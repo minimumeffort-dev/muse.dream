@@ -9,6 +9,7 @@ import { sceneContacts } from "../scene/contacts";
 import type {SceneObject} from "../scene/schema";
 
 export const FOOT_RADIUS=3,FOOT_HEIGHT=17.5;
+export const MAX_FLIGHT_CLEARANCE=450;
 const groundTuning:Record<"car"|"bicycle"|"skateboard",CarTuning>={
   car:TUNING,
   bicycle:{...TUNING,engineAccel:100,brakeAccel:180,reverseAccel:50,maxForwardSpeed:130,maxReverseSpeed:35,dragPerS:.5,turnRateRadS:2.4,maxTerrainSpeed:180},
@@ -102,7 +103,7 @@ function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,pro
   const steps=Math.max(1,Math.ceil(Math.hypot(s.vx,s.vy,s.vz)*dt/(body.carRadius*.5))),sdt=dt/steps;
   for(let i=0;i<steps;i++){
     const x=s.x+s.vx*sdt,y=s.y+s.vy*sdt,ground=drivingHeight(world.scene.terrain,x,y),landingWater=plane ? waterAt(world.scene.terrain,x,y,ground) : undefined,floor=landingWater ? landingWater.level : ground,support=plane ? undefined : afloat(world,x,y,waterRadius);
-    const elevation=plane ? s.grounded ? floor : Math.max(floor,Math.min(floor+450,s.elevation+s.vz*sdt)) : support ? support.level-2 : s.elevation;
+    const elevation=plane ? s.grounded ? floor : Math.max(floor,Math.min(floor+MAX_FLIGHT_CLEARANCE,s.elevation+s.vz*sdt)) : support ? support.level-2 : s.elevation;
     const data=sceneContacts(world.scene),contacts=[...data.solids.query(x,y,body.carRadius+data.maxRadius),...actorContacts(world.scene,s.timeS,s)];
     breakOnContact(s,body,x,y,contacts);
     if(!plane && !support || !carFootprintClear(body,x,y,elevation,s.timeS,s)) {s.vx=0;s.vy=0;s.vz=0;break;}

@@ -1,3 +1,5 @@
+import {SunShadows} from "../../src/game/sun";
+import {MAX_FLIGHT_CLEARANCE} from "../../src/sim/interaction";
 import * as THREE from 'three';
 import { createWorldScene } from '../../src/scene/world-fixture';
 import dreamV2Source from '../../docs/examples/dream-v2-world.dream?raw';
@@ -43,8 +45,6 @@ renderer.toneMappingExposure = 1.05;
 const scene = new THREE.Scene(); scene.background = new THREE.Color('#526b76');
 scene.add(new THREE.HemisphereLight('#bad4e2', '#384736', 1.25));
 const sun = new THREE.DirectionalLight('#ffe5b8', 2.4); sun.castShadow = true;
-sun.shadow.mapSize.set(2048, 2048); sun.shadow.normalBias = .6;
-Object.assign(sun.shadow.camera, { left: -410, right: 410, top: 410, bottom: -410, far: 1800 });
 scene.add(sun, sun.target, buildEnvironment(doc), new WorldScenery(doc).group,buildRoutes(doc));
 const landscape=new WorldLandscape(doc);scene.add(landscape.group);
 const live=[];
@@ -52,6 +52,7 @@ for (const object of doc.objects) if (object.route || hasAnimatedJoints(object.s
   const group = isReactive(object.spec) && impactOf(object.spec)?.kind!=='bounce' ? buildDamageObject(object) : object.route ? compactObject(buildObject(object)) : buildObject(object),placement=objectPlacement(doc,object); group.position.copy(worldPosition(doc, object.x, object.y, 1.5)); group.position.y=placement.base+1.5;group.quaternion.copy(placement.rotation);group.userData.object=object; scene.add(group);live.push(group);
 }
 if(dreamV2){const player=buildPlayer(doc);player.position.copy(worldPosition(doc,doc.spawn.x,doc.spawn.y,1.5));player.rotation.y=-doc.spawn.headingRad;scene.add(player);}
+const worldBounds=new THREE.Box3().setFromObject(scene),sunShadows=new SunShadows(sun,worldBounds.min.y-32,worldBounds.max.y+MAX_FLIGHT_CLEARANCE);
 document.body.dataset.source=dreamV2 ? 'dream-2' : 'main-world';
 terrainPlayer.value.set(0, -10000, 0);
 let running = true, time = 0, previous = performance.now();
@@ -68,10 +69,16 @@ renderer.setAnimationLoop(() => {
     animateObject(group,time,true,p?.travelled??0,0,select.selectedOptions[0].text===object.id ? 0 : Infinity);
   }
   const location = locations[Number(select.value)], p=location.object?.route ? actorPose(doc,location.object,time) : location;
-  const target = worldPosition(doc, p.x, p.y, 20);if(p.elevation!==undefined)target.y=p.elevation+20;
-  const point = cameraPosition(target, Number(view.value)), aspect = canvas.clientWidth / canvas.clientHeight, half = Math.max(location.half??210, (location.half??205) / aspect);
+  const target = worldPosition(doc, p.x+Number(document.querySelector("#pan").value), p.y, 20);if(p.elevation!==undefined)target.y=p.elevation+20;
+  const point = cameraPosition(target, Number(view.value)), aspect = canvas.clientWidth / canvas.clientHeight, half = Math.max(location.half??(new URLSearchParams(location.search).has("shadows") ? 270 : 210), (location.half??205) / aspect);
   Object.assign(camera, { left: -half * aspect, right: half * aspect, top: half, bottom: -half });
   camera.updateProjectionMatrix(); camera.position.set(point.x, target.y+Number(document.querySelector("#pitch").value), point.z); camera.lookAt(target);
-  sun.target.position.copy(target); sun.position.copy(target).add(new THREE.Vector3(-300, 690, 220));
+  camera.updateMatrixWorld();
+  if(document.querySelector('#shadows').value==='previous'){
+    Object.assign(sun.shadow.camera,{left:-410,right:410,top:410,bottom:-410,near:.5,far:1800});sun.shadow.camera.updateProjectionMatrix();
+    sun.target.position.copy(target);sun.position.copy(target).add(new THREE.Vector3(-300,690,220));
+    sun.updateMatrixWorld();sun.target.updateMatrixWorld();sun.shadow.updateMatrices(sun);
+  }else sunShadows.update(camera);
+  document.body.dataset.shadow=JSON.stringify({mode:document.querySelector('#shadows').value,span:[sun.shadow.camera.right*2,sun.shadow.camera.top*2],map:sun.shadow.mapSize.toArray()});
   renderer.render(scene, camera);
 });

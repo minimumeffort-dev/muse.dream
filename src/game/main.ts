@@ -1,3 +1,4 @@
+import {SunShadows} from "./sun";
 import {mediaCapture} from "./media-capture";
 import {vehicleReviewStart} from "./review-start";
 import { measuredScale, playerRadius, playerHeight } from "../scene/measure";
@@ -13,7 +14,7 @@ import { drivingHeight } from "../scene/terrain";
 import { archetypeOf, objectRadius } from "../sim/archetypes";
 import { buildPaperMask } from "../sim/mask";
 import { createCarAtSpawn, FixedStepper, resetCar, type World } from "../sim/car";
-import { nearbyRide,toggleRide,stepInteractive,occupiedObject,exitPosition } from "../sim/interaction";
+import { MAX_FLIGHT_CLEARANCE,nearbyRide,toggleRide,stepInteractive,occupiedObject,exitPosition } from "../sim/interaction";
 import { actorPoses } from "../sim/actors";
 import { interactiveWorld } from "../scene/interactive-world";
 import { buildRoutes } from "./routes";
@@ -90,13 +91,6 @@ function start(): void {
   resize();
   scene.add(new THREE.HemisphereLight("#bad4e2", "#384736", 1.25));
   const sun = new THREE.DirectionalLight("#ffe5b8", 2.4);
-  sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
-  sun.shadow.camera.left = -410; sun.shadow.camera.right = 410;
-  sun.shadow.camera.top = 410; sun.shadow.camera.bottom = -410;
-  sun.shadow.camera.far = 1800;
-  sun.shadow.normalBias = .6; sun.shadow.bias = -.0001;
-  sun.shadow.radius = 3;
   scene.add(sun, sun.target);
   const fill = new THREE.DirectionalLight("#a7c4eb", .3);
   fill.position.set(350, 250, -300); scene.add(fill);
@@ -135,6 +129,9 @@ function start(): void {
   const particles = new WorldParticles(doc); scene.add(particles.mesh);
   const occlusion = new SceneryOcclusion(objects.filter(object=>object!==avatar));
   const updateMap = createWorldMap(document.querySelector<HTMLCanvasElement>("#world-map")!, doc);
+
+  const worldBounds=new THREE.Box3().setFromObject(scene);
+  const sunShadows=new SunShadows(sun,worldBounds.min.y-32,worldBounds.max.y+MAX_FLIGHT_CLEARANCE);
 
   // Keyboard-only diagnostics stay out of the play surface.
   const debug = new THREE.Group();
@@ -358,8 +355,7 @@ function start(): void {
     camera.updateMatrixWorld(); scene.updateMatrixWorld();
     scenery.update(camera, position.clone().add(new THREE.Vector3(0, 7, 0)), dt, reduced.matches);
     occlusion.update(camera, position.clone().add(new THREE.Vector3(0, playerHeight(doc) / 2, 0)), dt, reduced.matches,occupied ? actorMeshes.get(occupied.id) : undefined);
-    sun.target.position.set(follow.x, follow.y, follow.z);
-    sun.position.set(follow.x - 300, follow.y + 690, follow.z + 220);
+    sunShadows.update(camera);
     hudTime += dt;
     if (hudTime > .1) {
       hudTime = 0;
@@ -381,6 +377,7 @@ function start(): void {
       container.dataset.occluders = String(occlusion.obscuredCount + scenery.obscuredCount);
       container.dataset.view = camera.quaternion.toArray().map(v => v.toFixed(5)).join(",");
       container.dataset.zoom = camera.zoom.toFixed(3);
+      if(import.meta.env.DEV)container.dataset.shadow=JSON.stringify({span:[sun.shadow.camera.right*2,sun.shadow.camera.top*2],map:sun.shadow.mapSize.toArray(),direction:sun.position.clone().sub(sun.target.position).normalize().toArray()});
       container.dataset.render = JSON.stringify({ calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, geometries: renderer.info.memory.geometries });
       const foot=car.control.kind==="foot",nearby=foot ? nearbyRide(car,world) : undefined,exit=foot ? undefined : exitPosition(car,world);
       interact.hidden=mode!=="playing" || foot && !nearby;

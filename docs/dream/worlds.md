@@ -50,6 +50,26 @@ Objects with `rideable(...,control=...)` use the route only for initial placemen
 
 Autonomous water actors must keep their whole body afloat and clear of bridge decks. Autonomous air actors use a bounded takeoff/landing envelope. The controllable boat instead checks its full visible hull against navigable water and banks; the controllable plane takes off and lands under input. One driving height per XY still prevents boats travelling under bridge decks. These are bounded arcade mechanics, not traffic AI, free-flight aerodynamics or general buoyancy.
 
+## Light while moving
+
+The engine keeps one sun direction across the world. Its shadow camera covers the
+visible terrain and objects, with extra room for shadows cast by things outside
+the screen. The coverage follows the viewport, including rotated views, small
+vehicle zoom and flight. Walking over a hill does not turn the sun or expose the
+edge of a small shadow box.
+
+The shadow grid stays aligned to world space as the camera translates. Boarding
+zoom retains the wider view's shadow coverage, so that transition cannot rescale
+the grid. The renderer keeps one 2048 × 2048 shadow map; it does not allocate a new
+light or a larger texture while travelling. More visible coverage can draw more
+shadow casters than the old clipped box. This is engine-owned rendering, with no
+new Dream fields or generated shaders.
+
+The development [geometry review](http://127.0.0.1:5173/tests/visual/roads.html?shadows)
+has Stable / Previous shadows, four views and a Pan slider for comparing the same
+scene at a frozen animation phase. [Verification captures](../evidence/sun-shadows)
+keep the comparison with the implementation.
+
 ## Split a world into modules
 
 ```text
