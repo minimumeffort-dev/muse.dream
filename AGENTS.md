@@ -25,6 +25,15 @@ Two skills govern all work here: [Ponytail](.agents/skills/ponytail/SKILL.md)
 [`paper-game`](.agents/skills/paper-game/SKILL.md) (domain invariants).
 Provenance and evidence rules: [`docs/agent-workflow.md`](docs/agent-workflow.md).
 
+## Commit and push every change
+
+After each completed change, run the appropriate checks, update the required
+docs, commit the task's changes and push the current branch to `origin` before
+finishing. The user has given standing authorization for this workflow; no
+additional confirmation is needed unless they explicitly ask to keep work local.
+Stage only task-related files, preserve unrelated edits and never force-push.
+If a commit or push fails, report the failure and what remains local.
+
 ## Documentation is part of implementation
 
 Every new feature or behavior change must update `README.md` and the relevant

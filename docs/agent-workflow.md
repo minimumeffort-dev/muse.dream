@@ -63,6 +63,10 @@ The user subsequently authorized making the repository public, publishing the
 product documentation, and adding Muse Dream to the Minimum Effort GitHub
 profile and website. This does not authorize a real model-provider integration.
 
+The user also gave standing authorization to commit and push every completed
+change after verification and required documentation updates. Follow the Git
+workflow in `AGENTS.md`; pushes can trigger the linked Vercel deployment.
+
 ## Evidence requirements
 
 - Every slice ships with checks actually executed in that session; report
