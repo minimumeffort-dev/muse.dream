@@ -53,3 +53,17 @@ GitHub's repository viewer has its own syntax system. Adding our grammar to this
 ## Planned-world captures
 
 `town-center.jpg`, `suburbs.jpg`, `sports-park.jpg`, `basketball.jpg`, `golf-park.jpg` and `south-lake.jpg` come from the live geometry review's native canvas, with untrimmed context captures retained in [the verification record](../evidence/urban-world/verification.md). `urban-assets.jpg` and the updated `assets-all.jpg` come from the same actual Dream gallery. Assets, turf, streets and shorelines are procedural engine output; these are not concept images. The README and [planned-world guide](../urban-world.md) link the corresponding Dream sources and current mock limitations.
+
+## NPC programs
+
+`npc-attention.jpg` is a native screenshot of the actual game at
+`/?test-npc=town_resident_0`, with a pedestrian watching the nearby walking player.
+`npc-people.jpg` uses the focused gallery for Town pedestrian, Park visitor,
+Football player, Basketball player and Park walker. The atlas, town, sports park,
+basketball court, golf and south-lake stills were refreshed after the people gained
+faces and +X-facing assemblies. They retain native render resolution and JPEG 95
+encoding. The new [NPC guide](../dream/npcs.md) contains the checked complete example.
+The existing driving/switching and destruction GIFs, HD videos and stills remain
+accurate: their visible geometry and prescribed actions did not change. The baker
+and naturalist keep their continuous joint routines, now selected by Dream programs.
+See the [verification and media audit](../evidence/npc-programs/verification.md).

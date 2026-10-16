@@ -14,7 +14,7 @@ The suburbs have 36 homes with three different silhouettes. Each driveway faces 
 
 ![A football pitch and basketball court in the sports park](media/sports-park.jpg)
 
-The football pitch is 100 × 64 metres. The basketball playing surface is 28 × 15 metres, with space around it. Four people practise kicks and dribbles, and visitors stand nearby. The golf park has three fairways, putting greens, sand traps and flags. These are places to explore; match rules, ball scoring and golf controls are still to come.
+The football pitch is 100 × 64 metres. The basketball playing surface is 28 × 15 metres, with space around it. Four people practise kicks and dribbles, and visitors stand nearby. The golf park has three fairways, putting greens, sand traps and flags. Their Dream programs alternate practice with rest and turn toward a nearby player. [NPC roles and routines](dream/npcs.md) define that behavior. These are places to explore; match rules, ball scoring and golf controls are still to come.
 
 ![Three fairways with putting greens and sand traps](media/golf-park.jpg)
 
@@ -36,7 +36,7 @@ Three language primitives describe the urban ground:
 
 ## Bigger without streaming
 
-Roads, sidewalks and paint use spatial tiles with local culling bounds. Intersections use a shared union, so there aren't stacked road tiles or sidewalks running across a crossing. Buildings and static visitors use the existing compacted, instanced scenery path. Grass retains its sampling density as the world grows, while ground finishes reserve clear space.
+Roads, sidewalks and paint use spatial tiles with local culling bounds. Intersections use a shared union, so there aren't stacked road tiles or sidewalks running across a crossing. Buildings use the existing compacted, instanced scenery path. NPC visitors use compacted actor meshes so their orientation can respond to the player. Grass retains its sampling density as the world grows, while ground finishes reserve clear space.
 
 The entire world remains resident. Mesh detail, shadows, particles, pixel ratio policy and post-processing stay the same. There is no distance-based replacement or district loading. [Rendering measurements](rendering.md) record the comparable original-start drive and a separate town drive. These local measurements do not establish a minimum laptop specification.
 

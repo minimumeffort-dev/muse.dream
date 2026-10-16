@@ -78,7 +78,10 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 | `checkpoint` | top | ID / no block | `at: v2`, `dir: v2`, `width: n` |
 | `route` | top | ID / path | `kind: rail / path / water / air / ambient`, `mode: loop / shuttle`, `speed: n`, `altitude?: n`, `wait_s?: n`, `width?: n`, `surface?: trail / cycle / paved` |
 | `point` | path | No ID / no block | `at: point` |
-| `place` | top | ID / no block | `object: ref`, `at?: v2`, `route?: ref`, `offset?: n`, `scale?: n`, `heading_deg?: n` |
+| `behavior` | top | ID / behavior | `start: ref` |
+| `state` | behavior | ID / npc_state | `action: idle / patrol / perform`, `face?: none / player` |
+| `on` | npc_state | ID / no block | `event: after / near_player / far_player`, `to: ref`, `seconds?: n`, `radius?: n` |
+| `place` | top | ID / no block | `object: ref`, `at?: v2`, `route?: ref`, `offset?: n`, `scale?: n`, `heading_deg?: n`, `role?: prop / npc / controllable`, `behavior?: ref` |
 | `unresolved` | top | ID / no block | `label: text` |
 
 ### Value constructors
@@ -206,3 +209,13 @@ Break behavior separates authored components; it doesn't cut new shards from an 
 Scenes and linked districts share limits of 32 streets, 64 surfaces and 128 markings. Streets take 2–16 XY anchors, widths 60–180 and sidewalks 0–40 per side. Each segment is horizontal or vertical and at least 80 units long. The total street length is at most 60000 units. The scene compiler checks street connectivity, world boundaries, solid carriageway clearance and water crossings.
 
 Surfaces take 3–64 points and must be simple, nonzero polygons, at most 1000000 square units and 2000 units across. Split larger grounds into tiles. They cannot cover street carriageways. Later surfaces in the linked scene overlay earlier surfaces. Markings take 2–64 points, width .5–12, and at least three points when closed. Repeated first points and zero-length segments fail. Total marking length, including closed seams, is at most 40000 units. Grounds and markings stay within the world, follow the shared heightfield and clear procedural tufts. They add no collision body or flattening operation. [Runnable neighborhood](../examples/planned-neighborhood.dream).
+
+## NPC programs
+
+`place(...,role=prop|npc|controllable,behavior=program_id)` assigns instance ownership. `controllable` requires the template's `rideable.control`; `npc` requires a route or program; `prop` prohibits both. Only NPCs accept a program. Legacy omitted roles infer control capability, then route, then prop. A driver-capable NPC cannot be boarded; passenger-only NPC seats retain passenger travel. The root player remains the original car.
+
+`behavior id(start=state_id){state ...}` declares 1–8 unique reachable states. `state id(action=idle|patrol|perform,face=none|player){on ...}` chooses an action; face defaults to none and is invalid with patrol. `on id(event=after,to=state_id,seconds=n)` requires only seconds (.1–300). `near_player` and `far_player` require only radius (10–240 world units) and compare 3D distance <= and >= respectively. Transition IDs are unique per state; targets are local to the program. No compound conditions or executable code.
+
+The first matching transition wins once per fixed tick; state time resets on entry. Idle rests joints; perform animates in place; both pause route time. Patrol resumes the placement's route without teleporting and animates only while moving. Stationary face=player turns at 2.5 rad/s. Animation respects reduced motion. Clocks are per-instance runtime state, preserved by R and reset by Start over. Without a runtime snapshot, actor inspection returns the program's initial pose.
+
+Programs and references are file-local; includes merge data. There are at most 16 programs and 32 NPCs in the accepted scene. Each state has at most 4 transitions. Existing 24 moving actor/controllable and 24 live jointed assembly caps remain. Explicit NPCs require version 2 assemblies without foundations, compound contacts, knockable bodies or destruction; boat and plane NPCs need a domain route. Full-scene acceptance checks stationary dry footprints and route clearance. Solid NPC cylinders participate in player contacts. There is no pathfinding, runtime avoidance, humanoid possession or generated input profile. [Complete example](../examples/npc-behavior.dream) and [guide](npcs.md).

@@ -1,4 +1,6 @@
 dream 2;
+behavior baker_greeting(start=waving){state waving(action=perform){}}
+
 asset a_castle(module=landmarks,object=castle);
 asset a_mushroom_rover(module=landmarks,object=mushroom_rover);
 asset a_mushroom(module=landmarks,object=mushroom);
@@ -30,7 +32,7 @@ place farm_house(object=a_hillside_cottage,at=[2740,2100],scale=1);
 place farm_well(object=a_village_well,at=[2650,2000],scale=1);
 place farm_apple(object=a_old_apple_tree,at=[2510,1940],scale=1);
 place farm_log(object=a_fallen_log,at=[2420,2140],scale=1,heading_deg=-24);
-place orchard_baker(object=a_waving_baker,at=[1150,1610],scale=1);
+place orchard_baker(object=a_waving_baker,at=[1150,1610],scale=1,role=npc,behavior=baker_greeting);
 place orchard_picnic(object=a_orchard_picnic,at=[1060,1600],scale=1);
 place meadow_granite(object=a_mossy_granite,at=[2890,2050],scale=1);
 place orchard_cart(object=a_orchard_cart,at=[1240,1625],scale=1);

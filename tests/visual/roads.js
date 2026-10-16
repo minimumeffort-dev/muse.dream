@@ -14,6 +14,9 @@ import { archetypeOf } from '../../src/sim/archetypes';
 import { cameraPosition } from '../../src/game/camera';
 import { worldTime, terrainPlayer } from '../../src/game/shaders';
 import { buildRoutes } from '../../src/game/routes';
+import {isActor} from "../../src/scene/agents";
+import {createCarAtSpawn} from "../../src/sim/car";
+import {stepNpcs} from "../../src/sim/npcs";
 import { actorPose } from '../../src/sim/actors';
 import { buildDamageObject } from '../../src/game/damage';
 import { compactObject } from '../../src/game/compact-object';
@@ -50,27 +53,27 @@ const sun = new THREE.DirectionalLight('#ffe5b8', 2.4); sun.castShadow = true;
 scene.add(sun, sun.target, buildEnvironment(doc), new WorldScenery(doc).group,buildRoutes(doc));
 const landscape=new WorldLandscape(doc);scene.add(landscape.group);
 const live=[];
-for (const object of doc.objects) if (object.route || hasAnimatedJoints(object.spec) || isReactive(object.spec) || archetypeOf(object).interaction === 'knockable') {
-  const group = isReactive(object.spec) && impactOf(object.spec)?.kind!=='bounce' ? buildDamageObject(object) : object.route ? compactObject(buildObject(object)) : buildObject(object),placement=objectPlacement(doc,object); group.position.copy(worldPosition(doc, object.x, object.y, 1.5)); group.position.y=placement.base+1.5;group.quaternion.copy(placement.rotation);group.userData.object=object;group.userData.ambient=!!object.route && doc.routes.find(r=>r.id===object.route.id)?.kind==='ambient'; scene.add(group);live.push(group);
+for (const object of doc.objects) if (isActor(object) || hasAnimatedJoints(object.spec) || isReactive(object.spec) || archetypeOf(object).interaction === 'knockable') {
+  const group = isReactive(object.spec) && impactOf(object.spec)?.kind!=='bounce' ? buildDamageObject(object) : isActor(object) ? compactObject(buildObject(object)) : buildObject(object),placement=objectPlacement(doc,object); group.position.copy(worldPosition(doc, object.x, object.y, 1.5)); group.position.y=placement.base+1.5;group.quaternion.copy(placement.rotation);group.userData.object=object;group.userData.ambient=!!object.route && doc.routes.find(r=>r.id===object.route.id)?.kind==='ambient'; scene.add(group);live.push(group);
 }
 if(dreamV2){const player=buildPlayer(doc);player.position.copy(worldPosition(doc,doc.spawn.x,doc.spawn.y,1.5));player.rotation.y=-doc.spawn.headingRad;scene.add(player);}
 const worldBounds=new THREE.Box3().setFromObject(scene),sunShadows=new SunShadows(sun,worldBounds.min.y-32,worldBounds.max.y+MAX_FLIGHT_CLEARANCE);
 document.body.dataset.source=dreamV2 ? 'dream-2' : 'main-world';
 terrainPlayer.value.set(0, -10000, 0);
-let running = true, time = 0, previous = performance.now();
+let running = true, time = 0, previous = performance.now(), preview=createCarAtSpawn(doc);
 document.querySelector("#motion").onclick = event => { running = !running; event.target.textContent = running ? "Pause animation" : "Resume animation"; };
 const wake=document.createElement('button');wake.textContent='Ripple';document.querySelector('header').append(wake);
 wake.onclick=()=>{const location=locations[Number(select.value)];for(const {waves} of landscape.waters) waves.disturb(location.x,location.y,2);};
 const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 1, 10000);
 new ResizeObserver(() => renderer.setSize(canvas.clientWidth, canvas.clientHeight, false)).observe(canvas);
 renderer.setAnimationLoop(() => {
-  const now = performance.now(),dt=Math.min(.1,(now-previous)/1000); if (running) {time+=dt;for(const {waves} of landscape.waters) waves.step(dt);landscape.upload();} previous = now; worldTime.value = time;
+  const now = performance.now(),dt=Math.min(.1,(now-previous)/1000); if (running) {preview={...preview,npcs:stepNpcs(preview,dt,doc),timeS:preview.timeS+dt};time+=dt;for(const {waves} of landscape.waters) waves.step(dt);landscape.upload();} previous = now; worldTime.value = time;
   for(const group of live){
-    const object=group.userData.object,p=object.route ? actorPose(doc,object,time) : undefined;
-    if(p){group.position.copy(worldPosition(doc,p.x,p.y));group.position.y=p.elevation+(group.userData.ambient ? .2 : 1.5);group.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),p.kind==='rail'||p.kind==='path' ? terrainNormal(doc,p.x,p.y) : new THREE.Vector3(0,1,0));group.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),-p.headingRad));}
-    animateObject(group,time,!group.userData.ambient || !!p?.speed,p?.travelled??0,0,select.selectedOptions[0].text===object.id ? 0 : Infinity);
+    const object=group.userData.object,p=isActor(object) ? actorPose(doc,object,time,preview) : undefined;
+    if(p){group.position.copy(worldPosition(doc,p.x,p.y));group.position.y=p.elevation+(group.userData.ambient || p.activity && p.kind==='path' ? .2 : 1.5);group.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),!p.activity && (p.kind==='rail'||p.kind==='path') || object.spec?.grounding==='surface' ? terrainNormal(doc,p.x,p.y) : new THREE.Vector3(0,1,0));group.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),-p.headingRad));}
+    animateObject(group,p?.animationTimeS??time,p?.activity ? p.activity==='perform' || p.activity==='patrol' && p.speed>0 : !group.userData.ambient || !!p?.speed,p?.travelled??0,0,select.selectedOptions[0].text===object.id ? 0 : Infinity);
   }
-  const location = locations[Number(select.value)], p=location.object?.route ? actorPose(doc,location.object,time) : location;
+  const location = locations[Number(select.value)], p=location.object?.route ? actorPose(doc,location.object,time,preview) : location;
   const target = worldPosition(doc, p.x+Number(document.querySelector("#pan").value), p.y, 20);if(p.elevation!==undefined)target.y=p.elevation+20;
   const point = cameraPosition(target, Number(view.value)), aspect = canvas.clientWidth / canvas.clientHeight, half = Math.max(location.half??(new URLSearchParams(location.search).has("shadows") ? 270 : 210), (location.half??205) / aspect);
   Object.assign(camera, { left: -half * aspect, right: half * aspect, top: half, bottom: -half });

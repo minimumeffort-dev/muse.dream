@@ -2,6 +2,8 @@ import { carFootprintClear,stepCar,TUNING,type CarState,type CarInput,type World
 import { actorPose,actorContacts,routeObjects } from "./actors";
 import { advanceImpactMotion,breakOnContact } from "./impacts";
 import { controlOf,type VehicleControl } from "../scene/object-dsl";
+import {controlFor,roleOf} from '../scene/agents';
+import {stepNpcs} from './npcs';
 import { objectHeight,objectRadius } from "./archetypes";
 import { drivingHeight,waterAt } from "../scene/terrain";
 import {assemblyHorizontalRadius,playerRadius} from "../scene/measure";
@@ -34,6 +36,7 @@ export function nearbyRide(state:CarState,world:World):RideTarget|undefined {
   }
   for(const object of routeObjects(world.scene)) {
     if(!object.spec || !("dslVersion" in object.spec) || object.spec.dslVersion!==2 || !object.spec.rideable)continue;
+    if(roleOf(object)==='npc' && controlOf(object.spec))continue;
     const p=actorPose(world.scene,object,state.timeS,state),d=Math.max(0,Math.hypot(p.x-state.x,p.y-state.y)-objectRadius(object));
     if(d<distance && Math.abs(p.elevation-state.elevation)<28){nearest={id:object.id,labelText:object.labelText,object};distance=d;}
   }
@@ -62,14 +65,14 @@ export function toggleRide(state:CarState,world:World):CarState {
   }
   const target=nearbyRide(state,world);if(!target)return state;
   const pose=target.id===null ? state.vehicles.find(v=>v.id===null)! : actorPose(world.scene,target.object!,state.timeS,state);
-  const control:CarState["control"]=target.id===null ? {kind:"car"} : {kind:controlOf(target.object!.spec) ? "vehicle" : "passenger",id:target.id};
+  const control:CarState["control"]=target.id===null ? {kind:"car"} : {kind:controlFor(target.object!) ? "vehicle" : "passenger",id:target.id};
   const next:CarState={...state,control,x:pose.x,y:pose.y,elevation:pose.elevation,headingRad:pose.headingRad,distance:pose.distance,vehicles:state.vehicles.filter(v=>v.id!==target.id),
     vx:0,vy:0,vz:0,grounded:true,landingSpeed:0,pitch:0,bank:0,boostedThisStep:false};
   if(control.kind!=="passenger" && !carFootprintClear(bodyWorld(next,world),next.x,next.y,next.elevation,next.timeS,next))return state;
   return next;
 }
-function nextMotion(state:CarState,dt:number):CarState {
-  return {...state,timeS:state.timeS+dt,props:state.props.map(p=>({...p})),broken:[...state.broken],brokenZones:state.brokenZones.map(z=>({...z})),debris:[...state.debris],impacts:[],boostReadyAtS:{...state.boostReadyAtS},boostedThisStep:false,landingSpeed:0};
+function nextMotion(state:CarState,dt:number,world:World):CarState {
+  return {...state,npcs:stepNpcs(state,dt,world.scene),timeS:state.timeS+dt,props:state.props.map(p=>({...p})),broken:[...state.broken],brokenZones:state.brokenZones.map(z=>({...z})),debris:[...state.debris],impacts:[],boostReadyAtS:{...state.boostReadyAtS},boostedThisStep:false,landingSpeed:0};
 }
 function afloat(world:World,x:number,y:number,radius:number) {
   const floor=drivingHeight(world.scene.terrain,x,y),water=waterAt(world.scene.terrain,x,y,floor);
@@ -82,7 +85,7 @@ function afloat(world:World,x:number,y:number,radius:number) {
 }
 /** Bounded arcade boat/aircraft dynamics, independent of authored routes. */
 function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,profile:"boat"|"plane"):CarState {
-  const s=nextMotion(state,dt),body=bodyWorld(s,world),throttle=Math.max(-1,Math.min(1,input.throttle)),steer=Math.max(-1,Math.min(1,input.steer));
+  const s=nextMotion(state,dt,world),body=bodyWorld(s,world),throttle=Math.max(-1,Math.min(1,input.throttle)),steer=Math.max(-1,Math.min(1,input.steer));
   const plane=profile==="plane",maxSpeed=plane ? 400 : 135,accel=plane ? 170 : 80;
   let fwd=s.vx*Math.cos(s.headingRad)+s.vy*Math.sin(s.headingRad);
   if(throttle>0)fwd+=accel*Math.max(0,1-fwd/maxSpeed)*throttle*dt;
@@ -128,7 +131,7 @@ export function stepInteractive(state:CarState,input:CarInput,dt:number,world:Wo
     if(profile==="boat" || profile==="plane")return stepFreeVehicle(state,input,dt,world,profile);
     return stepCar(state,input,dt,{...bodyWorld(state,world),tuning:groundTuning[profile]});
   }
-  const p=actorPose(world.scene,object,state.timeS+dt,state),next=nextMotion(state,dt);
+  const next=nextMotion(state,dt,world),p=actorPose(world.scene,object,next.timeS,next);
   Object.assign(next,{x:p.x,y:p.y,elevation:p.elevation,headingRad:p.headingRad,vx:p.vx??0,vy:p.vy??0,vz:0,grounded:p.kind!=="air",surface:p.kind==="water" ? "water" : "paper",distance:p.travelled});
   advanceImpactMotion(next,bodyWorld(state,world),dt,false);return next;
 }

@@ -198,3 +198,35 @@ Scene limits: <=64 surfaces, <=128 markings, <=40000 total marking length.
 Include district modules to merge streets/surfaces/markings as well as placements.
 Keep all ground features inside world bounds. The full scene acceptance boundary
 checks them after linking. The model still writes only bounded data.
+
+ACTOR OWNERSHIP AND NPC PROGRAMS
+For every new actor placement emit role=controllable or role=npc explicitly.
+role=prop is passive scenery; no route or behavior. Mechanical motion/destruction remain possible.
+Template rideable.control is capability; place.role chooses ownership. controllable needs
+that capability and starts parked, accepting player input after boarding. npc is engine-owned;
+a driver-capable NPC cannot be boarded. Passenger-only NPC train seats remain usable.
+Legacy omitted role infers control capability -> controllable, else route -> npc, else prop.
+world.player remains the original car; no humanoid possession or generated input profiles.
+behavior attentive_walk(start=walking){
+ state walking(action=patrol){on notice(event=near_player,to=watching,radius=65);}
+ state watching(action=idle,face=player){on leave(event=far_player,to=walking,radius=95);}
+}
+place neighbor(object=person,route=promenade,role=npc,behavior=attentive_walk);
+Behavior IDs/references are file-local; state IDs and transition targets are behavior-local.
+All states must be reachable from start. Transition IDs unique per state. Includes merge
+program data; asset imports only object capabilities. <=16 programs and <=32 NPCs per scene.
+1..8 states/program; <=4 transitions/state. action=idle rests joints; perform animates in
+place; both hold route clock. patrol requires placement.route and resumes its clock without
+teleporting. It animates only while moving. face=none default; face=player stationary only,
+turning <=2.5 rad/s. Asset forward is +X. No arbitrary poses, scripts or callbacks.
+on event=after requires only seconds (.1..300); near_player/far_player requires only radius
+(10..240 units), using 3D distance <= / >=. Use separated near/far radii for hysteresis.
+One transition/fixed tick, first matching declaration wins; state elapsed resets on entry.
+Use perform -> idle -> perform with after transitions for timed routines. Existing joints
+supply the motion; this does not generate sports rules, pathfinding or obstacle avoidance.
+Explicit NPCs need version 2 decor/solid cylinders, without foundations, compound contacts,
+knockable bodies or destruction. Ambient routes remain decor-only; boat/plane NPCs need
+routes in their domain. Stationary NPC footprints must be dry and clear. Preserve <=24 route
+actors/controllable vehicles and <=24 live jointed assemblies including the player.
+Runtime clocks are per instance outside Scene; pause freezes them; R preserves them and
+Start over resets them. No model calls during simulation.

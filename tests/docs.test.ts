@@ -23,6 +23,10 @@ describe("published Dream documentation",()=>{
     const example=pages['../docs/dream/behavior.md']!.match(/```dream\n([\s\S]*?)```/)![1]!;
     expect(example.trim()).toBe(examples['../docs/examples/ambient-wildlife.dream']!.trim());
   });
+  it("keeps the NPC guide identical to its runnable module",()=>{
+    const example=pages['../docs/dream/npcs.md']!.match(/```dream\n([\s\S]*?)```/)![1]!;
+    expect(example.trim()).toBe(examples['../docs/examples/npc-behavior.dream']!.trim());
+  });
   it.each(Object.entries(pages))("keeps local links and images valid in %s",(path,source)=>{
     for(const match of source.matchAll(/\]\(([^)]+)\)/g)){
       const target=match[1]!.split('#')[0]!;

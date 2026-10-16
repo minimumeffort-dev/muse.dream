@@ -1,4 +1,6 @@
 dream 2;
+behavior nature_study(start=observing){state observing(action=perform){}}
+
 asset a_bakery_basket(module=dream_creations,object=bakery_basket);
 asset a_field_naturalist(module=dream_creations,object=field_naturalist);
 asset a_meadow_tortoise(module=dream_creations,object=meadow_tortoise);
@@ -73,7 +75,7 @@ route cloud_trip(kind=air,mode=loop,speed=115,altitude=180,wait_s=6){
   point(at=[1400,2150]);
 }
 place orchard_bread(object=a_bakery_basket,at=[1150,1690],scale=1.2);
-place farm_naturalist(object=a_field_naturalist,at=[2820,1980],scale=1.2);
+place farm_naturalist(object=a_field_naturalist,at=[2820,1980],scale=1.2,role=npc,behavior=nature_study);
 place pond_tortoise(object=a_meadow_tortoise,at=[2710,2210],scale=1.3);
 place farm_sunflowers(object=a_wild_sunflowers,at=[2780,2210],scale=1.2);
 place ridge_cairn(object=a_trail_cairn,at=[4620,1410],scale=1.5);
@@ -84,7 +86,7 @@ place meadow_ball(object=a_festival_ball,at=[930,1505],scale=1);
 place meadow_table(object=a_breakaway_table,at=[850,1510],scale=1);
 place orchard_crate(object=a_produce_crate,at=[1320,1600],scale=1,heading_deg=14.999999999999998);
 place garden_planter(object=a_terracotta_planter,at=[840,1770],scale=1.2);
-place meadow_train(object=a_meadow_locomotive,route=orchard_rail,offset=0,scale=1);
-place meadow_coach(object=a_passenger_carriage,route=orchard_rail,offset=94,scale=1);
-place meadow_plane(object=a_cloudhopper_plane,route=cloud_trip,offset=0,scale=1);
-place lake_boat(object=a_willow_launch,route=lake_trip,offset=0,scale=1);
+place meadow_train(object=a_meadow_locomotive,route=orchard_rail,offset=0,scale=1,role=npc);
+place meadow_coach(object=a_passenger_carriage,route=orchard_rail,offset=94,scale=1,role=npc);
+place meadow_plane(object=a_cloudhopper_plane,route=cloud_trip,offset=0,scale=1,role=controllable);
+place lake_boat(object=a_willow_launch,route=lake_trip,offset=0,scale=1,role=controllable);

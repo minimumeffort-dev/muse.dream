@@ -335,7 +335,42 @@
         "route": "ref?",
         "offset": "n?",
         "scale": "n?",
-        "heading_deg": "n?"
+        "heading_deg": "n?",
+        "role": "prop|npc|controllable?",
+        "behavior": "ref?"
+      }
+    },
+    "behavior": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "start": "ref"
+      },
+      "block": "behavior"
+    },
+    "state": {
+      "contexts": [
+        "behavior"
+      ],
+      "id": true,
+      "fields": {
+        "action": "idle|patrol|perform",
+        "face": "none|player?"
+      },
+      "block": "npc_state"
+    },
+    "on": {
+      "contexts": [
+        "npc_state"
+      ],
+      "id": true,
+      "fields": {
+        "event": "after|near_player|far_player",
+        "to": "ref",
+        "seconds": "n?",
+        "radius": "n?"
       }
     },
     "watercourse": {
@@ -588,6 +623,42 @@
         "lifetime": "n"
       }
     }
+  },
+  "agents": {
+    "limits": {
+      "programs": 16,
+      "actors": 32,
+      "states": 8,
+      "transitions": 4,
+      "seconds": [
+        0.1,
+        300
+      ],
+      "radius": [
+        10,
+        240
+      ],
+      "turnRadS": 2.5
+    },
+    "roles": {
+      "prop": "passive scenery, no route or behavior",
+      "controllable": "requires rideable control capability; parked until player boards",
+      "npc": "engine-owned route or behavior; driver-capable NPC cannot be boarded, passenger-only seats remain available"
+    },
+    "legacy": "omitted role infers controllable from control capability, otherwise npc from route, otherwise prop",
+    "program": "behavior ID is file-local; states and transition targets are local to that behavior; all states reachable from start",
+    "actions": {
+      "idle": "rest joints and pause route clock",
+      "patrol": "advance placement route and animate while moving",
+      "perform": "animate joints in place with route clock paused"
+    },
+    "events": {
+      "after": "only seconds, since state entry",
+      "near_player": "only radius; 3D distance <= radius",
+      "far_player": "only radius; 3D distance >= radius"
+    },
+    "execution": "one transition per fixed tick, first matching declaration wins; elapsed resets on transition; per-instance clocks live outside Scene; patrol resumes without teleport; face=player turns stationary actors at 2.5 rad/s",
+    "boundary": "data-only bounded state machines; no scripts, pathfinding, generated input profiles or model calls; root world.player remains the original car"
   },
   "urbanGround": {
     "streets": 32,

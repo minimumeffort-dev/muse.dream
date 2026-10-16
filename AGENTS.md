@@ -126,3 +126,11 @@ Dream ambient routes require decor-only assemblies and create no infrastructure 
 physics contacts. Optional altitude keeps birds airborne through the entire loop;
 ground habitats require dry, clear footprints. Preserve existing actor/joint caps,
 vehicle-route speed bounds, instanced plants and reduced-motion joint poses.
+
+Dream actor ownership is per placement: `role=prop|npc|controllable`. New actors
+must declare it. Template `rideable.control` is a capability; only controllable
+instances accept player input. NPC programs use bounded state/action/transition
+data, never scripts. Keep per-instance clocks outside Scene, advance once per
+fixed tick across every player control mode, preserve them on R and reset on
+Start over. Route interruption must resume without teleport. Preserve 16 program,
+32 NPC, 24 route/controllable and 24 jointed-assembly caps. See `docs/dream/npcs.md`.

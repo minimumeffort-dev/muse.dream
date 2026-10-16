@@ -21,7 +21,7 @@ object small_table(label="Small table"){
 }
 ```
 
-The model-facing contract uses named fields, explicit IDs and a bounded set of commands. The [reference](dream/reference.md) lists them all. The [object guide](dream/objects.md) explains composition and scale, [worlds](dream/worlds.md) covers layout and modules, and [behavior](dream/behavior.md) covers interaction and destruction.
+The model-facing contract uses named fields, explicit IDs and a bounded set of commands. The [reference](dream/reference.md) lists them all. The [object guide](dream/objects.md) explains composition and scale, [worlds](dream/worlds.md) covers layout and modules, and [behavior](dream/behavior.md) covers interaction and destruction. [NPCs and control](dream/npcs.md) covers placement ownership and reusable state machines.
 
 For a provider integration, use the [model instructions](dream-v2-model.txt), [command export](dream-v2-contract.json) and [generation/repair guide](dream/model-authoring.md). The command export is generated from the parser table. [The EBNF](dream-v2.ebnf) describes structural syntax; the compiler enforces contexts, references and geometry budgets.
 

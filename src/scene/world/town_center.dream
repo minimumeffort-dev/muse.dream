@@ -1,4 +1,17 @@
 dream 2;
+behavior town_attention(start=walking){
+  state walking(action=patrol){
+    on notice(event=near_player,to=watching,radius=65);
+  }
+  state watching(action=idle,face=player){
+    on leave(event=far_player,to=walking,radius=95);
+  }
+}
+behavior square_attention(start=waiting){
+  state waiting(action=idle){on notice(event=near_player,to=watching,radius=65);}
+  state watching(action=idle,face=player){on leave(event=far_player,to=waiting,radius=95);}
+}
+
 asset brick_apartments(module=town_assets,object=brick_apartments);
 asset corner_shop(module=town_assets,object=corner_shop);
 asset civic_library(module=town_assets,object=civic_library);
@@ -86,5 +99,5 @@ route town_promenade(kind=ambient,mode=loop,speed=9,wait_s=1){
   point(at=[7110,1710]);
   point(at=[6740,1710]);
 }
-place town_resident_0(object=town_walker,route=town_promenade);
-place town_resident_1(object=park_visitor,at=[6960,1500]);
+place town_resident_0(object=town_walker,route=town_promenade,role=npc,behavior=town_attention);
+place town_resident_1(object=park_visitor,at=[6960,1500],role=npc,behavior=square_attention);

@@ -2,7 +2,7 @@ import {SunShadows} from "./sun";
 import {mediaCapture} from "./media-capture";
 import {renderProfile} from "./render-profile";
 import {freezeStatic} from "./batching";
-import {vehicleReviewStart,drivingReviewStart} from "./review-start";
+import {vehicleReviewStart,drivingReviewStart,npcReviewStart} from "./review-start";
 import { measuredScale, playerRadius, playerHeight } from "../scene/measure";
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -18,6 +18,7 @@ import { buildPaperMask } from "../sim/mask";
 import { createCarAtSpawn, FixedStepper, resetCar, type World } from "../sim/car";
 import { MAX_FLIGHT_CLEARANCE,nearbyRide,toggleRide,stepInteractive,occupiedObject,exitPosition } from "../sim/interaction";
 import { actorPoses } from "../sim/actors";
+import {isActor} from '../scene/agents';
 import { interactiveWorld } from "../scene/interactive-world";
 import { buildRoutes } from "./routes";
 import { compactObject } from "./compact-object";
@@ -52,6 +53,7 @@ function start(): void {
   let car = createCarAtSpawn(doc);
   if(import.meta.env.DEV)car=vehicleReviewStart(car,world,new URLSearchParams(location.search).get("test-vehicle"));
   if(import.meta.env.DEV)car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));
+  if(import.meta.env.DEV)car=npcReviewStart(car,world,new URLSearchParams(location.search).get("test-npc"));
   const stepper = new FixedStepper();
   const keys = new Set<string>();
   let mode: "playing" | "paused" = "playing";
@@ -107,7 +109,7 @@ function start(): void {
   const breakMeshes=new Map<string,THREE.Group>();
   const objects: THREE.Group[] = [];
   for (const object of doc.objects) {
-    if (!object.route && !controlOf(object.spec) && !isReactive(object.spec) && archetypeOf(object).interaction !== "knockable" && !hasAnimatedJoints(object.spec)) continue;
+    if (!isActor(object) && !isReactive(object.spec) && archetypeOf(object).interaction !== "knockable" && !hasAnimatedJoints(object.spec)) continue;
     const destructible=isReactive(object.spec) && impactOf(object.spec)?.kind!=="bounce";
     const group = destructible ? buildDamageObject(object) : compactObject(buildObject(object));
     group.position.copy(worldPosition(doc, object.x, object.y, 1.5));
@@ -118,7 +120,7 @@ function start(): void {
     scene.add(group);
     objects.push(group);
     if(archetypeOf(object).interaction === "knockable") propMeshes.set(object.id, group);
-    if(object.route || controlOf(object.spec)){actorMeshes.set(object.id,group);rideZooms.set(object.id,rideCameraZoom(doc.player,object));}
+    if(isActor(object)){actorMeshes.set(object.id,group);rideZooms.set(object.id,rideCameraZoom(doc.player,object));}
     if(destructible)breakMeshes.set(object.id,group);
   }
   const debris=new WorldDebris(doc);scene.add(debris.group);
@@ -314,12 +316,16 @@ function start(): void {
     poses??=actorPoses(doc,car.timeS,car);
     for(const pose of poses){
       const group=actorMeshes.get(pose.id)!;
-      group.position.copy(worldPosition(doc,pose.x,pose.y));group.position.y=pose.elevation+(group.userData.ambient ? .2 : 1.5);
-      const normal=pose.kind==="rail" || pose.kind==="path" ? terrainNormal(doc,pose.x,pose.y) : new THREE.Vector3(0,1,0);
+      group.position.copy(worldPosition(doc,pose.x,pose.y));group.position.y=pose.elevation+(group.userData.ambient || pose.activity && pose.kind==="path" ? .2 : 1.5);
+      const spec=group.userData.sceneObject.spec;
+      const upright=pose.activity && spec?.grounding!=='surface';
+      const normal=!upright && (pose.kind==="rail" || pose.kind==="path") ? terrainNormal(doc,pose.x,pose.y) : new THREE.Vector3(0,1,0);
       group.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),normal).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),-pose.headingRad));
       group.quaternion.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(pose.bank??0,0,pose.pitch??0)));
       group.userData.distance=pose.travelled;
       group.userData.moving=pose.speed>0;
+      group.userData.npcActive=pose.activity ? pose.activity==='perform' || pose.activity==='patrol' && pose.speed>0 : undefined;
+      group.userData.npcTime=pose.animationTimeS;
     }
     const occupied=occupiedObject(car,world);
     const standingRide=controlOf(occupied?.spec)==="skateboard";
@@ -343,7 +349,7 @@ function start(): void {
     }
     for (const object of objects) {
       const spec=object.userData.sceneObject;
-      animateObject(object, worldTime.value, !reduced.matches && (!object.userData.ambient || object.userData.moving), object.userData.distance ?? 0,0,
+      animateObject(object, object.userData.npcTime??worldTime.value, !reduced.matches && (object.userData.npcActive??(!object.userData.ambient || object.userData.moving)), object.userData.distance ?? 0,0,
         spec ? Math.hypot(object.position.x-position.x,object.position.z-position.z)/spec.scale : Infinity);
     }
     const target = { x: position.x, y: (car.control.kind!=="car" ? car.elevation : drivingHeight(doc.terrain, car.x, car.y)) + 12, z: position.z };
@@ -396,6 +402,7 @@ function start(): void {
       container.dataset.avatar=standingRide ? "standing" : walker.visible ? "walking" : occupied ? "seated" : "in-car";
       container.dataset.vehicles=JSON.stringify(car.vehicles);
       container.dataset.actors=JSON.stringify(poses.map(p=>({id:p.id,x:p.x,y:p.y,elevation:p.elevation})));
+      if(import.meta.env.DEV)container.dataset.npcs=JSON.stringify(poses.filter(p=>p.stateId).map(p=>({id:p.id,state:p.stateId,action:p.activity,x:p.x,y:p.y,heading:p.headingRad,animationTime:p.animationTimeS})));
       container.dataset.destruction=JSON.stringify({broken:car.broken,zones:car.brokenZones,debris:car.debris.length,toppling:car.debris.filter(p=>p.topple).map(p=>({id:p.objectId,angle:p.topple!.angle,settled:p.settled})),props:car.props.filter(p=>p.elevation!==undefined).map(p=>({id:p.id,x:p.x,y:p.y,elevation:p.elevation,vz:p.vz}))});
     }
     if (hudTime === 0) updateMap(car, cameraAngle);

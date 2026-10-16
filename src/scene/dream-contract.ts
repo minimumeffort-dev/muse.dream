@@ -1,5 +1,6 @@
 import { DREAM_LIMITS } from "./dream-syntax";
 import { MEASURE_PROFILES, UNITS_PER_METER, CAR_PROPORTION_RULES, MEASURE_KINDS } from "./measure";
+import {NPC_LIMITS} from './agents';
 
 // This table drives parsing, canonical field order and the model's vocabulary export.
 export interface DreamCommand { contexts: readonly string[]; id: boolean; fields: Readonly<Record<string,string>>; block?: string }
@@ -31,7 +32,10 @@ export const DREAM_V2_COMMANDS: Readonly<Record<string,DreamCommand>> = Object.f
   beam: command("object visual",true,{shape:"box|cylinder|capsule",material:"ref",from:"v3",to:"v3",width:"n",depth:"n",taper:"n?",deform:"deform?",motion:"part_motion?"}),
   route: command("top",true,{kind:"rail|path|water|air|ambient",mode:"loop|shuttle",speed:"n",altitude:"n?",wait_s:"n?",width:"n?",surface:"trail|cycle|paved?"},"path"),
   point: command("path",false,{at:"point"}),
-  place: command("top",true,{object:"ref",at:"v2?",route:"ref?",offset:"n?",scale:"n?",heading_deg:"n?"}),
+  place: command("top",true,{object:"ref",at:"v2?",route:"ref?",offset:"n?",scale:"n?",heading_deg:"n?",role:"prop|npc|controllable?",behavior:"ref?"}),
+  behavior: command('top',true,{start:'ref'},'behavior'),
+  state: command('behavior',true,{action:'idle|patrol|perform',face:'none|player?'},'npc_state'),
+  on: command('npc_state',true,{event:'after|near_player|far_player',to:'ref',seconds:'n?',radius:'n?'}),
   watercourse: command("top",true,{level:"n",depth:"n",bank:"n",color:"color",flow:"v2"},"path"),
   world: command("top",false,{size:"v2",spawn:"v2",heading_deg:"n",player:"ref?"}),
   road: command("top",true,{width:"n",points:"points2"}),
@@ -63,6 +67,7 @@ export const DREAM_V2_CONTRACT = {
   expressions:"finite numbers, constants, + - * /, sin(degrees), cos(degrees); no general code",
   types:{n:"numeric expression",v2:"[n,n]",v3:"[n,n,n]",nums:"[n,...]",symbols:"[symbol,...]",point:"[n,n] or [n,n,n]",points2:"[[n,n],...]",colors:"[#rrggbb,#rrggbb]",color:"#rrggbb",ref:"symbol ID",symbol:"identifier",text:'"JSON-escaped string"',bool:"true|false",optional:"type suffix ?",variants:"enum values separated by |; other types are nested constructor calls"},
   limits:DREAM_LIMITS,projectLimits:DREAM_PROJECT_LIMITS,commands:DREAM_V2_COMMANDS,
+  agents:{limits:NPC_LIMITS,roles:{prop:'passive scenery, no route or behavior',controllable:'requires rideable control capability; parked until player boards',npc:'engine-owned route or behavior; driver-capable NPC cannot be boarded, passenger-only seats remain available'},legacy:'omitted role infers controllable from control capability, otherwise npc from route, otherwise prop',program:'behavior ID is file-local; states and transition targets are local to that behavior; all states reachable from start',actions:{idle:'rest joints and pause route clock',patrol:'advance placement route and animate while moving',perform:'animate joints in place with route clock paused'},events:{after:'only seconds, since state entry',near_player:'only radius; 3D distance <= radius',far_player:'only radius; 3D distance >= radius'},execution:'one transition per fixed tick, first matching declaration wins; elapsed resets on transition; per-instance clocks live outside Scene; patrol resumes without teleport; face=player turns stationary actors at 2.5 rad/s',boundary:'data-only bounded state machines; no scripts, pathfinding, generated input profiles or model calls; root world.player remains the original car'},
   urbanGround:{streets:32,surfaces:64,markings:128,streetLength:60000,markingLength:40000,street:{anchors:[2,16],width:[60,180],sidewalkPerSide:[0,40],minimumSegment:80,geometry:'open orthogonal polyline; joined square intersections',acceptance:'every component reaches racing road; carriageways clear of solids/water; dedicated paths remain separate'},surface:{points:[3,64],area:1000000,extent:2000,geometry:'simple polygon; declaration order overlays; cannot cover streets'},marking:{points:[2,64],width:[.5,12],closedMinimum:3,block:'point/let/repeat; omit repeated first point'},semantics:'visual ground follows terrain; streets add normal road grip; no generated controllers, flattening, bridges or traffic'},
   proportions:{unitsPerMeter:UNITS_PER_METER,profiles:MEASURE_PROFILES,relativeToPlayerCar:CAR_PROPORTION_RULES,rule:"measure sets one rest-pose extent; uniform scale preserves shape, physics and attachments. place.scale is 0.5..2 variation and must stay in the profile range. kind=custom permits deliberate fantasy sizes. Omit measure only for legacy local-unit assets."},
   modules:{registry:"host-supplied module ID to Dream 2 text; no file/URL resolution",asset:"imports one exported object only, under a local alias",include:"merges world data only; symbols remain file-local",errors:"module ID accompanies nested diagnostics; failure returns no partial world"},

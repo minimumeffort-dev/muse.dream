@@ -1,4 +1,5 @@
 import {routePath} from "../scene/routes";
+import {initialNpcs,stepNpcs,type NpcState} from './npcs';
 import {onStreet} from '../scene/streets';
 import {distanceToRoad} from "../scene/road";
 import { playerHeight } from "../scene/measure";
@@ -80,6 +81,7 @@ export interface CarState {
   control:PlayerControl;
   /** Only unoccupied vehicles are stored here; the active body is this state. */
   vehicles:ParkedVehicle[];
+  npcs:NpcState[];
   distance:number;pitch:number;bank:number;
 }
 
@@ -124,7 +126,7 @@ export type CarTuning={ [K in keyof typeof TUNING]:number };
 
 export function createCarAtSpawn(scene: Scene): CarState {
   return {
-    control:{kind:"car"},vehicles:[],distance:0,pitch:0,bank:0,
+    control:{kind:"car"},vehicles:[],npcs:initialNpcs(scene),distance:0,pitch:0,bank:0,
     x: scene.spawn.x,
     y: scene.spawn.y,
     vx: 0,
@@ -157,6 +159,7 @@ export function resetCar(state: CarState, scene: Scene, resetRace = false): CarS
     ...fresh,
     vehicles:[...state.vehicles.filter(v=>v.id!==null && !(state.control.kind==="vehicle" && v.id===state.control.id)),...(saveVehicle ? [{id:vehicleId,x:state.x,y:state.y,elevation:state.elevation,headingRad:state.headingRad,distance:state.distance}] : [])],
     timeS: state.timeS,
+    npcs:state.npcs.map(n=>({...n})),
     lap: state.lap,
     boostReadyAtS: { ...state.boostReadyAtS },
     props: state.props.map((p) => ({ ...p })),
@@ -205,6 +208,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
   const tuning=world.tuning??TUNING;
   const s: CarState = {
     ...state,
+    npcs:stepNpcs(state,dt,scene),
     boostReadyAtS: { ...state.boostReadyAtS },
     boostedThisStep: false,
     landingSpeed: 0,

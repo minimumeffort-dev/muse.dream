@@ -20,6 +20,12 @@ describe('Dream syntax highlighting',()=>{
     for(const [kind,value] of [['keyword','part'],['field','material'],['field','taper'],['number','.2'],['number','3e2'],['color','#77a05b'],['symbol','leaf'],['boolean','true']])
       expect(html).toContain(`<span class="dream-${kind}">${value}</span>`);
   });
+  it('highlights NPC vocabulary without swallowing identifier prefixes',()=>{
+    const html=highlight('behavior stroll(start=walking){state walking(action=patrol){on notice(event=near_player,to=watching,radius=65);}} place neighbor(object=person,role=npc,behavior=stroll);');
+    for(const word of ['behavior','state','on'])expect(html).toContain(`class="dream-keyword">${word}</span>`);
+    for(const word of ['role','behavior','action','event','to','radius'])expect(html).toContain(`class="dream-field">${word}</span>`);
+    expect(highlight('stateful onlooker behavior_tree')).not.toContain('dream-keyword');
+  });
   it('tracks the generated compiler vocabulary',()=>{
     const contract=JSON.parse(readFileSync('docs/dream-v2-contract.json','utf8'));
     expect(Object.keys(contract.commands)).toEqual(Object.keys(DREAM_V2_COMMANDS));

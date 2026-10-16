@@ -77,7 +77,7 @@ describe("Dream world authoring",()=>{
   it("rejects routes without a safe world footprint or water support",()=>{
     expect(validateScenePlayability(doc,world.roadMask,11)).toEqual([]);
     const boat=doc.objects.find(o=>o.id==="lake_boat")!;
-    const legacyObjects=doc.objects.map(o=>o.id===boat.id ? {...o,spec:objectDslSchema.parse({...o.spec,rideable:{seat:[18,12,0]}})} : o);
+    const legacyObjects=doc.objects.map(o=>o.id===boat.id ? {...o,role:undefined,spec:objectDslSchema.parse({...o.spec,rideable:{seat:[18,12,0]}})} : o);
     const invalid=parseScene({...doc,objects:legacyObjects,routes:doc.routes.map(r=>r.id===boat.route!.id ? {...r,points:[{x:2400,y:2200},{x:2600,y:2200},{x:2600,y:2400}]} : r)});
     expect(validateScenePlayability(invalid,world.roadMask,11)).toContainEqual(expect.objectContaining({code:"route-not-clear"}));
     expect(()=>parseScene({...doc,objects:[{...boat,route:{id:"absent",offset:0}}]})).toThrow("existing route");
@@ -86,7 +86,7 @@ describe("Dream world authoring",()=>{
   it("rejects a boat crossing a bridge deck even when its side rails are disabled",()=>{
     const routes=doc.routes.map(r=>r.id==="lake_trip" ? {...r,points:[{x:3000,y:2370},{x:3100,y:2370},{x:3100,y:2450},{x:3000,y:2450}]} : r);
     const landscape=doc.terrain.landscape!,bridges=landscape.bridges.filter(b=>b.id!=="meadow_footbridge");
-    const objects=doc.objects.map(o=>o.id==="lake_boat" ? {...o,spec:objectDslSchema.parse({...o.spec,rideable:{seat:[18,12,0]}})} : o);
+    const objects=doc.objects.map(o=>o.id==="lake_boat" ? {...o,role:undefined,spec:objectDslSchema.parse({...o.spec,rideable:{seat:[18,12,0]}})} : o);
     const clear=parseScene({...doc,objects,routes,terrain:{...doc.terrain,landscape:{...landscape,bridges}}});
     expect(validateScenePlayability(clear,world.roadMask,11)).toEqual([]);
     const blocked=parseScene({...clear,terrain:{...clear.terrain,landscape:{...landscape,bridges:landscape.bridges.map(b=>b.id==="meadow_footbridge" ? {...b,rails:false} : b)}}});

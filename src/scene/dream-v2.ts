@@ -104,7 +104,7 @@ export class ParserV2 extends Parser {
         case "asset":program.assets!.push(node);break;
         case "include":program.includes!.push(node);break;
         case "route":program.routes.push({token,name,kind:wordField(node,"kind"),mode:wordField(node,"mode"),speed:num("speed"),altitude:node.fields.has("altitude") ? num("altitude") : undefined,wait:node.fields.has("wait_s") ? num("wait_s") : undefined,width:node.fields.has("width") ? num("width") : undefined,surface:node.fields.has("surface") ? wordField(node,"surface") : undefined,block:lowerBlock(node.block!)});break;
-        case "place":program.places.push({token,name,assembly:wordField(node,"object"),at:node.fields.get("at") as Expr[]|undefined,route:node.fields.has("route") ? wordField(node,"route") : undefined,offset:node.fields.get("offset") as Expr|undefined,scale:node.fields.get("scale") as Expr|undefined,heading:node.fields.get("heading_deg") as Expr|undefined});break;
+        case "place":program.places.push({token,name,assembly:wordField(node,"object"),at:node.fields.get("at") as Expr[]|undefined,route:node.fields.has("route") ? wordField(node,"route") : undefined,offset:node.fields.get("offset") as Expr|undefined,scale:node.fields.get("scale") as Expr|undefined,heading:node.fields.get("heading_deg") as Expr|undefined,role:node.fields.has("role") ? wordField(node,"role") as "prop"|"npc"|"controllable" : undefined,behavior:node.fields.has("behavior") ? wordField(node,"behavior") : undefined});break;
         case "watercourse":program.waters.push({token,name,level:num("level"),depth:num("depth"),bank:num("bank"),color:wordField(node,"color"),flow:listField(node,"flow"),block:lowerBlock(node.block!)});break;
         default:program.layout.push(node);
       }
@@ -189,7 +189,7 @@ function validateReferences(nodes:DreamNode[]):void {
         if(((node.fields.get("args") as Expr[]|undefined)??[]).length!==params.length)fail(`component '${target.id}' expects ${params.length} arguments`,node.token,"E_ARITY");
       }
       if(node.kind==="place"){
-        reference(node,"object","object");if(node.fields.has("route"))reference(node,"route","route");
+        reference(node,"object","object");if(node.fields.has("route"))reference(node,"route","route");if(node.fields.has("behavior"))reference(node,"behavior","behavior");
         if(Number(node.fields.has("at"))+Number(node.fields.has("route"))!==1)fail("place needs exactly one of at or route",node.token,"E_PLACEMENT");
         if(node.fields.has("offset") && !node.fields.has("route"))fail("offset requires a route",node.token,"E_PLACEMENT");
         if(node.fields.has("heading_deg") && node.fields.has("route"))fail("heading_deg applies to at placements; a route owns its actor heading",{...node.token,path:`${node.token.path}/heading_deg`},"E_PLACEMENT");

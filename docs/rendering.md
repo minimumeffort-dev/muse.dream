@@ -30,8 +30,18 @@ These measurements come from the development machine. Lower-powered laptop perfo
 
 ## The planned-world expansion
 
-The expanded world has a little over twice the former area, with 715 placements and 83 assemblies. Street carriageways are unioned before triangulation; sidewalks subtract the entire network, leaving open junctions. Carriageways, sidewalks, surfaces and paint retain local culling tiles. Static buildings and visitors use compacted, instanced assets. Grass samples scale with area to retain density; surfaces reserve their footprint so grass stays off courts, driveways and pitches.
+The expanded world has a little over twice the former area, with 715 placements and 83 assemblies. Street carriageways are unioned before triangulation; sidewalks subtract the entire network, leaving open junctions. Carriageways, sidewalks, surfaces and paint retain local culling tiles. Static buildings use compacted, instanced assets; programmable visitors use compacted actor meshes so they can turn toward the player. Grass samples scale with area to retain density; surfaces reserve their footprint so grass stays off courts, driveways and pitches.
 
 For a fixed comparison render size, the development profiler accepts `profile-dpr=1` through `1.5`. Production keeps its normal device-pixel-ratio policy. Match the drawing buffer, browser viewport and camera between runs. Add `test-driving=town` to profile a clear street in the dense new district; `suburbs` and `sports` are also development review starts. These helpers change the inspection pose, not the production spawn.
 
 The [expansion evidence](evidence/urban-world/verification.md) records raw original-start and town measurements, screenshots, geometry checks and the media audit. More world area does not imply that all its geometry is submitted each frame: the entire accepted scene stays resident, while existing frustum culling skips draws outside the visible and shadow views. These results do not replace testing on lower-powered hardware.
+
+## Bounded NPC updates
+
+The r23 world adds explicit actor roles and per-instance behavior clocks while keeping
+the existing route and joint budgets. The [NPC check](evidence/npc-programs/verification.md)
+repeats the 1280 × 720, DPR 1 town drive with 60 warm-up and 300 measured frames.
+Mean CPU preparation/submission was 2.05 ms and GPU time 1.02 ms; the earlier town
+run recorded 1.94 ms and 1.01 ms. Draw calls remained about 172. These are single
+local runs with normal timing variance, not a performance guarantee. No quality,
+particle, shadow or resident-world settings were reduced.

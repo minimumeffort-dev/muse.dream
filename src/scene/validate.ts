@@ -1,4 +1,5 @@
 import {controlOf} from "./object-dsl";
+import {controlFor,isActor,roleOf} from "./agents";
 import { assemblyHorizontalRadius, playerHeight, measuredScale, CAR_PROPORTION_RULES } from "./measure";
 import { roadPoints, roadFrames, bridgeFitsRoad, ROAD_CURB_WIDTH, distanceToRoad } from "./road";
 import { SpatialGrid } from "../sim/spatial";
@@ -86,7 +87,7 @@ export function validateScenePlayability(
     ...scene.objects.map((o) => o.id),
     ...(scene.terrain.landscape?.waters ?? []).map(w=>w.id),
     ...(scene.terrain.landscape?.bridges ?? []).map(b=>b.id),
-    ...scene.routes.map(r=>r.id),
+    ...scene.routes.map(r=>r.id),...scene.behaviors.map(b=>b.id),
     ...scene.streets.map(r=>r.id),...scene.surfaces.map(r=>r.id),...scene.markings.map(r=>r.id),
   ]) {
     if (ids.has(id)) {
@@ -141,7 +142,8 @@ export function validateScenePlayability(
 
   // Road quality is validated even when the player may explore off-road.
   // Flood through valid car centers, including solid obstacles, not raw road pixels.
-  const solids = scene.objects.filter((o) => !o.route && !controlOf(o.spec) && archetypeOf(o).interaction === "solid")
+  const stationary=(o:Scene['objects'][number])=>!isActor(o) || roleOf(o)==='npc' && !o.route;
+  const solids = scene.objects.filter((o) => stationary(o) && archetypeOf(o).interaction === "solid")
     .flatMap((o) => objectContacts(scene,o))
     .concat(bridgeRails(scene.terrain).map(rail=>({...rail,bottom:-Infinity})));
   const maxRadius=Math.max(0,...solids.map(o=>o.r)),carHeight=playerHeight(scene);
@@ -216,7 +218,7 @@ export function validateScenePlayability(
       });
       continue;
     }
-    if (object.route || controlOf(object.spec) || archetypeOf(object).interaction !== "solid") continue;
+    if (isActor(object) || archetypeOf(object).interaction !== "solid") continue;
     for (const p of routePoints) {
       const floor=drivingHeight(scene.terrain,p.x,p.y);
       if (objectContacts(scene,object).some(c=>floor<c.top-.05 && floor+carHeight>c.bottom+.05 && Math.hypot(c.x-p.x,c.y-p.y)<c.r+carRadius+2)) {
@@ -232,7 +234,7 @@ export function validateScenePlayability(
   for(const route of scene.routes)if(route.points.some(p=>p.x<40 || p.y<40 || p.x>width-40 || p.y>height-40))
     problems.push({code:"route-not-clear",message:`route "${route.id}" infrastructure must stay inside the world`});
   // Explicit width reserves infrastructure, including paths with no moving actor.
-  const pathContacts=scene.objects.filter(o=>!o.route && !controlOf(o.spec) && archetypeOf(o).interaction!=="decor").flatMap(o=>objectContacts(scene,o));
+  const pathContacts=scene.objects.filter(o=>stationary(o) && archetypeOf(o).interaction!=="decor").flatMap(o=>objectContacts(scene,o));
   for(const surface of [...scene.surfaces,...scene.markings])if(surface.points.some(p=>p.x<0 || p.y<0 || p.x>width || p.y>height))
     problems.push({code:'landscape-out-of-bounds',message:`ground feature "${surface.id}" extends outside the world`});
   for(const marking of scene.markings)if(markingPolygons(marking).flat().some(p=>p.x<0 || p.y<0 || p.x>width || p.y>height))
@@ -286,7 +288,7 @@ export function validateScenePlayability(
       problems.push({code:"route-not-clear",message:`path "${route.id}" ${reason}`});
     }
   }
-  for(const object of scene.objects.filter(o=>o.route && !controlOf(o.spec))){
+  for(const object of scene.objects.filter(o=>o.route && roleOf(o)==='npc')){
     const route=scene.routes.find(r=>r.id===object.route!.id)!,path=routePath(route),radius=route.kind==="ambient" ? assemblyHorizontalRadius(object.spec as import("./object-dsl").ObjectDsl,object.scale) : objectRadius(object),bodyHeight=objectHeight(object);
     let invalid=false;
     const steps=Math.ceil(path.length/12);
@@ -315,7 +317,14 @@ export function validateScenePlayability(
   }
 
   const parkedContacts=actorContacts(scene,0);
-  for(const object of scene.objects.filter(o=>controlOf(o.spec))){
+  for(const object of scene.objects.filter(o=>roleOf(o)==='npc' && !o.route)){
+    const p=actorPose(scene,object,0),radius=assemblyHorizontalRadius(object.spec as import('./object-dsl').ObjectDsl,object.scale),height=objectHeight(object);
+    const wet=Array.from({length:9},(_,i)=>i===8 ? p : {x:p.x+Math.cos(i*Math.PI/4)*radius,y:p.y+Math.sin(i*Math.PI/4)*radius}).some(q=>waterAt(scene.terrain,q.x,q.y));
+    const blocked=[...solidGrid.query(p.x,p.y,radius+maxRadius),...parkedContacts].some(c=>c.id!==object.id && p.elevation<c.top-.05 && p.elevation+height>c.bottom+.05 && Math.hypot(c.x-p.x,c.y-p.y)<radius+c.r);
+    const outside=p.x<radius || p.y<radius || p.x>width-radius || p.y>scene.canonical.height-radius;
+    if(wet || blocked || outside)problems.push({code:'route-not-clear',message:`NPC "${object.id}" needs a dry, unobstructed starting footprint inside the world`});
+  }
+  for(const object of scene.objects.filter(o=>controlFor(o))){
     const pose=actorPose(scene,object,0),radius=objectRadius(object),height=objectHeight(object);
     let invalid=pose.x<radius || pose.y<radius || pose.x>width-radius || pose.y>scene.canonical.height-radius;
     if(controlOf(object.spec)==="boat"){

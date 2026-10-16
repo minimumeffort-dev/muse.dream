@@ -859,5 +859,6 @@
   },
   "streets": [],
   "surfaces": [],
-  "markings": []
+  "markings": [],
+  "behaviors": []
 }

@@ -1,4 +1,4 @@
-import {controlOf} from "../scene/object-dsl";
+import {isActor} from '../scene/agents';
 import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import type { Scene, SceneObject } from "../scene/schema";
@@ -65,7 +65,7 @@ export class WorldScenery {
     const entries: Entry[] = [], prototypes = new Map<string, THREE.Group>();
     const batches = new Map<string, { prototype: THREE.Group; items: { object: SceneObject; entry: Entry }[] }>();
     for (const object of scene.objects) {
-      if(object.route || controlOf(object.spec) || impactOf(object.spec))continue;
+      if(isActor(object) || impactOf(object.spec))continue;
       if (archetypeOf(object).interaction === "knockable") continue;
       const placement=objectPlacement(scene,object),live=hasAnimatedJoints(object.spec) || zonesOf(object.spec).length>0;
       if(live && (!placement.foundation || placement.base-placement.low<=.1)) continue;

@@ -1,0 +1,94 @@
+# Who controls an object?
+
+[Docs](../README.md) / NPCs and control
+
+An assembly describes what something can do. A placement decides who controls it. A bicycle can be parked for you to ride, or belong to an NPC. A pedestrian can follow a route, stop when you approach and look at you. Those choices are Dream 2 data.
+
+| Placement role | Owner | Behavior |
+| --- | --- | --- |
+| `prop` | Nobody | Scenery and physical props. No actor route or NPC program. Mechanical joints and destruction still work. |
+| `controllable` | Player after boarding | Requires a `rideable` control profile. Starts parked; F boards it from nearby dry ground. |
+| `npc` | Engine | An autonomous route or a bounded `behavior` program. A driver-capable NPC cannot be taken over. A passenger-only train seat still works. |
+
+Declare `role` on each new actor placement. For legacy source, omitting it infers controllable from the template's control capability, otherwise NPC from a route, otherwise prop. `world(player=...)` still selects the original car; the walking Explorer is engine-owned. Humanoid possession and custom input profiles are not implemented.
+
+![People composed from shared Dream parts, with faces aligned to local +X](../media/npc-people.jpg)
+
+## A pedestrian who notices you
+
+This complete object-and-actor module compiles on its own and can be included in a world. [Download npc-behavior.dream](../examples/npc-behavior.dream).
+
+```dream
+dream 2;
+material blue(style=toon,colors=[#537eaa,#3c5f87]);
+material skin(style=toon,colors=[#c59774,#a97655]);
+object pedestrian(label="Pedestrian"){
+  measure(kind=person,axis=y,meters=1.8);
+  body(interaction=decor,radius=4,height=18);
+  part torso(shape=capsule,material=blue,at=[0,11,0],size=[5,6,4]);
+  part head(shape=sphere,material=skin,at=[0,16,0],size=[4,4,4]);
+  part nose(shape=sphere,material=skin,at=[2,16,0],size=[1,1,1]);
+  repeat legs(index=i,count=2){
+    joint leg(at=[0,8,i*3-1.5],motion=swing(axis=z,deg=18,hz=.6,phase_deg=i*180)){
+      part shin(shape=capsule,material=blue,at=[0,-4,0],size=[2,8,2]);
+    }
+  }
+}
+route promenade(kind=ambient,mode=loop,speed=9){
+  point(at=[400,400]);
+  point(at=[650,400]);
+  point(at=[650,600]);
+  point(at=[400,600]);
+}
+behavior attentive_walk(start=walking){
+  state walking(action=patrol){
+    on notice(event=near_player,to=watching,radius=65);
+  }
+  state watching(action=idle,face=player){
+    on leave(event=far_player,to=walking,radius=95);
+  }
+}
+place neighbor(object=pedestrian,route=promenade,role=npc,behavior=attentive_walk);
+```
+
+The NPC walks its placement's route until you come within 65 units, or 6.5 metres. It stops, rests its joints and turns toward you. Moving beyond 95 units lets it resume from the same point. The two radii prevent flickering between states at one boundary.
+
+![A pedestrian watching the nearby player in the town square](../media/npc-attention.jpg)
+
+## Program the routine
+
+A `behavior` contains named `state` blocks and a starting state. Each state chooses one action:
+
+| Action | Movement | Animation |
+| --- | --- | --- |
+| `idle` | Hold position; pause route clock | Rest pose |
+| `patrol` | Follow the route on this placement | Run existing joints while moving; rest at route waits |
+| `perform` | Hold position; pause route clock | Run existing joints in place |
+
+`face=player` is available on stationary states. It turns at at most 2.5 radians per second. Author assets facing local +X so their face agrees with their travel heading. Joints respect reduced motion.
+
+Inside a state, `on` selects a transition:
+
+| Event | Required field | Condition |
+| --- | --- | --- |
+| `after` | `seconds` | Elapsed time in this state reaches the duration |
+| `near_player` | `radius` | 3D distance to the active player is at most the radius |
+| `far_player` | `radius` | 3D distance is at least the radius |
+
+Give each transition a stable local ID and `to` state. Conditions are checked in declaration order. The first match wins, at most once per fixed simulation tick. State time resets on entry, including self-transitions. Use `perform → idle → perform` with `after` transitions for activity and rest, as the mock sports players do. These are authored routines, without football or basketball match rules.
+
+Programs are reusable by placements in their source module. State names and targets belong to that program; every state must be reachable from its start. A patrol state requires a route on the placement. `include` merges programs and placements; `asset` imports only object capability data. Programs do not fetch modules, run JavaScript or call a model.
+
+![Basketball players use the same bounded activity and rest program](../media/basketball-court.jpg)
+
+The live world now declares its people, animals, train and player vehicles explicitly. Town and lakeside walkers pause near you; park visitors turn toward you; sports players play, rest and notice you. The baker and naturalist perform their existing joint routines. Wildlife keeps its existing habitat routes.
+
+## Clocks, collisions and limits
+
+Each NPC owns a runtime snapshot: current state, elapsed state time, route time, animation time and heading. It lives beside vehicle and damage state, outside the accepted scene. Switching between walking, car, bicycle, boat, plane and passenger travel advances the same NPC clocks once per tick. Pause freezes them. R preserves them; Start over resets them.
+
+A program-controlled NPC requires a version 2 assembly with a decor or solid cylinder, without a foundation, compound contacts or destruction. Ambient routes still require decor. Ground NPCs follow terrain; stationary people stay upright unless their template requests surface grounding. Complete-world validation checks dry, clear stationary footprints and the full authored route. Solid NPCs participate in actor cylinder contacts; decor people remain nonblocking. There is no runtime pathfinding, obstacle avoidance or actor-to-actor traffic solver. Keep patrol routes clear.
+
+The bounds are 16 programs per linked scene, 32 NPCs, 1–8 states per program and 0–4 transitions per state. Durations are .1–300 seconds; proximity radii are 10–240 world units. Existing caps remain 24 route actors/controllable vehicles and 24 live jointed assemblies including the player. A static NPC without joints does not consume an animation slot.
+
+[Command reference](reference.md#npc-programs) · [Vehicle controls](behavior.md#bodies-contacts-and-boarding) · [Model instructions](../dream-v2-model.txt)

@@ -1,4 +1,5 @@
 dream 2;
+behavior meadow_rest(start=resting){state resting(action=idle){}}
 asset roe_deer(module=fauna,object=roe_deer);
 asset meadow_hare(module=fauna,object=meadow_hare);
 asset copper_fox(module=fauna,object=copper_fox);
@@ -68,14 +69,14 @@ route ridge_kites(kind=ambient,mode=loop,speed=45,altitude=220){
   point(at=[4569,2923]);
   point(at=[4651,3004]);
 }
-place glade_deer(object=roe_deer,route=deer_glade,scale=1);
-place glade_fawn(object=roe_deer,route=deer_glade,offset=50,scale=.8);
-place hollow_fox(object=copper_fox,route=fox_hollow,scale=1);
-place gull_0(object=river_gull,route=river_gulls,offset=0,scale=1);
-place gull_1(object=river_gull,route=river_gulls,offset=60,scale=0.9299999999999999);
-place gull_2(object=river_gull,route=river_gulls,offset=120,scale=0.86);
-place kite_0(object=red_kite,route=ridge_kites,offset=0,scale=1);
-place kite_1(object=red_kite,route=ridge_kites,offset=90,scale=0.94);
-place meadow_hare_0(object=meadow_hare,at=[3072,3116],scale=1,heading_deg=-80);
-place meadow_hare_1(object=meadow_hare,at=[3614,2864],scale=1,heading_deg=30);
-place meadow_hare_2(object=meadow_hare,at=[3639,3310],scale=1,heading_deg=140);
+place glade_deer(object=roe_deer,route=deer_glade,scale=1,role=npc);
+place glade_fawn(object=roe_deer,route=deer_glade,offset=50,scale=.8,role=npc);
+place hollow_fox(object=copper_fox,route=fox_hollow,scale=1,role=npc);
+place gull_0(object=river_gull,route=river_gulls,offset=0,scale=1,role=npc);
+place gull_1(object=river_gull,route=river_gulls,offset=60,scale=0.9299999999999999,role=npc);
+place gull_2(object=river_gull,route=river_gulls,offset=120,scale=0.86,role=npc);
+place kite_0(object=red_kite,route=ridge_kites,offset=0,scale=1,role=npc);
+place kite_1(object=red_kite,route=ridge_kites,offset=90,scale=0.94,role=npc);
+place meadow_hare_0(object=meadow_hare,at=[3072,3116],scale=1,heading_deg=-80,role=npc,behavior=meadow_rest);
+place meadow_hare_1(object=meadow_hare,at=[3614,2864],scale=1,heading_deg=30,role=npc,behavior=meadow_rest);
+place meadow_hare_2(object=meadow_hare,at=[3639,3310],scale=1,heading_deg=140,role=npc,behavior=meadow_rest);

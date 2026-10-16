@@ -20,6 +20,8 @@ The world now covers 800 × 780 metres. The original circuit sits in the country
 
 The layout, buildings, turf, paint and people all come from Dream 2. The sports animations are authored mock routines. There are no match rules, traffic AI or golf controls yet. [Explore the planned world](docs/urban-world.md), or [compile a neighborhood](docs/examples/planned-neighborhood.dream).
 
+People now have explicit NPC roles and small programs written in Dream 2. Walk up to someone in the square: they stop and turn toward you, then continue their walk when you leave. Sports players alternate practice and rest. The same object template can be an NPC or a vehicle you control. [Write an NPC routine](docs/dream/npcs.md).
+
 The HUD keeps the map, vehicle prompts and pause control. There is no lap counter or checkpoint target to follow; explore at your own pace.
 
 Release the throttle and the car coasts to a complete stop on dry, flat ground. Tires hold across ordinary dry slopes instead of slowly creeping sideways. Steeper hills can still roll the car downhill, and ice keeps its lower grip.
@@ -78,7 +80,7 @@ object oak(label="Oak"){
 
 The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation uses Minimum Effort's Manrope and Archivo fonts, warm white, charcoal and yellow, with the same page gutters and spacing. Dream commands, fields, references, colors and expressions are highlighted, with copy buttons for complete examples.
 
-[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 66 assemblies and 534 placements, all authored in Dream 2.
+[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 83 assemblies and 715 placements, all authored in Dream 2.
 
 Objects share physical units. The car is 3.55 metres long, the plane has a 10.8-metre wingspan, and the skateboard is 0.82 metres long. A size declaration scales the geometry, collision body, seats and broken pieces together. The compiler checks proportions too, so a skateboard can't quietly become larger than the car.
 

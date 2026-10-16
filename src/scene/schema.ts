@@ -1,10 +1,10 @@
-import {controlOf} from "./object-dsl";
 import { z } from "zod";
 import { measuredScale, measureProblem } from "./measure";
 import { objectDslSchema, hasAnimatedJoints, MAX_ANIMATED_ASSEMBLIES,impactOf,isReactive } from "./object-dsl";
 import { terrainSchema } from "./terrain";
 import { routeSchema } from "./routes";
 import {streetSchema,surfaceSchema,markingSchema} from './streets';
+import {NPC_LIMITS,roleSchema,behaviorSchema,roleOf,controlFor,agentProblem} from './agents';
 
 /**
  * Versioned scene document: the single contract between geometry/semantics
@@ -76,6 +76,8 @@ export const sceneObjectSchema = z.object({
   /** Resolved uniform scale. Measured assets share the world's physical unit. */
   scale: z.number().finite().min(0.05).max(4),
   headingRad:z.number().finite().min(-Math.PI*2).max(Math.PI*2).optional(),
+  role:roleSchema.optional(),
+  behavior:z.string().regex(/^[a-z][a-z0-9_]{0,31}$/).optional(),
   route:z.object({id:z.string().min(1).max(40),offset:z.number().finite().min(0).max(2048).default(0)}).strict().optional(),
   /** Required when kind is "custom": the invented archetype as data. */
   spec: customSpecSchema.optional(),
@@ -139,6 +141,7 @@ export const sceneSchema = z.object({
   }),
   terrain: terrainSchema.default({ hills: [] }),
   routes:z.array(routeSchema).max(12).default([]),
+  behaviors:z.array(behaviorSchema).max(NPC_LIMITS.programs).default([]),
   streets:z.array(streetSchema).max(32).default([]),
   surfaces:z.array(surfaceSchema).max(64).default([]),
   markings:z.array(markingSchema).max(128).default([]),
@@ -166,7 +169,10 @@ export const sceneSchema = z.object({
   // The standing player character occupies one of the existing live animation slots.
   const animated=scene.objects.filter(object=>hasAnimatedJoints(object.spec)).length+Number(hasAnimatedJoints(scene.player))+1;
   if(animated>MAX_ANIMATED_ASSEMBLIES) ctx.addIssue({code:z.ZodIssueCode.custom,message:`scene exceeds ${MAX_ANIMATED_ASSEMBLIES} animated assemblies`});
-  if(scene.objects.filter(o=>o.route || controlOf(o.spec)).length>24) ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 24 route actors or controllable vehicles"});
+  if(scene.objects.filter(o=>o.route || controlFor(o)).length>24) ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 24 route actors or controllable vehicles"});
+  if(scene.objects.filter(o=>roleOf(o)==='npc').length>NPC_LIMITS.actors)ctx.addIssue({code:'custom',message:'scene exceeds 32 NPCs'});
+  if(new Set(scene.behaviors.map(b=>b.id)).size!==scene.behaviors.length)ctx.addIssue({code:'custom',message:'duplicate behavior ID'});
+  for(const object of scene.objects){const problem=agentProblem(object,scene.behaviors,scene.routes);if(problem)ctx.addIssue({code:'custom',message:`${object.id}: ${problem}`});}
   const reactive=scene.objects.filter(o=>isReactive(o.spec));
   if(reactive.length>24)ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 24 impact objects"});
   const fragments=reactive.reduce((sum,{spec})=>{
