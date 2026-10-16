@@ -15,6 +15,10 @@ describe("published Dream documentation",()=>{
     const example=pages['../docs/dream/quickstart.md']!.match(/```dream\n([\s\S]*?)```/)![1]!;
     expect(example.trim()).toBe(examples['../docs/examples/toppling-tree.dream']!.trim());
   });
+  it('keeps the material-parameter example identical to its runnable source',()=>{
+    const blocks=[...pages['../docs/dream/examples.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
+    expect(blocks).toContain(examples['../docs/examples/material-components.dream']!.trim());
+  });
   it("keeps the object's complete wood example identical to its runnable source",()=>{
     const example=pages['../docs/dream/objects.md']!.match(/```dream\n(dream 2;[\s\S]*?)```/)![1]!;
     expect(example.trim()).toBe(examples['../docs/examples/tapered-wood.dream']!.trim());

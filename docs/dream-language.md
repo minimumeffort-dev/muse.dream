@@ -23,6 +23,8 @@ object small_table(label="Small table"){
 
 The model-facing contract uses named fields, explicit IDs and a bounded set of commands. The [reference](dream/reference.md) lists them all. The [object guide](dream/objects.md) explains composition and scale, [worlds](dream/worlds.md) covers layout and modules, and [behavior](dream/behavior.md) covers interaction and destruction. [NPCs and control](dream/npcs.md) covers placement ownership and reusable state machines.
 
+For agent authoring, request a task-specific packet with `node scripts/dream.mjs context --features objects,voxels`. It includes compiler-owned vocabulary and relevant instructions, while all acceptance checks remain in force. Components now accept typed material parameters alongside numeric parameters: [reuse geometry with different finishes](examples/material-components.dream). These are compatible Dream 2 additions; existing source remains valid.
+
 For a provider integration, use the [model instructions](dream-v2-model.txt), [command export](dream-v2-contract.json) and [generation/repair guide](dream/model-authoring.md). The command export is generated from the parser table. [The EBNF](dream-v2.ebnf) describes structural syntax; the compiler enforces contexts, references and geometry budgets.
 
 The live world uses `voxel_world(object_cell=1,ground_cell=8,height_step=1);` to construct all assets and landscape surfaces from voxels. See [whole-world construction](whole-world-voxels.md). Explicit voxel volumes add bounded `fill` and `cut` operations, cached greedy surface meshing and optional fracture chunks. Start with the [voxel guide](dream/voxels.md) and [complete wall](examples/voxel-wall.dream). Physical contacts remain explicit and separate from occupied cells.

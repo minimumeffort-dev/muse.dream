@@ -127,7 +127,7 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
     let impact:ObjectDslV2["impact"];
     let measure:ObjectDslV2["measure"];
     const breakZones:NonNullable<ObjectDslV2["breakZones"]>=[];
-    const walk = (block: Statement[], frame: Frame, inherited: Map<string, number>, stack: string[] = [], root = false, depth = 0) => {
+    const walk = (block: Statement[], frame: Frame, inherited: Map<string, number>, stack: string[] = [], root = false, depth = 0,materials=program.materials) => {
       if (depth > DREAM_LIMITS.nesting) fail("expanded nesting exceeds 16", block[0]?.token,"E_BUDGET");
       const env = new Map(inherited), localNames = new Set<string>();
       for (const statement of block) {
@@ -159,11 +159,11 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
             zoneOrigins.push(token);
             const zoneId=id(),values=statement.damage!.args.map(number),position=vector(statement.at,env);
             breakZones.push({id:zoneId,position:position.toArray(),radius:number(statement.args![0]!),height:number(statement.args![1]!),impact:{kind:"break",speed:values[0]!,scatter:values[1]!,lift:values[2]!,spin:values[3]!,lifetime:values[4]!,...(statement.damage!.pattern ? {pattern:statement.damage!.pattern as "scatter"|"splinter"|"crumble"} : {})}});
-            walk(statement.block!,{...identity(),position,zone:zoneId,path},env,stack,false,depth+1);break;
+            walk(statement.block!,{...identity(),position,zone:zoneId,path},env,stack,false,depth+1,materials);break;
           }
           case "fragment":
             if(frame.fragment)fail("fragment groups cannot nest",token,"E_CONTEXT");
-            walk(statement.block!,{...frame,fragment:id(),path},env,stack,false,depth+1);break;
+            walk(statement.block!,{...frame,fragment:id(),path},env,stack,false,depth+1,materials);break;
           case "rideable": if(rideable)fail("duplicate rideable",token);rideable={seat:statement.at ? vector(statement.at,env).toArray() : [0,16,0],...(statement.control ? {control:statement.control as NonNullable<ObjectDslV2["rideable"]>["control"]} : {})};break;
           case "emit":if(emitter)fail("duplicate emitter",token);emitter={kind:statement.name as "steam",position:vector(statement.at,env).toArray(),rate:number(statement.value!)};break;
           case "contact":
@@ -175,7 +175,7 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
           case "repeat": {
             const count = number(statement.value!);
             if (!Number.isInteger(count) || count < 0 || count > DREAM_LIMITS.repeat) fail("repeat count must be an integer from 0 to 32", token);
-            for (let i = 0; i < count; i++) walk(statement.block!, {...frame,path:[...path,String(i)]}, new Map(env).set(statement.name!, i), stack, false, depth + 1); break;
+            for (let i = 0; i < count; i++) walk(statement.block!, {...frame,path:[...path,String(i)]}, new Map(env).set(statement.name!, i), stack, false, depth + 1,materials); break;
           }
           case "use": {
             const component = program.components.get(statement.name!);
@@ -184,9 +184,13 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
             if (statement.args!.length !== component.params.length) fail(`'${statement.name}' expects ${component.params.length} arguments`, token);
             const scope = new Map(globals);
             component.params.forEach((param, i) => scope.set(param, number(statement.args![i]!)));
-            walk(component.block, {...transform(frame, statement, env),path}, scope, [...stack, statement.name!], false, depth + 1); break;
+            const formals=component.materials??[],actuals=statement.materials??[];
+            const bindings=formals.length ? new Map(program.materials) : program.materials;
+            if(formals.length!==actuals.length)fail(`'${statement.name}' expects ${formals.length} materials`,token,'E_ARITY');
+            formals.forEach((param,i)=>{const material=materials.get(actuals[i]!);if(!material)fail(`unknown material '${actuals[i]}'`,token,'E_REFERENCE');bindings.set(param,material);});
+            walk(component.block, {...transform(frame, statement, env),path}, scope, [...stack, statement.name!], false, depth + 1,bindings); break;
           }
-          case "group": walk(statement.block!, {...transform(frame, statement, env),path}, env, stack, false, depth + 1); break;
+          case "group": walk(statement.block!, {...transform(frame, statement, env),path}, env, stack, false, depth + 1,materials); break;
           case "joint": {
             if (joints.length >= 12) fail("joint budget exceeds 12", token,"E_BUDGET");
             const local = transform(frame, statement, env), jointId = id(), motion = statement.motion;
@@ -196,11 +200,11 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
               ...(motion?.kind==='roll' ? {animation:{kind:'roll' as const,axis:motion.axis as 'x'|'y'|'z',radius:number(motion.args[0]!)*local.scale}} : {}),
               ...(motion?.kind==="open" ? {proximity:{axis:motion.axis as "x"|"y"|"z",angleRad:number(motion.args[0]!)*RAD,radius:number(motion.args[1]!)}} : {}) });
             jointOrigins.push(token);
-            walk(statement.block!, { ...identity(), parent: jointId, scale: local.scale,fragment:frame.fragment,zone:frame.zone,path }, env, stack, false, depth + 1); break;
+            walk(statement.block!, { ...identity(), parent: jointId, scale: local.scale,fragment:frame.fragment,zone:frame.zone,path }, env, stack, false, depth + 1,materials); break;
           }
           case "part": case "beam": case "voxels": {
             if (parts.length >= 32) fail("part budget exceeds 32", token,"E_BUDGET");
-            const material = program.materials.get(statement.material!);
+            const material = materials.get(statement.material!);
             if (!material) fail(`unknown material '${statement.material}'`, token,"E_REFERENCE");
             let position = vector(statement.at, env), orient = rotation(statement.rotate, env), size = vector(statement.size, env);
             if (kind === "beam") {

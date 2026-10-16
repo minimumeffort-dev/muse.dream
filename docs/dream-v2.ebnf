@@ -53,3 +53,8 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
 (* voxel_world is a singleton top-level world-owner construction policy with
    object_cell, ground_cell and height_step numeric fields. See contract bounds.
    It changes all linked render geometry, not physical contact ownership. *)
+
+(* component.params and component.materials declare separate numeric/material
+   formals, at most eight unique names combined. use.args and use.materials bind
+   exact positional lists. Material actuals resolve in the caller; callees see
+   globals and their own explicit bindings, never implicit caller locals. *)

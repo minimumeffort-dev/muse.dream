@@ -95,7 +95,23 @@ Use `kind=custom` with an explicit axis and dimension for unusual inventions or 
 
 ## Reuse a shape without copying it
 
-`component` accepts numeric parameters. `use` expands it at a named site. `repeat` supplies an index for bounded variation. The [breakable bench](../examples/breakable-bench.dream) uses repeats to place its slats and frames.
+`component` accepts numeric and material parameters. `use` expands it at a named site. The same geometry can become oak furniture, painted furniture or four people in different uniforms without copying the assembly. `repeat` supplies an index for bounded variation.
+
+```dream
+component leg(params=[h],materials=[finish]){
+  beam post(shape=box,material=finish,from=[0,0,0],to=[0,h,0],width=4,depth=4);
+}
+```
+
+Inside an object or another component, pass numbers and material IDs in their separate lists:
+
+```dream
+use support(component=leg,args=[24],materials=[timber],at=[-22,0,-12]);
+```
+
+[Two complete tables](../examples/material-components.dream) reuse a table component and pass its finish to the nested leg component. Both lists have exact arity, in declaration order. There are at most eight unique parameter names combined. Numeric and material parameters cannot share a name; material parameters cannot shadow global numeric constants. They may shadow global materials. Bindings resolve in the caller, and the callee receives globals plus its own explicit bindings. Caller locals do not leak into nested components. Existing numeric-only components keep their meaning.
+
+Parameters work with `part`, `beam` and `voxels`, including geometry inside groups, joints and fragments. Expansion still counts every part and joint; reuse makes the source smaller, not the resulting world's budgets larger. The [breakable bench](../examples/breakable-bench.dream) uses repeats to place its slats and frames.
 
 A `group` applies a rigid position, rotation and uniform scale to its contents. Use `joint` when parts need a connected coordinate frame. Joint transforms don't inherit primitive dimension scaling, so a hand doesn't stretch when an upper arm gets longer. Local constants resolve in order. Components see globals and their parameters, not the caller's local bindings.
 

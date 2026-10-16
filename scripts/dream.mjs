@@ -5,18 +5,25 @@ import { createServer } from 'vite';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const [command,...args]=process.argv.slice(2),write=args.includes('--write'),files=[],directories=[];
-let server;
+let server,features;
 try {
   for(let i=0;i<args.length;i++){
     if(args[i]==='--write')continue;
+    if(args[i]==='--features' && args[i+1] && !args[i+1].startsWith('--')){
+      if(features)throw Object.assign(new Error('Duplicate --features'),{code:'E_USAGE'});
+      features=args[++i].split(',');continue;
+    }
     if(args[i]==='--modules' && args[i+1] && !args[i+1].startsWith('--'))directories.push(resolve(args[++i]));
     else if(args[i].startsWith('--'))throw Object.assign(new Error('Unknown or incomplete option: '+args[i]),{code:'E_USAGE'});
     else files.push(args[i]);
   }
-  if(!['check','compile','format','migrate','contract'].includes(command) || (command==='contract' ? files.length!==0 || write : files.length!==1) || write && !['format','migrate'].includes(command))
-    throw Object.assign(new Error('Usage: npm run dream -- check|compile|format|migrate file.dream [--modules directory] [--write]; or contract'),{code:'E_USAGE'});
+  if(!['check','compile','format','migrate','contract','context'].includes(command) || (['contract','context'].includes(command) ? files.length!==0 || write || directories.length>0 : files.length!==1) || features && command!=='context' || write && !['format','migrate'].includes(command))
+    throw Object.assign(new Error('Usage: npm run dream -- check|compile|format|migrate file.dream [--modules directory] [--write]; contract; or context [--features objects,world,...|all]'),{code:'E_USAGE'});
   server=await createServer({root,configFile:false,logLevel:'silent',server:{middlewareMode:true,watch:null},appType:'custom'});
-  if(command==='contract') {
+  if(command==='context') {
+    const {dreamAgentContext}=await server.ssrLoadModule('/src/scene/dream-agent.ts');
+    process.stdout.write(JSON.stringify(dreamAgentContext(features))+'\n');
+  } else if(command==='contract') {
     const {DREAM_V2_CONTRACT}=await server.ssrLoadModule('/src/scene/dream-contract.ts');
     process.stdout.write(JSON.stringify(DREAM_V2_CONTRACT,null,2)+'\n');
   } else {

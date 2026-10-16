@@ -100,7 +100,7 @@ export class ParserV2 extends Parser {
           program.materials.set(name,objectMaterialSchema.parse({shaderStyle:style==="grain" ? "paper-grain" : style,colorA:colors[0],colorB:colors[1],...(node.fields.has("night") ? {nightColor:wordField(node,"night")} : {})}));break;
         }
         case "let":program.globals.push({token,kind:"let",name,value:num("value")});break;
-        case "component":program.components.set(name,{token,params:(node.fields.get("params") as Expr[]|undefined)?.map(e=>e.name!)??[],block:lowerBlock(node.block!)});break;
+        case "component":program.components.set(name,{token,params:(node.fields.get("params") as Expr[]|undefined)?.map(e=>e.name!)??[],materials:(node.fields.get('materials') as Expr[]|undefined)?.map(e=>e.name!)??[],block:lowerBlock(node.block!)});break;
         case "object":program.objects.push({token,id:name,name:field(node,"label") as string,block:lowerBlock(node.block!)});break;
         case "asset":program.assets!.push(node);break;
         case "include":program.includes!.push(node);break;
@@ -135,6 +135,7 @@ export function lowerBlock(nodes:DreamNode[]):Statement[] {
     if(node.fields.has("at"))statement.at=v("at");
     if(node.fields.has("motion"))statement.motion=motion(field(node,"motion") as DreamNode);
     if(node.fields.has('bone'))statement.bone=wordField(node,'bone');
+    if(node.fields.has('materials'))statement.materials=listField(node,'materials').map(e=>e.name!);
     if(node.fields.has("deform")){const deform=field(node,"deform") as DreamNode;statement.deform=[exprField(deform,"seed"),exprField(deform,"amount")];}
     switch(kind) {
       case "let":statement.value=n("value");break;
@@ -177,23 +178,29 @@ function validateReferences(nodes:DreamNode[]):void {
     if(target?.kind!==kind && !(kind==="object" && target?.kind==="asset"))fail(`'${key}' needs an existing ${kind} ID; found '${id}'`,{...node.token,path:`${node.token.path}/${key}`},"E_REFERENCE",nodes.filter(n=>n.kind===kind || kind==="object" && n.kind==="asset").map(n=>n.id!).sort());
     return target;
   };
-  const walk=(block:DreamNode[],outer:Set<string>)=>{
+  const walk=(block:DreamNode[],outer:Set<string>,materialScope=new Set<string>())=>{
     const scope=new Set(outer);
     for(const node of block) {
       if(node.kind==="component") {
         const params=((node.fields.get("params") as Expr[]|undefined)??[]).map(e=>e.name!);
-        if(params.length>8 || new Set(params).size!==params.length)fail("components allow at most 8 unique parameters",node.token,"E_PARAMETERS");
-        params.forEach(p=>checkSymbol(p,node.token));walk(node.block!,new Set([...globals,...params]));continue;
+        const materials=((node.fields.get('materials') as Expr[]|undefined)??[]).map(e=>e.name!),names=[...params,...materials];
+        if(names.length>8 || new Set(names).size!==names.length || materials.some(p=>globals.has(p)))fail("components allow at most 8 unique numeric/material parameters; material parameters cannot shadow numbers",node.token,"E_PARAMETERS");
+        names.forEach(p=>checkSymbol(p,node.token));walk(node.block!,new Set([...globals,...params]),new Set(materials));continue;
       }
       for(const [key,value] of node.fields) {
         const type=commands[node.kind]!.fields[key]!.replace(/\?$/,"");
         if(numericTypes.has(type) || type==="position2" && Array.isArray(value))checkNumbers(value,scope);
         if(isNode(value))for(const [innerKey,inner] of value.fields)if(commands[value.kind]!.fields[innerKey]==="n")checkNumbers(inner,scope);
       }
-      if(node.kind==="part" || node.kind==="beam" || node.kind==="voxels")reference(node,"material","material");
+      if((node.kind==="part" || node.kind==="beam" || node.kind==="voxels") && !materialScope.has(wordField(node,'material')))reference(node,"material","material");
       if(node.kind==="use"){
         const target=reference(node,"component","component"),params=(target.fields.get("params") as Expr[]|undefined)??[];
-        if(((node.fields.get("args") as Expr[]|undefined)??[]).length!==params.length)fail(`component '${target.id}' expects ${params.length} arguments`,node.token,"E_ARITY");
+        if(((node.fields.get("args") as Expr[]|undefined)??[]).length!==params.length)fail(`component '${target.id}' expects ${params.length} arguments [${params.map(p=>p.name).join(',')}]`,{...node.token,path:`${node.token.path}/args`},"E_ARITY",params.map(p=>p.name!));
+        const formals=(target.fields.get('materials') as Expr[]|undefined)??[],actuals=(node.fields.get('materials') as Expr[]|undefined)??[];
+        if(actuals.length!==formals.length)fail(`component '${target.id}' expects materials [${formals.map(p=>p.name).join(',')}]`,{...node.token,path:`${node.token.path}/materials`},'E_ARITY',formals.map(p=>p.name!));
+        actuals.forEach((value,index)=>{
+          if(!materialScope.has(value.name!) && definitions.get(value.name!)?.kind!=='material')fail(`unknown material '${value.name}'`,{...value.token,path:`${node.token.path}/materials[${index}]`},'E_REFERENCE',[...new Set([...materialScope,...nodes.filter(n=>n.kind==='material').map(n=>n.id!)])].sort());
+        });
       }
       if(node.kind==="place"){
         reference(node,"object","object");if(node.fields.has("route"))reference(node,"route","route");if(node.fields.has("behavior"))reference(node,"behavior","behavior");
@@ -206,7 +213,7 @@ function validateReferences(nodes:DreamNode[]):void {
       if(node.kind==='place' && node.fields.has('phase_s') && !node.fields.has('route'))fail('phase_s requires a route',node.token,'E_PLACEMENT');
       if(node.kind==="world" && node.fields.has("player"))reference(node,"player","object");
       if(node.kind==="let")scope.add(node.id!);
-      if(node.block)walk(node.block,node.kind==="repeat" ? new Set([...scope,wordField(node,"index")]) : scope);
+      if(node.block)walk(node.block,node.kind==="repeat" ? new Set([...scope,wordField(node,"index")]) : scope,materialScope);
     }
   };walk(nodes,globals);
   const completed=new Set<string>();

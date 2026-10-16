@@ -1,6 +1,5 @@
 import {checkDream,formatDream} from '../scene/dream';
-import instructions from '../../docs/dream-v2-model.txt?raw';
-import {DREAM_V2_CONTRACT} from '../scene/dream-contract';
+import {dreamAgentContext} from '../scene/dream-agent';
 import townSource from '../../docs/examples/town-scenario.dream?raw';
 
 export const DEFAULT_PROMPT='Build a connected town with two agents. Deliver bread to a school, then visit a clinic with limited service capacity. Give each agent a budget of 16, carrying capacity 4 and a deadline of 80 steps. Seed 7.';
@@ -9,7 +8,7 @@ export interface DreamProposal {source:string;provider:'mock';assumptions:string
 export type DreamInterpreter=(request:PromptRequest)=>Promise<DreamProposal>;
 export function modelContext(prompt:string){
   if(!prompt.trim()||prompt.length>4000)throw new Error('Use a prompt of 1–4,000 characters.');
-  return {instructions,contract:DREAM_V2_CONTRACT,prompt,output:'One complete Dream 2 source file. Unsupported intent must stay explicitly unresolved. Never emit executable code.'};
+  return {...dreamAgentContext(['scenarios']),prompt,output:'One complete Dream 2 source file. Unsupported intent must stay explicitly unresolved. Never emit executable code.'};
 }
 /** This labelled local template interpreter is a transport boundary, not an LLM or a semantic parser. */
 export const mockInterpreter:DreamInterpreter=async({prompt,signal})=>{

@@ -1,9 +1,19 @@
-Generate Dream 2 data for a playable interpretation of the user's paper sketch.
+## core
+Generate Dream 2 data from the user's intent: a prompt, sketch or existing revision.
 Return one complete source file starting with dream 2; no markdown or explanation.
-Include at least one object, asset, include or complete world.
+Include at least one object, asset, include, complete world or standalone scenario.
 Use the command contract and only supported fields, contexts and constructors.
 The engine owns rendering, physics and shaders. No JS, module code, URLs or callbacks.
 
+If intent is unsupported, add unresolved id(label="specific unsupported intent");
+in the full-world source. Do not fabricate syntax or silently claim unsupported physics.
+Run node scripts/dream.mjs check file.dream. On failure read code, line, column,
+path, message, expected. Repair the entire source, preserving unrelated IDs and
+content. Only ok:true may be accepted; full worlds also pass scene playability.
+Object-only use compileDream. World fragments use compileDreamWorld. Complete
+playable worlds use compileDreamScene with host-owned identity/hash.
+
+## objects
 Syntax: kind id?(key=value,...); or kind id?(key=value,...){...}
 IDs: lowercase [a-z][a-z0-9_]{0,31}; do not use sin, cos, true, false as IDs.
 Use a unique ID for every top-level declaration and each named item in a block.
@@ -57,11 +67,18 @@ assembly budgets. No controller scripts or independent part orbit callbacks.
 
 Expressions: numbers, scoped constants, + - * /, sin(degrees), cos(degrees).
 Global constants may forward-reference each other without cycles. Local constants
-resolve in order. Components see globals and params, never caller-local names.
+resolve in order. Components see globals and their explicit bindings, never caller-local names.
+component chair(params=[height],materials=[paint]) declares numeric and material
+parameters. use seat(component=chair,args=[24],materials=[oak]) binds both lists
+positionally with exact arity. At most 8 unique names across both lists. Material
+formals cannot shadow global numeric constants or numeric formals. Material actuals
+resolve in the caller; callees see global materials plus only their own bindings.
+Pass a parent material parameter explicitly to a nested use. No dynamic shaders,
+string substitution, implicit material inheritance or changed identity semantics.
 Use repeat id(index=i,count=...) for bounded variation; use explicit use-site IDs.
 
 Budget per source: 65536 characters, 12000 lexer tokens, 2048 expanded statements,
-16 objects, 16 nesting levels, 0..32 repeats, 8 params/component. No recursion.
+16 objects, 16 nesting levels, 0..32 repeats, 8 numeric/material parameters combined per component. No recursion.
 All numeric results finite, abs<=1000000. Combined positive scale<=16.
 Per assembly: 1..32 parts, <=12 joints, joint depth<=4, assembled reach<=256.
 Part size: each .1..128 in object DSL v2; legacy v1 retains .5..128. Beam endpoint length remains >=.5. Use thin parts for glazing, pipes and rails; bodies/contacts remain independent. Final offsets: X/Z -64..64, Y -128..128.
@@ -105,13 +122,26 @@ Water landings stall the aircraft at the surface; R recovers it to its start.
 The engine supplies a standing Explorer and seated traveler from Dream assemblies;
 model output still contains no controller code, input callbacks or physics scripts.
 Steam only: rate_s 1..12, position X/Z -64..64, Y 0..128.
-Bounce: knockable body; restitution in [0.1,0.9], lift in [0.05,0.8].
-Break: solid body; speed 40..400, scatter 0..160, lift 0..180, spin 0..8,
-lifetime 2..8. <=8 static fragments; fragment blocks cannot nest.
-Whole-object impact assemblies cannot have foundations, contacts, seats or emitters.
-Prefer flat ground for scattering props; foundations cannot fill their downhill gaps.
-Topple uses terrain-aware support and can fall on hills.
 
+
+HUMANOID RIGS
+Use joint(...,bone=...) for locomotion, not swing motions on straight stick limbs.
+Exactly 12 unique bindings, measured decor person only. Parent tree:
+root -> spine -> left_shoulder -> left_elbow; mirror right_shoulder/right_elbow.
+root -> left_hip -> left_knee -> left_ankle; mirror right_hip/right_knee/right_ankle.
+Rest frames unrotated, facing +X, +Y up, left +Z. root=[0,positive_height,0],
+spine=[0,nonnegative_height,0], hip=[0,0,signed_width], shoulder=[0,positive_height,signed_width].
+Elbow/knee/ankle=[0,-length,0], length >= .5. Root height >=1.
+Every visual part belongs to a bone; overlap rounded joint caps at elbows/knees.
+No independent part/bone motion, fragments or zones. Keep feet at Y=0 in assembled rest.
+Engine owns walk/run blending, lifted steps, two-bone legs, jump/landing, crawl/tread,
+reduced-motion poses and sports overrides. Body and movement physics stay separate.
+No extra joints, generated controllers, skinning, or terrain foot probes. Existing
+12-joint, depth-4, 32-part and 24-live-assembly caps unchanged. Furnish rejects bone rigs.
+Use examples/humanoid.dream as a complete template; keep binding names, vary geometry,
+colors and measured size. Labels/generated IDs do not choose anatomy or behavior.
+
+## world
 For a full world emit exactly one world and one road, and 2..64 ordered checkpoints.
 world size positive integers <=16384. Host supplies identity, source hash/provenance.
 Player is an object ID with a solid body, no foundation/contacts/seat/emitter/impact/break zones.
@@ -160,14 +190,7 @@ and may pass under a deck only with full hull/body clearance. Boat exits require
 real dry shore; never place a boarding point underneath a deck.
 Hollow buildings/tunnels use separated contacts and overhead clearance.
 
-If intent is unsupported, add unresolved id(label="specific unsupported intent");
-in the full-world source. Do not fabricate syntax or silently claim unsupported physics.
-Run node scripts/dream.mjs check file.dream. On failure read code, line, column,
-path, message, expected. Repair the entire source, preserving unrelated IDs and
-content. Only ok:true may be accepted; full worlds also pass scene playability.
-Object-only use compileDream. World fragments use compileDreamWorld. Complete
-playable worlds use compileDreamScene with host-owned identity/hash.
-
+## modules
 PROJECT MODULES
 asset local_id(module=library_id,object=exported_object_id); imports only an object.
 include district_id(module=module_id); includes that module's world declarations.
@@ -191,7 +214,15 @@ district files. Across reachable files, including entry: <=32 files, depth <=8,
 exactly one world/road layout for compileDreamScene; never split checkpoints or
 terrain across district files. Final merged geometry must pass playability.
 
+## interactions
 DESTRUCTION EXTENSIONS
+Bounce: knockable body; restitution in [0.1,0.9], lift in [0.05,0.8].
+Break: solid body; speed 40..400, scatter 0..160, lift 0..180, spin 0..8,
+lifetime 2..8. <=8 static fragments; fragment blocks cannot nest.
+Whole-object impact assemblies cannot have foundations, contacts, seats or emitters.
+Prefer flat ground for scattering props; foundations cannot fill their downhill gaps.
+Topple uses terrain-aware support and can fall on hills.
+
 break(...,pattern=scatter|splinter|crumble) optionally chooses release motion.
 Absent pattern preserves original scatter. Splinter throws wood parts forward;
 crumble drops masonry near the contact with low lift, spin and rebound.
@@ -214,6 +245,10 @@ contacts and foundations are allowed and survive section damage. Author core
 contacts separately so an intact root cylinder does not block the intended
 opening after a zone breaks. Terrain foundations stay intact.
 
+SHARED INTERACTION RULES
+rule wooden_tables(kind=table,mode=break(speed=90,scatter=62,lift=100,spin=4,lifetime=6,pattern=splinter)); declares an authoritative interaction for every object whose measure.kind matches. At most 16 rules, exactly one owner per category, in the entry file only. Loaded modules cannot declare rules. Apply across local/imported templates, placements and furnishing before object validation. A rule replaces local impact settings. A break rule replaces every existing break-zone impact when zones exist; retained core/foundations remain. Bodies, animation and fragment grouping must be compatible; incompatible assets fail compilation, never silently lose construction. Each placement has independent damage. Scene v1 interactionRules is optional for legacy data, defaults to []; serialized placements must match. Keep 24 reactive placements, 8 fragments per assembly and 128 potential scene fragments. rule does not bypass any budget. Select by measure.kind, never labels/position/randomness. custom is one catchall category, not separate bread/rock/ball types. Current live policies cover tables and benches; other categories keep authored defaults. Existing break/topple/bounce constructors only, no scripts or structural/material simulation. Complete example: examples/interaction-rules.dream.
+
+## city
 Urban layouts: street id(width=100,sidewalk=20,points=[[x,y],...],cycle_width=20);
 Streets use open polylines in any direction, turns <=120 degrees: 2..16 anchors, segments >=80, width 60..180,
 sidewalk 0..40 per side. Optional cycle_width 16..40 adds one lane per side outside
@@ -237,38 +272,6 @@ Scene limits: <=64 surfaces, <=128 markings, <=40000 total marking length.
 Include district modules to merge streets/surfaces/markings as well as placements.
 Keep all ground features inside world bounds. The full scene acceptance boundary
 checks them after linking. The model still writes only bounded data.
-
-ACTOR OWNERSHIP AND NPC PROGRAMS
-For every new actor placement emit role=controllable or role=npc explicitly.
-role=prop is passive scenery; no route or behavior. Mechanical motion/destruction remain possible.
-Template rideable.control is capability; place.role chooses ownership. controllable needs
-that capability and starts parked, accepting player input after boarding. npc is engine-owned;
-a driver-capable NPC cannot be boarded. Passenger-only NPC train seats remain usable.
-Legacy omitted role infers control capability -> controllable, else route -> npc, else prop.
-world.player remains the original car; no humanoid possession or generated input profiles.
-behavior attentive_walk(start=walking){
- state walking(action=patrol){on notice(event=near_player,to=watching,radius=65);}
- state watching(action=idle,face=player){on leave(event=far_player,to=walking,radius=95);}
-}
-place neighbor(object=person,route=promenade,role=npc,behavior=attentive_walk);
-Behavior IDs/references are file-local; state IDs and transition targets are behavior-local.
-All states must be reachable from start. Transition IDs unique per state. Includes merge
-program data; asset imports only object capabilities. <=16 programs and <=32 NPCs per scene.
-1..8 states/program; <=4 transitions/state. action=idle rests joints; perform animates in
-place; both hold route clock. patrol requires placement.route and resumes its clock without
-teleporting. It animates only while moving. face=none default; face=player stationary only,
-turning <=2.5 rad/s. Asset forward is +X. No arbitrary poses, scripts or callbacks.
-on event=after requires only seconds (.1..300); near_player/far_player requires only radius
-(10..240 units), using 3D distance <= / >=. Use separated near/far radii for hysteresis.
-One transition/fixed tick, first matching declaration wins; state elapsed resets on entry.
-Use perform -> idle -> perform with after transitions for timed routines. Existing joints
-supply the motion; this does not generate sports rules, pathfinding or obstacle avoidance.
-Explicit NPCs need version 2 decor/solid bodies, without foundations,
-knockable bodies or destruction. Ambient routes remain decor-only; boat/plane NPCs need
-routes in their domain. Stationary NPC footprints must be dry and clear. Preserve <=24 route
-actors/controllable vehicles and <=24 live jointed assemblies including the player.
-Runtime clocks are per instance outside Scene; pause freezes them; R preserves them and
-Start over resets them. No model calls during simulation.
 
 CONNECTED CITY DATA
 junction id(at=[x,y]); binds one file-local point; <=128 per source. road and street
@@ -311,6 +314,40 @@ embedded in its wall, canopy touching wall and supported by posts that reach a
 porch slab. Keep all architectural parts attached. Reserve schoolyards, market
 squares, service aprons and entrance paths before placing surrounding housing.
 
+## npcs
+ACTOR OWNERSHIP AND NPC PROGRAMS
+For every new actor placement emit role=controllable or role=npc explicitly.
+role=prop is passive scenery; no route or behavior. Mechanical motion/destruction remain possible.
+Template rideable.control is capability; place.role chooses ownership. controllable needs
+that capability and starts parked, accepting player input after boarding. npc is engine-owned;
+a driver-capable NPC cannot be boarded. Passenger-only NPC train seats remain usable.
+Legacy omitted role infers control capability -> controllable, else route -> npc, else prop.
+world.player remains the original car; no humanoid possession or generated input profiles.
+behavior attentive_walk(start=walking){
+ state walking(action=patrol){on notice(event=near_player,to=watching,radius=65);}
+ state watching(action=idle,face=player){on leave(event=far_player,to=walking,radius=95);}
+}
+place neighbor(object=person,route=promenade,role=npc,behavior=attentive_walk);
+Behavior IDs/references are file-local; state IDs and transition targets are behavior-local.
+All states must be reachable from start. Transition IDs unique per state. Includes merge
+program data; asset imports only object capabilities. <=16 programs and <=32 NPCs per scene.
+1..8 states/program; <=4 transitions/state. action=idle rests joints; perform animates in
+place; both hold route clock. patrol requires placement.route and resumes its clock without
+teleporting. It animates only while moving. face=none default; face=player stationary only,
+turning <=2.5 rad/s. Asset forward is +X. No arbitrary poses, scripts or callbacks.
+on event=after requires only seconds (.1..300); near_player/far_player requires only radius
+(10..240 units), using 3D distance <= / >=. Use separated near/far radii for hysteresis.
+One transition/fixed tick, first matching declaration wins; state elapsed resets on entry.
+Use perform -> idle -> perform with after transitions for timed routines. Existing joints
+supply the motion; this does not generate sports rules, pathfinding or obstacle avoidance.
+Explicit NPCs need version 2 decor/solid bodies, without foundations,
+knockable bodies or destruction. Ambient routes remain decor-only; boat/plane NPCs need
+routes in their domain. Stationary NPC footprints must be dry and clear. Preserve <=24 route
+actors/controllable vehicles and <=24 live jointed assemblies including the player.
+Runtime clocks are per instance outside Scene; pause freezes them; R preserves them and
+Start over resets them. No model calls during simulation.
+
+## population
 CONTEXTUAL POPULATIONS
 furnish id(objects=[object_ref,...],streets=[street_ref,...],spacing=340,setback=2,seed=41,facing=street);
 furnish id(objects=[bicycle],sites=[site_ref,...],spacing=26,setback=4,count=6,seed=82,paving=#aaa99f);
@@ -342,6 +379,7 @@ Driver controls still need one solid cylinder without foundation/compound contac
 Passenger-only rideable(at=[x,y,z]) may use compound contacts on a solid transit assembly;
 F boards without taking control. NPC route clocks keep ownership. No underground transit layer yet.
 
+## lighting
 DAY AND NIGHT
 Optional once, beside world/road in the world-owning file:
 daylight(cycle_s=600,start_hour=10);
@@ -361,6 +399,7 @@ damage or player lamp. Flocks cannot carry lamps. Use material.night for glowing
 One shared 2048 directional shadow map serves sun/moon; no per-lamp shadow maps.
 NPC routines and transit schedules continue; no opening hours, weather or astronomical calendar.
 
+## scenarios
 LOGICAL TASK SCENARIOS
 An optional scenario block describes a logical graph environment, separate from 3D
 movement/NPC clocks. Do not claim physical navigation, clinical or learning outcomes.
@@ -393,6 +432,7 @@ No guarantee of affordability/solvability. The current lab requires a standalone
 scenario; it cannot yet apply logical actions to the rendered city's actors.
 Keep unsupported user intent explicit instead of inventing vocabulary.
 
+## voxels
 VOXEL CONSTRUCTION
 Use voxels id(material=mat,at=[x,y,z],size=[sx,sy,sz],grid=[nx,ny,nz],chunks=[cx,cy,cz]?){fill solid(from=[0,0,0],to=[nx,ny,nz]);cut opening(from=[...],to=[...]);}. Each voxels declaration is one rigid part. The block permits fill/cut, let and bounded repeat. shape=box is default; ellipsoid tests cell centers inside the from/to bounds. Operations run in order. Coordinates are integer half-open cell indices, 0 <= from < to <= grid; each axis 1..32, at most 32768 cells, 64 expanded operations, 8192 greedy surface quads. Assembly limits: 65536 cells, 1048576 fill/cut cell visits, existing 32 parts. Linked project: 1048576 cells across assembly definitions. Use equal size/grid ratios for cubic cells. Use separate volumes for materials. No raw voxel arrays, shaders, scripts or remote meshes.
 Optional chunks must divide grid axes exactly into at most 8 nonempty pieces. Requires impact break or a break zone, no fragment wrapper. All pieces count toward existing 8 fragments per assembly, 24 reactive placements and 128 scene fragments. Unchunked volumes can use normal fragment groups/topple. Voxel parts disallow deform, cloth and part motion; use rigid joints for animation. Explicit body/contact cylinders remain the physics geometry: carved holes do not create traversable openings, editable terrain or tunnels. The live city uses the optional world construction policy below.
@@ -402,25 +442,6 @@ Construction: silhouette and measure first. Doors/window heights follow usable f
 WHOLE-WORLD VOXELS
 For a complete world, put voxel_world(object_cell=1,ground_cell=8,height_step=1); beside world/road in the owner file. Exactly one declaration; object_cell .25..4 local units, ground_cell exactly 4 or 8, height_step .5..1. The compiler applies it to all linked templates, furnishings, player and flocks. Continue writing part/beam as compact shape stamps; the engine constructs their occupied cells, fits the authored envelope, and retains material/joint/fragment ownership. Explicit voxels/fill/cut remain exact and keep existing budgets. Ground and infrastructure use resident column tiles; paint keeps fine cells/layer separation and water keeps rigid column wave anchors. Fixed construction resolution, no camera LOD. Physics remains explicit contacts plus the smooth driving heightfield. No editable terrain, automatic destructibility or per-cell physics. Do not output voxelSize/voxelWorld compiler metadata in source.
 
+## sports
 SPORTS PRACTICE
 sport id(kind=football|basketball,surface=surface_id,ball=placement_id,targets=[first,second],target_at=[x,y,z],target_size=[width,height]); connects existing world data after linking. At most 8 grounds, each with its own non-overlapping dry surface and distinct bounce ball. Ball is a static prop with a round knockable body: world radius .5..3, height twice radius. Use measure(kind=custom,axis=x,meters=.22/.24) to resolve real ball size from a local body(radius=4,height=8); do not lower legacy body bounds. Targets are two static upright assemblies at least 64 units apart; target_at and target_size use their local units and follow placement heading/scale. Football target is a grounded opening 6..120 wide and 4..50 high, local +Z points out of the field, opposing target normals. Basketball target is a clear X/Z ring diameter 2.5..12, fitting the ball, at height 16..50; local +Z points into the court. Target anchor must lie in the actual assembly bounds and within 32 of the surface. Surface sampled height variation <=3, no water. Existing object/reactive budgets still apply. Engine owns walk-up dribbling, charged shots, scoring, recovery and camera; no generated controller code, team AI, fouls or bank-shot backboard physics. Complete source: examples/sports-practice.dream.
-
-SHARED INTERACTION RULES
-rule wooden_tables(kind=table,mode=break(speed=90,scatter=62,lift=100,spin=4,lifetime=6,pattern=splinter)); declares an authoritative interaction for every object whose measure.kind matches. At most 16 rules, exactly one owner per category, in the entry file only. Loaded modules cannot declare rules. Apply across local/imported templates, placements and furnishing before object validation. A rule replaces local impact settings. A break rule replaces every existing break-zone impact when zones exist; retained core/foundations remain. Bodies, animation and fragment grouping must be compatible; incompatible assets fail compilation, never silently lose construction. Each placement has independent damage. Scene v1 interactionRules is optional for legacy data, defaults to []; serialized placements must match. Keep 24 reactive placements, 8 fragments per assembly and 128 potential scene fragments. rule does not bypass any budget. Select by measure.kind, never labels/position/randomness. custom is one catchall category, not separate bread/rock/ball types. Current live policies cover tables and benches; other categories keep authored defaults. Existing break/topple/bounce constructors only, no scripts or structural/material simulation. Complete example: examples/interaction-rules.dream.
-
-HUMANOID RIGS
-Use joint(...,bone=...) for locomotion, not swing motions on straight stick limbs.
-Exactly 12 unique bindings, measured decor person only. Parent tree:
-root -> spine -> left_shoulder -> left_elbow; mirror right_shoulder/right_elbow.
-root -> left_hip -> left_knee -> left_ankle; mirror right_hip/right_knee/right_ankle.
-Rest frames unrotated, facing +X, +Y up, left +Z. root=[0,positive_height,0],
-spine=[0,nonnegative_height,0], hip=[0,0,signed_width], shoulder=[0,positive_height,signed_width].
-Elbow/knee/ankle=[0,-length,0], length >= .5. Root height >=1.
-Every visual part belongs to a bone; overlap rounded joint caps at elbows/knees.
-No independent part/bone motion, fragments or zones. Keep feet at Y=0 in assembled rest.
-Engine owns walk/run blending, lifted steps, two-bone legs, jump/landing, crawl/tread,
-reduced-motion poses and sports overrides. Body and movement physics stay separate.
-No extra joints, generated controllers, skinning, or terrain foot probes. Existing
-12-joint, depth-4, 32-part and 24-live-assembly caps unchanged. Furnish rejects bone rigs.
-Use examples/humanoid.dream as a complete template; keep binding names, vary geometry,
-colors and measured size. Labels/generated IDs do not choose anatomy or behavior.

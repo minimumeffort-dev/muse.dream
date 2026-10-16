@@ -56,7 +56,7 @@ A command with an ID requires a name immediately after its keyword. Commands wit
 | `material` | top | ID / no block | `style: toon / grain / glow / stripes / cloth / brick / wood / stone`, `colors: colors`, `night?: color` |
 | `rule` | top | ID / no block | `kind: measure category`, `mode: impact` |
 | `let` | top / object / visual / path / route_path / voxel_ops | ID / no block | `value: n` |
-| `component` | top | ID / visual | `params?: symbols` |
+| `component` | top | ID / visual | `params?: symbols`, `materials?: symbols` |
 | `object` | top | ID / object | `label: text` |
 | `asset` | top | ID / no block | `module: ref`, `object: ref` |
 | `include` | top | ID / no block | `module: ref` |
@@ -74,9 +74,11 @@ A command with an ID requires a name immediately after its keyword. Commands wit
 | `group` | object / visual | ID / visual | `at?: v3`, `rot_deg?: v3`, `scale?: n` |
 | `joint` | object / visual | ID / visual | `at?: v3`, `rot_deg?: v3`, `bone?: humanoid binding`, `motion?: joint_motion` |
 | `repeat` | object / visual / path / route_path / voxel_ops | ID / inherit | `index: symbol`, `count: n` |
-| `use` | object / visual | ID / no block | `component: ref`, `args?: nums`, `at?: v3`, `rot_deg?: v3`, `scale?: n` |
+| `use` | object / visual | ID / no block | `component: ref`, `args?: nums`, `materials?: symbols`, `at?: v3`, `rot_deg?: v3`, `scale?: n` |
 | `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus / prism`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `outline?: points2`, `taper?: n`, `deform?: deform`, `motion?: part_motion` |
 | `beam` | object / visual | ID / no block | `shape: box / cylinder / capsule`, `material: ref`, `from: v3`, `to: v3`, `width: n`, `depth: n`, `taper?: n`, `deform?: deform`, `motion?: part_motion` |
+
+Components allow eight unique numeric/material formals combined: `params=[height]` and `materials=[finish]`. `use.args` binds numeric expressions; `use.materials` binds material IDs or enclosing material formals. Both lists require exact arity in declaration order, including zero when omitted. Material formals cannot collide with numeric formals or global numeric constants; numeric-only shadowing retains its existing semantics. Material formals may shadow global materials. Callees receive globals plus explicit bindings, without caller-local leakage. Material bindings apply to parts, beams, voxels and nested uses. No recursion; source, expansion, part and joint limits remain unchanged. [Complete nested example](../examples/material-components.dream).
 
 Prism parts require `outline: points2`: 3..24 vertices in normalized XY, each coordinate in 0..1, spanning 0..1 on both axes and area at least `.01`. Either winding is accepted. No holes, repeated closing point, zero-length edges, foldbacks, crossed edges or self-touching. The engine centers it across full size X/Y and extrudes through full size Z. Only prisms accept an outline. Rotation, uniform scaling, measurement, batching and material rules remain the same.
 
@@ -174,7 +176,7 @@ With a measured car player, tree height and plane wingspan must exceed the car's
 | --- | --- |
 | Source file | 65,536 UTF-16 characters, 12,000 lexer tokens, 2,048 expanded statements, nesting 16 |
 | File declarations | 16 objects/assets combined, 64 placements, 12 routes, 8 watercourses, 16 includes |
-| Components | Up to 8 numeric parameters; repeat 0–32; no recursive components |
+| Components | Up to 8 numeric/material parameters combined; repeat 0–32; no recursive components |
 | Numeric expressions | Finite, absolute value ≤1,000,000; parse depth 32, evaluation/dependency depth 64 |
 | Assembly | 1–32 parts, ≤12 joints, joint depth ≤4, native reach ≤256 |
 | Geometry | Part size .1–128 in object v2 (.5–128 in v1); beam length ≥ .5; X/Z offset ±64, Y ±128; joint offsets ±64 |
@@ -254,6 +256,8 @@ Import from [`src/scene/dream.ts`](../../src/scene/dream.ts).
 
 `identity` is host-owned `{sceneId,revisionId,sourceHash}`. `modules` is a closed map from IDs to source text. Neither is read from generated URLs or filesystem paths.
 
+`dreamAgentContext(features?)` is exported separately from [`src/scene/dream-agent.ts`](../../src/scene/dream-agent.ts). It returns scoped instructions and the compiler contract subset, with dependency closure and deterministic feature order. Default: `['objects']`. `['all']` returns every command and semantic contract. Feature requests contain 1–16 names; unknown names fail with `E_CONTEXT`, and `all` must stand alone. The full compiler always enforces its complete bounds. [Feature list and host example](model-authoring.md).
+
 ### CLI
 
 ```sh
@@ -262,9 +266,10 @@ node scripts/dream.mjs compile file.dream
 node scripts/dream.mjs format file.dream
 node scripts/dream.mjs migrate file.dream
 node scripts/dream.mjs contract
+node scripts/dream.mjs context --features objects,voxels
 ```
 
-Repeat `--modules directory` for explicit local libraries. `format` and `migrate` support atomic `--write`. Machine-readable stdout and exit codes are intended for a host's repair loop. The lexer token count isn't a model-token estimate.
+Repeat `--modules directory` for explicit local libraries. `format` and `migrate` support atomic `--write`. Machine-readable stdout and exit codes are intended for a host's repair loop. The lexer token count isn't a model-token estimate. `context` prints compact JSON containing instructions and contract metadata; generated world source remains Dream text. It accepts no file, module directory or `--write` option.
 
 ### Diagnostics and identity
 

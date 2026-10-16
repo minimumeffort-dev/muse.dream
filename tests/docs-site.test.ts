@@ -67,6 +67,15 @@ describe('Dream syntax highlighting',()=>{
     expect(Object.keys(contract.commands)).toEqual(Object.keys(DREAM_V2_COMMANDS));
     for(const command of Object.keys(contract.commands))expect(highlight(command+'()')).toContain(`class="dream-keyword">${command}</span>`);
   });
+  it('highlights material parameters without consuming longer symbols or HTML',()=>{
+    const source='component leg(params=[h],materials=[finish]){use nested(component=post,args=[h],materials=[finish]);} // <script>';
+    const html=highlight(source);
+    expect(html).toContain('class="dream-field">materials</span>');
+    expect(html).toContain('class="dream-symbol">finish</span>');
+    expect(highlight('materials_extra finish_materials')).not.toMatch(/dream-field/);
+    expect(html).not.toContain('<script>');
+    expect(html.replace(/<[^>]+>/g,'').replaceAll('&lt;','<').replaceAll('&gt;','>')).toBe(source);
+  });
   it('highlights scenario declarations and fields without swallowing related identifiers',()=>{
     const html=highlight('scenario day(seed=1,max_steps=80){agent courier(budget=9);service clinic(consumes=kit,produces=receipt,duration=4,fee=1);objective care(kind=produce,quantity=1);} // <script>');
     for(const name of ['scenario','agent','service','objective'])expect(html).toContain(`class="dream-keyword">${name}</span>`);

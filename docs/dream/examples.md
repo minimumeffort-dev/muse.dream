@@ -20,6 +20,37 @@ fragments and damage. [Read the shared-rule contract](rules.md).
 
 [The complete humanoid](../examples/humanoid.dream) binds twelve joints to the engine's walk, run and swim cycles. The model supplies anatomy and connected parts; the engine supplies motion. [Close-up recordings and binding rules](behavior.md#humanoid-motion).
 
+## Two finishes, one assembly
+
+These [two tables](../examples/material-components.dream) share their top and four legs. Numeric parameters set dimensions; material parameters select a finish and pass it through nested components. The complete file compiles to ten parts, with no special renderer recipe.
+
+```dream
+dream 2;
+material timber(style=wood,colors=[#98724e,#62452f]);
+material blue(style=toon,colors=[#537eaa,#3c5f87]);
+component leg(params=[h],materials=[finish]){
+  beam post(shape=box,material=finish,from=[0,0,0],to=[0,h,0],width=4,depth=4);
+}
+component table(params=[h],materials=[finish]){
+  repeat ends(index=i,count=2){
+    repeat sides(index=j,count=2){
+      use support(component=leg,args=[h],materials=[finish],at=[i*44-22,0,j*24-12]);
+    }
+  }
+  part top(shape=box,material=finish,at=[0,h+2,0],size=[58,4,38]);
+}
+object oak_table(label="Oak table"){
+  measure(kind=table,axis=x,meters=1.8);
+  body(interaction=solid,radius=26,height=28);
+  use furniture(component=table,args=[24],materials=[timber]);
+}
+object blue_table(label="Blue table"){
+  measure(kind=table,axis=x,meters=1.8);
+  body(interaction=solid,radius=26,height=28);
+  use furniture(component=table,args=[24],materials=[blue]);
+}
+```
+
 ## A ball that bounces
 
 A sphere supplies the shape. The knockable body and bounce declaration supply the behavior. `measure` makes the ball sixty centimetres tall; it scales the body with the mesh.

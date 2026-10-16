@@ -114,13 +114,24 @@ NPC/animation/physics limits remain independent and unchanged.
 
 Prefer Dream 2 for new model-authored source. Read `docs/dream-language.md`,
 `docs/dream-v2-model.txt` and the generated `docs/dream-v2-contract.json`.
-The compiler command table owns field vocabulary and canonical order. Keep
+Use `node scripts/dream.mjs context --features objects,voxels` (or the relevant
+features) for a smaller agent packet; `all` is the full fallback. Feature mappings
+and dependency closure live in `src/scene/dream-agent.ts`; keep full-contract
+coverage and instruction sections tested when vocabulary changes. The compiler
+command table owns field vocabulary and canonical order. Keep
 Dream 1 compatibility, explicit stable IDs, structured diagnostics and all
 source/expansion/engine bounds. `compileDreamScene` is the complete-world
 acceptance boundary; `compileDreamWorld` alone does not certify playability. `asset` imports object
 data; `include` merges district data. Preserve per-file and aggregate project
 budgets; module IDs never resolve files or URLs in the compiler.
 Actual provider generation accuracy and token costs remain unmeasured.
+
+Dream components bind numeric `params` through `use.args` and material formals
+through `use.materials`, with exact arity and at most eight unique names combined.
+Preserve lexical scope: resolve actuals in the caller, then give the callee globals
+plus explicit bindings. Material formals cannot shadow numeric formals or global numeric constants;
+numeric-only semantics remain compatible. Reuse cannot raise expanded geometry budgets.
+See `docs/examples/material-components.dream`.
 
 New Dream 2 objects declare `measure(kind=...,axis=...,meters=...)`; use
 `docs/proportions.md` and the generated contract's proportion profiles. Ten

@@ -86,7 +86,8 @@
       ],
       "id": true,
       "fields": {
-        "params": "symbols?"
+        "params": "symbols?",
+        "materials": "symbols?"
       },
       "block": "visual"
     },
@@ -286,6 +287,7 @@
       "fields": {
         "component": "ref",
         "args": "nums?",
+        "materials": "symbols?",
         "at": "v3?",
         "rot_deg": "v3?",
         "scale": "n?"
@@ -909,6 +911,10 @@
         "lifetime": "n"
       }
     }
+  },
+  "components": {
+    "parameters": 8,
+    "semantics": "params declares numeric formals; materials declares material formals. At most 8 unique names combined. Material formals cannot shadow numeric formals or global numeric constants. use.args and use.materials supply matching positional lists, with exact arity and types. Actual materials resolve from globals or the enclosing component material bindings. Callees see globals and their own explicit bindings, never implicit caller locals. No recursive components. Transforms, use-site identity paths and expanded budgets are unchanged."
   },
   "interactionRules": {
     "maximum": 16,

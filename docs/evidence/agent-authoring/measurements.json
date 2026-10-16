@@ -1,0 +1,79 @@
+{
+  "fullInstructionsAndContract": {
+    "characters": 61364,
+    "bytes": 61364
+  },
+  "packets": {
+    "objects": {
+      "characters": 18597,
+      "bytes": 18597,
+      "commands": 23,
+      "features": [
+        "objects"
+      ]
+    },
+    "scenarios": {
+      "characters": 6596,
+      "bytes": 6596,
+      "commands": 8,
+      "features": [
+        "scenarios"
+      ]
+    },
+    "objects,voxels": {
+      "characters": 28620,
+      "bytes": 28620,
+      "commands": 34,
+      "features": [
+        "objects",
+        "interactions",
+        "voxels"
+      ]
+    },
+    "city,population,lighting": {
+      "characters": 50643,
+      "bytes": 50643,
+      "commands": 59,
+      "features": [
+        "objects",
+        "world",
+        "modules",
+        "interactions",
+        "city",
+        "npcs",
+        "population",
+        "lighting"
+      ]
+    },
+    "all": {
+      "characters": 61819,
+      "bytes": 61819,
+      "commands": 72,
+      "features": [
+        "objects",
+        "world",
+        "modules",
+        "interactions",
+        "city",
+        "npcs",
+        "population",
+        "lighting",
+        "scenarios",
+        "voxels",
+        "sports"
+      ]
+    }
+  },
+  "source": {
+    "tests/fixtures/city-people-v38.dream": {
+      "characters": 11639,
+      "bytes": 11639,
+      "syntaxTokens": 4411
+    },
+    "src/scene/world/city_people.dream": {
+      "characters": 4186,
+      "bytes": 4186,
+      "syntaxTokens": 1457
+    }
+  }
+}
