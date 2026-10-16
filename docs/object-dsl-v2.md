@@ -58,6 +58,11 @@ A torus's hole axis is local Z; rotate it to make a horizontal rim. Torus
 proportions are fixed in this slice. Geometry is built once, not regenerated
 every frame.
 
+Boxes bevel their edges relative to the shortest declared dimension before
+normalization, preserving crisp long boards. Torus rings use a slimmer fixed
+profile for readable wheel openings and handles. Outer `size` dimensions remain
+the geometry/grounding contract; neither shape introduces a new physics body.
+
 A part may declare `deform: { "seed": 73, "amount": 0.045 }`. The engine
 applies a fixed smooth spatial deformation and renormalizes its bounds,
 so the dimensions and physical body stay independent. Identical seeds and

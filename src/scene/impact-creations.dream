@@ -10,6 +10,7 @@ component table_leg(params=[x,z]){
   fragment leg(){
     part leg(shape=box,material=dark,at=[x,13,z],size=[5,26,5]);
     part foot(shape=box,material=wood,at=[x,2,z],size=[7,4,7]);
+    beam brace(shape=box,material=dark,from=[x,19,z],to=[x*.7,26,z*.7],width=3,depth=3);
   }
 }
 object festival_ball(label="Festival ball"){
@@ -17,8 +18,8 @@ object festival_ball(label="Festival ball"){
   body(interaction=knockable,radius=13,height=26,friction=0.55);
   impact(mode=bounce(restitution=0.74,lift=0.42));
   part ball(shape=sphere,material=coral,at=[0,13,0],size=[26,26,26],motion=roll(axis=z,radius=13));
-  part band(shape=torus,material=cream,at=[0,13,0],size=[26.3,26.3,3],rot_deg=[90,0,0],motion=roll(axis=y,radius=13));
-  part seam(shape=torus,material=cream,at=[0,13,0],size=[26.5,26.5,1.5],motion=roll(axis=z,radius=13));
+  part band(shape=torus,material=cream,at=[0,13,0],size=[26.1,26.1,1],rot_deg=[90,0,0],motion=roll(axis=y,radius=13));
+  part seam(shape=torus,material=cream,at=[0,13,0],size=[26.1,26.1,.6],motion=roll(axis=z,radius=13));
 }
 object breakaway_table(label="Breakaway table"){
   measure(kind=table,axis=x,meters=2.2);
@@ -43,6 +44,7 @@ object produce_crate(label="Produce crate"){
   }
   repeat repeat_side(index=side,count=2){
     fragment long_side(){
+      repeat corner_posts(index=p,count=2){part post(shape=box,material=dark,at=[p*30-15,14,side*28-14],size=[3,24,3]);}
       repeat repeat_slat(index=slat,count=3){
         part board(shape=box,material=wood,at=[0,9+slat*8,side*28-14],size=[35,6,3]);
       }
@@ -55,7 +57,8 @@ object produce_crate(label="Produce crate"){
   }
   repeat repeat_apple(index=apple,count=3){
     fragment produce(){
-      part apple(shape=sphere,material=coral,at=[(apple-1)*9,22,0],size=[8,8,8]);
+      part apple(shape=sphere,material=coral,at=[(apple-1)*9,22,0],size=[8,8,8],deform=deform(seed=52+apple*9,amount=.06));
+      part stem(shape=cylinder,material=dark,at=[(apple-1)*9,26.5,0],size=[.6,2,.6]);
     }
   }
 }
@@ -65,7 +68,10 @@ object terracotta_planter(label="Terracotta planter"){
   impact(mode=break(speed=65,scatter=45,lift=75,spin=3,lifetime=5));
   repeat repeat_side(index=side,count=4){
     fragment clay_side(){
-      part wall(shape=box,material=clay,at=[cos(side*90)*12,13,sin(side*90)*12],size=[4,23,20],rot_deg=[0,-side*90,0]);
+      repeat facets(index=f,count=2){
+        let a(value=side*90+f*45);
+        part wall(shape=box,material=clay,at=[cos(a)*13,13,sin(a)*13],size=[3,23,11],rot_deg=[0,-a,0]);
+      }
     }
   }
   fragment rim(){
@@ -75,6 +81,7 @@ object terracotta_planter(label="Terracotta planter"){
     part soil(shape=cylinder,material=soil,at=[0,23,0],size=[26,3,26]);
     part stem(shape=cylinder,material=green,at=[0,28,0],size=[3,12,3]);
     part leaves(shape=icosphere,material=green,at=[0,34,0],size=[24,12,19]);
+      repeat leaf_branches(index=l,count=2){beam leaf(shape=capsule,material=green,from=[0,28,0],to=[l*22-11,35,0],width=5,depth=2);}
   }
 }
 place meadow_ball(object=festival_ball,at=[930,1505]);

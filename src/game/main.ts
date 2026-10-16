@@ -110,7 +110,7 @@ function start(): void {
   for (const object of doc.objects) {
     if (!object.route && !isReactive(object.spec) && archetypeOf(object).interaction !== "knockable" && !hasAnimatedJoints(object.spec)) continue;
     const destructible=isReactive(object.spec) && impactOf(object.spec)?.kind!=="bounce";
-    const group = destructible ? buildDamageObject(object) : object.route ? compactObject(buildObject(object)) : buildObject(object);
+    const group = destructible ? buildDamageObject(object) : compactObject(buildObject(object));
     group.position.copy(worldPosition(doc, object.x, object.y, 1.5));
     const placement=objectPlacement(doc,object);
     group.position.y=placement.base+1.5;group.quaternion.copy(placement.rotation);
@@ -123,8 +123,8 @@ function start(): void {
   }
   const debris=new WorldDebris(doc);scene.add(debris.group);
   const traveler=interactiveWorld.assemblies.find(a=>a.displayName==="Traveler")!;
-  const avatar=buildObject({id:"traveler",kind:"custom",labelText:"Traveler",x:0,y:0,scale:measuredScale(traveler),spec:traveler});avatar.visible=false;objects.push(avatar);
-  const carRoot = new THREE.Group(), carMesh = buildPlayer(doc);
+  const avatar=compactObject(buildObject({id:"traveler",kind:"custom",labelText:"Traveler",x:0,y:0,scale:measuredScale(traveler),spec:traveler}));avatar.visible=false;objects.push(avatar);
+  const carRoot = new THREE.Group(), carMesh = compactObject(buildPlayer(doc));
   carRoot.add(carMesh); scene.add(carRoot);
   const particles = new WorldParticles(doc); scene.add(particles.mesh);
   const occlusion = new SceneryOcclusion(objects);

@@ -4,6 +4,7 @@ import type { ObjectPart } from "../scene/object-dsl";
 
 /** Merge rigid siblings by material; wheels retain their own pivots and distance animation. */
 export function compactObject(group:THREE.Group):THREE.Group {
+  for(const child of group.children)if(child instanceof THREE.Group)compactObject(child);
   group.updateMatrix();
   const batches=new Map<string,{items:THREE.Mesh[];frame:THREE.Matrix4;motion?:ObjectPart["animation"]}>();
   for(const child of group.children){

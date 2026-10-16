@@ -4,6 +4,8 @@ import { dreamExamples } from '../../src/scene/dream-creations';
 import { buildObject, animateObject } from '../../src/game/world3d';
 import { worldTime, worldMotion } from '../../src/game/shaders';
 import { interactiveWorld } from '../../src/scene/interactive-world';
+import { compileDreamWorld } from '../../src/scene/dream';
+import { worldSource, worldModules } from '../../src/scene/world-fixture';
 
 const canvas=document.querySelector('canvas'),grid=document.querySelector('.grid');
 const view=document.querySelector('#view'),phase=document.querySelector('#phase');
@@ -11,8 +13,10 @@ const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,1.5)); renderer.setScissorTest(true);
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
 const worldExamples=new URLSearchParams(location.search).has('world');
+const allExamples=new URLSearchParams(location.search).has('all');
 if(worldExamples)document.querySelector('header a').href='/src/scene/interactive-world.dream';
-const items=(worldExamples ? interactiveWorld.assemblies : dreamExamples).map(spec=>{
+if(allExamples)document.querySelector('header a').href='/src/scene/world/open-world.dream';
+const items=(allExamples ? compileDreamWorld(worldSource,worldModules).assemblies : worldExamples ? interactiveWorld.assemblies : dreamExamples).map(spec=>{
   const cell=document.createElement('article'),name=document.createElement('strong'),detail=document.createElement('small');
   name.textContent=spec.displayName;detail.textContent=`${spec.parts.length} parts · ${spec.joints?.length??0} joints`;
   cell.append(name,detail);grid.append(cell);

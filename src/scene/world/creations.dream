@@ -1,4 +1,6 @@
 dream 2;
+material seam(style=toon,colors=[#755334,#755334]);
+material flour(style=toon,colors=[#e6d4b1,#e6d4b1]);
 material m0(style=toon,colors=[#4f8091,#4f8091]);
 material m1(style=toon,colors=[#f1dfb5,#f1dfb5]);
 material m2(style=toon,colors=[#353b40,#353b40]);
@@ -35,6 +37,10 @@ object waving_baker(label="Waving baker"){
     part hat_puff_neg_1(shape=sphere,material=m1,at=[-5,44,0],size=[12,12,14]);
     part hat_puff_0(shape=sphere,material=m1,at=[0,44,0],size=[12,12,14]);
     part hat_puff_1(shape=sphere,material=m1,at=[5,44,0],size=[12,12,14]);
+    part apron_pocket(shape=box,material=m7,at=[0,4,6.1],size=[9,5,.7]);
+    repeat ears(index=e,count=2){part ear(shape=sphere,material=m3,at=[e*16-8,28,0],size=[3,4,3]);}
+    repeat buttons(index=k,count=3){part button(shape=sphere,material=m5,at=[0,15-k*3,6.3],size=[.8,.8,.5]);}
+    repeat cuffs(index=c,count=2){part strap(shape=box,material=m1,at=[c*8-4,13,6],size=[1,12,.5]);}
     joint left_shoulder(at=[-10,17,0],motion=swing(axis=z,deg=3.437746770784939,hz=0.20690142601946396,phase_deg=0)){
       part left_upper_arm(shape=capsule,material=m0,at=[0,-8.5,0],size=[6,18,6]);
       joint left_elbow(at=[0,-17,0],rot_deg=[-6.875493541569878,0,0]){
@@ -65,6 +71,8 @@ object crusty_bread(label="Crusty bread"){
   part score_2_0(shape=capsule,material=m7,at=[8.8,15.492472332656506,-3],size=[1.2,3.8,0.8],rot_deg=[72.55364766278666,0,-20.05352282957881]);
   part score_2_1(shape=capsule,material=m7,at=[10,15.95,0],size=[1.2,3.8,0.8],rot_deg=[90,0,-20.05352282957881]);
   part score_2_2(shape=capsule,material=m7,at=[11.2,15.492472332656506,3],size=[1.2,3.8,0.8],rot_deg=[107.44635233721337,0,-20.05352282957881]);
+  part baked_base(shape=capsule,material=seam,at=[0,2,0],size=[3,36,15],rot_deg=[0,0,90]);
+  repeat flour_dust(index=f,count=3){part dust(shape=sphere,material=flour,at=[f*8-8,15,4],size=[3,.5,2]);}
 }
 object harvest_bowl(label="Harvest bowl"){
   measure(kind=custom,axis=x,meters=0.4);
@@ -78,6 +86,8 @@ object harvest_bowl(label="Harvest bowl"){
   part stem_1(shape=cylinder,material=m9,at=[5,14,5],size=[1,3,1],rot_deg=[0,0,11.459155902616464]);
   part fruit_2(shape=sphere,material=m11,at=[1,10,-5],size=[10,11,10],deform=deform(seed=89,amount=0.09));
   part stem_2(shape=cylinder,material=m9,at=[1,16,-5],size=[1,3,1],rot_deg=[0,0,11.459155902616464]);
+  repeat leaves(index=l,count=2){part leaf(shape=capsule,material=m11,at=[l*11-5,13,4],size=[3,6,1],rot_deg=[40,0,l*30-15]);}
+  part foot(shape=cylinder,material=m7,at=[0,1.5,0],size=[15,3,15]);
 }
 object mossy_granite(label="Mossy granite"){
   measure(kind=custom,axis=y,meters=1.8);
@@ -85,12 +95,17 @@ object mossy_granite(label="Mossy granite"){
   ground(mode=surface);
   part stone(shape=icosphere,material=m12,at=[0,16,0],size=[44,32,35],deform=deform(seed=381,amount=0.23));
   part moss(shape=icosphere,material=m13,at=[-7,28,-3],size=[25,9,23],deform=deform(seed=85,amount=0.18));
+  part broken_chip(shape=icosphere,material=m12,at=[-15,5,7],size=[12,10,12],deform=deform(seed=186,amount=.2));
+  part small_lichen(shape=icosphere,material=m13,at=[12,25,-2],size=[9,3,11],deform=deform(seed=91,amount=.2));
 }
 object orchard_picnic(label="Orchard picnic"){
   measure(kind=table,axis=x,meters=2.4);
   body(interaction=solid,radius=30,height=28);
   impact(mode=break(speed=90,scatter=62,lift=100,spin=4,lifetime=6));
-  part tabletop(shape=box,material=m14,at=[0,26,0],size=[66,4,38]);
+  fragment tabletop(){
+    part tabletop(shape=box,material=m14,at=[0,26,0],size=[66,4,38]);
+    repeat plank_seams(index=p,count=3){part seam(shape=box,material=seam,at=[0,28,p*9-9],size=[64,.5,.5]);}
+  }
   part leg_neg_1_neg_1(shape=box,material=m14,at=[-26,12,-12],size=[4,24,4]);
   part leg_neg_1_1(shape=box,material=m14,at=[-26,12,12],size=[4,24,4]);
   part leg_1_neg_1(shape=box,material=m14,at=[26,12,-12],size=[4,24,4]);

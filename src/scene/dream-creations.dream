@@ -1,4 +1,5 @@
 dream 2;
+material stitching(style=toon,colors=[#b8a277,#b8a277]);
 material wood(style=grain,colors=[#966c48,#b48c60]);
 material dark(style=toon,colors=[#303c43,#303c43]);
 material metal(style=toon,colors=[#6f9295,#6f9295]);
@@ -30,7 +31,7 @@ component blossom(params=[]){
     let a(value=petal*60);
     part petal(shape=capsule,material=gold,at=[cos(a)*8,sin(a)*8,0],size=[5,13,3],rot_deg=[0,0,a-90]);
   }
-  part seeds(shape=sphere,material=crust,at=[0,0,1],size=[10,10,5]);
+  part seeds(shape=sphere,material=crust,at=[0,0,1],size=[10,10,5],deform=deform(seed=94,amount=.12));
 }
 object orchard_cart(label="Orchard cart"){
   measure(kind=custom,axis=x,meters=1.8);
@@ -52,6 +53,10 @@ object orchard_cart(label="Orchard cart"){
     part apple(shape=sphere,material=red,at=[(apple-1)*11,26,0],size=[12,13,12],deform=deform(seed=apple*21+4,amount=0.09));
     part stem(shape=cylinder,material=wood,at=[(apple-1)*11,33,0],size=[1.2,3,1.2]);
   }
+  repeat corners(index=s,count=2){
+    repeat ends(index=e,count=2){part corner_post(shape=box,material=wood,at=[e*40-20,26,s*38-19],size=[3,18,3]);}
+  }
+  part crossbrace(shape=box,material=metal,at=[0,15,0],size=[5,2,40]);
 }
 object field_naturalist(label="Field naturalist"){
   measure(kind=person,axis=y,meters=1.78);
@@ -84,6 +89,10 @@ object field_naturalist(label="Field naturalist"){
       part hand(shape=sphere,material=skin,at=[0,-14,0],size=[6,7,5]);
     }
   }
+  repeat ears(index=e,count=2){part ear(shape=sphere,material=skin,at=[e*16-8,54,0],size=[3,4,3]);}
+  part nose(shape=sphere,material=skin,at=[0,53,8],size=[3,3,3]);
+  repeat buttons(index=b,count=3){part button(shape=sphere,material=gold,at=[0,39-b*5,6.7],size=[1,1,.5]);}
+  repeat collar(index=c,count=2){beam collar(shape=box,material=cream,from=[c*8-4,43,5],to=[0,38,7],width=2,depth=1);}
 }
 object meadow_tortoise(label="Meadow tortoise"){
   measure(kind=custom,axis=x,meters=0.55);
@@ -105,6 +114,10 @@ object meadow_tortoise(label="Meadow tortoise"){
       part eye(shape=sphere,material=dark,at=[12,3,eye*9-4.5],size=[2.3,3,2]);
     }
   }
+  repeat shell_sides(index=s,count=2){
+    repeat plates(index=p,count=2){part plate(shape=icosphere,material=moss,at=[p*16-8,18,s*23-11.5],size=[12,8,3],rot_deg=[0,p*20-10,0]);}
+  }
+  part beak(shape=capsule,material=cream,at=[24,11.5,0],size=[5,5,8]);
 }
 object bakery_basket(label="Bakery basket"){
   measure(kind=custom,axis=x,meters=0.45);
@@ -120,6 +133,10 @@ object bakery_basket(label="Bakery basket"){
   }
   use loaf(component=loaf,args=[30],at=[0,8,-5],rot_deg=[0,15,0],scale=0.8);
   use loaf_2(component=loaf,args=[28],at=[0,9,6],rot_deg=[0,-15,0],scale=0.8);
+  repeat basket_weave(index=b,count=4){
+    let a(value=b*90+22.5);
+    beam weave(shape=box,material=cream,from=[cos(a)*14,3,sin(a)*11],to=[cos(a)*17,10,sin(a)*14],width=1,depth=1);
+  }
 }
 object wild_sunflowers(label="Wild sunflowers"){
   measure(kind=custom,axis=y,meters=2);
@@ -135,6 +152,7 @@ object wild_sunflowers(label="Wild sunflowers"){
       }
     }
   }
+  repeat ground_leaves(index=l,count=2){part leaf(shape=capsule,material=leaf,at=[l*24-12,12,0],size=[4,17,2],rot_deg=[0,0,l*80-40]);}
 }
 object trail_cairn(label="Trail cairn"){
   measure(kind=custom,axis=y,meters=1.3);
@@ -144,6 +162,8 @@ object trail_cairn(label="Trail cairn"){
     part rock(shape=icosphere,material=stone,at=[layer-2,7+layer*10,0],size=[width,14,width*0.8],rot_deg=[0,layer*37,0],deform=deform(seed=381+layer*87,amount=0.23));
   }
   part moss(shape=icosphere,material=moss,at=[-9,14,3],size=[18,4,17],deform=deform(seed=85,amount=0.18));
+  part lichen_upper(shape=icosphere,material=moss,at=[1,39,2],size=[11,2,9],deform=deform(seed=17,amount=.18));
+  part gravel(shape=icosphere,material=stone,at=[14,2,4],size=[9,4,8],deform=deform(seed=453,amount=.22));
 }
 object wayside_bench(label="Wayside bench"){
   measure(kind=bench,axis=x,meters=1.8);
@@ -161,5 +181,11 @@ object wayside_bench(label="Wayside bench"){
   }
   repeat repeat_slat_2(index=slat,count=2){
     part back(shape=box,material=wood,at=[0,23+slat*6,-16-slat],size=[60,4,3],rot_deg=[-8,0,0]);
+  }
+  repeat arms(index=s,count=2){
+    let x(value=s*50-25);
+    part armrest(shape=box,material=wood,at=[x,24,0],size=[3,3,29]);
+    part arm_support(shape=box,material=metal,at=[x,20,11],size=[2,8,2]);
+    repeat bolts(index=b,count=2){part bolt(shape=sphere,material=metal,at=[x,24+b*6,-14.5],size=[1,1,1]);}
   }
 }

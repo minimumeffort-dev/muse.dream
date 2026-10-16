@@ -32,6 +32,8 @@ Dream 2 is a compact text language for composing objects and worlds. It has name
 
 Objects share physical units. The car is 3.55 metres long, the plane has a 10.8-metre wingspan, and the skateboard is 0.82 metres long. A size declaration scales the geometry, collision body, seats and broken pieces together. The compiler checks proportions too, so a skateboard can't quietly become larger than the car.
 
+The [asset library](docs/asset-library.md) covers all 53 world assemblies. Cars have window pillars and wheel hubs, bikes have chains and pedals, and buildings have framed windows, timber details and connected canopies. Trees have forks and bark markings, with seeded variation in their crowns. These details are Dream parts too, including the pieces released when something breaks.
+
 ![Trees, a plane, car, person, bicycle, bench, skateboard and bread shown at the same physical scale](docs/media/proportions.jpg)
 
 ## Run it

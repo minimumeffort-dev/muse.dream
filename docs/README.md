@@ -10,6 +10,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | --- | --- |
 | [Quickstart](dream/quickstart.md) | Compile a complete object, then a playable world |
 | [Compose objects](dream/objects.md) | Parts, materials, components, joints and physical size |
+| [Asset library](asset-library.md) | The 53 mock-world assemblies and their construction details |
 | [Build a world](dream/worlds.md) | Terrain, roads, bridges, water and moving vehicles |
 | [Give things behavior](dream/behavior.md) | Contacts, boarding, doors, bouncing and destruction |
 | [Generate with a model](dream/model-authoring.md) | Context, validation, repair and atomic acceptance |
@@ -25,7 +26,7 @@ node scripts/dream.mjs compile docs/examples/breakable-bench.dream
 npm run dev
 ```
 
-The development server includes an [asset gallery](http://127.0.0.1:5173/tests/visual/dream.html?world), a [shared-scale lineup](http://127.0.0.1:5173/tests/visual/proportions.html) and a [destruction replay](http://127.0.0.1:5173/tests/visual/destruction.html). These inspection pages aren't part of the production build.
+The development server includes a [complete asset gallery](http://127.0.0.1:5173/tests/visual/dream.html?all), a [shared-scale lineup](http://127.0.0.1:5173/tests/visual/proportions.html) and a [destruction replay](http://127.0.0.1:5173/tests/visual/destruction.html). The gallery has four viewing angles and fixed animation phases for checking connections. These inspection pages aren't part of the production build.
 
 ## What's implemented
 

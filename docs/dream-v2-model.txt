@@ -21,6 +21,9 @@ rot_deg=[90,0,0] still rolls about its own Y axis; a torus wheel uses Z.
 Keep feet/bases at local Y=0. World placements take only XY, not arbitrary height.
 Use endpoint beams for connected struts, groups for rigid transforms, joints
 for connected articulation. Keep physical bodies separate from visual parts.
+Within the 32-part limit, add identifying details such as window frames, wheel hubs,
+forks, bark marks and food scores. Keep them attached to the same joint or fragment
+as their support. Detail must not bridge independent break zones or close a doorway.
 Use foundations for upright solid buildings, ground(mode=surface) for tilting props.
 The cloth material is flag wind, not garment physics; use toon/grain for rigid clothing.
 A joint never inherits primitive dimension scaling; scale a surrounding group.

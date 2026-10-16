@@ -16,6 +16,7 @@ import { parseScene } from "../src/scene/schema";
 import { buildMaskForScene, createFixtureScene } from "../src/scene/fixture";
 import { createCarAtSpawn, stepCar } from "../src/sim/car";
 import { objectHeight, objectRadius } from "../src/sim/archetypes";
+import { partGeometry } from "../src/scene/object-geometry";
 import { buildPaperMask } from "../src/sim/mask";
 
 const worldScene = createWorldScene();
@@ -54,6 +55,34 @@ describe("continuous road trim", () => {
 });
 
 describe("connected object assemblies", () => {
+  it.each(["Timber workshop","Brick bakehouse"])("connects %s's detachable canopy to its supporting wall", name => {
+    const object=worldScene.objects.find(o=>o.spec?.displayName===name)!;
+    const spec=object.spec!;
+    if(!("dslVersion" in spec) || spec.dslVersion!==2)throw new Error("expected Dream 2 building");
+    const model=buildObject({...object,scale:1});
+    const wall=spec.parts.find(p=>!p.zone && p.shape==="box" && p.size[0]>=40 && p.size[1]>=40)!;
+    const wallBounds=new THREE.Box3().setFromObject(model.getObjectByName(wall.id)!,true);
+    const roofs=spec.parts.filter(p=>p.zone && p.shape==="box" && p.size[0]>=40 && p.size[1]<=4);
+    expect(roofs.length).toBeGreaterThan(0);
+    for(const roof of roofs){
+      const bounds=new THREE.Box3().setFromObject(model.getObjectByName(roof.id)!,true);
+      expect(bounds.min.x).toBeLessThanOrEqual(wallBounds.max.x);
+      expect(bounds.max.y).toBeLessThanOrEqual(wallBounds.max.y);
+    }
+  });
+  it("keeps long plank tops flat near their ends and leaves a usable hole in thin rings", () => {
+    const base = {id:"detail",position:[0,0,0] as [number,number,number],material:mockCastle.parts[0]!.material};
+    const board = new THREE.Mesh(partGeometry({...base,shape:"box",size:[60,4,6]}),new THREE.MeshBasicMaterial());
+    board.scale.set(60,4,6);board.updateMatrixWorld(true);
+    const ray = new THREE.Raycaster(new THREE.Vector3(29,20,0),new THREE.Vector3(0,-1,0));
+    expect(ray.intersectObject(board)[0]!.point.y).toBeCloseTo(2,5);
+    const ring = new THREE.Mesh(partGeometry({...base,shape:"torus",size:[20,20,3]}),new THREE.MeshBasicMaterial());
+    ring.scale.set(20,20,3);ring.updateMatrixWorld(true);
+    ray.set(new THREE.Vector3(6,0,20),new THREE.Vector3(0,0,-1));
+    expect(ray.intersectObject(ring)).toHaveLength(0);
+    ray.set(new THREE.Vector3(8,0,20),new THREE.Vector3(0,0,-1));
+    expect(ray.intersectObject(ring).length).toBeGreaterThan(0);
+  });
   it.each(["box", "sphere", "cylinder", "cone", "pyramid", "icosphere"] as const)("honors the declared XYZ dimensions for %s", shape => {
     const spec = objectDslSchema.parse({ ...mockCastle, foundation: undefined, parts: [{ id: "part", shape, position: [0, 12, 0], size: [30, 24, 18], material: mockCastle.parts[0]!.material }] });
     const built = buildObject({ id: "shape", kind: "custom", labelText: "shape", x: 0, y: 0, scale: 1, spec });

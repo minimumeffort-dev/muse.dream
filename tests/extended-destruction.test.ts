@@ -38,7 +38,9 @@ describe("Dream 2 destruction authoring",()=>{
     expect(examples.assemblies).toHaveLength(6);expect(spec("Leaning birch").impact).toMatchObject({kind:"topple",duration:1.1});
     expect(objectFragments(spec("Slatted park bench"))).toHaveLength(7);
     const house=spec("Brick bakehouse");expect(house.impact).toBeUndefined();expect(house.breakZones![0]!.impact.pattern).toBe("crumble");
-    expect(house.parts.filter(p=>p.zone)).toHaveLength(8);expect(objectFragments(house)).toHaveLength(8);
+    expect(house.parts.filter(p=>p.zone)).toHaveLength(9);expect(objectFragments(house)).toHaveLength(8);
+    const cover=house.parts.find(p=>p.zone && p.size[0]===42)!;
+    expect(house.parts.filter(p=>p.fragment===cover.fragment)).toHaveLength(2);
     expect(house.parts.some(p=>!p.zone)).toBe(true);
   });
   it.each([

@@ -23,6 +23,8 @@ The gallery frames each asset independently to show its construction. The
 
 Cylinders, cones and capsules point along local Y; a torus hole points along local Z. A rotated primitive keeps its own motion axes. `beam` takes `from` and `to` endpoints and builds a connected box, cylinder or capsule between them.
 
+Box bevels follow the smallest physical dimension, so a long plank keeps crisp ends. Rings use a slimmer profile for tyres, rims and handles while keeping their declared outer dimensions. The [asset library](../asset-library.md) shows how the current world uses these shapes for window frames, pedals, bark, food and detachable building details.
+
 Materials are engine-owned styles: `toon`, `grain`, `glow`, `stripes` or `cloth`, each with two hex colors. `grain` maps to the engine's paper-grain material. Cloth supplies flag-like wind deformation; it isn't a clothing simulator. `deform(seed=...,amount=...)` adds bounded, deterministic variation to supported parts.
 
 ## Give it a physical size

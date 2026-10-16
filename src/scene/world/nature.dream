@@ -1,4 +1,6 @@
 dream 2;
+material bark_mark(style=toon,colors=[#4d5145,#4d5145]);
+material lichen(style=toon,colors=[#708257,#708257]);
 material m0(style=toon,colors=[#d5d2b9,#8a978b]);
 material m1(style=toon,colors=[#648553,#3b5c44]);
 material m2(style=toon,colors=[#3d6858,#294b43]);
@@ -14,50 +16,63 @@ object birch(label="Birch"){
   body(interaction=solid,radius=9,height=68);
   part trunk(shape=cylinder,material=m0,at=[0,23,0],size=[4,46,4]);
   part fork(shape=cylinder,material=m0,at=[-5,34,0],size=[2,23,2],rot_deg=[0,0,-27.501974166279513]);
-  part upper_crown(shape=icosphere,material=m1,at=[1,53,0],size=[24,29,21],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
-  part side_crown(shape=icosphere,material=m1,at=[-9,43,1],size=[20,23,18],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
-  part lower_crown(shape=icosphere,material=m2,at=[7,40,-3],size=[17,21,16],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
+  part upper_crown(shape=icosphere,material=m1,at=[1,53,0],size=[24,29,21],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),deform=deform(seed=8995,amount=.14));
+  part side_crown(shape=icosphere,material=m1,at=[-9,43,1],size=[20,23,18],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),deform=deform(seed=9026,amount=.14));
+  part lower_crown(shape=icosphere,material=m2,at=[7,40,-3],size=[17,21,16],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),deform=deform(seed=9057,amount=.14));
+  repeat bark_marks(index=b,count=4){part mark(shape=box,material=bark_mark,at=[.2,8+b*9,1.8],size=[2.7,.7,.5],rot_deg=[0,0,b*4-6]);}
+  beam twig(shape=cylinder,material=m0,from=[0,29,0],to=[8,42,-3],width=1.5,depth=1.5);
+  part light_leaves(shape=icosphere,material=m1,at=[5,54,4],size=[14,17,13],deform=deform(seed=175,amount=.13));
 }
 object silver_fir(label="Silver fir"){
   measure(kind=tree,axis=y,meters=13);
   body(interaction=solid,radius=13,height=76);
   part trunk(shape=cylinder,material=m3,at=[0,30,0],size=[5,60,5]);
-  part bough_0(shape=cone,material=m2,at=[0,22,0],size=[39,22,33.15],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
-  part bough_1(shape=cone,material=m1,at=[-2,35,0],size=[32,23,27.2],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
-  part bough_2(shape=cone,material=m2,at=[1,48,0],size=[25,23,21.25],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
-  part bough_3(shape=cone,material=m1,at=[0,62,0],size=[16,28,13.6],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
+  part bough_0(shape=cone,material=m2,at=[0,22,0],size=[39,22,33.15],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),deform=deform(seed=18433,amount=.14));
+  part bough_1(shape=cone,material=m1,at=[-2,35,0],size=[32,23,27.2],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),deform=deform(seed=18464,amount=.14));
+  part bough_2(shape=cone,material=m2,at=[1,48,0],size=[25,23,21.25],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),deform=deform(seed=18495,amount=.14));
+  part bough_3(shape=cone,material=m1,at=[0,62,0],size=[16,28,13.6],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),deform=deform(seed=18526,amount=.14));
+  beam exposed_root(shape=cylinder,material=m3,from=[-5,1,0],to=[0,6,0],width=2,depth=2);
+  repeat needles(index=n,count=3){part tip(shape=cone,material=m2,at=[n*8-8,22+n*12,5],size=[12-n*2,13,12-n*2],rot_deg=[0,n*25,0],deform=deform(seed=18588,amount=.14));}
 }
 object young_rowan(label="Young rowan"){
   measure(kind=tree,axis=y,meters=5.5);
   body(interaction=solid,radius=6,height=35);
   part stem(shape=cylinder,material=m3,at=[0,11,0],size=[2,22,2]);
-  part crown(shape=icosphere,material=m1,at=[-2,26,0],size=[17,17,14],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
-  part side_leaves(shape=icosphere,material=m2,at=[5,19,1],size=[12,13,12],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
+  part crown(shape=icosphere,material=m1,at=[-2,26,0],size=[17,17,14],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),deform=deform(seed=20660,amount=.14));
+  part side_leaves(shape=icosphere,material=m2,at=[5,19,1],size=[12,13,12],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),deform=deform(seed=20691,amount=.14));
+  beam fork(shape=cylinder,material=m3,from=[0,10,0],to=[-5,23,1],width=1,depth=1);
+  repeat berries(index=b,count=3){part berry(shape=sphere,material=m9,at=[b*3-3,23,6],size=[2,2,2]);}
 }
 object wild_shrub(label="Wild shrub"){
   measure(kind=custom,axis=y,meters=0.8);
   body(interaction=decor,radius=12,height=15);
-  part left(shape=icosphere,material=m2,at=[-8,6,0],size=[18,12,17]);
-  part center(shape=icosphere,material=m1,at=[2,8,-3],size=[22,16,18]);
-  part right(shape=icosphere,material=m2,at=[11,5,3],size=[13,10,13]);
+  part left(shape=icosphere,material=m2,at=[-8,6,0],size=[18,12,17],deform=deform(seed=18368,amount=.14));
+  part center(shape=icosphere,material=m1,at=[2,8,-3],size=[22,16,18],deform=deform(seed=18399,amount=.14));
+  part right(shape=icosphere,material=m2,at=[11,5,3],size=[13,10,13],deform=deform(seed=18430,amount=.14));
+  beam stem(shape=cylinder,material=m3,from=[0,1,0],to=[-5,9,0],width=1.5,depth=1.5);
+  part new_growth(shape=icosphere,material=m1,at=[6,11,4],size=[12,8,10],deform=deform(seed=337,amount=.17));
 }
 object juniper_scrub(label="Juniper scrub"){
   measure(kind=custom,axis=y,meters=1.2);
   body(interaction=decor,radius=10,height=23);
-  part bush(shape=icosphere,material=m2,at=[0,9,0],size=[22,18,21]);
-  part shoot(shape=cone,material=m1,at=[-4,15,1],size=[12,19,11]);
+  part bush(shape=icosphere,material=m2,at=[0,9,0],size=[22,18,21],deform=deform(seed=23944,amount=.14));
+  part shoot(shape=cone,material=m1,at=[-4,15,1],size=[12,19,11],deform=deform(seed=23975,amount=.14));
+  repeat berries(index=b,count=3){part berry(shape=sphere,material=m8,at=[b*4-4,12+b,8],size=[2,2,2]);}
+  part branch(shape=cylinder,material=m3,at=[0,5,0],size=[3,10,3]);
 }
 object weathered_boulder(label="Weathered boulder"){
   measure(kind=custom,axis=y,meters=2);
   body(interaction=solid,radius=21,height=34);
   ground(mode=surface);
-  part stone(shape=icosphere,material=m4,at=[0,14,0],size=[37,32,29],rot_deg=[0,29.79380534680281,6.875493541569878]);
+  part stone(shape=icosphere,material=m4,at=[0,14,0],size=[37,32,29],rot_deg=[0,29.79380534680281,6.875493541569878],deform=deform(seed=418,amount=.18));
+  part lichen_patch(shape=icosphere,material=lichen,at=[-4,25,0],size=[18,2,14],deform=deform(seed=61,amount=.21));
 }
 object exposed_stone_slab(label="Exposed stone slab"){
   measure(kind=custom,axis=x,meters=3);
   body(interaction=solid,radius=27,height=14);
   ground(mode=surface);
-  part slab(shape=icosphere,material=m4,at=[0,5,0],size=[51,14,30],rot_deg=[0,-22.91831180523293,3.437746770784939]);
+  part slab(shape=icosphere,material=m4,at=[0,5,0],size=[51,14,30],rot_deg=[0,-22.91831180523293,3.437746770784939],deform=deform(seed=637,amount=.18));
+  part lichen_patch(shape=icosphere,material=lichen,at=[-4,10,0],size=[18,2,14],deform=deform(seed=61,amount=.21));
 }
 object standing_deadwood(label="Standing deadwood"){
   measure(kind=tree,axis=y,meters=6);
@@ -65,6 +80,9 @@ object standing_deadwood(label="Standing deadwood"){
   part trunk(shape=cylinder,material=m3,at=[0,20,0],size=[6,40,6]);
   part left_branch(shape=cylinder,material=m3,at=[-6,29,0],size=[3,19,3],rot_deg=[0,0,-41.8259190445501]);
   part right_branch(shape=cylinder,material=m3,at=[5,23,2],size=[3,15,3],rot_deg=[0,22.91831180523293,45.83662361046586]);
+  part cut_top(shape=cylinder,material=m5,at=[0,39,0],size=[5,1,5]);
+  beam root(shape=cylinder,material=m3,from=[-6,1,0],to=[0,7,0],width=3,depth=3);
+  beam snapped_twig(shape=cylinder,material=m3,from=[0,18,0],to=[-6,23,4],width=2,depth=2);
 }
 object fallen_log(label="Fallen log"){
   measure(kind=custom,axis=x,meters=3);
@@ -74,6 +92,8 @@ object fallen_log(label="Fallen log"){
   part cut_neg_1(shape=cylinder,material=m5,at=[-22,5,0],size=[9,0.5,9],rot_deg=[0,0,90]);
   part cut_1(shape=cylinder,material=m5,at=[22,5,0],size=[9,0.5,9],rot_deg=[0,0,90]);
   part broken_branch(shape=cylinder,material=m3,at=[-5,9,1],size=[3,13,3],rot_deg=[0,17.188733853924695,-34.37746770784939]);
+  repeat growth_rings(index=e,count=2){part ring(shape=torus,material=m3,at=[e*44-22,5,0],size=[7,7,.6],rot_deg=[0,90,0]);}
+  repeat bark_grooves(index=g,count=3){part groove(shape=box,material=bark_mark,at=[0,5+g*2,5-g],size=[36,.6,.6],rot_deg=[0,0,g-1]);}
 }
 object timber_barn(label="Timber barn"){
   measure(kind=building,axis=y,meters=8);
@@ -86,6 +106,11 @@ object timber_barn(label="Timber barn"){
   part door_post_1(shape=box,material=m5,at=[14,15,22],size=[3,30,2]);
   part lintel(shape=box,material=m5,at=[0,29,22],size=[31,3,2]);
   part door_bar(shape=box,material=m5,at=[0,13,22.3],size=[24,2,1]);
+  repeat cladding(index=c,count=5){part board(shape=box,material=m5,at=[c*9-18,16,21.5],size=[.7,27,.6]);}
+  beam door_brace_left(shape=box,material=m5,from=[-11,3,22.8],to=[0,24,22.8],width=2,depth=1);
+  beam door_brace_right(shape=box,material=m5,from=[0,24,22.8],to=[11,3,22.8],width=2,depth=1);
+  part loft_shadow(shape=box,material=m3,at=[0,29,21.8],size=[9,5,1]);
+  part base_course(shape=box,material=m4,at=[0,2,0],size=[55,4,43]);
 }
 object village_well(label="Village well"){
   measure(kind=custom,axis=y,meters=2.5);
@@ -104,15 +129,23 @@ object village_well(label="Village well"){
   part roof(shape=pyramid,material=m3,at=[0,40,0],size=[38,15,30]);
   part spindle(shape=cylinder,material=m3,at=[0,27,0],size=[3,31,3],rot_deg=[0,0,90]);
   part water(shape=cylinder,material=m8,at=[0,5,0],size=[17,1,17]);
+  part bucket(shape=cylinder,material=m5,at=[0,14,0],size=[8,9,8]);
+  part rope(shape=cylinder,material=m3,at=[0,22,0],size=[.5,9,.5]);
+  part crank(shape=box,material=m3,at=[17,24,0],size=[2,8,2]);
+  part crank_grip(shape=cylinder,material=m5,at=[19,20,0],size=[2,5,2],rot_deg=[0,0,90]);
+  part coping(shape=torus,material=m4,at=[0,12,0],size=[28,28,3],rot_deg=[90,0,0]);
 }
 object old_apple_tree(label="Old apple tree"){
   measure(kind=tree,axis=y,meters=5.5);
   body(interaction=solid,radius=11,height=37);
   part trunk(shape=cylinder,material=m3,at=[0,10,0],size=[5,20,5]);
-  part crown_left(shape=icosphere,material=m1,at=[-8,25,0],size=[23,21,22],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
-  part crown_right(shape=icosphere,material=m2,at=[8,26,1],size=[25,21,23],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
+  part crown_left(shape=icosphere,material=m1,at=[-8,25,0],size=[23,21,22],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),deform=deform(seed=25131,amount=.14));
+  part crown_right(shape=icosphere,material=m2,at=[8,26,1],size=[25,21,23],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),deform=deform(seed=25162,amount=.14));
   part apple_0(shape=sphere,material=m9,at=[-13,24,7],size=[3,3,3]);
   part apple_1(shape=sphere,material=m9,at=[6,28,11],size=[3,3,3]);
   part apple_2(shape=sphere,material=m9,at=[15,23,5],size=[3,3,3]);
   part apple_3(shape=sphere,material=m9,at=[-1,19,8],size=[3,3,3]);
+  beam left_fork(shape=cylinder,material=m3,from=[0,10,0],to=[-8,24,0],width=3,depth=3);
+  beam right_fork(shape=cylinder,material=m3,from=[0,10,0],to=[9,25,1],width=3,depth=3);
+  repeat fruit_stems(index=f,count=2){part stem(shape=cylinder,material=m3,at=[f*19-13,26+f*4,7+f*4],size=[.6,2,.6]);}
 }

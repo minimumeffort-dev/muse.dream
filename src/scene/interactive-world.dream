@@ -51,6 +51,10 @@ object meadow_locomotive(label="Meadow locomotive"){
     part cab_post(shape=box,material=red,at=[-11,36,side*26-13],size=[3,15,3]);
   }
   part roof(shape=box,material=dark,at=[-22,46,0],size=[32,4,35]);
+  repeat boiler_bands(index=b,count=2){part band(shape=torus,material=steel,at=[b*20+1,25,0],size=[23,23,1.5],rot_deg=[0,90,0]);}
+  repeat cab_glass(index=s,count=2){part window(shape=box,material=glass,at=[-22,36,s*26-13],size=[16,11,.5]);}
+  part chimney_foot(shape=cylinder,material=dark,at=[23,33,0],size=[11,3,11]);
+  part smokebox_door(shape=cylinder,material=dark,at=[34.3,25,0],size=[16,.6,16],rot_deg=[0,0,90]);
 }
 object passenger_carriage(label="Passenger carriage"){
   measure(kind=train,axis=x,meters=8);
@@ -61,6 +65,7 @@ object passenger_carriage(label="Passenger carriage"){
     }
     repeat repeat_window(index=window,count=3){
       part window(shape=box,material=glass,at=[(window-1)*20,32,side*28-14],size=[13,13,1]);
+      part divider(shape=box,material=cream,at=[(window-1)*20,32,side*29-14.5],size=[.7,13,.5]);
     }
     part stripe(shape=box,material=cream,at=[0,22,side*28-14],size=[69,4,1]);
   }
@@ -70,6 +75,8 @@ object passenger_carriage(label="Passenger carriage"){
   repeat repeat_end(index=end,count=2){
     part coupling(shape=box,material=dark,at=[end*84-42,13,0],size=[14,3,4]);
   }
+  repeat ends(index=e,count=2){part end_door(shape=box,material=wood,at=[e*71-35.5,28,0],size=[.5,22,10]);}
+  repeat vents(index=v,count=2){part vent(shape=box,material=steel,at=[v*34-17,46.5,0],size=[5,1,8]);}
 }
 object cloudhopper_plane(label="Cloudhopper plane"){
   measure(kind=plane,axis=z,meters=10.8);
@@ -88,6 +95,17 @@ object cloudhopper_plane(label="Cloudhopper plane"){
     part wheel(shape=cylinder,material=dark,at=[8,5,side*24-12],size=[10,4,10],rot_deg=[90,0,0],motion=roll(axis=y,radius=5));
   }
   part tail_wheel(shape=sphere,material=dark,at=[-29,4,0],size=[5,5,5]);
+  repeat wing_details(index=s,count=2){
+    let sign(value=s*2-1);
+    part aileron_seam(shape=box,material=dark,at=[-4,14.5,sign*26],size=[.6,.5,30]);
+    part wing_tip(shape=box,material=red,at=[3,13,sign*43],size=[22,3,5]);
+    part wing_stripe(shape=box,material=cream,at=[3,14.5,sign*35],size=[20,.5,3]);
+    part wheel_hub(shape=cylinder,material=steel,at=[8,5,sign*14],size=[5,.6,5],rot_deg=[90,0,0],motion=roll(axis=y,radius=5));
+    part cockpit_frame(shape=torus,material=steel,at=[s*8-13,20,0],size=[14,10,.7],rot_deg=[0,90,0]);
+    part navigation_light(shape=sphere,material=gold,at=[3,14,sign*45],size=[1.5,.5,1.5]);
+    part rudder_seam(shape=box,material=cream,at=[-30,22,sign*1.6],size=[.7,12,.5]);
+  }
+  beam tail_strut(shape=cylinder,material=steel,from=[-28,10,0],to=[-29,4,0],width=1,depth=1);
 }
 object willow_launch(label="Willow launch"){
   measure(kind=boat,axis=x,meters=6);
@@ -99,7 +117,7 @@ object willow_launch(label="Willow launch"){
   part roof(shape=box,material=red,at=[-7,30,0],size=[31,4,28]);
   part windshield(shape=box,material=glass,at=[6,23,0],size=[1,10,17]);
   repeat repeat_side(index=side,count=2){
-    part window(shape=box,material=glass,at=[-7,23,side*23-11.5],size=[16,10,1]);
+    part window(shape=sphere,material=glass,at=[-7,23,side*23-11.5],size=[16,10,1]);
     beam rail(shape=cylinder,material=steel,from=[10,17,side*23-11.5],to=[27,17,side*16-8],width=1,depth=1);
     repeat repeat_post(index=post,count=2){
       part post(shape=cylinder,material=steel,at=[12+post*13,14,side*21-10.5],size=[1,7,1]);
@@ -108,6 +126,15 @@ object willow_launch(label="Willow launch"){
   part seat(shape=box,material=red,at=[17,13,0],size=[12,4,13]);
   part mast(shape=cylinder,material=wood,at=[-23,26,0],size=[2,30,2]);
   part pennant(shape=box,material=red,at=[-17,36,0],size=[12,8,1]);
+  repeat sides(index=s,count=2){
+    let sign(value=s*2-1);
+    beam rubbing_strake(shape=box,material=wood,from=[-25,8,sign*12],to=[25,8,sign*12],width=1.5,depth=1.5);
+    part porthole(shape=torus,material=steel,at=[-7,23,sign*12],size=[18,12,1]);
+    part windscreen_post(shape=box,material=wood,at=[6.5,23,sign*7.5],size=[1,10,1]);
+    part lifering(shape=torus,material=red,at=[-18,17,sign*11.7],size=[9,9,1.5]);
+  }
+  repeat deck_seams(index=d,count=3){part seam(shape=box,material=dark,at=[0,12,d*6-6],size=[49,.5,.5]);}
+  part bow_cleat(shape=box,material=steel,at=[25,14,0],size=[2,2,6]);
 }
 object meadow_bicycle(label="Meadow bicycle"){
   measure(kind=bicycle,axis=x,meters=1.8);
@@ -124,6 +151,17 @@ object meadow_bicycle(label="Meadow bicycle"){
   part saddle(shape=capsule,material=dark,at=[-6,28,0],size=[6,12,4],rot_deg=[0,0,90]);
   beam handlebar(shape=cylinder,material=dark,from=[12,32,-8],to=[12,32,8],width=2,depth=2);
   part crank(shape=cylinder,material=steel,at=[-3,12,0],size=[5,5,5],rot_deg=[90,0,0],motion=roll(axis=y,radius=10));
+  beam steering_stem(shape=cylinder,material=steel,from=[12,26,0],to=[12,32,0],width=2,depth=2);
+  beam seat_post(shape=cylinder,material=steel,from=[-6,24,0],to=[-6,28,0],width=1.5,depth=1.5);
+  beam chain_top(shape=box,material=dark,from=[-19,12,2],to=[-3,14,2],width=.6,depth=.6);
+  beam chain_bottom(shape=box,material=dark,from=[-19,9,2],to=[-3,10,2],width=.6,depth=.6);
+  repeat pedals(index=s,count=2){
+    let sign(value=s*2-1);
+    beam crank_arm(shape=box,material=steel,from=[-3,12,0],to=[-3+sign*3,12+sign*3,sign*4],width=1,depth=1);
+    part pedal(shape=box,material=dark,at=[-3+sign*3,12+sign*3,sign*5],size=[4,1.5,3]);
+    part grip(shape=capsule,material=dark,at=[12,32,sign*7],size=[2,4,2],rot_deg=[90,0,0]);
+  }
+  part bell(shape=cylinder,material=gold,at=[12,33,-4],size=[2.5,1,2.5]);
 }
 object maple_skateboard(label="Maple skateboard"){
   measure(kind=skateboard,axis=x,meters=0.82);
@@ -135,6 +173,15 @@ object maple_skateboard(label="Maple skateboard"){
     part truck(shape=box,material=steel,at=[axle*26-13,4,0],size=[4,3,14]);
     repeat repeat_side(index=side,count=2){
       part wheel(shape=cylinder,material=gold,at=[axle*26-13,3,side*14-7],size=[6,3,6],rot_deg=[90,0,0],motion=roll(axis=y,radius=3));
+    }
+  }
+  repeat ends(index=e,count=2){
+    let sign(value=e*2-1);
+    part kick(shape=capsule,material=wood,at=[sign*17.8,8.5,0],size=[2,7,11],rot_deg=[0,0,sign*78]);
+    part kingpin(shape=cylinder,material=steel,at=[sign*13,5,0],size=[2,3,2]);
+    repeat sides(index=s,count=2){
+      part hub(shape=cylinder,material=steel,at=[sign*13,3,s*17-8.5],size=[3,.5,3],rot_deg=[90,0,0],motion=roll(axis=y,radius=3));
+      part bolt(shape=cylinder,material=steel,at=[sign*13,8.7,s*6-3],size=[1,.5,1]);
     }
   }
 }
@@ -164,6 +211,14 @@ object meadow_station_2(label="Meadow station"){
   use opening_door(component=opening_door,args=[]);
   part clock(shape=sphere,material=cream,at=[38,46,0],size=[2,10,10]);
   part clock_hand(shape=box,material=dark,at=[39,47,0],size=[1,5,1]);
+  repeat sides(index=s,count=2){
+    let sign(value=s*2-1);
+    part window_upright(shape=box,material=cream,at=[0,30,sign*31.7],size=[1,18,.6]);
+    part window_cross(shape=box,material=cream,at=[0,30,sign*31.7],size=[22,1,.6]);
+    part drainpipe(shape=cylinder,material=dark,at=[-28,23,sign*31.5],size=[1.5,46,1.5]);
+    part eave(shape=box,material=wood,at=[0,45,sign*33],size=[82,3,3]);
+  }
+  part clock_hour(shape=box,material=dark,at=[39,46,1.5],size=[.5,.7,4]);
 }
 object lakeside_boathouse(label="Lakeside boathouse"){
   measure(kind=building,axis=y,meters=6);
@@ -183,7 +238,12 @@ object lakeside_boathouse(label="Lakeside boathouse"){
   part roof(shape=pyramid,material=teal,at=[0,48,0],size=[84,20,78]);
   part lintel(shape=box,material=cream,at=[35,40,0],size=[5,8,52]);
   use opening_door(component=opening_door,args=[]);
-  part lifering(shape=torus,material=red,at=[38,27,23],size=[2,12,12],rot_deg=[0,90,0]);
+  part lifering(shape=torus,material=red,at=[38,27,23],size=[12,12,2],rot_deg=[0,90,0]);
+  repeat sides(index=s,count=2){
+    repeat siding(index=b,count=4){part batten(shape=box,material=cream,at=[b*17-25.5,21,s*62-31],size=[1,38,1]);}
+    part eave(shape=box,material=wood,at=[0,38.5,s*66-33],size=[80,3,3]);
+  }
+  part door_lamp(shape=sphere,material=gold,at=[38,41,-16],size=[4,5,4]);
 }
 object mossy_passage(label="Mossy passage"){
   measure(kind=building,axis=y,meters=10);
@@ -210,6 +270,11 @@ object mossy_passage(label="Mossy passage"){
       part cap(shape=box,material=cream,at=[side*94-47,58,pillar*106-53],size=[6,9,30]);
     }
   }
+  repeat sides(index=s,count=2){
+    part footing(shape=box,material=stone,at=[0,3,s*108-54],size=[96,6,27]);
+    part key_course(shape=box,material=cream,at=[s*96-48,71,0],size=[2,8,22]);
+    repeat ivy(index=i,count=2){part ivy(shape=icosphere,material=moss,at=[s*96-48,66,i*84-42],size=[3,6,13],deform=deform(seed=62+i*9+s,amount=.17));}
+  }
 }
 object traveler(label="Traveler"){
   measure(kind=custom,axis=y,meters=1.25);
@@ -227,6 +292,12 @@ object traveler(label="Traveler"){
     beam shin(shape=capsule,material=dark,from=[10,-5,z*0.6],to=[13,-14,z*0.6],width=4,depth=4);
     part shoe(shape=box,material=cream,at=[15,-14,z*0.6],size=[8,4,5]);
   }
+  repeat sides(index=s,count=2){
+    let sign(value=s*2-1);
+    part hand(shape=sphere,material=skin,at=[13,4,sign*5],size=[4,3,3]);
+    part ear(shape=sphere,material=skin,at=[0,27,sign*6.3],size=[3,3,2.5]);
+  }
+  part backpack(shape=box,material=wood,at=[-7,10,0],size=[6,12,11]);
 }
 route orchard_rail(kind=rail,mode=loop,speed=72,wait_s=4){
   repeat repeat_i(index=i,count=24){

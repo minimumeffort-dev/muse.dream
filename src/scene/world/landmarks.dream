@@ -1,4 +1,8 @@
 dream 2;
+material glazing(style=toon,colors=[#6497a5,#294c62]);
+material trim(style=toon,colors=[#d1c5a5,#a99b7e]);
+material metal(style=toon,colors=[#a2aaa7,#66757c]);
+material cut_wood(style=grain,colors=[#9c754e,#d1aa74]);
 material m0(style=toon,colors=[#aeb7af,#53666a]);
 material m1(style=toon,colors=[#26272e,#424854]);
 material m2(style=toon,colors=[#813b4e,#542d42]);
@@ -44,6 +48,15 @@ object castle(label="Castle"){
   part battlement_neg_7(shape=box,material=m0,at=[-7,44,8],size=[4,6,4]);
   part battlement_0(shape=box,material=m0,at=[0,44,8],size=[4,6,4]);
   part battlement_7(shape=box,material=m0,at=[7,44,8],size=[4,6,4]);
+  repeat tower_trim(index=t,count=2){
+    repeat tower_row(index=r,count=2){
+      part collar(shape=cylinder,material=trim,at=[t*32-16,37,r*28-14],size=[11,3,11]);
+    }
+  }
+  repeat gate_posts(index=s,count=2){part jamb(shape=box,material=trim,at=[s*12-6,9,15],size=[3,18,2]);}
+  part arch_lintel(shape=box,material=trim,at=[0,18,15],size=[15,3,2]);
+  part timber_gate(shape=box,material=cut_wood,at=[0,6,15.1],size=[7,12,.5]);
+  repeat rear_merlons(index=m,count=3){part merlon(shape=box,material=m0,at=[m*7-7,44,-8],size=[4,6,4]);}
 }
 object mushroom(label="Mushroom"){
   measure(kind=custom,axis=y,meters=0.6);
@@ -52,6 +65,8 @@ object mushroom(label="Mushroom"){
   part cap(shape=sphere,material=m6,at=[0,17,0],size=[22,10,20]);
   part spot_left(shape=sphere,material=m4,at=[-5,21,2],size=[4,2,4]);
   part spot_right(shape=sphere,material=m4,at=[5,21,-2],size=[3,2,3]);
+  part gills(shape=cylinder,material=trim,at=[0,14,0],size=[17,1,16]);
+  repeat gill_lines(index=g,count=3){part gill(shape=box,material=cut_wood,at=[g*4-4,13.4,4],size=[.5,.5,6],rot_deg=[0,g*20-20,0]);}
 }
 object mushroom_rover(label="Mushroom rover"){
   measure(kind=custom,axis=x,meters=2.2);
@@ -63,37 +78,52 @@ object mushroom_rover(label="Mushroom rover"){
   part wheel_ne(shape=cylinder,material=m1,at=[8,4,-9],size=[8,4,8],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
   part wheel_sw(shape=cylinder,material=m1,at=[-8,4,9],size=[8,4,8],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
   part wheel_se(shape=cylinder,material=m1,at=[8,4,9],size=[8,4,8],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
+  repeat hub_sides(index=s,count=2){
+    repeat hubs(index=w,count=2){part hub(shape=cylinder,material=metal,at=[w*16-8,4,s*22.2-11.1],size=[4,.6,4],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));}
+    part lamp(shape=sphere,material=m13,at=[11,9,s*10-5],size=[2,2,3]);
+    part spot(shape=sphere,material=m4,at=[s*10-5,26,2],size=[4,1.5,4]);
+  }
 }
 object oak(label="Oak"){
   measure(kind=tree,axis=y,meters=10);
   body(interaction=solid,radius=14,height=56);
   part trunk(shape=cylinder,material=m8,at=[0,14,0],size=[6,28,6]);
   part branch(shape=cylinder,material=m8,at=[-5,24,0],size=[3,17,3],rot_deg=[0,0,-34.37746770784939]);
-  part crown(shape=icosphere,material=m9,at=[0,40,0],size=[34,32,32],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
-  part crown_left(shape=icosphere,material=m10,at=[-12,33,3],size=[24,24,23],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
-  part crown_right(shape=icosphere,material=m9,at=[12,35,-4],size=[23,25,24],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
+  part crown(shape=icosphere,material=m9,at=[0,40,0],size=[34,32,32],motion=sway(deg=1.432394487827058,hz=0.1909859317102744),deform=deform(seed=5510,amount=.14));
+  part crown_left(shape=icosphere,material=m10,at=[-12,33,3],size=[24,24,23],motion=sway(deg=1.432394487827058,hz=0.1909859317102744),deform=deform(seed=5541,amount=.14));
+  part crown_right(shape=icosphere,material=m9,at=[12,35,-4],size=[23,25,24],motion=sway(deg=1.432394487827058,hz=0.1909859317102744),deform=deform(seed=5572,amount=.14));
+  beam root_left(shape=cylinder,material=m8,from=[-5,1,1],to=[0,7,0],width=2,depth=2);
+  beam root_right(shape=cylinder,material=m8,from=[5,1,-2],to=[0,7,0],width=2,depth=2);
+  beam second_fork(shape=cylinder,material=m8,from=[0,19,0],to=[9,31,-4],width=3,depth=3);
+  part bark_scar(shape=box,material=cut_wood,at=[1,12,2.8],size=[1,7,.5]);
 }
 object pine(label="Pine"){
   measure(kind=tree,axis=y,meters=12);
   body(interaction=solid,radius=12,height=64);
   part trunk(shape=cylinder,material=m8,at=[0,12,0],size=[5,24,5]);
-  part lower_crown(shape=cone,material=m9,at=[0,30,0],size=[37,30,37],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
-  part middle_crown(shape=cone,material=m10,at=[0,43,0],size=[29,27,29],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
-  part upper_crown(shape=cone,material=m9,at=[0,55,0],size=[19,24,19],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
+  part lower_crown(shape=cone,material=m9,at=[0,30,0],size=[37,30,37],motion=sway(deg=1.432394487827058,hz=0.1909859317102744),deform=deform(seed=7400,amount=.14));
+  part middle_crown(shape=cone,material=m10,at=[0,43,0],size=[29,27,29],motion=sway(deg=1.432394487827058,hz=0.1909859317102744),deform=deform(seed=7431,amount=.14));
+  part upper_crown(shape=cone,material=m9,at=[0,55,0],size=[19,24,19],motion=sway(deg=1.432394487827058,hz=0.1909859317102744),deform=deform(seed=7462,amount=.14));
+  beam root_left(shape=cylinder,material=m8,from=[-4,1,1],to=[0,5,0],width=2,depth=2);
+  beam root_right(shape=cylinder,material=m8,from=[4,1,-2],to=[0,5,0],width=2,depth=2);
+  part bough_tip(shape=cone,material=m10,at=[-7,27,3],size=[15,14,13],rot_deg=[0,0,-8],deform=deform(seed=7555,amount=.14));
+  part bough_tip_2(shape=cone,material=m9,at=[6,40,-4],size=[11,13,10],rot_deg=[0,0,9],deform=deform(seed=7586,amount=.14));
 }
 object boulders(label="Boulders"){
   measure(kind=custom,axis=y,meters=1.6);
   body(interaction=solid,radius=18,height=22);
   ground(mode=surface);
-  part large(shape=icosphere,material=m0,at=[-5,11,0],size=[29,22,26]);
+  part large(shape=icosphere,material=m0,at=[-5,11,0],size=[29,22,26],deform=deform(seed=319,amount=.16));
   part small(shape=icosphere,material=m0,at=[12,6,5],size=[18,12,18],rot_deg=[0,40.10704565915762,11.459155902616464]);
+  part lichen(shape=icosphere,material=m9,at=[-7,19,2],size=[15,2,14],deform=deform(seed=312,amount=.18));
+  part chip(shape=icosphere,material=m0,at=[3,2,-9],size=[9,4,8],deform=deform(seed=118,amount=.22));
 }
 object little_rally_car(label="Little rally car"){
   measure(kind=car,axis=x,meters=3.55);
   body(interaction=solid,radius=11,height=14);
   part chassis(shape=box,material=m11,at=[0,6,0],size=[33,7,17]);
   part hood(shape=box,material=m11,at=[10,10,0],size=[12,3,16]);
-  part cab(shape=box,material=m12,at=[-4,11,0],size=[16,8,14]);
+  part cab(shape=box,material=glazing,at=[-4,11,0],size=[16,8,14]);
   part roof(shape=box,material=m4,at=[-4,15,0],size=[15,2,13]);
   part stripe(shape=box,material=m4,at=[10,11.6,0],size=[12,0.5,3]);
   part bumper(shape=box,material=m1,at=[17,5,0],size=[2,3,18]);
@@ -105,6 +135,20 @@ object little_rally_car(label="Little rally car"){
   part lamp_1(shape=box,material=m13,at=[17.3,8,5.5],size=[1,3,4]);
   part wheel_neg_10_1(shape=cylinder,material=m1,at=[-10,4,9],size=[8,3,8],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
   part wheel_10_1(shape=cylinder,material=m1,at=[10,4,9],size=[8,3,8],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
+  repeat trim_sides(index=s,count=2){
+    let z(value=s*2-1);
+    repeat alloy_hubs(index=w,count=2){
+      part hub(shape=cylinder,material=metal,at=[w*20-10,4,z*10.4],size=[4.5,.6,4.5],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
+    }
+    part window_pillar(shape=box,material=m11,at=[-4,11.5,z*7.2],size=[1.5,7,.7]);
+    part door_handle(shape=box,material=metal,at=[-8,8.5,z*8.5],size=[2,.6,.6]);
+    part mirror(shape=box,material=m11,at=[3,10,z*9.3],size=[2.5,2,2]);
+    part tail_lamp(shape=box,material=m6,at=[-16.7,7,z*6],size=[.6,2.5,3]);
+  }
+  part windshield(shape=box,material=glazing,at=[4.2,12.4,0],size=[.5,4.3,11],rot_deg=[0,0,8]);
+  part rear_glass(shape=box,material=glazing,at=[-12.2,12,0],size=[.5,4,10]);
+  part grille(shape=box,material=m1,at=[17.7,5,0],size=[.5,2.5,7]);
+  part grille_bar(shape=box,material=metal,at=[17.7,5,0],size=[.5,.5,6]);
 }
 object hillside_cottage(label="Hillside cottage"){
   measure(kind=building,axis=y,meters=8);
@@ -113,10 +157,23 @@ object hillside_cottage(label="Hillside cottage"){
   part walls(shape=box,material=m4,at=[0,17,0],size=[42,34,34]);
   part roof(shape=pyramid,material=m14,at=[0,48,0],size=[52,28,44]);
   part door(shape=box,material=m15,at=[0,10,17.5],size=[10,20,1]);
-  part window_neg_13(shape=box,material=m13,at=[-13,22,17.5],size=[8,9,1]);
-  part window_13(shape=box,material=m13,at=[13,22,17.5],size=[8,9,1]);
+  part window_neg_13(shape=box,material=glazing,at=[-13,22,17.5],size=[8,9,1]);
+  part window_13(shape=box,material=glazing,at=[13,22,17.5],size=[8,9,1]);
   part chimney(shape=box,material=m0,at=[13,53,-6],size=[7,22,7]);
   part step(shape=box,material=m0,at=[0,2,22],size=[17,4,10]);
+  repeat sides(index=s,count=2){
+    let sign(value=s*2-1);
+    part eave(shape=box,material=trim,at=[0,34,sign*20],size=[50,2,2]);
+    part side_frame(shape=box,material=m15,at=[sign*21.4,21,0],size=[1,13,14]);
+    part side_glass(shape=box,material=glazing,at=[sign*22,21,0],size=[.5,9,10]);
+    part window_cross(shape=box,material=m15,at=[sign*13,22,18.2],size=[.7,9,.6]);
+    part window_sill(shape=box,material=m15,at=[sign*13,17,18.2],size=[10,2,2]);
+    part door_post(shape=box,material=trim,at=[sign*6,11,18],size=[2,22,2]);
+  }
+  part door_lintel(shape=box,material=trim,at=[0,22,18],size=[14,2,2]);
+  part handle(shape=sphere,material=metal,at=[3,11,18.4],size=[1.5,1.5,1]);
+  part chimney_cap(shape=box,material=m0,at=[13,62,-6],size=[10,2,10]);
+  part footing(shape=box,material=m0,at=[0,2,0],size=[43,4,35]);
 }
 object windmill(label="Windmill"){
   measure(kind=building,axis=y,meters=12);
@@ -126,9 +183,17 @@ object windmill(label="Windmill"){
   part roof(shape=cone,material=m2,at=[0,88,0],size=[40,24,40]);
   part axle(shape=cylinder,material=m15,at=[0,64,17],size=[6,16,6],rot_deg=[90,0,0]);
   part hub(shape=sphere,material=m15,at=[0,64,21],size=[10,10,10]);
-  part sails_0(shape=box,material=m15,at=[0,64,21],size=[8,78,2],rot_deg=[0,0,0],motion=spin(axis=z,deg_s=28.64788975654116));
-  part sails_1(shape=box,material=m15,at=[0,64,21],size=[8,78,2],rot_deg=[0,0,90],motion=spin(axis=z,deg_s=28.64788975654116));
+  part sails_0(shape=box,material=trim,at=[0,64,21],size=[11,78,1],rot_deg=[0,0,0],motion=spin(axis=z,deg_s=28.64788975654116));
+  part sails_1(shape=box,material=trim,at=[0,64,21],size=[11,78,1],rot_deg=[0,0,90],motion=spin(axis=z,deg_s=28.64788975654116));
   part door(shape=box,material=m15,at=[0,11,16],size=[9,22,2]);
+  repeat sail_spars(index=s,count=2){part spar(shape=box,material=m15,at=[0,64,21.8],size=[2,78,1],rot_deg=[0,0,s*90],motion=spin(axis=z,deg_s=28.64788975654116));}
+  part bearing(shape=torus,material=metal,at=[0,64,20],size=[12,12,2]);
+  part base_course(shape=cylinder,material=m0,at=[0,3,0],size=[33,6,33]);
+  repeat windows(index=w,count=2){
+    part frame(shape=box,material=m15,at=[0,34+w*17,16],size=[8,11,1]);
+    part glass(shape=box,material=glazing,at=[0,34+w*17,16.6],size=[5,8,.5]);
+  }
+  part door_lintel(shape=box,material=trim,at=[0,23,16.5],size=[13,3,2]);
 }
 object crystal_garden(label="Crystal garden"){
   measure(kind=custom,axis=y,meters=3);
@@ -136,6 +201,9 @@ object crystal_garden(label="Crystal garden"){
   part crystal_neg_1(shape=icosphere,material=m16,at=[-11,13,-4],size=[13,27,13],rot_deg=[0,0,14.32394487827058]);
   part crystal_0(shape=icosphere,material=m17,at=[0,24,0],size=[13,48,13],rot_deg=[0,0,0]);
   part crystal_1(shape=icosphere,material=m16,at=[11,13,4],size=[13,27,13],rot_deg=[0,0,-14.32394487827058]);
+  part matrix(shape=icosphere,material=m0,at=[0,2,0],size=[30,4,22],deform=deform(seed=511,amount=.18));
+  repeat shards(index=s,count=2){part shard(shape=cone,material=m17,at=[s*16-8,8,7],size=[7,16,6],rot_deg=[8,0,s*16-8]);}
+  part inclusion(shape=icosphere,material=m16,at=[0,19,5],size=[5,18,2]);
 }
 object ancient_ruins(label="Ancient ruins"){
   measure(kind=building,axis=y,meters=5);
@@ -145,6 +213,14 @@ object ancient_ruins(label="Ancient ruins"){
   part pillar_18(shape=cylinder,material=m0,at=[18,18,0],size=[12,36,12]);
   part lintel(shape=box,material=m0,at=[0,37,0],size=[52,8,16],rot_deg=[0,0,3.437746770784939]);
   part fallen(shape=cylinder,material=m0,at=[6,7,19],size=[12,31,12],rot_deg=[0,0,90]);
+  repeat columns(index=c,count=2){
+    let x(value=c*36-18);
+    part base(shape=cylinder,material=trim,at=[x,2,0],size=[15,4,15]);
+    part capital(shape=cylinder,material=trim,at=[x,33,0],size=[15,4,15]);
+    repeat flutes(index=f,count=2){part flute(shape=box,material=trim,at=[x+f*4-2,18,5.6],size=[.7,25,.7]);}
+  }
+  part lichen(shape=icosphere,material=m9,at=[-14,39,0],size=[13,2,10],deform=deform(seed=214,amount=.15));
+  part chip(shape=icosphere,material=m0,at=[-15,3,15],size=[10,6,8],deform=deform(seed=301,amount=.2));
 }
 object cactus(label="Cactus"){
   measure(kind=custom,axis=y,meters=3);
@@ -155,13 +231,21 @@ object cactus(label="Cactus"){
   part finger_neg_1(shape=cylinder,material=m9,at=[-14,21,0],size=[8,17,8]);
   part arm_1(shape=box,material=m9,at=[8,25,0],size=[14,7,7]);
   part finger_1(shape=cylinder,material=m9,at=[14,31,0],size=[8,17,8]);
+  repeat ribs(index=r,count=3){part rib(shape=cylinder,material=m9,at=[r*3-3,22,4.6],size=[.7,31,.7]);}
+  part arm_tip_left(shape=sphere,material=m9,at=[-14,29,0],size=[8,7,8]);
+  part arm_tip_right(shape=sphere,material=m9,at=[14,39,0],size=[8,7,8]);
+  part flower(shape=sphere,material=m5,at=[0,44,0],size=[6,3,6]);
 }
 object amber_tree(label="Amber tree"){
   measure(kind=tree,axis=y,meters=7);
   body(interaction=solid,radius=14,height=56);
   part trunk(shape=cylinder,material=m8,at=[0,14,0],size=[6,28,6]);
   part branch(shape=cylinder,material=m8,at=[-5,24,0],size=[3,17,3],rot_deg=[0,0,-34.37746770784939]);
-  part crown(shape=icosphere,material=m18,at=[0,40,0],size=[34,32,32],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
-  part crown_left(shape=icosphere,material=m19,at=[-12,33,3],size=[24,24,23],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
-  part crown_right(shape=icosphere,material=m19,at=[12,35,-4],size=[23,25,24],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
+  part crown(shape=icosphere,material=m18,at=[0,40,0],size=[34,32,32],motion=sway(deg=1.432394487827058,hz=0.1909859317102744),deform=deform(seed=17937,amount=.14));
+  part crown_left(shape=icosphere,material=m19,at=[-12,33,3],size=[24,24,23],motion=sway(deg=1.432394487827058,hz=0.1909859317102744),deform=deform(seed=17968,amount=.14));
+  part crown_right(shape=icosphere,material=m19,at=[12,35,-4],size=[23,25,24],motion=sway(deg=1.432394487827058,hz=0.1909859317102744),deform=deform(seed=17999,amount=.14));
+  beam root_left(shape=cylinder,material=m8,from=[-5,1,1],to=[0,7,0],width=2,depth=2);
+  beam root_right(shape=cylinder,material=m8,from=[5,1,-2],to=[0,7,0],width=2,depth=2);
+  beam second_fork(shape=cylinder,material=m8,from=[0,19,0],to=[9,31,-4],width=3,depth=3);
+  part bark_scar(shape=box,material=cut_wood,at=[1,12,2.8],size=[1,7,.5]);
 }

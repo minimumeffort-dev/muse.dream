@@ -1,5 +1,5 @@
 import { describe,it,expect } from "vitest";
-import { Box3,Quaternion,Vector3 } from "three";
+import { Box3,Mesh,Quaternion,Vector3 } from "three";
 import source from "../src/scene/interactive-world.dream?raw";
 import legacySource from "./fixtures/dream-v1/interactive-world.dream?raw";
 import { compileDream,compileDreamWorld } from "../src/scene/dream";
@@ -161,6 +161,18 @@ describe("fixed-clock vehicles and passenger rides",()=>{
       }
     }
     expect(after).toBeLessThan(before*.6);
+  });
+  it("batches detail inside moving joint frames without changing the character's animated silhouette",()=>{
+    const baker=doc.objects.find(o=>o.spec?.displayName==="Waving baker")!;
+    const raw=buildObject(baker),batched=compactObject(buildObject(baker));
+    const meshCount=(g:typeof raw)=>{let n=0;g.traverse(o=>{if(o instanceof Mesh)n++;});return n;};
+    expect(meshCount(batched)).toBeLessThan(meshCount(raw)*.75);
+    for(const time of [0,.7,1.5,3,4.5]){
+      animateObject(raw,time);animateObject(batched,time);
+      const a=new Box3().setFromObject(raw,true),b=new Box3().setFromObject(batched,true);
+      expect(a.min.distanceTo(b.min)).toBeLessThan(.0001);
+      expect(a.max.distanceTo(b.max)).toBeLessThan(.0001);
+    }
   });
 });
 

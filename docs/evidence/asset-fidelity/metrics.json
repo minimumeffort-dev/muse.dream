@@ -1,0 +1,79 @@
+{
+  "assemblies": 53,
+  "changedAssemblies": 53,
+  "parts": 882,
+  "maximumParts": 32,
+  "placements": 448,
+  "bodyDeclarationsUnchanged": true,
+  "samples": [
+    {
+      "phase": "spawn",
+      "car": "1045.0,1360.0,1.5",
+      "zoom": 1.18,
+      "riding": "",
+      "flight": {
+        "jumps": 0,
+        "landings": 0,
+        "maxClearance": 0
+      },
+      "render": {
+        "calls": 330,
+        "triangles": 256773,
+        "geometries": 204
+      },
+      "fps": 60
+    },
+    {
+      "phase": "bicycle",
+      "car": "1065.0,1425.0,9.6",
+      "zoom": 2.327,
+      "riding": "village_bike",
+      "flight": {
+        "jumps": 0,
+        "landings": 0,
+        "maxClearance": 0
+      },
+      "render": {
+        "calls": 278,
+        "triangles": 229570,
+        "geometries": 256
+      },
+      "fps": 60
+    },
+    {
+      "phase": "returned",
+      "car": "1045.0,1360.0,1.5",
+      "zoom": 1.927,
+      "riding": "",
+      "flight": {
+        "jumps": 0,
+        "landings": 0,
+        "maxClearance": 0
+      },
+      "render": {
+        "calls": 258,
+        "triangles": 205562,
+        "geometries": 256
+      },
+      "fps": 60
+    },
+    {
+      "phase": "driving-crest",
+      "car": "1841.2,1359.6,5.7",
+      "zoom": 1.18,
+      "riding": "",
+      "flight": {
+        "jumps": 1,
+        "landings": 1,
+        "maxClearance": 1.5784752671363087
+      },
+      "render": {
+        "calls": 223,
+        "triangles": 174277,
+        "geometries": 352
+      },
+      "fps": 60
+    }
+  ],
+  "browserErrors": []
+}

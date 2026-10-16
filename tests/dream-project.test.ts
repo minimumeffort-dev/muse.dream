@@ -1,5 +1,4 @@
 import {describe,it,expect} from "vitest";
-import {Euler,Matrix4,Quaternion} from "three";
 import {checkDream,compileDreamWorld,compileDreamScene,formatDream} from "../src/scene/dream";
 import {createWorldScene,worldModules,worldSource} from "../src/scene/world-fixture";
 import {objectDslSchema,type ObjectDsl} from "../src/scene/object-dsl";
@@ -77,28 +76,23 @@ function close(a:unknown,b:unknown):void {
   }
   expect(a).toEqual(b);
 }
-function geometry(spec:ObjectDsl) {
-  const joints=spec.dslVersion===2 ? spec.joints??[] : [],byId=new Map(joints.map(j=>[j.id,j]));
-  const rotation=(r:number[]=[0,0,0])=>new Matrix4().makeRotationFromQuaternion(new Quaternion().setFromEuler(new Euler(...r))).elements;
-  const frame=(id:string):unknown=>{const j=byId.get(id)!;return {position:j.position,rotation:rotation(j.rotation),animation:j.animation,proximity:j.proximity,parent:j.parent ? frame(j.parent) : undefined};};
-  const key=(value:unknown)=>JSON.stringify(value,(_key,v)=>typeof v==='number' ? Math.round(v*1e7)/1e7 : v);
-  const sorted=<T,>(values:T[])=>values.sort((a,b)=>key(a).localeCompare(key(b)));
-  return {parts:sorted(spec.parts.map(p=>({shape:p.shape,position:p.position,size:p.size,rotation:rotation(p.rotation),material:p.material,
-    ...('parent' in p && p.parent ? {parent:frame(p.parent)} : {}),...('deform' in p && p.deform ? {deform:p.deform} : {}),
-    ...(p.animation ? {animation:p.animation.kind==='roll' ? {...p.animation,axis:p.animation.axis??'y'} : p.animation} : {})}))),
-    joints:sorted(joints.map(j=>frame(j.id)))};
-}
 const scene=createWorldScene(),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(6000,4800),carRadius:11};
 
 describe("complete Dream 2 mock world",()=>{
-  it("retains the prior world structure while applying physical proportions and local clearance corrections",()=>{
+  it("retains world layout and physical bodies while allowing richer visual assemblies",()=>{
     const canonicalId=(id:string)=>id.replaceAll('-','_');
     expect(scene.canonical).toEqual(before.scene.canonical);expect(scene.spawn).toEqual(before.scene.spawn);
     close(scene.roadMaskRef,before.scene.roadMaskRef);
     close(scene.terrain,{...before.scene.terrain,hills:before.scene.terrain.hills.map(h=>({...h,id:canonicalId(h.id)})),landscape:{...before.scene.terrain.landscape,waters:before.scene.terrain.landscape.waters.map(w=>({...w,id:canonicalId(w.id)})),bridges:before.scene.terrain.landscape.bridges.map(b=>({...b,id:canonicalId(b.id)}))}});
     close(scene.checkpoints,before.scene.checkpoints.map(c=>({...c,id:canonicalId(c.id)})));close(scene.regions,before.scene.regions);
     const assets=new Map(scene.objects.map(o=>[o.spec!.displayName,o.spec as ObjectDsl]));assets.set(scene.player!.displayName,scene.player!);
-    for(const [name,spec] of Object.entries(before.specs)){const old=objectDslSchema.parse(spec),current=assets.get(name)!;expect(current,name).toBeDefined();if(["Cloudhopper plane","Wayside bench"].includes(name))continue;close(geometry(current),geometry(old));expect(current.body).toEqual(name==="Meadow locomotive" ? {...old.body,colliderRadius:22} : old.body);}
+    for(const [name,spec] of Object.entries(before.specs)){
+      const old=objectDslSchema.parse(spec),current=assets.get(name)!;expect(current,name).toBeDefined();
+      const body=name==="Meadow locomotive" ? {...old.body,colliderRadius:22} :
+        name==="Cloudhopper plane" ? {...old.body,colliderHeight:29} : name==="Wayside bench" ? {...old.body,colliderHeight:32} : old.body;
+      expect(current.body,name).toEqual(body);
+      expect(current.parts.length).toBeLessThanOrEqual(32);
+    }
     for(const {assembly,id,...placement} of before.scene.objects){const current=scene.objects.find(o=>o.id===canonicalId(id))!;expect(current,id).toBeDefined();expect(current.spec!.displayName).toBe(assembly);const relocated=new Set(['sketch_668','sketch_1171','sketch_2850','sketch_4124','sketch_548','sketch_2152','sketch_1002','sketch_2753','sketch_1591','sketch_2339','sketch_3539','sketch_2021','sketch_2994','sketch_3295','sketch_3811','sketch_2941']);
       if(relocated.has(current.id))expect(Math.hypot(current.x-placement.x,current.y-placement.y)).toBeLessThan(20.01);
       close({...current,spec:undefined,scale:undefined,...(relocated.has(current.id)?{x:placement.x,y:placement.y}:{})},{...placement,scale:undefined,labelText:current.spec!.displayName,id:canonicalId(id),spec:undefined});}
