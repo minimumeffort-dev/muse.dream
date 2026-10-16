@@ -142,3 +142,9 @@ placements and mechanics did not change. City overview/day-night captures still
 illustrate the same layout, lighting and proportions; the new captures above show
 the changed shell/board construction. Historical evidence retains its original
 revision and counts. No prompting UI was added or removed.
+
+## Constructed buildings and transport, r33
+
+`constructed-assets.jpg` shows the actual rebuilt terraced house, garden house, bus, tram, regional railcar and launch. Housing, civic/transit, voxel detail and complete asset sheets are refreshed. All images retain native browser/canvas resolution; geometry-review PNG exports are encoded as JPEG at quality 95.
+
+Driving, switching, locomotion, swimming, day/night and flight use 210/240/180/180/360/300 freshly rendered frames, with each GIF, HD video and corresponding still refreshed together. Town/suburb, sports, water/bridge, street and four lighting views show the current models. The [construction verification](../evidence/asset-construction/verification.md) records retained captures and limits. Isolated destruction, existing ground vehicle/aircraft detail, flora/fauna and character assets retain unchanged geometry. These are procedural runtime captures, not concept images or frame-rate measurements.

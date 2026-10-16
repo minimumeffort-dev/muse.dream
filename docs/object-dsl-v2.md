@@ -116,7 +116,7 @@ pause freezes time and reduced motion restores the rest pose.
 
 Bounds remain explicit:
 
-- 1–32 parts; each dimension 0.5–128; object scale remains 0.5–2.
+- 1–32 parts; each visual dimension 0.1–128 (v1 retains 0.5–128; beam endpoint length stays at least 0.5); object scale remains 0.5–2.
 - Part X/Z offsets: -64–64. V2 local Y: -128–128, allowing limbs below joints.
 - Joint XYZ offsets: -64–64; Euler rotations: -pi–pi.
 - Deformation seed: integer 0–65535; amount: 0–0.24.

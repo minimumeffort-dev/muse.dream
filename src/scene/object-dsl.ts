@@ -78,7 +78,10 @@ const jointSchema=z.object({
   animation:z.union([jointAnimationSchema,z.object({kind:z.literal('roll'),axis:z.enum(['x','y','z']),radius:z.number().finite().min(1).max(32)}).strict()]).optional(),
   proximity:z.object({axis:z.enum(["x","y","z"]),angleRad:z.number().finite().min(-Math.PI).max(Math.PI),radius:z.number().finite().min(20).max(160)}).strict().optional(),
 }).strict();
+export const MIN_DETAIL_SIZE=.1;
+const detailDimension=z.number().finite().min(MIN_DETAIL_SIZE).max(128);
 const objectV2PartSchema=objectPartSchema.extend({
+  size:z.tuple([detailDimension,detailDimension,detailDimension]),
   shape:z.enum(["box","sphere","cylinder","cone","pyramid","icosphere","capsule","torus","prism","voxel"]),
   voxels:voxelSchema.optional(),
   outline:z.array(z.tuple([z.number().finite(),z.number().finite()])).min(3).max(24).optional(),

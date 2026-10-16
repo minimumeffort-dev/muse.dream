@@ -54,7 +54,7 @@ Budget per source: 65536 characters, 12000 lexer tokens, 2048 expanded statement
 16 objects, 16 nesting levels, 0..32 repeats, 8 params/component. No recursion.
 All numeric results finite, abs<=1000000. Combined positive scale<=16.
 Per assembly: 1..32 parts, <=12 joints, joint depth<=4, assembled reach<=256.
-Part size: each .5..128. Final offsets: X/Z -64..64, Y -128..128.
+Part size: each .1..128 in object DSL v2; legacy v1 retains .5..128. Beam endpoint length remains >=.5. Use thin parts for glazing, pipes and rails; bodies/contacts remain independent. Final offsets: X/Z -64..64, Y -128..128.
 For every new object emit measure(kind=...,axis=...,meters=...) directly inside it.
 10 canonical world units = 1 meter. This uniformly sizes assembled rest-pose
 geometry AND all physical contacts, foundations, seats, wheels and fragments.
@@ -386,3 +386,5 @@ Keep unsupported user intent explicit instead of inventing vocabulary.
 VOXEL CONSTRUCTION
 Use voxels id(material=mat,at=[x,y,z],size=[sx,sy,sz],grid=[nx,ny,nz],chunks=[cx,cy,cz]?){fill solid(from=[0,0,0],to=[nx,ny,nz]);cut opening(from=[...],to=[...]);}. Each voxels declaration is one rigid part. The block permits fill/cut, let and bounded repeat. shape=box is default; ellipsoid tests cell centers inside the from/to bounds. Operations run in order. Coordinates are integer half-open cell indices, 0 <= from < to <= grid; each axis 1..32, at most 32768 cells, 64 expanded operations, 8192 greedy surface quads. Assembly limits: 65536 cells, 1048576 fill/cut cell visits, existing 32 parts. Linked project: 1048576 cells across assembly definitions. Use equal size/grid ratios for cubic cells. Use separate volumes for materials. No raw voxel arrays, shaders, scripts or remote meshes.
 Optional chunks must divide grid axes exactly into at most 8 nonempty pieces. Requires impact break or a break zone, no fragment wrapper. All pieces count toward existing 8 fragments per assembly, 24 reactive placements and 128 scene fragments. Unchunked volumes can use normal fragment groups/topple. Voxel parts disallow deform, cloth and part motion; use rigid joints for animation. Explicit body/contact cylinders remain the physics geometry: carved holes do not create traversable openings, editable terrain or tunnels. Current city is hybrid, not entirely voxelized.
+
+Construction: silhouette and measure first. Doors/window heights follow usable floors; glazing must remain visible through carved frames. Roofs meet walls, porch posts meet base/canopy, gutters meet leaders. Rolling tires/hubs stay coaxial, bogies support their shell, and rideable seats must fit an independently measured rider. Check transformed multi-angle renders, not only schemas. Checked live constructions: examples/terraced-house.dream, examples/city-bus.dream, examples/cabin-launch.dream.

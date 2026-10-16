@@ -11,9 +11,9 @@ import wall from '../docs/examples/voxel-wall.dream?raw';
 
 const scene=createWorldScene();
 describe('voxel city integration',()=>{
- it('uses voxels across eleven building types, existing benches and a paired park boundary',()=>{
+ it('uses voxels across architecture, transit, boat fittings, benches and a paired park boundary',()=>{
   const objects=scene.objects.filter(o=>o.spec && 'parts' in o.spec && o.spec.parts.some(p=>'voxels' in p && p.voxels));
-  expect(objects).toHaveLength(192);expect(new Set(objects.map(o=>o.spec!.displayName)).size).toBe(13);
+  expect(objects).toHaveLength(201);expect(new Set(objects.map(o=>o.spec!.displayName)).size).toBe(17);
   const expected=compileDream(wall)[0]!;
   for(const id of ['park_wall_west','park_wall_east'])expect(scene.objects.find(o=>o.id===id)!.spec).toEqual(expected);
   const reactive=scene.objects.filter(o=>o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && (o.spec.impact || o.spec.breakZones));

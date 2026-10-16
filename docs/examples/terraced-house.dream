@@ -1,0 +1,65 @@
+dream 2;
+material brick(style=toon,colors=[#b17459,#985c48]);
+material glass(style=toon,colors=[#6c929d,#42616f],night=#f2bf7e);
+material roof(style=toon,colors=[#535b64,#3b4753]);
+material trim(style=toon,colors=[#e5decd,#c5bfae]);
+material dark(style=toon,colors=[#35464c,#28363e]);
+component sash(params=[w,h]){
+  part glazing(shape=box,material=glass,at=[0,0,0],size=[w*.79,h*.84,.12]);
+  voxels joinery(material=trim,at=[0,0,.08],size=[w,h,.12],grid=[16,20,1]){
+    fill frame(from=[0,0,0],to=[16,20,1]);
+    cut aperture(from=[2,2,0],to=[14,18,1]);
+    fill mullion(from=[7,2,0],to=[8,18,1]);
+    fill transom(from=[2,10,0],to=[14,11,1]);
+  }
+}
+
+component drainage(params=[w,h,d,side]){
+  beam gutter(shape=cylinder,material=dark,from=[-w/2,h,side*(d/2+.6)],to=[w/2,h,side*(d/2+.6)],width=.22,depth=.22);
+  part leader(shape=prism,material=dark,at=[w/2-.5,(h+.5)/2,side*(d/2+.37)],size=[.74,h-.5,.18],rot_deg=[0,-90*side,0],outline=[[0,0],[.24,0],[.24,.94],[1,.985],[1,1],[.76,1],[0,.95]]);
+}
+
+component entry(params=[]){
+  voxels frame(material=trim,at=[0,3.35,.04],size=[4.5,6.7,.18],grid=[20,30,1]){
+    fill surround(from=[0,0,0],to=[20,30,1]);cut opening(from=[2,0,0],to=[18,27,1]);
+  }
+  voxels door(material=dark,at=[0,3,0],size=[3.5,6,.12],grid=[14,24,2]){
+    fill slab(from=[0,0,0],to=[14,24,2]);
+    repeat panels(index=i,count=2){cut inset(from=[2,i*10+2,1],to=[12,i*10+10,2]);}
+  }
+}
+
+object brick_terrace(label="Brick terrace"){
+  measure(kind=building,axis=y,meters=9);
+  body(interaction=solid,radius=9.5,height=23);
+  foundation(size=[19.4,25.4],color=#9e9d8c);
+  contact cell_0_0(at=[-4.750000,0,-9.375000],radius=5.685783,height=18.0);
+  contact cell_0_1(at=[-4.750000,0,-3.125000],radius=5.685783,height=18.0);
+  contact cell_0_2(at=[-4.750000,0,3.125000],radius=5.685783,height=18.0);
+  contact cell_0_3(at=[-4.750000,0,9.375000],radius=5.685783,height=18.0);
+  contact cell_1_0(at=[4.750000,0,-9.375000],radius=5.685783,height=18.0);
+  contact cell_1_1(at=[4.750000,0,-3.125000],radius=5.685783,height=18.0);
+  contact cell_1_2(at=[4.750000,0,3.125000],radius=5.685783,height=18.0);
+  contact cell_1_3(at=[4.750000,0,9.375000],radius=5.685783,height=18.0);
+  voxels walls(material=brick,at=[0,9,0],size=[19,18,25],grid=[19,18,25]){
+    fill shell(from=[0,0,0],to=[19,18,25]);
+  }
+  part roof(shape=prism,material=roof,at=[0,20.5,0],size=[19.2,5,26.5],outline=[[0,0],[.5,1],[1,0],[.98,0],[.5,.88],[.02,0]]);
+  part eaves(shape=box,material=trim,at=[0,17.75,0],size=[19.2,0.5,26.5]);
+  part attic(shape=prism,material=brick,at=[0,20.2,0],size=[19,4.4,25],outline=[[0,0],[1,0],[.5,1]]);
+  repeat floors(index=f,count=2){
+    repeat bays(index=b,count=2){
+      use window(component=sash,args=[3.8,4.95],at=[(b*2-1)*4.94,(f+.55)*9,-12.52],rot_deg=[0,180,0]);
+    }
+  }
+  repeat rear(index=b,count=2){use window(component=sash,args=[3.8,4.95],at=[(b*2-1)*4.94,13.95,12.52]);}
+  use rear_ground(component=sash,args=[3.8,4.95],at=[0,4.95,12.52]);
+  repeat sides(index=s,count=2){use window(component=sash,args=[4,4.95],at=[(s*2-1)*9.52,13.95,0],rot_deg=[0,s*180-90,0]);}
+  use entrance(component=entry,at=[0,0,-12.52],rot_deg=[0,180,0]);
+  part step(shape=box,material=trim,at=[0,0.25,-14],size=[7,0.5,3.5]);
+  part plinth(shape=box,material=trim,at=[0,0.5,0],size=[19.1,1,25.1]);
+  use drain_0(component=drainage,args=[19,18,25,-1]);
+  use drain_2(component=drainage,args=[19,18,25,1]);
+  voxels chimney(material=brick,at=[6.08,20.2,3.5],size=[2.4,4.4,2.8],grid=[12,16,12]){fill shaft(from=[2,0,2],to=[10,14,10]);fill crown(from=[0,14,0],to=[12,16,12]);cut flue(from=[4,14,4],to=[8,16,8]);}
+  beam ridge(shape=cylinder,material=roof,from=[0,22.7,-13.1],to=[0,22.7,13.1],width=0.6,depth=0.6);
+}

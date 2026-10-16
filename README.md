@@ -12,11 +12,19 @@ Racing is where this started. The idea is to make whatever someone draws playabl
 
 ## Build the solid bits with voxels
 
-City wall shells and breakable benches now use voxel volumes. Dream can fill a block, carve an opening and split it into chunks on impact. The engine merges the visible faces, so a solid block doesn't become thousands of little meshes. Terrain and vehicles keep their current geometry.
+City wall shells and breakable benches now use voxel volumes. Dream can fill a block, carve an opening and split it into chunks on impact. The engine merges the visible faces, so a solid block doesn't become thousands of little meshes. Terrain keeps its heightfield. Vehicles combine shaped profiles with voxel fittings.
 
 ![A carved voxel wall breaking on impact](docs/media/voxels.gif)
 
 [How voxel construction works](docs/dream/voxels.md) · [Complete Dream example](docs/examples/voxel-wall.dream)
+
+## Build things the way they fit together
+
+Houses now have framed glazing, readable floor heights, supported porches, roof edges and connected gutters. Buses have wheel openings and passenger doors. The tram and train run on two supported bogies. The launch has a pointed hull, a planked deck, an outboard and a cabin that fits its rider.
+
+![Rebuilt houses, public transport and cabin launch](docs/media/constructed-assets.jpg)
+
+This pass rebuilds 15 assembly types used by 197 objects in the mock city. Dream 2 now permits finer visual dimensions, so a pipe or window frame doesn't have to be a chunky block. Bodies, contacts, world scale and part budgets stay bounded. [See how they're constructed](docs/asset-construction.md), or build the [house](docs/examples/terraced-house.dream), [bus](docs/examples/city-bus.dream) and [boat](docs/examples/cabin-launch.dream).
 
 ## Give the world a task
 

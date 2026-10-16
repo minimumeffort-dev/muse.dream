@@ -1,0 +1,1252 @@
+{
+  "sourceCommit": "00633bc936aa44f2b693f856b58f011b545485ab",
+  "assets": {
+    "Brick terrace": {
+      "body": {
+        "interaction": "solid",
+        "colliderRadius": 9.5,
+        "colliderHeight": 23
+      },
+      "contacts": [
+        {
+          "position": [
+            -4.75,
+            0,
+            -9.375
+          ],
+          "radius": 5.685783,
+          "height": 18
+        },
+        {
+          "position": [
+            -4.75,
+            0,
+            -3.125
+          ],
+          "radius": 5.685783,
+          "height": 18
+        },
+        {
+          "position": [
+            -4.75,
+            0,
+            3.125
+          ],
+          "radius": 5.685783,
+          "height": 18
+        },
+        {
+          "position": [
+            -4.75,
+            0,
+            9.375
+          ],
+          "radius": 5.685783,
+          "height": 18
+        },
+        {
+          "position": [
+            4.75,
+            0,
+            -9.375
+          ],
+          "radius": 5.685783,
+          "height": 18
+        },
+        {
+          "position": [
+            4.75,
+            0,
+            -3.125
+          ],
+          "radius": 5.685783,
+          "height": 18
+        },
+        {
+          "position": [
+            4.75,
+            0,
+            3.125
+          ],
+          "radius": 5.685783,
+          "height": 18
+        },
+        {
+          "position": [
+            4.75,
+            0,
+            9.375
+          ],
+          "radius": 5.685783,
+          "height": 18
+        }
+      ],
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 9
+      },
+      "scale": 3.9130434782608696,
+      "floor": 0
+    },
+    "Ochre terrace": {
+      "body": {
+        "interaction": "solid",
+        "colliderRadius": 10.5,
+        "colliderHeight": 25
+      },
+      "contacts": [
+        {
+          "position": [
+            -5.25,
+            0,
+            -10.125
+          ],
+          "radius": 6.241244,
+          "height": 19
+        },
+        {
+          "position": [
+            -5.25,
+            0,
+            -3.375
+          ],
+          "radius": 6.241244,
+          "height": 19
+        },
+        {
+          "position": [
+            -5.25,
+            0,
+            3.375
+          ],
+          "radius": 6.241244,
+          "height": 19
+        },
+        {
+          "position": [
+            -5.25,
+            0,
+            10.125
+          ],
+          "radius": 6.241244,
+          "height": 19
+        },
+        {
+          "position": [
+            5.25,
+            0,
+            -10.125
+          ],
+          "radius": 6.241244,
+          "height": 19
+        },
+        {
+          "position": [
+            5.25,
+            0,
+            -3.375
+          ],
+          "radius": 6.241244,
+          "height": 19
+        },
+        {
+          "position": [
+            5.25,
+            0,
+            3.375
+          ],
+          "radius": 6.241244,
+          "height": 19
+        },
+        {
+          "position": [
+            5.25,
+            0,
+            10.125
+          ],
+          "radius": 6.241244,
+          "height": 19
+        }
+      ],
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 10
+      },
+      "scale": 4,
+      "floor": 0
+    },
+    "Blue terrace": {
+      "body": {
+        "interaction": "solid",
+        "colliderRadius": 9,
+        "colliderHeight": 22
+      },
+      "contacts": [
+        {
+          "position": [
+            -4.5,
+            0,
+            -9
+          ],
+          "radius": 5.408327,
+          "height": 17
+        },
+        {
+          "position": [
+            -4.5,
+            0,
+            -3
+          ],
+          "radius": 5.408327,
+          "height": 17
+        },
+        {
+          "position": [
+            -4.5,
+            0,
+            3
+          ],
+          "radius": 5.408327,
+          "height": 17
+        },
+        {
+          "position": [
+            -4.5,
+            0,
+            9
+          ],
+          "radius": 5.408327,
+          "height": 17
+        },
+        {
+          "position": [
+            4.5,
+            0,
+            -9
+          ],
+          "radius": 5.408327,
+          "height": 17
+        },
+        {
+          "position": [
+            4.5,
+            0,
+            -3
+          ],
+          "radius": 5.408327,
+          "height": 17
+        },
+        {
+          "position": [
+            4.5,
+            0,
+            3
+          ],
+          "radius": 5.408327,
+          "height": 17
+        },
+        {
+          "position": [
+            4.5,
+            0,
+            9
+          ],
+          "radius": 5.408327,
+          "height": 17
+        }
+      ],
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 8.5
+      },
+      "scale": 3.8636363636363638,
+      "floor": 0
+    },
+    "Garden house": {
+      "body": {
+        "interaction": "solid",
+        "colliderRadius": 12,
+        "colliderHeight": 19
+      },
+      "contacts": [
+        {
+          "position": [
+            -9,
+            0,
+            -6
+          ],
+          "radius": 6.708204,
+          "height": 15
+        },
+        {
+          "position": [
+            -9,
+            0,
+            6
+          ],
+          "radius": 6.708204,
+          "height": 15
+        },
+        {
+          "position": [
+            -3,
+            0,
+            -6
+          ],
+          "radius": 6.708204,
+          "height": 15
+        },
+        {
+          "position": [
+            -3,
+            0,
+            6
+          ],
+          "radius": 6.708204,
+          "height": 15
+        },
+        {
+          "position": [
+            3,
+            0,
+            -6
+          ],
+          "radius": 6.708204,
+          "height": 15
+        },
+        {
+          "position": [
+            3,
+            0,
+            6
+          ],
+          "radius": 6.708204,
+          "height": 15
+        },
+        {
+          "position": [
+            9,
+            0,
+            -6
+          ],
+          "radius": 6.708204,
+          "height": 15
+        },
+        {
+          "position": [
+            9,
+            0,
+            6
+          ],
+          "radius": 6.708204,
+          "height": 15
+        }
+      ],
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 7.5
+      },
+      "scale": 3.9473684210526314,
+      "floor": 0
+    },
+    "Courtyard house": {
+      "body": {
+        "interaction": "solid",
+        "colliderRadius": 13.5,
+        "colliderHeight": 20
+      },
+      "contacts": [
+        {
+          "position": [
+            -10.125,
+            0,
+            -5.5
+          ],
+          "radius": 6.452955,
+          "height": 15
+        },
+        {
+          "position": [
+            -10.125,
+            0,
+            5.5
+          ],
+          "radius": 6.452955,
+          "height": 15
+        },
+        {
+          "position": [
+            -3.375,
+            0,
+            -5.5
+          ],
+          "radius": 6.452955,
+          "height": 15
+        },
+        {
+          "position": [
+            -3.375,
+            0,
+            5.5
+          ],
+          "radius": 6.452955,
+          "height": 15
+        },
+        {
+          "position": [
+            3.375,
+            0,
+            -5.5
+          ],
+          "radius": 6.452955,
+          "height": 15
+        },
+        {
+          "position": [
+            3.375,
+            0,
+            5.5
+          ],
+          "radius": 6.452955,
+          "height": 15
+        },
+        {
+          "position": [
+            10.125,
+            0,
+            -5.5
+          ],
+          "radius": 6.452955,
+          "height": 15
+        },
+        {
+          "position": [
+            10.125,
+            0,
+            5.5
+          ],
+          "radius": 6.452955,
+          "height": 15
+        }
+      ],
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 8
+      },
+      "scale": 4,
+      "floor": 0
+    },
+    "Brick apartments": {
+      "body": {
+        "interaction": "solid",
+        "colliderRadius": 21,
+        "colliderHeight": 43
+      },
+      "contacts": [
+        {
+          "position": [
+            -15.75,
+            0,
+            -8
+          ],
+          "radius": 9.56883,
+          "height": 35
+        },
+        {
+          "position": [
+            -15.75,
+            0,
+            8
+          ],
+          "radius": 9.56883,
+          "height": 35
+        },
+        {
+          "position": [
+            -5.25,
+            0,
+            -8
+          ],
+          "radius": 9.56883,
+          "height": 35
+        },
+        {
+          "position": [
+            -5.25,
+            0,
+            8
+          ],
+          "radius": 9.56883,
+          "height": 35
+        },
+        {
+          "position": [
+            5.25,
+            0,
+            -8
+          ],
+          "radius": 9.56883,
+          "height": 35
+        },
+        {
+          "position": [
+            5.25,
+            0,
+            8
+          ],
+          "radius": 9.56883,
+          "height": 35
+        },
+        {
+          "position": [
+            15.75,
+            0,
+            -8
+          ],
+          "radius": 9.56883,
+          "height": 35
+        },
+        {
+          "position": [
+            15.75,
+            0,
+            8
+          ],
+          "radius": 9.56883,
+          "height": 35
+        }
+      ],
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 17
+      },
+      "scale": 3.953488372093023,
+      "floor": 0
+    },
+    "Corner apartments": {
+      "body": {
+        "interaction": "solid",
+        "colliderRadius": 18.5,
+        "colliderHeight": 35
+      },
+      "contacts": [
+        {
+          "position": [
+            -13.875,
+            0,
+            -7.5
+          ],
+          "radius": 8.811392,
+          "height": 27
+        },
+        {
+          "position": [
+            -13.875,
+            0,
+            7.5
+          ],
+          "radius": 8.811392,
+          "height": 27
+        },
+        {
+          "position": [
+            -4.625,
+            0,
+            -7.5
+          ],
+          "radius": 8.811392,
+          "height": 27
+        },
+        {
+          "position": [
+            -4.625,
+            0,
+            7.5
+          ],
+          "radius": 8.811392,
+          "height": 27
+        },
+        {
+          "position": [
+            4.625,
+            0,
+            -7.5
+          ],
+          "radius": 8.811392,
+          "height": 27
+        },
+        {
+          "position": [
+            4.625,
+            0,
+            7.5
+          ],
+          "radius": 8.811392,
+          "height": 27
+        },
+        {
+          "position": [
+            13.875,
+            0,
+            -7.5
+          ],
+          "radius": 8.811392,
+          "height": 27
+        },
+        {
+          "position": [
+            13.875,
+            0,
+            7.5
+          ],
+          "radius": 8.811392,
+          "height": 27
+        }
+      ],
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 14
+      },
+      "scale": 4,
+      "floor": 0
+    },
+    "Canal apartments": {
+      "body": {
+        "interaction": "solid",
+        "colliderRadius": 19,
+        "colliderHeight": 38
+      },
+      "contacts": [
+        {
+          "position": [
+            -14.25,
+            0,
+            -7.5
+          ],
+          "radius": 8.87764,
+          "height": 30
+        },
+        {
+          "position": [
+            -14.25,
+            0,
+            7.5
+          ],
+          "radius": 8.87764,
+          "height": 30
+        },
+        {
+          "position": [
+            -4.75,
+            0,
+            -7.5
+          ],
+          "radius": 8.87764,
+          "height": 30
+        },
+        {
+          "position": [
+            -4.75,
+            0,
+            7.5
+          ],
+          "radius": 8.87764,
+          "height": 30
+        },
+        {
+          "position": [
+            4.75,
+            0,
+            -7.5
+          ],
+          "radius": 8.87764,
+          "height": 30
+        },
+        {
+          "position": [
+            4.75,
+            0,
+            7.5
+          ],
+          "radius": 8.87764,
+          "height": 30
+        },
+        {
+          "position": [
+            14.25,
+            0,
+            -7.5
+          ],
+          "radius": 8.87764,
+          "height": 30
+        },
+        {
+          "position": [
+            14.25,
+            0,
+            7.5
+          ],
+          "radius": 8.87764,
+          "height": 30
+        }
+      ],
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 15
+      },
+      "scale": 3.9473684210526314,
+      "floor": 0
+    },
+    "Corner shop": {
+      "body": {
+        "interaction": "solid",
+        "colliderRadius": 11.5,
+        "colliderHeight": 23
+      },
+      "contacts": [
+        {
+          "position": [
+            -5.75,
+            0,
+            -9.375
+          ],
+          "radius": 6.54432,
+          "height": 18
+        },
+        {
+          "position": [
+            -5.75,
+            0,
+            -3.125
+          ],
+          "radius": 6.54432,
+          "height": 18
+        },
+        {
+          "position": [
+            -5.75,
+            0,
+            3.125
+          ],
+          "radius": 6.54432,
+          "height": 18
+        },
+        {
+          "position": [
+            -5.75,
+            0,
+            9.375
+          ],
+          "radius": 6.54432,
+          "height": 18
+        },
+        {
+          "position": [
+            5.75,
+            0,
+            -9.375
+          ],
+          "radius": 6.54432,
+          "height": 18
+        },
+        {
+          "position": [
+            5.75,
+            0,
+            -3.125
+          ],
+          "radius": 6.54432,
+          "height": 18
+        },
+        {
+          "position": [
+            5.75,
+            0,
+            3.125
+          ],
+          "radius": 6.54432,
+          "height": 18
+        },
+        {
+          "position": [
+            5.75,
+            0,
+            9.375
+          ],
+          "radius": 6.54432,
+          "height": 18
+        }
+      ],
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 9
+      },
+      "scale": 3.9130434782608696,
+      "floor": 0
+    },
+    "Neighborhood bakery": {
+      "body": {
+        "interaction": "solid",
+        "colliderRadius": 12.5,
+        "colliderHeight": 24
+      },
+      "contacts": [
+        {
+          "position": [
+            -6.25,
+            0,
+            -9.75
+          ],
+          "radius": 7.044501,
+          "height": 18
+        },
+        {
+          "position": [
+            -6.25,
+            0,
+            -3.25
+          ],
+          "radius": 7.044501,
+          "height": 18
+        },
+        {
+          "position": [
+            -6.25,
+            0,
+            3.25
+          ],
+          "radius": 7.044501,
+          "height": 18
+        },
+        {
+          "position": [
+            -6.25,
+            0,
+            9.75
+          ],
+          "radius": 7.044501,
+          "height": 18
+        },
+        {
+          "position": [
+            6.25,
+            0,
+            -9.75
+          ],
+          "radius": 7.044501,
+          "height": 18
+        },
+        {
+          "position": [
+            6.25,
+            0,
+            -3.25
+          ],
+          "radius": 7.044501,
+          "height": 18
+        },
+        {
+          "position": [
+            6.25,
+            0,
+            3.25
+          ],
+          "radius": 7.044501,
+          "height": 18
+        },
+        {
+          "position": [
+            6.25,
+            0,
+            9.75
+          ],
+          "radius": 7.044501,
+          "height": 18
+        }
+      ],
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 9.5
+      },
+      "scale": 3.9583333333333335,
+      "floor": 0
+    },
+    "Office studios": {
+      "body": {
+        "interaction": "solid",
+        "colliderRadius": 26,
+        "colliderHeight": 60
+      },
+      "contacts": [
+        {
+          "position": [
+            -19.5,
+            0,
+            -10.75
+          ],
+          "radius": 12.562345,
+          "height": 59
+        },
+        {
+          "position": [
+            -19.5,
+            0,
+            10.75
+          ],
+          "radius": 12.562345,
+          "height": 59
+        },
+        {
+          "position": [
+            -6.5,
+            0,
+            -10.75
+          ],
+          "radius": 12.562345,
+          "height": 59
+        },
+        {
+          "position": [
+            -6.5,
+            0,
+            10.75
+          ],
+          "radius": 12.562345,
+          "height": 59
+        },
+        {
+          "position": [
+            6.5,
+            0,
+            -10.75
+          ],
+          "radius": 12.562345,
+          "height": 59
+        },
+        {
+          "position": [
+            6.5,
+            0,
+            10.75
+          ],
+          "radius": 12.562345,
+          "height": 59
+        },
+        {
+          "position": [
+            19.5,
+            0,
+            -10.75
+          ],
+          "radius": 12.562345,
+          "height": 59
+        },
+        {
+          "position": [
+            19.5,
+            0,
+            10.75
+          ],
+          "radius": 12.562345,
+          "height": 59
+        }
+      ],
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 24
+      },
+      "scale": 4,
+      "floor": 0
+    },
+    "City bus": {
+      "body": {
+        "interaction": "solid",
+        "colliderRadius": 15,
+        "colliderHeight": 17
+      },
+      "contacts": [
+        {
+          "position": [
+            -17,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            -12.1429,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            -7.2857,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            -2.4286,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            2.4286,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            7.2857,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            12.1429,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            17,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        }
+      ],
+      "measure": {
+        "kind": "bus",
+        "axis": "x",
+        "meters": 9.4
+      },
+      "scale": 2.0128479328547946,
+      "floor": -8.881784197001252e-16
+    },
+    "City tram": {
+      "body": {
+        "interaction": "solid",
+        "colliderRadius": 15,
+        "colliderHeight": 17
+      },
+      "contacts": [
+        {
+          "position": [
+            -33.5,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            -23.9286,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            -14.3571,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            -4.7857,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            4.7857,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            14.3571,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            23.9286,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            33.5,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        }
+      ],
+      "measure": {
+        "kind": "tram",
+        "axis": "x",
+        "meters": 16
+      },
+      "scale": 2.007528307735134,
+      "floor": -8.881784197001252e-16
+    },
+    "Regional electric train": {
+      "body": {
+        "interaction": "solid",
+        "colliderRadius": 15,
+        "colliderHeight": 17
+      },
+      "contacts": [
+        {
+          "position": [
+            -43.5,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            -31.0714,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            -18.6429,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            -6.2143,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            6.2143,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            18.6429,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            31.0714,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        },
+        {
+          "position": [
+            43.5,
+            0,
+            0
+          ],
+          "radius": 7,
+          "height": 17
+        }
+      ],
+      "measure": {
+        "kind": "train",
+        "axis": "x",
+        "meters": 20
+      },
+      "scale": 2.006018115565511,
+      "floor": -8.881784197001252e-16
+    },
+    "Willow launch": {
+      "body": {
+        "interaction": "solid",
+        "colliderRadius": 26,
+        "colliderHeight": 38
+      },
+      "contacts": [],
+      "measure": {
+        "kind": "boat",
+        "axis": "x",
+        "meters": 6
+      },
+      "scale": 0.8695652173913043,
+      "floor": -4
+    }
+  }
+}

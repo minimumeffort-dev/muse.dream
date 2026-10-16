@@ -92,3 +92,9 @@ Animated parts aren't interchangeable with destructible fragments. Breakable ass
 ## Voxel geometry
 
 Dream 2 now supports bounded filled/carved voxel parts, greedy surface meshing and optional fracture chunks. The city uses voxel building shells, bench boards and carved park walls; the library bakehouse adds chunked masonry; measured proportions and explicit contacts remain unchanged. See the [voxel guide](voxels.md) for syntax, limits, a complete example and current boundaries.
+
+## Finer construction
+
+Object DSL v2 accepts visual dimensions from `.1` to `128` local units. V1 retains `.5` as its minimum, and beams still need at least `.5` endpoint length. The minimum is local: use `measure` to resolve physical scale before choosing pipe, frame or railing thickness. Parts remain visual; body, compound contacts and all geometry budgets are independent.
+
+The [construction guide](../asset-construction.md) follows complete live [house](../examples/terraced-house.dream), [bus](../examples/city-bus.dream) and [launch](../examples/cabin-launch.dream) sources. They combine carved voxel frames with shaped profiles rather than increasing the part cap.

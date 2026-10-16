@@ -65,3 +65,5 @@ The [model prompt](dream-v2-model.txt), [command export](dream-v2-contract.json)
 Dream 1 remains readable. [Its syntax](dream-v1.md), [Object DSL v2](object-dsl-v2.md) and [landscape data](landscape-dsl.md) document compatibility and compiled engine formats. Dream 2, Object DSL v2 and Scene v1 are separate versions, not interchangeable names.
 
 [Explore the planned town, suburbs, lake and sports park](urban-world.md). The whole mock world is authored in Dream 2, including streets, ground surfaces, markings and people.
+
+[Asset construction](asset-construction.md) explains the live house, bus and launch sources and the checks that keep their parts connected.

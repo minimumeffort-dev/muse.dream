@@ -1,0 +1,61 @@
+dream 2;
+material redbrick(style=grain,colors=[#9e6053,#bd8170]);
+material ochre(style=toon,colors=[#d4b378,#b9955f]);
+material glass(style=toon,colors=[#6c929d,#42616f]);
+material roof(style=toon,colors=[#535b64,#3b4753]);
+material trim(style=toon,colors=[#e5decd,#c5bfae]);
+material dark(style=toon,colors=[#35464c,#28363e]);
+material sign(style=toon,colors=[#e4b948,#c79435]);
+component road_axle(params=[x,r]){
+  part axle(shape=cylinder,material=dark,at=[x,r,0],size=[1.1,13.3,1.1],rot_deg=[90,0,0]);
+  repeat sides(index=s,count=2){
+    part tire(shape=cylinder,material=dark,at=[x,r,(s*2-1)*6.4],size=[r*2,1.5,r*2],rot_deg=[90,0,0],motion=roll(axis=y,radius=r));
+    part hub(shape=cylinder,material=trim,at=[x,r,(s*2-1)*6.4],size=[r*1.15,1.8,r*1.15],rot_deg=[90,0,0],motion=roll(axis=y,radius=r));
+  }
+}
+
+component passenger_door(params=[w,h]){
+  voxels leaf(material=dark,at=[0,0,0],size=[w,h,.5],grid=[12,28,1]){
+    fill frame(from=[0,0,0],to=[12,28,1]);
+    repeat leaves(index=i,count=2){
+      cut upper_pane(from=[i*6+1,9,0],to=[i*6+5,26,1]);
+      cut lower_panel(from=[i*6+1,2,0],to=[i*6+5,7,1]);
+    }
+  }
+}
+
+object city_bus(label="City bus"){
+ measure(kind=bus,axis=x,meters=9.4);
+ body(interaction=solid,radius=15,height=17);
+ rideable(at=[0,8.7,0]);
+ contact shell_0(at=[-17,0,0],radius=7,height=17);
+ contact shell_1(at=[-12.1429,0,0],radius=7,height=17);
+ contact shell_2(at=[-7.2857,0,0],radius=7,height=17);
+ contact shell_3(at=[-2.4286,0,0],radius=7,height=17);
+ contact shell_4(at=[2.4286,0,0],radius=7,height=17);
+ contact shell_5(at=[7.2857,0,0],radius=7,height=17);
+ contact shell_6(at=[12.1429,0,0],radius=7,height=17);
+ contact shell_7(at=[17,0,0],radius=7,height=17);
+  part shell(shape=prism,material=ochre,at=[0,8,0],size=[46,12,13],outline=[[0,0],[0.13043,0],[0.13043,0.05833],[0.14954,0.23511],[0.19565,0.30833],[0.24177,0.23511],[0.26087,0.05833],[0.26087,0],[0.73913,0],[0.73913,0.05833],[0.75823,0.23511],[0.80435,0.30833],[0.85046,0.23511],[0.86957,0.05833],[0.86957,0],[1,0],[1,0.41667],[0.97391,1],[0.01565,1],[0,0.66667]]);
+  part roof(shape=box,material=trim,at=[0,14.5,0],size=[45,1,12]);
+  part windscreen(shape=box,material=glass,at=[22.54286,10.6,0],size=[0.5,6,10.7],rot_deg=[0,0,9.72758]);
+  part rear_window(shape=box,material=glass,at=[-23.1,10.6,0],size=[0.5,5,10.7]);
+  voxels side_glazing_l(material=glass,at=[0,10.4,-6.6],size=[37,5,.5],grid=[30,10,1]){repeat windows(index=i,count=6){fill pane(from=[i*5,0,0],to=[i*5+4,10,1]);}}
+  voxels side_glazing_r(material=glass,at=[0,10.4,6.6],size=[37,5,.5],grid=[30,10,1]){repeat windows(index=i,count=6){fill pane(from=[i*5,0,0],to=[i*5+4,10,1]);}}
+  use axle_0(component=road_axle,args=[-14,2.7]);
+  use axle_1(component=road_axle,args=[14,2.7]);
+  part chassis(shape=box,material=dark,at=[0,3,0],size=[41,2,10]);
+  use door_0(component=passenger_door,args=[4.4,11],at=[20,7.7,6.75]);
+  use door_1(component=passenger_door,args=[4.4,11],at=[-2,7.7,6.75]);
+  part headlight_m1(shape=box,material=sign,at=[23.1,5,-4.3],size=[0.5,1.8,2]);
+  part tail_light_m1(shape=box,material=redbrick,at=[-23.1,5.5,-4.5],size=[0.5,2,1.5]);
+  beam mirror_arm_m1(shape=cylinder,material=dark,from=[20,11,-6.5],to=[22,11.5,-6.8],width=0.5,depth=0.5);
+  part mirror_m1(shape=box,material=dark,at=[22,11,-6.9],size=[0.8,2,0.5]);
+  part headlight_1(shape=box,material=sign,at=[23.1,5,4.3],size=[0.5,1.8,2]);
+  part tail_light_1(shape=box,material=redbrick,at=[-23.1,5.5,4.5],size=[0.5,2,1.5]);
+  beam mirror_arm_1(shape=cylinder,material=dark,from=[20,11,6.5],to=[22,11.5,6.8],width=0.5,depth=0.5);
+  part mirror_1(shape=box,material=dark,at=[22,11,6.9],size=[0.8,2,0.5]);
+  part destination(shape=box,material=dark,at=[22.4,14.1,0],size=[0.5,1.2,9]);
+  part air_conditioner(shape=box,material=roof,at=[-5,16,0],size=[13,2,8]);
+  part grille(shape=box,material=dark,at=[23.05,4,0],size=[0.5,1.1,6]);
+}

@@ -26,6 +26,13 @@ describe("object DSL v2 boundary",()=> {
     const doc=createWorldScene();
     for(const id of ["orchard_baker","orchard_picnic","meadow_granite"]) expect(doc.objects.some(o=>o.id===id)).toBe(true);
   });
+  it("accepts fine v2 visual parts while retaining the v1 minimum and finite bounds",()=> {
+    const fine={...mockBread,parts:[{...mockBread.parts[0],shape:"box",deform:undefined,size:[.1,2,.12]}]};
+    expect(objectDslSchema.parse(fine).parts[0]!.size).toEqual([.1,2,.12]);
+    expect(objectDslSchema.safeParse({...mockCar,parts:[{...mockCar.parts[0],size:[.1,2,.12]}]}).success).toBe(false);
+    for(const size of [[.099,2,1],[0,2,1],[NaN,2,1],[Infinity,2,1],[129,2,1]])
+      expect(objectDslSchema.safeParse({...fine,parts:[{...fine.parts[0],size}]}).success).toBe(false);
+  });
   it.each([
     ["missing parent",{...mockPerson,joints:[{id:"a",parent:"absent",position:[0,0,0]}]}],
     ["self parent",{...mockPerson,joints:[{id:"a",parent:"a",position:[0,0,0]}]}],

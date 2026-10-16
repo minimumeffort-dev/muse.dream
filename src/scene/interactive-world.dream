@@ -111,31 +111,34 @@ object cloudhopper_plane(label="Cloudhopper plane"){
 object willow_launch(label="Willow launch"){
   measure(kind=boat,axis=x,meters=6);
   body(interaction=solid,radius=26,height=38);
-  rideable(at=[18,12,0],control=boat);
-  part hull(shape=sphere,material=teal,at=[0,4,0],size=[69,16,31]);
-  part deck(shape=box,material=wood,at=[0,10,0],size=[54,4,24]);
-  part cabin(shape=box,material=cream,at=[-7,20,0],size=[25,18,22]);
-  part roof(shape=box,material=red,at=[-7,30,0],size=[31,4,28]);
-  part windshield(shape=box,material=glass,at=[6,23,0],size=[1,10,17]);
-  repeat repeat_side(index=side,count=2){
-    part window(shape=sphere,material=glass,at=[-7,23,side*23-11.5],size=[16,10,1]);
-    beam rail(shape=cylinder,material=steel,from=[10,17,side*23-11.5],to=[27,17,side*16-8],width=1,depth=1);
-    repeat repeat_post(index=post,count=2){
-      part post(shape=cylinder,material=steel,at=[12+post*13,14,side*21-10.5],size=[1,7,1]);
-    }
-  }
-  part seat(shape=box,material=red,at=[17,13,0],size=[12,4,13]);
-  part mast(shape=cylinder,material=wood,at=[-23,26,0],size=[2,30,2]);
-  part pennant(shape=box,material=red,at=[-17,36,0],size=[12,8,1]);
+  rideable(at=[-5,16.1,0],control=boat);
+  part keel(shape=prism,material=teal,at=[2,2,0],size=[65,12,11],outline=[[0,.3],[.1,0],[.75,.05],[1,.8],[1,1],[0,1]]);
+  part hull(shape=prism,material=teal,at=[2,7,0],size=[65,31,8],rot_deg=[90,0,0],outline=[[0,.08],[.65,0],[.85,.12],[1,.5],[.85,.88],[.65,1],[0,.92]]);
+  part deck(shape=prism,material=wood,at=[2,10.8,0],size=[61,27,1.5],rot_deg=[90,0,0],outline=[[0,.08],[.65,0],[.85,.12],[1,.5],[.85,.88],[.65,1],[0,.92]]);
+  part gunwale(shape=prism,material=cream,at=[2,11.2,0],size=[65,31,1],rot_deg=[90,0,0],outline=[[0,.08],[.65,0],[.85,.12],[1,.5],[.85,.88],[.65,1],[0,.92],[0,.85],[.62,.92],[.8,.82],[.94,.5],[.8,.18],[.62,.08],[0,.15]]);
+  part wheelhouse(shape=prism,material=cream,at=[-7,22,0],size=[25,22,22],outline=[[0,0],[1,0],[1,.2],[.8,1],[0,1]]);
+  part roof(shape=prism,material=red,at=[-8.5,34,0],size=[31,3,26],outline=[[0,0],[1,0],[.95,.8],[.1,1],[0,.7]]);
+  part windscreen(shape=box,material=glass,at=[2.95,25,0],size=[.7,14,17],rot_deg=[0,0,16]);
   repeat sides(index=s,count=2){
-    let sign(value=s*2-1);
-    beam rubbing_strake(shape=box,material=wood,from=[-25,8,sign*12],to=[25,8,sign*12],width=1.5,depth=1.5);
-    part porthole(shape=torus,material=steel,at=[-7,23,sign*12],size=[18,12,1]);
-    part windscreen_post(shape=box,material=wood,at=[6.5,23,sign*7.5],size=[1,10,1]);
-    part lifering(shape=torus,material=red,at=[-18,17,sign*11.7],size=[9,9,1.5]);
+    let side(value=s*2-1);
+    repeat windows(index=w,count=2){part pane(shape=prism,material=glass,at=[-14+w*11,25,side*11.1],size=[8.5,9,.5],outline=[[0,0],[1,0],[.85,1],[0,1]]);}
+    part cabin_pillar(shape=box,material=wood,at=[-8.7,25,side*11.2],size=[.7,10,.5]);
+    part lifering(shape=torus,material=red,at=[-16,16,side*11.5],size=[7,7,1.2]);
+    beam bow_rail(shape=cylinder,material=steel,from=[9,16.5,side*12],to=[29,16.5,side*5],width=.7,depth=.7);
+    repeat posts(index=p,count=2){beam stanchion(shape=cylinder,material=steel,from=[10+p*17,11.5,side*(11.65-p*5.95)],to=[10+p*17,16.5,side*(11.65-p*5.95)],width=.6,depth=.6);}
   }
-  repeat deck_seams(index=d,count=3){part seam(shape=box,material=dark,at=[0,12,d*6-6],size=[49,.5,.5]);}
-  part bow_cleat(shape=box,material=steel,at=[25,14,0],size=[2,2,6]);
+  part aft_bench(shape=box,material=red,at=[-25,13,0],size=[8,3,20]);
+  part helm_console(shape=box,material=cream,at=[2,14.5,0],size=[4,9,9]);
+  part helm_wheel(shape=torus,material=steel,at=[-.3,17.5,0],size=[5,5,.7],rot_deg=[0,90,0]);
+  part mast(shape=cylinder,material=wood,at=[-23,26,0],size=[1.2,30,1.2]);
+  part pennant(shape=prism,material=red,at=[-17,36,0],size=[12,8,.5],outline=[[0,0],[1,.5],[0,1]]);
+  voxels cleats(material=steel,at=[0,12,0],size=[50,1,5],grid=[32,1,5]){fill aft(from=[0,0,0],to=[2,1,5]);fill bow(from=[30,0,0],to=[32,1,5]);}
+  voxels helm_seat(material=red,at=[-7,15.6,0],size=[8,12,9],grid=[16,24,18]){
+    fill pedestal(from=[7,0,7],to=[9,12,11]);fill cushion(from=[0,12,0],to=[16,13,18]);fill backrest(from=[0,12,0],to=[3,24,18]);
+  }
+  part outboard(shape=box,material=dark,at=[-32.5,9,0],size=[4,5,5]);
+  beam drive_leg(shape=cylinder,material=steel,from=[-32,7,0],to=[-33,-1,0],width=1,depth=1);
+  repeat blades(index=b,count=2){part propeller(shape=box,material=steel,at=[-33,-1,0],size=[.6,4,.8],rot_deg=[b*90+45,0,0]);}
 }
 object meadow_bicycle(label="Meadow bicycle"){
   measure(kind=bicycle,axis=x,meters=1.8);

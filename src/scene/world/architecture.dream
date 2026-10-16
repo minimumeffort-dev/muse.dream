@@ -1,6 +1,6 @@
 dream 2;
-material brick(style=grain,colors=[#b17459,#985c48]);
-material redbrick(style=grain,colors=[#9e6053,#bd8170]);
+material brick(style=toon,colors=[#b17459,#985c48]);
+material redbrick(style=toon,colors=[#9e6053,#bd8170]);
 material plaster(style=toon,colors=[#ddd1b9,#c5b69a]);
 material blue(style=toon,colors=[#9aadaf,#758e98]);
 material ochre(style=toon,colors=[#d4b378,#b9955f]);
@@ -12,6 +12,39 @@ material wood(style=grain,colors=[#805c40,#aa815a]);
 material dark(style=toon,colors=[#35464c,#28363e]);
 material green(style=toon,colors=[#5e7c73,#405d55]);
 material sign(style=toon,colors=[#e4b948,#c79435]);
+component sash(params=[w,h]){
+  part glazing(shape=box,material=glass,at=[0,0,0],size=[w*.79,h*.84,.12]);
+  voxels joinery(material=trim,at=[0,0,.08],size=[w,h,.12],grid=[16,20,1]){
+    fill frame(from=[0,0,0],to=[16,20,1]);
+    cut aperture(from=[2,2,0],to=[14,18,1]);
+    fill mullion(from=[7,2,0],to=[8,18,1]);
+    fill transom(from=[2,10,0],to=[14,11,1]);
+  }
+}
+component curtain_bay(params=[w,h]){
+  part glazing(shape=box,material=glass,at=[0,0,0],size=[w*.98,h*.94,.12]);
+  voxels frame(material=trim,at=[0,0,.08],size=[w,h,.12],grid=[32,20,1]){
+    fill frame(from=[0,0,0],to=[32,20,1]);
+    repeat panes(index=i,count=4){cut pane(from=[i*8+1,2,0],to=[i*8+7,18,1]);}
+  }
+}
+component rear_stack(params=[w,h,n,step]){
+  voxels glazing(material=glass,at=[0,h/2,0],size=[w,h,.12],grid=[16,step*n,1]){repeat floors(index=f,count=n){fill pane(from=[2,f*step+2,0],to=[14,f*step+6,1]);}}
+  voxels joinery(material=trim,at=[0,h/2,.08],size=[w,h,.12],grid=[16,step*n,1]){repeat floors(index=f,count=n){fill surround(from=[0,f*step+1,0],to=[16,f*step+7,1]);cut aperture(from=[2,f*step+2,0],to=[14,f*step+6,1]);fill mullion(from=[7,f*step+2,0],to=[8,f*step+6,1]);}}
+}
+component drainage(params=[w,h,d,side]){
+  beam gutter(shape=cylinder,material=dark,from=[-w/2,h,side*(d/2+.6)],to=[w/2,h,side*(d/2+.6)],width=.22,depth=.22);
+  part leader(shape=prism,material=dark,at=[w/2-.5,(h+.5)/2,side*(d/2+.37)],size=[.74,h-.5,.18],rot_deg=[0,-90*side,0],outline=[[0,0],[.24,0],[.24,.94],[1,.985],[1,1],[.76,1],[0,.95]]);
+}
+component entry(params=[]){
+  voxels frame(material=trim,at=[0,3.35,.04],size=[4.5,6.7,.18],grid=[20,30,1]){
+    fill surround(from=[0,0,0],to=[20,30,1]);cut opening(from=[2,0,0],to=[18,27,1]);
+  }
+  voxels door(material=dark,at=[0,3,0],size=[3.5,6,.12],grid=[14,24,2]){
+    fill slab(from=[0,0,0],to=[14,24,2]);
+    repeat panels(index=i,count=2){cut inset(from=[2,i*10+2,1],to=[12,i*10+10,2]);}
+  }
+}
 object brick_terrace(label="Brick terrace"){
   measure(kind=building,axis=y,meters=9);
   body(interaction=solid,radius=9.5,height=23);
@@ -27,19 +60,26 @@ object brick_terrace(label="Brick terrace"){
   voxels walls(material=brick,at=[0,9,0],size=[19,18,25],grid=[19,18,25]){
     fill shell(from=[0,0,0],to=[19,18,25]);
   }
-  part roof(shape=pyramid,material=roof,at=[0,20.5,0],size=[19.2,5,26.5]);
+  part roof(shape=prism,material=roof,at=[0,20.5,0],size=[19.2,5,26.5],outline=[[0,0],[.5,1],[1,0],[.98,0],[.5,.88],[.02,0]]);
   part eaves(shape=box,material=trim,at=[0,17.75,0],size=[19.2,0.5,26.5]);
-  part window_0_0(shape=box,material=glass,at=[-4.75,7,-12.65],size=[2.945,3.78,0.5]);
-  part window_0_2(shape=box,material=glass,at=[4.75,7,-12.65],size=[2.945,3.78,0.5]);
-  part window_1_0(shape=box,material=glass,at=[-4.75,13,-12.65],size=[2.945,3.78,0.5]);
-  part window_1_1(shape=box,material=glass,at=[0,13,-12.65],size=[2.945,3.78,0.5]);
-  part window_1_2(shape=box,material=glass,at=[4.75,13,-12.65],size=[2.945,3.78,0.5]);
-  part rear_1_0(shape=box,material=glass,at=[-4.75,13,12.65],size=[3.42,4,0.5]);
-  part rear_1_1(shape=box,material=glass,at=[4.75,13,12.65],size=[3.42,4,0.5]);
-  part door(shape=box,material=dark,at=[0,3,-12.65],size=[3.5,6,0.5]);
-  part door_header(shape=box,material=trim,at=[0,6.2,-12.8],size=[4.5,0.7,0.6]);
+  part attic(shape=prism,material=brick,at=[0,20.2,0],size=[19,4.4,25],outline=[[0,0],[1,0],[.5,1]]);
+  repeat floors(index=f,count=2){
+    repeat bays(index=b,count=2){
+      use window(component=sash,args=[3.8,4.95],at=[(b*2-1)*4.94,(f+.55)*9,-12.52],rot_deg=[0,180,0]);
+    }
+  }
+  repeat rear(index=b,count=2){use window(component=sash,args=[3.8,4.95],at=[(b*2-1)*4.94,13.95,12.52]);}
+  use rear_ground(component=sash,args=[3.8,4.95],at=[0,4.95,12.52]);
+  repeat sides(index=s,count=2){use window(component=sash,args=[4,4.95],at=[(s*2-1)*9.52,13.95,0],rot_deg=[0,s*180-90,0]);}
+  use entrance(component=entry,at=[0,0,-12.52],rot_deg=[0,180,0]);
   part step(shape=box,material=trim,at=[0,0.25,-14],size=[7,0.5,3.5]);
+  part plinth(shape=box,material=trim,at=[0,0.5,0],size=[19.1,1,25.1]);
+  use drain_0(component=drainage,args=[19,18,25,-1]);
+  use drain_2(component=drainage,args=[19,18,25,1]);
+  voxels chimney(material=brick,at=[6.08,20.2,3.5],size=[2.4,4.4,2.8],grid=[12,16,12]){fill shaft(from=[2,0,2],to=[10,14,10]);fill crown(from=[0,14,0],to=[12,16,12]);cut flue(from=[4,14,4],to=[8,16,8]);}
+  beam ridge(shape=cylinder,material=roof,from=[0,22.7,-13.1],to=[0,22.7,13.1],width=0.6,depth=0.6);
 }
+
 object ochre_terrace(label="Ochre terrace"){
   measure(kind=building,axis=y,meters=10);
   body(interaction=solid,radius=10.5,height=25);
@@ -57,17 +97,22 @@ object ochre_terrace(label="Ochre terrace"){
   }
   part roof(shape=pyramid,material=tile,at=[0,22,0],size=[21.2,6,28.5]);
   part eaves(shape=box,material=trim,at=[0,18.75,0],size=[21.2,0.5,28.5]);
-  part window_0_0(shape=box,material=glass,at=[-5.25,7,-13.65],size=[3.255,3.99,0.5]);
-  part window_0_2(shape=box,material=glass,at=[5.25,7,-13.65],size=[3.255,3.99,0.5]);
-  part window_1_0(shape=box,material=glass,at=[-5.25,14,-13.65],size=[3.255,3.99,0.5]);
-  part window_1_1(shape=box,material=glass,at=[0,14,-13.65],size=[3.255,3.99,0.5]);
-  part window_1_2(shape=box,material=glass,at=[5.25,14,-13.65],size=[3.255,3.99,0.5]);
-  part rear_1_0(shape=box,material=glass,at=[-5.25,14,13.65],size=[3.78,4,0.5]);
-  part rear_1_1(shape=box,material=glass,at=[5.25,14,13.65],size=[3.78,4,0.5]);
-  part door(shape=box,material=dark,at=[0,3,-13.65],size=[3.5,6,0.5]);
-  part door_header(shape=box,material=trim,at=[0,6.2,-13.8],size=[4.5,0.7,0.6]);
+  repeat floors(index=f,count=2){
+    repeat bays(index=b,count=2){
+      use window(component=sash,args=[4.2,5.225],at=[(b*2-1)*5.46,(f+.55)*9.5,-13.52],rot_deg=[0,180,0]);
+    }
+  }
+  repeat rear(index=b,count=2){use window(component=sash,args=[4.2,5.225],at=[(b*2-1)*5.46,14.725,13.52]);}
+  use rear_ground(component=sash,args=[4.2,5.225],at=[0,5.225,13.52]);
+  repeat sides(index=s,count=2){use window(component=sash,args=[4.32,5.225],at=[(s*2-1)*10.52,14.725,0],rot_deg=[0,s*180-90,0]);}
+  use entrance(component=entry,at=[0,0,-13.52],rot_deg=[0,180,0]);
   part step(shape=box,material=trim,at=[0,0.25,-15],size=[7,0.5,3.5]);
+  part plinth(shape=box,material=trim,at=[0,0.5,0],size=[21.1,1,27.1]);
+  use drain_0(component=drainage,args=[21,19,27,-1]);
+  use drain_2(component=drainage,args=[21,19,27,1]);
+  voxels chimney(material=brick,at=[6.72,21.6,3.78],size=[2.4,5.2,2.8],grid=[12,16,12]){fill shaft(from=[2,0,2],to=[10,14,10]);fill crown(from=[0,14,0],to=[12,16,12]);cut flue(from=[4,14,4],to=[8,16,8]);}
 }
+
 object blue_terrace(label="Blue terrace"){
   measure(kind=building,axis=y,meters=8.5);
   body(interaction=solid,radius=9.0,height=22);
@@ -83,18 +128,26 @@ object blue_terrace(label="Blue terrace"){
   voxels walls(material=blue,at=[0,8.5,0],size=[18,17,24],grid=[18,17,24]){
     fill shell(from=[0,0,0],to=[18,17,24]);
   }
-  part roof(shape=pyramid,material=roof,at=[0,19.5,0],size=[18.2,5,25.5]);
+  part roof(shape=prism,material=roof,at=[0,19.5,0],size=[18.2,5,25.5],outline=[[0,0],[.5,1],[1,0],[.98,0],[.5,.88],[.02,0]]);
   part eaves(shape=box,material=trim,at=[0,16.75,0],size=[18.2,0.5,25.5]);
-  part window_0_0(shape=box,material=glass,at=[-3,7,-12.15],size=[3.72,3.57,0.5]);
-  part window_0_1(shape=box,material=glass,at=[3,7,-12.15],size=[3.72,3.57,0.5]);
-  part window_1_0(shape=box,material=glass,at=[-3,12,-12.15],size=[3.72,3.57,0.5]);
-  part window_1_1(shape=box,material=glass,at=[3,12,-12.15],size=[3.72,3.57,0.5]);
-  part rear_1_0(shape=box,material=glass,at=[-4.5,12,12.15],size=[3.24,4,0.5]);
-  part rear_1_1(shape=box,material=glass,at=[4.5,12,12.15],size=[3.24,4,0.5]);
-  part door(shape=box,material=dark,at=[0,3,-12.15],size=[3.5,6,0.5]);
-  part door_header(shape=box,material=trim,at=[0,6.2,-12.3],size=[4.5,0.7,0.6]);
+  part attic(shape=prism,material=blue,at=[0,19.2,0],size=[18,4.4,24],outline=[[0,0],[1,0],[.5,1]]);
+  repeat floors(index=f,count=2){
+    repeat bays(index=b,count=2){
+      use window(component=sash,args=[3.6,4.675],at=[(b*2-1)*4.68,(f+.55)*8.5,-12.02],rot_deg=[0,180,0]);
+    }
+  }
+  repeat rear(index=b,count=2){use window(component=sash,args=[3.6,4.675],at=[(b*2-1)*4.68,13.175,12.02]);}
+  use rear_ground(component=sash,args=[3.6,4.675],at=[0,4.675,12.02]);
+  repeat sides(index=s,count=2){use window(component=sash,args=[3.84,4.675],at=[(s*2-1)*9.02,13.175,0],rot_deg=[0,s*180-90,0]);}
+  use entrance(component=entry,at=[0,0,-12.02],rot_deg=[0,180,0]);
   part step(shape=box,material=trim,at=[0,0.25,-13.5],size=[7,0.5,3.5]);
+  part plinth(shape=box,material=trim,at=[0,0.5,0],size=[18.1,1,24.1]);
+  use drain_0(component=drainage,args=[18,17,24,-1]);
+  use drain_2(component=drainage,args=[18,17,24,1]);
+  voxels chimney(material=brick,at=[5.76,19.2,3.36],size=[2.4,4.4,2.8],grid=[12,16,12]){fill shaft(from=[2,0,2],to=[10,14,10]);fill crown(from=[0,14,0],to=[12,16,12]);cut flue(from=[4,14,4],to=[8,16,8]);}
+  beam ridge(shape=cylinder,material=roof,from=[0,21.7,-12.6],to=[0,21.7,12.6],width=0.6,depth=0.6);
 }
+
 object garden_house(label="Garden house"){
   measure(kind=building,axis=y,meters=7.5);
   body(interaction=solid,radius=12.0,height=19);
@@ -110,19 +163,26 @@ object garden_house(label="Garden house"){
   voxels walls(material=plaster,at=[0,7.5,0],size=[24,15,24],grid=[24,15,24]){
     fill shell(from=[0,0,0],to=[24,15,24]);
   }
-  part roof(shape=pyramid,material=tile,at=[0,17,0],size=[24.2,4,25.5]);
+  part roof(shape=prism,material=tile,at=[0,17,0],size=[24.2,4,25.5],outline=[[0,0],[.5,1],[1,0],[.98,0],[.5,.88],[.02,0]]);
   part eaves(shape=box,material=trim,at=[0,14.75,0],size=[24.2,0.5,25.5]);
-  part window_0_0(shape=box,material=glass,at=[-6,7,-12.15],size=[3.72,3.15,0.5]);
-  part window_0_2(shape=box,material=glass,at=[6,7,-12.15],size=[3.72,3.15,0.5]);
-  part window_1_0(shape=box,material=glass,at=[-6,10,-12.15],size=[3.72,3.15,0.5]);
-  part window_1_1(shape=box,material=glass,at=[0,10,-12.15],size=[3.72,3.15,0.5]);
-  part window_1_2(shape=box,material=glass,at=[6,10,-12.15],size=[3.72,3.15,0.5]);
-  part rear_1_0(shape=box,material=glass,at=[-6,10,12.15],size=[4.32,4,0.5]);
-  part rear_1_1(shape=box,material=glass,at=[6,10,12.15],size=[4.32,4,0.5]);
-  part door(shape=box,material=dark,at=[0,3,-12.15],size=[3.5,6,0.5]);
-  part door_header(shape=box,material=trim,at=[0,6.2,-12.3],size=[4.5,0.7,0.6]);
+  part attic(shape=prism,material=plaster,at=[0,16.76,0],size=[24,3.52,24],outline=[[0,0],[1,0],[.5,1]]);
+  repeat floors(index=f,count=2){
+    repeat bays(index=b,count=2){
+      use window(component=sash,args=[4.8,4.125],at=[(b*2-1)*6.24,(f+.55)*7.5,-12.02],rot_deg=[0,180,0]);
+    }
+  }
+  repeat rear(index=b,count=2){use window(component=sash,args=[4.8,4.125],at=[(b*2-1)*6.24,11.625,12.02]);}
+  use rear_ground(component=sash,args=[4.8,4.125],at=[0,4.125,12.02]);
+  repeat sides(index=s,count=2){use window(component=sash,args=[3.84,4.125],at=[(s*2-1)*12.02,11.625,0],rot_deg=[0,s*180-90,0]);}
+  use entrance(component=entry,at=[0,0,-12.02],rot_deg=[0,180,0]);
   part step(shape=box,material=trim,at=[0,0.25,-13.5],size=[7,0.5,3.5]);
+  use drain_0(component=drainage,args=[24,15,24,-1]);
+  use drain_2(component=drainage,args=[24,15,24,1]);
+  part porch_canopy(shape=prism,material=green,at=[0,7.9,-13.5],size=[8,1.2,3.5],outline=[[0,0],[1,0],[1,.5],[0,1]]);
+  part porch_post_l(shape=box,material=wood,at=[-3.3,4,-14.7],size=[0.8,8,0.8]);
+  part porch_post_r(shape=box,material=wood,at=[3.3,4,-14.7],size=[0.8,8,0.8]);
 }
+
 object courtyard_house(label="Courtyard house"){
   measure(kind=building,axis=y,meters=8);
   body(interaction=solid,radius=13.5,height=20);
@@ -140,17 +200,24 @@ object courtyard_house(label="Courtyard house"){
   }
   part roof(shape=pyramid,material=roof,at=[0,17.5,0],size=[27.2,5,23.5]);
   part eaves(shape=box,material=trim,at=[0,14.75,0],size=[27.2,0.5,23.5]);
-  part window_0_0(shape=box,material=glass,at=[-6.75,7,-11.15],size=[4.185,3.15,0.5]);
-  part window_0_2(shape=box,material=glass,at=[6.75,7,-11.15],size=[4.185,3.15,0.5]);
-  part window_1_0(shape=box,material=glass,at=[-6.75,10,-11.15],size=[4.185,3.15,0.5]);
-  part window_1_1(shape=box,material=glass,at=[0,10,-11.15],size=[4.185,3.15,0.5]);
-  part window_1_2(shape=box,material=glass,at=[6.75,10,-11.15],size=[4.185,3.15,0.5]);
-  part rear_1_0(shape=box,material=glass,at=[-6.75,10,11.15],size=[4.86,4,0.5]);
-  part rear_1_1(shape=box,material=glass,at=[6.75,10,11.15],size=[4.86,4,0.5]);
-  part door(shape=box,material=dark,at=[0,3,-11.15],size=[3.5,6,0.5]);
-  part door_header(shape=box,material=trim,at=[0,6.2,-11.3],size=[4.5,0.7,0.6]);
+  repeat floors(index=f,count=2){
+    repeat bays(index=b,count=2){
+      use window(component=sash,args=[5.4,4.125],at=[(b*2-1)*7.02,(f+.55)*7.5,-11.02],rot_deg=[0,180,0]);
+    }
+  }
+  repeat rear(index=b,count=2){use window(component=sash,args=[5.4,4.125],at=[(b*2-1)*7.02,11.625,11.02]);}
+  use rear_ground(component=sash,args=[5.4,4.125],at=[0,4.125,11.02]);
+  repeat sides(index=s,count=2){use window(component=sash,args=[3.52,4.125],at=[(s*2-1)*13.52,11.625,0],rot_deg=[0,s*180-90,0]);}
+  use entrance(component=entry,at=[0,0,-11.02],rot_deg=[0,180,0]);
   part step(shape=box,material=trim,at=[0,0.25,-12.5],size=[7,0.5,3.5]);
+  part plinth(shape=box,material=trim,at=[0,0.5,0],size=[27.1,1,22.1]);
+  use drain_0(component=drainage,args=[27,15,22,-1]);
+  use drain_2(component=drainage,args=[27,15,22,1]);
+  part porch_canopy(shape=prism,material=green,at=[0,7.9,-12.5],size=[8,1.2,3.5],outline=[[0,0],[1,0],[1,.5],[0,1]]);
+  part porch_post_l(shape=box,material=wood,at=[-3.3,4,-13.7],size=[0.8,8,0.8]);
+  part porch_post_r(shape=box,material=wood,at=[3.3,4,-13.7],size=[0.8,8,0.8]);
 }
+
 object brick_apartments(label="Brick apartments"){
   measure(kind=building,axis=y,meters=17);
   body(interaction=solid,radius=21.0,height=43);
@@ -168,27 +235,21 @@ object brick_apartments(label="Brick apartments"){
   }
   part roof(shape=pyramid,material=roof,at=[0,39,0],size=[42.2,8,33.5]);
   part eaves(shape=box,material=trim,at=[0,34.75,0],size=[42.2,0.5,33.5]);
-  part window_0_0(shape=box,material=glass,at=[-10.5,7,-16.15],size=[6.51,3.675,0.5]);
-  part window_0_2(shape=box,material=glass,at=[10.5,7,-16.15],size=[6.51,3.675,0.5]);
-  part window_1_0(shape=box,material=glass,at=[-10.5,14.6667,-16.15],size=[6.51,3.675,0.5]);
-  part window_1_1(shape=box,material=glass,at=[0,14.6667,-16.15],size=[6.51,3.675,0.5]);
-  part window_1_2(shape=box,material=glass,at=[10.5,14.6667,-16.15],size=[6.51,3.675,0.5]);
-  part rear_1_0(shape=box,material=glass,at=[-10.5,14.6667,16.15],size=[7.56,4,0.5]);
-  part rear_1_1(shape=box,material=glass,at=[10.5,14.6667,16.15],size=[7.56,4,0.5]);
-  part window_2_0(shape=box,material=glass,at=[-10.5,22.3333,-16.15],size=[6.51,3.675,0.5]);
-  part window_2_1(shape=box,material=glass,at=[0,22.3333,-16.15],size=[6.51,3.675,0.5]);
-  part window_2_2(shape=box,material=glass,at=[10.5,22.3333,-16.15],size=[6.51,3.675,0.5]);
-  part rear_2_0(shape=box,material=glass,at=[-10.5,22.3333,16.15],size=[7.56,4,0.5]);
-  part rear_2_1(shape=box,material=glass,at=[10.5,22.3333,16.15],size=[7.56,4,0.5]);
-  part window_3_0(shape=box,material=glass,at=[-10.5,30,-16.15],size=[6.51,3.675,0.5]);
-  part window_3_1(shape=box,material=glass,at=[0,30,-16.15],size=[6.51,3.675,0.5]);
-  part window_3_2(shape=box,material=glass,at=[10.5,30,-16.15],size=[6.51,3.675,0.5]);
-  part rear_3_0(shape=box,material=glass,at=[-10.5,30,16.15],size=[7.56,4,0.5]);
-  part rear_3_1(shape=box,material=glass,at=[10.5,30,16.15],size=[7.56,4,0.5]);
-  part door(shape=box,material=dark,at=[0,3,-16.15],size=[3.5,6,0.5]);
-  part door_header(shape=box,material=trim,at=[0,6.2,-16.3],size=[4.5,0.7,0.6]);
+  repeat floors(index=f,count=4){
+    repeat bays(index=b,count=2){
+      use window(component=sash,args=[9.24,4.8125],at=[(b*2-1)*10.92,(f+.55)*8.75,-16.02],rot_deg=[0,180,0]);
+    }
+  }
+  repeat rear(index=b,count=2){use windows(component=rear_stack,args=[9.24,35,4,8],at=[(b*2-1)*10.92,0,16.02]);}
+  use entrance(component=entry,at=[0,0,-16.02],rot_deg=[0,180,0]);
   part step(shape=box,material=trim,at=[0,0.25,-17.5],size=[7,0.5,3.5]);
+  part plinth(shape=box,material=trim,at=[0,0.5,0],size=[42.1,1,32.1]);
+  part balcony_floor(shape=box,material=trim,at=[0,9.625,-17.1],size=[29.4,0.5,3.2]);
+  part balcony_guard(shape=prism,material=dark,at=[0,11.225,-18.4],size=[29.4,3,0.15],outline=[[0,0],[0.005,0],[0.005,0.94],[0.2475,0.94],[0.2475,0],[0.2525,0],[0.2525,0.94],[0.4975,0.94],[0.4975,0],[0.5025,0],[0.5025,0.94],[0.7475,0.94],[0.7475,0],[0.7525,0],[0.7525,0.94],[0.995,0.94],[0.995,0],[1,0],[1,1],[0,1]]);
+  use front_drain(component=drainage,args=[42,35,32,-1]);
+  part chimney(shape=box,material=brick,at=[11.76,38.2,3.2],size=[2.5,6.4,3]);
 }
+
 object corner_apartments(label="Corner apartments"){
   measure(kind=building,axis=y,meters=14);
   body(interaction=solid,radius=18.5,height=35);
@@ -206,22 +267,21 @@ object corner_apartments(label="Corner apartments"){
   }
   part roof(shape=pyramid,material=tile,at=[0,31,0],size=[37.2,8,31.5]);
   part eaves(shape=box,material=trim,at=[0,26.75,0],size=[37.2,0.5,31.5]);
-  part window_0_0(shape=box,material=glass,at=[-9.25,7,-15.15],size=[5.735,3.78,0.5]);
-  part window_0_2(shape=box,material=glass,at=[9.25,7,-15.15],size=[5.735,3.78,0.5]);
-  part window_1_0(shape=box,material=glass,at=[-9.25,14.5,-15.15],size=[5.735,3.78,0.5]);
-  part window_1_1(shape=box,material=glass,at=[0,14.5,-15.15],size=[5.735,3.78,0.5]);
-  part window_1_2(shape=box,material=glass,at=[9.25,14.5,-15.15],size=[5.735,3.78,0.5]);
-  part rear_1_0(shape=box,material=glass,at=[-9.25,14.5,15.15],size=[6.66,4,0.5]);
-  part rear_1_1(shape=box,material=glass,at=[9.25,14.5,15.15],size=[6.66,4,0.5]);
-  part window_2_0(shape=box,material=glass,at=[-9.25,22,-15.15],size=[5.735,3.78,0.5]);
-  part window_2_1(shape=box,material=glass,at=[0,22,-15.15],size=[5.735,3.78,0.5]);
-  part window_2_2(shape=box,material=glass,at=[9.25,22,-15.15],size=[5.735,3.78,0.5]);
-  part rear_2_0(shape=box,material=glass,at=[-9.25,22,15.15],size=[6.66,4,0.5]);
-  part rear_2_1(shape=box,material=glass,at=[9.25,22,15.15],size=[6.66,4,0.5]);
-  part door(shape=box,material=dark,at=[0,3,-15.15],size=[3.5,6,0.5]);
-  part door_header(shape=box,material=trim,at=[0,6.2,-15.3],size=[4.5,0.7,0.6]);
+  repeat floors(index=f,count=3){
+    repeat bays(index=b,count=2){
+      use window(component=sash,args=[8.14,4.95],at=[(b*2-1)*9.62,(f+.55)*9,-15.02],rot_deg=[0,180,0]);
+    }
+  }
+  repeat rear(index=b,count=2){use windows(component=rear_stack,args=[8.14,27,3,10],at=[(b*2-1)*9.62,0,15.02]);}
+  use entrance(component=entry,at=[0,0,-15.02],rot_deg=[0,180,0]);
   part step(shape=box,material=trim,at=[0,0.25,-16.5],size=[7,0.5,3.5]);
+  part plinth(shape=box,material=trim,at=[0,0.5,0],size=[37.1,1,30.1]);
+  part balcony_floor(shape=box,material=trim,at=[0,9.9,-16.1],size=[25.9,0.5,3.2]);
+  part balcony_guard(shape=prism,material=dark,at=[0,11.5,-17.4],size=[25.9,3,0.15],outline=[[0,0],[0.005,0],[0.005,0.94],[0.2475,0.94],[0.2475,0],[0.2525,0],[0.2525,0.94],[0.4975,0.94],[0.4975,0],[0.5025,0],[0.5025,0.94],[0.7475,0.94],[0.7475,0],[0.7525,0],[0.7525,0.94],[0.995,0.94],[0.995,0],[1,0],[1,1],[0,1]]);
+  use front_drain(component=drainage,args=[37,27,30,-1]);
+  part chimney(shape=box,material=brick,at=[10.36,30.2,3],size=[2.5,6.4,3]);
 }
+
 object canal_apartments(label="Canal apartments"){
   measure(kind=building,axis=y,meters=15);
   body(interaction=solid,radius=19.0,height=38);
@@ -239,22 +299,21 @@ object canal_apartments(label="Canal apartments"){
   }
   part roof(shape=pyramid,material=roof,at=[0,34,0],size=[38.2,8,31.5]);
   part eaves(shape=box,material=trim,at=[0,29.75,0],size=[38.2,0.5,31.5]);
-  part window_0_0(shape=box,material=glass,at=[-9.5,7,-15.15],size=[5.89,4.2,0.5]);
-  part window_0_2(shape=box,material=glass,at=[9.5,7,-15.15],size=[5.89,4.2,0.5]);
-  part window_1_0(shape=box,material=glass,at=[-9.5,16,-15.15],size=[5.89,4.2,0.5]);
-  part window_1_1(shape=box,material=glass,at=[0,16,-15.15],size=[5.89,4.2,0.5]);
-  part window_1_2(shape=box,material=glass,at=[9.5,16,-15.15],size=[5.89,4.2,0.5]);
-  part rear_1_0(shape=box,material=glass,at=[-9.5,16,15.15],size=[6.84,4,0.5]);
-  part rear_1_1(shape=box,material=glass,at=[9.5,16,15.15],size=[6.84,4,0.5]);
-  part window_2_0(shape=box,material=glass,at=[-9.5,25,-15.15],size=[5.89,4.2,0.5]);
-  part window_2_1(shape=box,material=glass,at=[0,25,-15.15],size=[5.89,4.2,0.5]);
-  part window_2_2(shape=box,material=glass,at=[9.5,25,-15.15],size=[5.89,4.2,0.5]);
-  part rear_2_0(shape=box,material=glass,at=[-9.5,25,15.15],size=[6.84,4,0.5]);
-  part rear_2_1(shape=box,material=glass,at=[9.5,25,15.15],size=[6.84,4,0.5]);
-  part door(shape=box,material=dark,at=[0,3,-15.15],size=[3.5,6,0.5]);
-  part door_header(shape=box,material=trim,at=[0,6.2,-15.3],size=[4.5,0.7,0.6]);
+  repeat floors(index=f,count=3){
+    repeat bays(index=b,count=2){
+      use window(component=sash,args=[8.36,5.5],at=[(b*2-1)*9.88,(f+.55)*10,-15.02],rot_deg=[0,180,0]);
+    }
+  }
+  repeat rear(index=b,count=2){use windows(component=rear_stack,args=[8.36,30,3,10],at=[(b*2-1)*9.88,0,15.02]);}
+  use entrance(component=entry,at=[0,0,-15.02],rot_deg=[0,180,0]);
   part step(shape=box,material=trim,at=[0,0.25,-16.5],size=[7,0.5,3.5]);
+  part plinth(shape=box,material=trim,at=[0,0.5,0],size=[38.1,1,30.1]);
+  part balcony_floor(shape=box,material=trim,at=[0,11,-16.1],size=[26.6,0.5,3.2]);
+  part balcony_guard(shape=prism,material=dark,at=[0,12.6,-17.4],size=[26.6,3,0.15],outline=[[0,0],[0.005,0],[0.005,0.94],[0.2475,0.94],[0.2475,0],[0.2525,0],[0.2525,0.94],[0.4975,0.94],[0.4975,0],[0.5025,0],[0.5025,0.94],[0.7475,0.94],[0.7475,0],[0.7525,0],[0.7525,0.94],[0.995,0.94],[0.995,0],[1,0],[1,1],[0,1]]);
+  use front_drain(component=drainage,args=[38,30,30,-1]);
+  part chimney(shape=box,material=brick,at=[10.64,33.2,3],size=[2.5,6.4,3]);
 }
+
 object corner_shop(label="Corner shop"){
   measure(kind=building,axis=y,meters=9);
   body(interaction=solid,radius=11.5,height=23);
@@ -272,23 +331,24 @@ object corner_shop(label="Corner shop"){
   }
   part roof(shape=pyramid,material=roof,at=[0,20.5,0],size=[23.2,5,26.5]);
   part eaves(shape=box,material=trim,at=[0,17.75,0],size=[23.2,0.5,26.5]);
-  part window_0_0(shape=box,material=glass,at=[-5.75,7,-12.65],size=[3.565,3.78,0.5]);
-  part window_0_2(shape=box,material=glass,at=[5.75,7,-12.65],size=[3.565,3.78,0.5]);
-  part window_1_0(shape=box,material=glass,at=[-5.75,13,-12.65],size=[3.565,3.78,0.5]);
-  part window_1_1(shape=box,material=glass,at=[0,13,-12.65],size=[3.565,3.78,0.5]);
-  part window_1_2(shape=box,material=glass,at=[5.75,13,-12.65],size=[3.565,3.78,0.5]);
-  part rear_1_0(shape=box,material=glass,at=[-5.75,13,12.65],size=[4.14,4,0.5]);
-  part rear_1_1(shape=box,material=glass,at=[5.75,13,12.65],size=[4.14,4,0.5]);
-  part door(shape=box,material=dark,at=[0,3,-12.65],size=[3.5,6,0.5]);
-  part door_header(shape=box,material=trim,at=[0,6.2,-12.8],size=[4.5,0.7,0.6]);
+  repeat floors(index=f,count=2){
+    repeat bays(index=b,count=2){
+      use window(component=sash,args=[4.6,4.95],at=[(b*2-1)*5.98,(f+.55)*9,-12.52],rot_deg=[0,180,0]);
+    }
+  }
+  repeat rear(index=b,count=2){use window(component=sash,args=[4.6,4.95],at=[(b*2-1)*5.98,13.95,12.52]);}
+  use rear_ground(component=sash,args=[4.6,4.95],at=[0,4.95,12.52]);
+  repeat sides(index=s,count=2){use window(component=sash,args=[4,4.95],at=[(s*2-1)*11.52,13.95,0],rot_deg=[0,s*180-90,0]);}
+  use entrance(component=entry,at=[0,0,-12.52],rot_deg=[0,180,0]);
   part step(shape=box,material=trim,at=[0,0.25,-14],size=[22,0.5,3.5]);
   part porch_base(shape=box,material=trim,at=[0,0.25,-15.5],size=[22,0.5,6.5]);
-  part canopy(shape=box,material=green,at=[0,8.5,-15.5],size=[20,0.7,6.5]);
-  part post0(shape=box,material=wood,at=[-9,4.5,-18],size=[0.8,8,0.8]);
-  part post1(shape=box,material=wood,at=[9,4.5,-18],size=[0.8,8,0.8]);
-  part signboard(shape=box,material=dark,at=[0,11,-12.9],size=[16,3,1]);
-  part sign_stripe(shape=box,material=sign,at=[0,11,-13.5],size=[13,0.7,0.5]);
+  use drain_0(component=drainage,args=[23,18,25,-1]);
+  use drain_2(component=drainage,args=[23,18,25,1]);
+  part porch_canopy(shape=prism,material=green,at=[0,7.9,-15.5],size=[18.4,1.2,6.5],outline=[[0,0],[1,0],[1,.5],[0,1]]);
+  part porch_post_l(shape=box,material=wood,at=[-8.5,4,-18.2],size=[0.8,8,0.8]);
+  part porch_post_r(shape=box,material=wood,at=[8.5,4,-18.2],size=[0.8,8,0.8]);
 }
+
 object bakery(label="Neighborhood bakery"){
   measure(kind=building,axis=y,meters=9.5);
   body(interaction=solid,radius=12.5,height=24);
@@ -306,25 +366,26 @@ object bakery(label="Neighborhood bakery"){
   }
   part roof(shape=pyramid,material=tile,at=[0,21,0],size=[25.2,6,27.5]);
   part eaves(shape=box,material=trim,at=[0,17.75,0],size=[25.2,0.5,27.5]);
-  part window_0_0(shape=box,material=glass,at=[-6.25,7,-13.15],size=[3.875,3.78,0.5]);
-  part window_0_2(shape=box,material=glass,at=[6.25,7,-13.15],size=[3.875,3.78,0.5]);
-  part window_1_0(shape=box,material=glass,at=[-6.25,13,-13.15],size=[3.875,3.78,0.5]);
-  part window_1_1(shape=box,material=glass,at=[0,13,-13.15],size=[3.875,3.78,0.5]);
-  part window_1_2(shape=box,material=glass,at=[6.25,13,-13.15],size=[3.875,3.78,0.5]);
-  part rear_1_0(shape=box,material=glass,at=[-6.25,13,13.15],size=[4.5,4,0.5]);
-  part rear_1_1(shape=box,material=glass,at=[6.25,13,13.15],size=[4.5,4,0.5]);
-  part door(shape=box,material=dark,at=[0,3,-13.15],size=[3.5,6,0.5]);
-  part door_header(shape=box,material=trim,at=[0,6.2,-13.3],size=[4.5,0.7,0.6]);
+  repeat floors(index=f,count=2){
+    repeat bays(index=b,count=2){
+      use window(component=sash,args=[5,4.95],at=[(b*2-1)*6.5,(f+.55)*9,-13.02],rot_deg=[0,180,0]);
+    }
+  }
+  repeat rear(index=b,count=2){use window(component=sash,args=[5,4.95],at=[(b*2-1)*6.5,13.95,13.02]);}
+  use rear_ground(component=sash,args=[5,4.95],at=[0,4.95,13.02]);
+  repeat sides(index=s,count=2){use window(component=sash,args=[4.16,4.95],at=[(s*2-1)*12.52,13.95,0],rot_deg=[0,s*180-90,0]);}
+  use entrance(component=entry,at=[0,0,-13.02],rot_deg=[0,180,0]);
   part step(shape=box,material=trim,at=[0,0.25,-14.5],size=[24,0.5,3.5]);
   part porch_base(shape=box,material=trim,at=[0,0.25,-16],size=[24,0.5,6.5]);
+  use drain_0(component=drainage,args=[25,18,26,-1]);
+  use drain_2(component=drainage,args=[25,18,26,1]);
   zone porch(at=[0,0,-16],radius=12,height=9,mode=break(speed=115,scatter=50,lift=45,spin=3,lifetime=7,pattern=splinter)){
-  part canopy(shape=box,material=green,at=[0,8.5,0],size=[22,0.7,6.5]);
-  part post0(shape=box,material=wood,at=[-10,4.5,-2.5],size=[0.8,8,0.8]);
-  part post1(shape=box,material=wood,at=[10,4.5,-2.5],size=[0.8,8,0.8]);
+  part porch_canopy(shape=prism,material=green,at=[0,7.9,0],size=[20,1.2,6.5],outline=[[0,0],[1,0],[1,.5],[0,1]]);
+  part porch_post_l(shape=box,material=wood,at=[-9.3,4,-2.7],size=[0.8,8,0.8]);
+  part porch_post_r(shape=box,material=wood,at=[9.3,4,-2.7],size=[0.8,8,0.8]);
   }
-  part signboard(shape=box,material=dark,at=[0,11,-13.4],size=[16,3,1]);
-  part sign_stripe(shape=box,material=sign,at=[0,11,-14],size=[13,0.7,0.5]);
 }
+
 object office_studios(label="Office studios"){
   measure(kind=building,axis=y,meters=24);
   body(interaction=solid,radius=26.0,height=60);
@@ -342,29 +403,14 @@ object office_studios(label="Office studios"){
   }
   part roof(shape=box,material=roof,at=[0,59.5,0],size=[52.2,1,44.5]);
   part eaves(shape=box,material=trim,at=[0,58.75,0],size=[52.2,0.5,44.5]);
-  part window_0_0(shape=box,material=glass,at=[-15.6,7,-21.65],size=[6.448,5,0.5]);
-  part window_0_1(shape=box,material=glass,at=[-5.2,7,-21.65],size=[6.448,5,0.5]);
-  part window_0_2(shape=box,material=glass,at=[5.2,7,-21.65],size=[6.448,5,0.5]);
-  part window_0_3(shape=box,material=glass,at=[15.6,7,-21.65],size=[6.448,5,0.5]);
-  part window_1_0(shape=box,material=glass,at=[-15.6,22.6667,-21.65],size=[6.448,5,0.5]);
-  part window_1_1(shape=box,material=glass,at=[-5.2,22.6667,-21.65],size=[6.448,5,0.5]);
-  part window_1_2(shape=box,material=glass,at=[5.2,22.6667,-21.65],size=[6.448,5,0.5]);
-  part window_1_3(shape=box,material=glass,at=[15.6,22.6667,-21.65],size=[6.448,5,0.5]);
-  part rear_1_0(shape=box,material=glass,at=[-13,22.6667,21.65],size=[9.36,4,0.5]);
-  part rear_1_1(shape=box,material=glass,at=[13,22.6667,21.65],size=[9.36,4,0.5]);
-  part window_2_0(shape=box,material=glass,at=[-15.6,38.3333,-21.65],size=[6.448,5,0.5]);
-  part window_2_1(shape=box,material=glass,at=[-5.2,38.3333,-21.65],size=[6.448,5,0.5]);
-  part window_2_2(shape=box,material=glass,at=[5.2,38.3333,-21.65],size=[6.448,5,0.5]);
-  part window_2_3(shape=box,material=glass,at=[15.6,38.3333,-21.65],size=[6.448,5,0.5]);
-  part rear_2_0(shape=box,material=glass,at=[-13,38.3333,21.65],size=[9.36,4,0.5]);
-  part rear_2_1(shape=box,material=glass,at=[13,38.3333,21.65],size=[9.36,4,0.5]);
-  part window_3_0(shape=box,material=glass,at=[-15.6,54,-21.65],size=[6.448,5,0.5]);
-  part window_3_1(shape=box,material=glass,at=[-5.2,54,-21.65],size=[6.448,5,0.5]);
-  part window_3_2(shape=box,material=glass,at=[5.2,54,-21.65],size=[6.448,5,0.5]);
-  part window_3_3(shape=box,material=glass,at=[15.6,54,-21.65],size=[6.448,5,0.5]);
-  part rear_3_0(shape=box,material=glass,at=[-13,54,21.65],size=[9.36,4,0.5]);
-  part rear_3_1(shape=box,material=glass,at=[13,54,21.65],size=[9.36,4,0.5]);
-  part door(shape=box,material=dark,at=[0,3,-21.65],size=[3.5,6,0.5]);
-  part door_header(shape=box,material=trim,at=[0,6.2,-21.8],size=[4.5,0.7,0.6]);
+  repeat floors(index=f,count=6){
+    repeat faces(index=s,count=2){
+      let side(value=s*2-1);
+      use windows(component=curtain_bay,args=[41.6,5.40833],at=[0,(f+.55)*9.83333,side*21.52],rot_deg=[0,180-s*180,0]);
+    }
+  }
+  use entrance(component=entry,at=[0,0,-21.52],rot_deg=[0,180,0]);
   part step(shape=box,material=trim,at=[0,0.25,-23],size=[7,0.5,3.5]);
+  part plinth(shape=box,material=trim,at=[0,0.5,0],size=[52.1,1,43.1]);
+  voxels plant(material=dark,at=[0,59.75,0],size=[12,.5,8],grid=[24,1,16]){fill housing(from=[0,0,0],to=[24,1,16]);repeat vents(index=i,count=5){cut vent(from=[i*4+2,0,2],to=[i*4+3,1,14]);}}
 }

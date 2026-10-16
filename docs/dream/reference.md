@@ -155,7 +155,7 @@ With a measured car player, tree height and plane wingspan must exceed the car's
 | Components | Up to 8 numeric parameters; repeat 0–32; no recursive components |
 | Numeric expressions | Finite, absolute value ≤1,000,000; parse depth 32, evaluation/dependency depth 64 |
 | Assembly | 1–32 parts, ≤12 joints, joint depth ≤4, native reach ≤256 |
-| Geometry | Part size .5–128; X/Z offset ±64, Y ±128; joint offsets ±64 |
+| Geometry | Part size .1–128 in object v2 (.5–128 in v1); beam length ≥ .5; X/Z offset ±64, Y ±128; joint offsets ±64 |
 | Body | Native radius 4–30, height 4–160, friction .5–5 |
 | Measured size | Uniform factor .05–4; placement variation .5–2 inside its profile |
 | Unmeasured size | Placement multiplier .5–2 |

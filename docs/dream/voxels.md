@@ -43,7 +43,7 @@ A visual opening does **not** create a traversable opening. Bodies and compound 
 
 Two carved garden walls flank the river-park bench and break into four chunks each. Eleven residential and commercial building templates now use voxel wall shells. The slatted benches use voxel boards inside their existing seven fragment groups. The asset-library bakehouse storefront uses a carved volume with six masonry chunks, plus its canopy and door. Their measured proportions, entrances, foundations, roads and physical contacts remain shared with the existing world.
 
-This is a hybrid world: terrain, roads, water, curved roofs, vehicles, plants and animals retain their existing geometry. Voxel construction is available wherever a Dream assembly makes sense; this is not a claim that every world cell has been converted.
+This is a hybrid world: terrain, roads, water, curved roofs, plants and animals use shaped geometry; vehicles combine profiles with voxel glazing, lights and fittings. Voxel construction is available wherever a Dream assembly makes sense; this is not a claim that every world cell has been converted.
 
 ![Voxel shells and boards retain the surrounding model details](../media/voxel-assets.jpg)
 

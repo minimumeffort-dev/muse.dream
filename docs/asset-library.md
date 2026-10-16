@@ -21,6 +21,18 @@ The mock world contains 83 reusable assemblies, all written in Dream 2. The asse
 
 The seated traveler and standing Explorer are separate engine-provided Dream assemblies. The Explorer has an animated walking gait and keeps its own physical size when switching to a seated vehicle pose. Bread and a harvest bowl remain standalone authoring examples. [Open the full atlas](media/assets-all.jpg), or follow the [local gallery setup](README.md#try-it-locally) for interactive inspection. Front, right, back and left views share the same geometry. The phase selector exposes wheel and joint motion.
 
+## Buildings and transport with recognizable construction
+
+The eleven housing, shop and office templates use shared carved window frames, inset glazing and panel doors. Gabled roofs close over attic walls; gutters lead into bent downpipes. Apartment guards have slender posts, and porch supports meet their slab and canopy. Offices have six floor bands rather than a few oversized windows. Brick uses a masonry-colored surface instead of wood grain.
+
+![Houses, bus, tram, railcar and launch rebuilt from bounded Dream parts](media/constructed-assets.jpg)
+
+The bus shell has wheel openings, a sloped cab, two passenger doors, repeated window bays and a rooftop cooling unit. The tram and regional railcar have separate cab ends and two four-wheel bogies; the tram's folded collector sits on an insulator. The launch has a keel, pointed upper hull, deck, wheelhouse, guard rail, mounted outboard and fitted helm seat. It remains a six-metre arcade boat.
+
+Fifteen templates cover 197 live placements. Their measured scales and existing physical bodies are preserved, and the bakery's porch remains a separate break zone. Dream 2's visual size minimum is now `.1` local units; the v1 minimum remains `.5`. Finer trim doesn't add physical contacts or raise the 32-part cap.
+
+[Construction guide and reference cues](asset-construction.md) · [Complete house](examples/terraced-house.dream) · [Complete bus](examples/city-bus.dream) · [Complete launch](examples/cabin-launch.dream) · [Checks and media audit](evidence/asset-construction/verification.md).
+
 ## Ground vehicles built around their mechanics
 
 The rally coupe, cream-roof town car, compact hatchback and panel van now have different silhouettes. Extruded Dream profiles form sloped cabins and wheel openings. Pillars meet their roofs and shells; lenses sit on their panels. Axles, hubs and tires share rigid bearing frames, with suspension crossmembers connecting them to the body. The racer's visual body travel is limited to five centimetres so its tires stay clear of the openings during a landing.
@@ -77,7 +89,7 @@ The live city uses a walking deer habitat and gulls above the river; the library
 
 The replacement adds terraces, apartments, neighborhood shops and civic buildings with different dimensions and uses. Apartments and offices have several floors; shops and homes stay lower. The blocks have street frontage, courtyards and sidewalks. Suburban driveways run toward their street instead of ending in random grass.
 
-![Town buildings, homes and sports people composed in Dream 2](media/urban-assets.jpg)
+![Housing, shops and offices composed in Dream 2](media/urban-assets.jpg)
 
 Football goals have connected posts and net threads. Basketball hoops have a supported backboard, rim and net. Four animated players practise kicks and dribbles; a commuter visits the market, and the vendor, teacher and health worker react near their buildings. The golf area has an authored fairway and flag. It is an explorable landscape rather than a golf simulation.
 

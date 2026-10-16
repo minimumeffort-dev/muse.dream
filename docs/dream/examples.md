@@ -139,3 +139,11 @@ The source files are the examples. Tests compare these complete snippets with th
 ## A carved voxel wall
 
 [Download voxel-wall.dream](../examples/voxel-wall.dream). One fill, an opening and repeated top cuts become a four-piece breakable wall. Read [voxel construction](voxels.md) for geometry and collision boundaries.
+
+## Constructed buildings and transport
+
+- [Terraced house](../examples/terraced-house.dream): thin framed glazing, gabled roof, chimney and connected drainage.
+- [City bus](../examples/city-bus.dream): wheel openings, rolling axles and carved passenger doors.
+- [Cabin launch](../examples/cabin-launch.dream): pointed hull, deck, wheelhouse, outboard and fitted seat.
+
+These complete sources compile to the same assemblies used in the live mock world. [Construction notes](../asset-construction.md).

@@ -200,6 +200,7 @@ Use Dream 2 `voxels` / `fill` / `cut` for bounded volumetric parts. Read
 clone GPU attributes for callers, and keep cut-face winding/normals correct.
 Destruction chunks count toward the existing eight / 128 fragment budgets;
 never create per-cell physics bodies. Contacts, terrain and motion remain engine
-owned. The current city uses voxel shells, benches and bakehouse masonry, while
-terrain, transport and organic assets remain a hybrid representation. Prompt
+owned. The current city uses voxel shells, carved joinery, transport fittings, benches and bakehouse masonry, while terrain, transport and organic assets remain a hybrid representation. Prompt
 world authoring is deferred; preserve the existing Lab without expanding it.
+
+New asset passes must preserve accepted physical scale, bodies, contacts, foundations and destruction zones unless changing those is part of the task. Object DSL v2 visual dimensions permit .1..128 local units; v1 retains .5..128 and beam endpoint length stays >=.5. Use fine dimensions for trim instead of oversizing it. Check visible glazing, usable floors, roof/support joins, coaxial rolling parts and independently scaled passenger fit. Review the constructed sources in `docs/asset-construction.md` and inspect four rendered angles.
