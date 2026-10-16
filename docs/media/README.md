@@ -246,3 +246,19 @@ The full asset atlas, `city-people.jpg`, shared-scale lineup and NPC context now
 Street bends, crossing paint, boost placement and access to sports grounds and school yards were audited in the real world. The [verification record](../evidence/world-audit/verification.md) retains matching before/after views and four public-space asset angles. `public-space-assets.jpg` shows the supported shelter seat, mounted hoop, table crossrails and market stall. The complete atlas and sports asset sheet reflect the same source. The source-derived map, affected district and four lighting stills are refreshed.
 
 Driving, car boost, football, basketball, switching, locomotion, swimming, day/night and flight GIF/HD pairs and their matching stills use newly rendered 30 fps source frames. Existing isolated bench and voxel-wall destruction recordings remain accurate, as do focused galleries of unchanged vehicles, architecture, character motion, materials, plants and wildlife. These captures are rendered evidence, not a laptop benchmark.
+
+## Road overlaps, r41
+
+The [road verification](../evidence/road-overlaps/verification.md) keeps matched
+native views of the circuit joins and whole bicycle symbols. Refreshed the
+source-derived map, city/recreation/bridge/airport/medical views, voxel city/park/
+water views and four fixed lighting states. The HUD uses the revised map polygons.
+
+Driving, car boost, switching, walking/jumping, football and day/night recordings
+use 210/210/240/180/240/360 fresh source frames respectively, at 30 rendered frames
+per simulation second. Their GIFs, HD videos and matching stills are replaced
+together. Basketball practice, swimming and aircraft clips retain unchanged local
+geometry: their cameras stay around the court, canal and airport/flight corridor,
+away from the repaired circuit joins and crowded glyphs. These canvas exports do
+not include the HTML minimap. Focused asset, character, material and destruction
+galleries are unchanged. No performance benchmark or interpolated frames.

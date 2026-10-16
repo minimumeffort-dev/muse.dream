@@ -280,6 +280,10 @@ bridge.from/to accept either an XY pair or junction ID. Includes never export sy
 Keep the main road/street network in one file and reuse junctions for exact joins.
 Street interiors use bounded miter joins; only the two ends have square caps.
 Crossing paint clears centerlines, cycle glyphs and neighboring stop lines.
+City sidewalks, cycle tracks and separators yield to the circuit carriageway.
+Existing sidewalk strips across it become painted, walkable crossings with open
+curbs and no center paint. Cycle symbols require their entire envelope to fit
+inside a lane and outside crossing clearance; crowded symbols are omitted whole.
 road.style=racing default; street makes neutral curbs and removes start paint.
 site id(object=placement_id,kind=home|market|school|hospital|work|civic|park|station|airport|stop,
 entry=[local_x,local_z],street=street_id,width=16,points=[[world_x,world_y],...]);

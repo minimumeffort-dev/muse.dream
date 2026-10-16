@@ -34,6 +34,8 @@ Stops have named anchors, waits and platform sites in Dream. Platform paths join
 
 Bicycle tracks follow the avenues and continue across the three bridges. Painted symbols and road center lines leave clear gaps at zebra crossings. Junction declarations create the crossings on the street arms, with stop lines before them. Duplicate stripes merge and neighboring stop lines leave the zebra clear. Street and cycle-track bends use a shared mitered ribbon, so interior anchors no longer protrude as square tiles. Walkers, drivers and cyclists share one world; you still choose your own route when controlling a vehicle.
 
+At the outer circuit, city paving and cycle tracks stop at the carriageway. Sidewalk connections across it become painted crossings with open curbs, keeping walking routes connected. Bicycle symbols keep their complete shape or leave a gap when there is too little room. Both maps follow the same footprints, including bridge connections. [See the road-overlap checks](evidence/road-overlaps/verification.md).
+
 ## A regional airport
 
 The western airfield now has a terminal, maintenance hangar, control tower and a lit public approach. Its bus serves River hospital; the entrance paths join the same pedestrian network as the neighborhoods. Bicycle parking and a rideable scooter sit on the public side. The hangar has a separate service road and crew entrance.

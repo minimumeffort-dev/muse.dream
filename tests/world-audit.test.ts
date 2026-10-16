@@ -1,12 +1,13 @@
 import {describe,it,expect} from 'vitest';
-import {Box3,Mesh,Raycaster,Vector3} from 'three';
+import {Box3,Mesh,MeshBasicMaterial,DoubleSide,Raycaster,Vector3} from 'three';
 import {compileDream,compileDreamWorld} from '../src/scene/dream';
 import {buildObject} from '../src/game/world3d';
 import {streetPolygons,cyclePolygons,onPolygon,type Street} from '../src/scene/streets';
 import {buildStreets} from '../src/game/streets';
+import {roadGeometry} from '../src/game/environment';
 import {parseScene} from '../src/scene/schema';
 import {createFixtureScene} from '../src/scene/fixture';
-import {crossingPolygons} from '../src/scene/sites';
+import {crossingPolygons,onWalkway} from '../src/scene/sites';
 import transit from '../src/scene/world/transit_assets.dream?raw';
 import sports from '../src/scene/world/sports_assets.dream?raw';
 import civic from '../src/scene/world/civic_assets.dream?raw';
@@ -43,6 +44,30 @@ describe('street and crossing detail',()=>{
     for(const [x,y] of [[300,466],[400,466],[500,477]])expect(lanes.some(p=>onPolygon(p,x!,y!))).toBe(true);
     expect(lanes.some(p=>onPolygon(p,40,400))).toBe(false);
     expect(bend.points[0]).toEqual({x:100,y:400});
+  });
+  it('opens city sidewalks and cycle tracks where the driving circuit passes through',()=>{
+    const street={id:'access',width:60,cycleWidth:20,sidewalk:20,points:[{x:480,y:80},{x:480,y:360}]};
+    const scene=parseScene({...createFixtureScene(),objects:[],regions:[],terrain:{hills:[]},streets:[street]});
+    const root=buildStreets(scene),ray=new Raycaster();
+    for(const [name,x] of [['street-sidewalks',414],['street-cycle-tracks',435],['cycle-separators',447]] as const){
+      ray.set(new Vector3(x-480,50,129-360),new Vector3(0,-1,0));
+      expect(ray.intersectObject(root.getObjectByName(name)!,true),name).toHaveLength(0);
+    }
+    // The removed raised pavement becomes a painted, connected pedestrian crossing.
+    expect(onWalkway(scene,414,129,3.5)).toBe(true);
+    ray.set(new Vector3(414-480,50,127-360),new Vector3(0,-1,0));
+    expect(ray.intersectObject(root.getObjectByName('pedestrian-crossings')!,true)).toHaveLength(1);
+    // A yielding cycle lane must expose asphalt, not a hole down to grass.
+    const asphalt=new Mesh(roadGeometry(scene),new MeshBasicMaterial({side:DoubleSide}));asphalt.updateMatrixWorld();
+    ray.set(new Vector3(435-480,50,129-360),new Vector3(0,-1,0));
+    expect(ray.intersectObject(asphalt)).toHaveLength(1);
+  });
+  it('omits a complete cycle symbol beside a crossing instead of leaving its clipped wheel behind',()=>{
+    const street={id:'main',width:100,cycleWidth:20,sidewalk:20,points:[{x:100,y:360},{x:850,y:360}]};
+    const scene=parseScene({...createFixtureScene(),objects:[],regions:[],terrain:{hills:[]},streets:[street],crossings:[{id:'walk',street:'main',at:{x:270,y:360},width:24,junction:false}]});
+    const root=buildStreets(scene),symbols=root.getObjectByName('cycle-symbols')!,ray=new Raycaster();
+    const hits=(x:number)=>{ray.set(new Vector3(x-480,50,426.6-360),new Vector3(0,-1,0));return ray.intersectObject(symbols,true).length;};
+    expect(hits(239.2)).toBe(0);expect(hits(539.2)).toBeGreaterThan(0);
   });
   it('clips stop paint out of nearby crossings and does not stack duplicate zebra stripes',()=>{
     const street={id:'main',width:100,sidewalk:20,points:[{x:100,y:360},{x:850,y:360}]};

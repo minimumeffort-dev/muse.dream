@@ -3,7 +3,7 @@ import {MAX_WORLD_SIZE} from './world-bounds';
 import {z} from 'zod';
 import type {Point,Scene} from './schema';
 import {pointInPolygon} from '../sim/mask';
-import {streetPolygons,streetSidewalks,markingPolygons,onPolygon} from './streets';
+import {streetPolygons,streetSidewalks,streetCircuitCrossings,markingPolygons,onPolygon} from './streets';
 import {distanceToPolygon,polygonBounds,unionPolygons,partition,polygonArea,subtractPolygons} from './polygons';
 import {sceneContacts} from './contacts';
 import {assemblyBounds} from './measure';
@@ -74,6 +74,7 @@ const cache=new WeakMap<Scene,{polygons:Point[][];sites:Map<string,number>;roots
 export function walkingNetwork(scene:Scene){
   let value=cache.get(scene);if(value)return value;
   const polygons=[...streetSidewalks(scene)];
+  polygons.push(...streetCircuitCrossings(scene).flatMap(c=>c.polygons));
   polygons.push(...scene.crossings.flatMap(c=>crossingPolygons(scene,c)));
   const sites=new Map<string,number>();
   for(const site of scene.sites){sites.set(site.id,polygons.length);polygons.push(...sitePolygons(scene,site));}

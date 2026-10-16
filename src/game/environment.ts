@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import {voxelTerrainTile} from './voxel-columns';
 import {voxelStamp} from '../scene/voxel-stamp';
-import {reservedGround,streetPolygons,onStreet} from '../scene/streets';
+import {reservedGround,streetPolygons,streetCircuitCrossings,onPolygon} from '../scene/streets';
 import {buildStreets} from './streets';
 import { bridgeAt, bridgeCoordinates, bridgePolygon } from "../scene/landscape-dsl";
 import type { Point, Scene } from "../scene/schema";
@@ -60,7 +60,7 @@ function timberFootprints(doc: Scene): Point[][] {
 /** Road, paint and effects all conform to the same triangles as the terrain. */
 export function roadGeometry(doc: Scene): THREE.BufferGeometry {
   const sections = roadSections(doc), half = doc.roadMaskRef.params.roadWidth / 2;
-  return surfaceGeometry(doc, sections.slice(1).map((b, i) => roadRibbon(sections[i]!, b, -half, half)), ROAD_SURFACE_LIFT, undefined, undefined, [...timberFootprints(doc),...streetPolygons(doc.streets,'riding')]);
+  return surfaceGeometry(doc, sections.slice(1).map((b, i) => roadRibbon(sections[i]!, b, -half, half)), ROAD_SURFACE_LIFT, undefined, undefined, [...timberFootprints(doc),...streetPolygons(doc.streets)]);
 }
 
 /** Continuous bands, with top and walls split at the underlying terrain edges. */
@@ -68,7 +68,7 @@ export function curbGeometry(doc: Scene, side: -1 | 1): THREE.BufferGeometry {
   const sections = roadSections(doc), half = doc.roadMaskRef.params.roadWidth / 2;
   const inner = side * (half - ROAD_CURB_WIDTH / 2), outer = side * (half + ROAD_CURB_WIDTH / 2);
   const vertices: number[] = [], colors: number[] = [];
-  const cutouts = [...timberFootprints(doc),...streetPolygons(doc.streets,'riding')];
+  const cutouts = [...timberFootprints(doc),...streetPolygons(doc.streets,'reserved')];
   const timber = (doc.terrain.landscape?.bridges ?? []).filter(bridge => bridge.style === "timber");
   const curbLift = (x: number, y: number, lift: number) => {
     let distance = Infinity;
@@ -94,7 +94,7 @@ export function curbGeometry(doc: Scene, side: -1 | 1): THREE.BufferGeometry {
       const edge = surfaceEdge(start!, end!, cutouts);
       for (let j = 1; j < edge.length; j++) {
         const a = edge[j - 1]!, b = edge[j]!;
-        if (onStreet(doc,(a.x+b.x)/2,(a.y+b.y)/2) || bridgeAt(doc.terrain.landscape, (a.x + b.x) / 2, (a.y + b.y) / 2)?.style === "timber") continue;
+        if (cutouts.some(p=>onPolygon(p,(a.x+b.x)/2,(a.y+b.y)/2))) continue;
         const point = (p: Point, lift: number) => new THREE.Vector3(p.x - doc.canonical.width / 2, surfaceHeight(doc, p.x, p.y) + curbLift(p.x, p.y, lift), p.y - doc.canonical.height / 2);
         const p = point(edge[j - 1]!, -.5), q = point(edge[j]!, -.5), r = point(edge[j]!, 3.1), t = point(edge[j - 1]!, 3.1);
         for (const v of [p, r, q, p, t, r]) vertices.push(...v.toArray());
@@ -113,7 +113,7 @@ export function roadMarkingGeometry(doc: Scene): THREE.BufferGeometry {
     const a = sections[i - 1]!, b = sections[i]!;
     if ((a.distance + b.distance) / 2 % 48 < 22) polygons.push(roadRibbon(a, b, -1.25, 1.25));
   }
-  return surfaceGeometry(doc, polygons, 1.8, undefined, undefined, [...timberFootprints(doc),...streetPolygons(doc.streets,'riding')]);
+  return surfaceGeometry(doc, polygons, 1.8, undefined, undefined, [...timberFootprints(doc),...streetPolygons(doc.streets,'riding'),...streetCircuitCrossings(doc).flatMap(c=>c.polygons)]);
 }
 
 export function drapedPolygon(doc: Scene, polygon: Point[], lift: number): THREE.BufferGeometry {

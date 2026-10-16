@@ -1084,7 +1084,7 @@
       ],
       "cycleSeparator": 6,
       "minimumSegment": 80,
-      "geometry": "open polyline in any direction; turns at most 120 degrees; bounded miter joins with square endpoint caps; non-overlapping junctions; optional cycle tracks",
+      "geometry": "open polyline in any direction; turns at most 120 degrees; bounded miter joins with square endpoint caps; non-overlapping junctions; city paving, cycle tracks and separators yield to the circuit; sidewalk strips across it become painted walkable crossings with open curbs and clear center paint; complete cycle glyph envelopes must fit a lane and clear crossings and other glyphs; optional cycle tracks",
       "acceptance": "every component reaches driving loop; riding surface clear of solids; water crossings require an aligned bridge carrying the full street, cycle tracks and sidewalks between rails; dedicated paths remain separate"
     },
     "surface": {

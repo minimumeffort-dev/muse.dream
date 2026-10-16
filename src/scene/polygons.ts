@@ -52,6 +52,14 @@ export function subtractPolygons(polygons:Point[][],holes:Point[][]):Point[][]{
     let pieces=[polygon];for(const {p,b} of cuts){if(!pieces.length)break;pieces=subtract(pieces,p,b);}return pieces;
   });
 }
+/** Intersect convex pieces without confusing an overlapping bounding box with occupied ground. */
+export function intersectPolygons(polygons:Point[][],outlines:Point[][]):Point[][]{
+  const cuts=outlines.map(p=>({p,b:polygonBounds(p)}));
+  return polygons.flatMap(p=>{const a=polygonBounds(p);return cuts.flatMap(({p:outline,b})=>{
+    if(a.x1<=b.x0 || a.x0>=b.x1 || a.y1<=b.y0 || a.y0>=b.y1)return [];
+    const inside=partition(p,outline).inside;return polygonArea(inside)>1e-7 ? [inside] : [];
+  });});
+}
 /** Non-overlapping convex pieces, so junctions never stack terrain meshes. */
 export function unionPolygons(polygons:Point[][],holes:Point[][]=[]):Point[][]{
   const result:Point[][]=[],bounds:ReturnType<typeof polygonBounds>[]=[];

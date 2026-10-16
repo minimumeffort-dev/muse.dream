@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 import type {Scene,Point} from '../scene/schema';
-import {streetPolygons,streetSidewalks,cyclePolygons,markingPolygons,onPolygon} from '../scene/streets';
-import {unionPolygons,subtractPolygons,polygonBounds} from '../scene/polygons';
+import {streetPolygons,streetSidewalks,streetCycleTracks,streetCircuitCrossings,markingPolygons,onPolygon} from '../scene/streets';
+import {unionPolygons,subtractPolygons,polygonBounds,polygonArea} from '../scene/polygons';
+import {roadFootprint} from '../scene/road';
 import {sitePolygons,streetFrame,crossingLanes,crossingPolygons} from '../scene/sites';
-import {bridgePolygon} from '../scene/landscape-dsl';
+import {bridgePolygon,polygonsOverlap,clipPolygon} from '../scene/landscape-dsl';
 import {surfaceGeometry} from './surface';
 import {tiledMesh} from './batching';
 import {toonMaterial} from './shaders';
@@ -12,7 +13,7 @@ import {toonMaterial} from './shaders';
 export function buildStreets(scene:Scene):THREE.Group{
   const group=new THREE.Group();group.name='streets-and-grounds';
   const roads=streetPolygons(scene.streets),roadUnion=unionPolygons(roads);
-  const riding=streetPolygons(scene.streets,'riding'),bands=unionPolygons(cyclePolygons(scene.streets),roads);
+  const loop=roadFootprint(scene),riding=streetPolygons(scene.streets,'riding'),bands=streetCycleTracks(scene);
   const sidewalks=streetSidewalks(scene);
   const timber=(scene.terrain.landscape?.bridges??[]).filter(b=>b.style==='timber').map(bridgePolygon);
   const add=(polygons:Point[][],color:string,lift:number,name:string)=>{
@@ -22,10 +23,10 @@ export function buildStreets(scene:Scene):THREE.Group{
     const mesh=tiledMesh(geometry,toonMaterial(color));mesh.name=name;group.add(mesh);
   };
   add(roadUnion,'#626e77',1.25,'street-carriageways');
-  add(unionPolygons(riding,[...roads,...bands]),'#c9c3af',1.55,'cycle-separators');
+  add(unionPolygons(riding,[...roads,...bands,...loop]),'#c9c3af',1.55,'cycle-separators');
   add(bands,'#a76855',1.4,'street-cycle-tracks');
   add(sidewalks,'#bcb6a4',1.6,'street-sidewalks');
-  add(unionPolygons(scene.sites.flatMap(s=>sitePolygons(scene,s)),streetPolygons(scene.streets,'reserved')),'#bcb6a4',1.6,'entrance-paths');
+  add(unionPolygons(scene.sites.flatMap(s=>sitePolygons(scene,s)),[...streetPolygons(scene.streets,'reserved'),...loop]),'#bcb6a4',1.6,'entrance-paths');
   // Declaration order is paint order. Small bounded offsets prevent overlapping turf/court z-fighting.
   scene.surfaces.forEach((s,i)=>add([s.points],s.color,.65+i*.015,`ground-${s.id}`));
   const dashes:Point[][]=[];
@@ -44,22 +45,34 @@ export function buildStreets(scene:Scene):THREE.Group{
     }
   }
   const crossingClearance=scene.crossings.flatMap(c=>crossingPolygons(scene,{...c,width:c.width+16}));
-  add(subtractPolygons(dashes,crossingClearance),'#d8d2b7',1.4,'street-centerlines');
-  const symbols:Point[][]=[];
+  add(subtractPolygons(dashes,[...crossingClearance,...loop]),'#d8d2b7',1.4,'street-centerlines');
+  const symbols:Point[][]=[],symbolBounds:Point[][]=[];
   for(const s of scene.streets.filter(s=>s.cycleWidth))for(let i=1;i<s.points.length;i++){
     const a=s.points[i-1]!,b=s.points[i]!,length=Math.hypot(b.x-a.x,b.y-a.y),dx=(b.x-a.x)/length,dy=(b.y-a.y)/length;
     for(let d=150;d<length-80;d+=300)for(const side of [-1,1]){
       const offset=s.width/2+6+s.cycleWidth!/2,x=a.x+dx*d-dy*offset*side,y=a.y+dy*d+dx*offset*side;
       if(segments.some(other=>!(other.a===a && other.b===b) && near(other,x,y,40)))continue;
       const point=(along:number,across:number)=>({x:x+side*(dx*along-dy*across),y:y+side*(dy*along+dx*across)});
-      const line=(points:Point[],closed=false)=>symbols.push(...markingPolygons({id:'cycle-symbol',color:'#eee8d9',width:1,closed,points}));
+      const bounds=[point(-12,-8),point(25,-8),point(25,7),point(-12,7)];
+      if([...crossingClearance,...symbolBounds].some(p=>polygonsOverlap(p,bounds)) || subtractPolygons([bounds],bands).some(p=>polygonArea(p)>.01))continue;
+      const glyph:Point[][]=[];
+      const line=(points:Point[],closed=false)=>glyph.push(...markingPolygons({id:'cycle-symbol',color:'#eee8d9',width:1,closed,points}));
       for(const wheel of [-7,7])line(Array.from({length:12},(_,n)=>point(wheel+4*Math.cos(n*Math.PI/6),4*Math.sin(n*Math.PI/6))),true);
       line([point(-7,0),point(-3,-5),point(2,0),point(-7,0),point(0,-4),point(7,0),point(4,-6)]);
       line([point(18,-4),point(22,0),point(18,4)]);
+      symbols.push(...unionPolygons(glyph));symbolBounds.push(bounds);
     }
   }
-  add(subtractPolygons(symbols,crossingClearance),'#eee8d9',1.85,'cycle-symbols');
+  add(symbols,'#eee8d9',1.85,'cycle-symbols');
   const crossings:Point[][]=[],stopLines:Point[][]=[];
+  for(const {street,polygons} of streetCircuitCrossings(scene))for(const polygon of polygons){
+    const center=polygon.reduce((p,q)=>({x:p.x+q.x/polygon.length,y:p.y+q.y/polygon.length}),{x:0,y:0}),frame=streetFrame(street,center);
+    const along=(p:Point)=>p.x*frame.dx+p.y*frame.dy,distances=polygon.map(along);
+    for(let d=Math.floor(Math.min(...distances)/7)*7;d<Math.max(...distances);d+=7){
+      const stripe=clipPolygon(clipPolygon(polygon,p=>along(p)-d),p=>d+3-along(p));
+      if(polygonArea(stripe)>1e-7)crossings.push(stripe);
+    }
+  }
   for(const crossing of scene.crossings)for(const {street,at} of crossingLanes(scene,crossing)){
     const frame=streetFrame(street,at),half=street.width/2+(street.cycleWidth ? street.cycleWidth+6 : 0);
     for(const sign of [-1,1]){

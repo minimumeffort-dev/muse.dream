@@ -114,6 +114,11 @@ Street road/riding/reserved footprints share bounded miter joins and square endp
 caps. Preserve that geometry across masks, reservations, rendering and maps. Merge
 duplicate crossing paint and clear centerlines, cycle glyphs and neighboring stop
 lines around zebras. Audit new ground effects against sidewalks and junctions.
+City sidewalks, cycle tracks, separators and entrance paving yield to the circuit.
+Keep existing sidewalk/circuit connections as derived painted crossings in both
+rendering and walking validation; clear circuit curbs and paint there. Place cycle
+glyphs only when their whole envelope fits a lane and clears crossings/other
+glyphs. Maps must reuse these shared footprints instead of independent strokes.
 
 ## Dream authoring
 

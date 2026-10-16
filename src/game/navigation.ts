@@ -1,9 +1,9 @@
 import { bridgePolygon } from "../scene/landscape-dsl";
-import { roadPoints } from "../scene/road";
-import type { Scene } from "../scene/schema";
+import { roadFootprint } from "../scene/road";
+import type { Point,Scene } from "../scene/schema";
 import type { CarState } from "../sim/car";
 import { actorPoses } from "../sim/actors";
-import {cyclePolygons} from '../scene/streets';
+import {streetPolygons,streetCycleTracks} from '../scene/streets';
 
 /** Destination meaning comes from Dream sites, never inferred from building labels. */
 export function mapDestinations(scene:Scene){
@@ -37,26 +37,21 @@ export function createWorldMap(canvas: HTMLCanvasElement, scene: Scene) {
     map.beginPath();water.polygon.forEach((p,i)=>i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));
     map.closePath();map.fillStyle=water.color;map.fill();
   }
-  const roadWidth = scene.roadMaskRef.params.roadWidth;
   for(const surface of scene.surfaces){
     map.beginPath();surface.points.forEach((p,i)=>i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));
     map.closePath();map.fillStyle=surface.color;map.fill();
   }
-  for(const street of scene.streets){
-    map.beginPath();street.points.forEach((p,i)=>i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));
-    map.lineWidth=street.width;map.lineJoin='round';map.strokeStyle='#a7aca5';map.stroke();
-  }
-  map.fillStyle='#c78d75';
-  for(const polygon of cyclePolygons(scene.streets)){map.beginPath();polygon.forEach((p,i)=>i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));map.closePath();map.fill();}
+  const paint=(polygons:Point[][],color:string)=>{
+    map.fillStyle=color;
+    for(const polygon of polygons){map.beginPath();polygon.forEach((p,i)=>i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));map.closePath();map.fill();}
+  };
+  paint((scene.terrain.landscape?.bridges??[]).map(bridgePolygon),'#c9a77a');
+  paint(roadFootprint(scene),'#829493');
+  paint(streetPolygons(scene.streets),'#a7aca5');
+  paint(streetCycleTracks(scene),'#c78d75');
   for(const route of scene.routes)if(route.kind==="rail" || route.kind==="tram" || route.kind==="path"){
     map.beginPath();route.points.forEach((p,i)=>i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));if(route.mode==="loop")map.closePath();
     map.strokeStyle=route.surface==="cycle" ? "#76ad9c" : route.surface==="paved" ? "#a5afb0" : "#c9ac7c";map.lineWidth=route.width??12;map.stroke();
-  }
-  map.beginPath(); roadPoints(scene).forEach((p,i) => i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));
-  map.closePath(); map.lineWidth = roadWidth; map.strokeStyle = "#829493"; map.stroke();
-  for(const bridge of scene.terrain.landscape?.bridges ?? []) {
-    map.beginPath();bridgePolygon(bridge).forEach((p,i)=>i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));
-    map.closePath();map.fillStyle="#c9a77a";map.fill();
   }
   for (const region of scene.regions) {
     map.beginPath(); region.polygon.forEach((p, i) => i ? map.lineTo(p.x, p.y) : map.moveTo(p.x, p.y));

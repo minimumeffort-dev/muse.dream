@@ -1,8 +1,9 @@
-import {distanceToPolygon,unionPolygons} from './polygons';
+import {distanceToPolygon,unionPolygons,intersectPolygons} from './polygons';
 import {MAX_WORLD_SIZE} from './world-bounds';
 import {z} from 'zod';
 import type {Scene,Point} from './schema';
 import {pointInPolygon} from '../sim/mask';
+import {roadFootprint} from './road';
 import {bridgeCoordinates,bridgePolygon,clipPolygon,polygonsOverlap} from './landscape-dsl';
 
 const point=z.object({x:z.number().finite().min(0).max(MAX_WORLD_SIZE),y:z.number().finite().min(0).max(MAX_WORLD_SIZE)}).strict();
@@ -79,10 +80,21 @@ function streetStrip(s:Street,r:number,cap=r):Point[][]{
 export function streetPolygons(streets:Street[],mode:'road'|'riding'|'reserved'='road'):Point[][]{
   return streets.flatMap(s=>streetStrip(s,s.width/2+(mode!=='road' && s.cycleWidth ? s.cycleWidth+6 : 0)+(mode==='reserved' ? s.sidewalk : 0)));
 }
-const cache=new WeakMap<Scene,{roads:Point[][];riding:Point[][];reserved:Point[][];walkways?:Point[][]}>();
+const cache=new WeakMap<Scene,{roads:Point[][];riding:Point[][];reserved:Point[][];walkways?:Point[][];cycles?:Point[][];crossings?:{street:Street;polygons:Point[][]}[]}>();
 export function streetFootprints(scene:Scene){let value=cache.get(scene);if(!value){value={roads:streetPolygons(scene.streets),riding:streetPolygons(scene.streets,'riding'),reserved:streetPolygons(scene.streets,'reserved')};cache.set(scene,value);}return value;}
 /** Validation and rendering reuse the exact same sidewalk union. */
-export function streetSidewalks(scene:Scene){const ground=streetFootprints(scene);return ground.walkways??=unionPolygons(ground.reserved,ground.riding);}
+export function streetSidewalks(scene:Scene){const ground=streetFootprints(scene);return ground.walkways??=unionPolygons(ground.reserved,[...ground.riding,...roadFootprint(scene)]);}
+/** City lanes yield to every carriageway, including the independently authored circuit. */
+export function streetCycleTracks(scene:Scene){const ground=streetFootprints(scene);return ground.cycles??=unionPolygons(cyclePolygons(scene.streets),[...ground.roads,...roadFootprint(scene)]);}
+/** Existing sidewalk connections across the circuit become crosswalks, rather than raised paving. */
+export function streetCircuitCrossings(scene:Scene){
+  const ground=streetFootprints(scene),loop=roadFootprint(scene);let used:Point[][]=[];
+  return ground.crossings??=scene.streets.flatMap(street=>{
+    const walks=unionPolygons(streetPolygons([street],'reserved'),ground.riding);
+    const polygons=unionPolygons(intersectPolygons(walks,loop),used);used=used.concat(polygons);
+    return polygons.length ? [{street,polygons}] : [];
+  });
+}
 export const inRect=(r:Rect,x:number,y:number,margin=0)=>x>=r.x0-margin && x<=r.x1+margin && y>=r.y0-margin && y<=r.y1+margin;
 export const onPolygon=(p:Point[],x:number,y:number,margin=0)=>pointInPolygon(x,y,p) || distanceToPolygon(x,y,p)<=margin;
 export function onStreet(scene:Scene,x:number,y:number){return streetFootprints(scene).riding.some(p=>onPolygon(p,x,y));}

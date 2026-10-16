@@ -69,7 +69,13 @@ describe('street cycle tracks',()=>{
   }
   const ray=new Raycaster(new Vector3(66,600,-231),new Vector3(0,-1,0)),material=new MeshBasicMaterial();
   const original=new Mesh(roadGeometry(fixture),material);expect(ray.intersectObject(original).length).toBeGreaterThan(0);
-  for(const geometry of [roadGeometry(doc()),roadMarkingGeometry(doc())]){expect(ray.intersectObject(new Mesh(geometry,material))).toHaveLength(0);geometry.dispose();}
+  const asphalt=roadGeometry(doc()),paint=roadMarkingGeometry(doc());
+  // The cycle track yields at the circuit; asphalt stays beneath it and paint clears the join.
+  expect(ray.intersectObject(new Mesh(asphalt,material))).toHaveLength(1);
+  expect(ray.intersectObject(new Mesh(paint,material))).toHaveLength(0);
+  ray.set(new Vector3(0,600,-231),new Vector3(0,-1,0));
+  expect(ray.intersectObject(new Mesh(asphalt,material))).toHaveLength(0);
+  asphalt.dispose();paint.dispose();
   original.geometry.dispose();material.dispose();
  });
 });

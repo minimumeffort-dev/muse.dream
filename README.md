@@ -54,6 +54,8 @@ Drive through the city or head out into the hills. Climbing slows the car down, 
 
 The world now covers 1.4 × 1.1 kilometres. It has been rebuilt around places people need: homes, markets, schools, a hospital, workplaces, a library and stations. The center has tighter frontages; garden streets and the southern neighborhood have more space around the houses. Streets, entrance paths, crossings and platforms actually connect. Street and cycle-track bends now share a continuous ribbon, crossing paint stays clear, and paved paths reach the courts, pitch and school yards.
 
+City pavements and bicycle tracks now leave the outer circuit open too. Walking connections cross it on painted zebras, and crowded bicycle symbols leave a gap instead of a broken wheel. The world and both maps share those road footprints.
+
 ![Homes, shops and the tram avenue](docs/media/town-center.jpg)
 
 Five buses serve the neighborhoods, schools, both medical centers, station and airport across four routes. A tram shares the main avenue, and a regional train stops at the stations. F boards those services as a passenger. Three scooters are available to drive near the market, medical center and airport. Schools, hospitals, airport and railway stations have symbols on the map. [Explore the city](docs/urban-world.md).

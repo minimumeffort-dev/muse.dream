@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { describe, expect, it } from "vitest";
 import { curbGeometry, roadSections, roadMarkingGeometry } from "../src/game/environment";
 import { tiledMesh } from "../src/game/batching";
-import {onStreet} from "../src/scene/streets";
+import {onPolygon,streetPolygons} from "../src/scene/streets";
 import { bridgeAt } from "../src/scene/landscape-dsl";
 import { surfaceHeight } from "../src/game/surface";
 import { animateObject, buildObject } from "../src/game/world3d";
@@ -32,6 +32,7 @@ describe("continuous road trim", () => {
     const mesh = tiledMesh(geometry, new THREE.MeshBasicMaterial()), ray = new THREE.Raycaster();
     mesh.updateMatrixWorld(true);
     const sections = roadSections(worldScene), half = worldScene.roadMaskRef.params.roadWidth / 2;
+    const cityAccess=streetPolygons(worldScene.streets,'reserved');
     for (let i = 0; i < sections.length - 1; i++) {
       const at = sections[i]!, before = sections[(i - 1 + sections.length - 1) % (sections.length - 1)]!, after = sections[i + 1]!;
       for (const neighbor of [before, after]) {
@@ -39,7 +40,7 @@ describe("continuous road trim", () => {
         const y = at.y * .98 + neighbor.y * .02 + at.ny * side * half;
         ray.set(new THREE.Vector3(x - worldScene.canonical.width/2, 600, y - worldScene.canonical.height/2), new THREE.Vector3(0, -1, 0));
         const hit = ray.intersectObject(mesh, true)[0];
-        if(onStreet(worldScene,x,y) || bridgeAt(worldScene.terrain.landscape,x,y)?.style==="timber") {expect(hit).toBeUndefined();continue;}
+        if(cityAccess.some(p=>onPolygon(p,x,y)) || bridgeAt(worldScene.terrain.landscape,x,y)?.style==="timber") {expect(hit).toBeUndefined();continue;}
         expect(hit, `curb gap at section ${i}`).toBeDefined();
         const lift=hit!.point.y-surfaceHeight(worldScene,x,y);
         expect(lift).toBeGreaterThanOrEqual(1.499);expect(lift).toBeLessThanOrEqual(3.101);
