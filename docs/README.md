@@ -15,6 +15,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [Asset library](asset-library.md) | The mock-world assemblies and their construction details |
 | [Build a world](dream/worlds.md) | Terrain, roads, bridges, water, dedicated paths and moving vehicles |
 | [Populate streets and habitats](dream/populations.md) | Connected lighting, planting, destination parking, birds and transit |
+| [Day and night](dream/day-night.md) | A shared clock, changing sunlight, window glow and street lighting |
 | [NPCs and control](dream/npcs.md) | Explicit ownership, reusable state machines, proximity and timed routines |
 | [Give things behavior](dream/behavior.md) | Walking, vehicle controls, contacts, doors and destruction |
 | [Generate with a model](dream/model-authoring.md) | Context, validation, repair and atomic acceptance |

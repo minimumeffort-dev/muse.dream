@@ -1,3 +1,5 @@
+import {nightFactor} from "./shaders";
+import {WorldDaylight} from "./daylight";
 import {buildFlocks} from "./flocks";
 import {SunShadows} from "./sun";
 import {mediaCapture} from "./media-capture";
@@ -95,7 +97,7 @@ function start(): void {
   }
   new ResizeObserver(resize).observe(container);
   resize();
-  scene.add(new THREE.HemisphereLight("#bad4e2", "#384736", 1.25));
+  const hemisphere=new THREE.HemisphereLight("#bad4e2", "#384736", 1.25);scene.add(hemisphere);
   const sun = new THREE.DirectionalLight("#ffe5b8", 2.4);
   scene.add(sun, sun.target);
   const fill = new THREE.DirectionalLight("#a7c4eb", .3);
@@ -138,9 +140,12 @@ function start(): void {
   const occlusion = new SceneryOcclusion(objects.filter(object=>object!==avatar));
   const updateMap = createWorldMap(document.querySelector<HTMLCanvasElement>("#world-map")!, doc);
 
+  const daylight=new WorldDaylight(doc,scene,hemisphere,sun,fill);
+  const reviewHour=import.meta.env.DEV ? Number(new URLSearchParams(location.search).get("test-hour")) : NaN;
+  const hourOffset=import.meta.env.DEV && new URLSearchParams(location.search).has("test-hour") && Number.isFinite(reviewHour) && reviewHour>=0 && reviewHour<24 && doc.daylight ? ((reviewHour-doc.daylight.startHour+24)%24)/24*doc.daylight.cycleSeconds : 0;
   const worldBounds=new THREE.Box3().setFromObject(scene);
   const sunShadows=new SunShadows(sun,worldBounds.min.y-32,worldBounds.max.y+MAX_FLIGHT_CLEARANCE);
-  for(const root of [environment,landscape.group,routes,scenery.group,flocks])freezeStatic(root);
+  for(const root of [environment,landscape.group,routes,scenery.group,flocks,daylight.pools])freezeStatic(root);
   // Matrices are updated once below, before both occlusion and rendering consume them.
   scene.matrixWorldAutoUpdate=false;
 
@@ -179,6 +184,7 @@ function start(): void {
 
   function resetPosition(restartRace = false): void {
     car = resetCar(car, doc, restartRace);
+    if(restartRace)worldTime.value=0;
     stepper.reset(); particles.clear(); landscape.clear(); snap = true; cameraAngle=viewAngle;
     boostUntil = 0; surface.textContent = "";
     flight = { jumps: 0, landings: 0, maxClearance: 0 }; landingBounce = 0;
@@ -228,12 +234,15 @@ function start(): void {
   const profile=import.meta.env.DEV ? renderProfile(renderer,()=>{
     resetPosition(true);car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));worldTime.value=0;
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
-  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,switching:240,locomotion:180,swimming:180},(clip)=>{
+  let captureTime:number|undefined;
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,switching:240,locomotion:180,swimming:180,daynight:360},(clip)=>{
+    captureTime=undefined;
     resetPosition(true);worldTime.value=0;setMode("playing");
     if(clip==='switching'){const bike=doc.objects.find(o=>o.id==='village_bike')!;car={...car,x:bike.x-40,y:bike.y,headingRad:0,elevation:drivingHeight(doc.terrain,bike.x-40,bike.y)};}
     if(clip==='locomotion' || clip==='swimming')car=movementReviewStart(car,world,clip==='swimming' ? 'swim' : 'walk');
   },(clip:string,frame:number)=>{
     keys.clear();
+    if(clip==="daynight"){captureTime=frame/359*(doc.daylight?.cycleSeconds??600);return;}
     if(clip==="driving"){if(frame<175)keys.add("KeyW");return;}
     if(clip==='locomotion'){
       if(frame<130){keys.add('KeyS');if(frame>40)keys.add('ShiftLeft');}
@@ -397,7 +406,8 @@ function start(): void {
     camera.updateMatrixWorld(); scene.updateMatrixWorld();
     scenery.update(camera, position.clone().add(new THREE.Vector3(0, 7, 0)), dt, reduced.matches);
     occlusion.update(camera, position.clone().add(new THREE.Vector3(0, playerHeight(doc) / 2, 0)), dt, reduced.matches,occupied ? actorMeshes.get(occupied.id) : undefined);
-    sunShadows.update(camera);
+    daylight.update(captureTime??(worldTime.value+hourOffset));
+    sunShadows.update(camera,daylight.direction);
     hudTime += dt;
     if (hudTime > .1) {
       hudTime = 0;
@@ -405,6 +415,7 @@ function start(): void {
       surface.dataset.effect = car.surface === "ice" ? "ice" : "boost";
       // DOM diagnostics let browser checks observe real simulation and camera state.
       container.dataset.car = [car.x, car.y, position.y].map((v) => v.toFixed(1)).join(",");
+      container.dataset.daylight=JSON.stringify({hour:daylight.hour,night:nightFactor.value,direction:daylight.direction.toArray()});
       container.dataset.camera = [follow.x, follow.y, follow.z].map((v) => v.toFixed(1)).join(",");
       container.dataset.mode = mode;
       container.dataset.particles = String(particles.activeCount);

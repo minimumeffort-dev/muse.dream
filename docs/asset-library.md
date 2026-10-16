@@ -71,3 +71,7 @@ The eight new assemblies are an avenue streetlight, neighborhood lantern, plante
 ![The complete new street kit](media/street-assets.jpg)
 
 [Population rules](dream/populations.md) choose the streets and destinations these assets belong to. Static parked vehicles bake joint rest poses; explicit controllable rides keep live wheels and controls. Bird flocks use the same authored shape with instanced shader flight rather than allocating a joint controller per bird.
+
+## After dark
+
+Architecture and civic window materials declare a warm `night` color. The two streetlight assemblies declare local lamp sources and measured light-pool radii. Their geometry, contacts and placement rules are unchanged. These are explicit Dream capabilities, independent of asset labels. [Day/night authoring](dream/day-night.md).

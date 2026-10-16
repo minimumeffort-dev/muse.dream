@@ -2,7 +2,7 @@ dream 2;
 material iron(style=toon,colors=[#35464c,#25363d]);
 material stone(style=toon,colors=[#a9a494,#c7bfaa]);
 material brass(style=toon,colors=[#9b8051,#c8a86b]);
-material lamp_glass(style=glow,colors=[#f4db9c,#ffe9ba]);
+material lamp_glass(style=glow,colors=[#f4db9c,#ffe9ba],night=#ffd18a);
 material leaf(style=toon,colors=[#527348,#77935d]);
 material petal(style=toon,colors=[#cf9458,#e0ba73]);
 material blue(style=toon,colors=[#6c8497,#879bad]);
@@ -10,6 +10,7 @@ material pigeon_gray(style=toon,colors=[#7c8c95,#a4aeb0]);
 material throat(style=toon,colors=[#527c70,#536776]);
 material red(style=toon,colors=[#ac6b51,#b98362]);
 object avenue_lamp(label="Avenue streetlight"){
+ lamp(at=[8,39,0],radius=52,color=#ffc581);
  measure(kind=custom,axis=y,meters=5.2);
  body(interaction=solid,radius=4,height=40);
  contact pole_body(at=[0,0,0],radius=1.2,height=40);
@@ -20,6 +21,7 @@ object avenue_lamp(label="Avenue streetlight"){
  part lens(shape=box,material=lamp_glass,at=[8,39.2,0],size=[4.5,.5,2.3]);
 }
 object neighborhood_lamp(label="Neighborhood lantern"){
+ lamp(at=[0,32,0],radius=36,color=#ffd18a);
  measure(kind=custom,axis=y,meters=3.8);
  body(interaction=solid,radius=4,height=38);
  contact pole_body(at=[0,0,0],radius=1.4,height=38);

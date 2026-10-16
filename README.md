@@ -12,7 +12,7 @@ Racing is where this started. The idea is to make whatever someone draws playabl
 
 ## You can leave the road
 
-Drive through the city or head out into the hills. Climbing slows the car down, descending gives it speed, and a fast crest can launch it into the air. The camera follows you through the world. Sunlight keeps its direction as you move, including through hills, camera turns and flight.
+Drive through the city or head out into the hills. Climbing slows the car down, descending gives it speed, and a fast crest can launch it into the air. The camera follows you through the world. The sun moves with the day clock, independently of driving and camera turns.
 
 The world now covers 1.4 × 1.1 kilometres. It has been rebuilt around places people need: homes, markets, schools, a hospital, workplaces, a library and stations. The center has tighter frontages; garden streets and the southern neighborhood have more space around the houses. Streets, entrance paths, crossings and platforms actually connect.
 
@@ -71,6 +71,14 @@ The asset library includes gulls, red kites, deer, foxes and hares. The live cit
 ![Wildlife and plants composed from Dream 2](docs/media/ecology.jpg)
 
 Wildlife follows bounded ambient routes without drawing roads or runways. Plants stay instanced, and animals use the existing animation budget. These are authored mock habitats; animal perception and avoidance are still to come. [See the assets](docs/asset-library.md), or [write a pair of flying birds](docs/examples/ambient-wildlife.dream).
+
+## Stay until night
+
+The world has a ten-minute day. Shadows move with the sun, dusk warms the scene, windows light up and streetlights come on. Moonlight keeps the road readable after dark. Dream describes the clock and the light: `daylight(cycle_s=600,start_hour=10)` sets the cycle, while materials and lamp assemblies declare their night appearance.
+
+![A complete day and night over the mock city](docs/media/daynight.gif)
+
+[Watch in HD](docs/media/daynight.mp4) · [Write daylight and lamps in Dream](docs/dream/day-night.md)
 
 ## The world is made from small descriptions
 

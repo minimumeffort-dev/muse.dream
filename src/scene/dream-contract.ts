@@ -1,3 +1,4 @@
+import {MAX_LIGHT_POOLS} from './daylight';
 import { DREAM_LIMITS } from "./dream-syntax";
 import { MEASURE_PROFILES, UNITS_PER_METER, CAR_PROPORTION_RULES, MEASURE_KINDS } from "./measure";
 import {NPC_LIMITS} from './agents';
@@ -9,7 +10,7 @@ export const DREAM_PROJECT_LIMITS=Object.freeze({modules:32,depth:8,characters:5
 const command = (contexts: string, id: boolean, fields: Record<string,string>, block?: string): DreamCommand =>
   Object.freeze({contexts:Object.freeze(contexts.split(" ")),id,fields:Object.freeze(fields),...(block ? {block} : {})});
 export const DREAM_V2_COMMANDS: Readonly<Record<string,DreamCommand>> = Object.freeze({
-  material: command("top",true,{style:"toon|grain|glow|stripes|cloth",colors:"colors"}),
+  material: command("top",true,{style:"toon|grain|glow|stripes|cloth",colors:"colors",night:"color?"}),
   let: command("top object visual path route_path",true,{value:"n"}),
   component: command("top",true,{params:"symbols?"},"visual"),
   object: command("top",true,{label:"text"},"object"),
@@ -21,6 +22,7 @@ export const DREAM_V2_COMMANDS: Readonly<Record<string,DreamCommand>> = Object.f
   foundation: command("object",false,{size:"v2",color:"color"}),
   contact: command("object",true,{at:"v3",radius:"n",height:"n"}),
   rideable: command("object",false,{at:"v3",control:"car|bicycle|skateboard|scooter|boat|plane?"}),
+  lamp: command("object",false,{at:"v3",radius:"n",color:"color"}),
   emit: command("object",false,{kind:"steam",at:"v3",rate_s:"n"}),
   impact: command("object",false,{mode:"impact"}),
   fragment: command("object visual",true,{},"visual"),
@@ -44,6 +46,7 @@ export const DREAM_V2_COMMANDS: Readonly<Record<string,DreamCommand>> = Object.f
   on: command('npc_state',true,{event:'after|near_player|far_player',to:'ref',seconds:'n?',radius:'n?'}),
   watercourse: command("top",true,{level:"n",depth:"n",bank:"n",color:"color",flow:"v2",ends:"round|open?"},"path"),
   junction: command("top",true,{at:"v2"}),
+  daylight: command("top",false,{cycle_s:"n",start_hour:"n"}),
   world: command("top",false,{size:"v2",spawn:"position2",heading_deg:"n",player:"ref?"}),
   road: command("top",true,{width:"n",points:"points2?",via:"symbols?",style:"racing|street?"}),
   street: command("top",true,{width:"n",sidewalk:"n",points:"points2?",via:"symbols?",cycle_width:"n?"}),
@@ -75,6 +78,7 @@ export const DREAM_V2_CONTRACT = {
   types:{n:"numeric expression",v2:"[n,n]",position2:"[n,n] or a file-local junction reference",v3:"[n,n,n]",nums:"[n,...]",symbols:"[symbol,...]",point:"[n,n] or [n,n,n]",points2:"[[n,n],...]",colors:"[#rrggbb,#rrggbb]",color:"#rrggbb",ref:"symbol ID",symbol:"identifier",text:'"JSON-escaped string"',bool:"true|false",optional:"type suffix ?",variants:"enum values separated by |; other types are nested constructor calls"},
   limits:DREAM_LIMITS,projectLimits:DREAM_PROJECT_LIMITS,commands:DREAM_V2_COMMANDS,
   agents:{limits:NPC_LIMITS,roles:{prop:'passive scenery, no route or behavior',controllable:'requires rideable control capability; parked until player boards',npc:'engine-owned route or behavior; driver-capable NPC cannot be boarded, passenger-only seats remain available'},legacy:'omitted role infers controllable from control capability, otherwise npc from route, otherwise prop',program:'behavior ID is file-local; states and transition targets are local to that behavior; all states reachable from start',actions:{idle:'rest joints and pause route clock',patrol:'advance placement route and animate while moving',perform:'animate joints in place with route clock paused'},events:{after:'only seconds, since state entry',near_player:'only radius; 3D distance <= radius',far_player:'only radius; 3D distance >= radius'},execution:'one transition per fixed tick, first matching declaration wins; elapsed resets on transition; per-instance clocks live outside Scene; patrol resumes without teleport; face=player turns stationary actors at 2.5 rad/s',boundary:'data-only bounded state machines; no scripts, pathfinding, generated input profiles or model calls; root world.player remains the original car'},
+  daylight:{cycleSeconds:[120,3600],startHour:"0 <= hour < 24",semantics:"optional single declaration beside world/road; paused visual clock, reduced motion freezes it; R preserves clock, Start over resets it; omitted keeps static daytime",nightMaterial:"optional material.night color emits after dusk; daytime base paint unchanged",lamp:"object-root local position and radius 8..80, color; static prop only, no damage/knockables; soft ground-projected pool, not a point light",lightPools:MAX_LIGHT_POOLS},
   worldLimits:{dimension:MAX_WORLD_SIZE,waterArea:MAX_WATER_AREA,waveCellsPerBody:MAX_WAVE_CELLS,waveCellSize:24,watercourseStationWidth:[80,1200]},
   urbanGround:{streets:32,surfaces:64,markings:128,streetLength:MAX_STREET_LENGTH,markingLength:40000,street:{anchors:[2,16],width:[60,180],sidewalkPerSide:[0,40],cycleWidthPerSide:[16,40],cycleSeparator:6,minimumSegment:80,geometry:'open polyline in any direction; turns at most 120 degrees; segment-aligned square joins; non-overlapping junctions; optional cycle tracks',acceptance:'every component reaches driving loop; riding surface clear of solids; water crossings require an aligned bridge carrying the full street, cycle tracks and sidewalks between rails; dedicated paths remain separate'},surface:{points:[3,64],area:1000000,extent:2000,geometry:'simple polygon; declaration order overlays; cannot cover street riding surfaces'},marking:{points:[2,64],width:[.5,12],closedMinimum:3,block:'point/let/repeat; omit repeated first point'},semantics:'visual ground follows terrain/decks; streets and cycle tracks add normal road grip; explicit bridges only, no generated controllers, flattening or traffic'},
   cityAccess:{junctionsPerFile:128,sites:256,crossings:64,site:{entry:'object-local [X,Z], transformed with placement heading and resolved scale',points:'world XY, entry is prepended; last point must lie inside the named sidewalk',width:[12,40],maximumLength:800,kinds:['home','market','school','hospital','work','civic','park','station','stop'],serves:'stop-only site references, at most 8; targets must be reachable on the pedestrian network'},crossing:{junction:'optional true expands to zebra crossings on every connected street arm',width:[12,40]},junction:'file-local coordinate ID; road/street use exactly one of via or points; world spawn and bridge ends accept junction IDs; includes do not export symbols',acceptance:'static building sites require attached exterior entrances and clear dry access paths; stops must reach served sites; short overlapping street endpoints are rejected in site-authored cities'},

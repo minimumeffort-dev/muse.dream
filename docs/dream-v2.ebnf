@@ -27,3 +27,6 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
 (* furnish/flock are top-level data commands, not loops or executable scripts.
    furnish targets streets XOR sites after module linking; sites require count.
    place.phase_s shifts a declared route clock; all bounds live in the contract. *)
+
+(* daylight is a single optional world-owner declaration. lamp is object-root only;
+   material.night is an optional color. All three are bounded data, not scripts. *)

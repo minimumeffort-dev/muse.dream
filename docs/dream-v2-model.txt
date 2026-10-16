@@ -314,3 +314,22 @@ rideable(control=scooter) uses direct ground controls, standing rider and buffer
 Driver controls still need one solid cylinder without foundation/compound contacts/impact.
 Passenger-only rideable(at=[x,y,z]) may use compound contacts on a solid transit assembly;
 F boards without taking control. NPC route clocks keep ownership. No underground transit layer yet.
+
+DAY AND NIGHT
+Optional once, beside world/road in the world-owning file:
+daylight(cycle_s=600,start_hour=10);
+cycle_s finite 120..3600 seconds per complete 24-hour cycle. start_hour finite 0<=h<24;
+fractions allowed. Omit for legacy static daytime. Paused visual clock across all control
+modes; pause/reduced motion freeze it, R preserves it, Start over resets to start_hour.
+material glass(style=toon,colors=[#6c929d,#42616f],night=#f2bf7e);
+Optional night=color adds dusk-to-dawn emission; daytime base paint remains. It follows
+geometry through batching, instancing and fragments. No scripts, collider or point light.
+Object-root only, one per assembly:
+lamp(at=[0,38,0],radius=30,color=#ffd18a);
+Position X/Z -64..64, Y 0..128. Radius 8..80 local units, scaled with measured placement.
+Projects a soft unshadowed pool below source XZ onto terrain/deck surfaces; source height
+is metadata, not optical falloff. It does not illuminate walls or calculate object occlusion.
+<=512 placed pools per scene. Static props only; no route/NPC/control ownership, knockables,
+damage or player lamp. Flocks cannot carry lamps. Use material.night for glowing windows.
+One shared 2048 directional shadow map serves sun/moon; no per-lamp shadow maps.
+NPC routines and transit schedules continue; no opening hours, weather or astronomical calendar.

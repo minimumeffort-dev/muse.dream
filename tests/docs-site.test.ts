@@ -42,6 +42,12 @@ describe('Dream syntax highlighting',()=>{
     for(const name of ['objects','streets','grounds','paving','flap_hz','flap_deg','phase_s'])expect(html).toContain(`class="dream-field">${name}</span>`);
     expect(highlight('furnishing flocking phase_stone')).not.toMatch(/dream-(?:keyword|field)/);
   });
+  it('highlights daylight and lamp declarations without consuming longer symbols',()=>{
+    const html=highlight('daylight(cycle_s=600,start_hour=10);material glass(night=#ffcc88);lamp(at=[0,38,0],radius=30,color=#ffd18a);');
+    for(const word of ['daylight','lamp'])expect(html).toContain(`class="dream-keyword">${word}</span>`);
+    for(const word of ['cycle_s','start_hour','night'])expect(html).toContain(`class="dream-field">${word}</span>`);
+    expect(highlight('daylighting lampstand nighttime')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('tracks the generated compiler vocabulary',()=>{
     const contract=JSON.parse(readFileSync('docs/dream-v2-contract.json','utf8'));
     expect(Object.keys(contract.commands)).toEqual(Object.keys(DREAM_V2_COMMANDS));

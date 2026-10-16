@@ -107,7 +107,7 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
     };
     let body: ObjectDslV2["body"] | undefined, grounding: ObjectDslV2["grounding"], foundation: ObjectDslV2["foundation"];
     const contacts:NonNullable<ObjectDslV2["contacts"]>=[];let rideable:ObjectDslV2["rideable"];
-    let emitter:ObjectDslV2["emitter"];
+    let emitter:ObjectDslV2["emitter"],lamp:ObjectDslV2["lamp"];
     let impact:ObjectDslV2["impact"];
     let measure:ObjectDslV2["measure"];
     const breakZones:NonNullable<ObjectDslV2["breakZones"]>=[];
@@ -120,7 +120,7 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
         const number = (expr: Expr) => numeric(expr, env);
         const path=[...(frame.path??[]),statement.scope??statement.name??kind];
         const id = () => program.version===2 ? stableId(path) : `${statement.name!.slice(0, 25)}-${serial++}`;
-        if (["body", "measure", "ground", "foundation","contact","rideable","emit","impact","zone"].includes(kind) && !root) fail(`${kind} belongs directly inside an object`, token);
+        if (["body", "measure", "ground", "foundation","contact","rideable","lamp","emit","impact","zone"].includes(kind) && !root) fail(`${kind} belongs directly inside an object`, token);
         if(root && ["body","measure","ground","foundation","rideable","emit","impact"].includes(kind))metadataOrigins.set(kind==="ground" ? "grounding" : kind==="emit" ? "emitter" : kind,token);
         switch (kind) {
           case "measure":measure={kind:statement.name as NonNullable<ObjectDslV2["measure"]>["kind"],axis:statement.axis as "x"|"y"|"z",meters:number(statement.value!)};break;
@@ -132,6 +132,7 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
             const [colliderRadius, colliderHeight, frictionPerS] = statement.args!.map(number);
             body = { interaction: statement.interaction as ObjectDslV2["body"]["interaction"], colliderRadius: colliderRadius!, colliderHeight: colliderHeight!, ...(frictionPerS === undefined ? {} : { frictionPerS }) }; break;
           }
+          case "lamp":if(lamp)fail("duplicate lamp",token);lamp={position:vector(statement.at,env).toArray(),radius:number(statement.args![0]!),color:statement.name!};metadataOrigins.set("lamp",token);break;
           case "ground": if (grounding) fail("duplicate ground", token); grounding = statement.name as ObjectDslV2["grounding"]; break;
           case "impact":{
             if(impact)fail("duplicate impact",token);const values=statement.args!.map(number);
@@ -211,7 +212,7 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
     if (!body) fail("object needs a body declaration", object.token);
     const result = objectDslSchema.safeParse({ dslVersion: 2, displayName: object.name, body, parts,...(measure ? {measure} : {}),
       ...(joints.length ? { joints } : {}), ...(grounding ? { grounding } : {}), ...(foundation ? { foundation } : {}),
-      ...(contacts.length ? {contacts} : {}),...(rideable ? {rideable} : {}),...(emitter ? {emitter} : {}),...(impact ? {impact} : {}),...(breakZones.length ? {breakZones} : {}) });
+      ...(contacts.length ? {contacts} : {}),...(rideable ? {rideable} : {}),...(emitter ? {emitter} : {}),...(lamp ? {lamp} : {}),...(impact ? {impact} : {}),...(breakZones.length ? {breakZones} : {}) });
     if (!result.success) {
       const issue = result.error.issues[0]!, index = issue.path[1];
       const field=String(issue.path[0]);

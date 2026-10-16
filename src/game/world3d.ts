@@ -1,3 +1,4 @@
+import {nightPaint} from "./shaders";
 import { measuredScale } from "../scene/measure";
 import * as THREE from "three";
 import type { Scene, SceneObject } from "../scene/schema";
@@ -109,6 +110,9 @@ export function buildCustom(object: SceneObject): THREE.Group {
         const colors=new Float32Array(m.geometry.getAttribute("position").count*3);
         for(let i=0;i<colors.length;i+=3)material.color.toArray(colors,i);
         m.geometry.setAttribute("color",new THREE.BufferAttribute(colors,3));
+        const emission=new Float32Array(colors.length),night=new THREE.Color(part.material.nightColor??0);
+        for(let i=0;i<emission.length;i+=3)night.toArray(emission,i);
+        m.geometry.setAttribute("nightEmission",new THREE.BufferAttribute(emission,3));nightPaint(material);
         material.color.setRGB(1,1,1);material.vertexColors=true;
       }
       m.userData.materialKey = JSON.stringify(paint ? {shaderStyle:style} : part.material);

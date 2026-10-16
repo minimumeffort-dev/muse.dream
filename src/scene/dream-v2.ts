@@ -97,7 +97,7 @@ export class ParserV2 extends Parser {
       switch(node.kind) {
         case "material": {
           const colors=listField(node,"colors").map(c=>c.name!),style=wordField(node,"style");
-          program.materials.set(name,objectMaterialSchema.parse({shaderStyle:style==="grain" ? "paper-grain" : style,colorA:colors[0],colorB:colors[1]}));break;
+          program.materials.set(name,objectMaterialSchema.parse({shaderStyle:style==="grain" ? "paper-grain" : style,colorA:colors[0],colorB:colors[1],...(node.fields.has("night") ? {nightColor:wordField(node,"night")} : {})}));break;
         }
         case "let":program.globals.push({token,kind:"let",name,value:num("value")});break;
         case "component":program.components.set(name,{token,params:(node.fields.get("params") as Expr[]|undefined)?.map(e=>e.name!)??[],block:lowerBlock(node.block!)});break;
@@ -144,6 +144,7 @@ export function lowerBlock(nodes:DreamNode[]):Statement[] {
       case "contact":statement.args=[n("radius"),n("height")];break;
       case "emit":statement.name=wordField(node,"kind");statement.value=n("rate_s");break;
       case "impact":{const mode=field(node,"mode") as DreamNode;statement.name=mode.kind;statement.args=Object.entries(commands[mode.kind]!.fields).filter(([,type])=>type==="n").map(([key])=>exprField(mode,key));if(mode.fields.has("pattern"))statement.pattern=wordField(mode,"pattern");break;}
+      case "lamp":statement.at=v("at");statement.args=[n("radius")];statement.name=wordField(node,"color");break;
       case "zone":{const mode=field(node,"mode") as DreamNode;statement.args=[n("radius"),n("height")];statement.damage={kind:mode.kind,args:["speed","scatter","lift","spin","lifetime"].map(key=>exprField(mode,key)),...(mode.fields.has("pattern") ? {pattern:wordField(mode,"pattern")} : {})};break;}
       case "repeat":statement.name=wordField(node,"index");statement.value=n("count");break;
       case "use":statement.name=wordField(node,"component");statement.args=(node.fields.get("args") as Expr[]|undefined)??[];break;

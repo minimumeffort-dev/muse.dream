@@ -140,3 +140,7 @@ Use shared `junction` IDs for exact joins, `site` for a building's use and attac
 ## Populate the network
 
 Use [contextual population rules](populations.md) for street lighting, planting, destination parking and decorative bird habitats. Rules reserve the complete linked city before expanding; explicit actors keep their own control and behavior budgets.
+
+## Time of day
+
+An optional `daylight` declaration gives the world a shared day/night clock. Materials declare their after-dark emission with `night`, and static lamp assemblies declare terrain-fitted pools. [Day and night](day-night.md) includes bounds, lifecycle behavior and a complete runnable example.

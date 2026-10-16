@@ -1,3 +1,4 @@
+import {daylightSchema} from "./daylight";
 import { z } from "zod";
 import { bridgeSchema,waterSchema,type Water } from "./landscape-dsl";
 import { terrainSchema } from "./terrain";
@@ -6,7 +7,7 @@ import type { ObjectDslV2 } from "./object-dsl";
 import { fail,type Program,type Expr,type DreamNode,type Token } from "./dream-syntax";
 import { exprField,field,listField,wordField } from "./dream-v2";
 
-export type DreamLayout=Pick<Scene,"canonical"|"roadMaskRef"|"spawn"|"terrain"|"checkpoints"|"regions"|"unresolvedLabels"|"player"> & {origin:Token};
+export type DreamLayout=Pick<Scene,"canonical"|"roadMaskRef"|"spawn"|"terrain"|"checkpoints"|"regions"|"unresolvedLabels"|"player"|"daylight"> & {origin:Token};
 function validated<T>(schema:z.ZodType<T>,data:unknown,node:DreamNode):T {
   const result=schema.safeParse(data);
   if(!result.success){const issue=result.error.issues[0]!;fail(`${issue.path.join(".")}: ${issue.message}`,node.token,"E_SCHEMA");}
@@ -57,7 +58,8 @@ export function compileLayout(program:Program,assemblies:Map<string,ObjectDslV2>
   if(!program.layout.length)return undefined;
   const worlds=program.layout.filter(n=>n.kind==="world"),roads=program.layout.filter(n=>n.kind==="road");
   if(worlds.length!==1 || roads.length!==1)fail("a full world needs exactly one world and one road declaration",program.layout[0]!.token,"E_WORLD");
-  const world=worlds[0]!,road=roads[0]!;
+  const world=worlds[0]!,road=roads[0]!,daylightNodes=program.layout.filter(n=>n.kind==="daylight");
+  if(daylightNodes.length>1)fail("only one daylight declaration is allowed",daylightNodes[1]!.token,"E_WORLD");
   const num=(node:DreamNode,key:string)=>evaluate(exprField(node,key));
   const vec=(node:DreamNode,key:string)=>listField(node,key).map(evaluate);
   const point=(values:number[])=>({x:values[0]!,y:values[1]!});
@@ -90,6 +92,7 @@ export function compileLayout(program:Program,assemblies:Map<string,ObjectDslV2>
     canonical:validated(shape.canonical,{width:size[0],height:size[1],coordinateSystem:"top-left-x-right-y-down-px"},world),
     roadMaskRef:validated(shape.roadMaskRef,{kind:"generated-spline-loop",params:{points:points(road),roadWidth:num(road,"width"),...(road.fields.has("style") ? {style:wordField(road,"style")} : {})}},road),
     spawn:validated(shape.spawn,{...spawn,headingRad:num(world,"heading_deg")*Math.PI/180},world),
+    ...(daylightNodes[0] ? {daylight:validated(daylightSchema,{cycleSeconds:num(daylightNodes[0],"cycle_s"),startHour:num(daylightNodes[0],"start_hour")},daylightNodes[0])} : {}),
     terrain,checkpoints:validated(shape.checkpoints,checkpoints,world),regions,unresolvedLabels,...(player ? {player} : {}),
   };
 }

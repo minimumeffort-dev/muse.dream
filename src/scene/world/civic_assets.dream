@@ -4,7 +4,7 @@ material redbrick(style=grain,colors=[#9e6053,#bd8170]);
 material plaster(style=toon,colors=[#ddd1b9,#c5b69a]);
 material blue(style=toon,colors=[#9aadaf,#758e98]);
 material ochre(style=toon,colors=[#d4b378,#b9955f]);
-material glass(style=toon,colors=[#6c929d,#42616f]);
+material glass(style=toon,colors=[#6c929d,#42616f],night=#f2bf7e);
 material roof(style=toon,colors=[#535b64,#3b4753]);
 material tile(style=toon,colors=[#aa6b50,#864d3e]);
 material trim(style=toon,colors=[#e5decd,#c5bfae]);

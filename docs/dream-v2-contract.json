@@ -53,7 +53,8 @@
       "id": true,
       "fields": {
         "style": "toon|grain|glow|stripes|cloth",
-        "colors": "colors"
+        "colors": "colors",
+        "night": "color?"
       }
     },
     "let": {
@@ -169,6 +170,17 @@
       "fields": {
         "at": "v3",
         "control": "car|bicycle|skateboard|scooter|boat|plane?"
+      }
+    },
+    "lamp": {
+      "contexts": [
+        "object"
+      ],
+      "id": false,
+      "fields": {
+        "at": "v3",
+        "radius": "n",
+        "color": "color"
       }
     },
     "emit": {
@@ -478,6 +490,16 @@
         "at": "v2"
       }
     },
+    "daylight": {
+      "contexts": [
+        "top"
+      ],
+      "id": false,
+      "fields": {
+        "cycle_s": "n",
+        "start_hour": "n"
+      }
+    },
     "world": {
       "contexts": [
         "top"
@@ -754,6 +776,17 @@
     },
     "execution": "one transition per fixed tick, first matching declaration wins; elapsed resets on transition; per-instance clocks live outside Scene; patrol resumes without teleport; face=player turns stationary actors at 2.5 rad/s",
     "boundary": "data-only bounded state machines; no scripts, pathfinding, generated input profiles or model calls; root world.player remains the original car"
+  },
+  "daylight": {
+    "cycleSeconds": [
+      120,
+      3600
+    ],
+    "startHour": "0 <= hour < 24",
+    "semantics": "optional single declaration beside world/road; paused visual clock, reduced motion freezes it; R preserves clock, Start over resets it; omitted keeps static daytime",
+    "nightMaterial": "optional material.night color emits after dusk; daytime base paint unchanged",
+    "lamp": "object-root local position and radius 8..80, color; static prop only, no damage/knockables; soft ground-projected pool, not a point light",
+    "lightPools": 512
   },
   "worldLimits": {
     "dimension": 16384,

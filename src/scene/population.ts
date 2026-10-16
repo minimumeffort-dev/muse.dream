@@ -31,7 +31,7 @@ export const flockSchema=z.object({id:z.string().regex(/^[a-z][a-z0-9_]{0,31}$/)
   count:z.number().int().min(1).max(32),altitude:z.number().finite().min(60).max(300),speed:z.number().finite().min(5).max(80),
   flapHz:z.number().finite().min(0).max(6).default(2),flapDeg:z.number().finite().min(0).max(25).default(12),seed:z.number().int().min(0).max(65535),
 }).strict().superRefine((f,ctx)=>{
-  if(f.spec.body.interaction!=='decor' || isReactive(f.spec) || f.spec.foundation || f.spec.dslVersion===2 && (f.spec.rideable || f.spec.emitter || f.spec.contacts))ctx.addIssue({code:'custom',message:'flocks require passive decor without contacts, seats, foundations, damage or emitters'});
+  if(f.spec.body.interaction!=='decor' || isReactive(f.spec) || f.spec.foundation || f.spec.dslVersion===2 && (f.spec.rideable || f.spec.emitter || f.spec.contacts || f.spec.lamp))ctx.addIssue({code:'custom',message:'flocks require passive decor without contacts, seats, foundations, damage or emitters'});
   if(assemblyHorizontalRadius(f.spec,measuredScale(f.spec))>20)ctx.addIssue({code:'custom',message:'flock members must fit a 20-unit horizontal radius'});
 });
 export type Flock=z.infer<typeof flockSchema>;

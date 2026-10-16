@@ -1,3 +1,4 @@
+import {daylightSchema,MAX_LIGHT_POOLS} from './daylight';
 import {MAX_WORLD_SIZE,MAX_STREET_LENGTH} from './world-bounds';
 import { z } from "zod";
 import { assemblyHorizontalRadius, measuredScale, measureProblem } from "./measure";
@@ -144,6 +145,7 @@ export const sceneSchema = z.object({
     y: z.number().finite(),
     headingRad: z.number().finite(),
   }),
+  daylight:daylightSchema.optional(),
   terrain: terrainSchema.default({ hills: [] }),
   routes:z.array(routeSchema).max(12).default([]),
   behaviors:z.array(behaviorSchema).max(NPC_LIMITS.programs).default([]),
@@ -156,8 +158,8 @@ export const sceneSchema = z.object({
   player: objectDslSchema.optional().refine((spec) => !spec || spec.body.interaction === "solid", {
     message: "player requires a solid body",
   }).refine((spec)=>!spec?.foundation,{message:"player cannot carry a terrain foundation"})
-    .refine(spec=>!spec || spec.dslVersion!==2 || !spec.contacts && !spec.rideable && !spec.emitter && !isReactive(spec),
-      {message:"player uses its driving cylinder; contacts, rideable seats and emitters belong on world objects"}),
+    .refine(spec=>!spec || spec.dslVersion!==2 || !spec.contacts && !spec.rideable && !spec.emitter && !spec.lamp && !isReactive(spec),
+      {message:"player uses its driving cylinder; contacts, rideable seats, lamps and emitters belong on world objects"}),
   /** Ordered: index 0 is start/finish; laps require 1..n-1 in order first. */
   checkpoints: z.array(checkpointSchema).min(2).max(64),
   regions: z.array(regionSchema).max(128),
@@ -171,6 +173,9 @@ export const sceneSchema = z.object({
     notes: z.string(),
   }),
 }).superRefine((scene,ctx)=> {
+  const lamps=scene.objects.filter(o=>o.spec && "lamp" in o.spec && o.spec.lamp);
+  if(lamps.length>MAX_LIGHT_POOLS)ctx.addIssue({code:"custom",message:"scene exceeds 512 light pools"});
+  for(const o of lamps)if(roleOf(o)!=="prop" || o.route || o.spec && "body" in o.spec && o.spec.body.interaction==="knockable" || isReactive(o.spec))ctx.addIssue({code:"custom",message:`lamp "${o.id}" requires a static prop without damage`});
   const length=(points:Point[])=>points.slice(1).reduce((n,p,i)=>n+Math.hypot(p.x-points[i]!.x,p.y-points[i]!.y),0);
   if(scene.streets.reduce((n,s)=>n+length(s.points),0)>MAX_STREET_LENGTH)ctx.addIssue({code:'custom',message:'scene exceeds 120000 street units'});
   if(scene.markings.reduce((n,s)=>n+length(s.closed ? [...s.points,s.points[0]!] : s.points),0)>40000)ctx.addIssue({code:'custom',message:'scene exceeds 40000 marking units'});

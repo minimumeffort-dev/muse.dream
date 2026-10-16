@@ -1,14 +1,16 @@
 import * as THREE from "three";
 import {DEFAULT_CAMERA_ZOOM} from "./camera";
 
-const direction=new THREE.Vector3(-300,690,220).normalize();
-const rotation=new THREE.Matrix4().lookAt(direction,new THREE.Vector3(),new THREE.Vector3(0,1,0));
-const right=new THREE.Vector3().setFromMatrixColumn(rotation,0);
-const up=new THREE.Vector3().setFromMatrixColumn(rotation,1);
+export const DEFAULT_SUN_DIRECTION=new THREE.Vector3(-300,690,220).normalize();
 const margin=64;
 
 /** One sun, with a world-aligned pixel grid covering the whole orthographic view. */
 export class SunShadows {
+  private zero=new THREE.Vector3();
+  private direction=new THREE.Vector3();
+  private right=new THREE.Vector3();
+  private up=new THREE.Vector3();
+  private rotation=new THREE.Matrix4();
   private bounds=new THREE.Box3();
   private point=new THREE.Vector3();
   private origin=new THREE.Vector3();
@@ -21,7 +23,10 @@ export class SunShadows {
     light.shadow.normalBias=.6;light.shadow.bias=-.0001;light.shadow.radius=3;
   }
 
-  update(camera:THREE.OrthographicCamera):void {
+  update(camera:THREE.OrthographicCamera,lightDirection=DEFAULT_SUN_DIRECTION):void {
+    const direction=this.direction.copy(lightDirection).normalize(),right=this.right,up=this.up;
+    this.rotation.lookAt(direction,this.zero,THREE.Object3D.DEFAULT_UP);
+    right.setFromMatrixColumn(this.rotation,0);up.setFromMatrixColumn(this.rotation,1);
     this.bounds.makeEmpty();camera.getWorldDirection(this.view);
     // Retain the widest gameplay view while boarding zoom eases in and out.
     const extent=camera.zoom/Math.min(camera.zoom,DEFAULT_CAMERA_ZOOM);

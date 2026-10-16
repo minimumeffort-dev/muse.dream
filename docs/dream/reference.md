@@ -36,7 +36,7 @@ A command with an ID requires a name immediately after its keyword. Commands wit
 
 | Command | Context | ID / block | Fields |
 | --- | --- | --- | --- |
-| `material` | top | ID / no block | `style: toon / grain / glow / stripes / cloth`, `colors: colors` |
+| `material` | top | ID / no block | `style: toon / grain / glow / stripes / cloth`, `colors: colors`, `night?: color` |
 | `let` | top / object / visual / path / route_path | ID / no block | `value: n` |
 | `component` | top | ID / visual | `params?: symbols` |
 | `object` | top | ID / object | `label: text` |
@@ -48,6 +48,7 @@ A command with an ID requires a name immediately after its keyword. Commands wit
 | `foundation` | object | No ID / no block | `size: v2`, `color: color` |
 | `contact` | object | ID / no block | `at: v3`, `radius: n`, `height: n` |
 | `rideable` | object | No ID / no block | `at: v3`, `control?: car / bicycle / skateboard / scooter / boat / plane` |
+| `lamp` | object | No ID / no block | `at: v3`, `radius: n`, `color: color` |
 | `emit` | object | No ID / no block | `kind: steam`, `at: v3`, `rate_s: n` |
 | `impact` | object | No ID / no block | `mode: impact` |
 | `fragment` | object / visual | ID / visual | None |
@@ -65,6 +66,7 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 
 | Command | Context | ID / block | Fields |
 | --- | --- | --- | --- |
+| `daylight` | top | No ID / no block | `cycle_s: n`, `start_hour: n` |
 | `world` | top | No ID / no block | `size: v2`, `spawn: position2`, `heading_deg: n`, `player?: ref` |
 | `road` | top | ID / no block | `width: n`, `points?: points2`, `via?: symbols`, `style?: racing / street` |
 | `street` | top | ID / no block | `width: n`, `sidewalk: n`, `points?: points2`, `via?: symbols`, `cycle_width?: n` |
@@ -181,6 +183,18 @@ The compiler filters full visual footprints against roads, pavements, crossings,
 `place.phase_s=0..3600` requires a route and shifts its whole clock, including stops. It can stagger buses that share a service. `offset` still means carriage distance. Neither field adds traffic avoidance.
 
 [Population authoring guide](populations.md) · [Complete runnable example](../examples/populated-neighborhood.dream)
+
+## Daylight and night lighting
+
+`daylight(cycle_s=600,start_hour=10)` is optional and appears once beside the world's `world` and `road` declarations. `cycle_s` is 120–3,600 seconds for a complete 24-hour cycle. `start_hour` is finite, from 0 inclusive to 24 exclusive; fractions are accepted. Omit the declaration for legacy static daytime. The paused visual clock owns the cycle across every control mode. Pause and reduced motion freeze it, R preserves it, and Start over resets it.
+
+`material(...,night=#rrggbb)` adds an after-dark emission color while preserving the daytime base paint. Emission survives rigid batching, instancing and detachable geometry. It adds no physical collider or point light. The compiled material field is `nightColor`.
+
+Object-root `lamp(at=[x,y,z],radius=30,color=#ffd18a)` projects a soft, unshadowed pool onto the accepted terrain/deck surface below its source's XZ position. Position follows the existing object bounds (XZ ±64, Y 0–128); radius is 8–80 local units and follows measured placement scale. One lamp per assembly, at most 512 placed pools per scene. Lamp placements must be static props without knockable or destructive behavior; they cannot be actors or the player. Pool geometry stays resident in culled tiles. These are ground-light effects; they do not illuminate walls, calculate optical falloff from source height or replace collision geometry.
+
+One 2,048 × 2,048 directional shadow map serves the stylized sun and moon. Direct light fades out during their horizon handoff. Sky, fog, hemisphere light, night emission and pools blend with the same phase. Ground driving, traffic schedules and collisions retain their existing mechanics.
+
+[Day and night guide](day-night.md) · [Complete lantern world](../examples/day-night.dream)
 
 ## Compiler APIs
 

@@ -11,6 +11,7 @@ import type { Water } from "../scene/landscape-dsl";
  */
 export const worldTime = { value: 0 };
 export const worldMotion = { value: 1 };
+export const nightFactor = { value: 0 };
 export const terrainPlayer = { value: new THREE.Vector3() };
 export const terrainView = { value: new THREE.Vector3(180,1000,480).normalize() };
 
@@ -57,7 +58,7 @@ export function toonMaterial(color: THREE.ColorRepresentation): THREE.MeshToonMa
   return new THREE.MeshToonMaterial({ color, gradientMap: toonGradient() });
 }
 
-export function styledMaterial(spec: ObjectMaterial, useB = false): THREE.Material {
+function baseStyledMaterial(spec: ObjectMaterial, useB = false): THREE.Material {
   const color = new THREE.Color(useB ? spec.colorB : spec.colorA);
   switch (spec.shaderStyle) {
     case "toon":
@@ -99,6 +100,33 @@ export function styledMaterial(spec: ObjectMaterial, useB = false): THREE.Materi
       return mat;
     }
   }
+}
+
+/** Night paint travels with geometry through rigid merging, instancing and released fragments. */
+export function nightPaint(material:THREE.Material):void {
+  const original=material.onBeforeCompile.bind(material),key=material.customProgramCacheKey();
+  material.onBeforeCompile=(shader,renderer)=>{
+    original(shader,renderer);shader.uniforms.nightFactor=nightFactor;
+    shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\nattribute vec3 nightEmission; varying vec3 vNightEmission;')
+      .replace('#include <begin_vertex>','#include <begin_vertex>\nvNightEmission=nightEmission;');
+    shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\nuniform float nightFactor; varying vec3 vNightEmission;')
+      .replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\ntotalEmissiveRadiance+=vNightEmission*nightFactor*1.8;');
+  };
+  material.customProgramCacheKey=()=>key+'-night-paint';
+}
+export function styledMaterial(spec:ObjectMaterial,useB=false):THREE.Material {
+  const material=baseStyledMaterial(spec,useB);
+  if(spec.nightColor && !['toon','paper-grain'].includes(spec.shaderStyle)){
+    const lit=material as THREE.MeshStandardMaterial;lit.emissive.setRGB(0,0,0);
+    const original=material.onBeforeCompile.bind(material),key=material.customProgramCacheKey(),tint=new THREE.Color(spec.nightColor);
+    material.onBeforeCompile=(shader,renderer)=>{
+      original(shader,renderer);shader.uniforms.nightFactor=nightFactor;shader.uniforms.nightTint={value:tint};
+      shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\nuniform float nightFactor; uniform vec3 nightTint;')
+        .replace('#include <emissivemap_fragment>','#include <emissivemap_fragment>\ntotalEmissiveRadiance+=nightTint*nightFactor*1.8;');
+    };
+    material.customProgramCacheKey=()=>key+'-night-glow';
+  }
+  return material;
 }
 
 /** Cloth waves are engine-owned; rigid foliage motion lives in the compiler. */

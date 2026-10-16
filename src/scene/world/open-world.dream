@@ -1,4 +1,5 @@
 dream 2;
+daylight(cycle_s=600,start_hour=10);
 asset player_car(module=landmarks,object=little_rally_car);
 world(size=[14000,11000],spawn=[6330,4233],heading_deg=0,player=player_car);
 junction j0(at=[2900,3000]);

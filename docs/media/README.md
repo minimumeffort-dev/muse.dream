@@ -91,3 +91,9 @@ The isolated destruction recording, tree/code example, flora/fauna galleries, bi
 The [population verification](../evidence/street-life/verification.md) records the source fingerprint, coverage and limitations. Refreshed `driving`, `switching`, `locomotion` and `swimming` GIF/MP4 pairs use 210/240/180/180 actual frames at 30 fps, with matching `world`, `on-foot`, `riding`, `jumping` and `swimming` stills. Added `street-assets.jpg` and `street-life.jpg`; refreshed the 78-assembly atlas, source-derived city map and all district, sports, bridge and waterway scene views affected by the new populations.
 
 Retained closeups show unchanged authored geometry: wood, birch, flora, fauna, proportions, civic buildings, people and isolated destruction. These do not claim to show a new world layout. The earlier evidence sections describe their own revisions.
+
+## r28 day and night, 2026-10-16
+
+`daynight.gif` and `daynight.mp4` use 360 actual rendered frames at 30 fps. The lighting clock advances through the full ten-minute cycle over twelve seconds; ordinary street activity retains normal replay timing. `daynight.jpg` is a matching native replay frame. `city-day.jpg`, `city-dusk.jpg`, `city-night.jpg` and `city-dawn.jpg` come from one fixed city-review camera at 10:00, 17:30, 22:00 and 06:30.
+
+Driving, switching, locomotion and swimming GIF/HD pairs and matching stills were refreshed for the current renderer. Existing static district/asset views retain unchanged geometry and daytime appearance, while the new captures show the lighting states. The isolated destruction fixture is unchanged. The [day/night verification](../evidence/day-night/verification.md) records executed checks, browser evidence and limitations.

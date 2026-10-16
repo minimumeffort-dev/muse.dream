@@ -6,6 +6,7 @@ export const objectMaterialSchema = z.object({
   shaderStyle: z.enum(["toon", "paper-grain", "glow", "stripes", "cloth"]),
   colorA: z.string().regex(/^#[0-9a-fA-F]{6}$/),
   colorB: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+  nightColor: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),
 }).strict();
 
 const offset = z.number().finite().min(-64).max(64);
@@ -89,6 +90,7 @@ const objectDslV2Schema=objectV1Schema.extend({
   dslVersion:z.literal(2),joints:z.array(jointSchema).max(12).optional(),parts:z.array(objectV2PartSchema).min(1).max(32),
   contacts:z.array(z.object({position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),radius:z.number().finite().min(1).max(64),height:z.number().finite().min(1).max(160)}).strict()).min(1).max(8).optional(),
   rideable:z.object({seat:z.tuple([offset,z.number().finite().min(0).max(128),offset]),control:z.enum(["car","bicycle","skateboard","scooter","boat","plane"]).optional()}).strict().optional(),
+  lamp:z.object({position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),radius:z.number().finite().min(8).max(80),color:z.string().regex(/^#[0-9a-fA-F]{6}$/)}).strict().optional(),
   emitter:z.object({kind:z.literal("steam"),position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),rate:z.number().finite().min(1).max(12)}).strict().optional(),
   impact:impactSchema.optional(),
   breakZones:z.array(z.object({id:z.string().min(1).max(40),position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),
