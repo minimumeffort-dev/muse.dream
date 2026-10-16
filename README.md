@@ -14,6 +14,8 @@ Racing is where this started. The idea is to make whatever someone draws playabl
 
 Follow the circuit or head into the hills. Climbing slows the car down, descending gives it speed, and a fast crest can launch it into the air. The camera follows you through the world, with a slightly closer view so the smaller objects are easier to see. Wooden bridges carry the track across water, and the train keeps running while you explore. Sunlight keeps the same direction as you move, with shadows covering the full view through hills, camera turns and flight.
 
+Release the throttle and the car coasts to a complete stop on dry, flat ground. Tires hold across ordinary dry slopes instead of slowly creeping sideways. Steeper hills can still roll the car downhill, and ice keeps its lower grip.
+
 ![Driving through the mock world](docs/media/driving.gif)
 
 [Watch in HD](docs/media/driving.mp4)

@@ -2,7 +2,7 @@ import {SunShadows} from "./sun";
 import {mediaCapture} from "./media-capture";
 import {renderProfile} from "./render-profile";
 import {freezeStatic} from "./batching";
-import {vehicleReviewStart} from "./review-start";
+import {vehicleReviewStart,drivingReviewStart} from "./review-start";
 import { measuredScale, playerRadius, playerHeight } from "../scene/measure";
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -53,6 +53,7 @@ function start(): void {
     driveMask: buildPaperMask(doc.canonical.width, doc.canonical.height), carRadius };
   let car = createCarAtSpawn(doc);
   if(import.meta.env.DEV)car=vehicleReviewStart(car,world,new URLSearchParams(location.search).get("test-vehicle"));
+  if(import.meta.env.DEV)car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));
   const stepper = new FixedStepper();
   const keys = new Set<string>();
   let mode: "playing" | "paused" = "playing";

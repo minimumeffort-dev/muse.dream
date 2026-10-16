@@ -144,7 +144,9 @@ describe("open paper world", () => {
     const after = stepCar(stateAt({ x: 480, y: 200, surface: "ice", headingRad: 0, vy: 80 }),
       { steer: 0, throttle: 0 }, DT, world);
     expect(after.surface).toBe("paper");
-    expect(after.vy).toBeCloseTo(80 * Math.exp(-TUNING.baseLateralGrip * DT));
+    const normal=stepCar(stateAt({x:480,y:200,surface:"paper",headingRad:0,vy:80}),{steer:0,throttle:0},DT,world);
+    expect(after).toEqual(normal);
+    expect(after.vy).toBeLessThan(75);
   });
 });
 

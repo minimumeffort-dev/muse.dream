@@ -2,9 +2,10 @@ import { describe, expect, it } from "vitest";
 import { createFixtureScene, buildMaskForScene, CAR_RADIUS } from "../src/scene/fixture";
 import { parseScene } from "../src/scene/schema";
 import { sampleTerrain, terrainHeight } from "../src/scene/terrain";
-import { createCarAtSpawn, FixedStepper, resetCar, stepCar, type CarState, type World } from "../src/sim/car";
+import { createCarAtSpawn, FixedStepper, resetCar, stepCar, TUNING, type CarState, type World } from "../src/sim/car";
 import { buildPaperMask } from "../src/sim/mask";
 import { createWorldScene } from "../src/scene/world-fixture";
+import {drivingReviewStart} from "../src/game/review-start";
 
 const DT = 1 / 120, idle = { throttle: 0, steer: 0 };
 const scene = parseScene({ ...createFixtureScene(), objects: [], regions: [],
@@ -14,6 +15,17 @@ const at = (x: number, vx = 0): CarState => ({ ...createCarAtSpawn(scene), x, y:
   headingRad: vx < 0 ? Math.PI : 0, elevation: terrainHeight(scene.terrain, x, 360) });
 
 describe("terrain driving", () => {
+  it("starts driving reviews at clear real-world poses and leaves normal starts untouched",()=>{
+    const doc=createWorldScene(),w={...world,scene:doc,roadMask:buildMaskForScene(doc),driveMask:buildPaperMask(6000,4800)},start=createCarAtSpawn(doc);
+    const hill=drivingReviewStart(start,w,"sidehill"),coast=drivingReviewStart(start,w,"coast");
+    expect(hill).toMatchObject({x:1290,y:1360,vx:0,vy:0,headingRad:Math.PI/2});
+    expect(hill.elevation).toBe(terrainHeight(doc.terrain,hill.x,hill.y));
+    expect(coast).toMatchObject({x:start.x,y:start.y,vx:-80,vy:0,headingRad:Math.PI});
+    expect(drivingReviewStart(start,w,null)).toBe(start);
+    expect(drivingReviewStart(start,w,"anything-else")).toBe(start);
+    const blocked={...w,driveMask:buildPaperMask(100,100)};
+    expect(drivingReviewStart(start,blocked,"sidehill")).toBe(start);
+  });
   it("lets the mock player drive the opening road crest, jump and land without a scripted impulse", () => {
     const doc = createWorldScene();
     const mockWorld = { ...world, scene: doc, roadMask: buildMaskForScene(doc), driveMask: buildPaperMask(doc.canonical.width, doc.canonical.height) };
@@ -49,6 +61,55 @@ describe("terrain driving", () => {
     const roll = stepCar(at(420), idle, DT, world);
     expect(roll.vx).toBeLessThan(0);
     expect(roll.elevation).toBeLessThan(at(420).elevation);
+  });
+  it("holds the tires across a dry hillside instead of slowly sliding sideways from rest", () => {
+    for(const headingRad of [Math.PI/2,-Math.PI/2]){
+      const start={...at(420),headingRad};let car=start;
+      for(let i=0;i<1200;i++)car=stepCar(car,idle,DT,world);
+      expect(Math.hypot(car.x-start.x,car.y-start.y)).toBeLessThan(.001);
+      expect(Math.hypot(car.vx,car.vy)).toBeLessThan(.001);
+    }
+  });
+  it("coasts to a complete stop on dry flat ground after releasing the controls", () => {
+    const flat=parseScene({...scene,terrain:{hills:[]}}),dry={...world,scene:flat};
+    for(const vx of [80,-80]){
+      let car={...at(420,vx),elevation:0};
+      for(let i=0;i<600;i++)car=stepCar(car,idle,DT,dry);
+      expect(Math.hypot(car.vx,car.vy)).toBe(0);
+      const stopped=car;
+      for(let i=0;i<600;i++)car=stepCar(car,idle,DT,dry);
+      expect([car.x,car.y]).toEqual([stopped.x,stopped.y]);
+    }
+  });
+  it("settles an existing side slip without stopping legitimate rolling or ice drift", () => {
+    let dry={...at(420,-15),headingRad:Math.PI/2};
+    for(let i=0;i<600;i++)dry=stepCar(dry,idle,DT,world);
+    expect(Math.hypot(dry.vx,dry.vy)).toBeLessThan(.001);
+    expect(Math.abs(dry.x-420)).toBeLessThan(5);
+    const frozen={x:dry.x,y:dry.y};
+    for(let i=0;i<600;i++)dry=stepCar(dry,idle,DT,world);
+    expect(Math.hypot(dry.x-frozen.x,dry.y-frozen.y)).toBeLessThan(.001);
+    const icy=parseScene({...scene,regions:[{id:"frozen-slope",labelText:"ICE",rule:{effect:"ICE"},polygon:[{x:240,y:300},{x:600,y:300},{x:600,y:420},{x:240,y:420}]}]});
+    let ice={...at(420),headingRad:Math.PI/2};
+    for(let i=0;i<360;i++)ice=stepCar(ice,idle,DT,{...world,scene:icy});
+    expect(Math.abs(ice.x-420)).toBeGreaterThan(10);
+    expect(ice.surface).toBe("ice");
+  });
+  it("preserves throttle power and airborne motion while resolving neutral coasting", () => {
+    const flat=parseScene({...scene,terrain:{hills:[]}}),dry={...world,scene:flat};
+    const start={...at(420,80),elevation:0};
+    const noResistance={...dry,tuning:{...TUNING,lateralFriction:0,iceLateralFriction:0,coastFriction:0,iceCoastFriction:0}};
+    expect(stepCar(start,{throttle:1,steer:0},DT,dry)).toEqual(stepCar(start,{throttle:1,steer:0},DT,noResistance));
+    const flying={...start,elevation:100,grounded:false};
+    expect(stepCar(flying,idle,DT,dry)).toEqual(stepCar(flying,idle,DT,noResistance));
+  });
+  it("replays a dry-ground stop identically at 30, 60 and 144 rendering fps", () => {
+    const flat=parseScene({...scene,terrain:{hills:[]}}),dry={...world,scene:flat};
+    const replay=(fps:number)=>{let car={...at(420,80),elevation:0};const clock=new FixedStepper();
+      for(let frame=0;frame<fps*5;frame++)for(let i=clock.push(1/fps);i>0;i--)car=stepCar(car,idle,clock.stepDt,dry);
+      return car;
+    };
+    expect(replay(30)).toEqual(replay(60));expect(replay(144)).toEqual(replay(60));
   });
   it("projects engine force onto steep terrain instead of gaining free climbing power", () => {
     const steep = parseScene({ ...scene, terrain: { hills: [{ id: "steep", x: 480, y: 360, radiusX: 120, radiusY: 180, height: 300 }] } });

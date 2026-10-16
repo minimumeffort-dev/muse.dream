@@ -15,7 +15,7 @@ const groundTuning:Record<"car"|"bicycle"|"skateboard",CarTuning>={
   bicycle:{...TUNING,engineAccel:100,brakeAccel:180,reverseAccel:50,maxForwardSpeed:130,maxReverseSpeed:35,dragPerS:.5,turnRateRadS:2.4,maxTerrainSpeed:180},
   skateboard:{...TUNING,engineAccel:65,brakeAccel:140,reverseAccel:35,maxForwardSpeed:85,maxReverseSpeed:25,dragPerS:.6,turnRateRadS:2.8,maxTerrainSpeed:130},
 };
-const walkingTuning={...TUNING,engineAccel:0,turnRateRadS:0,baseLateralGrip:0,iceLateralGrip:0,dragPerS:0};
+const walkingTuning={...TUNING,engineAccel:0,turnRateRadS:0,baseLateralGrip:0,iceLateralGrip:0,dragPerS:0,lateralFriction:0,iceLateralFriction:0,coastFriction:0,iceCoastFriction:0};
 export function occupiedObject(state:CarState,world:World) {
   const control=state.control;
   return control.kind==="vehicle" || control.kind==="passenger" ? world.scene.objects.find(o=>o.id===control.id) : undefined;

@@ -108,6 +108,10 @@ export const TUNING = {
   boostCooldownS: 2.5,
   baseLateralGrip: 9, // 1/s exponential lateral-velocity decay
   iceLateralGrip: 1.3,
+  lateralFriction: .7, // bounded tire impulse as a fraction of contact load
+  iceLateralFriction: .025,
+  coastFriction: .06, // rolling resistance at neutral throttle
+  iceCoastFriction: .006,
   dragPerS: 0.25,
   turnRateRadS: 2.7,
   gravity: 300,
@@ -318,10 +322,12 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
     s.vy=water.flow.y+(s.vy-water.flow.y)*retention;
   }
 
+  let contactLoad=tuning.gravity;
   if (s.grounded && !onObject) {
     const denominator = 1 + ground.dx ** 2 + ground.dy ** 2;
     const bend = sampleTerrain(scene.terrain, s.x, s.y, s.vx, s.vy).bend;
     const normalForce = tuning.gravity + bend + (ground.dx * nfx + ground.dy * nfy) * engineAccel;
+    contactLoad=Math.max(0,normalForce)/denominator;
     // Project forces onto the surface; a crest cannot pull the car down.
     if (normalForce < 0 && Math.hypot(s.vx, s.vy) > 60) s.grounded = false;
     else {
@@ -329,6 +335,15 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
       s.vy -= normalForce * ground.dy / denominator * dt;
     }
     s.vz = ground.dx * s.vx + ground.dy * s.vy;
+  }
+  // Resolve tire resistance after gravity; decay alone never reaches a stable stop.
+  if(s.grounded && !water){
+    let forward=s.vx*nfx+s.vy*nfy,side=-s.vx*nfy+s.vy*nfx;
+    const ice=surface==="ice",loadImpulse=contactLoad*dt;
+    side=Math.sign(side)*Math.max(0,Math.abs(side)-(ice ? tuning.iceLateralFriction : tuning.lateralFriction)*loadImpulse);
+    if(throttle===0)forward=Math.sign(forward)*Math.max(0,Math.abs(forward)-(ice ? tuning.iceCoastFriction : tuning.coastFriction)*loadImpulse);
+    s.vx=nfx*forward-nfy*side;s.vy=nfy*forward+nfx*side;
+    s.vz=onObject ? 0 : ground.dx*s.vx+ground.dy*s.vy;
   }
   const speed = Math.hypot(s.vx, s.vy);
   if (speed > tuning.maxTerrainSpeed) {
