@@ -188,7 +188,7 @@ export function buildEnvironment(doc: Scene): THREE.Group {
   }
   ["#263e4d", "#f8edcf"].forEach((color, i) => group.add(tiledMesh(surfaceGeometry(doc, finishPolygons[i]!, 1.85), toonMaterial(color))));
   // Passable decoration is instanced in spatial tiles, never a new collider.
-  const corridors=doc.routes.filter(route=>route.kind!=="water").map(route=>{
+  const corridors=doc.routes.filter(route=>route.kind!=="water" && route.kind!=="ambient").map(route=>{
     const {points,radius}=routeInfrastructure(route);return {points,radius:radius+4};
   });
   const path = roadPoints(doc), tufts: THREE.Matrix4[] = [], flowers: THREE.Matrix4[] = [], colors: THREE.Color[] = [];

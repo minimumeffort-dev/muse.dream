@@ -11,7 +11,7 @@ describe("coherent mock world layout", () => {
     const specs = [...new Map(scene.objects.map(object => [object.spec!.displayName, object.spec!])).values()];
     const forms = new Set(specs.map(spec => "dslVersion" in spec ? JSON.stringify(spec.parts.map(({ material: _, ...part }) => part)) : spec.shape));
     expect(forms.size).toBeGreaterThanOrEqual(20);
-    expect(specs.length).toBeLessThanOrEqual(52); // Six bounded destruction assemblies extend the fixture bank.
+    expect(specs.length).toBeLessThanOrEqual(65); // Includes thirteen bounded flora and fauna assemblies.
   });
   it("keeps landmarks rare and buildings together at two occupied sites", () => {
     for (const name of ["Castle", "Windmill", "Ancient ruins", "Crystal garden"]) expect(named(name),name).toHaveLength(1);
@@ -34,7 +34,9 @@ describe("coherent mock world layout", () => {
     const grove = scene.objects.filter(object => Math.hypot(object.x-1550,object.y-2850) < 450);
     const meadow = scene.objects.filter(object => Math.hypot(object.x-3150,object.y-2650) < 450);
     expect(grove.length).toBeGreaterThan(15);
-    expect(grove.length).toBeGreaterThan(meadow.length * 3);
+    const trees=(objects:typeof scene.objects)=>objects.filter(o=>o.spec && 'measure' in o.spec && o.spec.measure?.kind==='tree').length;
+    expect(trees(grove)).toBeGreaterThan(trees(meadow) * 3);
+    expect(trees(grove)).toBeGreaterThan(10);
     expect(new Set(grove.map(object => object.spec?.displayName)).size).toBeGreaterThanOrEqual(5);
   });
 });

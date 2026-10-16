@@ -1,13 +1,15 @@
 import { z } from "zod";
 
 export const routeSchema=z.object({
-  id:z.string().min(1).max(40),kind:z.enum(["rail","path","water","air"]),mode:z.enum(["loop","shuttle"]),
-  speed:z.number().finite().min(12).max(160),altitude:z.number().finite().min(60).max(300).optional(),
+  id:z.string().min(1).max(40),kind:z.enum(["rail","path","water","air","ambient"]),mode:z.enum(["loop","shuttle"]),
+  speed:z.number().finite().min(.5).max(160),altitude:z.number().finite().min(60).max(300).optional(),
   width:z.number().finite().min(16).max(120).optional(),surface:z.enum(["trail","cycle","paved"]).optional(),
   waitS:z.number().finite().min(0).max(12).default(0),
   points:z.array(z.object({x:z.number().finite().min(0).max(8192),y:z.number().finite().min(0).max(8192)}).strict()).min(2).max(64),
 }).strict().superRefine((route,ctx)=>{
-  if((route.kind==="air")!==!!route.altitude) ctx.addIssue({code:z.ZodIssueCode.custom,message:"only air routes require altitude"});
+  if(route.kind!=="ambient" && route.speed<12)ctx.addIssue({code:z.ZodIssueCode.custom,message:"vehicle routes require speed 12..160; ambient routes allow .5..160"});
+  if(route.kind==="air" && !route.altitude || route.altitude!==undefined && route.kind!=="air" && route.kind!=="ambient")
+    ctx.addIssue({code:z.ZodIssueCode.custom,message:"air routes require altitude; only air and ambient routes accept it"});
   if((route.width!==undefined || route.surface!==undefined) && route.kind!=="path")ctx.addIssue({code:z.ZodIssueCode.custom,message:"width and surface belong to path routes"});
   if(route.surface!==undefined && route.width===undefined)ctx.addIssue({code:z.ZodIssueCode.custom,message:"styled paths require an explicit corridor width"});
   if(route.mode==="loop" && route.points.length<3) ctx.addIssue({code:z.ZodIssueCode.custom,message:"loops need three points"});

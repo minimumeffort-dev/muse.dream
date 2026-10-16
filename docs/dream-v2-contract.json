@@ -305,7 +305,7 @@
       ],
       "id": true,
       "fields": {
-        "kind": "rail|path|water|air",
+        "kind": "rail|path|water|air|ambient",
         "mode": "loop|shuttle",
         "speed": "n",
         "altitude": "n?",

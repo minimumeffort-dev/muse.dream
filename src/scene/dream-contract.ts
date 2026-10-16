@@ -29,7 +29,7 @@ export const DREAM_V2_COMMANDS: Readonly<Record<string,DreamCommand>> = Object.f
   use: command("object visual",true,{component:"ref",args:"nums?",at:"v3?",rot_deg:"v3?",scale:"n?"}),
   part: command("object visual",true,{shape:"box|sphere|cylinder|cone|pyramid|icosphere|capsule|torus",material:"ref",at:"v3",size:"v3",rot_deg:"v3?",taper:"n?",deform:"deform?",motion:"part_motion?"}),
   beam: command("object visual",true,{shape:"box|cylinder|capsule",material:"ref",from:"v3",to:"v3",width:"n",depth:"n",taper:"n?",deform:"deform?",motion:"part_motion?"}),
-  route: command("top",true,{kind:"rail|path|water|air",mode:"loop|shuttle",speed:"n",altitude:"n?",wait_s:"n?",width:"n?",surface:"trail|cycle|paved?"},"path"),
+  route: command("top",true,{kind:"rail|path|water|air|ambient",mode:"loop|shuttle",speed:"n",altitude:"n?",wait_s:"n?",width:"n?",surface:"trail|cycle|paved?"},"path"),
   point: command("path",false,{at:"point"}),
   place: command("top",true,{object:"ref",at:"v2?",route:"ref?",offset:"n?",scale:"n?",heading_deg:"n?"}),
   watercourse: command("top",true,{level:"n",depth:"n",bank:"n",color:"color",flow:"v2"},"path"),

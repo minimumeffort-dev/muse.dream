@@ -15,12 +15,13 @@ renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.
 const params=new URLSearchParams(location.search),focus=params.getAll('asset');
 const worldExamples=params.has('world');
 const allExamples=params.has('all');
-if(focus.length){grid.style.gridTemplateColumns=`repeat(${Math.min(2,focus.length)},1fr)`;document.querySelector('main').style.setProperty('min-height','650px');}
+const focusHeight=focus.length>2 ? '360px' : '650px';
+if(focus.length){grid.style.gridTemplateColumns=`repeat(${Math.min(2,focus.length)},1fr)`;document.querySelector('main').style.setProperty('min-height',focusHeight);}
 if(worldExamples)document.querySelector('header a').href='/src/scene/interactive-world.dream';
 if(allExamples)document.querySelector('header a').href='/src/scene/world/open-world.dream';
 const items=(allExamples ? compileDreamWorld(worldSource,worldModules).assemblies : worldExamples ? interactiveWorld.assemblies : dreamExamples).filter(spec=>!focus.length || focus.includes(spec.displayName)).map(spec=>{
   const cell=document.createElement('article'),name=document.createElement('strong'),detail=document.createElement('small');
-  if(focus.length)cell.style.height='650px';
+  if(focus.length)cell.style.height=focusHeight;
   name.textContent=spec.displayName;detail.textContent=`${spec.parts.length} parts · ${spec.joints?.length??0} joints`;
   cell.append(name,detail);grid.append(cell);
   const scene=new THREE.Scene();scene.background=new THREE.Color('#52714d');

@@ -1,0 +1,26 @@
+dream 2;
+material feather(style=toon,colors=[#d7ddcf,#a1b4ad]);
+material tip(style=toon,colors=[#465a55,#30423d]);
+material gold(style=toon,colors=[#d5aa54,#a67b3c]);
+object gull(label="River gull"){
+  measure(kind=custom,axis=z,meters=1.8);
+  body(interaction=decor,radius=4,height=24);
+  part body(shape=capsule,material=feather,at=[0,7,0],size=[7,22,8],rot_deg=[0,0,-90]);
+  part head(shape=sphere,material=feather,at=[11,9,0],size=[8,8,8]);
+  part beak(shape=cone,material=gold,at=[17,8,0],size=[3,8,3],rot_deg=[0,0,-90]);
+  repeat sides(index=s,count=2){
+    let side(value=s*2-1);
+    joint wing(at=[0,7,side*3],rot_deg=[0,-side*16,0],motion=swing(axis=x,deg=24,hz=.5,phase_deg=s*180)){
+      beam inner(shape=cylinder,material=feather,from=[0,0,0],to=[0,0,side*24],width=17,depth=2.4,taper=.25);
+      beam outer(shape=cylinder,material=tip,from=[0,0,side*20],to=[0,0,side*30],width=6,depth=1.5,taper=.15);
+    }
+  }
+}
+route over_meadow(kind=ambient,mode=loop,speed=45,altitude=120){
+  point(at=[300,300]);
+  point(at=[650,300]);
+  point(at=[650,500]);
+  point(at=[300,500]);
+}
+place gull_one(object=gull,route=over_meadow,scale=1);
+place gull_two(object=gull,route=over_meadow,offset=60,scale=.93);

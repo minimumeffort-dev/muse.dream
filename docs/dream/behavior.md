@@ -28,6 +28,47 @@ The camera moves closer for walking and small vehicles, using their resolved dim
 
 A joint can use `open(axis=y,deg=105,radius=100)` for a proximity door. Its declared wall contacts provide the opening. The animated panel doesn't push the car through rotating mesh collision.
 
+## Wildlife and habitats
+
+Birds can circle above the terrain while deer and a fox move through their clearings. Hares idle in the meadow. Their bodies, wings, ears and legs are Dream parts. The current world adds five animal forms and eight plant forms, including ferns, reeds, foxgloves, lavender and weeping willows.
+
+![Deer, a hare, a fox and a gull composed in Dream 2](../media/fauna.jpg)
+
+An `ambient` route creates no road or runway. It accepts only a `decor` body and leaves racing collisions to the existing physical objects. Ground movement follows terrain; optional `altitude` keeps a bird airborne through the whole loop. These are authored habitats, without animal perception, fleeing or hunting. Wing and leg joints respect reduced motion and return to rest during route waits.
+
+[Download this complete two-bird example](../examples/ambient-wildlife.dream):
+
+```dream
+dream 2;
+material feather(style=toon,colors=[#d7ddcf,#a1b4ad]);
+material tip(style=toon,colors=[#465a55,#30423d]);
+material gold(style=toon,colors=[#d5aa54,#a67b3c]);
+object gull(label="River gull"){
+  measure(kind=custom,axis=z,meters=1.8);
+  body(interaction=decor,radius=4,height=24);
+  part body(shape=capsule,material=feather,at=[0,7,0],size=[7,22,8],rot_deg=[0,0,-90]);
+  part head(shape=sphere,material=feather,at=[11,9,0],size=[8,8,8]);
+  part beak(shape=cone,material=gold,at=[17,8,0],size=[3,8,3],rot_deg=[0,0,-90]);
+  repeat sides(index=s,count=2){
+    let side(value=s*2-1);
+    joint wing(at=[0,7,side*3],rot_deg=[0,-side*16,0],motion=swing(axis=x,deg=24,hz=.5,phase_deg=s*180)){
+      beam inner(shape=cylinder,material=feather,from=[0,0,0],to=[0,0,side*24],width=17,depth=2.4,taper=.25);
+      beam outer(shape=cylinder,material=tip,from=[0,0,side*20],to=[0,0,side*30],width=6,depth=1.5,taper=.15);
+    }
+  }
+}
+route over_meadow(kind=ambient,mode=loop,speed=45,altitude=120){
+  point(at=[300,300]);
+  point(at=[650,300]);
+  point(at=[650,500]);
+  point(at=[300,500]);
+}
+place gull_one(object=gull,route=over_meadow,scale=1);
+place gull_two(object=gull,route=over_meadow,offset=60,scale=.93);
+```
+
+The [reference](reference.md#ambient-wildlife) gives the speed, height and scene bounds. Plants remain instanced scenery. Habitat placements keep their roots away from water surfaces, bridge decks and the racing circuit.
+
 ## Bounce, break or fall
 
 | Declaration inside an object | Result |

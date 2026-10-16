@@ -1,0 +1,109 @@
+dream 2;
+material stem(style=toon,colors=[#456749,#304e38]);
+material fern_leaf(style=toon,colors=[#6c9652,#3e6d45]);
+material dock_leaf(style=toon,colors=[#789455,#496c43]);
+material purple(style=toon,colors=[#9a719d,#694c7d]);
+material bell_pink(style=toon,colors=[#c788a0,#985e80]);
+material bell_inner(style=toon,colors=[#704967,#533953]);
+material reed_leaf(style=toon,colors=[#829659,#566d42]);
+material reed_head(style=toon,colors=[#8b6744,#634e38]);
+material cream(style=toon,colors=[#eee4bd,#d3cba8]);
+material pollen(style=toon,colors=[#d9aa45,#b38634]);
+material bark(style=toon,colors=[#806447,#544b37]);
+material hazel_leaf(style=toon,colors=[#789451,#4d7042]);
+material willow_leaf(style=toon,colors=[#9da45c,#687f48]);
+
+object woodland_fern(label="Woodland fern"){
+  measure(kind=custom,axis=y,meters=.9);
+  body(interaction=decor,radius=4,height=15);
+  ground(mode=surface);
+  repeat fronds(index=f,count=4){
+    group fan(rot_deg=[0,f*92,0]){
+      beam rib(shape=cylinder,material=stem,from=[0,1,0],to=[12,14,0],width=.7,depth=.7,taper=.25);
+      repeat leaflets(index=l,count=3){
+        part left(shape=icosphere,material=fern_leaf,at=[3+l*3,4+l*3,-1.5],size=[6-l,1.2,4-l*.5],rot_deg=[0,-35,30]);
+        part right(shape=icosphere,material=fern_leaf,at=[3+l*3,4+l*3,1.5],size=[6-l,1.2,4-l*.5],rot_deg=[0,35,30]);
+      }
+      part tip(shape=icosphere,material=fern_leaf,at=[11,13,0],size=[5,1,3],rot_deg=[0,0,45]);
+    }
+  }
+}
+object broadleaf_dock(label="Broadleaf dock"){
+  measure(kind=custom,axis=y,meters=1.05);
+  body(interaction=decor,radius=4,height=18);
+  ground(mode=surface);
+  repeat leaves(index=l,count=6){
+    group leaf(rot_deg=[0,l*61,0]){
+      beam stalk(shape=cylinder,material=stem,from=[0,0,0],to=[9,10+l*.5,0],width=.8,depth=.8,taper=.35);
+      part blade(shape=icosphere,material=dock_leaf,at=[11,11+l*.5,0],size=[15,2,7],rot_deg=[0,0,20],deform=deform(seed=52+l,amount=.12),motion=sway(deg=2,hz=.18));
+    }
+  }
+}
+object foxglove(label="Pink foxglove"){
+  measure(kind=custom,axis=y,meters=1.5);
+  body(interaction=decor,radius=4,height=50);
+  beam stalk(shape=cylinder,material=stem,from=[0,0,0],to=[1,48,0],width=1.2,depth=1.2,taper=.35);
+  repeat leaves(index=l,count=4){part blade(shape=icosphere,material=dock_leaf,at=[cos(l*97)*5,4+l*2,sin(l*97)*5],size=[14,1.5,5],rot_deg=[0,l*97,20]);}
+  repeat bells(index=b,count=6){
+    group flower(at=[cos(b*137)*3,19+b*4,sin(b*137)*3],rot_deg=[0,b*137,20]){
+      part bell(shape=capsule,material=bell_pink,at=[0,0,0],size=[5.5,8,5.5]);
+      part mouth(shape=cylinder,material=bell_inner,at=[0,-3.5,0],size=[4.2,.6,4.2]);
+    }
+  }
+  part bud(shape=icosphere,material=bell_pink,at=[1,47,0],size=[3.5,5,3.5]);
+}
+object wild_lavender(label="Wild lavender"){
+  measure(kind=custom,axis=y,meters=.9);
+  body(interaction=decor,radius=4,height=32);
+  ground(mode=surface);
+  repeat spires(index=s,count=3){
+    group spike(at=[s*5-5,0,sin(s*130)*4],rot_deg=[0,s*73,s*7-7]){
+      beam stalk(shape=cylinder,material=stem,from=[0,0,0],to=[0,31-s*2,0],width=.8,depth=.8,taper=.3);
+      repeat florets(index=f,count=3){part flower(shape=icosphere,material=purple,at=[0,18+f*4-s*2,0],size=[5-f*.6,5,4.5-f*.5],deform=deform(seed=s*11+f,amount=.12));}
+      part leaves(shape=icosphere,material=reed_leaf,at=[0,7,0],size=[12,1.5,3],rot_deg=[0,s*60,20]);
+    }
+  }
+}
+object river_reeds(label="River reeds"){
+  measure(kind=custom,axis=y,meters=1.8);
+  body(interaction=decor,radius=4,height=52);
+  ground(mode=surface);
+  repeat reeds(index=r,count=5){
+    group stalk(at=[cos(r*137)*6,0,sin(r*137)*6],rot_deg=[0,r*137,r*2-4]){
+      beam stem(shape=cylinder,material=stem,from=[0,0,0],to=[0,38+r*2,0],width=.9,depth=.9,taper=.4);
+      part seed_head(shape=capsule,material=reed_head,at=[0,35+r*2,0],size=[3.2,10,3.2]);
+      part blade(shape=icosphere,material=reed_leaf,at=[4,15,0],size=[3,30,1.3],rot_deg=[0,0,-18],motion=sway(deg=2,hz=.2));
+    }
+  }
+}
+object meadow_daisies(label="Meadow daisies"){
+  measure(kind=custom,axis=x,meters=1.15);
+  body(interaction=decor,radius=4,height=30);
+  ground(mode=surface);
+  repeat flowers(index=f,count=3){
+    group bloom(at=[f*10-10,0,sin(f*130)*5]){
+      beam stalk(shape=cylinder,material=stem,from=[0,0,0],to=[0,18+f*4,0],width=.8,depth=.8,taper=.4);
+      part center(shape=sphere,material=pollen,at=[0,18+f*4,0],size=[4,2.5,4]);
+      repeat petals(index=p,count=6){part petal(shape=icosphere,material=cream,at=[cos(p*60)*3.6,18+f*4,sin(p*60)*3.6],size=[6,1.2,3],rot_deg=[0,-p*60,0]);}
+      part leaf(shape=icosphere,material=fern_leaf,at=[3,7+f,0],size=[9,1.5,3],rot_deg=[0,f*80,25]);
+    }
+  }
+}
+object hazel_bush(label="Hazel thicket"){
+  measure(kind=custom,axis=y,meters=2.5);
+  body(interaction=decor,radius=6,height=40);
+  repeat stems(index=s,count=3){beam branch(shape=cylinder,material=bark,from=[0,0,0],to=[s*10-10,26,sin(s*130)*6],width=2.2,depth=2.2,taper=.4);}
+  repeat crowns(index=c,count=4){part crown(shape=icosphere,material=hazel_leaf,at=[cos(c*100)*9,22+sin(c*100)*3,sin(c*100)*8],size=[25,23,21],deform=deform(seed=283+c*41,amount=.14),motion=sway(deg=1.5,hz=.15));}
+  repeat catkins(index=c,count=5){part catkin(shape=capsule,material=pollen,at=[cos(c*137)*15,16+c,sin(c*137)*14],size=[1.8,6,1.8]);}
+}
+object weeping_willow(label="Weeping willow"){
+  measure(kind=tree,axis=y,meters=10);
+  body(interaction=solid,radius=9,height=62);
+  beam trunk(shape=cylinder,material=bark,from=[0,0,0],to=[2,39,0],width=7,depth=7,taper=.55);
+  repeat boughs(index=b,count=3){beam branch(shape=cylinder,material=bark,from=[1,24,0],to=[cos(b*120)*19,43,sin(b*120)*19],width=3,depth=3,taper=.35);}
+  repeat crowns(index=c,count=4){part crown(shape=icosphere,material=willow_leaf,at=[cos(c*90)*12,43,sin(c*90)*12],size=[30,23,29],deform=deform(seed=521+c*21,amount=.14));}
+  repeat curtains(index=c,count=8){
+    part frond(shape=icosphere,material=willow_leaf,at=[cos(c*45)*23,29+sin(c*97)*3,sin(c*45)*23],size=[3.4,29,3],rot_deg=[sin(c*45)*8,0,cos(c*45)*8],deform=deform(seed=871+c*17,amount=.12),motion=sway(deg=2,hz=.18));
+    part inner_frond(shape=icosphere,material=fern_leaf,at=[cos(c*45)*20,24+sin(c*97)*3,sin(c*45)*20],size=[3.4,22,3],deform=deform(seed=921+c*17,amount=.12),motion=sway(deg=2,hz=.18));
+  }
+}

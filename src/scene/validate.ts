@@ -231,7 +231,7 @@ export function validateScenePlayability(
     problems.push({code:"route-not-clear",message:`route "${route.id}" infrastructure must stay inside the world`});
   // Explicit width reserves infrastructure, including paths with no moving actor.
   const pathContacts=scene.objects.filter(o=>!o.route && !controlOf(o.spec) && archetypeOf(o).interaction!=="decor").flatMap(o=>objectContacts(scene,o));
-  const groundRoutes=scene.routes.filter(r=>r.kind!=="water").map(route=>({route,...routeInfrastructure(route)}));
+  const groundRoutes=scene.routes.filter(r=>r.kind!=="water" && r.kind!=="ambient").map(route=>({route,...routeInfrastructure(route)}));
   for(const route of scene.routes.filter(r=>r.kind==="path" && r.width!==undefined)){
     let obstruction:string|undefined;
     const frames=routeFrames(route),anchors=routePath(route).points;
@@ -260,13 +260,14 @@ export function validateScenePlayability(
     }
   }
   for(const object of scene.objects.filter(o=>o.route && !controlOf(o.spec))){
-    const route=scene.routes.find(r=>r.id===object.route!.id)!,path=routePath(route),radius=objectRadius(object),bodyHeight=objectHeight(object);
+    const route=scene.routes.find(r=>r.id===object.route!.id)!,path=routePath(route),radius=route.kind==="ambient" ? assemblyHorizontalRadius(object.spec as import("./object-dsl").ObjectDsl,object.scale) : objectRadius(object),bodyHeight=objectHeight(object);
     let invalid=false;
     const steps=Math.ceil(path.length/12);
     for(let sample=0;sample<=steps;sample++){
       const d=sample/steps*path.length;
       const p=routePoint(route,d);
       if(p.x<radius || p.y<radius || p.x>width-radius || p.y>scene.canonical.height-radius){invalid=true;break;}
+      if(route.kind==="ambient" && !route.altitude && Array.from({length:9},(_,i)=>i===8 ? p : {x:p.x+Math.cos(i*Math.PI/4)*radius,y:p.y+Math.sin(i*Math.PI/4)*radius}).some(q=>waterAt(scene.terrain,q.x,q.y))){invalid=true;break;}
       if(route.kind==="water"){
         if(!scene.terrain.landscape?.waters.some(w=>pointInPolygon(p.x,p.y,w.polygon))) {invalid=true;break;}
         for(let i=0;i<8;i++){

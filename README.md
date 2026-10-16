@@ -38,6 +38,12 @@ Some things move when you hit them. Others break. A ball bounces away, a bench c
 
 ![A bench breaking into its authored components after a car impact](docs/media/destruction.gif)
 
+The landscape has wildlife now: gulls and red kites fly overhead, deer and a fox move through clearings, and hares idle in the meadow. Ferns, broad leaves, foxgloves, lavender, reeds, daisies, hazel and weeping willows give the ground and riverbanks more variety. All of them are Dream 2 assemblies.
+
+![Wildlife and plants composed from Dream 2](docs/media/ecology.jpg)
+
+Wildlife follows bounded ambient routes without drawing roads or runways. Plants stay instanced, and animals use the existing animation budget. These are authored mock habitats; animal perception and avoidance are still to come. [See the assets](docs/asset-library.md), or [write a pair of flying birds](docs/examples/ambient-wildlife.dream).
+
 ## The world is made from small descriptions
 
 Dream 2 is a compact text language for composing objects and worlds. It has named fields, reusable components and bounded repetition. A model can describe a new object without writing JavaScript or a shader. The engine builds its geometry and runs the supported behavior.
@@ -64,11 +70,11 @@ object oak(label="Oak"){
 
 The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation site highlights Dream commands, fields, references, colors and expressions, with copy buttons for complete examples.
 
-[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 53 assemblies and 448 placements, all authored in Dream 2.
+[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 66 assemblies and 534 placements, all authored in Dream 2.
 
 Objects share physical units. The car is 3.55 metres long, the plane has a 10.8-metre wingspan, and the skateboard is 0.82 metres long. A size declaration scales the geometry, collision body, seats and broken pieces together. The compiler checks proportions too, so a skateboard can't quietly become larger than the car.
 
-The [asset library](docs/asset-library.md) covers all 53 world assemblies. Cars have window pillars and wheel hubs, bikes have chains and pedals, and buildings have framed windows, timber details and connected canopies. Trees have connected forks and bark markings, with seeded variation in their crowns. Deadwood uses tapered trunks and branches; fallen logs have cut ends, moss and varied headings on the ground. These details are Dream parts too, including the pieces released when something breaks.
+The [asset library](docs/asset-library.md) covers all 66 world assemblies. Cars have window pillars and wheel hubs, bikes have chains and pedals, and buildings have framed windows, timber details and connected canopies. Trees have connected forks and bark markings, with seeded variation in their crowns. Deadwood uses tapered trunks and branches; fallen logs have cut ends, moss and varied headings on the ground. These details are Dream parts too, including the pieces released when something breaks.
 
 ![Fallen log and deadwood built with connected, tapered wood parts](docs/media/woodland.jpg)
 

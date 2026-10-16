@@ -73,7 +73,7 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 | `watercourse` | top | ID / path | `level: n`, `depth: n`, `bank: n`, `color: color`, `flow: v2` |
 | `effect` | top | ID / no block | `kind: ice / boost`, `points: points2` |
 | `checkpoint` | top | ID / no block | `at: v2`, `dir: v2`, `width: n` |
-| `route` | top | ID / path | `kind: rail / path / water / air`, `mode: loop / shuttle`, `speed: n`, `altitude?: n`, `wait_s?: n`, `width?: n`, `surface?: trail / cycle / paved` |
+| `route` | top | ID / path | `kind: rail / path / water / air / ambient`, `mode: loop / shuttle`, `speed: n`, `altitude?: n`, `wait_s?: n`, `width?: n`, `surface?: trail / cycle / paved` |
 | `point` | path | No ID / no block | `at: point` |
 | `place` | top | ID / no block | `object: ref`, `at?: v2`, `route?: ref`, `offset?: n`, `scale?: n`, `heading_deg?: n` |
 | `unresolved` | top | ID / no block | `label: text` |
@@ -147,9 +147,17 @@ F exits to accessible dry ground. On foot, F enters a seat within 60 units of th
 
 ### Dedicated paths
 
-For `kind=path`, `width` is the full paved width, 16–120 units. `surface=trail|cycle|paved` requires an explicit width. These fields are invalid on rail, water and air routes. Omit both only for legacy paths, which retain a 28-unit trail and actor-only clearance.
+For `kind=path`, `width` is the full paved width, 16–120 units. `surface=trail|cycle|paved` requires an explicit width. These fields are invalid on rail, water, air and ambient routes. Omit both only for legacy paths, which retain a 28-unit trail and actor-only clearance.
 
 An explicit width reserves a corridor even without a vehicle. Full-world validation keeps it inside the world and clear of road/curbs, water, placed physical objects, other ground routes and runways, with an 8-unit buffer plus conservative sampling allowance. Overlap rejects the proposed world with `E_SCENE_ROUTE_NOT_CLEAR`. Turns that would fold the inside edge also reject the world; widen their radius or shorten the width. It does not relocate assets automatically or create crossings. Paint and map widths use the same declaration; grass is excluded from the surface.
+
+### Ambient wildlife
+
+`route(kind=ambient,...)` moves a `decor` assembly without building infrastructure or clearing ground plants. Speed is `.5`–`160` units/second; other route kinds keep `12`–`160`. Omit `altitude` for terrain-following movement, or set `60`–`300` for a constant height above the terrain, including at the loop seam. `air` retains its runway and takeoff/landing ramps.
+
+Ambient actors cannot be solid or knockable and cannot carry seats, impact behavior, foundations or compound contacts. They create no vehicle collision contacts. Their rest-pose visual radius is checked against bounds and solids along the complete route; ground routes also reject water beneath their footprint. Routes remain bounded loops or shuttles, without autonomous perception or avoidance. Wing and gait joints use existing `swing` motion, return to rest for reduced motion and stop during route waits. The existing scene caps still apply: 12 routes, 24 actors/controlled vehicles and 24 jointed assemblies including the player.
+
+See the [complete two-bird example](../examples/ambient-wildlife.dream) and the [flora and fauna sources](../../src/scene/world/wildlife.dream).
 
 ## Compiler APIs
 

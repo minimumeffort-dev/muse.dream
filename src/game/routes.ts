@@ -9,7 +9,7 @@ import { toonMaterial } from "./shaders";
 export function buildRoutes(scene:Scene):THREE.Group {
   const group=new THREE.Group();group.name="world-routes";
   for(const route of scene.routes){
-    if(route.kind==="water")continue;
+    if(route.kind==="water" || route.kind==="ambient")continue;
     const {frames,halfWidth:w}=routeInfrastructure(route);
     const strip=(inner:number,outer:number)=>frames.slice(1).map((b,i)=>{const a=frames[i]!;
       return [{x:a.x+a.nx*inner,y:a.y+a.ny*inner},{x:b.x+b.nx*inner,y:b.y+b.ny*inner},{x:b.x+b.nx*outer,y:b.y+b.ny*outer},{x:a.x+a.nx*outer,y:a.y+a.ny*outer}];});

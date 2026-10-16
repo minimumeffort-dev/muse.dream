@@ -49,3 +49,6 @@ include district_7(module=district_7);
 include district_8(module=district_8);
 include roadside_props(module=roadside_props);
 include destructible(module=destructible);
+include vegetation_0(module=vegetation_0);
+include vegetation_1(module=vegetation_1);
+include wildlife(module=wildlife);

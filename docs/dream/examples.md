@@ -117,3 +117,5 @@ The source files are the examples. Tests compare these complete snippets with th
 [Ball source](../examples/bouncing-ball.dream) · [Bench source](../examples/breakable-bench.dream) · [Sign source](../examples/swinging-sign.dream) · [Tree source](../examples/toppling-tree.dream)
 
 [Tapered wood](../examples/tapered-wood.dream) builds a connected snag with a narrowing trunk, rising branch and cut face. The [object guide](objects.md#grow-a-connected-branch) includes the complete source.
+
+[Ambient wildlife](../examples/ambient-wildlife.dream) composes a pair of birds with wing joints and a continuous airborne loop. The [behavior guide](behavior.md#wildlife-and-habitats) includes the complete source.

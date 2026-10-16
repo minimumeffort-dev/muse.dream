@@ -9,8 +9,8 @@ into Three.js and tested mechanics; model output remains data-only.
 
 Current state: **mock open world** — a 6000 x 4800 handmade landscape with a
 winding eight-checkpoint circuit, composed assets, heightfield driving/jumps,
-ICE/BOOST, off-road collisions, fixed-angle camera, walking, direct vehicle controls
-and instanced scenery. F exits to dry ground and boards nearby on foot. Bicycles,
+ICE/BOOST, off-road collisions, fixed-angle camera, walking, direct vehicle controls,
+ambient wildlife, layered vegetation and instanced scenery. F exits to dry ground and boards nearby on foot. Bicycles,
 skateboards, boats and planes are player-controlled; trains retain autonomous routes.
 The original small fixture remains for regression tests. No photo upload,
 camera or model calls yet. The complete live world is authored in Dream 2 text
@@ -114,3 +114,8 @@ dry and collision-free, prohibit mid-air exits, preserve checkpoint state outsid
 the original car, and keep the occupied vehicle opaque. Use `docs/dream/behavior.md`.
 Reserve one of the 24 live jointed-assembly slots for the standing character; scene
 objects plus the player vehicle may use the remaining 23.
+
+Dream ambient routes require decor-only assemblies and create no infrastructure or
+physics contacts. Optional altitude keeps birds airborne through the entire loop;
+ground habitats require dry, clear footprints. Preserve existing actor/joint caps,
+vehicle-route speed bounds, instanced plants and reduced-motion joint poses.

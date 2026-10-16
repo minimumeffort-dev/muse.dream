@@ -170,8 +170,11 @@ export const sceneSchema = z.object({
   if(fragments>128)ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 128 destruction fragments"});
   if(reactive.some(o=>o.route))ctx.addIssue({code:z.ZodIssueCode.custom,message:"route actors cannot carry impact behavior"});
   if(scene.objects.filter(o=>o.spec && "dslVersion" in o.spec && o.spec.dslVersion===2 && o.spec.emitter).length>16)ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 16 particle emitters"});
-  for(const object of scene.objects) if(object.route && (!scene.routes.some(r=>r.id===object.route!.id) || !object.spec || !("dslVersion" in object.spec) || object.spec.foundation || object.spec.body.interaction!=="solid" || object.spec.dslVersion===2 && object.spec.contacts))
-    ctx.addIssue({code:z.ZodIssueCode.custom,message:"route actors need an existing route and a solid cylinder without a foundation"});
+  for(const object of scene.objects)if(object.route){
+    const route=scene.routes.find(r=>r.id===object.route!.id);
+    if(!route || !object.spec || !("dslVersion" in object.spec) || object.spec.foundation || object.spec.body.interaction!==(route.kind==="ambient" ? "decor" : "solid") || object.spec.dslVersion===2 && object.spec.contacts)
+      ctx.addIssue({code:z.ZodIssueCode.custom,message:"route actors need an existing route without foundations/compound contacts; ambient actors require decor, other routes require a solid cylinder"});
+  }
 });
 
 export type Point = z.infer<typeof pointSchema>;

@@ -115,6 +115,7 @@ function start(): void {
     const placement=objectPlacement(doc,object);
     group.position.y=placement.base+1.5;group.quaternion.copy(placement.rotation);
     group.userData.sceneObject=object;
+    group.userData.ambient=!!object.route && doc.routes.find(r=>r.id===object.route!.id)?.kind==="ambient";
     scene.add(group);
     objects.push(group);
     if(archetypeOf(object).interaction === "knockable") propMeshes.set(object.id, group);
@@ -316,11 +317,12 @@ function start(): void {
     poses??=actorPoses(doc,car.timeS,car);
     for(const pose of poses){
       const group=actorMeshes.get(pose.id)!;
-      group.position.copy(worldPosition(doc,pose.x,pose.y));group.position.y=pose.elevation+1.5;
+      group.position.copy(worldPosition(doc,pose.x,pose.y));group.position.y=pose.elevation+(group.userData.ambient ? .2 : 1.5);
       const normal=pose.kind==="rail" || pose.kind==="path" ? terrainNormal(doc,pose.x,pose.y) : new THREE.Vector3(0,1,0);
       group.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),normal).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),-pose.headingRad));
       group.quaternion.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(pose.bank??0,0,pose.pitch??0)));
       group.userData.distance=pose.travelled;
+      group.userData.moving=pose.speed>0;
     }
     const occupied=occupiedObject(car,world);
     const standingRide=controlOf(occupied?.spec)==="skateboard";
@@ -344,7 +346,7 @@ function start(): void {
     }
     for (const object of objects) {
       const spec=object.userData.sceneObject;
-      animateObject(object, worldTime.value, !reduced.matches, object.userData.distance ?? 0,0,
+      animateObject(object, worldTime.value, !reduced.matches && (!object.userData.ambient || object.userData.moving), object.userData.distance ?? 0,0,
         spec ? Math.hypot(object.position.x-position.x,object.position.z-position.z)/spec.scale : Infinity);
     }
     const target = { x: position.x, y: (car.control.kind!=="car" ? car.elevation : drivingHeight(doc.terrain, car.x, car.y)) + 12, z: position.z };

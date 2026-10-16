@@ -165,7 +165,7 @@ one particle draw with car effects; far emitters are culled and reduced motion
 clears it. Model-authored particle/shader programs never execute.
 
 Limits: 12 routes, 2–64 points per route (loops need ≥3), route length ≤12,000,
-speed 12–160, stop wait 0–12 seconds, air altitude 60–300, trailing offset 0–2,048.
+vehicle speed 12–160 (ambient .5–160), stop wait 0–12 seconds, air altitude 60–300, trailing offset 0–2,048.
 World source declares at most 64 placements and 8 watercourses. A watercourse has
 2–8 stations of width 80–480 and compiles into the unchanged bounded water schema.
 Scenes accept at most 24 mobile actors, including controllable vehicles, 16 emitters and 24 jointed live assemblies
@@ -178,3 +178,14 @@ against the car. Routes are validated against static geometry and water; they
 do not dynamically negotiate with other vehicles or knocked props. Mock layout
 keeps independent routes apart. Geometry, motion and collision checks remain
 separate from any future Muse provider evaluation.
+
+
+## Ambient wildlife in Dream 2
+
+Use `route(kind=ambient,...)` with a `decor` assembly to move wildlife without
+roads, rails, runways or grass clearing. Optional altitude 60–300 stays constant
+above terrain through the loop seam; omit altitude for dry ground movement.
+Ambient actors create no physical contacts. Existing route, actor and animation
+caps still apply. This is bounded authored movement, without perception or
+avoidance. See the [complete bird example](examples/ambient-wildlife.dream) and
+[reference](dream/reference.md#ambient-wildlife).
