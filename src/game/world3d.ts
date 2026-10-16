@@ -102,7 +102,16 @@ export function buildCustom(object: SceneObject): THREE.Group {
     for (const part of spec.parts) {
       const m = mesh(partGeometry(part), styledMaterial(part.material),0,0,0,false);
       m.name = part.id;
-      m.userData.materialKey = JSON.stringify(part.material);
+      const style=part.material.shaderStyle,paint=style==="toon" || style==="paper-grain";
+      // Linear vertex paint lets differently colored parts share a draw without changing shading.
+      if(paint){
+        const material=m.material as THREE.MeshToonMaterial | THREE.MeshStandardMaterial;
+        const colors=new Float32Array(m.geometry.getAttribute("position").count*3);
+        for(let i=0;i<colors.length;i+=3)material.color.toArray(colors,i);
+        m.geometry.setAttribute("color",new THREE.BufferAttribute(colors,3));
+        material.color.setRGB(1,1,1);material.vertexColors=true;
+      }
+      m.userData.materialKey = JSON.stringify(paint ? {shaderStyle:style} : part.material);
       m.userData.materialStyle = part.material.shaderStyle;
       m.position.fromArray(part.position);
       m.scale.fromArray(part.size);

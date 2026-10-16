@@ -1,5 +1,11 @@
 import * as THREE from "three";
 
+/** Only for world-fixed roots: GPU wind, water and instance fades still animate normally. */
+export function freezeStatic(root:THREE.Object3D):void {
+  root.updateWorldMatrix(true,true);
+  root.traverse(node=>{node.matrixAutoUpdate=false;node.matrixWorldAutoUpdate=false;});
+}
+
 /** Split static triangles into local bounds so Three can cull terrain and road tiles. */
 export function tiledMesh(geometry: THREE.BufferGeometry, material: THREE.Material, tileSize = 400): THREE.Group {
   const source = geometry.index ? geometry.toNonIndexed() : geometry;

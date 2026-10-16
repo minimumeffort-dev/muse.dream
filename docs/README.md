@@ -19,6 +19,8 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 
 [Read the highlighted documentation](https://minimumeffort-dev.github.io/muse.dream/) · [Media and syntax highlighting](media/README.md)
 
+[Rendering and performance](rendering.md) explains how the engine keeps the full world resident and measures changes without lowering visual quality.
+
 ## Try it locally
 
 From the repository root, after `npm ci`:

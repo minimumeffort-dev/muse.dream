@@ -72,6 +72,12 @@ keep the comparison with the implementation.
 
 ## Split a world into modules
 
+Modules organize accepted source. The renderer builds the complete world up front;
+travelling does not load or unload districts. Ordinary camera and shadow frustum
+culling skips invisible draws while their geometry stays resident. The engine's
+[rendering notes](../rendering.md) cover batching, retained visual quality and
+repeatable measurements. No extra Dream fields are needed for these optimizations.
+
 ```text
 dream 2;
 asset birch(module=nature,object=birch);

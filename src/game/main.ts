@@ -1,5 +1,7 @@
 import {SunShadows} from "./sun";
 import {mediaCapture} from "./media-capture";
+import {renderProfile} from "./render-profile";
+import {freezeStatic} from "./batching";
 import {vehicleReviewStart} from "./review-start";
 import { measuredScale, playerRadius, playerHeight } from "../scene/measure";
 import * as THREE from "three";
@@ -94,9 +96,9 @@ function start(): void {
   scene.add(sun, sun.target);
   const fill = new THREE.DirectionalLight("#a7c4eb", .3);
   fill.position.set(350, 250, -300); scene.add(fill);
-  scene.add(buildEnvironment(doc));
+  const environment=buildEnvironment(doc);scene.add(environment);
   const landscape=new WorldLandscape(doc);scene.add(landscape.group);
-  scene.add(buildRoutes(doc));
+  const routes=buildRoutes(doc);scene.add(routes);
 
   const scenery = new WorldScenery(doc); scene.add(scenery.group);
   const propMeshes = new Map<string, THREE.Group>();
@@ -132,6 +134,9 @@ function start(): void {
 
   const worldBounds=new THREE.Box3().setFromObject(scene);
   const sunShadows=new SunShadows(sun,worldBounds.min.y-32,worldBounds.max.y+MAX_FLIGHT_CLEARANCE);
+  for(const root of [environment,landscape.group,routes,scenery.group])freezeStatic(root);
+  // Matrices are updated once below, before both occlusion and rendering consume them.
+  scene.matrixWorldAutoUpdate=false;
 
   // Keyboard-only diagnostics stay out of the play surface.
   const debug = new THREE.Group();
@@ -216,6 +221,9 @@ function start(): void {
   container.dataset.source="dream-2";
   let previous = performance.now(), hudTime = 0;
   let frameMs = 16.7;
+  const profile=import.meta.env.DEV ? renderProfile(renderer,()=>{
+    resetPosition(true);worldTime.value=0;
+  },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
   const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,switching:240},()=>{
     resetPosition(true);worldTime.value=0;setMode("playing");
   },(clip:string,frame:number)=>{
@@ -230,10 +238,11 @@ function start(): void {
   renderer.setAnimationLoop(() => {
     const captureDt=capture?.begin();
     if(captureDt===null)return;
-    const now = performance.now(), elapsedMs = now - previous, dt = captureDt ?? Math.min(elapsedMs / 1000, .1); previous = now;
+    const now = performance.now(), elapsedMs = now - previous, dt = profile?.begin(elapsedMs) ?? captureDt ?? Math.min(elapsedMs / 1000, .1); previous = now;
     frameMs += (elapsedMs - frameMs) * .05;
     worldMotion.value = reduced.matches ? 0 : 1;
     let boosted = false, impact = 0, collision = 0;
+    let poses:ReturnType<typeof actorPoses>|undefined;
     const objectImpacts:ImpactEvent[]=[];
     if (mode === "playing") {
       if (!reduced.matches) worldTime.value += dt;
@@ -248,7 +257,8 @@ function start(): void {
         car = stepInteractive(car, input, stepper.stepDt, world);
         objectImpacts.push(...car.impacts);
         landscape.step(car,stepper.stepDt,!reduced.matches); boosted ||= car.boostedThisStep;
-        landscape.stepActors(actorPoses(doc,car.timeS,car).filter(p=>!(car.control.kind==="vehicle" && p.id===car.control.id)),stepper.stepDt,!reduced.matches);
+        poses=actorPoses(doc,car.timeS,car);
+        landscape.stepActors(poses.filter(p=>!(car.control.kind==="vehicle" && p.id===car.control.id)),stepper.stepDt,!reduced.matches);
         if (!riding && wasGrounded && !car.grounded) flight.jumps++;
         if (!riding && !wasGrounded && car.grounded) flight.landings++;
         if(!riding)flight.maxClearance = Math.max(flight.maxClearance, car.elevation - drivingHeight(doc.terrain, car.x, car.y));
@@ -256,7 +266,8 @@ function start(): void {
         if(!riding && car.landingSpeed===0) collision=Math.max(collision,previousSpeed-Math.hypot(car.vx,car.vy));
       }
       if (boosted) boostUntil = car.timeS + .5;
-      particles.update(car, dt, !reduced.matches, boosted, impact, collision,actorPoses(doc,car.timeS,car));
+      poses??=actorPoses(doc,car.timeS,car);
+      particles.update(car, dt, !reduced.matches, boosted, impact, collision,poses);
       particles.objectImpacts(car,objectImpacts,!reduced.matches);
       landingBounce = Math.max(landingBounce * Math.exp(-dt * 12), Math.min(1.8, impact * .008));
       if(car.control.kind==="car")wheelDistance += (car.vx * Math.cos(car.headingRad) + car.vy * Math.sin(car.headingRad)) * dt;
@@ -301,7 +312,7 @@ function start(): void {
         vertices.needsUpdate = true;
       }
     }
-    const poses=actorPoses(doc,car.timeS,car);
+    poses??=actorPoses(doc,car.timeS,car);
     for(const pose of poses){
       const group=actorMeshes.get(pose.id)!;
       group.position.copy(worldPosition(doc,pose.x,pose.y));group.position.y=pose.elevation+1.5;
@@ -314,19 +325,19 @@ function start(): void {
     const standingRide=controlOf(occupied?.spec)==="skateboard";
     avatar.visible=!!occupied && !standingRide;
     if(occupied && !standingRide){
-      const group=actorMeshes.get(occupied.id)!;group.add(avatar);
+      const group=actorMeshes.get(occupied.id)!;if(avatar.parent!==group)group.add(avatar);
       const spec=group.userData.sceneObject.spec;
       avatar.position.fromArray(spec.rideable.seat);
       avatar.scale.setScalar(measuredScale(traveler)/group.scale.x);
     }
     walker.visible=car.control.kind==="foot" || standingRide;
     if(standingRide){
-      const group=actorMeshes.get(occupied!.id)!;group.add(walker);
+      const group=actorMeshes.get(occupied!.id)!;if(walker.parent!==group)group.add(walker);
       const spec=group.userData.sceneObject.spec;
       walker.position.fromArray(spec.rideable.seat);walker.rotation.set(0,0,0);
       walker.scale.setScalar(measuredScale(walkerSpec)/group.scale.x);animateObject(walker,car.timeS,false);
     }else if(walker.visible){
-      scene.add(walker);walker.scale.setScalar(measuredScale(walkerSpec));
+      if(walker.parent!==scene)scene.add(walker);walker.scale.setScalar(measuredScale(walkerSpec));
       walker.position.copy(position);walker.rotation.set(0,-car.headingRad,0);
       animateObject(walker,car.timeS,!reduced.matches && Math.hypot(car.vx,car.vy)>3);
     }
@@ -340,8 +351,8 @@ function start(): void {
       follow = followCamera(follow, target, dt, snap || reduced.matches);
       follow.x = target.x; follow.z = target.z;
       const zoom = car.control.kind==="foot" ? 2.25 : occupied ? rideZooms.get(occupied.id)! : DEFAULT_CAMERA_ZOOM;
-      camera.zoom = followCameraZoom(camera.zoom, zoom, dt, snap || reduced.matches);
-      camera.updateProjectionMatrix();
+      const nextZoom=followCameraZoom(camera.zoom, zoom, dt, snap || reduced.matches);
+      if(camera.zoom!==nextZoom){camera.zoom=nextZoom;camera.updateProjectionMatrix();}
     }
     snap = false;
     if (mode === "playing") cameraAngle += (viewAngle - cameraAngle) * (reduced.matches ? 1 : 1 - Math.exp(-dt * 8));
@@ -392,7 +403,9 @@ function start(): void {
     }
     if (hudTime === 0) updateMap(car, cameraAngle);
     renderer.info.reset();
+    profile?.beforeRender();
     composer.render();
+    profile?.end();
     capture?.end();
   });
 }
