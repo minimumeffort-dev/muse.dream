@@ -235,15 +235,22 @@ function start(): void {
     resetPosition(true);car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));worldTime.value=0;
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
   let captureTime:number|undefined;
-  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,switching:240,locomotion:180,swimming:180,daynight:360},(clip)=>{
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300},(clip)=>{
     captureTime=undefined;
     resetPosition(true);worldTime.value=0;setMode("playing");
     if(clip==='switching'){const bike=doc.objects.find(o=>o.id==='village_bike')!;car={...car,x:bike.x-40,y:bike.y,headingRad:0,elevation:drivingHeight(doc.terrain,bike.x-40,bike.y)};}
     if(clip==='locomotion' || clip==='swimming')car=movementReviewStart(car,world,clip==='swimming' ? 'swim' : 'walk');
+    if(clip==='flight')car=toggleRide(vehicleReviewStart(car,world,'cloudhopper'),world);
   },(clip:string,frame:number)=>{
     keys.clear();
     if(clip==="daynight"){captureTime=frame/359*(doc.daylight?.cycleSeconds??600);return;}
     if(clip==="driving"){if(frame<175)keys.add("KeyW");return;}
+    if(clip==='flight'){
+      keys.add('KeyW');
+      if(frame>=40 && frame<170)keys.add('Space');
+      if(frame>=170 && frame<225)keys.add('KeyD');
+      if(frame>=240)keys.add('ShiftLeft');return;
+    }
     if(clip==='locomotion'){
       if(frame<130){keys.add('KeyS');if(frame>40)keys.add('ShiftLeft');}
       if(frame>=62 && frame<78 || frame>=105 && frame<120)keys.add('Space');return;

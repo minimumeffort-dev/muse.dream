@@ -34,6 +34,10 @@ Boats retain sideways momentum through a rudder turn, settle it through hull res
 
 Aircraft need forward speed to take off. Climb and descent build gradually rather than snapping vertical speed. Release the climb control at flying speed to level out; insufficient airspeed produces a sink. A wall impact stops horizontal travel while gravity continues. Land before exiting. A water landing stalls the aircraft at the surface; leave it to wade/swim or press R to recover it. These are bounded arcade controls, not a flight or sailing simulator.
 
+![Taking off, climbing and banking in the mock world](../media/flight.gif)
+
+[Watch in HD](../media/flight.mp4) · [Compose the complete light aircraft](../examples/light-aircraft.dream). Its wing tips are separate, continuous sections; the 10.8-metre wingspan and collision body keep their existing size. The model uses existing Dream shapes, taper, endpoint braces and rigid animation.
+
 Releasing the ground vehicle's throttle lets it coast to a complete stop on dry, flat ground. Bounded rolling resistance and lateral tire friction are resolved after slope gravity, so tiny velocities cannot keep the body creeping indefinitely. The tires can hold across ordinary dry slopes and settle an existing side slip. A sufficiently steep slope can still overcome grip or roll the vehicle along its wheels; ice has much less resistance. Uphill slowdown, downhill acceleration, normal throttle power, crest jumps and water currents remain active. Tire resistance applies only during ground contact, with the coasting part applied at neutral throttle. Walking, boats and aircraft keep their own control rules.
 
 These are engine-owned contact rules, with no extra Dream syntax. For local inspection after `npm run dev`, use `http://127.0.0.1:5173/?test-driving=sidehill` for a cross-slope pose or `http://127.0.0.1:5173/?test-driving=coast` for neutral coasting. These development helpers are excluded from production. The [verification record](../evidence/tire-grip/verification.md) separates fixture tests from browser observations.

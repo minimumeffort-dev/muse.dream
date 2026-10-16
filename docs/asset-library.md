@@ -20,6 +20,16 @@ The mock world contains 78 reusable assemblies, all written in Dream 2. The asse
 
 The seated traveler and standing Explorer are separate engine-provided Dream assemblies. The Explorer has an animated walking gait and keeps its own physical size when switching to a seated vehicle pose. Bread and a harvest bowl remain standalone authoring examples. [Open the full atlas](media/assets-all.jpg), or follow the [local gallery setup](README.md#try-it-locally) for interactive inspection. Front, right, back and left views share the same geometry. The phase selector exposes wheel and joint motion.
 
+## A light aircraft that holds together
+
+Cloudhopper has a continuous tapered fuselage, a glazed cabin, braced high wings, rounded tailplane, rudder, main landing gear and a supported tail wheel. Its 10.8-metre wingspan and collision cylinder retain their existing size. The seat sits inside the cabin. Wheels roll around their axles and the propeller turns around the nose shaft.
+
+![The rebuilt Cloudhopper light aircraft](media/aircraft.jpg)
+
+The wings use flattened, tapered cylinders. Each colored tip continues the inner section's end diameter and replaces its outer span. It doesn't cover another wing face. The old red boxes occupied the same top and bottom planes as the teal wing, which made the colors flicker as the view changed. Geometry fixes that overlap; the renderer keeps its existing depth, shadows and antialiasing settings.
+
+[Download the complete checked aircraft](examples/light-aircraft.dream). Its 31 parts use existing Dream commands and compact into six render meshes with independent wheel and propeller pivots. [The verification record](evidence/aircraft/verification.md) includes four viewing angles, surface checks, boarding and a real simulation flight replay.
+
 ## Adding useful detail
 
 Start with the silhouette and [physical size](proportions.md). Use endpoint beams for forks, braces and steering stems so the connections are explicit. Keep glass inside its frame, roof edges over their walls and canopies connected to a supporting building. Seeded deformation gives stone and foliage an irregular surface without adding a new shape or generating geometry every frame.

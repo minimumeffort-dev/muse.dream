@@ -48,6 +48,12 @@ WASD walks, swims or drives. Space jumps on foot, a bicycle or skateboard, and g
 
 Bicycles lean into turns and turn less sharply at speed. Boats keep momentum as you steer and fit underneath bridges when the hull has clearance. Swimming has a surface pose, strokes and a wake. The plane builds its climb gradually, holds altitude at flying speed and sinks when it gets too slow. These are arcade mechanics, with the same terrain and object contacts as the rest of the world. [See the controls and movement rules](docs/dream/behavior.md).
 
+The plane is now a braced, high-wing light aircraft, with a tapered fuselage, cabin windows and a tail wheel. Its red tips replace the ends of the wings, so the colors stay solid when you fly and turn the view. The whole assembly is still Dream 2. [Build the aircraft](docs/examples/light-aircraft.dream).
+
+![Taking off and banking in the rebuilt Dream aircraft](docs/media/flight.gif)
+
+[Watch the flight in HD](docs/media/flight.mp4)
+
 ![Swimming through the city canal](docs/media/swimming.gif)
 
 [Watch swimming in HD](docs/media/swimming.mp4)

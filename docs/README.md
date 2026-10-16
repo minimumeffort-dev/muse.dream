@@ -42,6 +42,7 @@ The game runs locally at `http://127.0.0.1:5173/`. The inspection tools below re
 | Complete asset gallery | `/tests/visual/dream.html?all` | [Full asset atlas](media/assets-all.jpg) |
 | Shared-scale lineup | `/tests/visual/proportions.html` | [Proportion lineup](media/proportions.jpg) |
 | Vehicle control review | `/tests/visual/vehicles.html` | [Vehicle switching video](media/switching.mp4) |
+| Aircraft and flight | `/?test-vehicle=cloudhopper` | [Flight video](media/flight.mp4), [Dream source](examples/light-aircraft.dream) |
 | Destruction replay | `/tests/visual/destruction.html` | [Destruction video](media/destruction.mp4) |
 
 The local gallery has four viewing angles and fixed animation phases for checking connections. These inspection pages aren't part of the production build.

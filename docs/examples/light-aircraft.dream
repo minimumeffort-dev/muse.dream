@@ -1,0 +1,39 @@
+dream 2;
+material teal(style=toon,colors=[#448b87,#448b87]);
+material red(style=toon,colors=[#af5040,#af5040]);
+material cream(style=toon,colors=[#e6d6b0,#e6d6b0]);
+material dark(style=toon,colors=[#2c3840,#2c3840]);
+material steel(style=toon,colors=[#a6b7b3,#a6b7b3]);
+material glass(style=toon,colors=[#83bbc5,#83bbc5]);
+material gold(style=toon,colors=[#d5a253,#d5a253]);
+object cloudhopper_plane(label="Cloudhopper plane"){
+  measure(kind=plane,axis=z,meters=10.8);
+  body(interaction=solid,radius=29,height=29);
+  rideable(at=[1,19,0],control=plane);
+  part fuselage(shape=cylinder,material=cream,at=[-1,14,0],size=[14,66,17],rot_deg=[0,0,90],taper=.22);
+  part cabin(shape=box,material=cream,at=[1,19,0],size=[27,13,17]);
+  part windshield(shape=box,material=glass,at=[16.2,22,0],size=[1,8,14],rot_deg=[0,0,20]);
+  part wing_center(shape=box,material=cream,at=[4,26,0],size=[22,2.8,14]);
+  part cowling(shape=cylinder,material=red,at=[31,14,0],size=[15.5,10,18.5],rot_deg=[0,0,90]);
+  part propeller(shape=box,material=dark,at=[37,14,0],size=[1.5,25,2],motion=spin(axis=x,deg_s=160));
+  part spinner(shape=capsule,material=steel,at=[39,14,0],size=[5,7,5],rot_deg=[0,0,90]);
+  part tailplane(shape=capsule,material=teal,at=[-31,16,0],size=[12,32,2],rot_deg=[90,0,0]);
+  part fin(shape=cylinder,material=red,at=[-30,21,0],size=[14,13,2],taper=.4);
+  part tail_wheel(shape=sphere,material=dark,at=[-31,2.5,0],size=[5,5,5]);
+  beam tail_strut(shape=cylinder,material=steel,from=[-29,13,0],to=[-31,3,0],width=1.2,depth=1.2);
+  repeat sides(index=s,count=2){
+    let sign(value=s*2-1);
+    part cabin_window(shape=box,material=glass,at=[1,22,sign*8.6],size=[20,7,.8]);
+    part window_post(shape=box,material=cream,at=[2,22,sign*9],size=[1,7,1]);
+    // Elliptical wing sections narrow together. The red cap replaces the outer
+    // section; it never shares the wing's exposed top or bottom faces.
+    part wing(shape=cylinder,material=teal,at=[4,26,sign*22.5],size=[22,33,2.8],rot_deg=[sign*90,0,0],taper=.67);
+    part wing_tip(shape=cylinder,material=red,at=[4,26,sign*42.5],size=[22*.67,7,2.8*.67],rot_deg=[sign*90,0,0],taper=.58/.67);
+    beam wing_brace(shape=cylinder,material=steel,from=[7,15,sign*5],to=[5,26,sign*28],width=1.3,depth=1.3);
+    beam gear(shape=cylinder,material=steel,from=[10,11,sign*5],to=[10,4.5,sign*12],width=1.5,depth=1.5);
+    part wheel(shape=cylinder,material=dark,at=[10,4.5,sign*12],size=[9,4,9],rot_deg=[90,0,0],motion=roll(axis=y,radius=4.5));
+    part wheel_hub(shape=cylinder,material=steel,at=[10,4.5,sign*14.3],size=[4,.6,4],rot_deg=[90,0,0],motion=roll(axis=y,radius=4.5));
+    part navigation_light(shape=sphere,material=gold,at=[4,26.95,sign*44.5],size=[1.4,1.2,1.4]);
+    beam exhaust(shape=cylinder,material=dark,from=[28,9,sign*5],to=[26,7,sign*8],width=1.3,depth=1.3);
+  }
+}

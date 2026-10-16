@@ -13,16 +13,18 @@ Driving, vehicle switching, jumping, swimming and destruction are exported at **
 | Bench destruction | [destruction.gif](destruction.gif) | [destruction.mp4](destruction.mp4) | 4 seconds |
 | Walking, running and jumping | [locomotion.gif](locomotion.gif) | [locomotion.mp4](locomotion.mp4) | 6 seconds |
 | Swimming in the city canal | [swimming.gif](swimming.gif) | [swimming.mp4](swimming.mp4) | 6 seconds |
+| Aircraft takeoff, climb, bank and descent | [flight.gif](flight.gif) | [flight.mp4](flight.mp4) | 10 seconds |
+| Day and night | [daynight.gif](daynight.gif) | [daynight.mp4](daynight.mp4) | 12 seconds |
 
 The main-game captures use the real simulation, follow camera, scenery, particles and post-processing. The destruction review replays fixed simulation phases. These are offline exports, not frame-rate benchmarks. GIF timing is rounded to hundredths of a second by the format; the video preserves the 30 fps clock.
 
 ## Refresh the captures
 
-Run `npm run dev`, then open `http://127.0.0.1:5173/?capture`. Choose driving, switching, locomotion or swimming and press **Capture PNG frames**. Export destruction at `http://127.0.0.1:5173/tests/visual/destruction.html?docs&capture`.
+Run `npm run dev`, then open `http://127.0.0.1:5173/?capture`. Choose driving, switching, locomotion, swimming, daynight or flight and press **Capture PNG frames**. Export destruction at `http://127.0.0.1:5173/tests/visual/destruction.html?docs&capture`.
 
-The exporter advances the live renderer by 1/30 second only after the previous PNG has been saved. Frames go to `.npm-cache/media/<clip>/`. Its local Vite endpoint accepts only same-origin PNGs for the five named clips; it is absent from the production build. The capture layout is 1600 × 900 CSS pixels, with the renderer's existing pixel ratio applied to the source PNGs.
+The exporter advances the live renderer by 1/30 second only after the previous PNG has been saved. Frames go to `.npm-cache/media/<clip>/`. Its local Vite endpoint accepts only same-origin PNGs for the seven named clips; it is absent from the production build. The capture layout is 1600 × 900 CSS pixels, with the renderer's existing pixel ratio applied to the source PNGs.
 
-Encode after all five clips finish, using local FFmpeg and Gifsicle installations:
+Encode after the selected clips finish, using local FFmpeg and Gifsicle installations:
 
 ```sh
 node scripts/encode-media.mjs /absolute/path/to/ffmpeg /absolute/path/to/gifsicle
@@ -97,3 +99,7 @@ Retained closeups show unchanged authored geometry: wood, birch, flora, fauna, p
 `daynight.gif` and `daynight.mp4` use 360 actual rendered frames at 30 fps. The lighting clock advances through the full ten-minute cycle over twelve seconds; ordinary street activity retains normal replay timing. `daynight.jpg` is a matching native replay frame. `city-day.jpg`, `city-dusk.jpg`, `city-night.jpg` and `city-dawn.jpg` come from one fixed city-review camera at 10:00, 17:30, 22:00 and 06:30.
 
 Driving, switching, locomotion and swimming GIF/HD pairs and matching stills were refreshed for the current renderer. Existing static district/asset views retain unchanged geometry and daytime appearance, while the new captures show the lighting states. The isolated destruction fixture is unchanged. The [day/night verification](../evidence/day-night/verification.md) records executed checks, browser evidence and limitations.
+
+## r29 aircraft, 2026-10-16
+
+`aircraft.jpg` and four evidence angles show the rebuilt 31-part Cloudhopper. Refreshed `assets.jpg`, `assets-all.jpg` and `proportions.jpg`; the scale viewer uses the live Commuter after its former character was removed from the city. `flight.gif`, `flight.mp4` and `flight.jpg` come from 300 actual main-game frames at 30 fps, covering takeoff, climb, banking and descent. Existing city and other-vehicle recordings retain unchanged visible geometry. The [aircraft verification](../evidence/aircraft/verification.md) records the surface-overlap regression, runtime checks and limitations.

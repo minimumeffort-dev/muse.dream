@@ -14,7 +14,7 @@ Object.assign(sun.shadow.camera,{left:-240,right:240,top:200,bottom:-200,near:1,
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(1000,600),new THREE.MeshStandardMaterial({color:'#52714d'}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
 const grid=new THREE.GridHelper(1000,100,'#a7b497','#718968');grid.position.y=.02;grid.material.transparent=true;grid.material.opacity=.25;scene.add(grid);
 const bread=compileDream(creations).find(s=>s.displayName==='Crusty bread');
-const examples=[['Birch',-150],['Cloudhopper plane',-65],['Little rally car',10],['Waving baker',48],['Meadow bicycle',78],['Slatted park bench',108],['Maple skateboard',138],['Crusty bread',158]];
+const examples=[['Birch',-150],['Cloudhopper plane',-65],['Little rally car',10],['Commuter',48],['Meadow bicycle',78],['Slatted park bench',108],['Maple skateboard',138],['Crusty bread',158]];
 const metrics=[];
 for(const [name,x] of examples){
   const spec=name===world.player.displayName ? world.player : name==='Crusty bread' ? bread : world.objects.find(o=>o.spec.displayName===name).spec;
