@@ -48,8 +48,8 @@ A feature isn't complete while its README or documentation describes older behav
 Build the published docs with `npm run docs:build`. Dream highlighting reads the
 same generated compiler command contract; cover token boundaries and HTML escaping
 when changing it. Keep inline complete examples identical to their `.dream` files.
-Documentation motion uses the dev-only `?capture` exporter at 30 fixed steps per
-second, then `node scripts/encode-media.mjs`; never interpolate missing frames or
+Documentation motion uses the dev-only `?capture` exporter at 30 rendered frames per
+simulation second, then `node scripts/encode-media.mjs`; never interpolate missing frames or
 present offline captures as live performance measurements. Refresh the HD video,
 GIF and corresponding still together. See `docs/media/README.md`.
 Use Horia's editorial voice: concrete, conversational prose, useful visuals,
