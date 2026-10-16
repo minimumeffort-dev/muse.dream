@@ -46,12 +46,12 @@ describe("object DSL v2 boundary",()=> {
   ])("rejects %s",(_,spec)=>expect(()=>object(spec)).toThrow());
   it("caps live jointed assemblies while allowing static compositions to instance",()=> {
     const doc=createFixtureScene(),actor=object(mockPerson);
-    const crowd=Array.from({length:MAX_ANIMATED_ASSEMBLIES},(_,i)=>({...actor,id:`actor-${i}`}));
-    expect(parseScene({...doc,objects:crowd}).objects).toHaveLength(24);
+    const crowd=Array.from({length:MAX_ANIMATED_ASSEMBLIES-1},(_,i)=>({...actor,id:`actor-${i}`}));
+    expect(parseScene({...doc,objects:crowd}).objects).toHaveLength(23);
     expect(()=>parseScene({...doc,objects:[...crowd,{...actor,id:"extra"}]})).toThrow(/animated assemblies/);
     const staticSpec={...mockPerson,joints:mockPerson.joints!.map(({animation:_,...joint})=>joint)};
     expect(hasAnimatedJoints(staticSpec)).toBe(false);
-    expect(parseScene({...doc,objects:crowd.map(o=>({...o,spec:staticSpec})),player:{...mockPerson,body:{...mockPerson.body,interaction:"solid"}}}).objects).toHaveLength(24);
+    expect(parseScene({...doc,objects:[...crowd,{...actor,id:"static-extra"}].map(o=>({...o,spec:staticSpec})),player:{...mockPerson,body:{...mockPerson.body,interaction:"solid"}}}).objects).toHaveLength(24);
   });
 });
 
