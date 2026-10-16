@@ -8,7 +8,7 @@ import { parseScene, type SceneObject } from "../src/scene/schema";
 import { terrainHeight } from "../src/scene/terrain";
 import { objectHeight } from "../src/sim/archetypes";
 import { animateObject, buildObject, buildPlayer } from "../src/game/world3d";
-import { cameraPosition } from "../src/game/camera";
+import { cameraPosition, DEFAULT_CAMERA_ZOOM, followCameraZoom, rideCameraZoom } from "../src/game/camera";
 import { SceneryOcclusion } from "../src/game/occlusion";
 
 const oak: SceneObject = { id: "oak", kind: "custom", labelText: "OAK", x: 400, y: 400, scale: 1.3, spec: mockOak };
@@ -67,6 +67,40 @@ describe("composed assets", () => {
 });
 
 describe("world visibility", () => {
+  it("frames smaller Dream rides more closely using their resolved size, without zooming into larger vehicles", () => {
+    const scene = createWorldScene();
+    const bike = scene.objects.find(o => o.id === "village_bike")!;
+    const board = scene.objects.find(o => o.id === "village_skateboard")!;
+    const plane = scene.objects.find(o => o.id === "meadow_plane")!;
+    const zoom = rideCameraZoom(scene.player, bike);
+    expect(zoom).toBeGreaterThan(DEFAULT_CAMERA_ZOOM * 1.5);
+    expect(rideCameraZoom(scene.player, { ...bike, id: "invention", labelText: "Something new" })).toBe(zoom);
+    expect(rideCameraZoom(scene.player, { ...bike, scale: bike.scale * 1.2 })).toBeLessThan(zoom);
+    expect(rideCameraZoom(scene.player, board)).toBeGreaterThan(zoom);
+    expect(rideCameraZoom(scene.player, board)).toBeLessThanOrEqual(2.8);
+    expect(rideCameraZoom(scene.player, plane)).toBe(DEFAULT_CAMERA_ZOOM);
+    expect(rideCameraZoom(scene.player)).toBe(DEFAULT_CAMERA_ZOOM);
+  });
+  it("eases boarding and returning equally across frame rates, with an immediate reset/reduced-motion path", () => {
+    const scene = createWorldScene();
+    const target = rideCameraZoom(scene.player, scene.objects.find(o => o.id === "village_bike")!);
+    const results = [30, 60, 144].map(fps => {
+      let zoom = DEFAULT_CAMERA_ZOOM;
+      for (let frame = 0; frame < fps; frame++) zoom = followCameraZoom(zoom, target, 1 / fps);
+      expect(zoom).toBeGreaterThan(DEFAULT_CAMERA_ZOOM);
+      expect(zoom).toBeLessThan(target);
+      expect(target - zoom).toBeLessThan((target - DEFAULT_CAMERA_ZOOM) * .06);
+      const returning = followCameraZoom(zoom, DEFAULT_CAMERA_ZOOM, .1);
+      expect(returning).toBeLessThan(zoom);
+      expect(returning).toBeGreaterThan(DEFAULT_CAMERA_ZOOM);
+      expect(followCameraZoom(returning, target, 0)).toBe(returning);
+      expect(followCameraZoom(returning, target, .01, true)).toBe(target);
+      expect(followCameraZoom(returning, DEFAULT_CAMERA_ZOOM, 0, true)).toBe(DEFAULT_CAMERA_ZOOM);
+      return zoom;
+    });
+    expect(results[0]).toBeCloseTo(results[1]!, 10);
+    expect(results[1]).toBeCloseTo(results[2]!, 10);
+  });
   it("keeps exactly the same view orientation while following hills, accelerating or landing", () => {
     const scene=createWorldScene();
     for(const angle of [0,Math.PI/2,Math.PI,Math.PI*1.5]) {

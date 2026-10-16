@@ -17,6 +17,18 @@ The same resolved `SceneObject.scale` reaches meshes, grounding, foundations,
 contacts, seats, wheels and released fragments. The player uses the same
 conversion. Passengers keep their own physical size when boarding a small vehicle.
 
+The default view uses 1.18 camera zoom for readability, making everything appear
+18% larger than the original framing. Boarding a smaller vehicle increases zoom
+according to its assembled rest-pose size and resolved placement scale, relative
+to the player. This uses geometry rather than object labels or measure kinds, so
+new Dream inventions get the same treatment. Zoom is capped at 2.8 to retain
+navigation context; larger rides keep the default view.
+
+Boarding and returning ease the zoom over about a second. Pause freezes the
+transition; reset and reduced motion snap directly to the appropriate framing.
+Driving, hills and view rotation do not change the target zoom. Physical sizes
+and collision clearances stay the same, and the minimap retains the full world.
+
 `place(...,scale=1.1)` adds 10% variation after physical sizing. It must stay
 within 0.5..2 and the kind's proportion range; resolved scale is bounded to
 0.05..4. Existing unmeasured objects retain their 0.5..2 local-unit behavior.

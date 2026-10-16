@@ -2,7 +2,8 @@
 
 These are captures of the running mock prototype, not generated product mockups.
 
-- `world.jpg` and `driving.gif`: the main game at `/`, including a crest jump and landing in the captured drive.
+- `world.jpg` and `driving.gif`: the main game at `/` with the closer 1.18 camera zoom, including a crest jump and landing in the captured drive.
+- `riding.jpg`: the same game after boarding the meadow bicycle, with size-based automatic zoom.
 - `destruction.gif`: fixed simulation phases of the Slatted park bench in `/tests/visual/destruction.html?docs`.
 - `code-to-tree.jpg`: `/tests/visual/docs.html`, rendered from the complete `docs/examples/toppling-tree.dream` source displayed alongside it.
 - `assets.jpg`: `/tests/visual/dream.html?world`, with each asset framed independently.

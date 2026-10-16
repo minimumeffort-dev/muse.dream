@@ -10,6 +10,10 @@ Every object declares a body with a radius and height. A static upright solid ca
 
 `rideable(at=[x,y,z])` supplies a local seat. A route placement then gives that vehicle an activity. F boards it nearby; F returns to the parked car when that footprint is clear. Race progress freezes during a passenger ride. The rider keeps its own physical size, including on a small bicycle or skateboard. WASD still drives the car, not the boarded vehicle.
 
+The camera automatically moves closer for small rides and eases back when you return to the car. Framing comes from the assembled size and placement scale, so it also works for new Dream objects. Larger vehicles keep the wider view. Reduced motion makes the change immediate.
+
+![A closer view while riding the meadow bicycle](../media/riding.jpg)
+
 A joint can use `open(axis=y,deg=105,radius=100)` for a proximity door. Its declared wall contacts provide the opening. The animated panel doesn't push the car through rotating mesh collision.
 
 ## Bounce, break or fall

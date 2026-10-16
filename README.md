@@ -12,9 +12,11 @@ Racing is where this started. The idea is to make whatever someone draws playabl
 
 ## You can leave the road
 
-Follow the circuit or head into the hills. Climbing slows the car down, descending gives it speed, and a fast crest can launch it into the air. The camera follows you through the world. Wooden bridges carry the track across water, and trains, planes, boats, bicycles and skateboards follow their own routes. You can board them for a passenger ride.
+Follow the circuit or head into the hills. Climbing slows the car down, descending gives it speed, and a fast crest can launch it into the air. The camera follows you through the world, with a slightly closer view so the smaller objects are easier to see. Wooden bridges carry the track across water, and trains, planes, boats, bicycles and skateboards follow their own routes. You can board them for a passenger ride.
 
 ![Driving through the mock world](docs/media/driving.gif)
+
+Board a smaller ride, like a bicycle or skateboard, and the camera moves closer so you can see it. Return to the car and the view eases back out. The objects keep their physical proportions.
 
 Some things move when you hit them. Others break. A ball bounces away, a bench comes apart in splinters, a tree falls as a whole, and a building can lose a section while its main structure stays solid. Those differences are declared in Dream 2.
 

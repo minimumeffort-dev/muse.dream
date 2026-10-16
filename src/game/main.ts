@@ -19,7 +19,7 @@ import { compactObject } from "./compact-object";
 import { worldTime, worldMotion, terrainPlayer, terrainView, worldGradeShader } from "./shaders";
 import { animateObject, buildObject, buildPlayer } from "./world3d";
 import { buildEnvironment, roadGeometry, terrainNormal, worldPosition } from "./environment";
-import { cameraPosition, followCamera, type FollowTarget } from "./camera";
+import { cameraPosition, followCamera, followCameraZoom, rideCameraZoom, DEFAULT_CAMERA_ZOOM, type FollowTarget } from "./camera";
 import { hasAnimatedJoints,impactOf,isReactive } from "../scene/object-dsl";
 import { buildDamageObject,updateDamage } from "./damage";
 import { WorldDebris } from "./debris";
@@ -65,6 +65,7 @@ function start(): void {
   scene.background = new THREE.Color("#526b76");
   scene.fog = new THREE.Fog("#526b76", 1700, 3400);
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 1, 10000);
+  camera.zoom = DEFAULT_CAMERA_ZOOM;
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
   const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), .12, .35, 1.6);
@@ -103,6 +104,7 @@ function start(): void {
   const scenery = new WorldScenery(doc); scene.add(scenery.group);
   const propMeshes = new Map<string, THREE.Group>();
   const actorMeshes=new Map<string,THREE.Group>();
+  const rideZooms=new Map<string,number>();
   const breakMeshes=new Map<string,THREE.Group>();
   const objects: THREE.Group[] = [];
   for (const object of doc.objects) {
@@ -116,7 +118,7 @@ function start(): void {
     scene.add(group);
     objects.push(group);
     if(archetypeOf(object).interaction === "knockable") propMeshes.set(object.id, group);
-    if(object.route)actorMeshes.set(object.id,group);
+    if(object.route){actorMeshes.set(object.id,group);rideZooms.set(object.id,rideCameraZoom(doc.player,object));}
     if(destructible)breakMeshes.set(object.id,group);
   }
   const debris=new WorldDebris(doc);scene.add(debris.group);
@@ -304,6 +306,9 @@ function start(): void {
     if (mode === "playing" || snap) {
       follow = followCamera(follow, target, dt, snap || reduced.matches);
       follow.x = target.x; follow.z = target.z;
+      const zoom = car.ride ? rideZooms.get(car.ride.actorId)! : DEFAULT_CAMERA_ZOOM;
+      camera.zoom = followCameraZoom(camera.zoom, zoom, dt, snap || reduced.matches);
+      camera.updateProjectionMatrix();
     }
     snap = false;
     if (mode === "playing") cameraAngle += (viewAngle - cameraAngle) * (reduced.matches ? 1 : 1 - Math.exp(-dt * 8));
@@ -339,6 +344,7 @@ function start(): void {
       container.dataset.fps = (1000 / frameMs).toFixed(1);
       container.dataset.occluders = String(occlusion.obscuredCount + scenery.obscuredCount);
       container.dataset.view = camera.quaternion.toArray().map(v => v.toFixed(5)).join(",");
+      container.dataset.zoom = camera.zoom.toFixed(3);
       container.dataset.render = JSON.stringify({ calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, geometries: renderer.info.memory.geometries });
       const nearby=nearbyRide(car,world);interact.hidden=mode!=="playing" || !car.ride && !nearby;
       interact.textContent=car.ride ? "F · Return to car" : `F · Ride ${nearby?.labelText ?? ""}`;
