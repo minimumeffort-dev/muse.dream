@@ -1,0 +1,14 @@
+dream 2;
+material masonry(style=toon,colors=[#b17459,#985c48]);
+object garden_wall(label="Voxel garden wall"){
+  measure(kind=custom,axis=x,meters=3);
+  body(interaction=solid,radius=24,height=32);
+  impact(mode=break(speed=90,scatter=50,lift=55,spin=3,lifetime=6,pattern=crumble));
+  voxels wall(material=masonry,at=[0,16,0],size=[60,32,8],grid=[30,16,4],chunks=[2,2,1]){
+    fill solid(from=[0,0,0],to=[30,16,4]);
+    cut opening(from=[12,0,0],to=[18,10,4]);
+    repeat top(index=i,count=5){
+      cut notch(from=[i*6+2,14,0],to=[i*6+4,16,4]);
+    }
+  }
+}

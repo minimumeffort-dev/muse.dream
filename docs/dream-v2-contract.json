@@ -256,7 +256,8 @@
         "object",
         "visual",
         "path",
-        "route_path"
+        "route_path",
+        "voxel_ops"
       ],
       "id": true,
       "fields": {
@@ -295,6 +296,44 @@
         "taper": "n?",
         "deform": "deform?",
         "motion": "part_motion?"
+      }
+    },
+    "voxels": {
+      "contexts": [
+        "object",
+        "visual"
+      ],
+      "id": true,
+      "fields": {
+        "material": "ref",
+        "at": "v3",
+        "size": "v3",
+        "grid": "v3",
+        "chunks": "v3?",
+        "rot_deg": "v3?"
+      },
+      "block": "voxel_ops"
+    },
+    "fill": {
+      "contexts": [
+        "voxel_ops"
+      ],
+      "id": true,
+      "fields": {
+        "from": "v3",
+        "to": "v3",
+        "shape": "box|ellipsoid?"
+      }
+    },
+    "cut": {
+      "contexts": [
+        "voxel_ops"
+      ],
+      "id": true,
+      "fields": {
+        "from": "v3",
+        "to": "v3",
+        "shape": "box|ellipsoid?"
       }
     },
     "beam": {
@@ -840,6 +879,18 @@
     "outline": "3..24 simple polygon points [X,Y], 0..1 and spanning both axes; either winding, no repeated closing point, holes, touching or crossed edges; area >= .01",
     "extrusion": "outline maps across full size X/Y, centered, extruded along Z through full size Z; rotation and uniform scaling apply normally",
     "jointRoll": "roll(axis,radius) on a joint rotates all children rigidly by traveled distance / resolved radius; reduced motion rests it, parked furnishings bake the rest pose"
+  },
+  "voxels": {
+    "limits": {
+      "axis": 32,
+      "cells": 32768,
+      "objectCells": 65536,
+      "operations": 64,
+      "objectWork": 1048576,
+      "quads": 8192,
+      "projectCells": 1048576
+    },
+    "semantics": "voxels is one rigid part with grid 1..32 per axis; ordered fill/cut operations use integer half-open [from,to) cell bounds, box default or ellipsoid cell-center test. Exterior faces are greedily merged and mesh data cached. size maps the whole grid to object-local dimensions; use equal size/grid ratios for cubic cells. Optional chunks divides grid exactly into at most 8 nonempty rigid fracture pieces, only with break or a break zone; no fragment wrapper, no deform/cloth/part motion. Physics contacts remain explicit cylinders, not per-cell collision or arbitrary tunnels. Terrain, roads and water retain their existing representation."
   },
   "scenarios": {
     "limits": {

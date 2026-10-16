@@ -178,3 +178,7 @@ all five examples are handmade mock data.
 ## Night appearance
 
 An optional material `nightColor` is a six-digit emission color, compiled from Dream `material(...,night=#rrggbb)`. One optional object-root `lamp: {position: [x,y,z], radius, color}` declares a terrain/deck-fitted, unshadowed surface pool. Radius is 8–80 native units; measured scale carries it into the world. Lamp placements require static, non-reactive prop ownership and count against the 512-pool scene cap. These fields do not create physical bodies or point lights. [Complete source and lifecycle](dream/day-night.md).
+
+## Voxel geometry
+
+Dream 2 now supports bounded filled/carved voxel parts, greedy surface meshing and optional fracture chunks. The city uses voxel building shells, bench boards and carved park walls; the library bakehouse adds chunked masonry; measured proportions and explicit contacts remain unchanged. See the [voxel guide](dream/voxels.md) for syntax, limits, a complete example and current boundaries.

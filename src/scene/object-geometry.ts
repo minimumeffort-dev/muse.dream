@@ -1,9 +1,11 @@
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
+import {meshVoxels,type VoxelVolume,type VoxelSlice} from './voxels';
 import type { ObjectPart } from "./object-dsl";
 
 function basePartGeometry(shape: ObjectPart["shape"], size: ObjectPart["size"], taper=1,outline?:readonly (readonly [number,number])[]): THREE.BufferGeometry {
   switch (shape) {
+    case "voxel": throw new Error("voxel requires validated volume data");
     case 'prism': {
       if(!outline)throw new Error('prism requires a validated outline');
       const path=new THREE.Shape(outline.map(([x,y])=>new THREE.Vector2(x-.5,y-.5)));
@@ -28,8 +30,17 @@ function basePartGeometry(shape: ObjectPart["shape"], size: ObjectPart["size"], 
   }
 }
 
+/** Mesh buffers are cached as CPU data; every caller owns disposable GPU attributes. */
+export function voxelGeometry(volume:VoxelVolume,slice?:VoxelSlice):THREE.BufferGeometry {
+  const data=meshVoxels(volume,slice),geometry=new THREE.BufferGeometry();
+  geometry.setAttribute('position',new THREE.BufferAttribute(data.positions.slice(),3));
+  geometry.setAttribute('normal',new THREE.BufferAttribute(data.normals.slice(),3));
+  geometry.setAttribute('uv',new THREE.BufferAttribute(data.uvs.slice(),2));return geometry;
+}
+
 /** Variation is deterministic from position, so duplicated seam vertices remain joined. */
 export function partGeometry(part:ObjectPart):THREE.BufferGeometry {
+  if(part.shape==='voxel' && 'voxels' in part && part.voxels)return voxelGeometry(part.voxels);
   const geometry=basePartGeometry(part.shape,part.size,"taper" in part ? part.taper : undefined,'outline' in part ? part.outline : undefined);
   const deform="deform" in part ? part.deform : undefined;
   if(deform?.amount) {

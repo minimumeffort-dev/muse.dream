@@ -39,3 +39,8 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
 
 (* daylight is a single optional world-owner declaration. lamp is object-root only;
    material.night is an optional color. All three are bounded data, not scripts. *)
+
+(* voxels is an object/visual command with a voxel_ops block. Its block accepts
+   fill/cut/let/repeat. fill/cut use integer half-open from/to cell bounds and
+   optional shape=box|ellipsoid. grid and optional chunks are numeric triples;
+   semantic validation enforces cell, work, surface and fracture limits. *)

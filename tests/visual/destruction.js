@@ -51,12 +51,13 @@ function renderState(){
   document.body.dataset.state=JSON.stringify({broken:state.broken,zones:state.brokenZones,toppling:state.debris.filter(p=>p.topple).map(p=>p.topple.angle),debris:state.debris.length,props:state.props,car:{x:state.x,y:state.y},particles:particles.activeCount});
 }
 new ResizeObserver(()=>renderer.setSize(canvas.clientWidth,canvas.clientHeight,false)).observe(canvas);
-const capture=mediaCapture(canvas,{destruction:120},()=>{
-  select.value='Slatted park bench';document.querySelector('#view').value='1.57079632679';previousKey='';
+const capture=mediaCapture(canvas,{destruction:120,voxels:120},clip=>{
+  select.value=clip==='voxels' ? 'Voxel garden wall' : 'Slatted park bench';document.querySelector('#view').value='1.57079632679';previousKey='';
 },(_clip,frame)=>{captureTime=Math.max(0,frame/30-.7);});
 renderer.setAnimationLoop(()=>{
   if(capture?.begin()===null)return;
   renderState();const aspect=canvas.clientWidth/canvas.clientHeight,half=140,angle=Number(document.querySelector('#view').value);
+  if(new URLSearchParams(location.search).has('docs'))camera.zoom=select.value==='Voxel garden wall' ? 4.2 : 2.4;
   Object.assign(camera,{left:-half*aspect,right:half*aspect,top:half,bottom:-half});camera.updateProjectionMatrix();
-  camera.position.set(90*Math.cos(angle)+120*Math.sin(angle),140,120*Math.cos(angle)-90*Math.sin(angle));camera.lookAt(0,20,0);worldTime.value=Number(captureTime??phase.value);renderer.render(scene,camera);capture?.end();
+  camera.position.set(90*Math.cos(angle)+120*Math.sin(angle),140,120*Math.cos(angle)-90*Math.sin(angle));camera.lookAt(0,select.value==='Voxel garden wall' ? 10 : 20,0);worldTime.value=Number(captureTime??phase.value);renderer.render(scene,camera);capture?.end();
 });

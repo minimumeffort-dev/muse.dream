@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { measureProblem, measuredScale, MEASURE_KINDS } from "./measure";
+import {voxelSchema,voxelCells,voxelWork,voxelChunkCount,VOXEL_LIMITS} from './voxels';
 import {profileProblem} from './profile';
 
 /** Versioned bounded assemblies. Geometry, motion and shaders belong to the engine. */
@@ -78,7 +79,8 @@ const jointSchema=z.object({
   proximity:z.object({axis:z.enum(["x","y","z"]),angleRad:z.number().finite().min(-Math.PI).max(Math.PI),radius:z.number().finite().min(20).max(160)}).strict().optional(),
 }).strict();
 const objectV2PartSchema=objectPartSchema.extend({
-  shape:z.enum(["box","sphere","cylinder","cone","pyramid","icosphere","capsule","torus","prism"]),
+  shape:z.enum(["box","sphere","cylinder","cone","pyramid","icosphere","capsule","torus","prism","voxel"]),
+  voxels:voxelSchema.optional(),
   outline:z.array(z.tuple([z.number().finite(),z.number().finite()])).min(3).max(24).optional(),
   parent:z.string().min(1).max(40).optional(),
   position:z.tuple([offset,z.number().finite().min(-128).max(128),offset]),
@@ -115,9 +117,18 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
   if(spec.dslVersion===2) {
     let geometryValid=true;
     spec.parts.forEach((part,index)=>{
+      if(part.shape==='voxel' && (!part.voxels || !voxelSchema.safeParse(part.voxels).success))geometryValid=false;
       if(part.taper!==undefined && part.shape!=="cylinder"){geometryValid=false;ctx.addIssue({code:z.ZodIssueCode.custom,path:["parts",index,"taper"],message:"taper requires a cylinder"});}
       const problem=part.shape==='prism' ? part.outline ? profileProblem(part.outline) : 'prism requires an outline' : part.outline ? 'outline requires a prism' : undefined;
       if(problem){geometryValid=false;ctx.addIssue({code:z.ZodIssueCode.custom,path:['parts',index,'outline'],message:problem});}
+    });
+    const volumes=spec.parts.flatMap(p=>p.voxels ? [p.voxels] : []);
+    if(volumes.reduce((n,v)=>n+voxelCells(v),0)>VOXEL_LIMITS.objectCells || volumes.reduce((n,v)=>n+voxelWork(v),0)>VOXEL_LIMITS.objectWork)
+      ctx.addIssue({code:z.ZodIssueCode.custom,path:['parts'],message:'assembly voxel budget exceeds 65536 cells or 1048576 cell visits'});
+    spec.parts.forEach((p,i)=>{
+      if((p.shape==='voxel')!==!!p.voxels)ctx.addIssue({code:z.ZodIssueCode.custom,path:['parts',i,'voxels'],message:'voxel shape requires voxel data; other shapes cannot use it'});
+      if(p.voxels && (p.deform || p.animation || p.material.shaderStyle==='cloth'))ctx.addIssue({code:z.ZodIssueCode.custom,path:['parts',i,'voxels'],message:'voxels use rigid geometry without deform, cloth or part motion; joints remain available'});
+      if(p.voxels?.chunks && (p.fragment || !(spec.impact?.kind==='break' || p.zone)))ctx.addIssue({code:z.ZodIssueCode.custom,path:['parts',i,'voxels','chunks'],message:'voxel chunks require break behavior or a break zone and cannot belong to a fragment group'});
     });
     const impact=spec.impact;
     if(impact && (spec.foundation || spec.contacts || spec.rideable || spec.emitter))ctx.addIssue({code:z.ZodIssueCode.custom,message:"impact objects use one body without foundations, contacts, seats or emitters"});
@@ -129,7 +140,7 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
     if(spec.parts.some(p=>p.zone && !zoneIds.has(p.zone)) || zones.some(z=>!spec.parts.some(p=>p.zone===z.id)))ctx.addIssue({code:z.ZodIssueCode.custom,message:"every break zone must own parts; part zones must exist"});
     if(zones.length && !spec.parts.some(p=>!p.zone))ctx.addIssue({code:z.ZodIssueCode.custom,message:"partial destruction requires retained structural parts"});
     if(impact?.kind!=="break" && impact?.kind!=="topple" && spec.parts.some(p=>p.fragment && !p.zone))ctx.addIssue({code:z.ZodIssueCode.custom,message:"fragment groups require break/topple behavior or a break zone"});
-    const fragmentCount=new Set(fractures.map(p=>p.fragment ? `group:${p.fragment}` : `part:${p.id}`)).size;
+    const fragmentCount=new Set(fractures.filter(p=>!p.voxels?.chunks).map(p=>p.fragment ? `group:${p.fragment}` : `part:${p.id}`)).size+fractures.reduce((n,p)=>n+(p.voxels?.chunks ? voxelChunkCount(p.voxels) : 0),0);
     if(fractures.length && (fragmentCount>8 || spec.parts.some(p=>p.animation) || spec.joints?.some(j=>j.animation || j.proximity)))ctx.addIssue({code:z.ZodIssueCode.custom,message:"break assemblies need at most 8 static fragments"});
     if(impact?.kind==="topple" && fragmentCount!==1)ctx.addIssue({code:z.ZodIssueCode.custom,message:"topple needs exactly one rigid fragment"});
     if(impact?.kind==="topple" && impact.lifetime<impact.duration+.8)ctx.addIssue({code:z.ZodIssueCode.custom,message:"topple lifetime must allow its fall and final 0.8 second fade"});

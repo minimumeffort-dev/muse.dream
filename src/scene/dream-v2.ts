@@ -149,6 +149,8 @@ export function lowerBlock(nodes:DreamNode[]):Statement[] {
       case "zone":{const mode=field(node,"mode") as DreamNode;statement.args=[n("radius"),n("height")];statement.damage={kind:mode.kind,args:["speed","scatter","lift","spin","lifetime"].map(key=>exprField(mode,key)),...(mode.fields.has("pattern") ? {pattern:wordField(mode,"pattern")} : {})};break;}
       case "repeat":statement.name=wordField(node,"index");statement.value=n("count");break;
       case "use":statement.name=wordField(node,"component");statement.args=(node.fields.get("args") as Expr[]|undefined)??[];break;
+      case "voxels":statement.grid=v("grid");if(node.fields.has("chunks"))statement.chunks=v("chunks");statement.shape="voxel";statement.material=wordField(node,"material");statement.size=v("size");break;
+      case "fill":case "cut":statement.at=v("from");statement.to=v("to");statement.shape=node.fields.has("shape") ? wordField(node,"shape") : "box";break;
       case "part":statement.shape=wordField(node,"shape");statement.material=wordField(node,"material");statement.size=v("size");break;
       case "beam":statement.shape=wordField(node,"shape");statement.material=wordField(node,"material");statement.at=v("from");statement.to=v("to");statement.args=[n("width"),n("depth")];break;
       case "point":statement.args=listField(node,"at");break;
@@ -187,7 +189,7 @@ function validateReferences(nodes:DreamNode[]):void {
         if(numericTypes.has(type) || type==="position2" && Array.isArray(value))checkNumbers(value,scope);
         if(isNode(value))for(const [innerKey,inner] of value.fields)if(commands[value.kind]!.fields[innerKey]==="n")checkNumbers(inner,scope);
       }
-      if(node.kind==="part" || node.kind==="beam")reference(node,"material","material");
+      if(node.kind==="part" || node.kind==="beam" || node.kind==="voxels")reference(node,"material","material");
       if(node.kind==="use"){
         const target=reference(node,"component","component"),params=(target.fields.get("params") as Expr[]|undefined)??[];
         if(((node.fields.get("args") as Expr[]|undefined)??[]).length!==params.length)fail(`component '${target.id}' expects ${params.length} arguments`,node.token,"E_ARITY");

@@ -56,6 +56,12 @@ describe('Dream syntax highlighting',()=>{
     const contract=JSON.parse(readFileSync('docs/dream-v2-contract.json','utf8'));
     expect(contract.commands.part.fields.outline).toBe('points2?');expect(contract.commands.roll.contexts).toContain('joint_motion');
   });
+  it('highlights voxel construction without consuming related symbols or HTML',()=>{
+    const html=highlight('voxels wall(grid=[8,8,8],chunks=[2,2,1]){fill solid(from=[0,0,0],to=[8,8,8]);cut opening(shape=ellipsoid);} // <script>');
+    for(const name of ['voxels','fill','cut'])expect(html).toContain(`class="dream-keyword">${name}</span>`);
+    for(const name of ['grid','chunks','from','to'])expect(html).toContain(`class="dream-field">${name}</span>`);
+    expect(html).not.toContain('<script>');expect(highlight('voxelstuff fillable cutaway gridlock')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('tracks the generated compiler vocabulary',()=>{
     const contract=JSON.parse(readFileSync('docs/dream-v2-contract.json','utf8'));
     expect(Object.keys(contract.commands)).toEqual(Object.keys(DREAM_V2_COMMANDS));
@@ -70,6 +76,10 @@ describe('Dream syntax highlighting',()=>{
 });
 
 describe('published site',()=>{
+  it('keeps the voxel guide identical to its complete runnable source',()=>{
+    const guide=readFileSync('docs/dream/voxels.md','utf8');
+    expect(guide.match(/```dream\n([\s\S]*?)```/)![1]!.trim()).toBe(readFileSync('docs/examples/voxel-wall.dream','utf8').trim());
+  });
   it('builds highlighted source with project-relative navigation and working downloads',()=>{
     execFileSync(process.execPath,['scripts/docs.mjs']);
     const html=readFileSync('dist-docs/dream/examples.html','utf8');

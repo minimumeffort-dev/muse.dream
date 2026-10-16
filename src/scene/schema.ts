@@ -1,3 +1,4 @@
+import {voxelCells,voxelChunkCount,VOXEL_LIMITS} from './voxels';
 import {daylightSchema,MAX_LIGHT_POOLS} from './daylight';
 import {MAX_WORLD_SIZE,MAX_STREET_LENGTH} from './world-bounds';
 import { z } from "zod";
@@ -188,12 +189,16 @@ export const sceneSchema = z.object({
   if(scene.objects.filter(o=>roleOf(o)==='npc').length>NPC_LIMITS.actors)ctx.addIssue({code:'custom',message:'scene exceeds 32 NPCs'});
   if(new Set(scene.behaviors.map(b=>b.id)).size!==scene.behaviors.length)ctx.addIssue({code:'custom',message:'duplicate behavior ID'});
   for(const object of scene.objects){const problem=agentProblem(object,scene.behaviors,scene.routes);if(problem)ctx.addIssue({code:'custom',message:`${object.id}: ${problem}`});}
+  const voxelData=new Map<string,number>();
+  for(const spec of [scene.player,...scene.objects.map(o=>o.spec),...scene.flocks.map(f=>f.spec)])if(spec && 'dslVersion' in spec && spec.dslVersion===2)
+    for(const p of spec.parts)if(p.voxels)voxelData.set(JSON.stringify(p.voxels),voxelCells(p.voxels));
+  if([...voxelData.values()].reduce((a,b)=>a+b,0)>VOXEL_LIMITS.projectCells)ctx.addIssue({code:'custom',message:'scene exceeds 1048576 unique voxel cells'});
   const reactive=scene.objects.filter(o=>isReactive(o.spec));
   if(reactive.length>24)ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 24 impact objects"});
   const fragments=reactive.reduce((sum,{spec})=>{
     if(!spec || !("dslVersion" in spec) || spec.dslVersion!==2 || spec.impact?.kind==="bounce")return sum;
     const parts=spec.impact ? spec.parts : spec.parts.filter(p=>p.zone);
-    return sum+new Set(parts.map(p=>p.fragment ? `group:${p.fragment}` : `part:${p.id}`)).size;
+    return sum+new Set(parts.filter(p=>!p.voxels?.chunks).map(p=>p.fragment ? `group:${p.fragment}` : `part:${p.id}`)).size+parts.reduce((n,p)=>n+(p.voxels?.chunks ? voxelChunkCount(p.voxels) : 0),0);
   },0);
   if(fragments>128)ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 128 destruction fragments"});
   if(reactive.some(o=>o.route))ctx.addIssue({code:z.ZodIssueCode.custom,message:"route actors cannot carry impact behavior"});

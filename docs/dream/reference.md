@@ -54,7 +54,7 @@ A command with an ID requires a name immediately after its keyword. Commands wit
 | Command | Context | ID / block | Fields |
 | --- | --- | --- | --- |
 | `material` | top | ID / no block | `style: toon / grain / glow / stripes / cloth`, `colors: colors`, `night?: color` |
-| `let` | top / object / visual / path / route_path | ID / no block | `value: n` |
+| `let` | top / object / visual / path / route_path / voxel_ops | ID / no block | `value: n` |
 | `component` | top | ID / visual | `params?: symbols` |
 | `object` | top | ID / object | `label: text` |
 | `asset` | top | ID / no block | `module: ref`, `object: ref` |
@@ -72,7 +72,7 @@ A command with an ID requires a name immediately after its keyword. Commands wit
 | `zone` | object | ID / visual | `at: v3`, `radius: n`, `height: n`, `mode: fracture` |
 | `group` | object / visual | ID / visual | `at?: v3`, `rot_deg?: v3`, `scale?: n` |
 | `joint` | object / visual | ID / visual | `at?: v3`, `rot_deg?: v3`, `motion?: joint_motion` |
-| `repeat` | object / visual / path / route_path | ID / inherit | `index: symbol`, `count: n` |
+| `repeat` | object / visual / path / route_path / voxel_ops | ID / inherit | `index: symbol`, `count: n` |
 | `use` | object / visual | ID / no block | `component: ref`, `args?: nums`, `at?: v3`, `rot_deg?: v3`, `scale?: n` |
 | `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus / prism`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `outline?: points2`, `taper?: n`, `deform?: deform`, `motion?: part_motion` |
 | `beam` | object / visual | ID / no block | `shape: box / cylinder / capsule`, `material: ref`, `from: v3`, `to: v3`, `width: n`, `depth: n`, `taper?: n`, `deform?: deform`, `motion?: part_motion` |
@@ -296,3 +296,15 @@ Water polygons have 3–32 vertices, area 400–8,000,000 square units and exten
 `road(style=street)` uses neutral curbs and omits the racing start paint. The default remains `racing` for existing sources. `watercourse(ends=open)` removes round caps; use open ends at the world boundary to continue a river beyond the map. The default is `round`.
 
 [Compile the complete connected city](../examples/connected-city.dream). The [source-derived world map](../media/city-plan.svg) uses the same compiled coordinates, footprints, paths, routes and bridges as the game.
+
+## Voxel construction
+
+| Command | Context | ID / block | Fields |
+| --- | --- | --- | --- |
+| `voxels` | object / visual | ID / voxel_ops | `material: ref`, `at: v3`, `size: v3`, `grid: v3`, `chunks?: v3`, `rot_deg?: v3` |
+| `fill` | voxel_ops | ID / no block | `from: v3`, `to: v3`, `shape?: box / ellipsoid` |
+| `cut` | voxel_ops | ID / no block | `from: v3`, `to: v3`, `shape?: box / ellipsoid` |
+
+`voxels id(material,at,size,grid,chunks?,rot_deg?){...}` is one visual part, available inside objects, components, groups, joints, fragments and zones. Its block accepts named `fill` / `cut` operations with `from`, `to`, optional `shape=box|ellipsoid`, plus bounded `let` and `repeat`. Integer cell bounds are half-open and lie within the grid. Each axis is 1..32; each volume has at most 32,768 cells, 64 expanded operations and 8,192 merged quads. Assemblies have at most 65,536 cells and 1,048,576 fill/cut cell visits. The linked project has at most 1,048,576 cells across assembly definitions.
+
+`chunks` divides grid axes exactly, yielding at most eight nonempty pieces. It requires break behavior or a break zone and cannot be inside `fragment`. It counts toward the same eight-fragment assembly and 128-fragment scene budgets. Without chunks, existing fragment groups apply. Voxels reject deform, cloth and part motion; rigid joint motion is allowed. Cells affect appearance and released pieces; explicit body/contact cylinders still govern collisions. See [voxel construction](voxels.md) and the generated contract's `voxels` section.

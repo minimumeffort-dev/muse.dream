@@ -19,3 +19,7 @@ place orchard_sapling(object=a_amber_sapling,at=[4700,4930],heading_deg=0);
 asset a_market_stall(module=civic_assets,object=market_stall);
 place market_stall_west(object=a_market_stall,at=[6150,4350]);
 place market_stall_east(object=a_market_stall,at=[6580,4350]);
+
+asset a_garden_wall(module=destructible,object=garden_wall);
+place park_wall_west(object=a_garden_wall,at=[7490,7460],heading_deg=0);
+place park_wall_east(object=a_garden_wall,at=[7550,7460],heading_deg=0);

@@ -25,6 +25,8 @@ The model-facing contract uses named fields, explicit IDs and a bounded set of c
 
 For a provider integration, use the [model instructions](dream-v2-model.txt), [command export](dream-v2-contract.json) and [generation/repair guide](dream/model-authoring.md). The command export is generated from the parser table. [The EBNF](dream-v2.ebnf) describes structural syntax; the compiler enforces contexts, references and geometry budgets.
 
+Voxel volumes add bounded `fill` and `cut` operations, cached greedy surface meshing and optional fracture chunks. Start with the [voxel guide](dream/voxels.md) and [complete wall](examples/voxel-wall.dream). Physical contacts remain explicit and separate from occupied cells.
+
 ## Version policy
 
 Dream 2 fixes existing field meanings, units, scopes and identity paths. Compatible additions require allowlisted fields, bounds, runnable examples, updated docs and regression coverage. Regenerate the command export with `node scripts/dream.mjs contract`. Changing existing syntax, units or identity semantics requires a new major authoring version. Unknown fields keep failing.

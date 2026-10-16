@@ -2,6 +2,7 @@ import * as THREE from "three";
 import type { Scene,SceneObject } from "../scene/schema";
 import type { CarState } from "../sim/car";
 import type { ObjectDslV2 } from "../scene/object-dsl";
+import {voxelGeometry} from '../scene/object-geometry';
 import { objectFragments } from "../scene/fragments";
 import { buildObject } from "./world3d";
 import { worldPosition } from "./environment";
@@ -19,10 +20,22 @@ export class WorldDebris {
       const group=new THREE.Group(),shift=new THREE.Matrix4().makeTranslation(-fragment.center.x,-fragment.center.y,-fragment.center.z);
       for(const id of fragment.parts){
         const mesh=source.getObjectByName(id) as THREE.Mesh,copy=mesh.clone();
+        if(fragment.slice){
+          const volume=(object.spec as ObjectDslV2).parts.find(p=>p.id===id)!.voxels!;
+          copy.geometry=voxelGeometry(volume,fragment.slice);
+          // Fracture exposes cut faces; restore the intact part's uniform vertex paint.
+          for(const name of ['color','nightEmission']){
+            const attribute=mesh.geometry.getAttribute(name);if(!attribute)continue;
+            const values=new Float32Array(copy.geometry.getAttribute('position').count*attribute.itemSize);
+            for(let i=0;i<values.length;i++)values[i]=attribute.array[i%attribute.itemSize]!;
+            copy.geometry.setAttribute(name,new THREE.BufferAttribute(values,attribute.itemSize));
+          }
+        }else copy.geometry=mesh.geometry.clone();
         shift.clone().multiply(mesh.matrixWorld).decompose(copy.position,copy.quaternion,copy.scale);group.add(copy);
       }
       compactObject(group);group.scale.setScalar(object.scale);group.visible=false;this.group.add(group);this.pieces.set(`${object.id}/${fragment.id}`,group);
     }
+    source.traverse(node=>{if(node instanceof THREE.Mesh)node.geometry.dispose();});
   }
   update(state:CarState,reduced=false):void {
     for(const group of this.pieces.values())group.visible=false;

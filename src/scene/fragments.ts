@@ -1,8 +1,9 @@
 import { Box3,Euler,Matrix4,Quaternion,Vector3 } from "three";
 import type { ObjectDslV2 } from "./object-dsl";
-import { partGeometry } from "./object-geometry";
+import {voxelSlices,type VoxelSlice} from './voxels';
+import { partGeometry,voxelGeometry } from "./object-geometry";
 
-export interface FragmentShape {id:string;parts:string[];center:Vector3;corners:Vector3[];zone?:string}
+export interface FragmentShape {id:string;parts:string[];center:Vector3;corners:Vector3[];zone?:string;slice?:VoxelSlice}
 const cache=new WeakMap<ObjectDslV2,FragmentShape[]>();
 /** Rest-pose fragment frames are shared by simulation and rendering. */
 export function objectFragments(spec:ObjectDslV2):FragmentShape[] {
@@ -13,18 +14,21 @@ export function objectFragments(spec:ObjectDslV2):FragmentShape[] {
     if(!frames.has(id)){const j=joints.get(id)!;frames.set(id,(j.parent ? frame(j.parent).clone() : new Matrix4()).multiply(transform(j.position,j.rotation)));}
     return frames.get(id)!;
   };
-  const groups=new Map<string,{parts:string[];bounds:Box3;zone?:string}>();
+  const groups=new Map<string,{parts:string[];bounds:Box3;zone?:string;slice?:VoxelSlice}>();
   for(const part of spec.parts){
     if(spec.breakZones && !part.zone)continue;
-    const id=part.fragment ? `group:${part.fragment}` : `part:${part.id}`,group=groups.get(id)??{parts:[],bounds:new Box3(),...(part.zone ? {zone:part.zone} : {})};
     const matrix=(part.parent ? frame(part.parent).clone() : new Matrix4()).multiply(transform(part.position,part.rotation,part.size));
-    const geometry=partGeometry(part).applyMatrix4(matrix);geometry.computeBoundingBox();group.bounds.union(geometry.boundingBox!);geometry.dispose();
-    group.parts.push(part.id);groups.set(id,group);
+    for(const [i,slice] of (part.voxels?.chunks ? voxelSlices(part.voxels) : [undefined]).entries()){
+      const id=slice ? `voxel:${part.id}:${i}` : part.fragment ? `group:${part.fragment}` : `part:${part.id}`;
+      const group=groups.get(id)??{parts:[],bounds:new Box3(),...(part.zone ? {zone:part.zone} : {}),...(slice ? {slice} : {})};
+      const geometry=(slice ? voxelGeometry(part.voxels!,slice) : partGeometry(part)).applyMatrix4(matrix);
+      geometry.computeBoundingBox();group.bounds.union(geometry.boundingBox!);geometry.dispose();group.parts.push(part.id);groups.set(id,group);
+    }
   }
-  const result=[...groups].map(([id,{parts,bounds,zone}])=>{
+  const result=[...groups].map(([id,{parts,bounds,zone,slice}])=>{
     const center=bounds.getCenter(new Vector3()),size=bounds.getSize(new Vector3()).multiplyScalar(.5);
     const corners=Array.from({length:8},(_,i)=>new Vector3(i&1 ? size.x : -size.x,i&2 ? size.y : -size.y,i&4 ? size.z : -size.z));
-    return {id,parts,center,corners,...(zone ? {zone} : {})};
+    return {id,parts,center,corners,...(zone ? {zone} : {}),...(slice ? {slice} : {})};
   });
   cache.set(spec,result);return result;
 }

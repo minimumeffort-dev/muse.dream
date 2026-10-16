@@ -1,5 +1,6 @@
 import {furnishingSchema,flockSchema,furnishWorld,POPULATION_LIMITS,type Furnishing,type Flock} from './population';
 import { Euler, Quaternion, Vector3 } from "three";
+import {voxelCells,VOXEL_LIMITS} from './voxels';
 import { objectDslSchema,controlOf,isReactive, type ObjectDslV2 } from "./object-dsl";
 import {siteSchema,crossingSchema} from './sites';
 import {streetSchema,surfaceSchema,markingSchema} from "./streets";
@@ -182,7 +183,7 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
             jointOrigins.push(token);
             walk(statement.block!, { ...identity(), parent: jointId, scale: local.scale,fragment:frame.fragment,zone:frame.zone,path }, env, stack, false, depth + 1); break;
           }
-          case "part": case "beam": {
+          case "part": case "beam": case "voxels": {
             if (parts.length >= 32) fail("part budget exceeds 32", token,"E_BUDGET");
             const material = program.materials.get(statement.material!);
             if (!material) fail(`unknown material '${statement.material}'`, token,"E_REFERENCE");
@@ -200,8 +201,29 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
             if (motion?.kind === "spin") animation = { kind: "spin", axis: motion.axis as "x" | "y" | "z", speed: number(motion.args[0]!) * RAD };
             if (motion?.kind === "roll") animation = { kind: "roll", radius: number(motion.args[0]!) * frame.scale,...(motion.axis ? {axis:motion.axis as "x"|"y"|"z"} : {}) };
             if (motion?.kind === "sway") animation = { kind: "sway", amplitudeRad: number(motion.args[0]!) * RAD, speed: number(motion.args[1]!) };
+            let voxels:ObjectDslV2['parts'][number]['voxels'];
+            if(kind==='voxels'){
+              const operations:NonNullable<typeof voxels>['operations']=[];
+              const expand=(block:Statement[],scope:Map<string,number>,depth:number)=>{
+                if(depth>DREAM_LIMITS.nesting)fail('voxel nesting exceeds 16',token,'E_BUDGET');
+                const local=new Map(scope);
+                for(const op of block){
+                  if(++budget.steps>DREAM_LIMITS.steps)fail('expansion budget exceeds 2048 statements',op.token,'E_BUDGET');
+                  if(op.kind==='let'){local.set(op.name!,numeric(op.value!,local));continue;}
+                  if(op.kind==='repeat'){
+                    const count=numeric(op.value!,local);if(!Number.isInteger(count) || count<0 || count>32)fail('repeat count must be an integer from 0 to 32',op.token,'E_BUDGET');
+                    for(let i=0;i<count;i++)expand(op.block!,new Map(local).set(op.name!,i),depth+1);continue;
+                  }
+                  if(operations.length>=VOXEL_LIMITS.operations)fail('voxel operation budget exceeds 64',op.token,'E_BUDGET');
+                  operations.push({mode:op.kind as 'fill'|'cut',shape:op.shape as 'box'|'ellipsoid',from:vector(op.at,local).toArray(),to:vector(op.to,local).toArray()});
+                }
+              };
+              expand(statement.block!,env,0);
+              voxels={grid:vector(statement.grid,env).toArray(),operations,...(statement.chunks ? {chunks:vector(statement.chunks,env).toArray()} : {})};
+            }
             parts.push({ id: id(), shape: statement.shape as ObjectDslV2["parts"][number]["shape"], material: { ...material },
               position: position.toArray(), size: size.toArray(), rotation: angles(orient), ...(frame.parent ? { parent: frame.parent } : {}),
+              ...(voxels ? {voxels} : {}),
               ...(statement.taper ? {taper:number(statement.taper)} : {}),
               ...(statement.outline ? {outline:statement.outline.map(point=>point.map(number) as [number,number])} : {}),
               ...(frame.fragment ? {fragment:frame.fragment} : {}),...(frame.zone ? {zone:frame.zone} : {}),...(statement.deform ? { deform: { seed: number(statement.deform[0]), amount: number(statement.deform[1]) } } : {}), ...(animation ? { animation } : {}) });
@@ -265,6 +287,7 @@ export function compileDreamWorld(source:string,modules:DreamModules={}):DreamWo
     finally{active.delete(name);}
   };
   let world=load(source,"<entry>").world;
+  if(world.assemblies.reduce((sum,spec)=>sum+spec.parts.reduce((n,p)=>n+(p.voxels ? voxelCells(p.voxels) : 0),0),0)>VOXEL_LIMITS.projectCells)fail('project exceeds 1048576 voxel cells',undefined,'E_BUDGET');
   if(world.furnishings.length){
     if(!world.layout)fail('furnish expansion requires a complete linked world',undefined,'E_WORLD');
     const {origin,...layout}=world.layout;

@@ -88,3 +88,7 @@ A rolling joint turns its whole child assembly around one bearing by traveled di
 Animated parts aren't interchangeable with destructible fragments. Breakable assemblies require a static rest pose so their release frames are deterministic. Full shape, position, motion and expansion bounds are in the [reference](reference.md).
 
 [Next: world layout](worlds.md) · [Behavior and destruction](behavior.md)
+
+## Voxel geometry
+
+Dream 2 now supports bounded filled/carved voxel parts, greedy surface meshing and optional fracture chunks. The city uses voxel building shells, bench boards and carved park walls; the library bakehouse adds chunked masonry; measured proportions and explicit contacts remain unchanged. See the [voxel guide](voxels.md) for syntax, limits, a complete example and current boundaries.

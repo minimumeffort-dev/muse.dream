@@ -135,3 +135,7 @@ The source files are the examples. Tests compare these complete snippets with th
 [The complete neighborhood module](../examples/planned-neighborhood.dream) joins two streets and paints a basketball court with a repeated center circle. It can be included in a full world. The [planned-world guide](../urban-world.md) shows the larger town, suburbs and sports park built from the same primitives.
 
 [Programmable pedestrian](../examples/npc-behavior.dream) pauses its route near the player and turns toward them. The [NPC guide](npcs.md) includes the complete source and explains timed routines, roles and runtime ownership.
+
+## A carved voxel wall
+
+[Download voxel-wall.dream](../examples/voxel-wall.dream). One fill, an opening and repeated top cuts become a four-piece breakable wall. Read [voxel construction](voxels.md) for geometry and collision boundaries.

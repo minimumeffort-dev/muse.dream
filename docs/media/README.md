@@ -10,6 +10,7 @@ Driving, vehicle switching, jumping, swimming and destruction are exported at **
 | --- | --- | --- | --- |
 | Driving | [driving.gif](driving.gif) | [driving.mp4](driving.mp4) | 7 seconds |
 | Car → walking → bicycle → walking | [switching.gif](switching.gif) | [switching.mp4](switching.mp4) | 8 seconds |
+| Voxel wall destruction | [voxels.gif](voxels.gif) | [voxels.mp4](voxels.mp4) | 4 seconds |
 | Bench destruction | [destruction.gif](destruction.gif) | [destruction.mp4](destruction.mp4) | 4 seconds |
 | Walking, running and jumping | [locomotion.gif](locomotion.gif) | [locomotion.mp4](locomotion.mp4) | 6 seconds |
 | Swimming in the city canal | [swimming.gif](swimming.gif) | [swimming.mp4](swimming.mp4) | 6 seconds |
@@ -123,3 +124,21 @@ Refreshed the flight GIF, HD video and matching still together after changing ai
 `airport.jpg` and `east-medical-center.jpg` are native geometry-review canvas exports, with complete viewport context retained in the [verification record](../evidence/city-services/verification.md). `city-service-assets.jpg` and the four evidence angles show the new Dream assemblies. The complete 82-assembly atlas and HUD screenshot are refreshed; the latter includes the semantic destination markers.
 
 The flight GIF, HD video and still are refreshed together using 300 newly rendered frames at 30 fps. This recording includes the rebuilt airport surroundings. The wide waterway overview is refreshed too. Existing car, bicycle, swimming, day/night and destruction recordings retain their accurate local geometry and behavior. The new roads and buildings sit outside those camera views; those clips export the WebGL canvas without the HTML minimap. Existing car/plane models, school and hospital models, wildlife, tree and scale galleries are unchanged. The source-generated city map includes the airport link, separate service access, new medical entrance and bus services. All captures show actual procedural geometry; no image generation or frame interpolation was used.
+
+## Voxel city, r32
+
+`voxel-assets.jpg` and `assets-all.jpg` are native screenshots of the actual Dream
+asset gallery. The atlas now contains 83 assemblies. `voxel-park.jpg` is the
+untrimmed geometry-review canvas showing the two wall sections beside the existing
+bench and connected park paths. Four-angle context images are retained in
+`docs/evidence/voxels/`. The new voxel wall and updated bench recordings each use
+120 actual rendered frames at 30 fps, with GIF, HD video and still refreshed
+together. They are offline fixed-step exports, not live browser benchmarks.
+
+Reviewed README, object/impact guides, language reference, model instructions,
+examples and generated highlighting contract. Existing airport/medical, vehicle,
+woodland, flora/fauna and movement captures remain accurate: their visible models,
+placements and mechanics did not change. City overview/day-night captures still
+illustrate the same layout, lighting and proportions; the new captures above show
+the changed shell/board construction. Historical evidence retains its original
+revision and counts. No prompting UI was added or removed.

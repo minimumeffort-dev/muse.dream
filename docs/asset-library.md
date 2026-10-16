@@ -2,7 +2,7 @@
 
 [Dream 2 docs](README.md) / Assets
 
-The mock world contains 82 reusable assemblies, all written in Dream 2. The assemblies include vehicles, buildings, wildlife and several layers of vegetation, with window frames, wheel hubs, bark markings and irregular foliage.
+The mock world contains 83 reusable assemblies, all written in Dream 2. The assemblies include vehicles, buildings, wildlife and several layers of vegetation, with window frames, wheel hubs, bark markings and irregular foliage.
 
 ![Vehicles, buildings and a seated traveler built from Dream parts](media/assets.jpg)
 
@@ -100,3 +100,7 @@ The eight new assemblies are an avenue streetlight, neighborhood lantern, plante
 ## After dark
 
 Architecture and civic window materials declare a warm `night` color. The two streetlight assemblies declare local lamp sources and measured light-pool radii. Their geometry, contacts and placement rules are unchanged. These are explicit Dream capabilities, independent of asset labels. [Day/night authoring](dream/day-night.md).
+
+## Voxel geometry
+
+Dream 2 now supports bounded filled/carved voxel parts, greedy surface meshing and optional fracture chunks. The city uses voxel building shells, bench boards and two carved park walls; the bakehouse example adds chunked masonry; measured proportions and explicit contacts remain unchanged. See the [voxel guide](dream/voxels.md) for syntax, limits, a complete example and current boundaries.

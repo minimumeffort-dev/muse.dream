@@ -191,3 +191,15 @@ Use `flock` for bounded instanced cosmetic bird populations across appropriate h
 
 
 Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. The shared visual clock pauses with the game, freezes for reduced motion, survives R and resets on Start over. Keep one sun/moon shadow map with world-aligned stabilization; lighting phase is independent of camera/vehicle motion. `material.night` survives batching/instancing/fragments, and object-root `lamp` creates bounded static terrain/deck-fitted surface pools. Preserve the 512-pool cap, all existing actor/joint/physics limits, and exact daytime geometry. Do not add per-lamp point lights/shadow maps or claim pools provide wall lighting, object occlusion or astronomical accuracy. Document and capture new lighting states at 30 rendered fps.
+
+## Voxel assemblies
+
+Use Dream 2 `voxels` / `fill` / `cut` for bounded volumetric parts. Read
+`docs/dream/voxels.md`; preserve grid/work/surface/project limits in
+`src/scene/voxels.ts`. Validate before allocating/meshing. Cache CPU mesh data,
+clone GPU attributes for callers, and keep cut-face winding/normals correct.
+Destruction chunks count toward the existing eight / 128 fragment budgets;
+never create per-cell physics bodies. Contacts, terrain and motion remain engine
+owned. The current city uses voxel shells, benches and bakehouse masonry, while
+terrain, transport and organic assets remain a hybrid representation. Prompt
+world authoring is deferred; preserve the existing Lab without expanding it.
