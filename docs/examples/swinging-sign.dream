@@ -1,0 +1,17 @@
+dream 2;
+material timber(style=grain,colors=[#b1855e,#694b33]);
+material paint(style=toon,colors=[#527f75,#284c47]);
+component support(params=[x]){
+  beam post(shape=box,material=timber,from=[x,0,0],to=[x,40,0],width=3,depth=3);
+}
+object sign(label="Wind over the bicycle lane"){
+  measure(kind=custom,axis=y,meters=2.4);
+  body(interaction=solid,radius=12,height=43);
+  use left(component=support,args=[-12]);
+  use right(component=support,args=[12]);
+  beam crossbar(shape=box,material=timber,from=[-14,40,0],to=[14,40,0],width=3,depth=3);
+  joint hinge(at=[0,38,0],motion=swing(axis=x,deg=8,hz=.35,phase_deg=0)){
+    part panel(shape=box,material=paint,at=[0,-7,0],size=[22,12,2]);
+    part stripe(shape=box,material=timber,at=[0,-7,1.1],size=[15,2,.5]);
+  }
+}

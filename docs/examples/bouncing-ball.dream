@@ -1,0 +1,8 @@
+dream 2;
+material rubber(style=toon,colors=[#df714f,#aa4637]);
+object ball(label="Red ball"){
+  measure(kind=custom,axis=y,meters=.6);
+  body(interaction=knockable,radius=8,height=16,friction=.65);
+  impact(mode=bounce(restitution=.74,lift=.24));
+  part shell(shape=sphere,material=rubber,at=[0,8,0],size=[16,16,16]);
+}

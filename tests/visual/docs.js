@@ -4,7 +4,9 @@ import {compileDream} from '../../src/scene/dream';
 import {measuredScale} from '../../src/scene/measure';
 import {buildObject} from '../../src/game/world3d';
 
-document.querySelector('pre').textContent=source;
+import {highlightDream} from '../../docs/site/dream-highlight.mjs';
+import {DREAM_V2_COMMANDS} from '../../src/scene/dream-contract';
+document.querySelector('pre').innerHTML=highlightDream(source,DREAM_V2_COMMANDS);
 const canvas=document.querySelector('canvas'),renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const scene=new THREE.Scene();scene.background=new THREE.Color('#405a43');scene.add(new THREE.HemisphereLight('#c5d6df','#34462f',1.1));

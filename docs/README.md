@@ -8,6 +8,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 
 | Start here | What you'll build or learn |
 | --- | --- |
+| [Runnable examples](dream/examples.md) | Bouncing ball, breakable bench, hinged sign and toppling tree |
 | [Quickstart](dream/quickstart.md) | Compile a complete object, then a playable world |
 | [Compose objects](dream/objects.md) | Parts, materials, components, joints and physical size |
 | [Asset library](asset-library.md) | The 53 mock-world assemblies and their construction details |
@@ -15,6 +16,8 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [Give things behavior](dream/behavior.md) | Walking, vehicle controls, contacts, doors and destruction |
 | [Generate with a model](dream/model-authoring.md) | Context, validation, repair and atomic acceptance |
 | [Language reference](dream/reference.md) | Every command, field, budget and compiler API |
+
+[Read the highlighted documentation](https://minimumeffort-dev.github.io/muse.dream/) · [Media and syntax highlighting](media/README.md)
 
 ## Try it locally
 

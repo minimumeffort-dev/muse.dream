@@ -4,7 +4,7 @@ I want to sketch a world on paper and then explore it. Draw a road through the h
 
 Racing is where this started. The idea is to make whatever someone draws playable.
 
-[Play the prototype](https://musedream.vercel.app/) · [Explore Dream 2](docs/README.md) · [Start with an example](docs/dream/quickstart.md)
+[Play the prototype](https://musedream.vercel.app/) · [Explore Dream 2](https://minimumeffort-dev.github.io/muse.dream/) · [Start with an example](docs/dream/quickstart.md)
 
 ![The Muse Dream mock world, with a winding road, a castle and objects to explore](docs/media/world.jpg)
 
@@ -16,9 +16,13 @@ Follow the circuit or head into the hills. Climbing slows the car down, descendi
 
 ![Driving through the mock world](docs/media/driving.gif)
 
+[Watch in HD](docs/media/driving.mp4)
+
 Press **F** to get out of the car, walk over to another vehicle and press **F** again. You control the bicycle, skateboard, boat or plane yourself. Leave the lane, steer across the pond or take off from the runway. A vehicle stays where you park it, including the car you left behind.
 
 ![Leaving the car, walking to the bicycle and steering it yourself](docs/media/switching.gif)
+
+[Watch the vehicle switch in HD](docs/media/switching.mp4)
 
 WASD walks or drives. In the plane, Space climbs and Shift descends. Land before getting out; bring the boat close enough to dry shore to disembark. The camera moves closer for walking and smaller vehicles, then eases back out for the car. The objects keep their physical proportions.
 
@@ -35,6 +39,26 @@ Some things move when you hit them. Others break. A ball bounces away, a bench c
 Dream 2 is a compact text language for composing objects and worlds. It has named fields, reusable components and bounded repetition. A model can describe a new object without writing JavaScript or a shader. The engine builds its geometry and runs the supported behavior.
 
 ![A ten-metre tree rendered beside the complete Dream 2 source that defines it](docs/media/code-to-tree.jpg)
+
+A complete tree looks like this:
+
+```dream
+dream 2;
+material bark(style=grain,colors=[#846044,#4b392c]);
+material leaf(style=toon,colors=[#77a05b,#426b45]);
+object oak(label="Oak"){
+  measure(kind=tree,axis=y,meters=10);
+  body(interaction=solid,radius=4,height=69);
+  impact(mode=topple(speed=110,duration=1.1,lifetime=8));
+  fragment tree(){
+    part trunk(shape=cylinder,material=bark,at=[0,24,0],size=[6,48,6]);
+    part crown(shape=icosphere,material=leaf,at=[0,52,0],size=[36,34,32]);
+    part branch(shape=icosphere,material=leaf,at=[-12,44,3],size=[24,24,23]);
+  }
+}
+```
+
+The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation site highlights Dream commands, fields, references, colors and expressions, with copy buttons for complete examples.
 
 [Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 53 assemblies and 448 placements, all authored in Dream 2.
 
@@ -82,6 +106,7 @@ node scripts/dream.mjs check src/scene/world/open-world.dream --modules src/scen
 [The docs](docs/README.md) cover composition, physical size, terrain, water, routes and destruction. For model integration, start with the [authoring instructions](docs/dream-v2-model.txt) and [generated command contract](docs/dream-v2-contract.json). Dream 2 source compiles to validated scene data; generated code never runs.
 
 ```sh
+npm run docs:build # Highlighted static docs in dist-docs/
 npm test       # Compiler, scene, simulation and rendering behavior
 npm run build  # TypeScript + production build
 ```

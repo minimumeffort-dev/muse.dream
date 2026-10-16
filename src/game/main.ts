@@ -1,3 +1,4 @@
+import {mediaCapture} from "./media-capture";
 import {vehicleReviewStart} from "./review-start";
 import { measuredScale, playerRadius, playerHeight } from "../scene/measure";
 import * as THREE from "three";
@@ -218,8 +219,21 @@ function start(): void {
   container.dataset.source="dream-2";
   let previous = performance.now(), hudTime = 0;
   let frameMs = 16.7;
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,switching:240},()=>{
+    resetPosition(true);worldTime.value=0;setMode("playing");
+  },(clip:string,frame:number)=>{
+    keys.clear();
+    if(clip==="driving"){if(frame<175)keys.add("KeyW");return;}
+    if(frame===18 || frame===78 || frame===210)useRide();
+    if(frame>=18 && frame<63)keys.add("KeyS");
+    if(frame>=100 && frame<165)keys.add("KeyW");
+    if(frame>=140 && frame<160)keys.add("KeyD");
+    if(frame>=168 && frame<198)keys.add("KeyS");
+  }) : undefined;
   renderer.setAnimationLoop(() => {
-    const now = performance.now(), elapsedMs = now - previous, dt = Math.min(elapsedMs / 1000, .1); previous = now;
+    const captureDt=capture?.begin();
+    if(captureDt===null)return;
+    const now = performance.now(), elapsedMs = now - previous, dt = captureDt ?? Math.min(elapsedMs / 1000, .1); previous = now;
     frameMs += (elapsedMs - frameMs) * .05;
     worldMotion.value = reduced.matches ? 0 : 1;
     let boosted = false, impact = 0, collision = 0;
@@ -382,6 +396,7 @@ function start(): void {
     if (hudTime === 0) updateMap(car, cameraAngle);
     renderer.info.reset();
     composer.render();
+    capture?.end();
   });
 }
 
