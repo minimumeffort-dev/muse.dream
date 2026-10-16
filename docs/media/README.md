@@ -32,6 +32,8 @@ The encoder checks for consecutive source frames before replacing a GIF and vide
 
 ![Highlighted, copyable Dream source in the documentation](highlighted-docs.png)
 
+`exploration-hud.jpg` is a native main-game screenshot of the current HUD, with lap progress and checkpoint targets removed. The motion exports capture the WebGL canvas without HTML controls.
+
 ## Syntax highlighting
 
 The published documentation is built from the repository's Markdown using `npm run docs:build`. The custom [Dream highlighter](../site/dream-highlight.mjs) recognizes commands and nested constructors from the compiler's generated contract, named fields, symbols, numbers, colors, strings and comments. It preserves source text and escapes HTML before adding spans. Copy buttons copy the original code, without markup.

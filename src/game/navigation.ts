@@ -49,10 +49,6 @@ export function createWorldMap(canvas: HTMLCanvasElement, scene: Scene) {
     }
     const parked=car.vehicles.find(v=>v.id===null);
     if(parked){ctx.fillStyle="#e6a46f";ctx.fillRect(padding+parked.x*scale-2,padding+parked.y*scale-2,4,4);}
-    const checkpoint = scene.checkpoints[car.nextCheckpoint]!;
-    ctx.beginPath(); ctx.arc(padding + (checkpoint.a.x + checkpoint.b.x) / 2 * scale,
-      padding + (checkpoint.a.y + checkpoint.b.y) / 2 * scale, 4, 0, Math.PI * 2);
-    ctx.strokeStyle = "#f2cf88"; ctx.lineWidth = 2; ctx.stroke();
     ctx.save(); ctx.translate(padding + car.x * scale, padding + car.y * scale);
     // A faint camera wedge also shows which way the rotated view is looking.
     ctx.rotate(Math.atan2(-480, -180) - angle);

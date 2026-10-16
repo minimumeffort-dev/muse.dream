@@ -10,14 +10,13 @@
   <body>
     <main id="game" aria-label="Paper Dream" tabindex="0"></main>
     <div class="hud">
-      <div class="race-status"><span id="lap">Lap 1</span><span id="progress" role="img" aria-label="Checkpoint 1 of 4"></span></div>
       <span id="surface" role="status"></span>
       <button id="pause" type="button" aria-label="Pause" aria-pressed="false" data-paused="false">
         <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" /></svg>
         <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z" /></svg>
       </button>
     </div>
-    <canvas id="world-map" width="304" height="244" role="img" aria-label="World map with your position and next checkpoint"></canvas>
+    <canvas id="world-map" width="304" height="244" role="img" aria-label="World map with your position"></canvas>
     <button id="interact" type="button" hidden></button>
     <dialog id="pause-menu" aria-label="Pause menu">
       <div class="menu-card">

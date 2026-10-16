@@ -22,6 +22,10 @@ Exits need accessible dry ground. You cannot step out during flight or disembark
 
 The camera moves closer for walking and small vehicles, using their resolved dimensions, and eases back for larger ones. Reduced motion snaps the camera change and disables the walking gait. The occupied vehicle stays opaque when scenery fades around it.
 
+The exploration HUD shows vehicle and surface status, boarding prompts and pause. The map shows your position, parked car and moving actors, with no checkpoint target. Lap and checkpoint counters are hidden; the legacy racing simulation and Dream checkpoint data remain compatible.
+
+![The exploration HUD with pause, vehicle prompt and position map, without lap or checkpoint progress](../media/exploration-hud.jpg)
+
 ![Walking beside a parked vehicle](../media/on-foot.jpg)
 
 [Compile the complete controllable bicycle](../examples/controllable-bicycle.dream). Omitting `control` keeps the legacy passenger-only seat on a route, as used by the autonomous mock train. Those rides still follow their declared path.

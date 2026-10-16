@@ -39,8 +39,6 @@ import { createWorldMap } from "./navigation";
 const container = document.querySelector<HTMLElement>("#game")!;
 const pauseButton = document.querySelector<HTMLButtonElement>("#pause")!;
 const pauseMenu = document.querySelector<HTMLDialogElement>("#pause-menu")!;
-const lap = document.querySelector<HTMLElement>("#lap")!;
-const progress = document.querySelector<HTMLElement>("#progress")!;
 const surface = document.querySelector<HTMLElement>("#surface")!;
 const interact=document.querySelector<HTMLButtonElement>("#interact")!;
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
@@ -217,8 +215,6 @@ function start(): void {
   addEventListener("keyup", (e) => keys.delete(e.code));
   addEventListener("blur", () => { keys.clear(); });
   document.addEventListener("visibilitychange", () => { if (document.hidden) setMode("paused"); });
-  const dots = doc.checkpoints.map(() => document.createElement("i"));
-  progress.append(...dots);
   container.dataset.world=JSON.stringify({width:doc.canonical.width,height:doc.canonical.height,objects:doc.objects.length,checkpoints:doc.checkpoints.length});
   container.dataset.source="dream-2";
   let previous = performance.now(), hudTime = 0;
@@ -373,9 +369,6 @@ function start(): void {
     hudTime += dt;
     if (hudTime > .1) {
       hudTime = 0;
-      lap.textContent = `Lap ${car.lap + 1}`;
-      progress.setAttribute("aria-label", `Checkpoint ${car.nextCheckpoint === 0 ? dots.length : car.nextCheckpoint} of ${dots.length}`);
-      dots.forEach((dot, i) => dot.classList.toggle("passed", car.nextCheckpoint === 0 || i < car.nextCheckpoint));
       surface.textContent = occupied ? occupied.labelText+(controlOf(occupied.spec)==="plane" ? " · Space ↑ / Shift ↓" : "") : car.control.kind==="foot" ? "On foot" : !car.grounded ? "Airborne" : car.timeS < boostUntil ? "Boost" : car.surface === "ice" ? "Sliding" : car.surface === "water" ? "Water" : "";
       surface.dataset.effect = car.surface === "ice" ? "ice" : "boost";
       // DOM diagnostics let browser checks observe real simulation and camera state.
