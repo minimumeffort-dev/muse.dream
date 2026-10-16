@@ -18,6 +18,12 @@ World heading 0=east, 90=south. rot_deg is local Euler XYZ in degrees.
 Shapes use full bounding dimensions. Cylinders/capsules/cones point along Y;
 torus holes point along Z. Motion axes are primitive-local: a cylinder with
 rot_deg=[90,0,0] still rolls about its own Y axis; a torus wheel uses Z.
+Prism parts require outline=[[x,y],...] with 3..24 simple polygon vertices in
+0..1, spanning 0..1 on both axes, area >= .01. Either winding; no holes,
+duplicate closing point, crossed/touching edges or zero-length edges. The
+engine centers the outline in full size X/Y and extrudes through full size Z.
+Use concave outlines for wheel openings and sloped outlines for cabins/panels.
+Only prism parts accept outline; beams remain box/cylinder/capsule.
 Keep feet/bases at local Y=0. World placements take only XY, not arbitrary height.
 Use endpoint beams for connected struts; start each fork inside its trunk.
 Cylinder part/beam taper is optional, finite .1..1 (default 1): +Y/to diameter
@@ -30,6 +36,14 @@ as their support. Detail must not bridge independent break zones or close a door
 Use foundations for upright solid buildings, ground(mode=surface) for tilting props.
 The cloth material is flag wind, not garment physics; use toon/grain for rigid clothing.
 A joint never inherits primitive dimension scaling; scale a surrounding group.
+roll(axis=...,radius=...) also works on joints: all children turn as one rigid
+mechanism by traveled distance / resolved radius. Use one bearing frame for
+an axle's tires, hubs and shaft, or a bicycle's chainring, arms and pedals.
+The bearing stays fixed during visual body suspension travel. Orient bearings
+so forward travel rolls their wheels forward; keep shafts inside the hubs.
+Parked furnish templates bake roll joints at rest; swing/open joints remain
+ineligible for furnishings. Live roll joints count toward existing jointed
+assembly budgets. No controller scripts or independent part orbit callbacks.
 
 Expressions: numbers, scoped constants, + - * /, sin(degrees), cos(degrees).
 Global constants may forward-reference each other without cycles. Local constants

@@ -57,8 +57,10 @@ A command with an ID requires a name immediately after its keyword. Commands wit
 | `joint` | object / visual | ID / visual | `at?: v3`, `rot_deg?: v3`, `motion?: joint_motion` |
 | `repeat` | object / visual / path / route_path | ID / inherit | `index: symbol`, `count: n` |
 | `use` | object / visual | ID / no block | `component: ref`, `args?: nums`, `at?: v3`, `rot_deg?: v3`, `scale?: n` |
-| `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `taper?: n`, `deform?: deform`, `motion?: part_motion` |
+| `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus / prism`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `outline?: points2`, `taper?: n`, `deform?: deform`, `motion?: part_motion` |
 | `beam` | object / visual | ID / no block | `shape: box / cylinder / capsule`, `material: ref`, `from: v3`, `to: v3`, `width: n`, `depth: n`, `taper?: n`, `deform?: deform`, `motion?: part_motion` |
+
+Prism parts require `outline: points2`: 3..24 vertices in normalized XY, each coordinate in 0..1, spanning 0..1 on both axes and area at least `.01`. Either winding is accepted. No holes, repeated closing point, zero-length edges, foldbacks, crossed edges or self-touching. The engine centers it across full size X/Y and extrudes through full size Z. Only prisms accept an outline. Rotation, uniform scaling, measurement, batching and material rules remain the same.
 
 For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1` to `1`, default `1`. It sets the +Y end diameter relative to the −Y base, or `to` relative to `from` for a beam. Full `size` dimensions and beam `width`/`depth` describe the base. Rotation and uniform group scaling preserve the ratio. Seeded deformation may vary the surface; grounding, measurement and rendering use the same resulting geometry. Other shapes reject this field. See the [complete tapered wood example](../examples/tapered-wood.dream).
 
@@ -89,12 +91,14 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 | `place` | top | ID / no block | `object: ref`, `at?: v2`, `route?: ref`, `offset?: n`, `phase_s?: n`, `scale?: n`, `heading_deg?: n`, `role?: prop / npc / controllable`, `behavior?: ref` |
 | `unresolved` | top | ID / no block | `label: text` |
 
+Rolling joints use the same bounded radius 1..32 as part roll. Their children rotate rigidly by traveled distance / resolved radius; their bearing positions remain fixed during visual suspension compression. Radius follows uniform group/placement scale. Reduced motion rests the pose. Parked `furnish` templates bake roll joints at rest; swing/open templates still reject. Live rolling assemblies retain the 24-assembly and 12-joint caps.
+
 ### Value constructors
 
 | Command | Context | ID / block | Fields |
 | --- | --- | --- | --- |
 | `spin` | part_motion | No ID / no block | `axis: x / y / z`, `deg_s: n` |
-| `roll` | part_motion | No ID / no block | `axis: x / y / z`, `radius: n` |
+| `roll` | part_motion / joint_motion | No ID / no block | `axis: x / y / z`, `radius: n` |
 | `sway` | part_motion | No ID / no block | `deg: n`, `hz: n` |
 | `swing` | joint_motion | No ID / no block | `axis: x / y / z`, `deg: n`, `hz: n`, `phase_deg: n` |
 | `open` | joint_motion | No ID / no block | `axis: x / y / z`, `deg: n`, `radius: n` |

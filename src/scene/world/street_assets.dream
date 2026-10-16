@@ -9,6 +9,11 @@ material blue(style=toon,colors=[#6c8497,#879bad]);
 material pigeon_gray(style=toon,colors=[#7c8c95,#a4aeb0]);
 material throat(style=toon,colors=[#527c70,#536776]);
 material red(style=toon,colors=[#ac6b51,#b98362]);
+material vehicle_glass(style=toon,colors=[#527a8d,#345260]);
+material rubber(style=toon,colors=[#252d32,#353c40]);
+material tail_red(style=toon,colors=[#a94335,#c45d42]);
+material vehicle_lens(style=toon,colors=[#dfd6bc,#f3e8cf],night=#ffd18a);
+material van_paint(style=toon,colors=[#e1ddcd,#c8c5b7]);
 object avenue_lamp(label="Avenue streetlight"){
  lamp(at=[8,39,0],radius=52,color=#ffc581);
  measure(kind=custom,axis=y,meters=5.2);
@@ -54,14 +59,28 @@ object verge_flowers(label="Mixed verge flowers"){
 object city_scooter(label="Electric city scooter"){
  measure(kind=custom,axis=x,meters=1.25);
  body(interaction=solid,radius=4.5,height=14);
- rideable(at=[-1,3,0],control=scooter);
- part deck(shape=box,material=iron,at=[0,2.2,0],size=[11,1,3]);
- beam stem(shape=cylinder,material=blue,from=[4.5,1.8,0],to=[3.5,13,0],width=1,depth=1);
- beam handlebar(shape=cylinder,material=iron,from=[3.5,13,-3.5],to=[3.5,13,3.5],width=.8,depth=.8);
- beam fork(shape=cylinder,material=iron,from=[4.5,1.8,-1],to=[4.5,4,-1],width=.7,depth=.7);
- repeat wheels(index=i,count=2){part tire(shape=cylinder,material=iron,at=[i*10-5,1.5,0],size=[3,1,3],rot_deg=[90,0,0],motion=roll(axis=y,radius=1.5));part hub(shape=cylinder,material=stone,at=[i*10-5,1.5,.55],size=[1.2,.5,1.2],rot_deg=[90,0,0]);}
- part headlight(shape=sphere,material=lamp_glass,at=[4,10.5,0],size=[1.2,1.2,1.2]);
- beam stand(shape=cylinder,material=iron,from=[-1,1.8,0],to=[-1,.4,1.8],width=.5,depth=.5);
+ rideable(at=[-.5,2.05,0],control=scooter);
+ part deck(shape=capsule,material=blue,at=[0,1.4,0],size=[.7,7,3],rot_deg=[0,0,90]);
+ part grip_tape(shape=box,material=rubber,at=[0,1.8,0],size=[5.5,.5,2.3]);
+ beam neck(shape=cylinder,material=blue,from=[3.3,1.4,0],to=[4.2,4.7,0],width=1,depth=1);
+ beam steering_stem(shape=cylinder,material=blue,from=[4.2,4.7,0],to=[3.3,11.7,0],width=1,depth=1);
+ beam crown(shape=cylinder,material=iron,from=[4.2,4.7,-.9],to=[4.2,4.7,.9],width=.8,depth=.8);
+ beam handlebar(shape=cylinder,material=iron,from=[3.3,11.7,-3],to=[3.3,11.7,3],width=.7,depth=.7);
+ repeat sides(index=s,count=2){
+  let side(value=s*2-1);
+  beam front_fork(shape=cylinder,material=iron,from=[4.2,4.7,side*.9],to=[5,1.5,side*.9],width=.6,depth=.6);
+  beam rear_stay(shape=cylinder,material=iron,from=[-3.3,1.5,side*.9],to=[-5,1.5,side*.9],width=.6,depth=.6);
+  part grip(shape=capsule,material=rubber,at=[3.3,11.7,side*2.8],size=[.8,1.4,.8],rot_deg=[90,0,0]);
+ }
+ repeat wheels(index=i,count=2){
+  part tire(shape=cylinder,material=rubber,at=[i*10-5,1.5,0],size=[3,1.1,3],rot_deg=[-90,0,0],motion=roll(axis=y,radius=1.5));
+  part hub(shape=cylinder,material=stone,at=[i*10-5,1.5,0],size=[1.5,2,1.5],rot_deg=[-90,0,0],motion=roll(axis=y,radius=1.5));
+  part mudguard(shape=prism,material=blue,at=[i*10-5,3,0],size=[2.8,1.15,1.5],outline=[[0,0],[.12,0],[.2,.25],[.35,.6],[.65,.6],[.8,.25],[.88,0],[1,0],[.94,.4],[.8,.8],[.65,1],[.35,1],[.2,.8],[.06,.4]]);
+ }
+ beam brake_mount(shape=cylinder,material=iron,from=[-3.3,1.5,0],to=[-3.9,3,0],width=.6,depth=.6);
+ part headlight_housing(shape=cylinder,material=iron,at=[3.8,9.5,0],size=[1.6,1.1,1.6],rot_deg=[0,0,90]);
+ part headlight(shape=sphere,material=vehicle_lens,at=[4.38,9.5,0],size=[.6,1.1,1.1]);
+ part tail_light(shape=box,material=tail_red,at=[-6.25,2.8,0],size=[.5,.8,1.2]);
 }
 object city_pigeon(label="City pigeon"){
  measure(kind=custom,axis=z,meters=.72);
@@ -76,29 +95,66 @@ object city_pigeon(label="City pigeon"){
  repeat eyes(index=i,count=2){part eye(shape=sphere,material=iron,at=[3.5,5.2,i*1.4-.7],size=[.5,.5,.5]);}
 }
 object city_hatchback(label="City hatchback"){
- measure(kind=car,axis=x,meters=3.8);
- body(interaction=solid,radius=11,height=15);
- rideable(at=[-2,12,0]);
- part chassis(shape=box,material=blue,at=[0,5,0],size=[32,6,14]);
- part bonnet(shape=box,material=blue,at=[10,8.2,0],size=[10,2,13]);
- part cabin(shape=box,material=throat,at=[-3,10,0],size=[18,7,12]);
- part roof(shape=box,material=blue,at=[-3,14,0],size=[17,1.5,12.8]);
- repeat pillars(index=i,count=3){repeat sides(index=j,count=2){part pillar(shape=box,material=blue,at=[i*8-11,10,j*12.8-6.4],size=[1,7,.5]);}}
- repeat axles(index=i,count=2){repeat sides(index=j,count=2){part tire(shape=cylinder,material=iron,at=[i*21-10.5,3,j*14-7],size=[6,2,6],rot_deg=[90,0,0],motion=roll(axis=y,radius=3));part hub(shape=cylinder,material=stone,at=[i*21-10.5,3,j*15.8-7.9],size=[3,1,3],rot_deg=[90,0,0]);}}
- repeat lights(index=i,count=2){part light(shape=box,material=lamp_glass,at=[16.2,5.2,i*9-4.5],size=[.5,2,3]);}
- part front_bumper(shape=box,material=iron,at=[16,3.6,0],size=[1,1,13]);
- part rear_bumper(shape=box,material=iron,at=[-16,3.6,0],size=[1,1,13]);
+  measure(kind=car,axis=x,meters=3.8);
+  body(interaction=solid,radius=11,height=15);
+  rideable(at=[-1,6,0]);
+  part shell(shape=prism,material=blue,at=[0,5.45,0],size=[31.8,6.7,14.8],outline=[[0,0],[0.05818,0],[0.05818,0.13433],[0.07313,0.39925],[0.11399,0.59319],[0.16981,0.66418],[0.22563,0.59319],[0.26649,0.39925],[0.28145,0.13433],[0.28145,0],[0.71855,0],[0.71855,0.13433],[0.73351,0.39925],[0.77437,0.59319],[0.83019,0.66418],[0.88601,0.59319],[0.92687,0.39925],[0.94182,0.13433],[0.94182,0],[1,0],[1,0.76119],[0.92138,1],[0.07547,1],[0,0.85075]]);
+  part cabin(shape=prism,material=vehicle_glass,at=[-2.75,11.15,0],size=[19.5,5.7,11.6],outline=[[0,0],[1,0],[0.73333,1],[0.06667,1]]);
+  part roof(shape=box,material=blue,at=[-4.7,14.3,0],size=[13.6,0.9,12.4]);
+  repeat sides(index=s,count=2){
+    let side(value=s*2-1);
+    beam front_pillar(shape=box,material=blue,from=[7,8.3,side*5.85],to=[1.8,14.05,side*5.85],width=.8,depth=.8);
+    beam rear_pillar(shape=box,material=blue,from=[-12.5,8.3,side*5.85],to=[-11.2,14.05,side*5.85],width=.8,depth=.8);
+    beam center_pillar(shape=box,material=blue,from=[-3,8.3,side*5.85],to=[-3,14.1,side*5.85],width=.65,depth=.8);
+    beam mirror(shape=box,material=blue,from=[5.8,9.6,side*6.1],to=[6.2,9.8,side*7.75],width=1.2,depth=1.2);
+    part handle(shape=box,material=stone,at=[-5,7.8,side*7.55],size=[1.8,.6,.6]);
+
+    part headlight(shape=box,material=vehicle_lens,at=[16.05,6.5,side*4.44],size=[.6,2.2,3.2]);
+    part tail_light(shape=box,material=tail_red,at=[-16.05,6.6,side*4.884],size=[.6,2.5,2.2]);
+  }
+  part front_bumper(shape=box,material=rubber,at=[15.8,3.5,0],size=[1.4,1.5,15]);
+  part rear_bumper(shape=box,material=rubber,at=[-15.8,3.5,0],size=[1.4,1.5,15]);
+  part grille(shape=box,material=rubber,at=[16.15,5.1,0],size=[.5,2.1,7]);
+  repeat axles(index=w,count=2){
+    part suspension_yoke(shape=box,material=rubber,at=[(w*2-1)*10.5,5.025,0],size=[1.4,4.05,9]);
+    joint bearing(at=[(w*2-1)*10.5,3,0],rot_deg=[0,180,0],motion=roll(axis=z,radius=3)){
+      part shaft(shape=cylinder,material=rubber,at=[0,0,0],size=[1.1,13.3,1.1],rot_deg=[90,0,0]);
+      repeat wheels(index=s,count=2){
+        part tire(shape=cylinder,material=rubber,at=[0,0,(s*2-1)*6.4],size=[6,2.6,6],rot_deg=[90,0,0]);
+        part hub(shape=cylinder,material=stone,at=[0,0,(s*2-1)*6.4],size=[3.15,2.8,3.15],rot_deg=[90,0,0]);
+      }
+    }
+  }
 }
 object delivery_van(label="Neighborhood delivery van"){
  measure(kind=car,axis=x,meters=4.8);
  body(interaction=solid,radius=13,height=23);
- rideable(at=[10,14,0]);
- part chassis(shape=box,material=iron,at=[0,4,0],size=[40,3,16]);
- part cargo(shape=box,material=stone,at=[-5,14,0],size=[30,19,17]);
- part roof(shape=box,material=stone,at=[-5,24,0],size=[30,1,17]);
- part cab(shape=box,material=blue,at=[13,10,0],size=[13,14,16]);
- part windscreen(shape=box,material=throat,at=[19.6,13,0],size=[.5,6,13]);
- repeat sides(index=j,count=2){part window(shape=box,material=throat,at=[13,13,j*16.5-8.25],size=[10,6,.5]);part cargo_trim(shape=box,material=blue,at=[-5,12,j*17.5-8.75],size=[28,3,.5]);}
- repeat axles(index=i,count=2){repeat sides(index=j,count=2){part tire(shape=cylinder,material=iron,at=[i*27-13.5,3.5,j*17-8.5],size=[7,2,7],rot_deg=[90,0,0],motion=roll(axis=y,radius=3.5));part hub(shape=cylinder,material=stone,at=[i*27-13.5,3.5,j*18.6-9.3],size=[3.5,1,3.5],rot_deg=[90,0,0]);}}
- repeat lights(index=i,count=2){part light(shape=box,material=lamp_glass,at=[19.7,7,i*10-5],size=[.5,2,3]);}
+ rideable(at=[11,7.4,0]);
+ part shell(shape=prism,material=van_paint,at=[0,13.35,0],size=[38.8,21.3,17.8],outline=[[0,0],[0.04639,0],[0.04639,0.03756],[0.07734,0.17367],[0.15206,0.23005],[0.22678,0.17367],[0.25773,0.03756],[0.25773,0],[0.74227,0],[0.74227,0.03756],[0.77322,0.17367],[0.84794,0.23005],[0.92266,0.17367],[0.95361,0.03756],[0.95361,0],[1,0],[1,0.22535],[0.98196,0.47418],[0.81443,0.94366],[0.70619,1],[0.01804,1],[0,0.95305]]);
+ part roof(shape=box,material=van_paint,at=[-5,24,0],size=[29,1,18.6]);
+ part windshield(shape=box,material=vehicle_glass,at=[16,16.7,0],size=[.6,10.7,14.8],rot_deg=[0,0,33]);
+ repeat sides(index=s,count=2){
+  let side(value=s*2-1);
+  part window(shape=prism,material=vehicle_glass,at=[12.7,16.3,side*8.98],size=[10.8,10,.6],outline=[[0,0],[1,0],[.5,1],[0,1]]);
+  part door_seam(shape=box,material=stone,at=[7.0,13.8,side*9.05],size=[.5,18,.5]);
+  part handle(shape=box,material=iron,at=[9.4,10.5,side*9.1],size=[2.2,.7,.8]);
+
+  part headlight(shape=box,material=vehicle_lens,at=[19.5,7,side*5.6],size=[.6,2,3.1]);
+  part tail_light(shape=box,material=tail_red,at=[-19.5,8,side*7.5],size=[.6,5,1.5]);
+  part rear_door(shape=box,material=stone,at=[-19.55,13.7,side*4.1],size=[.5,16,7.7]);
+  part rear_handle(shape=box,material=iron,at=[-19.75,12,side*1],size=[.5,2.5,.7]);
+ }
+ part front_bumper(shape=box,material=iron,at=[19.3,3.7,0],size=[1.4,1.5,18]);
+ part rear_bumper(shape=box,material=iron,at=[-19.3,3.7,0],size=[1.4,1.5,18]);
+ part grille(shape=box,material=iron,at=[19.65,5.5,0],size=[.5,2.1,8]);
+  repeat axles(index=w,count=2){
+    part suspension_yoke(shape=box,material=rubber,at=[(w*2-1)*13.5,5.8,0],size=[1.4,4.6,13]);
+    joint bearing(at=[(w*2-1)*13.5,3.5,0],rot_deg=[0,180,0],motion=roll(axis=z,radius=3.5)){
+      part shaft(shape=cylinder,material=rubber,at=[0,0,0],size=[1.1,17.3,1.1],rot_deg=[90,0,0]);
+      repeat wheels(index=s,count=2){
+        part tire(shape=cylinder,material=rubber,at=[0,0,(s*2-1)*8.4],size=[7,2.6,7],rot_deg=[90,0,0]);
+        part hub(shape=cylinder,material=stone,at=[0,0,(s*2-1)*8.4],size=[3.675,2.8,3.675],rot_deg=[90,0,0]);
+      }
+    }
+  }
 }

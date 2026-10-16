@@ -20,6 +20,7 @@ The gallery frames each asset independently to show its construction. The
 | `cylinder`, `cone`, `pyramid` | Trunks, posts, roofs and tapered forms |
 | `capsule` | Limbs, rounded bodies and decks |
 | `torus` | Wheels, handles and rings |
+| `prism` | Sloped cabins, body panels, wheel openings and shaped decks |
 
 Cylinders, cones and capsules point along local Y; a torus hole points along local Z. A rotated primitive keeps its own motion axes. `beam` takes `from` and `to` endpoints and builds a connected box, cylinder or capsule between them.
 
@@ -46,6 +47,18 @@ object snag(label="Woodland snag"){
 }
 ```
 
+## Shape a panel instead of stacking boxes
+
+A `prism` extrudes a small XY outline through the full Z dimension. Coordinates run from 0 to 1 across the declared width and height, and the engine centers the result at `at`. The outline must reach both extrema on X and Y. It has 3–24 vertices, area at least `.01`, and no holes, repeated closing point, crossed edges or self-touching. Either winding works. Concave lower edges can leave real wheel openings through both sides of a body.
+
+Inside an object, with a declared `glass` material:
+
+```dream
+part cabin(shape=prism,material=glass,at=[0,12,0],size=[20,8,14],outline=[[0,0],[1,0],[.75,1],[.2,1]]);
+```
+
+The [complete city car](../examples/city-car.dream) combines a shaped shell, sloped glazing, roof and pillars with connected axles. Visual openings do not change its collision cylinder. The profile is bounded data, triangulated once by the engine, with the same batching, materials, measured size and terrain support as other parts.
+
 ## Give it a physical size
 
 Inside an object:
@@ -68,7 +81,9 @@ A `group` applies a rigid position, rotation and uniform scale to its contents. 
 
 ## Animate a connection
 
-Parts support `spin`, distance-driven `roll` and rigid `sway`. Joints support oscillating `swing` or a proximity-driven `open`. Arguments use named fields: `spin(axis=x,deg_s=90)` or `swing(axis=z,deg=20,hz=.25,phase_deg=0)`.
+Parts support `spin`, distance-driven `roll` and rigid `sway`. Joints support `roll`, oscillating `swing` or a proximity-driven `open`. Arguments use named fields: `spin(axis=x,deg_s=90)` or `swing(axis=z,deg=20,hz=.25,phase_deg=0)`.
+
+A rolling joint turns its whole child assembly around one bearing by traveled distance divided by its resolved radius. Tires, hubs and a shaft can share one axle frame; a chainring, crank arms and pedals can share another. All children retain their distances from the bearing. Orient the local axis to match forward wheel travel. Reduced motion rests the mechanism, and parked furnishings bake its rest pose without allocating live joints. Swinging or proximity-operated templates remain ineligible for furnishings. [The complete bicycle](../examples/city-bicycle.dream) uses a rolling crank with paired forks and stays.
 
 Animated parts aren't interchangeable with destructible fragments. Breakable assemblies require a static rest pose so their release frames are deterministic. Full shape, position, motion and expansion bounds are in the [reference](reference.md).
 

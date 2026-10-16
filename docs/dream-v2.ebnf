@@ -7,6 +7,10 @@ fields = field, { ",", field }, [ "," ] ;
 field = identifier, "=", value ;
 value = expression | string | color | "true" | "false" | array | constructor ;
 array = "[", [ value, { ",", value }, [ "," ] ], "]" ;
+(* part(shape=prism) requires outline: 3..24 [X,Y] arrays, each coordinate 0..1,
+   full extents 0..1 on both axes, simple closed contour without repeated start.
+   The engine extrudes the profile along Z. roll is a part_motion or joint_motion
+   constructor; a joint owns one rigid distance-driven mechanism. *)
 constructor = identifier, "(", fields, ")" ;
 expression = product, { ("+" | "-"), product } ;
 product = unary, { ("*" | "/"), unary } ;

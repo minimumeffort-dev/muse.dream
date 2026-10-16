@@ -48,6 +48,14 @@ describe('Dream syntax highlighting',()=>{
     for(const word of ['cycle_s','start_hour','night'])expect(html).toContain(`class="dream-field">${word}</span>`);
     expect(highlight('daylighting lampstand nighttime')).not.toMatch(/dream-(?:keyword|field)/);
   });
+  it('highlights profile fields and rolling joints with source preservation and escaping',()=>{
+    const html=highlight('part shell(shape=prism,outline=[[0,0],[1,0],[.7,1]]);joint axle(motion=roll(axis=z,radius=4)); // <script>');
+    expect(html).toContain('class="dream-field">outline</span>');expect(html).toContain('class="dream-symbol">prism</span>');
+    expect(html).toContain('class="dream-keyword">roll</span>');expect(html).not.toContain('<script>');
+    expect(highlight('outliner outline_extra prismatically')).not.toMatch(/dream-(?:field|keyword)/);
+    const contract=JSON.parse(readFileSync('docs/dream-v2-contract.json','utf8'));
+    expect(contract.commands.part.fields.outline).toBe('points2?');expect(contract.commands.roll.contexts).toContain('joint_motion');
+  });
   it('tracks the generated compiler vocabulary',()=>{
     const contract=JSON.parse(readFileSync('docs/dream-v2-contract.json','utf8'));
     expect(Object.keys(contract.commands)).toEqual(Object.keys(DREAM_V2_COMMANDS));

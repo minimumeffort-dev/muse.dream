@@ -103,3 +103,9 @@ Driving, switching, locomotion and swimming GIF/HD pairs and matching stills wer
 ## r29 aircraft, 2026-10-16
 
 `aircraft.jpg` and four evidence angles show the rebuilt 31-part Cloudhopper. Refreshed `assets.jpg`, `assets-all.jpg` and `proportions.jpg`; the scale viewer uses the live Commuter after its former character was removed from the city. `flight.gif`, `flight.mp4` and `flight.jpg` come from 300 actual main-game frames at 30 fps, covering takeoff, climb, banking and descent. Existing city and other-vehicle recordings retain unchanged visible geometry. The [aircraft verification](../evidence/aircraft/verification.md) records the surface-overlap regression, runtime checks and limitations.
+
+## r30 ground vehicles, 2026-10-16
+
+`vehicle-kit.jpg` shows the rebuilt rally car, town car, hatchback, delivery van, bicycle and scooter. Four gallery angles are retained with the [construction verification](../evidence/ground-vehicles/verification.md). Refreshed the activity/full/street asset sheets and physical-scale comparison. Complete car and bicycle examples match the live assemblies; the Dream guides explain bounded extruded profiles and rigid distance-driven joints.
+
+Driving, switching, locomotion, swimming and day/night GIF/HD pairs use 210/240/180/180/360 newly rendered frames, with matching world/on-foot/riding/jumping/swimming/daynight stills. Vehicle-visible district, transport and four lighting views, the HUD and NPC context are refreshed. The unchanged aircraft/airfield flight and isolated fixture destruction recordings retain their accurate geometry. Civic buildings, people, trees and wildlife sheets and the source-derived map are unchanged. See the verification record for counts, native-input checks and retained-capture reasons.

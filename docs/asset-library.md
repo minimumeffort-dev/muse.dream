@@ -20,6 +20,16 @@ The mock world contains 78 reusable assemblies, all written in Dream 2. The asse
 
 The seated traveler and standing Explorer are separate engine-provided Dream assemblies. The Explorer has an animated walking gait and keeps its own physical size when switching to a seated vehicle pose. Bread and a harvest bowl remain standalone authoring examples. [Open the full atlas](media/assets-all.jpg), or follow the [local gallery setup](README.md#try-it-locally) for interactive inspection. Front, right, back and left views share the same geometry. The phase selector exposes wheel and joint motion.
 
+## Ground vehicles built around their mechanics
+
+The rally coupe, cream-roof town car, compact hatchback and panel van now have different silhouettes. Extruded Dream profiles form sloped cabins and wheel openings. Pillars meet their roofs and shells; lenses sit on their panels. Axles, hubs and tires share rigid bearing frames, with suspension crossmembers connecting them to the body. The racer's visual body travel is limited to five centimetres so its tires stay clear of the openings during a landing.
+
+![Cars, bicycle, van and scooter with connected frames and shaped bodies](media/vehicle-kit.jpg)
+
+The bicycle is a step-through city frame with paired rear stays, fork blades, mounted axles and a chain line between its rear cog and chainring. Crank arms and pedals turn together around the bottom bracket as it travels. The scooter has a lower deck, paired fork and rear supports, shaped fenders, a brake mount and a headlight housing. The existing collision cylinders and measured vehicle lengths are preserved; neither model adds mesh-shaped physics.
+
+[Complete car](examples/city-car.dream) · [Complete bicycle](examples/city-bicycle.dream) · [Prisms and rolling joints](dream/objects.md) · [Verification and media audit](evidence/ground-vehicles/verification.md). Parked bicycle cranks are baked at rest. The cars batch into three or four meshes each, and the bicycle into four. The shared seated rider remains a placeholder; its legs do not yet follow the pedals.
+
 ## A light aircraft that holds together
 
 Cloudhopper has a continuous tapered fuselage, a glazed cabin, braced high wings, rounded tailplane, rudder, main landing gear and a supported tail wheel. Its 10.8-metre wingspan and collision cylinder retain their existing size. The seat sits inside the cabin. Wheels roll around their axles and the propeller turns around the nose shaft.

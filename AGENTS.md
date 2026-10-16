@@ -111,6 +111,16 @@ world units represent one metre. Compiled placements already contain the
 resolved uniform scale. Preserve independent passenger size and scale the
 player's mesh and driving cylinder together. Legacy unmeasured assets remain readable.
 
+Prism parts use 3..24 normalized XY outline points spanning 0..1 on both axes,
+with area >= .01, no holes, crossings, self-touching, foldbacks or repeated closing point.
+Only `shape=prism` accepts `outline`; the engine extrudes full size Z once and
+retains the existing materials, geometry support and batching paths. Keep version 1 strict.
+`joint(motion=roll(...))` owns a rigid distance-driven mechanism. Keep axle centers
+fixed during visual suspension travel, and wheels/hubs/shafts coaxial. Parked furnishing
+templates bake only roll joints at rest; swing/open templates remain rejected. Preserve
+live assembly caps and useful field-specific diagnostics for model repair. See
+`docs/examples/city-car.dream` and `docs/examples/city-bicycle.dream`.
+
 Dream 2 destruction includes optional splinter/crumble release patterns, rigid
 `topple` behavior, and independent `zone` sections. Core contacts and terrain
 foundations survive zone damage. Keep scene limits at 24 reactive objects and

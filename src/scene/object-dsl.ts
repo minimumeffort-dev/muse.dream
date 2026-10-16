@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { measureProblem, measuredScale, MEASURE_KINDS } from "./measure";
+import {profileProblem} from './profile';
 
 /** Versioned bounded assemblies. Geometry, motion and shaders belong to the engine. */
 export const objectMaterialSchema = z.object({
@@ -73,11 +74,12 @@ const jointAnimationSchema=z.object({
 const jointSchema=z.object({
   id:z.string().min(1).max(40),parent:z.string().min(1).max(40).optional(),
   position:z.tuple([offset,offset,offset]),rotation:z.tuple([angle,angle,angle]).optional(),
-  animation:jointAnimationSchema.optional(),
+  animation:z.union([jointAnimationSchema,z.object({kind:z.literal('roll'),axis:z.enum(['x','y','z']),radius:z.number().finite().min(1).max(32)}).strict()]).optional(),
   proximity:z.object({axis:z.enum(["x","y","z"]),angleRad:z.number().finite().min(-Math.PI).max(Math.PI),radius:z.number().finite().min(20).max(160)}).strict().optional(),
 }).strict();
 const objectV2PartSchema=objectPartSchema.extend({
-  shape:z.enum(["box","sphere","cylinder","cone","pyramid","icosphere","capsule","torus"]),
+  shape:z.enum(["box","sphere","cylinder","cone","pyramid","icosphere","capsule","torus","prism"]),
+  outline:z.array(z.tuple([z.number().finite(),z.number().finite()])).min(3).max(24).optional(),
   parent:z.string().min(1).max(40).optional(),
   position:z.tuple([offset,z.number().finite().min(-128).max(128),offset]),
   taper:z.number().finite().min(.1).max(1).optional(),
@@ -111,8 +113,11 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
     ids.add(part.id);
   });
   if(spec.dslVersion===2) {
+    let geometryValid=true;
     spec.parts.forEach((part,index)=>{
-      if(part.taper!==undefined && part.shape!=="cylinder")ctx.addIssue({code:z.ZodIssueCode.custom,path:["parts",index,"taper"],message:"taper requires a cylinder"});
+      if(part.taper!==undefined && part.shape!=="cylinder"){geometryValid=false;ctx.addIssue({code:z.ZodIssueCode.custom,path:["parts",index,"taper"],message:"taper requires a cylinder"});}
+      const problem=part.shape==='prism' ? part.outline ? profileProblem(part.outline) : 'prism requires an outline' : part.outline ? 'outline requires a prism' : undefined;
+      if(problem){geometryValid=false;ctx.addIssue({code:z.ZodIssueCode.custom,path:['parts',index,'outline'],message:problem});}
     });
     const impact=spec.impact;
     if(impact && (spec.foundation || spec.contacts || spec.rideable || spec.emitter))ctx.addIssue({code:z.ZodIssueCode.custom,message:"impact objects use one body without foundations, contacts, seats or emitters"});
@@ -159,7 +164,7 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
     if(spec.measure){
       const problem=measureProblem(spec.measure);
       if(problem)ctx.addIssue({code:z.ZodIssueCode.custom,path:["measure"],message:problem});
-      else if(hierarchyValid && spec.parts.every(p=>p.taper===undefined || p.shape==="cylinder" && p.taper>=.1 && p.taper<=1)){const scale=measuredScale(spec);if(!Number.isFinite(scale) || scale<.05 || scale>4)ctx.addIssue({code:z.ZodIssueCode.custom,path:["measure"],message:"measured size must resolve to a uniform scale in 0.05..4"});}
+      else if(hierarchyValid && geometryValid){const scale=measuredScale(spec);if(!Number.isFinite(scale) || scale<.05 || scale>4)ctx.addIssue({code:z.ZodIssueCode.custom,path:["measure"],message:"measured size must resolve to a uniform scale in 0.05..4"});}
     }
   }
 });

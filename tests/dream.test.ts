@@ -51,7 +51,7 @@ describe("Dream authoring language", () => {
     }`);
     const joint = spec.joints![0]!, p = spec.parts[0]!;
     expect(joint.position[0]).toBeCloseTo(0, 10); expect(joint.position[1]).toBeCloseTo(0, 10);
-    expect(joint.animation!.phase).toBeCloseTo(-Math.PI/6);
+    expect(joint.animation && "phase" in joint.animation ? joint.animation.phase : undefined).toBeCloseTo(-Math.PI/6);
     expect(p.parent).toBe(joint.id); expect(p.position).toEqual([0,6,0]); expect(p.size).toEqual([4,8,4]);
     const group = buildObject(object(spec)); group.updateMatrixWorld(true);
     const mesh = group.getObjectByName(p.id)!;

@@ -1,0 +1,40 @@
+dream 2;
+material glazing(style=toon,colors=[#6497a5,#294c62]);
+material metal(style=toon,colors=[#a2aaa7,#66757c]);
+material m1(style=toon,colors=[#26272e,#424854]);
+material m4(style=toon,colors=[#f2e7d3,#d7b994]);
+material m6(style=toon,colors=[#c4453c,#f2e7d3]);
+material m13(style=glow,colors=[#ffe4a0,#ffffff]);
+material m14(style=toon,colors=[#3d6677,#263d57]);
+object town_car(label="Town car"){
+  measure(kind=car,axis=x,meters=3.55);
+  body(interaction=solid,radius=11,height=14);
+  rideable(at=[-3,6.6,0],control=car);
+  part shell(shape=prism,material=m14,at=[0.25,5.84,0],size=[34.3,6.92,17.8],outline=[[0,0],[0.08601,0],[0.08601,0.1474],[0.10143,0.4328],[0.14359,0.64173],[0.20117,0.71821],[0.25875,0.64173],[0.3009,0.4328],[0.31633,0.1474],[0.31633,0],[0.6691,0],[0.6691,0.1474],[0.68452,0.4328],[0.72668,0.64173],[0.78426,0.71821],[0.84184,0.64173],[0.88399,0.4328],[0.89942,0.1474],[0.89942,0],[1,0],[1,0.76879],[0.92711,1],[0.06997,1],[0,0.85549]]);
+  part cabin(shape=prism,material=glazing,at=[-2.75,12.05,0],size=[20.5,6.5,14.6],outline=[[0,0],[1,0],[0.78049,1],[0.04878,1]]);
+  part roof(shape=box,material=m4,at=[-4.5,15.55,0],size=[15.6,0.9,15.4]);
+  repeat sides(index=s,count=2){
+    let side(value=s*2-1);
+    beam front_pillar(shape=box,material=m14,from=[7.5,8.8,side*7.35],to=[3,15.35,side*7.35],width=.8,depth=.8);
+    beam rear_pillar(shape=box,material=m14,from=[-13,8.8,side*7.35],to=[-12,15.35,side*7.35],width=.8,depth=.8);
+    beam center_pillar(shape=box,material=m14,from=[-3,8.8,side*7.35],to=[-3,15.4,side*7.35],width=.65,depth=.8);
+    beam mirror(shape=box,material=m14,from=[6.3,10.1,side*7.6],to=[6.7,10.3,side*10.1],width=1.2,depth=1.2);
+    part handle(shape=box,material=metal,at=[-5,8.3,side*9.05],size=[1.8,.6,.6]);
+
+    part headlight(shape=cylinder,material=m13,at=[17.55,7,side*5.34],size=[2.7,0.6,2.7],rot_deg=[0,0,90]);
+    part tail_light(shape=box,material=m6,at=[-17.05,7.1,side*5.874],size=[.6,2.5,2.2]);
+  }
+  part front_bumper(shape=box,material=m1,at=[17.3,3.5,0],size=[1.4,1.5,18]);
+  part rear_bumper(shape=box,material=m1,at=[-16.8,3.5,0],size=[1.4,1.5,18]);
+  part grille(shape=box,material=m1,at=[17.65,5.1,0],size=[.5,2.1,7]);
+  repeat axles(index=w,count=2){
+    part suspension_yoke(shape=box,material=m1,at=[(w*2-1)*10,5.625,0],size=[1.4,4.45,11.8]);
+    joint bearing(at=[(w*2-1)*10,3.4,0],rot_deg=[0,180,0],motion=roll(axis=z,radius=3.4)){
+      part shaft(shape=cylinder,material=m1,at=[0,0,0],size=[1.1,16.1,1.1],rot_deg=[90,0,0]);
+      repeat wheels(index=s,count=2){
+        part tire(shape=cylinder,material=m1,at=[0,0,(s*2-1)*7.8],size=[6.8,2.6,6.8],rot_deg=[90,0,0]);
+        part hub(shape=cylinder,material=metal,at=[0,0,(s*2-1)*7.8],size=[3.57,2.8,3.57],rot_deg=[90,0,0]);
+      }
+    }
+  }
+}

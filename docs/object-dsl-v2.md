@@ -23,6 +23,8 @@ and their handmade source in `src/scene/mock-creations.ts`.
 | Bread | Horizontal capsule with slight seeded variation, crust grain and cream-colored scoring detail parts |
 | A scene of these things | Place assemblies in scene coordinates; compose the bread and fruit onto a picnic table as another assembly |
 
+Version 2 parts also accept `shape: "prism"` with a bounded `outline` of normalized XY pairs. The engine extrudes it through Z; legacy version 1 stays unchanged. Joints may use `animation: {kind: "roll", axis: "z", radius: 8}` for rigid distance-driven mechanisms. Existing swing animation objects retain their original format. [Dream authoring and bounds](dream/objects.md).
+
 ## The composition contract
 
 Every object has a display name, `parts` and one independent `body`.

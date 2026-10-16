@@ -286,11 +286,12 @@
       ],
       "id": true,
       "fields": {
-        "shape": "box|sphere|cylinder|cone|pyramid|icosphere|capsule|torus",
+        "shape": "box|sphere|cylinder|cone|pyramid|icosphere|capsule|torus|prism",
         "material": "ref",
         "at": "v3",
         "size": "v3",
         "rot_deg": "v3?",
+        "outline": "points2?",
         "taper": "n?",
         "deform": "deform?",
         "motion": "part_motion?"
@@ -653,7 +654,8 @@
     },
     "roll": {
       "contexts": [
-        "part_motion"
+        "part_motion",
+        "joint_motion"
       ],
       "id": false,
       "fields": {
@@ -740,6 +742,12 @@
         "lifetime": "n"
       }
     }
+  },
+  "geometry": {
+    "shape": "prism",
+    "outline": "3..24 simple polygon points [X,Y], 0..1 and spanning both axes; either winding, no repeated closing point, holes, touching or crossed edges; area >= .01",
+    "extrusion": "outline maps across full size X/Y, centered, extruded along Z through full size Z; rotation and uniform scaling apply normally",
+    "jointRoll": "roll(axis,radius) on a joint rotates all children rigidly by traveled distance / resolved radius; reduced motion rests it, parked furnishings bake the rest pose"
   },
   "agents": {
     "limits": {

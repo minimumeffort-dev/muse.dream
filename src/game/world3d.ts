@@ -3,9 +3,13 @@ import { measuredScale } from "../scene/measure";
 import * as THREE from "three";
 import type { Scene, SceneObject } from "../scene/schema";
 import type { ObjectPart } from "../scene/object-dsl";
+
 import { partGeometry } from "../scene/object-geometry";
 import { styledMaterial, toonMaterial } from "./shaders";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
+
+/** Five centimetres of visual body travel keeps the player's tires inside their openings. */
+export const MAX_SUSPENSION_COMPRESSION=.5;
 
 /**
  * Canonical pixels (+x right, +y down) map 1:1 to centered world X/Z,
@@ -166,11 +170,11 @@ export function animateObject(group: THREE.Group, time: number, enabled = true, 
   group.traverse(part => {
     const joint=part.userData.jointRest;
     if(joint) {
-      part.position.copy(joint.position);if(part.parent===group) part.position.y-=compression;
+      part.position.copy(joint.position);if(part.parent===group && joint.animation?.kind!=='roll') part.position.y-=compression;
       part.quaternion.copy(joint.rotation);
       if(enabled && joint.animation) {
         const motion=joint.animation,axis=new THREE.Vector3(Number(motion.axis==="x"),Number(motion.axis==="y"),Number(motion.axis==="z"));
-        part.rotateOnAxis(axis,Math.sin(time*motion.speed+motion.phase)*motion.amplitudeRad);
+        part.rotateOnAxis(axis,'kind' in motion ? distance/(motion.radius*group.scale.x) : Math.sin(time*motion.speed+motion.phase)*motion.amplitudeRad);
       }
       if(joint.proximity) {
         const motion=joint.proximity,t=THREE.MathUtils.clamp((motion.radius-listenerDistance)/24,0,1),open=t*t*(3-2*t);

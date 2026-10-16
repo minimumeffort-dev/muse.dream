@@ -176,6 +176,7 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
             const local = transform(frame, statement, env), jointId = id(), motion = statement.motion;
             joints.push({ id: jointId, ...(frame.parent ? { parent: frame.parent } : {}), position: local.position.toArray(), rotation: angles(local.rotation),
               ...(motion?.kind==="swing" ? { animation: { axis: motion.axis as "x" | "y" | "z", amplitudeRad: number(motion.args[0]!) * RAD, speed: number(motion.args[1]!), phase: number(motion.args[2]!) * RAD } } : {}),
+              ...(motion?.kind==='roll' ? {animation:{kind:'roll' as const,axis:motion.axis as 'x'|'y'|'z',radius:number(motion.args[0]!)*local.scale}} : {}),
               ...(motion?.kind==="open" ? {proximity:{axis:motion.axis as "x"|"y"|"z",angleRad:number(motion.args[0]!)*RAD,radius:number(motion.args[1]!)}} : {}) });
             jointOrigins.push(token);
             walk(statement.block!, { ...identity(), parent: jointId, scale: local.scale,fragment:frame.fragment,zone:frame.zone,path }, env, stack, false, depth + 1); break;
@@ -201,6 +202,7 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
             parts.push({ id: id(), shape: statement.shape as ObjectDslV2["parts"][number]["shape"], material: { ...material },
               position: position.toArray(), size: size.toArray(), rotation: angles(orient), ...(frame.parent ? { parent: frame.parent } : {}),
               ...(statement.taper ? {taper:number(statement.taper)} : {}),
+              ...(statement.outline ? {outline:statement.outline.map(point=>point.map(number) as [number,number])} : {}),
               ...(frame.fragment ? {fragment:frame.fragment} : {}),...(frame.zone ? {zone:frame.zone} : {}),...(statement.deform ? { deform: { seed: number(statement.deform[0]), amount: number(statement.deform[1]) } } : {}), ...(animation ? { animation } : {}) });
             origins.push(token); break;
           }
@@ -214,7 +216,10 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
       ...(joints.length ? { joints } : {}), ...(grounding ? { grounding } : {}), ...(foundation ? { foundation } : {}),
       ...(contacts.length ? {contacts} : {}),...(rideable ? {rideable} : {}),...(emitter ? {emitter} : {}),...(lamp ? {lamp} : {}),...(impact ? {impact} : {}),...(breakZones.length ? {breakZones} : {}) });
     if (!result.success) {
-      const issue = result.error.issues[0]!, index = issue.path[1];
+      const error=result.error.issues[0]!;
+      // Preserve the specific axis/radius diagnostic instead of an opaque union error.
+      const issue=error.code==='invalid_union' ? [...error.unionErrors].sort((a,b)=>a.issues.length-b.issues.length)[0]!.issues[0]! : error;
+      const index = issue.path[1];
       const field=String(issue.path[0]);
       const tokens=field==="parts" ? origins : field==="joints" ? jointOrigins : field==="contacts" ? contactOrigins : field==="breakZones" ? zoneOrigins : [];
       const token=(typeof index==="number" ? tokens[index] : metadataOrigins.get(field))??object.token;
@@ -347,13 +352,14 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
         flocks.push(flockSchema.parse({id:node.id,spec,center:vec('at'),radius:vec('radius'),count:num('count'),altitude:num('altitude'),speed:num('speed'),seed:num('seed'),...(node.fields.has('flap_hz') ? {flapHz:num('flap_hz')} : {}),...(node.fields.has('flap_deg') ? {flapDeg:num('flap_deg')} : {})}));
       }else{
         const objects=listField(node,'objects').map(ref=>exports.get(ref.name!)!);
-        if(!objects.length || objects.length>8 || objects.some(s=>!s || s.body.interaction==='knockable' || s.joints?.some(j=>j.animation || j.proximity) || isReactive(s) || s.emitter))fail('furnish needs 1..8 passive static object templates',node.token,'E_POPULATION');
+        if(!objects.length || objects.length>8 || objects.some(s=>!s || s.body.interaction==='knockable' || s.joints?.some(j=>j.proximity || j.animation && !('kind' in j.animation && j.animation.kind==='roll')) || isReactive(s) || s.emitter))fail('furnish needs 1..8 passive static object templates',node.token,'E_POPULATION');
         const data={id:node.id,spacing:num('spacing'),setback:num('setback'),seed:num('seed')};
         for(const key of ['streets','sites','grounds'])if(node.fields.has(key))Object.assign(data,{[key]:listField(node,key).map(e=>e.name!)});
         if(node.fields.has('paving'))Object.assign(data,{paving:wordField(node,'paving')});
         for(const key of ['side','facing'])if(node.fields.has(key))Object.assign(data,{[key]:wordField(node,key)});
         for(const key of ['count','jitter'])if(node.fields.has(key))Object.assign(data,{[key]:num(key)});
-        furnishings.push({...furnishingSchema.parse(data),objects});
+        // Distance-driven joints rest in parked scenery; they consume no live controller slots.
+        furnishings.push({...furnishingSchema.parse(data),objects:objects.map(s=>s.joints?.some(j=>j.animation) ? {...s,joints:s.joints.map(({animation,...joint})=>joint)} : s)});
       }
     }catch(error){if(error instanceof DreamError)throw error;fail(error instanceof ZodError ? error.issues[0]!.message : String(error),node.token,'E_POPULATION');}
   }

@@ -4,6 +4,8 @@
 
 Start with something you can see and understand. Change one field, run the checker and look at what the engine builds. These are complete Dream 2 files, checked alongside the compiler tests.
 
+[City car](../examples/city-car.dream) uses a concave shell profile, sloped glazing and two rigid axle bearings. [City bicycle](../examples/city-bicycle.dream) uses paired forks and stays, mounted axles and a rolling crank. Both are the complete assemblies used by the mock world. [See their construction](../asset-library.md#ground-vehicles-built-around-their-mechanics).
+
 [Walkable garden steps](../examples/walkable-steps.dream) pair three round treads with matching cylinder contacts. Each rise is 30 cm, below the walking controller's 40 cm step limit. The [movement guide](behavior.md) explains headroom, jumping and water support.
 
 [The complete light aircraft](../examples/light-aircraft.dream) uses tapered sections for its fuselage and wings, endpoint braces and independent wheel/propeller animation. Its [asset guide](../asset-library.md#a-light-aircraft-that-holds-together) explains the joins and physical scale.

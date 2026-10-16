@@ -30,6 +30,8 @@ The walking body automatically climbs contact steps up to **4 units, or 40 cm**,
 
 Bicycles use speed-dependent steering and lean into turns. Higher speed opens the turning radius. Bicycles, skateboards and scooters keep their own acceleration, grip and speed limits, share terrain/collisions with the racing car, and can jump under player input. The original car keeps its existing crest and ramp jumps.
 
+Rolling joints keep tires and hubs on a shared axle, or crank arms and pedals on one bearing. Their visual phase follows traveled distance; idle and parked mechanisms stay still. This does not add suspension physics, a drivetrain solver or rider leg tracking. [Vehicle construction and source](../asset-library.md#ground-vehicles-built-around-their-mechanics).
+
 Boats retain sideways momentum through a rudder turn, settle it through hull resistance and drift with currents. Their complete visible hull must stay over navigable water. Bridge undersides and finite rail bottoms provide real headroom; a boat stays on the water while a car drives on the deck above it. A hop is limited by the underside, then gravity brings the hull back to the surface. Low crossings and banks stop a hull that doesn't fit.
 
 Aircraft need forward speed to take off. Climb and descent build gradually rather than snapping vertical speed. Release the climb control at flying speed to level out; insufficient airspeed produces a sink. A wall impact stops horizontal travel while gravity continues. Land before exiting. A water landing stalls the aircraft at the surface; leave it to wade/swim or press R to recover it. These are bounded arcade controls, not a flight or sailing simulator.

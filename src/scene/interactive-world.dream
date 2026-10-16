@@ -15,11 +15,10 @@ component rail_wheel(params=[x,z]){
   part hub(shape=cylinder,material=steel,at=[x,8,z+2],size=[7,1,7],rot_deg=[90,0,0]);
 }
 component bicycle_wheel(params=[x]){
-  part tire(shape=torus,material=dark,at=[x,10,0],size=[20,20,3],motion=roll(axis=z,radius=10));
-  part rim(shape=torus,material=steel,at=[x,10,0],size=[16,16,1],motion=roll(axis=z,radius=10));
-  repeat repeat_spoke(index=spoke,count=3){
-    part spoke(shape=box,material=steel,at=[x,10,0],size=[16,1,1],rot_deg=[0,0,spoke*60],motion=roll(axis=z,radius=10));
-  }
+  part tire(shape=torus,material=dark,at=[x,10,0],size=[20,20,3],rot_deg=[0,180,0],motion=roll(axis=z,radius=10));
+  part rim(shape=torus,material=steel,at=[x,10,0],size=[16,16,1],rot_deg=[0,180,0],motion=roll(axis=z,radius=10));
+  part axle(shape=cylinder,material=steel,at=[x,10,0],size=[2.5,5.5,2.5],rot_deg=[-90,0,0],motion=roll(axis=y,radius=10));
+  repeat spokes(index=i,count=2){part spoke(shape=box,material=steel,at=[x,10,0],size=[16,.5,.5],rot_deg=[0,180,i*90],motion=roll(axis=z,radius=10));}
 }
 component opening_door(params=[]){
   joint door(at=[36,2,-13],motion=open(axis=y,deg=105,radius=100)){
@@ -141,29 +140,34 @@ object willow_launch(label="Willow launch"){
 object meadow_bicycle(label="Meadow bicycle"){
   measure(kind=bicycle,axis=x,meters=1.8);
   body(interaction=solid,radius=20,height=39);
-  rideable(at=[-3,26,0],control=bicycle);
-  use bicycle_wheel(component=bicycle_wheel,args=[-19]);
-  use bicycle_wheel_2(component=bicycle_wheel,args=[19]);
-  beam rear_frame(shape=cylinder,material=teal,from=[-19,10,0],to=[-3,12,0],width=2,depth=2);
-  beam rear_stay(shape=cylinder,material=teal,from=[-19,10,0],to=[-6,25,0],width=2,depth=2);
-  beam seat_tube(shape=cylinder,material=teal,from=[-3,12,0],to=[-6,25,0],width=2,depth=2);
-  beam top_tube(shape=cylinder,material=teal,from=[-6,25,0],to=[12,27,0],width=2,depth=2);
-  beam down_tube(shape=cylinder,material=teal,from=[-3,12,0],to=[12,27,0],width=2,depth=2);
-  beam fork(shape=cylinder,material=steel,from=[12,30,0],to=[19,10,0],width=2,depth=2);
-  part saddle(shape=capsule,material=dark,at=[-6,28,0],size=[6,12,4],rot_deg=[0,0,90]);
-  beam handlebar(shape=cylinder,material=dark,from=[12,32,-8],to=[12,32,8],width=2,depth=2);
-  part crank(shape=cylinder,material=steel,at=[-3,12,0],size=[5,5,5],rot_deg=[90,0,0],motion=roll(axis=y,radius=10));
-  beam steering_stem(shape=cylinder,material=steel,from=[12,26,0],to=[12,32,0],width=2,depth=2);
-  beam seat_post(shape=cylinder,material=steel,from=[-6,24,0],to=[-6,28,0],width=1.5,depth=1.5);
-  beam chain_top(shape=box,material=dark,from=[-19,12,2],to=[-3,14,2],width=.6,depth=.6);
-  beam chain_bottom(shape=box,material=dark,from=[-19,9,2],to=[-3,10,2],width=.6,depth=.6);
-  repeat pedals(index=s,count=2){
-    let sign(value=s*2-1);
-    beam crank_arm(shape=box,material=steel,from=[-3,12,0],to=[-3+sign*3,12+sign*3,sign*4],width=1,depth=1);
-    part pedal(shape=box,material=dark,at=[-3+sign*3,12+sign*3,sign*5],size=[4,1.5,3]);
-    part grip(shape=capsule,material=dark,at=[12,32,sign*7],size=[2,4,2],rot_deg=[90,0,0]);
+  rideable(at=[-6,28.5,0],control=bicycle);
+  use rear_wheel(component=bicycle_wheel,args=[-19]);
+  use front_wheel(component=bicycle_wheel,args=[19]);
+  beam seat_tube(shape=cylinder,material=teal,from=[-3,12,0],to=[-6,25,0],width=1.5,depth=1.5);
+  beam step_through(shape=cylinder,material=teal,from=[-3,12,0],to=[12,27,0],width=1.8,depth=1.8);
+  repeat sides(index=s,count=2){
+    let side(value=s*2-1);
+    beam seat_stay(shape=cylinder,material=teal,from=[-19,10,side*2.5],to=[-6,25,side*.5],width=1.1,depth=1.1);
+    beam chain_stay(shape=cylinder,material=teal,from=[-19,10,side*2.5],to=[-3,12,side],width=1.2,depth=1.2);
+    beam fork_blade(shape=cylinder,material=steel,from=[12,27,side*2.4],to=[19,10,side*2.4],width=1.3,depth=1.3);
   }
-  part bell(shape=cylinder,material=gold,at=[12,33,-4],size=[2.5,1,2.5]);
+  beam fork_crown(shape=cylinder,material=steel,from=[12,27,-2.4],to=[12,27,2.4],width=1.8,depth=1.8);
+  beam steering_stem(shape=cylinder,material=steel,from=[12,27,0],to=[12,32,0],width=1.5,depth=1.5);
+  beam handlebar(shape=capsule,material=dark,from=[12,32,-9],to=[12,32,9],width=1.6,depth=1.6);
+  beam seat_post(shape=cylinder,material=steel,from=[-6,24.5,0],to=[-6,28,0],width=1.2,depth=1.2);
+  part saddle(shape=capsule,material=dark,at=[-6,28.5,0],size=[4,12,7],rot_deg=[0,0,90]);
+  beam chain_top(shape=box,material=dark,from=[-19,11.3,2.8],to=[-3,14.5,2.8],width=.5,depth=.5);
+  beam chain_bottom(shape=box,material=dark,from=[-19,8.7,2.8],to=[-3,9.5,2.8],width=.5,depth=.5);
+  part crank_axle(shape=cylinder,material=steel,at=[-3,12,0],size=[2,6.4,2],rot_deg=[-90,0,0]);
+  part rear_cog(shape=cylinder,material=steel,at=[-19,10,2.8],size=[2.6,.6,2.6],rot_deg=[-90,0,0]);
+  joint crank(at=[-3,12,0],rot_deg=[0,180,0],motion=roll(axis=z,radius=18)){
+    part chainring(shape=cylinder,material=steel,at=[0,0,-2.8],size=[5,.8,5],rot_deg=[90,0,0]);
+    repeat pedals(index=s,count=2){
+      let side(value=s*2-1);
+      beam arm(shape=box,material=steel,from=[0,0,side*2.8],to=[side*3,side*3,side*2.8],width=.8,depth=.8);
+      part pedal(shape=box,material=dark,at=[side*3,side*3,side*4],size=[4,1.2,3]);
+    }
+  }
 }
 object maple_skateboard(label="Maple skateboard"){
   measure(kind=skateboard,axis=x,meters=0.82);

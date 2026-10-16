@@ -26,7 +26,7 @@ import { interactiveWorld } from "../scene/interactive-world";
 import { buildRoutes } from "./routes";
 import { compactObject } from "./compact-object";
 import { worldTime, worldMotion, terrainPlayer, terrainView, worldGradeShader } from "./shaders";
-import { animateObject, buildObject, buildPlayer } from "./world3d";
+import { animateObject, buildObject, buildPlayer,MAX_SUSPENSION_COMPRESSION } from "./world3d";
 import { buildEnvironment, roadGeometry, terrainNormal, worldPosition } from "./environment";
 import { cameraPosition, followCamera, followCameraZoom, rideCameraZoom, DEFAULT_CAMERA_ZOOM, type FollowTarget } from "./camera";
 import { hasAnimatedJoints,impactOf,isReactive,controlOf } from "../scene/object-dsl";
@@ -300,7 +300,7 @@ function start(): void {
       poses??=actorPoses(doc,car.timeS,car);
       particles.update(car, dt, !reduced.matches, boosted, impact, collision,poses);
       particles.objectImpacts(car,objectImpacts,!reduced.matches);
-      landingBounce = Math.max(landingBounce * Math.exp(-dt * 12), Math.min(1.8, impact * .008));
+      landingBounce = Math.max(landingBounce * Math.exp(-dt * 12), Math.min(MAX_SUSPENSION_COMPRESSION, impact * .008));
       if(car.control.kind==="car")wheelDistance += (car.vx * Math.cos(car.headingRad) + car.vy * Math.sin(car.headingRad)) * dt;
     }
     landscape.upload();

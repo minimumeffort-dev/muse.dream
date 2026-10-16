@@ -2,8 +2,13 @@ import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import type { ObjectPart } from "./object-dsl";
 
-function basePartGeometry(shape: ObjectPart["shape"], size: ObjectPart["size"], taper=1): THREE.BufferGeometry {
+function basePartGeometry(shape: ObjectPart["shape"], size: ObjectPart["size"], taper=1,outline?:readonly (readonly [number,number])[]): THREE.BufferGeometry {
   switch (shape) {
+    case 'prism': {
+      if(!outline)throw new Error('prism requires a validated outline');
+      const path=new THREE.Shape(outline.map(([x,y])=>new THREE.Vector2(x-.5,y-.5)));
+      path.closePath();return new THREE.ExtrudeGeometry(path,{depth:1,bevelEnabled:false,steps:1,curveSegments:1}).translate(0,0,-.5);
+    }
     case "capsule": return new THREE.CapsuleGeometry(.5,1,5,12);
     case "torus": return new THREE.TorusGeometry(.42,.08,10,24);
     // Bevel in physical units before normalization, so long boards keep crisp ends.
@@ -25,7 +30,7 @@ function basePartGeometry(shape: ObjectPart["shape"], size: ObjectPart["size"], 
 
 /** Variation is deterministic from position, so duplicated seam vertices remain joined. */
 export function partGeometry(part:ObjectPart):THREE.BufferGeometry {
-  const geometry=basePartGeometry(part.shape,part.size,"taper" in part ? part.taper : undefined);
+  const geometry=basePartGeometry(part.shape,part.size,"taper" in part ? part.taper : undefined,'outline' in part ? part.outline : undefined);
   const deform="deform" in part ? part.deform : undefined;
   if(deform?.amount) {
     const positions=geometry.getAttribute("position");
