@@ -1,0 +1,154 @@
+dream 2;
+material m0(style=toon,colors=[#aeb7af,#53666a]);
+material m1(style=toon,colors=[#26272e,#424854]);
+material m2(style=toon,colors=[#813b4e,#542d42]);
+material m3(style=glow,colors=[#ffcf86,#ffffff]);
+material m4(style=toon,colors=[#f2e7d3,#d7b994]);
+material m5(style=cloth,colors=[#d95668,#ffbd9b]);
+material m6(style=toon,colors=[#c4453c,#f2e7d3]);
+material m7(style=stripes,colors=[#63b89a,#e4e8ac]);
+material m8(style=toon,colors=[#604638,#372c2c]);
+material m9(style=toon,colors=[#32644c,#224a40]);
+material m10(style=toon,colors=[#477b50,#32644c]);
+material m11(style=toon,colors=[#bf4936,#77382e]);
+material m12(style=toon,colors=[#284d61,#152d3d]);
+material m13(style=glow,colors=[#ffe4a0,#ffffff]);
+material m14(style=toon,colors=[#3d6677,#263d57]);
+material m15(style=toon,colors=[#966348,#583c33]);
+material m16(style=glow,colors=[#7b9ac4,#ffffff]);
+material m17(style=glow,colors=[#79d1cb,#ffffff]);
+material m18(style=toon,colors=[#b87536,#774b32]);
+material m19(style=toon,colors=[#d4a456,#774b32]);
+object castle(label="Castle"){
+  body(interaction=solid,radius=30,height=58);
+  foundation(size=[48,44],color=#77817b);
+  part keep(shape=box,material=m0,at=[0,15,0],size=[32,30,28]);
+  part upper_keep(shape=box,material=m0,at=[0,36,0],size=[20,12,18]);
+  part gate(shape=box,material=m1,at=[0,8,14.5],size=[9,16,1]);
+  part tower_nw(shape=cylinder,material=m0,at=[-16,21,-14],size=[10,42,10]);
+  part tower_ne(shape=cylinder,material=m0,at=[16,21,-14],size=[10,42,10]);
+  part tower_sw(shape=cylinder,material=m0,at=[-16,21,14],size=[10,42,10]);
+  part tower_se(shape=cylinder,material=m0,at=[16,21,14],size=[10,42,10]);
+  part roof_nw(shape=cone,material=m2,at=[-16,49,-14],size=[13,14,13]);
+  part roof_ne(shape=cone,material=m2,at=[16,49,-14],size=[13,14,13]);
+  part roof_sw(shape=cone,material=m2,at=[-16,49,14],size=[13,14,13]);
+  part roof_se(shape=cone,material=m2,at=[16,49,14],size=[13,14,13]);
+  part window_neg_9_14(shape=box,material=m3,at=[-9,14,14.5],size=[3,6,1]);
+  part window_neg_9_26(shape=box,material=m3,at=[-9,26,14.5],size=[3,6,1]);
+  part window_9_14(shape=box,material=m3,at=[9,14,14.5],size=[3,6,1]);
+  part window_9_26(shape=box,material=m3,at=[9,26,14.5],size=[3,6,1]);
+  part flagpole(shape=cylinder,material=m4,at=[0,57,0],size=[1,34,1]);
+  part flag(shape=box,material=m5,at=[8,69,0],size=[16,9,0.5]);
+  part foundation(shape=box,material=m0,at=[0,2,0],size=[41,4,37]);
+  part battlement_neg_7(shape=box,material=m0,at=[-7,44,8],size=[4,6,4]);
+  part battlement_0(shape=box,material=m0,at=[0,44,8],size=[4,6,4]);
+  part battlement_7(shape=box,material=m0,at=[7,44,8],size=[4,6,4]);
+}
+object mushroom(label="Mushroom"){
+  body(interaction=knockable,radius=10,height=22,friction=1.6);
+  part stem(shape=cylinder,material=m4,at=[0,8,0],size=[7,16,7]);
+  part cap(shape=sphere,material=m6,at=[0,17,0],size=[22,10,20]);
+  part spot_left(shape=sphere,material=m4,at=[-5,21,2],size=[4,2,4]);
+  part spot_right(shape=sphere,material=m4,at=[5,21,-2],size=[3,2,3]);
+}
+object mushroom_rover(label="Mushroom rover"){
+  body(interaction=knockable,radius=15,height=27,friction=2.2);
+  part chassis(shape=box,material=m7,at=[0,7,0],size=[24,8,16]);
+  part stem(shape=cylinder,material=m4,at=[0,15,0],size=[7,12,7]);
+  part cap(shape=sphere,material=m6,at=[0,22,0],size=[24,10,22]);
+  part wheel_nw(shape=cylinder,material=m1,at=[-8,4,-9],size=[8,4,8],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
+  part wheel_ne(shape=cylinder,material=m1,at=[8,4,-9],size=[8,4,8],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
+  part wheel_sw(shape=cylinder,material=m1,at=[-8,4,9],size=[8,4,8],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
+  part wheel_se(shape=cylinder,material=m1,at=[8,4,9],size=[8,4,8],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
+}
+object oak(label="Oak"){
+  body(interaction=solid,radius=14,height=56);
+  part trunk(shape=cylinder,material=m8,at=[0,14,0],size=[6,28,6]);
+  part branch(shape=cylinder,material=m8,at=[-5,24,0],size=[3,17,3],rot_deg=[0,0,-34.37746770784939]);
+  part crown(shape=icosphere,material=m9,at=[0,40,0],size=[34,32,32],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
+  part crown_left(shape=icosphere,material=m10,at=[-12,33,3],size=[24,24,23],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
+  part crown_right(shape=icosphere,material=m9,at=[12,35,-4],size=[23,25,24],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
+}
+object pine(label="Pine"){
+  body(interaction=solid,radius=12,height=64);
+  part trunk(shape=cylinder,material=m8,at=[0,12,0],size=[5,24,5]);
+  part lower_crown(shape=cone,material=m9,at=[0,30,0],size=[37,30,37],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
+  part middle_crown(shape=cone,material=m10,at=[0,43,0],size=[29,27,29],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
+  part upper_crown(shape=cone,material=m9,at=[0,55,0],size=[19,24,19],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
+}
+object boulders(label="Boulders"){
+  body(interaction=solid,radius=18,height=22);
+  ground(mode=surface);
+  part large(shape=icosphere,material=m0,at=[-5,11,0],size=[29,22,26]);
+  part small(shape=icosphere,material=m0,at=[12,6,5],size=[18,12,18],rot_deg=[0,40.10704565915762,11.459155902616464]);
+}
+object little_rally_car(label="Little rally car"){
+  body(interaction=solid,radius=11,height=14);
+  part chassis(shape=box,material=m11,at=[0,6,0],size=[33,7,17]);
+  part hood(shape=box,material=m11,at=[10,10,0],size=[12,3,16]);
+  part cab(shape=box,material=m12,at=[-4,11,0],size=[16,8,14]);
+  part roof(shape=box,material=m4,at=[-4,15,0],size=[15,2,13]);
+  part stripe(shape=box,material=m4,at=[10,11.6,0],size=[12,0.5,3]);
+  part bumper(shape=box,material=m1,at=[17,5,0],size=[2,3,18]);
+  part wing_post(shape=box,material=m1,at=[-15,11,0],size=[2,6,13]);
+  part wing(shape=box,material=m11,at=[-15,14,0],size=[5,2,21]);
+  part lamp_neg_1(shape=box,material=m13,at=[17.3,8,-5.5],size=[1,3,4]);
+  part wheel_neg_10_neg_1(shape=cylinder,material=m1,at=[-10,4,-9],size=[8,3,8],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
+  part wheel_10_neg_1(shape=cylinder,material=m1,at=[10,4,-9],size=[8,3,8],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
+  part lamp_1(shape=box,material=m13,at=[17.3,8,5.5],size=[1,3,4]);
+  part wheel_neg_10_1(shape=cylinder,material=m1,at=[-10,4,9],size=[8,3,8],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
+  part wheel_10_1(shape=cylinder,material=m1,at=[10,4,9],size=[8,3,8],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
+}
+object hillside_cottage(label="Hillside cottage"){
+  body(interaction=solid,radius=28,height=64);
+  foundation(size=[46,58],color=#77817b);
+  part walls(shape=box,material=m4,at=[0,17,0],size=[42,34,34]);
+  part roof(shape=pyramid,material=m14,at=[0,48,0],size=[52,28,44]);
+  part door(shape=box,material=m15,at=[0,10,17.5],size=[10,20,1]);
+  part window_neg_13(shape=box,material=m13,at=[-13,22,17.5],size=[8,9,1]);
+  part window_13(shape=box,material=m13,at=[13,22,17.5],size=[8,9,1]);
+  part chimney(shape=box,material=m0,at=[13,53,-6],size=[7,22,7]);
+  part step(shape=box,material=m0,at=[0,2,22],size=[17,4,10]);
+}
+object windmill(label="Windmill"){
+  body(interaction=solid,radius=25,height=105);
+  foundation(size=[38,38],color=#77817b);
+  part tower(shape=cylinder,material=m4,at=[0,38,0],size=[32,76,32]);
+  part roof(shape=cone,material=m2,at=[0,88,0],size=[40,24,40]);
+  part axle(shape=cylinder,material=m15,at=[0,64,17],size=[6,16,6],rot_deg=[90,0,0]);
+  part hub(shape=sphere,material=m15,at=[0,64,21],size=[10,10,10]);
+  part sails_0(shape=box,material=m15,at=[0,64,21],size=[8,78,2],rot_deg=[0,0,0],motion=spin(axis=z,deg_s=28.64788975654116));
+  part sails_1(shape=box,material=m15,at=[0,64,21],size=[8,78,2],rot_deg=[0,0,90],motion=spin(axis=z,deg_s=28.64788975654116));
+  part door(shape=box,material=m15,at=[0,11,16],size=[9,22,2]);
+}
+object crystal_garden(label="Crystal garden"){
+  body(interaction=solid,radius=17,height=43);
+  part crystal_neg_1(shape=icosphere,material=m16,at=[-11,13,-4],size=[13,27,13],rot_deg=[0,0,14.32394487827058]);
+  part crystal_0(shape=icosphere,material=m17,at=[0,24,0],size=[13,48,13],rot_deg=[0,0,0]);
+  part crystal_1(shape=icosphere,material=m16,at=[11,13,4],size=[13,27,13],rot_deg=[0,0,-14.32394487827058]);
+}
+object ancient_ruins(label="Ancient ruins"){
+  body(interaction=solid,radius=28,height=38);
+  foundation(size=[60,54],color=#77817b);
+  part pillar_neg_18(shape=cylinder,material=m0,at=[-18,18,0],size=[12,36,12]);
+  part pillar_18(shape=cylinder,material=m0,at=[18,18,0],size=[12,36,12]);
+  part lintel(shape=box,material=m0,at=[0,37,0],size=[52,8,16],rot_deg=[0,0,3.437746770784939]);
+  part fallen(shape=cylinder,material=m0,at=[6,7,19],size=[12,31,12],rot_deg=[0,0,90]);
+}
+object cactus(label="Cactus"){
+  body(interaction=solid,radius=10,height=42);
+  part stem(shape=cylinder,material=m10,at=[0,21,0],size=[12,42,12]);
+  part tip(shape=sphere,material=m10,at=[0,42,0],size=[12,10,12]);
+  part arm_neg_1(shape=box,material=m9,at=[-8,15,0],size=[14,7,7]);
+  part finger_neg_1(shape=cylinder,material=m9,at=[-14,21,0],size=[8,17,8]);
+  part arm_1(shape=box,material=m9,at=[8,25,0],size=[14,7,7]);
+  part finger_1(shape=cylinder,material=m9,at=[14,31,0],size=[8,17,8]);
+}
+object amber_tree(label="Amber tree"){
+  body(interaction=solid,radius=14,height=56);
+  part trunk(shape=cylinder,material=m8,at=[0,14,0],size=[6,28,6]);
+  part branch(shape=cylinder,material=m8,at=[-5,24,0],size=[3,17,3],rot_deg=[0,0,-34.37746770784939]);
+  part crown(shape=icosphere,material=m18,at=[0,40,0],size=[34,32,32],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
+  part crown_left(shape=icosphere,material=m19,at=[-12,33,3],size=[24,24,23],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
+  part crown_right(shape=icosphere,material=m19,at=[12,35,-4],size=[23,25,24],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
+}

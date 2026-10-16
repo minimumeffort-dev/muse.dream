@@ -1,0 +1,49 @@
+
+> paper-racing-game@0.1.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/world3d.test.ts (5 tests) 25ms
+ ✓ tests/object-dsl.test.ts (26 tests) 35ms
+ ✓ tests/world-presentation.test.ts (6 tests) 101ms
+ ✓ tests/sim.test.ts (18 tests) 103ms
+ ✓ tests/dream.test.ts (43 tests) 283ms
+ ✓ tests/object-dsl-v2.test.ts (26 tests) 355ms
+ ✓ tests/world-layout.test.ts (4 tests) 586ms
+   ✓ coherent mock world layout > mixes neighboring silhouettes without overlapping physical bodies  518ms
+ ✓ tests/terrain-driving.test.ts (13 tests) 570ms
+   ✓ terrain driving > lets the mock player drive the opening road crest, jump and land without a scripted impulse  506ms
+ ✓ tests/scene.test.ts (11 tests) 1103ms
+ ✓ tests/object-placement.test.ts (12 tests) 1495ms
+   ✓ objects supported on hills > places every current world assembly above the rendered surface  1236ms
+ ✓ tests/water-bridges.test.ts (13 tests) 1488ms
+   ✓ bounded landscape DSL > rejects off-world, overlapping and submerged bridge proposals  1106ms
+ ✓ tests/destruction.test.ts (24 tests) 1447ms
+   ✓ impact DSL > authors distinct bounce, table, crate and planter behaviors without object-name recipes  575ms
+ ✓ tests/open-world.test.ts (10 tests) 1887ms
+   ✓ bounded open-world scene > has nine times the former area, a winding circuit and diverse assemblies  547ms
+   ✓ bounded open-world scene > rejects collapsed, unbounded or off-sheet road proposals  612ms
+   ✓ bounded open-world scene > finishes the full winding circuit through every ordered checkpoint  630ms
+ ✓ tests/interactive-world.test.ts (30 tests) 2048ms
+   ✓ Dream world authoring > rejects routes without a safe world footprint or water support  875ms
+   ✓ Dream world authoring > rejects a boat crossing a bridge deck even when its side rails are disabled  779ms
+ ✓ tests/component-geometry.test.ts (16 tests) 3149ms
+   ✓ continuous road trim > joins every curb face, including the loop seam on side -1  1574ms
+   ✓ continuous road trim > joins every curb face, including the loop seam on side 1  1369ms
+ ✓ tests/landscape.test.ts (11 tests) 3411ms
+   ✓ paper-authored landscape data > keeps the larger mock world's racing road playable  617ms
+   ✓ terrain and render alignment > subdivides long road straights and drapes every vertex over the same height field  1597ms
+   ✓ terrain and render alignment > keeps triangle interiors above the rendered ground, including ice, boost and the road crest  1099ms
+ ✓ tests/bridge-continuity.test.ts (13 tests) 3095ms
+   ✓ one continuous road across a bridge > stops painted dashes and raised curbs at timber banks  340ms
+   ✓ one continuous road across a bridge > tapers both curb sections into the timber without exposed ends  330ms
+   ✓ one continuous road across a bridge > retains asphalt over a stone road bridge  1213ms
+   ✓ bridge/road semantic validation > accepts either end order, curved contained crossings and unrelated footbridges  494ms
+
+ Test Files  17 passed (17)
+      Tests  281 passed (281)
+   Start at  01:30:52
+   Duration  4.85s (transform 679ms, setup 0ms, collect 5.39s, tests 21.18s, environment 2ms, prepare 644ms)
+

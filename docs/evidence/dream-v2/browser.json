@@ -1,0 +1,15 @@
+{
+  "main": {
+    "car": "1455.5,1360.0,9.6",
+    "flight": "{\"jumps\":1,\"landings\":1,\"maxClearance\":4.446770090383463}",
+    "fps": "60.0",
+    "grounded": "true",
+    "render": "{\"calls\":295,\"triangles\":145275,\"geometries\":276}",
+    "view": "-0.51308,0.15225,0.09304,0.83959",
+    "world": "{\"width\":6000,\"height\":4800,\"objects\":432,\"checkpoints\":8}"
+  },
+  "viewStayedFixed": true,
+  "mainConsole": [],
+  "worldConsole": [],
+  "galleryConsole": []
+}

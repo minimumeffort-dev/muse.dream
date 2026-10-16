@@ -1,0 +1,36 @@
+{
+  "before": {
+    "camera": "-1955.0,12.0,-1040.0",
+    "car": "1045.0,1360.0,1.5",
+    "flight": "{\"jumps\":0,\"landings\":0,\"maxClearance\":0}",
+    "fps": "59.7",
+    "grounded": "true",
+    "heading": "0.000",
+    "height": 720,
+    "mode": "playing",
+    "occluders": "0",
+    "particles": "0",
+    "render": "{\"calls\":224,\"triangles\":129721,\"geometries\":123}",
+    "speed": "0.0",
+    "view": "-0.51308,0.15225,0.09304,0.83959",
+    "width": 1280,
+    "world": "{\"width\":6000,\"height\":4800,\"objects\":861,\"checkpoints\":8}"
+  },
+  "after": {
+    "camera": "-1955.0,12.0,-1040.0",
+    "car": "1045.0,1360.0,1.5",
+    "flight": "{\"jumps\":0,\"landings\":0,\"maxClearance\":0}",
+    "fps": "60.3",
+    "grounded": "true",
+    "heading": "0.000",
+    "height": 720,
+    "mode": "playing",
+    "occluders": "0",
+    "particles": "0",
+    "render": "{\"calls\":202,\"triangles\":98297,\"geometries\":116}",
+    "speed": "0.0",
+    "view": "-0.51308,0.15225,0.09304,0.83959",
+    "width": 1280,
+    "world": "{\"width\":6000,\"height\":4800,\"objects\":413,\"checkpoints\":8}"
+  }
+}

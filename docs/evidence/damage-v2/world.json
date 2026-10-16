@@ -1,0 +1,137 @@
+{
+  "revision": "r14",
+  "files": 18,
+  "sourceCharacters": 114556,
+  "objects": 448,
+  "checkpoints": 8,
+  "routes": 5,
+  "reactive": [
+    {
+      "id": "orchard_picnic",
+      "mode": "break",
+      "zones": 0,
+      "fragments": 7
+    },
+    {
+      "id": "meadow_ball",
+      "mode": "bounce",
+      "zones": 0,
+      "fragments": 0
+    },
+    {
+      "id": "meadow_table",
+      "mode": "break",
+      "zones": 0,
+      "fragments": 7
+    },
+    {
+      "id": "orchard_crate",
+      "mode": "break",
+      "zones": 0,
+      "fragments": 8
+    },
+    {
+      "id": "garden_planter",
+      "mode": "break",
+      "zones": 0,
+      "fragments": 6
+    },
+    {
+      "id": "roadside_table",
+      "mode": "break",
+      "zones": 0,
+      "fragments": 7
+    },
+    {
+      "id": "roadside_ball",
+      "mode": "bounce",
+      "zones": 0,
+      "fragments": 0
+    },
+    {
+      "id": "station_crate",
+      "mode": "break",
+      "zones": 0,
+      "fragments": 8
+    },
+    {
+      "id": "orchard_supply_crate",
+      "mode": "break",
+      "zones": 0,
+      "fragments": 8
+    },
+    {
+      "id": "station_planter",
+      "mode": "break",
+      "zones": 0,
+      "fragments": 6
+    },
+    {
+      "id": "roadside_planter",
+      "mode": "break",
+      "zones": 0,
+      "fragments": 6
+    },
+    {
+      "id": "orchard_birch",
+      "mode": "topple",
+      "zones": 0,
+      "fragments": 1
+    },
+    {
+      "id": "meadow_spruce",
+      "mode": "topple",
+      "zones": 0,
+      "fragments": 1
+    },
+    {
+      "id": "orchard_sapling",
+      "mode": "topple",
+      "zones": 0,
+      "fragments": 1
+    },
+    {
+      "id": "west_birch",
+      "mode": "topple",
+      "zones": 0,
+      "fragments": 1
+    },
+    {
+      "id": "station_spruce",
+      "mode": "topple",
+      "zones": 0,
+      "fragments": 1
+    },
+    {
+      "id": "southern_sapling",
+      "mode": "topple",
+      "zones": 0,
+      "fragments": 1
+    },
+    {
+      "id": "park_bench",
+      "mode": "break",
+      "zones": 0,
+      "fragments": 7
+    },
+    {
+      "id": "station_bench",
+      "mode": "break",
+      "zones": 0,
+      "fragments": 7
+    },
+    {
+      "id": "orchard_workshop",
+      "mode": "zones",
+      "zones": 1,
+      "fragments": 6
+    },
+    {
+      "id": "wayside_bakehouse",
+      "mode": "zones",
+      "zones": 1,
+      "fragments": 8
+    }
+  ],
+  "potentialFragments": 97
+}

@@ -1,0 +1,41 @@
+{
+  "note": "Handmade corpus. Syntax-token counts are lexer tokens, not LLM tokenizer counts. Compile timings are local warm samples, not inference measurements.",
+  "sources": [
+    {
+      "source": "dream-creations",
+      "legacyCharacters": 6198,
+      "v2Characters": 7938,
+      "legacySyntaxTokens": 2004,
+      "v2SyntaxTokens": 3211,
+      "assemblies": 7,
+      "parts": 125,
+      "joints": 7,
+      "placements": 0,
+      "medianCompileMs": 1.951
+    },
+    {
+      "source": "interactive-world",
+      "legacyCharacters": 10451,
+      "v2Characters": 14082,
+      "legacySyntaxTokens": 3538,
+      "v2SyntaxTokens": 5692,
+      "assemblies": 10,
+      "parts": 162,
+      "joints": 2,
+      "placements": 9,
+      "medianCompileMs": 3.371
+    },
+    {
+      "source": "impact-creations",
+      "legacyCharacters": 2381,
+      "v2Characters": 3367,
+      "legacySyntaxTokens": 687,
+      "v2SyntaxTokens": 1194,
+      "assemblies": 4,
+      "parts": 38,
+      "joints": 0,
+      "placements": 4,
+      "medianCompileMs": 1.318
+    }
+  ]
+}

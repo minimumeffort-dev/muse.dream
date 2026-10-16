@@ -1,0 +1,43 @@
+import * as THREE from "three";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
+import type { ObjectPart } from "./object-dsl";
+
+function basePartGeometry(shape: ObjectPart["shape"]): THREE.BufferGeometry {
+  switch (shape) {
+    case "capsule": return new THREE.CapsuleGeometry(.5,1,5,12);
+    case "torus": return new THREE.TorusGeometry(.36,.14,10,24);
+    case "box": return new RoundedBoxGeometry(1,1,1,2,.12);
+    case "sphere": return new THREE.SphereGeometry(0.5, 16, 12);
+    case "cylinder": return new THREE.CylinderGeometry(0.5, 0.5, 1, 16);
+    case "cone": return new THREE.ConeGeometry(0.5, 1, 16);
+    case "pyramid": return new THREE.ConeGeometry(0.5, 1, 4).rotateY(Math.PI / 4).scale(Math.SQRT2, 1, Math.SQRT2);
+    case "icosphere": {
+      const geo = new THREE.IcosahedronGeometry(.5, 1);
+      geo.computeBoundingBox();
+      const size = geo.boundingBox!.getSize(new THREE.Vector3());
+      geo.scale(1 / size.x, 1 / size.y, 1 / size.z);
+      geo.computeVertexNormals();
+      return geo;
+    }
+  }
+}
+
+/** Variation is deterministic from position, so duplicated seam vertices remain joined. */
+export function partGeometry(part:ObjectPart):THREE.BufferGeometry {
+  const geometry=basePartGeometry(part.shape);
+  const deform="deform" in part ? part.deform : undefined;
+  if(deform?.amount) {
+    const positions=geometry.getAttribute("position");
+    for(let i=0;i<positions.count;i++) {
+      const x=positions.getX(i),y=positions.getY(i),z=positions.getZ(i),seed=deform.seed*.731;
+      const noise=(Math.sin(x*7.1+y*3.7+seed)+Math.sin(y*5.3+z*6.1-seed*.7)+Math.sin(z*8.3+x*4.9+seed*1.3))/3;
+      const factor=1+noise*deform.amount;positions.setXYZ(i,x*factor,y*factor,z*factor);
+    }
+  }
+  if(deform || part.shape==="capsule" || part.shape==="torus") {
+    geometry.computeBoundingBox();const bounds=geometry.boundingBox!,center=bounds.getCenter(new THREE.Vector3()),size=bounds.getSize(new THREE.Vector3());
+    geometry.translate(-center.x,-center.y,-center.z);geometry.scale(1/size.x,1/size.y,1/size.z);geometry.computeVertexNormals();
+  }
+  return geometry;
+}
+

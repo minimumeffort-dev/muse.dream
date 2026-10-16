@@ -1,0 +1,271 @@
+dream 2;
+material teal(style=toon,colors=[#448b87,#448b87]);
+material red(style=toon,colors=[#af5040,#af5040]);
+material cream(style=toon,colors=[#e6d6b0,#e6d6b0]);
+material dark(style=toon,colors=[#2c3840,#2c3840]);
+material steel(style=toon,colors=[#a6b7b3,#a6b7b3]);
+material glass(style=toon,colors=[#83bbc5,#83bbc5]);
+material wood(style=grain,colors=[#926745,#b88f60]);
+material stone(style=grain,colors=[#8a928d,#737e7c]);
+material moss(style=toon,colors=[#6d8050,#6d8050]);
+material gold(style=toon,colors=[#d5a253,#d5a253]);
+material skin(style=toon,colors=[#c68d65,#c68d65]);
+component rail_wheel(params=[x,z]){
+  part tire(shape=cylinder,material=dark,at=[x,8,z],size=[16,4,16],rot_deg=[90,0,0],motion=roll(axis=y,radius=8));
+  part hub(shape=cylinder,material=steel,at=[x,8,z+2],size=[7,1,7],rot_deg=[90,0,0]);
+}
+component bicycle_wheel(params=[x]){
+  part tire(shape=torus,material=dark,at=[x,10,0],size=[20,20,3],motion=roll(axis=z,radius=10));
+  part rim(shape=torus,material=steel,at=[x,10,0],size=[16,16,1],motion=roll(axis=z,radius=10));
+  repeat repeat_spoke(index=spoke,count=3){
+    part spoke(shape=box,material=steel,at=[x,10,0],size=[16,1,1],rot_deg=[0,0,spoke*60],motion=roll(axis=z,radius=10));
+  }
+}
+component opening_door(params=[]){
+  joint door(at=[36,2,-13],motion=open(axis=y,deg=105,radius=100)){
+    part panel(shape=box,material=teal,at=[0,18,12],size=[3,36,24]);
+    part window(shape=box,material=glass,at=[2,23,12],size=[1,15,17]);
+    part handle(shape=sphere,material=gold,at=[3,15,21],size=[2,2,2]);
+  }
+}
+object meadow_locomotive(label="Meadow locomotive"){
+  body(interaction=solid,radius=30,height=51);
+  rideable(at=[-19,18,0]);
+  emit(kind=steam,at=[23,51,0],rate_s=6);
+  repeat repeat_side(index=side,count=2){
+    repeat repeat_axle(index=axle,count=3){
+      use rail_wheel(component=rail_wheel,args=[(axle-1)*23,side*24-12]);
+    }
+    beam rod(shape=box,material=steel,from=[-24,8,side*30-15],to=[24,8,side*30-15],width=2,depth=2);
+  }
+  part chassis(shape=box,material=dark,at=[0,14,0],size=[74,7,28]);
+  part boiler(shape=cylinder,material=teal,at=[10,25,0],size=[22,43,22],rot_deg=[0,0,90]);
+  part nose(shape=cylinder,material=steel,at=[33,25,0],size=[20,2,20],rot_deg=[0,0,90]);
+  part lamp(shape=sphere,material=gold,at=[35,28,0],size=[4,5,5]);
+  part chimney(shape=cylinder,material=dark,at=[23,41,0],size=[7,19,7]);
+  part chimney_cap(shape=cylinder,material=dark,at=[23,49,0],size=[10,3,10]);
+  part cab_back(shape=box,material=red,at=[-32,30,0],size=[3,30,28]);
+  repeat repeat_side_2(index=side,count=2){
+    part cab_side(shape=box,material=red,at=[-22,23,side*26-13],size=[23,14,3]);
+    part cab_post(shape=box,material=red,at=[-11,36,side*26-13],size=[3,15,3]);
+  }
+  part roof(shape=box,material=dark,at=[-22,46,0],size=[32,4,35]);
+}
+object passenger_carriage(label="Passenger carriage"){
+  body(interaction=solid,radius=30,height=50);
+  repeat repeat_side(index=side,count=2){
+    repeat repeat_axle(index=axle,count=2){
+      use rail_wheel(component=rail_wheel,args=[axle*40-20,side*24-12]);
+    }
+    repeat repeat_window(index=window,count=3){
+      part window(shape=box,material=glass,at=[(window-1)*20,32,side*28-14],size=[13,13,1]);
+    }
+    part stripe(shape=box,material=cream,at=[0,22,side*28-14],size=[69,4,1]);
+  }
+  part chassis(shape=box,material=dark,at=[0,14,0],size=[78,5,27]);
+  part cabin(shape=box,material=red,at=[0,29,0],size=[70,27,28]);
+  part roof(shape=capsule,material=cream,at=[0,44,0],size=[7,76,33],rot_deg=[0,0,90]);
+  repeat repeat_end(index=end,count=2){
+    part coupling(shape=box,material=dark,at=[end*84-42,13,0],size=[14,3,4]);
+  }
+}
+object cloudhopper_plane(label="Cloudhopper plane"){
+  body(interaction=solid,radius=29,height=32);
+  rideable(at=[-9,19,0]);
+  part fuselage(shape=capsule,material=cream,at=[0,17,0],size=[20,69,19],rot_deg=[0,0,90]);
+  part wings(shape=box,material=teal,at=[3,17,0],size=[22,3,92]);
+  part tailplane(shape=box,material=teal,at=[-29,18,0],size=[15,2,34]);
+  part fin(shape=box,material=red,at=[-27,27,0],size=[13,18,3]);
+  part cockpit(shape=sphere,material=glass,at=[-9,25,0],size=[22,12,14]);
+  part nose(shape=cylinder,material=red,at=[33,17,0],size=[16,6,16],rot_deg=[0,0,90]);
+  part propeller(shape=box,material=dark,at=[37,17,0],size=[2,36,3],motion=spin(axis=x,deg_s=160));
+  part spinner(shape=sphere,material=steel,at=[39,17,0],size=[6,6,6]);
+  repeat repeat_side(index=side,count=2){
+    beam strut(shape=cylinder,material=steel,from=[8,14,side*10-5],to=[8,5,side*22-11],width=2,depth=2);
+    part wheel(shape=cylinder,material=dark,at=[8,5,side*24-12],size=[10,4,10],rot_deg=[90,0,0],motion=roll(axis=y,radius=5));
+  }
+  part tail_wheel(shape=sphere,material=dark,at=[-29,6,0],size=[5,5,5]);
+}
+object willow_launch(label="Willow launch"){
+  body(interaction=solid,radius=26,height=38);
+  rideable(at=[18,12,0]);
+  part hull(shape=sphere,material=teal,at=[0,4,0],size=[69,16,31]);
+  part deck(shape=box,material=wood,at=[0,10,0],size=[54,4,24]);
+  part cabin(shape=box,material=cream,at=[-7,20,0],size=[25,18,22]);
+  part roof(shape=box,material=red,at=[-7,30,0],size=[31,4,28]);
+  part windshield(shape=box,material=glass,at=[6,23,0],size=[1,10,17]);
+  repeat repeat_side(index=side,count=2){
+    part window(shape=box,material=glass,at=[-7,23,side*23-11.5],size=[16,10,1]);
+    beam rail(shape=cylinder,material=steel,from=[10,17,side*23-11.5],to=[27,17,side*16-8],width=1,depth=1);
+    repeat repeat_post(index=post,count=2){
+      part post(shape=cylinder,material=steel,at=[12+post*13,14,side*21-10.5],size=[1,7,1]);
+    }
+  }
+  part seat(shape=box,material=red,at=[17,13,0],size=[12,4,13]);
+  part mast(shape=cylinder,material=wood,at=[-23,26,0],size=[2,30,2]);
+  part pennant(shape=box,material=red,at=[-17,36,0],size=[12,8,1]);
+}
+object meadow_bicycle(label="Meadow bicycle"){
+  body(interaction=solid,radius=20,height=39);
+  rideable(at=[-3,26,0]);
+  use bicycle_wheel(component=bicycle_wheel,args=[-19]);
+  use bicycle_wheel_2(component=bicycle_wheel,args=[19]);
+  beam rear_frame(shape=cylinder,material=teal,from=[-19,10,0],to=[-3,12,0],width=2,depth=2);
+  beam rear_stay(shape=cylinder,material=teal,from=[-19,10,0],to=[-6,25,0],width=2,depth=2);
+  beam seat_tube(shape=cylinder,material=teal,from=[-3,12,0],to=[-6,25,0],width=2,depth=2);
+  beam top_tube(shape=cylinder,material=teal,from=[-6,25,0],to=[12,27,0],width=2,depth=2);
+  beam down_tube(shape=cylinder,material=teal,from=[-3,12,0],to=[12,27,0],width=2,depth=2);
+  beam fork(shape=cylinder,material=steel,from=[12,30,0],to=[19,10,0],width=2,depth=2);
+  part saddle(shape=capsule,material=dark,at=[-6,28,0],size=[6,12,4],rot_deg=[0,0,90]);
+  beam handlebar(shape=cylinder,material=dark,from=[12,32,-8],to=[12,32,8],width=2,depth=2);
+  part crank(shape=cylinder,material=steel,at=[-3,12,0],size=[5,5,5],rot_deg=[90,0,0],motion=roll(axis=y,radius=10));
+}
+object maple_skateboard(label="Maple skateboard"){
+  body(interaction=solid,radius=14,height=9);
+  rideable(at=[0,8,0]);
+  part deck(shape=capsule,material=wood,at=[0,7,0],size=[3,43,12],rot_deg=[0,0,90]);
+  part grip(shape=capsule,material=dark,at=[0,8.4,0],size=[1,36,10],rot_deg=[0,0,90]);
+  repeat repeat_axle(index=axle,count=2){
+    part truck(shape=box,material=steel,at=[axle*26-13,4,0],size=[4,3,14]);
+    repeat repeat_side(index=side,count=2){
+      part wheel(shape=cylinder,material=gold,at=[axle*26-13,3,side*14-7],size=[6,3,6],rot_deg=[90,0,0],motion=roll(axis=y,radius=3));
+    }
+  }
+}
+object meadow_station_2(label="Meadow station"){
+  body(interaction=solid,radius=30,height=66);
+  emit(kind=steam,at=[-20,78,-15],rate_s=2);
+  contact contact(at=[-32,0,-20],radius=8,height=50);
+  contact contact_2(at=[-32,0,0],radius=8,height=50);
+  contact contact_3(at=[-32,0,20],radius=8,height=50);
+  contact contact_4(at=[-18,0,-27],radius=9,height=50);
+  contact contact_5(at=[18,0,-27],radius=9,height=50);
+  contact contact_6(at=[-18,0,27],radius=9,height=50);
+  contact contact_7(at=[18,0,27],radius=9,height=50);
+  contact contact_8(at=[0,48,0],radius=39,height=16);
+  part rear(shape=box,material=cream,at=[-32,25,0],size=[10,50,60]);
+  repeat repeat_side(index=side,count=2){
+    part wall(shape=box,material=cream,at=[0,25,side*54-27],size=[72,50,7]);
+    part window(shape=box,material=glass,at=[0,30,side*62-31],size=[22,18,1]);
+    beam sill(shape=box,material=wood,from=[-13,19,side*64-32],to=[13,19,side*64-32],width=3,depth=3);
+    part front_post(shape=box,material=wood,at=[35,24,side*45-22.5],size=[5,48,15]);
+  }
+  part lintel(shape=box,material=wood,at=[35,44,0],size=[5,10,38]);
+  part roof(shape=pyramid,material=red,at=[0,57,0],size=[88,24,76]);
+  part chimney(shape=box,material=stone,at=[-20,65,-15],size=[10,22,10]);
+  part platform(shape=box,material=stone,at=[48,1,0],size=[28,2,72]);
+  use opening_door(component=opening_door,args=[]);
+  part clock(shape=sphere,material=cream,at=[38,46,0],size=[2,10,10]);
+  part clock_hand(shape=box,material=dark,at=[39,47,0],size=[1,5,1]);
+}
+object lakeside_boathouse(label="Lakeside boathouse"){
+  body(interaction=solid,radius=30,height=56);
+  contact contact(at=[-32,0,-20],radius=8,height=42);
+  contact contact_2(at=[-32,0,0],radius=8,height=42);
+  contact contact_3(at=[-32,0,20],radius=8,height=42);
+  contact contact_4(at=[-18,0,-27],radius=9,height=42);
+  contact contact_5(at=[18,0,-27],radius=9,height=42);
+  contact contact_6(at=[-18,0,27],radius=9,height=42);
+  contact contact_7(at=[18,0,27],radius=9,height=42);
+  contact contact_8(at=[0,42,0],radius=39,height=12);
+  part rear(shape=box,material=wood,at=[-30,21,0],size=[8,42,62]);
+  repeat repeat_side(index=side,count=2){
+    part wall(shape=box,material=wood,at=[0,21,side*55-27.5],size=[70,42,6]);
+  }
+  part roof(shape=pyramid,material=teal,at=[0,48,0],size=[84,20,78]);
+  part lintel(shape=box,material=cream,at=[35,40,0],size=[5,8,52]);
+  use opening_door(component=opening_door,args=[]);
+  part lifering(shape=torus,material=red,at=[38,27,23],size=[2,12,12],rot_deg=[0,90,0]);
+}
+object mossy_passage(label="Mossy passage"){
+  body(interaction=solid,radius=30,height=80);
+  contact contact(at=[-32,0,-54],radius=14,height=64);
+  contact contact_2(at=[0,0,-54],radius=14,height=64);
+  contact contact_3(at=[32,0,-54],radius=14,height=64);
+  contact contact_4(at=[-32,0,54],radius=14,height=64);
+  contact contact_5(at=[0,0,54],radius=14,height=64);
+  contact contact_6(at=[32,0,54],radius=14,height=64);
+  contact contact_7(at=[0,64,-28],radius=38,height=14);
+  contact contact_8(at=[0,64,28],radius=38,height=14);
+  repeat repeat_side(index=side,count=2){
+    part wall(shape=box,material=stone,at=[0,32,side*108-54],size=[96,64,26]);
+    repeat repeat_course(index=course,count=3){
+      part seam(shape=box,material=dark,at=[0,16+course*18,side*81-40.5],size=[95,1,1]);
+    }
+  }
+  part roof(shape=box,material=stone,at=[0,70,0],size=[96,14,128]);
+  part moss(shape=icosphere,material=moss,at=[0,79,0],size=[99,12,124],deform=deform(seed=85,amount=0.1));
+  repeat repeat_side_2(index=side,count=2){
+    part keystone(shape=box,material=cream,at=[side*94-47,67,0],size=[5,15,18]);
+    repeat repeat_pillar(index=pillar,count=2){
+      part cap(shape=box,material=cream,at=[side*94-47,58,pillar*106-53],size=[6,9,30]);
+    }
+  }
+}
+object traveler(label="Traveler"){
+  body(interaction=decor,radius=8,height=42);
+  part torso(shape=capsule,material=teal,at=[0,10,0],size=[12,20,14]);
+  part head(shape=sphere,material=skin,at=[0,26,0],size=[13,14,13]);
+  part hair(shape=sphere,material=dark,at=[-1,31,0],size=[14,7,14]);
+  part nose(shape=sphere,material=skin,at=[7,26,0],size=[3,3,3]);
+  repeat repeat_side(index=side,count=2){
+    let z(value=side*10-5);
+    part eye(shape=sphere,material=dark,at=[6,28,z*0.6],size=[2,2,2]);
+    beam sleeve(shape=capsule,material=teal,from=[0,15,z],to=[6,6,z],width=4,depth=4);
+    beam forearm(shape=capsule,material=skin,from=[6,6,z],to=[13,4,z],width=3,depth=3);
+    beam thigh(shape=capsule,material=dark,from=[0,0,z*0.6],to=[10,-5,z*0.6],width=5,depth=5);
+    beam shin(shape=capsule,material=dark,from=[10,-5,z*0.6],to=[13,-14,z*0.6],width=4,depth=4);
+    part shoe(shape=box,material=cream,at=[15,-14,z*0.6],size=[8,4,5]);
+  }
+}
+route orchard_rail(kind=rail,mode=loop,speed=72,wait_s=4){
+  repeat repeat_i(index=i,count=24){
+    let a(value=-90+i*15);
+    point(at=[1300+cos(a)*260,1960+sin(a)*170]);
+  }
+}
+route meadow_cycle(kind=path,mode=loop,speed=35,wait_s=6){
+  point(at=[1065,1425]);
+  point(at=[1100,1460]);
+  point(at=[1080,1520]);
+  point(at=[1020,1530]);
+  point(at=[980,1490]);
+  point(at=[1000,1430]);
+}
+route village_skate(kind=path,mode=loop,speed=45,wait_s=2){
+  point(at=[810,1595]);
+  point(at=[760,1650]);
+  point(at=[700,1600]);
+  point(at=[730,1555]);
+}
+route lake_trip(kind=water,mode=loop,speed=40,wait_s=5){
+  repeat repeat_i(index=i,count=20){
+    let a(value=180+i*18);
+    point(at=[2900+cos(a)*65,2410+sin(a)*90]);
+  }
+}
+route cloud_trip(kind=air,mode=loop,speed=115,altitude=180,wait_s=6){
+  point(at=[1580,1690]);
+  point(at=[1800,1690]);
+  point(at=[2250,1900]);
+  point(at=[2400,2400]);
+  point(at=[2080,2700]);
+  point(at=[1570,2600]);
+  point(at=[1400,2150]);
+}
+watercourse willow_river(level=0,depth=8,bank=32,color=#237e8c,flow=[0,24]){
+  point(at=[1930,1050,320]);
+  point(at=[1970,1260,140]);
+  point(at=[1980,1480,150]);
+  point(at=[1920,1740,150]);
+  point(at=[1830,2010,420]);
+}
+place meadow_train(object=meadow_locomotive,route=orchard_rail,scale=1.1);
+place meadow_coach(object=passenger_carriage,route=orchard_rail,offset=94,scale=1.1);
+place meadow_plane(object=cloudhopper_plane,route=cloud_trip,scale=1.1);
+place lake_boat(object=willow_launch,route=lake_trip,scale=1.1);
+place village_bike(object=meadow_bicycle,route=meadow_cycle,scale=1.2);
+place village_skateboard(object=maple_skateboard,route=village_skate,scale=1.3);
+place meadow_station(object=meadow_station_2,at=[1470,1660],scale=1.3,heading_deg=90);
+place lake_boathouse(object=lakeside_boathouse,at=[2680,2370],scale=1.3);
+place rail_passage(object=mossy_passage,at=[1560,1960],scale=1.5,heading_deg=90);

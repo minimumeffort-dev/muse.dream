@@ -1,0 +1,133 @@
+Generate Dream 2 data for a playable interpretation of the user's paper sketch.
+Return one complete source file starting with dream 2; no markdown or explanation.
+Include at least one object, asset, include or complete world.
+Use the command contract and only supported fields, contexts and constructors.
+The engine owns rendering, physics and shaders. No JS, module code, URLs or callbacks.
+
+Syntax: kind id?(key=value,...); or kind id?(key=value,...){...}
+IDs: lowercase [a-z][a-z0-9_]{0,31}; do not use sin, cos, true, false as IDs.
+Use a unique ID for every top-level declaration and each named item in a block.
+Use IDs for references; label="..." is display-only. Keep IDs stable on repair.
+Use table field order. Always emit required fields. Use named constructor fields.
+No aliases: rot_deg, heading_deg, spin(axis=z,deg_s=90),
+swing(axis=z,deg=20,hz=.25,phase_deg=0), roll(axis=y,radius=8).
+Colors are six-digit hex. material colors always contains two colors.
+
+Coordinates: world [x,y] = right/down; object [x,y,z] = Y up; asset forward +X.
+World heading 0=east, 90=south. rot_deg is local Euler XYZ in degrees.
+Shapes use full bounding dimensions. Cylinders/capsules/cones point along Y;
+torus holes point along Z. Motion axes are primitive-local: a cylinder with
+rot_deg=[90,0,0] still rolls about its own Y axis; a torus wheel uses Z.
+Keep feet/bases at local Y=0. World placements take only XY, not arbitrary height.
+Use endpoint beams for connected struts, groups for rigid transforms, joints
+for connected articulation. Keep physical bodies separate from visual parts.
+Use foundations for upright solid buildings, ground(mode=surface) for tilting props.
+The cloth material is flag wind, not garment physics; use toon/grain for rigid clothing.
+A joint never inherits primitive dimension scaling; scale a surrounding group.
+
+Expressions: numbers, scoped constants, + - * /, sin(degrees), cos(degrees).
+Global constants may forward-reference each other without cycles. Local constants
+resolve in order. Components see globals and params, never caller-local names.
+Use repeat id(index=i,count=...) for bounded variation; use explicit use-site IDs.
+
+Budget per source: 65536 characters, 12000 lexer tokens, 2048 expanded statements,
+16 objects, 16 nesting levels, 0..32 repeats, 8 params/component. No recursion.
+All numeric results finite, abs<=1000000. Combined positive scale<=16.
+Per assembly: 1..32 parts, <=12 joints, joint depth<=4, assembled reach<=256.
+Part size: each .5..128. Final offsets: X/Z -64..64, Y -128..128.
+Joint offsets: each -64..64. Body radius 4..30, height 4..160, friction .5..5.
+Foundation size .5..128; only upright solids, no mobile objects/player.
+Deform seed integer 0..65535, amount in [0,0.24]. One motion per part/joint.
+Spin deg_s -171.88..171.88; roll radius 1..32.
+Sway deg 0..6.87, hz .016.. .477. Swing deg 0..80.21, hz .016.. .636,
+phase_deg -180..180. Open deg -180..180, radius 20..160.
+At most 8 upright solid compound contacts: offset X/Z -64..64, Y 0..128,
+radius 1..64, height 1..160. Contact geometry replaces the main body footprint.
+rideable requires a solid cylinder without foundation/contacts. Seat Y 0..128.
+Steam only: rate_s 1..12, position X/Z -64..64, Y 0..128.
+Bounce: knockable body; restitution in [0.1,0.9], lift in [0.05,0.8].
+Break: solid body; speed 40..400, scatter 0..160, lift 0..180, spin 0..8,
+lifetime 2..8. <=8 static fragments; fragment blocks cannot nest.
+Whole-object impact assemblies cannot have foundations, contacts, seats or emitters.
+Prefer flat ground for scattering props; foundations cannot fill their downhill gaps.
+Topple uses terrain-aware support and can fall on hills.
+
+For a full world emit exactly one world and one road, and 2..64 ordered checkpoints.
+world size positive integers <=8192. Host supplies identity, source hash/provenance.
+Player is an object ID with a solid body, no foundation/contacts/seat/emitter/impact/break zones.
+Road: 6..64 cyclic anchors, adjacent distances>8, width 40..240. Keep its complete
+width/curbs inside the world and leave conservative clearance around bends.
+Checkpoints: at center, nonzero dir, width (0,240]; start is first. Put them on road.
+Effects: simple polygons of 3..256 vertices, area>=1; kind=ice|boost; keep on road.
+Hills: <=16, radius X/Y 120..1600, height 0..320. Tints <=16, radius 120..3000.
+Bridge: <=8, span 80..600, width 64..240, arch 0..40, dry open ends.
+Road corridor plus curbs must fit between rails across the entire span.
+Timber owns the wooden driving deck; the engine clips asphalt and tapers curbs.
+Water: <=8 combined basins/watercourses. Level 0..300, depth 2..24, bank 20..120,
+flow components -60..60, drag .5..6; waves=[speed 20..100,damping .5..4,strength 0..2].
+Water polygons: 3..32 points, simple, area 400..500000, X/Y extent 80..1600;
+contain banks and do not overlap other water. Watercourses keep their default drag/waves; use only their listed fields.
+Watercourse: 2..8 stations [x,y,width],
+width 80..480; distinct stations, rounded source/outlet generated by engine.
+Routes <=12: kind rail|path|water|air, mode loop|shuttle, speed 12..160, wait_s 0..12,
+2..64 points (loop>=3), segments>=8, total length<=12000. Only air needs altitude
+60..300. Place uses exactly one of at or route; offset 0..2048 only with route;
+scale .5..2; heading_deg -360..360 only for at placements (routes own heading). <=64 placements; scene <=24 route actors,
+<=24 live joint assemblies including player, <=24 impact objects, <=128 fragments,
+<=16 steam emitters. Route actors need solid bodies without foundation/contacts/impact.
+One driving height per XY. No stacked roads, driving under bridges or boats under decks.
+Hollow buildings/tunnels use separated contacts and overhead clearance.
+
+If intent is unsupported, add unresolved id(label="specific unsupported intent");
+in the full-world source. Do not fabricate syntax or silently claim unsupported physics.
+Run node scripts/dream.mjs check file.dream. On failure read code, line, column,
+path, message, expected. Repair the entire source, preserving unrelated IDs and
+content. Only ok:true may be accepted; full worlds also pass scene playability.
+Object-only use compileDream. World fragments use compileDreamWorld. Complete
+playable worlds use compileDreamScene with host-owned identity/hash.
+
+PROJECT MODULES
+asset local_id(module=library_id,object=exported_object_id); imports only an object.
+include district_id(module=module_id); includes that module's world declarations.
+Use the asset alias for local place/object and world/player references.
+Example: asset ball(module=props,object=festival_ball);
+place courtyard_ball(object=ball,at=[300,400]);
+The host supplies a closed map of module IDs to Dream 2 text. No file paths, URLs,
+JS imports, fetches or generated execution. Only reference module IDs supplied
+by the host; otherwise author a self-contained file. Object/material/constants
+are local to a file. Asset imports do not add the library's example placements,
+routes or terrain. Include adds placements/routes/water/layout, never symbols.
+A file may import an asset and include the same library once; shared asset
+libraries compile once. Cycles, duplicate included world IDs and multiple layouts
+fail atomically. Diagnostics add module when the error originates in a module.
+Per-file limits above still apply: at most 16 local objects + asset aliases and
+16 includes, 64 placements, 12 routes, 8 watercourses. Split larger worlds into
+district files. Across reachable files, including entry: <=32 files, depth <=8,
+<=524288 UTF-16 characters, <=128 object definitions, <=4096 placements,
+<=12 routes and <=8 water bodies. Full scene still caps 24 impact objects,
+128 destruction fragments and 24 animated assemblies. The whole project needs
+exactly one world/road layout for compileDreamScene; never split checkpoints or
+terrain across district files. Final merged geometry must pass playability.
+
+DESTRUCTION EXTENSIONS
+break(...,pattern=scatter|splinter|crumble) optionally chooses release motion.
+Absent pattern preserves original scatter. Splinter throws wood parts forward;
+crumble drops masonry near the contact with low lift, spin and rebound.
+impact(mode=topple(speed=110,duration=1.1,lifetime=8)); topples the entire static
+solid as one rigid fragment about the far edge of its body, away from impact.
+All parts must belong to one fragment. duration .25..2; lifetime 2..8 and >=
+duration+.8. Other whole-object impact restrictions still apply.
+zone facade(at=[42,0,0],radius=16,height=39,mode=break(speed=135,scatter=55,
+lift=45,spin=3,lifetime=7,pattern=crumble)){ visual statements }
+Zone at is an object-local cylinder base; visual coordinates inside are relative
+to it. radius 1..64, height 1..160, offsets X/Z +/-64 and Y 0..128. Only break
+mode is allowed. A zone may use fragments/groups/components/static joints;
+fragments cannot cross zones. Up to 4 zones and 8 total released fragments per
+assembly; keep the 32-part, reach and scene budgets. Zone blocks belong directly
+inside an object. They cannot nest or appear in visual components, but use sites
+inside them can compose visual components. Every zone owns at least one part;
+retain structural geometry outside all zones. The object must be an upright
+solid without whole-object impact, a seat, emitter or animated geometry. Core
+contacts and foundations are allowed and survive section damage. Author core
+contacts separately so an intact root cylinder does not block the intended
+opening after a zone breaks. Terrain foundations stay intact.

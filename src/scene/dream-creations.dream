@@ -1,0 +1,158 @@
+dream 2;
+material wood(style=grain,colors=[#966c48,#b48c60]);
+material dark(style=toon,colors=[#303c43,#303c43]);
+material metal(style=toon,colors=[#6f9295,#6f9295]);
+material cream(style=toon,colors=[#eadcbb,#eadcbb]);
+material skin(style=toon,colors=[#c58e68,#c58e68]);
+material jacket(style=toon,colors=[#477a86,#477a86]);
+material leaf(style=toon,colors=[#567b44,#567b44]);
+material shell(style=grain,colors=[#78844c,#a4a261]);
+material gold(style=toon,colors=[#e2ac43,#e2ac43]);
+material crust(style=grain,colors=[#b97136,#e2ac62]);
+material stone(style=grain,colors=[#8b928d,#737e7c]);
+material moss(style=toon,colors=[#65774b,#65774b]);
+material red(style=toon,colors=[#ba5d47,#ba5d47]);
+component post(params=[h]){
+  part leg(shape=box,material=wood,at=[0,h/2,0],size=[4,h,4]);
+}
+component wheel(params=[r]){
+  part tire(shape=cylinder,material=dark,at=[0,0,0],size=[r*2,4,r*2],rot_deg=[90,0,0]);
+  part hub(shape=cylinder,material=metal,at=[0,0,2.2],size=[r,1,r],rot_deg=[90,0,0]);
+}
+component loaf(params=[length]){
+  part bread(shape=capsule,material=crust,at=[0,6,0],size=[12,length,12],rot_deg=[0,0,90],deform=deform(seed=73,amount=0.06));
+  repeat repeat_cut(index=cut,count=3){
+    part score(shape=capsule,material=cream,at=[(cut-1)*length/5,11.7,0],size=[1.4,6,0.8],rot_deg=[90,0,-25]);
+  }
+}
+component blossom(params=[]){
+  repeat repeat_petal(index=petal,count=6){
+    let a(value=petal*60);
+    part petal(shape=capsule,material=gold,at=[cos(a)*8,sin(a)*8,0],size=[5,13,3],rot_deg=[0,0,a-90]);
+  }
+  part seeds(shape=sphere,material=crust,at=[0,0,1],size=[10,10,5]);
+}
+object orchard_cart(label="Orchard cart"){
+  body(interaction=knockable,radius=28,height=44,friction=3);
+  repeat repeat_side(index=side,count=2){
+    let z(value=(side*2-1)*20);
+    use wheel(component=wheel,args=[9],at=[0,9,z],rot_deg=[0,side*180,0]);
+    repeat repeat_rail(index=rail,count=3){
+      part rail(shape=box,material=wood,at=[0,21+rail*6,z],size=[44,4,3]);
+    }
+    beam handle(shape=box,material=wood,from=[17,18,z],to=[42,25,z*0.75],width=3,depth=3);
+  }
+  part axle(shape=cylinder,material=metal,at=[0,9,0],size=[3,45,3],rot_deg=[90,0,0]);
+  part bed(shape=box,material=wood,at=[0,18,0],size=[44,4,42]);
+  repeat repeat_end(index=end,count=2){
+    part end(shape=box,material=wood,at=[end*40-20,29,0],size=[3,18,40]);
+  }
+  repeat repeat_apple(index=apple,count=3){
+    part apple(shape=sphere,material=red,at=[(apple-1)*11,26,0],size=[12,13,12],deform=deform(seed=apple*21+4,amount=0.09));
+    part stem(shape=cylinder,material=wood,at=[(apple-1)*11,33,0],size=[1.2,3,1.2]);
+  }
+}
+object field_naturalist(label="Field naturalist"){
+  body(interaction=decor,radius=11,height=78);
+  repeat repeat_side(index=side,count=2){
+    let x(value=side*8-4);
+    part trouser(shape=capsule,material=dark,at=[x,13,0],size=[6,23,7]);
+    part boot(shape=box,material=wood,at=[x,3,2],size=[7,6,12]);
+  }
+  part coat(shape=capsule,material=jacket,at=[0,32,0],size=[20,28,13]);
+  part belt(shape=box,material=wood,at=[0,23,0],size=[20,3,14]);
+  part neck(shape=capsule,material=skin,at=[0,46,0],size=[6,8,6]);
+  part head(shape=sphere,material=skin,at=[0,54,0],size=[17,19,16]);
+  part brim(shape=cylinder,material=wood,at=[0,62,0],size=[29,2,25]);
+  part hat(shape=capsule,material=cream,at=[0,65,0],size=[18,10,17]);
+  part hatband(shape=cylinder,material=wood,at=[0,63.5,0],size=[18.5,3,17.5]);
+  part bag(shape=box,material=wood,at=[0,33,-9],size=[17,21,8]);
+  repeat repeat_eye(index=eye,count=2){
+    part eye(shape=sphere,material=dark,at=[eye*6-3,55,7.5],size=[2,2.5,1.5]);
+    part binocular(shape=cylinder,material=dark,at=[eye*7-3.5,32,10],size=[6,10,6],rot_deg=[90,0,0]);
+  }
+  joint left_shoulder(at=[-11,41,0],rot_deg=[0,0,-12]){
+    beam sleeve(shape=capsule,material=jacket,from=[0,0,0],to=[0,-15,0],width=6,depth=6);
+    part hand(shape=sphere,material=skin,at=[0,-18,0],size=[6,7,6]);
+  }
+  joint right_shoulder(at=[11,41,0],rot_deg=[0,0,150]){
+    beam sleeve(shape=capsule,material=jacket,from=[0,0,0],to=[0,-15,0],width=6,depth=6);
+    joint elbow(at=[0,-15,0],rot_deg=[0,0,20],motion=swing(axis=z,deg=22,hz=2.2/6.283185307179586,phase_deg=0)){
+      beam forearm(shape=capsule,material=skin,from=[0,0,0],to=[0,-12,0],width=5,depth=5);
+      part hand(shape=sphere,material=skin,at=[0,-14,0],size=[6,7,5]);
+    }
+  }
+}
+object meadow_tortoise(label="Meadow tortoise"){
+  body(interaction=knockable,radius=19,height=28,friction=4);
+  repeat repeat_side(index=side,count=2){
+    repeat repeat_end(index=end,count=2){
+      part foot(shape=capsule,material=leaf,at=[end*20-10,4,side*24-12],size=[10,8,9],rot_deg=[0,0,end*30-15]);
+    }
+  }
+  part belly(shape=sphere,material=cream,at=[0,9,0],size=[34,12,28]);
+  part shell(shape=sphere,material=shell,at=[0,14,0],size=[38,25,32],deform=deform(seed=87,amount=0.06));
+  repeat repeat_plate(index=plate,count=3){
+    part scute(shape=icosphere,material=moss,at=[(plate-1)*10,25,0],size=[9,4,11]);
+  }
+  part tail(shape=cone,material=leaf,at=[-22,9.5,0],size=[5,10,5],rot_deg=[0,0,90]);
+  joint neck(at=[15,13,0],motion=swing(axis=y,deg=12,hz=0.7/6.283185307179586,phase_deg=0)){
+    part head(shape=capsule,material=leaf,at=[8,0,0],size=[10,18,11],rot_deg=[0,0,90]);
+    repeat repeat_eye(index=eye,count=2){
+      part eye(shape=sphere,material=dark,at=[12,3,eye*9-4.5],size=[2.3,3,2]);
+    }
+  }
+}
+object bakery_basket(label="Bakery basket"){
+  ground(mode=surface);
+  body(interaction=knockable,radius=18,height=26,friction=3);
+  part base(shape=cylinder,material=wood,at=[0,3,0],size=[34,6,29]);
+  repeat repeat_ring(index=ring,count=3){
+    part rim(shape=torus,material=wood,at=[0,6+ring*3,0],size=[37,32,4],rot_deg=[90,0,0]);
+  }
+  repeat repeat_rib(index=rib,count=8){
+    let a(value=rib*45);
+    beam rib(shape=box,material=wood,from=[cos(a)*13,3,sin(a)*10],to=[cos(a)*17,10,sin(a)*14],width=2,depth=2);
+  }
+  use loaf(component=loaf,args=[30],at=[0,8,-5],rot_deg=[0,15,0],scale=0.8);
+  use loaf_2(component=loaf,args=[28],at=[0,9,6],rot_deg=[0,-15,0],scale=0.8);
+}
+object wild_sunflowers(label="Wild sunflowers"){
+  body(interaction=decor,radius=20,height=74);
+  repeat repeat_flower(index=flower,count=3){
+    let h(value=40+flower*12);
+    group group(at=[(flower-1)*17,0,flower*5-5],rot_deg=[0,flower*35-25,0]){
+      beam stem(shape=cylinder,material=leaf,from=[0,0,0],to=[0,h,0],width=2,depth=2);
+      part leaf(shape=capsule,material=leaf,at=[-5,h*0.45,0],size=[5,15,2],rot_deg=[0,0,55]);
+      part leaf_2(shape=capsule,material=leaf,at=[5,h*0.65,0],size=[5,15,2],rot_deg=[0,0,-55]);
+      joint flower(at=[0,h,0],motion=swing(axis=z,deg=5,hz=1.1/6.283185307179586,phase_deg=flower*60)){
+        use blossom(component=blossom,args=[]);
+      }
+    }
+  }
+}
+object trail_cairn(label="Trail cairn"){
+  body(interaction=solid,radius=22,height=56);
+  repeat repeat_layer(index=layer,count=4){
+    let width(value=40-layer*8);
+    part rock(shape=icosphere,material=stone,at=[layer-2,7+layer*10,0],size=[width,14,width*0.8],rot_deg=[0,layer*37,0],deform=deform(seed=381+layer*87,amount=0.23));
+  }
+  part moss(shape=icosphere,material=moss,at=[-9,14,3],size=[18,4,17],deform=deform(seed=85,amount=0.18));
+}
+object wayside_bench(label="Wayside bench"){
+  body(interaction=solid,radius=28,height=47);
+  foundation(size=[60,42],color=#68765a);
+  repeat repeat_side(index=side,count=2){
+    let x(value=side*44-22);
+    use post(component=post,args=[22],at=[x,0,-12]);
+    use post_2(component=post,args=[22],at=[x,0,12]);
+    beam brace(shape=box,material=metal,from=[x,5,-13],to=[x,20,13],width=2,depth=2);
+    beam back_post(shape=box,material=wood,from=[x,0,-12],to=[x,45,-18],width=4,depth=4);
+  }
+  repeat repeat_slat(index=slat,count=4){
+    part seat(shape=box,material=wood,at=[0,24,-12+slat*8],size=[60,4,6]);
+  }
+  repeat repeat_slat_2(index=slat,count=2){
+    part back(shape=box,material=wood,at=[0,34+slat*9,-16-slat],size=[60,6,3],rot_deg=[-8,0,0]);
+  }
+}

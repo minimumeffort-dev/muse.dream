@@ -1,0 +1,32 @@
+{
+  "shots": [
+    {
+      "object": "Breakaway table",
+      "time": "Before",
+      "state": "{\"broken\":[],\"debris\":0,\"props\":[],\"car\":{\"x\":438,\"y\":360},\"particles\":0}"
+    },
+    {
+      "object": "Breakaway table",
+      "time": "0.2 seconds",
+      "state": "{\"broken\":[\"target\"],\"debris\":7,\"props\":[],\"car\":{\"x\":481.5504035563896,\"y\":360},\"particles\":34}"
+    },
+    {
+      "object": "Breakaway table",
+      "time": "0.6 seconds",
+      "state": "{\"broken\":[\"target\"],\"debris\":7,\"props\":[],\"car\":{\"x\":561.6327209314906,\"y\":360},\"particles\":60}"
+    },
+    {
+      "object": "Terracotta planter",
+      "time": "0.2 seconds",
+      "state": "{\"broken\":[\"target\"],\"debris\":6,\"props\":[],\"car\":{\"x\":492.5504035563896,\"y\":360},\"particles\":34}"
+    },
+    {
+      "object": "Festival ball",
+      "time": "0.2 seconds",
+      "state": "{\"broken\":[],\"debris\":0,\"props\":[{\"id\":\"target\",\"x\":568.9334052661635,\"y\":360,\"vx\":419.98699179935556,\"vy\":0,\"elevation\":16.88279918458811,\"vz\":53.16399592294053}],\"car\":{\"x\":506.61737369279683,\"y\":360},\"particles\":18}"
+    }
+  ],
+  "crateFinal": "{\"broken\":[\"target\"],\"debris\":8,\"props\":[],\"car\":{\"x\":488.5504035563896,\"y\":360},\"particles\":34}",
+  "gentleFinal": "{\"broken\":[],\"debris\":0,\"props\":[],\"car\":{\"x\":439.98136019051844,\"y\":360},\"particles\":0}",
+  "reducedFinal": "{\"broken\":[\"target\"],\"debris\":7,\"props\":[],\"car\":{\"x\":561.6327209314906,\"y\":360},\"particles\":0}"
+}

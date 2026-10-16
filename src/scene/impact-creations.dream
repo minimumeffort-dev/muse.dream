@@ -1,0 +1,79 @@
+dream 2;
+material coral(style=toon,colors=[#d97054,#d97054]);
+material cream(style=toon,colors=[#eadab5,#eadab5]);
+material wood(style=grain,colors=[#92613d,#bd905d]);
+material dark(style=toon,colors=[#654632,#654632]);
+material clay(style=grain,colors=[#b86747,#d88c62]);
+material soil(style=toon,colors=[#584832,#584832]);
+material green(style=toon,colors=[#648650,#648650]);
+component table_leg(params=[x,z]){
+  fragment leg(){
+    part leg(shape=box,material=dark,at=[x,13,z],size=[5,26,5]);
+    part foot(shape=box,material=wood,at=[x,2,z],size=[7,4,7]);
+  }
+}
+object festival_ball(label="Festival ball"){
+  body(interaction=knockable,radius=13,height=26,friction=0.55);
+  impact(mode=bounce(restitution=0.74,lift=0.42));
+  part ball(shape=sphere,material=coral,at=[0,13,0],size=[26,26,26],motion=roll(axis=z,radius=13));
+  part band(shape=torus,material=cream,at=[0,13,0],size=[26.3,26.3,3],rot_deg=[90,0,0],motion=roll(axis=y,radius=13));
+  part seam(shape=torus,material=cream,at=[0,13,0],size=[26.5,26.5,1.5],motion=roll(axis=z,radius=13));
+}
+object breakaway_table(label="Breakaway table"){
+  body(interaction=solid,radius=29,height=31);
+  impact(mode=break(speed=90,scatter=62,lift=100,spin=4,lifetime=6));
+  repeat repeat_plank(index=plank,count=3){
+    fragment plank(){
+      part top(shape=box,material=wood,at=[0,29,(plank-1)*10],size=[54,4,9]);
+    }
+  }
+  use table_leg(component=table_leg,args=[-21,-10]);
+  use table_leg_2(component=table_leg,args=[-21,10]);
+  use table_leg_3(component=table_leg,args=[21,-10]);
+  use table_leg_4(component=table_leg,args=[21,10]);
+}
+object produce_crate(label="Produce crate"){
+  body(interaction=solid,radius=22,height=31);
+  impact(mode=break(speed=75,scatter=82,lift=115,spin=5,lifetime=5));
+  fragment base(){
+    part base(shape=box,material=dark,at=[0,3,0],size=[33,6,29]);
+  }
+  repeat repeat_side(index=side,count=2){
+    fragment long_side(){
+      repeat repeat_slat(index=slat,count=3){
+        part board(shape=box,material=wood,at=[0,9+slat*8,side*28-14],size=[35,6,3]);
+      }
+    }
+    fragment end(){
+      repeat repeat_slat(index=slat,count=3){
+        part board(shape=box,material=wood,at=[side*32-16,9+slat*8,0],size=[3,6,26]);
+      }
+    }
+  }
+  repeat repeat_apple(index=apple,count=3){
+    fragment produce(){
+      part apple(shape=sphere,material=coral,at=[(apple-1)*9,22,0],size=[8,8,8]);
+    }
+  }
+}
+object terracotta_planter(label="Terracotta planter"){
+  body(interaction=solid,radius=18,height=36);
+  impact(mode=break(speed=65,scatter=45,lift=75,spin=3,lifetime=5));
+  repeat repeat_side(index=side,count=4){
+    fragment clay_side(){
+      part wall(shape=box,material=clay,at=[cos(side*90)*12,13,sin(side*90)*12],size=[4,23,20],rot_deg=[0,-side*90,0]);
+    }
+  }
+  fragment rim(){
+    part rim(shape=torus,material=clay,at=[0,25,0],size=[36,36,6],rot_deg=[90,0,0]);
+  }
+  fragment plant(){
+    part soil(shape=cylinder,material=soil,at=[0,23,0],size=[26,3,26]);
+    part stem(shape=cylinder,material=green,at=[0,28,0],size=[3,12,3]);
+    part leaves(shape=icosphere,material=green,at=[0,34,0],size=[24,12,19]);
+  }
+}
+place meadow_ball(object=festival_ball,at=[930,1505]);
+place meadow_table(object=breakaway_table,at=[850,1510]);
+place orchard_crate(object=produce_crate,at=[1350,1570],heading_deg=15);
+place garden_planter(object=terracotta_planter,at=[840,1770],scale=1.2);

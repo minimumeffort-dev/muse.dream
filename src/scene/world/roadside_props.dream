@@ -1,0 +1,11 @@
+dream 2;
+asset ball(module=impact_creations,object=festival_ball);
+asset table(module=impact_creations,object=breakaway_table);
+asset crate(module=impact_creations,object=produce_crate);
+asset planter(module=impact_creations,object=terracotta_planter);
+place roadside_table(object=table,at=[1460,1510]);
+place roadside_ball(object=ball,at=[1560,1495]);
+place station_crate(object=crate,at=[1615,1590],heading_deg=15);
+place orchard_supply_crate(object=crate,at=[1635,1780],heading_deg=-10);
+place station_planter(object=planter,at=[1500,1780],scale=1.2);
+place roadside_planter(object=planter,at=[1705,1610]);

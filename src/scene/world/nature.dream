@@ -1,0 +1,106 @@
+dream 2;
+material m0(style=toon,colors=[#d5d2b9,#8a978b]);
+material m1(style=toon,colors=[#648553,#3b5c44]);
+material m2(style=toon,colors=[#3d6858,#294b43]);
+material m3(style=toon,colors=[#655140,#3c3830]);
+material m4(style=toon,colors=[#89918a,#535e60]);
+material m5(style=toon,colors=[#a27b55,#68513c]);
+material m6(style=toon,colors=[#985d45,#633e32]);
+material m7(style=toon,colors=[#4a5552,#333c3b]);
+material m8(style=toon,colors=[#385b67,#253e4c]);
+material m9(style=toon,colors=[#ba5840,#813e34]);
+object birch(label="Birch"){
+  body(interaction=solid,radius=9,height=68);
+  part trunk(shape=cylinder,material=m0,at=[0,23,0],size=[4,46,4]);
+  part fork(shape=cylinder,material=m0,at=[-5,34,0],size=[2,23,2],rot_deg=[0,0,-27.501974166279513]);
+  part upper_crown(shape=icosphere,material=m1,at=[1,53,0],size=[24,29,21],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
+  part side_crown(shape=icosphere,material=m1,at=[-9,43,1],size=[20,23,18],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
+  part lower_crown(shape=icosphere,material=m2,at=[7,40,-3],size=[17,21,16],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
+}
+object silver_fir(label="Silver fir"){
+  body(interaction=solid,radius=13,height=76);
+  part trunk(shape=cylinder,material=m3,at=[0,30,0],size=[5,60,5]);
+  part bough_0(shape=cone,material=m2,at=[0,22,0],size=[39,22,33.15],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
+  part bough_1(shape=cone,material=m1,at=[-2,35,0],size=[32,23,27.2],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
+  part bough_2(shape=cone,material=m2,at=[1,48,0],size=[25,23,21.25],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
+  part bough_3(shape=cone,material=m1,at=[0,62,0],size=[16,28,13.6],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
+}
+object young_rowan(label="Young rowan"){
+  body(interaction=solid,radius=6,height=35);
+  part stem(shape=cylinder,material=m3,at=[0,11,0],size=[2,22,2]);
+  part crown(shape=icosphere,material=m1,at=[-2,26,0],size=[17,17,14],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
+  part side_leaves(shape=icosphere,material=m2,at=[5,19,1],size=[12,13,12],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
+}
+object wild_shrub(label="Wild shrub"){
+  body(interaction=decor,radius=12,height=15);
+  part left(shape=icosphere,material=m2,at=[-8,6,0],size=[18,12,17]);
+  part center(shape=icosphere,material=m1,at=[2,8,-3],size=[22,16,18]);
+  part right(shape=icosphere,material=m2,at=[11,5,3],size=[13,10,13]);
+}
+object juniper_scrub(label="Juniper scrub"){
+  body(interaction=decor,radius=10,height=23);
+  part bush(shape=icosphere,material=m2,at=[0,9,0],size=[22,18,21]);
+  part shoot(shape=cone,material=m1,at=[-4,15,1],size=[12,19,11]);
+}
+object weathered_boulder(label="Weathered boulder"){
+  body(interaction=solid,radius=21,height=34);
+  ground(mode=surface);
+  part stone(shape=icosphere,material=m4,at=[0,14,0],size=[37,32,29],rot_deg=[0,29.79380534680281,6.875493541569878]);
+}
+object exposed_stone_slab(label="Exposed stone slab"){
+  body(interaction=solid,radius=27,height=14);
+  ground(mode=surface);
+  part slab(shape=icosphere,material=m4,at=[0,5,0],size=[51,14,30],rot_deg=[0,-22.91831180523293,3.437746770784939]);
+}
+object standing_deadwood(label="Standing deadwood"){
+  body(interaction=solid,radius=9,height=42);
+  part trunk(shape=cylinder,material=m3,at=[0,20,0],size=[6,40,6]);
+  part left_branch(shape=cylinder,material=m3,at=[-6,29,0],size=[3,19,3],rot_deg=[0,0,-41.8259190445501]);
+  part right_branch(shape=cylinder,material=m3,at=[5,23,2],size=[3,15,3],rot_deg=[0,22.91831180523293,45.83662361046586]);
+}
+object fallen_log(label="Fallen log"){
+  body(interaction=solid,radius=23,height=16);
+  ground(mode=surface);
+  part log(shape=cylinder,material=m3,at=[0,5,0],size=[11,44,11],rot_deg=[0,0,90]);
+  part cut_neg_1(shape=cylinder,material=m5,at=[-22,5,0],size=[9,0.5,9],rot_deg=[0,0,90]);
+  part cut_1(shape=cylinder,material=m5,at=[22,5,0],size=[9,0.5,9],rot_deg=[0,0,90]);
+  part broken_branch(shape=cylinder,material=m3,at=[-5,9,1],size=[3,13,3],rot_deg=[0,17.188733853924695,-34.37746770784939]);
+}
+object timber_barn(label="Timber barn"){
+  body(interaction=solid,radius=30,height=64);
+  foundation(size=[66,58],color=#697267);
+  part walls(shape=box,material=m6,at=[0,15,0],size=[54,30,42]);
+  part roof(shape=pyramid,material=m7,at=[0,46,0],size=[64,32,54]);
+  part doors(shape=box,material=m3,at=[0,13,21.5],size=[25,26,1]);
+  part door_post_neg_1(shape=box,material=m5,at=[-14,15,22],size=[3,30,2]);
+  part door_post_1(shape=box,material=m5,at=[14,15,22],size=[3,30,2]);
+  part lintel(shape=box,material=m5,at=[0,29,22],size=[31,3,2]);
+  part door_bar(shape=box,material=m5,at=[0,13,22.3],size=[24,2,1]);
+}
+object village_well(label="Village well"){
+  body(interaction=solid,radius=21,height=48);
+  foundation(size=[40,36],color=#777f73);
+  part stone_0(shape=box,material=m4,at=[0,6,11],size=[9,12,5],rot_deg=[0,0,0]);
+  part stone_1(shape=box,material=m4,at=[7.778174593052022,6,7.778174593052023],size=[9,12,5],rot_deg=[0,45,0]);
+  part stone_2(shape=box,material=m4,at=[11,6,6.735557395310443e-16],size=[9,12,5],rot_deg=[0,90,0]);
+  part stone_3(shape=box,material=m4,at=[7.778174593052023,6,-7.778174593052022],size=[9,12,5],rot_deg=[0,135,0]);
+  part stone_4(shape=box,material=m4,at=[1.3471114790620886e-15,6,-11],size=[9,12,5],rot_deg=[0,180,0]);
+  part stone_5(shape=box,material=m4,at=[-7.778174593052022,6,-7.778174593052024],size=[9,12,5],rot_deg=[0,-135,0]);
+  part stone_6(shape=box,material=m4,at=[-11,6,-2.0206672185931327e-15],size=[9,12,5],rot_deg=[0,-90,0]);
+  part stone_7(shape=box,material=m4,at=[-7.778174593052024,6,7.778174593052021],size=[9,12,5],rot_deg=[0,-45,0]);
+  part post_neg_1(shape=box,material=m5,at=[-15,18,0],size=[3,36,3]);
+  part post_1(shape=box,material=m5,at=[15,18,0],size=[3,36,3]);
+  part roof(shape=pyramid,material=m3,at=[0,40,0],size=[38,15,30]);
+  part spindle(shape=cylinder,material=m3,at=[0,27,0],size=[3,31,3],rot_deg=[0,0,90]);
+  part water(shape=cylinder,material=m8,at=[0,5,0],size=[17,1,17]);
+}
+object old_apple_tree(label="Old apple tree"){
+  body(interaction=solid,radius=11,height=37);
+  part trunk(shape=cylinder,material=m3,at=[0,10,0],size=[5,20,5]);
+  part crown_left(shape=icosphere,material=m1,at=[-8,25,0],size=[23,21,22],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
+  part crown_right(shape=icosphere,material=m2,at=[8,26,1],size=[25,21,23],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
+  part apple_0(shape=sphere,material=m9,at=[-13,24,7],size=[3,3,3]);
+  part apple_1(shape=sphere,material=m9,at=[6,28,11],size=[3,3,3]);
+  part apple_2(shape=sphere,material=m9,at=[15,23,5],size=[3,3,3]);
+  part apple_3(shape=sphere,material=m9,at=[-1,19,8],size=[3,3,3]);
+}

@@ -1,0 +1,550 @@
+{
+  "language": "Dream",
+  "version": 2,
+  "header": "dream 2;",
+  "syntax": "kind id?(key=value,...); | kind id?(key=value,...){ statements }",
+  "identifiers": "[a-z][a-z0-9_]{0,31}; references use IDs, labels are display-only",
+  "coordinates": {
+    "world": "[x,y], origin top-left, x right, y down",
+    "object": "[x,y,z], Y up",
+    "length": "canonical units",
+    "angles": "degrees; Euler XYZ",
+    "frequency": "cycles/second (hz)",
+    "speed": "units/second"
+  },
+  "expressions": "finite numbers, constants, + - * /, sin(degrees), cos(degrees); no general code",
+  "types": {
+    "n": "numeric expression",
+    "v2": "[n,n]",
+    "v3": "[n,n,n]",
+    "nums": "[n,...]",
+    "symbols": "[symbol,...]",
+    "point": "[n,n] or [n,n,n]",
+    "points2": "[[n,n],...]",
+    "colors": "[#rrggbb,#rrggbb]",
+    "color": "#rrggbb",
+    "ref": "symbol ID",
+    "symbol": "identifier",
+    "text": "\"JSON-escaped string\"",
+    "bool": "true|false",
+    "optional": "type suffix ?",
+    "variants": "enum values separated by |; other types are nested constructor calls"
+  },
+  "limits": {
+    "characters": 65536,
+    "tokens": 12000,
+    "nesting": 16,
+    "steps": 2048,
+    "objects": 16,
+    "repeat": 32
+  },
+  "projectLimits": {
+    "modules": 32,
+    "depth": 8,
+    "characters": 524288,
+    "assemblies": 128
+  },
+  "commands": {
+    "material": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "style": "toon|grain|glow|stripes|cloth",
+        "colors": "colors"
+      }
+    },
+    "let": {
+      "contexts": [
+        "top",
+        "object",
+        "visual",
+        "path"
+      ],
+      "id": true,
+      "fields": {
+        "value": "n"
+      }
+    },
+    "component": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "params": "symbols?"
+      },
+      "block": "visual"
+    },
+    "object": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "label": "text"
+      },
+      "block": "object"
+    },
+    "asset": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "module": "ref",
+        "object": "ref"
+      }
+    },
+    "include": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "module": "ref"
+      }
+    },
+    "body": {
+      "contexts": [
+        "object"
+      ],
+      "id": false,
+      "fields": {
+        "interaction": "solid|knockable|decor",
+        "radius": "n",
+        "height": "n",
+        "friction": "n?"
+      }
+    },
+    "ground": {
+      "contexts": [
+        "object"
+      ],
+      "id": false,
+      "fields": {
+        "mode": "upright|surface"
+      }
+    },
+    "foundation": {
+      "contexts": [
+        "object"
+      ],
+      "id": false,
+      "fields": {
+        "size": "v2",
+        "color": "color"
+      }
+    },
+    "contact": {
+      "contexts": [
+        "object"
+      ],
+      "id": true,
+      "fields": {
+        "at": "v3",
+        "radius": "n",
+        "height": "n"
+      }
+    },
+    "rideable": {
+      "contexts": [
+        "object"
+      ],
+      "id": false,
+      "fields": {
+        "at": "v3"
+      }
+    },
+    "emit": {
+      "contexts": [
+        "object"
+      ],
+      "id": false,
+      "fields": {
+        "kind": "steam",
+        "at": "v3",
+        "rate_s": "n"
+      }
+    },
+    "impact": {
+      "contexts": [
+        "object"
+      ],
+      "id": false,
+      "fields": {
+        "mode": "impact"
+      }
+    },
+    "fragment": {
+      "contexts": [
+        "object",
+        "visual"
+      ],
+      "id": true,
+      "fields": {},
+      "block": "visual"
+    },
+    "zone": {
+      "contexts": [
+        "object"
+      ],
+      "id": true,
+      "fields": {
+        "at": "v3",
+        "radius": "n",
+        "height": "n",
+        "mode": "fracture"
+      },
+      "block": "visual"
+    },
+    "group": {
+      "contexts": [
+        "object",
+        "visual"
+      ],
+      "id": true,
+      "fields": {
+        "at": "v3?",
+        "rot_deg": "v3?",
+        "scale": "n?"
+      },
+      "block": "visual"
+    },
+    "joint": {
+      "contexts": [
+        "object",
+        "visual"
+      ],
+      "id": true,
+      "fields": {
+        "at": "v3?",
+        "rot_deg": "v3?",
+        "motion": "joint_motion?"
+      },
+      "block": "visual"
+    },
+    "repeat": {
+      "contexts": [
+        "object",
+        "visual",
+        "path"
+      ],
+      "id": true,
+      "fields": {
+        "index": "symbol",
+        "count": "n"
+      },
+      "block": "inherit"
+    },
+    "use": {
+      "contexts": [
+        "object",
+        "visual"
+      ],
+      "id": true,
+      "fields": {
+        "component": "ref",
+        "args": "nums?",
+        "at": "v3?",
+        "rot_deg": "v3?",
+        "scale": "n?"
+      }
+    },
+    "part": {
+      "contexts": [
+        "object",
+        "visual"
+      ],
+      "id": true,
+      "fields": {
+        "shape": "box|sphere|cylinder|cone|pyramid|icosphere|capsule|torus",
+        "material": "ref",
+        "at": "v3",
+        "size": "v3",
+        "rot_deg": "v3?",
+        "deform": "deform?",
+        "motion": "part_motion?"
+      }
+    },
+    "beam": {
+      "contexts": [
+        "object",
+        "visual"
+      ],
+      "id": true,
+      "fields": {
+        "shape": "box|cylinder|capsule",
+        "material": "ref",
+        "from": "v3",
+        "to": "v3",
+        "width": "n",
+        "depth": "n",
+        "deform": "deform?",
+        "motion": "part_motion?"
+      }
+    },
+    "route": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "kind": "rail|path|water|air",
+        "mode": "loop|shuttle",
+        "speed": "n",
+        "altitude": "n?",
+        "wait_s": "n?"
+      },
+      "block": "path"
+    },
+    "point": {
+      "contexts": [
+        "path"
+      ],
+      "id": false,
+      "fields": {
+        "at": "point"
+      }
+    },
+    "place": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "object": "ref",
+        "at": "v2?",
+        "route": "ref?",
+        "offset": "n?",
+        "scale": "n?",
+        "heading_deg": "n?"
+      }
+    },
+    "watercourse": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "level": "n",
+        "depth": "n",
+        "bank": "n",
+        "color": "color",
+        "flow": "v2"
+      },
+      "block": "path"
+    },
+    "world": {
+      "contexts": [
+        "top"
+      ],
+      "id": false,
+      "fields": {
+        "size": "v2",
+        "spawn": "v2",
+        "heading_deg": "n",
+        "player": "ref?"
+      }
+    },
+    "road": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "width": "n",
+        "points": "points2"
+      }
+    },
+    "hill": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "at": "v2",
+        "radius": "v2",
+        "height": "n"
+      }
+    },
+    "tint": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "at": "v2",
+        "radius": "n",
+        "color": "color"
+      }
+    },
+    "bridge": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "from": "v2",
+        "to": "v2",
+        "width": "n",
+        "arch": "n",
+        "style": "timber|stone",
+        "rails": "bool"
+      }
+    },
+    "water": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "points": "points2",
+        "level": "n",
+        "depth": "n",
+        "bank": "n",
+        "color": "color",
+        "flow": "v2",
+        "drag": "n",
+        "waves": "v3"
+      }
+    },
+    "effect": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "kind": "ice|boost",
+        "points": "points2"
+      }
+    },
+    "checkpoint": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "at": "v2",
+        "dir": "v2",
+        "width": "n"
+      }
+    },
+    "unresolved": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "label": "text"
+      }
+    },
+    "spin": {
+      "contexts": [
+        "part_motion"
+      ],
+      "id": false,
+      "fields": {
+        "axis": "x|y|z",
+        "deg_s": "n"
+      }
+    },
+    "roll": {
+      "contexts": [
+        "part_motion"
+      ],
+      "id": false,
+      "fields": {
+        "axis": "x|y|z",
+        "radius": "n"
+      }
+    },
+    "sway": {
+      "contexts": [
+        "part_motion"
+      ],
+      "id": false,
+      "fields": {
+        "deg": "n",
+        "hz": "n"
+      }
+    },
+    "swing": {
+      "contexts": [
+        "joint_motion"
+      ],
+      "id": false,
+      "fields": {
+        "axis": "x|y|z",
+        "deg": "n",
+        "hz": "n",
+        "phase_deg": "n"
+      }
+    },
+    "open": {
+      "contexts": [
+        "joint_motion"
+      ],
+      "id": false,
+      "fields": {
+        "axis": "x|y|z",
+        "deg": "n",
+        "radius": "n"
+      }
+    },
+    "deform": {
+      "contexts": [
+        "deform"
+      ],
+      "id": false,
+      "fields": {
+        "seed": "n",
+        "amount": "n"
+      }
+    },
+    "bounce": {
+      "contexts": [
+        "impact"
+      ],
+      "id": false,
+      "fields": {
+        "restitution": "n",
+        "lift": "n"
+      }
+    },
+    "break": {
+      "contexts": [
+        "impact",
+        "fracture"
+      ],
+      "id": false,
+      "fields": {
+        "speed": "n",
+        "scatter": "n",
+        "lift": "n",
+        "spin": "n",
+        "lifetime": "n",
+        "pattern": "scatter|splinter|crumble?"
+      }
+    },
+    "topple": {
+      "contexts": [
+        "impact"
+      ],
+      "id": false,
+      "fields": {
+        "speed": "n",
+        "duration": "n",
+        "lifetime": "n"
+      }
+    }
+  },
+  "modules": {
+    "registry": "host-supplied module ID to Dream 2 text; no file/URL resolution",
+    "asset": "imports one exported object only, under a local alias",
+    "include": "merges world data only; symbols remain file-local",
+    "errors": "module ID accompanies nested diagnostics; failure returns no partial world"
+  },
+  "output": "validated Object DSL v2 and Scene v1; authoring-language version is separate"
+}

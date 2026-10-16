@@ -1,0 +1,15 @@
+{
+  "camera": "-1291.1,12.1,-1040.0",
+  "car": "1708.9,1360.0,1.5",
+  "flight": "{\"jumps\":1,\"landings\":1,\"maxClearance\":4.446770090383463}",
+  "fps": "60.1",
+  "grounded": "true",
+  "heading": "0.000",
+  "mode": "playing",
+  "occluders": "0",
+  "particles": "51",
+  "render": "{\"calls\":132,\"triangles\":70233,\"geometries\":190}",
+  "speed": "451.0",
+  "view": "-0.51308,0.15225,0.09304,0.83959",
+  "world": "{\"width\":6000,\"height\":4800,\"objects\":416,\"checkpoints\":8}"
+}

@@ -1,0 +1,115 @@
+{
+  "fracture": {
+    "actors": "[{\"id\":\"meadow_train\",\"x\":1300,\"y\":1790,\"elevation\":0},{\"id\":\"meadow_coach\",\"x\":1207.1688935765203,\"y\":1802.7091576296245,\"elevation\":0},{\"id\":\"meadow_plane\",\"x\":1580,\"y\":1690,\"elevation\":0},{\"id\":\"lake_boat\",\"x\":2835,\"y\":2410,\"elevation\":-2},{\"id\":\"village_bike\",\"x\":1065,\"y\":1425,\"elevation\":0},{\"id\":\"village_skateboard\",\"x\":809.2432431067543,\"y\":1595.8324325825702,\"elevation\":0}]",
+    "camera": "-1904.0,12.0,-769.1",
+    "car": "1096.0,1630.9,1.5",
+    "destruction": "{\"broken\":[\"orchard_picnic\"],\"debris\":7,\"props\":[{\"id\":\"meadow_ball\",\"x\":930,\"y\":1505,\"elevation\":0.25,\"vz\":0},{\"id\":\"roadside_ball\",\"x\":1560,\"y\":1495,\"elevation\":0.25,\"vz\":0}]}",
+    "flight": "{\"jumps\":0,\"landings\":0,\"maxClearance\":0}",
+    "fps": "60.0",
+    "grounded": "true",
+    "heading": "1.655",
+    "mode": "paused",
+    "occluders": "0",
+    "particles": "103",
+    "render": "{\"calls\":392,\"triangles\":195698,\"geometries\":282}",
+    "riding": "",
+    "source": "dream-2",
+    "speed": "197.0",
+    "view": "-0.51308,0.15225,0.09304,0.83959",
+    "world": "{\"width\":6000,\"height\":4800,\"objects\":438,\"checkpoints\":8}"
+  },
+  "returnToStart": {
+    "actors": "[{\"id\":\"meadow_train\",\"x\":1300,\"y\":1790,\"elevation\":0},{\"id\":\"meadow_coach\",\"x\":1207.1688935765203,\"y\":1802.7091576296245,\"elevation\":0},{\"id\":\"meadow_plane\",\"x\":1580,\"y\":1690,\"elevation\":0},{\"id\":\"lake_boat\",\"x\":2835,\"y\":2410,\"elevation\":-2},{\"id\":\"village_bike\",\"x\":1065,\"y\":1425,\"elevation\":0},{\"id\":\"village_skateboard\",\"x\":809.2432431067543,\"y\":1595.8324325825702,\"elevation\":0}]",
+    "camera": "-1955.0,12.0,-1040.0",
+    "car": "1045.0,1360.0,1.5",
+    "destruction": "{\"broken\":[\"orchard_picnic\"],\"debris\":7,\"props\":[{\"id\":\"meadow_ball\",\"x\":930,\"y\":1505,\"elevation\":0.25,\"vz\":0},{\"id\":\"roadside_ball\",\"x\":1560,\"y\":1495,\"elevation\":0.25,\"vz\":0}]}",
+    "flight": "{\"jumps\":0,\"landings\":0,\"maxClearance\":0}",
+    "fps": "60.0",
+    "grounded": "true",
+    "heading": "0.000",
+    "mode": "paused",
+    "occluders": "0",
+    "particles": "0",
+    "render": "{\"calls\":369,\"triangles\":183484,\"geometries\":282}",
+    "riding": "",
+    "source": "dream-2",
+    "speed": "0.0",
+    "view": "-0.51308,0.15225,0.09304,0.83959",
+    "world": "{\"width\":6000,\"height\":4800,\"objects\":438,\"checkpoints\":8}"
+  },
+  "startOver": {
+    "actors": "[{\"id\":\"meadow_train\",\"x\":1555.194736300304,\"y\":1983.8651240640315,\"elevation\":0},{\"id\":\"meadow_coach\",\"x\":1537.8830015818444,\"y\":1895.0731404319004,\"elevation\":0},{\"id\":\"meadow_plane\",\"x\":1920.2202965727183,\"y\":1746.1028050672685,\"elevation\":172},{\"id\":\"lake_boat\",\"x\":2936.491144192204,\"y\":2335.978616055299,\"elevation\":-2},{\"id\":\"village_bike\",\"x\":1081.7106956233565,\"y\":1514.8679131299305,\"elevation\":0},{\"id\":\"village_skateboard\",\"x\":810,\"y\":1595,\"elevation\":0}]",
+    "camera": "-1955.0,12.0,-1040.0",
+    "car": "1045.0,1360.0,1.5",
+    "destruction": "{\"broken\":[],\"debris\":0,\"props\":[{\"id\":\"meadow_ball\",\"x\":930,\"y\":1505,\"elevation\":0.25,\"vz\":0},{\"id\":\"roadside_ball\",\"x\":1560,\"y\":1495,\"elevation\":0.25,\"vz\":0}]}",
+    "flight": "{\"jumps\":0,\"landings\":0,\"maxClearance\":0}",
+    "fps": "60.0",
+    "grounded": "true",
+    "heading": "0.000",
+    "mode": "playing",
+    "occluders": "0",
+    "particles": "4",
+    "render": "{\"calls\":358,\"triangles\":181180,\"geometries\":282}",
+    "riding": "",
+    "source": "dream-2",
+    "speed": "0.0",
+    "view": "-0.51308,0.15225,0.09304,0.83959",
+    "world": "{\"width\":6000,\"height\":4800,\"objects\":438,\"checkpoints\":8}"
+  },
+  "freshLoad": {
+    "actors": "[{\"id\":\"meadow_train\",\"x\":1314.6811692586277,\"y\":2128.736237915122,\"elevation\":0},{\"id\":\"meadow_coach\",\"x\":1407.054167442623,\"y\":2113.4387830959904,\"elevation\":0},{\"id\":\"meadow_plane\",\"x\":1580,\"y\":1690,\"elevation\":0},{\"id\":\"lake_boat\",\"x\":2835,\"y\":2410,\"elevation\":-2},{\"id\":\"village_bike\",\"x\":1065,\"y\":1425,\"elevation\":0},{\"id\":\"village_skateboard\",\"x\":810,\"y\":1595,\"elevation\":0}]",
+    "camera": "-1955.0,12.0,-1040.0",
+    "car": "1045.0,1360.0,1.5",
+    "destruction": "{\"broken\":[],\"debris\":0,\"props\":[{\"id\":\"meadow_ball\",\"x\":930,\"y\":1505,\"elevation\":0.25,\"vz\":0},{\"id\":\"roadside_ball\",\"x\":1560,\"y\":1495,\"elevation\":0.25,\"vz\":0}]}",
+    "flight": "{\"jumps\":0,\"landings\":0,\"maxClearance\":0}",
+    "fps": "60.0",
+    "grounded": "true",
+    "heading": "0.000",
+    "mode": "playing",
+    "occluders": "0",
+    "particles": "4",
+    "render": "{\"calls\":358,\"triangles\":181180,\"geometries\":225}",
+    "riding": "",
+    "source": "dream-2",
+    "speed": "0.0",
+    "view": "-0.51308,0.15225,0.09304,0.83959",
+    "world": "{\"width\":6000,\"height\":4800,\"objects\":438,\"checkpoints\":8}"
+  },
+  "earlierResolvedHotReloadErrors": [
+    {
+      "level": "error",
+      "message": "DreamError: Dream 38:1: duplicate ID 'window_9_14' in this scope\n    at fail (http://127.0.0.1:5173/src/scene/dream-syntax.ts?t=1792108306288:15:9)\n    at ParserV2.nodes (http://127.0.0.1:5173/src/scene/dream-v2.ts?t=1792108306288:110:33)\n    at ParserV2.node (http://127.0.0.1:5173/src/scene/dream-v2.ts?t=1792108306288:99:45)\n    at ParserV2.nodes (http://127.0.0.1:5173/src/scene/dream-v2.ts?t=1792108306288:108:25)\n    at ParserV2.parse (http://127.0.0.1:5173/src/scene/dream-v2.ts?t=1792108306288:124:24)\n    at parseDream (http://127.0.0.1:5173/src/scene/dream.ts?t=1792108306288:19:91)\n    at load (http://127.0.0.1:5173/src/scene/dream.ts?t=1792108306288:301:17)\n    at resolve (http://127.0.0.1:5173/src/scene/dream.ts?t=1792108306288:312:14)\n    at load (http://127.0.0.1:5173/src/scene/dream.ts?t=1792108306288:317:54)\n    at compileDreamWorld (http://127.0.0.1:5173/src/scene/dream.ts?t=1792108306288:337:10)",
+      "timestamp": "2026-10-15T23:52:04.072Z",
+      "url": "http://127.0.0.1:5173/src/game/main.ts?t=1792108323939"
+    },
+    {
+      "level": "error",
+      "message": "DreamError: Dream 18:1: duplicate ID 'castle' in this scope\n    at fail (http://127.0.0.1:5173/src/scene/dream-syntax.ts?t=1792108306288:15:9)\n    at ParserV2.nodes (http://127.0.0.1:5173/src/scene/dream-v2.ts?t=1792108306288:110:33)\n    at ParserV2.parse (http://127.0.0.1:5173/src/scene/dream-v2.ts?t=1792108306288:124:24)\n    at parseDream (http://127.0.0.1:5173/src/scene/dream.ts?t=1792108306288:19:91)\n    at load (http://127.0.0.1:5173/src/scene/dream.ts?t=1792108306288:301:17)\n    at resolve (http://127.0.0.1:5173/src/scene/dream.ts?t=1792108306288:312:14)\n    at http://127.0.0.1:5173/src/scene/dream.ts?t=1792108306288:325:16\n    at Array.map (<anonymous>)\n    at load (http://127.0.0.1:5173/src/scene/dream.ts?t=1792108306288:321:49)\n    at compileDreamWorld (http://127.0.0.1:5173/src/scene/dream.ts?t=1792108306288:337:10)",
+      "timestamp": "2026-10-15T23:52:13.952Z",
+      "url": "http://127.0.0.1:5173/src/game/main.ts?t=1792108333818"
+    }
+  ],
+  "newConsoleEntriesSinceReload": [],
+  "screenshotDestruction": {
+    "broken": [
+      "orchard_picnic"
+    ],
+    "debris": 7,
+    "props": [
+      {
+        "elevation": 0.25,
+        "id": "meadow_ball",
+        "vz": 0,
+        "x": 930,
+        "y": 1505
+      },
+      {
+        "elevation": 0.25,
+        "id": "roadside_ball",
+        "vz": 0,
+        "x": 1560,
+        "y": 1495
+      }
+    ]
+  }
+}

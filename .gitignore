@@ -1,0 +1,9 @@
+node_modules/
+.npm-cache/
+dist/
+.vercel/
+.DS_Store
+.env
+.env.*
+!.env.example
+*.local

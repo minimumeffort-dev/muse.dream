@@ -1,0 +1,70 @@
+dream 1;
+material coral = toon #d97054;
+material cream = toon #eadab5;
+material wood = grain #92613d #bd905d;
+material dark = toon #654632;
+material clay = grain #b86747 #d88c62;
+material soil = toon #584832;
+material green = toon #648650;
+
+object "Festival ball" {
+  body knockable radius 13 height 26 friction 0.55;
+  impact bounce restitution 0.74 lift 0.42;
+  part ball sphere coral at [0,13,0] size [26,26,26] roll z 13;
+  part band torus cream at [0,13,0] size [26.3,26.3,3] rotate [90,0,0] roll y 13;
+  part seam torus cream at [0,13,0] size [26.5,26.5,1.5] roll z 13;
+}
+
+component table_leg(x,z) {
+  fragment leg {
+    part leg box dark at [x,13,z] size [5,26,5];
+    part foot box wood at [x,2,z] size [7,4,7];
+  }
+}
+object "Breakaway table" {
+  body solid radius 29 height 31;
+  impact break speed 90 scatter 62 lift 100 spin 4 lifetime 6;
+  repeat plank 3 {
+    fragment plank {part top box wood at [0,29,(plank-1)*10] size [54,4,9];}
+  }
+  use table_leg(-21,-10);use table_leg(-21,10);
+  use table_leg(21,-10);use table_leg(21,10);
+}
+
+object "Produce crate" {
+  body solid radius 22 height 31;
+  impact break speed 75 scatter 82 lift 115 spin 5 lifetime 5;
+  fragment base {part base box dark at [0,3,0] size [33,6,29];}
+  repeat side 2 {
+    fragment long_side {
+      repeat slat 3 {part board box wood at [0,9+slat*8,side*28-14] size [35,6,3];}
+    }
+    fragment end {
+      repeat slat 3 {part board box wood at [side*32-16,9+slat*8,0] size [3,6,26];}
+    }
+  }
+  repeat apple 3 {
+    fragment produce {part apple sphere coral at [(apple-1)*9,22,0] size [8,8,8];}
+  }
+}
+
+object "Terracotta planter" {
+  body solid radius 18 height 36;
+  impact break speed 65 scatter 45 lift 75 spin 3 lifetime 5;
+  repeat side 4 {
+    fragment clay_side {
+      part wall box clay at [cos(side*90)*12,13,sin(side*90)*12] size [4,23,20] rotate [0,-side*90,0];
+    }
+  }
+  fragment rim {part rim torus clay at [0,25,0] size [36,36,6] rotate [90,0,0];}
+  fragment plant {
+    part soil cylinder soil at [0,23,0] size [26,3,26];
+    part stem cylinder green at [0,28,0] size [3,12,3];
+    part leaves icosphere green at [0,34,0] size [24,12,19];
+  }
+}
+
+place meadow_ball "Festival ball" at [930,1505];
+place meadow_table "Breakaway table" at [850,1510];
+place orchard_crate "Produce crate" at [1350,1570] heading 15;
+place garden_planter "Terracotta planter" at [840,1770] scale 1.2;

@@ -1,0 +1,100 @@
+dream 2;
+material bark(style=grain,colors=[#6e5137,#9a7550]);
+material birch_bark(style=toon,colors=[#d4d3ba,#8e9a8b]);
+material leaves(style=toon,colors=[#638653,#365b42]);
+material fir_leaves(style=toon,colors=[#416958,#284b40]);
+material amber(style=toon,colors=[#c18942,#866037]);
+material wood(style=grain,colors=[#91613f,#bb915d]);
+material dark_wood(style=toon,colors=[#5e4735,#40372d]);
+material plaster(style=toon,colors=[#ddd0a7,#b4a17b]);
+material roof(style=toon,colors=[#45626c,#2d424e]);
+material brick(style=grain,colors=[#a66146,#ce9575]);
+material stone(style=toon,colors=[#8b9181,#5a655f]);
+object leaning_birch(label="Leaning birch"){
+  body(interaction=solid,radius=9,height=67);
+  impact(mode=topple(speed=110,duration=1.1,lifetime=8));
+  fragment tree(){
+    part trunk(shape=cylinder,material=birch_bark,at=[0,24,0],size=[7,48,7]);
+    beam fork(shape=cylinder,material=birch_bark,from=[0,28,0],to=[-9,47,0],width=3,depth=3);
+    part upper_crown(shape=icosphere,material=leaves,at=[1,53,0],size=[28,29,23]);
+    part side_crown(shape=icosphere,material=leaves,at=[-10,44,1],size=[23,22,21]);
+    part lower_crown(shape=icosphere,material=fir_leaves,at=[8,39,-4],size=[20,22,20]);
+  }
+}
+object silver_spruce(label="Silver spruce"){
+  body(interaction=solid,radius=12,height=76);
+  impact(mode=topple(speed=145,duration=1.35,lifetime=8));
+  fragment tree(){
+    part trunk(shape=cylinder,material=bark,at=[0,30,0],size=[8,60,8]);
+    repeat boughs(index=i,count=4){
+      part crown(shape=cone,material=fir_leaves,at=[0,23+i*13,0],size=[42-i*9,30,36-i*7]);
+    }
+  }
+}
+object amber_sapling(label="Amber sapling"){
+  body(interaction=solid,radius=7,height=43);
+  impact(mode=topple(speed=70,duration=.7,lifetime=7));
+  fragment tree(){
+    part trunk(shape=cylinder,material=bark,at=[0,13,0],size=[5,26,5]);
+    beam branch(shape=cylinder,material=bark,from=[0,17,0],to=[8,29,2],width=2,depth=2);
+    part crown(shape=icosphere,material=amber,at=[-4,31,0],size=[25,24,23]);
+    part side(shape=icosphere,material=amber,at=[9,26,2],size=[18,19,17]);
+  }
+}
+object slatted_bench(label="Slatted park bench"){
+  body(interaction=solid,radius=28,height=44);
+  impact(mode=break(speed=95,scatter=65,lift=65,spin=4,lifetime=6,pattern=splinter));
+  repeat slats(index=i,count=4){
+    fragment plank(){part seat(shape=box,material=wood,at=[0,23,-12+i*8],size=[60,4,6]);}
+  }
+  repeat supports(index=i,count=2){
+    fragment frame(){
+      part leg_front(shape=box,material=dark_wood,at=[i*44-22,10,12],size=[5,20,6]);
+      part leg_back(shape=box,material=dark_wood,at=[i*44-22,21,-13],size=[5,42,6]);
+      part brace(shape=box,material=dark_wood,at=[i*44-22,18,0],size=[6,4,29]);
+    }
+  }
+  fragment back(){
+    part upper(shape=box,material=wood,at=[0,39,-16],size=[60,7,4]);
+    part lower(shape=box,material=wood,at=[0,30,-16],size=[60,7,4]);
+  }
+}
+object timber_workshop(label="Timber workshop"){
+  body(interaction=solid,radius=30,height=66);
+  foundation(size=[128,90],color=#79816e);
+  contact core(at=[-12,0,0],radius=30,height=54);
+  part walls(shape=box,material=wood,at=[-12,21,0],size=[50,42,54]);
+  part roof(shape=pyramid,material=roof,at=[-12,55,0],size=[70,26,74]);
+  part door(shape=box,material=dark_wood,at=[14,16,0],size=[2,32,21]);
+  part lintel(shape=box,material=plaster,at=[15,34,0],size=[3,4,27]);
+  zone porch(at=[44,0,0],radius=16,height=43,mode=break(speed=100,scatter=52,lift=52,spin=3,lifetime=7,pattern=splinter)){
+    repeat boards(index=i,count=4){part canopy(shape=box,material=wood,at=[0,40,-24+i*16],size=[30,4,15]);}
+    repeat posts(index=i,count=2){part post(shape=box,material=dark_wood,at=[10,19,i*56-28],size=[5,38,5]);}
+  }
+}
+object brick_bakehouse(label="Brick bakehouse"){
+  body(interaction=solid,radius=30,height=72);
+  foundation(size=[128,90],color=#8e8171);
+  contact core(at=[-16,0,0],radius=28,height=56);
+  part walls(shape=box,material=plaster,at=[-14,23,0],size=[48,46,54]);
+  part roof(shape=pyramid,material=roof,at=[-14,59,0],size=[72,26,74]);
+  part chimney(shape=box,material=brick,at=[-25,65,-12],size=[10,23,10]);
+  part threshold(shape=box,material=stone,at=[29,1,0],size=[28,2,36]);
+  zone storefront(at=[42,0,0],radius=16,height=39,mode=break(speed=135,scatter=55,lift=45,spin=3,lifetime=7,pattern=crumble)){
+    repeat sides(index=i,count=2){
+      repeat courses(index=j,count=3){part brick(shape=box,material=brick,at=[0,5+j*10,i*28-14],size=[12,9,12]);}
+    }
+    part lintel(shape=box,material=brick,at=[0,35,0],size=[13,9,40]);
+    part door(shape=box,material=dark_wood,at=[-2,15,0],size=[3,30,17]);
+  }
+}
+place orchard_birch(object=leaning_birch,at=[1340,1140]);
+place meadow_spruce(object=silver_spruce,at=[1720,1200]);
+place orchard_sapling(object=amber_sapling,at=[1225,1925]);
+place west_birch(object=leaning_birch,at=[425,1425]);
+place station_spruce(object=silver_spruce,at=[1720,1785]);
+place southern_sapling(object=amber_sapling,at=[750,1820]);
+place park_bench(object=slatted_bench,at=[1225,1500]);
+place station_bench(object=slatted_bench,at=[1515,2200]);
+place orchard_workshop(object=timber_workshop,at=[455,2035]);
+place wayside_bakehouse(object=brick_bakehouse,at=[2150,1170]);

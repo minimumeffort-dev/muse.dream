@@ -1,0 +1,63 @@
+import { DREAM_LIMITS } from "./dream-syntax";
+
+// This table drives parsing, canonical field order and the model's vocabulary export.
+export interface DreamCommand { contexts: readonly string[]; id: boolean; fields: Readonly<Record<string,string>>; block?: string }
+export const DREAM_PROJECT_LIMITS=Object.freeze({modules:32,depth:8,characters:524288,assemblies:128});
+const command = (contexts: string, id: boolean, fields: Record<string,string>, block?: string): DreamCommand =>
+  Object.freeze({contexts:Object.freeze(contexts.split(" ")),id,fields:Object.freeze(fields),...(block ? {block} : {})});
+export const DREAM_V2_COMMANDS: Readonly<Record<string,DreamCommand>> = Object.freeze({
+  material: command("top",true,{style:"toon|grain|glow|stripes|cloth",colors:"colors"}),
+  let: command("top object visual path",true,{value:"n"}),
+  component: command("top",true,{params:"symbols?"},"visual"),
+  object: command("top",true,{label:"text"},"object"),
+  asset: command("top",true,{module:"ref",object:"ref"}),
+  include: command("top",true,{module:"ref"}),
+  body: command("object",false,{interaction:"solid|knockable|decor",radius:"n",height:"n",friction:"n?"}),
+  ground: command("object",false,{mode:"upright|surface"}),
+  foundation: command("object",false,{size:"v2",color:"color"}),
+  contact: command("object",true,{at:"v3",radius:"n",height:"n"}),
+  rideable: command("object",false,{at:"v3"}),
+  emit: command("object",false,{kind:"steam",at:"v3",rate_s:"n"}),
+  impact: command("object",false,{mode:"impact"}),
+  fragment: command("object visual",true,{},"visual"),
+  zone: command("object",true,{at:"v3",radius:"n",height:"n",mode:"fracture"},"visual"),
+  group: command("object visual",true,{at:"v3?",rot_deg:"v3?",scale:"n?"},"visual"),
+  joint: command("object visual",true,{at:"v3?",rot_deg:"v3?",motion:"joint_motion?"},"visual"),
+  repeat: command("object visual path",true,{index:"symbol",count:"n"},"inherit"),
+  use: command("object visual",true,{component:"ref",args:"nums?",at:"v3?",rot_deg:"v3?",scale:"n?"}),
+  part: command("object visual",true,{shape:"box|sphere|cylinder|cone|pyramid|icosphere|capsule|torus",material:"ref",at:"v3",size:"v3",rot_deg:"v3?",deform:"deform?",motion:"part_motion?"}),
+  beam: command("object visual",true,{shape:"box|cylinder|capsule",material:"ref",from:"v3",to:"v3",width:"n",depth:"n",deform:"deform?",motion:"part_motion?"}),
+  route: command("top",true,{kind:"rail|path|water|air",mode:"loop|shuttle",speed:"n",altitude:"n?",wait_s:"n?"},"path"),
+  point: command("path",false,{at:"point"}),
+  place: command("top",true,{object:"ref",at:"v2?",route:"ref?",offset:"n?",scale:"n?",heading_deg:"n?"}),
+  watercourse: command("top",true,{level:"n",depth:"n",bank:"n",color:"color",flow:"v2"},"path"),
+  world: command("top",false,{size:"v2",spawn:"v2",heading_deg:"n",player:"ref?"}),
+  road: command("top",true,{width:"n",points:"points2"}),
+  hill: command("top",true,{at:"v2",radius:"v2",height:"n"}),
+  tint: command("top",true,{at:"v2",radius:"n",color:"color"}),
+  bridge: command("top",true,{from:"v2",to:"v2",width:"n",arch:"n",style:"timber|stone",rails:"bool"}),
+  water: command("top",true,{points:"points2",level:"n",depth:"n",bank:"n",color:"color",flow:"v2",drag:"n",waves:"v3"}),
+  effect: command("top",true,{kind:"ice|boost",points:"points2"}),
+  checkpoint: command("top",true,{at:"v2",dir:"v2",width:"n"}),
+  unresolved: command("top",true,{label:"text"}),
+  spin: command("part_motion",false,{axis:"x|y|z",deg_s:"n"}),
+  roll: command("part_motion",false,{axis:"x|y|z",radius:"n"}),
+  sway: command("part_motion",false,{deg:"n",hz:"n"}),
+  swing: command("joint_motion",false,{axis:"x|y|z",deg:"n",hz:"n",phase_deg:"n"}),
+  open: command("joint_motion",false,{axis:"x|y|z",deg:"n",radius:"n"}),
+  deform: command("deform",false,{seed:"n",amount:"n"}),
+  bounce: command("impact",false,{restitution:"n",lift:"n"}),
+  break: command("impact fracture",false,{speed:"n",scatter:"n",lift:"n",spin:"n",lifetime:"n",pattern:"scatter|splinter|crumble?"}),
+  topple: command("impact",false,{speed:"n",duration:"n",lifetime:"n"}),
+});
+export const DREAM_V2_CONTRACT = {
+  language:"Dream",version:2,header:"dream 2;",
+  syntax:"kind id?(key=value,...); | kind id?(key=value,...){ statements }",
+  identifiers:"[a-z][a-z0-9_]{0,31}; references use IDs, labels are display-only",
+  coordinates:{world:"[x,y], origin top-left, x right, y down",object:"[x,y,z], Y up",length:"canonical units",angles:"degrees; Euler XYZ",frequency:"cycles/second (hz)",speed:"units/second"},
+  expressions:"finite numbers, constants, + - * /, sin(degrees), cos(degrees); no general code",
+  types:{n:"numeric expression",v2:"[n,n]",v3:"[n,n,n]",nums:"[n,...]",symbols:"[symbol,...]",point:"[n,n] or [n,n,n]",points2:"[[n,n],...]",colors:"[#rrggbb,#rrggbb]",color:"#rrggbb",ref:"symbol ID",symbol:"identifier",text:'"JSON-escaped string"',bool:"true|false",optional:"type suffix ?",variants:"enum values separated by |; other types are nested constructor calls"},
+  limits:DREAM_LIMITS,projectLimits:DREAM_PROJECT_LIMITS,commands:DREAM_V2_COMMANDS,
+  modules:{registry:"host-supplied module ID to Dream 2 text; no file/URL resolution",asset:"imports one exported object only, under a local alias",include:"merges world data only; symbols remain file-local",errors:"module ID accompanies nested diagnostics; failure returns no partial world"},
+  output:"validated Object DSL v2 and Scene v1; authoring-language version is separate",
+} as const;

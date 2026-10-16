@@ -1,0 +1,55 @@
+{
+  "revision": "r12",
+  "objects": 432,
+  "assemblies": [
+    {
+      "name": "Festival ball",
+      "parts": 3,
+      "impact": {
+        "kind": "bounce",
+        "restitution": 0.74,
+        "lift": 0.42
+      },
+      "fragments": 0
+    },
+    {
+      "name": "Breakaway table",
+      "parts": 11,
+      "impact": {
+        "kind": "break",
+        "speed": 90,
+        "scatter": 62,
+        "lift": 100,
+        "spin": 4,
+        "lifetime": 6
+      },
+      "fragments": 7
+    },
+    {
+      "name": "Produce crate",
+      "parts": 16,
+      "impact": {
+        "kind": "break",
+        "speed": 75,
+        "scatter": 82,
+        "lift": 115,
+        "spin": 5,
+        "lifetime": 5
+      },
+      "fragments": 8
+    },
+    {
+      "name": "Terracotta planter",
+      "parts": 8,
+      "impact": {
+        "kind": "break",
+        "speed": 65,
+        "scatter": 45,
+        "lift": 75,
+        "spin": 3,
+        "lifetime": 5
+      },
+      "fragments": 6
+    }
+  ]
+}

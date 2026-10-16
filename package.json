@@ -1,0 +1,25 @@
+{
+  "name": "paper-racing-game",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Draw a racing track on paper, then drive on it. Slice 1: handmade fixture racer.",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5173",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "dream": "node scripts/dream.mjs"
+  },
+  "dependencies": {
+    "three": "^0.170.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/three": "^0.170.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.7",
+    "vitest": "^3.0.5"
+  }
+}

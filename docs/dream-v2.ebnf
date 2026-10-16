@@ -1,0 +1,21 @@
+(* Structural grammar only. dream-v2-contract.json supplies command contexts,
+   required IDs/fields, field types and allowed constructors. *)
+program = "dream", "2", ";", statement, { statement } ;
+statement = identifier, [ identifier ], "(", [ fields ], ")",
+            ( ";" | "{", { statement }, "}" ) ;
+fields = field, { ",", field }, [ "," ] ;
+field = identifier, "=", value ;
+value = expression | string | color | "true" | "false" | array | constructor ;
+array = "[", [ value, { ",", value }, [ "," ] ], "]" ;
+constructor = identifier, "(", fields, ")" ;
+expression = product, { ("+" | "-"), product } ;
+product = unary, { ("*" | "/"), unary } ;
+unary = ("+" | "-"), unary | primary ;
+primary = number | identifier | "(", expression, ")"
+        | ("sin" | "cos"), "(", expression, ")" ;
+identifier = lower_letter, { lower_letter | digit | "_" } ;
+(* Identifier length 1..32; sin/cos/true/false are reserved IDs.
+   number: /(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?/
+   color: /#[0-9a-fA-F]{6}\b/
+   string: JSON double-quoted string without literal CR/LF.
+   Whitespace and // line comments are ignored. *)

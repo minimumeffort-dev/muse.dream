@@ -1,0 +1,860 @@
+{
+  "schemaVersion": 1,
+  "sceneId": "v2-world",
+  "revisionId": "r1",
+  "sourceHash": "handmade-dream-v2",
+  "canonical": {
+    "width": 960,
+    "height": 900,
+    "coordinateSystem": "top-left-x-right-y-down-px"
+  },
+  "roadMaskRef": {
+    "kind": "generated-spline-loop",
+    "params": {
+      "points": [
+        {
+          "x": 300,
+          "y": 590
+        },
+        {
+          "x": 660,
+          "y": 590
+        },
+        {
+          "x": 810,
+          "y": 500
+        },
+        {
+          "x": 810,
+          "y": 220
+        },
+        {
+          "x": 660,
+          "y": 130
+        },
+        {
+          "x": 300,
+          "y": 130
+        },
+        {
+          "x": 150,
+          "y": 220
+        },
+        {
+          "x": 150,
+          "y": 500
+        }
+      ],
+      "roadWidth": 118
+    }
+  },
+  "spawn": {
+    "x": 525,
+    "y": 609,
+    "headingRad": 0
+  },
+  "terrain": {
+    "landscape": {
+      "dslVersion": 1,
+      "waters": [
+        {
+          "id": "river",
+          "polygon": [
+            {
+              "x": 410,
+              "y": 250
+            },
+            {
+              "x": 410,
+              "y": 450
+            },
+            {
+              "x": 410,
+              "y": 640
+            },
+            {
+              "x": 410,
+              "y": 800
+            },
+            {
+              "x": 415.32843272420996,
+              "y": 826.7878402655563
+            },
+            {
+              "x": 430.50252531694167,
+              "y": 849.4974746830583
+            },
+            {
+              "x": 453.21215973444373,
+              "y": 864.67156727579
+            },
+            {
+              "x": 480,
+              "y": 870
+            },
+            {
+              "x": 506.78784026555627,
+              "y": 864.67156727579
+            },
+            {
+              "x": 529.4974746830583,
+              "y": 849.4974746830583
+            },
+            {
+              "x": 544.67156727579,
+              "y": 826.7878402655563
+            },
+            {
+              "x": 550,
+              "y": 800
+            },
+            {
+              "x": 550,
+              "y": 640
+            },
+            {
+              "x": 550,
+              "y": 450
+            },
+            {
+              "x": 550,
+              "y": 250
+            },
+            {
+              "x": 544.67156727579,
+              "y": 223.21215973444367
+            },
+            {
+              "x": 529.4974746830583,
+              "y": 200.50252531694167
+            },
+            {
+              "x": 506.7878402655563,
+              "y": 185.32843272420993
+            },
+            {
+              "x": 480,
+              "y": 180
+            },
+            {
+              "x": 453.2121597344437,
+              "y": 185.32843272420996
+            },
+            {
+              "x": 430.50252531694167,
+              "y": 200.50252531694167
+            },
+            {
+              "x": 415.3284327242099,
+              "y": 223.21215973444373
+            }
+          ],
+          "level": 0,
+          "depth": 6,
+          "bankWidth": 32,
+          "color": "#267f8a",
+          "flow": {
+            "x": 0,
+            "y": 24
+          },
+          "dragPerS": 2.2,
+          "waves": {
+            "speed": 70,
+            "damping": 1.4,
+            "strength": 1.2
+          }
+        },
+        {
+          "id": "pond",
+          "polygon": [
+            {
+              "x": 650,
+              "y": 750
+            },
+            {
+              "x": 790,
+              "y": 750
+            },
+            {
+              "x": 790,
+              "y": 870
+            },
+            {
+              "x": 650,
+              "y": 870
+            }
+          ],
+          "level": 0,
+          "depth": 6,
+          "bankWidth": 32,
+          "color": "#318d86",
+          "flow": {
+            "x": 0,
+            "y": 0
+          },
+          "dragPerS": 2.2,
+          "waves": {
+            "speed": 55,
+            "damping": 1.1,
+            "strength": 1.4
+          }
+        }
+      ],
+      "bridges": [
+        {
+          "id": "racing_bridge",
+          "a": {
+            "x": 300,
+            "y": 591
+          },
+          "b": {
+            "x": 660,
+            "y": 591
+          },
+          "width": 240,
+          "archHeight": 12,
+          "style": "timber",
+          "rails": true
+        }
+      ]
+    },
+    "hills": [
+      {
+        "id": "meadow",
+        "x": 480,
+        "y": 350,
+        "radiusX": 120,
+        "radiusY": 120,
+        "height": 60
+      }
+    ],
+    "tints": [
+      {
+        "x": 480,
+        "y": 350,
+        "radius": 180,
+        "color": "#998363"
+      }
+    ]
+  },
+  "routes": [
+    {
+      "id": "meadow_path",
+      "kind": "path",
+      "mode": "loop",
+      "speed": 35,
+      "waitS": 2,
+      "points": [
+        {
+          "x": 260,
+          "y": 300
+        },
+        {
+          "x": 360,
+          "y": 300
+        },
+        {
+          "x": 360,
+          "y": 400
+        },
+        {
+          "x": 260,
+          "y": 400
+        }
+      ]
+    }
+  ],
+  "player": {
+    "dslVersion": 2,
+    "displayName": "Sketch car",
+    "parts": [
+      {
+        "id": "d_184f58717a1a6a3f",
+        "shape": "box",
+        "position": [
+          0,
+          7,
+          0
+        ],
+        "size": [
+          26,
+          10,
+          17
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "material": {
+          "shaderStyle": "toon",
+          "colorA": "#c85c43",
+          "colorB": "#c85c43"
+        }
+      },
+      {
+        "id": "d_8ce26b2eec3df40b",
+        "shape": "cylinder",
+        "position": [
+          -9,
+          5,
+          -9
+        ],
+        "size": [
+          8,
+          3,
+          8
+        ],
+        "rotation": [
+          1.5707963267948963,
+          0,
+          0
+        ],
+        "material": {
+          "shaderStyle": "toon",
+          "colorA": "#303c43",
+          "colorB": "#303c43"
+        },
+        "animation": {
+          "kind": "roll",
+          "radius": 4,
+          "axis": "y"
+        }
+      },
+      {
+        "id": "d_13f2c69804971294",
+        "shape": "cylinder",
+        "position": [
+          -9,
+          5,
+          9
+        ],
+        "size": [
+          8,
+          3,
+          8
+        ],
+        "rotation": [
+          1.5707963267948963,
+          0,
+          0
+        ],
+        "material": {
+          "shaderStyle": "toon",
+          "colorA": "#303c43",
+          "colorB": "#303c43"
+        },
+        "animation": {
+          "kind": "roll",
+          "radius": 4,
+          "axis": "y"
+        }
+      },
+      {
+        "id": "d_d232c4329862eb44",
+        "shape": "cylinder",
+        "position": [
+          9,
+          5,
+          -9
+        ],
+        "size": [
+          8,
+          3,
+          8
+        ],
+        "rotation": [
+          1.5707963267948963,
+          0,
+          0
+        ],
+        "material": {
+          "shaderStyle": "toon",
+          "colorA": "#303c43",
+          "colorB": "#303c43"
+        },
+        "animation": {
+          "kind": "roll",
+          "radius": 4,
+          "axis": "y"
+        }
+      },
+      {
+        "id": "d_6a832473e2e9b6fb",
+        "shape": "cylinder",
+        "position": [
+          9,
+          5,
+          9
+        ],
+        "size": [
+          8,
+          3,
+          8
+        ],
+        "rotation": [
+          1.5707963267948963,
+          0,
+          0
+        ],
+        "material": {
+          "shaderStyle": "toon",
+          "colorA": "#303c43",
+          "colorB": "#303c43"
+        },
+        "animation": {
+          "kind": "roll",
+          "radius": 4,
+          "axis": "y"
+        }
+      }
+    ],
+    "body": {
+      "interaction": "solid",
+      "colliderRadius": 11,
+      "colliderHeight": 15
+    }
+  },
+  "checkpoints": [
+    {
+      "id": "start",
+      "a": {
+        "x": 480,
+        "y": 662.5
+      },
+      "b": {
+        "x": 480,
+        "y": 562.5
+      },
+      "dir": {
+        "x": 1,
+        "y": 0
+      }
+    },
+    {
+      "id": "east",
+      "a": {
+        "x": 878.75,
+        "y": 360
+      },
+      "b": {
+        "x": 778.75,
+        "y": 360
+      },
+      "dir": {
+        "x": 0,
+        "y": -1
+      }
+    },
+    {
+      "id": "north",
+      "a": {
+        "x": 480,
+        "y": 57.5
+      },
+      "b": {
+        "x": 480,
+        "y": 157.5
+      },
+      "dir": {
+        "x": -1,
+        "y": 0
+      }
+    },
+    {
+      "id": "west",
+      "a": {
+        "x": 81.25,
+        "y": 360
+      },
+      "b": {
+        "x": 181.25,
+        "y": 360
+      },
+      "dir": {
+        "x": 0,
+        "y": 1
+      }
+    }
+  ],
+  "regions": [
+    {
+      "id": "boost_strip",
+      "labelText": "BOOST",
+      "polygon": [
+        {
+          "x": 600,
+          "y": 570
+        },
+        {
+          "x": 640,
+          "y": 570
+        },
+        {
+          "x": 640,
+          "y": 640
+        },
+        {
+          "x": 600,
+          "y": 640
+        }
+      ],
+      "rule": {
+        "effect": "BOOST"
+      }
+    },
+    {
+      "id": "ice_patch",
+      "labelText": "ICE",
+      "polygon": [
+        {
+          "x": 430,
+          "y": 76
+        },
+        {
+          "x": 530,
+          "y": 76
+        },
+        {
+          "x": 530,
+          "y": 142
+        },
+        {
+          "x": 430,
+          "y": 142
+        }
+      ],
+      "rule": {
+        "effect": "ICE"
+      }
+    }
+  ],
+  "objects": [
+    {
+      "id": "touring_car",
+      "kind": "custom",
+      "labelText": "Sketch car",
+      "x": 260,
+      "y": 300,
+      "scale": 1,
+      "headingRad": -0.7853981633974483,
+      "route": {
+        "id": "meadow_path",
+        "offset": 0
+      },
+      "spec": {
+        "dslVersion": 2,
+        "displayName": "Sketch car",
+        "parts": [
+          {
+            "id": "d_184f58717a1a6a3f",
+            "shape": "box",
+            "position": [
+              0,
+              7,
+              0
+            ],
+            "size": [
+              26,
+              10,
+              17
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#c85c43",
+              "colorB": "#c85c43"
+            }
+          },
+          {
+            "id": "d_8ce26b2eec3df40b",
+            "shape": "cylinder",
+            "position": [
+              -9,
+              5,
+              -9
+            ],
+            "size": [
+              8,
+              3,
+              8
+            ],
+            "rotation": [
+              1.5707963267948963,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#303c43",
+              "colorB": "#303c43"
+            },
+            "animation": {
+              "kind": "roll",
+              "radius": 4,
+              "axis": "y"
+            }
+          },
+          {
+            "id": "d_13f2c69804971294",
+            "shape": "cylinder",
+            "position": [
+              -9,
+              5,
+              9
+            ],
+            "size": [
+              8,
+              3,
+              8
+            ],
+            "rotation": [
+              1.5707963267948963,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#303c43",
+              "colorB": "#303c43"
+            },
+            "animation": {
+              "kind": "roll",
+              "radius": 4,
+              "axis": "y"
+            }
+          },
+          {
+            "id": "d_d232c4329862eb44",
+            "shape": "cylinder",
+            "position": [
+              9,
+              5,
+              -9
+            ],
+            "size": [
+              8,
+              3,
+              8
+            ],
+            "rotation": [
+              1.5707963267948963,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#303c43",
+              "colorB": "#303c43"
+            },
+            "animation": {
+              "kind": "roll",
+              "radius": 4,
+              "axis": "y"
+            }
+          },
+          {
+            "id": "d_6a832473e2e9b6fb",
+            "shape": "cylinder",
+            "position": [
+              9,
+              5,
+              9
+            ],
+            "size": [
+              8,
+              3,
+              8
+            ],
+            "rotation": [
+              1.5707963267948963,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#303c43",
+              "colorB": "#303c43"
+            },
+            "animation": {
+              "kind": "roll",
+              "radius": 4,
+              "axis": "y"
+            }
+          }
+        ],
+        "body": {
+          "interaction": "solid",
+          "colliderRadius": 11,
+          "colliderHeight": 15
+        }
+      }
+    },
+    {
+      "id": "table",
+      "kind": "custom",
+      "labelText": "Breakable table",
+      "x": 640,
+      "y": 350,
+      "scale": 1,
+      "spec": {
+        "dslVersion": 2,
+        "displayName": "Breakable table",
+        "parts": [
+          {
+            "id": "d_c8cd781d8e46fb17",
+            "shape": "box",
+            "position": [
+              0,
+              26,
+              0
+            ],
+            "size": [
+              48,
+              4,
+              32
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "paper-grain",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_56f9bc194465a83c"
+          },
+          {
+            "id": "d_dc318f8b7ad17ed5",
+            "shape": "box",
+            "position": [
+              -18,
+              12,
+              -11
+            ],
+            "size": [
+              4,
+              24,
+              4
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "paper-grain",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_2e4ea2f5d85b89e3"
+          },
+          {
+            "id": "d_4bad0a6e79ef10be",
+            "shape": "box",
+            "position": [
+              -18,
+              12,
+              11
+            ],
+            "size": [
+              4,
+              24,
+              4
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "paper-grain",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_1c9f1fef3d60f434"
+          },
+          {
+            "id": "d_ba46edb975dd0d7e",
+            "shape": "box",
+            "position": [
+              18,
+              12,
+              -11
+            ],
+            "size": [
+              4,
+              24,
+              4
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "paper-grain",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_5ceffa575b7fa3f4"
+          },
+          {
+            "id": "d_267d4d4f02ed6195",
+            "shape": "box",
+            "position": [
+              18,
+              12,
+              11
+            ],
+            "size": [
+              4,
+              24,
+              4
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "paper-grain",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_72067d5df95f15a3"
+          }
+        ],
+        "body": {
+          "interaction": "solid",
+          "colliderRadius": 24,
+          "colliderHeight": 28
+        },
+        "impact": {
+          "kind": "break",
+          "speed": 90,
+          "scatter": 62,
+          "lift": 100,
+          "spin": 4,
+          "lifetime": 6
+        }
+      }
+    }
+  ],
+  "unresolvedLabels": [
+    {
+      "regionId": "sky_magic",
+      "labelText": "Weather-changing spells are not supported"
+    }
+  ],
+  "provenance": {
+    "source": "handmade-fixture",
+    "notes": "Compiled Dream 2 mock world. No model calls."
+  }
+}

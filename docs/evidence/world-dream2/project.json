@@ -1,0 +1,56 @@
+{
+  "filesIncludingEntry": 17,
+  "characters": 109332,
+  "assemblies": 47,
+  "parts": 495,
+  "placements": 438,
+  "routes": 5,
+  "waters": 2,
+  "reactive": [
+    {
+      "id": "orchard_picnic",
+      "kind": "break"
+    },
+    {
+      "id": "meadow_ball",
+      "kind": "bounce"
+    },
+    {
+      "id": "meadow_table",
+      "kind": "break"
+    },
+    {
+      "id": "orchard_crate",
+      "kind": "break"
+    },
+    {
+      "id": "garden_planter",
+      "kind": "break"
+    },
+    {
+      "id": "roadside_table",
+      "kind": "break"
+    },
+    {
+      "id": "roadside_ball",
+      "kind": "bounce"
+    },
+    {
+      "id": "station_crate",
+      "kind": "break"
+    },
+    {
+      "id": "orchard_supply_crate",
+      "kind": "break"
+    },
+    {
+      "id": "station_planter",
+      "kind": "break"
+    },
+    {
+      "id": "roadside_planter",
+      "kind": "break"
+    }
+  ],
+  "potentialFragments": 63
+}

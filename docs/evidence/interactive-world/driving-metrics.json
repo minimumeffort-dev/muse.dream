@@ -1,0 +1,53 @@
+{
+  "driveStart": {
+    "actors": "[{\"id\":\"meadow_train\",\"x\":1300,\"y\":1790,\"elevation\":0},{\"id\":\"meadow_coach\",\"x\":1207.1688935765203,\"y\":1802.7091576296245,\"elevation\":0},{\"id\":\"meadow_plane\",\"x\":1580,\"y\":1690,\"elevation\":0},{\"id\":\"lake_boat\",\"x\":2835,\"y\":2410,\"elevation\":-2},{\"id\":\"village_bike\",\"x\":1065,\"y\":1425,\"elevation\":0},{\"id\":\"village_skateboard\",\"x\":810,\"y\":1595,\"elevation\":0}]",
+    "camera": "-1955.0,12.0,-1040.0",
+    "car": "1045.0,1360.0,1.5",
+    "flight": "{\"jumps\":0,\"landings\":0,\"maxClearance\":0}",
+    "fps": "41.1",
+    "grounded": "true",
+    "heading": "0.000",
+    "mode": "playing",
+    "occluders": "0",
+    "particles": "0",
+    "render": "{\"calls\":375,\"triangles\":188190,\"geometries\":217}",
+    "riding": "",
+    "speed": "0.0",
+    "view": "-0.51308,0.15225,0.09304,0.83959",
+    "world": "{\"width\":6000,\"height\":4800,\"objects\":427,\"checkpoints\":8}"
+  },
+  "driveCrest": {
+    "actors": "[{\"id\":\"meadow_train\",\"x\":1300,\"y\":1790,\"elevation\":0},{\"id\":\"meadow_coach\",\"x\":1207.1688935765203,\"y\":1802.7091576296245,\"elevation\":0},{\"id\":\"meadow_plane\",\"x\":1580,\"y\":1690,\"elevation\":0},{\"id\":\"lake_boat\",\"x\":2835,\"y\":2410,\"elevation\":-2},{\"id\":\"village_bike\",\"x\":1065,\"y\":1425,\"elevation\":0},{\"id\":\"village_skateboard\",\"x\":759.197472828586,\"y\":1649.331227357155,\"elevation\":0}]",
+    "camera": "-1306.1,12.1,-1040.0",
+    "car": "1693.9,1360.0,1.5",
+    "flight": "{\"jumps\":1,\"landings\":1,\"maxClearance\":4.446770090383463}",
+    "fps": "60.0",
+    "grounded": "true",
+    "heading": "0.000",
+    "mode": "playing",
+    "occluders": "0",
+    "particles": "61",
+    "render": "{\"calls\":226,\"triangles\":115909,\"geometries\":305}",
+    "riding": "",
+    "speed": "454.8",
+    "view": "-0.51308,0.15225,0.09304,0.83959",
+    "world": "{\"width\":6000,\"height\":4800,\"objects\":427,\"checkpoints\":8}"
+  },
+  "driveEnd": {
+    "actors": "[{\"id\":\"meadow_train\",\"x\":1381.4414312438369,\"y\":1799.6244697520342,\"elevation\":0},{\"id\":\"meadow_coach\",\"x\":1288.2434766406423,\"y\":1791.0120071644026,\"elevation\":0},{\"id\":\"meadow_plane\",\"x\":1580,\"y\":1690,\"elevation\":0},{\"id\":\"lake_boat\",\"x\":2835.644003356418,\"y\":2404.370046999481,\"elevation\":-2},{\"id\":\"village_bike\",\"x\":1065,\"y\":1425,\"elevation\":0},{\"id\":\"village_skateboard\",\"x\":708.4948683751574,\"y\":1607.0790569792978,\"elevation\":0}]",
+    "camera": "-1159.1,16.2,-1040.1",
+    "car": "1840.9,1359.9,5.7",
+    "flight": "{\"jumps\":2,\"landings\":2,\"maxClearance\":4.446770090383463}",
+    "fps": "60.0",
+    "grounded": "true",
+    "heading": "0.000",
+    "mode": "playing",
+    "occluders": "0",
+    "particles": "13",
+    "render": "{\"calls\":185,\"triangles\":104103,\"geometries\":310}",
+    "riding": "",
+    "speed": "7.2",
+    "view": "-0.51308,0.15225,0.09304,0.83959",
+    "world": "{\"width\":6000,\"height\":4800,\"objects\":427,\"checkpoints\":8}"
+  }
+}
