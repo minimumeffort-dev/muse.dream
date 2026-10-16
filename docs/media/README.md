@@ -59,7 +59,7 @@ GitHub's repository viewer has its own syntax system. Adding our grammar to this
 `npc-attention.jpg` is a native screenshot of the actual game at
 `/?test-npc=town_resident_0`, with a pedestrian watching the nearby walking player.
 `npc-people.jpg` uses the focused gallery for Town pedestrian, Park visitor,
-Football player, Basketball player and Park walker. The atlas, town, sports park,
+Football player, Basketball player and Park walker. The complete and urban asset atlases, town, sports park,
 basketball court, golf and south-lake stills were refreshed after the people gained
 faces and +X-facing assemblies. They retain native render resolution and JPEG 95
 encoding. The new [NPC guide](../dream/npcs.md) contains the checked complete example.

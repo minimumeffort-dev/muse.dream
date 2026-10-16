@@ -43,7 +43,7 @@ Same local browser, town drive, 1280 × 720 drawing buffer, DPR 1, 60 warm-up fr
 
 Updated README, language overview, behavior/reference/model instructions, generated contract, runnable example, navigation, urban-world/rendering notes and AGENTS.md. The new NPC guide includes explicit roles, executable source, behavior tables and current boundaries.
 
-Refreshed the full atlas and town, sports, basketball, golf and south-lake screenshots. Added the native near-player screenshot and focused people gallery. Existing driving/switching/destruction GIFs, HD videos and their stills remain representative: their visible geometry and prescribed actions did not change. Baker and naturalist keep their continuous joints through explicit perform programs. Other asset, flora/fauna, proportions, bridge and terrain captures remain accurate; their source geometry did not change.
+Refreshed the full and eight-object urban atlases and town, sports, basketball, golf and south-lake screenshots. Added the native near-player screenshot and focused people gallery. Existing driving/switching/destruction GIFs, HD videos and their stills remain representative: their visible geometry and prescribed actions did not change. Baker and naturalist keep their continuous joints through explicit perform programs. Other asset, flora/fauna, proportions, bridge and terrain captures remain accurate; their source geometry did not change.
 
 ## Boundaries
 
@@ -56,4 +56,4 @@ The initial GitHub run and its retry passed all 559 assertions but failed with
 event-loop turn between CPU-heavy scene tests so queued worker reports can be
 delivered. Test and reporting timeouts remain unchanged, and unhandled errors
 remain fatal. README, language docs and screenshots were audited for this
-test-only follow-up; their runtime behavior and images remain accurate.
+test-only follow-up; their runtime behavior and images remain accurate. A final catalog audit also corrected the remaining README assembly count and the asset guide's older visitor-instancing description, and refreshed its urban atlas.
