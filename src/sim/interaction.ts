@@ -11,6 +11,7 @@ import { sceneContacts } from "../scene/contacts";
 import type {SceneObject} from "../scene/schema";
 import {bridgeAt} from '../scene/landscape-dsl';
 import {aircraftFloor} from '../scene/aircraft-support';
+import {stepSports} from './sports';
 
 export const FOOT_RADIUS=3,FOOT_HEIGHT=17.5;
 export const MAX_FLIGHT_CLEARANCE=450;
@@ -164,6 +165,9 @@ function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,pro
   advanceImpactMotion(s,body,dt);return s;
 }
 export function stepInteractive(state:CarState,input:CarInput,dt:number,world:World):CarState {
+  return stepSports(stepControlled(state,input,dt,world),state,input,dt,world);
+}
+function stepControlled(state:CarState,input:CarInput,dt:number,world:World):CarState {
   if(state.control.kind==="car")return stepCar(state,input,dt,world);
   if(state.control.kind==="foot"){
     const angle=Math.atan2(180,480)+(input.viewAngle??0),length=Math.max(1,Math.hypot(input.steer,input.throttle));

@@ -2,6 +2,8 @@ dream 2;
 asset a_football_goal(module=sports_assets,object=football_goal);
 asset a_basketball_hoop(module=sports_assets,object=basketball_hoop);
 asset a_golf_pin(module=sports_assets,object=golf_pin);
+asset a_football(module=sports_assets,object=football);
+asset a_basketball(module=sports_assets,object=basketball);
 surface airfield_runway(color=#777c78,points=[[2080,8750],[2260,8750],[2260,10050],[2080,10050]]);
 surface airfield_apron(color=#969a8d,points=[[2260,9300],[2700,9300],[2700,9670],[2260,9670]]);
 asset a_airport_terminal(module=transit_assets,object=airport_terminal);
@@ -35,13 +37,26 @@ surface workshop_yard(color=#aaa18b,points=[[12050,6700],[12330,6700],[12330,710
 surface football_turf(color=#59834f,points=[[10100,4370],[11100,4370],[11100,5010],[10100,5010]]);
 marking football_touchlines(color=#e8e3ce,width=1.4,closed=true){point(at=[10100,4370]);point(at=[11100,4370]);point(at=[11100,5010]);point(at=[10100,5010]);}
 marking football_halfway(color=#e8e3ce,width=1.5,closed=false){point(at=[10600,4370]);point(at=[10600,5010]);}
+marking football_penalty_west(color=#e8e3ce,width=1.4,closed=false){point(at=[10100,4488.4]);point(at=[10265,4488.4]);point(at=[10265,4891.6]);point(at=[10100,4891.6]);}
+marking football_penalty_east(color=#e8e3ce,width=1.4,closed=false){point(at=[11100,4488.4]);point(at=[10935,4488.4]);point(at=[10935,4891.6]);point(at=[11100,4891.6]);}
+marking football_goalbox_west(color=#e8e3ce,width=1.4,closed=false){point(at=[10100,4598.4]);point(at=[10155,4598.4]);point(at=[10155,4781.6]);point(at=[10100,4781.6]);}
+marking football_goalbox_east(color=#e8e3ce,width=1.4,closed=false){point(at=[11100,4598.4]);point(at=[11045,4598.4]);point(at=[11045,4781.6]);point(at=[11100,4781.6]);}
 marking football_center(color=#e8e3ce,width=1.4,closed=true){point(at=[10691,4690]);point(at=[10687.899,4713.553]);point(at=[10678.808,4735.5]);point(at=[10664.347,4754.347]);point(at=[10645.5,4768.808]);point(at=[10623.553,4777.899]);point(at=[10600,4781]);point(at=[10576.447,4777.899]);point(at=[10554.5,4768.808]);point(at=[10535.653,4754.347]);point(at=[10521.192,4735.5]);point(at=[10512.101,4713.553]);point(at=[10509,4690]);point(at=[10512.101,4666.447]);point(at=[10521.192,4644.5]);point(at=[10535.653,4625.653]);point(at=[10554.5,4611.192]);point(at=[10576.447,4602.101]);point(at=[10600,4599]);point(at=[10623.553,4602.101]);point(at=[10645.5,4611.192]);point(at=[10664.347,4625.653]);point(at=[10678.808,4644.5]);point(at=[10687.899,4666.447]);}
 place pitch_goal_0(object=a_football_goal,at=[10100,4690],heading_deg=90);
 place pitch_goal_1(object=a_football_goal,at=[11100,4690],heading_deg=-90);
+place pitch_ball(object=a_football,at=[10600,4690]);
+sport football_practice(kind=football,surface=football_turf,ball=pitch_ball,targets=[pitch_goal_0,pitch_goal_1],target_at=[0,12,0],target_size=[72,24]);
 surface basketball_court(color=#647f8b,points=[[7140,7900],[7420,7900],[7420,8050],[7140,8050]]);
 marking basketball_touchlines(color=#e8e3ce,width=1,closed=true){point(at=[7140,7900]);point(at=[7420,7900]);point(at=[7420,8050]);point(at=[7140,8050]);}
 marking basketball_half(color=#e8e3ce,width=1,closed=false){point(at=[7280,7900]);point(at=[7280,8050]);}
+marking basketball_key_west(color=#e8e3ce,width=1,closed=false){point(at=[7140,7950.5]);point(at=[7198,7950.5]);point(at=[7198,7999.5]);point(at=[7140,7999.5]);}
+marking basketball_key_east(color=#e8e3ce,width=1,closed=false){point(at=[7420,7950.5]);point(at=[7362,7950.5]);point(at=[7362,7999.5]);point(at=[7420,7999.5]);}
+marking basketball_three_west(color=#e8e3ce,width=1,closed=false){repeat arc(index=a,count=25){point(at=[7144.152+cos(-90+a*7.5)*67.5,7975+sin(-90+a*7.5)*67.5]);}}
+marking basketball_three_east(color=#e8e3ce,width=1,closed=false){repeat arc(index=a,count=25){point(at=[7415.848-cos(-90+a*7.5)*67.5,7975+sin(-90+a*7.5)*67.5]);}}
+marking basketball_center(color=#e8e3ce,width=1,closed=true){repeat circle(index=a,count=24){point(at=[7280+cos(a*15)*18,7975+sin(a*15)*18]);}}
 place court_hoop_0(object=a_basketball_hoop,at=[7132,7975],heading_deg=-90);
 place court_hoop_1(object=a_basketball_hoop,at=[7428,7975],heading_deg=90);
+place court_ball(object=a_basketball,at=[7280,7975]);
+sport basketball_practice(kind=basketball,surface=basketball_court,ball=court_ball,targets=[court_hoop_0,court_hoop_1],target_at=[0,30,12],target_size=[4.3,4.3]);
 surface golf_fairway(color=#79965f,points=[[5820,9160],[6030,9240],[6120,9580],[6500,9690],[6610,9820],[6370,9920],[5970,9710],[5850,9440]]);
 place golf_flag(object=a_golf_pin,at=[6450,9810],heading_deg=0);

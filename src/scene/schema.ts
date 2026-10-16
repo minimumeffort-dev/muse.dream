@@ -11,6 +11,7 @@ import {flockSchema,POPULATION_LIMITS} from './population';
 import {siteSchema,crossingSchema} from './sites';
 import {streetSchema,surfaceSchema,markingSchema} from './streets';
 import {NPC_LIMITS,roleSchema,behaviorSchema,roleOf,controlFor,agentProblem} from './agents';
+import {sportSchema,sportProblems,MAX_SPORTS} from './sports';
 
 /**
  * Versioned scene document: the single contract between geometry/semantics
@@ -158,6 +159,7 @@ export const sceneSchema = z.object({
   flocks:z.array(flockSchema).max(POPULATION_LIMITS.flocks).default([]),
   sites:z.array(siteSchema).max(256).default([]),
   crossings:z.array(crossingSchema).max(64).default([]),
+  sports:z.array(sportSchema).max(MAX_SPORTS).default([]),
   player: objectDslSchema.optional().refine((spec) => !spec || spec.body.interaction === "solid", {
     message: "player requires a solid body",
   }).refine((spec)=>!spec?.foundation,{message:"player cannot carry a terrain foundation"})
@@ -176,6 +178,7 @@ export const sceneSchema = z.object({
     notes: z.string(),
   }),
 }).superRefine((scene,ctx)=> {
+  for(const message of sportProblems(scene))ctx.addIssue({code:'custom',path:['sports'],message});
   const lamps=scene.objects.filter(o=>o.spec && "lamp" in o.spec && o.spec.lamp);
   if(lamps.length>MAX_LIGHT_POOLS)ctx.addIssue({code:"custom",message:"scene exceeds 512 light pools"});
   for(const o of lamps)if(roleOf(o)!=="prop" || o.route || o.spec && "body" in o.spec && o.spec.body.interaction==="knockable" || isReactive(o.spec))ctx.addIssue({code:"custom",message:`lamp "${o.id}" requires a static prop without damage`});

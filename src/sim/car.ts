@@ -1,4 +1,5 @@
 import {routePath} from "../scene/routes";
+import {initialSports,type SportState} from './sports';
 import {initialNpcs,stepNpcs,type NpcState} from './npcs';
 import {onStreet} from '../scene/streets';
 import {distanceToRoad} from "../scene/road";
@@ -36,6 +37,8 @@ export interface CarInput {
   boost?:boolean;
   /** A fresh UI press, consumed for one fixed tick (also preserves quick taps). */
   boostPressed?:boolean;
+  shoot?:boolean;shootPressed?:boolean;shootReleased?:boolean;
+  aim?:{x:number;y:number};
 }
 
 export type Surface = "road" | "paper" | "ice" | "water";
@@ -78,6 +81,7 @@ export interface CarState {
   /** True for the single step in which a boost fired (HUD flash). */
   boostedThisStep: boolean;
   carBoost:{held:boolean;activeUntilS:number;readyAtS:number};
+  sports:SportState[];
   /** Live knockable props, in scene-object order. Solids never move. */
   props: PropState[];
   broken:string[];
@@ -162,6 +166,7 @@ export function createCarAtSpawn(scene: Scene): CarState {
     boostReadyAtS: {},
     boostedThisStep: false,
     carBoost:{held:false,activeUntilS:0,readyAtS:0},
+    sports:initialSports(scene),
     broken:[],brokenZones:[],debris:[],impacts:[],
     props: scene.objects
       .filter((o) => archetypeOf(o).interaction === "knockable")
@@ -184,6 +189,7 @@ export function resetCar(state: CarState, scene: Scene, resetRace = false): CarS
     lap: state.lap,
     boostReadyAtS: { ...state.boostReadyAtS },
     carBoost:{...fresh.carBoost,held:state.carBoost.held,readyAtS:state.carBoost.readyAtS},
+    sports:state.sports.map(game=>({...game,held:false,possessed:false,chargeStartS:null})),
     props: state.props.map((p) => ({ ...p })),
     broken:[...state.broken],brokenZones:state.brokenZones.map(z=>({...z})),debris:state.debris.map(p=>({...p})),
   };

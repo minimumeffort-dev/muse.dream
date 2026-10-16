@@ -192,3 +192,20 @@ recordings remain accurate because they don't boost a car or include the changed
 HTML HUD. World geometry, assets and their stills are unchanged. The
 [boost verification](../evidence/car-boost/verification.md) records checks,
 encoding and limits.
+
+## Walk-up sports, r36
+
+`football.gif` / `football.mp4` and `basketball.gif` / `basketball.mp4` use 240
+and 210 consecutive frames at 30 fps, with matched practice stills. Native
+source frames are 2400 × 1350; videos are 1600 × 900 and GIFs 960 × 540, without
+interpolation. Separate native HUD screenshots show the shot control, gold
+power band and scores. The football park, both basketball image paths and full
+85-assembly atlas are refreshed. `sports-assets.jpg` and four retained gallery
+angles show the new balls and connected horizontal hoop.
+
+Existing movement, boost, day/night and destruction recordings retain their
+unchanged local geometry and actions. Canvas exports exclude the updated HTML
+map legend and pause help. Other district, vehicle, material and flora/fauna
+captures do not show the modified grounds. Historical evidence retains its
+original revision. The [sports verification](../evidence/sports/verification.md)
+records native controls, retained-capture reasons and the solo-practice limits.

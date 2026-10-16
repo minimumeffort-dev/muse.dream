@@ -85,5 +85,5 @@ it('bakes parked bicycle cranks at rest and retains the full world within its ex
   expect(hasAnimatedJoints(spec('Meadow bicycle'))).toBe(true);
   const count=scene.objects.filter(o=>hasAnimatedJoints(o.spec)).length+Number(hasAnimatedJoints(scene.player))+1;
   expect(count).toBeLessThanOrEqual(MAX_ANIMATED_ASSEMBLIES);
-  expect(scene.objects.length).toBe(1364);expect(scene.checkpoints).toHaveLength(8);
+  expect(scene.objects.length).toBe(1366);expect(scene.checkpoints).toHaveLength(8);
 });

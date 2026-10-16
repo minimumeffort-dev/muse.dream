@@ -1,4 +1,6 @@
 import {nightFactor} from "./shaders";
+import {activeSport,closestSportTarget,sportCharge,cancelSportAction} from '../sim/sports';
+import {SportsVisuals,poseSportBall} from './sports';
 import {WorldDaylight} from "./daylight";
 import {buildFlocks} from "./flocks";
 import {SunShadows} from "./sun";
@@ -28,7 +30,7 @@ import { compactObject } from "./compact-object";
 import { worldTime, worldMotion, terrainPlayer, terrainView, worldGradeShader } from "./shaders";
 import { animateObject, buildObject, buildPlayer,MAX_SUSPENSION_COMPRESSION } from "./world3d";
 import { buildEnvironment, roadGeometry, terrainNormal, worldPosition } from "./environment";
-import { cameraPosition, followCamera, followCameraZoom, rideCameraZoom, DEFAULT_CAMERA_ZOOM, type FollowTarget } from "./camera";
+import { cameraPosition, followCamera, followCameraZoom, rideCameraZoom, sportCameraFrame, DEFAULT_CAMERA_ZOOM, type FollowTarget } from "./camera";
 import { cameraZoomInput } from "./camera-input";
 import { hasAnimatedJoints,impactOf,isReactive,controlOf } from "../scene/object-dsl";
 import { buildDamageObject,updateDamage } from "./damage";
@@ -48,6 +50,8 @@ const surface = document.querySelector<HTMLElement>("#surface")!;
 const interact=document.querySelector<HTMLButtonElement>("#interact")!;
 const boostButton=document.querySelector<HTMLButtonElement>("#boost")!;
 const boostLabel=document.querySelector<HTMLElement>("#boost-label")!;
+const sportButton=document.querySelector<HTMLButtonElement>('#sport-action')!;
+const sportLabel=document.querySelector<HTMLElement>('#sport-action-label')!;
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 
 function start(): void {
@@ -64,6 +68,9 @@ function start(): void {
   const stepper = new FixedStepper();
   const keys = new Set<string>();
   let boostRequested=false;
+  let shootButtonHeld=false,shootPressed=false,shootReleased=false;
+  let pointerAim:{x:number;y:number}|undefined;
+  const clearShot=()=>{shootButtonHeld=shootPressed=shootReleased=false;pointerAim=undefined;car=cancelSportAction(car);};
   let mode: "playing" | "paused" = "playing";
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -75,7 +82,7 @@ function start(): void {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
-  renderer.domElement.setAttribute("aria-label", "WASD walks, swims or drives. Shift or the Boost button gives a car burst. F enters or exits a vehicle. Space jumps on foot or on a bicycle, skateboard or scooter, and hops a boat. Shift runs or swims faster. In an aircraft Space climbs and Shift descends. Pinch or scroll to zoom. Q and E rotate the view. P pauses; R returns to the start.");
+  renderer.domElement.setAttribute("aria-label", "WASD walks, swims or drives. On sports grounds, approach the ball, hold J or the shot button, then release to kick or shoot. Shift or the Boost button gives a car burst. F enters or exits a vehicle. Space jumps on foot or on a bicycle, skateboard or scooter, and hops a boat. Shift runs or swims faster. In an aircraft Space climbs and Shift descends. Pinch or scroll to zoom. Q and E rotate the view. P pauses; R returns to the start.");
   container.append(renderer.domElement);
   const manualZoom = cameraZoomInput(renderer.domElement, () => mode === "playing");
   const scene = new THREE.Scene();
@@ -83,6 +90,17 @@ function start(): void {
   scene.fog = new THREE.Fog("#526b76", 1700, 3400);
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 1, 10000);
   camera.zoom = DEFAULT_CAMERA_ZOOM;
+  const aimRay=new THREE.Raycaster(),aimPlane=new THREE.Plane(),aimHit=new THREE.Vector3();
+  const aimFromPointer=(e:PointerEvent)=>{
+    if(mode!=='playing' || !activeSport(car,doc)){pointerAim=undefined;return;}
+    const rect=renderer.domElement.getBoundingClientRect();
+    aimRay.setFromCamera(new THREE.Vector2((e.clientX-rect.left)/rect.width*2-1,1-(e.clientY-rect.top)/rect.height*2),camera);
+    aimPlane.set(new THREE.Vector3(0,1,0),-car.elevation);
+    if(aimRay.ray.intersectPlane(aimPlane,aimHit))pointerAim={x:aimHit.x+doc.canonical.width/2,y:aimHit.z+doc.canonical.height/2};
+    container.focus({preventScroll:true});
+  };
+  renderer.domElement.addEventListener('pointerdown',aimFromPointer);
+  renderer.domElement.addEventListener('pointermove',e=>{if(e.buttons&1)aimFromPointer(e);});
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
   const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), .12, .35, 1.6);
@@ -142,7 +160,9 @@ function start(): void {
   const carRoot = new THREE.Group(), carMesh = compactObject(buildPlayer(doc));
   carRoot.add(carMesh); scene.add(carRoot);
   const particles = new WorldParticles(doc); scene.add(particles.mesh);
-  const occlusion = new SceneryOcclusion(objects.filter(object=>object!==avatar));
+  const sportVisuals=new SportsVisuals(doc);scene.add(sportVisuals.group);
+  const sportBalls=new Set(doc.sports.map(s=>s.ballId));
+  const occlusion = new SceneryOcclusion(objects.filter(object=>object!==avatar && !sportBalls.has(object.userData.sceneObject?.id)));
   const updateMap = createWorldMap(document.querySelector<HTMLCanvasElement>("#world-map")!, doc);
 
   const daylight=new WorldDaylight(doc,scene,hemisphere,sun,fill);
@@ -189,6 +209,8 @@ function start(): void {
 
   function resetPosition(restartRace = false): void {
     car = resetCar(car, doc, restartRace);
+    clearShot();
+    pointerAim=undefined;
     boostRequested=false;
     if(restartRace){worldTime.value=0;manualZoom.factor=1;}
     stepper.reset(); particles.clear(); landscape.clear(); snap = true; cameraAngle=viewAngle;
@@ -199,7 +221,7 @@ function start(): void {
   }
 
   function setMode(next: typeof mode): void {
-    mode = next; keys.clear(); boostRequested=false; stepper.reset();
+    mode = next; keys.clear(); boostRequested=false; pointerAim=undefined; clearShot(); stepper.reset();
     if(next === "paused") cameraAngle=viewAngle;
     if (next === "paused" && !pauseMenu.open) pauseMenu.showModal();
     else if (next === "playing" && pauseMenu.open) pauseMenu.close();
@@ -209,12 +231,20 @@ function start(): void {
     if(next==="playing")container.focus({preventScroll:true});
   }
   pauseButton.addEventListener("click", () => setMode(mode === "playing" ? "paused" : "playing"));
-  const useRide=()=>{if(mode==="playing"){car=toggleRide(car,world);boostRequested=false;container.focus({preventScroll:true});}};
+  const useRide=()=>{if(mode==="playing"){car=toggleRide(car,world);boostRequested=false;clearShot();container.focus({preventScroll:true});}};
   interact.addEventListener("click",useRide);
   boostButton.addEventListener('click',()=>{
     if(mode==='playing' && isCarControl(car,world))boostRequested=true;
     container.focus({preventScroll:true});
   });
+  const beginShot=()=>{if(mode==='playing' && !sportButton.disabled){shootButtonHeld=true;shootPressed=true;}};
+  const releaseShot=()=>{if(shootButtonHeld){shootButtonHeld=false;shootReleased=true;}container.focus({preventScroll:true});};
+  sportButton.addEventListener('pointerdown',e=>{e.preventDefault();sportButton.setPointerCapture(e.pointerId);beginShot();container.focus({preventScroll:true});});
+  sportButton.addEventListener('pointerup',releaseShot);
+  sportButton.addEventListener('pointercancel',clearShot);
+  sportButton.addEventListener('keydown',e=>{if(e.code==='Space' || e.code==='Enter'){e.preventDefault();e.stopPropagation();if(!e.repeat)beginShot();}});
+  sportButton.addEventListener('keyup',e=>{if(e.code==='Space' || e.code==='Enter'){e.preventDefault();e.stopPropagation();releaseShot();}});
+  sportButton.addEventListener('click',e=>{if(e.detail===0){beginShot();releaseShot();}});
   pauseMenu.addEventListener("cancel", (e) => { e.preventDefault(); setMode("playing"); });
   reduced.addEventListener("change", () => { particles.clear(); landscape.clear(); snap = true; });
   document.querySelector("#resume")!.addEventListener("click", () => { setMode("playing"); });
@@ -232,11 +262,13 @@ function start(): void {
       if (mode === "playing" && e.code === "KeyE") viewAngle += Math.PI / 2;
       if(mode==="playing" && e.code==="KeyF")useRide();
       if(mode==='playing' && (e.code==='ShiftLeft' || e.code==='ShiftRight'))boostRequested=true;
+      if(mode==='playing' && e.code==='KeyJ')shootPressed=true;
     }
     keys.add(e.code);
+    if(!e.repeat && ['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))pointerAim=undefined;
   });
-  addEventListener("keyup", (e) => keys.delete(e.code));
-  addEventListener("blur", () => { keys.clear(); boostRequested=false; });
+  addEventListener("keyup", (e) => {keys.delete(e.code);if(e.code==='KeyJ')shootReleased=true;});
+  addEventListener("blur", () => { keys.clear(); boostRequested=false;clearShot(); });
   document.addEventListener("visibilitychange", () => { if (document.hidden) setMode("paused"); });
   container.dataset.world=JSON.stringify({width:doc.canonical.width,height:doc.canonical.height,objects:doc.objects.length,checkpoints:doc.checkpoints.length,birds:doc.flocks.reduce((n,f)=>n+f.count,0)});
   container.dataset.source="dream-2";
@@ -246,17 +278,20 @@ function start(): void {
     resetPosition(true);car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));worldTime.value=0;
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
   let captureTime:number|undefined;
-  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300},(clip)=>{
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300},(clip)=>{
     captureTime=undefined;
     resetPosition(true);worldTime.value=0;setMode("playing");
     if(clip==='switching'){const bike=doc.objects.find(o=>o.id==='village_bike')!;car={...car,x:bike.x-40,y:bike.y,headingRad:0,elevation:drivingHeight(doc.terrain,bike.x-40,bike.y)};}
     if(clip==='locomotion' || clip==='swimming')car=movementReviewStart(car,world,clip==='swimming' ? 'swim' : 'walk');
     if(clip==='flight')car=toggleRide(vehicleReviewStart(car,world,'cloudhopper'),world);
+    if(clip==='football' || clip==='basketball')car=movementReviewStart(car,world,clip);
   },(clip:string,frame:number)=>{
     keys.clear();
     if(clip==="daynight"){captureTime=frame/359*(doc.daylight?.cycleSeconds??600);return;}
     if(clip==="driving"){if(frame<175)keys.add("KeyW");return;}
     if(clip==='boost'){if(frame<175)keys.add('KeyW');if(frame>=25 && frame<50)keys.add('ShiftLeft');return;}
+    if(clip==='football'){if(frame>=20 && frame<48)keys.add('KeyJ');return;}
+    if(clip==='basketball'){if(frame>=20 && frame<38)keys.add('KeyJ');return;}
     if(clip==='flight'){
       keys.add('KeyW');
       if(frame>=40 && frame<170)keys.add('Space');
@@ -294,11 +329,14 @@ function start(): void {
         lift:Number(keys.has("Space"))-Number(keys.has("ShiftLeft") || keys.has("ShiftRight")),viewAngle:cameraAngle,
         jump:keys.has('Space'),sprint:keys.has('ShiftLeft') || keys.has('ShiftRight'),
         boost:keys.has('ShiftLeft') || keys.has('ShiftRight'),
+        shoot:keys.has('KeyJ') || shootButtonHeld,
+        aim:pointerAim,
       };
       const steps = stepper.push(dt);
       for (let i = 0; i < steps; i++) {
         const wasGrounded = car.grounded, previousSpeed=Math.hypot(car.vx,car.vy),riding=car.control.kind!=="car";
-        car = stepInteractive(car, {...input,boostPressed:boostRequested}, stepper.stepDt, world);
+        car = stepInteractive(car, {...input,boostPressed:boostRequested,shootPressed,shootReleased}, stepper.stepDt, world);
+        shootPressed=shootReleased=false;
         boostRequested=false;
         objectImpacts.push(...car.impacts);
         landscape.step(car,stepper.stepDt,!reduced.matches); boosted ||= car.boostedThisStep;
@@ -344,6 +382,11 @@ function start(): void {
       group.position.copy(worldPosition(doc, prop.x, prop.y, 1.5));
       const placement=objectPlacement(doc,group.userData.sceneObject,prop.x,prop.y);
       group.position.y=(prop.elevation??placement.base)+1.5;group.quaternion.copy(placement.rotation);
+      if(sportBalls.has(prop.id)){
+        const rotation=group.userData.ballRotation??=new THREE.Quaternion(),speed=Math.hypot(prop.vx,prop.vy);
+        if(mode==='playing' && !reduced.matches && speed>1)rotation.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(-prop.vy,0,prop.vx).normalize(),speed*dt/objectRadius(group.userData.sceneObject)));
+        poseSportBall(group,rotation,objectRadius(group.userData.sceneObject));
+      }
       if (mode === "playing") group.userData.distance = (group.userData.distance ?? 0) + Math.hypot(prop.vx, prop.vy) * dt;
       if (debug.visible) {
         const line = colliderLines.get(prop.id)!;
@@ -372,6 +415,9 @@ function start(): void {
       group.userData.npcTime=pose.animationTimeS;
     }
     const occupied=occupiedObject(car,world);
+    const court=activeSport(car,doc),sportGame=court && car.sports.find(g=>g.id===court.sport.id)!;
+    sportVisuals.update(car,court);
+    sportButton.style.setProperty('--power',String(sportGame ? sportCharge(car,sportGame) : 0));
     const standingRide=["skateboard","scooter"].includes(controlOf(occupied?.spec)??"");
     avatar.visible=!!occupied && !standingRide;
     if(occupied && !standingRide){
@@ -401,17 +447,27 @@ function start(): void {
         if(joint.position.y>walkerSpec.body.colliderHeight!*.6){node.rotateY(Math.sin(phase)*1.1);node.rotateZ(.7+Math.cos(phase)*.8);}
         else node.rotateZ(Math.sin(phase)*.25);
       });
+      if(court && sportGame && !reduced.matches)walker.traverse(node=>{
+        const joint=node.userData.jointRest;if(!joint?.animation)return;
+        const upper=joint.position.y>walkerSpec.body.colliderHeight!*.6,shotAge=car.timeS-sportGame.shotAtS;
+        if(court.sport.kind==='basketball' && upper && (sportGame.possessed || sportGame.shots>0 && shotAge<.4)){
+          node.quaternion.copy(joint.rotation);node.rotateZ(sportGame.chargeStartS!==null || shotAge<.4 && sportGame.shots>0 ? 1.9 : joint.position.z>0 ? .4+Math.sin(car.timeS*9)*.3 : .1);
+        }
+        if(court.sport.kind==='football' && !upper && joint.position.z>0 && sportGame.shots>0 && shotAge<.35){node.quaternion.copy(joint.rotation);node.rotateZ(Math.sin(shotAge/.35*Math.PI)*1.1);}
+      });
     }
     for (const object of objects) {
       const spec=object.userData.sceneObject;
       animateObject(object, object.userData.npcTime??worldTime.value, !reduced.matches && (object.userData.npcActive??(!object.userData.ambient || object.userData.moving)), object.userData.distance ?? 0,0,
         spec ? Math.hypot(object.position.x-position.x,object.position.z-position.z)/spec.scale : Infinity);
     }
-    const target = { x: position.x, y: (car.control.kind!=="car" ? car.elevation : drivingHeight(doc.terrain, car.x, car.y)) + 12, z: position.z };
+    const sportBall=court && car.props.find(p=>p.id===court.sport.ballId)!,sportsFrame=court && sportBall && sportCameraFrame(car,sportGame?.event==='out' ? car : sportBall,court.sport.kind,court.sport.kind==='basketball' && sportGame?.possessed ? closestSportTarget(court,sportGame.aim?.[0]??car.x,sportGame.aim?.[1]??car.y) : undefined);
+    const framing=sportsFrame ? worldPosition(doc,sportsFrame.x,sportsFrame.y) : position;
+    const target = { x: framing.x, y: (car.control.kind!=="car" ? car.elevation : drivingHeight(doc.terrain, car.x, car.y)) + 12, z: framing.z };
     if (mode === "playing" || snap) {
       follow = followCamera(follow, target, dt, snap || reduced.matches);
-      follow.x = target.x; follow.z = target.z;
-      const zoom = car.control.kind==="foot" ? 2.25 : occupied ? rideZooms.get(occupied.id)! : DEFAULT_CAMERA_ZOOM;
+      if(!court){follow.x = target.x; follow.z = target.z;}
+      const zoom = sportsFrame ? sportsFrame.zoom : car.control.kind==="foot" ? 2.25 : occupied ? rideZooms.get(occupied.id)! : DEFAULT_CAMERA_ZOOM;
       const nextZoom=followCameraZoom(camera.zoom, zoom * manualZoom.factor, dt, snap || reduced.matches);
       if(camera.zoom!==nextZoom){camera.zoom=nextZoom;camera.updateProjectionMatrix();}
     }
@@ -432,8 +488,17 @@ function start(): void {
     hudTime += dt;
     if (hudTime > .1) {
       hudTime = 0;
-      surface.textContent = occupied ? occupied.labelText+(controlOf(occupied.spec)==="plane" ? " · Space ↑ / Shift ↓" : controlOf(occupied.spec)==='bicycle' || controlOf(occupied.spec)==='skateboard' || controlOf(occupied.spec)==='scooter' ? ' · Space jump' : controlOf(occupied.spec)==='boat' ? ' · Space hop' : "") : car.control.kind==="foot" ? isSwimming(car,world) ? 'Swimming · Shift faster' : 'On foot · Space jump / Shift run' : !car.grounded ? "Airborne" : car.timeS < boostUntil ? "Boost" : car.surface === "ice" ? "Sliding" : car.surface === "water" ? "Water" : "";
+      const sportsStatus=court && sportGame ? `${court.sport.kind==='football' ? 'Football' : 'Basketball'} · ${sportGame.score} ${court.sport.kind==='football' ? sportGame.score===1 ? 'goal' : 'goals' : 'pts'} · ${sportGame.event==='goal' ? 'Goal!' : sportGame.event==='basket' ? 'Basket!' : sportGame.event==='out' ? 'Out · ball returning' : !sportGame.possessed ? 'Move to the ball' : court.sport.kind==='football' ? 'WASD aim · J kick' : 'Release J at the gold mark'}` : '';
+      const surfaceText = sportsStatus || (occupied ? occupied.labelText+(controlOf(occupied.spec)==="plane" ? " · Space ↑ / Shift ↓" : controlOf(occupied.spec)==='bicycle' || controlOf(occupied.spec)==='skateboard' || controlOf(occupied.spec)==='scooter' ? ' · Space jump' : controlOf(occupied.spec)==='boat' ? ' · Space hop' : "") : car.control.kind==="foot" ? isSwimming(car,world) ? 'Swimming · Shift faster' : 'On foot · Space jump / Shift run' : !car.grounded ? "Airborne" : car.timeS < boostUntil ? "Boost" : car.surface === "ice" ? "Sliding" : car.surface === "water" ? "Water" : "");
+      if(surface.textContent!==surfaceText)surface.textContent=surfaceText;
       surface.dataset.effect = car.surface === "ice" ? "ice" : "boost";
+      sportButton.hidden=mode!=='playing' || !court;
+      sportButton.disabled=!sportGame?.possessed || !!sportGame.resetAtS;
+      sportButton.dataset.kind=court?.sport.kind??'';
+      const power=sportGame ? sportCharge(car,sportGame) : 0;
+      sportLabel.textContent=!sportGame?.possessed ? 'Find the ball' : court?.sport.kind==='football' ? 'Hold J · Kick' : 'Hold J · Shoot';
+      sportButton.setAttribute('aria-label',`${court?.sport.kind==='football' ? 'Kick' : 'Shoot'}: hold J or this button, release for power${court?.sport.kind==='basketball' ? '. Release at the gold mark' : ''}`);
+      container.dataset.sport=JSON.stringify({active:court?.sport.id??null,possessed:sportGame?.possessed??false,power,games:car.sports,balls:doc.sports.map(s=>car.props.find(p=>p.id===s.ballId))});
       const carControl=isCarControl(car,world),boostActive=car.timeS<car.carBoost.activeUntilS,boostWait=Math.max(0,car.carBoost.readyAtS-car.timeS);
       const boostBlocked=!car.grounded || car.surface==='water' || car.vx*Math.cos(car.headingRad)+car.vy*Math.sin(car.headingRad)<-1 || keys.has('KeyS') || keys.has('ArrowDown');
       boostButton.hidden=mode!=='playing' || !carControl;

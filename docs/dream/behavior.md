@@ -8,6 +8,10 @@ Appearance and interaction are separate. The same assembled shape can be solid, 
 
 ## View controls
 
+[Sports grounds](sports.md) add on-foot football and basketball controls, with
+automatic close framing, dribbling and scored shots. Existing walking, vehicle
+and camera controls remain available outside the grounds.
+
 Pinch the trackpad or scroll vertically over the world to zoom in and out. Mouse wheels work too. Framing eases smoothly, keeps the same view angle and remains relative to the current vehicle, so boarding a bicycle still brings it closer. Reduced motion applies zoom immediately. Manual framing survives R; Start over restores the default. Gestures over the pause menu retain normal browser behavior.
 
 ![Close view of the voxel car using manual zoom](../media/zoom-close.jpg)

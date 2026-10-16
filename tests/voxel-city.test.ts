@@ -17,7 +17,8 @@ describe('voxel city integration',()=>{
   const expected=compileDream(wall)[0]!;
   for(const id of ['park_wall_west','park_wall_east'])expect(scene.objects.find(o=>o.id===id)!.spec).toEqual({...expected,voxelSize:scene.voxelWorld?.objectCell});
   const reactive=scene.objects.filter(o=>o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && (o.spec.impact || o.spec.breakZones));
-  expect(reactive).toHaveLength(20);
+  expect(reactive).toHaveLength(22);
+  expect(scene.sports.map(s=>s.ballId).sort()).toEqual(['court_ball','pitch_ball']);
   expect(reactive.reduce((n,o)=>n+((o.spec as ObjectDslV2).impact?.kind==='bounce' ? 0 : objectFragments(o.spec as ObjectDslV2).length),0)).toBe(73);
  });
  it('allows a real off-road car impact to release four chunks and continues driving',()=>{

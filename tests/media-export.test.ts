@@ -21,6 +21,8 @@ describe('local capture boundary',()=>{
     try{
       expect(await request('/__media/driving/0000.png')).toBe(204);
       expect(await request('/__media/boost/0000.png')).toBe(204);
+      expect(await request('/__media/football/0000.png')).toBe(204);
+      expect(await request('/__media/basketball/0000.png')).toBe(204);
       expect(await readFile(root+'/.npm-cache/media/driving/0000.png')).toEqual(png);
       expect(await request('/__media/locomotion/0000.png')).toBe(204);
       expect(await request('/__media/swimming/0000.png')).toBe(204);

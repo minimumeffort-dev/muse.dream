@@ -690,6 +690,20 @@
         "points": "points2"
       }
     },
+    "sport": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "kind": "football|basketball",
+        "surface": "ref",
+        "ball": "ref",
+        "targets": "symbols",
+        "target_at": "v3",
+        "target_size": "v2"
+      }
+    },
     "marking": {
       "contexts": [
         "top"
@@ -1001,6 +1015,10 @@
       80,
       1200
     ]
+  },
+  "sports": {
+    "maximum": 8,
+    "semantics": "Walk-up practice on a dry nearly level named surface. One distinct bounce ball and two static target placements per ground. target_at and target_size use target-local units, transformed with the actual placement; football size is opening width/height with local +Z pointing outward, basketball size is ring X/Z diameter. Ball body radius .5..3 world units and height twice radius. Engine owns dribbling, charged kicks/shots, goals/baskets, out-of-bounds recovery and camera. No generated controls or full-team match AI."
   },
   "urbanGround": {
     "streets": 32,

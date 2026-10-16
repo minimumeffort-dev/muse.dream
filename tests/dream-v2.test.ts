@@ -174,7 +174,7 @@ describe("located repair diagnostics and atomic rejection",()=>{
 describe("whole-world authoring boundary",()=>{
   it("compiles layout, terrain, timber bridge, effects, actors, player and unresolved intent",()=>{
     const scene=compileDreamScene(fullWorld,identity);
-    expect(scene).toEqual(goldenWorld);
+    expect(scene).toEqual({...goldenWorld,sports:[]});
     expect(scene.sceneId).toBe(identity.sceneId);expect(scene.terrain.hills).toHaveLength(1);expect(scene.terrain.landscape!.bridges[0]!.style).toBe("timber");
     expect(scene.regions.map(r=>r.rule.effect)).toEqual(["BOOST","ICE"]);expect(scene.player!.displayName).toBe("Sketch car");expect(scene.objects).toHaveLength(2);expect(scene.terrain.landscape!.waters).toHaveLength(2);expect(scene.unresolvedLabels[0]!.labelText).toContain("not supported");
     expect(checkDream(fullWorld).ok).toBe(true);

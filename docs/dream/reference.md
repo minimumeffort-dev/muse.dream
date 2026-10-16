@@ -90,6 +90,7 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 | `road` | top | ID / no block | `width: n`, `points?: points2`, `via?: symbols`, `style?: racing / street` |
 | `street` | top | ID / no block | `width: n`, `sidewalk: n`, `points?: points2`, `via?: symbols`, `cycle_width?: n` |
 | `surface` | top | ID / no block | `color: color`, `points: points2` |
+| `sport` | top | ID / no block | `kind: football / basketball`, `surface: ref`, `ball: ref`, `targets: symbols`, `target_at: v3`, `target_size: v2` |
 | `marking` | top | ID / path | `color: color`, `width: n`, `closed: bool` |
 | `hill` | top | ID / no block | `at: v2`, `radius: v2`, `height: n` |
 | `tint` | top | ID / no block | `at: v2`, `radius: n`, `color: color` |
@@ -123,6 +124,13 @@ Rolling joints use the same bounded radius 1..32 as part roll. Their children ro
 | `bounce` | impact | No ID / no block | `restitution: n`, `lift: n` |
 | `break` | impact / fracture | No ID / no block | `speed: n`, `scatter: n`, `lift: n`, `spin: n`, `lifetime: n`, `pattern?: scatter / splinter / crumble` |
 | `topple` | impact | No ID / no block | `speed: n`, `duration: n`, `lifetime: n` |
+
+## Sports
+
+[Sports](sports.md) connects one named surface, one bounce ball and two target
+placements. Eight grounds per linked project; target anchors and sizes are
+object-local, so they follow placement scale/heading. The guide covers bounds,
+controls and the complete compiler-checked example.
 
 ## Proportion profiles
 

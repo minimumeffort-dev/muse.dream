@@ -1,4 +1,5 @@
 import {furnishingSchema,flockSchema,furnishWorld,POPULATION_LIMITS,type Furnishing,type Flock} from './population';
+import {sportSchema,MAX_SPORTS} from './sports';
 import { Euler, Quaternion, Vector3 } from "three";
 import {voxelCells,VOXEL_LIMITS} from './voxels';
 import { objectDslSchema,controlOf,isReactive, type ObjectDslV2 } from "./object-dsl";
@@ -252,7 +253,7 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
   });
 }
 
-export interface DreamWorld {assemblies:ObjectDslV2[];routes:Route[];objects:SceneObject[];waters:Water[];streets:Scene['streets'];surfaces:Scene['surfaces'];markings:Scene['markings'];behaviors:Scene['behaviors'];sites:Scene['sites'];crossings:Scene['crossings'];furnishings:Furnishing[];flocks:Flock[];scenarios:Scenario[];layout?:DreamLayout}
+export interface DreamWorld {assemblies:ObjectDslV2[];routes:Route[];objects:SceneObject[];waters:Water[];streets:Scene['streets'];surfaces:Scene['surfaces'];markings:Scene['markings'];behaviors:Scene['behaviors'];sites:Scene['sites'];crossings:Scene['crossings'];sports:Scene['sports'];furnishings:Furnishing[];flocks:Flock[];scenarios:Scenario[];layout?:DreamLayout}
 export type DreamModules=Readonly<Record<string,string>>;
 type LinkedWorld={world:DreamWorld;exports:Map<string,ObjectDslV2>};
 /** The same bounded language now authors placements, shared routes and continuous watercourses. */
@@ -420,14 +421,19 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
   layout??=inherited[0]?.layout;
   const allWaters=[...children.flatMap(w=>w.waters),...ownWaters];
   const scenarios=[...program.layout.filter(n=>n.kind==='scenario').map(n=>compileScenario(n,e=>numeric(e,globals))),...children.flatMap(w=>w.scenarios)];
+  const sports=[...program.layout.filter(n=>n.kind==='sport').map(node=>{
+    const result=sportSchema.safeParse({id:node.id,kind:wordField(node,'kind'),surfaceId:wordField(node,'surface'),ballId:wordField(node,'ball'),targets:listField(node,'targets').map(e=>e.name!),targetAt:listField(node,'target_at').map(e=>numeric(e,globals)),targetSize:listField(node,'target_size').map(e=>numeric(e,globals))});
+    if(!result.success)fail(result.error.issues[0]!.message,node.token,'E_SCHEMA');return result.data;
+  }),...children.flatMap(w=>w.sports)];
+  if(sports.length>MAX_SPORTS)fail('combined project exceeds 8 sports grounds',undefined,'E_BUDGET');
   if(scenarios.length>SCENARIO_LIMITS.scenarios)fail('project permits one scenario',undefined,'E_SCENARIO');
-  const world:DreamWorld={scenarios,assemblies:[...new Set([...exports.values(),...children.flatMap(w=>w.assemblies)])],routes:[...routes,...children.flatMap(w=>w.routes)],objects:[...objects,...children.flatMap(w=>w.objects)],waters:allWaters,streets:[...infrastructure.streets,...children.flatMap(w=>w.streets)],surfaces:[...infrastructure.surfaces,...children.flatMap(w=>w.surfaces)],markings:[...infrastructure.markings,...children.flatMap(w=>w.markings)],behaviors:[...behaviors,...children.flatMap(w=>w.behaviors)],sites:[...infrastructure.sites,...children.flatMap(w=>w.sites)],crossings:[...infrastructure.crossings,...children.flatMap(w=>w.crossings)],furnishings:[...furnishings,...children.flatMap(w=>w.furnishings)],flocks:[...flocks,...children.flatMap(w=>w.flocks)]};
+  const world:DreamWorld={scenarios,sports,assemblies:[...new Set([...exports.values(),...children.flatMap(w=>w.assemblies)])],routes:[...routes,...children.flatMap(w=>w.routes)],objects:[...objects,...children.flatMap(w=>w.objects)],waters:allWaters,streets:[...infrastructure.streets,...children.flatMap(w=>w.streets)],surfaces:[...infrastructure.surfaces,...children.flatMap(w=>w.surfaces)],markings:[...infrastructure.markings,...children.flatMap(w=>w.markings)],behaviors:[...behaviors,...children.flatMap(w=>w.behaviors)],sites:[...infrastructure.sites,...children.flatMap(w=>w.sites)],crossings:[...infrastructure.crossings,...children.flatMap(w=>w.crossings)],furnishings:[...furnishings,...children.flatMap(w=>w.furnishings)],flocks:[...flocks,...children.flatMap(w=>w.flocks)]};
   if(world.furnishings.length>POPULATION_LIMITS.rules || world.flocks.length>POPULATION_LIMITS.flocks || world.flocks.reduce((n,f)=>n+f.count,0)>POPULATION_LIMITS.birds)fail('population budget exceeded',undefined,'E_BUDGET');
   if(world.behaviors.length>NPC_LIMITS.programs)fail('combined project exceeds 16 behaviors',undefined,'E_BUDGET');
   if(world.routes.length>12 || world.waters.length>8 || world.objects.length>4096)fail("combined project exceeds scene route/water/placement budgets",undefined,"E_BUDGET");
   if(world.streets.length>32 || world.surfaces.length>64 || world.markings.length>128)fail('combined project exceeds 32 streets / 64 surfaces / 128 markings',undefined,'E_BUDGET');
   if(world.sites.length>256 || world.crossings.length>64)fail('combined project exceeds 256 sites / 64 crossings',undefined,'E_BUDGET');
-  const worldIds=new Set<string>();for(const item of [...world.routes,...world.waters,...world.objects,...world.streets,...world.surfaces,...world.markings,...world.behaviors,...world.sites,...world.crossings,...world.furnishings,...world.flocks]){if(worldIds.has(item.id))fail(`duplicate world id '${item.id}'`,undefined,"E_DUPLICATE_ID");worldIds.add(item.id);}
+  const worldIds=new Set<string>();for(const item of [...world.routes,...world.waters,...world.objects,...world.streets,...world.surfaces,...world.markings,...world.behaviors,...world.sites,...world.crossings,...world.sports,...world.furnishings,...world.flocks]){if(worldIds.has(item.id))fail(`duplicate world id '${item.id}'`,undefined,"E_DUPLICATE_ID");worldIds.add(item.id);}
   if(layout)world.layout={...layout,terrain:{...layout.terrain,landscape:{...layout.terrain.landscape!,waters:allWaters}}};
   return {world,exports};
 }
@@ -457,7 +463,7 @@ function sceneFromWorld(world:DreamWorld,identity:DreamSceneIdentity):Scene {
   if(!world.layout)fail("compileDreamScene requires world/road declarations",undefined,"E_WORLD");
   const {origin,...layout}=world.layout;
   let scene:Scene;
-  try {scene=parseScene({schemaVersion:1,...identity,...layout,routes:world.routes,objects:world.objects,streets:world.streets,surfaces:world.surfaces,markings:world.markings,behaviors:world.behaviors,flocks:world.flocks,sites:world.sites,crossings:world.crossings,provenance:{source:"handmade-fixture",notes:"Compiled Dream 2 mock world. No model calls."}});}
+  try {scene=parseScene({schemaVersion:1,...identity,...layout,routes:world.routes,objects:world.objects,streets:world.streets,surfaces:world.surfaces,markings:world.markings,behaviors:world.behaviors,flocks:world.flocks,sites:world.sites,crossings:world.crossings,sports:world.sports,provenance:{source:"handmade-fixture",notes:"Compiled Dream 2 mock world. No model calls."}});}
   catch(error){if(error instanceof ZodError)fail(error.issues[0]!.message,origin,"E_SCHEMA");throw error;}
   const problems=validateScenePlayability(scene,buildMaskForScene(scene),playerRadius(scene));
   if(problems.length)fail(`${problems[0]!.code}: ${problems[0]!.message}`,origin,`E_SCENE_${problems[0]!.code.toUpperCase().replace(/-/g,"_")}`);

@@ -48,7 +48,7 @@ The river enters at the north edge, passes under three bridges and widens into a
 
 ![The continuous river and lake](media/connected-waterway.jpg)
 
-The eastbank has a 100 × 64-metre football pitch. A basketball court, sports pavilion and golf fairway occupy the southern park area. Players practise kicks and dribbles and notice a nearby visitor. Scores, matches and golf controls are still to come.
+The eastbank has a 100 × 64-metre football pitch. A basketball court, sports pavilion and golf fairway occupy the southern park area. Football and basketball now support [on-foot practice](dream/sports.md): dribble, aim, charge shots and score, with a closer camera. The other people retain their ambient routines. Full matches and golf controls are still to come.
 
 ![The football ground between eastbank streets](media/sports-park.jpg)
 

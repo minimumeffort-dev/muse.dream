@@ -181,6 +181,14 @@ Preserve per-press jump buffering/grace, low-step headroom, chest-depth water
 support, full-hull bridge clearance, and gravity after airborne collisions.
 Do not add generated controller code or increase animation/render budgets.
 
+Dream `sport` connects an existing dry surface, one measured bounce ball and two
+static target placements. Keep the eight-ground cap, local target transforms,
+round ball bodies and validation after linking. On-foot practice, possession,
+charged shots, scores and recovery live in `src/sim/sports.ts`; props retain their
+existing physics. Camera framing never changes heading. Preserve manual zoom,
+movement/jump/sprint controls, charge cancellation and R/Start over semantics.
+Ambient people remain NPCs, not full-match opponents. See `docs/dream/sports.md`.
+
 City connections are Dream data: file-local `junction` references share road/street coordinates; `site` attaches an object-local entrance to a named sidewalk; `crossing(junction=true)` supplies crossings on all street arms; route `stop` ties a wait to a platform/destination. Street/tram NPCs use existing carriageways; walking routes stay on the pedestrian network. Preserve the 256-site, 64-crossing, 128-local-junction and 16-stops-per-route bounds. The published map is generated with `node scripts/render-city-map.mjs` from the accepted scene, never drawn independently. Reserve entrances and civic grounds before placing housing. New architecture needs attached roof/façade/porch checks and inspected multi-angle renders.
 
 The pre-redesign r24 snapshot in `tests/fixtures/legacy-world.json` is an explicit engine regression fixture. It preserves timber bridge, older terrain and interaction cases without constraining the live layout. Live city acceptance, exact joins, pedestrian reachability, architecture attachment, transit and the replacement racing loop are tested separately.

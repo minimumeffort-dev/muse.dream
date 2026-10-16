@@ -29,6 +29,9 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 
 [Rendering and performance](rendering.md) explains how the engine keeps the full world resident and measures changes without lowering visual quality.
 
+[Walk-up football and basketball](dream/sports.md) covers dribbling, charged
+shots, scores, camera changes and the Dream connections behind each ground.
+
 ## Try it locally
 
 From the repository root, after `npm ci`:

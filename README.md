@@ -94,6 +94,29 @@ WASD walks, swims or drives. Space jumps on foot, a bicycle or skateboard, and g
 
 [Watch jumping in HD](docs/media/locomotion.mp4)
 
+## Get out and play
+
+The football pitch and basketball court now work. Get out of the car, walk up
+to the ball and start dribbling. Hold J or the shot button, then release to kick
+or shoot. Click the ground to aim. Basketball has a gold power band; football
+lets you sprint, dribble and loft a kick while jumping.
+
+The camera moves closer on the ground and widens around a travelling ball.
+Goals and baskets count, and an out-of-bounds ball comes back instead of getting lost
+somewhere in the city. Find the grounds at F and B on the map.
+
+These are practice sessions. The other people keep their ambient routines;
+opponent teams and full matches are still to come. The playable connections
+live in Dream's new `sport` command. [Controls and Dream source](docs/dream/sports.md).
+
+![A charged kick, travelling ball and goal in the mock world](docs/media/football.gif)
+
+[Watch football in HD](docs/media/football.mp4)
+
+![Dribbling and making a basketball shot](docs/media/basketball.gif)
+
+[Watch basketball in HD](docs/media/basketball.mp4)
+
 Bicycles lean into turns and turn less sharply at speed. Boats keep momentum as you steer and fit underneath bridges when the hull has clearance. Swimming has a surface pose, strokes and a wake. The plane builds its climb gradually, holds altitude at flying speed and sinks when it gets too slow. These are arcade mechanics, with the same terrain and object contacts as the rest of the world. [See the controls and movement rules](docs/dream/behavior.md).
 
 The ground vehicles have been rebuilt around their structure. Cars have shaped shells, wheel openings, sloped glass and framed roofs. Each axle turns its tires, hubs and shaft together. The bicycle has paired forks and stays, a supported crank and connected pedals; the scooter has a low deck and mounted fenders. They use the same Dream language as the rest of the world. [Read the car source](docs/examples/city-car.dream) or [build the bicycle](docs/examples/city-bicycle.dream).

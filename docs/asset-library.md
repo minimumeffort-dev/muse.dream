@@ -2,7 +2,7 @@
 
 [Dream 2 docs](README.md) / Assets
 
-The mock world contains 83 reusable assemblies, all written in Dream 2. The assemblies include vehicles, buildings, wildlife and several layers of vegetation, with window frames, wheel hubs, bark markings and irregular foliage.
+The mock world contains 85 reusable assemblies, all written in Dream 2. The assemblies include vehicles, buildings, wildlife and several layers of vegetation, with window frames, wheel hubs, bark markings and irregular foliage. Footballs and basketballs are measured bounce props, connected to playable grounds through [sports data](dream/sports.md).
 
 The live world's `voxel_world` policy converts all of these to occupied-cell geometry after linking. Profiles and beams remain compact shape stamps in Dream, with materials, measured envelopes, joints and destruction ownership preserved. [How the whole world is constructed](whole-world-voxels.md). Standalone examples without a world policy retain their original shaped rendering.
 

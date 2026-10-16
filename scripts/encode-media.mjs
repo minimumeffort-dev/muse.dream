@@ -2,7 +2,7 @@ import {execFileSync} from 'node:child_process';
 import {readdir,stat} from 'node:fs/promises';
 import {resolve} from 'node:path';
 const ffmpeg=process.argv[2]||'ffmpeg',gifsicle=process.argv[3]||'gifsicle';
-const clips=[['driving',210],['boost',210],['switching',240],['destruction',120],['voxels',120],['locomotion',180],['swimming',180],['daynight',360],['flight',300]];
+const clips=[['driving',210],['boost',210],['football',240],['basketball',210],['switching',240],['destruction',120],['voxels',120],['locomotion',180],['swimming',180],['daynight',360],['flight',300]];
 const selected=process.argv.slice(4);
 if(selected.some(name=>!clips.some(([clip])=>clip===name)))throw Error('Unknown capture clip');
 for(const [name,count] of clips.filter(([name])=>!selected.length || selected.includes(name))){

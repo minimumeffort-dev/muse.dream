@@ -8,6 +8,13 @@ import {aircraftFloor} from '../scene/aircraft-support';
 /** Real mock-world positions for exercising terrain contact, jumping and water navigation. */
 export function movementReviewStart(state:CarState,world:World,scenario:string|null):CarState {
   if(scenario==='walk')return toggleRide(state,world);
+  if(scenario==='football' || scenario==='basketball'){
+    const court=world.scene.sports.find(s=>s.kind===scenario),ball=court && world.scene.objects.find(o=>o.id===court.ballId);if(!ball)return state;
+    const x=ball.x-6,y=ball.y;
+    const next:CarState={...state,control:{kind:'foot'},x,y,elevation:drivingHeight(world.scene.terrain,x,y),headingRad:0,
+      vehicles:[{id:null,x:state.x,y:state.y,elevation:state.elevation,headingRad:state.headingRad,distance:0}]};
+    return carFootprintClear(bodyWorld(next,world),x,y,next.elevation,state.timeS,next) ? next : state;
+  }
   if(scenario==='plane-hill'){
     const plane=routeObjects(world.scene).find(o=>controlFor(o)==='plane');if(!plane)return state;
     const next:CarState={...state,x:12500,y:10200,headingRad:0,control:{kind:'vehicle',id:plane.id},vx:0,vy:0,vz:0,pitch:0,bank:0,grounded:true,

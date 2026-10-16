@@ -1,0 +1,76 @@
+dream 2;
+material white(style=toon,colors=[#e9e5d7,#c9ccc7]);
+material steel(style=toon,colors=[#6f8187,#4b626d]);
+material net(style=toon,colors=[#b8c7b9,#8ca99c]);
+material orange(style=toon,colors=[#d28a42,#ab622d]);
+material skin(style=toon,colors=[#c59774,#a97655]);
+material hair(style=toon,colors=[#4e4037,#362e29]);
+material blue(style=toon,colors=[#537eaa,#3c5f87]);
+material red(style=toon,colors=[#b96a60,#944f50]);
+material dark(style=toon,colors=[#3c4c59,#283844]);
+material yellow(style=cloth,colors=[#e2bd5d,#b4913f]);
+object football(label="Football"){
+  measure(kind=custom,axis=x,meters=.22);
+  body(interaction=knockable,radius=4,height=8,friction=.6);
+  impact(mode=bounce(restitution=.62,lift=.15));
+  part leather(shape=sphere,material=white,at=[0,4,0],size=[8,8,8]);
+  repeat patches(index=p,count=6){
+    part patch(shape=icosphere,material=dark,at=[cos(p*60)*3.98,4,sin(p*60)*3.98],size=[.25,2.1,2.1],rot_deg=[0,-p*60,0]);
+  }
+  part top_patch(shape=icosphere,material=dark,at=[0,7.98,0],size=[2.3,.25,2.3]);
+}
+object basketball(label="Basketball"){
+  measure(kind=custom,axis=x,meters=.24);
+  body(interaction=knockable,radius=4,height=8,friction=.5);
+  impact(mode=bounce(restitution=.78,lift=.2));
+  part leather(shape=sphere,material=orange,at=[0,4,0],size=[8,8,8]);
+  part seam_horizontal(shape=torus,material=dark,at=[0,4,0],size=[8.3,8.3,.3],rot_deg=[90,0,0]);
+  part seam_vertical(shape=torus,material=dark,at=[0,4,0],size=[8.3,8.3,.3]);
+  part seam_cross(shape=torus,material=dark,at=[0,4,0],size=[8.3,8.3,.3],rot_deg=[0,90,0]);
+}
+object football_goal(label="Football goal"){
+  measure(kind=custom,axis=x,meters=7.4);
+  body(interaction=decor,radius=4,height=25);
+  repeat posts(index=p,count=2){
+    beam upright(shape=cylinder,material=white,from=[p*72-36,0,0],to=[p*72-36,24,0],width=1.2,depth=1.2);
+    beam support(shape=cylinder,material=steel,from=[p*72-36,24,0],to=[p*72-36,0,18],width=0.8,depth=0.8);
+  }
+  beam bar(shape=cylinder,material=white,from=[-36,24,0],to=[36,24,0],width=1.2,depth=1.2);
+  repeat threads(index=t,count=9){
+    beam thread(shape=cylinder,material=net,from=[t*8-32,24,0],to=[t*8-32,0,18],width=0.5,depth=0.5);
+  }
+  repeat horizontals(index=n,count=3){
+    beam thread(shape=cylinder,material=net,from=[-36,n*8,18-n*6],to=[36,n*8,18-n*6],width=0.5,depth=0.5);
+  }
+}
+object basketball_hoop(label="Basketball hoop"){
+  measure(kind=custom,axis=y,meters=4);
+  body(interaction=solid,radius=4,height=40);
+  beam pole(shape=box,material=steel,from=[0,0,0],to=[0,36,0],width=1.5,depth=1.5);
+  beam arm(shape=box,material=steel,from=[0,34,0],to=[0,34,9],width=1.5,depth=1.5);
+  part board(shape=box,material=white,at=[0,34,9],size=[18,11,1]);
+  part square(shape=box,material=steel,at=[0,33,9.7],size=[6,4,0.5]);
+  repeat rim_segments(index=r,count=16){
+    beam rim(shape=cylinder,material=orange,from=[cos(r*22.5)*2.25,30,12+sin(r*22.5)*2.25],to=[cos((r+1)*22.5)*2.25,30,12+sin((r+1)*22.5)*2.25],width=.18,depth=.18);
+  }
+  repeat cords(index=c,count=6){
+    beam net_cord(shape=cylinder,material=net,from=[cos(c*60)*2,30,12+sin(c*60)*2],to=[cos(c*60),25,12+sin(c*60)],width=0.5,depth=0.5);
+  }
+}
+voxel_world(object_cell=1,ground_cell=8,height_step=1);
+world(size=[2400,1800],spawn=[1200,150],heading_deg=0);
+road circuit(width=80,points=[[1200.0,150.0],[1601.818,207.09],[1942.462,369.67],[2170.074,612.987],[2250.0,900.0],[2170.074,1187.013],[1942.462,1430.33],[1601.818,1592.91],[1200.0,1650.0],[798.182,1592.91],[457.538,1430.33],[229.926,1187.013],[150.0,900.0],[229.926,612.987],[457.538,369.67],[798.182,207.09]]);
+surface pitch(color=#59834f,points=[[500,400],[1500,400],[1500,1040],[500,1040]]);
+place west_goal(object=football_goal,at=[500,720],heading_deg=90);
+place east_goal(object=football_goal,at=[1500,720],heading_deg=-90);
+place match_ball(object=football,at=[1000,720]);
+sport football_practice(kind=football,surface=pitch,ball=match_ball,targets=[west_goal,east_goal],target_at=[0,12,0],target_size=[72,24]);
+surface court(color=#647f8b,points=[[1750,600],[2030,600],[2030,750],[1750,750]]);
+place west_hoop(object=basketball_hoop,at=[1742,675],heading_deg=-90);
+place east_hoop(object=basketball_hoop,at=[2038,675],heading_deg=90);
+place court_ball(object=basketball,at=[1890,675]);
+sport basketball_practice(kind=basketball,surface=court,ball=court_ball,targets=[west_hoop,east_hoop],target_at=[0,30,12],target_size=[4.3,4.3]);
+checkpoint start(at=[1200,150],dir=[1,0],width=70);
+checkpoint east(at=[2250,900],dir=[0,1],width=70);
+checkpoint south(at=[1200,1650],dir=[-1,0],width=70);
+checkpoint west(at=[150,900],dir=[0,-1],width=70);
