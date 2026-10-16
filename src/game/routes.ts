@@ -4,6 +4,7 @@ import { routeInfrastructure } from "../scene/routes";
 import { drivingHeight } from "../scene/terrain";
 import { surfaceGeometry } from "./surface";
 import { toonMaterial } from "./shaders";
+import {tiledMesh} from './batching';
 
 /** Static route infrastructure uses the same sampled centerline as the moving vehicles. */
 export function buildRoutes(scene:Scene):THREE.Group {
@@ -15,13 +16,14 @@ export function buildRoutes(scene:Scene):THREE.Group {
       return [{x:a.x+a.nx*inner,y:a.y+a.ny*inner},{x:b.x+b.nx*inner,y:b.y+b.ny*inner},{x:b.x+b.nx*outer,y:b.y+b.ny*outer},{x:a.x+a.nx*outer,y:a.y+a.ny*outer}];});
     const polygons=strip(-w,w);
     if(route.kind!=="tram"){
-    const ground=new THREE.Mesh(surfaceGeometry(scene,polygons,.7),toonMaterial(route.kind==="rail" ? "#7f8270" : route.kind==="air" ? "#717c75" : route.surface==="cycle" ? "#4c8079" : route.surface==="paved" ? "#707f83" : "#b19c71"));
+    const surface=(geometry:THREE.BufferGeometry,color:string,paint=false)=>{if(scene.voxelWorld){if(paint)geometry.userData.voxelOptions.cell=.5;return tiledMesh(geometry,toonMaterial(color));}return new THREE.Mesh(geometry,toonMaterial(color));};
+    const ground=surface(surfaceGeometry(scene,polygons,.7),route.kind==="rail" ? "#7f8270" : route.kind==="air" ? "#717c75" : route.surface==="cycle" ? "#4c8079" : route.surface==="paved" ? "#707f83" : "#b19c71");
     ground.name=`route-${route.id}`;
     ground.receiveShadow=true;group.add(ground);
     if(route.surface && route.surface!=="trail"){
       const paint=[...strip(-w+1.5,-w+2.5),...strip(w-2.5,w-1.5)];
       if(route.surface==="cycle")paint.push(...strip(-.65,.65).filter((_,i)=>frames[i]!.distance%48<24));
-      const markings=new THREE.Mesh(surfaceGeometry(scene,paint,.85),toonMaterial("#ded6af"));
+      const markings=surface(surfaceGeometry(scene,paint,.85),'#ded6af',true);
       markings.name=`markings-${route.id}`;markings.receiveShadow=true;group.add(markings);
     }
     }

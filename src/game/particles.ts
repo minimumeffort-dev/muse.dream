@@ -3,7 +3,7 @@ import type { CarState } from "../sim/car";
 import type { Scene } from "../scene/schema";
 import { waterAt } from "../scene/terrain";
 import { worldPosition } from "./environment";
-import { particleMaterial } from "./shaders";
+import { particleMaterial,voxelParticleMaterial } from "./shaders";
 import type { ActorPose } from "../sim/actors";
 import { objectPlacement } from "../scene/placement";
 import type { ImpactEvent } from "../sim/impacts";
@@ -16,7 +16,7 @@ const ICE = new THREE.Color("#b4eaff").multiplyScalar(1.3), SPARK = new THREE.Co
 
 /** One fixed GPU draw and a bounded pool for dust, shards, sparks and ambient life. */
 export class WorldParticles {
-  readonly mesh: THREE.Points;
+  readonly mesh: THREE.Points|THREE.Mesh;
   private positions = new Float32Array((CAP + MOTES) * 3);
   private colors = new Float32Array((CAP + MOTES) * 3);
   private opacity = new Float32Array(CAP + MOTES);
@@ -35,12 +35,14 @@ export class WorldParticles {
 
   constructor(private doc: Scene) {
     this.emitters=doc.objects.flatMap(object=>object.spec && "dslVersion" in object.spec && object.spec.dslVersion===2 && object.spec.emitter ? [{object,emitter:object.spec.emitter}] : []);
-    const geometry = new THREE.BufferGeometry();
+    const geometry = doc.voxelWorld ? new THREE.InstancedBufferGeometry() : new THREE.BufferGeometry();
+    if(doc.voxelWorld){const cube=new THREE.BoxGeometry(1,1,1);geometry.setIndex(cube.index);for(const [name,attribute] of Object.entries(cube.attributes))geometry.setAttribute(name,attribute);}
     for(const [name,array,itemSize] of [
       ["position",this.positions,3],["color",this.colors,3],["opacity",this.opacity,1],
       ["size",this.size,1],["kind",this.kind,1],["angle",this.angle,1],
-    ] as const) geometry.setAttribute(name,new THREE.BufferAttribute(array,itemSize).setUsage(THREE.DynamicDrawUsage));
-    this.mesh = new THREE.Points(geometry, particleMaterial());
+    ] as const) geometry.setAttribute(doc.voxelWorld && name==='position' ? 'offset' : name,(doc.voxelWorld ? new THREE.InstancedBufferAttribute(array,itemSize) : new THREE.BufferAttribute(array,itemSize)).setUsage(THREE.DynamicDrawUsage));
+    if(geometry instanceof THREE.InstancedBufferGeometry)geometry.instanceCount=CAP+MOTES;
+    this.mesh = doc.voxelWorld ? new THREE.Mesh(geometry,voxelParticleMaterial()) : new THREE.Points(geometry, particleMaterial());
     this.mesh.frustumCulled = false;
   }
 
@@ -129,6 +131,6 @@ export class WorldParticles {
       this.opacity[j]=Math.max(0,1-Math.hypot(x-car.x,y-car.y)/400)*(.3+Math.sin(this.time*1.2+i)*.18);
       this.size[j]=i%3?3:4;this.kind[j]=3;this.angle[j]=0;
     }
-    for(const name of ["position","color","opacity","size","kind","angle"]) this.mesh.geometry.getAttribute(name).needsUpdate=true;
+    for(const name of ["position","color","opacity","size","kind","angle"]) this.mesh.geometry.getAttribute(this.doc.voxelWorld && name==='position' ? 'offset' : name).needsUpdate=true;
   }
 }

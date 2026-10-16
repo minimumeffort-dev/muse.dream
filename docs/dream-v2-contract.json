@@ -632,6 +632,17 @@
         "start_hour": "n"
       }
     },
+    "voxel_world": {
+      "contexts": [
+        "top"
+      ],
+      "id": false,
+      "fields": {
+        "object_cell": "n",
+        "ground_cell": "n",
+        "height_step": "n"
+      }
+    },
     "world": {
       "contexts": [
         "top"
@@ -893,7 +904,31 @@
       "quads": 8192,
       "projectCells": 1048576
     },
-    "semantics": "voxels is one rigid part with grid 1..32 per axis; ordered fill/cut operations use integer half-open [from,to) cell bounds, box default or ellipsoid cell-center test. Exterior faces are greedily merged and mesh data cached. size maps the whole grid to object-local dimensions; use equal size/grid ratios for cubic cells. Optional chunks divides grid exactly into at most 8 nonempty rigid fracture pieces, only with break or a break zone; no fragment wrapper, no deform/cloth/part motion. Physics contacts remain explicit cylinders, not per-cell collision or arbitrary tunnels. Terrain, roads and water retain their existing representation."
+    "semantics": "voxels is one rigid part with grid 1..32 per axis; ordered fill/cut operations use integer half-open [from,to) cell bounds, box default or ellipsoid cell-center test. Exterior faces are greedily merged and mesh data cached. size maps the whole grid to object-local dimensions; use equal size/grid ratios for cubic cells. Optional chunks divides grid exactly into at most 8 nonempty rigid fracture pieces, only with break or a break zone; no fragment wrapper, no deform/cloth/part motion. Physics contacts remain explicit cylinders, not per-cell collision or arbitrary tunnels.",
+    "world": {
+      "limits": {
+        "stampAxis": 32,
+        "stampCacheBytes": 16777216,
+        "tileSize": 400,
+        "columnCellsPerTile": 640000
+      },
+      "command": "voxel_world(object_cell=1,ground_cell=8,height_step=1);",
+      "bounds": {
+        "objectCell": [
+          0.25,
+          4
+        ],
+        "groundCell": [
+          4,
+          8
+        ],
+        "heightStep": [
+          0.5,
+          1
+        ]
+      },
+      "semantics": "Optional world-owner policy applies after linking and furnishing. Every shaped part is an engine voxel stamp, retaining its authored envelope, material, rigid joints and fragment ownership; explicit voxels keep their exact fill/cut data. Stamp grids use 4..32 cells per axis, fit to part dimensions with a bounded shared mesh cache; no full-world 3D array. Ground uses resident 400-unit tiles of greedy solid columns. Infrastructure uses world-aligned columns with separate surface lifts; fine paint uses .5-unit cells. Water columns retain a bounded wave field and a rigid per-column wave anchor. Resolution is fixed at construction, never changed by camera distance. Collision cylinders and smooth driving heightfields remain separate; no editable terrain, automatic damage or per-cell physics."
+    }
   },
   "scenarios": {
     "limits": {

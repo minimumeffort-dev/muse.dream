@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import {partition} from "../scene/polygons";
-import { bridgeCoordinates, bridgePolygon, clipPolygon as clip, type Bridge } from "../scene/landscape-dsl";
+import { bridgeAt,bridgeCoordinates, bridgePolygon, clipPolygon as clip, type Bridge } from "../scene/landscape-dsl";
 import type { Point, Scene } from "../scene/schema";
 import { sampleTerrain, terrainHeight, bridgeHeight, terrainSurfaceHeight, TERRAIN_STEP } from "../scene/terrain";
 
@@ -8,11 +8,27 @@ export { TERRAIN_STEP } from "../scene/terrain";
 
 /** Match PlaneGeometry's SW–NE diagonal, including between its vertices. */
 type HeightAt = (x:number,y:number)=>number;
+const voxelGroundCache=new WeakMap<Scene,Map<string,number>>();
 export function bridgeHeightAt(doc:Scene,bridge:Bridge):HeightAt {
   return (x,y)=>{const p=bridgeCoordinates(bridge,x,y);return bridgeHeight(doc.terrain,bridge,p.t,p.across);};
 }
 export function surfaceHeight(doc: Scene, x: number, y: number, heightAt?:HeightAt): number {
   return terrainSurfaceHeight(doc.terrain,x,y,heightAt);
+}
+
+/** Infrastructure samples the supporting voxel column, rather than sinking into
+ * the high side of a coarse ground cell. Decks keep their shared bridge field. */
+export function voxelSurfaceBase(doc:Scene,x:number,z:number,heightAt?:HeightAt):number{
+  const px=x+doc.canonical.width/2,py=z+doc.canonical.height/2;
+  if(heightAt)return heightAt(px,py);
+  const bridge=bridgeAt(doc.terrain.landscape,px,py);
+  if(bridge){const p=bridgeCoordinates(bridge,px,py);return bridgeHeight(doc.terrain,bridge,p.t,p.across);}
+  const cell=doc.voxelWorld!.groundCell;
+  const ix=Math.floor(px/cell),iy=Math.floor(py/cell),key=`${ix},${iy}`;
+  let cache=voxelGroundCache.get(doc);if(!cache){cache=new Map();voxelGroundCache.set(doc,cache);}
+  let value=cache.get(key);
+  if(value===undefined){value=terrainHeight(doc.terrain,(ix+.5)*cell,(iy+.5)*cell);if(cache.size<640000)cache.set(key,value);}
+  return value;
 }
 
 /** Clip authored polygons onto the actual ground triangles, rather than sampling a second mesh. */
@@ -80,6 +96,7 @@ export function surfaceGeometry(doc: Scene, polygons: Point[][], lift: number, d
   geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
   geometry.setAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));
   geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
+  if(doc.voxelWorld)geometry.userData.voxelOptions={cell:2,step:doc.voxelWorld.heightStep,lift,thickness:Math.max(.08,lift),maxMerge:200,baseAt:(x:number,z:number)=>voxelSurfaceBase(doc,x,z,heightAt)};
   return geometry;
 }
 

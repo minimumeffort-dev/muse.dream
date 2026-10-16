@@ -93,6 +93,7 @@ const objectV2PartSchema=objectPartSchema.extend({
   zone:z.string().min(1).max(40).optional(),
 }).strict();
 const objectDslV2Schema=objectV1Schema.extend({
+  voxelSize:z.number().finite().min(.25).max(4).optional(),
   measure:z.object({kind:z.enum(MEASURE_KINDS),axis:z.enum(["x","y","z"]),meters:z.number().finite().min(.05).max(60)}).strict().optional(),
   dslVersion:z.literal(2),joints:z.array(jointSchema).max(12).optional(),parts:z.array(objectV2PartSchema).min(1).max(32),
   contacts:z.array(z.object({position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),radius:z.number().finite().min(1).max(64),height:z.number().finite().min(1).max(160)}).strict()).min(1).max(8).optional(),

@@ -183,7 +183,7 @@ export function bridgeMaterial(style:"timber"|"stone"):THREE.MeshStandardMateria
   material.customProgramCacheKey=()=>`bridge-${style}`;return material;
 }
 
-export function waterMaterial(water:Water,texture:THREE.DataTexture,grid:{columns:number;rows:number;width:number;height:number}):THREE.MeshStandardMaterial {
+export function waterMaterial(water:Water,texture:THREE.DataTexture,grid:{columns:number;rows:number;width:number;height:number},voxel=false):THREE.MeshStandardMaterial {
   const material=new THREE.MeshStandardMaterial({color:water.color,roughness:.28,metalness:.12,transparent:true,opacity:.88,depthWrite:false});
   material.onBeforeCompile=shader=> {
     Object.assign(shader.uniforms,{waveField:{value:texture},waveTexel:{value:new THREE.Vector2(1/grid.columns,1/grid.rows)},
@@ -194,12 +194,12 @@ export function waterMaterial(water:Water,texture:THREE.DataTexture,grid:{column
       float waterSample(vec2 p) {return texture2D(waveField,p*(1.-waveTexel)+waveTexel*.5).r*4.-2.;}
       float waterWave(vec2 p) {vec2 q=p*waterSize-waterFlow*time;
         return waterSample(p)+motion*(sin(q.x*.065+q.y*.03-time*1.2)+sin(q.y*.11-time*.7))*.26;}`;
-    shader.vertexShader=shader.vertexShader.replace("#include <common>",`#include <common>\n${common}\nattribute float waterDepth;`)
+    shader.vertexShader=shader.vertexShader.replace("#include <common>",`#include <common>\n${common}\nattribute float waterDepth;${voxel ? 'attribute vec2 voxelAnchor;' : ''}`)
       .replace("#include <beginnormal_vertex>",`#include <beginnormal_vertex>
         float wx=(waterWave(uv+vec2(waveTexel.x,0.))-waterWave(uv-vec2(waveTexel.x,0.)))/(2.*waterSize.x*waveTexel.x);
         float wy=(waterWave(uv+vec2(0.,waveTexel.y))-waterWave(uv-vec2(0.,waveTexel.y)))/(2.*waterSize.y*waveTexel.y);
-        objectNormal=normalize(vec3(-wx,1.,-wy));`)
-      .replace("#include <begin_vertex>","#include <begin_vertex>\nwaterUV=uv;waterShore=waterDepth;transformed.y+=waterWave(uv);");
+        ${voxel ? '' : 'objectNormal=normalize(vec3(-wx,1.,-wy));'}`)
+      .replace("#include <begin_vertex>",`#include <begin_vertex>\nwaterUV=uv;waterShore=waterDepth;transformed.y+=${voxel ? 'floor(waterWave(voxelAnchor)*2.)*.5' : 'waterWave(uv)'};`);
     shader.fragmentShader=shader.fragmentShader.replace("#include <common>",`#include <common>\n${common}`)
       .replace("#include <color_fragment>",`#include <color_fragment>
         vec2 p=waterUV*waterSize-waterFlow*time;
@@ -207,7 +207,7 @@ export function waterMaterial(water:Water,texture:THREE.DataTexture,grid:{column
         float ripple=abs(waterSample(waterUV));
         diffuseColor.rgb=mix(diffuseColor.rgb,vec3(.55,.84,.79),min(.7,streak*.24+ripple*.2+(1.-smoothstep(.1,1.2,waterShore))*.18));`);
   };
-  material.customProgramCacheKey=()=>"landscape-water-v1";return material;
+  material.customProgramCacheKey=()=>voxel ? 'landscape-water-voxel-v2' : "landscape-water-v1";return material;
 }
 
 const surfaceVertex = `varying vec2 v; void main() {
@@ -275,6 +275,19 @@ export function particleMaterial(): THREE.ShaderMaterial {
         if(a*alpha<.005) discard;gl_FragColor=vec4(tint,a*alpha);
       }`,
   });
+}
+
+/** One instanced draw for the same bounded particle pool, using solid voxel shards. */
+export function voxelParticleMaterial():THREE.ShaderMaterial{
+  return new THREE.ShaderMaterial({transparent:true,depthWrite:false,vertexColors:true,
+    vertexShader:`attribute vec3 offset;attribute float opacity;attribute float size;attribute float kind;attribute float angle;
+      varying float alpha;varying vec3 tint;
+      void main(){alpha=opacity;float c=cos(angle),s=sin(angle);mat3 turn=mat3(c,0.,-s,0.,1.,0.,s,0.,c);
+        vec3 extent=vec3(1.);if(kind>.5&&kind<1.5)extent=vec3(.3,1.8,.3);
+        vec3 p=turn*(position*extent*max(0.,size)*.35)+offset;
+        tint=color*(.65+.35*max(0.,dot(turn*normal,normalize(vec3(-.4,.8,.3)))));
+        gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
+    fragmentShader:`varying float alpha;varying vec3 tint;void main(){if(alpha<.005)discard;gl_FragColor=vec4(tint,alpha);}`});
 }
 
 export const worldGradeShader = {

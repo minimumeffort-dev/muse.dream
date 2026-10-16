@@ -10,13 +10,17 @@ Racing is where this started. The idea is to make whatever someone draws playabl
 
 **The playable world is a handmade mock today.** The renderer, driving simulation and Dream 2 compiler work. Photo upload and Muse interpretation are still to come. There are no model calls or API keys to configure.
 
-## Build the solid bits with voxels
+## The whole world is made of voxels
 
-City wall shells and breakable benches now use voxel volumes. Dream can fill a block, carve an opening and split it into chunks on impact. The engine merges the visible faces, so a solid block doesn't become thousands of little meshes. Terrain keeps its heightfield. Vehicles combine shaped profiles with voxel fittings.
+The ground, roads, river, buildings, vehicles, people and plants now go through voxel construction. Dream describes the shapes and connections; the engine fills their cells and merges the visible faces. Wheels still turn, boats still pass under bridges, and breakable objects keep their authored pieces. A voxel doesn't need its own mesh or physics body.
+
+The world stays resident. Object stamps and terrain tiles use different bounded grids, with fine cells for markings and small fittings. Driving still uses the smooth heightfield and explicit contacts, so stepped graphics don't shake the car. Editable terrain and per-cell destruction are still further work.
+
+![Voxel terrain and connected city infrastructure](docs/media/voxel-world.jpg)
 
 ![A carved voxel wall breaking on impact](docs/media/voxels.gif)
 
-[How voxel construction works](docs/dream/voxels.md) · [Complete Dream example](docs/examples/voxel-wall.dream)
+[How voxel construction works](docs/dream/voxels.md) · [Complete voxel world](docs/examples/voxel-world.dream)
 
 ## Build things the way they fit together
 
@@ -24,7 +28,7 @@ Houses now have framed glazing, readable floor heights, supported porches, roof 
 
 ![Rebuilt houses, public transport and cabin launch](docs/media/constructed-assets.jpg)
 
-This pass rebuilds 15 assembly types used by 197 objects in the mock city. Dream 2 now permits finer visual dimensions, so a pipe or window frame doesn't have to be a chunky block. Bodies, contacts, world scale and part budgets stay bounded. [See how they're constructed](docs/asset-construction.md), or build the [house](docs/examples/terraced-house.dream), [bus](docs/examples/city-bus.dream) and [boat](docs/examples/cabin-launch.dream).
+The construction library includes 15 rebuilt assembly types used by 197 objects in the mock city. Dream 2 permits fine visual dimensions, so a pipe or window frame can keep its proportions when it becomes a voxel stamp. Bodies, contacts, world scale and part budgets stay bounded. [See how they're constructed](docs/asset-construction.md), or build the [house](docs/examples/terraced-house.dream), [bus](docs/examples/city-bus.dream) and [boat](docs/examples/cabin-launch.dream).
 
 ## Give the world a task
 

@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import {voxelTerrainTile} from './voxel-columns';
+import {voxelStamp} from '../scene/voxel-stamp';
 import {reservedGround,streetPolygons,onStreet} from '../scene/streets';
 import {buildStreets} from './streets';
 import { bridgeAt, bridgeCoordinates, bridgePolygon } from "../scene/landscape-dsl";
@@ -9,7 +11,7 @@ import { distanceToRoad, roadPoints, roadFrames, roadRibbon, ROAD_CURB_WIDTH, RO
 import { tiledMesh, tiledInstances } from "./batching";
 import { groundMaterial, roadMaterial, toonMaterial, zoneMaterial } from "./shaders";
 import { toWorldX, toWorldZ } from "./world3d";
-import { surfaceGeometry, surfaceHeight, surfaceEdge, TERRAIN_STEP } from "./surface";
+import { surfaceGeometry, surfaceHeight, surfaceEdge, voxelSurfaceBase,TERRAIN_STEP } from "./surface";
 
 export function worldPosition(doc: Scene, x: number, y: number, lift = 0): THREE.Vector3 {
   return new THREE.Vector3(toWorldX(x, doc.canonical.width), drivingHeight(doc.terrain, x, y) + lift, toWorldZ(y, doc.canonical.height));
@@ -101,6 +103,7 @@ export function curbGeometry(doc: Scene, side: -1 | 1): THREE.BufferGeometry {
     while (colors.length < vertices.length) colors.push(...color.toArray());
   }
   const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
+  if(doc.voxelWorld)geo.userData.voxelOptions={cell:1,step:doc.voxelWorld.heightStep,lift:3.1,thickness:3.6,baseAt:(x:number,z:number)=>voxelSurfaceBase(doc,x,z)};
   geo.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3)); geo.computeVertexNormals(); return geo;
 }
 
@@ -156,6 +159,14 @@ export function buildEnvironment(doc: Scene): THREE.Group {
   const groundMat = groundMaterial(), low = new THREE.Color("#52744c"), high = new THREE.Color("#70865a"), rock = new THREE.Color("#77817b");
   const tints = (doc.terrain.tints ?? []).map(t => ({ ...t, color: new THREE.Color(t.color) }));
   for (let y = -800; y < height + 800; y += 400) for (let x = -800; x < width + 800; x += 400) {
+    if(doc.voxelWorld){
+      const ground=voxelTerrainTile(x-width/2,y-height/2,doc.voxelWorld,(px,pz)=>terrainHeight(doc.terrain,px+width/2,pz+height/2),(px,pz,h)=>{
+        const wx=px+width/2,wy=pz+height/2,color=low.clone().lerp(high,h/350);
+        for(const tint of tints)color.lerp(tint.color,THREE.MathUtils.smoothstep(1-Math.hypot(wx-tint.x,wy-tint.y)/tint.radius,0,1)*.8);
+        return color;
+      });
+      const tile=new THREE.Mesh(ground,groundMat);tile.name='voxel-terrain';tile.receiveShadow=true;tile.matrixAutoUpdate=false;group.add(tile);continue;
+    }
     const ground = new THREE.PlaneGeometry(400, 400, 400 / TERRAIN_STEP, 400 / TERRAIN_STEP); ground.rotateX(-Math.PI / 2);
     ground.translate(x + 200 - width / 2, 0, y + 200 - height / 2);
     const vertices = ground.getAttribute("position"), colors: number[] = [];
@@ -172,10 +183,13 @@ export function buildEnvironment(doc: Scene): THREE.Group {
   group.add(tiledMesh(roadGeometry(doc), roadMaterial()));
   const roadWidth = doc.roadMaskRef.params.roadWidth;
   const curbMaterial = toonMaterial("#ffffff"); curbMaterial.vertexColors = true;
+  const paint=roadMarkingGeometry(doc);if(doc.voxelWorld)paint.userData.voxelOptions.cell=.5;
   group.add(tiledMesh(curbGeometry(doc, 1), curbMaterial), tiledMesh(curbGeometry(doc, -1), curbMaterial),
-    tiledMesh(roadMarkingGeometry(doc), toonMaterial("#e8e1c8")));
+    tiledMesh(paint, toonMaterial("#e8e1c8")));
   for (const region of doc.regions) {
-    const surface = new THREE.Mesh(drapedPolygon(doc, region.polygon, 1.65), zoneMaterial(region.rule.effect));
+    const geometry=drapedPolygon(doc,region.polygon,1.65);
+    if(doc.voxelWorld)geometry.userData.voxelOptions={cell:2,step:doc.voxelWorld.heightStep,lift:1.65,thickness:.08,baseAt:(x:number,z:number)=>voxelSurfaceBase(doc,x,z)};
+    const surface = doc.voxelWorld ? tiledMesh(geometry,zoneMaterial(region.rule.effect)) : new THREE.Mesh(geometry,zoneMaterial(region.rule.effect));
     surface.receiveShadow = true; surface.renderOrder = 1; group.add(surface);
   }
   // The finish line derives from the checkpoint, rather than a fixture coordinate.
@@ -208,7 +222,8 @@ export function buildEnvironment(doc: Scene): THREE.Group {
     transform.scale.setScalar(.6 + random() * .8); transform.updateMatrix(); tufts.push(transform.matrix.clone());
     if (i % 8 === 0) { flowers.push(transform.matrix.clone()); colors.push(new THREE.Color(i % 3 ? "#f8d99e" : "#e9a6b1")); }
   }
-  group.add(tiledInstances(new THREE.ConeGeometry(1.8, 7, 3), toonMaterial("#557d4a"), tufts),
-    tiledInstances(new THREE.IcosahedronGeometry(2, 0), toonMaterial("#ffffff"), flowers, colors));
+  const stamp=(g:THREE.BufferGeometry,size:number[])=>{if(!doc.voxelWorld)return g;const v=voxelStamp(g,size,doc.voxelWorld.objectCell);g.dispose();return v;};
+  group.add(tiledInstances(stamp(new THREE.ConeGeometry(1.8,7,3),[3.6,7,3.6]),toonMaterial("#557d4a"),tufts),
+    tiledInstances(stamp(new THREE.IcosahedronGeometry(2,0),[4,4,4]),toonMaterial("#ffffff"),flowers,colors));
   return group;
 }

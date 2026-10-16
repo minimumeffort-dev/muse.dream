@@ -12,6 +12,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [Quickstart](dream/quickstart.md) | Compile a complete object, then a playable world |
 | [Compose objects](dream/objects.md) | Parts, materials, components, joints and physical size |
 | [Build with voxels](dream/voxels.md) | Fill, carve, merge faces and break volumes into bounded chunks |
+| [A whole voxel world](whole-world-voxels.md) | Construct the terrain, city, vehicles, plants and water from cells |
 | [City design](city-design.md) | Research, connected destinations and the source-derived map |
 | [Asset library](asset-library.md) | The mock-world assemblies and their construction details |
 | [Build a world](dream/worlds.md) | Terrain, roads, bridges, water, dedicated paths and moving vehicles |

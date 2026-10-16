@@ -52,9 +52,19 @@ const bytes=(m:VoxelMesh)=>m.positions.byteLength+m.normals.byteLength+m.uvs.byt
 /** Greedy rectangle meshing, six axis sweeps. Slice boundaries expose new fracture faces. */
 export function meshVoxels(v:VoxelVolume,slice?:VoxelSlice):VoxelMesh {
   const key=JSON.stringify([v,slice]),prior=meshes.get(key);if(prior)return prior;
-  const cells=voxelOccupancy(v),size=v.grid,positions:number[]=[],normals:number[]=[],uvs:number[]=[];
+  const result=meshVoxelGrid(v.grid,voxelOccupancy(v),slice);
+  while(meshes.size && (meshes.size>=128 || meshBytes+bytes(result)>8*1024*1024)){
+    const oldest=meshes.keys().next().value!;meshBytes-=bytes(meshes.get(oldest)!);meshes.delete(oldest);
+  }
+  if(bytes(result)<=8*1024*1024){meshes.set(key,result);meshBytes+=bytes(result);}return result;
+}
+
+/** Engine stamps share the same occupied-cell mesher and limits as authored volumes. */
+export function meshVoxelGrid(size:readonly number[],cells:Uint8Array,slice?:VoxelSlice):VoxelMesh {
+  if(size.length!==3 || size.some(n=>!Number.isInteger(n) || n<1 || n>VOXEL_LIMITS.axis) || cells.length!==voxelCells({grid:size}))throw new Error('invalid bounded voxel grid');
+  const positions:number[]=[],normals:number[]=[],uvs:number[]=[];
   const from=slice?.from??[0,0,0],to=slice?.to??size;
-  const occupied=(p:number[])=>p.every((n,a)=>n>=from[a]! && n<to[a]!) && !!cells[p[0]!+size[0]*(p[1]!+size[1]*p[2]!)];
+  const occupied=(p:number[])=>p.every((n,a)=>n>=from[a]! && n<to[a]!) && !!cells[p[0]!+size[0]!*(p[1]!+size[1]!*p[2]!)];
   let quads=0,exposedFaces=0,count=0;
   for(let z=from[2]!;z<to[2]!;z++)for(let y=from[1]!;y<to[1]!;y++)for(let x=from[0]!;x<to[0]!;x++)if(occupied([x,y,z]))count++;
   for(let d=0;d<3;d++)for(const sign of [-1,1]){
@@ -80,8 +90,5 @@ export function meshVoxels(v:VoxelVolume,slice?:VoxelSlice):VoxelMesh {
     }
   }
   const result={positions:new Float32Array(positions),normals:new Float32Array(normals),uvs:new Float32Array(uvs),quads,cells:count,exposedFaces};
-  while(meshes.size && (meshes.size>=128 || meshBytes+bytes(result)>8*1024*1024)){
-    const oldest=meshes.keys().next().value!;meshBytes-=bytes(meshes.get(oldest)!);meshes.delete(oldest);
-  }
-  if(bytes(result)<=8*1024*1024){meshes.set(key,result);meshBytes+=bytes(result);}return result;
+  return result;
 }

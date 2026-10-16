@@ -129,9 +129,9 @@ function start(): void {
     if(destructible)breakMeshes.set(object.id,group);
   }
   const debris=new WorldDebris(doc);scene.add(debris.group);
-  const traveler=interactiveWorld.assemblies.find(a=>a.displayName==="Traveler")!;
+  const traveler={...interactiveWorld.assemblies.find(a=>a.displayName==="Traveler")!,voxelSize:doc.voxelWorld?.objectCell};
   const avatar=compactObject(buildObject({id:"traveler",kind:"custom",labelText:"Traveler",x:0,y:0,scale:measuredScale(traveler),spec:traveler}));avatar.visible=false;objects.push(avatar);
-  const walkerSpec=interactiveWorld.assemblies.find(a=>a.displayName==="Explorer")!;
+  const walkerSpec={...interactiveWorld.assemblies.find(a=>a.displayName==="Explorer")!,voxelSize:doc.voxelWorld?.objectCell};
   const walker=compactObject(buildObject({id:"explorer",kind:"custom",labelText:"Explorer",x:0,y:0,scale:measuredScale(walkerSpec),spec:walkerSpec}));
   walker.visible=false;scene.add(walker);
   const carRoot = new THREE.Group(), carMesh = compactObject(buildPlayer(doc));

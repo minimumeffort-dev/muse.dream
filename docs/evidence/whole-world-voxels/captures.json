@@ -1,0 +1,44 @@
+[
+  {
+    "clip": "driving",
+    "frames": 210,
+    "fps": 30,
+    "gifBytes": 16156895,
+    "videoBytes": 4425508
+  },
+  {
+    "clip": "switching",
+    "frames": 240,
+    "fps": 30,
+    "gifBytes": 6810586,
+    "videoBytes": 2195355
+  },
+  {
+    "clip": "locomotion",
+    "frames": 180,
+    "fps": 30,
+    "gifBytes": 6479016,
+    "videoBytes": 3221924
+  },
+  {
+    "clip": "swimming",
+    "frames": 180,
+    "fps": 30,
+    "gifBytes": 6913403,
+    "videoBytes": 2256805
+  },
+  {
+    "clip": "daynight",
+    "frames": 360,
+    "fps": 30,
+    "gifBytes": 10492040,
+    "videoBytes": 2991343
+  },
+  {
+    "clip": "flight",
+    "frames": 300,
+    "fps": 30,
+    "gifBytes": 11668136,
+    "videoBytes": 4870404
+  }
+]

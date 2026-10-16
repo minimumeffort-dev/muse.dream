@@ -16,6 +16,9 @@ renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.
 const params=new URLSearchParams(location.search),focus=params.getAll('asset');
 const worldExamples=params.has('world');
 const allExamples=params.has('all');
+// A full native-resolution atlas must fit within the WebGL renderbuffer height.
+// The ordinary responsive two-column view can exceed it with all 83 assets.
+if(params.has('sheet')){document.body.style.width='1600px';grid.style.gridTemplateColumns='repeat(4,1fr)';}
 const focusHeight=focus.length>2 ? '360px' : '650px';
 if(focus.length){grid.style.gridTemplateColumns=`repeat(${Math.min(2,focus.length)},1fr)`;document.querySelector('main').style.setProperty('min-height',focusHeight);}
 if(worldExamples)document.querySelector('header a').href='/src/scene/interactive-world.dream';

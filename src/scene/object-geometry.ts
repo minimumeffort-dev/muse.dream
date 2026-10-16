@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import {meshVoxels,type VoxelVolume,type VoxelSlice} from './voxels';
 import type { ObjectPart } from "./object-dsl";
+import {voxelStamp} from './voxel-stamp';
 
 function basePartGeometry(shape: ObjectPart["shape"], size: ObjectPart["size"], taper=1,outline?:readonly (readonly [number,number])[]): THREE.BufferGeometry {
   switch (shape) {
@@ -35,11 +36,11 @@ export function voxelGeometry(volume:VoxelVolume,slice?:VoxelSlice):THREE.Buffer
   const data=meshVoxels(volume,slice),geometry=new THREE.BufferGeometry();
   geometry.setAttribute('position',new THREE.BufferAttribute(data.positions.slice(),3));
   geometry.setAttribute('normal',new THREE.BufferAttribute(data.normals.slice(),3));
-  geometry.setAttribute('uv',new THREE.BufferAttribute(data.uvs.slice(),2));return geometry;
+  geometry.setAttribute('uv',new THREE.BufferAttribute(data.uvs.slice(),2));geometry.userData.voxel={kind:'volume',cells:data.cells,quads:data.quads};return geometry;
 }
 
 /** Variation is deterministic from position, so duplicated seam vertices remain joined. */
-export function partGeometry(part:ObjectPart):THREE.BufferGeometry {
+export function partGeometry(part:ObjectPart,voxelCell?:number):THREE.BufferGeometry {
   if(part.shape==='voxel' && 'voxels' in part && part.voxels)return voxelGeometry(part.voxels);
   const geometry=basePartGeometry(part.shape,part.size,"taper" in part ? part.taper : undefined,'outline' in part ? part.outline : undefined);
   const deform="deform" in part ? part.deform : undefined;
@@ -55,6 +56,7 @@ export function partGeometry(part:ObjectPart):THREE.BufferGeometry {
     geometry.computeBoundingBox();const bounds=geometry.boundingBox!,center=bounds.getCenter(new THREE.Vector3()),size=bounds.getSize(new THREE.Vector3());
     geometry.translate(-center.x,-center.y,-center.z);geometry.scale(1/size.x,1/size.y,1/size.z);geometry.computeVertexNormals();
   }
+  if(voxelCell){const result=voxelStamp(geometry,part.size,voxelCell,JSON.stringify([part.shape,part.size,'taper' in part ? part.taper : null,'outline' in part ? part.outline : null,deform]));geometry.dispose();return result;}
   return geometry;
 }
 

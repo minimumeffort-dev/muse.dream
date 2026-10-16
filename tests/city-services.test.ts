@@ -1,3 +1,4 @@
+import type {ObjectDslV2} from '../src/scene/object-dsl';
 import {beforeAll,describe,expect,it} from 'vitest';
 import {Box3,Euler,Matrix4,Quaternion,Vector3} from 'three';
 import {createWorldScene} from '../src/scene/world-fixture';
@@ -79,6 +80,7 @@ describe('connected civic services and regional airport',()=>{
   expect(scene.objects.filter(o=>o.id.startsWith('service_bicycles_')).length).toBeGreaterThanOrEqual(4);
  });
  it('publishes the same complete terminal Dream assembly as the live airport',()=>{
-  expect(compileDream(terminalSource)).toEqual([scene.objects.find(o=>o.id==='airport_terminal')!.spec]);
+  const {voxelSize,...authored}=scene.objects.find(o=>o.id==='airport_terminal')!.spec as ObjectDslV2;
+  expect(voxelSize).toBe(scene.voxelWorld?.objectCell);expect(compileDream(terminalSource)).toEqual([authored]);
  });
 });

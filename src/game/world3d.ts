@@ -105,7 +105,7 @@ export function buildCustom(object: SceneObject): THREE.Group {
       for(const joint of spec.joints ?? []) (joint.parent ? joints.get(joint.parent)! : g).add(joints.get(joint.id)!);
     }
     for (const part of spec.parts) {
-      const m = mesh(partGeometry(part), styledMaterial(part.material),0,0,0,false);
+      const m = mesh(partGeometry(part,spec.dslVersion===2 ? spec.voxelSize : undefined), styledMaterial(part.material),0,0,0,false);
       m.name = part.id;
       const style=part.material.shaderStyle,paint=style==="toon" || style==="paper-grain";
       // Linear vertex paint lets differently colored parts share a draw without changing shading.

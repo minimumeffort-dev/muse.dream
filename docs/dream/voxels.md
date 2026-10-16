@@ -6,6 +6,14 @@ A wall doesn't need one mesh per brick. Describe the occupied cells, cut opening
 
 [HD recording](../media/voxels.mp4) · [Download the complete wall](../examples/voxel-wall.dream)
 
+## Voxel construction across the world
+
+The live city now uses `voxel_world(object_cell=1,ground_cell=8,height_step=1);`. It converts every linked object template, generated furnishing, player vehicle and flock after the world is assembled. Ground, streets, cycle tracks, painted crossings, bridge decks, water, plants and vehicle parts all produce voxel surfaces. [Build a complete voxel world](../whole-world-voxels.md).
+
+![The connected voxel city](../media/voxel-world.jpg)
+
+`part` and `beam` remain compact shape stamps for the model. The engine samples their occupied cells, preserving outlines, openings, material, measured bounds and rigid motion. Explicit `voxels` gives the model direct control of fill/cut operations and fracture chunks. The world policy changes construction; it does not silently add damage or replace contacts.
+
 ## Fill, cut, repeat
 
 `voxels` creates one rigid visual part. `grid` gives its cell counts, `size` its full local dimensions and `at` its center. Cell coordinates start at the minimum corner. Every operation uses integer half-open bounds: `from` is included, `to` is excluded. A `[30,16,4]` grid with size `[60,32,8]` has two-unit cubic cells.
@@ -43,7 +51,7 @@ A visual opening does **not** create a traversable opening. Bodies and compound 
 
 Two carved garden walls flank the river-park bench and break into four chunks each. Eleven residential and commercial building templates now use voxel wall shells. The slatted benches use voxel boards inside their existing seven fragment groups. The asset-library bakehouse storefront uses a carved volume with six masonry chunks, plus its canopy and door. Their measured proportions, entrances, foundations, roads and physical contacts remain shared with the existing world.
 
-This is a hybrid world: terrain, roads, water, curved roofs, plants and animals use shaped geometry; vehicles combine profiles with voxel glazing, lights and fittings. Voxel construction is available wherever a Dream assembly makes sense; this is not a claim that every world cell has been converted.
+The live world's remaining curved shapes now become occupied-cell stamps too. The city uses sparse solid ground columns and infrastructure tiles rather than allocating a kilometre-wide 3D array. The world policy leaves older standalone examples readable in their original shaped mode; add it to a complete world to use voxel construction throughout.
 
 ![Voxel shells and boards retain the surrounding model details](../media/voxel-assets.jpg)
 

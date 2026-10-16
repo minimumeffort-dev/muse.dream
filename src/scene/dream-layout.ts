@@ -1,4 +1,5 @@
 import {daylightSchema} from "./daylight";
+import {voxelWorldSchema} from './voxel-world';
 import { z } from "zod";
 import { bridgeSchema,waterSchema,type Water } from "./landscape-dsl";
 import { terrainSchema } from "./terrain";
@@ -7,7 +8,7 @@ import type { ObjectDslV2 } from "./object-dsl";
 import { fail,type Program,type Expr,type DreamNode,type Token } from "./dream-syntax";
 import { exprField,field,listField,wordField } from "./dream-v2";
 
-export type DreamLayout=Pick<Scene,"canonical"|"roadMaskRef"|"spawn"|"terrain"|"checkpoints"|"regions"|"unresolvedLabels"|"player"|"daylight"> & {origin:Token};
+export type DreamLayout=Pick<Scene,"canonical"|"roadMaskRef"|"spawn"|"terrain"|"checkpoints"|"regions"|"unresolvedLabels"|"player"|"daylight"|"voxelWorld"> & {origin:Token};
 function validated<T>(schema:z.ZodType<T>,data:unknown,node:DreamNode):T {
   const result=schema.safeParse(data);
   if(!result.success){const issue=result.error.issues[0]!;fail(`${issue.path.join(".")}: ${issue.message}`,node.token,"E_SCHEMA");}
@@ -86,9 +87,11 @@ export function compileLayout(program:Program,assemblies:Map<string,ObjectDslV2>
     }
   }
   const terrain=validated(terrainSchema,{hills,...(tints.length ? {tints} : {}),landscape:{dslVersion:1,waters:[...waters,...basins],bridges}},world);
+  const voxelNode=program.layout.find(n=>n.kind==='voxel_world');
   const player=world.fields.has("player") ? assemblies.get(wordField(world,"player")) : undefined;
   return {
     origin:world.token,
+    ...(voxelNode ? {voxelWorld:validated(voxelWorldSchema,{objectCell:num(voxelNode,'object_cell'),groundCell:num(voxelNode,'ground_cell'),heightStep:num(voxelNode,'height_step')},voxelNode)} : {}),
     canonical:validated(shape.canonical,{width:size[0],height:size[1],coordinateSystem:"top-left-x-right-y-down-px"},world),
     roadMaskRef:validated(shape.roadMaskRef,{kind:"generated-spline-loop",params:{points:points(road),roadWidth:num(road,"width"),...(road.fields.has("style") ? {style:wordField(road,"style")} : {})}},road),
     spawn:validated(shape.spawn,{...spawn,headingRad:num(world,"heading_deg")*Math.PI/180},world),

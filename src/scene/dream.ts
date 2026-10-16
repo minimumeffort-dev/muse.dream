@@ -296,6 +296,13 @@ export function compileDreamWorld(source:string,modules:DreamModules={}):DreamWo
       const result=furnishWorld(base,world.furnishings);world={...world,objects:[...world.objects,...result.objects],surfaces:[...world.surfaces,...result.surfaces]};
     }catch(error){if(error instanceof DreamError)throw error;fail(error instanceof Error ? error.message : 'invalid furnishing',origin,'E_POPULATION');}
   }
+  // Apply once, after linked modules and furnishings expand. Contacts and measurement
+  // continue to use the original stamp bounds; voxel construction is renderer data.
+  if(world.layout?.voxelWorld){
+    const cell=world.layout.voxelWorld.objectCell,converted=new Map<ObjectDslV2,ObjectDslV2>();
+    const spec=(value:ObjectDslV2)=>{let result=converted.get(value);if(!result){result={...value,voxelSize:cell};converted.set(value,result);}return result;};
+    world={...world,assemblies:world.assemblies.map(spec),objects:world.objects.map(o=>o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 ? {...o,spec:spec(o.spec)} : o),flocks:world.flocks.map(f=>({...f,spec:f.spec.dslVersion===2 ? spec(f.spec) : f.spec})),layout:{...world.layout,...(world.layout.player?.dslVersion===2 ? {player:spec(world.layout.player)} : {})}};
+  }
   return world;
 }
 function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,children:DreamWorld[]) {

@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import {voxelSurface,type ColumnOptions} from './voxel-columns';
 
 /** Only for world-fixed roots: GPU wind, water and instance fades still animate normally. */
 export function freezeStatic(root:THREE.Object3D):void {
@@ -25,7 +26,9 @@ export function tiledMesh(geometry: THREE.BufferGeometry, material: THREE.Materi
       geo.setAttribute(name, new THREE.BufferAttribute(values, attribute.itemSize));
     }
     geo.computeBoundingSphere();
-    const mesh = new THREE.Mesh(geo, material); mesh.receiveShadow = true; mesh.matrixAutoUpdate = false; group.add(mesh);
+    const options=geometry.userData.voxelOptions as ColumnOptions|undefined;
+    const rendered=options ? voxelSurface(geo,options) : geo;if(options)geo.dispose();
+    const mesh = new THREE.Mesh(rendered, material); mesh.receiveShadow = true; mesh.matrixAutoUpdate = false; group.add(mesh);
   }
   if (source !== geometry) source.dispose(); geometry.dispose(); return group;
 }

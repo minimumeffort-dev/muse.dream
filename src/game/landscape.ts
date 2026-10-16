@@ -35,7 +35,8 @@ export class WorldLandscape {
       }
       geometry.setAttribute("waterDepth",new THREE.BufferAttribute(depths,1));
       geometry.computeVertexNormals();geometry.computeBoundingSphere();geometry.boundingSphere!.radius+=3;
-      const mesh=tiledMesh(geometry,waterMaterial(water,texture,waves));
+      if(doc.voxelWorld)geometry.userData.voxelOptions={cell:8,step:doc.voxelWorld.heightStep,lift:water.level+.25,thickness:2,maxMerge:1,rigid:true};
+      const mesh=tiledMesh(geometry,waterMaterial(water,texture,waves,!!doc.voxelWorld));
       mesh.name=`water-${water.id}`;mesh.traverse(tile=>{tile.renderOrder=2;if(tile instanceof THREE.Mesh)tile.geometry.boundingSphere!.radius+=3;});this.group.add(mesh);
       return {water,waves,texture,pixels,version:waves.version};
     });
@@ -56,8 +57,9 @@ export class WorldLandscape {
       const roadway=[...roadFootprint(doc),...streetPolygons(doc.streets,'riding')].filter(polygon=>Math.max(...polygon.map(p=>p.x))>=minX && Math.min(...polygon.map(p=>p.x))<=maxX &&
         Math.max(...polygon.map(p=>p.y))>=minY && Math.min(...polygon.map(p=>p.y))<=maxY);
       // Timber is the driving surface; paved stone bridges retain a road corridor.
-      const deck=new THREE.Mesh(surfaceGeometry(doc,[footprint],ROAD_SURFACE_LIFT,{x:ux,y:uy},heightAt,bridge.style==="timber" ? [] : roadway),bridgeMaterial(bridge.style));
-      deck.name=`bridge-${bridge.id}`;deck.castShadow=deck.receiveShadow=true;this.group.add(deck);
+      const deckGeometry=surfaceGeometry(doc,[footprint],ROAD_SURFACE_LIFT,{x:ux,y:uy},heightAt,bridge.style==="timber" ? [] : roadway);
+      const deck=doc.voxelWorld ? tiledMesh(deckGeometry,bridgeMaterial(bridge.style)) : new THREE.Mesh(deckGeometry,bridgeMaterial(bridge.style));
+      deck.name=`bridge-${bridge.id}`;deck.traverse(n=>{if(n instanceof THREE.Mesh)n.castShadow=n.receiveShadow=true;});this.group.add(deck);
       const wood=toonMaterial(bridge.style==="timber" ? "#73503a" : "#797c82");
       const count=Math.ceil(length/24);
       for(const side of [-1,1]) {
@@ -77,7 +79,7 @@ export class WorldLandscape {
         }
       }
     }
-    const cylinder=new THREE.CylinderGeometry(1,1,1,6);
+    const cylinder=doc.voxelWorld ? new THREE.BoxGeometry(2,1,2) : new THREE.CylinderGeometry(1,1,1,6);
     for(const [material,matrices] of beams) {
       const mesh=new THREE.InstancedMesh(cylinder,material,matrices.length);
       matrices.forEach((matrix,i)=>mesh.setMatrixAt(i,matrix));mesh.computeBoundingSphere();

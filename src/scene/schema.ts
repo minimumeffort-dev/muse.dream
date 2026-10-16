@@ -1,4 +1,5 @@
 import {voxelCells,voxelChunkCount,VOXEL_LIMITS} from './voxels';
+import {voxelWorldSchema} from './voxel-world';
 import {daylightSchema,MAX_LIGHT_POOLS} from './daylight';
 import {MAX_WORLD_SIZE,MAX_STREET_LENGTH} from './world-bounds';
 import { z } from "zod";
@@ -147,6 +148,7 @@ export const sceneSchema = z.object({
     headingRad: z.number().finite(),
   }),
   daylight:daylightSchema.optional(),
+  voxelWorld:voxelWorldSchema.optional(),
   terrain: terrainSchema.default({ hills: [] }),
   routes:z.array(routeSchema).max(12).default([]),
   behaviors:z.array(behaviorSchema).max(NPC_LIMITS.programs).default([]),

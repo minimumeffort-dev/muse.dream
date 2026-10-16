@@ -46,3 +46,7 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    semantic validation enforces cell, work, surface and fracture limits. *)
 
 (* Object DSL v2 visual size axes: .1..128; v1 .5..128. Beam endpoint length >= .5. Semantic bounds are enforced after expansion. *)
+
+(* voxel_world is a singleton top-level world-owner construction policy with
+   object_cell, ground_cell and height_step numeric fields. See contract bounds.
+   It changes all linked render geometry, not physical contact ownership. *)

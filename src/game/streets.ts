@@ -17,7 +17,9 @@ export function buildStreets(scene:Scene):THREE.Group{
   const timber=(scene.terrain.landscape?.bridges??[]).filter(b=>b.style==='timber').map(bridgePolygon);
   const add=(polygons:Point[][],color:string,lift:number,name:string)=>{
     if(!polygons.length)return;
-    const mesh=tiledMesh(surfaceGeometry(scene,polygons,lift,undefined,undefined,timber),toonMaterial(color));mesh.name=name;group.add(mesh);
+    const geometry=surfaceGeometry(scene,polygons,lift,undefined,undefined,timber);
+    if(scene.voxelWorld && /lines|symbols|crossings|markings/.test(name))geometry.userData.voxelOptions.cell=.5;
+    const mesh=tiledMesh(geometry,toonMaterial(color));mesh.name=name;group.add(mesh);
   };
   add(roadUnion,'#626e77',1.25,'street-carriageways');
   add(unionPolygons(riding,[...roads,...bands]),'#c9c3af',1.55,'cycle-separators');
