@@ -125,6 +125,44 @@ describe('bicycle, skateboard, boat and plane handling',()=>{
     const stopped=run({...state,vx:200,elevation:20,grounded:false},blocked,idle,2);
     expect(stopped.x).toBeLessThan(420);expect(stopped.grounded).toBe(true);expect(stopped.elevation).toBe(0);
   });
+  it.each([0,Math.PI/2,Math.PI,-Math.PI/2])('keeps airspeed at the world edge and turns back from heading %s',headingRad=>{
+    const {world,state}=vehicle('plane'),radius=bodyWorld(state,world).carRadius;
+    const start={...state,x:480+Math.cos(headingRad)*(480-radius-2),y:360+Math.sin(headingRad)*(360-radius-2),headingRad,vx:Math.cos(headingRad)*250,vy:Math.sin(headingRad)*250,elevation:100,grounded:false};
+    const snapshot=structuredClone(start),edge=run(start,world,{throttle:1,steer:0},.5);
+    expect(Math.hypot(edge.vx,edge.vy)).toBeGreaterThan(200);expect(edge.grounded).toBe(false);
+    let returned=edge;
+    for(let i=0;i<480;i++){
+      returned=stepInteractive(returned,{throttle:1,steer:1},1/120,world);
+      expect(world.driveMask.footprintClear(returned.x,returned.y,radius)).toBe(true);
+    }
+    expect(returned.headingRad-headingRad).toBeGreaterThan(3);
+    expect((returned.x-edge.x)*Math.cos(headingRad)+(returned.y-edge.y)*Math.sin(headingRad)).toBeLessThan(-50);
+    expect(start).toEqual(snapshot);
+  });
+  it.each([-1,1])('can steer %s out of every world corner without crossing its footprint boundary',steer=>{
+    for(const sx of [-1,1])for(const sy of [-1,1]){
+      const {world,state}=vehicle('plane'),radius=bodyWorld(state,world).carRadius,headingRad=Math.atan2(sy,sx);
+      let flying={...state,x:sx<0 ? radius+2 : 960-radius-2,y:sy<0 ? radius+2 : 720-radius-2,headingRad,vx:Math.cos(headingRad)*250,vy:Math.sin(headingRad)*250,elevation:100,grounded:false};
+      for(let i=0;i<480;i++){
+        flying=stepInteractive(flying,{throttle:1,steer},1/120,world);
+        expect(world.driveMask.footprintClear(flying.x,flying.y,radius)).toBe(true);
+      }
+      expect(flying.x).toBeGreaterThan(radius+50);expect(flying.x).toBeLessThan(960-radius-50);
+      expect(flying.y).toBeGreaterThan(radius+50);expect(flying.y).toBeLessThan(720-radius-50);
+      expect(flying.grounded).toBe(false);
+    }
+  });
+  it('keeps edge turns deterministic at 30, 60 and 144 render fps and still stalls when braking',()=>{
+    const {world,state}=vehicle('plane'),start={...state,x:950,y:360,vx:250,elevation:100,grounded:false},input={throttle:1,steer:-1};
+    const reference=run(start,world,input,4);
+    for(const fps of [30,60,144]){
+      let flying=start;const clock=new FixedStepper();
+      for(let frame=0;frame<fps*4;frame++)for(let i=0,n=clock.push(1/fps);i<n;i++)flying=stepInteractive(flying,input,clock.stepDt,world);
+      expect(flying).toEqual(reference);
+    }
+    const stalled=run({...start,vx:40},world,{throttle:-1,steer:0},1);
+    expect(stalled.elevation).toBeLessThan(80);expect(stalled.vz).toBeLessThan(0);
+  });
   it.each([30,60,144])('replays jumping and swimming at %i fps without mutating its input',fps=>{
     for(const wet of [false,true]){
       const world=setup([],wet),start=wet ? {...foot(world,350),elevation:-FOOT_HEIGHT*.65} : foot(world),snapshot=structuredClone(start),input={...east,jump:true,sprint:true};

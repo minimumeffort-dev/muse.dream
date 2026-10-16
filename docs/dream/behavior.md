@@ -57,6 +57,15 @@ Boats retain sideways momentum through a rudder turn, settle it through hull res
 
 Aircraft need forward speed to take off. Climb and descent build gradually rather than snapping vertical speed. Release the climb control at flying speed to level out; insufficient airspeed produces a sink. A wall impact stops horizontal travel while gravity continues. Land before exiting. A water landing stalls the aircraft at the surface; leave it to wade/swim or press R to recover it. These are bounded arcade controls, not a flight or sailing simulator.
 
+An airborne plane reaching a world edge keeps its airspeed and turn authority.
+Its collision body stays inside the finite map and can slide along the edge;
+hold **A** or **D** to turn back. This also works at corners. Braking can still
+produce a stall, and terrain, building, vehicle and travel-mask contacts remain
+active. Grounded aircraft retain their taxi and reverse controls. The boundary
+uses the authored collision cylinder; it does not clip every visible wing tip.
+The [boundary verification](../evidence/aircraft-boundary/verification.md)
+shows native flight into the edge and back into the world.
+
 Aircraft terrain contact surveys a cached underside profile from the Dream assembly, including the wheels, nose and wing span. It uses the current heading, pitch and bank against the terrain heightfield and the engine's ground triangulation. Voxel construction approximates the same field with stepped columns; the driving controller keeps the smooth contact model. A landing keeps the aircraft above the hillside; a solid's top remains supporting until the body leaves its edge, then airborne control and stall rules resume. Hold **S** after braking to taxi backward on dry ground and back away from an obstruction. Reverse is disabled in flight and after a water landing. Building and vehicle impacts still use authored collision cylinders, rather than mesh-level wing collisions. These engine contact rules need no new Dream syntax.
 
 ![The live Dream aircraft taxiing on a hillside](../evidence/aircraft-terrain/hill-taxi.png)

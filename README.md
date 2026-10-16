@@ -125,6 +125,10 @@ The ground vehicles have been rebuilt around their structure. Cars have shaped s
 
 The plane is now a braced, high-wing light aircraft, with a tapered fuselage, cabin windows and a tail wheel. Its red tips replace the ends of the wings, so the colors stay solid when you fly and turn the view. Terrain contact checks its nose, wheels and wings as it pitches and banks, keeping the assembly above hills. Hold S after stopping to taxi backward on land. The whole assembly is still Dream 2. [Build the aircraft](docs/examples/light-aircraft.dream).
 
+At the map edge, the airborne plane keeps its airspeed and steering while its
+collision body stays inside the world. Hold A or D to turn back into the city.
+[See the boundary fix](docs/evidence/aircraft-boundary/verification.md).
+
 ![Taking off and banking in the rebuilt Dream aircraft](docs/media/flight.gif)
 
 [Watch the flight in HD](docs/media/flight.mp4)

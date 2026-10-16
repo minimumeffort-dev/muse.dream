@@ -118,7 +118,10 @@ function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,pro
   }
   const steps=Math.max(1,Math.ceil(Math.hypot(s.vx,s.vy,s.vz)*dt/(body.carRadius*.5))),sdt=dt/steps;
   for(let i=0;i<steps;i++){
-    const x=s.x+s.vx*sdt,y=s.y+s.vy*sdt;
+    // The finite world edge contains flight without removing the airspeed needed to turn back.
+    const margin=body.carRadius+.001,flying=plane && !s.grounded;
+    const x=flying ? Math.max(margin,Math.min(world.driveMask.width-margin,s.x+s.vx*sdt)) : s.x+s.vx*sdt;
+    const y=flying ? Math.max(margin,Math.min(world.driveMask.height-margin,s.y+s.vy*sdt)) : s.y+s.vy*sdt;
     const support=plane ? undefined : navigableWater(world.scene.terrain,x,y,waterRadius,body.bodyHeight??20);
     let floor=plane ? aircraftFloor(world.scene,aircraft!,{...s,x,y}) : (support?.level??water?.level??s.elevation+2)-2;
     const data=sceneContacts(world.scene),contacts=[...data.solids.query(x,y,body.carRadius+data.maxRadius),...actorContacts(world.scene,s.timeS,s)];

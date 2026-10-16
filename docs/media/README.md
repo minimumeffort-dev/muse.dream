@@ -209,3 +209,13 @@ map legend and pause help. Other district, vehicle, material and flora/fauna
 captures do not show the modified grounds. Historical evidence retains its
 original revision. The [sports verification](../evidence/sports/verification.md)
 records native controls, retained-capture reasons and the solo-practice limits.
+
+## Aircraft world-edge recovery
+
+The [boundary verification](../evidence/aircraft-boundary/verification.md) keeps
+native before/edge/returned screenshots with the actual controller readings.
+README and movement docs now explain steering back from edges and corners.
+The existing flight GIF, HD video and matching still remain accurate: that
+runway departure and bank stay inside the world, so their movement is unchanged.
+All other world, asset and action media retain their existing geometry and
+behavior. No new offline recording or performance claim was needed for this fix.

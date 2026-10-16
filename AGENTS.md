@@ -181,6 +181,10 @@ Preserve per-press jump buffering/grace, low-step headroom, chest-depth water
 support, full-hull bridge clearance, and gravity after airborne collisions.
 Do not add generated controller code or increase animation/render budgets.
 
+Airborne aircraft clamp their collision body to the finite world rectangle while
+retaining airspeed and steering. Preserve edge/corner escape, stall behavior and
+ordinary mask/solid contacts; world-edge containment must not zero turn authority.
+
 Dream `sport` connects an existing dry surface, one measured bounce ball and two
 static target placements. Keep the eight-ground cap, local target transforms,
 round ball bodies and validation after linking. On-foot practice, possession,
