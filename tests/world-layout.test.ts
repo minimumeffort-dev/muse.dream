@@ -3,22 +3,23 @@ import {Mesh,Box3,Vector3,Euler,Quaternion,Matrix4} from 'three';
 import {buildStreets} from '../src/game/streets';
 import {createWorldScene,worldModules} from '../src/scene/world-fixture';
 import {compileDream,checkDream,compileDreamWorld,formatDream} from '../src/scene/dream';
-import {walkingNetwork,siteEntry,sitePath} from '../src/scene/sites';
+import {walkingNetwork,siteEntry,sitePath,sitePolygons} from '../src/scene/sites';
 import {assemblyBounds} from '../src/scene/measure';
 import {partGeometry} from '../src/scene/object-geometry';
-import {bridgeFitsStreet,streetPolygons} from '../src/scene/streets';
+import {bridgeFitsStreet,streetPolygons,streetSidewalks,onPolygon} from '../src/scene/streets';
 import {buildMaskForScene} from '../src/scene/fixture';
 import {buildPaperMask} from '../src/sim/mask';
-import {createCarAtSpawn,stepCar,type World} from '../src/sim/car';
+import {createCarAtSpawn,stepCar,carFootprintClear,type World} from '../src/sim/car';
 import {roadPoints,roadFrames,distanceToRoad} from '../src/scene/road';
 import {drivingHeight} from '../src/scene/terrain';
 import {validateScenePlayability} from '../src/scene/validate';
 import {polygonArea,partition} from '../src/scene/polygons';
-import {stepInteractive,toggleRide} from '../src/sim/interaction';
+import {stepInteractive,toggleRide,bodyWorld} from '../src/sim/interaction';
 import {actorPose} from '../src/sim/actors';
 import {waterAt} from '../src/scene/terrain';
 import {roleOf} from '../src/scene/agents';
 import {routePose,routePath} from '../src/scene/routes';
+import {polygonsOverlap} from '../src/scene/landscape-dsl';
 
 const scene=createWorldScene();
 describe('connected river city',()=>{
@@ -40,6 +41,29 @@ describe('connected river city',()=>{
   for(const route of scene.routes.filter(r=>r.stops?.length))for(const stop of route.stops!){
    const site=scene.sites.find(s=>s.id===stop.site)!;expect(site).toBeDefined();
    expect(Math.hypot(siteEntry(scene,site).x-route.points[stop.anchor]!.x,siteEntry(scene,site).y-route.points[stop.anchor]!.y)).toBeLessThanOrEqual(120);
+  }
+ });
+ it('provides continuous dry, clear paving from sidewalks and school entrances to recreation grounds',()=>{
+  const paths=[
+   {id:'basketball_access',points:[[7082,7915],[7142,7915]]},
+   {id:'football_access',points:[[10600,4290],[10600,4372]]},
+   {id:'school_yard_access',points:[[4432.5,3508],[4280,3508],[4280,3772]]},
+   {id:'south_yard_access',points:[[5898,7148],[5760,7148],[5760,6828]]},
+  ];
+  const world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11};
+  const state={...createCarAtSpawn(scene),control:{kind:'foot' as const}},foot=bodyWorld(state,world);
+  const paving=[...streetSidewalks(scene),...scene.sites.flatMap(s=>sitePolygons(scene,s)),...scene.surfaces.map(s=>s.points)];
+  for(const path of paths){
+   expect(scene.surfaces.some(s=>s.id===path.id)).toBe(true);
+   for(let i=1;i<path.points.length;i++){
+    const a=path.points[i-1]!,b=path.points[i]!,steps=Math.ceil(Math.hypot(b[0]!-a[0]!,b[1]!-a[1]!)/4);
+    for(let n=0;n<=steps;n++){
+     const x=a[0]!+(b[0]!-a[0]!)*n/steps,y=a[1]!+(b[1]!-a[1]!)*n/steps,floor=drivingHeight(scene.terrain,x,y);
+     expect(waterAt(scene.terrain,x,y,floor),path.id).toBeUndefined();
+     expect(carFootprintClear(foot,x,y,floor,0,state),`${path.id}: blocked at ${x},${y}`).toBe(true);
+     for(let j=0;j<8;j++){const px=x+Math.cos(j*Math.PI/4)*3.5,py=y+Math.sin(j*Math.PI/4)*3.5;expect(paving.some(p=>onPolygon(p,px,py)),`${path.id}: paving gap at ${px},${py}`).toBe(true);}
+    }
+   }
   }
  });
  it('keeps architectural parts attached, including roofs, façade details and breakable porch supports',()=>{
@@ -104,6 +128,7 @@ describe('connected river city',()=>{
   }
   expect(car.lap).toBe(1);expect(seen.size).toBe(8);expect(distanceToRoad(path,car.x,car.y)).toBeLessThan(65);
   expect(scene.regions.map(r=>r.rule.effect).sort()).toEqual(['BOOST','ICE']);
+  for(const region of scene.regions)expect(streetPolygons(scene.streets,'reserved').some(p=>polygonsOverlap(p,region.polygon)),`${region.id}: effect overlaps an urban junction or pavement`).toBe(false);
   for(const region of scene.regions)for(let i=0;i<region.polygon.length;i++){const a=region.polygon[i]!,b=region.polygon[(i+1)%region.polygon.length]!;for(let j=0;j<=10;j++)expect(world.roadMask.footprintClear(a.x+(b.x-a.x)*j/10,a.y+(b.y-a.y)*j/10,20)).toBe(true);}
  });
 });

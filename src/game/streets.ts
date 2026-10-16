@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type {Scene,Point} from '../scene/schema';
 import {streetPolygons,streetSidewalks,cyclePolygons,markingPolygons,onPolygon} from '../scene/streets';
-import {unionPolygons,subtractPolygons} from '../scene/polygons';
+import {unionPolygons,subtractPolygons,polygonBounds} from '../scene/polygons';
 import {sitePolygons,streetFrame,crossingLanes,crossingPolygons} from '../scene/sites';
 import {bridgePolygon} from '../scene/landscape-dsl';
 import {surfaceGeometry} from './surface';
@@ -29,11 +29,17 @@ export function buildStreets(scene:Scene):THREE.Group{
   // Declaration order is paint order. Small bounded offsets prevent overlapping turf/court z-fighting.
   scene.surfaces.forEach((s,i)=>add([s.points],s.color,.65+i*.015,`ground-${s.id}`));
   const dashes:Point[][]=[];
-  const segments=scene.streets.flatMap(s=>s.points.slice(1).map((b,i)=>({a:s.points[i]!,b,width:s.width})));
+  const segments=scene.streets.flatMap(s=>s.points.slice(1).map((b,i)=>{
+    const a=s.points[i]!,polygon=streetPolygons([{...s,sidewalk:0,points:[a,b]}])[0]!;
+    return {a,b,polygon,bounds:polygonBounds(polygon)};
+  }));
+  const near=(other:typeof segments[number],x:number,y:number,margin:number)=>{
+    const b=other.bounds;return x>=b.x0-margin && x<=b.x1+margin && y>=b.y0-margin && y<=b.y1+margin && onPolygon(other.polygon,x,y,margin);
+  };
   for(const segment of segments){
     const {a,b}=segment,length=Math.hypot(b.x-a.x,b.y-a.y),dx=(b.x-a.x)/length,dy=(b.y-a.y)/length;
     for(let d=30;d<length-24;d+=60){const x=a.x+dx*d,y=a.y+dy*d;
-      if(segments.some(other=>other!==segment && onPolygon(streetPolygons([{id:'crossing',sidewalk:0,width:other.width,points:[other.a,other.b]}])[0]!,x,y,28)))continue;
+      if(segments.some(other=>other!==segment && near(other,x,y,28)))continue;
       dashes.push(...markingPolygons({id:'dash',color:'#d8d2b7',width:1.4,closed:false,points:[{x:x-dx*12,y:y-dy*12},{x:x+dx*12,y:y+dy*12}]}));
     }
   }
@@ -44,7 +50,7 @@ export function buildStreets(scene:Scene):THREE.Group{
     const a=s.points[i-1]!,b=s.points[i]!,length=Math.hypot(b.x-a.x,b.y-a.y),dx=(b.x-a.x)/length,dy=(b.y-a.y)/length;
     for(let d=150;d<length-80;d+=300)for(const side of [-1,1]){
       const offset=s.width/2+6+s.cycleWidth!/2,x=a.x+dx*d-dy*offset*side,y=a.y+dy*d+dx*offset*side;
-      if(segments.some(other=>!(other.a===a && other.b===b) && onPolygon(streetPolygons([{id:'crossing',sidewalk:0,width:other.width,points:[other.a,other.b]}])[0]!,x,y,40)))continue;
+      if(segments.some(other=>!(other.a===a && other.b===b) && near(other,x,y,40)))continue;
       const point=(along:number,across:number)=>({x:x+side*(dx*along-dy*across),y:y+side*(dy*along+dx*across)});
       const line=(points:Point[],closed=false)=>symbols.push(...markingPolygons({id:'cycle-symbol',color:'#eee8d9',width:1,closed,points}));
       for(const wheel of [-7,7])line(Array.from({length:12},(_,n)=>point(wheel+4*Math.cos(n*Math.PI/6),4*Math.sin(n*Math.PI/6))),true);
@@ -65,8 +71,8 @@ export function buildStreets(scene:Scene):THREE.Group{
       crossings.push(...markingPolygons({id:crossing.id,color:'#eee8d9',closed:false,width:3,points:[{x:x-frame.dx*crossing.width/2,y:y-frame.dy*crossing.width/2},{x:x+frame.dx*crossing.width/2,y:y+frame.dy*crossing.width/2}]}));
     }
   }
-  add(crossings,'#eee8d9',1.86,'pedestrian-crossings');
-  add(stopLines,'#eee8d9',1.86,'crossing-stop-lines');
+  add(unionPolygons(crossings),'#eee8d9',1.86,'pedestrian-crossings');
+  add(unionPolygons(subtractPolygons(stopLines,crossingClearance)),'#eee8d9',1.86,'crossing-stop-lines');
   const markings=new Map<string,Point[][]>();
   for(const s of scene.markings){const polygons=markings.get(s.color)??[];polygons.push(...markingPolygons(s));markings.set(s.color,polygons);}
   for(const [color,polygons] of markings)add(polygons,color,1.9,'authored-markings');

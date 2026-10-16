@@ -11,6 +11,7 @@ component table_leg(params=[x,z]){
     part leg(shape=box,material=dark,at=[x,13,z],size=[5,26,5]);
     part foot(shape=box,material=wood,at=[x,2,z],size=[7,4,7]);
     beam brace(shape=box,material=dark,from=[x,19,z],to=[x*.7,26,z*.7],width=3,depth=3);
+    beam stretcher(shape=box,material=dark,from=[x,26,z*1.4],to=[x,26,0],width=3,depth=3);
   }
 }
 object festival_ball(label="Festival ball"){
@@ -57,8 +58,8 @@ object produce_crate(label="Produce crate"){
   }
   repeat repeat_apple(index=apple,count=3){
     fragment produce(){
-      part apple(shape=sphere,material=coral,at=[(apple-1)*9,22,0],size=[8,8,8],deform=deform(seed=52+apple*9,amount=.06));
-      part stem(shape=cylinder,material=dark,at=[(apple-1)*9,26.5,0],size=[.6,2,.6]);
+      part apple(shape=sphere,material=coral,at=[(apple-1)*9,10,0],size=[8,8,8],deform=deform(seed=52+apple*9,amount=.06));
+      part stem(shape=cylinder,material=dark,at=[(apple-1)*9,14.5,0],size=[.6,2,.6]);
     }
   }
 }

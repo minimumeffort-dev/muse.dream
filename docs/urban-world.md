@@ -16,11 +16,15 @@ There are 187 homes and shops across four areas, with different frontages and se
 
 The market hall has a square, produce stalls, a vendor and a commuter who walks there from home. Two neighborhood schools and a technical college sit among the housing and workplaces. River hospital has an entrance apron and a health worker outside. Eastbank medical center serves the station and workshop district, with its own entrance and bus stop. Offices, a library and harbor workshops give the city other destinations.
 
+![A paved route around the primary school reaches its rear yard](media/school.jpg)
+
 These are mock places and visible routines. There are no working interiors, hospital services or simulated job market.
 
 ## Buses, tram and regional train
 
 Five buses run four services: the garden/market loop, the southern school/hospital loop, an eastbank medical/station loop and an airport/hospital shuttle. The tram runs along the main avenue to the central station. A regional electric train stops at two connected platforms. Street routes use the actual carriageways; tram rails share the road surface. They do not draw extra paving over streets.
+
+![The station platform and entrance join the same streets as the football ground](media/central-station.jpg)
 
 F boards a bus, tram or regional railcar as a passenger. The service retains its route clock; driving inputs do not take over. Underground metro and subway tunnels are not implemented yet.
 
@@ -28,7 +32,7 @@ Stops have named anchors, waits and platform sites in Dream. Platform paths join
 
 ![A connected canal bridge carrying the street and cycle tracks](media/city-cycle-lanes.jpg)
 
-Bicycle tracks follow the avenues and continue across the three bridges. Painted symbols and road center lines leave clear gaps at zebra crossings. Junction declarations create the crossings on the street arms, with stop lines before them. Walkers, drivers and cyclists share one world; you still choose your own route when controlling a vehicle.
+Bicycle tracks follow the avenues and continue across the three bridges. Painted symbols and road center lines leave clear gaps at zebra crossings. Junction declarations create the crossings on the street arms, with stop lines before them. Duplicate stripes merge and neighboring stop lines leave the zebra clear. Street and cycle-track bends use a shared mitered ribbon, so interior anchors no longer protrude as square tiles. Walkers, drivers and cyclists share one world; you still choose your own route when controlling a vehicle.
 
 ## A regional airport
 
@@ -48,7 +52,7 @@ The river enters at the north edge, passes under three bridges and widens into a
 
 ![The continuous river and lake](media/connected-waterway.jpg)
 
-The eastbank has a 100 × 64-metre football pitch. A basketball court, sports pavilion and golf fairway occupy the southern park area. Football and basketball now support [on-foot practice](dream/sports.md): dribble, aim, charge shots and score, with a closer camera. The other people retain their ambient routines. Full matches and golf controls are still to come.
+The eastbank has a 100 × 64-metre football pitch. A basketball court, sports pavilion and golf fairway occupy the southern park area. Football and basketball now support [on-foot practice](dream/sports.md): dribble, aim, charge shots and score, with a closer camera. Paved access strips join both sports grounds to their adjacent sidewalks. Paths also wrap around the two neighborhood schools to reach their rear yards, with full walking-body clearance. These ground finishes do not add NPC route planning. The other people retain their ambient routines. Full matches and golf controls are still to come.
 
 ![The football ground between eastbank streets](media/sports-park.jpg)
 
@@ -56,13 +60,13 @@ Woodland and meadow surround the city. Oaks, birches, firs, rowan, apple trees a
 
 ## Everyday street life
 
-The city has 398 streetlights along six networks, 89 additional street trees, 277 mixed planting groups and 22 destination planters. Thirty-three parked bicycles and sixteen scooters sit beside schools, services and transit stops on paved aprons joined to the sidewalk. Separate explicit scooters near the market, airport and eastbank medical center remain controllable.
+The city has 400 streetlights along six networks, 89 additional street trees, 277 mixed planting groups and 23 destination planters. Thirty-four parked bicycles and sixteen scooters sit beside schools, services and transit stops on paved aprons joined to the sidewalk. Separate explicit scooters near the market, airport and eastbank medical center remain controllable.
 
 Four road cars use three different silhouettes: rally car, hatchback and delivery van. Transit and available rides use the remaining existing actor slots. Sixteen habitats distribute 256 decorative birds across city blocks, river, lake, woodland and meadow. These populations come from [Dream rules](dream/populations.md), filtered against the accepted streets, entrances, water and existing objects.
 
 ## Day and night
 
-The mock starts at 10:00 and completes a day in ten minutes of play. Sun and moon lighting share one shadow map. Windows and the 398 streetlights fade on after dusk, with soft light pools fitted to the pavement. [Dream owns the clock and light declarations](dream/day-night.md).
+The mock starts at 10:00 and completes a day in ten minutes of play. Sun and moon lighting share one shadow map. Windows and the 400 streetlights fade on after dusk, with soft light pools fitted to the pavement. [Dream owns the clock and light declarations](dream/day-night.md).
 
 ![The market square at night](media/city-night.jpg)
 

@@ -13,6 +13,10 @@ materials and joins stay the same.
 
 ![Vehicles, buildings and a seated traveler built from Dream parts](media/assets.jpg)
 
+![Shelter seating, mounted hoop, supported table and produce stall](media/public-space-assets.jpg)
+
+Shelter seats stand on two supports. Table planks rest on crossrails that stay attached to their leg fragments when the table breaks. The produce stall's sign reaches its posts, and apples in the breakable crate sit on its floor. The [world audit](evidence/world-audit/verification.md) records the construction and path checks.
+
 ## What's in the world
 
 | Family | Assemblies | Source |
@@ -102,7 +106,7 @@ The replacement adds terraces, apartments, neighborhood shops and civic building
 
 ![Housing, shops and offices composed in Dream 2](media/urban-assets.jpg)
 
-Football goals have connected posts and net threads. Basketball hoops have a supported backboard, rim and net. Four animated players practise kicks and dribbles; a commuter visits the market, and the vendor, teacher and health worker react near their buildings. The golf area has an authored fairway and flag. It is an explorable landscape rather than a golf simulation.
+Football goals have connected posts and net threads. Basketball hoops have a supported backboard, a bracket that mounts the rim, and a hanging net. Four animated players practise kicks and dribbles; a commuter visits the market, and the vendor, teacher and health worker react near their buildings. The golf area has an authored fairway and flag. It is an explorable landscape rather than a golf simulation.
 
 [Buildings and furniture](../src/scene/world/architecture.dream), [sports and people](../src/scene/world/sports_assets.dream), [district layout](urban-world.md). The full world stays within the existing 24 live jointed-assembly slots, including the standing character. People use compacted NPC meshes so they can face nearby players. [Dream roles and programs](dream/npcs.md) choose patrol, activity, rest and proximity reactions; body dimensions and animation budgets stay the same.
 

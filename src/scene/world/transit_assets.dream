@@ -217,6 +217,9 @@ object transit_shelter(label="Transit shelter"){
  part roof(shape=box,material=green,at=[0,13.5,0],size=[22,1,10]);
  repeat posts(index=p,count=2){part post(shape=box,material=dark,at=[p*18-9,6.5,0],size=[1,13,1]);}
  part bench(shape=box,material=wood,at=[0,2.8,1],size=[14,1,3]);
+ repeat bench_supports(index=p,count=2){
+  beam leg(shape=box,material=dark,from=[p*10-5,.5,1],to=[p*10-5,2.5,1],width=.6,depth=2);
+ }
  part rear(shape=box,material=glass,at=[0,7,3],size=[18,12,.5]);
  part board(shape=box,material=sign,at=[8,10,-.6],size=[2.5,4,.5]);
 }

@@ -50,6 +50,7 @@ object basketball_hoop(label="Basketball hoop"){
   beam arm(shape=box,material=steel,from=[0,34,0],to=[0,34,9],width=1.5,depth=1.5);
   part board(shape=box,material=white,at=[0,34,9],size=[18,11,1]);
   part square(shape=box,material=steel,at=[0,33,9.7],size=[6,4,0.5]);
+  beam rim_mount(shape=box,material=steel,from=[0,30,9.3],to=[0,30,10.25],width=.5,depth=.5);
   repeat rim_segments(index=r,count=16){
     beam rim(shape=cylinder,material=orange,from=[cos(r*22.5)*2.25,30,12+sin(r*22.5)*2.25],to=[cos((r+1)*22.5)*2.25,30,12+sin((r+1)*22.5)*2.25],width=.18,depth=.18);
   }

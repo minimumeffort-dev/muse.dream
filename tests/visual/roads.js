@@ -92,8 +92,10 @@ renderer.setAnimationLoop(() => {
   const target = worldPosition(doc, p.x+Number(document.querySelector("#pan").value), p.y, 20);if(p.elevation!==undefined)target.y=p.elevation+20;
   const point = cameraPosition(target, Number(view.value)), aspect = canvas.clientWidth / canvas.clientHeight, half = Math.max(location.half??(new URLSearchParams(location.search).has("shadows") ? 270 : 210), (location.half??205) / aspect);
   Object.assign(camera, { left: -half * aspect, right: half * aspect, top: half, bottom: -half });
+  camera.zoom=Number(document.querySelector('#zoom').value);
   camera.updateProjectionMatrix(); camera.position.set(point.x, target.y+Number(document.querySelector("#pitch").value), point.z); camera.lookAt(target);
   camera.updateMatrixWorld();
+  sun.castShadow=document.querySelector('#shadows').value!=='off';
   if(document.querySelector('#shadows').value==='previous'){
     Object.assign(sun.shadow.camera,{left:-410,right:410,top:410,bottom:-410,near:.5,far:1800});sun.shadow.camera.updateProjectionMatrix();
     sun.target.position.copy(target);sun.position.copy(target).add(new THREE.Vector3(-300,690,220));

@@ -240,3 +240,9 @@ are unchanged copies of those native captures for the published guide.
 The full asset atlas, `city-people.jpg`, shared-scale lineup and NPC context now show the bound civic characters. Other model detail sheets, the city-layout map and isolated destruction/voxel wall clips retain unchanged content. The [animation verification](../evidence/character-animation/verification.md) separates tests, native controls, capture counts and limitations. Offline frame exports are not performance benchmarks.
 
 `hill-taxi.png` preserves the existing native aircraft-terrain screenshot in the published media directory, fixing its former evidence-folder image embed. Its geometry is unchanged.
+
+## World audit, r40
+
+Street bends, crossing paint, boost placement and access to sports grounds and school yards were audited in the real world. The [verification record](../evidence/world-audit/verification.md) retains matching before/after views and four public-space asset angles. `public-space-assets.jpg` shows the supported shelter seat, mounted hoop, table crossrails and market stall. The complete atlas and sports asset sheet reflect the same source. The source-derived map, affected district and four lighting stills are refreshed.
+
+Driving, car boost, football, basketball, switching, locomotion, swimming, day/night and flight GIF/HD pairs and their matching stills use newly rendered 30 fps source frames. Existing isolated bench and voxel-wall destruction recordings remain accurate, as do focused galleries of unchanged vehicles, architecture, character motion, materials, plants and wildlife. These captures are rendered evidence, not a laptop benchmark.

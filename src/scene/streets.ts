@@ -67,14 +67,17 @@ export function unionRects(rects:Rect[],holes:Rect[]=[]):Rect[]{
   }
   return result;
 }
-/** Segment-aligned square joins also support diagonal streets without oversized AABBs. */
+function streetStrip(s:Street,r:number,cap=r):Point[][]{
+  const points=s.points.map(p=>({...p}));
+  for(const [i,j] of [[0,1],[points.length-1,points.length-2]]){
+    const p=points[i!]!,q=s.points[j!]!,length=Math.hypot(p.x-q.x,p.y-q.y);
+    p.x+=(p.x-q.x)/length*cap;p.y+=(p.y-q.y)/length*cap;
+  }
+  return markingPolygons({id:s.id,color:'#000000',width:r*2,closed:false,points});
+}
+/** One bounded miter ribbon; interior anchors never add protruding square caps. */
 export function streetPolygons(streets:Street[],mode:'road'|'riding'|'reserved'='road'):Point[][]{
-  return streets.flatMap(s=>s.points.slice(1).map((b,i)=>{
-    const a=s.points[i]!,length=Math.hypot(b.x-a.x,b.y-a.y),dx=(b.x-a.x)/length,dy=(b.y-a.y)/length;
-    const r=s.width/2+(mode!=='road' && s.cycleWidth ? s.cycleWidth+6 : 0)+(mode==='reserved' ? s.sidewalk : 0);
-    return [{x:a.x-dx*r-dy*r,y:a.y-dy*r+dx*r},{x:b.x+dx*r-dy*r,y:b.y+dy*r+dx*r},
-      {x:b.x+dx*r+dy*r,y:b.y+dy*r-dx*r},{x:a.x-dx*r+dy*r,y:a.y-dy*r-dx*r}];
-  }));
+  return streets.flatMap(s=>streetStrip(s,s.width/2+(mode!=='road' && s.cycleWidth ? s.cycleWidth+6 : 0)+(mode==='reserved' ? s.sidewalk : 0)));
 }
 const cache=new WeakMap<Scene,{roads:Point[][];riding:Point[][];reserved:Point[][];walkways?:Point[][]}>();
 export function streetFootprints(scene:Scene){let value=cache.get(scene);if(!value){value={roads:streetPolygons(scene.streets),riding:streetPolygons(scene.streets,'riding'),reserved:streetPolygons(scene.streets,'reserved')};cache.set(scene,value);}return value;}
@@ -106,12 +109,10 @@ export function cycleBands(streets:Street[]):Rect[]{
   }));
 }
 export function cyclePolygons(streets:Street[]):Point[][]{
-  return streets.filter(s=>s.cycleWidth).flatMap(s=>s.points.slice(1).flatMap((b,i)=>{
-    const a=s.points[i]!,length=Math.hypot(b.x-a.x,b.y-a.y),dx=(b.x-a.x)/length,dy=(b.y-a.y)/length;
-    const inner=s.width/2+6,outer=inner+s.cycleWidth!,reach=outer;
-    const at=(d:number,n:number)=>({x:a.x+dx*d-dy*n,y:a.y+dy*d+dx*n});
-    return [-1,1].map(side=>[at(-reach,inner*side),at(length+reach,inner*side),at(length+reach,outer*side),at(-reach,outer*side)]);
-  }));
+  return streets.filter(s=>s.cycleWidth).flatMap(s=>{
+    const inner=s.width/2+6,outer=inner+s.cycleWidth!;
+    return unionPolygons(streetStrip(s,outer),streetStrip(s,inner,outer));
+  });
 }
 /** A bridge must carry the entire street cross-section through both open ends. */
 export function bridgeFitsStreet(scene:Scene,bridge:import('./landscape-dsl').Bridge):boolean{

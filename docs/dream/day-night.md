@@ -43,7 +43,7 @@ A lamp assembly can also declare one `lamp(at=[0,38,0],radius=30,color=#ffd18a)`
 
 ## Rendering and current limits
 
-The world keeps one directional shadow map for the sun and moon. Their direct light fades to darkness during the horizon handoff. Streetlights use shared emissive materials and bounded surface pools, with no per-lamp shadow map. The 398 lights follow city and airport placement rules; the cycle adds no actors or live joints.
+The world keeps one directional shadow map for the sun and moon. Their direct light fades to darkness during the horizon handoff. Streetlights use shared emissive materials and bounded surface pools, with no per-lamp shadow map. The 400 lights follow city and airport placement rules; the cycle adds no actors or live joints.
 
 Light pools are stylized, unshadowed ground effects. They do not light building walls or simulate occlusion from objects. Windows glow without simulating interiors or occupancy. Existing NPC programs and transit schedules continue through the night; this feature does not add opening hours, weather or an astronomical calendar.
 

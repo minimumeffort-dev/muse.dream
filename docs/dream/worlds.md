@@ -93,7 +93,7 @@ Cycles, duplicate world IDs, multiple layouts, invalid routes and exceeded proje
 
 The live world is now 14000 × 11000 units. A new river city replaces the old layout: homes, shops, schools, hospital, workplaces, stations and sports grounds share connected streets and paths. [See the layout and captures](../urban-world.md).
 
-`street` describes an open polyline in any direction, a carriageway width and sidewalk width on each side. Intersecting streets share one ground surface. Sidewalks stop at the junction, and the racing curbs open where an access street joins. The car gets normal road grip there. Streets do not consume moving-route slots.
+`street` describes an open polyline in any direction, a carriageway width and sidewalk width on each side. Interior bends use bounded miter joins instead of overlapping square caps. Road grip, scenery reservations and rendering use the same ribbon. Intersecting streets share one ground surface. Sidewalks stop at the junction, and the racing curbs open where an access street joins. The car gets normal road grip there. Streets do not consume moving-route slots.
 
 `surface` fills a simple polygon with color on the actual terrain triangles. Use it for turf, courts, plazas, driveways or sand. Linked scene order defines overlay order, with bounded height offsets to prevent flickering. Each module contributes its local surfaces before its included districts, which follow include order. These are visual ground finishes; they do not flatten hills or invent new physics. `marking` draws an open or closed painted line from a point block. It supports `let`, `repeat`, `sin` and `cos`, so circles need no separate shape command.
 

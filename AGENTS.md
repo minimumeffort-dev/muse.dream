@@ -110,6 +110,11 @@ clinical/learning/ecosystem validity or dataset quality. Domain examples are tas
 exercises; consult `docs/world-systems.md` before expanding them. Existing world
 NPC/animation/physics limits remain independent and unchanged.
 
+Street road/riding/reserved footprints share bounded miter joins and square endpoint
+caps. Preserve that geometry across masks, reservations, rendering and maps. Merge
+duplicate crossing paint and clear centerlines, cycle glyphs and neighboring stop
+lines around zebras. Audit new ground effects against sidewalks and junctions.
+
 ## Dream authoring
 
 Prefer Dream 2 for new model-authored source. Read `docs/dream-language.md`,
