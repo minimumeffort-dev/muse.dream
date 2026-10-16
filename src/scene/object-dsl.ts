@@ -88,7 +88,7 @@ const objectDslV2Schema=objectV1Schema.extend({
   measure:z.object({kind:z.enum(MEASURE_KINDS),axis:z.enum(["x","y","z"]),meters:z.number().finite().min(.05).max(60)}).strict().optional(),
   dslVersion:z.literal(2),joints:z.array(jointSchema).max(12).optional(),parts:z.array(objectV2PartSchema).min(1).max(32),
   contacts:z.array(z.object({position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),radius:z.number().finite().min(1).max(64),height:z.number().finite().min(1).max(160)}).strict()).min(1).max(8).optional(),
-  rideable:z.object({seat:z.tuple([offset,z.number().finite().min(0).max(128),offset]),control:z.enum(["car","bicycle","skateboard","boat","plane"]).optional()}).strict().optional(),
+  rideable:z.object({seat:z.tuple([offset,z.number().finite().min(0).max(128),offset]),control:z.enum(["car","bicycle","skateboard","scooter","boat","plane"]).optional()}).strict().optional(),
   emitter:z.object({kind:z.literal("steam"),position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),rate:z.number().finite().min(1).max(12)}).strict().optional(),
   impact:impactSchema.optional(),
   breakZones:z.array(z.object({id:z.string().min(1).max(40),position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),
@@ -130,8 +130,8 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
     for(const p of spec.parts.filter(p=>p.fragment)){if(ownership.has(p.fragment!) && ownership.get(p.fragment!)!==p.zone)ctx.addIssue({code:z.ZodIssueCode.custom,message:"a fragment cannot cross break zones"});ownership.set(p.fragment!,p.zone);}
     if(spec.contacts && (spec.body.interaction!=="solid" || spec.grounding==="surface"))
       ctx.addIssue({code:z.ZodIssueCode.custom,message:"compound contacts require an upright solid"});
-    if(spec.rideable && (spec.body.interaction!=="solid" || spec.foundation || spec.contacts))
-      ctx.addIssue({code:z.ZodIssueCode.custom,message:"rideable assemblies require a solid cylinder without foundations"});
+    if(spec.rideable && (spec.body.interaction!=="solid" || spec.foundation || spec.contacts && spec.rideable.control))
+      ctx.addIssue({code:z.ZodIssueCode.custom,message:"rideable assemblies require a solid body without foundations; driver controls require a single cylinder"});
     const joints=new Map((spec.joints ?? []).map(joint=>[joint.id,joint]));
     for(const joint of spec.joints ?? []) {
       if(joint.animation && joint.proximity) ctx.addIssue({code:z.ZodIssueCode.custom,message:"a joint chooses oscillation or proximity motion"});

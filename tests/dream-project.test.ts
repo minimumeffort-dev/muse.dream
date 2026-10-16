@@ -73,7 +73,7 @@ const scene=createWorldScene(),world:World={scene,roadMask:buildMaskForScene(sce
 describe("complete Dream 2 mock world",()=>{
   it("authors the complete connected city in bounded Dream modules",()=>{
     expect(scene.canonical).toMatchObject({width:14000,height:11000});
-    expect(scene.objects.length).toBeGreaterThan(450);expect(scene.objects.length).toBeLessThan(800);
+    expect(scene.objects.length).toBeGreaterThan(450);expect(scene.objects.length).toBeLessThanOrEqual(4096);
     expect(scene.objects.every(o=>o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2)).toBe(true);
     expect(scene.sites.length).toBeGreaterThan(180);
     expect(scene.routes.some(r=>r.kind==='tram')).toBe(true);
@@ -81,7 +81,7 @@ describe("complete Dream 2 mock world",()=>{
   });
   it("accepts the whole world from text and revalidates an invalid included placement",()=>{
     expect(compileDreamScene(worldSource,{sceneId:scene.sceneId,revisionId:scene.revisionId,sourceHash:scene.sourceHash},worldModules)).toEqual(scene);
-    const changed=worldModules.breakables!.replace('at=[6270,4370]','at=[6330,4200]');expect(changed).not.toBe(worldModules.breakables);
+    const changed=worldModules.breakables!.replace('at=[6270,4370]','at=[6330,4233]');expect(changed).not.toBe(worldModules.breakables);
     const result=checkDream(worldSource,{...worldModules,breakables:changed});expect(result.ok).toBe(false);if(!result.ok)expect(result.diagnostics[0]!.code).toMatch(/^E_SCENE_/);
   });
   it.each(['picnic_table','produce_crate','market_planter'])("breaks the actual world prop %s into its authored fragments",id=>{

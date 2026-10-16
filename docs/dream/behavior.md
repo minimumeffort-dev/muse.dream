@@ -10,7 +10,7 @@ Appearance and interaction are separate. The same assembled shape can be solid, 
 
 Every object declares a body with a radius and height. A static upright solid can replace its default footprint with named `contact` cylinders. Separate wall and roof contacts leave a real doorway or passage with headroom. These remain vertical cylinders, not arbitrary mesh-shaped collision bodies.
 
-`rideable(at=[x,y,z],control=bicycle)` supplies a local seat and selects an engine control profile. The profiles are `car`, `bicycle`, `skateboard`, `boat` and `plane`. A placement with `role=controllable` starts parked and takes WASD input when occupied. It can have a fixed XY placement or use a route's initial pose; the route does not constrain its movement.
+`rideable(at=[x,y,z],control=bicycle)` supplies a local seat and selects an engine control profile. The profiles are `car`, `bicycle`, `skateboard`, `scooter`, `boat` and `plane`. A placement with `role=controllable` starts parked and takes WASD input when occupied. It can have a fixed XY placement or use a route's initial pose; the route does not constrain its movement.
 
 **F** gets you out of the current vehicle. Walk to another one, then press **F** to enter it. Boarding uses distance from the body's edge, up to 60 canonical units, and an elevation difference below 28 units. The car and other vehicles remain where you leave them. You can return on foot and take them over again. **R** returns to the starting car while keeping parked vehicles and world damage; Start over restores everything. Resetting during flight or after a water landing returns the abandoned aircraft to its authored start.
 
@@ -18,7 +18,7 @@ Every object declares a body with a radius and height. A static upright solid ca
 | --- | --- | --- | --- |
 | On foot | Screen-relative walking | Jump | Run |
 | Swimming | Screen-relative swimming | Faster stroke | Faster stroke |
-| Bicycle / skateboard | Throttle, brake/reverse, steering | Bunny hop / ollie | No extra action |
+| Bicycle / skateboard / scooter | Throttle, brake/reverse, steering | Bunny hop / ollie | No extra action |
 | Boat | Throttle, brake/reverse, rudder | Small water hop | No extra action |
 | Plane | Throttle/brake, steering | Climb | Descend |
 
@@ -28,7 +28,7 @@ The walking body automatically climbs contact steps up to **4 units, or 40 cm**,
 
 ![Running and jumping in the actual mock world](../media/locomotion.gif)
 
-Bicycles use speed-dependent steering and lean into turns. Higher speed opens the turning radius. Bicycles and skateboards keep their own acceleration, grip and speed limits, share terrain/collisions with the racing car, and can jump under player input. The original car keeps its existing crest and ramp jumps.
+Bicycles use speed-dependent steering and lean into turns. Higher speed opens the turning radius. Bicycles, skateboards and scooters keep their own acceleration, grip and speed limits, share terrain/collisions with the racing car, and can jump under player input. The original car keeps its existing crest and ramp jumps.
 
 Boats retain sideways momentum through a rudder turn, settle it through hull resistance and drift with currents. Their complete visible hull must stay over navigable water. Bridge undersides and finite rail bottoms provide real headroom; a boat stays on the water while a car drives on the deck above it. A hop is limited by the underside, then gravity brings the hull back to the surface. Low crossings and banks stop a hull that doesn't fit.
 
@@ -44,7 +44,7 @@ Shallow water supports wading on the bed. Deeper water supports the character at
 
 ![Swimming through the city canal, with both banks in view](../media/swimming.gif)
 
-One character is active at a time: a standing, walking or swimming Dream assembly on foot and a seated assembly on a vehicle. The skateboard uses the standing Explorer. Their physical sizes are independent of the vehicle's scale. Original-car racing progress is preserved while walking or using another vehicle. These mechanics extend the existing engine profiles; Dream's command vocabulary is unchanged.
+One character is active at a time: a standing, walking or swimming Dream assembly on foot and a seated assembly on a vehicle. The skateboard and scooter use the standing Explorer. Their physical sizes are independent of the vehicle's scale. Original-car racing progress is preserved while walking or using another vehicle. These mechanics extend the existing engine profiles; Dream's command vocabulary is unchanged.
 
 The camera moves closer for walking and small vehicles, using their resolved dimensions, and eases back for larger ones. Reduced motion snaps the camera change and disables the walking gait. The occupied vehicle stays opaque when scenery fades around it.
 
@@ -126,3 +126,5 @@ A gentle bump or glancing pass doesn't trigger a fracture. Once broken, an intac
 Debris collides with terrain only. It doesn't strike cars or trigger another building's collapse. There is no arbitrary mesh cutting, accumulated structural damage or repair game yet. The [impact engine contract](../impact-dsl.md) contains detailed bounds and compatibility notes.
 
 [Model generation and repair](model-authoring.md) · [Reference](reference.md)
+
+Passenger-only seats may use compound contacts on solid transit vehicles. The mock bus, tram and regional railcar keep their schedules when boarded. The scooter uses direct standing ground controls and the same buffered jump contract as a bicycle. [Population and ownership details](populations.md).

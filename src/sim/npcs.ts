@@ -9,7 +9,7 @@ const compiled=new WeakMap<Scene,SceneObject[]>();
 function programmed(scene:Scene){let objects=compiled.get(scene);if(!objects){objects=scene.objects.filter(o=>!!o.behavior);compiled.set(scene,objects);}return objects;}
 export function initialNpcState(scene:Scene,object:SceneObject):NpcState{
   const program=behaviorFor(scene,object)!,route=object.route && scene.routes.find(r=>r.id===object.route!.id)!;
-  return {id:object.id,stateId:program.start,elapsedS:0,routeTimeS:0,animationTimeS:0,headingRad:route ? routePose(route,0,object.route!.offset).headingRad : object.headingRad??0};
+  return {id:object.id,stateId:program.start,elapsedS:0,routeTimeS:0,animationTimeS:0,headingRad:route ? routePose(route,object.route!.phaseS??0,object.route!.offset).headingRad : object.headingRad??0};
 }
 export function initialNpcs(scene:Scene):NpcState[]{return programmed(scene).map(o=>initialNpcState(scene,o));}
 /** One declared transition per fixed tick. Route clocks pause, so interruptions never teleport an NPC. */
@@ -22,7 +22,7 @@ export function stepNpcs(state:CarState,dt:number,scene:Scene):NpcState[]{
     if(transition){next.stateId=transition.to;next.elapsedS=0;active=program.states.find(s=>s.id===transition.to)!;}
     if(active.action==='patrol'){
       next.routeTimeS+=dt;
-      const route=scene.routes.find(r=>r.id===object.route!.id)!,p=routePose(route,next.routeTimeS,object.route!.offset);
+      const route=scene.routes.find(r=>r.id===object.route!.id)!,p=routePose(route,next.routeTimeS+(object.route!.phaseS??0),object.route!.offset);
       next.headingRad=p.headingRad;if(p.speed>0)next.animationTimeS+=dt;
     }else{
       if(active.action==='perform')next.animationTimeS+=dt;

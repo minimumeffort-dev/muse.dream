@@ -85,7 +85,7 @@ The live world now declares its people, animals, train and player vehicles expli
 
 ## Clocks, collisions and limits
 
-Each NPC owns a runtime snapshot: current state, elapsed state time, route time, animation time and heading. It lives beside vehicle and damage state, outside the accepted scene. Switching between walking, car, bicycle, boat, plane and passenger travel advances the same NPC clocks once per tick. Pause freezes them. R preserves them; Start over resets them.
+Each NPC owns a runtime snapshot: current state, elapsed state time, route time, animation time and heading. It lives beside vehicle and damage state, outside the accepted scene. Switching between walking, car, bicycle, scooter, boat, plane and passenger travel advances the same NPC clocks once per tick. Pause freezes them. R preserves them; Start over resets them.
 
 A program-controlled NPC requires a version 2 assembly with a decor or solid cylinder, without a foundation or destruction. Street, tram and rail NPCs may use up to eight compound contacts for a long vehicle body. Ambient routes still require decor. Ground NPCs follow terrain; stationary people stay upright unless their template requests surface grounding. Complete-world validation checks dry, clear stationary footprints and the full authored route. Solid NPCs participate in the authored actor contacts; decor people remain nonblocking. There is no runtime pathfinding, obstacle avoidance or actor-to-actor traffic solver. Keep patrol routes clear.
 

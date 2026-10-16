@@ -36,6 +36,12 @@ describe('Dream syntax highlighting',()=>{
     for(const name of ['via','entry','serves','junction'])expect(html).toContain(`class="dream-field">${name}</span>`);
     expect(highlight('junctional sitework crossingway stopper')).not.toContain('dream-keyword');
   });
+  it('highlights population fields and route phases without consuming symbol prefixes',()=>{
+    const html=highlight('furnish lights(objects=[lamp],streets=[main],grounds=[square],paving=#aaa99f);flock birds(flap_hz=3,flap_deg=18);place bus(phase_s=64);');
+    for(const name of ['furnish','flock'])expect(html).toContain(`class="dream-keyword">${name}</span>`);
+    for(const name of ['objects','streets','grounds','paving','flap_hz','flap_deg','phase_s'])expect(html).toContain(`class="dream-field">${name}</span>`);
+    expect(highlight('furnishing flocking phase_stone')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('tracks the generated compiler vocabulary',()=>{
     const contract=JSON.parse(readFileSync('docs/dream-v2-contract.json','utf8'));
     expect(Object.keys(contract.commands)).toEqual(Object.keys(DREAM_V2_COMMANDS));

@@ -15,6 +15,7 @@ material sign(style=toon,colors=[#e4b948,#c79435]);
 object city_bus(label="City bus"){
  measure(kind=bus,axis=x,meters=9.4);
  body(interaction=solid,radius=15,height=17);
+ rideable(at=[0,12,0]);
  contact shell_0(at=[-17,0,0],radius=7,height=17);
  contact shell_1(at=[-12.1429,0,0],radius=7,height=17);
  contact shell_2(at=[-7.2857,0,0],radius=7,height=17);
@@ -45,6 +46,7 @@ object city_bus(label="City bus"){
 object city_tram(label="City tram"){
  measure(kind=tram,axis=x,meters=16);
  body(interaction=solid,radius=15,height=17);
+ rideable(at=[0,12,0]);
  contact shell_0(at=[-33.5,0,0],radius=7,height=17);
  contact shell_1(at=[-23.9286,0,0],radius=7,height=17);
  contact shell_2(at=[-14.3571,0,0],radius=7,height=17);
@@ -79,6 +81,7 @@ object city_tram(label="City tram"){
 object regional_train(label="Regional electric train"){
  measure(kind=train,axis=x,meters=20);
  body(interaction=solid,radius=15,height=17);
+ rideable(at=[0,12,0]);
  contact shell_0(at=[-43.5,0,0],radius=7,height=17);
  contact shell_1(at=[-31.0714,0,0],radius=7,height=17);
  contact shell_2(at=[-18.6429,0,0],radius=7,height=17);

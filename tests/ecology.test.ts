@@ -90,7 +90,7 @@ describe('Dream-authored ecology',()=>{
       expect(objectDslSchema.parse(spec)).toEqual(spec);expect(spec.measure).toBeDefined();
       expect(spec.parts.length).toBeLessThanOrEqual(32);expect(assemblyBounds(spec).isEmpty()).toBe(false);
     }
-    expect(world.objects.length).toBeGreaterThan(450);expect(world.routes).toHaveLength(9);
+    expect(world.objects.length).toBeGreaterThan(450);expect(world.routes).toHaveLength(12);
     expect(world.objects.filter(o=>hasAnimatedJoints(o.spec)).length+Number(hasAnimatedJoints(world.player))+1).toBeLessThanOrEqual(MAX_ANIMATED_ASSEMBLIES);
   });
   it('keeps all new plant roots on dry ground clear of bridges and the circuit',()=>{

@@ -47,14 +47,18 @@ route regional_rail(kind=rail,mode=shuttle,speed=55,gauge=14.35){
  point(at=[13600,4000]);
 }
 place regional_train_vehicle(object=a_regional_train,route=regional_rail,offset=0,role=npc);
-route east_traffic(kind=street,mode=shuttle,speed=40){
- point(at=[10010,4200]);
- point(at=[10950,4200]);
+route east_traffic(kind=street,mode=loop,speed=40){
+ point(at=[10010,4166]);
+ point(at=[10950,4166]);
+ point(at=[10950,4234]);
+ point(at=[10010,4234]);
 }
 place east_taxi(object=a_little_rally_car,route=east_traffic,offset=0,role=npc);
-route north_traffic(kind=street,mode=shuttle,speed=37){
- point(at=[6900,2400]);
- point(at=[7900,2400]);
+route north_traffic(kind=street,mode=loop,speed=37){
+ point(at=[6900,2380]);
+ point(at=[7900,2380]);
+ point(at=[7900,2420]);
+ point(at=[6900,2420]);
 }
 place north_car(object=a_little_rally_car,route=north_traffic,offset=0,role=npc);
 place village_bike(object=a_meadow_bicycle,at=[6310,4290],heading_deg=0,role=controllable);
@@ -63,3 +67,25 @@ place harbor_car(object=a_town_car,at=[11700,6375],heading_deg=0,role=controllab
 place canal_launch(object=a_willow_launch,at=[8955,4700],heading_deg=90,role=controllable);
 place lake_boat(object=a_willow_launch,at=[10550,9300],heading_deg=90,role=controllable);
 place cloudhopper(object=a_cloudhopper_plane,at=[2170,9600],heading_deg=-90,role=controllable);
+
+place east_delivery(object=a_delivery_van,route=east_traffic,offset=800,role=npc);
+place north_delivery(object=a_hatchback,route=north_traffic,offset=900,role=npc);
+route center_traffic(kind=street,mode=loop,speed=32){
+ point(at=[5906,3300]);point(at=[5906,4167]);point(at=[6782,4167]);point(at=[6782,3210]);point(at=[5906,3210]);
+}
+place center_car(object=a_little_rally_car,route=center_traffic,role=npc);
+place center_delivery(object=a_hatchback,route=center_traffic,offset=1600,role=npc);
+route garden_traffic(kind=street,mode=loop,speed=28){
+ point(at=[3790,3310]);point(at=[3790,4090]);point(at=[3010,4090]);point(at=[2815,3310]);
+}
+place garden_car(object=a_hatchback,route=garden_traffic,role=npc);
+route south_traffic(kind=street,mode=loop,speed=32){
+ point(at=[4400,7750]);point(at=[5500,7300]);point(at=[7000,7350]);point(at=[7000,8400]);point(at=[6600,8100]);point(at=[5400,7800]);
+}
+place south_car(object=a_delivery_van,route=south_traffic,role=npc);
+place west_bus_return(object=a_city_bus,route=west_bus,phase_s=64,role=npc);
+asset a_hatchback(module=street_assets,object=city_hatchback);
+asset a_delivery_van(module=street_assets,object=delivery_van);
+asset a_scooter(module=street_assets,object=city_scooter);
+place market_scooter(object=a_scooter,at=[6260,4320],heading_deg=0,role=controllable);
+place station_bicycle(object=a_meadow_bicycle,at=[10800,4095],heading_deg=0,role=controllable);

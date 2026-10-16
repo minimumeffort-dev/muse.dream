@@ -61,8 +61,8 @@ GitHub's repository viewer has its own syntax system. Adding our grammar to this
 ## NPC programs
 
 `npc-attention.jpg` is a native screenshot of the actual game at
-`/?test-npc=town_resident_0`, with a pedestrian watching the nearby walking player.
-`npc-people.jpg` uses the focused gallery for Town pedestrian, Park visitor,
+`/?test-npc=vendor`, with the market vendor watching the nearby walking player.
+`npc-people.jpg` retains the standalone assembly gallery for Town pedestrian, Park visitor,
 Football player, Basketball player and Park walker. The complete and urban asset atlases, town, sports park,
 basketball court, golf and south-lake stills were refreshed after the people gained
 faces and +X-facing assemblies. They retain native render resolution and JPEG 95
@@ -85,3 +85,9 @@ The [transport verification](../evidence/transport-world/verification.md) keeps 
 The live layout was replaced, so the main-game driving, switching, locomotion and swimming GIFs, HD videos and their corresponding stills are refreshed together. The town, suburb, sports, basketball, golf, lake, cycle-crossing and waterway images come from the updated geometry review. `city-assets.jpg` shows the new civic architecture and transit assemblies from the actual Dream gallery; the live atlas is refreshed too. The map `city-plan.svg` is generated from the accepted Scene with `node scripts/render-city-map.mjs`, so its roads, footprints, entrances, stops and bridges cannot drift into a separate illustration.
 
 The isolated destruction recording, tree/code example, flora/fauna galleries, birch/woodland details and physical-proportion comparison retain their existing valid geometry. Those images demonstrate unchanged asset definitions, not the removed city layout. Earlier media notes above describe historical passes; the [city verification](../evidence/city-research/verification.md) identifies the current captures and checks. No source frames are interpolated. Offline recordings do not measure browser frame rate.
+
+## r27 street populations, 2026-10-16
+
+The [population verification](../evidence/street-life/verification.md) records the source fingerprint, coverage and limitations. Refreshed `driving`, `switching`, `locomotion` and `swimming` GIF/MP4 pairs use 210/240/180/180 actual frames at 30 fps, with matching `world`, `on-foot`, `riding`, `jumping` and `swimming` stills. Added `street-assets.jpg` and `street-life.jpg`; refreshed the 78-assembly atlas, source-derived city map and all district, sports, bridge and waterway scene views affected by the new populations.
+
+Retained closeups show unchanged authored geometry: wood, birch, flora, fauna, proportions, civic buildings, people and isolated destruction. These do not claim to show a new world layout. The earlier evidence sections describe their own revisions.

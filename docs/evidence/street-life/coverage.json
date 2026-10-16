@@ -1,0 +1,32 @@
+{
+  "revision": "r27",
+  "sourceHash": "1c3f0b4bcf3c091cb9ed17d042b9e4cc5d0d975a971a3babe969905c196e0153",
+  "placements": 1327,
+  "assemblies": 78,
+  "parts": 1296,
+  "streets": 30,
+  "sites": 211,
+  "surfaces": 23,
+  "routes": 12,
+  "actors": 24,
+  "npcs": 23,
+  "flocks": 16,
+  "birds": 256,
+  "generated": {
+    "school_bicycles": 20,
+    "transit_bicycles": 7,
+    "destination_scooters": 16,
+    "center_lamps": 74,
+    "north_lamps": 58,
+    "garden_lamps": 70,
+    "south_lamps": 75,
+    "east_lamps": 98,
+    "center_trees": 26,
+    "garden_trees": 21,
+    "waterfront_trees": 42,
+    "center_planting": 97,
+    "garden_planting": 88,
+    "waterside_planting": 95,
+    "destination_planters": 20
+  }
+}

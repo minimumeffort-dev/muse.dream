@@ -105,7 +105,7 @@ export class ParserV2 extends Parser {
         case "asset":program.assets!.push(node);break;
         case "include":program.includes!.push(node);break;
         case "route":program.routes.push({token,name,gauge:node.fields.has("gauge") ? num("gauge") : undefined,kind:wordField(node,"kind"),mode:wordField(node,"mode"),speed:num("speed"),altitude:node.fields.has("altitude") ? num("altitude") : undefined,wait:node.fields.has("wait_s") ? num("wait_s") : undefined,width:node.fields.has("width") ? num("width") : undefined,surface:node.fields.has("surface") ? wordField(node,"surface") : undefined,block:lowerBlock(node.block!)});break;
-        case "place":program.places.push({token,name,assembly:wordField(node,"object"),at:node.fields.get("at") as Expr[]|undefined,route:node.fields.has("route") ? wordField(node,"route") : undefined,offset:node.fields.get("offset") as Expr|undefined,scale:node.fields.get("scale") as Expr|undefined,heading:node.fields.get("heading_deg") as Expr|undefined,role:node.fields.has("role") ? wordField(node,"role") as "prop"|"npc"|"controllable" : undefined,behavior:node.fields.has("behavior") ? wordField(node,"behavior") : undefined});break;
+        case "place":program.places.push({token,name,assembly:wordField(node,"object"),at:node.fields.get("at") as Expr[]|undefined,route:node.fields.has("route") ? wordField(node,"route") : undefined,offset:node.fields.get("offset") as Expr|undefined,phase:node.fields.get("phase_s") as Expr|undefined,scale:node.fields.get("scale") as Expr|undefined,heading:node.fields.get("heading_deg") as Expr|undefined,role:node.fields.has("role") ? wordField(node,"role") as "prop"|"npc"|"controllable" : undefined,behavior:node.fields.has("behavior") ? wordField(node,"behavior") : undefined});break;
         case "watercourse":program.waters.push({token,name,...(node.fields.has("ends") ? {ends:wordField(node,"ends") as "round"|"open"} : {}),level:num("level"),depth:num("depth"),bank:num("bank"),color:wordField(node,"color"),flow:listField(node,"flow"),block:lowerBlock(node.block!)});break;
         default:program.layout.push(node);
       }
@@ -196,6 +196,9 @@ function validateReferences(nodes:DreamNode[]):void {
         if(node.fields.has("offset") && !node.fields.has("route"))fail("offset requires a route",node.token,"E_PLACEMENT");
         if(node.fields.has("heading_deg") && node.fields.has("route"))fail("heading_deg applies to at placements; a route owns its actor heading",{...node.token,path:`${node.token.path}/heading_deg`},"E_PLACEMENT");
       }
+      if(node.kind==='flock')reference(node,'object','object');
+      if(node.kind==='furnish')for(const ref of listField(node,'objects'))reference({...node,fields:new Map([['object',ref]])},'object','object');
+      if(node.kind==='place' && node.fields.has('phase_s') && !node.fields.has('route'))fail('phase_s requires a route',node.token,'E_PLACEMENT');
       if(node.kind==="world" && node.fields.has("player"))reference(node,"player","object");
       if(node.kind==="let")scope.add(node.id!);
       if(node.block)walk(node.block,node.kind==="repeat" ? new Set([...scope,wordField(node,"index")]) : scope);

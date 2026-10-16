@@ -168,7 +168,7 @@
       "id": false,
       "fields": {
         "at": "v3",
-        "control": "car|bicycle|skateboard|boat|plane?"
+        "control": "car|bicycle|skateboard|scooter|boat|plane?"
       }
     },
     "emit": {
@@ -367,6 +367,43 @@
         "junction": "bool?"
       }
     },
+    "furnish": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "objects": "symbols",
+        "streets": "symbols?",
+        "sites": "symbols?",
+        "grounds": "symbols?",
+        "paving": "color?",
+        "spacing": "n",
+        "setback": "n",
+        "seed": "n",
+        "side": "left|right|both?",
+        "facing": "along|street?",
+        "jitter": "n?",
+        "count": "n?"
+      }
+    },
+    "flock": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "object": "ref",
+        "at": "v2",
+        "radius": "v2",
+        "count": "n",
+        "altitude": "n",
+        "speed": "n",
+        "seed": "n",
+        "flap_hz": "n?",
+        "flap_deg": "n?"
+      }
+    },
     "place": {
       "contexts": [
         "top"
@@ -377,6 +414,7 @@
         "at": "v2?",
         "route": "ref?",
         "offset": "n?",
+        "phase_s": "n?",
         "scale": "n?",
         "heading_deg": "n?",
         "role": "prop|npc|controllable?",
@@ -924,6 +962,18 @@
     "asset": "imports one exported object only, under a local alias",
     "include": "merges world data only; symbols remain file-local",
     "errors": "module ID accompanies nested diagnostics; failure returns no partial world"
+  },
+  "population": {
+    "rules": 32,
+    "generatedPerRule": 128,
+    "generatedTotal": 1024,
+    "candidatesPerRule": 2048,
+    "flocks": 16,
+    "birds": 256,
+    "membersPerFlock": 32,
+    "furnish": "exactly one of streets or sites; sites require count 1..12. Passive static assemblies only; no live joints, knockables, destruction or emitters. Optional grounds explicitly permit named surfaces; site paving creates connected parking aprons within the 64-surface budget. Parked templates have prop ownership and cannot be boarded. Generated props count toward 4096 scene objects. Full linked scene reservations filter candidates deterministically. No guaranteed minimum count; inspect compiled coverage.",
+    "flight": "decorative instanced flight, no NPC/physics ownership. Authored joints are baked at rest; wing motion uses bounded local-Z flex. All birds stay resident. Habitats must fit the world; flight clears terrain and roofs.",
+    "phase": "place.phase_s 0..3600 only with route; shifts the entire route clock including stops. offset remains a carriage distance."
   },
   "output": "validated Object DSL v2 and Scene v1; authoring-language version is separate"
 }

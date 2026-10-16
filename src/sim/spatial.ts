@@ -2,10 +2,11 @@
 export class SpatialGrid<T extends { x: number; y: number }> {
   private cells = new Map<string, T[]>();
   constructor(items: readonly T[], readonly cellSize = 256) {
-    for (const item of items) {
-      const key = `${Math.floor(item.x / cellSize)},${Math.floor(item.y / cellSize)}`;
+    for (const item of items) this.insert(item);
+  }
+  insert(item:T):void {
+      const key = `${Math.floor(item.x / this.cellSize)},${Math.floor(item.y / this.cellSize)}`;
       const cell = this.cells.get(key) ?? []; cell.push(item); this.cells.set(key, cell);
-    }
   }
   query(x: number, y: number, radius: number): T[] {
     const result: T[] = [];

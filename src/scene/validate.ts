@@ -90,7 +90,7 @@ export function validateScenePlayability(
     ...scene.objects.map((o) => o.id),
     ...(scene.terrain.landscape?.waters ?? []).map(w=>w.id),
     ...(scene.terrain.landscape?.bridges ?? []).map(b=>b.id),
-    ...scene.routes.map(r=>r.id),...scene.behaviors.map(b=>b.id),
+    ...scene.flocks.map(f=>f.id),...scene.routes.map(r=>r.id),...scene.behaviors.map(b=>b.id),
     ...scene.streets.map(r=>r.id),...scene.surfaces.map(r=>r.id),...scene.markings.map(r=>r.id),
   ]) {
     if (ids.has(id)) {

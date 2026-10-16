@@ -1,3 +1,4 @@
+import {buildFlocks} from "./flocks";
 import {SunShadows} from "./sun";
 import {mediaCapture} from "./media-capture";
 import {renderProfile} from "./render-profile";
@@ -68,7 +69,7 @@ function start(): void {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
-  renderer.domElement.setAttribute("aria-label", "WASD walks, swims or drives. F enters or exits a vehicle. Space jumps on foot or on a bicycle or skateboard, and hops a boat. Shift runs or swims faster. In an aircraft Space climbs and Shift descends. P pauses; R returns to the start.");
+  renderer.domElement.setAttribute("aria-label", "WASD walks, swims or drives. F enters or exits a vehicle. Space jumps on foot or on a bicycle, skateboard or scooter, and hops a boat. Shift runs or swims faster. In an aircraft Space climbs and Shift descends. P pauses; R returns to the start.");
   container.append(renderer.domElement);
   const scene = new THREE.Scene();
   scene.background = new THREE.Color("#526b76");
@@ -103,6 +104,7 @@ function start(): void {
   const landscape=new WorldLandscape(doc);scene.add(landscape.group);
   const routes=buildRoutes(doc);scene.add(routes);
 
+  const flocks=buildFlocks(doc);scene.add(flocks);
   const scenery = new WorldScenery(doc); scene.add(scenery.group);
   const propMeshes = new Map<string, THREE.Group>();
   const actorMeshes=new Map<string,THREE.Group>();
@@ -138,7 +140,7 @@ function start(): void {
 
   const worldBounds=new THREE.Box3().setFromObject(scene);
   const sunShadows=new SunShadows(sun,worldBounds.min.y-32,worldBounds.max.y+MAX_FLIGHT_CLEARANCE);
-  for(const root of [environment,landscape.group,routes,scenery.group])freezeStatic(root);
+  for(const root of [environment,landscape.group,routes,scenery.group,flocks])freezeStatic(root);
   // Matrices are updated once below, before both occlusion and rendering consume them.
   scene.matrixWorldAutoUpdate=false;
 
@@ -219,7 +221,7 @@ function start(): void {
   addEventListener("keyup", (e) => keys.delete(e.code));
   addEventListener("blur", () => { keys.clear(); });
   document.addEventListener("visibilitychange", () => { if (document.hidden) setMode("paused"); });
-  container.dataset.world=JSON.stringify({width:doc.canonical.width,height:doc.canonical.height,objects:doc.objects.length,checkpoints:doc.checkpoints.length});
+  container.dataset.world=JSON.stringify({width:doc.canonical.width,height:doc.canonical.height,objects:doc.objects.length,checkpoints:doc.checkpoints.length,birds:doc.flocks.reduce((n,f)=>n+f.count,0)});
   container.dataset.source="dream-2";
   let previous = performance.now(), hudTime = 0;
   let frameMs = 16.7;
@@ -340,7 +342,7 @@ function start(): void {
       group.userData.npcTime=pose.animationTimeS;
     }
     const occupied=occupiedObject(car,world);
-    const standingRide=controlOf(occupied?.spec)==="skateboard";
+    const standingRide=["skateboard","scooter"].includes(controlOf(occupied?.spec)??"");
     avatar.visible=!!occupied && !standingRide;
     if(occupied && !standingRide){
       const group=actorMeshes.get(occupied.id)!;if(avatar.parent!==group)group.add(avatar);
@@ -399,7 +401,7 @@ function start(): void {
     hudTime += dt;
     if (hudTime > .1) {
       hudTime = 0;
-      surface.textContent = occupied ? occupied.labelText+(controlOf(occupied.spec)==="plane" ? " · Space ↑ / Shift ↓" : controlOf(occupied.spec)==='bicycle' || controlOf(occupied.spec)==='skateboard' ? ' · Space jump' : controlOf(occupied.spec)==='boat' ? ' · Space hop' : "") : car.control.kind==="foot" ? isSwimming(car,world) ? 'Swimming · Shift faster' : 'On foot · Space jump / Shift run' : !car.grounded ? "Airborne" : car.timeS < boostUntil ? "Boost" : car.surface === "ice" ? "Sliding" : car.surface === "water" ? "Water" : "";
+      surface.textContent = occupied ? occupied.labelText+(controlOf(occupied.spec)==="plane" ? " · Space ↑ / Shift ↓" : controlOf(occupied.spec)==='bicycle' || controlOf(occupied.spec)==='skateboard' || controlOf(occupied.spec)==='scooter' ? ' · Space jump' : controlOf(occupied.spec)==='boat' ? ' · Space hop' : "") : car.control.kind==="foot" ? isSwimming(car,world) ? 'Swimming · Shift faster' : 'On foot · Space jump / Shift run' : !car.grounded ? "Airborne" : car.timeS < boostUntil ? "Boost" : car.surface === "ice" ? "Sliding" : car.surface === "water" ? "Water" : "";
       surface.dataset.effect = car.surface === "ice" ? "ice" : "boost";
       // DOM diagnostics let browser checks observe real simulation and camera state.
       container.dataset.car = [car.x, car.y, position.y].map((v) => v.toFixed(1)).join(",");

@@ -1,5 +1,6 @@
+import {furnishingSchema,flockSchema,furnishWorld,POPULATION_LIMITS,type Furnishing,type Flock} from './population';
 import { Euler, Quaternion, Vector3 } from "three";
-import { objectDslSchema,controlOf, type ObjectDslV2 } from "./object-dsl";
+import { objectDslSchema,controlOf,isReactive, type ObjectDslV2 } from "./object-dsl";
 import {siteSchema,crossingSchema} from './sites';
 import {streetSchema,surfaceSchema,markingSchema} from "./streets";
 import {behaviorSchema,agentProblem,NPC_LIMITS} from './agents';
@@ -9,7 +10,7 @@ import { sceneObjectSchema,parseScene,type Scene,type SceneObject } from "./sche
 import { ZodError } from "zod";
 
 import { DREAM_LIMITS, DreamError, fail, lex, Parser, type Token, type Expr, type Vec, type Transform, type Program, type Statement } from "./dream-syntax";
-import { ParserV2, printDreamV2, wordField, exprField, field, lowerBlock } from "./dream-v2";
+import { ParserV2, printDreamV2, wordField, exprField, field, listField, lowerBlock } from "./dream-v2";
 import { migrateProgram } from "./dream-migrate";
 import { compileLayout,compileCoordinates, type DreamLayout } from "./dream-layout";
 import { buildMaskForScene } from "./fixture";
@@ -222,7 +223,7 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
   });
 }
 
-export interface DreamWorld {assemblies:ObjectDslV2[];routes:Route[];objects:SceneObject[];waters:Water[];streets:Scene['streets'];surfaces:Scene['surfaces'];markings:Scene['markings'];behaviors:Scene['behaviors'];sites:Scene['sites'];crossings:Scene['crossings'];layout?:DreamLayout}
+export interface DreamWorld {assemblies:ObjectDslV2[];routes:Route[];objects:SceneObject[];waters:Water[];streets:Scene['streets'];surfaces:Scene['surfaces'];markings:Scene['markings'];behaviors:Scene['behaviors'];sites:Scene['sites'];crossings:Scene['crossings'];furnishings:Furnishing[];flocks:Flock[];layout?:DreamLayout}
 export type DreamModules=Readonly<Record<string,string>>;
 type LinkedWorld={world:DreamWorld;exports:Map<string,ObjectDslV2>};
 /** The same bounded language now authors placements, shared routes and continuous watercourses. */
@@ -256,7 +257,16 @@ export function compileDreamWorld(source:string,modules:DreamModules={}):DreamWo
     }catch(error){if(error instanceof DreamError && name!=="<entry>" && !error.diagnostic.module)error.diagnostic.module=name;throw error;}
     finally{active.delete(name);}
   };
-  return load(source,"<entry>").world;
+  let world=load(source,"<entry>").world;
+  if(world.furnishings.length){
+    if(!world.layout)fail('furnish expansion requires a complete linked world',undefined,'E_WORLD');
+    const {origin,...layout}=world.layout;
+    try{
+      const base=parseScene({schemaVersion:1,sceneId:'furnish',revisionId:'furnish',sourceHash:'furnish',...layout,...world,provenance:{source:'handmade-fixture',notes:'Population expansion'}});
+      const result=furnishWorld(base,world.furnishings);world={...world,objects:[...world.objects,...result.objects],surfaces:[...world.surfaces,...result.surfaces]};
+    }catch(error){if(error instanceof DreamError)throw error;fail(error instanceof Error ? error.message : 'invalid furnishing',origin,'E_POPULATION');}
+  }
+  return world;
 }
 function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,children:DreamWorld[]) {
   const budget={steps:0},ownAssemblies=compileObjects(program,budget),globals=globalNumbers(program);
@@ -315,18 +325,37 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
     const route=source.route ? routes.find(r=>r.id===source.route) : undefined;
     if(source.route && !route)fail(`unknown route '${source.route}'`,source.token);
     if(source.at && source.at.length!==2)fail("placement needs two coordinates",source.token);
-    const offset=source.offset ? numeric(source.offset,globals) : 0;
-    const position=route ? routePose(route,0,offset) : {x:numeric(source.at![0]!,globals),y:numeric(source.at![1]!,globals)};
-    const tangent=route && controlOf(spec) ? routePoint(route,routePose(route,0,offset).distance+8) : undefined;
+    const offset=source.offset ? numeric(source.offset,globals) : 0,phaseS=source.phase ? numeric(source.phase,globals) : 0;
+    const position=route ? routePose(route,phaseS,offset) : {x:numeric(source.at![0]!,globals),y:numeric(source.at![1]!,globals)};
+    const tangent=route && controlOf(spec) ? routePoint(route,routePose(route,phaseS,offset).distance+8) : undefined;
     const heading=tangent ? {headingRad:Math.atan2(tangent.y-position.y,tangent.x-position.x)} : {};
     const variation=source.scale ? numeric(source.scale,globals) : 1;
     if(variation<.5 || variation>2)fail("placement scale must be 0.5..2",source.scale?.token??source.token,"E_SCHEMA");
     const result=sceneObjectSchema.safeParse({id:source.name,kind:"custom",labelText:spec.displayName,spec,...position,...heading,
       scale:variation*measuredScale(spec),...(source.heading ? {headingRad:numeric(source.heading,globals)*RAD} : {}),
-      ...(route ? {route:{id:route.id,offset}} : {}),...(source.role ? {role:source.role} : {}),...(source.behavior ? {behavior:source.behavior} : {})});
+      ...(route ? {route:{id:route.id,offset,...(source.phase ? {phaseS} : {})}} : {}),...(source.role ? {role:source.role} : {}),...(source.behavior ? {behavior:source.behavior} : {})});
     if(!result.success)fail(result.error.issues[0]!.message,source.token,"E_SCHEMA");
     const problem=agentProblem(result.data,behaviors,routes);if(problem)fail(problem,source.token,'E_AGENT');return result.data;
   });
+  const furnishings:Furnishing[]=[],flocks:Flock[]=[];
+  for(const node of program.layout.filter(n=>n.kind==='furnish' || n.kind==='flock')){
+    const num=(key:string)=>numeric(exprField(node,key),globals),vec=(key:string)=>{const v=listField(node,key).map(e=>numeric(e,globals));return {x:v[0]!,y:v[1]!};};
+    try{
+      if(node.kind==='flock'){
+        const spec=exports.get(wordField(node,'object'));if(!spec)fail('unknown flock object',node.token,'E_REFERENCE');
+        flocks.push(flockSchema.parse({id:node.id,spec,center:vec('at'),radius:vec('radius'),count:num('count'),altitude:num('altitude'),speed:num('speed'),seed:num('seed'),...(node.fields.has('flap_hz') ? {flapHz:num('flap_hz')} : {}),...(node.fields.has('flap_deg') ? {flapDeg:num('flap_deg')} : {})}));
+      }else{
+        const objects=listField(node,'objects').map(ref=>exports.get(ref.name!)!);
+        if(!objects.length || objects.length>8 || objects.some(s=>!s || s.body.interaction==='knockable' || s.joints?.some(j=>j.animation || j.proximity) || isReactive(s) || s.emitter))fail('furnish needs 1..8 passive static object templates',node.token,'E_POPULATION');
+        const data={id:node.id,spacing:num('spacing'),setback:num('setback'),seed:num('seed')};
+        for(const key of ['streets','sites','grounds'])if(node.fields.has(key))Object.assign(data,{[key]:listField(node,key).map(e=>e.name!)});
+        if(node.fields.has('paving'))Object.assign(data,{paving:wordField(node,'paving')});
+        for(const key of ['side','facing'])if(node.fields.has(key))Object.assign(data,{[key]:wordField(node,key)});
+        for(const key of ['count','jitter'])if(node.fields.has(key))Object.assign(data,{[key]:num(key)});
+        furnishings.push({...furnishingSchema.parse(data),objects});
+      }
+    }catch(error){if(error instanceof DreamError)throw error;fail(error instanceof ZodError ? error.issues[0]!.message : String(error),node.token,'E_POPULATION');}
+  }
   let layout=compileLayout(program,exports,waters,e=>numeric(e,globals));
   const coordinates=compileCoordinates(program,e=>numeric(e,globals));
   const infrastructure={streets:[] as Scene['streets'],surfaces:[] as Scene['surfaces'],markings:[] as Scene['markings'],sites:[] as Scene['sites'],crossings:[] as Scene['crossings']};
@@ -352,12 +381,13 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
   if(inherited.length+Number(!!layout)>1)fail("project needs exactly one world layout",undefined,"E_WORLD");
   layout??=inherited[0]?.layout;
   const allWaters=[...children.flatMap(w=>w.waters),...ownWaters];
-  const world:DreamWorld={assemblies:[...new Set([...exports.values(),...children.flatMap(w=>w.assemblies)])],routes:[...routes,...children.flatMap(w=>w.routes)],objects:[...objects,...children.flatMap(w=>w.objects)],waters:allWaters,streets:[...infrastructure.streets,...children.flatMap(w=>w.streets)],surfaces:[...infrastructure.surfaces,...children.flatMap(w=>w.surfaces)],markings:[...infrastructure.markings,...children.flatMap(w=>w.markings)],behaviors:[...behaviors,...children.flatMap(w=>w.behaviors)],sites:[...infrastructure.sites,...children.flatMap(w=>w.sites)],crossings:[...infrastructure.crossings,...children.flatMap(w=>w.crossings)]};
+  const world:DreamWorld={assemblies:[...new Set([...exports.values(),...children.flatMap(w=>w.assemblies)])],routes:[...routes,...children.flatMap(w=>w.routes)],objects:[...objects,...children.flatMap(w=>w.objects)],waters:allWaters,streets:[...infrastructure.streets,...children.flatMap(w=>w.streets)],surfaces:[...infrastructure.surfaces,...children.flatMap(w=>w.surfaces)],markings:[...infrastructure.markings,...children.flatMap(w=>w.markings)],behaviors:[...behaviors,...children.flatMap(w=>w.behaviors)],sites:[...infrastructure.sites,...children.flatMap(w=>w.sites)],crossings:[...infrastructure.crossings,...children.flatMap(w=>w.crossings)],furnishings:[...furnishings,...children.flatMap(w=>w.furnishings)],flocks:[...flocks,...children.flatMap(w=>w.flocks)]};
+  if(world.furnishings.length>POPULATION_LIMITS.rules || world.flocks.length>POPULATION_LIMITS.flocks || world.flocks.reduce((n,f)=>n+f.count,0)>POPULATION_LIMITS.birds)fail('population budget exceeded',undefined,'E_BUDGET');
   if(world.behaviors.length>NPC_LIMITS.programs)fail('combined project exceeds 16 behaviors',undefined,'E_BUDGET');
   if(world.routes.length>12 || world.waters.length>8 || world.objects.length>4096)fail("combined project exceeds scene route/water/placement budgets",undefined,"E_BUDGET");
   if(world.streets.length>32 || world.surfaces.length>64 || world.markings.length>128)fail('combined project exceeds 32 streets / 64 surfaces / 128 markings',undefined,'E_BUDGET');
   if(world.sites.length>256 || world.crossings.length>64)fail('combined project exceeds 256 sites / 64 crossings',undefined,'E_BUDGET');
-  const worldIds=new Set<string>();for(const item of [...world.routes,...world.waters,...world.objects,...world.streets,...world.surfaces,...world.markings,...world.behaviors,...world.sites,...world.crossings]){if(worldIds.has(item.id))fail(`duplicate world id '${item.id}'`,undefined,"E_DUPLICATE_ID");worldIds.add(item.id);}
+  const worldIds=new Set<string>();for(const item of [...world.routes,...world.waters,...world.objects,...world.streets,...world.surfaces,...world.markings,...world.behaviors,...world.sites,...world.crossings,...world.furnishings,...world.flocks]){if(worldIds.has(item.id))fail(`duplicate world id '${item.id}'`,undefined,"E_DUPLICATE_ID");worldIds.add(item.id);}
   if(layout)world.layout={...layout,terrain:{...layout.terrain,landscape:{...layout.terrain.landscape!,waters:allWaters}}};
   return {world,exports};
 }
@@ -387,7 +417,7 @@ function sceneFromWorld(world:DreamWorld,identity:DreamSceneIdentity):Scene {
   if(!world.layout)fail("compileDreamScene requires world/road declarations",undefined,"E_WORLD");
   const {origin,...layout}=world.layout;
   let scene:Scene;
-  try {scene=parseScene({schemaVersion:1,...identity,...layout,routes:world.routes,objects:world.objects,streets:world.streets,surfaces:world.surfaces,markings:world.markings,behaviors:world.behaviors,sites:world.sites,crossings:world.crossings,provenance:{source:"handmade-fixture",notes:"Compiled Dream 2 mock world. No model calls."}});}
+  try {scene=parseScene({schemaVersion:1,...identity,...layout,routes:world.routes,objects:world.objects,streets:world.streets,surfaces:world.surfaces,markings:world.markings,behaviors:world.behaviors,flocks:world.flocks,sites:world.sites,crossings:world.crossings,provenance:{source:"handmade-fixture",notes:"Compiled Dream 2 mock world. No model calls."}});}
   catch(error){if(error instanceof ZodError)fail(error.issues[0]!.message,origin,"E_SCHEMA");throw error;}
   const problems=validateScenePlayability(scene,buildMaskForScene(scene),playerRadius(scene));
   if(problems.length)fail(`${problems[0]!.code}: ${problems[0]!.message}`,origin,`E_SCENE_${problems[0]!.code.toUpperCase().replace(/-/g,"_")}`);

@@ -1,3 +1,4 @@
+import {buildFlocks} from '../../src/game/flocks';
 import {SunShadows} from "../../src/game/sun";
 import {MAX_FLIGHT_CLEARANCE} from "../../src/sim/interaction";
 import * as THREE from 'three';
@@ -51,7 +52,7 @@ renderer.toneMappingExposure = 1.05;
 const scene = new THREE.Scene(); scene.background = new THREE.Color('#526b76');
 scene.add(new THREE.HemisphereLight('#bad4e2', '#384736', 1.25));
 const sun = new THREE.DirectionalLight('#ffe5b8', 2.4); sun.castShadow = true;
-scene.add(sun, sun.target, buildEnvironment(doc), new WorldScenery(doc).group,buildRoutes(doc));
+scene.add(sun, sun.target,buildFlocks(doc), buildEnvironment(doc), new WorldScenery(doc).group,buildRoutes(doc));
 const landscape=new WorldLandscape(doc);scene.add(landscape.group);
 const live=[];
 for (const object of doc.objects) if (isActor(object) || hasAnimatedJoints(object.spec) || isReactive(object.spec) || archetypeOf(object).interaction === 'knockable') {

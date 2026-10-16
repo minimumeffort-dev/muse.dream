@@ -2,7 +2,7 @@
 
 [Dream 2 docs](README.md) / Assets
 
-The mock world contains 70 reusable assemblies, all written in Dream 2. The assemblies include vehicles, buildings, wildlife and several layers of vegetation, with window frames, wheel hubs, bark markings and irregular foliage.
+The mock world contains 78 reusable assemblies, all written in Dream 2. The assemblies include vehicles, buildings, wildlife and several layers of vegetation, with window frames, wheel hubs, bark markings and irregular foliage.
 
 ![Vehicles, buildings and a seated traveler built from Dream parts](media/assets.jpg)
 
@@ -10,11 +10,11 @@ The mock world contains 70 reusable assemblies, all written in Dream 2. The asse
 
 | Family | Assemblies | Source |
 | --- | --- | --- |
-| Transport | Rally car, town car, city bus, tram, regional train, plane, launch, bicycle, skateboard | [Transit](../src/scene/world/transit_assets.dream), [landmarks](../src/scene/world/landmarks.dream), [activities](../src/scene/interactive-world.dream) |
+| Transport | Rally car, town car, hatchback, delivery van, scooter, city bus, tram, regional train, plane, launch, bicycle, skateboard | [Street assets](../src/scene/world/street_assets.dream), [Transit](../src/scene/world/transit_assets.dream), [landmarks](../src/scene/world/landmarks.dream), [activities](../src/scene/interactive-world.dream) |
 | Housing and shops | Three terraces, garden and courtyard homes, three apartment types, corner shop, bakery | [Architecture](../src/scene/world/architecture.dream) |
 | Civic and work | Market hall, hospital, two schools, college, offices, library, workshops, stations, boathouse and pavilion | [Civic assets](../src/scene/world/civic_assets.dream), [architecture](../src/scene/world/architecture.dream) |
 | People | Commuter, vendor, teacher, health worker, football and basketball players | [City people](../src/scene/world/city_people.dream), [sports](../src/scene/world/sports_assets.dream) |
-| Wildlife | Live deer and gull habitats; the library also defines hares, foxes and kites | [Fauna](../src/scene/world/fauna.dream), [habitats](../src/scene/world/life.dream) |
+| Wildlife | Pigeon and gull flocks, live deer and route gull habitats; the library also defines hares, foxes and kites | [Fauna](../src/scene/world/fauna.dream), [habitats](../src/scene/world/life.dream) |
 | Vegetation | Oak, pine, amber tree, birch, fir, rowan, apple, willow, ferns, flowers and shrubs | [Nature](../src/scene/world/nature.dream), [flora](../src/scene/world/flora.dream), [landmarks](../src/scene/world/landmarks.dream) |
 | Props and destruction | Produce stalls, table, crate, planter, ball, slatted benches, toppling trees and breakable shop porches | [Civic assets](../src/scene/world/civic_assets.dream), [impact props](../src/scene/impact-creations.dream), [destructible furniture](../src/scene/world/destructible.dream) |
 
@@ -63,3 +63,11 @@ Football goals have connected posts and net threads. Basketball hoops have a sup
 The new houses and civic buildings share dimensions across walls, roofs, doors, glass and supported porch parts. Roof bases meet wall tops. Thin façade details overlap their supporting wall. Porch posts meet a slab and canopy, including the bakery's breakable section. The tests check the actual transformed primitive bounds and roof support; the gallery exposes four views. This is an asset check, not a claim that arbitrary model-generated geometry is structurally sound. Entrance paths receive separate full-scene clearance and reachability checks.
 
 ![The rebuilt civic architecture and public transport](media/city-assets.jpg)
+
+## A street kit with context
+
+The eight new assemblies are an avenue streetlight, neighborhood lantern, planted tub, mixed verge flowers, electric city scooter, pigeon, hatchback and delivery van. Each declares a measured size. Lamp contacts stay narrow; the scooter has wheels, a deck, steering stem and handlebar; the two traffic bodies have different windows and cargo proportions.
+
+![The complete new street kit](media/street-assets.jpg)
+
+[Population rules](dream/populations.md) choose the streets and destinations these assets belong to. Static parked vehicles bake joint rest poses; explicit controllable rides keep live wheels and controls. Bird flocks use the same authored shape with instanced shader flight rather than allocating a joint controller per bird.

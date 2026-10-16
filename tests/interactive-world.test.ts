@@ -54,7 +54,7 @@ describe("Dream world authoring",()=>{
       {...passage,contacts:Array(9).fill(passage.contacts![0])},
       {...passage,grounding:"surface"},
       {...passage,body:{...passage.body,interaction:"knockable"}},
-      {...passage,rideable:{seat:[0,0,0]}},
+      {...passage,rideable:{seat:[0,0,0],control:"car"}},
       {...station,joints:[{...station.joints![0],animation:{axis:"y",amplitudeRad:.1,speed:1,phase:0}}]},
       {...station,joints:[{...station.joints![0],proximity:{axis:"q",angleRad:1,radius:100}}]},
       {...station,emitter:{kind:"script",position:[0,20,0],rate:1}},

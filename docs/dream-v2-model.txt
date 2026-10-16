@@ -60,18 +60,19 @@ Sway deg 0..6.87, hz .016.. .477. Swing deg 0..80.21, hz .016.. .636,
 phase_deg -180..180. Open deg -180..180, radius 20..160.
 At most 8 upright solid compound contacts: offset X/Z -64..64, Y 0..128,
 radius 1..64, height 1..160. Contact geometry replaces the main body footprint.
-rideable requires a solid cylinder without foundation/contacts/impact. Seat Y 0..128.
-Add control=car|bicycle|skateboard|boat|plane for direct player control. These are
+rideable requires a solid body without foundation/impact. Seat Y 0..128.
+Driver control requires a single cylinder without compound contacts; passenger-only seats may use compound contacts.
+Add control=car|bicycle|skateboard|scooter|boat|plane for direct player control. These are
 bounded engine profiles, not generated physics. Controlled vehicles start parked;
 place at XY or use a route only for its initial pose/infrastructure. They do not
 follow that route while being driven, and stay where the player leaves them.
-Omit control only for legacy passenger seats on autonomous routes, e.g. the train.
+Omit control for passenger seats on autonomous routes, including buses, trams and trains.
 Give boats full-hull navigable water and a boarding point near dry shore; bridge travel requires hull/body clearance below the deck and side rails. Give planes a clear dry takeoff/landing area. Ground vehicles
 share terrain/contact mechanics. F prefers clear dry ground, then allows wading/swimming
 exits into water. No exit during flight. Boats and swimmers stay below bridge decks.
 Walking climbs contact tops in steps up to 4 world units (40 cm) with headroom;
 visual mesh details alone are not steps. Use explicit low contacts for terraces.
-Space jumps on foot/bicycles/skateboards, hops boats, or speeds a swimming stroke.
+Space jumps on foot/bicycles/skateboards/scooters, hops boats, or speeds a swimming stroke.
 Shift runs/swims faster. Bicycle steering/lean, boat inertia, jump buffering, water
 support and aircraft climb/stall response belong to engine profiles, not DSL code.
 Walking and non-racing vehicles preserve the original car's checkpoint progress.
@@ -282,3 +283,34 @@ Compose buildings using shared wall/roof dimensions: roof base = wall top, glass
 embedded in its wall, canopy touching wall and supported by posts that reach a
 porch slab. Keep all architectural parts attached. Reserve schoolyards, market
 squares, service aprons and entrance paths before placing surrounding housing.
+
+CONTEXTUAL POPULATIONS
+furnish id(objects=[object_ref,...],streets=[street_ref,...],spacing=340,setback=2,seed=41,facing=street);
+furnish id(objects=[bicycle],sites=[site_ref,...],spacing=26,setback=4,count=6,seed=82,paving=#aaa99f);
+Exactly one streets/sites array, 1..32 unique targets. 1..8 object refs, file-local or asset imports.
+Street spacing 80..800, side=left|right|both (default both), relative to path direction.
+Sites require count 1..12, spacing 12..800; follow entrance side, preserving access.
+setback 0..120 beyond the pavement and full visual radius. facing=along|street (along default).
+jitter 0...3 (default 0); seed integer 0..65535. No arbitrary scale jitter.
+grounds=[surface_ids] explicitly permits those visual grounds; other authored grounds excluded.
+Site-only paving=color adds parking aprons joined to pavement, within 64 scene surfaces.
+Expansion runs after linking; complete visual footprints reserve roads, crossings, entrances,
+bridges, water, ground infrastructure and existing objects. Skip blocked candidates.
+Static templates only: no active joints, proximity joints, knockables, damage or emitters.
+Generated objects have role=prop; parked bikes/scooters cannot be boarded. For an available
+ride use an explicit role=controllable placement with rideable control. Original actor caps apply.
+<=32 rules, <=2048 candidates/rule, <=128 emitted/rule, <=1024 generated overall, also <=4096
+scene objects. Output has no minimum guarantee; inspect compiled rule/district coverage.
+flock id(object=bird_ref,at=[x,y],radius=[rx,ry],count=16,altitude=65,speed=32,seed=101,flap_hz=3.2,flap_deg=18);
+Passive decor only: no seat, contact, foundation, impact or emitter; measured horizontal radius <=20.
+Radius axes 40..1200; count 1..32; altitude 60..300; speed 5..80; seed integer 0..65535;
+flap_hz 0..6 default 2, flap_deg 0..25 default 12. Full habitat must fit world bounds.
+Flight clears terrain/roofs; joints bake at rest; bounded local-Z flex animates wings.
+<=16 flocks, <=256 decorative birds overall. Instanced GPU motion, no NPC/physics ownership,
+no reactions or programs. Reduced motion freezes pose; complete populations stay resident.
+place optional phase_s=0..3600 requires route and shifts the entire route clock, including waits.
+offset stays distance along the route. No traffic avoidance or signal solver is added.
+rideable(control=scooter) uses direct ground controls, standing rider and buffered Space jump.
+Driver controls still need one solid cylinder without foundation/compound contacts/impact.
+Passenger-only rideable(at=[x,y,z]) may use compound contacts on a solid transit assembly;
+F boards without taking control. NPC route clocks keep ownership. No underground transit layer yet.

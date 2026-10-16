@@ -29,12 +29,12 @@ export function actorPose(scene:Scene,object:SceneObject,timeS:number,state?:Car
   }
   if(program){
     const clock=state?.npcs?.find(n=>n.id===object.id)??initialNpcState(scene,object),active=program.states.find(s=>s.id===clock.stateId)!;
-    const point=route ? routePose(route,clock.routeTimeS,object.route!.offset) : {x:object.x,y:object.y,distance:0,travelled:0};
+    const point=route ? routePose(route,clock.routeTimeS+(object.route!.phaseS??0),object.route!.offset) : {x:object.x,y:object.y,distance:0,travelled:0};
     let heights=bases.get(scene);if(!heights){heights=new Map();bases.set(scene,heights);}let base=heights.get(object.id);if(base===undefined){base=objectPlacement(scene,object).base;heights.set(object.id,base);}
     const speed=active.action==='patrol' && 'speed' in point ? point.speed : 0;
     return {id:object.id,...point,elevation:route ? routeElevation(scene,route,point,point.distance) : base,headingRad:clock.headingRad,speed,kind,activity:active.action,animationTimeS:clock.animationTimeS,stateId:clock.stateId,vx:Math.cos(clock.headingRad)*speed,vy:Math.sin(clock.headingRad)*speed};
   }
-  const point=routePose(route!,timeS,object.route!.offset);
+  const point=routePose(route!,timeS+(object.route!.phaseS??0),object.route!.offset);
   return {id:object.id,...point,elevation:routeElevation(scene,route!,point,point.distance),kind,vx:Math.cos(point.headingRad)*point.speed,vy:Math.sin(point.headingRad)*point.speed};
 }
 export function routeElevation(scene:Scene,route:Route,point:{x:number;y:number},distance:number) {

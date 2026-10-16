@@ -1,9 +1,10 @@
 import {MAX_WORLD_SIZE,MAX_STREET_LENGTH} from './world-bounds';
 import { z } from "zod";
-import { measuredScale, measureProblem } from "./measure";
+import { assemblyHorizontalRadius, measuredScale, measureProblem } from "./measure";
 import { objectDslSchema, hasAnimatedJoints, MAX_ANIMATED_ASSEMBLIES,impactOf,isReactive } from "./object-dsl";
 import { terrainSchema } from "./terrain";
 import { routeSchema } from "./routes";
+import {flockSchema,POPULATION_LIMITS} from './population';
 import {siteSchema,crossingSchema} from './sites';
 import {streetSchema,surfaceSchema,markingSchema} from './streets';
 import {NPC_LIMITS,roleSchema,behaviorSchema,roleOf,controlFor,agentProblem} from './agents';
@@ -80,7 +81,7 @@ export const sceneObjectSchema = z.object({
   headingRad:z.number().finite().min(-Math.PI*2).max(Math.PI*2).optional(),
   role:roleSchema.optional(),
   behavior:z.string().regex(/^[a-z][a-z0-9_]{0,31}$/).optional(),
-  route:z.object({id:z.string().min(1).max(40),offset:z.number().finite().min(0).max(2048).default(0)}).strict().optional(),
+  route:z.object({id:z.string().min(1).max(40),offset:z.number().finite().min(0).max(2048).default(0),phaseS:z.number().finite().min(0).max(3600).optional()}).strict().optional(),
   /** Required when kind is "custom": the invented archetype as data. */
   spec: customSpecSchema.optional(),
 }).superRefine((o, ctx) => {
@@ -149,6 +150,7 @@ export const sceneSchema = z.object({
   streets:z.array(streetSchema).max(32).default([]),
   surfaces:z.array(surfaceSchema).max(64).default([]),
   markings:z.array(markingSchema).max(128).default([]),
+  flocks:z.array(flockSchema).max(POPULATION_LIMITS.flocks).default([]),
   sites:z.array(siteSchema).max(256).default([]),
   crossings:z.array(crossingSchema).max(64).default([]),
   player: objectDslSchema.optional().refine((spec) => !spec || spec.body.interaction === "solid", {
@@ -172,6 +174,8 @@ export const sceneSchema = z.object({
   const length=(points:Point[])=>points.slice(1).reduce((n,p,i)=>n+Math.hypot(p.x-points[i]!.x,p.y-points[i]!.y),0);
   if(scene.streets.reduce((n,s)=>n+length(s.points),0)>MAX_STREET_LENGTH)ctx.addIssue({code:'custom',message:'scene exceeds 120000 street units'});
   if(scene.markings.reduce((n,s)=>n+length(s.closed ? [...s.points,s.points[0]!] : s.points),0)>40000)ctx.addIssue({code:'custom',message:'scene exceeds 40000 marking units'});
+  if(scene.flocks.reduce((n,f)=>n+f.count,0)>POPULATION_LIMITS.birds)ctx.addIssue({code:'custom',message:'scene exceeds 256 decorative flock members'});
+  for(const f of scene.flocks){const margin=assemblyHorizontalRadius(f.spec,measuredScale(f.spec))+8;if(f.center.x<f.radius.x+margin || f.center.y<f.radius.y+margin || f.center.x+f.radius.x+margin>scene.canonical.width || f.center.y+f.radius.y+margin>scene.canonical.height)ctx.addIssue({code:'custom',message:`flock "${f.id}" flight envelope extends outside the world`});}
   // The standing player character occupies one of the existing live animation slots.
   const animated=scene.objects.filter(object=>hasAnimatedJoints(object.spec)).length+Number(hasAnimatedJoints(scene.player))+1;
   if(animated>MAX_ANIMATED_ASSEMBLIES) ctx.addIssue({code:z.ZodIssueCode.custom,message:`scene exceeds ${MAX_ANIMATED_ASSEMBLIES} animated assemblies`});

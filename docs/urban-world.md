@@ -20,7 +20,9 @@ These are mock places and visible routines. There are no working interiors, hosp
 
 ## Buses, tram and regional train
 
-Two bus loops serve the neighborhoods, school, hospital and market. The tram runs along the main avenue to the central station. A regional electric train stops at two connected platforms. Street routes use the actual carriageways; tram rails share the road surface. They do not draw extra paving over streets.
+Three buses on two loops serve the neighborhoods, school, hospital and market. The tram runs along the main avenue to the central station. A regional electric train stops at two connected platforms. Street routes use the actual carriageways; tram rails share the road surface. They do not draw extra paving over streets.
+
+F boards a bus, tram or regional railcar as a passenger. The service retains its route clock; driving inputs do not take over. Underground metro and subway tunnels are not implemented yet.
 
 Stops have named anchors, waits and platform sites in Dream. Platform paths join the pedestrian network, and served destinations must be reachable from them. The regional train is a single rigid railcar, so a shuttle turnaround cannot stack separate carriages. These vehicles follow authored schedules; they do not implement traffic signals or avoidance.
 
@@ -39,6 +41,12 @@ The eastbank has a 100 × 64-metre football pitch. A basketball court, sports pa
 ![The football ground between eastbank streets](media/sports-park.jpg)
 
 Woodland and meadow surround the city. Oaks, birches, firs, rowan, apple trees and willows mix with understory plants. Deer have a clear habitat, and gulls fly over the river. Destructible trees and benches remain, alongside breakable market props and shop porches.
+
+## Everyday street life
+
+The city has 375 streetlights along five district networks, 89 additional street trees, 280 mixed planting groups and 20 destination planters. Twenty-seven parked bicycles and sixteen scooters sit beside schools, services and transit stops on paved aprons joined to the sidewalk. Separate explicit rides remain controllable, including the market scooter.
+
+Eight road cars use three different silhouettes: rally car, hatchback and delivery van. Sixteen habitats distribute 256 decorative birds across city blocks, river, lake, woodland and meadow. These populations come from [Dream rules](dream/populations.md), filtered against the accepted streets, entrances, water and existing objects.
 
 ## Dream owns the connections
 

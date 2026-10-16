@@ -136,3 +136,7 @@ Use shared `junction` IDs for exact joins, `site` for a building's use and attac
 `route(kind=street)` sends buses along existing carriageways. `tram` adds rails there, and `walk` sends people along paths and crossings. Named `stop` anchors wait beside actual platform sites; a walking stop can visit a home, market or workplace. Rail/tram gauges and long-vehicle compound contacts are explicit data. These routes do not implement traffic avoidance.
 
 [Run the complete city example](../examples/connected-city.dream), read the [connection bounds](reference.md#connected-city-declarations), or inspect the [source-derived map](../media/city-plan.svg). Regenerate the map with `node scripts/render-city-map.mjs` after changing the world.
+
+## Populate the network
+
+Use [contextual population rules](populations.md) for street lighting, planting, destination parking and decorative bird habitats. Rules reserve the complete linked city before expanding; explicit actors keep their own control and behavior budgets.

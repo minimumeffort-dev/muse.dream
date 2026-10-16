@@ -303,3 +303,32 @@ export function sceneryDepthMaterial(motion?:ObjectPart["animation"],cloth=false
   material.onBeforeCompile=(shader,renderer)=>{original(shader,renderer);sceneryMotion(shader,motion);};
   material.customProgramCacheKey=()=>`scenery-depth-${JSON.stringify(motion)}-${cloth}`;return material;
 }
+
+/** Cosmetic flight deforms identical color/shadow geometry; reduced motion freezes the complete pose. */
+function flockShader(shader:CompiledShader,flock:import('../scene/population').Flock,scale:number):void{
+  shader.uniforms.flockTime=worldTime;shader.uniforms.flockMotion=worldMotion;
+  const rx=(flock.radius.x/scale).toFixed(6),rz=(flock.radius.y/scale).toFixed(6),angular=(flock.speed/Math.max(flock.radius.x,flock.radius.y)).toFixed(6);
+  shader.vertexShader=shader.vertexShader.replace('#include <common>',`#include <common>
+    attribute vec4 flight;uniform float flockTime;uniform float flockMotion;
+    mat3 flightYaw(float a){float c=cos(a),s=sin(a);return mat3(c,0.,s,0.,1.,0.,-s,0.,c);}
+    float flightAngle(){return flight.x+flockTime*flockMotion*${angular}*flight.w;}
+    float flightHeading(){float a=flightAngle();return atan(${rz}*cos(a),-${rx}*sin(a));}
+    float wingSlope(){return sin(flockTime*flockMotion*${(flock.flapHz*Math.PI*2).toFixed(6)}+flight.z)*${Math.tan(flock.flapDeg*Math.PI/180).toFixed(6)};}`)
+    .replace('#include <beginnormal_vertex>',`#include <beginnormal_vertex>
+      objectNormal.z-=sign(position.z)*wingSlope()*objectNormal.y;
+      objectNormal=flightYaw(flightHeading())*normalize(objectNormal);`)
+    .replace('#include <begin_vertex>',`#include <begin_vertex>
+      transformed.y+=abs(transformed.z)*wingSlope();
+      transformed=flightYaw(flightHeading())*transformed;
+      float a=flightAngle();transformed+=vec3(${rx}*flight.y*cos(a),sin(a*2.+flight.z)*${(5/scale).toFixed(6)},${rz}*flight.y*sin(a));`);
+}
+export function flockMaterial(material:THREE.Material,flock:import('../scene/population').Flock,scale:number):THREE.Material{
+  const original=material.onBeforeCompile.bind(material),key=material.customProgramCacheKey();
+  material.onBeforeCompile=(shader,renderer)=>{original(shader,renderer);flockShader(shader,flock,scale);};
+  material.customProgramCacheKey=()=>`flock-${key}-${flock.radius.x}-${flock.radius.y}-${flock.speed}-${flock.flapHz}-${flock.flapDeg}-${scale}`;return material;
+}
+export function flockDepthMaterial(flock:import('../scene/population').Flock,scale:number):THREE.MeshDepthMaterial{
+  const material=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking});
+  material.onBeforeCompile=shader=>flockShader(shader,flock,scale);
+  material.customProgramCacheKey=()=>`flock-depth-${flock.radius.x}-${flock.radius.y}-${flock.speed}-${flock.flapHz}-${flock.flapDeg}-${scale}`;return material;
+}

@@ -13,9 +13,10 @@ import {bridgeAt} from '../scene/landscape-dsl';
 
 export const FOOT_RADIUS=3,FOOT_HEIGHT=17.5;
 export const MAX_FLIGHT_CLEARANCE=450;
-const groundTuning:Record<"car"|"bicycle"|"skateboard",CarTuning>={
+const groundTuning:Record<"car"|"bicycle"|"skateboard"|"scooter",CarTuning>={
   car:TUNING,
   bicycle:{...TUNING,engineAccel:100,brakeAccel:180,reverseAccel:50,maxForwardSpeed:130,maxReverseSpeed:35,dragPerS:.5,turnRateRadS:2.4,maxTerrainSpeed:180},
+  scooter:{...TUNING,engineAccel:90,brakeAccel:190,reverseAccel:35,maxForwardSpeed:105,maxReverseSpeed:25,dragPerS:.6,turnRateRadS:2.5,maxTerrainSpeed:150},
   skateboard:{...TUNING,engineAccel:65,brakeAccel:140,reverseAccel:35,maxForwardSpeed:85,maxReverseSpeed:25,dragPerS:.6,turnRateRadS:2.8,maxTerrainSpeed:130},
 };
 const walkingTuning={...TUNING,engineAccel:0,turnRateRadS:0,baseLateralGrip:0,iceLateralGrip:0,dragPerS:0,lateralFriction:0,iceLateralFriction:0,coastFriction:0,iceCoastFriction:0};
@@ -170,7 +171,7 @@ export function stepInteractive(state:CarState,input:CarInput,dt:number,world:Wo
   if(state.control.kind==="vehicle"){
     const profile=controlOf(object.spec)!;
     if(profile==="boat" || profile==="plane")return stepFreeVehicle(state,input,dt,world,profile);
-    const body={...bodyWorld(state,world),tuning:groundTuning[profile],jumpSpeed:profile==='bicycle' ? 85 : profile==='skateboard' ? 75 : undefined};
+    const body={...bodyWorld(state,world),tuning:groundTuning[profile],jumpSpeed:profile==='bicycle' ? 85 : profile==='skateboard' || profile==='scooter' ? 75 : undefined};
     const speed=state.vx*Math.cos(state.headingRad)+state.vy*Math.sin(state.headingRad),authority=Math.max(-1,Math.min(1,speed/45));
     const yaw=Math.sign(speed)*Math.sign(input.steer)*Math.min(Math.abs(speed)/14*Math.tan(Math.abs(input.steer)*.42),TUNING.gravity*.55/Math.max(20,Math.abs(speed)));
     const steer=profile==='bicycle' && authority!==0 ? yaw/(body.tuning.turnRateRadS*authority) : input.steer;

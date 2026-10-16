@@ -11,7 +11,7 @@ Current state: **mock open world** — a 14000 x 11000 handmade landscape with a
 winding eight-checkpoint circuit, composed assets, heightfield driving/jumps,
 ICE/BOOST, off-road collisions, fixed-angle camera, walking, direct vehicle controls,
 a rebuilt river city with connected entrances, schools, hospital, markets, workplaces, buses, tram, regional rail, cycle tracks and sports grounds, ambient wildlife, layered vegetation and instanced scenery. Walking supports running, jumping, low contact steps and surface swimming. F prefers dry exits, permits water disembarking and boards nearby on foot. Bicycles,
-skateboards, boats and planes are player-controlled; trains retain autonomous routes.
+skateboards, scooters, boats and planes are player-controlled; public transport retains autonomous routes and exposes passenger seats.
 The original small fixture remains for regression tests. No photo upload,
 camera or model calls yet. The complete live world is authored in Dream 2 text
 under `src/scene/world/`, linked through a closed host-supplied module map. This is a labelled pre-hackathon prototype; see
@@ -146,7 +146,7 @@ per XY; boats and swimmers use the terrain bed and validated deck/rail headroom 
 bridges. Preserve dry shore boarding, full-hull checks and finite rail bottoms.
 See `docs/urban-world.md` for the transport layout and `docs/dream/reference.md`.
 
-Movement stays in the fixed-step engine. Space jumps on foot/bicycles/skateboards
+Movement stays in the fixed-step engine. Space jumps on foot/bicycles/skateboards/scooters
 and hops boats; Shift runs/swims faster, while aircraft retain Space/Shift lift.
 Preserve per-press jump buffering/grace, low-step headroom, chest-depth water
 support, full-hull bridge clearance, and gravity after airborne collisions.
@@ -155,3 +155,9 @@ Do not add generated controller code or increase animation/render budgets.
 City connections are Dream data: file-local `junction` references share road/street coordinates; `site` attaches an object-local entrance to a named sidewalk; `crossing(junction=true)` supplies crossings on all street arms; route `stop` ties a wait to a platform/destination. Street/tram NPCs use existing carriageways; walking routes stay on the pedestrian network. Preserve the 256-site, 64-crossing, 128-local-junction and 16-stops-per-route bounds. The published map is generated with `node scripts/render-city-map.mjs` from the accepted scene, never drawn independently. Reserve entrances and civic grounds before placing housing. New architecture needs attached roof/façade/porch checks and inspected multi-angle renders.
 
 The pre-redesign r24 snapshot in `tests/fixtures/legacy-world.json` is an explicit engine regression fixture. It preserves timber bridge, older terrain and interaction cases without constraining the live layout. Live city acceptance, exact joins, pedestrian reachability, architecture attachment, transit and the replacement racing loop are tested separately.
+
+## Build populations and networks
+
+New world features need useful coverage across the relevant districts, with a reason for their placement. Use `furnish` for deterministic street-relative furniture, species-specific planting and parking beside destination entrances. Reserve crossings, clear walking paths, bridges, cycle tracks, water and rail/runway corridors. Destination parking needs a connected apron; inspect compiled counts because a rule can legitimately emit nothing when obstructed. Validate coverage by district, not just one showcase object.
+
+Use `flock` for bounded instanced cosmetic bird populations across appropriate habitats; these are not interactive NPCs. Preserve the existing live actor/joint budgets. Transit must follow connected infrastructure and real platforms; `phase_s` staggers the full journey including its waits. A future metro/subway needs declared station access, platforms, line connectivity, headroom and an actual underground movement/rendering layer before it can be described as working. A train hidden under terrain is not a subway implementation.

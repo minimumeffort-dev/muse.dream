@@ -13,7 +13,7 @@ import { objectPlacement } from "../scene/placement";
 
 
 /** Bake parts sharing a material/motion into one draw, retaining each rigid animation pivot. */
-function batchPrototype(source: THREE.Group): THREE.Group {
+export function batchPrototype(source: THREE.Group): THREE.Group {
   source.updateMatrixWorld(true);
   const group = new THREE.Group();
   const batches = new Map<string, { geometries: THREE.BufferGeometry[]; material: THREE.Material; motion: ObjectPart["animation"] }>();
