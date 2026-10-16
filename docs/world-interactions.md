@@ -82,6 +82,8 @@ and 28 units of elevation. The traveler sits in the declared seat; the car stays
 parked. **F** returns to that car if its footprint is clear. R still returns to
 spawn. Pause blocks boarding and freezes route travel.
 
+The live bicycle stop is in the meadow south of the starting road. Approach it off-road, then press **F** when the control appears. Its enlarged cycle route and the riverside skating route declare full corridor widths in Dream 2. See [world layout and dedicated paths](dream/worlds.md#routes-and-moving-objects) for their current contract. The unannotated Dream 1 examples below remain compatibility syntax.
+
 This slice provides passenger rides. WASD still controls the car; it does not
 steer the train, plane, boat, bicycle or skateboard yet. Race/checkpoint progress
 is frozen during rides. Safe return preserves simulation time and race progress.

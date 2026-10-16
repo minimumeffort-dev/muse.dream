@@ -103,7 +103,7 @@ export class ParserV2 extends Parser {
         case "object":program.objects.push({token,id:name,name:field(node,"label") as string,block:lowerBlock(node.block!)});break;
         case "asset":program.assets!.push(node);break;
         case "include":program.includes!.push(node);break;
-        case "route":program.routes.push({token,name,kind:wordField(node,"kind"),mode:wordField(node,"mode"),speed:num("speed"),altitude:node.fields.has("altitude") ? num("altitude") : undefined,wait:node.fields.has("wait_s") ? num("wait_s") : undefined,block:lowerBlock(node.block!)});break;
+        case "route":program.routes.push({token,name,kind:wordField(node,"kind"),mode:wordField(node,"mode"),speed:num("speed"),altitude:node.fields.has("altitude") ? num("altitude") : undefined,wait:node.fields.has("wait_s") ? num("wait_s") : undefined,width:node.fields.has("width") ? num("width") : undefined,surface:node.fields.has("surface") ? wordField(node,"surface") : undefined,block:lowerBlock(node.block!)});break;
         case "place":program.places.push({token,name,assembly:wordField(node,"object"),at:node.fields.get("at") as Expr[]|undefined,route:node.fields.has("route") ? wordField(node,"route") : undefined,offset:node.fields.get("offset") as Expr|undefined,scale:node.fields.get("scale") as Expr|undefined,heading:node.fields.get("heading_deg") as Expr|undefined});break;
         case "watercourse":program.waters.push({token,name,level:num("level"),depth:num("depth"),bank:num("bank"),color:wordField(node,"color"),flow:listField(node,"flow"),block:lowerBlock(node.block!)});break;
         default:program.layout.push(node);

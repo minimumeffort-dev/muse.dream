@@ -71,7 +71,7 @@ A command with an ID requires a name immediately after its keyword. Commands wit
 | `watercourse` | top | ID / path | `level: n`, `depth: n`, `bank: n`, `color: color`, `flow: v2` |
 | `effect` | top | ID / no block | `kind: ice / boost`, `points: points2` |
 | `checkpoint` | top | ID / no block | `at: v2`, `dir: v2`, `width: n` |
-| `route` | top | ID / path | `kind: rail / path / water / air`, `mode: loop / shuttle`, `speed: n`, `altitude?: n`, `wait_s?: n` |
+| `route` | top | ID / path | `kind: rail / path / water / air`, `mode: loop / shuttle`, `speed: n`, `altitude?: n`, `wait_s?: n`, `width?: n`, `surface?: trail / cycle / paved` |
 | `point` | path | No ID / no block | `at: point` |
 | `place` | top | ID / no block | `object: ref`, `at?: v2`, `route?: ref`, `offset?: n`, `scale?: n`, `heading_deg?: n` |
 | `unresolved` | top | ID / no block | `label: text` |
@@ -134,6 +134,12 @@ With a measured car player, tree height and plane wingspan must exceed the car's
 | Infrastructure | 2–64 checkpoints, ≤8 bridges and ≤8 combined water basins/watercourses |
 
 The [machine instructions](../dream-v2-model.txt) carry detailed motion and landscape parameter bounds. The schema and full-scene validator are the final acceptance boundary. Expanded/native geometry limits still apply before physical scaling.
+
+### Dedicated paths
+
+For `kind=path`, `width` is the full paved width, 16–120 units. `surface=trail|cycle|paved` requires an explicit width. These fields are invalid on rail, water and air routes. Omit both only for legacy paths, which retain a 28-unit trail and actor-only clearance.
+
+An explicit width reserves a corridor even without a vehicle. Full-world validation keeps it inside the world and clear of road/curbs, water, placed physical objects, other ground routes and runways, with an 8-unit buffer plus conservative sampling allowance. Overlap rejects the proposed world with `E_SCENE_ROUTE_NOT_CLEAR`. Turns that would fold the inside edge also reject the world; widen their radius or shorten the width. It does not relocate assets automatically or create crossings. Paint and map widths use the same declaration; grass is excluded from the surface.
 
 ## Compiler APIs
 

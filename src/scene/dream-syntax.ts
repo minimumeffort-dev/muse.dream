@@ -14,7 +14,7 @@ export type Statement = {
   pattern?:string;axis?:string;damage?:{kind:string;args:Expr[];pattern?:string};
 };
 export type Component = { token: Token; params: string[]; block: Statement[] };
-export type RouteSource={token:Token;name:string;kind:string;mode:string;speed:Expr;altitude?:Expr;wait?:Expr;block:Statement[]};
+export type RouteSource={token:Token;name:string;kind:string;mode:string;speed:Expr;altitude?:Expr;wait?:Expr;width?:Expr;surface?:string;block:Statement[]};
 export type PlaceSource={token:Token;name:string;assembly:string;at?:Expr[];route?:string;offset?:Expr;scale?:Expr;heading?:Expr};
 export type WaterSource={token:Token;name:string;level:Expr;depth:Expr;bank:Expr;color:string;flow:Expr[];block:Statement[]};
 export type Program = {

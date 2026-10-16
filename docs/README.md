@@ -11,7 +11,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [Quickstart](dream/quickstart.md) | Compile a complete object, then a playable world |
 | [Compose objects](dream/objects.md) | Parts, materials, components, joints and physical size |
 | [Asset library](asset-library.md) | The 53 mock-world assemblies and their construction details |
-| [Build a world](dream/worlds.md) | Terrain, roads, bridges, water and moving vehicles |
+| [Build a world](dream/worlds.md) | Terrain, roads, bridges, water, dedicated paths and moving vehicles |
 | [Give things behavior](dream/behavior.md) | Contacts, boarding, doors, bouncing and destruction |
 | [Generate with a model](dream/model-authoring.md) | Context, validation, repair and atomic acceptance |
 | [Language reference](dream/reference.md) | Every command, field, budget and compiler API |

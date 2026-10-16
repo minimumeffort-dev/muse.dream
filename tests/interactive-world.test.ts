@@ -33,6 +33,8 @@ const sceneFor=(objects:SceneObject[])=>parseScene({...createFixtureScene(),obje
 const worldFor=(object:SceneObject):World=>{const scene=sceneFor([object]);return {scene,carRadius:11,driveMask:buildPaperMask(960,720),roadMask:buildMaskForScene(scene)};};
 const at=(x:number,y:number,headingRad=0):CarState=>({...createCarAtSpawn(doc),x,y,headingRad,elevation:drivingHeight(doc.terrain,x,y),vx:0,vy:0});
 
+const cycleCar=()=>{const bike=doc.objects.find(o=>o.id==="village_bike")!;return at(bike.x,bike.y-45,Math.PI/2);};
+
 describe("Dream world authoring",()=>{
   it("compiles ten new assemblies, routes, placements and a rounded watercourse from the same source",()=>{
     expect(compileDreamWorld(source)).toEqual(interactiveWorld);
@@ -114,26 +116,26 @@ describe("fixed-clock vehicles and passenger rides",()=>{
     const landed=actorPose(doc,plane,duration+route.waitS+2);expect(landed.speed).toBe(0);expect(landed.x).toBeCloseTo(plane.x);expect(landed.y).toBeCloseTo(plane.y);
   });
   it("boards a nearby bicycle, advances the world without awarding race progress, and returns to the parked car",()=>{
-    const original=createCarAtSpawn(doc),bike=nearbyRide(original,world);
+    const original=cycleCar(),bike=nearbyRide(original,world);
     expect(bike?.id).toBe("village_bike");let rider=toggleRide(original,world);
     expect(rider.ride?.actorId).toBe(bike!.id);
-    for(let i=0;i<1200;i++)rider=stepInteractive(rider,{throttle:1,steer:1},1/120,world);
-    const pose=actorPose(doc,bike!,10);expect(rider.x).toBeCloseTo(pose.x);expect(rider.y).toBeCloseTo(pose.y);expect(Math.hypot(rider.x-bike!.x,rider.y-bike!.y)).toBeGreaterThan(30);
+    for(let i=0;i<2400;i++)rider=stepInteractive(rider,{throttle:1,steer:1},1/120,world);
+    const pose=actorPose(doc,bike!,20);expect(rider.x).toBeCloseTo(pose.x);expect(rider.y).toBeCloseTo(pose.y);expect(Math.hypot(rider.x-bike!.x,rider.y-bike!.y)).toBeGreaterThan(30);
     expect(rider.nextCheckpoint).toBe(original.nextCheckpoint);expect(rider.lap).toBe(original.lap);
-    const returned=toggleRide(rider,world);expect(returned.ride).toBeUndefined();expect(returned.x).toBe(original.x);expect(returned.timeS).toBeCloseTo(10);
+    const returned=toggleRide(rider,world);expect(returned.ride).toBeUndefined();expect(returned.x).toBe(original.x);expect(returned.timeS).toBeCloseTo(20);
     expect(resetCar(rider,doc).ride).toBeUndefined();expect(original.ride).toBeUndefined();
   });
   it.each([30,60,144])("replays the same ride at %i render frames per second",fps=>{
-    let rider=toggleRide(createCarAtSpawn(doc),world);const stepper=new FixedStepper();
-    for(let frame=0;frame<fps*10;frame++)for(let i=0,n=stepper.push(1/fps);i<n;i++)rider=stepInteractive(rider,{throttle:0,steer:0},stepper.stepDt,world);
-    expect(rider.x).toBeCloseTo(actorPose(doc,doc.objects.find(o=>o.id==="village_bike")!,10).x,8);
-    expect(rider.timeS).toBeCloseTo(10,10);
+    let rider=toggleRide(cycleCar(),world);const stepper=new FixedStepper();
+    for(let frame=0;frame<fps*20;frame++)for(let i=0,n=stepper.push(1/fps);i<n;i++)rider=stepInteractive(rider,{throttle:0,steer:0},stepper.stepDt,world);
+    expect(rider.x).toBeCloseTo(actorPose(doc,doc.objects.find(o=>o.id==="village_bike")!,20).x,8);
+    expect(rider.timeS).toBeCloseTo(20,10);
   });
   it("does not board distant or airborne vehicles, or return into an occupied parked spot",()=>{
     const car=at(3600,3000);expect(toggleRide(car,world)).toBe(car);
     const plane=doc.objects.find(o=>o.id==="meadow_plane")!,p=actorPose(doc,plane,11);
     expect(nearbyRide({...at(p.x,p.y),timeS:11},world)).not.toBe(plane);
-    let rider=toggleRide(createCarAtSpawn(doc),world);rider={...rider,ride:{...rider.ride!,parked:{x:1190,y:1140,elevation:0,headingRad:0}}};
+    let rider=toggleRide(cycleCar(),world);rider={...rider,ride:{...rider.ride!,parked:{x:1190,y:1140,elevation:0,headingRad:0}}};
     expect(toggleRide(rider,world)).toBe(rider);
   });
   it("pushes a stationary car out of a moving vehicle and allows overflight",()=>{

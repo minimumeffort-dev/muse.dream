@@ -34,4 +34,4 @@ place orchard_baker(object=a_waving_baker,at=[1150,1610],scale=1);
 place orchard_picnic(object=a_orchard_picnic,at=[1060,1600],scale=1);
 place meadow_granite(object=a_mossy_granite,at=[2890,2050],scale=1);
 place orchard_cart(object=a_orchard_cart,at=[1240,1625],scale=1);
-place orchard_bench(object=a_wayside_bench,at=[960,1680],scale=1);
+place orchard_bench(object=a_wayside_bench,at=[1030,1660],scale=1);

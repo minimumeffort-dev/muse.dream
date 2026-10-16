@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { bridgeAt, bridgeCoordinates, bridgePolygon } from "../scene/landscape-dsl";
 import type { Point, Scene } from "../scene/schema";
 import { sampleTerrain, terrainHeight, drivingHeight, waterAt } from "../scene/terrain";
+import { routeInfrastructure } from "../scene/routes";
 import { distanceToRoad, roadPoints, roadFrames, roadRibbon, ROAD_CURB_WIDTH, ROAD_SURFACE_LIFT, type RoadFrame } from "../scene/road";
 import { tiledMesh, tiledInstances } from "./batching";
 import { groundMaterial, roadMaterial, toonMaterial, zoneMaterial } from "./shaders";
@@ -187,13 +188,17 @@ export function buildEnvironment(doc: Scene): THREE.Group {
   }
   ["#263e4d", "#f8edcf"].forEach((color, i) => group.add(tiledMesh(surfaceGeometry(doc, finishPolygons[i]!, 1.85), toonMaterial(color))));
   // Passable decoration is instanced in spatial tiles, never a new collider.
+  const corridors=doc.routes.filter(route=>route.kind!=="water").map(route=>{
+    const {points,radius}=routeInfrastructure(route);return {points,radius:radius+4};
+  });
   const path = roadPoints(doc), tufts: THREE.Matrix4[] = [], flowers: THREE.Matrix4[] = [], colors: THREE.Color[] = [];
   const transform = new THREE.Object3D(); let seed = 1234;
   const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
   const decorationSamples = Math.min(24000, Math.ceil(width * height / 1200));
   for (let i = 0; i < decorationSamples; i++) {
     const x = random() * width, y = random() * height;
-    if (bridgeAt(doc.terrain.landscape,x,y) || waterAt(doc.terrain,x,y) || distanceToRoad(path, x, y) < roadWidth / 2 + 10) continue;
+    if (bridgeAt(doc.terrain.landscape,x,y) || waterAt(doc.terrain,x,y) || distanceToRoad(path, x, y) < roadWidth / 2 + 10 ||
+      corridors.some(route=>distanceToRoad(route.points,x,y)<route.radius)) continue;
     transform.position.copy(worldPosition(doc, x, y, 3)); transform.rotation.set(.1, random() * 6, .2);
     transform.scale.setScalar(.6 + random() * .8); transform.updateMatrix(); tufts.push(transform.matrix.clone());
     if (i % 8 === 0) { flowers.push(transform.matrix.clone()); colors.push(new THREE.Color(i % 3 ? "#f8d99e" : "#e9a6b1")); }

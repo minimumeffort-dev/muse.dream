@@ -1,5 +1,5 @@
 import { playerHeight, measuredScale, CAR_PROPORTION_RULES } from "./measure";
-import { roadPoints, roadFrames, bridgeFitsRoad, ROAD_CURB_WIDTH } from "./road";
+import { roadPoints, roadFrames, bridgeFitsRoad, ROAD_CURB_WIDTH, distanceToRoad } from "./road";
 import { SpatialGrid } from "../sim/spatial";
 import { archetypeOf, objectRadius,objectHeight } from "../sim/archetypes";
 import { pointInPolygon, RasterMask } from "../sim/mask";
@@ -8,7 +8,7 @@ import { bridgePolygon, bridgeCoordinates, polygonsOverlap } from "./landscape-d
 import { bridgeHeight, bridgeRails, terrainHeight, waterAt } from "./terrain";
 import { drivingHeight } from "./terrain";
 import { objectContacts } from "./contacts";
-import { routePath,routePoint } from "./routes";
+import { routePath,routePoint,routeFrames,routeInfrastructure } from "./routes";
 import { routeElevation } from "../sim/actors";
 
 export interface SceneProblem {
@@ -228,6 +228,36 @@ export function validateScenePlayability(
 
   for(const route of scene.routes)if(route.points.some(p=>p.x<40 || p.y<40 || p.x>width-40 || p.y>height-40))
     problems.push({code:"route-not-clear",message:`route "${route.id}" infrastructure must stay inside the world`});
+  // Explicit width reserves infrastructure, including paths with no moving actor.
+  const pathContacts=scene.objects.filter(o=>!o.route && archetypeOf(o).interaction!=="decor").flatMap(o=>objectContacts(scene,o));
+  const groundRoutes=scene.routes.filter(r=>r.kind!=="water").map(route=>({route,...routeInfrastructure(route)}));
+  for(const route of scene.routes.filter(r=>r.kind==="path" && r.width!==undefined)){
+    let obstruction:string|undefined;
+    const frames=routeFrames(route),anchors=routePath(route).points;
+    const sharp=anchors.some((p,i)=>{
+      const a=anchors[i-1]??(route.mode==="loop" ? anchors.at(-2)! : undefined),b=anchors[i+1]??(route.mode==="loop" ? anchors[1]! : undefined);
+      return a && b && ((p.x-a.x)*(b.x-p.x)+(p.y-a.y)*(b.y-p.y))/(Math.hypot(p.x-a.x,p.y-a.y)*Math.hypot(b.x-p.x,b.y-p.y))<-.5;
+    });
+    for(let i=0;i<frames.length;i++){
+      const p=frames[i]!,next=frames[i+1],dx=next ? next.x-p.x : 0,dy=next ? next.y-p.y : 0;
+      if(sharp || next && dx*dx+dy*dy-Math.abs(route.width!/2*((next.nx-p.nx)*dx+(next.ny-p.ny)*dy))<=(dx*dx+dy*dy)*.05){obstruction="a bend too tight for its width";break;}
+      const radius=route.width!/2*Math.hypot(p.nx,p.ny)+4,margin=radius+8,floor=drivingHeight(scene.terrain,p.x,p.y);
+      const object=pathContacts.find(c=>Math.hypot(c.x-p.x,c.y-p.y)<c.r+margin && c.bottom<floor+24 && c.top>floor);
+      if(p.x<margin || p.y<margin || p.x>width-margin || p.y>height-margin)obstruction="world boundary";
+      else if(distanceToRoad(path,p.x,p.y)<halfRoad+ROAD_CURB_WIDTH+margin)obstruction="racing road and curbs";
+      else if(waters.some(w=>pointInPolygon(p.x,p.y,w.polygon) || distanceToRoad([...w.polygon,w.polygon[0]!],p.x,p.y)<margin))obstruction="water bank";
+      else if(object)obstruction=`placed object "${object.id}"`;
+      else {
+        const other=groundRoutes.find(other=>other.route!==route && distanceToRoad(other.points,p.x,p.y)<margin+other.radius);
+        if(other)obstruction=other.route.kind==="air" ? "runway" : "another ground route";
+      }
+      if(obstruction)break;
+    }
+    if(obstruction){
+      const reason=obstruction==="a bend too tight for its width" ? "bend too tight for its width; widen the turn or reduce the width" : `corridor overlaps ${obstruction}; reserve its full width plus 8 units of clearance`;
+      problems.push({code:"route-not-clear",message:`path "${route.id}" ${reason}`});
+    }
+  }
   for(const object of scene.objects.filter(o=>o.route)){
     const route=scene.routes.find(r=>r.id===object.route!.id)!,path=routePath(route),radius=objectRadius(object),bodyHeight=objectHeight(object);
     let invalid=false;

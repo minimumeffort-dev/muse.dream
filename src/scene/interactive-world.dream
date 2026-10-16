@@ -305,19 +305,19 @@ route orchard_rail(kind=rail,mode=loop,speed=72,wait_s=4){
     point(at=[1300+cos(a)*260,1960+sin(a)*170]);
   }
 }
-route meadow_cycle(kind=path,mode=loop,speed=35,wait_s=6){
-  point(at=[1065,1425]);
-  point(at=[1100,1460]);
-  point(at=[1080,1520]);
-  point(at=[1020,1530]);
-  point(at=[980,1490]);
-  point(at=[1000,1430]);
+route meadow_cycle(kind=path,mode=loop,speed=35,wait_s=10,width=40,surface=cycle){
+  repeat arc(index=i,count=32){
+    let a(value=240+i*360/32);
+    point(at=[1165+cos(a)*225,1615+sin(a)*120]);
+    point(at=[1165+cos(a+360/64)*225,1615+sin(a+360/64)*120]);
+  }
 }
-route village_skate(kind=path,mode=loop,speed=45,wait_s=2){
-  point(at=[810,1595]);
-  point(at=[760,1650]);
-  point(at=[700,1600]);
-  point(at=[730,1555]);
+route village_skate(kind=path,mode=loop,speed=45,wait_s=6,width=54,surface=paved){
+  repeat arc(index=i,count=32){
+    let a(value=270+i*360/32);
+    point(at=[2250+cos(a)*200,2350+sin(a)*140]);
+    point(at=[2250+cos(a+360/64)*200,2350+sin(a+360/64)*140]);
+  }
 }
 route lake_trip(kind=water,mode=loop,speed=40,wait_s=5){
   repeat repeat_i(index=i,count=20){

@@ -306,7 +306,9 @@
         "mode": "loop|shuttle",
         "speed": "n",
         "altitude": "n?",
-        "wait_s": "n?"
+        "wait_s": "n?",
+        "width": "n?",
+        "surface": "trail|cycle|paved?"
       },
       "block": "path"
     },

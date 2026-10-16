@@ -1,0 +1,55 @@
+{
+  "revisionId": "r17",
+  "sourceHash": "handmade-dream2-activity-layout-v17",
+  "routes": [
+    {
+      "id": "meadow_cycle",
+      "surface": "cycle",
+      "width": 40,
+      "length": 1108.6514983327954,
+      "previousLength": 358.57677293972597,
+      "extent": {
+        "x": 449.75906436436446,
+        "y": 239.87150099432756
+      },
+      "minimumRoadEdgeGap": 37.63392177097686,
+      "stop": {
+        "x": 1052.5,
+        "y": 1511.0769515458674
+      }
+    },
+    {
+      "id": "village_skate",
+      "surface": "paved",
+      "width": 54,
+      "length": 1076.0415416320307,
+      "previousLength": 295.9588287276105,
+      "extent": {
+        "x": 400,
+        "y": 280
+      },
+      "minimumRoadEdgeGap": 449.48138063081103,
+      "stop": {
+        "x": 2250,
+        "y": 2210
+      }
+    }
+  ],
+  "relocatedProps": [
+    {
+      "id": "orchard_bench",
+      "x": 1030,
+      "y": 1660
+    },
+    {
+      "id": "orchard_crate",
+      "x": 1320,
+      "y": 1600
+    },
+    {
+      "id": "park_bench",
+      "x": 1225,
+      "y": 1550
+    }
+  ]
+}

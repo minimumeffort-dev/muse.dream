@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import type { Scene } from "../scene/schema";
-import { routePath,routePoint } from "../scene/routes";
+import { routeInfrastructure } from "../scene/routes";
 import { drivingHeight } from "../scene/terrain";
 import { surfaceGeometry } from "./surface";
 import { toonMaterial } from "./shaders";
@@ -10,15 +10,19 @@ export function buildRoutes(scene:Scene):THREE.Group {
   const group=new THREE.Group();group.name="world-routes";
   for(const route of scene.routes){
     if(route.kind==="water")continue;
-    const path=routePath(route),count=Math.ceil(path.length/10),frames=Array.from({length:count+1},(_,i)=>{
-      const distance=i/count*path.length,p=routePoint(route,distance),a=routePoint(route,distance-8),b=routePoint(route,distance+8),n=Math.hypot(b.x-a.x,b.y-a.y)||1;
-      return {...p,nx:-(b.y-a.y)/n,ny:(b.x-a.x)/n};
-    });
-    const polygons=frames.slice(1).map((b,i)=>{const a=frames[i]!,w=route.kind==="air" ? 30 : route.kind==="rail" ? 20 : 14;
-      return [{x:a.x+a.nx*w,y:a.y+a.ny*w},{x:b.x+b.nx*w,y:b.y+b.ny*w},{x:b.x-b.nx*w,y:b.y-b.ny*w},{x:a.x-a.nx*w,y:a.y-a.ny*w}];});
-    if(route.kind==="air")polygons.splice(Math.ceil(180/10));
-    const ground=new THREE.Mesh(surfaceGeometry(scene,polygons,.7),toonMaterial(route.kind==="rail" ? "#7f8270" : route.kind==="air" ? "#717c75" : "#b19c71"));
+    const {frames,halfWidth:w}=routeInfrastructure(route);
+    const strip=(inner:number,outer:number)=>frames.slice(1).map((b,i)=>{const a=frames[i]!;
+      return [{x:a.x+a.nx*inner,y:a.y+a.ny*inner},{x:b.x+b.nx*inner,y:b.y+b.ny*inner},{x:b.x+b.nx*outer,y:b.y+b.ny*outer},{x:a.x+a.nx*outer,y:a.y+a.ny*outer}];});
+    const polygons=strip(-w,w);
+    const ground=new THREE.Mesh(surfaceGeometry(scene,polygons,.7),toonMaterial(route.kind==="rail" ? "#7f8270" : route.kind==="air" ? "#717c75" : route.surface==="cycle" ? "#4c8079" : route.surface==="paved" ? "#707f83" : "#b19c71"));
+    ground.name=`route-${route.id}`;
     ground.receiveShadow=true;group.add(ground);
+    if(route.surface && route.surface!=="trail"){
+      const paint=[...strip(-w+1.5,-w+2.5),...strip(w-2.5,w-1.5)];
+      if(route.surface==="cycle")paint.push(...strip(-.65,.65).filter((_,i)=>frames[i]!.distance%48<24));
+      const markings=new THREE.Mesh(surfaceGeometry(scene,paint,.85),toonMaterial("#ded6af"));
+      markings.name=`markings-${route.id}`;markings.receiveShadow=true;group.add(markings);
+    }
     if(route.kind!=="rail")continue;
     const ties:THREE.Matrix4[]=[],rails:THREE.Matrix4[]=[],transform=new THREE.Object3D();
     const point=(x:number,y:number,lift:number)=>new THREE.Vector3(x-scene.canonical.width/2,drivingHeight(scene.terrain,x,y)+lift,y-scene.canonical.height/2);

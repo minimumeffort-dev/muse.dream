@@ -18,6 +18,10 @@ Follow the circuit or head into the hills. Climbing slows the car down, descendi
 
 Board a smaller ride, like a bicycle or skateboard, and the camera moves closer so you can see it. Return to the car and the view eases back out. The objects keep their physical proportions.
 
+Paths need room too. The meadow now has a four-metre-wide cycle circuit around its picnic area, and the riverside has a larger paved skating circuit. Both are over a hundred metres long. Their width is part of Dream 2, so the compiler can catch a road covering a lane or a tree planted on it. Drive off-road to the bicycle stop, then press **F** when you're close.
+
+![The expanded cycle circuit, clear of the racing road and railway](docs/media/cycle-meadow.jpg)
+
 Some things move when you hit them. Others break. A ball bounces away, a bench comes apart in splinters, a tree falls as a whole, and a building can lose a section while its main structure stays solid. Those differences are declared in Dream 2.
 
 ![A bench breaking into its authored components after a car impact](docs/media/destruction.gif)

@@ -28,6 +28,7 @@ for(const object of doc.objects.filter(o=>isReactive(o.spec)))locations.push({na
 for(const bridge of doc.terrain.landscape?.bridges ?? []) locations.push({name:bridge.id,x:(bridge.a.x+bridge.b.x)/2,y:(bridge.a.y+bridge.b.y)/2});
 for(const object of doc.objects.filter(object=>['orchard_cart','orchard_bench','orchard_bread','farm_naturalist','pond_tortoise','farm_sunflowers','ridge_cairn'].includes(object.id))) locations.push({name:object.id,x:object.x,y:object.y});
 for(const object of doc.objects.filter(o=>o.route || ['meadow_station','lake_boathouse','rail_passage'].includes(o.id)))locations.push({name:object.id,x:object.x,y:object.y,object});
+if(!dreamV2)locations.push({name:'Cycle meadow',x:1165,y:1615,half:330},{name:'Riverside skate circuit',x:2250,y:2350,half:300});
 if(!dreamV2)locations.push({name:'River source',x:1930,y:1050},{name:'River outlet pool',x:1830,y:2010});
 for(const water of doc.terrain.landscape?.waters ?? []) locations.push({name:water.id,x:water.polygon.reduce((s,p)=>s+p.x,0)/water.polygon.length,y:water.polygon.reduce((s,p)=>s+p.y,0)/water.polygon.length});
 if(!dreamV2)locations.push({name:'Pond shallows',x:2910,y:2460});
@@ -68,7 +69,7 @@ renderer.setAnimationLoop(() => {
   }
   const location = locations[Number(select.value)], p=location.object?.route ? actorPose(doc,location.object,time) : location;
   const target = worldPosition(doc, p.x, p.y, 20);if(p.elevation!==undefined)target.y=p.elevation+20;
-  const point = cameraPosition(target, Number(view.value)), aspect = canvas.clientWidth / canvas.clientHeight, half = Math.max(210, 205 / aspect);
+  const point = cameraPosition(target, Number(view.value)), aspect = canvas.clientWidth / canvas.clientHeight, half = Math.max(location.half??210, (location.half??205) / aspect);
   Object.assign(camera, { left: -half * aspect, right: half * aspect, top: half, bottom: -half });
   camera.updateProjectionMatrix(); camera.position.set(point.x, target.y+Number(document.querySelector("#pitch").value), point.z); camera.lookAt(target);
   sun.target.position.copy(target); sun.position.copy(target).add(new THREE.Vector3(-300, 690, 220));

@@ -282,7 +282,7 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
   };
   const routes=program.routes.map(source=>{
     const parsed=routeSchema.safeParse({id:source.name,kind:source.kind,mode:source.mode,speed:numeric(source.speed,globals),
-      waitS:source.wait ? numeric(source.wait,globals) : 0,...(source.altitude ? {altitude:numeric(source.altitude,globals)} : {}),
+      waitS:source.wait ? numeric(source.wait,globals) : 0,...(source.width ? {width:numeric(source.width,globals)} : {}),...(source.surface ? {surface:source.surface} : {}),...(source.altitude ? {altitude:numeric(source.altitude,globals)} : {}),
       points:points(source.block,2,64).map(([x,y])=>({x,y}))});
     if(!parsed.success)fail(parsed.error.issues[0]!.message,source.token,"E_SCHEMA");return parsed.data;
   });

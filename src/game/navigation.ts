@@ -26,7 +26,7 @@ export function createWorldMap(canvas: HTMLCanvasElement, scene: Scene) {
   const roadWidth = scene.roadMaskRef.params.roadWidth;
   for(const route of scene.routes)if(route.kind==="rail" || route.kind==="path"){
     map.beginPath();route.points.forEach((p,i)=>i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));if(route.mode==="loop")map.closePath();
-    map.strokeStyle="#c9ac7c";map.lineWidth=12;map.stroke();
+    map.strokeStyle=route.surface==="cycle" ? "#76ad9c" : route.surface==="paved" ? "#a5afb0" : "#c9ac7c";map.lineWidth=route.width??12;map.stroke();
   }
   map.beginPath(); roadPoints(scene).forEach((p,i) => i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));
   map.closePath(); map.lineWidth = roadWidth; map.strokeStyle = "#829493"; map.stroke();
