@@ -10,16 +10,18 @@ function view(aspect=16/9,angle=0,elevation=12,zoom=1.18,x=0,z=0){
 }
 function screenPoint(camera:THREE.OrthographicCamera,x:number,y:number,height:number){
   const ray=new THREE.Raycaster();ray.setFromCamera(new THREE.Vector2(x,y),camera);
-  return ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,1,0),-height),new THREE.Vector3())!;
+  return ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,1,0),-height),new THREE.Vector3());
 }
 
 describe('sun shadow continuity',()=>{
   it('covers visible receivers and their offscreen casters through hills, flight, rotation, zoom and resize',()=>{
     const light=new THREE.DirectionalLight(),shadows=new SunShadows(light,-40,800),direction=new THREE.Vector3(-300,690,220).normalize();
-    for(const aspect of [9/19.5,4/3,16/9,32/9])for(const angle of [0,.6,Math.PI/2,Math.PI,Math.PI*1.5])for(const elevation of [12,190,770])for(const zoom of [1.18,1.6,2.8]){
+    for(const aspect of [9/19.5,4/3,16/9,32/9])for(const angle of [0,.6,Math.PI/2,Math.PI,Math.PI*1.5])for(const elevation of [12,190,770])for(const zoom of [.59,1.18,1.6,2.8,8.4]){
       const camera=view(aspect,angle,elevation,zoom,2300,-1800);shadows.update(camera);
       for(const x of [-1,0,1])for(const y of [-1,0,1])for(const height of [-40,0,320,800]){
-        const point=screenPoint(camera,x,y,height),caster=point.clone().addScaledVector(direction,(800-height)/direction.y);
+        const point=screenPoint(camera,x,y,height);
+        if(!point)continue; // A high plane can lie behind the camera in a wide overview.
+        const caster=point.clone().addScaledVector(direction,(800-height)/direction.y);
         for(const p of [point,caster]){
           const ndc=p.project(light.shadow.camera);
           expect(Math.abs(ndc.x)).toBeLessThan(.999);expect(Math.abs(ndc.y)).toBeLessThan(.999);expect(Math.abs(ndc.z)).toBeLessThan(1);
@@ -40,12 +42,15 @@ describe('sun shadow continuity',()=>{
     expect(pixels[1]!.distanceTo(pixels[0]!)).toBeLessThan(1e-8);
   });
   it('keeps the sun direction and grid size fixed during motion and boarding zoom',()=>{
-    const light=new THREE.DirectionalLight(),shadows=new SunShadows(light,-40,800),expected=new THREE.Vector3(-300,690,220).normalize();let size:number[]|undefined;
-    for(const [x,height,zoom] of [[0,12,1.18],[300,160,1.5],[800,770,2.8],[4000,12,1.18]]){
-      shadows.update(view(16/9,0,height!,zoom!,x!,-2000));
-      expect(light.position.clone().sub(light.target.position).normalize().distanceTo(expected)).toBeLessThan(1e-12);
-      const bounds=[light.shadow.camera.right,light.shadow.camera.top];if(size)expect(bounds).toEqual(size);size=bounds;
-      expect(light.shadow.mapSize.toArray()).toEqual([2048,2048]);
+    const light=new THREE.DirectionalLight(),shadows=new SunShadows(light,-40,800),expected=new THREE.Vector3(-300,690,220).normalize();
+    for(const factor of [.5,1,3]){
+      let size:number[]|undefined;
+      for(const [x,height,zoom] of [[0,12,1.18],[300,160,1.5],[800,770,2.8],[4000,12,1.18]]){
+        shadows.update(view(16/9,0,height!,zoom!*factor,x!,-2000),expected,1.18*factor);
+        expect(light.position.clone().sub(light.target.position).normalize().distanceTo(expected)).toBeLessThan(1e-12);
+        const bounds=[light.shadow.camera.right,light.shadow.camera.top];if(size)expect(bounds).toEqual(size);size=bounds;
+        expect(light.shadow.mapSize.toArray()).toEqual([2048,2048]);
+      }
     }
   });
 });

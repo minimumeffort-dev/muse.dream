@@ -6,6 +6,14 @@ Appearance and interaction are separate. The same assembled shape can be solid, 
 
 [NPCs and control](npcs.md) adds placement roles and bounded programs for patrol, activity, rest and player proximity. The same assembly can be player-controllable or owned by an NPC.
 
+## View controls
+
+Pinch the trackpad or scroll vertically over the world to zoom in and out. Mouse wheels work too. Framing eases smoothly, keeps the same view angle and remains relative to the current vehicle, so boarding a bicycle still brings it closer. Reduced motion applies zoom immediately. Manual framing survives R; Start over restores the default. Gestures over the pause menu retain normal browser behavior.
+
+![Close view of the voxel car using manual zoom](../media/zoom-close.jpg)
+
+[Wider overview of the same position](../media/zoom-overview.jpg) · [Input and camera checks](../evidence/trackpad-zoom/verification.md)
+
 ## Bodies, contacts and boarding
 
 Every object declares a body with a radius and height. A static upright solid can replace its default footprint with named `contact` cylinders. Separate wall and roof contacts leave a real doorway or passage with headroom. These remain vertical cylinders, not arbitrary mesh-shaped collision bodies.

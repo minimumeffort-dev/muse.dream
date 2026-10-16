@@ -181,12 +181,15 @@ For local development, open `http://127.0.0.1:5173/` on your machine. You can al
 | --- | --- |
 | WASD / arrows | Walk, swim or drive the current vehicle |
 | Q / E | Rotate the view |
+| Trackpad pinch / two-finger scroll, or mouse wheel | Zoom in / out over the world |
 | F | Exit a vehicle, or enter one nearby while on foot |
 | Space | Jump on foot/bike/skateboard, hop a boat, swim faster, or climb in the plane |
 | Shift | Run, swim faster, or descend in the plane |
 | P / Escape | Pause |
 | R | Return to the start, keeping changes to the world |
 | Start over, in the pause menu | Reset the race and restore destroyed objects |
+
+Manual zoom keeps your framing as you move and switch vehicles. Smaller rides still bring the camera closer automatically. R keeps your zoom; Start over restores it.
 
 ## Work with Dream 2
 

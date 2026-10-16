@@ -29,6 +29,7 @@ import { worldTime, worldMotion, terrainPlayer, terrainView, worldGradeShader } 
 import { animateObject, buildObject, buildPlayer,MAX_SUSPENSION_COMPRESSION } from "./world3d";
 import { buildEnvironment, roadGeometry, terrainNormal, worldPosition } from "./environment";
 import { cameraPosition, followCamera, followCameraZoom, rideCameraZoom, DEFAULT_CAMERA_ZOOM, type FollowTarget } from "./camera";
+import { cameraZoomInput } from "./camera-input";
 import { hasAnimatedJoints,impactOf,isReactive,controlOf } from "../scene/object-dsl";
 import { buildDamageObject,updateDamage } from "./damage";
 import { WorldDebris } from "./debris";
@@ -71,8 +72,9 @@ function start(): void {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
-  renderer.domElement.setAttribute("aria-label", "WASD walks, swims or drives. F enters or exits a vehicle. Space jumps on foot or on a bicycle, skateboard or scooter, and hops a boat. Shift runs or swims faster. In an aircraft Space climbs and Shift descends. P pauses; R returns to the start.");
+  renderer.domElement.setAttribute("aria-label", "WASD walks, swims or drives. F enters or exits a vehicle. Space jumps on foot or on a bicycle, skateboard or scooter, and hops a boat. Shift runs or swims faster. In an aircraft Space climbs and Shift descends. Pinch or scroll to zoom. Q and E rotate the view. P pauses; R returns to the start.");
   container.append(renderer.domElement);
+  const manualZoom = cameraZoomInput(renderer.domElement, () => mode === "playing");
   const scene = new THREE.Scene();
   scene.background = new THREE.Color("#526b76");
   scene.fog = new THREE.Fog("#526b76", 1700, 3400);
@@ -184,7 +186,7 @@ function start(): void {
 
   function resetPosition(restartRace = false): void {
     car = resetCar(car, doc, restartRace);
-    if(restartRace)worldTime.value=0;
+    if(restartRace){worldTime.value=0;manualZoom.factor=1;}
     stepper.reset(); particles.clear(); landscape.clear(); snap = true; cameraAngle=viewAngle;
     boostUntil = 0; surface.textContent = "";
     flight = { jumps: 0, landings: 0, maxClearance: 0 }; landingBounce = 0;
@@ -398,7 +400,7 @@ function start(): void {
       follow = followCamera(follow, target, dt, snap || reduced.matches);
       follow.x = target.x; follow.z = target.z;
       const zoom = car.control.kind==="foot" ? 2.25 : occupied ? rideZooms.get(occupied.id)! : DEFAULT_CAMERA_ZOOM;
-      const nextZoom=followCameraZoom(camera.zoom, zoom, dt, snap || reduced.matches);
+      const nextZoom=followCameraZoom(camera.zoom, zoom * manualZoom.factor, dt, snap || reduced.matches);
       if(camera.zoom!==nextZoom){camera.zoom=nextZoom;camera.updateProjectionMatrix();}
     }
     snap = false;
@@ -414,7 +416,7 @@ function start(): void {
     scenery.update(camera, position.clone().add(new THREE.Vector3(0, 7, 0)), dt, reduced.matches);
     occlusion.update(camera, position.clone().add(new THREE.Vector3(0, playerHeight(doc) / 2, 0)), dt, reduced.matches,occupied ? actorMeshes.get(occupied.id) : undefined);
     daylight.update(captureTime??(worldTime.value+hourOffset));
-    sunShadows.update(camera,daylight.direction);
+    sunShadows.update(camera,daylight.direction,DEFAULT_CAMERA_ZOOM * manualZoom.factor);
     hudTime += dt;
     if (hudTime > .1) {
       hudTime = 0;

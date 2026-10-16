@@ -23,13 +23,13 @@ export class SunShadows {
     light.shadow.normalBias=.6;light.shadow.bias=-.0001;light.shadow.radius=3;
   }
 
-  update(camera:THREE.OrthographicCamera,lightDirection=DEFAULT_SUN_DIRECTION):void {
+  update(camera:THREE.OrthographicCamera,lightDirection=DEFAULT_SUN_DIRECTION,baseZoom=DEFAULT_CAMERA_ZOOM):void {
     const direction=this.direction.copy(lightDirection).normalize(),right=this.right,up=this.up;
     this.rotation.lookAt(direction,this.zero,THREE.Object3D.DEFAULT_UP);
     right.setFromMatrixColumn(this.rotation,0);up.setFromMatrixColumn(this.rotation,1);
     this.bounds.makeEmpty();camera.getWorldDirection(this.view);
     // Retain the widest gameplay view while boarding zoom eases in and out.
-    const extent=camera.zoom/Math.min(camera.zoom,DEFAULT_CAMERA_ZOOM);
+    const extent=camera.zoom/Math.min(camera.zoom,baseZoom);
     for(const x of [-extent,extent])for(const y of [-extent,extent]){
       this.origin.set(x,y,-1).unproject(camera);
       for(const height of [this.minHeight,this.maxHeight]){

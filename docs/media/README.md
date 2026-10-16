@@ -169,3 +169,7 @@ Earlier evidence sections describe their original revisions. See the
 [whole-world verification](../evidence/whole-world-voxels/verification.md).
 
 The r34 timber curb follow-up preserves the small example's existing deck transition. Its native review is `tests/visual/roads.html?voxel`. The live city uses three stone bridges, so its current screenshots and recordings remain accurate; their construction is unchanged by the taper fix.
+
+## Trackpad framing
+
+`zoom-overview.jpg` and `zoom-close.jpg` are native browser captures at the same player position and view angle, using the minimum and maximum manual car zoom. The pause-help capture in the [verification record](../evidence/trackpad-zoom/verification.md) shows the new instruction. Default framing, world geometry, vehicle animation and lighting remain unchanged, so the existing 30 fps GIF/video pairs and their stills remain accurate. These screenshots demonstrate framing, not measured performance or a physical trackpad test.

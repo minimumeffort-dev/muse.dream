@@ -46,12 +46,12 @@ Autonomous water actors must keep their whole body afloat and have enough headro
 
 The engine keeps one sun direction across the world. Its shadow camera covers the
 visible terrain and objects, with extra room for shadows cast by things outside
-the screen. The coverage follows the viewport, including rotated views, small
-vehicle zoom and flight. Walking over a hill does not turn the sun or expose the
+the screen. The coverage follows the viewport, including rotated views, manual
+trackpad zoom, small vehicle framing and flight. Walking over a hill does not turn the sun or expose the
 edge of a small shadow box.
 
 The shadow grid stays aligned to world space as the camera translates. Boarding
-zoom retains the wider view's shadow coverage, so that transition cannot rescale
+zoom retains the wider view's shadow coverage at your chosen manual scale, so that transition cannot rescale
 the grid. The renderer keeps one 2048 × 2048 shadow map; it does not allocate a new
 light or a larger texture while travelling. More visible coverage can draw more
 shadow casters than the old clipped box. This is engine-owned rendering, with no
