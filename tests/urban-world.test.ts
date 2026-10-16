@@ -33,10 +33,10 @@ describe('bounded Dream street and ground data',()=>{
   expect(checkDream(example.replace('count=24','count=33')).ok).toBe(false);
   expect(checkDream(example.replace('width=100','width=59')).ok).toBe(false);
  });
- it('enforces aggregate module counts and scene lengths without raising prior budgets',()=>{
+ it('enforces aggregate module counts and the expanded scene length bound',()=>{
   const streets=Array.from({length:32},(_,i)=>`street s_${i}(width=60,sidewalk=0,points=[[100,100],[100,200]]);`).join('');
   expect(checkDream('dream 2;'+streets+'include more(module=extra);',{extra:'dream 2;street more(width=60,sidewalk=0,points=[[200,100],[200,200]]);'}).ok).toBe(false);
-  expect(()=>parseScene({...fixture,streets:Array.from({length:8},(_,i)=>({...data.streets[0],id:`long_${i}`,points:[{x:100,y:100},{x:100,y:8100}]}))})).toThrow('60000 street');
+  expect(()=>parseScene({...fixture,streets:Array.from({length:16},(_,i)=>({...data.streets[0],id:`long_${i}`,points:[{x:100,y:100},{x:100,y:8100}]}))})).toThrow('120000 street');
  });
  it('returns source diagnostics for invalid infrastructure in an included module',()=>{
   const result=checkDream('dream 2;include child(module=child);',{child:example.replace('sidewalk=20','sidewalk=-1')});
@@ -82,7 +82,7 @@ describe('continuous, terrain-conforming streets',()=>{
 });
 describe('expanded planned world',()=>{
  it('retains the circuit, controls and destruction inside existing scene limits',()=>{
-  expect(world.canonical).toMatchObject({width:8000,height:7800});expect(world.objects).toHaveLength(715);
+  expect(world.canonical).toMatchObject({width:12000,height:10000});expect(world.objects).toHaveLength(796);
   expect(world.streets.length).toBeGreaterThan(20);expect(world.surfaces.length).toBeLessThanOrEqual(64);
   expect(world.objects.filter(o=>o.id.startsWith('block_'))).toHaveLength(44);expect(world.objects.filter(o=>/^home_\d/.test(o.id))).toHaveLength(36);
   expect(world.objects.filter(o=>/^(pitch|court)_player_/.test(o.id))).toHaveLength(4);
@@ -102,7 +102,7 @@ describe('expanded planned world',()=>{
   }
  });
  it.each(['town','suburbs','sports'])('lets the original car drive the %s streets with normal grip',scenario=>{
-  const context={scene:world,roadMask:buildMaskForScene(world),driveMask:buildPaperMask(8000,7800),carRadius:11};
+  const context={scene:world,roadMask:buildMaskForScene(world),driveMask:buildPaperMask(world.canonical.width,world.canonical.height),carRadius:11};
   let car=drivingReviewStart(createCarAtSpawn(world),context,scenario),initial={x:car.x,y:car.y};
   expect(onStreet(world,car.x,car.y)).toBe(true);
   for(let i=0;i<180;i++)car=stepCar(car,{throttle:1,steer:0},1/120,context);
@@ -110,7 +110,7 @@ describe('expanded planned world',()=>{
   expect(Math.hypot(car.x-initial.x,car.y-initial.y)).toBeGreaterThan(100);
  });
  it('lets the new lake launch board and exit from dry shore',()=>{
-  const context={scene:world,roadMask:buildMaskForScene(world),driveMask:buildPaperMask(8000,7800),carRadius:11};
+  const context={scene:world,roadMask:buildMaskForScene(world),driveMask:buildPaperMask(world.canonical.width,world.canonical.height),carRadius:11};
   const shore=vehicleReviewStart(createCarAtSpawn(world),context,'south_lake_launch');
   expect(shore.control.kind).toBe('foot');expect(nearbyRide(shore,context)?.id).toBe('south_lake_launch');
   expect(toggleRide(shore,context).control).toEqual({kind:'vehicle',id:'south_lake_launch'});

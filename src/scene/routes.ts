@@ -1,3 +1,4 @@
+import {MAX_WORLD_SIZE} from './world-bounds';
 import { z } from "zod";
 
 export const routeSchema=z.object({
@@ -5,7 +6,7 @@ export const routeSchema=z.object({
   speed:z.number().finite().min(.5).max(160),altitude:z.number().finite().min(60).max(300).optional(),
   width:z.number().finite().min(16).max(120).optional(),surface:z.enum(["trail","cycle","paved"]).optional(),
   waitS:z.number().finite().min(0).max(12).default(0),
-  points:z.array(z.object({x:z.number().finite().min(0).max(8192),y:z.number().finite().min(0).max(8192)}).strict()).min(2).max(64),
+  points:z.array(z.object({x:z.number().finite().min(0).max(MAX_WORLD_SIZE),y:z.number().finite().min(0).max(MAX_WORLD_SIZE)}).strict()).min(2).max(64),
 }).strict().superRefine((route,ctx)=>{
   if(route.kind!=="ambient" && route.speed<12)ctx.addIssue({code:z.ZodIssueCode.custom,message:"vehicle routes require speed 12..160; ambient routes allow .5..160"});
   if(route.kind==="air" && !route.altitude || route.altitude!==undefined && route.kind!=="air" && route.kind!=="ambient")

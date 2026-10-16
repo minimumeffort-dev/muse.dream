@@ -1,6 +1,6 @@
 # Rendering the whole world
 
-The mock world has 715 placed objects across an 8000 × 7800 landscape. It stays resident while you drive, walk or fly. There is no district streaming, distance-based asset replacement or automatic quality reduction.
+The mock world has 796 placed objects across a 12000 × 10000 landscape. It stays resident while you drive, walk or fly. There is no district streaming, distance-based asset replacement or automatic quality reduction.
 
 ## Less work for the same image
 
@@ -30,7 +30,7 @@ These measurements come from the development machine. Lower-powered laptop perfo
 
 ## The planned-world expansion
 
-The expanded world has a little over twice the former area, with 715 placements and 83 assemblies. Street carriageways are unioned before triangulation; sidewalks subtract the entire network, leaving open junctions. Carriageways, sidewalks, surfaces and paint retain local culling tiles. Static buildings use compacted, instanced assets; programmable visitors use compacted actor meshes so they can turn toward the player. Grass samples scale with area to retain density; surfaces reserve their footprint so grass stays off courts, driveways and pitches.
+The current world is 1.92 times the previous 8000 × 7800 area, with 796 placements and 83 assemblies. Street carriageways are unioned before triangulation; sidewalks subtract the entire network, leaving open junctions. Carriageways, sidewalks, surfaces and paint retain local culling tiles. Static buildings use compacted, instanced assets; programmable visitors use compacted actor meshes so they can turn toward the player. Grass samples scale with area to retain density; surfaces reserve their footprint so grass stays off courts, driveways and pitches.
 
 For a fixed comparison render size, the development profiler accepts `profile-dpr=1` through `1.5`. Production keeps its normal device-pixel-ratio policy. Match the drawing buffer, browser viewport and camera between runs. Add `test-driving=town` to profile a clear street in the dense new district; `suburbs` and `sports` are also development review starts. These helpers change the inspection pose, not the production spawn.
 
@@ -45,3 +45,9 @@ Mean CPU preparation/submission was 2.05 ms and GPU time 1.02 ms; the earlier to
 run recorded 1.94 ms and 1.01 ms. Draw calls remained about 172. These are single
 local runs with normal timing variance, not a performance guarantee. No quality,
 particle, shadow or resident-world settings were reduced.
+
+## Connected transport expansion
+
+The 1.2 × 1 km world keeps terrain, wave, shadow and asset detail unchanged. Water triangles now use the same resident spatial tiling as roads; UVs, depth attributes and wave displacement bounds survive the split. The solver iterates precomputed wet cells instead of dry cells inside a long waterway’s bounding rectangle. Street driving uses cached riding footprints, including bicycle lanes. No loading, unloading or distance-based asset replacements were added.
+
+[Transport verification](evidence/transport-world/verification.md) records the local measurements and limits for this revision.

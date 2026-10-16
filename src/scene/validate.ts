@@ -6,13 +6,13 @@ import { SpatialGrid } from "../sim/spatial";
 import { archetypeOf, objectRadius,objectHeight } from "../sim/archetypes";
 import { pointInPolygon, RasterMask } from "../sim/mask";
 import type { Scene } from "./schema";
-import { bridgePolygon, bridgeCoordinates, polygonsOverlap } from "./landscape-dsl";
-import { bridgeHeight, bridgeRails, terrainHeight, waterAt } from "./terrain";
+import { bridgePolygon, bridgeCoordinates, polygonsOverlap,clipPolygon } from "./landscape-dsl";
+import { bridgeHeight, bridgeRails, terrainHeight, waterAt,navigableWater } from "./terrain";
 import { drivingHeight } from "./terrain";
 import { objectContacts } from "./contacts";
 import { routePath,routePoint,routeFrames,routeInfrastructure } from "./routes";
 import { actorPose,actorContacts,routeElevation } from "../sim/actors";
-import {streetRects,rectPolygon,inRect,streetFootprints,markingPolygons} from './streets';
+import {streetRects,streetRidingRects,bridgeFitsStreet,rectPolygon,inRect,streetFootprints,markingPolygons} from './streets';
 
 export interface SceneProblem {
   code:
@@ -113,8 +113,8 @@ export function validateScenePlayability(
     if(escapes) problems.push({code:"water-not-contained",message:`water "${water.id}" needs banks at or above its level`});
   }
   for(const bridge of bridges) {
-    if(!bridgeFitsRoad(scene,bridge,frames))
-      problems.push({code:"bridge-road-disconnected",message:`bridge "${bridge.id}" must carry the full road and curbs through both open ends, clear of side rails`});
+    if(!bridgeFitsRoad(scene,bridge,frames) || streetRects(scene.streets,true).some(r=>polygonsOverlap(rectPolygon(r),bridgePolygon(bridge))) && !bridgeFitsStreet(scene,bridge))
+      problems.push({code:"bridge-road-disconnected",message:`bridge "${bridge.id}" must carry the full road or street cross-section through both open ends, clear of side rails`});
     let unsafe=false;
     const {ux,uy}=bridgeCoordinates(bridge,bridge.a.x,bridge.a.y);
     for(let i=0;i<=30;i++) for(const across of [-bridge.width/2,0,bridge.width/2]) {
@@ -145,7 +145,7 @@ export function validateScenePlayability(
   const stationary=(o:Scene['objects'][number])=>!isActor(o) || roleOf(o)==='npc' && !o.route;
   const solids = scene.objects.filter((o) => stationary(o) && archetypeOf(o).interaction === "solid")
     .flatMap((o) => objectContacts(scene,o))
-    .concat(bridgeRails(scene.terrain).map(rail=>({...rail,bottom:-Infinity})));
+    .concat(bridgeRails(scene.terrain));
   const maxRadius=Math.max(0,...solids.map(o=>o.r)),carHeight=playerHeight(scene);
   const solidGrid = new SpatialGrid(solids);
   const clearance = new RasterMask(width, height, undefined, mask.cellSize);
@@ -240,12 +240,19 @@ export function validateScenePlayability(
   for(const marking of scene.markings)if(markingPolygons(marking).flat().some(p=>p.x<0 || p.y<0 || p.x>width || p.y>height))
     problems.push({code:'landscape-out-of-bounds',message:`marking "${marking.id}" paint width extends outside the world`});
   const streetGround=streetFootprints(scene);
-  for(const surface of scene.surfaces)if(streetGround.roads.some(r=>polygonsOverlap(surface.points,rectPolygon(r))))
+  for(const surface of scene.surfaces)if(streetGround.riding.some(r=>polygonsOverlap(surface.points,rectPolygon(r))))
     problems.push({code:'landscape-overlap',message:`ground surface "${surface.id}" overlaps a street carriageway`});
   for(const street of scene.streets){
-    const carriageways=streetRects([street]),reserved=streetRects([street],true);
+    const carriageways=streetRidingRects([street]),reserved=streetRects([street],true);
     if(reserved.some(r=>r.x0<0 || r.y0<0 || r.x1>width || r.y1>height))problems.push({code:'landscape-out-of-bounds',message:`street "${street.id}" extends outside the world`});
-    if(carriageways.some(r=>waters.some(w=>polygonsOverlap(rectPolygon(r),w.polygon))))problems.push({code:'route-not-clear',message:`street "${street.id}" crosses water; use a bridge-connected road instead`});
+    const unsupported=reserved.some(r=>waters.some(w=>{
+      if(!polygonsOverlap(rectPolygon(r),w.polygon))return false;
+      let intersection=clipPolygon(w.polygon,p=>p.x-r.x0);intersection=clipPolygon(intersection,p=>r.x1-p.x);
+      intersection=clipPolygon(intersection,p=>p.y-r.y0);intersection=clipPolygon(intersection,p=>r.y1-p.y);
+      if(intersection.length<3)return false;
+      return !bridges.some(b=>bridgeFitsStreet(scene,b) && intersection.every(p=>{const q=bridgeCoordinates(b,p.x,p.y);return q.t>=0 && q.t<=1 && Math.abs(q.across)<=b.width/2-6;}));
+    }));
+    if(unsupported)problems.push({code:'route-not-clear',message:`street "${street.id}" crosses water without a full-width connected bridge`});
     const contact=pathContacts.find(c=>carriageways.some(r=>{
       const x=Math.max(r.x0,Math.min(r.x1,c.x)),y=Math.max(r.y0,Math.min(r.y1,c.y)),floor=drivingHeight(scene.terrain,x,y);
       return Math.hypot(c.x-x,c.y-y)<c.r+2 && c.bottom<floor+24 && c.top>floor+.05;
@@ -298,17 +305,7 @@ export function validateScenePlayability(
       if(p.x<radius || p.y<radius || p.x>width-radius || p.y>scene.canonical.height-radius){invalid=true;break;}
       if(route.kind==="ambient" && !route.altitude && Array.from({length:9},(_,i)=>i===8 ? p : {x:p.x+Math.cos(i*Math.PI/4)*radius,y:p.y+Math.sin(i*Math.PI/4)*radius}).some(q=>waterAt(scene.terrain,q.x,q.y))){invalid=true;break;}
       if(route.kind==="water"){
-        if(!scene.terrain.landscape?.waters.some(w=>pointInPolygon(p.x,p.y,w.polygon))) {invalid=true;break;}
-        for(let i=0;i<8;i++){
-          const x=p.x+Math.cos(i*Math.PI/4)*radius,y=p.y+Math.sin(i*Math.PI/4)*radius;
-          if(!scene.terrain.landscape?.waters.some(w=>pointInPolygon(x,y,w.polygon) && terrainHeight(scene.terrain,x,y)<w.level-.2))invalid=true;
-        }
-        // shortcut: boats cannot pass under heightfield bridge decks; add layered ground before permitting it.
-        if(bridges.some(bridge=>{
-          const {t,across,length}=bridgeCoordinates(bridge,p.x,p.y);
-          return Math.hypot(Math.max(0,-t*length,(t-1)*length),Math.max(0,Math.abs(across)-bridge.width/2))<radius;
-        }))invalid=true;
-        if(invalid)break;
+        if(!navigableWater(scene.terrain,p.x,p.y,radius,bodyHeight)){invalid=true;break;}
       }
       const bottom=routeElevation(scene,route,p,d),top=bottom+bodyHeight;
       if(solidGrid.query(p.x,p.y,radius+maxRadius).some(c=>bottom<c.top-.05 && top>c.bottom+.05 && Math.hypot(c.x-p.x,c.y-p.y)<radius+c.r)){invalid=true;break;}
@@ -329,10 +326,7 @@ export function validateScenePlayability(
     let invalid=pose.x<radius || pose.y<radius || pose.x>width-radius || pose.y>scene.canonical.height-radius;
     if(controlOf(object.spec)==="boat"){
       const support=Math.max(radius,assemblyHorizontalRadius(object.spec as import("./object-dsl").ObjectDsl,object.scale));
-      for(let i=0;i<12;i++){
-        const x=pose.x+Math.cos(i*Math.PI/6)*support,y=pose.y+Math.sin(i*Math.PI/6)*support,floor=drivingHeight(scene.terrain,x,y),water=waterAt(scene.terrain,x,y,floor);
-        if(!water || floor>=water.level-.5)invalid=true;
-      }
+      if(!navigableWater(scene.terrain,pose.x,pose.y,support,height))invalid=true;
     }
     if(controlOf(object.spec)==="plane" && waterAt(scene.terrain,pose.x,pose.y,pose.elevation))invalid=true;
     if(solidGrid.query(pose.x,pose.y,radius+maxRadius).some(c=>pose.elevation<c.top-.05 && pose.elevation+height>c.bottom+.05 && Math.hypot(c.x-pose.x,c.y-pose.y)<radius+c.r))invalid=true;

@@ -25,7 +25,6 @@ behavior sports_routine(start=playing){
   }
 }
 
-surface lake_shore(color=#9e9d7b,points=[[4497.33,5181.11],[4584.67,5161.55],[4690.17,5155.36],[4796.98,5162.04],[4888.28,5181.11],[4961.75,5216.44],[5025.64,5266.96],[5078.95,5324.75],[5120.73,5381.86],[5152.51,5437.01],[5174.22,5494.13],[5182.39,5553.23],[5173.55,5614.31],[5145.9,5683.33],[5101.57,5758.28],[5043.05,5827.28],[4972.8,5878.46],[4882.58,5910.33],[4774.04,5928.65],[4664.49,5932.44],[4571.3,5920.73],[4496.6,5890.6],[4431.96,5843.46],[4378.88,5784.77],[4338.85,5719.97],[4311.61,5644.28],[4296.59,5556.86],[4294.77,5469.11],[4307.15,5392.44],[4334.39,5326.48],[4375.84,5266.3],[4430.48,5216.36]]);
 asset football_goal(module=sports_assets,object=football_goal);
 asset basketball_hoop(module=sports_assets,object=basketball_hoop);
 asset golf_pin(module=sports_assets,object=golf_pin);
@@ -217,12 +216,12 @@ place golf_flag_2(object=golf_pin,at=[7165,6540],scale=1,heading_deg=0);
 route lake_walk(kind=ambient,mode=loop,speed=8,wait_s=2){
   point(at=[3950,4900]);
   point(at=[3950,6500]);
-  point(at=[5530,6500]);
-  point(at=[5530,4900]);
+  point(at=[4150,6500]);
+  point(at=[4150,4900]);
 }
 place lakeside_walker(object=park_walker,route=lake_walk,role=npc,behavior=lake_attention);
 route south_lake_boat(kind=water,mode=loop,speed=20){
-  point(at=[4395,5415]);
+  point(at=[4350,5415]);
   point(at=[4900,5400]);
   point(at=[4950,5650]);
   point(at=[4600,5750]);

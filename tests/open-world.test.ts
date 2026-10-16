@@ -19,14 +19,14 @@ const scene = createWorldScene();
 
 describe("bounded open-world scene", () => {
   it("expands to organized districts beyond the original landscape, a winding circuit and diverse assemblies", () => {
-    expect(scene.canonical.width * scene.canonical.height).toBe(8000 * 7800);
+    expect(scene.canonical.width * scene.canonical.height).toBe(12000 * 10000);
     expect(new Set(scene.objects.filter(o => o.spec).map(o => o.spec!.displayName)).size).toBeGreaterThanOrEqual(12);
     expect(scene.objects.length).toBeGreaterThan(300);
     expect(scene.objects.length).toBeLessThan(1000);
     expect(scene.checkpoints).toHaveLength(8);
     const points = roadPoints(scene), mask = buildMaskForScene(scene);
     for (const p of points) expect(mask.footprintClear(p.x, p.y, 11)).toBe(true);
-    expect(mask.data.length).toBeLessThan(4_000_000);
+    expect(mask.data.length).toBe(7_500_000);
     expect(mask.isDrivable(3000, 2400)).toBe(false);
     for(const object of scene.objects.filter(o=>!o.route)) expect(distanceToRoad(points,object.x,object.y)-objectRadius(object)).toBeGreaterThan(scene.roadMaskRef.params.roadWidth/2+15);
     expect(validateScenePlayability(scene, mask, 11)).toEqual([]);
@@ -47,7 +47,7 @@ describe("bounded open-world scene", () => {
   });
   it("rejects collapsed, unbounded or off-sheet road proposals", () => {
     expect(() => parseScene({ ...scene, roadMaskRef: { kind: "generated-spline-loop", params: { roadWidth: 156, points: Array(6).fill({ x: 100, y: 100 }) } } })).toThrow();
-    expect(() => parseScene({ ...scene, canonical: { ...scene.canonical, width: 9000 } })).toThrow();
+    expect(() => parseScene({ ...scene, canonical: { ...scene.canonical, width: 16385 } })).toThrow();
     const tight = parseScene({ ...scene, roadMaskRef: { kind: "generated-spline-loop", params: { roadWidth: 240, points: [{ x: 300, y: 300 }, { x: 800, y: 300 }, { x: 850, y: 350 }, { x: 800, y: 800 }, { x: 300, y: 800 }, { x: 250, y: 500 }] } } });
     expect(validateScenePlayability(tight, buildMaskForScene(tight), 11)).toContainEqual(expect.objectContaining({ code: "road-bend-too-tight" }));
     const offSheet = parseScene({ ...scene, roadMaskRef: { kind: "generated-spline-loop", params: { roadWidth: 156, points: [{ x: 30, y: 30 }, { x: 500, y: 30 }, { x: 700, y: 700 }, { x: 500, y: 1000 }, { x: 200, y: 1000 }, { x: 10, y: 700 }] } } });

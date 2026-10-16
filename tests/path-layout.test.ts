@@ -75,17 +75,18 @@ describe("dedicated path corridors",()=>{
 
 describe("full-size mock activities",()=>{
   const scene=createWorldScene();
-  it("gives both routes at least a hundred metres of clear travel and generous space from the circuit",()=>{
+  it("keeps the skate circuit and connects cycling to city streets",()=>{
     expect(validateScenePlayability(scene,buildMaskForScene(scene),11)).toEqual([]);
-    for(const id of ["meadow_cycle","village_skate"]){
+    expect(scene.routes.find(r=>r.id==="meadow_cycle")).toBeUndefined();
+    expect(scene.streets.filter(s=>s.cycleWidth).length).toBeGreaterThan(20);
+    for(const id of ["village_skate"]){
       const path=scene.routes.find(r=>r.id===id)!;
       expect(routePath(path).length,id).toBeGreaterThan(1000);
       expect(Math.max(...path.points.map(p=>p.x))-Math.min(...path.points.map(p=>p.x))).toBeGreaterThanOrEqual(400);
       expect(Math.max(...path.points.map(p=>p.y))-Math.min(...path.points.map(p=>p.y))).toBeGreaterThanOrEqual(230);
       expect(path.width).toBeGreaterThanOrEqual(40);
     }
-    const changed=parseScene({...scene,routes:scene.routes.map(r=>r.id==="meadow_cycle" ? {...r,points:r.points.map(p=>({...p,y:p.y-70}))} : r)});
-    expect(validateScenePlayability(changed,buildMaskForScene(scene),11)).toContainEqual(expect.objectContaining({code:"route-not-clear",message:expect.stringContaining("racing road")}));
+
   });
   it("keeps grass and flowers outside the newly reserved surfaces",()=>{
     const environment=buildEnvironment(scene),paths=scene.routes.filter(r=>r.kind==="path"),matrix=new Matrix4();let decorations=0;

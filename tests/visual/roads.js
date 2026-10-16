@@ -33,13 +33,13 @@ for(const object of doc.objects.filter(o=>isReactive(o.spec)))locations.push({na
 for(const bridge of doc.terrain.landscape?.bridges ?? []) locations.push({name:bridge.id,x:(bridge.a.x+bridge.b.x)/2,y:(bridge.a.y+bridge.b.y)/2});
 for(const object of doc.objects.filter(object=>['orchard_cart','orchard_bench','orchard_bread','farm_naturalist','pond_tortoise','farm_sunflowers','ridge_cairn'].includes(object.id))) locations.push({name:object.id,x:object.x,y:object.y});
 for(const object of doc.objects.filter(o=>o.route || ['meadow_station','lake_boathouse','rail_passage'].includes(o.id)))locations.push({name:object.id,x:object.x,y:object.y,object,...(object.route && doc.routes.find(r=>r.id===object.route.id)?.kind==='ambient' ? {half:80} : {})});
-if(!dreamV2)locations.push({name:'Cycle meadow',x:1165,y:1615,half:330},{name:'Riverside skate circuit',x:2250,y:2350,half:300});
+if(!dreamV2)locations.push({name:'City cycle tracks',x:9375,y:1700,half:240},{name:'Riverside skate circuit',x:2250,y:2350,half:300});
 if(!dreamV2)locations.push({name:'River source',x:1930,y:1050},{name:'River outlet pool',x:1830,y:2010});
 for(const water of doc.terrain.landscape?.waters ?? []) locations.push({name:water.id,x:water.polygon.reduce((s,p)=>s+p.x,0)/water.polygon.length,y:water.polygon.reduce((s,p)=>s+p.y,0)/water.polygon.length});
 for(const object of doc.objects.filter(o=>['eco_woodland_fern_0','eco_foxglove_0','eco_river_reeds_0','eco_weeping_willow_0'].includes(o.id)))locations.push({name:object.id,x:object.x,y:object.y,half:110});
 if(!dreamV2)locations.push({name:'Pond shallows',x:2910,y:2460},{name:'Fern understory',x:1550,y:2850},{name:'Riverbank plants',x:1860,y:1960});
 if(!dreamV2)locations.push({ name:'Mixed grove', x:1550, y:2850 }, { name:'Open meadow', x:3150, y:2650 });
-if(!dreamV2)locations.push({name:'Town center',x:6900,y:1800,half:1000},{name:'Town square',x:6925,y:1525,half:330},{name:'Suburbs',x:2100,y:5870,half:1000},{name:'Football pitch',x:6400,y:5020,half:440},{name:'Basketball court',x:7300,y:4945,half:180},{name:'Golf park',x:6700,y:6500,half:850},{name:'South lake',x:4750,y:5500,half:650});
+if(!dreamV2)locations.push({name:'Town center',x:6900,y:1800,half:1000},{name:'Town square',x:6925,y:1525,half:330},{name:'Suburbs',x:2100,y:5870,half:1000},{name:'Football pitch',x:6400,y:5020,half:440},{name:'Basketball court',x:7300,y:4945,half:180},{name:'Golf park',x:6700,y:6500,half:850},{name:'South lake',x:4750,y:5500,half:650},{name:'Canal district',x:10000,y:2700,half:2100},{name:'Canal bridge',x:8750,y:2350,half:500},{name:'Lake boulevard',x:4350,y:6900,half:600},{name:'Connected waterway',x:6800,y:6700,half:3400});
 else for(const object of doc.objects.filter(o=>!o.route))locations.push({name:object.id,x:object.x,y:object.y});
 const select = document.querySelector('#location'), view = document.querySelector('#view'), canvas = document.querySelector('canvas');
 locations.forEach((location, index) => select.add(new Option(location.name, String(index))));

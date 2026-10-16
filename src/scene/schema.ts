@@ -1,3 +1,4 @@
+import {MAX_WORLD_SIZE,MAX_STREET_LENGTH} from './world-bounds';
 import { z } from "zod";
 import { measuredScale, measureProblem } from "./measure";
 import { objectDslSchema, hasAnimatedJoints, MAX_ANIMATED_ASSEMBLIES,impactOf,isReactive } from "./object-dsl";
@@ -110,8 +111,8 @@ export const sceneSchema = z.object({
   /** Hash/identity of the source this scene was derived from. */
   sourceHash: z.string().min(1),
   canonical: z.object({
-    width: z.number().int().positive().max(8192),
-    height: z.number().int().positive().max(8192),
+    width: z.number().int().positive().max(MAX_WORLD_SIZE),
+    height: z.number().int().positive().max(MAX_WORLD_SIZE),
     /** Coordinate system: origin top-left, +x right, +y down, units px. */
     coordinateSystem: z.literal("top-left-x-right-y-down-px"),
   }),
@@ -130,7 +131,7 @@ export const sceneSchema = z.object({
     }),
   }),
     z.object({ kind: z.literal("generated-spline-loop"), params: z.object({
-      points: z.array(z.object({x: z.number().min(0).max(8192), y: z.number().min(0).max(8192)}).strict()).min(6).max(64).refine(points=>points.every((p,i)=>{const next=points[(i+1)%points.length]!;return Math.hypot(p.x-next.x,p.y-next.y)>8;}), "road anchors must be distinct and at least 8 units apart"),
+      points: z.array(z.object({x: z.number().min(0).max(MAX_WORLD_SIZE), y: z.number().min(0).max(MAX_WORLD_SIZE)}).strict()).min(6).max(64).refine(points=>points.every((p,i)=>{const next=points[(i+1)%points.length]!;return Math.hypot(p.x-next.x,p.y-next.y)>8;}), "road anchors must be distinct and at least 8 units apart"),
       roadWidth: z.number().min(40).max(240),
     }).strict() }).strict(),
   ]),
@@ -164,7 +165,7 @@ export const sceneSchema = z.object({
   }),
 }).superRefine((scene,ctx)=> {
   const length=(points:Point[])=>points.slice(1).reduce((n,p,i)=>n+Math.hypot(p.x-points[i]!.x,p.y-points[i]!.y),0);
-  if(scene.streets.reduce((n,s)=>n+length(s.points),0)>60000)ctx.addIssue({code:'custom',message:'scene exceeds 60000 street units'});
+  if(scene.streets.reduce((n,s)=>n+length(s.points),0)>MAX_STREET_LENGTH)ctx.addIssue({code:'custom',message:'scene exceeds 120000 street units'});
   if(scene.markings.reduce((n,s)=>n+length(s.closed ? [...s.points,s.points[0]!] : s.points),0)>40000)ctx.addIssue({code:'custom',message:'scene exceeds 40000 marking units'});
   // The standing player character occupies one of the existing live animation slots.
   const animated=scene.objects.filter(object=>hasAnimatedJoints(object.spec)).length+Number(hasAnimatedJoints(scene.player))+1;

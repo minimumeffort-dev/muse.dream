@@ -15,13 +15,6 @@ asset a_fallen_log(module=nature,object=fallen_log);
 asset a_exposed_stone_slab(module=nature,object=exposed_stone_slab);
 asset a_weathered_boulder(module=nature,object=weathered_boulder);
 asset a_juniper_scrub(module=nature,object=juniper_scrub);
-route meadow_cycle(kind=path,mode=loop,speed=35,wait_s=10,width=40,surface=cycle){
-  repeat arc(index=i,count=32){
-    let a(value=240+i*360/32);
-    point(at=[1165+cos(a)*225,1615+sin(a)*120]);
-    point(at=[1165+cos(a+360/64)*225,1615+sin(a+360/64)*120]);
-  }
-}
 route village_skate(kind=path,mode=loop,speed=45,wait_s=6,width=54,surface=paved){
   repeat arc(index=i,count=32){
     let a(value=270+i*360/32);
@@ -29,7 +22,7 @@ route village_skate(kind=path,mode=loop,speed=45,wait_s=6,width=54,surface=paved
     point(at=[2250+cos(a+360/64)*200,2350+sin(a+360/64)*140]);
   }
 }
-place village_bike(object=a_meadow_bicycle,route=meadow_cycle,offset=0,scale=1,role=controllable);
+place village_bike(object=a_meadow_bicycle,at=[1052.5,1511.0769515458674],heading_deg=30,scale=1,role=controllable);
 place village_skateboard(object=a_maple_skateboard,route=village_skate,offset=0,scale=1,role=controllable);
 place sketch_19(object=a_birch,at=[4936.424428853206,756.3349961768836],scale=0.8881262912414968);
 place sketch_21(object=a_young_rowan,at=[2531.4733028411865,3146.0519772721455],scale=0.9856313126161694);

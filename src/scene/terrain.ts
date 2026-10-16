@@ -1,3 +1,4 @@
+import {MAX_WORLD_SIZE} from './world-bounds';
 import { z } from "zod";
 import { bridgeAt, bridgeCoordinates, landscapeSchema, waterDistance, type Bridge } from "./landscape-dsl";
 import { pointInPolygon } from "../sim/mask";
@@ -7,14 +8,14 @@ export const terrainSchema = z.object({
   landscape: landscapeSchema.optional(),
   hills: z.array(z.object({
     id: z.string().min(1).max(40),
-    x: z.number().finite().min(0).max(8192),
-    y: z.number().finite().min(0).max(8192),
+    x: z.number().finite().min(0).max(MAX_WORLD_SIZE),
+    y: z.number().finite().min(0).max(MAX_WORLD_SIZE),
     radiusX: z.number().finite().min(120).max(1600),
     radiusY: z.number().finite().min(120).max(1600),
     height: z.number().finite().min(0).max(320),
   }).strict()).max(16),
   tints: z.array(z.object({
-    x:z.number().min(0).max(8192),y:z.number().min(0).max(8192),
+    x:z.number().min(0).max(MAX_WORLD_SIZE),y:z.number().min(0).max(MAX_WORLD_SIZE),
     radius:z.number().min(120).max(3000),color:z.string().regex(/^#[0-9a-fA-F]{6}$/),
   }).strict()).max(16).optional(),
 }).strict().superRefine(({ hills }, ctx) => {
@@ -104,6 +105,18 @@ export function waterAt(terrain:Terrain,x:number,y:number,elevation=drivingHeigh
   return terrain.landscape?.waters.find(w=>elevation<w.level+.5 && pointInPolygon(x,y,w.polygon) && terrainHeight(terrain,x,y)<w.level-.1);
 }
 
+/** Water owns boat support; a road deck only blocks a hull without headroom. */
+export function navigableWater(terrain:Terrain,x:number,y:number,radius:number,height:number){
+  const water=waterAt(terrain,x,y,terrainHeight(terrain,x,y));if(!water)return;
+  for(let i=0;i<=12;i++){
+    const px=x+(i===12 ? 0 : Math.cos(i*Math.PI/6)*radius),py=y+(i===12 ? 0 : Math.sin(i*Math.PI/6)*radius),floor=terrainHeight(terrain,px,py);
+    if(floor>=water.level-.5 || waterAt(terrain,px,py,floor)?.id!==water.id)return;
+    const bridge=bridgeAt(terrain.landscape,px,py);
+    if(bridge){const p=bridgeCoordinates(bridge,px,py);if(water.level-2+height>bridgeHeight(terrain,bridge,p.t,p.across)-4)return;}
+  }
+  return water;
+}
+
 /** Dense small cylinders share the existing conservative footprint collision path. */
 export function bridgeRails(terrain:Terrain) {
   return (terrain.landscape?.bridges ?? []).filter(b=>b.rails).flatMap(bridge=> {
@@ -111,7 +124,7 @@ export function bridgeRails(terrain:Terrain) {
     for(const side of [-1,1]) for(let i=0;i<=steps;i++) {
       const t=i/steps;
       result.push({x:bridge.a.x+ux*length*t-uy*bridge.width/2*side,
-        y:bridge.a.y+uy*length*t+ux*bridge.width/2*side,r:3,top:bridgeHeight(terrain,bridge,t,bridge.width/2*side)+21});
+        y:bridge.a.y+uy*length*t+ux*bridge.width/2*side,r:3,bottom:bridgeHeight(terrain,bridge,t,bridge.width/2*side)-3,top:bridgeHeight(terrain,bridge,t,bridge.width/2*side)+21});
     }
     return result;
   });

@@ -2,42 +2,54 @@
 
 [Dream docs](README.md) / Planned world
 
-The mock world now covers 800 × 780 metres, a little over twice its previous area. The countryside and original circuit stay where they were. A connected town sits to the east, homes have their own suburban streets to the south, and the lake and sports park sit between them.
+The mock world covers 1.2 × 1 kilometres, nearly twice the previous map's area. The original circuit and countryside stay where they were. Streets connect the town, southern suburbs, sports park and a new district across the canal.
 
-![Connected town blocks and planted courtyards](media/town-center.jpg)
+![Connected city cycle tracks across a canal bridge](media/city-cycle-lanes.jpg)
 
-The town has 44 buildings across eleven occupied blocks and a planted public square. Apartments and offices sit alongside lower shops and a library. Streets connect at open intersections, with sidewalks around the blocks. The eastern gateway joins the racing circuit, so the town is somewhere you can drive to.
+## Bicycle lanes that go somewhere
+
+The painted lanes follow actual streets. Each side has a two-metre track, a 0.6-metre separator and a sidewalk outside it. They continue across junctions and bridges, connecting the residential streets, town square, sports park, western lakefront and eastern district. There are over eight kilometres of street centerlines with cycling lanes, with a track on each side. These are connected destinations rather than an isolated oval in a field.
+
+A bicycle waits on the new city's avenue and another on the western lakefront. The original bicycle still waits near the starting orchard. Press F to leave the car, walk up to a bicycle and press F again. You steer it yourself; lanes do not constrain the controls. The riverside skate park retains its separate recreational circuit.
+
+![Town blocks and planted courtyards](media/town-center.jpg)
+
+The older town has 44 buildings across eleven occupied blocks and a planted public square. Apartments and offices sit alongside shops and a library. Across the canal, another 36 buildings face the new streets, with trees, seats and planted courtyards inside the blocks. The gateways still connect to the original racing circuit.
 
 ![Houses facing suburban streets with driveways and gardens](media/suburbs.jpg)
 
-The suburbs have 36 homes with three different silhouettes. Each driveway faces a street; trees sit inside the blocks. A second access road connects the original circuit to the residential grid. The southern boulevard links it to the park and town.
+The suburbs keep 36 homes with three different silhouettes. Driveways meet the sidewalks without covering the cycling surface; trees stay inside the blocks. The southern boulevard connects the suburbs to the lake crossing and sports park.
 
-![A football pitch and basketball court in the sports park](media/sports-park.jpg)
+## One connected waterway
 
-The football pitch is 100 × 64 metres. The basketball playing surface is 28 × 15 metres, with space around it. Four people practise kicks and dribbles, and visitors stand nearby. The golf park has three fairways, putting greens, sand traps and flags. Their Dream programs alternate practice with rest and turn toward a nearby player. [NPC roles and routines](dream/npcs.md) define that behavior. These are places to explore; match rules, ball scoring and golf controls are still to come.
+![The lake, river, southern bay and canal form one water body](media/connected-waterway.jpg)
 
-![Three fairways with putting greens and sand traps](media/golf-park.jpg)
+The southern lake narrows into a river, broadens into a bay and continues north as a canal between the sports park and the new city. Its banks follow one width-bearing Dream watercourse. Water keeps its existing surface ripples and current. The older pond and countryside river remain separate habitats.
 
-The southern lake has shaped banks and the existing water ripples. A walking loop surrounds it and a second controllable launch starts on the water. The older pond, river, bridges and original vehicles remain.
+Five new bridges carry the streets, bicycle lanes and sidewalks over this waterway. Each crossing reserves the full street width between the rails and blends into dry ground at both ends. A canal launch waits near the bank. Boats can travel below a bridge when the whole hull and body fit; a low deck blocks them. F only disembarks at dry shore, so it cannot lift a boat's driver through a deck.
 
 ![The southern lake and its wooded banks](media/south-lake.jpg)
 
+## Parks and people
+
+![A football pitch and basketball court in the sports park](media/sports-park.jpg)
+
+The football pitch is 100 × 64 metres. The basketball surface is 28 × 15 metres, with space around it. Four people practise kicks and dribbles; visitors stand nearby. The golf park has three fairways, greens, sand traps and flags. Their [Dream programs](dream/npcs.md) alternate practice with rest and turn toward a nearby player. Match rules, scoring and golf controls are still to come.
+
+![Three fairways with greens and sand traps](media/golf-park.jpg)
+
 ## Everything is Dream data
 
-[The entry file](../src/scene/world/open-world.dream) includes an [expansion module](../src/scene/world/urban_expansion.dream), which links the town, suburbs, sports park and gardens. Assets stay separate from their placements. The complete world uses 83 reusable assemblies and 715 placements. There are no model calls.
+[The entry file](../src/scene/world/open-world.dream) includes an [expansion module](../src/scene/world/urban_expansion.dream). The [waterfront district](../src/scene/world/city_waterfront.dream) and [waterside gardens](../src/scene/world/waterside_gardens.dream) describe the new streets and placements. Assets stay separate from where they appear. The complete mock uses 83 reusable assemblies and 796 placements, with no model calls.
 
-Three language primitives describe the urban ground:
+`street` owns connected carriageways, optional cycle tracks and sidewalks. `surface` paints terrain-following courts, driveways, turf and sand. `marking` adds paint from bounded point blocks. `watercourse` defines a continuous basin; `bridge` supplies an explicit crossing. The engine supplies the geometry, projection and tested controls.
 
-- `street` joins orthogonal carriageways and sidewalks. It has ordinary road grip and doesn't consume an actor route.
-- `surface` paints terrain-following polygons for turf, courts, driveways and sand. Later surfaces in the linked scene overlay earlier ones.
-- `marking` adds open or closed paint ribbons. Point blocks support bounded repetition and trigonometry, including center circles and arcs.
-
-[Compile a complete neighborhood module](examples/planned-neighborhood.dream), or read the [world guide](dream/worlds.md#streets-grounds-and-paint) and [bounds](dream/reference.md#urban-ground-bounds). The scene acceptance boundary rejects disconnected street components, obstructed carriageways and water crossings. The engine supplies intersections, terrain projection, graphics and driving; the model supplies bounded descriptions.
+[Compile the complete city-lane and canal example](examples/city-cycle-lanes.dream), or read the [world guide](dream/worlds.md#streets-grounds-and-paint) and [reference](dream/reference.md#urban-ground-bounds). The acceptance boundary rejects disconnected streets, blocked riding surfaces, covered lanes and water crossings without full-width bridge support.
 
 ## Bigger without streaming
 
-Roads, sidewalks and paint use spatial tiles with local culling bounds. Intersections use a shared union, so there aren't stacked road tiles or sidewalks running across a crossing. Buildings use the existing compacted, instanced scenery path. NPC visitors use compacted actor meshes so their orientation can respond to the player. Grass retains its sampling density as the world grows, while ground finishes reserve clear space.
+The complete world stays resident. Roads, lanes, sidewalks, paint and water have local culling tiles. Water retains its original triangles and wave resolution; its solver skips dry cells inside the waterway's bounding grid. Buildings keep the existing compacted, instanced scenery path. Grass retains its sampling density as the map grows.
 
-The entire world remains resident. Mesh detail, shadows, particles, pixel ratio policy and post-processing stay the same. There is no distance-based replacement or district loading. [Rendering measurements](rendering.md) record the comparable original-start drive and a separate town drive. These local measurements do not establish a minimum laptop specification.
+Assets, shadow resolution, particles, pixel ratio and post-processing keep their quality settings. [Rendering notes](rendering.md) and the [transport verification](evidence/transport-world/verification.md) record measurements and checks. Local timings do not establish a minimum laptop specification.
 
-The current animation budget is full: 24 live jointed assemblies including the standing player. The four sports players and two pedestrians share that budget with existing wildlife and moving doors. More people can use static poses; more independent live motion will need a measured engine change. Streets currently support right angles, and the world still has one driving height per XY. There is no traffic simulation or generated terrain excavation.
+The live animation budget remains 24 jointed assemblies, including the standing player. Streets currently support right angles. Ground vehicles have one driving height per XY; the water controller separately checks under-bridge clearance. There is no stacked road system, generated terrain excavation, traffic simulation or automatic layout repair.

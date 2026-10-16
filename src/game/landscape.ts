@@ -5,6 +5,8 @@ import { bridgeCoordinates, bridgePolygon } from "../scene/landscape-dsl";
 import { roadFootprint, ROAD_SURFACE_LIFT } from "../scene/road";
 import { terrainHeight, waterAt } from "../scene/terrain";
 import { WaterWaves } from "../sim/waves";
+import {tiledMesh} from './batching';
+import {streetRidingRects,rectPolygon} from '../scene/streets';
 import { surfaceGeometry, surfaceHeight, bridgeHeightAt } from "./surface";
 import { bridgeMaterial, toonMaterial, waterMaterial } from "./shaders";
 import type { ActorPose } from "../sim/actors";
@@ -33,8 +35,8 @@ export class WorldLandscape {
       }
       geometry.setAttribute("waterDepth",new THREE.BufferAttribute(depths,1));
       geometry.computeVertexNormals();geometry.computeBoundingSphere();geometry.boundingSphere!.radius+=3;
-      const mesh=new THREE.Mesh(geometry,waterMaterial(water,texture,waves));
-      mesh.name=`water-${water.id}`;mesh.receiveShadow=true;mesh.renderOrder=2;this.group.add(mesh);
+      const mesh=tiledMesh(geometry,waterMaterial(water,texture,waves));
+      mesh.name=`water-${water.id}`;mesh.traverse(tile=>{tile.renderOrder=2;if(tile instanceof THREE.Mesh)tile.geometry.boundingSphere!.radius+=3;});this.group.add(mesh);
       return {water,waves,texture,pixels,version:waves.version};
     });
     const point=(x:number,y:number,lift:number,heightAt?:(x:number,y:number)=>number)=>new THREE.Vector3(x-doc.canonical.width/2,surfaceHeight(doc,x,y,heightAt)+lift,y-doc.canonical.height/2);
@@ -51,7 +53,7 @@ export class WorldLandscape {
       const heightAt=bridgeHeightAt(doc,bridge);
       const footprint=bridgePolygon(bridge),minX=Math.min(...footprint.map(p=>p.x)),maxX=Math.max(...footprint.map(p=>p.x)),
         minY=Math.min(...footprint.map(p=>p.y)),maxY=Math.max(...footprint.map(p=>p.y));
-      const roadway=roadFootprint(doc).filter(polygon=>Math.max(...polygon.map(p=>p.x))>=minX && Math.min(...polygon.map(p=>p.x))<=maxX &&
+      const roadway=[...roadFootprint(doc),...streetRidingRects(doc.streets).map(rectPolygon)].filter(polygon=>Math.max(...polygon.map(p=>p.x))>=minX && Math.min(...polygon.map(p=>p.x))<=maxX &&
         Math.max(...polygon.map(p=>p.y))>=minY && Math.min(...polygon.map(p=>p.y))<=maxY);
       // Timber is the driving surface; paved stone bridges retain a road corridor.
       const deck=new THREE.Mesh(surfaceGeometry(doc,[footprint],ROAD_SURFACE_LIFT,{x:ux,y:uy},heightAt,bridge.style==="timber" ? [] : roadway),bridgeMaterial(bridge.style));

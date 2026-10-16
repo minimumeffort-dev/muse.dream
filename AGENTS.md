@@ -7,10 +7,10 @@ handmade fixture, including the current car and track, is temporary input
 for that future pipeline. The engine compiles validated scene/DSL data
 into Three.js and tested mechanics; model output remains data-only.
 
-Current state: **mock open world** — a 8000 x 7800 handmade landscape with a
+Current state: **mock open world** — a 12000 x 10000 handmade landscape with a
 winding eight-checkpoint circuit, composed assets, heightfield driving/jumps,
 ICE/BOOST, off-road collisions, fixed-angle camera, walking, direct vehicle controls,
-connected town streets, suburbs, a lake and sports park, ambient wildlife, layered vegetation and instanced scenery. F exits to dry ground and boards nearby on foot. Bicycles,
+connected city cycle tracks, suburbs, a continuous lake/canal and sports park, ambient wildlife, layered vegetation and instanced scenery. F exits to dry ground and boards nearby on foot. Bicycles,
 skateboards, boats and planes are player-controlled; trains retain autonomous routes.
 The original small fixture remains for regression tests. No photo upload,
 camera or model calls yet. The complete live world is authored in Dream 2 text
@@ -138,3 +138,10 @@ data, never scripts. Keep per-instance clocks outside Scene, advance once per
 fixed tick across every player control mode, preserve them on R and reset on
 Start over. Route interruption must resume without teleport. Preserve 16 program,
 32 NPC, 24 route/controllable and 24 jointed-assembly caps. See `docs/dream/npcs.md`.
+
+Street cycle tracks use `cycle_width` per side with a fixed 6-unit separator.
+Reserve the full riding surface from props/ground finishes and carry sidewalks
+and lanes across explicit full-width bridges. Ground driving still has one height
+per XY; boats alone use the terrain bed and validated deck/rail headroom beneath
+bridges. Preserve dry shore boarding, full-hull checks and finite rail bottoms.
+See `docs/urban-world.md` for the transport layout and `docs/dream/reference.md`.

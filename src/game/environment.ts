@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {reservedGround,streetRects,rectPolygon,onStreet} from '../scene/streets';
+import {reservedGround,streetRidingRects,rectPolygon,onStreet} from '../scene/streets';
 import {buildStreets} from './streets';
 import { bridgeAt, bridgeCoordinates, bridgePolygon } from "../scene/landscape-dsl";
 import type { Point, Scene } from "../scene/schema";
@@ -58,7 +58,7 @@ function timberFootprints(doc: Scene): Point[][] {
 /** Road, paint and effects all conform to the same triangles as the terrain. */
 export function roadGeometry(doc: Scene): THREE.BufferGeometry {
   const sections = roadSections(doc), half = doc.roadMaskRef.params.roadWidth / 2;
-  return surfaceGeometry(doc, sections.slice(1).map((b, i) => roadRibbon(sections[i]!, b, -half, half)), ROAD_SURFACE_LIFT, undefined, undefined, timberFootprints(doc));
+  return surfaceGeometry(doc, sections.slice(1).map((b, i) => roadRibbon(sections[i]!, b, -half, half)), ROAD_SURFACE_LIFT, undefined, undefined, [...timberFootprints(doc),...streetRidingRects(doc.streets).map(rectPolygon)]);
 }
 
 /** Continuous bands, with top and walls split at the underlying terrain edges. */
@@ -66,7 +66,7 @@ export function curbGeometry(doc: Scene, side: -1 | 1): THREE.BufferGeometry {
   const sections = roadSections(doc), half = doc.roadMaskRef.params.roadWidth / 2;
   const inner = side * (half - ROAD_CURB_WIDTH / 2), outer = side * (half + ROAD_CURB_WIDTH / 2);
   const vertices: number[] = [], colors: number[] = [];
-  const cutouts = [...timberFootprints(doc),...streetRects(doc.streets).map(rectPolygon)];
+  const cutouts = [...timberFootprints(doc),...streetRidingRects(doc.streets).map(rectPolygon)];
   const timber = (doc.terrain.landscape?.bridges ?? []).filter(bridge => bridge.style === "timber");
   const curbLift = (x: number, y: number, lift: number) => {
     let distance = Infinity;
@@ -110,7 +110,7 @@ export function roadMarkingGeometry(doc: Scene): THREE.BufferGeometry {
     const a = sections[i - 1]!, b = sections[i]!;
     if ((a.distance + b.distance) / 2 % 48 < 22) polygons.push(roadRibbon(a, b, -1.25, 1.25));
   }
-  return surfaceGeometry(doc, polygons, 1.8, undefined, undefined, timberFootprints(doc));
+  return surfaceGeometry(doc, polygons, 1.8, undefined, undefined, [...timberFootprints(doc),...streetRidingRects(doc.streets).map(rectPolygon)]);
 }
 
 export function drapedPolygon(doc: Scene, polygon: Point[], lift: number): THREE.BufferGeometry {

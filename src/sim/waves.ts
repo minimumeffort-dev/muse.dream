@@ -8,6 +8,7 @@ export class WaterWaves {
   readonly columns:number; readonly rows:number; readonly wet:Uint8Array;
   heights:Float32Array<ArrayBuffer>; private velocity:Float32Array<ArrayBuffer>; private next:Float32Array<ArrayBuffer>; private nextVelocity:Float32Array<ArrayBuffer>;
   private energy=0;
+  private wetCells:number[]=[];
   version=0;
   constructor(readonly water:Water,terrain:Terrain) {
     this.minX=Math.min(...water.polygon.map(p=>p.x)); this.minY=Math.min(...water.polygon.map(p=>p.y));
@@ -20,6 +21,7 @@ export class WaterWaves {
     for(let y=1;y<this.rows-1;y++) for(let x=1;x<this.columns-1;x++) {
       const px=this.minX+x*this.width/(this.columns-1),py=this.minY+y*this.height/(this.rows-1);
       this.wet[y*this.columns+x]=Number(pointInPolygon(px,py,water.polygon) && terrainHeight(terrain,px,py)<water.level-.1);
+      if(this.wet[y*this.columns+x])this.wetCells.push(y*this.columns+x);
     }
   }
   disturb(x:number,y:number,strength=1):void {
@@ -40,9 +42,8 @@ export class WaterWaves {
     const damping=Math.exp(-this.water.waves.damping*h);
     for(let step=0;step<steps;step++) {
       let peak=0;
-      for(let y=1;y<this.rows-1;y++) for(let x=1;x<this.columns-1;x++) {
-        const i=y*this.columns+x;
-        if(!this.wet[i]) continue;
+      for(const i of this.wetCells) {
+        const x=i%this.columns,y=Math.floor(i/this.columns);
         const lap=(this.heights[i-1]!-2*this.heights[i]!+this.heights[i+1]!)/(dx*dx)+
           (this.heights[i-this.columns]!-2*this.heights[i]!+this.heights[i+this.columns]!)/(dy*dy);
         const sx=x-this.water.flow.x*h/dx,sy=y-this.water.flow.y*h/dy;

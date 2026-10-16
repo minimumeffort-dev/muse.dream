@@ -49,7 +49,9 @@ and `stone` use the same physical contract. `rails` enables continuous
 cylinder contacts along both sides; a sufficiently high jump can clear them.
 There is one driving height per XY: the bridge owns its footprint. **Driving
 under bridges and stacked roads are not supported.** The carved riverbed
-remains visible below the rendered deck.
+remains visible below the rendered deck. Boats use that bed for support and may
+pass beneath the deck when their full hull and body have headroom. Boat exits
+require dry shore, so a deck above a boat cannot become an exit point.
 
 Roads and crossings compile together. A `timber` bridge owns its full wooden
 driving deck, including where the racing road crosses it. Asphalt, painted
@@ -83,7 +85,7 @@ the model does not author separate patches or adjust render elevations.
 
 - At most eight waters and eight bridges; stable IDs are unique across the scene.
 - Water polygons have 3–32 vertices, no crossings or degenerate edges, an
-  area of 400–500,000 square units and an extent of 80–1600 on each axis.
+  area of 400–8,000,000 square units and an extent of 80–16384 on each axis.
 - Water level: 0–300; depth: 2–24; bank width: 20–120.
 - Each current component: -60–60; drag: 0.5–6 per second.
 - Wave propagation speed: 20–100; damping: 0.5–4 per second;
@@ -110,8 +112,9 @@ road, curbs and effects share the renderer's 20-unit triangle grid, split at
 deck boundaries. The simulation samples the corresponding continuous height
 function for slopes, jumps and contacts.
 
-Each water body has a persistent grid with cells at least 20 units wide and
-at most 68 × 68 samples. A damped wave equation propagates car disturbances;
+Each water body has a persistent grid with roughly 24-unit cells and
+at most 131072 samples. The bounding grid is checked before allocation;
+only its precomputed wet cells are integrated. A damped wave equation propagates car disturbances;
 current advects height and velocity. Amplitude is capped at two units. Dry
 cells bound the solver. Sleeping fields do no integration or texture uploads. Rendering uses a linearly
 filtered byte texture, keeping GPU upload bandwidth bounded without float-filter
@@ -121,11 +124,12 @@ pool. Wave integration follows fixed simulation steps; pause freezes it;
 reset and reduced motion clear it. Decorative flow and normals use the
 engine's shared paused/reduced-motion clock.
 
-Bridge supports and rails share one instanced cylinder draw per bridge;
+Bridge supports and rails share one instanced cylinder draw per bridge.
+Water triangles use resident spatial tiles, preserving their UVs and depth attributes;
 static geometry is built once. The minimap displays water and crossings.
 
 This is surface-wave dynamics, not a volumetric fluid or buoyancy solver.
-There is no flooding, erosion, floating-prop simulation or underwater driving
-layer. The current examples are a shallow river with a timber racing bridge
-and a pond with an off-road stone footbridge. They are handmade mocks: no
+There is no flooding, erosion, floating-prop simulation or stacked ground driving
+layer. Current examples include the shallow countryside river and pond, plus
+a continuous southern lake, bay and city canal crossed by five street bridges. They are handmade mocks: no
 model provider, image upload or network call is involved.

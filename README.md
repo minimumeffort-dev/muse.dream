@@ -14,7 +14,7 @@ Racing is where this started. The idea is to make whatever someone draws playabl
 
 Follow the circuit or head into the hills. Climbing slows the car down, descending gives it speed, and a fast crest can launch it into the air. The camera follows you through the world, with a slightly closer view so the smaller objects are easier to see. Wooden bridges carry the track across water, and the train keeps running while you explore. Sunlight keeps the same direction as you move, with shadows covering the full view through hills, camera turns and flight.
 
-The world now covers 800 × 780 metres. The original circuit sits in the countryside, with a connected town to the east, suburbs to the south and a lakeside sports park. Drive through the blocks, take the southern boulevard, or leave the road and cross the football pitch. The park also has a basketball court and three golf fairways. People walk around the square and lake; players practise on the pitch and court.
+The world now covers 1.2 × 1 kilometres. The original circuit sits in the countryside, with a connected town to the east, suburbs to the south and a lakeside sports park. Drive through the blocks, take the southern boulevard, or leave the road and cross the football pitch. The park also has a basketball court and three golf fairways. People walk around the square and lake; players practise on the pitch and court.
 
 ![Town blocks with connected streets, sidewalks and planted courtyards](docs/media/town-center.jpg)
 
@@ -40,9 +40,13 @@ Press **F** to get out of the car, walk over to another vehicle and press **F** 
 
 WASD walks or drives. In the plane, Space climbs and Shift descends. Land before getting out; bring the boat close enough to dry shore to disembark. The camera moves closer for walking and smaller vehicles, then eases back out for the car. The objects keep their physical proportions.
 
-Paths need room too. The meadow now has a four-metre-wide cycle circuit around its picnic area, and the riverside has a larger paved skating circuit. Both are over a hundred metres long. Their width is part of Dream 2, so the compiler can catch a road covering a lane or a tree planted on it. The bicycle starts beside the lane. Step out and walk over when you want to ride.
+Bicycle lanes run alongside streets, across the bridges and between the town, suburbs, sports park and waterfront. Each side has its own painted track, separated from the carriageway. Get on a bicycle and choose where to go. The riverside skating circuit remains its own park.
 
-![The expanded cycle circuit, clear of the racing road and railway](docs/media/cycle-meadow.jpg)
+![Connected city bicycle lanes and a canal crossing](docs/media/city-cycle-lanes.jpg)
+
+The lake narrows into a river, opens into a southern bay and continues north as a city canal. Five new bridges carry the roads, bicycle lanes and sidewalks over it. Boats can pass underneath when they have enough clearance. [See the larger transport layout](docs/urban-world.md).
+
+![The continuous lake, river, southern bay and city canal](docs/media/connected-waterway.jpg)
 
 Some things move when you hit them. Others break. A ball bounces away, a bench comes apart in splinters, a tree falls as a whole, and a building can lose a section while its main structure stays solid. Those differences are declared in Dream 2.
 
@@ -80,7 +84,7 @@ object oak(label="Oak"){
 
 The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation uses Minimum Effort's Manrope and Archivo fonts, warm white, charcoal and yellow, with the same page gutters and spacing. Dream commands, fields, references, colors and expressions are highlighted, with copy buttons for complete examples.
 
-[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 83 assemblies and 715 placements, all authored in Dream 2.
+[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 83 assemblies and 796 placements, all authored in Dream 2.
 
 Objects share physical units. The car is 3.55 metres long, the plane has a 10.8-metre wingspan, and the skateboard is 0.82 metres long. A size declaration scales the geometry, collision body, seats and broken pieces together. The compiler checks proportions too, so a skateboard can't quietly become larger than the car.
 

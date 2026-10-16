@@ -22,25 +22,15 @@ The road, effect zones, car and props share the driving surface. Slopes influenc
 
 `bridge` declares endpoints, width, arch, material style and rails. A racing crossing must connect to dry terrain and fit the entire road corridor between its rails. Timber owns its driving deck: asphalt is clipped away and the road curbs taper into the banks. Stone crossings retain the appropriate road surface.
 
-There is one driving height per XY. Roads cannot stack, cars don't drive under bridge decks and boats cannot navigate beneath them. A covered passage can use separated wall contacts and overhead clearance, but it doesn't excavate a terrain tunnel. Water has currents and bounded surface waves, not volumetric fluid dynamics.
+There is one driving height per XY. Roads cannot stack and cars don't drive under bridge decks. Boats use the water bed instead and can pass underneath when their full hull and body clear the deck and rails. A covered passage can use separated wall contacts and overhead clearance, but it doesn't excavate a terrain tunnel. Water has currents and bounded surface waves, not volumetric fluid dynamics.
 
 ## Routes and moving objects
 
 `route` describes a `rail`, `path`, `water` or `air` activity, using `loop` or `shuttle` travel. For autonomous actors, its speed, wait time and points determine the pose from the fixed simulation clock. A placed actor references that route; `offset` separates a carriage from its locomotive. Route heading is derived from travel, so `heading_deg` only belongs on fixed XY placements.
 
-A bicycle lane needs space in the layout. Declare its full `width` and a `surface`: `cycle` adds edge paint and a dashed centre line, `paved` makes a neutral hard surface, and `trail` keeps the earth finish. These fields belong only to `kind=path`; a surface requires a width. Width is 16–120 units, or 1.6–12 metres.
+City bicycle lanes belong to the street network. Add `cycle_width=20` to reserve a two-metre track on each side of the carriageway. The engine adds a 0.6-metre separator, moves the sidewalks outward and paints bicycle symbols and junction crossings. Lanes follow streets to actual destinations; they do not consume actor routes. [The full urban example](../examples/city-cycle-lanes.dream) includes an aligned canal bridge.
 
-```dream
-route meadow_cycle(kind=path,mode=loop,speed=35,wait_s=10,width=40,surface=cycle){
-  repeat arc(index=i,count=32){
-    let a(value=240+i*360/32);
-    point(at=[1165+cos(a)*225,1615+sin(a)*120]);
-    point(at=[1165+cos(a+360/64)*225,1615+sin(a+360/64)*120]);
-  }
-}
-```
-
-That is the live meadow's roughly 110-metre cycle circuit, with a four-metre surface around the picnic area. The separate skate circuit is roughly 107 metres long and 5.4 metres wide. They have room to exist alongside the racing circuit. Nearby benches and crates sit clear of the paving. Park nearby, press **F** to step out and walk to the bicycle, then press **F** to ride it. The bicycle starts clear of the road.
+Use `route(kind=path,width=...,surface=cycle|paved|trail)` for a separate recreational path. Width is 16–120 units, or 1.6–12 metres. The riverside skate circuit remains a dedicated park activity; the former isolated meadow cycling oval has been replaced by connected street lanes. Vehicles remain freely controlled, without being tied to the infrastructure path.
 
 The complete-world compiler checks an explicitly sized path's corridor, including paths without vehicles. It rejects overlap with road/curbs, water, physical props, independent ground routes and runways. Leave an eight-unit buffer beyond the full width; validation includes an additional sampling allowance. It reports the obstruction so the model can repair the placement. Corners share cross-sections, paint follows the terrain, and procedural grass stays off the surface. Existing paths without a width retain the legacy 28-unit trail and actor clearance; they do not gain a dedicated corridor implicitly.
 
@@ -48,7 +38,7 @@ The complete-world compiler checks an explicitly sized path's corridor, includin
 
 Objects with `rideable(...,control=...)` use the route only for initial placement and infrastructure. They start parked and move freely under player input. Leaving one stores its position, so it cannot snap back to a route. See [vehicle controls](behavior.md#bodies-contacts-and-boarding).
 
-Autonomous water actors must keep their whole body afloat and clear of bridge decks. Autonomous air actors use a bounded takeoff/landing envelope. The controllable boat instead checks its full visible hull against navigable water and banks; the controllable plane takes off and lands under input. One driving height per XY still prevents boats travelling under bridge decks. These are bounded arcade mechanics, not traffic AI, free-flight aerodynamics or general buoyancy.
+Autonomous water actors must keep their whole body afloat and have enough headroom beneath any bridge deck. Autonomous air actors use a bounded takeoff/landing envelope. The controllable boat instead checks its full visible hull against navigable water and banks; the controllable plane takes off and lands under input. Water support checks the terrain bed, and finite rail contacts allow clear boat underpasses. Boat exits still require real dry shore. These are bounded arcade mechanics, not traffic AI, free-flight aerodynamics or general buoyancy.
 
 ## Light while moving
 
@@ -98,7 +88,7 @@ Cycles, duplicate world IDs, multiple layouts, invalid routes and exceeded proje
 
 ## Streets, grounds and paint
 
-The live world is now 8000 × 7800 units, with connected town blocks, separate suburbs, a southern lake and a sports park. The original circuit and countryside remain. [See the layout and captures](../urban-world.md).
+The live world is now 12000 × 10000 units, with connected town blocks, separate suburbs, a lake-to-canal waterway and a sports park. The original circuit and countryside remain. [See the layout and captures](../urban-world.md).
 
 `street` describes an open orthogonal centerline, a carriageway width and sidewalk width on each side. Intersecting streets share one ground surface. Sidewalks stop at the junction, and the racing curbs open where an access street joins. The car gets normal road grip there. Streets do not consume moving-route slots.
 
@@ -115,4 +105,25 @@ marking center_circle(color=#e8e3ce,width=1,closed=true){
 }
 ```
 
-This excerpt belongs after `dream 2;` or inside an included district file. A complete playable world still needs its circuit, spawn and checkpoints. `compileDreamScene` checks that every street component reaches that circuit, stays in bounds and keeps its carriageway clear of solids and water. Streets currently support right-angle plans; use the existing racing curve for winding roads. They do not create bridge decks, traffic signals or traffic rules. Keep dedicated bicycle paths clear of streets too.
+This excerpt belongs after `dream 2;` or inside an included district file. A complete playable world still needs its circuit, spawn and checkpoints. `compileDreamScene` checks that every street component reaches that circuit, stays in bounds and keeps the complete riding width clear of solids, with explicit full-width bridges over water. Streets currently support right-angle plans; use the existing racing curve for winding roads. They require explicit bridge decks and do not create traffic signals or traffic rules. Keep dedicated bicycle paths clear of streets too.
+
+## A complete city crossing
+
+This standalone world connects its original circuit to two city streets and a canal crossing. Download [the same source](../examples/city-cycle-lanes.dream) and check it with the CLI.
+
+```dream
+dream 2;
+world(size=[4000,2400],spawn=[525,609],heading_deg=0);
+road circuit(width=118,points=[[300,590],[660,590],[810,500],[810,220],[660,130],[300,130],[150,220],[150,500]]);
+street avenue(width=100,sidewalk=20,points=[[1400,400],[1400,2000]],cycle_width=20);
+street quay(width=100,sidewalk=20,points=[[810,400],[3500,400]],cycle_width=20);
+bridge canal_crossing(from=[2250,400],to=[2750,400],width=220,arch=40,style=stone,rails=true);
+water canal(points=[[2440,150],[2560,150],[2560,1900],[2440,1900]],level=0,depth=12,bank=24,color=#477f99,flow=[0,12],drag=2.2,waves=[70,1.4,1.2]);
+checkpoint start(at=[480,612.5],dir=[1,0],width=100);
+
+checkpoint east(at=[828.75,360],dir=[0,-1],width=100);
+
+checkpoint north(at=[480,107.5],dir=[-1,0],width=100);
+
+checkpoint west(at=[131.25,360],dir=[0,1],width=100);
+```

@@ -27,6 +27,10 @@ describe("published Dream documentation",()=>{
     const example=pages['../docs/dream/npcs.md']!.match(/```dream\n([\s\S]*?)```/)![1]!;
     expect(example.trim()).toBe(examples['../docs/examples/npc-behavior.dream']!.trim());
   });
+  it("keeps the city crossing identical to its complete runnable source",()=>{
+    const blocks=[...pages['../docs/dream/worlds.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
+    expect(blocks).toContain(examples['../docs/examples/city-cycle-lanes.dream']!.trim());
+  });
   it.each(Object.entries(pages))("keeps local links and images valid in %s",(path,source)=>{
     for(const match of source.matchAll(/\]\(([^)]+)\)/g)){
       const target=match[1]!.split('#')[0]!;

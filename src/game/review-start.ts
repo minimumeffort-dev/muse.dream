@@ -25,7 +25,7 @@ export function npcReviewStart(state:CarState,world:World,id:string|null):CarSta
 
 /** Known clear mock-world poses for checking neutral coasting and cross-slope grip. */
 export function drivingReviewStart(state:CarState,world:World,scenario:string|null):CarState {
-  const district=scenario==='town' ? [6650,1500,Math.PI/2] : scenario==='suburbs' ? [1700,5750,Math.PI/2] : scenario==='sports' ? [5600,4800,Math.PI/2] : undefined;
+  const district=scenario==='town' ? [6650,1500,Math.PI/2] : scenario==='suburbs' ? [1700,5750,Math.PI/2] : scenario==='sports' ? [5600,4800,Math.PI/2] : scenario==='waterfront' ? [9300,1700,Math.PI/2] : scenario==='canal-bridge' ? [8310,2350,0] : scenario==='lake-bridge' ? [3950,6900,0] : undefined;
   if(district){const [x,y,headingRad]=district as [number,number,number],elevation=drivingHeight(world.scene.terrain,x,y);
     if(carFootprintClear(world,x,y,elevation,state.timeS,state))return {...state,x,y,headingRad,elevation,vx:0,vy:0};
   }

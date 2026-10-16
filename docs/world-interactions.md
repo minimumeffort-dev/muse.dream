@@ -60,8 +60,8 @@ car to spawn preserves the world clock.
 
 Water actors float at the authored level minus two units and leave persistent
 surface wakes. The whole physical footprint must stay in navigable water.
-Water routes cannot intersect bridge decks: the current heightfield cannot
-represent a navigable layer beneath a bridge.
+Water routes require enough clearance for the full body beneath a bridge deck.
+Boats use the terrain bed independently of the ground driving height.
 Air actors have a bounded 180-unit takeoff/landing ramp at the route endpoints,
 then cruise at their declared height above local ground. They return to a ground
 boarding stop. These are authored vehicle activities, not free-flight aerodynamics,
@@ -83,7 +83,7 @@ rideable(at=[0,18,0],control=bicycle);
 
 Profiles are `car`, `bicycle`, `skateboard`, `boat` and `plane`. Vehicles with a profile start parked. The route supplies initial placement and infrastructure, not their movement. **F** leaves the current vehicle on accessible dry ground. WASD then walks; **F** enters a nearby seat within 60 units of its body's edge and 28 units of elevation. You control the new vehicle, and it stays where you park it. The original car stays parked too. **R** returns to that car's starting point while retaining parked vehicles and damage; Start over restores the world.
 
-Walking follows screen directions after camera rotation. W/S accelerates, brakes and reverses ground vehicles and boats; A/D steers. Aircraft need speed before Space can climb; Shift descends, and low airspeed causes descent. F cannot eject you in flight. Boats use full-hull clearance against water banks and bridge decks, and need nearby dry ground for exit. The engine still has one driving height per XY, so boats cannot navigate beneath bridges.
+Walking follows screen directions after camera rotation. W/S accelerates, brakes and reverses ground vehicles and boats; A/D steers. Aircraft need speed before Space can climb; Shift descends, and low airspeed causes descent. F cannot eject you in flight. Boats use full-hull clearance against water banks and bridge decks, and need nearby dry ground for exit. Ground vehicles still have one driving height per XY; boats separately use water support and finite deck/rail headroom.
 
 The seated traveler and standing Explorer are Dream assemblies. Smaller vehicles and walking get closer camera framing. Checkpoints advance only in the original racing car; other modes preserve progress. Unconfigured train seats remain autonomous passenger rides. Pause freezes controls, routes, waves and destruction. [The current guide](dream/behavior.md) and [runnable bicycle](examples/controllable-bicycle.dream) describe the complete control contract.
 
@@ -167,7 +167,7 @@ clears it. Model-authored particle/shader programs never execute.
 Limits: 12 routes, 2–64 points per route (loops need ≥3), route length ≤12,000,
 vehicle speed 12–160 (ambient .5–160), stop wait 0–12 seconds, air altitude 60–300, trailing offset 0–2,048.
 World source declares at most 64 placements and 8 watercourses. A watercourse has
-2–8 stations of width 80–480 and compiles into the unchanged bounded water schema.
+2–8 stations of width 80–1200 and compiles into the unchanged bounded water schema.
 Scenes accept at most 24 mobile actors, including controllable vehicles, 16 emitters and 24 jointed live assemblies
 including the player. Existing source/token/work, part and joint limits remain.
 

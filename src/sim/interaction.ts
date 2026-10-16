@@ -5,10 +5,11 @@ import { controlOf,type VehicleControl } from "../scene/object-dsl";
 import {controlFor,roleOf} from '../scene/agents';
 import {stepNpcs} from './npcs';
 import { objectHeight,objectRadius } from "./archetypes";
-import { drivingHeight,waterAt } from "../scene/terrain";
+import { drivingHeight,waterAt,navigableWater } from "../scene/terrain";
 import {assemblyHorizontalRadius,playerRadius} from "../scene/measure";
 import { sceneContacts } from "../scene/contacts";
 import type {SceneObject} from "../scene/schema";
+import {bridgeAt} from '../scene/landscape-dsl';
 
 export const FOOT_RADIUS=3,FOOT_HEIGHT=17.5;
 export const MAX_FLIGHT_CLEARANCE=450;
@@ -53,6 +54,8 @@ export function exitPosition(state:CarState,world:World) {
   for(let ring=0;ring<7;ring++)for(let side=0;side<8;side++){
     const angle=state.headingRad+Math.PI/2+side*Math.PI/4,r=radius+FOOT_RADIUS+5+ring*8;
     const x=state.x+Math.cos(angle)*r,y=state.y+Math.sin(angle)*r,elevation=drivingHeight(world.scene.terrain,x,y);
+    // A boat can leave at the shore, but cannot teleport up through a bridge deck.
+    if(controlOf(object?.spec)==='boat' && bridgeAt(world.scene.terrain.landscape,x,y))continue;
     if(r-bodyRadius<60 && Math.abs(elevation-state.elevation)<28 && carFootprintClear(footWorld,x,y,elevation,state.timeS,foot))return {x,y,elevation,vehicles};
   }
   return undefined;
@@ -74,15 +77,7 @@ export function toggleRide(state:CarState,world:World):CarState {
 function nextMotion(state:CarState,dt:number,world:World):CarState {
   return {...state,npcs:stepNpcs(state,dt,world.scene),timeS:state.timeS+dt,props:state.props.map(p=>({...p})),broken:[...state.broken],brokenZones:state.brokenZones.map(z=>({...z})),debris:[...state.debris],impacts:[],boostReadyAtS:{...state.boostReadyAtS},boostedThisStep:false,landingSpeed:0};
 }
-function afloat(world:World,x:number,y:number,radius:number) {
-  const floor=drivingHeight(world.scene.terrain,x,y),water=waterAt(world.scene.terrain,x,y,floor);
-  if(!water || floor>=water.level-.5)return undefined;
-  for(let i=0;i<12;i++){
-    const px=x+Math.cos(i*Math.PI/6)*radius,py=y+Math.sin(i*Math.PI/6)*radius,ground=drivingHeight(world.scene.terrain,px,py);
-    if(ground>=water.level-.5 || waterAt(world.scene.terrain,px,py,ground)?.id!==water.id)return undefined;
-  }
-  return water;
-}
+const afloat=(world:World,x:number,y:number,radius:number)=>navigableWater(world.scene.terrain,x,y,radius,world.bodyHeight??20);
 /** Bounded arcade boat/aircraft dynamics, independent of authored routes. */
 function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,profile:"boat"|"plane"):CarState {
   const s=nextMotion(state,dt,world),body=bodyWorld(s,world),throttle=Math.max(-1,Math.min(1,input.throttle)),steer=Math.max(-1,Math.min(1,input.steer));
@@ -96,7 +91,7 @@ function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,pro
   s.headingRad+=steer*(plane ? 1.05 : 1.5)*authority*dt;
   s.vx=Math.cos(s.headingRad)*fwd;s.vy=Math.sin(s.headingRad)*fwd;
   const waterRadius=plane ? body.carRadius : Math.max(body.carRadius,assemblyHorizontalRadius(occupiedObject(s,world)!.spec as import("../scene/object-dsl").ObjectDsl,occupiedObject(s,world)!.scale));
-  const water=plane ? undefined : afloat(world,s.x,s.y,waterRadius);
+  const water=plane ? undefined : afloat(body,s.x,s.y,waterRadius);
   if(water){s.vx+=water.flow.x*.3*dt;s.vy+=water.flow.y*.3*dt;}
   const lift=Math.max(-1,Math.min(1,input.lift??0));
   if(plane){
@@ -105,7 +100,7 @@ function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,pro
   }else{s.elevation=water ? water.level-2 : s.elevation;s.vz=0;s.grounded=true;}
   const steps=Math.max(1,Math.ceil(Math.hypot(s.vx,s.vy,s.vz)*dt/(body.carRadius*.5))),sdt=dt/steps;
   for(let i=0;i<steps;i++){
-    const x=s.x+s.vx*sdt,y=s.y+s.vy*sdt,ground=drivingHeight(world.scene.terrain,x,y),landingWater=plane ? waterAt(world.scene.terrain,x,y,ground) : undefined,floor=landingWater ? landingWater.level : ground,support=plane ? undefined : afloat(world,x,y,waterRadius);
+    const x=s.x+s.vx*sdt,y=s.y+s.vy*sdt,ground=drivingHeight(world.scene.terrain,x,y),landingWater=plane ? waterAt(world.scene.terrain,x,y,ground) : undefined,floor=landingWater ? landingWater.level : ground,support=plane ? undefined : afloat(body,x,y,waterRadius);
     const elevation=plane ? s.grounded ? floor : Math.max(floor,Math.min(floor+MAX_FLIGHT_CLEARANCE,s.elevation+s.vz*sdt)) : support ? support.level-2 : s.elevation;
     const data=sceneContacts(world.scene),contacts=[...data.solids.query(x,y,body.carRadius+data.maxRadius),...actorContacts(world.scene,s.timeS,s)];
     breakOnContact(s,body,x,y,contacts);

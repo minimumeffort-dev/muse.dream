@@ -1,6 +1,6 @@
 dream 2;
 asset rally_car(module=landmarks,object=little_rally_car);
-world(size=[8000,7800],spawn=[1045,1360],heading_deg=0,player=rally_car);
+world(size=[12000,10000],spawn=[1045,1360],heading_deg=0,player=rally_car);
 road circuit(width=156,points=[[1000,1360],[1600,1360],[2200,1650],[2800,1300],[2700,800],[3400,600],[4700,950],[5200,1600],[4500,2100],[5000,2900],[4350,3850],[3300,4000],[2750,3300],[1900,3750],[800,3450],[650,2900],[1200,2350],[500,1800],[650,1360]]);
 hill west_hill(at=[510,620],radius=[600,500],height=135);
 hill east_summit(at=[1480,670],radius=[620,520],height=155);
@@ -57,5 +57,20 @@ hill golf_knoll(at=[6850,6580],radius=[650,650],height=42);
 hill lake_woodland(at=[3800,5920],radius=[650,900],height=50);
 tint southern_meadow(at=[3100,6050],radius=2200,color=#718759);
 tint park_greens(at=[6500,6200],radius=1700,color=#6f8b58);
-water south_lake(points=[[4512.8,5204.18],[4594.42,5185.9],[4693.02,5180.11],[4792.84,5186.36],[4878.17,5204.18],[4946.83,5237.2],[5006.54,5284.41],[5056.37,5338.42],[5095.41,5391.8],[5125.11,5443.34],[5145.4,5496.72],[5153.04,5551.96],[5144.78,5609.04],[5118.94,5673.54],[5077.51,5743.59],[5022.82,5808.08],[4957.16,5855.91],[4872.84,5885.69],[4771.4,5902.82],[4669.02,5906.36],[4581.93,5895.41],[4512.11,5867.25],[4451.7,5823.2],[4402.1,5768.35],[4364.68,5707.79],[4339.23,5637.05],[4325.19,5555.35],[4323.49,5473.34],[4335.06,5401.68],[4360.52,5340.04],[4399.25,5283.8],[4450.32,5237.12]],level=0,depth=16,bank=45,color=#477f99,flow=[0,0],drag=2.5,waves=[55,1.1,1.2]);
+watercourse south_lake(level=0,depth=16,bank=45,color=#477f99,flow=[0,12]){
+  point(at=[4700,5500,850]);
+  point(at=[4450,6700,320]);
+  point(at=[4800,8200,500]);
+  point(at=[6500,9000,900]);
+  point(at=[9000,9000,700]);
+  point(at=[8750,6500,220]);
+  point(at=[8750,3500,180]);
+  point(at=[8750,450,240]);
+}
 include urban_expansion(module=urban_expansion);
+
+bridge lake_boulevard_bridge(from=[4180,6900],to=[4780,6900],width=240,arch=40,style=stone,rails=true);
+bridge canal_north_bridge(from=[8450,1250],to=[9050,1250],width=240,arch=40,style=stone,rails=true);
+bridge canal_market_bridge(from=[8450,2350],to=[9050,2350],width=240,arch=40,style=stone,rails=true);
+bridge canal_park_bridge(from=[8450,4400],to=[9050,4400],width=240,arch=40,style=stone,rails=true);
+bridge canal_south_bridge(from=[8500,6900],to=[9100,6900],width=240,arch=40,style=stone,rails=true);

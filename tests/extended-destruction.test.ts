@@ -165,7 +165,7 @@ describe("partial buildings retain structure and collisions",()=>{
 const full=createWorldScene(),fullWorld:World={scene:full,roadMask:buildMaskForScene(full),driveMask:buildPaperMask(full.canonical.width,full.canonical.height),carRadius:11};
 describe("live destructible world",()=>{
   it("adds ten placed examples under the existing impact and fragment limits",()=>{
-    expect(full.objects).toHaveLength(715);const reactive=full.objects.filter(o=>isReactive(o.spec));expect(reactive).toHaveLength(21);
+    expect(full.objects).toHaveLength(796);const reactive=full.objects.filter(o=>isReactive(o.spec));expect(reactive).toHaveLength(21);
     expect(reactive.reduce((sum,o)=>sum+(o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && o.spec.impact?.kind!=='bounce' ? objectFragments(o.spec).length : 0),0)).toBe(97);
     expect(examples.objects).toHaveLength(10);
   });

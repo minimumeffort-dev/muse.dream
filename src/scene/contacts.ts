@@ -11,7 +11,7 @@ const compiled=new WeakMap<Scene,{objects:Map<string,SceneObject>;solids:Spatial
 export function sceneContacts(scene:Scene){
   let data=compiled.get(scene);if(data)return data;
   const contacts=scene.objects.filter(o=>!isActor(o) && archetypeOf(o).interaction==="solid").flatMap(o=>objectContacts(scene,o))
-    .concat(bridgeRails(scene.terrain).map(c=>({...c,bottom:-Infinity})));
+    .concat(bridgeRails(scene.terrain));
   data={objects:new Map(scene.objects.map(o=>[o.id,o])),solids:new SpatialGrid(contacts),maxRadius:Math.max(0,...contacts.map(c=>c.r))};compiled.set(scene,data);return data;
 }
 /** Authored cylinders, independent of visual mesh geometry. Y offsets leave passages open. */

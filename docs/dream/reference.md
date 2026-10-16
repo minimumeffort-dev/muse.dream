@@ -66,7 +66,7 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 | --- | --- | --- | --- |
 | `world` | top | No ID / no block | `size: v2`, `spawn: v2`, `heading_deg: n`, `player?: ref` |
 | `road` | top | ID / no block | `width: n`, `points: points2` |
-| `street` | top | ID / no block | `width: n`, `sidewalk: n`, `points: points2` |
+| `street` | top | ID / no block | `width: n`, `sidewalk: n`, `points: points2`, `cycle_width?: n` |
 | `surface` | top | ID / no block | `color: color`, `points: points2` |
 | `marking` | top | ID / path | `color: color`, `width: n`, `closed: bool` |
 | `hill` | top | ID / no block | `at: v2`, `radius: v2`, `height: n` |
@@ -135,7 +135,7 @@ With a measured car player, tree height and plane wingspan must exceed the car's
 | Unmeasured size | Placement multiplier .5–2 |
 | Compound contacts | 1–8; native radius 1–64, height 1–160, bottom Y 0–128 |
 | Project | 32 reachable modules including entry, depth 8, 524,288 UTF-16 characters, 128 defined assemblies |
-| Full scene | Dimensions ≤8192 per axis; ≤4096 placements, 12 routes, 24 mobile actors, including controllable vehicles |
+| Full scene | Dimensions ≤16384 per axis; ≤4096 placements, 12 routes, 24 mobile actors, including controllable vehicles |
 | Animation / effects | ≤24 live joint assemblies including player; ≤16 steam emitters |
 | Destruction | ≤24 reactive objects, ≤128 potential fragments, ≤8 fragments per assembly, ≤4 zones per object |
 | Terrain | ≤16 hills and 16 tint areas; combined terrain height cap 320 |
@@ -149,7 +149,7 @@ The [machine instructions](../dream-v2-model.txt) carry detailed motion and land
 
 `rideable` takes an optional `control=car|bicycle|skateboard|boat|plane`. It requires a solid cylinder without foundations, compound contacts or impact behavior. Omitting `control` preserves the legacy route passenger seat. A controlled vehicle can use `place(...,at=[...])` or a route's initial pose; its declared route is not a movement constraint. Controlled and parked poses live in simulation state, leaving the accepted scene immutable.
 
-F exits to accessible dry ground. On foot, F enters a seat within 60 units of the body's edge and 28 units of elevation. W/S controls throttle/braking/reverse; A/D steers. Space/Shift climbs/descends in aircraft. Walking is screen-relative. Aircraft require speed for takeoff, descend at low speed and cannot be exited in flight. A water landing stalls at the surface; R recovers the aircraft. Boats need full-hull navigable water, stop at banks/decks and can only be exited near dry ground. Ground vehicles share heightfield driving, collision and supported impact mechanics. Only the original racing car advances checkpoints.
+F exits to accessible dry ground. On foot, F enters a seat within 60 units of the body's edge and 28 units of elevation. W/S controls throttle/braking/reverse; A/D steers. Space/Shift climbs/descends in aircraft. Walking is screen-relative. Aircraft require speed for takeoff, descend at low speed and cannot be exited in flight. A water landing stalls at the surface; R recovers the aircraft. Boats need full-hull navigable water, stop at banks or bridges without body clearance and can only be exited near dry ground. Ground vehicles share heightfield driving, collision and supported impact mechanics. Only the original racing car advances checkpoints.
 
 ### Dedicated paths
 
@@ -200,13 +200,13 @@ Named paths and repeat indices derive stable local part/joint/fragment IDs. Unre
 
 ## Runtime boundaries
 
-The car uses fixed-timestep heightfield physics and cylinder contacts. One driving height per XY excludes stacked roads, driving under bridge decks and boats beneath decks. Covered objects can have separate wall/roof contacts, but they don't excavate terrain. Water supports surface waves and current forces. Vehicle activities are authored paths, not independent driver/flight AI.
+The car uses fixed-timestep heightfield physics and cylinder contacts. One ground driving height per XY excludes stacked roads and ground driving under bridge decks. Boats separately use the terrain bed and require full-hull water and body clearance below decks/rails. They exit only at dry shore. Covered objects can have separate wall/roof contacts, but they don't excavate terrain. Water supports surface waves and current forces. Vehicle activities are authored paths, not independent driver/flight AI.
 
 Break behavior separates authored components; it doesn't cut new shards from an arbitrary mesh. Debris is cosmetic and collides with terrain only. Whole-object impacts exclude foundations, seats, compound contacts and emitters; partial zones preserve retained building structure. Door animation is visual around authored contacts. Source never supplies executable code, callbacks, shader programs or provider credentials.
 
 ### Urban ground bounds
 
-Scenes and linked districts share limits of 32 streets, 64 surfaces and 128 markings. Streets take 2–16 XY anchors, widths 60–180 and sidewalks 0–40 per side. Each segment is horizontal or vertical and at least 80 units long. The total street length is at most 60000 units. The scene compiler checks street connectivity, world boundaries, solid carriageway clearance and water crossings.
+Scenes and linked districts share limits of 32 streets, 64 surfaces and 128 markings. Streets take 2–16 XY anchors, widths 60–180 and sidewalks 0–40 per side. Each segment is horizontal or vertical and at least 80 units long. Optional `cycle_width=16..40` adds a track on each side, separated from the carriageway by 6 units. Sidewalks move outward; the complete riding envelope gets normal road grip and must stay clear. The total street length is at most 120000 units. The scene compiler checks street connectivity, world boundaries, solid riding-surface clearance and water crossings. An explicit aligned bridge must carry the entire carriageway, both cycle tracks, separators and sidewalks through its open ends, clear of rails; the street must continue at least 20 units past each end.
 
 Surfaces take 3–64 points and must be simple, nonzero polygons, at most 1000000 square units and 2000 units across. Split larger grounds into tiles. They cannot cover street carriageways. Later surfaces in the linked scene overlay earlier surfaces. Markings take 2–64 points, width .5–12, and at least three points when closed. Repeated first points and zero-length segments fail. Total marking length, including closed seams, is at most 40000 units. Grounds and markings stay within the world, follow the shared heightfield and clear procedural tufts. They add no collision body or flattening operation. [Runnable neighborhood](../examples/planned-neighborhood.dream).
 
@@ -219,3 +219,7 @@ Surfaces take 3–64 points and must be simple, nonzero polygons, at most 100000
 The first matching transition wins once per fixed tick; state time resets on entry. Idle rests joints; perform animates in place; both pause route time. Patrol resumes the placement's route without teleporting and animates only while moving. Stationary face=player turns at 2.5 rad/s. Animation respects reduced motion. Clocks are per-instance runtime state, preserved by R and reset by Start over. Without a runtime snapshot, actor inspection returns the program's initial pose.
 
 Programs and references are file-local; includes merge data. There are at most 16 programs and 32 NPCs in the accepted scene. Each state has at most 4 transitions. Existing 24 moving actor/controllable and 24 live jointed assembly caps remain. Explicit NPCs require version 2 assemblies without foundations, compound contacts, knockable bodies or destruction; boat and plane NPCs need a domain route. Full-scene acceptance checks stationary dry footprints and route clearance. Solid NPC cylinders participate in player contacts. There is no pathfinding, runtime avoidance, humanoid possession or generated input profile. [Complete example](../examples/npc-behavior.dream) and [guide](npcs.md).
+
+### Water bounds
+
+Water polygons have 3–32 vertices, area 400–8,000,000 square units and extent 80–16384 per axis. The wave bounding grid uses 24-unit cells and at most 131072 cells per body, including its final row/column. Watercourses take 2–8 distinct `[x,y,width]` stations, width 80–1200, and compile to the same polygon and wave bounds. Banks must contain the level; separate bodies cannot overlap. A wider world does not change terrain or wave resolution.

@@ -108,7 +108,7 @@ describe('fixed-step NPC programs',()=>{
   for(const id of ['village_bike','lake_boat','meadow_plane','meadow_train']){
    const template=live.objects.find(o=>o.id===id)!,obj={...template,id:'ride',role:undefined,route:template.route ? {...template.route,id:'vehicle_route'} : undefined};
    const route=live.routes.find(r=>r.id===template.route?.id)!;
-   const scene=parseScene({...w.scene,objects:[...w.scene.objects,obj],routes:[...w.scene.routes,{...route,id:'vehicle_route'}]}),testWorld={...w,scene};
+   const scene=parseScene({...w.scene,objects:[...w.scene.objects,obj],routes:[...w.scene.routes,...(route ? [{...route,id:'vehicle_route'}] : [])]}),testWorld={...w,scene};
    const p=actorPose(scene,obj,0),state={...createCarAtSpawn(scene),x:p.x,y:p.y,elevation:p.elevation,control:{kind:id==='meadow_train' ? 'passenger' as const : 'vehicle' as const,id:'ride'}};
    expect(stepInteractive(state,idle,1/120,testWorld).npcs[0]!.elapsedS).toBeCloseTo(1/120);
   }

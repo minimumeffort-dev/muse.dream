@@ -26,6 +26,10 @@ describe('Dream syntax highlighting',()=>{
     for(const word of ['role','behavior','action','event','to','radius'])expect(html).toContain(`class="dream-field">${word}</span>`);
     expect(highlight('stateful onlooker behavior_tree')).not.toContain('dream-keyword');
   });
+  it('highlights cycle_width as one field without consuming similarly named IDs',()=>{
+    expect(highlight('street avenue(cycle_width=20);')).toContain('class="dream-field">cycle_width</span>');
+    expect(highlight('cycle_width_extra cycle_widthway')).not.toContain('dream-field');
+  });
   it('tracks the generated compiler vocabulary',()=>{
     const contract=JSON.parse(readFileSync('docs/dream-v2-contract.json','utf8'));
     expect(Object.keys(contract.commands)).toEqual(Object.keys(DREAM_V2_COMMANDS));

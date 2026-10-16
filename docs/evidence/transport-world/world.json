@@ -1,0 +1,21 @@
+{
+  "revision": "r24",
+  "size": {
+    "width": 12000,
+    "height": 10000,
+    "coordinateSystem": "top-left-x-right-y-down-px"
+  },
+  "placements": 796,
+  "streets": 32,
+  "streetMeters": 9460,
+  "cyclingStreets": 28,
+  "cyclingCenterlineMeters": 8600,
+  "cycleTracksMeters": 17200,
+  "bridges": 7,
+  "waterGrid": [
+    209,
+    381
+  ],
+  "wetCells": 11451,
+  "waterArea": 6639322.2500595
+}

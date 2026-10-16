@@ -1,6 +1,6 @@
 import type { Scene,SceneObject } from "../scene/schema";
 import { routePose,routePath,type Route } from "../scene/routes";
-import { drivingHeight,waterAt } from "../scene/terrain";
+import { drivingHeight,waterAt,terrainHeight } from "../scene/terrain";
 import { pointInPolygon } from "./mask";
 import { objectRadius,objectHeight,archetypeOf } from "./archetypes";
 import { controlOf } from "../scene/object-dsl";
@@ -23,7 +23,7 @@ export function actorPose(scene:Scene,object:SceneObject,timeS:number,state?:Car
   const parked=state?.vehicles.find(v=>v.id===object.id);
   if(parked)return {...parked,id:object.id,kind,speed:0,travelled:parked.distance,vx:0,vy:0};
   if(control){
-    const elevation=drivingHeight(scene.terrain,object.x,object.y),water=control==="boat" ? waterAt(scene.terrain,object.x,object.y,elevation) : undefined;
+    const elevation=control==='boat' ? terrainHeight(scene.terrain,object.x,object.y) : drivingHeight(scene.terrain,object.x,object.y),water=control==="boat" ? waterAt(scene.terrain,object.x,object.y,elevation) : undefined;
     return {id:object.id,x:object.x,y:object.y,elevation:water ? water.level-2 : elevation,headingRad:object.headingRad??0,kind,speed:0,distance:0,travelled:0,vx:0,vy:0};
   }
   if(program){

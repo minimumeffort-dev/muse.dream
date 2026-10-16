@@ -67,3 +67,11 @@ The existing driving/switching and destruction GIFs, HD videos and stills remain
 accurate: their visible geometry and prescribed actions did not change. The baker
 and naturalist keep their continuous joint routines, now selected by Dream programs.
 See the [verification and media audit](../evidence/npc-programs/verification.md).
+
+## Connected transport world, r24
+
+`city-cycle-lanes.jpg` shows the actual canal bridge, connected tracks and open junctions. `connected-waterway.jpg` shows the larger lake/river/bay/canal layout. Both use the native geometry-review canvas. Town, suburb, sports, basketball, golf and southern-lake stills were replaced for the new lanes and shoreline. `cycle-meadow.jpg` is retained as a historical capture; the live world no longer contains that oval and current product pages use the connected lane image.
+
+Driving and switching were exported again at 30 simulation/rendered frames per second, and the GIF, HD video and world/on-foot/riding stills were refreshed together. The destruction review uses an isolated fixture with unchanged bench geometry, so its source frames remain accurate; the encoder regenerated the matching pair from those frames. Asset atlases, proportions, ecology, code-to-tree and birch/woodland captures stay accurate because this pass changes placement and infrastructure, not their assembly geometry. The HUD and NPC attention screenshot were refreshed for the expanded minimap and streets.
+
+The [transport verification](../evidence/transport-world/verification.md) keeps uncropped context, player-control checks, world counts and the matched local profiler report. These screenshots and offline recordings are evidence of rendered behavior, not a low-powered laptop benchmark.

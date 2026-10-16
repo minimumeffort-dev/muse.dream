@@ -1,7 +1,8 @@
+import {MAX_WORLD_SIZE,MAX_WATER_AREA,MAX_WAVE_CELLS} from './world-bounds';
 import { z } from "zod";
 import { pointInPolygon } from "../sim/mask";
 
-const point = z.object({ x:z.number().finite().min(0).max(8192), y:z.number().finite().min(0).max(8192) }).strict();
+const point = z.object({ x:z.number().finite().min(0).max(MAX_WORLD_SIZE), y:z.number().finite().min(0).max(MAX_WORLD_SIZE) }).strict();
 type Point = z.infer<typeof point>;
 const id = z.string().min(1).max(40);
 const cross = (a:Point,b:Point,c:Point) => (b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x);
@@ -30,8 +31,8 @@ export const waterSchema = z.object({
   }
   const width=Math.max(...polygon.map(p=>p.x))-Math.min(...polygon.map(p=>p.x));
   const height=Math.max(...polygon.map(p=>p.y))-Math.min(...polygon.map(p=>p.y));
-  if(invalid || Math.abs(area)/2<400 || Math.abs(area)/2>500000 || width<80 || height<80 || width>1600 || height>1600)
-    ctx.addIssue({code:z.ZodIssueCode.custom,message:"water requires a simple bounded polygon (400–500000 square units, maximum extent 1600)"});
+  if(invalid || Math.abs(area)/2<400 || Math.abs(area)/2>MAX_WATER_AREA || width<80 || height<80 || width>MAX_WORLD_SIZE || height>MAX_WORLD_SIZE || (Math.ceil(width/24)+1)*(Math.ceil(height/24)+1)>MAX_WAVE_CELLS)
+    ctx.addIssue({code:z.ZodIssueCode.custom,message:"water requires a simple bounded polygon (400–8000000 square units, maximum extent 16384 and 131072 wave cells)"});
 });
 
 export const bridgeSchema = z.object({
@@ -53,7 +54,7 @@ export type Bridge = z.infer<typeof bridgeSchema>;
 export type Landscape = z.infer<typeof landscapeSchema>;
 
 export const watercourseSchema=z.object({
-  id,stations:z.array(z.object({x:point.shape.x,y:point.shape.y,width:z.number().finite().min(80).max(480)}).strict()).min(2).max(8),
+  id,stations:z.array(z.object({x:point.shape.x,y:point.shape.y,width:z.number().finite().min(80).max(1200)}).strict()).min(2).max(8),
   level:z.number().finite().min(0).max(300),depth:z.number().finite().min(2).max(24),
   bankWidth:z.number().finite().min(20).max(120),color:z.string().regex(/^#[0-9a-fA-F]{6}$/),
   dragPerS:z.number().finite().min(.5).max(6).default(2.2),
