@@ -20,7 +20,7 @@ The live city now uses `voxel_world(object_cell=1,ground_cell=8,height_step=1);`
 
 ```dream
 dream 2;
-material masonry(style=toon,colors=[#b17459,#985c48]);
+material masonry(style=brick,colors=[#a96f55,#bcb1a0]);
 object garden_wall(label="Voxel garden wall"){
   measure(kind=custom,axis=x,meters=3);
   body(interaction=solid,radius=24,height=32);

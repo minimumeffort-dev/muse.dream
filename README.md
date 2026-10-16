@@ -22,6 +22,14 @@ The world stays resident. Object stamps and terrain tiles use different bounded 
 
 [How voxel construction works](docs/dream/voxels.md) · [Complete voxel world](docs/examples/voxel-world.dream)
 
+## Brick, wood and stone
+
+Brick walls now have staggered courses, thin mortar and small differences between bricks. Timber keeps its grain along the piece, and stone has mineral variation. The same finishes survive instancing and breaking apart. They're surface detail on the existing voxels, so a wall doesn't need hundreds of extra brick meshes.
+
+![Brick, oak and limestone composed in Dream](docs/media/material-finishes.jpg)
+
+[Use the materials in Dream](docs/dream/objects.md#parts-and-materials) · [Complete wall and bench](docs/examples/material-finishes.dream)
+
 ## Build things the way they fit together
 
 Houses now have framed glazing, readable floor heights, supported porches, roof edges and connected gutters. Buses have wheel openings and passenger doors. The tram and train run on two supported bogies. The launch has a pointed hull, a planked deck, an outboard and a cabin that fits its rider.

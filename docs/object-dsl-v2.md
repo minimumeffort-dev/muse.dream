@@ -1,5 +1,7 @@
 # Object DSL v2: shapes, joints and organic variation
 
+Materials also accept `shaderStyle: "brick" | "wood" | "stone"`. `colorA` is the base surface; `colorB` supplies mortar, grain tint or mineral tint respectively. Physical dimensions, filtered detail and shallow normal relief are engine-owned. Appearance remains separate from the voxel grid and body. [Authoring examples and visual checks](dream/objects.md#parts-and-materials).
+
 For compact text authoring, start with [Dream 2](dream-language.md). Its palettes,
 components, expressions, repeats and joint blocks compile into this same validated
 v2 data. The original seven Dream examples and the ten

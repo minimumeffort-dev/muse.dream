@@ -52,7 +52,7 @@
       ],
       "id": true,
       "fields": {
-        "style": "toon|grain|glow|stripes|cloth",
+        "style": "toon|grain|glow|stripes|cloth|brick|wood|stone",
         "colors": "colors",
         "night": "color?"
       }

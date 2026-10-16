@@ -53,7 +53,7 @@ describe('constructed architecture and transport',()=>{
   let chimneys=0;
   for(const spec of compileDreamWorld(architecture).assemblies){
    const wall=spec.parts[0]!,wallTop=wall.position[1]+wall.size[1]/2;
-   const chimney=spec.parts.find(p=>p.material.colorA==='#b17459' && p.size[0]<=3 && p.size[2]<=3 && p.position[1]>wallTop);if(!chimney)continue;chimneys++;
+   const chimney=spec.parts.find(p=>p.material.shaderStyle==='brick' && p.size[0]<=3 && p.size[2]<=3 && p.position[1]>wallTop);if(!chimney)continue;chimneys++;
    const group=buildObject(item(spec));group.updateMatrixWorld(true);
    const roof=group.getObjectByName(spec.parts[1]!.id)!,top=new Box3().setFromObject(group.getObjectByName(chimney.id)!,true).max.y;
    const hit=new Raycaster(new Vector3(chimney.position[0],128,chimney.position[2]),new Vector3(0,-1,0)).intersectObject(roof)[0]!;
@@ -92,7 +92,7 @@ describe('constructed architecture and transport',()=>{
  });
  it('fits the seated driver above the launch deck and below the wheelhouse roof',()=>{
   const boat=asset('Willow launch'),traveler=asset('Traveler'),seat=boat.rideable!.seat,ratio=measuredScale(traveler)/measuredScale(boat),person=assemblyBounds(traveler);
-  const deck=boat.parts.find(p=>p.shape==='prism' && p.material.shaderStyle==='paper-grain')!,deckBox=new Box3().setFromObject(buildObject(item({...boat,parts:[deck]})),true);
+  const deck=boat.parts.find(p=>p.shape==='prism' && p.material.shaderStyle==='wood')!,deckBox=new Box3().setFromObject(buildObject(item({...boat,parts:[deck]})),true);
   const roof=boat.parts.find(p=>p.position[1]===34)!,roofBox=new Box3().setFromObject(buildObject(item({...boat,parts:[roof]})),true);
   expect(seat[1]+person.min.y*ratio).toBeGreaterThanOrEqual(deckBox.max.y-.1);
   expect(seat[1]+person.min.y*ratio).toBeLessThan(deckBox.max.y+.25);

@@ -72,7 +72,8 @@ describe('bounded voxel construction and greedy surface meshing',()=>{
   expect(pieces.reduce((n,m)=>n+m.exposedFaces,0)).toBeGreaterThan(whole.exposedFaces);
  });
  it('breaks a voxel wall through the actual car sim, renders only each chunk, and restarts intact',()=>{
-  const spec=compileDream(source)[0]!,object={id:'wall',kind:'custom',labelText:spec.displayName,x:480,y:360,scale:1,spec},scene=parseScene({...createFixtureScene(),objects:[object],regions:[],terrain:{hills:[]}});
+  // Retain the vertex-painted fragment regression; materials.test.ts covers brick cut faces.
+  const spec=compileDream(source.replace('style=brick','style=toon'))[0]!,object={id:'wall',kind:'custom',labelText:spec.displayName,x:480,y:360,scale:1,spec},scene=parseScene({...createFixtureScene(),objects:[object],regions:[],terrain:{hills:[]}});
   const world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(960,720),carRadius:11};let state={...createCarAtSpawn(scene),x:445,y:360,vx:240,headingRad:0};
   state=stepCar(state,{throttle:1,steer:0},1/120,world);expect(state.broken).toContain('wall');expect(state.debris).toHaveLength(4);
   const intact=buildDamageObject(scene.objects[0]!);updateDamage(intact,'wall',state);expect(intact.visible).toBe(false);

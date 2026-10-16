@@ -4,7 +4,7 @@
 
 A person, a loaf of bread and a plane use the same assembly format. Their names don't choose a renderer recipe. You choose primitives, connect them and declare a body independently of their appearance.
 
-![Vehicles, buildings and a traveler composed from Dream 2 primitives](../media/assets.jpg)
+![Vehicles and masonry buildings composed from Dream 2 primitives](../media/assets.jpg)
 
 The gallery frames each asset independently to show its construction. The
 [shared-scale lineup](../media/proportions.jpg) shows their relative dimensions.
@@ -26,7 +26,27 @@ Cylinders, cones and capsules point along local Y; a torus hole points along loc
 
 Box bevels follow the smallest physical dimension, so a long plank keeps crisp ends. Rings use a slimmer profile for tyres, rims and handles while keeping their declared outer dimensions. The [asset library](../asset-library.md) shows how the current world uses these shapes for window frames, pedals, bark, food and detachable building details.
 
-Materials are engine-owned styles: `toon`, `grain`, `glow`, `stripes` or `cloth`, each with two hex colors. `grain` maps to the engine's paper-grain material. Cloth supplies flag-like wind deformation; it isn't a clothing simulator. `deform(seed=...,amount=...)` adds bounded, deterministic variation to supported parts.
+Materials are engine-owned styles, each with two hex colors. `deform(seed=...,amount=...)` adds bounded, deterministic variation to supported parts.
+
+| Style | Surface | Two colors |
+| --- | --- | --- |
+| `brick` | Staggered 24 × 7.5 cm courses, thin recessed mortar and variation between bricks | Fired face / mortar |
+| `wood` | Grain follows the longest dimension of each member, including rotated beams | Base timber / grain tint |
+| `stone` | Broad mineral variation and fine, filtered flecks | Base stone / mineral tint |
+| `toon`, `grain` | Flat cartoon shading or paper grain | Existing base / alternate palette |
+| `glow`, `stripes`, `cloth` | Emission, bands or flag wind | Existing base / alternate palette |
+
+![Brick courses, timber grain and limestone in one Dream assembly](../media/material-finishes.jpg)
+
+```dream
+material fired_clay(style=brick,colors=[#a96f55,#bcb1a0]);
+material oak(style=wood,colors=[#98724e,#62452f]);
+material limestone(style=stone,colors=[#b3b3a5,#8c9489]);
+```
+
+[Compile the complete wall and bench](../examples/material-finishes.dream). Brick courses share the assembly's local frame across adjacent parts; wood keeps each member's grain direction. Surface coordinates survive rigid merging, instances and newly exposed voxel fracture faces. Physical scale follows the rendered transform, so enlarging a building doesn't enlarge its bricks. Fine patterns blend toward their average below a pixel to reduce shimmer at a distance. Relief changes lighting, not silhouettes or collision. No material adds per-brick geometry, downloads, model-written shaders or extra physics bodies.
+
+`grain` remains the original paper-grain finish. `cloth` supplies flag wind, not garment physics. The new presets do not change the voxel grid, material URLs remain unsupported, and roughness/relief are engine-owned rather than arbitrary Dream shader parameters.
 
 ## Grow a connected branch
 

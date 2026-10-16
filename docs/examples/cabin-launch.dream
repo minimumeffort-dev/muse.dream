@@ -5,7 +5,7 @@ material cream(style=toon,colors=[#e6d6b0,#e6d6b0]);
 material dark(style=toon,colors=[#2c3840,#2c3840]);
 material steel(style=toon,colors=[#a6b7b3,#a6b7b3]);
 material glass(style=toon,colors=[#83bbc5,#83bbc5]);
-material wood(style=grain,colors=[#926745,#b88f60]);
+material wood(style=wood,colors=[#926745,#b88f60]);
 object willow_launch(label="Willow launch"){
   measure(kind=boat,axis=x,meters=6);
   body(interaction=solid,radius=26,height=38);

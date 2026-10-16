@@ -16,7 +16,7 @@ describe("published Dream documentation",()=>{
     expect(example.trim()).toBe(examples['../docs/examples/toppling-tree.dream']!.trim());
   });
   it("keeps the object's complete wood example identical to its runnable source",()=>{
-    const example=pages['../docs/dream/objects.md']!.match(/```dream\n([\s\S]*?)```/)![1]!;
+    const example=pages['../docs/dream/objects.md']!.match(/```dream\n(dream 2;[\s\S]*?)```/)![1]!;
     expect(example.trim()).toBe(examples['../docs/examples/tapered-wood.dream']!.trim());
   });
   it("keeps the wildlife guide's complete example identical to its runnable source",()=>{

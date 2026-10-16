@@ -173,3 +173,11 @@ The r34 timber curb follow-up preserves the small example's existing deck transi
 ## Trackpad framing
 
 `zoom-overview.jpg` and `zoom-close.jpg` are native browser captures at the same player position and view angle, using the minimum and maximum manual car zoom. The pause-help capture in the [verification record](../evidence/trackpad-zoom/verification.md) shows the new instruction. Default framing, world geometry, vehicle animation and lighting remain unchanged, so the existing 30 fps GIF/video pairs and their stills remain accurate. These screenshots demonstrate framing, not measured performance or a physical trackpad test.
+
+## Material finishes, r35
+
+`material-finishes.jpg` shows the complete brick/oak/limestone example. The current 83-asset atlas, curated object sheet, constructed asset sheet, town/suburb, city cycle tracks, airport, medical center, sports, lake/waterway and four lighting views are refreshed from native browser screenshots or the review's Save PNG action. Evidence includes the terrace from four sides and a bakehouse section breaking into eight pieces.
+
+All eight motion sets use new consecutive 30 fps frames: driving 210, switching 240, destruction 120, voxel wall 120, locomotion 180, swimming 180, day/night 360 and flight 300. GIFs, HD videos and their stills were refreshed together. The source frames are actual renderer output, not frame interpolation or a live performance benchmark.
+
+The map, scale lineup, code-to-tree, logical Lab, focused wildlife/plants and dedicated car/bicycle/aircraft views retain their unchanged geometry and materials. Older focused city sheets remain construction references; the refreshed atlas and material example show the current finishes. The zoom/controls captures retain the same framing and mechanics; their earlier background paint is superseded by this pass. [Material verification](../evidence/materials/verification.md).

@@ -1,5 +1,5 @@
 dream 2;
-material masonry(style=toon,colors=[#b17459,#985c48]);
+material masonry(style=brick,colors=[#a96f55,#bcb1a0]);
 material steel(style=toon,colors=[#8f9b94,#8f9b94]);
 material glazing(style=toon,colors=[#61919a,#61919a]);
 material bark(style=grain,colors=[#6e5137,#9a7550]);
@@ -9,12 +9,12 @@ material birch_shade(style=toon,colors=[#6c9252,#527146]);
 material leaves(style=toon,colors=[#638653,#365b42]);
 material fir_leaves(style=toon,colors=[#416958,#284b40]);
 material amber(style=toon,colors=[#c18942,#866037]);
-material wood(style=grain,colors=[#91613f,#bb915d]);
+material wood(style=wood,colors=[#91613f,#bb915d]);
 material dark_wood(style=toon,colors=[#5e4735,#40372d]);
 material plaster(style=toon,colors=[#ddd0a7,#b4a17b]);
 material roof(style=toon,colors=[#45626c,#2d424e]);
-material brick(style=grain,colors=[#a66146,#ce9575]);
-material stone(style=toon,colors=[#8b9181,#5a655f]);
+material brick(style=brick,colors=[#a66146,#bcb1a0]);
+material stone(style=stone,colors=[#8b9181,#5a655f]);
 object leaning_birch(label="Leaning birch"){
   measure(kind=tree,axis=y,meters=10);
   body(interaction=solid,radius=9,height=67);
@@ -126,9 +126,6 @@ object brick_bakehouse(label="Brick bakehouse"){
     voxels brickwork(material=brick,at=[0,15,0],size=[12,30,40],grid=[6,15,20],chunks=[1,3,2]){
       fill wall(from=[0,0,0],to=[6,15,20]);
       cut doorway(from=[0,0,6],to=[6,15,14]);
-      repeat mortar(index=j,count=2){
-        cut joint(from=[5,5+j*5,0],to=[6,6+j*5,20]);
-      }
     }
     fragment entry_cover(){
       part lintel(shape=box,material=brick,at=[0,35,0],size=[13,9,40]);

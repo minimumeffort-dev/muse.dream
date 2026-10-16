@@ -14,7 +14,7 @@ export const DREAM_PROJECT_LIMITS=Object.freeze({modules:32,depth:8,characters:5
 const command = (contexts: string, id: boolean, fields: Record<string,string>, block?: string): DreamCommand =>
   Object.freeze({contexts:Object.freeze(contexts.split(" ")),id,fields:Object.freeze(fields),...(block ? {block} : {})});
 export const DREAM_V2_COMMANDS: Readonly<Record<string,DreamCommand>> = Object.freeze({
-  material: command("top",true,{style:"toon|grain|glow|stripes|cloth",colors:"colors",night:"color?"}),
+  material: command("top",true,{style:"toon|grain|glow|stripes|cloth|brick|wood|stone",colors:"colors",night:"color?"}),
   let: command("top object visual path route_path",true,{value:"n"}),
   component: command("top",true,{params:"symbols?"},"visual"),
   object: command("top",true,{label:"text"},"object"),

@@ -7,6 +7,7 @@ import { objectFragments } from "../scene/fragments";
 import { buildObject } from "./world3d";
 import { worldPosition } from "./environment";
 import { compactObject } from "./compact-object";
+import { materialCoordinates } from "./material-coordinates";
 
 /** Geometry is made on first fracture and reused after restart; scene budgets cap the cache. */
 export class WorldDebris {
@@ -21,8 +22,9 @@ export class WorldDebris {
       for(const id of fragment.parts){
         const mesh=source.getObjectByName(id) as THREE.Mesh,copy=mesh.clone();
         if(fragment.slice){
-          const volume=(object.spec as ObjectDslV2).parts.find(p=>p.id===id)!.voxels!;
-          copy.geometry=voxelGeometry(volume,fragment.slice);
+          const part=(object.spec as ObjectDslV2).parts.find(p=>p.id===id)!;
+          copy.geometry=voxelGeometry(part.voxels!,fragment.slice);
+          materialCoordinates(copy.geometry,part);
           // Fracture exposes cut faces; restore the intact part's uniform vertex paint.
           for(const name of ['color','nightEmission']){
             const attribute=mesh.geometry.getAttribute(name);if(!attribute)continue;

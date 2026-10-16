@@ -61,6 +61,8 @@ export function toonMaterial(color: THREE.ColorRepresentation): THREE.MeshToonMa
 function baseStyledMaterial(spec: ObjectMaterial, useB = false): THREE.Material {
   const color = new THREE.Color(useB ? spec.colorB : spec.colorA);
   switch (spec.shaderStyle) {
+    case "brick": case "wood": case "stone":
+      return surfaceMaterial(spec);
     case "toon":
       return toonMaterial(color);
     case "cloth": {
@@ -100,6 +102,58 @@ function baseStyledMaterial(spec: ObjectMaterial, useB = false): THREE.Material 
       return mat;
     }
   }
+}
+
+/** Physical-scale surface detail on existing faces, without per-brick geometry or downloads. */
+function surfaceMaterial(spec: ObjectMaterial): THREE.MeshStandardMaterial {
+  const material = new THREE.MeshStandardMaterial({ color: spec.colorA, roughness: spec.shaderStyle === "wood" ? .78 : .96 });
+  const wood = spec.shaderStyle === "wood", stone = spec.shaderStyle === "stone";
+  material.onBeforeCompile = shader => {
+    shader.uniforms.surfaceTint = { value: new THREE.Color(spec.colorB) };
+    shader.vertexShader = shader.vertexShader.replace("#include <common>", "#include <common>\nattribute vec3 surfacePosition; varying vec3 vSurfacePosition;")
+      .replace("#include <begin_vertex>", "#include <begin_vertex>\nvSurfacePosition=surfacePosition;");
+    shader.fragmentShader = shader.fragmentShader.replace("#include <common>", `#include <common>
+      varying vec3 vSurfacePosition; uniform vec3 surfaceTint;
+      float surfaceHash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}`)
+      .replace("#include <color_fragment>", `#include <color_fragment>
+        vec3 localDx=dFdx(vSurfacePosition),localDy=dFdy(vSurfacePosition);
+        vec3 viewDx=dFdx(-vViewPosition),viewDy=dFdy(-vViewPosition);
+        // Recover uniform physical scale even after instancing or baking fragment transforms.
+        float unitScale=sqrt((dot(viewDx,viewDx)+dot(viewDy,viewDy))/max(dot(localDx,localDx)+dot(localDy,localDy),1e-12));
+        unitScale=floor(unitScale*1000.+.5)/1000.;
+        vec3 surfacePoint=vSurfacePosition*unitScale;
+        float surfaceHeight=0.;
+        ${wood ? `
+          float rings=(length(surfacePoint.xz+vec2(2.3,1.1))+.045*sin(surfacePoint.y*.27))*18.;
+          float grainDetail=1.-smoothstep(.5,3.,fwidth(rings));
+          float grain=.5+.5*sin(rings);
+          diffuseColor.rgb=mix(diffuseColor.rgb,surfaceTint,.16+grainDetail*grain*.22);
+          surfaceHeight=grain*grainDetail*.018;` : stone ? `
+          float mineral=.5+.5*sin(surfacePoint.x*.73+surfacePoint.y*.91+sin(surfacePoint.z*.8));
+          float fleck=surfaceHash(floor(surfacePoint.xy*3.)+floor(surfacePoint.z*3.));
+          float detail=1.-smoothstep(.3,1.,max(fwidth(surfacePoint.x),max(fwidth(surfacePoint.y),fwidth(surfacePoint.z)))*3.);
+          diffuseColor.rgb=mix(diffuseColor.rgb,surfaceTint,.12+mineral*.18+(fleck-.5)*detail*.12);
+          surfaceHeight=(mineral+fleck*detail*.2)*.025;` : `
+          vec3 face=abs(normalize(cross(localDx,localDy)));
+          vec2 plane=face.y>.7 ? surfacePoint.xz : face.x>face.z ? surfacePoint.zy : surfacePoint.xy;
+          vec2 tile=plane/vec2(2.4,.75);
+          float row=floor(tile.y);tile.x+=mod(row,2.)*.5;
+          vec2 cell=floor(tile),edge=min(fract(tile),1.-fract(tile));
+          vec2 aa=max(fwidth(tile),vec2(.0001));
+          float faceMask=smoothstep(.02-aa.x,.02+aa.x,edge.x)*smoothstep(.055-aa.y,.055+aa.y,edge.y);
+          float detail=1.-smoothstep(.22,.8,max(aa.x,aa.y));
+          faceMask=mix(.86,faceMask,detail);
+          float tint=(surfaceHash(cell)-.5)*.22*detail;
+          vec3 faceColor=diffuseColor.rgb*(1.+tint);
+          diffuseColor.rgb=mix(surfaceTint,faceColor,faceMask);
+          surfaceHeight=faceMask*.045;`}`)
+      .replace("#include <normal_fragment_maps>", `#include <normal_fragment_maps>
+        vec3 surfaceR1=cross(viewDy,normal),surfaceR2=cross(normal,viewDx);
+        float surfaceDet=dot(viewDx,surfaceR1);
+        normal=normalize(abs(surfaceDet)*normal-sign(surfaceDet)*(dFdx(surfaceHeight)*surfaceR1+dFdy(surfaceHeight)*surfaceR2));`);
+  };
+  material.customProgramCacheKey = () => `surface-${spec.shaderStyle}-1`;
+  return material;
 }
 
 /** Night paint travels with geometry through rigid merging, instancing and released fragments. */

@@ -1,6 +1,6 @@
 dream 2;
-material brick(style=grain,colors=[#b17459,#985c48]);
-material redbrick(style=grain,colors=[#9e6053,#bd8170]);
+material brick(style=brick,colors=[#a96f55,#bcb1a0]);
+material redbrick(style=brick,colors=[#995b4c,#b9ae9e]);
 material plaster(style=toon,colors=[#ddd1b9,#c5b69a]);
 material blue(style=toon,colors=[#9aadaf,#758e98]);
 material ochre(style=toon,colors=[#d4b378,#b9955f]);
@@ -8,7 +8,7 @@ material glass(style=toon,colors=[#6c929d,#42616f],night=#f2bf7e);
 material roof(style=toon,colors=[#535b64,#3b4753]);
 material tile(style=toon,colors=[#aa6b50,#864d3e]);
 material trim(style=toon,colors=[#e5decd,#c5bfae]);
-material wood(style=grain,colors=[#805c40,#aa815a]);
+material wood(style=wood,colors=[#805c40,#aa815a]);
 material dark(style=toon,colors=[#35464c,#28363e]);
 material green(style=toon,colors=[#5e7c73,#405d55]);
 material sign(style=toon,colors=[#e4b948,#c79435]);

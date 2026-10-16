@@ -53,7 +53,7 @@ A command with an ID requires a name immediately after its keyword. Commands wit
 
 | Command | Context | ID / block | Fields |
 | --- | --- | --- | --- |
-| `material` | top | ID / no block | `style: toon / grain / glow / stripes / cloth`, `colors: colors`, `night?: color` |
+| `material` | top | ID / no block | `style: toon / grain / glow / stripes / cloth / brick / wood / stone`, `colors: colors`, `night?: color` |
 | `let` | top / object / visual / path / route_path / voxel_ops | ID / no block | `value: n` |
 | `component` | top | ID / visual | `params?: symbols` |
 | `object` | top | ID / object | `label: text` |

@@ -1,7 +1,7 @@
 dream 2;
 material coral(style=toon,colors=[#d97054,#d97054]);
 material cream(style=toon,colors=[#eadab5,#eadab5]);
-material wood(style=grain,colors=[#92613d,#bd905d]);
+material wood(style=wood,colors=[#92613d,#bd905d]);
 material dark(style=toon,colors=[#654632,#654632]);
 material clay(style=grain,colors=[#b86747,#d88c62]);
 material soil(style=toon,colors=[#584832,#584832]);

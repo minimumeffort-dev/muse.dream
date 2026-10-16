@@ -5,7 +5,7 @@ import {profileProblem} from './profile';
 
 /** Versioned bounded assemblies. Geometry, motion and shaders belong to the engine. */
 export const objectMaterialSchema = z.object({
-  shaderStyle: z.enum(["toon", "paper-grain", "glow", "stripes", "cloth"]),
+  shaderStyle: z.enum(["toon", "paper-grain", "glow", "stripes", "cloth", "brick", "wood", "stone"]),
   colorA: z.string().regex(/^#[0-9a-fA-F]{6}$/),
   colorB: z.string().regex(/^#[0-9a-fA-F]{6}$/),
   nightColor: z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),

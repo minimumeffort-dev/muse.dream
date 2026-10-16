@@ -12,6 +12,16 @@ Use table field order. Always emit required fields. Use named constructor fields
 No aliases: rot_deg, heading_deg, spin(axis=z,deg_s=90),
 swing(axis=z,deg=20,hz=.25,phase_deg=0), roll(axis=y,radius=8).
 Colors are six-digit hex. material colors always contains two colors.
+Material style may be toon, grain, glow, stripes, cloth, brick, wood or stone.
+For brick, colors=[fired_face,mortar]; use a subdued warm gray for mortar, not
+a second red. The engine supplies staggered 24x7.5 cm courses, thin recessed
+joints and restrained brick variation. Do not model every brick or cut open
+voxel slots to represent mortar. Wood colors=[base,grain_tint]; grain follows
+each member's longest dimension. Stone colors=[base,mineral_tint] gives natural
+mineral variation, not a block bond. These finishes keep physical pattern size
+through placement scale, instancing and fracture. Detail is filtered below a
+pixel; relief is visual only. No custom GLSL, texture URLs, roughness or bump
+fields. Use voxels/fill/cut for actual openings and authored destruction chunks.
 
 Coordinates: world [x,y] = right/down; object [x,y,z] = Y up; asset forward +X.
 World heading 0=east, 90=south. rot_deg is local Euler XYZ in degrees.

@@ -1,5 +1,5 @@
 dream 2;
-material brick(style=toon,colors=[#b17459,#985c48]);
+material brick(style=brick,colors=[#a96f55,#bcb1a0]);
 material glass(style=toon,colors=[#6c929d,#42616f],night=#f2bf7e);
 material roof(style=toon,colors=[#535b64,#3b4753]);
 material trim(style=toon,colors=[#e5decd,#c5bfae]);

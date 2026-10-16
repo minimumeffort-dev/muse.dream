@@ -6,6 +6,7 @@ import type { ObjectPart } from "../scene/object-dsl";
 
 import { partGeometry } from "../scene/object-geometry";
 import { styledMaterial, toonMaterial } from "./shaders";
+import { materialCoordinates } from "./material-coordinates";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 
 /** Five centimetres of visual body travel keeps the player's tires inside their openings. */
@@ -106,6 +107,7 @@ export function buildCustom(object: SceneObject): THREE.Group {
     }
     for (const part of spec.parts) {
       const m = mesh(partGeometry(part,spec.dslVersion===2 ? spec.voxelSize : undefined), styledMaterial(part.material),0,0,0,false);
+      materialCoordinates(m.geometry, part);
       m.name = part.id;
       const style=part.material.shaderStyle,paint=style==="toon" || style==="paper-grain";
       // Linear vertex paint lets differently colored parts share a draw without changing shading.

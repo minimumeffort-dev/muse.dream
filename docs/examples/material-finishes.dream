@@ -1,0 +1,16 @@
+dream 2;
+material fired_clay(style=brick,colors=[#a96f55,#bcb1a0]);
+material oak(style=wood,colors=[#98724e,#62452f]);
+material limestone(style=stone,colors=[#b3b3a5,#8c9489]);
+object garden_wall(label="Brick, oak and limestone"){
+  measure(kind=custom,axis=x,meters=6.4);
+  body(interaction=solid,radius=30,height=32);
+  part wall(shape=box,material=fired_clay,at=[0,17,0],size=[64,28,4]);
+  part coping(shape=box,material=limestone,at=[0,32,0],size=[64,2,6]);
+  repeat slats(index=i,count=3){
+    part bench_seat(shape=box,material=oak,at=[0,7,8+i*2.5],size=[32,1.5,2]);
+  }
+  repeat legs(index=i,count=2){
+    part leg(shape=box,material=oak,at=[i*26-13,3.5,10.5],size=[2,7,6]);
+  }
+}

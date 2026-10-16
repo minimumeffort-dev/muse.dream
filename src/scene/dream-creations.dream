@@ -1,6 +1,6 @@
 dream 2;
 material stitching(style=toon,colors=[#b8a277,#b8a277]);
-material wood(style=grain,colors=[#966c48,#b48c60]);
+material wood(style=wood,colors=[#966c48,#b48c60]);
 material dark(style=toon,colors=[#303c43,#303c43]);
 material metal(style=toon,colors=[#6f9295,#6f9295]);
 material cream(style=toon,colors=[#eadcbb,#eadcbb]);
