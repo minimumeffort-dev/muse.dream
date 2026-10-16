@@ -1,3 +1,4 @@
+import {controlOf} from "./object-dsl";
 import type { Scene, SceneObject } from "./schema";
 import { objectHeight,archetypeOf } from "../sim/archetypes";
 import { objectPlacement } from "./placement";
@@ -9,7 +10,7 @@ const compiled=new WeakMap<Scene,{objects:Map<string,SceneObject>;solids:Spatial
 /** Car and prop collision share one immutable broad phase per accepted revision. */
 export function sceneContacts(scene:Scene){
   let data=compiled.get(scene);if(data)return data;
-  const contacts=scene.objects.filter(o=>!o.route && archetypeOf(o).interaction==="solid").flatMap(o=>objectContacts(scene,o))
+  const contacts=scene.objects.filter(o=>!o.route && !controlOf(o.spec) && archetypeOf(o).interaction==="solid").flatMap(o=>objectContacts(scene,o))
     .concat(bridgeRails(scene.terrain).map(c=>({...c,bottom:-Infinity})));
   data={objects:new Map(scene.objects.map(o=>[o.id,o])),solids:new SpatialGrid(contacts),maxRadius:Math.max(0,...contacts.map(c=>c.r))};compiled.set(scene,data);return data;
 }

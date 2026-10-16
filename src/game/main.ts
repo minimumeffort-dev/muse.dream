@@ -1,3 +1,4 @@
+import {vehicleReviewStart} from "./review-start";
 import { measuredScale, playerRadius, playerHeight } from "../scene/measure";
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -11,7 +12,7 @@ import { drivingHeight } from "../scene/terrain";
 import { archetypeOf, objectRadius } from "../sim/archetypes";
 import { buildPaperMask } from "../sim/mask";
 import { createCarAtSpawn, FixedStepper, resetCar, type World } from "../sim/car";
-import { nearbyRide,toggleRide,stepInteractive } from "../sim/interaction";
+import { nearbyRide,toggleRide,stepInteractive,occupiedObject,exitPosition } from "../sim/interaction";
 import { actorPoses } from "../sim/actors";
 import { interactiveWorld } from "../scene/interactive-world";
 import { buildRoutes } from "./routes";
@@ -20,7 +21,7 @@ import { worldTime, worldMotion, terrainPlayer, terrainView, worldGradeShader } 
 import { animateObject, buildObject, buildPlayer } from "./world3d";
 import { buildEnvironment, roadGeometry, terrainNormal, worldPosition } from "./environment";
 import { cameraPosition, followCamera, followCameraZoom, rideCameraZoom, DEFAULT_CAMERA_ZOOM, type FollowTarget } from "./camera";
-import { hasAnimatedJoints,impactOf,isReactive } from "../scene/object-dsl";
+import { hasAnimatedJoints,impactOf,isReactive,controlOf } from "../scene/object-dsl";
 import { buildDamageObject,updateDamage } from "./damage";
 import { WorldDebris } from "./debris";
 import type { ImpactEvent } from "../sim/impacts";
@@ -47,6 +48,7 @@ function start(): void {
   const world: World = { scene: doc, roadMask,
     driveMask: buildPaperMask(doc.canonical.width, doc.canonical.height), carRadius };
   let car = createCarAtSpawn(doc);
+  if(import.meta.env.DEV)car=vehicleReviewStart(car,world,new URLSearchParams(location.search).get("test-vehicle"));
   const stepper = new FixedStepper();
   const keys = new Set<string>();
   let mode: "playing" | "paused" = "playing";
@@ -59,7 +61,7 @@ function start(): void {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
-  renderer.domElement.setAttribute("aria-label", "Drive with WASD or arrow keys. F boards a nearby vehicle or returns to your car. P pauses; R returns to the start.");
+  renderer.domElement.setAttribute("aria-label", "WASD walks or drives. F enters or exits a vehicle. Space climbs and Shift descends in an aircraft. P pauses; R returns to the start.");
   container.append(renderer.domElement);
   const scene = new THREE.Scene();
   scene.background = new THREE.Color("#526b76");
@@ -108,7 +110,7 @@ function start(): void {
   const breakMeshes=new Map<string,THREE.Group>();
   const objects: THREE.Group[] = [];
   for (const object of doc.objects) {
-    if (!object.route && !isReactive(object.spec) && archetypeOf(object).interaction !== "knockable" && !hasAnimatedJoints(object.spec)) continue;
+    if (!object.route && !controlOf(object.spec) && !isReactive(object.spec) && archetypeOf(object).interaction !== "knockable" && !hasAnimatedJoints(object.spec)) continue;
     const destructible=isReactive(object.spec) && impactOf(object.spec)?.kind!=="bounce";
     const group = destructible ? buildDamageObject(object) : compactObject(buildObject(object));
     group.position.copy(worldPosition(doc, object.x, object.y, 1.5));
@@ -118,16 +120,19 @@ function start(): void {
     scene.add(group);
     objects.push(group);
     if(archetypeOf(object).interaction === "knockable") propMeshes.set(object.id, group);
-    if(object.route){actorMeshes.set(object.id,group);rideZooms.set(object.id,rideCameraZoom(doc.player,object));}
+    if(object.route || controlOf(object.spec)){actorMeshes.set(object.id,group);rideZooms.set(object.id,rideCameraZoom(doc.player,object));}
     if(destructible)breakMeshes.set(object.id,group);
   }
   const debris=new WorldDebris(doc);scene.add(debris.group);
   const traveler=interactiveWorld.assemblies.find(a=>a.displayName==="Traveler")!;
   const avatar=compactObject(buildObject({id:"traveler",kind:"custom",labelText:"Traveler",x:0,y:0,scale:measuredScale(traveler),spec:traveler}));avatar.visible=false;objects.push(avatar);
+  const walkerSpec=interactiveWorld.assemblies.find(a=>a.displayName==="Explorer")!;
+  const walker=compactObject(buildObject({id:"explorer",kind:"custom",labelText:"Explorer",x:0,y:0,scale:measuredScale(walkerSpec),spec:walkerSpec}));
+  walker.visible=false;scene.add(walker);
   const carRoot = new THREE.Group(), carMesh = compactObject(buildPlayer(doc));
   carRoot.add(carMesh); scene.add(carRoot);
   const particles = new WorldParticles(doc); scene.add(particles.mesh);
-  const occlusion = new SceneryOcclusion(objects);
+  const occlusion = new SceneryOcclusion(objects.filter(object=>object!==avatar));
   const updateMap = createWorldMap(document.querySelector<HTMLCanvasElement>("#world-map")!, doc);
 
   // Keyboard-only diagnostics stay out of the play surface.
@@ -180,16 +185,17 @@ function start(): void {
     pauseButton.setAttribute("aria-label", next === "paused" ? "Resume" : "Pause");
     pauseButton.setAttribute("aria-pressed", String(next === "paused"));
     pauseButton.dataset.paused = String(next === "paused");
+    if(next==="playing")container.focus({preventScroll:true});
   }
   pauseButton.addEventListener("click", () => setMode(mode === "playing" ? "paused" : "playing"));
-  const useRide=()=>{if(mode==="playing")car=toggleRide(car,world);};
+  const useRide=()=>{if(mode==="playing"){car=toggleRide(car,world);container.focus({preventScroll:true});}};
   interact.addEventListener("click",useRide);
   pauseMenu.addEventListener("cancel", (e) => { e.preventDefault(); setMode("playing"); });
   reduced.addEventListener("change", () => { particles.clear(); landscape.clear(); snap = true; });
-  document.querySelector("#resume")!.addEventListener("click", () => { setMode("playing"); pauseButton.focus(); });
+  document.querySelector("#resume")!.addEventListener("click", () => { setMode("playing"); });
   document.querySelector("#restart")!.addEventListener("click", () => {
     resetPosition(true);
-    setMode("playing"); pauseButton.focus();
+    setMode("playing");
   });
   addEventListener("keydown", (e) => {
     if (e.code.startsWith("Arrow") || e.code === "Space" && e.target === container) e.preventDefault();
@@ -223,14 +229,15 @@ function start(): void {
       const input = {
         steer: Number(keys.has("KeyD") || keys.has("ArrowRight")) - Number(keys.has("KeyA") || keys.has("ArrowLeft")),
         throttle: Number(keys.has("KeyW") || keys.has("ArrowUp")) - Number(keys.has("KeyS") || keys.has("ArrowDown")),
+        lift:Number(keys.has("Space"))-Number(keys.has("ShiftLeft") || keys.has("ShiftRight")),viewAngle:cameraAngle,
       };
       const steps = stepper.push(dt);
       for (let i = 0; i < steps; i++) {
-        const wasGrounded = car.grounded, previousSpeed=Math.hypot(car.vx,car.vy),riding=!!car.ride;
+        const wasGrounded = car.grounded, previousSpeed=Math.hypot(car.vx,car.vy),riding=car.control.kind!=="car";
         car = stepInteractive(car, input, stepper.stepDt, world);
         objectImpacts.push(...car.impacts);
         landscape.step(car,stepper.stepDt,!reduced.matches); boosted ||= car.boostedThisStep;
-        landscape.stepActors(actorPoses(doc,car.timeS),stepper.stepDt,!reduced.matches);
+        landscape.stepActors(actorPoses(doc,car.timeS,car).filter(p=>!(car.control.kind==="vehicle" && p.id===car.control.id)),stepper.stepDt,!reduced.matches);
         if (!riding && wasGrounded && !car.grounded) flight.jumps++;
         if (!riding && !wasGrounded && car.grounded) flight.landings++;
         if(!riding)flight.maxClearance = Math.max(flight.maxClearance, car.elevation - drivingHeight(doc.terrain, car.x, car.y));
@@ -238,17 +245,18 @@ function start(): void {
         if(!riding && car.landingSpeed===0) collision=Math.max(collision,previousSpeed-Math.hypot(car.vx,car.vy));
       }
       if (boosted) boostUntil = car.timeS + .5;
-      particles.update(car, dt, !reduced.matches, boosted, impact, collision,actorPoses(doc,car.timeS));
+      particles.update(car, dt, !reduced.matches, boosted, impact, collision,actorPoses(doc,car.timeS,car));
       particles.objectImpacts(car,objectImpacts,!reduced.matches);
       landingBounce = Math.max(landingBounce * Math.exp(-dt * 12), Math.min(1.8, impact * .008));
-      if(!car.ride)wheelDistance += (car.vx * Math.cos(car.headingRad) + car.vy * Math.sin(car.headingRad)) * dt;
+      if(car.control.kind==="car")wheelDistance += (car.vx * Math.cos(car.headingRad) + car.vy * Math.sin(car.headingRad)) * dt;
     }
     landscape.upload();
     for(const [id,group] of breakMeshes)updateDamage(group,id,car);
     debris.update(car,reduced.matches);
-    const visual=car.ride ? {...car,...car.ride.parked,grounded:true,vz:0,vx:0,vy:0} : car;
+    const parked=car.vehicles.find(v=>v.id===null),visual=car.control.kind==="car" ? car : {...car,...(parked??doc.spawn),grounded:true,vz:0,vx:0,vy:0};
     const position = worldPosition(doc, car.x, car.y, 1.5), normal = terrainNormal(doc, visual.x, visual.y);
     position.y = car.elevation + 1.5;
+    carRoot.visible=car.control.kind==="car" || !!parked;
     carRoot.position.copy(worldPosition(doc,visual.x,visual.y));carRoot.position.y=visual.elevation+1.5;
     forward.set(Math.cos(visual.headingRad), 0, Math.sin(visual.headingRad));
     if (visual.grounded) {
@@ -282,31 +290,45 @@ function start(): void {
         vertices.needsUpdate = true;
       }
     }
-    const poses=actorPoses(doc,car.timeS);
+    const poses=actorPoses(doc,car.timeS,car);
     for(const pose of poses){
       const group=actorMeshes.get(pose.id)!;
       group.position.copy(worldPosition(doc,pose.x,pose.y));group.position.y=pose.elevation+1.5;
       const normal=pose.kind==="rail" || pose.kind==="path" ? terrainNormal(doc,pose.x,pose.y) : new THREE.Vector3(0,1,0);
       group.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),normal).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),-pose.headingRad));
+      group.quaternion.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(pose.bank??0,0,pose.pitch??0)));
       group.userData.distance=pose.travelled;
     }
-    avatar.visible=!!car.ride;
-    if(car.ride){
-      const group=actorMeshes.get(car.ride.actorId)!;group.add(avatar);
+    const occupied=occupiedObject(car,world);
+    const standingRide=controlOf(occupied?.spec)==="skateboard";
+    avatar.visible=!!occupied && !standingRide;
+    if(occupied && !standingRide){
+      const group=actorMeshes.get(occupied.id)!;group.add(avatar);
       const spec=group.userData.sceneObject.spec;
       avatar.position.fromArray(spec.rideable.seat);
       avatar.scale.setScalar(measuredScale(traveler)/group.scale.x);
+    }
+    walker.visible=car.control.kind==="foot" || standingRide;
+    if(standingRide){
+      const group=actorMeshes.get(occupied!.id)!;group.add(walker);
+      const spec=group.userData.sceneObject.spec;
+      walker.position.fromArray(spec.rideable.seat);walker.rotation.set(0,0,0);
+      walker.scale.setScalar(measuredScale(walkerSpec)/group.scale.x);animateObject(walker,car.timeS,false);
+    }else if(walker.visible){
+      scene.add(walker);walker.scale.setScalar(measuredScale(walkerSpec));
+      walker.position.copy(position);walker.rotation.set(0,-car.headingRad,0);
+      animateObject(walker,car.timeS,!reduced.matches && Math.hypot(car.vx,car.vy)>3);
     }
     for (const object of objects) {
       const spec=object.userData.sceneObject;
       animateObject(object, worldTime.value, !reduced.matches, object.userData.distance ?? 0,0,
         spec ? Math.hypot(object.position.x-position.x,object.position.z-position.z)/spec.scale : Infinity);
     }
-    const target = { x: position.x, y: (car.ride ? car.elevation : drivingHeight(doc.terrain, car.x, car.y)) + 12, z: position.z };
+    const target = { x: position.x, y: (car.control.kind!=="car" ? car.elevation : drivingHeight(doc.terrain, car.x, car.y)) + 12, z: position.z };
     if (mode === "playing" || snap) {
       follow = followCamera(follow, target, dt, snap || reduced.matches);
       follow.x = target.x; follow.z = target.z;
-      const zoom = car.ride ? rideZooms.get(car.ride.actorId)! : DEFAULT_CAMERA_ZOOM;
+      const zoom = car.control.kind==="foot" ? 2.25 : occupied ? rideZooms.get(occupied.id)! : DEFAULT_CAMERA_ZOOM;
       camera.zoom = followCameraZoom(camera.zoom, zoom, dt, snap || reduced.matches);
       camera.updateProjectionMatrix();
     }
@@ -321,7 +343,7 @@ function start(): void {
     (scene.fog as THREE.Fog).far = (scene.fog as THREE.Fog).near + 1700;
     camera.updateMatrixWorld(); scene.updateMatrixWorld();
     scenery.update(camera, position.clone().add(new THREE.Vector3(0, 7, 0)), dt, reduced.matches);
-    occlusion.update(camera, position.clone().add(new THREE.Vector3(0, playerHeight(doc) / 2, 0)), dt, reduced.matches);
+    occlusion.update(camera, position.clone().add(new THREE.Vector3(0, playerHeight(doc) / 2, 0)), dt, reduced.matches,occupied ? actorMeshes.get(occupied.id) : undefined);
     sun.target.position.set(follow.x, follow.y, follow.z);
     sun.position.set(follow.x - 300, follow.y + 690, follow.z + 220);
     hudTime += dt;
@@ -330,7 +352,7 @@ function start(): void {
       lap.textContent = `Lap ${car.lap + 1}`;
       progress.setAttribute("aria-label", `Checkpoint ${car.nextCheckpoint === 0 ? dots.length : car.nextCheckpoint} of ${dots.length}`);
       dots.forEach((dot, i) => dot.classList.toggle("passed", car.nextCheckpoint === 0 || i < car.nextCheckpoint));
-      surface.textContent = car.ride ? doc.objects.find(o=>o.id===car.ride!.actorId)!.labelText : !car.grounded ? "Airborne" : car.timeS < boostUntil ? "Boost" : car.surface === "ice" ? "Sliding" : car.surface === "water" ? "Water" : "";
+      surface.textContent = occupied ? occupied.labelText+(controlOf(occupied.spec)==="plane" ? " · Space ↑ / Shift ↓" : "") : car.control.kind==="foot" ? "On foot" : !car.grounded ? "Airborne" : car.timeS < boostUntil ? "Boost" : car.surface === "ice" ? "Sliding" : car.surface === "water" ? "Water" : "";
       surface.dataset.effect = car.surface === "ice" ? "ice" : "boost";
       // DOM diagnostics let browser checks observe real simulation and camera state.
       container.dataset.car = [car.x, car.y, position.y].map((v) => v.toFixed(1)).join(",");
@@ -346,9 +368,14 @@ function start(): void {
       container.dataset.view = camera.quaternion.toArray().map(v => v.toFixed(5)).join(",");
       container.dataset.zoom = camera.zoom.toFixed(3);
       container.dataset.render = JSON.stringify({ calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, geometries: renderer.info.memory.geometries });
-      const nearby=nearbyRide(car,world);interact.hidden=mode!=="playing" || !car.ride && !nearby;
-      interact.textContent=car.ride ? "F · Return to car" : `F · Ride ${nearby?.labelText ?? ""}`;
-      container.dataset.riding=car.ride?.actorId ?? "";
+      const foot=car.control.kind==="foot",nearby=foot ? nearbyRide(car,world) : undefined,exit=foot ? undefined : exitPosition(car,world);
+      interact.hidden=mode!=="playing" || foot && !nearby;
+      interact.disabled=!foot && !exit;
+      interact.textContent=foot ? `F · ${nearby?.object && !controlOf(nearby.object.spec) ? "Ride" : "Drive"} ${nearby?.labelText??""}` : exit ? "F · Exit vehicle" : controlOf(occupied?.spec)==="boat" ? "Dock to exit" : car.surface==="water" ? "R · Recover plane" : "Land to exit";
+      container.dataset.riding=occupied?.id??"";
+      container.dataset.control=JSON.stringify(car.control);
+      container.dataset.avatar=standingRide ? "standing" : walker.visible ? "walking" : occupied ? "seated" : "in-car";
+      container.dataset.vehicles=JSON.stringify(car.vehicles);
       container.dataset.actors=JSON.stringify(poses.map(p=>({id:p.id,x:p.x,y:p.y,elevation:p.elevation})));
       container.dataset.destruction=JSON.stringify({broken:car.broken,zones:car.brokenZones,debris:car.debris.length,toppling:car.debris.filter(p=>p.topple).map(p=>({id:p.objectId,angle:p.topple!.angle,settled:p.settled})),props:car.props.filter(p=>p.elevation!==undefined).map(p=>({id:p.id,x:p.x,y:p.y,elevation:p.elevation,vz:p.vz}))});
     }

@@ -26,7 +26,7 @@ There is one driving height per XY. Roads cannot stack, cars don't drive under b
 
 ## Routes and moving objects
 
-`route` describes a `rail`, `path`, `water` or `air` activity, using `loop` or `shuttle` travel. Its speed, wait time and points determine the pose from the fixed simulation clock. A placed actor references that route; `offset` separates a carriage from its locomotive. Route heading is derived from travel, so `heading_deg` only belongs on fixed XY placements.
+`route` describes a `rail`, `path`, `water` or `air` activity, using `loop` or `shuttle` travel. For autonomous actors, its speed, wait time and points determine the pose from the fixed simulation clock. A placed actor references that route; `offset` separates a carriage from its locomotive. Route heading is derived from travel, so `heading_deg` only belongs on fixed XY placements.
 
 A bicycle lane needs space in the layout. Declare its full `width` and a `surface`: `cycle` adds edge paint and a dashed centre line, `paved` makes a neutral hard surface, and `trail` keeps the earth finish. These fields belong only to `kind=path`; a surface requires a width. Width is 16–120 units, or 1.6–12 metres.
 
@@ -40,13 +40,15 @@ route meadow_cycle(kind=path,mode=loop,speed=35,wait_s=10,width=40,surface=cycle
 }
 ```
 
-That is the live meadow's roughly 110-metre cycle circuit, with a four-metre surface around the picnic area. The separate skate circuit is roughly 107 metres long and 5.4 metres wide. They have room to exist alongside the racing circuit. Nearby benches and crates sit clear of the paving. Drive off-road toward a ride before pressing **F**; the bicycle no longer starts beneath the road.
+That is the live meadow's roughly 110-metre cycle circuit, with a four-metre surface around the picnic area. The separate skate circuit is roughly 107 metres long and 5.4 metres wide. They have room to exist alongside the racing circuit. Nearby benches and crates sit clear of the paving. Park nearby, press **F** to step out and walk to the bicycle, then press **F** to ride it. The bicycle starts clear of the road.
 
 The complete-world compiler checks an explicitly sized path's corridor, including paths without vehicles. It rejects overlap with road/curbs, water, physical props, independent ground routes and runways. Leave an eight-unit buffer beyond the full width; validation includes an additional sampling allowance. It reports the obstruction so the model can repair the placement. Corners share cross-sections, paint follows the terrain, and procedural grass stays off the surface. Existing paths without a width retain the legacy 28-unit trail and actor clearance; they do not gain a dedicated corridor implicitly.
 
 [Compile a complete dedicated-path example](../examples/dedicated-path.dream). Widen bends so the inside edge cannot fold. Crossings, junctions and automatic layout repair are not implemented.
 
-Water actors must keep their whole body afloat and clear of bridge decks. Air actors use a bounded takeoff/landing envelope and return to a boarding stop. These are authored activities, not traffic AI, free-flight aerodynamics or general buoyancy.
+Objects with `rideable(...,control=...)` use the route only for initial placement and infrastructure. They start parked and move freely under player input. Leaving one stores its position, so it cannot snap back to a route. See [vehicle controls](behavior.md#bodies-contacts-and-boarding).
+
+Autonomous water actors must keep their whole body afloat and clear of bridge decks. Autonomous air actors use a bounded takeoff/landing envelope. The controllable boat instead checks its full visible hull against navigable water and banks; the controllable plane takes off and lands under input. One driving height per XY still prevents boats travelling under bridge decks. These are bounded arcade mechanics, not traffic AI, free-flight aerodynamics or general buoyancy.
 
 ## Split a world into modules
 

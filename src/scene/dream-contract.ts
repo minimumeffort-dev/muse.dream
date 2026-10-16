@@ -18,7 +18,7 @@ export const DREAM_V2_COMMANDS: Readonly<Record<string,DreamCommand>> = Object.f
   ground: command("object",false,{mode:"upright|surface"}),
   foundation: command("object",false,{size:"v2",color:"color"}),
   contact: command("object",true,{at:"v3",radius:"n",height:"n"}),
-  rideable: command("object",false,{at:"v3"}),
+  rideable: command("object",false,{at:"v3",control:"car|bicycle|skateboard|boat|plane?"}),
   emit: command("object",false,{kind:"steam",at:"v3",rate_s:"n"}),
   impact: command("object",false,{mode:"impact"}),
   fragment: command("object visual",true,{},"visual"),

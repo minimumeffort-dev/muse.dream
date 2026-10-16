@@ -1,3 +1,4 @@
+import {controlOf} from "./object-dsl";
 import { z } from "zod";
 import { measuredScale, measureProblem } from "./measure";
 import { objectDslSchema, hasAnimatedJoints, MAX_ANIMATED_ASSEMBLIES,impactOf,isReactive } from "./object-dsl";
@@ -155,9 +156,10 @@ export const sceneSchema = z.object({
     notes: z.string(),
   }),
 }).superRefine((scene,ctx)=> {
-  const animated=scene.objects.filter(object=>hasAnimatedJoints(object.spec)).length+Number(hasAnimatedJoints(scene.player));
+  // The standing player character occupies one of the existing live animation slots.
+  const animated=scene.objects.filter(object=>hasAnimatedJoints(object.spec)).length+Number(hasAnimatedJoints(scene.player))+1;
   if(animated>MAX_ANIMATED_ASSEMBLIES) ctx.addIssue({code:z.ZodIssueCode.custom,message:`scene exceeds ${MAX_ANIMATED_ASSEMBLIES} animated assemblies`});
-  if(scene.objects.filter(o=>o.route).length>24) ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 24 route actors"});
+  if(scene.objects.filter(o=>o.route || controlOf(o.spec)).length>24) ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 24 route actors or controllable vehicles"});
   const reactive=scene.objects.filter(o=>isReactive(o.spec));
   if(reactive.length>24)ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 24 impact objects"});
   const fragments=reactive.reduce((sum,{spec})=>{

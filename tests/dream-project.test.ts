@@ -96,7 +96,7 @@ describe("complete Dream 2 mock world",()=>{
     for(const {assembly,id,...placement} of before.scene.objects){const current=scene.objects.find(o=>o.id===canonicalId(id))!;expect(current,id).toBeDefined();expect(current.spec!.displayName).toBe(assembly);const relocated=new Set(['sketch_668','sketch_1171','sketch_2850','sketch_4124','sketch_548','sketch_2152','sketch_1002','sketch_2753','sketch_1591','sketch_2339','sketch_3539','sketch_2021','sketch_2994','sketch_3295','sketch_3811','sketch_2941']);
       const activityProps:Record<string,[number,number]>={orchard_bench:[1030,1660],orchard_crate:[1320,1600],park_bench:[1225,1550]};
       if(activityProps[current.id])expect([current.x,current.y]).toEqual(activityProps[current.id]);
-      const movedActivity=activityProps[current.id] || current.route && ["meadow_cycle","village_skate"].includes(current.route.id);
+      const movedActivity=activityProps[current.id] || current.route && ["meadow_cycle","village_skate","cloud_trip","lake_trip"].includes(current.route.id);
       if(relocated.has(current.id))expect(Math.hypot(current.x-placement.x,current.y-placement.y)).toBeLessThan(20.01);
       close({...current,headingRad:current.headingRad,spec:undefined,scale:undefined,...(relocated.has(current.id)||movedActivity?{x:placement.x,y:placement.y,headingRad:placement.headingRad}:{})},{...placement,headingRad:placement.headingRad,scale:undefined,labelText:current.spec!.displayName,id:canonicalId(id),spec:undefined});}
     expect(scene.objects).toHaveLength(448);expect(scene.objects.every(o=>o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2)).toBe(true);

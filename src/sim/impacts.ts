@@ -26,7 +26,7 @@ export function breakOnContact(state:CarState,world:World,x:number,y:number,cont
     const object=sceneContacts(world.scene).objects.get(contact.id);if(!object)continue;
     const impact=contact.zoneId ? zonesOf(object.spec).find(z=>z.id===contact.zoneId)!.impact : impactOf(object.spec);if(!impact || impact.kind==="bounce")continue;
     const dx=contact.x-state.x,dy=contact.y-state.y,d=Math.hypot(dx,dy)||1;
-    const speed=(state.vx*dx+state.vy*dy)/d,height=playerHeight(world.scene);
+    const speed=(state.vx*dx+state.vy*dy)/d,height=world.bodyHeight??playerHeight(world.scene);
     if(speed<impact.speed || state.elevation>=contact.top-.05 || state.elevation+height<=contact.bottom+.05 || Math.hypot(x-contact.x,y-contact.y)>=world.carRadius+contact.r)continue;
     if(contact.zoneId)state.brokenZones.push({objectId:object.id,zoneId:contact.zoneId});else state.broken.push(object.id);
     const spec=object.spec as ObjectDslV2,placement=objectPlacement(world.scene,object);
@@ -53,14 +53,14 @@ export function breakOnContact(state:CarState,world:World,x:number,y:number,cont
 
 /** Bounded ballistic pieces are cosmetic contacts with terrain; they never block the racing line. */
 export function advanceImpactMotion(state:CarState,world:World,dt:number,hitCar=true):void {
-  const {scene}=world,data=sceneContacts(scene),actors=actorContacts(scene,state.timeS);
+  const {scene}=world,data=sceneContacts(scene),actors=actorContacts(scene,state.timeS,state);
   for(const prop of state.props){
     const object=data.objects.get(prop.id)!,impact=impactOf(object.spec);if(impact?.kind!=="bounce")continue;
     const radius=objectRadius(object),height=objectHeight(object),placement=objectPlacement(scene,object,prop.x,prop.y);
     let elevation=prop.elevation??placement.base,vz=prop.vz??0;
     const dx=prop.x-state.x,dy=prop.y-state.y,distance=Math.hypot(dx,dy),nx=distance>1e-6 ? dx/distance : Math.cos(state.headingRad),ny=distance>1e-6 ? dy/distance : Math.sin(state.headingRad);
     const closing=(state.vx-prop.vx)*nx+(state.vy-prop.vy)*ny;
-    if(hitCar && distance<world.carRadius+radius && state.elevation<elevation+height && state.elevation+(playerHeight(scene))>elevation && closing>8){
+    if(hitCar && distance<world.carRadius+radius && state.elevation<elevation+height && state.elevation+(world.bodyHeight??playerHeight(scene))>elevation && closing>8){
       prop.vx+=nx*closing*(1+impact.restitution);prop.vy+=ny*closing*(1+impact.restitution);vz=Math.max(vz,Math.min(220,closing*impact.lift));
       prop.x=state.x+nx*(world.carRadius+radius+.1);prop.y=state.y+ny*(world.carRadius+radius+.1);
       state.impacts.push({id:prop.id,kind:"bounce",x:prop.x,y:prop.y,elevation,speed:closing});

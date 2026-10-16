@@ -1,0 +1,39 @@
+dream 2;
+material teal(style=toon,colors=[#448b87,#448b87]);
+material dark(style=toon,colors=[#2c3840,#2c3840]);
+material steel(style=toon,colors=[#a6b7b3,#a6b7b3]);
+material gold(style=toon,colors=[#d5a253,#d5a253]);
+component bicycle_wheel(params=[x]){
+  part tire(shape=torus,material=dark,at=[x,10,0],size=[20,20,3],motion=roll(axis=z,radius=10));
+  part rim(shape=torus,material=steel,at=[x,10,0],size=[16,16,1],motion=roll(axis=z,radius=10));
+  repeat repeat_spoke(index=spoke,count=3){
+    part spoke(shape=box,material=steel,at=[x,10,0],size=[16,1,1],rot_deg=[0,0,spoke*60],motion=roll(axis=z,radius=10));
+  }
+}
+object meadow_bicycle(label="Meadow bicycle"){
+  measure(kind=bicycle,axis=x,meters=1.8);
+  body(interaction=solid,radius=20,height=39);
+  rideable(at=[-3,26,0],control=bicycle);
+  use bicycle_wheel(component=bicycle_wheel,args=[-19]);
+  use bicycle_wheel_2(component=bicycle_wheel,args=[19]);
+  beam rear_frame(shape=cylinder,material=teal,from=[-19,10,0],to=[-3,12,0],width=2,depth=2);
+  beam rear_stay(shape=cylinder,material=teal,from=[-19,10,0],to=[-6,25,0],width=2,depth=2);
+  beam seat_tube(shape=cylinder,material=teal,from=[-3,12,0],to=[-6,25,0],width=2,depth=2);
+  beam top_tube(shape=cylinder,material=teal,from=[-6,25,0],to=[12,27,0],width=2,depth=2);
+  beam down_tube(shape=cylinder,material=teal,from=[-3,12,0],to=[12,27,0],width=2,depth=2);
+  beam fork(shape=cylinder,material=steel,from=[12,30,0],to=[19,10,0],width=2,depth=2);
+  part saddle(shape=capsule,material=dark,at=[-6,28,0],size=[6,12,4],rot_deg=[0,0,90]);
+  beam handlebar(shape=cylinder,material=dark,from=[12,32,-8],to=[12,32,8],width=2,depth=2);
+  part crank(shape=cylinder,material=steel,at=[-3,12,0],size=[5,5,5],rot_deg=[90,0,0],motion=roll(axis=y,radius=10));
+  beam steering_stem(shape=cylinder,material=steel,from=[12,26,0],to=[12,32,0],width=2,depth=2);
+  beam seat_post(shape=cylinder,material=steel,from=[-6,24,0],to=[-6,28,0],width=1.5,depth=1.5);
+  beam chain_top(shape=box,material=dark,from=[-19,12,2],to=[-3,14,2],width=.6,depth=.6);
+  beam chain_bottom(shape=box,material=dark,from=[-19,9,2],to=[-3,10,2],width=.6,depth=.6);
+  repeat pedals(index=s,count=2){
+    let sign(value=s*2-1);
+    beam crank_arm(shape=box,material=steel,from=[-3,12,0],to=[-3+sign*3,12+sign*3,sign*4],width=1,depth=1);
+    part pedal(shape=box,material=dark,at=[-3+sign*3,12+sign*3,sign*5],size=[4,1.5,3]);
+    part grip(shape=capsule,material=dark,at=[12,32,sign*7],size=[2,4,2],rot_deg=[90,0,0]);
+  }
+  part bell(shape=cylinder,material=gold,at=[12,33,-4],size=[2.5,1,2.5]);
+}

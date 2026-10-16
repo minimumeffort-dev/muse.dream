@@ -46,7 +46,7 @@ A command with an ID requires a name immediately after its keyword. Commands wit
 | `ground` | object | No ID / no block | `mode: upright / surface` |
 | `foundation` | object | No ID / no block | `size: v2`, `color: color` |
 | `contact` | object | ID / no block | `at: v3`, `radius: n`, `height: n` |
-| `rideable` | object | No ID / no block | `at: v3` |
+| `rideable` | object | No ID / no block | `at: v3`, `control?: car / bicycle / skateboard / boat / plane` |
 | `emit` | object | No ID / no block | `kind: steam`, `at: v3`, `rate_s: n` |
 | `impact` | object | No ID / no block | `mode: impact` |
 | `fragment` | object / visual | ID / visual | None |
@@ -127,13 +127,21 @@ With a measured car player, tree height and plane wingspan must exceed the car's
 | Unmeasured size | Placement multiplier .5–2 |
 | Compound contacts | 1–8; native radius 1–64, height 1–160, bottom Y 0–128 |
 | Project | 32 reachable modules including entry, depth 8, 524,288 UTF-16 characters, 128 defined assemblies |
-| Full scene | Dimensions ≤8192 per axis; ≤4096 placements, 12 routes, 24 route actors |
+| Full scene | Dimensions ≤8192 per axis; ≤4096 placements, 12 routes, 24 mobile actors, including controllable vehicles |
 | Animation / effects | ≤24 live joint assemblies including player; ≤16 steam emitters |
 | Destruction | ≤24 reactive objects, ≤128 potential fragments, ≤8 fragments per assembly, ≤4 zones per object |
 | Terrain | ≤16 hills and 16 tint areas; combined terrain height cap 320 |
 | Infrastructure | 2–64 checkpoints, ≤8 bridges and ≤8 combined water basins/watercourses |
 
+The live jointed-assembly budget is 24 including the engine character; source objects and the player vehicle share the remaining 23 slots.
+
 The [machine instructions](../dream-v2-model.txt) carry detailed motion and landscape parameter bounds. The schema and full-scene validator are the final acceptance boundary. Expanded/native geometry limits still apply before physical scaling.
+
+### Vehicle controls
+
+`rideable` takes an optional `control=car|bicycle|skateboard|boat|plane`. It requires a solid cylinder without foundations, compound contacts or impact behavior. Omitting `control` preserves the legacy route passenger seat. A controlled vehicle can use `place(...,at=[...])` or a route's initial pose; its declared route is not a movement constraint. Controlled and parked poses live in simulation state, leaving the accepted scene immutable.
+
+F exits to accessible dry ground. On foot, F enters a seat within 60 units of the body's edge and 28 units of elevation. W/S controls throttle/braking/reverse; A/D steers. Space/Shift climbs/descends in aircraft. Walking is screen-relative. Aircraft require speed for takeoff, descend at low speed and cannot be exited in flight. A water landing stalls at the surface; R recovers the aircraft. Boats need full-hull navigable water, stop at banks/decks and can only be exited near dry ground. Ground vehicles share heightfield driving, collision and supported impact mechanics. Only the original racing car advances checkpoints.
 
 ### Dedicated paths
 

@@ -21,11 +21,11 @@ export class SceneryOcclusion {
     }
   }
 
-  update(camera: THREE.OrthographicCamera, player: THREE.Vector3, dt: number, snap = false): void {
+  update(camera: THREE.OrthographicCamera, player: THREE.Vector3, dt: number, snap = false, occupied?:THREE.Group): void {
     this.screen.copy(player).project(camera);
     this.ray.setFromCamera(new THREE.Vector2(this.screen.x, this.screen.y), camera);
     this.ray.far = this.ray.ray.origin.distanceTo(player) - 4;
-    const obscuring = new Set(this.ray.intersectObjects(this.groups.filter(group=>group.visible), true).map((hit) => this.roots.get(hit.object)));
+    const obscuring = new Set(this.ray.intersectObjects(this.groups.filter(group=>group.visible && group!==occupied), true).map((hit) => this.roots.get(hit.object)));
     this.obscuredCount = obscuring.size;
     for (const [group, materials] of this.materials) {
       const target = obscuring.has(group) ? .22 : 1;

@@ -33,12 +33,11 @@ const sceneFor=(objects:SceneObject[])=>parseScene({...createFixtureScene(),obje
 const worldFor=(object:SceneObject):World=>{const scene=sceneFor([object]);return {scene,carRadius:11,driveMask:buildPaperMask(960,720),roadMask:buildMaskForScene(scene)};};
 const at=(x:number,y:number,headingRad=0):CarState=>({...createCarAtSpawn(doc),x,y,headingRad,elevation:drivingHeight(doc.terrain,x,y),vx:0,vy:0});
 
-const cycleCar=()=>{const bike=doc.objects.find(o=>o.id==="village_bike")!;return at(bike.x,bike.y-45,Math.PI/2);};
 
 describe("Dream world authoring",()=>{
-  it("compiles ten new assemblies, routes, placements and a rounded watercourse from the same source",()=>{
+  it("compiles eleven assemblies, routes, placements and a rounded watercourse from the same source",()=>{
     expect(compileDreamWorld(source)).toEqual(interactiveWorld);
-    expect(interactiveWorld.assemblies).toHaveLength(10);expect(interactiveWorld.routes).toHaveLength(5);
+    expect(interactiveWorld.assemblies).toHaveLength(11);expect(interactiveWorld.routes).toHaveLength(5);
     expect(interactiveWorld.objects).toHaveLength(9);expect(interactiveWorld.waters).toHaveLength(1);
     for(const object of interactiveWorld.objects)expect(doc.objects.some(o=>o.id===object.id),object.id).toBe(true);
     expect(()=>compileDream(source)).toThrow("compileDreamWorld");
@@ -61,7 +60,8 @@ describe("Dream world authoring",()=>{
       {...station,emitter:{kind:"script",position:[0,20,0],rate:1}},
       {...station,emitter:{kind:"steam",position:[0,20,0],rate:1000}},
     ])expect(objectDslSchema.safeParse(bad).success).toBe(false);
-    expect(()=>parseScene({...doc,objects:Array.from({length:25},(_,i)=>({...item("Meadow station"),id:`house${i}`}))})).toThrow("animated assemblies");
+    expect(()=>parseScene({...doc,objects:Array.from({length:24},(_,i)=>({...item("Meadow station"),id:`house${i}`}))})).toThrow("animated assemblies");
+    expect(parseScene({...doc,objects:Array.from({length:23},(_,i)=>({...item("Meadow station"),id:`house${i}`}))}).objects).toHaveLength(23);
     expect(()=>parseScene({...doc,player:passage})).toThrow("driving cylinder");
     expect(()=>parseScene({...doc,player:spec("Meadow locomotive")})).toThrow("world objects");
   });
@@ -77,15 +77,17 @@ describe("Dream world authoring",()=>{
   it("rejects routes without a safe world footprint or water support",()=>{
     expect(validateScenePlayability(doc,world.roadMask,11)).toEqual([]);
     const boat=doc.objects.find(o=>o.id==="lake_boat")!;
-    const invalid=parseScene({...doc,routes:doc.routes.map(r=>r.id===boat.route!.id ? {...r,points:[{x:2400,y:2200},{x:2600,y:2200},{x:2600,y:2400}]} : r)});
+    const legacyObjects=doc.objects.map(o=>o.id===boat.id ? {...o,spec:objectDslSchema.parse({...o.spec,rideable:{seat:[18,12,0]}})} : o);
+    const invalid=parseScene({...doc,objects:legacyObjects,routes:doc.routes.map(r=>r.id===boat.route!.id ? {...r,points:[{x:2400,y:2200},{x:2600,y:2200},{x:2600,y:2400}]} : r)});
     expect(validateScenePlayability(invalid,world.roadMask,11)).toContainEqual(expect.objectContaining({code:"route-not-clear"}));
     expect(()=>parseScene({...doc,objects:[{...boat,route:{id:"absent",offset:0}}]})).toThrow("existing route");
-    expect(()=>parseScene({...doc,objects:Array.from({length:25},(_,i)=>({...boat,id:`boat${i}`}))})).toThrow("24 route actors");
+    expect(()=>parseScene({...doc,objects:Array.from({length:24},(_,i)=>({...boat,id:`boat${i}`}))})).toThrow("24 route actors");
   });
   it("rejects a boat crossing a bridge deck even when its side rails are disabled",()=>{
     const routes=doc.routes.map(r=>r.id==="lake_trip" ? {...r,points:[{x:3000,y:2370},{x:3100,y:2370},{x:3100,y:2450},{x:3000,y:2450}]} : r);
     const landscape=doc.terrain.landscape!,bridges=landscape.bridges.filter(b=>b.id!=="meadow_footbridge");
-    const clear=parseScene({...doc,routes,terrain:{...doc.terrain,landscape:{...landscape,bridges}}});
+    const objects=doc.objects.map(o=>o.id==="lake_boat" ? {...o,spec:objectDslSchema.parse({...o.spec,rideable:{seat:[18,12,0]}})} : o);
+    const clear=parseScene({...doc,objects,routes,terrain:{...doc.terrain,landscape:{...landscape,bridges}}});
     expect(validateScenePlayability(clear,world.roadMask,11)).toEqual([]);
     const blocked=parseScene({...clear,terrain:{...clear.terrain,landscape:{...landscape,bridges:landscape.bridges.map(b=>b.id==="meadow_footbridge" ? {...b,rails:false} : b)}}});
     expect(validateScenePlayability(blocked,world.roadMask,11)).toContainEqual(expect.objectContaining({code:"route-not-clear"}));
@@ -108,35 +110,21 @@ describe("fixed-clock vehicles and passenger rides",()=>{
     expect(routePose(route,8).x).toBe(200);expect(routePose(route,8).speed).toBe(0);
     expect(routePose(route,10).x).toBe(180);expect(Math.cos(routePose(route,10).headingRad)).toBeCloseTo(-1);
   });
-  it("takes off, cruises and lands at the same boarding stop",()=>{
-    const plane=doc.objects.find(o=>o.id==="meadow_plane")!,route=doc.routes.find(r=>r.id===plane.route!.id)!;
-    const duration=routePath(route).length/route.speed;
-    expect(actorPose(doc,plane,0).elevation).toBeCloseTo(drivingHeight(doc.terrain,plane.x,plane.y));
-    const high=actorPose(doc,plane,route.waitS+duration/2);expect(high.elevation-drivingHeight(doc.terrain,high.x,high.y)).toBeCloseTo(route.altitude!);
-    const landed=actorPose(doc,plane,duration+route.waitS+2);expect(landed.speed).toBe(0);expect(landed.x).toBeCloseTo(plane.x);expect(landed.y).toBeCloseTo(plane.y);
+  it("leaves controllable vehicles parked until the player takes over",()=>{
+    for(const id of ["meadow_plane","lake_boat","village_bike","village_skateboard"]){
+      const vehicle=doc.objects.find(o=>o.id===id)!;
+      expect(actorPose(doc,vehicle,100)).toEqual(actorPose(doc,vehicle,0));
+    }
   });
-  it("boards a nearby bicycle, advances the world without awarding race progress, and returns to the parked car",()=>{
-    const original=cycleCar(),bike=nearbyRide(original,world);
-    expect(bike?.id).toBe("village_bike");let rider=toggleRide(original,world);
-    expect(rider.ride?.actorId).toBe(bike!.id);
+  it("keeps legacy unconfigured train seats as passenger rides with frozen race progress",()=>{
+    const train=doc.objects.find(o=>o.id==="meadow_train")!,pose=actorPose(doc,train,0);
+    const original={...at(pose.x,pose.y-50),control:{kind:"foot" as const}},target=nearbyRide(original,world);
+    expect(target?.id).toBe(train.id);let rider=toggleRide(original,world);
+    expect(rider.control).toEqual({kind:"passenger",id:train.id});
     for(let i=0;i<2400;i++)rider=stepInteractive(rider,{throttle:1,steer:1},1/120,world);
-    const pose=actorPose(doc,bike!,20);expect(rider.x).toBeCloseTo(pose.x);expect(rider.y).toBeCloseTo(pose.y);expect(Math.hypot(rider.x-bike!.x,rider.y-bike!.y)).toBeGreaterThan(30);
+    const moved=actorPose(doc,train,20);expect(rider.x).toBeCloseTo(moved.x);expect(rider.y).toBeCloseTo(moved.y);
     expect(rider.nextCheckpoint).toBe(original.nextCheckpoint);expect(rider.lap).toBe(original.lap);
-    const returned=toggleRide(rider,world);expect(returned.ride).toBeUndefined();expect(returned.x).toBe(original.x);expect(returned.timeS).toBeCloseTo(20);
-    expect(resetCar(rider,doc).ride).toBeUndefined();expect(original.ride).toBeUndefined();
-  });
-  it.each([30,60,144])("replays the same ride at %i render frames per second",fps=>{
-    let rider=toggleRide(cycleCar(),world);const stepper=new FixedStepper();
-    for(let frame=0;frame<fps*20;frame++)for(let i=0,n=stepper.push(1/fps);i<n;i++)rider=stepInteractive(rider,{throttle:0,steer:0},stepper.stepDt,world);
-    expect(rider.x).toBeCloseTo(actorPose(doc,doc.objects.find(o=>o.id==="village_bike")!,20).x,8);
-    expect(rider.timeS).toBeCloseTo(20,10);
-  });
-  it("does not board distant or airborne vehicles, or return into an occupied parked spot",()=>{
-    const car=at(3600,3000);expect(toggleRide(car,world)).toBe(car);
-    const plane=doc.objects.find(o=>o.id==="meadow_plane")!,p=actorPose(doc,plane,11);
-    expect(nearbyRide({...at(p.x,p.y),timeS:11},world)).not.toBe(plane);
-    let rider=toggleRide(cycleCar(),world);rider={...rider,ride:{...rider.ride!,parked:{x:1190,y:1140,elevation:0,headingRad:0}}};
-    expect(toggleRide(rider,world)).toBe(rider);
+    expect(resetCar(rider,doc).control).toEqual({kind:"car"});
   });
   it("pushes a stationary car out of a moving vehicle and allows overflight",()=>{
     const train=doc.objects.find(o=>o.id==="meadow_train")!,p=actorPose(doc,train,7);

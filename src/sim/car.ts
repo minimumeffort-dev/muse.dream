@@ -1,3 +1,5 @@
+import {routePath} from "../scene/routes";
+import {distanceToRoad} from "../scene/road";
 import { playerHeight } from "../scene/measure";
 import { objectPlacement } from "../scene/placement";
 import type { Checkpoint, Scene } from "../scene/schema";
@@ -6,7 +8,7 @@ import { archetypeOf, objectHeight, objectRadius } from "./archetypes";
 import { pointInPolygon, type RasterMask } from "./mask";
 import { sceneContacts } from "../scene/contacts";
 import { actorContacts } from "./actors";
-import { impactOf } from "../scene/object-dsl";
+import { impactOf,controlOf } from "../scene/object-dsl";
 import { breakOnContact,advanceImpactMotion,isBroken,type DebrisState,type ImpactEvent } from "./impacts";
 
 /**
@@ -25,6 +27,8 @@ export interface CarInput {
   steer: number;
   /** -1 (brake/reverse) .. 1 (throttle) */
   throttle: number;
+  /** Space / Shift for aircraft; view angle aligns walking with the screen. */
+  lift?:number;viewAngle?:number;
 }
 
 export type Surface = "road" | "paper" | "ice" | "water";
@@ -39,6 +43,9 @@ export interface PropState {
   elevation?:number;
   vz?:number;
 }
+
+export type PlayerControl={kind:"car"}|{kind:"foot"}|{kind:"vehicle";id:string}|{kind:"passenger";id:string};
+export interface ParkedVehicle {id:string|null;x:number;y:number;elevation:number;headingRad:number;distance:number}
 
 export interface CarState {
   x: number;
@@ -69,7 +76,10 @@ export interface CarState {
   brokenZones:{objectId:string;zoneId:string}[];
   debris:DebrisState[];
   impacts:ImpactEvent[];
-  ride?:{actorId:string;parked:{x:number;y:number;headingRad:number;elevation:number}};
+  control:PlayerControl;
+  /** Only unoccupied vehicles are stored here; the active body is this state. */
+  vehicles:ParkedVehicle[];
+  distance:number;pitch:number;bank:number;
 }
 
 export interface World {
@@ -80,6 +90,11 @@ export interface World {
   /** Travel boundary. The fixture allows the whole sheet. */
   driveMask: RasterMask;
   carRadius: number;
+  bodyHeight?:number;
+  tuning?:CarTuning;
+  dryGround?:boolean;
+  damageEnabled?:boolean;
+  effectsEnabled?:boolean;
 }
 
 export const TUNING = {
@@ -100,8 +115,11 @@ export const TUNING = {
   checkpointHeight: 48,
 } as const;
 
+export type CarTuning={ [K in keyof typeof TUNING]:number };
+
 export function createCarAtSpawn(scene: Scene): CarState {
   return {
+    control:{kind:"car"},vehicles:[],distance:0,pitch:0,bank:0,
     x: scene.spawn.x,
     y: scene.spawn.y,
     vx: 0,
@@ -127,9 +145,12 @@ export function createCarAtSpawn(scene: Scene): CarState {
 export function resetCar(state: CarState, scene: Scene, resetRace = false): CarState {
   const fresh = createCarAtSpawn(scene);
   if (resetRace) return fresh;
-  // Car-only reset leaves knocked props where they lie.
+  const vehicleId=state.control.kind==="vehicle" ? state.control.id : undefined;
+  const saveVehicle=vehicleId && state.grounded && !(controlOf(scene.objects.find(o=>o.id===vehicleId)?.spec)==="plane" && waterAt(scene.terrain,state.x,state.y,drivingHeight(scene.terrain,state.x,state.y)));
+  // Car-only reset leaves knocked props and safely parked vehicles where they lie.
   return {
     ...fresh,
+    vehicles:[...state.vehicles.filter(v=>v.id!==null && !(state.control.kind==="vehicle" && v.id===state.control.id)),...(saveVehicle ? [{id:vehicleId,x:state.x,y:state.y,elevation:state.elevation,headingRad:state.headingRad,distance:state.distance}] : [])],
     timeS: state.timeS,
     lap: state.lap,
     boostReadyAtS: { ...state.boostReadyAtS },
@@ -169,13 +190,14 @@ function crossedCheckpoint(
 }
 
 export function carFootprintClear(world:World,x:number,y:number,elevation:number,timeS:number,state?:CarState):boolean {
-  const data=sceneContacts(world.scene),height=playerHeight(world.scene);
-  return world.driveMask.footprintClear(x,y,world.carRadius) && ![...data.solids.query(x,y,world.carRadius+data.maxRadius),...actorContacts(world.scene,timeS)]
+  const data=sceneContacts(world.scene),height=world.bodyHeight??playerHeight(world.scene);
+  return world.driveMask.footprintClear(x,y,world.carRadius) && (!world.dryGround || !waterAt(world.scene.terrain,x,y,drivingHeight(world.scene.terrain,x,y))) && ![...data.solids.query(x,y,world.carRadius+data.maxRadius),...actorContacts(world.scene,timeS,state)]
     .some(s=>(!state || !isBroken(state,s)) && elevation<s.top-.05 && elevation+height>s.bottom+.05 && Math.hypot(x-s.x,y-s.y)<world.carRadius+s.r);
 }
 
 export function stepCar(state: CarState, input: CarInput, dt: number, world: World): CarState {
   const { scene, roadMask, driveMask, carRadius } = world;
+  const tuning=world.tuning??TUNING;
   const s: CarState = {
     ...state,
     boostReadyAtS: { ...state.boostReadyAtS },
@@ -189,9 +211,9 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
   // Solid archetype colliders join the mask as "not drivable" for the car.
   const compiled = sceneContacts(scene);
   // Include the full fixed-step movement and any displacement by a moving actor.
-  const moving=actorContacts(scene,s.timeS),height=playerHeight(scene);
+  const moving=actorContacts(scene,s.timeS,s),height=world.bodyHeight??playerHeight(scene);
   const pushRange=moving.length ? 2*(carRadius+Math.max(...moving.map(a=>a.r))) : 0;
-  const solids = [...compiled.solids.query(s.x,s.y,carRadius + compiled.maxRadius + TUNING.maxTerrainSpeed*dt+pushRange),...moving];
+  const solids = [...compiled.solids.query(s.x,s.y,carRadius + compiled.maxRadius + tuning.maxTerrainSpeed*dt+pushRange),...moving];
   const supportHeight = (x: number, y: number, fromHeight: number): number => {
     let floor = drivingHeight(scene.terrain, x, y);
     for (const solid of solids) {
@@ -202,7 +224,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
     return floor;
   };
   const blocked = (x: number, y: number): boolean => {
-    if (!driveMask.footprintClear(x, y, carRadius)) return true;
+    if (!driveMask.footprintClear(x, y, carRadius) || world.dryGround && waterAt(scene.terrain,x,y,drivingHeight(scene.terrain,x,y))) return true;
     for (const solid of solids) {
       if(isBroken(s,solid))continue;
       if (s.elevation < solid.top - .05 && s.elevation+height>solid.bottom+.05 && Math.hypot(x - solid.x, y - solid.y) < carRadius + solid.r) return true;
@@ -231,23 +253,23 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
   const throttle = Math.max(-1, Math.min(1, input.throttle));
 
   // Derive surface each step, so leaving water or ice always restores normal grip.
-  let surface: Surface = roadMask.isDrivable(s.x, s.y) ? "road" : "paper";
+  let surface: Surface = roadMask.isDrivable(s.x, s.y) || scene.routes.some(r=>r.kind==="path" && r.surface && r.surface!=="trail" && distanceToRoad(routePath(r).points,s.x,s.y)<r.width!/2) ? "road" : "paper";
   const water = waterAt(scene.terrain,s.x,s.y,s.elevation);
-  for (const region of scene.regions) {
+  for (const region of world.effectsEnabled===false ? [] : scene.regions) {
     if (s.grounded && !onObject && region.rule.effect === "ICE" && pointInPolygon(s.x, s.y, region.polygon)) {
       surface = "ice";
     }
     if (s.grounded && !onObject && region.rule.effect === "BOOST" && pointInPolygon(s.x, s.y, region.polygon)) {
       const readyAt = s.boostReadyAtS[region.id] ?? 0;
       if (s.timeS >= readyAt) {
-        s.vx += Math.cos(s.headingRad) * TUNING.boostImpulse;
-        s.vy += Math.sin(s.headingRad) * TUNING.boostImpulse;
+        s.vx += Math.cos(s.headingRad) * tuning.boostImpulse;
+        s.vy += Math.sin(s.headingRad) * tuning.boostImpulse;
         const speed = Math.hypot(s.vx, s.vy);
-        if (speed > TUNING.boostSpeedCap) {
-          s.vx = (s.vx / speed) * TUNING.boostSpeedCap;
-          s.vy = (s.vy / speed) * TUNING.boostSpeedCap;
+        if (speed > tuning.boostSpeedCap) {
+          s.vx = (s.vx / speed) * tuning.boostSpeedCap;
+          s.vy = (s.vy / speed) * tuning.boostSpeedCap;
         }
-        s.boostReadyAtS[region.id] = s.timeS + TUNING.boostCooldownS;
+        s.boostReadyAtS[region.id] = s.timeS + tuning.boostCooldownS;
         s.boostedThisStep = true;
       }
     }
@@ -263,7 +285,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
 
   // Steering needs rolling speed; sign follows travel so reverse steers sanely.
   const steerAuthority = Math.max(-1, Math.min(1, fwdSpeed / 45));
-  s.headingRad += steer * TUNING.turnRateRadS * steerAuthority * dt * (s.grounded ? 1 : .15);
+  s.headingRad += steer * tuning.turnRateRadS * steerAuthority * dt * (s.grounded ? 1 : .15);
 
   const nfx = Math.cos(s.headingRad);
   const nfy = Math.sin(s.headingRad);
@@ -272,19 +294,19 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
   const beforeEngine = fwd;
 
   if (s.grounded && throttle > 0) {
-    const fade = Math.max(0, 1 - fwd / TUNING.maxForwardSpeed);
-    fwd += TUNING.engineAccel * fade * throttle * dt;
+    const fade = Math.max(0, 1 - fwd / tuning.maxForwardSpeed);
+    fwd += tuning.engineAccel * fade * throttle * dt;
   } else if (s.grounded && throttle < 0) {
     if (fwd > 1) {
-      fwd = Math.max(0, fwd + TUNING.brakeAccel * throttle * dt);
+      fwd = Math.max(0, fwd + tuning.brakeAccel * throttle * dt);
     } else {
-      fwd = Math.max(-TUNING.maxReverseSpeed, fwd + TUNING.reverseAccel * throttle * dt);
+      fwd = Math.max(-tuning.maxReverseSpeed, fwd + tuning.reverseAccel * throttle * dt);
     }
   }
   const engineAccel = (fwd - beforeEngine) / dt;
-  const drag = Math.exp(-(s.grounded ? TUNING.dragPerS : .04) * dt);
+  const drag = Math.exp(-(s.grounded ? tuning.dragPerS : .04) * dt);
   fwd *= drag;
-  const grip = surface === "ice" ? TUNING.iceLateralGrip : TUNING.baseLateralGrip;
+  const grip = surface === "ice" ? tuning.iceLateralGrip : tuning.baseLateralGrip;
   lat *= Math.exp(-(s.grounded ? grip : .04) * dt);
 
   s.vx = nfx * fwd + -nfy * lat;
@@ -299,7 +321,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
   if (s.grounded && !onObject) {
     const denominator = 1 + ground.dx ** 2 + ground.dy ** 2;
     const bend = sampleTerrain(scene.terrain, s.x, s.y, s.vx, s.vy).bend;
-    const normalForce = TUNING.gravity + bend + (ground.dx * nfx + ground.dy * nfy) * engineAccel;
+    const normalForce = tuning.gravity + bend + (ground.dx * nfx + ground.dy * nfy) * engineAccel;
     // Project forces onto the surface; a crest cannot pull the car down.
     if (normalForce < 0 && Math.hypot(s.vx, s.vy) > 60) s.grounded = false;
     else {
@@ -309,9 +331,9 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
     s.vz = ground.dx * s.vx + ground.dy * s.vy;
   }
   const speed = Math.hypot(s.vx, s.vy);
-  if (speed > TUNING.maxTerrainSpeed) {
-    s.vx *= TUNING.maxTerrainSpeed / speed; s.vy *= TUNING.maxTerrainSpeed / speed;
-    s.vz *= TUNING.maxTerrainSpeed / speed;
+  if (speed > tuning.maxTerrainSpeed) {
+    s.vx *= tuning.maxTerrainSpeed / speed; s.vy *= tuning.maxTerrainSpeed / speed;
+    s.vz *= tuning.maxTerrainSpeed / speed;
   }
 
   // Conservative substeps: no sub-move longer than half the footprint radius.
@@ -324,7 +346,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
     const dy = s.vy * sdt;
     let nx = s.x + dx;
     let ny = s.y + dy;
-    breakOnContact(s,world,nx,ny,solids);
+    if(world.damageEnabled!==false)breakOnContact(s,world,nx,ny,solids);
     if (blocked(nx, ny)) {
       // Rollback with slide: try each axis from the last valid position.
       if (!blocked(nx, s.y)) {
@@ -344,14 +366,14 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
     s.y = ny;
 
     const contact = supportHeight(s.x, s.y, s.elevation);
-    let predicted = s.elevation + s.vz * sdt - .5 * TUNING.gravity * sdt * sdt;
+    let predicted = s.elevation + s.vz * sdt - .5 * tuning.gravity * sdt * sdt;
     for(const solid of solids) if(!isBroken(s,solid) && s.elevation+height<=solid.bottom+.05 && predicted+height>solid.bottom && Math.hypot(s.x-solid.x,s.y-solid.y)<carRadius+solid.r){
       predicted=solid.bottom-height;s.vz=Math.min(0,-Math.abs(s.vz)*.2);
     }
     if (s.grounded && contact < predicted - .08) s.grounded = false;
     if (!s.grounded) {
       s.elevation = predicted;
-      s.vz -= TUNING.gravity * sdt;
+      s.vz -= tuning.gravity * sdt;
       if (s.elevation <= contact) {
         const slope = sampleTerrain(scene.terrain, s.x, s.y);
         const floorSpeed = contact > slope.height + .05 ? 0 : slope.dx * s.vx + slope.dy * s.vy;
@@ -367,7 +389,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
     }
 
     const expected = scene.checkpoints[s.nextCheckpoint];
-    if (expected && s.elevation - drivingHeight(scene.terrain, s.x, s.y) <= TUNING.checkpointHeight && crossedCheckpoint(from, { x: s.x, y: s.y }, expected)) {
+    if (s.control.kind==="car" && expected && s.elevation - drivingHeight(scene.terrain, s.x, s.y) <= tuning.checkpointHeight && crossedCheckpoint(from, { x: s.x, y: s.y }, expected)) {
       if (s.nextCheckpoint === 0) s.lap += 1;
       s.nextCheckpoint = (s.nextCheckpoint + 1) % scene.checkpoints.length;
     }
@@ -401,7 +423,8 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
       prop.vy = s.vy * 1.15 + ny * 60;
     }
   }
-  advanceImpactMotion(s,world,dt);
+  s.distance+=(s.vx*Math.cos(s.headingRad)+s.vy*Math.sin(s.headingRad))*dt;
+  advanceImpactMotion(s,world,dt,world.damageEnabled!==false);
   return s;
 }
 

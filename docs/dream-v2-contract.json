@@ -165,7 +165,8 @@
       ],
       "id": false,
       "fields": {
-        "at": "v3"
+        "at": "v3",
+        "control": "car|bicycle|skateboard|boat|plane?"
       }
     },
     "emit": {

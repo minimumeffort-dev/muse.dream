@@ -85,7 +85,7 @@ export class WorldParticles {
   update(car: CarState, dt: number, enabled: boolean, boost = false, landingSpeed = 0, collisionSpeed = 0,actors:ActorPose[]=[]): void {
     if (!enabled) { this.clear(); return; }
     this.time+=dt;this.boostLife=boost?.45:Math.max(0,this.boostLife-dt);
-    const speed=car.ride ? 0 : Math.hypot(car.vx,car.vy), slip=Math.abs(-Math.sin(car.headingRad)*car.vx+Math.cos(car.headingRad)*car.vy);
+    const speed=car.control.kind==="foot" || car.control.kind==="passenger" ? 0 : Math.hypot(car.vx,car.vy), slip=Math.abs(-Math.sin(car.headingRad)*car.vx+Math.cos(car.headingRad)*car.vy);
     const wet=car.surface==="water",icy=car.surface==="ice", dusty=car.surface==="paper", boosting=this.boostLife>0;
     const rate=boosting?110:dusty?65:wet||icy||slip>35?48:12;
     this.emission+=dt*((car.grounded&&speed>45)||boosting?rate:0);

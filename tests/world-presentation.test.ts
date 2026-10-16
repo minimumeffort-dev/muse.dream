@@ -126,6 +126,8 @@ describe("world visibility", () => {
     occlusion.update(camera, new THREE.Vector3(0, 0, 0), .1, true);
     expect(material.opacity).toBe(.22);
     expect(material.transparent).toBe(true);
+    occlusion.update(camera, new THREE.Vector3(0, 0, 0), .1, true,root);
+    expect(material.opacity).toBe(1);expect(occlusion.obscuredCount).toBe(0);
     root.position.x = 80; scene.updateMatrixWorld();
     occlusion.update(camera, new THREE.Vector3(0, 0, 0), .1, true);
     expect(material.opacity).toBe(1);

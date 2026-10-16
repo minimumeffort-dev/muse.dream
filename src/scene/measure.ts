@@ -62,3 +62,9 @@ export function measuredScale(spec:ObjectDsl):number {
 }
 export const playerRadius=(scene:{player?:ObjectDsl})=>scene.player ? scene.player.body.colliderRadius*measuredScale(scene.player) : 11;
 export const playerHeight=(scene:{player?:ObjectDsl})=>scene.player ? (scene.player.body.colliderHeight??14)*measuredScale(scene.player) : 14;
+
+/** Conservative horizontal support extent, separate from the authored collision cylinder. */
+export function assemblyHorizontalRadius(spec:ObjectDsl,scale:number):number {
+  const bounds=assemblyBounds(spec);
+  return Math.hypot(Math.max(Math.abs(bounds.min.x),Math.abs(bounds.max.x)),Math.max(Math.abs(bounds.min.z),Math.abs(bounds.max.z)))*scale;
+}

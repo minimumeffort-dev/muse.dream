@@ -87,7 +87,7 @@ const objectDslV2Schema=objectV1Schema.extend({
   measure:z.object({kind:z.enum(MEASURE_KINDS),axis:z.enum(["x","y","z"]),meters:z.number().finite().min(.05).max(60)}).strict().optional(),
   dslVersion:z.literal(2),joints:z.array(jointSchema).max(12).optional(),parts:z.array(objectV2PartSchema).min(1).max(32),
   contacts:z.array(z.object({position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),radius:z.number().finite().min(1).max(64),height:z.number().finite().min(1).max(160)}).strict()).min(1).max(8).optional(),
-  rideable:z.object({seat:z.tuple([offset,z.number().finite().min(0).max(128),offset])}).strict().optional(),
+  rideable:z.object({seat:z.tuple([offset,z.number().finite().min(0).max(128),offset]),control:z.enum(["car","bicycle","skateboard","boat","plane"]).optional()}).strict().optional(),
   emitter:z.object({kind:z.literal("steam"),position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),rate:z.number().finite().min(1).max(12)}).strict().optional(),
   impact:impactSchema.optional(),
   breakZones:z.array(z.object({id:z.string().min(1).max(40),position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),
@@ -167,4 +167,9 @@ export type ObjectMaterial = z.infer<typeof objectMaterialSchema>;
 export const MAX_ANIMATED_ASSEMBLIES=24;
 export function hasAnimatedJoints(spec:{displayName:string;dslVersion?:number;joints?:{id:string;animation?:unknown;proximity?:unknown}[]}|undefined):boolean {
   return spec?.dslVersion===2 && !!spec.joints?.some(joint=>joint.animation || joint.proximity);
+}
+
+export type VehicleControl=NonNullable<ObjectDslV2["rideable"]>["control"] & string;
+export function controlOf(spec:{displayName:string;dslVersion?:number;rideable?:{control?:VehicleControl}}|undefined):VehicleControl|undefined {
+  return spec?.dslVersion===2 ? spec.rideable?.control : undefined;
 }

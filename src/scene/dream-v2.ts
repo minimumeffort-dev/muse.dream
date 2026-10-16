@@ -138,6 +138,7 @@ function lowerBlock(nodes:DreamNode[]):Statement[] {
       case "measure":statement.name=wordField(node,"kind");statement.axis=wordField(node,"axis");statement.value=n("meters");break;
       case "ground":statement.name=wordField(node,"mode");break;
       case "foundation":statement.args=listField(node,"size");statement.color=wordField(node,"color");break;
+      case "rideable":if(node.fields.has("control"))statement.control=wordField(node,"control");break;
       case "contact":statement.args=[n("radius"),n("height")];break;
       case "emit":statement.name=wordField(node,"kind");statement.value=n("rate_s");break;
       case "impact":{const mode=field(node,"mode") as DreamNode;statement.name=mode.kind;statement.args=Object.entries(commands[mode.kind]!.fields).filter(([,type])=>type==="n").map(([key])=>exprField(mode,key));if(mode.fields.has("pattern"))statement.pattern=wordField(mode,"pattern");break;}

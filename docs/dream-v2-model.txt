@@ -57,7 +57,20 @@ Sway deg 0..6.87, hz .016.. .477. Swing deg 0..80.21, hz .016.. .636,
 phase_deg -180..180. Open deg -180..180, radius 20..160.
 At most 8 upright solid compound contacts: offset X/Z -64..64, Y 0..128,
 radius 1..64, height 1..160. Contact geometry replaces the main body footprint.
-rideable requires a solid cylinder without foundation/contacts. Seat Y 0..128.
+rideable requires a solid cylinder without foundation/contacts/impact. Seat Y 0..128.
+Add control=car|bicycle|skateboard|boat|plane for direct player control. These are
+bounded engine profiles, not generated physics. Controlled vehicles start parked;
+place at XY or use a route only for its initial pose/infrastructure. They do not
+follow that route while being driven, and stay where the player leaves them.
+Omit control only for legacy passenger seats on autonomous routes, e.g. the train.
+Give boats full-hull navigable water and a boarding point near dry shore; no travel
+under bridge decks. Give planes a clear dry takeoff/landing area. Ground vehicles
+share terrain/contact mechanics. F exits to dry ground, then boards nearby on foot.
+Walking and non-racing vehicles preserve the original car's checkpoint progress.
+Aircraft need takeoff speed; Space/Shift climbs/descends and flight blocks exit.
+Water landings stall the aircraft at the surface; R recovers it to its start.
+The engine supplies a standing Explorer and seated traveler from Dream assemblies;
+model output still contains no controller code, input callbacks or physics scripts.
 Steam only: rate_s 1..12, position X/Z -64..64, Y 0..128.
 Bounce: knockable body; restitution in [0.1,0.9], lift in [0.05,0.8].
 Break: solid body; speed 40..400, scatter 0..160, lift 0..180, spin 0..8,
@@ -95,8 +108,9 @@ keep objects at their measured sizes. Omit width/surface only for legacy shared 
 Widen bends to keep the inside ribbon from folding; avoid turns sharper than 120 degrees.
 The engine does not invent crossings or reroute invalid layouts.
 Place uses exactly one of at or route; offset 0..2048 only with route;
-scale .5..2; heading_deg -360..360 only for at placements (routes own heading). <=64 placements; scene <=24 route actors,
-<=24 live joint assemblies including player, <=24 impact objects, <=128 fragments,
+scale .5..2; heading_deg -360..360 only for at placements (routes own heading). <=64 placements; scene <=24 mobile actors including controllable vehicles,
+<=24 live joint assemblies including the standing engine character; reserve one slot,
+so source objects plus the player vehicle may use at most 23. <=24 impact objects, <=128 fragments,
 <=16 steam emitters. Route actors need solid bodies without foundation/contacts/impact.
 One driving height per XY. No stacked roads, driving under bridges or boats under decks.
 Hollow buildings/tunnels use separated contacts and overhead clearance.

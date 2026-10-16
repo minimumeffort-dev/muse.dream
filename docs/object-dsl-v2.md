@@ -131,14 +131,14 @@ destruction of authored components. See [impact authoring](impact-dsl.md) for
 the JSON contract, Dream syntax, bounds and physical limits.
 
 V2 also accepts bounded `contacts` for upright wall and roof cylinders,
-`rideable: {seat: [x,y,z]}`, one `emitter: {kind: "steam", position: [x,y,z], rate}`,
+`rideable: {seat: [x,y,z], control?: "car"|"bicycle"|"skateboard"|"boat"|"plane"}`, one `emitter: {kind: "steam", position: [x,y,z], rate}`,
 and `proximity` on a joint. Proximity selects an axis, opening angle in radians
 and local trigger radius instead of oscillation. Wheel `roll` may select an
 explicit local axis; omitted axes keep the existing Y behavior.
 
 These declarations remain data, with no object-name dispatch or executable
 behavior. [World interactions](world-interactions.md) documents the exact bounds,
-Dream syntax, route placement, passenger controls and collision limits.
+Dream syntax, route placement, direct vehicle control, legacy passenger seats and collision limits.
 
 ## Guidance for a future Muse interpretation
 

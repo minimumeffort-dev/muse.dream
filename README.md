@@ -12,13 +12,17 @@ Racing is where this started. The idea is to make whatever someone draws playabl
 
 ## You can leave the road
 
-Follow the circuit or head into the hills. Climbing slows the car down, descending gives it speed, and a fast crest can launch it into the air. The camera follows you through the world, with a slightly closer view so the smaller objects are easier to see. Wooden bridges carry the track across water, and trains, planes, boats, bicycles and skateboards follow their own routes. You can board them for a passenger ride.
+Follow the circuit or head into the hills. Climbing slows the car down, descending gives it speed, and a fast crest can launch it into the air. The camera follows you through the world, with a slightly closer view so the smaller objects are easier to see. Wooden bridges carry the track across water, and the train keeps running while you explore.
 
 ![Driving through the mock world](docs/media/driving.gif)
 
-Board a smaller ride, like a bicycle or skateboard, and the camera moves closer so you can see it. Return to the car and the view eases back out. The objects keep their physical proportions.
+Press **F** to get out of the car, walk over to another vehicle and press **F** again. You control the bicycle, skateboard, boat or plane yourself. Leave the lane, steer across the pond or take off from the runway. A vehicle stays where you park it, including the car you left behind.
 
-Paths need room too. The meadow now has a four-metre-wide cycle circuit around its picnic area, and the riverside has a larger paved skating circuit. Both are over a hundred metres long. Their width is part of Dream 2, so the compiler can catch a road covering a lane or a tree planted on it. Drive off-road to the bicycle stop, then press **F** when you're close.
+![Leaving the car, walking to the bicycle and steering it yourself](docs/media/switching.gif)
+
+WASD walks or drives. In the plane, Space climbs and Shift descends. Land before getting out; bring the boat close enough to dry shore to disembark. The camera moves closer for walking and smaller vehicles, then eases back out for the car. The objects keep their physical proportions.
+
+Paths need room too. The meadow now has a four-metre-wide cycle circuit around its picnic area, and the riverside has a larger paved skating circuit. Both are over a hundred metres long. Their width is part of Dream 2, so the compiler can catch a road covering a lane or a tree planted on it. The bicycle starts beside the lane. Step out and walk over when you want to ride.
 
 ![The expanded cycle circuit, clear of the racing road and railway](docs/media/cycle-meadow.jpg)
 
@@ -53,9 +57,10 @@ Open [localhost:5173](http://127.0.0.1:5173/). A browser with WebGL is required.
 
 | Control | Action |
 | --- | --- |
-| WASD / arrows | Drive |
+| WASD / arrows | Walk or drive the current vehicle |
 | Q / E | Rotate the view |
-| F | Board a nearby vehicle or return to the parked car |
+| F | Exit a vehicle, or enter one nearby while on foot |
+| Space / Shift | Climb / descend in the plane |
 | P / Escape | Pause |
 | R | Return to the start, keeping changes to the world |
 | Start over, in the pause menu | Reset the race and restore destroyed objects |

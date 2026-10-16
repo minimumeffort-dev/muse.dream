@@ -9,7 +9,9 @@ into Three.js and tested mechanics; model output remains data-only.
 
 Current state: **mock open world** — a 6000 x 4800 handmade landscape with a
 winding eight-checkpoint circuit, composed assets, heightfield driving/jumps,
-ICE/BOOST, off-road collisions, fixed-angle camera and instanced scenery.
+ICE/BOOST, off-road collisions, fixed-angle camera, walking, direct vehicle controls
+and instanced scenery. F exits to dry ground and boards nearby on foot. Bicycles,
+skateboards, boats and planes are player-controlled; trains retain autonomous routes.
 The original small fixture remains for regression tests. No photo upload,
 camera or model calls yet. The complete live world is authored in Dream 2 text
 under `src/scene/world/`, linked through a closed host-supplied module map. This is a labelled pre-hackathon prototype; see
@@ -95,3 +97,13 @@ Dream 2 destruction includes optional splinter/crumble release patterns, rigid
 `topple` behavior, and independent `zone` sections. Core contacts and terrain
 foundations survive zone damage. Keep scene limits at 24 reactive objects and
 128 potential fragments; use `docs/impact-dsl.md` for the full authoring contract.
+
+Dream vehicle controls are explicit `rideable(at=...,control=...)` data. Preserve
+the one active-body owner, parked-vehicle poses and the immutable accepted scene.
+Controls never come from labels or generated code. Ground vehicles share the fixed
+car simulation with their own tuning/body dimensions; boats and planes use bounded
+arcade controllers, full water clearance and cylinder contacts. Keep on-foot exits
+dry and collision-free, prohibit mid-air exits, preserve checkpoint state outside
+the original car, and keep the occupied vehicle opaque. Use `docs/dream/behavior.md`.
+Reserve one of the 24 live jointed-assembly slots for the standing character; scene
+objects plus the player vehicle may use the remaining 23.

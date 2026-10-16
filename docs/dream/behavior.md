@@ -8,11 +8,19 @@ Appearance and interaction are separate. The same assembled shape can be solid, 
 
 Every object declares a body with a radius and height. A static upright solid can replace its default footprint with named `contact` cylinders. Separate wall and roof contacts leave a real doorway or passage with headroom. These remain vertical cylinders, not arbitrary mesh-shaped collision bodies.
 
-`rideable(at=[x,y,z])` supplies a local seat. A route placement then gives that vehicle an activity. F boards it nearby; F returns to the parked car when that footprint is clear. Race progress freezes during a passenger ride. The rider keeps its own physical size, including on a small bicycle or skateboard. WASD still drives the car, not the boarded vehicle.
+`rideable(at=[x,y,z],control=bicycle)` supplies a local seat and selects an engine control profile. The profiles are `car`, `bicycle`, `skateboard`, `boat` and `plane`. A controlled vehicle starts parked and takes WASD input when occupied. It can have a fixed XY placement or use a route's initial pose; the route does not constrain its movement.
 
-The camera automatically moves closer for small rides and eases back when you return to the car. Framing comes from the assembled size and placement scale, so it also works for new Dream objects. Larger vehicles keep the wider view. Reduced motion makes the change immediate.
+**F** gets you out of the current vehicle. Walk to another one, then press **F** to enter it. Boarding uses distance from the body's edge, up to 60 canonical units, and an elevation difference below 28 units. The car and other vehicles remain where you leave them. You can return on foot and take them over again. **R** returns to the starting car while keeping parked vehicles and world damage; Start over restores everything. Resetting during flight or after a water landing returns the abandoned aircraft to its authored start.
 
-![A closer view while riding the meadow bicycle](../media/riding.jpg)
+Walking uses screen-relative WASD, including after rotating the camera. Ground vehicles use W/S to accelerate, brake and reverse, and A/D to steer. Bicycles and skateboards have their own acceleration, grip and speed limits and share terrain, jumps and collision with the racing car. Boats use throttle, rudder steering, current drift and full-hull water clearance. Planes use W/S throttle and braking, A/D steering, Space to climb and Shift to descend. Takeoff needs forward speed; low airspeed causes descent. Release the climb control at flying speed to hold altitude. A water landing stalls the aircraft at the surface; press R to recover. These are bounded arcade controls, not a flight or sailing simulator.
+
+Exits need accessible dry ground. You cannot step out during flight or disembark in the middle of the pond. Bring the boat toward a bank or land the aircraft first. One character is active at a time: a standing, walking Dream assembly on foot and a seated assembly on a vehicle. The skateboard uses the standing Explorer. Their physical sizes are independent of the vehicle's scale. Original-car racing progress is preserved while walking or using another vehicle.
+
+The camera moves closer for walking and small vehicles, using their resolved dimensions, and eases back for larger ones. Reduced motion snaps the camera change and disables the walking gait. The occupied vehicle stays opaque when scenery fades around it.
+
+![Walking beside a parked vehicle](../media/on-foot.jpg)
+
+[Compile the complete controllable bicycle](../examples/controllable-bicycle.dream). Omitting `control` keeps the legacy passenger-only seat on a route, as used by the autonomous mock train. Those rides still follow their declared path.
 
 A joint can use `open(axis=y,deg=105,radius=100)` for a proximity door. Its declared wall contacts provide the opening. The animated panel doesn't push the car through rotating mesh collision.
 

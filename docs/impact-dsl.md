@@ -76,6 +76,8 @@ on the terrain. They shrink away over their final 0.8 seconds. The broken object
 stays broken after the pieces expire. **R** preserves destruction; **Start over**
 restores the entire world. Pause freezes motion and lifetime. A passenger ride
 continues debris and ball simulation without treating the passenger as a car hit.
+Directly controlled vehicles use their own body dimensions for impacts. Walking
+does not fracture objects or launch balls.
 Reduced motion applies destruction without flying fragments or impact puffs.
 
 ## Validation, runtime budget and limits

@@ -81,7 +81,7 @@ object passenger_carriage(label="Passenger carriage"){
 object cloudhopper_plane(label="Cloudhopper plane"){
   measure(kind=plane,axis=z,meters=10.8);
   body(interaction=solid,radius=29,height=29);
-  rideable(at=[-9,16,0]);
+  rideable(at=[-9,16,0],control=plane);
   part fuselage(shape=capsule,material=cream,at=[0,13,0],size=[14,69,17],rot_deg=[0,0,90]);
   part wings(shape=box,material=teal,at=[3,13,0],size=[22,3,92]);
   part tailplane(shape=box,material=teal,at=[-29,14,0],size=[15,2,34]);
@@ -110,7 +110,7 @@ object cloudhopper_plane(label="Cloudhopper plane"){
 object willow_launch(label="Willow launch"){
   measure(kind=boat,axis=x,meters=6);
   body(interaction=solid,radius=26,height=38);
-  rideable(at=[18,12,0]);
+  rideable(at=[18,12,0],control=boat);
   part hull(shape=sphere,material=teal,at=[0,4,0],size=[69,16,31]);
   part deck(shape=box,material=wood,at=[0,10,0],size=[54,4,24]);
   part cabin(shape=box,material=cream,at=[-7,20,0],size=[25,18,22]);
@@ -139,7 +139,7 @@ object willow_launch(label="Willow launch"){
 object meadow_bicycle(label="Meadow bicycle"){
   measure(kind=bicycle,axis=x,meters=1.8);
   body(interaction=solid,radius=20,height=39);
-  rideable(at=[-3,26,0]);
+  rideable(at=[-3,26,0],control=bicycle);
   use bicycle_wheel(component=bicycle_wheel,args=[-19]);
   use bicycle_wheel_2(component=bicycle_wheel,args=[19]);
   beam rear_frame(shape=cylinder,material=teal,from=[-19,10,0],to=[-3,12,0],width=2,depth=2);
@@ -166,7 +166,7 @@ object meadow_bicycle(label="Meadow bicycle"){
 object maple_skateboard(label="Maple skateboard"){
   measure(kind=skateboard,axis=x,meters=0.82);
   body(interaction=solid,radius=14,height=9);
-  rideable(at=[0,8,0]);
+  rideable(at=[0,8,0],control=skateboard);
   part deck(shape=capsule,material=wood,at=[0,7,0],size=[3,43,12],rot_deg=[0,0,90]);
   part grip(shape=capsule,material=dark,at=[0,8.4,0],size=[1,36,10],rot_deg=[0,0,90]);
   repeat repeat_axle(index=axle,count=2){
@@ -298,6 +298,28 @@ object traveler(label="Traveler"){
     part ear(shape=sphere,material=skin,at=[0,27,sign*6.3],size=[3,3,2.5]);
   }
   part backpack(shape=box,material=wood,at=[-7,10,0],size=[6,12,11]);
+}
+object walker(label="Explorer"){
+  measure(kind=person,axis=y,meters=1.75);
+  body(interaction=decor,radius=8,height=57);
+  part torso(shape=capsule,material=teal,at=[0,34,0],size=[14,22,19]);
+  part belt(shape=box,material=dark,at=[0,24,0],size=[13,3,17]);
+  part head(shape=sphere,material=skin,at=[0,49,0],size=[14,14,14]);
+  part hair(shape=sphere,material=dark,at=[-1,53,0],size=[15,8,15]);
+  part nose(shape=sphere,material=skin,at=[7,49,0],size=[3,3,3]);
+  part backpack(shape=box,material=wood,at=[-7,34,0],size=[6,16,14]);
+  repeat sides(index=s,count=2){
+    let sign(value=s*2-1);
+    part eye(shape=sphere,material=dark,at=[6,51,sign*4],size=[2,2,2]);
+    joint leg(at=[0,23,sign*4],motion=swing(axis=z,deg=23,hz=.6,phase_deg=s*180)){
+      part trouser(shape=capsule,material=dark,at=[0,-10,0],size=[6,20,6]);
+      part shoe(shape=box,material=cream,at=[3,-21,0],size=[10,4,7]);
+    }
+    joint arm(at=[0,40,sign*11],motion=swing(axis=z,deg=20,hz=.6,phase_deg=(1-s)*180)){
+      part sleeve(shape=capsule,material=teal,at=[0,-7,0],size=[5,16,5]);
+      part hand(shape=sphere,material=skin,at=[0,-17,0],size=[5,6,5]);
+    }
+  }
 }
 route orchard_rail(kind=rail,mode=loop,speed=72,wait_s=4){
   repeat repeat_i(index=i,count=24){

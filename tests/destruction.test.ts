@@ -131,13 +131,13 @@ describe("destruction simulation",()=>{
       for(const corner of shape.corners){const p=corner.clone().applyQuaternion(q);expect(piece.elevation+p.y).toBeGreaterThanOrEqual(drivingHeight(scene.terrain,piece.x+p.x,piece.y+p.z)-.001);}
     }
   });
-  it("keeps destruction moving during a passenger ride without creating passenger impacts",()=>{
+  it("keeps destruction moving while a controlled bicycle is stationary",()=>{
     const scene=createWorldScene(),world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(6000,4800),carRadius:11};
     const table=scene.objects.find(o=>o.id==="meadow_table")!,car={...createCarAtSpawn(scene),x:table.x-objectRadius(table)-11,y:table.y,elevation:0,vx:240};
     breakOnContact(car,world,table.x-objectRadius(table)-10,table.y,objectContacts(scene,table));expect(car.debris).toHaveLength(7);
     const bike=scene.objects.find(o=>o.id==="village_bike")!;
-    const boarded=toggleRide({...car,x:bike.x,y:bike.y-45,vx:0,vy:0,elevation:drivingHeight(scene.terrain,bike.x,bike.y-45)},world),after=stepInteractive(boarded,idle,1/120,world);
-    expect(after.ride?.actorId).toBe("village_bike");expect(after.debris[0]!.age).toBeGreaterThan(boarded.debris[0]!.age);expect(after.impacts).toEqual([]);
+    const boarded=toggleRide({...car,control:{kind:"foot"},x:bike.x,y:bike.y-45,vx:0,vy:0,elevation:drivingHeight(scene.terrain,bike.x,bike.y-45)},world),after=stepInteractive(boarded,idle,1/120,world);
+    expect(after.control).toEqual({kind:"vehicle",id:"village_bike"});expect(after.debris[0]!.age).toBeGreaterThan(boarded.debris[0]!.age);expect(after.impacts).toEqual([]);
   });
 });
 

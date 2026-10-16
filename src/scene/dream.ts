@@ -1,6 +1,6 @@
 import { Euler, Quaternion, Vector3 } from "three";
-import { objectDslSchema, type ObjectDslV2 } from "./object-dsl";
-import { routeSchema,routePose,type Route } from "./routes";
+import { objectDslSchema,controlOf, type ObjectDslV2 } from "./object-dsl";
+import { routeSchema,routePose,routePoint,type Route } from "./routes";
 import { compileWatercourse,type Water } from "./landscape-dsl";
 import { sceneObjectSchema,parseScene,type Scene,type SceneObject } from "./schema";
 import { ZodError } from "zod";
@@ -143,7 +143,7 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
           case "fragment":
             if(frame.fragment)fail("fragment groups cannot nest",token,"E_CONTEXT");
             walk(statement.block!,{...frame,fragment:id(),path},env,stack,false,depth+1);break;
-          case "rideable": if(rideable)fail("duplicate rideable",token);rideable={seat:statement.at ? vector(statement.at,env).toArray() : [0,16,0]};break;
+          case "rideable": if(rideable)fail("duplicate rideable",token);rideable={seat:statement.at ? vector(statement.at,env).toArray() : [0,16,0],...(statement.control ? {control:statement.control as NonNullable<ObjectDslV2["rideable"]>["control"]} : {})};break;
           case "emit":if(emitter)fail("duplicate emitter",token);emitter={kind:statement.name as "steam",position:vector(statement.at,env).toArray(),rate:number(statement.value!)};break;
           case "contact":
             if(contacts.length>=8)fail("contact budget exceeds 8",token);
@@ -299,9 +299,11 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
     if(source.at && source.at.length!==2)fail("placement needs two coordinates",source.token);
     const offset=source.offset ? numeric(source.offset,globals) : 0;
     const position=route ? routePose(route,0,offset) : {x:numeric(source.at![0]!,globals),y:numeric(source.at![1]!,globals)};
+    const tangent=route && controlOf(spec) ? routePoint(route,routePose(route,0,offset).distance+8) : undefined;
+    const heading=tangent ? {headingRad:Math.atan2(tangent.y-position.y,tangent.x-position.x)} : {};
     const variation=source.scale ? numeric(source.scale,globals) : 1;
     if(variation<.5 || variation>2)fail("placement scale must be 0.5..2",source.scale?.token??source.token,"E_SCHEMA");
-    const result=sceneObjectSchema.safeParse({id:source.name,kind:"custom",labelText:spec.displayName,spec,...position,
+    const result=sceneObjectSchema.safeParse({id:source.name,kind:"custom",labelText:spec.displayName,spec,...position,...heading,
       scale:variation*measuredScale(spec),...(source.heading ? {headingRad:numeric(source.heading,globals)*RAD} : {}),
       ...(route ? {route:{id:route.id,offset}} : {})});
     if(!result.success)fail(result.error.issues[0]!.message,source.token,"E_SCHEMA");return result.data;

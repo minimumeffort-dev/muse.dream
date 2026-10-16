@@ -2,11 +2,11 @@
 
 For new model output, use [Dream 2](dream-language.md). Dream 1 examples below remain supported.
 
-The same Dream 1 source now describes where assemblies live and what bounded
-activities they support. The canonical handmade mock is
+Dream 2 describes where assemblies live and which bounded activities they support.
+Dream 1 examples below document compatibility. The canonical handmade mock is
 [`interactive-world.dream`](../src/scene/interactive-world.dream): locomotive,
 carriage, plane, boat, bicycle, skateboard, station, boathouse, stone passage and
-a seated traveler. Nine placements, five routes, one continuous watercourse.
+a seated traveler and a standing Explorer. Nine placements, five routes, one continuous watercourse.
 These names select no engine recipes. Features compile to validated scene data.
 
 ## Routes and placement
@@ -52,7 +52,7 @@ Author enough points for the intended curvature; a tight corner is not a physica
 steering simulation. `offset` follows distance along the path, including corners,
 so carriages keep their spacing during a loop's dwell.
 
-Every leg waits at its starting stop, then travels at fixed speed. Loops wrap;
+For autonomous actors without a control profile, every leg waits at its starting stop, then travels at fixed speed. Loops wrap;
 shuttles reverse at endpoints. Wheels use an unwrapped distance clock, avoiding
 a roll-phase jump when a loop wraps. All poses derive from the fixed simulation
 clock; pause freezes them, a race restart restarts them, and returning only the
@@ -75,20 +75,17 @@ Inside an object:
 rideable at [0,18,0];
 ```
 
-This declares an object-local seat. A rideable must have a solid cylinder and no
-foundation or compound contacts. A world placement on a route makes it an active
-vehicle. **F** or the contextual button boards a vehicle within 70 canonical units
-and 28 units of elevation. The traveler sits in the declared seat; the car stays
-parked. **F** returns to that car if its footprint is clear. R still returns to
-spawn. Pause blocks boarding and freezes route travel.
+This legacy declaration is a passenger seat on an autonomous route. Dream 2 adds direct controls:
 
-The live bicycle stop is in the meadow south of the starting road. Approach it off-road, then press **F** when the control appears. Its enlarged cycle route and the riverside skating route declare full corridor widths in Dream 2. See [world layout and dedicated paths](dream/worlds.md#routes-and-moving-objects) for their current contract. The unannotated Dream 1 examples below remain compatibility syntax.
+```dream
+rideable(at=[0,18,0],control=bicycle);
+```
 
-This slice provides passenger rides. WASD still controls the car; it does not
-steer the train, plane, boat, bicycle or skateboard yet. Race/checkpoint progress
-is frozen during rides. Safe return preserves simulation time and race progress.
-There is no walking/disembark-anywhere mode. The contextual control is hidden
-when no vehicle is nearby; no permanent toolbar was added.
+Profiles are `car`, `bicycle`, `skateboard`, `boat` and `plane`. Vehicles with a profile start parked. The route supplies initial placement and infrastructure, not their movement. **F** leaves the current vehicle on accessible dry ground. WASD then walks; **F** enters a nearby seat within 60 units of its body's edge and 28 units of elevation. You control the new vehicle, and it stays where you park it. The original car stays parked too. **R** returns to that car's starting point while retaining parked vehicles and damage; Start over restores the world.
+
+Walking follows screen directions after camera rotation. W/S accelerates, brakes and reverses ground vehicles and boats; A/D steers. Aircraft need speed before Space can climb; Shift descends, and low airspeed causes descent. F cannot eject you in flight. Boats use full-hull clearance against water banks and bridge decks, and need nearby dry ground for exit. The engine still has one driving height per XY, so boats cannot navigate beneath bridges.
+
+The seated traveler and standing Explorer are Dream assemblies. Smaller vehicles and walking get closer camera framing. Checkpoints advance only in the original racing car; other modes preserve progress. Unconfigured train seats remain autonomous passenger rides. Pause freezes controls, routes, waves and destruction. [The current guide](dream/behavior.md) and [runnable bicycle](examples/controllable-bicycle.dream) describe the complete control contract.
 
 ## Buildings, doors and passages
 
@@ -171,7 +168,7 @@ Limits: 12 routes, 2–64 points per route (loops need ≥3), route length ≤12
 speed 12–160, stop wait 0–12 seconds, air altitude 60–300, trailing offset 0–2,048.
 World source declares at most 64 placements and 8 watercourses. A watercourse has
 2–8 stations of width 80–480 and compiles into the unchanged bounded water schema.
-Scenes accept at most 24 route actors, 16 emitters and 24 jointed live assemblies
+Scenes accept at most 24 mobile actors, including controllable vehicles, 16 emitters and 24 jointed live assemblies
 including the player. Existing source/token/work, part and joint limits remain.
 
 Static scenery remains instanced. Route infrastructure uses shared surfaces and

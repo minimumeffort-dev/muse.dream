@@ -44,9 +44,11 @@ export function createWorldMap(canvas: HTMLCanvasElement, scene: Scene) {
   }
   return (car: CarState, angle: number): void => {
     ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.drawImage(base, 0, 0);
-    for(const actor of actorPoses(scene,car.timeS)){
+    for(const actor of actorPoses(scene,car.timeS,car)){
       ctx.beginPath();ctx.arc(padding+actor.x*scale,padding+actor.y*scale,2,0,Math.PI*2);ctx.fillStyle=actor.kind==="water" ? "#8dd6d8" : "#e9d8b2";ctx.fill();
     }
+    const parked=car.vehicles.find(v=>v.id===null);
+    if(parked){ctx.fillStyle="#e6a46f";ctx.fillRect(padding+parked.x*scale-2,padding+parked.y*scale-2,4,4);}
     const checkpoint = scene.checkpoints[car.nextCheckpoint]!;
     ctx.beginPath(); ctx.arc(padding + (checkpoint.a.x + checkpoint.b.x) / 2 * scale,
       padding + (checkpoint.a.y + checkpoint.b.y) / 2 * scale, 4, 0, Math.PI * 2);
