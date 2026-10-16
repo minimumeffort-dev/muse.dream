@@ -201,13 +201,17 @@ object oak(label="Oak"){
 }
 ```
 
-Agents can ask for just the language they need: `node scripts/dream.mjs context --features objects,voxels` returns scoped instructions and compiler metadata. Components also accept material parameters, so one rig can dress several people and one table can have several finishes. The four civic characters now share one rig instead of repeating it. [Authoring and repair](docs/dream/model-authoring.md) · [Two finishes, one assembly](docs/examples/material-components.dream).
+Agents can ask for just the language they need: `node scripts/dream.mjs context --features objects,voxels` returns scoped instructions and compiler metadata. Components also accept material parameters, so one rig can dress several people and one table can have several finishes. The eight civic characters share one rig instead of repeating it. [Authoring and repair](docs/dream/model-authoring.md) · [Two finishes, one assembly](docs/examples/material-components.dream).
 
 The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation uses Minimum Effort's Manrope and Archivo fonts, warm white, charcoal and yellow, with the same page gutters and spacing. Dream commands, fields, references, colors and expressions are highlighted, with copy buttons for complete examples.
 
-[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 85 assemblies and 1,370 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
+[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 103 assemblies and 1,695 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
 
-Streetlights now follow streets, bicycle and scooter parking sits beside destinations, and birds fly across sixteen habitats. Dream’s `furnish` and `flock` commands describe those populations with bounded rules. There are four road cars, five buses and boardable tram and rail services. The actor and animation limits stay the same. [See how populations work](docs/dream/populations.md).
+Streetlights now follow streets, bicycle and scooter parking sits beside destinations, and birds fly across sixteen habitats. Dream’s `furnish` and `flock` commands describe those populations with bounded rules.
+
+There are 123 residents, 60 additional ground animals and birds, 336 trees, 45 parked bicycles, 22 parked scooters and 14 parked cars alongside four road cars, five buses and boardable tram and rail services. Four new neighbors react nearby; most added residents and wildlife are detailed resting props shared through instancing. The actor and animation limits stay the same. [See how populations work](docs/dream/populations.md).
+
+![Residents built from the same complete Dream humanoid rig](docs/media/city-residents.jpg)
 
 ![Market square with connected parking, lighting and public transport](docs/media/street-life.jpg)
 

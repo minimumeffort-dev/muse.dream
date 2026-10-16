@@ -262,3 +262,24 @@ geometry: their cameras stay around the court, canal and airport/flight corridor
 away from the repaired circuit joins and crowded glyphs. These canvas exports do
 not include the HTML minimap. Focused asset, character, material and destruction
 galleries are unchanged. No performance benchmark or interpolated frames.
+
+## Fuller city and habitats, r42
+
+The [population verification](../evidence/population-expansion/verification.md)
+records 1,695 accepted placements, unchanged engine limits and matched local
+rendering observations. `city-residents.jpg` shows four new resident variants;
+`population-assets.jpg` shows the dog, cat, sparrow, meadow grass and hydrangea.
+Both sets were reviewed from four angles. `assets-all.jpg` now shows 103
+reusable assemblies. City/recreation/transport and four lighting stills, the
+source-derived map, voxel terrain/park/water views and clean HUD are refreshed.
+Additional `population-*.jpg` views show native habitat and hospital context.
+Focused galleries of unchanged vehicles, original wildlife/flora, architecture,
+materials, shared proportions and character mechanics remain accurate.
+
+All nine main-game GIF/HD pairs use newly rendered source frames at 30 fps:
+driving/boost 210 each, football 240, basketball 210, switching 240,
+locomotion/swimming 180 each, day/night 360 and flight 300. Matching stills are
+replaced with them. Isolated bench and voxel-wall destruction clips are unchanged.
+No interpolation, image generation, per-instance geometry simplification or
+camera-based world unloading. The offline exports are separate from the local
+300-sample rendering comparison and are not performance measurements.

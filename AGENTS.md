@@ -240,6 +240,8 @@ The pre-redesign r24 snapshot in `tests/fixtures/legacy-world.json` is an explic
 
 New world features need useful coverage across the relevant districts, with a reason for their placement. Use `furnish` for deterministic street-relative furniture, species-specific planting and parking beside destination entrances. Reserve crossings, clear walking paths, bridges, cycle tracks, water and rail/runway corridors. Destination parking needs a connected apron; inspect compiled counts because a rule can legitimately emit nothing when obstructed. Validate coverage by district, not just one showcase object.
 
+Use explicit `pose=rest` for passive residents/wildlife that reuse rigged models. Preserve full geometry, body and rest transforms; never freeze away damage, knockables, proximity or emitters. Resting `place` requires explicit prop ownership, fixed position and no program. `furnish(on=sidewalk)` is decor-only, setback=0, no paving, full-radius fit with an inner walking corridor; keep crossings and entrances clear. Test district coverage and the unchanged NPC/live-rig limits.
+
 Use `flock` for bounded instanced cosmetic bird populations across appropriate habitats; these are not interactive NPCs. Preserve the existing live actor/joint budgets. Transit must follow connected infrastructure and real platforms; `phase_s` staggers the full journey including its waits. A future metro/subway needs declared station access, platforms, line connectivity, headroom and an actual underground movement/rendering layer before it can be described as working. A train hidden under terrain is not a subway implementation.
 
 

@@ -1,4 +1,4 @@
-import {furnishingSchema,flockSchema,furnishWorld,POPULATION_LIMITS,type Furnishing,type Flock} from './population';
+import {furnishingSchema,flockSchema,furnishWorld,restingTemplate,POPULATION_LIMITS,type Furnishing,type Flock} from './population';
 import {sportSchema,MAX_SPORTS} from './sports';
 import {interactionRuleSchema,interactionRuleFor,MAX_INTERACTION_RULES,type InteractionRule} from './interaction-rules';
 import { Euler, Quaternion, Vector3 } from "three";
@@ -385,7 +385,8 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
     return result.data;
   });
   const objects=program.places.map(source=>{
-    const spec=exports.get(source.assembly);if(!spec)fail(`unknown assembly '${source.assembly}'`,source.token);
+    let spec=exports.get(source.assembly);if(!spec)fail(`unknown assembly '${source.assembly}'`,source.token);
+    if(source.pose)try{spec=restingTemplate(spec);}catch(error){fail((error as Error).message,source.token,"E_POPULATION");}
     const route=source.route ? routes.find(r=>r.id===source.route) : undefined;
     if(source.route && !route)fail(`unknown route '${source.route}'`,source.token);
     if(source.at && source.at.length!==2)fail("placement needs two coordinates",source.token);
@@ -409,12 +410,14 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
         const spec=exports.get(wordField(node,'object'));if(!spec)fail('unknown flock object',node.token,'E_REFERENCE');
         flocks.push(flockSchema.parse({id:node.id,spec,center:vec('at'),radius:vec('radius'),count:num('count'),altitude:num('altitude'),speed:num('speed'),seed:num('seed'),...(node.fields.has('flap_hz') ? {flapHz:num('flap_hz')} : {}),...(node.fields.has('flap_deg') ? {flapDeg:num('flap_deg')} : {})}));
       }else{
-        const objects=listField(node,'objects').map(ref=>exports.get(ref.name!)!);
+        const objects=listField(node,'objects').map(ref=>{const spec=exports.get(ref.name!)!;return node.fields.has('pose') && spec ? restingTemplate(spec) : spec;});
+        if(node.fields.has('on') && wordField(node,'on')==='sidewalk' && objects.some(s=>s?.body.interaction!=='decor'))fail('sidewalk furnishing requires passive decor so the walking corridor stays open',node.token,'E_POPULATION');
         if(!objects.length || objects.length>8 || objects.some(s=>!s || s.body.interaction==='knockable' || s.joints?.some(j=>j.bone || j.proximity || j.animation && !('kind' in j.animation && j.animation.kind==='roll')) || isReactive(s) || s.emitter))fail('furnish needs 1..8 passive static object templates',node.token,'E_POPULATION');
         const data={id:node.id,spacing:num('spacing'),setback:num('setback'),seed:num('seed')};
         for(const key of ['streets','sites','grounds'])if(node.fields.has(key))Object.assign(data,{[key]:listField(node,key).map(e=>e.name!)});
+        if(node.fields.has('pose'))Object.assign(data,{pose:wordField(node,'pose')});
         if(node.fields.has('paving'))Object.assign(data,{paving:wordField(node,'paving')});
-        for(const key of ['side','facing'])if(node.fields.has(key))Object.assign(data,{[key]:wordField(node,key)});
+        for(const key of ['side','facing','on'])if(node.fields.has(key))Object.assign(data,{[key]:wordField(node,key)});
         for(const key of ['count','jitter'])if(node.fields.has(key))Object.assign(data,{[key]:num(key)});
         // Distance-driven joints rest in parked scenery; they consume no live controller slots.
         furnishings.push({...furnishingSchema.parse(data),objects:objects.map(s=>s.joints?.some(j=>j.animation) ? {...s,joints:s.joints.map(({animation,...joint})=>joint)} : s)});

@@ -133,3 +133,121 @@ object red_kite(label="Red kite"){
     }
   }
 }
+
+material dog_coat(style=toon,colors=[#c4a16f,#9b774f]);
+material cat_coat(style=toon,colors=[#8c969d,#616b74]);
+object neighborhood_dog(label="Neighborhood dog"){
+ measure(kind=custom,axis=x,meters=1.15);
+ body(interaction=decor,radius=4,height=26);
+ part body(shape=capsule,material=dog_coat,at=[0,14,0],size=[12,26,12],rot_deg=[0,0,90]);
+ part chest(shape=icosphere,material=dog_coat,at=[9,15,0],size=[12,17,13]);
+ repeat sides(index=s,count=2){
+  let z(value=s*8-4);
+  beam front_leg(shape=capsule,material=dog_coat,from=[8,15,z],to=[9,3,z],width=3,depth=3);
+  beam back_leg(shape=capsule,material=dog_coat,from=[-9,14,z],to=[-8,3,z],width=3.5,depth=3.5);
+  part front_paw(shape=capsule,material=cream,at=[10,2,z],size=[4,6,4],rot_deg=[0,0,90]);
+  part back_paw(shape=capsule,material=dog_coat,at=[-7,2,z],size=[4,6,4],rot_deg=[0,0,90]);
+  part ear(shape=capsule,material=fox_dark,at=[12,21,s*10-5],size=[3,10,4],rot_deg=[s*20-10,0,-10]);
+  part eye(shape=sphere,material=dark,at=[17,24,s*7-3.5],size=[1.2,1.2,.8]);
+ }
+ beam neck(shape=capsule,material=dog_coat,from=[9,16,0],to=[13,23,0],width=9,depth=9);
+ part head(shape=icosphere,material=dog_coat,at=[15,24,0],size=[11,10,10]);
+ part muzzle(shape=capsule,material=cream,at=[21,21,0],size=[5,10,6],rot_deg=[0,0,90]);
+ part nose(shape=icosphere,material=dark,at=[26,21,0],size=[2.5,2.5,4]);
+ beam tail_base(shape=capsule,material=dog_coat,from=[-11,17,0],to=[-18,22,1],width=3,depth=3);
+ beam tail_tip(shape=capsule,material=dog_coat,from=[-18,22,1],to=[-21,28,2],width=2.5,depth=2.5);
+}
+object garden_cat(label="Garden cat"){
+ measure(kind=custom,axis=y,meters=.4);
+ body(interaction=decor,radius=4,height=21);
+ part haunch(shape=icosphere,material=cat_coat,at=[-3,5,0],size=[11,11,10]);
+ part chest(shape=capsule,material=cat_coat,at=[1,10,0],size=[8,16,8]);
+ repeat sides(index=s,count=2){
+  part foreleg(shape=capsule,material=cat_coat,at=[4,5,s*5-2.5],size=[2.5,9,2.5]);
+  part paw(shape=capsule,material=cream,at=[5,1.5,s*5-2.5],size=[3,5,3],rot_deg=[0,0,90]);
+  part ear(shape=cone,material=cat_coat,at=[1,21,s*6-3],size=[4,6,3]);
+  part eye(shape=sphere,material=gold,at=[5.3,17,s*5-2.5],size=[1,1.2,.8]);
+ }
+ part head(shape=sphere,material=cat_coat,at=[2,17,0],size=[9,8,8]);
+ part muzzle(shape=icosphere,material=cream,at=[6,15.5,0],size=[3,3,4]);
+ part nose(shape=icosphere,material=ear_inner,at=[7.5,16,0],size=[1,1,1]);
+ beam tail_base(shape=capsule,material=cat_coat,from=[-7,4,0],to=[-11,2,3],width=2,depth=2);
+ beam tail_tip(shape=capsule,material=cat_coat,from=[-11,2,3],to=[-5,1.5,6],width=2,depth=2);
+}
+object perched_sparrow(label="Perched sparrow"){
+ measure(kind=custom,axis=x,meters=.25);
+ body(interaction=decor,radius=4,height=6);
+ part body(shape=icosphere,material=hare_coat,at=[0,3,0],size=[7,4,3.5]);
+ part breast(shape=icosphere,material=cream,at=[2,3,0],size=[3,3,3]);
+ part head(shape=sphere,material=fox_dark,at=[3,5,0],size=[3,3,3]);
+ part cheek(shape=icosphere,material=cream,at=[4,4.5,0],size=[2,2,2.7]);
+ beam beak(shape=box,material=gold,from=[4.5,4.8,0],to=[6,4.6,0],width=.5,depth=.5);
+ part tail(shape=prism,material=fox_dark,at=[-5,3,0],size=[5,.5,2.5],outline=[[0,0],[1,0],[1,1],[0,1]],rot_deg=[0,0,-8]);
+ repeat sides(index=s,count=2){
+  part folded_wing(shape=icosphere,material=deer_coat,at=[-.8,3.5,s*3-1.5],size=[5,2.5,.8]);
+  part eye(shape=sphere,material=dark,at=[4.1,5.4,s*2-1],size=[.5,.5,.5]);
+  beam leg(shape=cylinder,material=gold,from=[1,1.8,s*1.5-.75],to=[1,0,s*1.5-.75],width=.4,depth=.4);
+ }
+}
+
+// Population expansion, r42. Authored habitat patches, filtered against the accepted networks.
+place wildlife_infill_000(object=meadow_hare,at=[1137.24,2024.10],heading_deg=6,role=prop,pose=rest);
+place wildlife_infill_001(object=roe_deer,at=[1299.04,3626.34],heading_deg=120,role=prop,pose=rest);
+place wildlife_infill_002(object=meadow_hare,at=[2181.91,6564.65],heading_deg=108,role=prop,pose=rest);
+place wildlife_infill_003(object=perched_sparrow,at=[3191.86,4442.22],heading_deg=288,role=prop,pose=rest);
+place wildlife_infill_004(object=perched_sparrow,at=[6753.34,7941.42],heading_deg=263,role=prop,pose=rest);
+place wildlife_infill_005(object=perched_sparrow,at=[12647.95,3799.31],heading_deg=348,role=prop,pose=rest);
+place wildlife_infill_006(object=perched_sparrow,at=[12583.42,9412.63],heading_deg=220,role=prop,pose=rest);
+place wildlife_infill_007(object=meadow_hare,at=[1450.56,2575.03],heading_deg=283,role=prop,pose=rest);
+place wildlife_infill_008(object=roe_deer,at=[1933.43,4718.73],heading_deg=131,role=prop,pose=rest);
+place wildlife_infill_009(object=copper_fox,at=[2254.42,6688.34],heading_deg=130,role=prop,pose=rest);
+place wildlife_infill_010(object=perched_sparrow,at=[3356.64,5634.54],heading_deg=291,role=prop,pose=rest);
+place wildlife_infill_011(object=perched_sparrow,at=[5950.50,8459.62],heading_deg=132,role=prop,pose=rest);
+place wildlife_infill_012(object=garden_cat,at=[12054.96,4066.57],heading_deg=321,role=prop,pose=rest);
+place wildlife_infill_013(object=meadow_hare,at=[11284.06,9265.48],heading_deg=357,role=prop,pose=rest);
+place wildlife_infill_014(object=roe_deer,at=[1461.67,2146.23],heading_deg=133,role=prop,pose=rest);
+place wildlife_infill_015(object=roe_deer,at=[1777.42,4037.02],heading_deg=169,role=prop,pose=rest);
+place wildlife_infill_016(object=meadow_hare,at=[1102.24,7856.01],heading_deg=351,role=prop,pose=rest);
+place wildlife_infill_017(object=garden_cat,at=[3535.35,3957.75],heading_deg=179,role=prop,pose=rest);
+place wildlife_infill_018(object=perched_sparrow,at=[5454.14,7214.61],heading_deg=284,role=prop,pose=rest);
+place wildlife_infill_019(object=perched_sparrow,at=[12544.61,3941.29],heading_deg=72,role=prop,pose=rest);
+place wildlife_infill_020(object=meadow_hare,at=[11270.23,8912.12],heading_deg=114,role=prop,pose=rest);
+place wildlife_infill_021(object=roe_deer,at=[893.65,1246.64],heading_deg=271,role=prop,pose=rest);
+place wildlife_infill_022(object=roe_deer,at=[1798.66,4989.63],heading_deg=227,role=prop,pose=rest);
+place wildlife_infill_023(object=copper_fox,at=[1417.09,7457.07],heading_deg=327,role=prop,pose=rest);
+place wildlife_infill_024(object=garden_cat,at=[3812.20,5217.15],heading_deg=243,role=prop,pose=rest);
+place wildlife_infill_025(object=neighborhood_dog,at=[5444.58,7080.05],heading_deg=342,role=prop,pose=rest);
+place wildlife_infill_026(object=garden_cat,at=[12402.17,3768.85],heading_deg=63,role=prop,pose=rest);
+place wildlife_infill_027(object=perched_sparrow,at=[12806.41,9610.85],heading_deg=157,role=prop,pose=rest);
+place wildlife_infill_028(object=meadow_hare,at=[1591.17,1965.87],heading_deg=81,role=prop,pose=rest);
+place wildlife_infill_029(object=copper_fox,at=[1066.50,4950.52],heading_deg=54,role=prop,pose=rest);
+place wildlife_infill_030(object=meadow_hare,at=[1968.44,7945.10],heading_deg=53,role=prop,pose=rest);
+place wildlife_infill_031(object=perched_sparrow,at=[3354.23,5672.78],heading_deg=8,role=prop,pose=rest);
+place wildlife_infill_032(object=perched_sparrow,at=[5416.20,7066.77],heading_deg=133,role=prop,pose=rest);
+place wildlife_infill_033(object=perched_sparrow,at=[11623.24,3446.81],heading_deg=318,role=prop,pose=rest);
+place wildlife_infill_034(object=perched_sparrow,at=[12261.54,9050.63],heading_deg=168,role=prop,pose=rest);
+place wildlife_infill_035(object=meadow_hare,at=[769.49,1395.33],heading_deg=343,role=prop,pose=rest);
+place wildlife_infill_036(object=copper_fox,at=[1829.17,5136.03],heading_deg=38,role=prop,pose=rest);
+place wildlife_infill_037(object=copper_fox,at=[1807.11,7732.96],heading_deg=266,role=prop,pose=rest);
+place wildlife_infill_038(object=neighborhood_dog,at=[4165.71,4872.14],heading_deg=340,role=prop,pose=rest);
+place wildlife_infill_039(object=perched_sparrow,at=[6676.96,6634.77],heading_deg=14,role=prop,pose=rest);
+place wildlife_infill_040(object=perched_sparrow,at=[12570.48,3062.90],heading_deg=263,role=prop,pose=rest);
+place wildlife_infill_041(object=meadow_hare,at=[12448.63,9561.94],heading_deg=39,role=prop,pose=rest);
+place wildlife_infill_042(object=roe_deer,at=[1098.93,2422.50],heading_deg=309,role=prop,pose=rest);
+place wildlife_infill_043(object=roe_deer,at=[1357.71,5190.02],heading_deg=298,role=prop,pose=rest);
+place wildlife_infill_044(object=meadow_hare,at=[1083.65,6646.53],heading_deg=192,role=prop,pose=rest);
+place wildlife_infill_045(object=perched_sparrow,at=[3248.51,3957.61],heading_deg=83,role=prop,pose=rest);
+place wildlife_infill_046(object=neighborhood_dog,at=[5988.83,6559.55],heading_deg=299,role=prop,pose=rest);
+place wildlife_infill_047(object=garden_cat,at=[12826.63,3513.30],heading_deg=192,role=prop,pose=rest);
+place wildlife_infill_048(object=meadow_hare,at=[11890.00,8946.77],heading_deg=93,role=prop,pose=rest);
+place wildlife_infill_049(object=roe_deer,at=[1671.35,2153.40],heading_deg=108,role=prop,pose=rest);
+place wildlife_infill_050(object=copper_fox,at=[1777.87,4738.21],heading_deg=80,role=prop,pose=rest);
+place wildlife_infill_051(object=meadow_hare,at=[1923.93,6396.21],heading_deg=84,role=prop,pose=rest);
+place wildlife_infill_052(object=neighborhood_dog,at=[3821.52,4989.79],heading_deg=121,role=prop,pose=rest);
+place wildlife_infill_053(object=neighborhood_dog,at=[7183.82,7628.33],heading_deg=45,role=prop,pose=rest);
+place wildlife_infill_054(object=garden_cat,at=[12393.50,3540.11],heading_deg=77,role=prop,pose=rest);
+place wildlife_infill_055(object=meadow_hare,at=[12154.74,8943.43],heading_deg=139,role=prop,pose=rest);
+place wildlife_infill_056(object=roe_deer,at=[1824.99,1611.33],heading_deg=322,role=prop,pose=rest);
+place wildlife_infill_057(object=roe_deer,at=[1128.19,5270.37],heading_deg=115,role=prop,pose=rest);
+place wildlife_infill_058(object=meadow_hare,at=[1843.92,7276.63],heading_deg=313,role=prop,pose=rest);
+place wildlife_infill_059(object=neighborhood_dog,at=[3798.85,4978.94],heading_deg=252,role=prop,pose=rest);

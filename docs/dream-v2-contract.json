@@ -447,9 +447,11 @@
         "setback": "n",
         "seed": "n",
         "side": "left|right|both?",
-        "facing": "along|street?",
+        "facing": "along|street|varied?",
         "jitter": "n?",
-        "count": "n?"
+        "count": "n?",
+        "pose": "rest?",
+        "on": "verge|sidewalk?"
       }
     },
     "flock": {
@@ -483,7 +485,8 @@
         "scale": "n?",
         "heading_deg": "n?",
         "role": "prop|npc|controllable?",
-        "behavior": "ref?"
+        "behavior": "ref?",
+        "pose": "rest?"
       }
     },
     "behavior": {
@@ -936,7 +939,7 @@
       "right_shoulder",
       "right_elbow"
     ],
-    "semantics": "Optional joint.bone binds a complete 12-joint humanoid on a measured decor person. Required tree: root -> spine -> shoulder -> elbow, root -> hip -> knee -> ankle, paired left/right. Rest faces +X, +Y up, left +Z; unrotated frames, root centered with positive height, hips at root height, shoulders above spine, downward knee/ankle/elbow offsets >= .5. All parts parent to bones, no independent motion/fractures. Engine owns speed-blended walk/run, two-bone leg poses, jump/landing and crawl/tread transitions. Existing 12-joint/depth-4/32-part and 24-live-assembly limits apply. Furnish rejects live rigs. Collision and terrain support remain separate; no skinning, terrain foot probes or generated animation scripts."
+    "semantics": "Optional joint.bone binds a complete 12-joint humanoid on a measured decor person. Required tree: root -> spine -> shoulder -> elbow, root -> hip -> knee -> ankle, paired left/right. Rest faces +X, +Y up, left +Z; unrotated frames, root centered with positive height, hips at root height, shoulders above spine, downward knee/ankle/elbow offsets >= .5. All parts parent to bones, no independent motion/fractures. Engine owns speed-blended walk/run, two-bone leg poses, jump/landing and crawl/tread transitions. Existing 12-joint/depth-4/32-part and 24-live-assembly limits apply. Furnish rejects live rigs unless explicit pose=rest bakes the authored rest geometry into passive props. Collision and terrain support remain separate; no skinning, terrain foot probes or generated animation scripts."
   },
   "geometry": {
     "partSizeMinimum": 0.1,
@@ -1266,7 +1269,7 @@
     "flocks": 16,
     "birds": 256,
     "membersPerFlock": 32,
-    "furnish": "exactly one of streets or sites; sites require count 1..12. Passive static assemblies only; no live joints, knockables, destruction or emitters. Optional grounds explicitly permit named surfaces; site paving creates connected parking aprons within the 64-surface budget. Parked templates have prop ownership and cannot be boarded. Generated props count toward 4096 scene objects. Full linked scene reservations filter candidates deterministically. No guaranteed minimum count; inspect compiled coverage.",
+    "furnish": "exactly one of streets or sites; sites require count 1..12. Passive static assemblies only; no live joints, knockables, destruction or emitters. pose=rest explicitly removes bone bindings and part/joint clocks while preserving geometry, rest transforms and body; it cannot disable damage, emitters, knockables or proximity joints. On place it requires explicit role=prop, fixed at and no behavior. on=sidewalk requires decor, setback=0 and no paving; the full radius must fit the outer sidewalk and leave an inner 8-unit corridor. Default on=verge stays beyond the pavement. facing=varied gives seeded headings; jitter also varies site-row spacing. Optional grounds explicitly permit named surfaces; site paving creates connected parking aprons within the 64-surface budget. Parked templates have prop ownership and cannot be boarded. Generated props count toward 4096 scene objects. Full linked scene reservations filter candidates deterministically. No guaranteed minimum count; inspect compiled coverage.",
     "flight": "decorative instanced flight, no NPC/physics ownership. Authored joints are baked at rest; wing motion uses bounded local-Z flex. All birds stay resident. Habitats must fit the world; flight clears terrain and roofs.",
     "phase": "place.phase_s 0..3600 only with route; shifts the entire route clock including stops. offset remains a carriage distance."
   },

@@ -72,11 +72,13 @@ describe('typed material parameters',()=>{
     expect(compileDream(source(numeric,'use item(component=painted,args=[6],materials=[blue,red,red,red,red,red,red]);'))[0]!.parts[0]!.size).toEqual([6,10,10]);
   });
   it('reduces the actual civic source without changing compiled anatomy, appearance or behavior',()=>{
-    const before=compileDream(beforePeople),after=compileDream(people);
+    const before=compileDream(beforePeople),after=compileDream(people).filter(s=>before.some(original=>original.displayName===s.displayName));
     expect(after.map(anatomy)).toEqual(before.map(anatomy));
     expect(after.map(a=>[a.parts.length,a.joints!.length])).toEqual([[25,12],[25,12],[25,12],[25,12]]);
     expect(after[0]!.parts[0]!.id).not.toBe(before[0]!.parts[0]!.id);
-    expect(people.length).toBeLessThan(beforePeople.length*.4);
-    expect(lex(people).length).toBeLessThan(lex(beforePeople).length*.4);
+    const originalFour=people.slice(0,people.indexOf("material coat_rust"));
+    expect(compileDream(originalFour).map(anatomy)).toEqual(before.map(anatomy));
+    expect(originalFour.length).toBeLessThan(beforePeople.length*.4);
+    expect(lex(originalFour).length).toBeLessThan(lex(beforePeople).length*.4);
   });
 });

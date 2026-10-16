@@ -9,32 +9,32 @@ material blue(style=toon,colors=[#537eaa,#3c5f87]);
 material red(style=toon,colors=[#b96a60,#944f50]);
 material dark(style=toon,colors=[#3c4c59,#283844]);
 material yellow(style=toon,colors=[#e2bd5d,#b4913f]);
-component civic_person(materials=[shirt]){
+component civic_person(materials=[shirt,complexion,hair_tone]){
   joint pelvis(bone=root,at=[0,25,0]){
     part belt(shape=box,material=dark,at=[0,0,0],size=[12,3,15]);
     joint chest(bone=spine,at=[0,1,0]){
       part torso(shape=capsule,material=shirt,at=[0,8,0],size=[12,19,16]);
-      part head(shape=sphere,material=skin,at=[0,24,0],size=[12,12,12]);
-      part hair(shape=sphere,material=hair,at=[-.7,28,0],size=[12.8,6.4,13]);
-      part nose(shape=sphere,material=skin,at=[6,23,0],size=[3,3,3]);
+      part head(shape=sphere,material=complexion,at=[0,24,0],size=[12,12,12]);
+      part hair(shape=sphere,material=hair_tone,at=[-.7,28,0],size=[12.8,6.4,13]);
+      part nose(shape=sphere,material=complexion,at=[6,23,0],size=[3,3,3]);
       repeat eyes(index=s,count=2){
         part eye(shape=sphere,material=dark,at=[5.3,25.5,s*7-3.5],size=[1.5,1.5,1.5]);
-        part ear(shape=sphere,material=skin,at=[-.5,24,s*12-6],size=[2.5,3,2]);
+        part ear(shape=sphere,material=complexion,at=[-.5,24,s*12-6],size=[2.5,3,2]);
       }
       joint left_arm(bone=left_shoulder,at=[0,17,9]){
         part sleeve(shape=capsule,material=shirt,at=[0,-4.5,0],size=[5,10.5,5]);
         joint left_forearm(bone=left_elbow,at=[0,-9.5,0]){
-          part elbow(shape=sphere,material=skin,at=[0,0,0],size=[4.2,4.2,4.2]);
-          part forearm(shape=capsule,material=skin,at=[0,-4.5,0],size=[4,10,4]);
-          part hand(shape=box,material=skin,at=[.5,-10,0],size=[4.5,4,3.5]);
+          part elbow(shape=sphere,material=complexion,at=[0,0,0],size=[4.2,4.2,4.2]);
+          part forearm(shape=capsule,material=complexion,at=[0,-4.5,0],size=[4,10,4]);
+          part hand(shape=box,material=complexion,at=[.5,-10,0],size=[4.5,4,3.5]);
         }
       }
       joint right_arm(bone=right_shoulder,at=[0,17,-9]){
         part sleeve(shape=capsule,material=shirt,at=[0,-4.5,0],size=[5,10.5,5]);
         joint right_forearm(bone=right_elbow,at=[0,-9.5,0]){
-          part elbow(shape=sphere,material=skin,at=[0,0,0],size=[4.2,4.2,4.2]);
-          part forearm(shape=capsule,material=skin,at=[0,-4.5,0],size=[4,10,4]);
-          part hand(shape=box,material=skin,at=[.5,-10,0],size=[4.5,4,3.5]);
+          part elbow(shape=sphere,material=complexion,at=[0,0,0],size=[4.2,4.2,4.2]);
+          part forearm(shape=capsule,material=complexion,at=[0,-4.5,0],size=[4,10,4]);
+          part hand(shape=box,material=complexion,at=[.5,-10,0],size=[4.5,4,3.5]);
         }
       }
     }
@@ -64,23 +64,52 @@ material uniform_commuter(style=toon,colors=[#756f94,#ded5bf]);
 object commuter(label="Commuter"){
   measure(kind=person,axis=y,meters=1.8);
   body(interaction=decor,radius=13,height=57);
-  use anatomy(component=civic_person,materials=[uniform_commuter]);
+  use anatomy(component=civic_person,materials=[uniform_commuter,skin,hair]);
 }
 material uniform_health_worker(style=toon,colors=[#75a5b2,#ded5bf]);
 object health_worker(label="Health worker"){
   measure(kind=person,axis=y,meters=1.8);
   body(interaction=decor,radius=13,height=57);
-  use anatomy(component=civic_person,materials=[uniform_health_worker]);
+  use anatomy(component=civic_person,materials=[uniform_health_worker,skin,hair]);
 }
 material uniform_market_vendor(style=toon,colors=[#c49154,#ded5bf]);
 object market_vendor(label="Market vendor"){
   measure(kind=person,axis=y,meters=1.8);
   body(interaction=decor,radius=13,height=57);
-  use anatomy(component=civic_person,materials=[uniform_market_vendor]);
+  use anatomy(component=civic_person,materials=[uniform_market_vendor,skin,hair]);
 }
 material uniform_teacher(style=toon,colors=[#83966c,#ded5bf]);
 object teacher(label="Teacher"){
   measure(kind=person,axis=y,meters=1.8);
   body(interaction=decor,radius=13,height=57);
-  use anatomy(component=civic_person,materials=[uniform_teacher]);
+  use anatomy(component=civic_person,materials=[uniform_teacher,skin,hair]);
+}
+
+material skin_deep(style=toon,colors=[#925e45,#714631]);
+material skin_warm(style=toon,colors=[#d5ad86,#ab805b]);
+material hair_gray(style=toon,colors=[#98938a,#6f706b]);
+material hair_black(style=toon,colors=[#2d3137,#1e252b]);
+material coat_rust(style=toon,colors=[#b56546,#864c39]);
+material coat_teal(style=toon,colors=[#548b86,#396966]);
+material coat_lilac(style=toon,colors=[#9481ae,#70658b]);
+material coat_cream(style=toon,colors=[#d8c591,#b2a174]);
+object river_shopper(label="River shopper"){
+ measure(kind=person,axis=y,meters=1.75);
+ body(interaction=decor,radius=13,height=57);
+ use anatomy(component=civic_person,materials=[coat_rust,skin_deep,hair_black]);
+}
+object campus_student(label="Campus student"){
+ measure(kind=person,axis=y,meters=1.65);
+ body(interaction=decor,radius=13,height=57);
+ use anatomy(component=civic_person,materials=[coat_lilac,skin_warm,hair_black]);
+}
+object park_neighbor(label="Park neighbor"){
+ measure(kind=person,axis=y,meters=1.8);
+ body(interaction=decor,radius=13,height=57);
+ use anatomy(component=civic_person,materials=[coat_teal,skin_deep,hair_gray]);
+}
+object city_resident(label="City resident"){
+ measure(kind=person,axis=y,meters=1.85);
+ body(interaction=decor,radius=13,height=57);
+ use anatomy(component=civic_person,materials=[coat_cream,skin,hair_black]);
 }

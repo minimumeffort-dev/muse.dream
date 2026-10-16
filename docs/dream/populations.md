@@ -28,7 +28,25 @@ Candidates that cannot fit are skipped. A rule can emit nothing, so compile the 
 
 Generated bicycles and scooters are static props. They use the same measured geometry but have no live controller or joint clock. Place an explicit `role=controllable` bicycle or scooter beside a clear approach when the player should be able to ride it. That placement uses the existing vehicle budget and direct engine controls.
 
-The live mock has 27 parked bicycles and 16 parked scooters at destinations, plus separate controllable rides. The market scooter uses WASD and a press of Space to jump.
+The live mock has 45 parked bicycles, 22 parked scooters and 14 parked cars at destinations, plus separate controllable rides. The market scooter uses WASD and a press of Space to jump.
+
+## Give residents and ground wildlife a place
+
+![New resident variants use the complete shared humanoid construction](../media/city-residents.jpg)
+
+The city has 123 people, including 111 resting sidewalk residents and four additional greeting NPCs. Varied clothing, hair and complexions reuse the same complete humanoid construction. Dogs and cats occupy neighborhood green areas; deer, hares and foxes live in woodland; sparrows occupy gardens and park edges. The 60 additional ground animals and birds are resting scenery.
+
+```dream
+// Fragment: explorer is a rigged decor person; avenue is a connected street.
+furnish neighbors(objects=[explorer],streets=[avenue],spacing=160,setback=0,seed=31,pose=rest,on=sidewalk,facing=varied,jitter=.3);
+place garden_hare(object=hare,at=[1200,1500],role=prop,pose=rest);
+```
+
+`pose=rest` keeps every part, rest transform, material and body while baking bone bindings and animation clocks. It leaves the reusable template intact for real NPCs. Damage, proximity interactions, emitters and knockables cannot be frozen away. An explicit resting placement requires `role=prop`, `at`, and no route or behavior. These are passive instances, not autonomous pedestrians or animals.
+
+`on=sidewalk` fits decor into the outer sidewalk, leaving at least 8 units of inner walking space. It requires `setback=0` and no paving. Crossings and entrances remain reserved. The default `on=verge` places objects beyond the pavement. `facing=varied` gives seeded headings; `jitter` varies street or destination-row spacing. [Complete runnable population](../examples/resting-population.dream).
+
+![Dogs, cats, sparrows and two new planting forms](../media/population-assets.jpg)
 
 ## Give birds room to fly
 

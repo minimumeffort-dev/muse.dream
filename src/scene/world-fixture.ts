@@ -12,5 +12,5 @@ export const worldModules:DreamModules=Object.freeze({dream_creations:objects,in
 export { source as worldSource };
 /** The entire mock world is authored in Dream 2; only revision identity belongs to the host. */
 export function createWorldScene() {
-  return compileDreamScene(source,{sceneId:"mock-open-world",revisionId:"r41",sourceHash:"handmade-road-overlaps-v41"},worldModules);
+  return compileDreamScene(source,{sceneId:"mock-open-world",revisionId:"r42",sourceHash:"handmade-populated-city-v42"},worldModules);
 }

@@ -76,6 +76,41 @@ describe('live district populations and transport',()=>{
   expect(scene.objects.filter(o=>o.route||controlFor(o)).length).toBeLessThanOrEqual(24);
   expect(scene.objects.filter(o=>roleOf(o)==='npc').length).toBeLessThanOrEqual(32);
  });
+ it('populates districts and habitats without blocking walking, parking or the circuit',async()=>{
+  const {hasAnimatedJoints}=await import('../src/scene/object-dsl');
+  const {assemblyHorizontalRadius}=await import('../src/scene/measure');
+  const {onWalkway,sitePath,crossingPolygons}=await import('../src/scene/sites');
+  const {distanceToPolygon}=await import('../src/scene/polygons');
+  const {distanceToRoad,roadPoints}=await import('../src/scene/road');
+  const {waterAt}=await import('../src/scene/terrain');
+  const scene=liveScene,roads=streetFootprints(scene).riding;
+  for(const district of ['center','neighborhood','east']){
+   const people=scene.objects.filter(o=>o.id.startsWith(district+'_residents_'));
+   expect(people.length).toBeGreaterThan(25);
+   for(const person of people){
+    expect(person.role).toBe('prop');expect(hasAnimatedJoints(person.spec)).toBe(false);
+    const radius=assemblyHorizontalRadius(person.spec as import('../src/scene/object-dsl').ObjectDslV2,person.scale);
+    expect(onWalkway(scene,person.x,person.y,radius)).toBe(true);
+    expect(scene.sites.every(site=>distanceToRoad(sitePath(scene,site),person.x,person.y)>site.width/2+radius)).toBe(true);
+    expect(scene.crossings.flatMap(c=>crossingPolygons(scene,c)).some(p=>pointInPolygon(person.x,person.y,p)||distanceToPolygon(person.x,person.y,p)<radius)).toBe(false);
+   }
+  }
+  const cars=scene.objects.filter(o=>/^(civic|east)_parking_/.test(o.id));
+  expect(cars.length).toBe(14);expect(new Set(cars.map(o=>o.spec!.displayName)).size).toBe(3);
+  for(const car of cars){expect(car.role).toBe('prop');expect((car.spec as import('../src/scene/object-dsl').ObjectDslV2).body.interaction).toBe('solid');expect(scene.surfaces.some(s=>pointInPolygon(car.x,car.y,s.points))).toBe(true);}
+  const animals=scene.objects.filter(o=>o.id.startsWith('wildlife_infill_'));
+  expect(animals).toHaveLength(60);expect(new Set(animals.map(o=>o.spec!.displayName)).size).toBe(6);
+  const additions=scene.objects.filter(o=>/^(wildlife|woodland|garden)_infill_/.test(o.id));
+  expect(additions).toHaveLength(188);
+  for(const object of additions){
+   const r=assemblyHorizontalRadius(object.spec as import('../src/scene/object-dsl').ObjectDslV2,object.scale);
+   expect(hasAnimatedJoints(object.spec)).toBe(false);
+   expect(roads.some(p=>pointInPolygon(object.x,object.y,p)||distanceToPolygon(object.x,object.y,p)<r)).toBe(false);
+   expect(distanceToRoad(roadPoints(scene),object.x,object.y)).toBeGreaterThan(scene.roadMaskRef.params.roadWidth/2+r);
+   for(let a=0;a<Math.PI*2;a+=Math.PI/4)expect(waterAt(scene.terrain,object.x+Math.cos(a)*r,object.y+Math.sin(a)*r)).toBeUndefined();
+  }
+  expect(scene.objects.filter(o=>hasAnimatedJoints(o.spec)).length+Number(hasAnimatedJoints(scene.player))+1).toBeLessThanOrEqual(24);
+ });
  it('boards a real bus as a passenger and follows the same clock without taking over its controls',async()=>{
   const {buildMaskForScene}=await import('../src/scene/fixture');const {buildPaperMask}=await import('../src/sim/mask');
   const scene=liveScene,world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11};

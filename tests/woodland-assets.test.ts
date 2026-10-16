@@ -12,7 +12,7 @@ import {assemblyBounds,measuredScale} from "../src/scene/measure";
 import {objectFragments} from "../src/scene/fragments";
 
 const scene=createWorldScene();
-const assemblies=[...compileDream(nature),...compileDream(landmarks),...compileDreamWorld(destructible).assemblies];
+const assemblies=[...compileDreamWorld(nature).assemblies,...compileDream(landmarks),...compileDreamWorld(destructible).assemblies];
 const spec=(name:string)=>assemblies.find(o=>o.displayName===name)!;
 const mesh=(part:ObjectPart)=>{
   const result=new Mesh(partGeometry(part),new MeshBasicMaterial());

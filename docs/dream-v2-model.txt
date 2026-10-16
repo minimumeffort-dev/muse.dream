@@ -62,7 +62,7 @@ an axle's tires, hubs and shaft, or a bicycle's chainring, arms and pedals.
 The bearing stays fixed during visual body suspension travel. Orient bearings
 so forward travel rolls their wheels forward; keep shafts inside the hubs.
 Parked furnish templates bake roll joints at rest; swing/open joints remain
-ineligible for furnishings. Live roll joints count toward existing jointed
+ineligible for furnishings unless explicitly baked with pose=rest. Live roll joints count toward existing jointed
 assembly budgets. No controller scripts or independent part orbit callbacks.
 
 Expressions: numbers, scoped constants, + - * /, sin(degrees), cos(degrees).
@@ -137,7 +137,7 @@ No independent part/bone motion, fragments or zones. Keep feet at Y=0 in assembl
 Engine owns walk/run blending, lifted steps, two-bone legs, jump/landing, crawl/tread,
 reduced-motion poses and sports overrides. Body and movement physics stay separate.
 No extra joints, generated controllers, skinning, or terrain foot probes. Existing
-12-joint, depth-4, 32-part and 24-live-assembly caps unchanged. Furnish rejects bone rigs.
+12-joint, depth-4, 32-part and 24-live-assembly caps unchanged. Furnish rejects live bone rigs unless explicit pose=rest bakes passive scenery.
 Use examples/humanoid.dream as a complete template; keep binding names, vary geometry,
 colors and measured size. Labels/generated IDs do not choose anatomy or behavior.
 
@@ -360,13 +360,20 @@ furnish id(objects=[bicycle],sites=[site_ref,...],spacing=26,setback=4,count=6,s
 Exactly one streets/sites array, 1..32 unique targets. 1..8 object refs, file-local or asset imports.
 Street spacing 80..800, side=left|right|both (default both), relative to path direction.
 Sites require count 1..12, spacing 12..800; follow entrance side, preserving access.
-setback 0..120 beyond the pavement and full visual radius. facing=along|street (along default).
-jitter 0...3 (default 0); seed integer 0..65535. No arbitrary scale jitter.
+setback 0..120 beyond the pavement and full visual radius. facing=along|street|varied (along default; varied is seeded heading).
+jitter 0...3 (default 0) varies longitudinal street or site-row spacing; seed integer 0..65535. No arbitrary scale jitter.
 grounds=[surface_ids] explicitly permits those visual grounds; other authored grounds excluded.
 Site-only paving=color adds parking aprons joined to pavement, within 64 scene surfaces.
 Expansion runs after linking; complete visual footprints reserve roads, crossings, entrances,
 bridges, water, ground infrastructure and existing objects. Skip blocked candidates.
 Static templates only: no active joints, proximity joints, knockables, damage or emitters.
+pose=rest explicitly bakes bone bindings and part/joint animation at authored rest transforms;
+full geometry, material, measure, body and joint parenting survive. It never disables damage,
+knockables, emitters or proximity interactions. The original template remains live.
+place(...,at=[x,y],role=prop,pose=rest) also supports a single passive resting instance;
+explicit prop required, no route or behavior. Resting props consume no NPC/live-rig slot.
+on=verge (default) stays outside the sidewalk. on=sidewalk requires decor, setback=0,
+no paving; full radius fits the outer sidewalk, leaving at least 8 units inside for walking.
 Generated objects have role=prop; parked bikes/scooters cannot be boarded. For an available
 ride use an explicit role=controllable placement with rideable control. Original actor caps apply.
 <=32 rules, <=2048 candidates/rule, <=128 emitted/rule, <=1024 generated overall, also <=4096

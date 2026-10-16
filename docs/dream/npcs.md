@@ -96,3 +96,5 @@ The bounds are 16 programs per linked scene, 32 NPCs, 1–8 states per program a
 ## Journeys with destinations
 
 Use `route(kind=walk)` to keep a person's full body on entrance paths, pavements and crossings. A named `stop` can reference a home, market or other site; the live commuter visits both ends of the market journey. `street` buses and `tram` vehicles use existing roads, with platform sites for intermediate waits. [The complete city example](../examples/connected-city.dream) connects buildings, a bus stop and its served destinations. There is no generated pathfinding: author the route and let the acceptance checks reject invalid geometry.
+
+For passive residents, `pose=rest` on an explicit prop or `furnish` preserves the full model without live NPC or rig state. `on=sidewalk` keeps their complete footprints on the outer paving, clear of crossings and entrances. These instances do not walk or react; use `role=npc` and a bounded program for that behavior. [Population rules and runnable example](populations.md).

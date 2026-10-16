@@ -107,3 +107,91 @@ object weeping_willow(label="Weeping willow"){
     part inner_frond(shape=icosphere,material=fern_leaf,at=[cos(c*45)*20,24+sin(c*97)*3,sin(c*45)*20],size=[3.4,22,3],deform=deform(seed=921+c*17,amount=.12),motion=sway(deg=2,hz=.18));
   }
 }
+
+material grass_gold(style=toon,colors=[#9ba969,#71844e]);
+material blue_petal(style=toon,colors=[#829bbf,#627b9e]);
+object meadow_grass(label="Meadow grass clump"){
+ measure(kind=custom,axis=y,meters=.7);
+ body(interaction=decor,radius=4,height=20);
+ ground(mode=surface);
+ repeat blades(index=i,count=9){
+  beam blade(shape=box,material=grass_gold,from=[cos(i*137)*i*.6,0,sin(i*137)*i*.6],to=[cos(i*137)*(i*.6+4),10+i,sin(i*137)*(i*.6+4)],width=.7,depth=.25);
+ }
+}
+object blue_hydrangea(label="Blue hydrangea"){
+ measure(kind=custom,axis=y,meters=1.1);
+ body(interaction=decor,radius=4,height=24);
+ repeat branches(index=i,count=4){
+  let x(value=cos(i*137)*6);
+  let z(value=sin(i*137)*6);
+  beam stem(shape=cylinder,material=bark,from=[0,0,0],to=[x,15,z],width=1,depth=1);
+  part leaves(shape=icosphere,material=hazel_leaf,at=[x*.8,10,z*.8],size=[12,8,10],deform=deform(seed=681+i,amount=.14));
+  part flower_head(shape=icosphere,material=blue_petal,at=[x,17+i,z],size=[9,8,9],deform=deform(seed=901+i,amount=.1));
+ }
+}
+
+// Population expansion, r42. Authored habitat patches, filtered against the accepted networks.
+place garden_infill_000(object=woodland_fern,at=[644.41,2135.66],heading_deg=19,role=prop);
+place garden_infill_001(object=hazel_bush,at=[508.57,4622.49],heading_deg=358,role=prop);
+place garden_infill_002(object=meadow_grass,at=[1428.09,6324.98],heading_deg=311,role=prop);
+place garden_infill_003(object=blue_hydrangea,at=[2810.35,5395.23],heading_deg=355,role=prop);
+place garden_infill_004(object=meadow_daisies,at=[5508.39,6614.18],heading_deg=310,role=prop);
+place garden_infill_005(object=wild_lavender,at=[11676.12,3750.51],heading_deg=209,role=prop);
+place garden_infill_006(object=broadleaf_dock,at=[10247.93,7480.37],heading_deg=267,role=prop);
+place garden_infill_007(object=meadow_grass,at=[12003.34,8446.76],heading_deg=68,role=prop);
+place garden_infill_008(object=broadleaf_dock,at=[834.58,2126.61],heading_deg=315,role=prop);
+place garden_infill_009(object=hazel_bush,at=[1521.68,4422.17],heading_deg=106,role=prop);
+place garden_infill_010(object=meadow_daisies,at=[1952.97,7403.42],heading_deg=332,role=prop);
+place garden_infill_011(object=blue_hydrangea,at=[2627.36,5498.55],heading_deg=14,role=prop);
+place garden_infill_012(object=meadow_daisies,at=[6724.95,6419.02],heading_deg=256,role=prop);
+place garden_infill_013(object=wild_lavender,at=[11737.85,2740.72],heading_deg=356,role=prop);
+place garden_infill_014(object=broadleaf_dock,at=[11091.43,6487.96],heading_deg=167,role=prop);
+place garden_infill_015(object=meadow_grass,at=[12405.06,9994.00],heading_deg=49,role=prop);
+place garden_infill_016(object=broadleaf_dock,at=[1954.94,2278.67],heading_deg=125,role=prop);
+place garden_infill_017(object=hazel_bush,at=[669.55,4173.69],heading_deg=147,role=prop);
+place garden_infill_018(object=foxglove,at=[1145.90,7678.59],heading_deg=104,role=prop);
+place garden_infill_019(object=wild_lavender,at=[4067.52,4668.22],heading_deg=251,role=prop);
+place garden_infill_020(object=meadow_daisies,at=[4976.48,6970.59],heading_deg=95,role=prop);
+place garden_infill_021(object=blue_hydrangea,at=[10944.60,3201.71],heading_deg=291,role=prop);
+place garden_infill_022(object=meadow_grass,at=[10803.58,7561.12],heading_deg=237,role=prop);
+place garden_infill_023(object=meadow_daisies,at=[11799.92,9839.58],heading_deg=70,role=prop);
+place garden_infill_024(object=woodland_fern,at=[1584.30,2164.05],heading_deg=30,role=prop);
+place garden_infill_025(object=hazel_bush,at=[1601.93,4695.25],heading_deg=175,role=prop);
+place garden_infill_026(object=meadow_daisies,at=[1490.94,7484.01],heading_deg=291,role=prop);
+place garden_infill_027(object=wild_lavender,at=[3833.88,5372.75],heading_deg=210,role=prop);
+place garden_infill_028(object=meadow_daisies,at=[5793.87,7195.62],heading_deg=148,role=prop);
+place garden_infill_029(object=wild_lavender,at=[10535.25,3475.71],heading_deg=179,role=prop);
+place garden_infill_030(object=river_reeds,at=[10375.82,6379.12],heading_deg=121,role=prop);
+place garden_infill_031(object=meadow_daisies,at=[11573.75,8809.59],heading_deg=136,role=prop);
+place garden_infill_032(object=woodland_fern,at=[1258.14,1975.56],heading_deg=62,role=prop);
+place garden_infill_033(object=woodland_fern,at=[1459.46,3442.04],heading_deg=200,role=prop);
+place garden_infill_034(object=meadow_grass,at=[2147.27,6338.03],heading_deg=58,role=prop);
+place garden_infill_035(object=wild_lavender,at=[3302.40,5693.40],heading_deg=27,role=prop);
+place garden_infill_036(object=meadow_daisies,at=[5182.27,7038.62],heading_deg=11,role=prop);
+place garden_infill_037(object=wild_lavender,at=[12761.33,3503.66],heading_deg=155,role=prop);
+place garden_infill_038(object=meadow_grass,at=[8920.22,7033.18],heading_deg=350,role=prop);
+place garden_infill_039(object=meadow_daisies,at=[12682.93,8776.93],heading_deg=83,role=prop);
+place garden_infill_040(object=woodland_fern,at=[1066.51,1715.69],heading_deg=272,role=prop);
+place garden_infill_041(object=woodland_fern,at=[688.14,4786.52],heading_deg=14,role=prop);
+place garden_infill_042(object=meadow_grass,at=[1957.38,6077.54],heading_deg=88,role=prop);
+place garden_infill_043(object=wild_lavender,at=[3174.15,4606.91],heading_deg=62,role=prop);
+place garden_infill_044(object=meadow_grass,at=[6266.24,7621.14],heading_deg=38,role=prop);
+place garden_infill_045(object=broadleaf_dock,at=[11586.85,2832.57],heading_deg=197,role=prop);
+place garden_infill_046(object=river_reeds,at=[11278.18,7162.14],heading_deg=111,role=prop);
+place garden_infill_047(object=meadow_daisies,at=[11964.19,9720.70],heading_deg=160,role=prop);
+place garden_infill_048(object=woodland_fern,at=[805.86,1401.71],heading_deg=75,role=prop);
+place garden_infill_049(object=hazel_bush,at=[1075.41,3759.98],heading_deg=136,role=prop);
+place garden_infill_050(object=meadow_daisies,at=[1814.85,7098.10],heading_deg=143,role=prop);
+place garden_infill_051(object=wild_lavender,at=[3306.20,5806.60],heading_deg=302,role=prop);
+place garden_infill_052(object=meadow_daisies,at=[5704.35,6393.23],heading_deg=196,role=prop);
+place garden_infill_053(object=blue_hydrangea,at=[10407.96,3288.03],heading_deg=303,role=prop);
+place garden_infill_054(object=river_reeds,at=[9787.14,6784.57],heading_deg=152,role=prop);
+place garden_infill_055(object=meadow_grass,at=[11981.31,9699.38],heading_deg=302,role=prop);
+place garden_infill_056(object=woodland_fern,at=[1885.50,1819.70],heading_deg=121,role=prop);
+place garden_infill_057(object=hazel_bush,at=[859.88,4003.79],heading_deg=101,role=prop);
+place garden_infill_058(object=meadow_daisies,at=[1397.43,6819.49],heading_deg=301,role=prop);
+place garden_infill_059(object=wild_lavender,at=[3541.14,5768.46],heading_deg=197,role=prop);
+place garden_infill_060(object=blue_hydrangea,at=[5512.30,6422.70],heading_deg=359,role=prop);
+place garden_infill_061(object=wild_lavender,at=[11822.35,2260.56],heading_deg=183,role=prop);
+place garden_infill_062(object=meadow_grass,at=[10583.74,6374.55],heading_deg=57,role=prop);
+place garden_infill_063(object=meadow_daisies,at=[12991.68,9568.90],heading_deg=348,role=prop);

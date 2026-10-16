@@ -22,7 +22,7 @@ import floraSource from '../src/scene/world/flora.dream?raw';
 import faunaSource from '../src/scene/world/fauna.dream?raw';
 import example from '../docs/examples/ambient-wildlife.dream?raw';
 
-const fauna=compileDream(faunaSource),flora=compileDream(floraSource),world=createWorldScene();
+const fauna=compileDreamWorld(faunaSource).assemblies,flora=compileDreamWorld(floraSource).assemblies,world=createWorldScene();
 const exampleWorld=compileDreamWorld(example);
 const fixture=parseScene({...createFixtureScene(),objects:exampleWorld.objects,routes:exampleWorld.routes,regions:[],terrain:{hills:[]}});
 const ground=()=>parseScene({...fixture,routes:fixture.routes.map(r=>({...r,altitude:undefined,speed:5}))});
@@ -83,9 +83,9 @@ describe('bounded ambient routes',()=>{
 });
 
 describe('Dream-authored ecology',()=>{
-  it('adds thirteen distinct measured forms inside all existing budgets',()=>{
-    expect(flora).toHaveLength(8);expect(fauna).toHaveLength(5);
-    expect(new Set([...flora,...fauna].map(s=>JSON.stringify(s.parts.map(({material,...p})=>p)))) .size).toBe(13);
+  it('adds eighteen distinct measured forms inside all existing budgets',()=>{
+    expect(flora).toHaveLength(10);expect(fauna).toHaveLength(8);
+    expect(new Set([...flora,...fauna].map(s=>JSON.stringify(s.parts.map(({material,...p})=>p)))) .size).toBe(18);
     for(const spec of [...flora,...fauna]){
       expect(objectDslSchema.parse(spec)).toEqual(spec);expect(spec.measure).toBeDefined();
       expect(spec.parts.length).toBeLessThanOrEqual(32);expect(assemblyBounds(spec).isEmpty()).toBe(false);

@@ -194,6 +194,6 @@ joint leg(bone=left_hip,at=[0,0,4]){
 }
 ```
 
-This is a fragment; the [complete example](../examples/humanoid.dream) supplies the materials, root, spine, arms and other leg. Bone bindings survive generated IDs, imports and voxel construction. They do not depend on a character's name. The Explorer and four civic pedestrian models use this rig; sports NPC assemblies keep their authored activity poses. Football kicks and basketball shots override the player's relevant limbs while locomotion continues.
+This is a fragment; the [complete example](../examples/humanoid.dream) supplies the materials, root, spine, arms and other leg. Bone bindings survive generated IDs, imports and voxel construction. They do not depend on a character's name. The Explorer and eight civic pedestrian models use this rig; sports NPC assemblies keep their authored activity poses. Football kicks and basketball shots override the player's relevant limbs while locomotion continues.
 
 The renderer caches bone references and solves a small two-segment leg pose. It does not rebuild geometry each frame, add animated-assembly slots, or change walking speed, jumps, water support, collisions or vehicle ownership. This is rigid articulation, not skinned animation or a terrain-aware foot-placement solver. Cadence is tuned for the game's fast arcade movement, so stance poses do not guarantee a foot remains fixed to one world point. [Verification and media audit](../evidence/character-animation/verification.md).

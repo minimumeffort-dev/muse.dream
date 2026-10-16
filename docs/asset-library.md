@@ -2,7 +2,7 @@
 
 [Dream 2 docs](README.md) / Assets
 
-The mock world contains 85 reusable assemblies, all written in Dream 2. The assemblies include vehicles, buildings, wildlife and several layers of vegetation, with window frames, wheel hubs, bark markings and irregular foliage. Footballs and basketballs are measured bounce props, connected to playable grounds through [sports data](dream/sports.md).
+The mock world contains 103 reusable assemblies, all written in Dream 2. The assemblies include vehicles, buildings, wildlife and several layers of vegetation, with window frames, wheel hubs, bark markings and irregular foliage. Footballs and basketballs are measured bounce props, connected to playable grounds through [sports data](dream/sports.md).
 
 The live world's `voxel_world` policy converts all of these to occupied-cell geometry after linking. Profiles and beams remain compact shape stamps in Dream, with materials, measured envelopes, joints and destruction ownership preserved. [How the whole world is constructed](whole-world-voxels.md). Standalone examples without a world policy retain their original shaped rendering.
 
@@ -25,12 +25,12 @@ Shelter seats stand on two supports. Table planks rest on crossrails that stay a
 | Housing and shops | Three terraces, garden and courtyard homes, three apartment types, corner shop, bakery | [Architecture](../src/scene/world/architecture.dream) |
 | Civic and work | Market hall, hospital, two schools, college, offices, library, workshops, stations, boathouse and pavilion | [Civic assets](../src/scene/world/civic_assets.dream), [architecture](../src/scene/world/architecture.dream) |
 | Airport and eastbank care | Glazed terminal, gabled hangar, control tower and medical center | [Airport assets](../src/scene/world/transit_assets.dream), [Civic assets](../src/scene/world/civic_assets.dream) |
-| People | Commuter, vendor, teacher, health worker, football and basketball players | [City people](../src/scene/world/city_people.dream), [sports](../src/scene/world/sports_assets.dream) |
-| Wildlife | Pigeon and gull flocks, live deer and route gull habitats; the library also defines hares, foxes and kites | [Fauna](../src/scene/world/fauna.dream), [habitats](../src/scene/world/life.dream) |
+| People | Commuter, vendor, teacher, health worker, shopper, student, neighbor, resident, football and basketball players | [City people](../src/scene/world/city_people.dream), [sports](../src/scene/world/sports_assets.dream) |
+| Wildlife | Pigeon and gull flocks, live deer and route gull, resting deer, hares, foxes, dogs, cats and sparrows; the library also defines kites | [Fauna](../src/scene/world/fauna.dream), [habitats](../src/scene/world/life.dream) |
 | Vegetation | Oak, pine, amber tree, birch, fir, rowan, apple, willow, ferns, flowers and shrubs | [Nature](../src/scene/world/nature.dream), [flora](../src/scene/world/flora.dream), [landmarks](../src/scene/world/landmarks.dream) |
 | Props and destruction | Produce stalls, table, crate, planter, ball, slatted benches, toppling trees and breakable shop porches | [Civic assets](../src/scene/world/civic_assets.dream), [impact props](../src/scene/impact-creations.dream), [destructible furniture](../src/scene/world/destructible.dream) |
 
-The seated traveler and standing Explorer are separate engine-provided Dream assemblies. The Explorer and four civic pedestrian models use twelve bound joints for articulated walking and running. The Explorer also crawls and treads in water, and keeps its own physical size when switching to a seated vehicle pose. Bread and a harvest bowl remain standalone authoring examples. [Open the full atlas](media/assets-all.jpg), or follow the [local gallery setup](README.md#try-it-locally) for interactive inspection. Front, right, back and left views share the same geometry. The phase selector exposes wheel and joint motion.
+The seated traveler and standing Explorer are separate engine-provided Dream assemblies. The Explorer and eight civic pedestrian models use twelve bound joints for articulated walking and running. The Explorer also crawls and treads in water, and keeps its own physical size when switching to a seated vehicle pose. Bread and a harvest bowl remain standalone authoring examples. [Open the full atlas](media/assets-all.jpg), or follow the [local gallery setup](README.md#try-it-locally) for interactive inspection. Front, right, back and left views share the same geometry. The phase selector exposes wheel and joint motion.
 
 ![The civic pedestrian rigs](media/city-people.jpg)
 
@@ -94,7 +94,7 @@ The art stays stylized and uses procedural geometry. This pass doesn't add impor
 
 ## Different layers of landscape
 
-The flora library has eight distinct forms, mixed into the live woodland and meadow planting. Ferns and hazel sit around woodland, lavender grows through the drier east, and reeds and willows follow dry banks. Daisies, dock and foxgloves fill selected edges and clearings. Plant roots stay off the circuit, bridge decks and water surfaces. Small scale changes supplement different silhouettes.
+The flora library has ten distinct forms, including meadow grass and blue hydrangeas, mixed into the live woodland and meadow planting. Ferns and hazel sit around woodland, lavender grows through the drier east, and reeds and willows follow dry banks. Daisies, dock and foxgloves fill selected edges and clearings. Plant roots stay off the circuit, bridge decks and water surfaces. Small scale changes supplement different silhouettes.
 
 ![Ferns, foxgloves, lavender, reeds, daisies and a willow](media/flora.jpg)
 
@@ -131,3 +131,11 @@ Architecture and civic window materials declare a warm `night` color. The two st
 ## Voxel geometry
 
 Dream 2 now supports bounded filled/carved voxel parts, greedy surface meshing and optional fracture chunks. The city uses voxel building shells, bench boards and two carved park walls; the bakehouse example adds chunked masonry; measured proportions and explicit contacts remain unchanged. See the [voxel guide](dream/voxels.md) for syntax, limits, a complete example and current boundaries.
+
+## A fuller city and its habitats
+
+The live city now contains 123 people, 336 trees and 60 additional resting ground animals and birds. Shoppers, students and neighbors have varied clothing, hair and complexions; dogs, cats and sparrows join the woodland deer, hares and foxes. Meadow grass and hydrangeas add two more planting forms.
+
+![New neighborhood animals and garden plants](media/population-assets.jpg)
+
+The added residents and wildlife share complete instanced geometry at explicit rest poses. Four new neighbors use live greeting programs. Fourteen parked cars have solid bodies on connected parking aprons; the four moving road cars retain their routes. [Rest poses, sidewalk placement and population bounds](dream/populations.md).

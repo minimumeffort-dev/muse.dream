@@ -3,7 +3,7 @@ import type {Scene,SceneObject,Point} from './schema';
 import {objectDslSchema,isReactive,type ObjectDslV2} from './object-dsl';
 import {assemblyHorizontalRadius,measuredScale} from './measure';
 import {isActor,controlFor} from './agents';
-import {streetFootprints} from './streets';
+import {streetFootprints,streetSidewalks,onPolygon} from './streets';
 import {sitePath,streetFrame,crossingPolygons} from './sites';
 import {distanceToPolygon} from './polygons';
 import {roadPoints,distanceToRoad} from './road';
@@ -17,15 +17,26 @@ import {SpatialGrid} from '../sim/spatial';
 export const POPULATION_LIMITS=Object.freeze({rules:32,perRule:128,generated:1024,candidatesPerRule:2048,flocks:16,birds:256});
 const refs=z.array(z.string().regex(/^[a-z][a-z0-9_]{0,31}$/)).min(1).max(32);
 export const furnishingSchema=z.object({id:z.string(),streets:refs.optional(),sites:refs.optional(),grounds:refs.optional(),paving:z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),spacing:z.number().finite().min(12).max(800),
-  setback:z.number().finite().min(0).max(120),side:z.enum(['left','right','both']).default('both'),facing:z.enum(['along','street']).default('along'),
+  setback:z.number().finite().min(0).max(120),side:z.enum(['left','right','both']).default('both'),facing:z.enum(['along','street','varied']).default('along'),
   jitter:z.number().finite().min(0).max(.3).default(0),seed:z.number().int().min(0).max(65535),count:z.number().int().min(1).max(12).optional(),
+  pose:z.literal('rest').optional(),
+  on:z.enum(['verge','sidewalk']).default('verge'),
 }).strict().superRefine((r,ctx)=>{
   if(Number(!!r.streets)+Number(!!r.sites)!==1 || !!r.sites!==!!r.count)ctx.addIssue({code:'custom',message:'furnish needs streets, or sites with count'});
   if(r.streets && r.spacing<80)ctx.addIssue({code:'custom',message:'street furnishing spacing must be at least 80'});
   if(r.paving && !r.sites)ctx.addIssue({code:'custom',message:'paving belongs to destination furnishing'});
+  if(r.on==='sidewalk' && (r.setback!==0 || r.paving))ctx.addIssue({code:'custom',message:'sidewalk furnishing requires setback=0 and no paving'});
   if(new Set(r.streets??r.sites??[]).size!==(r.streets??r.sites??[]).length)ctx.addIssue({code:'custom',message:'furnish targets must be unique'});
 });
 export type Furnishing=z.infer<typeof furnishingSchema>&{objects:ObjectDslV2[]};
+const resting=new WeakMap<ObjectDslV2,ObjectDslV2>();
+/** Explicit resting scenery preserves the full model and body, without live rig ownership. */
+export function restingTemplate(spec:ObjectDslV2):ObjectDslV2{
+  if(isReactive(spec) || spec.emitter || spec.body.interaction==='knockable' || spec.joints?.some(j=>j.proximity))throw Error('rest pose cannot disable damage, emitters, knockables or proximity interactions');
+  let value=resting.get(spec);
+  if(!value){value={...spec,parts:spec.parts.map(({animation,...part})=>part),...(spec.joints ? {joints:spec.joints.map(({bone,animation,...joint})=>joint)} : {})};resting.set(spec,value);}
+  return value;
+}
 export const flockSchema=z.object({id:z.string().regex(/^[a-z][a-z0-9_]{0,31}$/),spec:objectDslSchema,
   center:z.object({x:z.number().finite(),y:z.number().finite()}).strict(),radius:z.object({x:z.number().finite().min(40).max(1200),y:z.number().finite().min(40).max(1200)}).strict(),
   count:z.number().int().min(1).max(32),altitude:z.number().finite().min(60).max(300),speed:z.number().finite().min(5).max(80),
@@ -42,7 +53,7 @@ export function furnishWorld(scene:Scene,rules:Furnishing[]):{objects:SceneObjec
   const occupied=new SpatialGrid<{x:number;y:number;r:number}>([]),existing=scene.objects.filter(o=>!isActor(o) || !o.route);
   let maxRadius=0;
   for(const o of existing){const r=o.spec && 'dslVersion' in o.spec ? assemblyHorizontalRadius(o.spec,o.scale)+(controlFor(o) ? 16 : isActor(o) ? 4 : 0) : 30;occupied.insert({x:o.x,y:o.y,r});maxRadius=Math.max(maxRadius,r);}
-  const reserved=streetFootprints(scene).reserved,road=roadPoints(scene),paths=scene.sites.map(s=>({points:sitePath(scene,s),r:s.width/2+4}));
+  const ground=streetFootprints(scene),reserved=ground.reserved,walkways=streetSidewalks(scene),road=roadPoints(scene),paths=scene.sites.map(s=>({points:sitePath(scene,s),r:s.width/2+4}));
   const fixedExclusions=[...(scene.terrain.landscape?.bridges??[]).map(bridgePolygon),...scene.crossings.flatMap(c=>crossingPolygons(scene,c))];
   const corridors=scene.routes.filter(r=>['rail','path','air'].includes(r.kind)).map(route=>routeInfrastructure(route));
   const generated:SceneObject[]=[],pads=new Map<string,{color:string;dx:number;dy:number;origin:Point;inner:number;outer:number;low:number;high:number;side:number}>();
@@ -60,7 +71,7 @@ export function furnishWorld(scene:Scene,rules:Furnishing[]):{objects:SceneObjec
         const end=site.points.at(-1)!,frame=streetFrame(street,end),side=Math.sign((end.x-frame.x)*-frame.dy+(end.y-frame.y)*frame.dx)||1;
         let distance=0,best=Infinity;for(let i=1;i<street.points.length;i++){const a=street.points[i-1]!,b=street.points[i]!,d=lengths[i]!-lengths[i-1]!,t=Math.max(0,Math.min(1,((end.x-a.x)*(b.x-a.x)+(end.y-a.y)*(b.y-a.y))/(d*d))),delta=Math.hypot(a.x+(b.x-a.x)*t-end.x,a.y+(b.y-a.y)*t-end.y);if(delta<best){best=delta;distance=lengths[i-1]!+d*t;}}
         // Keep the entrance itself open; put the parking row beside its approach.
-        for(let i=0;i<rule.count!;i++)candidates.push({street,distance:distance+(i%2 ? -1 : 1)*(36+Math.floor(i/2)*rule.spacing),side,siteId:id,key:`${targetIndex}_${i}`});
+        for(let i=0;i<rule.count!;i++)candidates.push({street,distance:distance+(i%2 ? -1 : 1)*(36+Math.floor(i/2)*rule.spacing)+(rule.jitter ? (random()-.5)*rule.spacing*rule.jitter : 0),side,siteId:id,key:`${targetIndex}_${i}`});
       }else{
         if(length/rule.spacing*2>POPULATION_LIMITS.candidatesPerRule)throw Error(`furnish "${rule.id}" exceeds candidate budget`);
         for(let d=rule.spacing*.5,i=0;d<length-rule.spacing*.25;d+=rule.spacing,i++)candidates.push({street,distance:d+(random()-.5)*rule.spacing*rule.jitter,key:`${targetIndex}_${i}`});
@@ -75,14 +86,18 @@ export function furnishWorld(scene:Scene,rules:Furnishing[]):{objects:SceneObjec
       const a=street.points[segment-1]!,b=street.points[segment]!,length=lengths[segment]!-lengths[segment-1]!,dx=(b.x-a.x)/length,dy=(b.y-a.y)/length,d=candidate.distance-lengths[segment-1]!;
       const sides=candidate.side ? [candidate.side] : rule.side==='both' ? [-1,1] : [rule.side==='left' ? -1 : 1];
       for(const side of sides){
-        const spec=rule.objects[Math.floor(random()*rule.objects.length)]!,scale=measuredScale(spec),r=assemblyHorizontalRadius(spec,scale),offset=street.width/2+(street.cycleWidth ? street.cycleWidth+6 : 0)+street.sidewalk+rule.setback+r;
+        const spec=rule.objects[Math.floor(random()*rule.objects.length)]!,scale=measuredScale(spec),r=assemblyHorizontalRadius(spec,scale),riding=street.width/2+(street.cycleWidth ? street.cycleWidth+6 : 0);
+        if(rule.on==='sidewalk' && (spec.body.interaction!=='decor' || street.sidewalk<2*r+9))continue;
+        const offset=rule.on==='sidewalk' ? riding+street.sidewalk-r-1 : riding+street.sidewalk+rule.setback+r;
         const x=a.x+dx*d-dy*offset*side,y=a.y+dy*d+dx*offset*side;
         const overlaps=(p:Point[])=>pointInPolygon(x,y,p)||distanceToPolygon(x,y,p)<r+4;
-        if(x<r+8 || y<r+8 || x>scene.canonical.width-r-8 || y>scene.canonical.height-r-8 || reserved.some(p=>pointInPolygon(x,y,p)||distanceToPolygon(x,y,p)<r+.01) || exclusions.some(overlaps) || distanceToRoad(road,x,y)<scene.roadMaskRef.params.roadWidth/2+r+8 || paths.some(p=>distanceToRoad(p.points,x,y)<p.r+r) || corridors.some(c=>distanceToRoad(c.points,x,y)<c.radius+r+8))continue;
+        const occupiedRoad=(rule.on==='sidewalk' ? ground.riding : reserved).some(p=>pointInPolygon(x,y,p)||distanceToPolygon(x,y,p)<r+.01);
+        if(rule.on==='sidewalk' && Array.from({length:9},(_,i)=>i ? {x:x+Math.cos(i*Math.PI/4)*r,y:y+Math.sin(i*Math.PI/4)*r} : {x,y}).some(p=>!walkways.some(w=>onPolygon(w,p.x,p.y))))continue;
+        if(x<r+8 || y<r+8 || x>scene.canonical.width-r-8 || y>scene.canonical.height-r-8 || occupiedRoad || exclusions.some(overlaps) || distanceToRoad(road,x,y)<scene.roadMaskRef.params.roadWidth/2+r+8 || paths.some(p=>distanceToRoad(p.points,x,y)<p.r+r) || corridors.some(c=>distanceToRoad(c.points,x,y)<c.radius+r+8))continue;
         if(Array.from({length:9},(_,i)=>({x:x+Math.cos(i*Math.PI/4)*r,y:y+Math.sin(i*Math.PI/4)*r})).some(p=>waterAt(scene.terrain,p.x,p.y)))continue;
         if(occupied.query(x,y,r+maxRadius+4).some(o=>Math.hypot(o.x-x,o.y-y)<o.r+r+4))continue;
-        if(++emitted>POPULATION_LIMITS.perRule || generated.length>=POPULATION_LIMITS.generated || scene.objects.length+generated.length>=4096)throw Error('furnish expansion exceeds 128 per rule, 1024 generated or 4096 scene objects');
-        const heading=Math.atan2(dy,dx)+(rule.facing==='street' ? -side*Math.PI/2 : 0);
+        if(++emitted>POPULATION_LIMITS.perRule || generated.length>=POPULATION_LIMITS.generated || scene.objects.length+generated.length>=4096)throw Error(`furnish "${rule.id}": expansion exceeds 128 per rule, 1024 generated or 4096 scene objects (${emitted} in rule, ${generated.length} generated)`);
+        const heading=rule.facing==='varied' ? random()*Math.PI*2 : Math.atan2(dy,dx)+(rule.facing==='street' ? -side*Math.PI/2 : 0);
         generated.push({id:`${rule.id}_${key}_${side<0 ? 'l':'r'}`,kind:'custom',labelText:spec.displayName,x,y,headingRad:heading,scale,spec,role:'prop'});
         if(rule.paving && candidate.siteId){
           const id=`parking_${candidate.siteId}_${segment}_${rule.paving.slice(1)}`,inner=offset-rule.setback-r-.5,outer=offset+r+4;

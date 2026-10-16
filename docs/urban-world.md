@@ -62,7 +62,9 @@ Woodland and meadow surround the city. Oaks, birches, firs, rowan, apple trees a
 
 ## Everyday street life
 
-The city has 400 streetlights along six networks, 89 additional street trees, 277 mixed planting groups and 23 destination planters. Thirty-four parked bicycles and sixteen scooters sit beside schools, services and transit stops on paved aprons joined to the sidewalk. Separate explicit scooters near the market, airport and eastbank medical center remain controllable.
+The city has 400 streetlights along six networks, 89 additional street trees, 275 mixed street planting groups and 16 destination planters, plus 64 additional garden and understory clusters and 64 woodland trees. Forty-five parked bicycles and twenty-two scooters sit beside schools, services and transit stops on paved aprons joined to the sidewalk. Fourteen parked cars use connected civic and eastbank aprons. Separate explicit scooters near the market, airport and eastbank medical center remain controllable.
+
+The city has 123 people across its center, neighborhoods and eastbank: 111 sidewalk residents, four new greeting NPCs and eight existing activity/commuter NPCs. Sidewalk groups preserve a walking corridor and avoid entrance paths and crossings. Sixty resting deer, hares, foxes, dogs, cats and sparrows occupy clear, dry habitat patches; the existing live deer, route gull and 256 flock birds keep moving. Resting instances reuse full geometry without allocating live animation controllers. [Population authoring](dream/populations.md).
 
 Four road cars use three different silhouettes: rally car, hatchback and delivery van. Transit and available rides use the remaining existing actor slots. Sixteen habitats distribute 256 decorative birds across city blocks, river, lake, woodland and meadow. These populations come from [Dream rules](dream/populations.md), filtered against the accepted streets, entrances, water and existing objects.
 
@@ -87,3 +89,7 @@ All declared entrances and platforms belong to one pedestrian network. The compi
 [Compile a complete city example](examples/connected-city.dream), read the [connection reference](dream/reference.md#connected-city-declarations), or inspect the [research and design notes](city-design.md).
 
 The complete world stays resident, with the existing instancing, geometry tiles and frustum culling. Asset detail, pixel ratio, shadows, particles and post-processing retain their quality settings. Ground driving still has one height per XY; boats and swimmers use the water layer below bridges. There is no automatic road repair, generated terrain excavation or traffic solver.
+
+![Woodland with habitat-specific ground wildlife and understory](media/population-woodland.jpg)
+
+[Inspect the garden and habitat additions](media/population-assets.jpg).
