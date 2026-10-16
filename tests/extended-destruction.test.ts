@@ -20,8 +20,9 @@ import {WorldDebris} from "../src/game/debris";
 import {WorldScenery} from "../src/game/scenery";
 import {WorldParticles} from "../src/game/particles";
 const examples=compileDreamWorld(source),spec=(name:string)=>examples.assemblies.find(s=>s.displayName===name)!;
+// Local-unit fracture replays; complete-world contacts exercise resolved sizing separately.
 function worldFor(assembly:ObjectDslV2,scale=1,headingRad=0):World{
-  const scene=parseScene({...createFixtureScene(),objects:[{id:"target",kind:"custom",labelText:assembly.displayName,x:480,y:360,scale,headingRad,spec:assembly}],regions:[],terrain:{hills:[]}});
+  const scene=parseScene({...createFixtureScene(),objects:[{id:"target",kind:"custom",labelText:assembly.displayName,x:480,y:360,scale,headingRad,spec:{...assembly,measure:undefined}}],regions:[],terrain:{hills:[]}});
   return {scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(960,720),carRadius:11};
 }
 function aimed(world:World,zone=false,speed=240){

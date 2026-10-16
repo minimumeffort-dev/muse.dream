@@ -1,3 +1,4 @@
+import { measuredScale } from "../../src/scene/measure";
 import * as THREE from 'three';
 import { createWorldScene } from '../../src/scene/world-fixture';
 import { parseScene } from '../../src/scene/schema';
@@ -16,7 +17,7 @@ const assets = doc.objects.filter(object => {
   if (seen.has(key)) return false;
   seen.add(key); return true;
 });
-for(const spec of [...inventionExamples,...dreamExamples,...interactiveWorld.assemblies]) if(!seen.has(spec.displayName)) { seen.add(spec.displayName);assets.push({id:spec.displayName,kind:'custom',labelText:spec.displayName,x:3000,y:2400,scale:1,spec}); }
+for(const spec of [...inventionExamples,...dreamExamples,...interactiveWorld.assemblies]) if(!seen.has(spec.displayName)) { seen.add(spec.displayName);assets.push({id:spec.displayName,kind:'custom',labelText:spec.displayName,x:3000,y:2400,scale:measuredScale(spec),spec}); }
 assets.push({ id: 'player', kind: 'custom', labelText: 'Player', x: 3000, y: 2400, scale: 1, spec: mockCar });
 const select = document.querySelector('#asset'), view = document.querySelector('#view');
 const motion = document.querySelector('#motion'), canvas = document.querySelector('canvas');
@@ -52,7 +53,7 @@ function dispose(group) {
 }
 function change() {
   dispose(source); dispose(batched);
-  const object = { ...assets[Number(select.value)], x: 3000, y: 2400, scale: 1.5 };
+  const object = { ...assets[Number(select.value)], x: 3000, y: 2400, scale: assets[Number(select.value)].scale };
   source = buildObject(object); source.position.y = 1.5; left.add(source);
   const spec = object.spec;
   const still = spec && 'dslVersion' in spec ? { ...spec, body: { ...spec.body, interaction: 'solid' } } : spec;

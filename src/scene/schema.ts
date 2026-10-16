@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { measuredScale, measureProblem } from "./measure";
 import { objectDslSchema, hasAnimatedJoints, MAX_ANIMATED_ASSEMBLIES,impactOf,isReactive } from "./object-dsl";
 import { terrainSchema } from "./terrain";
 import { routeSchema } from "./routes";
@@ -70,13 +71,18 @@ export const sceneObjectSchema = z.object({
   labelText: z.string(),
   x: z.number().finite(),
   y: z.number().finite(),
-  /** Bounded visual/physical size multiplier, clamped by the archetype. */
-  scale: z.number().min(0.5).max(2),
+  /** Resolved uniform scale. Measured assets share the world's physical unit. */
+  scale: z.number().finite().min(0.05).max(4),
   headingRad:z.number().finite().min(-Math.PI*2).max(Math.PI*2).optional(),
   route:z.object({id:z.string().min(1).max(40),offset:z.number().finite().min(0).max(2048).default(0)}).strict().optional(),
   /** Required when kind is "custom": the invented archetype as data. */
   spec: customSpecSchema.optional(),
 }).superRefine((o, ctx) => {
+  const spec=o.spec && "dslVersion" in o.spec && o.spec.dslVersion===2 ? o.spec : undefined;
+  if(spec?.measure){
+    const variation=o.scale/measuredScale(spec),problem=measureProblem(spec.measure,variation);
+    if(problem || variation<.5-1e-7 || variation>2+1e-7)ctx.addIssue({code:z.ZodIssueCode.custom,path:["scale"],message:problem??"measured placement variation must be 0.5..2"});
+  }else if(o.scale<.5 || o.scale>2)ctx.addIssue({code:z.ZodIssueCode.custom,path:["scale"],message:"unmeasured placement scale must be 0.5..2"});
   if (o.kind === "custom" && !o.spec) {
     ctx.addIssue({ code: z.ZodIssueCode.custom, message: "custom object requires a spec", path: ["spec"] });
   }

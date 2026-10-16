@@ -1,0 +1,13 @@
+dream 2;
+material bark(style=grain,colors=[#846044,#4b392c]);
+material leaf(style=toon,colors=[#77a05b,#426b45]);
+object oak(label="Oak"){
+  measure(kind=tree,axis=y,meters=10);
+  body(interaction=solid,radius=4,height=69);
+  impact(mode=topple(speed=110,duration=1.1,lifetime=8));
+  fragment tree(){
+    part trunk(shape=cylinder,material=bark,at=[0,24,0],size=[6,48,6]);
+    part crown(shape=icosphere,material=leaf,at=[0,52,0],size=[36,34,32]);
+    part branch(shape=icosphere,material=leaf,at=[-12,44,3],size=[24,24,23]);
+  }
+}

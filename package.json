@@ -1,9 +1,9 @@
 {
-  "name": "paper-racing-game",
+  "name": "muse-dream",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Draw a racing track on paper, then drive on it. Slice 1: handmade fixture racer.",
+  "description": "Playable worlds described in Dream 2. Paper-to-world mock prototype with Three.js.",
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5173",
     "build": "tsc --noEmit && vite build",

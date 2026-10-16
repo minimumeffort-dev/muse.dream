@@ -1,3 +1,4 @@
+import { measuredScale } from "../scene/measure";
 import * as THREE from "three";
 import type { Scene, SceneObject } from "../scene/schema";
 import type { ObjectPart } from "../scene/object-dsl";
@@ -177,7 +178,7 @@ export function animateObject(group: THREE.Group, time: number, enabled = true, 
 
 export function buildPlayer(scene: Scene): THREE.Group {
   return scene.player ? buildCustom({ id: "player", kind: "custom", labelText: scene.player.displayName,
-    x: 0, y: 0, scale: 1, spec: scene.player }) : buildCar();
+    x: 0, y: 0, scale: measuredScale(scene.player), spec: scene.player }) : buildCar();
 }
 
 export function buildObject(object: SceneObject): THREE.Group {

@@ -13,6 +13,7 @@ component table_leg(params=[x,z]){
   }
 }
 object festival_ball(label="Festival ball"){
+  measure(kind=custom,axis=x,meters=0.65);
   body(interaction=knockable,radius=13,height=26,friction=0.55);
   impact(mode=bounce(restitution=0.74,lift=0.42));
   part ball(shape=sphere,material=coral,at=[0,13,0],size=[26,26,26],motion=roll(axis=z,radius=13));
@@ -20,6 +21,7 @@ object festival_ball(label="Festival ball"){
   part seam(shape=torus,material=cream,at=[0,13,0],size=[26.5,26.5,1.5],motion=roll(axis=z,radius=13));
 }
 object breakaway_table(label="Breakaway table"){
+  measure(kind=table,axis=x,meters=2.2);
   body(interaction=solid,radius=29,height=31);
   impact(mode=break(speed=90,scatter=62,lift=100,spin=4,lifetime=6));
   repeat repeat_plank(index=plank,count=3){
@@ -33,6 +35,7 @@ object breakaway_table(label="Breakaway table"){
   use table_leg_4(component=table_leg,args=[21,10]);
 }
 object produce_crate(label="Produce crate"){
+  measure(kind=custom,axis=x,meters=0.8);
   body(interaction=solid,radius=22,height=31);
   impact(mode=break(speed=75,scatter=82,lift=115,spin=5,lifetime=5));
   fragment base(){
@@ -57,6 +60,7 @@ object produce_crate(label="Produce crate"){
   }
 }
 object terracotta_planter(label="Terracotta planter"){
+  measure(kind=custom,axis=y,meters=0.85);
   body(interaction=solid,radius=18,height=36);
   impact(mode=break(speed=65,scatter=45,lift=75,spin=3,lifetime=5));
   repeat repeat_side(index=side,count=4){

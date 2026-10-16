@@ -33,6 +33,7 @@ component blossom(params=[]){
   part seeds(shape=sphere,material=crust,at=[0,0,1],size=[10,10,5]);
 }
 object orchard_cart(label="Orchard cart"){
+  measure(kind=custom,axis=x,meters=1.8);
   body(interaction=knockable,radius=28,height=44,friction=3);
   repeat repeat_side(index=side,count=2){
     let z(value=(side*2-1)*20);
@@ -53,6 +54,7 @@ object orchard_cart(label="Orchard cart"){
   }
 }
 object field_naturalist(label="Field naturalist"){
+  measure(kind=person,axis=y,meters=1.78);
   body(interaction=decor,radius=11,height=78);
   repeat repeat_side(index=side,count=2){
     let x(value=side*8-4);
@@ -84,6 +86,7 @@ object field_naturalist(label="Field naturalist"){
   }
 }
 object meadow_tortoise(label="Meadow tortoise"){
+  measure(kind=custom,axis=x,meters=0.55);
   body(interaction=knockable,radius=19,height=28,friction=4);
   repeat repeat_side(index=side,count=2){
     repeat repeat_end(index=end,count=2){
@@ -104,6 +107,7 @@ object meadow_tortoise(label="Meadow tortoise"){
   }
 }
 object bakery_basket(label="Bakery basket"){
+  measure(kind=custom,axis=x,meters=0.45);
   ground(mode=surface);
   body(interaction=knockable,radius=18,height=26,friction=3);
   part base(shape=cylinder,material=wood,at=[0,3,0],size=[34,6,29]);
@@ -118,6 +122,7 @@ object bakery_basket(label="Bakery basket"){
   use loaf_2(component=loaf,args=[28],at=[0,9,6],rot_deg=[0,-15,0],scale=0.8);
 }
 object wild_sunflowers(label="Wild sunflowers"){
+  measure(kind=custom,axis=y,meters=2);
   body(interaction=decor,radius=20,height=74);
   repeat repeat_flower(index=flower,count=3){
     let h(value=40+flower*12);
@@ -132,6 +137,7 @@ object wild_sunflowers(label="Wild sunflowers"){
   }
 }
 object trail_cairn(label="Trail cairn"){
+  measure(kind=custom,axis=y,meters=1.3);
   body(interaction=solid,radius=22,height=56);
   repeat repeat_layer(index=layer,count=4){
     let width(value=40-layer*8);
@@ -140,19 +146,20 @@ object trail_cairn(label="Trail cairn"){
   part moss(shape=icosphere,material=moss,at=[-9,14,3],size=[18,4,17],deform=deform(seed=85,amount=0.18));
 }
 object wayside_bench(label="Wayside bench"){
-  body(interaction=solid,radius=28,height=47);
+  measure(kind=bench,axis=x,meters=1.8);
+  body(interaction=solid,radius=28,height=32);
   foundation(size=[60,42],color=#68765a);
   repeat repeat_side(index=side,count=2){
     let x(value=side*44-22);
-    use post(component=post,args=[22],at=[x,0,-12]);
-    use post_2(component=post,args=[22],at=[x,0,12]);
-    beam brace(shape=box,material=metal,from=[x,5,-13],to=[x,20,13],width=2,depth=2);
-    beam back_post(shape=box,material=wood,from=[x,0,-12],to=[x,45,-18],width=4,depth=4);
+    use post(component=post,args=[14],at=[x,0,-12]);
+    use post_2(component=post,args=[14],at=[x,0,12]);
+    beam brace(shape=box,material=metal,from=[x,4,-13],to=[x,13,13],width=2,depth=2);
+    beam back_post(shape=box,material=wood,from=[x,0,-12],to=[x,30,-18],width=4,depth=4);
   }
   repeat repeat_slat(index=slat,count=4){
-    part seat(shape=box,material=wood,at=[0,24,-12+slat*8],size=[60,4,6]);
+    part seat(shape=box,material=wood,at=[0,16,-12+slat*8],size=[60,4,6]);
   }
   repeat repeat_slat_2(index=slat,count=2){
-    part back(shape=box,material=wood,at=[0,34+slat*9,-16-slat],size=[60,6,3],rot_deg=[-8,0,0]);
+    part back(shape=box,material=wood,at=[0,23+slat*6,-16-slat],size=[60,4,3],rot_deg=[-8,0,0]);
   }
 }

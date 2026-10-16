@@ -1,0 +1,18 @@
+
+> paper-racing-game@0.1.0 build
+> tsc --noEmit && vite build
+
+vite v6.4.4 building for production...
+transforming...
+✓ 91 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   1.63 kB │ gzip:   0.75 kB
+dist/assets/index-BvvEaad7.css    2.95 kB │ gzip:   1.13 kB
+dist/assets/index-pEetMmZL.js   866.68 kB │ gzip: 235.46 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 710ms

@@ -28,8 +28,8 @@ route village_skate(kind=path,mode=loop,speed=45,wait_s=2){
   point(at=[700,1600]);
   point(at=[730,1555]);
 }
-place village_bike(object=a_meadow_bicycle,route=meadow_cycle,offset=0,scale=1.2);
-place village_skateboard(object=a_maple_skateboard,route=village_skate,offset=0,scale=1.3);
+place village_bike(object=a_meadow_bicycle,route=meadow_cycle,offset=0,scale=1);
+place village_skateboard(object=a_maple_skateboard,route=village_skate,offset=0,scale=1);
 place sketch_19(object=a_birch,at=[4936.424428853206,756.3349961768836],scale=0.8881262912414968);
 place sketch_21(object=a_young_rowan,at=[2531.4733028411865,3146.0519772721455],scale=0.9856313126161694);
 place sketch_26(object=a_young_rowan,at=[2097.2521914867684,2754.964704019949],scale=1.2875972779234872);

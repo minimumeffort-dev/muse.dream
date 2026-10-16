@@ -1,0 +1,479 @@
+[
+  {
+    "name": "Castle",
+    "size": [
+      45,
+      74,
+      41
+    ],
+    "factor": 1.892
+  },
+  {
+    "name": "Mushroom rover",
+    "size": [
+      24,
+      27,
+      22
+    ],
+    "factor": 0.917
+  },
+  {
+    "name": "Mushroom",
+    "size": [
+      22,
+      22,
+      20
+    ],
+    "factor": 0.273
+  },
+  {
+    "name": "Windmill",
+    "size": [
+      78,
+      103,
+      46
+    ],
+    "factor": 1.165
+  },
+  {
+    "name": "Hillside cottage",
+    "size": [
+      52,
+      64,
+      49
+    ],
+    "factor": 1.25
+  },
+  {
+    "name": "Ancient ruins",
+    "size": [
+      52.27,
+      42.24,
+      33
+    ],
+    "factor": 1.184
+  },
+  {
+    "name": "Crystal garden",
+    "size": [
+      35.53,
+      48.08,
+      21
+    ],
+    "factor": 0.624
+  },
+  {
+    "name": "Timber barn",
+    "size": [
+      64,
+      62,
+      54
+    ],
+    "factor": 1.29
+  },
+  {
+    "name": "Village well",
+    "size": [
+      38,
+      47.5,
+      30
+    ],
+    "factor": 0.526
+  },
+  {
+    "name": "Old apple tree",
+    "size": [
+      40,
+      36.5,
+      23.5
+    ],
+    "factor": 1.507
+  },
+  {
+    "name": "Fallen log",
+    "size": [
+      44.5,
+      15.71,
+      11
+    ],
+    "factor": 0.674
+  },
+  {
+    "name": "Waving baker",
+    "size": [
+      48.18,
+      71,
+      18
+    ],
+    "factor": 0.246
+  },
+  {
+    "name": "Orchard picnic",
+    "size": [
+      66,
+      40.3,
+      38
+    ],
+    "factor": 0.364
+  },
+  {
+    "name": "Mossy granite",
+    "size": [
+      44,
+      32.5,
+      35
+    ],
+    "factor": 0.554
+  },
+  {
+    "name": "Orchard cart",
+    "size": [
+      64.5,
+      38,
+      45
+    ],
+    "factor": 0.279
+  },
+  {
+    "name": "Wayside bench",
+    "size": [
+      60,
+      31.44,
+      34.62
+    ],
+    "factor": 0.3
+  },
+  {
+    "name": "Bakery basket",
+    "size": [
+      37,
+      18.68,
+      32
+    ],
+    "factor": 0.122
+  },
+  {
+    "name": "Field naturalist",
+    "size": [
+      41.71,
+      71.24,
+      28
+    ],
+    "factor": 0.25
+  },
+  {
+    "name": "Meadow tortoise",
+    "size": [
+      59,
+      27.26,
+      33
+    ],
+    "factor": 0.093
+  },
+  {
+    "name": "Wild sunflowers",
+    "size": [
+      57.69,
+      76.82,
+      27.17
+    ],
+    "factor": 0.26
+  },
+  {
+    "name": "Trail cairn",
+    "size": [
+      40,
+      44,
+      32
+    ],
+    "factor": 0.295
+  },
+  {
+    "name": "Meadow station",
+    "size": [
+      106,
+      76,
+      76
+    ],
+    "factor": 0.921
+  },
+  {
+    "name": "Lakeside boathouse",
+    "size": [
+      86,
+      58,
+      78
+    ],
+    "factor": 1.034
+  },
+  {
+    "name": "Mossy passage",
+    "size": [
+      100,
+      85,
+      136
+    ],
+    "factor": 1.176
+  },
+  {
+    "name": "Festival ball",
+    "size": [
+      26.5,
+      26.5,
+      26.3
+    ],
+    "factor": 0.245
+  },
+  {
+    "name": "Breakaway table",
+    "size": [
+      54,
+      31,
+      29
+    ],
+    "factor": 0.407
+  },
+  {
+    "name": "Produce crate",
+    "size": [
+      35,
+      28,
+      31
+    ],
+    "factor": 0.229
+  },
+  {
+    "name": "Terracotta planter",
+    "size": [
+      36,
+      38.5,
+      36
+    ],
+    "factor": 0.221
+  },
+  {
+    "name": "Meadow locomotive",
+    "size": [
+      75,
+      50.5,
+      35
+    ],
+    "factor": 1.333
+  },
+  {
+    "name": "Passenger carriage",
+    "size": [
+      98,
+      47.5,
+      33
+    ],
+    "factor": 0.816
+  },
+  {
+    "name": "Cloudhopper plane",
+    "size": [
+      78.5,
+      29,
+      92
+    ],
+    "factor": 1.174
+  },
+  {
+    "name": "Willow launch",
+    "size": [
+      69,
+      45,
+      31
+    ],
+    "factor": 0.87
+  },
+  {
+    "name": "Meadow bicycle",
+    "size": [
+      58,
+      33,
+      16
+    ],
+    "factor": 0.31
+  },
+  {
+    "name": "Maple skateboard",
+    "size": [
+      43,
+      8.9,
+      17
+    ],
+    "factor": 0.191
+  },
+  {
+    "name": "Birch",
+    "size": [
+      34.5,
+      67.5,
+      21.5
+    ],
+    "factor": 1.481
+  },
+  {
+    "name": "Young rowan",
+    "size": [
+      21.5,
+      34.5,
+      14
+    ],
+    "factor": 1.594
+  },
+  {
+    "name": "Boulders",
+    "size": [
+      40.29,
+      22,
+      26.65
+    ],
+    "factor": 0.727
+  },
+  {
+    "name": "Silver fir",
+    "size": [
+      39,
+      76,
+      33.15
+    ],
+    "factor": 1.711
+  },
+  {
+    "name": "Oak",
+    "size": [
+      47.5,
+      56,
+      32
+    ],
+    "factor": 1.786
+  },
+  {
+    "name": "Wild shrub",
+    "size": [
+      34.5,
+      16,
+      21.5
+    ],
+    "factor": 0.5
+  },
+  {
+    "name": "Cactus",
+    "size": [
+      36,
+      47,
+      12
+    ],
+    "factor": 0.638
+  },
+  {
+    "name": "Standing deadwood",
+    "size": [
+      24.52,
+      40,
+      8.53
+    ],
+    "factor": 1.5
+  },
+  {
+    "name": "Pine",
+    "size": [
+      37,
+      67,
+      37
+    ],
+    "factor": 1.791
+  },
+  {
+    "name": "Exposed stone slab",
+    "size": [
+      46.89,
+      13.97,
+      32.37
+    ],
+    "factor": 0.64
+  },
+  {
+    "name": "Weathered boulder",
+    "size": [
+      34.69,
+      31.77,
+      30.07
+    ],
+    "factor": 0.63
+  },
+  {
+    "name": "Juniper scrub",
+    "size": [
+      22,
+      24.5,
+      21
+    ],
+    "factor": 0.49
+  },
+  {
+    "name": "Leaning birch",
+    "size": [
+      39.5,
+      67.5,
+      25.5
+    ],
+    "factor": 1.481
+  },
+  {
+    "name": "Silver spruce",
+    "size": [
+      42,
+      77,
+      36
+    ],
+    "factor": 1.558
+  },
+  {
+    "name": "Amber sapling",
+    "size": [
+      34.5,
+      43,
+      23
+    ],
+    "factor": 1.047
+  },
+  {
+    "name": "Slatted park bench",
+    "size": [
+      60,
+      30,
+      33
+    ],
+    "factor": 0.3
+  },
+  {
+    "name": "Timber workshop",
+    "size": [
+      106,
+      68,
+      74
+    ],
+    "factor": 0.882
+  },
+  {
+    "name": "Brick bakehouse",
+    "size": [
+      98.5,
+      76.5,
+      74
+    ],
+    "factor": 0.915
+  },
+  {
+    "name": "Little rally car",
+    "size": [
+      35.5,
+      16,
+      21
+    ],
+    "factor": 1
+  }
+]

@@ -11,7 +11,7 @@ asset a_silver_fir(module=nature,object=silver_fir);
 asset a_weathered_boulder(module=nature,object=weathered_boulder);
 asset a_cactus(module=landmarks,object=cactus);
 asset a_standing_deadwood(module=nature,object=standing_deadwood);
-place sketch_1002(object=a_birch,at=[2425.3443566383794,3237.490218691528],scale=1.2106806515017525);
+place sketch_1002(object=a_birch,at=[2437.114,3239.831],scale=1.2106806515017525);
 place sketch_1008(object=a_birch,at=[397.532472317107,808.4771666675806],scale=0.9180304240668192);
 place sketch_1037(object=a_juniper_scrub,at=[3688.217430235818,1581.8295159609988],scale=1.1923927810508759);
 place sketch_1045(object=a_young_rowan,at=[3749.0483332425356,1391.4299816591665],scale=0.9512306502088904);
@@ -27,7 +27,7 @@ place sketch_1122(object=a_birch,at=[2930.472362274304,785.0542745785788],scale=
 place sketch_1136(object=a_boulders,at=[2253.1933485064656,3824.218555097468],scale=1.0410928449360655);
 place sketch_1162(object=a_oak,at=[2952.54210352432,4602.991787111387],scale=1.086617649323307);
 place sketch_1164(object=a_exposed_stone_slab,at=[4253.768359101377,2813.305788533762],scale=0.9831567876040935);
-place sketch_1171(object=a_birch,at=[1869.680242636241,2756.417000759393],scale=0.999388947756961);
+place sketch_1171(object=a_birch,at=[1857.911,2758.758],scale=0.999388947756961);
 place sketch_1177(object=a_fallen_log,at=[3761.2065006047487,3423.163077305071],scale=1.0372065952047707);
 place sketch_1186(object=a_birch,at=[854.7811498632655,3693.997576693073],scale=0.9977204440161586);
 place sketch_1200(object=a_silver_fir,at=[1513.830303400755,2819.4912527455017],scale=1.2532735392684118);
@@ -73,5 +73,5 @@ place sketch_1555(object=a_young_rowan,at=[2440.3473884565756,4201.861678948626]
 place sketch_1557(object=a_young_rowan,at=[3888.354653469287,3643.542165728286],scale=1.1072857755003498);
 place sketch_1563(object=a_weathered_boulder,at=[3977.3752266308293,3461.601415509358],scale=0.963288682885468);
 place sketch_1585(object=a_wild_shrub,at=[5323.684688843787,2954.4356441823766],scale=1.236000885278918);
-place sketch_1591(object=a_young_rowan,at=[550.655550439842,2143.9605183899403],scale=1.1162863224977628);
+place sketch_1591(object=a_young_rowan,at=[548.433,2147.286],scale=1.1162863224977628);
 place sketch_1598(object=a_birch,at=[999.3730679154396,3743.2574149919674],scale=1.0988921113545076);

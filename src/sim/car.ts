@@ -1,3 +1,4 @@
+import { playerHeight } from "../scene/measure";
 import { objectPlacement } from "../scene/placement";
 import type { Checkpoint, Scene } from "../scene/schema";
 import { sampleTerrain, drivingHeight, waterAt } from "../scene/terrain";
@@ -168,7 +169,7 @@ function crossedCheckpoint(
 }
 
 export function carFootprintClear(world:World,x:number,y:number,elevation:number,timeS:number,state?:CarState):boolean {
-  const data=sceneContacts(world.scene),height=world.scene.player?.body.colliderHeight ?? 14;
+  const data=sceneContacts(world.scene),height=playerHeight(world.scene);
   return world.driveMask.footprintClear(x,y,world.carRadius) && ![...data.solids.query(x,y,world.carRadius+data.maxRadius),...actorContacts(world.scene,timeS)]
     .some(s=>(!state || !isBroken(state,s)) && elevation<s.top-.05 && elevation+height>s.bottom+.05 && Math.hypot(x-s.x,y-s.y)<world.carRadius+s.r);
 }
@@ -188,7 +189,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
   // Solid archetype colliders join the mask as "not drivable" for the car.
   const compiled = sceneContacts(scene);
   // Include the full fixed-step movement and any displacement by a moving actor.
-  const moving=actorContacts(scene,s.timeS),height=scene.player?.body.colliderHeight ?? 14;
+  const moving=actorContacts(scene,s.timeS),height=playerHeight(scene);
   const pushRange=moving.length ? 2*(carRadius+Math.max(...moving.map(a=>a.r))) : 0;
   const solids = [...compiled.solids.query(s.x,s.y,carRadius + compiled.maxRadius + TUNING.maxTerrainSpeed*dt+pushRange),...moving];
   const supportHeight = (x: number, y: number, fromHeight: number): number => {

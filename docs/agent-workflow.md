@@ -59,6 +59,10 @@ On 2026-10-16, the user explicitly authorized a private GitHub repository
 and a Vercel deployment. This changes the deployment boundary only; model
 calls remain mocked and competition eligibility remains unresolved.
 
+The user subsequently authorized making the repository public, publishing the
+product documentation, and adding Muse Dream to the Minimum Effort GitHub
+profile and website. This does not authorize a real model-provider integration.
+
 ## Evidence requirements
 
 - Every slice ships with checks actually executed in that session; report

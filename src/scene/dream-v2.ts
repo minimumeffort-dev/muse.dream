@@ -135,6 +135,7 @@ function lowerBlock(nodes:DreamNode[]):Statement[] {
     switch(kind) {
       case "let":statement.value=n("value");break;
       case "body":statement.interaction=wordField(node,"interaction");statement.args=[n("radius"),n("height"),...(node.fields.has("friction") ? [n("friction")] : [])];break;
+      case "measure":statement.name=wordField(node,"kind");statement.axis=wordField(node,"axis");statement.value=n("meters");break;
       case "ground":statement.name=wordField(node,"mode");break;
       case "foundation":statement.args=listField(node,"size");statement.color=wordField(node,"color");break;
       case "contact":statement.args=[n("radius"),n("height")];break;

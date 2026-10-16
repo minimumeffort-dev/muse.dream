@@ -35,6 +35,17 @@ Budget per source: 65536 characters, 12000 lexer tokens, 2048 expanded statement
 All numeric results finite, abs<=1000000. Combined positive scale<=16.
 Per assembly: 1..32 parts, <=12 joints, joint depth<=4, assembled reach<=256.
 Part size: each .5..128. Final offsets: X/Z -64..64, Y -128..128.
+For every new object emit measure(kind=...,axis=...,meters=...) directly inside it.
+10 canonical world units = 1 meter. This uniformly sizes assembled rest-pose
+geometry AND all physical contacts, foundations, seats, wheels and fragments.
+Keep local part dimensions inside the existing bounds; do not pre-scale them.
+Profiles/axes/ranges are in contract.proportions.profiles. Examples:
+car x 3.55; tree y 10; plane z 10.8; person y 1.75; bicycle x 1.8;
+skateboard x .82; bench x 1.8; table x 2.4; bread: food x .35.
+place.scale is 0.5..2 variation after measurement, still inside the kind's range.
+Resolved scale must be .05..4. Use kind=custom for deliberate fantasy sizes.
+In car worlds: tree height and plane span > player length; bike/board length < player length.
+Never infer a proportion class from a label. Omit measure only for legacy assets.
 Joint offsets: each -64..64. Body radius 4..30, height 4..160, friction .5..5.
 Foundation size .5..128; only upright solids, no mobile objects/player.
 Deform seed integer 0..65535, amount in [0,0.24]. One motion per part/joint.

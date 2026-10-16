@@ -11,6 +11,7 @@ import { migrateProgram } from "./dream-migrate";
 import { compileLayout, type DreamLayout } from "./dream-layout";
 import { buildMaskForScene } from "./fixture";
 import { validateScenePlayability } from "./validate";
+import { measuredScale, playerRadius } from "./measure";
 export { DREAM_LIMITS, DreamError } from "./dream-syntax";
 export { DREAM_PROJECT_LIMITS } from "./dream-contract";
 import { DREAM_PROJECT_LIMITS } from "./dream-contract";
@@ -104,6 +105,7 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
     const contacts:NonNullable<ObjectDslV2["contacts"]>=[];let rideable:ObjectDslV2["rideable"];
     let emitter:ObjectDslV2["emitter"];
     let impact:ObjectDslV2["impact"];
+    let measure:ObjectDslV2["measure"];
     const breakZones:NonNullable<ObjectDslV2["breakZones"]>=[];
     const walk = (block: Statement[], frame: Frame, inherited: Map<string, number>, stack: string[] = [], root = false, depth = 0) => {
       if (depth > DREAM_LIMITS.nesting) fail("expanded nesting exceeds 16", block[0]?.token,"E_BUDGET");
@@ -114,9 +116,10 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
         const number = (expr: Expr) => numeric(expr, env);
         const path=[...(frame.path??[]),statement.scope??statement.name??kind];
         const id = () => program.version===2 ? stableId(path) : `${statement.name!.slice(0, 25)}-${serial++}`;
-        if (["body", "ground", "foundation","contact","rideable","emit","impact","zone"].includes(kind) && !root) fail(`${kind} belongs directly inside an object`, token);
-        if(root && ["body","ground","foundation","rideable","emit","impact"].includes(kind))metadataOrigins.set(kind==="ground" ? "grounding" : kind==="emit" ? "emitter" : kind,token);
+        if (["body", "measure", "ground", "foundation","contact","rideable","emit","impact","zone"].includes(kind) && !root) fail(`${kind} belongs directly inside an object`, token);
+        if(root && ["body","measure","ground","foundation","rideable","emit","impact"].includes(kind))metadataOrigins.set(kind==="ground" ? "grounding" : kind==="emit" ? "emitter" : kind,token);
         switch (kind) {
+          case "measure":measure={kind:statement.name as NonNullable<ObjectDslV2["measure"]>["kind"],axis:statement.axis as "x"|"y"|"z",meters:number(statement.value!)};break;
           case "let":
             if (localNames.has(statement.name!)) fail(`duplicate local '${statement.name}'`, token);
             localNames.add(statement.name!); env.set(statement.name!, number(statement.value!)); break;
@@ -201,7 +204,7 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
     };
     walk(object.block, identity(), globals, [], true);
     if (!body) fail("object needs a body declaration", object.token);
-    const result = objectDslSchema.safeParse({ dslVersion: 2, displayName: object.name, body, parts,
+    const result = objectDslSchema.safeParse({ dslVersion: 2, displayName: object.name, body, parts,...(measure ? {measure} : {}),
       ...(joints.length ? { joints } : {}), ...(grounding ? { grounding } : {}), ...(foundation ? { foundation } : {}),
       ...(contacts.length ? {contacts} : {}),...(rideable ? {rideable} : {}),...(emitter ? {emitter} : {}),...(impact ? {impact} : {}),...(breakZones.length ? {breakZones} : {}) });
     if (!result.success) {
@@ -296,8 +299,10 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
     if(source.at && source.at.length!==2)fail("placement needs two coordinates",source.token);
     const offset=source.offset ? numeric(source.offset,globals) : 0;
     const position=route ? routePose(route,0,offset) : {x:numeric(source.at![0]!,globals),y:numeric(source.at![1]!,globals)};
+    const variation=source.scale ? numeric(source.scale,globals) : 1;
+    if(variation<.5 || variation>2)fail("placement scale must be 0.5..2",source.scale?.token??source.token,"E_SCHEMA");
     const result=sceneObjectSchema.safeParse({id:source.name,kind:"custom",labelText:spec.displayName,spec,...position,
-      scale:source.scale ? numeric(source.scale,globals) : 1,...(source.heading ? {headingRad:numeric(source.heading,globals)*RAD} : {}),
+      scale:variation*measuredScale(spec),...(source.heading ? {headingRad:numeric(source.heading,globals)*RAD} : {}),
       ...(route ? {route:{id:route.id,offset}} : {})});
     if(!result.success)fail(result.error.issues[0]!.message,source.token,"E_SCHEMA");return result.data;
   });
@@ -341,7 +346,7 @@ function sceneFromWorld(world:DreamWorld,identity:DreamSceneIdentity):Scene {
   let scene:Scene;
   try {scene=parseScene({schemaVersion:1,...identity,...layout,routes:world.routes,objects:world.objects,provenance:{source:"handmade-fixture",notes:"Compiled Dream 2 mock world. No model calls."}});}
   catch(error){if(error instanceof ZodError)fail(error.issues[0]!.message,origin,"E_SCHEMA");throw error;}
-  const problems=validateScenePlayability(scene,buildMaskForScene(scene),scene.player?.body.colliderRadius??11);
+  const problems=validateScenePlayability(scene,buildMaskForScene(scene),playerRadius(scene));
   if(problems.length)fail(`${problems[0]!.code}: ${problems[0]!.message}`,origin,`E_SCENE_${problems[0]!.code.toUpperCase().replace(/-/g,"_")}`);
   return scene;
 }

@@ -25,6 +25,19 @@ Two skills govern all work here: [Ponytail](.agents/skills/ponytail/SKILL.md)
 [`paper-game`](.agents/skills/paper-game/SKILL.md) (domain invariants).
 Provenance and evidence rules: [`docs/agent-workflow.md`](docs/agent-workflow.md).
 
+## Documentation is part of implementation
+
+Every new feature or behavior change must update `README.md` and the relevant
+product/DSL docs in the same change. Describe what works now, keep limitations
+explicit, and replace stale screenshots when visible behavior changes. Include
+runnable `.dream` examples for language features and check them with the compiler.
+When changing Dream's vocabulary, update the model instructions, generated
+command contract and language reference together. Keep links and examples valid.
+A feature isn't complete while its README or documentation describes older behavior.
+Use Horia's editorial voice: concrete, conversational prose, useful visuals,
+no hype, no invented claims and no em dashes. Preserve the distinction between
+working mock mechanics and the future sketch/Muse pipeline.
+
 ## Run and test (verified 2026-10-15)
 
 ```sh
@@ -62,6 +75,12 @@ acceptance boundary; `compileDreamWorld` alone does not certify playability. `as
 data; `include` merges district data. Preserve per-file and aggregate project
 budgets; module IDs never resolve files or URLs in the compiler.
 Actual provider generation accuracy and token costs remain unmeasured.
+
+New Dream 2 objects declare `measure(kind=...,axis=...,meters=...)`; use
+`docs/proportions.md` and the generated contract's proportion profiles. Ten
+world units represent one metre. Compiled placements already contain the
+resolved uniform scale. Preserve independent passenger size and scale the
+player's mesh and driving cylinder together. Legacy unmeasured assets remain readable.
 
 Dream 2 destruction includes optional splinter/crumble release patterns, rigid
 `topple` behavior, and independent `zone` sections. Core contacts and terrain

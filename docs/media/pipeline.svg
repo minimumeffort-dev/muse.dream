@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="200" viewBox="0 0 1280 200" role="img" aria-labelledby="title desc">
+<title id="title">The paper-to-world pipeline</title><desc id="desc">Paper capture and Muse interpretation are planned. Dream 2 validation and Three.js rendering are implemented.</desc>
+<rect width="1280" height="200" rx="12" fill="#1d2d2a"/>
+<g font-family="system-ui,sans-serif"><text x="28" y="36" fill="#eae8d9" font-size="18">From a sketch to a playable world</text>
+<g fill="none" stroke="#81988a" stroke-dasharray="5 5"><rect x="28" y="67" width="190" height="100" rx="8"/><rect x="264" y="67" width="190" height="100" rx="8"/></g>
+<g fill="#30443a" stroke="#6b8d63"><rect x="500" y="67" width="190" height="100" rx="8"/><rect x="736" y="67" width="230" height="100" rx="8"/><rect x="1012" y="67" width="240" height="100" rx="8"/></g>
+<g stroke="#b9c8aa" stroke-width="2" fill="none"><path d="M229 117h24m-7-6 7 6-7 6M465 117h24m-7-6 7 6-7 6M701 117h24m-7-6 7 6-7 6M977 117h24m-7-6 7 6-7 6"/></g>
+<g fill="#f0ecdd" font-size="21"><text x="48" y="105">Paper sketch</text><text x="284" y="105">Muse</text><text x="520" y="105">Dream 2</text><text x="756" y="105">Validate</text><text x="1032" y="105">Three.js world</text></g>
+<g fill="#b5c4ad" font-size="14"><text x="48" y="141">Capture planned</text><text x="284" y="141">Mock input today</text><text x="520" y="141">Object + world source</text><text x="756" y="141">Schema + playable scene</text><text x="1032" y="141">Render + simulate</text></g></g></svg>

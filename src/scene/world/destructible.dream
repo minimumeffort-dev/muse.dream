@@ -11,6 +11,7 @@ material roof(style=toon,colors=[#45626c,#2d424e]);
 material brick(style=grain,colors=[#a66146,#ce9575]);
 material stone(style=toon,colors=[#8b9181,#5a655f]);
 object leaning_birch(label="Leaning birch"){
+  measure(kind=tree,axis=y,meters=10);
   body(interaction=solid,radius=9,height=67);
   impact(mode=topple(speed=110,duration=1.1,lifetime=8));
   fragment tree(){
@@ -22,6 +23,7 @@ object leaning_birch(label="Leaning birch"){
   }
 }
 object silver_spruce(label="Silver spruce"){
+  measure(kind=tree,axis=y,meters=12);
   body(interaction=solid,radius=12,height=76);
   impact(mode=topple(speed=145,duration=1.35,lifetime=8));
   fragment tree(){
@@ -32,6 +34,7 @@ object silver_spruce(label="Silver spruce"){
   }
 }
 object amber_sapling(label="Amber sapling"){
+  measure(kind=tree,axis=y,meters=4.5);
   body(interaction=solid,radius=7,height=43);
   impact(mode=topple(speed=70,duration=.7,lifetime=7));
   fragment tree(){
@@ -42,24 +45,26 @@ object amber_sapling(label="Amber sapling"){
   }
 }
 object slatted_bench(label="Slatted park bench"){
-  body(interaction=solid,radius=28,height=44);
+  measure(kind=bench,axis=x,meters=1.8);
+  body(interaction=solid,radius=28,height=31);
   impact(mode=break(speed=95,scatter=65,lift=65,spin=4,lifetime=6,pattern=splinter));
   repeat slats(index=i,count=4){
-    fragment plank(){part seat(shape=box,material=wood,at=[0,23,-12+i*8],size=[60,4,6]);}
+    fragment plank(){part seat(shape=box,material=wood,at=[0,16,-12+i*8],size=[60,4,6]);}
   }
   repeat supports(index=i,count=2){
     fragment frame(){
-      part leg_front(shape=box,material=dark_wood,at=[i*44-22,10,12],size=[5,20,6]);
-      part leg_back(shape=box,material=dark_wood,at=[i*44-22,21,-13],size=[5,42,6]);
-      part brace(shape=box,material=dark_wood,at=[i*44-22,18,0],size=[6,4,29]);
+      part leg_front(shape=box,material=dark_wood,at=[i*44-22,6.5,12],size=[5,13,6]);
+      part leg_back(shape=box,material=dark_wood,at=[i*44-22,15,-13],size=[5,30,6]);
+      part brace(shape=box,material=dark_wood,at=[i*44-22,12,0],size=[6,4,29]);
     }
   }
   fragment back(){
-    part upper(shape=box,material=wood,at=[0,39,-16],size=[60,7,4]);
-    part lower(shape=box,material=wood,at=[0,30,-16],size=[60,7,4]);
+    part upper(shape=box,material=wood,at=[0,27,-16],size=[60,6,4]);
+    part lower(shape=box,material=wood,at=[0,21,-16],size=[60,6,4]);
   }
 }
 object timber_workshop(label="Timber workshop"){
+  measure(kind=building,axis=y,meters=6);
   body(interaction=solid,radius=30,height=66);
   foundation(size=[128,90],color=#79816e);
   contact core(at=[-12,0,0],radius=30,height=54);
@@ -73,6 +78,7 @@ object timber_workshop(label="Timber workshop"){
   }
 }
 object brick_bakehouse(label="Brick bakehouse"){
+  measure(kind=building,axis=y,meters=7);
   body(interaction=solid,radius=30,height=72);
   foundation(size=[128,90],color=#8e8171);
   contact core(at=[-16,0,0],radius=28,height=56);

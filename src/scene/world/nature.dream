@@ -10,6 +10,7 @@ material m7(style=toon,colors=[#4a5552,#333c3b]);
 material m8(style=toon,colors=[#385b67,#253e4c]);
 material m9(style=toon,colors=[#ba5840,#813e34]);
 object birch(label="Birch"){
+  measure(kind=tree,axis=y,meters=10);
   body(interaction=solid,radius=9,height=68);
   part trunk(shape=cylinder,material=m0,at=[0,23,0],size=[4,46,4]);
   part fork(shape=cylinder,material=m0,at=[-5,34,0],size=[2,23,2],rot_deg=[0,0,-27.501974166279513]);
@@ -18,6 +19,7 @@ object birch(label="Birch"){
   part lower_crown(shape=icosphere,material=m2,at=[7,40,-3],size=[17,21,16],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
 }
 object silver_fir(label="Silver fir"){
+  measure(kind=tree,axis=y,meters=13);
   body(interaction=solid,radius=13,height=76);
   part trunk(shape=cylinder,material=m3,at=[0,30,0],size=[5,60,5]);
   part bough_0(shape=cone,material=m2,at=[0,22,0],size=[39,22,33.15],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
@@ -26,39 +28,46 @@ object silver_fir(label="Silver fir"){
   part bough_3(shape=cone,material=m1,at=[0,62,0],size=[16,28,13.6],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
 }
 object young_rowan(label="Young rowan"){
+  measure(kind=tree,axis=y,meters=5.5);
   body(interaction=solid,radius=6,height=35);
   part stem(shape=cylinder,material=m3,at=[0,11,0],size=[2,22,2]);
   part crown(shape=icosphere,material=m1,at=[-2,26,0],size=[17,17,14],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
   part side_leaves(shape=icosphere,material=m2,at=[5,19,1],size=[12,13,12],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));
 }
 object wild_shrub(label="Wild shrub"){
+  measure(kind=custom,axis=y,meters=0.8);
   body(interaction=decor,radius=12,height=15);
   part left(shape=icosphere,material=m2,at=[-8,6,0],size=[18,12,17]);
   part center(shape=icosphere,material=m1,at=[2,8,-3],size=[22,16,18]);
   part right(shape=icosphere,material=m2,at=[11,5,3],size=[13,10,13]);
 }
 object juniper_scrub(label="Juniper scrub"){
+  measure(kind=custom,axis=y,meters=1.2);
   body(interaction=decor,radius=10,height=23);
   part bush(shape=icosphere,material=m2,at=[0,9,0],size=[22,18,21]);
   part shoot(shape=cone,material=m1,at=[-4,15,1],size=[12,19,11]);
 }
 object weathered_boulder(label="Weathered boulder"){
+  measure(kind=custom,axis=y,meters=2);
   body(interaction=solid,radius=21,height=34);
   ground(mode=surface);
   part stone(shape=icosphere,material=m4,at=[0,14,0],size=[37,32,29],rot_deg=[0,29.79380534680281,6.875493541569878]);
 }
 object exposed_stone_slab(label="Exposed stone slab"){
+  measure(kind=custom,axis=x,meters=3);
   body(interaction=solid,radius=27,height=14);
   ground(mode=surface);
   part slab(shape=icosphere,material=m4,at=[0,5,0],size=[51,14,30],rot_deg=[0,-22.91831180523293,3.437746770784939]);
 }
 object standing_deadwood(label="Standing deadwood"){
+  measure(kind=tree,axis=y,meters=6);
   body(interaction=solid,radius=9,height=42);
   part trunk(shape=cylinder,material=m3,at=[0,20,0],size=[6,40,6]);
   part left_branch(shape=cylinder,material=m3,at=[-6,29,0],size=[3,19,3],rot_deg=[0,0,-41.8259190445501]);
   part right_branch(shape=cylinder,material=m3,at=[5,23,2],size=[3,15,3],rot_deg=[0,22.91831180523293,45.83662361046586]);
 }
 object fallen_log(label="Fallen log"){
+  measure(kind=custom,axis=x,meters=3);
   body(interaction=solid,radius=23,height=16);
   ground(mode=surface);
   part log(shape=cylinder,material=m3,at=[0,5,0],size=[11,44,11],rot_deg=[0,0,90]);
@@ -67,6 +76,7 @@ object fallen_log(label="Fallen log"){
   part broken_branch(shape=cylinder,material=m3,at=[-5,9,1],size=[3,13,3],rot_deg=[0,17.188733853924695,-34.37746770784939]);
 }
 object timber_barn(label="Timber barn"){
+  measure(kind=building,axis=y,meters=8);
   body(interaction=solid,radius=30,height=64);
   foundation(size=[66,58],color=#697267);
   part walls(shape=box,material=m6,at=[0,15,0],size=[54,30,42]);
@@ -78,6 +88,7 @@ object timber_barn(label="Timber barn"){
   part door_bar(shape=box,material=m5,at=[0,13,22.3],size=[24,2,1]);
 }
 object village_well(label="Village well"){
+  measure(kind=custom,axis=y,meters=2.5);
   body(interaction=solid,radius=21,height=48);
   foundation(size=[40,36],color=#777f73);
   part stone_0(shape=box,material=m4,at=[0,6,11],size=[9,12,5],rot_deg=[0,0,0]);
@@ -95,6 +106,7 @@ object village_well(label="Village well"){
   part water(shape=cylinder,material=m8,at=[0,5,0],size=[17,1,17]);
 }
 object old_apple_tree(label="Old apple tree"){
+  measure(kind=tree,axis=y,meters=5.5);
   body(interaction=solid,radius=11,height=37);
   part trunk(shape=cylinder,material=m3,at=[0,10,0],size=[5,20,5]);
   part crown_left(shape=icosphere,material=m1,at=[-8,25,0],size=[23,21,22],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058));

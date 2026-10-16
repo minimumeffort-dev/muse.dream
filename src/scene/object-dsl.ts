@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { measureProblem, measuredScale, MEASURE_KINDS } from "./measure";
 
 /** Versioned bounded assemblies. Geometry, motion and shaders belong to the engine. */
 export const objectMaterialSchema = z.object({
@@ -83,6 +84,7 @@ const objectV2PartSchema=objectPartSchema.extend({
   zone:z.string().min(1).max(40).optional(),
 }).strict();
 const objectDslV2Schema=objectV1Schema.extend({
+  measure:z.object({kind:z.enum(MEASURE_KINDS),axis:z.enum(["x","y","z"]),meters:z.number().finite().min(.05).max(60)}).strict().optional(),
   dslVersion:z.literal(2),joints:z.array(jointSchema).max(12).optional(),parts:z.array(objectV2PartSchema).min(1).max(32),
   contacts:z.array(z.object({position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),radius:z.number().finite().min(1).max(64),height:z.number().finite().min(1).max(160)}).strict()).min(1).max(8).optional(),
   rideable:z.object({seat:z.tuple([offset,z.number().finite().min(0).max(128),offset])}).strict().optional(),
@@ -132,9 +134,11 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
       if(ids.has(joint.id)) ctx.addIssue({code:z.ZodIssueCode.custom,message:"joint and part ids must be unique"});
       ids.add(joint.id);
     }
+    let hierarchyValid=true;
     const pathLength=(id:string,seen=new Set<string>()):number=> {
       const joint=joints.get(id);
       if(!joint || seen.has(id) || seen.size>=4) {
+        hierarchyValid=false;
         ctx.addIssue({code:z.ZodIssueCode.custom,message:"joint hierarchy must reference existing joints, be acyclic and at most four levels deep"});return Infinity;
       }
       seen.add(id);
@@ -144,6 +148,12 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
     for(const part of spec.parts) {
       const distance=(part.parent ? pathLength(part.parent) : 0)+Math.hypot(...part.position)+Math.hypot(...part.size)/2;
       if(distance>256) ctx.addIssue({code:z.ZodIssueCode.custom,message:"assembled part exceeds the 256-unit reach budget"});
+    }
+    // Only inspect geometry after hierarchy/shape validation has succeeded.
+    if(spec.measure){
+      const problem=measureProblem(spec.measure);
+      if(problem)ctx.addIssue({code:z.ZodIssueCode.custom,path:["measure"],message:problem});
+      else if(hierarchyValid){const scale=measuredScale(spec);if(!Number.isFinite(scale) || scale<.05 || scale>4)ctx.addIssue({code:z.ZodIssueCode.custom,path:["measure"],message:"measured size must resolve to a uniform scale in 0.05..4"});}
     }
   }
 });

@@ -15,6 +15,7 @@ material m12(style=toon,colors=[#8b918d,#8b918d]);
 material m13(style=toon,colors=[#697e4c,#697e4c]);
 material m14(style=toon,colors=[#956e4c,#956e4c]);
 object waving_baker(label="Waving baker"){
+  measure(kind=person,axis=y,meters=1.75);
   body(interaction=decor,radius=11,height=76);
   part leg_neg_1(shape=capsule,material=m2,at=[-4.2,12,0],size=[6,20,7]);
   part shoe_neg_1(shape=capsule,material=m5,at=[-4.2,2,2],size=[7,4,11]);
@@ -51,6 +52,7 @@ object waving_baker(label="Waving baker"){
   }
 }
 object crusty_bread(label="Crusty bread"){
+  measure(kind=food,axis=x,meters=0.35);
   body(interaction=knockable,radius=13,height=18,friction=2.8);
   ground(mode=surface);
   part loaf(shape=capsule,material=m6,at=[0,8,0],size=[16,38,18],rot_deg=[0,0,90],deform=deform(seed=73,amount=0.045));
@@ -65,6 +67,7 @@ object crusty_bread(label="Crusty bread"){
   part score_2_2(shape=capsule,material=m7,at=[11.2,15.492472332656506,3],size=[1.2,3.8,0.8],rot_deg=[107.44635233721337,0,-20.05352282957881]);
 }
 object harvest_bowl(label="Harvest bowl"){
+  measure(kind=custom,axis=x,meters=0.4);
   body(interaction=knockable,radius=14,height=18,friction=2.5);
   ground(mode=surface);
   part bowl_base(shape=cylinder,material=m1,at=[0,2,0],size=[22,4,22]);
@@ -77,12 +80,14 @@ object harvest_bowl(label="Harvest bowl"){
   part stem_2(shape=cylinder,material=m9,at=[1,16,-5],size=[1,3,1],rot_deg=[0,0,11.459155902616464]);
 }
 object mossy_granite(label="Mossy granite"){
+  measure(kind=custom,axis=y,meters=1.8);
   body(interaction=solid,radius=23,height=34);
   ground(mode=surface);
   part stone(shape=icosphere,material=m12,at=[0,16,0],size=[44,32,35],deform=deform(seed=381,amount=0.23));
   part moss(shape=icosphere,material=m13,at=[-7,28,-3],size=[25,9,23],deform=deform(seed=85,amount=0.18));
 }
 object orchard_picnic(label="Orchard picnic"){
+  measure(kind=table,axis=x,meters=2.4);
   body(interaction=solid,radius=30,height=28);
   impact(mode=break(speed=90,scatter=62,lift=100,spin=4,lifetime=6));
   part tabletop(shape=box,material=m14,at=[0,26,0],size=[66,4,38]);

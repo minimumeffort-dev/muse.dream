@@ -1,10 +1,11 @@
+import { measuredScale, playerRadius, playerHeight } from "../scene/measure";
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
-import { buildMaskForScene, CAR_RADIUS } from "../scene/fixture";
+import { buildMaskForScene } from "../scene/fixture";
 import { createWorldScene } from "../scene/world-fixture";
 import { drivingHeight } from "../scene/terrain";
 import { archetypeOf, objectRadius } from "../sim/archetypes";
@@ -41,7 +42,7 @@ const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 
 function start(): void {
   const doc = createWorldScene();
-  const carRadius = doc.player?.body.colliderRadius ?? CAR_RADIUS;
+  const carRadius = playerRadius(doc);
   const roadMask = buildMaskForScene(doc);
   const world: World = { scene: doc, roadMask,
     driveMask: buildPaperMask(doc.canonical.width, doc.canonical.height), carRadius };
@@ -120,7 +121,7 @@ function start(): void {
   }
   const debris=new WorldDebris(doc);scene.add(debris.group);
   const traveler=interactiveWorld.assemblies.find(a=>a.displayName==="Traveler")!;
-  const avatar=buildObject({id:"traveler",kind:"custom",labelText:"Traveler",x:0,y:0,scale:.7,spec:traveler});avatar.visible=false;objects.push(avatar);
+  const avatar=buildObject({id:"traveler",kind:"custom",labelText:"Traveler",x:0,y:0,scale:measuredScale(traveler),spec:traveler});avatar.visible=false;objects.push(avatar);
   const carRoot = new THREE.Group(), carMesh = buildPlayer(doc);
   carRoot.add(carMesh); scene.add(carRoot);
   const particles = new WorldParticles(doc); scene.add(particles.mesh);
@@ -292,6 +293,7 @@ function start(): void {
       const group=actorMeshes.get(car.ride.actorId)!;group.add(avatar);
       const spec=group.userData.sceneObject.spec;
       avatar.position.fromArray(spec.rideable.seat);
+      avatar.scale.setScalar(measuredScale(traveler)/group.scale.x);
     }
     for (const object of objects) {
       const spec=object.userData.sceneObject;
@@ -314,7 +316,7 @@ function start(): void {
     (scene.fog as THREE.Fog).far = (scene.fog as THREE.Fog).near + 1700;
     camera.updateMatrixWorld(); scene.updateMatrixWorld();
     scenery.update(camera, position.clone().add(new THREE.Vector3(0, 7, 0)), dt, reduced.matches);
-    occlusion.update(camera, position.clone().add(new THREE.Vector3(0, (doc.player?.body.colliderHeight ?? 14) / 2, 0)), dt, reduced.matches);
+    occlusion.update(camera, position.clone().add(new THREE.Vector3(0, playerHeight(doc) / 2, 0)), dt, reduced.matches);
     sun.target.position.set(follow.x, follow.y, follow.z);
     sun.position.set(follow.x - 300, follow.y + 690, follow.z + 220);
     hudTime += dt;

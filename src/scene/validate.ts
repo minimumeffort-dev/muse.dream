@@ -1,3 +1,4 @@
+import { playerHeight, measuredScale, CAR_PROPORTION_RULES } from "./measure";
 import { roadPoints, roadFrames, bridgeFitsRoad, ROAD_CURB_WIDTH } from "./road";
 import { SpatialGrid } from "../sim/spatial";
 import { archetypeOf, objectRadius,objectHeight } from "../sim/archetypes";
@@ -29,7 +30,8 @@ export interface SceneProblem {
     | "water-not-contained"
     | "bridge-not-clear"
     | "bridge-road-disconnected"
-    | "route-not-clear";
+    | "route-not-clear"
+    | "object-proportions";
   message: string;
 }
 
@@ -45,6 +47,16 @@ export function validateScenePlayability(
   carRadius: number,
 ): SceneProblem[] {
   const problems: SceneProblem[] = [];
+  const reference=scene.player?.dslVersion===2 && scene.player.measure?.kind==="car" ? scene.player.measure.meters : undefined;
+  if(reference)for(const object of scene.objects){
+    const spec=object.spec && "dslVersion" in object.spec && object.spec.dslVersion===2 ? object.spec : undefined;
+    if(!spec?.measure || !Object.hasOwn(CAR_PROPORTION_RULES,spec.measure.kind))continue;
+    const relation=CAR_PROPORTION_RULES[spec.measure.kind as keyof typeof CAR_PROPORTION_RULES];
+    const meters=spec.measure.meters*object.scale/measuredScale(spec);
+    if(relation==="larger" ? meters<=reference : meters>=reference)
+      problems.push({code:"object-proportions",message:`${object.id}: ${spec.measure.kind} must measure ${relation} than the player car's ${reference} m length; use kind=custom for deliberate fantasy sizes`});
+  }
+
   const { width, height } = scene.canonical;
 
   if (mask.width !== width || mask.height !== height) {
@@ -129,7 +141,7 @@ export function validateScenePlayability(
   const solids = scene.objects.filter((o) => !o.route && archetypeOf(o).interaction === "solid")
     .flatMap((o) => objectContacts(scene,o))
     .concat(bridgeRails(scene.terrain).map(rail=>({...rail,bottom:-Infinity})));
-  const maxRadius=Math.max(0,...solids.map(o=>o.r)),carHeight=scene.player?.body.colliderHeight ?? 14;
+  const maxRadius=Math.max(0,...solids.map(o=>o.r)),carHeight=playerHeight(scene);
   const solidGrid = new SpatialGrid(solids);
   const clearance = new RasterMask(width, height, undefined, mask.cellSize);
   const { columns, rows, cellSize } = mask;

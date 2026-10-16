@@ -1,3 +1,4 @@
+import { measuredScale } from "../src/scene/measure";
 import { describe, expect, it } from "vitest";
 import { Box3, InstancedMesh, Matrix4, Mesh, Vector3 } from "three";
 import source from "../src/scene/dream-creations.dream?raw";
@@ -16,7 +17,7 @@ const header = "dream 1; material red = toon #bb5544;";
 const body = "body solid radius 12 height 40;";
 const part = "part block box red at [0,5,0] size [10,10,10];";
 const compile = (block: string, declarations = "") => compileDream(`${header} ${declarations} object "Test" { ${body} ${block} }`)[0]!;
-const object = (spec = compile(part)): SceneObject => ({ id: "dream", kind: "custom", labelText: "Dream", x: 480, y: 360, scale: 1, spec });
+const object = (spec = compile(part)): SceneObject => ({ id: "dream", kind: "custom", labelText: "Dream", x: 480, y: 360, scale: measuredScale(spec), spec });
 
 describe("Dream authoring language", () => {
   it("compiles comments, palettes, arithmetic precedence and scoped numbers to strict v2 data", () => {

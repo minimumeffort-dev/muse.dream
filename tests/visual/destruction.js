@@ -1,3 +1,4 @@
+import { measuredScale } from "../../src/scene/measure";
 import * as THREE from 'three';
 import { impactWorld } from '../../src/scene/impact-creations';
 import damageSource from '../../src/scene/world/destructible.dream?raw';
@@ -26,13 +27,14 @@ scene.add(new THREE.HemisphereLight('#bad4e2','#384736',1.25));
 const sun=new THREE.DirectionalLight('#ffe5b8',2.4);sun.position.set(-200,400,150);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=sun.shadow.camera.bottom=-220;sun.shadow.camera.right=sun.shadow.camera.top=220;sun.shadow.camera.far=900;scene.add(sun);
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(2000,2000),new THREE.MeshStandardMaterial({color:'#52714d'}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
 const camera=new THREE.OrthographicCamera(-1,1,1,-1,.1,2000),content=new THREE.Group();scene.add(content);
+if(new URLSearchParams(location.search).has('docs'))camera.zoom=2.4;
 let previousKey='',owned=[];
 function renderState(){
   const key=[select.value,phase.value,speed.value,document.querySelector('#reduced').checked].join('/');
   if(key===previousKey)return;previousKey=key;
   for(const node of owned)node.traverse(child=>{if(child.isMesh || child.isPoints){child.geometry.dispose();for(const mat of Array.isArray(child.material)?child.material:[child.material])mat.dispose();}});
   content.clear();owned=[];
-  const spec=assemblies.find(s=>s.displayName===select.value),object={id:'target',kind:'custom',labelText:spec.displayName,x:480,y:360,scale:1,spec};
+  const spec=assemblies.find(s=>s.displayName===select.value),object={id:'target',kind:'custom',labelText:spec.displayName,x:480,y:360,scale:measuredScale(spec),spec};
   const doc=parseScene({...createFixtureScene(),objects:[object],regions:[],terrain:{hills:[]}}),world={scene:doc,roadMask:buildMaskForScene(doc),driveMask:buildPaperMask(960,720),carRadius:11};
   const zone=objectContacts(doc,object).find(c=>c.zoneId);
   let state={...createCarAtSpawn(doc),x:zone ? zone.x+zone.r+12 : 480-objectRadius(object)-12,y:zone?.y??360,vx:Number(speed.value)*(zone?-1:1),headingRad:zone?Math.PI:0};

@@ -1,3 +1,4 @@
+import { measuredScale } from "../../src/scene/measure";
 import * as THREE from 'three';
 import { dreamExamples } from '../../src/scene/dream-creations';
 import { buildObject, animateObject } from '../../src/game/world3d';
@@ -18,7 +19,7 @@ const items=(worldExamples ? interactiveWorld.assemblies : dreamExamples).map(sp
   const scene=new THREE.Scene();scene.background=new THREE.Color('#52714d');
   scene.add(new THREE.HemisphereLight('#bad4e2','#384736',1.25));
   const sun=new THREE.DirectionalLight('#ffe5b8',2.4);sun.position.set(-300,690,220);scene.add(sun);
-  const group=buildObject({id:spec.displayName,kind:'custom',labelText:spec.displayName,x:0,y:0,scale:1,spec});scene.add(group);
+  const group=buildObject({id:spec.displayName,kind:'custom',labelText:spec.displayName,x:0,y:0,scale:measuredScale(spec),spec});scene.add(group);
   const floor=new THREE.Mesh(new THREE.PlaneGeometry(500,500),new THREE.MeshStandardMaterial({color:'#52714d'}));
   floor.rotation.x=-Math.PI/2;floor.position.y=-.5;scene.add(floor);
   const bounds=new THREE.Box3().setFromObject(group,true);group.position.y-=bounds.min.y;bounds.setFromObject(group,true);const center=bounds.getCenter(new THREE.Vector3());

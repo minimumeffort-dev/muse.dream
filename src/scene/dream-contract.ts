@@ -1,4 +1,5 @@
 import { DREAM_LIMITS } from "./dream-syntax";
+import { MEASURE_PROFILES, UNITS_PER_METER, CAR_PROPORTION_RULES, MEASURE_KINDS } from "./measure";
 
 // This table drives parsing, canonical field order and the model's vocabulary export.
 export interface DreamCommand { contexts: readonly string[]; id: boolean; fields: Readonly<Record<string,string>>; block?: string }
@@ -13,6 +14,7 @@ export const DREAM_V2_COMMANDS: Readonly<Record<string,DreamCommand>> = Object.f
   asset: command("top",true,{module:"ref",object:"ref"}),
   include: command("top",true,{module:"ref"}),
   body: command("object",false,{interaction:"solid|knockable|decor",radius:"n",height:"n",friction:"n?"}),
+  measure: command("object",false,{kind:MEASURE_KINDS.join("|"),axis:"x|y|z",meters:"n"}),
   ground: command("object",false,{mode:"upright|surface"}),
   foundation: command("object",false,{size:"v2",color:"color"}),
   contact: command("object",true,{at:"v3",radius:"n",height:"n"}),
@@ -58,6 +60,7 @@ export const DREAM_V2_CONTRACT = {
   expressions:"finite numbers, constants, + - * /, sin(degrees), cos(degrees); no general code",
   types:{n:"numeric expression",v2:"[n,n]",v3:"[n,n,n]",nums:"[n,...]",symbols:"[symbol,...]",point:"[n,n] or [n,n,n]",points2:"[[n,n],...]",colors:"[#rrggbb,#rrggbb]",color:"#rrggbb",ref:"symbol ID",symbol:"identifier",text:'"JSON-escaped string"',bool:"true|false",optional:"type suffix ?",variants:"enum values separated by |; other types are nested constructor calls"},
   limits:DREAM_LIMITS,projectLimits:DREAM_PROJECT_LIMITS,commands:DREAM_V2_COMMANDS,
+  proportions:{unitsPerMeter:UNITS_PER_METER,profiles:MEASURE_PROFILES,relativeToPlayerCar:CAR_PROPORTION_RULES,rule:"measure sets one rest-pose extent; uniform scale preserves shape, physics and attachments. place.scale is 0.5..2 variation and must stay in the profile range. kind=custom permits deliberate fantasy sizes. Omit measure only for legacy local-unit assets."},
   modules:{registry:"host-supplied module ID to Dream 2 text; no file/URL resolution",asset:"imports one exported object only, under a local alias",include:"merges world data only; symbols remain file-local",errors:"module ID accompanies nested diagnostics; failure returns no partial world"},
   output:"validated Object DSL v2 and Scene v1; authoring-language version is separate",
 } as const;

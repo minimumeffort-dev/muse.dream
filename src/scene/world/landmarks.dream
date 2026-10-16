@@ -20,6 +20,7 @@ material m17(style=glow,colors=[#79d1cb,#ffffff]);
 material m18(style=toon,colors=[#b87536,#774b32]);
 material m19(style=toon,colors=[#d4a456,#774b32]);
 object castle(label="Castle"){
+  measure(kind=building,axis=y,meters=14);
   body(interaction=solid,radius=30,height=58);
   foundation(size=[48,44],color=#77817b);
   part keep(shape=box,material=m0,at=[0,15,0],size=[32,30,28]);
@@ -45,6 +46,7 @@ object castle(label="Castle"){
   part battlement_7(shape=box,material=m0,at=[7,44,8],size=[4,6,4]);
 }
 object mushroom(label="Mushroom"){
+  measure(kind=custom,axis=y,meters=0.6);
   body(interaction=knockable,radius=10,height=22,friction=1.6);
   part stem(shape=cylinder,material=m4,at=[0,8,0],size=[7,16,7]);
   part cap(shape=sphere,material=m6,at=[0,17,0],size=[22,10,20]);
@@ -52,6 +54,7 @@ object mushroom(label="Mushroom"){
   part spot_right(shape=sphere,material=m4,at=[5,21,-2],size=[3,2,3]);
 }
 object mushroom_rover(label="Mushroom rover"){
+  measure(kind=custom,axis=x,meters=2.2);
   body(interaction=knockable,radius=15,height=27,friction=2.2);
   part chassis(shape=box,material=m7,at=[0,7,0],size=[24,8,16]);
   part stem(shape=cylinder,material=m4,at=[0,15,0],size=[7,12,7]);
@@ -62,6 +65,7 @@ object mushroom_rover(label="Mushroom rover"){
   part wheel_se(shape=cylinder,material=m1,at=[8,4,9],size=[8,4,8],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
 }
 object oak(label="Oak"){
+  measure(kind=tree,axis=y,meters=10);
   body(interaction=solid,radius=14,height=56);
   part trunk(shape=cylinder,material=m8,at=[0,14,0],size=[6,28,6]);
   part branch(shape=cylinder,material=m8,at=[-5,24,0],size=[3,17,3],rot_deg=[0,0,-34.37746770784939]);
@@ -70,6 +74,7 @@ object oak(label="Oak"){
   part crown_right(shape=icosphere,material=m9,at=[12,35,-4],size=[23,25,24],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
 }
 object pine(label="Pine"){
+  measure(kind=tree,axis=y,meters=12);
   body(interaction=solid,radius=12,height=64);
   part trunk(shape=cylinder,material=m8,at=[0,12,0],size=[5,24,5]);
   part lower_crown(shape=cone,material=m9,at=[0,30,0],size=[37,30,37],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
@@ -77,12 +82,14 @@ object pine(label="Pine"){
   part upper_crown(shape=cone,material=m9,at=[0,55,0],size=[19,24,19],motion=sway(deg=1.432394487827058,hz=0.1909859317102744));
 }
 object boulders(label="Boulders"){
+  measure(kind=custom,axis=y,meters=1.6);
   body(interaction=solid,radius=18,height=22);
   ground(mode=surface);
   part large(shape=icosphere,material=m0,at=[-5,11,0],size=[29,22,26]);
   part small(shape=icosphere,material=m0,at=[12,6,5],size=[18,12,18],rot_deg=[0,40.10704565915762,11.459155902616464]);
 }
 object little_rally_car(label="Little rally car"){
+  measure(kind=car,axis=x,meters=3.55);
   body(interaction=solid,radius=11,height=14);
   part chassis(shape=box,material=m11,at=[0,6,0],size=[33,7,17]);
   part hood(shape=box,material=m11,at=[10,10,0],size=[12,3,16]);
@@ -100,6 +107,7 @@ object little_rally_car(label="Little rally car"){
   part wheel_10_1(shape=cylinder,material=m1,at=[10,4,9],size=[8,3,8],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
 }
 object hillside_cottage(label="Hillside cottage"){
+  measure(kind=building,axis=y,meters=8);
   body(interaction=solid,radius=28,height=64);
   foundation(size=[46,58],color=#77817b);
   part walls(shape=box,material=m4,at=[0,17,0],size=[42,34,34]);
@@ -111,6 +119,7 @@ object hillside_cottage(label="Hillside cottage"){
   part step(shape=box,material=m0,at=[0,2,22],size=[17,4,10]);
 }
 object windmill(label="Windmill"){
+  measure(kind=building,axis=y,meters=12);
   body(interaction=solid,radius=25,height=105);
   foundation(size=[38,38],color=#77817b);
   part tower(shape=cylinder,material=m4,at=[0,38,0],size=[32,76,32]);
@@ -122,12 +131,14 @@ object windmill(label="Windmill"){
   part door(shape=box,material=m15,at=[0,11,16],size=[9,22,2]);
 }
 object crystal_garden(label="Crystal garden"){
+  measure(kind=custom,axis=y,meters=3);
   body(interaction=solid,radius=17,height=43);
   part crystal_neg_1(shape=icosphere,material=m16,at=[-11,13,-4],size=[13,27,13],rot_deg=[0,0,14.32394487827058]);
   part crystal_0(shape=icosphere,material=m17,at=[0,24,0],size=[13,48,13],rot_deg=[0,0,0]);
   part crystal_1(shape=icosphere,material=m16,at=[11,13,4],size=[13,27,13],rot_deg=[0,0,-14.32394487827058]);
 }
 object ancient_ruins(label="Ancient ruins"){
+  measure(kind=building,axis=y,meters=5);
   body(interaction=solid,radius=28,height=38);
   foundation(size=[60,54],color=#77817b);
   part pillar_neg_18(shape=cylinder,material=m0,at=[-18,18,0],size=[12,36,12]);
@@ -136,6 +147,7 @@ object ancient_ruins(label="Ancient ruins"){
   part fallen(shape=cylinder,material=m0,at=[6,7,19],size=[12,31,12],rot_deg=[0,0,90]);
 }
 object cactus(label="Cactus"){
+  measure(kind=custom,axis=y,meters=3);
   body(interaction=solid,radius=10,height=42);
   part stem(shape=cylinder,material=m10,at=[0,21,0],size=[12,42,12]);
   part tip(shape=sphere,material=m10,at=[0,42,0],size=[12,10,12]);
@@ -145,6 +157,7 @@ object cactus(label="Cactus"){
   part finger_1(shape=cylinder,material=m9,at=[14,31,0],size=[8,17,8]);
 }
 object amber_tree(label="Amber tree"){
+  measure(kind=tree,axis=y,meters=7);
   body(interaction=solid,radius=14,height=56);
   part trunk(shape=cylinder,material=m8,at=[0,14,0],size=[6,28,6]);
   part branch(shape=cylinder,material=m8,at=[-5,24,0],size=[3,17,3],rot_deg=[0,0,-34.37746770784939]);

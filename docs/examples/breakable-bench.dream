@@ -1,0 +1,22 @@
+dream 2;
+material wood(style=grain,colors=[#ad784e,#624331]);
+material metal(style=toon,colors=[#354849,#263839]);
+object park_bench(label="Park bench"){
+  measure(kind=bench,axis=x,meters=1.8);
+  body(interaction=solid,radius=28,height=31);
+  impact(mode=break(speed=95,scatter=65,lift=65,spin=4,lifetime=6,pattern=splinter));
+  repeat slats(index=i,count=3){
+    fragment seat(){
+      part plank(shape=box,material=wood,at=[0,16,-8+i*8],size=[60,4,6]);
+    }
+  }
+  repeat sides(index=i,count=2){
+    fragment frame(){
+      part front(shape=box,material=metal,at=[i*44-22,6.5,10],size=[5,13,5]);
+      part rear(shape=box,material=metal,at=[i*44-22,15,-12],size=[5,30,5]);
+    }
+  }
+  fragment back(){
+    part plank(shape=box,material=wood,at=[0,26,-14],size=[60,6,4]);
+  }
+}

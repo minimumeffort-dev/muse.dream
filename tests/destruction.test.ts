@@ -1,3 +1,4 @@
+import { objectRadius } from "../src/sim/archetypes";
 import { describe,it,expect } from "vitest";
 import { Box3,Quaternion } from "three";
 import source from "../src/scene/impact-creations.dream?raw";
@@ -24,7 +25,8 @@ import { buildObject } from "../src/game/world3d";
 import { WorldParticles } from "../src/game/particles";
 
 const spec=(name:string)=>impactWorld.assemblies.find(s=>s.displayName===name)!;
-const item=(name:string):SceneObject=>({id:"target",kind:"custom",labelText:name,x:480,y:360,scale:1,spec:spec(name)});
+// Local-unit mechanics replays remain independent of whole-world physical sizing.
+const item=(name:string):SceneObject=>({id:"target",kind:"custom",labelText:name,x:480,y:360,scale:1,spec:{...spec(name),measure:undefined}});
 function makeWorld(object=item("Breakaway table")):World {
   const scene=parseScene({...createFixtureScene(),objects:[object],terrain:{hills:[]},regions:[]});
   return {scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(960,720),carRadius:11};
@@ -119,7 +121,7 @@ describe("destruction simulation",()=>{
     expect(new WorldScenery(makeWorld().scene).objectCount).toBe(0);
   });
   it("supports falling fragment bounds on hills and preserves their release frames through static joints",()=>{
-    const table=spec("Breakaway table"),framed={...table,joints:[{id:"frame",position:[3,4,2] as [number,number,number],rotation:[.1,.2,-.1] as [number,number,number]}],parts:table.parts.map(p=>({...p,parent:"frame"}))};
+    const table=spec("Breakaway table"),framed={...table,measure:undefined,joints:[{id:"frame",position:[3,4,2] as [number,number,number],rotation:[.1,.2,-.1] as [number,number,number]}],parts:table.parts.map(p=>({...p,parent:"frame"}))};
     const object={...item("Breakaway table"),spec:objectDslSchema.parse(framed)},base=makeWorld(object);
     const scene=parseScene({...base.scene,terrain:{hills:[{id:"hill",x:500,y:350,radiusX:180,radiusY:200,height:80}]}}),world={...base,scene},car={...initial(world),elevation:objectPlacement(scene,object).base};
     breakOnContact(car,world,450,360,objectContacts(scene,object));expect(car.debris).toHaveLength(7);
@@ -131,8 +133,8 @@ describe("destruction simulation",()=>{
   });
   it("keeps destruction moving during a passenger ride without creating passenger impacts",()=>{
     const scene=createWorldScene(),world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(6000,4800),carRadius:11};
-    const table=scene.objects.find(o=>o.id==="meadow_table")!,car={...createCarAtSpawn(scene),x:table.x-40,y:table.y,elevation:0,vx:240};
-    breakOnContact(car,world,table.x-38,table.y,objectContacts(scene,table));expect(car.debris).toHaveLength(7);
+    const table=scene.objects.find(o=>o.id==="meadow_table")!,car={...createCarAtSpawn(scene),x:table.x-objectRadius(table)-11,y:table.y,elevation:0,vx:240};
+    breakOnContact(car,world,table.x-objectRadius(table)-10,table.y,objectContacts(scene,table));expect(car.debris).toHaveLength(7);
     const boarded=toggleRide({...car,...scene.spawn,vx:0,vy:0,elevation:0},world),after=stepInteractive(boarded,idle,1/120,world);
     expect(after.ride?.actorId).toBe("village_bike");expect(after.debris[0]!.age).toBeGreaterThan(boarded.debris[0]!.age);expect(after.impacts).toEqual([]);
   });

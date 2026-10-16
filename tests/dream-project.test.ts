@@ -91,15 +91,17 @@ function geometry(spec:ObjectDsl) {
 const scene=createWorldScene(),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(6000,4800),carRadius:11};
 
 describe("complete Dream 2 mock world",()=>{
-  it("keeps all 432 prior placements, road, terrain and composed assets through the migration",()=>{
+  it("retains the prior world structure while applying physical proportions and local clearance corrections",()=>{
     const canonicalId=(id:string)=>id.replaceAll('-','_');
     expect(scene.canonical).toEqual(before.scene.canonical);expect(scene.spawn).toEqual(before.scene.spawn);
     close(scene.roadMaskRef,before.scene.roadMaskRef);
     close(scene.terrain,{...before.scene.terrain,hills:before.scene.terrain.hills.map(h=>({...h,id:canonicalId(h.id)})),landscape:{...before.scene.terrain.landscape,waters:before.scene.terrain.landscape.waters.map(w=>({...w,id:canonicalId(w.id)})),bridges:before.scene.terrain.landscape.bridges.map(b=>({...b,id:canonicalId(b.id)}))}});
     close(scene.checkpoints,before.scene.checkpoints.map(c=>({...c,id:canonicalId(c.id)})));close(scene.regions,before.scene.regions);
     const assets=new Map(scene.objects.map(o=>[o.spec!.displayName,o.spec as ObjectDsl]));assets.set(scene.player!.displayName,scene.player!);
-    for(const [name,spec] of Object.entries(before.specs)){const old=objectDslSchema.parse(spec),current=assets.get(name)!;expect(current,name).toBeDefined();close(geometry(current),geometry(old));expect(current.body).toEqual(old.body);}
-    for(const {assembly,id,...placement} of before.scene.objects){const current=scene.objects.find(o=>o.id===canonicalId(id))!;expect(current,id).toBeDefined();expect(current.spec!.displayName).toBe(assembly);close({...current,spec:undefined},{...placement,labelText:current.spec!.displayName,id:canonicalId(id),spec:undefined});}
+    for(const [name,spec] of Object.entries(before.specs)){const old=objectDslSchema.parse(spec),current=assets.get(name)!;expect(current,name).toBeDefined();if(["Cloudhopper plane","Wayside bench"].includes(name))continue;close(geometry(current),geometry(old));expect(current.body).toEqual(name==="Meadow locomotive" ? {...old.body,colliderRadius:22} : old.body);}
+    for(const {assembly,id,...placement} of before.scene.objects){const current=scene.objects.find(o=>o.id===canonicalId(id))!;expect(current,id).toBeDefined();expect(current.spec!.displayName).toBe(assembly);const relocated=new Set(['sketch_668','sketch_1171','sketch_2850','sketch_4124','sketch_548','sketch_2152','sketch_1002','sketch_2753','sketch_1591','sketch_2339','sketch_3539','sketch_2021','sketch_2994','sketch_3295','sketch_3811','sketch_2941']);
+      if(relocated.has(current.id))expect(Math.hypot(current.x-placement.x,current.y-placement.y)).toBeLessThan(20.01);
+      close({...current,spec:undefined,scale:undefined,...(relocated.has(current.id)?{x:placement.x,y:placement.y}:{})},{...placement,scale:undefined,labelText:current.spec!.displayName,id:canonicalId(id),spec:undefined});}
     expect(scene.objects).toHaveLength(448);expect(scene.objects.every(o=>o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2)).toBe(true);
   });
   it("accepts the whole world from text and revalidates an invalid included placement",()=>{
@@ -116,7 +118,7 @@ describe("complete Dream 2 mock world",()=>{
     expect(resetCar(state,scene).broken).toContain(id);expect(resetCar(state,scene,true).broken).toEqual([]);
   });
   it("keeps the nearby ball intact while launching it away from an actual car contact",()=>{
-    const ball=scene.objects.find(o=>o.id==='roadside_ball')!,start={...createCarAtSpawn(scene),x:ball.x-23,y:ball.y,elevation:objectPlacement(scene,ball).base,vx:240};
+    const ball=scene.objects.find(o=>o.id==='roadside_ball')!,start={...createCarAtSpawn(scene),x:ball.x-objectRadius(ball)-10,y:ball.y,elevation:objectPlacement(scene,ball).base,vx:240};
     const state=stepCar(start,{throttle:0,steer:0},1/120,world),prop=state.props.find(p=>p.id===ball.id)!;
     expect(prop.vx).toBeGreaterThan(200);expect(prop.vz).toBeGreaterThan(0);expect(state.broken).not.toContain(ball.id);
   });
