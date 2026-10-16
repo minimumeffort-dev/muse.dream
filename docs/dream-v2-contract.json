@@ -257,6 +257,7 @@
       "fields": {
         "at": "v3?",
         "rot_deg": "v3?",
+        "bone": "root|spine|left_hip|left_knee|left_ankle|left_shoulder|left_elbow|right_hip|right_knee|right_ankle|right_shoulder|right_elbow?",
         "motion": "joint_motion?"
       },
       "block": "visual"
@@ -913,6 +914,23 @@
     "maximum": 16,
     "selector": "measure.kind; no labels, positions or random exemptions",
     "scope": "Entry file only. One rule per category. Applies before assembly validation to every local/imported template, placement and furnishing. Its impact replaces per-object impact for that category, or every existing zone impact for a break rule; geometry, retained structure, body, fragment groups and per-instance damage remain separate. Scene validation rejects inconsistent serialized placements. Existing 24 reactive-object and 128 potential-fragment budgets remain unchanged. Unknown legacy categories are not inferred."
+  },
+  "humanoid": {
+    "bones": [
+      "root",
+      "spine",
+      "left_hip",
+      "left_knee",
+      "left_ankle",
+      "left_shoulder",
+      "left_elbow",
+      "right_hip",
+      "right_knee",
+      "right_ankle",
+      "right_shoulder",
+      "right_elbow"
+    ],
+    "semantics": "Optional joint.bone binds a complete 12-joint humanoid on a measured decor person. Required tree: root -> spine -> shoulder -> elbow, root -> hip -> knee -> ankle, paired left/right. Rest faces +X, +Y up, left +Z; unrotated frames, root centered with positive height, hips at root height, shoulders above spine, downward knee/ankle/elbow offsets >= .5. All parts parent to bones, no independent motion/fractures. Engine owns speed-blended walk/run, two-bone leg poses, jump/landing and crawl/tread transitions. Existing 12-joint/depth-4/32-part and 24-live-assembly limits apply. Furnish rejects live rigs. Collision and terrain support remain separate; no skinning, terrain foot probes or generated animation scripts."
   },
   "geometry": {
     "partSizeMinimum": 0.1,

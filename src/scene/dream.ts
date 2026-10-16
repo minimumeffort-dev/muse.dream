@@ -191,6 +191,7 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
             if (joints.length >= 12) fail("joint budget exceeds 12", token,"E_BUDGET");
             const local = transform(frame, statement, env), jointId = id(), motion = statement.motion;
             joints.push({ id: jointId, ...(frame.parent ? { parent: frame.parent } : {}), position: local.position.toArray(), rotation: angles(local.rotation),
+              ...(statement.bone ? {bone:statement.bone as NonNullable<ObjectDslV2['joints']>[number]['bone']} : {}),
               ...(motion?.kind==="swing" ? { animation: { axis: motion.axis as "x" | "y" | "z", amplitudeRad: number(motion.args[0]!) * RAD, speed: number(motion.args[1]!), phase: number(motion.args[2]!) * RAD } } : {}),
               ...(motion?.kind==='roll' ? {animation:{kind:'roll' as const,axis:motion.axis as 'x'|'y'|'z',radius:number(motion.args[0]!)*local.scale}} : {}),
               ...(motion?.kind==="open" ? {proximity:{axis:motion.axis as "x"|"y"|"z",angleRad:number(motion.args[0]!)*RAD,radius:number(motion.args[1]!)}} : {}) });
@@ -405,7 +406,7 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
         flocks.push(flockSchema.parse({id:node.id,spec,center:vec('at'),radius:vec('radius'),count:num('count'),altitude:num('altitude'),speed:num('speed'),seed:num('seed'),...(node.fields.has('flap_hz') ? {flapHz:num('flap_hz')} : {}),...(node.fields.has('flap_deg') ? {flapDeg:num('flap_deg')} : {})}));
       }else{
         const objects=listField(node,'objects').map(ref=>exports.get(ref.name!)!);
-        if(!objects.length || objects.length>8 || objects.some(s=>!s || s.body.interaction==='knockable' || s.joints?.some(j=>j.proximity || j.animation && !('kind' in j.animation && j.animation.kind==='roll')) || isReactive(s) || s.emitter))fail('furnish needs 1..8 passive static object templates',node.token,'E_POPULATION');
+        if(!objects.length || objects.length>8 || objects.some(s=>!s || s.body.interaction==='knockable' || s.joints?.some(j=>j.bone || j.proximity || j.animation && !('kind' in j.animation && j.animation.kind==='roll')) || isReactive(s) || s.emitter))fail('furnish needs 1..8 passive static object templates',node.token,'E_POPULATION');
         const data={id:node.id,spacing:num('spacing'),setback:num('setback'),seed:num('seed')};
         for(const key of ['streets','sites','grounds'])if(node.fields.has(key))Object.assign(data,{[key]:listField(node,key).map(e=>e.name!)});
         if(node.fields.has('paving'))Object.assign(data,{paving:wordField(node,'paving')});

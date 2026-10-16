@@ -68,7 +68,7 @@ shows native flight into the edge and back into the world.
 
 Aircraft terrain contact surveys a cached underside profile from the Dream assembly, including the wheels, nose and wing span. It uses the current heading, pitch and bank against the terrain heightfield and the engine's ground triangulation. Voxel construction approximates the same field with stepped columns; the driving controller keeps the smooth contact model. A landing keeps the aircraft above the hillside; a solid's top remains supporting until the body leaves its edge, then airborne control and stall rules resume. Hold **S** after braking to taxi backward on dry ground and back away from an obstruction. Reverse is disabled in flight and after a water landing. Building and vehicle impacts still use authored collision cylinders, rather than mesh-level wing collisions. These engine contact rules need no new Dream syntax.
 
-![The live Dream aircraft taxiing on a hillside](../evidence/aircraft-terrain/hill-taxi.png)
+![The live Dream aircraft taxiing on a hillside](../media/hill-taxi.png)
 
 The [terrain-contact verification](../evidence/aircraft-terrain/verification.md) separates geometry checks, native controls and retained media.
 
@@ -82,13 +82,13 @@ These are engine-owned contact rules, with no extra Dream syntax. For local insp
 
 Exits prefer accessible dry ground, then allow water disembarking when the character fits. You cannot step out during flight. Under a bridge, leaving a boat puts you in the water, never through the deck. Swim back to a boat and press F to board again. Parked vehicles retain their positions and do not acquire a second controller.
 
-Shallow water supports wading on the bed. Deeper water supports the character at chest depth, with a horizontal swimming pose, arm strokes, flutter kicks and a small wake. Shift or Space increases swimming effort. Water currents still carry you when you stop. Swimming follows the terrain onto a bank and switches back to walking. There is no diving, breath meter or drowning mechanic.
+Shallow water supports wading on the bed. Deeper water supports the character at chest depth, with a forward crawl, alternating arm pulls, bent-elbow recovery, flutter kicks and a small wake. Releasing the controls eases into an upright tread; current velocity does not count as stroke effort. Shift or Space increases swimming effort. Water currents still carry you when you stop. Swimming follows the terrain onto a bank and switches back to walking. There is no diving, breath meter or drowning mechanic.
 
 ![Swimming through the city canal, with both banks in view](../media/swimming.gif)
 
-One character is active at a time: a standing, walking or swimming Dream assembly on foot and a seated assembly on a vehicle. The skateboard and scooter use the standing Explorer. Their physical sizes are independent of the vehicle's scale. Original-car racing progress is preserved while walking or using another vehicle. These mechanics extend the existing engine profiles; Dream's command vocabulary is unchanged.
+One character is active at a time: a standing, walking or swimming Dream assembly on foot and a seated assembly on a vehicle. The skateboard and scooter use the standing Explorer. Their physical sizes are independent of the vehicle's scale. Original-car racing progress is preserved while walking or using another vehicle. Movement stays in the existing engine profiles; the character's joint anatomy is explicit Dream data.
 
-The camera moves closer for walking and small vehicles, using their resolved dimensions, and eases back for larger ones. Reduced motion snaps the camera change and disables the walking gait. The occupied vehicle stays opaque when scenery fades around it.
+The camera moves closer for walking and small vehicles, using their resolved dimensions, and eases back for larger ones. Reduced motion snaps the camera change and holds a supported character pose without gait, strokes or breathing motion. The occupied vehicle stays opaque when scenery fades around it.
 
 The exploration HUD shows vehicle and surface status, car boost with its recharge, boarding prompts and pause. The map shows your position, parked car and moving actors, with no checkpoint target. Lap and checkpoint counters are hidden; the legacy racing simulation and Dream checkpoint data remain compatible.
 
@@ -170,3 +170,30 @@ Debris collides with terrain only. It doesn't strike cars or trigger another bui
 [Model generation and repair](model-authoring.md) · [Reference](reference.md)
 
 Passenger-only seats may use compound contacts on solid transit vehicles. The mock bus, tram and regional railcar keep their schedules when boarded. The scooter uses direct standing ground controls and the same buffered jump contract as a bicycle. [Population and ownership details](populations.md).
+
+## Humanoid motion
+
+Walking, running and swimming use one connected voxel rig, with twelve semantic bone bindings. Elbows and knees bend around their own pivots; shoes stay attached to ankle frames. Walking has a grounded stance and lifted return. Running adds knee lift, stronger arm drive, a forward torso lean and a flight beat. Jumping tucks the legs, and a landing briefly compresses the pose. Starting, stopping and entering water blend the movement weights instead of freezing halfway through a step.
+
+![Walk, run and crawl on the same Dream rig](../media/character-motion.jpg)
+
+[Close-up motion recording](../media/character.gif) · [HD video](../media/character.mp4) · [Complete compilable rig](../examples/humanoid.dream)
+
+Inside the pelvis (`bone=root`) of a complete measured `person` object, bind an articulated leg like this:
+
+```dream
+joint leg(bone=left_hip,at=[0,0,4]){
+  part thigh(shape=capsule,material=trousers,at=[0,-5.5,0],size=[5.7,12,5.7]);
+  joint shin(bone=left_knee,at=[0,-11.5,0]){
+    part knee(shape=sphere,material=trousers,at=[0,0,0],size=[5,5,5]);
+    part calf(shape=capsule,material=trousers,at=[0,-5.2,0],size=[5,11,5]);
+    joint foot(bone=left_ankle,at=[0,-10.5,0]){
+      part shoe(shape=box,material=shoes,at=[2.3,-1,0],size=[9,4,6.2]);
+    }
+  }
+}
+```
+
+This is a fragment; the [complete example](../examples/humanoid.dream) supplies the materials, root, spine, arms and other leg. Bone bindings survive generated IDs, imports and voxel construction. They do not depend on a character's name. The Explorer and four civic pedestrian models use this rig; sports NPC assemblies keep their authored activity poses. Football kicks and basketball shots override the player's relevant limbs while locomotion continues.
+
+The renderer caches bone references and solves a small two-segment leg pose. It does not rebuild geometry each frame, add animated-assembly slots, or change walking speed, jumps, water support, collisions or vehicle ownership. This is rigid articulation, not skinned animation or a terrain-aware foot-placement solver. Cadence is tuned for the game's fast arcade movement, so stance poses do not guarantee a foot remains fixed to one world point. [Verification and media audit](../evidence/character-animation/verification.md).

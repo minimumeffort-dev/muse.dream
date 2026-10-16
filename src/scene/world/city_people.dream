@@ -9,113 +9,219 @@ material blue(style=toon,colors=[#537eaa,#3c5f87]);
 material red(style=toon,colors=[#b96a60,#944f50]);
 material dark(style=toon,colors=[#3c4c59,#283844]);
 material yellow(style=toon,colors=[#e2bd5d,#b4913f]);
-component person(params=[]){
-  part shorts(shape=box,material=dark,at=[0,7,0],size=[5,2,3.5]);
-  part head(shape=sphere,material=skin,at=[0,15,0],size=[3.5,4,3.5]);
-  part hair(shape=icosphere,material=hair,at=[0,16.5,0],size=[3.7,1.7,3.6]);
-  repeat eyes(index=e,count=2){
-    part eye(shape=sphere,material=dark,at=[e*1.4-.7,15.3,1.6],size=[.5,.5,.5]);
-  }
-  part nose(shape=sphere,material=skin,at=[0,14.8,1.9],size=[.7,.8,.7]);
-}
-
 material uniform_commuter(style=toon,colors=[#756f94,#ded5bf]);
 object commuter(label="Commuter"){
   measure(kind=person,axis=y,meters=1.8);
-  body(interaction=decor,radius=4,height=18);
-  group facing(rot_deg=[0,90,0]){
-    use torso(component=person);
-    part uniform(shape=capsule,material=uniform_commuter,at=[0,10,0],size=[5,6,3.5]);
-    joint leg_0(at=[-1.5,7,0],motion=swing(axis=x,deg=17,hz=0.6,phase_deg=0)){
-      part shin(shape=capsule,material=skin,at=[0,-3,0],size=[1.7,6,1.7]);
-      part shoe(shape=box,material=white,at=[0,-6,1],size=[2,1.5,3.5]);
+  body(interaction=decor,radius=13,height=57);
+  joint pelvis(bone=root,at=[0,25,0]){
+    part belt(shape=box,material=dark,at=[0,0,0],size=[12,3,15]);
+    joint chest(bone=spine,at=[0,1,0]){
+      part torso(shape=capsule,material=uniform_commuter,at=[0,8,0],size=[12,19,16]);
+      part head(shape=sphere,material=skin,at=[0,24,0],size=[12,12,12]);
+      part hair(shape=sphere,material=hair,at=[-.7,28,0],size=[12.8,6.4,13]);
+      part nose(shape=sphere,material=skin,at=[6,23,0],size=[3,3,3]);
+      repeat eyes(index=s,count=2){
+        part eye(shape=sphere,material=dark,at=[5.3,25.5,s*7-3.5],size=[1.5,1.5,1.5]);
+        part ear(shape=sphere,material=skin,at=[-.5,24,s*12-6],size=[2.5,3,2]);
+      }
+      joint left_arm(bone=left_shoulder,at=[0,17,9]){
+        part sleeve(shape=capsule,material=uniform_commuter,at=[0,-4.5,0],size=[5,10.5,5]);
+        joint left_forearm(bone=left_elbow,at=[0,-9.5,0]){
+          part elbow(shape=sphere,material=skin,at=[0,0,0],size=[4.2,4.2,4.2]);
+          part forearm(shape=capsule,material=skin,at=[0,-4.5,0],size=[4,10,4]);
+          part hand(shape=box,material=skin,at=[.5,-10,0],size=[4.5,4,3.5]);
+        }
+      }
+      joint right_arm(bone=right_shoulder,at=[0,17,-9]){
+        part sleeve(shape=capsule,material=uniform_commuter,at=[0,-4.5,0],size=[5,10.5,5]);
+        joint right_forearm(bone=right_elbow,at=[0,-9.5,0]){
+          part elbow(shape=sphere,material=skin,at=[0,0,0],size=[4.2,4.2,4.2]);
+          part forearm(shape=capsule,material=skin,at=[0,-4.5,0],size=[4,10,4]);
+          part hand(shape=box,material=skin,at=[.5,-10,0],size=[4.5,4,3.5]);
+        }
+      }
     }
-    joint arm_0(at=[-3,12,0],motion=swing(axis=x,deg=15,hz=0.6,phase_deg=90)){
-      part sleeve(shape=capsule,material=uniform_commuter,at=[0,-1,0],size=[2,3,2]);
-      part hand(shape=capsule,material=skin,at=[0,-3.5,0],size=[1.5,3.5,1.5]);
+    joint left_leg(bone=left_hip,at=[0,0,4]){
+      part thigh(shape=capsule,material=dark,at=[0,-5.5,0],size=[5.7,12,5.7]);
+      joint left_shin(bone=left_knee,at=[0,-11.5,0]){
+        part knee(shape=sphere,material=dark,at=[0,0,0],size=[5,5,5]);
+        part calf(shape=capsule,material=dark,at=[0,-5.2,0],size=[5,11,5]);
+        joint left_foot(bone=left_ankle,at=[0,-10.5,0]){
+          part shoe(shape=box,material=white,at=[2.3,-1,0],size=[9,4,6.2]);
+        }
+      }
     }
-    joint leg_1(at=[1.5,7,0],motion=swing(axis=x,deg=17,hz=0.6,phase_deg=180)){
-      part shin(shape=capsule,material=skin,at=[0,-3,0],size=[1.7,6,1.7]);
-      part shoe(shape=box,material=white,at=[0,-6,1],size=[2,1.5,3.5]);
-    }
-    joint arm_1(at=[3,12,0],motion=swing(axis=x,deg=15,hz=0.6,phase_deg=-90)){
-      part sleeve(shape=capsule,material=uniform_commuter,at=[0,-1,0],size=[2,3,2]);
-      part hand(shape=capsule,material=skin,at=[0,-3.5,0],size=[1.5,3.5,1.5]);
+    joint right_leg(bone=right_hip,at=[0,0,-4]){
+      part thigh(shape=capsule,material=dark,at=[0,-5.5,0],size=[5.7,12,5.7]);
+      joint right_shin(bone=right_knee,at=[0,-11.5,0]){
+        part knee(shape=sphere,material=dark,at=[0,0,0],size=[5,5,5]);
+        part calf(shape=capsule,material=dark,at=[0,-5.2,0],size=[5,11,5]);
+        joint right_foot(bone=right_ankle,at=[0,-10.5,0]){
+          part shoe(shape=box,material=white,at=[2.3,-1,0],size=[9,4,6.2]);
+        }
+      }
     }
   }
 }
 material uniform_health_worker(style=toon,colors=[#75a5b2,#ded5bf]);
 object health_worker(label="Health worker"){
   measure(kind=person,axis=y,meters=1.8);
-  body(interaction=decor,radius=4,height=18);
-  group facing(rot_deg=[0,90,0]){
-    use torso(component=person);
-    part uniform(shape=capsule,material=uniform_health_worker,at=[0,10,0],size=[5,6,3.5]);
-    joint leg_0(at=[-1.5,7,0],motion=swing(axis=x,deg=17,hz=0.6,phase_deg=0)){
-      part shin(shape=capsule,material=skin,at=[0,-3,0],size=[1.7,6,1.7]);
-      part shoe(shape=box,material=white,at=[0,-6,1],size=[2,1.5,3.5]);
+  body(interaction=decor,radius=13,height=57);
+  joint pelvis(bone=root,at=[0,25,0]){
+    part belt(shape=box,material=dark,at=[0,0,0],size=[12,3,15]);
+    joint chest(bone=spine,at=[0,1,0]){
+      part torso(shape=capsule,material=uniform_health_worker,at=[0,8,0],size=[12,19,16]);
+      part head(shape=sphere,material=skin,at=[0,24,0],size=[12,12,12]);
+      part hair(shape=sphere,material=hair,at=[-.7,28,0],size=[12.8,6.4,13]);
+      part nose(shape=sphere,material=skin,at=[6,23,0],size=[3,3,3]);
+      repeat eyes(index=s,count=2){
+        part eye(shape=sphere,material=dark,at=[5.3,25.5,s*7-3.5],size=[1.5,1.5,1.5]);
+        part ear(shape=sphere,material=skin,at=[-.5,24,s*12-6],size=[2.5,3,2]);
+      }
+      joint left_arm(bone=left_shoulder,at=[0,17,9]){
+        part sleeve(shape=capsule,material=uniform_health_worker,at=[0,-4.5,0],size=[5,10.5,5]);
+        joint left_forearm(bone=left_elbow,at=[0,-9.5,0]){
+          part elbow(shape=sphere,material=skin,at=[0,0,0],size=[4.2,4.2,4.2]);
+          part forearm(shape=capsule,material=skin,at=[0,-4.5,0],size=[4,10,4]);
+          part hand(shape=box,material=skin,at=[.5,-10,0],size=[4.5,4,3.5]);
+        }
+      }
+      joint right_arm(bone=right_shoulder,at=[0,17,-9]){
+        part sleeve(shape=capsule,material=uniform_health_worker,at=[0,-4.5,0],size=[5,10.5,5]);
+        joint right_forearm(bone=right_elbow,at=[0,-9.5,0]){
+          part elbow(shape=sphere,material=skin,at=[0,0,0],size=[4.2,4.2,4.2]);
+          part forearm(shape=capsule,material=skin,at=[0,-4.5,0],size=[4,10,4]);
+          part hand(shape=box,material=skin,at=[.5,-10,0],size=[4.5,4,3.5]);
+        }
+      }
     }
-    joint arm_0(at=[-3,12,0],motion=swing(axis=x,deg=15,hz=0.6,phase_deg=90)){
-      part sleeve(shape=capsule,material=uniform_health_worker,at=[0,-1,0],size=[2,3,2]);
-      part hand(shape=capsule,material=skin,at=[0,-3.5,0],size=[1.5,3.5,1.5]);
+    joint left_leg(bone=left_hip,at=[0,0,4]){
+      part thigh(shape=capsule,material=dark,at=[0,-5.5,0],size=[5.7,12,5.7]);
+      joint left_shin(bone=left_knee,at=[0,-11.5,0]){
+        part knee(shape=sphere,material=dark,at=[0,0,0],size=[5,5,5]);
+        part calf(shape=capsule,material=dark,at=[0,-5.2,0],size=[5,11,5]);
+        joint left_foot(bone=left_ankle,at=[0,-10.5,0]){
+          part shoe(shape=box,material=white,at=[2.3,-1,0],size=[9,4,6.2]);
+        }
+      }
     }
-    joint leg_1(at=[1.5,7,0],motion=swing(axis=x,deg=17,hz=0.6,phase_deg=180)){
-      part shin(shape=capsule,material=skin,at=[0,-3,0],size=[1.7,6,1.7]);
-      part shoe(shape=box,material=white,at=[0,-6,1],size=[2,1.5,3.5]);
-    }
-    joint arm_1(at=[3,12,0],motion=swing(axis=x,deg=15,hz=0.6,phase_deg=-90)){
-      part sleeve(shape=capsule,material=uniform_health_worker,at=[0,-1,0],size=[2,3,2]);
-      part hand(shape=capsule,material=skin,at=[0,-3.5,0],size=[1.5,3.5,1.5]);
+    joint right_leg(bone=right_hip,at=[0,0,-4]){
+      part thigh(shape=capsule,material=dark,at=[0,-5.5,0],size=[5.7,12,5.7]);
+      joint right_shin(bone=right_knee,at=[0,-11.5,0]){
+        part knee(shape=sphere,material=dark,at=[0,0,0],size=[5,5,5]);
+        part calf(shape=capsule,material=dark,at=[0,-5.2,0],size=[5,11,5]);
+        joint right_foot(bone=right_ankle,at=[0,-10.5,0]){
+          part shoe(shape=box,material=white,at=[2.3,-1,0],size=[9,4,6.2]);
+        }
+      }
     }
   }
 }
 material uniform_market_vendor(style=toon,colors=[#c49154,#ded5bf]);
 object market_vendor(label="Market vendor"){
   measure(kind=person,axis=y,meters=1.8);
-  body(interaction=decor,radius=4,height=18);
-  group facing(rot_deg=[0,90,0]){
-    use torso(component=person);
-    part uniform(shape=capsule,material=uniform_market_vendor,at=[0,10,0],size=[5,6,3.5]);
-    joint leg_0(at=[-1.5,7,0],motion=swing(axis=x,deg=17,hz=0.6,phase_deg=0)){
-      part shin(shape=capsule,material=skin,at=[0,-3,0],size=[1.7,6,1.7]);
-      part shoe(shape=box,material=white,at=[0,-6,1],size=[2,1.5,3.5]);
+  body(interaction=decor,radius=13,height=57);
+  joint pelvis(bone=root,at=[0,25,0]){
+    part belt(shape=box,material=dark,at=[0,0,0],size=[12,3,15]);
+    joint chest(bone=spine,at=[0,1,0]){
+      part torso(shape=capsule,material=uniform_market_vendor,at=[0,8,0],size=[12,19,16]);
+      part head(shape=sphere,material=skin,at=[0,24,0],size=[12,12,12]);
+      part hair(shape=sphere,material=hair,at=[-.7,28,0],size=[12.8,6.4,13]);
+      part nose(shape=sphere,material=skin,at=[6,23,0],size=[3,3,3]);
+      repeat eyes(index=s,count=2){
+        part eye(shape=sphere,material=dark,at=[5.3,25.5,s*7-3.5],size=[1.5,1.5,1.5]);
+        part ear(shape=sphere,material=skin,at=[-.5,24,s*12-6],size=[2.5,3,2]);
+      }
+      joint left_arm(bone=left_shoulder,at=[0,17,9]){
+        part sleeve(shape=capsule,material=uniform_market_vendor,at=[0,-4.5,0],size=[5,10.5,5]);
+        joint left_forearm(bone=left_elbow,at=[0,-9.5,0]){
+          part elbow(shape=sphere,material=skin,at=[0,0,0],size=[4.2,4.2,4.2]);
+          part forearm(shape=capsule,material=skin,at=[0,-4.5,0],size=[4,10,4]);
+          part hand(shape=box,material=skin,at=[.5,-10,0],size=[4.5,4,3.5]);
+        }
+      }
+      joint right_arm(bone=right_shoulder,at=[0,17,-9]){
+        part sleeve(shape=capsule,material=uniform_market_vendor,at=[0,-4.5,0],size=[5,10.5,5]);
+        joint right_forearm(bone=right_elbow,at=[0,-9.5,0]){
+          part elbow(shape=sphere,material=skin,at=[0,0,0],size=[4.2,4.2,4.2]);
+          part forearm(shape=capsule,material=skin,at=[0,-4.5,0],size=[4,10,4]);
+          part hand(shape=box,material=skin,at=[.5,-10,0],size=[4.5,4,3.5]);
+        }
+      }
     }
-    joint arm_0(at=[-3,12,0],motion=swing(axis=x,deg=15,hz=0.6,phase_deg=90)){
-      part sleeve(shape=capsule,material=uniform_market_vendor,at=[0,-1,0],size=[2,3,2]);
-      part hand(shape=capsule,material=skin,at=[0,-3.5,0],size=[1.5,3.5,1.5]);
+    joint left_leg(bone=left_hip,at=[0,0,4]){
+      part thigh(shape=capsule,material=dark,at=[0,-5.5,0],size=[5.7,12,5.7]);
+      joint left_shin(bone=left_knee,at=[0,-11.5,0]){
+        part knee(shape=sphere,material=dark,at=[0,0,0],size=[5,5,5]);
+        part calf(shape=capsule,material=dark,at=[0,-5.2,0],size=[5,11,5]);
+        joint left_foot(bone=left_ankle,at=[0,-10.5,0]){
+          part shoe(shape=box,material=white,at=[2.3,-1,0],size=[9,4,6.2]);
+        }
+      }
     }
-    joint leg_1(at=[1.5,7,0],motion=swing(axis=x,deg=17,hz=0.6,phase_deg=180)){
-      part shin(shape=capsule,material=skin,at=[0,-3,0],size=[1.7,6,1.7]);
-      part shoe(shape=box,material=white,at=[0,-6,1],size=[2,1.5,3.5]);
-    }
-    joint arm_1(at=[3,12,0],motion=swing(axis=x,deg=15,hz=0.6,phase_deg=-90)){
-      part sleeve(shape=capsule,material=uniform_market_vendor,at=[0,-1,0],size=[2,3,2]);
-      part hand(shape=capsule,material=skin,at=[0,-3.5,0],size=[1.5,3.5,1.5]);
+    joint right_leg(bone=right_hip,at=[0,0,-4]){
+      part thigh(shape=capsule,material=dark,at=[0,-5.5,0],size=[5.7,12,5.7]);
+      joint right_shin(bone=right_knee,at=[0,-11.5,0]){
+        part knee(shape=sphere,material=dark,at=[0,0,0],size=[5,5,5]);
+        part calf(shape=capsule,material=dark,at=[0,-5.2,0],size=[5,11,5]);
+        joint right_foot(bone=right_ankle,at=[0,-10.5,0]){
+          part shoe(shape=box,material=white,at=[2.3,-1,0],size=[9,4,6.2]);
+        }
+      }
     }
   }
 }
 material uniform_teacher(style=toon,colors=[#83966c,#ded5bf]);
 object teacher(label="Teacher"){
   measure(kind=person,axis=y,meters=1.8);
-  body(interaction=decor,radius=4,height=18);
-  group facing(rot_deg=[0,90,0]){
-    use torso(component=person);
-    part uniform(shape=capsule,material=uniform_teacher,at=[0,10,0],size=[5,6,3.5]);
-    joint leg_0(at=[-1.5,7,0],motion=swing(axis=x,deg=17,hz=0.6,phase_deg=0)){
-      part shin(shape=capsule,material=skin,at=[0,-3,0],size=[1.7,6,1.7]);
-      part shoe(shape=box,material=white,at=[0,-6,1],size=[2,1.5,3.5]);
+  body(interaction=decor,radius=13,height=57);
+  joint pelvis(bone=root,at=[0,25,0]){
+    part belt(shape=box,material=dark,at=[0,0,0],size=[12,3,15]);
+    joint chest(bone=spine,at=[0,1,0]){
+      part torso(shape=capsule,material=uniform_teacher,at=[0,8,0],size=[12,19,16]);
+      part head(shape=sphere,material=skin,at=[0,24,0],size=[12,12,12]);
+      part hair(shape=sphere,material=hair,at=[-.7,28,0],size=[12.8,6.4,13]);
+      part nose(shape=sphere,material=skin,at=[6,23,0],size=[3,3,3]);
+      repeat eyes(index=s,count=2){
+        part eye(shape=sphere,material=dark,at=[5.3,25.5,s*7-3.5],size=[1.5,1.5,1.5]);
+        part ear(shape=sphere,material=skin,at=[-.5,24,s*12-6],size=[2.5,3,2]);
+      }
+      joint left_arm(bone=left_shoulder,at=[0,17,9]){
+        part sleeve(shape=capsule,material=uniform_teacher,at=[0,-4.5,0],size=[5,10.5,5]);
+        joint left_forearm(bone=left_elbow,at=[0,-9.5,0]){
+          part elbow(shape=sphere,material=skin,at=[0,0,0],size=[4.2,4.2,4.2]);
+          part forearm(shape=capsule,material=skin,at=[0,-4.5,0],size=[4,10,4]);
+          part hand(shape=box,material=skin,at=[.5,-10,0],size=[4.5,4,3.5]);
+        }
+      }
+      joint right_arm(bone=right_shoulder,at=[0,17,-9]){
+        part sleeve(shape=capsule,material=uniform_teacher,at=[0,-4.5,0],size=[5,10.5,5]);
+        joint right_forearm(bone=right_elbow,at=[0,-9.5,0]){
+          part elbow(shape=sphere,material=skin,at=[0,0,0],size=[4.2,4.2,4.2]);
+          part forearm(shape=capsule,material=skin,at=[0,-4.5,0],size=[4,10,4]);
+          part hand(shape=box,material=skin,at=[.5,-10,0],size=[4.5,4,3.5]);
+        }
+      }
     }
-    joint arm_0(at=[-3,12,0],motion=swing(axis=x,deg=15,hz=0.6,phase_deg=90)){
-      part sleeve(shape=capsule,material=uniform_teacher,at=[0,-1,0],size=[2,3,2]);
-      part hand(shape=capsule,material=skin,at=[0,-3.5,0],size=[1.5,3.5,1.5]);
+    joint left_leg(bone=left_hip,at=[0,0,4]){
+      part thigh(shape=capsule,material=dark,at=[0,-5.5,0],size=[5.7,12,5.7]);
+      joint left_shin(bone=left_knee,at=[0,-11.5,0]){
+        part knee(shape=sphere,material=dark,at=[0,0,0],size=[5,5,5]);
+        part calf(shape=capsule,material=dark,at=[0,-5.2,0],size=[5,11,5]);
+        joint left_foot(bone=left_ankle,at=[0,-10.5,0]){
+          part shoe(shape=box,material=white,at=[2.3,-1,0],size=[9,4,6.2]);
+        }
+      }
     }
-    joint leg_1(at=[1.5,7,0],motion=swing(axis=x,deg=17,hz=0.6,phase_deg=180)){
-      part shin(shape=capsule,material=skin,at=[0,-3,0],size=[1.7,6,1.7]);
-      part shoe(shape=box,material=white,at=[0,-6,1],size=[2,1.5,3.5]);
-    }
-    joint arm_1(at=[3,12,0],motion=swing(axis=x,deg=15,hz=0.6,phase_deg=-90)){
-      part sleeve(shape=capsule,material=uniform_teacher,at=[0,-1,0],size=[2,3,2]);
-      part hand(shape=capsule,material=skin,at=[0,-3.5,0],size=[1.5,3.5,1.5]);
+    joint right_leg(bone=right_hip,at=[0,0,-4]){
+      part thigh(shape=capsule,material=dark,at=[0,-5.5,0],size=[5.7,12,5.7]);
+      joint right_shin(bone=right_knee,at=[0,-11.5,0]){
+        part knee(shape=sphere,material=dark,at=[0,0,0],size=[5,5,5]);
+        part calf(shape=capsule,material=dark,at=[0,-5.2,0],size=[5,11,5]);
+        joint right_foot(bone=right_ankle,at=[0,-10.5,0]){
+          part shoe(shape=box,material=white,at=[2.3,-1,0],size=[9,4,6.2]);
+        }
+      }
     }
   }
 }

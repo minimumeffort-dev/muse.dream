@@ -1,4 +1,5 @@
 import { z } from "zod";
+import {HUMANOID_BONES,BONE_PARENT} from './humanoid';
 import { measureProblem, measuredScale, MEASURE_KINDS } from "./measure";
 import {voxelSchema,voxelCells,voxelWork,voxelChunkCount,VOXEL_LIMITS} from './voxels';
 import {profileProblem} from './profile';
@@ -74,6 +75,7 @@ const jointAnimationSchema=z.object({
 }).strict();
 const jointSchema=z.object({
   id:z.string().min(1).max(40),parent:z.string().min(1).max(40).optional(),
+  bone:z.enum(HUMANOID_BONES).optional(),
   position:z.tuple([offset,offset,offset]),rotation:z.tuple([angle,angle,angle]).optional(),
   animation:z.union([jointAnimationSchema,z.object({kind:z.literal('roll'),axis:z.enum(['x','y','z']),radius:z.number().finite().min(1).max(32)}).strict()]).optional(),
   proximity:z.object({axis:z.enum(["x","y","z"]),angleRad:z.number().finite().min(-Math.PI).max(Math.PI),radius:z.number().finite().min(20).max(160)}).strict().optional(),
@@ -145,7 +147,7 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
     if(zones.length && !spec.parts.some(p=>!p.zone))ctx.addIssue({code:z.ZodIssueCode.custom,message:"partial destruction requires retained structural parts"});
     if(impact?.kind!=="break" && impact?.kind!=="topple" && spec.parts.some(p=>p.fragment && !p.zone))ctx.addIssue({code:z.ZodIssueCode.custom,message:"fragment groups require break/topple behavior or a break zone"});
     const fragmentCount=new Set(fractures.filter(p=>!p.voxels?.chunks).map(p=>p.fragment ? `group:${p.fragment}` : `part:${p.id}`)).size+fractures.reduce((n,p)=>n+(p.voxels?.chunks ? voxelChunkCount(p.voxels) : 0),0);
-    if(fractures.length && (fragmentCount>8 || spec.parts.some(p=>p.animation) || spec.joints?.some(j=>j.animation || j.proximity)))ctx.addIssue({code:z.ZodIssueCode.custom,message:"break assemblies need at most 8 static fragments"});
+    if(fractures.length && (fragmentCount>8 || spec.parts.some(p=>p.animation) || spec.joints?.some(j=>j.animation || j.proximity || j.bone)))ctx.addIssue({code:z.ZodIssueCode.custom,message:"break assemblies need at most 8 static fragments"});
     if(impact?.kind==="topple" && fragmentCount!==1)ctx.addIssue({code:z.ZodIssueCode.custom,message:"topple needs exactly one rigid fragment"});
     if(impact?.kind==="topple" && impact.lifetime<impact.duration+.8)ctx.addIssue({code:z.ZodIssueCode.custom,message:"topple lifetime must allow its fall and final 0.8 second fade"});
     const ownership=new Map<string,string|undefined>();
@@ -155,6 +157,21 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
     if(spec.rideable && (spec.body.interaction!=="solid" || spec.foundation || spec.contacts && spec.rideable.control))
       ctx.addIssue({code:z.ZodIssueCode.custom,message:"rideable assemblies require a solid body without foundations; driver controls require a single cylinder"});
     const joints=new Map((spec.joints ?? []).map(joint=>[joint.id,joint]));
+    const bones=(spec.joints??[]).filter(j=>j.bone);
+    if(bones.length){
+      if(bones.length!==HUMANOID_BONES.length || new Set(bones.map(j=>j.bone)).size!==HUMANOID_BONES.length || spec.measure?.kind!=='person' || spec.body.interaction!=='decor')
+        ctx.addIssue({code:z.ZodIssueCode.custom,message:'humanoid bones require all 12 unique bindings on a measured decor person'});
+      for(const joint of bones){
+        const parent=joint.parent ? joints.get(joint.parent)?.bone : null;
+        if(parent!==BONE_PARENT[joint.bone!] || joint.animation || joint.proximity || joint.rotation?.some(a=>Math.abs(a)>1e-6))
+          ctx.addIssue({code:z.ZodIssueCode.custom,message:'humanoid bones require the canonical hierarchy, unrotated rest frames and engine-owned motion'});
+        const [x,y,lateral]=joint.position,bone=joint.bone!;
+        const valid=bone==='root' ? x===0 && y>=1 && lateral===0 : bone==='spine' ? x===0 && y>=0 && lateral===0 : bone.endsWith('_hip') ? x===0 && y===0 && (bone.startsWith('left') ? lateral>0 : lateral<0) : bone.endsWith('_shoulder') ? x===0 && y>0 && (bone.startsWith('left') ? lateral>0 : lateral<0) : x===0 && y<=-.5 && lateral===0;
+        if(!valid)ctx.addIssue({code:z.ZodIssueCode.custom,message:'humanoid rest frames face +X with +Y up, left +Z, straight downward limbs and positive segment lengths'});
+      }
+      if(spec.parts.some(p=>!p.parent || !joints.get(p.parent)?.bone || p.animation || p.fragment || p.zone))
+        ctx.addIssue({code:z.ZodIssueCode.custom,message:'humanoid parts must belong to bones without independent motion or fractures'});
+    }
     for(const joint of spec.joints ?? []) {
       if(joint.animation && joint.proximity) ctx.addIssue({code:z.ZodIssueCode.custom,message:"a joint chooses oscillation or proximity motion"});
       if(ids.has(joint.id)) ctx.addIssue({code:z.ZodIssueCode.custom,message:"joint and part ids must be unique"});
@@ -191,8 +208,8 @@ export type ObjectPart = ObjectDsl["parts"][number];
 export type ObjectMaterial = z.infer<typeof objectMaterialSchema>;
 
 export const MAX_ANIMATED_ASSEMBLIES=24;
-export function hasAnimatedJoints(spec:{displayName:string;dslVersion?:number;joints?:{id:string;animation?:unknown;proximity?:unknown}[]}|undefined):boolean {
-  return spec?.dslVersion===2 && !!spec.joints?.some(joint=>joint.animation || joint.proximity);
+export function hasAnimatedJoints(spec:{displayName:string;dslVersion?:number;joints?:{id:string;animation?:unknown;proximity?:unknown;bone?:string}[]}|undefined):boolean {
+  return spec?.dslVersion===2 && !!spec.joints?.some(joint=>joint.animation || joint.proximity || joint.bone);
 }
 
 export type VehicleControl=NonNullable<ObjectDslV2["rideable"]>["control"] & string;

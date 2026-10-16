@@ -1,0 +1,74 @@
+{
+  "fps": 30,
+  "interpolated": false,
+  "frames": 2310,
+  "clips": {
+    "character": {
+      "frames": 180,
+      "sourceFirst": "2026-10-16T20:45:46.384Z",
+      "sourceLast": "2026-10-16T20:45:49.373Z",
+      "videoSha256": "f8b382207e9bc342cb42e6308dca71ce2def2d4f702810a443f097cc1e2742d5"
+    },
+    "driving": {
+      "frames": 210,
+      "sourceFirst": "2026-10-16T20:48:30.833Z",
+      "sourceLast": "2026-10-16T20:48:41.296Z",
+      "videoSha256": "f8b3baa737dee497c202db0df27291b1f8211ddbf9b295e6dab1c87edd1eb68d"
+    },
+    "boost": {
+      "frames": 210,
+      "sourceFirst": "2026-10-16T20:49:02.647Z",
+      "sourceLast": "2026-10-16T20:49:13.247Z",
+      "videoSha256": "ec6f79bce9145611d4e148a7081c60e951186a248236c5c813312b478e210125"
+    },
+    "football": {
+      "frames": 240,
+      "sourceFirst": "2026-10-16T20:46:34.824Z",
+      "sourceLast": "2026-10-16T20:46:42.862Z",
+      "videoSha256": "e9084c7808d005c3398c7bdc1e45ed7a5d0a81a43bf2e4f9a98b6f7c52a20df9"
+    },
+    "basketball": {
+      "frames": 210,
+      "sourceFirst": "2026-10-16T20:47:09.657Z",
+      "sourceLast": "2026-10-16T20:47:17.547Z",
+      "videoSha256": "8d41be60ee847d9ead32b5c965d379bd67cadd4d057e17c917b1ea77e6be1514"
+    },
+    "switching": {
+      "frames": 240,
+      "sourceFirst": "2026-10-16T20:47:49.872Z",
+      "sourceLast": "2026-10-16T20:47:58.618Z",
+      "videoSha256": "be8c16659eaa94001e26ac1c3091a099e89e6a98f60c65b5c5c01594be8fa2c5"
+    },
+    "locomotion": {
+      "frames": 180,
+      "sourceFirst": "2026-10-16T20:43:27.249Z",
+      "sourceLast": "2026-10-16T20:43:36.063Z",
+      "videoSha256": "e958a57ac25ce00c8d10d35384bd862cd667a3e2ef1a1ca23bc9b6cab3869948"
+    },
+    "swimming": {
+      "frames": 180,
+      "sourceFirst": "2026-10-16T20:46:05.676Z",
+      "sourceLast": "2026-10-16T20:46:14.738Z",
+      "videoSha256": "e0c32d120e73b8a1c356f9ebd2cfd661ef854ca36067617d1a45c549c25a1575"
+    },
+    "daynight": {
+      "frames": 360,
+      "sourceFirst": "2026-10-16T20:49:44.397Z",
+      "sourceLast": "2026-10-16T20:49:59.806Z",
+      "videoSha256": "b260572a67f43c071b36784e197242195140698911882f1b19691766fdc47c4d"
+    },
+    "flight": {
+      "frames": 300,
+      "sourceFirst": "2026-10-16T20:51:01.263Z",
+      "sourceLast": "2026-10-16T20:51:20.981Z",
+      "videoSha256": "6d2d953352559cf17d5232281b2b08398d729ca0e601c8b3962d07a38e1001af"
+    }
+  },
+  "source": {
+    "src/game/character-animation.ts": "a33076d37e814301caef65e6601eac6e65c1efc6ba5ba69b1de46ff88655d2f4",
+    "src/scene/humanoid.ts": "8012383e0923f6fddae4fbaababb95d1ae68cd31c299092e534d66b44fe11c1a",
+    "src/scene/interactive-world.dream": "c9ed13d5bb50dcbe843f1167efe757cbe024c223e4fc8fef34ba84adec3e135e",
+    "src/scene/world/city_people.dream": "128b0f1eaaff0d38ccb6ff58da78696da87250d6d58b37c3e1ec34d003a1130f",
+    "docs/examples/humanoid.dream": "c26cf5e4453afa03f1d0b8808d7916e080708cc17c4ed51ae4a36ead75c97b38"
+  }
+}

@@ -14,6 +14,8 @@ Supply [dream-v2-model.txt](../dream-v2-model.txt), the [generated command contr
 
 The output is one complete source file beginning with `dream 2;`, without a Markdown wrapper. References use IDs. Labels are display text. Every new object declares `measure`, a separate body and bounded visual parts. Unsupported intent belongs in an explicit `unresolved` declaration instead of an invented command.
 
+For moving people, supply the [complete humanoid example](../examples/humanoid.dream) and the contract's `humanoid` entry. Declare `joint.bone` bindings for anatomy; the engine owns the walk, run and swim cycles. Keep arbitrary animation scripts out of the output.
+
 ## Validate before applying
 
 1. Parse the source and resolve references inside the compiler's vocabulary.

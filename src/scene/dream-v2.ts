@@ -134,6 +134,7 @@ export function lowerBlock(nodes:DreamNode[]):Statement[] {
     if(node.fields.has('outline'))statement.outline=node.fields.get('outline') as [Expr,Expr][];
     if(node.fields.has("at"))statement.at=v("at");
     if(node.fields.has("motion"))statement.motion=motion(field(node,"motion") as DreamNode);
+    if(node.fields.has('bone'))statement.bone=wordField(node,'bone');
     if(node.fields.has("deform")){const deform=field(node,"deform") as DreamNode;statement.deform=[exprField(deform,"seed"),exprField(deform,"amount")];}
     switch(kind) {
       case "let":statement.value=n("value");break;

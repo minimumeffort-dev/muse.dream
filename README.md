@@ -88,6 +88,10 @@ Press **F** to get out of the car, walk over to another vehicle and press **F** 
 
 [Watch the vehicle switch in HD](docs/media/switching.mp4)
 
+Walking and running now have bent knees, articulated elbows, weight shift and distinct strides. Swimming alternates a crawl with upright treading when you stop. The same Dream bone bindings animate the city pedestrians. [Character rig and motion](docs/dream/behavior.md#humanoid-motion).
+
+![Walking, running and swimming with one connected Dream rig](docs/media/character.gif)
+
 WASD walks, swims or drives. Space jumps on foot, a bicycle or skateboard, and gives the boat a small hop. Shift runs or swims faster. Walk up low steps, jump a small obstacle, or leave a boat and swim back to shore. Exits prefer dry ground when there is room. Land the plane before getting out; Space climbs and Shift descends while flying.
 
 ![Running and jumping beside the parked car](docs/media/locomotion.gif)

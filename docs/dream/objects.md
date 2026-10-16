@@ -105,6 +105,8 @@ Parts support `spin`, distance-driven `roll` and rigid `sway`. Joints support `r
 
 A rolling joint turns its whole child assembly around one bearing by traveled distance divided by its resolved radius. Tires, hubs and a shaft can share one axle frame; a chainring, crank arms and pedals can share another. All children retain their distances from the bearing. Orient the local axis to match forward wheel travel. Reduced motion rests the mechanism, and parked furnishings bake its rest pose without allocating live joints. Swinging or proximity-operated templates remain ineligible for furnishings. [The complete bicycle](../examples/city-bicycle.dream) uses a rolling crank with paired forks and stays.
 
+Use `joint(...,bone=left_knee)` and the complete twelve-bone humanoid contract for people who walk, run and swim. The engine chooses the movement cycle; the model supplies connected anatomy. [Rig, source and close-up motion](behavior.md#humanoid-motion). Ordinary machinery keeps `roll`, `swing` and `open`.
+
 Animated parts aren't interchangeable with destructible fragments. Breakable assemblies require a static rest pose so their release frames are deterministic. Full shape, position, motion and expansion bounds are in the [reference](reference.md).
 
 [Next: world layout](worlds.md) · [Behavior and destruction](behavior.md)

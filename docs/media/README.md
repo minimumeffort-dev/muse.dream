@@ -232,3 +232,11 @@ unchanged, and the older bench's intact geometry/materials keep their shape.
 Its new destruction ownership is shown in the new guide and evidence.
 `rule-square-table.jpg`, `rule-round-table.jpg` and `rule-supported-bench.jpg`
 are unchanged copies of those native captures for the published guide.
+
+## Articulated characters · 2026-10-17
+
+`character.gif`, its HD video and `character-motion.jpg` show the actual Explorer rig walking, running and crawling side by side. The close-up uses 180 newly rendered frames at 30 fps. The nine main-game GIF/HD pairs are refreshed too: driving/boost 210 frames each, football 240, basketball 210, switching 240, locomotion/swimming 180 each, day/night 360 and flight 300. Matching stills are refreshed with their recordings. No interpolated frames or image generation.
+
+The full asset atlas, `city-people.jpg`, shared-scale lineup and NPC context now show the bound civic characters. Other model detail sheets, the city-layout map and isolated destruction/voxel wall clips retain unchanged content. The [animation verification](../evidence/character-animation/verification.md) separates tests, native controls, capture counts and limitations. Offline frame exports are not performance benchmarks.
+
+`hill-taxi.png` preserves the existing native aircraft-terrain screenshot in the published media directory, fixing its former evidence-folder image embed. Its geometry is unchanged.

@@ -72,7 +72,7 @@ A command with an ID requires a name immediately after its keyword. Commands wit
 | `fragment` | object / visual | ID / visual | None |
 | `zone` | object | ID / visual | `at: v3`, `radius: n`, `height: n`, `mode: fracture` |
 | `group` | object / visual | ID / visual | `at?: v3`, `rot_deg?: v3`, `scale?: n` |
-| `joint` | object / visual | ID / visual | `at?: v3`, `rot_deg?: v3`, `motion?: joint_motion` |
+| `joint` | object / visual | ID / visual | `at?: v3`, `rot_deg?: v3`, `bone?: humanoid binding`, `motion?: joint_motion` |
 | `repeat` | object / visual / path / route_path / voxel_ops | ID / inherit | `index: symbol`, `count: n` |
 | `use` | object / visual | ID / no block | `component: ref`, `args?: nums`, `at?: v3`, `rot_deg?: v3`, `scale?: n` |
 | `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus / prism`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `outline?: points2`, `taper?: n`, `deform?: deform`, `motion?: part_motion` |
@@ -109,6 +109,9 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 | `flock` | top | ID / no block | `object: ref`, `at: v2`, `radius: v2`, `count: n`, `altitude: n`, `speed: n`, `seed: n`, `flap_hz?: n`, `flap_deg?: n` |
 | `place` | top | ID / no block | `object: ref`, `at?: v2`, `route?: ref`, `offset?: n`, `phase_s?: n`, `scale?: n`, `heading_deg?: n`, `role?: prop / npc / controllable`, `behavior?: ref` |
 | `unresolved` | top | ID / no block | `label: text` |
+
+`joint(...,bone=...)` binds engine-owned humanoid motion. Use all twelve bindings once:
+`root`, `spine`, `left_hip`, `left_knee`, `left_ankle`, `left_shoulder`, `left_elbow`, and the five corresponding `right_` bindings. The hierarchy is `root → spine → shoulder → elbow` and `root → hip → knee → ankle` on both sides. Rest frames face +X, +Y up, left +Z, with zero rotation. Root is centered above the ground; spine is directly above root; hips lie at root height, shoulders above spine. Knee, ankle and elbow offsets point straight down by at least .5 local units. Hip/shoulder lateral offsets choose their declared side. The object must be a measured decor person, all parts must belong to bones, and bone motion cannot combine with `motion` or fracture groups. Bindings count as live animation, including without `swing`, and cannot be used in `furnish`. Other joints keep their existing behavior. [Complete rig and motion notes](behavior.md#humanoid-motion).
 
 Rolling joints use the same bounded radius 1..32 as part roll. Their children rotate rigidly by traveled distance / resolved radius; their bearing positions remain fixed during visual suspension compression. Radius follows uniform group/placement scale. Reduced motion rests the pose. Parked `furnish` templates bake roll joints at rest; swing/open templates still reject. Live rolling assemblies retain the 24-assembly and 12-joint caps.
 

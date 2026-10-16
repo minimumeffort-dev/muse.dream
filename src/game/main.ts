@@ -1,3 +1,4 @@
+import {CharacterAnimator} from './character-animation';
 import {nightFactor} from "./shaders";
 import {activeSport,closestSportTarget,sportCharge,cancelSportAction} from '../sim/sports';
 import {SportsVisuals,poseSportBall} from './sports';
@@ -17,11 +18,11 @@ import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { buildMaskForScene } from "../scene/fixture";
 import { createWorldScene } from "../scene/world-fixture";
-import { drivingHeight } from "../scene/terrain";
+import { drivingHeight,waterAt } from "../scene/terrain";
 import { archetypeOf, objectRadius } from "../sim/archetypes";
 import { buildPaperMask } from "../sim/mask";
 import { CAR_BOOST, isCarControl, createCarAtSpawn, FixedStepper, resetCar, type World } from "../sim/car";
-import { FOOT_HEIGHT,MAX_FLIGHT_CLEARANCE,isSwimming,nearbyRide,toggleRide,stepInteractive,occupiedObject,exitPosition } from "../sim/interaction";
+import { MAX_FLIGHT_CLEARANCE,isSwimming,nearbyRide,toggleRide,stepInteractive,occupiedObject,exitPosition } from "../sim/interaction";
 import { actorPoses } from "../sim/actors";
 import {isActor} from '../scene/agents';
 import { interactiveWorld } from "../scene/interactive-world";
@@ -136,6 +137,7 @@ function start(): void {
   const rideZooms=new Map<string,number>();
   const breakMeshes=new Map<string,THREE.Group>();
   const objects: THREE.Group[] = [];
+  const characters=new Map<THREE.Group,CharacterAnimator>();
   for (const object of doc.objects) {
     if (!isActor(object) && !isReactive(object.spec) && archetypeOf(object).interaction !== "knockable" && !hasAnimatedJoints(object.spec)) continue;
     const destructible=isReactive(object.spec) && impactOf(object.spec)?.kind!=="bounce";
@@ -147,6 +149,7 @@ function start(): void {
     group.userData.ambient=!!object.route && ["ambient","walk"].includes(doc.routes.find(r=>r.id===object.route!.id)?.kind??"");
     scene.add(group);
     objects.push(group);
+    if(object.spec && 'dslVersion' in object.spec && object.spec.dslVersion===2 && object.spec.joints?.some(j=>j.bone))characters.set(group,new CharacterAnimator(group,object.spec));
     if(archetypeOf(object).interaction === "knockable") propMeshes.set(object.id, group);
     if(isActor(object)){actorMeshes.set(object.id,group);rideZooms.set(object.id,rideCameraZoom(doc.player,object));}
     if(destructible)breakMeshes.set(object.id,group);
@@ -157,6 +160,7 @@ function start(): void {
   const walkerSpec={...interactiveWorld.assemblies.find(a=>a.displayName==="Explorer")!,voxelSize:doc.voxelWorld?.objectCell};
   const walker=compactObject(buildObject({id:"explorer",kind:"custom",labelText:"Explorer",x:0,y:0,scale:measuredScale(walkerSpec),spec:walkerSpec}));
   walker.visible=false;scene.add(walker);
+  const walkerAnimation=new CharacterAnimator(walker,walkerSpec);
   const carRoot = new THREE.Group(), carMesh = compactObject(buildPlayer(doc));
   carRoot.add(carMesh); scene.add(carRoot);
   const particles = new WorldParticles(doc); scene.add(particles.mesh);
@@ -209,6 +213,7 @@ function start(): void {
 
   function resetPosition(restartRace = false): void {
     car = resetCar(car, doc, restartRace);
+    walkerAnimation.reset();
     clearShot();
     pointerAim=undefined;
     boostRequested=false;
@@ -281,6 +286,7 @@ function start(): void {
   const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300},(clip)=>{
     captureTime=undefined;
     resetPosition(true);worldTime.value=0;setMode("playing");
+    characters.forEach(character=>character.reset());
     if(clip==='switching'){const bike=doc.objects.find(o=>o.id==='village_bike')!;car={...car,x:bike.x-40,y:bike.y,headingRad:0,elevation:drivingHeight(doc.terrain,bike.x-40,bike.y)};}
     if(clip==='locomotion' || clip==='swimming')car=movementReviewStart(car,world,clip==='swimming' ? 'swim' : 'walk');
     if(clip==='flight')car=toggleRide(vehicleReviewStart(car,world,'cloudhopper'),world);
@@ -411,6 +417,7 @@ function start(): void {
       group.quaternion.multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(pose.bank??0,0,pose.pitch??0)));
       group.userData.distance=pose.travelled;
       group.userData.moving=pose.speed>0;
+      group.userData.speed=pose.speed;
       group.userData.npcActive=pose.activity ? pose.activity==='perform' || pose.activity==='patrol' && pose.speed>0 : undefined;
       group.userData.npcTime=pose.animationTimeS;
     }
@@ -431,36 +438,23 @@ function start(): void {
       const group=actorMeshes.get(occupied!.id)!;if(walker.parent!==group)group.add(walker);
       const spec=group.userData.sceneObject.spec;
       walker.position.fromArray(spec.rideable.seat);walker.rotation.set(0,0,0);
-      walker.scale.setScalar(measuredScale(walkerSpec)/group.scale.x);animateObject(walker,car.timeS,false);
+      walker.scale.setScalar(measuredScale(walkerSpec)/group.scale.x);walkerAnimation.reset();
     }else if(walker.visible){
       if(walker.parent!==scene)scene.add(walker);walker.scale.setScalar(measuredScale(walkerSpec));
-      walker.position.copy(position);walker.rotation.set(0,-car.headingRad,0);
-      const swimming=isSwimming(car,world),speed=Math.hypot(car.vx,car.vy);
-      if(swimming){walker.position.y+=FOOT_HEIGHT*.65;walker.rotateZ(-Math.PI/2);}
-      // Distance drives the gait, so stopping freezes it and sprinting lengthens the cadence.
-      animateObject(walker,car.distance/(swimming ? 24 : 45),!reduced.matches && speed>3 && (car.grounded || swimming));
-      if(swimming && !reduced.matches && speed>3)walker.traverse(node=>{
-        const joint=node.userData.jointRest;if(!joint?.animation)return;
-        const phase=car.distance/18+joint.animation.phase;
-        node.quaternion.copy(joint.rotation);
-        // The Explorer's upper joints paddle; lower joints make a smaller flutter kick.
-        if(joint.position.y>walkerSpec.body.colliderHeight!*.6){node.rotateY(Math.sin(phase)*1.1);node.rotateZ(.7+Math.cos(phase)*.8);}
-        else node.rotateZ(Math.sin(phase)*.25);
-      });
-      if(court && sportGame && !reduced.matches)walker.traverse(node=>{
-        const joint=node.userData.jointRest;if(!joint?.animation)return;
-        const upper=joint.position.y>walkerSpec.body.colliderHeight!*.6,shotAge=car.timeS-sportGame.shotAtS;
-        if(court.sport.kind==='basketball' && upper && (sportGame.possessed || sportGame.shots>0 && shotAge<.4)){
-          node.quaternion.copy(joint.rotation);node.rotateZ(sportGame.chargeStartS!==null || shotAge<.4 && sportGame.shots>0 ? 1.9 : joint.position.z>0 ? .4+Math.sin(car.timeS*9)*.3 : .1);
-        }
-        if(court.sport.kind==='football' && !upper && joint.position.z>0 && sportGame.shots>0 && shotAge<.35){node.quaternion.copy(joint.rotation);node.rotateZ(Math.sin(shotAge/.35*Math.PI)*1.1);}
-      });
+      walker.position.copy(position);walker.position.y=car.elevation+.2;walker.rotation.set(0,-car.headingRad,0);
+      const swimming=isSwimming(car,world),water=swimming && waterAt(doc.terrain,car.x,car.y,car.elevation);
+      const speed=Math.hypot(car.vx-(water ? water.flow.x : 0),car.vy-(water ? water.flow.y : 0));
+      walkerAnimation.update({speed,swimming,grounded:car.grounded,verticalSpeed:car.vz,time:car.timeS,enabled:!reduced.matches,
+        sport:court && sportGame ? {kind:court.sport.kind,possessed:sportGame.possessed,charging:sportGame.chargeStartS!==null,shotAge:sportGame.shots ? car.timeS-sportGame.shotAtS : Infinity} : undefined},mode==='playing' ? dt : 0);
     }
     for (const object of objects) {
       const spec=object.userData.sceneObject;
+      const character=characters.get(object);
+      if(character){character.update({speed:object.userData.npcActive===false ? 0 : object.userData.speed??0,swimming:false,grounded:true,verticalSpeed:0,time:object.userData.npcTime??worldTime.value,enabled:!reduced.matches},mode==='playing' ? dt : 0);continue;}
       animateObject(object, object.userData.npcTime??worldTime.value, !reduced.matches && (object.userData.npcActive??(!object.userData.ambient || object.userData.moving)), object.userData.distance ?? 0,0,
         spec ? Math.hypot(object.position.x-position.x,object.position.z-position.z)/spec.scale : Infinity);
     }
+    if(!walker.visible)walkerAnimation.reset();
     const sportBall=court && car.props.find(p=>p.id===court.sport.ballId)!,sportsFrame=court && sportBall && sportCameraFrame(car,sportGame?.event==='out' ? car : sportBall,court.sport.kind,court.sport.kind==='basketball' && sportGame?.possessed ? closestSportTarget(court,sportGame.aim?.[0]??car.x,sportGame.aim?.[1]??car.y) : undefined);
     const framing=sportsFrame ? worldPosition(doc,sportsFrame.x,sportsFrame.y) : position;
     const target = { x: framing.x, y: (car.control.kind!=="car" ? car.elevation : drivingHeight(doc.terrain, car.x, car.y)) + 12, z: framing.z };
@@ -531,7 +525,7 @@ function start(): void {
       interact.textContent=foot ? `F · ${nearby?.object && !controlOf(nearby.object.spec) ? "Ride" : "Drive"} ${nearby?.labelText??""}` : exit ? 'F · Exit vehicle' : !car.grounded ? 'Land to exit' : 'Move to a clear exit';
       container.dataset.riding=occupied?.id??"";
       container.dataset.control=JSON.stringify(car.control);
-      container.dataset.avatar=standingRide ? "standing" : walker.visible ? "walking" : occupied ? "seated" : "in-car";
+      container.dataset.avatar=standingRide ? "standing" : walker.visible ? isSwimming(car,world) ? "swimming" : "walking" : occupied ? "seated" : "in-car";
       container.dataset.vehicles=JSON.stringify(car.vehicles);
       container.dataset.actors=JSON.stringify(poses.map(p=>({id:p.id,x:p.x,y:p.y,elevation:p.elevation})));
       if(import.meta.env.DEV)container.dataset.npcs=JSON.stringify(poses.filter(p=>p.stateId).map(p=>({id:p.id,state:p.stateId,action:p.activity,x:p.x,y:p.y,heading:p.headingRad,animationTime:p.animationTimeS})));

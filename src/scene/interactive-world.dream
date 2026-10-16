@@ -311,22 +311,54 @@ object traveler(label="Traveler"){
 object walker(label="Explorer"){
   measure(kind=person,axis=y,meters=1.75);
   body(interaction=decor,radius=8,height=57);
-  part torso(shape=capsule,material=teal,at=[0,34,0],size=[14,22,19]);
-  part belt(shape=box,material=dark,at=[0,24,0],size=[13,3,17]);
-  part head(shape=sphere,material=skin,at=[0,49,0],size=[14,14,14]);
-  part hair(shape=sphere,material=dark,at=[-1,53,0],size=[15,8,15]);
-  part nose(shape=sphere,material=skin,at=[7,49,0],size=[3,3,3]);
-  part backpack(shape=box,material=wood,at=[-7,34,0],size=[6,16,14]);
-  repeat sides(index=s,count=2){
-    let sign(value=s*2-1);
-    part eye(shape=sphere,material=dark,at=[6,51,sign*4],size=[2,2,2]);
-    joint leg(at=[0,23,sign*4],motion=swing(axis=z,deg=23,hz=.6,phase_deg=s*180)){
-      part trouser(shape=capsule,material=dark,at=[0,-10,0],size=[6,20,6]);
-      part shoe(shape=box,material=cream,at=[3,-21,0],size=[10,4,7]);
+  joint pelvis(bone=root,at=[0,25,0]){
+    part belt(shape=box,material=dark,at=[0,0,0],size=[12,3,15]);
+    joint chest(bone=spine,at=[0,1,0]){
+      part torso(shape=capsule,material=teal,at=[0,8,0],size=[12,19,16]);
+      part head(shape=sphere,material=skin,at=[0,24,0],size=[12,12,12]);
+      part hair(shape=sphere,material=dark,at=[-.7,28,0],size=[12.8,6.4,13]);
+      part nose(shape=sphere,material=skin,at=[6,23,0],size=[3,3,3]);
+      repeat eyes(index=s,count=2){
+        part eye(shape=sphere,material=dark,at=[5.3,25.5,s*7-3.5],size=[1.5,1.5,1.5]);
+        part ear(shape=sphere,material=skin,at=[-.5,24,s*12-6],size=[2.5,3,2]);
+      }
+      part backpack(shape=box,material=wood,at=[-7,8,0],size=[6,15,13]);
+      joint left_arm(bone=left_shoulder,at=[0,17,9]){
+        part sleeve(shape=capsule,material=teal,at=[0,-4.5,0],size=[5,10.5,5]);
+        joint left_forearm(bone=left_elbow,at=[0,-9.5,0]){
+          part elbow(shape=sphere,material=skin,at=[0,0,0],size=[4.2,4.2,4.2]);
+          part forearm(shape=capsule,material=skin,at=[0,-4.5,0],size=[4,10,4]);
+          part hand(shape=box,material=skin,at=[.5,-10,0],size=[4.5,4,3.5]);
+        }
+      }
+      joint right_arm(bone=right_shoulder,at=[0,17,-9]){
+        part sleeve(shape=capsule,material=teal,at=[0,-4.5,0],size=[5,10.5,5]);
+        joint right_forearm(bone=right_elbow,at=[0,-9.5,0]){
+          part elbow(shape=sphere,material=skin,at=[0,0,0],size=[4.2,4.2,4.2]);
+          part forearm(shape=capsule,material=skin,at=[0,-4.5,0],size=[4,10,4]);
+          part hand(shape=box,material=skin,at=[.5,-10,0],size=[4.5,4,3.5]);
+        }
+      }
     }
-    joint arm(at=[0,40,sign*11],motion=swing(axis=z,deg=20,hz=.6,phase_deg=(1-s)*180)){
-      part sleeve(shape=capsule,material=teal,at=[0,-7,0],size=[5,16,5]);
-      part hand(shape=sphere,material=skin,at=[0,-17,0],size=[5,6,5]);
+    joint left_leg(bone=left_hip,at=[0,0,4]){
+      part thigh(shape=capsule,material=dark,at=[0,-5.5,0],size=[5.7,12,5.7]);
+      joint left_shin(bone=left_knee,at=[0,-11.5,0]){
+        part knee(shape=sphere,material=dark,at=[0,0,0],size=[5,5,5]);
+        part calf(shape=capsule,material=dark,at=[0,-5.2,0],size=[5,11,5]);
+        joint left_foot(bone=left_ankle,at=[0,-10.5,0]){
+          part shoe(shape=box,material=cream,at=[2.3,-1,0],size=[9,4,6.2]);
+        }
+      }
+    }
+    joint right_leg(bone=right_hip,at=[0,0,-4]){
+      part thigh(shape=capsule,material=dark,at=[0,-5.5,0],size=[5.7,12,5.7]);
+      joint right_shin(bone=right_knee,at=[0,-11.5,0]){
+        part knee(shape=sphere,material=dark,at=[0,0,0],size=[5,5,5]);
+        part calf(shape=capsule,material=dark,at=[0,-5.2,0],size=[5,11,5]);
+        joint right_foot(bone=right_ankle,at=[0,-10.5,0]){
+          part shoe(shape=box,material=cream,at=[2.3,-1,0],size=[9,4,6.2]);
+        }
+      }
     }
   }
 }

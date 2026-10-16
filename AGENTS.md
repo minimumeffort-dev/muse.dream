@@ -163,6 +163,14 @@ the original car, and keep the occupied vehicle opaque. Use `docs/dream/behavior
 Reserve one of the 24 live jointed-assembly slots for the standing character; scene
 objects plus the player vehicle may use the remaining 23.
 
+Humanoid animation uses explicit `joint.bone` bindings, not labels or height guesses.
+Keep the complete 12-bone hierarchy, unrotated +X-forward rest frames, rigid segment
+lengths and existing live assembly budget. Cache bone references outside frame loops.
+Walk/run, jump/landing, crawl/tread and sports limb poses stay renderer-owned;
+water-relative speed determines stroke effort, not current drift. Preserve reduced
+motion, pause, standing ride resets and seated ownership. See
+`docs/dream/behavior.md#humanoid-motion` and `docs/examples/humanoid.dream`.
+
 Dream ambient routes require decor-only assemblies and create no infrastructure or
 physics contacts. Optional altitude keeps birds airborne through the entire loop;
 ground habitats require dry, clear footprints. Preserve existing actor/joint caps,
