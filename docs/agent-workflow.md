@@ -55,6 +55,10 @@ API calls, no deployment), accepting that it may need disclosure, rewrite,
 or exclusion once rules publish. Recheck the official page before any
 competition submission.
 
+On 2026-10-16, the user explicitly authorized a private GitHub repository
+and a Vercel deployment. This changes the deployment boundary only; model
+calls remain mocked and competition eligibility remains unresolved.
+
 ## Evidence requirements
 
 - Every slice ships with checks actually executed in that session; report

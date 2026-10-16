@@ -1,5 +1,9 @@
 # Paper Racer
 
+Play the [deployed mock world](https://musedream.vercel.app/).
+Source: [minimumeffort-dev/muse.dream](https://github.com/minimumeffort-dev/muse.dream) (private).
+Vercel deploys `main` to production and creates previews for other branches.
+
 Sketch a world on paper and bring it to life. The user supplies the ideas
 through the drawing; Muse interprets and elaborates the entire world:
 track and layout, environment, objects, castle and player vehicle. Racing
