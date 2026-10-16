@@ -26,6 +26,8 @@ There is one driving height per XY. Roads cannot stack and cars don't drive unde
 
 ## Routes and moving objects
 
+Connected destinations use `site(kind=...)`: schools, hospitals, stations and airports keep their meaning in Dream and on the minimap. `kind=airport` identifies a terminal; its runway, apron, aircraft, service access and bus stops still need explicit source. Public paths must reach a named sidewalk and remain clear of the runway. [The complete airport example](../examples/airport-stop.dream) connects a terminal and medical center to a passenger bus. [The standalone terminal](../examples/airport-terminal.dream) matches the live assembly.
+
 `route` describes a `rail`, `path`, `water` or `air` activity, using `loop` or `shuttle` travel. For autonomous actors, its speed, wait time and points determine the pose from the fixed simulation clock. A placed actor references that route; `offset` separates a carriage from its locomotive. Route heading is derived from travel, so `heading_deg` only belongs on fixed XY placements.
 
 City bicycle lanes belong to the street network. Add `cycle_width=20` to reserve a two-metre track on each side of the carriageway. The engine adds a 0.6-metre separator, moves the sidewalks outward and paints bicycle symbols and junction crossings. Lanes follow streets to actual destinations; they do not consume actor routes. [The full urban example](../examples/city-cycle-lanes.dream) includes an aligned canal bridge.

@@ -77,7 +77,7 @@ describe("complete Dream 2 mock world",()=>{
     expect(scene.objects.every(o=>o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2)).toBe(true);
     expect(scene.sites.length).toBeGreaterThan(180);
     expect(scene.routes.some(r=>r.kind==='tram')).toBe(true);
-    expect(scene.routes.filter(r=>r.kind==='street' && r.stops?.length)).toHaveLength(2);
+    expect(scene.routes.filter(r=>r.kind==='street' && r.stops?.length)).toHaveLength(4);
   });
   it("accepts the whole world from text and revalidates an invalid included placement",()=>{
     expect(compileDreamScene(worldSource,{sceneId:scene.sceneId,revisionId:scene.revisionId,sourceHash:scene.sourceHash},worldModules)).toEqual(scene);

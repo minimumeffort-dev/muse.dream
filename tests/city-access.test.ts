@@ -36,6 +36,13 @@ route bus(kind=street,mode=shuttle,speed=20){
 const compiled=compileDreamWorld(source),city=()=>parseScene({...createFixtureScene(),terrain:{hills:[]},objects:compiled.objects,streets:compiled.streets,sites:compiled.sites,crossings:compiled.crossings,routes:compiled.routes});
 
 describe('connected city data',()=>{
+ it('round trips an airport destination without inventing runway or flight mechanics',()=>{
+  const text=source.replace('kind=home,','kind=airport,'),world=compileDreamWorld(text);
+  expect(world.sites[0]!.kind).toBe('airport');
+  expect(compileDreamWorld(formatDream(text))).toEqual(world);
+  expect(world.routes).toHaveLength(1);expect(world.waters).toHaveLength(0);
+  expect(()=>compileDreamWorld(text.replace('kind=airport','kind=spaceport'))).toThrow();
+ });
  it('round trips sites, stops and arbitrary street directions through the actual command contract',()=>{
   expect(compileDreamWorld(formatDream(source))).toEqual(compiled);
   expect(compiled.routes[0]!.stops).toEqual([{id:'homes',anchor:0,waitS:3,site:'platform'}]);

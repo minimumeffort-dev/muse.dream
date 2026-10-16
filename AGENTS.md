@@ -12,7 +12,7 @@ into Three.js and tested mechanics; model output remains data-only.
 Current state: **mock open world** — a 14000 x 11000 handmade landscape with a
 winding eight-checkpoint circuit, composed assets, heightfield driving/jumps,
 ICE/BOOST, off-road collisions, fixed-angle camera, walking, direct vehicle controls,
-a rebuilt river city with connected entrances, schools, hospital, markets, workplaces, buses, tram, regional rail, cycle tracks and sports grounds, ambient wildlife, layered vegetation and instanced scenery. Walking supports running, jumping, low contact steps and surface swimming. F prefers dry exits, permits water disembarking and boards nearby on foot. Bicycles,
+a rebuilt river city with connected entrances, schools, two medical destinations, a regional airport, markets, workplaces, five buses, tram, regional rail, cycle tracks and sports grounds, ambient wildlife, layered vegetation and instanced scenery. Walking supports running, jumping, low contact steps and surface swimming. F prefers dry exits, permits water disembarking and boards nearby on foot. Bicycles,
 skateboards, scooters, boats and planes are player-controlled; public transport retains autonomous routes and exposes passenger seats.
 The original small fixture remains for regression tests. No photo upload,
 camera or model calls yet. The complete live world is authored in Dream 2 text

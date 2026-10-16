@@ -80,7 +80,7 @@ describe('connected river city',()=>{
   expect(routePose(tram,distance/tram.speed+1)).toMatchObject({...tram.points[stop.anchor],speed:0});
   const commuter=scene.routes.find(r=>r.kind==='walk')!;
   expect(commuter.stops!.map(s=>scene.sites.find(site=>site.id===s.site)!.kind)).toEqual(['home','market']);
-  expect(scene.routes.filter(r=>r.kind==='street' && r.stops?.length)).toHaveLength(2);
+  expect(scene.routes.filter(r=>r.kind==='street' && r.stops?.length)).toHaveLength(4);
  });
  it('sails under the real market bridge and leaves the moored boat on dry shore',()=>{
   const world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11};

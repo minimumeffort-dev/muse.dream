@@ -30,6 +30,9 @@ furnish center_planting(objects=[verge_flowers,lavender,daisies],streets=[market
 furnish garden_planting(objects=[shrub,fern,dock,verge_flowers],streets=[garden_collector,garden_crescent,garden_lane,school_street,south_terrace,hospital_street],spacing=240,setback=15,seed=72,jitter=.3);
 furnish waterside_planting(objects=[shrub,dock,daisies,lavender],streets=[eastbank,river_street,lakefront,harbor_street],spacing=280,setback=15,seed=73,jitter=.3);
 furnish destination_planters(objects=[planted_tub],sites=[access_market_hall,access_hospital,access_garden_school,access_south_school,access_public_library,access_offices,access_college,access_harbor_market,access_sports_pavilion],spacing=50,setback=2,count=6,seed=81,grounds=[market_square,hospital_apron]);
+furnish airport_lamps(objects=[neighborhood_lamp],streets=[airport_connector,airfield_road,airport_service],spacing=340,setback=2,seed=46,facing=street);
+furnish service_bicycles(objects=[bicycle],sites=[access_airport,access_east_medical_center],spacing=26,setback=4,count=4,seed=85,grounds=[airport_forecourt,east_medical_apron],paving=#aaa99f);
+furnish service_planters(objects=[planted_tub],sites=[access_airport,access_east_medical_center],spacing=50,setback=2,count=4,seed=86,grounds=[airport_forecourt,east_medical_apron]);
 flock market_pigeons(object=pigeon,at=[6400,4400],radius=[900,850],count=16,altitude=65,speed=32,seed=101,flap_hz=3.2,flap_deg=18);
 flock oldtown_pigeons(object=pigeon,at=[6200,3000],radius=[1100,700],count=16,altitude=65,speed=30,seed=102,flap_hz=3.5,flap_deg=16);
 flock library_pigeons(object=pigeon,at=[6800,5500],radius=[1000,700],count=16,altitude=70,speed=33,seed=103,flap_hz=3.1,flap_deg=17);

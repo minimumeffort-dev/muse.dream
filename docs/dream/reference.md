@@ -270,7 +270,7 @@ Surfaces take 3–64 points and must be simple, nonzero polygons, at most 100000
 
 The first matching transition wins once per fixed tick; state time resets on entry. Idle rests joints; perform animates in place; both pause route time. Patrol resumes the placement's route without teleporting and animates only while moving. Stationary face=player turns at 2.5 rad/s. Animation respects reduced motion. Clocks are per-instance runtime state, preserved by R and reset by Start over. Without a runtime snapshot, actor inspection returns the program's initial pose.
 
-Programs and references are file-local; includes merge data. There are at most 16 programs and 32 NPCs in the accepted scene. Each state has at most 4 transitions. Existing 24 moving actor/controllable and 24 live jointed assembly caps remain. Explicit NPCs require version 2 assemblies without foundations, compound contacts, knockable bodies or destruction; boat and plane NPCs need a domain route. Full-scene acceptance checks stationary dry footprints and route clearance. Solid NPC cylinders participate in player contacts. There is no pathfinding, runtime avoidance, humanoid possession or generated input profile. [Complete example](../examples/npc-behavior.dream) and [guide](npcs.md).
+Programs and references are file-local; includes merge data. There are at most 16 programs and 32 NPCs in the accepted scene. Each state has at most 4 transitions. Existing 24 moving actor/controllable and 24 live jointed assembly caps remain. Explicit NPCs require version 2 assemblies without foundations, knockable bodies or destruction. Solid street, tram and rail NPCs may use compound contacts; directly controlled rides require one body. Boat and plane NPCs need a domain route. Full-scene acceptance checks stationary dry footprints and route clearance. Solid NPC cylinders participate in player contacts. There is no pathfinding, runtime avoidance, humanoid possession or generated input profile. [Complete example](../examples/npc-behavior.dream) and [guide](npcs.md).
 
 ### Water bounds
 
@@ -281,7 +281,7 @@ Water polygons have 3–32 vertices, area 400–8,000,000 square units and exten
 | Command | Context | ID / block | Fields |
 | --- | --- | --- | --- |
 | `stop` | route_path | ID / no block | `at: v2`, `wait_s: n`, `site: ref` |
-| `site` | top | ID / no block | `object: ref`, `kind: home / market / school / hospital / work / civic / park / station / stop`, `entry: v2`, `street: ref`, `width: n`, `points: points2`, `serves?: symbols` |
+| `site` | top | ID / no block | `object: ref`, `kind: home / market / school / hospital / work / civic / park / station / airport / stop`, `entry: v2`, `street: ref`, `width: n`, `points: points2`, `serves?: symbols` |
 | `crossing` | top | ID / no block | `street: ref`, `at: v2`, `width: n`, `junction?: bool` |
 | `junction` | top | ID / no block | `at: v2` |
 

@@ -36,6 +36,7 @@ for(const bridge of doc.terrain.landscape?.bridges ?? []) locations.push({name:b
 for(const object of doc.objects.filter(object=>['orchard_cart','orchard_bench','orchard_bread','farm_naturalist','pond_tortoise','farm_sunflowers','ridge_cairn'].includes(object.id))) locations.push({name:object.id,x:object.x,y:object.y});
 for(const object of doc.objects.filter(o=>o.route || ['meadow_station','lake_boathouse','rail_passage'].includes(o.id)))locations.push({name:object.id,x:object.x,y:object.y,object,...(object.route && doc.routes.find(r=>r.id===object.route.id)?.kind==='ambient' ? {half:80} : {})});
 if(!dreamV2)locations.push({name:'City cycle tracks',x:9000,y:4200,half:420});
+if(!dreamV2)locations.push({name:'Regional airport',x:2180,y:9340,half:850},{name:'Airport terminal',x:1700,y:9450,half:230},{name:'Airport hangar',x:2530,y:9460,half:230},{name:'Airport tower',x:1730,y:9150,half:210},{name:'Eastbank medical center',x:12000,y:5500,half:350});
 if(!dreamV2)locations.push({name:'River source',x:9000,y:450},{name:'River outlet',x:10100,y:10500});
 for(const water of doc.terrain.landscape?.waters ?? []) locations.push({name:water.id,x:water.polygon.reduce((s,p)=>s+p.x,0)/water.polygon.length,y:water.polygon.reduce((s,p)=>s+p.y,0)/water.polygon.length});
 for(const object of doc.objects.filter(o=>['eco_woodland_fern_0','eco_foxglove_0','eco_river_reeds_0','eco_weeping_willow_0'].includes(o.id)))locations.push({name:object.id,x:object.x,y:object.y,half:110});

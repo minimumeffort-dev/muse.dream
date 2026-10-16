@@ -11,7 +11,7 @@ import {drivingHeight,waterAt} from './terrain';
 
 const ref=z.string().regex(/^[a-z][a-z0-9_]{0,39}$/);
 const point=z.object({x:z.number().finite().min(0).max(MAX_WORLD_SIZE),y:z.number().finite().min(0).max(MAX_WORLD_SIZE)}).strict();
-export const siteSchema=z.object({id:ref,objectId:ref,kind:z.enum(['home','market','school','hospital','work','civic','park','station','stop']),
+export const siteSchema=z.object({id:ref,objectId:ref,kind:z.enum(['home','market','school','hospital','work','civic','park','station','airport','stop']),
   entry:z.object({x:z.number().finite().min(-128).max(128),y:z.number().finite().min(-128).max(128)}).strict(),street:ref,width:z.number().min(12).max(40),
   points:z.array(point).min(1).max(16),serves:z.array(ref).max(8).default([]),
 }).strict().superRefine((s,ctx)=>{

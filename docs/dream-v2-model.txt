@@ -266,7 +266,7 @@ require exactly one of points=[[x,y],...] or via=[junction_id,...]. world.spawn 
 bridge.from/to accept either an XY pair or junction ID. Includes never export symbols.
 Keep the main road/street network in one file and reuse junctions for exact joins.
 road.style=racing default; street makes neutral curbs and removes start paint.
-site id(object=placement_id,kind=home|market|school|hospital|work|civic|park|station|stop,
+site id(object=placement_id,kind=home|market|school|hospital|work|civic|park|station|airport|stop,
 entry=[local_x,local_z],street=street_id,width=16,points=[[world_x,world_y],...]);
 Entry follows the owner's placement heading and resolved measured scale; points are
 world XY and the engine prepends that entrance. 1..16 points; path width 12..40;
@@ -274,6 +274,9 @@ length <=800. End the full path width inside its named sidewalk. Keep the entire
 path dry and free of other solid bodies. Every static measured building in a
 site-authored city needs a site. <=256 sites. Stops alone may declare serves=[ids],
 max 8 destination sites, all reachable on sidewalks/paths/crossings.
+airport classifies a terminal destination for navigation. Author its buildings,
+runway/apron surfaces, service access, aircraft and transit explicitly; the kind
+does not generate them. Keep public walking paths and boarding clear of the runway.
 crossing id(street=street_id,at=[x,y],width=24,junction=true);
 At lies on the named centerline. Omit junction for a single crossing; true creates
 crossings on all arms of the shared junction. <=64 declarations. Use junction

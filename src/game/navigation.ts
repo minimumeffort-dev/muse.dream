@@ -5,6 +5,15 @@ import type { CarState } from "../sim/car";
 import { actorPoses } from "../sim/actors";
 import {cyclePolygons} from '../scene/streets';
 
+/** Destination meaning comes from Dream sites, never inferred from building labels. */
+export function mapDestinations(scene:Scene){
+  const symbols:Partial<Record<Scene['sites'][number]['kind'],string>>={school:'S',hospital:'+',airport:'A',station:'R'};
+  return scene.sites.flatMap(site=>{
+    const symbol=symbols[site.kind],object=scene.objects.find(o=>o.id===site.objectId);
+    return symbol && object ? [{id:site.id,kind:site.kind,symbol,label:object.labelText,x:object.x,y:object.y}] : [];
+  });
+}
+
 /** A small north-up map keeps a multi-screen world legible without more controls. */
 export function createWorldMap(canvas: HTMLCanvasElement, scene: Scene) {
   const ctx = canvas.getContext("2d");
@@ -53,6 +62,15 @@ export function createWorldMap(canvas: HTMLCanvasElement, scene: Scene) {
     map.beginPath(); map.arc(object.x, object.y, 15 * object.scale, 0, Math.PI * 2);
     map.fillStyle = "#a4bd9470"; map.fill();
   }
+  map.setTransform(1,0,0,1,0,0);
+  map.textAlign='center';map.textBaseline='middle';map.font='bold 11px system-ui';
+  for(const destination of mapDestinations(scene)){
+    const x=padding+destination.x*scale,y=padding+destination.y*scale;
+    map.beginPath();map.arc(x,y,7,0,Math.PI*2);map.fillStyle='#f7c843';map.fill();map.lineWidth=1;map.strokeStyle='#171717';map.stroke();
+    map.fillStyle='#171717';map.fillText(destination.symbol,x,y+.5);
+  }
+  canvas.title='S · school / college   + · hospital   A · airport   R · railway station';
+  canvas.setAttribute('aria-label','World map with your position. S: school or college. Plus: hospital. A: airport. R: railway station.');
   return (car: CarState, angle: number): void => {
     ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.drawImage(base, 0, 0);
     for(const actor of actorPoses(scene,car.timeS,car)){

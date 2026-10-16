@@ -20,7 +20,7 @@ try{
  const reserved=unionPolygons(streetPolygons(scene.streets,'reserved'));
  const roads=[...ring,...unionPolygons(streetPolygons(scene.streets))];
  const riding=unionPolygons(streetPolygons(scene.streets,'riding'),streetPolygons(scene.streets));
- const destinations=scene.sites.filter(s=>['market','hospital','school','work','civic','station','park'].includes(s.kind) && !s.id.includes('oldtown_'));
+ const destinations=scene.sites.filter(s=>['market','hospital','school','work','civic','station','airport','park'].includes(s.kind) && !s.id.includes('oldtown_'));
  const height=1300+Math.ceil(destinations.length/4)*20;
  const s=[`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 ${height}" role="img" aria-labelledby="title desc"><title id="title">River town, compiled Dream geometry</title><desc id="desc">Roads and intersections are unions of the actual world geometry. Building footprints, entrances, transit stops and bridges come from the same compiled Dream source as the game.</desc><rect width="1500" height="${height}" fill="#fafaf7"/><g font-family="system-ui,sans-serif" fill="#171717"><text x="50" y="52" font-size="30" font-weight="700">A city has to make sense.</text><text x="50" y="86" font-size="17" fill="#5e5e56">Compiled Dream geometry · 1.4 × 1.1 km · roads, entrances, platforms and bridges share the game source</text></g><g transform="translate(50 120) scale(.1)"><rect width="14000" height="11000" fill="#dce2d1"/>`];
  for(const h of scene.terrain.hills)s.push(`<ellipse cx="${h.x}" cy="${h.y}" rx="${h.radiusX}" ry="${h.radiusY}" fill="#becbb0"/>`);

@@ -30,6 +30,8 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
 (* A position2 field accepts an XY array or a file-local junction identifier.
    road/street require exactly one points or via field. A route_path block may
    contain named stop anchors; ordinary path blocks accept point/let/repeat only. *)
+(* site.kind=airport identifies a connected terminal destination. It adds no
+   runway, aircraft, routes or flight controller implicitly. *)
 
 (* furnish/flock are top-level data commands, not loops or executable scripts.
    furnish targets streets XOR sites after module linking; sites require count.

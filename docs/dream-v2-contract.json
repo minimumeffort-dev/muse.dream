@@ -360,7 +360,7 @@
       "id": true,
       "fields": {
         "object": "ref",
-        "kind": "home|market|school|hospital|work|civic|park|station|stop",
+        "kind": "home|market|school|hospital|work|civic|park|station|airport|stop",
         "entry": "v2",
         "street": "ref",
         "width": "n",
@@ -985,6 +985,7 @@
         "civic",
         "park",
         "station",
+        "airport",
         "stop"
       ],
       "serves": "stop-only site references, at most 8; targets must be reachable on the pedestrian network"

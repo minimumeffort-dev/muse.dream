@@ -1,0 +1,30 @@
+{
+  "revision": "r31",
+  "objects": 1362,
+  "assemblies": 82,
+  "parts": 1405,
+  "streets": 32,
+  "sites": 218,
+  "routes": 12,
+  "surfaces": 28,
+  "groups": {
+    "center_lamps": 74,
+    "north_lamps": 58,
+    "garden_lamps": 70,
+    "south_lamps": 73,
+    "east_lamps": 97,
+    "airport_lamps": 26,
+    "service_bicycles": 6,
+    "service_planters": 2,
+    "center_trees": 26,
+    "garden_trees": 21,
+    "waterfront_trees": 42,
+    "center_planting": 97,
+    "garden_planting": 85,
+    "waterside_planting": 95,
+    "school_bicycles": 20,
+    "transit_bicycles": 7,
+    "destination_scooters": 16,
+    "destination_planters": 20
+  }
+}

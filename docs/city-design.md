@@ -14,6 +14,8 @@ This map is generated from the compiled Dream world. It uses the actual roads, b
 | --- | --- | --- |
 | Market hall and square | Old-town shops, homes, tram interchange, deliveries from the service street | A vendor, produce stalls and a commuter visiting the market |
 | Hospital | Main bus route, a public entrance, a separate service apron and nearby housing | A health worker outside, with a clear public approach |
+| Eastbank medical center | Workshop street, station bus, entrance apron and bicycle parking | A second medical destination with its own building type |
+| Regional airport | Public terminal and bus stop, hospital link, runway-side apron, separate hangar service road and control tower | Rideable aircraft and scooter; boardable bus |
 | Schools | Homes, pavements, crossings, playing space and neighborhood bus stops | Teachers, visitors and people walking to school |
 | Offices, studios and technical college | North avenue, the tram/bus interchange and mixed housing | Workers and commuters |
 | Workshops and harbor | Service streets, railway station, loading yards and the waterfront | A service yard, boats and nearby rail access |

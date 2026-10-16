@@ -28,3 +28,7 @@ place bus_sports(object=a_transit_shelter,at=[7110,7200],heading_deg=270);
 site access_bus_sports(object=bus_sports,kind=stop,entry=[0,-5],street=civic_walk,width=16,points=[[7078,7200]],serves=[access_sports_pavilion]);
 place bus_south_school(object=a_transit_shelter,at=[5802.332,7240.039],heading_deg=181.909);
 site access_bus_south_school(object=bus_south_school,kind=stop,entry=[0,-5],street=south_terrace,width=16,points=[[5801.333,7270.022]],serves=[access_south_school]);
+place bus_east_medical(object=a_transit_shelter,at=[12000,5280],heading_deg=0);
+site access_bus_east_medical(object=bus_east_medical,kind=stop,entry=[0,-5],street=workshop_street,width=16,points=[[12000,5248]],serves=[access_east_medical_center]);
+place bus_east_station(object=a_transit_shelter,at=[10950,4320],heading_deg=0);
+site access_bus_east_station(object=bus_east_station,kind=stop,entry=[0,-5],street=market_avenue,width=16,points=[[10950,4288]],serves=[access_central_station]);

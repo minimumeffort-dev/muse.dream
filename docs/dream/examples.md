@@ -12,6 +12,8 @@ Start with something you can see and understand. Change one field, run the check
 
 [The complete light aircraft](../examples/light-aircraft.dream) uses tapered sections for its fuselage and wings, endpoint braces and independent wheel/propeller animation. Its [asset guide](../asset-library.md#a-light-aircraft-that-holds-together) explains the joins and physical scale.
 
+[Airport terminal](../examples/airport-terminal.dream) is the exact 24-part assembly used in the live airport. [Airport and medical shuttle](../examples/airport-stop.dream) is a standalone world with both destination kinds, attached entrances, a connected platform and a passenger bus. Its source distinguishes terminal meaning from the geometry and transport needed to support it.
+
 ## A ball that bounces
 
 A sphere supplies the shape. The knockable body and bounce declaration supply the behavior. `measure` makes the ball sixty centimetres tall; it scales the body with the mesh.

@@ -117,3 +117,9 @@ Driving, switching, locomotion, swimming and day/night GIF/HD pairs use 210/240/
 ## Aircraft terrain contact, 2026-10-16
 
 Refreshed the flight GIF, HD video and matching still together after changing aircraft terrain contact. Native hillside taxi/takeoff screenshots use the actual eastern heath and player controls; see the [verification record](../evidence/aircraft-terrain/verification.md). Aircraft geometry, the city layout, lighting and render settings are unchanged, so the asset gallery, scale lineup, city stills and other movement/destruction recordings remain accurate. The survey uses a cached underside profile; it does not add mesh collision for buildings or aerodynamic simulation.
+
+## r31 city services and regional airport, 2026-10-16
+
+`airport.jpg` and `east-medical-center.jpg` are native geometry-review canvas exports, with complete viewport context retained in the [verification record](../evidence/city-services/verification.md). `city-service-assets.jpg` and the four evidence angles show the new Dream assemblies. The complete 82-assembly atlas and HUD screenshot are refreshed; the latter includes the semantic destination markers.
+
+The flight GIF, HD video and still are refreshed together using 300 newly rendered frames at 30 fps. This recording includes the rebuilt airport surroundings. The wide waterway overview is refreshed too. Existing car, bicycle, swimming, day/night and destruction recordings retain their accurate local geometry and behavior. The new roads and buildings sit outside those camera views; those clips export the WebGL canvas without the HTML minimap. Existing car/plane models, school and hospital models, wildlife, tree and scale galleries are unchanged. The source-generated city map includes the airport link, separate service access, new medical entrance and bus services. All captures show actual procedural geometry; no image generation or frame interpolation was used.

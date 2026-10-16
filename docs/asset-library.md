@@ -2,7 +2,7 @@
 
 [Dream 2 docs](README.md) / Assets
 
-The mock world contains 78 reusable assemblies, all written in Dream 2. The assemblies include vehicles, buildings, wildlife and several layers of vegetation, with window frames, wheel hubs, bark markings and irregular foliage.
+The mock world contains 82 reusable assemblies, all written in Dream 2. The assemblies include vehicles, buildings, wildlife and several layers of vegetation, with window frames, wheel hubs, bark markings and irregular foliage.
 
 ![Vehicles, buildings and a seated traveler built from Dream parts](media/assets.jpg)
 
@@ -13,6 +13,7 @@ The mock world contains 78 reusable assemblies, all written in Dream 2. The asse
 | Transport | Rally car, town car, hatchback, delivery van, scooter, city bus, tram, regional train, plane, launch, bicycle, skateboard | [Street assets](../src/scene/world/street_assets.dream), [Transit](../src/scene/world/transit_assets.dream), [landmarks](../src/scene/world/landmarks.dream), [activities](../src/scene/interactive-world.dream) |
 | Housing and shops | Three terraces, garden and courtyard homes, three apartment types, corner shop, bakery | [Architecture](../src/scene/world/architecture.dream) |
 | Civic and work | Market hall, hospital, two schools, college, offices, library, workshops, stations, boathouse and pavilion | [Civic assets](../src/scene/world/civic_assets.dream), [architecture](../src/scene/world/architecture.dream) |
+| Airport and eastbank care | Glazed terminal, gabled hangar, control tower and medical center | [Airport assets](../src/scene/world/transit_assets.dream), [Civic assets](../src/scene/world/civic_assets.dream) |
 | People | Commuter, vendor, teacher, health worker, football and basketball players | [City people](../src/scene/world/city_people.dream), [sports](../src/scene/world/sports_assets.dream) |
 | Wildlife | Pigeon and gull flocks, live deer and route gull habitats; the library also defines hares, foxes and kites | [Fauna](../src/scene/world/fauna.dream), [habitats](../src/scene/world/life.dream) |
 | Vegetation | Oak, pine, amber tree, birch, fir, rowan, apple, willow, ferns, flowers and shrubs | [Nature](../src/scene/world/nature.dream), [flora](../src/scene/world/flora.dream), [landmarks](../src/scene/world/landmarks.dream) |
@@ -41,6 +42,10 @@ The wings use flattened, tapered cylinders. Each colored tip continues the inner
 [Download the complete checked aircraft](examples/light-aircraft.dream). Its 31 parts use existing Dream commands and compact into six render meshes with independent wheel and propeller pivots. [The verification record](evidence/aircraft/verification.md) includes four viewing angles, surface checks, boarding and a real simulation flight replay.
 
 ## Adding useful detail
+
+The new airport buildings use different structures: a long glazed terminal with a supported canopy, a gabled hangar with sliding-door panels, and a narrow tower carrying an observation cabin. Eastbank medical center has a separate entrance block and two floors of windows. Each uses static Dream parts with attached roofs, glazing and supports. [Compose the exact terminal](examples/airport-terminal.dream), or [build a connected terminal, medical center and bus stop](examples/airport-stop.dream).
+
+![Airport buildings and eastbank medical center composed in Dream](media/city-service-assets.jpg)
 
 Start with the silhouette and [physical size](proportions.md). Use endpoint beams for forks, braces and steering stems so the connections are explicit. Keep glass inside its frame, roof edges over their walls and canopies connected to a supporting building. Seeded deformation gives stone and foliage an irregular surface without adding a new shape or generating geometry every frame.
 

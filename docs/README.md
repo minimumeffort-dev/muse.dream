@@ -46,6 +46,9 @@ The game runs locally at `http://127.0.0.1:5173/`. The inspection tools below re
 | Vehicle control review | `/tests/visual/vehicles.html` | [Vehicle switching video](media/switching.mp4) |
 | Aircraft and flight | `/?test-vehicle=cloudhopper` | [Flight video](media/flight.mp4), [Dream source](examples/light-aircraft.dream) |
 | Aircraft on a hillside | `/?test-movement=plane-hill` | Native controls on the eastern heath; [contact checks](evidence/aircraft-terrain/verification.md) |
+| Regional airport | `/?test-driving=airport` | [Terminal, hangar and approach](media/airport.jpg); board buses with F |
+| Eastbank medical center | `/?test-driving=medical` | [Medical center and bus stop](media/east-medical-center.jpg) |
+| Available scooters | `/?test-vehicle=airport_scooter` or `/?test-vehicle=medical_scooter` | Walk up, press F, then drive and jump |
 | Destruction replay | `/tests/visual/destruction.html` | [Destruction video](media/destruction.mp4) |
 
 The local gallery has four viewing angles and fixed animation phases for checking connections. These inspection pages aren't part of the production build.

@@ -28,7 +28,11 @@ The world now covers 1.4 × 1.1 kilometres. It has been rebuilt around places pe
 
 ![Homes, shops and the tram avenue](docs/media/town-center.jpg)
 
-Two bus loops serve the neighborhoods. A tram shares the main avenue, and a regional train stops at the stations. A commuter walks from home to the market. Sports players practise on the pitch and court, and people notice you nearby. The buildings and routines are handmade mock data; there are no working interiors, economy or traffic avoidance yet. [Explore the city](docs/urban-world.md).
+Five buses serve the neighborhoods, schools, both medical centers, station and airport across four routes. A tram shares the main avenue, and a regional train stops at the stations. F boards those services as a passenger. Three scooters are available to drive near the market, medical center and airport. Schools, hospitals, airport and railway stations have symbols on the map. [Explore the city](docs/urban-world.md).
+
+The regional airport has a glazed terminal, control tower, maintenance hangar and a continuous runway, with a separate apron and service road. Its bus stop, entrance paths and bicycle parking connect to town. The eastbank has its own medical center beside the station bus route. These are explorable mock places; interiors, clinical services and airport operations are still to come.
+
+![The regional airport, runway, terminal, hangar and connected public approach](docs/media/airport.jpg)
 
 ![The city map generated from its compiled Dream source](docs/media/city-plan.svg)
 
@@ -126,9 +130,9 @@ object oak(label="Oak"){
 
 The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation uses Minimum Effort's Manrope and Archivo fonts, warm white, charcoal and yellow, with the same page gutters and spacing. Dream commands, fields, references, colors and expressions are highlighted, with copy buttons for complete examples.
 
-[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 78 assemblies and 1,327 placements, all authored in Dream 2.
+[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 82 assemblies and 1,362 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
 
-Streetlights now follow streets, bicycle and scooter parking sits beside destinations, and birds fly across sixteen habitats. Dream’s `furnish` and `flock` commands describe those populations with bounded rules. There are eight road cars, three buses and boardable tram and rail services. [See how populations work](docs/dream/populations.md).
+Streetlights now follow streets, bicycle and scooter parking sits beside destinations, and birds fly across sixteen habitats. Dream’s `furnish` and `flock` commands describe those populations with bounded rules. There are four road cars, five buses and boardable tram and rail services. The actor and animation limits stay the same. [See how populations work](docs/dream/populations.md).
 
 ![Market square with connected parking, lighting and public transport](docs/media/street-life.jpg)
 

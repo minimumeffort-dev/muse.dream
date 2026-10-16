@@ -12,6 +12,73 @@ material wood(style=grain,colors=[#805c40,#aa815a]);
 material dark(style=toon,colors=[#35464c,#28363e]);
 material green(style=toon,colors=[#5e7c73,#405d55]);
 material sign(style=toon,colors=[#e4b948,#c79435]);
+material airport_glass(style=toon,colors=[#7ba5b2,#456a7c],night=#e6bd83);
+object airport_terminal(label="Regional airport terminal"){
+ measure(kind=building,axis=y,meters=7.7);
+ body(interaction=solid,radius=30,height=22);
+ foundation(size=[76,38],color=#a6a79b);
+ contact wall_0(at=[-27,0,-8.5],radius=13,height=20);
+ contact wall_1(at=[-9,0,-8.5],radius=13,height=20);
+ contact wall_2(at=[9,0,-8.5],radius=13,height=20);
+ contact wall_3(at=[27,0,-8.5],radius=13,height=20);
+ contact wall_4(at=[-27,0,8.5],radius=13,height=20);
+ contact wall_5(at=[-9,0,8.5],radius=13,height=20);
+ contact wall_6(at=[9,0,8.5],radius=13,height=20);
+ contact wall_7(at=[27,0,8.5],radius=13,height=20);
+ part walls(shape=box,material=plaster,at=[0,10,0],size=[72,20,34]);
+ part roof(shape=box,material=roof,at=[0,21,0],size=[76,2,38]);
+ part fascia(shape=box,material=green,at=[0,18.8,-17.2],size=[72,2,.6]);
+ repeat bays(index=i,count=6){
+  part glazing(shape=box,material=airport_glass,at=[i*11-27.5,11,-17.15],size=[9.5,12,.5]);
+  part mullion(shape=box,material=trim,at=[i*11-32.5,10,-17.3],size=[.7,18,.7]);
+ }
+ part doors(shape=box,material=dark,at=[0,5,-17.5],size=[9,10,.6]);
+ part door_glass(shape=box,material=airport_glass,at=[0,6,-17.85],size=[7,7,.5]);
+ part porch(shape=box,material=trim,at=[0,.25,-21],size=[36,.5,10]);
+ part canopy(shape=box,material=green,at=[0,9,-21],size=[34,1,9]);
+ repeat columns(index=i,count=2){part column(shape=cylinder,material=trim,at=[i*28-14,4.75,-24],size=[.9,8.5,.9]);}
+ part sign_panel(shape=box,material=dark,at=[0,15,-17.6],size=[22,3,1]);
+ beam aircraft_wing(shape=box,material=sign,from=[-6,15,-18.2],to=[6,15,-18.2],width=.5,depth=.5);
+ beam aircraft_body(shape=box,material=sign,from=[0,14,-18.2],to=[0,16,-18.2],width=.5,depth=.5);
+}
+object airport_hangar(label="Aircraft maintenance hangar"){
+ measure(kind=building,axis=y,meters=10.8);
+ body(interaction=solid,radius=30,height=36);
+ foundation(size=[65,54],color=#93998e);
+ contact wall_0(at=[-22.5,0,-12.5],radius=14.6,height=24);
+ contact wall_1(at=[-7.5,0,-12.5],radius=14.6,height=24);
+ contact wall_2(at=[7.5,0,-12.5],radius=14.6,height=24);
+ contact wall_3(at=[22.5,0,-12.5],radius=14.6,height=24);
+ contact wall_4(at=[-22.5,0,12.5],radius=14.6,height=24);
+ contact wall_5(at=[-7.5,0,12.5],radius=14.6,height=24);
+ contact wall_6(at=[7.5,0,12.5],radius=14.6,height=24);
+ contact wall_7(at=[22.5,0,12.5],radius=14.6,height=24);
+ part walls(shape=box,material=blue,at=[0,12,0],size=[60,24,50]);
+ part roof(shape=prism,material=roof,at=[0,30,0],size=[64,12,53],outline=[[0,0],[1,0],[1,.35],[.5,1],[0,.35]]);
+ repeat doors(index=i,count=2){part door(shape=box,material=trim,at=[i*27-13.5,10,-25.2],size=[26.5,20,.7]);}
+ repeat ribs(index=i,count=6){part rib(shape=box,material=dark,at=[i*10-25,12,-25.65],size=[.5,23,.5]);}
+ part lintel(shape=box,material=dark,at=[0,22,-25.3],size=[59,2,1]);
+ part crew_door(shape=box,material=dark,at=[0,3,25.2],size=[4,6,.7]);
+ part crew_step(shape=box,material=trim,at=[0,.25,26],size=[6,.5,3]);
+}
+object airport_tower(label="Airport control tower"){
+ measure(kind=building,axis=y,meters=18);
+ body(interaction=solid,radius=14,height=48);
+ foundation(size=[28,28],color=#a1a397);
+ contact shaft_body(at=[0,0,0],radius=8.5,height=36);
+ contact cabin_body(at=[0,36,0],radius=15.6,height=6);
+ part shaft(shape=box,material=plaster,at=[0,18,0],size=[12,36,12]);
+ part cabin(shape=box,material=green,at=[0,39,0],size=[22,6,22]);
+ part roof(shape=box,material=roof,at=[0,42.75,0],size=[24,1.5,24]);
+ repeat windows(index=i,count=2){
+  let sign(value=i*2-1);
+  part front_glass(shape=box,material=airport_glass,at=[0,39,sign*11.1],size=[20,4,.5]);
+  part side_glass(shape=box,material=airport_glass,at=[sign*11.1,39,0],size=[.5,4,20]);
+ }
+ part antenna(shape=cylinder,material=dark,at=[0,45.5,0],size=[.5,5,.5]);
+ part base(shape=box,material=trim,at=[0,.3,0],size=[28,.6,28]);
+ part door(shape=box,material=dark,at=[0,3,-6.2],size=[3,6,.5]);
+}
 object city_bus(label="City bus"){
  measure(kind=bus,axis=x,meters=9.4);
  body(interaction=solid,radius=15,height=17);

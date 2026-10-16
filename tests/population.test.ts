@@ -72,7 +72,7 @@ describe('live district populations and transport',()=>{
   const spawnContacts=(await import('../src/sim/actors')).actorContacts;
   for(let t=0;t<=240;t+=2)expect(spawnContacts(scene,t).some(c=>Math.hypot(c.x-scene.spawn.x,c.y-scene.spawn.y)<c.r+11),'spawn must stay clear of scheduled traffic').toBe(false);
   const cars=scene.objects.filter(o=>o.route && scene.routes.find(r=>r.id===o.route!.id)?.kind==='street' && o.spec && 'measure' in o.spec && o.spec.measure?.kind==='car');
-  expect(cars.length).toBe(8);expect(new Set(cars.map(o=>o.spec!.displayName)).size).toBe(3);
+  expect(cars.length).toBe(4);expect(new Set(cars.map(o=>o.spec!.displayName)).size).toBe(3);
   expect(scene.objects.filter(o=>o.route||controlFor(o)).length).toBeLessThanOrEqual(24);
   expect(scene.objects.filter(o=>roleOf(o)==='npc').length).toBeLessThanOrEqual(32);
  });

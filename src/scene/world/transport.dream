@@ -47,13 +47,14 @@ route regional_rail(kind=rail,mode=shuttle,speed=55,gauge=14.35){
  point(at=[13600,4000]);
 }
 place regional_train_vehicle(object=a_regional_train,route=regional_rail,offset=0,role=npc);
-route east_traffic(kind=street,mode=loop,speed=40){
- point(at=[10010,4166]);
- point(at=[10950,4166]);
- point(at=[10950,4234]);
- point(at=[10010,4234]);
+route east_bus(kind=street,mode=loop,speed=38){
+ stop east_station(at=[10950,4200],wait_s=6,site=access_bus_east_station);
+ point(at=[11200,4200]);point(at=[11200,5200]);
+ stop east_medical(at=[12000,5200],wait_s=6,site=access_bus_east_medical);
+ point(at=[12460,5200]);point(at=[12490,5210]);point(at=[12500,5240]);
+ point(at=[12500,6200]);point(at=[11200,6200]);point(at=[11200,4200]);
 }
-place east_taxi(object=a_little_rally_car,route=east_traffic,offset=0,role=npc);
+place east_bus_vehicle(object=a_city_bus,route=east_bus,role=npc);
 route north_traffic(kind=street,mode=loop,speed=37){
  point(at=[6900,2380]);
  point(at=[7900,2380]);
@@ -68,17 +69,19 @@ place canal_launch(object=a_willow_launch,at=[8955,4700],heading_deg=90,role=con
 place lake_boat(object=a_willow_launch,at=[10550,9300],heading_deg=90,role=controllable);
 place cloudhopper(object=a_cloudhopper_plane,at=[2170,9600],heading_deg=-90,role=controllable);
 
-place east_delivery(object=a_delivery_van,route=east_traffic,offset=800,role=npc);
-place north_delivery(object=a_hatchback,route=north_traffic,offset=900,role=npc);
 route center_traffic(kind=street,mode=loop,speed=32){
  point(at=[5906,3300]);point(at=[5906,4167]);point(at=[6782,4167]);point(at=[6782,3210]);point(at=[5906,3210]);
 }
 place center_car(object=a_little_rally_car,route=center_traffic,role=npc);
 place center_delivery(object=a_hatchback,route=center_traffic,offset=1600,role=npc);
-route garden_traffic(kind=street,mode=loop,speed=28){
- point(at=[3790,3310]);point(at=[3790,4090]);point(at=[3010,4090]);point(at=[2815,3310]);
+route airport_bus(kind=street,mode=shuttle,speed=42){
+ point(at=[2000,9620]);
+ stop airport(at=[2000,9550],wait_s=6,site=access_airport_bus);
+ point(at=[2000,8600]);point(at=[3000,7800]);point(at=[3300,6500]);
+ stop hospital(at=[3830,6500],wait_s=6,site=access_bus_hospital);
+ point(at=[3900,6500]);
 }
-place garden_car(object=a_hatchback,route=garden_traffic,role=npc);
+place airport_bus_vehicle(object=a_city_bus,route=airport_bus,role=npc);
 route south_traffic(kind=street,mode=loop,speed=32){
  point(at=[4400,7750]);point(at=[5500,7300]);point(at=[7000,7350]);point(at=[7000,8400]);point(at=[6600,8100]);point(at=[5400,7800]);
 }
@@ -88,4 +91,6 @@ asset a_hatchback(module=street_assets,object=city_hatchback);
 asset a_delivery_van(module=street_assets,object=delivery_van);
 asset a_scooter(module=street_assets,object=city_scooter);
 place market_scooter(object=a_scooter,at=[6260,4320],heading_deg=0,role=controllable);
+place airport_scooter(object=a_scooter,at=[1905,9630],heading_deg=0,role=controllable);
+place medical_scooter(object=a_scooter,at=[12050,5315],heading_deg=0,role=controllable);
 place station_bicycle(object=a_meadow_bicycle,at=[10800,4095],heading_deg=0,role=controllable);

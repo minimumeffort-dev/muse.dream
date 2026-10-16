@@ -1,12 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1420" role="img" aria-labelledby="title desc"><title id="title">River town, compiled Dream geometry</title><desc id="desc">Roads and intersections are unions of the actual world geometry. Building footprints, entrances, transit stops and bridges come from the same compiled Dream source as the game.</desc><rect width="1500" height="1420" fill="#fafaf7"/><g font-family="system-ui,sans-serif" fill="#171717"><text x="50" y="52" font-size="30" font-weight="700">A city has to make sense.</text><text x="50" y="86" font-size="17" fill="#5e5e56">Compiled Dream geometry · 1.4 × 1.1 km · roads, entrances, platforms and bridges share the game source</text></g><g transform="translate(50 120) scale(.1)"><rect width="14000" height="11000" fill="#dce2d1"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1440" role="img" aria-labelledby="title desc"><title id="title">River town, compiled Dream geometry</title><desc id="desc">Roads and intersections are unions of the actual world geometry. Building footprints, entrances, transit stops and bridges come from the same compiled Dream source as the game.</desc><rect width="1500" height="1440" fill="#fafaf7"/><g font-family="system-ui,sans-serif" fill="#171717"><text x="50" y="52" font-size="30" font-weight="700">A city has to make sense.</text><text x="50" y="86" font-size="17" fill="#5e5e56">Compiled Dream geometry · 1.4 × 1.1 km · roads, entrances, platforms and bridges share the game source</text></g><g transform="translate(50 120) scale(.1)"><rect width="14000" height="11000" fill="#dce2d1"/>
 <ellipse cx="1000" cy="1700" rx="1300" ry="1600" fill="#becbb0"/>
 <ellipse cx="1350" cy="6300" rx="900" ry="1500" fill="#becbb0"/>
 <ellipse cx="6500" cy="400" rx="1600" ry="800" fill="#becbb0"/>
 <ellipse cx="13000" cy="10200" rx="1400" ry="1000" fill="#becbb0"/>
 <ellipse cx="5500" cy="10200" rx="1500" ry="700" fill="#becbb0"/>
 <polygon points="8880.00,0.00 8900.00,2200.00 8890.27,4507.66 9145.73,6542.43 9607.72,8587.52 9550.00,11000.00 10650.00,11000.00 10592.28,8412.48 9454.27,6457.57 9109.73,4492.34 9100.00,2200.00 9120.00,0.00" fill="#9fc4d0"/>
+<polygon points="11860.00,5262.00 12130.00,5262.00 12130.00,5440.00 11860.00,5440.00" fill="#c2bea8"/>
 <polygon points="2080.00,8750.00 2260.00,8750.00 2260.00,10050.00 2080.00,10050.00" fill="#c2bea8"/>
-<polygon points="2054.00,9300.00 2310.00,9300.00 2310.00,9670.00 2054.00,9670.00" fill="#c2bea8"/>
+<polygon points="2260.00,9300.00 2700.00,9300.00 2700.00,9670.00 2260.00,9670.00" fill="#c2bea8"/>
+<polygon points="1795.00,9300.00 1946.00,9300.00 1946.00,9680.00 1795.00,9680.00" fill="#c2bea8"/>
+<polygon points="2630.00,9360.00 2756.00,9360.00 2756.00,9560.00 2630.00,9560.00" fill="#c2bea8"/>
 <polygon points="6100.00,4300.00 6690.00,4300.00 6690.00,4400.00 6100.00,4400.00" fill="#c2bea8"/>
 <polygon points="4270.00,3770.00 4590.00,3770.00 4590.00,4010.00 4270.00,4010.00" fill="#c2bea8"/>
 <polygon points="5700.00,6680.00 6100.00,6680.00 6100.00,6830.00 5700.00,6830.00" fill="#c2bea8"/>
@@ -28,6 +31,8 @@
 <polygon points="6432.90,2497.50 6567.10,2497.50 6567.10,2522.20 6432.90,2522.20" fill="#c2bea8"/>
 <polygon points="11567.10,8290.50 11432.90,8290.50 11432.90,8315.20 11567.10,8315.20" fill="#c2bea8"/>
 <polygon points="7342.90,7403.50 7477.10,7403.50 7477.10,7428.20 7342.90,7428.20" fill="#c2bea8"/>
+<polygon points="1936.50,9374.58 1936.50,9525.42 1909.15,9525.42 1909.15,9374.58" fill="#c2bea8"/>
+<polygon points="11870.58,5259.50 11923.42,5259.50 11923.42,5286.85 11870.58,5286.85" fill="#c2bea8"/>
 <polygon points="8700.00,2520.00 9300.00,2520.00 9300.00,2280.00 8700.00,2280.00" fill="#8c9490"/>
 <polygon points="8700.00,4320.00 9300.00,4320.00 9300.00,4080.00 8700.00,4080.00" fill="#8c9490"/>
 <polygon points="8955.00,6320.00 9555.00,6320.00 9555.00,6080.00 8955.00,6080.00" fill="#8c9490"/>
@@ -198,16 +203,16 @@
 <polygon points="10800.00,8221.46 10800.00,9800.00 11000.00,9800.00 11000.00,8665.91" fill="#f2eee0"/>
 <polygon points="10849.84,8332.23 11000.00,8665.91 11000.00,8264.66" fill="#f2eee0"/>
 <polygon points="11000.00,8178.54 11000.00,8100.00 10964.66,8100.00" fill="#f2eee0"/>
+<polygon points="11100.00,4300.00 11100.00,5300.00 11300.00,5300.00 11300.00,4300.00" fill="#f2eee0"/>
 <polygon points="11100.00,6298.00 11100.00,6300.00 11300.00,6300.00 11300.00,6298.00" fill="#f2eee0"/>
-<polygon points="11298.00,6298.00 11300.00,6298.00 11300.00,4300.00 11298.00,4300.00" fill="#f2eee0"/>
-<polygon points="11100.00,4300.00 11100.00,6102.00 11298.00,6102.00 11298.00,4300.00" fill="#f2eee0"/>
+<polygon points="11298.00,6298.00 11300.00,6298.00 11300.00,5300.00 11298.00,5300.00" fill="#f2eee0"/>
+<polygon points="11100.00,5300.00 11100.00,6102.00 11298.00,6102.00 11298.00,5300.00" fill="#f2eee0"/>
 <polygon points="11150.00,6300.00 12080.00,7540.00 12240.00,7420.00 11400.00,6300.00" fill="#f2eee0"/>
 <polygon points="11300.00,6300.00 11400.00,6300.00 11398.50,6298.00 11300.00,6298.00" fill="#f2eee0"/>
 <polygon points="11300.00,6298.00 11398.50,6298.00 11300.00,6166.67" fill="#f2eee0"/>
-<polygon points="11300.00,5260.00 12560.00,5260.00 12560.00,5169.62 11300.00,5232.62" fill="#f2eee0"/>
 <polygon points="10752.50,5260.00 11100.00,5260.00 11100.00,5242.62" fill="#f2eee0"/>
-<polygon points="11300.00,5232.62 12560.00,5169.62 12560.00,5140.00 11300.00,5140.00" fill="#f2eee0"/>
 <polygon points="10053.12,5260.00 10752.50,5260.00 11100.00,5242.62 11100.00,5140.00 10047.12,5140.00" fill="#f2eee0"/>
+<polygon points="11300.00,5260.00 12560.00,5260.00 12560.00,5140.00 11300.00,5140.00" fill="#f2eee0"/>
 <polygon points="11393.25,6291.00 12591.00,6291.00 12591.00,6109.00 11300.00,6109.00 11300.00,6166.67" fill="#f2eee0"/>
 <polygon points="12409.00,6291.00 12409.00,8291.00 12591.00,8291.00 12591.00,6291.00" fill="#f2eee0"/>
 <polygon points="12409.00,8109.00 11345.91,8109.00 11000.00,8264.66 11000.00,8291.00 12409.00,8291.00" fill="#f2eee0"/>
@@ -236,10 +241,18 @@
 <polygon points="1428.94,4165.46 921.54,2947.69 847.69,2978.46 1333.43,4144.23" fill="#f2eee0"/>
 <polygon points="1369.63,4152.28 1333.43,4144.23 1358.20,4203.69" fill="#f2eee0"/>
 <polygon points="1371.06,4234.54 1378.46,4252.31 1403.69,4241.80" fill="#f2eee0"/>
-<polygon points="3008.43,7724.10 1924.10,8591.57 1991.57,8675.90 3075.90,7808.43" fill="#f2eee0"/>
-<polygon points="1946.00,8546.00 1946.00,8574.05 1981.06,8546.00" fill="#f2eee0"/>
-<polygon points="1946.00,8618.94 1946.00,9754.00 2054.00,9754.00 2054.00,8753.94" fill="#f2eee0"/>
-<polygon points="1991.57,8675.90 2054.00,8753.94 2054.00,8625.95" fill="#f2eee0"/>
+<polygon points="3010.00,7710.04 1910.04,8590.00 1990.00,8689.96 3089.96,7810.00" fill="#f2eee0"/>
+<polygon points="1936.00,8536.00 1936.00,8569.24 1977.55,8536.00" fill="#f2eee0"/>
+<polygon points="1936.00,8622.45 1936.00,9764.00 2064.00,9764.00 2064.00,8782.45" fill="#f2eee0"/>
+<polygon points="1990.00,8689.96 2064.00,8782.45 2064.00,8630.76" fill="#f2eee0"/>
+<polygon points="2064.00,8654.00 2854.00,8654.00 2854.00,8546.00 2169.95,8546.00 2064.00,8630.76" fill="#f2eee0"/>
+<polygon points="2746.00,9634.95 2746.00,9754.00 2841.24,9754.00" fill="#f2eee0"/>
+<polygon points="2746.00,8654.00 2746.00,9634.95 2841.24,9754.00 2854.00,9754.00 2854.00,8654.00" fill="#f2eee0"/>
+<polygon points="3103.75,7635.04 3123.35,7550.10 2998.53,7521.73 2942.64,7763.93" fill="#f2eee0"/>
+<polygon points="3047.97,7876.75 3057.36,7836.07 3015.79,7869.33" fill="#f2eee0"/>
+<polygon points="3069.33,7784.21 3103.75,7635.04 3010.00,7710.04" fill="#f2eee0"/>
+<polygon points="3123.35,7550.10 3212.00,7165.96 3212.00,6748.07 3181.47,6728.99 2998.53,7521.73" fill="#f2eee0"/>
+<polygon points="3212.00,6598.00 3211.70,6598.00 3181.47,6728.99 3212.00,6748.07" fill="#f2eee0"/>
 <polygon points="2460.20,4404.87 2960.46,4154.74 2961.25,4150.00 2911.80,4150.00 2419.95,4395.92" fill="#9caf8f"/>
 <polygon points="2266.01,4501.96 2375.10,4447.42 2334.85,4438.48 2254.38,4478.71" fill="#9caf8f"/>
 <polygon points="2375.10,4447.42 2460.20,4404.87 2419.95,4395.92 2334.85,4438.48" fill="#9caf8f"/>
@@ -363,7 +376,7 @@
 <polygon points="2162.05,5917.32 2109.05,6002.12 2131.10,6015.90 2184.10,5931.10" fill="#9caf8f"/>
 <polygon points="2924.00,6576.00 2978.20,6576.00 2936.60,6550.00 2924.00,6550.00" fill="#9caf8f"/>
 <polygon points="2924.00,6542.12 2924.00,6550.00 2936.60,6550.00" fill="#9caf8f"/>
-<polygon points="3042.12,6576.00 3260.00,6576.00 3260.00,6550.00 3058.37,6550.00" fill="#9caf8f"/>
+<polygon points="3042.12,6576.00 3241.41,6576.00 3247.41,6550.00 3058.37,6550.00" fill="#9caf8f"/>
 <polygon points="3340.00,6576.00 3376.00,6576.00 3376.00,6550.00 3340.00,6550.00" fill="#9caf8f"/>
 <polygon points="3376.00,6450.00 3376.00,6424.00 3350.00,6424.00 3350.00,6450.00" fill="#9caf8f"/>
 <polygon points="3350.00,6424.00 3106.46,6424.00 3090.21,6450.00 3350.00,6450.00" fill="#9caf8f"/>
@@ -598,7 +611,8 @@
 <polygon points="7894.13,7971.00 7886.70,7945.00 7871.00,7945.00 7871.00,7971.00" fill="#9caf8f"/>
 <polygon points="7886.70,7945.00 7871.00,7890.06 7871.00,7945.00" fill="#9caf8f"/>
 <polygon points="3236.00,7526.47 3236.00,7564.00 3260.00,7564.00 3260.00,7531.93" fill="#9caf8f"/>
-<polygon points="3236.00,6576.00 3236.00,7444.43 3260.00,7449.89 3260.00,6576.00" fill="#9caf8f"/>
+<polygon points="3236.00,6955.22 3236.00,7444.43 3260.00,7449.89 3260.00,6851.22" fill="#9caf8f"/>
+<polygon points="3236.00,6576.00 3236.00,6599.44 3241.41,6576.00" fill="#9caf8f"/>
 <polygon points="3236.00,7444.43 3236.00,7526.47 3252.13,7530.14 3260.00,7495.51 3260.00,7449.89" fill="#9caf8f"/>
 <polygon points="3260.00,7564.00 3364.00,7564.00 3364.00,7555.57 3295.51,7540.00 3260.00,7540.00" fill="#9caf8f"/>
 <polygon points="3364.00,7473.53 3364.00,6576.00 3340.00,6576.00 3340.00,7468.07" fill="#9caf8f"/>
@@ -645,10 +659,13 @@
 <polygon points="10950.00,8432.95 10976.00,8490.73 10976.00,8249.14 10950.00,8260.84" fill="#9caf8f"/>
 <polygon points="10976.00,8155.00 10976.00,8124.00 10950.00,8124.00 10950.00,8125.91 10963.09,8155.00" fill="#9caf8f"/>
 <polygon points="10950.00,8124.00 10949.14,8124.00 10950.00,8125.91" fill="#9caf8f"/>
-<polygon points="11276.00,6124.00 11276.00,5240.00 11250.00,5240.00 11250.00,6124.00" fill="#9caf8f"/>
-<polygon points="11276.00,5160.00 11276.00,4276.00 11250.00,4276.00 11250.00,5160.00" fill="#9caf8f"/>
-<polygon points="11124.00,5240.00 11124.00,6015.33 11150.00,6050.00 11150.00,5240.00" fill="#9caf8f"/>
+<polygon points="11124.00,5240.00 11124.00,5276.00 11150.00,5276.00 11150.00,5240.00" fill="#9caf8f"/>
 <polygon points="11124.00,4276.00 11124.00,5160.00 11150.00,5160.00 11150.00,4276.00" fill="#9caf8f"/>
+<polygon points="11250.00,5276.00 11276.00,5276.00 11276.00,5250.00 11250.00,5250.00" fill="#9caf8f"/>
+<polygon points="11276.00,5250.00 11276.00,5240.00 11250.00,5240.00 11250.00,5250.00" fill="#9caf8f"/>
+<polygon points="11276.00,5160.00 11276.00,4276.00 11250.00,4276.00 11250.00,5160.00" fill="#9caf8f"/>
+<polygon points="11276.00,6124.00 11276.00,5276.00 11250.00,5276.00 11250.00,6124.00" fill="#9caf8f"/>
+<polygon points="11124.00,5276.00 11124.00,6015.33 11150.00,6050.00 11150.00,5276.00" fill="#9caf8f"/>
 <polygon points="11124.00,6015.33 11124.00,6124.00 11150.00,6124.00 11150.00,6050.00" fill="#9caf8f"/>
 <polygon points="11162.00,6276.00 12084.80,7506.40 12105.60,7490.80 11194.50,6276.00" fill="#9caf8f"/>
 <polygon points="12105.60,7490.80 12206.40,7415.20 12190.80,7394.40 12090.00,7470.00" fill="#9caf8f"/>
@@ -2314,13 +2331,13 @@
 <polygon points="10850.00,8210.73 10850.00,9750.00 10950.00,9750.00 10950.00,8432.95" fill="#737d7c"/>
 <polygon points="10874.92,8266.11 10950.00,8432.95 10950.00,8232.33" fill="#737d7c"/>
 <polygon points="10950.00,8189.27 10950.00,8150.00 10932.33,8150.00" fill="#737d7c"/>
-<polygon points="11150.00,4250.00 11150.00,6150.00 11250.00,6150.00 11250.00,4250.00" fill="#737d7c"/>
+<polygon points="11150.00,4250.00 11150.00,5250.00 11250.00,5250.00 11250.00,4250.00" fill="#737d7c"/>
+<polygon points="11150.00,5250.00 11150.00,6150.00 11250.00,6150.00 11250.00,5250.00" fill="#737d7c"/>
 <polygon points="11175.00,6250.00 12090.00,7470.00 12170.00,7410.00 11300.00,6250.00" fill="#737d7c"/>
 <polygon points="11250.00,6250.00 11300.00,6250.00 11250.00,6183.33" fill="#737d7c"/>
 <polygon points="10151.25,5240.00 11150.00,5240.00 11150.00,5190.06" fill="#737d7c"/>
-<polygon points="11250.00,5240.00 12540.00,5240.00 12540.00,5160.00 11751.25,5160.00 11250.00,5185.06" fill="#737d7c"/>
 <polygon points="10002.06,5240.00 10151.25,5240.00 11150.00,5190.06 11150.00,5160.00 9998.06,5160.00" fill="#737d7c"/>
-<polygon points="11250.00,5185.06 11751.25,5160.00 11250.00,5160.00" fill="#737d7c"/>
+<polygon points="11250.00,5240.00 12540.00,5240.00 12540.00,5160.00 11250.00,5160.00" fill="#737d7c"/>
 <polygon points="11296.25,6245.00 12545.00,6245.00 12545.00,6155.00 11250.00,6155.00 11250.00,6183.33" fill="#737d7c"/>
 <polygon points="12455.00,6245.00 12455.00,8245.00 12545.00,8245.00 12545.00,6245.00" fill="#737d7c"/>
 <polygon points="12455.00,8155.00 11121.84,8155.00 10950.00,8232.33 10950.00,8245.00 12455.00,8245.00" fill="#737d7c"/>
@@ -2348,6 +2365,15 @@
 <polygon points="1960.00,8560.00 1960.00,8580.78 1985.97,8560.00" fill="#737d7c"/>
 <polygon points="1960.00,8614.03 1960.00,9740.00 2040.00,9740.00 2040.00,8714.03" fill="#737d7c"/>
 <polygon points="1993.75,8656.22 2040.00,8714.03 2040.00,8619.22" fill="#737d7c"/>
+<polygon points="2040.00,8630.00 2830.00,8630.00 2830.00,8570.00 2101.53,8570.00 2040.00,8619.22" fill="#737d7c"/>
+<polygon points="2770.00,9626.53 2770.00,9730.00 2830.00,9730.00 2830.00,9701.53" fill="#737d7c"/>
+<polygon points="2770.00,8630.00 2770.00,9626.53 2830.00,9701.53 2830.00,8630.00" fill="#737d7c"/>
+<polygon points="3064.84,7696.90 3110.74,7498.01 3032.73,7480.28 2964.15,7777.45" fill="#737d7c"/>
+<polygon points="3029.98,7847.97 3035.85,7822.55 3009.87,7843.33" fill="#737d7c"/>
+<polygon points="3043.33,7790.13 3064.84,7696.90 3006.25,7743.78" fill="#737d7c"/>
+<polygon points="3110.74,7498.01 3260.00,6851.22 3260.00,6721.46 3214.42,6692.97 3032.73,7480.28" fill="#737d7c"/>
+<polygon points="3260.00,6550.00 3247.41,6550.00 3214.42,6692.97 3260.00,6721.46" fill="#737d7c"/>
+<polyline points="11946.00,5435.50 11946.00,5250.00" fill="none" stroke="#b8aa89" stroke-width="20"/>
 <polyline points="6400.00,4406.88 6400.00,4288.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="3900.00,6701.00 3900.00,6587.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="4430.00,3545.00 4440.68,3384.80" fill="none" stroke="#b8aa89" stroke-width="16"/>
@@ -2372,6 +2398,8 @@
 <polyline points="3830.00,6608.00 3830.00,6587.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="7100.00,7200.00 7078.00,7200.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="5802.00,7250.03 5801.33,7270.02" fill="none" stroke="#b8aa89" stroke-width="16"/>
+<polyline points="12000.00,5270.00 12000.00,5248.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
+<polyline points="10950.00,4310.00 10950.00,4288.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="2581.71,4417.91 2557.56,4369.61" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="2661.44,4378.36 2637.16,4329.81" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="3140.00,4230.26 3140.00,4188.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
@@ -2559,6 +2587,11 @@
 <polyline points="9779.46,3472.09 9812.00,3472.09" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="9779.46,3600.09 9812.00,3600.09" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="9767.83,3728.09 9812.00,3728.09" fill="none" stroke="#b8aa89" stroke-width="16"/>
+<polyline points="1792.75,9450.00 1948.00,9450.00" fill="none" stroke="#b8aa89" stroke-width="20"/>
+<polyline points="2617.00,9460.00 2758.00,9460.00" fill="none" stroke="#b8aa89" stroke-width="20"/>
+<polyline points="1786.25,9150.00 1948.00,9150.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
+<polyline points="1925.00,9550.00 1948.00,9550.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
+<g><title>Eastbank medical center · east_medical_center</title><polygon points="11901.00,5437.00 12099.00,5437.00 12099.00,5596.00 11901.00,5596.00" fill="#827565"/></g>
 <g><title>Covered market hall · market_hall</title><polygon points="6271.93,4406.88 6528.07,4406.88 6528.07,4591.52 6271.93,4591.52" fill="#827565"/></g>
 <g><title>River hospital · hospital</title><polygon points="3749.60,6701.00 4050.40,6701.00 4050.40,6937.00 3749.60,6937.00" fill="#827565"/></g>
 <g><title>Garden primary school · garden_school</title><polygon points="4314.60,3545.00 4545.40,3545.00 4545.40,3733.00 4314.60,3733.00" fill="#827565"/></g>
@@ -2759,6 +2792,9 @@
 <g><title>Corner shop · east_022</title><polygon points="9779.46,3426.70 9779.46,3517.48 9654.24,3517.48 9654.24,3426.70" fill="#827565"/></g>
 <g><title>Corner shop · east_023</title><polygon points="9779.46,3554.70 9779.46,3645.48 9654.24,3645.48 9654.24,3554.70" fill="#827565"/></g>
 <g><title>Canal apartments · east_024</title><polygon points="9767.83,3652.70 9767.83,3803.49 9633.62,3803.49 9633.62,3652.70" fill="#827565"/></g>
+<g><title>Regional airport terminal · airport_terminal</title><polygon points="1791.00,9317.00 1791.00,9583.00 1633.50,9583.00 1633.50,9317.00" fill="#827565"/></g>
+<g><title>Aircraft maintenance hangar · airport_hangar</title><polygon points="2450.50,9556.00 2450.50,9364.00 2612.50,9364.00 2612.50,9556.00" fill="#827565"/></g>
+<g><title>Airport control tower · airport_tower</title><polygon points="1782.50,9097.50 1782.50,9202.50 1677.50,9202.50 1677.50,9097.50" fill="#827565"/></g>
 <circle cx="2400.568" cy="1999.184" r="32" fill="#789266"/>
 <circle cx="1450.957" cy="7407.115" r="32" fill="#789266"/>
 <circle cx="2180.216" cy="8198.852" r="32" fill="#789266"/>
@@ -3046,48 +3082,56 @@
 <polyline points="10760.00,4000.00 10880.00,4000.00 13300.00,4000.00 13600.00,4000.00" fill="none" stroke="#333e45" stroke-width="18" />
 <circle cx="10880" cy="4000" r="22" fill="#fafaf7" stroke="#333e45" stroke-width="10"/>
 <circle cx="13300" cy="4000" r="22" fill="#fafaf7" stroke="#333e45" stroke-width="10"/>
-<polyline points="10010.00,4166.00 10950.00,4166.00 10950.00,4234.00 10010.00,4234.00" fill="none" stroke="#735b98" stroke-width="14" stroke-dasharray="40 30"/>
+<polyline points="10950.00,4200.00 11200.00,4200.00 11200.00,5200.00 12000.00,5200.00 12460.00,5200.00 12490.00,5210.00 12500.00,5240.00 12500.00,6200.00 11200.00,6200.00 11200.00,4200.00" fill="none" stroke="#735b98" stroke-width="14" stroke-dasharray="40 30"/>
+<circle cx="10950" cy="4200" r="22" fill="#fafaf7" stroke="#735b98" stroke-width="10"/>
+<circle cx="12000" cy="5200" r="22" fill="#fafaf7" stroke="#735b98" stroke-width="10"/>
 <polyline points="6900.00,2380.00 7900.00,2380.00 7900.00,2420.00 6900.00,2420.00" fill="none" stroke="#735b98" stroke-width="14" stroke-dasharray="40 30"/>
 <polyline points="5906.00,3300.00 5906.00,4167.00 6782.00,4167.00 6782.00,3210.00 5906.00,3210.00" fill="none" stroke="#735b98" stroke-width="14" stroke-dasharray="40 30"/>
-<polyline points="3790.00,3310.00 3790.00,4090.00 3010.00,4090.00 2815.00,3310.00" fill="none" stroke="#735b98" stroke-width="14" stroke-dasharray="40 30"/>
+<polyline points="2000.00,9620.00 2000.00,9550.00 2000.00,8600.00 3000.00,7800.00 3300.00,6500.00 3830.00,6500.00 3900.00,6500.00" fill="none" stroke="#735b98" stroke-width="14" stroke-dasharray="40 30"/>
+<circle cx="2000" cy="9550" r="22" fill="#fafaf7" stroke="#735b98" stroke-width="10"/>
+<circle cx="3830" cy="6500" r="22" fill="#fafaf7" stroke="#735b98" stroke-width="10"/>
 <polyline points="4400.00,7750.00 5500.00,7300.00 7000.00,7350.00 7000.00,8400.00 6600.00,8100.00 5400.00,7800.00" fill="none" stroke="#735b98" stroke-width="14" stroke-dasharray="40 30"/>
-<circle cx="6400" cy="4510" r="85" fill="#f7c843"/><text x="6400" y="4550" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">1</text>
-<circle cx="3900" cy="6830" r="85" fill="#f7c843"/><text x="3900" y="6870" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">2</text>
-<circle cx="4430" cy="3650" r="85" fill="#f7c843"/><text x="4430" y="3690" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">3</text>
-<circle cx="5900" cy="6970" r="85" fill="#f7c843"/><text x="5900" y="7010" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">4</text>
-<circle cx="7200" cy="5520" r="85" fill="#f7c843"/><text x="7200" y="5560" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">5</text>
-<circle cx="6500" cy="2740" r="85" fill="#f7c843"/><text x="6500" y="2780" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">6</text>
-<circle cx="7500" cy="2760" r="85" fill="#f7c843"/><text x="7500" y="2800" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">7</text>
-<circle cx="11800" cy="6500" r="85" fill="#f7c843"/><text x="11800" y="6540" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">8</text>
-<circle cx="11500" cy="8500" r="85" fill="#f7c843"/><text x="11500" y="8540" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">9</text>
-<circle cx="7410" cy="7620" r="85" fill="#f7c843"/><text x="7410" y="7660" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">10</text>
-<circle cx="10700" cy="9300" r="85" fill="#f7c843"/><text x="10700" y="9340" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">11</text>
-<circle cx="11000" cy="4060" r="85" fill="#f7c843"/><text x="11000" y="4100" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">12</text>
-<circle cx="13300" cy="3800" r="85" fill="#f7c843"/><text x="13300" y="3840" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">13</text>
-<circle cx="11056.087" cy="2931" r="85" fill="#f7c843"/><text x="11056.087" y="2971" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">14</text>
-<circle cx="11292.743" cy="3378.072" r="85" fill="#f7c843"/><text x="11292.743" y="3418.072" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">15</text>
-<circle cx="11431.627" cy="3419.738" r="85" fill="#f7c843"/><text x="11431.627" y="3459.738" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">16</text>
-<circle cx="12343.913" cy="2993.953" r="85" fill="#f7c843"/><text x="12343.913" y="3033.953" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">17</text>
-<circle cx="12056.087" cy="2946.907" r="85" fill="#f7c843"/><text x="12056.087" y="2986.907" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">18</text>
-<circle cx="9706.087" cy="2949.047" r="85" fill="#f7c843"/><text x="9706.087" y="2989.047" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">19</text>
-<circle cx="9706.087" cy="3472.093" r="85" fill="#f7c843"/><text x="9706.087" y="3512.093" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">20</text>
-<circle cx="9706.087" cy="3600.093" r="85" fill="#f7c843"/><text x="9706.087" y="3640.093" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">21</text>
+<circle cx="12000" cy="5530" r="85" fill="#f7c843"/><text x="12000" y="5570" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">1</text>
+<circle cx="6400" cy="4510" r="85" fill="#f7c843"/><text x="6400" y="4550" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">2</text>
+<circle cx="3900" cy="6830" r="85" fill="#f7c843"/><text x="3900" y="6870" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">3</text>
+<circle cx="4430" cy="3650" r="85" fill="#f7c843"/><text x="4430" y="3690" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">4</text>
+<circle cx="5900" cy="6970" r="85" fill="#f7c843"/><text x="5900" y="7010" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">5</text>
+<circle cx="7200" cy="5520" r="85" fill="#f7c843"/><text x="7200" y="5560" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">6</text>
+<circle cx="6500" cy="2740" r="85" fill="#f7c843"/><text x="6500" y="2780" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">7</text>
+<circle cx="7500" cy="2760" r="85" fill="#f7c843"/><text x="7500" y="2800" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">8</text>
+<circle cx="11800" cy="6500" r="85" fill="#f7c843"/><text x="11800" y="6540" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">9</text>
+<circle cx="11500" cy="8500" r="85" fill="#f7c843"/><text x="11500" y="8540" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">10</text>
+<circle cx="7410" cy="7620" r="85" fill="#f7c843"/><text x="7410" y="7660" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">11</text>
+<circle cx="10700" cy="9300" r="85" fill="#f7c843"/><text x="10700" y="9340" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">12</text>
+<circle cx="11000" cy="4060" r="85" fill="#f7c843"/><text x="11000" y="4100" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">13</text>
+<circle cx="13300" cy="3800" r="85" fill="#f7c843"/><text x="13300" y="3840" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">14</text>
+<circle cx="11056.087" cy="2931" r="85" fill="#f7c843"/><text x="11056.087" y="2971" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">15</text>
+<circle cx="11292.743" cy="3378.072" r="85" fill="#f7c843"/><text x="11292.743" y="3418.072" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">16</text>
+<circle cx="11431.627" cy="3419.738" r="85" fill="#f7c843"/><text x="11431.627" y="3459.738" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">17</text>
+<circle cx="12343.913" cy="2993.953" r="85" fill="#f7c843"/><text x="12343.913" y="3033.953" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">18</text>
+<circle cx="12056.087" cy="2946.907" r="85" fill="#f7c843"/><text x="12056.087" y="2986.907" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">19</text>
+<circle cx="9706.087" cy="2949.047" r="85" fill="#f7c843"/><text x="9706.087" y="2989.047" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">20</text>
+<circle cx="9706.087" cy="3472.093" r="85" fill="#f7c843"/><text x="9706.087" y="3512.093" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">21</text>
+<circle cx="9706.087" cy="3600.093" r="85" fill="#f7c843"/><text x="9706.087" y="3640.093" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">22</text>
+<circle cx="1700" cy="9450" r="85" fill="#f7c843"/><text x="1700" y="9490" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">23</text>
+<circle cx="2530" cy="9460" r="85" fill="#f7c843"/><text x="2530" y="9500" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">24</text>
+<circle cx="1730" cy="9150" r="85" fill="#f7c843"/><text x="1730" y="9190" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">25</text>
 </g><g font-family="system-ui,sans-serif" fill="#3d3d38" font-size="15">
 <text x="50" y="1250">Charcoal: rail · Rust: tram · Violet: buses · Green: cycle tracks · Tan: entrance paths · Dots: route stops</text>
-<text x="50" y="1280">1. Covered market hall</text>
-<text x="410" y="1280">2. River hospital</text>
-<text x="770" y="1280">3. Garden primary school</text>
-<text x="1130" y="1280">4. South neighborhood school</text>
-<text x="50" y="1300">5. Public library</text>
-<text x="410" y="1300">6. Office studios</text>
-<text x="770" y="1300">7. Technical college</text>
-<text x="1130" y="1300">8. Harbor workshops</text>
-<text x="50" y="1320">9. Harbor food market</text>
-<text x="410" y="1320">10. Sports pavilion</text>
-<text x="770" y="1320">11. Public boat landing</text>
-<text x="1130" y="1320">12. Central station hall</text>
-<text x="50" y="1340">13. East station hall</text>
-<text x="410" y="1340">14. Corner shop</text>
+<text x="50" y="1280">1. Eastbank medical center</text>
+<text x="410" y="1280">2. Covered market hall</text>
+<text x="770" y="1280">3. River hospital</text>
+<text x="1130" y="1280">4. Garden primary school</text>
+<text x="50" y="1300">5. South neighborhood school</text>
+<text x="410" y="1300">6. Public library</text>
+<text x="770" y="1300">7. Office studios</text>
+<text x="1130" y="1300">8. Technical college</text>
+<text x="50" y="1320">9. Harbor workshops</text>
+<text x="410" y="1320">10. Harbor food market</text>
+<text x="770" y="1320">11. Sports pavilion</text>
+<text x="1130" y="1320">12. Public boat landing</text>
+<text x="50" y="1340">13. Central station hall</text>
+<text x="410" y="1340">14. East station hall</text>
 <text x="770" y="1340">15. Corner shop</text>
 <text x="1130" y="1340">16. Corner shop</text>
 <text x="50" y="1360">17. Corner shop</text>
@@ -3095,4 +3139,8 @@
 <text x="770" y="1360">19. Corner shop</text>
 <text x="1130" y="1360">20. Corner shop</text>
 <text x="50" y="1380">21. Corner shop</text>
+<text x="410" y="1380">22. Corner shop</text>
+<text x="770" y="1380">23. Regional airport terminal</text>
+<text x="1130" y="1380">24. Aircraft maintenance hangar</text>
+<text x="50" y="1400">25. Airport control tower</text>
 </g></svg>
