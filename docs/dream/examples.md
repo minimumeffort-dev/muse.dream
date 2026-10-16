@@ -4,6 +4,8 @@
 
 Start with something you can see and understand. Change one field, run the checker and look at what the engine builds. These are complete Dream 2 files, checked alongside the compiler tests.
 
+[Walkable garden steps](../examples/walkable-steps.dream) pair three round treads with matching cylinder contacts. Each rise is 30 cm, below the walking controller's 40 cm step limit. The [movement guide](behavior.md) explains headroom, jumping and water support.
+
 ## A ball that bounces
 
 A sphere supplies the shape. The knockable body and bounce declaration supply the behavior. `measure` makes the ball sixty centimetres tall; it scales the body with the mesh.

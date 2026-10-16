@@ -38,7 +38,19 @@ Press **F** to get out of the car, walk over to another vehicle and press **F** 
 
 [Watch the vehicle switch in HD](docs/media/switching.mp4)
 
-WASD walks or drives. In the plane, Space climbs and Shift descends. Land before getting out; bring the boat close enough to dry shore to disembark. The camera moves closer for walking and smaller vehicles, then eases back out for the car. The objects keep their physical proportions.
+WASD walks, swims or drives. Space jumps on foot, a bicycle or skateboard, and gives the boat a small hop. Shift runs or swims faster. Walk up low steps, jump a small obstacle, or leave a boat and swim back to shore. Exits prefer dry ground when there is room. Land the plane before getting out; Space climbs and Shift descends while flying.
+
+![Running and jumping beside the parked car](docs/media/locomotion.gif)
+
+[Watch jumping in HD](docs/media/locomotion.mp4)
+
+Bicycles lean into turns and turn less sharply at speed. Boats keep momentum as you steer and fit underneath bridges when the hull has clearance. Swimming has a surface pose, strokes and a wake. The plane builds its climb gradually, holds altitude at flying speed and sinks when it gets too slow. These are arcade mechanics, with the same terrain and object contacts as the rest of the world. [See the controls and movement rules](docs/dream/behavior.md).
+
+![Swimming through the city canal](docs/media/swimming.gif)
+
+[Watch swimming in HD](docs/media/swimming.mp4)
+
+The camera moves closer for walking and smaller vehicles, then eases back out for the car. The objects keep their physical proportions.
 
 Bicycle lanes run alongside streets, across the bridges and between the town, suburbs, sports park and waterfront. Each side has its own painted track, separated from the carriageway. Get on a bicycle and choose where to go. The riverside skating circuit remains its own park.
 
@@ -109,10 +121,11 @@ For local development, open `http://127.0.0.1:5173/` on your machine. You can al
 
 | Control | Action |
 | --- | --- |
-| WASD / arrows | Walk or drive the current vehicle |
+| WASD / arrows | Walk, swim or drive the current vehicle |
 | Q / E | Rotate the view |
 | F | Exit a vehicle, or enter one nearby while on foot |
-| Space / Shift | Climb / descend in the plane |
+| Space | Jump on foot/bike/skateboard, hop a boat, swim faster, or climb in the plane |
+| Shift | Run, swim faster, or descend in the plane |
 | P / Escape | Pause |
 | R | Return to the start, keeping changes to the world |
 | Start over, in the pause menu | Reset the race and restore destroyed objects |

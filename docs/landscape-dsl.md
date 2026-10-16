@@ -48,10 +48,11 @@ slope and curvature into the arch with a quintic easing curve. Both `timber`
 and `stone` use the same physical contract. `rails` enables continuous
 cylinder contacts along both sides; a sufficiently high jump can clear them.
 There is one driving height per XY: the bridge owns its footprint. **Driving
-under bridges and stacked roads are not supported.** The carved riverbed
+under bridges and stacked roads are not supported for ground vehicles.** The carved riverbed
 remains visible below the rendered deck. Boats use that bed for support and may
-pass beneath the deck when their full hull and body have headroom. Boat exits
-require dry shore, so a deck above a boat cannot become an exit point.
+pass beneath the deck when their full hull and body have headroom. Swimmers
+also remain on water support below a crossing. Boat exits prefer dry shore,
+then allow wading/swimming with headroom; a deck above a boat cannot become an exit point.
 
 Roads and crossings compile together. A `timber` bridge owns its full wooden
 driving deck, including where the racing road crosses it. Asphalt, painted

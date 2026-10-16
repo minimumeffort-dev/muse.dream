@@ -136,8 +136,8 @@ describe("walk, enter, drive and leave",()=>{
 });
 
 describe("boat and aircraft controls",()=>{
-  it("steers a boat freely, stops its full hull at the bank, and requires dry shore to exit",()=>{
-    const world=setup("lake_boat"),start=board(world);expect(start.control.kind).toBe("vehicle");expect(exitPosition(start,world)).toBeUndefined();
+  it("steers a boat freely, stops its full hull at the bank, and prefers dry shore when exiting",()=>{
+    const world=setup("lake_boat"),start=board(world);expect(start.control.kind).toBe("vehicle");expect(exitPosition(start,world)).toBeDefined();
     const turned=run(start,world,{throttle:1,steer:.3},2);expect(turned.y).toBeGreaterThan(start.y+20);expect(turned.headingRad).toBeGreaterThan(.4);
     const bank=run(start,world,{throttle:1,steer:0},10),r=bodyWorld(bank,world).carRadius;
     expect(bank.x).toBeLessThan(710-r);expect(bank.x).toBeGreaterThan(650);
@@ -169,7 +169,7 @@ describe("boat and aircraft controls",()=>{
     const landed=run({...board(world),x:480,y:360,elevation:20,grounded:false},world,{throttle:0,steer:0,lift:-1},1);
     expect(landed.elevation).toBe(0);expect(landed.surface).toBe("water");expect(landed.grounded).toBe(true);
     const powered=run(landed,world,{throttle:1,steer:0,lift:1},1);expect(powered.x).toBe(landed.x);expect(powered.elevation).toBe(0);
-    expect(toggleRide(powered,world)).toBe(powered);
+    expect(toggleRide(powered,world).control.kind).toBe('foot');
     const reset=resetCar(powered,scene);expect(actorPose(scene,scene.objects[0]!,reset.timeS,reset).x).toBe(150);
   });
   it("collides below an obstacle's top and clears it with sufficient altitude",()=>{

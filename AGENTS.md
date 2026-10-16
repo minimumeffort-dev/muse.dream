@@ -10,7 +10,7 @@ into Three.js and tested mechanics; model output remains data-only.
 Current state: **mock open world** — a 12000 x 10000 handmade landscape with a
 winding eight-checkpoint circuit, composed assets, heightfield driving/jumps,
 ICE/BOOST, off-road collisions, fixed-angle camera, walking, direct vehicle controls,
-connected city cycle tracks, suburbs, a continuous lake/canal and sports park, ambient wildlife, layered vegetation and instanced scenery. F exits to dry ground and boards nearby on foot. Bicycles,
+connected city cycle tracks, suburbs, a continuous lake/canal and sports park, ambient wildlife, layered vegetation and instanced scenery. Walking supports running, jumping, low contact steps and surface swimming. F prefers dry exits, permits water disembarking and boards nearby on foot. Bicycles,
 skateboards, boats and planes are player-controlled; trains retain autonomous routes.
 The original small fixture remains for regression tests. No photo upload,
 camera or model calls yet. The complete live world is authored in Dream 2 text
@@ -120,8 +120,8 @@ Dream vehicle controls are explicit `rideable(at=...,control=...)` data. Preserv
 the one active-body owner, parked-vehicle poses and the immutable accepted scene.
 Controls never come from labels or generated code. Ground vehicles share the fixed
 car simulation with their own tuning/body dimensions; boats and planes use bounded
-arcade controllers, full water clearance and cylinder contacts. Keep on-foot exits
-dry and collision-free, prohibit mid-air exits, preserve checkpoint state outside
+arcade controllers, full water clearance and cylinder contacts. Keep exits
+collision-free, prefer dry ground before wading/swimming, prohibit mid-air exits, preserve checkpoint state outside
 the original car, and keep the occupied vehicle opaque. Use `docs/dream/behavior.md`.
 Reserve one of the 24 live jointed-assembly slots for the standing character; scene
 objects plus the player vehicle may use the remaining 23.
@@ -142,6 +142,12 @@ Start over. Route interruption must resume without teleport. Preserve 16 program
 Street cycle tracks use `cycle_width` per side with a fixed 6-unit separator.
 Reserve the full riding surface from props/ground finishes and carry sidewalks
 and lanes across explicit full-width bridges. Ground driving still has one height
-per XY; boats alone use the terrain bed and validated deck/rail headroom beneath
+per XY; boats and swimmers use the terrain bed and validated deck/rail headroom beneath
 bridges. Preserve dry shore boarding, full-hull checks and finite rail bottoms.
 See `docs/urban-world.md` for the transport layout and `docs/dream/reference.md`.
+
+Movement stays in the fixed-step engine. Space jumps on foot/bicycles/skateboards
+and hops boats; Shift runs/swims faster, while aircraft retain Space/Shift lift.
+Preserve per-press jump buffering/grace, low-step headroom, chest-depth water
+support, full-hull bridge clearance, and gravity after airborne collisions.
+Do not add generated controller code or increase animation/render budgets.

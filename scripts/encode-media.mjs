@@ -2,7 +2,10 @@ import {execFileSync} from 'node:child_process';
 import {readdir,stat} from 'node:fs/promises';
 import {resolve} from 'node:path';
 const ffmpeg=process.argv[2]||'ffmpeg',gifsicle=process.argv[3]||'gifsicle';
-for(const [name,count] of [['driving',210],['switching',240],['destruction',120]]){
+const clips=[['driving',210],['switching',240],['destruction',120],['locomotion',180],['swimming',180]];
+const selected=process.argv.slice(4);
+if(selected.some(name=>!clips.some(([clip])=>clip===name)))throw Error('Unknown capture clip');
+for(const [name,count] of clips.filter(([name])=>!selected.length || selected.includes(name))){
   const dir=resolve('.npm-cache/media',name),frames=(await readdir(dir)).filter(f=>/^\d{4}\.png$/.test(f)).sort();
   if(frames.length!==count || frames.some((f,i)=>f!==String(i).padStart(4,'0')+'.png'))throw Error(`${name}: expected ${count} consecutive source frames`);
   const input=['-y','-framerate','30','-i',`${dir}/%04d.png`];

@@ -5,7 +5,7 @@ import {distanceToRoad} from "../scene/road";
 import { playerHeight } from "../scene/measure";
 import { objectPlacement } from "../scene/placement";
 import type { Checkpoint, Scene } from "../scene/schema";
-import { sampleTerrain, drivingHeight, waterAt } from "../scene/terrain";
+import { sampleTerrain, drivingHeight, terrainHeight, waterAt, waterCeiling } from "../scene/terrain";
 import { archetypeOf, objectHeight, objectRadius } from "./archetypes";
 import { pointInPolygon, type RasterMask } from "./mask";
 import { sceneContacts } from "../scene/contacts";
@@ -31,6 +31,7 @@ export interface CarInput {
   throttle: number;
   /** Space / Shift for aircraft; view angle aligns walking with the screen. */
   lift?:number;viewAngle?:number;
+  jump?:boolean;sprint?:boolean;
 }
 
 export type Surface = "road" | "paper" | "ice" | "water";
@@ -83,6 +84,7 @@ export interface CarState {
   vehicles:ParkedVehicle[];
   npcs:NpcState[];
   distance:number;pitch:number;bank:number;
+  jump:{held:boolean;bufferUntilS:number;coyoteUntilS:number};
 }
 
 export interface World {
@@ -98,6 +100,10 @@ export interface World {
   dryGround?:boolean;
   damageEnabled?:boolean;
   effectsEnabled?:boolean;
+  stepHeight?:number;
+  jumpSpeed?:number;
+  /** A walking body wades on the bed and floats at chest depth in deeper water. */
+  waterSupport?:boolean;
 }
 
 export const TUNING = {
@@ -127,6 +133,7 @@ export type CarTuning={ [K in keyof typeof TUNING]:number };
 export function createCarAtSpawn(scene: Scene): CarState {
   return {
     control:{kind:"car"},vehicles:[],npcs:initialNpcs(scene),distance:0,pitch:0,bank:0,
+    jump:{held:false,bufferUntilS:0,coyoteUntilS:0},
     x: scene.spawn.x,
     y: scene.spawn.y,
     vx: 0,
@@ -199,8 +206,19 @@ function crossedCheckpoint(
 
 export function carFootprintClear(world:World,x:number,y:number,elevation:number,timeS:number,state?:CarState):boolean {
   const data=sceneContacts(world.scene),height=world.bodyHeight??playerHeight(world.scene);
-  return world.driveMask.footprintClear(x,y,world.carRadius) && (!world.dryGround || !waterAt(world.scene.terrain,x,y,drivingHeight(world.scene.terrain,x,y))) && ![...data.solids.query(x,y,world.carRadius+data.maxRadius),...actorContacts(world.scene,timeS,state)]
+  return world.driveMask.footprintClear(x,y,world.carRadius) && (!world.dryGround || !waterAt(world.scene.terrain,x,y,drivingHeight(world.scene.terrain,x,y))) && !(world.waterSupport && elevation<drivingHeight(world.scene.terrain,x,y)-.05 && elevation+height>waterCeiling(world.scene.terrain,x,y,world.carRadius)) && ![...data.solids.query(x,y,world.carRadius+data.maxRadius),...actorContacts(world.scene,timeS,state)]
     .some(s=>(!state || !isBroken(state,s)) && elevation<s.top-.05 && elevation+height>s.bottom+.05 && Math.hypot(x-s.x,y-s.y)<world.carRadius+s.r);
+}
+
+/** A press is buffered across a landing; holding Space never repeats a jump. */
+export function applyJump(s:CarState,input:CarInput,speed:number):void {
+  if(input.jump && !s.jump.held)s.jump.bufferUntilS=s.timeS+.12;
+  s.jump.held=!!input.jump;
+  if(s.grounded)s.jump.coyoteUntilS=s.timeS+.1;
+  if(s.jump.bufferUntilS>s.timeS && (s.grounded || s.jump.coyoteUntilS>s.timeS)){
+    s.vz=Math.max(0,s.vz)+speed;s.grounded=false;
+    s.jump.bufferUntilS=0;s.jump.coyoteUntilS=0;
+  }
 }
 
 export function stepCar(state: CarState, input: CarInput, dt: number, world: World): CarState {
@@ -208,6 +226,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
   const tuning=world.tuning??TUNING;
   const s: CarState = {
     ...state,
+    jump:{...state.jump},
     npcs:stepNpcs(state,dt,scene),
     boostReadyAtS: { ...state.boostReadyAtS },
     boostedThisStep: false,
@@ -225,6 +244,9 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
   const solids = [...compiled.solids.query(s.x,s.y,carRadius + compiled.maxRadius + tuning.maxTerrainSpeed*dt+pushRange),...moving];
   const supportHeight = (x: number, y: number, fromHeight: number): number => {
     let floor = drivingHeight(scene.terrain, x, y);
+    const water=world.waterSupport && waterAt(scene.terrain,x,y,terrainHeight(scene.terrain,x,y));
+    // A swimmer stays below a bridge; somebody already on its deck stays on it.
+    if(water && (floor<water.level+.5 || fromHeight<floor-.05))floor=Math.max(terrainHeight(scene.terrain,x,y),water.level-height*.65);
     for (const solid of solids) {
       if(isBroken(s,solid))continue;
       if (fromHeight >= solid.top - .05 && Math.hypot(x - solid.x, y - solid.y) < carRadius + solid.r)
@@ -234,9 +256,11 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
   };
   const blocked = (x: number, y: number): boolean => {
     if (!driveMask.footprintClear(x, y, carRadius) || world.dryGround && waterAt(scene.terrain,x,y,drivingHeight(scene.terrain,x,y))) return true;
+    const step=world.stepHeight??0,raised=s.grounded && step>0 ? Math.max(s.elevation,supportHeight(x,y,s.elevation+step)) : s.elevation;
+    if(raised-s.elevation>step+.05 || world.waterSupport && raised<drivingHeight(scene.terrain,x,y)-.05 && raised+height>waterCeiling(scene.terrain,x,y,carRadius))return true;
     for (const solid of solids) {
       if(isBroken(s,solid))continue;
-      if (s.elevation < solid.top - .05 && s.elevation+height>solid.bottom+.05 && Math.hypot(x - solid.x, y - solid.y) < carRadius + solid.r) return true;
+      if (raised < solid.top - .05 && raised+height>solid.bottom+.05 && Math.hypot(x - solid.x, y - solid.y) < carRadius + solid.r) return true;
     }
     return false;
   };
@@ -252,11 +276,13 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
 
   const ground = sampleTerrain(scene.terrain, s.x, s.y, s.vx, s.vy);
   const floor = supportHeight(s.x, s.y, s.elevation);
-  const onObject = floor > ground.height + .05;
+  const onObject = floor > ground.height + .05 || !!world.waterSupport && floor < ground.height-.05;
   if (s.grounded) {
     s.elevation = floor;
     s.vz = onObject ? 0 : ground.dx * s.vx + ground.dy * s.vy;
   }
+  if(world.jumpSpeed)applyJump(s,input,world.jumpSpeed);
+  else s.jump={held:!!input.jump,bufferUntilS:0,coyoteUntilS:0};
 
   const steer = Math.max(-1, Math.min(1, input.steer));
   const throttle = Math.max(-1, Math.min(1, input.throttle));
@@ -328,7 +354,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
   }
 
   let contactLoad=tuning.gravity;
-  if (s.grounded && !onObject) {
+  if (s.grounded && !onObject && !world.waterSupport) {
     const denominator = 1 + ground.dx ** 2 + ground.dy ** 2;
     const bend = sampleTerrain(scene.terrain, s.x, s.y, s.vx, s.vy).bend;
     const normalForce = tuning.gravity + bend + (ground.dx * nfx + ground.dy * nfy) * engineAccel;
@@ -358,7 +384,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
 
   // Conservative substeps: no sub-move longer than half the footprint radius.
   const moveLen = Math.hypot(s.vx * dt, s.vy * dt);
-  const substeps = Math.max(1, Math.ceil(moveLen / (carRadius * 0.5)));
+  const substeps = Math.max(1, Math.ceil(Math.hypot(moveLen,s.vz*dt) / (carRadius * 0.5)));
   const sdt = dt / substeps;
   for (let i = 0; i < substeps; i++) {
     const from = { x: s.x, y: s.y };
@@ -385,8 +411,12 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
     s.x = nx;
     s.y = ny;
 
-    const contact = supportHeight(s.x, s.y, s.elevation);
+    const contact = supportHeight(s.x, s.y, s.elevation+(s.grounded ? world.stepHeight??0 : 0));
     let predicted = s.elevation + s.vz * sdt - .5 * tuning.gravity * sdt * sdt;
+    if(world.waterSupport && s.elevation<drivingHeight(scene.terrain,s.x,s.y)-.05){
+      const ceiling=waterCeiling(scene.terrain,s.x,s.y,carRadius)-height;
+      if(predicted>ceiling){predicted=ceiling;s.vz=Math.min(0,s.vz);}
+    }
     for(const solid of solids) if(!isBroken(s,solid) && s.elevation+height<=solid.bottom+.05 && predicted+height>solid.bottom && Math.hypot(s.x-solid.x,s.y-solid.y)<carRadius+solid.r){
       predicted=solid.bottom-height;s.vz=Math.min(0,-Math.abs(s.vz)*.2);
     }
@@ -396,7 +426,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
       s.vz -= tuning.gravity * sdt;
       if (s.elevation <= contact) {
         const slope = sampleTerrain(scene.terrain, s.x, s.y);
-        const floorSpeed = contact > slope.height + .05 ? 0 : slope.dx * s.vx + slope.dy * s.vy;
+        const floorSpeed = contact > slope.height + .05 || world.waterSupport && contact<slope.height-.05 ? 0 : slope.dx * s.vx + slope.dy * s.vy;
         s.landingSpeed = Math.max(s.landingSpeed, floorSpeed - s.vz);
         const retention = 1 - Math.min(.22, Math.max(0, s.landingSpeed) * .0006);
         s.vx *= retention; s.vy *= retention;
@@ -405,7 +435,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
     } else {
       s.elevation = contact;
       const slope = sampleTerrain(scene.terrain, s.x, s.y);
-      s.vz = contact > slope.height + .05 ? 0 : slope.dx * s.vx + slope.dy * s.vy;
+      s.vz = contact > slope.height + .05 || world.waterSupport && contact<slope.height-.05 ? 0 : slope.dx * s.vx + slope.dy * s.vy;
     }
 
     const expected = scene.checkpoints[s.nextCheckpoint];

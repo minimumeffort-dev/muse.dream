@@ -26,7 +26,7 @@ The suburbs keep 36 homes with three different silhouettes. Driveways meet the s
 
 The southern lake narrows into a river, broadens into a bay and continues north as a canal between the sports park and the new city. Its banks follow one width-bearing Dream watercourse. Water keeps its existing surface ripples and current. The older pond and countryside river remain separate habitats.
 
-Five new bridges carry the streets, bicycle lanes and sidewalks over this waterway. Each crossing reserves the full street width between the rails and blends into dry ground at both ends. A canal launch waits near the bank. Boats can travel below a bridge when the whole hull and body fit; a low deck blocks them. F only disembarks at dry shore, so it cannot lift a boat's driver through a deck.
+Five new bridges carry the streets, bicycle lanes and sidewalks over this waterway. Each crossing reserves the full street width between the rails and blends into dry ground at both ends. A canal launch waits near the bank. Boats and swimmers can travel below a bridge with enough hull/body clearance; a low deck blocks them. F prefers dry shore, then allows a water exit. Leaving a boat underneath a bridge puts the driver in the water, never through the deck.
 
 ![The southern lake and its wooded banks](media/south-lake.jpg)
 

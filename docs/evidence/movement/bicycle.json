@@ -1,0 +1,6 @@
+{
+  "car": "1075.1,1524.1,10.9",
+  "control": "{\"kind\":\"vehicle\",\"id\":\"village_bike\"}",
+  "grounded": "false",
+  "movement": "{\"swimming\":false,\"vz\":-40,\"pitch\":-0.2110592610246212,\"bank\":0}"
+}

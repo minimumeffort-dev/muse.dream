@@ -38,7 +38,7 @@ The complete-world compiler checks an explicitly sized path's corridor, includin
 
 Objects with `rideable(...,control=...)` use the route only for initial placement and infrastructure. They start parked and move freely under player input. Leaving one stores its position, so it cannot snap back to a route. See [vehicle controls](behavior.md#bodies-contacts-and-boarding).
 
-Autonomous water actors must keep their whole body afloat and have enough headroom beneath any bridge deck. Autonomous air actors use a bounded takeoff/landing envelope. The controllable boat instead checks its full visible hull against navigable water and banks; the controllable plane takes off and lands under input. Water support checks the terrain bed, and finite rail contacts allow clear boat underpasses. Boat exits still require real dry shore. These are bounded arcade mechanics, not traffic AI, free-flight aerodynamics or general buoyancy.
+Autonomous water actors must keep their whole body afloat and have enough headroom beneath any bridge deck. Autonomous air actors use a bounded takeoff/landing envelope. The controllable boat instead checks its full visible hull against navigable water and banks; the controllable plane takes off and lands under input. Boats and swimmers use the terrain bed and water support beneath decks, with finite rail contacts and underside headroom. Boat exits prefer dry shore, then permit wading or swimming without teleporting onto a deck. These are bounded arcade mechanics, not traffic AI, free-flight aerodynamics or general buoyancy.
 
 ## Light while moving
 

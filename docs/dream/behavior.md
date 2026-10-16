@@ -14,13 +14,37 @@ Every object declares a body with a radius and height. A static upright solid ca
 
 **F** gets you out of the current vehicle. Walk to another one, then press **F** to enter it. Boarding uses distance from the body's edge, up to 60 canonical units, and an elevation difference below 28 units. The car and other vehicles remain where you leave them. You can return on foot and take them over again. **R** returns to the starting car while keeping parked vehicles and world damage; Start over restores everything. Resetting during flight or after a water landing returns the abandoned aircraft to its authored start.
 
-Walking uses screen-relative WASD, including after rotating the camera. Ground vehicles use W/S to accelerate, brake and reverse, and A/D to steer. Bicycles and skateboards have their own acceleration, grip and speed limits and share terrain, jumps and collision with the racing car. Boats use throttle, rudder steering, current drift and full-hull water clearance. Planes use W/S throttle and braking, A/D steering, Space to climb and Shift to descend. Takeoff needs forward speed; low airspeed causes descent. Release the climb control at flying speed to hold altitude. A water landing stalls the aircraft at the surface; press R to recover. These are bounded arcade controls, not a flight or sailing simulator.
+| Mode | WASD / arrows | Space | Shift |
+| --- | --- | --- | --- |
+| On foot | Screen-relative walking | Jump | Run |
+| Swimming | Screen-relative swimming | Faster stroke | Faster stroke |
+| Bicycle / skateboard | Throttle, brake/reverse, steering | Bunny hop / ollie | No extra action |
+| Boat | Throttle, brake/reverse, rudder | Small water hop | No extra action |
+| Plane | Throttle/brake, steering | Climb | Descend |
+
+Walking accelerates toward the chosen direction, turns the character smoothly and brakes when released. Diagonals have the same speed as straight movement. Camera rotation changes the screen-relative direction. Jumping preserves momentum in the air and accepts a press up to 0.12 seconds before landing or 0.1 seconds after leaving a ledge. Holding Space doesn't trigger repeated jumps.
+
+The walking body automatically climbs contact steps up to **4 units, or 40 cm**, with enough headroom. Taller faces need a jump or another way around. A ceiling stops a jump. Steps come from the object's declared contact heights, not its visual triangles. [Compile these three garden terraces](../examples/walkable-steps.dream). Their round treads match the engine's cylinder contacts. Ladders, wall climbing and arbitrary mesh stairs are not implemented.
+
+![Running and jumping in the actual mock world](../media/locomotion.gif)
+
+Bicycles use speed-dependent steering and lean into turns. Higher speed opens the turning radius. Bicycles and skateboards keep their own acceleration, grip and speed limits, share terrain/collisions with the racing car, and can jump under player input. The original car keeps its existing crest and ramp jumps.
+
+Boats retain sideways momentum through a rudder turn, settle it through hull resistance and drift with currents. Their complete visible hull must stay over navigable water. Bridge undersides and finite rail bottoms provide real headroom; a boat stays on the water while a car drives on the deck above it. A hop is limited by the underside, then gravity brings the hull back to the surface. Low crossings and banks stop a hull that doesn't fit.
+
+Aircraft need forward speed to take off. Climb and descent build gradually rather than snapping vertical speed. Release the climb control at flying speed to level out; insufficient airspeed produces a sink. A wall impact stops horizontal travel while gravity continues. Land before exiting. A water landing stalls the aircraft at the surface; leave it to wade/swim or press R to recover it. These are bounded arcade controls, not a flight or sailing simulator.
 
 Releasing the ground vehicle's throttle lets it coast to a complete stop on dry, flat ground. Bounded rolling resistance and lateral tire friction are resolved after slope gravity, so tiny velocities cannot keep the body creeping indefinitely. The tires can hold across ordinary dry slopes and settle an existing side slip. A sufficiently steep slope can still overcome grip or roll the vehicle along its wheels; ice has much less resistance. Uphill slowdown, downhill acceleration, normal throttle power, crest jumps and water currents remain active. Tire resistance applies only during ground contact, with the coasting part applied at neutral throttle. Walking, boats and aircraft keep their own control rules.
 
 These are engine-owned contact rules, with no extra Dream syntax. For local inspection after `npm run dev`, use `http://127.0.0.1:5173/?test-driving=sidehill` for a cross-slope pose or `http://127.0.0.1:5173/?test-driving=coast` for neutral coasting. These development helpers are excluded from production. The [verification record](../evidence/tire-grip/verification.md) separates fixture tests from browser observations.
 
-Exits need accessible dry ground. You cannot step out during flight or disembark in the middle of the pond. Bring the boat toward a bank or land the aircraft first. One character is active at a time: a standing, walking Dream assembly on foot and a seated assembly on a vehicle. The skateboard uses the standing Explorer. Their physical sizes are independent of the vehicle's scale. Original-car racing progress is preserved while walking or using another vehicle.
+Exits prefer accessible dry ground, then allow water disembarking when the character fits. You cannot step out during flight. Under a bridge, leaving a boat puts you in the water, never through the deck. Swim back to a boat and press F to board again. Parked vehicles retain their positions and do not acquire a second controller.
+
+Shallow water supports wading on the bed. Deeper water supports the character at chest depth, with a horizontal swimming pose, arm strokes, flutter kicks and a small wake. Shift or Space increases swimming effort. Water currents still carry you when you stop. Swimming follows the terrain onto a bank and switches back to walking. There is no diving, breath meter or drowning mechanic.
+
+![Swimming through the city canal, with both banks in view](../media/swimming.gif)
+
+One character is active at a time: a standing, walking or swimming Dream assembly on foot and a seated assembly on a vehicle. The skateboard uses the standing Explorer. Their physical sizes are independent of the vehicle's scale. Original-car racing progress is preserved while walking or using another vehicle. These mechanics extend the existing engine profiles; Dream's command vocabulary is unchanged.
 
 The camera moves closer for walking and small vehicles, using their resolved dimensions, and eases back for larger ones. Reduced motion snaps the camera change and disables the walking gait. The occupied vehicle stays opaque when scenery fades around it.
 

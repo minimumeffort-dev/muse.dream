@@ -100,7 +100,7 @@ describe('connected larger world',()=>{
  });
  it('sails beneath a city bridge while cars use its elevated deck',()=>{
   let boat:CarState={...createCarAtSpawn(world),control:{kind:'vehicle' as const,id:'canal_launch'},x:8750,y:2100,elevation:-2,headingRad:Math.PI/2};let under=false;
-  for(let i=0;i<720;i++){boat=stepInteractive(boat,{throttle:1,steer:0},1/120,context);if(boat.y>2330&&boat.y<2370){under=true;expect(boat.elevation).toBe(-2);expect(drivingHeight(world.terrain,boat.x,boat.y)).toBeGreaterThan(20);expect(toggleRide(boat,context)).toEqual(boat);}}
+  for(let i=0;i<720;i++){boat=stepInteractive(boat,{throttle:1,steer:0},1/120,context);if(boat.y>2330&&boat.y<2370){under=true;expect(boat.elevation).toBe(-2);expect(drivingHeight(world.terrain,boat.x,boat.y)).toBeGreaterThan(20);const swimmer=toggleRide(boat,context);expect(swimmer.control.kind).toBe('foot');expect(swimmer.elevation).toBeLessThan(0);}}
   expect(under,JSON.stringify({x:boat.x,y:boat.y,elevation:boat.elevation,vx:boat.vx,vy:boat.vy})).toBe(true);expect(boat.y).toBeGreaterThan(2500);expect(boat.surface).toBe('water');
   const low={...world.terrain,landscape:{...world.terrain.landscape!,bridges:world.terrain.landscape!.bridges.map(b=>b.id==='canal_market_bridge'?{...b,archHeight:0}:b)}};
   expect(navigableWater(low,8750,2350,20,15)).toBeUndefined();

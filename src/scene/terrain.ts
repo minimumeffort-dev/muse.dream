@@ -117,6 +117,16 @@ export function navigableWater(terrain:Terrain,x:number,y:number,radius:number,h
   return water;
 }
 
+/** The underside of a water crossing, sampled over the complete moving footprint. */
+export function waterCeiling(terrain:Terrain,x:number,y:number,radius:number):number {
+  let ceiling=Infinity;
+  for(let i=0;i<=12;i++){
+    const px=x+(i===12 ? 0 : Math.cos(i*Math.PI/6)*radius),py=y+(i===12 ? 0 : Math.sin(i*Math.PI/6)*radius),bridge=bridgeAt(terrain.landscape,px,py);
+    if(bridge){const p=bridgeCoordinates(bridge,px,py);ceiling=Math.min(ceiling,bridgeHeight(terrain,bridge,p.t,p.across)-4);}
+  }
+  return ceiling;
+}
+
 /** Dense small cylinders share the existing conservative footprint collision path. */
 export function bridgeRails(terrain:Terrain) {
   return (terrain.landscape?.bridges ?? []).filter(b=>b.rails).flatMap(bridge=> {

@@ -2,7 +2,7 @@ import {SunShadows} from "./sun";
 import {mediaCapture} from "./media-capture";
 import {renderProfile} from "./render-profile";
 import {freezeStatic} from "./batching";
-import {vehicleReviewStart,drivingReviewStart,npcReviewStart} from "./review-start";
+import {vehicleReviewStart,drivingReviewStart,npcReviewStart,movementReviewStart} from "./review-start";
 import { measuredScale, playerRadius, playerHeight } from "../scene/measure";
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -16,7 +16,7 @@ import { drivingHeight } from "../scene/terrain";
 import { archetypeOf, objectRadius } from "../sim/archetypes";
 import { buildPaperMask } from "../sim/mask";
 import { createCarAtSpawn, FixedStepper, resetCar, type World } from "../sim/car";
-import { MAX_FLIGHT_CLEARANCE,nearbyRide,toggleRide,stepInteractive,occupiedObject,exitPosition } from "../sim/interaction";
+import { FOOT_HEIGHT,MAX_FLIGHT_CLEARANCE,isSwimming,nearbyRide,toggleRide,stepInteractive,occupiedObject,exitPosition } from "../sim/interaction";
 import { actorPoses } from "../sim/actors";
 import {isActor} from '../scene/agents';
 import { interactiveWorld } from "../scene/interactive-world";
@@ -54,6 +54,7 @@ function start(): void {
   if(import.meta.env.DEV)car=vehicleReviewStart(car,world,new URLSearchParams(location.search).get("test-vehicle"));
   if(import.meta.env.DEV)car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));
   if(import.meta.env.DEV)car=npcReviewStart(car,world,new URLSearchParams(location.search).get("test-npc"));
+  if(import.meta.env.DEV)car=movementReviewStart(car,world,new URLSearchParams(location.search).get("test-movement"));
   const stepper = new FixedStepper();
   const keys = new Set<string>();
   let mode: "playing" | "paused" = "playing";
@@ -67,7 +68,7 @@ function start(): void {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
-  renderer.domElement.setAttribute("aria-label", "WASD walks or drives. F enters or exits a vehicle. Space climbs and Shift descends in an aircraft. P pauses; R returns to the start.");
+  renderer.domElement.setAttribute("aria-label", "WASD walks, swims or drives. F enters or exits a vehicle. Space jumps on foot or on a bicycle or skateboard, and hops a boat. Shift runs or swims faster. In an aircraft Space climbs and Shift descends. P pauses; R returns to the start.");
   container.append(renderer.domElement);
   const scene = new THREE.Scene();
   scene.background = new THREE.Color("#526b76");
@@ -225,11 +226,20 @@ function start(): void {
   const profile=import.meta.env.DEV ? renderProfile(renderer,()=>{
     resetPosition(true);car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));worldTime.value=0;
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
-  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,switching:240},()=>{
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,switching:240,locomotion:180,swimming:180},(clip)=>{
     resetPosition(true);worldTime.value=0;setMode("playing");
+    if(clip==='locomotion' || clip==='swimming')car=movementReviewStart(car,world,clip==='swimming' ? 'swim' : 'walk');
   },(clip:string,frame:number)=>{
     keys.clear();
     if(clip==="driving"){if(frame<175)keys.add("KeyW");return;}
+    if(clip==='locomotion'){
+      if(frame<130){keys.add('KeyS');if(frame>40)keys.add('ShiftLeft');}
+      if(frame>=62 && frame<78 || frame>=105 && frame<120)keys.add('Space');return;
+    }
+    if(clip==='swimming'){
+      if(frame<140)keys.add('KeyS');if(frame>=50 && frame<125)keys.add('ShiftLeft');
+      if(frame>=85 && frame<110)keys.add('KeyA');return;
+    }
     if(frame===18 || frame===78 || frame===210)useRide();
     if(frame>=18 && frame<63)keys.add("KeyS");
     if(frame>=100 && frame<165)keys.add("KeyW");
@@ -251,6 +261,7 @@ function start(): void {
         steer: Number(keys.has("KeyD") || keys.has("ArrowRight")) - Number(keys.has("KeyA") || keys.has("ArrowLeft")),
         throttle: Number(keys.has("KeyW") || keys.has("ArrowUp")) - Number(keys.has("KeyS") || keys.has("ArrowDown")),
         lift:Number(keys.has("Space"))-Number(keys.has("ShiftLeft") || keys.has("ShiftRight")),viewAngle:cameraAngle,
+        jump:keys.has('Space'),sprint:keys.has('ShiftLeft') || keys.has('ShiftRight'),
       };
       const steps = stepper.push(dt);
       for (let i = 0; i < steps; i++) {
@@ -345,7 +356,18 @@ function start(): void {
     }else if(walker.visible){
       if(walker.parent!==scene)scene.add(walker);walker.scale.setScalar(measuredScale(walkerSpec));
       walker.position.copy(position);walker.rotation.set(0,-car.headingRad,0);
-      animateObject(walker,car.timeS,!reduced.matches && Math.hypot(car.vx,car.vy)>3);
+      const swimming=isSwimming(car,world),speed=Math.hypot(car.vx,car.vy);
+      if(swimming){walker.position.y+=FOOT_HEIGHT*.65;walker.rotateZ(-Math.PI/2);}
+      // Distance drives the gait, so stopping freezes it and sprinting lengthens the cadence.
+      animateObject(walker,car.distance/(swimming ? 24 : 45),!reduced.matches && speed>3 && (car.grounded || swimming));
+      if(swimming && !reduced.matches && speed>3)walker.traverse(node=>{
+        const joint=node.userData.jointRest;if(!joint?.animation)return;
+        const phase=car.distance/18+joint.animation.phase;
+        node.quaternion.copy(joint.rotation);
+        // The Explorer's upper joints paddle; lower joints make a smaller flutter kick.
+        if(joint.position.y>walkerSpec.body.colliderHeight!*.6){node.rotateY(Math.sin(phase)*1.1);node.rotateZ(.7+Math.cos(phase)*.8);}
+        else node.rotateZ(Math.sin(phase)*.25);
+      });
     }
     for (const object of objects) {
       const spec=object.userData.sceneObject;
@@ -376,7 +398,7 @@ function start(): void {
     hudTime += dt;
     if (hudTime > .1) {
       hudTime = 0;
-      surface.textContent = occupied ? occupied.labelText+(controlOf(occupied.spec)==="plane" ? " · Space ↑ / Shift ↓" : "") : car.control.kind==="foot" ? "On foot" : !car.grounded ? "Airborne" : car.timeS < boostUntil ? "Boost" : car.surface === "ice" ? "Sliding" : car.surface === "water" ? "Water" : "";
+      surface.textContent = occupied ? occupied.labelText+(controlOf(occupied.spec)==="plane" ? " · Space ↑ / Shift ↓" : controlOf(occupied.spec)==='bicycle' || controlOf(occupied.spec)==='skateboard' ? ' · Space jump' : controlOf(occupied.spec)==='boat' ? ' · Space hop' : "") : car.control.kind==="foot" ? isSwimming(car,world) ? 'Swimming · Shift faster' : 'On foot · Space jump / Shift run' : !car.grounded ? "Airborne" : car.timeS < boostUntil ? "Boost" : car.surface === "ice" ? "Sliding" : car.surface === "water" ? "Water" : "";
       surface.dataset.effect = car.surface === "ice" ? "ice" : "boost";
       // DOM diagnostics let browser checks observe real simulation and camera state.
       container.dataset.car = [car.x, car.y, position.y].map((v) => v.toFixed(1)).join(",");
@@ -384,6 +406,7 @@ function start(): void {
       container.dataset.mode = mode;
       container.dataset.particles = String(particles.activeCount);
       container.dataset.grounded = String(car.grounded);
+      if(import.meta.env.DEV)container.dataset.movement=JSON.stringify({swimming:isSwimming(car,world),vz:car.vz,pitch:car.pitch,bank:car.bank});
       container.dataset.speed = Math.hypot(car.vx, car.vy).toFixed(1);
       container.dataset.flight = JSON.stringify(flight);
       container.dataset.heading = car.headingRad.toFixed(3);
@@ -396,7 +419,7 @@ function start(): void {
       const foot=car.control.kind==="foot",nearby=foot ? nearbyRide(car,world) : undefined,exit=foot ? undefined : exitPosition(car,world);
       interact.hidden=mode!=="playing" || foot && !nearby;
       interact.disabled=!foot && !exit;
-      interact.textContent=foot ? `F · ${nearby?.object && !controlOf(nearby.object.spec) ? "Ride" : "Drive"} ${nearby?.labelText??""}` : exit ? "F · Exit vehicle" : controlOf(occupied?.spec)==="boat" ? "Dock to exit" : car.surface==="water" ? "R · Recover plane" : "Land to exit";
+      interact.textContent=foot ? `F · ${nearby?.object && !controlOf(nearby.object.spec) ? "Ride" : "Drive"} ${nearby?.labelText??""}` : exit ? 'F · Exit vehicle' : !car.grounded ? 'Land to exit' : 'Move to a clear exit';
       container.dataset.riding=occupied?.id??"";
       container.dataset.control=JSON.stringify(car.control);
       container.dataset.avatar=standingRide ? "standing" : walker.visible ? "walking" : occupied ? "seated" : "in-car";

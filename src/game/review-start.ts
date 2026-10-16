@@ -1,8 +1,18 @@
 import {carFootprintClear,type CarState,type World} from "../sim/car";
-import {drivingHeight} from "../scene/terrain";
+import {drivingHeight,terrainHeight,waterAt} from "../scene/terrain";
 import {actorPose,routeObjects} from "../sim/actors";
-import {toggleRide,bodyWorld} from "../sim/interaction";
+import {toggleRide,bodyWorld,FOOT_HEIGHT} from "../sim/interaction";
 import {controlFor} from "../scene/agents";
+
+/** Real mock-world positions for exercising jumping, swimming and bridge navigation. */
+export function movementReviewStart(state:CarState,world:World,scenario:string|null):CarState {
+  if(scenario==='walk')return toggleRide(state,world);
+  if(scenario!=='swim' && scenario!=='boat-bridge')return state;
+  const boat=scenario==='boat-bridge',x=8750,y=boat ? 2100 : 3350,water=waterAt(world.scene.terrain,x,y,terrainHeight(world.scene.terrain,x,y));
+  if(!water)return state;
+  const next:CarState={...state,control:boat ? {kind:'vehicle',id:'canal_launch'} : {kind:'foot'},x,y,elevation:water.level-(boat ? 2 : FOOT_HEIGHT*.65),headingRad:Math.PI/2,vx:0,vy:0,vz:0,grounded:true,surface:'water',vehicles:[{id:null,x:state.x,y:state.y,elevation:state.elevation,headingRad:state.headingRad,distance:0}]};
+  return carFootprintClear(bodyWorld(next,world),x,y,next.elevation,state.timeS,next) ? next : state;
+}
 
 /** Development inspection links start beside a vehicle using the real exit rules. */
 export function vehicleReviewStart(state:CarState,world:World,id:string|null):CarState {

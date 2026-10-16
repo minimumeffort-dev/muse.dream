@@ -67,7 +67,13 @@ place at XY or use a route only for its initial pose/infrastructure. They do not
 follow that route while being driven, and stay where the player leaves them.
 Omit control only for legacy passenger seats on autonomous routes, e.g. the train.
 Give boats full-hull navigable water and a boarding point near dry shore; bridge travel requires hull/body clearance below the deck and side rails. Give planes a clear dry takeoff/landing area. Ground vehicles
-share terrain/contact mechanics. F exits to dry ground, then boards nearby on foot.
+share terrain/contact mechanics. F prefers clear dry ground, then allows wading/swimming
+exits into water. No exit during flight. Boats and swimmers stay below bridge decks.
+Walking climbs contact tops in steps up to 4 world units (40 cm) with headroom;
+visual mesh details alone are not steps. Use explicit low contacts for terraces.
+Space jumps on foot/bicycles/skateboards, hops boats, or speeds a swimming stroke.
+Shift runs/swims faster. Bicycle steering/lean, boat inertia, jump buffering, water
+support and aircraft climb/stall response belong to engine profiles, not DSL code.
 Walking and non-racing vehicles preserve the original car's checkpoint progress.
 Aircraft need takeoff speed; Space/Shift climbs/descends and flight blocks exit.
 Water landings stall the aircraft at the surface; R recovers it to its start.

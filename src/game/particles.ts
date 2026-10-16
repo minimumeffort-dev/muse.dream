@@ -64,10 +64,11 @@ export class WorldParticles {
   }
 
   private emit(car:CarState,kind:number,burst=false):void {
-    const i=this.index++%CAP, offset=i*3, heading=car.headingRad, side=i%2?7:-7;
+    const i=this.index++%CAP, offset=i*3, heading=car.headingRad, side=(i%2?1:-1)*(car.control.kind==='foot' ? 2 : 7);
     const theta=Math.random()*Math.PI*2;
-    const x=car.x-Math.cos(heading)*13-Math.sin(heading)*side;
-    const y=car.y-Math.sin(heading)*13+Math.cos(heading)*side;
+    const behind=car.control.kind==='foot' ? 3 : 13;
+    const x=car.x-Math.cos(heading)*behind-Math.sin(heading)*side;
+    const y=car.y-Math.sin(heading)*behind+Math.cos(heading)*side;
     const position=worldPosition(this.doc,x,y);
     position.y=(kind===4 ? waterAt(this.doc.terrain,car.x,car.y,car.elevation)?.level ?? car.elevation : car.elevation)+4;
     position.toArray(this.positions,offset);
@@ -85,10 +86,10 @@ export class WorldParticles {
   update(car: CarState, dt: number, enabled: boolean, boost = false, landingSpeed = 0, collisionSpeed = 0,actors:ActorPose[]=[]): void {
     if (!enabled) { this.clear(); return; }
     this.time+=dt;this.boostLife=boost?.45:Math.max(0,this.boostLife-dt);
-    const speed=car.control.kind==="foot" || car.control.kind==="passenger" ? 0 : Math.hypot(car.vx,car.vy), slip=Math.abs(-Math.sin(car.headingRad)*car.vx+Math.cos(car.headingRad)*car.vy);
+    const speed=car.control.kind==="passenger" || car.control.kind==='foot' && car.surface!=='water' ? 0 : Math.hypot(car.vx,car.vy), slip=Math.abs(-Math.sin(car.headingRad)*car.vx+Math.cos(car.headingRad)*car.vy);
     const wet=car.surface==="water",icy=car.surface==="ice", dusty=car.surface==="paper", boosting=this.boostLife>0;
-    const rate=boosting?110:dusty?65:wet||icy||slip>35?48:12;
-    this.emission+=dt*((car.grounded&&speed>45)||boosting?rate:0);
+    const swimmer=car.control.kind==='foot' && wet,rate=swimmer ? 14 : boosting?110:dusty?65:wet||icy||slip>35?48:12;
+    this.emission+=dt*((car.grounded&&speed>(swimmer ? 8 : 45))||boosting?rate:0);
     while(this.emission>=1){this.emission--;this.emit(car,wet?4:boosting?1:icy?2:0);}
     if(boost) for(let i=0;i<20;i++) this.emit(car,1,true);
     if(landingSpeed>25) for(let i=0;i<Math.min(42,Math.ceil(landingSpeed*.2));i++) this.emit(car,wet?4:icy?2:0,true);

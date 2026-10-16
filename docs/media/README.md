@@ -4,27 +4,31 @@ These are captures of the running mock prototype. The game and asset geometry ar
 
 ## Motion you can actually follow
 
-Driving, vehicle switching and destruction are exported at **30 frames per simulation second**. Every frame is rendered; there is no frame interpolation. GIFs are 960 × 540 with a palette computed across the clip and Gifsicle compression. The matching 1600 × 900 H.264 videos keep more color and detail at a smaller download size.
+Driving, vehicle switching, jumping, swimming and destruction are exported at **30 frames per simulation second**. Every frame is rendered; there is no frame interpolation. GIFs are 960 × 540 with a palette computed across the clip and Gifsicle compression. The matching 1600 × 900 H.264 videos keep more color and detail at a smaller download size.
 
 | Capture | GIF | HD video | Duration |
 | --- | --- | --- | --- |
 | Driving | [driving.gif](driving.gif) | [driving.mp4](driving.mp4) | 7 seconds |
 | Car → walking → bicycle → walking | [switching.gif](switching.gif) | [switching.mp4](switching.mp4) | 8 seconds |
 | Bench destruction | [destruction.gif](destruction.gif) | [destruction.mp4](destruction.mp4) | 4 seconds |
+| Walking, running and jumping | [locomotion.gif](locomotion.gif) | [locomotion.mp4](locomotion.mp4) | 6 seconds |
+| Swimming in the city canal | [swimming.gif](swimming.gif) | [swimming.mp4](swimming.mp4) | 6 seconds |
 
 The main-game captures use the real simulation, follow camera, scenery, particles and post-processing. The destruction review replays fixed simulation phases. These are offline exports, not frame-rate benchmarks. GIF timing is rounded to hundredths of a second by the format; the video preserves the 30 fps clock.
 
 ## Refresh the captures
 
-Run `npm run dev`, then open `http://127.0.0.1:5173/?capture`. Choose driving or switching and press **Capture PNG frames**. Export destruction at `http://127.0.0.1:5173/tests/visual/destruction.html?docs&capture`.
+Run `npm run dev`, then open `http://127.0.0.1:5173/?capture`. Choose driving, switching, locomotion or swimming and press **Capture PNG frames**. Export destruction at `http://127.0.0.1:5173/tests/visual/destruction.html?docs&capture`.
 
-The exporter advances the live renderer by 1/30 second only after the previous PNG has been saved. Frames go to `.npm-cache/media/<clip>/`. Its local Vite endpoint accepts only same-origin PNGs for the three named clips; it is absent from the production build. The capture layout is 1600 × 900 CSS pixels, with the renderer's existing pixel ratio applied to the source PNGs.
+The exporter advances the live renderer by 1/30 second only after the previous PNG has been saved. Frames go to `.npm-cache/media/<clip>/`. Its local Vite endpoint accepts only same-origin PNGs for the five named clips; it is absent from the production build. The capture layout is 1600 × 900 CSS pixels, with the renderer's existing pixel ratio applied to the source PNGs.
 
-Encode after all three clips finish, using local FFmpeg and Gifsicle installations:
+Encode after all five clips finish, using local FFmpeg and Gifsicle installations:
 
 ```sh
 node scripts/encode-media.mjs /absolute/path/to/ffmpeg /absolute/path/to/gifsicle
 ```
+
+Append clip names to refresh only those captures, for example `switching locomotion swimming`. Refresh each selected clip's GIF, HD video and corresponding still together. `jumping.jpg` and `swimming.jpg` use original frames from their named clips.
 
 The encoder checks for consecutive source frames before replacing a GIF and video. Generated `dist-docs/` files are excluded from the development watcher, so rebuilding the documentation does not restart the game or interrupt a capture. Keep source frames local. Commit only the finished media. Still images use the original render or a native browser screenshot at its full resolution, with high-quality JPEG encoding where useful.
 

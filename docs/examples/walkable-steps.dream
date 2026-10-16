@@ -1,0 +1,12 @@
+dream 2;
+material stone(style=grain,colors=[#a79b83,#797d70]);
+object garden_steps(label="Garden steps"){
+  measure(kind=custom,axis=y,meters=.9);
+  body(interaction=solid,radius=30,height=9);
+  contact low(at=[0,0,0],radius=15,height=3);
+  contact middle(at=[28,0,0],radius=15,height=6);
+  contact high(at=[56,0,0],radius=15,height=9);
+  part low_tread(shape=cylinder,material=stone,at=[0,1.5,0],size=[30,3,30]);
+  part middle_tread(shape=cylinder,material=stone,at=[28,3,0],size=[30,6,30]);
+  part high_tread(shape=cylinder,material=stone,at=[56,4.5,0],size=[30,9,30]);
+}
