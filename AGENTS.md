@@ -38,9 +38,12 @@ If a commit or push fails, report the failure and what remains local.
 
 ## Documentation is part of implementation
 
-Every new feature or behavior change must update `README.md` and the relevant
-product/DSL docs in the same change. Describe what works now, keep limitations
-explicit, and replace stale screenshots when visible behavior changes. Include
+Every change, including bug fixes and asset refinements, must include a review of
+`README.md`, the affected product/DSL guides and their screenshots or recordings.
+Update affected text and replace stale captures in the same change. Mention which
+docs/media were refreshed, or why existing captures remain accurate, in the
+verification note or final response. Describe what works now and keep limitations
+explicit. Include
 runnable `.dream` examples for language features and check them with the compiler.
 When changing Dream's vocabulary, update the model instructions, generated
 command contract and language reference together. Keep links and examples valid.

@@ -2,7 +2,9 @@ dream 2;
 material steel(style=toon,colors=[#8f9b94,#8f9b94]);
 material glazing(style=toon,colors=[#61919a,#61919a]);
 material bark(style=grain,colors=[#6e5137,#9a7550]);
-material birch_bark(style=toon,colors=[#d4d3ba,#8e9a8b]);
+material birch_bark(style=toon,colors=[#e5e3d5,#bec5b5]);
+material birch_leaf(style=toon,colors=[#7fa461,#5e804e]);
+material birch_shade(style=toon,colors=[#6c9252,#527146]);
 material leaves(style=toon,colors=[#638653,#365b42]);
 material fir_leaves(style=toon,colors=[#416958,#284b40]);
 material amber(style=toon,colors=[#c18942,#866037]);
@@ -17,14 +19,29 @@ object leaning_birch(label="Leaning birch"){
   body(interaction=solid,radius=9,height=67);
   impact(mode=topple(speed=110,duration=1.1,lifetime=8));
   fragment tree(){
-    part trunk(shape=cylinder,material=birch_bark,at=[0,24,0],size=[7,48,7]);
-    beam fork(shape=cylinder,material=birch_bark,from=[0,28,0],to=[-9,47,0],width=3,depth=3);
-    part upper_crown(shape=icosphere,material=leaves,at=[1,53,0],size=[28,29,23],deform=deform(seed=23150,amount=.14));
-    part side_crown(shape=icosphere,material=leaves,at=[-10,44,1],size=[23,22,21],deform=deform(seed=23181,amount=.14));
-    part lower_crown(shape=icosphere,material=fir_leaves,at=[8,39,-4],size=[20,22,20],deform=deform(seed=23212,amount=.14));
-      beam root_left(shape=cylinder,material=birch_bark,from=[-5,1,0],to=[0,6,0],width=2,depth=2);
-    beam root_right(shape=cylinder,material=birch_bark,from=[5,1,0],to=[0,6,0],width=2,depth=2);
-    repeat bark_marks(index=b,count=3){part mark(shape=box,material=dark_wood,at=[0,6+b*6,3.5],size=[4.55,.7,.5]);}
+    beam trunk(shape=cylinder,material=birch_bark,from=[0,.18,0],to=[-4,57,2],width=4.8,depth=4.8,taper=.23);
+    beam left_fork(shape=cylinder,material=birch_bark,from=[-1.7,25,.9],to=[-15,49,0],width=2,depth=2,taper=.3);
+    beam right_fork(shape=cylinder,material=birch_bark,from=[-2.25,32,1.1],to=[10,51,5],width=1.7,depth=1.7,taper=.28);
+    beam back_fork(shape=cylinder,material=birch_bark,from=[-2.1,30,1.05],to=[-8,53,-10],width=1.5,depth=1.5,taper=.3);
+    beam front_fork(shape=cylinder,material=birch_bark,from=[-1.9,27,.95],to=[1,47,12],width=1.7,depth=1.7,taper=.28);
+    beam leader(shape=cylinder,material=birch_bark,from=[-2.9,41,1.44],to=[-8,61,2],width=1.2,depth=1.2,taper=.25);
+    beam left_twig(shape=cylinder,material=birch_bark,from=[-13.95,47.1,.08],to=[-22,37,2],width=.7,depth=.7,taper=.3);
+    beam right_twig(shape=cylinder,material=birch_bark,from=[8.85,49.2,4.64],to=[17,37,6],width=.7,depth=.7,taper=.3);
+    repeat bark_marks(index=b,count=4){
+      let y(value=6+b*9);
+      part front_scar(shape=icosphere,material=dark_wood,at=[-y*.07+.1,y,2.2+y*.003],size=[2.1-b*.22,.5,.5],rot_deg=[0,0,b*3-5]);
+      part back_scar(shape=icosphere,material=dark_wood,at=[-(y+3)*.07-.1,y+3,-2.2+(y+3)*.0675],size=[1.8-b*.18,.5,.5],rot_deg=[0,0,6-b*4]);
+    }
+    part top(shape=icosphere,material=birch_leaf,at=[-4,61,2],size=[13,13,12],deform=deform(seed=23150,amount=.08));
+    part left(shape=icosphere,material=birch_leaf,at=[-14,50,0],size=[16,18,14],deform=deform(seed=23181,amount=.08));
+    part right(shape=icosphere,material=birch_leaf,at=[10,52,5],size=[15,18,13],deform=deform(seed=23212,amount=.08));
+    part back(shape=icosphere,material=birch_shade,at=[-7,51,-9],size=[14,18,13],deform=deform(seed=23183,amount=.08));
+    part left_drop(shape=icosphere,material=birch_leaf,at=[-19,42,1],size=[10,16,10],deform=deform(seed=23185,amount=.09));
+    part right_drop(shape=icosphere,material=birch_leaf,at=[15,43,5],size=[10,16,10],deform=deform(seed=23187,amount=.09));
+    part front(shape=icosphere,material=birch_shade,at=[1,49,11],size=[13,15,12],deform=deform(seed=23189,amount=.08));
+    part upper_left(shape=icosphere,material=birch_leaf,at=[-10,58,5],size=[11,14,10],deform=deform(seed=23191,amount=.08));
+    part left_tassel(shape=icosphere,material=birch_leaf,at=[-22,35,2],size=[5,12,6],deform=deform(seed=23193,amount=.08));
+    part right_tassel(shape=icosphere,material=birch_leaf,at=[18,36,6],size=[5,12,6],deform=deform(seed=23195,amount=.08));
   }
 }
 object silver_spruce(label="Silver spruce"){

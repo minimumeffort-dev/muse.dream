@@ -29,6 +29,12 @@ Deadwood uses a continuous tapered trunk, rising forks and smaller cut faces at 
 
 ![Fallen log and standing deadwood with connected branches and cut ends](media/woodland.jpg)
 
+Both birches use pale tapered stems, rising forks and fine hanging twigs. Smaller leaf clusters leave the white branch structure visible; thin bark scars appear on the front and back. Each fork joins an existing stem, and each leaf cluster surrounds a branch tip. Their ten-metre height and authored collision bodies are preserved. The ordinary birch's foliage sways; the leaning birch keeps its whole assembly together during a fall.
+
+![Birch and destructible leaning birch with tapered white stems, visible forks and hanging foliage](media/birch.jpg)
+
+The [birch verification record](evidence/birch-assets/verification.md) includes four viewing angles, terrain placement, destruction checks and the documentation media audit.
+
 Details belong to their supporting coordinate frame. The baker's ears, straps and pocket follow its torso joint. A bench's armrests leave with its frame; the bakehouse's canopy leaves with its entrance lintel. Adding a bolt must not create an extra independent fragment. The usual limits still apply: 32 parts per object, eight release groups per breakable assembly, and the existing scene-wide animation and debris budgets.
 
 Rigid parts sharing a material are batched inside each joint frame. Wheels and propellers keep their own pivots. Repeated scenery remains instanced, including its foliage motion and occlusion fade. Added visual detail doesn't add mesh colliders: roads, clearance, driving and impacts still use the engine's existing masks, heightfield and bounded bodies.

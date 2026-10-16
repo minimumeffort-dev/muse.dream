@@ -14,17 +14,37 @@ material m6(style=toon,colors=[#985d45,#633e32]);
 material m7(style=toon,colors=[#4a5552,#333c3b]);
 material m8(style=toon,colors=[#385b67,#253e4c]);
 material m9(style=toon,colors=[#ba5840,#813e34]);
+material birch_bark(style=toon,colors=[#e5e3d5,#bec5b5]);
+material birch_leaf(style=toon,colors=[#7fa461,#5e804e]);
+material birch_shade(style=toon,colors=[#6c9252,#527146]);
 object birch(label="Birch"){
   measure(kind=tree,axis=y,meters=10);
   body(interaction=solid,radius=9,height=68);
-  part trunk(shape=cylinder,material=m0,at=[0,23,0],size=[4,46,4]);
-  beam fork(shape=cylinder,material=m0,from=[0,23,0],to=[-10,45,0],width=2,depth=2,taper=.55);
-  part upper_crown(shape=icosphere,material=m1,at=[1,53,0],size=[24,29,21],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),deform=deform(seed=8995,amount=.14));
-  part side_crown(shape=icosphere,material=m1,at=[-9,43,1],size=[20,23,18],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),deform=deform(seed=9026,amount=.14));
-  part lower_crown(shape=icosphere,material=m2,at=[7,40,-3],size=[17,21,16],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),deform=deform(seed=9057,amount=.14));
-  repeat bark_marks(index=b,count=4){part mark(shape=box,material=bark_mark,at=[.2,8+b*9,1.8],size=[2.7,.7,.5],rot_deg=[0,0,b*4-6]);}
-  beam twig(shape=cylinder,material=m0,from=[0,29,0],to=[8,42,-3],width=1.5,depth=1.5,taper=.5);
-  part light_leaves(shape=icosphere,material=m1,at=[5,54,4],size=[14,17,13],deform=deform(seed=175,amount=.13));
+  beam trunk(shape=cylinder,material=birch_bark,from=[0,.08,0],to=[1.6,57,.8],width=4.2,depth=4.2,taper=.22);
+  beam left_fork(shape=cylinder,material=birch_bark,from=[.7,25,.35],to=[-11.5,50,1],width=1.8,depth=1.8,taper=.3);
+  beam right_fork(shape=cylinder,material=birch_bark,from=[.95,34,.48],to=[12.5,53,3.5],width=1.5,depth=1.5,taper=.28);
+  beam back_fork(shape=cylinder,material=birch_bark,from=[.9,32,.45],to=[-4.5,54,-9],width=1.4,depth=1.4,taper=.3);
+  beam front_fork(shape=cylinder,material=birch_bark,from=[.75,27,.38],to=[4,47,10],width=1.6,depth=1.6,taper=.28);
+  beam leader(shape=cylinder,material=birch_bark,from=[1.15,41,.57],to=[-3,61,.5],width=1.1,depth=1.1,taper=.25);
+  beam left_twig(shape=cylinder,material=birch_bark,from=[-10.7,48.36,.96],to=[-17,38,2],width=.6,depth=.6,taper=.3);
+  beam right_twig(shape=cylinder,material=birch_bark,from=[11.3,51,3.2],to=[18,38,4],width=.6,depth=.6,taper=.3);
+  repeat bark_marks(index=b,count=4){
+    let y(value=6+b*9);
+    part front_scar(shape=icosphere,material=bark_mark,at=[y*.028+.1,y,1.9-y*.015],size=[1.9-b*.22,.5,.5],rot_deg=[0,0,b*3-5]);
+    part back_scar(shape=icosphere,material=bark_mark,at=[y*.028-.1,y+3,-1.9+(y+3)*.043],size=[1.6-b*.18,.5,.5],rot_deg=[0,0,6-b*4]);
+  }
+  group foliage(){
+    part top(shape=icosphere,material=birch_leaf,at=[1.5,61,.6],size=[13,13,12],motion=sway(deg=.8,hz=.14),deform=deform(seed=8995,amount=.08));
+    part left(shape=icosphere,material=birch_leaf,at=[-10,51,-1],size=[15,18,13],motion=sway(deg=.8,hz=.14),deform=deform(seed=9026,amount=.08));
+    part right(shape=icosphere,material=birch_leaf,at=[12,54,4],size=[14,18,13],motion=sway(deg=.8,hz=.14),deform=deform(seed=9057,amount=.08));
+    part back(shape=icosphere,material=birch_shade,at=[-3,51,-9],size=[14,18,13],motion=sway(deg=.8,hz=.14),deform=deform(seed=175,amount=.08));
+    part left_drop(shape=icosphere,material=birch_leaf,at=[-15,43,2],size=[10,16,10],motion=sway(deg=.8,hz=.14),deform=deform(seed=177,amount=.09));
+    part right_drop(shape=icosphere,material=birch_leaf,at=[17,44,3],size=[10,16,10],motion=sway(deg=.8,hz=.14),deform=deform(seed=179,amount=.09));
+    part front(shape=icosphere,material=birch_shade,at=[4,49,10],size=[13,15,12],motion=sway(deg=.8,hz=.14),deform=deform(seed=181,amount=.08));
+    part upper_left(shape=icosphere,material=birch_leaf,at=[-5,58,3],size=[11,14,10],motion=sway(deg=.8,hz=.14),deform=deform(seed=183,amount=.08));
+    part left_tassel(shape=icosphere,material=birch_leaf,at=[-18,36,3],size=[5,12,6],motion=sway(deg=.8,hz=.14),deform=deform(seed=185,amount=.08));
+    part right_tassel(shape=icosphere,material=birch_leaf,at=[19,37,4],size=[5,12,6],motion=sway(deg=.8,hz=.14),deform=deform(seed=187,amount=.08));
+  }
 }
 object silver_fir(label="Silver fir"){
   measure(kind=tree,axis=y,meters=13);

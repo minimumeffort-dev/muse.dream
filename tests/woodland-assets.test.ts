@@ -1,15 +1,18 @@
 import {describe,expect,it} from "vitest";
 import {Matrix4,Mesh,MeshBasicMaterial,Raycaster,Vector3} from "three";
-import {compileDream,formatDream,checkDream} from "../src/scene/dream";
+import {compileDream,compileDreamWorld,formatDream,checkDream} from "../src/scene/dream";
 import {objectDslSchema,type ObjectPart} from "../src/scene/object-dsl";
 import {partGeometry} from "../src/scene/object-geometry";
 import {createWorldScene} from "../src/scene/world-fixture";
 import example from "../docs/examples/tapered-wood.dream?raw";
 import nature from "../src/scene/world/nature.dream?raw";
 import landmarks from "../src/scene/world/landmarks.dream?raw";
+import destructible from "../src/scene/world/destructible.dream?raw";
+import {assemblyBounds,measuredScale} from "../src/scene/measure";
+import {objectFragments} from "../src/scene/fragments";
 
 const scene=createWorldScene();
-const assemblies=[...compileDream(nature),...compileDream(landmarks)];
+const assemblies=[...compileDream(nature),...compileDream(landmarks),...compileDreamWorld(destructible).assemblies];
 const spec=(name:string)=>assemblies.find(o=>o.displayName===name)!;
 const mesh=(part:ObjectPart)=>{
   const result=new Mesh(partGeometry(part),new MeshBasicMaterial());
@@ -67,7 +70,7 @@ describe("bounded cylinder taper",()=>{
 });
 
 describe("connected woodland assets",()=>{
-  it.each(['Standing deadwood','Birch','Oak','Amber tree'])("roots %s's rising forks inside the trunk",name=>{
+  it.each(['Standing deadwood','Oak','Amber tree'])("roots %s's rising forks inside the trunk",name=>{
     const object=spec(name),trunk=object.parts[0]!;
     const forks=name==='Standing deadwood' ? object.parts.filter(p=>p.taper===.4) : object.parts.filter(p=>p.shape==='cylinder' && p!==trunk && end(p,-1).y>10);
     expect(forks.length).toBeGreaterThan(0);
@@ -77,6 +80,25 @@ describe("connected woodland assets",()=>{
       expect(inside(trunk,root),`${name}: floating fork`).toBe(true);
     }
     expect(object.parts.length).toBeLessThanOrEqual(32);
+  });
+  it.each(['Birch','Leaning birch'])("connects %s's tapered branches and hanging twigs to supported foliage",name=>{
+    const object=spec(name),wood=object.parts.filter(p=>p.shape==='cylinder');
+    const leaves=object.parts.filter(p=>p.shape==='icosphere' && Math.max(...p.size)>5);
+    expect(wood[0]!.taper).toBeLessThan(.5);
+    expect(wood.some(p=>end(p,1).y<end(p,-1).y)).toBe(true);
+    for(const [i,branch] of wood.entries()){
+      if(i)expect(wood.slice(0,i).some(parent=>inside(parent,end(branch,-1))),`${name}: detached branch`).toBe(true);
+      expect(leaves.some(crown=>inside(crown,end(branch,1))),`${name}: branch tip misses foliage`).toBe(true);
+    }
+    for(const crown of leaves)expect(wood.some(branch=>inside(crown,end(branch,1))),`${name}: floating foliage at ${crown.position}`).toBe(true);
+    expect(assemblyBounds(object).getSize(new Vector3()).y*measuredScale(object)).toBeCloseTo(100,6);
+    expect(object.body.colliderRadius).toBe(9);
+    expect(object.parts.length).toBeLessThanOrEqual(32);
+    if(name==='Leaning birch'){
+      expect(objectFragments(object)).toHaveLength(1);
+      expect(new Set(object.parts.map(p=>p.fragment)).size).toBe(1);
+      expect(object.parts.every(p=>!p.animation)).toBe(true);
+    }
   });
   it("embeds the fallen log's stub in its bark and gives every placement a varied heading",()=>{
     const log=spec('Fallen log'),trunk=log.parts[0]!,stub=log.parts.find(p=>p.shape==='capsule')!;
