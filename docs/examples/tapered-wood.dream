@@ -1,0 +1,10 @@
+dream 2;
+material bark(style=toon,colors=[#76583d,#503b2b]);
+material cut(style=toon,colors=[#bc9668,#97754f]);
+object snag(label="Woodland snag"){
+  measure(kind=tree,axis=y,meters=6);
+  body(interaction=solid,radius=9,height=42);
+  beam trunk(shape=cylinder,material=bark,from=[0,0,0],to=[1,41,0],width=7,depth=6,taper=.38);
+  beam branch(shape=cylinder,material=bark,from=[.5,20,0],to=[-12,33,2],width=2.8,depth=2.5,taper=.4);
+  beam cut_top(shape=cylinder,material=cut,from=[1,40.8,0],to=[1,41.3,0],width=2.1,depth=1.9);
+}

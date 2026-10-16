@@ -1,6 +1,9 @@
 dream 2;
 material bark_mark(style=toon,colors=[#4d5145,#4d5145]);
 material lichen(style=toon,colors=[#708257,#708257]);
+material bark_ridge(style=toon,colors=[#7a624a,#574838]);
+material end_grain(style=toon,colors=[#bd996b,#8f704f]);
+material end_ring(style=toon,colors=[#886746,#6c5038]);
 material m0(style=toon,colors=[#d5d2b9,#8a978b]);
 material m1(style=toon,colors=[#648553,#3b5c44]);
 material m2(style=toon,colors=[#3d6858,#294b43]);
@@ -15,12 +18,12 @@ object birch(label="Birch"){
   measure(kind=tree,axis=y,meters=10);
   body(interaction=solid,radius=9,height=68);
   part trunk(shape=cylinder,material=m0,at=[0,23,0],size=[4,46,4]);
-  part fork(shape=cylinder,material=m0,at=[-5,34,0],size=[2,23,2],rot_deg=[0,0,-27.501974166279513]);
+  beam fork(shape=cylinder,material=m0,from=[0,23,0],to=[-10,45,0],width=2,depth=2,taper=.55);
   part upper_crown(shape=icosphere,material=m1,at=[1,53,0],size=[24,29,21],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),deform=deform(seed=8995,amount=.14));
   part side_crown(shape=icosphere,material=m1,at=[-9,43,1],size=[20,23,18],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),deform=deform(seed=9026,amount=.14));
   part lower_crown(shape=icosphere,material=m2,at=[7,40,-3],size=[17,21,16],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),deform=deform(seed=9057,amount=.14));
   repeat bark_marks(index=b,count=4){part mark(shape=box,material=bark_mark,at=[.2,8+b*9,1.8],size=[2.7,.7,.5],rot_deg=[0,0,b*4-6]);}
-  beam twig(shape=cylinder,material=m0,from=[0,29,0],to=[8,42,-3],width=1.5,depth=1.5);
+  beam twig(shape=cylinder,material=m0,from=[0,29,0],to=[8,42,-3],width=1.5,depth=1.5,taper=.5);
   part light_leaves(shape=icosphere,material=m1,at=[5,54,4],size=[14,17,13],deform=deform(seed=175,amount=.13));
 }
 object silver_fir(label="Silver fir"){
@@ -77,23 +80,39 @@ object exposed_stone_slab(label="Exposed stone slab"){
 object standing_deadwood(label="Standing deadwood"){
   measure(kind=tree,axis=y,meters=6);
   body(interaction=solid,radius=9,height=42);
-  part trunk(shape=cylinder,material=m3,at=[0,20,0],size=[6,40,6]);
-  part left_branch(shape=cylinder,material=m3,at=[-6,29,0],size=[3,19,3],rot_deg=[0,0,-41.8259190445501]);
-  part right_branch(shape=cylinder,material=m3,at=[5,23,2],size=[3,15,3],rot_deg=[0,22.91831180523293,45.83662361046586]);
-  part cut_top(shape=cylinder,material=m5,at=[0,39,0],size=[5,1,5]);
-  beam root(shape=cylinder,material=m3,from=[-6,1,0],to=[0,7,0],width=3,depth=3);
-  beam snapped_twig(shape=cylinder,material=m3,from=[0,18,0],to=[-6,23,4],width=2,depth=2);
+  beam trunk(shape=cylinder,material=m3,from=[0,0,0],to=[.6,41,1.2],width=7,depth=6.4,taper=.38,deform=deform(seed=63,amount=.04));
+  beam cut_top(shape=cylinder,material=end_grain,from=[.596,40.8,1.194],to=[.604,41.3,1.209],width=2.1,depth=1.9);
+  beam left_branch(shape=cylinder,material=m3,from=[.3,21,.6],to=[-12.7,34.4,2.1],width=2.8,depth=2.5,taper=.4);
+  beam left_snap(shape=cylinder,material=end_grain,from=[-12.5,34.19,2.077],to=[-12.85,34.55,2.117],width=.9,depth=.8);
+  beam right_branch(shape=cylinder,material=m3,from=[.2,15,.4],to=[11.3,29.5,-4.9],width=2.7,depth=2.4,taper=.4);
+  beam right_snap(shape=cylinder,material=end_grain,from=[11.13,29.28,-4.82],to=[11.46,29.71,-4.977],width=.85,depth=.75);
+  beam snapped_twig(shape=cylinder,material=m3,from=[0,11,0],to=[-5,16,6],width=2,depth=1.8,taper=.4);
+  part root_flare(shape=icosphere,material=m3,at=[0,1.6,0],size=[8.5,3.8,7.8],deform=deform(seed=93,amount=.1));
+  beam root_left(shape=cylinder,material=m3,from=[0,4,0],to=[-5,.6,2],width=2.2,depth=2.2,taper=.35);
+  beam root_right(shape=cylinder,material=m3,from=[0,4,0],to=[5,.6,-1],width=2.2,depth=2.2,taper=.35);
+  beam root_back(shape=cylinder,material=m3,from=[0,4,0],to=[1,.5,-4],width=2.2,depth=2.2,taper=.35);
+  part bark_scar(shape=box,material=bark_ridge,at=[1,11,2.6],size=[1.2,7,.6],rot_deg=[-5,10,-4]);
+  part base_moss(shape=icosphere,material=lichen,at=[-.8,4.5,3.5],size=[4.5,2,1.5],deform=deform(seed=92,amount=.13));
 }
 object fallen_log(label="Fallen log"){
   measure(kind=custom,axis=x,meters=3);
   body(interaction=solid,radius=23,height=16);
   ground(mode=surface);
-  part log(shape=cylinder,material=m3,at=[0,5,0],size=[11,44,11],rot_deg=[0,0,90]);
-  part cut_neg_1(shape=cylinder,material=m5,at=[-22,5,0],size=[9,0.5,9],rot_deg=[0,0,90]);
-  part cut_1(shape=cylinder,material=m5,at=[22,5,0],size=[9,0.5,9],rot_deg=[0,0,90]);
-  part broken_branch(shape=cylinder,material=m3,at=[-5,9,1],size=[3,13,3],rot_deg=[0,17.188733853924695,-34.37746770784939]);
-  repeat growth_rings(index=e,count=2){part ring(shape=torus,material=m3,at=[e*44-22,5,0],size=[7,7,.6],rot_deg=[0,90,0]);}
-  repeat bark_grooves(index=g,count=3){part groove(shape=box,material=bark_mark,at=[0,5+g*2,5-g],size=[36,.6,.6],rot_deg=[0,0,g-1]);}
+  part log(shape=cylinder,material=m3,at=[0,5.5,0],size=[11,44,11],rot_deg=[0,0,90]);
+  repeat ends(index=e,count=2){
+    let x(value=e*44.2-22.1);
+    part cut(shape=cylinder,material=end_grain,at=[x,5.5,0],size=[9,.6,9],rot_deg=[0,0,90]);
+    part ring(shape=torus,material=end_ring,at=[x+(e*2-1)*.28,5.5,0],size=[6.3,6.3,.5],rot_deg=[0,90,0]);
+    part pith(shape=cylinder,material=end_ring,at=[x+(e*2-1)*.28,5.5,0],size=[1.2,.5,1.2],rot_deg=[0,0,90]);
+  }
+  beam broken_branch(shape=capsule,material=m3,from=[-6,7.5,.5],to=[-1.5,13,3],width=2.4,depth=2.4);
+  beam branch_snap(shape=cylinder,material=end_grain,from=[-1.8,12.6,2.8],to=[-1.5,13,3],width=1.8,depth=1.8);
+  part upper_groove(shape=box,material=bark_mark,at=[-10,10.7,.8],size=[13,.55,.7],rot_deg=[0,-3,0]);
+  part front_groove(shape=box,material=bark_mark,at=[2,8.2,4.75],size=[17,.5,.6],rot_deg=[-30,0,2]);
+  part back_ridge(shape=box,material=bark_ridge,at=[13,9.8,-3.2],size=[8,.55,.7],rot_deg=[35,0,-5]);
+  part knot(shape=torus,material=end_ring,at=[8,7.5,5.1],size=[2.4,2,.6],rot_deg=[-22,0,0]);
+  part moss_left(shape=icosphere,material=lichen,at=[-10,10.1,-1],size=[13,1.4,5],deform=deform(seed=117,amount=.13));
+  part moss_right(shape=icosphere,material=lichen,at=[13,9.9,-1.5],size=[8,1.6,4],deform=deform(seed=133,amount=.15));
 }
 object timber_barn(label="Timber barn"){
   measure(kind=building,axis=y,meters=8);

@@ -195,6 +195,7 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
             if (motion?.kind === "sway") animation = { kind: "sway", amplitudeRad: number(motion.args[0]!) * RAD, speed: number(motion.args[1]!) };
             parts.push({ id: id(), shape: statement.shape as ObjectDslV2["parts"][number]["shape"], material: { ...material },
               position: position.toArray(), size: size.toArray(), rotation: angles(orient), ...(frame.parent ? { parent: frame.parent } : {}),
+              ...(statement.taper ? {taper:number(statement.taper)} : {}),
               ...(frame.fragment ? {fragment:frame.fragment} : {}),...(frame.zone ? {zone:frame.zone} : {}),...(statement.deform ? { deform: { seed: number(statement.deform[0]), amount: number(statement.deform[1]) } } : {}), ...(animation ? { animation } : {}) });
             origins.push(token); break;
           }

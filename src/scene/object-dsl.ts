@@ -79,6 +79,7 @@ const objectV2PartSchema=objectPartSchema.extend({
   shape:z.enum(["box","sphere","cylinder","cone","pyramid","icosphere","capsule","torus"]),
   parent:z.string().min(1).max(40).optional(),
   position:z.tuple([offset,z.number().finite().min(-128).max(128),offset]),
+  taper:z.number().finite().min(.1).max(1).optional(),
   deform:z.object({seed:z.number().int().min(0).max(65535),amount:z.number().finite().min(0).max(.24)}).strict().optional(),
   fragment:z.string().min(1).max(40).optional(),
   zone:z.string().min(1).max(40).optional(),
@@ -108,6 +109,9 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
     ids.add(part.id);
   });
   if(spec.dslVersion===2) {
+    spec.parts.forEach((part,index)=>{
+      if(part.taper!==undefined && part.shape!=="cylinder")ctx.addIssue({code:z.ZodIssueCode.custom,path:["parts",index,"taper"],message:"taper requires a cylinder"});
+    });
     const impact=spec.impact;
     if(impact && (spec.foundation || spec.contacts || spec.rideable || spec.emitter))ctx.addIssue({code:z.ZodIssueCode.custom,message:"impact objects use one body without foundations, contacts, seats or emitters"});
     if(impact && spec.body.interaction!==(impact.kind==="bounce" ? "knockable" : "solid"))ctx.addIssue({code:z.ZodIssueCode.custom,message:"bounce needs a knockable body; break/topple needs a solid body"});
@@ -153,7 +157,7 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
     if(spec.measure){
       const problem=measureProblem(spec.measure);
       if(problem)ctx.addIssue({code:z.ZodIssueCode.custom,path:["measure"],message:problem});
-      else if(hierarchyValid){const scale=measuredScale(spec);if(!Number.isFinite(scale) || scale<.05 || scale>4)ctx.addIssue({code:z.ZodIssueCode.custom,path:["measure"],message:"measured size must resolve to a uniform scale in 0.05..4"});}
+      else if(hierarchyValid && spec.parts.every(p=>p.taper===undefined || p.shape==="cylinder" && p.taper>=.1 && p.taper<=1)){const scale=measuredScale(spec);if(!Number.isFinite(scale) || scale<.05 || scale>4)ctx.addIssue({code:z.ZodIssueCode.custom,path:["measure"],message:"measured size must resolve to a uniform scale in 0.05..4"});}
     }
   }
 });

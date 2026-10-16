@@ -2,14 +2,14 @@ import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import type { ObjectPart } from "./object-dsl";
 
-function basePartGeometry(shape: ObjectPart["shape"], size: ObjectPart["size"]): THREE.BufferGeometry {
+function basePartGeometry(shape: ObjectPart["shape"], size: ObjectPart["size"], taper=1): THREE.BufferGeometry {
   switch (shape) {
     case "capsule": return new THREE.CapsuleGeometry(.5,1,5,12);
     case "torus": return new THREE.TorusGeometry(.42,.08,10,24);
     // Bevel in physical units before normalization, so long boards keep crisp ends.
     case "box": return new RoundedBoxGeometry(...size,2,Math.min(...size)*.12).scale(1/size[0],1/size[1],1/size[2]);
     case "sphere": return new THREE.SphereGeometry(0.5, 16, 12);
-    case "cylinder": return new THREE.CylinderGeometry(0.5, 0.5, 1, 16);
+    case "cylinder": return new THREE.CylinderGeometry(0.5*taper, 0.5, 1, 16);
     case "cone": return new THREE.ConeGeometry(0.5, 1, 16);
     case "pyramid": return new THREE.ConeGeometry(0.5, 1, 4).rotateY(Math.PI / 4).scale(Math.SQRT2, 1, Math.SQRT2);
     case "icosphere": {
@@ -25,7 +25,7 @@ function basePartGeometry(shape: ObjectPart["shape"], size: ObjectPart["size"]):
 
 /** Variation is deterministic from position, so duplicated seam vertices remain joined. */
 export function partGeometry(part:ObjectPart):THREE.BufferGeometry {
-  const geometry=basePartGeometry(part.shape,part.size);
+  const geometry=basePartGeometry(part.shape,part.size,"taper" in part ? part.taper : undefined);
   const deform="deform" in part ? part.deform : undefined;
   if(deform?.amount) {
     const positions=geometry.getAttribute("position");

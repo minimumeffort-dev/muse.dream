@@ -276,6 +276,7 @@
         "at": "v3",
         "size": "v3",
         "rot_deg": "v3?",
+        "taper": "n?",
         "deform": "deform?",
         "motion": "part_motion?"
       }
@@ -293,6 +294,7 @@
         "to": "v3",
         "width": "n",
         "depth": "n",
+        "taper": "n?",
         "deform": "deform?",
         "motion": "part_motion?"
       }

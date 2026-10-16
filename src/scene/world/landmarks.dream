@@ -88,13 +88,13 @@ object oak(label="Oak"){
   measure(kind=tree,axis=y,meters=10);
   body(interaction=solid,radius=14,height=56);
   part trunk(shape=cylinder,material=m8,at=[0,14,0],size=[6,28,6]);
-  part branch(shape=cylinder,material=m8,at=[-5,24,0],size=[3,17,3],rot_deg=[0,0,-34.37746770784939]);
+  beam branch(shape=cylinder,material=m8,from=[0,17,0],to=[-10,31,2],width=3,depth=3,taper=.6);
   part crown(shape=icosphere,material=m9,at=[0,40,0],size=[34,32,32],motion=sway(deg=1.432394487827058,hz=0.1909859317102744),deform=deform(seed=5510,amount=.14));
   part crown_left(shape=icosphere,material=m10,at=[-12,33,3],size=[24,24,23],motion=sway(deg=1.432394487827058,hz=0.1909859317102744),deform=deform(seed=5541,amount=.14));
   part crown_right(shape=icosphere,material=m9,at=[12,35,-4],size=[23,25,24],motion=sway(deg=1.432394487827058,hz=0.1909859317102744),deform=deform(seed=5572,amount=.14));
   beam root_left(shape=cylinder,material=m8,from=[-5,1,1],to=[0,7,0],width=2,depth=2);
   beam root_right(shape=cylinder,material=m8,from=[5,1,-2],to=[0,7,0],width=2,depth=2);
-  beam second_fork(shape=cylinder,material=m8,from=[0,19,0],to=[9,31,-4],width=3,depth=3);
+  beam second_fork(shape=cylinder,material=m8,from=[0,19,0],to=[9,31,-4],width=3,depth=3,taper=.6);
   part bark_scar(shape=box,material=cut_wood,at=[1,12,2.8],size=[1,7,.5]);
 }
 object pine(label="Pine"){
@@ -240,12 +240,12 @@ object amber_tree(label="Amber tree"){
   measure(kind=tree,axis=y,meters=7);
   body(interaction=solid,radius=14,height=56);
   part trunk(shape=cylinder,material=m8,at=[0,14,0],size=[6,28,6]);
-  part branch(shape=cylinder,material=m8,at=[-5,24,0],size=[3,17,3],rot_deg=[0,0,-34.37746770784939]);
+  beam branch(shape=cylinder,material=m8,from=[0,17,0],to=[-10,31,2],width=3,depth=3,taper=.6);
   part crown(shape=icosphere,material=m18,at=[0,40,0],size=[34,32,32],motion=sway(deg=1.432394487827058,hz=0.1909859317102744),deform=deform(seed=17937,amount=.14));
   part crown_left(shape=icosphere,material=m19,at=[-12,33,3],size=[24,24,23],motion=sway(deg=1.432394487827058,hz=0.1909859317102744),deform=deform(seed=17968,amount=.14));
   part crown_right(shape=icosphere,material=m19,at=[12,35,-4],size=[23,25,24],motion=sway(deg=1.432394487827058,hz=0.1909859317102744),deform=deform(seed=17999,amount=.14));
   beam root_left(shape=cylinder,material=m8,from=[-5,1,1],to=[0,7,0],width=2,depth=2);
   beam root_right(shape=cylinder,material=m8,from=[5,1,-2],to=[0,7,0],width=2,depth=2);
-  beam second_fork(shape=cylinder,material=m8,from=[0,19,0],to=[9,31,-4],width=3,depth=3);
+  beam second_fork(shape=cylinder,material=m8,from=[0,19,0],to=[9,31,-4],width=3,depth=3,taper=.6);
   part bark_scar(shape=box,material=cut_wood,at=[1,12,2.8],size=[1,7,.5]);
 }

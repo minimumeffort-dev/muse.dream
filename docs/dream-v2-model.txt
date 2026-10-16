@@ -19,8 +19,11 @@ Shapes use full bounding dimensions. Cylinders/capsules/cones point along Y;
 torus holes point along Z. Motion axes are primitive-local: a cylinder with
 rot_deg=[90,0,0] still rolls about its own Y axis; a torus wheel uses Z.
 Keep feet/bases at local Y=0. World placements take only XY, not arbitrary height.
-Use endpoint beams for connected struts, groups for rigid transforms, joints
-for connected articulation. Keep physical bodies separate from visual parts.
+Use endpoint beams for connected struts; start each fork inside its trunk.
+Cylinder part/beam taper is optional, finite .1..1 (default 1): +Y/to diameter
+divided by -Y/from diameter. width/depth/size remain full base dimensions.
+Use taper for continuous trunks and branches; use groups for rigid transforms,
+joints for connected articulation. Keep physical bodies separate from visual parts.
 Within the 32-part limit, add identifying details such as window frames, wheel hubs,
 forks, bark marks and food scores. Keep them attached to the same joint or fragment
 as their support. Detail must not bridge independent break zones or close a doorway.

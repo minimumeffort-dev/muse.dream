@@ -63,6 +63,13 @@ normalization, preserving crisp long boards. Torus rings use a slimmer fixed
 profile for readable wheel openings and handles. Outer `size` dimensions remain
 the geometry/grounding contract; neither shape introduces a new physics body.
 
+Cylinder parts accept optional `taper` from `.1` to `1`, default `1`. It is
+the +Y tip diameter divided by the −Y base diameter. `size` keeps its full
+base dimensions; rotations and group scales preserve the ratio. Other shapes
+reject `taper`, and v1 data remains unchanged. Dream 2 exposes the same field
+on cylinder `part` and endpoint `beam` commands. See the
+[complete wood example](examples/tapered-wood.dream).
+
 A part may declare `deform: { "seed": 73, "amount": 0.045 }`. The engine
 applies a fixed smooth spatial deformation and renormalizes its bounds,
 so the dimensions and physical body stay independent. Identical seeds and

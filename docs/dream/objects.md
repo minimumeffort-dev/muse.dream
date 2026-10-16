@@ -27,6 +27,25 @@ Box bevels follow the smallest physical dimension, so a long plank keeps crisp e
 
 Materials are engine-owned styles: `toon`, `grain`, `glow`, `stripes` or `cloth`, each with two hex colors. `grain` maps to the engine's paper-grain material. Cloth supplies flag-like wind deformation; it isn't a clothing simulator. `deform(seed=...,amount=...)` adds bounded, deterministic variation to supported parts.
 
+## Grow a connected branch
+
+A cylinder can narrow continuously with `taper`, a tip-to-base diameter ratio from `.1` to `1`. It defaults to `1`. For a `beam`, the base is `from` and the tip is `to`; for a `part`, the tip is local +Y. The declared dimensions still cover the full base. Start a fork inside its trunk so the surfaces overlap at the join.
+
+This [complete snag](../examples/tapered-wood.dream) uses one tapered trunk and one branch, with a smaller cut face at the top:
+
+```dream
+dream 2;
+material bark(style=toon,colors=[#76583d,#503b2b]);
+material cut(style=toon,colors=[#bc9668,#97754f]);
+object snag(label="Woodland snag"){
+  measure(kind=tree,axis=y,meters=6);
+  body(interaction=solid,radius=9,height=42);
+  beam trunk(shape=cylinder,material=bark,from=[0,0,0],to=[1,41,0],width=7,depth=6,taper=.38);
+  beam branch(shape=cylinder,material=bark,from=[.5,20,0],to=[-12,33,2],width=2.8,depth=2.5,taper=.4);
+  beam cut_top(shape=cylinder,material=cut,from=[1,40.8,0],to=[1,41.3,0],width=2.1,depth=1.9);
+}
+```
+
 ## Give it a physical size
 
 Inside an object:

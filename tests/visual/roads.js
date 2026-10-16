@@ -22,7 +22,7 @@ const doc = dreamV2 ? compileDreamScene(dreamV2Source,{sceneId:'dream2-review',r
 for (const region of doc.regions) locations.push({ name: region.rule.effect, x: region.polygon.reduce((sum,p)=>sum+p.x,0)/region.polygon.length, y: region.polygon.reduce((sum,p)=>sum+p.y,0)/region.polygon.length });
 for (const hill of doc.terrain.hills) locations.push({ name: hill.id, x: hill.x, y: hill.y });
 for (const checkpoint of doc.checkpoints) locations.push({ name: `Road ${checkpoint.id}`, x: (checkpoint.a.x + checkpoint.b.x) / 2, y: (checkpoint.a.y + checkpoint.b.y) / 2 });
-for (const id of ['sketch_245','sketch_3828','sketch_1482', 'castle', 'mill', 'cottage', 'ruins', 'farm_barn', 'cottage_well', 'crystal_garden','orchard_baker','orchard_picnic','meadow_granite']) {
+for (const id of ['sketch_245','sketch_3828','sketch_1482', 'castle', 'mill', 'cottage', 'ruins', 'farm_barn', 'farm_log', 'sketch_1071', 'sketch_1177', 'cottage_well', 'crystal_garden','orchard_baker','orchard_picnic','meadow_granite']) {
   const object = doc.objects.find(object => object.id === id);
   if(object)locations.push({ name: id, x: object.x, y: object.y });
 }

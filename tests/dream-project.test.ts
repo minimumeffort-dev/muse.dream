@@ -98,7 +98,7 @@ describe("complete Dream 2 mock world",()=>{
       if(activityProps[current.id])expect([current.x,current.y]).toEqual(activityProps[current.id]);
       const movedActivity=activityProps[current.id] || current.route && ["meadow_cycle","village_skate","cloud_trip","lake_trip"].includes(current.route.id);
       if(relocated.has(current.id))expect(Math.hypot(current.x-placement.x,current.y-placement.y)).toBeLessThan(20.01);
-      close({...current,headingRad:current.headingRad,spec:undefined,scale:undefined,...(relocated.has(current.id)||movedActivity?{x:placement.x,y:placement.y,headingRad:placement.headingRad}:{})},{...placement,headingRad:placement.headingRad,scale:undefined,labelText:current.spec!.displayName,id:canonicalId(id),spec:undefined});}
+      close({...current,headingRad:assembly==="Fallen log" ? placement.headingRad : current.headingRad,spec:undefined,scale:undefined,...(relocated.has(current.id)||movedActivity?{x:placement.x,y:placement.y,headingRad:placement.headingRad}:{})},{...placement,headingRad:placement.headingRad,scale:undefined,labelText:current.spec!.displayName,id:canonicalId(id),spec:undefined});}
     expect(scene.objects).toHaveLength(448);expect(scene.objects.every(o=>o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2)).toBe(true);
   });
   it("accepts the whole world from text and revalidates an invalid included placement",()=>{

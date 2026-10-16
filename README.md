@@ -68,7 +68,11 @@ The [checked examples](docs/dream/examples.md) also include a bouncing ball, bre
 
 Objects share physical units. The car is 3.55 metres long, the plane has a 10.8-metre wingspan, and the skateboard is 0.82 metres long. A size declaration scales the geometry, collision body, seats and broken pieces together. The compiler checks proportions too, so a skateboard can't quietly become larger than the car.
 
-The [asset library](docs/asset-library.md) covers all 53 world assemblies. Cars have window pillars and wheel hubs, bikes have chains and pedals, and buildings have framed windows, timber details and connected canopies. Trees have forks and bark markings, with seeded variation in their crowns. These details are Dream parts too, including the pieces released when something breaks.
+The [asset library](docs/asset-library.md) covers all 53 world assemblies. Cars have window pillars and wheel hubs, bikes have chains and pedals, and buildings have framed windows, timber details and connected canopies. Trees have connected forks and bark markings, with seeded variation in their crowns. Deadwood uses tapered trunks and branches; fallen logs have cut ends, moss and varied headings on the ground. These details are Dream parts too, including the pieces released when something breaks.
+
+![Fallen log and deadwood built with connected, tapered wood parts](docs/media/woodland.jpg)
+
+Cylinder `part` and `beam` commands accept a bounded `taper` ratio, so a trunk can narrow without stacking separate tubes. [Try the complete wood example](docs/examples/tapered-wood.dream).
 
 ![Trees, a plane, car, person, bicycle, bench, skateboard and bread shown at the same physical scale](docs/media/proportions.jpg)
 

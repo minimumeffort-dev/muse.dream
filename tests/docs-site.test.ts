@@ -16,8 +16,8 @@ describe('Dream syntax highlighting',()=>{
     expect(html).toContain('<span class="dream-string">&quot;&lt;img onerror=bad&gt;&amp;&quot;</span>');
   });
   it('distinguishes commands, fields, numeric expressions, colors, references and booleans',()=>{
-    const html=highlight('part crown(shape=icosphere,material=leaf,at=[-1,.2,3e2]); material leaf(colors=[#77a05b,#426b45]); bridge b(rails=true);');
-    for(const [kind,value] of [['keyword','part'],['field','material'],['number','.2'],['number','3e2'],['color','#77a05b'],['symbol','leaf'],['boolean','true']])
+    const html=highlight('part crown(shape=icosphere,material=leaf,at=[-1,.2,3e2],taper=.6); material leaf(colors=[#77a05b,#426b45]); bridge b(rails=true);');
+    for(const [kind,value] of [['keyword','part'],['field','material'],['field','taper'],['number','.2'],['number','3e2'],['color','#77a05b'],['symbol','leaf'],['boolean','true']])
       expect(html).toContain(`<span class="dream-${kind}">${value}</span>`);
   });
   it('tracks the generated compiler vocabulary',()=>{

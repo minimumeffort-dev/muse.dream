@@ -55,8 +55,10 @@ A command with an ID requires a name immediately after its keyword. Commands wit
 | `joint` | object / visual | ID / visual | `at?: v3`, `rot_deg?: v3`, `motion?: joint_motion` |
 | `repeat` | object / visual / path | ID / inherit | `index: symbol`, `count: n` |
 | `use` | object / visual | ID / no block | `component: ref`, `args?: nums`, `at?: v3`, `rot_deg?: v3`, `scale?: n` |
-| `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `deform?: deform`, `motion?: part_motion` |
-| `beam` | object / visual | ID / no block | `shape: box / cylinder / capsule`, `material: ref`, `from: v3`, `to: v3`, `width: n`, `depth: n`, `deform?: deform`, `motion?: part_motion` |
+| `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `taper?: n`, `deform?: deform`, `motion?: part_motion` |
+| `beam` | object / visual | ID / no block | `shape: box / cylinder / capsule`, `material: ref`, `from: v3`, `to: v3`, `width: n`, `depth: n`, `taper?: n`, `deform?: deform`, `motion?: part_motion` |
+
+For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1` to `1`, default `1`. It sets the +Y end diameter relative to the −Y base, or `to` relative to `from` for a beam. Full `size` dimensions and beam `width`/`depth` describe the base. Rotation and uniform group scaling preserve the ratio. Seeded deformation may vary the surface; grounding, measurement and rendering use the same resulting geometry. Other shapes reject this field. See the [complete tapered wood example](../examples/tapered-wood.dream).
 
 ### World layout and activities
 

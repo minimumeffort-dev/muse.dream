@@ -23,6 +23,10 @@ The seated traveler and standing Explorer are separate Dream assemblies. The Exp
 
 Start with the silhouette and [physical size](proportions.md). Use endpoint beams for forks, braces and steering stems so the connections are explicit. Keep glass inside its frame, roof edges over their walls and canopies connected to a supporting building. Seeded deformation gives stone and foliage an irregular surface without adding a new shape or generating geometry every frame.
 
+Deadwood uses a continuous tapered trunk, rising forks and smaller cut faces at the snapped ends. Fallen logs have bark scars, end grain and a short embedded branch stub. Their placements use varied headings while keeping the existing terrain support. Birch, oak and amber forks also start inside their trunks. The [tapered wood example](examples/tapered-wood.dream) shows the underlying Dream 2 feature.
+
+![Fallen log and standing deadwood with connected branches and cut ends](media/woodland.jpg)
+
 Details belong to their supporting coordinate frame. The baker's ears, straps and pocket follow its torso joint. A bench's armrests leave with its frame; the bakehouse's canopy leaves with its entrance lintel. Adding a bolt must not create an extra independent fragment. The usual limits still apply: 32 parts per object, eight release groups per breakable assembly, and the existing scene-wide animation and debris budgets.
 
 Rigid parts sharing a material are batched inside each joint frame. Wheels and propellers keep their own pivots. Repeated scenery remains instanced, including its foliage motion and occlusion fade. Added visual detail doesn't add mesh colliders: roads, clearance, driving and impacts still use the engine's existing masks, heightfield and bounded bodies.

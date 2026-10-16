@@ -1,6 +1,6 @@
 # Dream 2 language
 
-Dream 2 is the text authoring language behind Muse Dream. It compiles object assemblies and complete worlds into validated engine data. Start with the [documentation home](README.md), or use this complete five-part table as a small composition example.
+Dream 2 is the text authoring language behind Muse Dream. It compiles object assemblies and complete worlds into validated engine data. Cylinder parts and endpoint beams support bounded `taper` for continuous trunks, branches and posts; see the [wood example](examples/tapered-wood.dream). Start with the [documentation home](README.md), or use this complete five-part table as a small composition example.
 
 ```text
 dream 2;

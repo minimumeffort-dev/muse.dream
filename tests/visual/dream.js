@@ -12,12 +12,15 @@ const view=document.querySelector('#view'),phase=document.querySelector('#phase'
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,1.5)); renderer.setScissorTest(true);
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
-const worldExamples=new URLSearchParams(location.search).has('world');
-const allExamples=new URLSearchParams(location.search).has('all');
+const params=new URLSearchParams(location.search),focus=params.getAll('asset');
+const worldExamples=params.has('world');
+const allExamples=params.has('all');
+if(focus.length){grid.style.gridTemplateColumns=`repeat(${Math.min(2,focus.length)},1fr)`;document.querySelector('main').style.setProperty('min-height','650px');}
 if(worldExamples)document.querySelector('header a').href='/src/scene/interactive-world.dream';
 if(allExamples)document.querySelector('header a').href='/src/scene/world/open-world.dream';
-const items=(allExamples ? compileDreamWorld(worldSource,worldModules).assemblies : worldExamples ? interactiveWorld.assemblies : dreamExamples).map(spec=>{
+const items=(allExamples ? compileDreamWorld(worldSource,worldModules).assemblies : worldExamples ? interactiveWorld.assemblies : dreamExamples).filter(spec=>!focus.length || focus.includes(spec.displayName)).map(spec=>{
   const cell=document.createElement('article'),name=document.createElement('strong'),detail=document.createElement('small');
+  if(focus.length)cell.style.height='650px';
   name.textContent=spec.displayName;detail.textContent=`${spec.parts.length} parts · ${spec.joints?.length??0} joints`;
   cell.append(name,detail);grid.append(cell);
   const scene=new THREE.Scene();scene.background=new THREE.Color('#52714d');

@@ -115,3 +115,5 @@ node scripts/dream.mjs check docs/examples/dedicated-path.dream
 The source files are the examples. Tests compare these complete snippets with their source files, so the highlighted version cannot drift from the version the compiler checks. On GitHub, follow the file links below; on the documentation site, copy the complete highlighted block.
 
 [Ball source](../examples/bouncing-ball.dream) · [Bench source](../examples/breakable-bench.dream) · [Sign source](../examples/swinging-sign.dream) · [Tree source](../examples/toppling-tree.dream)
+
+[Tapered wood](../examples/tapered-wood.dream) builds a connected snag with a narrowing trunk, rising branch and cut face. The [object guide](objects.md#grow-a-connected-branch) includes the complete source.

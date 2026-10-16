@@ -129,6 +129,7 @@ function lowerBlock(nodes:DreamNode[]):Statement[] {
     if(node.block)statement.block=lowerBlock(node.block);
     if(node.fields.has("rot_deg"))statement.rotate=v("rot_deg");
     if(node.fields.has("scale"))statement.scale=n("scale");
+    if(node.fields.has("taper"))statement.taper=n("taper");
     if(node.fields.has("at"))statement.at=v("at");
     if(node.fields.has("motion"))statement.motion=motion(field(node,"motion") as DreamNode);
     if(node.fields.has("deform")){const deform=field(node,"deform") as DreamNode;statement.deform=[exprField(deform,"seed"),exprField(deform,"amount")];}
