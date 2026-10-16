@@ -48,3 +48,12 @@ Refreshed the full atlas and town, sports, basketball, golf and south-lake scree
 ## Boundaries
 
 NPC programs select existing engine actions. There is no generated JavaScript, model call, runtime pathfinding, traffic avoidance, match simulation, humanoid possession or user-defined input controller. Decor people are nonblocking; solid NPCs use actor cylinders. NPCs with destruction/knockable bodies or compound contacts are rejected. Boat/plane NPCs require water/air routes. Lower-powered hardware and provider generation accuracy remain unmeasured.
+
+## CI reporting follow-up
+
+The initial GitHub run and its retry passed all 559 assertions but failed with
+`[vitest-worker]: Timeout calling "onTaskUpdate"`. Test setup now yields one
+event-loop turn between CPU-heavy scene tests so queued worker reports can be
+delivered. Test and reporting timeouts remain unchanged, and unhandled errors
+remain fatal. README, language docs and screenshots were audited for this
+test-only follow-up; their runtime behavior and images remain accurate.

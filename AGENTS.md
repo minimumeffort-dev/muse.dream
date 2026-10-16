@@ -76,6 +76,10 @@ muse skills validate .agents/skills/paper-game --json
 muse skills validate .agents/skills/ponytail --json
 ```
 
+`tests/setup.ts` yields between CPU-heavy scene tests so Vitest worker reports
+can be delivered on slower CI runners. Preserve the test/reporting timeouts and
+keep unhandled errors fatal; do not hide a reporting failure to publish docs.
+
 ## Layout
 
 - `src/scene/` — versioned scene document, Dream 1/2 compiler, schema, handmade fixture, validation
