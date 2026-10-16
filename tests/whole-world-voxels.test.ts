@@ -71,6 +71,13 @@ describe('whole-world voxel construction',()=>{
   expect((pool.mesh.geometry as THREE.InstancedBufferGeometry).instanceCount).toBe(288);
   expect(pool.mesh.geometry.getAttribute('offset')).toBeInstanceOf(THREE.InstancedBufferAttribute);
  });
+ it('preserves a curb taper independently of quantized ground height',()=>{
+  const source=new THREE.PlaneGeometry(8,4).rotateX(-Math.PI/2).translate(4,3.1,2);
+  const geometry=voxelSurface(source,{cell:1,step:1,lift:3.1,thickness:3.6,baseAt:()=>10.8,liftAt:x=>1.25+1.85*x/8});
+  const p=geometry.getAttribute('position'),n=geometry.getAttribute('normal');let checked=0;
+  for(let i=0;i<p.count;i+=6)if(n.getY(i)===1){const center=(Math.min(...Array.from({length:6},(_,j)=>p.getX(i+j)))+Math.max(...Array.from({length:6},(_,j)=>p.getX(i+j))))/2;expect(p.getY(i)).toBeCloseTo(10+1.25+1.85*center/8,4);checked++;}
+  expect(checked).toBeGreaterThan(1);assertVoxelNormals(geometry);
+ });
  it('round trips the directive and rejects invalid grids and work before rendering',()=>{
   expect(compileDreamWorld(formatDream(worldSource),worldModules).layout?.voxelWorld).toEqual(policy);
   for(const replacement of ['object_cell=0','ground_cell=1','height_step=0','object_cell=999'])expect(checkDream(worldSource.replace(/object_cell=1|ground_cell=8|height_step=1/,replacement),worldModules).ok).toBe(false);

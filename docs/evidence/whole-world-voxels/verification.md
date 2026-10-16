@@ -48,6 +48,10 @@ Source SHA-256:
 
 - `src/scene/world/open-world.dream`: `97da4a8c7a7607755740452dea9116f7949e7c837f8f39ffe37d8adc1cb7882f`
 - `src/scene/voxel-stamp.ts`: `e609c274293196b8cf421acd59b7291ff87874b89c0dee4fc5e2a8ce07e8b000`
-- `src/game/voxel-columns.ts`: `e7766919ba59eefb7c5a40783566c6cc9cb7e43487a71368a49bab1a4548fafd`
+- `src/game/voxel-columns.ts`: `0980eb2c5c79735c032319aaa0355fd128563b48165467a808cb61d2dddf3148`
 - `src/scene/dream-contract.ts`: `0a3394521439c11a64d007bba1648027cffc7065388a8f85599020014b24dfe1`
 
+
+## Timber curb follow-up
+
+Column construction also preserves variable curb lifts, keeping the existing taper into timber decks instead of quantizing the curb into a raised end lip. The extra taper regression and bridge checks passed: **22 tests in two files**. The existing live-city media remains accurate because its three bridges are stone and their curb lifts are constant. `tests/visual/roads.html?voxel` renders the complete small voxel-world example, including its timber bridge. The source-defined asphalt/deck cutouts and existing bridge clearance remain unchanged.

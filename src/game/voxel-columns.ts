@@ -4,7 +4,7 @@ import {WORLD_VOXEL_LIMITS} from '../scene/voxel-world';
 
 type Column={height:number;values:number[];dx:number[];dz:number[];key:string};
 type Channel={name:string;size:number;offset:number};
-export type ColumnOptions={cell:number;step:number;lift:number;thickness:number;maxMerge?:number;rigid?:boolean;baseAt?:(x:number,z:number)=>number};
+export type ColumnOptions={cell:number;step:number;lift:number;thickness:number;maxMerge?:number;rigid?:boolean;baseAt?:(x:number,z:number)=>number;liftAt?:(x:number,z:number)=>number};
 
 /** Sparse, world-aligned solid columns. Empty cells cost no geometry; equal top
  * cells become rectangles, and only exposed vertical steps/perimeters are emitted. */
@@ -59,7 +59,8 @@ export function voxelSurface(source:THREE.BufferGeometry,options:ColumnOptions):
     const evaluate=(w:number[])=>Array.from({length},(_,j)=>w.reduce((sum,n,k)=>sum+n*attrs[k]![j]!,0));
     for(let z=lo[1]!;z<=hi[1]!;z++)for(let x=lo[0]!;x<=hi[0]!;x++){
       const cx=(x+.5)*cell,cz=(z+.5)*cell,w=weights(cx,cz);if(w.some(n=>n< -1e-6))continue;
-      const raw=options.baseAt ? options.baseAt(cx,cz)+lift : w.reduce((sum,n,j)=>sum+n*p[j]![1]!,0),height=Math.floor((raw-lift+1e-5)/step)*step+lift,key=`${x},${z}`,prior=columns.get(key);if(prior && prior.height>height)continue;
+      const surfaceLift=options.liftAt?.(cx,cz)??lift;
+      const raw=options.baseAt ? options.baseAt(cx,cz)+surfaceLift : w.reduce((sum,n,j)=>sum+n*p[j]![1]!,0),height=Math.floor((raw-surfaceLift+1e-5)/step)*step+surfaceLift,key=`${x},${z}`,prior=columns.get(key);if(prior && prior.height>height)continue;
       const values=evaluate(w),px=evaluate(weights(cx+1,cz)),pz=evaluate(weights(cx,cz+1));
       const paint=channels.filter(ch=>ch.name!=='uv').flatMap(ch=>values.slice(ch.offset,ch.offset+ch.size).map(n=>Math.round(n*32)));
       const anchor=channels.find(ch=>ch.name==='voxelAnchor')?.offset;

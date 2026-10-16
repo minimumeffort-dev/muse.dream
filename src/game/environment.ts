@@ -103,7 +103,7 @@ export function curbGeometry(doc: Scene, side: -1 | 1): THREE.BufferGeometry {
     while (colors.length < vertices.length) colors.push(...color.toArray());
   }
   const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
-  if(doc.voxelWorld)geo.userData.voxelOptions={cell:1,step:doc.voxelWorld.heightStep,lift:3.1,thickness:3.6,baseAt:(x:number,z:number)=>voxelSurfaceBase(doc,x,z)};
+  if(doc.voxelWorld)geo.userData.voxelOptions={cell:1,step:doc.voxelWorld.heightStep,lift:3.1,thickness:3.6,baseAt:(x:number,z:number)=>voxelSurfaceBase(doc,x,z),liftAt:(x:number,z:number)=>curbLift(x+doc.canonical.width/2,z+doc.canonical.height/2,3.1)};
   geo.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3)); geo.computeVertexNormals(); return geo;
 }
 
