@@ -14,6 +14,12 @@ Racing is where this started. The idea is to make whatever someone draws playabl
 
 Follow the circuit or head into the hills. Climbing slows the car down, descending gives it speed, and a fast crest can launch it into the air. The camera follows you through the world, with a slightly closer view so the smaller objects are easier to see. Wooden bridges carry the track across water, and the train keeps running while you explore. Sunlight keeps the same direction as you move, with shadows covering the full view through hills, camera turns and flight.
 
+The world now covers 800 × 780 metres. The original circuit sits in the countryside, with a connected town to the east, suburbs to the south and a lakeside sports park. Drive through the blocks, take the southern boulevard, or leave the road and cross the football pitch. The park also has a basketball court and three golf fairways. People walk around the square and lake; players practise on the pitch and court.
+
+![Town blocks with connected streets, sidewalks and planted courtyards](docs/media/town-center.jpg)
+
+The layout, buildings, turf, paint and people all come from Dream 2. The sports animations are authored mock routines. There are no match rules, traffic AI or golf controls yet. [Explore the planned world](docs/urban-world.md), or [compile a neighborhood](docs/examples/planned-neighborhood.dream).
+
 The HUD keeps the map, vehicle prompts and pause control. There is no lap counter or checkpoint target to follow; explore at your own pace.
 
 Release the throttle and the car coasts to a complete stop on dry, flat ground. Tires hold across ordinary dry slopes instead of slowly creeping sideways. Steeper hills can still roll the car downhill, and ice keeps its lower grip.

@@ -4,6 +4,7 @@ import { measuredScale, measureProblem } from "./measure";
 import { objectDslSchema, hasAnimatedJoints, MAX_ANIMATED_ASSEMBLIES,impactOf,isReactive } from "./object-dsl";
 import { terrainSchema } from "./terrain";
 import { routeSchema } from "./routes";
+import {streetSchema,surfaceSchema,markingSchema} from './streets';
 
 /**
  * Versioned scene document: the single contract between geometry/semantics
@@ -138,6 +139,9 @@ export const sceneSchema = z.object({
   }),
   terrain: terrainSchema.default({ hills: [] }),
   routes:z.array(routeSchema).max(12).default([]),
+  streets:z.array(streetSchema).max(32).default([]),
+  surfaces:z.array(surfaceSchema).max(64).default([]),
+  markings:z.array(markingSchema).max(128).default([]),
   player: objectDslSchema.optional().refine((spec) => !spec || spec.body.interaction === "solid", {
     message: "player requires a solid body",
   }).refine((spec)=>!spec?.foundation,{message:"player cannot carry a terrain foundation"})
@@ -156,6 +160,9 @@ export const sceneSchema = z.object({
     notes: z.string(),
   }),
 }).superRefine((scene,ctx)=> {
+  const length=(points:Point[])=>points.slice(1).reduce((n,p,i)=>n+Math.hypot(p.x-points[i]!.x,p.y-points[i]!.y),0);
+  if(scene.streets.reduce((n,s)=>n+length(s.points),0)>60000)ctx.addIssue({code:'custom',message:'scene exceeds 60000 street units'});
+  if(scene.markings.reduce((n,s)=>n+length(s.closed ? [...s.points,s.points[0]!] : s.points),0)>40000)ctx.addIssue({code:'custom',message:'scene exceeds 40000 marking units'});
   // The standing player character occupies one of the existing live animation slots.
   const animated=scene.objects.filter(object=>hasAnimatedJoints(object.spec)).length+Number(hasAnimatedJoints(scene.player))+1;
   if(animated>MAX_ANIMATED_ASSEMBLIES) ctx.addIssue({code:z.ZodIssueCode.custom,message:`scene exceeds ${MAX_ANIMATED_ASSEMBLIES} animated assemblies`});

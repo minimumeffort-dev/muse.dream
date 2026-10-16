@@ -2,7 +2,7 @@
 
 [Dream 2 docs](README.md) / Assets
 
-The mock world contains 66 assemblies, all written in Dream 2. The assemblies include vehicles, buildings, wildlife and several layers of vegetation, with window frames, wheel hubs, bark markings and irregular foliage.
+The mock world contains 83 assemblies, all written in Dream 2. The assemblies include vehicles, buildings, wildlife and several layers of vegetation, with window frames, wheel hubs, bark markings and irregular foliage.
 
 ![Vehicles, buildings and a seated traveler built from Dream parts](media/assets.jpg)
 
@@ -17,7 +17,7 @@ The mock world contains 66 assemblies, all written in Dream 2. The assemblies in
 | Trees | Weeping willow, birch, rowan, fir, oak, pine, apple tree, deadwood, leaning birch, spruce, amber sapling | [Nature](../src/scene/world/nature.dream), [landmarks](../src/scene/world/landmarks.dream), [destructible trees](../src/scene/world/destructible.dream), [flora](../src/scene/world/flora.dream) |
 | Ground, plants and wildlife | Mushroom, crystals, granite, cairn, boulders, shrub, cactus, slab, weathered boulder, juniper, log, sunflowers, tortoise | [Nature](../src/scene/world/nature.dream), [landmarks](../src/scene/world/landmarks.dream), [creations](../src/scene/world/creations.dream), [component library](../src/scene/dream-creations.dream) |
 | Furniture and props | Two benches, basket, picnic, breakaway table, produce crate, planter, ball, orchard cart | [Creations](../src/scene/world/creations.dream), [component library](../src/scene/dream-creations.dream), [impact props](../src/scene/impact-creations.dream), [destructible furniture](../src/scene/world/destructible.dream) |
-| People | Waving baker, field naturalist | [Creations](../src/scene/world/creations.dream), [component library](../src/scene/dream-creations.dream) |
+| People | Waving baker, field naturalist, football player, basketball player, town and park walkers, park visitor | [Creations](../src/scene/world/creations.dream), [component library](../src/scene/dream-creations.dream), [sports and people](../src/scene/world/sports_assets.dream) |
 
 The seated traveler and standing Explorer are separate Dream assemblies. The Explorer has an animated walking gait and keeps its own physical size when switching to a seated vehicle pose. Bread and a harvest bowl also have standalone definitions reused in the picnic. [Open the full atlas](media/assets-all.jpg), or run `npm run dev` and use the [interactive gallery](http://127.0.0.1:5173/tests/visual/dream.html?all). Front, right, back and left views share the same geometry. The phase selector exposes wheel and sail motion; proximity opens the doors.
 
@@ -48,3 +48,13 @@ The new flora has eight distinct forms across 75 placements. Ferns and hazel sit
 ![Ferns, foxgloves, lavender, reeds, daisies and a willow](media/flora.jpg)
 
 There are eleven new wildlife placements: five flying birds, three walking deer/fox actors and three idle hares. Birds use continuous airborne ambient routes; walking animals follow clear, dry habitats. Their motion stays inside the existing actor and joint budgets. Plants retain static instancing and shader wind. The [behavior guide](dream/behavior.md#wildlife-and-habitats) explains the ambient route contract and its current limits.
+
+## A planned town and sports park
+
+The expansion adds four urban buildings, three house silhouettes, a street lamp and park seat. Apartments and offices have several floors; shops and homes stay lower. The blocks have street frontage, courtyards and sidewalks. Suburban driveways run toward their street instead of ending in random grass.
+
+![Town buildings, homes and sports people composed in Dream 2](media/urban-assets.jpg)
+
+Football goals have connected posts and net threads. Basketball hoops have a supported backboard, rim and net. Four animated players practise kicks and dribbles; other visitors and two walking routes populate the park and square. The golf park has three fairways, putting greens, sand traps and flags. It is an explorable landscape rather than a golf simulation.
+
+[Buildings and furniture](../src/scene/world/town_assets.dream), [sports and people](../src/scene/world/sports_assets.dream), [district layout](urban-world.md). The full world uses the existing 24 live jointed-assembly slots, including the standing character. Additional static visitors remain instanced.

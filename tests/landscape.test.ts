@@ -70,7 +70,7 @@ describe("terrain and render alignment", () => {
         const a = new THREE.Vector3().fromBufferAttribute(p,i), b = new THREE.Vector3().fromBufferAttribute(p,i+1), c = new THREE.Vector3().fromBufferAttribute(p,i+2);
         for (const [u,v] of [[.2,.3],[.65,.1]]) {
           const point = a.clone().multiplyScalar(1-u!-v!).addScaledVector(b,u!).addScaledVector(c,v!);
-          expect(point.y-groundAt(point.x+3000,point.z+2400)).toBeCloseTo(lift,3);
+          expect(point.y-groundAt(point.x+scene.canonical.width/2,point.z+scene.canonical.height/2)).toBeCloseTo(lift,3);
         }
       }
       geometry.dispose();
@@ -109,7 +109,7 @@ describe("terrain and render alignment", () => {
     for(const outline of [polygon,[...polygon].reverse()]) {
       const geometry=drapedPolygon(scene,outline,1.65),p=geometry.getAttribute("position"),edge=geometry.getAttribute("edgeDistance");
       const distancesAt=(x:number,y:number)=>Array.from({length:p.count},(_,i)=>i)
-        .filter(i=>Math.abs(p.getX(i)+3000-x)<.001 && Math.abs(p.getZ(i)+2400-y)<.001).map(i=>edge.getX(i));
+        .filter(i=>Math.abs(p.getX(i)+scene.canonical.width/2-x)<.001 && Math.abs(p.getZ(i)+scene.canonical.height/2-y)<.001).map(i=>edge.getX(i));
       for(const [x,y,distance] of [[400,420,0],[440,440,0],[420,420,20],[460,420,20]]) {
         const values=distancesAt(x!,y!);expect(values.length).toBeGreaterThan(0);
         values.forEach(value=>expect(value).toBeCloseTo(distance!,3));

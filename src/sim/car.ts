@@ -1,4 +1,5 @@
 import {routePath} from "../scene/routes";
+import {onStreet} from '../scene/streets';
 import {distanceToRoad} from "../scene/road";
 import { playerHeight } from "../scene/measure";
 import { objectPlacement } from "../scene/placement";
@@ -257,7 +258,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
   const throttle = Math.max(-1, Math.min(1, input.throttle));
 
   // Derive surface each step, so leaving water or ice always restores normal grip.
-  let surface: Surface = roadMask.isDrivable(s.x, s.y) || scene.routes.some(r=>r.kind==="path" && r.surface && r.surface!=="trail" && distanceToRoad(routePath(r).points,s.x,s.y)<r.width!/2) ? "road" : "paper";
+  let surface: Surface = roadMask.isDrivable(s.x, s.y) || onStreet(scene,s.x,s.y) || scene.routes.some(r=>r.kind==="path" && r.surface && r.surface!=="trail" && distanceToRoad(routePath(r).points,s.x,s.y)<r.width!/2) ? "road" : "paper";
   const water = waterAt(scene.terrain,s.x,s.y,s.elevation);
   for (const region of world.effectsEnabled===false ? [] : scene.regions) {
     if (s.grounded && !onObject && region.rule.effect === "ICE" && pointInPolygon(s.x, s.y, region.polygon)) {

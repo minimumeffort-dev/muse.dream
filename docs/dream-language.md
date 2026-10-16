@@ -30,3 +30,5 @@ For a provider integration, use the [model instructions](dream-v2-model.txt), [c
 Dream 2 fixes existing field meanings, units, scopes and identity paths. Compatible additions require allowlisted fields, bounds, runnable examples, updated docs and regression coverage. Regenerate the command export with `node scripts/dream.mjs contract`. Changing existing syntax, units or identity semantics requires a new major authoring version. Unknown fields keep failing.
 
 Dream 1 remains supported through the same compiler. See [the compatibility guide](dream-v1.md). Dream source versions, Object DSL versions and Scene versions describe separate contracts. The complete live world is Dream 2; the older TypeScript fixtures remain for regression tests.
+
+Urban districts use bounded `street`, `surface` and `marking` declarations. They link through the same closed module registry as assets and placements. See [streets, grounds and paint](dream/worlds.md#streets-grounds-and-paint), the [reference bounds](dream/reference.md#urban-ground-bounds) and the [runnable neighborhood](examples/planned-neighborhood.dream).

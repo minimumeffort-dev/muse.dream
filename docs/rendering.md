@@ -1,6 +1,6 @@
 # Rendering the whole world
 
-The mock world has 448 placed objects across a 6000 × 4800 landscape. It stays resident while you drive, walk or fly. There is no district streaming, distance-based asset replacement or automatic quality reduction.
+The mock world has 715 placed objects across an 8000 × 7800 landscape. It stays resident while you drive, walk or fly. There is no district streaming, distance-based asset replacement or automatic quality reduction.
 
 ## Less work for the same image
 
@@ -27,3 +27,11 @@ The report includes mean and 95th-percentile times, draw calls including the sha
 The [recorded comparison](evidence/render-performance/verification.md) keeps the source revision, measurement conditions, raw reports and screenshots together. The stationary image comparison checks the visible game area outside the profiler panel. Regression tests also compare painted vertices, normals and UVs through rotation and suspension, retain fixed world placement alongside moving objects, and exercise racing, off-road contacts, destruction and vehicle controls.
 
 These measurements come from the development machine. Lower-powered laptop performance still needs testing on those machines, especially integrated GPUs, high-resolution displays and sustained thermal load. The engine keeps the full world in memory, so it still needs enough memory for the accepted scene.
+
+## The planned-world expansion
+
+The expanded world has a little over twice the former area, with 715 placements and 83 assemblies. Street carriageways are unioned before triangulation; sidewalks subtract the entire network, leaving open junctions. Carriageways, sidewalks, surfaces and paint retain local culling tiles. Static buildings and visitors use compacted, instanced assets. Grass samples scale with area to retain density; surfaces reserve their footprint so grass stays off courts, driveways and pitches.
+
+For a fixed comparison render size, the development profiler accepts `profile-dpr=1` through `1.5`. Production keeps its normal device-pixel-ratio policy. Match the drawing buffer, browser viewport and camera between runs. Add `test-driving=town` to profile a clear street in the dense new district; `suburbs` and `sports` are also development review starts. These helpers change the inspection pose, not the production spawn.
+
+The [expansion evidence](evidence/urban-world/verification.md) records raw original-start and town measurements, screenshots, geometry checks and the media audit. More world area does not imply that all its geometry is submitted each frame: the entire accepted scene stays resident, while existing frustum culling skips draws outside the visible and shadow views. These results do not replace testing on lower-powered hardware.

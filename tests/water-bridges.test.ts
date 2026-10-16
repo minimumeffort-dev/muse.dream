@@ -87,16 +87,16 @@ describe("one shared bridge driving surface",()=> {
     const doc=createWorldScene(),landscape=new WorldLandscape(doc),b=doc.terrain.landscape!.bridges[0]!;
     const deck=landscape.group.getObjectByName(`bridge-${b.id}`) as THREE.Mesh;
     const p=deck.geometry.getAttribute("position"),heightAt=bridgeHeightAt(doc,b);
-    for(let i=0;i<p.count;i++) expect(p.getY(i)).toBeCloseTo(surfaceHeight(doc,p.getX(i)+3000,p.getZ(i)+2400,heightAt)+ROAD_SURFACE_LIFT,3);
+    for(let i=0;i<p.count;i++) expect(p.getY(i)).toBeCloseTo(surfaceHeight(doc,p.getX(i)+doc.canonical.width/2,p.getZ(i)+doc.canonical.height/2,heightAt)+ROAD_SURFACE_LIFT,3);
     const ray=new THREE.Raycaster();deck.updateMatrixWorld(true);
     const {ux,uy}=bridgeCoordinates(b,b.a.x,b.a.y);
     for(let i=1;i<20;i++) for(const side of [-1,1]) {
       const t=i/20,x=b.a.x+(b.b.x-b.a.x)*t-uy*(b.width/2-.2)*side,y=b.a.y+(b.b.y-b.a.y)*t+ux*(b.width/2-.2)*side;
-      ray.set(new THREE.Vector3(x-3000,600,y-2400),new THREE.Vector3(0,-1,0));
+      ray.set(new THREE.Vector3(x-doc.canonical.width/2,600,y-doc.canonical.height/2),new THREE.Vector3(0,-1,0));
       expect(ray.intersectObject(deck)[0]!.point.y).toBeCloseTo(surfaceHeight(doc,x,y,heightAt)+ROAD_SURFACE_LIFT,3);
     }
     expect(landscape.group.children.filter(m=>m instanceof THREE.InstancedMesh)).toHaveLength(doc.terrain.landscape!.bridges.length);
-    expect(landscape.group.children.length).toBe(6);
+    expect(landscape.group.children.length).toBe(doc.terrain.landscape!.waters.length+doc.terrain.landscape!.bridges.length*2);
     expect(bridgePolygon(b)).toHaveLength(4);
   });
 });

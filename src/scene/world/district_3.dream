@@ -13,7 +13,7 @@ asset a_exposed_stone_slab(module=nature,object=exposed_stone_slab);
 asset a_oak(module=landmarks,object=oak);
 asset a_juniper_scrub(module=nature,object=juniper_scrub);
 place sketch_474(object=a_wild_shrub,at=[4689.621747890487,1678.0222567962483],scale=0.8857616579858586);
-place sketch_483(object=a_birch,at=[3265.377896139398,4206.441218708642],scale=1.1725462010595948);
+place sketch_483(object=a_birch,at=[3140,4206],scale=1.1725462010595948);
 place sketch_485(object=a_young_rowan,at=[2309.55155021511,3062.9283564398065],scale=0.9371440859045833);
 place sketch_487(object=a_birch,at=[2955.068998457864,4192.299095657654],scale=1.241996004851535);
 place sketch_492(object=a_birch,at=[4273.104506847449,919.6166010573506],scale=1.0734523871447892);
@@ -58,7 +58,7 @@ place sketch_781(object=a_young_rowan,at=[2635.2825596462935,1253.8284410024062]
 place sketch_817(object=a_exposed_stone_slab,at=[4367.520281905308,3065.388851542957],scale=1.3407319302437828);
 place sketch_828(object=a_young_rowan,at=[671.3680397719145,767.3595719737932],scale=1.0721854133531452);
 place sketch_833(object=a_silver_fir,at=[5756.406984734349,254.0939900558442],scale=0.8897009062580764);
-place sketch_834(object=a_oak,at=[3216.8646064354107,4456.274484610185],scale=1.1823281429475174);
+place sketch_834(object=a_oak,at=[3140,4456],scale=1.1823281429475174);
 place sketch_835(object=a_oak,at=[1519.9802109505981,2404.9105180660263],scale=0.8584520203527063);
 place sketch_851(object=a_exposed_stone_slab,at=[1373.0501457117498,3299.5091806864366],scale=1.1151567376451568);
 place sketch_879(object=a_oak,at=[2198.190041142516,3050.384361622855],scale=1.2010016103973613);

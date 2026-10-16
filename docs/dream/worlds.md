@@ -44,7 +44,7 @@ That is the live meadow's roughly 110-metre cycle circuit, with a four-metre sur
 
 The complete-world compiler checks an explicitly sized path's corridor, including paths without vehicles. It rejects overlap with road/curbs, water, physical props, independent ground routes and runways. Leave an eight-unit buffer beyond the full width; validation includes an additional sampling allowance. It reports the obstruction so the model can repair the placement. Corners share cross-sections, paint follows the terrain, and procedural grass stays off the surface. Existing paths without a width retain the legacy 28-unit trail and actor clearance; they do not gain a dedicated corridor implicitly.
 
-[Compile a complete dedicated-path example](../examples/dedicated-path.dream). Widen bends so the inside edge cannot fold. Crossings, junctions and automatic layout repair are not implemented.
+[Compile a complete dedicated-path example](../examples/dedicated-path.dream). Widen bends so the inside edge cannot fold. Dedicated path crossings and automatic layout repair are not implemented. Use `street` for an orthogonal urban network.
 
 Objects with `rideable(...,control=...)` use the route only for initial placement and infrastructure. They start parked and move freely under player input. Leaving one stores its position, so it cannot snap back to a route. See [vehicle controls](behavior.md#bodies-contacts-and-boarding).
 
@@ -95,3 +95,24 @@ node scripts/dream.mjs check src/scene/world/open-world.dream --modules src/scen
 Cycles, duplicate world IDs, multiple layouts, invalid routes and exceeded project budgets reject the whole proposal.
 
 [Next: interactions](behavior.md) · [Reference](reference.md)
+
+## Streets, grounds and paint
+
+The live world is now 8000 × 7800 units, with connected town blocks, separate suburbs, a southern lake and a sports park. The original circuit and countryside remain. [See the layout and captures](../urban-world.md).
+
+`street` describes an open orthogonal centerline, a carriageway width and sidewalk width on each side. Intersecting streets share one ground surface. Sidewalks stop at the junction, and the racing curbs open where an access street joins. The car gets normal road grip there. Streets do not consume moving-route slots.
+
+`surface` fills a simple polygon with color on the actual terrain triangles. Use it for turf, courts, plazas, driveways or sand. Linked scene order defines overlay order, with bounded height offsets to prevent flickering. Each module contributes its local surfaces before its included districts, which follow include order. These are visual ground finishes; they do not flatten hills or invent new physics. `marking` draws an open or closed painted line from a point block. It supports `let`, `repeat`, `sin` and `cos`, so circles need no separate shape command.
+
+[Compile this complete district module](../examples/planned-neighborhood.dream):
+
+```dream
+street main_street(width=100,sidewalk=20,points=[[400,200],[400,1200]]);
+street cross_street(width=100,sidewalk=20,points=[[200,700],[1200,700]]);
+surface court(color=#587f8b,points=[[600,850],[880,850],[880,1000],[600,1000]]);
+marking center_circle(color=#e8e3ce,width=1,closed=true){
+  repeat ring(index=i,count=24){point(at=[740+cos(i*15)*18,925+sin(i*15)*18]);}
+}
+```
+
+This excerpt belongs after `dream 2;` or inside an included district file. A complete playable world still needs its circuit, spawn and checkpoints. `compileDreamScene` checks that every street component reaches that circuit, stays in bounds and keeps its carriageway clear of solids and water. Streets currently support right-angle plans; use the existing racing curve for winding roads. They do not create bridge decks, traffic signals or traffic rules. Keep dedicated bicycle paths clear of streets too.

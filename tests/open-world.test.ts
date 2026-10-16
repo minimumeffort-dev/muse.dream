@@ -18,15 +18,15 @@ import { animateObject, buildObject } from "../src/game/world3d";
 const scene = createWorldScene();
 
 describe("bounded open-world scene", () => {
-  it("has nine times the former area, a winding circuit and diverse assemblies", () => {
-    expect(scene.canonical.width * scene.canonical.height).toBe(9 * 2000 * 1600);
+  it("expands to organized districts beyond the original landscape, a winding circuit and diverse assemblies", () => {
+    expect(scene.canonical.width * scene.canonical.height).toBe(8000 * 7800);
     expect(new Set(scene.objects.filter(o => o.spec).map(o => o.spec!.displayName)).size).toBeGreaterThanOrEqual(12);
     expect(scene.objects.length).toBeGreaterThan(300);
-    expect(scene.objects.length).toBeLessThan(700);
+    expect(scene.objects.length).toBeLessThan(1000);
     expect(scene.checkpoints).toHaveLength(8);
     const points = roadPoints(scene), mask = buildMaskForScene(scene);
     for (const p of points) expect(mask.footprintClear(p.x, p.y, 11)).toBe(true);
-    expect(mask.data.length).toBeLessThan(2_000_000);
+    expect(mask.data.length).toBeLessThan(4_000_000);
     expect(mask.isDrivable(3000, 2400)).toBe(false);
     for(const object of scene.objects.filter(o=>!o.route)) expect(distanceToRoad(points,object.x,object.y)-objectRadius(object)).toBeGreaterThan(scene.roadMaskRef.params.roadWidth/2+15);
     expect(validateScenePlayability(scene, mask, 11)).toEqual([]);
@@ -62,7 +62,7 @@ describe("bounded open-world scene", () => {
     expect(mask.floodFrom(6001,4800).some(value=>value===1)).toBe(false);
   });
   it("finishes the full winding circuit through every ordered checkpoint", () => {
-    const world: World = { scene, roadMask: buildMaskForScene(scene), driveMask: buildPaperMask(6000, 4800), carRadius: 11 };
+    const world: World = { scene, roadMask: buildMaskForScene(scene), driveMask: buildPaperMask(scene.canonical.width,scene.canonical.height), carRadius: 11 };
     const path = roadPoints(scene), n = path.length - 1;
     let car = createCarAtSpawn(scene), cursor = 0; const seen = new Set<number>();
     for (let i = 0;i < 24000 && car.lap === 0;i++) {
@@ -94,7 +94,7 @@ describe("local rendering and interaction budgets", () => {
   });
   it("instances repeated assemblies and fades only the obstructing instance", () => {
     const object = scene.objects.find(o => o.id === "cottage")!;
-    const doc = parseScene({ ...scene, terrain: { hills: [] }, objects: [{ ...object, x: 3000, y: 2425 }, { ...object, id: "other", x: 3100, y: 2425 }] });
+    const doc = parseScene({ ...scene, terrain: { hills: [] }, objects: [{ ...object, x: scene.canonical.width/2, y: scene.canonical.height/2+25 }, { ...object, id: "other", x: scene.canonical.width/2+100, y: scene.canonical.height/2+25 }] });
     const scenery = new WorldScenery(doc);
     expect(scenery.group.children.length).toBeLessThan(8);
     expect(scenery.group.children.every(m => m instanceof THREE.InstancedMesh)).toBe(true);
@@ -110,7 +110,7 @@ describe("local rendering and interaction budgets", () => {
   it("preserves the full composed asset bounds when batching, including scaled cloth", () => {
     for (const id of ["castle", "mill"]) {
       const object = scene.objects.find(o => o.id === id)!;
-      const doc = parseScene({ ...scene, terrain: { hills: [] }, objects: [{ ...object, x: 3000, y: 2400 }] });
+      const doc = parseScene({ ...scene, terrain: { hills: [] }, objects: [{ ...object, x: scene.canonical.width/2, y: scene.canonical.height/2 }] });
       const source = buildObject(doc.objects[0]!); source.position.y = 1.5; source.updateMatrixWorld(true);
       const batched = new WorldScenery(doc).group; batched.updateMatrixWorld(true);
       const a = new THREE.Box3().setFromObject(source), b = new THREE.Box3().setFromObject(batched);

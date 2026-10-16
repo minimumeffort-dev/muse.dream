@@ -179,3 +179,22 @@ solid without whole-object impact, a seat, emitter or animated geometry. Core
 contacts and foundations are allowed and survive section damage. Author core
 contacts separately so an intact root cylinder does not block the intended
 opening after a zone breaks. Terrain foundations stay intact.
+
+Urban layouts: street id(width=100,sidewalk=20,points=[[x,y],...]);
+Streets use open orthogonal centerlines: 2..16 anchors, segments >=80, width 60..180,
+sidewalk 0..40 per side. Intersections are joined by the engine. All street components
+must reach the racing circuit. Reserve carriageway clearance from solid objects,
+water and dedicated path corridors. Streets do not create bridges or actor routes.
+Scene limits: <=32 streets, <=60000 total street length. These are separate from
+road's cyclic racing spline and route's moving actors/dedicated paths.
+surface id(color=#rrggbb,points=[[x,y],...]); fills a simple 3..64 point polygon.
+Surface area <=1000000, extent <=2000. Split larger grounds. Never cover street carriageways.
+Local surfaces precede included modules; includes follow include order. Later linked surfaces overlay earlier ones. Grounds follow existing terrain; they do not
+flatten it or change physics. Use for courtyards, driveways, turf, courts and sand.
+marking id(color=#rrggbb,width=1,closed=true){point(at=[x,y]);...}
+Marking blocks accept point/let/repeat; generate circles with sin/cos. 2..64 points,
+closed needs >=3, width .5..12. Never repeat the first point at the end. No zero edges.
+Scene limits: <=64 surfaces, <=128 markings, <=40000 total marking length.
+Include district modules to merge streets/surfaces/markings as well as placements.
+Keep all ground features inside world bounds. The full scene acceptance boundary
+checks them after linking. The model still writes only bounded data.

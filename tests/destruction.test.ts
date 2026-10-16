@@ -132,7 +132,7 @@ describe("destruction simulation",()=>{
     }
   });
   it("keeps destruction moving while a controlled bicycle is stationary",()=>{
-    const scene=createWorldScene(),world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(6000,4800),carRadius:11};
+    const scene=createWorldScene(),world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11};
     const table=scene.objects.find(o=>o.id==="meadow_table")!,car={...createCarAtSpawn(scene),x:table.x-objectRadius(table)-11,y:table.y,elevation:0,vx:240};
     breakOnContact(car,world,table.x-objectRadius(table)-10,table.y,objectContacts(scene,table));expect(car.debris).toHaveLength(7);
     const bike=scene.objects.find(o=>o.id==="village_bike")!;

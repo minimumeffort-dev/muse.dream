@@ -1,0 +1,5 @@
+dream 2;
+include planned_town(module=town_center);
+include residential(module=suburbs);
+include recreation(module=sports_park);
+include gardens(module=urban_gardens);

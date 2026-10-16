@@ -42,3 +42,5 @@ The entire playable mock is Dream 2 source, including its player, terrain, circu
 The [model prompt](dream-v2-model.txt), [command export](dream-v2-contract.json) and [grammar](dream-v2.ebnf) accompany these guides. The export comes from the compiler's command table and is authoritative for required fields and contexts.
 
 Dream 1 remains readable. [Its syntax](dream-v1.md), [Object DSL v2](object-dsl-v2.md) and [landscape data](landscape-dsl.md) document compatibility and compiled engine formats. Dream 2, Object DSL v2 and Scene v1 are separate versions, not interchangeable names.
+
+[Explore the planned town, suburbs, lake and sports park](urban-world.md). The whole mock world is authored in Dream 2, including streets, ground surfaces, markings and people.

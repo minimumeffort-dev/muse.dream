@@ -26,7 +26,7 @@ import { WorldParticles } from "../src/game/particles";
 import guide from "../docs/world-interactions.md?raw";
 
 const doc=createWorldScene();
-const world:World={scene:doc,carRadius:11,driveMask:buildPaperMask(6000,4800),roadMask:buildMaskForScene(doc)};
+const world:World={scene:doc,carRadius:11,driveMask:buildPaperMask(doc.canonical.width,doc.canonical.height),roadMask:buildMaskForScene(doc)};
 const spec=(name:string)=>interactiveWorld.assemblies.find(s=>s.displayName===name)!;
 const item=(name:string):SceneObject=>({id:"test",kind:"custom",labelText:name,x:480,y:360,scale:1,spec:spec(name)});
 const sceneFor=(objects:SceneObject[])=>parseScene({...createFixtureScene(),objects,regions:[],terrain:{hills:[]}});

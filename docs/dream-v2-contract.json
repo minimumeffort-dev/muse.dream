@@ -374,6 +374,39 @@
         "points": "points2"
       }
     },
+    "street": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "width": "n",
+        "sidewalk": "n",
+        "points": "points2"
+      }
+    },
+    "surface": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "color": "color",
+        "points": "points2"
+      }
+    },
+    "marking": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "color": "color",
+        "width": "n",
+        "closed": "bool"
+      },
+      "block": "path"
+    },
     "hill": {
       "contexts": [
         "top"
@@ -555,6 +588,52 @@
         "lifetime": "n"
       }
     }
+  },
+  "urbanGround": {
+    "streets": 32,
+    "surfaces": 64,
+    "markings": 128,
+    "streetLength": 60000,
+    "markingLength": 40000,
+    "street": {
+      "anchors": [
+        2,
+        16
+      ],
+      "width": [
+        60,
+        180
+      ],
+      "sidewalkPerSide": [
+        0,
+        40
+      ],
+      "minimumSegment": 80,
+      "geometry": "open orthogonal polyline; joined square intersections",
+      "acceptance": "every component reaches racing road; carriageways clear of solids/water; dedicated paths remain separate"
+    },
+    "surface": {
+      "points": [
+        3,
+        64
+      ],
+      "area": 1000000,
+      "extent": 2000,
+      "geometry": "simple polygon; declaration order overlays; cannot cover streets"
+    },
+    "marking": {
+      "points": [
+        2,
+        64
+      ],
+      "width": [
+        0.5,
+        12
+      ],
+      "closedMinimum": 3,
+      "block": "point/let/repeat; omit repeated first point"
+    },
+    "semantics": "visual ground follows terrain; streets add normal road grip; no generated controllers, flattening, bridges or traffic"
   },
   "proportions": {
     "unitsPerMeter": 10,

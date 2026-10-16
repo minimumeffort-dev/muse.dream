@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { describe, expect, it } from "vitest";
 import { curbGeometry, roadSections, roadMarkingGeometry } from "../src/game/environment";
 import { tiledMesh } from "../src/game/batching";
+import {onStreet} from "../src/scene/streets";
 import { bridgeAt } from "../src/scene/landscape-dsl";
 import { surfaceHeight } from "../src/game/surface";
 import { animateObject, buildObject } from "../src/game/world3d";
@@ -25,7 +26,7 @@ describe("continuous road trim", () => {
   it.each([-1, 1] as const)("joins every curb face, including the loop seam on side %s", side => {
     const geometry = curbGeometry(worldScene, side), positions = geometry.getAttribute("position");
     for (let i = 0; i < positions.count; i++) {
-      const ground = surfaceHeight(worldScene, positions.getX(i) + 3000, positions.getZ(i) + 2400), lift = positions.getY(i) - ground;
+      const ground = surfaceHeight(worldScene, positions.getX(i) + worldScene.canonical.width/2, positions.getZ(i) + worldScene.canonical.height/2), lift = positions.getY(i) - ground;
       expect(lift).toBeGreaterThanOrEqual(-.501);expect(lift).toBeLessThanOrEqual(3.101);
     }
     const mesh = tiledMesh(geometry, new THREE.MeshBasicMaterial()), ray = new THREE.Raycaster();
@@ -36,9 +37,9 @@ describe("continuous road trim", () => {
       for (const neighbor of [before, after]) {
         const x = at.x * .98 + neighbor.x * .02 + at.nx * side * half;
         const y = at.y * .98 + neighbor.y * .02 + at.ny * side * half;
-        ray.set(new THREE.Vector3(x - 3000, 600, y - 2400), new THREE.Vector3(0, -1, 0));
+        ray.set(new THREE.Vector3(x - worldScene.canonical.width/2, 600, y - worldScene.canonical.height/2), new THREE.Vector3(0, -1, 0));
         const hit = ray.intersectObject(mesh, true)[0];
-        if(bridgeAt(worldScene.terrain.landscape,x,y)?.style==="timber") {expect(hit).toBeUndefined();continue;}
+        if(onStreet(worldScene,x,y) || bridgeAt(worldScene.terrain.landscape,x,y)?.style==="timber") {expect(hit).toBeUndefined();continue;}
         expect(hit, `curb gap at section ${i}`).toBeDefined();
         const lift=hit!.point.y-surfaceHeight(worldScene,x,y);
         expect(lift).toBeGreaterThanOrEqual(1.499);expect(lift).toBeLessThanOrEqual(3.101);

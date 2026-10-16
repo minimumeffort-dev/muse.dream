@@ -856,5 +856,8 @@
   "provenance": {
     "source": "handmade-fixture",
     "notes": "Compiled Dream 2 mock world. No model calls."
-  }
+  },
+  "streets": [],
+  "surfaces": [],
+  "markings": []
 }

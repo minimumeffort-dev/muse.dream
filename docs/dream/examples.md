@@ -119,3 +119,7 @@ The source files are the examples. Tests compare these complete snippets with th
 [Tapered wood](../examples/tapered-wood.dream) builds a connected snag with a narrowing trunk, rising branch and cut face. The [object guide](objects.md#grow-a-connected-branch) includes the complete source.
 
 [Ambient wildlife](../examples/ambient-wildlife.dream) composes a pair of birds with wing joints and a continuous airborne loop. The [behavior guide](behavior.md#wildlife-and-habitats) includes the complete source.
+
+## A neighborhood
+
+[The complete neighborhood module](../examples/planned-neighborhood.dream) joins two streets and paints a basketball court with a repeated center circle. It can be included in a full world. The [planned-world guide](../urban-world.md) shows the larger town, suburbs and sports park built from the same primitives.

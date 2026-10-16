@@ -66,6 +66,9 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 | --- | --- | --- | --- |
 | `world` | top | No ID / no block | `size: v2`, `spawn: v2`, `heading_deg: n`, `player?: ref` |
 | `road` | top | ID / no block | `width: n`, `points: points2` |
+| `street` | top | ID / no block | `width: n`, `sidewalk: n`, `points: points2` |
+| `surface` | top | ID / no block | `color: color`, `points: points2` |
+| `marking` | top | ID / path | `color: color`, `width: n`, `closed: bool` |
 | `hill` | top | ID / no block | `at: v2`, `radius: v2`, `height: n` |
 | `tint` | top | ID / no block | `at: v2`, `radius: n`, `color: color` |
 | `bridge` | top | ID / no block | `from: v2`, `to: v2`, `width: n`, `arch: n`, `style: timber / stone`, `rails: bool` |
@@ -197,3 +200,9 @@ Named paths and repeat indices derive stable local part/joint/fragment IDs. Unre
 The car uses fixed-timestep heightfield physics and cylinder contacts. One driving height per XY excludes stacked roads, driving under bridge decks and boats beneath decks. Covered objects can have separate wall/roof contacts, but they don't excavate terrain. Water supports surface waves and current forces. Vehicle activities are authored paths, not independent driver/flight AI.
 
 Break behavior separates authored components; it doesn't cut new shards from an arbitrary mesh. Debris is cosmetic and collides with terrain only. Whole-object impacts exclude foundations, seats, compound contacts and emitters; partial zones preserve retained building structure. Door animation is visual around authored contacts. Source never supplies executable code, callbacks, shader programs or provider credentials.
+
+### Urban ground bounds
+
+Scenes and linked districts share limits of 32 streets, 64 surfaces and 128 markings. Streets take 2–16 XY anchors, widths 60–180 and sidewalks 0–40 per side. Each segment is horizontal or vertical and at least 80 units long. The total street length is at most 60000 units. The scene compiler checks street connectivity, world boundaries, solid carriageway clearance and water crossings.
+
+Surfaces take 3–64 points and must be simple, nonzero polygons, at most 1000000 square units and 2000 units across. Split larger grounds into tiles. They cannot cover street carriageways. Later surfaces in the linked scene overlay earlier surfaces. Markings take 2–64 points, width .5–12, and at least three points when closed. Repeated first points and zero-length segments fail. Total marking length, including closed seams, is at most 40000 units. Grounds and markings stay within the world, follow the shared heightfield and clear procedural tufts. They add no collision body or flattening operation. [Runnable neighborhood](../examples/planned-neighborhood.dream).

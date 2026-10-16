@@ -45,7 +45,7 @@ describe("Dream control profiles",()=>{
     const object=live.objects.find(o=>o.id===id)!;expect(actorPose(live,object,1000)).toEqual(actorPose(live,object,0));
   });
   it.each(["village_bike","village_skateboard","lake_boat","meadow_plane"])("can reboard %s from its real dry exit point",id=>{
-    const world={scene:live,roadMask:buildMaskForScene(live),driveMask:buildPaperMask(6000,4800),carRadius:11};
+    const world={scene:live,roadMask:buildMaskForScene(live),driveMask:buildPaperMask(live.canonical.width,live.canonical.height),carRadius:11};
     const foot=vehicleReviewStart(createCarAtSpawn(live),world,id);expect(foot.control.kind).toBe("foot");
     if(id==="meadow_plane"){
       const plane=live.objects.find(o=>o.id===id)!;

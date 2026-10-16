@@ -24,6 +24,14 @@ export function createWorldMap(canvas: HTMLCanvasElement, scene: Scene) {
     map.closePath();map.fillStyle=water.color;map.fill();
   }
   const roadWidth = scene.roadMaskRef.params.roadWidth;
+  for(const surface of scene.surfaces){
+    map.beginPath();surface.points.forEach((p,i)=>i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));
+    map.closePath();map.fillStyle=surface.color;map.fill();
+  }
+  for(const street of scene.streets){
+    map.beginPath();street.points.forEach((p,i)=>i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));
+    map.lineWidth=street.width;map.lineJoin='round';map.strokeStyle='#a7aca5';map.stroke();
+  }
   for(const route of scene.routes)if(route.kind==="rail" || route.kind==="path"){
     map.beginPath();route.points.forEach((p,i)=>i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));if(route.mode==="loop")map.closePath();
     map.strokeStyle=route.surface==="cycle" ? "#76ad9c" : route.surface==="paved" ? "#a5afb0" : "#c9ac7c";map.lineWidth=route.width??12;map.stroke();

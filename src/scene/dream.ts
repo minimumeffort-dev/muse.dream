@@ -1,12 +1,13 @@
 import { Euler, Quaternion, Vector3 } from "three";
 import { objectDslSchema,controlOf, type ObjectDslV2 } from "./object-dsl";
+import {streetSchema,surfaceSchema,markingSchema} from "./streets";
 import { routeSchema,routePose,routePoint,type Route } from "./routes";
 import { compileWatercourse,type Water } from "./landscape-dsl";
 import { sceneObjectSchema,parseScene,type Scene,type SceneObject } from "./schema";
 import { ZodError } from "zod";
 
 import { DREAM_LIMITS, DreamError, fail, lex, Parser, type Token, type Expr, type Vec, type Transform, type Program, type Statement } from "./dream-syntax";
-import { ParserV2, printDreamV2, wordField } from "./dream-v2";
+import { ParserV2, printDreamV2, wordField, exprField, field, lowerBlock } from "./dream-v2";
 import { migrateProgram } from "./dream-migrate";
 import { compileLayout, type DreamLayout } from "./dream-layout";
 import { buildMaskForScene } from "./fixture";
@@ -219,7 +220,7 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
   });
 }
 
-export interface DreamWorld {assemblies:ObjectDslV2[];routes:Route[];objects:SceneObject[];waters:Water[];layout?:DreamLayout}
+export interface DreamWorld {assemblies:ObjectDslV2[];routes:Route[];objects:SceneObject[];waters:Water[];streets:Scene['streets'];surfaces:Scene['surfaces'];markings:Scene['markings'];layout?:DreamLayout}
 export type DreamModules=Readonly<Record<string,string>>;
 type LinkedWorld={world:DreamWorld;exports:Map<string,ObjectDslV2>};
 /** The same bounded language now authors placements, shared routes and continuous watercourses. */
@@ -310,14 +311,26 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
     if(!result.success)fail(result.error.issues[0]!.message,source.token,"E_SCHEMA");return result.data;
   });
   let layout=compileLayout(program,exports,waters,e=>numeric(e,globals));
+  const infrastructure={streets:[] as Scene['streets'],surfaces:[] as Scene['surfaces'],markings:[] as Scene['markings']};
+  for(const node of program.layout){
+    if(!['street','surface','marking'].includes(node.kind))continue;
+    const value=(key:string)=>numeric(exprField(node,key),globals);
+    const outline=()=> (field(node,'points') as Expr[][]).map(v=>({x:numeric(v[0]!,globals),y:numeric(v[1]!,globals)}));
+    const result=node.kind==='street' ? streetSchema.safeParse({id:node.id,width:value('width'),sidewalk:value('sidewalk'),points:outline()}) : node.kind==='surface' ? surfaceSchema.safeParse({id:node.id,color:wordField(node,'color'),points:outline()}) : markingSchema.safeParse({id:node.id,color:wordField(node,'color'),width:value('width'),closed:field(node,'closed'),points:points(lowerBlock(node.block!),2,64).map(([x,y])=>({x,y}))});
+    if(!result.success)fail(result.error.issues[0]!.message,node.token,'E_SCHEMA');
+    if(node.kind==='street')infrastructure.streets.push(result.data as Scene['streets'][number]);
+    else if(node.kind==='surface')infrastructure.surfaces.push(result.data as Scene['surfaces'][number]);
+    else infrastructure.markings.push(result.data as Scene['markings'][number]);
+  }
   const ownWaters=layout?.terrain.landscape?.waters??waters;
   const inherited=children.filter(w=>w.layout);
   if(inherited.length+Number(!!layout)>1)fail("project needs exactly one world layout",undefined,"E_WORLD");
   layout??=inherited[0]?.layout;
   const allWaters=[...children.flatMap(w=>w.waters),...ownWaters];
-  const world:DreamWorld={assemblies:[...new Set([...exports.values(),...children.flatMap(w=>w.assemblies)])],routes:[...routes,...children.flatMap(w=>w.routes)],objects:[...objects,...children.flatMap(w=>w.objects)],waters:allWaters};
+  const world:DreamWorld={assemblies:[...new Set([...exports.values(),...children.flatMap(w=>w.assemblies)])],routes:[...routes,...children.flatMap(w=>w.routes)],objects:[...objects,...children.flatMap(w=>w.objects)],waters:allWaters,streets:[...infrastructure.streets,...children.flatMap(w=>w.streets)],surfaces:[...infrastructure.surfaces,...children.flatMap(w=>w.surfaces)],markings:[...infrastructure.markings,...children.flatMap(w=>w.markings)]};
   if(world.routes.length>12 || world.waters.length>8 || world.objects.length>4096)fail("combined project exceeds scene route/water/placement budgets",undefined,"E_BUDGET");
-  const worldIds=new Set<string>();for(const item of [...world.routes,...world.waters,...world.objects]){if(worldIds.has(item.id))fail(`duplicate world id '${item.id}'`,undefined,"E_DUPLICATE_ID");worldIds.add(item.id);}
+  if(world.streets.length>32 || world.surfaces.length>64 || world.markings.length>128)fail('combined project exceeds 32 streets / 64 surfaces / 128 markings',undefined,'E_BUDGET');
+  const worldIds=new Set<string>();for(const item of [...world.routes,...world.waters,...world.objects,...world.streets,...world.surfaces,...world.markings]){if(worldIds.has(item.id))fail(`duplicate world id '${item.id}'`,undefined,"E_DUPLICATE_ID");worldIds.add(item.id);}
   if(layout)world.layout={...layout,terrain:{...layout.terrain,landscape:{...layout.terrain.landscape!,waters:allWaters}}};
   return {world,exports};
 }
@@ -347,7 +360,7 @@ function sceneFromWorld(world:DreamWorld,identity:DreamSceneIdentity):Scene {
   if(!world.layout)fail("compileDreamScene requires world/road declarations",undefined,"E_WORLD");
   const {origin,...layout}=world.layout;
   let scene:Scene;
-  try {scene=parseScene({schemaVersion:1,...identity,...layout,routes:world.routes,objects:world.objects,provenance:{source:"handmade-fixture",notes:"Compiled Dream 2 mock world. No model calls."}});}
+  try {scene=parseScene({schemaVersion:1,...identity,...layout,routes:world.routes,objects:world.objects,streets:world.streets,surfaces:world.surfaces,markings:world.markings,provenance:{source:"handmade-fixture",notes:"Compiled Dream 2 mock world. No model calls."}});}
   catch(error){if(error instanceof ZodError)fail(error.issues[0]!.message,origin,"E_SCHEMA");throw error;}
   const problems=validateScenePlayability(scene,buildMaskForScene(scene),playerRadius(scene));
   if(problems.length)fail(`${problems[0]!.code}: ${problems[0]!.message}`,origin,`E_SCENE_${problems[0]!.code.toUpperCase().replace(/-/g,"_")}`);

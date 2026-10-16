@@ -11,6 +11,7 @@ import { drivingHeight } from "./terrain";
 import { objectContacts } from "./contacts";
 import { routePath,routePoint,routeFrames,routeInfrastructure } from "./routes";
 import { actorPose,actorContacts,routeElevation } from "../sim/actors";
+import {streetRects,rectPolygon,inRect,streetFootprints,markingPolygons} from './streets';
 
 export interface SceneProblem {
   code:
@@ -86,6 +87,7 @@ export function validateScenePlayability(
     ...(scene.terrain.landscape?.waters ?? []).map(w=>w.id),
     ...(scene.terrain.landscape?.bridges ?? []).map(b=>b.id),
     ...scene.routes.map(r=>r.id),
+    ...scene.streets.map(r=>r.id),...scene.surfaces.map(r=>r.id),...scene.markings.map(r=>r.id),
   ]) {
     if (ids.has(id)) {
       problems.push({ code: "duplicate-id", message: `duplicate id "${id}"` });
@@ -231,6 +233,30 @@ export function validateScenePlayability(
     problems.push({code:"route-not-clear",message:`route "${route.id}" infrastructure must stay inside the world`});
   // Explicit width reserves infrastructure, including paths with no moving actor.
   const pathContacts=scene.objects.filter(o=>!o.route && !controlOf(o.spec) && archetypeOf(o).interaction!=="decor").flatMap(o=>objectContacts(scene,o));
+  for(const surface of [...scene.surfaces,...scene.markings])if(surface.points.some(p=>p.x<0 || p.y<0 || p.x>width || p.y>height))
+    problems.push({code:'landscape-out-of-bounds',message:`ground feature "${surface.id}" extends outside the world`});
+  for(const marking of scene.markings)if(markingPolygons(marking).flat().some(p=>p.x<0 || p.y<0 || p.x>width || p.y>height))
+    problems.push({code:'landscape-out-of-bounds',message:`marking "${marking.id}" paint width extends outside the world`});
+  const streetGround=streetFootprints(scene);
+  for(const surface of scene.surfaces)if(streetGround.roads.some(r=>polygonsOverlap(surface.points,rectPolygon(r))))
+    problems.push({code:'landscape-overlap',message:`ground surface "${surface.id}" overlaps a street carriageway`});
+  for(const street of scene.streets){
+    const carriageways=streetRects([street]),reserved=streetRects([street],true);
+    if(reserved.some(r=>r.x0<0 || r.y0<0 || r.x1>width || r.y1>height))problems.push({code:'landscape-out-of-bounds',message:`street "${street.id}" extends outside the world`});
+    if(carriageways.some(r=>waters.some(w=>polygonsOverlap(rectPolygon(r),w.polygon))))problems.push({code:'route-not-clear',message:`street "${street.id}" crosses water; use a bridge-connected road instead`});
+    const contact=pathContacts.find(c=>carriageways.some(r=>{
+      const x=Math.max(r.x0,Math.min(r.x1,c.x)),y=Math.max(r.y0,Math.min(r.y1,c.y)),floor=drivingHeight(scene.terrain,x,y);
+      return Math.hypot(c.x-x,c.y-y)<c.r+2 && c.bottom<floor+24 && c.top>floor+.05;
+    }));
+    if(contact)problems.push({code:'route-not-clear',message:`street "${street.id}" is obstructed near ${Math.round(contact.x)},${Math.round(contact.y)}`});
+  }
+  // Every street component must reach the original circuit. A visually isolated grid is not accepted.
+  const pending=new Set(scene.streets),connected:ReturnType<typeof streetRects>=[];
+  let changed=true;
+  while(changed){changed=false;for(const street of pending){const rects=streetRects([street]);
+    if(rects.some(r=>path.some(p=>p.x>=r.x0-halfRoad && p.x<=r.x1+halfRoad && p.y>=r.y0-halfRoad && p.y<=r.y1+halfRoad) || connected.some(c=>r.x0<=c.x1 && r.x1>=c.x0 && r.y0<=c.y1 && r.y1>=c.y0))){pending.delete(street);connected.push(...rects);changed=true;}
+  }}
+  for(const street of pending)problems.push({code:'route-not-clear',message:`street "${street.id}" has no connection to the circuit`});
   const groundRoutes=scene.routes.filter(r=>r.kind!=="water" && r.kind!=="ambient").map(route=>({route,...routeInfrastructure(route)}));
   for(const route of scene.routes.filter(r=>r.kind==="path" && r.width!==undefined)){
     let obstruction:string|undefined;
@@ -248,6 +274,7 @@ export function validateScenePlayability(
       else if(distanceToRoad(path,p.x,p.y)<halfRoad+ROAD_CURB_WIDTH+margin)obstruction="racing road and curbs";
       else if(waters.some(w=>pointInPolygon(p.x,p.y,w.polygon) || distanceToRoad([...w.polygon,w.polygon[0]!],p.x,p.y)<margin))obstruction="water bank";
       else if(object)obstruction=`placed object "${object.id}"`;
+      else if(streetGround.reserved.some(r=>inRect(r,p.x,p.y,margin)))obstruction='a street and sidewalk';
       else {
         const other=groundRoutes.find(other=>other.route!==route && distanceToRoad(other.points,p.x,p.y)<margin+other.radius);
         if(other)obstruction=other.route.kind==="air" ? "runway" : "another ground route";

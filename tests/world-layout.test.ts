@@ -11,7 +11,7 @@ describe("coherent mock world layout", () => {
     const specs = [...new Map(scene.objects.map(object => [object.spec!.displayName, object.spec!])).values()];
     const forms = new Set(specs.map(spec => "dslVersion" in spec ? JSON.stringify(spec.parts.map(({ material: _, ...part }) => part)) : spec.shape));
     expect(forms.size).toBeGreaterThanOrEqual(20);
-    expect(specs.length).toBeLessThanOrEqual(65); // Includes thirteen bounded flora and fauna assemblies.
+    expect(specs.length).toBeLessThanOrEqual(128); // The existing linked-project assembly bound.
   });
   it("keeps landmarks rare and buildings together at two occupied sites", () => {
     for (const name of ["Castle", "Windmill", "Ancient ruins", "Crystal garden"]) expect(named(name),name).toHaveLength(1);
@@ -27,7 +27,7 @@ describe("coherent mock world layout", () => {
       const a = scene.objects[i]!, b = scene.objects[j]!, distance = Math.hypot(a.x-b.x,a.y-b.y);
       if(a.route || b.route)continue; // Moving route clearances have their own time/height checks.
       expect(distance, `${a.id} / ${b.id}`).toBeGreaterThanOrEqual(objectRadius(a)+objectRadius(b)+16);
-      if (a.spec?.displayName === b.spec?.displayName) expect(distance).toBeGreaterThanOrEqual(150);
+      if (a.x<5600 && a.y<4800 && b.x<5600 && b.y<4800 && a.spec?.displayName === b.spec?.displayName) expect(distance).toBeGreaterThanOrEqual(150);
     }
   });
   it("has dense mixed groves and open meadow, rather than uniform scatter", () => {

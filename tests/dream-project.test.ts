@@ -76,14 +76,14 @@ function close(a:unknown,b:unknown):void {
   }
   expect(a).toEqual(b);
 }
-const scene=createWorldScene(),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(6000,4800),carRadius:11};
+const scene=createWorldScene(),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11};
 
 describe("complete Dream 2 mock world",()=>{
   it("retains world layout and physical bodies while allowing richer visual assemblies",()=>{
     const canonicalId=(id:string)=>id.replaceAll('-','_');
-    expect(scene.canonical).toEqual(before.scene.canonical);expect(scene.spawn).toEqual(before.scene.spawn);
+    expect(scene.canonical).toEqual({...before.scene.canonical,width:8000,height:7800});expect(scene.spawn).toEqual(before.scene.spawn);
     close(scene.roadMaskRef,before.scene.roadMaskRef);
-    close(scene.terrain,{...before.scene.terrain,hills:before.scene.terrain.hills.map(h=>({...h,id:canonicalId(h.id)})),landscape:{...before.scene.terrain.landscape,waters:before.scene.terrain.landscape.waters.map(w=>({...w,id:canonicalId(w.id)})),bridges:before.scene.terrain.landscape.bridges.map(b=>({...b,id:canonicalId(b.id)}))}});
+    close({...scene.terrain,hills:scene.terrain.hills.slice(0,12),tints:scene.terrain.tints!.slice(0,4),landscape:{...scene.terrain.landscape!,waters:scene.terrain.landscape!.waters.slice(0,2)}},{...before.scene.terrain,hills:before.scene.terrain.hills.map(h=>({...h,id:canonicalId(h.id)})),landscape:{...before.scene.terrain.landscape,waters:before.scene.terrain.landscape.waters.map(w=>({...w,id:canonicalId(w.id)})),bridges:before.scene.terrain.landscape.bridges.map(b=>({...b,id:canonicalId(b.id)}))}});
     close(scene.checkpoints,before.scene.checkpoints.map(c=>({...c,id:canonicalId(c.id)})));close(scene.regions,before.scene.regions);
     const assets=new Map(scene.objects.map(o=>[o.spec!.displayName,o.spec as ObjectDsl]));assets.set(scene.player!.displayName,scene.player!);
     for(const [name,spec] of Object.entries(before.specs)){
@@ -95,11 +95,12 @@ describe("complete Dream 2 mock world",()=>{
     }
     for(const {assembly,id,...placement} of before.scene.objects){const current=scene.objects.find(o=>o.id===canonicalId(id))!;expect(current,id).toBeDefined();expect(current.spec!.displayName).toBe(assembly);const relocated=new Set(['sketch_668','sketch_1171','sketch_2850','sketch_4124','sketch_548','sketch_2152','sketch_1002','sketch_2753','sketch_1591','sketch_2339','sketch_3539','sketch_2021','sketch_2994','sketch_3295','sketch_3811','sketch_2941']);
       const activityProps:Record<string,[number,number]>={orchard_bench:[1030,1660],orchard_crate:[1320,1600],park_bench:[1225,1550]};
+      const urbanMoved=["sketch_51","sketch_483","sketch_834"].includes(current.id);if(urbanMoved)expect([current.x,current.y]).toEqual(({sketch_51:[3113,4628],sketch_483:[3140,4206],sketch_834:[3140,4456]} as Record<string,number[]>)[current.id]);
       if(activityProps[current.id])expect([current.x,current.y]).toEqual(activityProps[current.id]);
       const movedActivity=activityProps[current.id] || current.route && ["meadow_cycle","village_skate","cloud_trip","lake_trip"].includes(current.route.id);
       if(relocated.has(current.id))expect(Math.hypot(current.x-placement.x,current.y-placement.y)).toBeLessThan(20.01);
-      close({...current,headingRad:assembly==="Fallen log" ? placement.headingRad : current.headingRad,spec:undefined,scale:undefined,...(relocated.has(current.id)||movedActivity?{x:placement.x,y:placement.y,headingRad:placement.headingRad}:{})},{...placement,headingRad:placement.headingRad,scale:undefined,labelText:current.spec!.displayName,id:canonicalId(id),spec:undefined});}
-    expect(scene.objects).toHaveLength(534);expect(scene.objects.every(o=>o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2)).toBe(true);
+      close({...current,headingRad:assembly==="Fallen log" ? placement.headingRad : current.headingRad,spec:undefined,scale:undefined,...(relocated.has(current.id)||movedActivity||urbanMoved?{x:placement.x,y:placement.y,headingRad:placement.headingRad}:{})},{...placement,headingRad:placement.headingRad,scale:undefined,labelText:current.spec!.displayName,id:canonicalId(id),spec:undefined});}
+    expect(scene.objects).toHaveLength(715);expect(scene.objects.every(o=>o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2)).toBe(true);
   });
   it("accepts the whole world from text and revalidates an invalid included placement",()=>{
     expect(compileDreamScene(worldSource,{sceneId:scene.sceneId,revisionId:scene.revisionId,sourceHash:scene.sourceHash},worldModules)).toEqual(scene);

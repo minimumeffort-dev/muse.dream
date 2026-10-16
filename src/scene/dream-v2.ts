@@ -122,7 +122,7 @@ function motion(node:DreamNode):Motion {
   const args=node.kind==="spin" ? [n("deg_s")] : node.kind==="roll" ? [n("radius")] : node.kind==="sway" ? [n("deg"),hz()] : node.kind==="swing" ? [n("deg"),hz(),n("phase_deg")] : [n("deg"),n("radius")];
   return {kind:node.kind as Motion["kind"],axis,args};
 }
-function lowerBlock(nodes:DreamNode[]):Statement[] {
+export function lowerBlock(nodes:DreamNode[]):Statement[] {
   return nodes.map(node=> {
     const {kind,token,id:scope}=node,n=(key:string)=>exprField(node,key),v=(key:string)=>listField(node,key) as Vec;
     const statement:Statement={token,kind,scope,name:scope};

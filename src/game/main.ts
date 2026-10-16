@@ -57,7 +57,8 @@ function start(): void {
   let mode: "playing" | "paused" = "playing";
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  const profileDpr=import.meta.env.DEV && new URLSearchParams(location.search).has('profile') ? Number(new URLSearchParams(location.search).get('profile-dpr')) : 0;
+  renderer.setPixelRatio(profileDpr>=1 && profileDpr<=1.5 ? profileDpr : Math.min(devicePixelRatio, 1.5));
   renderer.info.autoReset = false;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -220,7 +221,7 @@ function start(): void {
   let previous = performance.now(), hudTime = 0;
   let frameMs = 16.7;
   const profile=import.meta.env.DEV ? renderProfile(renderer,()=>{
-    resetPosition(true);worldTime.value=0;
+    resetPosition(true);car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));worldTime.value=0;
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
   const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,switching:240},()=>{
     resetPosition(true);worldTime.value=0;setMode("playing");

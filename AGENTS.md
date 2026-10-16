@@ -7,10 +7,10 @@ handmade fixture, including the current car and track, is temporary input
 for that future pipeline. The engine compiles validated scene/DSL data
 into Three.js and tested mechanics; model output remains data-only.
 
-Current state: **mock open world** — a 6000 x 4800 handmade landscape with a
+Current state: **mock open world** — a 8000 x 7800 handmade landscape with a
 winding eight-checkpoint circuit, composed assets, heightfield driving/jumps,
 ICE/BOOST, off-road collisions, fixed-angle camera, walking, direct vehicle controls,
-ambient wildlife, layered vegetation and instanced scenery. F exits to dry ground and boards nearby on foot. Bicycles,
+connected town streets, suburbs, a lake and sports park, ambient wildlife, layered vegetation and instanced scenery. F exits to dry ground and boards nearby on foot. Bicycles,
 skateboards, boats and planes are player-controlled; trains retain autonomous routes.
 The original small fixture remains for regression tests. No photo upload,
 camera or model calls yet. The complete live world is authored in Dream 2 text

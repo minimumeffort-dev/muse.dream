@@ -16,7 +16,7 @@ const at = (x: number, vx = 0): CarState => ({ ...createCarAtSpawn(scene), x, y:
 
 describe("terrain driving", () => {
   it("starts driving reviews at clear real-world poses and leaves normal starts untouched",()=>{
-    const doc=createWorldScene(),w={...world,scene:doc,roadMask:buildMaskForScene(doc),driveMask:buildPaperMask(6000,4800)},start=createCarAtSpawn(doc);
+    const doc=createWorldScene(),w={...world,scene:doc,roadMask:buildMaskForScene(doc),driveMask:buildPaperMask(doc.canonical.width,doc.canonical.height)},start=createCarAtSpawn(doc);
     const hill=drivingReviewStart(start,w,"sidehill"),coast=drivingReviewStart(start,w,"coast");
     expect(hill).toMatchObject({x:1290,y:1360,vx:0,vy:0,headingRad:Math.PI/2});
     expect(hill.elevation).toBe(terrainHeight(doc.terrain,hill.x,hill.y));

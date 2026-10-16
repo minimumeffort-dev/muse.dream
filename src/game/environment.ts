@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import {reservedGround,streetRects,rectPolygon,onStreet} from '../scene/streets';
+import {buildStreets} from './streets';
 import { bridgeAt, bridgeCoordinates, bridgePolygon } from "../scene/landscape-dsl";
 import type { Point, Scene } from "../scene/schema";
 import { sampleTerrain, terrainHeight, drivingHeight, waterAt } from "../scene/terrain";
@@ -64,7 +66,7 @@ export function curbGeometry(doc: Scene, side: -1 | 1): THREE.BufferGeometry {
   const sections = roadSections(doc), half = doc.roadMaskRef.params.roadWidth / 2;
   const inner = side * (half - ROAD_CURB_WIDTH / 2), outer = side * (half + ROAD_CURB_WIDTH / 2);
   const vertices: number[] = [], colors: number[] = [];
-  const cutouts = timberFootprints(doc);
+  const cutouts = [...timberFootprints(doc),...streetRects(doc.streets).map(rectPolygon)];
   const timber = (doc.terrain.landscape?.bridges ?? []).filter(bridge => bridge.style === "timber");
   const curbLift = (x: number, y: number, lift: number) => {
     let distance = Infinity;
@@ -90,7 +92,7 @@ export function curbGeometry(doc: Scene, side: -1 | 1): THREE.BufferGeometry {
       const edge = surfaceEdge(start!, end!, cutouts);
       for (let j = 1; j < edge.length; j++) {
         const a = edge[j - 1]!, b = edge[j]!;
-        if (bridgeAt(doc.terrain.landscape, (a.x + b.x) / 2, (a.y + b.y) / 2)?.style === "timber") continue;
+        if (onStreet(doc,(a.x+b.x)/2,(a.y+b.y)/2) || bridgeAt(doc.terrain.landscape, (a.x + b.x) / 2, (a.y + b.y) / 2)?.style === "timber") continue;
         const point = (p: Point, lift: number) => new THREE.Vector3(p.x - doc.canonical.width / 2, surfaceHeight(doc, p.x, p.y) + curbLift(p.x, p.y, lift), p.y - doc.canonical.height / 2);
         const p = point(edge[j - 1]!, -.5), q = point(edge[j]!, -.5), r = point(edge[j]!, 3.1), t = point(edge[j - 1]!, 3.1);
         for (const v of [p, r, q, p, t, r]) vertices.push(...v.toArray());
@@ -149,6 +151,7 @@ export function drapedPolygon(doc: Scene, polygon: Point[], lift: number): THREE
 
 export function buildEnvironment(doc: Scene): THREE.Group {
   const group = new THREE.Group(), { width, height } = doc.canonical;
+  group.add(buildStreets(doc));
   // Local terrain tiles keep invisible hills out of the main and shadow passes.
   const groundMat = groundMaterial(), low = new THREE.Color("#52744c"), high = new THREE.Color("#70865a"), rock = new THREE.Color("#77817b");
   const tints = (doc.terrain.tints ?? []).map(t => ({ ...t, color: new THREE.Color(t.color) }));
@@ -194,10 +197,10 @@ export function buildEnvironment(doc: Scene): THREE.Group {
   const path = roadPoints(doc), tufts: THREE.Matrix4[] = [], flowers: THREE.Matrix4[] = [], colors: THREE.Color[] = [];
   const transform = new THREE.Object3D(); let seed = 1234;
   const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
-  const decorationSamples = Math.min(24000, Math.ceil(width * height / 1200));
+  const decorationSamples = Math.ceil(width * height / 1200);
   for (let i = 0; i < decorationSamples; i++) {
     const x = random() * width, y = random() * height;
-    if (bridgeAt(doc.terrain.landscape,x,y) || waterAt(doc.terrain,x,y) || distanceToRoad(path, x, y) < roadWidth / 2 + 10 ||
+    if (reservedGround(doc,x,y) || bridgeAt(doc.terrain.landscape,x,y) || waterAt(doc.terrain,x,y) || distanceToRoad(path, x, y) < roadWidth / 2 + 10 ||
       corridors.some(route=>distanceToRoad(route.points,x,y)<route.radius)) continue;
     transform.position.copy(worldPosition(doc, x, y, 3)); transform.rotation.set(.1, random() * 6, .2);
     transform.scale.setScalar(.6 + random() * .8); transform.updateMatrix(); tufts.push(transform.matrix.clone());

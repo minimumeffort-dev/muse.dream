@@ -36,6 +36,7 @@ for(const water of doc.terrain.landscape?.waters ?? []) locations.push({name:wat
 for(const object of doc.objects.filter(o=>['eco_woodland_fern_0','eco_foxglove_0','eco_river_reeds_0','eco_weeping_willow_0'].includes(o.id)))locations.push({name:object.id,x:object.x,y:object.y,half:110});
 if(!dreamV2)locations.push({name:'Pond shallows',x:2910,y:2460},{name:'Fern understory',x:1550,y:2850},{name:'Riverbank plants',x:1860,y:1960});
 if(!dreamV2)locations.push({ name:'Mixed grove', x:1550, y:2850 }, { name:'Open meadow', x:3150, y:2650 });
+if(!dreamV2)locations.push({name:'Town center',x:6900,y:1800,half:1000},{name:'Town square',x:6925,y:1525,half:330},{name:'Suburbs',x:2100,y:5870,half:1000},{name:'Football pitch',x:6400,y:5020,half:440},{name:'Basketball court',x:7300,y:4945,half:180},{name:'Golf park',x:6700,y:6500,half:850},{name:'South lake',x:4750,y:5500,half:650});
 else for(const object of doc.objects.filter(o=>!o.route))locations.push({name:object.id,x:object.x,y:object.y});
 const select = document.querySelector('#location'), view = document.querySelector('#view'), canvas = document.querySelector('canvas');
 locations.forEach((location, index) => select.add(new Option(location.name, String(index))));
