@@ -48,6 +48,10 @@ A feature isn't complete while its README or documentation describes older behav
 Build the published docs with `npm run docs:build`. Dream highlighting reads the
 same generated compiler command contract; cover token boundaries and HTML escaping
 when changing it. Keep inline complete examples identical to their `.dream` files.
+The published docs use Minimum Effort's visual identity. Keep Manrope body text,
+Archivo headings, warm white/charcoal/yellow colors, shared gutters and spacing
+aligned with minimumeffort.dev. The source tokens and font provenance are documented
+in `docs/media/README.md`; do not introduce a separate product theme.
 Documentation motion uses the dev-only `?capture` exporter at 30 rendered frames per
 simulation second, then `node scripts/encode-media.mjs`; never interpolate missing frames or
 present offline captures as live performance measurements. Refresh the HD video,

@@ -70,7 +70,7 @@ object oak(label="Oak"){
 }
 ```
 
-The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation site highlights Dream commands, fields, references, colors and expressions, with copy buttons for complete examples.
+The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation uses Minimum Effort's Manrope and Archivo fonts, warm white, charcoal and yellow, with the same page gutters and spacing. Dream commands, fields, references, colors and expressions are highlighted, with copy buttons for complete examples.
 
 [Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 66 assemblies and 534 placements, all authored in Dream 2.
 

@@ -36,6 +36,10 @@ The encoder checks for consecutive source frames before replacing a GIF and vide
 
 ## Syntax highlighting
 
+The documentation shares [Minimum Effort's](https://minimumeffort.dev/) visual identity: Manrope body text, Archivo headings and wordmark, warm white `#fafaf7`, charcoal `#171717` and yellow `#f7c843`. Page gutters use `clamp(1.25rem, 6vw, 5.5rem)` with a 1304-pixel maximum, the same spacing scale and a shared alignment for header and content. Code panels use the site's charcoal surface, with Dream tokens kept distinct and readable.
+
+The tokens in `docs/site/style.css` follow Minimum Effort's `src/app/globals.css` and `src/app/site-theme.css`, checked against the live site. The Latin variable fonts are hosted with the docs, so reading needs no Google Fonts request. Font sources and their SIL Open Font Licenses are included in [`docs/site/fonts/README.md`](../site/fonts/README.md). Keep this identity when extending the docs.
+
 The published documentation is built from the repository's Markdown using `npm run docs:build`. The custom [Dream highlighter](../site/dream-highlight.mjs) recognizes commands and nested constructors from the compiler's generated contract, named fields, symbols, numbers, colors, strings and comments. It preserves source text and escapes HTML before adding spans. Copy buttons copy the original code, without markup.
 
 Use a `dream` fence in Markdown. Complete examples are checked by the compiler, and tests compare the guide's snippets with their downloadable source files. JavaScript is only needed for the copy button; highlighting and navigation are already in the generated HTML.
