@@ -20,6 +20,8 @@ Entering an unsupported `script` command rejects the proposed source, disables S
 
 A one-agent prompt with one credit and a five-step deadline ends as **Deadline reached**, with zero of two tasks completed and no fabricated reward. [Deadline view](deadline.jpg) and [exported episode](browser-deadline.jsonl) replay to the same failed result. The garden and classroom examples also completed through the actual UI. Authored examples identify their source separately from the brief. The normal 3D car moved from `(6330,4233)` to `(6505.3,4233)` under native W input, retaining 1,327 objects and eight checkpoints; the [pause menu](pause-navigation.jpg) links to the lab. No game console errors were recorded.
 
+Final UI review loaded the classroom example, then generated a town proposal. The example selector clears to “Choose an example” so it cannot mislabel generated or manually edited source as the last loaded example. The dashboard/source screenshots were refreshed after this correction. Build and native-input verification passed; episode semantics and existing recordings are unchanged.
+
 ## Runtime invariants
 
 Scenario parsing uses the existing Dream command table, regular syntax, global numeric expressions, compiler limits and canonical formatter. Scoped IDs and typed references reject, including disconnected locations, self/duplicate links, absent sources, invalid capacities, nonempty saleable sinks and unmatched goals. Located repair diagnostics identify the offending declaration and field.

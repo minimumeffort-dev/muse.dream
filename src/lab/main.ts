@@ -12,7 +12,7 @@ const prompt=get<HTMLTextAreaElement>('prompt'),source=get<HTMLTextAreaElement>(
 const accept=get<HTMLButtonElement>('accept'),generate=get<HTMLButtonElement>('generate'),cancel=get<HTMLButtonElement>('cancel'),play=get<HTMLButtonElement>('play'),step=get<HTMLButtonElement>('step'),reset=get<HTMLButtonElement>('reset'),download=get<HTMLButtonElement>('export');
 let candidate:Scenario|undefined,episode:Episode|undefined,manifest:Manifest|undefined,controller:AbortController|undefined,version=0,timer:ReturnType<typeof setInterval>|undefined;
 let origin='checked example';
-prompt.value=DEFAULT_PROMPT;source.value=formatDream(example);
+prompt.value=DEFAULT_PROMPT;source.value=formatDream(example);get<HTMLSelectElement>('example').value='town';
 const text=(id:string,value:string)=>{get(id).textContent=value;};
 function stop(){if(timer!==undefined)clearInterval(timer);timer=undefined;play.textContent='Run baseline';}
 function invalidate(){controller?.abort();version++;candidate=undefined;accept.disabled=true;text('source-state','Unvalidated');}
@@ -27,14 +27,14 @@ get<HTMLFormElement>('prompt-form').onsubmit=async event=>{
   event.preventDefault();stop();invalidate();const current=version,request=new AbortController();controller=request;generate.disabled=true;cancel.hidden=false;status.textContent='Building a local mock proposal…';
   try{
     const proposal=await proposeDream({prompt:prompt.value,signal:request.signal});if(current!==version)return;
-    source.value=proposal.source;origin='mock proposal';get('assumption-list').replaceChildren(...proposal.assumptions.map(a=>{const li=document.createElement('li');li.textContent=a;return li;}));
+    source.value=proposal.source;origin='mock proposal';get<HTMLSelectElement>('example').value='';get('assumption-list').replaceChildren(...proposal.assumptions.map(a=>{const li=document.createElement('li');li.textContent=a;return li;}));
     status.textContent='Proposal ready. Review the Dream source, then start an episode.';validate();
   }catch(error){if(current===version)status.textContent=request.signal.aborted?'Proposal cancelled.':error instanceof Error?error.message:String(error);}
   finally{if(current===version){generate.disabled=false;cancel.hidden=true;}}
 };
 cancel.onclick=()=>{invalidate();generate.disabled=false;cancel.hidden=true;status.textContent='Proposal cancelled. Accepted episode preserved.';};
 prompt.oninput=()=>{invalidate();generate.disabled=false;cancel.hidden=true;status.textContent='Brief changed. Generate a fresh proposal.';};
-source.oninput=()=>{invalidate();origin='edited source';text('source-state','Edited');generate.disabled=false;cancel.hidden=true;};
+source.oninput=()=>{invalidate();origin='edited source';get<HTMLSelectElement>('example').value='';text('source-state','Edited');generate.disabled=false;cancel.hidden=true;};
 get('validate').onclick=()=>{stop();validate();};
 get<HTMLSelectElement>('example').onchange=event=>{stop();invalidate();origin='checked example';source.value=formatDream({town:example,ecology,classroom}[(event.target as HTMLSelectElement).value as 'town'|'ecology'|'classroom']);status.textContent='Checked example loaded. The brief does not change this authored source.';validate();};
 accept.onclick=async()=>{
