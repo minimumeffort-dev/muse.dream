@@ -13,6 +13,13 @@ button:focus-visible { outline: 3px solid #ffde98; outline-offset: 4px; }
 #pause { margin-left: auto; border-radius: 50%; width: 44px; height: 44px; display: grid; place-items: center; background: #263e43b8; backdrop-filter: blur(16px); }
 #pause:hover { background: #263e43e8; }
 #interact{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);padding:12px 20px;border-radius:24px;background:#263e43ed;box-shadow:0 4px 20px #11262b38;font-size:13px;font-weight:600;max-width:calc(100% - 190px)}
+#boost { position: fixed; left: 28px; bottom: max(30px, env(safe-area-inset-bottom)); min-width: 132px; height: 48px; padding: 0 14px; display: flex; align-items: center; justify-content: center; gap: 8px; overflow: hidden; isolation: isolate; border: 1px solid #fff1ce60; border-radius: 24px; background: #263e43ed; box-shadow: 0 4px 20px #11262b38; font-size: 13px; font-weight: 700; }
+#boost .boost-fill { position: absolute; z-index: -1; inset: 0; background: #f2d8a1; transform: scaleX(var(--charge, 1)); transform-origin: left; }
+#boost:not(:disabled), #boost[data-active="true"] { color: #263e43; }
+#boost:disabled { cursor: default; }
+#boost:disabled:not([data-active="true"]) .boost-fill { background: #40575c; }
+#boost svg { width: 18px; height: 18px; fill: currentColor; }
+#boost kbd { font: inherit; opacity: .75; }
 #pause svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 3; stroke-linecap: round; fill: none; }
 #pause .play-icon { display: none; fill: currentColor; stroke-width: 0; }
 #pause[data-paused="true"] .play-icon { display: block; }
@@ -27,4 +34,4 @@ h1 { margin: 0 0 18px; font-size: 26px; font-weight: 600; }
 .menu-card .quiet { background: none; color: #dce5d9; margin-top: 6px; font-size: 13px; font-weight: 400; }
 .menu-card>a{display:inline-block;color:#fff1ce;font-size:12px;margin-top:14px;text-underline-offset:4px}
 .error { display: grid; place-items: center; padding: 40px; color: #243e43; }
-@media (max-width: 600px) { .hud { inset: max(16px, env(safe-area-inset-top)) 16px auto; } }
+@media (max-width: 600px) { .hud { inset: max(16px, env(safe-area-inset-top)) 16px auto; } #boost { left: 16px; bottom: max(24px, env(safe-area-inset-bottom)); } #interact { bottom: max(164px, calc(env(safe-area-inset-bottom) + 140px)); max-width: calc(100% - 32px); } }

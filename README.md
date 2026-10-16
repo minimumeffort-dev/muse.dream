@@ -74,6 +74,12 @@ Release the throttle and the car coasts to a complete stop on dry, flat ground. 
 
 [Watch in HD](docs/media/driving.mp4)
 
+Press **Shift** or click **Boost** for a one-second car burst, then give it five seconds to recharge. The button shows when it's ready again. Braking cuts the burst; the same hills, collisions and boost pads still apply.
+
+![Boosting through the mock city](docs/media/boost.gif)
+
+[Watch the boost in HD](docs/media/boost.mp4)
+
 The whole world stays in memory while you explore. The renderer batches differently colored parts into fewer draws and reuses fixed world transforms, keeping the same assets, shadows, particles and post-processing. The [rendering notes](docs/rendering.md) include before/after measurements and a local profiler for checking changes.
 
 Press **F** to get out of the car, walk over to another vehicle and press **F** again. You control the bicycle, skateboard, boat or plane yourself. Leave the lane, steer across the pond or take off from the runway. A vehicle stays where you park it, including the car you left behind.
@@ -192,7 +198,7 @@ For local development, open `http://127.0.0.1:5173/` on your machine. You can al
 | Trackpad pinch / two-finger scroll, or mouse wheel | Zoom in / out over the world |
 | F | Exit a vehicle, or enter one nearby while on foot |
 | Space | Jump on foot/bike/skateboard, hop a boat, swim faster, or climb in the plane |
-| Shift | Run, swim faster, or descend in the plane |
+| Shift / Boost button | Boost a car; Shift also runs, swims faster, or descends in the plane |
 | P / Escape | Pause |
 | R | Return to the start, keeping changes to the world |
 | Start over, in the pause menu | Reset the race and restore destroyed objects |

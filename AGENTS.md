@@ -174,7 +174,9 @@ bridges. Preserve dry shore boarding, full-hull checks and finite rail bottoms.
 See `docs/urban-world.md` for the transport layout and `docs/dream/reference.md`.
 
 Movement stays in the fixed-step engine. Space jumps on foot/bicycles/skateboards/scooters
-and hops boats; Shift runs/swims faster, while aircraft retain Space/Shift lift.
+and hops boats; Shift boosts cars or runs/swims faster, while aircraft retain Space/Shift lift.
+Car boost uses one-second thrust and five-second recharge in simulation time; preserve
+per-press activation, braking cancellation, vehicle ownership and the independent pad cooldown.
 Preserve per-press jump buffering/grace, low-step headroom, chest-depth water
 support, full-hull bridge clearance, and gravity after airborne collisions.
 Do not add generated controller code or increase animation/render budgets.

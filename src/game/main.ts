@@ -18,7 +18,7 @@ import { createWorldScene } from "../scene/world-fixture";
 import { drivingHeight } from "../scene/terrain";
 import { archetypeOf, objectRadius } from "../sim/archetypes";
 import { buildPaperMask } from "../sim/mask";
-import { createCarAtSpawn, FixedStepper, resetCar, type World } from "../sim/car";
+import { CAR_BOOST, isCarControl, createCarAtSpawn, FixedStepper, resetCar, type World } from "../sim/car";
 import { FOOT_HEIGHT,MAX_FLIGHT_CLEARANCE,isSwimming,nearbyRide,toggleRide,stepInteractive,occupiedObject,exitPosition } from "../sim/interaction";
 import { actorPoses } from "../sim/actors";
 import {isActor} from '../scene/agents';
@@ -46,6 +46,8 @@ const pauseButton = document.querySelector<HTMLButtonElement>("#pause")!;
 const pauseMenu = document.querySelector<HTMLDialogElement>("#pause-menu")!;
 const surface = document.querySelector<HTMLElement>("#surface")!;
 const interact=document.querySelector<HTMLButtonElement>("#interact")!;
+const boostButton=document.querySelector<HTMLButtonElement>("#boost")!;
+const boostLabel=document.querySelector<HTMLElement>("#boost-label")!;
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 
 function start(): void {
@@ -61,6 +63,7 @@ function start(): void {
   if(import.meta.env.DEV)car=movementReviewStart(car,world,new URLSearchParams(location.search).get("test-movement"));
   const stepper = new FixedStepper();
   const keys = new Set<string>();
+  let boostRequested=false;
   let mode: "playing" | "paused" = "playing";
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -72,7 +75,7 @@ function start(): void {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
-  renderer.domElement.setAttribute("aria-label", "WASD walks, swims or drives. F enters or exits a vehicle. Space jumps on foot or on a bicycle, skateboard or scooter, and hops a boat. Shift runs or swims faster. In an aircraft Space climbs and Shift descends. Pinch or scroll to zoom. Q and E rotate the view. P pauses; R returns to the start.");
+  renderer.domElement.setAttribute("aria-label", "WASD walks, swims or drives. Shift or the Boost button gives a car burst. F enters or exits a vehicle. Space jumps on foot or on a bicycle, skateboard or scooter, and hops a boat. Shift runs or swims faster. In an aircraft Space climbs and Shift descends. Pinch or scroll to zoom. Q and E rotate the view. P pauses; R returns to the start.");
   container.append(renderer.domElement);
   const manualZoom = cameraZoomInput(renderer.domElement, () => mode === "playing");
   const scene = new THREE.Scene();
@@ -186,6 +189,7 @@ function start(): void {
 
   function resetPosition(restartRace = false): void {
     car = resetCar(car, doc, restartRace);
+    boostRequested=false;
     if(restartRace){worldTime.value=0;manualZoom.factor=1;}
     stepper.reset(); particles.clear(); landscape.clear(); snap = true; cameraAngle=viewAngle;
     boostUntil = 0; surface.textContent = "";
@@ -195,7 +199,7 @@ function start(): void {
   }
 
   function setMode(next: typeof mode): void {
-    mode = next; keys.clear(); stepper.reset();
+    mode = next; keys.clear(); boostRequested=false; stepper.reset();
     if(next === "paused") cameraAngle=viewAngle;
     if (next === "paused" && !pauseMenu.open) pauseMenu.showModal();
     else if (next === "playing" && pauseMenu.open) pauseMenu.close();
@@ -205,8 +209,12 @@ function start(): void {
     if(next==="playing")container.focus({preventScroll:true});
   }
   pauseButton.addEventListener("click", () => setMode(mode === "playing" ? "paused" : "playing"));
-  const useRide=()=>{if(mode==="playing"){car=toggleRide(car,world);container.focus({preventScroll:true});}};
+  const useRide=()=>{if(mode==="playing"){car=toggleRide(car,world);boostRequested=false;container.focus({preventScroll:true});}};
   interact.addEventListener("click",useRide);
+  boostButton.addEventListener('click',()=>{
+    if(mode==='playing' && isCarControl(car,world))boostRequested=true;
+    container.focus({preventScroll:true});
+  });
   pauseMenu.addEventListener("cancel", (e) => { e.preventDefault(); setMode("playing"); });
   reduced.addEventListener("change", () => { particles.clear(); landscape.clear(); snap = true; });
   document.querySelector("#resume")!.addEventListener("click", () => { setMode("playing"); });
@@ -223,11 +231,12 @@ function start(): void {
       if (mode === "playing" && e.code === "KeyQ") viewAngle -= Math.PI / 2;
       if (mode === "playing" && e.code === "KeyE") viewAngle += Math.PI / 2;
       if(mode==="playing" && e.code==="KeyF")useRide();
+      if(mode==='playing' && (e.code==='ShiftLeft' || e.code==='ShiftRight'))boostRequested=true;
     }
     keys.add(e.code);
   });
   addEventListener("keyup", (e) => keys.delete(e.code));
-  addEventListener("blur", () => { keys.clear(); });
+  addEventListener("blur", () => { keys.clear(); boostRequested=false; });
   document.addEventListener("visibilitychange", () => { if (document.hidden) setMode("paused"); });
   container.dataset.world=JSON.stringify({width:doc.canonical.width,height:doc.canonical.height,objects:doc.objects.length,checkpoints:doc.checkpoints.length,birds:doc.flocks.reduce((n,f)=>n+f.count,0)});
   container.dataset.source="dream-2";
@@ -237,7 +246,7 @@ function start(): void {
     resetPosition(true);car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));worldTime.value=0;
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
   let captureTime:number|undefined;
-  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300},(clip)=>{
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300},(clip)=>{
     captureTime=undefined;
     resetPosition(true);worldTime.value=0;setMode("playing");
     if(clip==='switching'){const bike=doc.objects.find(o=>o.id==='village_bike')!;car={...car,x:bike.x-40,y:bike.y,headingRad:0,elevation:drivingHeight(doc.terrain,bike.x-40,bike.y)};}
@@ -247,6 +256,7 @@ function start(): void {
     keys.clear();
     if(clip==="daynight"){captureTime=frame/359*(doc.daylight?.cycleSeconds??600);return;}
     if(clip==="driving"){if(frame<175)keys.add("KeyW");return;}
+    if(clip==='boost'){if(frame<175)keys.add('KeyW');if(frame>=25 && frame<50)keys.add('ShiftLeft');return;}
     if(clip==='flight'){
       keys.add('KeyW');
       if(frame>=40 && frame<170)keys.add('Space');
@@ -283,11 +293,13 @@ function start(): void {
         throttle: Number(keys.has("KeyW") || keys.has("ArrowUp")) - Number(keys.has("KeyS") || keys.has("ArrowDown")),
         lift:Number(keys.has("Space"))-Number(keys.has("ShiftLeft") || keys.has("ShiftRight")),viewAngle:cameraAngle,
         jump:keys.has('Space'),sprint:keys.has('ShiftLeft') || keys.has('ShiftRight'),
+        boost:keys.has('ShiftLeft') || keys.has('ShiftRight'),
       };
       const steps = stepper.push(dt);
       for (let i = 0; i < steps; i++) {
         const wasGrounded = car.grounded, previousSpeed=Math.hypot(car.vx,car.vy),riding=car.control.kind!=="car";
-        car = stepInteractive(car, input, stepper.stepDt, world);
+        car = stepInteractive(car, {...input,boostPressed:boostRequested}, stepper.stepDt, world);
+        boostRequested=false;
         objectImpacts.push(...car.impacts);
         landscape.step(car,stepper.stepDt,!reduced.matches); boosted ||= car.boostedThisStep;
         poses=actorPoses(doc,car.timeS,car);
@@ -422,6 +434,15 @@ function start(): void {
       hudTime = 0;
       surface.textContent = occupied ? occupied.labelText+(controlOf(occupied.spec)==="plane" ? " · Space ↑ / Shift ↓" : controlOf(occupied.spec)==='bicycle' || controlOf(occupied.spec)==='skateboard' || controlOf(occupied.spec)==='scooter' ? ' · Space jump' : controlOf(occupied.spec)==='boat' ? ' · Space hop' : "") : car.control.kind==="foot" ? isSwimming(car,world) ? 'Swimming · Shift faster' : 'On foot · Space jump / Shift run' : !car.grounded ? "Airborne" : car.timeS < boostUntil ? "Boost" : car.surface === "ice" ? "Sliding" : car.surface === "water" ? "Water" : "";
       surface.dataset.effect = car.surface === "ice" ? "ice" : "boost";
+      const carControl=isCarControl(car,world),boostActive=car.timeS<car.carBoost.activeUntilS,boostWait=Math.max(0,car.carBoost.readyAtS-car.timeS);
+      const boostBlocked=!car.grounded || car.surface==='water' || car.vx*Math.cos(car.headingRad)+car.vy*Math.sin(car.headingRad)<-1 || keys.has('KeyS') || keys.has('ArrowDown');
+      boostButton.hidden=mode!=='playing' || !carControl;
+      boostButton.disabled=boostWait>0 || boostBlocked;
+      boostButton.dataset.active=String(boostActive);
+      boostButton.style.setProperty('--charge',String(boostActive ? 1 : Math.max(0,1-boostWait/CAR_BOOST.rechargeS)));
+      boostLabel.textContent=boostActive ? 'Boosting' : boostWait>0 ? `Boost · ${boostWait.toFixed(1)}s` : 'Boost';
+      boostButton.setAttribute('aria-label',boostActive ? 'Boost active' : boostWait>0 ? `Boost recharging, ${Math.ceil(boostWait)} seconds` : boostBlocked ? 'Boost unavailable: drive forward on dry ground' : 'Boost (Shift)');
+      container.dataset.boost=JSON.stringify({active:boostActive,ready:carControl && boostWait===0 && !boostBlocked,remaining:boostWait,timeS:car.timeS});
       // DOM diagnostics let browser checks observe real simulation and camera state.
       container.dataset.car = [car.x, car.y, position.y].map((v) => v.toFixed(1)).join(",");
       container.dataset.daylight=JSON.stringify({hour:daylight.hour,night:nightFactor.value,direction:daylight.direction.toArray()});

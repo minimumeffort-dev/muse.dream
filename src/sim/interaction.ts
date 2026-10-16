@@ -68,18 +68,18 @@ export function exitPosition(state:CarState,world:World) {
 export function toggleRide(state:CarState,world:World):CarState {
   if(state.control.kind!=="foot"){
     const exit=exitPosition(state,world);if(!exit)return state;
-    return {...state,...exit,control:{kind:"foot"},vx:0,vy:0,vz:0,grounded:true,landingSpeed:0,pitch:0,bank:0,boostedThisStep:false,jump:{held:state.jump.held,bufferUntilS:0,coyoteUntilS:0}};
+    return {...state,...exit,control:{kind:"foot"},vx:0,vy:0,vz:0,grounded:true,landingSpeed:0,pitch:0,bank:0,boostedThisStep:false,carBoost:{...state.carBoost,activeUntilS:0},jump:{held:state.jump.held,bufferUntilS:0,coyoteUntilS:0}};
   }
   const target=nearbyRide(state,world);if(!target)return state;
   const pose=target.id===null ? state.vehicles.find(v=>v.id===null)! : actorPose(world.scene,target.object!,state.timeS,state);
   const control:CarState["control"]=target.id===null ? {kind:"car"} : {kind:controlFor(target.object!) ? "vehicle" : "passenger",id:target.id};
   const next:CarState={...state,control,x:pose.x,y:pose.y,elevation:pose.elevation,headingRad:pose.headingRad,distance:pose.distance,vehicles:state.vehicles.filter(v=>v.id!==target.id),
-    vx:0,vy:0,vz:0,grounded:true,landingSpeed:0,pitch:0,bank:0,boostedThisStep:false,jump:{held:state.jump.held,bufferUntilS:0,coyoteUntilS:0}};
+    vx:0,vy:0,vz:0,grounded:true,landingSpeed:0,pitch:0,bank:0,boostedThisStep:false,carBoost:{...state.carBoost,activeUntilS:0},jump:{held:state.jump.held,bufferUntilS:0,coyoteUntilS:0}};
   if(control.kind!=="passenger" && !carFootprintClear(bodyWorld(next,world),next.x,next.y,next.elevation,next.timeS,next))return state;
   return next;
 }
-function nextMotion(state:CarState,dt:number,world:World):CarState {
-  return {...state,jump:{...state.jump},npcs:stepNpcs(state,dt,world.scene),timeS:state.timeS+dt,props:state.props.map(p=>({...p})),broken:[...state.broken],brokenZones:state.brokenZones.map(z=>({...z})),debris:[...state.debris],impacts:[],boostReadyAtS:{...state.boostReadyAtS},boostedThisStep:false,landingSpeed:0};
+function nextMotion(state:CarState,input:CarInput,dt:number,world:World):CarState {
+  return {...state,jump:{...state.jump},carBoost:{...state.carBoost,held:!!input.boost,activeUntilS:0},npcs:stepNpcs(state,dt,world.scene),timeS:state.timeS+dt,props:state.props.map(p=>({...p})),broken:[...state.broken],brokenZones:state.brokenZones.map(z=>({...z})),debris:[...state.debris],impacts:[],boostReadyAtS:{...state.boostReadyAtS},boostedThisStep:false,landingSpeed:0};
 }
 export function isSwimming(state:CarState,world:World):boolean {
   const water=state.control.kind==='foot' && waterAt(world.scene.terrain,state.x,state.y,state.elevation);
@@ -87,7 +87,7 @@ export function isSwimming(state:CarState,world:World):boolean {
 }
 /** Bounded arcade boat/aircraft dynamics, independent of authored routes. */
 function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,profile:"boat"|"plane"):CarState {
-  const s=nextMotion(state,dt,world),body=bodyWorld(s,world),throttle=Math.max(-1,Math.min(1,input.throttle)),steer=Math.max(-1,Math.min(1,input.steer));
+  const s=nextMotion(state,input,dt,world),body=bodyWorld(s,world),throttle=Math.max(-1,Math.min(1,input.throttle)),steer=Math.max(-1,Math.min(1,input.steer));
   const plane=profile==="plane",aircraft=plane ? occupiedObject(s,world)! : undefined,maxSpeed=plane ? 400 : 135,accel=plane ? 170 : 80;
   const water=plane ? undefined : waterAt(world.scene.terrain,s.x,s.y,terrainHeight(world.scene.terrain,s.x,s.y));
   const flow=water?.flow??{x:0,y:0};
@@ -177,7 +177,7 @@ export function stepInteractive(state:CarState,input:CarInput,dt:number,world:Wo
     const turn=moving ? Math.atan2(Math.sin(targetHeading-state.headingRad),Math.cos(targetHeading-state.headingRad)) : 0;
     const headingRad=state.headingRad+Math.max(-12*dt,Math.min(12*dt,turn));
     const footWorld={...bodyWorld(state,world),jumpSpeed:swimming ? undefined : 105};
-    return stepCar({...state,vx,vy,headingRad},{steer:0,throttle:0,jump:input.jump},dt,footWorld);
+    return stepCar({...state,vx,vy,headingRad},{steer:0,throttle:0,jump:input.jump,boost:input.boost},dt,footWorld);
   }
   const object=occupiedObject(state,world)!;
   if(state.control.kind==="vehicle"){
@@ -193,7 +193,7 @@ export function stepInteractive(state:CarState,input:CarInput,dt:number,world:Wo
     next.pitch=state.pitch+(pitch-state.pitch)*Math.min(1,dt*12);
     return next;
   }
-  const next=nextMotion(state,dt,world),p=actorPose(world.scene,object,next.timeS,next);
+  const next=nextMotion(state,input,dt,world),p=actorPose(world.scene,object,next.timeS,next);
   Object.assign(next,{x:p.x,y:p.y,elevation:p.elevation,headingRad:p.headingRad,vx:p.vx??0,vy:p.vy??0,vz:0,grounded:p.kind!=="air",surface:p.kind==="water" ? "water" : "paper",distance:p.travelled});
   advanceImpactMotion(next,bodyWorld(state,world),dt,false);return next;
 }

@@ -89,7 +89,7 @@ export class WorldParticles {
     if (!enabled) { this.clear(); return; }
     this.time+=dt;this.boostLife=boost?.45:Math.max(0,this.boostLife-dt);
     const speed=car.control.kind==="passenger" || car.control.kind==='foot' && car.surface!=='water' ? 0 : Math.hypot(car.vx,car.vy), slip=Math.abs(-Math.sin(car.headingRad)*car.vx+Math.cos(car.headingRad)*car.vy);
-    const wet=car.surface==="water",icy=car.surface==="ice", dusty=car.surface==="paper", boosting=this.boostLife>0;
+    const wet=car.surface==="water",icy=car.surface==="ice", dusty=car.surface==="paper", boosting=this.boostLife>0 || car.timeS<car.carBoost.activeUntilS;
     const swimmer=car.control.kind==='foot' && wet,rate=swimmer ? 14 : boosting?110:dusty?65:wet||icy||slip>35?48:12;
     this.emission+=dt*((car.grounded&&speed>(swimmer ? 8 : 45))||boosting?rate:0);
     while(this.emission>=1){this.emission--;this.emit(car,wet?4:boosting?1:icy?2:0);}

@@ -32,6 +32,10 @@ export interface CarInput {
   /** Space / Shift for aircraft; view angle aligns walking with the screen. */
   lift?:number;viewAngle?:number;
   jump?:boolean;sprint?:boolean;
+  /** One press requests a car boost; holding never repeats it. */
+  boost?:boolean;
+  /** A fresh UI press, consumed for one fixed tick (also preserves quick taps). */
+  boostPressed?:boolean;
 }
 
 export type Surface = "road" | "paper" | "ice" | "water";
@@ -73,6 +77,7 @@ export interface CarState {
   boostReadyAtS: Record<string, number>;
   /** True for the single step in which a boost fired (HUD flash). */
   boostedThisStep: boolean;
+  carBoost:{held:boolean;activeUntilS:number;readyAtS:number};
   /** Live knockable props, in scene-object order. Solids never move. */
   props: PropState[];
   broken:string[];
@@ -130,6 +135,14 @@ export const TUNING = {
 
 export type CarTuning={ [K in keyof typeof TUNING]:number };
 
+export const CAR_BOOST={durationS:1,rechargeS:5,acceleration:650} as const;
+
+/** Only player-owned car profiles get the manual boost capability. */
+export function isCarControl(state:CarState,world:World):boolean {
+  const control=state.control;
+  return control.kind==='car' || control.kind==='vehicle' && controlOf(world.scene.objects.find(o=>o.id===control.id)?.spec)==='car';
+}
+
 export function createCarAtSpawn(scene: Scene): CarState {
   return {
     control:{kind:"car"},vehicles:[],npcs:initialNpcs(scene),distance:0,pitch:0,bank:0,
@@ -148,6 +161,7 @@ export function createCarAtSpawn(scene: Scene): CarState {
     surface: "road",
     boostReadyAtS: {},
     boostedThisStep: false,
+    carBoost:{held:false,activeUntilS:0,readyAtS:0},
     broken:[],brokenZones:[],debris:[],impacts:[],
     props: scene.objects
       .filter((o) => archetypeOf(o).interaction === "knockable")
@@ -169,6 +183,7 @@ export function resetCar(state: CarState, scene: Scene, resetRace = false): CarS
     npcs:state.npcs.map(n=>({...n})),
     lap: state.lap,
     boostReadyAtS: { ...state.boostReadyAtS },
+    carBoost:{...fresh.carBoost,held:state.carBoost.held,readyAtS:state.carBoost.readyAtS},
     props: state.props.map((p) => ({ ...p })),
     broken:[...state.broken],brokenZones:state.brokenZones.map(z=>({...z})),debris:state.debris.map(p=>({...p})),
   };
@@ -227,6 +242,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
   const s: CarState = {
     ...state,
     jump:{...state.jump},
+    carBoost:{...state.carBoost},
     npcs:stepNpcs(state,dt,scene),
     boostReadyAtS: { ...state.boostReadyAtS },
     boostedThisStep: false,
@@ -318,6 +334,17 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
   const fy = Math.sin(s.headingRad);
   const fwdSpeed = s.vx * fx + s.vy * fy;
 
+  const carControl=isCarControl(s,world),pressed=input.boostPressed || input.boost && !s.carBoost.held;
+  s.carBoost.held=!!input.boost;
+  // Brake cancels thrust. Water and changing body cannot carry a car burst along.
+  if(!carControl || water || throttle<0)s.carBoost.activeUntilS=0;
+  if(pressed && carControl && s.grounded && !water && throttle>=0 && fwdSpeed>=-1 && s.timeS>=s.carBoost.readyAtS){
+    s.carBoost.activeUntilS=s.timeS+CAR_BOOST.durationS;
+    s.carBoost.readyAtS=s.carBoost.activeUntilS+CAR_BOOST.rechargeS;
+    s.boostedThisStep=true;
+  }
+  const boosting=carControl && s.grounded && s.timeS<s.carBoost.activeUntilS;
+
   // Steering needs rolling speed; sign follows travel so reverse steers sanely.
   const steerAuthority = Math.max(-1, Math.min(1, fwdSpeed / 45));
   s.headingRad += steer * tuning.turnRateRadS * steerAuthority * dt * (s.grounded ? 1 : .15);
@@ -338,6 +365,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
       fwd = Math.max(-tuning.maxReverseSpeed, fwd + tuning.reverseAccel * throttle * dt);
     }
   }
+  if(boosting)fwd+=CAR_BOOST.acceleration*dt;
   const engineAccel = (fwd - beforeEngine) / dt;
   const drag = Math.exp(-(s.grounded ? tuning.dragPerS : .04) * dt);
   fwd *= drag;
@@ -372,14 +400,15 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
     let forward=s.vx*nfx+s.vy*nfy,side=-s.vx*nfy+s.vy*nfx;
     const ice=surface==="ice",loadImpulse=contactLoad*dt;
     side=Math.sign(side)*Math.max(0,Math.abs(side)-(ice ? tuning.iceLateralFriction : tuning.lateralFriction)*loadImpulse);
-    if(throttle===0)forward=Math.sign(forward)*Math.max(0,Math.abs(forward)-(ice ? tuning.iceCoastFriction : tuning.coastFriction)*loadImpulse);
+    if(throttle===0 && !boosting)forward=Math.sign(forward)*Math.max(0,Math.abs(forward)-(ice ? tuning.iceCoastFriction : tuning.coastFriction)*loadImpulse);
     s.vx=nfx*forward-nfy*side;s.vy=nfy*forward+nfx*side;
     s.vz=onObject ? 0 : ground.dx*s.vx+ground.dy*s.vy;
   }
   const speed = Math.hypot(s.vx, s.vy);
-  if (speed > tuning.maxTerrainSpeed) {
-    s.vx *= tuning.maxTerrainSpeed / speed; s.vy *= tuning.maxTerrainSpeed / speed;
-    s.vz *= tuning.maxTerrainSpeed / speed;
+  const speedCap=boosting ? Math.min(tuning.boostSpeedCap,tuning.maxTerrainSpeed) : tuning.maxTerrainSpeed;
+  if (speed > speedCap) {
+    s.vx *= speedCap / speed; s.vy *= speedCap / speed;
+    s.vz *= speedCap / speed;
   }
 
   // Conservative substeps: no sub-move longer than half the footprint radius.

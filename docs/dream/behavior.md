@@ -24,6 +24,7 @@ Every object declares a body with a radius and height. A static upright solid ca
 
 | Mode | WASD / arrows | Space | Shift |
 | --- | --- | --- | --- |
+| Car | Throttle, brake/reverse, steering | No extra action | One-second boost |
 | On foot | Screen-relative walking | Jump | Run |
 | Swimming | Screen-relative swimming | Faster stroke | Faster stroke |
 | Bicycle / skateboard / scooter | Throttle, brake/reverse, steering | Bunny hop / ollie | No extra action |
@@ -31,6 +32,14 @@ Every object declares a body with a radius and height. A static upright solid ca
 | Plane | Throttle/brake, steering | Climb | Descend |
 
 Walking accelerates toward the chosen direction, turns the character smoothly and brakes when released. Diagonals have the same speed as straight movement. Camera rotation changes the screen-relative direction. Jumping preserves momentum in the air and accepts a press up to 0.12 seconds before landing or 0.1 seconds after leaving a ledge. Holding Space doesn't trigger repeated jumps.
+
+Cars also have a **Boost** button. Click it or press Shift once for one second of forward thrust, followed by five seconds of recharge. Holding Shift never repeats a burst; release and press again when ready. The button shows the remaining time and hides while on foot or using another control profile. A burst starts on dry ground while stopped or moving forward. Braking cancels thrust, airborne wheels add no thrust, and water cancels the burst. Boost pads retain their own cooldown; combined boost is capped at 520 units per second during the grounded burst. Pause freezes recharge. R cancels the burst while keeping recharge; Start over refills it. Leaving the car cancels its burst and keeps the shared recharge clock.
+
+This capability belongs to the existing `car` engine profile, including Dream objects with `rideable(at=...,control=car)` and `role=controllable`. No extra Dream command or model-generated controller is needed. Bikes, scooters, boards, boats, aircraft and NPC passenger rides keep their own controls.
+
+![A car boosting with the recharge button visible](../media/car-boost.jpg)
+
+[Boost recording](../media/boost.gif) · [HD video](../media/boost.mp4) · [Checks and capture details](../evidence/car-boost/verification.md)
 
 The walking body automatically climbs contact steps up to **4 units, or 40 cm**, with enough headroom. Taller faces need a jump or another way around. A ceiling stops a jump. Steps come from the object's declared contact heights, not its visual triangles. [Compile these three garden terraces](../examples/walkable-steps.dream). Their round treads match the engine's cylinder contacts. Ladders, wall climbing and arbitrary mesh stairs are not implemented.
 
@@ -68,9 +77,9 @@ One character is active at a time: a standing, walking or swimming Dream assembl
 
 The camera moves closer for walking and small vehicles, using their resolved dimensions, and eases back for larger ones. Reduced motion snaps the camera change and disables the walking gait. The occupied vehicle stays opaque when scenery fades around it.
 
-The exploration HUD shows vehicle and surface status, boarding prompts and pause. The map shows your position, parked car and moving actors, with no checkpoint target. Lap and checkpoint counters are hidden; the legacy racing simulation and Dream checkpoint data remain compatible.
+The exploration HUD shows vehicle and surface status, car boost with its recharge, boarding prompts and pause. The map shows your position, parked car and moving actors, with no checkpoint target. Lap and checkpoint counters are hidden; the legacy racing simulation and Dream checkpoint data remain compatible.
 
-![The exploration HUD with pause, vehicle prompt and position map, without lap or checkpoint progress](../media/exploration-hud.jpg)
+![The exploration HUD with car boost, pause, vehicle prompt and position map](../media/exploration-hud.jpg)
 
 ![Walking beside a parked vehicle](../media/on-foot.jpg)
 

@@ -181,3 +181,14 @@ The r34 timber curb follow-up preserves the small example's existing deck transi
 All eight motion sets use new consecutive 30 fps frames: driving 210, switching 240, destruction 120, voxel wall 120, locomotion 180, swimming 180, day/night 360 and flight 300. GIFs, HD videos and their stills were refreshed together. The source frames are actual renderer output, not frame interpolation or a live performance benchmark.
 
 The map, scale lineup, code-to-tree, logical Lab, focused wildlife/plants and dedicated car/bicycle/aircraft views retain their unchanged geometry and materials. Older focused city sheets remain construction references; the refreshed atlas and material example show the current finishes. The zoom/controls captures retain the same framing and mechanics; their earlier background paint is superseded by this pass. [Material verification](../evidence/materials/verification.md).
+
+## Manual car boost
+
+`boost.gif` and `boost.mp4` use 210 actual frames at 30 fps. The car accelerates,
+then Shift triggers a single burst. Native screenshots `car-boost.jpg` and the
+refreshed `exploration-hud.jpg` show the new control; the verification record
+also keeps active, recharging and small-screen states. Existing canvas-only
+recordings remain accurate because they don't boost a car or include the changed
+HTML HUD. World geometry, assets and their stills are unchanged. The
+[boost verification](../evidence/car-boost/verification.md) records checks,
+encoding and limits.
