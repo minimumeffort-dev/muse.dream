@@ -1,5 +1,6 @@
 import {furnishingSchema,flockSchema,furnishWorld,POPULATION_LIMITS,type Furnishing,type Flock} from './population';
 import {sportSchema,MAX_SPORTS} from './sports';
+import {interactionRuleSchema,interactionRuleFor,MAX_INTERACTION_RULES,type InteractionRule} from './interaction-rules';
 import { Euler, Quaternion, Vector3 } from "three";
 import {voxelCells,VOXEL_LIMITS} from './voxels';
 import { objectDslSchema,controlOf,isReactive, type ObjectDslV2 } from "./object-dsl";
@@ -69,8 +70,20 @@ function transform(frame: Frame, statement: Transform, env: Map<string, number>)
 /** Both authoring versions compile atomically to the same bounded Object DSL v2. */
 export function compileDream(source: string): ObjectDslV2[] {
   const program = parseDream(source);
-  if(program.routes.length || program.places.length || program.waters.length || program.layout.length || program.assets?.length || program.includes?.length) fail("world declarations require compileDreamWorld",undefined,"E_TARGET");
-  return compileObjects(program);
+  if(program.routes.length || program.places.length || program.waters.length || program.layout.some(n=>n.kind!=='rule') || program.assets?.length || program.includes?.length) fail("world declarations require compileDreamWorld",undefined,"E_TARGET");
+  return compileObjects(program,undefined,compileInteractionRules(program));
+}
+function compileInteractionRules(program:Program):InteractionRule[]{
+  const nodes=program.layout.filter(n=>n.kind==='rule'),globals=globalNumbers(program),kinds=new Set<string>();
+  if(nodes.length>MAX_INTERACTION_RULES)fail('interaction rule budget exceeds 16',nodes[MAX_INTERACTION_RULES]!.token,'E_BUDGET');
+  return nodes.map(node=>{
+    const mode=field(node,'mode') as NonNullable<Program['nodes']>[number],impact:Record<string,unknown>={kind:mode.kind};
+    for(const [key,value] of mode.fields)impact[key]=key==='pattern' ? (value as Expr).name : numeric(value as Expr,globals);
+    const result=interactionRuleSchema.safeParse({id:node.id,kind:wordField(node,'kind'),impact});
+    if(!result.success)fail(result.error.issues[0]!.message,node.token,'E_SCHEMA');
+    if(kinds.has(result.data.kind))fail(`only one interaction rule may own kind '${result.data.kind}'`,node.token,'E_RULE');
+    kinds.add(result.data.kind);return result.data;
+  });
 }
 function globalNumbers(program:Program) {
   const globals=new Map<string,number>();
@@ -94,7 +107,7 @@ function globalNumbers(program:Program) {
   }
   return globals;
 }
-function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
+function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]=[]):ObjectDslV2[] {
   const globals=globalNumbers(program);
   return program.objects.map(object => {
     const parts: ObjectDslV2["parts"] = [], joints: NonNullable<ObjectDslV2["joints"]> = [];
@@ -236,6 +249,12 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
     };
     walk(object.block, identity(), globals, [], true);
     if (!body) fail("object needs a body declaration", object.token);
+    const rule=interactionRuleFor({measure},rules);
+    if(rule){
+      if(breakZones.length && rule.impact.kind==='break')for(const zone of breakZones)zone.impact=rule.impact;
+      else impact=rule.impact;
+      metadataOrigins.set('impact',object.token);
+    }
     const result = objectDslSchema.safeParse({ dslVersion: 2, displayName: object.name, body, parts,...(measure ? {measure} : {}),
       ...(joints.length ? { joints } : {}), ...(grounding ? { grounding } : {}), ...(foundation ? { foundation } : {}),
       ...(contacts.length ? {contacts} : {}),...(rideable ? {rideable} : {}),...(emitter ? {emitter} : {}),...(lamp ? {lamp} : {}),...(impact ? {impact} : {}),...(breakZones.length ? {breakZones} : {}) });
@@ -247,17 +266,18 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
       const field=String(issue.path[0]);
       const tokens=field==="parts" ? origins : field==="joints" ? jointOrigins : field==="contacts" ? contactOrigins : field==="breakZones" ? zoneOrigins : [];
       const token=(typeof index==="number" ? tokens[index] : metadataOrigins.get(field))??object.token;
-      fail(`${object.name}: ${issue.path.join(".") || "assembly"}: ${issue.message}`, token,"E_SCHEMA");
+      fail(`${object.name}${rule ? ` (rule ${rule.id})` : ''}: ${issue.path.join(".") || "assembly"}: ${issue.message}`, token,"E_SCHEMA");
     }
     return result.data as ObjectDslV2;
   });
 }
 
-export interface DreamWorld {assemblies:ObjectDslV2[];routes:Route[];objects:SceneObject[];waters:Water[];streets:Scene['streets'];surfaces:Scene['surfaces'];markings:Scene['markings'];behaviors:Scene['behaviors'];sites:Scene['sites'];crossings:Scene['crossings'];sports:Scene['sports'];furnishings:Furnishing[];flocks:Flock[];scenarios:Scenario[];layout?:DreamLayout}
+export interface DreamWorld {interactionRules:InteractionRule[];assemblies:ObjectDslV2[];routes:Route[];objects:SceneObject[];waters:Water[];streets:Scene['streets'];surfaces:Scene['surfaces'];markings:Scene['markings'];behaviors:Scene['behaviors'];sites:Scene['sites'];crossings:Scene['crossings'];sports:Scene['sports'];furnishings:Furnishing[];flocks:Flock[];scenarios:Scenario[];layout?:DreamLayout}
 export type DreamModules=Readonly<Record<string,string>>;
 type LinkedWorld={world:DreamWorld;exports:Map<string,ObjectDslV2>};
 /** The same bounded language now authors placements, shared routes and continuous watercourses. */
 export function compileDreamWorld(source:string,modules:DreamModules={}):DreamWorld {
+  const entry=parseDream(source),rules=compileInteractionRules(entry);
   const cache=new Map<string,LinkedWorld>(),active=new Set<string>();
   let characters=0,definitions=0;
   const load=(text:string,name:string,token?:Token):LinkedWorld=>{
@@ -268,7 +288,7 @@ export function compileDreamWorld(source:string,modules:DreamModules={}):DreamWo
     if(active.size>=DREAM_PROJECT_LIMITS.depth)fail("module dependency depth exceeds 8",token,"E_BUDGET");
     active.add(name);
     let program:Program;
-    try{program=parseDream(text);}catch(error){if(error instanceof DreamError && name!=="<entry>")error.diagnostic.module=name;throw error;}
+    try{program=name==='<entry>' ? entry : parseDream(text);}catch(error){if(error instanceof DreamError && name!=="<entry>")error.diagnostic.module=name;throw error;}
     if(name!=="<entry>" && program.version!==2)fail("project modules require Dream 2",token,"E_VERSION");
     definitions+=program.objects.length;if(definitions>DREAM_PROJECT_LIMITS.assemblies)fail("project exceeds 128 assembly definitions",token,"E_BUDGET");
     const resolve=(node:NonNullable<Program["nodes"]>[number])=>{
@@ -277,17 +297,18 @@ export function compileDreamWorld(source:string,modules:DreamModules={}):DreamWo
       return load(modules[id]!,id,node.token);
     };
     try {
+      if(name!=='<entry>' && program.layout.some(n=>n.kind==='rule'))fail('interaction rules belong in the entry file',program.layout.find(n=>n.kind==='rule')!.token,'E_RULE');
       const assets=new Map<string,ObjectDslV2>();
       for(const node of program.assets??[]){const id=wordField(node,"object"),spec=resolve(node).exports.get(id);if(!spec)fail(`module has no exported object '${id}'`,node.token,"E_REFERENCE");assets.set(node.id!,spec);}
       const included=new Set<string>();
       const children=(program.includes??[]).map(node=>{
         const id=wordField(node,"module");if(included.has(id))fail(`module '${id}' is included twice`,node.token,"E_DUPLICATE_ID");included.add(id);return resolve(node).world;
       });
-      const result=compileWorldProgram(program,assets,children);cache.set(name,result);return result;
+      const result=compileWorldProgram(program,assets,children,rules);cache.set(name,result);return result;
     }catch(error){if(error instanceof DreamError && name!=="<entry>" && !error.diagnostic.module)error.diagnostic.module=name;throw error;}
     finally{active.delete(name);}
   };
-  let world=load(source,"<entry>").world;
+  let world={...load(source,"<entry>").world,interactionRules:rules};
   if(world.assemblies.reduce((sum,spec)=>sum+spec.parts.reduce((n,p)=>n+(p.voxels ? voxelCells(p.voxels) : 0),0),0)>VOXEL_LIMITS.projectCells)fail('project exceeds 1048576 voxel cells',undefined,'E_BUDGET');
   if(world.furnishings.length){
     if(!world.layout)fail('furnish expansion requires a complete linked world',undefined,'E_WORLD');
@@ -306,8 +327,8 @@ export function compileDreamWorld(source:string,modules:DreamModules={}):DreamWo
   }
   return world;
 }
-function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,children:DreamWorld[]) {
-  const budget={steps:0},ownAssemblies=compileObjects(program,budget),globals=globalNumbers(program);
+function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,children:DreamWorld[],rules:InteractionRule[]) {
+  const budget={steps:0},ownAssemblies=compileObjects(program,budget,rules),globals=globalNumbers(program);
   const exports=new Map(program.objects.map((object,i)=>[object.id??object.name,ownAssemblies[i]!]));
   for(const [id,spec] of assets)exports.set(id,spec);
   const ids=new Set<string>();for(const item of [...program.routes,...program.places,...program.waters]){
@@ -427,7 +448,7 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
   }),...children.flatMap(w=>w.sports)];
   if(sports.length>MAX_SPORTS)fail('combined project exceeds 8 sports grounds',undefined,'E_BUDGET');
   if(scenarios.length>SCENARIO_LIMITS.scenarios)fail('project permits one scenario',undefined,'E_SCENARIO');
-  const world:DreamWorld={scenarios,sports,assemblies:[...new Set([...exports.values(),...children.flatMap(w=>w.assemblies)])],routes:[...routes,...children.flatMap(w=>w.routes)],objects:[...objects,...children.flatMap(w=>w.objects)],waters:allWaters,streets:[...infrastructure.streets,...children.flatMap(w=>w.streets)],surfaces:[...infrastructure.surfaces,...children.flatMap(w=>w.surfaces)],markings:[...infrastructure.markings,...children.flatMap(w=>w.markings)],behaviors:[...behaviors,...children.flatMap(w=>w.behaviors)],sites:[...infrastructure.sites,...children.flatMap(w=>w.sites)],crossings:[...infrastructure.crossings,...children.flatMap(w=>w.crossings)],furnishings:[...furnishings,...children.flatMap(w=>w.furnishings)],flocks:[...flocks,...children.flatMap(w=>w.flocks)]};
+  const world:DreamWorld={interactionRules:[],scenarios,sports,assemblies:[...new Set([...exports.values(),...children.flatMap(w=>w.assemblies)])],routes:[...routes,...children.flatMap(w=>w.routes)],objects:[...objects,...children.flatMap(w=>w.objects)],waters:allWaters,streets:[...infrastructure.streets,...children.flatMap(w=>w.streets)],surfaces:[...infrastructure.surfaces,...children.flatMap(w=>w.surfaces)],markings:[...infrastructure.markings,...children.flatMap(w=>w.markings)],behaviors:[...behaviors,...children.flatMap(w=>w.behaviors)],sites:[...infrastructure.sites,...children.flatMap(w=>w.sites)],crossings:[...infrastructure.crossings,...children.flatMap(w=>w.crossings)],furnishings:[...furnishings,...children.flatMap(w=>w.furnishings)],flocks:[...flocks,...children.flatMap(w=>w.flocks)]};
   if(world.furnishings.length>POPULATION_LIMITS.rules || world.flocks.length>POPULATION_LIMITS.flocks || world.flocks.reduce((n,f)=>n+f.count,0)>POPULATION_LIMITS.birds)fail('population budget exceeded',undefined,'E_BUDGET');
   if(world.behaviors.length>NPC_LIMITS.programs)fail('combined project exceeds 16 behaviors',undefined,'E_BUDGET');
   if(world.routes.length>12 || world.waters.length>8 || world.objects.length>4096)fail("combined project exceeds scene route/water/placement budgets",undefined,"E_BUDGET");
@@ -463,7 +484,7 @@ function sceneFromWorld(world:DreamWorld,identity:DreamSceneIdentity):Scene {
   if(!world.layout)fail("compileDreamScene requires world/road declarations",undefined,"E_WORLD");
   const {origin,...layout}=world.layout;
   let scene:Scene;
-  try {scene=parseScene({schemaVersion:1,...identity,...layout,routes:world.routes,objects:world.objects,streets:world.streets,surfaces:world.surfaces,markings:world.markings,behaviors:world.behaviors,flocks:world.flocks,sites:world.sites,crossings:world.crossings,sports:world.sports,provenance:{source:"handmade-fixture",notes:"Compiled Dream 2 mock world. No model calls."}});}
+  try {scene=parseScene({schemaVersion:1,...identity,...layout,routes:world.routes,objects:world.objects,streets:world.streets,surfaces:world.surfaces,markings:world.markings,behaviors:world.behaviors,flocks:world.flocks,sites:world.sites,crossings:world.crossings,sports:world.sports,interactionRules:world.interactionRules,provenance:{source:"handmade-fixture",notes:"Compiled Dream 2 mock world. No model calls."}});}
   catch(error){if(error instanceof ZodError)fail(error.issues[0]!.message,origin,"E_SCHEMA");throw error;}
   const problems=validateScenePlayability(scene,buildMaskForScene(scene),playerRadius(scene));
   if(problems.length)fail(`${problems[0]!.code}: ${problems[0]!.message}`,origin,`E_SCENE_${problems[0]!.code.toUpperCase().replace(/-/g,"_")}`);

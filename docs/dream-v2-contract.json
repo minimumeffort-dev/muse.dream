@@ -57,6 +57,16 @@
         "night": "color?"
       }
     },
+    "rule": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "kind": "car|plane|tree|person|bicycle|skateboard|bench|table|building|train|bus|tram|boat|food|custom",
+        "mode": "impact"
+      }
+    },
     "let": {
       "contexts": [
         "top",
@@ -898,6 +908,11 @@
         "lifetime": "n"
       }
     }
+  },
+  "interactionRules": {
+    "maximum": 16,
+    "selector": "measure.kind; no labels, positions or random exemptions",
+    "scope": "Entry file only. One rule per category. Applies before assembly validation to every local/imported template, placement and furnishing. Its impact replaces per-object impact for that category, or every existing zone impact for a break rule; geometry, retained structure, body, fragment groups and per-instance damage remain separate. Scene validation rejects inconsistent serialized placements. Existing 24 reactive-object and 128 potential-fragment budgets remain unchanged. Unknown legacy categories are not inferred."
   },
   "geometry": {
     "partSizeMinimum": 0.1,

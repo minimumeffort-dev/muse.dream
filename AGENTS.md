@@ -143,6 +143,16 @@ Dream 2 destruction includes optional splinter/crumble release patterns, rigid
 foundations survive zone damage. Keep scene limits at 24 reactive objects and
 128 potential fragments; use `docs/impact-dsl.md` for the full authoring contract.
 
+Interaction rules belong in the Dream entry file: `rule id(kind=table,mode=break(...));`
+selects `measure.kind`, never a label or position. One rule per category, at most
+16. Its parameters replace matching local impacts or existing break-zone impacts
+before validation, across linked assets. Keep per-object damage independent and
+reject inconsistent serialized scenes. Preserve body/fragment compatibility and
+the existing reactive/fragment budgets. See `docs/dream/rules.md`.
+When adding another variant of a category, apply its shared policy. Intentional
+physics differences need explicit semantic category data; never assign immunity
+from a label, coordinate or one showcase placement.
+
 Dream vehicle controls are explicit `rideable(at=...,control=...)` data. Preserve
 the one active-body owner, parked-vehicle poses and the immutable accepted scene.
 Controls never come from labels or generated code. Ground vehicles share the fixed

@@ -55,7 +55,7 @@ export function compileCoordinates(program:Program,evaluate:(e:Expr)=>number){
 
 export function compileLayout(program:Program,assemblies:Map<string,ObjectDslV2>,waters:Water[],evaluate:(e:Expr)=>number):DreamLayout|undefined {
   const coordinates=compileCoordinates(program,evaluate);
-  program={...program,layout:program.layout.filter(n=>!['street','surface','marking','behavior','site','crossing','junction','furnish','flock','scenario','sport'].includes(n.kind))};
+  program={...program,layout:program.layout.filter(n=>!['street','surface','marking','behavior','site','crossing','junction','furnish','flock','scenario','sport','rule'].includes(n.kind))};
   if(!program.layout.length)return undefined;
   const worlds=program.layout.filter(n=>n.kind==="world"),roads=program.layout.filter(n=>n.kind==="road");
   if(worlds.length!==1 || roads.length!==1)fail("a full world needs exactly one world and one road declaration",program.layout[0]!.token,"E_WORLD");

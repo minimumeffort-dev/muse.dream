@@ -54,6 +54,7 @@ A command with an ID requires a name immediately after its keyword. Commands wit
 | Command | Context | ID / block | Fields |
 | --- | --- | --- | --- |
 | `material` | top | ID / no block | `style: toon / grain / glow / stripes / cloth / brick / wood / stone`, `colors: colors`, `night?: color` |
+| `rule` | top | ID / no block | `kind: measure category`, `mode: impact` |
 | `let` | top / object / visual / path / route_path / voxel_ops | ID / no block | `value: n` |
 | `component` | top | ID / visual | `params?: symbols` |
 | `object` | top | ID / object | `label: text` |
@@ -124,6 +125,16 @@ Rolling joints use the same bounded radius 1..32 as part roll. Their children ro
 | `bounce` | impact | No ID / no block | `restitution: n`, `lift: n` |
 | `break` | impact / fracture | No ID / no block | `speed: n`, `scatter: n`, `lift: n`, `spin: n`, `lifetime: n`, `pattern?: scatter / splinter / crumble` |
 | `topple` | impact | No ID / no block | `speed: n`, `duration: n`, `lifetime: n` |
+
+## Shared interaction rules
+
+[Interaction rules](rules.md) apply a bounded impact to every matching
+`measure.kind`, across linked modules. Entry file only, at most 16 and one per
+category. The rule replaces local impact settings before validation. A `break`
+rule updates every existing break zone when the assembly has zones; retained
+structure survives. Body and fragment compatibility, 24 reactive placements and
+128 potential fragments remain enforced. The complete example has two different
+tables and one shared rule.
 
 ## Sports
 

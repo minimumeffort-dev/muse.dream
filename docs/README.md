@@ -22,6 +22,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [Prompt and run scenarios](dream/scenarios.md) | Shared resources, agents, budgets, service capacity, tasks and replayable episodes |
 | [World systems roadmap](world-systems.md) | Economics, ecology, education, healthcare operations and agent evaluation |
 | [Give things behavior](dream/behavior.md) | Walking, vehicle controls, contacts, doors and destruction |
+| [Share interaction rules](dream/rules.md) | One table or bench rule across every matching model |
 | [Generate with a model](dream/model-authoring.md) | Context, validation, repair and atomic acceptance |
 | [Language reference](dream/reference.md) | Every command, field, budget and compiler API |
 

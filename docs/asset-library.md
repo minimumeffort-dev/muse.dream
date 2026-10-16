@@ -6,6 +6,11 @@ The mock world contains 85 reusable assemblies, all written in Dream 2. The asse
 
 The live world's `voxel_world` policy converts all of these to occupied-cell geometry after linking. Profiles and beams remain compact shape stamps in Dream, with materials, measured envelopes, joints and destruction ownership preserved. [How the whole world is constructed](whole-world-voxels.md). Standalone examples without a world policy retain their original shaped rendering.
 
+[Shared interaction rules](dream/rules.md) keep table and bench variants on one
+policy per category. The older Wayside bench now has detachable boards and
+armrests, with its foundation and supports retained. Its intact dimensions,
+materials and joins stay the same.
+
 ![Vehicles, buildings and a seated traveler built from Dream parts](media/assets.jpg)
 
 ## What's in the world

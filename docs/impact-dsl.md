@@ -1,5 +1,10 @@
 # Dream impacts and destruction
 
+[Shared category rules](dream/rules.md) apply one impact definition to every
+matching `measure.kind`, including imported models. The live world uses these
+for tables and benches. Objects retain independent damage and their authored
+fragment groups; retained bench supports can survive board damage.
+
 For new model output, use [Dream 2](dream-language.md). Dream 1 examples below remain supported.
 
 Impact behavior describes what an assembly does when the car hits it. It is

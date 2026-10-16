@@ -1,12 +1,17 @@
 import {mediaCapture} from '../../src/game/media-capture';
-import { measuredScale } from "../../src/scene/measure";
+import { measuredScale,playerRadius } from "../../src/scene/measure";
 import * as THREE from 'three';
 import { impactWorld } from '../../src/scene/impact-creations';
 import damageSource from '../../src/scene/world/destructible.dream?raw';
+import ruleSource from '../../docs/examples/interaction-rules.dream?raw';
+import librarySource from '../../src/scene/dream-creations.dream?raw';
+import carSource from '../../docs/examples/city-car.dream?raw';
 import { compileDreamWorld } from '../../src/scene/dream';
 import { objectContacts } from '../../src/scene/contacts';
 import { buildDamageObject,updateDamage } from '../../src/game/damage';
-const assemblies=[...impactWorld.assemblies,...compileDreamWorld(damageSource).assemblies];
+const assemblies=[...impactWorld.assemblies,...compileDreamWorld(damageSource).assemblies,...compileDreamWorld(ruleSource).assemblies,...compileDreamWorld(librarySource).assemblies.filter(s=>s.measure?.kind==='bench')];
+const rulesReview=new URLSearchParams(location.search).has('rules');
+const reviewPlayer=rulesReview ? {...compileDreamWorld(carSource).assemblies[0],rideable:undefined} : undefined;
 import { createFixtureScene,buildMaskForScene } from '../../src/scene/fixture';
 import { parseScene } from '../../src/scene/schema';
 import { createCarAtSpawn,stepCar } from '../../src/sim/car';
@@ -37,9 +42,10 @@ function renderState(){
   for(const node of owned)node.traverse(child=>{if(child.isMesh || child.isPoints){child.geometry.dispose();for(const mat of Array.isArray(child.material)?child.material:[child.material])mat.dispose();}});
   content.clear();owned=[];
   const spec=assemblies.find(s=>s.displayName===select.value),object={id:'target',kind:'custom',labelText:spec.displayName,x:480,y:360,scale:measuredScale(spec),spec};
-  const doc=parseScene({...createFixtureScene(),objects:[object],regions:[],terrain:{hills:[]}}),world={scene:doc,roadMask:buildMaskForScene(doc),driveMask:buildPaperMask(960,720),carRadius:11};
+  const doc=parseScene({...createFixtureScene(),...(reviewPlayer ? {player:reviewPlayer} : {}),objects:[object],regions:[],terrain:{hills:[]}}),world={scene:doc,roadMask:buildMaskForScene(doc),driveMask:buildPaperMask(960,720),carRadius:playerRadius(doc)};
   const zone=objectContacts(doc,object).find(c=>c.zoneId);
-  let state={...createCarAtSpawn(doc),x:zone ? zone.x+zone.r+12 : 480-objectRadius(object)-12,y:zone?.y??360,vx:Number(speed.value)*(zone?-1:1),headingRad:zone?Math.PI:0};
+  const reach=world.carRadius+(rulesReview ? 12 : 1);
+  let state={...createCarAtSpawn(doc),x:zone ? zone.x+zone.r+reach : 480-objectRadius(object)-reach,y:zone?.y??360,vx:Number(speed.value)*(zone?-1:1),headingRad:zone?Math.PI:0};
   const particles=new WorldParticles(doc),steps=Math.round(Number(captureTime??phase.value)*120);
   for(let i=0;i<steps;i++){state=stepCar(state,{throttle:0,steer:0},1/120,world);particles.update(state,1/120,!document.querySelector('#reduced').checked);particles.objectImpacts(state,state.impacts,!document.querySelector('#reduced').checked);}
   const target=spec.breakZones || spec.impact?.kind==='topple' ? buildDamageObject(object) : buildObject(object),placement=objectPlacement(doc,object),prop=state.props[0];target.position.copy(worldPosition(doc,prop?.x??object.x,prop?.y??object.y));target.position.y=(prop?.elevation??placement.base)+1.5;updateDamage(target,'target',state);

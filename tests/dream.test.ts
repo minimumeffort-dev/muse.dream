@@ -5,7 +5,7 @@ import source from "../src/scene/dream-creations.dream?raw";
 import guide from "../docs/dream-language.md?raw";
 import { compileDream, DreamError, DREAM_LIMITS } from "../src/scene/dream";
 import { dreamExamples } from "../src/scene/dream-creations";
-import { objectDslSchema } from "../src/scene/object-dsl";
+import { objectDslSchema,isReactive } from "../src/scene/object-dsl";
 import { buildObject, animateObject } from "../src/game/world3d";
 import { WorldScenery } from "../src/game/scenery";
 import { createFixtureScene } from "../src/scene/fixture";
@@ -97,7 +97,7 @@ describe("Dream authoring language", () => {
     expect(compileDream(source)).toEqual(dreamExamples);
   });
   it("instances static Dream objects with the same geometry bounds as the source assembly", () => {
-    for (const spec of dreamExamples.filter(s => !s.joints?.some(j => j.animation))) {
+    for (const spec of dreamExamples.filter(s => !isReactive(s) && !s.joints?.some(j => j.animation))) {
       const item = object({ ...spec, body:{ ...spec.body, interaction:"solid" } });
       const scene = parseScene({ ...createFixtureScene(), terrain:{ hills:[] }, objects:[item] });
       const sourceGroup = buildObject(item), scenery = new WorldScenery(scene).group;

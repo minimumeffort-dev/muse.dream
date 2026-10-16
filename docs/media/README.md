@@ -219,3 +219,16 @@ The existing flight GIF, HD video and matching still remain accurate: that
 runway departure and bank stay inside the world, so their movement is unchanged.
 All other world, asset and action media retain their existing geometry and
 behavior. No new offline recording or performance claim was needed for this fix.
+
+## Shared interaction rules, r37
+
+The [rule verification](../evidence/interaction-rules/verification.md) keeps
+native square/round table impacts under one shared policy, a gentle touch and
+the older bench before/after its boards detach. Four bench angles retain the
+construction review. These captures opt into the measured town car in the
+isolated impact viewer. Existing action GIF/HD/still sets, city imagery and
+asset sheets remain accurate: live furniture parameters and placements are
+unchanged, and the older bench's intact geometry/materials keep their shape.
+Its new destruction ownership is shown in the new guide and evidence.
+`rule-square-table.jpg`, `rule-round-table.jpg` and `rule-supported-bench.jpg`
+are unchanged copies of those native captures for the published guide.

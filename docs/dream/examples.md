@@ -4,6 +4,10 @@
 
 Start with something you can see and understand. Change one field, run the checker and look at what the engine builds. These are complete Dream 2 files, checked alongside the compiler tests.
 
+[Two tables, one rule](../examples/interaction-rules.dream) gives a square table
+and a round pedestal table the same impact policy. Each keeps its own shape,
+fragments and damage. [Read the shared-rule contract](rules.md).
+
 [Town errands](../examples/town-scenario.dream), [garden and habitat care](../examples/ecology-scenario.dream) and [class preparation](../examples/classroom-scenario.dream) are runnable logical task environments. They share prices, budgets, capacity, services and objectives. [Prompt and run them in Dream Lab](scenarios.md).
 
 [City car](../examples/city-car.dream) uses a concave shell profile, sloped glazing and two rigid axle bearings. [City bicycle](../examples/city-bicycle.dream) uses paired forks and stays, mounted axles and a rolling crank. Both are the complete assemblies used by the mock world. [See their construction](../asset-library.md#ground-vehicles-built-around-their-mechanics).

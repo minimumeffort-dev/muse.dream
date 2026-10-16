@@ -176,16 +176,20 @@ object wayside_bench(label="Wayside bench"){
     beam brace(shape=box,material=metal,from=[x,4,-13],to=[x,13,13],width=2,depth=2);
     beam back_post(shape=box,material=wood,from=[x,0,-12],to=[x,30,-18],width=4,depth=4);
   }
-  repeat repeat_slat(index=slat,count=4){
-    part seat(shape=box,material=wood,at=[0,16,-12+slat*8],size=[60,4,6]);
-  }
-  repeat repeat_slat_2(index=slat,count=2){
-    part back(shape=box,material=wood,at=[0,23+slat*6,-16-slat],size=[60,4,3],rot_deg=[-8,0,0]);
+  zone boards(at=[0,0,0],radius=30,height=34,mode=break(speed=95,scatter=65,lift=65,spin=4,lifetime=6,pattern=splinter)){
+    repeat repeat_slat(index=slat,count=4){
+      part seat(shape=box,material=wood,at=[0,16,-12+slat*8],size=[60,4,6]);
+    }
+    repeat repeat_slat_2(index=slat,count=2){
+      fragment back(){
+        part back(shape=box,material=wood,at=[0,23+slat*6,-16-slat],size=[60,4,3],rot_deg=[-8,0,0]);
+        repeat bolts(index=s,count=2){part bolt(shape=sphere,material=metal,at=[s*50-25,24+slat*6,-14.5],size=[1,1,1]);}
+      }
+    }
+    repeat arms(index=s,count=2){part armrest(shape=box,material=wood,at=[s*50-25,24,0],size=[3,3,29]);}
   }
   repeat arms(index=s,count=2){
     let x(value=s*50-25);
-    part armrest(shape=box,material=wood,at=[x,24,0],size=[3,3,29]);
     part arm_support(shape=box,material=metal,at=[x,20,11],size=[2,8,2]);
-    repeat bolts(index=b,count=2){part bolt(shape=sphere,material=metal,at=[x,24+b*6,-14.5],size=[1,1,1]);}
   }
 }
