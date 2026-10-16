@@ -3,7 +3,7 @@ import { describe,expect,it } from "vitest";
 import { landscapeSchema,bridgePolygon,bridgeCoordinates,type Water,type Bridge } from "../src/scene/landscape-dsl";
 import { terrainHeight,drivingHeight,bridgeHeight,waterAt,sampleTerrain,bridgeRails } from "../src/scene/terrain";
 import { createFixtureScene,buildMaskForScene } from "../src/scene/fixture";
-import { createWorldScene } from "../src/scene/world-fixture";
+import {createLegacyWorld as createWorldScene} from "./fixtures/legacy-world"; // Frozen engine regression world; the live city is tested separately.
 import { parseScene } from "../src/scene/schema";
 import { validateScenePlayability } from "../src/scene/validate";
 import { createCarAtSpawn,stepCar,FixedStepper,type World } from "../src/sim/car";

@@ -20,6 +20,7 @@ Expressions support finite numbers, constants, unary signs, arithmetic, parenthe
 
 | Field type | Value |
 | --- | --- |
+| `position2` | XY pair or file-local junction ID |
 | `n`, `v2`, `v3` | Numeric expression, two expressions or three expressions |
 | `nums`, `symbols` | Array of expressions or array of symbol IDs |
 | `point`, `points2` | Two/three expressions, or an array of XY points |
@@ -36,13 +37,13 @@ A command with an ID requires a name immediately after its keyword. Commands wit
 | Command | Context | ID / block | Fields |
 | --- | --- | --- | --- |
 | `material` | top | ID / no block | `style: toon / grain / glow / stripes / cloth`, `colors: colors` |
-| `let` | top / object / visual / path | ID / no block | `value: n` |
+| `let` | top / object / visual / path / route_path | ID / no block | `value: n` |
 | `component` | top | ID / visual | `params?: symbols` |
 | `object` | top | ID / object | `label: text` |
 | `asset` | top | ID / no block | `module: ref`, `object: ref` |
 | `include` | top | ID / no block | `module: ref` |
 | `body` | object | No ID / no block | `interaction: solid / knockable / decor`, `radius: n`, `height: n`, `friction?: n` |
-| `measure` | object | No ID / no block | `kind: car / plane / tree / person / bicycle / skateboard / bench / table / building / train / boat / food / custom`, `axis: x / y / z`, `meters: n` |
+| `measure` | object | No ID / no block | `kind: car / plane / tree / person / bicycle / skateboard / bench / table / building / train / bus / tram / boat / food / custom`, `axis: x / y / z`, `meters: n` |
 | `ground` | object | No ID / no block | `mode: upright / surface` |
 | `foundation` | object | No ID / no block | `size: v2`, `color: color` |
 | `contact` | object | ID / no block | `at: v3`, `radius: n`, `height: n` |
@@ -53,7 +54,7 @@ A command with an ID requires a name immediately after its keyword. Commands wit
 | `zone` | object | ID / visual | `at: v3`, `radius: n`, `height: n`, `mode: fracture` |
 | `group` | object / visual | ID / visual | `at?: v3`, `rot_deg?: v3`, `scale?: n` |
 | `joint` | object / visual | ID / visual | `at?: v3`, `rot_deg?: v3`, `motion?: joint_motion` |
-| `repeat` | object / visual / path | ID / inherit | `index: symbol`, `count: n` |
+| `repeat` | object / visual / path / route_path | ID / inherit | `index: symbol`, `count: n` |
 | `use` | object / visual | ID / no block | `component: ref`, `args?: nums`, `at?: v3`, `rot_deg?: v3`, `scale?: n` |
 | `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `taper?: n`, `deform?: deform`, `motion?: part_motion` |
 | `beam` | object / visual | ID / no block | `shape: box / cylinder / capsule`, `material: ref`, `from: v3`, `to: v3`, `width: n`, `depth: n`, `taper?: n`, `deform?: deform`, `motion?: part_motion` |
@@ -64,20 +65,20 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 
 | Command | Context | ID / block | Fields |
 | --- | --- | --- | --- |
-| `world` | top | No ID / no block | `size: v2`, `spawn: v2`, `heading_deg: n`, `player?: ref` |
-| `road` | top | ID / no block | `width: n`, `points: points2` |
-| `street` | top | ID / no block | `width: n`, `sidewalk: n`, `points: points2`, `cycle_width?: n` |
+| `world` | top | No ID / no block | `size: v2`, `spawn: position2`, `heading_deg: n`, `player?: ref` |
+| `road` | top | ID / no block | `width: n`, `points?: points2`, `via?: symbols`, `style?: racing / street` |
+| `street` | top | ID / no block | `width: n`, `sidewalk: n`, `points?: points2`, `via?: symbols`, `cycle_width?: n` |
 | `surface` | top | ID / no block | `color: color`, `points: points2` |
 | `marking` | top | ID / path | `color: color`, `width: n`, `closed: bool` |
 | `hill` | top | ID / no block | `at: v2`, `radius: v2`, `height: n` |
 | `tint` | top | ID / no block | `at: v2`, `radius: n`, `color: color` |
-| `bridge` | top | ID / no block | `from: v2`, `to: v2`, `width: n`, `arch: n`, `style: timber / stone`, `rails: bool` |
+| `bridge` | top | ID / no block | `from: position2`, `to: position2`, `width: n`, `arch: n`, `style: timber / stone`, `rails: bool` |
 | `water` | top | ID / no block | `points: points2`, `level: n`, `depth: n`, `bank: n`, `color: color`, `flow: v2`, `drag: n`, `waves: v3` |
-| `watercourse` | top | ID / path | `level: n`, `depth: n`, `bank: n`, `color: color`, `flow: v2` |
+| `watercourse` | top | ID / path | `level: n`, `depth: n`, `bank: n`, `color: color`, `flow: v2`, `ends?: round / open` |
 | `effect` | top | ID / no block | `kind: ice / boost`, `points: points2` |
 | `checkpoint` | top | ID / no block | `at: v2`, `dir: v2`, `width: n` |
-| `route` | top | ID / path | `kind: rail / path / water / air / ambient`, `mode: loop / shuttle`, `speed: n`, `altitude?: n`, `wait_s?: n`, `width?: n`, `surface?: trail / cycle / paved` |
-| `point` | path | No ID / no block | `at: point` |
+| `route` | top | ID / route_path | `kind: rail / path / water / air / ambient / street / tram / walk`, `mode: loop / shuttle`, `speed: n`, `altitude?: n`, `wait_s?: n`, `width?: n`, `surface?: trail / cycle / paved`, `gauge?: n` |
+| `point` | path / route_path | No ID / no block | `at: point` |
 | `behavior` | top | ID / behavior | `start: ref` |
 | `state` | behavior | ID / npc_state | `action: idle / patrol / perform`, `face?: none / player` |
 | `on` | npc_state | ID / no block | `event: after / near_player / far_player`, `to: ref`, `seconds?: n`, `radius?: n` |
@@ -165,7 +166,7 @@ An explicit width reserves a corridor even without a vehicle. Full-world validat
 
 Ambient actors cannot be solid or knockable and cannot carry seats, impact behavior, foundations or compound contacts. They create no vehicle collision contacts. Their rest-pose visual radius is checked against bounds and solids along the complete route; ground routes also reject water beneath their footprint. Routes remain bounded loops or shuttles, without autonomous perception or avoidance. Wing and gait joints use existing `swing` motion, return to rest for reduced motion and stop during route waits. The existing scene caps still apply: 12 routes, 24 actors/controlled vehicles and 24 jointed assemblies including the player.
 
-See the [complete two-bird example](../examples/ambient-wildlife.dream) and the [flora and fauna sources](../../src/scene/world/wildlife.dream).
+See the [complete two-bird example](../examples/ambient-wildlife.dream) and the [flora and fauna sources](../../src/scene/world/life.dream).
 
 ## Compiler APIs
 
@@ -208,7 +209,7 @@ Break behavior separates authored components; it doesn't cut new shards from an 
 
 ### Urban ground bounds
 
-Scenes and linked districts share limits of 32 streets, 64 surfaces and 128 markings. Streets take 2–16 XY anchors, widths 60–180 and sidewalks 0–40 per side. Each segment is horizontal or vertical and at least 80 units long. Optional `cycle_width=16..40` adds a track on each side, separated from the carriageway by 6 units. Sidewalks move outward; the complete riding envelope gets normal road grip and must stay clear. The total street length is at most 120000 units. The scene compiler checks street connectivity, world boundaries, solid riding-surface clearance and water crossings. An explicit aligned bridge must carry the entire carriageway, both cycle tracks, separators and sidewalks through its open ends, clear of rails; the street must continue at least 20 units past each end.
+Scenes and linked districts share limits of 32 streets, 64 surfaces and 128 markings. Streets take 2–16 XY anchors, widths 60–180 and sidewalks 0–40 per side. Segments may run in any direction, must be at least 80 units long, and cannot turn more than 120 degrees. Optional `cycle_width=16..40` adds a track on each side, separated from the carriageway by 6 units. Sidewalks move outward; the complete riding envelope gets normal road grip and must stay clear. The total street length is at most 120000 units. The scene compiler checks street connectivity, world boundaries, solid riding-surface clearance and water crossings. An explicit aligned bridge must carry the entire carriageway, both cycle tracks, separators and sidewalks through its open ends, clear of rails; the street must continue at least 20 units past each end.
 
 Surfaces take 3–64 points and must be simple, nonzero polygons, at most 1000000 square units and 2000 units across. Split larger grounds into tiles. They cannot cover street carriageways. Later surfaces in the linked scene overlay earlier surfaces. Markings take 2–64 points, width .5–12, and at least three points when closed. Repeated first points and zero-length segments fail. Total marking length, including closed seams, is at most 40000 units. Grounds and markings stay within the world, follow the shared heightfield and clear procedural tufts. They add no collision body or flattening operation. [Runnable neighborhood](../examples/planned-neighborhood.dream).
 
@@ -225,3 +226,24 @@ Programs and references are file-local; includes merge data. There are at most 1
 ### Water bounds
 
 Water polygons have 3–32 vertices, area 400–8,000,000 square units and extent 80–16384 per axis. The wave bounding grid uses 24-unit cells and at most 131072 cells per body, including its final row/column. Watercourses take 2–8 distinct `[x,y,width]` stations, width 80–1200, and compile to the same polygon and wave bounds. Banks must contain the level; separate bodies cannot overlap. A wider world does not change terrain or wave resolution.
+
+## Connected city declarations
+
+| Command | Context | ID / block | Fields |
+| --- | --- | --- | --- |
+| `stop` | route_path | ID / no block | `at: v2`, `wait_s: n`, `site: ref` |
+| `site` | top | ID / no block | `object: ref`, `kind: home / market / school / hospital / work / civic / park / station / stop`, `entry: v2`, `street: ref`, `width: n`, `points: points2`, `serves?: symbols` |
+| `crossing` | top | ID / no block | `street: ref`, `at: v2`, `width: n`, `junction?: bool` |
+| `junction` | top | ID / no block | `at: v2` |
+
+`junction` binds a file-local XY point. `road` and `street` require exactly one of `points` or `via`; the latter takes junction IDs. A world's `spawn` and a bridge's `from`/`to` also accept these IDs. Includes merge world data, and keep coordinate symbols local. Keep a connected network in one module so its joins share coordinates. Up to 128 junctions per source.
+
+`site` attaches a use and entrance to a static object. `entry` is object-local X/Z, transformed by the placement's heading and resolved scale. `points` are world XY; the engine prepends the entrance. The last point must join the named street's sidewalk with the full 12–40-unit path width. Paths stay dry, unobstructed and at most 800 units long. Every static measured building in a site-authored city needs an access site. Up to 256 sites per scene. Stops may `serves=[site_id,...]` up to eight reachable destinations.
+
+`crossing` connects both sidewalks. Optional `junction=true` expands one declaration into zebra crossings on every street arm, outside the intersection. Up to 64 crossing declarations. Sidewalks, entrance paths and crossings form the validated pedestrian network. Short overlapping street endpoints are rejected in site-authored cities; use shared junctions for exact centerline connections.
+
+`route(kind=street)` places vehicles on existing carriageways; it creates no extra surface. `tram` adds rails in the existing road, and `walk` uses the pedestrian network without paving it. `rail` and `tram` accept a 10–24-unit gauge. A `stop` is a named route anchor, with a .1–30-second wait and a site within 120 units. Street, tram and rail stops use station/platform sites; walking stops can visit homes, markets and other destinations. Up to 16 stops within the existing 64 route anchors. Shuttle returns visit stops in reverse order. Rail, tram and street NPCs may use up to eight compound contacts for their long bodies; controlled vehicles retain their existing cylinder boundary.
+
+`road(style=street)` uses neutral curbs and omits the racing start paint. The default remains `racing` for existing sources. `watercourse(ends=open)` removes round caps; use open ends at the world boundary to continue a river beyond the map. The default is `round`.
+
+[Compile the complete connected city](../examples/connected-city.dream). The [source-derived world map](../media/city-plan.svg) uses the same compiled coordinates, footprints, paths, routes and bridges as the game.

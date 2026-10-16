@@ -4,7 +4,7 @@ import source from "../src/scene/interactive-world.dream?raw";
 import legacySource from "./fixtures/dream-v1/interactive-world.dream?raw";
 import { compileDream,compileDreamWorld } from "../src/scene/dream";
 import { interactiveWorld } from "../src/scene/interactive-world";
-import { createWorldScene } from "../src/scene/world-fixture";
+import {createLegacyWorld as createWorldScene} from "./fixtures/legacy-world"; // Frozen engine regression world; the live city is tested separately.
 import { createFixtureScene,buildMaskForScene } from "../src/scene/fixture";
 import { parseScene,type SceneObject } from "../src/scene/schema";
 import { routeSchema,routePath,routePoint,routePose } from "../src/scene/routes";

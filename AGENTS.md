@@ -7,10 +7,10 @@ handmade fixture, including the current car and track, is temporary input
 for that future pipeline. The engine compiles validated scene/DSL data
 into Three.js and tested mechanics; model output remains data-only.
 
-Current state: **mock open world** — a 12000 x 10000 handmade landscape with a
+Current state: **mock open world** — a 14000 x 11000 handmade landscape with a
 winding eight-checkpoint circuit, composed assets, heightfield driving/jumps,
 ICE/BOOST, off-road collisions, fixed-angle camera, walking, direct vehicle controls,
-connected city cycle tracks, suburbs, a continuous lake/canal and sports park, ambient wildlife, layered vegetation and instanced scenery. Walking supports running, jumping, low contact steps and surface swimming. F prefers dry exits, permits water disembarking and boards nearby on foot. Bicycles,
+a rebuilt river city with connected entrances, schools, hospital, markets, workplaces, buses, tram, regional rail, cycle tracks and sports grounds, ambient wildlife, layered vegetation and instanced scenery. Walking supports running, jumping, low contact steps and surface swimming. F prefers dry exits, permits water disembarking and boards nearby on foot. Bicycles,
 skateboards, boats and planes are player-controlled; trains retain autonomous routes.
 The original small fixture remains for regression tests. No photo upload,
 camera or model calls yet. The complete live world is authored in Dream 2 text
@@ -151,3 +151,7 @@ and hops boats; Shift runs/swims faster, while aircraft retain Space/Shift lift.
 Preserve per-press jump buffering/grace, low-step headroom, chest-depth water
 support, full-hull bridge clearance, and gravity after airborne collisions.
 Do not add generated controller code or increase animation/render budgets.
+
+City connections are Dream data: file-local `junction` references share road/street coordinates; `site` attaches an object-local entrance to a named sidewalk; `crossing(junction=true)` supplies crossings on all street arms; route `stop` ties a wait to a platform/destination. Street/tram NPCs use existing carriageways; walking routes stay on the pedestrian network. Preserve the 256-site, 64-crossing, 128-local-junction and 16-stops-per-route bounds. The published map is generated with `node scripts/render-city-map.mjs` from the accepted scene, never drawn independently. Reserve entrances and civic grounds before placing housing. New architecture needs attached roof/façade/porch checks and inspected multi-angle renders.
+
+The pre-redesign r24 snapshot in `tests/fixtures/legacy-world.json` is an explicit engine regression fixture. It preserves timber bridge, older terrain and interaction cases without constraining the live layout. Live city acceptance, exact joins, pedestrian reachability, architecture attachment, transit and the replacement racing loop are tested separately.

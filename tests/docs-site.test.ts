@@ -30,6 +30,12 @@ describe('Dream syntax highlighting',()=>{
     expect(highlight('street avenue(cycle_width=20);')).toContain('class="dream-field">cycle_width</span>');
     expect(highlight('cycle_width_extra cycle_widthway')).not.toContain('dream-field');
   });
+  it('highlights city connection commands without consuming similarly named symbols',()=>{
+    const html=highlight('junction corner(at=[10,20]);street main(via=[corner,end]);site home(entry=[0,-20],serves=[school]);crossing zebra(junction=true);stop school(at=[10,20],site=platform);');
+    for(const name of ['junction','site','crossing','stop'])expect(html).toContain(`class="dream-keyword">${name}</span>`);
+    for(const name of ['via','entry','serves','junction'])expect(html).toContain(`class="dream-field">${name}</span>`);
+    expect(highlight('junctional sitework crossingway stopper')).not.toContain('dream-keyword');
+  });
   it('tracks the generated compiler vocabulary',()=>{
     const contract=JSON.parse(readFileSync('docs/dream-v2-contract.json','utf8'));
     expect(Object.keys(contract.commands)).toEqual(Object.keys(DREAM_V2_COMMANDS));

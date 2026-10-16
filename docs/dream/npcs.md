@@ -81,14 +81,18 @@ Programs are reusable by placements in their source module. State names and targ
 
 ![Basketball players use the same bounded activity and rest program](../media/basketball-court.jpg)
 
-The live world now declares its people, animals, train and player vehicles explicitly. Town and lakeside walkers pause near you; park visitors turn toward you; sports players play, rest and notice you. The baker and naturalist perform their existing joint routines. Wildlife keeps its existing habitat routes.
+The live world now declares its people, animals, train and player vehicles explicitly. A commuter walks from home to the market and pauses near you. A vendor, teacher and health worker react in front of their destinations; sports players practise and notice you. Buses, a tram and a regional train follow street/rail routes with intermediate stops. Deer and gulls retain bounded habitats.
 
 ## Clocks, collisions and limits
 
 Each NPC owns a runtime snapshot: current state, elapsed state time, route time, animation time and heading. It lives beside vehicle and damage state, outside the accepted scene. Switching between walking, car, bicycle, boat, plane and passenger travel advances the same NPC clocks once per tick. Pause freezes them. R preserves them; Start over resets them.
 
-A program-controlled NPC requires a version 2 assembly with a decor or solid cylinder, without a foundation, compound contacts or destruction. Ambient routes still require decor. Ground NPCs follow terrain; stationary people stay upright unless their template requests surface grounding. Complete-world validation checks dry, clear stationary footprints and the full authored route. Solid NPCs participate in actor cylinder contacts; decor people remain nonblocking. There is no runtime pathfinding, obstacle avoidance or actor-to-actor traffic solver. Keep patrol routes clear.
+A program-controlled NPC requires a version 2 assembly with a decor or solid cylinder, without a foundation or destruction. Street, tram and rail NPCs may use up to eight compound contacts for a long vehicle body. Ambient routes still require decor. Ground NPCs follow terrain; stationary people stay upright unless their template requests surface grounding. Complete-world validation checks dry, clear stationary footprints and the full authored route. Solid NPCs participate in the authored actor contacts; decor people remain nonblocking. There is no runtime pathfinding, obstacle avoidance or actor-to-actor traffic solver. Keep patrol routes clear.
 
 The bounds are 16 programs per linked scene, 32 NPCs, 1–8 states per program and 0–4 transitions per state. Durations are .1–300 seconds; proximity radii are 10–240 world units. Existing caps remain 24 route actors/controllable vehicles and 24 live jointed assemblies including the player. A static NPC without joints does not consume an animation slot.
 
 [Command reference](reference.md#npc-programs) · [Vehicle controls](behavior.md#bodies-contacts-and-boarding) · [Model instructions](../dream-v2-model.txt)
+
+## Journeys with destinations
+
+Use `route(kind=walk)` to keep a person's full body on entrance paths, pavements and crossings. A named `stop` can reference a home, market or other site; the live commuter visits both ends of the market journey. `street` buses and `tram` vehicles use existing roads, with platform sites for intermediate waits. [The complete city example](../examples/connected-city.dream) connects buildings, a bus stop and its served destinations. There is no generated pathfinding: author the route and let the acceptance checks reject invalid geometry.

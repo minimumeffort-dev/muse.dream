@@ -12,7 +12,7 @@ import { objectContacts } from "../src/scene/contacts";
 import { objectPlacement } from "../src/scene/placement";
 import { parseScene,type SceneObject } from "../src/scene/schema";
 import { createFixtureScene,buildMaskForScene } from "../src/scene/fixture";
-import { createWorldScene } from "../src/scene/world-fixture";
+import {createLegacyWorld as createWorldScene} from "./fixtures/legacy-world"; // Frozen engine regression world; the live city is tested separately.
 import { validateScenePlayability } from "../src/scene/validate";
 import { drivingHeight } from "../src/scene/terrain";
 import { buildPaperMask } from "../src/sim/mask";

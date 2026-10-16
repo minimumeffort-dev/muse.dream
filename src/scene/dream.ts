@@ -1,5 +1,6 @@
 import { Euler, Quaternion, Vector3 } from "three";
 import { objectDslSchema,controlOf, type ObjectDslV2 } from "./object-dsl";
+import {siteSchema,crossingSchema} from './sites';
 import {streetSchema,surfaceSchema,markingSchema} from "./streets";
 import {behaviorSchema,agentProblem,NPC_LIMITS} from './agents';
 import { routeSchema,routePose,routePoint,type Route } from "./routes";
@@ -10,7 +11,7 @@ import { ZodError } from "zod";
 import { DREAM_LIMITS, DreamError, fail, lex, Parser, type Token, type Expr, type Vec, type Transform, type Program, type Statement } from "./dream-syntax";
 import { ParserV2, printDreamV2, wordField, exprField, field, lowerBlock } from "./dream-v2";
 import { migrateProgram } from "./dream-migrate";
-import { compileLayout, type DreamLayout } from "./dream-layout";
+import { compileLayout,compileCoordinates, type DreamLayout } from "./dream-layout";
 import { buildMaskForScene } from "./fixture";
 import { validateScenePlayability } from "./validate";
 import { measuredScale, playerRadius } from "./measure";
@@ -221,7 +222,7 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
   });
 }
 
-export interface DreamWorld {assemblies:ObjectDslV2[];routes:Route[];objects:SceneObject[];waters:Water[];streets:Scene['streets'];surfaces:Scene['surfaces'];markings:Scene['markings'];behaviors:Scene['behaviors'];layout?:DreamLayout}
+export interface DreamWorld {assemblies:ObjectDslV2[];routes:Route[];objects:SceneObject[];waters:Water[];streets:Scene['streets'];surfaces:Scene['surfaces'];markings:Scene['markings'];behaviors:Scene['behaviors'];sites:Scene['sites'];crossings:Scene['crossings'];layout?:DreamLayout}
 export type DreamModules=Readonly<Record<string,string>>;
 type LinkedWorld={world:DreamWorld;exports:Map<string,ObjectDslV2>};
 /** The same bounded language now authors placements, shared routes and continuous watercourses. */
@@ -264,7 +265,7 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
   const ids=new Set<string>();for(const item of [...program.routes,...program.places,...program.waters]){
     if(ids.has(item.name))fail(`duplicate world id '${item.name}'`,item.token);ids.add(item.name);
   }
-  const points=(block:Statement[],columns:number,max:number)=>{
+  const points=(block:Statement[],columns:number,max:number,stops?:NonNullable<Route["stops"]>)=>{
     const result:number[][]=[];
     const walk=(block:Statement[],inherited:Map<string,number>,depth=0)=>{
       if(depth>16)fail("point expansion nesting exceeds 16",block[0]?.token,"E_BUDGET");
@@ -276,22 +277,26 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
         } else if(statement.kind==="repeat"){
           const n=numeric(statement.value!,env);if(!Number.isInteger(n)||n<0||n>32)fail("repeat count must be an integer from 0 to 32",statement.token);
           for(let i=0;i<n;i++)walk(statement.block!,new Map(env).set(statement.name!,i),depth+1);
-        } else if(statement.kind==="point"){
+        } else if(statement.kind==="point" || statement.kind==="stop" && stops){
           if(statement.args!.length!==columns)fail(`expected ${columns} point coordinates`,statement.token);
-          if(result.length>=max)fail(`point budget exceeds ${max}`,statement.token,"E_BUDGET");result.push(statement.args!.map(e=>numeric(e,env)));
+          if(result.length>=max)fail(`point budget exceeds ${max}`,statement.token,"E_BUDGET");
+          if(statement.kind==="stop")stops!.push({id:statement.name!,anchor:result.length,waitS:numeric(statement.value!,env),site:statement.site!});
+          result.push(statement.args!.map(e=>numeric(e,env)));
         } else fail("paths only accept point, let and repeat",statement.token);
       }
     };walk(block,globals);return result;
   };
   const routes=program.routes.map(source=>{
+    const stops:NonNullable<Route["stops"]>=[];
+    const anchors=points(source.block,2,64,stops).map(([x,y])=>({x,y}));
     const parsed=routeSchema.safeParse({id:source.name,kind:source.kind,mode:source.mode,speed:numeric(source.speed,globals),
-      waitS:source.wait ? numeric(source.wait,globals) : 0,...(source.width ? {width:numeric(source.width,globals)} : {}),...(source.surface ? {surface:source.surface} : {}),...(source.altitude ? {altitude:numeric(source.altitude,globals)} : {}),
-      points:points(source.block,2,64).map(([x,y])=>({x,y}))});
+      waitS:source.wait ? numeric(source.wait,globals) : 0,...(source.gauge ? {gauge:numeric(source.gauge,globals)} : {}),...(source.width ? {width:numeric(source.width,globals)} : {}),...(source.surface ? {surface:source.surface} : {}),...(source.altitude ? {altitude:numeric(source.altitude,globals)} : {}),
+      points:anchors,...(stops.length ? {stops} : {})});
     if(!parsed.success)fail(parsed.error.issues[0]!.message,source.token,"E_SCHEMA");return parsed.data;
   });
   const waters=program.waters.map(source=>{
     if(source.flow.length!==2)fail("flow needs two coordinates",source.token);
-    try{return compileWatercourse({id:source.name,level:numeric(source.level,globals),depth:numeric(source.depth,globals),bankWidth:numeric(source.bank,globals),color:source.color,
+    try{return compileWatercourse({id:source.name,ends:source.ends,level:numeric(source.level,globals),depth:numeric(source.depth,globals),bankWidth:numeric(source.bank,globals),color:source.color,
       flow:{x:numeric(source.flow[0]!,globals),y:numeric(source.flow[1]!,globals)},stations:points(source.block,3,8).map(([x,y,width])=>({x:x!,y:y!,width:width!}))});}
     catch(error){if(error instanceof DreamError)throw error;fail(error instanceof ZodError ? error.issues[0]!.message : error instanceof Error ? error.message : "invalid watercourse",source.token);}
   });
@@ -323,12 +328,20 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
     const problem=agentProblem(result.data,behaviors,routes);if(problem)fail(problem,source.token,'E_AGENT');return result.data;
   });
   let layout=compileLayout(program,exports,waters,e=>numeric(e,globals));
-  const infrastructure={streets:[] as Scene['streets'],surfaces:[] as Scene['surfaces'],markings:[] as Scene['markings']};
+  const coordinates=compileCoordinates(program,e=>numeric(e,globals));
+  const infrastructure={streets:[] as Scene['streets'],surfaces:[] as Scene['surfaces'],markings:[] as Scene['markings'],sites:[] as Scene['sites'],crossings:[] as Scene['crossings']};
   for(const node of program.layout){
-    if(!['street','surface','marking'].includes(node.kind))continue;
+    if(!['street','surface','marking','site','crossing'].includes(node.kind))continue;
     const value=(key:string)=>numeric(exprField(node,key),globals);
     const outline=()=> (field(node,'points') as Expr[][]).map(v=>({x:numeric(v[0]!,globals),y:numeric(v[1]!,globals)}));
-    const result=node.kind==='street' ? streetSchema.safeParse({id:node.id,width:value('width'),sidewalk:value('sidewalk'),points:outline(),...(node.fields.has('cycle_width') ? {cycleWidth:value('cycle_width')} : {})}) : node.kind==='surface' ? surfaceSchema.safeParse({id:node.id,color:wordField(node,'color'),points:outline()}) : markingSchema.safeParse({id:node.id,color:wordField(node,'color'),width:value('width'),closed:field(node,'closed'),points:points(lowerBlock(node.block!),2,64).map(([x,y])=>({x,y}))});
+    if(node.kind==='site' || node.kind==='crossing'){
+      const vec=(key:string)=>{const v=field(node,key) as Expr[];return {x:numeric(v[0]!,globals),y:numeric(v[1]!,globals)};};
+      const result=node.kind==='site' ? siteSchema.safeParse({id:node.id,objectId:wordField(node,'object'),kind:wordField(node,'kind'),entry:vec('entry'),street:wordField(node,'street'),width:value('width'),points:outline(),serves:node.fields.has('serves') ? (field(node,'serves') as Expr[]).map(e=>e.name!) : []}) : crossingSchema.safeParse({id:node.id,street:wordField(node,'street'),at:vec('at'),width:value('width'),...(node.fields.has('junction') ? {junction:field(node,'junction')} : {})});
+      if(!result.success)fail(result.error.issues[0]!.message,node.token,'E_SCHEMA');
+      if(node.kind==='site')infrastructure.sites.push(result.data as Scene['sites'][number]);else infrastructure.crossings.push(result.data as Scene['crossings'][number]);
+      continue;
+    }
+    const result=node.kind==='street' ? streetSchema.safeParse({id:node.id,width:value('width'),sidewalk:value('sidewalk'),points:coordinates.points(node),...(node.fields.has('cycle_width') ? {cycleWidth:value('cycle_width')} : {})}) : node.kind==='surface' ? surfaceSchema.safeParse({id:node.id,color:wordField(node,'color'),points:outline()}) : markingSchema.safeParse({id:node.id,color:wordField(node,'color'),width:value('width'),closed:field(node,'closed'),points:points(lowerBlock(node.block!),2,64).map(([x,y])=>({x,y}))});
     if(!result.success)fail(result.error.issues[0]!.message,node.token,'E_SCHEMA');
     if(node.kind==='street')infrastructure.streets.push(result.data as Scene['streets'][number]);
     else if(node.kind==='surface')infrastructure.surfaces.push(result.data as Scene['surfaces'][number]);
@@ -339,11 +352,12 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
   if(inherited.length+Number(!!layout)>1)fail("project needs exactly one world layout",undefined,"E_WORLD");
   layout??=inherited[0]?.layout;
   const allWaters=[...children.flatMap(w=>w.waters),...ownWaters];
-  const world:DreamWorld={assemblies:[...new Set([...exports.values(),...children.flatMap(w=>w.assemblies)])],routes:[...routes,...children.flatMap(w=>w.routes)],objects:[...objects,...children.flatMap(w=>w.objects)],waters:allWaters,streets:[...infrastructure.streets,...children.flatMap(w=>w.streets)],surfaces:[...infrastructure.surfaces,...children.flatMap(w=>w.surfaces)],markings:[...infrastructure.markings,...children.flatMap(w=>w.markings)],behaviors:[...behaviors,...children.flatMap(w=>w.behaviors)]};
+  const world:DreamWorld={assemblies:[...new Set([...exports.values(),...children.flatMap(w=>w.assemblies)])],routes:[...routes,...children.flatMap(w=>w.routes)],objects:[...objects,...children.flatMap(w=>w.objects)],waters:allWaters,streets:[...infrastructure.streets,...children.flatMap(w=>w.streets)],surfaces:[...infrastructure.surfaces,...children.flatMap(w=>w.surfaces)],markings:[...infrastructure.markings,...children.flatMap(w=>w.markings)],behaviors:[...behaviors,...children.flatMap(w=>w.behaviors)],sites:[...infrastructure.sites,...children.flatMap(w=>w.sites)],crossings:[...infrastructure.crossings,...children.flatMap(w=>w.crossings)]};
   if(world.behaviors.length>NPC_LIMITS.programs)fail('combined project exceeds 16 behaviors',undefined,'E_BUDGET');
   if(world.routes.length>12 || world.waters.length>8 || world.objects.length>4096)fail("combined project exceeds scene route/water/placement budgets",undefined,"E_BUDGET");
   if(world.streets.length>32 || world.surfaces.length>64 || world.markings.length>128)fail('combined project exceeds 32 streets / 64 surfaces / 128 markings',undefined,'E_BUDGET');
-  const worldIds=new Set<string>();for(const item of [...world.routes,...world.waters,...world.objects,...world.streets,...world.surfaces,...world.markings,...world.behaviors]){if(worldIds.has(item.id))fail(`duplicate world id '${item.id}'`,undefined,"E_DUPLICATE_ID");worldIds.add(item.id);}
+  if(world.sites.length>256 || world.crossings.length>64)fail('combined project exceeds 256 sites / 64 crossings',undefined,'E_BUDGET');
+  const worldIds=new Set<string>();for(const item of [...world.routes,...world.waters,...world.objects,...world.streets,...world.surfaces,...world.markings,...world.behaviors,...world.sites,...world.crossings]){if(worldIds.has(item.id))fail(`duplicate world id '${item.id}'`,undefined,"E_DUPLICATE_ID");worldIds.add(item.id);}
   if(layout)world.layout={...layout,terrain:{...layout.terrain,landscape:{...layout.terrain.landscape!,waters:allWaters}}};
   return {world,exports};
 }
@@ -373,7 +387,7 @@ function sceneFromWorld(world:DreamWorld,identity:DreamSceneIdentity):Scene {
   if(!world.layout)fail("compileDreamScene requires world/road declarations",undefined,"E_WORLD");
   const {origin,...layout}=world.layout;
   let scene:Scene;
-  try {scene=parseScene({schemaVersion:1,...identity,...layout,routes:world.routes,objects:world.objects,streets:world.streets,surfaces:world.surfaces,markings:world.markings,behaviors:world.behaviors,provenance:{source:"handmade-fixture",notes:"Compiled Dream 2 mock world. No model calls."}});}
+  try {scene=parseScene({schemaVersion:1,...identity,...layout,routes:world.routes,objects:world.objects,streets:world.streets,surfaces:world.surfaces,markings:world.markings,behaviors:world.behaviors,sites:world.sites,crossings:world.crossings,provenance:{source:"handmade-fixture",notes:"Compiled Dream 2 mock world. No model calls."}});}
   catch(error){if(error instanceof ZodError)fail(error.issues[0]!.message,origin,"E_SCHEMA");throw error;}
   const problems=validateScenePlayability(scene,buildMaskForScene(scene),playerRadius(scene));
   if(problems.length)fail(`${problems[0]!.code}: ${problems[0]!.message}`,origin,`E_SCENE_${problems[0]!.code.toUpperCase().replace(/-/g,"_")}`);

@@ -156,6 +156,26 @@ export function pointInPolygon(
   return inside;
 }
 
+/** Scanline union, preserving cell-center semantics without scanning a diagonal's entire bounding box. */
+export function paintPolygons(mask:RasterMask,polygons:readonly (readonly {x:number;y:number}[])[]):void{
+  const cell=mask.cellSize;
+  for(const polygon of polygons){
+    const y0=Math.max(0,Math.ceil(Math.min(...polygon.map(p=>p.y))/cell-.5)),y1=Math.min(mask.rows,Math.ceil(Math.max(...polygon.map(p=>p.y))/cell-.5));
+    for(let row=y0;row<y1;row++){
+      const y=(row+.5)*cell,crossings:number[]=[];
+      for(let i=0;i<polygon.length;i++){
+        const a=polygon[i]!,b=polygon[(i+1)%polygon.length]!;
+        if((a.y>y)!==(b.y>y))crossings.push(a.x+(y-a.y)*(b.x-a.x)/(b.y-a.y));
+      }
+      crossings.sort((a,b)=>a-b);
+      for(let i=0;i+1<crossings.length;i+=2){
+        const x0=Math.max(0,Math.ceil(crossings[i]!/cell-.5)),x1=Math.min(mask.columns,Math.ceil(crossings[i+1]!/cell-.5));
+        if(x1>x0)mask.data.fill(1,row*mask.columns+x0,row*mask.columns+x1);
+      }
+    }
+  }
+}
+
 /** Rasterize segment bounds on a 4-unit grid; queries and footprint radii remain in world units. */
 export function buildRibbonMask(width: number, height: number, points: {x:number;y:number}[], roadWidth: number): RasterMask {
   const mask = new RasterMask(width, height, undefined, 4), r = roadWidth / 2;

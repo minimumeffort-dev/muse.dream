@@ -139,13 +139,3 @@ object brick_bakehouse(label="Brick bakehouse"){
   part chimney_cap(shape=box,material=stone,at=[-25,75,-12],size=[13,2,13]);
   repeat eaves(index=s,count=2){part eave(shape=box,material=dark_wood,at=[-14,46,s*34-17],size=[68,2,3]);}
 }
-place orchard_birch(object=leaning_birch,at=[1340,1140]);
-place meadow_spruce(object=silver_spruce,at=[1720,1200]);
-place orchard_sapling(object=amber_sapling,at=[1225,1925]);
-place west_birch(object=leaning_birch,at=[425,1425]);
-place station_spruce(object=silver_spruce,at=[1720,1785]);
-place southern_sapling(object=amber_sapling,at=[750,1820]);
-place park_bench(object=slatted_bench,at=[1225,1550]);
-place station_bench(object=slatted_bench,at=[1515,2200]);
-place orchard_workshop(object=timber_workshop,at=[455,2035]);
-place wayside_bakehouse(object=brick_bakehouse,at=[2150,1170]);

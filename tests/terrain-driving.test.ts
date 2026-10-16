@@ -4,7 +4,7 @@ import { parseScene } from "../src/scene/schema";
 import { sampleTerrain, terrainHeight } from "../src/scene/terrain";
 import { createCarAtSpawn, FixedStepper, resetCar, stepCar, TUNING, type CarState, type World } from "../src/sim/car";
 import { buildPaperMask } from "../src/sim/mask";
-import { createWorldScene } from "../src/scene/world-fixture";
+import {createLegacyWorld as createWorldScene} from "./fixtures/legacy-world"; // Frozen engine regression world; the live city is tested separately.
 import {drivingReviewStart} from "../src/game/review-start";
 
 const DT = 1 / 120, idle = { throttle: 0, steer: 0 };
@@ -18,7 +18,7 @@ describe("terrain driving", () => {
   it("starts driving reviews at clear real-world poses and leaves normal starts untouched",()=>{
     const doc=createWorldScene(),w={...world,scene:doc,roadMask:buildMaskForScene(doc),driveMask:buildPaperMask(doc.canonical.width,doc.canonical.height)},start=createCarAtSpawn(doc);
     const hill=drivingReviewStart(start,w,"sidehill"),coast=drivingReviewStart(start,w,"coast");
-    expect(hill).toMatchObject({x:1290,y:1360,vx:0,vy:0,headingRad:Math.PI/2});
+    expect(hill).toMatchObject({x:1150,y:1750,vx:0,vy:0,headingRad:Math.PI/2});
     expect(hill.elevation).toBe(terrainHeight(doc.terrain,hill.x,hill.y));
     expect(coast).toMatchObject({x:start.x,y:start.y,vx:-80,vy:0,headingRad:Math.PI});
     expect(drivingReviewStart(start,w,null)).toBe(start);

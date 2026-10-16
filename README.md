@@ -6,21 +6,23 @@ Racing is where this started. The idea is to make whatever someone draws playabl
 
 [Play the prototype](https://musedream.vercel.app/) · [Explore Dream 2](https://minimumeffort-dev.github.io/muse.dream/) · [Start with an example](docs/dream/quickstart.md)
 
-![The Muse Dream mock world, with a winding road, a castle and objects to explore](docs/media/world.jpg)
+![The Muse Dream river city, with connected streets, homes and places to explore](docs/media/world.jpg)
 
 **The playable world is a handmade mock today.** The renderer, driving simulation and Dream 2 compiler work. Photo upload and Muse interpretation are still to come. There are no model calls or API keys to configure.
 
 ## You can leave the road
 
-Follow the circuit or head into the hills. Climbing slows the car down, descending gives it speed, and a fast crest can launch it into the air. The camera follows you through the world, with a slightly closer view so the smaller objects are easier to see. Wooden bridges carry the track across water, and the train keeps running while you explore. Sunlight keeps the same direction as you move, with shadows covering the full view through hills, camera turns and flight.
+Drive through the city or head out into the hills. Climbing slows the car down, descending gives it speed, and a fast crest can launch it into the air. The camera follows you through the world. Sunlight keeps its direction as you move, including through hills, camera turns and flight.
 
-The world now covers 1.2 × 1 kilometres. The original circuit sits in the countryside, with a connected town to the east, suburbs to the south and a lakeside sports park. Drive through the blocks, take the southern boulevard, or leave the road and cross the football pitch. The park also has a basketball court and three golf fairways. People walk around the square and lake; players practise on the pitch and court.
+The world now covers 1.4 × 1.1 kilometres. It has been rebuilt around places people need: homes, markets, schools, a hospital, workplaces, a library and stations. The center has tighter frontages; garden streets and the southern neighborhood have more space around the houses. Streets, entrance paths, crossings and platforms actually connect.
 
-![Town blocks with connected streets, sidewalks and planted courtyards](docs/media/town-center.jpg)
+![Homes, shops and the tram avenue](docs/media/town-center.jpg)
 
-The layout, buildings, turf, paint and people all come from Dream 2. The sports animations are authored mock routines. There are no match rules, traffic AI or golf controls yet. [Explore the planned world](docs/urban-world.md), or [compile a neighborhood](docs/examples/planned-neighborhood.dream).
+Two bus loops serve the neighborhoods. A tram shares the main avenue, and a regional train stops at the stations. A commuter walks from home to the market. Sports players practise on the pitch and court, and people notice you nearby. The buildings and routines are handmade mock data; there are no working interiors, economy or traffic avoidance yet. [Explore the city](docs/urban-world.md).
 
-People now have explicit NPC roles and small programs written in Dream 2. Walk up to someone in the square: they stop and turn toward you, then continue their walk when you leave. Sports players alternate practice and rest. The same object template can be an NPC or a vehicle you control. [Write an NPC routine](docs/dream/npcs.md).
+![The city map generated from its compiled Dream source](docs/media/city-plan.svg)
+
+The map uses the game's actual geometry. Shared junctions keep the street centerlines aligned, and entrances move with their buildings. Dream now describes sites, crossings, route stops and the connections between them. [Read the design and sources](docs/city-design.md), or [compile a complete connected neighborhood](docs/examples/connected-city.dream).
 
 The HUD keeps the map, vehicle prompts and pause control. There is no lap counter or checkpoint target to follow; explore at your own pace.
 
@@ -52,19 +54,19 @@ Bicycles lean into turns and turn less sharply at speed. Boats keep momentum as 
 
 The camera moves closer for walking and smaller vehicles, then eases back out for the car. The objects keep their physical proportions.
 
-Bicycle lanes run alongside streets, across the bridges and between the town, suburbs, sports park and waterfront. Each side has its own painted track, separated from the carriageway. Get on a bicycle and choose where to go. The riverside skating circuit remains its own park.
+Bicycle lanes run alongside streets, across the bridges and between the town, suburbs, sports park and waterfront. Each side has its own painted track, separated from the carriageway. Get on a bicycle and choose where to go. The skateboard is freely controlled too.
 
 ![Connected city bicycle lanes and a canal crossing](docs/media/city-cycle-lanes.jpg)
 
-The lake narrows into a river, opens into a southern bay and continues north as a city canal. Five new bridges carry the roads, bicycle lanes and sidewalks over it. Boats can pass underneath when they have enough clearance. [See the larger transport layout](docs/urban-world.md).
+The river enters at the north edge, passes under three bridges and widens into a lake that continues beyond the southern boundary. The bridges carry roads, bicycle lanes and sidewalks. Boats can pass underneath when they have enough clearance. [See the larger transport layout](docs/urban-world.md).
 
-![The continuous lake, river, southern bay and city canal](docs/media/connected-waterway.jpg)
+![The continuous river widening into a lake](docs/media/connected-waterway.jpg)
 
 Some things move when you hit them. Others break. A ball bounces away, a bench comes apart in splinters, a tree falls as a whole, and a building can lose a section while its main structure stays solid. Those differences are declared in Dream 2.
 
 ![A bench breaking into its authored components after a car impact](docs/media/destruction.gif)
 
-The landscape has wildlife now: gulls and red kites fly overhead, deer and a fox move through clearings, and hares idle in the meadow. Ferns, broad leaves, foxgloves, lavender, reeds, daisies, hazel and weeping willows give the ground and riverbanks more variety. All of them are Dream 2 assemblies.
+The asset library includes gulls, red kites, deer, foxes and hares. The live city uses a deer habitat and gulls over the river. Ferns, broad leaves, foxgloves, lavender, reeds, daisies, hazel and weeping willows give the ground and riverbanks more variety. All of them are Dream 2 assemblies.
 
 ![Wildlife and plants composed from Dream 2](docs/media/ecology.jpg)
 
@@ -96,11 +98,11 @@ object oak(label="Oak"){
 
 The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation uses Minimum Effort's Manrope and Archivo fonts, warm white, charcoal and yellow, with the same page gutters and spacing. Dream commands, fields, references, colors and expressions are highlighted, with copy buttons for complete examples.
 
-[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 83 assemblies and 796 placements, all authored in Dream 2.
+[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 70 assemblies and 511 placements, all authored in Dream 2.
 
 Objects share physical units. The car is 3.55 metres long, the plane has a 10.8-metre wingspan, and the skateboard is 0.82 metres long. A size declaration scales the geometry, collision body, seats and broken pieces together. The compiler checks proportions too, so a skateboard can't quietly become larger than the car.
 
-The [asset library](docs/asset-library.md) covers all 83 world assemblies. Cars have window pillars and wheel hubs, bikes have chains and pedals, and buildings have framed windows, timber details and connected canopies. Birches have pale tapered stems, visible forks, hanging twigs and smaller leaf clusters, with bark marks on both sides. The destructible birch falls as one connected tree. Deadwood uses tapered trunks and branches; fallen logs have cut ends, moss and varied headings on the ground. These details are Dream parts too, including the pieces released when something breaks.
+The [asset library](docs/asset-library.md) covers the live world assemblies. Cars have window pillars and wheel hubs, bikes have chains and pedals, and the new buildings have attached roofs, embedded façade details and supported canopies. Birches have pale tapered stems, visible forks, hanging twigs and smaller leaf clusters, with bark marks on both sides. The destructible birch falls as one connected tree. Deadwood uses tapered trunks and branches; fallen logs have cut ends, moss and varied headings on the ground. These details are Dream parts too, including the pieces released when something breaks.
 
 ![Fallen log and deadwood built with connected, tapered wood parts](docs/media/woodland.jpg)
 

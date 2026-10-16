@@ -7,7 +7,7 @@ import { bridgeAt } from "../src/scene/landscape-dsl";
 import { surfaceHeight } from "../src/game/surface";
 import { animateObject, buildObject } from "../src/game/world3d";
 import { WorldScenery } from "../src/game/scenery";
-import { createWorldScene } from "../src/scene/world-fixture";
+import {createLegacyWorld as createWorldScene} from "./fixtures/legacy-world"; // Frozen engine regression world; the live city is tested separately.
 import { mockCastle, mockCottage, mockWindmill, mockRuin } from "../src/scene/mock-objects";
 import { mockBarn, mockWell } from "../src/scene/mock-landscape";
 import { objectDslSchema } from "../src/scene/object-dsl";

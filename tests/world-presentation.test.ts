@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { describe, expect, it } from "vitest";
 import { createFixtureScene } from "../src/scene/fixture";
-import { createWorldScene } from "../src/scene/world-fixture";
+import {createLegacyWorld as createWorldScene} from "./fixtures/legacy-world"; // Frozen engine regression world; the live city is tested separately.
 import { mockCar, mockOak, mockRock } from "../src/scene/mock-objects";
 import { objectDslSchema } from "../src/scene/object-dsl";
 import { parseScene, type SceneObject } from "../src/scene/schema";

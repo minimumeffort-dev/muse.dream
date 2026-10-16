@@ -1,0 +1,46 @@
+dream 2;
+asset a_roe_deer(module=fauna,object=roe_deer);
+asset a_river_gull(module=fauna,object=river_gull);
+asset a_market_vendor(module=city_people,object=market_vendor);
+asset a_health_worker(module=city_people,object=health_worker);
+asset a_teacher(module=city_people,object=teacher);
+asset a_football_player(module=sports_assets,object=football_player);
+asset a_basketball_player(module=sports_assets,object=basketball_player);
+route woodland_deer(kind=ambient,mode=loop,speed=10){
+ point(at=[800,4300]);
+ point(at=[1000,4500]);
+ point(at=[800,4800]);
+ point(at=[600,4600]);
+}
+route river_birds(kind=ambient,mode=loop,speed=38,altitude=220){
+ point(at=[8800,2500]);
+ point(at=[9200,4500]);
+ point(at=[9500,6500]);
+ point(at=[8900,5500]);
+}
+place woodland_deer_npc(object=a_roe_deer,route=woodland_deer,offset=0,role=npc);
+place river_gull_npc(object=a_river_gull,route=river_birds,offset=0,role=npc);
+behavior public_life(start=busy){
+ state busy(action=perform,face=none){on look(event=near_player,radius=90,to=hello);}
+ state hello(action=idle,face=player){on resume(event=far_player,radius=130,to=busy);}
+}
+place vendor(object=a_market_vendor,at=[6400,4350],role=npc,behavior=public_life);
+place doctor(object=a_health_worker,at=[3900,6600],role=npc,behavior=public_life);
+place teacher(object=a_teacher,at=[4430,3420],role=npc,behavior=public_life);
+place footballer_a(object=a_football_player,at=[10400,4650],role=npc,behavior=public_life);
+place footballer_b(object=a_football_player,at=[10740,4760],role=npc,behavior=public_life);
+place basketballer_a(object=a_basketball_player,at=[7230,7970],role=npc,behavior=public_life);
+place basketballer_b(object=a_basketball_player,at=[7340,7980],role=npc,behavior=public_life);
+asset a_commuter(module=city_people,object=commuter);
+route market_commute(kind=walk,mode=shuttle,speed=10){
+ stop home(at=[6493.348,4064.717],wait_s=6,site=access_oldtown_044);
+ point(at=[6493.348,4112]);
+ point(at=[6400,4112]);
+ point(at=[6400,4288]);
+ stop market(at=[6400,4398],wait_s=12,site=access_market_hall);
+}
+behavior commuter_routine(start=journey){
+ state journey(action=patrol,face=none){on greet(event=near_player,radius=45,to=hello);}
+ state hello(action=idle,face=player){on resume(event=far_player,radius=70,to=journey);}
+}
+place market_commuter(object=a_commuter,route=market_commute,role=npc,behavior=commuter_routine);

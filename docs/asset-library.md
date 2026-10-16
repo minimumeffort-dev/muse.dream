@@ -2,7 +2,7 @@
 
 [Dream 2 docs](README.md) / Assets
 
-The mock world contains 83 assemblies, all written in Dream 2. The assemblies include vehicles, buildings, wildlife and several layers of vegetation, with window frames, wheel hubs, bark markings and irregular foliage.
+The mock world contains 70 reusable assemblies, all written in Dream 2. The assemblies include vehicles, buildings, wildlife and several layers of vegetation, with window frames, wheel hubs, bark markings and irregular foliage.
 
 ![Vehicles, buildings and a seated traveler built from Dream parts](media/assets.jpg)
 
@@ -10,16 +10,15 @@ The mock world contains 83 assemblies, all written in Dream 2. The assemblies in
 
 | Family | Assemblies | Source |
 | --- | --- | --- |
-| Transport | Rally car, mushroom rover, locomotive, carriage, plane, launch, bicycle, skateboard | [Landmarks](../src/scene/world/landmarks.dream), [activities](../src/scene/interactive-world.dream) |
-| Buildings and structures | Castle, windmill, cottage, ruins, barn, well, station, boathouse, passage, workshop, bakehouse | [Landmarks](../src/scene/world/landmarks.dream), [nature](../src/scene/world/nature.dream), [activities](../src/scene/interactive-world.dream), [destructible structures](../src/scene/world/destructible.dream) |
-| Wildlife | Roe deer, meadow hare, copper fox, river gull, red kite | [Fauna](../src/scene/world/fauna.dream), [habitats](../src/scene/world/wildlife.dream) |
-| Understory and flowers | Ferns, broadleaf dock, pink foxgloves, lavender, river reeds, daisies, hazel | [Flora](../src/scene/world/flora.dream) |
-| Trees | Weeping willow, birch, rowan, fir, oak, pine, apple tree, deadwood, leaning birch, spruce, amber sapling | [Nature](../src/scene/world/nature.dream), [landmarks](../src/scene/world/landmarks.dream), [destructible trees](../src/scene/world/destructible.dream), [flora](../src/scene/world/flora.dream) |
-| Ground, plants and wildlife | Mushroom, crystals, granite, cairn, boulders, shrub, cactus, slab, weathered boulder, juniper, log, sunflowers, tortoise | [Nature](../src/scene/world/nature.dream), [landmarks](../src/scene/world/landmarks.dream), [creations](../src/scene/world/creations.dream), [component library](../src/scene/dream-creations.dream) |
-| Furniture and props | Two benches, basket, picnic, breakaway table, produce crate, planter, ball, orchard cart | [Creations](../src/scene/world/creations.dream), [component library](../src/scene/dream-creations.dream), [impact props](../src/scene/impact-creations.dream), [destructible furniture](../src/scene/world/destructible.dream) |
-| People | Waving baker, field naturalist, football player, basketball player, town and park walkers, park visitor | [Creations](../src/scene/world/creations.dream), [component library](../src/scene/dream-creations.dream), [sports and people](../src/scene/world/sports_assets.dream) |
+| Transport | Rally car, town car, city bus, tram, regional train, plane, launch, bicycle, skateboard | [Transit](../src/scene/world/transit_assets.dream), [landmarks](../src/scene/world/landmarks.dream), [activities](../src/scene/interactive-world.dream) |
+| Housing and shops | Three terraces, garden and courtyard homes, three apartment types, corner shop, bakery | [Architecture](../src/scene/world/architecture.dream) |
+| Civic and work | Market hall, hospital, two schools, college, offices, library, workshops, stations, boathouse and pavilion | [Civic assets](../src/scene/world/civic_assets.dream), [architecture](../src/scene/world/architecture.dream) |
+| People | Commuter, vendor, teacher, health worker, football and basketball players | [City people](../src/scene/world/city_people.dream), [sports](../src/scene/world/sports_assets.dream) |
+| Wildlife | Live deer and gull habitats; the library also defines hares, foxes and kites | [Fauna](../src/scene/world/fauna.dream), [habitats](../src/scene/world/life.dream) |
+| Vegetation | Oak, pine, amber tree, birch, fir, rowan, apple, willow, ferns, flowers and shrubs | [Nature](../src/scene/world/nature.dream), [flora](../src/scene/world/flora.dream), [landmarks](../src/scene/world/landmarks.dream) |
+| Props and destruction | Produce stalls, table, crate, planter, ball, slatted benches, toppling trees and breakable shop porches | [Civic assets](../src/scene/world/civic_assets.dream), [impact props](../src/scene/impact-creations.dream), [destructible furniture](../src/scene/world/destructible.dream) |
 
-The seated traveler and standing Explorer are separate Dream assemblies. The Explorer has an animated walking gait and keeps its own physical size when switching to a seated vehicle pose. Bread and a harvest bowl also have standalone definitions reused in the picnic. [Open the full atlas](media/assets-all.jpg), or follow the [local gallery setup](README.md#try-it-locally) for interactive inspection. Front, right, back and left views share the same geometry. The phase selector exposes wheel and sail motion; proximity opens the doors.
+The seated traveler and standing Explorer are separate engine-provided Dream assemblies. The Explorer has an animated walking gait and keeps its own physical size when switching to a seated vehicle pose. Bread and a harvest bowl remain standalone authoring examples. [Open the full atlas](media/assets-all.jpg), or follow the [local gallery setup](README.md#try-it-locally) for interactive inspection. Front, right, back and left views share the same geometry. The phase selector exposes wheel and joint motion.
 
 ## Adding useful detail
 
@@ -35,7 +34,7 @@ Both birches use pale tapered stems, rising forks and fine hanging twigs. Smalle
 
 The [birch verification record](evidence/birch-assets/verification.md) includes four viewing angles, terrain placement, destruction checks and the documentation media audit.
 
-Details belong to their supporting coordinate frame. The baker's ears, straps and pocket follow its torso joint. A bench's armrests leave with its frame; the bakehouse's canopy leaves with its entrance lintel. Adding a bolt must not create an extra independent fragment. The usual limits still apply: 32 parts per object, eight release groups per breakable assembly, and the existing scene-wide animation and debris budgets.
+Details belong to their supporting coordinate frame. The baker's ears, straps and pocket follow its torso joint. A bench's armrests leave with its frame; the new bakery's canopy and posts leave in its porch zone. Adding a bolt must not create an extra independent fragment. The usual limits still apply: 32 parts per object, eight release groups per breakable assembly, and the existing scene-wide animation and debris budgets.
 
 Rigid parts sharing a material are batched inside each joint frame. Wheels and propellers keep their own pivots. Repeated scenery remains instanced, including its foliage motion and occlusion fade. Added visual detail doesn't add mesh colliders: roads, clearance, driving and impacts still use the engine's existing masks, heightfield and bounded bodies.
 
@@ -43,18 +42,24 @@ The art stays stylized and uses procedural geometry. This pass doesn't add impor
 
 ## Different layers of landscape
 
-The new flora has eight distinct forms across 75 placements. Ferns and hazel sit around woodland, lavender grows through the drier east, and reeds and willows follow dry banks. Daisies, dock and foxgloves fill selected edges and clearings. Plant roots stay off the circuit, bridge decks and water surfaces. Small scale changes supplement different silhouettes.
+The flora library has eight distinct forms, mixed into the live woodland and meadow planting. Ferns and hazel sit around woodland, lavender grows through the drier east, and reeds and willows follow dry banks. Daisies, dock and foxgloves fill selected edges and clearings. Plant roots stay off the circuit, bridge decks and water surfaces. Small scale changes supplement different silhouettes.
 
 ![Ferns, foxgloves, lavender, reeds, daisies and a willow](media/flora.jpg)
 
-There are eleven new wildlife placements: five flying birds, three walking deer/fox actors and three idle hares. Birds use continuous airborne ambient routes; walking animals follow clear, dry habitats. Their motion stays inside the existing actor and joint budgets. Plants retain static instancing and shader wind. The [behavior guide](dream/behavior.md#wildlife-and-habitats) explains the ambient route contract and its current limits.
+The live city uses a walking deer habitat and gulls above the river; the library also retains fox, hare and kite forms. Birds use continuous airborne ambient routes; walking animals follow clear, dry habitats. Their motion stays inside the existing actor and joint budgets. Plants retain static instancing and shader wind. The [behavior guide](dream/behavior.md#wildlife-and-habitats) explains the ambient route contract and its current limits.
 
 ## A planned town and sports park
 
-The expansion adds four urban buildings, three house silhouettes, a street lamp and park seat. Apartments and offices have several floors; shops and homes stay lower. The blocks have street frontage, courtyards and sidewalks. Suburban driveways run toward their street instead of ending in random grass.
+The replacement adds terraces, apartments, neighborhood shops and civic buildings with different dimensions and uses. Apartments and offices have several floors; shops and homes stay lower. The blocks have street frontage, courtyards and sidewalks. Suburban driveways run toward their street instead of ending in random grass.
 
 ![Town buildings, homes and sports people composed in Dream 2](media/urban-assets.jpg)
 
-Football goals have connected posts and net threads. Basketball hoops have a supported backboard, rim and net. Four animated players practise kicks and dribbles; other visitors and two walking routes populate the park and square. The golf park has three fairways, putting greens, sand traps and flags. It is an explorable landscape rather than a golf simulation.
+Football goals have connected posts and net threads. Basketball hoops have a supported backboard, rim and net. Four animated players practise kicks and dribbles; a commuter visits the market, and the vendor, teacher and health worker react near their buildings. The golf area has an authored fairway and flag. It is an explorable landscape rather than a golf simulation.
 
-[Buildings and furniture](../src/scene/world/town_assets.dream), [sports and people](../src/scene/world/sports_assets.dream), [district layout](urban-world.md). The full world uses the existing 24 live jointed-assembly slots, including the standing character. Visitors now use compacted NPC meshes so they can face nearby players. [Dream roles and programs](dream/npcs.md) choose patrol, activity, rest and proximity reactions; body dimensions and animation budgets stay the same.
+[Buildings and furniture](../src/scene/world/architecture.dream), [sports and people](../src/scene/world/sports_assets.dream), [district layout](urban-world.md). The full world uses the existing 24 live jointed-assembly slots, including the standing character. People use compacted NPC meshes so they can face nearby players. [Dream roles and programs](dream/npcs.md) choose patrol, activity, rest and proximity reactions; body dimensions and animation budgets stay the same.
+
+## Attached architecture
+
+The new houses and civic buildings share dimensions across walls, roofs, doors, glass and supported porch parts. Roof bases meet wall tops. Thin façade details overlap their supporting wall. Porch posts meet a slab and canopy, including the bakery's breakable section. The tests check the actual transformed primitive bounds and roof support; the gallery exposes four views. This is an asset check, not a claim that arbitrary model-generated geometry is structurally sound. Entrance paths receive separate full-scene clearance and reachability checks.
+
+![The rebuilt civic architecture and public transport](media/city-assets.jpg)

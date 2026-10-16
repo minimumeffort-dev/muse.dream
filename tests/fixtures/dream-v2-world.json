@@ -860,5 +860,7 @@
   "streets": [],
   "surfaces": [],
   "markings": [],
-  "behaviors": []
+  "behaviors": [],
+  "sites": [],
+  "crossings": []
 }

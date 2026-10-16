@@ -34,11 +34,12 @@ export function agentProblem(object:SceneObject,behaviors:Behavior[],routes:Scen
   if(role==='prop' && object.route)return 'props cannot have an actor route';
   if(role!=='npc')return;
   if(!object.role && !object.behavior)return; // Preserve legacy route documents at their existing boundary.
-  if(!spec || spec.foundation || spec.contacts || isReactive(spec) || spec.body.interaction==='knockable')return 'NPCs require an assembly cylinder without foundations, compound contacts or destruction';
+  const route=routes.find(r=>r.id===object.route?.id);
+  if(!spec || spec.foundation || spec.contacts && !["street","tram","rail"].includes(route?.kind??"") || isReactive(spec) || spec.body.interaction==='knockable')return 'NPCs require an assembly cylinder without foundations, compound contacts or destruction';
   const program=behaviors.find(b=>b.id===object.behavior);
   if(object.behavior && !program)return 'NPC behavior does not exist';
   if(!program && !object.route)return 'NPC needs a behavior or an autonomous route';
-  const control=controlOf(spec),route=routes.find(r=>r.id===object.route?.id);
+  const control=controlOf(spec);
   if((control==='boat' && route?.kind!=='water') || (control==='plane' && route?.kind!=='air'))return 'boat and plane NPCs require a route in their water or air domain';
   if(program?.states.some(s=>s.action==='patrol') && !object.route)return 'patrol needs a route on its NPC placement';
 }

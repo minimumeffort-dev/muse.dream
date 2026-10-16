@@ -1,7 +1,7 @@
 import {describe,it,expect} from "vitest";
 import {compileDream,formatDream} from "../src/scene/dream";
 import {objectDslSchema,controlOf} from "../src/scene/object-dsl";
-import {createWorldScene} from "../src/scene/world-fixture";
+import {createLegacyWorld as createWorldScene} from "./fixtures/legacy-world"; // Frozen engine regression world; the live city is tested separately.
 import {createFixtureScene,buildMaskForScene} from "../src/scene/fixture";
 import {parseScene,type SceneObject} from "../src/scene/schema";
 import {sceneContacts} from "../src/scene/contacts";

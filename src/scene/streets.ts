@@ -1,3 +1,4 @@
+import {distanceToPolygon,unionPolygons} from './polygons';
 import {MAX_WORLD_SIZE} from './world-bounds';
 import {z} from 'zod';
 import type {Scene,Point} from './schema';
@@ -8,9 +9,11 @@ const point=z.object({x:z.number().finite().min(0).max(MAX_WORLD_SIZE),y:z.numbe
 const id=z.string().min(1).max(40),color=z.string().regex(/^#[0-9a-fA-F]{6}$/);
 export const streetSchema=z.object({id,width:z.number().min(60).max(180),sidewalk:z.number().min(0).max(40),cycleWidth:z.number().min(16).max(40).optional(),points:z.array(point).min(2).max(16)}).strict().superRefine((s,ctx)=>{
   for(let i=1;i<s.points.length;i++){
-    const a=s.points[i-1]!,b=s.points[i]!;
-    if((a.x!==b.x && a.y!==b.y) || Math.hypot(a.x-b.x,a.y-b.y)<80)
-      ctx.addIssue({code:'custom',message:'streets require orthogonal segments at least 80 units long'});
+    const a=s.points[i-1]!,b=s.points[i]!,d=Math.hypot(a.x-b.x,a.y-b.y);
+    if(d<80)ctx.addIssue({code:'custom',message:'street segments must be at least 80 units long'});
+    const c=s.points[i+1];
+    if(c && ((b.x-a.x)*(c.x-b.x)+(b.y-a.y)*(c.y-b.y))/(d*Math.hypot(c.x-b.x,c.y-b.y))<-.5)
+      ctx.addIssue({code:'custom',message:'street turns must not exceed 120 degrees; split the junction into separate streets'});
   }
 });
 export const surfaceSchema=z.object({id,color,points:z.array(point).min(3).max(64)}).strict().superRefine((s,ctx)=>{
@@ -64,11 +67,23 @@ export function unionRects(rects:Rect[],holes:Rect[]=[]):Rect[]{
   }
   return result;
 }
-const cache=new WeakMap<Scene,{roads:Rect[];riding:Rect[];reserved:Rect[]}>();
-export function streetFootprints(scene:Scene){let value=cache.get(scene);if(!value){value={roads:streetRects(scene.streets),riding:streetRidingRects(scene.streets),reserved:streetRects(scene.streets,true)};cache.set(scene,value);}return value;}
+/** Segment-aligned square joins also support diagonal streets without oversized AABBs. */
+export function streetPolygons(streets:Street[],mode:'road'|'riding'|'reserved'='road'):Point[][]{
+  return streets.flatMap(s=>s.points.slice(1).map((b,i)=>{
+    const a=s.points[i]!,length=Math.hypot(b.x-a.x,b.y-a.y),dx=(b.x-a.x)/length,dy=(b.y-a.y)/length;
+    const r=s.width/2+(mode!=='road' && s.cycleWidth ? s.cycleWidth+6 : 0)+(mode==='reserved' ? s.sidewalk : 0);
+    return [{x:a.x-dx*r-dy*r,y:a.y-dy*r+dx*r},{x:b.x+dx*r-dy*r,y:b.y+dy*r+dx*r},
+      {x:b.x+dx*r+dy*r,y:b.y+dy*r-dx*r},{x:a.x-dx*r+dy*r,y:a.y-dy*r-dx*r}];
+  }));
+}
+const cache=new WeakMap<Scene,{roads:Point[][];riding:Point[][];reserved:Point[][];walkways?:Point[][]}>();
+export function streetFootprints(scene:Scene){let value=cache.get(scene);if(!value){value={roads:streetPolygons(scene.streets),riding:streetPolygons(scene.streets,'riding'),reserved:streetPolygons(scene.streets,'reserved')};cache.set(scene,value);}return value;}
+/** Validation and rendering reuse the exact same sidewalk union. */
+export function streetSidewalks(scene:Scene){const ground=streetFootprints(scene);return ground.walkways??=unionPolygons(ground.reserved,ground.riding);}
 export const inRect=(r:Rect,x:number,y:number,margin=0)=>x>=r.x0-margin && x<=r.x1+margin && y>=r.y0-margin && y<=r.y1+margin;
-export function onStreet(scene:Scene,x:number,y:number){return streetFootprints(scene).riding.some(r=>inRect(r,x,y));}
-export function reservedGround(scene:Scene,x:number,y:number){return streetFootprints(scene).reserved.some(r=>inRect(r,x,y,4)) || scene.surfaces.some(s=>pointInPolygon(x,y,s.points));}
+export const onPolygon=(p:Point[],x:number,y:number,margin=0)=>pointInPolygon(x,y,p) || distanceToPolygon(x,y,p)<=margin;
+export function onStreet(scene:Scene,x:number,y:number){return streetFootprints(scene).riding.some(p=>onPolygon(p,x,y));}
+export function reservedGround(scene:Scene,x:number,y:number){return streetFootprints(scene).reserved.some(p=>onPolygon(p,x,y,4)) || scene.surfaces.some(s=>pointInPolygon(x,y,s.points));}
 /** Mitered paint stays a single ribbon at corners. Limit miter reach for very sharp authored turns. */
 export function markingPolygons(s:Marking):Point[][]{
   const n=s.points.length,frames=s.points.map((p,i)=>{
@@ -90,19 +105,27 @@ export function cycleBands(streets:Street[]):Rect[]{
     return [-1,1].map(side=>a.y===b.y ? {x0:Math.min(a.x,b.x)-reach,x1:Math.max(a.x,b.x)+reach,y0:a.y+(side<0 ? -outer : inner),y1:a.y+(side<0 ? -inner : outer)} : {y0:Math.min(a.y,b.y)-reach,y1:Math.max(a.y,b.y)+reach,x0:a.x+(side<0 ? -outer : inner),x1:a.x+(side<0 ? -inner : outer)});
   }));
 }
+export function cyclePolygons(streets:Street[]):Point[][]{
+  return streets.filter(s=>s.cycleWidth).flatMap(s=>s.points.slice(1).flatMap((b,i)=>{
+    const a=s.points[i]!,length=Math.hypot(b.x-a.x,b.y-a.y),dx=(b.x-a.x)/length,dy=(b.y-a.y)/length;
+    const inner=s.width/2+6,outer=inner+s.cycleWidth!,reach=outer;
+    const at=(d:number,n:number)=>({x:a.x+dx*d-dy*n,y:a.y+dy*d+dx*n});
+    return [-1,1].map(side=>[at(-reach,inner*side),at(length+reach,inner*side),at(length+reach,outer*side),at(-reach,outer*side)]);
+  }));
+}
 /** A bridge must carry the entire street cross-section through both open ends. */
 export function bridgeFitsStreet(scene:Scene,bridge:import('./landscape-dsl').Bridge):boolean{
-  const horizontal=bridge.a.y===bridge.b.y,vertical=bridge.a.x===bridge.b.x;if(!horizontal && !vertical)return false;
   const outline=bridgePolygon(bridge),available=bridge.width/2-(bridge.rails ? 6 : 0);
-  for(const rect of streetRects(scene.streets,true))if(polygonsOverlap(rectPolygon(rect),outline)){
-    let strip=rectPolygon(rect).map(point=>{const p=bridgeCoordinates(bridge,point.x,point.y);return {x:p.t,y:p.across};});
+  for(const polygon of streetPolygons(scene.streets,'reserved'))if(polygonsOverlap(polygon,outline)){
+    let strip=polygon.map(point=>{const p=bridgeCoordinates(bridge,point.x,point.y);return {x:p.t,y:p.across};});
     strip=clipPolygon(strip,p=>p.x);strip=clipPolygon(strip,p=>1-p.x);
     if(strip.some(p=>Math.abs(p.y)>available+.001))return false;
   }
   return scene.streets.some(s=>s.points.slice(1).some((b,i)=>{
-    const a=s.points[i]!;if(horizontal!== (a.y===b.y))return false;
-    const extent=s.width/2+(s.cycleWidth ? s.cycleWidth+6 : 0)+s.sidewalk,available=bridge.width/2-(bridge.rails ? 6 : 0);
-    const offset=horizontal ? Math.abs(a.y-bridge.a.y) : Math.abs(a.x-bridge.a.x);
-    return offset+extent<=available && (horizontal ? Math.min(a.x,b.x)<=Math.min(bridge.a.x,bridge.b.x)-20 && Math.max(a.x,b.x)>=Math.max(bridge.a.x,bridge.b.x)+20 : Math.min(a.y,b.y)<=Math.min(bridge.a.y,bridge.b.y)-20 && Math.max(a.y,b.y)>=Math.max(bridge.a.y,bridge.b.y)+20);
+    const a=s.points[i]!,dx=b.x-a.x,dy=b.y-a.y,length=Math.hypot(dx,dy);
+    const u=bridgeCoordinates(bridge,a.x,a.y),v=bridgeCoordinates(bridge,b.x,b.y);
+    const parallel=Math.abs(dx*(bridge.b.y-bridge.a.y)-dy*(bridge.b.x-bridge.a.x))/(length*u.length)<1e-6;
+    const extent=s.width/2+(s.cycleWidth ? s.cycleWidth+6 : 0)+s.sidewalk;
+    return parallel && Math.max(Math.abs(u.across),Math.abs(v.across))+extent<=available && Math.min(u.t,v.t)*u.length<=-20 && (Math.max(u.t,v.t)-1)*u.length>=20;
   }));
 }

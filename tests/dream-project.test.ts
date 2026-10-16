@@ -68,47 +68,23 @@ describe("bounded Dream 2 modules",()=>{
   });
 });
 
-function close(a:unknown,b:unknown):void {
-  if(typeof a==='number' && typeof b==='number'){expect(a).toBeCloseTo(b,8);return;}
-  if(Array.isArray(a) && Array.isArray(b)){expect(a).toHaveLength(b.length);a.forEach((v,i)=>close(v,b[i]));return;}
-  if(a && b && typeof a==='object' && typeof b==='object'){
-    expect(Object.keys(a).sort()).toEqual(Object.keys(b).sort());for(const k of Object.keys(a))close((a as Record<string,unknown>)[k],(b as Record<string,unknown>)[k]);return;
-  }
-  expect(a).toEqual(b);
-}
 const scene=createWorldScene(),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11};
 
 describe("complete Dream 2 mock world",()=>{
-  it("retains world layout and physical bodies while allowing richer visual assemblies",()=>{
-    const canonicalId=(id:string)=>id.replaceAll('-','_');
-    expect(scene.canonical).toEqual({...before.scene.canonical,width:12000,height:10000});expect(scene.spawn).toEqual(before.scene.spawn);
-    close(scene.roadMaskRef,before.scene.roadMaskRef);
-    close({...scene.terrain,hills:scene.terrain.hills.slice(0,12),tints:scene.terrain.tints!.slice(0,4),landscape:{...scene.terrain.landscape!,waters:scene.terrain.landscape!.waters.filter(w=>w.id!=='south_lake'),bridges:scene.terrain.landscape!.bridges.slice(0,2)}},{...before.scene.terrain,hills:before.scene.terrain.hills.map(h=>({...h,id:canonicalId(h.id)})),landscape:{...before.scene.terrain.landscape,waters:before.scene.terrain.landscape.waters.map(w=>({...w,id:canonicalId(w.id)})),bridges:before.scene.terrain.landscape.bridges.map(b=>({...b,id:canonicalId(b.id)}))}});
-    close(scene.checkpoints,before.scene.checkpoints.map(c=>({...c,id:canonicalId(c.id)})));close(scene.regions,before.scene.regions);
-    const assets=new Map(scene.objects.map(o=>[o.spec!.displayName,o.spec as ObjectDsl]));assets.set(scene.player!.displayName,scene.player!);
-    for(const [name,spec] of Object.entries(before.specs)){
-      const old=objectDslSchema.parse(spec),current=assets.get(name)!;expect(current,name).toBeDefined();
-      const body=name==="Meadow locomotive" ? {...old.body,colliderRadius:22} :
-        name==="Cloudhopper plane" ? {...old.body,colliderHeight:29} : name==="Wayside bench" ? {...old.body,colliderHeight:32} : old.body;
-      expect(current.body,name).toEqual(body);
-      expect(current.parts.length).toBeLessThanOrEqual(32);
-    }
-    for(const {assembly,id,...placement} of before.scene.objects){const current=scene.objects.find(o=>o.id===canonicalId(id))!;expect(current,id).toBeDefined();expect(current.spec!.displayName).toBe(assembly);const relocated=new Set(['sketch_668','sketch_1171','sketch_2850','sketch_4124','sketch_548','sketch_2152','sketch_1002','sketch_2753','sketch_1591','sketch_2339','sketch_3539','sketch_2021','sketch_2994','sketch_3295','sketch_3811','sketch_2941']);
-      const activityProps:Record<string,[number,number]>={orchard_bench:[1030,1660],orchard_crate:[1320,1600],park_bench:[1225,1550]};
-      const urbanMoved=["sketch_51","sketch_483","sketch_834"].includes(current.id);if(urbanMoved)expect([current.x,current.y]).toEqual(({sketch_51:[3113,4628],sketch_483:[3140,4206],sketch_834:[3140,4456]} as Record<string,number[]>)[current.id]);
-      if(activityProps[current.id])expect([current.x,current.y]).toEqual(activityProps[current.id]);
-      const movedActivity=current.id==="village_bike" || activityProps[current.id] || current.route && ["meadow_cycle","village_skate","cloud_trip","lake_trip"].includes(current.route.id);
-      if(relocated.has(current.id))expect(Math.hypot(current.x-placement.x,current.y-placement.y)).toBeLessThan(20.01);
-      if(current.id==='village_bike'){expect(current.route).toBeUndefined();expect(current.role).toBe('controllable');}
-      close({...current,...(current.id==='village_bike'?{route:placement.route}:{}),role:undefined,behavior:undefined,headingRad:assembly==="Fallen log" ? placement.headingRad : current.headingRad,spec:undefined,scale:undefined,...(relocated.has(current.id)||movedActivity||urbanMoved?{x:placement.x,y:placement.y,headingRad:placement.headingRad}:{})},{...placement,role:undefined,behavior:undefined,headingRad:placement.headingRad,scale:undefined,labelText:current.spec!.displayName,id:canonicalId(id),spec:undefined});}
-    expect(scene.objects).toHaveLength(796);expect(scene.objects.every(o=>o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2)).toBe(true);
+  it("authors the complete connected city in bounded Dream modules",()=>{
+    expect(scene.canonical).toMatchObject({width:14000,height:11000});
+    expect(scene.objects.length).toBeGreaterThan(450);expect(scene.objects.length).toBeLessThan(800);
+    expect(scene.objects.every(o=>o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2)).toBe(true);
+    expect(scene.sites.length).toBeGreaterThan(180);
+    expect(scene.routes.some(r=>r.kind==='tram')).toBe(true);
+    expect(scene.routes.filter(r=>r.kind==='street' && r.stops?.length)).toHaveLength(2);
   });
   it("accepts the whole world from text and revalidates an invalid included placement",()=>{
     expect(compileDreamScene(worldSource,{sceneId:scene.sceneId,revisionId:scene.revisionId,sourceHash:scene.sourceHash},worldModules)).toEqual(scene);
-    const changed=worldModules.roadside_props!.replace('at=[1460,1510]','at=[1045,1360]');expect(changed).not.toBe(worldModules.roadside_props);
-    const result=checkDream(worldSource,{...worldModules,roadside_props:changed});expect(result.ok).toBe(false);if(!result.ok)expect(result.diagnostics[0]!.code).toMatch(/^E_SCENE_/);
+    const changed=worldModules.breakables!.replace('at=[6270,4370]','at=[6330,4200]');expect(changed).not.toBe(worldModules.breakables);
+    const result=checkDream(worldSource,{...worldModules,breakables:changed});expect(result.ok).toBe(false);if(!result.ok)expect(result.diagnostics[0]!.code).toMatch(/^E_SCENE_/);
   });
-  it.each(['orchard_picnic','roadside_table','station_crate','orchard_supply_crate','station_planter','roadside_planter'])("breaks the actual world prop %s into its authored fragments",id=>{
+  it.each(['picnic_table','produce_crate','market_planter'])("breaks the actual world prop %s into its authored fragments",id=>{
     const target=scene.objects.find(o=>o.id===id)!,placement=objectPlacement(scene,target),radius=objectRadius(target);
     const start={...createCarAtSpawn(scene),x:target.x-radius-12,y:target.y,elevation:placement.base,vx:240,headingRad:0};
     let state=start;
@@ -117,7 +93,7 @@ describe("complete Dream 2 mock world",()=>{
     expect(resetCar(state,scene).broken).toContain(id);expect(resetCar(state,scene,true).broken).toEqual([]);
   });
   it("keeps the nearby ball intact while launching it away from an actual car contact",()=>{
-    const ball=scene.objects.find(o=>o.id==='roadside_ball')!,start={...createCarAtSpawn(scene),x:ball.x-objectRadius(ball)-10,y:ball.y,elevation:objectPlacement(scene,ball).base,vx:240};
+    const ball=scene.objects.find(o=>o.id==='festival_ball')!,start={...createCarAtSpawn(scene),x:ball.x-objectRadius(ball)-10,y:ball.y,elevation:objectPlacement(scene,ball).base,vx:240};
     const state=stepCar(start,{throttle:0,steer:0},1/120,world),prop=state.props.find(p=>p.id===ball.id)!;
     expect(prop.vx).toBeGreaterThan(200);expect(prop.vz).toBeGreaterThan(0);expect(state.broken).not.toContain(ball.id);
   });

@@ -30,11 +30,11 @@ There is one driving height per XY. Roads cannot stack and cars don't drive unde
 
 City bicycle lanes belong to the street network. Add `cycle_width=20` to reserve a two-metre track on each side of the carriageway. The engine adds a 0.6-metre separator, moves the sidewalks outward and paints bicycle symbols and junction crossings. Lanes follow streets to actual destinations; they do not consume actor routes. [The full urban example](../examples/city-cycle-lanes.dream) includes an aligned canal bridge.
 
-Use `route(kind=path,width=...,surface=cycle|paved|trail)` for a separate recreational path. Width is 16–120 units, or 1.6–12 metres. The riverside skate circuit remains a dedicated park activity; the former isolated meadow cycling oval has been replaced by connected street lanes. Vehicles remain freely controlled, without being tied to the infrastructure path.
+Use `route(kind=path,width=...,surface=cycle|paved|trail)` for a separate recreational path. Width is 16–120 units, or 1.6–12 metres. The live city uses connected street tracks; dedicated paths remain available for authored parks and trails. Vehicles remain freely controlled, without being tied to the infrastructure path.
 
 The complete-world compiler checks an explicitly sized path's corridor, including paths without vehicles. It rejects overlap with road/curbs, water, physical props, independent ground routes and runways. Leave an eight-unit buffer beyond the full width; validation includes an additional sampling allowance. It reports the obstruction so the model can repair the placement. Corners share cross-sections, paint follows the terrain, and procedural grass stays off the surface. Existing paths without a width retain the legacy 28-unit trail and actor clearance; they do not gain a dedicated corridor implicitly.
 
-[Compile a complete dedicated-path example](../examples/dedicated-path.dream). Widen bends so the inside edge cannot fold. Dedicated path crossings and automatic layout repair are not implemented. Use `street` for an orthogonal urban network.
+[Compile a complete dedicated-path example](../examples/dedicated-path.dream). Widen bends so the inside edge cannot fold. Dedicated path crossings and automatic layout repair are not implemented. Use `street` for a connected urban network.
 
 Objects with `rideable(...,control=...)` use the route only for initial placement and infrastructure. They start parked and move freely under player input. Leaving one stores its position, so it cannot snap back to a route. See [vehicle controls](behavior.md#bodies-contacts-and-boarding).
 
@@ -89,9 +89,9 @@ Cycles, duplicate world IDs, multiple layouts, invalid routes and exceeded proje
 
 ## Streets, grounds and paint
 
-The live world is now 12000 × 10000 units, with connected town blocks, separate suburbs, a lake-to-canal waterway and a sports park. The original circuit and countryside remain. [See the layout and captures](../urban-world.md).
+The live world is now 14000 × 11000 units. A new river city replaces the old layout: homes, shops, schools, hospital, workplaces, stations and sports grounds share connected streets and paths. [See the layout and captures](../urban-world.md).
 
-`street` describes an open orthogonal centerline, a carriageway width and sidewalk width on each side. Intersecting streets share one ground surface. Sidewalks stop at the junction, and the racing curbs open where an access street joins. The car gets normal road grip there. Streets do not consume moving-route slots.
+`street` describes an open polyline in any direction, a carriageway width and sidewalk width on each side. Intersecting streets share one ground surface. Sidewalks stop at the junction, and the racing curbs open where an access street joins. The car gets normal road grip there. Streets do not consume moving-route slots.
 
 `surface` fills a simple polygon with color on the actual terrain triangles. Use it for turf, courts, plazas, driveways or sand. Linked scene order defines overlay order, with bounded height offsets to prevent flickering. Each module contributes its local surfaces before its included districts, which follow include order. These are visual ground finishes; they do not flatten hills or invent new physics. `marking` draws an open or closed painted line from a point block. It supports `let`, `repeat`, `sin` and `cos`, so circles need no separate shape command.
 
@@ -106,7 +106,7 @@ marking center_circle(color=#e8e3ce,width=1,closed=true){
 }
 ```
 
-This excerpt belongs after `dream 2;` or inside an included district file. A complete playable world still needs its circuit, spawn and checkpoints. `compileDreamScene` checks that every street component reaches that circuit, stays in bounds and keeps the complete riding width clear of solids, with explicit full-width bridges over water. Streets currently support right-angle plans; use the existing racing curve for winding roads. They require explicit bridge decks and do not create traffic signals or traffic rules. Keep dedicated bicycle paths clear of streets too.
+This excerpt belongs after `dream 2;` or inside an included district file. A complete playable world still needs its circuit, spawn and checkpoints. `compileDreamScene` checks that every street component reaches that circuit, stays in bounds and keeps the complete riding width clear of solids, with explicit full-width bridges over water. Street segments may run in any direction, with turns bounded to 120 degrees; the cyclic road remains a smooth curve. They require explicit bridge decks and do not create traffic signals or traffic rules. Keep dedicated bicycle paths clear of streets too.
 
 ## A complete city crossing
 
@@ -128,3 +128,11 @@ checkpoint north(at=[480,107.5],dir=[-1,0],width=100);
 
 checkpoint west(at=[131.25,360],dir=[0,1],width=100);
 ```
+
+## Entrances and public transport
+
+Use shared `junction` IDs for exact joins, `site` for a building's use and attached entrance, and `crossing` for a real walk between pavements. The entrance is local to the building; path points are world coordinates. A `junction=true` crossing creates the street-arm crossings with one declaration. The live city's entrances and platforms belong to one connected pedestrian network.
+
+`route(kind=street)` sends buses along existing carriageways. `tram` adds rails there, and `walk` sends people along paths and crossings. Named `stop` anchors wait beside actual platform sites; a walking stop can visit a home, market or workplace. Rail/tram gauges and long-vehicle compound contacts are explicit data. These routes do not implement traffic avoidance.
+
+[Run the complete city example](../examples/connected-city.dream), read the [connection bounds](reference.md#connected-city-declarations), or inspect the [source-derived map](../media/city-plan.svg). Regenerate the map with `node scripts/render-city-map.mjs` after changing the world.

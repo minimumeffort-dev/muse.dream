@@ -1,3 +1,5 @@
+import {validateSites,siteEntry,onWalkway} from './sites';
+import {distanceToPolygon,partition,polygonArea,triangulatePolygon} from './polygons';
 import {controlOf} from "./object-dsl";
 import {controlFor,isActor,roleOf} from "./agents";
 import { assemblyHorizontalRadius, playerHeight, measuredScale, CAR_PROPORTION_RULES } from "./measure";
@@ -5,17 +7,18 @@ import { roadPoints, roadFrames, bridgeFitsRoad, ROAD_CURB_WIDTH, distanceToRoad
 import { SpatialGrid } from "../sim/spatial";
 import { archetypeOf, objectRadius,objectHeight } from "../sim/archetypes";
 import { pointInPolygon, RasterMask } from "../sim/mask";
-import type { Scene } from "./schema";
+import type { Scene,Point } from "./schema";
 import { bridgePolygon, bridgeCoordinates, polygonsOverlap,clipPolygon } from "./landscape-dsl";
 import { bridgeHeight, bridgeRails, terrainHeight, waterAt,navigableWater } from "./terrain";
 import { drivingHeight } from "./terrain";
 import { objectContacts } from "./contacts";
 import { routePath,routePoint,routeFrames,routeInfrastructure } from "./routes";
 import { actorPose,actorContacts,routeElevation } from "../sim/actors";
-import {streetRects,streetRidingRects,bridgeFitsStreet,rectPolygon,inRect,streetFootprints,markingPolygons} from './streets';
+import {streetPolygons,bridgeFitsStreet,onPolygon,streetFootprints,markingPolygons} from './streets';
 
 export interface SceneProblem {
   code:
+    | "site-not-connected"
     | "road-bend-too-tight"
     | "road-out-of-bounds"
     | "mask-dimensions"
@@ -113,7 +116,7 @@ export function validateScenePlayability(
     if(escapes) problems.push({code:"water-not-contained",message:`water "${water.id}" needs banks at or above its level`});
   }
   for(const bridge of bridges) {
-    if(!bridgeFitsRoad(scene,bridge,frames) || streetRects(scene.streets,true).some(r=>polygonsOverlap(rectPolygon(r),bridgePolygon(bridge))) && !bridgeFitsStreet(scene,bridge))
+    if(!bridgeFitsRoad(scene,bridge,frames) || streetPolygons(scene.streets,'reserved').some(r=>polygonsOverlap(r,bridgePolygon(bridge))) && !bridgeFitsStreet(scene,bridge))
       problems.push({code:"bridge-road-disconnected",message:`bridge "${bridge.id}" must carry the full road or street cross-section through both open ends, clear of side rails`});
     let unsafe=false;
     const {ux,uy}=bridgeCoordinates(bridge,bridge.a.x,bridge.a.y);
@@ -133,7 +136,7 @@ export function validateScenePlayability(
   }
 
   // The island hole must survive: the sheet center is not road for a loop.
-  if (scene.roadMaskRef.kind === "generated-rounded-rect-loop" && mask.isDrivable(width / 2, height / 2)) {
+  if (scene.roadMaskRef.kind === "generated-rounded-rect-loop" && mask.isDrivable(width / 2, height / 2) && !streetFootprints(scene).riding.some(p=>pointInPolygon(width/2,height/2,p))) {
     problems.push({
       code: "island-filled",
       message: "center island is drivable; loop topology is broken",
@@ -239,34 +242,37 @@ export function validateScenePlayability(
     problems.push({code:'landscape-out-of-bounds',message:`ground feature "${surface.id}" extends outside the world`});
   for(const marking of scene.markings)if(markingPolygons(marking).flat().some(p=>p.x<0 || p.y<0 || p.x>width || p.y>height))
     problems.push({code:'landscape-out-of-bounds',message:`marking "${marking.id}" paint width extends outside the world`});
+  for(const message of validateSites(scene))problems.push({code:"site-not-connected",message});
   const streetGround=streetFootprints(scene);
-  for(const surface of scene.surfaces)if(streetGround.riding.some(r=>polygonsOverlap(surface.points,rectPolygon(r))))
+  const waterTriangles=waters.map(w=>({water:w,triangles:triangulatePolygon(w.polygon)}));
+  for(const surface of scene.surfaces)if(streetGround.riding.some(p=>polygonsOverlap(surface.points,p)))
     problems.push({code:'landscape-overlap',message:`ground surface "${surface.id}" overlaps a street carriageway`});
   for(const street of scene.streets){
-    const carriageways=streetRidingRects([street]),reserved=streetRects([street],true);
-    if(reserved.some(r=>r.x0<0 || r.y0<0 || r.x1>width || r.y1>height))problems.push({code:'landscape-out-of-bounds',message:`street "${street.id}" extends outside the world`});
-    const unsupported=reserved.some(r=>waters.some(w=>{
-      if(!polygonsOverlap(rectPolygon(r),w.polygon))return false;
-      let intersection=clipPolygon(w.polygon,p=>p.x-r.x0);intersection=clipPolygon(intersection,p=>r.x1-p.x);
-      intersection=clipPolygon(intersection,p=>p.y-r.y0);intersection=clipPolygon(intersection,p=>r.y1-p.y);
-      if(intersection.length<3)return false;
-      return !bridges.some(b=>bridgeFitsStreet(scene,b) && intersection.every(p=>{const q=bridgeCoordinates(b,p.x,p.y);return q.t>=0 && q.t<=1 && Math.abs(q.across)<=b.width/2-6;}));
+    const carriageways=streetPolygons([street],'riding'),reserved=streetPolygons([street],'reserved');
+    if(reserved.flat().some(p=>p.x<0 || p.y<0 || p.x>width || p.y>height))problems.push({code:'landscape-out-of-bounds',message:`street "${street.id}" extends outside the world`});
+    const unsupported=reserved.some(polygon=>waterTriangles.some(({water,triangles})=>{
+      if(!polygonsOverlap(polygon,water.polygon))return false;
+      return triangles.some(triangle=>{
+        const intersection=partition(triangle,polygon).inside;
+        if(intersection.length<3 || polygonArea(intersection)<1e-7)return false;
+        return !bridges.some(b=>bridgeFitsStreet(scene,b) && intersection.every(p=>{const q=bridgeCoordinates(b,p.x,p.y);return q.t>=-1e-7 && q.t<=1+1e-7 && Math.abs(q.across)<=b.width/2-6+.001;}));
+      });
     }));
     if(unsupported)problems.push({code:'route-not-clear',message:`street "${street.id}" crosses water without a full-width connected bridge`});
-    const contact=pathContacts.find(c=>carriageways.some(r=>{
-      const x=Math.max(r.x0,Math.min(r.x1,c.x)),y=Math.max(r.y0,Math.min(r.y1,c.y)),floor=drivingHeight(scene.terrain,x,y);
-      return Math.hypot(c.x-x,c.y-y)<c.r+2 && c.bottom<floor+24 && c.top>floor+.05;
+    const contact=pathContacts.find(c=>carriageways.some(p=>{
+      const floor=drivingHeight(scene.terrain,c.x,c.y);
+      return (pointInPolygon(c.x,c.y,p) || distanceToPolygon(c.x,c.y,p)<c.r+2) && c.bottom<floor+24 && c.top>floor+.05;
     }));
     if(contact)problems.push({code:'route-not-clear',message:`street "${street.id}" is obstructed near ${Math.round(contact.x)},${Math.round(contact.y)}`});
   }
-  // Every street component must reach the original circuit. A visually isolated grid is not accepted.
-  const pending=new Set(scene.streets),connected:ReturnType<typeof streetRects>=[];
+  // Every street component must connect to the driving loop, including diagonal junctions.
+  const pending=new Set(scene.streets),connected:Point[][]=[];
   let changed=true;
-  while(changed){changed=false;for(const street of pending){const rects=streetRects([street]);
-    if(rects.some(r=>path.some(p=>p.x>=r.x0-halfRoad && p.x<=r.x1+halfRoad && p.y>=r.y0-halfRoad && p.y<=r.y1+halfRoad) || connected.some(c=>r.x0<=c.x1 && r.x1>=c.x0 && r.y0<=c.y1 && r.y1>=c.y0))){pending.delete(street);connected.push(...rects);changed=true;}
+  while(changed){changed=false;for(const street of pending){const polygons=streetPolygons([street]);
+    if(polygons.some(p=>path.some(v=>pointInPolygon(v.x,v.y,p) || distanceToPolygon(v.x,v.y,p)<=halfRoad) || connected.some(c=>polygonsOverlap(p,c)))){pending.delete(street);connected.push(...polygons);changed=true;}
   }}
-  for(const street of pending)problems.push({code:'route-not-clear',message:`street "${street.id}" has no connection to the circuit`});
-  const groundRoutes=scene.routes.filter(r=>r.kind!=="water" && r.kind!=="ambient").map(route=>({route,...routeInfrastructure(route)}));
+  for(const street of pending)problems.push({code:'route-not-clear',message:`street "${street.id}" has no connection to the driving loop`});
+  const groundRoutes=scene.routes.filter(r=>["rail","path","air"].includes(r.kind)).map(route=>({route,...routeInfrastructure(route)}));
   for(const route of scene.routes.filter(r=>r.kind==="path" && r.width!==undefined)){
     let obstruction:string|undefined;
     const frames=routeFrames(route),anchors=routePath(route).points;
@@ -283,7 +289,7 @@ export function validateScenePlayability(
       else if(distanceToRoad(path,p.x,p.y)<halfRoad+ROAD_CURB_WIDTH+margin)obstruction="racing road and curbs";
       else if(waters.some(w=>pointInPolygon(p.x,p.y,w.polygon) || distanceToRoad([...w.polygon,w.polygon[0]!],p.x,p.y)<margin))obstruction="water bank";
       else if(object)obstruction=`placed object "${object.id}"`;
-      else if(streetGround.reserved.some(r=>inRect(r,p.x,p.y,margin)))obstruction='a street and sidewalk';
+      else if(streetGround.reserved.some(r=>onPolygon(r,p.x,p.y,margin)))obstruction='a street and sidewalk';
       else {
         const other=groundRoutes.find(other=>other.route!==route && distanceToRoad(other.points,p.x,p.y)<margin+other.radius);
         if(other)obstruction=other.route.kind==="air" ? "runway" : "another ground route";
@@ -295,22 +301,27 @@ export function validateScenePlayability(
       problems.push({code:"route-not-clear",message:`path "${route.id}" ${reason}`});
     }
   }
+  for(const route of scene.routes)for(const stop of route.stops??[]){
+    const site=scene.sites.find(s=>s.id===stop.site),p=route.points[stop.anchor]!;
+    if(!site || route.kind!=='walk' && site.kind!=='stop' && site.kind!=='station' || site && Math.hypot(siteEntry(scene,site).x-p.x,siteEntry(scene,site).y-p.y)>120)
+      problems.push({code:'site-not-connected',message:`stop "${stop.id}" on route "${route.id}" needs a connected ${route.kind==='walk' ? 'destination' : 'platform'} site within 120 units`});
+  }
   for(const object of scene.objects.filter(o=>o.route && roleOf(o)==='npc')){
     const route=scene.routes.find(r=>r.id===object.route!.id)!,path=routePath(route),radius=route.kind==="ambient" ? assemblyHorizontalRadius(object.spec as import("./object-dsl").ObjectDsl,object.scale) : objectRadius(object),bodyHeight=objectHeight(object);
     let invalid=false;
     const steps=Math.ceil(path.length/12);
     for(let sample=0;sample<=steps;sample++){
-      const d=sample/steps*path.length;
-      const p=routePoint(route,d);
+      const d=sample/steps*path.length,p=routePoint(route,d),before=routePoint(route,d-12),after=routePoint(route,d+12),headingRad=Math.atan2(after.y-before.y,after.x-before.x);
       if(p.x<radius || p.y<radius || p.x>width-radius || p.y>scene.canonical.height-radius){invalid=true;break;}
       if(route.kind==="ambient" && !route.altitude && Array.from({length:9},(_,i)=>i===8 ? p : {x:p.x+Math.cos(i*Math.PI/4)*radius,y:p.y+Math.sin(i*Math.PI/4)*radius}).some(q=>waterAt(scene.terrain,q.x,q.y))){invalid=true;break;}
-      if(route.kind==="water"){
-        if(!navigableWater(scene.terrain,p.x,p.y,radius,bodyHeight)){invalid=true;break;}
-      }
-      const bottom=routeElevation(scene,route,p,d),top=bottom+bodyHeight;
-      if(solidGrid.query(p.x,p.y,radius+maxRadius).some(c=>bottom<c.top-.05 && top>c.bottom+.05 && Math.hypot(c.x-p.x,c.y-p.y)<radius+c.r)){invalid=true;break;}
+      if(route.kind==='walk' && !onWalkway(scene,p.x,p.y,radius)){invalid=true;break;}
+      if(route.kind==="water" && !navigableWater(scene.terrain,p.x,p.y,radius,bodyHeight)){invalid=true;break;}
+      const bottom=routeElevation(scene,route,p,d),pose={...p,elevation:bottom,headingRad};
+      const contacts=objectContacts(scene,object,pose);
+      if((route.kind==='street' || route.kind==='tram') && contacts.some(c=>Array.from({length:9},(_,i)=>i===8 ? {x:c.x,y:c.y} : {x:c.x+Math.cos(i*Math.PI/4)*c.r,y:c.y+Math.sin(i*Math.PI/4)*c.r}).some(q=>!streetGround.roads.some(poly=>pointInPolygon(q.x,q.y,poly)) && distanceToRoad(roadPoints(scene),q.x,q.y)>halfRoad))){invalid=true;break;}
+      if(contacts.some(body=>solidGrid.query(body.x,body.y,body.r+maxRadius).some(c=>body.bottom<c.top-.05 && body.top>c.bottom+.05 && Math.hypot(c.x-body.x,c.y-body.y)<body.r+c.r))){invalid=true;break;}
     }
-    if(invalid)problems.push({code:"route-not-clear",message:`route for "${object.id}" must keep its body in bounds, clear of solids and in navigable water when afloat`});
+    if(invalid)problems.push({code:"route-not-clear",message:`route for "${object.id}" must keep its body in bounds, clear of solids, on its ${route.kind==='walk' ? 'pedestrian network' : route.kind==='street' || route.kind==='tram' ? 'existing roadway' : route.kind==='water' ? 'navigable water' : 'accepted route'}`});
   }
 
   const parkedContacts=actorContacts(scene,0);

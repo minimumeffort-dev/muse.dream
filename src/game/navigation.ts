@@ -3,7 +3,7 @@ import { roadPoints } from "../scene/road";
 import type { Scene } from "../scene/schema";
 import type { CarState } from "../sim/car";
 import { actorPoses } from "../sim/actors";
-import {cycleBands} from '../scene/streets';
+import {cyclePolygons} from '../scene/streets';
 
 /** A small north-up map keeps a multi-screen world legible without more controls. */
 export function createWorldMap(canvas: HTMLCanvasElement, scene: Scene) {
@@ -34,8 +34,8 @@ export function createWorldMap(canvas: HTMLCanvasElement, scene: Scene) {
     map.lineWidth=street.width;map.lineJoin='round';map.strokeStyle='#a7aca5';map.stroke();
   }
   map.fillStyle='#c78d75';
-  for(const r of cycleBands(scene.streets))map.fillRect(r.x0,r.y0,r.x1-r.x0,r.y1-r.y0);
-  for(const route of scene.routes)if(route.kind==="rail" || route.kind==="path"){
+  for(const polygon of cyclePolygons(scene.streets)){map.beginPath();polygon.forEach((p,i)=>i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));map.closePath();map.fill();}
+  for(const route of scene.routes)if(route.kind==="rail" || route.kind==="tram" || route.kind==="path"){
     map.beginPath();route.points.forEach((p,i)=>i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));if(route.mode==="loop")map.closePath();
     map.strokeStyle=route.surface==="cycle" ? "#76ad9c" : route.surface==="paved" ? "#a5afb0" : "#c9ac7c";map.lineWidth=route.width??12;map.stroke();
   }

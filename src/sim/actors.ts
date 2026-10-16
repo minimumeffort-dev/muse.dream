@@ -1,3 +1,4 @@
+import {objectContacts} from "../scene/contacts";
 import type { Scene,SceneObject } from "../scene/schema";
 import { routePose,routePath,type Route } from "../scene/routes";
 import { drivingHeight,waterAt,terrainHeight } from "../scene/terrain";
@@ -17,7 +18,7 @@ const bases=new WeakMap<Scene,Map<string,number>>();
 export function actorPose(scene:Scene,object:SceneObject,timeS:number,state?:CarState):ActorPose {
   const control=controlFor(object),route=object.route && scene.routes.find(r=>r.id===object.route!.id)!,program=behaviorFor(scene,object);
   const profile=controlOf(object.spec);
-  const kind=profile==="boat" ? "water" : profile==="plane" ? "air" : route?.kind==="ambient" ? route.altitude ? "air" : "path" : route?.kind??"path";
+  const kind=profile==="boat" ? "water" : profile==="plane" ? "air" : route?.kind==="ambient" ? route.altitude ? "air" : "path" : route?.kind==="walk" || route?.kind==="street" ? "path" : route?.kind==="tram" ? "rail" : route?.kind??"path";
   if(state?.control.kind==="vehicle" && state.control.id===object.id)
     return {id:object.id,x:state.x,y:state.y,elevation:state.elevation,headingRad:state.headingRad,kind,speed:Math.hypot(state.vx,state.vy),distance:state.distance,travelled:state.distance,vx:state.vx,vy:state.vy,pitch:state.pitch,bank:state.bank};
   const parked=state?.vehicles.find(v=>v.id===object.id);
@@ -51,8 +52,8 @@ export function routeElevation(scene:Scene,route:Route,point:{x:number;y:number}
 }
 export function actorPoses(scene:Scene,timeS:number,state?:CarState) {return routeObjects(scene).map(o=>actorPose(scene,o,timeS,state));}
 export function actorContacts(scene:Scene,timeS:number,state?:CarState) {
-  const contacts=routeObjects(scene).filter(o=>archetypeOf(o).interaction!=="decor" && !(state?.control.kind==="vehicle" && state.control.id===o.id)).map(object=>{
-    const p=actorPose(scene,object,timeS,state);return {...p,r:objectRadius(object),bottom:p.elevation,top:p.elevation+objectHeight(object),vx:p.vx??0,vy:p.vy??0};
+  const contacts=routeObjects(scene).filter(o=>archetypeOf(o).interaction!=="decor" && !(state?.control.kind==="vehicle" && state.control.id===o.id)).flatMap(object=>{
+    const p=actorPose(scene,object,timeS,state);return objectContacts(scene,object,p).map(c=>({...p,...c,id:object.id,vx:p.vx??0,vy:p.vy??0}));
   });
   const parked=state?.vehicles.find(v=>v.id===null);
   if(parked && state?.control.kind!=="car")contacts.push({...parked,id:"@player",kind:"path",speed:0,travelled:parked.distance,r:playerRadius(scene),bottom:parked.elevation,top:parked.elevation+playerHeight(scene),vx:0,vy:0});

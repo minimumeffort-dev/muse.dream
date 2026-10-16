@@ -4,6 +4,7 @@ import { measuredScale, measureProblem } from "./measure";
 import { objectDslSchema, hasAnimatedJoints, MAX_ANIMATED_ASSEMBLIES,impactOf,isReactive } from "./object-dsl";
 import { terrainSchema } from "./terrain";
 import { routeSchema } from "./routes";
+import {siteSchema,crossingSchema} from './sites';
 import {streetSchema,surfaceSchema,markingSchema} from './streets';
 import {NPC_LIMITS,roleSchema,behaviorSchema,roleOf,controlFor,agentProblem} from './agents';
 
@@ -128,11 +129,13 @@ export const sceneSchema = z.object({
         radius: z.number().nonnegative(),
       }),
       roadWidth: z.number().positive(),
+      style: z.enum(["racing","street"]).optional(),
     }),
   }),
     z.object({ kind: z.literal("generated-spline-loop"), params: z.object({
       points: z.array(z.object({x: z.number().min(0).max(MAX_WORLD_SIZE), y: z.number().min(0).max(MAX_WORLD_SIZE)}).strict()).min(6).max(64).refine(points=>points.every((p,i)=>{const next=points[(i+1)%points.length]!;return Math.hypot(p.x-next.x,p.y-next.y)>8;}), "road anchors must be distinct and at least 8 units apart"),
       roadWidth: z.number().min(40).max(240),
+      style: z.enum(["racing","street"]).optional(),
     }).strict() }).strict(),
   ]),
   spawn: z.object({
@@ -146,6 +149,8 @@ export const sceneSchema = z.object({
   streets:z.array(streetSchema).max(32).default([]),
   surfaces:z.array(surfaceSchema).max(64).default([]),
   markings:z.array(markingSchema).max(128).default([]),
+  sites:z.array(siteSchema).max(256).default([]),
+  crossings:z.array(crossingSchema).max(64).default([]),
   player: objectDslSchema.optional().refine((spec) => !spec || spec.body.interaction === "solid", {
     message: "player requires a solid body",
   }).refine((spec)=>!spec?.foundation,{message:"player cannot carry a terrain foundation"})
@@ -186,7 +191,7 @@ export const sceneSchema = z.object({
   if(scene.objects.filter(o=>o.spec && "dslVersion" in o.spec && o.spec.dslVersion===2 && o.spec.emitter).length>16)ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 16 particle emitters"});
   for(const object of scene.objects)if(object.route){
     const route=scene.routes.find(r=>r.id===object.route!.id);
-    if(!route || !object.spec || !("dslVersion" in object.spec) || object.spec.foundation || object.spec.body.interaction!==(route.kind==="ambient" ? "decor" : "solid") || object.spec.dslVersion===2 && object.spec.contacts)
+    if(!route || !object.spec || !("dslVersion" in object.spec) || object.spec.foundation || object.spec.body.interaction!==(route.kind==="ambient" || route.kind==="walk" ? "decor" : "solid") || object.spec.dslVersion===2 && object.spec.contacts && !["street","tram","rail"].includes(route.kind))
       ctx.addIssue({code:z.ZodIssueCode.custom,message:"route actors need an existing route without foundations/compound contacts; ambient actors require decor, other routes require a solid cylinder"});
   }
 });

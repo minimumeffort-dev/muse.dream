@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import {partition} from "../scene/polygons";
 import { bridgeCoordinates, bridgePolygon, clipPolygon as clip, type Bridge } from "../scene/landscape-dsl";
 import type { Point, Scene } from "../scene/schema";
 import { sampleTerrain, terrainHeight, bridgeHeight, terrainSurfaceHeight, TERRAIN_STEP } from "../scene/terrain";
@@ -12,19 +13,6 @@ export function bridgeHeightAt(doc:Scene,bridge:Bridge):HeightAt {
 }
 export function surfaceHeight(doc: Scene, x: number, y: number, heightAt?:HeightAt): number {
   return terrainSurfaceHeight(doc.terrain,x,y,heightAt);
-}
-
-/** Partition against a convex outline, preserving the exact shared boundary in either winding. */
-function partition(polygon:Point[],outline:Point[]):{inside:Point[];outside:Point[][]} {
-  const winding=Math.sign(outline.reduce((area,a,i)=>{const b=outline[(i+1)%outline.length]!;return area+a.x*b.y-b.x*a.y;},0));
-  let inside=polygon;const outside:Point[][]=[];
-  for(let i=0;i<outline.length && inside.length>=3;i++) {
-    const a=outline[i]!,b=outline[(i+1)%outline.length]!;
-    const distance=(p:Point)=>winding*((b.x-a.x)*(p.y-a.y)-(b.y-a.y)*(p.x-a.x));
-    const piece=clip(inside,p=>-distance(p));if(piece.length>=3)outside.push(piece);
-    inside=clip(inside,distance);
-  }
-  return {inside,outside};
 }
 
 /** Clip authored polygons onto the actual ground triangles, rather than sampling a second mesh. */

@@ -9,7 +9,8 @@ import { worldSource, worldModules } from '../../src/scene/world-fixture';
 
 const canvas=document.querySelector('canvas'),grid=document.querySelector('.grid');
 const view=document.querySelector('#view'),phase=document.querySelector('#phase');
-const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+// Review-only: retain native pixels for documentation exports between frames.
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,1.5)); renderer.setScissorTest(true);
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
 const params=new URLSearchParams(location.search),focus=params.getAll('asset');

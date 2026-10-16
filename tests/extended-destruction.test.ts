@@ -8,7 +8,7 @@ import {objectContacts} from "../src/scene/contacts";
 import {objectPlacement} from "../src/scene/placement";
 import {objectSupport} from "../src/scene/object-support";
 import {parseScene} from "../src/scene/schema";
-import {createWorldScene} from "../src/scene/world-fixture";
+import {createLegacyWorld as createWorldScene} from "./fixtures/legacy-world"; // Frozen engine regression world; the live city is tested separately.
 import {createFixtureScene,buildMaskForScene} from "../src/scene/fixture";
 import {drivingHeight} from "../src/scene/terrain";
 import {buildPaperMask} from "../src/sim/mask";
@@ -163,11 +163,12 @@ describe("partial buildings retain structure and collisions",()=>{
 });
 
 const full=createWorldScene(),fullWorld:World={scene:full,roadMask:buildMaskForScene(full),driveMask:buildPaperMask(full.canonical.width,full.canonical.height),carRadius:11};
-describe("live destructible world",()=>{
+describe("preserved destructible-world regression",()=>{
   it("adds ten placed examples under the existing impact and fragment limits",()=>{
     expect(full.objects).toHaveLength(796);const reactive=full.objects.filter(o=>isReactive(o.spec));expect(reactive).toHaveLength(21);
     expect(reactive.reduce((sum,o)=>sum+(o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && o.spec.impact?.kind!=='bounce' ? objectFragments(o.spec).length : 0),0)).toBe(97);
-    expect(examples.objects).toHaveLength(10);
+    expect(examples.objects).toHaveLength(0); // Asset libraries no longer contain hidden live placements.
+    expect(examples.assemblies).toHaveLength(6);
   });
   it.each(['park_bench','station_bench','orchard_workshop','wayside_bakehouse'])("allows an actual off-road impact on %s without damaging the circuit",id=>{
     const object=full.objects.find(o=>o.id===id)!,zone=objectContacts(full,object).find(c=>c.zoneId),contact=zone??objectContacts(full,object)[0]!;

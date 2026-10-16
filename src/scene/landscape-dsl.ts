@@ -54,6 +54,7 @@ export type Bridge = z.infer<typeof bridgeSchema>;
 export type Landscape = z.infer<typeof landscapeSchema>;
 
 export const watercourseSchema=z.object({
+  ends:z.enum(["round","open"]).default("round"),
   id,stations:z.array(z.object({x:point.shape.x,y:point.shape.y,width:z.number().finite().min(80).max(1200)}).strict()).min(2).max(8),
   level:z.number().finite().min(0).max(300),depth:z.number().finite().min(2).max(24),
   bankWidth:z.number().finite().min(20).max(120),color:z.string().regex(/^#[0-9a-fA-F]{6}$/),
@@ -62,7 +63,7 @@ export const watercourseSchema=z.object({
 }).strict();
 /** One continuous basin, widening into pools and closing with rounded source/outlet banks. */
 export function compileWatercourse(input:z.input<typeof watercourseSchema>):Water {
-  const {stations,...data}=watercourseSchema.parse(input),outline:Point[]=[];
+  const {stations,ends,...data}=watercourseSchema.parse(input),outline:Point[]=[];
   const normals=stations.map((p,i)=>{
     const a=stations[Math.max(0,i-1)]!,b=stations[Math.min(stations.length-1,i+1)]!,length=Math.hypot(b.x-a.x,b.y-a.y);
     if(length<8) throw new Error("watercourse stations must be distinct");
@@ -71,9 +72,9 @@ export function compileWatercourse(input:z.input<typeof watercourseSchema>):Wate
   const edge=(i:number,side:number)=>({x:stations[i]!.x+normals[i]!.x*stations[i]!.width/2*side,y:stations[i]!.y+normals[i]!.y*stations[i]!.width/2*side});
   for(let i=0;i<stations.length;i++) outline.push(edge(i,1));
   const cap=(i:number,start:number)=>{const p=stations[i]!,n=normals[i]!,a=Math.atan2(n.y,n.x)+start;for(let j=1;j<8;j++){const angle=a-Math.PI*j/8;outline.push({x:p.x+Math.cos(angle)*p.width/2,y:p.y+Math.sin(angle)*p.width/2});}};
-  cap(stations.length-1,0);
+  if(ends==="round")cap(stations.length-1,0);
   for(let i=stations.length-1;i>=0;i--) outline.push(edge(i,-1));
-  cap(0,Math.PI);
+  if(ends==="round")cap(0,Math.PI);
   return waterSchema.parse({...data,polygon:outline,waves:{speed:70,damping:1.4,strength:1.2}});
 }
 

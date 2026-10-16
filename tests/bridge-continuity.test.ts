@@ -4,7 +4,7 @@ import { WorldLandscape } from "../src/game/landscape";
 import { curbGeometry, roadGeometry, roadMarkingGeometry, roadSections } from "../src/game/environment";
 import { tiledMesh } from "../src/game/batching";
 import { surfaceGeometry, surfaceHeight } from "../src/game/surface";
-import { createWorldScene } from "../src/scene/world-fixture";
+import {createLegacyWorld as createWorldScene} from "./fixtures/legacy-world"; // Frozen engine regression world; the live city is tested separately.
 import { createFixtureScene, buildMaskForScene } from "../src/scene/fixture";
 import { bridgeAt, bridgeCoordinates, type Bridge } from "../src/scene/landscape-dsl";
 import { bridgeFitsRoad, roadFrames, ROAD_SURFACE_LIFT } from "../src/scene/road";

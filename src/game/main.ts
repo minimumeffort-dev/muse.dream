@@ -117,7 +117,7 @@ function start(): void {
     const placement=objectPlacement(doc,object);
     group.position.y=placement.base+1.5;group.quaternion.copy(placement.rotation);
     group.userData.sceneObject=object;
-    group.userData.ambient=!!object.route && doc.routes.find(r=>r.id===object.route!.id)?.kind==="ambient";
+    group.userData.ambient=!!object.route && ["ambient","walk"].includes(doc.routes.find(r=>r.id===object.route!.id)?.kind??"");
     scene.add(group);
     objects.push(group);
     if(archetypeOf(object).interaction === "knockable") propMeshes.set(object.id, group);
@@ -228,6 +228,7 @@ function start(): void {
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
   const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,switching:240,locomotion:180,swimming:180},(clip)=>{
     resetPosition(true);worldTime.value=0;setMode("playing");
+    if(clip==='switching'){const bike=doc.objects.find(o=>o.id==='village_bike')!;car={...car,x:bike.x-40,y:bike.y,headingRad:0,elevation:drivingHeight(doc.terrain,bike.x-40,bike.y)};}
     if(clip==='locomotion' || clip==='swimming')car=movementReviewStart(car,world,clip==='swimming' ? 'swim' : 'walk');
   },(clip:string,frame:number)=>{
     keys.clear();
@@ -240,11 +241,11 @@ function start(): void {
       if(frame<140)keys.add('KeyS');if(frame>=50 && frame<125)keys.add('ShiftLeft');
       if(frame>=85 && frame<110)keys.add('KeyA');return;
     }
-    if(frame===18 || frame===78 || frame===210)useRide();
-    if(frame>=18 && frame<63)keys.add("KeyS");
-    if(frame>=100 && frame<165)keys.add("KeyW");
-    if(frame>=140 && frame<160)keys.add("KeyD");
-    if(frame>=168 && frame<198)keys.add("KeyS");
+    if(frame===18 || frame===52 || frame===180)useRide();
+    if(frame>=22 && frame<44)keys.add("KeyD");
+    if(frame>=68 && frame<130)keys.add("KeyW");
+    if(frame>=135 && frame<162)keys.add("KeyS");
+
   }) : undefined;
   renderer.setAnimationLoop(() => {
     const captureDt=capture?.begin();

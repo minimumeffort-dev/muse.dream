@@ -19,3 +19,7 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    color: /#[0-9a-fA-F]{6}\b/
    string: JSON double-quoted string without literal CR/LF.
    Whitespace and // line comments are ignored. *)
+
+(* A position2 field accepts an XY array or a file-local junction identifier.
+   road/street require exactly one points or via field. A route_path block may
+   contain named stop anchors; ordinary path blocks accept point/let/repeat only. *)

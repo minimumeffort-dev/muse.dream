@@ -2,13 +2,15 @@ import {MAX_WORLD_SIZE} from './world-bounds';
 import { z } from "zod";
 
 export const routeSchema=z.object({
-  id:z.string().min(1).max(40),kind:z.enum(["rail","path","water","air","ambient"]),mode:z.enum(["loop","shuttle"]),
+  id:z.string().min(1).max(40),kind:z.enum(["rail","path","water","air","ambient","street","tram","walk"]),mode:z.enum(["loop","shuttle"]),
   speed:z.number().finite().min(.5).max(160),altitude:z.number().finite().min(60).max(300).optional(),
+  gauge:z.number().finite().min(10).max(24).optional(),
+  stops:z.array(z.object({id:z.string().regex(/^[a-z][a-z0-9_]{0,39}$/),anchor:z.number().int().min(0).max(63),waitS:z.number().finite().min(.1).max(30),site:z.string().regex(/^[a-z][a-z0-9_]{0,39}$/)}).strict()).max(16).optional(),
   width:z.number().finite().min(16).max(120).optional(),surface:z.enum(["trail","cycle","paved"]).optional(),
   waitS:z.number().finite().min(0).max(12).default(0),
   points:z.array(z.object({x:z.number().finite().min(0).max(MAX_WORLD_SIZE),y:z.number().finite().min(0).max(MAX_WORLD_SIZE)}).strict()).min(2).max(64),
 }).strict().superRefine((route,ctx)=>{
-  if(route.kind!=="ambient" && route.speed<12)ctx.addIssue({code:z.ZodIssueCode.custom,message:"vehicle routes require speed 12..160; ambient routes allow .5..160"});
+  if(route.kind!=="ambient" && route.kind!=="walk" && route.speed<12)ctx.addIssue({code:z.ZodIssueCode.custom,message:"vehicle routes require speed 12..160; ambient routes allow .5..160"});
   if(route.kind==="air" && !route.altitude || route.altitude!==undefined && route.kind!=="air" && route.kind!=="ambient")
     ctx.addIssue({code:z.ZodIssueCode.custom,message:"air routes require altitude; only air and ambient routes accept it"});
   if((route.width!==undefined || route.surface!==undefined) && route.kind!=="path")ctx.addIssue({code:z.ZodIssueCode.custom,message:"width and surface belong to path routes"});
@@ -18,6 +20,11 @@ export const routeSchema=z.object({
     ctx.addIssue({code:z.ZodIssueCode.custom,message:"route points must be at least 8 units apart"});
   if(route.mode==="loop" && Math.hypot(route.points[0]!.x-route.points.at(-1)!.x,route.points[0]!.y-route.points.at(-1)!.y)<8)
     ctx.addIssue({code:z.ZodIssueCode.custom,message:"loop closure must be at least 8 units"});
+  if(route.gauge!==undefined && route.kind!=="rail" && route.kind!=="tram")ctx.addIssue({code:'custom',message:'gauge belongs to rail and tram routes'});
+  if(route.stops?.length){
+    if(!['street','tram','rail','walk'].includes(route.kind))ctx.addIssue({code:'custom',message:'stops belong to street, tram, rail or walking routes'});
+    if(new Set(route.stops.map(s=>s.id)).size!==route.stops.length || new Set(route.stops.map(s=>s.anchor)).size!==route.stops.length || route.stops.some(s=>s.anchor>=route.points.length))ctx.addIssue({code:'custom',message:'stops need unique IDs and existing unique anchor indices'});
+  }
   const length=route.points.reduce((sum,p,i)=>i ? sum+Math.hypot(p.x-route.points[i-1]!.x,p.y-route.points[i-1]!.y) : 0,0)+
     (route.mode==="loop" ? Math.hypot(route.points[0]!.x-route.points.at(-1)!.x,route.points[0]!.y-route.points.at(-1)!.y) : 0);
   if(length>12000)ctx.addIssue({code:z.ZodIssueCode.custom,message:"route length exceeds 12000"});
@@ -70,16 +77,19 @@ export function routeInfrastructure(route:Route) {
 }
 /** Stateless distance clock keeps all carriages on the same centerline, including corners. */
 export function routePose(route:Route,timeS:number,offset=0) {
-  const {length}=routePath(route),travelS=length/route.speed,cycle=travelS+route.waitS;
-  const leg=Math.floor(timeS/cycle),phase=modulo(timeS,cycle),waiting=phase<route.waitS,travel=Math.max(0,phase-route.waitS)*route.speed;
-  let distance:number,direction=1;
-  if(route.mode==="loop") {
-    distance=modulo(travel-offset,length);
-  } else {
-    direction=leg%2===0 ? 1 : -1;
-    distance=direction===1 ? Math.max(0,travel-offset) : Math.min(length,length-travel+offset);
+  const path=routePath(route),{length}=path,stops=route.stops??[];
+  const cycle=length/route.speed+route.waitS+stops.reduce((sum,s)=>sum+s.waitS,0),leg=Math.floor(timeS/cycle),phase=modulo(timeS,cycle),direction=route.mode==='shuttle' && leg%2 ? -1 : 1;
+  const ordered=stops.map(s=>({...s,distance:direction===1 ? path.distances[s.anchor]! : length-path.distances[s.anchor]!})).sort((a,b)=>a.distance-b.distance);
+  let remaining=Math.max(0,phase-route.waitS),travel=0,waiting=phase<route.waitS;
+  if(!waiting)for(const stop of ordered){
+    const seconds=(stop.distance-travel)/route.speed;
+    if(remaining<seconds){travel+=remaining*route.speed;remaining=0;break;}
+    remaining-=seconds;travel=stop.distance;
+    if(remaining<stop.waitS){waiting=true;remaining=0;break;}
+    remaining-=stop.waitS;
   }
-  const point=routePoint(route,distance),before=routePoint(route,distance-12),after=routePoint(route,distance+12);
-  const travelled=leg*length+travel-offset;
+  if(!waiting)travel+=remaining*route.speed;
+  const distance=route.mode==='loop' ? modulo(travel-offset,length) : Math.max(0,Math.min(length,direction===1 ? travel-offset : length-travel+offset));
+  const point=routePoint(route,distance),before=routePoint(route,distance-12),after=routePoint(route,distance+12),travelled=leg*length+travel-offset;
   return {...point,headingRad:Math.atan2(after.y-before.y,after.x-before.x)+(direction===-1 ? Math.PI : 0),distance,travelled,speed:waiting ? 0 : route.speed,direction};
 }

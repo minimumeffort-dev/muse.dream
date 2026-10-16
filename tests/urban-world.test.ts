@@ -4,7 +4,8 @@ import {compileDreamWorld,formatDream,checkDream,compileDreamScene} from '../src
 import {streetSchema,surfaceSchema,markingSchema,unionRects,streetRects,inRect,onStreet,markingPolygons} from '../src/scene/streets';
 import {parseScene} from '../src/scene/schema';
 import {createFixtureScene,buildMaskForScene} from '../src/scene/fixture';
-import {createWorldScene} from '../src/scene/world-fixture';
+import {createWorldScene as createLiveWorld} from '../src/scene/world-fixture';
+import {createLegacyWorld as createWorldScene} from "./fixtures/legacy-world"; // Frozen engine regression world; the live city is tested separately.
 import {validateScenePlayability} from '../src/scene/validate';
 import {buildStreets} from '../src/game/streets';
 import {terrainSurfaceHeight} from '../src/scene/terrain';
@@ -24,9 +25,9 @@ describe('bounded Dream street and ground data',()=>{
   expect(compileDreamWorld(formatDream(example))).toEqual(data);
   expect(compileDreamWorld('dream 2; include district(module=town);',{town:example})).toEqual(data);
  });
- it('rejects unsupported curves, narrow streets, self-crossing ground and degenerate paint',()=>{
+ it('accepts angled streets and rejects narrow, folded or degenerate proposals',()=>{
   const street=data.streets[0]!;
-  for(const change of [{width:59},{width:181},{sidewalk:41},{points:[{x:100,y:100},{x:400,y:400}]},{points:[{x:100,y:100},{x:100,y:101}]}])expect(streetSchema.safeParse({...street,...change}).success).toBe(false);
+  for(const change of [{width:59},{width:181},{sidewalk:41},{points:[{x:100,y:100},{x:400,y:400},{x:110,y:110}]},{points:[{x:100,y:100},{x:100,y:101}]}])expect(streetSchema.safeParse({...street,...change}).success).toBe(false);
   expect(surfaceSchema.safeParse({...data.surfaces[0],points:[{x:0,y:0},{x:100,y:100},{x:0,y:100},{x:100,y:0}]}).success).toBe(false);
   expect(markingSchema.safeParse({...data.markings[0],points:[{x:100,y:100},{x:100,y:100}]}).success).toBe(false);
   expect(surfaceSchema.safeParse({...data.surfaces[0],points:[{x:0,y:0},{x:2000,y:0},{x:2000,y:2000},{x:0,y:2000}]}).success).toBe(false);
@@ -102,7 +103,7 @@ describe('expanded planned world',()=>{
   }
  });
  it.each(['town','suburbs','sports'])('lets the original car drive the %s streets with normal grip',scenario=>{
-  const context={scene:world,roadMask:buildMaskForScene(world),driveMask:buildPaperMask(world.canonical.width,world.canonical.height),carRadius:11};
+  const world=createLiveWorld(),context={scene:world,roadMask:buildMaskForScene(world),driveMask:buildPaperMask(world.canonical.width,world.canonical.height),carRadius:11};
   let car=drivingReviewStart(createCarAtSpawn(world),context,scenario),initial={x:car.x,y:car.y};
   expect(onStreet(world,car.x,car.y)).toBe(true);
   for(let i=0;i<180;i++)car=stepCar(car,{throttle:1,steer:0},1/120,context);

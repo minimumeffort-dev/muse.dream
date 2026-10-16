@@ -10,7 +10,7 @@ import {stepNpcs} from '../src/sim/npcs';
 import {stepInteractive,toggleRide,nearbyRide} from '../src/sim/interaction';
 import {buildPaperMask} from '../src/sim/mask';
 import {validateScenePlayability} from '../src/scene/validate';
-import {createWorldScene} from '../src/scene/world-fixture';
+import {createLegacyWorld as createWorldScene} from "./fixtures/legacy-world"; // Frozen engine regression world; the live city is tested separately.
 import {npcReviewStart} from '../src/game/review-start';
 import {waterSchema} from '../src/scene/landscape-dsl';
 import source from '../docs/examples/npc-behavior.dream?raw';

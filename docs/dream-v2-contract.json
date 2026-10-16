@@ -16,6 +16,7 @@
   "types": {
     "n": "numeric expression",
     "v2": "[n,n]",
+    "position2": "[n,n] or a file-local junction reference",
     "v3": "[n,n,n]",
     "nums": "[n,...]",
     "symbols": "[symbol,...]",
@@ -60,7 +61,8 @@
         "top",
         "object",
         "visual",
-        "path"
+        "path",
+        "route_path"
       ],
       "id": true,
       "fields": {
@@ -124,7 +126,7 @@
       ],
       "id": false,
       "fields": {
-        "kind": "car|plane|tree|person|bicycle|skateboard|bench|table|building|train|boat|food|custom",
+        "kind": "car|plane|tree|person|bicycle|skateboard|bench|table|building|train|bus|tram|boat|food|custom",
         "axis": "x|y|z",
         "meters": "n"
       }
@@ -241,7 +243,8 @@
       "contexts": [
         "object",
         "visual",
-        "path"
+        "path",
+        "route_path"
       ],
       "id": true,
       "fields": {
@@ -305,23 +308,63 @@
       ],
       "id": true,
       "fields": {
-        "kind": "rail|path|water|air|ambient",
+        "kind": "rail|path|water|air|ambient|street|tram|walk",
         "mode": "loop|shuttle",
         "speed": "n",
         "altitude": "n?",
         "wait_s": "n?",
         "width": "n?",
-        "surface": "trail|cycle|paved?"
+        "surface": "trail|cycle|paved?",
+        "gauge": "n?"
       },
-      "block": "path"
+      "block": "route_path"
     },
     "point": {
       "contexts": [
-        "path"
+        "path",
+        "route_path"
       ],
       "id": false,
       "fields": {
         "at": "point"
+      }
+    },
+    "stop": {
+      "contexts": [
+        "route_path"
+      ],
+      "id": true,
+      "fields": {
+        "at": "v2",
+        "wait_s": "n",
+        "site": "ref"
+      }
+    },
+    "site": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "object": "ref",
+        "kind": "home|market|school|hospital|work|civic|park|station|stop",
+        "entry": "v2",
+        "street": "ref",
+        "width": "n",
+        "points": "points2",
+        "serves": "symbols?"
+      }
+    },
+    "crossing": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "street": "ref",
+        "at": "v2",
+        "width": "n",
+        "junction": "bool?"
       }
     },
     "place": {
@@ -383,9 +426,19 @@
         "depth": "n",
         "bank": "n",
         "color": "color",
-        "flow": "v2"
+        "flow": "v2",
+        "ends": "round|open?"
       },
       "block": "path"
+    },
+    "junction": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "at": "v2"
+      }
     },
     "world": {
       "contexts": [
@@ -394,7 +447,7 @@
       "id": false,
       "fields": {
         "size": "v2",
-        "spawn": "v2",
+        "spawn": "position2",
         "heading_deg": "n",
         "player": "ref?"
       }
@@ -406,7 +459,9 @@
       "id": true,
       "fields": {
         "width": "n",
-        "points": "points2"
+        "points": "points2?",
+        "via": "symbols?",
+        "style": "racing|street?"
       }
     },
     "street": {
@@ -417,7 +472,8 @@
       "fields": {
         "width": "n",
         "sidewalk": "n",
-        "points": "points2",
+        "points": "points2?",
+        "via": "symbols?",
         "cycle_width": "n?"
       }
     },
@@ -471,8 +527,8 @@
       ],
       "id": true,
       "fields": {
-        "from": "v2",
-        "to": "v2",
+        "from": "position2",
+        "to": "position2",
         "width": "n",
         "arch": "n",
         "style": "timber|stone",
@@ -696,8 +752,8 @@
       ],
       "cycleSeparator": 6,
       "minimumSegment": 80,
-      "geometry": "open orthogonal polyline; joined square intersections; optional cycle tracks with painted junction crossings",
-      "acceptance": "every component reaches racing road; riding surface clear of solids; water crossings require an aligned bridge carrying the full street, cycle tracks and sidewalks between rails; dedicated paths remain separate"
+      "geometry": "open polyline in any direction; turns at most 120 degrees; segment-aligned square joins; non-overlapping junctions; optional cycle tracks",
+      "acceptance": "every component reaches driving loop; riding surface clear of solids; water crossings require an aligned bridge carrying the full street, cycle tracks and sidewalks between rails; dedicated paths remain separate"
     },
     "surface": {
       "points": [
@@ -721,6 +777,60 @@
       "block": "point/let/repeat; omit repeated first point"
     },
     "semantics": "visual ground follows terrain/decks; streets and cycle tracks add normal road grip; explicit bridges only, no generated controllers, flattening or traffic"
+  },
+  "cityAccess": {
+    "junctionsPerFile": 128,
+    "sites": 256,
+    "crossings": 64,
+    "site": {
+      "entry": "object-local [X,Z], transformed with placement heading and resolved scale",
+      "points": "world XY, entry is prepended; last point must lie inside the named sidewalk",
+      "width": [
+        12,
+        40
+      ],
+      "maximumLength": 800,
+      "kinds": [
+        "home",
+        "market",
+        "school",
+        "hospital",
+        "work",
+        "civic",
+        "park",
+        "station",
+        "stop"
+      ],
+      "serves": "stop-only site references, at most 8; targets must be reachable on the pedestrian network"
+    },
+    "crossing": {
+      "junction": "optional true expands to zebra crossings on every connected street arm",
+      "width": [
+        12,
+        40
+      ]
+    },
+    "junction": "file-local coordinate ID; road/street use exactly one of via or points; world spawn and bridge ends accept junction IDs; includes do not export symbols",
+    "acceptance": "static building sites require attached exterior entrances and clear dry access paths; stops must reach served sites; short overlapping street endpoints are rejected in site-authored cities"
+  },
+  "transit": {
+    "kinds": [
+      "street",
+      "tram",
+      "walk",
+      "rail",
+      "path",
+      "water",
+      "air",
+      "ambient"
+    ],
+    "stopsPerRoute": 16,
+    "stop": "named route anchor with wait_s .1..30 and a site reference within 120 units; street/tram/rail require a station or stop site; walk may visit destinations",
+    "gauge": [
+      10,
+      24
+    ],
+    "semantics": "street and walk add no infrastructure; tram lays rails in existing carriageways; street/tram keep complete actor contacts on accepted roads; walk keeps the body on paths/crossings/sidewalks; shuttle stops are visited in reverse on return; solid NPC rail/tram/street vehicles may use compound contacts"
   },
   "proportions": {
     "unitsPerMeter": 10,
@@ -774,6 +884,16 @@
         "axis": "x",
         "min": 6,
         "max": 20
+      },
+      "bus": {
+        "axis": "x",
+        "min": 6,
+        "max": 18
+      },
+      "tram": {
+        "axis": "x",
+        "min": 10,
+        "max": 35
       },
       "boat": {
         "axis": "x",

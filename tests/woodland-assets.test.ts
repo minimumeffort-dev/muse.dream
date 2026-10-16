@@ -105,8 +105,8 @@ describe("connected woodland assets",()=>{
     expect(inside(trunk,end(stub,-1))).toBe(true);
     expect(end(stub,1).y-end(stub,-1).y).toBeGreaterThan(4);
     const placements=scene.objects.filter(o=>o.spec?.displayName==='Fallen log');
-    expect(placements).toHaveLength(15);
-    expect(new Set(placements.map(o=>o.headingRad)).size).toBe(15);
+    expect(placements).toHaveLength(2);
+    expect(new Set(placements.map(o=>o.headingRad)).size).toBe(2);
     expect(log.measure).toEqual({kind:'custom',axis:'x',meters:3});
     expect(log.body).toEqual({interaction:'solid',colliderRadius:23,colliderHeight:16});
   });

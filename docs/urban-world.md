@@ -1,55 +1,57 @@
 # A world with places to go
 
-[Dream docs](README.md) / Planned world
+[Dream docs](README.md) / River city
 
-The mock world covers 1.2 × 1 kilometres, nearly twice the previous map's area. The original circuit and countryside stay where they were. Streets connect the town, southern suburbs, sports park and a new district across the canal.
+The world has been rebuilt from scratch. It covers 1.4 × 1.1 kilometres, with an older center, garden streets, a southern neighborhood and a station district across the river. The previous racing layout is no longer a constraint.
 
-![Connected city cycle tracks across a canal bridge](media/city-cycle-lanes.jpg)
+![The actual streets, building footprints, entrances and public transport](media/city-plan.svg)
 
-## Bicycle lanes that go somewhere
+This map comes from the accepted Dream source. Roads are drawn as shared surfaces, so pavement borders cannot close an intersection. The game uses the same geometry for the road mesh, driving mask and connection checks. Run `node scripts/render-city-map.mjs` to regenerate it.
 
-The painted lanes follow actual streets. Each side has a two-metre track, a 0.6-metre separator and a sidewalk outside it. They continue across junctions and bridges, connecting the residential streets, town square, sports park, western lakefront and eastern district. There are over eight kilometres of street centerlines with cycling lanes, with a track on each side. These are connected destinations rather than an isolated oval in a field.
+## Homes, services and work
 
-A bicycle waits on the new city's avenue and another on the western lakefront. The original bicycle still waits near the starting orchard. Press F to leave the car, walk up to a bicycle and press F again. You steer it yourself; lanes do not constrain the controls. The riverside skate park retains its separate recreational circuit.
+There are 187 homes and shops across four areas, with different frontages and setbacks. The center mixes terraces, corner shops and apartments. Garden streets have more space around the houses; the eastbank has larger apartment buildings. Buildings face a street and have a visible entrance path.
 
-![Town blocks and planted courtyards](media/town-center.jpg)
+![Homes and shops facing the main avenue](media/town-center.jpg)
 
-The older town has 44 buildings across eleven occupied blocks and a planted public square. Apartments and offices sit alongside shops and a library. Across the canal, another 36 buildings face the new streets, with trees, seats and planted courtyards inside the blocks. The gateways still connect to the original racing circuit.
+The market hall has a square, produce stalls, a vendor and a commuter who walks there from home. Two neighborhood schools and a technical college sit among the housing and workplaces. The hospital has an entrance apron and a health worker outside. Offices, a library and harbor workshops give the city other destinations.
 
-![Houses facing suburban streets with driveways and gardens](media/suburbs.jpg)
+These are mock places and visible routines. There are no working interiors, hospital services or simulated job market.
 
-The suburbs keep 36 homes with three different silhouettes. Driveways meet the sidewalks without covering the cycling surface; trees stay inside the blocks. The southern boulevard connects the suburbs to the lake crossing and sports park.
+## Buses, tram and regional train
 
-## One connected waterway
+Two bus loops serve the neighborhoods, school, hospital and market. The tram runs along the main avenue to the central station. A regional electric train stops at two connected platforms. Street routes use the actual carriageways; tram rails share the road surface. They do not draw extra paving over streets.
 
-![The lake, river, southern bay and canal form one water body](media/connected-waterway.jpg)
+Stops have named anchors, waits and platform sites in Dream. Platform paths join the pedestrian network, and served destinations must be reachable from them. The regional train is a single rigid railcar, so a shuttle turnaround cannot stack separate carriages. These vehicles follow authored schedules; they do not implement traffic signals or avoidance.
 
-The southern lake narrows into a river, broadens into a bay and continues north as a canal between the sports park and the new city. Its banks follow one width-bearing Dream watercourse. Water keeps its existing surface ripples and current. The older pond and countryside river remain separate habitats.
+![A connected canal bridge carrying the street and cycle tracks](media/city-cycle-lanes.jpg)
 
-Five new bridges carry the streets, bicycle lanes and sidewalks over this waterway. Each crossing reserves the full street width between the rails and blends into dry ground at both ends. A canal launch waits near the bank. Boats and swimmers can travel below a bridge with enough hull/body clearance; a low deck blocks them. F prefers dry shore, then allows a water exit. Leaving a boat underneath a bridge puts the driver in the water, never through the deck.
+Bicycle tracks follow the avenues and continue across the three bridges. Painted symbols and road center lines leave clear gaps at zebra crossings. Junction declarations create the crossings on the street arms, with stop lines before them. Walkers, drivers and cyclists share one world; you still choose your own route when controlling a vehicle.
 
-![The southern lake and its wooded banks](media/south-lake.jpg)
+## River, lake and parks
 
-## Parks and people
+The river enters at the north edge, passes under three bridges and widens into a lake that continues beyond the southern boundary. The watercourse has open ends at the world edges, rather than round pools pretending to be a river. Its banks, flow, ripples, boat clearance and swimming support remain engine-owned.
 
-![A football pitch and basketball court in the sports park](media/sports-park.jpg)
+![The continuous river and lake](media/connected-waterway.jpg)
 
-The football pitch is 100 × 64 metres. The basketball surface is 28 × 15 metres, with space around it. Four people practise kicks and dribbles; visitors stand nearby. The golf park has three fairways, greens, sand traps and flags. Their [Dream programs](dream/npcs.md) alternate practice with rest and turn toward a nearby player. Match rules, scoring and golf controls are still to come.
+The eastbank has a 100 × 64-metre football pitch. A basketball court, sports pavilion and golf fairway occupy the southern park area. Players practise kicks and dribbles and notice a nearby visitor. Scores, matches and golf controls are still to come.
 
-![Three fairways with greens and sand traps](media/golf-park.jpg)
+![The football ground between eastbank streets](media/sports-park.jpg)
 
-## Everything is Dream data
+Woodland and meadow surround the city. Oaks, birches, firs, rowan, apple trees and willows mix with understory plants. Deer have a clear habitat, and gulls fly over the river. Destructible trees and benches remain, alongside breakable market props and shop porches.
 
-[The entry file](../src/scene/world/open-world.dream) includes an [expansion module](../src/scene/world/urban_expansion.dream). The [waterfront district](../src/scene/world/city_waterfront.dream) and [waterside gardens](../src/scene/world/waterside_gardens.dream) describe the new streets and placements. Assets stay separate from where they appear. The complete mock uses 83 reusable assemblies and 796 placements, with no model calls.
+## Dream owns the connections
 
-`street` owns connected carriageways, optional cycle tracks and sidewalks. `surface` paints terrain-following courts, driveways, turf and sand. `marking` adds paint from bounded point blocks. `watercourse` defines a continuous basin; `bridge` supplies an explicit crossing. The engine supplies the geometry, projection and tested controls.
+The [entry source](../src/scene/world/open-world.dream) owns the shared junctions, road, streets, terrain and bridges. [Civic buildings](../src/scene/world/civic.dream), [stations](../src/scene/world/stations.dream), [transport](../src/scene/world/transport.dream), [people](../src/scene/world/life.dream) and frontage modules add the places and activity.
 
-[Compile the complete city-lane and canal example](examples/city-cycle-lanes.dream), or read the [world guide](dream/worlds.md#streets-grounds-and-paint) and [reference](dream/reference.md#urban-ground-bounds). The acceptance boundary rejects disconnected streets, blocked riding surfaces, covered lanes and water crossings without full-width bridge support.
+- `junction` gives connecting streets one coordinate to share.
+- `site` attaches a local entrance to an object and a clear world-space path to a named sidewalk.
+- `crossing` connects pavements; `junction=true` supplies the street-arm crossings.
+- `stop` connects a route's named wait to a platform or walking destination.
+- `street`, `tram` and `walk` routes use the accepted network.
 
-## Bigger without streaming
+All declared entrances and platforms belong to one pedestrian network. The compiler rejects detached entrances, blocked paths, short overlapping street endpoints, missing destinations, unsupported water crossings and vehicles that leave their accepted domain. The new architecture has checks for connected roofs, façade details and supported canopies.
 
-The complete world stays resident. Roads, lanes, sidewalks, paint and water have local culling tiles. Water retains its original triangles and wave resolution; its solver skips dry cells inside the waterway's bounding grid. Buildings keep the existing compacted, instanced scenery path. Grass retains its sampling density as the map grows.
+[Compile a complete city example](examples/connected-city.dream), read the [connection reference](dream/reference.md#connected-city-declarations), or inspect the [research and design notes](city-design.md).
 
-Assets, shadow resolution, particles, pixel ratio and post-processing keep their quality settings. [Rendering notes](rendering.md) and the [transport verification](evidence/transport-world/verification.md) record measurements and checks. Local timings do not establish a minimum laptop specification.
-
-The live animation budget remains 24 jointed assemblies, including the standing player. Streets currently support right angles. Ground vehicles have one driving height per XY; the water controller separately checks under-bridge clearance. There is no stacked road system, generated terrain excavation, traffic simulation or automatic layout repair.
+The complete world stays resident, with the existing instancing, geometry tiles and frustum culling. Asset detail, pixel ratio, shadows, particles and post-processing retain their quality settings. Ground driving still has one height per XY; boats and swimmers use the water layer below bridges. There is no automatic road repair, generated terrain excavation or traffic solver.

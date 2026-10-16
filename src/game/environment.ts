@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {reservedGround,streetRidingRects,rectPolygon,onStreet} from '../scene/streets';
+import {reservedGround,streetPolygons,onStreet} from '../scene/streets';
 import {buildStreets} from './streets';
 import { bridgeAt, bridgeCoordinates, bridgePolygon } from "../scene/landscape-dsl";
 import type { Point, Scene } from "../scene/schema";
@@ -58,7 +58,7 @@ function timberFootprints(doc: Scene): Point[][] {
 /** Road, paint and effects all conform to the same triangles as the terrain. */
 export function roadGeometry(doc: Scene): THREE.BufferGeometry {
   const sections = roadSections(doc), half = doc.roadMaskRef.params.roadWidth / 2;
-  return surfaceGeometry(doc, sections.slice(1).map((b, i) => roadRibbon(sections[i]!, b, -half, half)), ROAD_SURFACE_LIFT, undefined, undefined, [...timberFootprints(doc),...streetRidingRects(doc.streets).map(rectPolygon)]);
+  return surfaceGeometry(doc, sections.slice(1).map((b, i) => roadRibbon(sections[i]!, b, -half, half)), ROAD_SURFACE_LIFT, undefined, undefined, [...timberFootprints(doc),...streetPolygons(doc.streets,'riding')]);
 }
 
 /** Continuous bands, with top and walls split at the underlying terrain edges. */
@@ -66,7 +66,7 @@ export function curbGeometry(doc: Scene, side: -1 | 1): THREE.BufferGeometry {
   const sections = roadSections(doc), half = doc.roadMaskRef.params.roadWidth / 2;
   const inner = side * (half - ROAD_CURB_WIDTH / 2), outer = side * (half + ROAD_CURB_WIDTH / 2);
   const vertices: number[] = [], colors: number[] = [];
-  const cutouts = [...timberFootprints(doc),...streetRidingRects(doc.streets).map(rectPolygon)];
+  const cutouts = [...timberFootprints(doc),...streetPolygons(doc.streets,'riding')];
   const timber = (doc.terrain.landscape?.bridges ?? []).filter(bridge => bridge.style === "timber");
   const curbLift = (x: number, y: number, lift: number) => {
     let distance = Infinity;
@@ -80,7 +80,7 @@ export function curbGeometry(doc: Scene, side: -1 | 1): THREE.BufferGeometry {
   const cream = new THREE.Color("#f7ddbe"), red = new THREE.Color("#ce776d");
   for (let i = 1; i < sections.length; i++) {
     const a = sections[i - 1]!, b = sections[i]!;
-    const color = Math.floor((a.distance + b.distance) / 28) % 2 ? cream : red;
+    const color = doc.roadMaskRef.params.style=== "street" ? new THREE.Color("#aaa79a") : Math.floor((a.distance + b.distance) / 28) % 2 ? cream : red;
     const top = surfaceGeometry(doc, [roadRibbon(a, b, inner, outer)], 3.1, undefined, undefined, cutouts);
     const positions = top.getAttribute("position");
     for (let j = 0; j < positions.count; j++) {
@@ -110,7 +110,7 @@ export function roadMarkingGeometry(doc: Scene): THREE.BufferGeometry {
     const a = sections[i - 1]!, b = sections[i]!;
     if ((a.distance + b.distance) / 2 % 48 < 22) polygons.push(roadRibbon(a, b, -1.25, 1.25));
   }
-  return surfaceGeometry(doc, polygons, 1.8, undefined, undefined, [...timberFootprints(doc),...streetRidingRects(doc.streets).map(rectPolygon)]);
+  return surfaceGeometry(doc, polygons, 1.8, undefined, undefined, [...timberFootprints(doc),...streetPolygons(doc.streets,'riding')]);
 }
 
 export function drapedPolygon(doc: Scene, polygon: Point[], lift: number): THREE.BufferGeometry {
@@ -179,6 +179,7 @@ export function buildEnvironment(doc: Scene): THREE.Group {
     surface.receiveShadow = true; surface.renderOrder = 1; group.add(surface);
   }
   // The finish line derives from the checkpoint, rather than a fixture coordinate.
+  if(doc.roadMaskRef.params.style!=="street"){
   const start = doc.checkpoints[0]!;
   const direction = new THREE.Vector2(start.b.x - start.a.x, start.b.y - start.a.y);
   const length = direction.length(); direction.normalize();
@@ -190,8 +191,9 @@ export function buildEnvironment(doc: Scene): THREE.Group {
     finishPolygons[(i + j) % 2]!.push(polygon);
   }
   ["#263e4d", "#f8edcf"].forEach((color, i) => group.add(tiledMesh(surfaceGeometry(doc, finishPolygons[i]!, 1.85), toonMaterial(color))));
+  }
   // Passable decoration is instanced in spatial tiles, never a new collider.
-  const corridors=doc.routes.filter(route=>route.kind!=="water" && route.kind!=="ambient").map(route=>{
+  const corridors=doc.routes.filter(route=>["rail","path","air"].includes(route.kind)).map(route=>{
     const {points,radius}=routeInfrastructure(route);return {points,radius:radius+4};
   });
   const path = roadPoints(doc), tufts: THREE.Matrix4[] = [], flowers: THREE.Matrix4[] = [], colors: THREE.Color[] = [];

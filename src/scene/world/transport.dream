@@ -1,0 +1,65 @@
+dream 2;
+asset a_city_tram(module=transit_assets,object=city_tram);
+asset a_city_bus(module=transit_assets,object=city_bus);
+asset a_regional_train(module=transit_assets,object=regional_train);
+asset a_little_rally_car(module=landmarks,object=little_rally_car);
+asset a_meadow_bicycle(module=interactive_world,object=meadow_bicycle);
+asset a_maple_skateboard(module=interactive_world,object=maple_skateboard);
+asset a_town_car(module=landmarks,object=town_car);
+asset a_willow_launch(module=interactive_world,object=willow_launch);
+asset a_cloudhopper_plane(module=interactive_world,object=cloudhopper_plane);
+route market_tram(kind=tram,mode=shuttle,speed=38,gauge=14.35){
+ point(at=[5250,4200]);
+ stop market_tram_stop_1(at=[6460,4200],wait_s=4,site=access_tram_market);
+ stop market_tram_stop_2(at=[8080,4200],wait_s=4,site=access_tram_civic);
+ stop market_tram_stop_3(at=[11130,4200],wait_s=4,site=access_tram_station);
+ point(at=[11150,4200]);
+}
+place market_tram_vehicle(object=a_city_tram,route=market_tram,offset=0,role=npc);
+route west_bus(kind=street,mode=loop,speed=34){
+ stop west_bus_stop_0(at=[3800,3950],wait_s=4,site=access_bus_garden);
+ point(at=[3800,3300]);
+ stop west_bus_stop_2(at=[4550,3350],wait_s=4,site=access_bus_school);
+ point(at=[5200,3200]);
+ point(at=[5200,4200]);
+ stop west_bus_stop_5(at=[5000,4185.714],wait_s=4,site=access_bus_market);
+ point(at=[3800,4100]);
+}
+place west_bus_vehicle(object=a_city_bus,route=west_bus,offset=0,role=npc);
+route south_bus(kind=street,mode=loop,speed=34){
+ stop south_bus_stop_0(at=[3830,6500],wait_s=4,site=access_bus_hospital);
+ point(at=[4200,6500]);
+ point(at=[6100,6200]);
+ point(at=[7000,6200]);
+ stop south_bus_stop_4(at=[7000,7200],wait_s=4,site=access_bus_sports);
+ point(at=[7000,7350]);
+ stop south_bus_stop_6(at=[5800,7310],wait_s=4,site=access_bus_south_school);
+ point(at=[5500,7300]);
+ point(at=[4400,7750]);
+ point(at=[3300,7500]);
+ point(at=[3300,6500]);
+}
+place south_bus_vehicle(object=a_city_bus,route=south_bus,offset=0,role=npc);
+route regional_rail(kind=rail,mode=shuttle,speed=55,gauge=14.35){
+ point(at=[10760,4000]);
+ stop regional_rail_stop_1(at=[10880,4000],wait_s=4,site=access_rail_platform);
+ stop regional_rail_stop_2(at=[13300,4000],wait_s=4,site=access_east_platform);
+ point(at=[13600,4000]);
+}
+place regional_train_vehicle(object=a_regional_train,route=regional_rail,offset=0,role=npc);
+route east_traffic(kind=street,mode=shuttle,speed=40){
+ point(at=[10010,4200]);
+ point(at=[10950,4200]);
+}
+place east_taxi(object=a_little_rally_car,route=east_traffic,offset=0,role=npc);
+route north_traffic(kind=street,mode=shuttle,speed=37){
+ point(at=[6900,2400]);
+ point(at=[7900,2400]);
+}
+place north_car(object=a_little_rally_car,route=north_traffic,offset=0,role=npc);
+place village_bike(object=a_meadow_bicycle,at=[6310,4290],heading_deg=0,role=controllable);
+place town_skateboard(object=a_maple_skateboard,at=[6280,4330],heading_deg=0,role=controllable);
+place harbor_car(object=a_town_car,at=[11700,6375],heading_deg=0,role=controllable);
+place canal_launch(object=a_willow_launch,at=[8955,4700],heading_deg=90,role=controllable);
+place lake_boat(object=a_willow_launch,at=[10550,9300],heading_deg=90,role=controllable);
+place cloudhopper(object=a_cloudhopper_plane,at=[2170,9600],heading_deg=-90,role=controllable);

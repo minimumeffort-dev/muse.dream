@@ -103,11 +103,11 @@ describe("the complete mock world's proportion rules",()=>{
     expect(size('Cloudhopper plane').z).toBeCloseTo(10.8);
     expect(size('Maple skateboard').x).toBeCloseTo(.82);
     expect(size('Meadow bicycle').x).toBeCloseTo(1.8);
-    expect(size('Waving baker').y).toBeCloseTo(1.75);
+    expect(size('Market vendor').y).toBeCloseTo(1.8);
     expect(size('Slatted park bench').x).toBeCloseTo(1.8);
-    for(const name of ['Slatted park bench','Wayside bench']){expect(size(name).y).toBeGreaterThan(.85);expect(size(name).y).toBeLessThan(1);}
+    for(const name of ['Slatted park bench']){expect(size(name).y).toBeGreaterThan(.85);expect(size(name).y).toBeLessThan(1);}
     expect(size('Cloudhopper plane').y).toBeLessThan(3.5);
-    expect(size('Orchard picnic').x).toBeCloseTo(2.4);
-    expect(size('Castle').y).toBeCloseTo(14);
+    expect(size('City bus').x).toBeCloseTo(9.4);
+    expect(size('River hospital').y).toBeCloseTo(16);
   });
 });

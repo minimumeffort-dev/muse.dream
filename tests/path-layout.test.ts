@@ -6,7 +6,7 @@ import {parseScene,type Scene} from "../src/scene/schema";
 import {validateScenePlayability} from "../src/scene/validate";
 import {roadPoints,distanceToRoad,ROAD_CURB_WIDTH} from "../src/scene/road";
 import {waterSchema} from "../src/scene/landscape-dsl";
-import {createWorldScene} from "../src/scene/world-fixture";
+import {createLegacyWorld as createWorldScene} from "./fixtures/legacy-world"; // Frozen engine regression world; the live city is tested separately.
 import {buildRoutes} from "../src/game/routes";
 import {buildEnvironment} from "../src/game/environment";
 import {compileDreamWorld,formatDream} from "../src/scene/dream";

@@ -11,12 +11,12 @@ export type Statement = {
   token: Token; kind: string; scope?: string; name?: string; shape?: string; material?: string;
   value?: Expr; args?: Expr[]; at?: Vec; size?: Vec; to?: Vec; rotate?: Vec; scale?: Expr;
   taper?: Expr; deform?: [Expr, Expr]; motion?: Motion; block?: Statement[]; interaction?: string; color?: string;
-  pattern?:string;axis?:string;control?:string;damage?:{kind:string;args:Expr[];pattern?:string};
+  site?:string;pattern?:string;axis?:string;control?:string;damage?:{kind:string;args:Expr[];pattern?:string};
 };
 export type Component = { token: Token; params: string[]; block: Statement[] };
-export type RouteSource={token:Token;name:string;kind:string;mode:string;speed:Expr;altitude?:Expr;wait?:Expr;width?:Expr;surface?:string;block:Statement[]};
+export type RouteSource={token:Token;name:string;kind:string;mode:string;speed:Expr;altitude?:Expr;wait?:Expr;width?:Expr;surface?:string;gauge?:Expr;block:Statement[]};
 export type PlaceSource={token:Token;name:string;assembly:string;at?:Expr[];route?:string;offset?:Expr;scale?:Expr;heading?:Expr;role?:'prop'|'npc'|'controllable';behavior?:string};
-export type WaterSource={token:Token;name:string;level:Expr;depth:Expr;bank:Expr;color:string;flow:Expr[];block:Statement[]};
+export type WaterSource={ends?:"round"|"open";token:Token;name:string;level:Expr;depth:Expr;bank:Expr;color:string;flow:Expr[];block:Statement[]};
 export type Program = {
   version: 1 | 2; layout: DreamNode[]; nodes?: DreamNode[]; assets?: DreamNode[]; includes?: DreamNode[];
   materials: Map<string, ObjectMaterial>; components: Map<string, Component>;

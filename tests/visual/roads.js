@@ -33,17 +33,18 @@ for(const object of doc.objects.filter(o=>isReactive(o.spec)))locations.push({na
 for(const bridge of doc.terrain.landscape?.bridges ?? []) locations.push({name:bridge.id,x:(bridge.a.x+bridge.b.x)/2,y:(bridge.a.y+bridge.b.y)/2});
 for(const object of doc.objects.filter(object=>['orchard_cart','orchard_bench','orchard_bread','farm_naturalist','pond_tortoise','farm_sunflowers','ridge_cairn'].includes(object.id))) locations.push({name:object.id,x:object.x,y:object.y});
 for(const object of doc.objects.filter(o=>o.route || ['meadow_station','lake_boathouse','rail_passage'].includes(o.id)))locations.push({name:object.id,x:object.x,y:object.y,object,...(object.route && doc.routes.find(r=>r.id===object.route.id)?.kind==='ambient' ? {half:80} : {})});
-if(!dreamV2)locations.push({name:'City cycle tracks',x:9375,y:1700,half:240},{name:'Riverside skate circuit',x:2250,y:2350,half:300});
-if(!dreamV2)locations.push({name:'River source',x:1930,y:1050},{name:'River outlet pool',x:1830,y:2010});
+if(!dreamV2)locations.push({name:'City cycle tracks',x:9000,y:4200,half:420});
+if(!dreamV2)locations.push({name:'River source',x:9000,y:450},{name:'River outlet',x:10100,y:10500});
 for(const water of doc.terrain.landscape?.waters ?? []) locations.push({name:water.id,x:water.polygon.reduce((s,p)=>s+p.x,0)/water.polygon.length,y:water.polygon.reduce((s,p)=>s+p.y,0)/water.polygon.length});
 for(const object of doc.objects.filter(o=>['eco_woodland_fern_0','eco_foxglove_0','eco_river_reeds_0','eco_weeping_willow_0'].includes(o.id)))locations.push({name:object.id,x:object.x,y:object.y,half:110});
-if(!dreamV2)locations.push({name:'Pond shallows',x:2910,y:2460},{name:'Fern understory',x:1550,y:2850},{name:'Riverbank plants',x:1860,y:1960});
-if(!dreamV2)locations.push({ name:'Mixed grove', x:1550, y:2850 }, { name:'Open meadow', x:3150, y:2650 });
-if(!dreamV2)locations.push({name:'Town center',x:6900,y:1800,half:1000},{name:'Town square',x:6925,y:1525,half:330},{name:'Suburbs',x:2100,y:5870,half:1000},{name:'Football pitch',x:6400,y:5020,half:440},{name:'Basketball court',x:7300,y:4945,half:180},{name:'Golf park',x:6700,y:6500,half:850},{name:'South lake',x:4750,y:5500,half:650},{name:'Canal district',x:10000,y:2700,half:2100},{name:'Canal bridge',x:8750,y:2350,half:500},{name:'Lake boulevard',x:4350,y:6900,half:600},{name:'Connected waterway',x:6800,y:6700,half:3400});
+if(!dreamV2)locations.push({name:'Lake shallows',x:10550,y:9300},{name:'Fern understory',x:1500,y:5700},{name:'Riverbank plants',x:8400,y:7200});
+if(!dreamV2)locations.push({ name:'Mixed grove', x:1200, y:2100 }, { name:'Open meadow', x:2500, y:6500 });
+if(!dreamV2)locations.push({name:'Town center',x:6400,y:4000,half:1050},{name:'Town square',x:6400,y:4350,half:380},{name:'Hospital',x:3900,y:6800,half:520},{name:'School',x:4430,y:3650,half:500},{name:'Central station',x:11000,y:4030,half:500},{name:'Suburbs',x:3350,y:4300,half:950},{name:'Football pitch',x:10600,y:4690,half:620},{name:'Basketball court',x:7280,y:7975,half:250},{name:'Golf park',x:6200,y:9600,half:600},{name:'South lake',x:10100,y:9300,half:1000},{name:'Canal district',x:10500,y:4200,half:2100},{name:'Canal bridge',x:9000,y:4200,half:500},{name:'Lake boulevard',x:9255,y:6200,half:600},{name:'Connected waterway',x:9700,y:6000,half:5700});
 else for(const object of doc.objects.filter(o=>!o.route))locations.push({name:object.id,x:object.x,y:object.y});
 const select = document.querySelector('#location'), view = document.querySelector('#view'), canvas = document.querySelector('canvas');
 locations.forEach((location, index) => select.add(new Option(location.name, String(index))));
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+// Review-only: retain native pixels for documentation exports between frames.
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5)); renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap; renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.05;
@@ -64,6 +65,13 @@ let running = true, time = 0, previous = performance.now(), preview=createCarAtS
 document.querySelector("#motion").onclick = event => { running = !running; event.target.textContent = running ? "Pause animation" : "Resume animation"; };
 const wake=document.createElement('button');wake.textContent='Ripple';document.querySelector('header').append(wake);
 wake.onclick=()=>{const location=locations[Number(select.value)];for(const {waves} of landscape.waters) waves.disturb(location.x,location.y,2);};
+const download=document.createElement('button');download.textContent='Save PNG';document.querySelector('header').append(download);
+download.onclick=()=>canvas.toBlob(blob=>{
+  if(!blob)return;
+  const link=document.createElement('a'),url=URL.createObjectURL(blob);link.href=url;
+  link.download=`${select.selectedOptions[0].text.toLowerCase().replaceAll(' ','-')}.png`;link.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
 const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 1, 10000);
 new ResizeObserver(() => renderer.setSize(canvas.clientWidth, canvas.clientHeight, false)).observe(canvas);
 renderer.setAnimationLoop(() => {

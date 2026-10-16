@@ -7,7 +7,7 @@ import {mockCar} from "../src/scene/mock-objects";
 import {buildObject,animateObject} from "../src/game/world3d";
 import {WorldScenery} from "../src/game/scenery";
 import {createFixtureScene} from "../src/scene/fixture";
-import {createWorldScene} from "../src/scene/world-fixture";
+import {createLegacyWorld as createWorldScene} from "./fixtures/legacy-world"; // Frozen engine regression world; the live city is tested separately.
 import {parseScene,type SceneObject} from "../src/scene/schema";
 import {createCarAtSpawn,stepCar} from "../src/sim/car";
 import {buildPaperMask} from "../src/sim/mask";
