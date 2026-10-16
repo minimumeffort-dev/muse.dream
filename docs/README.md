@@ -11,7 +11,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [Runnable examples](dream/examples.md) | Bouncing ball, breakable bench, hinged sign and toppling tree |
 | [Quickstart](dream/quickstart.md) | Compile a complete object, then a playable world |
 | [Compose objects](dream/objects.md) | Parts, materials, components, joints and physical size |
-| [Asset library](asset-library.md) | The 53 mock-world assemblies and their construction details |
+| [Asset library](asset-library.md) | The 83 mock-world assemblies and their construction details |
 | [Build a world](dream/worlds.md) | Terrain, roads, bridges, water, dedicated paths and moving vehicles |
 | [NPCs and control](dream/npcs.md) | Explicit ownership, reusable state machines, proximity and timed routines |
 | [Give things behavior](dream/behavior.md) | Walking, vehicle controls, contacts, doors and destruction |
@@ -32,7 +32,16 @@ node scripts/dream.mjs compile docs/examples/breakable-bench.dream
 npm run dev
 ```
 
-The development server includes a [complete asset gallery](http://127.0.0.1:5173/tests/visual/dream.html?all), a [shared-scale lineup](http://127.0.0.1:5173/tests/visual/proportions.html) a [vehicle control review](http://127.0.0.1:5173/tests/visual/vehicles.html) and a [destruction replay](http://127.0.0.1:5173/tests/visual/destruction.html). The gallery has four viewing angles and fixed animation phases for checking connections. These inspection pages aren't part of the production build.
+The game runs locally at `http://127.0.0.1:5173/`. The inspection tools below require that development server; their paths are copyable instructions. The public previews work without installing anything.
+
+| Tool | Local path | Public preview |
+| --- | --- | --- |
+| Complete asset gallery | `/tests/visual/dream.html?all` | [Full asset atlas](media/assets-all.jpg) |
+| Shared-scale lineup | `/tests/visual/proportions.html` | [Proportion lineup](media/proportions.jpg) |
+| Vehicle control review | `/tests/visual/vehicles.html` | [Vehicle switching video](media/switching.mp4) |
+| Destruction replay | `/tests/visual/destruction.html` | [Destruction video](media/destruction.mp4) |
+
+The local gallery has four viewing angles and fixed animation phases for checking connections. These inspection pages aren't part of the production build.
 
 ## What's implemented
 

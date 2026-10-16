@@ -12,7 +12,7 @@ Pixel ratio, antialiasing, the 2048 × 2048 sun shadow map, shadow coverage, blo
 
 ## Measure a change
 
-Run `npm run dev` and open [the local profiler](http://127.0.0.1:5173/?profile). It is development-only and absent from the production build. Its world starts frozen so the initial view can be compared exactly.
+Run `npm run dev`, then open `http://127.0.0.1:5173/?profile` on your machine. It is development-only and absent from the production build. Its world starts frozen so the initial view can be compared exactly.
 
 - **Measure still** resets to the starting view with its animation clock frozen.
 - **Measure drive** resets the car and applies the same six-second input sequence at a simulation step of 1/60 per rendered frame. The existing simulation still advances in its 1/120 steps. The renderer runs on the browser's real animation loop.

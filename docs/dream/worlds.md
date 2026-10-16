@@ -55,8 +55,9 @@ light or a larger texture while travelling. More visible coverage can draw more
 shadow casters than the old clipped box. This is engine-owned rendering, with no
 new Dream fields or generated shaders.
 
-The development [geometry review](http://127.0.0.1:5173/tests/visual/roads.html?shadows)
-has Stable / Previous shadows, four views and a Pan slider for comparing the same
+After `npm run dev`, open the local geometry review at
+`http://127.0.0.1:5173/tests/visual/roads.html?shadows`. It has Stable / Previous
+shadows, four views and a Pan slider for comparing the same
 scene at a frozen animation phase. [Verification captures](../evidence/sun-shadows)
 keep the comparison with the implementation.
 

@@ -105,7 +105,7 @@ npm ci
 npm run dev
 ```
 
-Open [localhost:5173](http://127.0.0.1:5173/). A browser with WebGL is required.
+For local development, open `http://127.0.0.1:5173/` on your machine. You can also [play the hosted prototype](https://musedream.vercel.app/). A browser with WebGL is required.
 
 | Control | Action |
 | --- | --- |

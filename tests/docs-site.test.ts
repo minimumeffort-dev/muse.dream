@@ -53,6 +53,7 @@ describe('published site',()=>{
       const page=readFileSync('dist-docs/'+file,'utf8');
       for(const match of page.matchAll(/(?:href|src)="([^"#][^"]*)"/g)){
         const url=new URL(match[1]!,`https://docs.local/${file}`);
+        expect(url.hostname,`${file}: development URL in published href/src: ${match[1]}`).not.toMatch(/(^|\.)localhost\.?$|^127\.|^(?:0\.0\.0\.0|\[::1\])$/i);
         if(url.origin!=='https://docs.local')continue;
         expect(existsSync('dist-docs'+url.pathname),`${file}: ${url.pathname}`).toBe(true);
       }
