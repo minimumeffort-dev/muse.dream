@@ -113,3 +113,7 @@ Driving, switching, locomotion, swimming and day/night GIF/HD pairs use 210/240/
 ## Prompt and task lab, 2026-10-16
 
 `dream-lab.jpg` is a native full-page capture of `/lab/`, paused at step 22 of the default town exercise. Source, declared connections, service capacity, agent state and metrics are actual runtime output. It is a logical network dashboard, not a screenshot of agents controlling the 3D city. The [verification record](../evidence/scenarios/verification.md) includes the exported browser episode and its headless replay. Existing world/asset stills and recordings retain their unchanged geometry and mechanics. The game only gains a Dream Lab link inside its pause menu; its ordinary HUD and recordings remain current.
+
+## Aircraft terrain contact, 2026-10-16
+
+Refreshed the flight GIF, HD video and matching still together after changing aircraft terrain contact. Native hillside taxi/takeoff screenshots use the actual eastern heath and player controls; see the [verification record](../evidence/aircraft-terrain/verification.md). Aircraft geometry, the city layout, lighting and render settings are unchanged, so the asset gallery, scale lineup, city stills and other movement/destruction recordings remain accurate. The survey uses a cached underside profile; it does not add mesh collision for buildings or aerodynamic simulation.

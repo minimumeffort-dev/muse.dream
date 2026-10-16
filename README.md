@@ -62,7 +62,7 @@ The ground vehicles have been rebuilt around their structure. Cars have shaped s
 
 ![The rebuilt rally car, bicycle, town car, hatchback, van and scooter](docs/media/vehicle-kit.jpg)
 
-The plane is now a braced, high-wing light aircraft, with a tapered fuselage, cabin windows and a tail wheel. Its red tips replace the ends of the wings, so the colors stay solid when you fly and turn the view. The whole assembly is still Dream 2. [Build the aircraft](docs/examples/light-aircraft.dream).
+The plane is now a braced, high-wing light aircraft, with a tapered fuselage, cabin windows and a tail wheel. Its red tips replace the ends of the wings, so the colors stay solid when you fly and turn the view. Terrain contact checks its nose, wheels and wings as it pitches and banks, keeping the assembly above hills. Hold S after stopping to taxi backward on land. The whole assembly is still Dream 2. [Build the aircraft](docs/examples/light-aircraft.dream).
 
 ![Taking off and banking in the rebuilt Dream aircraft](docs/media/flight.gif)
 

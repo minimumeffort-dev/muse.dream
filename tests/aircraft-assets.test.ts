@@ -11,7 +11,7 @@ import {buildMaskForScene} from '../src/scene/fixture';
 import {buildPaperMask} from '../src/sim/mask';
 import {createCarAtSpawn,resetCar,type World} from '../src/sim/car';
 import {stepInteractive,toggleRide,bodyWorld} from '../src/sim/interaction';
-import {vehicleReviewStart} from '../src/game/review-start';
+import {vehicleReviewStart,movementReviewStart} from '../src/game/review-start';
 
 const spec=interactiveWorld.assemblies.find(s=>s.displayName==='Cloudhopper plane')!;
 const object={id:'plane',kind:'custom' as const,labelText:spec.displayName,x:0,y:0,scale:1,spec};
@@ -81,6 +81,9 @@ describe('aircraft geometry and visible surface ownership',()=>{
 it('boards the live aircraft, takes off, banks, rejects a midair exit and recovers without changing race progress',()=>{
   const scene=createWorldScene(),world:World={scene,carRadius:11,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height)};
   const initial=createCarAtSpawn(scene),foot=vehicleReviewStart(initial,world,'cloudhopper');
+  const hill=movementReviewStart(initial,world,'plane-hill');
+  expect(hill.control).toEqual({kind:'vehicle',id:'cloudhopper'});expect(hill.elevation).toBeGreaterThan(60);
+  expect(toggleRide(hill,world).control.kind).toBe('foot');
   expect(foot.control.kind).toBe('foot');
   let state=toggleRide(foot,world);expect(state.control).toEqual({kind:'vehicle',id:'cloudhopper'});
   const body=bodyWorld(state,world);

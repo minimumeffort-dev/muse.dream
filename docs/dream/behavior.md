@@ -36,6 +36,12 @@ Boats retain sideways momentum through a rudder turn, settle it through hull res
 
 Aircraft need forward speed to take off. Climb and descent build gradually rather than snapping vertical speed. Release the climb control at flying speed to level out; insufficient airspeed produces a sink. A wall impact stops horizontal travel while gravity continues. Land before exiting. A water landing stalls the aircraft at the surface; leave it to wade/swim or press R to recover it. These are bounded arcade controls, not a flight or sailing simulator.
 
+Aircraft terrain contact surveys a cached underside profile from the Dream assembly, including the wheels, nose and wing span. It uses the current heading, pitch and bank against both the terrain heightfield and rendered ground triangles. A landing keeps the aircraft above the hillside; a solid's top remains supporting until the body leaves its edge, then airborne control and stall rules resume. Hold **S** after braking to taxi backward on dry ground and back away from an obstruction. Reverse is disabled in flight and after a water landing. Building and vehicle impacts still use authored collision cylinders, rather than mesh-level wing collisions. These engine contact rules need no new Dream syntax.
+
+![The live Dream aircraft taxiing on a hillside](../evidence/aircraft-terrain/hill-taxi.png)
+
+The [terrain-contact verification](../evidence/aircraft-terrain/verification.md) separates geometry checks, native controls and retained media.
+
 ![Taking off, climbing and banking in the mock world](../media/flight.gif)
 
 [Watch in HD](../media/flight.mp4) · [Compose the complete light aircraft](../examples/light-aircraft.dream). Its wing tips are separate, continuous sections; the 10.8-metre wingspan and collision body keep their existing size. The model uses existing Dream shapes, taper, endpoint braces and rigid animation.

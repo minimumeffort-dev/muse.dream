@@ -10,6 +10,7 @@ import {assemblyHorizontalRadius,playerRadius} from "../scene/measure";
 import { sceneContacts } from "../scene/contacts";
 import type {SceneObject} from "../scene/schema";
 import {bridgeAt} from '../scene/landscape-dsl';
+import {aircraftFloor} from '../scene/aircraft-support';
 
 export const FOOT_RADIUS=3,FOOT_HEIGHT=17.5;
 export const MAX_FLIGHT_CLEARANCE=450;
@@ -47,7 +48,7 @@ export function nearbyRide(state:CarState,world:World):RideTarget|undefined {
 const parkedPose=(state:CarState,id:string|null):ParkedVehicle=>({id,x:state.x,y:state.y,elevation:state.elevation,headingRad:state.headingRad,distance:state.distance});
 /** Prefer dry exits, then let a grounded occupant disembark into swimmable water. */
 export function exitPosition(state:CarState,world:World) {
-  if(state.control.kind==="foot" || !state.grounded || controlOf(occupiedObject(state,world)?.spec)==="plane" && state.surface!=="water" && state.elevation>drivingHeight(world.scene.terrain,state.x,state.y)+3)return undefined;
+  if(state.control.kind==="foot" || !state.grounded || controlOf(occupiedObject(state,world)?.spec)==="plane" && state.surface!=="water" && state.elevation>aircraftFloor(world.scene,occupiedObject(state,world)!,state)+3)return undefined;
   const id=state.control.kind==="car" ? null : state.control.id;
   const vehicles=state.control.kind==="passenger" ? state.vehicles : [...state.vehicles.filter(v=>v.id!==id),parkedPose(state,id)];
   const foot:CarState={...state,control:{kind:"foot"},vehicles},footWorld=bodyWorld(foot,world),object=occupiedObject(state,world),bodyRadius=bodyWorld(state,world).carRadius;
@@ -87,12 +88,12 @@ export function isSwimming(state:CarState,world:World):boolean {
 /** Bounded arcade boat/aircraft dynamics, independent of authored routes. */
 function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,profile:"boat"|"plane"):CarState {
   const s=nextMotion(state,dt,world),body=bodyWorld(s,world),throttle=Math.max(-1,Math.min(1,input.throttle)),steer=Math.max(-1,Math.min(1,input.steer));
-  const plane=profile==="plane",maxSpeed=plane ? 400 : 135,accel=plane ? 170 : 80;
+  const plane=profile==="plane",aircraft=plane ? occupiedObject(s,world)! : undefined,maxSpeed=plane ? 400 : 135,accel=plane ? 170 : 80;
   const water=plane ? undefined : waterAt(world.scene.terrain,s.x,s.y,terrainHeight(world.scene.terrain,s.x,s.y));
   const flow=water?.flow??{x:0,y:0};
   let fwd=(s.vx-flow.x)*Math.cos(s.headingRad)+(s.vy-flow.y)*Math.sin(s.headingRad);
   if(throttle>0)fwd+=accel*Math.max(0,1-fwd/maxSpeed)*throttle*dt;
-  else if(throttle<0)fwd=fwd>1 ? Math.max(0,fwd-accel*1.8*dt) : Math.max(plane ? 0 : -40,fwd+accel*.4*throttle*dt);
+  else if(throttle<0)fwd=fwd>1 ? Math.max(0,fwd-accel*1.8*dt) : Math.max(plane && !s.grounded ? 0 : -40,fwd+accel*.4*throttle*dt);
   fwd*=Math.exp(-(plane ? .12 : .3)*dt);
   if(plane && s.grounded && waterAt(world.scene.terrain,s.x,s.y,drivingHeight(world.scene.terrain,s.x,s.y)))fwd=0;
   const authority=Math.max(-1,Math.min(1,fwd/(plane ? 100 : 35)));
@@ -108,15 +109,21 @@ function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,pro
     if(s.grounded && fwd>110 && lift>0){s.grounded=false;s.vz=15;}
     const target=fwd<100 ? -Math.max(10,(100-fwd)*1.5) : lift*80*Math.min(1,fwd/150);
     s.vz=s.grounded ? 0 : s.vz+Math.max(-100*dt,Math.min(100*dt,target-s.vz));
+    s.pitch=s.grounded ? 0 : Math.atan2(s.vz,Math.max(60,Math.abs(fwd)));
+    s.bank+=((s.grounded ? 0 : steer*.45*authority)-s.bank)*Math.min(1,dt*5);
   }else{
     if(s.grounded && water){s.elevation=water.level-2;s.vz=0;}
     applyJump(s,input,45);
   }
   const steps=Math.max(1,Math.ceil(Math.hypot(s.vx,s.vy,s.vz)*dt/(body.carRadius*.5))),sdt=dt/steps;
   for(let i=0;i<steps;i++){
-    const x=s.x+s.vx*sdt,y=s.y+s.vy*sdt,ground=drivingHeight(world.scene.terrain,x,y),landingWater=plane ? waterAt(world.scene.terrain,x,y,ground) : undefined;
+    const x=s.x+s.vx*sdt,y=s.y+s.vy*sdt;
     const support=plane ? undefined : navigableWater(world.scene.terrain,x,y,waterRadius,body.bodyHeight??20);
-    const floor=plane ? landingWater ? landingWater.level : ground : (support?.level??water?.level??s.elevation+2)-2;
+    let floor=plane ? aircraftFloor(world.scene,aircraft!,{...s,x,y}) : (support?.level??water?.level??s.elevation+2)-2;
+    const data=sceneContacts(world.scene),contacts=[...data.solids.query(x,y,body.carRadius+data.maxRadius),...actorContacts(world.scene,s.timeS,s)];
+    // Retain a landed cap across ticks, but never climb a solid from its side.
+    if(plane)for(const contact of contacts)if(!isBroken(s,contact) && s.elevation>=contact.top-.05 && Math.hypot(x-contact.x,y-contact.y)<body.carRadius+contact.r)floor=Math.max(floor,contact.top);
+    if(plane && s.grounded && floor<s.elevation-4){s.grounded=false;s.vz=0;}
     let elevation=s.grounded ? floor : s.elevation+s.vz*sdt-(plane ? 0 : 90*sdt*sdt);
     if(!plane){
       s.vz-=s.grounded ? 0 : 180*sdt;
@@ -124,13 +131,11 @@ function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,pro
       if(elevation>ceiling){elevation=Math.max(floor,ceiling);s.vz=Math.min(0,s.vz);}
     }
     elevation=Math.max(floor,Math.min(floor+MAX_FLIGHT_CLEARANCE,elevation));
-    const data=sceneContacts(world.scene),contacts=[...data.solids.query(x,y,body.carRadius+data.maxRadius),...actorContacts(world.scene,s.timeS,s)];
     breakOnContact(s,body,x,y,contacts);
     if(!plane && !support || !carFootprintClear(body,x,y,elevation,s.timeS,s)) {
       s.vx=0;s.vy=0;
       // A collision stops travel, not gravity. An airborne body must still land.
-      const ownGround=drivingHeight(world.scene.terrain,s.x,s.y),ownWater=plane && waterAt(world.scene.terrain,s.x,s.y,ownGround);
-      let ownFloor=plane ? ownWater ? ownWater.level : ownGround : (water?.level??s.elevation+2)-2,ceiling=plane ? Infinity : waterCeiling(world.scene.terrain,s.x,s.y,waterRadius)-(body.bodyHeight??20);
+      let ownFloor=plane ? aircraftFloor(world.scene,aircraft!,s) : (water?.level??s.elevation+2)-2,ceiling=plane ? Infinity : waterCeiling(world.scene.terrain,s.x,s.y,waterRadius)-(body.bodyHeight??20);
       const local=[...data.solids.query(s.x,s.y,body.carRadius+data.maxRadius),...actorContacts(world.scene,s.timeS,s)];
       for(const contact of local){
         if(isBroken(s,contact) || Math.hypot(s.x-contact.x,s.y-contact.y)>=body.carRadius+contact.r)continue;
@@ -139,15 +144,22 @@ function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,pro
       }
       s.elevation=Math.max(ownFloor,Math.min(ceiling,s.elevation+s.vz*sdt));
       if(s.elevation>=ceiling)s.vz=Math.min(0,s.vz);
-      if(s.elevation<=ownFloor){s.grounded=true;s.vz=0;}
+      if(s.elevation<=ownFloor && s.vz<=0){s.grounded=true;s.vz=0;}
       continue;
     }
     s.distance+=((x-s.x)*c+(y-s.y)*sn);s.x=x;s.y=y;s.elevation=elevation;
-    if(!s.grounded && elevation<=floor+.01){s.grounded=true;s.landingSpeed=Math.max(0,-s.vz);s.vz=0;s.vx*=.85;s.vy*=.85;}
+    if(!s.grounded && elevation<=floor+.01 && s.vz<=0){s.grounded=true;s.landingSpeed=Math.max(0,-s.vz);s.vz=0;s.vx*=.85;s.vy*=.85;}
     if(elevation>=floor+MAX_FLIGHT_CLEARANCE)s.vz=Math.min(0,s.vz);
   }
-  s.pitch=plane && !s.grounded ? Math.atan2(s.vz,Math.max(60,Math.abs(fwd))) : 0;
-  s.bank+=((plane && !s.grounded ? steer*.45*authority : plane ? 0 : steer*.08*authority)-s.bank)*Math.min(1,dt*5);
+  if(plane && s.grounded && (s.pitch!==0 || s.bank!==0)){
+    s.pitch=0;s.bank=0;
+    let floor=aircraftFloor(world.scene,aircraft!,s);
+    const data=sceneContacts(world.scene);
+    for(const contact of [...data.solids.query(s.x,s.y,body.carRadius+data.maxRadius),...actorContacts(world.scene,s.timeS,s)])
+      if(!isBroken(s,contact) && s.elevation>=contact.top-.05 && Math.hypot(s.x-contact.x,s.y-contact.y)<body.carRadius+contact.r)floor=Math.max(floor,contact.top);
+    s.elevation=floor;
+  }
+  if(!plane){s.pitch=0;s.bank+=(steer*.08*authority-s.bank)*Math.min(1,dt*5);}
   s.surface=plane && !(s.grounded && waterAt(world.scene.terrain,s.x,s.y,drivingHeight(world.scene.terrain,s.x,s.y))) ? "paper" : "water";
   advanceImpactMotion(s,body,dt);return s;
 }

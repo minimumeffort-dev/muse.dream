@@ -3,10 +3,18 @@ import {drivingHeight,terrainHeight,waterAt} from "../scene/terrain";
 import {actorPose,routeObjects} from "../sim/actors";
 import {toggleRide,bodyWorld,FOOT_HEIGHT} from "../sim/interaction";
 import {controlFor} from "../scene/agents";
+import {aircraftFloor} from '../scene/aircraft-support';
 
-/** Real mock-world positions for exercising jumping, swimming and bridge navigation. */
+/** Real mock-world positions for exercising terrain contact, jumping and water navigation. */
 export function movementReviewStart(state:CarState,world:World,scenario:string|null):CarState {
   if(scenario==='walk')return toggleRide(state,world);
+  if(scenario==='plane-hill'){
+    const plane=routeObjects(world.scene).find(o=>controlFor(o)==='plane');if(!plane)return state;
+    const next:CarState={...state,x:12500,y:10200,headingRad:0,control:{kind:'vehicle',id:plane.id},vx:0,vy:0,vz:0,pitch:0,bank:0,grounded:true,
+      vehicles:[{id:null,x:state.x,y:state.y,elevation:state.elevation,headingRad:state.headingRad,distance:0}]};
+    next.elevation=aircraftFloor(world.scene,plane,next);
+    return carFootprintClear(bodyWorld(next,world),next.x,next.y,next.elevation,state.timeS,next) ? next : state;
+  }
   if(scenario!=='swim' && scenario!=='boat-bridge')return state;
   const boat=scenario==='boat-bridge',x=9000,y=boat ? 3980 : 3500,water=waterAt(world.scene.terrain,x,y,terrainHeight(world.scene.terrain,x,y));
   if(!water)return state;

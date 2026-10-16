@@ -9,6 +9,7 @@ import {controlFor,isActor,behaviorFor} from '../scene/agents';
 import {initialNpcState} from './npcs';
 import {objectPlacement} from '../scene/placement';
 import { playerHeight,playerRadius } from "../scene/measure";
+import {aircraftFloor} from '../scene/aircraft-support';
 import type {CarState} from "./car";
 
 export interface ActorPose {id:string;x:number;y:number;elevation:number;headingRad:number;speed:number;distance:number;travelled:number;kind:"rail"|"path"|"water"|"air";vx?:number;vy?:number;pitch?:number;bank?:number;activity?:'idle'|'patrol'|'perform';animationTimeS?:number;stateId?:string}
@@ -24,7 +25,10 @@ export function actorPose(scene:Scene,object:SceneObject,timeS:number,state?:Car
   const parked=state?.vehicles.find(v=>v.id===object.id);
   if(parked)return {...parked,id:object.id,kind,speed:0,travelled:parked.distance,vx:0,vy:0};
   if(control){
-    const elevation=control==='boat' ? terrainHeight(scene.terrain,object.x,object.y) : drivingHeight(scene.terrain,object.x,object.y),water=control==="boat" ? waterAt(scene.terrain,object.x,object.y,elevation) : undefined;
+    let heights=bases.get(scene);if(!heights){heights=new Map();bases.set(scene,heights);}
+    let elevation=heights.get(object.id);
+    if(elevation===undefined){elevation=control==='plane' ? aircraftFloor(scene,object,{x:object.x,y:object.y,headingRad:object.headingRad??0,pitch:0,bank:0}) : control==='boat' ? terrainHeight(scene.terrain,object.x,object.y) : drivingHeight(scene.terrain,object.x,object.y);heights.set(object.id,elevation);}
+    const water=control==="boat" ? waterAt(scene.terrain,object.x,object.y,elevation) : undefined;
     return {id:object.id,x:object.x,y:object.y,elevation:water ? water.level-2 : elevation,headingRad:object.headingRad??0,kind,speed:0,distance:0,travelled:0,vx:0,vy:0};
   }
   if(program){

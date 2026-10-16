@@ -16,6 +16,10 @@ import {assemblyHorizontalRadius} from "../src/scene/measure";
 import type {ObjectDsl} from "../src/scene/object-dsl";
 import {vehicleReviewStart} from "../src/game/review-start";
 import {WorldScenery} from "../src/game/scenery";
+import {objectSupport} from '../src/scene/object-support';
+import {Euler,Quaternion,Vector3} from 'three';
+import {createWorldScene as createLiveWorld} from '../src/scene/world-fixture';
+import {terrainSurfaceHeight} from '../src/scene/terrain';
 
 const live=createWorldScene(),idle={throttle:0,steer:0};
 const pond=waterSchema.parse({id:"pond",polygon:[{x:250,y:180},{x:710,y:180},{x:710,y:540},{x:250,y:540}],level:0,depth:6,bankWidth:32,color:"#227788",flow:{x:0,y:0},dragPerS:2,waves:{speed:55,damping:1,strength:1}});
@@ -136,6 +140,43 @@ describe("walk, enter, drive and leave",()=>{
 });
 
 describe("boat and aircraft controls",()=>{
+  it('keeps the complete live aircraft above hills while landing, banking and taxiing',()=>{
+    const plane=createLiveWorld().objects.find(o=>o.id==='cloudhopper')!;
+    const scene=parseScene({...createFixtureScene(),objects:[{...plane,x:330,y:360,headingRad:0}],routes:[],regions:[],terrain:{hills:[{id:'hill',x:560,y:400,radiusX:220,radiusY:180,height:100}]}});
+    const world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(960,720),carRadius:11};
+    let state={...board(world),elevation:50,vx:150,grounded:false,bank:.4,vz:-30};
+    let landed=false;
+    const point=new Vector3();
+    for(let i=0;i<420;i++){
+      state=stepInteractive(state,{throttle:1,steer:0,lift:-1},1/120,world);landed||=state.grounded;
+      const rotation=new Quaternion().setFromAxisAngle(new Vector3(0,1,0),-state.headingRad).multiply(new Quaternion().setFromEuler(new Euler(state.bank,0,state.pitch)));
+      let clearance=Infinity;
+      for(const local of objectSupport(scene,scene.objects[0]!)){
+        point.copy(local).multiplyScalar(plane.scale).applyQuaternion(rotation);
+        clearance=Math.min(clearance,state.elevation+point.y-Math.max(drivingHeight(scene.terrain,state.x+point.x,state.y+point.z),terrainSurfaceHeight(scene.terrain,state.x+point.x,state.y+point.z)));
+      }
+      expect(clearance).toBeGreaterThanOrEqual(-.05);
+    }
+    expect(landed).toBe(true);expect(state.x).toBeGreaterThan(600);
+  });
+  it('retains support after landing on an obstacle instead of dropping inside it',()=>{
+    const world=setup('meadow_plane',[{id:'platform',kind:'tire-stack',labelText:'Platform',x:480,y:360,scale:2}]);
+    const top=sceneContacts(world.scene).solids.query(480,360,100)[0]!.top;
+    let state={...board(setup('meadow_plane')),elevation:top+.2,vz:-20,grounded:false};
+    state=run(state,world,idle,1);
+    expect(state.grounded).toBe(true);expect(state.elevation).toBeCloseTo(top);
+    expect(run(state,world,idle,1).elevation).toBeCloseTo(top);
+    const moved=run({...state,vx:80},world,idle,1.5);
+    expect(moved.x).toBeGreaterThan(560);expect(moved.elevation).toBeLessThan(top);
+  });
+  it('backs away from a terrain-side obstruction on the ground without reversing in flight',()=>{
+    const world=setup('meadow_plane',[{id:'wall',kind:'tree',labelText:'Wall',x:580,y:360,scale:2}]);
+    const stopped=run(board(world),world,{throttle:1,steer:0},3);
+    const reversed=run(stopped,world,{throttle:-1,steer:0},1);
+    expect(reversed.x).toBeLessThan(stopped.x-10);expect(reversed.grounded).toBe(true);
+    const flying=run({...board(world),elevation:200,grounded:false,vx:20},world,{throttle:-1,steer:0},.2);
+    expect(flying.vx).toBeGreaterThanOrEqual(0);
+  });
   it("steers a boat freely, stops its full hull at the bank, and prefers dry shore when exiting",()=>{
     const world=setup("lake_boat"),start=board(world);expect(start.control.kind).toBe("vehicle");expect(exitPosition(start,world)).toBeDefined();
     const turned=run(start,world,{throttle:1,steer:.3},2);expect(turned.y).toBeGreaterThan(start.y+20);expect(turned.headingRad).toBeGreaterThan(.4);
