@@ -467,6 +467,98 @@
         "radius": "n?"
       }
     },
+    "scenario": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "seed": "n",
+        "max_steps": "n"
+      },
+      "block": "scenario"
+    },
+    "item": {
+      "contexts": [
+        "scenario"
+      ],
+      "id": true,
+      "fields": {
+        "label": "text"
+      }
+    },
+    "location": {
+      "contexts": [
+        "scenario"
+      ],
+      "id": true,
+      "fields": {
+        "label": "text",
+        "at": "v2"
+      }
+    },
+    "link": {
+      "contexts": [
+        "scenario"
+      ],
+      "id": true,
+      "fields": {
+        "from": "ref",
+        "to": "ref",
+        "steps": "n"
+      }
+    },
+    "stock": {
+      "contexts": [
+        "scenario"
+      ],
+      "id": true,
+      "fields": {
+        "at": "ref",
+        "item": "ref",
+        "mode": "source|sink",
+        "quantity": "n",
+        "price": "n?"
+      }
+    },
+    "service": {
+      "contexts": [
+        "scenario"
+      ],
+      "id": true,
+      "fields": {
+        "at": "ref",
+        "consumes": "ref",
+        "produces": "ref",
+        "duration": "n",
+        "capacity": "n",
+        "fee": "n"
+      }
+    },
+    "agent": {
+      "contexts": [
+        "scenario"
+      ],
+      "id": true,
+      "fields": {
+        "at": "ref",
+        "budget": "n",
+        "capacity": "n"
+      }
+    },
+    "objective": {
+      "contexts": [
+        "scenario"
+      ],
+      "id": true,
+      "fields": {
+        "agent": "ref",
+        "kind": "deliver|produce",
+        "at": "ref",
+        "item": "ref",
+        "quantity": "n"
+      }
+    },
     "watercourse": {
       "contexts": [
         "top"
@@ -748,6 +840,21 @@
     "outline": "3..24 simple polygon points [X,Y], 0..1 and spanning both axes; either winding, no repeated closing point, holes, touching or crossed edges; area >= .01",
     "extrusion": "outline maps across full size X/Y, centered, extruded along Z through full size Z; rotation and uniform scaling apply normally",
     "jointRoll": "roll(axis,radius) on a joint rotates all children rigidly by traveled distance / resolved radius; reduced motion rests it, parked furnishings bake the rest pose"
+  },
+  "scenarios": {
+    "limits": {
+      "scenarios": 1,
+      "locations": 32,
+      "links": 64,
+      "items": 32,
+      "stocks": 64,
+      "services": 32,
+      "agents": 8,
+      "objectives": 32,
+      "steps": 1000
+    },
+    "semantics": "Optional logical task environment, separate from driving physics and NPC clocks. Explicit bidirectional links take integer steps; source stock sells, sinks accept deliveries and cannot resell; services consume/produce one item with capacity, duration and fee. Agents have integer credits and carrying capacity. Deliver/produce objectives advance only on committed transfers/completions. Seed rotates contention priority deterministically. No generated scripts, real model calls, medical decisions or ecological realism.",
+    "output": "Step API with local observations, joint actions, rewards, termination/truncation and replayable JSONL. Prompt interpreter and agent policies are labelled mocks."
   },
   "agents": {
     "limits": {

@@ -347,3 +347,35 @@ is metadata, not optical falloff. It does not illuminate walls or calculate obje
 damage or player lamp. Flocks cannot carry lamps. Use material.night for glowing windows.
 One shared 2048 directional shadow map serves sun/moon; no per-lamp shadow maps.
 NPC routines and transit schedules continue; no opening hours, weather or astronomical calendar.
+
+LOGICAL TASK SCENARIOS
+An optional scenario block describes a logical graph environment, separate from 3D
+movement/NPC clocks. Do not claim physical navigation, clinical or learning outcomes.
+scenario morning(seed=7,max_steps=80){ ... }
+Block-local commands, IDs unique across kinds, no callbacks or generated scripts:
+item bread(label="Bread");
+location shop(label="Shop",at=[100,200]);
+link walk(from=shop,to=school,steps=3);
+stock shelf(at=shop,item=bread,mode=source,quantity=8,price=2);
+stock delivered(at=school,item=bread,mode=sink,quantity=0);
+service session(at=school,consumes=material,produces=receipt,duration=4,capacity=1,fee=1);
+agent courier(at=shop,budget=16,capacity=4);
+objective breakfast(agent=courier,kind=deliver,at=school,item=bread,quantity=2);
+All references need typed declarations in the same block. Links are bidirectional;
+all locations connected. Steps/durations are integer ticks including the start tick.
+Sources sell finite stock; sinks start empty/price=0 and never resell. Services
+consume/produce exactly one unit, reserve capacity and charge at start, finish
+later. Credits transfer to location treasuries; no negative inventory or free money.
+Goals are deliver or produce and advance only on real transfers/completions by
+that agent at that location; each unit is allocated once. Each completed goal
+rewards one. Success terminates; reaching max_steps first truncates. Seed rotates
+ASCII agent contention priority. Blocked capacity races are separate from violations.
+One scenario/project, <=32 locations/items/services/objectives, <=64 links/stocks,
+<=8 agents, max_steps 1..1000, seed 0..2147483647, coordinates 0..14000.
+Stock quantity 0..1000, objective quantity 1..1000, price/fee/budget 0..100000,
+agent capacity 1..100, service capacity 1..8, link steps/duration 1..100; integers.
+Every agent needs a goal; delivery goals need a matching sink and production goals
+need a matching service. An item needs finite initial stock or a production chain.
+No guarantee of affordability/solvability. The current lab requires a standalone
+scenario; it cannot yet apply logical actions to the rendered city's actors.
+Keep unsupported user intent explicit instead of inventing vocabulary.

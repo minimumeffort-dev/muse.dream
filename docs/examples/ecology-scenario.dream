@@ -1,0 +1,21 @@
+dream 2;
+scenario park_stewards(seed=3,max_steps=70){
+  item water(label="Water allocation");
+  item seedling(label="Seedling");
+  item feed(label="Feed portion");
+  item care(label="Care visit recorded");
+  location nursery(label="Plant nursery",at=[100,120]);
+  location park(label="Community garden",at=[650,120]);
+  location habitat(label="Animal habitat",at=[380,350]);
+  link garden_path(from=nursery,to=park,steps=3);
+  link keeper_path(from=nursery,to=habitat,steps=3);
+  stock water_tank(at=nursery,item=water,mode=source,quantity=6,price=1);
+  stock feed_store(at=nursery,item=feed,mode=source,quantity=4,price=2);
+  stock planted_seedlings(at=park,item=seedling,mode=sink,quantity=0);
+  service raise_seedling(at=nursery,consumes=water,produces=seedling,duration=3,capacity=1,fee=0);
+  service care_visit(at=habitat,consumes=feed,produces=care,duration=2,capacity=1,fee=0);
+  agent gardener(at=nursery,budget=8,capacity=2);
+  agent keeper(at=nursery,budget=8,capacity=2);
+  objective plant_garden(agent=gardener,kind=deliver,at=park,item=seedling,quantity=2);
+  objective habitat_visit(agent=keeper,kind=produce,at=habitat,item=care,quantity=1);
+}

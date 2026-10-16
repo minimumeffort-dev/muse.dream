@@ -1,6 +1,8 @@
 # Paper-to-racing game
 
 A browser game where the user's paper sketches become playable worlds.
+Text prompts precede the future sketch input: the model proposes bounded Dream
+source for geometry, systems and task scenarios, while the engine owns execution.
 Muse interprets and elaborates the whole world: track/layout, environment,
 objects, castle and player vehicle. Racing is the first example. Every
 handmade fixture, including the current car and track, is temporary input
@@ -92,6 +94,21 @@ keep unhandled errors fatal; do not hide a reporting failure to publish docs.
 
 Mock mode only until a provider integration is explicitly authorized. Keep
 any future API key server-only (see `.env.example`); never commit secrets.
+
+Dream Lab at `/lab/` is a separate logical scenario environment. Its prompt
+interpreter and greedy policies are explicitly mocked; it does not yet drive
+3D characters. Keep its budgets, resources, prices, travel, services and goals
+in bounded Dream data. Policies receive local observations and submit actions;
+they never set rewards or completion. Preserve deterministic seeded contention,
+atomic conserved credit transfers, capacity, private inventories/tasks, unique
+per-agent actions, and the distinction between blocking and rule violations.
+Durations include the initiating step. Delivery sinks cannot resell; allocate
+units once across objectives. Termination is success; truncation is a deadline.
+Record pinned source/hash and replay every transition. Bump the episode version
+when changing transition semantics. No provider calls, generated scripts, claimed
+clinical/learning/ecosystem validity or dataset quality. Domain examples are task
+exercises; consult `docs/world-systems.md` before expanding them. Existing world
+NPC/animation/physics limits remain independent and unchanged.
 
 ## Dream authoring
 

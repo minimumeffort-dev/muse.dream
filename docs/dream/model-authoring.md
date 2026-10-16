@@ -4,6 +4,8 @@
 
 Dream 2 gives a model a finite language for proposing the world suggested by a paper sketch. Its regular records, stable IDs and located diagnostics support a generation-and-repair loop. The real Muse provider isn't connected yet; the current examples and world are handmade mocks.
 
+[Dream Lab](https://musedream.vercel.app/lab/) exercises the same authoring boundary with a text prompt and a labelled template interpreter. It validates and accepts a logical task scenario before mock policies run. It extracts agent count, budget, carrying capacity, deadline and seed from the town brief, with explicit assumptions for everything else. [Scenario authoring and the action boundary](scenarios.md) explain what works; [world systems](../world-systems.md) describes the extensions still needed for broader intent.
+
 ![The intended input and implemented compiler pipeline](../media/pipeline.svg)
 
 ## Give the model the contract

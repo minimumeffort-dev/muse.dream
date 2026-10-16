@@ -19,6 +19,7 @@ import { measuredScale, playerRadius } from "./measure";
 export { DREAM_LIMITS, DreamError } from "./dream-syntax";
 export { DREAM_PROJECT_LIMITS } from "./dream-contract";
 import { DREAM_PROJECT_LIMITS } from "./dream-contract";
+import {compileScenario,type Scenario,SCENARIO_LIMITS} from './scenario';
 
 function parseDream(source: string): Program {
   const tokens = lex(source);
@@ -229,7 +230,7 @@ function compileObjects(program:Program,budget={steps:0}):ObjectDslV2[] {
   });
 }
 
-export interface DreamWorld {assemblies:ObjectDslV2[];routes:Route[];objects:SceneObject[];waters:Water[];streets:Scene['streets'];surfaces:Scene['surfaces'];markings:Scene['markings'];behaviors:Scene['behaviors'];sites:Scene['sites'];crossings:Scene['crossings'];furnishings:Furnishing[];flocks:Flock[];layout?:DreamLayout}
+export interface DreamWorld {assemblies:ObjectDslV2[];routes:Route[];objects:SceneObject[];waters:Water[];streets:Scene['streets'];surfaces:Scene['surfaces'];markings:Scene['markings'];behaviors:Scene['behaviors'];sites:Scene['sites'];crossings:Scene['crossings'];furnishings:Furnishing[];flocks:Flock[];scenarios:Scenario[];layout?:DreamLayout}
 export type DreamModules=Readonly<Record<string,string>>;
 type LinkedWorld={world:DreamWorld;exports:Map<string,ObjectDslV2>};
 /** The same bounded language now authors placements, shared routes and continuous watercourses. */
@@ -388,7 +389,9 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
   if(inherited.length+Number(!!layout)>1)fail("project needs exactly one world layout",undefined,"E_WORLD");
   layout??=inherited[0]?.layout;
   const allWaters=[...children.flatMap(w=>w.waters),...ownWaters];
-  const world:DreamWorld={assemblies:[...new Set([...exports.values(),...children.flatMap(w=>w.assemblies)])],routes:[...routes,...children.flatMap(w=>w.routes)],objects:[...objects,...children.flatMap(w=>w.objects)],waters:allWaters,streets:[...infrastructure.streets,...children.flatMap(w=>w.streets)],surfaces:[...infrastructure.surfaces,...children.flatMap(w=>w.surfaces)],markings:[...infrastructure.markings,...children.flatMap(w=>w.markings)],behaviors:[...behaviors,...children.flatMap(w=>w.behaviors)],sites:[...infrastructure.sites,...children.flatMap(w=>w.sites)],crossings:[...infrastructure.crossings,...children.flatMap(w=>w.crossings)],furnishings:[...furnishings,...children.flatMap(w=>w.furnishings)],flocks:[...flocks,...children.flatMap(w=>w.flocks)]};
+  const scenarios=[...program.layout.filter(n=>n.kind==='scenario').map(n=>compileScenario(n,e=>numeric(e,globals))),...children.flatMap(w=>w.scenarios)];
+  if(scenarios.length>SCENARIO_LIMITS.scenarios)fail('project permits one scenario',undefined,'E_SCENARIO');
+  const world:DreamWorld={scenarios,assemblies:[...new Set([...exports.values(),...children.flatMap(w=>w.assemblies)])],routes:[...routes,...children.flatMap(w=>w.routes)],objects:[...objects,...children.flatMap(w=>w.objects)],waters:allWaters,streets:[...infrastructure.streets,...children.flatMap(w=>w.streets)],surfaces:[...infrastructure.surfaces,...children.flatMap(w=>w.surfaces)],markings:[...infrastructure.markings,...children.flatMap(w=>w.markings)],behaviors:[...behaviors,...children.flatMap(w=>w.behaviors)],sites:[...infrastructure.sites,...children.flatMap(w=>w.sites)],crossings:[...infrastructure.crossings,...children.flatMap(w=>w.crossings)],furnishings:[...furnishings,...children.flatMap(w=>w.furnishings)],flocks:[...flocks,...children.flatMap(w=>w.flocks)]};
   if(world.furnishings.length>POPULATION_LIMITS.rules || world.flocks.length>POPULATION_LIMITS.flocks || world.flocks.reduce((n,f)=>n+f.count,0)>POPULATION_LIMITS.birds)fail('population budget exceeded',undefined,'E_BUDGET');
   if(world.behaviors.length>NPC_LIMITS.programs)fail('combined project exceeds 16 behaviors',undefined,'E_BUDGET');
   if(world.routes.length>12 || world.waters.length>8 || world.objects.length>4096)fail("combined project exceeds scene route/water/placement budgets",undefined,"E_BUDGET");

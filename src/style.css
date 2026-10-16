@@ -25,5 +25,6 @@ h1 { margin: 0 0 18px; font-size: 26px; font-weight: 600; }
 .menu-card p { margin: 0 0 24px; color: #e3ece0; font-size: 13px; line-height: 1.9; }
 .menu-card button { display: block; width: 100%; padding: 12px; border-radius: 12px; background: #f2d8a1; color: #293e3f; font-weight: 600; }
 .menu-card .quiet { background: none; color: #dce5d9; margin-top: 6px; font-size: 13px; font-weight: 400; }
+.menu-card>a{display:inline-block;color:#fff1ce;font-size:12px;margin-top:14px;text-underline-offset:4px}
 .error { display: grid; place-items: center; padding: 40px; color: #243e43; }
 @media (max-width: 600px) { .hud { inset: max(16px, env(safe-area-inset-top)) 16px auto; } }

@@ -4,6 +4,8 @@
 
 Start with something you can see and understand. Change one field, run the checker and look at what the engine builds. These are complete Dream 2 files, checked alongside the compiler tests.
 
+[Town errands](../examples/town-scenario.dream), [garden and habitat care](../examples/ecology-scenario.dream) and [class preparation](../examples/classroom-scenario.dream) are runnable logical task environments. They share prices, budgets, capacity, services and objectives. [Prompt and run them in Dream Lab](scenarios.md).
+
 [City car](../examples/city-car.dream) uses a concave shell profile, sloped glazing and two rigid axle bearings. [City bicycle](../examples/city-bicycle.dream) uses paired forks and stays, mounted axles and a rolling crank. Both are the complete assemblies used by the mock world. [See their construction](../asset-library.md#ground-vehicles-built-around-their-mechanics).
 
 [Walkable garden steps](../examples/walkable-steps.dream) pair three round treads with matching cylinder contacts. Each rise is 30 cm, below the walking controller's 40 cm step limit. The [movement guide](behavior.md) explains headroom, jumping and water support.

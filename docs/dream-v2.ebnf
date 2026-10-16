@@ -5,6 +5,9 @@ statement = identifier, [ identifier ], "(", [ fields ], ")",
             ( ";" | "{", { statement }, "}" ) ;
 fields = field, { ",", field }, [ "," ] ;
 field = identifier, "=", value ;
+(* scenario is a top-level bounded logical environment. Its block permits only
+   item, location, link, stock, service, agent and objective declarations.
+   IDs/references are local to that block; no scripts or general rule callbacks. *)
 value = expression | string | color | "true" | "false" | array | constructor ;
 array = "[", [ value, { ",", value }, [ "," ] ], "]" ;
 (* part(shape=prism) requires outline: 3..24 [X,Y] arrays, each coordinate 0..1,

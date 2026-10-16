@@ -33,7 +33,7 @@ try {
       if(!result.ok){process.stdout.write(JSON.stringify(result)+'\n');process.exitCode=1;}
       else {
         const {lex}=await server.ssrLoadModule('/src/scene/dream-syntax.ts'),world=result.world;
-        process.stdout.write(JSON.stringify({ok:true,characters:source.length,syntaxTokens:lex(source).length-1,assemblies:world.assemblies.length,parts:world.assemblies.reduce((n,a)=>n+a.parts.length,0),joints:world.assemblies.reduce((n,a)=>n+(a.joints?.length??0),0),placements:world.objects.length,routes:world.routes.length,waters:world.waters.length,fullWorld:!!world.layout})+'\n');
+        process.stdout.write(JSON.stringify({ok:true,characters:source.length,syntaxTokens:lex(source).length-1,assemblies:world.assemblies.length,parts:world.assemblies.reduce((n,a)=>n+a.parts.length,0),joints:world.assemblies.reduce((n,a)=>n+(a.joints?.length??0),0),placements:world.objects.length,routes:world.routes.length,waters:world.waters.length,scenarios:world.scenarios.length,fullWorld:!!world.layout})+'\n');
       }
     } else {
       const output=command==='format' ? compiler.formatDream(source) : command==='migrate' ? compiler.migrateDream(source,modules) : JSON.stringify(compiler.compileDreamWorld(source,modules),null,2)+'\n';

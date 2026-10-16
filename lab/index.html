@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#fafaf7"><title>Dream Lab</title><link rel="stylesheet" href="/src/lab/style.css"></head>
+<body>
+  <a class="skip" href="#workspace">Skip to workspace</a>
+  <header class="lab-header"><a class="brand" href="https://minimumeffort.dev/" aria-label="Minimum Effort, home"><span class="brand-compact" aria-hidden="true"><span class="brand-compact-m">m</span><span class="brand-compact-e">e.</span></span><span class="brand-name" aria-hidden="true">minimum<span class="brand-effort">effort.</span></span></a><span>Dream Lab</span><nav aria-label="Product"><a href="/">Play world ↗</a><a href="https://minimumeffort-dev.github.io/muse.dream/dream/scenarios.html">Docs ↗</a></nav></header>
+  <main id="workspace">
+    <div class="intro"><p class="eyebrow">Prompt → Dream → experiment</p><h1>Give the world a task.</h1><p>Build the rules, drop in agents, see what happens. Keep the source and every step.</p></div>
+    <div class="lab-grid">
+      <section class="composer" aria-labelledby="brief-heading">
+        <div class="section-head"><h2 id="brief-heading">The brief</h2><span class="tag">Mock interpreter</span></div>
+        <form id="prompt-form"><label for="prompt">Describe the scenario</label><textarea id="prompt" maxlength="4000" rows="6" required></textarea><p class="note">Local town template. Extracts agent count, budget, carrying capacity, deadline and seed. Other wording is unimplemented intent.</p><button id="generate" type="submit">Generate proposal</button><button id="cancel" type="button" hidden>Cancel</button></form>
+        <p id="proposal-status" role="status" aria-live="polite"></p>
+        <details id="assumptions"><summary>What the mock assumes</summary><ul id="assumption-list"></ul></details>
+        <details class="source-panel" open><summary>Dream source <span id="source-state">Example</span></summary><label for="example">Load a checked example</label><select id="example"><option value="town">Town errands</option><option value="ecology">Garden &amp; habitat care</option><option value="classroom">Class preparation</option></select><label class="sr-only" for="source">Dream source</label><textarea id="source" rows="19" spellcheck="false"></textarea></details>
+        <div class="actions"><button id="validate" class="secondary" type="button">Validate Dream</button><button id="accept" type="button">Start episode</button></div>
+        <p id="diagnostic" class="note" role="status"></p>
+      </section>
+      <section class="dashboard" aria-labelledby="run-heading">
+        <div class="section-head"><div><p class="eyebrow">Live episode</p><h2 id="run-heading">Morning errands</h2></div><span id="run-state" class="tag">Preview</span></div>
+        <div class="run-controls"><button id="play" type="button" disabled>Run baseline</button><button id="step" class="secondary" type="button" disabled>Step</button><button id="reset" class="secondary" type="button" disabled>Reset</button><button id="export" class="secondary" type="button" disabled>Export JSONL</button></div>
+        <p id="step-count" class="note">Start an episode to run the local mock agents.</p>
+        <div id="metrics" class="metrics" aria-label="Episode metrics"></div>
+        <svg id="network" viewBox="0 0 900 400" role="img" aria-label="Scenario locations, declared connections and agent positions"></svg>
+        <p class="note network-note">Logical travel network. This lab does not yet control the 3D city or its walking/driving physics.</p>
+        <div class="table-wrap"><table><caption>Agents · mock-greedy-1 policy</caption><thead><tr><th>Agent</th><th>Activity</th><th>Credits</th><th>Carrying</th><th>Tasks</th></tr></thead><tbody id="agents"></tbody></table></div>
+        <div class="lower-grid"><section><h3>World resources</h3><ul id="resources" class="plain-list"></ul></section><section><h3>Recent events</h3><ol id="events" class="plain-list"></ol></section></div>
+        <p id="recording" class="note">JSONL includes pinned Dream source, SHA-256, observations, joint actions, outcomes, rewards and terminal flags. Nothing leaves this browser.</p>
+      </section>
+    </div>
+    <footer>Handmade rules and mock policies. No model calls. Clinic visits are a supply-and-queue exercise, not a healthcare model.</footer>
+  </main>
+  <script type="module" src="/src/lab/main.ts"></script>
+</body></html>

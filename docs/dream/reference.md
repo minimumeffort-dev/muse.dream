@@ -30,6 +30,23 @@ Expressions support finite numbers, constants, unary signs, arithmetic, parenthe
 
 ## Commands
 
+### Logical scenarios and episodes
+
+These commands describe a bounded task network. They do not change NPC clocks, the 3D layout or driving physics. [Rules, runtime actions and recordings](scenarios.md).
+
+| Command | Context | ID / block | Fields |
+| --- | --- | --- | --- |
+| `scenario` | top | ID / scenario | `seed: n`, `max_steps: n` |
+| `item` | scenario | ID / no block | `label: text` |
+| `location` | scenario | ID / no block | `label: text`, `at: v2` |
+| `link` | scenario | ID / no block | `from: ref`, `to: ref`, `steps: n` |
+| `stock` | scenario | ID / no block | `at: ref`, `item: ref`, `mode: source / sink`, `quantity: n`, `price?: n` |
+| `service` | scenario | ID / no block | `at: ref`, `consumes: ref`, `produces: ref`, `duration: n`, `capacity: n`, `fee: n` |
+| `agent` | scenario | ID / no block | `at: ref`, `budget: n`, `capacity: n` |
+| `objective` | scenario | ID / no block | `agent: ref`, `kind: deliver / produce`, `at: ref`, `item: ref`, `quantity: n` |
+
+One scenario per project. Its IDs are block-local and unique across declaration kinds. References must have the expected type. Locations form a connected undirected graph. `max_steps` is integer 1..1000; seed 0..2147483647; coordinates 0..14000. At most 32 locations/items/services/objectives, 64 links/stocks and eight agents. Link steps and service duration are 1..100, service capacity 1..8, agent capacity 1..100, objective quantity 1..1000. Stock quantity is 0..1000; price, budget and fee are integer 0..100000. Price defaults to zero. Sinks require zero initial quantity/price and cannot be purchased. Services consume and produce one unit of different existing items. Objectives require a matching sink/service and an agent; every agent needs an objective. Delivery/production availability checks do not prove affordability or deadline feasibility. The scenario can compile beside a world, but the lab/recording runner currently accepts standalone scenarios only.
+
 A command with an ID requires a name immediately after its keyword. Commands with a block contain statements in their stated context. The context `top` is the file root; `visual` contains geometry/composition; `path` contains points, constants and repeats. Constructors are nested field values, not standalone statements.
 
 ### Assemblies and composition

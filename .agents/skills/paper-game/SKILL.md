@@ -23,8 +23,10 @@ file and the user's current instructions disagree, the user wins.
   publication, or credential changes without explicit authorization.
   Runtime model API usage is separate from the coding-agent subscription;
   ask before any paid model experiment (provider, purpose, proposed limit).
-- The coding agent builds the app. Muse Spark is only the vision model the
-  finished app may call when a user presses Scan. Keep those roles separate.
+- The coding agent builds the app. The finished app's model interprets user
+  prompts and eventually paper sketches into proposed Dream source. Keep those
+  roles separate. Prompt interpretation and agent policies remain mocked until
+  real provider integration is separately authorized.
 - Model output is validated scene/DSL data describing the interpreted world
   and supported behaviors, never executable code. No `eval`, generated modules, or model-directed
   URLs. Unknown labels stay visibly unresolved.
@@ -138,6 +140,11 @@ pipeline depends on.
   interpret, validate, preview the diff, apply atomically at a simulation
   boundary. Ignore stale responses. Invalid scans leave the last valid
   world intact; keep the previous revision for undo.
+- Logical task scenarios have separate episode state, observations, policy
+  actions and evaluation. They are not additional city NPC controllers or a
+  2D fallback for the game. Preserve the bounded resource/transaction semantics
+  and replay rules in `AGENTS.md` and `docs/dream/scenarios.md`; do not claim
+  biological, clinical or learning validity from a generic service exercise.
 
 ## Evidence
 

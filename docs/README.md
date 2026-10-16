@@ -17,6 +17,8 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [Populate streets and habitats](dream/populations.md) | Connected lighting, planting, destination parking, birds and transit |
 | [Day and night](dream/day-night.md) | A shared clock, changing sunlight, window glow and street lighting |
 | [NPCs and control](dream/npcs.md) | Explicit ownership, reusable state machines, proximity and timed routines |
+| [Prompt and run scenarios](dream/scenarios.md) | Shared resources, agents, budgets, service capacity, tasks and replayable episodes |
+| [World systems roadmap](world-systems.md) | Economics, ecology, education, healthcare operations and agent evaluation |
 | [Give things behavior](dream/behavior.md) | Walking, vehicle controls, contacts, doors and destruction |
 | [Generate with a model](dream/model-authoring.md) | Context, validation, repair and atomic acceptance |
 | [Language reference](dream/reference.md) | Every command, field, budget and compiler API |
@@ -49,7 +51,7 @@ The local gallery has four viewing angles and fixed animation phases for checkin
 
 ## What's implemented
 
-The entire playable mock is Dream 2 source, including its player, terrain, circuit and placed objects. Supported behaviors run in the engine's tested simulation. The next input boundary is the paper sketch: Muse will interpret it and produce a proposed Dream revision. Photo capture, interpretation and the rescan workflow aren't connected yet.
+The entire playable mock is Dream 2 source, including its player, terrain, circuit and placed objects. Supported behaviors run in the engine's tested simulation. The separate [Dream Lab](https://musedream.vercel.app/lab/) now exercises prompt → proposed Dream → validated logical scenario → mock agents → local episode records. Its interpreter is a bounded town template, and its agent travel is a logical graph. It does not yet change or control the playable city. Real prompt/sketch interpretation, photo capture and the rescan workflow remain unconnected.
 
 ## Contract and compatibility
 

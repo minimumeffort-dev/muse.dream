@@ -2,6 +2,7 @@ import {MAX_LIGHT_POOLS} from './daylight';
 import { DREAM_LIMITS } from "./dream-syntax";
 import { MEASURE_PROFILES, UNITS_PER_METER, CAR_PROPORTION_RULES, MEASURE_KINDS } from "./measure";
 import {NPC_LIMITS} from './agents';
+import {SCENARIO_LIMITS} from './scenario';
 import {MAX_WORLD_SIZE,MAX_WATER_AREA,MAX_WAVE_CELLS,MAX_STREET_LENGTH} from './world-bounds';
 
 // This table drives parsing, canonical field order and the model's vocabulary export.
@@ -44,6 +45,14 @@ export const DREAM_V2_COMMANDS: Readonly<Record<string,DreamCommand>> = Object.f
   behavior: command('top',true,{start:'ref'},'behavior'),
   state: command('behavior',true,{action:'idle|patrol|perform',face:'none|player?'},'npc_state'),
   on: command('npc_state',true,{event:'after|near_player|far_player',to:'ref',seconds:'n?',radius:'n?'}),
+  scenario: command('top',true,{seed:'n',max_steps:'n'},'scenario'),
+  item: command('scenario',true,{label:'text'}),
+  location: command('scenario',true,{label:'text',at:'v2'}),
+  link: command('scenario',true,{from:'ref',to:'ref',steps:'n'}),
+  stock: command('scenario',true,{at:'ref',item:'ref',mode:'source|sink',quantity:'n',price:'n?'}),
+  service: command('scenario',true,{at:'ref',consumes:'ref',produces:'ref',duration:'n',capacity:'n',fee:'n'}),
+  agent: command('scenario',true,{at:'ref',budget:'n',capacity:'n'}),
+  objective: command('scenario',true,{agent:'ref',kind:'deliver|produce',at:'ref',item:'ref',quantity:'n'}),
   watercourse: command("top",true,{level:"n",depth:"n",bank:"n",color:"color",flow:"v2",ends:"round|open?"},"path"),
   junction: command("top",true,{at:"v2"}),
   daylight: command("top",false,{cycle_s:"n",start_hour:"n"}),
@@ -78,6 +87,7 @@ export const DREAM_V2_CONTRACT = {
   types:{n:"numeric expression",v2:"[n,n]",position2:"[n,n] or a file-local junction reference",v3:"[n,n,n]",nums:"[n,...]",symbols:"[symbol,...]",point:"[n,n] or [n,n,n]",points2:"[[n,n],...]",colors:"[#rrggbb,#rrggbb]",color:"#rrggbb",ref:"symbol ID",symbol:"identifier",text:'"JSON-escaped string"',bool:"true|false",optional:"type suffix ?",variants:"enum values separated by |; other types are nested constructor calls"},
   limits:DREAM_LIMITS,projectLimits:DREAM_PROJECT_LIMITS,commands:DREAM_V2_COMMANDS,
   geometry:{shape:'prism',outline:'3..24 simple polygon points [X,Y], 0..1 and spanning both axes; either winding, no repeated closing point, holes, touching or crossed edges; area >= .01',extrusion:'outline maps across full size X/Y, centered, extruded along Z through full size Z; rotation and uniform scaling apply normally',jointRoll:'roll(axis,radius) on a joint rotates all children rigidly by traveled distance / resolved radius; reduced motion rests it, parked furnishings bake the rest pose'},
+  scenarios:{limits:SCENARIO_LIMITS,semantics:'Optional logical task environment, separate from driving physics and NPC clocks. Explicit bidirectional links take integer steps; source stock sells, sinks accept deliveries and cannot resell; services consume/produce one item with capacity, duration and fee. Agents have integer credits and carrying capacity. Deliver/produce objectives advance only on committed transfers/completions. Seed rotates contention priority deterministically. No generated scripts, real model calls, medical decisions or ecological realism.',output:'Step API with local observations, joint actions, rewards, termination/truncation and replayable JSONL. Prompt interpreter and agent policies are labelled mocks.'},
   agents:{limits:NPC_LIMITS,roles:{prop:'passive scenery, no route or behavior',controllable:'requires rideable control capability; parked until player boards',npc:'engine-owned route or behavior; driver-capable NPC cannot be boarded, passenger-only seats remain available'},legacy:'omitted role infers controllable from control capability, otherwise npc from route, otherwise prop',program:'behavior ID is file-local; states and transition targets are local to that behavior; all states reachable from start',actions:{idle:'rest joints and pause route clock',patrol:'advance placement route and animate while moving',perform:'animate joints in place with route clock paused'},events:{after:'only seconds, since state entry',near_player:'only radius; 3D distance <= radius',far_player:'only radius; 3D distance >= radius'},execution:'one transition per fixed tick, first matching declaration wins; elapsed resets on transition; per-instance clocks live outside Scene; patrol resumes without teleport; face=player turns stationary actors at 2.5 rad/s',boundary:'data-only bounded state machines; no scripts, pathfinding, generated input profiles or model calls; root world.player remains the original car'},
   daylight:{cycleSeconds:[120,3600],startHour:"0 <= hour < 24",semantics:"optional single declaration beside world/road; paused visual clock, reduced motion freezes it; R preserves clock, Start over resets it; omitted keeps static daytime",nightMaterial:"optional material.night color emits after dusk; daytime base paint unchanged",lamp:"object-root local position and radius 8..80, color; static prop only, no damage/knockables; soft ground-projected pool, not a point light",lightPools:MAX_LIGHT_POOLS},
   worldLimits:{dimension:MAX_WORLD_SIZE,waterArea:MAX_WATER_AREA,waveCellsPerBody:MAX_WAVE_CELLS,waveCellSize:24,watercourseStationWidth:[80,1200]},

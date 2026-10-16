@@ -61,6 +61,12 @@ describe('Dream syntax highlighting',()=>{
     expect(Object.keys(contract.commands)).toEqual(Object.keys(DREAM_V2_COMMANDS));
     for(const command of Object.keys(contract.commands))expect(highlight(command+'()')).toContain(`class="dream-keyword">${command}</span>`);
   });
+  it('highlights scenario declarations and fields without swallowing related identifiers',()=>{
+    const html=highlight('scenario day(seed=1,max_steps=80){agent courier(budget=9);service clinic(consumes=kit,produces=receipt,duration=4,fee=1);objective care(kind=produce,quantity=1);} // <script>');
+    for(const name of ['scenario','agent','service','objective'])expect(html).toContain(`class="dream-keyword">${name}</span>`);
+    for(const name of ['seed','max_steps','budget','consumes','produces','duration','fee','quantity'])expect(html).toContain(`class="dream-field">${name}</span>`);
+    expect(highlight('scenario_builder agency services stockroom')).not.toMatch(/dream-keyword/);expect(html).not.toContain('<script>');
+  });
 });
 
 describe('published site',()=>{
