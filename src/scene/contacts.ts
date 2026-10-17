@@ -3,16 +3,27 @@ import type { Scene, SceneObject } from "./schema";
 import { objectHeight,archetypeOf } from "../sim/archetypes";
 import { objectPlacement } from "./placement";
 import { bridgeRails } from "./terrain";
+import {bridgeCoordinates} from './landscape-dsl';
 import { SpatialGrid } from "../sim/spatial";
 
 export interface Contact {id?:string;zoneId?:string;x:number;y:number;r:number;bottom:number;top:number}
-const compiled=new WeakMap<Scene,{objects:Map<string,SceneObject>;solids:SpatialGrid<Contact>;maxRadius:number}>();
+export interface SceneContactData {sourceHash:string;contacts:Contact[]}
+const compiled=new WeakMap<Scene,ReturnType<typeof prepare>>();
+function prepare(scene:Scene,contacts:Contact[]){return {objects:new Map(scene.objects.map(o=>[o.id,o])),contacts,solids:new SpatialGrid(contacts),maxRadius:Math.max(0,...contacts.map(c=>c.r))};}
 /** Car and prop collision share one immutable broad phase per accepted revision. */
 export function sceneContacts(scene:Scene){
   let data=compiled.get(scene);if(data)return data;
   const contacts=scene.objects.filter(o=>!isActor(o) && archetypeOf(o).interaction==="solid").flatMap(o=>objectContacts(scene,o))
     .concat(bridgeRails(scene.terrain));
-  data={objects:new Map(scene.objects.map(o=>[o.id,o])),solids:new SpatialGrid(contacts),maxRadius:Math.max(0,...contacts.map(c=>c.r))};compiled.set(scene,data);return data;
+  data=prepare(scene,contacts);compiled.set(scene,data);return data;
+}
+/** Host-worker bootstrap data, outside the authored scene and saved state. */
+export function sceneContactData(scene:Scene):SceneContactData{return {sourceHash:scene.sourceHash,contacts:sceneContacts(scene).contacts};}
+export function primeSceneContacts(scene:Scene,data:SceneContactData):void{
+ const solids=scene.objects.filter(o=>!isActor(o) && archetypeOf(o).interaction==='solid'),ids=new Set(solids.map(o=>o.id));
+ const expected=solids.reduce((n,o)=>{const s=o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 ? o.spec : undefined;return n+(s?.contacts?.length??1)+(s?.breakZones?.length??0);},0)+(scene.terrain.landscape?.bridges??[]).filter(b=>b.rails).reduce((n,b)=>n+2*(Math.ceil(bridgeCoordinates(b,b.a.x,b.a.y).length/5)+1),0);
+ if(!data || data.sourceHash!==scene.sourceHash || !Array.isArray(data.contacts) || data.contacts.length!==expected || data.contacts.some(c=>!c || ![c.x,c.y,c.r,c.top].every(Number.isFinite) || c.r<=0 || !(Number.isFinite(c.bottom) || c.bottom===-Infinity) || c.bottom>=c.top || c.id!==undefined && !ids.has(c.id)))throw Error('Invalid prepared scene contacts');
+ compiled.set(scene,prepare(scene,data.contacts));
 }
 /** Authored cylinders, independent of visual mesh geometry. Y offsets leave passages open. */
 export function objectContacts(scene:Scene,object:SceneObject,pose?:{x:number;y:number;elevation:number;headingRad:number}):Contact[] {

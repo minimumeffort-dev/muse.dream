@@ -82,6 +82,18 @@ muse skills validate .agents/skills/ponytail --json
 can be delivered on slower CI runners. Preserve the test/reporting timeouts and
 keep unhandled errors fatal; do not hide a reporting failure to publish docs.
 
+Worker bootstrap supplies host-derived pedestrian graph, static contact caches
+and complete-world culling bounds.
+Prime contacts before navigation on the exact received Scene. Preserve graph node
+order, contact order, source identity, bounds and structural checks; these caches
+are not authored Dream fields or saved data. Keep runtime imports out of the tiny
+boot client. Routes and interactive assembly preparation use the same generators
+for synchronous fixtures and cooperative startup, with exact geometry and controls.
+Do not trade render detail or simulation rules for a shorter loading screen.
+Hold the first simulation/render handoff until required chunks and async shader
+preparation are ready. Keep one preparation owner, terminal failure/reload and
+worker/chunk cleanup. Record actual first-draw time separately from loader time.
+
 ## Layout
 
 - `src/scene/` — versioned scene document, Dream 1/2 compiler, schema, handmade fixture, validation

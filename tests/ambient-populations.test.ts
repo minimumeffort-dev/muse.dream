@@ -1,7 +1,7 @@
 import {describe,it,expect,beforeAll} from 'vitest';
 import {InstancedMesh,Mesh,Vector3,Box3} from 'three';
 import {compileDreamScene,compileDreamWorld,checkDream,formatDream} from '../src/scene/dream';
-import {ambientNavigation,ambientProblems} from '../src/scene/ambient-navigation';
+import {ambientNavigation,ambientProblems,ambientGraph,primeAmbientNavigation} from '../src/scene/ambient-navigation';
 import {initialAmbient,stepAmbient,ambientObjects,ambientPose} from '../src/sim/ambient';
 import {createCarAtSpawn,resetCar} from '../src/sim/car';
 import {stepInteractive} from '../src/sim/interaction';
@@ -23,6 +23,41 @@ let scene:Scene;
 beforeAll(()=>{scene=compileDreamScene(source,identity);});
 function advance(initial:ReturnType<typeof createCarAtSpawn>,seconds:number,dt=.05){let state=initial;for(let i=0;i<Math.round(seconds/dt);i++)state={...state,population:stepAmbient(state,dt,scene),timeS:state.timeS+dt};return state;}
 describe('bounded moving ambient populations',()=>{
+ it('reuses a worker graph with identical node indices, initial state and crowd decisions',()=>{
+  const copy=structuredClone(scene),source=JSON.stringify(copy),graph=structuredClone(ambientGraph(scene));
+  primeAmbientNavigation(copy,graph);
+  expect(ambientNavigation(copy).nodes).toEqual(ambientNavigation(scene).nodes);
+  expect(ambientNavigation(copy).starts).toEqual(ambientNavigation(scene).starts);
+  let a={...createCarAtSpawn(scene),x:100,y:2200},b={...createCarAtSpawn(copy),x:100,y:2200};
+  expect(b).toEqual(a);
+  for(let i=0;i<500;i++){
+   a={...a,population:stepAmbient(a,.05,scene),timeS:a.timeS+.05};
+   b={...b,population:stepAmbient(b,.05,copy),timeS:b.timeS+.05};
+  }
+  expect(b.population).toEqual(a.population);expect(JSON.stringify(copy)).toBe(source);
+  const o=copy.objects.find(o=>o.ambient?.motion.kind==='walk')!,nav=ambientNavigation(copy);
+  expect(nav.clear(o.x,o.y,nav.radius(o),true)).toBe(true);
+  expect(nav.segment(o,nav.nodes[nav.starts.get(o.id)!]!,nav.radius(o),true)).toBe(true);
+ });
+ it('builds the same instanced population in cooperative steps',()=>{
+  const sync=new AmbientPopulation(scene),steps=AmbientPopulation.buildSteps(scene);let result=steps.next(),yields=0;while(!result.done){yields++;result=steps.next();}
+  const staged=result.value;expect(yields).toBeGreaterThanOrEqual(2);expect(staged.count).toBe(sync.count);expect(staged.group.children.length).toBe(sync.group.children.length);
+  for(const [i,child] of sync.group.children.entries()){const a=child as InstancedMesh,b=staged.group.children[i] as InstancedMesh;expect(b.count).toBe(a.count);expect(b.castShadow).toBe(a.castShadow);expect(b.customDepthMaterial!.customProgramCacheKey()).toBe(a.customDepthMaterial!.customProgramCacheKey());for(const [name,attribute] of Object.entries(a.geometry.attributes))expect(b.geometry.getAttribute(name).array).toEqual(attribute.array);expect(b.geometry.index!.array).toEqual(a.geometry.index!.array);}
+ });
+ it('rejects mismatched, oversized or broken prepared graphs without changing the fallback',()=>{
+  const valid=ambientGraph(scene),node=valid.nodes.findIndex(n=>n.links.length>0);
+  const corrupt=[
+   (g:typeof valid)=>{g.sourceHash='different';},
+   (g:typeof valid)=>{g.nodes=Array.from({length:8193},()=>({x:0,y:0,links:[]}));},
+   (g:typeof valid)=>{g.nodes[node]!.x=NaN;},
+   (g:typeof valid)=>{g.nodes[node]!.links=[g.nodes.length];},
+   (g:typeof valid)=>{g.nodes[node]!.links=[node];},
+   (g:typeof valid)=>{g.nodes[node]!.links.push(g.nodes[node]!.links[0]!);},
+   (g:typeof valid)=>{g.nodes[g.nodes[node]!.links[0]!]!.links=[];},
+   (g:typeof valid)=>{g.starts.clear();},
+  ];
+  for(const change of corrupt){const graph=structuredClone(valid),copy=structuredClone(scene);change(graph);expect(()=>primeAmbientNavigation(copy,graph)).toThrow('prepared pedestrian graph');expect(ambientNavigation(copy).nodes).toEqual(valid.nodes);}
+ });
  it('keeps complete geometry, explicit ownership, deterministic source and separate controller budgets',()=>{
   expect(compileDreamScene(formatDream(source),identity)).toEqual(scene);
   expect(scene.objects.every(o=>o.role==='ambient')).toBe(true);expect(scene.objects.every(o=>!hasAnimatedJoints(o.spec))).toBe(true);

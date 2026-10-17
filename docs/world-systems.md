@@ -35,7 +35,7 @@ Player-to-person authored conversations now use the existing bounded state machi
 
 Interiors need an explicit floor/space owner, portals, clearance and supported movement, including camera visibility and loading. The current single-height driving field cannot stand in for multiple floors. Skyscrapers, lifts and stairs require that additional layer before they are called usable. Relationships and dating need authored consent, preferences, memory and repeatable social interactions; the current attention state is only a proximity reaction. Sports practice exists; full matches, teams, referees, entertainment venues, weather and needs beyond market fullness remain separate missing mechanics.
 
-Night navigation now has readable sky/ground fill outside lamp pools, while static districts load and unload around the player. Those improvements support the larger simulation without adding actors or reducing visual settings. Continue measuring populated districts as new systems land. Keep provider integration and external-policy adapters deferred until separately authorized.
+Night navigation now has readable sky/ground fill outside lamp pools, while static districts load and unload around the player. Startup now reuses worker-prepared paths, contacts and culling bounds, yields during route/asset assembly and waits for shader readiness. Those improvements support the larger simulation without adding actors or reducing visual settings. Continue measuring populated districts as new systems land, especially on lower-powered laptops and cold loads. Keep provider integration and external-policy adapters deferred until separately authorized.
 
 
 ## Current priorities and delivered foundation

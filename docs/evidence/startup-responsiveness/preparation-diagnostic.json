@@ -1,0 +1,9 @@
+{
+  "contactsMs": 1227.855458,
+  "walkingNetworkMs": 58.03637500000059,
+  "primeRemainingMs": 4.395332999999482,
+  "initialStateAfterPrimingMs": 0.9904169999999795,
+  "graphNodes": 2800,
+  "graphBytes": 159683,
+  "kind": "Node SSR diagnostic, caches within each module; not browser timing"
+}

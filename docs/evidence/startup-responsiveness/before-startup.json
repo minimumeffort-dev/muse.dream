@@ -1,0 +1,49 @@
+{
+  "heartbeat": {
+    "maxGapMs": 1949.199999988079,
+    "samples": 148
+  },
+  "phases": [
+    {
+      "endMs": 3974.300000011921,
+      "label": "Reading Dream · checking the world",
+      "startMs": 0.10000002384185792
+    },
+    {
+      "endMs": 5409.600000023842,
+      "label": "Preparing driving and walking",
+      "startMs": 3974.300000011921
+    },
+    {
+      "endMs": 5426.800000011921,
+      "label": "Starting the renderer",
+      "startMs": 5409.600000023842
+    },
+    {
+      "endMs": 6879.800000011921,
+      "label": "Building water and bridges",
+      "startMs": 5426.800000011921
+    },
+    {
+      "endMs": 7358.900000035763,
+      "label": "Assembling people and wildlife",
+      "startMs": 6879.800000011921
+    },
+    {
+      "endMs": 8633,
+      "label": "Preparing vehicles and interactive objects",
+      "startMs": 7358.900000035763
+    },
+    {
+      "endMs": 8813.100000023842,
+      "label": "Preparing lighting",
+      "startMs": 8633
+    },
+    {
+      "endMs": 12384.5,
+      "label": "Loading the first neighbourhood",
+      "startMs": 8813.100000023842
+    }
+  ],
+  "totalMs": 12384.5
+}

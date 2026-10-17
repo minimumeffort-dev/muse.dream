@@ -6,6 +6,28 @@ The mock world has 1,695 placed objects across a 14000 × 11000 landscape. Stati
 
 The loading screen arrives in the first HTML response. One worker compiles and validates Dream, then builds terrain, streets, water and static object chunks on demand. Finished mesh buffers are transferred to the renderer, along with engine-owned material recipes and per-instance occlusion data. Object stamping and batching stay off the main thread. The first complete view starts the game; the rest of the map is built as it becomes relevant.
 
+The worker also supplies the pedestrian portal graph, surveyed static collision
+cylinders and whole-world culling bounds. The game restores their local
+query helpers instead of repeating graph construction and terrain-support surveys.
+Graph node order stays exact so saved pedestrians retain their destinations. These
+are host-owned caches, outside Dream source and saved state. Source identity,
+bounds, links, starting nodes and cylinder structure are checked before use.
+Route surfaces/paint/rails and live interactive assemblies use cooperative build
+steps: the loader can update between pieces without changing their geometry or
+creating a lower-detail version. Individual mesh builds and the first GPU upload
+can still block; this does not make startup instantaneous. Once the first required
+chunks arrive, Three.js prepares shader programs asynchronously before the first
+draw. Browsers with parallel shader compilation can complete that work while the
+loading screen remains active; other drivers may still block. Simulation waits
+for both the required chunks and shader readiness. A failure exposes Reload,
+stops rendering and releases the streaming worker.
+
+On the local M3 Ultra / 96 GiB, the recorded maximum startup heartbeat gap fell
+from 1,949 ms to 289–293 ms across two final samples at full settings. Loading
+still took 11.5–12.2 seconds; this mainly improves page responsiveness. Matched
+drives retained the same draws, triangles and roughly 16.7 ms frame intervals.
+[Measurement conditions, raw reports and limits](evidence/startup-responsiveness/verification.md).
+
 ![The real startup loader](media/loading.png)
 
 Chunks cover 800 × 800 world units. Selection includes the orthographic view at the world's height extremes, rotated and zoomed views, object extents and upstream shadow casters. A 400-unit prefetch margin and three seconds of movement lookahead prepare the next area. A wider retention band keeps up to sixteen previously visited chunks warm outside that requested area, avoiding repeated rebuilding near boundaries.

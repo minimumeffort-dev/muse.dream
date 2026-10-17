@@ -1,7 +1,7 @@
 import {it,expect,vi} from 'vitest';
 import * as THREE from 'three';
 import {createFixtureScene} from '../src/scene/fixture';
-import {WorldStreaming,selectChunks,streamFootprint} from '../src/game/world-streaming';
+import {WorldStreaming,selectChunks,streamFootprint,worldStreamBounds} from '../src/game/world-streaming';
 import {packChunk,unpackChunk,disposeChunk} from '../src/game/chunk-packet';
 import {validChunkRegion,buildWorldChunk} from '../src/game/chunk-builder';
 import {toonMaterial,worldTime} from '../src/game/shaders';
@@ -13,6 +13,13 @@ const fixture=()=>({...createFixtureScene(),canonical:{width:9600,height:7200,co
 const tick=()=>new Promise(resolve=>setTimeout(resolve,5));
 function packet(){const root=new THREE.Group();root.add(new THREE.Mesh(new THREE.BoxGeometry(1,1,1),toonMaterial('#decbb2')));return packChunk(root).packet;}
 function cameraAt(x:number,z:number){const camera=new THREE.OrthographicCamera(-200,200,200,-200,1,10000);camera.position.set(x,1000,z+480);camera.lookAt(x,0,z);camera.updateMatrixWorld();return camera;}
+
+it('reuses transferred world bounds without changing selection or accepting invalid coverage',()=>{
+ const scene=createFixtureScene(),bounds=worldStreamBounds(scene),stream=new WorldStreaming(scene,async()=>packet(),()=>toonMaterial('#fff'),structuredClone(bounds));
+ expect(stream.bounds).toEqual(bounds);expect(stream.bounds).not.toBe(bounds);
+ const camera=cameraAt(0,0),sun=new THREE.Vector3(-.7,.4,.6).normalize();expect(streamFootprint(camera,sun,stream.bounds,960,720)).toEqual(streamFootprint(camera,sun,worldStreamBounds(structuredClone(scene)),960,720));stream.dispose();
+ for(const bad of [{...bounds,min:NaN},{...bounds,max:Infinity},{...bounds,min:bounds.max},{...bounds,radius:0}])expect(()=>new WorldStreaming(scene,async()=>packet(),()=>toonMaterial('#fff'),bad)).toThrow('prepared streaming bounds');
+});
 
 it('clips canonical chunks without gaps, including negative origins and partial world edges',()=>{
  const scene=fixture(),footprint=[{x:1,y:1},{x:1599,y:1},{x:1599,y:1599},{x:1,y:1599}];

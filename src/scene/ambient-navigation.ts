@@ -11,11 +11,28 @@ import {roadFootprint,distanceToRoad} from './road';
 import {AMBIENT_LIMITS} from './ambient';
 
 export interface WalkNode extends Point {links:number[]}
+export interface AmbientGraph {sourceHash:string;nodes:WalkNode[];starts:Map<string,number>}
 const cache=new WeakMap<Scene,ReturnType<typeof buildNavigation>>();
 export function ambientNavigation(scene:Scene){let value=cache.get(scene);if(!value){value=buildNavigation(scene);cache.set(scene,value);}return value;}
+/** Only the accepted world's worker supplies this cache, never Dream or saved state. */
+export function ambientGraph(scene:Scene):AmbientGraph{const {nodes,starts}=ambientNavigation(scene);return {sourceHash:scene.sourceHash,nodes,starts};}
+export function primeAmbientNavigation(scene:Scene,graph:AmbientGraph):void{
+ const walkers=scene.objects.filter(o=>o.ambient?.motion.kind==='walk');
+ const invalid=()=>{throw Error('Invalid prepared pedestrian graph');};
+ if(!graph || graph.sourceHash!==scene.sourceHash || !Array.isArray(graph.nodes) || graph.nodes.length>AMBIENT_LIMITS.graphNodes || !(graph.starts instanceof Map) || graph.starts.size!==walkers.length)invalid();
+ const {nodes,starts}=graph;
+ let edges=0;
+ for(const [i,node] of nodes.entries()){
+  if(!node || !Number.isFinite(node.x) || !Number.isFinite(node.y) || node.x<0 || node.y<0 || node.x>scene.canonical.width || node.y>scene.canonical.height || !Array.isArray(node.links) || node.links.length>nodes.length || new Set(node.links).size!==node.links.length)invalid();
+  edges+=node.links.length;
+  if(node.links.some(j=>!Number.isInteger(j) || j<0 || j>=nodes.length || j===i))invalid();
+ }
+ if(edges>AMBIENT_LIMITS.graphNodes*4 || nodes.some((node,i)=>node.links.some(j=>!nodes[j]!.links.includes(i))) || walkers.some(o=>!Number.isInteger(starts.get(o.id)) || !nodes[starts.get(o.id)!]?.links.length))invalid();
+ cache.set(scene,buildNavigation(scene,graph));
+}
 const radius=(o:SceneObject)=>assemblyHorizontalRadius(o.spec as ObjectDslV2,o.scale);
 /** Sparse polygon portals reuse accepted pavement. No raster of the whole world or runtime path search. */
-function buildNavigation(scene:Scene){
+function buildNavigation(scene:Scene,prepared?:AmbientGraph){
  const members=scene.objects.filter(o=>!!o.ambient),walkers=members.filter(o=>o.ambient!.motion.kind==='walk');
  const r=Math.max(3,...walkers.map(radius)),contacts=sceneContacts(scene),polygons=walkers.length ? walkingNetwork(scene).polygons : [];
  const bins=new Map<string,number[]>(),bounds=polygons.map(polygonBounds);
@@ -58,6 +75,7 @@ function buildNavigation(scene:Scene){
   }
   const n=Math.max(1,Math.ceil(length/8));for(let i=0;i<=n;i++)if(!clear(a.x+(b.x-a.x)*i/n,a.y+(b.y-a.y)*i/n,rr,walk))return false;return true;
  };
+ if(prepared)return {...prepared,radius,clear,segment};
  const nodes:WalkNode[]=[],centers:number[]=[];
  const add=(p:Point)=>{if(nodes.length>=AMBIENT_LIMITS.graphNodes)throw Error('pedestrian portal graph exceeds 8192 nodes');nodes.push({...p,links:[]});return nodes.length-1;};
  const connect=(i:number,j:number)=>{if(i!==j && segment(nodes[i]!,nodes[j]!,r,true)){nodes[i]!.links.push(j);nodes[j]!.links.push(i);}};

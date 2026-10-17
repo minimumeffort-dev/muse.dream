@@ -69,8 +69,9 @@ export class WorldStreaming {
   private signature='';
   private loaded=0;private unloaded=0;private discarded=0;private bytes=0;private peakBytes=0;private peakResident=0;private maxInstallMs=0;private maxSliceMs=0;
   error:Error|undefined;
-  constructor(private doc:Scene,private build:(region:RenderRegion)=>Promise<ChunkPacket>,private water:(id:string)=>THREE.Material){
-    this.bounds=worldStreamBounds(doc);this.group.name='streamed-world';
+  constructor(private doc:Scene,private build:(region:RenderRegion)=>Promise<ChunkPacket>,private water:(id:string)=>THREE.Material,bounds=worldStreamBounds(doc)){
+    if(![bounds.min,bounds.max,bounds.radius].every(Number.isFinite) || bounds.min>=bounds.max || bounds.radius<16)throw Error('Invalid prepared streaming bounds');
+    this.bounds={...bounds};this.group.name='streamed-world';
   }
   get ready():boolean{return !this.error && [...this.required].every(key=>this.residents.has(key));}
   get stats(){return {resident:this.residents.size,required:this.required.size,pending:this.wanted.filter(r=>!this.residents.has(r.key)).length,bytes:this.bytes,peakBytes:this.peakBytes,peakResident:this.peakResident,maxInstallMs:this.maxInstallMs,maxSliceMs:this.maxSliceMs,loaded:this.loaded,unloaded:this.unloaded,discarded:this.discarded,ready:this.ready,keys:[...this.residents.keys()]};}

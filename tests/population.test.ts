@@ -112,6 +112,18 @@ describe('live district populations and transport',()=>{
   }
   expect(scene.objects.filter(o=>hasAnimatedJoints(o.spec)).length+Number(hasAnimatedJoints(scene.player))+1).toBeLessThanOrEqual(24);
  });
+ it('preserves the complete live graph, contact broad phase and crowd state across worker bootstrap',async()=>{
+  const {ambientGraph,ambientNavigation,primeAmbientNavigation}=await import('../src/scene/ambient-navigation'),{sceneContactData,sceneContacts,primeSceneContacts}=await import('../src/scene/contacts'),{stepAmbient}=await import('../src/sim/ambient');
+  const {worldStreamBounds}=await import('../src/game/world-streaming');
+  const copy=structuredClone(liveScene),source=JSON.stringify(copy),contacts=structuredClone(sceneContactData(liveScene)),graph=structuredClone(ambientGraph(liveScene));
+  primeSceneContacts(copy,contacts);primeAmbientNavigation(copy,graph);
+  expect(ambientNavigation(copy).nodes).toEqual(ambientNavigation(liveScene).nodes);expect(ambientNavigation(copy).starts).toEqual(ambientNavigation(liveScene).starts);
+  for(let y=0;y<=11000;y+=500)for(let x=0;x<=14000;x+=500)expect(sceneContacts(copy).solids.query(x,y,120)).toEqual(sceneContacts(liveScene).solids.query(x,y,120));
+  let a={...createCarAtSpawn(liveScene),x:100,y:100},b={...createCarAtSpawn(copy),x:100,y:100};expect(b).toEqual(a);
+  for(let i=0;i<200;i++){a={...a,population:stepAmbient(a,.05,liveScene),timeS:a.timeS+.05};b={...b,population:stepAmbient(b,.05,copy),timeS:b.timeS+.05};}
+  expect(b.population).toEqual(a.population);expect(JSON.stringify(copy)).toBe(source);
+  expect(worldStreamBounds(copy)).toEqual(worldStreamBounds(liveScene));
+ });
  it('keeps every live ambient member clear throughout two minutes of city movement',async()=>{
   const {stepAmbient,ambientObjects}=await import('../src/sim/ambient'),{stepNpcs}=await import('../src/sim/npcs'),{ambientNavigation}=await import('../src/scene/ambient-navigation');
   const scene=liveScene,objects=ambientObjects(scene),nav=ambientNavigation(scene),unsafe=new Set<string>();let state={...createCarAtSpawn(scene),x:100,y:100};

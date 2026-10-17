@@ -1,10 +1,23 @@
 export interface Loading {
   stage(label:string):Promise<void>;
   build<T>(label:string,steps:Generator<void,T>):Promise<T>;
-  ready():void;
+  ready(firstRenderMs?:number):void;
   fail(error:unknown):void;
 }
 const yieldToPage=()=>new Promise<void>(resolve=>setTimeout(resolve,0));
+
+/** One async preparation, with simulation held until it succeeds or reload is required. */
+export function firstFrameReady(prepare:()=>Promise<unknown>,fail:(error:unknown)=>void):()=>boolean{
+  let phase:'waiting'|'preparing'|'ready'|'failed'='waiting';
+  const failed=(error:unknown)=>{phase='failed';fail(error);};
+  return ()=>{
+    if(phase==='waiting'){
+      phase='preparing';
+      try{prepare().then(()=>{phase='ready';},failed);}catch(error){failed(error);}
+    }
+    return phase==='ready';
+  };
+}
 
 /** Phase names describe real work; no invented percentage or minimum delay. */
 export function loadingScreen() {
@@ -24,9 +37,9 @@ export function loadingScreen() {
       await stage(label);
       let result=steps.next();while(!result.done){if(performance.now()-lastYield>=12){await yieldToPage();lastYield=performance.now();}result=steps.next();}return result.value;
     },
-    ready(){
+    ready(firstRenderMs?:number){
       stop();screen.hidden=true;document.body.dataset.loading='ready';document.querySelector('#game')!.setAttribute('aria-busy','false');
-      screen.dataset.result=JSON.stringify({totalMs:performance.now()-start,phases,heartbeat:{samples:heartbeats,maxGapMs:maxGap}});
+      screen.dataset.result=JSON.stringify({totalMs:performance.now()-start,firstRenderMs,phases,heartbeat:{samples:heartbeats,maxGapMs:maxGap}});
     },
     fail(error:unknown){
       stop();screen.hidden=false;document.body.dataset.loading='error';status.setAttribute('role','alert');status.textContent='The world couldn’t start. Reload to try again.';

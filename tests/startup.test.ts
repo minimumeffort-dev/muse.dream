@@ -4,8 +4,42 @@ import {tiledMesh,tiledMeshSteps} from '../src/game/batching';
 import {voxelSurface,voxelTerrainTile} from '../src/game/voxel-columns';
 import {assemblyBounds} from '../src/scene/measure';
 import {mockCastle} from '../src/scene/mock-objects';
-import {loadingScreen} from '../src/game/loading';
+import {loadingScreen,firstFrameReady} from '../src/game/loading';
 import {geometryMemory} from '../src/game/geometry-memory';
+import {WorldWorkerClient} from '../src/game/world-worker-client';
+import {ambientGraph,ambientNavigation,primeAmbientNavigation} from '../src/scene/ambient-navigation';
+import {createFixtureScene} from '../src/scene/fixture';
+import {sceneContactData,primeSceneContacts,sceneContacts} from '../src/scene/contacts';
+import {buildRoutes,buildRoutesSteps} from '../src/game/routes';
+import {routeSchema} from '../src/scene/routes';
+
+it('holds the first frame through a single async preparation and makes failures terminal',async()=>{
+ let release!:()=>void;const prepare=vi.fn(()=>new Promise<void>(resolve=>{release=resolve;})),fail=vi.fn(),ready=firstFrameReady(prepare,fail);
+ expect(ready()).toBe(false);expect(ready()).toBe(false);expect(prepare).toHaveBeenCalledOnce();release();await Promise.resolve();expect(ready()).toBe(true);expect(fail).not.toHaveBeenCalled();
+ for(const prepare of [()=>Promise.reject(new Error('GPU failed')),()=>{throw Error('GPU failed');}]){const fail=vi.fn(),ready=firstFrameReady(prepare,fail);expect(ready()).toBe(false);await Promise.resolve();expect(ready()).toBe(false);expect(ready()).toBe(false);expect(fail).toHaveBeenCalledOnce();expect(fail.mock.calls[0]![0].message).toBe('GPU failed');}
+});
+
+it('carries the accepted worker graph and fails scene/chunk waiters on bootstrap errors',async()=>{
+ const makeWorker=()=>({onmessage:null as any,postMessage:vi.fn(),terminate:vi.fn()});
+ const worker=makeWorker(),compile=vi.fn(),client=new WorldWorkerClient(worker as unknown as Worker,compile),scene=createFixtureScene();
+ const navigation=structuredClone(ambientGraph(scene)),received=structuredClone(scene);
+ worker.onmessage({data:{scene:received,navigation,contacts:structuredClone(sceneContactData(scene)),compileMs:12,saveCompatibility:'current'}});
+ expect(await client.scene).toBe(received);primeSceneContacts(received,client.contacts);primeAmbientNavigation(received,client.navigation);expect(compile).toHaveBeenCalledWith(12);expect(client.saveCompatibility).toBe('current');expect(ambientNavigation(received).nodes).toEqual(navigation.nodes);
+ client.dispose();
+ const broken=makeWorker(),bad=new WorldWorkerClient(broken as unknown as Worker),failure=bad.scene.catch(e=>e.message);
+ const pending=bad.build({x0:0,y0:0,x1:800,y1:800}).catch(e=>e.message);
+ broken.onmessage({data:{error:'Graph preparation failed'}});
+ expect(await failure).toBe('Graph preparation failed');expect(await pending).toBe('Graph preparation failed');expect(broken.terminate).toHaveBeenCalledOnce();
+ await expect(bad.build({x0:0,y0:0,x1:800,y1:800})).rejects.toThrow('Graph preparation failed');
+});
+
+it('retains exact static contact order and rejects broken prepared cylinders',()=>{
+ const scene=createFixtureScene(),valid=sceneContactData(scene),copy=structuredClone(scene),source=JSON.stringify(copy);
+ primeSceneContacts(copy,structuredClone(valid));expect(sceneContacts(copy).contacts).toEqual(sceneContacts(scene).contacts);
+ for(let y=0;y<=720;y+=100)for(let x=0;x<=960;x+=100)expect(sceneContacts(copy).solids.query(x,y,150)).toEqual(sceneContacts(scene).solids.query(x,y,150));
+ expect(JSON.stringify(copy)).toBe(source);
+ for(const change of [(d:typeof valid)=>{d.sourceHash='wrong';},(d:typeof valid)=>{d.contacts.pop();},(d:typeof valid)=>{d.contacts[0]!.r=NaN;},(d:typeof valid)=>{d.contacts[0]!.top=-Infinity;},(d:typeof valid)=>{d.contacts[0]!.id='unknown';}]){const data=structuredClone(valid);change(data);expect(()=>primeSceneContacts(structuredClone(scene),data)).toThrow('prepared scene contacts');}
+});
 
 it('staged tiling yields and produces exactly the synchronous buffers and bounds',()=>{
  const source=new THREE.PlaneGeometry(900,450,9,6).rotateX(-Math.PI/2),material=new THREE.MeshBasicMaterial();
@@ -21,6 +55,18 @@ it('staged tiling yields and produces exactly the synchronous buffers and bounds
   for(const [name,attr] of Object.entries(a.attributes))expect(attr.array).toEqual(b.getAttribute(name).array);
   expect(a.boundingSphere).toEqual(b.boundingSphere);
  }
+});
+it('cooperative route construction retains exact surfaces, paint, rails and sleepers',()=>{
+ const scene={...createFixtureScene(),voxelWorld:{groundCell:8 as const,heightStep:1,objectCell:1},routes:[
+  {id:'cycle',kind:'path',mode:'shuttle',speed:20,points:[{x:90,y:300},{x:600,y:300},{x:720,y:420}],surface:'cycle',width:30},
+  {id:'rail',kind:'rail' as const,mode:'shuttle' as const,speed:20,points:[{x:120,y:500},{x:720,y:500}],gauge:24},
+  {id:'tram',kind:'tram' as const,mode:'shuttle' as const,speed:20,points:[{x:120,y:200},{x:720,y:200}],gauge:14.35},
+ ].map(r=>routeSchema.parse(r))};
+ const sync=buildRoutes(scene),steps=buildRoutesSteps(scene);let result=steps.next(),yields=0;while(!result.done){yields++;result=steps.next();}
+ expect(yields).toBeGreaterThan(20);
+ const meshes=(root:THREE.Group)=>{const all:THREE.Mesh[]=[];root.traverse(n=>{if(n instanceof THREE.Mesh)all.push(n);});return all;},a=meshes(sync),b=meshes(result.value);
+ expect(b.length).toBe(a.length);expect(a.length).toBeGreaterThan(6);
+ for(const [i,mesh] of a.entries()){const copy=b[i]!;expect(copy.name).toBe(mesh.name);expect(copy.castShadow).toBe(mesh.castShadow);expect(copy.receiveShadow).toBe(mesh.receiveShadow);expect((copy.material as THREE.MeshStandardMaterial).color).toEqual((mesh.material as THREE.MeshStandardMaterial).color);expect(copy.geometry.index?.array).toEqual(mesh.geometry.index?.array);for(const [name,attribute] of Object.entries(mesh.geometry.attributes))expect(copy.geometry.getAttribute(name).array).toEqual(attribute.array);if(mesh instanceof THREE.InstancedMesh)expect((copy as THREE.InstancedMesh).instanceMatrix.array).toEqual(mesh.instanceMatrix.array);}
 });
 it('column indexing retains analytic UVs, negative coordinates and large index ranges',()=>{
  const source=new THREE.PlaneGeometry(160,160).rotateX(-Math.PI/2).translate(-80,0,-80);

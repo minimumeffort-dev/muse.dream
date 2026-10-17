@@ -1,10 +1,16 @@
 import type {Scene} from '../scene/schema';
 import type {RenderRegion} from './render-region';
 import type {ChunkPacket} from './chunk-packet';
+import type {AmbientGraph} from '../scene/ambient-navigation';
+import type {SceneContactData} from '../scene/contacts';
+import type {StreamBounds} from './world-streaming';
 
 /** A single producer bounds CPU work and transferred buffers during fast travel. */
 export class WorldWorkerClient {
   readonly scene:Promise<Scene>;
+  navigation!:AmbientGraph;
+  contacts!:SceneContactData;
+  bounds!:StreamBounds;
   saveCompatibility?:string;
   previousSaveCompatibility?:string;
   previousMarketSaveCompatibility?:string;
@@ -19,7 +25,7 @@ export class WorldWorkerClient {
       this.rejectScene=reject;
       worker.onmessage=({data})=>{
         if(data.error){this.fail(new Error(data.error));return;}
-        if(data.scene){this.saveCompatibility=data.saveCompatibility;this.previousSaveCompatibility=data.previousSaveCompatibility;this.previousMarketSaveCompatibility=data.previousMarketSaveCompatibility;this.emptyEconomySaveCompatibility=data.emptyEconomySaveCompatibility;this.previousSaveSource=data.previousSaveSource;onCompile(data.compileMs);resolve(data.scene);return;}
+        if(data.scene){this.navigation=data.navigation;this.contacts=data.contacts;this.bounds=data.bounds;this.saveCompatibility=data.saveCompatibility;this.previousSaveCompatibility=data.previousSaveCompatibility;this.previousMarketSaveCompatibility=data.previousMarketSaveCompatibility;this.emptyEconomySaveCompatibility=data.emptyEconomySaveCompatibility;this.previousSaveSource=data.previousSaveSource;onCompile(data.compileMs);resolve(data.scene);return;}
         const pending=this.pending.get(data.id);if(!pending)return;this.pending.delete(data.id);pending.resolve(data.packet);
       };
     });

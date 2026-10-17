@@ -422,3 +422,12 @@ palette, with no dithering and Gifsicle loss 80. It is offered as an optional
 animation link rather than downloading automatically in README/the guide; the
 full-color HD video and native poster remain primary. Market/conversation GIFs
 retain their earlier no-additional-Gifsicle-loss settings.
+
+## Startup preparation
+
+The startup responsiveness pass changes cache transfer and build scheduling. The
+loader's visible design, accepted world, assets, shaders, animation, controls and
+saved rules stay the same. Existing paired recordings and loading still remain
+accurate. Native before/after stills and actual browser timing reports are kept in
+the [startup responsiveness evidence](../evidence/startup-responsiveness/verification.md);
+no offline capture is a startup measurement.

@@ -18,7 +18,7 @@ The world loads around you as you drive, walk or fly. Terrain, streets, river su
 
 Diagonal roads and painted lines keep their actual outline. Curved object stamps use continuous voxel contours, so tires, roof slopes and aircraft parts don't need a staircase silhouette. Bridge ramps and their paint share a continuous surface, and water tiles share wave samples. Explicit fill/cut volumes keep their carved cells and fracture chunks.
 
-The opening loader waits for the first neighbourhood. Camera rotation, manual zoom and offscreen shadow casters are included in streaming coverage. [How loading and memory work](docs/rendering.md#loading-and-memory).
+The opening loader waits for the first neighbourhood. Validated pedestrian paths and collision cylinders are reused from the worker; road/transit and interactive-asset preparation yield between build steps. Camera rotation, manual zoom and offscreen shadow casters are included in streaming coverage. [How loading and memory work](docs/rendering.md#loading-and-memory).
 
 Driving still uses the smooth heightfield and explicit contacts, so visual steps don't shake the car. Editable terrain and per-cell destruction are still further work.
 

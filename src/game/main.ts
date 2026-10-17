@@ -1,4 +1,6 @@
 import {gameSave} from './save';
+import {primeAmbientNavigation} from '../scene/ambient-navigation';
+import {primeSceneContacts} from '../scene/contacts';
 import {commerceControls} from './commerce';
 import type {CommerceAction} from '../sim/commerce';
 import {saveTools} from './save-tools';
@@ -24,7 +26,7 @@ import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { buildMaskForScene } from "../scene/fixture";
 import type {Scene} from "../scene/schema";
-import type {Loading} from "./loading";
+import {firstFrameReady,type Loading} from "./loading";
 import { drivingHeight,waterAt } from "../scene/terrain";
 import { archetypeOf, objectRadius } from "../sim/archetypes";
 import { buildPaperMask } from "../sim/mask";
@@ -33,7 +35,7 @@ import { MAX_FLIGHT_CLEARANCE,isSwimming,nearbyRide,toggleRide,stepInteractive,o
 import { actorPoses } from "../sim/actors";
 import {isActor} from '../scene/agents';
 import { interactiveWorld } from "../scene/interactive-world";
-import { buildRoutes } from "./routes";
+import { buildRoutesSteps } from "./routes";
 import { compactObject } from "./compact-object";
 import { worldTime, worldMotion, terrainPlayer, terrainView, worldGradeShader } from "./shaders";
 import { animateObject, buildObject, buildPlayer,MAX_SUSPENSION_COMPRESSION } from "./world3d";
@@ -68,6 +70,8 @@ const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 
 export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):Promise<void> {
   await loading.stage("Preparing driving and walking");
+  primeSceneContacts(doc,worker.contacts);
+  primeAmbientNavigation(doc,worker.navigation);
   const carRadius = playerRadius(doc);
   const roadMask = buildMaskForScene(doc);
   const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
@@ -160,10 +164,8 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   fill.position.set(350, 250, -300); scene.add(fill);
   await loading.stage("Building water and bridges");
   const landscape=new WorldLandscape(doc,true);scene.add(landscape.group);
-  const routes=buildRoutes(doc);scene.add(routes);
-
-  const flocks=buildFlocks(doc);scene.add(flocks);
-  const scenery=new WorldStreaming(doc,region=>worker.build(region),id=>landscape.waters.find(w=>w.water.id===id)!.material);scene.add(scenery.group);
+  const routes=await loading.build("Building roads and transit",buildRoutesSteps(doc));scene.add(routes);
+  const scenery=new WorldStreaming(doc,region=>worker.build(region),id=>landscape.waters.find(w=>w.water.id===id)!.material,worker.bounds);scene.add(scenery.group);
   const streamStatus=document.createElement('output');streamStatus.id='world-stream-status';streamStatus.setAttribute('role','status');streamStatus.textContent='Loading nearby world';streamStatus.hidden=true;container.append(streamStatus);
   let streamWaitStarted=0;
   const streamState=()=>{
@@ -174,17 +176,21 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     return scenery.ready;
   };
   addEventListener('pagehide',event=>{if(!event.persisted)scenery.dispose();});
-  await loading.stage("Assembling people and wildlife");
-  const populations=new AmbientPopulation(doc);scene.add(populations.group);
+  const {flocks,populations}=await loading.build("Assembling people and wildlife",(function*(){
+    const flocks=buildFlocks(doc);scene.add(flocks);yield;
+    const populations=yield* AmbientPopulation.buildSteps(doc);scene.add(populations.group);
+    return {flocks,populations};
+  })());
   const propMeshes = new Map<string, THREE.Group>();
   const actorMeshes=new Map<string,THREE.Group>();
   const rideZooms=new Map<string,number>();
   const breakMeshes=new Map<string,THREE.Group>();
   const objects: THREE.Group[] = [];
   const characters=new Map<THREE.Group,CharacterAnimator>();
-  await loading.stage("Preparing vehicles and interactive objects");
+  const {debris,traveler,avatar,walkerSpec,walker,walkerAnimation,carRoot,carMesh,particles,sportVisuals}=await loading.build("Preparing vehicles and interactive objects",(function*(){
   for (const object of doc.objects) {
     if (!isActor(object) && !isReactive(object.spec) && archetypeOf(object).interaction !== "knockable" && !hasAnimatedJoints(object.spec)) continue;
+    yield;
     const destructible=isReactive(object.spec) && impactOf(object.spec)?.kind!=="bounce";
     const group = destructible ? buildDamageObject(object) : compactObject(buildObject(object));
     group.position.copy(worldPosition(doc, object.x, object.y, 1.5));
@@ -199,17 +205,23 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     if(isActor(object)){actorMeshes.set(object.id,group);rideZooms.set(object.id,rideCameraZoom(doc.player,object));}
     if(destructible)breakMeshes.set(object.id,group);
   }
+  yield;
   const debris=new WorldDebris(doc);scene.add(debris.group);
+  yield;
   const traveler={...interactiveWorld.assemblies.find(a=>a.displayName==="Traveler")!,voxelSize:doc.voxelWorld?.objectCell};
   const avatar=compactObject(buildObject({id:"traveler",kind:"custom",labelText:"Traveler",x:0,y:0,scale:measuredScale(traveler),spec:traveler}));avatar.visible=false;objects.push(avatar);
+  yield;
   const walkerSpec={...interactiveWorld.assemblies.find(a=>a.displayName==="Explorer")!,voxelSize:doc.voxelWorld?.objectCell};
   const walker=compactObject(buildObject({id:"explorer",kind:"custom",labelText:"Explorer",x:0,y:0,scale:measuredScale(walkerSpec),spec:walkerSpec}));
   walker.visible=false;scene.add(walker);
   const walkerAnimation=new CharacterAnimator(walker,walkerSpec);
+  yield;
   const carRoot = new THREE.Group(), carMesh = compactObject(buildPlayer(doc));
   carRoot.add(carMesh); scene.add(carRoot);
   const particles = new WorldParticles(doc); scene.add(particles.mesh);
   const sportVisuals=new SportsVisuals(doc);scene.add(sportVisuals.group);
+  return {debris,traveler,avatar,walkerSpec,walker,walkerAnimation,carRoot,carMesh,particles,sportVisuals};
+  })());
   const sportBalls=new Set(doc.sports.map(s=>s.ballId));
   const occlusion = new SceneryOcclusion(objects.filter(object=>object!==avatar && !sportBalls.has(object.userData.sceneObject?.id)));
   const updateMap = createWorldMap(document.querySelector<HTMLCanvasElement>("#world-map")!, doc);
@@ -394,8 +406,14 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
 
   }) : undefined;
   let memoryRevision="";
+  const shadersReady=firstFrameReady(async()=>{
+    await loading.stage('Preparing the first frame');
+    const start=performance.now();
+    await renderer.compileAsync(scene,camera);
+    if(import.meta.env.DEV)container.dataset.shaderWarmup=JSON.stringify({ms:performance.now()-start,parallel:renderer.extensions.has('KHR_parallel_shader_compile')});
+  },error=>{renderer.setAnimationLoop(null);scenery.dispose();worker.dispose();loading.fail(error);});
   const frame=() => {
-    if(pendingDraw){if(streamState()){pendingDraw();pendingDraw=undefined;previous=performance.now();}return;}
+    if(pendingDraw){if(streamState() && shadersReady()){pendingDraw();pendingDraw=undefined;previous=performance.now();}return;}
     const captureDt=capture?.begin();
     if(captureDt===null)return;
     const now = performance.now(), elapsedMs = now - previous, dt = profile?.begin(elapsedMs) ?? captureDt ?? Math.min(elapsedMs / 1000, .1); previous = now;
@@ -625,11 +643,12 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       commerce.update(car,mode==='playing');
       if(import.meta.env.DEV && car.economy)container.dataset.economy=JSON.stringify(car.economy);
       if(saves && (saveDirty || car.timeS-saveAt>=10))saveNow();
+      const first=document.body.dataset.loading!=="ready",renderStart=first ? performance.now() : 0;
       renderer.info.reset();profile?.beforeRender();composer.render();profile?.end();capture?.end();
-      if(document.body.dataset.loading!=="ready")loading.ready();
+      if(first)loading.ready(performance.now()-renderStart);
       if(import.meta.env.DEV){container.dataset.streaming=JSON.stringify(scenery.stats);const revision=`${scenery.stats.loaded},${scenery.stats.unloaded}`;if(revision!==memoryRevision){memoryRevision=revision;container.dataset.memory=JSON.stringify(geometryMemory(scene));}}
     };
-    if(streamState())draw();else pendingDraw=draw;
+    if(streamState() && shadersReady())draw();else pendingDraw=draw;
   };
   await loading.stage("Loading the first neighbourhood");
   frame();
