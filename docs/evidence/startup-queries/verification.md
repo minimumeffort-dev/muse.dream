@@ -128,9 +128,12 @@ Ordinary keyboard driving, F to leave the car, walking and Space were exercised
 afterward. [On-foot view](production-controls.png). Public-origin progress was
 not replaced or imported.
 
-That native view also identifies a remaining crossing-paint overlap. It belongs
-to the unchanged city geometry and needs a separate road-marking correction;
-exact equality here does not imply every existing asset or street detail is right.
+The native view initially suggests a crossing-paint overlap. Source tracing
+identifies the two continuous strips as raised tram rails, not street center paint:
+`buildRoutesSteps` draws rail boxes above the street, while `buildStreetSteps`
+already clips center paint around crossings. A separate visual pass should embed
+those rails in the carriageway and retain their continuity through crossings.
+Exact equality here does not imply every existing asset or street detail is right.
 
 ## Executed checks
 

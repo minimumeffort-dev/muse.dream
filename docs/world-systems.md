@@ -48,10 +48,12 @@ Night navigation now has readable sky/ground fill outside lamp pools, while stat
 
 Existing limits remain visible: the city has decorative institutions, bounded NPC routines, arcade vehicles and sports practice. It has a working food/work/delivery loop and one enterable market ground floor, with no employment contracts, enterable restaurant, relationship progression, multi-floor interior movement or weather system yet. Prioritize connected activities over adding more empty buildings.
 
-The current native street audit also shows center paint continuing through one
-crossing near the town start. Trace the separate paint sources and fix their shared
-clipping before expanding road decoration. Existing world equality checks preserve
-that geometry; they do not certify every placement or marking is correct.
+The current native street audit shows two raised tram rails crossing the zebra
+near the town start. They initially look like overlapping road paint; tracing the
+renderer identifies rail geometry, while center paint already yields to crossings.
+Embed the tram rails visually in the carriageway while preserving their continuity.
+Existing world equality checks preserve that geometry; they do not certify every
+placement or marking is correct.
 
 Natural work grounds now retain the terrain and cosmetic plants through explicit
 Dream `finish=terrain`. Coverage, furniture reservations, contacts and walking
