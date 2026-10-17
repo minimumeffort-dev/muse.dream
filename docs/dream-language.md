@@ -66,3 +66,7 @@ paint mesh or map fill. It omits `color` and retains cosmetic ground plants;
 ordinary painted surfaces keep their existing syntax and require color.
 Geometry, furniture reservations and movement bounds still apply.
 [Grounds](dream/worlds.md#streets-grounds-and-paint).
+
+Multi-input work uses a bounded `work` block of `ingredient(good=...,take=...)`
+statements. The existing `input`/`take` form remains valid. Both compile to the
+same conserved production ledger. [Recipes and the complete example](dream/commerce.md#recipes-with-several-ingredients).

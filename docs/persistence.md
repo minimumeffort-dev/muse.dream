@@ -44,7 +44,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-Format 9 retains the exact source hash and the compatibility fingerprint, with simulation version 13. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+Format 9 retains the exact source hash and the compatibility fingerprint, with simulation version 14. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -202,3 +202,21 @@ R56 keeps format 9 and advances simulation rules to 12. Its registered r55 proje
 Balances, inventory, reserved work/cargo, damage, plant growth, clocks, sports and parked-vehicle ownership stay saved. Derived pedestrian node IDs are rebound to the new graph; when an old goal disappeared or is blocked, a nearby reachable node replaces that goal without moving the walker or resetting its history.
 
 A grounded player's old pose may now intersect the raised floor or wall. Restore first tries supported footing at the same XY, then clear footing within 32 units, retaining the active body and parked vehicles. An active batch prefers a pose that still reaches its market through the opening. This is an explicit geometry upgrade, not arbitrary layout migration. If no safe local pose exists, the existing player-recovery rule still applies. The building's support and NPC work state are independent of render chunks.
+
+## Multi-input work upgrade
+
+The registered simulation-13 release upgrades to simulation 14 after validating
+its exact accepted-world projection and conserved saved ledger. It preserves all
+existing fields, including work deadlines, balances, stock, consumed food,
+deliveries, repair claims and paths, growing trees, NPC memory, vehicles and
+visual time. It adds only the four new zeroed inventory/consumption entries,
+eight vegetables, eight boards, eight fastener units and an empty lunch shelf
+at the market, plus zeroed `pack_lunch` and `assemble_kit` batch counters. No money
+is added. Reloading the new slot cannot seed those supplies again.
+
+The old format-9 slot stays intact. The current slot wins; corrupt or changed
+current data blocks fallback rather than silently rewinding to the previous
+release. The earlier registered upgrades still pass through their own checked
+physical projections before receiving the new definitions. A change to another
+world, price or recipe remains incompatible. Ingredient reservations are derived
+from the accepted recipe and active work ID; saves cannot supply a custom recipe.

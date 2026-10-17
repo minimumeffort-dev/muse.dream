@@ -284,7 +284,7 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 ## Saved simulation state
 
 Current save format 9 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 13. Historical formats retain their registered projections.
+at simulation version 14. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -495,3 +495,13 @@ vehicle AI. See `docs/examples/courier-resupply.dream` and the commerce guide.
 Dream object-root `interior` owns one static ground-floor space with 1..4 explicit portals. Keep the 32-space scene cap and existing eight contacts / 32 parts per assembly. Rectangle contacts use size XOR radius, optional rectangle heading, upright static structures only; cylinders remain compatible. Floor and ceiling contacts must span the space at the declared heights. Full-scene acceptance proves doorway cylinder clearance and steps. Use shared contact geometry for every narrow phase and `walkingHeight` for people/work, placement and dry exits. Preserve water/bridge support. No inferred collider from a visual door or floor.
 
 Keep explicit shell `part.cutaway` tags through compaction, instancing and worker transfer; only the roof and camera-facing walls disappear inside. Contents/floors stay opaque, physical contacts and roof shadows survive, reduced motion snaps transitions. A room-owning lamp clips its always-on surface pool to the floor; no new point lights, shadow maps or wall-lighting claims. Work grounds may name the placed building ID and reuse the same floor polygon. Trade and conversation use shared contact sight. Preserve saved jobs, stock, money, damage, bodies and ownership through the registered r55 physical projection and bounded local player recovery. Multiple floors, stairs/lifts and hand tools remain separate missing capabilities. See `docs/dream/interiors.md`.
+
+Multi-input `work` uses an optional recipe block with 1..4 unique
+`ingredient(good=...,take=...)` declarations, exclusive with scalar input/take.
+Every input needs a matching market lot, a positive bounded quantity fitting its
+limit, and differs from output. Keep all input/wage/output/refund reservations
+atomic, shared NPC/player checks, per-good conservation and exact completion or
+refund. Never add per-item render/physics bodies. The simulation-13 to 14 upgrade
+adds only the four finite market supplies/empty lunch shelf and zeroed new
+inventory/consumption/batch fields; preserve old state and its slot, with no
+population/floor rebasing for this upgrade. See `docs/examples/multi-input-work.dream`.

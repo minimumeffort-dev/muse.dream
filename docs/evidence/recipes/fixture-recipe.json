@@ -1,0 +1,10 @@
+{
+  "source": "Native Backups download from isolated localhost:5183/?test-save after ordinary kit assembly and starting Pack lunch. User/public save was untouched.",
+  "rendererSourceSha256": "175a10c288f02547287a11c2cabf4bb4b35c8434a365ba5d6f65e707b84f9782",
+  "worldSourceHash": "bb446c9ba89881bf6d982231858d445366da2cd4bafbda1c74df19021b6e06cb",
+  "compatibilityHash": "97f4bf439e7eb4a1998c36851128724123b16861e4ce277d295d1e4e182ab5a4",
+  "simulationVersion": 14,
+  "path": "tests/fixtures/save-v9-r57-recipe.json",
+  "sha256": "467cf164b9c26e4d9c301bdb65cd896157fdb14f27c189ff5055363da9252472",
+  "meaning": "The later UI-only fix selects the active saved job for its recipe hint. Saved state and accepted world are identical."
+}

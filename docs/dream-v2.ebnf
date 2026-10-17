@@ -66,6 +66,10 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
 (* One economy() block per linked playable world. Its block permits good, account,
    market, work, delivery and repair. A market block contains lot declarations. Actor references
    resolve after linking; goods/work/market references belong to the economy.
+   Work permits either input/take with a semicolon or an optional recipe block of
+   1..4 ingredient(good=ref,take=n) statements, no ingredient IDs. Exactly one
+   form, unique input goods, no empty block, no input equal to output. All inputs,
+   refund capacities, wage and output room reserve atomically.
    Integer money, stock and conserved transfers are engine-owned, never callbacks. *)
 
 (* place.parked is a boolean on explicit controllable fixed placements.

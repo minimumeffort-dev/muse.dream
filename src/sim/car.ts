@@ -120,6 +120,7 @@ export interface World {
   previousPlantSaveCompatibility?:string;
   previousFinishSaveCompatibility?:string;
   previousCourierSaveCompatibility?:string;
+  previousRecipeSaveCompatibility?:string;
   previousEgressSaveCompatibility?:string;
   previousInteriorSaveCompatibility?:string;
   previousInteriorNavigation?:import('../scene/ambient-navigation').AmbientGraph;

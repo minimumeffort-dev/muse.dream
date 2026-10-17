@@ -71,7 +71,7 @@ export class ParserV2 extends Parser {
     }
     for(const [key,type] of Object.entries(definition.fields))if(!type.endsWith("?") && !node.fields.has(key))
       fail(`missing field '${key}'`,{...token,path:`${token.path}/${key}`},"E_FIELD_REQUIRED",[type]);
-    if(definition.block)node.block=this.nodes(definition.block==="inherit" ? context==="object" ? "visual" : context : definition.block,depth+1,token.path);
+    if(definition.block && (!definition.block.endsWith('?') || this.is('{')))node.block=this.nodes(definition.block==="inherit" ? context==="object" ? "visual" : context : definition.block.replace(/\?$/,''),depth+1,token.path);
     else if(context!=="value")this.expect(";");
     return node;
   }
@@ -82,7 +82,7 @@ export class ParserV2 extends Parser {
     while(context==="top" ? !this.is("<end>") : !this.accept("}")) {
       const node=this.node(context,depth,path);
       if(node.id) {if(names.has(node.id))fail(`duplicate ID '${node.id}' in this scope`,node.token,"E_DUPLICATE_ID");names.add(node.id);}
-      else if(node.kind!=="point") {if(singletons.has(node.kind))fail(`duplicate '${node.kind}'`,node.token,"E_DUPLICATE_ID");singletons.add(node.kind);}
+      else if(!["point","ingredient"].includes(node.kind)) {if(singletons.has(node.kind))fail(`duplicate '${node.kind}'`,node.token,"E_DUPLICATE_ID");singletons.add(node.kind);}
       nodes.push(node);
     }
     return nodes;

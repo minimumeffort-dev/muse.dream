@@ -11,14 +11,18 @@ import type {Scene} from './schema';
 import {roleOf} from './agents';
 import {waterAt,drivingHeight} from './terrain';
 
-export const COMMERCE_LIMITS=Object.freeze({goods:8,accounts:16,markets:8,jobs:16,deliveries:16,courierContracts:4,repairs:8,repairNodes:4096,repairNetworkNodes:8192,repairNetworkLinks:32768,repairGrounds:8,repairStreetTargets:512,repairAccessPieces:2048,repairVerge:32,repairRadius:4,repairPath:128,money:1_000_000,quantity:10_000,capacity:32,decisionS:.25});
+export const COMMERCE_LIMITS=Object.freeze({goods:8,accounts:16,markets:8,jobs:16,ingredients:4,deliveries:16,courierContracts:4,repairs:8,repairNodes:4096,repairNetworkNodes:8192,repairNetworkLinks:32768,repairGrounds:8,repairStreetTargets:512,repairAccessPieces:2048,repairVerge:32,repairRadius:4,repairPath:128,money:1_000_000,quantity:10_000,capacity:32,decisionS:.25});
 const ref=z.string().regex(/^[a-z][a-z0-9_]{0,31}$/),money=z.number().int().min(0).max(COMMERCE_LIMITS.money),quantity=z.number().int().min(0).max(COMMERCE_LIMITS.quantity);
 const label=z.string().min(1).max(40).refine(s=>s.trim().length>0,'label must contain text');
 const good=z.object({id:ref,label,food:z.number().finite().min(0).max(100).default(0)}).strict();
 const account=z.object({id:ref,actor:ref,credits:money,capacity:z.number().int().min(1).max(COMMERCE_LIMITS.capacity),satiety:z.number().finite().min(0).max(100),drainPerS:z.number().finite().min(0).max(.25),shop:z.boolean().default(false),work:ref.optional(),repair:ref.optional(),repairs:z.array(ref).min(1).max(GROWTH_LIMITS.workerServices).optional(),deliveries:z.array(ref).min(1).max(COMMERCE_LIMITS.courierContracts).optional()}).strict();
 const lot=z.object({id:ref,good:ref,quantity,limit:quantity.refine(n=>n>0),price:z.number().int().min(1).max(10_000).optional()}).strict();
 const market=z.object({id:ref,label,actor:ref,credits:money,radius:z.number().finite().min(20).max(80),lots:z.array(lot).min(1).max(COMMERCE_LIMITS.goods)}).strict();
-const job=z.object({id:ref,label,market:ref,input:ref,take:quantity.refine(n=>n>0),output:ref,make:quantity.refine(n=>n>0),seconds:z.number().finite().min(1).max(120),pay:money.refine(n=>n>0),effort:z.number().finite().min(1).max(50),capacity:z.number().int().min(1).max(4),target:quantity}).strict();
+const ingredient=z.object({good:ref,take:quantity.refine(n=>n>0)}).strict();
+const job=z.object({id:ref,label,market:ref,input:ref.optional(),take:quantity.refine(n=>n>0).optional(),ingredients:z.array(ingredient).min(1).max(COMMERCE_LIMITS.ingredients).optional(),output:ref,make:quantity.refine(n=>n>0),seconds:z.number().finite().min(1).max(120),pay:money.refine(n=>n>0),effort:z.number().finite().min(1).max(50),capacity:z.number().int().min(1).max(4),target:quantity}).strict().superRefine((j,ctx)=>{
+ if(j.ingredients ? j.input!==undefined || j.take!==undefined : j.input===undefined || j.take===undefined)ctx.addIssue({code:'custom',message:'work needs input and take, or an ingredient block, never both',path:['ingredients']});
+ if(j.ingredients && new Set(j.ingredients.map(i=>i.good)).size!==j.ingredients.length)ctx.addIssue({code:'custom',message:'work ingredients need unique goods',path:['ingredients']});
+});
 const delivery=z.object({id:ref,label,from:ref,to:ref,good:ref,quantity:z.number().int().min(1).max(COMMERCE_LIMITS.capacity),pay:money.refine(n=>n>0),price:z.number().int().min(0).max(10_000).optional(),capacity:z.number().int().min(1).max(4),on:ref.optional(),grounds:z.array(ref).min(1).max(COMMERCE_LIMITS.repairGrounds-1).optional()}).strict().superRefine((d,ctx)=>{
  if(d.grounds && (!d.on || new Set([d.on,...d.grounds]).size!==d.grounds.length+1))ctx.addIssue({code:'custom',message:'delivery grounds require on and must be unique, excluding on',path:['grounds']});
 });
@@ -49,11 +53,11 @@ export const economySchema=z.object({goods:z.array(good).min(1).max(COMMERCE_LIM
   if(d.pay+d.quantity*(d.price??0)>COMMERCE_LIMITS.money)issue('delivery invoice and wage must fit the treasury limit',['deliveries',i,'price']);
  });
  e.jobs.forEach((j,i)=>{
-  const m=e.markets.find(m=>m.id===j.market),input=m?.lots.find(l=>l.good===j.input),output=m?.lots.find(l=>l.good===j.output);
+  const m=e.markets.find(m=>m.id===j.market),output=m?.lots.find(l=>l.good===j.output);
   if(!m)issue('unknown work market',['jobs',i,'market']);
-  if(!input || j.take>input.limit)issue('work input must fit an existing market lot',['jobs',i,'input']);
+  for(const [k,need] of jobInputs(j).entries()){const input=m?.lots.find(l=>l.good===need.good);if(!input || need.take>input.limit)issue('work input must fit an existing market lot',j.ingredients ? ['jobs',i,'ingredients',k,'good'] : ['jobs',i,'input']);}
   if(!output || j.make>output.limit || j.target>output.limit)issue('work output and target must fit an existing market lot',['jobs',i,'output']);
-  if(j.input===j.output)issue('work needs different input and output goods',['jobs',i,'output']);
+  if(jobInputs(j).some(i=>i.good===j.output))issue('work needs different input and output goods',['jobs',i,'output']);
  });
  e.repairs.forEach((r,i)=>{const lot=e.markets.find(m=>m.id===r.market)?.lots.find(l=>l.good===r.input);if(!lot || lot.limit<r.take)issue('repair input must fit an existing market lot',['repairs',i,'input']);});
  e.accounts.forEach((a,i)=>{
@@ -71,6 +75,8 @@ export const economySchema=z.object({goods:z.array(good).min(1).max(COMMERCE_LIM
 export type Economy=z.infer<typeof economySchema>;
 export type Market=Economy['markets'][number];
 export type Job=Economy['jobs'][number];
+export const jobInputs=(job:Pick<Job,'input'|'take'|'ingredients'>)=>job.ingredients??(job.input!==undefined && job.take!==undefined ? [{good:job.input,take:job.take}] : []);
+export const jobTake=(job:Job,good:string)=>job.ingredients ? job.ingredients.find(i=>i.good===good)?.take??0 : job.input===good ? job.take! : 0;
 export type Repair=Economy['repairs'][number];
 export type Delivery=Economy['deliveries'][number];
 export const accountRepairs=(a:{repair?:string;repairs?:string[]})=>a.repairs??(a.repair ? [a.repair] : []);

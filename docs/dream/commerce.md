@@ -20,7 +20,7 @@ One `economy()` block owns the system for a linked world. Goods, accounts, marke
 | `account` | Actor-owned integer credits, carrying capacity, fullness and drain per simulation second |
 | `market` | A stationary vendor, treasury and interaction radius of 20..80 world units |
 | `lot` | One good's initial stock and capacity; optional positive integer price allows buying and selling |
-| `work` | Timed conversion of one input good into another, with wage, effort, shared capacity and refill target |
+| `work` | Timed conversion of one or several input goods into another, with wage, effort, shared capacity and refill target |
 
 The player acts through controls. NPC `shop=true` attempts food purchases/consumption at fullness 40 or below. Optional account `work` refills its job's output toward `target`. Policies submit the same transactions and meet the same range, capacity, inventory and money checks. These are bounded engine policies, not generated scripts or general life AI.
 
@@ -91,7 +91,112 @@ Needs and work settle on a resident 4 Hz simulation clock. NPC decisions are at 
 
 [Save format and the first-market migration](../persistence.md) preserve earlier world changes while introducing this new system. Later changes to economy rules still need an explicit migration. Limits are in the generated [command contract](../dream-v2-contract.json) and [reference](reference.md#commerce-bounds). Logical Lab scenarios remain independent.
 
-This is an outdoor market loop. Enterable kitchens, opening hours, shifts, multi-stage production chains, relationship progression and customer pathfinding driven by needs remain future work. The supply ledger is working; those institutions should not be described as complete yet.
+The market has a usable ground-floor interior and short food and repair-supply chains. Enterable kitchens, opening hours, shifts, supply production, relationship progression and customer pathfinding driven by needs remain future work. The supply ledger is working; those institutions should not be described as complete yet.
+
+## Recipes with several ingredients
+
+At the market, choose **Pack lunch** and press **H**. One loaf and one vegetable
+unit leave the business shelves together. Five seconds later, one packed lunch
+reaches its counter and you earn three credits. Select Packed lunch in the goods
+menu, buy it with B, then eat it with G. Baking and packing now form a small
+production chain: flour becomes bread, then bread and vegetables become lunch.
+
+**Assemble a repair kit** uses one timber board and one fastener unit, takes seven
+seconds and pays three credits. It needs room on the repair-kit shelf, so repair
+some damage first. The caretaker can use the resulting kit through the existing
+repair jobs. The market starts with eight vegetables, eight boards and eight
+fastener units. They are finite supplies, added once for existing saves. Neither
+job creates ingredients or business money, and kit assembly does not replace
+all the world's supply needs.
+
+The work panel shows the selected recipe. A missing ingredient blocks the whole
+start; it cannot take the bread and fail halfway through taking vegetables.
+Wages, output room and room to refund every ingredient stay reserved. Cancel or
+walk away before completion to return all inputs and wages without output or pay.
+NPC workers use the same rule; the live baker keeps its existing bread duty.
+
+![Packing, buying and eating a lunch](../media/recipes.gif)
+
+[HD recording](../media/recipes.mp4) · [Complete recipe world](../examples/multi-input-work.dream)
+
+Use either the original `input`/`take` fields or an ingredient block, never both.
+A block has one to four unique goods, each backed by a matching lot at that
+market. Each take is a positive bounded integer and fits the lot's capacity.
+Inputs cannot also be the output. Empty blocks, duplicate goods and unknown
+supplies fail with a located compiler diagnostic. No generated code runs.
+The same construct describes cooking and workshop assembly:
+
+```dream
+dream 2;
+material blue(style=toon,colors=[#537eaa,#3c5f87]);
+material skin(style=toon,colors=[#c59774,#a97655]);
+object pedestrian(label="Pedestrian"){
+  measure(kind=person,axis=y,meters=1.8);
+  body(interaction=decor,radius=4,height=18);
+  part torso(shape=capsule,material=blue,at=[0,11,0],size=[5,6,4]);
+  part head(shape=sphere,material=skin,at=[0,16,0],size=[4,4,4]);
+  part nose(shape=sphere,material=skin,at=[2,16,0],size=[1,1,1]);
+  repeat legs(index=i,count=2){
+    joint leg(at=[0,8,i*3-1.5],motion=swing(axis=z,deg=18,hz=.6,phase_deg=i*180)){
+      part shin(shape=capsule,material=blue,at=[0,-4,0],size=[2,8,2]);
+    }
+  }
+}
+behavior welcome(start=waiting){
+  state waiting(action=idle){on talk(event=interact,to=hello,radius=55,familiar=false);on again(event=interact,to=returning,radius=55,familiar=true);}
+  state hello(action=idle,face=player,say="Hello. Welcome to the neighborhood."){
+    on ask(event=interact,to=about,radius=55);
+    on finish(event=after,to=waiting,seconds=6);
+  }
+  state returning(action=idle,face=player,say="Good to see you again."){
+    on finish(event=after,to=waiting,seconds=6);
+  }
+  state about(action=idle,face=player,say="I like walking by the river. See you around."){
+    on finish(event=after,to=waiting,seconds=6);
+  }
+}
+place neighbor(object=pedestrian,at=[580,710],role=npc,behavior=welcome);
+world(size=[4000,2400],spawn=[525,609],heading_deg=0);
+road circuit(width=118,points=[[300,590],[660,590],[810,500],[810,220],[660,130],[300,130],[150,220],[150,500]]);
+
+checkpoint start(at=[480,612.5],dir=[1,0],width=100);
+checkpoint east(at=[828.75,360],dir=[0,-1],width=100);
+checkpoint north(at=[480,107.5],dir=[-1,0],width=100);
+checkpoint west(at=[131.25,360],dir=[0,1],width=100);
+
+place customer(object=pedestrian,at=[620,730],role=npc,behavior=welcome);
+economy(){
+ good bread(label="Bread",food=45);
+ good vegetables(label="Vegetables",food=20);
+ good lunch(label="Packed lunch",food=65);
+ good boards(label="Timber boards");
+ good fasteners(label="Fasteners");
+ good kit(label="Repair kit");
+ account pocket(actor=player,credits=20,capacity=8,satiety=60,drain_s=.05);
+ account cook(actor=neighbor,credits=0,capacity=4,satiety=65,drain_s=.05,work=pack_lunch);
+ market corner(label="Market workshop",actor=neighbor,credits=100,radius=70){
+  lot bread_shelf(good=bread,quantity=8,limit=16,price=5);
+  lot produce(good=vegetables,quantity=8,limit=16,price=2);
+  lot lunches(good=lunch,quantity=0,limit=8,price=8);
+  lot wood(good=boards,quantity=8,limit=8);
+  lot hardware(good=fasteners,quantity=8,limit=8);
+  lot repair_kits(good=kit,quantity=0,limit=8);
+ }
+ work pack_lunch(label="Pack lunch",market=corner,output=lunch,make=1,seconds=2,pay=3,effort=6,capacity=1,target=2){
+  ingredient(good=bread,take=1);
+  ingredient(good=vegetables,take=1);
+ }
+ work assemble_kit(label="Assemble a repair kit",market=corner,output=kit,make=1,seconds=2,pay=3,effort=6,capacity=1,target=2){
+  ingredient(good=boards,take=2);
+  ingredient(good=fasteners,take=1);
+ }
+}
+```
+
+Run `npm run -s dream -- check docs/examples/multi-input-work.dream`. Its two-second
+jobs keep the example short; the live city uses five and seven seconds. Saved
+work keeps its original deadline and reserved supplies. Reloading, leaving a
+render chunk or changing vehicles never finishes a job twice.
 
 ## Deliveries
 

@@ -18,6 +18,7 @@ Driving, vehicle switching, jumping, swimming and destruction are exported at **
 | Delivery pickup and vehicle carry | [delivery.gif](delivery.gif) | [delivery.mp4](delivery.mp4) | 12 seconds |
 | Public-pavement maintenance journey | [maintenance.gif](maintenance.gif) | [maintenance.mp4](maintenance.mp4) | 20 seconds |
 | Caretaker repair and return | [repair.gif](repair.gif) | [repair.mp4](repair.mp4) | 28 seconds |
+| Packed lunches and recipe work | [recipes.gif](recipes.gif) | [recipes.mp4](recipes.mp4) | 12 seconds |
 | Food, trade and paid work | [commerce.gif](commerce.gif) | [commerce.mp4](commerce.mp4) | 12 seconds |
 | Day and night | [daynight.gif](daynight.gif) | [daynight.mp4](daynight.mp4) | 12 seconds |
 
@@ -663,3 +664,27 @@ aircraft clearance. No accepted placement, material, road, map or asset model
 changed. Historic evidence stays pinned to its release. See the
 [exit verification](../evidence/transit-exits/verification.md) for native controls,
 released-engine backup fixtures, complete-world identity and resource limits.
+
+## Recipes and the expanded market panel
+
+Recipes, commerce, conversation, delivery, parking, repair, courier, handoff,
+interior and interiornight are refreshed together for the eight-good market,
+recipe hints and goods/work selectors. They contain 4,260 consecutive native
+frames at 30 rendered frames per simulation second. Recipes uses ordinary work,
+buy and eat actions; the default bread-work recording still uses bread. Capture
+starts reset the selectors, so a preceding clip cannot choose its next job.
+The recipe poster uses frame 250. The other still indices remain
+300/60/100/100/720/180/300/430/180 for commerce, conversation, delivery, parking,
+repair, courier, handoff, interior and interiornight. HD video remains 1600 × 900;
+GIFs retain their existing quality settings, with recipes using the 1280 × 720,
+256-color, no-dither/loss-80 profile used by parking. All three outputs share the
+same rendered source frames; there is no interpolated motion.
+
+The final UI fix reads a restored active job for its hint. It does not change
+these clips, which do not reload work and select their matching job before
+starting. The exact capture source and the one-file final source delta are kept
+in the [recipe verification](../evidence/recipes/verification.md). Native restored
+work is checked separately. Maintenance, lamp/street repair, planting/growth,
+transit and other world/asset recordings retain their unchanged visible scene
+and controls; none shows the altered market goods/recipe panel. The school
+handoff still remains accurate. These offline captures do not measure live FPS.

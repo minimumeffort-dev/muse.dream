@@ -9,6 +9,10 @@ const examples=import.meta.glob<string>('../docs/examples/*.dream',{query:'?raw'
 const files=Object.keys(import.meta.glob(['../src/**/*','../docs/**/*','../scripts/*','../tests/**/*','../README.md'])).map(p=>p.slice(3));
 
 describe("published Dream documentation",()=>{
+  it('keeps both complete food and workshop recipes identical to their runnable world',()=>{
+    const blocks=[...pages['../docs/dream/commerce.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
+    expect(blocks).toContain(examples['../docs/examples/multi-input-work.dream']!.trim());
+  });
   it('keeps the complete interior guide, runnable example and live market identical',()=>{
     const example=examples['../docs/examples/enterable-market.dream']!.trim(),blocks=[...pages['../docs/dream/interiors.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
     expect(blocks).toContain(example);expect(liveMarket.trim()).toBe(example);

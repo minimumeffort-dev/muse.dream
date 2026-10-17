@@ -6,6 +6,10 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights recipe ingredients at full boundaries and escapes authored text',()=>{
+    const html=highlight('work lunch(label="<Lunch>&"){ingredient(good=bread,take=1);ingredient(good=greens,take=2);}');
+    expect(html).toContain('class="dream-keyword">ingredient</span>');expect(html).toContain('&lt;Lunch&gt;&amp;');expect(highlight('ingredients ingredient_extra good_extra takes')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('highlights interior commands and shell fields at exact boundaries, escaping labels',()=>{
     const html=highlight('object hall(label="<Hall>&"){interior(at=[0,1,0],size=[30,20,30]){portal door(side=front,offset=0,width=10,height=20);}part roof(cutaway=roof);}');
     for(const word of ['interior','portal'])expect(html).toContain(`class="dream-keyword">${word}</span>`);

@@ -106,6 +106,13 @@ Walk up to the market vendor, teacher, health worker or commuter on foot and pre
 
 At the market, **B** buys bread, **G** eats it and **V** sells an item back. **H** starts paid work: six seconds, one bag of flour, two loaves on the shelf and three credits for you. The baker replenishes stock and the commuter buys food through the same finite supplies and accounts. [The working market and its Dream source](docs/dream/commerce.md).
 
+The market also pays for packing lunches from bread and vegetables, or assembling
+repair kits from boards and fasteners. Both inputs reserve together. Finished
+lunches can be bought and eaten; finished kits feed the neighborhood's existing
+repair work. Supplies and business money stay finite. [Recipes in Dream](docs/dream/commerce.md#recipes-with-several-ingredients).
+
+![Pack a lunch from real shelf stock](docs/media/recipes.gif)
+
 ![Buy food and help at the market](docs/media/commerce.gif)
 
 [Watch the market in HD](docs/media/commerce.mp4)

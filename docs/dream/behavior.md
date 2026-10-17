@@ -187,7 +187,7 @@ Whole-object impacts cannot also carry a foundation, compound contacts, a seat o
 
 A gentle bump or glancing pass doesn't trigger a fracture. Once broken, an intact collider is removed exactly once. The changed world persists after cosmetic pieces expire. R resets the car while keeping damage; Start over restores the world. Pause freezes destruction and lifetime. Reduced motion applies damage without flying fragments or impact puffs.
 
-Debris collides with terrain only. It doesn't strike cars or trigger another building's collapse. There is no arbitrary mesh cutting, accumulated structural damage or repair game yet. The [impact engine contract](../impact-dsl.md) contains detailed bounds and compatibility notes.
+Debris collides with terrain only. It doesn't strike cars or trigger another building's collapse. There is no arbitrary mesh cutting or accumulated structural damage. Selected furniture, lamps and orchard trees use the finite [repair and planting jobs](commerce.md#repair-work). The [impact engine contract](../impact-dsl.md) contains detailed bounds and compatibility notes.
 
 [Model generation and repair](model-authoring.md) · [Reference](reference.md)
 

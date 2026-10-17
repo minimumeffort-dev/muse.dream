@@ -85,7 +85,7 @@ behavior market_chat(start=busy){
  state returning(action=idle,face=player,say="Good to see you again. Welcome back."){
   on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
- state about(action=idle,face=player,say="You can bake bread, deliver to the school, repair market furniture or bring flour and repair kits from Station supplies."){
+ state about(action=idle,face=player,say="You can bake bread, pack lunches, assemble repair kits, deliver to the school or help repair the neighborhood."){
   on again(event=interact,to=hello,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
 }
@@ -123,6 +123,10 @@ economy(){
  good flour(label="Flour");
  good timber(label="Repair kit");
  good sapling(label="Tree sapling");
+ good vegetables(label="Vegetables",food=20);
+ good lunch(label="Packed lunch",food=65);
+ good boards(label="Timber boards");
+ good fasteners(label="Fasteners");
  account pocket(actor=player,credits=20,capacity=8,satiety=48,drain_s=.05);
  account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,work=bake);
  account regular(actor=market_commuter,credits=30,capacity=4,satiety=25,drain_s=.05,shop=true);
@@ -141,6 +145,10 @@ economy(){
   lot flour_sack(good=flour,quantity=30,limit=30);
   lot repair_kits(good=timber,quantity=12,limit=12);
   lot tree_saplings(good=sapling,quantity=6,limit=6);
+  lot produce_box(good=vegetables,quantity=8,limit=16,price=2);
+  lot lunch_counter(good=lunch,quantity=0,limit=8,price=8);
+  lot workshop_boards(good=boards,quantity=8,limit=8);
+  lot workshop_fasteners(good=fasteners,quantity=8,limit=8);
  }
  delivery flour_run(label="Bring flour to the bakery",from=station_supplies,to=market_stall,good=flour,quantity=2,pay=4,capacity=1);
  delivery school_run(label="Take bread to school",from=market_stall,to=school_canteen,good=bread,quantity=2,pay=5,capacity=1);
@@ -149,4 +157,13 @@ economy(){
  delivery saplings_run(label="Bring saplings to the market",from=station_supplies,to=market_stall,good=sapling,quantity=2,pay=4,price=2,capacity=1,on=market_square);
  repair orchard_trees(label="Plant a new tree",market=market_stall,on=market_square,grounds=[orchard_work,orchard_path],kind=tree,input=sapling,take=1,seconds=10,pay=6,effort=6,regrow_s=180,seed_scale=.15);
  work bake(label="Bake bread",market=market_stall,input=flour,take=1,output=bread,make=2,seconds=6,pay=3,effort=12,capacity=1,target=4);
+ work pack_lunch(label="Pack lunch",market=market_stall,output=lunch,make=1,seconds=5,pay=3,effort=6,capacity=1,target=2){
+  ingredient(good=bread,take=1);
+  ingredient(good=vegetables,take=1);
+ }
+ work assemble_kit(label="Assemble a repair kit",market=market_stall,output=timber,make=1,seconds=7,pay=3,effort=6,capacity=1,target=4){
+  ingredient(good=boards,take=1);
+  ingredient(good=fasteners,take=1);
+ }
+
 }

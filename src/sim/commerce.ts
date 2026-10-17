@@ -8,7 +8,7 @@ import {GROWTH_LIMITS} from '../scene/growth';
 import {advanceGrowth} from './growth';
 import type {CarState,CarInput} from './car';
 import type {Scene} from '../scene/schema';
-import {COMMERCE_LIMITS as L,accountRepairs,deliveryBill,type Economy,type Market} from '../scene/commerce';
+import {COMMERCE_LIMITS as L,jobInputs,jobTake,accountRepairs,deliveryBill,type Economy,type Market} from '../scene/commerce';
 import {actorPose} from './actors';
 import {repairArea,repairTargets,targetBroken,repairApproach,repairSegment,repairSpaceClear,REPAIR_REACH,REPAIR_SPEED,REPAIR_RADIUS} from './repair';
 import {objectFragments} from '../scene/fragments';
@@ -55,7 +55,7 @@ function inReach(state:CarState,scene:Scene,account:Account,market:Market):boole
 const active=(e:EconomyState,job:string)=>e.accounts.filter(a=>a.work?.id===job).length;
 function reserved(e:EconomyState,definition:Economy,market:string,good?:string){
  let n=0;for(const a of e.accounts)if(a.repair && a.repair.phase!=='home'){const r=definition.repairs.find(r=>r.id===a.repair!.id)!;if(r.market===market)n+=good===undefined ? r.pay : r.input===good ? r.take : 0;}
- for(const a of e.accounts)if(a.work){const j=definition.jobs.find(j=>j.id===a.work!.id)!;if(j.market===market)n+=good===undefined ? j.pay : (j.input===good ? j.take : 0)+(j.output===good ? j.make : 0);}
+ for(const a of e.accounts)if(a.work){const j=definition.jobs.find(j=>j.id===a.work!.id)!;if(j.market===market)n+=good===undefined ? j.pay : jobTake(j,good!)+(j.output===good ? j.make : 0);}
  for(const a of e.accounts)if(a.delivery){const d=definition.deliveries.find(d=>d.id===a.delivery!.id)!;n+=good===undefined ? (d.to===market ? d.pay+deliveryBill(d) : d.from===market ? deliveryBill(d) : 0) : (d.from===market || d.to===market) && d.good===good ? d.quantity : 0;}
  return n;
 }
@@ -117,7 +117,7 @@ function reason(state:CarState,scene:Scene,e:EconomyState,a:Account,action:Comme
   if(e.batches[j.id]!+active(e,j.id)>=1e9)return 'capacity';
   if(a.satiety<j.effort)return 'satiety';
   if(active(e,j.id)>=j.capacity)return 'busy';
-  if(stock.stock[j.input]!<j.take)return 'input';
+  if(jobInputs(j).some(i=>stock.stock[i.good]!<i.take))return 'input';
   if(stock.credits<j.pay || a.credits+j.pay>L.money)return 'treasury';
   const lot=m.lots.find(l=>l.good===j.output)!;
   if(stock.stock[j.output]!+reserved(e,c.e,m.id,j.output)+j.make>lot.limit)return 'capacity';
@@ -145,7 +145,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
  const now=state.timeS,e:EconomyState={...old,atS:now,turn:(old.turn+1)%old.accounts.length,accounts:old.accounts.map(a=>({...a,inventory:{...a.inventory},...(a.work ? {work:{...a.work}} : {}),...(a.repair ? {repair:{...a.repair,path:a.repair.path.map(p=>({...p}))}} : {}),...(a.courier ? {courier:{...a.courier,path:a.courier.path.map(p=>({...p})),at:{...a.courier.at}}} : {}),satiety:Math.max(0,a.satiety-(now-old.atS)*c.accounts.get(a.id)!.drainPerS)})),markets:old.markets.map(m=>({...m,stock:{...m.stock}})),consumed:{...old.consumed},batches:{...old.batches},delivered:{...old.delivered},repaired:{...old.repaired},events:[...old.events]};
  let current:CarState=advanceGrowth({...state,economy:e},now-old.atS,scene);
  const report=(a:Account,kind:EconomyState['events'][number]['kind'],ref:string,why?:Reason)=>{e.events.push({account:a.id,kind,ref,atS:now,...(why ? {reason:why} : {})});e.events=e.events.slice(-12);};
- const cancel=(a:Account)=>{const j=c.jobs.get(a.work!.id)!,m=e.markets.find(m=>m.id===j.market)!;m.stock[j.input]!+=j.take;m.credits+=j.pay;a.work=undefined;report(a,'cancel',j.id);};
+ const cancel=(a:Account)=>{const j=c.jobs.get(a.work!.id)!,m=e.markets.find(m=>m.id===j.market)!;for(const i of jobInputs(j))m.stock[i.good]!+=i.take;m.credits+=j.pay;a.work=undefined;report(a,'cancel',j.id);};
  for(const a of e.accounts)if(a.work){
   const j=c.jobs.get(a.work.id)!,m=e.markets.find(m=>m.id===j.market)!;
   if(!inReach(state,scene,a,c.markets.get(j.market)!)){cancel(a);continue;}
@@ -180,7 +180,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
   if(action.kind==='eat'){a.inventory[action.good]!--;a.satiety=Math.min(100,a.satiety+c.goods.get(action.good)!.food);e.consumed[action.good]!++;report(a,'eat',action.good);return;}
   if(action.kind==='buy'){const m=e.markets.find(m=>m.id===action.market)!,lot=c.markets.get(m.id)!.lots.find(l=>l.good===action.good)!;a.credits-=lot.price!;m.credits+=lot.price!;m.stock[action.good]!--;a.inventory[action.good]!++;report(a,'buy',action.good);return;}
   if(action.kind==='sell'){const m=e.markets.find(m=>m.id===action.market)!,lot=c.markets.get(m.id)!.lots.find(l=>l.good===action.good)!;a.credits+=lot.price!;m.credits-=lot.price!;m.stock[action.good]!++;a.inventory[action.good]!--;report(a,'sell',action.good);return;}
-  const j=c.jobs.get(action.job)!,m=e.markets.find(m=>m.id===j.market)!;m.stock[j.input]!-=j.take;m.credits-=j.pay;a.work={id:j.id,doneAtS:now-dt+j.seconds};report(a,'start',j.id);
+  const j=c.jobs.get(action.job)!,m=e.markets.find(m=>m.id===j.market)!;for(const i of jobInputs(j))m.stock[i.good]!-=i.take;m.credits-=j.pay;a.work={id:j.id,doneAtS:now-dt+j.seconds};report(a,'start',j.id);
  };
  const returnCourier=(a:Account)=>{const t=a.courier!,home=c.objects.get(c.accounts.get(a.id)!.actor)!;t.phase='home';t.at={x:home.x,y:home.y};t.path=[];t.routeAtS=0;};
  for(const a of e.accounts)if(a.courier){
@@ -250,8 +250,8 @@ export function checkEconomyState(state:CarState,scene:Scene):void{
  if(d.jobs.some(j=>active(e,j.id)>j.capacity || e.batches[j.id]!+active(e,j.id)>1e9))throw Error('Invalid work capacity');
  const total=e.accounts.reduce((n,a)=>n+a.credits+(a.work ? d.jobs.find(j=>j.id===a.work!.id)!.pay : 0)+(a.delivery ? d.deliveries.find(t=>t.id===a.delivery!.id)!.pay+deliveryBill(d.deliveries.find(t=>t.id===a.delivery!.id)!) : 0)+(a.repair && a.repair.phase!=='home' ? d.repairs.find(r=>r.id===a.repair!.id)!.pay : 0),0)+e.markets.reduce((n,m)=>n+m.credits,0),initial=d.accounts.reduce((n,a)=>n+a.credits,0)+d.markets.reduce((n,m)=>n+m.credits,0);
  if(total!==initial)throw Error('Money is not conserved');
- for(const g of d.goods){const expected=d.markets.reduce((n,m)=>n+(m.lots.find(l=>l.good===g.id)?.quantity??0),0)+d.jobs.reduce((n,j)=>n+e.batches[j.id]!*((j.output===g.id ? j.make : 0)-(j.input===g.id ? j.take : 0)),0)-e.consumed[g.id]!-d.repairs.reduce((n,r)=>n+(r.input===g.id ? r.take*e.repaired[r.id]! : 0),0);
-  const actual=e.markets.reduce((n,m)=>n+(m.stock[g.id]??0),0)+e.accounts.reduce((n,a)=>n+a.inventory[g.id]!+(a.work && d.jobs.find(j=>j.id===a.work!.id)!.input===g.id ? d.jobs.find(j=>j.id===a.work!.id)!.take : 0)+(a.delivery && d.deliveries.find(t=>t.id===a.delivery!.id)!.good===g.id ? d.deliveries.find(t=>t.id===a.delivery!.id)!.quantity : 0)+(a.repair && a.repair.phase!=='home' && d.repairs.find(r=>r.id===a.repair!.id)!.input===g.id ? d.repairs.find(r=>r.id===a.repair!.id)!.take : 0),0);
+ for(const g of d.goods){const expected=d.markets.reduce((n,m)=>n+(m.lots.find(l=>l.good===g.id)?.quantity??0),0)+d.jobs.reduce((n,j)=>n+e.batches[j.id]!*((j.output===g.id ? j.make : 0)-jobTake(j,g.id)),0)-e.consumed[g.id]!-d.repairs.reduce((n,r)=>n+(r.input===g.id ? r.take*e.repaired[r.id]! : 0),0);
+  const actual=e.markets.reduce((n,m)=>n+(m.stock[g.id]??0),0)+e.accounts.reduce((n,a)=>n+a.inventory[g.id]!+(a.work ? jobTake(d.jobs.find(j=>j.id===a.work!.id)!,g.id) : 0)+(a.delivery && d.deliveries.find(t=>t.id===a.delivery!.id)!.good===g.id ? d.deliveries.find(t=>t.id===a.delivery!.id)!.quantity : 0)+(a.repair && a.repair.phase!=='home' && d.repairs.find(r=>r.id===a.repair!.id)!.input===g.id ? d.repairs.find(r=>r.id===a.repair!.id)!.take : 0),0);
   if(actual!==expected || !g.food && e.consumed[g.id]!==0)throw Error('Goods are not conserved');
  }
  for(const event of e.events){const reference=event.kind==='blocked' ? event.ref==='action' && !!event.reason : event.kind==='buy' || event.kind==='sell' || event.kind==='eat' ? d.goods.some(g=>g.id===event.ref) : ['collected','delivered','delivery_cancelled','courier_started'].includes(event.kind) ? d.deliveries.some(d=>d.id===event.ref) : ['repair_started','repaired','repair_cancelled'].includes(event.kind) ? d.repairs.some(r=>r.id===event.ref) : d.jobs.some(j=>j.id===event.ref);if(!d.accounts.some(a=>a.id===event.account) || event.atS>e.atS+1e-6 || !reference)throw Error('Invalid economy event');}
