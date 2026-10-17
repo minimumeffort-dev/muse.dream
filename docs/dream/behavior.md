@@ -106,7 +106,7 @@ Birds can circle above the terrain while deer and a fox move through their clear
 
 ![Deer, a hare, a fox and a gull composed in Dream 2](../media/fauna.jpg)
 
-An `ambient` route creates no road or runway. It accepts only a `decor` body and leaves racing collisions to the existing physical objects. Ground movement follows terrain; optional `altitude` keeps a bird airborne through the whole loop. These are authored habitats, without animal perception, fleeing or hunting. Wing and leg joints respect reduced motion and return to rest during route waits.
+An `ambient` route creates no road or runway. It accepts only a `decor` body and leaves racing collisions to the existing physical objects. Ground movement follows terrain; optional `altitude` keeps a bird airborne through the whole loop. Routes alone provide authored travel. The route deer adds a nearby-player attention program; the 60 added ground animals use Dream `roam` motion to flee and recover inside safe habitats. Ambient `walk` populations follow the accepted pedestrian network. [Population motion](populations.md) is separate from general NPC programs and hunting is not implemented. Wing and leg joints respect reduced motion and return to rest during route waits.
 
 [Download this complete two-bird example](../examples/ambient-wildlife.dream):
 

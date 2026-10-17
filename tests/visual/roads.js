@@ -1,3 +1,5 @@
+import {AmbientPopulation} from '../../src/game/ambient-population';
+import {stepAmbient} from '../../src/sim/ambient';
 import {WorldDaylight} from "../../src/game/daylight";
 import {buildFlocks} from '../../src/game/flocks';
 import {SunShadows} from "../../src/game/sun";
@@ -59,6 +61,7 @@ const fill=new THREE.DirectionalLight('#a7c4eb',.3);fill.position.set(350,250,-3
 const sun = new THREE.DirectionalLight('#ffe5b8', 2.4); sun.castShadow = true;
 scene.add(sun, sun.target,buildFlocks(doc), buildEnvironment(doc), new WorldScenery(doc).group,buildRoutes(doc));
 const landscape=new WorldLandscape(doc);scene.add(landscape.group);
+const populations=new AmbientPopulation(doc);scene.add(populations.group);
 const live=[];
 for (const object of doc.objects) if (isActor(object) || hasAnimatedJoints(object.spec) || isReactive(object.spec) || archetypeOf(object).interaction === 'knockable') {
   const group = isReactive(object.spec) && impactOf(object.spec)?.kind!=='bounce' ? buildDamageObject(object) : isActor(object) ? compactObject(buildObject(object)) : buildObject(object),placement=objectPlacement(doc,object); group.position.copy(worldPosition(doc, object.x, object.y, 1.5)); group.position.y=placement.base+1.5;group.quaternion.copy(placement.rotation);group.userData.object=object;group.userData.ambient=!!object.route && doc.routes.find(r=>r.id===object.route.id)?.kind==='ambient'; scene.add(group);live.push(group);
@@ -82,7 +85,7 @@ download.onclick=()=>canvas.toBlob(blob=>{
 const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 1, 10000);
 new ResizeObserver(() => renderer.setSize(canvas.clientWidth, canvas.clientHeight, false)).observe(canvas);
 renderer.setAnimationLoop(() => {
-  const now = performance.now(),dt=Math.min(.1,(now-previous)/1000); if (running) {preview={...preview,npcs:stepNpcs(preview,dt,doc),timeS:preview.timeS+dt};time+=dt;for(const {waves} of landscape.waters) waves.step(dt);landscape.upload();} previous = now; worldTime.value = time;
+  const now = performance.now(),dt=Math.min(.1,(now-previous)/1000); if (running) {preview={...preview,npcs:stepNpcs(preview,dt,doc),population:stepAmbient(preview,dt,doc),timeS:preview.timeS+dt};time+=dt;for(const {waves} of landscape.waters) waves.step(dt);landscape.upload();} previous = now; worldTime.value = time;
   for(const group of live){
     const object=group.userData.object,p=isActor(object) ? actorPose(doc,object,time,preview) : undefined;
     if(p){group.position.copy(worldPosition(doc,p.x,p.y));group.position.y=p.elevation+(group.userData.ambient || p.activity && p.kind==='path' ? .2 : 1.5);group.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),!p.activity && (p.kind==='rail'||p.kind==='path') || object.spec?.grounding==='surface' ? terrainNormal(doc,p.x,p.y) : new THREE.Vector3(0,1,0));group.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),-p.headingRad));}
@@ -105,5 +108,6 @@ renderer.setAnimationLoop(() => {
     daylight.update(clock);sunShadows.update(camera,daylight.direction);
   }
   document.body.dataset.shadow=JSON.stringify({mode:document.querySelector('#shadows').value,span:[sun.shadow.camera.right*2,sun.shadow.camera.top*2],map:sun.shadow.mapSize.toArray()});
+  populations.update(preview,camera,sun,running ? dt : 0);
   renderer.render(scene, camera);
 });

@@ -6,6 +6,13 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights bounded motion constructors without consuming identifiers or HTML',()=>{
+    const html=highlight('place hare(role=ambient,motion=roam(radius=90,speed=5,alert=70,flee_speed=30,recover_s=2,gait=hop)); furnish people(motion=walk(speed=14,wait_s=1)); // <script>');
+    for(const word of ['walk','roam'])expect(html).toContain('class="dream-keyword">'+word+'</span>');
+    for(const word of ['alert','flee_speed','recover_s','gait'])expect(html).toContain('class="dream-field">'+word+'</span>');
+    expect(highlight('walkway roaming alertness flee_speed_extra')).not.toMatch(/dream-(?:keyword|field)/);
+    expect(html).not.toContain('<script>');
+  });
   it('preserves every character and protects HTML in strings and comments',()=>{
     const source='// part "<script>"\r\ndream 2;\nobject oak(label="<img onerror=bad>&") { part trunk(size=[-1,.5,2e-3],material=bark); }';
     const html=highlight(source);

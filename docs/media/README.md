@@ -23,7 +23,7 @@ The main-game captures use the real simulation, follow camera, scenery, particle
 
 Run `npm run dev`, then open `http://127.0.0.1:5173/?capture`. Choose driving, switching, locomotion, swimming, daynight or flight and press **Capture PNG frames**. Export destruction at `http://127.0.0.1:5173/tests/visual/destruction.html?docs&capture`.
 
-The exporter advances the live renderer by 1/30 second only after the previous PNG has been saved. Frames go to `.npm-cache/media/<clip>/`. Its local Vite endpoint accepts only same-origin PNGs for the seven named clips; it is absent from the production build. The capture layout is 1600 × 900 CSS pixels, with the renderer's existing pixel ratio applied to the source PNGs.
+The exporter advances the live renderer by 1/30 second only after the previous PNG has been saved. Frames go to `.npm-cache/media/<clip>/`. Its local Vite endpoint accepts only same-origin PNGs for the allowlisted named clips; it is absent from the production build. The capture layout is 1600 × 900 CSS pixels, with the renderer's existing pixel ratio applied to the source PNGs.
 
 Encode after the selected clips finish, using local FFmpeg and Gifsicle installations:
 
@@ -283,3 +283,27 @@ replaced with them. Isolated bench and voxel-wall destruction clips are unchange
 No interpolation, image generation, per-instance geometry simplification or
 camera-based world unloading. The offline exports are separate from the local
 300-sample rendering comparison and are not performance measurements.
+
+## Moving ground populations
+
+The added 111 sidewalk residents now walk, and 60 ground animals and birds roam and
+react to nearby players. `pedestrians.gif` / `.mp4` use 360 newly rendered frames,
+as do `wildlife.gif` / `.mp4`. Their matching JPEG stills come from frames 180 and
+30. The deer clip shows initial flight and later recovery; the pedestrian clip
+shows movement along the actual paving. Source PNGs remain local, without frame
+interpolation. These offline recordings do not measure live performance.
+
+The nine main-game motion sets are refreshed at 30 rendered frames per second:
+driving/boost 210 each, football 240, basketball 210, switching 240,
+locomotion/swimming 180 each, day/night 360 and flight 300. Each GIF, HD video and
+matching still is updated together. The dog and cat now have four walking hip
+joints; `population-assets.jpg` and `assets-all.jpg` show their current geometry.
+Four native asset angles and the two motion sequences are in the
+[movement verification](../evidence/moving-populations/verification.md).
+
+The source-derived city map, architecture, roads, plants, physical proportions,
+character-only motion and isolated destruction examples retain their accepted
+geometry. Their existing captures remain accurate. Existing district stills show
+the same layout at a particular moment; the new clips demonstrate moving
+populations. A separate native browser profile compares full-quality driving,
+with all members resident and the same pixel ratio, viewport and inputs.

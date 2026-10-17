@@ -73,7 +73,7 @@ const jointAnimationSchema=z.object({
   axis:z.enum(["x","y","z"]), amplitudeRad:z.number().finite().min(0).max(1.4),
   speed:z.number().finite().min(.1).max(4),phase:z.number().finite().min(-Math.PI).max(Math.PI),
 }).strict();
-const jointSchema=z.object({
+export const jointSchema=z.object({
   id:z.string().min(1).max(40),parent:z.string().min(1).max(40).optional(),
   bone:z.enum(HUMANOID_BONES).optional(),
   position:z.tuple([offset,offset,offset]),rotation:z.tuple([angle,angle,angle]).optional(),

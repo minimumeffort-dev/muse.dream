@@ -242,6 +242,17 @@ New world features need useful coverage across the relevant districts, with a re
 
 Use explicit `pose=rest` for passive residents/wildlife that reuse rigged models. Preserve full geometry, body and rest transforms; never freeze away damage, knockables, proximity or emitters. Resting `place` requires explicit prop ownership, fixed position and no program. `furnish(on=sidewalk)` is decor-only, setback=0, no paving, full-radius fit with an inner walking corridor; keep crossings and entrances clear. Test district coverage and the unchanged NPC/live-rig limits.
 
+Use explicit `role=ambient` with Dream `motion=walk(...)` / `roam(...)` for bounded
+instanced ground populations. Furnish motion creates ambient ownership; walking
+requires on=sidewalk and a complete measured humanoid. Preserve the 192-member,
+8192-portal and 20 Hz limits, accepted pavement/crossing geometry, full-footprint
+clearance, swept-vehicle waits, dry bounded habitats and 3D player reactions. Keep
+original validated joints beside resting geometry; no seats, contacts, damage,
+foundations, programs, part clocks or proximity/rolling mechanisms. Share rigid
+GPU transforms in color and shadow passes, interpolate the pure resident state,
+and preserve reduced-motion rest, pause, R and Start over behavior. This path does
+not raise the existing NPC/route/CPU live-rig caps or supply general crowd physics.
+
 Use `flock` for bounded instanced cosmetic bird populations across appropriate habitats; these are not interactive NPCs. Preserve the existing live actor/joint budgets. Transit must follow connected infrastructure and real platforms; `phase_s` staggers the full journey including its waits. A future metro/subway needs declared station access, platforms, line connectivity, headroom and an actual underground movement/rendering layer before it can be described as working. A train hidden under terrain is not a subway implementation.
 
 

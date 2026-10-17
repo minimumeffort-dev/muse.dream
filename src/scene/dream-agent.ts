@@ -11,7 +11,7 @@ export const DREAM_AGENT_FEATURES={
   interactions:feature('rule impact fragment zone bounce break topple',['interactionRules'],['objects']),
   city:feature('street surface marking site crossing stop',['urbanGround','cityAccess','transit'],['world','npcs']),
   npcs:feature('behavior state on',['agents'],['world']),
-  population:feature('furnish flock',['population'],['city','modules','interactions']),
+  population:feature('furnish flock walk roam',['population'],['city','modules','interactions']),
   lighting:feature('daylight lamp',['daylight'],['objects']),
   scenarios:feature('scenario item location link stock service agent objective',['scenarios']),
   voxels:feature('voxels fill cut voxel_world',['voxels'],['objects','interactions']),

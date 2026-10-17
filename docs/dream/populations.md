@@ -34,17 +34,29 @@ The live mock has 45 parked bicycles, 22 parked scooters and 14 parked cars at d
 
 ![New resident variants use the complete shared humanoid construction](../media/city-residents.jpg)
 
-The city has 123 people, including 111 resting sidewalk residents and four additional greeting NPCs. Varied clothing, hair and complexions reuse the same complete humanoid construction. Dogs and cats occupy neighborhood green areas; deer, hares and foxes live in woodland; sparrows occupy gardens and park edges. The 60 additional ground animals and birds are resting scenery.
+The city has 123 people. Of those, 111 walk around the connected pavement, while twelve keep their existing NPC activities, greetings and commutes. The 60 ground animals and birds now roam their habitats and flee when you approach. Dogs and cats use neighborhood green areas; deer, hares and foxes use woodland; sparrows hop around gardens and park edges.
+
+![Pedestrians moving on the authored pavement](../media/pedestrians.gif)
 
 ```dream
 // Fragment: explorer is a rigged decor person; avenue is a connected street.
-furnish neighbors(objects=[explorer],streets=[avenue],spacing=160,setback=0,seed=31,pose=rest,on=sidewalk,facing=varied,jitter=.3);
-place garden_hare(object=hare,at=[1200,1500],role=prop,pose=rest);
+furnish neighbors(objects=[explorer],streets=[avenue],spacing=160,setback=0,seed=31,on=sidewalk,motion=walk(speed=14,wait_s=1));
+place garden_hare(object=hare,at=[2400,2100],role=ambient,motion=roam(radius=90,speed=5,alert=70,flee_speed=30,recover_s=2,gait=hop));
 ```
 
-`pose=rest` keeps every part, rest transform, material and body while baking bone bindings and animation clocks. It leaves the reusable template intact for real NPCs. Damage, proximity interactions, emitters and knockables cannot be frozen away. An explicit resting placement requires `role=prop`, `at`, and no route or behavior. These are passive instances, not autonomous pedestrians or animals.
+`walk` uses a cached graph derived from accepted sidewalks, entrance paths and zebras. Pedestrians choose connected segments, pause briefly at their ends and wait for the swept space of approaching vehicles. They never invent a straight shortcut across a carriageway. `speed` is 4–24 world units per second and `wait_s` is 0–5, default 1.
 
-`on=sidewalk` fits decor into the outer sidewalk, leaving at least 8 units of inner walking space. It requires `setback=0` and no paving. Crossings and entrances remain reserved. The default `on=verge` places objects beyond the pavement. `facing=varied` gives seeded headings; `jitter` varies street or destination-row spacing. [Complete runnable population](../examples/resting-population.dream).
+`roam` stays within `radius` of the authored home. Animals avoid water, roads, reserved grounds, solids and world edges. A player within `alert` triggers flight at `flee_speed`; after separation, `recover_s` settles them back to roaming. Height matters, so a high aircraft does not frighten everything underneath it. Hares and sparrows use `gait=hop`; quadrupeds retain their authored swing joints. If no safe direction fits, the animal waits rather than jumping through an obstacle.
+
+![A deer moves away from the approaching player](../media/wildlife.gif)
+
+These instances have explicit `role=ambient`, or acquire it from `furnish(...,motion=...)`. They are cosmetic populations, separate from general NPC programs, seats and physical contacts. Their validated rig and full voxel geometry are shared in GPU instances. Pure movement runs at 20 Hz with interpolated rendering. All 171 members remain resident; frustum culling checks both the camera and shadow view. The cap is 192 ambient members and 8,192 cached walking nodes. The existing NPC, route, vehicle and CPU live-rig limits stay unchanged.
+
+Pause freezes the population clock. R preserves it; Start over restores its seed and home poses. Reduced motion rests limb and hopping animation. This is bounded walking and avoidance, without crowd collision, traffic signals, full animal intelligence or ecological simulation. Use a full `role=npc` program when an individual needs custom states or a transit route.
+
+`motion` cannot combine with `pose=rest`, routes, behavior programs, seats, contacts, foundations, impacts, emitters, lamps, part clocks, proximity or rolling joints. Walking requires the complete measured humanoid rig. [Complete runnable moving population](../examples/moving-population.dream) · [HD pedestrians](../media/pedestrians.mp4) · [HD wildlife](../media/wildlife.mp4).
+
+`pose=rest` remains available for deliberately passive props, preserving every part, material and rest transform. It requires explicit prop ownership on `place`. `on=sidewalk` fits the complete radius on the outer paving, leaves an inner walking corridor and reserves crossings and entrances. The default `on=verge` places objects beyond the pavement. [Passive authoring example](../examples/resting-population.dream).
 
 ![Dogs, cats, sparrows and two new planting forms](../media/population-assets.jpg)
 
@@ -57,7 +69,7 @@ flock market_birds(object=pigeon,at=[6400,4400],radius=[900,850],count=16,altitu
 
 Flocks share geometry and fixed instance buffers. Flight and wing flex run in the color and shadow shaders; no CPU transform or NPC state is created for each bird. The envelope clears nearby roofs and terrain. Reduced motion freezes the birds, and their complete habitat remains resident.
 
-The mock distributes 256 birds through 16 city, river, lake, woodland and meadow habitats. These are decorative flight populations. The separate deer and route gull retain their existing NPC behavior. A reactive bird would need an explicit bounded actor rather than a flock member.
+The mock distributes 256 birds through 16 city, river, lake, woodland and meadow habitats. These are decorative flight populations. The separate route deer pauses and watches a nearby player before resuming its route; the high route gull retains its flight behavior. A reactive bird would need an explicit bounded actor rather than a flock member.
 
 ## Transport serves places
 

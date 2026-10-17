@@ -27,7 +27,7 @@ Stdout is compact JSON containing `features`, `availableFeatures`, `instructions
 | `interactions` | Shared impact rules, break zones, fragments, bounce and topple |
 | `city` | Streets, grounds, paint, connected entrances, crossings and stops |
 | `npcs` | Bounded behavior states, actions and transitions |
-| `population` | Street/site furnishing and cosmetic bird populations |
+| `population` | Street/site furnishing, pavement walkers, reactive roaming and cosmetic bird populations |
 | `lighting` | Daylight, night emission and lamp pools |
 | `scenarios` | Logical task networks, agents, resources, services and objectives |
 | `voxels` | Filled/carved volumes and the whole-world construction policy |
@@ -101,3 +101,5 @@ The [verification note](../evidence/agent-authoring/verification.md) compares co
 Source cannot set provenance, credentials, arbitrary URLs, callbacks or executable modules. The host chooses the model, supplies module text, checks freshness and owns the active revision. Capture, interpretation, preview and atomic apply remain separate work.
 
 [Compiler APIs and diagnostics](reference.md) · [Version policy](../dream-language.md)
+
+Use `motion=walk(...)` for measured humanoids on the accepted pedestrian network and `motion=roam(...)` for animals with bounded nearby flight. These use explicit ambient ownership and shared GPU rigs, separate from full NPC programs. [Bounds, examples and limits](populations.md).

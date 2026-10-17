@@ -1,0 +1,17 @@
+{
+  "package-lock.json": "62c03f5f2297fef558d3a01d638ad6c90c7ad75f10c604072ba6a40e456900e0",
+  "src/scene/ambient.ts": "8e54261c431ec1c48a7d25be269e1970e846f98971670a1e6a3706eb29a0dbe7",
+  "src/scene/ambient-navigation.ts": "b9d8b295d187be9286281ff42bfd463f442c20d61e72c2d6ca9b48444d3152f6",
+  "src/scene/dream.ts": "97968382a24361620326c1345f77c331d2e41781a718e7f2a0922cb1a1a431f4",
+  "src/scene/dream-v2.ts": "7263e47359a83fe560738a52477c87a494ce97bcb695b760368dde224db27e59",
+  "src/scene/dream-contract.ts": "22d43159a0bec2356cd1a7979254b9df12b297101e99dd6727093c2da4ddf5a4",
+  "src/game/ambient-population.ts": "c0986d8cd5436caff0fe88c0994db5e53e13ee338c07dad23a73f0214fdc36e5",
+  "src/game/shaders.ts": "58b5f5c5b325aa520e78b5d9ffad2561de94467a4989149a009bd94632850e66",
+  "src/sim/ambient.ts": "f62757f8be93edb423d7c6fe143412c675480e401ebf991601f72015d51c2f56",
+  "src/sim/car.ts": "a92909ca4f114ab77ed2563a911c002c4480a5b43b1a2f7e0fcef7ce5e692710",
+  "src/sim/interaction.ts": "192b7060b6237d6714f6101ad2324c0d0fe37c58009b54c83cad3035988412ec",
+  "src/scene/world/life.dream": "b80a815bda909897cbe64c74554095223b0bedc5a6cbbe9624352cb0851e4694",
+  "src/scene/world/fauna.dream": "d3cc700e894df4a31ad80237cff1f200ad0fbf8164d46a656ec8a47984624b3b",
+  "docs/dream-v2-model.txt": "570330523863f5ec2ad219971d4698e562d4944360905fb3fa5b3b520977a780",
+  "docs/dream-v2-contract.json": "f296ce0a6cb216cdfd69295b4f8ded6eca863bd99a596b9966f2b1180599b3a4"
+}

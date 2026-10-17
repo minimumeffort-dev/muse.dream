@@ -137,7 +137,7 @@ No independent part/bone motion, fragments or zones. Keep feet at Y=0 in assembl
 Engine owns walk/run blending, lifted steps, two-bone legs, jump/landing, crawl/tread,
 reduced-motion poses and sports overrides. Body and movement physics stay separate.
 No extra joints, generated controllers, skinning, or terrain foot probes. Existing
-12-joint, depth-4, 32-part and 24-live-assembly caps unchanged. Furnish rejects live bone rigs unless explicit pose=rest bakes passive scenery.
+12-joint, depth-4, 32-part and 24-live-assembly caps unchanged. Furnish requires pose=rest for passive rigs or motion=walk(...) for shared ambient walkers.
 Use examples/humanoid.dream as a complete template; keep binding names, vary geometry,
 colors and measured size. Labels/generated IDs do not choose anatomy or behavior.
 
@@ -322,7 +322,8 @@ squares, service aprons and entrance paths before placing surrounding housing.
 
 ## npcs
 ACTOR OWNERSHIP AND NPC PROGRAMS
-For every new actor placement emit role=controllable or role=npc explicitly.
+For every new general actor placement emit role=controllable or role=npc explicitly.
+Use role=ambient only with the bounded population motion contract below.
 role=prop is passive scenery; no route or behavior. Mechanical motion/destruction remain possible.
 Template rideable.control is capability; place.role chooses ownership. controllable needs
 that capability and starts parked, accepting player input after boarding. npc is engine-owned;
@@ -366,7 +367,7 @@ grounds=[surface_ids] explicitly permits those visual grounds; other authored gr
 Site-only paving=color adds parking aprons joined to pavement, within 64 scene surfaces.
 Expansion runs after linking; complete visual footprints reserve roads, crossings, entrances,
 bridges, water, ground infrastructure and existing objects. Skip blocked candidates.
-Static templates only: no active joints, proximity joints, knockables, damage or emitters.
+Static templates unless bounded ambient motion is declared below: no proximity joints, knockables, damage or emitters.
 pose=rest explicitly bakes bone bindings and part/joint animation at authored rest transforms;
 full geometry, material, measure, body and joint parenting survive. It never disables damage,
 knockables, emitters or proximity interactions. The original template remains live.
@@ -374,10 +375,27 @@ place(...,at=[x,y],role=prop,pose=rest) also supports a single passive resting i
 explicit prop required, no route or behavior. Resting props consume no NPC/live-rig slot.
 on=verge (default) stays outside the sidewalk. on=sidewalk requires decor, setback=0,
 no paving; full radius fits the outer sidewalk, leaving at least 8 units inside for walking.
-Generated objects have role=prop; parked bikes/scooters cannot be boarded. For an available
+Generated objects default to role=prop; motion creates role=ambient. Parked bikes/scooters cannot be boarded. For an available
 ride use an explicit role=controllable placement with rideable control. Original actor caps apply.
 <=32 rules, <=2048 candidates/rule, <=128 emitted/rule, <=1024 generated overall, also <=4096
 scene objects. Output has no minimum guarantee; inspect compiled rule/district coverage.
+AMBIENT GROUND MOTION (separate from general NPC programs)
+furnish neighbors(objects=[person],streets=[avenue],spacing=160,setback=0,seed=31,on=sidewalk,motion=walk(speed=14,wait_s=1));
+place hare_one(object=hare,at=[1200,1500],role=ambient,motion=roam(radius=90,speed=5,alert=70,flee_speed=30,recover_s=2,gait=hop));
+place motion requires explicit role=ambient, fixed at, no pose, route or behavior.
+Furnish motion creates ambient ownership; walk requires on=sidewalk. Cannot combine pose and motion.
+walk needs a complete measured humanoid rig; speed 4..24, wait_s 0..5 default 1.
+Engine caches portals from accepted sidewalk/crossing/entrance polygons; no paths invented across roads.
+Full visual footprints stay on pavement and wait for approaching swept vehicle space.
+roam stays within authored radius 20..180, speed 2..16; alert 20..180 uses 3D player distance.
+flee_speed 8..60 and >= speed; recover_s .5..10 default 2 after separation; gait walk default or hop.
+Animals avoid road/ground reservations, solids, water and world bounds. Blocked movement rests in alert.
+Decor only; no seats, contacts, foundations, damage, emitters, lamps, part clocks, proximity or roll joints.
+Validated humanoid bindings or swing joints animate rigid complete geometry in shared GPU instances.
+<=192 ambient members, deterministic 20 Hz simulation with render interpolation; <=8192 cached walk nodes.
+All populations remain resident; existing 32 NPC/24 route+control/24 CPU live-rig caps do not increase.
+Pause freezes state, R preserves it, Start over resets it. Reduced motion rests limb/hop poses.
+No generated scripts, mutual crowd collision, general NPC programs, signals or ecological simulation.
 flock id(object=bird_ref,at=[x,y],radius=[rx,ry],count=16,altitude=65,speed=32,seed=101,flap_hz=3.2,flap_deg=18);
 Passive decor only: no seat, contact, foundation, impact or emitter; measured horizontal radius <=20.
 Radius axes 40..1200; count 1..32; altitude 60..300; speed 5..80; seed integer 0..65535;

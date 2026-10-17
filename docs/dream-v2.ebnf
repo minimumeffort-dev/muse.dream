@@ -58,3 +58,7 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    formals, at most eight unique names combined. use.args and use.materials bind
    exact positional lists. Material actuals resolve in the caller; callees see
    globals and their own explicit bindings, never implicit caller locals. *)
+
+(* place/furnish motion accepts bounded walk(...) or roam(...) constructors.
+   place requires role=ambient and fixed at; motion excludes pose/route/behavior.
+   These are data interpreted by the engine, not scripts. See population bounds. *)

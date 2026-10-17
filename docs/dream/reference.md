@@ -107,9 +107,9 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 | `behavior` | top | ID / behavior | `start: ref` |
 | `state` | behavior | ID / npc_state | `action: idle / patrol / perform`, `face?: none / player` |
 | `on` | npc_state | ID / no block | `event: after / near_player / far_player`, `to: ref`, `seconds?: n`, `radius?: n` |
-| `furnish` | top | ID / no block | `objects: symbols`, `streets?: symbols`, `sites?: symbols`, `grounds?: symbols`, `paving?: color`, `spacing: n`, `setback: n`, `seed: n`, `side?: left / right / both`, `facing?: along / street / varied`, `jitter?: n`, `count?: n`, `pose?: rest`, `on?: verge / sidewalk` |
+| `furnish` | top | ID / no block | `objects: symbols`, `streets?: symbols`, `sites?: symbols`, `grounds?: symbols`, `paving?: color`, `spacing: n`, `setback: n`, `seed: n`, `side?: left / right / both`, `facing?: along / street / varied`, `jitter?: n`, `count?: n`, `pose?: rest`, `on?: verge / sidewalk`, `motion?: ambient_motion` |
 | `flock` | top | ID / no block | `object: ref`, `at: v2`, `radius: v2`, `count: n`, `altitude: n`, `speed: n`, `seed: n`, `flap_hz?: n`, `flap_deg?: n` |
-| `place` | top | ID / no block | `object: ref`, `at?: v2`, `route?: ref`, `offset?: n`, `phase_s?: n`, `scale?: n`, `heading_deg?: n`, `role?: prop / npc / controllable`, `behavior?: ref`, `pose?: rest` |
+| `place` | top | ID / no block | `object: ref`, `at?: v2`, `route?: ref`, `offset?: n`, `phase_s?: n`, `scale?: n`, `heading_deg?: n`, `role?: prop / npc / controllable / ambient`, `behavior?: ref`, `pose?: rest`, `motion?: ambient_motion` |
 | `unresolved` | top | ID / no block | `label: text` |
 
 `joint(...,bone=...)` binds engine-owned humanoid motion. Use all twelve bindings once:
@@ -219,13 +219,24 @@ See the [complete two-bird example](../examples/ambient-wildlife.dream) and the 
 
 ## Contextual populations
 
-`furnish` expands after all includes are linked. Give it 1–8 static object references and exactly one target array: `streets` or `sites` (1–32 unique IDs). Street mode uses spacing 80–800 and `side=left|right|both` relative to path direction. Destination mode requires `count=1..12` per site, uses spacing 12–800 and follows the entrance side. `setback` is 0–120 beyond the pavement and visual radius; `facing=along|street|varied`, `jitter=0..0.3` and integer `seed=0..65535` make repeatable variations. `varied` randomizes heading from the seed; jitter applies to street and destination rows.
+`furnish` expands after all includes are linked. Give it 1–8 object references (static unless ambient `motion` is declared) and exactly one target array: `streets` or `sites` (1–32 unique IDs). Street mode uses spacing 80–800 and `side=left|right|both` relative to path direction. Destination mode requires `count=1..12` per site, uses spacing 12–800 and follows the entrance side. `setback` is 0–120 beyond the pavement and visual radius; `facing=along|street|varied`, `jitter=0..0.3` and integer `seed=0..65535` make repeatable variations. `varied` randomizes heading from the seed; jitter applies to street and destination rows.
 
 `on=verge` is the default. `on=sidewalk` requires decor, `setback=0` and no paving: the complete visual radius fits the outer sidewalk while preserving an inner corridor of at least 8 units. Narrow sidewalks skip candidates.
 
 `pose=rest` explicitly bakes authored joint transforms and removes bone bindings and part/joint animation clocks. Geometry, material, scale, body and joint parenting remain intact. The source template remains live for other placements. Damage, knockables, emitters and proximity interactions cannot be frozen away. A single `place(...,at=[x,y],role=prop,pose=rest)` follows the same policy and rejects routes, behaviors or inferred ownership. Resting scenery is instanced, without spending live-rig or NPC slots. [Runnable example](../examples/resting-population.dream).
 
-The compiler filters full visual footprints against roads, pavements, crossings, entrances, bridges, water, infrastructure and existing placements. `grounds=[surface_id,...]` permits named visual surfaces explicitly. Site-only `paving=#rrggbb` creates parking aprons joined to the sidewalk, within the existing 64-surface budget. Templates cannot be knockable, reactive, emitting or have live joint motion; generated parked vehicles have `role=prop` and cannot be boarded. Use a separate explicit `role=controllable` placement for an available ride. There is no minimum output guarantee: inspect compiled coverage. Limits are 32 rules, 2,048 candidates per rule, 128 emitted objects per rule and 1,024 generated objects overall, also counted against 4,096 scene placements.
+The compiler filters full visual footprints against roads, pavements, crossings, entrances, bridges, water, infrastructure and existing placements. `grounds=[surface_id,...]` permits named visual surfaces explicitly. Site-only `paving=#rrggbb` creates parking aprons joined to the sidewalk, within the existing 64-surface budget. Templates cannot be knockable, reactive or emitting; live joints require the bounded ambient motion path or passive `pose=rest`; generated parked vehicles have `role=prop` and cannot be boarded. Use a separate explicit `role=controllable` placement for an available ride. There is no minimum output guarantee: inspect compiled coverage. Limits are 32 rules, 2,048 candidates per rule, 128 emitted objects per rule and 1,024 generated objects overall, also counted against 4,096 scene placements.
+
+| Constructor | Context | ID / block | Fields |
+| --- | --- | --- | --- |
+| `walk` | ambient_motion | No ID / no block | `speed: n`, `wait_s?: n` |
+| `roam` | ambient_motion | No ID / no block | `radius: n`, `speed: n`, `alert: n`, `flee_speed: n`, `recover_s?: n`, `gait?: walk / hop` |
+
+`motion=walk(speed=14,wait_s=1)` on `place` requires explicit `role=ambient` and fixed `at`; on `furnish` it creates ambient ownership and requires `on=sidewalk`. It follows cached portals in accepted pavement, including zebras, and yields to swept vehicle space. The complete humanoid rig is required. Speed is 4–24; wait is 0–5 seconds, default 1.
+
+`motion=roam(radius=90,speed=5,alert=70,flee_speed=30,recover_s=2,gait=hop)` stays dry, clear of solids and outside roads/grounds. Radius and alert are 20–180; speed is 2–16; flee speed is 8–60 and at least speed; recovery is .5–10 seconds, default 2. Gait is `walk` (default) or `hop`. Player distance includes elevation. Blocked members wait rather than teleporting.
+
+Ambient motion excludes passive `pose`, routes, programs, seats, contacts, foundations, damage, lamps, emitters, part clocks and proximity/rolling joints. Original humanoid bindings or swing joints survive as validated metadata beside the resting assembly. At most 192 members use fixed 20 Hz movement, render interpolation and shared GPU geometry/rig transforms; the graph has at most 8,192 nodes. All remain resident. Existing NPC/route/CPU rig limits are unchanged. Pause freezes state, R preserves it and Start over resets it; reduced motion rests gait/hops. There are no mutual crowd contacts, generated scripts, signals or ecosystem simulation. [Runnable example](../examples/moving-population.dream).
 
 `flock` declares a decorative instanced population, separate from NPC ownership. Its template must be passive decor, without seats, contacts, foundations, emitters or impacts, and fit a 20-unit horizontal radius. `radius` is 40–1,200 per axis, `count` 1–32, `altitude` 60–300, `speed` 5–80, `flap_hz` 0–6 (default 2), `flap_deg` 0–25 (default 12), and integer `seed` 0–65,535. The complete habitat must fit the world. Altitude clears terrain and nearby roofs; authored joints are baked at rest and the shader flexes wings along local Z. The resident cap is 16 flocks and 256 birds. These birds do not collide, react or receive behavior programs. Reduced motion freezes their pose.
 
@@ -295,7 +306,7 @@ Surfaces take 3–64 points and must be simple, nonzero polygons, at most 100000
 
 ## NPC programs
 
-`place(...,role=prop|npc|controllable,behavior=program_id)` assigns instance ownership. `controllable` requires the template's `rideable.control`; `npc` requires a route or program; `prop` prohibits both. Only NPCs accept a program. Legacy omitted roles infer control capability, then route, then prop. A driver-capable NPC cannot be boarded; passenger-only NPC seats retain passenger travel. The root player remains the original car.
+`place(...,role=prop|npc|controllable|ambient,behavior=program_id)` assigns instance ownership. `controllable` requires the template's `rideable.control`; `npc` requires a route or program; `prop` prohibits both. Only NPCs accept a program. Legacy omitted roles infer control capability, then route, then prop. A driver-capable NPC cannot be boarded; passenger-only NPC seats retain passenger travel. The root player remains the original car.
 
 `behavior id(start=state_id){state ...}` declares 1–8 unique reachable states. `state id(action=idle|patrol|perform,face=none|player){on ...}` chooses an action; face defaults to none and is invalid with patrol. `on id(event=after,to=state_id,seconds=n)` requires only seconds (.1–300). `near_player` and `far_player` require only radius (10–240 world units) and compare 3D distance <= and >= respectively. Transition IDs are unique per state; targets are local to the program. No compound conditions or executable code.
 

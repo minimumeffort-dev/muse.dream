@@ -25,10 +25,10 @@ export class ParserV2 extends Parser {
     if(this.token.text.startsWith('"')) {const token=this.take();try{return JSON.parse(token.text) as string;}catch{fail("invalid quoted string",{...token,path},"E_TYPE");}}
     if(this.is("true") || this.is("false"))return this.take().text==="true";
     if(this.token.text.startsWith("#")){const token=this.take();return {token:{...token,path},name:token.text.toLowerCase()};}
-    if(this.tokens[this.index+1]?.text==="(" && Object.hasOwn(commands,this.token.text) && commands[this.token.text]!.contexts.some(c=>["part_motion","joint_motion","deform","impact"].includes(c)))
+    if(this.tokens[this.index+1]?.text==="(" && Object.hasOwn(commands,this.token.text) && commands[this.token.text]!.contexts.some(c=>["part_motion","joint_motion","deform","impact","ambient_motion"].includes(c)))
       return this.node("value",depth+1,path);
     if(/^[A-Za-z_]/.test(this.token.text) && this.tokens[this.index+1]?.text==="(" && !["sin","cos"].includes(this.token.text))
-      fail(`unknown constructor '${this.token.text}'`,{...this.token,path},"E_CONSTRUCTOR",["sin","cos",...Object.keys(commands).filter(k=>commands[k]!.contexts.some(c=>["part_motion","joint_motion","deform","impact"].includes(c)))]);
+      fail(`unknown constructor '${this.token.text}'`,{...this.token,path},"E_CONSTRUCTOR",["sin","cos",...Object.keys(commands).filter(k=>commands[k]!.contexts.some(c=>["part_motion","joint_motion","deform","impact","ambient_motion"].includes(c)))]);
     const expr=this.expr();
     const locate=(e:Expr)=>{e.token={...e.token,path};e.args?.forEach(locate);};locate(expr);return expr;
   }
@@ -48,14 +48,14 @@ export class ParserV2 extends Parser {
     else if(type==="text")valid=typeof value==="string";
     else if(type==="bool")valid=typeof value==="boolean";
     else if(type==="symbol" || type==="ref") {valid=!!symbol && identifier.test(symbol);if(valid)checkSymbol(symbol!,token);}
-    else if(["part_motion","joint_motion","deform","impact","fracture"].includes(type))valid=isNode(value) && commands[value.kind]!.contexts.includes(type);
+    else if(["part_motion","joint_motion","deform","impact","ambient_motion","fracture"].includes(type))valid=isNode(value) && commands[value.kind]!.contexts.includes(type);
     else valid=!!symbol && type.split("|").includes(symbol);
-    if(!valid)fail(`expected ${type}`,token,"E_TYPE",type.includes("|") ? type.split("|") : ["part_motion","joint_motion","deform","impact","fracture"].includes(type) ? Object.keys(commands).filter(k=>commands[k]!.contexts.includes(type)) : [type]);
+    if(!valid)fail(`expected ${type}`,token,"E_TYPE",type.includes("|") ? type.split("|") : ["part_motion","joint_motion","deform","impact","ambient_motion","fracture"].includes(type) ? Object.keys(commands).filter(k=>commands[k]!.contexts.includes(type)) : [type]);
   }
   private node(context:string,depth:number,path:string):DreamNode {
     const original=this.take(),kind=original.text,definition=Object.hasOwn(commands,kind) ? commands[kind] : undefined;
     const token={...original,path};
-    if(!definition || (context==="value" ? !definition.contexts.some(c=>["part_motion","joint_motion","deform","impact"].includes(c)) : !definition.contexts.includes(context)))
+    if(!definition || (context==="value" ? !definition.contexts.some(c=>["part_motion","joint_motion","deform","impact","ambient_motion"].includes(c)) : !definition.contexts.includes(context)))
       fail(`'${kind}' is not allowed in ${context}`,token,"E_CONTEXT",Object.keys(commands).filter(k=>commands[k]!.contexts.includes(context)));
     const id=definition.id ? this.name() : undefined;if(id)checkSymbol(id,token);
     token.path=`${path}/${kind}${id ? `:${id}` : ""}`;
@@ -105,7 +105,7 @@ export class ParserV2 extends Parser {
         case "asset":program.assets!.push(node);break;
         case "include":program.includes!.push(node);break;
         case "route":program.routes.push({token,name,gauge:node.fields.has("gauge") ? num("gauge") : undefined,kind:wordField(node,"kind"),mode:wordField(node,"mode"),speed:num("speed"),altitude:node.fields.has("altitude") ? num("altitude") : undefined,wait:node.fields.has("wait_s") ? num("wait_s") : undefined,width:node.fields.has("width") ? num("width") : undefined,surface:node.fields.has("surface") ? wordField(node,"surface") : undefined,block:lowerBlock(node.block!)});break;
-        case "place":program.places.push({token,name,assembly:wordField(node,"object"),at:node.fields.get("at") as Expr[]|undefined,route:node.fields.has("route") ? wordField(node,"route") : undefined,offset:node.fields.get("offset") as Expr|undefined,phase:node.fields.get("phase_s") as Expr|undefined,scale:node.fields.get("scale") as Expr|undefined,heading:node.fields.get("heading_deg") as Expr|undefined,role:node.fields.has("role") ? wordField(node,"role") as "prop"|"npc"|"controllable" : undefined,behavior:node.fields.has("behavior") ? wordField(node,"behavior") : undefined,pose:node.fields.has("pose") ? wordField(node,"pose") as "rest" : undefined});break;
+        case "place":program.places.push({token,name,assembly:wordField(node,"object"),at:node.fields.get("at") as Expr[]|undefined,route:node.fields.has("route") ? wordField(node,"route") : undefined,offset:node.fields.get("offset") as Expr|undefined,phase:node.fields.get("phase_s") as Expr|undefined,scale:node.fields.get("scale") as Expr|undefined,heading:node.fields.get("heading_deg") as Expr|undefined,role:node.fields.has("role") ? wordField(node,"role") as "prop"|"npc"|"controllable"|"ambient" : undefined,behavior:node.fields.has("behavior") ? wordField(node,"behavior") : undefined,pose:node.fields.has("pose") ? wordField(node,"pose") as "rest" : undefined,motion:node.fields.get("motion") as DreamNode|undefined});break;
         case "watercourse":program.waters.push({token,name,...(node.fields.has("ends") ? {ends:wordField(node,"ends") as "round"|"open"} : {}),level:num("level"),depth:num("depth"),bank:num("bank"),color:wordField(node,"color"),flow:listField(node,"flow"),block:lowerBlock(node.block!)});break;
         default:program.layout.push(node);
       }
@@ -203,6 +203,7 @@ function validateReferences(nodes:DreamNode[]):void {
         });
       }
       if(node.kind==="place"){
+        if(node.fields.has("motion") && (wordField(node,"role")!=="ambient" || node.fields.has("route") || node.fields.has("behavior") || node.fields.has("pose")))fail("motion requires role=ambient, fixed at and no pose, route or behavior",node.token,"E_PLACEMENT");
         if(node.fields.has("pose") && (!node.fields.has("role") || wordField(node,"role")!=="prop" || node.fields.has("route") || node.fields.has("behavior")))fail("pose=rest requires role=prop at a fixed position without behavior",{...node.token,path:`${node.token.path}/pose`},"E_PLACEMENT");
         reference(node,"object","object");if(node.fields.has("route"))reference(node,"route","route");if(node.fields.has("behavior"))reference(node,"behavior","behavior");
         if(Number(node.fields.has("at"))+Number(node.fields.has("route"))!==1)fail("place needs exactly one of at or route",node.token,"E_PLACEMENT");

@@ -6,6 +6,7 @@ An assembly describes what something can do. A placement decides who controls it
 
 | Placement role | Owner | Behavior |
 | --- | --- | --- |
+| `ambient` | Bounded engine motion | Instanced decor using Dream `walk` or `roam`, with no general program, contact body or boarding. |
 | `prop` | Nobody | Scenery and physical props. No actor route or NPC program. Mechanical joints and destruction still work. |
 | `controllable` | Player after boarding | Requires a `rideable` control profile. Starts parked; F boards it from nearby dry ground. |
 | `npc` | Engine | An autonomous route or a bounded `behavior` program. A driver-capable NPC cannot be taken over. A passenger-only train seat still works. |
@@ -87,7 +88,7 @@ The live world now declares its people, animals, train and player vehicles expli
 
 Each NPC owns a runtime snapshot: current state, elapsed state time, route time, animation time and heading. It lives beside vehicle and damage state, outside the accepted scene. Switching between walking, car, bicycle, scooter, boat, plane and passenger travel advances the same NPC clocks once per tick. Pause freezes them. R preserves them; Start over resets them.
 
-A program-controlled NPC requires a version 2 assembly with a decor or solid cylinder, without a foundation or destruction. Street, tram and rail NPCs may use up to eight compound contacts for a long vehicle body. Ambient routes still require decor. Ground NPCs follow terrain; stationary people stay upright unless their template requests surface grounding. Complete-world validation checks dry, clear stationary footprints and the full authored route. Solid NPCs participate in the authored actor contacts; decor people remain nonblocking. There is no runtime pathfinding, obstacle avoidance or actor-to-actor traffic solver. Keep patrol routes clear.
+A program-controlled NPC requires a version 2 assembly with a decor or solid cylinder, without a foundation or destruction. Street, tram and rail NPCs may use up to eight compound contacts for a long vehicle body. Ambient routes still require decor. Ground NPCs follow terrain; stationary people stay upright unless their template requests surface grounding. Complete-world validation checks dry, clear stationary footprints and the full authored route. Solid NPCs participate in the authored actor contacts; decor people remain nonblocking. General NPC programs use explicit clear patrol routes, without runtime pathfinding or an actor-to-actor traffic solver. Instanced ambient populations have separate bounded pavement navigation and animal avoidance. Keep NPC patrol routes clear.
 
 The bounds are 16 programs per linked scene, 32 NPCs, 1–8 states per program and 0–4 transitions per state. Durations are .1–300 seconds; proximity radii are 10–240 world units. Existing caps remain 24 route actors/controllable vehicles and 24 live jointed assemblies including the player. A static NPC without joints does not consume an animation slot.
 
@@ -97,4 +98,4 @@ The bounds are 16 programs per linked scene, 32 NPCs, 1–8 states per program a
 
 Use `route(kind=walk)` to keep a person's full body on entrance paths, pavements and crossings. A named `stop` can reference a home, market or other site; the live commuter visits both ends of the market journey. `street` buses and `tram` vehicles use existing roads, with platform sites for intermediate waits. [The complete city example](../examples/connected-city.dream) connects buildings, a bus stop and its served destinations. There is no generated pathfinding: author the route and let the acceptance checks reject invalid geometry.
 
-For passive residents, `pose=rest` on an explicit prop or `furnish` preserves the full model without live NPC or rig state. `on=sidewalk` keeps their complete footprints on the outer paving, clear of crossings and entrances. These instances do not walk or react; use `role=npc` and a bounded program for that behavior. [Population rules and runnable example](populations.md).
+For passive residents, `pose=rest` on an explicit prop or `furnish` preserves the full model without live NPC or rig state. `on=sidewalk` keeps their complete footprints on the outer paving, clear of crossings and entrances. These resting instances stay passive. Use `motion=walk(...)` or `motion=roam(...)` with ambient ownership for instanced movement and nearby flight, or `role=npc` for a custom bounded program. [Population rules and runnable example](populations.md).

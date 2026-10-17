@@ -1,3 +1,4 @@
+import {AmbientPopulation} from './ambient-population';
 import {CharacterAnimator} from './character-animation';
 import {nightFactor} from "./shaders";
 import {activeSport,closestSportTarget,sportCharge,cancelSportAction} from '../sim/sports';
@@ -8,7 +9,7 @@ import {SunShadows} from "./sun";
 import {mediaCapture} from "./media-capture";
 import {renderProfile} from "./render-profile";
 import {freezeStatic} from "./batching";
-import {vehicleReviewStart,drivingReviewStart,npcReviewStart,movementReviewStart} from "./review-start";
+import {vehicleReviewStart,drivingReviewStart,npcReviewStart,movementReviewStart,populationReviewStart} from "./review-start";
 import { measuredScale, playerRadius, playerHeight } from "../scene/measure";
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -66,6 +67,7 @@ function start(): void {
   if(import.meta.env.DEV)car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));
   if(import.meta.env.DEV)car=npcReviewStart(car,world,new URLSearchParams(location.search).get("test-npc"));
   if(import.meta.env.DEV)car=movementReviewStart(car,world,new URLSearchParams(location.search).get("test-movement"));
+  if(import.meta.env.DEV)car=populationReviewStart(car,world,new URLSearchParams(location.search).get("test-population"));
   const stepper = new FixedStepper();
   const keys = new Set<string>();
   let boostRequested=false;
@@ -132,6 +134,7 @@ function start(): void {
 
   const flocks=buildFlocks(doc);scene.add(flocks);
   const scenery = new WorldScenery(doc); scene.add(scenery.group);
+  const populations=new AmbientPopulation(doc);scene.add(populations.group);
   const propMeshes = new Map<string, THREE.Group>();
   const actorMeshes=new Map<string,THREE.Group>();
   const rideZooms=new Map<string,number>();
@@ -174,7 +177,7 @@ function start(): void {
   const hourOffset=import.meta.env.DEV && new URLSearchParams(location.search).has("test-hour") && Number.isFinite(reviewHour) && reviewHour>=0 && reviewHour<24 && doc.daylight ? ((reviewHour-doc.daylight.startHour+24)%24)/24*doc.daylight.cycleSeconds : 0;
   const worldBounds=new THREE.Box3().setFromObject(scene);
   const sunShadows=new SunShadows(sun,worldBounds.min.y-32,worldBounds.max.y+MAX_FLIGHT_CLEARANCE);
-  for(const root of [environment,landscape.group,routes,scenery.group,flocks,daylight.pools])freezeStatic(root);
+  for(const root of [environment,landscape.group,routes,scenery.group,flocks,daylight.pools,populations.group])freezeStatic(root);
   // Matrices are updated once below, before both occlusion and rendering consume them.
   scene.matrixWorldAutoUpdate=false;
 
@@ -283,16 +286,18 @@ function start(): void {
     resetPosition(true);car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));worldTime.value=0;
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
   let captureTime:number|undefined;
-  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300},(clip)=>{
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:360,wildlife:360},(clip)=>{
     captureTime=undefined;
     resetPosition(true);worldTime.value=0;setMode("playing");
     characters.forEach(character=>character.reset());
+    if(clip==='pedestrians' || clip==='wildlife')car=populationReviewStart(car,world,clip);
     if(clip==='switching'){const bike=doc.objects.find(o=>o.id==='village_bike')!;car={...car,x:bike.x-40,y:bike.y,headingRad:0,elevation:drivingHeight(doc.terrain,bike.x-40,bike.y)};}
     if(clip==='locomotion' || clip==='swimming')car=movementReviewStart(car,world,clip==='swimming' ? 'swim' : 'walk');
     if(clip==='flight')car=toggleRide(vehicleReviewStart(car,world,'cloudhopper'),world);
     if(clip==='football' || clip==='basketball')car=movementReviewStart(car,world,clip);
   },(clip:string,frame:number)=>{
     keys.clear();
+    if(clip==='pedestrians' || clip==='wildlife')return;
     if(clip==="daynight"){captureTime=frame/359*(doc.daylight?.cycleSeconds??600);return;}
     if(clip==="driving"){if(frame<175)keys.add("KeyW");return;}
     if(clip==='boost'){if(frame<175)keys.add('KeyW');if(frame>=25 && frame<50)keys.add('ShiftLeft');return;}
@@ -479,6 +484,7 @@ function start(): void {
     occlusion.update(camera, position.clone().add(new THREE.Vector3(0, playerHeight(doc) / 2, 0)), dt, reduced.matches,occupied ? actorMeshes.get(occupied.id) : undefined);
     daylight.update(captureTime??(worldTime.value+hourOffset));
     sunShadows.update(camera,daylight.direction,DEFAULT_CAMERA_ZOOM * manualZoom.factor);
+    populations.update(car,camera,sun,mode==='playing' ? dt : 0,reduced.matches);
     hudTime += dt;
     if (hudTime > .1) {
       hudTime = 0;
@@ -492,6 +498,7 @@ function start(): void {
       const power=sportGame ? sportCharge(car,sportGame) : 0;
       sportLabel.textContent=!sportGame?.possessed ? 'Find the ball' : court?.sport.kind==='football' ? 'Hold J · Kick' : 'Hold J · Shoot';
       sportButton.setAttribute('aria-label',`${court?.sport.kind==='football' ? 'Kick' : 'Shoot'}: hold J or this button, release for power${court?.sport.kind==='basketball' ? '. Release at the gold mark' : ''}`);
+      if(import.meta.env.DEV && car.population)container.dataset.population=JSON.stringify({count:populations.count,moving:car.population.members.filter(m=>m.speed>0).length,fleeing:car.population.members.filter(m=>m.mode==='flee').length,time:car.timeS,sample:doc.objects.filter(o=>o.ambient).map((o,i)=>({id:o.id,...car.population!.members[i]!})).sort((a,b)=>Math.hypot(a.x-car.x,a.y-car.y)-Math.hypot(b.x-car.x,b.y-car.y)).slice(0,6)});
       container.dataset.sport=JSON.stringify({active:court?.sport.id??null,possessed:sportGame?.possessed??false,power,games:car.sports,balls:doc.sports.map(s=>car.props.find(p=>p.id===s.ballId))});
       const carControl=isCarControl(car,world),boostActive=car.timeS<car.carBoost.activeUntilS,boostWait=Math.max(0,car.carBoost.readyAtS-car.timeS);
       const boostBlocked=!car.grounded || car.surface==='water' || car.vx*Math.cos(car.headingRad)+car.vy*Math.sin(car.headingRad)<-1 || keys.has('KeyS') || keys.has('ArrowDown');

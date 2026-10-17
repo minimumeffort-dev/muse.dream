@@ -1,3 +1,4 @@
+import {ambientSchema,ambientProblem,AMBIENT_LIMITS} from './ambient';
 import {voxelCells,voxelChunkCount,VOXEL_LIMITS} from './voxels';
 import {voxelWorldSchema} from './voxel-world';
 import {daylightSchema,MAX_LIGHT_POOLS} from './daylight';
@@ -85,11 +86,13 @@ export const sceneObjectSchema = z.object({
   scale: z.number().finite().min(0.05).max(4),
   headingRad:z.number().finite().min(-Math.PI*2).max(Math.PI*2).optional(),
   role:roleSchema.optional(),
+  ambient:ambientSchema.optional(),
   behavior:z.string().regex(/^[a-z][a-z0-9_]{0,31}$/).optional(),
   route:z.object({id:z.string().min(1).max(40),offset:z.number().finite().min(0).max(2048).default(0),phaseS:z.number().finite().min(0).max(3600).optional()}).strict().optional(),
   /** Required when kind is "custom": the invented archetype as data. */
   spec: customSpecSchema.optional(),
 }).superRefine((o, ctx) => {
+  const ambient=ambientProblem(o);if(ambient)ctx.addIssue({code:'custom',message:ambient,path:['ambient']});
   const spec=o.spec && "dslVersion" in o.spec && o.spec.dslVersion===2 ? o.spec : undefined;
   if(spec?.measure){
     const variation=o.scale/measuredScale(spec),problem=measureProblem(spec.measure,variation);
@@ -196,6 +199,7 @@ export const sceneSchema = z.object({
   if(scene.objects.filter(o=>o.route || controlFor(o)).length>24) ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 24 route actors or controllable vehicles"});
   if(scene.objects.filter(o=>roleOf(o)==='npc').length>NPC_LIMITS.actors)ctx.addIssue({code:'custom',message:'scene exceeds 32 NPCs'});
   if(new Set(scene.behaviors.map(b=>b.id)).size!==scene.behaviors.length)ctx.addIssue({code:'custom',message:'duplicate behavior ID'});
+  if(scene.objects.filter(o=>o.role==='ambient').length>AMBIENT_LIMITS.members)ctx.addIssue({code:'custom',message:'scene exceeds 192 instanced ambient members'});
   for(const object of scene.objects){const problem=agentProblem(object,scene.behaviors,scene.routes);if(problem)ctx.addIssue({code:'custom',message:`${object.id}: ${problem}`});}
   const voxelData=new Map<string,number>();
   for(const spec of [scene.player,...scene.objects.map(o=>o.spec),...scene.flocks.map(f=>f.spec)])if(spec && 'dslVersion' in spec && spec.dslVersion===2)

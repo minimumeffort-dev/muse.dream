@@ -65,7 +65,7 @@ export class WorldScenery {
     const entries: Entry[] = [], prototypes = new Map<string, THREE.Group>();
     const batches = new Map<string, { prototype: THREE.Group; items: { object: SceneObject; entry: Entry }[] }>();
     for (const object of scene.objects) {
-      if(isActor(object) || impactOf(object.spec))continue;
+      if(object.ambient || isActor(object) || impactOf(object.spec))continue;
       if (archetypeOf(object).interaction === "knockable") continue;
       const placement=objectPlacement(scene,object),live=hasAnimatedJoints(object.spec) || zonesOf(object.spec).length>0;
       if(live && (!placement.foundation || placement.base-placement.low<=.1)) continue;

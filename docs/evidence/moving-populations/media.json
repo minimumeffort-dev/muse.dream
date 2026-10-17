@@ -1,0 +1,145 @@
+{
+  "driving": {
+    "renderedFrames": 210,
+    "fps": 30,
+    "png": [
+      2400,
+      1350
+    ],
+    "gif": [
+      960,
+      540
+    ],
+    "mp4Bytes": 4384601
+  },
+  "boost": {
+    "renderedFrames": 210,
+    "fps": 30,
+    "png": [
+      2400,
+      1350
+    ],
+    "gif": [
+      960,
+      540
+    ],
+    "mp4Bytes": 4683979
+  },
+  "football": {
+    "renderedFrames": 240,
+    "fps": 30,
+    "png": [
+      2400,
+      1350
+    ],
+    "gif": [
+      960,
+      540
+    ],
+    "mp4Bytes": 1216070
+  },
+  "basketball": {
+    "renderedFrames": 210,
+    "fps": 30,
+    "png": [
+      2400,
+      1350
+    ],
+    "gif": [
+      960,
+      540
+    ],
+    "mp4Bytes": 1725587
+  },
+  "switching": {
+    "renderedFrames": 240,
+    "fps": 30,
+    "png": [
+      2400,
+      1350
+    ],
+    "gif": [
+      960,
+      540
+    ],
+    "mp4Bytes": 2242561
+  },
+  "locomotion": {
+    "renderedFrames": 180,
+    "fps": 30,
+    "png": [
+      2400,
+      1350
+    ],
+    "gif": [
+      960,
+      540
+    ],
+    "mp4Bytes": 3286854
+  },
+  "swimming": {
+    "renderedFrames": 180,
+    "fps": 30,
+    "png": [
+      2400,
+      1350
+    ],
+    "gif": [
+      960,
+      540
+    ],
+    "mp4Bytes": 2267172
+  },
+  "daynight": {
+    "renderedFrames": 360,
+    "fps": 30,
+    "png": [
+      2400,
+      1350
+    ],
+    "gif": [
+      960,
+      540
+    ],
+    "mp4Bytes": 3036422
+  },
+  "flight": {
+    "renderedFrames": 300,
+    "fps": 30,
+    "png": [
+      2400,
+      1350
+    ],
+    "gif": [
+      960,
+      540
+    ],
+    "mp4Bytes": 5063880
+  },
+  "pedestrians": {
+    "renderedFrames": 360,
+    "fps": 30,
+    "png": [
+      2400,
+      1350
+    ],
+    "gif": [
+      960,
+      540
+    ],
+    "mp4Bytes": 937005
+  },
+  "wildlife": {
+    "renderedFrames": 360,
+    "fps": 30,
+    "png": [
+      2400,
+      1350
+    ],
+    "gif": [
+      960,
+      540
+    ],
+    "mp4Bytes": 1756076
+  }
+}

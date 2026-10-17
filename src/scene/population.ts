@@ -1,3 +1,4 @@
+import {ambientMotionSchema,type Ambient} from './ambient';
 import {z} from 'zod';
 import type {Scene,SceneObject,Point} from './schema';
 import {objectDslSchema,isReactive,type ObjectDslV2} from './object-dsl';
@@ -19,7 +20,7 @@ const refs=z.array(z.string().regex(/^[a-z][a-z0-9_]{0,31}$/)).min(1).max(32);
 export const furnishingSchema=z.object({id:z.string(),streets:refs.optional(),sites:refs.optional(),grounds:refs.optional(),paving:z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),spacing:z.number().finite().min(12).max(800),
   setback:z.number().finite().min(0).max(120),side:z.enum(['left','right','both']).default('both'),facing:z.enum(['along','street','varied']).default('along'),
   jitter:z.number().finite().min(0).max(.3).default(0),seed:z.number().int().min(0).max(65535),count:z.number().int().min(1).max(12).optional(),
-  pose:z.literal('rest').optional(),
+  pose:z.literal('rest').optional(),motion:ambientMotionSchema.optional(),
   on:z.enum(['verge','sidewalk']).default('verge'),
 }).strict().superRefine((r,ctx)=>{
   if(Number(!!r.streets)+Number(!!r.sites)!==1 || !!r.sites!==!!r.count)ctx.addIssue({code:'custom',message:'furnish needs streets, or sites with count'});
@@ -28,7 +29,7 @@ export const furnishingSchema=z.object({id:z.string(),streets:refs.optional(),si
   if(r.on==='sidewalk' && (r.setback!==0 || r.paving))ctx.addIssue({code:'custom',message:'sidewalk furnishing requires setback=0 and no paving'});
   if(new Set(r.streets??r.sites??[]).size!==(r.streets??r.sites??[]).length)ctx.addIssue({code:'custom',message:'furnish targets must be unique'});
 });
-export type Furnishing=z.infer<typeof furnishingSchema>&{objects:ObjectDslV2[]};
+export type Furnishing=z.infer<typeof furnishingSchema>&{objects:ObjectDslV2[];rigs?:Ambient['joints'][]};
 const resting=new WeakMap<ObjectDslV2,ObjectDslV2>();
 /** Explicit resting scenery preserves the full model and body, without live rig ownership. */
 export function restingTemplate(spec:ObjectDslV2):ObjectDslV2{
@@ -86,7 +87,7 @@ export function furnishWorld(scene:Scene,rules:Furnishing[]):{objects:SceneObjec
       const a=street.points[segment-1]!,b=street.points[segment]!,length=lengths[segment]!-lengths[segment-1]!,dx=(b.x-a.x)/length,dy=(b.y-a.y)/length,d=candidate.distance-lengths[segment-1]!;
       const sides=candidate.side ? [candidate.side] : rule.side==='both' ? [-1,1] : [rule.side==='left' ? -1 : 1];
       for(const side of sides){
-        const spec=rule.objects[Math.floor(random()*rule.objects.length)]!,scale=measuredScale(spec),r=assemblyHorizontalRadius(spec,scale),riding=street.width/2+(street.cycleWidth ? street.cycleWidth+6 : 0);
+        const choice=Math.floor(random()*rule.objects.length),spec=rule.objects[choice]!,scale=measuredScale(spec),r=assemblyHorizontalRadius(spec,scale),riding=street.width/2+(street.cycleWidth ? street.cycleWidth+6 : 0);
         if(rule.on==='sidewalk' && (spec.body.interaction!=='decor' || street.sidewalk<2*r+9))continue;
         const offset=rule.on==='sidewalk' ? riding+street.sidewalk-r-1 : riding+street.sidewalk+rule.setback+r;
         const x=a.x+dx*d-dy*offset*side,y=a.y+dy*d+dx*offset*side;
@@ -98,7 +99,7 @@ export function furnishWorld(scene:Scene,rules:Furnishing[]):{objects:SceneObjec
         if(occupied.query(x,y,r+maxRadius+4).some(o=>Math.hypot(o.x-x,o.y-y)<o.r+r+4))continue;
         if(++emitted>POPULATION_LIMITS.perRule || generated.length>=POPULATION_LIMITS.generated || scene.objects.length+generated.length>=4096)throw Error(`furnish "${rule.id}": expansion exceeds 128 per rule, 1024 generated or 4096 scene objects (${emitted} in rule, ${generated.length} generated)`);
         const heading=rule.facing==='varied' ? random()*Math.PI*2 : Math.atan2(dy,dx)+(rule.facing==='street' ? -side*Math.PI/2 : 0);
-        generated.push({id:`${rule.id}_${key}_${side<0 ? 'l':'r'}`,kind:'custom',labelText:spec.displayName,x,y,headingRad:heading,scale,spec,role:'prop'});
+        generated.push({id:`${rule.id}_${key}_${side<0 ? 'l':'r'}`,kind:'custom',labelText:spec.displayName,x,y,headingRad:heading,scale,spec,role:rule.motion ? 'ambient' : 'prop',...(rule.motion ? {ambient:{motion:rule.motion,joints:rule.rigs?.[choice]??[]}} : {})});
         if(rule.paving && candidate.siteId){
           const id=`parking_${candidate.siteId}_${segment}_${rule.paving.slice(1)}`,inner=offset-rule.setback-r-.5,outer=offset+r+4;
           const pad=pads.get(id)??{color:rule.paving,dx,dy,origin:a,inner,outer,low:d-r-4,high:d+r+4,side};

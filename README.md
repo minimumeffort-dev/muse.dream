@@ -167,7 +167,7 @@ The asset library includes gulls, red kites, deer, foxes and hares. The live cit
 
 ![Wildlife and plants composed from Dream 2](docs/media/ecology.jpg)
 
-Wildlife follows bounded ambient routes without drawing roads or runways. Plants stay instanced, and animals use the existing animation budget. These are authored mock habitats; animal perception and avoidance are still to come. [See the assets](docs/asset-library.md), or [write a pair of flying birds](docs/examples/ambient-wildlife.dream).
+Ground wildlife roams bounded habitats and moves away when you approach. Pedestrians follow connected sidewalks and crossings, waiting for approaching vehicles. Full models share GPU instances, while movement runs at 20 Hz. Plants stay instanced, and flying flocks retain their shared flight shaders. These are authored mock behaviors, without crowd physics or an ecosystem simulation. [See the assets](docs/asset-library.md), or [write a pair of flying birds](docs/examples/ambient-wildlife.dream).
 
 ## Stay until night
 
@@ -209,7 +209,11 @@ The [checked examples](docs/dream/examples.md) also include a bouncing ball, bre
 
 Streetlights now follow streets, bicycle and scooter parking sits beside destinations, and birds fly across sixteen habitats. Dream’s `furnish` and `flock` commands describe those populations with bounded rules.
 
-There are 123 residents, 60 additional ground animals and birds, 336 trees, 45 parked bicycles, 22 parked scooters and 14 parked cars alongside four road cars, five buses and boardable tram and rail services. Four new neighbors react nearby; most added residents and wildlife are detailed resting props shared through instancing. The actor and animation limits stay the same. [See how populations work](docs/dream/populations.md).
+There are 123 residents, 60 additional ground animals and birds, 336 trees, 45 parked bicycles, 22 parked scooters and 14 parked cars alongside four road cars, five buses and boardable tram and rail services. 111 residents walk on the pedestrian network and 60 ground animals and birds roam and react nearby. Twelve people retain their individual NPC routines. The new populations share complete instanced models; the existing NPC and CPU rig limits stay the same. [See how populations work](docs/dream/populations.md).
+
+![People walk along the connected pavement](docs/media/pedestrians.gif)
+
+[Watch the wildlife react](docs/media/wildlife.mp4) · [Write the movement in Dream](docs/examples/moving-population.dream).
 
 ![Residents built from the same complete Dream humanoid rig](docs/media/city-residents.jpg)
 

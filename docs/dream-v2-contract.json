@@ -451,7 +451,32 @@
         "jitter": "n?",
         "count": "n?",
         "pose": "rest?",
-        "on": "verge|sidewalk?"
+        "on": "verge|sidewalk?",
+        "motion": "ambient_motion?"
+      }
+    },
+    "walk": {
+      "contexts": [
+        "ambient_motion"
+      ],
+      "id": false,
+      "fields": {
+        "speed": "n",
+        "wait_s": "n?"
+      }
+    },
+    "roam": {
+      "contexts": [
+        "ambient_motion"
+      ],
+      "id": false,
+      "fields": {
+        "radius": "n",
+        "speed": "n",
+        "alert": "n",
+        "flee_speed": "n",
+        "recover_s": "n?",
+        "gait": "walk|hop?"
       }
     },
     "flock": {
@@ -484,9 +509,10 @@
         "phase_s": "n?",
         "scale": "n?",
         "heading_deg": "n?",
-        "role": "prop|npc|controllable?",
+        "role": "prop|npc|controllable|ambient?",
         "behavior": "ref?",
-        "pose": "rest?"
+        "pose": "rest?",
+        "motion": "ambient_motion?"
       }
     },
     "behavior": {
@@ -939,7 +965,7 @@
       "right_shoulder",
       "right_elbow"
     ],
-    "semantics": "Optional joint.bone binds a complete 12-joint humanoid on a measured decor person. Required tree: root -> spine -> shoulder -> elbow, root -> hip -> knee -> ankle, paired left/right. Rest faces +X, +Y up, left +Z; unrotated frames, root centered with positive height, hips at root height, shoulders above spine, downward knee/ankle/elbow offsets >= .5. All parts parent to bones, no independent motion/fractures. Engine owns speed-blended walk/run, two-bone leg poses, jump/landing and crawl/tread transitions. Existing 12-joint/depth-4/32-part and 24-live-assembly limits apply. Furnish rejects live rigs unless explicit pose=rest bakes the authored rest geometry into passive props. Collision and terrain support remain separate; no skinning, terrain foot probes or generated animation scripts."
+    "semantics": "Optional joint.bone binds a complete 12-joint humanoid on a measured decor person. Required tree: root -> spine -> shoulder -> elbow, root -> hip -> knee -> ankle, paired left/right. Rest faces +X, +Y up, left +Z; unrotated frames, root centered with positive height, hips at root height, shoulders above spine, downward knee/ankle/elbow offsets >= .5. All parts parent to bones, no independent motion/fractures. Engine owns speed-blended walk/run, two-bone leg poses, jump/landing and crawl/tread transitions. Existing 12-joint/depth-4/32-part and 24-live-assembly limits apply. Furnish requires pose=rest for passive rigs or motion=walk(...) for instanced ambient walkers. Ambient GPU joints preserve the full validated hierarchy without per-member CPU rigs. Collision and terrain support remain separate; no skinning, terrain foot probes or generated animation scripts."
   },
   "geometry": {
     "partSizeMinimum": 0.1,
@@ -1018,6 +1044,7 @@
       "turnRadS": 2.5
     },
     "roles": {
+      "ambient": "bounded instanced decor motion from walk or roam, no arbitrary program, contact or boarding ownership",
       "prop": "passive scenery, no route or behavior",
       "controllable": "requires rideable control capability; parked until player boards",
       "npc": "engine-owned route or behavior; driver-capable NPC cannot be boarded, passenger-only seats remain available"
@@ -1262,6 +1289,12 @@
     "errors": "module ID accompanies nested diagnostics; failure returns no partial world"
   },
   "population": {
+    "ambient": {
+      "members": 192,
+      "tickSeconds": 0.05,
+      "graphNodes": 8192
+    },
+    "motion": "motion=walk(speed,wait_s=1) follows cached portals from accepted sidewalks, entrance paths and crossings, yielding to swept vehicles; speed 4..24, wait_s 0..5. Requires a complete humanoid rig. motion=roam(radius,speed,alert,flee_speed,recover_s=2,gait=walk) stays dry and outside roads/grounds, flees a nearby player and recovers after separation; radius/alert 20..180, speed 2..16, flee_speed 8..60 and >= speed, recover_s .5..10, gait walk|hop. Place requires explicit role=ambient and fixed at; furnish motion creates ambient ownership, walk requires on=sidewalk. Motion excludes pose=rest, routes, programs, seats, contacts, foundations, damage, emitters, lamps, part clocks and proximity/roll joints. Validated humanoid or swing joints animate shared full geometry in color/shadow shaders. At most 192 members; fixed deterministic 20 Hz movement with render interpolation; 8192 cached pedestrian graph nodes; existing NPC, route and CPU live-rig caps unchanged. All members stay resident. Pause freezes state, R preserves it, Start over resets it; reduced motion rests poses. These are cosmetic populations without mutual crowd contacts, general programs, signal solving or ecological simulation.",
     "rules": 32,
     "generatedPerRule": 128,
     "generatedTotal": 1024,
@@ -1269,7 +1302,7 @@
     "flocks": 16,
     "birds": 256,
     "membersPerFlock": 32,
-    "furnish": "exactly one of streets or sites; sites require count 1..12. Passive static assemblies only; no live joints, knockables, destruction or emitters. pose=rest explicitly removes bone bindings and part/joint clocks while preserving geometry, rest transforms and body; it cannot disable damage, emitters, knockables or proximity joints. On place it requires explicit role=prop, fixed at and no behavior. on=sidewalk requires decor, setback=0 and no paving; the full radius must fit the outer sidewalk and leave an inner 8-unit corridor. Default on=verge stays beyond the pavement. facing=varied gives seeded headings; jitter also varies site-row spacing. Optional grounds explicitly permit named surfaces; site paving creates connected parking aprons within the 64-surface budget. Parked templates have prop ownership and cannot be boarded. Generated props count toward 4096 scene objects. Full linked scene reservations filter candidates deterministically. No guaranteed minimum count; inspect compiled coverage.",
+    "furnish": "exactly one of streets or sites; sites require count 1..12. Passive static assemblies unless explicit ambient motion; no knockables, destruction or emitters. pose=rest explicitly removes bone bindings and part/joint clocks while preserving geometry, rest transforms and body; it cannot disable damage, emitters, knockables or proximity joints. On place it requires explicit role=prop, fixed at and no behavior. on=sidewalk requires decor, setback=0 and no paving; the full radius must fit the outer sidewalk and leave an inner 8-unit corridor. Default on=verge stays beyond the pavement. facing=varied gives seeded headings; jitter also varies site-row spacing. Optional grounds explicitly permit named surfaces; site paving creates connected parking aprons within the 64-surface budget. Non-moving parked templates have prop ownership and cannot be boarded. Generated props count toward 4096 scene objects. Full linked scene reservations filter candidates deterministically. No guaranteed minimum count; inspect compiled coverage.",
     "flight": "decorative instanced flight, no NPC/physics ownership. Authored joints are baked at rest; wing motion uses bounded local-Z flex. All birds stay resident. Habitats must fit the world; flight clears terrain and roofs.",
     "phase": "place.phase_s 0..3600 only with route; shifts the entire route clock including stops. offset remains a carriage distance."
   },

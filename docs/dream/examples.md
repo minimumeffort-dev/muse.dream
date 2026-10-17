@@ -186,3 +186,5 @@ The source files are the examples. Tests compare these complete snippets with th
 - [Cabin launch](../examples/cabin-launch.dream): pointed hull, deck, wheelhouse, outboard and fitted seat.
 
 These complete sources compile to the same assemblies used in the live mock world. [Construction notes](../asset-construction.md).
+
+[Moving populations](../examples/moving-population.dream) puts measured walkers on connected sidewalks and a reactive hare in a dry habitat. [How the movement works](populations.md).

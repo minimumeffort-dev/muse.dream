@@ -2,7 +2,7 @@ import {z} from 'zod';
 import {controlOf,isReactive} from './object-dsl';
 import type {Scene,SceneObject} from './schema';
 
-export const roleSchema=z.enum(['prop','npc','controllable']);
+export const roleSchema=z.enum(['prop','npc','controllable','ambient']);
 export const NPC_LIMITS=Object.freeze({programs:16,actors:32,states:8,transitions:4,seconds:[.1,300] as const,radius:[10,240] as const,turnRadS:2.5});
 const id=z.string().regex(/^[a-z][a-z0-9_]{0,31}$/);
 const transitionSchema=z.object({id,event:z.enum(['after','near_player','far_player']),to:id,seconds:z.number().finite().min(NPC_LIMITS.seconds[0]).max(NPC_LIMITS.seconds[1]).optional(),radius:z.number().finite().min(NPC_LIMITS.radius[0]).max(NPC_LIMITS.radius[1]).optional()}).strict().superRefine((t,ctx)=>{
@@ -26,7 +26,7 @@ export type Role=z.infer<typeof roleSchema>;
 /** Role belongs to the instance. A vehicle template's control is only a capability. */
 export function roleOf(object:Pick<SceneObject,'role'|'spec'|'route'>):Role{return object.role??(controlOf(object.spec) ? 'controllable' : object.route ? 'npc' : 'prop');}
 export function controlFor(object:SceneObject|undefined){return object && roleOf(object)==='controllable' ? controlOf(object.spec) : undefined;}
-export const isActor=(object:SceneObject)=>roleOf(object)!=='prop';
+export const isActor=(object:SceneObject)=>roleOf(object)==='npc' || roleOf(object)==='controllable';
 export function agentProblem(object:SceneObject,behaviors:Behavior[],routes:Scene['routes']):string|undefined{
   const role=roleOf(object),spec=object.spec && 'dslVersion' in object.spec && object.spec.dslVersion===2 ? object.spec : undefined;
   if(role==='controllable' && !controlOf(object.spec))return 'controllable role requires rideable control capability';

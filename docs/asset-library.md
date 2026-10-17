@@ -26,7 +26,7 @@ Shelter seats stand on two supports. Table planks rest on crossrails that stay a
 | Civic and work | Market hall, hospital, two schools, college, offices, library, workshops, stations, boathouse and pavilion | [Civic assets](../src/scene/world/civic_assets.dream), [architecture](../src/scene/world/architecture.dream) |
 | Airport and eastbank care | Glazed terminal, gabled hangar, control tower and medical center | [Airport assets](../src/scene/world/transit_assets.dream), [Civic assets](../src/scene/world/civic_assets.dream) |
 | People | Commuter, vendor, teacher, health worker, shopper, student, neighbor, resident, football and basketball players | [City people](../src/scene/world/city_people.dream), [sports](../src/scene/world/sports_assets.dream) |
-| Wildlife | Pigeon and gull flocks, live deer and route gull, resting deer, hares, foxes, dogs, cats and sparrows; the library also defines kites | [Fauna](../src/scene/world/fauna.dream), [habitats](../src/scene/world/life.dream) |
+| Wildlife | Pigeon and gull flocks, live deer and route gull, roaming deer, hares, foxes, dogs, cats and sparrows; the library also defines kites | [Fauna](../src/scene/world/fauna.dream), [habitats](../src/scene/world/life.dream) |
 | Vegetation | Oak, pine, amber tree, birch, fir, rowan, apple, willow, ferns, flowers and shrubs | [Nature](../src/scene/world/nature.dream), [flora](../src/scene/world/flora.dream), [landmarks](../src/scene/world/landmarks.dream) |
 | Props and destruction | Produce stalls, table, crate, planter, ball, slatted benches, toppling trees and breakable shop porches | [Civic assets](../src/scene/world/civic_assets.dream), [impact props](../src/scene/impact-creations.dream), [destructible furniture](../src/scene/world/destructible.dream) |
 
@@ -98,7 +98,7 @@ The flora library has ten distinct forms, including meadow grass and blue hydran
 
 ![Ferns, foxgloves, lavender, reeds, daisies and a willow](media/flora.jpg)
 
-The live city uses a walking deer habitat and gulls above the river; the library also retains fox, hare and kite forms. Birds use continuous airborne ambient routes; walking animals follow clear, dry habitats. Their motion stays inside the existing actor and joint budgets. Plants retain static instancing and shader wind. The [behavior guide](dream/behavior.md#wildlife-and-habitats) explains the ambient route contract and its current limits.
+The live city uses a walking deer habitat and gulls above the river; the library also retains fox, hare and kite forms. Birds use continuous airborne ambient routes; walking animals follow clear, dry habitats. Individual route actors stay inside the existing actor and joint budgets. The 111 added pedestrians and 60 ground animals now use bounded ambient movement with shared GPU rigs: walkers stay on connected pavement and ground wildlife flees nearby players. Dogs and cats have four connected walking legs. Plants retain static instancing and shader wind. The [behavior guide](dream/behavior.md#wildlife-and-habitats) explains the ambient route contract and its current limits.
 
 ## A planned town and sports park
 
@@ -134,7 +134,7 @@ Dream 2 now supports bounded filled/carved voxel parts, greedy surface meshing a
 
 ## A fuller city and its habitats
 
-The live city now contains 123 people, 336 trees and 60 additional resting ground animals and birds. Shoppers, students and neighbors have varied clothing, hair and complexions; dogs, cats and sparrows join the woodland deer, hares and foxes. Meadow grass and hydrangeas add two more planting forms.
+The live city now contains 123 people, 336 trees and 60 additional roaming ground animals and birds. Shoppers, students and neighbors have varied clothing, hair and complexions; dogs, cats and sparrows join the woodland deer, hares and foxes. Meadow grass and hydrangeas add two more planting forms.
 
 ![New neighborhood animals and garden plants](media/population-assets.jpg)
 

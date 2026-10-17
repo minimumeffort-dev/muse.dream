@@ -1,3 +1,4 @@
+import {ambientMotionSchema,ambientData,type AmbientMotion} from './ambient';
 import {furnishingSchema,flockSchema,furnishWorld,restingTemplate,POPULATION_LIMITS,type Furnishing,type Flock} from './population';
 import {sportSchema,MAX_SPORTS} from './sports';
 import {interactionRuleSchema,interactionRuleFor,MAX_INTERACTION_RULES,type InteractionRule} from './interaction-rules';
@@ -12,7 +13,7 @@ import { compileWatercourse,type Water } from "./landscape-dsl";
 import { sceneObjectSchema,parseScene,type Scene,type SceneObject } from "./schema";
 import { ZodError } from "zod";
 
-import { DREAM_LIMITS, DreamError, fail, lex, Parser, type Token, type Expr, type Vec, type Transform, type Program, type Statement } from "./dream-syntax";
+import { DREAM_LIMITS, DreamError, fail, lex, Parser, type DreamNode, type Token, type Expr, type Vec, type Transform, type Program, type Statement } from "./dream-syntax";
 import { ParserV2, printDreamV2, wordField, exprField, field, listField, lowerBlock } from "./dream-v2";
 import { migrateProgram } from "./dream-migrate";
 import { compileLayout,compileCoordinates, type DreamLayout } from "./dream-layout";
@@ -334,6 +335,10 @@ export function compileDreamWorld(source:string,modules:DreamModules={}):DreamWo
 }
 function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,children:DreamWorld[],rules:InteractionRule[]) {
   const budget={steps:0},ownAssemblies=compileObjects(program,budget,rules),globals=globalNumbers(program);
+  const movement=(node:DreamNode):AmbientMotion=>{
+    const n=(key:string,fallback?:number)=>node.fields.has(key) ? numeric(exprField(node,key),globals) : fallback;
+    try{return ambientMotionSchema.parse(node.kind==='walk' ? {kind:'walk',speed:n('speed'),waitS:n('wait_s',1)} : {kind:'roam',radius:n('radius'),speed:n('speed'),alert:n('alert'),fleeSpeed:n('flee_speed'),recoverS:n('recover_s',2),gait:node.fields.has('gait') ? wordField(node,'gait') : 'walk'});}catch(error){fail(error instanceof ZodError ? error.issues[0]!.message : String(error),node.token,'E_POPULATION');}
+  };
   const exports=new Map(program.objects.map((object,i)=>[object.id??object.name,ownAssemblies[i]!]));
   for(const [id,spec] of assets)exports.set(id,spec);
   const ids=new Set<string>();for(const item of [...program.routes,...program.places,...program.waters]){
@@ -386,7 +391,8 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
   });
   const objects=program.places.map(source=>{
     let spec=exports.get(source.assembly);if(!spec)fail(`unknown assembly '${source.assembly}'`,source.token);
-    if(source.pose)try{spec=restingTemplate(spec);}catch(error){fail((error as Error).message,source.token,"E_POPULATION");}
+    let ambient:ReturnType<typeof ambientData>|undefined;
+    try{ambient=source.motion ? ambientData(spec,movement(source.motion)) : undefined;if(source.pose || ambient)spec=restingTemplate(spec);}catch(error){if(error instanceof DreamError)throw error;fail((error as Error).message,source.token,"E_POPULATION");}
     const route=source.route ? routes.find(r=>r.id===source.route) : undefined;
     if(source.route && !route)fail(`unknown route '${source.route}'`,source.token);
     if(source.at && source.at.length!==2)fail("placement needs two coordinates",source.token);
@@ -398,7 +404,7 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
     if(variation<.5 || variation>2)fail("placement scale must be 0.5..2",source.scale?.token??source.token,"E_SCHEMA");
     const result=sceneObjectSchema.safeParse({id:source.name,kind:"custom",labelText:spec.displayName,spec,...position,...heading,
       scale:variation*measuredScale(spec),...(source.heading ? {headingRad:numeric(source.heading,globals)*RAD} : {}),
-      ...(route ? {route:{id:route.id,offset,...(source.phase ? {phaseS} : {})}} : {}),...(source.role ? {role:source.role} : {}),...(source.behavior ? {behavior:source.behavior} : {})});
+      ...(route ? {route:{id:route.id,offset,...(source.phase ? {phaseS} : {})}} : {}),...(ambient ? {ambient} : {}),...(source.role ? {role:source.role} : {}),...(source.behavior ? {behavior:source.behavior} : {})});
     if(!result.success)fail(result.error.issues[0]!.message,source.token,"E_SCHEMA");
     const problem=agentProblem(result.data,behaviors,routes);if(problem)fail(problem,source.token,'E_AGENT');return result.data;
   });
@@ -410,17 +416,20 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
         const spec=exports.get(wordField(node,'object'));if(!spec)fail('unknown flock object',node.token,'E_REFERENCE');
         flocks.push(flockSchema.parse({id:node.id,spec,center:vec('at'),radius:vec('radius'),count:num('count'),altitude:num('altitude'),speed:num('speed'),seed:num('seed'),...(node.fields.has('flap_hz') ? {flapHz:num('flap_hz')} : {}),...(node.fields.has('flap_deg') ? {flapDeg:num('flap_deg')} : {})}));
       }else{
-        const objects=listField(node,'objects').map(ref=>{const spec=exports.get(ref.name!)!;return node.fields.has('pose') && spec ? restingTemplate(spec) : spec;});
+        const original=listField(node,'objects').map(ref=>exports.get(ref.name!)!),motion=node.fields.has('motion') ? movement(field(node,'motion') as DreamNode) : undefined;
+        if(motion && node.fields.has('pose'))fail('moving populations cannot also declare pose=rest',node.token,'E_POPULATION');
+        if(motion?.kind==='walk' && (!node.fields.has('on') || wordField(node,'on')!=='sidewalk'))fail('walking furnish requires on=sidewalk',node.token,'E_POPULATION');
+        const objects=original.map(spec=>(node.fields.has('pose') || motion) && spec ? restingTemplate(spec) : spec);
         if(node.fields.has('on') && wordField(node,'on')==='sidewalk' && objects.some(s=>s?.body.interaction!=='decor'))fail('sidewalk furnishing requires passive decor so the walking corridor stays open',node.token,'E_POPULATION');
         if(!objects.length || objects.length>8 || objects.some(s=>!s || s.body.interaction==='knockable' || s.joints?.some(j=>j.bone || j.proximity || j.animation && !('kind' in j.animation && j.animation.kind==='roll')) || isReactive(s) || s.emitter))fail('furnish needs 1..8 passive static object templates',node.token,'E_POPULATION');
-        const data={id:node.id,spacing:num('spacing'),setback:num('setback'),seed:num('seed')};
+        const data={id:node.id,spacing:num('spacing'),setback:num('setback'),seed:num('seed'),...(motion ? {motion} : {})};
         for(const key of ['streets','sites','grounds'])if(node.fields.has(key))Object.assign(data,{[key]:listField(node,key).map(e=>e.name!)});
         if(node.fields.has('pose'))Object.assign(data,{pose:wordField(node,'pose')});
         if(node.fields.has('paving'))Object.assign(data,{paving:wordField(node,'paving')});
         for(const key of ['side','facing','on'])if(node.fields.has(key))Object.assign(data,{[key]:wordField(node,key)});
         for(const key of ['count','jitter'])if(node.fields.has(key))Object.assign(data,{[key]:num(key)});
         // Distance-driven joints rest in parked scenery; they consume no live controller slots.
-        furnishings.push({...furnishingSchema.parse(data),objects:objects.map(s=>s.joints?.some(j=>j.animation) ? {...s,joints:s.joints.map(({animation,...joint})=>joint)} : s)});
+        furnishings.push({...furnishingSchema.parse(data),...(motion ? {rigs:original.map(s=>ambientData(s,motion).joints)} : {}),objects:objects.map(s=>s.joints?.some(j=>j.animation) ? {...s,joints:s.joints.map(({animation,...joint})=>joint)} : s)});
       }
     }catch(error){if(error instanceof DreamError)throw error;fail(error instanceof ZodError ? error.issues[0]!.message : String(error),node.token,'E_POPULATION');}
   }
