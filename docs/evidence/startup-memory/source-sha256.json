@@ -18,6 +18,8 @@
     "src/scene/world/open-world.dream": "868801e58a51253cf09b0b91203e8d92601ccac60f9bf47c43315c2e2b5e4b4b",
     "scripts/profile-world-memory.mjs": "796033f3aa3b6a74e118b2ffe1984e4437ce2e923524be6d71b9291e7001182c",
     "tests/startup.test.ts": "1973ae1fd174e5384e796e47d77917f1900d457fef9b278e3e0d3f56a258eba0",
-    "tests/whole-world-voxels.test.ts": "0bdd77312648015d7def1e56a76ba0bd8908ecb1b179166e5da32100e7b18ed0"
+    "tests/whole-world-voxels.test.ts": "0bdd77312648015d7def1e56a76ba0bd8908ecb1b179166e5da32100e7b18ed0",
+    "tests/docs-site.test.ts": "3dd83bc0e4e9be39dec2dd30bc4ee21ae4a5203a5dd654540df9acce1a0e9326",
+    "docs/media/loading.png": "2ab329142ee3ae56e97cf22e5415cc23f38714996c8999ee40feae31e3a3cde8"
   }
 }

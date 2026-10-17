@@ -6,7 +6,7 @@ The mock world has 1,695 placed objects across a 14000 × 11000 landscape. It st
 
 The loading screen is part of the first HTML response. It shows the current work before the renderer module loads. Dream compilation, schema checks and complete-world playability validation run in a short-lived worker, which is terminated after transferring the accepted scene. Streets and terrain use cooperative construction steps; the entire world is ready before the loading screen leaves. Driving starts after the first rendered view. Failed compilation, module loading or WebGL startup exposes a Reload button.
 
-![The loading screen during real world construction](evidence/startup-memory/loader.png)
+![The loading screen during real world construction](media/loading.png)
 
 The engine now stores each column face as four vertices and six indices, instead of repeating six complete vertices. Positions, normals, winding, fine road paint, UVs and rigid water anchors retain their meaning. Coordinate lookups use numeric keys, and attribute gradients are calculated once per source triangle. Polygon clipping skips disjoint original bounds, and surface construction yields between ground strips. Identical asset rest bounds share a bounded cache across schema-cloned placements. These changes retain the world's geometry, simulation and rendering settings.
 

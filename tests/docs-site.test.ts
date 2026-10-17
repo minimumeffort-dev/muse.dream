@@ -112,6 +112,7 @@ describe('published site',()=>{
       for(const match of page.matchAll(/(?:href|src)="([^"#][^"]*)"/g)){
         const url=new URL(match[1]!,`https://docs.local/${file}`);
         expect(url.hostname,`${file}: development URL in published href/src: ${match[1]}`).not.toMatch(/(^|\.)localhost\.?$|^127\.|^(?:0\.0\.0\.0|\[::1\])$/i);
+        if(match[0].startsWith('src='))expect(url.hostname==='github.com' && url.pathname.includes('/blob/'),`${file}: a GitHub page cannot serve an embedded asset`).toBe(false);
         if(url.origin!=='https://docs.local')continue;
         expect(existsSync('dist-docs'+url.pathname),`${file}: ${url.pathname}`).toBe(true);
       }

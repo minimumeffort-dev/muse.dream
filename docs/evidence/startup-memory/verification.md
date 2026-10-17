@@ -41,7 +41,7 @@ The final development route `?profile&test-driving=town` exposed its loading UI 
 
 ## Media review
 
-`loader.png` is a native 1280 × 720 browser screenshot captured during actual construction. The shell uses the existing bundled Minimum Effort fonts and palette. README, rendering and whole-world voxel guides were reviewed and updated. Existing gameplay videos/GIFs/stills still represent the same surfaces and motion and remain accurate. No offline animation is used as evidence of live performance.
+`loader.png` is a native 1280 × 720 browser screenshot captured during actual construction. Its published copy is `docs/media/loading.png`, so the docs serve image bytes directly. Published-site checks reject GitHub blob-page URLs in embedded asset sources. The shell uses the existing bundled Minimum Effort fonts and palette. README, rendering and whole-world voxel guides were reviewed and updated. Existing gameplay videos/GIFs/stills still represent the same surfaces and motion and remain accurate. No offline animation is used as evidence of live performance.
 
 ## Limits
 
@@ -60,6 +60,7 @@ The bundled production preview also showed the loader immediately, completed its
 - Local full suite: **938 tests passed in 58 files**, 126.56 seconds. This covers racing, city/bridge contacts, aircraft, water, destruction, populations, Dream validation, documentation and constructed geometry.
 - Final cache review added a non-finite bounds regression: rejected numeric geometry cannot poison an identical valid default through a serialized cache key. The final focused startup/proportion/woodland suites passed **37 tests in three files**, including nine startup tests. Profiling was collected before this invalid-input-only guard; accepted-world geometry and mechanics are unchanged.
 - Production build/typecheck and the published documentation build passed. The existing large shared-chunk advisory remains. No dependency or quality settings changed.
+- Published-media follow-up: **77 documentation checks passed in two files**, including the new embedded-asset URL guard; the 32-page docs build passed. README and gameplay captures remain accurate.
 - `git diff --check` passed. Review was a self-review. Lower-powered hardware, total browser/driver memory and forced browser worker/WebGL failure recovery were not device-tested; phase/error behavior has focused unit coverage.
 
 [Source fingerprints](source-sha256.json) identify the final sources used for this change. The linked GitHub workflow reruns the complete suite on the pushed revision before publishing the docs.
