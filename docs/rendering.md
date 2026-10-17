@@ -184,3 +184,13 @@ polygons on the in-game and published maps. The source footprint still owns work
 coverage and reserves furniture; geometry and movement bounds are unchanged.
 Existing declaration indices retain their original paint lifts when a natural
 surface is skipped, so later overlays do not move down onto earlier paint.
+
+
+NPC resupply reuses resident maintenance walking and the existing character rigs.
+The live kit and sapling jobs share one additional prepared graph (3,248 nodes,
+10,000 directed links) for the same receiving ground, rather than building one
+per shipment. Original repair graphs, all 1,695 placements and the 2,813-node
+public population graph remain unchanged. Cargo is ledger state, not a new
+physical or render assembly. Pickup/carry/return work advances on the existing
+resident commerce clock; streaming owns none of it. Browser and replay evidence
+are recorded separately in [courier verification](evidence/courier/verification.md).

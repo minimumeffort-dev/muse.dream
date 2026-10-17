@@ -109,3 +109,18 @@ export function* repairReviewSteps(state:CarState,world:World,scenario:'lamp'|'s
  }
  throw Error('The streetlight worker did not reach its repair within twenty simulation minutes');
 }
+
+/** Offline resupply evidence starts with real furniture impacts and retains every walking step. */
+export function* courierReviewSteps(state:CarState,world:World,stage:'pickup'|'handoff'='pickup'):Generator<CarState,CarState>{
+ let next=drivingReviewStart(state,world,'repair');
+ for(let i=0;i<120*1800;i++){
+  if(i===396)next=toggleRide(next,world);
+  const dx=6360-next.x,dy=4350-next.y,distance=Math.hypot(dx,dy),angle=Math.atan2(180,480),walking=i>=396 && distance>3;
+  const steer=walking ? (dx*Math.cos(angle)-dy*Math.sin(angle))/distance : 0,throttle=i<220 ? 1 : i<396 ? -1 : walking ? (-dx*Math.sin(angle)-dy*Math.cos(angle))/distance : 0;
+  next=stepInteractive(next,{steer,throttle},1/120,world);
+  const t=next.economy?.accounts.find(a=>a.courier)?.courier;
+  if(t && (stage==='pickup' ? t.phase==='pickup' : t.phase==='dropoff' && t.path.reduce((sum,p,j)=>{const q=j ? t.path[j-1]! : t;return sum+Math.hypot(p.x-q.x,p.y-q.y);},0)<=120))return next;
+  if(i%30===0)yield next;
+ }
+ throw Error('The supply courier did not reach its review stage within thirty simulation minutes');
+}

@@ -1,0 +1,217 @@
+{
+  "sourceHash": "a653382fccb673739c388bf889dfd891b7599f459b81947a3a3c91d4ad6720dc",
+  "hardware": "Apple M3 Ultra, 96 GB as reported by system_profiler",
+  "method": "One quiet native dev-browser orchard driving run at unchanged full quality; 60 warm-up + 300 measured frames. This is driving, not an active courier trip or a less powerful laptop.",
+  "profile": {
+    "scenario": "drive",
+    "samples": 300,
+    "viewport": [
+      1920,
+      1080
+    ],
+    "pixelRatio": 1.5,
+    "cpuMs": {
+      "mean": 3.4099999970197676,
+      "p95": 4.600000023841858
+    },
+    "prepareMs": {
+      "mean": 2.384666665593783,
+      "p95": 3.400000035762787
+    },
+    "submitMs": {
+      "mean": 1.0253333314259847,
+      "p95": 1.300000011920929
+    },
+    "rafMs": {
+      "mean": 16.666666666666668,
+      "p95": 17.900000035762787
+    },
+    "gpuMs": {
+      "mean": 1.3028366989966547,
+      "p95": 1.464499
+    },
+    "gpuSamples": 299,
+    "draws": {
+      "mean": 154.79,
+      "p95": 175
+    },
+    "triangles": {
+      "mean": 592198.31,
+      "p95": 641397
+    },
+    "geometries": 277
+  },
+  "startup": {
+    "totalMs": 16243.5,
+    "firstRenderMs": 152.4000000357628,
+    "phases": [
+      {
+        "label": "Reading Dream \u00b7 checking the world",
+        "startMs": 0,
+        "endMs": 7852
+      },
+      {
+        "label": "Preparing driving and walking",
+        "startMs": 7852,
+        "endMs": 8024.5
+      },
+      {
+        "label": "Starting the renderer",
+        "startMs": 8024.5,
+        "endMs": 8037.399999976158
+      },
+      {
+        "label": "Building water and bridges",
+        "startMs": 8037.399999976158,
+        "endMs": 8206.099999964237
+      },
+      {
+        "label": "Building roads and transit",
+        "startMs": 8206.099999964237,
+        "endMs": 8366.899999976158
+      },
+      {
+        "label": "Assembling people and wildlife",
+        "startMs": 8366.899999976158,
+        "endMs": 9236.399999976158
+      },
+      {
+        "label": "Preparing vehicles and interactive objects",
+        "startMs": 9236.399999976158,
+        "endMs": 10876.800000011921
+      },
+      {
+        "label": "Preparing lighting",
+        "startMs": 10876.800000011921,
+        "endMs": 11159
+      },
+      {
+        "label": "Loading the first neighbourhood",
+        "startMs": 11159,
+        "endMs": 16009.199999988079
+      },
+      {
+        "label": "Preparing the first frame",
+        "startMs": 16009.199999988079,
+        "endMs": 16243.5
+      }
+    ],
+    "heartbeat": {
+      "samples": 298,
+      "maxGapMs": 282.69999998807907
+    }
+  },
+  "diagnostics": {
+    "destruction": {
+      "broken": [
+        "orchard_birch"
+      ],
+      "debris": 1,
+      "props": [
+        {
+          "elevation": 0,
+          "id": "pitch_ball",
+          "vz": 0,
+          "x": 10600,
+          "y": 4690
+        },
+        {
+          "elevation": 0.043373494702684,
+          "id": "court_ball",
+          "vz": 0,
+          "x": 7280,
+          "y": 7975
+        },
+        {
+          "elevation": 0.0124521072832481,
+          "id": "festival_ball",
+          "vz": 0,
+          "x": 6270,
+          "y": 4370
+        }
+      ],
+      "renderer": {
+        "cachedFragments": 1,
+        "pieces": 1,
+        "templates": 1
+      },
+      "toppling": [
+        {
+          "angle": 1.4090395097475934,
+          "id": "orchard_birch",
+          "settled": true
+        }
+      ],
+      "zones": []
+    },
+    "memory": {
+      "bytes": 269207136,
+      "geometries": 1723,
+      "uniqueBuffers": 9863,
+      "uniqueTriangles": 1903695
+    },
+    "render": {
+      "calls": 154,
+      "geometries": 275,
+      "triangles": 584012
+    },
+    "save": {
+      "compatibilityHash": "e0ae71a17aa055c0ca146651434ccd52341ed2d5a1798759f423b5ddca1afff9",
+      "enabled": false,
+      "restored": false,
+      "review": false,
+      "sourceHash": "a653382fccb673739c388bf889dfd891b7599f459b81947a3a3c91d4ad6720dc",
+      "status": "Review session: saves disabled."
+    },
+    "streaming": {
+      "bytes": 210790958,
+      "discarded": 0,
+      "keys": [
+        "4000,4000",
+        "4800,4000",
+        "4000,4800",
+        "4800,4800",
+        "4000,3200",
+        "4800,3200",
+        "3200,4000",
+        "5600,4000",
+        "3200,4800",
+        "5600,4800",
+        "4000,5600",
+        "4800,5600",
+        "3200,5600",
+        "3200,3200",
+        "5600,3200",
+        "5600,5600",
+        "4000,6400",
+        "4800,6400",
+        "3200,6400",
+        "5600,6400",
+        "4000,7200",
+        "4800,7200",
+        "3200,7200",
+        "5600,7200",
+        "4000,8000",
+        "4800,8000",
+        "3200,8000"
+      ],
+      "loaded": 27,
+      "maxInstallMs": 5.199999988079071,
+      "maxSliceMs": 5.099999964237213,
+      "peakBytes": 210790958,
+      "peakResident": 27,
+      "pending": 0,
+      "ready": true,
+      "required": 12,
+      "resident": 27,
+      "unloaded": 0
+    },
+    "world": {
+      "birds": 256,
+      "checkpoints": 8,
+      "height": 11000,
+      "objects": 1695,
+      "width": 14000
+    }
+  }
+}

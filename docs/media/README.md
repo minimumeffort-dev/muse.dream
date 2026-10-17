@@ -557,3 +557,28 @@ compiled city plan. The recordings use the same actual planting journey and
 visible. `planting.jpg` is frame 310; `growth.jpg` is frame 750. Historical r53
 evidence describes that release's painted ground and pinned media hashes.
 [Current refinement verification](../evidence/natural-grounds/verification.md).
+
+
+## Walking resupply, r55
+
+`courier` exports 360 actual rendered frames (12 simulation seconds) as the
+caretaker leaves for the station. `handoff` exports 540 frames (18 seconds) near
+its return to the bakery. Both pre-roll real furniture impacts, two paid repairs
+and the complete pedestrian journey through the fixed-step engine. The review
+player walks into the market's interaction range through normal movement so the
+stock and worker status are the actual production UI. The worker is never moved
+to a presentation coordinate. Daylight is held around 14:00 for readability.
+
+The full recorded engine journey takes about 19 simulation minutes. These clips
+show selected continuous moments, with no missing-frame interpolation, offline
+catch-up, time-compressed motion or live-FPS claim. Source frames are 2400 × 1350;
+HD video and matching posters are 1600 × 900, with 1280 × 720/256-color GIFs using
+the existing no-dither/loss-80 pipeline. Posters use departure frame 180 and handoff
+frame 300. Video, GIF and still are refreshed together. Run the native `?capture`
+exporter, then `node scripts/encode-media.mjs <ffmpeg> <gifsicle> courier handoff`.
+
+[Courier verification](../evidence/courier/verification.md) separates native
+save/recovery checks, complete fixed-step replay, media and browser measurements.
+Existing repair, planting, architecture, road, vehicle and lighting captures keep
+the same geometry and their depicted controls. The city map remains accurate:
+no placement, road, public graph or ground footprint changed in this release.

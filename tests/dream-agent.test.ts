@@ -19,6 +19,11 @@ describe('bounded agent context packets',()=>{
     expect(modelContext(DEFAULT_PROMPT)).toMatchObject({...packet,prompt:DEFAULT_PROMPT});
     for(const prompt of [' ', 'a'.repeat(4001)])expect(()=>modelContext(prompt)).toThrow('1–4,000');
   });
+  it('includes the city vocabulary required by courier and repair grounds',()=>{
+    const packet=dreamAgentContext(['commerce']);expect(packet.features).toContain('city');
+    for(const command of ['account','delivery','surface','street','crossing','site'])expect(packet.contract.commands).toHaveProperty(command);
+    expect(packet.instructions).toContain('NPC resupply:');expect(packet.contract.commands.account!.fields.deliveries).toBe('symbols?');
+  });
   it('adds required features once in deterministic order',()=>{
     const packet=dreamAgentContext(['sports','population','lighting']);
     expect(packet).toEqual(dreamAgentContext(['lighting','population','sports','sports']));

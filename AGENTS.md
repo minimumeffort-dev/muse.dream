@@ -419,7 +419,7 @@ Dream 2 ungrouped topple compiles one stable rigid fragment. Whole impacts may
 use one centered base contact; compound/offset contacts remain rejected. Preserve
 narrow lamp contacts, all authored geometry, shared category rules, night paint,
 actor/rig limits and no per-cell bodies. Lamp surface pools turn off while broken
-and return after paid repair. Keep format 8/simulation 10 and the registered r50/r51/r52
+and return after paid repair. Keep format 9/simulation 11 and the registered r50/r51/r52
 migration chain. Current service covers 84 targets including 77 lamps; other
 districts still need declared coverage.
 See `docs/examples/streetlight-repairs.dream` and `docs/dream/rules.md`.
@@ -446,8 +446,8 @@ At most 32 growing records plus reserved planting jobs. Scale renderer and
 contacts from one immutable growth snapshot; pause expansion for occupied space.
 Re-destruction captures current size, clears growth and never refunds a planted
 input. Keep streamed culling/shadow bounds valid for young crowns, reapply growth
-on chunk install and allocate no per-step geometry. Preserve format 8/simulation
-10, the exact registered r52 projection and older graph migrations. Overlapping
+on chunk install and allocate no per-step geometry. Preserve format 9/simulation
+11, the exact registered r52 projection and older graph migrations. Overlapping
 work grounds require clear full-cylinder portals; parked vehicles affect route
 selection, moving transit causes waits and blocked paths retry without losing
 claims. See `docs/dream/growth.md` and its checked example. Current live coverage
@@ -459,6 +459,24 @@ grass/flowers, without a surface mesh or map overlay. Painted/default surfaces
 require color; keep their declaration-index paint lifts. Both finishes retain
 polygon/world/riding bounds, furniture reservations, habitat exclusions and
 repair coverage. Do not infer paved access or flatten terrain from an activity
-area. Keep the exact r53 appearance projection, format 8/simulation 10 and all
+area. Keep the exact r53 appearance projection, format 9/simulation 11 and all
 older migrations; preserve saved growth/worker state without rebasing current
 node indices. See `docs/dream/worlds.md` and the orchard example.
+
+
+NPC `account.deliveries` accepts 1..4 unique ordered contracts, compatible with
+repair duties and exclusive with automatic work and player accounts. Couriers
+have stationary non-vendor homes in the receiving market reach and delivery `on`
+ground. Optional `grounds` adds 1..7 unique convex surfaces; all share 4096 local
+samples. Suppliers already on accepted pavement need no extra ground. Validate
+pickup, handoff and return from every assigned home. Reuse the existing sparse
+work-navigation/movement code and share identical ordered delivery coverage.
+Keep 8192-node, 32768-link, 128-waypoint and existing actor/rig/physics bounds.
+Pickup intent holds a shared contract slot without stock/funds/shelf reservations;
+arrival rechecks player collection rules. Failed pickups return empty-handed,
+never refunding uncollected goods. Collected cargo, invoice, pay and conservation
+use the same ledger; settle once and walk home without teleporting. Program
+clocks pause while the journey owns pose; preserve contact waits and interpolation.
+Keep format 9/simulation 11, the exact registered r54 projection and the entire
+older upgrade chain. No offline travel, upstream stock generation or courier
+vehicle AI. See `docs/examples/courier-resupply.dream` and the commerce guide.

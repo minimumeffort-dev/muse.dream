@@ -1,7 +1,7 @@
 import type {Scene} from './schema';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=10;
+export const SAVE_SIMULATION_VERSION=11;
 
 /** A conservative contract: only host provenance and spoken text may differ. */
 export function saveCompatibilitySource(scene:Scene):string {
@@ -27,7 +27,7 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || hash===NATURAL_COMPATIBILITY;
+  return !scene.economy || hash===COURIER_COMPATIBILITY;
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
@@ -41,9 +41,15 @@ export const POOL_COMPATIBILITY='14d169db7f71cf494d85aacec65a606328bc4a590f20b37
 export const VERGE_COMPATIBILITY='54269457677d740420e755511a55e932e99f0cd6f28e56d2e92a255f6f34cbb9';
 export const PLANT_COMPATIBILITY='5603fcbdc725e4cfe36e5284d0123a37d6cf46785904c3d235b44e6a52739f05';
 export const NATURAL_COMPATIBILITY='9d9cc87cdc01a9d2d67cfd6411a2724109308fcc354af58e13e6b415e9f0604e';
+export const COURIER_COMPATIBILITY='e0ae71a17aa055c0ca146651434ccd52341ed2d5a1798759f423b5ddca1afff9';
+/** Registered r54 projection preserves geometry, clocks and every existing ledger field. */
+export function preCourierScene(scene:Scene):Scene{
+ return {...scene,economy:scene.economy && {...scene.economy,accounts:scene.economy.accounts.map(a=>{const {deliveries,...old}=a;return old;}),deliveries:scene.economy.deliveries.map(d=>{const {on,grounds,...old}=d;return old;})}};
+}
+export function preCourierCompatibilitySource(scene:Scene):string{return projection(preCourierScene(scene),10);}
 /** Registered r53 appearance projection. Movement, ledgers and clocks are identical. */
 export function preFinishScene(scene:Scene):Scene{
- return {...scene,surfaces:scene.surfaces.map(s=>{if(s.id!=='orchard_work')return s;const {finish,...old}=s;return {...old,color:'#819461'};})};
+ scene=preCourierScene(scene);return {...scene,surfaces:scene.surfaces.map(s=>{if(s.id!=='orchard_work')return s;const {finish,...old}=s;return {...old,color:'#819461'};})};
 }
 export function preFinishCompatibilitySource(scene:Scene):string{return projection(preFinishScene(scene),10);}
 /** Registered r52 projection preserves every placement, contact and public walkway. */

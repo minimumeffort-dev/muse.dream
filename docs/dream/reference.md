@@ -57,10 +57,10 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | --- | --- | --- | --- |
 | `economy` | top | No ID / economy | None |
 | `good` | economy | ID / no block | `label: text`, `food?: n` |
-| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `shop?: bool`, `work?: ref`, `repair?: ref`, `repairs?: symbols` |
+| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `shop?: bool`, `work?: ref`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
 | `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n` |
 | `lot` | market | ID / no block | `good: ref`, `quantity: n`, `limit: n`, `price?: n` |
-| `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `price: n?`, `capacity: n` |
+| `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `price: n?`, `capacity: n`, `on: ref?`, `grounds: symbols?` |
 | `work` | economy | ID / no block | `label: text`, `market: ref`, `input: ref`, `take: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n` |
 
 ### Assemblies and composition
@@ -405,7 +405,7 @@ Buy/sell transfers one unit at the listed price. Work reserves input, wage, refu
 
 ### Delivery bounds
 
-`delivery id(label=text,from=ref,to=ref,good=ref,quantity=n,pay=n,price=n?,capacity=n);`
+`delivery id(label=text,from=ref,to=ref,good=ref,quantity=n,pay=n,price=n?,capacity=n,on=ref?,grounds=symbols?);`
 belongs inside `economy`. Both markets need a matching lot; their interaction
 areas must be separate. Quantity: integer 1..32 and within both lot limits.
 Pay: integer 1..1,000,000. Optional per-unit supplier price: integer 0..10,000,
@@ -419,8 +419,7 @@ account. Travel/vehicles/R/streaming retain cargo; hand over on foot at `to`
 to transfer it, pay the supplier invoice and earn the wage once. Cancel returns
 cargo and destination invoice/pay without output.
 Completion counts and active reservations are saved and checked against money,
-material and capacity bounds. Start over resets them. There is no timeout,
-automatic courier, path planner or unbounded item body. [Complete example](../examples/market-delivery.dream).
+material and capacity bounds. Start over resets them. There is no timeout or unbounded item body. NPC couriers use explicit work-ground data and bounded pedestrian paths. [Complete example](../examples/market-delivery.dream).
 
 ## Dormant vehicle parking
 
@@ -523,3 +522,32 @@ persists outside render chunks. Destruction captures the current scale for
 fragments and removes growth; it cannot refund a planted input. The completion
 ledger counts plantings rather than maturity. [Guide](growth.md) and
 [complete example](../examples/orchard-replanting.dream).
+
+
+### Courier bounds
+
+Account `deliveries` is 1..4 unique ordered contract refs. It excludes production
+`work` and player accounts; repair duties may coexist, with available repairs
+first. The actor is a stationary non-vendor NPC with a home in the receiving
+market reach and primary `on` ground. A delivery `on` is an existing convex
+surface containing its receiving market. Optional `grounds` adds 1..7 unique
+convex surfaces excluding `on`, with 4096 local grid samples total. A supplier
+already on pedestrian pavement needs no additional ground.
+
+Complete-world acceptance checks every worker's pickup, handoff and return route.
+Walking uses the same engine-owned work network: 8192 nodes, 32768 directed links,
+128 saved coordinate-only waypoints. Identical ordered delivery grounds share one
+prepared graph. Crossings and supported bridge pavement are required; no dry-land
+road shortcuts are inferred. Actor, rig and physical-body limits are unchanged.
+
+A pickup intent holds one shared contract slot but no goods/funds/shelf capacity.
+Only collection reserves sealed cargo, destination invoice/wage, supplier treasury
+and shelf headroom through the shared transaction. Arrival rechecks every bound;
+an unavailable pickup returns empty-handed. Handoff settles once, then the worker
+returns to its home. Current stock must admit a whole shipment before dispatch.
+One commitment owns walking/program state, with live obstacle checks and retry.
+Pickup/carry/return state survives streaming, R and save/load; no offline catch-up,
+upstream production, courier vehicle AI or item bodies are added.
+[Runnable source](../examples/courier-resupply.dream).
+
+Pickup and handoff approaches stay less than four world units above/below the vendor. A steep unsupported counter needs a level, connected approach before the courier can use it.

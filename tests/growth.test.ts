@@ -3,7 +3,7 @@ import source from '../docs/examples/orchard-replanting.dream?raw';
 import {compileDreamScene,formatDream} from '../src/scene/dream';
 import {encodeSave,decodeSave} from '../src/sim/save';
 import {resetCar} from '../src/sim/car';
-import {actorPose,repairForActor} from '../src/sim/actors';
+import {actorPose,workJourneyForActor} from '../src/sim/actors';
 import {advanceGrowth} from '../src/sim/growth';
 import {repairTargets} from '../src/sim/repair';
 import {growthScale} from '../src/scene/growth';
@@ -25,7 +25,7 @@ it('compiles bounded planting and ordered service choices with precise rejected 
 it('gives a shared-duty worker the same moving body and work pose as its saved journey',()=>{
  let s=start();const actor=scene.objects.find(o=>o.id==='customer')!;let moved=false,worked=false;
  for(let i=0;i<1000 && !s.growing?.length;i++){s=step(s);const task=s.economy!.accounts.find(a=>a.id==='regular')!.repair;if(!task)continue;
-  const pose=actorPose(scene,actor,s.timeS,s);expect(repairForActor(s,scene,actor.id)).toBe(task);expect([pose.x,pose.y,pose.headingRad,pose.speed]).toEqual([task.x,task.y,task.headingRad,task.speed]);
+  const pose=actorPose(scene,actor,s.timeS,s);expect(workJourneyForActor(s,scene,actor.id)).toBe(task);expect([pose.x,pose.y,pose.headingRad,pose.speed]).toEqual([task.x,task.y,task.headingRad,task.speed]);
   expect(pose.activity).toBe(task.phase==='work' ? 'perform' : 'patrol');moved ||= Math.hypot(pose.x-actor.x,pose.y-actor.y)>20;worked ||= task.phase==='work';
  }expect(moved).toBe(true);expect(worked).toBe(true);
 });

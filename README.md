@@ -137,6 +137,15 @@ on the three work grounds and 77 lamps beside Market Avenue, High Street and
 Civic Walk. The caretaker steps off the sidewalk for nearby repairs, using
 crossings between streets. Other districts still need connected service areas.
 
+The caretaker can now bring supplies back too. When a whole shipment fits, they
+walk to the station, collect two kits or saplings, carry them back and return
+home. Repairs come first. The same delivery ledger pays the depot and worker;
+no stock appears just because the camera moved away.
+
+![The caretaker setting off for station supplies](docs/media/courier.jpg)
+
+[Watch the supply trip in HD](docs/media/courier.mp4) · [Watch the handoff](docs/media/handoff.mp4) · [Author a courier in Dream](docs/dream/commerce.md#npc-supply-trips)
+
 The three existing orchard trees can now come back too. The caretaker collects a
 sapling, walks along a connected garden path and plants a replacement. It starts
 small and grows over three simulation minutes, with its shadow and collision body.

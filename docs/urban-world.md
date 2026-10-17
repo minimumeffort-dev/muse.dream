@@ -116,3 +116,11 @@ area's existing landscape and cosmetic grass instead of painting a green patch. 
 and their scale. The market caretaker reaches them through the pedestrian
 network for paid replanting. Route selection accounts for parked vehicles; moving
 transit still causes a wait. [Planting and growth](dream/growth.md).
+
+
+The market caretaker can now fetch replacement kits and saplings from the station
+using the same connected pedestrian network. Both contracts share one derived
+navigation graph for `market_square`; the existing supplier already stands on
+station pavement. No new paving or prop placement is needed. Declared courier
+homes, endpoints and complete return routes are checked before the world is
+accepted. [Supply rules](dream/commerce.md#npc-supply-trips).

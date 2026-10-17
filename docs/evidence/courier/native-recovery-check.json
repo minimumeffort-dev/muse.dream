@@ -1,0 +1,12 @@
+{
+  "method": "Restore real fixed-step carrying snapshot through production Backups, play, press R, pause and export. This verifies resumption/recovery, not a native recording of the full trip.",
+  "fromTimeS": 602.5083333329497,
+  "toTimeS": 625.1916666662624,
+  "beforeDistance": 7756.453874032426,
+  "afterDistance": 8071.453874032099,
+  "phase": "dropoff",
+  "sameSealedCargo": true,
+  "sameMarkets": true,
+  "sameWorkerCredits": true,
+  "recoveredPlayer": "car"
+}

@@ -136,7 +136,7 @@ and wage stay in escrow during travel; handoff pays the supplier and courier
 once, and cancellation returns both to the destination. The source treasury
 reserves enough headroom to receive its invoice. Completion transfers once; cancellation refunds once. No
 per-item meshes or physics bodies are allocated. NPC customers consume delivered
-stock; autonomous courier dispatch and delivery route planning remain future work.
+stock. [NPC supply trips](#npc-supply-trips) use explicit contracts and bounded pedestrian routes.
 
 [Download a complete delivery world](../examples/market-delivery.dream). Check it
 with `npm run -s dream -- check docs/examples/market-delivery.dream`. Its short
@@ -219,7 +219,7 @@ and hand it over with H. The bakery receives two kits, the depot receives six
 credits and you receive four. No player credits are charged.
 
 ```dream
-delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1);
+delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_square);
 repair market_tables(label="Repair neighborhood furniture",market=market_stall,on=market_square,grounds=[park_seating,station_seating],streets=[market_avenue,high_street,civic_walk],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
 ```
 
@@ -228,7 +228,7 @@ contracts omit `price` and retain their zero-price cargo transfers. Supplier
 prices are integers 0..10,000 per unit; invoice plus wage must fit the
 1,000,000-credit treasury bound. Shelves, carrying limits, treasury headroom and
 shared contract capacity still apply. The depot can run out and the bakery can
-run out of money. There is no automatic courier or upstream kit production.
+run out of money. The caretaker can now fetch these shipments through [NPC supply trips](#npc-supply-trips); upstream kit production remains future work.
 
 [Complete maintenance and procurement example](../examples/market-maintenance.dream).
 Run `npm run -s dream -- check docs/examples/market-maintenance.dream`. It includes
@@ -304,8 +304,7 @@ It connects a home yard to a lamp outside the opposite sidewalk using a real
 crossing, without a second work-ground surface. Ask for `commerce,city` in an
 agent context packet when authoring these routes.
 
-Other districts, tree replanting, automatic procurement and multiple service
-policies per worker remain further work. Damaged lamps lose their ground light
+Other districts still need connected recovery coverage. The caretaker now shares furniture and [tree replanting](growth.md) duties and can [fetch supplies](#npc-supply-trips) from the depot. Damaged lamps lose their ground light
 pool until repair. [Streetlight destruction](rules.md#streetlights-and-streamed-destruction)
 uses the same pooled geometry and saved damage as before.
 [Verification and media audit](../evidence/verge-repairs/verification.md).
@@ -324,3 +323,57 @@ A newly blocked segment clears its stale path and retries while keeping its
 claim and reserved supplies. Moving transit causes a wait rather than changing
 the walking network. Adjacent declared grounds join only through a clear
 full-cylinder portal; they cannot bridge a real gap.
+
+
+## NPC supply trips
+
+The caretaker now repairs and resupplies the neighborhood. If two replacement
+kits or saplings will fit on the bakery shelf, they can walk to the station,
+collect the shipment, bring it back and return home. Local food choices and
+available repairs take priority. Supplies, invoices and wages stay finite.
+The player can still take the same delivery contract.
+
+![The caretaker walking to collect supplies](../media/courier.jpg)
+
+[Supply trip in HD](../media/courier.mp4) · [Animated trip](../media/courier.gif)
+
+![The caretaker returning with the shipment](../media/handoff.jpg)
+
+[Handoff in HD](../media/handoff.mp4) · [Animated handoff](../media/handoff.gif)
+
+These declarations come from the [complete runnable courier world](../examples/courier-resupply.dream):
+
+```dream
+ account regular(actor=customer,credits=20,capacity=4,satiety=65,drain_s=.05,shop=true,repair=yard_furniture,deliveries=[kits_run]);
+ delivery kits_run(label="Bring repair kits",from=depot,to=corner,good=kit,quantity=2,pay=4,price=3,capacity=1,on=work_yard,grounds=[remote_yard]);
+```
+
+`account.deliveries` is an ordered list of 1..4 unique contracts. It can accompany
+repair duties, but excludes automatic production work. The actor needs a stationary
+home inside the receiving market's `on` ground and interaction radius. Market
+vendors stay at their businesses. The player never gets an automatic policy.
+
+Delivery `on` declares the receiving work ground. Optional `grounds` adds 1..7
+unique convex areas for off-pavement approaches, such as the example's depot yard.
+A supplier already on accepted pedestrian pavement needs no extra ground. These
+areas create no road or paving. The complete-world compiler checks pickup,
+handoff and return from every assigned home, using sidewalks, crossings and
+supported bridge pavements. Public roads, cycle tracks and water are not shortcuts.
+
+Walking to pickup holds one shared contract slot. It reserves no stock, money or
+shelf space yet. Collection rechecks the same rules as a player collection. If
+stock, funding or shelf space changed, the worker returns empty-handed without a
+wage or a refund of goods they never took. Collected cargo uses the existing
+sealed delivery reservation. Handoff pays the supplier and worker once.
+
+One commitment owns the worker's position, program clock and walking animation.
+Vehicles can block a crossing; the worker waits and retries. Pickup, carrying and
+return paths survive streaming, R and save/load. Restoring performs no offline
+travel. Identical ordered delivery grounds share one prepared topology; the same
+4096 local samples, 8192 nodes, 32768 links and 128 saved waypoints apply.
+Existing NPC, live-rig, physics and render-quality limits stay unchanged.
+
+This is walking resupply through a finite depot. It adds no upstream production,
+courier vehicle AI, shifts, general logistics scheduler or item pickup body.
+
+Pickup and handoff approaches stay less than four world units above/below the vendor. A steep unsupported counter needs a level, connected approach before the courier can use it.

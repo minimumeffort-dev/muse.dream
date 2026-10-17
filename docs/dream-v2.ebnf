@@ -108,3 +108,13 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
 (* surface.finish is paint|terrain, default paint. Paint requires color; terrain
    forbids it and retains the underlying terrain and cosmetic ground plants.
    Both keep the existing geometry, reservation and walking bounds. *)
+
+
+(* account.deliveries is 1..4 unique ordered delivery refs, compatible with repair
+   duties and exclusive with work/player ownership. Delivery on is the receiving
+   convex work ground; grounds adds 1..7 unique convex areas excluding on. Couriers
+   need stationary non-vendor homes in on and receiving market reach. Supplier
+   approaches may use accepted pavement. Validate full walking return trips.
+   Pickup intent holds a shared slot without reserving goods or funds; collection
+   rechecks player transactions. One cargo reservation, handoff and wage per trip.
+   Prepared topology and saved paths retain existing work-navigation bounds. *)

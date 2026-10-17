@@ -12,6 +12,10 @@ The tree starts small. Its trunk, crown, shadow and collision body grow together
 
 [Watch in HD](../media/growth.mp4). This shows the first 30 seconds of a 180-second growth period. It is an offline frame export, not a browser performance measurement.
 
+The caretaker can also fetch saplings when a full shipment fits, using the same
+finite stock and payments. Available repair and planting work takes priority.
+[Walking resupply](commerce.md#npc-supply-trips) explains the shared delivery slot.
+
 ## Planting is paid work
 
 The live bakery starts with six saplings. Planting takes ten seconds, consumes one sapling, uses six fullness and pays six credits from the bakery. The worker returns home after the job. The tree grows independently of that return journey. There is one caretaker, shared with furniture and streetlight repairs, so an existing commitment can keep them busy.

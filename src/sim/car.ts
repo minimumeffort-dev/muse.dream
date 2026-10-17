@@ -118,6 +118,7 @@ export interface World {
   previousVergeSaveCompatibility?:string;
   previousPlantSaveCompatibility?:string;
   previousFinishSaveCompatibility?:string;
+  previousCourierSaveCompatibility?:string;
   previousVergeNavigation?:import('../scene/ambient-navigation').AmbientGraph;
   emptyEconomySaveCompatibility?:string;
   previousSaveSource?:string;

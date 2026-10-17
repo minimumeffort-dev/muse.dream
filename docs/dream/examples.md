@@ -238,3 +238,9 @@ node scripts/dream.mjs check docs/examples/street-verge-repairs.dream
 topple rule, finite saplings, two repair policies on one worker and persistent
 physical growth. Check it with `npm run -s dream -- check docs/examples/orchard-replanting.dream`.
 The [guide](growth.md) explains the shorter example timings and live-city loop.
+
+
+[Courier resupply](../examples/courier-resupply.dream) lets the same worker repair
+two damaged objects, collect finite replacement kits across a crossing and bring
+them home. [NPC supply trips](commerce.md#npc-supply-trips) explain shared capacity,
+collection-time checks and saved walking phases.

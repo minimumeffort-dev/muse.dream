@@ -1,0 +1,20 @@
+// Fixed-step engine evidence, including real furniture impacts. This is not a browser FPS test.
+import {createServer} from 'vite';import {mkdir,writeFile} from 'node:fs/promises';import assert from 'node:assert/strict';
+const server=await createServer({configFile:false,server:{middlewareMode:true,watch:null,hmr:false},appType:'custom'});
+try{
+ const load=p=>server.ssrLoadModule('/src/'+p),{createWorldScene,worldSource,worldModules}=await load('scene/world-fixture.ts'),{buildMaskForScene}=await load('scene/fixture.ts'),{buildPaperMask}=await load('sim/mask.ts'),{playerRadius}=await load('scene/measure.ts'),{createCarAtSpawn}=await load('sim/car.ts'),{stepInteractive}=await load('sim/interaction.ts'),{courierReviewSteps}=await load('game/review-start.ts'),{checkEconomyState}=await load('sim/commerce.ts'),{encodeSave,decodeSave}=await load('sim/save.ts'),{saveCompatibilitySource,sha256,SAVE_SIMULATION_VERSION}=await load('scene/save-compatibility.ts'),{repairNavigation}=await load('sim/repair.ts');
+ const sourceHash=await sha256(JSON.stringify([worldSource,Object.entries(worldModules).sort(([a],[b])=>a<b ? -1 : a>b ? 1 : 0)])),scene=createWorldScene(sourceHash),world={scene,saveCompatibility:await sha256(saveCompatibilitySource(scene)),roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:playerRadius(scene)};
+ const directory='.npm-cache/courier/replay';await mkdir(directory,{recursive:true});const events=[],saved=new Set();let previous='',state=createCarAtSpawn(scene),finished=false;
+ const worker=()=>state.economy.accounts.find(a=>a.id==='caretaker');
+ const snapshot=async name=>{if(saved.has(name))return;saved.add(name);const text=encodeSave(state,state.timeS,world);assert.deepEqual(decodeSave(text,world).state,JSON.parse(JSON.stringify(state)));await writeFile(`${directory}/${name}.json`,text);};
+ const observe=()=>{checkEconomyState(state,scene);const a=worker(),key=state.broken.join(',')+'|'+(a.repair?.phase??a.courier?.phase??'idle')+'|'+state.economy.repaired.market_tables+'|'+state.economy.delivered.kits_run;if(key===previous)return;previous=key;events.push({timeS:state.timeS,broken:state.broken,repair:a.repair?.phase,courier:a.courier?.phase,at:a.courier ? [a.courier.x,a.courier.y] : a.repair ? [a.repair.x,a.repair.y] : undefined,credits:a.credits,repaired:state.economy.repaired.market_tables,delivered:state.economy.delivered.kits_run,markets:structuredClone(state.economy.markets)});};
+ const steps=courierReviewSteps(state,world);let next=steps.next();while(!next.done){state=next.value;observe();next=steps.next();}state=next.value;observe();await snapshot('pickup');assert.equal(worker().delivery,undefined);
+ for(let tick=0;tick<120*1800;tick++){
+  state=stepInteractive(state,{steer:0,throttle:0},1/120,world);if(tick%30!==0)continue;observe();const a=worker();
+  if(a.courier?.phase==='dropoff')await snapshot('carrying');if(a.courier?.phase==='home')await snapshot('returning');
+  if(tick%120===0)decodeSave(encodeSave(state,state.timeS,world),world);
+  if(state.economy.delivered.kits_run===1 && !a.courier){await snapshot('home');finished=true;break;}
+ }
+ assert(finished,'The full supply journey did not finish');assert.equal(state.economy.delivered.kits_run,1);assert.equal(state.economy.markets.find(m=>m.id==='station_supplies').stock.timber,30);assert.equal(state.economy.markets.find(m=>m.id==='station_supplies').credits,6);assert.equal(state.economy.markets.find(m=>m.id==='market_stall').stock.timber,12);assert.equal(state.economy.repaired.market_tables,2);
+ const result={sourceHash,simulationVersion:SAVE_SIMULATION_VERSION,compatibilityHash:world.saveCompatibility,events,final:{timeS:state.timeS,broken:state.broken,economy:state.economy},navigation:repairNavigation(scene).services.map(a=>({id:a.id,nodes:a.nodes.length,links:a.nodes.reduce((n,p)=>n+p.links.length,0)})),snapshots:[...saved]};await writeFile(`${directory}/verification.json`,JSON.stringify(result,null,2));console.log(JSON.stringify(result));
+}catch(error){console.error(error);process.exitCode=1;}finally{await server.close();}

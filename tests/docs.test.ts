@@ -1,3 +1,4 @@
+import liveLife from '../src/scene/world/life.dream?raw';
 import {describe,it,expect} from "vitest";
 import {checkDream} from "../src/scene/dream";
 import {DREAM_V2_COMMANDS} from "../src/scene/dream-contract";
@@ -14,6 +15,13 @@ describe("published Dream documentation",()=>{
   it('keeps the planting declarations identical to their checked complete example',()=>{
     const declarations=[...pages['../docs/dream/growth.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].flatMap(m=>m[1]!.trim().split('\n'));
     for(const declaration of declarations)expect(examples['../docs/examples/orchard-replanting.dream']).toContain(declaration);
+  });
+  it('keeps courier declarations identical to their runnable source',()=>{
+    const section=pages['../docs/dream/commerce.md']!.split('## NPC supply trips')[1]!;
+    const declarations=section.match(/```dream\n([\s\S]*?)```/)![1]!.trim().split('\n');
+    for(const declaration of declarations)expect(examples['../docs/examples/courier-resupply.dream']).toContain(declaration.trim());
+    const live=pages['../docs/dream/commerce.md']!.split('### Replacement supplies')[1]!.split('### Connected service grounds')[0]!;
+    for(const line of live.match(/```dream\n([\s\S]*?)```/)![1]!.trim().split('\n'))expect(liveLife).toContain(line.trim());
   });
   it('keeps the commerce guide identical to its complete runnable world',()=>{
     const block=pages['../docs/dream/commerce.md']!.match(/```dream\n([\s\S]*?)```/)![1]!;

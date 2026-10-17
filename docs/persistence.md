@@ -10,7 +10,7 @@ Autosave runs every ten simulation seconds, after a conversation press or commit
 | People | Program state, routine clocks, facing and whether you have met |
 | Physical changes | Moved props, damaged objects/building zones and remaining debris |
 | Sports | Scores, balls and practice state |
-| Market life | Credits, inventory, fullness, shelf stock, consumed food, completed batches, reserved work, sealed cargo, completed deliveries, repair claims/journeys, consumed supplies and planted-tree progress |
+| Market life | Credits, inventory, fullness, shelf stock, consumed food, completed batches, reserved work, sealed cargo, completed deliveries, repair claims/journeys, courier pickup/carry/return paths, consumed supplies and planted-tree progress |
 | World clocks | Simulation time, ambient population state and day/night phase |
 
 Held controls, buffered jumps and shot charges are cancelled on restore. Transient impact flashes are not replayed. The engine checks the active body's clearance; an unsafe pose recovers the player while retaining valid world changes. Public transport restores passenger ownership beside its saved route clocks.
@@ -44,11 +44,11 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-Format 8 retains the exact source hash and the compatibility fingerprint, with simulation version 10. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+Format 9 retains the exact source hash and the compatibility fingerprint, with simulation version 11. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The first market has an explicit registered upgrade from the earlier world. It verifies that every pre-market rule still matches, then initializes only the new accounts/stock/needs at the saved simulation time. Player position, vehicles, damage, sports, NPC memory, population and day/night remain saved. The known r44 format 1 source and format 2 browser fingerprints are supported; original slots are kept. A malformed newer slot blocks writes rather than silently loading an older copy. The registered upgrade chain includes the first-market, first-delivery, usable-parking, local-repair, replacement-supply and connected-repair releases. Later incompatible economy edits cannot silently replay older progress.
 
-Format 1 cannot establish arbitrary cross-source compatibility. Format 2 worlds outside the registered release require their exact earlier fingerprint. Unsupported format 3 economies are rejected. The first-delivery release also upgrades the known format 3 market: it checks the earlier world and economy, preserves existing balances, stock, fullness and reserved work deadlines, and initializes only the depot, canteen, staff account and empty delivery ledger. Sealed cargo and reserved delivery wages round-trip in format 8. Cancelling, recovery and reloading cannot pay a delivery twice. Future engine or economy changes need their own tested migration; no general layout or rule migration exists. A compatibility fingerprint is a safety check, not a signature proving a file's origin.
+Format 1 cannot establish arbitrary cross-source compatibility. Format 2 worlds outside the registered release require their exact earlier fingerprint. Unsupported format 3 economies are rejected. The first-delivery release also upgrades the known format 3 market: it checks the earlier world and economy, preserves existing balances, stock, fullness and reserved work deadlines, and initializes only the depot, canteen, staff account and empty delivery ledger. Sealed cargo and reserved delivery wages round-trip in format 9. Cancelling, recovery and reloading cannot pay a delivery twice. Future engine or economy changes need their own tested migration; no general layout or rule migration exists. A compatibility fingerprint is a safety check, not a signature proving a file's origin.
 
 The parking release upgrades the known r46 format 4 backup only after the host confirms an exact projection of the previous world. It preserves all economic/physical state and validates vehicle ownership against the old prop roles before accepting it. Old slots remain intact. Formats 5 and 6 permit up to 281 saved unoccupied poses (256 dormant parking records, the resident fleet and the original car); old formats keep their 24-record bound. This changes saved metadata capacity, not live animation limits.
 
@@ -171,3 +171,18 @@ vehicles and clocks remain exact; no new stock or counters are initialized.
 Derived public node indices already match and are retained. Original slots
 remain stored, and a malformed newer slot still blocks fallback. Other layout
 or rule edits require their own migration.
+
+
+The r54-to-r55 upgrade advances to format 9 / simulation 11. The host registers an
+exact r54 projection removing only automatic courier assignments and delivery
+work-ground fields. Every previous state field and world clock is preserved;
+no trip starts, stock changes or wage is paid during restore. The old format 8
+slot remains intact, and a corrupt format 9 slot blocks fallback.
+
+Courier pickup intent is separate from reserved sealed cargo. Saved phase,
+contract, position, destination, coordinate-only path and retry clock are checked
+against the accepted world and actor capability. Carrying requires the matching
+delivery reservation; pickup and return prohibit one. Money/material conservation
+and shared contract capacity include all commitments. Restoring a currently
+blocked path keeps its intent and checks live obstacles when movement resumes.
+The original registered upgrade chain remains supported.
