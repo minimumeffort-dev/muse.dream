@@ -7,7 +7,10 @@ import {clipPolygon} from './landscape-dsl';
 export function pavementSurface(polygons:Point[][]){
  const bins=new Map<string,number[]>(),bounds=polygons.map(polygonBounds);
  for(const [i,b] of bounds.entries())for(let y=Math.floor(b.y0/256);y<=Math.floor(b.y1/256);y++)for(let x=Math.floor(b.x0/256);x<=Math.floor(b.x1/256);x++){const key=x+','+y,cell=bins.get(key)??[];cell.push(i);bins.set(key,cell);}
- const paved=(x:number,y:number)=>bins.get(Math.floor(x/256)+','+Math.floor(y/256))?.some(i=>onPolygon(polygons[i]!,x,y,.01))??false;
+ const paved=(x:number,y:number)=>bins.get(Math.floor(x/256)+','+Math.floor(y/256))?.some(i=>{
+  const b=bounds[i]!,margin=.01+1e-9;
+  return x>=b.x0-margin && x<=b.x1+margin && y>=b.y0-margin && y<=b.y1+margin && onPolygon(polygons[i]!,x,y,.01);
+ })??false;
  // Check every pavement boundary, so short gaps at an oblique portal cannot fall between samples.
  const pavedSegment=(a:Point,b:Point,rr:number)=>{
   const candidates=new Set<number>();

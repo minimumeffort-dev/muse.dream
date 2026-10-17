@@ -1,0 +1,52 @@
+{
+  "profile": {
+    "scenario": "still",
+    "samples": 300,
+    "viewport": [
+      1920,
+      1080
+    ],
+    "pixelRatio": 1.5,
+    "cpuMs": {
+      "mean": 2.018333335320155,
+      "p95": 2.300000011920929
+    },
+    "prepareMs": {
+      "mean": 0.9676666676998138,
+      "p95": 1.100000023841858
+    },
+    "submitMs": {
+      "mean": 1.0506666676203409,
+      "p95": 1.300000011920929
+    },
+    "rafMs": {
+      "mean": 16.667000000079472,
+      "p95": 18.600000023841858
+    },
+    "gpuMs": {
+      "mean": 1.34052974916388,
+      "p95": 1.704666
+    },
+    "gpuSamples": 299,
+    "draws": {
+      "mean": 212,
+      "p95": 212
+    },
+    "triangles": {
+      "mean": 654706,
+      "p95": 654706
+    },
+    "geometries": 140
+  },
+  "diagnostics": {
+    "memory": "{\"bytes\":186502920,\"uniqueBuffers\":7168,\"geometries\":1236,\"uniqueTriangles\":1271795}",
+    "save": "{\"sourceHash\":\"269c818e0f333fe8fb11fe881219eb363ab59e54da8817787ba24191002c5464\",\"compatibilityHash\":\"36a6b350b49fa07044768fde832c838f9a4be007484d285a93c18a8beb77f136\",\"restored\":false,\"enabled\":false,\"review\":false,\"status\":\"Review session: saves disabled.\"}",
+    "streaming": "{\"resident\":16,\"required\":13,\"pending\":0,\"bytes\":129779738,\"peakBytes\":129779738,\"peakResident\":16,\"maxInstallMs\":6.099999964237213,\"maxSliceMs\":6,\"loaded\":16,\"unloaded\":0,\"discarded\":0,\"ready\":true,\"keys\":[\"4000,4000\",\"4800,4000\",\"4000,4800\",\"4800,4800\",\"4000,3200\",\"4800,3200\",\"3200,4000\",\"5600,4000\",\"3200,4800\",\"5600,4800\",\"4000,5600\",\"4800,5600\",\"3200,5600\",\"3200,3200\",\"5600,3200\",\"5600,5600\"]}"
+  },
+  "panel": {
+    "height": 652,
+    "width": 266.6328125,
+    "x": 16,
+    "y": 52
+  }
+}

@@ -14,6 +14,7 @@ import {sceneInteriors,walkingHeight,interiorProblems,occupiedInterior,portalPoi
 import {sceneContactData,primeSceneContacts,objectContacts} from '../src/scene/contacts';
 import {createFixtureScene,buildMaskForScene} from '../src/scene/fixture';
 import {parseScene} from '../src/scene/schema';
+import {validateScenePlayability} from '../src/scene/validate';
 import {measuredScale} from '../src/scene/measure';
 import {createCarAtSpawn,carFootprintClear,stepCar,type CarState} from '../src/sim/car';
 import {bodyWorld,stepInteractive,FOOT_HEIGHT,toggleRide} from '../src/sim/interaction';
@@ -28,6 +29,12 @@ function foot(x:number,y:number):CarState{return {...createCarAtSpawn(scene),con
 function walk(s:CarState,x:number,y:number,seconds:number){const angle=Math.atan2(180,480),c=Math.cos(angle),si=Math.sin(angle),length=Math.hypot(x,y);for(let i=0;i<seconds/dt;i++)s=stepInteractive(s,{steer:(x*c-y*si)/length,throttle:(-x*si-y*c)/length},dt,world);return s;}
 
 describe('upright rectangle contacts',()=>{
+ it('keeps roadside rectangles from filling the road with their broad-phase circle',()=>{
+  const spec=compileDream('dream 2;material brick(style=toon,colors=[#995b4c,#995b4c]);object wall(label="Roadside wall"){measure(kind=custom,axis=x,meters=12);body(interaction=solid,radius=4,height=20);contact c_wall(at=[0,0,0],size=[120,2],height=20);part wall(shape=box,material=brick,at=[0,10,0],size=[120,20,2]);}')[0]!;
+  const doc=parseScene({...createFixtureScene(),objects:[{id:'roadside',kind:'custom',labelText:'Wall',x:480,y:660,scale:2,spec}]}),mask=buildMaskForScene(doc),world={scene:doc,roadMask:mask,driveMask:buildPaperMask(960,720),carRadius:11};
+  expect(carFootprintClear(world,480,592,0,0)).toBe(true);
+  expect(validateScenePlayability(doc,mask,11)).toEqual([]);
+ });
  it('keeps empty doorway/corner space clear and resolves outward from rotated faces',()=>{
   const c={x:0,y:0,r:Math.hypot(10,2),bottom:0,top:30,box:{halfX:10,halfY:2,headingRad:Math.PI/2}};
   expect(contactOverlaps(c,5,0,2)).toBe(false);expect(contactOverlaps(c,3,0,2)).toBe(true);

@@ -92,6 +92,8 @@ Press **Shift** or click **Boost** for a one-second car burst, then give it five
 
 Static districts load as you approach and leave render memory behind you. Physics, NPCs and damage keep their state across the whole world. The renderer batches differently colored parts into fewer draws and reuses fixed transforms, keeping the same assets, shadows, particles and post-processing. The [rendering notes](docs/rendering.md) include before/after measurements and a local profiler for checking changes.
 
+World preparation now avoids repeated terrain and outline work. The [query checks](docs/evidence/startup-queries/verification.md) compare the complete accepted world, paths, collisions and save fingerprints against the preceding release, alongside native loading measurements. Detail and visual settings stay the same.
+
 Walk up to the market vendor, teacher, health worker or commuter on foot and press **T** to talk. Dream defines their replies, return greetings and transitions. People remember meeting you. Conversations pause a commuter's route and let it resume from the same point. [Author an NPC conversation](docs/dream/npcs.md#talk-to-a-person).
 
 ![Talking to the market vendor](docs/media/conversation.jpg)

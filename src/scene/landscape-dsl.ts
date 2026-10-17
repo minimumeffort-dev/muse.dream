@@ -86,7 +86,7 @@ export function polygonsOverlap(a:Point[],b:Point[]):boolean {
 
 /** Distance to the outline, negative outside; used for a smooth, dry bank. */
 export function waterDistance(water:Water,x:number,y:number):number {
-  if(!pointInPolygon(x,y,water.polygon)) return -1;
+  if(!waterContains(water,x,y)) return -1;
   let distance=Infinity;
   for(let i=0;i<water.polygon.length;i++) {
     const a=water.polygon[i]!,b=water.polygon[(i+1)%water.polygon.length]!;
@@ -96,9 +96,18 @@ export function waterDistance(water:Water,x:number,y:number):number {
   return distance;
 }
 
+// Accepted landscape geometry is immutable; caches follow its lifetime.
+const waterBounds=new WeakMap<Water,{x0:number;y0:number;x1:number;y1:number}>();
+export function waterContains(water:Water,x:number,y:number):boolean {
+  let b=waterBounds.get(water);
+  if(!b){b={x0:Infinity,y0:Infinity,x1:-Infinity,y1:-Infinity};for(const p of water.polygon){b.x0=Math.min(b.x0,p.x);b.y0=Math.min(b.y0,p.y);b.x1=Math.max(b.x1,p.x);b.y1=Math.max(b.y1,p.y);}waterBounds.set(water,b);}
+  return x>=b.x0 && x<=b.x1 && y>=b.y0 && y<=b.y1 && pointInPolygon(x,y,water.polygon);
+}
+const bridgeFrames=new WeakMap<Bridge,{length:number;ux:number;uy:number}>();
 export function bridgeCoordinates(bridge:Bridge,x:number,y:number) {
-  const length=Math.hypot(bridge.b.x-bridge.a.x,bridge.b.y-bridge.a.y);
-  const ux=(bridge.b.x-bridge.a.x)/length,uy=(bridge.b.y-bridge.a.y)/length;
+  let frame=bridgeFrames.get(bridge);
+  if(!frame){const length=Math.hypot(bridge.b.x-bridge.a.x,bridge.b.y-bridge.a.y);frame={length,ux:(bridge.b.x-bridge.a.x)/length,uy:(bridge.b.y-bridge.a.y)/length};if(length>0 && Number.isFinite(length))bridgeFrames.set(bridge,frame);}
+  const {length,ux,uy}=frame;
   return {length,ux,uy,t:((x-bridge.a.x)*ux+(y-bridge.a.y)*uy)/length,across:-(x-bridge.a.x)*uy+(y-bridge.a.y)*ux};
 }
 export function bridgeAt(landscape:Landscape|undefined,x:number,y:number):Bridge|undefined {

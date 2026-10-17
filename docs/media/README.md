@@ -434,6 +434,13 @@ accurate. Native before/after stills and actual browser timing reports are kept 
 the [startup responsiveness evidence](../evidence/startup-responsiveness/verification.md);
 no offline capture is a startup measurement.
 
+The later [terrain/outline query pass](../evidence/startup-queries/verification.md)
+keeps the r56 accepted world, placement transforms, road mask and navigation exact.
+It changes no geometry, asset, shader, animation or control. Existing loading
+design, city map and paired gameplay recordings remain accurate; native timing
+reports and a matched frozen view verify this pass separately. Recordings are
+not loading-time or live frame-rate measurements.
+
 ## Usable destination parking
 
 `parking.gif`, `parking.mp4` and `parking.jpg` share 360 native rendered frames

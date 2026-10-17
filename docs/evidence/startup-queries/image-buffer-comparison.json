@@ -1,0 +1,57 @@
+{
+  "scope": "Exact native screenshot pixels outside the profiler panel, unchanged counted geometry buffers and chunk keys. Not every possible view, total browser heap or VRAM.",
+  "comparisons": [
+    {
+      "after": "a",
+      "imageSize": [
+        1280,
+        720
+      ],
+      "excludedProfilerRects": [
+        [
+          16,
+          52,
+          283,
+          704
+        ],
+        [
+          16,
+          52,
+          283,
+          704
+        ]
+      ],
+      "changedGamePixels": 0,
+      "countedBufferBytes": 186502920,
+      "streamedBufferBytes": 129779738,
+      "sameChunkKeys": true,
+      "sameDrawsTrianglesAndGeometryCount": true
+    },
+    {
+      "after": "b",
+      "imageSize": [
+        1280,
+        720
+      ],
+      "excludedProfilerRects": [
+        [
+          16,
+          52,
+          283,
+          704
+        ],
+        [
+          16,
+          52,
+          283,
+          704
+        ]
+      ],
+      "changedGamePixels": 0,
+      "countedBufferBytes": 186502920,
+      "streamedBufferBytes": 129779738,
+      "sameChunkKeys": true,
+      "sameDrawsTrianglesAndGeometryCount": true
+    }
+  ]
+}

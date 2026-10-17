@@ -1,7 +1,6 @@
 import {MAX_WORLD_SIZE} from './world-bounds';
 import { z } from "zod";
-import { bridgeAt, bridgeCoordinates, landscapeSchema, waterDistance, type Bridge } from "./landscape-dsl";
-import { pointInPolygon } from "../sim/mask";
+import { bridgeAt, bridgeCoordinates, landscapeSchema, waterContains, waterDistance, type Bridge } from "./landscape-dsl";
 
 /** Bounded scene data shared by simulation, navigation and rendering. */
 export const terrainSchema = z.object({
@@ -32,6 +31,7 @@ function baseTerrain(terrain: Terrain, x: number, y: number, vx = 0, vy = 0) {
     const px = x - hill.x, py = y - hill.y;
     const rx2 = hill.radiusX ** 2, ry2 = hill.radiusY ** 2;
     const f = Math.max(0, 1 - px * px / rx2 - py * py / ry2);
+    if(f===0)continue;
     // Compact support with a smooth shoulder; hills blend without seams.
     height += hill.height * f ** 3;
     dx -= 6 * hill.height * f ** 2 * px / rx2;
@@ -94,7 +94,7 @@ export function sampleTerrain(terrain:Terrain,x:number,y:number,vx=0,vy=0) {
     const bend=(h(t+alongSpeed*e/length,across+crossSpeed*e)+h(t-alongSpeed*e/length,across-crossSpeed*e)-2*height)*speed**2/(e*e);
     return {height,dx:ux*alongSlope-uy*crossSlope,dy:uy*alongSlope+ux*crossSlope,bend};
   }
-  if(!terrain.landscape?.waters.some(w=>pointInPolygon(x,y,w.polygon))) return baseTerrain(terrain,x,y,vx,vy);
+  if(!terrain.landscape?.waters.some(w=>waterContains(w,x,y))) return baseTerrain(terrain,x,y,vx,vy);
   const h=terrainHeight(terrain,x,y),e=.5,speed=Math.hypot(vx,vy),ux=speed ? vx/speed : 0,uy=speed ? vy/speed : 0;
   return {height:h,dx:(terrainHeight(terrain,x+e,y)-terrainHeight(terrain,x-e,y))/(2*e),
     dy:(terrainHeight(terrain,x,y+e)-terrainHeight(terrain,x,y-e))/(2*e),
@@ -102,7 +102,7 @@ export function sampleTerrain(terrain:Terrain,x:number,y:number,vx=0,vy=0) {
 }
 
 export function waterAt(terrain:Terrain,x:number,y:number,elevation=drivingHeight(terrain,x,y)) {
-  return terrain.landscape?.waters.find(w=>elevation<w.level+.5 && pointInPolygon(x,y,w.polygon) && terrainHeight(terrain,x,y)<w.level-.1);
+  return terrain.landscape?.waters.find(w=>elevation<w.level+.5 && waterContains(w,x,y) && terrainHeight(terrain,x,y)<w.level-.1);
 }
 
 /** Water owns boat support; a road deck only blocks a hull without headroom. */

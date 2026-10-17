@@ -26,7 +26,7 @@ A `portal` describes an opening that already exists between the contacts. It doe
 
 Complete-world acceptance walks a conservative cylinder through each declared portal. It needs at least nine world units of width, twenty of headroom, clear contacts and floor steps no taller than four units. A painted door in a filled collision box fails that check. In the city, the entrance path and room polygon join the existing pedestrian network. NPC work paths use the same walls and opening.
 
-Rectangle contacts use `size=[width,depth]`, plus `at`, `height` and optional `heading_deg`. Cylinder contacts keep `radius`. Choose exactly one shape. Rectangles are upright static structures; moving vehicles retain their cylinders. The existing eight-contact budget is shared by the floor, walls, lintel and ceiling.
+Rectangle contacts use `size=[width,depth]`, plus `at`, `height` and optional `heading_deg`. Cylinder contacts keep `radius`. Choose exactly one shape. Rectangles are upright static structures; moving vehicles retain their cylinders. The existing eight-contact budget is shared by the floor, walls, lintel and ceiling. Road-clearance validation uses these same rectangles, so a long wall beside a street does not block the street merely because its broad-phase circle overlaps it.
 
 ## Cut away the shell
 

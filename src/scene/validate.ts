@@ -172,7 +172,7 @@ export function validateScenePlayability(
       const cx=(x+.5)*cellSize, cy=(y+.5)*cellSize;
       if (!mask.footprintClear(cx, cy, carRadius)) continue;
       const floor=drivingHeight(scene.terrain,cx,cy);
-      if (solidGrid.query(cx,cy,carRadius+maxRadius).some((o) => floor<o.top-.05 && floor+carHeight>o.bottom+.05 && Math.hypot(cx - o.x, cy - o.y) < o.r + carRadius)) continue;
+      if (solidGrid.query(cx,cy,carRadius+maxRadius).some((o) => floor<o.top-.05 && floor+carHeight>o.bottom+.05 && contactOverlaps(o,cx,cy,carRadius))) continue;
       clearance.data[y * columns + x] = 1;
     }
   }

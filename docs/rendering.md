@@ -1,6 +1,6 @@
 # Rendering the whole world
 
-The mock world has 1,695 placed objects across a 14000 × 11000 landscape. Static render geometry now loads around the player and leaves memory behind them. The accepted Dream world and its simulation stay complete.
+The mock world has 1,699 placed objects across a 14000 × 11000 landscape. Static render geometry now loads around the player and leaves memory behind them. The accepted Dream world and its simulation stay complete.
 
 ## Usable parked vehicles
 
@@ -33,6 +33,28 @@ from 1,949 ms to 289–293 ms across two final samples at full settings. Loading
 still took 11.5–12.2 seconds; this mainly improves page responsiveness. Matched
 drives retained the same draws, triangles and roughly 16.7 ms frame intervals.
 [Measurement conditions, raw reports and limits](evidence/startup-responsiveness/verification.md).
+
+The current query pass skips hills outside their compact support, rejects distant
+water/pavement outlines before exact polygon tests and reuses immutable bridge
+frames. It changes no terrain samples, contours or render detail. An exact
+comparison against the preceding release checks the complete accepted world,
+navigation, masks, contacts, placement transforms and eleven save fingerprints.
+The [current query evidence](evidence/startup-queries/verification.md) separates
+construction timings from native browser measurements. On the same local M3 Ultra,
+two quiet development reloads took 15.6–15.7 seconds, against a 17.9-second baseline
+of this market world. All use full settings; cold-network loads and lower-powered
+laptops remain unmeasured. Startup still takes time, and first-neighborhood mesh
+construction remains about five seconds.
+
+For adjacent revisions that retain the same Dream world, reproduce that comparison:
+
+```sh
+node scripts/profile-world-acceptance.mjs f83a0b02fde379052a757729dcd37a62b96351d6 /tmp/dream-acceptance.json
+```
+
+It uses an isolated source archive from Git and fails if any compared data changes.
+Its Node SSR timings are diagnostic construction measurements, not browser FPS,
+total memory or a cold-network loading benchmark.
 
 ![The real startup loader](media/loading.png)
 
