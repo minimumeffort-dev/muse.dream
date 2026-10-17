@@ -17,7 +17,8 @@ export function buildDamageObject(object:SceneObject):Group {
   }
   return root;
 }
-export function updateDamage(group:Group,objectId:string,state:CarState):void {
+export function updateDamage(group:Group,objectId:string,state:CarState,scale=1):void {
+  const authored=group.userData.damageScale??(group.userData.damageScale=group.scale.clone());group.scale.copy(authored).multiplyScalar(scale);
   group.visible=!state.broken.includes(objectId);
   for(const child of group.children)if(child.userData.breakZone)
     child.visible=!state.brokenZones.some(z=>z.objectId===objectId && z.zoneId===child.userData.breakZone);

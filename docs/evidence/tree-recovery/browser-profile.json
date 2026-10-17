@@ -1,0 +1,166 @@
+{
+  "machine": "Apple M3 Ultra",
+  "ramBytes": 103079215104,
+  "note": "One full-quality local development run. Not a low-end, cold-start or comparative speedup measurement.",
+  "frames": {
+    "scenario": "drive",
+    "samples": 300,
+    "viewport": [
+      1920,
+      1080
+    ],
+    "pixelRatio": 1.5,
+    "cpuMs": {
+      "mean": 3.5406666656335193,
+      "p95": 4.599999964237213
+    },
+    "prepareMs": {
+      "mean": 2.111333331068357,
+      "p95": 3.099999964237213
+    },
+    "submitMs": {
+      "mean": 1.4293333345651626,
+      "p95": 1.699999988079071
+    },
+    "rafMs": {
+      "mean": 16.667000000079472,
+      "p95": 17.400000035762787
+    },
+    "gpuMs": {
+      "mean": 1.335354016722408,
+      "p95": 1.515666
+    },
+    "gpuSamples": 299,
+    "draws": {
+      "mean": 252.99666666666667,
+      "p95": 359
+    },
+    "triangles": {
+      "mean": 647115.1366666667,
+      "p95": 705821
+    },
+    "geometries": 353
+  },
+  "loading": {
+    "totalMs": 14831.800000011921,
+    "firstRenderMs": 192.69999998807907,
+    "phases": [
+      {
+        "label": "Reading Dream · checking the world",
+        "startMs": 0.10000002384185791,
+        "endMs": 7484.699999988079
+      },
+      {
+        "label": "Preparing driving and walking",
+        "startMs": 7484.699999988079,
+        "endMs": 7657.900000035763
+      },
+      {
+        "label": "Starting the renderer",
+        "startMs": 7657.900000035763,
+        "endMs": 7670
+      },
+      {
+        "label": "Building water and bridges",
+        "startMs": 7670,
+        "endMs": 7836.199999988079
+      },
+      {
+        "label": "Building roads and transit",
+        "startMs": 7836.199999988079,
+        "endMs": 7998.600000023842
+      },
+      {
+        "label": "Assembling people and wildlife",
+        "startMs": 7998.600000023842,
+        "endMs": 8929.400000035763
+      },
+      {
+        "label": "Preparing vehicles and interactive objects",
+        "startMs": 8929.400000035763,
+        "endMs": 10710.5
+      },
+      {
+        "label": "Preparing lighting",
+        "startMs": 10710.5,
+        "endMs": 10995.900000035763
+      },
+      {
+        "label": "Loading the first neighbourhood",
+        "startMs": 10995.900000035763,
+        "endMs": 14522.400000035763
+      },
+      {
+        "label": "Preparing the first frame",
+        "startMs": 14522.400000035763,
+        "endMs": 14831.800000011921
+      }
+    ],
+    "heartbeat": {
+      "samples": 270,
+      "maxGapMs": 287.39999997615814
+    }
+  },
+  "world": {
+    "memory": {
+      "bytes": 250988394,
+      "geometries": 1812,
+      "uniqueBuffers": 10070,
+      "uniqueTriangles": 1905160
+    },
+    "source": {
+      "compatibilityHash": "5603fcbdc725e4cfe36e5284d0123a37d6cf46785904c3d235b44e6a52739f05",
+      "enabled": false,
+      "restored": false,
+      "review": false,
+      "sourceHash": "8f87ca7c33de44aa095340d797a19016565f10b9fbfa8985d50c3319707fb7bc",
+      "status": "Review session: saves disabled."
+    },
+    "streaming": {
+      "bytes": 195019556,
+      "discarded": 0,
+      "keys": [
+        "5600,4000",
+        "6400,4000",
+        "5600,3200",
+        "6400,3200",
+        "5600,4800",
+        "6400,4800",
+        "4800,4000",
+        "7200,4000",
+        "4800,3200",
+        "7200,3200",
+        "4800,4800",
+        "7200,4800",
+        "5600,2400",
+        "6400,2400",
+        "5600,5600",
+        "4800,2400",
+        "6400,5600",
+        "7200,2400",
+        "4800,5600",
+        "8000,4000",
+        "8000,3200",
+        "7200,5600",
+        "8000,4800",
+        "8000,2400",
+        "8000,5600",
+        "8800,4000",
+        "8800,3200",
+        "8800,4800",
+        "8800,2400",
+        "8800,5600"
+      ],
+      "loaded": 30,
+      "maxInstallMs": 4.300000011920929,
+      "maxSliceMs": 4.200000047683716,
+      "peakBytes": 195019556,
+      "peakResident": 30,
+      "pending": 0,
+      "ready": true,
+      "required": 9,
+      "resident": 30,
+      "unloaded": 0
+    }
+  }
+}

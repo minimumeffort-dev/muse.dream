@@ -230,3 +230,11 @@ No extra work-ground surface is drawn beneath the lamp.
 ```sh
 node scripts/dream.mjs check docs/examples/street-verge-repairs.dream
 ```
+
+
+## Plant and grow a replacement
+
+[Orchard recovery](../examples/orchard-replanting.dream) combines a whole-tree
+topple rule, finite saplings, two repair policies on one worker and persistent
+physical growth. Check it with `npm run -s dream -- check docs/examples/orchard-replanting.dream`.
+The [guide](growth.md) explains the shorter example timings and live-city loop.

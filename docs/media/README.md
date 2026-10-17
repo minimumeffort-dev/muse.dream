@@ -535,3 +535,17 @@ or live frame-rate claim. The prior park/furniture clips remain accurate: their
 models, contacts, work and pay are unchanged. The new crossing is outside their
 views. The city-plan SVG is regenerated for the added crossing.
 [Native checks, media audit and remaining limits](../evidence/verge-repairs/verification.md).
+
+
+## Orchard recovery
+
+`planting` exports 360 frames / 12 simulation seconds from the caretaker's actual
+arrival through ten-second planting and departure. `growth` exports 900 frames /
+30 simulation seconds starting immediately after planting; it shows the first
+thirty seconds of the live three-minute growth clock. The dev exporter pre-rolls
+the actual impact, dispatch and pedestrian journey in cooperative fixed steps,
+without teleporting the worker. Both select 14:00 lighting for readability.
+Encode with `node scripts/encode-media.mjs /path/to/ffmpeg /path/to/gifsicle planting growth`.
+The HD videos, 1280 × 720 GIFs and full-resolution stills are refreshed together.
+These exports do not measure live frame rate. [Guide](../dream/growth.md) and
+[verification](../evidence/tree-recovery/verification.md).

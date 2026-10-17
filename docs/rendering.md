@@ -164,3 +164,15 @@ lights, actors or per-cell bodies. The world worker prepares the expanded repair
 network and the earlier ambient graph used by the registered r51 save upgrade.
 The new crossing uses the existing clipped paint path; buildings, surfaces and
 quality settings are unchanged. [Repair coverage](dream/commerce.md#street-verges).
+
+
+## Growing assemblies
+
+Plant growth lives in resident simulation state, capped at 32 growing plants
+plus reserved planting jobs. Static streamed trees reuse their instance matrices;
+resident trees reuse their root transform. Both share the contact scale, planted
+root and accepted mature dimensions. Changed instance bounds include the lower
+young crown, so shadows/culling do not retain only the mature canopy. Unloading
+and rebuilding a chunk reapplies the saved growth scale before visibility.
+No new geometry buffer, light or per-cell body is created per growth step.
+[Authoring and limits](dream/growth.md).

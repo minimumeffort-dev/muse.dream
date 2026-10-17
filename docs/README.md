@@ -19,6 +19,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [Populate streets and habitats](dream/populations.md) | Connected lighting, planting, destination parking, birds and transit |
 | [Day and night](dream/day-night.md) | A shared clock, changing sunlight, window glow and street lighting |
 | [A working market and deliveries](dream/commerce.md) | Buy food, eat, sell, work for wages and share stock with NPCs |
+| [Planting and growth](dream/growth.md) | Replant fallen trees with finite saplings, paid work and persistent physical growth |
 | [NPCs and control](dream/npcs.md) | Explicit ownership, reusable state machines, proximity and timed routines |
 | [Prompt and run scenarios](dream/scenarios.md) | Shared resources, agents, budgets, service capacity, tasks and replayable episodes |
 | [World systems roadmap](world-systems.md) | Economics, ecology, education, healthcare operations and agent evaluation |

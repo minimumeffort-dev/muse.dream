@@ -58,6 +58,7 @@ export function selectChunks(doc:Scene,footprint:Point[],margin:number,focus:Poi
 
 type Resident={group:THREE.Group;scenery:WorldScenery;bytes:number};
 const nothingHidden:ReadonlySet<string>=new Set();
+const nothingGrowing:ReadonlyMap<string,number>=new Map();
 /** Complete simulation data stays resident. Only replaceable static render data is evicted. */
 export class WorldStreaming {
   readonly group=new THREE.Group();
@@ -69,6 +70,7 @@ export class WorldStreaming {
   private stopped=false;
   private signature='';
   private hidden=nothingHidden;
+  private growth=nothingGrowing;
   private loaded=0;private unloaded=0;private discarded=0;private bytes=0;private peakBytes=0;private peakResident=0;private maxInstallMs=0;private maxSliceMs=0;
   error:Error|undefined;
   constructor(private doc:Scene,private build:(region:RenderRegion)=>Promise<ChunkPacket>,private water:(id:string)=>THREE.Material,bounds=worldStreamBounds(doc)){
@@ -80,8 +82,8 @@ export class WorldStreaming {
   get obscuredCount():number{return [...this.residents.values()].reduce((n,r)=>n+r.scenery.obscuredCount,0);}
   get revision():number{return this.loaded+this.unloaded;}
   contains(x:number,y:number):boolean{return this.residents.has(`${Math.floor(x/WORLD_CHUNK_SIZE)*WORLD_CHUNK_SIZE},${Math.floor(y/WORLD_CHUNK_SIZE)*WORLD_CHUNK_SIZE}`);}
-  update(camera:THREE.OrthographicCamera,sun:THREE.Vector3,player:THREE.Vector3,velocity:Point,dt:number,reduced:boolean,hidden=nothingHidden):void{
-    this.hidden=hidden;
+  update(camera:THREE.OrthographicCamera,sun:THREE.Vector3,player:THREE.Vector3,velocity:Point,dt:number,reduced:boolean,hidden=nothingHidden,growth=nothingGrowing):void{
+    this.hidden=hidden;this.growth=growth;
     const signature=[camera.left,camera.right,camera.top,camera.bottom,Math.round(camera.position.x/32),Math.round(camera.position.y/16),Math.round(camera.position.z/32),...camera.quaternion.toArray().map(n=>Math.round(n*128)),Math.round(camera.zoom*100),Math.round(sun.x*64),Math.round(sun.y*64),Math.round(sun.z*64)].join(',');
     if(signature!==this.signature){
       this.signature=signature;
@@ -99,7 +101,7 @@ export class WorldStreaming {
       for(const [key,resident] of this.residents)if(!retain.has(key)){disposeChunk(resident.group);this.bytes-=resident.bytes;this.residents.delete(key);this.unloaded++;}
       void this.pump();
     }
-    for(const resident of this.residents.values()){resident.scenery.setHidden(hidden);resident.scenery.update(camera,player,dt,reduced);}
+    for(const resident of this.residents.values()){resident.scenery.setHidden(hidden);resident.scenery.setGrowth(growth);resident.scenery.update(camera,player,dt,reduced);}
   }
   private async pump():Promise<void>{
     if(this.working || this.stopped || this.error)return;this.working=true;
@@ -112,7 +114,7 @@ export class WorldStreaming {
         if(this.stopped || !this.wanted.some(r=>r.key===request.key)){this.discarded++;continue;}
         const installStart=performance.now();
         const group=unpackChunk(packet,this.water);installing=group;
-        const scenery=WorldScenery.fromChunk(this.doc,group,packet.occlusion);scenery.setHidden(this.hidden);freezeStatic(group);
+        const scenery=WorldScenery.fromChunk(this.doc,group,packet.occlusion);scenery.setHidden(this.hidden);scenery.setGrowth(this.growth);freezeStatic(group);
         this.maxSliceMs=Math.max(this.maxSliceMs,performance.now()-installStart);
         const bytes=geometryMemory(group).bytes;this.group.add(group);this.residents.set(request.key,{group,scenery,bytes});this.bytes+=bytes;this.loaded++;this.peakBytes=Math.max(this.peakBytes,this.bytes);this.peakResident=Math.max(this.peakResident,this.residents.size);this.maxInstallMs=Math.max(this.maxInstallMs,performance.now()-installStart);installing=undefined;
         await yieldFrame();

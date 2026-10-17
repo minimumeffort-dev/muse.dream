@@ -1,0 +1,83 @@
+{
+  "note": "Rendered frames at 30 per simulation second, selected 14:00 lighting. Growth is the first 30 of 180 seconds. No interpolation or live performance claim.",
+  "clips": [
+    {
+      "clip": "planting",
+      "sourceFrames": 360,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "posterFrame": 310,
+      "outputs": {
+        "jpg": {
+          "bytes": 493580,
+          "sha256": "61845312f64e1906ffdc12c4330b119ea36d8e73aee22cdecf90f1ae1c817c8c",
+          "size": [
+            2400,
+            1350
+          ]
+        },
+        "mp4": {
+          "bytes": 1648020,
+          "sha256": "a9e6f135d830efbb1d555c73f6f11e0996dd0b25422dcc54b363f4c4cfc9c558",
+          "decodedFrames": 360,
+          "size": [
+            1600,
+            900
+          ],
+          "fps": 30
+        },
+        "gif": {
+          "bytes": 9242614,
+          "sha256": "434ea706c75359127dd0f61306e5d3bcc1c3e6ced847ac1c1c6adc4365725634",
+          "size": [
+            1280,
+            720
+          ],
+          "frames": 360,
+          "durationMs": 12000
+        }
+      }
+    },
+    {
+      "clip": "growth",
+      "sourceFrames": 900,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "posterFrame": 750,
+      "outputs": {
+        "jpg": {
+          "bytes": 491663,
+          "sha256": "29b98fdb0458bca76f0091b3c5119acb6dc040f52c21d36b9d7f630e39f8d5f0",
+          "size": [
+            2400,
+            1350
+          ]
+        },
+        "mp4": {
+          "bytes": 3464834,
+          "sha256": "0c0f788e6a4d4cc0fdca356bc36d9d5ae0fbe47d0dd211e0f22d1c7256493c97",
+          "decodedFrames": 900,
+          "size": [
+            1600,
+            900
+          ],
+          "fps": 30
+        },
+        "gif": {
+          "bytes": 20235696,
+          "sha256": "7febda5af10a1c4feff591a65be161634a033c8e43e0532122dda174cf99a31c",
+          "size": [
+            1280,
+            720
+          ],
+          "frames": 900,
+          "durationMs": 30000
+        }
+      }
+    }
+  ]
+}

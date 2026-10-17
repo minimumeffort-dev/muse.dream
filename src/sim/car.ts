@@ -89,6 +89,7 @@ export interface CarState {
   /** Live knockable props, in scene-object order. Solids never move. */
   props: PropState[];
   broken:string[];
+  growing?:import('../scene/growth').GrowingPlant[];
   brokenZones:{objectId:string;zoneId:string}[];
   debris:DebrisState[];
   impacts:ImpactEvent[];
@@ -115,6 +116,7 @@ export interface World {
   previousNetworkSaveCompatibility?:string;
   previousPoolSaveCompatibility?:string;
   previousVergeSaveCompatibility?:string;
+  previousPlantSaveCompatibility?:string;
   previousVergeNavigation?:import('../scene/ambient-navigation').AmbientGraph;
   emptyEconomySaveCompatibility?:string;
   previousSaveSource?:string;
@@ -210,7 +212,7 @@ export function resetCar(state: CarState, scene: Scene, resetRace = false): CarS
     carBoost:{...fresh.carBoost,held:state.carBoost.held,readyAtS:state.carBoost.readyAtS},
     sports:state.sports.map(game=>({...game,held:false,possessed:false,chargeStartS:null})),
     props: state.props.map((p) => ({ ...p })),
-    broken:[...state.broken],brokenZones:state.brokenZones.map(z=>({...z})),debris:state.debris.map(p=>({...p})),
+    growing:state.growing,broken:[...state.broken],brokenZones:state.brokenZones.map(z=>({...z})),debris:state.debris.map(p=>({...p})),
   };
 }
 

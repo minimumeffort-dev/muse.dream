@@ -51,7 +51,7 @@ export function batchPrototype(source: THREE.Group): THREE.Group {
 }
 
 type Fade = { attribute: THREE.InstancedBufferAttribute; index: number };
-type Entry = { id:number;objectId?:string;x: number; y: number; box: THREE.Box3; opacity: number; instances: Fade[];transforms:{mesh:THREE.InstancedMesh;index:number;original?:THREE.Matrix4}[];hidden?:boolean };
+type Entry = { id:number;objectId?:string;x: number; y: number; box: THREE.Box3; opacity: number; instances: Fade[];transforms:{mesh:THREE.InstancedMesh;index:number;original?:THREE.Matrix4}[];hidden?:boolean;growthScale?:number;growthPivot?:THREE.Vector3;originalBox?:THREE.Box3 };
 
 /** Static scenery is instanced by assembly and local tile. Only knockables need scene nodes. */
 export class WorldScenery {
@@ -63,9 +63,10 @@ export class WorldScenery {
   private count=0;
   private entries:Entry[]=[];
   private hidden:ReadonlySet<string>|undefined;
+  private growth:ReadonlyMap<string,number>|undefined;
   get objectCount():number{return this.count;}
 
-  constructor(scene: Scene,objects=scene.objects) {
+  constructor(private scene: Scene,objects=scene.objects) {
     const foundations=new Map<string,{color:string;items:{entry:Entry;matrix:THREE.Matrix4}[]}>();
     const entries: Entry[] = [], prototypes = new Map<string, THREE.Group>();
     const batches = new Map<string, { prototype: THREE.Group; items: { object: SceneObject; entry: Entry }[] }>();
@@ -146,13 +147,34 @@ export class WorldScenery {
     scenery.entries=entries;scenery.grid=new SpatialGrid(entries);scenery.count=entries.length;return scenery;
   }
 
+  private transform(entry:Entry):void{
+    const scale=entry.growthScale??1,zero=new THREE.Matrix4().makeScale(0,0,0);
+    let change:THREE.Matrix4|undefined;
+    if(scale!==1){const pivot=entry.growthPivot!;change=new THREE.Matrix4().makeTranslation(pivot.x,pivot.y,pivot.z).multiply(new THREE.Matrix4().makeScale(scale,scale,scale)).multiply(new THREE.Matrix4().makeTranslation(-pivot.x,-pivot.y,-pivot.z));}
+    for(const t of entry.transforms){
+      if((entry.hidden || scale!==1) && !t.original){t.original=new THREE.Matrix4();t.mesh.getMatrixAt(t.index,t.original);}
+      if(entry.hidden)t.mesh.setMatrixAt(t.index,zero);
+      else if(t.original){const matrix=change ? new THREE.Matrix4().multiplyMatrices(change,t.original) : t.original;t.mesh.setMatrixAt(t.index,matrix);
+        // A young crown lies below its mature mesh bound. Keep the original bound too.
+        if(change){if(!t.mesh.geometry.boundingSphere)t.mesh.geometry.computeBoundingSphere();const sphere=t.mesh.geometry.boundingSphere!.clone().applyMatrix4(matrix);if(t.mesh.boundingSphere)t.mesh.boundingSphere.union(sphere);else t.mesh.boundingSphere=sphere;}
+        else t.original=undefined;
+      }
+      t.mesh.instanceMatrix.needsUpdate=true;t.mesh.boundingBox=null;
+      t.mesh.visible=!(t.mesh.userData.sceneryEntries as number[]).every(id=>this.entries[id]!.hidden);
+    }
+  }
   /** Collapse both colour and shadow geometry; ghosting still keeps ordinary shadows. */
   setHidden(ids:ReadonlySet<string>):void{
-    if(this.hidden===ids)return;this.hidden=ids;const zero=new THREE.Matrix4().makeScale(0,0,0),meshes=new Set<THREE.InstancedMesh>();
-    for(const entry of this.entries){const hidden=!!entry.objectId && ids.has(entry.objectId);if(hidden===!!entry.hidden)continue;entry.hidden=hidden;
-      for(const t of entry.transforms){if(hidden){t.original=new THREE.Matrix4();t.mesh.getMatrixAt(t.index,t.original);t.mesh.setMatrixAt(t.index,zero);}else if(t.original){t.mesh.setMatrixAt(t.index,t.original);t.original=undefined;}t.mesh.instanceMatrix.needsUpdate=true;meshes.add(t.mesh);}
+    if(this.hidden===ids)return;this.hidden=ids;
+    for(const entry of this.entries){const hidden=!!entry.objectId && ids.has(entry.objectId);if(hidden===!!entry.hidden)continue;entry.hidden=hidden;this.transform(entry);}
+  }
+  setGrowth(scales:ReadonlyMap<string,number>):void{
+    if(this.growth===scales)return;this.growth=scales;
+    for(const entry of this.entries){const scale=entry.objectId ? scales.get(entry.objectId)??1 : 1;if(scale===(entry.growthScale??1))continue;entry.growthScale=scale;
+      if(scale!==1){if(!entry.growthPivot){const object=this.scene.objects.find(o=>o.id===entry.objectId)!;entry.growthPivot=new THREE.Vector3(entry.x,objectPlacement(this.scene,object).base+1.5,entry.y);}entry.originalBox??=entry.box.clone();const p=entry.growthPivot;entry.box.copy(entry.originalBox);entry.box.min.sub(p).multiplyScalar(scale).add(p);entry.box.max.sub(p).multiplyScalar(scale).add(p);}
+      else if(entry.originalBox){entry.box.copy(entry.originalBox);entry.originalBox=undefined;}
+      this.transform(entry);
     }
-    for(const mesh of meshes)mesh.visible=!(mesh.userData.sceneryEntries as number[]).every(id=>this.entries[id]!.hidden);
   }
 
   update(camera: THREE.OrthographicCamera, player: THREE.Vector3, dt: number, snap = false): void {

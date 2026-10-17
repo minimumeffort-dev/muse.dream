@@ -108,3 +108,10 @@ footprints. This connects the four previously isolated lamp work approaches.
 The published plan is regenerated from the accepted 57-crossing scene.
 [Market-district maintenance](dream/commerce.md#street-verges) serves 84 targets
 without moving any of the 1,695 existing placements or 35 work/visual surfaces.
+
+
+The orchard west of High Street now has a dry garden path connected to the public
+sidewalk and overlapping its work ground. It preserves the existing three trees
+and their scale. The market caretaker reaches them through the pedestrian
+network for paid replanting. Route selection accounts for parked vehicles; moving
+transit still causes a wait. [Planting and growth](dream/growth.md).

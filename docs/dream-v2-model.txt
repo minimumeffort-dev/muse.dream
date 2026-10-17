@@ -574,7 +574,7 @@ per target, supply/wage reservations, work progress, obstruction waiting,
 consumption counters and return home. Player takes the same job at the market,
 stands beside the damage to work, or cancels/refunds. Pause freezes; R and saves
 preserve; Start over resets. No scripts, arbitrary off-network dispatch, ladders, free kits,
-new plant growth or implicit destruction. See examples/market-repair.dream, examples/market-maintenance.dream and
+implicit plant growth or destruction. See examples/market-repair.dream, examples/market-maintenance.dream and
 examples/neighborhood-repairs.dream. Worker topology is derived/prepared by the
 engine worker, never model-authored or saved graph data. Journeys advance in
 resident simulation time; walking across a city may take several minutes.
@@ -592,3 +592,25 @@ and 2048 access pieces per service; 4096 local samples, 8192 derived graph nodes
 rejects any unreachable target. Source/saves never supply graph edges. Existing
 workers, kits, wages, ownership and per-target claim rules apply. Use
 examples/street-verge-repairs.dream and request context features commerce,city.
+
+
+Tree recovery: repair(...,kind=tree,regrow_s=180,seed_scale=.15) plants a young
+replacement after paid work rather than restoring the mature tree immediately.
+regrow_s is 30..86400 simulation seconds; seed_scale is 0.1..0.5, default .15, and
+requires regrow_s. Planting requires kind=tree and whole toppling prop targets
+with a centered base body, without foundations, zones, seats, emitters or lamps.
+Use an explicit finite sapling good and a real supply-market lot. The same player
+and NPC jobs reserve inputs/pay, wait for space, consume once and return home.
+At most 32 growing plants plus committed planting jobs; each job reserves one slot.
+Growth runs at the resident commerce cadence, scales full visuals and contacts,
+waits for obstacles and survives R, render eviction and saves. Hitting a growing
+tree breaks its current size and loses that sapling; consumed supplies are not
+refunded. Mature completion frees its growth slot. No offline growth or biology claim.
+
+NPC account(...,repairs=[furniture,trees]) chooses from 1..4 unique service IDs in
+priority order, skipping unavailable work. It excludes repair= and work=; the
+legacy single repair= remains readable. One active commitment per worker. Homes
+must be inside each service's on surface and within its supply market's reach.
+Notices identify the selected service as well as the target. Touching work grounds
+join through full-cylinder portals; keep real gaps, roads and water impassable.
+Use examples/orchard-replanting.dream; request context features commerce,city.

@@ -11,6 +11,10 @@ describe("published Dream documentation",()=>{
     const blocks=[...pages['../docs/dream/populations.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
     expect(blocks).toContain(examples['../docs/examples/parked-vehicles.dream']!.trim());
   });
+  it('keeps the planting declarations identical to their checked complete example',()=>{
+    const declarations=pages['../docs/dream/growth.md']!.match(/```dream\n([\s\S]*?)```/)![1]!.trim().split('\n');
+    for(const declaration of declarations)expect(examples['../docs/examples/orchard-replanting.dream']).toContain(declaration);
+  });
   it('keeps the commerce guide identical to its complete runnable world',()=>{
     const block=pages['../docs/dream/commerce.md']!.match(/```dream\n([\s\S]*?)```/)![1]!;
     expect(block.trim()).toBe(examples['../docs/examples/market-work.dream']!.trim());

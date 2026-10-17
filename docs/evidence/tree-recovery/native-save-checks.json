@@ -1,0 +1,22 @@
+{
+  "r52_upgrade": {
+    "exact_prior_state_preserved": true,
+    "worldTime": 266.5879000000269,
+    "format": 8,
+    "marketSaplings": 6,
+    "newCompatibility": "5603fcbdc725e4cfe36e5284d0123a37d6cf46785904c3d235b44e6a52739f05",
+    "depotSaplings": 18
+  },
+  "reload_recovery": {
+    "beforeS": 380.14166666648526,
+    "afterS": 428.5333333331079,
+    "progressBeforeS": 96.749999999912,
+    "progressAfterS": 145.2499999998679,
+    "plantedAtPreserved": true,
+    "plantings": 1,
+    "carAfter": [
+      6330,
+      4233
+    ]
+  }
+}

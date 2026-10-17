@@ -98,3 +98,9 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    clipped away from riding surfaces, the circuit and water. There is no generated
    paving or unpainted-road shortcut. Per service: <=512 street targets and <=2048
    access pieces; existing graph, local-sample and saved-path limits remain. *)
+
+(* Planting constraints: repair.regrow_s is 30..86400 seconds and requires
+   kind=tree with centered whole-topple prop targets. seed_scale is 0.1..0.5,
+   default .15, only with regrow_s. Growing plants plus planting commitments <=32.
+   account.repairs is 1..4 unique refs, exclusive with repair and work; priority
+   selects available work, one active commitment. Touching grounds use portals. *)

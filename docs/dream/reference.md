@@ -57,7 +57,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | --- | --- | --- | --- |
 | `economy` | top | No ID / economy | None |
 | `good` | economy | ID / no block | `label: text`, `food?: n` |
-| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `shop?: bool`, `work?: ref` |
+| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `shop?: bool`, `work?: ref`, `repair?: ref`, `repairs?: symbols` |
 | `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n` |
 | `lot` | market | ID / no block | `good: ref`, `quantity: n`, `limit: n`, `price?: n` |
 | `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `price: n?`, `capacity: n` |
@@ -384,7 +384,7 @@ One optional `economy(){...}` per linked world. [Working guide](commerce.md).
 
 ```text
 good id(label=text,food=n?);
-account id(actor=ref,credits=n,capacity=n,satiety=n,drain_s=n,shop=bool?,work=ref?,repair=ref?);
+account id(actor=ref,credits=n,capacity=n,satiety=n,drain_s=n,shop=bool?,work=ref?,repair=ref?,repairs=symbols?);
 market id(label=text,actor=ref,credits=n,radius=n){ lot ... }
 lot id(good=ref,quantity=n,limit=n,price=n?);
 work id(label=text,market=ref,input=ref,take=n,output=ref,make=n,seconds=n,pay=n,effort=n,capacity=n,target=n);
@@ -425,9 +425,9 @@ automatic courier, path planner or unbounded item body. [Complete example](../ex
 
 | Command | Context | Form | Fields |
 | --- | --- | --- | --- |
-| `repair` | economy | ID / no block | `label`, `market`, `on`, optional `grounds`, `streets`, `verge`, exactly one of `kind` / `kinds`, `input`, `take`, `seconds`, `pay`, `effort`, optional `dispatch_s` |
+| `repair` | economy | ID / no block | `label`, `market`, `on`, optional `grounds`, `streets`, `verge`, exactly one of `kind` / `kinds`, `input`, `take`, `seconds`, `pay`, `effort`, optional `dispatch_s`, `regrow_s`, `seed_scale` |
 
-`repair id(label=text,market=ref,on=ref,grounds=symbols?,streets=symbols?,verge=n?,kind=measure_kind?,kinds=symbols?,input=ref,take=n,seconds=n,pay=n,effort=n,dispatch_s=n?);`
+`repair id(label=text,market=ref,on=ref,grounds=symbols?,streets=symbols?,verge=n?,kind=measure_kind?,kinds=symbols?,input=ref,take=n,seconds=n,pay=n,effort=n,dispatch_s=n?,regrow_s=n?,seed_scale=n?);`
 
 Inside `economy`, at most 8 services. Choose exactly one of `kind` or `kinds`.
 The latter is a nonempty unique list of existing measure categories. Input must be a matching supply-market lot.
@@ -438,7 +438,9 @@ break/topple objects or ground-accessible zones. The local 12-unit grid is cappe
 at 4,096 samples, saved paths at 128 points. Four-unit walking cylinders remain
 inside the primary surface and clear roads, riding lanes, water and solids when both `grounds` and `streets` are omitted.
 
-Optional NPC `account.repair` chooses one service. It excludes automatic `work`,
+Optional NPC `account.repair` chooses one service; `account.repairs` chooses an
+ordered, unique list of 1..4 services. The two fields are exclusive. Unavailable
+or unaffordable services are skipped. Both exclude automatic `work`,
 route/ambient movement and market ownership; its home starts within market reach.
 The player collects manually. Each damage target has one shared claimant.
 Collection reserves kits, refund space and pay; work progresses only beside the
@@ -446,7 +448,7 @@ damage. Restore waits for clear physical space, consumes inputs, pays once and
 records a completion. Cancel refunds. NPCs walk home before resuming their saved
 program. Journeys, notices, paths, work and conservation ledgers persist. Existing
 actor, rig, reactive-object and fragment limits are unchanged. No arbitrary off-network dispatch,
-scaffolds, free restocking or plant growth. [Working guide](commerce.md#repair-work). [Multi-category supply example](../examples/market-maintenance.dream).
+scaffolds or free restocking. Optional tree growth is bounded below. [Working guide](commerce.md#repair-work). [Multi-category supply example](../examples/market-maintenance.dream).
 
 
 ### Connected repair grounds
@@ -496,3 +498,21 @@ Categories still use `measure.kind`; carriageways, cycle tracks, the circuit and
 water are excluded. Full-world compilation checks every target from every worker
 home. Existing 4,096 local samples, 8,192 network nodes, 32,768 directed links and
 128 saved waypoints remain the limits. [Working example and routing](commerce.md#street-verges).
+
+
+### Planting bounds
+
+`repair(...,kind=tree,regrow_s=180,seed_scale=.15)` consumes the declared input and
+pays once at planting completion. `regrow_s`: 30..86,400 seconds. `seed_scale`:
+0.1..0.5, default .15; requires `regrow_s`. Exactly `kind=tree` is required;
+`kinds` is not accepted for growing repairs. Targets are whole-object topplers
+with a centered base body/contact, no foundation, zones, rideable seat, emitter
+or lamp. Existing geometry/animation limits still apply.
+
+At most 32 growing plants plus reserved planting jobs. Mature scene dimensions
+stay immutable; runtime visual transforms and cylinder contacts use the same
+linear scale. Growth settles at 4 Hz, pauses for occupied expansion space and
+persists outside render chunks. Destruction captures the current scale for
+fragments and removes growth; it cannot refund a planted input. The completion
+ledger counts plantings rather than maturity. [Guide](growth.md) and
+[complete example](../examples/orchard-replanting.dream).

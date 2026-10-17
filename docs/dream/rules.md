@@ -142,3 +142,9 @@ longer journey uses the accepted sidewalks and crossings.
 the sidewalk without inventing paving. [Watch that repair](../media/streetrepair.mp4).
 
 [Streetlight verification and media audit](../evidence/streetlights/verification.md).
+
+
+Whole-tree topple rules can now feed a finite-sapling planting service. A young
+replacement uses its current scale when hit, including its retained debris, and
+loses its growth record without refunding its planted input.
+[Planting and shared worker policies](growth.md).

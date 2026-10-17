@@ -1,7 +1,9 @@
 import {z} from 'zod';
+import {GROWTH_LIMITS} from '../scene/growth';
+import {advanceGrowth} from './growth';
 import type {CarState,CarInput} from './car';
 import type {Scene} from '../scene/schema';
-import {COMMERCE_LIMITS as L,deliveryBill,type Economy,type Market} from '../scene/commerce';
+import {COMMERCE_LIMITS as L,accountRepairs,deliveryBill,type Economy,type Market} from '../scene/commerce';
 import {actorPose,actorContacts} from './actors';
 import {repairTargets,targetBroken,repairApproach,repairPath,repairSegment,repairSpaceClear,repairPlayerContact,REPAIR_REACH,REPAIR_SPEED,REPAIR_RADIUS} from './repair';
 import {drivingHeight} from '../scene/terrain';
@@ -17,7 +19,8 @@ const event=previousEvent.extend({kind:z.enum(['buy','sell','eat','start','paid'
 export const parkingEconomyStateSchema=previousEconomyStateSchema.extend({accounts:z.array(accountState).max(L.accounts),events:z.array(event).max(12),delivered:z.record(count)}).strict();
 const point=z.object({x:z.number().finite().min(0).max(16384),y:z.number().finite().min(0).max(16384)}).strict();
 const repairState=z.object({id,objectId:z.string().min(1).max(128),zoneId:z.string().min(1).max(128).optional(),phase:z.enum(['out','work','home']),at:point,x:point.shape.x,y:point.shape.y,headingRad:z.number().finite(),progressS:clock,speed:z.number().finite().min(0).max(REPAIR_SPEED),distance:clock,path:z.array(point).max(L.repairPath),routeAtS:clock}).strict();
-export const economyStateSchema=parkingEconomyStateSchema.extend({accounts:z.array(accountState.extend({repair:repairState.optional(),repairSeen:z.object({objectId:z.string().min(1).max(128),zoneId:z.string().min(1).max(128).optional(),atS:clock}).strict().optional()}).strict()).max(L.accounts),repaired:z.record(count),events:z.array(event.extend({kind:z.enum([...event.shape.kind.options,'repair_started','repaired','repair_cancelled']),reason:z.enum([...previousEvent.shape.reason.unwrap().options,'damage']).optional()}).strict()).max(12)}).strict();
+export const priorGrowthEconomyStateSchema=parkingEconomyStateSchema.extend({accounts:z.array(accountState.extend({repair:repairState.optional(),repairSeen:z.object({objectId:z.string().min(1).max(128),zoneId:z.string().min(1).max(128).optional(),atS:clock}).strict().optional()}).strict()).max(L.accounts),repaired:z.record(count),events:z.array(event.extend({kind:z.enum([...event.shape.kind.options,'repair_started','repaired','repair_cancelled']),reason:z.enum([...previousEvent.shape.reason.unwrap().options,'damage']).optional()}).strict()).max(12)}).strict();
+export const economyStateSchema=priorGrowthEconomyStateSchema.extend({accounts:z.array(priorGrowthEconomyStateSchema.shape.accounts.element.extend({repairSeen:priorGrowthEconomyStateSchema.shape.accounts.element.shape.repairSeen.unwrap().extend({serviceId:id.optional()}).strict().optional()}).strict()).max(L.accounts)}).strict();
 export type EconomyState=z.infer<typeof economyStateSchema>;
 export type CommerceAction={kind:'buy';market:string;good:string}|{kind:'sell';market:string;good:string}|{kind:'eat';good:string}|{kind:'work';job:string}|{kind:'collect';delivery:string}|{kind:'deliver'}|{kind:'cancel'}|{kind:'repair';repair:string};
 type Account=EconomyState['accounts'][number];
@@ -66,6 +69,7 @@ function reason(state:CarState,scene:Scene,e:EconomyState,a:Account,action:Comme
  if(action.kind==='repair'){
   const r=c.repairs.get(action.repair);if(!r || !inReach(state,scene,a,c.markets.get(r.market)!))return 'range';
   const market=e.markets.find(m=>m.id===r.market)!;if(a.satiety<r.effort)return 'satiety';if(Object.values(a.inventory).reduce((n,v)=>n+v,0)+r.take>definition.capacity)return 'full';if(market.stock[r.input]!<r.take)return 'input';if(market.credits<r.pay || a.credits+r.pay>L.money)return 'treasury';
+  if(r.regrow_s!==undefined && (state.growing?.length??0)+e.accounts.filter(a=>a.repair && a.repair.phase!=='home' && c.repairs.get(a.repair.id)!.regrow_s!==undefined).length>=GROWTH_LIMITS.plants)return 'capacity';
   if(e.repaired[r.id]!+e.accounts.filter(a=>a.repair?.id===r.id && a.repair.phase!=='home').length>=1e9)return 'capacity';
   return repairOffer(state,scene,e,a,r.id) ? undefined : 'damage';
  }
@@ -129,7 +133,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
  const interrupted=player.work && !inReach(state,scene,player,c.markets.get(c.jobs.get(player.work.id)!.market)!);
  if(state.economy && !input.commerce && !interrupted && state.timeS-old.atS<L.decisionS-1e-8)return state;
  const now=state.timeS,e:EconomyState={...old,atS:now,turn:(old.turn+1)%old.accounts.length,accounts:old.accounts.map(a=>({...a,inventory:{...a.inventory},...(a.work ? {work:{...a.work}} : {}),...(a.repair ? {repair:{...a.repair,path:a.repair.path.map(p=>({...p}))}} : {}),satiety:Math.max(0,a.satiety-(now-old.atS)*c.accounts.get(a.id)!.drainPerS)})),markets:old.markets.map(m=>({...m,stock:{...m.stock}})),consumed:{...old.consumed},batches:{...old.batches},delivered:{...old.delivered},repaired:{...old.repaired},events:[...old.events]};
- let current:CarState={...state,economy:e};
+ let current:CarState=advanceGrowth({...state,economy:e},now-old.atS,scene);
  const report=(a:Account,kind:EconomyState['events'][number]['kind'],ref:string,why?:Reason)=>{e.events.push({account:a.id,kind,ref,atS:now,...(why ? {reason:why} : {})});e.events=e.events.slice(-12);};
  const cancel=(a:Account)=>{const j=c.jobs.get(a.work!.id)!,m=e.markets.find(m=>m.id===j.market)!;m.stock[j.input]!+=j.take;m.credits+=j.pay;a.work=undefined;report(a,'cancel',j.id);};
  for(const a of e.accounts)if(a.work){
@@ -137,7 +141,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
   if(!inReach(state,scene,a,c.markets.get(j.market)!)){cancel(a);continue;}
   if(now+1e-8>=a.work.doneAtS){m.stock[j.output]!+=j.make;a.credits+=j.pay;a.satiety=Math.max(0,a.satiety-j.effort);e.batches[j.id]!++;a.work=undefined;report(a,'paid',j.id);}
  }
- const finishRepair=(a:Account,refund:boolean)=>{const t=a.repair!,r=c.repairs.get(t.id)!,m=e.markets.find(m=>m.id===r.market)!;if(refund){m.stock[r.input]!+=r.take;m.credits+=r.pay;report(a,'repair_cancelled',r.id);}else{a.credits+=r.pay;a.satiety=Math.max(0,a.satiety-r.effort);e.repaired[r.id]!++;current={...current,broken:current.broken.filter(id=>id!==t.objectId || t.zoneId!==undefined),brokenZones:current.brokenZones.filter(z=>z.objectId!==t.objectId || z.zoneId!==t.zoneId),debris:current.debris.filter(p=>p.objectId!==t.objectId || t.zoneId!==undefined && !objectFragments(c.objects.get(t.objectId)!.spec as ObjectDslV2).some(f=>f.id===p.fragmentId && f.zone===t.zoneId))};report(a,'repaired',r.id);}
+ const finishRepair=(a:Account,refund:boolean)=>{const t=a.repair!,r=c.repairs.get(t.id)!,m=e.markets.find(m=>m.id===r.market)!;if(refund){m.stock[r.input]!+=r.take;m.credits+=r.pay;report(a,'repair_cancelled',r.id);}else{a.credits+=r.pay;a.satiety=Math.max(0,a.satiety-r.effort);e.repaired[r.id]!++;current={...current,broken:current.broken.filter(id=>id!==t.objectId || t.zoneId!==undefined),brokenZones:current.brokenZones.filter(z=>z.objectId!==t.objectId || z.zoneId!==t.zoneId),debris:current.debris.filter(p=>p.objectId!==t.objectId || t.zoneId!==undefined && !objectFragments(c.objects.get(t.objectId)!.spec as ObjectDslV2).some(f=>f.id===p.fragmentId && f.zone===t.zoneId))};if(r.regrow_s!==undefined)current={...current,growing:[...(current.growing??[]),{objectId:t.objectId,serviceId:r.id,plantedAtS:now,progressS:0}]};report(a,'repaired',r.id);}
   if(c.accounts.get(a.id)!.actor==='player')a.repair=undefined;else{t.phase='home';t.progressS=0;t.path=[];t.routeAtS=0;}
  };
  for(const a of e.accounts)if(a.repair){
@@ -149,14 +153,14 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
    const before=t.distance,playerBody=repairPlayerContact(scene,current);let remaining=REPAIR_SPEED*(now-old.atS);
    while(t.path.length && remaining>0){const next=t.path[0]!,distance=Math.hypot(next.x-t.x,next.y-t.y),d=Math.min(remaining,distance),p=distance>.001 ? {x:t.x+(next.x-t.x)*d/distance,y:t.y+(next.y-t.y)*d/distance} : next;
     const floor=drivingHeight(scene.terrain,p.x,p.y),blocked=Math.hypot(playerBody.x-p.x,playerBody.y-p.y)<REPAIR_RADIUS+playerBody.r && playerBody.bottom<floor+18 && playerBody.top>floor || actorContacts(scene,now,current).some(c=>Math.hypot(c.x-p.x,c.y-p.y)<c.r+REPAIR_RADIUS && c.top>floor && c.bottom<floor+18);
-    if(blocked || !repairSegment(scene,r,t,p,current)){t.routeAtS=now+1;break;}
+    if(blocked || !repairSegment(scene,r,t,p,current)){t.path=[];t.routeAtS=now+1;break;}
     if(distance>.001)t.headingRad=Math.atan2(next.y-t.y,next.x-t.x);t.x=p.x;t.y=p.y;t.distance+=d;remaining-=d;if(distance<=d+.001)t.path.shift();else break;
    }
    t.speed=Math.min(REPAIR_SPEED,(t.distance-before)/Math.max(1e-8,now-old.atS));
    if(t.phase==='home'){if(Math.hypot(t.x-object!.x,t.y-object!.y)<.1){a.repair=undefined;current={...current,npcs:current.npcs.map(n=>n.id===object!.id ? {...n,headingRad:t.headingRad} : n)};}continue;}
   }
   const p=npc ? t : ownerPose(current,scene,a),atWork=!!p && (npc ? t.path.length===0 : Math.hypot(current.vx,current.vy)<2) && Math.hypot(p.x-target.contact.x,p.y-target.contact.y)<=target.contact.r+REPAIR_REACH && Math.abs(drivingHeight(scene.terrain,p.x,p.y)-drivingHeight(scene.terrain,target.contact.x,target.contact.y))<4;
-  if(atWork){t.phase='work';if(npc)t.headingRad=Math.atan2(target.contact.y-t.y,target.contact.x-t.x);t.progressS=Math.min(r.seconds,t.progressS+now-old.atS);if(t.progressS+1e-8>=r.seconds && repairSpaceClear(scene,target,current))finishRepair(a,false);}else t.phase='out';
+  if(atWork){t.phase='work';if(npc)t.headingRad=Math.atan2(target.contact.y-t.y,target.contact.x-t.x);t.progressS=Math.min(r.seconds,t.progressS+now-old.atS);if(t.progressS+1e-8>=r.seconds && repairSpaceClear(scene,target,current,r.regrow_s!==undefined ? r.seed_scale??GROWTH_LIMITS.seedScale : 1))finishRepair(a,false);}else t.phase='out';
  }
  const perform=(a:Account,action:CommerceAction)=>{
   if(action.kind==='cancel'){
@@ -184,7 +188,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
    const food=c.e.goods.find(g=>g.food>0 && a.inventory[g.id]!>0);if(food){perform(a,{kind:'eat',good:food.id});continue;}
    if(spec.shop){const purchase=c.e.markets.flatMap(m=>m.lots.filter(l=>l.price && c.goods.get(l.good)!.food>0).map(l=>({kind:'buy' as const,market:m.id,good:l.good}))).find(action=>!reason(current,scene,e,a,action));if(purchase){perform(a,purchase);continue;}}
   }
-  if(spec.repair){const offer=repairOffer(current,scene,e,a,spec.repair);if(!offer){a.repairSeen=undefined;continue;}const {target}=offer;if(a.repairSeen?.objectId!==target.objectId || a.repairSeen.zoneId!==target.zoneId)a.repairSeen={objectId:target.objectId,...(target.zoneId ? {zoneId:target.zoneId} : {}),atS:now};if(now-a.repairSeen.atS+1e-8>=c.repairs.get(spec.repair)!.dispatch_s)perform(a,{kind:'repair',repair:spec.repair});continue;}
+  const services=accountRepairs(spec);if(services.length){const id=services.find(id=>spec.repairs ? !reason(current,scene,e,a,{kind:'repair',repair:id}) : !!repairOffer(current,scene,e,a,id)),offer=id && repairOffer(current,scene,e,a,id);if(!offer){a.repairSeen=undefined;continue;}const {target}=offer;if(a.repairSeen?.objectId!==target.objectId || a.repairSeen.zoneId!==target.zoneId || (a.repairSeen.serviceId??services[0])!==id)a.repairSeen={...(spec.repairs ? {serviceId:id!} : {}),objectId:target.objectId,...(target.zoneId ? {zoneId:target.zoneId} : {}),atS:now};if(now-a.repairSeen.atS+1e-8>=c.repairs.get(id as string)!.dispatch_s)perform(a,{kind:'repair',repair:id as string});continue;}
   if(spec.work){const j=c.jobs.get(spec.work)!,m=e.markets.find(m=>m.id===j.market)!;if(m.stock[j.output]!+reserved(e,c.e,m.id,j.output)<j.target)perform(a,{kind:'work',job:j.id});}
  }
  return current;
@@ -192,7 +196,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
 
 /** Restore also checks conservation, so malformed jobs cannot mint wages or material. */
 export function checkEconomyState(state:CarState,scene:Scene):void{
- const d=scene.economy,e=state.economy;if(!d){if(e)throw Error('World has no economy');return;}if(!e)throw Error('Missing economy');
+ const d=scene.economy,e=state.economy;if(!d){if(e || state.growing?.length)throw Error('World has no economy');return;}if(!e)throw Error('Missing economy');
  const ids=(actual:string[],expected:string[])=>actual.length===expected.length && new Set(actual).size===actual.length && actual.every(id=>expected.includes(id));
  if(!ids(e.accounts.map(a=>a.id),d.accounts.map(a=>a.id)) || !ids(e.markets.map(m=>m.id),d.markets.map(m=>m.id)) || !ids(Object.keys(e.consumed),d.goods.map(g=>g.id)) || !ids(Object.keys(e.batches),d.jobs.map(j=>j.id)) || !ids(Object.keys(e.delivered),d.deliveries.map(j=>j.id)) || !ids(Object.keys(e.repaired),d.repairs.map(r=>r.id)))throw Error('Unknown economy members');
  if(e.atS>state.timeS+1e-6 || state.timeS-e.atS>L.decisionS+1e-6 || e.turn>=e.accounts.length)throw Error('Invalid economy clock');
@@ -200,10 +204,13 @@ export function checkEconomyState(state:CarState,scene:Scene):void{
   if(a.delivery){const task=d.deliveries.find(t=>t.id===a.delivery!.id);if(!task || a.work || a.repair || a.delivery.startedAtS>e.atS+1e-6 || a.credits+task.pay>L.money || Object.values(a.inventory).reduce((n,v)=>n+v,0)+task.quantity>spec.capacity)throw Error('Invalid saved delivery');}
   if(a.work){const j=d.jobs.find(j=>j.id===a.work!.id);if(!j || a.repair || a.credits+j.pay>L.money || a.work.doneAtS<e.atS-1e-6 || a.work.doneAtS>state.timeS+j.seconds+1e-6)throw Error('Invalid saved work');}
  }
+ const plants=state.growing??[];if(plants.length+e.accounts.filter(a=>a.repair && a.repair.phase!=='home' && d.repairs.find(r=>r.id===a.repair!.id)?.regrow_s!==undefined).length>GROWTH_LIMITS.plants || new Set(plants.map(p=>p.objectId)).size!==plants.length)throw Error('Invalid plant capacity');
+ for(const p of plants){const r=d.repairs.find(r=>r.id===p.serviceId);if(!r?.regrow_s || ![p.progressS,p.plantedAtS].every(Number.isFinite) || p.plantedAtS<0 || p.progressS<0 || p.progressS>=r.regrow_s || p.plantedAtS>e.atS || p.progressS>e.atS-p.plantedAtS+1e-6 || state.broken.includes(p.objectId) || !repairTargets(scene,r).some(t=>t.objectId===p.objectId))throw Error('Invalid saved plant growth');}
+ for(const r of d.repairs)if(r.regrow_s!==undefined && plants.filter(p=>p.serviceId===r.id).length>e.repaired[r.id]!)throw Error('Plant growth exceeds consumed planting inputs');
  const claimed=new Set<string>();
- for(const a of e.accounts)if(a.repairSeen){const spec=d.accounts.find(d=>d.id===a.id)!,r=d.repairs.find(r=>r.id===spec.repair);if(!r || a.repairSeen.atS>state.timeS || !repairTargets(scene,r).some(t=>t.objectId===a.repairSeen!.objectId && t.zoneId===a.repairSeen!.zoneId))throw Error('Invalid saved repair notice');}
+ for(const a of e.accounts)if(a.repairSeen){const spec=d.accounts.find(d=>d.id===a.id)!,r=d.repairs.find(r=>r.id===(a.repairSeen!.serviceId??accountRepairs(spec)[0]));if(!r || !accountRepairs(spec).includes(r.id) || a.repairSeen.atS>state.timeS || !repairTargets(scene,r).some(t=>t.objectId===a.repairSeen!.objectId && t.zoneId===a.repairSeen!.zoneId))throw Error('Invalid saved repair notice');}
  for(const a of e.accounts)if(a.repair){const t=a.repair,r=d.repairs.find(r=>r.id===t.id),spec=d.accounts.find(s=>s.id===a.id)!,target=r && repairTargets(scene,r).find(o=>o.objectId===t.objectId && o.zoneId===t.zoneId),key=JSON.stringify([t.objectId,t.zoneId]);
-  if(!r || !target || a.work || a.delivery || spec.actor!=='player' && spec.repair!==r.id || t.progressS>r.seconds || t.phase!=='home' && Object.values(a.inventory).reduce((n,v)=>n+v,0)+r.take>spec.capacity || t.routeAtS>state.timeS+1.01 || t.phase!=='home' && (a.credits+r.pay>L.money || !targetBroken(state,t) || claimed.has(key)) || spec.actor==='player' && t.phase==='home')throw Error('Invalid saved repair');
+  if(!r || !target || a.work || a.delivery || spec.actor!=='player' && !accountRepairs(spec).includes(r.id) || t.progressS>r.seconds || t.phase!=='home' && Object.values(a.inventory).reduce((n,v)=>n+v,0)+r.take>spec.capacity || t.routeAtS>state.timeS+1.01 || t.phase!=='home' && (a.credits+r.pay>L.money || !targetBroken(state,t) || claimed.has(key)) || spec.actor==='player' && t.phase==='home')throw Error('Invalid saved repair');
   if(t.phase!=='home')claimed.add(key);
   if(!repairSegment(scene,r,t.at,t.at,state,true) || Math.hypot(t.at.x-target.contact.x,t.at.y-target.contact.y)>target.contact.r+REPAIR_REACH+.01 || Math.hypot(t.at.x-target.contact.x,t.at.y-target.contact.y)<target.contact.r+REPAIR_RADIUS)throw Error('Invalid repair approach');
   if(spec.actor!=='player'){if(!repairSegment(scene,r,t,t,state,true))throw Error('Invalid worker position');let previous={x:t.x,y:t.y};for(const p of t.path){if(!repairSegment(scene,r,previous,p,state,true))throw Error('Invalid saved repair path');previous=p;}if(t.path.length && Math.hypot(previous.x-(t.phase==='home' ? scene.objects.find(o=>o.id===spec.actor)!.x : t.at.x),previous.y-(t.phase==='home' ? scene.objects.find(o=>o.id===spec.actor)!.y : t.at.y))>.01)throw Error('Invalid repair destination');}

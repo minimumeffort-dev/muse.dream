@@ -71,7 +71,7 @@ export class WorldDebris {
       const prototype=this.prototypes.get(template)!;prototype.usedAt=this.time;
       let group=this.pieces.get(key);if(!group){group=prototype.groups.get(piece.fragmentId)!.clone(true);this.pieces.set(key,group);this.group.add(group);}
       group.visible=true;group.position.copy(worldPosition(this.scene,piece.x,piece.y));group.position.y=piece.elevation+1.5;
-      group.quaternion.fromArray(piece.rotation);group.scale.setScalar(object.scale*Math.min(1,(piece.lifetime-piece.age)/.8));
+      group.quaternion.fromArray(piece.rotation);group.scale.setScalar(object.scale*(piece.sizeScale??1)*Math.min(1,(piece.lifetime-piece.age)/.8));
     }
   }
 }

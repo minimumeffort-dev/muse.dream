@@ -70,7 +70,7 @@ working mock mechanics and the future sketch/Muse pipeline.
 ```sh
 npm install        # once
 npm run dev        # Vite dev server at http://127.0.0.1:5173/
-npm test           # Vitest behavior tests (simulation + scene validation)
+npm test -- --maxWorkers=2 --testTimeout=60000 # full-world behavior checks, matching CI
 npm run build      # typecheck (tsc --noEmit) + production build
 npm run typecheck  # types only
 npm run -s dream -- check docs/examples/dream-v2-world.dream # bounded DSL + playability check
@@ -419,7 +419,7 @@ Dream 2 ungrouped topple compiles one stable rigid fragment. Whole impacts may
 use one centered base contact; compound/offset contacts remain rejected. Preserve
 narrow lamp contacts, all authored geometry, shared category rules, night paint,
 actor/rig limits and no per-cell bodies. Lamp surface pools turn off while broken
-and return after paid repair. Keep format 7/simulation 9 and the registered r50/r51
+and return after paid repair. Keep format 8/simulation 10 and the registered r50/r51/r52
 migration chain. Current service covers 84 targets including 77 lamps; other
 districts still need declared coverage.
 See `docs/examples/streetlight-repairs.dream` and `docs/dream/rules.md`.
@@ -435,3 +435,20 @@ The r51 migration preserves all state while rebasing derived ambient node indice
 by coordinate/adjacency. Validate against the old graph first; prepare that graph
 in the world worker and preserve saved positions, clocks, random state, jobs,
 damage and ledger. See `docs/examples/street-verge-repairs.dream`.
+
+
+Tree planting extends `repair` with `regrow_s` (30..86400) and optional
+`seed_scale` (0.1..0.5, default .15), requiring exactly `kind=tree` and whole-object
+topplers with a centered base contact, no foundation/zones/seat/emitter/lamp.
+Use ordered `account.repairs` (1..4 unique services) for shared NPC duties; keep
+legacy `repair`, exclusive automatic policies and one active commitment.
+At most 32 growing records plus reserved planting jobs. Scale renderer and
+contacts from one immutable growth snapshot; pause expansion for occupied space.
+Re-destruction captures current size, clears growth and never refunds a planted
+input. Keep streamed culling/shadow bounds valid for young crowns, reapply growth
+on chunk install and allocate no per-step geometry. Preserve format 8/simulation
+10, the exact registered r52 projection and older graph migrations. Overlapping
+work grounds require clear full-cylinder portals; parked vehicles affect route
+selection, moving transit causes waits and blocked paths retry without losing
+claims. See `docs/dream/growth.md` and its checked example. Current live coverage
+is three orchard trees, not all 336 measured trees.

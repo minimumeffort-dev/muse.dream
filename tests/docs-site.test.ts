@@ -10,9 +10,14 @@ describe('Dream syntax highlighting',()=>{
     const html=highlight('world(damage_pool=true);rule lights(kind=lamp,mode=topple(speed=95));object light(label="<Lamp>&");');
     expect(html).toContain('class="dream-field">damage_pool</span>');expect(html).toContain('class="dream-keyword">topple</span>');expect(html).toContain('&lt;Lamp&gt;&amp;');expect(highlight('damage_pool_extra lamplighter topples')).not.toMatch(/dream-(?:keyword|field)/);
   });
+  it('highlights planting fields at complete boundaries and escapes authored labels',()=>{
+    const html=highlight('account gardener(repairs=[trees,furniture]);repair trees(label="<Plant>&",regrow_s=180,seed_scale=.15);');
+    for(const field of ['repairs','regrow_s','seed_scale'])expect(html).toContain(`class="dream-field">${field}</span>`);
+    expect(html).toContain('&lt;Plant&gt;&amp;');expect(highlight('repairs_extra regrow_slow seed_scaleway')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('highlights repair commands and dispatch fields without consuming longer IDs or authored HTML',()=>{
     const html=highlight('repair tables(label="<Repair>&",on=yard,kind=table,dispatch_s=12);account worker(repair=tables);');
-    expect(html).toContain('class="dream-keyword">repair</span>');expect(html).toContain('class="dream-field">dispatch_s</span>');expect(html).toContain('&lt;Repair&gt;&amp;');expect(highlight('repairman repairs dispatch_s_extra')).not.toMatch(/dream-(?:keyword|field)/);
+    expect(html).toContain('class="dream-keyword">repair</span>');expect(html).toContain('class="dream-field">dispatch_s</span>');expect(html).toContain('&lt;Repair&gt;&amp;');expect(highlight('repairman repairs_extra dispatch_s_extra')).not.toMatch(/dream-(?:keyword|field)/);
   });
   it('highlights dormant parking and local control adapters at complete token boundaries',()=>{
     const html=highlight('asset car(module=library,object=van,control=car);place bike(role=controllable,parked=true);furnish bikes(role=controllable); // <script>&');

@@ -1,7 +1,9 @@
+import {growthContact} from '../scene/growth';
+import {objectPlacement} from '../scene/placement';
 import type {Scene,Point} from '../scene/schema';
 import type {Repair} from '../scene/commerce';
 import type {CarState} from './car';
-import {COMMERCE_LIMITS,repairGrounds,repairTargets,repairCoverage,type RepairTarget} from '../scene/commerce';
+import {COMMERCE_LIMITS,accountRepairs,repairGrounds,repairTargets,repairCoverage,type RepairTarget} from '../scene/commerce';
 import {objectContacts,queryStaticContacts,sceneContacts,type Contact} from '../scene/contacts';
 import {onPolygon,streetFootprints} from '../scene/streets';
 import {polygonBounds,distanceToPolygon} from '../scene/polygons';
@@ -52,9 +54,9 @@ export function repairSegment(scene:Scene,r:Repair,a:Point,b:Point,state:CarStat
  for(let i=0;i<=n;i++){const p={x:a.x+(b.x-a.x)*i/n,y:a.y+(b.y-a.y)*i/n};if(areaOnly ? !grid(scene,r).allowed(p) : !repairClear(scene,r,p,state))return false;}return true;
 }
 /** Graph edges already have immutable pavement/water support; contacts remain live. */
-function segmentClear(scene:Scene,a:Point,b:Point,state?:CarState):boolean{
+function segmentClear(scene:Scene,a:Point,b:Point,state?:CarState,live:Contact[]=[]):boolean{
  const length=Math.hypot(b.x-a.x,b.y-a.y);
- return !queryStaticContacts(scene,(a.x+b.x)/2,(a.y+b.y)/2,length/2+REPAIR_RADIUS,state).some(c=>{
+ return ![...queryStaticContacts(scene,(a.x+b.x)/2,(a.y+b.y)/2,length/2+REPAIR_RADIUS,state),...live].some(c=>{
    if(state && isBroken(state,c) || distanceToRoad([a,b],c.x,c.y)>=REPAIR_RADIUS+c.r)return false;
    const t=length ? Math.max(0,Math.min(1,((c.x-a.x)*(b.x-a.x)+(c.y-a.y)*(b.y-a.y))/(length*length))) : 0,floor=drivingHeight(scene.terrain,a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t);
    return c.top>floor && c.bottom<floor+18;
@@ -84,6 +86,10 @@ export function repairNetwork(scene:Scene,r:Repair){
  const connect=(a:number,b:number)=>{if(a!==b && repairSegment(scene,r,nodes[a]!,nodes[b]!,undefined,true)){if(!nodes[a]!.links.includes(b))nodes[a]!.links.push(b);if(!nodes[b]!.links.includes(a))nodes[b]!.links.push(a);return true;}return false;};
  for(let i=0;i<g.nodes.length;i++)if(g.nodes[i])local[i]=add(g.point(i));
  for(const patch of g.patches)for(let j=0;j<patch.nx*patch.ny;j++){const i=patch.start+j;if(local[i]!<0)continue;for(const k of [j+1,j+patch.nx])if(k<patch.nx*patch.ny && (k===j+patch.nx || k%patch.nx!==0) && local[patch.start+k]!>=0)connect(local[i]!,local[patch.start+k]!);}
+ const connectLocal=(i:number,p:Point)=>{for(let j=0;j<g.nodes.length;j++)if(local[j]!>=0 && Math.hypot(g.point(j).x-p.x,g.point(j).y-p.y)<=24)connect(i,local[j]!);};
+ for(let a=0;a<g.patches.length;a++)for(let b=a+1;b<g.patches.length;b++){
+  const p=pavementPortal(g.patches[a]!.polygon,g.patches[b]!.polygon,REPAIR_RADIUS);if(p && g.allowed(p))connectLocal(add(p),p);
+ }
  // The worker's four-unit cylinder can use safe links omitted for wider cosmetic rigs.
  const components=new Int32Array(publicNodes.length).fill(-1);let component=0;
  for(let i=0;i<publicNodes.length;i++)if(components[i]===-1){const queue=[i];components[i]=component;for(let at=0;at<queue.length;at++)for(const j of publicNodes[queue[at]!]!.links)if(components[j]===-1){components[j]=component;queue.push(j);}component++;}
@@ -94,15 +100,16 @@ export function repairNetwork(scene:Scene,r:Repair){
   const p=pavementPortal(patch.polygon,polygon,REPAIR_RADIUS);if(!p || !g.allowed(p))continue;
   const i=add(p),inner=patch.verge ? pavementInsetPoint(polygon,p,REPAIR_RADIUS) : undefined;let link=i;
   if(inner && Math.hypot(inner.x-p.x,inner.y-p.y)>.01){const j=add(inner);if(connect(i,j))link=j;}
-  for(let j=0;j<g.nodes.length;j++)if(local[j]!>=0 && Math.hypot(g.point(j).x-p.x,g.point(j).y-p.y)<=24)connect(i,local[j]!);
+  connectLocal(i,p);
   let linked=0;for(const {j} of publicNodes.map((n,j)=>({j,d:Math.hypot(n.x-p.x,n.y-p.y)})).filter(({j})=>publicNodes[j]!.links.length).sort((a,b)=>a.d-b.d || a.j-b.j).slice(0,32))if(connect(link,j) && ++linked===8)break;
  }
  if(nodes.reduce((n,p)=>n+p.links.length,0)>COMMERCE_LIMITS.repairNetworkLinks)throw Error(`${r.id}: repair network exceeds 32768 links`);
  entries.set(r.id,nodes);return nodes;
 }
 function networkPath(scene:Scene,r:Repair,start:Point,end:Point,state?:CarState):Point[]|undefined{
- if(repairSegment(scene,r,start,end,state))return [{x:end.x,y:end.y}];
- const nodes=repairNetwork(scene,r),near=(p:Point)=>nodes.map((n,i)=>({i,d:Math.hypot(n.x-p.x,n.y-p.y)})).filter(v=>nodes[v.i]!.links.length).sort((a,b)=>a.d-b.d || a.i-b.i).slice(0,32).filter(v=>repairSegment(scene,r,p,nodes[v.i]!,state));
+ const live=state ? actorContacts(scene,state.timeS,state).filter(c=>!c.id || !sceneContacts(scene).objects.get(c.id)?.route) : [],clear=(a:Point,b:Point)=>repairSegment(scene,r,a,b,state,true) && segmentClear(scene,a,b,state,live);
+ if(clear(start,end))return [{x:end.x,y:end.y}];
+ const nodes=repairNetwork(scene,r),near=(p:Point)=>nodes.map((n,i)=>({i,d:Math.hypot(n.x-p.x,n.y-p.y)})).filter(v=>nodes[v.i]!.links.length).sort((a,b)=>a.d-b.d || a.i-b.i).slice(0,32).filter(v=>clear(p,nodes[v.i]!));
  const starts=near(start),ends=new Set(near(end).map(n=>n.i)),previous=new Int32Array(nodes.length).fill(-2),cost=new Float64Array(nodes.length).fill(Infinity),closed=new Uint8Array(nodes.length),heap:{i:number;f:number}[]=[];
  const less=(a:{i:number;f:number},b:{i:number;f:number})=>a.f<b.f || a.f===b.f && a.i<b.i;
  const push=(v:{i:number;f:number})=>{let i=heap.length;heap.push(v);while(i>0){const p=(i-1)>>1;if(!less(v,heap[p]!))break;heap[i]=heap[p]!;i=p;}heap[i]=v;};
@@ -114,7 +121,7 @@ function networkPath(scene:Scene,r:Repair,start:Point,end:Point,state?:CarState)
    const compact:Point[]=[];
    for(const p of path){if(compact.length && distance(compact.at(-1)!,p)<.001)continue;while(compact.length>1){const a=compact.at(-2)!,b=compact.at(-1)!,cross=(b.x-a.x)*(p.y-b.y)-(b.y-a.y)*(p.x-b.x),dot=(b.x-a.x)*(p.x-b.x)+(b.y-a.y)*(p.y-b.y);if(dot<0 || Math.abs(cross)>1e-5*(distance(a,b)+distance(b,p)))break;compact.pop();}compact.push(p);}
    return compact.length<=COMMERCE_LIMITS.repairPath ? compact : undefined;}
-  for(const j of nodes[i]!.links){const next=cost[i]!+distance(nodes[i]!,nodes[j]!);if(!closed[j] && next<cost[j]! && segmentClear(scene,nodes[i]!,nodes[j]!,state)){cost[j]=next;previous[j]=i;push({i:j,f:next+distance(nodes[j]!,end)});}}
+  for(const j of nodes[i]!.links){const next=cost[i]!+distance(nodes[i]!,nodes[j]!);if(!closed[j] && next<cost[j]! && segmentClear(scene,nodes[i]!,nodes[j]!,state,live)){cost[j]=next;previous[j]=i;push({i:j,f:next+distance(nodes[j]!,end)});}}
  }return;
 }
 export interface RepairNavigation {sourceHash:string;services:{id:string;nodes:WorkNode[]}[]}
@@ -134,7 +141,7 @@ export function primeRepairNavigation(scene:Scene,packet:RepairNavigation):void{
 export function repairAccessProblems(scene:Scene):string[]{
  const problems:string[]=[];
  for(const r of scene.economy?.repairs??[]){if(!r.grounds && !r.streets)continue;
-  try{const workers=scene.economy!.accounts.filter(a=>a.repair===r.id).map(a=>scene.objects.find(o=>o.id===a.actor)!);
+  try{const workers=scene.economy!.accounts.filter(a=>accountRepairs(a).includes(r.id)).map(a=>scene.objects.find(o=>o.id===a.actor)!);
    const homes=workers.length ? workers : [scene.objects.find(o=>o.id===scene.economy!.markets.find(m=>m.id===r.market)!.actor)!];
    repairNetwork(scene,r);
    for(const home of homes)for(const target of repairTargets(scene,r))if(!repairApproach(scene,r,target,home))problems.push(`${r.id}: ${target.objectId} needs a clear connection from its work ground to the pedestrian network and supply home`);
@@ -154,8 +161,8 @@ export function repairPlayerContact(scene:Scene,state:CarState):Contact{
  return {x:state.x,y:state.y,r,bottom:state.elevation,top:state.elevation+height};
 }
 /** Restore only into unoccupied space, including vehicles left parked inside the rubble. */
-export function repairSpaceClear(scene:Scene,t:RepairTarget,state:CarState):boolean{
- const object=scene.objects.find(o=>o.id===t.objectId)!,contacts=objectContacts(scene,object).filter(c=>c.zoneId===t.zoneId);
+export function repairSpaceClear(scene:Scene,t:RepairTarget,state:CarState,scale=1):boolean{
+ const object=scene.objects.find(o=>o.id===t.objectId)!,contacts=objectContacts(scene,object).filter(c=>c.zoneId===t.zoneId).map(c=>growthContact(c,objectPlacement(scene,object).base,scale));
  const objects=sceneContacts(scene).objects,people=actorPoses(scene,state.timeS,state).filter(p=>{const object=objects.get(p.id);return object && archetypeOf(object).interaction==='decor';}).map(p=>{const o=objects.get(p.id)!;return {x:p.x,y:p.y,r:objectRadius(o),bottom:p.elevation,top:p.elevation+objectHeight(o)};});
  const obstacles=[...people,repairPlayerContact(scene,state),...actorContacts(scene,state.timeS,state),...state.props.map(p=>{const o=scene.objects.find(o=>o.id===p.id)!;return {x:p.x,y:p.y,r:objectRadius(o),bottom:p.elevation??0,top:(p.elevation??0)+objectHeight(o)};})];
  return contacts.every(c=>![...obstacles,...queryStaticContacts(scene,c.x,c.y,c.r,state).filter(o=>o.id!==t.objectId && !isBroken(state,o))].some(o=>Math.hypot(o.x-c.x,o.y-c.y)<o.r+c.r+.1 && o.top>c.bottom && o.bottom<c.top));

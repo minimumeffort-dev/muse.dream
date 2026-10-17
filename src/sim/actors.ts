@@ -18,7 +18,7 @@ const actors=new WeakMap<Scene,SceneObject[]>();
 export function routeObjects(scene:Scene) {let objects=actors.get(scene);if(!objects){objects=scene.objects.filter(isResidentActor);actors.set(scene,objects);}return objects;}
 const bases=new WeakMap<Scene,Map<string,number>>();
 const repairOwners=new WeakMap<Scene,Map<string,string>>();
-export function repairForActor(state:CarState|undefined,scene:Scene,id:string){let owners=repairOwners.get(scene);if(!owners){owners=new Map(scene.economy?.accounts.filter(a=>a.repair).map(a=>[a.actor,a.id]));repairOwners.set(scene,owners);}const account=owners.get(id);return account ? state?.economy?.accounts.find(a=>a.id===account)?.repair : undefined;}
+export function repairForActor(state:CarState|undefined,scene:Scene,id:string){let owners=repairOwners.get(scene);if(!owners){owners=new Map(scene.economy?.accounts.filter(a=>a.repair || a.repairs?.length).map(a=>[a.actor,a.id]));repairOwners.set(scene,owners);}const account=owners.get(id);return account ? state?.economy?.accounts.find(a=>a.id===account)?.repair : undefined;}
 export function actorPose(scene:Scene,object:SceneObject,timeS:number,state?:CarState):ActorPose {
   const control=controlFor(object),route=object.route && scene.routes.find(r=>r.id===object.route!.id)!,program=behaviorFor(scene,object);
   const profile=controlOf(object.spec);

@@ -1,3 +1,4 @@
+import {growthScale,growthContact} from './growth';
 import {isResidentActor} from './agents';
 import type {CarState} from '../sim/car';
 import {parkingDefinitions,parkingState} from '../sim/parking';
@@ -33,7 +34,7 @@ export function movedParkingContacts(scene:Scene,x:number,y:number,reach:number,
 }
 /** The immutable seed cylinders yield to occupied/moved parking poses. */
 export function queryStaticContacts(scene:Scene,x:number,y:number,reach:number,state?:CarState):Contact[]{
- const data=sceneContacts(scene),seed=data.solids.query(x,y,reach+data.maxRadius);if(!state || !parkingDefinitions(scene).byId.size)return seed;
+ const data=sceneContacts(scene),original=data.solids.query(x,y,reach+data.maxRadius),seed=state?.growing?.length ? original.map(c=>{const scale=c.id ? growthScale(scene,state,c.id) : 1;return scale===1 ? c : growthContact(c,objectPlacement(scene,data.objects.get(c.id!)!).base,scale);}) : original;if(!state || !parkingDefinitions(scene).byId.size)return seed;
  const moved=parkingState(scene,state.vehicles),active=state.control.kind==='vehicle' ? state.control.id : undefined;
  return [...seed.filter(c=>!c.id || c.id!==active && !moved.byId.has(c.id)),...movedParkingContacts(scene,x,y,reach,state)];
 }

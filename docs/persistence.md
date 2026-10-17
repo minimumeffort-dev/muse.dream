@@ -10,7 +10,7 @@ Autosave runs every ten simulation seconds, after a conversation press or commit
 | People | Program state, routine clocks, facing and whether you have met |
 | Physical changes | Moved props, damaged objects/building zones and remaining debris |
 | Sports | Scores, balls and practice state |
-| Market life | Credits, inventory, fullness, shelf stock, consumed food, completed batches, reserved work, sealed cargo, completed deliveries, repair claims/journeys and consumed kits |
+| Market life | Credits, inventory, fullness, shelf stock, consumed food, completed batches, reserved work, sealed cargo, completed deliveries, repair claims/journeys, consumed supplies and planted-tree progress |
 | World clocks | Simulation time, ambient population state and day/night phase |
 
 Held controls, buffered jumps and shot charges are cancelled on restore. Transient impact flashes are not replayed. The engine checks the active body's clearance; an unsafe pose recovers the player while retaining valid world changes. Public transport restores passenger ownership beside its saved route clocks.
@@ -44,11 +44,11 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-Format 7 retains the exact source hash and the compatibility fingerprint, with simulation version 9. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+Format 8 retains the exact source hash and the compatibility fingerprint, with simulation version 10. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The first market has an explicit registered upgrade from the earlier world. It verifies that every pre-market rule still matches, then initializes only the new accounts/stock/needs at the saved simulation time. Player position, vehicles, damage, sports, NPC memory, population and day/night remain saved. The known r44 format 1 source and format 2 browser fingerprints are supported; original slots are kept. A malformed newer slot blocks writes rather than silently loading an older copy. The registered upgrade chain includes the first-market, first-delivery, usable-parking, local-repair, replacement-supply and connected-repair releases. Later incompatible economy edits cannot silently replay older progress.
 
-Format 1 cannot establish arbitrary cross-source compatibility. Format 2 worlds outside the registered release require their exact earlier fingerprint. Unsupported format 3 economies are rejected. The first-delivery release also upgrades the known format 3 market: it checks the earlier world and economy, preserves existing balances, stock, fullness and reserved work deadlines, and initializes only the depot, canteen, staff account and empty delivery ledger. Sealed cargo and reserved delivery wages round-trip in format 7. Cancelling, recovery and reloading cannot pay a delivery twice. Future engine or economy changes need their own tested migration; no general layout or rule migration exists. A compatibility fingerprint is a safety check, not a signature proving a file's origin.
+Format 1 cannot establish arbitrary cross-source compatibility. Format 2 worlds outside the registered release require their exact earlier fingerprint. Unsupported format 3 economies are rejected. The first-delivery release also upgrades the known format 3 market: it checks the earlier world and economy, preserves existing balances, stock, fullness and reserved work deadlines, and initializes only the depot, canteen, staff account and empty delivery ledger. Sealed cargo and reserved delivery wages round-trip in format 8. Cancelling, recovery and reloading cannot pay a delivery twice. Future engine or economy changes need their own tested migration; no general layout or rule migration exists. A compatibility fingerprint is a safety check, not a signature proving a file's origin.
 
 The parking release upgrades the known r46 format 4 backup only after the host confirms an exact projection of the previous world. It preserves all economic/physical state and validates vehicle ownership against the old prop roles before accepting it. Old slots remain intact. Formats 5 and 6 permit up to 281 saved unoccupied poses (256 dormant parking records, the resident fleet and the original car); old formats keep their 24-record bound. This changes saved metadata capacity, not live animation limits.
 
@@ -140,3 +140,22 @@ positions, travel history, random state and clocks. Worker paths are already
 coordinate-based and remain unchanged. Both graphs are prepared in the world
 worker. This is a tested migration for this release, not a general map-edit
 migration. Unknown old indices or missing coordinates are rejected.
+
+
+## Orchard recovery upgrade
+
+Format 8 / simulation 10 adds at most 32 growing-tree records: object, planting
+service, planted-at clock and elapsed unblocked growth. A damaged young tree's
+debris retains its captured size. Restore checks membership, uniqueness,
+authorized service, valid clocks/progress, planted-input consumption and reserved
+planting capacity. Paused or closed pages accumulate no growth.
+
+The registered r52 format 7 projection removes only the orchard grounds, sapling
+stock/delivery/service and extra worker policy. Existing objects, crossings,
+public-pavement graph and old market rules must still match. A matching save keeps
+all balances, stock, damage, jobs, paths, clocks, memories and vehicle ownership;
+only the new inventory keys, six market saplings, eighteen depot saplings and zero
+new completion counters are initialized. The earlier upgrade chain remains
+supported. r52 node indices already belong to the current pedestrian graph and
+are retained; older releases still use their registered graph conversion. No
+other layout or economy change can silently opt into this upgrade.

@@ -43,3 +43,9 @@ it('primes bounded worker-owned navigation atomically and rejects malformed topo
  const {repairNavigation,primeRepairNavigation}=await import('../src/sim/repair');const packet=repairNavigation(scene),copy={...scene};primeRepairNavigation(copy,packet);expect(repairNetwork(copy,r)).toBe(packet.services[0]!.nodes);
  for(const mutate of [(p:typeof packet)=>{p.sourceHash='other';},(p:typeof packet)=>{p.services[0]!.id='unknown';},(p:typeof packet)=>{p.services[0]!.nodes[0]!.x=NaN;},(p:typeof packet)=>{p.services[0]!.nodes[0]!.links=[0];},(p:typeof packet)=>{p.services[0]!.nodes[0]!.links=[8192];},(p:typeof packet)=>{p.services=[];}]){const bad=structuredClone(packet);mutate(bad);expect(()=>primeRepairNavigation(copy,bad)).toThrow('Invalid prepared');expect(repairNetwork(copy,r)).toBe(packet.services[0]!.nodes);}
 });
+
+it('connects adjoining work grounds through a full-cylinder portal and rejects a real gap',()=>{
+ const joined=source.replace('at=[1160,970]','at=[1160,1130]').replace('grounds=[remote_yard]','grounds=[remote_yard,outer_bed]')+'\nsurface outer_bed(color=#819461,points=[[1080,1010],[1260,1010],[1260,1190],[1080,1190]]);';
+ const accepted=compileDreamScene(joined,{sceneId:'joined-work',revisionId:'r1',sourceHash:'joined'});expect(accepted.surfaces.find(s=>s.id==='outer_bed')).toBeDefined();
+ expect(()=>compileDreamScene(joined.replace('[[1080,1010],[1260,1010]','[[1080,1040],[1260,1040]'),{sceneId:'gap',revisionId:'r1',sourceHash:'gap'})).toThrow('clear connection');
+});

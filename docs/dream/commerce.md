@@ -179,7 +179,9 @@ repair yard_tables(label="Repair a table",market=corner,on=work_yard,kind=table,
 
 Put the declaration inside `economy`. An NPC account uses `repair=yard_tables` to
 notice and take those jobs automatically. The player never has an automatic
-policy. Production `work` and `repair` policies cannot share one account.
+policy. Use `repairs=[service_a,service_b]` for one to four services in priority
+order, skipping work that cannot currently start. It excludes `repair` and
+automatic `work`; each account still holds one commitment.
 
 `kind` selects one measured category, as shared destruction rules do. Use
 `kinds=[table,custom]` for several categories under the same service. Declare
@@ -202,8 +204,8 @@ work approaches beside its sidewalks. When both are omitted, workers remain in
 the primary area.
 Blocked workers wait;
 there is no ladder, construction scaffold or dropped-kit simulation. Trees use
-the same restore mechanism when authored for it; growing a new sapling is still
-a separate missing capability. The live service covers the market table, crate and planter, both benches
+a `regrow_s` repair service for paid planting and physical growth.
+[Planting guide and runnable source](growth.md). The live service covers the market table, crate and planter, both benches
 at the park/station and the two park wall sections. It does not make other scenery destructible.
 
 
@@ -307,3 +309,18 @@ policies per worker remain further work. Damaged lamps lose their ground light
 pool until repair. [Streetlight destruction](rules.md#streetlights-and-streamed-destruction)
 uses the same pooled geometry and saved damage as before.
 [Verification and media audit](../evidence/verge-repairs/verification.md).
+
+
+## Planting and growth
+
+Repair services can plant a small replacement tree instead of restoring a mature
+one immediately. Saplings and pay come from the market; a saved growth clock
+then enlarges the tree and its collision body. The caretaker shares furniture
+and orchard duties through `repairs=[market_tables,orchard_trees]`.
+[Authoring, controls and current limits](growth.md).
+
+Network journeys now plan around parked vehicles and stationary physical actors.
+A newly blocked segment clears its stale path and retries while keeping its
+claim and reserved supplies. Moving transit causes a wait rather than changing
+the walking network. Adjacent declared grounds join only through a clear
+full-cylinder portal; they cannot bridge a real gap.

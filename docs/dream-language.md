@@ -53,3 +53,9 @@ includes a complete street-and-crossing example.
 `world(...,damage_pool=true)` keeps intact break/topple props instanced and gives
 them persistent independent damage with bounded active debris and mesh caches.
 The live streetlights use this path. [Rules and complete repair example](dream/rules.md#streetlights-and-streamed-destruction).
+
+
+Tree recovery reuses `repair` with `regrow_s` and optional `seed_scale`. Ordered
+`account.repairs` shares one worker across one to four services. The engine owns
+claims, finite inputs/pay, growth and clearance; source remains data-only.
+[Planting guide](dream/growth.md) · [Runnable world](examples/orchard-replanting.dream).
