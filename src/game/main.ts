@@ -1,4 +1,5 @@
 import {gameSave} from './save';
+import {saveTools} from './save-tools';
 import {nearbyNpc,npcSpeech} from '../sim/npcs';
 import {AmbientPopulation} from './ambient-population';
 import {CharacterAnimator} from './character-animation';
@@ -67,7 +68,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   await loading.stage("Preparing driving and walking");
   const carRadius = playerRadius(doc);
   const roadMask = buildMaskForScene(doc);
-  const world: World = { scene: doc, roadMask,
+  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,
     driveMask: buildPaperMask(doc.canonical.width, doc.canonical.height), carRadius };
   let car = createCarAtSpawn(doc);
   if(import.meta.env.DEV)car=vehicleReviewStart(car,world,new URLSearchParams(location.search).get("test-vehicle"));
@@ -80,12 +81,13 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   const saves=!review || reviewSave ? gameSave(world,()=>localStorage,reviewSave ? 'muse-dream.review-save' : 'muse-dream.save') : undefined;
   if(saves?.restored){car=saves.restored.state;worldTime.value=saves.restored.worldTime;}
   let saveAt=car.timeS,saveDirty=false;
+  const saveIdentity={sourceHash:doc.sourceHash,compatibilityHash:world.saveCompatibility};
   saveButton.hidden=!saves;saveButton.textContent=saves?.blocked ? "Save current session" : "Save now";saveStatus.textContent=saves?.status??'Review session: saves disabled.';
-  const saveNow=(replace=false)=>{
-    if(!saves)return;const start=performance.now(),saved=saves.write(car,worldTime.value,replace),ms=performance.now()-start;saveAt=car.timeS;saveDirty=false;saveStatus.textContent=saves.status;saveButton.textContent=saves.blocked ? "Save current session" : "Save now";saveError.hidden=saved;const warning=saved ? "" : saves.status;if(saveError.textContent!==warning)saveError.textContent=warning;
-    container.dataset.save=JSON.stringify({restored:!!saves.restored,saved,ms,characters:saves.characters,timeS:car.timeS,known:car.npcs.filter(n=>n.known).map(n=>n.id),review:reviewSave,status:saves.status});
+  const saveNow=(replace=false,state=car,time=worldTime.value)=>{
+    if(!saves)return false;const start=performance.now(),saved=saves.write(state,time,replace),ms=performance.now()-start;saveAt=car.timeS;saveDirty=false;saveStatus.textContent=saves.status;saveButton.textContent=saves.blocked ? "Save current session" : "Save now";saveError.hidden=saved;const warning=saved ? "" : saves.status;if(saveError.textContent!==warning)saveError.textContent=warning;
+    container.dataset.save=JSON.stringify({...saveIdentity,restored:!!saves.restored,saved,ms,characters:saves.characters,timeS:state.timeS,known:state.npcs.filter(n=>n.known).map(n=>n.id),review:reviewSave,status:saves.status});return saved;
   };
-  container.dataset.save=JSON.stringify({restored:!!saves?.restored,enabled:!!saves,review:reviewSave,status:saveStatus.textContent});
+  container.dataset.save=JSON.stringify({...saveIdentity,restored:!!saves?.restored,enabled:!!saves,review:reviewSave,status:saveStatus.textContent});
   saveButton.addEventListener('click',()=>saveNow(saves?.blocked??false));addEventListener('pagehide',()=>saveNow());
   if(saves && !saves.restored && saves.status.startsWith("Could not")){saveError.hidden=false;saveError.textContent=saves.status;}
   const stepper = new FixedStepper();
@@ -248,23 +250,33 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   let boostUntil = 0;
   let cameraAngle = 0, viewAngle = 0, landingBounce = 0;
   let flight = { jumps: 0, landings: 0, maxClearance: 0 };
+  document.querySelector<HTMLElement>('#save-tools')!.hidden=!saves;
+  const backups=saves ? saveTools(world,()=>({state:car,worldTime:worldTime.value}),snapshot=>saveNow(true,snapshot.state,snapshot.worldTime),snapshot=>{
+    car=snapshot.state;worldTime.value=snapshot.worldTime;saveDirty=false;saveAt=car.timeS;resetPresentation();saveStatus.textContent='Backup restored on this device.';
+  }) : undefined;
 
   function resetPosition(restartRace = false): void {
+    backups?.close();
     pendingDraw=undefined;saveDirty=true;
     car = resetCar(car, doc, restartRace);
+    resetPresentation(restartRace);
+    if(restartRace){worldTime.value=0;manualZoom.factor=1;}
+  }
+  function resetPresentation(resetProps=true):void{
+    pendingDraw=undefined;
     walkerAnimation.reset();
     clearShot();
     pointerAim=undefined;
     boostRequested=false;talkRequested=false;
-    if(restartRace){worldTime.value=0;manualZoom.factor=1;}
     stepper.reset(); particles.clear(); landscape.clear(); snap = true; cameraAngle=viewAngle;
     boostUntil = 0; surface.textContent = "";
     flight = { jumps: 0, landings: 0, maxClearance: 0 }; landingBounce = 0;
     wheelDistance = 0;
-    if (restartRace) for (const group of propMeshes.values()) group.userData.distance = 0;
+    if(resetProps)for (const group of propMeshes.values()) group.userData.distance = 0;
   }
 
   function setMode(next: typeof mode): void {
+    if(next==='playing')backups?.close();
     mode = next; keys.clear(); boostRequested=false;talkRequested=false; pointerAim=undefined; clearShot(); stepper.reset();
     if(next === "paused") cameraAngle=viewAngle;
     if (next === "paused" && !pauseMenu.open) pauseMenu.showModal();

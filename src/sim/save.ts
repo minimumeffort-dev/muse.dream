@@ -7,8 +7,10 @@ import {controlOf,impactOf,zonesOf} from '../scene/object-dsl';
 import {objectFragments} from '../scene/fragments';
 import {actorPose} from './actors';
 import {ambientNavigation} from '../scene/ambient-navigation';
+import {AMBIENT_LIMITS} from '../scene/ambient';
+import {SAVE_SIMULATION_VERSION} from '../scene/save-compatibility';
 
-export const SAVE_VERSION=1,MAX_SAVE_CHARACTERS=1_000_000;
+export const SAVE_VERSION=2,MAX_SAVE_CHARACTERS=1_000_000;
 const n=z.number().finite().min(-1e7).max(1e7),clock=z.number().finite().min(0).max(1e9),count=z.number().int().min(0).max(1e9),id=z.string().min(1).max(128),v2=z.tuple([n,n]),v3=z.tuple([n,n,n]),q=z.tuple([n,n,n,n]).refine(v=>Math.abs(Math.hypot(...v)-1)<.01);
 const prop=z.object({id,x:n,y:n,vx:n,vy:n,elevation:n.optional(),vz:n.optional()}).strict();
 const npc=z.object({id,stateId:id,elapsedS:clock,routeTimeS:clock,animationTimeS:clock,headingRad:n,known:z.boolean(),replyAtS:clock.optional()}).strict();
@@ -22,7 +24,9 @@ const stateSchema:z.ZodType<CarState>=z.object({
  control:z.discriminatedUnion('kind',[z.object({kind:z.literal('car')}).strict(),z.object({kind:z.literal('foot')}).strict(),z.object({kind:z.literal('vehicle'),id}).strict(),z.object({kind:z.literal('passenger'),id}).strict()]),
  vehicles:z.array(z.object({id:id.nullable(),x:n,y:n,elevation:n,headingRad:n,distance:clock}).strict()).max(24),npcs:z.array(npc).max(32),population:z.object({tick:count,members:z.array(member).max(192)}).strict().optional(),distance:clock,pitch:n,bank:n,jump:z.object({held:z.boolean(),bufferUntilS:clock,coyoteUntilS:clock}).strict(),
 }).strict();
-const packet=z.object({kind:z.literal('dream-save'),version:z.literal(SAVE_VERSION),sourceHash:z.string().min(1).max(128),sceneId:id,worldTime:clock,state:stateSchema}).strict();
+const legacyPacket=z.object({kind:z.literal('dream-save'),version:z.literal(1),sourceHash:z.string().min(1).max(128),sceneId:id,worldTime:clock,state:stateSchema}).strict();
+const packet=legacyPacket.extend({version:z.literal(SAVE_VERSION),compatibilityHash:z.string().regex(/^[a-f0-9]{64}$/).optional()}).strict();
+const supported=z.discriminatedUnion('version',[legacyPacket,packet]);
 const unique=(values:unknown[])=>new Set(values).size===values.length;
 const expected=new WeakMap<World['scene'],ReturnType<typeof createCarAtSpawn>>();
 function checkState(s:CarState,world:World){
@@ -44,18 +48,27 @@ function checkState(s:CarState,world:World){
  if(!unique(s.brokenZones.map(z=>JSON.stringify([z.objectId,z.zoneId]))) || s.brokenZones.some(z=>!zonesOf(objects.get(z.objectId)?.spec).some(zone=>zone.id===z.zoneId)))throw Error('Invalid saved building damage');
  if(!unique(s.debris.map(d=>JSON.stringify([d.objectId,d.fragmentId]))))throw Error('Duplicate saved fragments');
  for(const piece of s.debris){const spec=objects.get(piece.objectId)?.spec;if(!spec || !('dslVersion' in spec) || spec.dslVersion!==2)throw Error('Unknown saved fragment');const fragment=objectFragments(spec).find(f=>f.id===piece.fragmentId);if(!fragment || !(fragment.zone ? s.brokenZones.some(z=>z.objectId===piece.objectId && z.zoneId===fragment.zone) : s.broken.includes(piece.objectId)))throw Error('Saved fragment has no matching damage');}
- if(s.population?.members.length!==fresh.population?.members.length || s.population && (s.population.tick>Math.floor((s.timeS+1e-6)/.05) || s.population.members.some((m,i)=>{const o=ambient[i]!;return o.ambient!.motion.kind==='walk' && (m.mode!=='walk' || m.node<0 || m.node>=ambientNavigation(scene).nodes.length); })))throw Error('Invalid saved population');
+ const population=s.population,tick=Math.floor((s.timeS+1e-8)/AMBIENT_LIMITS.tickSeconds);
+ if(population?.members.length!==fresh.population?.members.length)throw Error('Invalid saved population');
+ // A stale clock would replay unbounded ambient ticks on the first movement input.
+ if(population && (population.tick>Math.floor((s.timeS+1e-6)/AMBIENT_LIMITS.tickSeconds) || ambient.length>0 && population.tick<Math.max(0,tick-1)))throw Error('Invalid saved population clock');
+ if(population?.members.some((m,i)=>{const o=ambient[i]!;return m.x<0 || m.y<0 || m.x>scene.canonical.width || m.y>scene.canonical.height || o.ambient!.motion.kind==='walk' && (m.mode!=='walk' || m.node<0 || m.node>=ambientNavigation(scene).nodes.length); }))throw Error('Invalid saved population member');
 }
 /** Save simulation data only. Held input and transient effects are deliberately cancelled. */
 export function encodeSave(state:CarState,worldTime:number,world:World):string{
  const clean=cancelSportAction(state),safe={...clean,impacts:[],boostedThisStep:false,jump:{...clean.jump,held:false,bufferUntilS:0},carBoost:{...clean.carBoost,held:false}};
- const data=packet.parse({kind:'dream-save',version:SAVE_VERSION,sceneId:world.scene.sceneId,sourceHash:world.scene.sourceHash,worldTime,state:safe});
+ const data=packet.parse({kind:'dream-save',version:SAVE_VERSION,sceneId:world.scene.sceneId,sourceHash:world.scene.sourceHash,compatibilityHash:world.saveCompatibility,worldTime,state:safe});
  checkState(data.state,world);const text=JSON.stringify(data);if(text.length>MAX_SAVE_CHARACTERS)throw Error('Save exceeds one million characters');return text;
 }
 export function decodeSave(text:string,world:World){
  if(text.length>MAX_SAVE_CHARACTERS)throw Error('Save exceeds one million characters');
- const data=packet.parse(JSON.parse(text));if(data.sourceHash!==world.scene.sourceHash || data.sceneId!==world.scene.sceneId)throw Error('Save belongs to a different Dream world');checkState(data.state,world);
+ let data:z.infer<typeof supported>;
+ try{data=supported.parse(JSON.parse(text));}catch{throw Error('This file is not a supported Muse Dream backup.');}
+ const compatible=data.version===2 && data.compatibilityHash!==undefined && data.compatibilityHash===world.saveCompatibility;
+ // Version 1's untagged rules are known only for simulation version 1.
+ if(data.version===1 && Number(SAVE_SIMULATION_VERSION)!==1 || data.sceneId!==world.scene.sceneId || (data.sourceHash!==world.scene.sourceHash && !compatible) || data.version===2 && data.compatibilityHash!==world.saveCompatibility)throw Error('This backup needs a different world or simulation version.');
+ try{checkState(data.state,world);}catch{throw Error('This backup contains invalid world state.');}
  // A valid saved world can outlive a safe active-body pose. Recover only the player.
  const state=data.state.control.kind==='passenger' || carFootprintClear(bodyWorld(data.state,world),data.state.x,data.state.y,data.state.elevation,data.state.timeS,data.state) ? data.state : resetCar({...data.state,grounded:false},world.scene);
- return {state,worldTime:data.worldTime};
+ return {state,worldTime:data.worldTime,sourceHash:data.sourceHash,version:data.version,compatible:data.sourceHash!==world.scene.sourceHash};
 }

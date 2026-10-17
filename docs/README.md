@@ -28,7 +28,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 
 [Read the highlighted documentation](https://minimumeffort-dev.github.io/muse.dream/) · [Media and syntax highlighting](media/README.md)
 
-[Rendering and performance](rendering.md) explains how static districts load and unload, and how changes are measured without lowering visual quality. [Saving and returning](persistence.md) covers local progress and source-version limits.
+[Rendering and performance](rendering.md) explains how static districts load and unload, and how changes are measured without lowering visual quality. [Saving and returning](persistence.md) covers local progress, downloadable backups and compatible world updates.
 
 [Walk-up football and basketball](dream/sports.md) covers dribbling, charged
 shots, scores, camera changes and the Dream connections behind each ground.

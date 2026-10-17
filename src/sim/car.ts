@@ -102,6 +102,8 @@ export interface CarState {
 export interface World {
   /** Immutable accepted revision; replace the world when applying a new scene. */
   scene: Scene;
+  /** Host-computed accepted simulation contract; never supplied by Dream. */
+  saveCompatibility?:string;
   /** Racing surface, independent of where the car may travel. */
   roadMask: RasterMask;
   /** Travel boundary. The fixture allows the whole sheet. */

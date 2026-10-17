@@ -9,6 +9,7 @@ import {toggleRide,stepInteractive} from '../src/sim/interaction';
 import {encodeSave,decodeSave,MAX_SAVE_CHARACTERS} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
 import {npcSpeech} from '../src/sim/npcs';
+import {saveCompatibilitySource,sha256} from '../src/scene/save-compatibility';
 
 const base=compileDreamScene(source,{sceneId:'save-test',revisionId:'r1',sourceHash:'exact-source'});
 const table=compileDreamWorld('dream 2;material wood(style=toon,colors=[#886644,#554433]);object table(label="Table"){body(interaction=solid,radius=10,height=12);impact(mode=break(speed=80,scatter=50,lift=40,spin=1,lifetime=4));part top(shape=box,material=wood,at=[0,11,0],size=[20,2,20]);}').assemblies[0]!;
@@ -47,6 +48,7 @@ it('round-trips the live population, damage and every control domain without res
  const doc=createWorldScene(),w:World={scene:doc,roadMask:buildMaskForScene(doc),driveMask:buildPaperMask(doc.canonical.width,doc.canonical.height),carRadius:11},base=createCarAtSpawn(doc);
  const broken=doc.objects.find(o=>impactOf(o.spec)?.kind==='break')!;base.broken=[broken.id];
  const car=decodeSave(encodeSave(base,314,w),w);expect(car.state.broken).toEqual(base.broken);expect(car.state.population).toEqual(base.population);expect(car.state.control.kind).toBe('car');
+ const stale=JSON.parse(encodeSave(base,314,w));stale.state.timeS=1e6;expect(()=>decodeSave(JSON.stringify(stale),w)).toThrow('invalid world state');
  for(const kind of ['bicycle','boat','plane'] as const){
   const object=doc.objects.find(o=>controlFor(o)===kind)!,p=actorPose(doc,object,0,base),state={...base,control:{kind:'vehicle' as const,id:object.id},x:p.x,y:p.y,elevation:p.elevation,headingRad:p.headingRad,vehicles:[{id:null,x:base.x,y:base.y,elevation:base.elevation,headingRad:base.headingRad,distance:0}]};
   expect(decodeSave(encodeSave(state,314,w),w).state.control).toEqual(state.control);
@@ -67,4 +69,40 @@ it('detects another tab updating the slot and requires an explicit session repla
  const rows=new Map<string,string>(),storage={getItem:(k:string)=>rows.get(k)??null,setItem:(k:string,v:string)=>{rows.set(k,v);}},first=gameSave(world,()=>storage),second=gameSave(world,()=>storage);
  expect(first.write(met(),4)).toBe(true);const previous=rows.get(first.key);expect(second.write(createCarAtSpawn(scene),0)).toBe(false);expect(second.blocked).toBe(true);expect(rows.get(first.key)).toBe(previous);
  expect(second.write(met(),5,true)).toBe(true);expect(second.blocked).toBe(false);expect(gameSave(world,()=>storage).restored?.worldTime).toBe(5);
+});
+
+it('hashes accepted rules deterministically and permits only provenance, formatting and dialogue edits',async()=>{
+ const hash=await sha256(saveCompatibilitySource(scene));
+ const wording=parseScene({...scene,sourceHash:'new-source',revisionId:'r2',provenance:{...scene.provenance,notes:'new source notes'},behaviors:scene.behaviors.map(b=>({...b,states:b.states.map(s=>({...s,...(s.say ? {say:'A revised greeting.'} : {})}))}))});
+ expect(await sha256(saveCompatibilitySource(wording))).toBe(hash);
+ const reordered=Object.fromEntries(Object.entries(scene).reverse()) as typeof scene;
+ expect(await sha256(saveCompatibilitySource(reordered))).toBe(hash);
+ const commented=compileDreamScene(source+'\n// An authoring note.\n',{sceneId:base.sceneId,revisionId:'r2',sourceHash:'commented'});
+ expect(saveCompatibilitySource(commented)).toBe(saveCompatibilitySource(base));
+ const variants:typeof scene[]=[
+  {...scene,canonical:{...scene.canonical,width:scene.canonical.width+1}},
+  {...scene,objects:scene.objects.map((o,i)=>i ? o : {...o,x:o.x+1})},
+  {...scene,terrain:{...scene.terrain,hills:[{id:'hill',x:300,y:300,height:20,radiusX:120,radiusY:120}]}},
+  {...scene,behaviors:scene.behaviors.map((b,i)=>i ? b : {...b,states:b.states.map((s,j)=>j ? s : {...s,face:s.face==='none' ? 'player' : 'none'})})},
+  {...scene,sceneId:'another-world'},
+ ];
+ for(const changed of variants)expect(await sha256(saveCompatibilitySource(changed))).not.toBe(hash);
+});
+
+it('resumes compatible source edits in one slot but rejects changed simulation contracts',async()=>{
+ const saveCompatibility=await sha256(saveCompatibilitySource(scene)),before={...world,saveCompatibility},after={...before,scene:{...scene,sourceHash:'reworded'}};
+ const text=encodeSave(met(),123,before),copy=decodeSave(text,after);expect(copy.state.npcs[0]!.known).toBe(true);expect(copy.compatible).toBe(true);expect(copy.sourceHash).toBe(scene.sourceHash);
+ const empty={getItem:()=>null,setItem:()=>{}};expect(gameSave(before,()=>empty).key).toBe(gameSave(after,()=>empty).key);
+ for(const invalid of [{...after,saveCompatibility:'a'.repeat(64)},{...before,saveCompatibility:'b'.repeat(64)},{...after,saveCompatibility:undefined}])expect(()=>decodeSave(text,invalid)).toThrow('different world or simulation');
+ const rows=new Map<string,string>(),storage={getItem:(k:string)=>rows.get(k)??null,setItem:(k:string,v:string)=>{rows.set(k,v);}},slot=gameSave(before,()=>storage);
+ expect(slot.write(met(),123)).toBe(true);const updated=gameSave(after,()=>storage);expect(updated.restored?.compatible).toBe(true);expect(updated.write(updated.restored!.state,123)).toBe(true);expect(JSON.parse(rows.get(slot.key)!).sourceHash).toBe('reworded');
+});
+
+it('upgrades an exact-source format 1 slot without removing it, and never guesses across source changes',async()=>{
+ const saveCompatibility=await sha256(saveCompatibilitySource(scene)),current={...world,saveCompatibility};
+ const data=JSON.parse(encodeSave(met(),40,world));data.version=1;delete data.compatibilityHash;
+ const legacyKey=`muse-dream.save.v1.${scene.sceneId}.${scene.sourceHash}`,text=JSON.stringify(data),rows=new Map([[legacyKey,text]]),storage={getItem:(k:string)=>rows.get(k)??null,setItem:(k:string,v:string)=>{rows.set(k,v);}};
+ const slot=gameSave(current,()=>storage);expect(slot.restored?.version).toBe(1);expect(slot.restored?.state.npcs[0]!.known).toBe(true);expect(slot.write(slot.restored!.state,40)).toBe(true);expect(rows.get(legacyKey)).toBe(text);expect(JSON.parse(rows.get(slot.key)!).version).toBe(2);
+ expect(()=>decodeSave(text,{...current,scene:{...scene,sourceHash:'changed'}})).toThrow('different world');
+ rows.set(slot.key,'corrupt');expect(gameSave(current,()=>storage).blocked).toBe(true);expect(rows.get(legacyKey)).toBe(text);
 });

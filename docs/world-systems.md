@@ -40,10 +40,10 @@ Night navigation now has readable sky/ground fill outside lamp pools, while stat
 
 ## Current priorities and delivered foundation
 
-1. The social foundation now has authored conversations, recognition on return and source-pinned saves, including physical changes. Next, add inspectable save export and safe migration between compatible authored world versions so future district changes can retain progress.
+1. The social foundation now has authored conversations, recognition on return, local saves and inspected backup restore, including physical changes. Comments and spoken wording can change without resetting progress. Geometry, population, economy and rule changes still need explicit migrations before existing progress can cross those boundaries.
 2. Make one market neighbourhood work as a connected economy: finite stock, conserved money, buying food, a paid delivery activity, work time and replenishment. Reuse the same rules for NPC customers and the player. The current Lab remains a separate exercise.
 3. Add explicit building spaces, entrances and supported floors before making shops, homes or workplaces enterable. Stairs and lifts must connect real movement layers; hiding a car beneath a roof is insufficient.
 4. Give people needs, identities, schedules and relationship history that change choices. Familiarity is currently one remembered meeting flag, not friendship or dating.
-5. Add coherent weather, sound and repair alongside those systems. Measure dense scenes, interiors, long travel and save responsiveness. Extend save migration when the world schema changes; cross-version and cross-device saves remain missing.
+5. Add coherent weather, sound and repair alongside those systems. Measure dense scenes, interiors, long travel and save responsiveness. Extend save migration when the world schema changes. Files can move progress between compatible browsers/devices manually; there is no cloud sync.
 
 Existing limits remain visible: the city has decorative institutions, bounded NPC routines, arcade vehicles and sports practice. It has no functioning employment contracts, restaurant economy, relationship progression, multi-floor interior movement or weather system yet. Prioritize connected activities over adding more empty buildings.

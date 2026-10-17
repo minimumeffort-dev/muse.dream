@@ -357,10 +357,20 @@ remain accurate.
 uses frame 60. The dev exporter composites the currently visible caption's actual
 text, bounds, font and colours over that frame's renderer canvas; it does not
 interpolate motion. Its temporary 2D buffer is released when export completes.
-`return-greeting.jpg` and `save-menu.jpg` come from native browser screenshots
-of the reload and save controls. [Verification](../evidence/conversations/verification.md).
+`return-greeting.jpg` comes from a native browser screenshot of the reload.
+The original save controls are preserved in the [conversation evidence](../evidence/conversations/verification.md).
 
 README, NPC guide/reference/model instructions, generated contract, systems
 priorities and saving guide were refreshed together. Existing asset, movement,
 destruction, lighting and population captures retain their represented geometry
 and controls; the new contextual reply is shown in this dedicated sequence.
+
+## Backups and compatible updates
+
+`save-menu.jpg` and `backup-preview.jpg` are refreshed from native 1280 × 720
+screenshots of the production build. The pause menu keeps Controls collapsed;
+Backups opens a local file preview before any restore. Source PNGs and browser
+state checks live in [save continuity evidence](../evidence/save-continuity/verification.md).
+There is no image upscaling or interpolated motion. The conversation video/GIF/still
+remain accurate: world geometry, spoken text and interaction timing are unchanged.
+This change adds save tooling, so its captures are native UI stills.

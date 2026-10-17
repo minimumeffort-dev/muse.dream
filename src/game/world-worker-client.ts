@@ -5,6 +5,7 @@ import type {ChunkPacket} from './chunk-packet';
 /** A single producer bounds CPU work and transferred buffers during fast travel. */
 export class WorldWorkerClient {
   readonly scene:Promise<Scene>;
+  saveCompatibility?:string;
   private next=0;
   private pending=new Map<number,{resolve:(packet:ChunkPacket)=>void;reject:(error:Error)=>void}>();
   private failure:Error|undefined;
@@ -14,7 +15,7 @@ export class WorldWorkerClient {
       this.rejectScene=reject;
       worker.onmessage=({data})=>{
         if(data.error){this.fail(new Error(data.error));return;}
-        if(data.scene){onCompile(data.compileMs);resolve(data.scene);return;}
+        if(data.scene){this.saveCompatibility=data.saveCompatibility;onCompile(data.compileMs);resolve(data.scene);return;}
         const pending=this.pending.get(data.id);if(!pending)return;this.pending.delete(data.id);pending.resolve(data.packet);
       };
     });

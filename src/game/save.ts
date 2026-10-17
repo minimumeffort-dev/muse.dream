@@ -1,11 +1,12 @@
 import {encodeSave,decodeSave,SAVE_VERSION} from '../sim/save';
 import type {CarState,World} from '../sim/car';
 
-/** One atomic, source-pinned local slot. Failed/corrupt saves are never silently overwritten. */
+/** One atomic compatible-world slot. Failed/corrupt saves are never silently overwritten. */
 export function gameSave(world:World,getStorage:()=>Pick<Storage,'getItem'|'setItem'>=()=>localStorage,prefix='muse-dream.save'){
- const key=`${prefix}.v${SAVE_VERSION}.${world.scene.sceneId}.${world.scene.sourceHash}`;
+ const key=`${prefix}.v${SAVE_VERSION}.${world.scene.sceneId}.${world.saveCompatibility??world.scene.sourceHash}`;
+ const legacyKey=`${prefix}.v1.${world.scene.sceneId}.${world.scene.sourceHash}`;
  let lastSeen:string|null=null,characters=0,status='Progress saves on this device.',blocked=false,restored:ReturnType<typeof decodeSave>|undefined;
- try{const text=getStorage().getItem(key);lastSeen=text;if(text!==null){restored=decodeSave(text,world);status='Restored your saved world.';}}
+ try{const storage=getStorage(),text=storage.getItem(key);lastSeen=text;const saved=text??storage.getItem(legacyKey);if(saved!==null){restored=decodeSave(saved,world);characters=saved.length;status=restored.compatible ? 'Restored progress from a compatible world update.' : restored.version===1 ? 'Restored your earlier save. Its original copy is kept.' : 'Restored your saved world.';}}
  catch{status='Could not restore saved progress. Save current session to replace it, or keep playing without saving.';blocked=true;}
  return {key,restored,get blocked(){return blocked;},get characters(){return characters;},get status(){return status;},write(state:CarState,worldTime:number,replace=false){
   if(blocked && !replace)return false;

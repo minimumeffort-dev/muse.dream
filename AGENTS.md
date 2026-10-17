@@ -267,6 +267,19 @@ Use `flock` for bounded instanced cosmetic bird populations across appropriate h
 
 Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. The shared visual clock pauses with the game, freezes for reduced motion, survives R and resets on Start over. Keep one sun/moon shadow map with world-aligned stabilization; lighting phase is independent of camera/vehicle motion. `material.night` survives batching/instancing/fragments, and object-root `lamp` creates bounded static terrain/deck-fitted surface pools. Preserve the 512-pool cap, all existing actor/joint/physics limits, and exact daytime geometry. Do not add per-lamp point lights/shadow maps or claim pools provide wall lighting, object occlusion or astronomical accuracy. Keep nighttime sky/ground fill usable through the sun/moon handoff while retaining exact daytime colours and intensities. Document and capture new lighting states at 30 rendered fps.
 
+## Saved simulation state
+
+Save format 2 pins exact source plus a host-computed accepted-world compatibility
+fingerprint. Only revision/source/provenance and behavior `say` text are excluded;
+preserve all geometry, routes, rules, array order and other accepted data. Bump
+`SAVE_SIMULATION_VERSION` when engine/save semantics change and provide an explicit
+tested migration before accepting older state. Format 1 currently upgrades only
+against exact source and keeps its original slot. Backups preview without writes;
+restore applies only after validation and a successful atomic storage write.
+Preserve input cancellation, ownership/damage/member checks, bounded population
+clock lag, changed-tab safeguards, and isolation of review/capture saves. Files
+are editable single-player state, not signed records. See `docs/persistence.md`.
+
 ## Voxel assemblies
 
 Keep the initial HTML loading shell ahead of renderer imports. Complete Dream
