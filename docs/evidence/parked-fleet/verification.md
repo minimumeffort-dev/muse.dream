@@ -174,3 +174,8 @@ clarifies resident-actor wording in the NPC/reference/model guides. No runtime,
 Dream vocabulary, media or saved rules change. The same captures remain accurate.
 Focused docs/highlighting/example/context checks and the docs build verify this
 text correction; the linked workflow reruns the complete suite after pushing it.
+
+A broader authoring/asset-guide search also corrected the remaining references
+to baked parked cranks, distinguished decorative props from available parking,
+and included scooters in the older interactions overview. This is documentation
+only; the inspected asset construction and paired captures remain unchanged.

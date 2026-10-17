@@ -56,7 +56,7 @@ The rally coupe, cream-roof town car, compact hatchback and panel van now have d
 
 The bicycle is a step-through city frame with paired rear stays, fork blades, mounted axles and a chain line between its rear cog and chainring. Crank arms and pedals turn together around the bottom bracket as it travels. The scooter has a lower deck, paired fork and rear supports, shaped fenders, a brake mount and a headlight housing. The existing collision cylinders and measured vehicle lengths are preserved; neither model adds mesh-shaped physics.
 
-[Complete car](examples/city-car.dream) · [Complete bicycle](examples/city-bicycle.dream) · [Prisms and rolling joints](dream/objects.md) · [Verification and media audit](evidence/ground-vehicles/verification.md). Parked bicycle cranks are baked at rest. The cars batch into three or four meshes each, and the bicycle into four. The shared seated rider remains a placeholder; its legs do not yet follow the pedals.
+[Complete car](examples/city-car.dream) · [Complete bicycle](examples/city-bicycle.dream) · [Prisms and rolling joints](dream/objects.md) · [Verification and media audit](evidence/ground-vehicles/verification.md). Unoccupied bicycle cranks keep their saved phase in instanced poses, then animate by distance when boarded. The cars batch into three or four meshes each, and the bicycle into four. The shared seated rider remains a placeholder; its legs do not yet follow the pedals.
 
 ## A light aircraft that holds together
 
@@ -122,7 +122,7 @@ The eight new assemblies are an avenue streetlight, neighborhood lantern, plante
 
 ![The complete new street kit](media/street-assets.jpg)
 
-[Population rules](dream/populations.md) choose the streets and destinations these assets belong to. Static parked vehicles bake joint rest poses; explicit controllable rides keep live wheels and controls. Bird flocks use the same authored shape with instanced shader flight rather than allocating a joint controller per bird.
+[Population rules](dream/populations.md) choose the streets and destinations these assets belong to. Decorative vehicle props bake joint rest poses. Controllable destination parking retains its mechanisms, with instanced unoccupied poses and one occupied fleet rig. Bird flocks use the same authored shape with instanced shader flight rather than allocating a joint controller per bird.
 
 ## After dark
 
@@ -138,4 +138,4 @@ The live city now contains 123 people, 336 trees and 60 additional roaming groun
 
 ![New neighborhood animals and garden plants](media/population-assets.jpg)
 
-The added residents and wildlife share complete instanced geometry at explicit rest poses. Four new neighbors use live greeting programs. Fourteen parked cars have solid bodies on connected parking aprons; the four moving road cars retain their routes. [Rest poses, sidewalk placement and population bounds](dream/populations.md).
+The added residents and wildlife share complete instanced geometry at explicit rest poses. Four new neighbors use live greeting programs. Fourteen usable parked cars/vans have solid bodies on connected parking aprons; the four moving road cars retain their routes. [Rest poses, sidewalk placement and population bounds](dream/populations.md).
