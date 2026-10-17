@@ -1,7 +1,7 @@
 import type {Scene,Point} from '../scene/schema';
 import type {Repair} from '../scene/commerce';
 import type {CarState} from './car';
-import {COMMERCE_LIMITS} from '../scene/commerce';
+import {COMMERCE_LIMITS,repairKinds} from '../scene/commerce';
 import {objectContacts,queryStaticContacts,sceneContacts,type Contact} from '../scene/contacts';
 import {impactOf,zonesOf} from '../scene/object-dsl';
 import {onPolygon,streetFootprints} from '../scene/streets';
@@ -35,19 +35,20 @@ export function repairSegment(scene:Scene,r:Repair,a:Point,b:Point,state:CarStat
 }
 /** Bounded local work-yard path, never a world raster or a shortcut through a street. */
 export function repairPath(scene:Scene,r:Repair,start:Point,end:Point,state:CarState):Point[]|undefined{
- if(repairSegment(scene,r,start,end,state))return [{...end}];
+ const destination={x:end.x,y:end.y};
+ if(repairSegment(scene,r,start,end,state))return [destination];
  const g=grid(scene,r),near=(p:Point)=>g.nodes.map((valid,i)=>({valid,i,d:Math.hypot(g.point(i).x-p.x,g.point(i).y-p.y)})).filter(v=>v.valid && v.d<=24).sort((a,b)=>a.d-b.d || a.i-b.i).filter(v=>repairSegment(scene,r,p,g.point(v.i),state)).map(v=>v.i);
  const starts=near(start),ends=new Set(near(end)),previous=new Int32Array(g.nodes.length).fill(-2),queue:number[]=[];
  for(const i of starts){previous[i]=-1;queue.push(i);}
  for(let cursor=0;cursor<queue.length;cursor++){
   const i=queue[cursor]!;
-  if(ends.has(i)){const path:Point[]=[end];for(let at=i;at>=0;at=previous[at]!)path.push(g.point(at));path.reverse();return path.length<=COMMERCE_LIMITS.repairPath ? path : undefined;}
+  if(ends.has(i)){const path:Point[]=[destination];for(let at=i;at>=0;at=previous[at]!)path.push(g.point(at));path.reverse();return path.length<=COMMERCE_LIMITS.repairPath ? path : undefined;}
   for(const j of [i-1,i+1,i-g.nx,i+g.nx])if(j>=0 && j<g.nodes.length && previous[j]===-2 && g.nodes[j] && Math.abs(j%g.nx-i%g.nx)+Math.abs(Math.floor(j/g.nx)-Math.floor(i/g.nx))===1 && repairSegment(scene,r,g.point(i),g.point(j),state)){previous[j]=i;queue.push(j);}
  }return;
 }
 export function repairTargets(scene:Scene,r:Repair):RepairTarget[]{
  const polygon=scene.surfaces.find(s=>s.id===r.on)!.points;
- return scene.objects.filter(o=>o.spec && 'measure' in o.spec && o.spec.measure?.kind===r.kind && onPolygon(polygon,o.x,o.y)).flatMap(o=>{
+ return scene.objects.filter(o=>o.spec && 'measure' in o.spec && !!o.spec.measure && repairKinds(r).includes(o.spec.measure.kind) && onPolygon(polygon,o.x,o.y)).flatMap(o=>{
   const contacts=objectContacts(scene,o);
   return [...(['break','topple'].includes(impactOf(o.spec)?.kind??'') ? [{objectId:o.id,contact:contacts[0]!}] : []),...zonesOf(o.spec).map(z=>({objectId:o.id,zoneId:z.id,contact:contacts.find(c=>c.zoneId===z.id)!})).filter(t=>t.contact.bottom<=drivingHeight(scene.terrain,t.contact.x,t.contact.y)+18)];
  });

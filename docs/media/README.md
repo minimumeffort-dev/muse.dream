@@ -455,14 +455,15 @@ old-save upgrade and diagnostic fleet images remain with the
 `repair.mp4`, `repair.gif` and `repair.jpg` come from 840 actual rendered frames,
 30 frames per simulation second. The dev recording drives through the table,
 brakes, leaves the car, then watches the caretaker collect a kit, walk to the
-damage, work, restore it and return. The poster is frame 720, after restoration.
+nearest damaged crate, restore it and return. The table stays broken until the
+next dispatch; one service now covers tables, crates and planters. The poster is frame 720, after restoration.
 The video is 1600 x 900 and the still retains its native 2400 x 1350 pixels; the 1280 x 720 GIF keeps
 all frames, 256 colours, no dithering and Gifsicle loss 80. This is an offline
 fixed-step render, not a live frame-rate measurement.
 
 Commerce (360 frames, still 300), conversation (240, still 60) and delivery
 (360, still 100) are refreshed together with their GIFs, videos and stills for
-the added repair-kit stock and work option. Their ordinary controls and trips
+the multi-category work label and replacement-supply vocabulary. Their ordinary controls and trips
 stay the same. Other recordings, asset sheets, the city map and existing save
 stills remain accurate: this release changes no geometry, placement, physical
 scale, ordinary movement, lighting or unrelated backup controls.
@@ -470,3 +471,4 @@ scale, ordinary movement, lighting or unrelated backup controls.
 The exporter permits only the `repair` clip to reach frame 839. Other clips keep
 the earlier 600-frame request ceiling; same-origin PNG/content/size checks are
 unchanged. [Repair verification](../evidence/maintenance/verification.md).
+The r49 refresh is documented in [replacement-supply verification](../evidence/supply/verification.md).

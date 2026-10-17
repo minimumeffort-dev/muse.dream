@@ -111,6 +111,7 @@ export interface World {
   previousMarketSaveCompatibility?:string;
   previousParkingSaveCompatibility?:string;
   previousRepairSaveCompatibility?:string;
+  previousSupplySaveCompatibility?:string;
   emptyEconomySaveCompatibility?:string;
   previousSaveSource?:string;
   /** Racing surface, independent of where the car may travel. */

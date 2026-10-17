@@ -1,7 +1,7 @@
 import {z} from 'zod';
 import type {CarState,CarInput} from './car';
 import type {Scene} from '../scene/schema';
-import {COMMERCE_LIMITS as L,type Economy,type Market} from '../scene/commerce';
+import {COMMERCE_LIMITS as L,deliveryBill,type Economy,type Market} from '../scene/commerce';
 import {actorPose,actorContacts} from './actors';
 import {repairTargets,targetBroken,repairApproach,repairPath,repairSegment,repairSpaceClear,repairPlayerContact,REPAIR_REACH,REPAIR_SPEED,REPAIR_RADIUS} from './repair';
 import {drivingHeight} from '../scene/terrain';
@@ -46,7 +46,7 @@ const active=(e:EconomyState,job:string)=>e.accounts.filter(a=>a.work?.id===job)
 function reserved(e:EconomyState,definition:Economy,market:string,good?:string){
  let n=0;for(const a of e.accounts)if(a.repair && a.repair.phase!=='home'){const r=definition.repairs.find(r=>r.id===a.repair!.id)!;if(r.market===market)n+=good===undefined ? r.pay : r.input===good ? r.take : 0;}
  for(const a of e.accounts)if(a.work){const j=definition.jobs.find(j=>j.id===a.work!.id)!;if(j.market===market)n+=good===undefined ? j.pay : (j.input===good ? j.take : 0)+(j.output===good ? j.make : 0);}
- for(const a of e.accounts)if(a.delivery){const d=definition.deliveries.find(d=>d.id===a.delivery!.id)!;n+=good===undefined ? (d.to===market ? d.pay : 0) : (d.from===market || d.to===market) && d.good===good ? d.quantity : 0;}
+ for(const a of e.accounts)if(a.delivery){const d=definition.deliveries.find(d=>d.id===a.delivery!.id)!;n+=good===undefined ? (d.to===market ? d.pay+deliveryBill(d) : d.from===market ? deliveryBill(d) : 0) : (d.from===market || d.to===market) && d.good===good ? d.quantity : 0;}
  return n;
 }
 export function repairOffer(state:CarState,scene:Scene,e:EconomyState,a:Account,id:string){
@@ -76,7 +76,7 @@ function reason(state:CarState,scene:Scene,e:EconomyState,a:Account,action:Comme
   if(e.accounts.filter(a=>a.delivery?.id===d.id).length>=d.capacity)return 'busy';
   if(from.stock[d.good]!<d.quantity)return 'stock';
   if(Object.values(a.inventory).reduce((n,v)=>n+v,0)+d.quantity>definition.capacity)return 'full';
-  if(to.credits<d.pay || a.credits+d.pay>L.money)return 'treasury';
+  if(to.credits<d.pay+deliveryBill(d) || from.credits+reserved(e,c.e,d.from)+deliveryBill(d)>L.money || a.credits+d.pay>L.money)return 'treasury';
   if(to.stock[d.good]!+reserved(e,c.e,d.to,d.good)+d.quantity>lot.limit)return 'capacity';
   return;
  }
@@ -162,14 +162,14 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
   if(action.kind==='cancel'){
    if(a.repair && a.repair.phase!=='home')finishRepair(a,true);
    if(a.work)cancel(a);
-   if(a.delivery){const d=c.deliveries.get(a.delivery.id)!;e.markets.find(m=>m.id===d.from)!.stock[d.good]!+=d.quantity;e.markets.find(m=>m.id===d.to)!.credits+=d.pay;a.delivery=undefined;report(a,'delivery_cancelled',d.id);}
+   if(a.delivery){const d=c.deliveries.get(a.delivery.id)!;e.markets.find(m=>m.id===d.from)!.stock[d.good]!+=d.quantity;e.markets.find(m=>m.id===d.to)!.credits+=d.pay+deliveryBill(d);a.delivery=undefined;report(a,'delivery_cancelled',d.id);}
    return;
   }
   const blocked=reason(current,scene,e,a,action);
   if(blocked){if(a.id===player.id)report(a,'blocked','action',blocked);return;}
   if(action.kind==='repair'){const r=c.repairs.get(action.repair)!,offer=repairOffer(current,scene,e,a,r.id)!,p=ownerPose(current,scene,a)!,m=e.markets.find(m=>m.id===r.market)!;m.stock[r.input]!-=r.take;m.credits-=r.pay;const npc=c.accounts.get(a.id)!.actor!=='player';a.repairSeen=undefined;a.repair={id:r.id,objectId:offer.target.objectId,...(offer.target.zoneId ? {zoneId:offer.target.zoneId} : {}),phase:'out',at:offer.end,x:npc ? p.x : offer.end.x,y:npc ? p.y : offer.end.y,headingRad:0,distance:0,progressS:0,speed:0,path:npc ? offer.path : [],routeAtS:now};report(a,'repair_started',r.id);return;}
-  if(action.kind==='collect'){const d=c.deliveries.get(action.delivery)!;e.markets.find(m=>m.id===d.from)!.stock[d.good]!-=d.quantity;e.markets.find(m=>m.id===d.to)!.credits-=d.pay;a.delivery={id:d.id,startedAtS:now};report(a,'collected',d.id);return;}
-  if(action.kind==='deliver'){const d=c.deliveries.get(a.delivery!.id)!;e.markets.find(m=>m.id===d.to)!.stock[d.good]!+=d.quantity;a.credits+=d.pay;a.delivery=undefined;e.delivered[d.id]!++;report(a,'delivered',d.id);return;}
+  if(action.kind==='collect'){const d=c.deliveries.get(action.delivery)!;e.markets.find(m=>m.id===d.from)!.stock[d.good]!-=d.quantity;e.markets.find(m=>m.id===d.to)!.credits-=d.pay+deliveryBill(d);a.delivery={id:d.id,startedAtS:now};report(a,'collected',d.id);return;}
+  if(action.kind==='deliver'){const d=c.deliveries.get(a.delivery!.id)!;e.markets.find(m=>m.id===d.to)!.stock[d.good]!+=d.quantity;e.markets.find(m=>m.id===d.from)!.credits+=deliveryBill(d);a.credits+=d.pay;a.delivery=undefined;e.delivered[d.id]!++;report(a,'delivered',d.id);return;}
   if(action.kind==='eat'){a.inventory[action.good]!--;a.satiety=Math.min(100,a.satiety+c.goods.get(action.good)!.food);e.consumed[action.good]!++;report(a,'eat',action.good);return;}
   if(action.kind==='buy'){const m=e.markets.find(m=>m.id===action.market)!,lot=c.markets.get(m.id)!.lots.find(l=>l.good===action.good)!;a.credits-=lot.price!;m.credits+=lot.price!;m.stock[action.good]!--;a.inventory[action.good]!++;report(a,'buy',action.good);return;}
   if(action.kind==='sell'){const m=e.markets.find(m=>m.id===action.market)!,lot=c.markets.get(m.id)!.lots.find(l=>l.good===action.good)!;a.credits+=lot.price!;m.credits-=lot.price!;m.stock[action.good]!++;a.inventory[action.good]!--;report(a,'sell',action.good);return;}
@@ -211,7 +211,7 @@ export function checkEconomyState(state:CarState,scene:Scene):void{
  for(const m of e.markets){const spec=d.markets.find(s=>s.id===m.id)!;if(!ids(Object.keys(m.stock),spec.lots.map(l=>l.good)) || m.credits+reserved(e,d,m.id)>L.money || spec.lots.some(l=>m.stock[l.good]!+reserved(e,d,m.id,l.good)>l.limit))throw Error('Invalid market capacity');}
  if(d.deliveries.some(d=>{const n=e.accounts.filter(a=>a.delivery?.id===d.id).length;return n>d.capacity || e.delivered[d.id]!+n>1e9;}))throw Error('Invalid delivery capacity');
  if(d.jobs.some(j=>active(e,j.id)>j.capacity || e.batches[j.id]!+active(e,j.id)>1e9))throw Error('Invalid work capacity');
- const total=e.accounts.reduce((n,a)=>n+a.credits+(a.work ? d.jobs.find(j=>j.id===a.work!.id)!.pay : 0)+(a.delivery ? d.deliveries.find(t=>t.id===a.delivery!.id)!.pay : 0)+(a.repair && a.repair.phase!=='home' ? d.repairs.find(r=>r.id===a.repair!.id)!.pay : 0),0)+e.markets.reduce((n,m)=>n+m.credits,0),initial=d.accounts.reduce((n,a)=>n+a.credits,0)+d.markets.reduce((n,m)=>n+m.credits,0);
+ const total=e.accounts.reduce((n,a)=>n+a.credits+(a.work ? d.jobs.find(j=>j.id===a.work!.id)!.pay : 0)+(a.delivery ? d.deliveries.find(t=>t.id===a.delivery!.id)!.pay+deliveryBill(d.deliveries.find(t=>t.id===a.delivery!.id)!) : 0)+(a.repair && a.repair.phase!=='home' ? d.repairs.find(r=>r.id===a.repair!.id)!.pay : 0),0)+e.markets.reduce((n,m)=>n+m.credits,0),initial=d.accounts.reduce((n,a)=>n+a.credits,0)+d.markets.reduce((n,m)=>n+m.credits,0);
  if(total!==initial)throw Error('Money is not conserved');
  for(const g of d.goods){const expected=d.markets.reduce((n,m)=>n+(m.lots.find(l=>l.good===g.id)?.quantity??0),0)+d.jobs.reduce((n,j)=>n+e.batches[j.id]!*((j.output===g.id ? j.make : 0)-(j.input===g.id ? j.take : 0)),0)-e.consumed[g.id]!-d.repairs.reduce((n,r)=>n+(r.input===g.id ? r.take*e.repaired[r.id]! : 0),0);
   const actual=e.markets.reduce((n,m)=>n+(m.stock[g.id]??0),0)+e.accounts.reduce((n,a)=>n+a.inventory[g.id]!+(a.work && d.jobs.find(j=>j.id===a.work!.id)!.input===g.id ? d.jobs.find(j=>j.id===a.work!.id)!.take : 0)+(a.delivery && d.deliveries.find(t=>t.id===a.delivery!.id)!.good===g.id ? d.deliveries.find(t=>t.id===a.delivery!.id)!.quantity : 0)+(a.repair && a.repair.phase!=='home' && d.repairs.find(r=>r.id===a.repair!.id)!.input===g.id ? d.repairs.find(r=>r.id===a.repair!.id)!.take : 0),0);

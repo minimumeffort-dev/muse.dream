@@ -60,7 +60,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `shop?: bool`, `work?: ref` |
 | `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n` |
 | `lot` | market | ID / no block | `good: ref`, `quantity: n`, `limit: n`, `price?: n` |
-| `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `capacity: n` |
+| `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `price: n?`, `capacity: n` |
 | `work` | economy | ID / no block | `label: text`, `market: ref`, `input: ref`, `take: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n` |
 
 ### Assemblies and composition
@@ -397,17 +397,19 @@ Buy/sell transfers one unit at the listed price. Work reserves input, wage, refu
 
 ### Delivery bounds
 
-`delivery id(label=text,from=ref,to=ref,good=ref,quantity=n,pay=n,capacity=n);`
+`delivery id(label=text,from=ref,to=ref,good=ref,quantity=n,pay=n,price=n?,capacity=n);`
 belongs inside `economy`. Both markets need a matching lot; their interaction
 areas must be separate. Quantity: integer 1..32 and within both lot limits.
-Pay: integer 1..1,000,000. Shared capacity: integer 1..4. The contract label
+Pay: integer 1..1,000,000. Optional per-unit supplier price: integer 0..10,000,
+default 0. Quantity × price + pay must fit 1,000,000. Shared capacity: integer 1..4. The contract label
 uses the ordinary nonblank 1..40 character bound.
 
-Collect on foot at `from`: reserve actual stock, destination pay, source refund
-space and destination shelf space atomically. Cargo counts toward carrying
+Collect on foot at `from`: reserve actual stock, destination invoice/pay, supplier
+treasury headroom, source refund space and destination shelf space atomically. Cargo counts toward carrying
 capacity but is unavailable for trade/food. One production, delivery or repair task per
 account. Travel/vehicles/R/streaming retain cargo; hand over on foot at `to`
-to transfer it and earn the wage once. Cancel returns cargo/pay without output.
+to transfer it, pay the supplier invoice and earn the wage once. Cancel returns
+cargo and destination invoice/pay without output.
 Completion counts and active reservations are saved and checked against money,
 material and capacity bounds. Start over resets them. There is no timeout,
 automatic courier, path planner or unbounded item body. [Complete example](../examples/market-delivery.dream).
@@ -422,11 +424,12 @@ automatic courier, path planner or unbounded item body. [Complete example](../ex
 
 | Command | Context | Form | Fields |
 | --- | --- | --- | --- |
-| `repair` | economy | ID / no block | `label`, `market`, `on`, `kind`, `input`, `take`, `seconds`, `pay`, `effort`, optional `dispatch_s` |
+| `repair` | economy | ID / no block | `label`, `market`, `on`, exactly one of `kind` / `kinds`, `input`, `take`, `seconds`, `pay`, `effort`, optional `dispatch_s` |
 
-`repair id(label=text,market=ref,on=ref,kind=measure_kind,input=ref,take=n,seconds=n,pay=n,effort=n,dispatch_s=n?);`
+`repair id(label=text,market=ref,on=ref,kind=measure_kind?,kinds=symbols?,input=ref,take=n,seconds=n,pay=n,effort=n,dispatch_s=n?);`
 
-Inside `economy`, at most 8 services. Input must be a matching supply-market lot.
+Inside `economy`, at most 8 services. Choose exactly one of `kind` or `kinds`.
+The latter is a nonempty unique list of existing measure categories. Input must be a matching supply-market lot.
 Take: integer 1..32 within its lot limit. Seconds: 1..120, pay: positive integer
 up to 1,000,000, effort: 1..50, dispatch delay: 0..120 seconds, default 12. `on`
 references a convex surface containing the market and eligible measured-kind
@@ -442,4 +445,4 @@ damage. Restore waits for clear physical space, consumes inputs, pays once and
 records a completion. Cancel refunds. NPCs walk home before resuming their saved
 program. Journeys, notices, paths, work and conservation ledgers persist. Existing
 actor, rig, reactive-object and fragment limits are unchanged. No city dispatch,
-scaffolds, free restocking or plant growth. [Working guide](commerce.md#repair-work).
+scaffolds, free restocking or plant growth. [Working guide](commerce.md#repair-work). [Multi-category supply example](../examples/market-maintenance.dream).

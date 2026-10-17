@@ -1,0 +1,184 @@
+{
+  "car": "6364.7,4331.0,1.5",
+  "control": {
+    "kind": "foot"
+  },
+  "destruction": {
+    "broken": [],
+    "debris": 0,
+    "props": [
+      {
+        "elevation": 0,
+        "id": "pitch_ball",
+        "vz": 0,
+        "x": 10600,
+        "y": 4690
+      },
+      {
+        "elevation": 0.043373494702684,
+        "id": "court_ball",
+        "vz": 0,
+        "x": 7280,
+        "y": 7975
+      },
+      {
+        "elevation": 0.0124521072832481,
+        "id": "festival_ball",
+        "vz": 0,
+        "x": 6270,
+        "y": 4370
+      }
+    ],
+    "toppling": [],
+    "zones": []
+  },
+  "economy": {
+    "accounts": [
+      {
+        "credits": 20,
+        "decisionAtS": 0,
+        "id": "pocket",
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        },
+        "satiety": 41.17499999999711
+      },
+      {
+        "credits": 0,
+        "decisionAtS": 137.25000000004042,
+        "id": "baker",
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        },
+        "satiety": 58.17499999999711
+      },
+      {
+        "credits": 25,
+        "decisionAtS": 137.25000000004042,
+        "id": "regular",
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        },
+        "satiety": 63.174999999996096
+      },
+      {
+        "credits": 30,
+        "decisionAtS": 137.25000000004042,
+        "id": "school_staff",
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        },
+        "satiety": 21.174999999998025
+      },
+      {
+        "credits": 8,
+        "decisionAtS": 137.25000000004042,
+        "id": "caretaker",
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        },
+        "satiety": 48.17499999999711
+      }
+    ],
+    "atS": 136.5000000000402,
+    "batches": {
+      "bake": 0
+    },
+    "consumed": {
+      "bread": 1,
+      "flour": 0,
+      "timber": 0
+    },
+    "delivered": {
+      "flour_run": 0,
+      "kits_run": 0,
+      "school_run": 0
+    },
+    "events": [
+      {
+        "account": "regular",
+        "atS": 37.24999999999853,
+        "kind": "buy",
+        "ref": "bread"
+      },
+      {
+        "account": "regular",
+        "atS": 38.24999999999847,
+        "kind": "eat",
+        "ref": "bread"
+      },
+      {
+        "account": "caretaker",
+        "atS": 44.24999999999813,
+        "kind": "repair_started",
+        "ref": "market_tables"
+      },
+      {
+        "account": "caretaker",
+        "atS": 53.499999999997605,
+        "kind": "repaired",
+        "ref": "market_tables"
+      },
+      {
+        "account": "caretaker",
+        "atS": 66.99999999999939,
+        "kind": "repair_started",
+        "ref": "market_tables"
+      },
+      {
+        "account": "caretaker",
+        "atS": 77.00000000000735,
+        "kind": "repaired",
+        "ref": "market_tables"
+      }
+    ],
+    "markets": [
+      {
+        "credits": 0,
+        "id": "station_supplies",
+        "stock": {
+          "flour": 80,
+          "timber": 32
+        }
+      },
+      {
+        "credits": 60,
+        "id": "school_canteen",
+        "stock": {
+          "bread": 0
+        }
+      },
+      {
+        "credits": 97,
+        "id": "market_stall",
+        "stock": {
+          "bread": 7,
+          "flour": 30,
+          "timber": 10
+        }
+      }
+    ],
+    "repaired": {
+      "market_tables": 2
+    },
+    "turn": 1
+  },
+  "save": {
+    "compatibilityHash": "0fa752fb32d4b251900d87d82b50c554a91a278b8a980bf3bb0bada5add9ba75",
+    "enabled": false,
+    "restored": false,
+    "review": false,
+    "sourceHash": "027d990ec7540da35d8ba27cad4ac924c2d17a96186660e0b5990dd4d9355f06",
+    "status": "Review session: saves disabled."
+  }
+}

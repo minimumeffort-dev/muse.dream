@@ -1,5 +1,6 @@
 import {it,expect} from 'vitest';
 import source from '../docs/examples/market-repair.dream?raw';
+import maintenance from '../docs/examples/market-maintenance.dream?raw';
 import {compileDreamScene,compileDreamWorld,formatDream} from '../src/scene/dream';
 import {createCarAtSpawn,resetCar,type CarState,type World} from '../src/sim/car';
 import {stepCommerce,checkEconomyState,commerceReason,initialEconomy} from '../src/sim/commerce';
@@ -26,7 +27,7 @@ it('compiles, formats and exposes bounded repair vocabulary and rejects invalid 
 it('walks to damage, works, restores contacts and returns without teleporting or minting supplies/pay',()=>{
  let s=start();const original=s,untouched=structuredClone(s);s=step(s);expect(a(s).repair?.phase).toBe('out');expect(market(s).stock.kit).toBe(2);expect(a(s).credits).toBe(20);checkEconomyState(s,scene);
  let previous=actorPose(scene,scene.objects.find(o=>o.id==='customer')!,s.timeS,s),worked=false;
- for(let i=0;i<100;i++){const old=s;s=step(s);const pose=actorPose(scene,scene.objects.find(o=>o.id==='customer')!,s.timeS,s);expect(Math.hypot(pose.x-previous.x,pose.y-previous.y)).toBeLessThanOrEqual(3.501);previous=pose;worked ||= a(s).repair?.phase==='work';checkEconomyState(s,scene);expect(old.economy).not.toBe(s.economy);}
+ for(let i=0;i<100;i++){const old=s;s=step(s);const pose=actorPose(scene,scene.objects.find(o=>o.id==='customer')!,s.timeS,s);expect(Math.hypot(pose.x-previous.x,pose.y-previous.y)).toBeLessThanOrEqual(3.501);previous=pose;worked ||= a(s).repair?.phase==='work';expect(()=>encodeSave(s,1,world)).not.toThrow();checkEconomyState(s,scene);expect(old.economy).not.toBe(s.economy);}
  expect(worked).toBe(true);expect(s.broken).toEqual([]);expect(a(s).repair).toBeUndefined();expect(a(s).credits).toBe(24);expect(s.economy!.repaired.yard_tables).toBe(1);expect(market(s).stock.kit).toBe(2);expect(original).toEqual(untouched);
 });
 it('lets the player claim the same kit and wage, pauses while travelling and refunds cancellation once',()=>{
@@ -97,3 +98,12 @@ it('routes talk to an available person instead of a worker whose program is susp
  const busy={...step(start()),x:620,y:730};expect(nearbyNpc(busy,scene)?.id).toBe('neighbor');
  const npcs=stepNpcs(busy,.25,scene,true);expect(npcs.find(n=>n.id==='neighbor')!.known).toBe(true);expect(npcs.find(n=>n.id==='customer')!.known).toBe(false);
 });
+
+it('accepts one explicit category or a unique category list, matching semantics rather than object labels',()=>{
+ const text=source.replace('kind=table,input=kit','kinds=[table,custom],input=kit'),doc=compileDreamScene(text,{sceneId:'kinds',revisionId:'r1',sourceHash:'kinds'});
+ expect(doc.economy!.repairs[0]!.kinds).toEqual(['table','custom']);expect(formatDream(formatDream(text))).toBe(formatDream(text));
+ for(const value of ['kinds=[]','kinds=[table,table]','kinds=[madeup]','kind=table,kinds=[table]'])expect(()=>compileDreamWorld(text.replace('kinds=[table,custom]',value))).toThrow();
+ expect(()=>compileDreamWorld(text.replace('kinds=[table,custom],',''))).toThrow('exactly one');
+});
+
+it('compiles the complete multi-category maintenance and paid procurement example',()=>{const doc=compileDreamScene(maintenance,{sceneId:'example',revisionId:'r1',sourceHash:'example'});expect(doc.economy!.repairs[0]!.kinds).toEqual(['table','custom']);expect(doc.economy!.deliveries[0]!.price).toBe(3);});

@@ -381,3 +381,14 @@ and program memory. Workers stay inside dry work areas and wait for bodies;
 no city-wide routing or tree growth is implied. Existing actor/rig/destruction
 caps stay unchanged. Registered r47 saves upgrade through a checked projection;
 never reset unrelated progress. See `docs/dream/commerce.md#repair-work`.
+
+
+Repair services choose exactly one of `kind` or a nonempty unique `kinds` list of
+measure categories. Local area and ground-accessible damage filters still apply;
+category lists do not make intact scenery destructible. Delivery `price` is an
+optional integer supplier payment per unit, default zero. The destination escrows
+invoice plus wage, the source reserves incoming treasury headroom, and both
+shelves reserve capacity. Handoff pays the supplier and courier once; cancellation
+refunds all reservations. Preserve finite upstream stock, conservation, existing
+carry/actor/repair budgets and the registered r48 save migration, including
+completed repair counters and in-progress work. See `docs/dream/commerce.md`.

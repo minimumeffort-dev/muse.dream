@@ -201,3 +201,9 @@ Carry reserved bread between places, earn pay on handoff and let a local custome
 buy it from the receiving stock. [Delivery rules](commerce.md#deliveries).
 
 [Repair a market table](../examples/market-repair.dream) connects finite kits and wages to a worker walking out, repairing category-selected damage and returning home. [How it works](commerce.md#repair-work).
+
+
+[Market maintenance and procurement](../examples/market-maintenance.dream) uses
+one service for tables and crates, then replenishes repair kits from a separate
+supplier. The receiving business pays for both goods and courier work.
+[Finite supplies and payment rules](commerce.md#replacement-supplies).

@@ -59,3 +59,22 @@ it('allows an owned meal during a delivery without consuming sealed cargo of the
  let s=step(start(),{kind:'buy',market:'corner',good:'bread'});s=step(s,{kind:'collect',delivery:'lunch_run'});const cargo=structuredClone(pocket(s).delivery),before=pocket(s).satiety;
  s=step(s,{kind:'eat',good:'bread'});expect(pocket(s).satiety).toBeGreaterThan(before);expect(pocket(s).inventory.bread).toBe(0);expect(pocket(s).delivery).toEqual(cargo);checkEconomyState(s,scene);
 });
+
+it('escrows a finite supplier invoice, pays both parties once and refunds the whole reservation on cancel',()=>{
+ const doc=compileDreamScene(source.replace('quantity=2,pay=4,capacity=1','quantity=2,pay=4,price=3,capacity=1'),{sceneId:'procurement',revisionId:'r1',sourceHash:'procurement'});
+ const initial={...start(),economy:createCarAtSpawn(doc).economy};
+ let s=step(initial,{kind:'collect',delivery:'lunch_run'},.25,doc);
+ expect(stock(s,'lunch_counter').credits).toBe(30);expect(stock(s,'corner').credits).toBe(105);checkEconomyState(s,doc);
+ const cancelled=step(s,{kind:'cancel'},.25,doc);expect(stock(cancelled,'lunch_counter').credits).toBe(40);expect(stock(cancelled,'corner').credits).toBe(105);checkEconomyState(cancelled,doc);
+ s=step({...s,x:1100,y:750},{kind:'deliver'},.25,doc);expect(stock(s,'corner').credits).toBe(111);expect(pocket(s).credits).toBe(24);expect(stock(s,'lunch_counter').stock.bread).toBe(2);checkEconomyState(s,doc);
+ s=step(s,{kind:'deliver'},.25,doc);expect(stock(s,'corner').credits).toBe(111);checkEconomyState(s,doc);
+});
+it('reserves supplier treasury headroom during other purchases and rejects an unaffordable invoice atomically',()=>{
+ const doc=compileDreamScene(source.replace('quantity=2,pay=4,capacity=1','quantity=2,pay=4,price=3,capacity=1').replace('actor=neighbor,credits=100','actor=neighbor,credits=999994'),{sceneId:'limits',revisionId:'r1',sourceHash:'limits'});
+ const initial={...start(),economy:createCarAtSpawn(doc).economy};
+ // The hungry shopper has not bought yet; the reserved six-credit invoice fills the supplier treasury.
+ expect(commerceReason(initial,doc,'pocket',{kind:'collect',delivery:'lunch_run'})).toBeUndefined();
+ let s=step(initial,{kind:'collect',delivery:'lunch_run'},.25,doc);expect(commerceReason(s,doc,'regular',{kind:'buy',market:'corner',good:'bread'})).toBe('treasury');checkEconomyState(s,doc);
+ stock(initial,'lunch_counter').credits=9;expect(commerceReason(initial,doc,'pocket',{kind:'collect',delivery:'lunch_run'})).toBe('treasury');
+ const over=source.replace('quantity=2,pay=4,capacity=1','quantity=2,pay=999999,price=3,capacity=1');expect(()=>compileDreamWorld(over)).toThrow('invoice and wage');
+});

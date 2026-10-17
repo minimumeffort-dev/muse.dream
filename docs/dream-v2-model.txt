@@ -512,11 +512,14 @@ conserved money/material, one job per account, shared capacity and saved clocks.
 No scripts, free restocking, offline catch-up or claims of nutritional realism.
 
 Use delivery id(label=...,from=source_market,to=destination_market,good=...,
-quantity=2,pay=5,capacity=1); inside economy(). At most 16 contracts; quantity
+quantity=2,pay=5,price=3,capacity=1); inside economy(). At most 16 contracts; quantity
 integer 1..32, pay integer 1..1000000, capacity integer 1..4. Markets must have
 non-overlapping interaction areas and both must stock the named good with enough
-capacity. Collection reserves source goods, destination wages and both shelf
-capacities. Cargo is separate from owned inventory but counts toward carry limits.
+capacity. Optional price is a per-unit supplier payment, integer 0..10000 (omitted means 0).
+Quantity*price+pay must fit 1000000. Collection reserves source goods, destination
+invoice plus wage, supplier treasury headroom and both shelf capacities.
+Completion pays the source business its invoice and the courier its wage; cancellation
+returns the invoice as well as cargo/pay. No player purchase is required. Cargo is separate from owned inventory but counts toward carry limits.
 One work/delivery/repair commitment per account; sealed cargo cannot be sold or eaten.
 The player may travel in vehicles and must hand over on foot at the destination.
 Completion transfers goods/pay once; cancellation anywhere returns reservations.
@@ -528,7 +531,9 @@ Use repair id(label=...,market=supply_market,on=work_surface,kind=table,
 input=kit,take=1,seconds=8,pay=4,effort=5,dispatch_s=12); inside economy.
 At most 8 services. on is an existing convex ground surface, with at most 4096
 12-unit local grid samples. Supply vendor and stationary worker home must lie in
-it; home must be within market reach. kind selects measure.kind, never labels.
+it; home must be within market reach. Choose exactly one of kind=table or
+kinds=[table,custom], a nonempty unique list from measure kinds. Both select
+measure.kind, never labels. The same service applies to every eligible category.
 Eligible ground-accessible break/topple targets and zones retain their original
 geometry/contacts after repair. Input must fit an existing lot; take integer
 1..32; seconds 1..120, pay positive integer <=1000000, effort 1..50, optional
@@ -539,4 +544,4 @@ per target, supply/wage reservations, work progress, obstruction waiting,
 consumption counters and return home. Player takes the same job at the market,
 stands beside the damage to work, or cancels/refunds. Pause freezes; R and saves
 preserve; Start over resets. No scripts, city-wide dispatch, ladders, free kits,
-new plant growth or implicit destruction. See examples/market-repair.dream.
+new plant growth or implicit destruction. See examples/market-repair.dream and examples/market-maintenance.dream.

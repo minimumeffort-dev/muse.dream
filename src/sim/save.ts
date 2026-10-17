@@ -9,7 +9,7 @@ import {actorPose} from './actors';
 import {ambientNavigation} from '../scene/ambient-navigation';
 import {AMBIENT_LIMITS} from '../scene/ambient';
 import {economyStateSchema,parkingEconomyStateSchema,previousEconomyStateSchema,initialEconomy,checkEconomyState} from './commerce';
-import {SAVE_SIMULATION_VERSION,R44_COMPATIBILITIES,preDeliveryScene,preParkingScene,preRepairScene} from '../scene/save-compatibility';
+import {SAVE_SIMULATION_VERSION,R44_COMPATIBILITIES,preDeliveryScene,preParkingScene,preRepairScene,preSupplyScene} from '../scene/save-compatibility';
 import {primeSceneContacts,sceneContactData} from '../scene/contacts';
 import {primeAmbientNavigation,ambientGraph} from '../scene/ambient-navigation';
 import {PARKING_LIMITS} from '../scene/agents';
@@ -44,11 +44,12 @@ const supported=z.discriminatedUnion('version',[legacyPacket,secondPacket,thirdP
 const unique=(values:unknown[])=>new Set(values).size===values.length;
 const expected=new WeakMap<World['scene'],ReturnType<typeof createCarAtSpawn>>();
 const previousWorlds=new WeakMap<World['scene'],Map<string,World['scene']>>();
-function previousPhysicalScene(world:World,stage:'repair'|'parking'|'delivery'|'commerce'='repair'):World['scene']{
+function previousPhysicalScene(world:World,stage:'supply'|'repair'|'parking'|'delivery'|'commerce'='repair'):World['scene']{
  let stages=previousWorlds.get(world.scene);if(!stages){stages=new Map();previousWorlds.set(world.scene,stages);}
  let scene=stages.get(stage);if(scene)return scene;
- const prior=world.previousRepairSaveCompatibility ? preRepairScene(world.scene) : world.scene;
- const physical=stage==='repair' ? prior : world.previousParkingSaveCompatibility ? preParkingScene(prior) : prior;
+ const current=world.previousSupplySaveCompatibility ? preSupplyScene(world.scene) : world.scene;
+ const prior=stage==='supply' ? current : world.previousRepairSaveCompatibility ? preRepairScene(current) : current;
+ const physical=stage==='supply' || stage==='repair' ? prior : world.previousParkingSaveCompatibility ? preParkingScene(prior) : prior;
  scene=stage==='delivery' ? preDeliveryScene(physical) : stage==='commerce' ? {...physical,economy:undefined} : physical;
  // Registered projection preserves every physical field; reuse the prepared caches.
  primeSceneContacts(scene,sceneContactData(world.scene));primeAmbientNavigation(scene,ambientGraph(world.scene));stages.set(stage,scene);return scene;
@@ -94,13 +95,14 @@ export function decodeSave(text:string,world:World){
  const untaggedExact=exact && !world.scene.economy;
  const knownSource=world.previousSaveSource!==undefined && data.sourceHash===world.previousSaveSource;
  const oldFingerprint=data.version===2 && data.compatibilityHash!==undefined && (data.compatibilityHash===world.previousSaveCompatibility || !!world.previousSaveSource && (R44_COMPATIBILITIES as readonly string[]).includes(data.compatibilityHash));
- const oldRules=Number(SAVE_SIMULATION_VERSION)===5 && (data.version===2 ? oldFingerprint || knownSource || data.compatibilityHash===undefined && untaggedExact && world.saveCompatibility===undefined : data.version===1 && (knownSource || untaggedExact));
- const addEconomy=Number(SAVE_SIMULATION_VERSION)===5 && data.version===3 && !data.state.economy && data.compatibilityHash!==undefined && data.compatibilityHash===world.emptyEconomySaveCompatibility;
- const addDeliveries=Number(SAVE_SIMULATION_VERSION)===5 && data.version===3 && !!data.state.economy && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousMarketSaveCompatibility;
- const addRepairs=Number(SAVE_SIMULATION_VERSION)===5 && data.version===5 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousRepairSaveCompatibility;
- const addParking=Number(SAVE_SIMULATION_VERSION)===5 && data.version===4 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousParkingSaveCompatibility;
- if(data.sceneId!==world.scene.sceneId || !(oldRules || addEconomy || addDeliveries || addParking || addRepairs || data.version===SAVE_VERSION && (exact || compatible) && data.compatibilityHash===world.saveCompatibility))throw Error('This backup needs a different world or simulation version.');
- const migrated=!!(oldRules || addEconomy || addDeliveries || addParking || addRepairs);let restored:CarState;
+ const oldRules=Number(SAVE_SIMULATION_VERSION)===6 && (data.version===2 ? oldFingerprint || knownSource || data.compatibilityHash===undefined && untaggedExact && world.saveCompatibility===undefined : data.version===1 && (knownSource || untaggedExact));
+ const addEconomy=Number(SAVE_SIMULATION_VERSION)===6 && data.version===3 && !data.state.economy && data.compatibilityHash!==undefined && data.compatibilityHash===world.emptyEconomySaveCompatibility;
+ const addDeliveries=Number(SAVE_SIMULATION_VERSION)===6 && data.version===3 && !!data.state.economy && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousMarketSaveCompatibility;
+ const addSupply=Number(SAVE_SIMULATION_VERSION)===6 && data.version===6 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousSupplySaveCompatibility;
+ const addRepairs=Number(SAVE_SIMULATION_VERSION)===6 && data.version===5 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousRepairSaveCompatibility;
+ const addParking=Number(SAVE_SIMULATION_VERSION)===6 && data.version===4 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousParkingSaveCompatibility;
+ if(data.sceneId!==world.scene.sceneId || !(oldRules || addEconomy || addDeliveries || addParking || addRepairs || addSupply || data.version===SAVE_VERSION && (exact || compatible) && data.compatibilityHash===world.saveCompatibility))throw Error('This backup needs a different world or simulation version.');
+ const migrated=!!(oldRules || addEconomy || addDeliveries || addParking || addRepairs || addSupply);let restored:CarState;
  if(oldRules || addEconomy){try{checkState(historicalState(data.state),{...world,scene:previousPhysicalScene(world,'commerce')});}catch{throw Error('This backup contains invalid world state.');}}
  if(addParking){try{checkState(historicalState(data.state),{...world,scene:previousPhysicalScene(world,'parking')});}catch{throw Error('This backup contains invalid world state.');}}
  if(addDeliveries && data.version===3 && data.state.economy){
@@ -109,8 +111,9 @@ export function decodeSave(text:string,world:World){
   const next=initialEconomy(previousPhysicalScene(world),data.state.timeS)!,old=data.state.economy;
   restored={...data.state,economy:{...next,...old,accounts:next.accounts.map(a=>old.accounts.find(b=>b.id===a.id)??a),markets:next.markets.map(m=>old.markets.find(n=>n.id===m.id)??m),delivered:next.delivered,repaired:next.repaired}};
  }else restored=oldRules || addEconomy ? {...data.state,economy:initialEconomy(world.scene,data.state.timeS)} : data.version===SAVE_VERSION ? data.state as CarState : historicalState(data.state);
+ if(addSupply){try{checkState(data.state as CarState,{...world,scene:previousPhysicalScene(world,'supply')});}catch{throw Error('This backup contains invalid world state.');}}
  if(addRepairs){try{checkState(historicalState(data.state),{...world,scene:previousPhysicalScene(world)});}catch{throw Error('This backup contains invalid world state.');}}
- if(migrated && world.previousRepairSaveCompatibility && restored.economy){const fresh=initialEconomy(world.scene,restored.timeS)!,old=restored.economy;restored={...restored,economy:{...fresh,...old,accounts:fresh.accounts.map(a=>{const existing=old.accounts.find(b=>b.id===a.id);return existing ? {...existing,inventory:{...a.inventory,...existing.inventory}} : a;}),markets:fresh.markets.map(m=>{const existing=old.markets.find(n=>n.id===m.id);return existing ? {...existing,stock:{...m.stock,...existing.stock}} : m;}),consumed:{...fresh.consumed,...old.consumed},repaired:fresh.repaired}};}
+ if(migrated && (world.previousRepairSaveCompatibility || world.previousSupplySaveCompatibility) && restored.economy){const fresh=initialEconomy(world.scene,restored.timeS)!,old=restored.economy;restored={...restored,economy:{...fresh,...old,accounts:fresh.accounts.map(a=>{const existing=old.accounts.find(b=>b.id===a.id);return existing ? {...existing,inventory:{...a.inventory,...existing.inventory}} : a;}),markets:fresh.markets.map(m=>{const existing=old.markets.find(n=>n.id===m.id);return existing ? {...existing,stock:{...m.stock,...existing.stock}} : m;}),consumed:{...fresh.consumed,...old.consumed},delivered:{...fresh.delivered,...old.delivered},repaired:{...fresh.repaired,...old.repaired}}};}
  try{checkState(restored,world);}catch{throw Error('This backup contains invalid world state.');}
  // A valid saved world can outlive a safe active-body pose. Recover only the player.
  const state=restored.control.kind==='passenger' || carFootprintClear(bodyWorld(restored,world),restored.x,restored.y,restored.elevation,restored.timeS,restored) ? restored : resetCar({...restored,grounded:false},world.scene);

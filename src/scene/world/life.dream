@@ -85,7 +85,7 @@ behavior market_chat(start=busy){
  state returning(action=idle,face=player,say="Good to see you again. Welcome back."){
   on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
- state about(action=idle,face=player,say="You can help bake bread, bring flour from Station supplies or take bread to the school canteen."){
+ state about(action=idle,face=player,say="You can bake bread, deliver to the school, repair market furniture or bring flour and repair kits from Station supplies."){
   on again(event=interact,to=hello,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
 }
@@ -129,6 +129,7 @@ economy(){
  account caretaker(actor=market_neighbor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,repair=market_tables);
  market station_supplies(label="Station supplies",actor=station_resident,credits=0,radius=70){
   lot flour_store(good=flour,quantity=80,limit=80);
+  lot depot_kits(good=timber,quantity=32,limit=32);
  }
  market school_canteen(label="School canteen",actor=teacher,credits=60,radius=70){
   lot bread_counter(good=bread,quantity=0,limit=12,price=5);
@@ -140,6 +141,7 @@ economy(){
  }
  delivery flour_run(label="Bring flour to the bakery",from=station_supplies,to=market_stall,good=flour,quantity=2,pay=4,capacity=1);
  delivery school_run(label="Take bread to school",from=market_stall,to=school_canteen,good=bread,quantity=2,pay=5,capacity=1);
- repair market_tables(label="Repair a market table",market=market_stall,on=market_square,kind=table,input=timber,take=1,seconds=8,pay=4,effort=5);
+ delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1);
+ repair market_tables(label="Repair market furniture",market=market_stall,on=market_square,kinds=[table,custom],input=timber,take=1,seconds=8,pay=4,effort=5);
  work bake(label="Bake bread",market=market_stall,input=flour,take=1,output=bread,make=2,seconds=6,pay=3,effort=12,capacity=1,target=4);
 }

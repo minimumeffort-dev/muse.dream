@@ -12,7 +12,7 @@ The vendor works when bread runs low. The commuter buys and eats when hungry, us
 
 ## Author it in Dream
 
-One `economy()` block owns the system for a linked world. Goods, accounts, markets and work have explicit IDs. Accounts reference the player or existing NPC placements. Markets and production workers require stationary NPCs; repair workers start from a stationary home and travel inside their declared work area. customers may use the existing walking routes. The complete-world compiler checks ownership after module linking.
+One `economy()` block owns the system for a linked world. Goods, accounts, markets and work have explicit IDs. Accounts reference the player or existing NPC placements. Markets and production workers require stationary NPCs; repair workers start from a stationary home and travel inside their declared work area. Customers may use the existing walking routes. The complete-world compiler checks ownership after module linking.
 
 | Declaration | Meaning |
 | --- | --- |
@@ -130,7 +130,11 @@ delivery school_run(label="Take bread to school",from=market_stall,to=school_can
 
 Both markets need a lot for the good, enough capacity and separate interaction
 areas. Collection reserves source/refund space, destination/output space and the
-wage atomically. Completion transfers once; cancellation refunds once. No
+wage atomically. Optional `price` adds a per-unit supplier invoice, paid by the
+destination business. It defaults to zero for existing contracts. The invoice
+and wage stay in escrow during travel; handoff pays the supplier and courier
+once, and cancellation returns both to the destination. The source treasury
+reserves enough headroom to receive its invoice. Completion transfers once; cancellation refunds once. No
 per-item meshes or physics bodies are allocated. NPC customers consume delivered
 stock; autonomous courier dispatch and delivery route planning remain future work.
 
@@ -140,20 +144,21 @@ example journey is for learning the rules; the live city jobs connect actual pla
 
 ## Repair work
 
-Drive into the table in the market square, then clear the wreckage. The caretaker
+Drive into the table, produce crate or terracotta planter in the market square,
+then clear the wreckage. The caretaker
 notices the damage, waits 12 seconds for someone to take the job, collects a
 repair kit from the vendor and walks over. Eight seconds of work restores the
-table and its collision body. The bakery pays four credits and loses one kit.
+object and its collision body. The bakery pays four credits and loses one kit.
 The caretaker walks back to their starting place before resuming their ordinary
 behaviour. A busy worker does not offer its suspended conversation prompt; you
 can still talk to other available people. Nothing is spawned from free stock.
 
-![The repaired table, with the worker heading home](../media/repair.jpg)
+![The repaired produce crate, with the worker heading home](../media/repair.jpg)
 
 [Watch the complete repair in HD](../media/repair.mp4) · [Animated repair](../media/repair.gif)
 
 You can do it too. Go to the bakery before the caretaker collects the kit, choose
-**Repair a market table** and press **H**. Follow the map marker to the damage and
+**Repair market furniture** and press **H**. Follow the map marker to the damage and
 stand beside it. Work pauses when you walk away, jump, swim or enter a vehicle;
 return to continue. **Cancel repair** refunds the unused kit and reserved pay.
 You receive the same four credits when the repair finishes.
@@ -176,7 +181,10 @@ Put the declaration inside `economy`. An NPC account uses `repair=yard_tables` t
 notice and take those jobs automatically. The player never has an automatic
 policy. Production `work` and `repair` policies cannot share one account.
 
-`kind` selects measured categories, as shared destruction rules do. It covers
+`kind` selects one measured category, as shared destruction rules do. Use
+`kinds=[table,custom]` for several categories under the same service. Declare
+exactly one of `kind` or `kinds`; lists must be nonempty, unique and use existing
+measure categories. It covers
 eligible break/topple objects and ground-accessible break zones in the named
 surface; it never selects by label or makes one table exempt. One account can
 hold one commitment, and each damaged object or zone has one claimant across all
@@ -191,5 +199,32 @@ inside that dry area and clear carriageways, cycle tracks, water and solid
 contacts. They do not dispatch workers across the city. Blocked workers wait;
 there is no ladder, construction scaffold or dropped-kit simulation. Trees use
 the same restore mechanism when authored for it; growing a new sapling is still
-a separate missing capability. The live service currently covers the market
-table. It does not make other scenery destructible.
+a separate missing capability. The live service covers the market table, crate
+and planter. It does not make other scenery destructible.
+
+
+### Replacement supplies
+
+The station depot starts with 32 repair kits. After the caretaker or player has
+used at least two kits, go to **Station supplies**, choose **Bring repair kits to
+the market** and press H. Two kits leave the depot; the bakery reserves six
+credits for the supplier and four for the courier. Take the cargo back, get out
+and hand it over with H. The bakery receives two kits, the depot receives six
+credits and you receive four. No player credits are charged.
+
+```dream
+delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1);
+repair market_tables(label="Repair market furniture",market=market_stall,on=market_square,kinds=[table,custom],input=timber,take=1,seconds=8,pay=4,effort=5);
+```
+
+These declarations are the live world's policy. The earlier flour and bread
+contracts omit `price` and retain their zero-price cargo transfers. Supplier
+prices are integers 0..10,000 per unit; invoice plus wage must fit the
+1,000,000-credit treasury bound. Shelves, carrying limits, treasury headroom and
+shared contract capacity still apply. The depot can run out and the bakery can
+run out of money. There is no automatic courier or upstream kit production.
+
+[Complete maintenance and procurement example](../examples/market-maintenance.dream).
+Run `npm run -s dream -- check docs/examples/market-maintenance.dream`. It includes
+a table and a crate served by one category list, plus a separate supplier and a
+paid kit contract. [Verification and remaining limits](../evidence/supply/verification.md).

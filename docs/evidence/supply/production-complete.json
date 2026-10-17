@@ -1,0 +1,159 @@
+{
+  "version": 6,
+  "sourceHash": "027d990ec7540da35d8ba27cad4ac924c2d17a96186660e0b5990dd4d9355f06",
+  "compatibilityHash": "0fa752fb32d4b251900d87d82b50c554a91a278b8a980bf3bb0bada5add9ba75",
+  "worldTime": 209.28400000010924,
+  "economy": {
+    "atS": 209.02499999997423,
+    "turn": 2,
+    "accounts": [
+      {
+        "id": "pocket",
+        "credits": 24,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        },
+        "satiety": 37.54875000000041,
+        "decisionAtS": 0
+      },
+      {
+        "id": "baker",
+        "credits": 0,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        },
+        "satiety": 54.54875000000041,
+        "decisionAtS": 209.3083333333082
+      },
+      {
+        "id": "regular",
+        "credits": 25,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        },
+        "satiety": 59.548749999999394,
+        "decisionAtS": 209.3083333333082
+      },
+      {
+        "id": "school_staff",
+        "credits": 30,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        },
+        "satiety": 17.54875000000132,
+        "decisionAtS": 209.3083333333082
+      },
+      {
+        "id": "caretaker",
+        "credits": 8,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        },
+        "satiety": 44.54875000000041,
+        "decisionAtS": 210.02499999997423
+      }
+    ],
+    "markets": [
+      {
+        "id": "station_supplies",
+        "credits": 6,
+        "stock": {
+          "flour": 80,
+          "timber": 30
+        }
+      },
+      {
+        "id": "school_canteen",
+        "credits": 60,
+        "stock": {
+          "bread": 0
+        }
+      },
+      {
+        "id": "market_stall",
+        "credits": 87,
+        "stock": {
+          "bread": 7,
+          "flour": 30,
+          "timber": 12
+        }
+      }
+    ],
+    "consumed": {
+      "bread": 1,
+      "flour": 0,
+      "timber": 0
+    },
+    "batches": {
+      "bake": 0
+    },
+    "events": [
+      {
+        "account": "regular",
+        "kind": "buy",
+        "ref": "bread",
+        "atS": 37.24999999999853
+      },
+      {
+        "account": "regular",
+        "kind": "eat",
+        "ref": "bread",
+        "atS": 38.24999999999847
+      },
+      {
+        "account": "caretaker",
+        "kind": "repair_started",
+        "ref": "market_tables",
+        "atS": 66.24999999999879
+      },
+      {
+        "account": "caretaker",
+        "kind": "repaired",
+        "ref": "market_tables",
+        "atS": 133.7500000000427
+      },
+      {
+        "account": "caretaker",
+        "kind": "repair_started",
+        "ref": "market_tables",
+        "atS": 148.00000000002973
+      },
+      {
+        "account": "caretaker",
+        "kind": "repaired",
+        "ref": "market_tables",
+        "atS": 157.25000000002132
+      },
+      {
+        "account": "pocket",
+        "kind": "collected",
+        "ref": "kits_run",
+        "atS": 199.80833333331594
+      },
+      {
+        "account": "pocket",
+        "kind": "delivered",
+        "ref": "kits_run",
+        "atS": 208.77499999997445
+      }
+    ],
+    "delivered": {
+      "flour_run": 0,
+      "school_run": 0,
+      "kits_run": 1
+    },
+    "repaired": {
+      "market_tables": 2
+    }
+  }
+}
