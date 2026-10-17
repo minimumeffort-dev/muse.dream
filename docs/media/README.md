@@ -15,6 +15,7 @@ Driving, vehicle switching, jumping, swimming and destruction are exported at **
 | Walking, running and jumping | [locomotion.gif](locomotion.gif) | [locomotion.mp4](locomotion.mp4) | 6 seconds |
 | Swimming in the city canal | [swimming.gif](swimming.gif) | [swimming.mp4](swimming.mp4) | 6 seconds |
 | Aircraft takeoff, climb, bank and descent | [flight.gif](flight.gif) | [flight.mp4](flight.mp4) | 10 seconds |
+| Delivery pickup and vehicle carry | [delivery.gif](delivery.gif) | [delivery.mp4](delivery.mp4) | 12 seconds |
 | Food, trade and paid work | [commerce.gif](commerce.gif) | [commerce.mp4](commerce.mp4) | 12 seconds |
 | Day and night | [daynight.gif](daynight.gif) | [daynight.mp4](daynight.mp4) | 12 seconds |
 
@@ -391,3 +392,33 @@ The remaining driving, switching, locomotion, swimming, sports, lighting, wildli
 and destruction captures retain the same represented geometry and controls. Their
 review starts carry no bought food and are outside the market interaction area,
 so the contextual market panel stays hidden there.
+
+## Delivery work
+
+The delivery pass refreshes commerce and conversation GIF/video/poster together
+for the work selector, then adds delivery GIF/video/poster. Delivery uses 360
+actual rendered frames at 30 per simulation second. Its development-only script
+selects the bread job, collects it, walks to the car, boards, reverses and exits.
+The visible market panel and live map canvas are composited over the actual
+renderer frame; the map line points directly to the destination. It is not a
+route solver or a recording of the complete trip. Native browser checks cover
+the real journey, handoff and reload separately. No interpolation or FPS claim.
+
+All three UI clips use 1280 x 720/256-color GIFs and matching 1600 x 900 videos.
+Existing asset, movement, sports, lighting, destruction and population captures
+retain the represented geometry and controls. Pause/backup stills without cargo
+retain their visible controls; a new native cargo view documents the extra state.
+`cargo-save.jpg` is the native production-build pause menu after restoring a
+two-loaf delivery. It is converted from `production-cargo-save.png` at its original
+size, without upscaling. The [delivery evidence](../evidence/delivery/verification.md)
+records the save/reload and cancellation checks.
+
+UI overlays use the same 1600 x 900 capture layout as the renderer, so their
+position no longer changes when the Codex browser panel is resized. Live gameplay
+keeps its responsive layout. The delivery map retains its rounded native bounds.
+
+The moving delivery GIF keeps 1280 x 720, all 360 source frames and a 256-color
+palette, with no dithering and Gifsicle loss 80. It is offered as an optional
+animation link rather than downloading automatically in README/the guide; the
+full-color HD video and native poster remain primary. Market/conversation GIFs
+retain their earlier no-additional-Gifsicle-loss settings.

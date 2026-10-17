@@ -1,0 +1,95 @@
+{
+  "origin": "http://127.0.0.1:4175/",
+  "build": "production, no review helpers",
+  "restoredBeforeCancellation": {
+    "version": 4,
+    "compatibilityHash": "41d7da9d2228df8a28a08d7db9713602482f312be20a04b6e50be2c028909def",
+    "timeS": 1416.0750000042253,
+    "pocket": {
+      "id": "pocket",
+      "credits": 18,
+      "inventory": {
+        "bread": 0,
+        "flour": 0
+      },
+      "satiety": 73.88416666657606,
+      "decisionAtS": 1273.708333335746,
+      "delivery": {
+        "id": "school_run",
+        "startedAtS": 1406.5250000041037
+      }
+    },
+    "markets": [
+      {
+        "id": "station_supplies",
+        "credits": 0,
+        "stock": {
+          "flour": 80
+        }
+      },
+      {
+        "id": "school_canteen",
+        "credits": 55,
+        "stock": {
+          "bread": 0
+        }
+      },
+      {
+        "id": "market_stall",
+        "credits": 107,
+        "stock": {
+          "bread": 6,
+          "flour": 29
+        }
+      }
+    ],
+    "delivered": {
+      "flour_run": 0,
+      "school_run": 0
+    }
+  },
+  "savedAfterCancellation": {
+    "version": 4,
+    "compatibilityHash": "41d7da9d2228df8a28a08d7db9713602482f312be20a04b6e50be2c028909def",
+    "timeS": 1416.8000000042346,
+    "pocket": {
+      "id": "pocket",
+      "credits": 18,
+      "inventory": {
+        "bread": 0,
+        "flour": 0
+      },
+      "satiety": 73.8479166665756,
+      "decisionAtS": 1273.708333335746
+    },
+    "markets": [
+      {
+        "id": "station_supplies",
+        "credits": 0,
+        "stock": {
+          "flour": 80
+        }
+      },
+      {
+        "id": "school_canteen",
+        "credits": 60,
+        "stock": {
+          "bread": 0
+        }
+      },
+      {
+        "id": "market_stall",
+        "credits": 107,
+        "stock": {
+          "bread": 8,
+          "flour": 29
+        }
+      }
+    ],
+    "delivered": {
+      "flour_run": 0,
+      "school_run": 0
+    }
+  },
+  "consoleWarningsOrErrors": []
+}

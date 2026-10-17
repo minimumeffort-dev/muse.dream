@@ -1,7 +1,7 @@
-import {carFootprintClear,type CarState,type World} from "../sim/car";
+import {carFootprintClear,resetCar,type CarState,type World} from "../sim/car";
 import {drivingHeight,terrainHeight,waterAt} from "../scene/terrain";
 import {actorPose,routeObjects} from "../sim/actors";
-import {toggleRide,bodyWorld,FOOT_HEIGHT} from "../sim/interaction";
+import {toggleRide,stepInteractive,bodyWorld,FOOT_HEIGHT} from "../sim/interaction";
 import {controlFor} from "../scene/agents";
 import {aircraftFloor} from '../scene/aircraft-support';
 
@@ -67,4 +67,13 @@ export function populationReviewStart(state:CarState,world:World,scenario:string
  if(!object)return state;
  const x=object.x+25,y=object.y,next:CarState={...state,control:{kind:'foot'},x,y,vx:0,vy:0,vz:0,grounded:true,elevation:drivingHeight(world.scene.terrain,x,y),vehicles:[{id:null,x:state.x,y:state.y,elevation:state.elevation,headingRad:state.headingRad,distance:0}]};
  return carFootprintClear(bodyWorld(next,world),x,y,next.elevation,state.timeS,next) ? next : state;
+}
+
+/** Profile the same driving start with cargo collected through the real engine. */
+export function cargoReviewStart(state:CarState,world:World,id:string|null):CarState{
+ const task=world.scene.economy?.deliveries.find(d=>d.id===id);if(!task)return state;
+ const market=world.scene.economy!.markets.find(m=>m.id===task.from)!;
+ const foot=npcReviewStart(state,world,market.actor);if(foot.control.kind!=='foot')return state;
+ const next=stepInteractive(foot,{steer:0,throttle:0,commerce:{kind:'collect',delivery:task.id}},1/120,world);
+ return next.economy?.accounts.some(a=>a.delivery?.id===id) ? resetCar(next,world.scene) : state;
 }

@@ -102,6 +102,16 @@ At the market, **B** buys bread, **G** eats it and **V** sells an item back. **H
 
 [Watch the market in HD](docs/media/commerce.mp4)
 
+You can also take delivery work. Bring flour from the station depot to the bakery,
+or carry bread to the school canteen. Pick up with **H**, follow the marked
+location, then hand over on foot to get paid. Cargo, stock and money survive
+travel and reload. The school staff can buy the bread you delivered.
+[How deliveries work](docs/dream/commerce.md#deliveries).
+
+![Taking a delivery](docs/media/delivery.jpg)
+
+[Animated pickup](docs/media/delivery.gif) · [Watch in HD](docs/media/delivery.mp4)
+
 Your world saves on this device. Reload to return to your position, parked vehicles, moved props, damage, NPC memory, market stock, accounts, work and day/night phase. Pause for **Save now**, or open **Backups** to download and restore a world. Comments and dialogue edits can carry progress forward; changes to world rules or geometry keep a separate save. **Start over** resets the saved world. [What is saved and how compatibility works](docs/persistence.md).
 
 Press **F** to get out of the car, walk over to another vehicle and press **F** again. You control the bicycle, skateboard, boat or plane yourself. Leave the lane, steer across the pond or take off from the runway. A vehicle stays where you park it, including the car you left behind.

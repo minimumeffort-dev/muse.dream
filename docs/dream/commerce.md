@@ -8,7 +8,7 @@ Want to earn some credits? **H** starts a six-second bread batch. The business r
 
 [Watch in HD](../media/commerce.mp4)
 
-The vendor works when bread runs low. The commuter buys and eats when hungry, using actual route positions and the same transactions as the player. Neither gets free food or money. Flour is finite, customers have finite budgets and work stops when ingredients, shelf space, wages or fullness run out. There is no automatic supply delivery yet.
+The vendor works when bread runs low. The commuter buys and eats when hungry, using actual route positions and the same transactions as the player. Neither gets free food or money. Flour is finite, customers have finite budgets and work stops when ingredients, shelf space, wages or fullness run out. Player delivery jobs now connect the station depot, bakery and school canteen; there is no automatic supply generation.
 
 ## Author it in Dream
 
@@ -91,4 +91,49 @@ Needs and work settle on a resident 4 Hz simulation clock. NPC decisions are at 
 
 [Save format and the first-market migration](../persistence.md) preserve earlier world changes while introducing this new system. Later changes to economy rules still need an explicit migration. Limits are in the generated [command contract](../dream-v2-contract.json) and [reference](reference.md#commerce-bounds). Logical Lab scenarios remain independent.
 
-This is an outdoor market loop. Enterable kitchens, opening hours, shifts, delivery work, production chains, relationship progression and customer pathfinding driven by needs remain future work. The supply ledger is working; those institutions should not be described as complete yet.
+This is an outdoor market loop. Enterable kitchens, opening hours, shifts, multi-stage production chains, relationship progression and customer pathfinding driven by needs remain future work. The supply ledger is working; those institutions should not be described as complete yet.
+
+## Deliveries
+
+At the bakery, choose **Take bread to school** in the work menu and press **H**.
+Two loaves leave the shelf and become your delivery cargo. The school reserves
+five credits and room for the bread. Follow the marked destination on the map;
+the panel shows its name and distance. Walk, cycle or drive there, get out and
+press H to hand it over. The school receives real stock and you receive the pay.
+Its staff member can then buy and eat that bread through the same market rules.
+
+![A completed handoff at the school](../media/delivery-handoff.jpg)
+
+![Collecting cargo and taking it in a vehicle](../media/delivery.jpg)
+
+[Animated pickup](../media/delivery.gif) · [Watch in HD](../media/delivery.mp4)
+
+The other job carries two units of flour from **Station supplies**, beside the
+east railway station, to the bakery for four credits. Bake a couple of batches
+first to make shelf space. The depot starts with 80 flour; it cannot generate
+more. Bread at the school and flour at the bakery remain finite. Work and trade
+can stop for a full shelf, full bag, empty source or insufficient business money.
+
+Cargo counts against your bag's capacity but cannot be sold, eaten or used for
+another job. You can eat your own carried food while on foot during a delivery;
+the sealed cargo stays intact. You can hold one production/delivery task at a time. **Cancel
+delivery** returns cargo and reserved pay, without paying you. Travel, vehicles,
+R, pause, render unloading and save/reload keep the task; Start over resets it.
+The map line is a direction to the destination, not a solved route. Cancellation
+returns the reservation directly; there is no dropped package simulation.
+
+Author it in the existing economy block:
+
+```dream
+delivery school_run(label="Take bread to school",from=market_stall,to=school_canteen,good=bread,quantity=2,pay=5,capacity=1);
+```
+
+Both markets need a lot for the good, enough capacity and separate interaction
+areas. Collection reserves source/refund space, destination/output space and the
+wage atomically. Completion transfers once; cancellation refunds once. No
+per-item meshes or physics bodies are allocated. NPC customers consume delivered
+stock; autonomous courier dispatch and delivery route planning remain future work.
+
+[Download a complete delivery world](../examples/market-delivery.dream). Check it
+with `npm run -s dream -- check docs/examples/market-delivery.dream`. Its short
+example journey is for learning the rules; the live city jobs connect actual places.

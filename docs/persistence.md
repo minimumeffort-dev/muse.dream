@@ -6,11 +6,11 @@ Autosave runs every ten simulation seconds, after a conversation press or commit
 
 | Saved state | What returns |
 | --- | --- |
-| Player and vehicles | Position, active control, motion and parked poses |
+| Player and vehicles | Position, active control, motion, signed wheel travel and parked poses |
 | People | Program state, routine clocks, facing and whether you have met |
 | Physical changes | Moved props, damaged objects/building zones and remaining debris |
 | Sports | Scores, balls and practice state |
-| Market life | Credits, inventory, fullness, shelf stock, consumed food, completed batches and reserved work |
+| Market life | Credits, inventory, fullness, shelf stock, consumed food, completed batches, reserved work, sealed cargo and completed deliveries |
 | World clocks | Simulation time, ambient population state and day/night phase |
 
 Held controls, buffered jumps and shot charges are cancelled on restore. Transient impact flashes are not replayed. The engine checks the active body's clearance; an unsafe pose recovers the player while retaining valid world changes. Public transport restores passenger ownership beside its saved route clocks.
@@ -18,6 +18,11 @@ Held controls, buffered jumps and shot charges are cancelled on restore. Transie
 **R** still recovers your vehicle and keeps the world's changes. **Start over** resets the world and replaces its current saved slot, including NPC familiarity. The pause menu shows whether saving worked. If storage is unavailable or full, the game remains playable and reports that saving failed. A malformed or externally changed saved slot is preserved. **Save current session** explicitly replaces it with your current session; Start over replaces it with a fresh world. Automatic writes stop if another tab has changed the slot. Keep one active world tab; this is not multiplayer synchronization. **Controls** opens the keyboard guide without crowding out save actions.
 
 ![Save controls in the pause menu](media/save-menu.jpg)
+
+Active deliveries return too. The pause menu shows the sealed cargo beside your
+balance; reloading keeps its destination and reserved pay.
+
+![A saved delivery with two loaves still in transit](media/cargo-save.jpg)
 
 ## Take a backup with you
 
@@ -39,15 +44,15 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-Format 3 retains the exact source hash and the compatibility fingerprint, with simulation version 2. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+Format 4 retains the exact source hash and the compatibility fingerprint, with simulation version 3. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
-The first market has an explicit registered upgrade from the earlier world. It verifies that every pre-market rule still matches, then initializes only the new accounts/stock/needs at the saved simulation time. Player position, vehicles, damage, sports, NPC memory, population and day/night remain saved. The known r44 format 1 source and format 2 browser fingerprints are supported; original slots are kept. A malformed newer slot blocks writes rather than silently loading an older copy. The upgrade is pinned to the first market release, so later incompatible economy edits cannot silently replay a much older pre-market save.
+The first market has an explicit registered upgrade from the earlier world. It verifies that every pre-market rule still matches, then initializes only the new accounts/stock/needs at the saved simulation time. Player position, vehicles, damage, sports, NPC memory, population and day/night remain saved. The known r44 format 1 source and format 2 browser fingerprints are supported; original slots are kept. A malformed newer slot blocks writes rather than silently loading an older copy. The registered upgrade chain includes only the first-market and first-delivery releases. Later incompatible economy edits cannot silently replay older progress.
 
-Format 1 cannot establish arbitrary cross-source compatibility. Format 2 worlds outside the registered release require their exact earlier fingerprint. Future engine or economy changes need their own tested migration; no general layout or rule migration exists. A compatibility fingerprint is a safety check, not a signature proving a file's origin.
+Format 1 cannot establish arbitrary cross-source compatibility. Format 2 worlds outside the registered release require their exact earlier fingerprint. Unsupported format 3 economies are rejected. The first-delivery release also upgrades the known format 3 market: it checks the earlier world and economy, preserves existing balances, stock, fullness and reserved work deadlines, and initializes only the depot, canteen, staff account and empty delivery ledger. Sealed cargo and reserved delivery wages round-trip in format 4. Cancelling, recovery and reloading cannot pay a delivery twice. Future engine or economy changes need their own tested migration; no general layout or rule migration exists. A compatibility fingerprint is a safety check, not a signature proving a file's origin.
 
 Restoration checks the format, world identity, source/compatibility, finite fields, exact members, NPC states/clocks, damage, fragments and vehicle ownership. Population clocks must be current enough to avoid replaying an unbounded backlog. One atomic browser storage write preserves the previous slot if writing fails. Files are bounded to one million characters; file reads are also bounded before allocation.
 
-Incompatible worlds keep separate local slots. An update that adds buildings or changes rules can still start a fresh world; old saves remain stored but cannot be played by incompatible source. Only the registered first-market addition is migrated; later layout, economy or schema changes remain separate slots. No save is uploaded or synchronized across browsers. Clearing site data removes local saves, so download a backup before clearing them. There is no offline catch-up or cloud service.
+Incompatible worlds keep separate local slots. An update that adds buildings or changes rules can still start a fresh world; old saves remain stored but cannot be played by incompatible source. The registered first-market and first-delivery additions are migrated; later layout, economy or schema changes remain separate slots. No save is uploaded or synchronized across browsers. Clearing site data removes local saves, so download a backup before clearing them. There is no offline catch-up or cloud service.
 
 Render chunks remain replaceable. Simulation and damage state live outside them, so unloading scenery cannot reset a person, repair a building or move a parked car. Wave texture disturbances and temporary particles are visual effects and are rebuilt after reload; water settings and clocks remain authored/saved.
 

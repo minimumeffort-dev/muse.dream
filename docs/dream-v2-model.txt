@@ -507,3 +507,16 @@ reserved wage to the worker. Food restores bounded satiety; drain_s is simulatio
 time only. Limits and ranges are in contract.commerce; preserve finite stock,
 conserved money/material, one job per account, shared capacity and saved clocks.
 No scripts, free restocking, offline catch-up or claims of nutritional realism.
+
+Use delivery id(label=...,from=source_market,to=destination_market,good=...,
+quantity=2,pay=5,capacity=1); inside economy(). At most 16 contracts; quantity
+integer 1..32, pay integer 1..1000000, capacity integer 1..4. Markets must have
+non-overlapping interaction areas and both must stock the named good with enough
+capacity. Collection reserves source goods, destination wages and both shelf
+capacities. Cargo is separate from owned inventory but counts toward carry limits.
+One work/delivery commitment per account; sealed cargo cannot be sold or eaten.
+The player may travel in vehicles and must hand over on foot at the destination.
+Completion transfers goods/pay once; cancellation anywhere returns reservations.
+No deadline, offline travel, free supply, NPC courier dispatch or route generation.
+NPC customers can buy/eat delivered food through the same market transactions.
+Owned food can be eaten on foot during a delivery; sealed cargo is never food inventory.

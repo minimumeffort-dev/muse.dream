@@ -108,6 +108,7 @@ export interface World {
   /** Host-computed accepted simulation contract; never supplied by Dream. */
   saveCompatibility?:string;
   previousSaveCompatibility?:string;
+  previousMarketSaveCompatibility?:string;
   emptyEconomySaveCompatibility?:string;
   previousSaveSource?:string;
   /** Racing surface, independent of where the car may travel. */

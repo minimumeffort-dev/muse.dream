@@ -7,6 +7,7 @@ export class WorldWorkerClient {
   readonly scene:Promise<Scene>;
   saveCompatibility?:string;
   previousSaveCompatibility?:string;
+  previousMarketSaveCompatibility?:string;
   emptyEconomySaveCompatibility?:string;
   previousSaveSource?:string;
   private next=0;
@@ -18,7 +19,7 @@ export class WorldWorkerClient {
       this.rejectScene=reject;
       worker.onmessage=({data})=>{
         if(data.error){this.fail(new Error(data.error));return;}
-        if(data.scene){this.saveCompatibility=data.saveCompatibility;this.previousSaveCompatibility=data.previousSaveCompatibility;this.emptyEconomySaveCompatibility=data.emptyEconomySaveCompatibility;this.previousSaveSource=data.previousSaveSource;onCompile(data.compileMs);resolve(data.scene);return;}
+        if(data.scene){this.saveCompatibility=data.saveCompatibility;this.previousSaveCompatibility=data.previousSaveCompatibility;this.previousMarketSaveCompatibility=data.previousMarketSaveCompatibility;this.emptyEconomySaveCompatibility=data.emptyEconomySaveCompatibility;this.previousSaveSource=data.previousSaveSource;onCompile(data.compileMs);resolve(data.scene);return;}
         const pending=this.pending.get(data.id);if(!pending)return;this.pending.delete(data.id);pending.resolve(data.packet);
       };
     });

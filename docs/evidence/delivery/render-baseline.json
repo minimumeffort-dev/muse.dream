@@ -1,0 +1,177 @@
+{
+  "profile": {
+    "cpuMs": {
+      "mean": 3.4410000014305115,
+      "p95": 4.600000023841858
+    },
+    "draws": {
+      "mean": 252.99666666666667,
+      "p95": 359
+    },
+    "geometries": 353,
+    "gpuMs": {
+      "mean": 1.3145156655518395,
+      "p95": 1.476125
+    },
+    "gpuSamples": 299,
+    "pixelRatio": 1.5,
+    "prepareMs": {
+      "mean": 2.1756666684150696,
+      "p95": 3.100000023841858
+    },
+    "rafMs": {
+      "mean": 16.66633333325386,
+      "p95": 18.5
+    },
+    "samples": 300,
+    "scenario": "drive",
+    "submitMs": {
+      "mean": 1.265333333015442,
+      "p95": 1.5
+    },
+    "triangles": {
+      "mean": 647115.1366666667,
+      "p95": 705821
+    },
+    "viewport": [
+      1920,
+      1080
+    ]
+  },
+  "world": {
+    "car": "7668.5,4233.0,1.5",
+    "economy": {
+      "accounts": [
+        {
+          "credits": 20,
+          "decisionAtS": 0,
+          "id": "pocket",
+          "inventory": {
+            "bread": 0,
+            "flour": 0
+          },
+          "satiety": 47.69999999999993
+        },
+        {
+          "credits": 0,
+          "decisionAtS": 6.250000000000051,
+          "id": "baker",
+          "inventory": {
+            "bread": 0,
+            "flour": 0
+          },
+          "satiety": 64.69999999999993
+        },
+        {
+          "credits": 30,
+          "decisionAtS": 6.250000000000051,
+          "id": "regular",
+          "inventory": {
+            "bread": 0,
+            "flour": 0
+          },
+          "satiety": 24.700000000000017
+        },
+        {
+          "credits": 30,
+          "decisionAtS": 6.250000000000051,
+          "id": "school_staff",
+          "inventory": {
+            "bread": 0,
+            "flour": 0
+          },
+          "satiety": 27.700000000000017
+        }
+      ],
+      "atS": 6.000000000000088,
+      "batches": {
+        "bake": 0
+      },
+      "consumed": {
+        "bread": 0,
+        "flour": 0
+      },
+      "delivered": {
+        "flour_run": 0,
+        "school_run": 0
+      },
+      "events": [],
+      "markets": [
+        {
+          "credits": 0,
+          "id": "station_supplies",
+          "stock": {
+            "flour": 80
+          }
+        },
+        {
+          "credits": 60,
+          "id": "school_canteen",
+          "stock": {
+            "bread": 0
+          }
+        },
+        {
+          "credits": 100,
+          "id": "market_stall",
+          "stock": {
+            "bread": 8,
+            "flour": 30
+          }
+        }
+      ],
+      "turn": 0
+    },
+    "memory": "{\"bytes\":255358898,\"uniqueBuffers\":9955,\"geometries\":1815,\"uniqueTriangles\":1941544}",
+    "streaming": "{\"resident\":30,\"required\":9,\"pending\":0,\"bytes\":192661700,\"peakBytes\":192661700,\"peakResident\":30,\"maxInstallMs\":4.300000011920929,\"maxSliceMs\":4.300000011920929,\"loaded\":30,\"unloaded\":0,\"discarded\":0,\"ready\":true,\"keys\":[\"5600,4000\",\"6400,4000\",\"5600,3200\",\"6400,3200\",\"5600,4800\",\"6400,4800\",\"4800,4000\",\"7200,4000\",\"4800,3200\",\"7200,3200\",\"4800,4800\",\"7200,4800\",\"5600,2400\",\"6400,2400\",\"5600,5600\",\"4800,2400\",\"6400,5600\",\"7200,2400\",\"4800,5600\",\"8000,4000\",\"8000,3200\",\"7200,5600\",\"8000,4800\",\"8000,2400\",\"8000,5600\",\"8800,4000\",\"8800,3200\",\"8800,4800\",\"8800,2400\",\"8800,5600\"]}"
+  },
+  "startup": {
+    "heartbeat": {
+      "maxGapMs": 1992.600000023842,
+      "samples": 150
+    },
+    "phases": [
+      {
+        "endMs": 4066.5,
+        "label": "Reading Dream · checking the world",
+        "startMs": 0.19999998807907104
+      },
+      {
+        "endMs": 5521.800000011921,
+        "label": "Preparing driving and walking",
+        "startMs": 4066.5
+      },
+      {
+        "endMs": 5539.399999976158,
+        "label": "Starting the renderer",
+        "startMs": 5521.800000011921
+      },
+      {
+        "endMs": 7030.100000023842,
+        "label": "Building water and bridges",
+        "startMs": 5539.399999976158
+      },
+      {
+        "endMs": 7514.100000023842,
+        "label": "Assembling people and wildlife",
+        "startMs": 7030.100000023842
+      },
+      {
+        "endMs": 8811.5,
+        "label": "Preparing vehicles and interactive objects",
+        "startMs": 7514.100000023842
+      },
+      {
+        "endMs": 8994.800000011921,
+        "label": "Preparing lighting",
+        "startMs": 8811.5
+      },
+      {
+        "endMs": 12546.600000023842,
+        "label": "Loading the first neighbourhood",
+        "startMs": 8994.800000011921
+      }
+    ],
+    "totalMs": 12546.600000023842
+  }
+}

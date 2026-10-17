@@ -8,11 +8,12 @@ import {objectFragments} from '../scene/fragments';
 import {actorPose} from './actors';
 import {ambientNavigation} from '../scene/ambient-navigation';
 import {AMBIENT_LIMITS} from '../scene/ambient';
-import {economyStateSchema,initialEconomy,checkEconomyState} from './commerce';
-import {SAVE_SIMULATION_VERSION,R44_COMPATIBILITIES} from '../scene/save-compatibility';
+import {economyStateSchema,previousEconomyStateSchema,initialEconomy,checkEconomyState} from './commerce';
+import {SAVE_SIMULATION_VERSION,R44_COMPATIBILITIES,preDeliveryScene} from '../scene/save-compatibility';
 
-export const SAVE_VERSION=3,MAX_SAVE_CHARACTERS=1_000_000;
+export const SAVE_VERSION=4,MAX_SAVE_CHARACTERS=1_000_000;
 const n=z.number().finite().min(-1e7).max(1e7),clock=z.number().finite().min(0).max(1e9),count=z.number().int().min(0).max(1e9),id=z.string().min(1).max(128),v2=z.tuple([n,n]),v3=z.tuple([n,n,n]),q=z.tuple([n,n,n,n]).refine(v=>Math.abs(Math.hypot(...v)-1)<.01);
+const wheelTravel=z.number().finite().min(-1e9).max(1e9);
 const prop=z.object({id,x:n,y:n,vx:n,vy:n,elevation:n.optional(),vz:n.optional()}).strict();
 const npc=z.object({id,stateId:id,elapsedS:clock,routeTimeS:clock,animationTimeS:clock,headingRad:n,known:z.boolean(),replyAtS:clock.optional()}).strict();
 const sport=z.object({id,score:count,shots:count,made:count,held:z.boolean(),possessed:z.boolean(),chargeStartS:clock.nullable(),lockUntilS:clock,resetAtS:clock,event:z.enum(['goal','basket','out']).nullable(),eventUntilS:clock,shotFrom:v2.optional(),shotAtS:clock,aim:v2.optional()}).strict();
@@ -23,14 +24,15 @@ const stateSchema=z.object({
  boostReadyAtS:z.record(clock),boostedThisStep:z.boolean(),carBoost:z.object({held:z.boolean(),activeUntilS:clock,readyAtS:clock}).strict(),
  sports:z.array(sport).max(8),props:z.array(prop).max(4096),broken:z.array(id).max(24),brokenZones:z.array(z.object({objectId:id,zoneId:id}).strict()).max(128),debris:z.array(debris).max(128),impacts:z.array(z.never()).max(0),
  control:z.discriminatedUnion('kind',[z.object({kind:z.literal('car')}).strict(),z.object({kind:z.literal('foot')}).strict(),z.object({kind:z.literal('vehicle'),id}).strict(),z.object({kind:z.literal('passenger'),id}).strict()]),
- vehicles:z.array(z.object({id:id.nullable(),x:n,y:n,elevation:n,headingRad:n,distance:clock}).strict()).max(24),npcs:z.array(npc).max(32),population:z.object({tick:count,members:z.array(member).max(192)}).strict().optional(),distance:clock,pitch:n,bank:n,jump:z.object({held:z.boolean(),bufferUntilS:clock,coyoteUntilS:clock}).strict(),
+ vehicles:z.array(z.object({id:id.nullable(),x:n,y:n,elevation:n,headingRad:n,distance:wheelTravel}).strict()).max(24),npcs:z.array(npc).max(32),population:z.object({tick:count,members:z.array(member).max(192)}).strict().optional(),distance:wheelTravel,pitch:n,bank:n,jump:z.object({held:z.boolean(),bufferUntilS:clock,coyoteUntilS:clock}).strict(),
  economy:economyStateSchema.optional(),
 }).strict();
 const legacyPacket=z.object({kind:z.literal('dream-save'),version:z.literal(1),sourceHash:z.string().min(1).max(128),sceneId:id,worldTime:clock,state:stateSchema.omit({economy:true})}).strict();
 const hash=z.string().regex(/^[a-f0-9]{64}$/).optional();
 const secondPacket=legacyPacket.extend({version:z.literal(2),compatibilityHash:hash}).strict();
+const thirdPacket=legacyPacket.extend({version:z.literal(3),compatibilityHash:hash,state:stateSchema.omit({economy:true}).extend({economy:previousEconomyStateSchema.optional()}).strict()}).strict();
 const packet=legacyPacket.extend({version:z.literal(SAVE_VERSION),compatibilityHash:hash,state:stateSchema}).strict();
-const supported=z.discriminatedUnion('version',[legacyPacket,secondPacket,packet]);
+const supported=z.discriminatedUnion('version',[legacyPacket,secondPacket,thirdPacket,packet]);
 const unique=(values:unknown[])=>new Set(values).size===values.length;
 const expected=new WeakMap<World['scene'],ReturnType<typeof createCarAtSpawn>>();
 function checkState(s:CarState,world:World){
@@ -73,10 +75,17 @@ export function decodeSave(text:string,world:World){
  const untaggedExact=exact && !world.scene.economy;
  const knownSource=world.previousSaveSource!==undefined && data.sourceHash===world.previousSaveSource;
  const oldFingerprint=data.version===2 && data.compatibilityHash!==undefined && (data.compatibilityHash===world.previousSaveCompatibility || !!world.previousSaveSource && (R44_COMPATIBILITIES as readonly string[]).includes(data.compatibilityHash));
- const oldRules=Number(SAVE_SIMULATION_VERSION)===2 && (data.version===2 ? oldFingerprint || knownSource || data.compatibilityHash===undefined && untaggedExact && world.saveCompatibility===undefined : data.version===1 && (knownSource || untaggedExact));
- const addEconomy=Number(SAVE_SIMULATION_VERSION)===2 && data.version===3 && !data.state.economy && data.compatibilityHash!==undefined && data.compatibilityHash===world.emptyEconomySaveCompatibility;
- if(data.sceneId!==world.scene.sceneId || !(oldRules || addEconomy || data.version===SAVE_VERSION && (exact || compatible) && data.compatibilityHash===world.saveCompatibility))throw Error('This backup needs a different world or simulation version.');
- const migrated=!!(oldRules || addEconomy);const restored:CarState=migrated ? {...data.state,economy:initialEconomy(world.scene,data.state.timeS)} : data.state;
+ const oldRules=Number(SAVE_SIMULATION_VERSION)===3 && (data.version===2 ? oldFingerprint || knownSource || data.compatibilityHash===undefined && untaggedExact && world.saveCompatibility===undefined : data.version===1 && (knownSource || untaggedExact));
+ const addEconomy=Number(SAVE_SIMULATION_VERSION)===3 && data.version===3 && !data.state.economy && data.compatibilityHash!==undefined && data.compatibilityHash===world.emptyEconomySaveCompatibility;
+ const addDeliveries=Number(SAVE_SIMULATION_VERSION)===3 && data.version===3 && !!data.state.economy && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousMarketSaveCompatibility;
+ if(data.sceneId!==world.scene.sceneId || !(oldRules || addEconomy || addDeliveries || data.version===SAVE_VERSION && (exact || compatible) && data.compatibilityHash===world.saveCompatibility))throw Error('This backup needs a different world or simulation version.');
+ const migrated=!!(oldRules || addEconomy || addDeliveries);let restored:CarState;
+ if(addDeliveries && data.version===3 && data.state.economy){
+  const previous={...data.state,economy:{...data.state.economy,delivered:{}}};
+  try{checkState(previous,{...world,scene:preDeliveryScene(world.scene)});}catch{throw Error('This backup contains invalid world state.');}
+  const next=initialEconomy(world.scene,data.state.timeS)!,old=data.state.economy;
+  restored={...data.state,economy:{...next,...old,accounts:next.accounts.map(a=>old.accounts.find(b=>b.id===a.id)??a),markets:next.markets.map(m=>old.markets.find(n=>n.id===m.id)??m),delivered:next.delivered}};
+ }else restored=migrated ? {...data.state,economy:initialEconomy(world.scene,data.state.timeS)} : data.state as CarState;
  try{checkState(restored,world);}catch{throw Error('This backup contains invalid world state.');}
  // A valid saved world can outlive a safe active-body pose. Recover only the player.
  const state=restored.control.kind==='passenger' || carFootprintClear(bodyWorld(restored,world),restored.x,restored.y,restored.elevation,restored.timeS,restored) ? restored : resetCar({...restored,grounded:false},world.scene);

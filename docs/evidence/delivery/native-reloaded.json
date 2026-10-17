@@ -1,0 +1,162 @@
+{
+  "economy": {
+    "accounts": [
+      {
+        "credits": 19,
+        "decisionAtS": 1700.3000000078443,
+        "delivery": {
+          "id": "school_run",
+          "startedAtS": 2379.883333340775
+        },
+        "id": "pocket",
+        "inventory": {
+          "bread": 0,
+          "flour": 0
+        },
+        "satiety": 64.1958333334091
+      },
+      {
+        "credits": 0,
+        "decisionAtS": 2456.633333339673,
+        "id": "baker",
+        "inventory": {
+          "bread": 0,
+          "flour": 0
+        },
+        "satiety": 27.195833333409105
+      },
+      {
+        "credits": 20,
+        "decisionAtS": 2456.633333339673,
+        "id": "regular",
+        "inventory": {
+          "bread": 0,
+          "flour": 0
+        },
+        "satiety": 77.19583333340911
+      },
+      {
+        "credits": 30,
+        "decisionAtS": 2456.633333339673,
+        "id": "school_staff",
+        "inventory": {
+          "bread": 0,
+          "flour": 0
+        },
+        "satiety": 21.59166666675992
+      }
+    ],
+    "atS": 2456.383333339662,
+    "batches": {
+      "bake": 3
+    },
+    "consumed": {
+      "bread": 4,
+      "flour": 0
+    },
+    "delivered": {
+      "flour_run": 0,
+      "school_run": 0
+    },
+    "events": [
+      {
+        "account": "pocket",
+        "atS": 1866.6333333432956,
+        "kind": "paid",
+        "ref": "bake"
+      },
+      {
+        "account": "pocket",
+        "atS": 1917.841666677281,
+        "kind": "start",
+        "ref": "bake"
+      },
+      {
+        "account": "pocket",
+        "atS": 1923.8416666773576,
+        "kind": "paid",
+        "ref": "bake"
+      },
+      {
+        "account": "pocket",
+        "atS": 1969.1833333446016,
+        "kind": "start",
+        "ref": "bake"
+      },
+      {
+        "account": "pocket",
+        "atS": 1970.7833333446215,
+        "kind": "cancel",
+        "ref": "bake"
+      },
+      {
+        "account": "regular",
+        "atS": 2301.283333341919,
+        "kind": "buy",
+        "ref": "bread"
+      },
+      {
+        "account": "regular",
+        "atS": 2302.2833333419044,
+        "kind": "eat",
+        "ref": "bread"
+      },
+      {
+        "account": "pocket",
+        "atS": 2327.600000008202,
+        "kind": "buy",
+        "ref": "bread"
+      },
+      {
+        "account": "pocket",
+        "atS": 2327.933333341531,
+        "kind": "eat",
+        "ref": "bread"
+      },
+      {
+        "account": "pocket",
+        "atS": 2328.2166666748603,
+        "kind": "start",
+        "ref": "bake"
+      },
+      {
+        "account": "pocket",
+        "atS": 2334.216666674773,
+        "kind": "paid",
+        "ref": "bake"
+      },
+      {
+        "account": "pocket",
+        "atS": 2379.883333340775,
+        "kind": "collected",
+        "ref": "school_run"
+      }
+    ],
+    "markets": [
+      {
+        "credits": 0,
+        "id": "station_supplies",
+        "stock": {
+          "flour": 80
+        }
+      },
+      {
+        "credits": 55,
+        "id": "school_canteen",
+        "stock": {
+          "bread": 0
+        }
+      },
+      {
+        "credits": 111,
+        "id": "market_stall",
+        "stock": {
+          "bread": 8,
+          "flour": 27
+        }
+      }
+    ],
+    "turn": 2
+  },
+  "save": "{\"sourceHash\":\"3325eeea049f101970216b9914a395541040d20b146daf0667c486af68569283\",\"compatibilityHash\":\"41d7da9d2228df8a28a08d7db9713602482f312be20a04b6e50be2c028909def\",\"restored\":true,\"saved\":true,\"ms\":0.699999988079071,\"characters\":62291,\"timeS\":2453.6583333397016,\"known\":[\"vendor\"],\"review\":true,\"status\":\"Saved on this device.\"}"
+}

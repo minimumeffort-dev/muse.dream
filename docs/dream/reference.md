@@ -60,6 +60,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `shop?: bool`, `work?: ref` |
 | `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n` |
 | `lot` | market | ID / no block | `good: ref`, `quantity: n`, `limit: n`, `price?: n` |
+| `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `capacity: n` |
 | `work` | economy | ID / no block | `label: text`, `market: ref`, `input: ref`, `take: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n` |
 
 ### Assemblies and composition
@@ -388,8 +389,25 @@ lot id(good=ref,quantity=n,limit=n,price=n?);
 work id(label=text,market=ref,input=ref,take=n,output=ref,make=n,seconds=n,pay=n,effort=n,capacity=n,target=n);
 ```
 
-At most 8 goods, 16 accounts, 8 markets and 16 jobs; each market has 1..8 lots with unique goods. Exactly one player account; one account per actor. Other owners are existing NPC placements. Market vendors and automatic workers are stationary; a worker must start in range of its market. NPC `shop` and `work` policies are optional; player accounts cannot automate themselves.
+At most 8 goods, 16 accounts, 8 markets, 16 jobs and 16 delivery contracts; each market has 1..8 lots with unique goods. Exactly one player account; one account per actor. Other owners are existing NPC placements. Market vendors and automatic workers are stationary; a worker must start in range of its market. NPC `shop` and `work` policies are optional; player accounts cannot automate themselves.
 
 Credits: integer 0..1,000,000. Stock/limits: integer 0..10,000 with positive limits. Price: integer 1..10,000, or omitted for untraded ingredients. Carrying capacity: integer 1..32. Fullness/food: 0..100, drain per second: 0..0.25. Radius: 20..80. Work: 1..120 seconds, positive integer take/make/pay, effort 1..50, capacity 1..4, target within output lot capacity. Input/output goods differ. Labels: 1..40 nonblank characters. IDs follow the ordinary identifier contract.
 
 Buy/sell transfers one unit at the listed price. Work reserves input, wage, refund space and output capacity; cancellation refunds, completion pays once and spends effort. Food consumes an owned unit and restores fullness. NPC food decisions occur at fullness <=40; automatic work refills to target. Shared money and material conservation, clock/owner/member bounds and capacity are checked on restore. The simulation owns rules and work time; the renderer owns gestures and feedback. No offline catch-up or generated scripts. Existing NPC, rig, physics and geometry caps are unchanged.
+
+### Delivery bounds
+
+`delivery id(label=text,from=ref,to=ref,good=ref,quantity=n,pay=n,capacity=n);`
+belongs inside `economy`. Both markets need a matching lot; their interaction
+areas must be separate. Quantity: integer 1..32 and within both lot limits.
+Pay: integer 1..1,000,000. Shared capacity: integer 1..4. The contract label
+uses the ordinary nonblank 1..40 character bound.
+
+Collect on foot at `from`: reserve actual stock, destination pay, source refund
+space and destination shelf space atomically. Cargo counts toward carrying
+capacity but is unavailable for trade/food. One production or delivery task per
+account. Travel/vehicles/R/streaming retain cargo; hand over on foot at `to`
+to transfer it and earn the wage once. Cancel returns cargo/pay without output.
+Completion counts and active reservations are saved and checked against money,
+material and capacity bounds. Start over resets them. There is no timeout,
+automatic courier, path planner or unbounded item body. [Complete example](../examples/market-delivery.dream).

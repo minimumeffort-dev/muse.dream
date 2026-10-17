@@ -11,7 +11,7 @@ export function captionLines(text:string,width:number,measure:(text:string)=>num
 // Development-only, frame-by-frame PNG export through Vite. No interpolated frames.
 export function mediaCapture(canvas:HTMLCanvasElement, clips:Record<string,number>, start:(clip:string)=>void, input:(clip:string,frame:number)=>void=()=>{}) {
   if(!new URLSearchParams(location.search).has('capture'))return;
-  const style=document.createElement('style');style.textContent='body{width:1600px;height:900px;overflow:hidden}#game{position:absolute;width:1600px;height:900px;inset:0}body>canvas:not(#world-map){width:1600px!important;height:900px!important}#media-capture{position:fixed;bottom:12px;left:16px;z-index:99;padding:10px;background:#17241f;color:#e6e9df;font:14px system-ui;display:flex;gap:10px}';document.head.append(style);
+  const style=document.createElement('style');style.textContent='body{position:relative;width:1600px;height:900px;overflow:hidden}#npc-speech,#commerce-panel,#world-map{position:absolute}#commerce-panel{bottom:100px;left:28px;width:290px;max-height:none;overflow:visible}#game{position:absolute;width:1600px;height:900px;inset:0}body>canvas:not(#world-map){width:1600px!important;height:900px!important}#media-capture{position:fixed;bottom:12px;left:16px;z-index:99;padding:10px;background:#17241f;color:#e6e9df;font:14px system-ui;display:flex;gap:10px}';document.head.append(style);
   const panel=document.createElement('div');panel.id='media-capture';
   const select=document.createElement('select');select.setAttribute('aria-label','Capture clip');
   for(const [name,frames] of Object.entries(clips))select.add(new Option(`${name} · ${frames} frames`,name));
@@ -45,6 +45,7 @@ export function mediaCapture(canvas:HTMLCanvasElement, clips:Record<string,numbe
           captionLines(text,rect.width-padding*2,text=>ctx.measureText(text).width).forEach((line,i)=>ctx.fillText(line,rect.x-view.x+(ctx.textAlign==='center' ? rect.width/2 : padding),rect.y-view.y+top+(lineHeight-fontSize)/2+i*lineHeight));
         }
         }
+        if(clip==='delivery'){const map=document.querySelector<HTMLCanvasElement>('#world-map');if(map && !map.hidden){const r=map.getBoundingClientRect();ctx.save();ctx.beginPath();ctx.roundRect(r.x-view.x,r.y-view.y,r.width,r.height,parseFloat(getComputedStyle(map).borderRadius)||0);ctx.clip();ctx.drawImage(map,r.x-view.x,r.y-view.y,r.width,r.height);ctx.restore();}}
         ctx.restore();output=composite;
       }
       output.toBlob(async blob=>{

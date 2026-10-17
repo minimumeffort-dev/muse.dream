@@ -627,6 +627,21 @@
         "target": "n"
       }
     },
+    "delivery": {
+      "contexts": [
+        "economy"
+      ],
+      "id": true,
+      "fields": {
+        "label": "text",
+        "from": "ref",
+        "to": "ref",
+        "good": "ref",
+        "quantity": "n",
+        "pay": "n",
+        "capacity": "n"
+      }
+    },
     "scenario": {
       "contexts": [
         "top"
@@ -1396,6 +1411,7 @@
       "accounts": 16,
       "markets": 8,
       "jobs": 16,
+      "deliveries": 16,
       "money": 1000000,
       "quantity": 10000,
       "capacity": 32,
@@ -1449,9 +1465,17 @@
       "labelCharacters": [
         1,
         40
+      ],
+      "deliveryQuantity": [
+        1,
+        32
+      ],
+      "deliveryCapacity": [
+        1,
+        4
       ]
     },
-    "semantics": "Optional one economy() block per linked world. Goods, accounts, stationary-NPC markets and timed work are bounded data. One player account, one account per actor; NPC shop=true buys/eats when satiety <=40; NPC work refills to its job target and requires a stationary actor in range. The player uses explicit on-foot grounded controls. Market lots buy and sell one unit at their fixed price, with finite stock, treasury and capacity; omitted price means a work ingredient not traded. Transactions conserve credits, reserve inputs/wages/output room, and refund on interrupted work. Work requires satiety >= effort; effort is spent on completion. Needs and NPC decisions use a resident 4 Hz clock, with immediate player actions/cancellation. No scripts, provider calls, offline catch-up, free replenishment or clinical/nutritional realism. State survives R, streaming and saves; Start over resets it. Logical Lab scenarios remain independent."
+    "semantics": "Optional one economy() block per linked world. Goods, accounts, stationary-NPC markets and timed work are bounded data. One player account, one account per actor; NPC shop=true buys/eats when satiety <=40; NPC work refills to its job target and requires a stationary actor in range. The player uses explicit on-foot grounded controls. Market lots buy and sell one unit at their fixed price, with finite stock, treasury and capacity; omitted price means a work ingredient not traded. Transactions conserve credits, reserve inputs/wages/output room, and refund on interrupted work. Work requires satiety >= effort; effort is spent on completion. Needs and NPC decisions use a resident 4 Hz clock, with immediate player actions/cancellation. No scripts, provider calls, offline catch-up, free replenishment or clinical/nutritional realism. State survives R, streaming and saves; Start over resets it. Delivery declares separate from/to markets, good, quantity, pay and capacity. Collect reserves finite source cargo, destination wage and both shelf capacities; sealed cargo counts toward carry capacity and cannot be traded/eaten. Complete on foot at the destination to transfer goods and pay once, or cancel anywhere to return all reservations. Carrying survives vehicles, R, streaming and saves. Deliveries are player-requested; automatic NPC courier dispatch/pathfinding is not implemented. Logical Lab scenarios remain independent."
   },
   "output": "validated Object DSL v2 and Scene v1; authoring-language version is separate"
 }

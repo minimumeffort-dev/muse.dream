@@ -177,3 +177,7 @@ vendor can replenish stock through the same paid work available to the player.
 Conversation still changes only its authored social state and familiarity.
 Commerce adds explicit inventory, money, needs and work state, without new actor
 or rig slots. It does not add needs-based pathfinding, shifts or relationships.
+
+The school staff account can buy and eat bread after a player delivery fills its
+market lot. Delivery cargo remains separate from owned food. Contracts currently
+require player collection/handoff; NPC dispatch and routing are not implemented.

@@ -24,6 +24,11 @@ it('round-trips physical changes, NPC memory, parked vehicles and the visual clo
  expect(stepInteractive(copy.state,idle,1/120,world)).toEqual(stepInteractive(state,idle,1/120,world));
  let next=copy.state;for(let i=0;i<730;i++)next=stepInteractive(next,idle,1/120,world);next=stepInteractive(next,{...idle,talkPressed:true},1/120,world);expect(npcSpeech(next,scene)?.text).toBe('Good to see you again.');
 });
+it('saves signed wheel travel after reversing, both occupied and parked',()=>{
+ let state=createCarAtSpawn(scene);for(let i=0;i<120;i++)state=stepInteractive(state,{steer:0,throttle:-1},1/120,world);
+ expect(state.distance).toBeLessThan(0);const copy=decodeSave(encodeSave(state,1,world),world).state;expect(copy.distance).toBe(state.distance);
+ const foot=toggleRide(state,world),parked=decodeSave(encodeSave(foot,1,world),world).state;expect(parked.vehicles[0]!.distance).toBe(state.distance);
+});
 it('cancels held input without mutating the live state or replaying transient impacts',()=>{
  const state={...met(),jump:{held:true,bufferUntilS:10,coyoteUntilS:0},carBoost:{held:true,activeUntilS:0,readyAtS:3},boostedThisStep:true};
  const restored=decodeSave(encodeSave(state,1,world),world).state;expect(restored.jump.held).toBe(false);expect(restored.jump.bufferUntilS).toBe(0);expect(restored.carBoost.held).toBe(false);expect(restored.boostedThisStep).toBe(false);expect(restored.impacts).toEqual([]);expect(state.jump.held).toBe(true);expect(state.carBoost.held).toBe(true);
@@ -102,7 +107,7 @@ it('upgrades an exact-source format 1 slot without removing it, and never guesse
  const saveCompatibility=await sha256(saveCompatibilitySource(scene)),current={...world,saveCompatibility};
  const data=JSON.parse(encodeSave(met(),40,world));data.version=1;delete data.compatibilityHash;
  const legacyKey=`muse-dream.save.v1.${scene.sceneId}.${scene.sourceHash}`,text=JSON.stringify(data),rows=new Map([[legacyKey,text]]),storage={getItem:(k:string)=>rows.get(k)??null,setItem:(k:string,v:string)=>{rows.set(k,v);}};
- const slot=gameSave(current,()=>storage);expect(slot.restored?.version).toBe(1);expect(slot.restored?.state.npcs[0]!.known).toBe(true);expect(slot.write(slot.restored!.state,40)).toBe(true);expect(rows.get(legacyKey)).toBe(text);expect(JSON.parse(rows.get(slot.key)!).version).toBe(3);
+ const slot=gameSave(current,()=>storage);expect(slot.restored?.version).toBe(1);expect(slot.restored?.state.npcs[0]!.known).toBe(true);expect(slot.write(slot.restored!.state,40)).toBe(true);expect(rows.get(legacyKey)).toBe(text);expect(JSON.parse(rows.get(slot.key)!).version).toBe(4);
  expect(()=>decodeSave(text,{...current,scene:{...scene,sourceHash:'changed'}})).toThrow('different world');
  rows.set(slot.key,'corrupt');expect(gameSave(current,()=>storage).blocked).toBe(true);expect(rows.get(legacyKey)).toBe(text);
 });

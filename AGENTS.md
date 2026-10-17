@@ -269,13 +269,14 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 
 ## Saved simulation state
 
-Save format 3 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 2. Only revision/source/provenance and behavior `say` text
+Save format 4 pins exact source plus a host-computed accepted-world fingerprint
+at simulation version 3. Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
 and accepted field. The registered first-market upgrade initializes only new
-commerce state at saved simulation time, after checking the old world. Original
-format 1/2 slots survive. Gate migration to the registered target so incompatible
+commerce state at saved simulation time, after checking the old world. The registered delivery upgrade preserves format 3 balances, stock, needs and
+reserved work, initializing only new destinations/accounts and delivery counters.
+Original format 1/2/3 slots survive. Gate migration to the registered target so incompatible
 future markets cannot silently rewind to pre-market progress. New semantics need
 an explicit tested migration and version bump. Backups preview without writes;
 restore applies only after validation and successful atomic storage. Preserve
@@ -302,9 +303,16 @@ Keep total credits and materials conserved, including escrow, completed batches
 and consumed food. Run commerce once through the complete fixed world tick;
 4 Hz state/needs/work, at most 1 Hz NPC decisions, immediate player actions and
 work interruption. Preserve R, Start over, pause, save/reload and streaming.
+Delivery reserves real cargo, destination pay and source/destination shelf space.
+Cargo counts toward carry capacity and cannot be traded or eaten. One work or
+delivery task per account; hand over on foot at the destination to pay once, or
+cancel to refund once. Travel, vehicle changes and R retain sealed cargo. Preserve
+conservation, counters, clear on-foot interaction ranges, map guidance and safe
+restore. Delivery contracts are player-requested; NPC shoppers consume delivered
+food through existing transactions. No automatic courier dispatch is implemented.
 No offline catch-up, new rigs/physics bodies, provider calls or nutrition claims.
 Optional work gestures use existing humanoid bones and reduced-motion rest.
-Future delivery, supply chains, shifts, skills and interior kitchens remain
+Future autonomous supply chains, shifts, skills and interior kitchens remain
 separate features. The logical Lab stays independent. See `docs/dream/commerce.md`.
 
 ## Voxel assemblies
@@ -337,3 +345,15 @@ world authoring is deferred; preserve the existing Lab without expanding it.
 New asset passes must preserve accepted physical scale, bodies, contacts, foundations and destruction zones unless changing those is part of the task. Object DSL v2 visual dimensions permit .1..128 local units; v1 retains .5..128 and beam endpoint length stays >=.5. Use fine dimensions for trim instead of oversizing it. Check visible glazing, usable floors, roof/support joins, coaxial rolling parts and independently scaled passenger fit. Review the constructed sources in `docs/asset-construction.md` and inspect four rendered angles.
 
 Dream `material(style=brick|wood|stone)` selects engine-owned physical surface finishes. Brick colors are face/mortar; wood base/grain; stone base/mineral. Preserve `surfacePosition` through batching and regenerate it for newly cut voxel fragments. It is separate from shape positions, so object motion cannot make the finish slide. Do not create per-brick meshes or cut large voxel slots for mortar. Keep filtered detail, night emission and existing draw/physics budgets; see `src/game/material-coordinates.ts` and `docs/dream/objects.md`.
+
+## Current expansion priorities
+
+The user wants every object to support interaction and enough force to destroy
+it, with workers repairing lamps and replanting trees. Parked cars/scooters must
+become usable, including future trucks/pickups. Existing passive furnishing and
+reactive-object caps describe today's limitations, not a desired permanent end
+state. Evolve them through measured bounded activation, persistent state and
+shared Dream rules; do not increase per-frame work or per-cell physics to meet
+the goal. Keep auditing road paint, corners, signs and asset attachment details.
+Current loader diagnostics still show long main-thread startup gaps; profile and
+reduce those while expanding interaction. See `docs/world-systems.md`.

@@ -1,0 +1,161 @@
+{
+  "car": "4456.7,3370.3,1.5",
+  "economy": {
+    "accounts": [
+      {
+        "credits": 24,
+        "decisionAtS": 1700.3000000078443,
+        "id": "pocket",
+        "inventory": {
+          "bread": 0,
+          "flour": 0
+        },
+        "satiety": 53.188333333569275
+      },
+      {
+        "credits": 0,
+        "decisionAtS": 2676.6333333364714,
+        "id": "baker",
+        "inventory": {
+          "bread": 0,
+          "flour": 0
+        },
+        "satiety": 16.188333333569286
+      },
+      {
+        "credits": 20,
+        "decisionAtS": 2676.6333333364714,
+        "id": "regular",
+        "inventory": {
+          "bread": 0,
+          "flour": 0
+        },
+        "satiety": 66.18833333356929
+      },
+      {
+        "credits": 30,
+        "decisionAtS": 2676.6333333364714,
+        "id": "school_staff",
+        "inventory": {
+          "bread": 0,
+          "flour": 0
+        },
+        "satiety": 10.5841666669201
+      }
+    ],
+    "atS": 2676.5333333364583,
+    "batches": {
+      "bake": 3
+    },
+    "consumed": {
+      "bread": 4,
+      "flour": 0
+    },
+    "delivered": {
+      "flour_run": 0,
+      "school_run": 1
+    },
+    "events": [
+      {
+        "account": "pocket",
+        "atS": 1917.841666677281,
+        "kind": "start",
+        "ref": "bake"
+      },
+      {
+        "account": "pocket",
+        "atS": 1923.8416666773576,
+        "kind": "paid",
+        "ref": "bake"
+      },
+      {
+        "account": "pocket",
+        "atS": 1969.1833333446016,
+        "kind": "start",
+        "ref": "bake"
+      },
+      {
+        "account": "pocket",
+        "atS": 1970.7833333446215,
+        "kind": "cancel",
+        "ref": "bake"
+      },
+      {
+        "account": "regular",
+        "atS": 2301.283333341919,
+        "kind": "buy",
+        "ref": "bread"
+      },
+      {
+        "account": "regular",
+        "atS": 2302.2833333419044,
+        "kind": "eat",
+        "ref": "bread"
+      },
+      {
+        "account": "pocket",
+        "atS": 2327.600000008202,
+        "kind": "buy",
+        "ref": "bread"
+      },
+      {
+        "account": "pocket",
+        "atS": 2327.933333341531,
+        "kind": "eat",
+        "ref": "bread"
+      },
+      {
+        "account": "pocket",
+        "atS": 2328.2166666748603,
+        "kind": "start",
+        "ref": "bake"
+      },
+      {
+        "account": "pocket",
+        "atS": 2334.216666674773,
+        "kind": "paid",
+        "ref": "bake"
+      },
+      {
+        "account": "pocket",
+        "atS": 2379.883333340775,
+        "kind": "collected",
+        "ref": "school_run"
+      },
+      {
+        "account": "pocket",
+        "atS": 2676.283333336462,
+        "kind": "delivered",
+        "ref": "school_run"
+      }
+    ],
+    "markets": [
+      {
+        "credits": 0,
+        "id": "station_supplies",
+        "stock": {
+          "flour": 80
+        }
+      },
+      {
+        "credits": 55,
+        "id": "school_canteen",
+        "stock": {
+          "bread": 2
+        }
+      },
+      {
+        "credits": 111,
+        "id": "market_stall",
+        "stock": {
+          "bread": 8,
+          "flour": 27
+        }
+      }
+    ],
+    "turn": 3
+  },
+  "memory": "{\"bytes\":278426354,\"uniqueBuffers\":10028,\"geometries\":1777,\"uniqueTriangles\":2015740}",
+  "save": "{\"sourceHash\":\"3325eeea049f101970216b9914a395541040d20b146daf0667c486af68569283\",\"compatibilityHash\":\"41d7da9d2228df8a28a08d7db9713602482f312be20a04b6e50be2c028909def\",\"restored\":true,\"saved\":true,\"ms\":0.699999988079071,\"characters\":61968,\"timeS\":2676.283333336462,\"known\":[\"vendor\"],\"review\":true,\"status\":\"Saved on this device.\"}",
+  "streaming": "{\"resident\":30,\"required\":9,\"pending\":0,\"bytes\":215729156,\"peakBytes\":230638030,\"peakResident\":34,\"maxInstallMs\":3.800000011920929,\"maxSliceMs\":3.699999988079071,\"loaded\":44,\"unloaded\":14,\"discarded\":2,\"ready\":true,\"keys\":[\"5600,4000\",\"5600,3200\",\"5600,4800\",\"4800,4000\",\"4800,3200\",\"4800,4800\",\"5600,2400\",\"4800,2400\",\"4000,4000\",\"4000,3200\",\"4000,4800\",\"4000,2400\",\"3200,4000\",\"3200,3200\",\"3200,4800\",\"3200,2400\",\"2400,4000\",\"2400,3200\",\"2400,4800\",\"2400,2400\",\"1600,3200\",\"1600,4000\",\"1600,2400\",\"4000,1600\",\"4800,1600\",\"3200,1600\",\"5600,1600\",\"1600,4800\",\"2400,1600\",\"1600,1600\"]}"
+}

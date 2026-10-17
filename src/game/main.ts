@@ -14,7 +14,7 @@ import {SunShadows} from "./sun";
 import {mediaCapture} from "./media-capture";
 import {renderProfile} from "./render-profile";
 import {freezeStatic} from "./batching";
-import {vehicleReviewStart,drivingReviewStart,npcReviewStart,movementReviewStart,populationReviewStart} from "./review-start";
+import {vehicleReviewStart,drivingReviewStart,npcReviewStart,cargoReviewStart,movementReviewStart,populationReviewStart} from "./review-start";
 import { measuredScale, playerRadius, playerHeight } from "../scene/measure";
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -70,7 +70,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   await loading.stage("Preparing driving and walking");
   const carRadius = playerRadius(doc);
   const roadMask = buildMaskForScene(doc);
-  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
+  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
     driveMask: buildPaperMask(doc.canonical.width, doc.canonical.height), carRadius };
   let car = createCarAtSpawn(doc);
   if(import.meta.env.DEV)car=vehicleReviewStart(car,world,new URLSearchParams(location.search).get("test-vehicle"));
@@ -115,7 +115,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
-  renderer.domElement.setAttribute("aria-label", "WASD walks, swims or drives. On sports grounds, approach the ball, hold J or the shot button, then release to kick or shoot. Shift or the Boost button gives a car burst. F enters or exits a vehicle. T talks to nearby people. B buys, V sells, H starts or cancels work and G eats carried food near a market. Space jumps on foot or on a bicycle, skateboard or scooter, and hops a boat. Shift runs or swims faster. In an aircraft Space climbs and Shift descends. Pinch or scroll to zoom. Q and E rotate the view. P pauses; R returns to the start.");
+  renderer.domElement.setAttribute("aria-label", "WASD walks, swims or drives. On sports grounds, approach the ball, hold J or the shot button, then release to kick or shoot. Shift or the Boost button gives a car burst. F enters or exits a vehicle. T talks to nearby people. B buys, V sells, H starts work, collects cargo or completes a delivery; G eats carried food. Space jumps on foot or on a bicycle, skateboard or scooter, and hops a boat. Shift runs or swims faster. In an aircraft Space climbs and Shift descends. Pinch or scroll to zoom. Q and E rotate the view. P pauses; R returns to the start.");
   container.append(renderer.domElement);
   const manualZoom = cameraZoomInput(renderer.domElement, () => mode === "playing");
   const scene = new THREE.Scene();
@@ -342,14 +342,14 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   let previous = performance.now(), hudTime = 0;
   let frameMs = 16.7;
   const profile=import.meta.env.DEV ? renderProfile(renderer,()=>{
-    resetPosition(true);car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));worldTime.value=0;
+    resetPosition(true);car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));car=cargoReviewStart(car,world,params.get("test-cargo"));worldTime.value=0;
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
   let captureTime:number|undefined;
-  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:360,wildlife:360,conversation:240,commerce:360},(clip)=>{
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:360,wildlife:360,conversation:240,commerce:360,delivery:360},(clip)=>{
     captureTime=undefined;
     resetPosition(true);worldTime.value=0;setMode("playing");
     characters.forEach(character=>character.reset());
-    if(clip==='conversation' || clip==='commerce')car=npcReviewStart(car,world,'vendor');
+    if(clip==='conversation' || clip==='commerce' || clip==='delivery')car=npcReviewStart(car,world,'vendor');
     if(clip==='pedestrians' || clip==='wildlife')car=populationReviewStart(car,world,clip);
     if(clip==='switching'){const bike=doc.objects.find(o=>o.id==='village_bike')!;car={...car,x:bike.x-40,y:bike.y,headingRad:0,elevation:drivingHeight(doc.terrain,bike.x-40,bike.y)};}
     if(clip==='locomotion' || clip==='swimming')car=movementReviewStart(car,world,clip==='swimming' ? 'swim' : 'walk');
@@ -357,6 +357,14 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     if(clip==='football' || clip==='basketball')car=movementReviewStart(car,world,clip);
   },(clip:string,frame:number)=>{
     keys.clear();
+    if(clip==='delivery'){
+      if(frame===5){const select=document.querySelector<HTMLSelectElement>('#market-job')!;select.value='delivery:school_run';select.dispatchEvent(new Event('change'));}
+      if(frame===20)commerce.key('KeyH');
+      if(frame>=40 && frame<100)keys.add('KeyW');
+      if(frame>=100 && frame<136){keys.add('KeyW');keys.add('KeyA');}
+      if(frame===145 || frame===300)useRide();
+      if(frame>=160 && frame<270)keys.add('KeyS');return;
+    }
     if(clip==='commerce'){if(frame===20)commerce.key('KeyB');if(frame===45)commerce.key('KeyG');if(frame===75)commerce.key('KeyH');return;}
     if(clip==='conversation'){if(frame===25 || frame===125)talkRequested=true;return;}
     if(clip==='pedestrians' || clip==='wildlife')return;

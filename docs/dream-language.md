@@ -39,4 +39,4 @@ Urban districts use bounded `street`, `surface` and `marking` declarations. They
 
 Ground populations can use Dream 2 `walk` and `roam` motion under explicit ambient ownership. The engine derives walking portals from accepted pavement and executes nearby animal reactions at 20 Hz; full geometry and joint poses stay instanced. [Population guide](dream/populations.md).
 
-Playable markets use one bounded `economy()` block with `good`, `account`, `market`, `lot` and `work` data. Player controls and NPC policies share conserved transactions, food, reserved wages and timed production. [Market guide and runnable world](dream/commerce.md). This is separate from the logical Lab scenario language.
+Playable markets use one bounded `economy()` block with `good`, `account`, `market`, `lot`, `work` and `delivery` data. Player controls and NPC policies share conserved transactions, food, reserved wages and timed production. [Market guide and runnable world](dream/commerce.md). This is separate from the logical Lab scenario language.

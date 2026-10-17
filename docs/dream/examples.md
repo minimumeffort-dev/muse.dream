@@ -195,3 +195,7 @@ with two authored replies, interaction range and a timed return to waiting.
 [Conversation semantics](npcs.md#talk-to-a-person).
 
 [Market work](../examples/market-work.dream) is a complete world with two NPCs, finite food, ingredient stock, shared wages, needs and timed work. [Play and author the market loop](commerce.md).
+
+[Market deliveries](../examples/market-delivery.dream) adds a second food counter.
+Carry reserved bread between places, earn pay on handoff and let a local customer
+buy it from the receiving stock. [Delivery rules](commerce.md#deliveries).
