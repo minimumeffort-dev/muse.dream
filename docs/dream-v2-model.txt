@@ -560,7 +560,7 @@ entrance paving; bridges require supported sidewalks. Complete-world acceptance
 checks every eligible target from every worker home. No connection means rejection.
 Routing has at most 8192 nodes, 32768 directed links and 128 saved waypoints.
 Request context features commerce,city when authoring the grounds/infrastructure.
-Without grounds, the original on-only local behavior remains unchanged. Supply vendor and stationary worker home must lie in
+Without grounds or streets, the original on-only local behavior remains unchanged. Supply vendor and stationary worker home must lie in
 it; home must be within market reach. Choose exactly one of kind=table or
 kinds=[table,custom], a nonempty unique list from measure kinds. Both select
 measure.kind, never labels. The same service applies to every eligible category.
@@ -578,3 +578,17 @@ new plant growth or implicit destruction. See examples/market-repair.dream, exam
 examples/neighborhood-repairs.dream. Worker topology is derived/prepared by the
 engine worker, never model-authored or saved graph data. Journeys advance in
 resident simulation time; walking across a city may take several minutes.
+
+Repair street coverage: add streets=[avenue,high_street] and optional verge=24 to
+repair(...). Streets are 1..32 unique existing IDs with sidewalks >=8 units wide.
+The service selects its existing measured kind/kinds near those sidewalks, plus
+its existing on/grounds targets. Verge is 0..32 world units, default 24, and needs
+streets. The engine derives short dry approaches only near matching damage
+contacts; it never creates roads or paving. Keep all riding surfaces, circuit and
+water clear, and supply real crossings at street intersections. Approaches join
+the public network with full-cylinder inset portals. At most 512 street targets
+and 2048 access pieces per service; 4096 local samples, 8192 derived graph nodes,
+32768 directed links and 128 saved waypoints remain. Complete-world acceptance
+rejects any unreachable target. Source/saves never supply graph edges. Existing
+workers, kits, wages, ownership and per-target claim rules apply. Use
+examples/street-verge-repairs.dream and request context features commerce,city.

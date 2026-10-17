@@ -114,6 +114,8 @@ export interface World {
   previousSupplySaveCompatibility?:string;
   previousNetworkSaveCompatibility?:string;
   previousPoolSaveCompatibility?:string;
+  previousVergeSaveCompatibility?:string;
+  previousVergeNavigation?:import('../scene/ambient-navigation').AmbientGraph;
   emptyEconomySaveCompatibility?:string;
   previousSaveSource?:string;
   /** Racing surface, independent of where the car may travel. */

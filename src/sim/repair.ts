@@ -1,9 +1,8 @@
 import type {Scene,Point} from '../scene/schema';
 import type {Repair} from '../scene/commerce';
 import type {CarState} from './car';
-import {COMMERCE_LIMITS,repairKinds,repairGrounds} from '../scene/commerce';
+import {COMMERCE_LIMITS,repairGrounds,repairTargets,repairCoverage,type RepairTarget} from '../scene/commerce';
 import {objectContacts,queryStaticContacts,sceneContacts,type Contact} from '../scene/contacts';
-import {impactOf,zonesOf} from '../scene/object-dsl';
 import {onPolygon,streetFootprints} from '../scene/streets';
 import {polygonBounds,distanceToPolygon} from '../scene/polygons';
 import {drivingHeight} from '../scene/terrain';
@@ -14,11 +13,11 @@ import {actorContacts,actorPoses} from './actors';
 import {objectHeight,objectRadius,archetypeOf} from './archetypes';
 import {ambientNavigation} from '../scene/ambient-navigation';
 import {walkingNetwork} from '../scene/sites';
-import {pavementSurface,pavementPortal} from '../scene/pavement';
+import {pavementSurface,pavementPortal,pavementInsetPoint} from '../scene/pavement';
 import {waterAt} from '../scene/terrain';
 import {playerHeight,playerRadius} from '../scene/measure';
 
-export interface RepairTarget {objectId:string;zoneId?:string;contact:Contact}
+export {repairTargets,type RepairTarget} from '../scene/commerce';
 export const REPAIR_RADIUS=COMMERCE_LIMITS.repairRadius,REPAIR_SPEED=14,REPAIR_REACH=12;
 const cache=new WeakMap<Scene,Map<string,ReturnType<typeof area>>>();
 function area(scene:Scene,r:Repair){
@@ -28,11 +27,11 @@ function area(scene:Scene,r:Repair){
  const {polygon,b,nx,ny}=patches[0]!,road=roadPoints(scene);
  const nearby=(points:Point[])=>{const q=polygonBounds(points);return q.x1+240>=b.x0 && q.x0-240<=b.x1 && q.y1+240>=b.y0 && q.y0-240<=b.y1;};
  const roads=road.slice(1).map((p,i)=>[road[i]!,p]).filter(nearby),riding=streetFootprints(scene).riding.filter(nearby),waters=(scene.terrain.landscape?.waters??[]).map(w=>w.polygon).filter(nearby);
- const surface=r.grounds ? pavementSurface([...walkingNetwork(scene).polygons,...patches.map(p=>p.polygon)]) : undefined;
+ const access=repairCoverage(scene,r).access,surface=r.grounds || r.streets ? pavementSurface([...walkingNetwork(scene).polygons,...patches.map(p=>p.polygon),...access]) : undefined;
  const waterBounds=(scene.terrain.landscape?.waters??[]).map(w=>polygonBounds(w.polygon));
  const dry=(p:Point)=>!waterBounds.some(b=>p.x+REPAIR_RADIUS>=b.x0 && p.x-REPAIR_RADIUS<=b.x1 && p.y+REPAIR_RADIUS>=b.y0 && p.y-REPAIR_RADIUS<=b.y1) || Array.from({length:9},(_,i)=>({x:p.x+(i ? Math.cos(i*Math.PI/4)*REPAIR_RADIUS : 0),y:p.y+(i ? Math.sin(i*Math.PI/4)*REPAIR_RADIUS : 0)})).every(p=>!waterAt(scene.terrain,p.x,p.y,drivingHeight(scene.terrain,p.x,p.y)));
  const allowed=(p:Point)=>surface ? dry(p) && Array.from({length:9},(_,i)=>({x:p.x+(i ? Math.cos(i*Math.PI/4)*REPAIR_RADIUS : 0),y:p.y+(i ? Math.sin(i*Math.PI/4)*REPAIR_RADIUS : 0)})).every(p=>surface.paved(p.x,p.y)) : onPolygon(polygon,p.x,p.y) && distanceToPolygon(p.x,p.y,polygon)>=REPAIR_RADIUS && !riding.some(q=>onPolygon(q,p.x,p.y) || distanceToPolygon(p.x,p.y,q)<REPAIR_RADIUS) && !roads.some(q=>distanceToRoad(q,p.x,p.y)<scene.roadMaskRef.params.roadWidth/2+REPAIR_RADIUS) && !waters.some(q=>onPolygon(q,p.x,p.y) || distanceToPolygon(p.x,p.y,q)<REPAIR_RADIUS);
- return {nx,ny,point,allowed,patches,surface,dry,nodes:Array.from({length:Math.min(offset,COMMERCE_LIMITS.repairNodes)},(_,i)=>allowed(point(i)))};
+ return {nx,ny,point,allowed,patches,access,surface,dry,nodes:Array.from({length:Math.min(offset,COMMERCE_LIMITS.repairNodes)},(_,i)=>allowed(point(i)))};
 }
 function grid(scene:Scene,r:Repair){let entries=cache.get(scene);if(!entries){entries=new Map();cache.set(scene,entries);}let value=entries.get(r.id);if(!value){value=area(scene,r);entries.set(r.id,value);}return value;}
 export function repairClear(scene:Scene,r:Repair,p:Point,state?:CarState):boolean{
@@ -63,7 +62,7 @@ function segmentClear(scene:Scene,a:Point,b:Point,state?:CarState):boolean{
 }
 /** Bounded work-yard or public-pavement path; never a world raster or street shortcut. */
 export function repairPath(scene:Scene,r:Repair,start:Point,end:Point,state?:CarState):Point[]|undefined{
- if(r.grounds)return networkPath(scene,r,start,end,state);
+ if(r.grounds || r.streets)return networkPath(scene,r,start,end,state);
  const destination={x:end.x,y:end.y};
  if(repairSegment(scene,r,start,end,state))return [destination];
  const g=grid(scene,r),near=(p:Point)=>g.nodes.map((valid,i)=>({valid,i,d:Math.hypot(g.point(i).x-p.x,g.point(i).y-p.y)})).filter(v=>v.valid && v.d<=24).sort((a,b)=>a.d-b.d || a.i-b.i).filter(v=>repairSegment(scene,r,p,g.point(v.i),state)).map(v=>v.i);
@@ -90,12 +89,13 @@ export function repairNetwork(scene:Scene,r:Repair){
  for(let i=0;i<publicNodes.length;i++)if(components[i]===-1){const queue=[i];components[i]=component;for(let at=0;at<queue.length;at++)for(const j of publicNodes[queue[at]!]!.links)if(components[j]===-1){components[j]=component;queue.push(j);}component++;}
  const publicGrid=new SpatialGrid(publicNodes.map((n,i)=>({x:n.x,y:n.y,i})),128);
  for(let i=0;i<publicNodes.length;i++){const n=publicNodes[i]!;let count=0;for(const p of publicGrid.query(n.x,n.y,128).filter(p=>p.i>i && components[p.i]!==components[i] && Math.hypot(p.x-n.x,p.y-n.y)<=128).sort((a,b)=>Math.hypot(a.x-n.x,a.y-n.y)-Math.hypot(b.x-n.x,b.y-n.y) || a.i-b.i).slice(0,32))if(connect(i,p.i) && ++count===4)break;}
- const pavement=walkingNetwork(scene).polygons;
- for(const patch of g.patches)for(const polygon of pavement){const b=polygonBounds(polygon);if(b.x1<patch.b.x0 || b.x0>patch.b.x1 || b.y1<patch.b.y0 || b.y0>patch.b.y1)continue;
+ const pavement=walkingNetwork(scene).polygons.map(polygon=>({polygon,b:polygonBounds(polygon)}));
+ for(const patch of [...g.patches.map(p=>({...p,verge:false})),...g.access.map(polygon=>({polygon,b:polygonBounds(polygon),verge:true}))])for(const {polygon,b} of pavement){if(b.x1<patch.b.x0 || b.x0>patch.b.x1 || b.y1<patch.b.y0 || b.y0>patch.b.y1)continue;
   const p=pavementPortal(patch.polygon,polygon,REPAIR_RADIUS);if(!p || !g.allowed(p))continue;
-  const i=add(p);
+  const i=add(p),inner=patch.verge ? pavementInsetPoint(polygon,p,REPAIR_RADIUS) : undefined;let link=i;
+  if(inner && Math.hypot(inner.x-p.x,inner.y-p.y)>.01){const j=add(inner);if(connect(i,j))link=j;}
   for(let j=0;j<g.nodes.length;j++)if(local[j]!>=0 && Math.hypot(g.point(j).x-p.x,g.point(j).y-p.y)<=24)connect(i,local[j]!);
-  let linked=0;for(const {j} of publicNodes.map((n,j)=>({j,d:Math.hypot(n.x-p.x,n.y-p.y)})).filter(({j})=>publicNodes[j]!.links.length).sort((a,b)=>a.d-b.d || a.j-b.j).slice(0,32))if(connect(i,j) && ++linked===8)break;
+  let linked=0;for(const {j} of publicNodes.map((n,j)=>({j,d:Math.hypot(n.x-p.x,n.y-p.y)})).filter(({j})=>publicNodes[j]!.links.length).sort((a,b)=>a.d-b.d || a.j-b.j).slice(0,32))if(connect(link,j) && ++linked===8)break;
  }
  if(nodes.reduce((n,p)=>n+p.links.length,0)>COMMERCE_LIMITS.repairNetworkLinks)throw Error(`${r.id}: repair network exceeds 32768 links`);
  entries.set(r.id,nodes);return nodes;
@@ -118,10 +118,10 @@ function networkPath(scene:Scene,r:Repair,start:Point,end:Point,state?:CarState)
  }return;
 }
 export interface RepairNavigation {sourceHash:string;services:{id:string;nodes:WorkNode[]}[]}
-export function repairNavigation(scene:Scene):RepairNavigation{return {sourceHash:scene.sourceHash,services:(scene.economy?.repairs??[]).filter(r=>r.grounds).map(r=>({id:r.id,nodes:repairNetwork(scene,r)}))};}
+export function repairNavigation(scene:Scene):RepairNavigation{return {sourceHash:scene.sourceHash,services:(scene.economy?.repairs??[]).filter(r=>r.grounds || r.streets).map(r=>({id:r.id,nodes:repairNetwork(scene,r)}))};}
 /** Prepared topology comes only from the accepted world's own worker, never Dream or saves. */
 export function primeRepairNavigation(scene:Scene,packet:RepairNavigation):void{
- const expected=(scene.economy?.repairs??[]).filter(r=>r.grounds).map(r=>r.id),bad=()=>{throw Error('Invalid prepared repair navigation');};
+ const expected=(scene.economy?.repairs??[]).filter(r=>r.grounds || r.streets).map(r=>r.id),bad=()=>{throw Error('Invalid prepared repair navigation');};
  if(!packet || packet.sourceHash!==scene.sourceHash || !Array.isArray(packet.services) || packet.services.length!==expected.length || packet.services.some(s=>!s || typeof s.id!=='string') || new Set(packet.services.map(s=>s.id)).size!==expected.length)bad();
  const prepared=new Map<string,WorkNode[]>();
  for(const service of packet.services){if(!expected.includes(service.id) || !Array.isArray(service.nodes) || !service.nodes.length || service.nodes.length>COMMERCE_LIMITS.repairNetworkNodes)bad();
@@ -133,7 +133,7 @@ export function primeRepairNavigation(scene:Scene,packet:RepairNavigation):void{
 }
 export function repairAccessProblems(scene:Scene):string[]{
  const problems:string[]=[];
- for(const r of scene.economy?.repairs??[]){if(!r.grounds)continue;
+ for(const r of scene.economy?.repairs??[]){if(!r.grounds && !r.streets)continue;
   try{const workers=scene.economy!.accounts.filter(a=>a.repair===r.id).map(a=>scene.objects.find(o=>o.id===a.actor)!);
    const homes=workers.length ? workers : [scene.objects.find(o=>o.id===scene.economy!.markets.find(m=>m.id===r.market)!.actor)!];
    repairNetwork(scene,r);
@@ -142,17 +142,10 @@ export function repairAccessProblems(scene:Scene):string[]{
  }
  return problems;
 }
-export function repairTargets(scene:Scene,r:Repair):RepairTarget[]{
- const polygons=repairGrounds(r).map(id=>scene.surfaces.find(s=>s.id===id)!.points);
- return scene.objects.filter(o=>o.spec && 'measure' in o.spec && !!o.spec.measure && repairKinds(r).includes(o.spec.measure.kind) && polygons.some(p=>onPolygon(p,o.x,o.y))).flatMap(o=>{
-  const contacts=objectContacts(scene,o);
-  return [...(['break','topple'].includes(impactOf(o.spec)?.kind??'') ? [{objectId:o.id,contact:contacts[0]!}] : []),...zonesOf(o.spec).map(z=>({objectId:o.id,zoneId:z.id,contact:contacts.find(c=>c.zoneId===z.id)!})).filter(t=>t.contact.bottom<=drivingHeight(scene.terrain,t.contact.x,t.contact.y)+18)];
- });
-}
 export const targetBroken=(state:CarState,t:Pick<RepairTarget,'objectId'|'zoneId'>)=>t.zoneId ? state.brokenZones.some(z=>z.objectId===t.objectId && z.zoneId===t.zoneId) : state.broken.includes(t.objectId);
 export function repairApproach(scene:Scene,r:Repair,t:RepairTarget,start:Point,state?:CarState){
  const c=t.contact,angle=Math.atan2(start.y-c.y,start.x-c.x),distance=c.r+REPAIR_RADIUS+3;
- for(let i=0;i<8;i++){const a=angle+i*Math.PI/4,end={x:c.x+Math.cos(a)*distance,y:c.y+Math.sin(a)*distance};if(repairClear(scene,r,end,state)){const path=repairPath(scene,r,start,end,state);if(path)return {end,path};}}
+ for(let i=0;i<8;i++){const a=angle+i*Math.PI/4,end={x:c.x+Math.cos(a)*distance,y:c.y+Math.sin(a)*distance};if(Math.abs(drivingHeight(scene.terrain,end.x,end.y)-drivingHeight(scene.terrain,c.x,c.y))<4 && repairClear(scene,r,end,state)){const path=repairPath(scene,r,start,end,state);if(path)return {end,path};}}
 }
 /** Same vehicle cylinder as driving; the maintenance foot clearance is conservative. */
 export function repairPlayerContact(scene:Scene,state:CarState):Contact{

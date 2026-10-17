@@ -520,3 +520,18 @@ Older repair recordings show the same furniture jobs and connected grounds;
 the new pair records the newly interactive lamps. See the
 [verification and media audit](../evidence/streetlights/verification.md) for the
 executed checks and remaining service-coverage limit.
+
+
+## Street-verge repairs (r52)
+
+`streetrepair.mp4`, `streetrepair.gif` and `streetrepair.jpg` show the caretaker
+repairing a lamp beside Market Avenue. The dev-only `streetrepair` exporter
+pre-rolls actual car impact, dispatch and walking, then records 360 consecutive
+rendered frames over 12 simulation seconds at 30 fps. The selected night lighting
+is a review override. Encode all three together with
+`node scripts/encode-media.mjs /path/to/ffmpeg /path/to/gifsicle streetrepair`
+(poster frame 250). No interpolation
+or live frame-rate claim. The prior park/furniture clips remain accurate: their
+models, contacts, work and pay are unchanged. The new crossing is outside their
+views. The city-plan SVG is regenerated for the added crossing.
+[Native checks, media audit and remaining limits](../evidence/verge-repairs/verification.md).

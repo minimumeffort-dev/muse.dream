@@ -71,6 +71,12 @@ describe('Dream syntax highlighting',()=>{
     for(const name of ['objects','streets','grounds','paving','flap_hz','flap_deg','phase_s'])expect(html).toContain(`class="dream-field">${name}</span>`);
     expect(highlight('furnishing flocking phase_stone')).not.toMatch(/dream-(?:keyword|field)/);
   });
+  it('highlights street repair fields, preserves boundaries and escapes text',()=>{
+    const html=highlight('repair service(streets=[main],verge=24,label="<work>&");');
+    for(const name of ['streets','verge'])expect(html).toContain(`class="dream-field">${name}</span>`);
+    expect(html).toContain('&lt;work&gt;&amp;');expect(html).not.toContain('<work>');
+    expect(highlight('vergeway oververge streetscape')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('highlights daylight and lamp declarations without consuming longer symbols',()=>{
     const html=highlight('daylight(cycle_s=600,start_hour=10);material glass(night=#ffcc88);lamp(at=[0,38,0],radius=30,color=#ffd18a);');
     for(const word of ['daylight','lamp'])expect(html).toContain(`class="dream-keyword">${word}</span>`);

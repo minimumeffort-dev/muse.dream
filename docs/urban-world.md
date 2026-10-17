@@ -100,3 +100,11 @@ to their sidewalks. Existing parked scooters, lamp and planter are preserved by
 explicit furnishing-ground allowances. A Dream repair service connects these
 areas to the market supply home using the same accepted pedestrian infrastructure.
 [Connected service grounds](dream/commerce.md#connected-service-grounds).
+
+
+High Street and South Avenue now meet at an explicit four-arm pedestrian crossing.
+Its zebras clear neighboring stop lines and center paint through the shared road
+footprints. This connects the four previously isolated lamp work approaches.
+The published plan is regenerated from the accepted 57-crossing scene.
+[Market-district maintenance](dream/commerce.md#street-verges) serves 84 targets
+without moving any of the 1,695 existing placements or 35 work/visual surfaces.

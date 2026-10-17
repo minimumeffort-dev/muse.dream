@@ -157,3 +157,10 @@ Lamp light-pool attributes change only when damage changes. No per-cell bodies,
 per-lamp lights, resolution reduction or camera LOD is added.
 
 [Dream contract and working example](dream/rules.md#streetlights-and-streamed-destruction).
+
+
+Street-service approaches are navigation data only. They add no render meshes,
+lights, actors or per-cell bodies. The world worker prepares the expanded repair
+network and the earlier ambient graph used by the registered r51 save upgrade.
+The new crossing uses the existing clipped paint path; buildings, surfaces and
+quality settings are unchanged. [Repair coverage](dream/commerce.md#street-verges).

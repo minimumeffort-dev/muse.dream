@@ -217,3 +217,16 @@ crossing, then return with its pay. [Grounds and routes](commerce.md#connected-s
 [Streetlight destruction and repairs](../examples/streetlight-repairs.dream)
 uses measured lamps, a shared topple rule, pooled static geometry, night light
 pools and finite paid repairs across two connected grounds.
+
+
+## Repair a street lamp
+
+[Street-verge repairs](../examples/street-verge-repairs.dream) connects a home yard
+to a lamp beyond the opposite sidewalk. The worker uses an authored crossing,
+steps onto a bounded dry approach, consumes a kit, gets paid and walks home.
+No extra work-ground surface is drawn beneath the lamp.
+[Coverage and bounds](commerce.md#street-verges).
+
+```sh
+node scripts/dream.mjs check docs/examples/street-verge-repairs.dream
+```

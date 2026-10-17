@@ -7,7 +7,7 @@ it('shares damage across all 400 lamps, repairs neighborhood furniture, then pay
  const scene=createWorldScene(),r=scene.economy!.repairs[0]!;
  const lamps=scene.objects.filter(o=>o.spec && 'measure' in o.spec && o.spec.measure?.kind==='lamp');expect(lamps).toHaveLength(400);expect(scene.damagePool).toBe(true);expect(new Set(lamps.map(o=>o.spec!.displayName)).size).toBe(2);for(const o of lamps){const spec=o.spec as import('../src/scene/object-dsl').ObjectDslV2;expect(spec.impact).toEqual({kind:'topple',speed:95,duration:1,lifetime:8});expect(spec.contacts).toHaveLength(1);expect(spec.contacts![0]!.position).toEqual([0,0,0]);expect([1.2,1.4]).toContain(spec.contacts![0]!.radius);}
 
- expect(repairTargets(scene,r).map(t=>t.objectId).sort()).toEqual(['market_planter','park_bench','park_wall_east','park_wall_west','picnic_table','produce_crate','south_lamps_4_1_r','station_bench']);
+ expect(repairTargets(scene,r)).toHaveLength(84);expect(repairTargets(scene,r).map(t=>t.objectId)).toEqual(expect.arrayContaining(['market_planter','park_bench','park_wall_east','park_wall_west','picnic_table','produce_crate','south_lamps_4_1_r','station_bench']));
  let s={...createCarAtSpawn(scene),broken:['market_planter','picnic_table','produce_crate']};
  for(let i=0;i<700;i++){s=stepCommerce({...s,timeS:s.timeS+.25},{},.25,scene);checkEconomyState(s,scene);}
  expect(s.broken).toEqual([]);expect(s.economy!.repaired.market_tables).toBe(3);expect(s.economy!.markets.find(m=>m.id==='market_stall')!.stock.timber).toBe(9);expect(s.economy!.accounts.find(a=>a.id==='caretaker')!.credits).toBe(12);expect(s.economy!.accounts.find(a=>a.id==='caretaker')!.repair).toBeUndefined();

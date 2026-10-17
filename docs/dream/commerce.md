@@ -12,7 +12,7 @@ The vendor works when bread runs low. The commuter buys and eats when hungry, us
 
 ## Author it in Dream
 
-One `economy()` block owns the system for a linked world. Goods, accounts, markets and work have explicit IDs. Accounts reference the player or existing NPC placements. Markets and production workers require stationary NPCs; repair workers start from a stationary home and use their declared grounds and connecting pedestrian pavement. Customers may use the existing walking routes. The complete-world compiler checks ownership after module linking.
+One `economy()` block owns the system for a linked world. Goods, accounts, markets and work have explicit IDs. Accounts reference the player or existing NPC placements. Markets and production workers require stationary NPCs; repair workers start from a stationary home and use their declared grounds, service streets and connecting pedestrian pavement. Customers may use the existing walking routes. The complete-world compiler checks ownership after module linking.
 
 | Declaration | Meaning |
 | --- | --- |
@@ -216,7 +216,7 @@ credits and you receive four. No player credits are charged.
 
 ```dream
 delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1);
-repair market_tables(label="Repair neighborhood furniture",market=market_stall,on=market_square,grounds=[park_seating,station_seating],kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
+repair market_tables(label="Repair neighborhood furniture",market=market_stall,on=market_square,grounds=[park_seating,station_seating],streets=[market_avenue,high_street,civic_walk],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
 ```
 
 These declarations are the live world's policy. The earlier flour and bread
@@ -267,8 +267,41 @@ an agent to author both services and infrastructure, use
 `node scripts/dream.mjs context --features commerce,city`.
 [Checks, recordings and remaining limits](../evidence/network-repair/verification.md).
 
-The service now covers eight repair targets, including the park streetlight. All
-400 city lamps can fall, but the other 399 lie outside these declared work grounds.
-A damaged lamp loses its ground light pool until repair. See
-[streetlight destruction and repair](rules.md#streetlights-and-streamed-destruction)
-for the shared rule, bounded render pool and complete runnable example.
+### Street verges
+
+The same service now reaches 84 targets, including 77 of the 400 city lamps.
+`streets=[market_avenue,high_street,civic_walk]` declares which sidewalks it serves.
+`verge=24` permits a short approach up to 2.4 metres beyond those sidewalks, near
+eligible object contacts. Measured categories still select the targets; names
+and coordinates cannot grant a special repair policy.
+
+![The caretaker working beside Market Avenue](../media/streetrepair.jpg)
+
+[Watch in HD](../media/streetrepair.mp4) · [Animated repair](../media/streetrepair.gif)
+
+Approaches use the same miter joins as the streets. They are clipped away from
+carriageways, cycle tracks, the circuit and water. They add no paving or shortcuts
+across grass between distant targets. A full worker cylinder must connect through
+the accepted pedestrian network. The High Street/South Avenue junction now has
+an authored four-arm crossing; without it, four lamp jobs are unreachable and
+complete-world validation rejects the world.
+
+A service can name 1..32 unique existing streets with sidewalks at least eight
+world units wide. Verge is 0..32 units, defaults to 24 and requires `streets`.
+At most 512 street targets and 2,048 derived approach polygons are allowed per
+service. The existing local-sample, network and saved-path limits above still
+apply. `on` remains the supply market and worker home; `grounds` stays optional.
+Player jobs and NPC jobs use the same coverage, finite kits, pay and obstruction
+checks. A stopped car can delay work or prevent safe restoration.
+
+[Complete street-verge repair world](../examples/street-verge-repairs.dream).
+Run `npm run -s dream -- check docs/examples/street-verge-repairs.dream`.
+It connects a home yard to a lamp outside the opposite sidewalk using a real
+crossing, without a second work-ground surface. Ask for `commerce,city` in an
+agent context packet when authoring these routes.
+
+Other districts, tree replanting, automatic procurement and multiple service
+policies per worker remain further work. Damaged lamps lose their ground light
+pool until repair. [Streetlight destruction](rules.md#streetlights-and-streamed-destruction)
+uses the same pooled geometry and saved damage as before.
+[Verification and media audit](../evidence/verge-repairs/verification.md).

@@ -79,7 +79,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   primeRepairNavigation(doc,worker.repairNavigation);
   const carRadius = playerRadius(doc);
   const roadMask = buildMaskForScene(doc);
-  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousParkingSaveCompatibility:worker.previousParkingSaveCompatibility,previousRepairSaveCompatibility:worker.previousRepairSaveCompatibility,previousSupplySaveCompatibility:worker.previousSupplySaveCompatibility,previousNetworkSaveCompatibility:worker.previousNetworkSaveCompatibility,previousPoolSaveCompatibility:worker.previousPoolSaveCompatibility,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
+  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousParkingSaveCompatibility:worker.previousParkingSaveCompatibility,previousRepairSaveCompatibility:worker.previousRepairSaveCompatibility,previousSupplySaveCompatibility:worker.previousSupplySaveCompatibility,previousNetworkSaveCompatibility:worker.previousNetworkSaveCompatibility,previousPoolSaveCompatibility:worker.previousPoolSaveCompatibility,previousVergeSaveCompatibility:worker.previousVergeSaveCompatibility,previousVergeNavigation:worker.previousVergeNavigation,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
     driveMask: buildPaperMask(doc.canonical.width, doc.canonical.height), carRadius };
   let car = createCarAtSpawn(doc);
   const repairViews=repairView();
@@ -372,14 +372,14 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     resetPosition(true);car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));car=cargoReviewStart(car,world,params.get("test-cargo"));worldTime.value=0;
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
   let captureTime:number|undefined,captureActor:string|undefined;
-  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:360,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840,maintenance:600,lamps:240,lamprepair:360},async(clip)=>{
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:360,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840,maintenance:600,lamps:240,lamprepair:360,streetrepair:360},async(clip)=>{
     captureTime=undefined;captureActor=undefined;
     resetPosition(true);worldTime.value=0;setMode("playing");
     characters.forEach(character=>character.reset());
     if(clip==='maintenance'){car=maintenanceReviewStart(car,world);worldTime.value=car.timeS;captureActor=doc.economy?.accounts.find(a=>car.economy?.accounts.find(b=>b.id===a.id)?.repair)?.actor;}
     if(clip==='lamps')car=drivingReviewStart(car,world,'lamp');
-    if(clip==='lamprepair'){
-      const steps=lampRepairReviewSteps(car,world);let result=steps.next(),yieldAt=performance.now();
+    if(clip==='lamprepair' || clip==='streetrepair'){
+      const steps=lampRepairReviewSteps(car,world,clip==='streetrepair' ? 'street-lamp' : 'lamp');let result=steps.next(),yieldAt=performance.now();
       while(!result.done){if(performance.now()-yieldAt>=12){await new Promise<void>(resolve=>setTimeout(resolve,0));yieldAt=performance.now();}result=steps.next();}
       car=result.value;worldTime.value=car.timeS;captureActor=doc.economy?.accounts.find(a=>car.economy?.accounts.find(b=>b.id===a.id)?.repair)?.actor;
     }
@@ -395,7 +395,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   },(clip:string,frame:number)=>{
     keys.clear();
     if(clip==='maintenance')return;
-    if(clip==='lamps' || clip==='lamprepair'){
+    if(clip==='lamps' || clip==='lamprepair' || clip==='streetrepair'){
       const config=doc.daylight;captureTime=config ? ((22-config.startHour+24)%24)/24*config.cycleSeconds+frame/30 : undefined;
       if(clip==='lamps'){if(frame<33)keys.add('KeyW');if(frame>=33 && frame<78)keys.add('KeyS');if(frame===84)useRide();}return;
     }

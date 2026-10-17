@@ -419,6 +419,19 @@ Dream 2 ungrouped topple compiles one stable rigid fragment. Whole impacts may
 use one centered base contact; compound/offset contacts remain rejected. Preserve
 narrow lamp contacts, all authored geometry, shared category rules, night paint,
 actor/rig limits and no per-cell bodies. Lamp surface pools turn off while broken
-and return after paid repair. Keep format 7/simulation 8 and the registered r50
-migration chain. Current park-lamp service is not city-wide repair coverage.
+and return after paid repair. Keep format 7/simulation 9 and the registered r50/r51
+migration chain. Current service covers 84 targets including 77 lamps; other
+districts still need declared coverage.
 See `docs/examples/streetlight-repairs.dream` and `docs/dream/rules.md`.
+
+
+Repair `streets` declares 1..32 unique sidewalk streets; optional `verge` is 0..32
+world units (default 24), only with streets. Derive short target-local approaches
+from shared street footprints, clipped away from riding surfaces, the circuit and
+water. Cap each service at 512 street targets and 2048 access polygons; retain all
+local/grid/network/path budgets. Validate full-cylinder access from every worker
+home and require actual crossings. Do not add broad grass shortcuts or paving.
+The r51 migration preserves all state while rebasing derived ambient node indices
+by coordinate/adjacency. Validate against the old graph first; prepare that graph
+in the world worker and preserve saved positions, clocks, random state, jobs,
+damage and ledger. See `docs/examples/street-verge-repairs.dream`.

@@ -44,7 +44,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-Format 7 retains the exact source hash and the compatibility fingerprint, with simulation version 8. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+Format 7 retains the exact source hash and the compatibility fingerprint, with simulation version 9. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The first market has an explicit registered upgrade from the earlier world. It verifies that every pre-market rule still matches, then initializes only the new accounts/stock/needs at the saved simulation time. Player position, vehicles, damage, sports, NPC memory, population and day/night remain saved. The known r44 format 1 source and format 2 browser fingerprints are supported; original slots are kept. A malformed newer slot blocks writes rather than silently loading an older copy. The registered upgrade chain includes the first-market, first-delivery, usable-parking, local-repair, replacement-supply and connected-repair releases. Later incompatible economy edits cannot silently replay older progress.
 
@@ -123,3 +123,20 @@ after reload. A completed repair restores its full collision and light pool;
 R preserves damage and Start over restores the authored world. Capacity pressure
 can retire older cosmetic pieces, never the saved damage record. There is still
 no offline repair or general migration for arbitrary world/rule edits.
+
+
+## Street-service navigation upgrade
+
+The registered r51 upgrade keeps format 7 and advances simulation rules to 9.
+It removes only the new service-street fields and High Street/South Avenue
+crossing to verify the earlier fingerprint. Every object, work surface, contact,
+balance, kit, job, damage record and clock remains saved. Earlier registered
+upgrades continue through the same chain; old slots stay intact.
+
+The crossing adds pedestrian navigation nodes. The engine validates saved node
+references against the earlier graph, then maps them to the same coordinates
+and compatible neighbor connections in the new graph. People retain their
+positions, travel history, random state and clocks. Worker paths are already
+coordinate-based and remain unchanged. Both graphs are prepared in the world
+worker. This is a tested migration for this release, not a general map-edit
+migration. Unknown old indices or missing coordinates are rejected.

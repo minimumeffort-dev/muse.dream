@@ -132,8 +132,10 @@ journey keeps going while you drive away or unload that part of the world.
 Repairs use finite supplies. After two jobs, you can bring two replacement kits
 from **Station supplies**. The bakery pays the depot six credits and pays you four
 for the delivery. These are transfers between actual balances. The depot starts
-with 32 kits and cannot generate more. City-wide maintenance and tree replanting are still to come. The service currently covers eight
-objects across three declared grounds; it does not repair arbitrary city damage.
+with 32 kits and cannot generate more. The service covers 84 targets: furniture
+on the three work grounds and 77 lamps beside Market Avenue, High Street and
+Civic Walk. The caretaker steps off the sidewalk for nearby repairs, using
+crossings between streets. Other districts and tree replanting are still to come.
 
 Your world saves on this device. Reload to return to your position, parked vehicles, moved props, damage, NPC memory, market stock, accounts, work, repair journeys and day/night phase. Pause for **Save now**, or open **Backups** to download and restore a world. Comments and dialogue edits can carry progress forward; changes to world rules or geometry keep a separate save. **Start over** resets the saved world. [What is saved and how compatibility works](docs/persistence.md).
 
@@ -216,14 +218,18 @@ rules; supported benches can lose their boards while their base stays put.
 
 All 400 streetlights can fall too. Their ground light pools turn off, and the
 damage stays after the district unloads or you reload the game. The caretaker
-can restore the park lamp using a real kit and paid work. Its model, collision
-and light pool return together. Other lamps still need repair-service coverage.
+can restore 77 of them using real kits and paid work. Their models, collisions
+and light pools return together. The remaining 323 lamps need service coverage.
 Intact lamps stay instanced; active debris and cached meshes have fixed limits.
 [How pooled destruction works in Dream](docs/dream/rules.md#streetlights-and-streamed-destruction).
 
 ![A streetlight falling at night](docs/media/lamps.jpg)
 
 [Watch the impact in HD](docs/media/lamps.mp4) · [Watch the paid repair](docs/media/lamprepair.mp4)
+
+![Repairing a lamp beside Market Avenue](docs/media/streetrepair.jpg)
+
+[Street repair in HD](docs/media/streetrepair.mp4) · [Animated repair](docs/media/streetrepair.gif) · [Declare service streets in Dream](docs/dream/commerce.md#street-verges)
 
 ![A bench breaking into its authored components after a car impact](docs/media/destruction.gif)
 

@@ -190,3 +190,9 @@ Repair accounts can temporarily own a stationary NPC's movement. Optional servic
 contacts and saves the trip. The underlying behavior program pauses and resumes
 at home. This does not add a general pathfinding action to behavior programs.
 [Connected repairs](commerce.md#connected-service-grounds).
+
+
+Repair workers can also serve explicitly named sidewalks and bounded dry verges.
+They still use pedestrian crossings between streets, pause for live obstructions
+and return home after consuming finite supplies. This is the same automatic
+repair policy, not an extra NPC controller. [Street services](commerce.md#street-verges).

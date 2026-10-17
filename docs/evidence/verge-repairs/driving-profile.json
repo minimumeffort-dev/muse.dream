@@ -1,0 +1,107 @@
+{
+  "report": {
+    "scenario": "drive",
+    "samples": 300,
+    "viewport": [
+      1345,
+      1279
+    ],
+    "pixelRatio": 1.5,
+    "cpuMs": {
+      "mean": 3.152666665116946,
+      "p95": 4.300000011920929
+    },
+    "prepareMs": {
+      "mean": 1.9913333320617677,
+      "p95": 3
+    },
+    "submitMs": {
+      "mean": 1.1613333330551783,
+      "p95": 1.5
+    },
+    "rafMs": {
+      "mean": 16.66433333337307,
+      "p95": 18.19999998807907
+    },
+    "gpuMs": {
+      "mean": 1.2125775484949837,
+      "p95": 1.441583
+    },
+    "gpuSamples": 299,
+    "draws": {
+      "mean": 193.63,
+      "p95": 313
+    },
+    "triangles": {
+      "mean": 523963.2266666667,
+      "p95": 582037
+    },
+    "geometries": 306
+  },
+  "startup": {
+    "totalMs": 13546.200000047684,
+    "firstRenderMs": 158.19999998807907,
+    "phases": [
+      {
+        "label": "Reading Dream · checking the world",
+        "startMs": 0.20000004768371582,
+        "endMs": 7088.700000047684
+      },
+      {
+        "label": "Preparing driving and walking",
+        "startMs": 7088.700000047684,
+        "endMs": 7277.5
+      },
+      {
+        "label": "Starting the renderer",
+        "startMs": 7277.5,
+        "endMs": 7292.100000023842
+      },
+      {
+        "label": "Building water and bridges",
+        "startMs": 7292.100000023842,
+        "endMs": 7466.200000047684
+      },
+      {
+        "label": "Building roads and transit",
+        "startMs": 7466.200000047684,
+        "endMs": 7640.100000023842
+      },
+      {
+        "label": "Assembling people and wildlife",
+        "startMs": 7640.100000023842,
+        "endMs": 8513.700000047684
+      },
+      {
+        "label": "Preparing vehicles and interactive objects",
+        "startMs": 8513.700000047684,
+        "endMs": 10175.900000035763
+      },
+      {
+        "label": "Preparing lighting",
+        "startMs": 10175.900000035763,
+        "endMs": 10461.800000011921
+      },
+      {
+        "label": "Loading the first neighbourhood",
+        "startMs": 10461.800000011921,
+        "endMs": 13304.200000047684
+      },
+      {
+        "label": "Preparing the first frame",
+        "startMs": 13304.200000047684,
+        "endMs": 13546.200000047684
+      }
+    ],
+    "heartbeat": {
+      "samples": 242,
+      "maxGapMs": 288.39999997615814
+    }
+  },
+  "diagnostics": {
+    "memory": "{\"bytes\":250904300,\"uniqueBuffers\":10054,\"geometries\":1808,\"uniqueTriangles\":1904035}",
+    "streaming": "{\"resident\":30,\"required\":9,\"pending\":0,\"bytes\":194935462,\"peakBytes\":194935462,\"peakResident\":30,\"maxInstallMs\":4.400000035762787,\"maxSliceMs\":4.400000035762787,\"loaded\":30,\"unloaded\":0,\"discarded\":0,\"ready\":true,\"keys\":[\"5600,4000\",\"6400,4000\",\"5600,3200\",\"6400,3200\",\"5600,4800\",\"6400,4800\",\"4800,4000\",\"4800,3200\",\"4800,4800\",\"7200,4000\",\"7200,3200\",\"5600,2400\",\"6400,2400\",\"7200,4800\",\"5600,5600\",\"4800,2400\",\"6400,5600\",\"7200,2400\",\"4800,5600\",\"7200,5600\",\"8000,4000\",\"8000,3200\",\"8000,4800\",\"8000,2400\",\"8000,5600\",\"8800,4000\",\"8800,3200\",\"8800,4800\",\"8800,2400\",\"8800,5600\"]}",
+    "world": "{\"width\":14000,\"height\":11000,\"objects\":1695,\"checkpoints\":8,\"birds\":256}"
+  },
+  "note": "Apple M3 Ultra, 96 GiB; full quality, owned tests/encoders/replays stopped. Single dev navigation; not cold startup or lower-end evidence."
+}

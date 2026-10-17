@@ -228,3 +228,6 @@ include street_life(module=street_life);
 include life(module=life);
 effect ice(kind=ice,points=[[7784.400989459487,1921.1853037863984],[7938.576815707252,2069.397815833469],[7990.248075573635,2022.1740834119346],[7829.782732421187,1867.8889867864568]]);
 effect boost(kind=boost,points=[[3815.718,8520.737],[3622.042,8400.872],[3660.776,8342.565],[3850.684,8460.096]]);
+
+// The two streets intersect between their original layout anchors.
+crossing repair_high_south(street=high_street,at=[5217.41935483871,6339.354838709678],width=24,junction=true);

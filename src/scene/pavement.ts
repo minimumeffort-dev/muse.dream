@@ -1,6 +1,7 @@
 import type {Point} from './schema';
 import {onPolygon} from './streets';
 import {partition,polygonArea,polygonBounds} from './polygons';
+import {clipPolygon} from './landscape-dsl';
 
 /** Exact support across the union of accepted pavement polygons. */
 export function pavementSurface(polygons:Point[][]){
@@ -36,3 +37,12 @@ export function pavementPortal(a:Point[],b:Point[],r:number):Point|undefined{
    if(high-low>=2*r+.1)return {x:p.x+dx*(low+high)/2/d,y:p.y+dy*(low+high)/2/d};
   }
  }
+
+/** Nearest full-cylinder center inside one convex pavement piece. */
+export function pavementInsetPoint(polygon:Point[],point:Point,r:number):Point|undefined{
+ const winding=Math.sign(polygon.reduce((n,p,i)=>{const q=polygon[(i+1)%polygon.length]!;return n+p.x*q.y-q.x*p.y;},0));let inner=polygon;
+ for(let i=0;i<polygon.length && inner.length>=3;i++){const a=polygon[i]!,b=polygon[(i+1)%polygon.length]!,dx=b.x-a.x,dy=b.y-a.y,length=Math.hypot(dx,dy);if(length>1e-8)inner=clipPolygon(inner,p=>winding*(dx*(p.y-a.y)-dy*(p.x-a.x))-(r+.01)*length);}
+ if(inner.length<3 || polygonArea(inner)<.001)return;
+ if(onPolygon(inner,point.x,point.y))return point;
+ let best:Point|undefined,distance=Infinity;for(let i=0;i<inner.length;i++){const a=inner[i]!,b=inner[(i+1)%inner.length]!,dx=b.x-a.x,dy=b.y-a.y,t=Math.max(0,Math.min(1,((point.x-a.x)*dx+(point.y-a.y)*dy)/(dx*dx+dy*dy || 1))),p={x:a.x+dx*t,y:a.y+dy*t},d=Math.hypot(p.x-point.x,p.y-point.y);if(d<distance){best=p;distance=d;}}return best;
+}

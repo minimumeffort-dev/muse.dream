@@ -1,7 +1,7 @@
 import type {Scene} from './schema';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=8;
+export const SAVE_SIMULATION_VERSION=9;
 
 /** A conservative contract: only host provenance and spoken text may differ. */
 export function saveCompatibilitySource(scene:Scene):string {
@@ -27,7 +27,7 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || hash===POOL_COMPATIBILITY;
+  return !scene.economy || hash===VERGE_COMPATIBILITY;
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
@@ -38,8 +38,15 @@ export const REPAIR_COMPATIBILITY='5cc3b8f0d07cdd7548cde3f57cef97dc17a900dbaeb6f
 export const SUPPLY_COMPATIBILITY='0fa752fb32d4b251900d87d82b50c554a91a278b8a980bf3bb0bada5add9ba75';
 export const NETWORK_COMPATIBILITY='482bfddc34e420e75d9eaa762816a09c7eb4810f1649c3e88d24b9d11b4b5657';
 export const POOL_COMPATIBILITY='14d169db7f71cf494d85aacec65a606328bc4a590f20b37685ffb7d17f7b9622';
+export const VERGE_COMPATIBILITY='54269457677d740420e755511a55e932e99f0cd6f28e56d2e92a255f6f34cbb9';
+/** Registered r51 projection keeps every object, surface and existing crossing. */
+export function preVergeScene(scene:Scene):Scene{
+ return {...scene,crossings:scene.crossings.filter(c=>c.id!=='repair_high_south'),economy:scene.economy && {...scene.economy,repairs:scene.economy.repairs.map(r=>{if(r.id!=='market_tables')return r;const {streets,verge,...old}=r;return old;})}};
+}
+export function preVergeCompatibilitySource(scene:Scene):string{return projection(preVergeScene(scene),8);}
 /** Registered r50 projection: lamp geometry, contacts and every existing placement are retained. */
 export function prePoolScene(scene:Scene):Scene{
+ scene=preVergeScene(scene);
  if(!scene.damagePool)return scene;
  const {damagePool,...old}=scene;
  return {...old,interactionRules:scene.interactionRules.filter(r=>r.kind!=='lamp'),objects:scene.objects.map(o=>{

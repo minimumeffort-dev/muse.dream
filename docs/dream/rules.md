@@ -123,12 +123,12 @@ Start over restores the authored world. Reduced motion applies damage without
 flying pieces. Lamps retain their authored material paint/emission on fragments;
 their declared surface pool is off. This is not an electrical network simulation.
 
-The caretaker can repair the lamp in the park seating pocket with the same finite
-kit and four-credit wage used for furniture. Its full model, collision and light
-pool return together after the work finishes. The service currently covers eight
-targets across three declared grounds. Other damaged streetlights still need
-additional service coverage; neither the renderer nor a category rule grants free
-repairs.
+The caretaker can repair 77 lamps beside the declared service streets and grounds
+with the same finite kit and four-credit wage used for furniture. The full model,
+collision and light pool return together. The service covers 84 targets in total;
+the remaining 323 lamps need additional service coverage.
+[Street verges](commerce.md#street-verges) connect nearby work to sidewalks and
+crossings. Neither the renderer nor a category rule grants free repairs.
 
 ![The caretaker restoring a damaged park lamp](../media/lamprepair.jpg)
 
@@ -138,5 +138,7 @@ repairs.
 Check it with `npm run -s dream -- check docs/examples/streetlight-repairs.dream`.
 It uses two connected grounds and real kit/wage reservations. The live world's
 longer journey uses the accepted sidewalks and crossings.
+[Street-verge example](../examples/street-verge-repairs.dream) adds a lamp outside
+the sidewalk without inventing paving. [Watch that repair](../media/streetrepair.mp4).
 
 [Streetlight verification and media audit](../evidence/streetlights/verification.md).

@@ -91,3 +91,10 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    A topple without authored fragments compiles one stable rigid fragment.
    Whole impacts accept at most one centered base contact; lamps may use pooled
    whole-object damage and disable their light pool until restored. *)
+
+(* repair.streets optionally lists 1..32 unique existing streets with sidewalks
+   >=8 units wide. verge is 0..32, default 24, and requires streets. Matching
+   measured-kind contacts near those sidewalks gain bounded dry work approaches,
+   clipped away from riding surfaces, the circuit and water. There is no generated
+   paving or unpainted-road shortcut. Per service: <=512 street targets and <=2048
+   access pieces; existing graph, local-sample and saved-path limits remain. *)
