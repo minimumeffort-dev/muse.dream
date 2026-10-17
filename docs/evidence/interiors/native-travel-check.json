@@ -1,0 +1,21 @@
+{
+  "fromS": 126.18333333337982,
+  "toS": 161.21666666668438,
+  "observedEastPose": [
+    10799.7,
+    4233
+  ],
+  "returnPose": [
+    6330,
+    4233
+  ],
+  "restoredTable": "hall_table_west",
+  "damage": [],
+  "repairLedger": {
+    "market_tables": 1,
+    "orchard_trees": 0
+  },
+  "accountCreditsInventories": "exact",
+  "markets": "exact",
+  "scope": "native production keyboard driving over 4,400 world units east, then R; chunk counts are measured separately in the headless traversal"
+}

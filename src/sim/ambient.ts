@@ -1,3 +1,4 @@
+import {walkingHeight} from '../scene/interiors';
 import type {Scene,SceneObject} from '../scene/schema';
 import {ambientNavigation} from '../scene/ambient-navigation';
 import {AMBIENT_LIMITS} from '../scene/ambient';
@@ -36,7 +37,7 @@ export function stepAmbient(state:CarState,dt:number,scene:Scene):AmbientState|u
     if(time<m.pauseUntil)return m;
     const goal=nav.nodes[m.node]!,distance=Math.hypot(goal.x-m.x,goal.y-m.y);heading=Math.atan2(goal.y-m.y,goal.x-m.x);speed=Math.min(speed,distance/AMBIENT_LIMITS.tickSeconds);
     // Waiting sees moving vehicles and the player's active body before entering their swept space.
-    const floor=drivingHeight(scene.terrain,m.x,m.y);
+    const floor=walkingHeight(scene,m.x,m.y);
     const next={x:m.x+Math.cos(heading)*speed*AMBIENT_LIMITS.tickSeconds,y:m.y+Math.sin(heading)*speed*AMBIENT_LIMITS.tickSeconds};
     if(movedParkingContacts(scene,m.x,m.y,nav.radius(o)+speed*AMBIENT_LIMITS.tickSeconds,state).some(c=>c.top>floor+.1 && c.bottom<floor+22 && distanceToRoad([m,next],c.x,c.y)<c.r+nav.radius(o)))return m;
     if(hazards.some(c=>{

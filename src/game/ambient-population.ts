@@ -5,8 +5,8 @@ import type {Scene,SceneObject} from '../scene/schema';
 import type {ObjectDslV2} from '../scene/object-dsl';
 import type {CarState} from '../sim/car';
 import {ambientObjects,ambientPose,initialAmbient} from '../sim/ambient';
-import {assemblyBounds} from '../scene/measure';
-import {drivingHeight} from '../scene/terrain';
+import {assemblyBounds,assemblyHorizontalRadius} from '../scene/measure';
+import {walkingHeight} from '../scene/interiors';
 import {buildObject} from './world3d';
 import {ambientMaterial} from './shaders';
 import {finishBuild} from './batching';
@@ -31,13 +31,14 @@ export class AmbientPopulation {
  readonly group=new THREE.Group();
  readonly count:number;
  private objects:SceneObject[];
+ private supportRadii:number[];
  private batches:Batch[]=[];
  private matrix=new THREE.Matrix4();private rotation=new THREE.Quaternion();private position=new THREE.Vector3();private scale=new THREE.Vector3();private sphere=new THREE.Sphere();
  private view=new THREE.Frustum();private shadow=new THREE.Frustum();private projection=new THREE.Matrix4();private up=new THREE.Vector3(0,1,0);
  private amounts:Float32Array;
  private tick=0;
  constructor(private scene:Scene,deferBuild=false){
-  this.objects=ambientObjects(scene);this.count=this.objects.length;this.amounts=new Float32Array(this.count);this.group.name='ambient-populations';
+  this.objects=ambientObjects(scene);this.supportRadii=this.objects.map(o=>assemblyHorizontalRadius(o.spec as ObjectDslV2,o.scale));this.count=this.objects.length;this.amounts=new Float32Array(this.count);this.group.name='ambient-populations';
   if(!deferBuild)finishBuild(this.assemble());
  }
  static *buildSteps(scene:Scene):Generator<void,AmbientPopulation>{const population=new AmbientPopulation(scene,true);yield* population.assemble();return population;}
@@ -61,7 +62,7 @@ export class AmbientPopulation {
    for(const i of batch.indices){const object=this.objects[i]!,p=ambientPose(population,i,state.timeS),motion=object.ambient!.motion;
     this.amounts[i]!+=(Number(p.speed>.01)-this.amounts[i]!)*(1-Math.exp(-dt*12));const amount=reduced ? 0 : this.amounts[i]!;
     const phase=p.distance/(motion.kind==='walk' ? batch.stride*object.scale : batch.meters*6),hop=motion.kind==='roam' && motion.gait==='hop' ? Math.max(0,Math.sin(phase*Math.PI*2))*Math.min(4,batch.meters*5)*amount : 0;
-    this.position.set(p.x-this.scene.canonical.width/2,drivingHeight(this.scene.terrain,p.x,p.y)+1.5+hop,p.y-this.scene.canonical.height/2);
+    this.position.set(p.x-this.scene.canonical.width/2,walkingHeight(this.scene,p.x,p.y,this.supportRadii[i]!)+1.5+hop,p.y-this.scene.canonical.height/2);
     this.sphere.set(this.position,batch.radius);if(!this.view.intersectsSphere(this.sphere) && !this.shadow.intersectsSphere(this.sphere))continue;
     this.rotation.setFromAxisAngle(this.up,-p.heading);this.scale.setScalar(object.scale);this.matrix.compose(this.position,this.rotation,this.scale);
     for(const mesh of batch.meshes){mesh.setMatrixAt(count,this.matrix);(mesh.geometry.getAttribute('popCycle') as THREE.InstancedBufferAttribute).setXYZ(count,p.distance/(batch.meters*6*.6),phase,amount);}count++;

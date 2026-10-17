@@ -1,3 +1,4 @@
+import {walkingHeight} from '../scene/interiors';
 import {objectContacts} from "../scene/contacts";
 import type { Scene,SceneObject } from "../scene/schema";
 import { routePose,routePath,type Route } from "../scene/routes";
@@ -35,7 +36,7 @@ export function actorPose(scene:Scene,object:SceneObject,timeS:number,state?:Car
     return {id:object.id,x:object.x,y:object.y,elevation:water ? water.level-2 : elevation,headingRad:object.headingRad??0,kind,speed:0,distance:0,travelled:0,vx:0,vy:0};
   }
   const maintenance=workJourneyForActor(state,scene,object.id);
-  if(maintenance)return {id:object.id,x:maintenance.x,y:maintenance.y,elevation:drivingHeight(scene.terrain,maintenance.x,maintenance.y),headingRad:maintenance.headingRad,speed:maintenance.speed,distance:maintenance.distance,travelled:maintenance.distance,kind,activity:maintenance.phase==='work' ? 'perform' : 'patrol',animationTimeS:timeS,vx:0,vy:0};
+  if(maintenance)return {id:object.id,x:maintenance.x,y:maintenance.y,elevation:walkingHeight(scene,maintenance.x,maintenance.y),headingRad:maintenance.headingRad,speed:maintenance.speed,distance:maintenance.distance,travelled:maintenance.distance,kind,activity:maintenance.phase==='work' ? 'perform' : 'patrol',animationTimeS:timeS,vx:0,vy:0};
   if(program){
     const clock=state?.npcs?.find(n=>n.id===object.id)??initialNpcState(scene,object),active=program.states.find(s=>s.id===clock.stateId)!;
     const point=route ? routePose(route,clock.routeTimeS+(object.route!.phaseS??0),object.route!.offset) : {x:object.x,y:object.y,distance:0,travelled:0};
@@ -47,7 +48,7 @@ export function actorPose(scene:Scene,object:SceneObject,timeS:number,state?:Car
   return {id:object.id,...point,elevation:routeElevation(scene,route!,point,point.distance),kind,vx:Math.cos(point.headingRad)*point.speed,vy:Math.sin(point.headingRad)*point.speed};
 }
 export function routeElevation(scene:Scene,route:Route,point:{x:number;y:number},distance:number) {
-  let elevation=drivingHeight(scene.terrain,point.x,point.y);
+  let elevation=route.kind==='walk' ? walkingHeight(scene,point.x,point.y) : drivingHeight(scene.terrain,point.x,point.y);
   if(route.kind==="water"){
     const water=scene.terrain.landscape?.waters.find(w=>pointInPolygon(point.x,point.y,w.polygon));
     if(water)elevation=water.level-2; // Invalid proposals still reach the playability diagnostic.

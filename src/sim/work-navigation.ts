@@ -1,3 +1,5 @@
+import {walkingHeight,workGround} from '../scene/interiors';
+import {contactOverlaps,segmentContactDistance} from '../scene/contact-geometry';
 import type {Scene,Point} from '../scene/schema';
 import type {CarState} from './car';
 import {COMMERCE_LIMITS} from '../scene/commerce';
@@ -19,7 +21,7 @@ export interface WalkingArea {id:string;grounds:string[];access:Point[][];networ
 const cache=new WeakMap<Scene,Map<string,ReturnType<typeof area>>>();
 function area(scene:Scene,r:WalkingArea){
  let offset=0;
- const patches=r.grounds.map(id=>{const polygon=scene.surfaces.find(s=>s.id===id)!.points,b=polygonBounds(polygon),nx=Math.ceil((b.x1-b.x0)/12)+1,ny=Math.ceil((b.y1-b.y0)/12)+1,start=offset;offset+=nx*ny;return {polygon,b,nx,ny,start};});
+ const patches=r.grounds.map(id=>{const polygon=workGround(scene,id)!.points,b=polygonBounds(polygon),nx=Math.ceil((b.x1-b.x0)/12)+1,ny=Math.ceil((b.y1-b.y0)/12)+1,start=offset;offset+=nx*ny;return {polygon,b,nx,ny,start};});
  const point=(i:number):Point=>{const p=patches.find(p=>i>=p.start && i<p.start+p.nx*p.ny)!,n=i-p.start;return {x:p.b.x0+n%p.nx*12,y:p.b.y0+Math.floor(n/p.nx)*12};};
  const {polygon,b,nx,ny}=patches[0]!,road=roadPoints(scene);
  const nearby=(points:Point[])=>{const q=polygonBounds(points);return q.x1+240>=b.x0 && q.x0-240<=b.x1 && q.y1+240>=b.y0 && q.y0-240<=b.y1;};
@@ -32,8 +34,8 @@ function area(scene:Scene,r:WalkingArea){
 }
 function grid(scene:Scene,r:WalkingArea){let entries=cache.get(scene);if(!entries){entries=new Map();cache.set(scene,entries);}let value=entries.get(r.id);if(!value){value=area(scene,r);entries.set(r.id,value);}return value;}
 export function workClear(scene:Scene,r:WalkingArea,p:Point,state?:CarState):boolean{
- const floor=drivingHeight(scene.terrain,p.x,p.y);
- return grid(scene,r).allowed(p) && !queryStaticContacts(scene,p.x,p.y,REPAIR_RADIUS,state).some(c=>!(state && isBroken(state,c)) && Math.hypot(c.x-p.x,c.y-p.y)<c.r+REPAIR_RADIUS && c.top>floor && c.bottom<floor+18);
+ const floor=walkingHeight(scene,p.x,p.y);
+ return grid(scene,r).allowed(p) && !queryStaticContacts(scene,p.x,p.y,REPAIR_RADIUS,state).some(c=>!(state && isBroken(state,c)) && contactOverlaps(c,p.x,p.y,REPAIR_RADIUS) && c.top>floor && c.bottom<floor+18);
 }
 export function workSegment(scene:Scene,r:WalkingArea,a:Point,b:Point,state:CarState|undefined,areaOnly=false):boolean{
  const g=grid(scene,r);
@@ -52,8 +54,8 @@ export function workSegment(scene:Scene,r:WalkingArea,a:Point,b:Point,state:CarS
 function segmentClear(scene:Scene,a:Point,b:Point,state?:CarState,live:Contact[]=[]):boolean{
  const length=Math.hypot(b.x-a.x,b.y-a.y);
  return ![...queryStaticContacts(scene,(a.x+b.x)/2,(a.y+b.y)/2,length/2+REPAIR_RADIUS,state),...live].some(c=>{
-   if(state && isBroken(state,c) || distanceToRoad([a,b],c.x,c.y)>=REPAIR_RADIUS+c.r)return false;
-   const t=length ? Math.max(0,Math.min(1,((c.x-a.x)*(b.x-a.x)+(c.y-a.y)*(b.y-a.y))/(length*length))) : 0,floor=drivingHeight(scene.terrain,a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t);
+   if(state && isBroken(state,c) || segmentContactDistance(c,a,b)>=REPAIR_RADIUS)return false;
+   const t=length ? Math.max(0,Math.min(1,((c.x-a.x)*(b.x-a.x)+(c.y-a.y)*(b.y-a.y))/(length*length))) : 0,floor=walkingHeight(scene,a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t);
    return c.top>floor && c.bottom<floor+18;
   });
 }

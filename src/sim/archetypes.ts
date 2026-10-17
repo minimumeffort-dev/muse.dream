@@ -55,7 +55,7 @@ export function archetypeOf(object: SceneObject): Archetype {
 export function objectRadius(object: SceneObject): number {
   const contacts=object.spec && "dslVersion" in object.spec && object.spec.dslVersion===2 ? object.spec.contacts : undefined;
   const zones=object.spec && "dslVersion" in object.spec && object.spec.dslVersion===2 ? object.spec.breakZones??[] : [];
-  return Math.max(contacts ? Math.max(...contacts.map(p=>Math.hypot(p.position[0],p.position[2])+p.radius)) : archetypeOf(object).colliderRadius,
+  return Math.max(contacts ? Math.max(...contacts.map(p=>Math.hypot(p.position[0],p.position[2])+(p.radius??Math.hypot(...p.size!)/2))) : archetypeOf(object).colliderRadius,
     ...zones.map(p=>Math.hypot(p.position[0],p.position[2])+p.radius)) * object.scale;
 }
 

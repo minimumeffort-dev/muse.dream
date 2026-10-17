@@ -7,7 +7,7 @@ import {SpatialGrid} from './spatial';
 const definitions=new WeakMap<Scene,ReturnType<typeof prepare>>();
 function prepare(scene:Scene){
  const objects=scene.objects.filter(isParkedVehicle),byId=new Map(objects.map(o=>[o.id,o]));
- const reach=(o:SceneObject)=>{const s=o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 ? o.spec : undefined;return Math.max(objectRadius(o),...(s?.contacts??[]).map(c=>(Math.hypot(c.position[0],c.position[2])+c.radius)*o.scale));};
+ const reach=(o:SceneObject)=>{const s=o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 ? o.spec : undefined;return Math.max(objectRadius(o),...(s?.contacts??[]).map(c=>(Math.hypot(c.position[0],c.position[2])+(c.radius??Math.hypot(...c.size!)/2))*o.scale));};
  return {byId,grid:new SpatialGrid(objects),reach:Math.max(0,...objects.map(reach)),states:new WeakMap<CarState['vehicles'],{byId:Map<string,ParkedVehicle>;grid:SpatialGrid<ParkedVehicle>}>()};
 }
 export function parkingDefinitions(scene:Scene){let data=definitions.get(scene);if(!data){data=prepare(scene);definitions.set(scene,data);}return data;}

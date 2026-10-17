@@ -67,18 +67,19 @@ describe('connected river city',()=>{
   }
  });
  it('keeps architectural parts attached, including roofs, façade details and breakable porch supports',()=>{
-  const specs=['architecture','civic_assets'].flatMap(id=>compileDream(worldModules[id]!).filter(s=>s.measure?.kind==='building'));
+  const specs=['architecture','civic_assets','market_interior'].flatMap(id=>compileDream(worldModules[id]!).filter(s=>s.measure?.kind==='building'));
   for(const spec of specs){
    const boxes=spec.parts.map(part=>{const g=partGeometry(part);g.applyMatrix4(new Matrix4().compose(new Vector3(...part.position),new Quaternion().setFromEuler(new Euler(...(part.rotation??[0,0,0]))),new Vector3(...part.size)));g.computeBoundingBox();const box=g.boundingBox!.clone();g.dispose();return box;});
    const connected=new Set([0]);let changed=true;
    while(changed){changed=false;for(let i=0;i<boxes.length;i++)if(!connected.has(i) && [...connected].some(j=>boxes[i]!.clone().expandByScalar(.01).intersectsBox(boxes[j]!))){connected.add(i);changed=true;}}
    expect(connected.size,`${spec.displayName}: detached architectural part`).toBe(spec.parts.length);
+   if(spec.interior)continue; // The enterable shell is checked against its actual openings in interiors.test.ts.
    const wall=spec.parts[0]!,roof=spec.parts[1]!;
    expect(roof.position[1]-roof.size[1]/2).toBeCloseTo(wall.position[1]+wall.size[1]/2,3);
    expect(roof.size[0]).toBeGreaterThanOrEqual(wall.size[0]);expect(roof.size[2]).toBeGreaterThanOrEqual(wall.size[2]);
    for(let i=0;i<=8;i++)for(let j=0;j<=8;j++){
     const x=(i/8-.5)*wall.size[0],z=(j/8-.5)*wall.size[2];
-    expect(spec.contacts!.some(c=>Math.hypot(c.position[0]-x,c.position[2]-z)<=c.radius+1e-5),`${spec.displayName}: walk-through wall corner`).toBe(true);
+    expect(spec.contacts!.some(c=>Math.hypot(c.position[0]-x,c.position[2]-z)<=(c.radius??0)+1e-5),`${spec.displayName}: walk-through wall corner`).toBe(true);
    }
    expect(assemblyBounds(spec).min.y).toBeGreaterThanOrEqual(-.01);
   }

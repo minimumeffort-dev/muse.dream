@@ -1,3 +1,4 @@
+import {sceneInteriors} from '../scene/interiors';
 import * as THREE from "three";
 import {contains,overlaps,type RenderRegion} from "./render-region";
 import {voxelTerrainTile} from './voxel-columns';
@@ -219,6 +220,7 @@ export function* buildEnvironmentSteps(doc:Scene,region?:RenderRegion):Generator
   const corridors=doc.routes.filter(route=>["rail","path","air"].includes(route.kind)).map(route=>{
     const {points,radius}=routeInfrastructure(route);return {points,radius:radius+4};
   });
+  const interiors=sceneInteriors(doc);
   const path = roadPoints(doc), tufts: THREE.Matrix4[] = [], flowers: THREE.Matrix4[] = [], colors: THREE.Color[] = [];
   const transform = new THREE.Object3D(); let seed = 1234;
   const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
@@ -227,7 +229,7 @@ export function* buildEnvironmentSteps(doc:Scene,region?:RenderRegion):Generator
     if(i%500===0)yield;
     const x = random() * width, y = random() * height,yaw=random()*6,size=.6+random()*.8;
     if(region && !contains(region,x,y))continue;
-    if (reservedGround(doc,x,y) || bridgeAt(doc.terrain.landscape,x,y) || waterAt(doc.terrain,x,y) || distanceToRoad(path, x, y) < roadWidth / 2 + 10 ||
+    if (interiors.some(f=>f.contains(x,y,-5)) || reservedGround(doc,x,y) || bridgeAt(doc.terrain.landscape,x,y) || waterAt(doc.terrain,x,y) || distanceToRoad(path, x, y) < roadWidth / 2 + 10 ||
       corridors.some(route=>distanceToRoad(route.points,x,y)<route.radius)) continue;
     transform.position.copy(worldPosition(doc, x, y, 3)); transform.rotation.set(.1,yaw,.2);
     transform.scale.setScalar(size); transform.updateMatrix(); tufts.push(transform.matrix.clone());

@@ -1,3 +1,4 @@
+import {workGround} from './interiors';
 import {z} from 'zod';
 import {GROWTH_LIMITS} from './growth';
 import {MEASURE_KINDS} from './measure';
@@ -82,7 +83,7 @@ const coverageCache=new WeakMap<Scene,Map<string,{targets:RepairTarget[];access:
 /** Short work approaches extend named sidewalks only near declared category contacts. */
 export function repairCoverage(scene:Scene,r:Repair){
  let entries=coverageCache.get(scene);if(!entries){entries=new Map();coverageCache.set(scene,entries);}const cached=entries.get(r.id);if(cached)return cached;
- const grounds=repairGrounds(r).flatMap(id=>scene.surfaces.find(s=>s.id===id)?.points ? [scene.surfaces.find(s=>s.id===id)!.points] : []),selected=scene.streets.filter(s=>r.streets?.includes(s.id)),road=roadFootprint(scene),riding=streetFootprints(scene).riding;
+ const grounds=repairGrounds(r).flatMap(id=>workGround(scene,id)?.points ? [workGround(scene,id)!.points] : []),selected=scene.streets.filter(s=>r.streets?.includes(s.id)),road=roadFootprint(scene),riding=streetFootprints(scene).riding;
  const sidewalks=r.streets ? unionPolygons(streetPolygons(selected,'reserved'),[...riding,...road]) : [],verge=r.verge??24;
  const verges=r.streets ? streetPolygons(selected.map(s=>({...s,sidewalk:s.sidewalk+verge})),'reserved') : [];
  const targets:RepairTarget[]=[],streetTargets:RepairTarget[]=[];
@@ -111,19 +112,19 @@ export function economyProblems(scene:Scene):string[]{
  for(const d of e.deliveries){const from=e.markets.find(m=>m.id===d.from),to=e.markets.find(m=>m.id===d.to),a=scene.objects.find(o=>o.id===from?.actor),b=scene.objects.find(o=>o.id===to?.actor);if(from && to && a && b && Math.hypot(a.x-b.x,a.y-b.y)<=from.radius+to.radius)problems.push(`${d.id}: delivery markets must have separate interaction areas`);}
  for(const d of e.deliveries)if(d.on){
   const ids=[d.on,...(d.grounds??[])],destination=scene.objects.find(o=>o.id===e.markets.find(m=>m.id===d.to)?.actor);let samples=0;
-  for(const id of ids){const ground=scene.surfaces.find(s=>s.id===id);if(!ground){problems.push(`${d.id}: unknown delivery ground ${id}`);continue;}const points=ground.points,turns=points.map((p,i)=>{const q=points[(i+1)%points.length]!,r=points[(i+2)%points.length]!;return Math.sign((q.x-p.x)*(r.y-q.y)-(q.y-p.y)*(r.x-q.x));}).filter(Boolean);if(new Set(turns).size>1)problems.push(`${d.id}: delivery grounds must be convex`);const b=polygonBounds(points);samples+=(Math.ceil((b.x1-b.x0)/12)+1)*(Math.ceil((b.y1-b.y0)/12)+1);}
+  for(const id of ids){const ground=workGround(scene,id);if(!ground){problems.push(`${d.id}: unknown delivery ground ${id}`);continue;}const points=ground.points,turns=points.map((p,i)=>{const q=points[(i+1)%points.length]!,r=points[(i+2)%points.length]!;return Math.sign((q.x-p.x)*(r.y-q.y)-(q.y-p.y)*(r.x-q.x));}).filter(Boolean);if(new Set(turns).size>1)problems.push(`${d.id}: delivery grounds must be convex`);const b=polygonBounds(points);samples+=(Math.ceil((b.x1-b.x0)/12)+1)*(Math.ceil((b.y1-b.y0)/12)+1);}
   if(samples>COMMERCE_LIMITS.repairNodes)problems.push(`${d.id}: delivery grounds exceed 4096 local navigation samples`);
-  const home=scene.surfaces.find(s=>s.id===d.on);if(!home || !destination || !onPolygon(home.points,destination.x,destination.y))problems.push(`${d.id}: delivery on must contain its receiving market`);
+  const home=workGround(scene,d.on);if(!home || !destination || !onPolygon(home.points,destination.x,destination.y))problems.push(`${d.id}: delivery on must contain its receiving market`);
  }
- for(const a of e.accounts)for(const id of a.deliveries??[]){const d=e.deliveries.find(d=>d.id===id),ground=scene.surfaces.find(s=>s.id===d?.on),home=scene.objects.find(o=>o.id===a.actor),m=e.markets.find(m=>m.id===d?.to),vendor=scene.objects.find(o=>o.id===m?.actor);if(!stationary(a.actor) || e.markets.some(m=>m.actor===a.actor) || !ground || !home || !onPolygon(ground.points,home.x,home.y) || !m || !vendor || Math.hypot(home.x-vendor.x,home.y-vendor.y)>m.radius)problems.push(`${a.id}: courier needs a stationary home in its receiving market ground and reach; a market owner cannot leave for deliveries`);}
+ for(const a of e.accounts)for(const id of a.deliveries??[]){const d=e.deliveries.find(d=>d.id===id),ground=workGround(scene,d?.on),home=scene.objects.find(o=>o.id===a.actor),m=e.markets.find(m=>m.id===d?.to),vendor=scene.objects.find(o=>o.id===m?.actor);if(!stationary(a.actor) || e.markets.some(m=>m.actor===a.actor) || !ground || !home || !onPolygon(ground.points,home.x,home.y) || !m || !vendor || Math.hypot(home.x-vendor.x,home.y-vendor.y)>m.radius)problems.push(`${a.id}: courier needs a stationary home in its receiving market ground and reach; a market owner cannot leave for deliveries`);}
  for(const a of e.accounts)if(a.work){const j=e.jobs.find(j=>j.id===a.work),m=e.markets.find(m=>m.id===j?.market),worker=scene.objects.find(o=>o.id===a.actor),vendor=scene.objects.find(o=>o.id===m?.actor);if(m && worker && vendor && Math.hypot(worker.x-vendor.x,worker.y-vendor.y)>m.radius)problems.push(`${a.id}: worker is outside its market's reach`);}
  for(const r of e.repairs){
-  const vendor=scene.objects.find(o=>o.id===e.markets.find(m=>m.id===r.market)?.actor),home=scene.surfaces.find(s=>s.id===r.on);
+  const vendor=scene.objects.find(o=>o.id===e.markets.find(m=>m.id===r.market)?.actor),home=workGround(scene,r.on);
   if(!home || !vendor || !onPolygon(home.points,vendor.x,vendor.y))problems.push(`${r.id}: repair needs a surface containing its supply market`);
   for(const id of r.streets??[]){const street=scene.streets.find(s=>s.id===id);if(!street || street.sidewalk<8)problems.push(`${r.id}: repair street ${id} needs an existing sidewalk at least 8 units wide`);}
   let samples=0;
   for(const id of repairGrounds(r)){
-   const area=scene.surfaces.find(s=>s.id===id);if(!area){problems.push(`${r.id}: unknown repair ground ${id}`);continue;}
+   const area=workGround(scene,id);if(!area){problems.push(`${r.id}: unknown repair ground ${id}`);continue;}
    const turns=area.points.map((p,i)=>{const q=area.points[(i+1)%area.points.length]!,r=area.points[(i+2)%area.points.length]!;return Math.sign((q.x-p.x)*(r.y-q.y)-(q.y-p.y)*(r.x-q.x));}).filter(n=>n);
    if(new Set(turns).size>1)problems.push(`${r.id}: repair area must be convex; split irregular work grounds`);
    const b=polygonBounds(area.points);samples+=(Math.ceil((b.x1-b.x0)/12)+1)*(Math.ceil((b.y1-b.y0)/12)+1);
@@ -132,6 +133,6 @@ export function economyProblems(scene:Scene):string[]{
   if(r.regrow_s!==undefined)for(const t of repairTargets(scene,r)){const o=scene.objects.find(o=>o.id===t.objectId)!,spec=o.spec;if(t.zoneId || roleOf(o)!=='prop' || !spec || !('dslVersion' in spec) || spec.dslVersion!==2 || spec.foundation || spec.rideable || spec.emitter || spec.lamp || spec.breakZones?.length || impactOf(spec)?.kind!=='topple' || spec.contacts?.some(c=>c.position.some(n=>n!==0)) || (spec.contacts?.length??0)>1)problems.push(`${r.id}: regrowth requires whole toppling prop trees with one centered base body, without foundations, zones, seats, emitters or lamps`);}
   try{if(!repairTargets(scene,r).length)problems.push(`${r.id}: repair area has no destructible objects of its measured kind`);}catch(error){problems.push(error instanceof Error ? error.message : String(error));}
  }
- for(const a of e.accounts)for(const id of accountRepairs(a)){const r=e.repairs.find(r=>r.id===id),area=scene.surfaces.find(s=>s.id===r?.on),o=scene.objects.find(o=>o.id===a.actor),m=e.markets.find(m=>m.id===r?.market),vendor=scene.objects.find(o=>o.id===m?.actor);if(!stationary(a.actor) || e.markets.some(m=>m.actor===a.actor) || !area || !o || !onPolygon(area.points,o.x,o.y) || !m || !vendor || Math.hypot(o.x-vendor.x,o.y-vendor.y)>m.radius)problems.push(`${a.id}: repair worker needs a stationary home inside its service area and supply-market reach; a market owner cannot leave for repairs`);}
+ for(const a of e.accounts)for(const id of accountRepairs(a)){const r=e.repairs.find(r=>r.id===id),area=workGround(scene,r?.on),o=scene.objects.find(o=>o.id===a.actor),m=e.markets.find(m=>m.id===r?.market),vendor=scene.objects.find(o=>o.id===m?.actor);if(!stationary(a.actor) || e.markets.some(m=>m.actor===a.actor) || !area || !o || !onPolygon(area.points,o.x,o.y) || !m || !vendor || Math.hypot(o.x-vendor.x,o.y-vendor.y)>m.radius)problems.push(`${a.id}: repair worker needs a stationary home inside its service area and supply-market reach; a market owner cannot leave for repairs`);}
  return problems;
 }

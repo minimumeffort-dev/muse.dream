@@ -1,3 +1,4 @@
+import {interactionSight} from './sight';
 import type {Scene,SceneObject} from '../scene/schema';
 import {behaviorFor,NPC_LIMITS,type Behavior} from '../scene/agents';
 import {routePose} from '../scene/routes';
@@ -22,7 +23,7 @@ export function nearbyNpc(state:CarState,scene:Scene){
     const program=behaviorFor(scene,object)!,snapshot=state.npcs?.find(n=>n.id===object.id)??initialNpcState(scene,object),active=program.states.find(s=>s.id===snapshot.stateId)!;
     if(!active.transitions.some(t=>t.event==='interact'))continue;
     const pose=actorPose(scene,object,state.timeS,state),distance=Math.hypot(state.x-pose.x,state.y-pose.y,state.elevation-pose.elevation);
-    if(active.transitions.some(t=>interacts(t,snapshot.known,distance)) && (!nearest || distance<nearest.distance || distance===nearest.distance && object.id<nearest.object.id))nearest={object,distance};
+    if(active.transitions.some(t=>interacts(t,snapshot.known,distance)) && interactionSight(scene,state,pose,state,object.id) && (!nearest || distance<nearest.distance || distance===nearest.distance && object.id<nearest.object.id))nearest={object,distance};
   }
   return nearest?.object;
 }
@@ -33,7 +34,7 @@ export function npcSpeech(state:CarState,scene:Scene){
   for(const object of programmed(scene)){
     const snapshot=state.npcs?.find(n=>n.id===object.id);if(snapshot?.replyAtS===undefined || state.timeS-snapshot.replyAtS>NPC_LIMITS.speechSeconds)continue;
     const active=behaviorFor(scene,object)!.states.find(s=>s.id===snapshot.stateId)!;if(!active.say)continue;
-    const pose=actorPose(scene,object,state.timeS,state);if(Math.hypot(state.x-pose.x,state.y-pose.y,state.elevation-pose.elevation)>NPC_LIMITS.interactRadius)continue;
+    const pose=actorPose(scene,object,state.timeS,state);if(Math.hypot(state.x-pose.x,state.y-pose.y,state.elevation-pose.elevation)>NPC_LIMITS.interactRadius || !interactionSight(scene,state,pose,state,object.id))continue;
     if(!latest || snapshot.replyAtS>latest.at || snapshot.replyAtS===latest.at && object.id<latest.npcId)latest={npcId:object.id,label:object.labelText??object.id,text:active.say,at:snapshot.replyAtS};
   }
   return latest;

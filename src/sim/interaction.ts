@@ -1,3 +1,5 @@
+import {walkingHeight} from '../scene/interiors';
+import {contactOverlaps} from '../scene/contact-geometry';
 import {stepCommerce} from './commerce';
 import {stepAmbient} from './ambient';
 import { applyJump,carFootprintClear,stepCar,TUNING,type CarState,type CarInput,type World,type ParkedVehicle,type CarTuning } from "./car";
@@ -60,7 +62,7 @@ export function exitPosition(state:CarState,world:World) {
   const profile=controlOf(object?.spec),radius=profile==="plane" || profile==="boat" ? Math.max(bodyRadius,assemblyHorizontalRadius(object!.spec as import("../scene/object-dsl").ObjectDsl,object!.scale)) : bodyRadius;
   for(const wet of [false,true])for(let ring=0;ring<7;ring++)for(let side=0;side<8;side++){
     const angle=state.headingRad+Math.PI/2+side*Math.PI/4,r=radius+FOOT_RADIUS+5+ring*8;
-    const x=state.x+Math.cos(angle)*r,y=state.y+Math.sin(angle)*r,ground=drivingHeight(world.scene.terrain,x,y),water=waterAt(world.scene.terrain,x,y,terrainHeight(world.scene.terrain,x,y));
+    const x=state.x+Math.cos(angle)*r,y=state.y+Math.sin(angle)*r,ground=walkingHeight(world.scene,x,y,FOOT_RADIUS),water=waterAt(world.scene.terrain,x,y,terrainHeight(world.scene.terrain,x,y));
     const elevation=wet && water ? Math.max(terrainHeight(world.scene.terrain,x,y),water.level-FOOT_HEIGHT*.65) : ground;
     // A boat can leave at the shore, but cannot teleport up through a bridge deck.
     if(!wet && profile==='boat' && bridgeAt(world.scene.terrain.landscape,x,y))continue;
@@ -130,7 +132,7 @@ function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,pro
     let floor=plane ? aircraftFloor(world.scene,aircraft!,{...s,x,y}) : (support?.level??water?.level??s.elevation+2)-2;
     const contacts=[...queryStaticContacts(world.scene,x,y,body.carRadius,s),...actorContacts(world.scene,s.timeS,s)];
     // Retain a landed cap across ticks, but never climb a solid from its side.
-    if(plane)for(const contact of contacts)if(!isBroken(s,contact) && s.elevation>=contact.top-.05 && Math.hypot(x-contact.x,y-contact.y)<body.carRadius+contact.r)floor=Math.max(floor,contact.top);
+    if(plane)for(const contact of contacts)if(!isBroken(s,contact) && s.elevation>=contact.top-.05 && contactOverlaps(contact,x,y,body.carRadius))floor=Math.max(floor,contact.top);
     if(plane && s.grounded && floor<s.elevation-4){s.grounded=false;s.vz=0;}
     let elevation=s.grounded ? floor : s.elevation+s.vz*sdt-(plane ? 0 : 90*sdt*sdt);
     if(!plane){
@@ -146,7 +148,7 @@ function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,pro
       let ownFloor=plane ? aircraftFloor(world.scene,aircraft!,s) : (water?.level??s.elevation+2)-2,ceiling=plane ? Infinity : waterCeiling(world.scene.terrain,s.x,s.y,waterRadius)-(body.bodyHeight??20);
       const local=[...queryStaticContacts(world.scene,s.x,s.y,body.carRadius,s),...actorContacts(world.scene,s.timeS,s)];
       for(const contact of local){
-        if(isBroken(s,contact) || Math.hypot(s.x-contact.x,s.y-contact.y)>=body.carRadius+contact.r)continue;
+        if(isBroken(s,contact) || !contactOverlaps(contact,s.x,s.y,body.carRadius))continue;
         if(s.elevation>=contact.top-.05)ownFloor=Math.max(ownFloor,contact.top);
         if(s.elevation+(body.bodyHeight??20)<=contact.bottom+.05)ceiling=Math.min(ceiling,contact.bottom-(body.bodyHeight??20));
       }
@@ -163,7 +165,7 @@ function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,pro
     s.pitch=0;s.bank=0;
     let floor=aircraftFloor(world.scene,aircraft!,s);
     for(const contact of [...queryStaticContacts(world.scene,s.x,s.y,body.carRadius,s),...actorContacts(world.scene,s.timeS,s)])
-      if(!isBroken(s,contact) && s.elevation>=contact.top-.05 && Math.hypot(s.x-contact.x,s.y-contact.y)<body.carRadius+contact.r)floor=Math.max(floor,contact.top);
+      if(!isBroken(s,contact) && s.elevation>=contact.top-.05 && contactOverlaps(contact,s.x,s.y,body.carRadius))floor=Math.max(floor,contact.top);
     s.elevation=floor;
   }
   if(!plane){s.pitch=0;s.bank+=(steer*.08*authority-s.bank)*Math.min(1,dt*5);}

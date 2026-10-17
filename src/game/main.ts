@@ -18,7 +18,7 @@ import {SunShadows} from "./sun";
 import {mediaCapture} from "./media-capture";
 import {renderProfile} from "./render-profile";
 import {freezeStatic} from "./batching";
-import {vehicleReviewStart,drivingReviewStart,npcReviewStart,cargoReviewStart,maintenanceReviewStart,repairReviewSteps,courierReviewSteps,movementReviewStart,populationReviewStart} from "./review-start";
+import {interiorReviewStart,interiorReviewInput,vehicleReviewStart,drivingReviewStart,npcReviewStart,cargoReviewStart,maintenanceReviewStart,repairReviewSteps,courierReviewSteps,movementReviewStart,populationReviewStart} from "./review-start";
 import { measuredScale, playerRadius, playerHeight } from "../scene/measure";
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -80,7 +80,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   primeRepairNavigation(doc,worker.repairNavigation);
   const carRadius = playerRadius(doc);
   const roadMask = buildMaskForScene(doc);
-  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousParkingSaveCompatibility:worker.previousParkingSaveCompatibility,previousRepairSaveCompatibility:worker.previousRepairSaveCompatibility,previousSupplySaveCompatibility:worker.previousSupplySaveCompatibility,previousNetworkSaveCompatibility:worker.previousNetworkSaveCompatibility,previousPoolSaveCompatibility:worker.previousPoolSaveCompatibility,previousVergeSaveCompatibility:worker.previousVergeSaveCompatibility,previousPlantSaveCompatibility:worker.previousPlantSaveCompatibility,previousFinishSaveCompatibility:worker.previousFinishSaveCompatibility,previousCourierSaveCompatibility:worker.previousCourierSaveCompatibility,previousVergeNavigation:worker.previousVergeNavigation,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
+  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousParkingSaveCompatibility:worker.previousParkingSaveCompatibility,previousRepairSaveCompatibility:worker.previousRepairSaveCompatibility,previousSupplySaveCompatibility:worker.previousSupplySaveCompatibility,previousNetworkSaveCompatibility:worker.previousNetworkSaveCompatibility,previousPoolSaveCompatibility:worker.previousPoolSaveCompatibility,previousVergeSaveCompatibility:worker.previousVergeSaveCompatibility,previousPlantSaveCompatibility:worker.previousPlantSaveCompatibility,previousFinishSaveCompatibility:worker.previousFinishSaveCompatibility,previousCourierSaveCompatibility:worker.previousCourierSaveCompatibility,previousInteriorSaveCompatibility:worker.previousInteriorSaveCompatibility,previousInteriorNavigation:worker.previousInteriorNavigation,previousInteriorContacts:worker.previousInteriorContacts,previousVergeNavigation:worker.previousVergeNavigation,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
     driveMask: buildPaperMask(doc.canonical.width, doc.canonical.height), carRadius };
   let car = createCarAtSpawn(doc);
   const repairViews=repairView();
@@ -370,13 +370,15 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   let previous = performance.now(), hudTime = 0;
   let frameMs = 16.7;
   const profile=import.meta.env.DEV ? renderProfile(renderer,()=>{
-    resetPosition(true);car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));car=cargoReviewStart(car,world,params.get("test-cargo"));worldTime.value=0;
+    resetPosition(true);car=drivingReviewStart(car,world,params.get("test-driving"));car=movementReviewStart(car,world,params.get("test-movement"));car=cargoReviewStart(car,world,params.get("test-cargo"));worldTime.value=0;
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
+  let captureWalk:ReturnType<typeof interiorReviewInput>|undefined;
   let captureTime:number|undefined,captureActor:string|undefined,captureFocus:THREE.Vector3|undefined;
-  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:360,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840,maintenance:600,lamps:240,lamprepair:360,streetrepair:360,planting:360,growth:900,courier:360,handoff:540},async(clip)=>{
-    captureTime=undefined;captureActor=undefined;captureFocus=undefined;
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:360,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840,maintenance:600,lamps:240,lamprepair:360,streetrepair:360,planting:360,growth:900,courier:360,handoff:540,interior:600,interiornight:240},async(clip)=>{
+    captureTime=undefined;captureActor=undefined;captureFocus=undefined;captureWalk=undefined;
     resetPosition(true);worldTime.value=0;setMode("playing");
     characters.forEach(character=>character.reset());
+    if(clip==='interior' || clip==='interiornight')car=interiorReviewStart(car,world,clip==='interiornight');
     if(clip==='maintenance'){car=maintenanceReviewStart(car,world);worldTime.value=car.timeS;captureActor=doc.economy?.accounts.find(a=>car.economy?.accounts.find(b=>b.id===a.id)?.repair)?.actor;}
     if(clip==='lamps')car=drivingReviewStart(car,world,'lamp');
     if(clip==='lamprepair' || clip==='streetrepair' || clip==='planting' || clip==='growth'){
@@ -400,6 +402,11 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     if(clip==='football' || clip==='basketball')car=movementReviewStart(car,world,clip);
   },(clip:string,frame:number)=>{
     keys.clear();
+    if(clip==='interior' || clip==='interiornight'){
+      const night=clip==='interiornight',config=doc.daylight;captureTime=config ? (((night ? 22 : 14)-config.startHour+24)%24)/24*config.cycleSeconds+frame/30 : undefined;
+      if(frame===360 && !night || frame===120 && night)viewAngle+=Math.PI/2;
+      captureWalk=interiorReviewInput(car,world,frame,cameraAngle,night);pendingCommerce=captureWalk.commerce;return;
+    }
     if(clip==='maintenance')return;
     if(clip==='planting' || clip==='growth' || clip==='courier' || clip==='handoff'){const config=doc.daylight;captureTime=config ? ((14-config.startHour+24)%24)/24*config.cycleSeconds+frame/30 : undefined;return;}
     if(clip==='lamps' || clip==='lamprepair' || clip==='streetrepair'){
@@ -482,6 +489,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
         boost:keys.has('ShiftLeft') || keys.has('ShiftRight'),
         shoot:keys.has('KeyJ') || shootButtonHeld,
         aim:pointerAim,
+        ...(captureDt ? captureWalk : undefined),
       };
       const steps = stepper.push(dt);
       for (let i = 0; i < steps; i++) {
@@ -562,7 +570,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     for(const rawPose of poses){
       const pose=repairViews.sample(rawPose,!!workJourneyForActor(car,doc,rawPose.id),car.economy?.atS??car.timeS,car.timeS,snap || reduced.matches);
       const group=actorMeshes.get(pose.id)!;
-      group.position.copy(worldPosition(doc,pose.x,pose.y));group.position.y=pose.elevation+(group.userData.ambient || pose.activity && pose.kind==="path" ? .2 : 1.5);
+      group.position.copy(worldPosition(doc,pose.x,pose.y));group.position.y=pose.elevation+1.5;
       const spec=group.userData.sceneObject.spec;
       const upright=pose.activity && spec?.grounding!=='surface';
       const normal=!upright && (pose.kind==="rail" || pose.kind==="path") ? terrainNormal(doc,pose.x,pose.y) : new THREE.Vector3(0,1,0);
@@ -630,11 +638,12 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     (scene.fog as THREE.Fog).near = camera.position.distanceTo(new THREE.Vector3(follow.x, follow.y, follow.z)) + 650;
     (scene.fog as THREE.Fog).far = (scene.fog as THREE.Fog).near + 1700;
     camera.updateMatrixWorld(); scene.updateMatrixWorld();
-    occlusion.update(camera, position.clone().add(new THREE.Vector3(0, playerHeight(doc) / 2, 0)), dt, reduced.matches,occupied ? actorMeshes.get(occupied.id) : undefined);
+    const settleView=reduced.matches || !!profile && dt===0;
+    occlusion.update(camera, position.clone().add(new THREE.Vector3(0, playerHeight(doc) / 2, 0)), dt, settleView,occupied ? actorMeshes.get(occupied.id) : undefined);
     daylight.update(captureTime??(worldTime.value+hourOffset),car.broken);
     const sceneryPlayer=position.clone().add(new THREE.Vector3(0,7,0));
     parking.update(car,scenery,camera,sceneryPlayer,dt,reduced.matches);
-    scenery.update(camera,daylight.direction,sceneryPlayer,{x:car.vx,y:car.vy},dt,reduced.matches,hiddenScenery(),growthScales(doc,car.growing));
+    scenery.update(camera,daylight.direction,sceneryPlayer,{x:car.vx,y:car.vy},dt,settleView,hiddenScenery(),growthScales(doc,car.growing));
     sunShadows.update(camera,daylight.direction,DEFAULT_CAMERA_ZOOM * manualZoom.factor);
     populations.update(car,camera,sun,mode==='playing' ? dt : 0,reduced.matches);
     hudTime += dt;

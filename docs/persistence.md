@@ -44,7 +44,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-Format 9 retains the exact source hash and the compatibility fingerprint, with simulation version 11. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+Format 9 retains the exact source hash and the compatibility fingerprint, with simulation version 12. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The first market has an explicit registered upgrade from the earlier world. It verifies that every pre-market rule still matches, then initializes only the new accounts/stock/needs at the saved simulation time. Player position, vehicles, damage, sports, NPC memory, population and day/night remain saved. The known r44 format 1 source and format 2 browser fingerprints are supported; original slots are kept. A malformed newer slot blocks writes rather than silently loading an older copy. The registered upgrade chain includes the first-market, first-delivery, usable-parking, local-repair, replacement-supply and connected-repair releases. Later incompatible economy edits cannot silently replay older progress.
 
@@ -186,3 +186,11 @@ delivery reservation; pickup and return prohibit one. Money/material conservatio
 and shared contract capacity include all commitments. Restoring a currently
 blocked path keeps its intent and checks live obstacles when movement resumes.
 The original registered upgrade chain remains supported.
+
+## Enterable-market upgrade
+
+R56 keeps format 9 and advances simulation rules to 12. Its registered r55 projection restores the pinned hall assembly and placement, original entrance, 70-unit bakery reach and repair grounds, and removes only the four new interior furniture placements. Earlier upgrades pass through that exact physical projection. The old slot remains intact; an invalid newer slot blocks fallback.
+
+Balances, inventory, reserved work/cargo, damage, plant growth, clocks, sports and parked-vehicle ownership stay saved. Derived pedestrian node IDs are rebound to the new graph; when an old goal disappeared or is blocked, a nearby reachable node replaces that goal without moving the walker or resetting its history.
+
+A grounded player's old pose may now intersect the raised floor or wall. Restore first tries supported footing at the same XY, then clear footing within 32 units, retaining the active body and parked vehicles. An active batch prefers a pose that still reaches its market through the opening. This is an explicit geometry upgrade, not arbitrary layout migration. If no safe local pose exists, the existing player-recovery rule still applies. The building's support and NPC work state are independent of render chunks.

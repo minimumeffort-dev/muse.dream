@@ -87,6 +87,7 @@ const objectV2PartSchema=objectPartSchema.extend({
   shape:z.enum(["box","sphere","cylinder","cone","pyramid","icosphere","capsule","torus","prism","voxel"]),
   voxels:voxelSchema.optional(),
   outline:z.array(z.tuple([z.number().finite(),z.number().finite()])).min(3).max(24).optional(),
+  cutaway:z.enum(["roof","front","back","left","right"]).optional(),
   parent:z.string().min(1).max(40).optional(),
   position:z.tuple([offset,z.number().finite().min(-128).max(128),offset]),
   taper:z.number().finite().min(.1).max(1).optional(),
@@ -98,7 +99,8 @@ const objectDslV2Schema=objectV1Schema.extend({
   voxelSize:z.number().finite().min(.25).max(4).optional(),
   measure:z.object({kind:z.enum(MEASURE_KINDS),axis:z.enum(["x","y","z"]),meters:z.number().finite().min(.05).max(60)}).strict().optional(),
   dslVersion:z.literal(2),joints:z.array(jointSchema).max(12).optional(),parts:z.array(objectV2PartSchema).min(1).max(32),
-  contacts:z.array(z.object({position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),radius:z.number().finite().min(1).max(64),height:z.number().finite().min(1).max(160)}).strict()).min(1).max(8).optional(),
+  contacts:z.array(z.object({position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),radius:z.number().finite().min(1).max(64).optional(),size:z.tuple([z.number().finite().min(.1).max(128),z.number().finite().min(.1).max(128)]).optional(),headingRad:z.number().finite().min(-2*Math.PI).max(2*Math.PI).optional(),height:z.number().finite().min(.1).max(160)}).strict()).min(1).max(8).optional(),
+  interior:z.object({position:z.tuple([offset,z.number().finite().min(.1).max(64),offset]),size:z.tuple([z.number().finite().min(2).max(128),z.number().finite().min(1).max(128),z.number().finite().min(2).max(128)]),portals:z.array(z.object({id:z.string().min(1).max(40),side:z.enum(["front","back","left","right"]),offset:z.number().finite().min(-64).max(64),width:z.number().finite().min(1).max(32),height:z.number().finite().min(1).max(64)}).strict()).min(1).max(4)}).strict().optional(),
   rideable:z.object({seat:z.tuple([offset,z.number().finite().min(0).max(128),offset]),control:z.enum(["car","bicycle","skateboard","scooter","boat","plane"]).optional()}).strict().optional(),
   lamp:z.object({position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),radius:z.number().finite().min(8).max(80),color:z.string().regex(/^#[0-9a-fA-F]{6}$/)}).strict().optional(),
   emitter:z.object({kind:z.literal("steam"),position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),rate:z.number().finite().min(1).max(12)}).strict().optional(),
@@ -136,8 +138,25 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
       if(p.voxels && (p.deform || p.animation || p.material.shaderStyle==='cloth'))ctx.addIssue({code:z.ZodIssueCode.custom,path:['parts',i,'voxels'],message:'voxels use rigid geometry without deform, cloth or part motion; joints remain available'});
       if(p.voxels?.chunks && (p.fragment || !(spec.impact?.kind==='break' || p.zone)))ctx.addIssue({code:z.ZodIssueCode.custom,path:['parts',i,'voxels','chunks'],message:'voxel chunks require break behavior or a break zone and cannot belong to a fragment group'});
     });
+    spec.contacts?.forEach((c,i)=>{
+      if((c.radius!==undefined)===(c.size!==undefined))ctx.addIssue({code:z.ZodIssueCode.custom,path:['contacts',i,'size'],message:'contact needs exactly one of radius or size'});
+      if(c.headingRad!==undefined && !c.size)ctx.addIssue({code:z.ZodIssueCode.custom,path:['contacts',i,'headingRad'],message:'heading requires a rectangle contact'});
+      if(c.radius!==undefined && c.height<1)ctx.addIssue({code:z.ZodIssueCode.custom,path:['contacts',i,'height'],message:'cylinder height must be at least 1'});
+    });
+    if(spec.interior){
+      const r=spec.interior,[x,y,zAt]=r.position,[w,h,d]=r.size;
+      const problem=(message:string)=>ctx.addIssue({code:z.ZodIssueCode.custom,path:['interior'],message});
+      if(spec.body.interaction!=='solid' || !spec.foundation || spec.grounding==='surface' || spec.rideable || spec.impact || spec.joints?.length)problem('interior requires a static upright solid foundation without seats, impact or joints');
+      if(Math.abs(x)+w/2>64 || Math.abs(zAt)+d/2>64 || y+h>128)problem('interior must fit local +/-64 and height 128');
+      if(new Set(r.portals.map(p=>p.id)).size!==r.portals.length)problem('portal IDs must be unique');
+      for(const p of r.portals)if(Math.abs(p.offset)+p.width/2>(['front','back'].includes(p.side) ? w : d)/2 || p.height>h)problem('portal must fit its interior side and headroom');
+      if(!spec.contacts?.some(c=>c.size && !c.headingRad && Math.abs(c.position[0]-x)+w/2<=c.size[0]/2+.001 && Math.abs(c.position[2]-zAt)+d/2<=c.size[1]/2+.001 && Math.abs(c.position[1]+c.height-y)<.001))problem('interior needs one rectangle floor contact covering its bounds with its top at interior.at.y');
+      if(!spec.contacts?.some(c=>c.size && !c.headingRad && Math.abs(c.position[0]-x)+w/2<=c.size[0]/2+.001 && Math.abs(c.position[2]-zAt)+d/2<=c.size[1]/2+.001 && Math.abs(c.position[1]-y-h)<.001))problem('interior needs one rectangle ceiling contact covering its bounds with its bottom at floor_y + clear height');
+      if(!spec.parts.some(p=>p.cutaway==='roof'))problem('interior needs explicitly tagged roof parts');
+    }else if(spec.parts.some(p=>p.cutaway))ctx.addIssue({code:z.ZodIssueCode.custom,path:['parts'],message:'cutaway parts require an interior'});
+    if(spec.parts.some(p=>p.cutaway && (p.parent || p.animation || p.zone || p.fragment)))ctx.addIssue({code:z.ZodIssueCode.custom,path:['parts'],message:'cutaway parts must be static retained shell parts'});
     const impact=spec.impact;
-    if(impact && (spec.foundation || spec.contacts && (impact.kind==='bounce' || spec.contacts.length!==1 || spec.contacts[0]!.position.some(n=>n!==0)) || spec.rideable || spec.emitter))ctx.addIssue({code:z.ZodIssueCode.custom,message:"impact objects use one centered cylinder without foundations, compound/offset contacts, seats or emitters"});
+    if(impact && (spec.foundation || spec.contacts && (impact.kind==='bounce' || spec.contacts.some(c=>!!c.size) || spec.contacts.length!==1 || spec.contacts[0]!.position.some(n=>n!==0)) || spec.rideable || spec.emitter))ctx.addIssue({code:z.ZodIssueCode.custom,message:"impact objects use one centered cylinder without foundations, compound/offset contacts, seats or emitters"});
     if(impact && spec.body.interaction!==(impact.kind==="bounce" ? "knockable" : "solid"))ctx.addIssue({code:z.ZodIssueCode.custom,message:"bounce needs a knockable body; break/topple needs a solid body"});
     const zones=spec.breakZones??[],zoneIds=new Set(zones.map(z=>z.id)),fractures=spec.parts.filter(p=>impact?.kind==="break" || impact?.kind==="topple" || p.zone);
     if(zoneIds.size!==zones.length || zones.some(z=>ids.has(z.id)))ctx.addIssue({code:z.ZodIssueCode.custom,message:"break zone ids must be unique"});
@@ -152,6 +171,7 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
     if(impact?.kind==="topple" && impact.lifetime<impact.duration+.8)ctx.addIssue({code:z.ZodIssueCode.custom,message:"topple lifetime must allow its fall and final 0.8 second fade"});
     const ownership=new Map<string,string|undefined>();
     for(const p of spec.parts.filter(p=>p.fragment)){if(ownership.has(p.fragment!) && ownership.get(p.fragment!)!==p.zone)ctx.addIssue({code:z.ZodIssueCode.custom,message:"a fragment cannot cross break zones"});ownership.set(p.fragment!,p.zone);}
+    if(spec.contacts?.some(c=>c.size) && spec.rideable)ctx.addIssue({code:z.ZodIssueCode.custom,path:['contacts'],message:'rectangle contacts belong to static structures without seats'});
     if(spec.contacts && (spec.body.interaction!=="solid" || spec.grounding==="surface"))
       ctx.addIssue({code:z.ZodIssueCode.custom,message:"compound contacts require an upright solid"});
     if(spec.rideable && (spec.body.interaction!=="solid" || spec.foundation || spec.contacts && spec.rideable.control))

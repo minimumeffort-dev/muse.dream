@@ -191,6 +191,7 @@ export const sceneSchema = z.object({
   for(const message of economyProblems(scene))ctx.addIssue({code:'custom',path:['economy'],message});
   for(const message of sportProblems(scene))ctx.addIssue({code:'custom',path:['sports'],message});
   for(const message of interactionRuleProblems(scene))ctx.addIssue({code:'custom',path:['interactionRules'],message});
+  if(scene.objects.filter(o=>o.spec && 'interior' in o.spec && o.spec.interior).length>32)ctx.addIssue({code:'custom',message:'scene exceeds 32 interior spaces'});
   const lamps=scene.objects.filter(o=>o.spec && "lamp" in o.spec && o.spec.lamp);
   if(lamps.length>MAX_LIGHT_POOLS)ctx.addIssue({code:"custom",message:"scene exceeds 512 light pools"});
   for(const o of lamps)if(roleOf(o)!=="prop" || o.route || o.spec && "body" in o.spec && o.spec.body.interaction==="knockable" || isReactive(o.spec) && !pooledImpact(scene,o))ctx.addIssue({code:"custom",message:`lamp "${o.id}" requires a static prop; damage needs a pooled whole-object impact`});
@@ -221,7 +222,7 @@ export const sceneSchema = z.object({
   if(scene.objects.filter(o=>o.spec && "dslVersion" in o.spec && o.spec.dslVersion===2 && o.spec.emitter).length>16)ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 16 particle emitters"});
   for(const object of scene.objects)if(object.route){
     const route=scene.routes.find(r=>r.id===object.route!.id);
-    if(!route || !object.spec || !("dslVersion" in object.spec) || object.spec.foundation || object.spec.body.interaction!==(route.kind==="ambient" || route.kind==="walk" ? "decor" : "solid") || object.spec.dslVersion===2 && object.spec.contacts && !["street","tram","rail"].includes(route.kind))
+    if(!route || !object.spec || !("dslVersion" in object.spec) || object.spec.foundation || object.spec.body.interaction!==(route.kind==="ambient" || route.kind==="walk" ? "decor" : "solid") || object.spec.dslVersion===2 && object.spec.contacts && (object.spec.contacts.some(c=>c.size) || !["street","tram","rail"].includes(route.kind)))
       ctx.addIssue({code:z.ZodIssueCode.custom,message:"route actors need an existing route without foundations/compound contacts; ambient actors require decor, other routes require a solid cylinder"});
   }
 });

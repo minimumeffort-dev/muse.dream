@@ -582,3 +582,29 @@ save/recovery checks, complete fixed-step replay, media and browser measurements
 Existing repair, planting, architecture, road, vehicle and lighting captures keep
 the same geometry and their depicted controls. The city map remains accurate:
 no placement, road, public graph or ground footprint changed in this release.
+
+## Enter the market, r56
+
+`interior` records 600 consecutive rendered frames over twenty simulation seconds:
+walking through the actual doorway, paid baking, buying and eating, then moving
+through the hall while rotating the view. `interiornight` records 240 frames over
+eight seconds with the same floor and furniture at 22:00. Its floor pool is an
+engine surface effect, not wall lighting. Both use native 2400 × 1350 source
+frames, 1600 × 900 H.264 videos and matching posters, and 1280 × 720/256-color GIFs
+with the existing no-dither/loss-80 pipeline. Posters use frames 430 and 180.
+
+Commerce (360 / still 300), conversation (240 / 60), delivery (360 / 100), repair
+(840 / 720), courier (360 / 180) and handoff (540 / 300) are refreshed together for
+the relocated hall, real opening and additional repair grounds. Delivery's current
+short review boards the nearby bicycle through the normal F control; the earlier
+car-based review above describes its previous release. The courier still pre-rolls
+every actual walking step. Each set includes HD video, GIF and poster. Nothing is
+interpolated, and these offline recordings make no live frame-rate claim.
+
+All eight sets use accepted Dream source
+`269c818e0f333fe8fb11fe881219eb363ab59e54da8817787ba24191002c5464`, simulation
+rules 12. The [interior verification](../evidence/interiors/verification.md) separates
+engine replay, native controls, compatibility and performance. The city plan is
+regenerated from the accepted scene. Existing out-of-market vehicle, sports,
+vegetation, destruction and terrain captures retain their represented assets and
+controls; earlier evidence stays pinned to its historical release.

@@ -1,3 +1,5 @@
+import {walkingHeight} from '../scene/interiors';
+import {contactOverlaps} from '../scene/contact-geometry';
 import {deliveryAreas} from './courier';
 import {workClear,workSegment,workPath,workNetwork,primeWorkNetworks,type WalkingArea,type WorkNode} from './work-navigation';
 import {growthContact} from '../scene/growth';
@@ -7,7 +9,6 @@ import type {Repair} from '../scene/commerce';
 import type {CarState} from './car';
 import {COMMERCE_LIMITS,accountRepairs,repairGrounds,repairTargets,repairCoverage,type RepairTarget} from '../scene/commerce';
 import {objectContacts,queryStaticContacts,sceneContacts,type Contact} from '../scene/contacts';
-import {drivingHeight} from '../scene/terrain';
 import {isBroken} from './impacts';
 import {actorContacts,actorPoses} from './actors';
 import {objectHeight,objectRadius,archetypeOf} from './archetypes';
@@ -51,7 +52,7 @@ export function repairAccessProblems(scene:Scene):string[]{
 export const targetBroken=(state:CarState,t:Pick<RepairTarget,'objectId'|'zoneId'>)=>t.zoneId ? state.brokenZones.some(z=>z.objectId===t.objectId && z.zoneId===t.zoneId) : state.broken.includes(t.objectId);
 export function repairApproach(scene:Scene,r:Repair,t:RepairTarget,start:Point,state?:CarState){
  const c=t.contact,angle=Math.atan2(start.y-c.y,start.x-c.x),distance=c.r+REPAIR_RADIUS+3;
- for(let i=0;i<8;i++){const a=angle+i*Math.PI/4,end={x:c.x+Math.cos(a)*distance,y:c.y+Math.sin(a)*distance};if(Math.abs(drivingHeight(scene.terrain,end.x,end.y)-drivingHeight(scene.terrain,c.x,c.y))<4 && repairClear(scene,r,end,state)){const path=repairPath(scene,r,start,end,state);if(path)return {end,path};}}
+ for(let i=0;i<8;i++){const a=angle+i*Math.PI/4,end={x:c.x+Math.cos(a)*distance,y:c.y+Math.sin(a)*distance};if(Math.abs(walkingHeight(scene,end.x,end.y)-walkingHeight(scene,c.x,c.y))<4 && repairClear(scene,r,end,state)){const path=repairPath(scene,r,start,end,state);if(path)return {end,path};}}
 }
 /** Same vehicle cylinder as driving; the maintenance foot clearance is conservative. */
 export function repairPlayerContact(scene:Scene,state:CarState):Contact{
@@ -61,8 +62,10 @@ export function repairPlayerContact(scene:Scene,state:CarState):Contact{
 }
 /** Restore only into unoccupied space, including vehicles left parked inside the rubble. */
 export function repairSpaceClear(scene:Scene,t:RepairTarget,state:CarState,scale=1):boolean{
- const object=scene.objects.find(o=>o.id===t.objectId)!,contacts=objectContacts(scene,object).filter(c=>c.zoneId===t.zoneId).map(c=>growthContact(c,objectPlacement(scene,object).base,scale));
+ const object=scene.objects.find(o=>o.id===t.objectId)!,base=objectPlacement(scene,object).base;
+ // Restoration checks above the footing; its supporting slab is not an overlap.
+ const contacts=objectContacts(scene,object).filter(c=>c.zoneId===t.zoneId).map(c=>{const contact=growthContact(c,base,scale);return {...contact,bottom:Math.max(base,contact.bottom)};});
  const objects=sceneContacts(scene).objects,people=actorPoses(scene,state.timeS,state).filter(p=>{const object=objects.get(p.id);return object && archetypeOf(object).interaction==='decor';}).map(p=>{const o=objects.get(p.id)!;return {x:p.x,y:p.y,r:objectRadius(o),bottom:p.elevation,top:p.elevation+objectHeight(o)};});
  const obstacles=[...people,repairPlayerContact(scene,state),...actorContacts(scene,state.timeS,state),...state.props.map(p=>{const o=scene.objects.find(o=>o.id===p.id)!;return {x:p.x,y:p.y,r:objectRadius(o),bottom:p.elevation??0,top:(p.elevation??0)+objectHeight(o)};})];
- return contacts.every(c=>![...obstacles,...queryStaticContacts(scene,c.x,c.y,c.r,state).filter(o=>o.id!==t.objectId && !isBroken(state,o))].some(o=>Math.hypot(o.x-c.x,o.y-c.y)<o.r+c.r+.1 && o.top>c.bottom && o.bottom<c.top));
+ return contacts.every(c=>![...obstacles,...queryStaticContacts(scene,c.x,c.y,c.r,state).filter(o=>o.id!==t.objectId && !isBroken(state,o))].some(o=>contactOverlaps(o,c.x,c.y,c.r+.1) && o.top>c.bottom && o.bottom<c.top));
 }

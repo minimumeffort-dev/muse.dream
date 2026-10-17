@@ -15,6 +15,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [A whole voxel world](whole-world-voxels.md) | Construct the terrain, city, vehicles, plants and water from cells |
 | [City design](city-design.md) | Research, connected destinations and the source-derived map |
 | [Asset library](asset-library.md) | The mock-world assemblies and their construction details |
+| [Enterable buildings](dream/interiors.md) | Supported ground floors, real doorways, cutaway views and connected work |
 | [Build a world](dream/worlds.md) | Terrain, roads, bridges, water, dedicated paths and moving vehicles |
 | [Populate streets and habitats](dream/populations.md) | Connected lighting, planting, destination parking, birds and transit |
 | [Day and night](dream/day-night.md) | A shared clock, changing sunlight, window glow and street lighting |
@@ -54,6 +55,7 @@ The game runs locally at `http://127.0.0.1:5173/`. The inspection tools below re
 | Vehicle control review | `/tests/visual/vehicles.html` | [Vehicle switching video](media/switching.mp4) |
 | Aircraft and flight | `/?test-vehicle=cloudhopper` | [Flight video](media/flight.mp4), [Dream source](examples/light-aircraft.dream) |
 | Aircraft on a hillside | `/?test-movement=plane-hill` | Native controls on the eastern heath; [contact checks](evidence/aircraft-terrain/verification.md) |
+| Covered market interior | `/?test-movement=interior` | [Walkthrough](media/interior.mp4), [night view](media/interiornight.mp4), [Dream source](examples/enterable-market.dream) |
 | Regional airport | `/?test-driving=airport` | [Terminal, hangar and approach](media/airport.jpg); board buses with F |
 | Eastbank medical center | `/?test-driving=medical` | [Medical center and bus stop](media/east-medical-center.jpg) |
 | Available scooters | `/?test-vehicle=airport_scooter` or `/?test-vehicle=medical_scooter` | Walk up, press F, then drive and jump |

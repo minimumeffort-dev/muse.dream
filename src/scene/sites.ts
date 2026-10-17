@@ -1,3 +1,5 @@
+import {sceneInteriors,walkingHeight} from './interiors';
+import {contactTouchesPolygon} from './contact-geometry';
 import {isActor} from './agents';
 import {MAX_WORLD_SIZE} from './world-bounds';
 import {z} from 'zod';
@@ -78,6 +80,7 @@ export function walkingNetwork(scene:Scene){
   polygons.push(...scene.crossings.flatMap(c=>crossingPolygons(scene,c)));
   const sites=new Map<string,number>();
   for(const site of scene.sites){sites.set(site.id,polygons.length);polygons.push(...sitePolygons(scene,site));}
+  polygons.push(...sceneInteriors(scene).map(f=>f.polygon));
   const roots=polygons.map((_,i)=>i),bounds=polygons.map(polygonBounds);
   const root=(i:number):number=>roots[i]===i ? i : roots[i]=root(roots[i]!);
   const connected=(a:Point[],b:Point[])=>{
@@ -139,7 +142,7 @@ export function validateSites(scene:Scene):string[]{
     if(uncrossed.some(path=>riding.some(road=>polygonArea(partition(path,road).inside)>1e-5)))problems.push(`site "${site.id}" crosses a riding lane without a declared crossing`);
     for(const polygon of sitePolygons(scene,site)){
       const b=polygonBounds(polygon),x=(b.x0+b.x1)/2,y=(b.y0+b.y1)/2,r=Math.hypot(b.x1-b.x0,b.y1-b.y0)/2;
-      if(contacts.solids.query(x,y,r+contacts.maxRadius).some(c=>c.id!==site.objectId && (pointInPolygon(c.x,c.y,polygon) || distanceToPolygon(c.x,c.y,polygon)<c.r) && c.top>drivingHeight(scene.terrain,c.x,c.y)+.1 && c.bottom<drivingHeight(scene.terrain,c.x,c.y)+20))invalid=true;
+      if(contacts.solids.query(x,y,r+contacts.maxRadius).some(c=>c.id!==site.objectId && contactTouchesPolygon(c,polygon) && c.top>walkingHeight(scene,c.x,c.y)+.1 && c.bottom<walkingHeight(scene,c.x,c.y)+20))invalid=true;
     }
     if(invalid || length>800)problems.push(`site "${site.id}" needs an unobstructed, dry entrance path of at most 800 units`);
     const own=network.roots[network.sites.get(site.id)!];

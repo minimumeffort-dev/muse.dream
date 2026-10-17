@@ -6,6 +6,11 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights interior commands and shell fields at exact boundaries, escaping labels',()=>{
+    const html=highlight('object hall(label="<Hall>&"){interior(at=[0,1,0],size=[30,20,30]){portal door(side=front,offset=0,width=10,height=20);}part roof(cutaway=roof);}');
+    for(const word of ['interior','portal'])expect(html).toContain(`class="dream-keyword">${word}</span>`);
+    expect(html).toContain('class="dream-field">cutaway</span>');expect(html).toContain('&lt;Hall&gt;&amp;');expect(highlight('interiority portals cutaways')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('highlights pooled destruction fields at complete boundaries and escapes labels',()=>{
     const html=highlight('world(damage_pool=true);rule lights(kind=lamp,mode=topple(speed=95));object light(label="<Lamp>&");');
     expect(html).toContain('class="dream-field">damage_pool</span>');expect(html).toContain('class="dream-keyword">topple</span>');expect(html).toContain('&lt;Lamp&gt;&amp;');expect(highlight('damage_pool_extra lamplighter topples')).not.toMatch(/dream-(?:keyword|field)/);

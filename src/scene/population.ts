@@ -1,3 +1,5 @@
+import {contactOverlaps,type ContactFootprint} from './contact-geometry';
+import {assemblyBounds} from './measure';
 import {ambientMotionSchema,type Ambient} from './ambient';
 import {z} from 'zod';
 import type {Scene,SceneObject,Point} from './schema';
@@ -53,9 +55,12 @@ export function seededRandom(seed:number){let n=seed>>>0;return ()=>{n=(Math.imu
 
 /** Street-relative candidates are filtered against the complete linked scene, never placed on guessed coordinates. */
 export function furnishWorld(scene:Scene,rules:Furnishing[]):{objects:SceneObject[];surfaces:Scene['surfaces']}{
-  const occupied=new SpatialGrid<{x:number;y:number;r:number}>([]),existing=scene.objects.filter(o=>!isActor(o) || !o.route);
+  const occupied=new SpatialGrid<ContactFootprint>([]),existing=scene.objects.filter(o=>!isActor(o) || !o.route);
   let maxRadius=0;
-  for(const o of existing){const r=o.spec && 'dslVersion' in o.spec ? assemblyHorizontalRadius(o.spec,o.scale)+(controlFor(o) ? 16 : isActor(o) ? 4 : 0) : 30;occupied.insert({x:o.x,y:o.y,r});maxRadius=Math.max(maxRadius,r);}
+  for(const o of existing){const r=o.spec && 'dslVersion' in o.spec ? assemblyHorizontalRadius(o.spec,o.scale)+(controlFor(o) ? 16 : isActor(o) ? 4 : 0) : 30;if(o.spec && 'interior' in o.spec && o.spec.interior){
+    const b=assemblyBounds(o.spec),a=o.headingRad??0,c=Math.cos(a),s=Math.sin(a),x=(b.min.x+b.max.x)/2*o.scale,y=(b.min.z+b.max.z)/2*o.scale,halfX=(b.max.x-b.min.x)/2*o.scale,halfY=(b.max.z-b.min.z)/2*o.scale;
+    const contact={x:o.x+x*c-y*s,y:o.y+x*s+y*c,r:Math.hypot(halfX,halfY),box:{halfX,halfY,headingRad:a}};occupied.insert(contact);maxRadius=Math.max(maxRadius,contact.r);
+   }else{occupied.insert({x:o.x,y:o.y,r});maxRadius=Math.max(maxRadius,r);}}
   const ground=streetFootprints(scene),reserved=ground.reserved,walkways=streetSidewalks(scene),road=roadPoints(scene),paths=scene.sites.map(s=>({points:sitePath(scene,s),r:s.width/2+4}));
   const fixedExclusions=[...(scene.terrain.landscape?.bridges??[]).map(bridgePolygon),...scene.crossings.flatMap(c=>crossingPolygons(scene,c))];
   const corridors=scene.routes.filter(r=>['rail','path','air'].includes(r.kind)).map(route=>routeInfrastructure(route));
@@ -98,7 +103,7 @@ export function furnishWorld(scene:Scene,rules:Furnishing[]):{objects:SceneObjec
         if(rule.on==='sidewalk' && Array.from({length:9},(_,i)=>i ? {x:x+Math.cos(i*Math.PI/4)*r,y:y+Math.sin(i*Math.PI/4)*r} : {x,y}).some(p=>!walkways.some(w=>onPolygon(w,p.x,p.y))))continue;
         if(x<r+8 || y<r+8 || x>scene.canonical.width-r-8 || y>scene.canonical.height-r-8 || occupiedRoad || exclusions.some(overlaps) || distanceToRoad(road,x,y)<scene.roadMaskRef.params.roadWidth/2+r+8 || paths.some(p=>distanceToRoad(p.points,x,y)<p.r+r) || corridors.some(c=>distanceToRoad(c.points,x,y)<c.radius+r+8))continue;
         if(Array.from({length:9},(_,i)=>({x:x+Math.cos(i*Math.PI/4)*r,y:y+Math.sin(i*Math.PI/4)*r})).some(p=>waterAt(scene.terrain,p.x,p.y)))continue;
-        if(occupied.query(x,y,r+maxRadius+4).some(o=>Math.hypot(o.x-x,o.y-y)<o.r+r+4))continue;
+        if(occupied.query(x,y,r+maxRadius+4).some(o=>contactOverlaps(o,x,y,r+4)))continue;
         if(++emitted>POPULATION_LIMITS.perRule || generated.length>=POPULATION_LIMITS.generated || scene.objects.length+generated.length>=4096)throw Error(`furnish "${rule.id}": expansion exceeds 128 per rule, 1024 generated or 4096 scene objects (${emitted} in rule, ${generated.length} generated)`);
         const heading=rule.facing==='varied' ? random()*Math.PI*2 : Math.atan2(dy,dx)+(rule.facing==='street' ? -side*Math.PI/2 : 0);
         generated.push({id:`${rule.id}_${key}_${side<0 ? 'l':'r'}`,kind:'custom',labelText:spec.displayName,x,y,headingRad:heading,scale,spec,role:rule.motion ? 'ambient' : rule.role,...(rule.role==='controllable' ? {parked:true as const} : {}),...(rule.motion ? {ambient:{motion:rule.motion,joints:rule.rigs?.[choice]??[]}} : {})});

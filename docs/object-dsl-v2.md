@@ -184,3 +184,5 @@ An optional material `nightColor` is a six-digit emission color, compiled from D
 ## Voxel geometry
 
 Dream 2 now supports bounded filled/carved voxel parts, greedy surface meshing and optional fracture chunks. The city uses voxel building shells, bench boards and carved park walls; the library bakehouse adds chunked masonry; measured proportions and explicit contacts remain unchanged. See the [voxel guide](dream/voxels.md) for syntax, limits, a complete example and current boundaries.
+
+Static upright v2 structures now also accept rectangle contacts through `size=[width,depth]`, with optional `heading_deg` in Dream source. A single ground-floor `interior` owns its local floor bounds and portal metadata; explicit contacts provide physical support and clearance. Part `cutaway` tags survive the renderer pipeline. [Full contract and example](dream/interiors.md). V1 and moving-vehicle cylinders remain unchanged.

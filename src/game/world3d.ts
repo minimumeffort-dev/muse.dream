@@ -109,6 +109,7 @@ export function buildCustom(object: SceneObject): THREE.Group {
       const m = mesh(partGeometry(part,spec.dslVersion===2 ? spec.voxelSize : undefined), styledMaterial(part.material),0,0,0,false);
       materialCoordinates(m.geometry, part);
       m.name = part.id;
+      if("cutaway" in part)m.userData.cutaway=part.cutaway;
       const style=part.material.shaderStyle,paint=style==="toon" || style==="paper-grain";
       // Linear vertex paint lets differently colored parts share a draw without changing shading.
       if(paint){

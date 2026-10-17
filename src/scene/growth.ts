@@ -13,4 +13,4 @@ export function growthScales(scene:Scene,plants:GrowingPlant[]|undefined):Readon
  if(!values){values=new Map(plants.map(p=>{const r=scene.economy!.repairs.find(r=>r.id===p.serviceId)!,start=r.seed_scale??GROWTH_LIMITS.seedScale;return [p.objectId,start+(1-start)*p.progressS/r.regrow_s!];}));entries.set(plants,values);}return values;
 }
 export const growthScale=(scene:Scene,state:Pick<CarState,'growing'>,id:string)=>growthScales(scene,state.growing).get(id)??1;
-export function growthContact(c:Contact,base:number,scale:number):Contact{return scale===1 ? c : {...c,r:c.r*scale,bottom:c.bottom===-Infinity ? c.bottom : base+(c.bottom-base)*scale,top:base+(c.top-base)*scale};}
+export function growthContact(c:Contact,base:number,scale:number):Contact{return scale===1 ? c : {...c,r:c.r*scale,...(c.box ? {box:{...c.box,halfX:c.box.halfX*scale,halfY:c.box.halfY*scale}} : {}),bottom:c.bottom===-Infinity ? c.bottom : base+(c.bottom-base)*scale,top:base+(c.top-base)*scale};}

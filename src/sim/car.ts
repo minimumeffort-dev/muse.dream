@@ -1,3 +1,4 @@
+import {contactOverlaps} from '../scene/contact-geometry';
 import {initialAmbient,stepAmbient,type AmbientState} from './ambient';
 import {initialEconomy,type EconomyState,type CommerceAction} from './commerce';
 import {routePath} from "../scene/routes";
@@ -119,6 +120,9 @@ export interface World {
   previousPlantSaveCompatibility?:string;
   previousFinishSaveCompatibility?:string;
   previousCourierSaveCompatibility?:string;
+  previousInteriorSaveCompatibility?:string;
+  previousInteriorNavigation?:import('../scene/ambient-navigation').AmbientGraph;
+  previousInteriorContacts?:import('../scene/contacts').SceneContactData;
   previousVergeNavigation?:import('../scene/ambient-navigation').AmbientGraph;
   emptyEconomySaveCompatibility?:string;
   previousSaveSource?:string;
@@ -251,7 +255,7 @@ function crossedCheckpoint(
 export function carFootprintClear(world:World,x:number,y:number,elevation:number,timeS:number,state?:CarState):boolean {
   const height=world.bodyHeight??playerHeight(world.scene);
   return world.driveMask.footprintClear(x,y,world.carRadius) && (!world.dryGround || !waterAt(world.scene.terrain,x,y,drivingHeight(world.scene.terrain,x,y))) && !(world.waterSupport && elevation<drivingHeight(world.scene.terrain,x,y)-.05 && elevation+height>waterCeiling(world.scene.terrain,x,y,world.carRadius)) && ![...queryStaticContacts(world.scene,x,y,world.carRadius,state),...actorContacts(world.scene,timeS,state)]
-    .some(s=>(!state || !isBroken(state,s)) && elevation<s.top-.05 && elevation+height>s.bottom+.05 && Math.hypot(x-s.x,y-s.y)<world.carRadius+s.r);
+    .some(s=>(!state || !isBroken(state,s)) && elevation<s.top-.05 && elevation+height>s.bottom+.05 && contactOverlaps(s,x,y,world.carRadius));
 }
 
 /** A press is buffered across a landing; holding Space never repeats a jump. */
@@ -294,7 +298,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
     if(water && (floor<water.level+.5 || fromHeight<floor-.05))floor=Math.max(terrainHeight(scene.terrain,x,y),water.level-height*.65);
     for (const solid of solids) {
       if(isBroken(s,solid))continue;
-      if (fromHeight >= solid.top - .05 && Math.hypot(x - solid.x, y - solid.y) < carRadius + solid.r)
+      if (fromHeight >= solid.top - .05 && contactOverlaps(solid,x,y,carRadius))
         floor = Math.max(floor, solid.top);
     }
     return floor;
@@ -305,7 +309,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
     if(raised-s.elevation>step+.05 || world.waterSupport && raised<drivingHeight(scene.terrain,x,y)-.05 && raised+height>waterCeiling(scene.terrain,x,y,carRadius))return true;
     for (const solid of solids) {
       if(isBroken(s,solid))continue;
-      if (raised < solid.top - .05 && raised+height>solid.bottom+.05 && Math.hypot(x - solid.x, y - solid.y) < carRadius + solid.r) return true;
+      if (raised < solid.top - .05 && raised+height>solid.bottom+.05 && contactOverlaps(solid,x,y,carRadius)) return true;
     }
     return false;
   };
@@ -475,7 +479,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
       const ceiling=waterCeiling(scene.terrain,s.x,s.y,carRadius)-height;
       if(predicted>ceiling){predicted=ceiling;s.vz=Math.min(0,s.vz);}
     }
-    for(const solid of solids) if(!isBroken(s,solid) && s.elevation+height<=solid.bottom+.05 && predicted+height>solid.bottom && Math.hypot(s.x-solid.x,s.y-solid.y)<carRadius+solid.r){
+    for(const solid of solids) if(!isBroken(s,solid) && s.elevation+height<=solid.bottom+.05 && predicted+height>solid.bottom && contactOverlaps(solid,s.x,s.y,carRadius)){
       predicted=solid.bottom-height;s.vz=Math.min(0,-Math.abs(s.vz)*.2);
     }
     if (s.grounded && contact < predicted - .08) s.grounded = false;

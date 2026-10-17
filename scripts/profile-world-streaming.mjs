@@ -1,4 +1,5 @@
 import {createServer} from 'vite';
+import assert from 'node:assert/strict';
 import {writeFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 if(!process.argv[2])throw Error('Usage: node --expose-gc scripts/profile-world-streaming.mjs output.json');
@@ -18,6 +19,9 @@ try{
   while(stream.stats.pending && !stream.error)await new Promise(resolve=>setTimeout(resolve,1));if(stream.error)throw stream.error;
   global.gc?.();const view={name,position:[x,y],ms:performance.now()-start,stream:stream.stats,geometry:geometryMemory(resident)};views.push(view);console.log(name,JSON.stringify({resident:view.stream.resident,loaded:view.stream.loaded,unloaded:view.stream.unloaded,bytes:view.geometry.bytes}));
  }
- const result={node:process.version,scope:'same major groups as profile-world-memory; streamed geometry plus resident bridges, routes, flocks and ambient populations; excludes live actors, player, effects, textures, render targets and worker caches',bounds:stream.bounds,views};
- await writeFile(process.argv[2],JSON.stringify(result,null,2)+'\n');stream.dispose();
+ stream.dispose();global.gc?.();
+ const disposed={stream:stream.stats,geometry:geometryMemory(stream.group)};
+ assert.equal(disposed.stream.resident,0);assert.equal(disposed.stream.bytes,0);assert.equal(disposed.geometry.bytes,0);assert.equal(stream.group.children.length,0);
+ const result={node:process.version,scope:'same major groups as profile-world-memory; streamed geometry plus resident bridges, routes, flocks and ambient populations; excludes live actors, player, effects, textures, render targets and worker caches',bounds:stream.bounds,views,disposed};
+ await writeFile(process.argv[2],JSON.stringify(result,null,2)+'\n');
 }finally{await server.close();}

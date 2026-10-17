@@ -78,7 +78,9 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `measure` | object | No ID / no block | `kind: car / plane / tree / person / bicycle / skateboard / bench / table / building / train / bus / tram / boat / food / custom`, `axis: x / y / z`, `meters: n` |
 | `ground` | object | No ID / no block | `mode: upright / surface` |
 | `foundation` | object | No ID / no block | `size: v2`, `color: color` |
-| `contact` | object | ID / no block | `at: v3`, `radius: n`, `height: n` |
+| `contact` | object | ID / no block | `at: v3`, `radius?: n`, `size?: v2`, `height: n`, `heading_deg?: n`; exactly one radius or size |
+| `interior` | object | No ID / interior | `at: v3`, `size: v3` |
+| `portal` | interior | ID / no block | `side: front / back / left / right`, `offset: n`, `width: n`, `height: n` |
 | `rideable` | object | No ID / no block | `at: v3`, `control?: car / bicycle / skateboard / scooter / boat / plane` |
 | `lamp` | object | No ID / no block | `at: v3`, `radius: n`, `color: color` |
 | `emit` | object | No ID / no block | `kind: steam`, `at: v3`, `rate_s: n` |
@@ -89,7 +91,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `joint` | object / visual | ID / visual | `at?: v3`, `rot_deg?: v3`, `bone?: humanoid binding`, `motion?: joint_motion` |
 | `repeat` | object / visual / path / route_path / voxel_ops | ID / inherit | `index: symbol`, `count: n` |
 | `use` | object / visual | ID / no block | `component: ref`, `args?: nums`, `materials?: symbols`, `at?: v3`, `rot_deg?: v3`, `scale?: n` |
-| `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus / prism`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `outline?: points2`, `taper?: n`, `deform?: deform`, `motion?: part_motion` |
+| `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus / prism`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `outline?: points2`, `taper?: n`, `deform?: deform`, `motion?: part_motion`, `cutaway?: roof / front / back / left / right` |
 | `beam` | object / visual | ID / no block | `shape: box / cylinder / capsule`, `material: ref`, `from: v3`, `to: v3`, `width: n`, `depth: n`, `taper?: n`, `deform?: deform`, `motion?: part_motion` |
 
 Components allow eight unique numeric/material formals combined: `params=[height]` and `materials=[finish]`. `use.args` binds numeric expressions; `use.materials` binds material IDs or enclosing material formals. Both lists require exact arity in declaration order, including zero when omitted. Material formals cannot collide with numeric formals or global numeric constants; numeric-only shadowing retains its existing semantics. Material formals may shadow global materials. Callees receive globals plus explicit bindings, without caller-local leakage. Material bindings apply to parts, beams, voxels and nested uses. No recursion; source, expansion, part and joint limits remain unchanged. [Complete nested example](../examples/material-components.dream).
@@ -198,7 +200,8 @@ With a measured car player, tree height and plane wingspan must exceed the car's
 | Body | Native radius 4–30, height 4–160, friction .5–5 |
 | Measured size | Uniform factor .05–4; placement variation .5–2 inside its profile |
 | Unmeasured size | Placement multiplier .5–2 |
-| Compound contacts | 1–8; native radius 1–64, height 1–160, bottom Y 0–128 |
+| Compound contacts | 1–8; cylinders radius 1–64, height 1–160; static rectangles sides .1–128, height .1–160; bottom Y 0–128 |
+| Interiors | 32 placed static ground floors; 1–4 portals each; existing part/contact bounds |
 | Project | 32 reachable modules including entry, depth 8, 524,288 UTF-16 characters, 128 defined assemblies |
 | Full scene | Dimensions ≤16384 per axis; ≤4096 placements, 12 routes, 24 resident mobile actors, including controllable vehicles; ≤256 dormant parked vehicles |
 | Animation / effects | ≤24 live joint assemblies including player; ≤16 steam emitters |
@@ -551,3 +554,7 @@ upstream production, courier vehicle AI or item bodies are added.
 [Runnable source](../examples/courier-resupply.dream).
 
 Pickup and handoff approaches stay less than four world units above/below the vendor. A steep unsupported counter needs a level, connected approach before the courier can use it.
+
+## Enterable ground floors
+
+[Interiors](interiors.md) defines supported floors, actual doorways, shell cutaways, sight and work coverage. A doorway is checked against physical contacts; a painted door does not create an opening. [Complete market assembly](../examples/enterable-market.dream).

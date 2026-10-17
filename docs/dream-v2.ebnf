@@ -78,7 +78,7 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    is a bounded engine policy. No generated controller code. *)
 
 
-(* repair.grounds is an optional list of 1..7 unique surface IDs, excluding on.
+(* repair.grounds is an optional list of 1..7 unique surface or placed-interior IDs, excluding on.
    The primary plus extra convex grounds share 4096 local samples. Extra grounds
    use the accepted pedestrian network, with 8192 derived nodes, 32768 directed
    links and 128 saved waypoints. Source/saves never contain graph/controller code. *)
@@ -118,3 +118,10 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    Pickup intent holds a shared slot without reserving goods or funds; collection
    rechecks player transactions. One cargo reservation, handoff and wage per trip.
    Prepared topology and saved paths retain existing work-navigation bounds. *)
+
+(* contact requires exactly one radius or size=[width,depth]; heading_deg is
+   rectangle-only. Circles retain existing bounds; rectangles are upright static
+   structures. interior is object-root with a block of 1..4 named portal records.
+   part.cutaway tags retained roof/front/back/left/right shell sections. A placed
+   interior's object ID may be used in repair/delivery grounds. Existing source,
+   geometry and navigation bounds remain unchanged. One ground floor only. *)

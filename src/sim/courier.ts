@@ -1,4 +1,4 @@
-import {drivingHeight} from '../scene/terrain';
+import {walkingHeight} from '../scene/interiors';
 import type {Scene,Point} from '../scene/schema';
 import type {Delivery} from '../scene/commerce';
 import {workClear,workPath,workNetwork,type WalkingArea} from './work-navigation';
@@ -15,7 +15,7 @@ export function courierApproach(scene:Scene,d:Delivery,marketId:string,start:Poi
  const m=scene.economy!.markets.find(m=>m.id===marketId)!,vendor=scene.objects.find(o=>o.id===m.actor)!,area=deliveryArea(d),angle=Math.atan2(start.y-vendor.y,start.x-vendor.x);
  for(let i=0;i<8;i++){
   const a=angle+i*Math.PI/4,end={x:vendor.x+Math.cos(a)*16,y:vendor.y+Math.sin(a)*16};
-  if(Math.abs(drivingHeight(scene.terrain,end.x,end.y)-drivingHeight(scene.terrain,vendor.x,vendor.y))<4 && workClear(scene,area,end,state)){const path=workPath(scene,area,start,end,state);if(path)return {end,path};}
+  if(Math.abs(walkingHeight(scene,end.x,end.y)-walkingHeight(scene,vendor.x,vendor.y))<4 && workClear(scene,area,end,state)){const path=workPath(scene,area,start,end,state);if(path)return {end,path};}
  }
 }
 export function courierAccessProblems(scene:Scene):string[]{

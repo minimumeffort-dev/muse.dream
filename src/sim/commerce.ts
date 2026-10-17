@@ -1,3 +1,5 @@
+import {interactionSight} from './sight';
+import {walkingHeight} from '../scene/interiors';
 import {courierApproach,deliveryArea} from './courier';
 import {workSegment} from './work-navigation';
 import {advanceWorkJourney} from './work-journey';
@@ -9,7 +11,6 @@ import type {Scene} from '../scene/schema';
 import {COMMERCE_LIMITS as L,accountRepairs,deliveryBill,type Economy,type Market} from '../scene/commerce';
 import {actorPose} from './actors';
 import {repairArea,repairTargets,targetBroken,repairApproach,repairSegment,repairSpaceClear,REPAIR_REACH,REPAIR_SPEED,REPAIR_RADIUS} from './repair';
-import {drivingHeight} from '../scene/terrain';
 import {objectFragments} from '../scene/fragments';
 import type {ObjectDslV2} from '../scene/object-dsl';
 
@@ -48,7 +49,8 @@ function ownerPose(state:CarState,scene:Scene,account:Account):Pose|undefined{
 }
 function inReach(state:CarState,scene:Scene,account:Account,market:Market):boolean{
  const p=ownerPose(state,scene,account),q=data(scene).places.get(market.id)!;
- return !!p && Math.hypot(p.x-q.x,p.y-q.y,p.elevation-q.elevation)<=market.radius;
+ if(!p || Math.hypot(p.x-q.x,p.y-q.y,p.elevation-q.elevation)>market.radius)return false;
+ return interactionSight(scene,p,q,state,market.actor);
 }
 const active=(e:EconomyState,job:string)=>e.accounts.filter(a=>a.work?.id===job).length;
 function reserved(e:EconomyState,definition:Economy,market:string,good?:string){
@@ -160,7 +162,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
    advanceWorkJourney(t,end,repairArea(scene,r),current,now-old.atS,scene);
    if(t.phase==='home'){if(Math.hypot(t.x-object!.x,t.y-object!.y)<.1){a.repair=undefined;current={...current,npcs:current.npcs.map(n=>n.id===object!.id ? {...n,headingRad:t.headingRad} : n)};}continue;}
   }
-  const p=npc ? t : ownerPose(current,scene,a),atWork=!!p && (npc ? t.path.length===0 : Math.hypot(current.vx,current.vy)<2) && Math.hypot(p.x-target.contact.x,p.y-target.contact.y)<=target.contact.r+REPAIR_REACH && Math.abs(drivingHeight(scene.terrain,p.x,p.y)-drivingHeight(scene.terrain,target.contact.x,target.contact.y))<4;
+  const p=npc ? t : ownerPose(current,scene,a),atWork=!!p && (npc ? t.path.length===0 : Math.hypot(current.vx,current.vy)<2) && Math.hypot(p.x-target.contact.x,p.y-target.contact.y)<=target.contact.r+REPAIR_REACH && Math.abs(walkingHeight(scene,p.x,p.y)-walkingHeight(scene,target.contact.x,target.contact.y))<4;
   if(atWork){t.phase='work';if(npc)t.headingRad=Math.atan2(target.contact.y-t.y,target.contact.x-t.x);t.progressS=Math.min(r.seconds,t.progressS+now-old.atS);if(t.progressS+1e-8>=r.seconds && repairSpaceClear(scene,target,current,r.regrow_s!==undefined ? r.seed_scale??GROWTH_LIMITS.seedScale : 1))finishRepair(a,false);}else t.phase='out';
  }
  const perform=(a:Account,action:CommerceAction)=>{
@@ -228,7 +230,7 @@ export function checkEconomyState(state:CarState,scene:Scene):void{
   if(!a.courier)continue;const t=a.courier,task=d.deliveries.find(d=>d.id===t.id),home=scene.objects.find(o=>o.id===spec.actor);
   if(spec.actor==='player' || !task?.on || !home || !spec.deliveries?.includes(t.id) || a.work || a.repair || (t.phase==='dropoff' ? a.delivery?.id!==t.id : !!a.delivery) || t.routeAtS>state.timeS+1.01)throw Error('Invalid saved courier');
   const area=deliveryArea(task),market=d.markets.find(m=>m.id===(t.phase==='pickup' ? task.from : task.to))!,vendor=scene.objects.find(o=>o.id===market.actor)!;
-  if(t.phase==='home' ? Math.hypot(t.at.x-home.x,t.at.y-home.y)>.01 : Math.hypot(t.at.x-vendor.x,t.at.y-vendor.y)>market.radius || Math.abs(drivingHeight(scene.terrain,t.at.x,t.at.y)-drivingHeight(scene.terrain,vendor.x,vendor.y))>4)throw Error('Invalid courier destination');
+  if(t.phase==='home' ? Math.hypot(t.at.x-home.x,t.at.y-home.y)>.01 : Math.hypot(t.at.x-vendor.x,t.at.y-vendor.y)>market.radius || Math.abs(walkingHeight(scene,t.at.x,t.at.y)-walkingHeight(scene,vendor.x,vendor.y))>4)throw Error('Invalid courier destination');
   if(!workSegment(scene,area,t,t,state,true) || !workSegment(scene,area,t.at,t.at,state,true))throw Error('Invalid courier position');
   let previous={x:t.x,y:t.y};for(const p of t.path){if(!workSegment(scene,area,previous,p,state,true))throw Error('Invalid saved courier path');previous=p;}if(t.path.length && Math.hypot(previous.x-t.at.x,previous.y-t.at.y)>.01)throw Error('Invalid courier path destination');
  }

@@ -1,3 +1,4 @@
+import {sceneInteriors} from '../scene/interiors';
 import {tiledMesh} from './batching';
 import * as THREE from 'three';
 import type {Scene} from '../scene/schema';
@@ -16,28 +17,30 @@ export function updateLightPools(group:THREE.Group,broken:readonly string[]):voi
 
 /** Resident terrain-fitted tiles for all static lamp pools. No per-lamp lights or shadow maps. */
 export function buildLightPools(doc:Scene):THREE.Group {
-  const positions:number[]=[],uvs:number[]=[],colors:number[]=[],indices:number[]=[],owners:number[]=[],ids:string[]=[];
+  const positions:number[]=[],uvs:number[]=[],colors:number[]=[],indices:number[]=[],owners:number[]=[],roomLight:number[]=[],ids:string[]=[];
   for(const object of doc.objects){
     const lamp=object.spec && 'lamp' in object.spec ? object.spec.lamp : undefined;if(!lamp)continue;
     const owner=ids.length;ids.push(object.id);
     const placement=objectPlacement(doc,object),source=new THREE.Vector3(...lamp.position).multiplyScalar(object.scale).applyQuaternion(placement.rotation);
     const cx=object.x+source.x,cy=object.y+source.z,r=lamp.radius*object.scale,color=new THREE.Color(lamp.color),offset=positions.length/3;
     // Share the exact ground/deck triangles and sit above pavement/paint render layers.
-    const patch=surfaceGeometry(doc,[[{x:cx-r,y:cy-r},{x:cx+r,y:cy-r},{x:cx+r,y:cy+r},{x:cx-r,y:cy+r}]],2.05);
+    const interior=sceneInteriors(doc).find(f=>f.object.id===object.id);
+    const patch=surfaceGeometry(doc,interior ? [interior.polygon] : [[{x:cx-r,y:cy-r},{x:cx+r,y:cy-r},{x:cx+r,y:cy+r},{x:cx-r,y:cy+r}]],2.05);
+    if(interior){const p=patch.getAttribute('position');for(let i=0;i<p.count;i++)p.setY(i,interior.floor+2.05);}
     const points=patch.getAttribute('position');
     for(let i=0;i<points.count;i++){
       const x=points.getX(i),y=points.getY(i),z=points.getZ(i);
       positions.push(x,y,z);uvs.push((x+doc.canonical.width/2-cx)/(2*r)+.5,(z+doc.canonical.height/2-cy)/(2*r)+.5);
-      color.toArray(colors,colors.length);indices.push(offset+i);owners.push(owner);
+      color.toArray(colors,colors.length);indices.push(offset+i);owners.push(owner);roomLight.push(Number(!!interior));
     }
     patch.dispose();
   }
-  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geometry.setAttribute('poolOwner',new THREE.Float32BufferAttribute(owners,1));geometry.setAttribute('enabled',new THREE.Float32BufferAttribute(new Float32Array(owners.length).fill(1),1));geometry.setIndex(indices);geometry.computeBoundingSphere();
+  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geometry.setAttribute('roomLight',new THREE.Float32BufferAttribute(roomLight,1));geometry.setAttribute('poolOwner',new THREE.Float32BufferAttribute(owners,1));geometry.setAttribute('enabled',new THREE.Float32BufferAttribute(new Float32Array(owners.length).fill(1),1));geometry.setIndex(indices);geometry.computeBoundingSphere();
   const material=new THREE.ShaderMaterial({uniforms:{nightFactor},vertexColors:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1,
-    vertexShader:'attribute float enabled;varying float vPoolEnabled;varying vec2 vUv;varying vec3 tint;void main(){vPoolEnabled=enabled;vUv=uv;tint=color;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-    fragmentShader:'uniform float nightFactor;varying float vPoolEnabled;varying vec2 vUv;varying vec3 tint;void main(){float r=length(vUv*2.-1.);float falloff=pow(max(0.,1.-r*r),2.);gl_FragColor=vec4(tint*.38,falloff*nightFactor*vPoolEnabled);\n#include <tonemapping_fragment>\n#include <colorspace_fragment>\n}',
+    vertexShader:'attribute float enabled;attribute float roomLight;varying float vRoomLight;varying float vPoolEnabled;varying vec2 vUv;varying vec3 tint;void main(){vRoomLight=roomLight;vPoolEnabled=enabled;vUv=uv;tint=color;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+    fragmentShader:'uniform float nightFactor;varying float vRoomLight;varying float vPoolEnabled;varying vec2 vUv;varying vec3 tint;void main(){float r=length(vUv*2.-1.);float falloff=pow(max(0.,1.-r*r),2.);gl_FragColor=vec4(tint*.38,falloff*max(nightFactor,vRoomLight*.65)*vPoolEnabled);\n#include <tonemapping_fragment>\n#include <colorspace_fragment>\n}',
   });
-  const group=tiledMesh(geometry,material,800);group.name='night-light-pools';
+  const group=tiledMesh(geometry,material,800);group.name='night-light-pools';group.userData.indoor=roomLight.some(Boolean);
   const entries=new Map<string,PoolRange[]>();
   group.traverse(node=>{if(!(node instanceof THREE.Mesh))return;node.renderOrder=1;node.receiveShadow=false;
     const owner=node.geometry.getAttribute('poolOwner'),attribute=node.geometry.getAttribute('enabled') as THREE.BufferAttribute;attribute.setUsage(THREE.DynamicDrawUsage);
@@ -60,9 +63,9 @@ export class WorldDaylight {
   update(seconds:number,broken:readonly string[]=[]):void {
     updateLightPools(this.pools,broken);
     const config=this.world.daylight;
-    if(!config){nightFactor.value=0;this.pools.visible=false;return;}
+    if(!config){nightFactor.value=0;this.pools.visible=!!this.pools.userData.indoor;return;}
     const phase=sampleDaylight(config,seconds);this.hour=phase.hour;nightFactor.value=phase.night;
-    this.direction.set(phase.direction.x,phase.direction.y,phase.direction.z);this.pools.visible=phase.night>.001;
+    this.direction.set(phase.direction.x,phase.direction.y,phase.direction.z);this.pools.visible=phase.night>.001 || !!this.pools.userData.indoor;
     (this.scene.background as THREE.Color).copy(palette.skyNight).lerp(palette.skyDay,phase.day).lerp(palette.skyDusk,phase.warm*.6);
     if(this.scene.fog)this.scene.fog.color.copy(this.scene.background as THREE.Color);
     this.hemisphere.color.copy(palette.upperNight).lerp(palette.upperDay,phase.day);this.hemisphere.groundColor.copy(palette.lowerNight).lerp(palette.lowerDay,phase.day);this.hemisphere.intensity=1.1+.15*phase.day;

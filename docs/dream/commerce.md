@@ -220,7 +220,7 @@ credits and you receive four. No player credits are charged.
 
 ```dream
 delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_square);
-repair market_tables(label="Repair neighborhood furniture",market=market_stall,on=market_square,grounds=[park_seating,station_seating],streets=[market_avenue,high_street,civic_walk],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
+repair market_tables(label="Repair neighborhood furniture",market=market_stall,on=market_square,grounds=[park_seating,station_seating,market_hall],streets=[market_avenue,high_street,civic_walk],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
 ```
 
 These declarations are the live world's policy. The earlier flour and bread
@@ -273,7 +273,7 @@ an agent to author both services and infrastructure, use
 
 ### Street verges
 
-The same service now reaches 84 targets, including 77 of the 400 city lamps.
+The same service now reaches 88 targets, including 77 of the 400 city lamps.
 `streets=[market_avenue,high_street,civic_walk]` declares which sidewalks it serves.
 `verge=24` permits a short approach up to 2.4 metres beyond those sidewalks, near
 eligible object contacts. Measured categories still select the targets; names
@@ -377,3 +377,9 @@ This is walking resupply through a finite depot. It adds no upstream production,
 courier vehicle AI, shifts, general logistics scheduler or item pickup body.
 
 Pickup and handoff approaches stay less than four world units above/below the vendor. A steep unsupported counter needs a level, connected approach before the courier can use it.
+
+## Work inside a building
+
+The market hall now has a [usable ground floor](interiors.md). Stand in its foyer with a clear line through the doorway to buy, sell, begin baking or talk to the vendor. Walls block these interactions. Existing work cancellation, finite stock and conserved wages still apply. The vendor remains at the entrance; this does not add a restaurant or another business.
+
+`repair.on` / `repair.grounds` and delivery grounds may name a placed building with an interior. The engine reuses its rotated floor footprint instead of a separate painted polygon. The live furniture service adds `market_hall` to its extra grounds; the worker uses the same doorway, floor and wall contacts as the player. No new worker, actor slot, inventory or money is created.

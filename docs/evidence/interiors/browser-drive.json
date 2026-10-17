@@ -1,0 +1,48 @@
+{
+  "hardware": "Apple M3 Ultra, 96 GB",
+  "profile": {
+    "scenario": "drive",
+    "samples": 300,
+    "viewport": [
+      1920,
+      1080
+    ],
+    "pixelRatio": 1.5,
+    "cpuMs": {
+      "mean": 3.9033333349227903,
+      "p95": 5.300000011920929
+    },
+    "prepareMs": {
+      "mean": 2.496000000635783,
+      "p95": 3.800000011920929
+    },
+    "submitMs": {
+      "mean": 1.4073333342870076,
+      "p95": 1.5
+    },
+    "rafMs": {
+      "mean": 16.666666666666668,
+      "p95": 17.399999976158142
+    },
+    "gpuMs": {
+      "mean": 1.2741933478260872,
+      "p95": 1.702125
+    },
+    "gpuSamples": 299,
+    "draws": {
+      "mean": 158.83666666666667,
+      "p95": 178
+    },
+    "triangles": {
+      "mean": 595024.81,
+      "p95": 644499
+    },
+    "geometries": 285
+  },
+  "diagnostics": {
+    "memory": "{\"bytes\":270088446,\"uniqueBuffers\":10020,\"geometries\":1727,\"uniqueTriangles\":1904730}",
+    "render": "{\"calls\":159,\"triangles\":587306,\"geometries\":283}",
+    "save": "{\"sourceHash\":\"269c818e0f333fe8fb11fe881219eb363ab59e54da8817787ba24191002c5464\",\"compatibilityHash\":\"36a6b350b49fa07044768fde832c838f9a4be007484d285a93c18a8beb77f136\",\"restored\":false,\"enabled\":false,\"review\":false,\"status\":\"Review session: saves disabled.\"}",
+    "streaming": "{\"resident\":27,\"required\":12,\"pending\":0,\"bytes\":210917924,\"peakBytes\":210917924,\"peakResident\":27,\"maxInstallMs\":6.5,\"maxSliceMs\":6.300000011920929,\"loaded\":27,\"unloaded\":0,\"discarded\":0,\"ready\":true,\"keys\":[\"4000,4000\",\"4800,4000\",\"4000,4800\",\"4800,4800\",\"4000,3200\",\"4800,3200\",\"3200,4000\",\"5600,4000\",\"3200,4800\",\"5600,4800\",\"4000,5600\",\"4800,5600\",\"3200,5600\",\"3200,3200\",\"5600,3200\",\"5600,5600\",\"4000,6400\",\"4800,6400\",\"3200,6400\",\"5600,6400\",\"4000,7200\",\"4800,7200\",\"3200,7200\",\"5600,7200\",\"4000,8000\",\"4800,8000\",\"3200,8000\"]}"
+  }
+}

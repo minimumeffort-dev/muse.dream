@@ -1,3 +1,5 @@
+import {interiorProblems} from './interiors';
+import {contactOverlaps,contactTouchesPolygon} from './contact-geometry';
 import {courierAccessProblems} from '../sim/courier';
 import {repairAccessProblems} from '../sim/repair';
 import {ambientProblems} from './ambient-navigation';
@@ -21,6 +23,7 @@ import {streetPolygons,bridgeFitsStreet,onPolygon,streetFootprints,markingPolygo
 
 export interface SceneProblem {
   code:
+    | "interior-not-clear"
     | "repair-not-connected"
     | "courier-not-connected"
     | "population-not-clear"
@@ -59,6 +62,7 @@ export function validateScenePlayability(
   carRadius: number,
 ): SceneProblem[] {
   const problems: SceneProblem[] = [];
+  for(const message of interiorProblems(scene))problems.push({code:"interior-not-clear",message});
   for(const message of ambientProblems(scene))problems.push({code:"population-not-clear",message});
   for(const message of repairAccessProblems(scene))problems.push({code:"repair-not-connected",message});
   for(const message of courierAccessProblems(scene))problems.push({code:"courier-not-connected",message});
@@ -233,7 +237,7 @@ export function validateScenePlayability(
     if (isResidentActor(object) || archetypeOf(object).interaction !== "solid") continue;
     for (const p of routePoints) {
       const floor=drivingHeight(scene.terrain,p.x,p.y);
-      if (objectContacts(scene,object).some(c=>floor<c.top-.05 && floor+carHeight>c.bottom+.05 && Math.hypot(c.x-p.x,c.y-p.y)<c.r+carRadius+2)) {
+      if (objectContacts(scene,object).some(c=>floor<c.top-.05 && floor+carHeight>c.bottom+.05 && contactOverlaps(c,p.x,p.y,carRadius+2))) {
         problems.push({
           code: "object-blocks-route",
           message: `solid object "${object.id}" blocks the spawn/checkpoint line`,
@@ -270,7 +274,7 @@ export function validateScenePlayability(
     if(unsupported)problems.push({code:'route-not-clear',message:`street "${street.id}" crosses water without a full-width connected bridge`});
     const contact=pathContacts.find(c=>carriageways.some(p=>{
       const floor=drivingHeight(scene.terrain,c.x,c.y);
-      return (pointInPolygon(c.x,c.y,p) || distanceToPolygon(c.x,c.y,p)<c.r+2) && c.bottom<floor+24 && c.top>floor+.05;
+      return contactTouchesPolygon(c,p,2) && c.bottom<floor+24 && c.top>floor+.05;
     }));
     if(contact)problems.push({code:'route-not-clear',message:`street "${street.id}" is obstructed near ${Math.round(contact.x)},${Math.round(contact.y)}`});
   }
@@ -293,7 +297,7 @@ export function validateScenePlayability(
       const p=frames[i]!,next=frames[i+1],dx=next ? next.x-p.x : 0,dy=next ? next.y-p.y : 0;
       if(sharp || next && dx*dx+dy*dy-Math.abs(route.width!/2*((next.nx-p.nx)*dx+(next.ny-p.ny)*dy))<=(dx*dx+dy*dy)*.05){obstruction="a bend too tight for its width";break;}
       const radius=route.width!/2*Math.hypot(p.nx,p.ny)+4,margin=radius+8,floor=drivingHeight(scene.terrain,p.x,p.y);
-      const object=pathContacts.find(c=>Math.hypot(c.x-p.x,c.y-p.y)<c.r+margin && c.bottom<floor+24 && c.top>floor);
+      const object=pathContacts.find(c=>contactOverlaps(c,p.x,p.y,margin) && c.bottom<floor+24 && c.top>floor);
       if(p.x<margin || p.y<margin || p.x>width-margin || p.y>height-margin)obstruction="world boundary";
       else if(distanceToRoad(path,p.x,p.y)<halfRoad+ROAD_CURB_WIDTH+margin)obstruction="racing road and curbs";
       else if(waters.some(w=>pointInPolygon(p.x,p.y,w.polygon) || distanceToRoad([...w.polygon,w.polygon[0]!],p.x,p.y)<margin))obstruction="water bank";
@@ -328,7 +332,7 @@ export function validateScenePlayability(
       const bottom=routeElevation(scene,route,p,d),pose={...p,elevation:bottom,headingRad};
       const contacts=objectContacts(scene,object,pose);
       if((route.kind==='street' || route.kind==='tram') && contacts.some(c=>Array.from({length:9},(_,i)=>i===8 ? {x:c.x,y:c.y} : {x:c.x+Math.cos(i*Math.PI/4)*c.r,y:c.y+Math.sin(i*Math.PI/4)*c.r}).some(q=>!streetGround.roads.some(poly=>pointInPolygon(q.x,q.y,poly)) && distanceToRoad(roadPoints(scene),q.x,q.y)>halfRoad))){invalid=true;break;}
-      if(contacts.some(body=>solidGrid.query(body.x,body.y,body.r+maxRadius).some(c=>body.bottom<c.top-.05 && body.top>c.bottom+.05 && Math.hypot(c.x-body.x,c.y-body.y)<body.r+c.r))){invalid=true;break;}
+      if(contacts.some(body=>solidGrid.query(body.x,body.y,body.r+maxRadius).some(c=>body.bottom<c.top-.05 && body.top>c.bottom+.05 && contactOverlaps(c,body.x,body.y,body.r)))){invalid=true;break;}
     }
     if(invalid)problems.push({code:"route-not-clear",message:`route for "${object.id}" must keep its body in bounds, clear of solids, on its ${route.kind==='walk' ? 'pedestrian network' : route.kind==='street' || route.kind==='tram' ? 'existing roadway' : route.kind==='water' ? 'navigable water' : 'accepted route'}`});
   }
@@ -337,7 +341,7 @@ export function validateScenePlayability(
   for(const object of scene.objects.filter(o=>roleOf(o)==='npc' && !o.route)){
     const p=actorPose(scene,object,0),radius=assemblyHorizontalRadius(object.spec as import('./object-dsl').ObjectDsl,object.scale),height=objectHeight(object);
     const wet=Array.from({length:9},(_,i)=>i===8 ? p : {x:p.x+Math.cos(i*Math.PI/4)*radius,y:p.y+Math.sin(i*Math.PI/4)*radius}).some(q=>waterAt(scene.terrain,q.x,q.y));
-    const blocked=[...solidGrid.query(p.x,p.y,radius+maxRadius),...parkedContacts].some(c=>c.id!==object.id && p.elevation<c.top-.05 && p.elevation+height>c.bottom+.05 && Math.hypot(c.x-p.x,c.y-p.y)<radius+c.r);
+    const blocked=[...solidGrid.query(p.x,p.y,radius+maxRadius),...parkedContacts].some(c=>c.id!==object.id && p.elevation<c.top-.05 && p.elevation+height>c.bottom+.05 && contactOverlaps(c,p.x,p.y,radius));
     const outside=p.x<radius || p.y<radius || p.x>width-radius || p.y>scene.canonical.height-radius;
     if(wet || blocked || outside)problems.push({code:'route-not-clear',message:`NPC "${object.id}" needs a dry, unobstructed starting footprint inside the world`});
   }
@@ -349,8 +353,8 @@ export function validateScenePlayability(
       if(!navigableWater(scene.terrain,pose.x,pose.y,support,height))invalid=true;
     }
     if(controlOf(object.spec)==="plane" && waterAt(scene.terrain,pose.x,pose.y,pose.elevation))invalid=true;
-    if(solidGrid.query(pose.x,pose.y,radius+maxRadius).some(c=>c.id!==object.id && pose.elevation<c.top-.05 && pose.elevation+height>c.bottom+.05 && Math.hypot(c.x-pose.x,c.y-pose.y)<radius+c.r))invalid=true;
-    if(parkedContacts.some(c=>c.id!==object.id && pose.elevation<c.top-.05 && pose.elevation+height>c.bottom+.05 && Math.hypot(c.x-pose.x,c.y-pose.y)<radius+c.r))invalid=true;
+    if(solidGrid.query(pose.x,pose.y,radius+maxRadius).some(c=>c.id!==object.id && pose.elevation<c.top-.05 && pose.elevation+height>c.bottom+.05 && contactOverlaps(c,pose.x,pose.y,radius)))invalid=true;
+    if(parkedContacts.some(c=>c.id!==object.id && pose.elevation<c.top-.05 && pose.elevation+height>c.bottom+.05 && contactOverlaps(c,pose.x,pose.y,radius)))invalid=true;
     const spawnFloor=drivingHeight(scene.terrain,scene.spawn.x,scene.spawn.y);
     if(pose.elevation<spawnFloor+carHeight && pose.elevation+height>spawnFloor && Math.hypot(pose.x-scene.spawn.x,pose.y-scene.spawn.y)<radius+carRadius)invalid=true;
     if(invalid)problems.push({code:"route-not-clear",message:`vehicle "${object.id}" needs a clear starting body; boats need full-hull navigable water and planes need dry ground`});

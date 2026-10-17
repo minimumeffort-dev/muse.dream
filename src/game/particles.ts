@@ -1,3 +1,4 @@
+import {sceneInteriors} from '../scene/interiors';
 import * as THREE from "three";
 import type { CarState } from "../sim/car";
 import type { Scene } from "../scene/schema";
@@ -128,7 +129,7 @@ export class WorldParticles {
       const y=(Math.floor(car.y/120)+Math.floor(i/8)-1)*120+(i*41%100);
       const p=worldPosition(this.doc,x,y,16+(i*17%70)+Math.sin(this.time*.7+i)*8);
       p.toArray(this.positions,j*3);this.colors.set(i%3?[1.3,1.1,.5]:[.7,1.3,1.1],j*3);
-      this.opacity[j]=Math.max(0,1-Math.hypot(x-car.x,y-car.y)/400)*(.3+Math.sin(this.time*1.2+i)*.18);
+      this.opacity[j]=sceneInteriors(this.doc).some(f=>f.contains(x,y) && p.y<f.ceiling+1.5) ? 0 : Math.max(0,1-Math.hypot(x-car.x,y-car.y)/400)*(.3+Math.sin(this.time*1.2+i)*.18);
       this.size[j]=i%3?3:4;this.kind[j]=3;this.angle[j]=0;
     }
     for(const name of ["position","color","opacity","size","kind","angle"]) this.mesh.geometry.getAttribute(this.doc.voxelWorld && name==='position' ? 'offset' : name).needsUpdate=true;

@@ -194,3 +194,9 @@ public population graph remain unchanged. Cargo is ledger state, not a new
 physical or render assembly. Pickup/carry/return work advances on the existing
 resident commerce clock; streaming owns none of it. Browser and replay evidence
 are recorded separately in [courier verification](evidence/courier/verification.md).
+
+## Ground-floor cutaways
+
+The market shell keeps explicit roof/front/back/left/right groups through compaction, instancing and worker transfer. Inside the room, per-instance visibility hides the roof and camera-facing sides while the floor, contents and far walls remain opaque. Changing Q/E changes only the view. Streamed chunks apply that view on installation; the accepted scene and physical contacts stay resident. Roof shadows remain stable.
+
+Interior floor pools add a bounded always-on surface effect to the existing lighting batch, clipped to the declared floor. They add no point light or shadow map and do not provide wall illumination or object occlusion. Cosmetic terrain tufts now yield to interior floors. See the [measured r56 checks](evidence/interiors/verification.md); offline walkthroughs are not FPS measurements.

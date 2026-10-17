@@ -1,7 +1,8 @@
+import marketR55 from './compatibility/r55-market.json';
 import type {Scene} from './schema';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=11;
+export const SAVE_SIMULATION_VERSION=12;
 
 /** A conservative contract: only host provenance and spoken text may differ. */
 export function saveCompatibilitySource(scene:Scene):string {
@@ -27,7 +28,7 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || hash===COURIER_COMPATIBILITY;
+  return !scene.economy || hash===INTERIOR_COMPATIBILITY;
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
@@ -42,9 +43,16 @@ export const VERGE_COMPATIBILITY='54269457677d740420e755511a55e932e99f0cd6f28e56
 export const PLANT_COMPATIBILITY='5603fcbdc725e4cfe36e5284d0123a37d6cf46785904c3d235b44e6a52739f05';
 export const NATURAL_COMPATIBILITY='9d9cc87cdc01a9d2d67cfd6411a2724109308fcc354af58e13e6b415e9f0604e';
 export const COURIER_COMPATIBILITY='e0ae71a17aa055c0ca146651434ccd52341ed2d5a1798759f423b5ddca1afff9';
+export const INTERIOR_COMPATIBILITY='36a6b350b49fa07044768fde832c838f9a4be007484d285a93c18a8beb77f136';
+/** The pinned r55 building and entrance are host migration data, never Dream policy. */
+export function preInteriorScene(scene:Scene):Scene{
+ if(!scene.objects.some(o=>o.id==='market_hall' && o.spec && 'interior' in o.spec && o.spec.interior))return scene;
+ return {...scene,objects:scene.objects.filter(o=>!['hall_table_west','hall_table_east','hall_bench','hall_produce_crate'].includes(o.id)).map(o=>o.id==='market_hall' ? marketR55 as Scene['objects'][number] : o),sites:scene.sites.map(s=>s.id==='access_market_hall' ? {...s,entry:{x:0,y:-26.25}} : s),economy:scene.economy && {...scene.economy,markets:scene.economy.markets.map(m=>m.id==='market_stall' ? {...m,radius:70} : m),repairs:scene.economy.repairs.map(r=>r.id==='market_tables' ? {...r,grounds:r.grounds?.filter(id=>id!=='market_hall')} : r)}};
+}
+export function preInteriorCompatibilitySource(scene:Scene):string{return projection(preInteriorScene(scene),11);}
 /** Registered r54 projection preserves geometry, clocks and every existing ledger field. */
 export function preCourierScene(scene:Scene):Scene{
- return {...scene,economy:scene.economy && {...scene.economy,accounts:scene.economy.accounts.map(a=>{const {deliveries,...old}=a;return old;}),deliveries:scene.economy.deliveries.map(d=>{const {on,grounds,...old}=d;return old;})}};
+ scene=preInteriorScene(scene);return {...scene,economy:scene.economy && {...scene.economy,accounts:scene.economy.accounts.map(a=>{const {deliveries,...old}=a;return old;}),deliveries:scene.economy.deliveries.map(d=>{const {on,grounds,...old}=d;return old;})}};
 }
 export function preCourierCompatibilitySource(scene:Scene):string{return projection(preCourierScene(scene),10);}
 /** Registered r53 appearance projection. Movement, ledgers and clocks are identical. */

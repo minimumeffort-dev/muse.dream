@@ -128,7 +128,7 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
     const contacts:NonNullable<ObjectDslV2["contacts"]>=[];let rideable:ObjectDslV2["rideable"];
     let emitter:ObjectDslV2["emitter"],lamp:ObjectDslV2["lamp"];
     let impact:ObjectDslV2["impact"];
-    let measure:ObjectDslV2["measure"];
+    let measure:ObjectDslV2["measure"],interior:ObjectDslV2["interior"];
     const breakZones:NonNullable<ObjectDslV2["breakZones"]>=[];
     const walk = (block: Statement[], frame: Frame, inherited: Map<string, number>, stack: string[] = [], root = false, depth = 0,materials=program.materials) => {
       if (depth > DREAM_LIMITS.nesting) fail("expanded nesting exceeds 16", block[0]?.token,"E_BUDGET");
@@ -139,8 +139,8 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
         const number = (expr: Expr) => numeric(expr, env);
         const path=[...(frame.path??[]),statement.scope??statement.name??kind];
         const id = () => program.version===2 ? stableId(path) : `${statement.name!.slice(0, 25)}-${serial++}`;
-        if (["body", "measure", "ground", "foundation","contact","rideable","lamp","emit","impact","zone"].includes(kind) && !root) fail(`${kind} belongs directly inside an object`, token);
-        if(root && ["body","measure","ground","foundation","rideable","emit","impact"].includes(kind))metadataOrigins.set(kind==="ground" ? "grounding" : kind==="emit" ? "emitter" : kind,token);
+        if (["body", "measure", "ground", "foundation","contact","interior","rideable","lamp","emit","impact","zone"].includes(kind) && !root) fail(`${kind} belongs directly inside an object`, token);
+        if(root && ["body","measure","ground","foundation","interior","rideable","emit","impact"].includes(kind))metadataOrigins.set(kind==="ground" ? "grounding" : kind==="emit" ? "emitter" : kind,token);
         switch (kind) {
           case "measure":measure={kind:statement.name as NonNullable<ObjectDslV2["measure"]>["kind"],axis:statement.axis as "x"|"y"|"z",meters:number(statement.value!)};break;
           case "let":
@@ -171,7 +171,12 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
           case "emit":if(emitter)fail("duplicate emitter",token);emitter={kind:statement.name as "steam",position:vector(statement.at,env).toArray(),rate:number(statement.value!)};break;
           case "contact":
             if(contacts.length>=8)fail("contact budget exceeds 8",token);
-            contacts.push({position:vector(statement.at,env).toArray(),radius:number(statement.args![0]!),height:number(statement.args![1]!)});contactOrigins.push(token);break;
+            contacts.push({position:vector(statement.at,env).toArray(),...(program.version===1 ? {radius:number(statement.args![0]!)} : {...(statement.args ? {radius:number(statement.args[0]!)} : {}),...(statement.contactSize ? {size:statement.contactSize.map(number) as [number,number]} : {}),...(statement.heading ? {headingRad:number(statement.heading)*RAD} : {})}),height:number(program.version===1 ? statement.args![1]! : statement.value!)});contactOrigins.push(token);break;
+          case "interior":
+            if(interior)fail('duplicate interior',token);
+            if(statement.block!.length>4)fail('portal budget exceeds 4',token,'E_BUDGET');
+            budget.steps+=statement.block!.length;if(budget.steps>DREAM_LIMITS.steps)fail('expansion budget exceeds 2048 statements',token,'E_BUDGET');
+            interior={position:vector(statement.at,env).toArray(),size:vector(statement.size,env).toArray(),portals:statement.block!.map(p=>{const values=p.args!.map(number);return {id:p.scope!,side:p.name as NonNullable<ObjectDslV2['interior']>['portals'][number]['side'],offset:values[0]!,width:values[1]!,height:values[2]!};})};break;
           case "foundation":
             if (foundation) fail("duplicate foundation", token);
             foundation = { footprint: statement.args!.map(number) as [number, number], color: statement.color! }; break;
@@ -245,7 +250,7 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
             }
             parts.push({ id: id(), shape: statement.shape as ObjectDslV2["parts"][number]["shape"], material: { ...material },
               position: position.toArray(), size: size.toArray(), rotation: angles(orient), ...(frame.parent ? { parent: frame.parent } : {}),
-              ...(voxels ? {voxels} : {}),
+              ...(voxels ? {voxels} : {}),...(statement.cutaway ? {cutaway:statement.cutaway as "roof"|"front"|"back"|"left"|"right"} : {}),
               ...(statement.taper ? {taper:number(statement.taper)} : {}),
               ...(statement.outline ? {outline:statement.outline.map(point=>point.map(number) as [number,number])} : {}),
               ...(frame.fragment ? {fragment:frame.fragment} : {}),...(frame.zone ? {zone:frame.zone} : {}),...(statement.deform ? { deform: { seed: number(statement.deform[0]), amount: number(statement.deform[1]) } } : {}), ...(animation ? { animation } : {}) });
@@ -267,7 +272,7 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
     if(program.version===2 && impact?.kind==='topple' && !parts.some(p=>p.fragment || p.voxels?.chunks)){const fragment=stableId(['$topple']);for(const part of parts)part.fragment=fragment;}
     const result = objectDslSchema.safeParse({ dslVersion: 2, displayName: object.name, body, parts,...(measure ? {measure} : {}),
       ...(joints.length ? { joints } : {}), ...(grounding ? { grounding } : {}), ...(foundation ? { foundation } : {}),
-      ...(contacts.length ? {contacts} : {}),...(rideable ? {rideable} : {}),...(emitter ? {emitter} : {}),...(lamp ? {lamp} : {}),...(impact ? {impact} : {}),...(breakZones.length ? {breakZones} : {}) });
+      ...(contacts.length ? {contacts} : {}),...(interior ? {interior} : {}),...(rideable ? {rideable} : {}),...(emitter ? {emitter} : {}),...(lamp ? {lamp} : {}),...(impact ? {impact} : {}),...(breakZones.length ? {breakZones} : {}) });
     if (!result.success) {
       const error=result.error.issues[0]!;
       // Preserve the specific axis/radius diagnostic instead of an opaque union error.

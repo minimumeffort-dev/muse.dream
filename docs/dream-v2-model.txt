@@ -44,6 +44,11 @@ duplicate closing point, crossed/touching edges or zero-length edges. The
 engine centers the outline in full size X/Y and extrudes through full size Z.
 Use concave outlines for wheel openings and sloped outlines for cabins/panels.
 Only prism parts accept outline; beams remain box/cylinder/capsule.
+A contact needs radius OR size=[width,depth], never both. size permits a static
+upright rectangle with optional heading_deg; radius remains a cylinder. Rectangles
+use .1..128 sides and .1..160 height, cylinders use radius 1..64 and height 1..160.
+No rectangle seats, moving routes or whole-object impacts. Interiors need the
+interiors packet; do not invent floors by hiding a car under an ordinary roof.
 Keep feet/bases at local Y=0. World placements take only XY, not arbitrary height.
 Use endpoint beams for connected struts; start each fork inside its trunk.
 Cylinder part/beam taper is optional, finite .1..1 (default 1): +Y/to diameter
@@ -352,6 +357,25 @@ clearance and pedestrian connections remain checked as before. It creates no
 shortcut, flattened ground, path, collider or extra growth clock. Prefer terrain
 finish for orchards and natural work grounds; paint real courts, squares and
 paths. Existing surface bounds apply. See examples/orchard-replanting.dream.
+
+## interiors
+Request this feature for enterable buildings. Author one static ground-floor
+interior per object: interior(at=[x,floor_y,z],size=[width,clear_height,depth]){
+portal entrance(side=front,offset=0,width=4,height=6); }. Values are local units.
+front=-Z, back=+Z, left=-X, right=+X. Offset follows X on front/back, Z on sides.
+Keep a solid foundation, a matching rectangle floor contact whose top equals
+floor_y, a matching ceiling contact starting at floor_y + clear_height, attached
+visible floor/walls/roof and actual openings between contacts.
+Tag shell parts with cutaway=roof|front|back|left|right. Leave contents and floor
+untagged. No joints, seats or whole-building impact. At most 32 placed interiors,
+4 portals each, using the existing 8 contacts and 32 parts per assembly.
+Full scenes prove a clear 9-unit doorway, 20-unit headroom and approach steps <=4.
+The same contacts govern walking, driving, props, NPC paths and sight for trade
+and conversation. Narrow doors can block cars. A room owner may have a lamp;
+its always-on pool fits only the floor, without wall lighting/object occlusion.
+Repair/delivery grounds can name the placed building ID instead of another
+painted surface. This does not add work, stock, staff or markets implicitly.
+One supported ground floor only. Do not claim multiple floors, stairs or lifts.
 
 ## npcs
 ACTOR OWNERSHIP AND NPC PROGRAMS

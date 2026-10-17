@@ -1,4 +1,5 @@
 import liveLife from '../src/scene/world/life.dream?raw';
+import liveMarket from '../src/scene/world/market_interior.dream?raw';
 import {describe,it,expect} from "vitest";
 import {checkDream} from "../src/scene/dream";
 import {DREAM_V2_COMMANDS} from "../src/scene/dream-contract";
@@ -8,6 +9,10 @@ const examples=import.meta.glob<string>('../docs/examples/*.dream',{query:'?raw'
 const files=Object.keys(import.meta.glob(['../src/**/*','../docs/**/*','../scripts/*','../tests/**/*','../README.md'])).map(p=>p.slice(3));
 
 describe("published Dream documentation",()=>{
+  it('keeps the complete interior guide, runnable example and live market identical',()=>{
+    const example=examples['../docs/examples/enterable-market.dream']!.trim(),blocks=[...pages['../docs/dream/interiors.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
+    expect(blocks).toContain(example);expect(liveMarket.trim()).toBe(example);
+  });
   it('keeps the parking guide identical to its runnable source',()=>{
     const blocks=[...pages['../docs/dream/populations.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
     expect(blocks).toContain(examples['../docs/examples/parked-vehicles.dream']!.trim());

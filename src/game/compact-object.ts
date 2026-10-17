@@ -17,7 +17,7 @@ export function compactObject(group:THREE.Group):THREE.Group {
     const vector=new THREE.Vector3(Number(axis==="x"),Number(axis==="y"),Number(axis==="z")).applyQuaternion(child.quaternion);
     const rounded=(values:number[])=>values.map(v=>Math.round(v*1e6)/1e6);
     const materialKey=child.userData.materialKey ?? (Array.isArray(child.material) ? child.material.map(m=>m.uuid) : child.material.uuid);
-    const key=JSON.stringify([materialKey,motion ? {...motion,axis:rounded(vector.toArray())} : null,motion ? rounded(child.position.toArray()) : null]);
+    const key=JSON.stringify([materialKey,child.userData.cutaway,motion ? {...motion,axis:rounded(vector.toArray())} : null,motion ? rounded(child.position.toArray()) : null]);
     const frame=motion ? new THREE.Matrix4().compose(child.position,child.quaternion,new THREE.Vector3(1,1,1)) : new THREE.Matrix4();
     const batch=batches.get(key)??{items:[],frame,motion};batch.items.push(child);batches.set(key,batch);
   }
@@ -30,7 +30,7 @@ export function compactObject(group:THREE.Group):THREE.Group {
     const first=items[0]!,mesh=new THREE.Mesh(indexedGeometry(geometry),first.material);
     frame.decompose(mesh.position,mesh.quaternion,mesh.scale);mesh.castShadow=mesh.receiveShadow=true;
     mesh.userData.rest={y:mesh.position.y,rotation:mesh.quaternion.clone(),animation:motion};
-    mesh.name=`batch-${first.name}`;
+    mesh.name=`batch-${first.name}`;mesh.userData.cutaway=first.userData.cutaway;mesh.userData.materialKey=first.userData.materialKey;mesh.userData.materialStyle=first.userData.materialStyle;
     for(const child of items){group.remove(child);child.geometry.dispose();}
     group.add(mesh);
   }

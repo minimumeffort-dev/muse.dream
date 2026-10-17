@@ -132,7 +132,7 @@ journey keeps going while you drive away or unload that part of the world.
 Repairs use finite supplies. After two jobs, you can bring two replacement kits
 from **Station supplies**. The bakery pays the depot six credits and pays you four
 for the delivery. These are transfers between actual balances. The depot starts
-with 32 kits and cannot generate more. The service covers 84 targets: furniture
+with 32 kits and cannot generate more. The service covers 88 targets: furniture
 on the three work grounds and 77 lamps beside Market Avenue, High Street and
 Civic Walk. The caretaker steps off the sidewalk for nearby repairs, using
 crossings between streets. Other districts still need connected service areas.
@@ -176,6 +176,16 @@ WASD walks, swims or drives. Space jumps on foot, a bicycle or skateboard, and g
 ![Running and jumping beside the parked car](docs/media/locomotion.gif)
 
 [Watch jumping in HD](docs/media/locomotion.mp4)
+
+## Walk into the market
+
+The market now has an actual doorway, walls and a supported floor. Walk in and the roof and near walls cut away, leaving the furniture and people visible. You can bake for wages, buy bread and eat from the foyer using the same finite stock as the people outside. The caretaker can reach damaged furniture inside through the doorway.
+
+![Inside the covered market](docs/media/interior.jpg)
+
+[Walkthrough](docs/media/interior.mp4) · [Night view](docs/media/interiornight.mp4) · [Author an interior in Dream](docs/dream/interiors.md)
+
+This is the first usable ground floor. Multiple floors, stairs, lifts and a hand-tool control for furniture are still to come. Existing saves have an explicit upgrade; business state survives visiting and unloading the hall.
 
 ## Get out and play
 
@@ -297,7 +307,7 @@ Agents can ask for just the language they need: `node scripts/dream.mjs context 
 
 The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation uses Minimum Effort's Manrope and Archivo fonts, warm white, charcoal and yellow, with the same page gutters and spacing. Dream commands, fields, references, colors and expressions are highlighted, with copy buttons for complete examples.
 
-[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 103 assemblies and 1,695 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
+[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 103 assemblies and 1,699 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
 
 Streetlights now follow streets, bicycle and scooter parking sits beside destinations, and birds fly across sixteen habitats. Dream’s `furnish` and `flock` commands describe those populations with bounded rules.
 

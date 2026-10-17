@@ -477,6 +477,12 @@ arrival rechecks player collection rules. Failed pickups return empty-handed,
 never refunding uncollected goods. Collected cargo, invoice, pay and conservation
 use the same ledger; settle once and walk home without teleporting. Program
 clocks pause while the journey owns pose; preserve contact waits and interpolation.
-Keep format 9/simulation 11, the exact registered r54 projection and the entire
-older upgrade chain. No offline travel, upstream stock generation or courier
+The r55 projection uses format 9/simulation 11; preserve its exact registered r54
+projection and the entire older upgrade chain. No offline travel, upstream stock generation or courier
 vehicle AI. See `docs/examples/courier-resupply.dream` and the commerce guide.
+
+## Enterable ground floors
+
+Dream object-root `interior` owns one static ground-floor space with 1..4 explicit portals. Keep the 32-space scene cap and existing eight contacts / 32 parts per assembly. Rectangle contacts use size XOR radius, optional rectangle heading, upright static structures only; cylinders remain compatible. Floor and ceiling contacts must span the space at the declared heights. Full-scene acceptance proves doorway cylinder clearance and steps. Use shared contact geometry for every narrow phase and `walkingHeight` for people/work, placement and dry exits. Preserve water/bridge support. No inferred collider from a visual door or floor.
+
+Keep explicit shell `part.cutaway` tags through compaction, instancing and worker transfer; only the roof and camera-facing walls disappear inside. Contents/floors stay opaque, physical contacts and roof shadows survive, reduced motion snaps transitions. A room-owning lamp clips its always-on surface pool to the floor; no new point lights, shadow maps or wall-lighting claims. Work grounds may name the placed building ID and reuse the same floor polygon. Trade and conversation use shared contact sight. Preserve saved jobs, stock, money, damage, bodies and ownership through the registered r55 physical projection and bounded local player recovery. Multiple floors, stairs/lifts and hand tools remain separate missing capabilities. See `docs/dream/interiors.md`.

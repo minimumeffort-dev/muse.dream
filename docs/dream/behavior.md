@@ -20,7 +20,7 @@ Pinch the trackpad or scroll vertically over the world to zoom in and out. Mouse
 
 ## Bodies, contacts and boarding
 
-Every object declares a body with a radius and height. A static upright solid can replace its default footprint with named `contact` cylinders. Separate wall and roof contacts leave a real doorway or passage with headroom. These remain vertical cylinders, not arbitrary mesh-shaped collision bodies.
+Every object declares a body with a radius and height. A static upright solid can replace its default footprint with named `contact` cylinders or upright rectangles. Separate wall, floor and ceiling contacts leave a real doorway with headroom. Dream 2 rectangles use `size=[width,depth]` and optional `heading_deg`; moving vehicles retain cylinders. See [enterable buildings](interiors.md) for a complete assembly.
 
 `rideable(at=[x,y,z],control=bicycle)` supplies a local seat and selects an engine control profile. The profiles are `car`, `bicycle`, `skateboard`, `scooter`, `boat` and `plane`. A placement with `role=controllable` starts parked and takes WASD input when occupied. It can have a fixed XY placement or use a route's initial pose; the route does not constrain its movement.
 
@@ -72,7 +72,7 @@ uses the authored collision cylinder; it does not clip every visible wing tip.
 The [boundary verification](../evidence/aircraft-boundary/verification.md)
 shows native flight into the edge and back into the world.
 
-Aircraft terrain contact surveys a cached underside profile from the Dream assembly, including the wheels, nose and wing span. It uses the current heading, pitch and bank against the terrain heightfield and the engine's ground triangulation. Voxel construction approximates the same field with stepped columns; the driving controller keeps the smooth contact model. A landing keeps the aircraft above the hillside; a solid's top remains supporting until the body leaves its edge, then airborne control and stall rules resume. Hold **S** after braking to taxi backward on dry ground and back away from an obstruction. Reverse is disabled in flight and after a water landing. Building and vehicle impacts still use authored collision cylinders, rather than mesh-level wing collisions. These engine contact rules need no new Dream syntax.
+Aircraft terrain contact surveys a cached underside profile from the Dream assembly, including the wheels, nose and wing span. It uses the current heading, pitch and bank against the terrain heightfield and the engine's ground triangulation. Voxel construction approximates the same field with stepped columns; the driving controller keeps the smooth contact model. A landing keeps the aircraft above the hillside; a solid's top remains supporting until the body leaves its edge, then airborne control and stall rules resume. Hold **S** after braking to taxi backward on dry ground and back away from an obstruction. Reverse is disabled in flight and after a water landing. Buildings use their authored contacts against the aircraft cylinder; this does not add mesh-level wing collisions.
 
 ![The live Dream aircraft taxiing on a hillside](../media/hill-taxi.png)
 

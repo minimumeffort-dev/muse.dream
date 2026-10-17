@@ -3390,7 +3390,7 @@
 <polygon points="3043.33,7790.13 3064.84,7696.90 3006.25,7743.78" fill="#737d7c"/>
 <polygon points="3260.00,6550.00 3247.41,6550.00 3214.42,6692.97 3260.00,6721.46" fill="#737d7c"/>
 <polyline points="11946.00,5435.50 11946.00,5250.00" fill="none" stroke="#b8aa89" stroke-width="20"/>
-<polyline points="6400.00,4406.88 6400.00,4288.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
+<polyline points="6400.00,4420.36 6400.00,4288.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="3900.00,6701.00 3900.00,6587.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="4430.00,3545.00 4440.68,3384.80" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="5900.00,7075.00 5893.40,7273.09" fill="none" stroke="#b8aa89" stroke-width="16"/>
@@ -3608,7 +3608,7 @@
 <polyline points="1786.25,9150.00 1948.00,9150.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="1925.00,9550.00 1948.00,9550.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <g><title>Eastbank medical center · east_medical_center</title><polygon points="11901.00,5437.00 12099.00,5437.00 12099.00,5596.00 11901.00,5596.00" fill="#827565"/></g>
-<g><title>Covered market hall · market_hall</title><polygon points="6271.93,4406.88 6528.07,4406.88 6528.07,4591.52 6271.93,4591.52" fill="#827565"/></g>
+<g><title>Covered market hall · market_hall</title><polygon points="6271.93,4391.88 6528.07,4391.88 6528.07,4576.52 6271.93,4576.52" fill="#827565"/></g>
 <g><title>River hospital · hospital</title><polygon points="3749.60,6701.00 4050.40,6701.00 4050.40,6937.00 3749.60,6937.00" fill="#827565"/></g>
 <g><title>Garden primary school · garden_school</title><polygon points="4314.60,3545.00 4545.40,3545.00 4545.40,3733.00 4314.60,3733.00" fill="#827565"/></g>
 <g><title>South neighborhood school · south_school</title><polygon points="6015.40,7075.00 5784.60,7075.00 5784.60,6887.00 6015.40,6887.00" fill="#827565"/></g>
@@ -4172,7 +4172,7 @@
 <circle cx="3830" cy="6500" r="22" fill="#fafaf7" stroke="#735b98" stroke-width="10"/>
 <polyline points="4400.00,7750.00 5500.00,7300.00 7000.00,7350.00 7000.00,8400.00 6600.00,8100.00 5400.00,7800.00" fill="none" stroke="#735b98" stroke-width="14" stroke-dasharray="40 30"/>
 <circle cx="12000" cy="5530" r="85" fill="#f7c843"/><text x="12000" y="5570" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">1</text>
-<circle cx="6400" cy="4510" r="85" fill="#f7c843"/><text x="6400" y="4550" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">2</text>
+<circle cx="6400" cy="4495" r="85" fill="#f7c843"/><text x="6400" y="4535" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">2</text>
 <circle cx="3900" cy="6830" r="85" fill="#f7c843"/><text x="3900" y="6870" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">3</text>
 <circle cx="4430" cy="3650" r="85" fill="#f7c843"/><text x="4430" y="3690" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">4</text>
 <circle cx="5900" cy="6970" r="85" fill="#f7c843"/><text x="5900" y="7010" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">5</text>

@@ -133,6 +133,7 @@ export function lowerBlock(nodes:DreamNode[]):Statement[] {
     if(node.fields.has("taper"))statement.taper=n("taper");
     if(node.fields.has('outline'))statement.outline=node.fields.get('outline') as [Expr,Expr][];
     if(node.fields.has("at"))statement.at=v("at");
+    if(node.fields.has("cutaway"))statement.cutaway=wordField(node,"cutaway");
     if(node.fields.has("motion"))statement.motion=motion(field(node,"motion") as DreamNode);
     if(node.fields.has('bone'))statement.bone=wordField(node,'bone');
     if(node.fields.has('materials'))statement.materials=listField(node,'materials').map(e=>e.name!);
@@ -144,7 +145,9 @@ export function lowerBlock(nodes:DreamNode[]):Statement[] {
       case "ground":statement.name=wordField(node,"mode");break;
       case "foundation":statement.args=listField(node,"size");statement.color=wordField(node,"color");break;
       case "rideable":if(node.fields.has("control"))statement.control=wordField(node,"control");break;
-      case "contact":statement.args=[n("radius"),n("height")];break;
+      case "contact":statement.value=n("height");if(node.fields.has("radius"))statement.args=[n("radius")];if(node.fields.has("size"))statement.contactSize=listField(node,"size");if(node.fields.has("heading_deg"))statement.heading=n("heading_deg");break;
+      case "interior":statement.size=v("size");break;
+      case "portal":statement.name=wordField(node,"side");statement.args=[n("offset"),n("width"),n("height")];break;
       case "emit":statement.name=wordField(node,"kind");statement.value=n("rate_s");break;
       case "impact":{const mode=field(node,"mode") as DreamNode;statement.name=mode.kind;statement.args=Object.entries(commands[mode.kind]!.fields).filter(([,type])=>type==="n").map(([key])=>exprField(mode,key));if(mode.fields.has("pattern"))statement.pattern=wordField(mode,"pattern");break;}
       case "lamp":statement.at=v("at");statement.args=[n("radius")];statement.name=wordField(node,"color");break;

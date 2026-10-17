@@ -1,0 +1,367 @@
+{
+  "sourceHash": "269c818e0f333fe8fb11fe881219eb363ab59e54da8817787ba24191002c5464",
+  "simulationVersion": 12,
+  "scope": "native dev exporter at 30 rendered frames per simulation second; offline capture does not measure browser performance; no interpolation",
+  "clips": [
+    {
+      "clip": "interior",
+      "sourceFrames": 600,
+      "sourceDimensions": [
+        2400,
+        1350
+      ],
+      "simulationSeconds": 20.0,
+      "firstWrite": 1792264409.2146966,
+      "lastWrite": 1792264439.6773348,
+      "posterFrame": 430,
+      "outputs": [
+        {
+          "file": "docs/media/interior.jpg",
+          "bytes": 164937,
+          "sha256": "75ed511552d57893ec6c8a15418f19818c3408ac9b355993964fb6d13e5713f1",
+          "dimensions": [
+            1600,
+            900
+          ]
+        },
+        {
+          "file": "docs/media/interior.mp4",
+          "bytes": 5821776,
+          "sha256": "132985351171639715aa190c8969c8b18cb768e640580d47ba72fdeb4ed2e338",
+          "dimensions": [
+            1600,
+            900
+          ],
+          "frames": 600,
+          "fps": 30
+        },
+        {
+          "file": "docs/media/interior.gif",
+          "bytes": 28855477,
+          "sha256": "67175b4060db472891aef75da985901d1648cd7a8bd0e6a9824aeee367675bd0",
+          "dimensions": [
+            1280,
+            720
+          ],
+          "frames": 600,
+          "durationMs": 20000
+        }
+      ]
+    },
+    {
+      "clip": "interiornight",
+      "sourceFrames": 240,
+      "sourceDimensions": [
+        2400,
+        1350
+      ],
+      "simulationSeconds": 8.0,
+      "firstWrite": 1792264522.3542445,
+      "lastWrite": 1792264534.318641,
+      "posterFrame": 180,
+      "outputs": [
+        {
+          "file": "docs/media/interiornight.jpg",
+          "bytes": 133846,
+          "sha256": "db2922364cc069b155f3481c3e4ed3a09bc81175838ddba67eda24f8f5623c27",
+          "dimensions": [
+            1600,
+            900
+          ]
+        },
+        {
+          "file": "docs/media/interiornight.mp4",
+          "bytes": 1304702,
+          "sha256": "15c8b262d8b231c5c5141ee9db4e7c3bba4e03d84b448129dd594c62614ca00c",
+          "dimensions": [
+            1600,
+            900
+          ],
+          "frames": 240,
+          "fps": 30
+        },
+        {
+          "file": "docs/media/interiornight.gif",
+          "bytes": 9108348,
+          "sha256": "dbadc5833bc8f006b0b478a4d1a50c2799dd149204187246a37608758a1740db",
+          "dimensions": [
+            1280,
+            720
+          ],
+          "frames": 240,
+          "durationMs": 8000
+        }
+      ]
+    },
+    {
+      "clip": "commerce",
+      "sourceFrames": 360,
+      "sourceDimensions": [
+        2400,
+        1350
+      ],
+      "simulationSeconds": 12.0,
+      "firstWrite": 1792264614.9852152,
+      "lastWrite": 1792264631.947971,
+      "posterFrame": 300,
+      "outputs": [
+        {
+          "file": "docs/media/commerce.jpg",
+          "bytes": 171198,
+          "sha256": "3a65f0c241a6ee3b3f07e996533b69d0424933765e20542853349b6516452bb0",
+          "dimensions": [
+            1600,
+            900
+          ]
+        },
+        {
+          "file": "docs/media/commerce.mp4",
+          "bytes": 1441814,
+          "sha256": "eb06bdce5c6eb71bdb722c4bc761432f1cd11b40b2e846a969a3091a9f5efae3",
+          "dimensions": [
+            1600,
+            900
+          ],
+          "frames": 360,
+          "fps": 30
+        },
+        {
+          "file": "docs/media/commerce.gif",
+          "bytes": 13336161,
+          "sha256": "8274de716b19833c8c85e03d7dde6eca796aa89798a799bc291f7865cee6b824",
+          "dimensions": [
+            1280,
+            720
+          ],
+          "frames": 360,
+          "durationMs": 12000
+        }
+      ]
+    },
+    {
+      "clip": "conversation",
+      "sourceFrames": 240,
+      "sourceDimensions": [
+        2400,
+        1350
+      ],
+      "simulationSeconds": 8.0,
+      "firstWrite": 1792265429.4806871,
+      "lastWrite": 1792265441.4592316,
+      "posterFrame": 60,
+      "outputs": [
+        {
+          "file": "docs/media/conversation.jpg",
+          "bytes": 173903,
+          "sha256": "c49932bfbcea52353cc447accf9eaa85ad3e84a1080c868191bf5fb057ba284b",
+          "dimensions": [
+            1600,
+            900
+          ]
+        },
+        {
+          "file": "docs/media/conversation.mp4",
+          "bytes": 551652,
+          "sha256": "b74604d0a5b6cdd8cf60288e41b87154ff399a407e9186eeb5ee0acfbe145e82",
+          "dimensions": [
+            1600,
+            900
+          ],
+          "frames": 240,
+          "fps": 30
+        },
+        {
+          "file": "docs/media/conversation.gif",
+          "bytes": 8368311,
+          "sha256": "c5403cd44214fe3a0ec47bd0fa12e07aecf240a86bf73828052262cbac28b394",
+          "dimensions": [
+            1280,
+            720
+          ],
+          "frames": 240,
+          "durationMs": 8000
+        }
+      ]
+    },
+    {
+      "clip": "delivery",
+      "sourceFrames": 360,
+      "sourceDimensions": [
+        2400,
+        1350
+      ],
+      "simulationSeconds": 12.0,
+      "firstWrite": 1792265359.6826854,
+      "lastWrite": 1792265379.6622486,
+      "posterFrame": 100,
+      "outputs": [
+        {
+          "file": "docs/media/delivery.jpg",
+          "bytes": 296588,
+          "sha256": "108ecf538052b0caef0080daf33b5565597dfa19b219688bedb5acfcf64d933b",
+          "dimensions": [
+            1600,
+            900
+          ]
+        },
+        {
+          "file": "docs/media/delivery.mp4",
+          "bytes": 4000623,
+          "sha256": "bab9d4fdb5df18e814b01180028c1da8ddd6fccb8f95d1bf43457c396e7a698f",
+          "dimensions": [
+            1600,
+            900
+          ],
+          "frames": 360,
+          "fps": 30
+        },
+        {
+          "file": "docs/media/delivery.gif",
+          "bytes": 21026582,
+          "sha256": "40035cb87bbdd60053475fe9e441f306b74979d0cdc4308caec37a9b868c18fc",
+          "dimensions": [
+            1280,
+            720
+          ],
+          "frames": 360,
+          "durationMs": 12000
+        }
+      ]
+    },
+    {
+      "clip": "repair",
+      "sourceFrames": 840,
+      "sourceDimensions": [
+        2400,
+        1350
+      ],
+      "simulationSeconds": 28.0,
+      "firstWrite": 1792265299.5038064,
+      "lastWrite": 1792265339.0637443,
+      "posterFrame": 720,
+      "outputs": [
+        {
+          "file": "docs/media/repair.jpg",
+          "bytes": 194690,
+          "sha256": "d24464dd39dfe39ee12dc235ad46944e53deed463980b5892775d49b57589e21",
+          "dimensions": [
+            1600,
+            900
+          ]
+        },
+        {
+          "file": "docs/media/repair.mp4",
+          "bytes": 3836897,
+          "sha256": "edb2f4abce37cbe805ea25a299e19767db939948ca617a45d01d8aaa60fe2dae",
+          "dimensions": [
+            1600,
+            900
+          ],
+          "frames": 840,
+          "fps": 30
+        },
+        {
+          "file": "docs/media/repair.gif",
+          "bytes": 26193315,
+          "sha256": "209216bde29f539dc723b3ccba7de8d98035ca09008947fbd248fa56067a2997",
+          "dimensions": [
+            1280,
+            720
+          ],
+          "frames": 840,
+          "durationMs": 28000
+        }
+      ]
+    },
+    {
+      "clip": "courier",
+      "sourceFrames": 360,
+      "sourceDimensions": [
+        2400,
+        1350
+      ],
+      "simulationSeconds": 12.0,
+      "firstWrite": 1792264926.8478494,
+      "lastWrite": 1792264941.7771943,
+      "posterFrame": 180,
+      "outputs": [
+        {
+          "file": "docs/media/courier.jpg",
+          "bytes": 199758,
+          "sha256": "9e4931e135c63000d62106f4f1a0d74e5274de24a8ff64a6e8bf587998872c3b",
+          "dimensions": [
+            1600,
+            900
+          ]
+        },
+        {
+          "file": "docs/media/courier.mp4",
+          "bytes": 3475597,
+          "sha256": "01f5625725eaf69d9152a37316caa012202459fa7287e615c8332682f9928276",
+          "dimensions": [
+            1600,
+            900
+          ],
+          "frames": 360,
+          "fps": 30
+        },
+        {
+          "file": "docs/media/courier.gif",
+          "bytes": 25564577,
+          "sha256": "bc7a8b595db750efc8d3154109982045e6a04da84809bfb55c0ecc4eb429b1a6",
+          "dimensions": [
+            1280,
+            720
+          ],
+          "frames": 360,
+          "durationMs": 12000
+        }
+      ]
+    },
+    {
+      "clip": "handoff",
+      "sourceFrames": 540,
+      "sourceDimensions": [
+        2400,
+        1350
+      ],
+      "simulationSeconds": 18.0,
+      "firstWrite": 1792265227.811372,
+      "lastWrite": 1792265252.2890487,
+      "posterFrame": 300,
+      "outputs": [
+        {
+          "file": "docs/media/handoff.jpg",
+          "bytes": 192554,
+          "sha256": "2edf9c7b25cf4dd6eacede549e8ad279ce1185fad231838e723d8f14209c4d40",
+          "dimensions": [
+            1600,
+            900
+          ]
+        },
+        {
+          "file": "docs/media/handoff.mp4",
+          "bytes": 4724674,
+          "sha256": "b129c809ab247a8d5176c7bfd45d79ca9e3f5f5943241d5eb147b0d95d01804f",
+          "dimensions": [
+            1600,
+            900
+          ],
+          "frames": 540,
+          "fps": 30
+        },
+        {
+          "file": "docs/media/handoff.gif",
+          "bytes": 34097755,
+          "sha256": "0dae2afc72f66e0831c586cb5e81d105b2f514747c1960a11d2d7c5f33e9e782",
+          "dimensions": [
+            1280,
+            720
+          ],
+          "frames": 540,
+          "durationMs": 18000
+        }
+      ]
+    }
+  ]
+}

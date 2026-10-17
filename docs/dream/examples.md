@@ -244,3 +244,7 @@ The [guide](growth.md) explains the shorter example timings and live-city loop.
 two damaged objects, collect finite replacement kits across a crossing and bring
 them home. [NPC supply trips](commerce.md#npc-supply-trips) explain shared capacity,
 collection-time checks and saved walking phases.
+
+## An enterable market
+
+The [complete market assembly](../examples/enterable-market.dream) declares a real floor, static rectangle walls, an opening and shell cutaways. [Interiors](interiors.md) explains how to place it, connect work and keep the floor readable at night.

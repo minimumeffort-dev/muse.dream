@@ -10,6 +10,7 @@ export type Motion = { kind: "spin" | "roll" | "sway" | "swing" | "open"; axis?:
 export type Statement = {
   token: Token; kind: string; scope?: string; name?: string; shape?: string; material?: string;
   value?: Expr; args?: Expr[]; at?: Vec; size?: Vec; to?: Vec; rotate?: Vec; scale?: Expr;
+  contactSize?:Expr[];heading?:Expr;cutaway?:string;
   grid?:Vec;chunks?:Vec;bone?:string;materials?:string[];
   taper?: Expr; outline?:[Expr,Expr][]; deform?: [Expr, Expr]; motion?: Motion; block?: Statement[]; interaction?: string; color?: string;
   site?:string;pattern?:string;axis?:string;control?:string;damage?:{kind:string;args:Expr[];pattern?:string};

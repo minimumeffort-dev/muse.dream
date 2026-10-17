@@ -136,3 +136,7 @@ Dream 2 now supports bounded filled/carved voxel parts, greedy surface meshing a
 Object DSL v2 accepts visual dimensions from `.1` to `128` local units. V1 retains `.5` as its minimum, and beams still need at least `.5` endpoint length. The minimum is local: use `measure` to resolve physical scale before choosing pipe, frame or railing thickness. Parts remain visual; body, compound contacts and all geometry budgets are independent.
 
 The [construction guide](../asset-construction.md) follows complete live [house](../examples/terraced-house.dream), [bus](../examples/city-bus.dream) and [launch](../examples/cabin-launch.dream) sources. They combine carved voxel frames with shaped profiles rather than increasing the part cap.
+
+## Enterable assemblies
+
+A static measured building can declare an `interior` with named `portal` openings. It needs explicit rectangle floor/ceiling contacts, an actual doorway and shell parts tagged with `cutaway`. The original cylinder contact form remains compatible. Read [interiors](interiors.md) and the [complete market assembly](../examples/enterable-market.dream); a painted door creates no passage.

@@ -1,3 +1,4 @@
+import {contactSeparation} from '../scene/contact-geometry';
 import {growthScale} from '../scene/growth';
 import {DAMAGE_POOL_LIMITS} from '../scene/damage-pool';
 import { playerHeight } from "../scene/measure";
@@ -78,10 +79,10 @@ export function advanceImpactMotion(state:CarState,world:World,dt:number,hitCar=
     prop.x+=prop.vx*dt;prop.y+=prop.vy*dt;
     const contacts=[...queryStaticContacts(scene,prop.x,prop.y,radius,state),...actors];
     for(const c of contacts){
-      const x=prop.x-c.x,y=prop.y-c.y,d=Math.hypot(x,y),r=radius+c.r;
-      if(isBroken(state,c) || d>=r || elevation>=c.top || elevation+height<=c.bottom)continue;
-      const ax=d>1e-6 ? x/d : -1,ay=d>1e-6 ? y/d : 0,dot=prop.vx*ax+prop.vy*ay;
-      prop.x=c.x+ax*(r+.1);prop.y=c.y+ay*(r+.1);
+      const {distance,nx:ax,ny:ay}=contactSeparation(c,prop.x,prop.y);
+      if(isBroken(state,c) || distance>=radius || elevation>=c.top || elevation+height<=c.bottom)continue;
+      const dot=prop.vx*ax+prop.vy*ay;
+      prop.x+=ax*(radius-distance+.1);prop.y+=ay*(radius-distance+.1);
       if(dot<0){prop.vx-=ax*dot*(1+impact.restitution);prop.vy-=ay*dot*(1+impact.restitution);}
     }
     if(prop.x<radius || prop.x>scene.canonical.width-radius){prop.x=Math.max(radius,Math.min(scene.canonical.width-radius,prop.x));prop.vx*=-impact.restitution;}
