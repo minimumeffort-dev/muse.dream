@@ -23,7 +23,8 @@ export function waterGeometry(doc:Scene,water:Water,region?:RenderRegion):THREE.
     positions.setY(i,water.level+.25);uv.setXY(i,(positions.getX(i)+doc.canonical.width/2-minX)/width,(positions.getZ(i)+doc.canonical.height/2-minY)/height);
   }
   geometry.setAttribute('waterDepth',new THREE.BufferAttribute(depths,1));geometry.computeVertexNormals();geometry.computeBoundingSphere();
-  if(doc.voxelWorld)geometry.userData.voxelOptions={contour:true,cell:8,originX:-doc.canonical.width/2,originZ:-doc.canonical.height/2,step:doc.voxelWorld.heightStep,lift:water.level+.25,thickness:2,maxMerge:1,rigid:true};
+  // A continuous translucent surface needs no internal or culling-tile skirts.
+  if(doc.voxelWorld)geometry.userData.voxelOptions={contour:true,cell:8,originX:-doc.canonical.width/2,originZ:-doc.canonical.height/2,step:doc.voxelWorld.heightStep,lift:water.level+.25,thickness:0,maxMerge:1,rigid:true};
   return geometry;
 }
 

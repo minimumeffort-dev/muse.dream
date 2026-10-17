@@ -5,102 +5,102 @@
   "phases": [
     {
       "label": "compile",
-      "ms": 4019.229375,
+      "ms": 4244.651124999999,
       "heap": {
-        "rss": 376242176,
-        "heapTotal": 239616000,
-        "heapUsed": 191736392,
-        "external": 37276866,
+        "rss": 377061376,
+        "heapTotal": 241942528,
+        "heapUsed": 193963104,
+        "external": 37275765,
         "arrayBuffers": 30043905
       }
     },
     {
       "label": "game/environment",
-      "ms": 25398.114499999996,
+      "ms": 30293.985249999998,
       "heap": {
-        "rss": 1201848320,
-        "heapTotal": 573767680,
-        "heapUsed": 164606792,
-        "external": 362255970,
-        "arrayBuffers": 355043026
+        "rss": 1237450752,
+        "heapTotal": 563970048,
+        "heapUsed": 161461456,
+        "external": 362338855,
+        "arrayBuffers": 355127012
       }
     },
     {
       "label": "game/landscape",
-      "ms": 1550.442500000001,
+      "ms": 1792.8729170000006,
       "heap": {
-        "rss": 1338966016,
-        "heapTotal": 644612096,
-        "heapUsed": 592856656,
-        "external": 408621182,
-        "arrayBuffers": 401385310
+        "rss": 1267089408,
+        "heapTotal": 553500672,
+        "heapUsed": 355943048,
+        "external": 404283415,
+        "arrayBuffers": 397048644
       }
     },
     {
       "label": "game/routes",
-      "ms": 138.20866600000227,
+      "ms": 128.5354159999988,
       "heap": {
-        "rss": 1276952576,
-        "heapTotal": 403849216,
-        "heapUsed": 190102536,
-        "external": 405570559,
-        "arrayBuffers": 398336374
+        "rss": 1273937920,
+        "heapTotal": 556515328,
+        "heapUsed": 379577136,
+        "external": 407510084,
+        "arrayBuffers": 400251697
       }
     },
     {
       "label": "game/flocks",
-      "ms": 210.11525000000256,
+      "ms": 235.21512500000244,
       "heap": {
-        "rss": 1292206080,
-        "heapTotal": 406142976,
-        "heapUsed": 223105688,
-        "external": 420661199,
-        "arrayBuffers": 413424442
+        "rss": 1297252352,
+        "heapTotal": 560447488,
+        "heapUsed": 396809864,
+        "external": 422518932,
+        "arrayBuffers": 415257973
       }
     },
     {
       "label": "game/scenery",
-      "ms": 2970.3335000000043,
+      "ms": 3189.2059579999986,
       "heap": {
-        "rss": 1439465472,
-        "heapTotal": 300154880,
-        "heapUsed": 221533704,
-        "external": 527188864,
-        "arrayBuffers": 519979312
+        "rss": 1383415808,
+        "heapTotal": 316948480,
+        "heapUsed": 180158480,
+        "external": 495468669,
+        "arrayBuffers": 488260218
       }
     },
     {
       "label": "game/ambient-population",
-      "ms": 574.1046659999993,
+      "ms": 590.164499999999,
       "heap": {
-        "rss": 1444429824,
-        "heapTotal": 290242560,
-        "heapUsed": 196633072,
-        "external": 516496660,
-        "arrayBuffers": 509255440
+        "rss": 1405714432,
+        "heapTotal": 300285952,
+        "heapUsed": 169802664,
+        "external": 498672681,
+        "arrayBuffers": 491432562
       }
     }
   ],
   "geometry": {
-    "bytes": 465051512,
+    "bytes": 462188722,
     "uniqueBuffers": 21559,
     "geometries": 5102,
-    "uniqueTriangles": 10444252
+    "uniqueTriangles": 10411515
   },
   "groups": [
     {
       "name": "environment",
-      "bytes": 354568798,
+      "bytes": 354667732,
       "uniqueBuffers": 16949,
       "geometries": 3493,
-      "uniqueTriangles": 4523029
+      "uniqueTriangles": 4522318
     },
     {
       "name": "landscape",
-      "bytes": 39364832,
+      "bytes": 36403108,
       "uniqueBuffers": 501,
       "geometries": 88,
-      "uniqueTriangles": 393080
+      "uniqueTriangles": 361054
     },
     {
       "name": "routes",
@@ -132,11 +132,11 @@
     }
   ],
   "resident": {
-    "rss": 1438269440,
-    "heapTotal": 261947392,
-    "heapUsed": 138709584,
-    "external": 510136249,
-    "arrayBuffers": 489096736
+    "rss": 1404665856,
+    "heapTotal": 262963200,
+    "heapUsed": 139131280,
+    "external": 498931422,
+    "arrayBuffers": 479741862
   },
   "placements": 1695
 }

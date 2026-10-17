@@ -36,7 +36,9 @@ export function unpackChunk(packet:ChunkPacket,water:(id:string)=>THREE.Material
   const attribute=(a:Attribute)=>a.instanced ? new THREE.InstancedBufferAttribute(a.array,a.size,a.normalized,a.instanced) : new THREE.BufferAttribute(a.array,a.size,a.normalized);
   const geometries=packet.geometries.map(g=>{const geometry=new THREE.BufferGeometry();for(const [name,a] of Object.entries(g.attributes))geometry.setAttribute(name,attribute(a));if(g.index)geometry.setIndex(attribute(g.index));geometry.computeBoundingSphere();return geometry;});
   const createMaterial=(recipe:MaterialRecipe):THREE.Material=>{
-    const material=recipe.kind==='ground' ? groundMaterial() : recipe.kind==='road' ? roadMaterial() : recipe.kind==='toon' ? toonMaterial(recipe.color) : recipe.kind==='zone' ? zoneMaterial(recipe.effect) : recipe.kind==='styled' ? styledMaterial(recipe.spec,recipe.useB) : recipe.kind==='scenery' ? sceneryMaterial(createMaterial(recipe.base),recipe.motion) : recipe.kind==='scenery-depth' ? sceneryDepthMaterial(recipe.motion,recipe.cloth) : water(recipe.id);
+    // Water recipes reference a persistent main-thread wave material, not placeholder paint.
+    if(recipe.kind==='water')return water(recipe.id);
+    const material=recipe.kind==='ground' ? groundMaterial() : recipe.kind==='road' ? roadMaterial() : recipe.kind==='toon' ? toonMaterial(recipe.color) : recipe.kind==='zone' ? zoneMaterial(recipe.effect) : recipe.kind==='styled' ? styledMaterial(recipe.spec,recipe.useB) : recipe.kind==='scenery' ? sceneryMaterial(createMaterial(recipe.base),recipe.motion) : sceneryDepthMaterial(recipe.motion,recipe.cloth);
     if(recipe.nightPaint)nightPaint(material);
     if('vertexColors' in material && recipe.vertexColors!==undefined)material.vertexColors=recipe.vertexColors;
     if(recipe.paintColor!==undefined)(material as THREE.MeshStandardMaterial).color.setHex(recipe.paintColor);return material;

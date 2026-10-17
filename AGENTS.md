@@ -272,8 +272,8 @@ damage, wave fields and live actors resident. Hold the last complete frame and
 simulation tick while required chunks are missing; exports wait too. Use stable
 world-data shadow bounds, never loaded geometry bounds. Static object meshing and batching run in the same worker using the synchronous
 fixture builders. Preserve night/wind shaders, shadow deformation, instanced attribute
-divisors and per-instance occlusion when transferring finished scenery. Keep column-face indices, all vertex channels and rigid
-water anchors. Memory reports count unique resident buffers and every instance
+divisors and per-instance occlusion when transferring finished scenery. Keep column-face indices, all vertex channels and
+water cell-anchor attributes. Memory reports count unique resident buffers and every instance
 buffer; never label them total browser memory or VRAM. See `docs/rendering.md`.
 
 Use Dream 2 `voxels` / `fill` / `cut` for bounded volumetric parts. Read
@@ -282,7 +282,7 @@ Use Dream 2 `voxels` / `fill` / `cut` for bounded volumetric parts. Read
 clone GPU attributes for callers, and keep cut-face winding/normals correct.
 Destruction chunks count toward the existing eight / 128 fragment budgets;
 never create per-cell physics bodies. Contacts, terrain and motion remain engine
-owned. The live world uses `voxel_world` after linking/furnishing: all shaped assets become bounded voxel stamps, while terrain uses streamed column tiles and infrastructure uses exact cut-cell contours. Shaped stamps use bounded surface nets with coplanar merging; explicit fill/cut volumes retain exact block faces and fracture cuts. Keep authored envelopes, layer lifts, fine road markings, tile seams, rigid water anchors and every animated/destructible part. Never allocate a full world 3D array or a scene/physics node per cell. Preserve the separate smooth driving heightfield and explicit contacts. See `src/scene/voxel-world.ts` for construction limits; they do not increase explicit fill/cut budgets. Prompt
+owned. The live world uses `voxel_world` after linking/furnishing: all shaped assets become bounded voxel stamps, while terrain uses streamed column tiles and infrastructure uses exact cut-cell contours. Shaped stamps use bounded surface nets with coplanar merging; explicit fill/cut volumes retain exact block faces and fracture cuts. Keep authored envelopes, layer lifts, fine road markings, tile seams and every animated/destructible part. Decks and their road/paint skins share the continuous bridge height field. Water retains cell anchors in geometry, but displacement and normals sample shared UVs so coincident vertices agree across chunks; omit transparent tile skirts. Never allocate a full world 3D array or a scene/physics node per cell. Preserve the separate smooth driving heightfield and explicit contacts. See `src/scene/voxel-world.ts` for construction limits; they do not increase explicit fill/cut budgets. Prompt
 world authoring is deferred; preserve the existing Lab without expanding it.
 
 New asset passes must preserve accepted physical scale, bodies, contacts, foundations and destruction zones unless changing those is part of the task. Object DSL v2 visual dimensions permit .1..128 local units; v1 retains .5..128 and beam endpoint length stays >=.5. Use fine dimensions for trim instead of oversizing it. Check visible glazing, usable floors, roof/support joins, coaxial rolling parts and independently scaled passenger fit. Review the constructed sources in `docs/asset-construction.md` and inspect four rendered angles.

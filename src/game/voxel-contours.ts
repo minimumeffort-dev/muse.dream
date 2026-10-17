@@ -12,7 +12,7 @@ export function contourSurface(source:THREE.BufferGeometry,options:ColumnOptions
   if(options.rigid && source.hasAttribute('uv'))channels.push(['voxelAnchor',source.getAttribute('uv')]);
   const sizes=channels.map(([,a])=>a.itemSize),offsets=sizes.map((_,i)=>sizes.slice(0,i).reduce((a,b)=>a+b,0));
   const positions:number[]=[],normals:number[]=[],values=channels.map(()=>[] as number[]),indices:number[]=[];
-  type Top={patch:Vertex[];height:number;anchor:number[]};
+  type Top={patch:Vertex[];height:number;anchor:number[];heights?:number[]};
   const edges=new Map<string,Edge[]>(),cells=new Set<string>(),tops=new Map<string,Top[]>();
   const clip=(polygon:Vertex[],axis:'x'|'z',bound:number,sign:number):Vertex[]=>{
     const out:Vertex[]=[];
@@ -52,7 +52,7 @@ export function contourSurface(source:THREE.BufferGeometry,options:ColumnOptions
       const base=options.baseAt ? options.baseAt(cx,cz) : ids.reduce((n,j,k)=>n+p.getY(j)*[u,v,1-u-v][k]!,0)-lift;
       const height=Math.floor((base+1e-5)/step)*step+surfaceLift;
       const uvOffset=channels.findIndex(([name])=>name==='uv'),anchor=uvOffset<0 ? [0,0] : [0,1].map(k=>[a,b,c].reduce((n,t,j)=>n+t.values[offsets[uvOffset]!+k]!*[u,v,1-u-v][j]!,0));
-      const key=`${x},${z}`,list=tops.get(key)??[];list.push({patch,height,anchor});tops.set(key,list);
+      const key=`${x},${z}`,list=tops.get(key)??[];list.push({patch,height,anchor,heights:options.surfaceAt ? patch.map(p=>options.surfaceAt!(p.x,p.z)??height) : undefined});tops.set(key,list);
       for(let j=0;j<patch.length;j++){
         const a=patch[j]!,b=patch[(j+1)%patch.length]!;
         if(Math.hypot(a.x-b.x,a.z-b.z)<1e-5)continue;
@@ -64,8 +64,15 @@ export function contourSurface(source:THREE.BufferGeometry,options:ColumnOptions
   }
   type Full={x:number;z:number;top:Top;signature:string;at:(x:number,z:number)=>Vertex};
   const full=new Map<string,Full>();
-  const top=(patch:Vertex[],height:number,anchor:number[])=>{
-    const first=positions.length/3;for(const point of patch)emit(point,height,[0,1,0],anchor);
+  const top=(patch:Vertex[],height:number,anchor:number[],heights?:number[])=>{
+    heights??=options.surfaceAt ? patch.map(p=>options.surfaceAt!(p.x,p.z)??height) : patch.map(()=>height);
+    const normal=[0,0,0],a=patch[0]!,ha=heights[0]!;
+    for(let j=1;j<patch.length-1;j++){
+      const b=patch[j]!,c=patch[j+1]!,ux=b.x-a.x,uy=heights[j]!-ha,uz=b.z-a.z,vx=c.x-a.x,vy=heights[j+1]!-ha,vz=c.z-a.z;
+      normal[0]!+=uy*vz-uz*vy;normal[1]!+=uz*vx-ux*vz;normal[2]!+=ux*vy-uy*vx;
+    }
+    const length=Math.hypot(...normal);if(length<1e-8)return;for(let i=0;i<3;i++)normal[i]!/=length;
+    const first=positions.length/3;patch.forEach((point,i)=>emit(point,heights![i]!,normal,anchor));
     for(let j=1;j<patch.length-1;j++)indices.push(first,first+j,first+j+1);
   };
   for(const [key,list] of tops){
@@ -73,11 +80,11 @@ export function contourSurface(source:THREE.BufferGeometry,options:ColumnOptions
     const at=(x:number,z:number):Vertex=>{const u=((b.z-c.z)*(x-c.x)+(c.x-b.x)*(z-c.z))/den,v=((c.z-a.z)*(x-c.x)+(a.x-c.x)*(z-c.z))/den;return {x,z,values:a.values.map((n,j)=>n*u+b.values[j]!*v+c.values[j]!*(1-u-v))};};
     const area=list.reduce((sum,t)=>sum+Math.abs(t.patch.reduce((n,p,j)=>{const q=t.patch[(j+1)%t.patch.length]!;return n+p.x*q.z-p.z*q.x;},0))/2,0);
     const affine=Number.isFinite(den) && Math.abs(den)>1e-8 && list.every(t=>t.height===first.height && t.patch.every(p=>{const value=at(p.x,p.z);return p.values.every((v,j)=>Math.abs(v-value.values[j]!)<1e-5);}));
-    if(!options.rigid && Math.abs(area-cell*cell)<.002 && affine){
+    if(!options.rigid && !list.some(t=>t.heights?.some(h=>Math.abs(h-t.height)>1e-6)) && Math.abs(area-cell*cell)<.002 && affine){
       const origin=at(0,0).values,gx=at(1,0).values.map((n,i)=>n-origin[i]!),gz=at(0,1).values.map((n,i)=>n-origin[i]!);
       const signature=JSON.stringify([first.height,...origin,...gx,...gz].map(n=>Math.round(n*1e5))),[x,z]=key.split(',').map(Number);
       full.set(key,{x:x!,z:z!,top:first,signature,at});
-    }else for(const t of list)top(t.patch,t.height,t.anchor);
+    }else for(const t of list)top(t.patch,t.height,t.anchor,t.heights);
   }
   for(const [key,c] of full){
     const {x,z}=c;let w=1,d=1;const max=options.maxMerge??400/cell;
@@ -88,9 +95,13 @@ export function contourSurface(source:THREE.BufferGeometry,options:ColumnOptions
   }
   for(const list of edges.values()){
     const edge=list.reduce((a,b)=>a.height>b.height ? a : b),other=list.length>1 ? Math.min(...list.map(e=>e.height)) : edge.height-thickness;
-    const low=Math.max(edge.height-thickness,other);if(edge.height-low<1e-5)continue;
+    const smoothA=options.surfaceAt?.(edge.a.x,edge.a.z),smoothB=options.surfaceAt?.(edge.b.x,edge.b.z);
+    if(list.length>1 && smoothA!==undefined && smoothB!==undefined)continue;
+    // Internal column risers reach the neighbouring top; deck skins follow their shared field.
+    const low=other;if(edge.height-low<1e-5 && smoothA===undefined && smoothB===undefined)continue;
     const {a,b,height}=edge,dx=b.x-a.x,dz=b.z-a.z,length=Math.hypot(dx,dz),normal=[-dz/length,0,dx/length],first=positions.length/3;
-    for(const [v,h] of [[a,height],[a,low],[b,low],[b,height]] as const)emit(v,h,normal,[edge.cx,edge.cz]);
+    const ha=smoothA??height,hb=smoothB??height,la=smoothA!==undefined ? ha-thickness : low,lb=smoothB!==undefined ? hb-thickness : low;
+    for(const [v,h] of [[a,ha],[a,la],[b,lb],[b,hb]] as const)emit(v,h,normal,[edge.cx,edge.cz]);
     indices.push(first,first+1,first+2,first,first+2,first+3);
   }
   const result=new THREE.BufferGeometry();result.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));result.setAttribute('normal',new THREE.Float32BufferAttribute(normals,3));

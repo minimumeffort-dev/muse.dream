@@ -29,14 +29,14 @@ The policy reaches imported templates, generated street furnishings, the player 
 | Ground | Solid columns in streamed 400-unit tiles, with merged tops and exposed steps |
 | Roads, paths and bridge decks | Exact cut-cell outlines over supporting columns, preserving lifts and connections |
 | Crossings, cycle symbols and lane paint | Exact thin outlines, retaining their width below the ground-cell size |
-| Water | Eight-unit surface columns, displaced rigidly by the existing bounded wave field |
+| Water | Eight-unit surface cells, with shared continuous wave displacement and normals |
 | Dust, sparks and splashes | One instanced draw of voxel particles in the existing fixed-size pool |
 
 `object_cell` is .25..4 local units. The stamp fits its grid to the original part dimensions, with a four-cell minimum for small rings and fittings and a 32-cell maximum along each axis. Long beams remain cuboids; curved profiles use surface nets rather than stair-step silhouettes. Equal cell dimensions are approximate for fitted stamps. Use explicit volumes with equal size/grid ratios when exact cubic cells matter.
 
 `ground_cell` is exactly 4 or 8 world units. `height_step` is .5..1. Ten world units represent a metre. These are construction settings, fixed for the world, rather than detail levels that change as the camera moves.
 
-Ground and infrastructure are columns, so the engine doesn't allocate a kilometre-wide 3D array. Neighboring terrain tiles sample the same field and emit the height difference at their boundary. Surface lifts stay separate from height quantization, keeping markings above pavement and timber decks clear of asphalt. Water retains its wake simulation; each column uses one wave anchor so its top stays rigid.
+Ground and infrastructure are columns, so the engine doesn't allocate a kilometre-wide 3D array. Neighboring terrain tiles sample the same field and emit the height difference at their boundary. Surface lifts stay separate from height quantization, keeping markings above pavement and timber decks clear of asphalt. Water retains its wake simulation and cell-anchor attributes. Shared UV samples drive continuous displacement and normals; transparent tile skirts are omitted so loaded neighbours meet without dark seams. Bridge ramps and their pavement use the same continuous deck field.
 
 ![Stepped solid terrain](media/voxel-hills.jpg)
 

@@ -16,7 +16,7 @@ The ground, roads, river, buildings, vehicles, people and plants now go through 
 
 The world loads around you as you drive, walk or fly. Terrain, streets, river surfaces and static objects are built in nearby chunks, with more prepared ahead of movement. Distant geometry is released. NPCs, collisions, water simulation and destruction keep their state when a district leaves view.
 
-Diagonal roads and painted lines keep their actual outline. Curved object stamps use continuous voxel contours, so tires, roof slopes and aircraft parts don't need a staircase silhouette. Explicit fill/cut volumes keep their carved cells and fracture chunks.
+Diagonal roads and painted lines keep their actual outline. Curved object stamps use continuous voxel contours, so tires, roof slopes and aircraft parts don't need a staircase silhouette. Bridge ramps and their paint share a continuous surface, and water tiles share wave samples. Explicit fill/cut volumes keep their carved cells and fracture chunks.
 
 The opening loader waits for the first neighbourhood. Camera rotation, manual zoom and offscreen shadow casters are included in streaming coverage. [How loading and memory work](docs/rendering.md#loading-and-memory).
 
@@ -90,7 +90,7 @@ Press **Shift** or click **Boost** for a one-second car burst, then give it five
 
 [Watch the boost in HD](docs/media/boost.mp4)
 
-The whole world stays in memory while you explore. The renderer batches differently colored parts into fewer draws and reuses fixed world transforms, keeping the same assets, shadows, particles and post-processing. The [rendering notes](docs/rendering.md) include before/after measurements and a local profiler for checking changes.
+Static districts load as you approach and leave render memory behind you. Physics, NPCs and damage keep their state across the whole world. The renderer batches differently colored parts into fewer draws and reuses fixed transforms, keeping the same assets, shadows, particles and post-processing. The [rendering notes](docs/rendering.md) include before/after measurements and a local profiler for checking changes.
 
 Press **F** to get out of the car, walk over to another vehicle and press **F** again. You control the bicycle, skateboard, boat or plane yourself. Leave the lane, steer across the pond or take off from the runway. A vehicle stays where you park it, including the car you left behind.
 

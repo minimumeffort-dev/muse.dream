@@ -325,7 +325,9 @@ required chunks are missing and do not establish live frame rate.
 `world.jpg` and `voxel-world.jpg` share the new driving still. `voxel-vehicles.jpg`
 and `voxel-contours.jpg` use the native four-angle car, bicycle, plane and house
 review. Untrimmed captures remain in the [evidence](../evidence/world-streaming/verification.md).
-`loading.png` shows the real first-neighbourhood loading phase.
+`loading.png` shows the real first-neighbourhood loading phase. The follow-up
+water/bridge review replaces swimming GIF/video/still and `voxel-water.jpg` after
+fixing persistent water paint, continuous bridge tops and water seams.
 
 The explicit fill/cut destruction clips, architectural construction examples,
 material examples, proportion references, maps and original terrain closeups were

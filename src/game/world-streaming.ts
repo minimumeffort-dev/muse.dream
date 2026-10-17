@@ -76,7 +76,7 @@ export class WorldStreaming {
   get stats(){return {resident:this.residents.size,required:this.required.size,pending:this.wanted.filter(r=>!this.residents.has(r.key)).length,bytes:this.bytes,peakBytes:this.peakBytes,peakResident:this.peakResident,maxInstallMs:this.maxInstallMs,maxSliceMs:this.maxSliceMs,loaded:this.loaded,unloaded:this.unloaded,discarded:this.discarded,ready:this.ready,keys:[...this.residents.keys()]};}
   get obscuredCount():number{return [...this.residents.values()].reduce((n,r)=>n+r.scenery.obscuredCount,0);}
   update(camera:THREE.OrthographicCamera,sun:THREE.Vector3,player:THREE.Vector3,velocity:Point,dt:number,reduced:boolean):void{
-    const signature=[Math.round(camera.position.x/32),Math.round(camera.position.y/16),Math.round(camera.position.z/32),...camera.quaternion.toArray().map(n=>Math.round(n*128)),Math.round(camera.zoom*100),Math.round(sun.x*64),Math.round(sun.y*64),Math.round(sun.z*64)].join(',');
+    const signature=[camera.left,camera.right,camera.top,camera.bottom,Math.round(camera.position.x/32),Math.round(camera.position.y/16),Math.round(camera.position.z/32),...camera.quaternion.toArray().map(n=>Math.round(n*128)),Math.round(camera.zoom*100),Math.round(sun.x*64),Math.round(sun.y*64),Math.round(sun.z*64)].join(',');
     if(signature!==this.signature){
       this.signature=signature;
       const {width,height}=this.doc.canonical,footprint=streamFootprint(camera,sun,this.bounds,width,height),focus={x:player.x+width/2,y:player.z+height/2},margin=this.bounds.radius+80;

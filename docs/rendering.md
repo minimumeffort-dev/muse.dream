@@ -18,10 +18,10 @@ The matched local survey measures these major render groups:
 
 | Same current geometry | Retained geometry buffers |
 | --- | ---: |
-| Entire map built at once | 443.5 MiB |
+| Entire map built at once | 440.8 MiB |
 | Town and warmed nearby chunks | 128.2 MiB |
 | Airport after leaving town | 106.4 MiB |
-| Waterfront after leaving the airport | 115.0 MiB |
+| Waterfront after leaving the airport | 114.2 MiB |
 | Return to town with nearby chunks kept warm | 163.4 MiB |
 
 The town case retains **71% fewer geometry-buffer bytes** than constructing the same current world at once. The return case keeps four additional nearby chunks; it has released the distant airport geometry. These are deterministic buffer counts, not total browser heap, VRAM or a lower-powered laptop frame-rate claim. The survey includes environment, water/bridges, routes, flocks, static scenery and ambient populations. It excludes live actors, the player, effects, textures, render targets, temporary construction and compiler/worker caches.
@@ -37,7 +37,7 @@ The development game's `#game[data-streaming]` reports required/resident chunks,
 
 ## Diagonals without stair steps
 
-Roads, cycle glyphs, crossings, decks and shorelines use cut-cell contours. The renderer clips their actual outline at supporting ground-cell boundaries, preserves UVs and layer lifts, and merges complete flat interiors. Narrow paint keeps its authored width even when it is smaller than a terrain cell. Adjacent chunks use the same canonical lattice and source-wide UV coordinates.
+Roads, cycle glyphs, crossings, decks and shorelines use cut-cell contours. The renderer clips their actual outline at supporting ground-cell boundaries, preserves UVs and layer lifts, and merges complete flat interiors. Narrow paint keeps its authored width even when it is smaller than a terrain cell. Adjacent chunks use the same canonical lattice and source-wide UV coordinates. Bridge decks and their pavement share a continuous height field, keeping ramps free of crosswise steps. Water samples the same wave field at shared UVs, without translucent tile skirts, so independently loaded tiles meet. Its persistent material and wave textures keep their original ownership and colour.
 
 Curved shaped stamps use a bounded surface net over occupied cells. Flat coplanar faces are merged, and the resulting surface is fitted to the original authored envelope. Tires retain their open centres; pivots, materials and physical contacts keep their existing ownership. Explicit `voxels/fill/cut` volumes retain exact cell faces and fracture cuts. Ground hills retain their stepped column appearance. No finer world-size grid, per-cell meshes or per-cell physics bodies were added.
 

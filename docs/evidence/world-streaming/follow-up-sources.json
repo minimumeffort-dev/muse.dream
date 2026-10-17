@@ -1,0 +1,15 @@
+{
+  "baseCommit": "b58833852f6830cfe3d678d677d999db011a2b56",
+  "recordedUTC": "2026-10-17T02:57:23.517723+00:00",
+  "scope": "water material ownership, continuous bridge/deck field, seam-free water and viewport resize coverage; all-resident/locality rerun; swimming recaptured; previous native-flight/profile evidence remains pinned to original sources.json",
+  "sha256": {
+    "src/game/chunk-packet.ts": "726925039aa814199a7e8f24532bd9aa0f0cf6b329222cf6a34097c1e0a82734",
+    "src/game/landscape.ts": "84e279821b67fb52f685472477a8d0d13454e832a7558a6cb4d73e3782fbaabc",
+    "src/game/shaders.ts": "db349d4f1fc79f77ed37b2f6574f204e126148d72b8f6a5679f70f7eb0978316",
+    "src/game/surface.ts": "48fab2f433569d5bdd09121f5948d3645cc14931ad962f7ceb6f3b87fdaa3e86",
+    "src/game/voxel-columns.ts": "773f40802f52d3e5ca8e9927169996a41095bb30ebaeee07dc1dcc275d038776",
+    "src/game/voxel-contours.ts": "0d570bef0d7dddf642166c794601af6c708c91c59bd866c595855ed4134db215",
+    "src/game/world-streaming.ts": "7b061dd41413dc8878a5a6d7446bfc3b01a24c777fb0d7fc77c08804a9dad3d2",
+    "tests/world-streaming.test.ts": "2aafbbd92ceff4b7701046c0279593630860bfe82286f7c97b0d970e7797fcff"
+  }
+}

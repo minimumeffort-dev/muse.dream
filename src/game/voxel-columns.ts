@@ -7,7 +7,7 @@ type Channel={name:string;size:number;offset:number};
 // Bounded world columns span far less than 2^20 on X. A linear key also retains
 // fractional terrain origins when the world's center is not a ground-cell multiple.
 const columnKey=(x:number,z:number)=>x+z*1048576;
-export type ColumnOptions={contour?:boolean;originX?:number;originZ?:number;cell:number;step:number;lift:number;thickness:number;maxMerge?:number;rigid?:boolean;baseAt?:(x:number,z:number)=>number;liftAt?:(x:number,z:number)=>number};
+export type ColumnOptions={surfaceAt?:(x:number,z:number)=>number|undefined;contour?:boolean;originX?:number;originZ?:number;cell:number;step:number;lift:number;thickness:number;maxMerge?:number;rigid?:boolean;baseAt?:(x:number,z:number)=>number;liftAt?:(x:number,z:number)=>number};
 
 /** Sparse, world-aligned solid columns. Empty cells cost no geometry; equal top
  * cells become rectangles, and only exposed vertical steps/perimeters are emitted. */

@@ -57,7 +57,7 @@ The live world's remaining curved shapes become occupied-cell stamps with contin
 
 ## Rendering and bounds
 
-The live world streams static geometry around the player. Infrastructure retains exact cut-cell outlines instead of centre-sampled stair steps; water keeps rigid per-cell wave anchors. Complete simulation and damage state remains resident. Streaming and contour choice are engine-owned and add no Dream commands. See [rendering and memory](../rendering.md).
+The live world streams static geometry around the player. Infrastructure retains exact cut-cell outlines instead of centre-sampled stair steps; bridge ramps use a shared continuous deck field, and water uses continuous shared UV waves without tile skirts. Cell anchors remain available in water geometry. Complete simulation and damage state remains resident. Streaming and contour choice are engine-owned and add no Dream commands. See [rendering and memory](../rendering.md).
 
 ![Continuous voxel contours inspected from four angles](../media/voxel-contours.jpg)
 

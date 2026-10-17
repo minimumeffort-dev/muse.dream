@@ -13,7 +13,7 @@
         6330,
         4233
       ],
-      "ms": 5674.500917,
+      "ms": 6074.066999999999,
       "stream": {
         "resident": 19,
         "required": 12,
@@ -21,8 +21,8 @@
         "bytes": 112016744,
         "peakBytes": 112016744,
         "peakResident": 19,
-        "maxInstallMs": 4.853291999999783,
-        "maxSliceMs": 4.583416999999827,
+        "maxInstallMs": 5.49829200000022,
+        "maxSliceMs": 5.320083000000523,
         "loaded": 19,
         "unloaded": 0,
         "discarded": 0,
@@ -50,10 +50,10 @@
         ]
       },
       "geometry": {
-        "bytes": 134419582,
+        "bytes": 134430138,
         "uniqueBuffers": 5499,
         "geometries": 946,
-        "uniqueTriangles": 984619
+        "uniqueTriangles": 984213
       }
     },
     {
@@ -62,7 +62,7 @@
         2000,
         9400
       ],
-      "ms": 4353.604458,
+      "ms": 4774.607374999998,
       "stream": {
         "resident": 20,
         "required": 11,
@@ -70,8 +70,8 @@
         "bytes": 89171084,
         "peakBytes": 112016744,
         "peakResident": 20,
-        "maxInstallMs": 4.853291999999783,
-        "maxSliceMs": 4.583416999999827,
+        "maxInstallMs": 5.49829200000022,
+        "maxSliceMs": 5.320083000000523,
         "loaded": 39,
         "unloaded": 19,
         "discarded": 0,
@@ -100,10 +100,10 @@
         ]
       },
       "geometry": {
-        "bytes": 111573922,
+        "bytes": 111584478,
         "uniqueBuffers": 2526,
         "geometries": 377,
-        "uniqueTriangles": 665835
+        "uniqueTriangles": 665429
       }
     },
     {
@@ -112,16 +112,16 @@
         9900,
         2800
       ],
-      "ms": 5575.451125000001,
+      "ms": 6653.559332999997,
       "stream": {
         "resident": 22,
         "required": 9,
         "pending": 0,
-        "bytes": 98157806,
+        "bytes": 97378166,
         "peakBytes": 112016744,
         "peakResident": 22,
-        "maxInstallMs": 4.853291999999783,
-        "maxSliceMs": 4.583416999999827,
+        "maxInstallMs": 5.49829200000022,
+        "maxSliceMs": 5.320083000000523,
         "loaded": 61,
         "unloaded": 39,
         "discarded": 0,
@@ -152,10 +152,10 @@
         ]
       },
       "geometry": {
-        "bytes": 120560644,
+        "bytes": 119791560,
         "uniqueBuffers": 4887,
         "geometries": 855,
-        "uniqueTriangles": 950274
+        "uniqueTriangles": 940248
       }
     },
     {
@@ -164,16 +164,16 @@
         6330,
         4233
       ],
-      "ms": 5962.642917000001,
+      "ms": 6405.056499999999,
       "stream": {
         "resident": 23,
         "required": 12,
         "pending": 0,
-        "bytes": 148905858,
-        "peakBytes": 148905858,
+        "bytes": 148941104,
+        "peakBytes": 148941104,
         "peakResident": 23,
-        "maxInstallMs": 4.853291999999783,
-        "maxSliceMs": 4.583416999999827,
+        "maxInstallMs": 5.49829200000022,
+        "maxSliceMs": 5.320083000000523,
         "loaded": 80,
         "unloaded": 57,
         "discarded": 0,
@@ -205,10 +205,10 @@
         ]
       },
       "geometry": {
-        "bytes": 171308696,
+        "bytes": 171354498,
         "uniqueBuffers": 6646,
         "geometries": 1171,
-        "uniqueTriangles": 1293182
+        "uniqueTriangles": 1293077
       }
     }
   ]

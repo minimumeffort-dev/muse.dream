@@ -1,4 +1,4 @@
-import {it,expect} from 'vitest';
+import {it,expect,vi} from 'vitest';
 import * as THREE from 'three';
 import {createFixtureScene} from '../src/scene/fixture';
 import {WorldStreaming,selectChunks,streamFootprint} from '../src/game/world-streaming';
@@ -119,4 +119,45 @@ it('restores styled shaders, night paint, wind shadows and local instance fades 
  expect(restored.obscuredCount).toBeGreaterThan(0);expect(restored.obscuredCount).toBe(source.obscuredCount);
  for(let i=0;i<copy.children.length;i++)expect((copy.children[i] as THREE.Mesh).geometry.getAttribute('visibility').array).toEqual((source.group.children[i] as THREE.Mesh).geometry.getAttribute('visibility').array);
  disposeChunk(source.group);disposeChunk(copy);
+});
+
+it('keeps persistent water colour, wave material and ownership when the worker uses a placeholder',()=>{
+ const root=new THREE.Group(),placeholder=new THREE.MeshBasicMaterial();placeholder.userData.streamMaterial={kind:'water',id:'river'};
+ const tile=new THREE.Mesh(new THREE.PlaneGeometry(10,10),placeholder);tile.renderOrder=2;root.add(tile);
+ const persistent=new THREE.MeshStandardMaterial({color:'#237e8c',roughness:.28,metalness:.12,transparent:true,opacity:.88,depthWrite:false});persistent.userData.streamShared=true;
+ const dispose=vi.fn();persistent.addEventListener('dispose',dispose);
+ const copy=unpackChunk(structuredClone(packChunk(root).packet),id=>{expect(id).toBe('river');return persistent;});
+ expect((copy.children[0] as THREE.Mesh).material).toBe(persistent);expect(persistent.color.getHexString()).toBe('237e8c');expect(persistent.opacity).toBe(.88);expect(persistent.depthWrite).toBe(false);disposeChunk(copy);expect(dispose).not.toHaveBeenCalled();
+});
+it('closes tall contour risers on bridge ramps even when a step exceeds the road skin thickness',()=>{
+ const source=new THREE.PlaneGeometry(16,8).rotateX(-Math.PI/2),g=contourSurface(source,{cell:8,step:1,lift:1.25,thickness:1.25,baseAt:x=>x<0?0:8});
+ const ray=new THREE.Raycaster(new THREE.Vector3(-7,4,1),new THREE.Vector3(1,0,0)),hits=ray.intersectObject(new THREE.Mesh(g,new THREE.MeshBasicMaterial()));
+ expect(hits.length).toBeGreaterThan(0);expect(hits[0]!.point.x).toBeCloseTo(0);expect(hits[0]!.face!.normal.x).toBeLessThan(-.99);
+});
+it('reconstructs continuous bridge tops and paint with aligned slope normals instead of visible crosswise stairs',()=>{
+ const source=new THREE.PlaneGeometry(32,16,4,2).rotateX(-Math.PI/2),heightAt=(x:number)=>2+x*.27;
+ const g=contourSurface(source,{cell:8,step:1,lift:1.25,thickness:1.25,baseAt:x=>heightAt(x),surfaceAt:(x)=>heightAt(x)+1.25});
+ const p=g.getAttribute('position'),n=g.getAttribute('normal');let checked=0;
+ for(let i=0;i<p.count;i++)if(n.getY(i)>.5){expect(p.getY(i)).toBeCloseTo(heightAt(p.getX(i))+1.25,5);expect(n.getX(i)).toBeCloseTo(-.27/Math.hypot(.27,1),5);checked++;}
+ expect(checked).toBeGreaterThan(20);
+});
+
+it('joins water tiles through continuous shared UV waves without transparent internal skirts',async()=>{
+ const {waterGeometry}=await import('../src/game/landscape'),{tiledMesh}=await import('../src/game/batching'),{waterMaterial}=await import('../src/game/shaders');
+ const doc={...createFixtureScene(),voxelWorld:{groundCell:8,heightStep:1,objectCell:1} as const};
+ const water={id:'seam',polygon:[{x:0,y:0},{x:640,y:0},{x:640,y:320},{x:0,y:320}],level:8,depth:20,color:'#237e8c',flow:{x:1,y:0}} as any;
+ const group=tiledMesh(waterGeometry(doc,water),new THREE.MeshBasicMaterial()),seen=new Map<string,number[]>();let shared=0;
+ group.traverse(node=>{if(!(node instanceof THREE.Mesh))return;const g=node.geometry,p=g.getAttribute('position'),n=g.getAttribute('normal'),uv=g.getAttribute('uv');expect(g.hasAttribute('voxelAnchor')).toBe(true);
+  for(let i=0;i<p.count;i++){expect(n.getY(i)).toBeCloseTo(1);const key=`${p.getX(i)},${p.getZ(i)}`,value=[p.getY(i),uv.getX(i),uv.getY(i)],previous=seen.get(key);if(previous){previous.forEach((v,j)=>expect(value[j]).toBeCloseTo(v,5));shared++;}else seen.set(key,value);}
+ });expect(shared).toBeGreaterThan(100);
+ const shader={uniforms:{},vertexShader:'#include <common>\n#include <beginnormal_vertex>\n#include <begin_vertex>',fragmentShader:'#include <common>\n#include <color_fragment>'} as any;
+ waterMaterial(water,new THREE.DataTexture(new Uint8Array(4),2,2),{columns:2,rows:2,width:640,height:320},true).onBeforeCompile(shader,null as any);
+ expect(shader.vertexShader).toContain('transformed.y+=waterWave(uv)');expect(shader.vertexShader).not.toContain('waterWave(voxelAnchor)');expect(shader.vertexShader).toContain('objectNormal=normalize(vec3(-wx,1.,-wy))');
+});
+
+it('reselects coverage when resizing changes the camera frustum without moving the player',()=>{
+ const stream=new WorldStreaming(fixture(),()=>new Promise(()=>{}),()=>toonMaterial('#fff')),camera=cameraAt(0,0),player=new THREE.Vector3(),sun=new THREE.Vector3(0,1,0);
+ stream.update(camera,sun,player,{x:0,y:0},0,false);const before=stream.stats.required;
+ camera.left=-2400;camera.right=2400;camera.updateProjectionMatrix();stream.update(camera,sun,player,{x:0,y:0},0,false);
+ expect(stream.stats.required).toBeGreaterThan(before);stream.dispose();
 });

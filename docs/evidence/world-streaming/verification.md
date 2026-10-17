@@ -10,7 +10,7 @@ The camera footprint includes both accepted height extremes, object extents and 
 
 Masks, complete accepted source data, fixed-step simulation, all damage, NPC clocks, live vehicles/people, ambient populations, flocks, wave simulation, bridges, routes and light pools remain resident. This is static render streaming, not simulation streaming. Required misses hold the last complete rendered frame and its already-computed simulation state until construction catches up. Capture exports wait before writing that frame. Reset cancels a pending frame from the old position. No distance-based quality reduction was added.
 
-Road and paint boundaries now clip exact contours to supporting cells. Source-wide UVs prevent chunk seams, and complete flat interiors merge. Curved shape stamps use bounded surface nets and coplanar merging, preserving the authored envelope and wheel openings. Explicit fill/cut volumes retain block faces and their existing fracture cuts. Ground terrain remains stepped. Identical painted vertices share indices without merging UV seams, hard normals or bone bindings.
+Road and paint boundaries now clip exact contours to supporting cells. Source-wide UVs prevent chunk seams, and complete flat interiors merge. Curved shape stamps use bounded surface nets and coplanar merging, preserving the authored envelope and wheel openings. Explicit fill/cut volumes retain block faces and their existing fracture cuts. Bridge decks and their paint use a shared continuous height field with slope normals; internal ground risers reach their neighbouring top even when taller than a thin paint skin. Ground terrain remains stepped. Water shares UV-based displacement/normals across chunks, with no translucent tile skirts. Per-cell anchor attributes remain in the geometry. Identical painted vertices share indices without merging UV seams, hard normals or bone bindings.
 
 ## Matched locality survey
 
@@ -21,7 +21,7 @@ node --expose-gc scripts/profile-world-memory.mjs voxel /tmp/all-resident.json
 node --expose-gc scripts/profile-world-streaming.mjs /tmp/locality.json
 ```
 
-The full case retains 465,051,512 bytes in major render groups. The warmed town retains 134,419,582; airport 111,573,922; waterfront 120,560,644; and return to town 171,308,696. The survey loads 80 chunks and unloads 57 by its last view. The town case uses 71.1% fewer geometry-buffer bytes than the full case. Four additional nearby chunks remain warm on return; distant airport chunks are gone.
+The full case retains 462,188,722 bytes in major render groups. The warmed town retains 134,430,138; airport 111,584,478; waterfront 119,791,560; and return to town 171,354,498. The survey loads 80 chunks and unloads 57 by its last view. The town case uses 70.9% fewer geometry-buffer bytes than the full case. Four additional nearby chunks remain warm on return; distant airport chunks are gone.
 
 Counts deduplicate backing buffers and include every instance matrix/color buffer. They cover environment, water/bridges, routes, flocks, static scenery and ambient populations. Live actors, player, effects, textures, render targets, temporary allocations, compiler caches, browser heap and GPU-driver allocations are excluded. Node process figures and phase timings are diagnostic, not browser memory or performance measurements. Earlier all-resident captures used different, blockier surfaces and are historical comparisons only.
 
@@ -35,13 +35,13 @@ The media audit below is completed with the refreshed paired clips. Offline reco
 
 ## Regression checks
 
-The complete local suite passes 949 tests in 59 files with two workers and the repository's CI timeout. New cases cover chunk selection at zoom/rotation/height extremes, upstream casters, stale results, eviction/rebuild, immutable accepted state, resource disposal, transferred indices/instances, shader reconstruction, matching wind depth passes, local fades, exact narrow diagonals, contour winding, flat merging and open wheel centres. The complete suite also exercises racing, terrain jumps, off-road contacts, boats below bridges, aircraft recovery, NPC/population motion and authored destruction.
+The complete local suite passes 954 tests in 59 files with two workers and the repository's CI timeout. New cases cover chunk selection at zoom/rotation/height extremes and viewport resizing, upstream casters, stale results, eviction/rebuild, immutable accepted state, resource disposal, transferred indices/instances, shader reconstruction, matching wind depth passes, local fades, exact narrow diagonals, contour winding, flat merging, open wheel centres, persistent water-material ownership, full-height risers, continuous bridge slopes and seam-free water UVs. The complete suite also exercises racing, terrain jumps, off-road contacts, boats below bridges, aircraft recovery, NPC/population motion and authored destruction.
 
-Production build/typecheck and published documentation build are checked separately. Source fingerprints accompany the evidence. Lower-powered laptop and sustained thermal/memory-pressure testing remain outstanding. The initial main-thread masks/navigation preparation can still delay input briefly, even though chunk geometry production has moved to the worker.
+Production build/typecheck and published documentation build are checked separately. Source fingerprints accompany the evidence. `sources.json` pins the initial streaming pass; `follow-up-sources.json` pins the water/bridge fixes and the rerun locality reports. Lower-powered laptop and sustained thermal/memory-pressure testing remain outstanding. The initial main-thread masks/navigation preparation can still delay input briefly, even though chunk geometry production has moved to the worker.
 
 ## Full-quality render sample
 
-The [town drive profile](render-profile.json) uses a 1920 × 1080 drawing buffer,
+The [town drive profile](render-profile.json), recorded on `b588338` before the water/bridge follow-up, uses a 1920 × 1080 drawing buffer,
 DPR 1.5, 60 warm-up frames and 300 measured frames. Mean preparation/submission
 was 3.80 ms, with 5.30 ms at the 95th percentile. GPU queries averaged 1.30 ms;
 presentation intervals averaged 16.67 ms. It submitted about 647,128 triangles
@@ -60,4 +60,4 @@ comparison, loader and four-angle contour atlas were refreshed together.
 counts and write times. Existing explicit carved-destruction, material, proportion,
 map and terrain-detail illustrations retain useful coverage of unchanged contracts;
 their dated evidence remains historical. README, rendering, whole-world voxels,
-voxel authoring, urban-world and media guides were reviewed and updated.
+voxel authoring, urban-world and media guides were reviewed and updated. The water/bridge follow-up re-exports swimming and refreshes the water/bridge still after correcting water colour, wave seams and ramp tops.

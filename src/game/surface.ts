@@ -105,7 +105,12 @@ export function* surfaceGeometrySteps(doc: Scene, polygons: Point[][], lift: num
   geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
   geometry.setAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));
   geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
-  if(doc.voxelWorld)geometry.userData.voxelOptions={contour:true,cell:doc.voxelWorld.groundCell,originX:-doc.canonical.width/2,originZ:-doc.canonical.height/2,step:doc.voxelWorld.heightStep,lift,thickness:Math.max(.08,lift),maxMerge:200,baseAt:(x:number,z:number)=>voxelSurfaceBase(doc,x,z,heightAt)};
+  const smoothDeck=heightAt || decks.some(d=>!region || d.minX<=region.x1 && d.maxX>=region.x0 && d.minY<=region.y1 && d.maxY>=region.y0);
+  const surfaceAt=smoothDeck ? (x:number,z:number)=>{
+    const px=x+doc.canonical.width/2,py=z+doc.canonical.height/2,bridge=heightAt ? undefined : bridgeAt(doc.terrain.landscape,px,py);
+    return heightAt || bridge ? surfaceHeight(doc,px,py,heightAt??bridgeHeightAt(doc,bridge!))+lift : undefined;
+  } : undefined;
+  if(doc.voxelWorld)geometry.userData.voxelOptions={surfaceAt,contour:true,cell:doc.voxelWorld.groundCell,originX:-doc.canonical.width/2,originZ:-doc.canonical.height/2,step:doc.voxelWorld.heightStep,lift,thickness:Math.max(.08,lift),maxMerge:200,baseAt:(x:number,z:number)=>voxelSurfaceBase(doc,x,z,heightAt)};
   return geometry;
 }
 
