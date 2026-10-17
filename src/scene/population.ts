@@ -21,12 +21,14 @@ export const furnishingSchema=z.object({id:z.string(),streets:refs.optional(),si
   setback:z.number().finite().min(0).max(120),side:z.enum(['left','right','both']).default('both'),facing:z.enum(['along','street','varied']).default('along'),
   jitter:z.number().finite().min(0).max(.3).default(0),seed:z.number().int().min(0).max(65535),count:z.number().int().min(1).max(12).optional(),
   pose:z.literal('rest').optional(),motion:ambientMotionSchema.optional(),
+  role:z.enum(['prop','controllable']).default('prop'),
   on:z.enum(['verge','sidewalk']).default('verge'),
 }).strict().superRefine((r,ctx)=>{
   if(Number(!!r.streets)+Number(!!r.sites)!==1 || !!r.sites!==!!r.count)ctx.addIssue({code:'custom',message:'furnish needs streets, or sites with count'});
   if(r.streets && r.spacing<80)ctx.addIssue({code:'custom',message:'street furnishing spacing must be at least 80'});
   if(r.paving && !r.sites)ctx.addIssue({code:'custom',message:'paving belongs to destination furnishing'});
   if(r.on==='sidewalk' && (r.setback!==0 || r.paving))ctx.addIssue({code:'custom',message:'sidewalk furnishing requires setback=0 and no paving'});
+  if(r.role==='controllable' && (r.pose || r.motion || r.on==='sidewalk'))ctx.addIssue({code:'custom',message:'controllable furnishing creates parked vehicles without rest, ambient motion or sidewalk placement'});
   if(new Set(r.streets??r.sites??[]).size!==(r.streets??r.sites??[]).length)ctx.addIssue({code:'custom',message:'furnish targets must be unique'});
 });
 export type Furnishing=z.infer<typeof furnishingSchema>&{objects:ObjectDslV2[];rigs?:Ambient['joints'][]};
@@ -99,7 +101,7 @@ export function furnishWorld(scene:Scene,rules:Furnishing[]):{objects:SceneObjec
         if(occupied.query(x,y,r+maxRadius+4).some(o=>Math.hypot(o.x-x,o.y-y)<o.r+r+4))continue;
         if(++emitted>POPULATION_LIMITS.perRule || generated.length>=POPULATION_LIMITS.generated || scene.objects.length+generated.length>=4096)throw Error(`furnish "${rule.id}": expansion exceeds 128 per rule, 1024 generated or 4096 scene objects (${emitted} in rule, ${generated.length} generated)`);
         const heading=rule.facing==='varied' ? random()*Math.PI*2 : Math.atan2(dy,dx)+(rule.facing==='street' ? -side*Math.PI/2 : 0);
-        generated.push({id:`${rule.id}_${key}_${side<0 ? 'l':'r'}`,kind:'custom',labelText:spec.displayName,x,y,headingRad:heading,scale,spec,role:rule.motion ? 'ambient' : 'prop',...(rule.motion ? {ambient:{motion:rule.motion,joints:rule.rigs?.[choice]??[]}} : {})});
+        generated.push({id:`${rule.id}_${key}_${side<0 ? 'l':'r'}`,kind:'custom',labelText:spec.displayName,x,y,headingRad:heading,scale,spec,role:rule.motion ? 'ambient' : rule.role,...(rule.role==='controllable' ? {parked:true as const} : {}),...(rule.motion ? {ambient:{motion:rule.motion,joints:rule.rigs?.[choice]??[]}} : {})});
         if(rule.paving && candidate.siteId){
           const id=`parking_${candidate.siteId}_${segment}_${rule.paving.slice(1)}`,inner=offset-rule.setback-r-.5,outer=offset+r+4;
           const pad=pads.get(id)??{color:rule.paving,dx,dy,origin:a,inner,outer,low:d-r-4,high:d+r+4,side};

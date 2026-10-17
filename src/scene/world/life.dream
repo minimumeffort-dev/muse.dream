@@ -56,14 +56,14 @@ asset shopper(module=city_people,object=river_shopper);
 asset student(module=city_people,object=campus_student);
 asset neighbor(module=city_people,object=park_neighbor);
 asset resident(module=city_people,object=city_resident);
-asset parked_hatchback(module=street_assets,object=city_hatchback);
-asset parked_van(module=street_assets,object=delivery_van);
+asset parked_hatchback(module=street_assets,object=city_hatchback,control=car);
+asset parked_van(module=street_assets,object=delivery_van,control=car);
 asset parked_sedan(module=landmarks,object=town_car);
 furnish center_residents(objects=[shopper,resident,a_commuter],streets=[market_avenue,high_street,civic_walk,north_avenue],spacing=600,setback=0,seed=302,side=left,motion=walk(speed=14,wait_s=1),on=sidewalk,facing=varied,jitter=.3);
 furnish neighborhood_residents(objects=[neighbor,resident,student],streets=[garden_collector,garden_crescent,school_street,south_terrace,hospital_street],spacing=600,setback=0,seed=303,motion=walk(speed=14,wait_s=1),on=sidewalk,facing=varied,jitter=.3);
 furnish east_residents(objects=[shopper,student,resident],streets=[eastbank,station_avenue,harbor_street,workshop_street,airfield_road],spacing=600,setback=0,seed=304,side=right,motion=walk(speed=14,wait_s=1),on=sidewalk,facing=varied,jitter=.3);
-furnish civic_parking(objects=[parked_hatchback,parked_sedan],sites=[access_garden_school,access_south_school,access_hospital,access_offices,access_college],spacing=58,setback=5,count=8,seed=311,grounds=[hospital_apron],paving=#aaa99f);
-furnish east_parking(objects=[parked_hatchback,parked_sedan,parked_van],sites=[access_east_medical_center,access_harbor_market,access_airport,access_harbor_workshops],spacing=62,setback=5,count=8,seed=312,grounds=[airport_forecourt,east_medical_apron],paving=#aaa99f);
+furnish civic_parking(objects=[parked_hatchback,parked_sedan],sites=[access_garden_school,access_south_school,access_hospital,access_offices,access_college],spacing=58,setback=5,count=8,seed=311,grounds=[hospital_apron],paving=#aaa99f,role=controllable);
+furnish east_parking(objects=[parked_hatchback,parked_sedan,parked_van],sites=[access_east_medical_center,access_harbor_market,access_airport,access_harbor_workshops],spacing=62,setback=5,count=8,seed=312,grounds=[airport_forecourt,east_medical_apron],paving=#aaa99f,role=controllable);
 behavior neighborhood_greeting(start=rest){
  state rest(action=idle,face=none){on hello(event=near_player,radius=80,to=greet);}
  state greet(action=idle,face=player){on resume(event=far_player,radius=120,to=rest);}

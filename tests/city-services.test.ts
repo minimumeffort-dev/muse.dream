@@ -12,6 +12,8 @@ import {mapDestinations} from '../src/game/navigation';
 import {partGeometry} from '../src/scene/object-geometry';
 import {hasAnimatedJoints} from '../src/scene/object-dsl';
 import {roleOf,controlFor} from '../src/scene/agents';
+import {objectContacts} from '../src/scene/contacts';
+import {actorPose} from '../src/sim/actors';
 import {routePath,routePose} from '../src/scene/routes';
 import type {Scene} from '../src/scene/schema';
 import {compileDream} from '../src/scene/dream';
@@ -47,7 +49,10 @@ describe('connected civic services and regional airport',()=>{
   }
   const bus=scene.objects.find(o=>o.id==='airport_bus_vehicle')!,route=scene.routes.find(r=>r.id==='airport_bus')!;
   const timeS=routePath(route).distances[route.stops![0]!.anchor]!/route.speed+.5,entry=siteEntry(scene,scene.sites.find(s=>s.id==='access_airport_bus')!);
-  const foot={...createCarAtSpawn(scene),control:{kind:'foot' as const},...entry,timeS},rider=toggleRide(foot,world);
+  const start=createCarAtSpawn(scene),foot={...start,control:{kind:'foot' as const},...entry,timeS,vehicles:[{id:null,x:start.x,y:start.y,elevation:start.elevation,headingRad:start.headingRad,distance:0}]};
+  const contacts=objectContacts(scene,bus,actorPose(scene,bus,timeS)),approaches=contacts.flatMap(c=>Array.from({length:8},(_,i)=>({...foot,x:c.x+Math.cos(i*Math.PI/4)*(c.r+9),y:c.y+Math.sin(i*Math.PI/4)*(c.r+9)})));
+  const approach=approaches.find(s=>Math.hypot(s.x-entry.x,s.y-entry.y)<120 && carFootprintClear(bodyWorld(s,world),s.x,s.y,s.elevation,timeS,s) && toggleRide(s,world).control.kind==='passenger');
+  expect(approach,'the platform must have a clear approach to its passenger bus').toBeDefined();const rider=toggleRide(approach!,world);
   expect(rider.control).toEqual({kind:'passenger',id:bus.id});
   const next=stepInteractive(rider,{throttle:1,steer:1},1/120,world);
   expect(next.x).toBeCloseTo(routePose(route,next.timeS).x);expect(next.y).toBeCloseTo(routePose(route,next.timeS).y);
@@ -72,9 +77,9 @@ describe('connected civic services and regional airport',()=>{
  });
  it('preserves the existing actor, animation, route and population budgets',()=>{
   expect(scene.routes).toHaveLength(12);
-  expect(scene.objects.filter(o=>o.route || controlFor(o)).length).toBeLessThanOrEqual(24);
+  expect(scene.objects.filter(o=>!o.parked && (o.route || controlFor(o))).length).toBeLessThanOrEqual(24);
   expect(scene.objects.filter(o=>roleOf(o)==='npc').length).toBeLessThanOrEqual(32);
-  expect(scene.objects.filter(o=>hasAnimatedJoints(o.spec)).length+Number(hasAnimatedJoints(scene.player))+1).toBeLessThanOrEqual(24);
+  expect(scene.objects.filter(o=>!o.parked && hasAnimatedJoints(o.spec)).length+Number(scene.objects.some(o=>o.parked && hasAnimatedJoints(o.spec)))+Number(hasAnimatedJoints(scene.player))+1).toBeLessThanOrEqual(24);
   expect(scene.flocks.reduce((n,f)=>n+f.count,0)).toBe(256);
   expect(scene.objects.filter(o=>o.id.startsWith('airport_lamps_')).length).toBeGreaterThan(20);
   expect(scene.objects.filter(o=>o.id.startsWith('service_bicycles_')).length).toBeGreaterThanOrEqual(4);

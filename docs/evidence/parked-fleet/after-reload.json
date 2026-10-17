@@ -1,0 +1,8 @@
+{
+  "car": "6513.1,4209.3,1.5",
+  "control": "{\"kind\":\"foot\"}",
+  "memory": "{\"bytes\":192686108,\"uniqueBuffers\":7351,\"geometries\":1330,\"uniqueTriangles\":1384941}",
+  "parking": "{\"active\":null,\"prototypes\":1,\"instances\":4}",
+  "save": "{\"sourceHash\":\"9b4a8530a3138ee9a87d04d00d24bfba0d57a28b1a8058b3fa7c4278a2f67720\",\"compatibilityHash\":\"12bf26fd5c21822fa347406211a5e7abe71c00c0d08199b4f58c7fc755470e75\",\"restored\":true,\"saved\":true,\"ms\":0.8999999761581421,\"characters\":62213,\"timeS\":3130.7499999965153,\"known\":[\"vendor\"],\"review\":true,\"status\":\"Saved on this device.\"}",
+  "vehicles": "[{\"id\":null,\"x\":6362.52029287953,\"y\":4233,\"elevation\":0,\"headingRad\":0,\"distance\":32.47435520389084},{\"id\":\"transit_bicycles_0_5_r\",\"x\":6503.277521194862,\"y\":4199.117285011859,\"elevation\":0,\"headingRad\":-0.7675482663395496,\"distance\":176.1707430566147}]"
+}

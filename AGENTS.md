@@ -193,6 +193,8 @@ car simulation with their own tuning/body dimensions; boats and planes use bound
 arcade controllers, full water clearance and cylinder contacts. Keep exits
 collision-free, prefer dry ground before wading/swimming, prohibit mid-air exits, preserve checkpoint state outside
 the original car, and keep the occupied vehicle opaque. Use `docs/dream/behavior.md`.
+Dormant vehicles use explicit `place(...,role=controllable,parked=true)` or `furnish(...,role=controllable)`. Dormant parking supports ground profiles; boats/planes keep resident placements until their seed water/air support is implemented. Keep their 256-record metadata/body cap separate from the 24 resident actors. Reserve one existing live-assembly slot for the single occupied dormant rig; render seeds and moved local poses as instances, retain exact wheel phase, hide seed shadows and release local prototypes on eviction. Optional `asset.control` adapts an existing seat on a validated copy, never the exported template or NPC passenger capability. Preserve the registered r46 format-4 upgrade, format-5/simulation-4 save semantics and earlier migration chain.
+
 Reserve one of the 24 live jointed-assembly slots for the standing character; scene
 objects plus the player vehicle may use the remaining 23.
 

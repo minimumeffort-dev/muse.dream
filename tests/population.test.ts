@@ -74,7 +74,7 @@ describe('live district populations and transport',()=>{
   for(let t=0;t<=240;t+=2)expect(spawnContacts(scene,t).some(c=>Math.hypot(c.x-scene.spawn.x,c.y-scene.spawn.y)<c.r+11),'spawn must stay clear of scheduled traffic').toBe(false);
   const cars=scene.objects.filter(o=>o.route && scene.routes.find(r=>r.id===o.route!.id)?.kind==='street' && o.spec && 'measure' in o.spec && o.spec.measure?.kind==='car');
   expect(cars.length).toBe(4);expect(new Set(cars.map(o=>o.spec!.displayName)).size).toBe(3);
-  expect(scene.objects.filter(o=>o.route||controlFor(o)).length).toBeLessThanOrEqual(24);
+  expect(scene.objects.filter(o=>!o.parked && (o.route||controlFor(o))).length).toBeLessThanOrEqual(24);
   expect(scene.objects.filter(o=>roleOf(o)==='npc').length).toBeLessThanOrEqual(32);
  });
  it('populates districts and habitats without blocking walking, parking or the circuit',async()=>{
@@ -98,7 +98,7 @@ describe('live district populations and transport',()=>{
   }
   const cars=scene.objects.filter(o=>/^(civic|east)_parking_/.test(o.id));
   expect(cars.length).toBe(14);expect(new Set(cars.map(o=>o.spec!.displayName)).size).toBe(3);
-  for(const car of cars){expect(car.role).toBe('prop');expect((car.spec as import('../src/scene/object-dsl').ObjectDslV2).body.interaction).toBe('solid');expect(scene.surfaces.some(s=>pointInPolygon(car.x,car.y,s.points))).toBe(true);}
+  for(const car of cars){expect(car.role).toBe('controllable');expect(car.parked).toBe(true);expect((car.spec as import('../src/scene/object-dsl').ObjectDslV2).body.interaction).toBe('solid');expect(scene.surfaces.some(s=>pointInPolygon(car.x,car.y,s.points))).toBe(true);}
   const animals=scene.objects.filter(o=>o.id.startsWith('wildlife_infill_'));
   expect(animals).toHaveLength(60);expect(animals.every(o=>o.role==='ambient' && o.ambient?.motion.kind==='roam')).toBe(true);expect(new Set(animals.map(o=>o.spec!.displayName)).size).toBe(6);
   const additions=scene.objects.filter(o=>/^(wildlife|woodland|garden)_infill_/.test(o.id));
@@ -110,7 +110,7 @@ describe('live district populations and transport',()=>{
    expect(distanceToRoad(roadPoints(scene),object.x,object.y)).toBeGreaterThan(scene.roadMaskRef.params.roadWidth/2+r);
    for(let a=0;a<Math.PI*2;a+=Math.PI/4)expect(waterAt(scene.terrain,object.x+Math.cos(a)*r,object.y+Math.sin(a)*r)).toBeUndefined();
   }
-  expect(scene.objects.filter(o=>hasAnimatedJoints(o.spec)).length+Number(hasAnimatedJoints(scene.player))+1).toBeLessThanOrEqual(24);
+  expect(scene.objects.filter(o=>!o.parked && hasAnimatedJoints(o.spec)).length+Number(scene.objects.some(o=>o.parked && hasAnimatedJoints(o.spec)))+Number(hasAnimatedJoints(scene.player))+1).toBeLessThanOrEqual(24);
  });
  it('preserves the complete live graph, contact broad phase and crowd state across worker bootstrap',async()=>{
   const {ambientGraph,ambientNavigation,primeAmbientNavigation}=await import('../src/scene/ambient-navigation'),{sceneContactData,sceneContacts,primeSceneContacts}=await import('../src/scene/contacts'),{stepAmbient}=await import('../src/sim/ambient');

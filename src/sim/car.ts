@@ -11,7 +11,7 @@ import type { Checkpoint, Scene } from "../scene/schema";
 import { sampleTerrain, drivingHeight, terrainHeight, waterAt, waterCeiling } from "../scene/terrain";
 import { archetypeOf, objectHeight, objectRadius } from "./archetypes";
 import { pointInPolygon, type RasterMask } from "./mask";
-import { sceneContacts } from "../scene/contacts";
+import { sceneContacts,queryStaticContacts } from "../scene/contacts";
 import { actorContacts } from "./actors";
 import { impactOf,controlOf } from "../scene/object-dsl";
 import { breakOnContact,advanceImpactMotion,isBroken,type DebrisState,type ImpactEvent } from "./impacts";
@@ -109,6 +109,7 @@ export interface World {
   saveCompatibility?:string;
   previousSaveCompatibility?:string;
   previousMarketSaveCompatibility?:string;
+  previousParkingSaveCompatibility?:string;
   emptyEconomySaveCompatibility?:string;
   previousSaveSource?:string;
   /** Racing surface, independent of where the car may travel. */
@@ -238,8 +239,8 @@ function crossedCheckpoint(
 }
 
 export function carFootprintClear(world:World,x:number,y:number,elevation:number,timeS:number,state?:CarState):boolean {
-  const data=sceneContacts(world.scene),height=world.bodyHeight??playerHeight(world.scene);
-  return world.driveMask.footprintClear(x,y,world.carRadius) && (!world.dryGround || !waterAt(world.scene.terrain,x,y,drivingHeight(world.scene.terrain,x,y))) && !(world.waterSupport && elevation<drivingHeight(world.scene.terrain,x,y)-.05 && elevation+height>waterCeiling(world.scene.terrain,x,y,world.carRadius)) && ![...data.solids.query(x,y,world.carRadius+data.maxRadius),...actorContacts(world.scene,timeS,state)]
+  const height=world.bodyHeight??playerHeight(world.scene);
+  return world.driveMask.footprintClear(x,y,world.carRadius) && (!world.dryGround || !waterAt(world.scene.terrain,x,y,drivingHeight(world.scene.terrain,x,y))) && !(world.waterSupport && elevation<drivingHeight(world.scene.terrain,x,y)-.05 && elevation+height>waterCeiling(world.scene.terrain,x,y,world.carRadius)) && ![...queryStaticContacts(world.scene,x,y,world.carRadius,state),...actorContacts(world.scene,timeS,state)]
     .some(s=>(!state || !isBroken(state,s)) && elevation<s.top-.05 && elevation+height>s.bottom+.05 && Math.hypot(x-s.x,y-s.y)<world.carRadius+s.r);
 }
 
@@ -271,11 +272,11 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
   s.timeS += dt;
 
   // Solid archetype colliders join the mask as "not drivable" for the car.
-  const compiled = sceneContacts(scene);
+  const compiled=sceneContacts(scene);
   // Include the full fixed-step movement and any displacement by a moving actor.
   const moving=actorContacts(scene,s.timeS,s),height=world.bodyHeight??playerHeight(scene);
   const pushRange=moving.length ? 2*(carRadius+Math.max(...moving.map(a=>a.r))) : 0;
-  const solids = [...compiled.solids.query(s.x,s.y,carRadius + compiled.maxRadius + tuning.maxTerrainSpeed*dt+pushRange),...moving];
+  const solids = [...queryStaticContacts(scene,s.x,s.y,carRadius+tuning.maxTerrainSpeed*dt+pushRange,s),...moving];
   const supportHeight = (x: number, y: number, fromHeight: number): number => {
     let floor = drivingHeight(scene.terrain, x, y);
     const water=world.waterSupport && waterAt(scene.terrain,x,y,terrainHeight(scene.terrain,x,y));

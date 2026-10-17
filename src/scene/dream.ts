@@ -306,7 +306,15 @@ export function compileDreamWorld(source:string,modules:DreamModules={}):DreamWo
     try {
       if(name!=='<entry>' && program.layout.some(n=>n.kind==='rule'))fail('interaction rules belong in the entry file',program.layout.find(n=>n.kind==='rule')!.token,'E_RULE');
       const assets=new Map<string,ObjectDslV2>();
-      for(const node of program.assets??[]){const id=wordField(node,"object"),spec=resolve(node).exports.get(id);if(!spec)fail(`module has no exported object '${id}'`,node.token,"E_REFERENCE");assets.set(node.id!,spec);}
+      for(const node of program.assets??[]){
+        const id=wordField(node,'object'),spec=resolve(node).exports.get(id);if(!spec)fail(`module has no exported object '${id}'`,node.token,'E_REFERENCE');
+        if(node.fields.has('control')){
+          if(!spec.rideable)fail('asset control requires an existing rideable seat',{...node.token,path:`${node.token.path}/control`},'E_SCHEMA');
+          const adapted=objectDslSchema.safeParse({...spec,rideable:{...spec.rideable,control:wordField(node,'control')}});
+          if(!adapted.success || adapted.data.dslVersion!==2)fail(adapted.success ? 'asset requires Dream 2 object data' : adapted.error.issues[0]!.message,{...node.token,path:`${node.token.path}/control`},'E_SCHEMA');
+          assets.set(node.id!,adapted.data);
+        }else assets.set(node.id!,spec);
+      }
       const included=new Set<string>();
       const children=(program.includes??[]).map(node=>{
         const id=wordField(node,"module");if(included.has(id))fail(`module '${id}' is included twice`,node.token,"E_DUPLICATE_ID");included.add(id);return resolve(node).world;
@@ -405,7 +413,7 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
     if(variation<.5 || variation>2)fail("placement scale must be 0.5..2",source.scale?.token??source.token,"E_SCHEMA");
     const result=sceneObjectSchema.safeParse({id:source.name,kind:"custom",labelText:spec.displayName,spec,...position,...heading,
       scale:variation*measuredScale(spec),...(source.heading ? {headingRad:numeric(source.heading,globals)*RAD} : {}),
-      ...(route ? {route:{id:route.id,offset,...(source.phase ? {phaseS} : {})}} : {}),...(ambient ? {ambient} : {}),...(source.role ? {role:source.role} : {}),...(source.behavior ? {behavior:source.behavior} : {})});
+      ...(route ? {route:{id:route.id,offset,...(source.phase ? {phaseS} : {})}} : {}),...(ambient ? {ambient} : {}),...(source.role ? {role:source.role} : {}),...(source.parked ? {parked:true} : {}),...(source.behavior ? {behavior:source.behavior} : {})});
     if(!result.success)fail(result.error.issues[0]!.message,source.token,"E_SCHEMA");
     const problem=agentProblem(result.data,behaviors,routes);if(problem)fail(problem,source.token,'E_AGENT');return result.data;
   });
@@ -421,16 +429,17 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
         if(motion && node.fields.has('pose'))fail('moving populations cannot also declare pose=rest',node.token,'E_POPULATION');
         if(motion?.kind==='walk' && (!node.fields.has('on') || wordField(node,'on')!=='sidewalk'))fail('walking furnish requires on=sidewalk',node.token,'E_POPULATION');
         const objects=original.map(spec=>(node.fields.has('pose') || motion) && spec ? restingTemplate(spec) : spec);
+        if(node.fields.has('role') && wordField(node,'role')==='controllable' && objects.some(s=>!s || !controlOf(s)))fail('controllable furnishing requires rideable(control=...) on every template',{...node.token,path:`${node.token.path}/role`},'E_POPULATION');
         if(node.fields.has('on') && wordField(node,'on')==='sidewalk' && objects.some(s=>s?.body.interaction!=='decor'))fail('sidewalk furnishing requires passive decor so the walking corridor stays open',node.token,'E_POPULATION');
         if(!objects.length || objects.length>8 || objects.some(s=>!s || s.body.interaction==='knockable' || s.joints?.some(j=>j.bone || j.proximity || j.animation && !('kind' in j.animation && j.animation.kind==='roll')) || isReactive(s) || s.emitter))fail('furnish needs 1..8 passive static object templates',node.token,'E_POPULATION');
         const data={id:node.id,spacing:num('spacing'),setback:num('setback'),seed:num('seed'),...(motion ? {motion} : {})};
         for(const key of ['streets','sites','grounds'])if(node.fields.has(key))Object.assign(data,{[key]:listField(node,key).map(e=>e.name!)});
         if(node.fields.has('pose'))Object.assign(data,{pose:wordField(node,'pose')});
         if(node.fields.has('paving'))Object.assign(data,{paving:wordField(node,'paving')});
-        for(const key of ['side','facing','on'])if(node.fields.has(key))Object.assign(data,{[key]:wordField(node,key)});
+        for(const key of ['side','facing','on','role'])if(node.fields.has(key))Object.assign(data,{[key]:wordField(node,key)});
         for(const key of ['count','jitter'])if(node.fields.has(key))Object.assign(data,{[key]:num(key)});
-        // Distance-driven joints rest in parked scenery; they consume no live controller slots.
-        furnishings.push({...furnishingSchema.parse(data),...(motion ? {rigs:original.map(s=>ambientData(s,motion).joints)} : {}),objects:objects.map(s=>s.joints?.some(j=>j.animation) ? {...s,joints:s.joints.map(({animation,...joint})=>joint)} : s)});
+        // Controllable parking keeps its rig for the one occupied vehicle.
+        furnishings.push({...furnishingSchema.parse(data),...(motion ? {rigs:original.map(s=>ambientData(s,motion).joints)} : {}),objects:objects.map(s=>!(node.fields.has('role') && wordField(node,'role')==='controllable') && s.joints?.some(j=>j.animation) ? {...s,joints:s.joints.map(({animation,...joint})=>joint)} : s)});
       }
     }catch(error){if(error instanceof DreamError)throw error;fail(error instanceof ZodError ? error.issues[0]!.message : String(error),node.token,'E_POPULATION');}
   }

@@ -24,6 +24,12 @@ Every object declares a body with a radius and height. A static upright solid ca
 
 `rideable(at=[x,y,z],control=bicycle)` supplies a local seat and selects an engine control profile. The profiles are `car`, `bicycle`, `skateboard`, `scooter`, `boat` and `plane`. A placement with `role=controllable` starts parked and takes WASD input when occupied. It can have a fixed XY placement or use a route's initial pose; the route does not constrain its movement.
 
+![A destination bicycle becomes a usable ride](../media/parking.jpg)
+
+[HD recording](../media/parking.mp4) · [GIF](../media/parking.gif)
+
+The destination parking now uses these same controls: 45 bicycles, 22 scooters and 14 cars/vans. Use `furnish(...,role=controllable)` or `place(...,role=controllable,parked=true)` to declare dormant available rides. [Parking rules and complete source](populations.md#make-the-parked-vehicles-usable).
+
 **F** gets you out of the current vehicle. Walk to another one, then press **F** to enter it. Boarding uses distance from the body's edge, up to 60 canonical units, and an elevation difference below 28 units. The car and other vehicles remain where you leave them. You can return on foot and take them over again. **R** returns to the starting car while keeping parked vehicles and world damage; Start over restores everything. Resetting during flight or after a water landing returns the abandoned aircraft to its authored start.
 
 | Mode | WASD / arrows | Space | Shift |

@@ -1,0 +1,118 @@
+{
+  "count": 81,
+  "models": [
+    {
+      "label": "Meadow bicycle",
+      "control": "bicycle",
+      "instances": 45,
+      "meshes": 4,
+      "geometry": {
+        "bytes": 1027308,
+        "uniqueBuffers": 24,
+        "geometries": 4,
+        "uniqueTriangles": 6606
+      },
+      "joints": 1
+    },
+    {
+      "label": "Electric city scooter",
+      "control": "scooter",
+      "instances": 22,
+      "meshes": 3,
+      "geometry": {
+        "bytes": 181240,
+        "uniqueBuffers": 18,
+        "geometries": 3,
+        "uniqueTriangles": 1180
+      },
+      "joints": 0
+    },
+    {
+      "label": "Town car",
+      "control": "car",
+      "instances": 4,
+      "meshes": 4,
+      "geometry": {
+        "bytes": 271680,
+        "uniqueBuffers": 22,
+        "geometries": 4,
+        "uniqueTriangles": 1904
+      },
+      "joints": 2
+    },
+    {
+      "label": "City hatchback",
+      "instances": 5,
+      "meshes": 3,
+      "geometry": {
+        "bytes": 266240,
+        "uniqueBuffers": 18,
+        "geometries": 3,
+        "uniqueTriangles": 1860
+      },
+      "joints": 2
+    },
+    {
+      "label": "Neighborhood delivery van",
+      "instances": 5,
+      "meshes": 3,
+      "geometry": {
+        "bytes": 315844,
+        "uniqueBuffers": 18,
+        "geometries": 3,
+        "uniqueTriangles": 2166
+      },
+      "joints": 2
+    }
+  ],
+  "examples": [
+    {
+      "id": "transit_bicycles_0_2_r",
+      "x": 6522,
+      "y": 4313.423450900427,
+      "label": "Meadow bicycle",
+      "control": "bicycle"
+    },
+    {
+      "id": "transit_bicycles_0_4_r",
+      "x": 6548,
+      "y": 4313.423450900427,
+      "label": "Meadow bicycle",
+      "control": "bicycle"
+    },
+    {
+      "id": "transit_bicycles_0_5_r",
+      "x": 6372,
+      "y": 4313.423450900427,
+      "label": "Meadow bicycle",
+      "control": "bicycle"
+    },
+    {
+      "id": "transit_bicycles_0_6_r",
+      "x": 6574,
+      "y": 4313.423450900427,
+      "label": "Meadow bicycle",
+      "control": "bicycle"
+    },
+    {
+      "id": "destination_scooters_0_3_r",
+      "x": 6344,
+      "y": 4313.098472625112,
+      "label": "Electric city scooter",
+      "control": "scooter"
+    }
+  ],
+  "formerlySeatOnly": [
+    "civic_parking_3_7_r",
+    "civic_parking_4_7_r",
+    "east_parking_0_4_r",
+    "east_parking_0_5_r",
+    "east_parking_0_6_r",
+    "east_parking_1_7_l",
+    "east_parking_2_5_r",
+    "east_parking_3_4_r",
+    "east_parking_3_5_r",
+    "east_parking_3_6_r"
+  ],
+  "liveAnimated": 23
+}

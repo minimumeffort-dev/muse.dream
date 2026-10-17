@@ -51,6 +51,7 @@ import { WorldLandscape } from "./landscape";
 import { WorldParticles } from "./particles";
 import { SceneryOcclusion } from "./occlusion";
 import {WorldStreaming} from './world-streaming';
+import {WorldParking} from './parking';
 import type {WorldWorkerClient} from './world-worker-client';
 import { createWorldMap } from "./navigation";
 import {geometryMemory} from './geometry-memory';
@@ -74,7 +75,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   primeAmbientNavigation(doc,worker.navigation);
   const carRadius = playerRadius(doc);
   const roadMask = buildMaskForScene(doc);
-  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
+  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousParkingSaveCompatibility:worker.previousParkingSaveCompatibility,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
     driveMask: buildPaperMask(doc.canonical.width, doc.canonical.height), carRadius };
   let car = createCarAtSpawn(doc);
   if(import.meta.env.DEV)car=vehicleReviewStart(car,world,new URLSearchParams(location.search).get("test-vehicle"));
@@ -189,6 +190,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   const characters=new Map<THREE.Group,CharacterAnimator>();
   const {debris,traveler,avatar,walkerSpec,walker,walkerAnimation,carRoot,carMesh,particles,sportVisuals}=await loading.build("Preparing vehicles and interactive objects",(function*(){
   for (const object of doc.objects) {
+    if(object.parked)continue;
     if (!isActor(object) && !isReactive(object.spec) && archetypeOf(object).interaction !== "knockable" && !hasAnimatedJoints(object.spec)) continue;
     yield;
     const destructible=isReactive(object.spec) && impactOf(object.spec)?.kind!=="bounce";
@@ -222,6 +224,12 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   const sportVisuals=new SportsVisuals(doc);scene.add(sportVisuals.group);
   return {debris,traveler,avatar,walkerSpec,walker,walkerAnimation,carRoot,carMesh,particles,sportVisuals};
   })());
+  const parking=new WorldParking(doc);scene.add(parking.group);
+  const releaseParked=(object:Scene['objects'][number],root:THREE.Group)=>{
+    if(avatar.parent===root)scene.add(avatar);if(walker.parent===root)scene.add(walker);
+    actorMeshes.delete(object.id);rideZooms.delete(object.id);const index=objects.indexOf(root);if(index>=0)objects.splice(index,1);
+  };
+  addEventListener('pagehide',event=>{if(!event.persisted)parking.dispose(releaseParked);});
   const sportBalls=new Set(doc.sports.map(s=>s.ballId));
   const occlusion = new SceneryOcclusion(objects.filter(object=>object!==avatar && !sportBalls.has(object.userData.sceneObject?.id)));
   const updateMap = createWorldMap(document.querySelector<HTMLCanvasElement>("#world-map")!, doc);
@@ -307,7 +315,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     else saveNow();
   }
   pauseButton.addEventListener("click", () => setMode(mode === "playing" ? "paused" : "playing"));
-  const useRide=()=>{if(mode==="playing"){car=toggleRide(car,world);pendingCommerce=undefined;boostRequested=false;talkRequested=false;clearShot();container.focus({preventScroll:true});}};
+  const useRide=()=>{if(mode==="playing" && !pendingDraw){car=toggleRide(car,world);pendingCommerce=undefined;boostRequested=false;talkRequested=false;clearShot();container.focus({preventScroll:true});}};
   interact.addEventListener("click",useRide);
   talkButton.addEventListener("click",()=>{if(mode==="playing")talkRequested=true;container.focus({preventScroll:true});});
   boostButton.addEventListener('click',()=>{
@@ -357,7 +365,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     resetPosition(true);car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));car=cargoReviewStart(car,world,params.get("test-cargo"));worldTime.value=0;
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
   let captureTime:number|undefined;
-  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:360,wildlife:360,conversation:240,commerce:360,delivery:360},(clip)=>{
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:360,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360},(clip)=>{
     captureTime=undefined;
     resetPosition(true);worldTime.value=0;setMode("playing");
     characters.forEach(character=>character.reset());
@@ -366,9 +374,16 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     if(clip==='switching'){const bike=doc.objects.find(o=>o.id==='village_bike')!;car={...car,x:bike.x-40,y:bike.y,headingRad:0,elevation:drivingHeight(doc.terrain,bike.x-40,bike.y)};}
     if(clip==='locomotion' || clip==='swimming')car=movementReviewStart(car,world,clip==='swimming' ? 'swim' : 'walk');
     if(clip==='flight')car=toggleRide(vehicleReviewStart(car,world,'cloudhopper'),world);
+    if(clip==='parking')car=vehicleReviewStart(car,world,'transit_bicycles_0_5_r');
     if(clip==='football' || clip==='basketball')car=movementReviewStart(car,world,clip);
   },(clip:string,frame:number)=>{
     keys.clear();
+    if(clip==='parking'){
+      if(frame===18 || frame===230 || frame===270)useRide();
+      if(frame>=25 && frame<130 || frame>=285 && frame<315)keys.add('KeyW');
+      if(frame>=45 && frame<65)keys.add('KeyA');
+      if(frame>=165 && frame<195)keys.add('KeyS');return;
+    }
     if(clip==='delivery'){
       if(frame===5){const select=document.querySelector<HTMLSelectElement>('#market-job')!;select.value='delivery:school_run';select.dispatchEvent(new Event('change'));}
       if(frame===20)commerce.key('KeyH');
@@ -504,6 +519,10 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
         vertices.needsUpdate = true;
       }
     }
+    const activeParking=parking.syncActive(car,releaseParked);
+    if(activeParking && !actorMeshes.has(activeParking.userData.sceneObject.id)){
+      const object=activeParking.userData.sceneObject;actorMeshes.set(object.id,activeParking);rideZooms.set(object.id,rideCameraZoom(doc.player,object));objects.push(activeParking);
+    }
     poses??=actorPoses(doc,car.timeS,car);
     for(const pose of poses){
       const group=actorMeshes.get(pose.id)!;
@@ -576,7 +595,9 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     camera.updateMatrixWorld(); scene.updateMatrixWorld();
     occlusion.update(camera, position.clone().add(new THREE.Vector3(0, playerHeight(doc) / 2, 0)), dt, reduced.matches,occupied ? actorMeshes.get(occupied.id) : undefined);
     daylight.update(captureTime??(worldTime.value+hourOffset));
-    scenery.update(camera,daylight.direction,position.clone().add(new THREE.Vector3(0,7,0)),{x:car.vx,y:car.vy},dt,reduced.matches);
+    const sceneryPlayer=position.clone().add(new THREE.Vector3(0,7,0));
+    parking.update(car,scenery,camera,sceneryPlayer,dt,reduced.matches);
+    scenery.update(camera,daylight.direction,sceneryPlayer,{x:car.vx,y:car.vy},dt,reduced.matches,parking.hiddenSeeds);
     sunShadows.update(camera,daylight.direction,DEFAULT_CAMERA_ZOOM * manualZoom.factor);
     populations.update(car,camera,sun,mode==='playing' ? dt : 0,reduced.matches);
     hudTime += dt;
@@ -646,7 +667,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       const first=document.body.dataset.loading!=="ready",renderStart=first ? performance.now() : 0;
       renderer.info.reset();profile?.beforeRender();composer.render();profile?.end();capture?.end();
       if(first)loading.ready(performance.now()-renderStart);
-      if(import.meta.env.DEV){container.dataset.streaming=JSON.stringify(scenery.stats);const revision=`${scenery.stats.loaded},${scenery.stats.unloaded}`;if(revision!==memoryRevision){memoryRevision=revision;container.dataset.memory=JSON.stringify(geometryMemory(scene));}}
+      if(import.meta.env.DEV){container.dataset.streaming=JSON.stringify(scenery.stats);container.dataset.parking=JSON.stringify(parking.stats);const revision=`${scenery.stats.loaded},${scenery.stats.unloaded},${car.vehicles.length},${parking.stats.active}`;if(revision!==memoryRevision){memoryRevision=revision;container.dataset.memory=JSON.stringify(geometryMemory(scene));}}
     };
     if(streamState() && shadersReady())draw();else pendingDraw=draw;
   };

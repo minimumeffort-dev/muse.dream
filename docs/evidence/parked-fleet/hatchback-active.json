@@ -1,0 +1,6 @@
+{
+  "boost": "{\"active\":false,\"ready\":false,\"remaining\":4.991666666666724,\"timeS\":32.61666666666546}",
+  "car": "6088.8,2029.6,1.5",
+  "control": "{\"kind\":\"vehicle\",\"id\":\"civic_parking_3_7_r\"}",
+  "parking": "{\"active\":\"civic_parking_3_7_r\",\"prototypes\":0,\"instances\":0}"
+}

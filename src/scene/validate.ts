@@ -2,7 +2,7 @@ import {ambientProblems} from './ambient-navigation';
 import {validateSites,siteEntry,onWalkway} from './sites';
 import {distanceToPolygon,partition,polygonArea,triangulatePolygon} from './polygons';
 import {controlOf} from "./object-dsl";
-import {controlFor,isActor,roleOf} from "./agents";
+import {controlFor,isResidentActor,roleOf} from "./agents";
 import { assemblyHorizontalRadius, playerHeight, measuredScale, CAR_PROPORTION_RULES } from "./measure";
 import { roadPoints, roadFrames, bridgeFitsRoad, ROAD_CURB_WIDTH, distanceToRoad } from "./road";
 import { SpatialGrid } from "../sim/spatial";
@@ -148,7 +148,7 @@ export function validateScenePlayability(
 
   // Road quality is validated even when the player may explore off-road.
   // Flood through valid car centers, including solid obstacles, not raw road pixels.
-  const stationary=(o:Scene['objects'][number])=>!isActor(o) || roleOf(o)==='npc' && !o.route;
+  const stationary=(o:Scene['objects'][number])=>!isResidentActor(o) || roleOf(o)==='npc' && !o.route;
   const solids = scene.objects.filter((o) => stationary(o) && archetypeOf(o).interaction === "solid")
     .flatMap((o) => objectContacts(scene,o))
     .concat(bridgeRails(scene.terrain));
@@ -224,7 +224,7 @@ export function validateScenePlayability(
       });
       continue;
     }
-    if (isActor(object) || archetypeOf(object).interaction !== "solid") continue;
+    if (isResidentActor(object) || archetypeOf(object).interaction !== "solid") continue;
     for (const p of routePoints) {
       const floor=drivingHeight(scene.terrain,p.x,p.y);
       if (objectContacts(scene,object).some(c=>floor<c.top-.05 && floor+carHeight>c.bottom+.05 && Math.hypot(c.x-p.x,c.y-p.y)<c.r+carRadius+2)) {
@@ -343,7 +343,7 @@ export function validateScenePlayability(
       if(!navigableWater(scene.terrain,pose.x,pose.y,support,height))invalid=true;
     }
     if(controlOf(object.spec)==="plane" && waterAt(scene.terrain,pose.x,pose.y,pose.elevation))invalid=true;
-    if(solidGrid.query(pose.x,pose.y,radius+maxRadius).some(c=>pose.elevation<c.top-.05 && pose.elevation+height>c.bottom+.05 && Math.hypot(c.x-pose.x,c.y-pose.y)<radius+c.r))invalid=true;
+    if(solidGrid.query(pose.x,pose.y,radius+maxRadius).some(c=>c.id!==object.id && pose.elevation<c.top-.05 && pose.elevation+height>c.bottom+.05 && Math.hypot(c.x-pose.x,c.y-pose.y)<radius+c.r))invalid=true;
     if(parkedContacts.some(c=>c.id!==object.id && pose.elevation<c.top-.05 && pose.elevation+height>c.bottom+.05 && Math.hypot(c.x-pose.x,c.y-pose.y)<radius+c.r))invalid=true;
     const spawnFloor=drivingHeight(scene.terrain,scene.spawn.x,scene.spawn.y);
     if(pose.elevation<spawnFloor+carHeight && pose.elevation+height>spawnFloor && Math.hypot(pose.x-scene.spawn.x,pose.y-scene.spawn.y)<radius+carRadius)invalid=true;

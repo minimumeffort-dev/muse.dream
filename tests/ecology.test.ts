@@ -48,7 +48,7 @@ describe('bounded ambient routes',()=>{
     expect(()=>parseScene({...fixture,objects:[{...object,spec:objectDslSchema.parse({...spec,body:{...spec.body,interaction:'solid'}})}]})).toThrow('ambient actors require decor');
     expect(()=>parseScene({...fixture,objects:Array.from({length:25},(_,i)=>({...object,id:`bird_${i}`}))})).toThrow();
     const plain=objectDslSchema.parse({...spec,parts:spec.parts.filter(p=>!('parent' in p && p.parent)),joints:undefined});
-    expect(()=>parseScene({...fixture,objects:Array.from({length:25},(_,i)=>({...object,spec:plain,id:`bird_${i}`}))})).toThrow('24 route actors');
+    expect(()=>parseScene({...fixture,objects:Array.from({length:25},(_,i)=>({...object,spec:plain,id:`bird_${i}`}))})).toThrow('24 resident route actors');
   });
   it('keeps birds aloft at the loop seam and ground animals on terrain',()=>{
     const route=fixture.routes[0]!,duration=routePath(route).length/route.speed;
@@ -91,7 +91,7 @@ describe('Dream-authored ecology',()=>{
       expect(spec.parts.length).toBeLessThanOrEqual(32);expect(assemblyBounds(spec).isEmpty()).toBe(false);
     }
     expect(world.objects.length).toBeGreaterThan(450);expect(world.routes).toHaveLength(12);
-    expect(world.objects.filter(o=>hasAnimatedJoints(o.spec)).length+Number(hasAnimatedJoints(world.player))+1).toBeLessThanOrEqual(MAX_ANIMATED_ASSEMBLIES);
+    expect(world.objects.filter(o=>!o.parked && hasAnimatedJoints(o.spec)).length+Number(world.objects.some(o=>o.parked && hasAnimatedJoints(o.spec)))+Number(hasAnimatedJoints(world.player))+1).toBeLessThanOrEqual(MAX_ANIMATED_ASSEMBLIES);
   });
   it('keeps all new plant roots on dry ground clear of bridges and the circuit',()=>{
     const plants=world.objects.filter(o=>o.id.startsWith('ecology_') && flora.some(s=>s.displayName===o.spec?.displayName));

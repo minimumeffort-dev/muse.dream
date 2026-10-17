@@ -1,5 +1,5 @@
 import {indexedGeometry} from './indexed-geometry';
-import {isActor} from '../scene/agents';
+import {isResidentActor} from '../scene/agents';
 import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import type { Scene, SceneObject } from "../scene/schema";
@@ -50,7 +50,7 @@ export function batchPrototype(source: THREE.Group): THREE.Group {
 }
 
 type Fade = { attribute: THREE.InstancedBufferAttribute; index: number };
-type Entry = { id:number;x: number; y: number; box: THREE.Box3; opacity: number; instances: Fade[] };
+type Entry = { id:number;objectId?:string;x: number; y: number; box: THREE.Box3; opacity: number; instances: Fade[];transforms:{mesh:THREE.InstancedMesh;index:number;original?:THREE.Matrix4}[];hidden?:boolean };
 
 /** Static scenery is instanced by assembly and local tile. Only knockables need scene nodes. */
 export class WorldScenery {
@@ -60,6 +60,8 @@ export class WorldScenery {
   private ray = new THREE.Raycaster();
   obscuredCount = 0;
   private count=0;
+  private entries:Entry[]=[];
+  private hidden:ReadonlySet<string>|undefined;
   get objectCount():number{return this.count;}
 
   constructor(scene: Scene,objects=scene.objects) {
@@ -67,16 +69,16 @@ export class WorldScenery {
     const entries: Entry[] = [], prototypes = new Map<string, THREE.Group>();
     const batches = new Map<string, { prototype: THREE.Group; items: { object: SceneObject; entry: Entry }[] }>();
     for (const object of objects) {
-      if(object.ambient || isActor(object) || impactOf(object.spec))continue;
+      if(object.ambient || isResidentActor(object) || impactOf(object.spec))continue;
       if (archetypeOf(object).interaction === "knockable") continue;
-      const placement=objectPlacement(scene,object),live=hasAnimatedJoints(object.spec) || zonesOf(object.spec).length>0;
+      const placement=objectPlacement(scene,object),live=!object.parked && hasAnimatedJoints(object.spec) || zonesOf(object.spec).length>0;
       if(live && (!placement.foundation || placement.base-placement.low<=.1)) continue;
       const key = JSON.stringify(object.spec ?? object.kind);
       let prototype = prototypes.get(key);
       if (!live && !prototype) { prototype = batchPrototype(buildObject({ ...object, scale: 1 })); prototype.updateMatrixWorld(true); prototypes.set(key, prototype); }
       const position = worldPosition(scene, object.x, object.y, 1.5);position.y=placement.base+1.5;
       const transform = new THREE.Matrix4().compose(position, placement.rotation, new THREE.Vector3().setScalar(object.scale));
-      const entry: Entry = {id:entries.length,x: position.x, y: position.z, box: prototype ? new THREE.Box3().setFromObject(prototype).applyMatrix4(transform) : new THREE.Box3(), opacity: 1, instances: [] };
+      const entry: Entry = {id:entries.length,objectId:object.id,x: position.x, y: position.z, box: prototype ? new THREE.Box3().setFromObject(prototype).applyMatrix4(transform) : new THREE.Box3(), opacity: 1, instances: [],transforms:[] };
       entries.push(entry);
       if(placement.foundation && placement.base-placement.low>.1){
         const {width,depth,color}=placement.foundation,height=placement.base-placement.low+4;
@@ -105,7 +107,7 @@ export class WorldScenery {
         const placement=objectPlacement(scene,object);
         const position=worldPosition(scene,object.x,object.y,1.5);position.y=placement.base+1.5;
         const matrix = new THREE.Matrix4().compose(position, placement.rotation, new THREE.Vector3().setScalar(object.scale));
-        mesh.setMatrixAt(i, matrix.multiply(partTransform)); entry.instances.push({ attribute: visibility, index: i });
+        mesh.setMatrixAt(i, matrix.multiply(partTransform)); entry.instances.push({ attribute: visibility, index: i });entry.transforms.push({mesh,index:i});
       });
       const motion=child.userData.rest?.animation as ObjectPart["animation"],cloth=child.userData.materialStyle === "cloth";
       if(motion?.kind === "sway" || motion?.kind === "spin" || cloth){
@@ -124,23 +126,32 @@ export class WorldScenery {
       geometry.setAttribute("visibility",visibility);
       const mesh=new THREE.InstancedMesh(geometry,sceneryMaterial(toonMaterial(color)),items.length);
       mesh.name="terrain-foundations";
-      items.forEach(({entry,matrix},i)=>{mesh.setMatrixAt(i,matrix);entry.instances.push({attribute:visibility,index:i});});
+      items.forEach(({entry,matrix},i)=>{mesh.setMatrixAt(i,matrix);entry.instances.push({attribute:visibility,index:i});entry.transforms.push({mesh,index:i});});
       mesh.userData.sceneryEntries=items.map(item=>item.entry.id);
       mesh.castShadow=true;mesh.receiveShadow=true;mesh.computeBoundingSphere();this.group.add(mesh);
     }
-    this.grid = new SpatialGrid(entries); this.count = entries.length;
-    this.group.userData.occlusion=entries.map(({x,y,box})=>({x,y,min:box.min.toArray(),max:box.max.toArray()}));
+    this.entries=entries;this.grid = new SpatialGrid(entries); this.count = entries.length;
+    this.group.userData.occlusion=entries.map(({objectId,x,y,box})=>({objectId,x,y,min:box.min.toArray(),max:box.max.toArray()}));
   }
 
   /** Rebind transferred instance attributes to the same local fade entries. */
-  static fromChunk(scene:Scene,group:THREE.Group,data:{x:number;y:number;min:number[];max:number[]}[]=[]):WorldScenery{
-    const scenery=new WorldScenery(scene,[]),entries:Entry[]=data.map((e,id)=>({id,x:e.x,y:e.y,box:new THREE.Box3(new THREE.Vector3().fromArray(e.min),new THREE.Vector3().fromArray(e.max)),opacity:1,instances:[]}));
+  static fromChunk(scene:Scene,group:THREE.Group,data:{objectId?:string;x:number;y:number;min:number[];max:number[]}[]=[]):WorldScenery{
+    const scenery=new WorldScenery(scene,[]),entries:Entry[]=data.map((e,id)=>({id,objectId:e.objectId,x:e.x,y:e.y,box:new THREE.Box3(new THREE.Vector3().fromArray(e.min),new THREE.Vector3().fromArray(e.max)),opacity:1,instances:[],transforms:[]}));
     group.traverse(node=>{
       if(!(node instanceof THREE.Mesh) || !node.userData.sceneryEntries)return;
       const attribute=node.geometry.getAttribute('visibility') as THREE.InstancedBufferAttribute;
-      (node.userData.sceneryEntries as number[]).forEach((id,index)=>entries[id]!.instances.push({attribute,index}));
+      (node.userData.sceneryEntries as number[]).forEach((id,index)=>{entries[id]!.instances.push({attribute,index});entries[id]!.transforms.push({mesh:node as THREE.InstancedMesh,index});});
     });
-    scenery.grid=new SpatialGrid(entries);scenery.count=entries.length;return scenery;
+    scenery.entries=entries;scenery.grid=new SpatialGrid(entries);scenery.count=entries.length;return scenery;
+  }
+
+  /** Collapse both colour and shadow geometry; ghosting still keeps ordinary shadows. */
+  setHidden(ids:ReadonlySet<string>):void{
+    if(this.hidden===ids)return;this.hidden=ids;const zero=new THREE.Matrix4().makeScale(0,0,0),meshes=new Set<THREE.InstancedMesh>();
+    for(const entry of this.entries){const hidden=!!entry.objectId && ids.has(entry.objectId);if(hidden===!!entry.hidden)continue;entry.hidden=hidden;
+      for(const t of entry.transforms){if(hidden){t.original=new THREE.Matrix4();t.mesh.getMatrixAt(t.index,t.original);t.mesh.setMatrixAt(t.index,zero);}else if(t.original){t.mesh.setMatrixAt(t.index,t.original);t.original=undefined;}t.mesh.instanceMatrix.needsUpdate=true;meshes.add(t.mesh);}
+    }
+    for(const mesh of meshes)mesh.visible=!(mesh.userData.sceneryEntries as number[]).every(id=>this.entries[id]!.hidden);
   }
 
   update(camera: THREE.OrthographicCamera, player: THREE.Vector3, dt: number, snap = false): void {
@@ -149,6 +160,7 @@ export class WorldScenery {
     const distance = this.ray.ray.origin.distanceTo(player) - 4, hit = new THREE.Vector3();
     const obscuring = new Set<Entry>();
     for (const entry of this.grid.query(player.x, player.z, 700)) {
+      if(entry.hidden)continue;
       if (this.ray.ray.intersectBox(entry.box, hit) && hit.distanceTo(this.ray.ray.origin) < distance) {
         obscuring.add(entry); this.fading.add(entry);
       }

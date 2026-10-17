@@ -1,0 +1,5 @@
+{
+  "car": "11718.8,5015.1,1.5",
+  "control": "{\"kind\":\"vehicle\",\"id\":\"east_parking_0_5_r\"}",
+  "parking": "{\"active\":\"east_parking_0_5_r\",\"prototypes\":0,\"instances\":0}"
+}

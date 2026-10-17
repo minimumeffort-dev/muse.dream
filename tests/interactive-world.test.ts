@@ -81,7 +81,7 @@ describe("Dream world authoring",()=>{
     const invalid=parseScene({...doc,objects:legacyObjects,routes:doc.routes.map(r=>r.id===boat.route!.id ? {...r,points:[{x:2400,y:2200},{x:2600,y:2200},{x:2600,y:2400}]} : r)});
     expect(validateScenePlayability(invalid,world.roadMask,11)).toContainEqual(expect.objectContaining({code:"route-not-clear"}));
     expect(()=>parseScene({...doc,objects:[{...boat,route:{id:"absent",offset:0}}]})).toThrow("existing route");
-    expect(()=>parseScene({...doc,objects:Array.from({length:25},(_,i)=>({...boat,id:`boat${i}`}))})).toThrow("24 route actors");
+    expect(()=>parseScene({...doc,objects:Array.from({length:25},(_,i)=>({...boat,id:`boat${i}`}))})).toThrow("24 resident route actors");
   });
   it("rejects a boat crossing a bridge deck even when its side rails are disabled",()=>{
     const routes=doc.routes.map(r=>r.id==="lake_trip" ? {...r,points:[{x:3000,y:2370},{x:3100,y:2370},{x:3100,y:2450},{x:3000,y:2450}]} : r);

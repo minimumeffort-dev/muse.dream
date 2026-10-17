@@ -2,6 +2,12 @@
 
 The mock world has 1,695 placed objects across a 14000 × 11000 landscape. Static render geometry now loads around the player and leaves memory behind them. The accepted Dream world and its simulation stay complete.
 
+## Usable parked vehicles
+
+The 81 parked bicycles, scooters and cars retain their full construction. Untouched models stay in streamed instance batches. Boarding hides the original instance in both color and shadow passes and creates one full CPU rig. Leaving it disposes that rig and adds its saved pose to local instance batches by model and rigid part. Wheel phase is baked only when ownership, parking or residency changes. Local prototypes and instance buffers are released when their destination chunks leave memory. Collision queries keep immutable seeds plus a spatial index of moved poses; they never scan the entire fleet each fixed tick.
+
+The 256-record dormant fleet cap does not raise the 24-resident-actor or 24-live-assembly limits. One active fleet rig is reserved. The matched original drive retained 253 mean draws, 647,115 triangles and 255,358,898 counted buffer bytes, with a 16.667 ms mean frame interval on the local M3 Ultra / 96 GiB. This is one local retention check, not a speed or low-powered-device claim. [Checks and browser evidence](evidence/parked-fleet/verification.md).
+
 ## Loading and memory
 
 The loading screen arrives in the first HTML response. One worker compiles and validates Dream, then builds terrain, streets, water and static object chunks on demand. Finished mesh buffers are transferred to the renderer, along with engine-owned material recipes and per-instance occlusion data. Object stamping and batching stay off the main thread. The first complete view starts the game; the rest of the map is built as it becomes relevant.

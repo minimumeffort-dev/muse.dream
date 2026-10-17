@@ -12,7 +12,7 @@ import { routeSchema } from "./routes";
 import {flockSchema,POPULATION_LIMITS} from './population';
 import {siteSchema,crossingSchema} from './sites';
 import {streetSchema,surfaceSchema,markingSchema} from './streets';
-import {NPC_LIMITS,roleSchema,behaviorSchema,roleOf,controlFor,agentProblem} from './agents';
+import {NPC_LIMITS,PARKING_LIMITS,roleSchema,behaviorSchema,roleOf,controlFor,agentProblem} from './agents';
 import {sportSchema,sportProblems,MAX_SPORTS} from './sports';
 import {interactionRuleSchema,interactionRuleProblems,MAX_INTERACTION_RULES} from './interaction-rules';
 
@@ -87,6 +87,7 @@ export const sceneObjectSchema = z.object({
   scale: z.number().finite().min(0.05).max(4),
   headingRad:z.number().finite().min(-Math.PI*2).max(Math.PI*2).optional(),
   role:roleSchema.optional(),
+  parked:z.literal(true).optional(),
   ambient:ambientSchema.optional(),
   behavior:z.string().regex(/^[a-z][a-z0-9_]{0,31}$/).optional(),
   route:z.object({id:z.string().min(1).max(40),offset:z.number().finite().min(0).max(2048).default(0),phaseS:z.number().finite().min(0).max(3600).optional()}).strict().optional(),
@@ -197,9 +198,10 @@ export const sceneSchema = z.object({
   if(scene.flocks.reduce((n,f)=>n+f.count,0)>POPULATION_LIMITS.birds)ctx.addIssue({code:'custom',message:'scene exceeds 256 decorative flock members'});
   for(const f of scene.flocks){const margin=assemblyHorizontalRadius(f.spec,measuredScale(f.spec))+8;if(f.center.x<f.radius.x+margin || f.center.y<f.radius.y+margin || f.center.x+f.radius.x+margin>scene.canonical.width || f.center.y+f.radius.y+margin>scene.canonical.height)ctx.addIssue({code:'custom',message:`flock "${f.id}" flight envelope extends outside the world`});}
   // The standing player character occupies one of the existing live animation slots.
-  const animated=scene.objects.filter(object=>hasAnimatedJoints(object.spec)).length+Number(hasAnimatedJoints(scene.player))+1;
+  const animated=scene.objects.filter(object=>!object.parked && hasAnimatedJoints(object.spec)).length+Number(scene.objects.some(o=>o.parked && hasAnimatedJoints(o.spec)))+Number(hasAnimatedJoints(scene.player))+1;
   if(animated>MAX_ANIMATED_ASSEMBLIES) ctx.addIssue({code:z.ZodIssueCode.custom,message:`scene exceeds ${MAX_ANIMATED_ASSEMBLIES} animated assemblies`});
-  if(scene.objects.filter(o=>o.route || controlFor(o)).length>24) ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 24 route actors or controllable vehicles"});
+  if(scene.objects.filter(o=>!o.parked && (o.route || controlFor(o))).length>24) ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 24 resident route actors or controllable vehicles"});
+  if(scene.objects.filter(o=>o.parked).length>PARKING_LIMITS.vehicles)ctx.addIssue({code:'custom',message:'scene exceeds 256 parked vehicles'});
   if(scene.objects.filter(o=>roleOf(o)==='npc').length>NPC_LIMITS.actors)ctx.addIssue({code:'custom',message:'scene exceeds 32 NPCs'});
   if(new Set(scene.behaviors.map(b=>b.id)).size!==scene.behaviors.length)ctx.addIssue({code:'custom',message:'duplicate behavior ID'});
   if(scene.objects.filter(o=>o.role==='ambient').length>AMBIENT_LIMITS.members)ctx.addIssue({code:'custom',message:'scene exceeds 192 instanced ambient members'});

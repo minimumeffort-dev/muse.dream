@@ -431,3 +431,19 @@ saved rules stay the same. Existing paired recordings and loading still remain
 accurate. Native before/after stills and actual browser timing reports are kept in
 the [startup responsiveness evidence](../evidence/startup-responsiveness/verification.md);
 no offline capture is a startup measurement.
+
+## Usable destination parking
+
+`parking.gif`, `parking.mp4` and `parking.jpg` share 360 native rendered frames
+at 30 frames per simulation second. The script boards a generated market bicycle,
+rides across the avenue, parks, reboards and rides again. The poster uses frame
+100. Video is 1600 x 900; the 1280 x 720 GIF retains all frames with a 256-color
+palette, no dithering and Gifsicle loss 80. No interpolated frames or live FPS
+claim. The GIF is an optional link, not an automatic README download.
+
+The existing asset, movement, sports, lighting and destruction captures retain
+the same construction and controls. Existing market/conversation/delivery
+recordings retain their UI and journey; default prop geometry has not moved.
+This dedicated sequence shows the newly available parking. Native reload,
+old-save upgrade and diagnostic fleet images remain with the
+[parking evidence](../evidence/parked-fleet/verification.md).

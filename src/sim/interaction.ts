@@ -9,11 +9,12 @@ import {stepNpcs} from './npcs';
 import { objectHeight,objectRadius } from "./archetypes";
 import { drivingHeight,terrainHeight,waterAt,navigableWater,waterCeiling } from "../scene/terrain";
 import {assemblyHorizontalRadius,playerRadius} from "../scene/measure";
-import { sceneContacts } from "../scene/contacts";
+import { queryStaticContacts,objectContacts } from "../scene/contacts";
 import type {SceneObject} from "../scene/schema";
 import {bridgeAt} from '../scene/landscape-dsl';
 import {aircraftFloor} from '../scene/aircraft-support';
 import {stepSports} from './sports';
+import {nearbyParking} from './parking';
 
 export const FOOT_RADIUS=3,FOOT_HEIGHT=17.5;
 export const MAX_FLIGHT_CLEARANCE=450;
@@ -40,11 +41,12 @@ export function nearbyRide(state:CarState,world:World):RideTarget|undefined {
   if(parked && Math.hypot(parked.x-state.x,parked.y-state.y)-playerRadius(world.scene)<distance && Math.abs(parked.elevation-state.elevation)<28){
     nearest={id:null,labelText:"car"};distance=Math.max(0,Math.hypot(parked.x-state.x,parked.y-state.y)-playerRadius(world.scene));
   }
-  for(const object of routeObjects(world.scene)) {
+  for(const object of [...routeObjects(world.scene),...nearbyParking(world.scene,state,60)]) {
     if(!object.spec || !("dslVersion" in object.spec) || object.spec.dslVersion!==2 || !object.spec.rideable)continue;
     if(roleOf(object)==='npc' && controlOf(object.spec))continue;
-    const p=actorPose(world.scene,object,state.timeS,state),d=Math.max(0,Math.hypot(p.x-state.x,p.y-state.y)-objectRadius(object));
-    if(d<distance && Math.abs(p.elevation-state.elevation)<28){nearest={id:object.id,labelText:object.labelText,object};distance=d;}
+    const p=actorPose(world.scene,object,state.timeS,state),contacts=object.spec.contacts;
+    const d=contacts ? Math.max(0,Math.min(...objectContacts(world.scene,object,p).map(c=>Math.hypot(c.x-state.x,c.y-state.y)-c.r))) : Math.max(0,Math.hypot(p.x-state.x,p.y-state.y)-objectRadius(object));
+    if((d<distance || d===distance && nearest?.id!==null && object.id<(nearest?.id??'')) && Math.abs(p.elevation-state.elevation)<28){nearest={id:object.id,labelText:object.labelText,object};distance=d;}
   }
   return nearest;
 }
@@ -126,7 +128,7 @@ function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,pro
     const y=flying ? Math.max(margin,Math.min(world.driveMask.height-margin,s.y+s.vy*sdt)) : s.y+s.vy*sdt;
     const support=plane ? undefined : navigableWater(world.scene.terrain,x,y,waterRadius,body.bodyHeight??20);
     let floor=plane ? aircraftFloor(world.scene,aircraft!,{...s,x,y}) : (support?.level??water?.level??s.elevation+2)-2;
-    const data=sceneContacts(world.scene),contacts=[...data.solids.query(x,y,body.carRadius+data.maxRadius),...actorContacts(world.scene,s.timeS,s)];
+    const contacts=[...queryStaticContacts(world.scene,x,y,body.carRadius,s),...actorContacts(world.scene,s.timeS,s)];
     // Retain a landed cap across ticks, but never climb a solid from its side.
     if(plane)for(const contact of contacts)if(!isBroken(s,contact) && s.elevation>=contact.top-.05 && Math.hypot(x-contact.x,y-contact.y)<body.carRadius+contact.r)floor=Math.max(floor,contact.top);
     if(plane && s.grounded && floor<s.elevation-4){s.grounded=false;s.vz=0;}
@@ -142,7 +144,7 @@ function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,pro
       s.vx=0;s.vy=0;
       // A collision stops travel, not gravity. An airborne body must still land.
       let ownFloor=plane ? aircraftFloor(world.scene,aircraft!,s) : (water?.level??s.elevation+2)-2,ceiling=plane ? Infinity : waterCeiling(world.scene.terrain,s.x,s.y,waterRadius)-(body.bodyHeight??20);
-      const local=[...data.solids.query(s.x,s.y,body.carRadius+data.maxRadius),...actorContacts(world.scene,s.timeS,s)];
+      const local=[...queryStaticContacts(world.scene,s.x,s.y,body.carRadius,s),...actorContacts(world.scene,s.timeS,s)];
       for(const contact of local){
         if(isBroken(s,contact) || Math.hypot(s.x-contact.x,s.y-contact.y)>=body.carRadius+contact.r)continue;
         if(s.elevation>=contact.top-.05)ownFloor=Math.max(ownFloor,contact.top);
@@ -160,8 +162,7 @@ function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,pro
   if(plane && s.grounded && (s.pitch!==0 || s.bank!==0)){
     s.pitch=0;s.bank=0;
     let floor=aircraftFloor(world.scene,aircraft!,s);
-    const data=sceneContacts(world.scene);
-    for(const contact of [...data.solids.query(s.x,s.y,body.carRadius+data.maxRadius),...actorContacts(world.scene,s.timeS,s)])
+    for(const contact of [...queryStaticContacts(world.scene,s.x,s.y,body.carRadius,s),...actorContacts(world.scene,s.timeS,s)])
       if(!isBroken(s,contact) && s.elevation>=contact.top-.05 && Math.hypot(s.x-contact.x,s.y-contact.y)<body.carRadius+contact.r)floor=Math.max(floor,contact.top);
     s.elevation=floor;
   }

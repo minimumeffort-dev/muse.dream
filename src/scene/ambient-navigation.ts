@@ -2,7 +2,8 @@ import type {Scene,Point,SceneObject} from './schema';
 import {walkingNetwork} from './sites';
 import {streetFootprints,onPolygon} from './streets';
 import {partition,polygonArea,polygonBounds,distanceToPolygon} from './polygons';
-import {sceneContacts} from './contacts';
+import {queryStaticContacts} from './contacts';
+import type {CarState} from '../sim/car';
 import {drivingHeight,waterAt} from './terrain';
 import {assemblyHorizontalRadius} from './measure';
 import type {ObjectDslV2} from './object-dsl';
@@ -34,7 +35,7 @@ const radius=(o:SceneObject)=>assemblyHorizontalRadius(o.spec as ObjectDslV2,o.s
 /** Sparse polygon portals reuse accepted pavement. No raster of the whole world or runtime path search. */
 function buildNavigation(scene:Scene,prepared?:AmbientGraph){
  const members=scene.objects.filter(o=>!!o.ambient),walkers=members.filter(o=>o.ambient!.motion.kind==='walk');
- const r=Math.max(3,...walkers.map(radius)),contacts=sceneContacts(scene),polygons=walkers.length ? walkingNetwork(scene).polygons : [];
+ const r=Math.max(3,...walkers.map(radius)),polygons=walkers.length ? walkingNetwork(scene).polygons : [];
  const bins=new Map<string,number[]>(),bounds=polygons.map(polygonBounds);
  for(const [i,b] of bounds.entries())for(let y=Math.floor(b.y0/256);y<=Math.floor(b.y1/256);y++)for(let x=Math.floor(b.x0/256);x<=Math.floor(b.x1/256);x++){const key=x+','+y,cell=bins.get(key)??[];cell.push(i);bins.set(key,cell);}
  const paved=(x:number,y:number)=>bins.get(Math.floor(x/256)+','+Math.floor(y/256))?.some(i=>onPolygon(polygons[i]!,x,y,.01))??false;
@@ -42,10 +43,10 @@ function buildNavigation(scene:Scene,prepared?:AmbientGraph){
  const blockedBins=new Map<string,number[]>(),margin=Math.max(0,...members.map(radius))+2;
  const waters=(scene.terrain.landscape?.waters??[]).map(w=>polygonBounds(w.polygon));
  for(const [i,p] of blocked.entries()){const b=polygonBounds(p);for(let y=Math.floor((b.y0-margin)/256);y<=Math.floor((b.y1+margin)/256);y++)for(let x=Math.floor((b.x0-margin)/256);x<=Math.floor((b.x1+margin)/256);x++){const key=x+','+y,cell=blockedBins.get(key)??[];cell.push(i);blockedBins.set(key,cell);}}
- const clear=(x:number,y:number,rr:number,walk:boolean)=>{
+ const clear=(x:number,y:number,rr:number,walk:boolean,state?:CarState)=>{
   if(x<rr || y<rr || x>scene.canonical.width-rr || y>scene.canonical.height-rr)return false;
   const floor=drivingHeight(scene.terrain,x,y);
-  if(contacts.solids.query(x,y,rr+contacts.maxRadius).some(c=>Math.hypot(c.x-x,c.y-y)<c.r+rr && c.top>floor+.1 && c.bottom<floor+22))return false;
+  if(queryStaticContacts(scene,x,y,rr,state).some(c=>Math.hypot(c.x-x,c.y-y)<c.r+rr && c.top>floor+.1 && c.bottom<floor+22))return false;
   const nearWater=waters.some(b=>x+rr>=b.x0 && x-rr<=b.x1 && y+rr>=b.y0 && y-rr<=b.y1);
   if(walk || nearWater)for(let i=0;i<9;i++){const px=x+(i ? Math.cos(i*Math.PI/4)*rr : 0),py=y+(i ? Math.sin(i*Math.PI/4)*rr : 0);if(nearWater && waterAt(scene.terrain,px,py,drivingHeight(scene.terrain,px,py)) || walk && !paved(px,py))return false;}
   return walk || !(blockedBins.get(Math.floor(x/256)+','+Math.floor(y/256))??[]).some(i=>onPolygon(blocked[i]!,x,y) || distanceToPolygon(x,y,blocked[i]!)<rr+2);
@@ -66,14 +67,14 @@ function buildNavigation(scene:Scene,prepared?:AmbientGraph){
    cuts.sort((a,b)=>a-b);for(let i=1;i<cuts.length;i++){const t=(cuts[i-1]!+cuts[i]!)/2;if(cuts[i]!-cuts[i-1]!>1e-8 && !paved(x+dx*t,y+dy*t))return false;}
   }return true;
  };
- const segment=(a:Point,b:Point,rr:number,walk:boolean)=>{
+ const segment=(a:Point,b:Point,rr:number,walk:boolean,state?:CarState)=>{
   const length=Math.hypot(b.x-a.x,b.y-a.y);
   if(walk && !pavedSegment(a,b,rr))return false;
-  for(const c of contacts.solids.query((a.x+b.x)/2,(a.y+b.y)/2,length/2+rr+contacts.maxRadius))if(distanceToRoad([a,b],c.x,c.y)<rr+c.r){
+  for(const c of queryStaticContacts(scene,(a.x+b.x)/2,(a.y+b.y)/2,length/2+rr,state))if(distanceToRoad([a,b],c.x,c.y)<rr+c.r){
    const t=length ? Math.max(0,Math.min(1,((c.x-a.x)*(b.x-a.x)+(c.y-a.y)*(b.y-a.y))/(length*length))) : 0,floor=drivingHeight(scene.terrain,a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t);
    if(c.top>floor+.1 && c.bottom<floor+22)return false;
   }
-  const n=Math.max(1,Math.ceil(length/8));for(let i=0;i<=n;i++)if(!clear(a.x+(b.x-a.x)*i/n,a.y+(b.y-a.y)*i/n,rr,walk))return false;return true;
+  const n=Math.max(1,Math.ceil(length/8));for(let i=0;i<=n;i++)if(!clear(a.x+(b.x-a.x)*i/n,a.y+(b.y-a.y)*i/n,rr,walk,state))return false;return true;
  };
  if(prepared)return {...prepared,radius,clear,segment};
  const nodes:WalkNode[]=[],centers:number[]=[];

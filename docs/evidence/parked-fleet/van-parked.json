@@ -1,0 +1,6 @@
+{
+  "car": "11730.9,4984.4,1.5",
+  "control": "{\"kind\":\"foot\"}",
+  "parking": "{\"active\":null,\"prototypes\":1,\"instances\":3}",
+  "vehicles": "[{\"id\":null,\"x\":6330,\"y\":4233,\"elevation\":0,\"headingRad\":0,\"distance\":0},{\"id\":\"east_parking_0_5_r\",\"x\":11709.37911640933,\"y\":4994.046123977305,\"elevation\":0,\"headingRad\":-1.9913211760141334,\"distance\":334.6959924695501}]"
+}

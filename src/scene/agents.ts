@@ -3,6 +3,7 @@ import {controlOf,isReactive} from './object-dsl';
 import type {Scene,SceneObject} from './schema';
 
 export const roleSchema=z.enum(['prop','npc','controllable','ambient']);
+export const PARKING_LIMITS=Object.freeze({vehicles:256});
 export const NPC_LIMITS=Object.freeze({programs:16,actors:32,states:8,transitions:4,seconds:[.1,300] as const,radius:[10,240] as const,turnRadS:2.5,interactRadius:80,speechCharacters:240,speechSeconds:8});
 const id=z.string().regex(/^[a-z][a-z0-9_]{0,31}$/);
 const transitionSchema=z.object({id,event:z.enum(['after','near_player','far_player','interact']),to:id,seconds:z.number().finite().min(NPC_LIMITS.seconds[0]).max(NPC_LIMITS.seconds[1]).optional(),radius:z.number().finite().min(NPC_LIMITS.radius[0]).max(NPC_LIMITS.radius[1]).optional(),familiar:z.boolean().optional()}).strict().superRefine((t,ctx)=>{
@@ -37,8 +38,12 @@ export type Role=z.infer<typeof roleSchema>;
 export function roleOf(object:Pick<SceneObject,'role'|'spec'|'route'>):Role{return object.role??(controlOf(object.spec) ? 'controllable' : object.route ? 'npc' : 'prop');}
 export function controlFor(object:SceneObject|undefined){return object && roleOf(object)==='controllable' ? controlOf(object.spec) : undefined;}
 export const isActor=(object:SceneObject)=>roleOf(object)==='npc' || roleOf(object)==='controllable';
+export const isParkedVehicle=(object:SceneObject|undefined)=>object?.parked===true;
+export const isResidentActor=(object:SceneObject)=>isActor(object) && !isParkedVehicle(object);
 export function agentProblem(object:SceneObject,behaviors:Behavior[],routes:Scene['routes']):string|undefined{
   const role=roleOf(object),spec=object.spec && 'dslVersion' in object.spec && object.spec.dslVersion===2 ? object.spec : undefined;
+  if(object.parked && ['boat','plane'].includes(controlOf(spec)??''))return 'dormant parking requires a ground vehicle; boats and planes keep resident controllable placements';
+  if(object.parked && (object.role!=='controllable' || !controlOf(spec) || object.route || object.behavior || object.ambient || !spec || spec.body.interaction!=='solid' || spec.foundation || isReactive(spec) || spec.emitter || spec.lamp || spec.joints?.some(j=>j.bone || j.proximity)))return 'parked vehicles require explicit controllable ownership, a solid rideable assembly and no routes, programs, foundations, damage, emitters, lamps, humanoid or proximity joints';
   if(role==='controllable' && !controlOf(object.spec))return 'controllable role requires rideable control capability';
   if(object.behavior && role!=='npc')return 'only NPCs can have a behavior';
   if(role==='prop' && object.route)return 'props cannot have an actor route';

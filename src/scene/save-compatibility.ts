@@ -1,7 +1,7 @@
 import type {Scene} from './schema';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=3;
+export const SAVE_SIMULATION_VERSION=4;
 
 /** A conservative contract: only host provenance and spoken text may differ. */
 export function saveCompatibilitySource(scene:Scene):string {
@@ -27,12 +27,24 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || hash===DELIVERY_COMPATIBILITY;
+  return !scene.economy || hash===PARKING_COMPATIBILITY;
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
 // A registered release upgrade, not an author-controlled migration policy.
 export const DELIVERY_COMPATIBILITY='41d7da9d2228df8a28a08d7db9713602482f312be20a04b6e50be2c028909def';
+export const PARKING_COMPATIBILITY='12bf26fd5c21822fa347406211a5e7abe71c00c0d08199b4f58c7fc755470e75';
+// These r46 seats were passenger-only props. Original moving NPC templates stay unchanged.
+const adaptedParking=new Set(['civic_parking_3_7_r','civic_parking_4_7_r','east_parking_0_4_r','east_parking_0_5_r','east_parking_0_6_r','east_parking_1_7_l','east_parking_2_5_r','east_parking_3_4_r','east_parking_3_5_r','east_parking_3_6_r']);
+export function preParkingScene(scene:Scene):Scene{
+ return {...scene,objects:scene.objects.map(o=>{
+  if(!o.parked)return o;
+  const {parked,...old}=o,spec=o.spec;
+  if(!spec || !('dslVersion' in spec) || spec.dslVersion!==2)throw Error('Invalid registered parking projection');
+  return {...old,role:'prop',spec:{...spec,...(spec.joints ? {joints:spec.joints.map(({animation,...joint})=>joint)} : {}),...(adaptedParking.has(o.id) && spec.rideable ? {rideable:{seat:spec.rideable.seat}} : {})}};
+ })};
+}
+export function preParkingCompatibilitySource(scene:Scene):string{return projection(preParkingScene(scene),3);}
 export function preDeliveryScene(scene:Scene):Scene{
  const e=scene.economy;if(!e)return scene;
  return {...scene,economy:{...e,accounts:e.accounts.filter(a=>['pocket','baker','regular'].includes(a.id)),markets:e.markets.filter(m=>m.id==='market_stall'),deliveries:[]}};

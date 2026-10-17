@@ -7,7 +7,7 @@ type MaterialRecipe=({kind:'ground'}|{kind:'road'}|{kind:'toon';color:number}|{k
 type Attribute={array:THREE.TypedArray;size:number;normalized:boolean;instanced?:number};
 type GeometryPacket={attributes:Record<string,Attribute>;index?:Attribute};
 type MeshPacket={geometry:number;material:number;matrix:number[];name:string;cast:boolean;receive:boolean;order:number;depth?:number;sceneryEntries?:number[];instances?:Float32Array;colors?:Float32Array};
-export type ChunkPacket={occlusion?:{x:number;y:number;min:number[];max:number[]}[];geometries:GeometryPacket[];materials:(MaterialRecipe & {vertexColors?:boolean})[];meshes:MeshPacket[]};
+export type ChunkPacket={occlusion?:{objectId?:string;x:number;y:number;min:number[];max:number[]}[];geometries:GeometryPacket[];materials:(MaterialRecipe & {vertexColors?:boolean})[];meshes:MeshPacket[]};
 
 /** Only engine-owned factories cross the worker boundary, never serialized shader code. */
 export function packChunk(root:THREE.Group):{packet:ChunkPacket;transfer:ArrayBuffer[]}{

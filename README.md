@@ -284,6 +284,14 @@ For local development, open `http://127.0.0.1:5173/` on your machine. You can al
 
 Manual zoom keeps your framing as you move and switch vehicles. Smaller rides still bring the camera closer automatically. R keeps your zoom; Start over restores it.
 
+## Take the parked bike
+
+The 45 parked bicycles, 22 scooters and 14 cars/vans beside destinations are now available rides. Walk up, press F, drive somewhere and leave it there. Its position and rolling phase return after reloading; the renderer keeps unoccupied vehicles instanced and activates one full rig when you board.
+
+![A destination bicycle ridden away from its original parking spot](docs/media/parking.jpg)
+
+[Watch the ride](docs/media/parking.mp4) · [GIF](docs/media/parking.gif) · [Author parking in Dream](docs/dream/populations.md#make-the-parked-vehicles-usable)
+
 ## Work with Dream 2
 
 Check a standalone example:

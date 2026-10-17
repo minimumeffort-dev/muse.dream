@@ -63,7 +63,7 @@ scene.add(sun, sun.target,buildFlocks(doc), buildEnvironment(doc), new WorldScen
 const landscape=new WorldLandscape(doc);scene.add(landscape.group);
 const populations=new AmbientPopulation(doc);scene.add(populations.group);
 const live=[];
-for (const object of doc.objects) if (isActor(object) || hasAnimatedJoints(object.spec) || isReactive(object.spec) || archetypeOf(object).interaction === 'knockable') {
+for (const object of doc.objects) if (!object.parked && (isActor(object) || hasAnimatedJoints(object.spec) || isReactive(object.spec) || archetypeOf(object).interaction === 'knockable')) {
   const group = isReactive(object.spec) && impactOf(object.spec)?.kind!=='bounce' ? buildDamageObject(object) : isActor(object) ? compactObject(buildObject(object)) : buildObject(object),placement=objectPlacement(doc,object); group.position.copy(worldPosition(doc, object.x, object.y, 1.5)); group.position.y=placement.base+1.5;group.quaternion.copy(placement.rotation);group.userData.object=object;group.userData.ambient=!!object.route && doc.routes.find(r=>r.id===object.route.id)?.kind==='ambient'; scene.add(group);live.push(group);
 }
 if(dreamV2){const player=buildPlayer(doc);player.position.copy(worldPosition(doc,doc.spawn.x,doc.spawn.y,1.5));player.rotation.y=-doc.spawn.headingRad;scene.add(player);}

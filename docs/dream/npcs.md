@@ -11,6 +11,8 @@ An assembly describes what something can do. A placement decides who controls it
 | `controllable` | Player after boarding | Requires a `rideable` control profile. Starts parked; F boards it from nearby dry ground. |
 | `npc` | Engine | An autonomous route or a bounded `behavior` program. A driver-capable NPC cannot be taken over. A passenger-only train seat still works. |
 
+Dormant parking uses `parked=true` on a fixed controllable placement, or `role=controllable` on `furnish`. It activates one fleet rig when occupied, within the existing animation cap, and retains moved poses in saves. [Parking rules](populations.md#make-the-parked-vehicles-usable). NPC driver and passenger ownership are unchanged.
+
 Declare `role` on each new actor placement. For legacy source, omitting it infers controllable from the template's control capability, otherwise NPC from a route, otherwise prop. `world(player=...)` still selects the original car; the walking Explorer is engine-owned. Humanoid possession and custom input profiles are not implemented.
 
 ![People composed from shared Dream parts, with faces aligned to local +X](../media/npc-people.jpg)

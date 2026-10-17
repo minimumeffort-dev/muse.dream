@@ -67,3 +67,7 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    market, work and delivery. A market block contains lot declarations. Actor references
    resolve after linking; goods/work/market references belong to the economy.
    Integer money, stock and conserved transfers are engine-owned, never callbacks. *)
+
+(* place.parked is a boolean on explicit controllable fixed placements.
+   furnish.role=controllable emits dormant parking. asset.control adapts an
+   existing seat on an isolated validated copy; registry resolution is unchanged. *)

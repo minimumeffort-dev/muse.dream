@@ -72,7 +72,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `let` | top / object / visual / path / route_path / voxel_ops | ID / no block | `value: n` |
 | `component` | top | ID / visual | `params?: symbols`, `materials?: symbols` |
 | `object` | top | ID / object | `label: text` |
-| `asset` | top | ID / no block | `module: ref`, `object: ref` |
+| `asset` | top | ID / no block | `module: ref`, `object: ref`, `control?: car / bicycle / skateboard / scooter / boat / plane` |
 | `include` | top | ID / no block | `module: ref` |
 | `body` | object | No ID / no block | `interaction: solid / knockable / decor`, `radius: n`, `height: n`, `friction?: n` |
 | `measure` | object | No ID / no block | `kind: car / plane / tree / person / bicycle / skateboard / bench / table / building / train / bus / tram / boat / food / custom`, `axis: x / y / z`, `meters: n` |
@@ -121,15 +121,15 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 | `behavior` | top | ID / behavior | `start: ref` |
 | `state` | behavior | ID / npc_state | `action: idle / patrol / perform`, `face?: none / player`, `say?: text` |
 | `on` | npc_state | ID / no block | `event: after / near_player / far_player / interact`, `to: ref`, `seconds?: n`, `radius?: n`, `familiar?: bool` |
-| `furnish` | top | ID / no block | `objects: symbols`, `streets?: symbols`, `sites?: symbols`, `grounds?: symbols`, `paving?: color`, `spacing: n`, `setback: n`, `seed: n`, `side?: left / right / both`, `facing?: along / street / varied`, `jitter?: n`, `count?: n`, `pose?: rest`, `on?: verge / sidewalk`, `motion?: ambient_motion` |
+| `furnish` | top | ID / no block | `objects: symbols`, `streets?: symbols`, `sites?: symbols`, `grounds?: symbols`, `paving?: color`, `spacing: n`, `setback: n`, `seed: n`, `side?: left / right / both`, `facing?: along / street / varied`, `jitter?: n`, `count?: n`, `pose?: rest`, `on?: verge / sidewalk`, `motion?: ambient_motion`, `role?: prop / controllable` |
 | `flock` | top | ID / no block | `object: ref`, `at: v2`, `radius: v2`, `count: n`, `altitude: n`, `speed: n`, `seed: n`, `flap_hz?: n`, `flap_deg?: n` |
-| `place` | top | ID / no block | `object: ref`, `at?: v2`, `route?: ref`, `offset?: n`, `phase_s?: n`, `scale?: n`, `heading_deg?: n`, `role?: prop / npc / controllable / ambient`, `behavior?: ref`, `pose?: rest`, `motion?: ambient_motion` |
+| `place` | top | ID / no block | `object: ref`, `at?: v2`, `route?: ref`, `offset?: n`, `phase_s?: n`, `scale?: n`, `heading_deg?: n`, `role?: prop / npc / controllable / ambient`, `behavior?: ref`, `pose?: rest`, `motion?: ambient_motion`, `parked?: bool` |
 | `unresolved` | top | ID / no block | `label: text` |
 
 `joint(...,bone=...)` binds engine-owned humanoid motion. Use all twelve bindings once:
 `root`, `spine`, `left_hip`, `left_knee`, `left_ankle`, `left_shoulder`, `left_elbow`, and the five corresponding `right_` bindings. The hierarchy is `root → spine → shoulder → elbow` and `root → hip → knee → ankle` on both sides. Rest frames face +X, +Y up, left +Z, with zero rotation. Root is centered above the ground; spine is directly above root; hips lie at root height, shoulders above spine. Knee, ankle and elbow offsets point straight down by at least .5 local units. Hip/shoulder lateral offsets choose their declared side. The object must be a measured decor person, all parts must belong to bones, and bone motion cannot combine with `motion` or fracture groups. Bindings count as live animation, including without `swing`, and require explicit `pose=rest` for passive `furnish`. Other joints keep their existing behavior. [Complete rig and motion notes](behavior.md#humanoid-motion).
 
-Rolling joints use the same bounded radius 1..32 as part roll. Their children rotate rigidly by traveled distance / resolved radius; their bearing positions remain fixed during visual suspension compression. Radius follows uniform group/placement scale. Reduced motion rests the pose. Parked `furnish` templates bake roll joints at rest; swing/open templates require explicit `pose=rest`. Live rolling assemblies retain the 24-assembly and 12-joint caps.
+Rolling joints use the same bounded radius 1..32 as part roll. Their children rotate rigidly by traveled distance / resolved radius; their bearing positions remain fixed during visual suspension compression. Radius follows uniform group/placement scale. Reduced motion rests the pose. Prop `furnish` templates bake roll joints at rest; controllable furnishings retain them for activation; swing/open templates require explicit `pose=rest`. Live rolling assemblies retain the 24-assembly and 12-joint caps.
 
 ### Value constructors
 
@@ -199,13 +199,13 @@ With a measured car player, tree height and plane wingspan must exceed the car's
 | Unmeasured size | Placement multiplier .5–2 |
 | Compound contacts | 1–8; native radius 1–64, height 1–160, bottom Y 0–128 |
 | Project | 32 reachable modules including entry, depth 8, 524,288 UTF-16 characters, 128 defined assemblies |
-| Full scene | Dimensions ≤16384 per axis; ≤4096 placements, 12 routes, 24 mobile actors, including controllable vehicles |
+| Full scene | Dimensions ≤16384 per axis; ≤4096 placements, 12 routes, 24 resident mobile actors, including controllable vehicles; ≤256 dormant parked vehicles |
 | Animation / effects | ≤24 live joint assemblies including player; ≤16 steam emitters |
 | Destruction | ≤24 reactive objects, ≤128 potential fragments, ≤8 fragments per assembly, ≤4 zones per object |
 | Terrain | ≤16 hills and 16 tint areas; combined terrain height cap 320 |
 | Infrastructure | 2–64 checkpoints, ≤8 bridges and ≤8 combined water basins/watercourses |
 
-The live jointed-assembly budget is 24 including the engine character; source objects and the player vehicle share the remaining 23 slots.
+The live jointed-assembly budget is 24 including the engine character; source objects and the player vehicle share the remaining 23 slots. A fleet with animated parked models reserves one of those slots for its single occupied rig.
 
 The [machine instructions](../dream-v2-model.txt) carry detailed motion and landscape parameter bounds. The schema and full-scene validator are the final acceptance boundary. Expanded/native geometry limits still apply before physical scaling.
 
@@ -239,7 +239,7 @@ See the [complete two-bird example](../examples/ambient-wildlife.dream) and the 
 
 `pose=rest` explicitly bakes authored joint transforms and removes bone bindings and part/joint animation clocks. Geometry, material, scale, body and joint parenting remain intact. The source template remains live for other placements. Damage, knockables, emitters and proximity interactions cannot be frozen away. A single `place(...,at=[x,y],role=prop,pose=rest)` follows the same policy and rejects routes, behaviors or inferred ownership. Resting scenery is instanced, without spending live-rig or NPC slots. [Runnable example](../examples/resting-population.dream).
 
-The compiler filters full visual footprints against roads, pavements, crossings, entrances, bridges, water, infrastructure and existing placements. `grounds=[surface_id,...]` permits named visual surfaces explicitly. Site-only `paving=#rrggbb` creates parking aprons joined to the sidewalk, within the existing 64-surface budget. Templates cannot be knockable, reactive or emitting; live joints require the bounded ambient motion path or passive `pose=rest`; generated parked vehicles have `role=prop` and cannot be boarded. Use a separate explicit `role=controllable` placement for an available ride. There is no minimum output guarantee: inspect compiled coverage. Limits are 32 rules, 2,048 candidates per rule, 128 emitted objects per rule and 1,024 generated objects overall, also counted against 4,096 scene placements.
+The compiler filters full visual footprints against roads, pavements, crossings, entrances, bridges, water, infrastructure and existing placements. `grounds=[surface_id,...]` permits named visual surfaces explicitly. Site-only `paving=#rrggbb` creates parking aprons joined to the sidewalk, within the existing 64-surface budget. Templates cannot be knockable, reactive or emitting; live joints require the bounded ambient motion path or passive `pose=rest`; default generated props cannot be boarded. `role=controllable` requires a driver-capable template, preserves rolling joints and emits `parked=true`; it rejects `pose=rest`, ambient motion and `on=sidewalk`. There is no minimum output guarantee: inspect compiled coverage. Limits are 32 rules, 2,048 candidates per rule, 128 emitted objects per rule and 1,024 generated objects overall, also counted against 4,096 scene placements.
 
 | Constructor | Context | ID / block | Fields |
 | --- | --- | --- | --- |
@@ -411,3 +411,9 @@ to transfer it and earn the wage once. Cancel returns cargo/pay without output.
 Completion counts and active reservations are saved and checked against money,
 material and capacity bounds. Start over resets them. There is no timeout,
 automatic courier, path planner or unbounded item body. [Complete example](../examples/market-delivery.dream).
+
+## Dormant vehicle parking
+
+`place(...,at=[x,y],role=controllable,parked=true)` declares a stationary available ground vehicle (car, bicycle, skateboard or scooter). Boats and planes retain ordinary resident controllable placements and their existing water/air support. `furnish(...,role=controllable)` creates the same ownership mode for every accepted parking candidate. It requires a solid driver assembly without routes, programs, foundations, damage, emitters, lamps, humanoid or proximity joints. There are at most 256 dormant vehicles in addition to the existing 24 resident actors; one occupied fleet rig must still fit the 24 live-assembly budget. Seeds and moved local poses are instanced. Saved poses retain signed wheel travel and collision bodies after unloading; R preserves them and Start over restores their authored positions. No NPC motion or vehicle damage is added. [Runnable source](../examples/parked-vehicles.dream).
+
+`asset id(module=library,object=vehicle,control=car)` adapts an existing seat on a local copy. The original export and other imports remain unchanged, including NPC passenger seats. Missing seats and invalid driver bodies fail compilation. The module registry remains host-supplied.

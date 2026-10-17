@@ -15,7 +15,7 @@ Author the streets, crossings, buildings and entrance paths first. `furnish` ref
 ```dream
 // Fragment: these IDs refer to objects, streets and sites in the linked world.
 furnish avenue_lights(objects=[avenue_lamp],streets=[market_avenue],spacing=340,setback=2,seed=41,facing=street);
-furnish school_parking(objects=[bicycle],sites=[access_garden_school],spacing=26,setback=4,count=6,seed=82,paving=#aaa99f);
+furnish school_parking(objects=[bicycle],sites=[access_garden_school],spacing=26,setback=4,count=6,seed=82,paving=#aaa99f,role=controllable);
 ```
 
 Street spacing follows distance along the authored polyline. Offset includes the carriageway, cycle track, sidewalk and full visual radius. Destination rows follow the entrance side of their named street, with gaps around the access path. Optional paving connects parking to the pavement. Existing controllable vehicles reserve extra maneuvering space.
@@ -24,11 +24,36 @@ The seed chooses among declared templates and varies longitudinal spacing when `
 
 Candidates that cannot fit are skipped. A rule can emit nothing, so compile the world and inspect counts by rule and district before accepting it. Do not increase the output cap to hide a bad placement rule.
 
-## Separate parked objects from available rides
+## Make the parked vehicles usable
 
-Generated bicycles and scooters are static props. They use the same measured geometry but have no live controller or joint clock. Place an explicit `role=controllable` bicycle or scooter beside a clear approach when the player should be able to ride it. That placement uses the existing vehicle budget and direct engine controls.
+Use `furnish(...,role=controllable)` for available parking. Every template needs an explicit `rideable` control profile. The compiler retains its rolling mechanisms and marks each generated placement `parked=true`. Default prop furnishing remains decorative. The renderer instances unoccupied models and activates one full rig when you board; it does not spend one live actor slot per parked bicycle.
 
-The live mock has 45 parked bicycles, 22 parked scooters and 14 parked cars at destinations, plus separate controllable rides. The market scooter uses WASD and a press of Space to jump.
+Dormant parking supports cars, bicycles, skateboards and scooters. Boats and planes keep ordinary resident controllable placements with their water/air support. There are at most 256 dormant vehicles, with one reserved occupied rig inside the existing 24-assembly cap. Their physical bodies, moved positions and ownership stay in simulation when rendering unloads. Walkers yield to moved vehicles on their paths. This does not add autonomous parking or vehicle damage. [Complete two-bicycle example](../examples/parked-vehicles.dream).
+
+The live mock has 45 usable parked bicycles, 22 scooters and 14 cars/vans at destinations, plus the original controllable rides. The market scooter uses WASD and a press of Space to jump.
+
+Compile the complete parking example:
+
+```dream
+dream 2;
+material teal(style=toon,colors=[#448b87,#448b87]);
+material rubber(style=toon,colors=[#273239,#273239]);
+object bicycle(label="Parked bicycle"){
+  measure(kind=bicycle,axis=x,meters=1.8);
+  body(interaction=solid,radius=8,height=16);
+  rideable(at=[-2,12,0],control=bicycle);
+  repeat wheels(index=i,count=2){
+    part tire(shape=torus,material=rubber,at=[i*16-8,4,0],size=[8,8,1.2],motion=roll(axis=z,radius=4),rot_deg=[0,180,0]);
+  }
+  beam frame(shape=cylinder,material=teal,from=[-8,4,0],to=[6,12,0],width=1,depth=1);
+  beam fork(shape=cylinder,material=teal,from=[6,14,0],to=[8,4,0],width=1,depth=1);
+  beam seatpost(shape=cylinder,material=teal,from=[-2,7,0],to=[-2,12,0],width=1,depth=1);
+  part seat(shape=box,material=rubber,at=[-2,12,0],size=[4,1,2]);
+  part handlebar(shape=box,material=rubber,at=[6,14,0],size=[1,1,7]);
+}
+place first(object=bicycle,at=[300,400],role=controllable,parked=true);
+place second(object=bicycle,at=[350,400],role=controllable,parked=true);
+```
 
 ## Give residents and ground wildlife a place
 

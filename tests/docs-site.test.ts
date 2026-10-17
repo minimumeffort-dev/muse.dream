@@ -6,6 +6,10 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights dormant parking and local control adapters at complete token boundaries',()=>{
+    const html=highlight('asset car(module=library,object=van,control=car);place bike(role=controllable,parked=true);furnish bikes(role=controllable); // <script>&');
+    expect(html).toContain('class="dream-field">parked</span>');expect(html).toContain('class="dream-field">control</span>');expect(html).toContain('&lt;script&gt;&amp;');expect(highlight('parked_extra parking controller')).not.toMatch(/dream-field/);
+  });
   it('highlights commerce boundaries and escapes labels without consuming longer IDs',()=>{
     const html=highlight('economy(){good bread(label="<Bread>&",food=45);account buyer(actor=player,credits=20,capacity=8,satiety=40,drain_s=.05);market stall(label="Bakery",actor=vendor,credits=100,radius=60){lot shelf(good=bread,quantity=8,limit=16,price=5);}delivery trip(label="Cargo",from=stall,to=counter,good=bread,quantity=2,pay=4,capacity=1);work bake(input=flour,take=1,output=bread,make=2,seconds=6,pay=3,effort=12,target=4);}');
     for(const word of ['economy','good','account','market','lot','work','delivery'])expect(html).toContain(`class="dream-keyword">${word}</span>`);

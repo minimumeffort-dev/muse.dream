@@ -5,7 +5,7 @@ import { impactOf,zonesOf,type ObjectDslV2 } from "../scene/object-dsl";
 import { objectFragments } from "../scene/fragments";
 import { objectPlacement } from "../scene/placement";
 import { drivingHeight } from "../scene/terrain";
-import { sceneContacts,type Contact } from "../scene/contacts";
+import { sceneContacts,queryStaticContacts,type Contact } from "../scene/contacts";
 import { objectHeight,objectRadius } from "./archetypes";
 import { objectSupport } from "../scene/object-support";
 import { actorContacts } from "./actors";
@@ -69,7 +69,7 @@ export function advanceImpactMotion(state:CarState,world:World,dt:number,hitCar=
     prop.vx*=damping;prop.vy*=damping;
     const speed=Math.hypot(prop.vx,prop.vy);if(speed>560){prop.vx*=560/speed;prop.vy*=560/speed;}
     prop.x+=prop.vx*dt;prop.y+=prop.vy*dt;
-    const contacts=[...data.solids.query(prop.x,prop.y,radius+data.maxRadius),...actors];
+    const contacts=[...queryStaticContacts(scene,prop.x,prop.y,radius,state),...actors];
     for(const c of contacts){
       const x=prop.x-c.x,y=prop.y-c.y,d=Math.hypot(x,y),r=radius+c.r;
       if(isBroken(state,c) || d>=r || elevation>=c.top || elevation+height<=c.bottom)continue;

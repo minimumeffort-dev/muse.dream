@@ -78,12 +78,12 @@ describe('connected vehicle assemblies',()=>{
   });
 });
 
-it('bakes parked bicycle cranks at rest and retains the full world within its existing live-animation cap',()=>{
+it('retains parked bicycle cranks for bounded activation inside the existing live-animation cap',()=>{
   const scene=createWorldScene(),parked=scene.objects.filter(o=>o.id.startsWith('school_bicycles_') || o.id.startsWith('transit_bicycles_'));
   expect(parked.length).toBe(39);
-  for(const bike of parked){expect(bike.role).toBe('prop');expect(hasAnimatedJoints(bike.spec)).toBe(false);expect(bike.spec).toMatchObject({dslVersion:2});}
+  for(const bike of parked){expect(bike.role).toBe('controllable');expect(bike.parked).toBe(true);expect(hasAnimatedJoints(bike.spec)).toBe(true);expect(bike.spec).toMatchObject({dslVersion:2});}
   expect(hasAnimatedJoints(spec('Meadow bicycle'))).toBe(true);
-  const count=scene.objects.filter(o=>hasAnimatedJoints(o.spec)).length+Number(hasAnimatedJoints(scene.player))+1;
+  const count=scene.objects.filter(o=>!o.parked && hasAnimatedJoints(o.spec)).length+Number(scene.objects.some(o=>o.parked && hasAnimatedJoints(o.spec)))+Number(hasAnimatedJoints(scene.player))+1;
   expect(count).toBeLessThanOrEqual(MAX_ANIMATED_ASSEMBLIES);
   expect(scene.objects.length).toBe(1695);expect(scene.checkpoints).toHaveLength(8);
 });

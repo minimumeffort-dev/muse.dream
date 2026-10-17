@@ -5,16 +5,17 @@ import { drivingHeight,waterAt,terrainHeight } from "../scene/terrain";
 import { pointInPolygon } from "./mask";
 import { objectRadius,objectHeight,archetypeOf } from "./archetypes";
 import { controlOf } from "../scene/object-dsl";
-import {controlFor,isActor,behaviorFor} from '../scene/agents';
+import {controlFor,isResidentActor,isParkedVehicle,behaviorFor} from '../scene/agents';
 import {initialNpcState} from './npcs';
 import {objectPlacement} from '../scene/placement';
 import { playerHeight,playerRadius } from "../scene/measure";
 import {aircraftFloor} from '../scene/aircraft-support';
 import type {CarState} from "./car";
+import {parkingDefinitions} from './parking';
 
 export interface ActorPose {id:string;x:number;y:number;elevation:number;headingRad:number;speed:number;distance:number;travelled:number;kind:"rail"|"path"|"water"|"air";vx?:number;vy?:number;pitch?:number;bank?:number;activity?:'idle'|'patrol'|'perform';animationTimeS?:number;stateId?:string}
 const actors=new WeakMap<Scene,SceneObject[]>();
-export function routeObjects(scene:Scene) {let objects=actors.get(scene);if(!objects){objects=scene.objects.filter(isActor);actors.set(scene,objects);}return objects;}
+export function routeObjects(scene:Scene) {let objects=actors.get(scene);if(!objects){objects=scene.objects.filter(isResidentActor);actors.set(scene,objects);}return objects;}
 const bases=new WeakMap<Scene,Map<string,number>>();
 export function actorPose(scene:Scene,object:SceneObject,timeS:number,state?:CarState):ActorPose {
   const control=controlFor(object),route=object.route && scene.routes.find(r=>r.id===object.route!.id)!,program=behaviorFor(scene,object);
@@ -27,7 +28,7 @@ export function actorPose(scene:Scene,object:SceneObject,timeS:number,state?:Car
   if(control){
     let heights=bases.get(scene);if(!heights){heights=new Map();bases.set(scene,heights);}
     let elevation=heights.get(object.id);
-    if(elevation===undefined){elevation=control==='plane' ? aircraftFloor(scene,object,{x:object.x,y:object.y,headingRad:object.headingRad??0,pitch:0,bank:0}) : control==='boat' ? terrainHeight(scene.terrain,object.x,object.y) : drivingHeight(scene.terrain,object.x,object.y);heights.set(object.id,elevation);}
+    if(elevation===undefined){elevation=control==='plane' ? aircraftFloor(scene,object,{x:object.x,y:object.y,headingRad:object.headingRad??0,pitch:0,bank:0}) : control==='boat' ? terrainHeight(scene.terrain,object.x,object.y) : object.parked ? objectPlacement(scene,object).base : drivingHeight(scene.terrain,object.x,object.y);heights.set(object.id,elevation);}
     const water=control==="boat" ? waterAt(scene.terrain,object.x,object.y,elevation) : undefined;
     return {id:object.id,x:object.x,y:object.y,elevation:water ? water.level-2 : elevation,headingRad:object.headingRad??0,kind,speed:0,distance:0,travelled:0,vx:0,vy:0};
   }
@@ -54,7 +55,7 @@ export function routeElevation(scene:Scene,route:Route,point:{x:number;y:number}
   if(route.kind==="ambient")elevation+=route.altitude??0;
   return elevation;
 }
-export function actorPoses(scene:Scene,timeS:number,state?:CarState) {return routeObjects(scene).map(o=>actorPose(scene,o,timeS,state));}
+export function actorPoses(scene:Scene,timeS:number,state?:CarState) {const active=state?.control.kind==='vehicle' ? parkingDefinitions(scene).byId.get(state.control.id) : undefined;return [...routeObjects(scene),...(isParkedVehicle(active) ? [active!] : [])].map(o=>actorPose(scene,o,timeS,state));}
 export function actorContacts(scene:Scene,timeS:number,state?:CarState) {
   const contacts=routeObjects(scene).filter(o=>archetypeOf(o).interaction!=="decor" && !(state?.control.kind==="vehicle" && state.control.id===o.id)).flatMap(object=>{
     const p=actorPose(scene,object,timeS,state);return objectContacts(scene,object,p).map(c=>({...p,...c,id:object.id,vx:p.vx??0,vy:p.vy??0}));

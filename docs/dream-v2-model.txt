@@ -61,7 +61,7 @@ mechanism by traveled distance / resolved radius. Use one bearing frame for
 an axle's tires, hubs and shaft, or a bicycle's chainring, arms and pedals.
 The bearing stays fixed during visual body suspension travel. Orient bearings
 so forward travel rolls their wheels forward; keep shafts inside the hubs.
-Parked furnish templates bake roll joints at rest; swing/open joints remain
+Prop furnish templates bake roll joints at rest; controllable parking retains them for activation; swing/open joints remain
 ineligible for furnishings unless explicitly baked with pose=rest. Live roll joints count toward existing jointed
 assembly budgets. No controller scripts or independent part orbit callbacks.
 
@@ -180,7 +180,7 @@ keep objects at their measured sizes. Omit width/surface only for legacy shared 
 Widen bends to keep the inside ribbon from folding; avoid turns sharper than 120 degrees.
 The engine does not invent crossings or reroute invalid layouts.
 Place uses exactly one of at or route; offset 0..2048 only with route;
-scale .5..2; heading_deg -360..360 only for at placements (routes own heading). <=64 placements; scene <=24 mobile actors including controllable vehicles,
+scale .5..2; heading_deg -360..360 only for at placements (routes own heading). <=64 placements; scene <=24 resident mobile actors including controllable vehicles,
 <=24 live joint assemblies including the standing engine character; reserve one slot,
 so source objects plus the player vehicle may use at most 23. <=24 impact objects, <=128 fragments,
 <=16 steam emitters. Vehicle route actors need solid bodies without foundation/impact; compound contacts are allowed only on street/tram/rail NPCs;
@@ -193,6 +193,7 @@ Hollow buildings/tunnels use separated contacts and overhead clearance.
 ## modules
 PROJECT MODULES
 asset local_id(module=library_id,object=exported_object_id); imports only an object.
+Optional control=car|bicycle|skateboard|scooter|boat|plane adapts a COPY with an existing rideable seat to a validated driver profile. The exported template and other imports retain their original passenger capability. It cannot add a missing seat or bypass driver validation.
 include district_id(module=module_id); includes that module's world declarations.
 Use the asset alias for local place/object and world/player references.
 Example: asset ball(module=props,object=festival_ball);
@@ -387,8 +388,10 @@ place(...,at=[x,y],role=prop,pose=rest) also supports a single passive resting i
 explicit prop required, no route or behavior. Resting props consume no NPC/live-rig slot.
 on=verge (default) stays outside the sidewalk. on=sidewalk requires decor, setback=0,
 no paving; full radius fits the outer sidewalk, leaving at least 8 units inside for walking.
-Generated objects default to role=prop; motion creates role=ambient. Parked bikes/scooters cannot be boarded. For an available
-ride use an explicit role=controllable placement with rideable control. Original actor caps apply.
+Generated objects default to role=prop; motion creates role=ambient. furnish(...,role=controllable) requires rideable(control=...) on every template and emits parked=true.
+For an explicit dormant ride use place(...,at=[x,y],role=controllable,parked=true). No route, behavior, pose=rest or ambient motion; no foundations, damage, emitters, lamps, humanoid or proximity joints. Furnish controllable parking cannot use on=sidewalk.
+Dormant parking supports car/bicycle/skateboard/scooter. Boats and planes keep ordinary resident controllable placements with their existing water/air support.
+At most 256 dormant vehicles, separate from the 24 resident-actor cap. Reserve ONE extra slot inside the existing 24 live-assembly cap for the occupied fleet rig; never instantiate all parked rigs. Original seeds and moved local poses stay instanced. Physics/ownership/moved poses remain in simulation and format 5 saves; R preserves parked poses, Start over resets them. No autonomous parking movement or damage. examples/parked-vehicles.dream is runnable.
 <=32 rules, <=2048 candidates/rule, <=128 emitted/rule, <=1024 generated overall, also <=4096
 scene objects. Output has no minimum guarantee; inspect compiled rule/district coverage.
 AMBIENT GROUND MOTION (separate from general NPC programs)

@@ -168,13 +168,13 @@ export function buildCustom(object: SceneObject): THREE.Group {
 }
 
 /** Allowlisted rigid animation preserves an asset's shape and proportions. */
-export function animateObject(group: THREE.Group, time: number, enabled = true, distance = 0, compression = 0, listenerDistance = Infinity): void {
+export function animateObject(group: THREE.Group, time: number, enabled:boolean|'roll' = true, distance = 0, compression = 0, listenerDistance = Infinity): void {
   group.traverse(part => {
     const joint=part.userData.jointRest;
     if(joint) {
       part.position.copy(joint.position);if(part.parent===group && joint.animation?.kind!=='roll') part.position.y-=compression;
       part.quaternion.copy(joint.rotation);
-      if(enabled && joint.animation) {
+      if(enabled && joint.animation && (enabled!=='roll' || joint.animation.kind==='roll')) {
         const motion=joint.animation,axis=new THREE.Vector3(Number(motion.axis==="x"),Number(motion.axis==="y"),Number(motion.axis==="z"));
         part.rotateOnAxis(axis,'kind' in motion ? distance/(motion.radius*group.scale.x) : Math.sin(time*motion.speed+motion.phase)*motion.amplitudeRad);
       }
@@ -188,7 +188,7 @@ export function animateObject(group: THREE.Group, time: number, enabled = true, 
     const motion = rest.animation;
     part.position.y = rest.y - (motion?.kind === "roll" || part.parent!==group ? 0 : compression);
     part.quaternion.copy(rest.rotation);
-    if (!enabled || !motion) return;
+    if (!enabled || !motion || enabled==='roll' && motion.kind!=='roll') return;
     if (motion.kind === "sway") part.rotateZ(Math.sin(time * motion.speed + part.position.x * .2) * motion.amplitudeRad);
     else if (motion.kind === "roll") {const axis=motion.axis ?? "y";part.rotateOnAxis(new THREE.Vector3(Number(axis==="x"),Number(axis==="y"),Number(axis==="z")),distance / (motion.radius * group.scale.x));}
     else part.rotateOnAxis(new THREE.Vector3(Number(motion.axis === "x"), Number(motion.axis === "y"), Number(motion.axis === "z")), time * motion.speed);

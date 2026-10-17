@@ -1,0 +1,6 @@
+{
+  "car": "6721.9,4147.3,1.5",
+  "control": "{\"kind\":\"vehicle\",\"id\":\"transit_bicycles_0_5_r\"}",
+  "save": "{\"sourceHash\":\"9b4a8530a3138ee9a87d04d00d24bfba0d57a28b1a8058b3fa7c4278a2f67720\",\"compatibilityHash\":\"12bf26fd5c21822fa347406211a5e7abe71c00c0d08199b4f58c7fc755470e75\",\"restored\":true,\"saved\":true,\"ms\":0.699999988079071,\"characters\":62186,\"timeS\":3160.6666666627466,\"known\":[\"vendor\"],\"review\":false,\"status\":\"Saved on this device.\"}",
+  "vehicles": "[{\"id\":null,\"x\":6362.52029287953,\"y\":4233,\"elevation\":0,\"headingRad\":0,\"distance\":32.47435520389084}]"
+}

@@ -3,6 +3,8 @@ import {ambientNavigation} from '../scene/ambient-navigation';
 import {AMBIENT_LIMITS} from '../scene/ambient';
 import {drivingHeight} from '../scene/terrain';
 import {actorContacts} from './actors';
+import {movedParkingContacts} from '../scene/contacts';
+import {distanceToRoad} from '../scene/road';
 import type {CarState} from './car';
 
 export interface AmbientMember {x:number;y:number;fromX:number;fromY:number;heading:number;fromHeading:number;distance:number;fromDistance:number;node:number;previous:number;random:number;until:number;pauseUntil:number;mode:'walk'|'roam'|'flee'|'alert';speed:number}
@@ -35,6 +37,8 @@ export function stepAmbient(state:CarState,dt:number,scene:Scene):AmbientState|u
     const goal=nav.nodes[m.node]!,distance=Math.hypot(goal.x-m.x,goal.y-m.y);heading=Math.atan2(goal.y-m.y,goal.x-m.x);speed=Math.min(speed,distance/AMBIENT_LIMITS.tickSeconds);
     // Waiting sees moving vehicles and the player's active body before entering their swept space.
     const floor=drivingHeight(scene.terrain,m.x,m.y);
+    const next={x:m.x+Math.cos(heading)*speed*AMBIENT_LIMITS.tickSeconds,y:m.y+Math.sin(heading)*speed*AMBIENT_LIMITS.tickSeconds};
+    if(movedParkingContacts(scene,m.x,m.y,nav.radius(o)+speed*AMBIENT_LIMITS.tickSeconds,state).some(c=>c.top>floor+.1 && c.bottom<floor+22 && distanceToRoad([m,next],c.x,c.y)<c.r+nav.radius(o)))return m;
     if(hazards.some(c=>{
      if(c.bottom>floor+24 || c.top<floor)return false;
      const vx=(c.vx??0)-Math.cos(heading)*speed,vy=(c.vy??0)-Math.sin(heading)*speed,dx=c.x-m.x,dy=c.y-m.y,t=Math.max(0,Math.min(2,-(dx*vx+dy*vy)/(vx*vx+vy*vy||1)));
@@ -47,7 +51,7 @@ export function stepAmbient(state:CarState,dt:number,scene:Scene):AmbientState|u
     if(m.mode==='flee'){heading=Math.atan2(m.y-state.y,m.x-state.x);speed=motion.fleeSpeed;}
     else if(time>=m.pauseUntil){heading=m.heading+(random()-.5)*2.2;m.pauseUntil=time+1+random()*3;}
     const step=speed*AMBIENT_LIMITS.tickSeconds,offsets=m.mode==='flee' ? [0,.5,-.5,1,-1,1.6,-1.6] : [0,.5,-.5,1,-1,1.6,-1.6,Math.PI];
-    const candidate=offsets.map(a=>({a:heading+a,x:m.x+Math.cos(heading+a)*step,y:m.y+Math.sin(heading+a)*step})).find(p=>Math.hypot(p.x-o.x,p.y-o.y)<=motion.radius && nav.segment(m,p,nav.radius(o),false));
+    const candidate=offsets.map(a=>({a:heading+a,x:m.x+Math.cos(heading+a)*step,y:m.y+Math.sin(heading+a)*step})).find(p=>Math.hypot(p.x-o.x,p.y-o.y)<=motion.radius && nav.segment(m,p,nav.radius(o),false,state));
     if(!candidate){m.mode='alert';m.until=time+motion.recoverS;return m;}
     heading=candidate.a;
    }
