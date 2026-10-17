@@ -88,6 +88,22 @@ These are engine-owned contact rules, with no extra Dream syntax. For local insp
 
 Exits prefer accessible dry ground, then allow water disembarking when the character fits. You cannot step out during flight. Under a bridge, leaving a boat puts you in the water, never through the deck. Swim back to a boat and press F to board again. Parked vehicles retain their positions and do not acquire a second controller.
 
+### Leave a vehicle
+
+For a compound passenger body, the engine finds clear ground beside its authored
+`contact` cylinders. Making a bus, tram or train longer no longer forces a large
+sideways exit. Blocking one side makes the engine try another point; a fully
+blocked exit leaves you aboard. [The city bus](../examples/city-bus.dream) uses
+this existing contact vocabulary. Driver-controlled vehicles retain their single
+cylinder; boats and aircraft keep their wider visible-hull clearance.
+
+This is a bounded clearance search, not an authored door animation or a guarantee
+of stepping onto a particular platform. F can reboard a nearby passenger vehicle;
+WASD does not take over its route. Your original parked car, checkpoints and the
+world's changes remain owned by the same simulation.
+
+![A short tram ride with two clear exits](../media/transit.gif)
+
 Shallow water supports wading on the bed. Deeper water supports the character at chest depth, with a forward crawl, alternating arm pulls, bent-elbow recovery, flutter kicks and a small wake. Releasing the controls eases into an upright tread; current velocity does not count as stroke effort. Shift or Space increases swimming effort. Water currents still carry you when you stop. Swimming follows the terrain onto a bank and switches back to walking. There is no diving, breath meter or drowning mechanic.
 
 ![Swimming through the city canal, with both banks in view](../media/swimming.gif)

@@ -2,7 +2,7 @@ import marketR55 from './compatibility/r55-market.json';
 import type {Scene} from './schema';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=12;
+export const SAVE_SIMULATION_VERSION=13;
 
 /** A conservative contract: only host provenance and spoken text may differ. */
 export function saveCompatibilitySource(scene:Scene):string {
@@ -28,7 +28,7 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || hash===INTERIOR_COMPATIBILITY;
+  return !scene.economy || hash===EGRESS_COMPATIBILITY;
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
@@ -44,6 +44,9 @@ export const PLANT_COMPATIBILITY='5603fcbdc725e4cfe36e5284d0123a37d6cf46785904c3
 export const NATURAL_COMPATIBILITY='9d9cc87cdc01a9d2d67cfd6411a2724109308fcc354af58e13e6b415e9f0604e';
 export const COURIER_COMPATIBILITY='e0ae71a17aa055c0ca146651434ccd52341ed2d5a1798759f423b5ddca1afff9';
 export const INTERIOR_COMPATIBILITY='36a6b350b49fa07044768fde832c838f9a4be007484d285a93c18a8beb77f136';
+export const EGRESS_COMPATIBILITY='f7b5f8bc696e111422148d51e068413050785a6dc03dcc418cbeb80d9f8adcfc';
+/** Same physical world and ledgers; only passenger exit selection changes. */
+export function preEgressCompatibilitySource(scene:Scene):string{return projection(scene,12);}
 /** The pinned r55 building and entrance are host migration data, never Dream policy. */
 export function preInteriorScene(scene:Scene):Scene{
  if(!scene.objects.some(o=>o.id==='market_hall' && o.spec && 'interior' in o.spec && o.spec.interior))return scene;

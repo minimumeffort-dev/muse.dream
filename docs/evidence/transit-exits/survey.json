@@ -1,0 +1,158 @@
+{
+  "baselineCommit": "7b9d25b37d8998f0514254e6643d98e638b5731f",
+  "scope": "Cold SSR geometry/control survey, not a timing or browser performance benchmark.",
+  "before": [
+    {
+      "id": "market_tram_vehicle",
+      "control": {
+        "kind": "foot"
+      },
+      "x": 5250,
+      "y": 4289.304896463273,
+      "elevation": 0,
+      "fromCenter": 89.3048964632726,
+      "contactGap": 75.76749561854096
+    },
+    {
+      "id": "west_bus_vehicle",
+      "control": {
+        "kind": "foot"
+      },
+      "x": 3856.308350388515,
+      "y": 3950,
+      "elevation": 0,
+      "fromCenter": 56.30835038851501,
+      "contactGap": 42.430209572248685
+    },
+    {
+      "id": "regional_train_vehicle",
+      "control": {
+        "kind": "foot"
+      },
+      "x": 10760,
+      "y": 4109.3039148360585,
+      "elevation": 0,
+      "fromCenter": 109.30391483605854,
+      "contactGap": 95.97035845515941
+    },
+    {
+      "id": "village_bike",
+      "control": {
+        "kind": "foot"
+      },
+      "x": 6310,
+      "y": 4304.206896551724,
+      "elevation": 0,
+      "fromCenter": 14.20689655172373,
+      "contactGap": 7.999999999999592
+    },
+    {
+      "id": "lake_boat",
+      "control": {
+        "kind": "foot"
+      },
+      "x": 10614.888653302743,
+      "y": 9300,
+      "elevation": 0,
+      "fromCenter": 64.88865330274348,
+      "contactGap": 42.279957650569564
+    },
+    {
+      "id": "cloudhopper",
+      "control": {
+        "kind": "foot"
+      },
+      "x": 2251.5196725341416,
+      "y": 9600,
+      "elevation": 0,
+      "fromCenter": 81.51967253414159,
+      "contactGap": 47.47619427327202
+    },
+    {
+      "id": "original-car",
+      "control": {
+        "kind": "foot"
+      },
+      "x": 6330,
+      "y": 4252,
+      "elevation": 0
+    }
+  ],
+  "after": [
+    {
+      "id": "market_tram_vehicle",
+      "control": {
+        "kind": "foot"
+      },
+      "x": 5250,
+      "y": 4219.849907275116,
+      "elevation": 0,
+      "fromCenter": 19.849907275115584,
+      "contactGap": 8.000000000000012
+    },
+    {
+      "id": "west_bus_vehicle",
+      "control": {
+        "kind": "foot"
+      },
+      "x": 3821.5422555183345,
+      "y": 3950,
+      "elevation": 0,
+      "fromCenter": 21.542255518334514,
+      "contactGap": 7.999999999999838
+    },
+    {
+      "id": "regional_train_vehicle",
+      "control": {
+        "kind": "foot"
+      },
+      "x": 10760,
+      "y": 4018.1784003356393,
+      "elevation": 0,
+      "fromCenter": 18.178400335639253,
+      "contactGap": 8.000000000000043
+    },
+    {
+      "id": "village_bike",
+      "control": {
+        "kind": "foot"
+      },
+      "x": 6310,
+      "y": 4304.206896551724,
+      "elevation": 0,
+      "fromCenter": 14.20689655172373,
+      "contactGap": 7.999999999999592
+    },
+    {
+      "id": "lake_boat",
+      "control": {
+        "kind": "foot"
+      },
+      "x": 10614.888653302743,
+      "y": 9300,
+      "elevation": 0,
+      "fromCenter": 64.88865330274348,
+      "contactGap": 42.279957650569564
+    },
+    {
+      "id": "cloudhopper",
+      "control": {
+        "kind": "foot"
+      },
+      "x": 2251.5196725341416,
+      "y": 9600,
+      "elevation": 0,
+      "fromCenter": 81.51967253414159,
+      "contactGap": 47.47619427327202
+    },
+    {
+      "id": "original-car",
+      "control": {
+        "kind": "foot"
+      },
+      "x": 6330,
+      "y": 4252,
+      "elevation": 0
+    }
+  ]
+}

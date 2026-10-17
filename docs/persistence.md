@@ -44,7 +44,15 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-Format 9 retains the exact source hash and the compatibility fingerprint, with simulation version 12. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+Format 9 retains the exact source hash and the compatibility fingerprint, with simulation version 13. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+
+The passenger-exit update has a registered upgrade from the released simulation
+12 world. Its accepted Dream data is identical. The upgrade keeps every saved
+field and clock, including passenger ownership, growth and a worker's return
+journey. It does not rerun older floor, population or inventory migrations. The
+previous format 9 slot remains stored; corrupt newer progress still blocks
+fallback. All earlier registered upgrades continue through their checked physical
+projections. Other world or rule edits do not gain automatic compatibility.
 
 The first market has an explicit registered upgrade from the earlier world. It verifies that every pre-market rule still matches, then initializes only the new accounts/stock/needs at the saved simulation time. Player position, vehicles, damage, sports, NPC memory, population and day/night remain saved. The known r44 format 1 source and format 2 browser fingerprints are supported; original slots are kept. A malformed newer slot blocks writes rather than silently loading an older copy. The registered upgrade chain includes the first-market, first-delivery, usable-parking, local-repair, replacement-supply and connected-repair releases. Later incompatible economy edits cannot silently replay older progress.
 

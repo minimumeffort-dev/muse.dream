@@ -283,8 +283,9 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 
 ## Saved simulation state
 
-Save format 5 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 4. Only revision/source/provenance and behavior `say` text
+Current save format 9 pins exact source plus a host-computed accepted-world fingerprint
+at simulation version 13. Historical formats retain their registered projections.
+Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
 and accepted field. The registered first-market upgrade initializes only new
@@ -303,6 +304,14 @@ without resetting valid world state. Save now writes immediately; Start over
 replaces the current slot and R preserves world changes. Expose storage failures
 and preserve corrupt or externally changed slots until explicit replacement.
 Never store meshes, generated code or provider data. See `docs/persistence.md`.
+
+Passenger exits use the authored cylinder union rather than its broad enclosing
+radius, with eight directions and seven outward rings. Keep collision, dry-ground,
+headroom, nearby boarding and boat/aircraft visual-clearance safeguards. Rectangle
+contacts remain static-only and driver controls retain a single cylinder. The
+registered simulation-12 to 13 upgrade changes no accepted world or saved field;
+never run older population, floor or inventory rebasing for this rules-only
+upgrade. Preserve the old format-9 slot and the entire earlier migration chain.
 
 ## Playable commerce
 

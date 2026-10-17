@@ -1,0 +1,8 @@
+{
+  "baselineCommit": "7b9d25b37d8998f0514254e6643d98e638b5731f",
+  "inputFixture": "save-v8-r53.json",
+  "scope": "The released version 12 decoder performs its registered older upgrade, then encodes a real format 9 world with ongoing growth and a returning worker. No public user data.",
+  "sourceHash": "269c818e0f333fe8fb11fe881219eb363ab59e54da8817787ba24191002c5464",
+  "compatibility": "36a6b350b49fa07044768fde832c838f9a4be007484d285a93c18a8beb77f136",
+  "fixtureFileSha256": "55d61cb36622d36d58eed278795383c9d2d89c3d9d5020c09eaa6aa9429389c1"
+}

@@ -60,9 +60,19 @@ export function exitPosition(state:CarState,world:World) {
   const vehicles=state.control.kind==="passenger" ? state.vehicles : [...state.vehicles.filter(v=>v.id!==id),parkedPose(state,id)];
   const foot:CarState={...state,control:{kind:"foot"},vehicles},footWorld=bodyWorld(foot,world),object=occupiedObject(state,world),bodyRadius=bodyWorld(state,world).carRadius;
   const profile=controlOf(object?.spec),radius=profile==="plane" || profile==="boat" ? Math.max(bodyRadius,assemblyHorizontalRadius(object!.spec as import("../scene/object-dsl").ObjectDsl,object!.scale)) : bodyRadius;
-  for(const wet of [false,true])for(let ring=0;ring<7;ring++)for(let side=0;side<8;side++){
-    const angle=state.headingRad+Math.PI/2+side*Math.PI/4,r=radius+FOOT_RADIUS+5+ring*8;
-    const x=state.x+Math.cos(angle)*r,y=state.y+Math.sin(angle)*r,ground=walkingHeight(world.scene,x,y,FOOT_RADIUS),water=waterAt(world.scene.terrain,x,y,terrainHeight(world.scene.terrain,x,y));
+  // Seats with explicit contacts are validated upright passenger cylinders. The
+  // enclosing broad-phase radius is useful for queries, not a sideways exit.
+  const contacts=object?.spec && 'dslVersion' in object.spec && object.spec.dslVersion===2 && object.spec.contacts ? objectContacts(world.scene,object,state) : undefined,margin=FOOT_RADIUS+5;
+  const exits=Array.from({length:8},(_,side)=>{
+    const angle=state.headingRad+Math.PI/2+side*Math.PI/4,dx=Math.cos(angle),dy=Math.sin(angle);let extent:number|undefined;
+    for(const c of contacts??[]){
+      const x=c.x-state.x,y=c.y-state.y,along=x*dx+y*dy,disc=(c.r+margin)**2-(x*x+y*y-along*along);
+      if(disc<0)continue;const end=along+Math.sqrt(disc);if(end>=0)extent=Math.max(extent??0,end);
+    }
+    return {dx,dy,r:Math.max(margin,extent??radius+margin)};
+  });
+  for(const wet of [false,true])for(let ring=0;ring<7;ring++)for(const exit of exits){
+    const r=exit.r+ring*8,x=state.x+exit.dx*r,y=state.y+exit.dy*r,ground=walkingHeight(world.scene,x,y,FOOT_RADIUS),water=waterAt(world.scene.terrain,x,y,terrainHeight(world.scene.terrain,x,y));
     const elevation=wet && water ? Math.max(terrainHeight(world.scene.terrain,x,y),water.level-FOOT_HEIGHT*.65) : ground;
     // A boat can leave at the shore, but cannot teleport up through a bridge deck.
     if(!wet && profile==='boat' && bridgeAt(world.scene.terrain.landscape,x,y))continue;

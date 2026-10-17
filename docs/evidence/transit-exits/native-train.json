@@ -1,0 +1,31 @@
+{
+  "boarded": {
+    "car": "10794.4,4000.0,1.5",
+    "control": {
+      "id": "regional_train_vehicle",
+      "kind": "passenger"
+    }
+  },
+  "exited": {
+    "car": "10794.4,4018.2,1.5",
+    "control": {
+      "kind": "foot"
+    },
+    "vehicle": {
+      "elevation": 0,
+      "id": "regional_train_vehicle",
+      "x": 10812.708333333334,
+      "y": 4000
+    },
+    "vehicles": [
+      {
+        "distance": 0,
+        "elevation": 0,
+        "headingRad": 0,
+        "id": null,
+        "x": 6330,
+        "y": 4233
+      }
+    ]
+  }
+}

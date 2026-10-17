@@ -28,6 +28,10 @@ Five buses run four services: the garden/market loop, the southern school/hospit
 
 F boards a bus, tram or regional railcar as a passenger. The service retains its route clock; driving inputs do not take over. Tram heads and grooves follow the constructed street and bridge triangles, including their approaches. Crossing paint leaves the track clear. These static details stream with street chunks; vehicle clocks and passenger ownership stay in simulation. Regional railway rails retain their raised profile and sleepers. Underground metro and subway tunnels are not implemented yet.
 
+Leaving a long vehicle uses its contact envelope, so a clear exit stays beside
+the body. An obstructed side falls back to another clear point. Door animations,
+chosen platform sides, fares and passenger capacity are still missing.
+
 Stops have named anchors, waits and platform sites in Dream. Platform paths join the pedestrian network, and served destinations must be reachable from them. The regional train is a single rigid railcar, so a shuttle turnaround cannot stack separate carriages. These vehicles follow authored schedules; they do not implement traffic signals or avoidance.
 
 ![A connected canal bridge carrying the street and cycle tracks](media/city-cycle-lanes.jpg)

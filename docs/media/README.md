@@ -642,3 +642,24 @@ tram corridor and remains accurate. Remote vegetation, wildlife, water/sports,
 airport and isolated destruction recordings retain their unchanged construction;
 asset galleries and the accepted-scene map are unchanged. Historical evidence
 keeps its release-specific images and claims.
+
+## Passenger exits
+
+`transit` records 240 consecutive rendered frames over eight simulation seconds.
+It starts beside the actual tram through the normal exit helper. F boards at
+frame 20, leaves at 105, boards again at 120 and leaves at 210. The service keeps
+its real route clock; there is no presentation path or moved NPC. Existing capture
+backpressure waits for required render chunks instead of dropping frames.
+
+The native source frames are 2400 × 1350 at thirty rendered frames per simulation
+second. GIF, 1600 × 900 H.264 video and matching poster are refreshed together with
+`node scripts/encode-media.mjs <ffmpeg> <gifsicle> transit`. The GIF uses the same
+1280 × 720/256-color, no-dither/loss-80 settings as parking. `transit.jpg` uses frame
+110. No missing-frame interpolation or live-FPS claim is made.
+
+The other recordings retain their pictured construction and controls. Their F
+transitions use unchanged single-cylinder cars/bicycles, or the existing boat and
+aircraft clearance. No accepted placement, material, road, map or asset model
+changed. Historic evidence stays pinned to its release. See the
+[exit verification](../evidence/transit-exits/verification.md) for native controls,
+released-engine backup fixtures, complete-world identity and resource limits.

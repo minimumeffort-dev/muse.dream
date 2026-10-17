@@ -54,11 +54,11 @@ the district; the tram's route, passenger controls and saved clock stay resident
 Keep auditing paint, junctions and attachments as new systems land. World equality
 checks alone do not certify every placement or marking is correct.
 
-The native tram check also exposes a usability limit: compound transit vehicles
-still use their broad body radius when choosing an exit. The result can be dry
-and collision-free yet several metres from the actual side door. Refine that
-shared egress rule against the contact envelope, with persistence/replay checks,
-before expanding the transit fleet.
+Compound passenger exits now use their actual contact envelope, with the same
+bounded collision and dry-ground checks. They retain NPC route ownership and
+parked vehicles. A registered save upgrade keeps the existing world intact.
+Door animations, platform-side intent, capacity and fares remain separate transit
+work; a clear collision result alone does not implement those systems.
 
 Natural work grounds now retain the terrain and cosmetic plants through explicit
 Dream `finish=terrain`. Coverage, furniture reservations, contacts and walking

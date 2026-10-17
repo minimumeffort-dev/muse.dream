@@ -96,6 +96,10 @@ World preparation now avoids repeated terrain and outline work. The [query check
 
 Tram tracks sit in the street and follow the actual road and bridge triangles. Crossings leave room for their narrow grooves. The tracks load and unload with the surrounding streets; the tram keeps its route and passenger controls. [Track construction and checks](docs/evidence/tram-tracks/verification.md).
 
+Press **F** beside a bus, tram or train to board as a passenger, then F to leave. Long vehicles now place you beside their actual collision body instead of several metres away. The route keeps moving; your parked car stays where you left it. [Controls and limits](docs/dream/behavior.md#leave-a-vehicle).
+
+![Boarding, riding and leaving the tram](docs/media/transit.gif)
+
 Walk up to the market vendor, teacher, health worker or commuter on foot and press **T** to talk. Dream defines their replies, return greetings and transitions. People remember meeting you. Conversations pause a commuter's route and let it resume from the same point. [Author an NPC conversation](docs/dream/npcs.md#talk-to-a-person).
 
 ![Talking to the market vendor](docs/media/conversation.jpg)
