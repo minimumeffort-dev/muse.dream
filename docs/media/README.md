@@ -348,3 +348,19 @@ interpolation. Earlier streaming recordings used 1600 × 900 inputs. The [night 
 keeps the earlier still and current native town view. Geometry, daytime light,
 controls and the other clips retain their accepted contracts; those captures
 remain accurate.
+
+
+## Conversations and saved progress
+
+`conversation.gif`, `conversation.mp4` and `conversation.jpg` share 240 native
+2400 × 1350 source frames, rendered at 30 frames per simulation second. The still
+uses frame 60. The dev exporter composites the currently visible caption's actual
+text, bounds, font and colours over that frame's renderer canvas; it does not
+interpolate motion. Its temporary 2D buffer is released when export completes.
+`return-greeting.jpg` and `save-menu.jpg` come from native browser screenshots
+of the reload and save controls. [Verification](../evidence/conversations/verification.md).
+
+README, NPC guide/reference/model instructions, generated contract, systems
+priorities and saving guide were refreshed together. Existing asset, movement,
+destruction, lighting and population captures retain their represented geometry
+and controls; the new contextual reply is shown in this dedicated sequence.

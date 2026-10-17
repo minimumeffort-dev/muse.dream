@@ -344,6 +344,18 @@ teleporting. It animates only while moving. face=none default; face=player stati
 turning <=2.5 rad/s. Asset forward is +X. No arbitrary poses, scripts or callbacks.
 on event=after requires only seconds (.1..300); near_player/far_player requires only radius
 (10..240 units), using 3D distance <= / >=. Use separated near/far radii for hysteresis.
+For player conversations use on talk(event=interact,to=reply,radius=55). interact requires
+only radius, 10..80 units; one grounded on-foot talk press selects one nearest eligible
+NPC by 3D distance, with stable ID ties. Optional familiar=false matches a first meeting;
+familiar=true matches a known person. familiar is only valid for interact. A successful
+interaction marks that NPC known; this persists on R, render unloads and local save/load,
+and resets on Start over. It is familiarity with the one player, not friendship or dating.
+The renderer exposes T and a contextual button.
+state reply(action=idle,face=player,say="Hello."){on finish(event=after,to=waiting,seconds=6);}
+Optional say is 1..240 nonblank plain-text characters, idle/perform only. It is shown only
+after interaction, within 80 units, for at most eight simulation seconds. Author the return
+transition; repeated interactions may advance to another reply. No voice generation,
+HTML, scripts, purchases, quests, money or relationship changes are implied by a line.
 One transition/fixed tick, first matching declaration wins; state elapsed resets on entry.
 Use perform -> idle -> perform with after transitions for timed routines. Existing joints
 supply the motion; this does not generate sports rules, pathfinding or obstacle avoidance.

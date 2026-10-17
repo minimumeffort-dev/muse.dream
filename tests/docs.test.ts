@@ -31,6 +31,10 @@ describe("published Dream documentation",()=>{
     const example=pages['../docs/dream/npcs.md']!.match(/```dream\n([\s\S]*?)```/)![1]!;
     expect(example.trim()).toBe(examples['../docs/examples/npc-behavior.dream']!.trim());
   });
+  it('keeps the complete conversation example identical to the runnable source',()=>{
+    const blocks=[...pages['../docs/dream/npcs.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
+    expect(blocks).toContain(examples['../docs/examples/npc-conversation.dream']!.trim());
+  });
   it('keeps the scenario guide identical to its complete runnable source',()=>{
     const example=pages['../docs/dream/scenarios.md']!.match(/```dream\n([\s\S]*?)```/)![1]!;
     expect(example.trim()).toBe(examples['../docs/examples/town-scenario.dream']!.trim());

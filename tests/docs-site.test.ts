@@ -33,6 +33,11 @@ describe('Dream syntax highlighting',()=>{
     for(const word of ['role','behavior','action','event','to','radius'])expect(html).toContain(`class="dream-field">${word}</span>`);
     expect(highlight('stateful onlooker behavior_tree')).not.toContain('dream-keyword');
   });
+  it('highlights speech fields without consuming identifiers and escapes authored replies',()=>{
+    const html=highlight('state reply(action=idle,say="<script>&"){on talk(event=interact,to=reply,radius=55,familiar=false);}');
+    expect(html).toContain('class="dream-field">familiar</span>');expect(html).toContain('class="dream-field">say</span>');expect(html).toContain('&lt;script&gt;&amp;');expect(html).not.toContain('<script>');
+    expect(highlight('sayings interactable familiarity')).not.toContain('dream-field');
+  });
   it('highlights cycle_width as one field without consuming similarly named IDs',()=>{
     expect(highlight('street avenue(cycle_width=20);')).toContain('class="dream-field">cycle_width</span>');
     expect(highlight('cycle_width_extra cycle_widthway')).not.toContain('dream-field');

@@ -39,6 +39,7 @@ export interface CarInput {
   /** A fresh UI press, consumed for one fixed tick (also preserves quick taps). */
   boostPressed?:boolean;
   shoot?:boolean;shootPressed?:boolean;shootReleased?:boolean;
+  talkPressed?:boolean;
   aim?:{x:number;y:number};
 }
 
@@ -251,7 +252,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
     ...state,
     jump:{...state.jump},
     carBoost:{...state.carBoost},
-    npcs:stepNpcs(state,dt,scene),population:stepAmbient(state,dt,scene),
+    npcs:stepNpcs(state,dt,scene,input.talkPressed),population:stepAmbient(state,dt,scene),
     boostReadyAtS: { ...state.boostReadyAtS },
     boostedThisStep: false,
     landingSpeed: 0,

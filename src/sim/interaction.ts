@@ -81,7 +81,7 @@ export function toggleRide(state:CarState,world:World):CarState {
   return next;
 }
 function nextMotion(state:CarState,input:CarInput,dt:number,world:World):CarState {
-  return {...state,jump:{...state.jump},carBoost:{...state.carBoost,held:!!input.boost,activeUntilS:0},npcs:stepNpcs(state,dt,world.scene),population:stepAmbient(state,dt,world.scene),timeS:state.timeS+dt,props:state.props.map(p=>({...p})),broken:[...state.broken],brokenZones:state.brokenZones.map(z=>({...z})),debris:[...state.debris],impacts:[],boostReadyAtS:{...state.boostReadyAtS},boostedThisStep:false,landingSpeed:0};
+  return {...state,jump:{...state.jump},carBoost:{...state.carBoost,held:!!input.boost,activeUntilS:0},npcs:stepNpcs(state,dt,world.scene,input.talkPressed),population:stepAmbient(state,dt,world.scene),timeS:state.timeS+dt,props:state.props.map(p=>({...p})),broken:[...state.broken],brokenZones:state.brokenZones.map(z=>({...z})),debris:[...state.debris],impacts:[],boostReadyAtS:{...state.boostReadyAtS},boostedThisStep:false,landingSpeed:0};
 }
 export function isSwimming(state:CarState,world:World):boolean {
   const water=state.control.kind==='foot' && waterAt(world.scene.terrain,state.x,state.y,state.elevation);
@@ -185,7 +185,7 @@ function stepControlled(state:CarState,input:CarInput,dt:number,world:World):Car
     const turn=moving ? Math.atan2(Math.sin(targetHeading-state.headingRad),Math.cos(targetHeading-state.headingRad)) : 0;
     const headingRad=state.headingRad+Math.max(-12*dt,Math.min(12*dt,turn));
     const footWorld={...bodyWorld(state,world),jumpSpeed:swimming ? undefined : 105};
-    return stepCar({...state,vx,vy,headingRad},{steer:0,throttle:0,jump:input.jump,boost:input.boost},dt,footWorld);
+    return stepCar({...state,vx,vy,headingRad},{steer:0,throttle:0,jump:input.jump,boost:input.boost,talkPressed:input.talkPressed},dt,footWorld);
   }
   const object=occupiedObject(state,world)!;
   if(state.control.kind==="vehicle"){

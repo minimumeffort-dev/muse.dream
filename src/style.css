@@ -62,3 +62,13 @@ body:not([data-loading="ready"])>#sport-action { visibility: hidden; }
 
 #world-stream-status{position:absolute;left:50%;bottom:6rem;transform:translateX(-50%);padding:.55rem .85rem;background:#faf9f5;color:#191919;border:1px solid #d8d6cf;font:500 .8rem Manrope,sans-serif;box-shadow:0 2px 12px #0002;pointer-events:none}
 #world-stream-status[hidden]{display:none}
+
+#talk { position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%); padding: 12px 20px; border-radius: 24px; background: #263e43ed; box-shadow: 0 4px 20px #11262b38; font-size: 13px; font-weight: 600; max-width: calc(100% - 32px); }
+#npc-speech { overflow-wrap: anywhere; position: fixed; top: 80px; left: 28px; max-width: min(360px, calc(100% - 56px)); padding: 16px 18px; border: 1px solid #e9e5d73d; border-radius: 12px; background: #172126f5; color: #fafaf7; box-shadow: 0 8px 32px #0004; pointer-events: none; }
+#npc-speaker { color: #f7c843; font-size: 12px; }
+#npc-reply { margin: 8px 0 0; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+body:not([data-loading="ready"])>#talk, body:not([data-loading="ready"])>#npc-speech { visibility: hidden; }
+@media (max-width:600px) { #talk { bottom: max(110px, calc(env(safe-area-inset-bottom) + 86px)); } #npc-speech { top: 66px; left: 16px; max-width: calc(100% - 32px); } }
+
+#save-error { position: fixed; bottom: 90px; left: 28px; max-width: min(390px, calc(100% - 56px)); padding: 12px 16px; border-radius: 10px; background: #171717; color: #fafaf7; font-size: 13px; line-height: 1.5; }
+#save-status { font-size: 12px; line-height: 1.5; }

@@ -382,11 +382,11 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
   const behaviorNodes=program.layout.filter(n=>n.kind==='behavior');
   if(behaviorNodes.length>NPC_LIMITS.programs)fail('behavior budget exceeds 16',behaviorNodes[NPC_LIMITS.programs]!.token,'E_BUDGET');
   const behaviors=behaviorNodes.map(node=>{
-    const states=node.block!.map(state=>({id:state.id,action:wordField(state,'action'),...(state.fields.has('face') ? {face:wordField(state,'face')} : {}),transitions:state.block!.map(on=>({id:on.id,event:wordField(on,'event'),to:wordField(on,'to'),...(on.fields.has('seconds') ? {seconds:numeric(exprField(on,'seconds'),globals)} : {}),...(on.fields.has('radius') ? {radius:numeric(exprField(on,'radius'),globals)} : {})}))}));
+    const states=node.block!.map(state=>({id:state.id,action:wordField(state,'action'),...(state.fields.has('say') ? {say:state.fields.get('say') as string} : {}),...(state.fields.has('face') ? {face:wordField(state,'face')} : {}),transitions:state.block!.map(on=>({id:on.id,event:wordField(on,'event'),to:wordField(on,'to'),...(on.fields.has('familiar') ? {familiar:on.fields.get('familiar') as boolean} : {}),...(on.fields.has('seconds') ? {seconds:numeric(exprField(on,'seconds'),globals)} : {}),...(on.fields.has('radius') ? {radius:numeric(exprField(on,'radius'),globals)} : {})}))}));
     budget.steps+=1+states.reduce((n,s)=>n+1+s.transitions.length,0);
     if(budget.steps>DREAM_LIMITS.steps)fail('behavior expansion exceeds 2048 statements',node.token,'E_BUDGET');
     const result=behaviorSchema.safeParse({id:node.id,start:wordField(node,'start'),states});
-    if(!result.success){const issue=result.error.issues[0]!,state=typeof issue.path[1]==='number' ? node.block![issue.path[1]] : undefined,on=typeof issue.path[3]==='number' ? state?.block?.[issue.path[3]] : undefined;fail(issue.message,(on??state??node).token,'E_SCHEMA');}
+    if(!result.success){const issue=result.error.issues[0]!,state=typeof issue.path[1]==='number' ? node.block![issue.path[1]] : undefined,on=typeof issue.path[3]==='number' ? state?.block?.[issue.path[3]] : undefined;const focus=on??state??node,field=issue.path.at(-1);fail(issue.message,typeof field==='string' && focus.fields.has(field) ? {...focus.token,path:`${focus.token.path}/${field}`} : focus.token,'E_SCHEMA');}
     return result.data;
   });
   const objects=program.places.map(source=>{

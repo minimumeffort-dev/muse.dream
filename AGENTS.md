@@ -200,7 +200,16 @@ vehicle-route speed bounds, instanced plants and reduced-motion joint poses.
 Dream actor ownership is per placement: `role=prop|npc|controllable`. New actors
 must declare it. Template `rideable.control` is a capability; only controllable
 instances accept player input. NPC programs use bounded state/action/transition
-data, never scripts. Keep per-instance clocks outside Scene, advance once per
+data, never scripts. Optional stationary `state.say` is 1..240 nonblank plain-text
+characters. `on(event=interact,radius=10..80)` consumes one grounded on-foot talk
+press for the nearest eligible NPC, with stable ID ties and per-transition range.
+Replies stay in per-NPC runtime state, expire after eight simulation seconds and
+hide beyond 80 units or outside foot control. Use textContent and announce only
+changed replies. Pause freezes time; R preserves NPC state; Start over resets it.
+Optional `familiar` is valid only on interact and matches the NPC's remembered
+first/return meeting state. A successful interaction marks it known; preserve it
+on R, streaming and save/load, reset on Start over. Conversation adds no actor/rig
+slots or implied inventory, money, jobs or relationship progression. Keep per-instance clocks outside Scene, advance once per
 fixed tick across every player control mode, preserve them on R and reset on
 Start over. Route interruption must resume without teleport. Preserve 16 program,
 32 NPC, 24 route/controllable and 24 jointed-assembly caps. See `docs/dream/npcs.md`.
@@ -288,3 +297,21 @@ world authoring is deferred; preserve the existing Lab without expanding it.
 New asset passes must preserve accepted physical scale, bodies, contacts, foundations and destruction zones unless changing those is part of the task. Object DSL v2 visual dimensions permit .1..128 local units; v1 retains .5..128 and beam endpoint length stays >=.5. Use fine dimensions for trim instead of oversizing it. Check visible glazing, usable floors, roof/support joins, coaxial rolling parts and independently scaled passenger fit. Review the constructed sources in `docs/asset-construction.md` and inspect four rendered angles.
 
 Dream `material(style=brick|wood|stone)` selects engine-owned physical surface finishes. Brick colors are face/mortar; wood base/grain; stone base/mineral. Preserve `surfacePosition` through batching and regenerate it for newly cut voxel fragments. It is separate from shape positions, so object motion cannot make the finish slide. Do not create per-brick meshes or cut large voxel slots for mortar. Keep filtered detail, night emission and existing draw/physics budgets; see `src/game/material-coordinates.ts` and `docs/dream/objects.md`.
+
+
+## Saved simulation state
+
+Normal play restores and atomically autosaves bounded local simulation data every
+ten simulation seconds, after talk presses, on pause and page exit. The pause menu
+provides Save now. Start over replaces the current source-specific slot; R keeps
+world changes. Pin the complete source/module map with SHA-256 in the worker before
+acceptance. Validate save version, source identity, finite fields, exact members,
+NPC states, ownership and damage before use. Keep corrupt or externally changed slots until explicit
+Save current session or Start over; expose storage failures without stopping play. Preserve simulation,
+NPC/ambient clocks, vehicles, props, damage/debris, sports and visual time. Cancel
+held inputs and transient impact flashes. Recover an unsafe active pose while
+retaining valid world state. Never store meshes, generated code or provider data.
+Capture/profiling/review helpers must not touch normal saves; dev test-save uses a
+separate namespace. Source versions have separate slots, without migration yet.
+See `docs/persistence.md` and `src/sim/save.ts`. Bump the save format version when
+changing stored transition meaning or incompatible runtime fields.

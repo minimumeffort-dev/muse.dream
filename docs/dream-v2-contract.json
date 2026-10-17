@@ -532,7 +532,8 @@
       "id": true,
       "fields": {
         "action": "idle|patrol|perform",
-        "face": "none|player?"
+        "face": "none|player?",
+        "say": "text?"
       },
       "block": "npc_state"
     },
@@ -542,10 +543,11 @@
       ],
       "id": true,
       "fields": {
-        "event": "after|near_player|far_player",
+        "event": "after|near_player|far_player|interact",
         "to": "ref",
         "seconds": "n?",
-        "radius": "n?"
+        "radius": "n?",
+        "familiar": "bool?"
       }
     },
     "scenario": {
@@ -1041,7 +1043,10 @@
         10,
         240
       ],
-      "turnRadS": 2.5
+      "turnRadS": 2.5,
+      "interactRadius": 80,
+      "speechCharacters": 240,
+      "speechSeconds": 8
     },
     "roles": {
       "ambient": "bounded instanced decor motion from walk or roam, no arbitrary program, contact or boarding ownership",
@@ -1050,6 +1055,7 @@
       "npc": "engine-owned route or behavior; driver-capable NPC cannot be boarded, passenger-only seats remain available"
     },
     "legacy": "omitted role infers controllable from control capability, otherwise npc from route, otherwise prop",
+    "speech": "state.say is 1..240 nonblank plain-text characters on idle/perform states; shown after interaction for at most 8 simulation seconds and within 80 units; does not generate speech, trade or change resources",
     "program": "behavior ID is file-local; states and transition targets are local to that behavior; all states reachable from start",
     "actions": {
       "idle": "rest joints and pause route clock",
@@ -1059,7 +1065,8 @@
     "events": {
       "after": "only seconds, since state entry",
       "near_player": "only radius; 3D distance <= radius",
-      "far_player": "only radius; 3D distance >= radius"
+      "far_player": "only radius; 3D distance >= radius",
+      "interact": "only radius, 10..80; one player talk press, nearest eligible NPC within 3D range; on foot and grounded only; optional familiar matches whether this NPC has already interacted with the player"
     },
     "execution": "one transition per fixed tick, first matching declaration wins; elapsed resets on transition; per-instance clocks live outside Scene; patrol resumes without teleport; face=player turns stationary actors at 2.5 rad/s",
     "boundary": "data-only bounded state machines; no scripts, pathfinding, generated input profiles or model calls; root world.player remains the original car"

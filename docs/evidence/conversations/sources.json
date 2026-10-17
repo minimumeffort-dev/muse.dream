@@ -1,0 +1,29 @@
+{
+  "baseCommit": "67547c311005cb8a458268bfbc5a43eca13fbbd4",
+  "sha256": {
+    "scripts/encode-media.mjs": "59eab23adb25da1267bbecff7f654bf0f5959802bf89db6f637f87096d14eeda",
+    "scripts/media-middleware.ts": "69a9fe6a8b48b50a9fcbb1c443daa79039f82d50ed99a4a37fb13e6e4417e4c4",
+    "src/game/main.ts": "c800c080218aa2bd85d6c6f01f038b3fc81676668c73ac275ba6a80188c65ae3",
+    "src/game/media-capture.ts": "c291b62c1285245ef84867c37deb6a08d6c527230b35ebe5921d78e43f962b26",
+    "src/game/save.ts": "8871d245e93c7588a53896a7c99337d34f09e29953a8e4e07254d362a642990d",
+    "src/scene/agents.ts": "b37c1c52305553ac3d57f574cd77613a291bbfd3002dd4ca071ad96176e7e557",
+    "src/scene/dream-contract.ts": "436160efe000b4c58dc4d04897da44b612c897b2bf3148bd3e09510590d651a2",
+    "src/scene/dream.ts": "69af0c877ecce7aeea8791d22e4081c22b252e901eee33a983797df1dbdcdddd",
+    "src/scene/world-fixture.ts": "94abf45332b46cb62d68ded58dbe01fa92d489e380638ceb8c89e139705ac7bc",
+    "src/scene/world-worker.ts": "5db509399c4ebc27168c07619d0cecfb73531eea87053f8d265fd4e4e5a2164c",
+    "src/scene/world/life.dream": "b01621ba2e33eb9478f8a9df588a826459e3082547404613c027566e47b588f8",
+    "src/sim/car.ts": "6b8555d6fdde135bc01cf799da21682f19eb814e7ee7bba47f9f9e30b0b6c63f",
+    "src/sim/interaction.ts": "af0338fa6ea9b8bb84e2cb3fff71535f28d247e4cab81c66f8653a49231c5c6e",
+    "src/sim/npcs.ts": "a8ba107023136912f09f0cc44470816c77ea4b450f46207bcd6a531d88f6e627",
+    "src/sim/save.ts": "6e40311cc4ee1834c61efe451f50e61e58dbf2ddc8b5a467944a4dc718fac6c2",
+    "src/style.css": "5f595695948a82688b83231857173d08a973bf8cdf0b0de590fdf10598fcf49e",
+    "tests/docs-site.test.ts": "8890311d85af491e21b855b6fcecb94a8025714385c5d34c8bf7f8d3673f1509",
+    "tests/docs.test.ts": "55b3902c2b11d37faa11fe6145172612ea73b2dc96c09f11425a8f9c225a8e80",
+    "tests/npc-conversation.test.ts": "6760c4d5dc2eab8b78d0be848ba01a4fbeee2d69c116a4f394acd9bdf6b48158",
+    "tests/save.test.ts": "a9c9f6ec6efc7ef05f4ef18cca0de5f3f96a4e77a5f27596e0cbf26febc99def",
+    "index.html": "95e5b0eb195da83a8e373363a339d8aeb7abc236ac2a794754b78dff42f9f802",
+    "docs/dream-v2-contract.json": "738e9676019e34d5f6411a78ae722efb4b9f8a7d294144a01b2e9fabacb30bfa",
+    "docs/dream-v2-model.txt": "b40bd21352175f5f6d6310de6a269d72125194bc951af8be1c79d0d44109406b",
+    "docs/examples/npc-conversation.dream": "b3af30f9a183691d65a02cc624ac520664fd01da95318434372f4125671cf83d"
+  }
+}
