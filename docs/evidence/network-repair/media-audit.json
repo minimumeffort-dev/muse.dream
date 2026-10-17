@@ -1,0 +1,210 @@
+{
+  "note": "Actual renderer PNG exports at 30 per simulation second. No offline interpolation. Maintenance camera follows the worker after a 44-second fixed-engine pre-roll. Offline media is not a live FPS measurement.",
+  "clips": [
+    {
+      "clip": "maintenance",
+      "sourceFrames": 600,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "posterFrame": 300,
+      "sourceFirstModified": 1792240440.963904,
+      "sourceLastModified": 1792240467.2963398,
+      "outputs": {
+        "jpg": {
+          "bytes": 245510,
+          "sha256": "a609bed8f1036283c19769e253a40507485d5ed714d684a8672519771a12f6bf",
+          "size": [
+            2400,
+            1350
+          ]
+        },
+        "mp4": {
+          "bytes": 3621216,
+          "sha256": "3277c7168526f297371dfc47f24331cccb2f32560c2980a2a8a4217f187599d0",
+          "size": [
+            1600,
+            900
+          ],
+          "decodedFrames": 600,
+          "fps": 30
+        },
+        "gif": {
+          "bytes": 36137826,
+          "sha256": "d227744b013bf5f688029ffa96dcc03f32cebfab692474f1dbf03cddae845d81",
+          "size": [
+            1280,
+            720
+          ],
+          "frames": 600,
+          "durationMs": 20000
+        }
+      }
+    },
+    {
+      "clip": "repair",
+      "sourceFrames": 840,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "posterFrame": 720,
+      "sourceFirstModified": 1792240115.2204728,
+      "sourceLastModified": 1792240144.3152018,
+      "outputs": {
+        "jpg": {
+          "bytes": 343339,
+          "sha256": "2cdb0bcd4bbb0c4973ba451ab953ce2bb85ec79021e6410e785474a480fea979",
+          "size": [
+            2400,
+            1350
+          ]
+        },
+        "mp4": {
+          "bytes": 3043555,
+          "sha256": "273366dab5de057e7779b1f8c12d77ae2689ed150d44ae7be7f8f2f0ec1763ac",
+          "size": [
+            1600,
+            900
+          ],
+          "decodedFrames": 840,
+          "fps": 30
+        },
+        "gif": {
+          "bytes": 19675261,
+          "sha256": "d522b4c13e85131e14c6025674539545474c8e58eedd160cfa1adee06eebd676",
+          "size": [
+            1280,
+            720
+          ],
+          "frames": 840,
+          "durationMs": 28000
+        }
+      }
+    },
+    {
+      "clip": "commerce",
+      "sourceFrames": 360,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "posterFrame": 300,
+      "sourceFirstModified": 1792240159.5382621,
+      "sourceLastModified": 1792240177.564987,
+      "outputs": {
+        "jpg": {
+          "bytes": 1464218,
+          "sha256": "11c17771d446c0405936b0ebdbf7966904455f1a1eb36498b1ea22805cc63d5c",
+          "size": [
+            2400,
+            1350
+          ]
+        },
+        "mp4": {
+          "bytes": 2004960,
+          "sha256": "c8552059f4f9ba937547ae93436c6be2ba381ed288e9003e7dd5e0f7234c468a",
+          "size": [
+            1600,
+            900
+          ],
+          "decodedFrames": 360,
+          "fps": 30
+        },
+        "gif": {
+          "bytes": 10562523,
+          "sha256": "b8a2866b031c90340914f6ba30b1a2a412b012f1369c41b70f07fe66d4feb0a6",
+          "size": [
+            1280,
+            720
+          ],
+          "frames": 360,
+          "durationMs": 12000
+        }
+      }
+    },
+    {
+      "clip": "conversation",
+      "sourceFrames": 240,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "posterFrame": 60,
+      "sourceFirstModified": 1792240200.4349766,
+      "sourceLastModified": 1792240212.4010205,
+      "outputs": {
+        "jpg": {
+          "bytes": 1486488,
+          "sha256": "d8243914fca253709e6d5d3ac4e7f9410925ee7797abc20476e6a67bbe21b0ab",
+          "size": [
+            2400,
+            1350
+          ]
+        },
+        "mp4": {
+          "bytes": 693699,
+          "sha256": "430d5468ec26891e09276c527f32e80b37cd79a4bb6e525a26ae32ff0871f8f6",
+          "size": [
+            1600,
+            900
+          ],
+          "decodedFrames": 240,
+          "fps": 30
+        },
+        "gif": {
+          "bytes": 6529611,
+          "sha256": "4c0699a8c6bceb2d3a574d337800986d5a6e99316302b23e420edcd66b5bb4e7",
+          "size": [
+            1280,
+            720
+          ],
+          "frames": 240,
+          "durationMs": 8000
+        }
+      }
+    },
+    {
+      "clip": "delivery",
+      "sourceFrames": 360,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "posterFrame": 100,
+      "sourceFirstModified": 1792240227.5569155,
+      "sourceLastModified": 1792240243.5920832,
+      "outputs": {
+        "jpg": {
+          "bytes": 418501,
+          "sha256": "a28f9076d35bcc5751598c8952499c48a324bb8d7583b9fe1bbbdea9e2a5e02a",
+          "size": [
+            2400,
+            1350
+          ]
+        },
+        "mp4": {
+          "bytes": 5703747,
+          "sha256": "cc96e08910b8bedb206a6761e0333717bb3e70f993c426a8d716d2654d744bc5",
+          "size": [
+            1600,
+            900
+          ],
+          "decodedFrames": 360,
+          "fps": 30
+        },
+        "gif": {
+          "bytes": 29790553,
+          "sha256": "2d09741df32964a5762b33870710e258486aed7a378c67de234ceb2af0fdecb6",
+          "size": [
+            1280,
+            720
+          ],
+          "frames": 360,
+          "durationMs": 12000
+        }
+      }
+    }
+  ]
+}

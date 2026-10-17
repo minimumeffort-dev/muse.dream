@@ -74,5 +74,11 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
 
 (* repair requires kind=symbol or kinds=[symbol,...], exactly one; a nonempty
    unique list selects measure.kind categories. delivery.price is optional per-unit
-   supplier payment, default zero; destination escrows invoice and wage. Repair stays inside a convex on=surface work area; account.repair
+   supplier payment, default zero; destination escrows invoice and wage. Repair uses declared convex work grounds; account.repair
    is a bounded engine policy. No generated controller code. *)
+
+
+(* repair.grounds is an optional list of 1..7 unique surface IDs, excluding on.
+   The primary plus extra convex grounds share 4096 local samples. Extra grounds
+   use the accepted pedestrian network, with 8192 derived nodes, 32768 directed
+   links and 128 saved waypoints. Source/saves never contain graph/controller code. *)

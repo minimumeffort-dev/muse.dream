@@ -16,7 +16,7 @@ import {SunShadows} from "./sun";
 import {mediaCapture} from "./media-capture";
 import {renderProfile} from "./render-profile";
 import {freezeStatic} from "./batching";
-import {vehicleReviewStart,drivingReviewStart,npcReviewStart,cargoReviewStart,movementReviewStart,populationReviewStart} from "./review-start";
+import {vehicleReviewStart,drivingReviewStart,npcReviewStart,cargoReviewStart,maintenanceReviewStart,movementReviewStart,populationReviewStart} from "./review-start";
 import { measuredScale, playerRadius, playerHeight } from "../scene/measure";
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -32,7 +32,9 @@ import { archetypeOf, objectRadius } from "../sim/archetypes";
 import { buildPaperMask } from "../sim/mask";
 import { CAR_BOOST, isCarControl, createCarAtSpawn, FixedStepper, resetCar, type World } from "../sim/car";
 import { MAX_FLIGHT_CLEARANCE,isSwimming,nearbyRide,toggleRide,stepInteractive,occupiedObject,exitPosition } from "../sim/interaction";
-import { actorPoses } from "../sim/actors";
+import {repairView} from './repair-view';
+import {primeRepairNavigation} from '../sim/repair';
+import { actorPoses,repairForActor } from "../sim/actors";
 import {isActor} from '../scene/agents';
 import { interactiveWorld } from "../scene/interactive-world";
 import { buildRoutesSteps } from "./routes";
@@ -73,16 +75,19 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   await loading.stage("Preparing driving and walking");
   primeSceneContacts(doc,worker.contacts);
   primeAmbientNavigation(doc,worker.navigation);
+  primeRepairNavigation(doc,worker.repairNavigation);
   const carRadius = playerRadius(doc);
   const roadMask = buildMaskForScene(doc);
-  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousParkingSaveCompatibility:worker.previousParkingSaveCompatibility,previousRepairSaveCompatibility:worker.previousRepairSaveCompatibility,previousSupplySaveCompatibility:worker.previousSupplySaveCompatibility,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
+  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousParkingSaveCompatibility:worker.previousParkingSaveCompatibility,previousRepairSaveCompatibility:worker.previousRepairSaveCompatibility,previousSupplySaveCompatibility:worker.previousSupplySaveCompatibility,previousNetworkSaveCompatibility:worker.previousNetworkSaveCompatibility,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
     driveMask: buildPaperMask(doc.canonical.width, doc.canonical.height), carRadius };
   let car = createCarAtSpawn(doc);
+  const repairViews=repairView();
   if(import.meta.env.DEV)car=vehicleReviewStart(car,world,new URLSearchParams(location.search).get("test-vehicle"));
   if(import.meta.env.DEV)car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));
   if(import.meta.env.DEV)car=npcReviewStart(car,world,new URLSearchParams(location.search).get("test-npc"));
   if(import.meta.env.DEV)car=movementReviewStart(car,world,new URLSearchParams(location.search).get("test-movement"));
   if(import.meta.env.DEV)car=populationReviewStart(car,world,new URLSearchParams(location.search).get("test-population"));
+  if(import.meta.env.DEV && new URLSearchParams(location.search).has('test-maintenance'))car=maintenanceReviewStart(car,world);
   const params=new URLSearchParams(location.search),review=import.meta.env.DEV && [...params.keys()].some(key=>key.startsWith('test-') || key==='capture' || key==='profile');
   const reviewSave=import.meta.env.DEV && params.has('test-save') && !params.has('capture') && !params.has('profile');
   const saves=!review || reviewSave ? gameSave(world,()=>localStorage,reviewSave ? 'muse-dream.review-save' : 'muse-dream.save') : undefined;
@@ -288,6 +293,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     if(restartRace){worldTime.value=0;manualZoom.factor=1;}
   }
   function resetPresentation(resetProps=true):void{
+    repairViews.reset();
     pendingCommerce=undefined;
     pendingDraw=undefined;
     walkerAnimation.reset();
@@ -364,11 +370,12 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   const profile=import.meta.env.DEV ? renderProfile(renderer,()=>{
     resetPosition(true);car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));car=cargoReviewStart(car,world,params.get("test-cargo"));worldTime.value=0;
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
-  let captureTime:number|undefined;
-  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:360,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840},(clip)=>{
-    captureTime=undefined;
+  let captureTime:number|undefined,captureActor:string|undefined;
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:360,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840,maintenance:600},(clip)=>{
+    captureTime=undefined;captureActor=undefined;
     resetPosition(true);worldTime.value=0;setMode("playing");
     characters.forEach(character=>character.reset());
+    if(clip==='maintenance'){car=maintenanceReviewStart(car,world);worldTime.value=car.timeS;captureActor=doc.economy?.accounts.find(a=>car.economy?.accounts.find(b=>b.id===a.id)?.repair)?.actor;}
     if(clip==='repair')car=drivingReviewStart(car,world,'repair');
     if(clip==='conversation' || clip==='commerce' || clip==='delivery')car=npcReviewStart(car,world,'vendor');
     if(clip==='pedestrians' || clip==='wildlife')car=populationReviewStart(car,world,clip);
@@ -379,6 +386,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     if(clip==='football' || clip==='basketball')car=movementReviewStart(car,world,clip);
   },(clip:string,frame:number)=>{
     keys.clear();
+    if(clip==='maintenance')return;
     if(clip==='repair'){if(frame<38)keys.add('KeyW');if(frame>=38 && frame<58)keys.add('KeyS');if(frame===60)useRide();return;}
     if(clip==='parking'){
       if(frame===18 || frame===230 || frame===270)useRide();
@@ -526,7 +534,8 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       const object=activeParking.userData.sceneObject;actorMeshes.set(object.id,activeParking);rideZooms.set(object.id,rideCameraZoom(doc.player,object));objects.push(activeParking);
     }
     poses??=actorPoses(doc,car.timeS,car);
-    for(const pose of poses){
+    for(const rawPose of poses){
+      const pose=repairViews.sample(rawPose,!!repairForActor(car,doc,rawPose.id),car.economy?.atS??car.timeS,car.timeS,snap || reduced.matches);
       const group=actorMeshes.get(pose.id)!;
       group.position.copy(worldPosition(doc,pose.x,pose.y));group.position.y=pose.elevation+(group.userData.ambient || pose.activity && pose.kind==="path" ? .2 : 1.5);
       const spec=group.userData.sceneObject.spec;
@@ -576,8 +585,9 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     }
     if(!walker.visible)walkerAnimation.reset();
     const sportBall=court && car.props.find(p=>p.id===court.sport.ballId)!,sportsFrame=court && sportBall && sportCameraFrame(car,sportGame?.event==='out' ? car : sportBall,court.sport.kind,court.sport.kind==='basketball' && sportGame?.possessed ? closestSportTarget(court,sportGame.aim?.[0]??car.x,sportGame.aim?.[1]??car.y) : undefined);
-    const framing=sportsFrame ? worldPosition(doc,sportsFrame.x,sportsFrame.y) : position;
-    const target = { x: framing.x, y: (car.control.kind!=="car" ? car.elevation : drivingHeight(doc.terrain, car.x, car.y)) + 12, z: framing.z };
+    const inspection=import.meta.env.DEV && captureActor ? actorMeshes.get(captureActor)?.position : undefined;
+    const framing=inspection ?? (sportsFrame ? worldPosition(doc,sportsFrame.x,sportsFrame.y) : position);
+    const target = { x: framing.x, y: (inspection ? inspection.y : car.control.kind!=="car" ? car.elevation : drivingHeight(doc.terrain, car.x, car.y)) + 12, z: framing.z };
     if (mode === "playing" || snap) {
       follow = followCamera(follow, target, dt, snap || reduced.matches);
       if(!court){follow.x = target.x; follow.z = target.z;}

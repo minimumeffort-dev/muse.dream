@@ -12,7 +12,7 @@ The vendor works when bread runs low. The commuter buys and eats when hungry, us
 
 ## Author it in Dream
 
-One `economy()` block owns the system for a linked world. Goods, accounts, markets and work have explicit IDs. Accounts reference the player or existing NPC placements. Markets and production workers require stationary NPCs; repair workers start from a stationary home and travel inside their declared work area. Customers may use the existing walking routes. The complete-world compiler checks ownership after module linking.
+One `economy()` block owns the system for a linked world. Goods, accounts, markets and work have explicit IDs. Accounts reference the player or existing NPC placements. Markets and production workers require stationary NPCs; repair workers start from a stationary home and use their declared grounds and connecting pedestrian pavement. Customers may use the existing walking routes. The complete-world compiler checks ownership after module linking.
 
 | Declaration | Meaning |
 | --- | --- |
@@ -158,7 +158,7 @@ can still talk to other available people. Nothing is spawned from free stock.
 [Watch the complete repair in HD](../media/repair.mp4) · [Animated repair](../media/repair.gif)
 
 You can do it too. Go to the bakery before the caretaker collects the kit, choose
-**Repair market furniture** and press **H**. Follow the map marker to the damage and
+**Repair neighborhood furniture** and press **H**. Follow the map marker to the damage and
 stand beside it. Work pauses when you walk away, jump, swim or enter a vehicle;
 return to continue. **Cancel repair** refunds the unused kit and reserved pay.
 You receive the same four credits when the repair finishes.
@@ -196,11 +196,13 @@ This is bounded local maintenance. The supply vendor and worker's home must lie
 inside the same convex surface, with the home in market reach. Work areas use at
 most 4,096 local navigation samples and paths at most 128 points. Routes stay
 inside that dry area and clear carriageways, cycle tracks, water and solid
-contacts. They do not dispatch workers across the city. Blocked workers wait;
+contacts. Optional `grounds` connects explicitly declared service areas through accepted
+pedestrian infrastructure. Without it, workers remain in the primary area.
+Blocked workers wait;
 there is no ladder, construction scaffold or dropped-kit simulation. Trees use
 the same restore mechanism when authored for it; growing a new sapling is still
-a separate missing capability. The live service covers the market table, crate
-and planter. It does not make other scenery destructible.
+a separate missing capability. The live service covers the market table, crate and planter, both benches
+at the park/station and the two park wall sections. It does not make other scenery destructible.
 
 
 ### Replacement supplies
@@ -214,7 +216,7 @@ credits and you receive four. No player credits are charged.
 
 ```dream
 delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1);
-repair market_tables(label="Repair market furniture",market=market_stall,on=market_square,kinds=[table,custom],input=timber,take=1,seconds=8,pay=4,effort=5);
+repair market_tables(label="Repair neighborhood furniture",market=market_stall,on=market_square,grounds=[park_seating,station_seating],kinds=[table,custom,bench],input=timber,take=1,seconds=8,pay=4,effort=5);
 ```
 
 These declarations are the live world's policy. The earlier flour and bread
@@ -228,3 +230,39 @@ run out of money. There is no automatic courier or upstream kit production.
 Run `npm run -s dream -- check docs/examples/market-maintenance.dream`. It includes
 a table and a crate served by one category list, plus a separate supplier and a
 paid kit contract. [Verification and remaining limits](../evidence/supply/verification.md).
+
+
+### Connected service grounds
+
+The live caretaker also serves the park seating area and the east station bench.
+Both have paving connected to their sidewalk. Parked scooters, the lamp and the
+planter retain their original positions; the furnishing rules explicitly allow
+these new grounds. Repair selection still uses measured categories and available
+damage, so the worker may restore a nearer wall before a bench.
+
+![Walking from the market along the accepted pedestrian network](../media/maintenance.jpg)
+
+[Journey in HD](../media/maintenance.mp4) · [Animated journey](../media/maintenance.gif)
+
+Keep the market and worker home inside `on`. Add `grounds=[park_seating,station_seating]`
+for distant work surfaces. The engine derives routes through sidewalks, crossings
+and entrance paving, with supported bridge sidewalks where needed. It cannot
+cut straight across an unpainted carriageway. The complete-world compiler rejects
+unreachable targets. The player can carry a kit in a vehicle; the caretaker walks
+at 1.4 m/s and returns after each job. A trip across the city takes several
+simulation minutes. Nothing completes during pause or while the page is closed.
+
+The primary ground plus extras are at most eight unique convex surfaces. Together
+they retain the 4,096 local-sample limit; the derived pedestrian graph has at most
+8,192 nodes and 32,768 directed links. Saved paths still have at most 128 points.
+The world worker prepares topology before play; live contacts are checked during
+search and movement. The renderer interpolates worker poses with one commerce-tick
+visual delay, at most 35 cm while walking; physics, stock and work clocks remain
+resident simulation data. Reduced motion and recovery snap the presentation.
+
+[Complete connected repair world](../examples/neighborhood-repairs.dream).
+Run `npm run -s dream -- check docs/examples/neighborhood-repairs.dream`.
+It connects two work grounds with a street and an authored crossing. When asking
+an agent to author both services and infrastructure, use
+`node scripts/dream.mjs context --features commerce,city`.
+[Checks, recordings and remaining limits](../evidence/network-repair/verification.md).

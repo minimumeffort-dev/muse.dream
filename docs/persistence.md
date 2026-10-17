@@ -44,9 +44,9 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-Format 6 retains the exact source hash and the compatibility fingerprint, with simulation version 6. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+Format 6 retains the exact source hash and the compatibility fingerprint, with simulation version 7. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
-The first market has an explicit registered upgrade from the earlier world. It verifies that every pre-market rule still matches, then initializes only the new accounts/stock/needs at the saved simulation time. Player position, vehicles, damage, sports, NPC memory, population and day/night remain saved. The known r44 format 1 source and format 2 browser fingerprints are supported; original slots are kept. A malformed newer slot blocks writes rather than silently loading an older copy. The registered upgrade chain includes the first-market, first-delivery usable-parking and local-repair and replacement-supply releases. Later incompatible economy edits cannot silently replay older progress.
+The first market has an explicit registered upgrade from the earlier world. It verifies that every pre-market rule still matches, then initializes only the new accounts/stock/needs at the saved simulation time. Player position, vehicles, damage, sports, NPC memory, population and day/night remain saved. The known r44 format 1 source and format 2 browser fingerprints are supported; original slots are kept. A malformed newer slot blocks writes rather than silently loading an older copy. The registered upgrade chain includes the first-market, first-delivery, usable-parking, local-repair, replacement-supply and connected-repair releases. Later incompatible economy edits cannot silently replay older progress.
 
 Format 1 cannot establish arbitrary cross-source compatibility. Format 2 worlds outside the registered release require their exact earlier fingerprint. Unsupported format 3 economies are rejected. The first-delivery release also upgrades the known format 3 market: it checks the earlier world and economy, preserves existing balances, stock, fullness and reserved work deadlines, and initializes only the depot, canteen, staff account and empty delivery ledger. Sealed cargo and reserved delivery wages round-trip in format 6. Cancelling, recovery and reloading cannot pay a delivery twice. Future engine or economy changes need their own tested migration; no general layout or rule migration exists. A compatibility fingerprint is a safety check, not a signature proving a file's origin.
 
@@ -54,7 +54,7 @@ The parking release upgrades the known r46 format 4 backup only after the host c
 
 Restoration checks the format, world identity, source/compatibility, finite fields, exact members, NPC states/clocks, damage, fragments and vehicle ownership. Population clocks must be current enough to avoid replaying an unbounded backlog. One atomic browser storage write preserves the previous slot if writing fails. Files are bounded to one million characters; file reads are also bounded before allocation.
 
-Incompatible worlds keep separate local slots. An update that adds buildings or changes rules can still start a fresh world; old saves remain stored but cannot be played by incompatible source. The registered first-market, first-delivery usable-parking and local-repair and replacement-supply additions are migrated; later layout, economy or schema changes remain separate slots. No save is uploaded or synchronized across browsers. Clearing site data removes local saves, so download a backup before clearing them. There is no offline catch-up or cloud service.
+Incompatible worlds keep separate local slots. An update that adds buildings or changes rules can still start a fresh world; old saves remain stored but cannot be played by incompatible source. The registered first-market, first-delivery, usable-parking, local-repair, replacement-supply and connected-repair additions are migrated; later layout, economy or schema changes remain separate slots. No save is uploaded or synchronized across browsers. Clearing site data removes local saves, so download a backup before clearing them. There is no offline catch-up or cloud service.
 
 Render chunks remain replaceable. Simulation and damage state live outside them, so unloading scenery cannot reset a person, repair a building or move a parked car. Wave texture disturbances and temporary particles are visual effects and are rebuilt after reload; water settings and clocks remain authored/saved.
 
@@ -86,3 +86,18 @@ Older registered releases continue through the same chain; arbitrary edits canno
 opt into it. Both r48 and current local slots are retained, and a corrupt newer
 slot prevents fallback. Delivery invoices are derived from the pinned contract;
 save validation includes their escrow and incoming treasury reservations.
+
+
+The connected-repair release keeps format 6 and advances simulation rules to 7.
+The registered r49 projection removes the two new seating surfaces and restores
+the former market-only policy; every existing object, contact and public-pavement
+field is preserved. Matching r49 saves keep their complete simulation state,
+including paid supplier deliveries, completed repairs, supplies, in-progress
+work, needs, memories, damage and vehicle ownership. Older registered upgrades
+continue through this projection. Original local slots remain stored.
+
+Repair paths may now span accepted pedestrian infrastructure between declared
+grounds, with the same 128-point bound. The large derived graph stays out of saves;
+it is prepared by the world worker. Current obstacles can block saved intent
+without invalidating it. Presentation interpolation is transient and resets on
+recovery; it does not change saved contacts or clocks.

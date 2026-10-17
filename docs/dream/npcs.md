@@ -183,3 +183,10 @@ or rig slots. It does not add needs-based pathfinding, shifts or relationships.
 The school staff account can buy and eat bread after a player delivery fills its
 market lot. Delivery cargo remains separate from owned food. Contracts currently
 require player collection/handoff; NPC dispatch and routing are not implemented.
+
+
+Repair accounts can temporarily own a stationary NPC's movement. Optional service
+`grounds` derives a bounded pedestrian route between work areas, checks live
+contacts and saves the trip. The underlying behavior program pauses and resumes
+at home. This does not add a general pathfinding action to behavior programs.
+[Connected repairs](commerce.md#connected-service-grounds).

@@ -326,7 +326,7 @@ Surfaces take 3–64 points and must be simple, nonzero polygons, at most 100000
 
 The first matching transition wins once per fixed tick; state time resets on entry. Idle rests joints; perform animates in place; both pause route time. Patrol resumes the placement's route without teleporting and animates only while moving. Stationary face=player turns at 2.5 rad/s. Animation respects reduced motion. Clocks are per-instance runtime state, preserved by R and reset by Start over. Without a runtime snapshot, actor inspection returns the program's initial pose.
 
-Programs and references are file-local; includes merge data. There are at most 16 programs and 32 NPCs in the accepted scene. Each state has at most 4 transitions. Existing 24 resident moving actor/controllable and 24 live jointed assembly caps remain. Explicit NPCs require version 2 assemblies without foundations, knockable bodies or destruction. Solid street, tram and rail NPCs may use compound contacts; directly controlled rides require one body. Boat and plane NPCs need a domain route. Full-scene acceptance checks stationary dry footprints and route clearance. Solid NPC cylinders participate in player contacts. There is no pathfinding, runtime avoidance, humanoid possession or generated input profile. [Complete example](../examples/npc-behavior.dream) and [guide](npcs.md).
+Programs and references are file-local; includes merge data. There are at most 16 programs and 32 NPCs in the accepted scene. Each state has at most 4 transitions. Existing 24 resident moving actor/controllable and 24 live jointed assembly caps remain. Explicit NPCs require version 2 assemblies without foundations, knockable bodies or destruction. Solid street, tram and rail NPCs may use compound contacts; directly controlled rides require one body. Boat and plane NPCs need a domain route. Full-scene acceptance checks stationary dry footprints and route clearance. Solid NPC cylinders participate in player contacts. Behavior programs do not request general pathfinding, runtime avoidance, humanoid possession or generated input profiles. Repair accounts have separate bounded engine-owned navigation between declared service grounds. [Complete example](../examples/npc-behavior.dream) and [guide](npcs.md).
 
 ### Water bounds
 
@@ -389,7 +389,7 @@ lot id(good=ref,quantity=n,limit=n,price=n?);
 work id(label=text,market=ref,input=ref,take=n,output=ref,make=n,seconds=n,pay=n,effort=n,capacity=n,target=n);
 ```
 
-At most 8 goods, 16 accounts, 8 markets, 16 jobs and 16 delivery contracts and 8 repair services; each market has 1..8 lots with unique goods. Exactly one player account; one account per actor. Other owners are existing NPC placements. Market vendors and production workers are stationary. Repair workers start at a stationary home in supply-market reach and travel within a declared work area. NPC `shop` and `work` policies are optional; player accounts cannot automate themselves.
+At most 8 goods, 16 accounts, 8 markets, 16 jobs and 16 delivery contracts and 8 repair services; each market has 1..8 lots with unique goods. Exactly one player account; one account per actor. Other owners are existing NPC placements. Market vendors and production workers are stationary. Repair workers start at a stationary home in supply-market reach and travel within declared grounds and their pedestrian connections. NPC `shop` and `work` policies are optional; player accounts cannot automate themselves.
 
 Credits: integer 0..1,000,000. Stock/limits: integer 0..10,000 with positive limits. Price: integer 1..10,000, or omitted for untraded ingredients. Carrying capacity: integer 1..32. Fullness/food: 0..100, drain per second: 0..0.25. Radius: 20..80. Work: 1..120 seconds, positive integer take/make/pay, effort 1..50, capacity 1..4, target within output lot capacity. Input/output goods differ. Labels: 1..40 nonblank characters. IDs follow the ordinary identifier contract.
 
@@ -424,9 +424,9 @@ automatic courier, path planner or unbounded item body. [Complete example](../ex
 
 | Command | Context | Form | Fields |
 | --- | --- | --- | --- |
-| `repair` | economy | ID / no block | `label`, `market`, `on`, exactly one of `kind` / `kinds`, `input`, `take`, `seconds`, `pay`, `effort`, optional `dispatch_s` |
+| `repair` | economy | ID / no block | `label`, `market`, `on`, optional `grounds`, exactly one of `kind` / `kinds`, `input`, `take`, `seconds`, `pay`, `effort`, optional `dispatch_s` |
 
-`repair id(label=text,market=ref,on=ref,kind=measure_kind?,kinds=symbols?,input=ref,take=n,seconds=n,pay=n,effort=n,dispatch_s=n?);`
+`repair id(label=text,market=ref,on=ref,grounds=symbols?,kind=measure_kind?,kinds=symbols?,input=ref,take=n,seconds=n,pay=n,effort=n,dispatch_s=n?);`
 
 Inside `economy`, at most 8 services. Choose exactly one of `kind` or `kinds`.
 The latter is a nonempty unique list of existing measure categories. Input must be a matching supply-market lot.
@@ -435,7 +435,7 @@ up to 1,000,000, effort: 1..50, dispatch delay: 0..120 seconds, default 12. `on`
 references a convex surface containing the market and eligible measured-kind
 break/topple objects or ground-accessible zones. The local 12-unit grid is capped
 at 4,096 samples, saved paths at 128 points. Four-unit walking cylinders remain
-inside the surface and clear roads, riding lanes, water and solids.
+inside the primary surface and clear roads, riding lanes, water and solids when `grounds` is omitted.
 
 Optional NPC `account.repair` chooses one service. It excludes automatic `work`,
 route/ambient movement and market ownership; its home starts within market reach.
@@ -444,5 +444,22 @@ Collection reserves kits, refund space and pay; work progresses only beside the
 damage. Restore waits for clear physical space, consumes inputs, pays once and
 records a completion. Cancel refunds. NPCs walk home before resuming their saved
 program. Journeys, notices, paths, work and conservation ledgers persist. Existing
-actor, rig, reactive-object and fragment limits are unchanged. No city dispatch,
+actor, rig, reactive-object and fragment limits are unchanged. No arbitrary off-network dispatch,
 scaffolds, free restocking or plant growth. [Working guide](commerce.md#repair-work). [Multi-category supply example](../examples/market-maintenance.dream).
+
+
+### Connected repair grounds
+
+Optional `repair.grounds` adds 1..7 unique existing convex ground-surface IDs,
+excluding the primary `on`. The combined grids retain the 4,096-sample cap at
+12-unit spacing. The market and worker home stay inside `on`; extra grounds
+connect through accepted pedestrian pavement, crossings and supported bridge
+sidewalks. Complete-world acceptance checks every eligible target from every
+worker home. An unreachable target or oversized graph fails acceptance.
+
+Derived routing is bounded to 8,192 nodes and 32,768 directed links. Host-owned
+worker packets carry topology; Dream source and save files cannot supply graph
+edges or controller code. Saved route intent still has at most 128 coordinate-only
+waypoints. Live contacts govern travel/restoration and blocked workers wait.
+Without `grounds`, the original local-yard behavior remains unchanged.
+[Runnable example](../examples/neighborhood-repairs.dream).

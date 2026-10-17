@@ -1,0 +1,595 @@
+{
+  "note": "Native local production backup UI. r49 retained; checkpoint imported at 346.258 seconds and resumed through restoration; exported during return at 360.908 seconds. Pure engine replay covers the uninterrupted full journey.",
+  "previousRelease": {
+    "sourceHash": "027d990ec7540da35d8ba27cad4ac924c2d17a96186660e0b5990dd4d9355f06",
+    "compatibilityHash": "0fa752fb32d4b251900d87d82b50c554a91a278b8a980bf3bb0bada5add9ba75",
+    "timeS": 209.2416666666407,
+    "broken": [],
+    "accounts": [
+      {
+        "id": "pocket",
+        "credits": 24,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        }
+      },
+      {
+        "id": "baker",
+        "credits": 0,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        }
+      },
+      {
+        "id": "regular",
+        "credits": 25,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        }
+      },
+      {
+        "id": "school_staff",
+        "credits": 30,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        }
+      },
+      {
+        "id": "caretaker",
+        "credits": 8,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        }
+      }
+    ],
+    "markets": [
+      {
+        "id": "station_supplies",
+        "credits": 6,
+        "stock": {
+          "flour": 80,
+          "timber": 30
+        }
+      },
+      {
+        "id": "school_canteen",
+        "credits": 60,
+        "stock": {
+          "bread": 0
+        }
+      },
+      {
+        "id": "market_stall",
+        "credits": 87,
+        "stock": {
+          "bread": 7,
+          "flour": 30,
+          "timber": 12
+        }
+      }
+    ],
+    "repaired": {
+      "market_tables": 2
+    },
+    "delivered": {
+      "flour_run": 0,
+      "school_run": 0,
+      "kits_run": 1
+    }
+  },
+  "migratedNative": {
+    "sourceHash": "71e4c5bbcefab6527e88ffd4c7e13f7ccbb80252947456cc53efe0130df4e900",
+    "compatibilityHash": "482bfddc34e420e75d9eaa762816a09c7eb4810f1649c3e88d24b9d11b4b5657",
+    "timeS": 432.0499999997714,
+    "broken": [],
+    "accounts": [
+      {
+        "id": "pocket",
+        "credits": 24,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        }
+      },
+      {
+        "id": "baker",
+        "credits": 0,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        }
+      },
+      {
+        "id": "regular",
+        "credits": 25,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        }
+      },
+      {
+        "id": "school_staff",
+        "credits": 30,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        }
+      },
+      {
+        "id": "caretaker",
+        "credits": 3,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        }
+      }
+    ],
+    "markets": [
+      {
+        "id": "station_supplies",
+        "credits": 6,
+        "stock": {
+          "flour": 80,
+          "timber": 30
+        }
+      },
+      {
+        "id": "school_canteen",
+        "credits": 60,
+        "stock": {
+          "bread": 0
+        }
+      },
+      {
+        "id": "market_stall",
+        "credits": 92,
+        "stock": {
+          "bread": 6,
+          "flour": 30,
+          "timber": 12
+        }
+      }
+    ],
+    "repaired": {
+      "market_tables": 2
+    },
+    "delivered": {
+      "flour_run": 0,
+      "school_run": 0,
+      "kits_run": 1
+    }
+  },
+  "resumedNative": {
+    "sourceHash": "71e4c5bbcefab6527e88ffd4c7e13f7ccbb80252947456cc53efe0130df4e900",
+    "compatibilityHash": "482bfddc34e420e75d9eaa762816a09c7eb4810f1649c3e88d24b9d11b4b5657",
+    "timeS": 360.9083333331694,
+    "broken": [
+      "park_bench",
+      "park_wall_east"
+    ],
+    "accounts": [
+      {
+        "id": "pocket",
+        "credits": 20,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        }
+      },
+      {
+        "id": "baker",
+        "credits": 0,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        }
+      },
+      {
+        "id": "regular",
+        "credits": 25,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        }
+      },
+      {
+        "id": "school_staff",
+        "credits": 30,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        }
+      },
+      {
+        "id": "caretaker",
+        "credits": 4,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0
+        },
+        "repair": {
+          "id": "market_tables",
+          "objectId": "park_wall_west",
+          "phase": "home",
+          "at": {
+            "x": 7483.974124199393,
+            "y": 7441.98087624673
+          },
+          "x": 7488.106217280139,
+          "y": 7394.520678248741,
+          "headingRad": -3.0329314377492196,
+          "progressS": 0,
+          "speed": 13.999999999998181,
+          "distance": 4754.889248192201,
+          "path": [
+            {
+              "x": 7410,
+              "y": 7386
+            },
+            {
+              "x": 7410,
+              "y": 7314
+            },
+            {
+              "x": 7402.013017918297,
+              "y": 7308
+            },
+            {
+              "x": 7090,
+              "y": 7308
+            },
+            {
+              "x": 7072,
+              "y": 7282
+            },
+            {
+              "x": 7078,
+              "y": 6809
+            },
+            {
+              "x": 7078,
+              "y": 6298
+            },
+            {
+              "x": 7104.448880590088,
+              "y": 6281.5
+            },
+            {
+              "x": 7104.448880590088,
+              "y": 6118.5
+            },
+            {
+              "x": 7068.589029844743,
+              "y": 6102
+            },
+            {
+              "x": 6990.694514922371,
+              "y": 5323.054850776285
+            },
+            {
+              "x": 6978.159691943924,
+              "y": 5258.00587471854
+            },
+            {
+              "x": 7000,
+              "y": 5240
+            },
+            {
+              "x": 7225,
+              "y": 5240
+            },
+            {
+              "x": 7175,
+              "y": 5235
+            },
+            {
+              "x": 7175,
+              "y": 5165
+            },
+            {
+              "x": 7143.224440295041,
+              "y": 5160
+            },
+            {
+              "x": 6986.448880590088,
+              "y": 5160
+            },
+            {
+              "x": 6965.125663446315,
+              "y": 5127.665589742437
+            },
+            {
+              "x": 6821.840308056076,
+              "y": 5141.994125281459
+            },
+            {
+              "x": 6774.505745052354,
+              "y": 4728.947748970963
+            },
+            {
+              "x": 6731.610970155257,
+              "y": 4300
+            },
+            {
+              "x": 6695.551119409912,
+              "y": 4282
+            },
+            {
+              "x": 6460,
+              "y": 4305
+            },
+            {
+              "x": 6448,
+              "y": 4312
+            },
+            {
+              "x": 6436,
+              "y": 4312
+            },
+            {
+              "x": 6436,
+              "y": 4324
+            },
+            {
+              "x": 6424,
+              "y": 4324
+            },
+            {
+              "x": 6424,
+              "y": 4348
+            },
+            {
+              "x": 6436,
+              "y": 4348
+            },
+            {
+              "x": 6460,
+              "y": 4380
+            }
+          ],
+          "routeAtS": 355.24999999984215
+        }
+      }
+    ],
+    "markets": [
+      {
+        "id": "station_supplies",
+        "credits": 0,
+        "stock": {
+          "flour": 80,
+          "timber": 32
+        }
+      },
+      {
+        "id": "school_canteen",
+        "credits": 60,
+        "stock": {
+          "bread": 0
+        }
+      },
+      {
+        "id": "market_stall",
+        "credits": 101,
+        "stock": {
+          "bread": 7,
+          "flour": 30,
+          "timber": 11
+        }
+      }
+    ],
+    "repaired": {
+      "market_tables": 1
+    },
+    "delivered": {
+      "flour_run": 0,
+      "school_run": 0,
+      "kits_run": 0
+    }
+  },
+  "homeCheckpointNative": {
+    "timeS": 699.3249999995284,
+    "broken": [
+      "park_bench",
+      "park_wall_east"
+    ],
+    "accounts": [
+      {
+        "id": "pocket",
+        "credits": 20,
+        "repair": null
+      },
+      {
+        "id": "baker",
+        "credits": 0,
+        "repair": null
+      },
+      {
+        "id": "regular",
+        "credits": 20,
+        "repair": null
+      },
+      {
+        "id": "school_staff",
+        "credits": 30,
+        "repair": null
+      },
+      {
+        "id": "caretaker",
+        "credits": 4,
+        "repair": {
+          "id": "market_tables",
+          "objectId": "park_bench",
+          "phase": "out",
+          "at": {
+            "x": 7514.988486620541,
+            "y": 7445.438244142703
+          },
+          "x": 6457.9000000000015,
+          "y": 4377.200000000003,
+          "headingRad": -2.214297435588181,
+          "progressS": 0,
+          "speed": 14,
+          "distance": 3.4999999999968168,
+          "path": [
+            {
+              "x": 6436,
+              "y": 4348
+            },
+            {
+              "x": 6424,
+              "y": 4348
+            },
+            {
+              "x": 6424,
+              "y": 4324
+            },
+            {
+              "x": 6436,
+              "y": 4324
+            },
+            {
+              "x": 6436,
+              "y": 4312
+            },
+            {
+              "x": 6448,
+              "y": 4312
+            },
+            {
+              "x": 6460,
+              "y": 4305
+            },
+            {
+              "x": 6695.551119409912,
+              "y": 4282
+            },
+            {
+              "x": 6731.610970155257,
+              "y": 4300
+            },
+            {
+              "x": 6774.505745052354,
+              "y": 4728.947748970963
+            },
+            {
+              "x": 6821.840308056076,
+              "y": 5141.994125281459
+            },
+            {
+              "x": 6965.125663446315,
+              "y": 5127.665589742437
+            },
+            {
+              "x": 6986.448880590088,
+              "y": 5160
+            },
+            {
+              "x": 7143.224440295041,
+              "y": 5160
+            },
+            {
+              "x": 7175,
+              "y": 5165
+            },
+            {
+              "x": 7175,
+              "y": 5235
+            },
+            {
+              "x": 7225,
+              "y": 5240
+            },
+            {
+              "x": 7000,
+              "y": 5240
+            },
+            {
+              "x": 6978.159691943924,
+              "y": 5258.00587471854
+            },
+            {
+              "x": 6990.694514922371,
+              "y": 5323.054850776285
+            },
+            {
+              "x": 7068.589029844743,
+              "y": 6102
+            },
+            {
+              "x": 7104.448880590088,
+              "y": 6118.5
+            },
+            {
+              "x": 7104.448880590088,
+              "y": 6281.5
+            },
+            {
+              "x": 7078,
+              "y": 6298
+            },
+            {
+              "x": 7078,
+              "y": 6809
+            },
+            {
+              "x": 7072,
+              "y": 7282
+            },
+            {
+              "x": 7090,
+              "y": 7308
+            },
+            {
+              "x": 7402.013017918297,
+              "y": 7308
+            },
+            {
+              "x": 7410,
+              "y": 7314
+            },
+            {
+              "x": 7410,
+              "y": 7386
+            },
+            {
+              "x": 7520,
+              "y": 7398
+            },
+            {
+              "x": 7520,
+              "y": 7416
+            },
+            {
+              "x": 7514.988486620541,
+              "y": 7445.438244142703
+            }
+          ],
+          "routeAtS": 698.9999999995287
+        }
+      }
+    ],
+    "repaired": {
+      "market_tables": 1
+    }
+  }
+}

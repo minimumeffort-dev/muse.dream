@@ -392,3 +392,15 @@ shelves reserve capacity. Handoff pays the supplier and courier once; cancellati
 refunds all reservations. Preserve finite upstream stock, conservation, existing
 carry/actor/repair budgets and the registered r48 save migration, including
 completed repair counters and in-progress work. See `docs/dream/commerce.md`.
+
+
+Repair `grounds` optionally adds 1..7 unique convex surfaces beyond `on`. The
+primary market/home stays in `on`; all grounds share 4096 local grid samples.
+Network travel uses accepted pedestrian pavement and crossings with live contacts,
+8192 derived nodes, 32768 directed links and 128 saved coordinate-only waypoints.
+Validate every target from every worker home. Prepare graph topology in the world
+worker; validate bounded packets before priming the client, never take graph data
+from Dream or saves. Preserve the registered r49 migration and every existing
+parked furnishing when adding paving. Worker presentation may interpolate one
+commerce tick; contacts/clocks remain in simulation and reduced motion/recovery
+snap the view. See `docs/examples/neighborhood-repairs.dream`.

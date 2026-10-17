@@ -1,9 +1,10 @@
 import {createWorldScene,worldSource,worldModules} from './world-fixture';
 import {buildWorldChunk} from '../game/chunk-builder';
 import {packChunk,disposeChunk} from '../game/chunk-packet';
-import {saveCompatibilitySource,preCommerceCompatibilitySource,registeredLegacySource,supportsPreCommerceUpgrade,preDeliveryCompatibilitySource,R45_COMPATIBILITY,preParkingScene,preParkingCompatibilitySource,PARKING_COMPATIBILITY,REPAIR_COMPATIBILITY,preRepairCompatibilitySource,SUPPLY_COMPATIBILITY,preSupplyCompatibilitySource,DELIVERY_COMPATIBILITY,sha256} from './save-compatibility';
+import {saveCompatibilitySource,preCommerceCompatibilitySource,registeredLegacySource,supportsPreCommerceUpgrade,preDeliveryCompatibilitySource,R45_COMPATIBILITY,preParkingScene,preParkingCompatibilitySource,PARKING_COMPATIBILITY,REPAIR_COMPATIBILITY,preRepairCompatibilitySource,SUPPLY_COMPATIBILITY,preSupplyCompatibilitySource,NETWORK_COMPATIBILITY,preNetworkCompatibilitySource,DELIVERY_COMPATIBILITY,sha256} from './save-compatibility';
 import {ambientGraph} from './ambient-navigation';
 import {sceneContactData} from './contacts';
+import {repairNavigation} from '../sim/repair';
 import {worldStreamBounds} from '../game/world-streaming';
 
 // Only accepted engine data and bounded mesh requests cross this boundary.
@@ -13,14 +14,15 @@ async function boot(){try {
   const scene=createWorldScene(sourceHash);
   const bounds=worldStreamBounds(scene);
   const saveCompatibility=await sha256(saveCompatibilitySource(scene));
-  const supplyHash=await sha256(preSupplyCompatibilitySource(scene)),supplyUpgrade=saveCompatibility===SUPPLY_COMPATIBILITY && supplyHash===REPAIR_COMPATIBILITY;
+  const networkHash=await sha256(preNetworkCompatibilitySource(scene)),networkUpgrade=saveCompatibility===NETWORK_COMPATIBILITY && networkHash===SUPPLY_COMPATIBILITY;
+  const supplyHash=await sha256(preSupplyCompatibilitySource(scene)),supplyUpgrade=(saveCompatibility===SUPPLY_COMPATIBILITY || networkUpgrade) && supplyHash===REPAIR_COMPATIBILITY;
   const repairHash=await sha256(preRepairCompatibilitySource(scene)),repairUpgrade=(saveCompatibility===REPAIR_COMPATIBILITY || supplyUpgrade) && repairHash===PARKING_COMPATIBILITY;
   const parkingHash=await sha256(preParkingCompatibilitySource(scene)),parkingUpgrade=(saveCompatibility===PARKING_COMPATIBILITY || repairUpgrade) && parkingHash===DELIVERY_COMPATIBILITY;
   const previousScene=parkingUpgrade ? preParkingScene(scene) : scene;
   const previousSaveCompatibility=await sha256(preCommerceCompatibilitySource(previousScene)),emptyEconomySaveCompatibility=await sha256(preCommerceCompatibilitySource(previousScene,2)),previousSaveSource=registeredLegacySource(emptyEconomySaveCompatibility);
   const previousMarketHash=await sha256(preDeliveryCompatibilitySource(previousScene));
   const upgrade=supportsPreCommerceUpgrade(scene,saveCompatibility);
-  postMessage({scene,bounds,previousSupplySaveCompatibility:supplyUpgrade ? supplyHash : undefined,previousRepairSaveCompatibility:repairUpgrade ? repairHash : undefined,navigation:ambientGraph(scene),contacts:sceneContactData(scene),saveCompatibility,previousParkingSaveCompatibility:parkingUpgrade ? parkingHash : undefined,previousMarketSaveCompatibility:upgrade && previousMarketHash===R45_COMPATIBILITY ? previousMarketHash : undefined,previousSaveCompatibility:upgrade ? previousSaveCompatibility : undefined,emptyEconomySaveCompatibility:upgrade ? emptyEconomySaveCompatibility : undefined,previousSaveSource:upgrade ? previousSaveSource : undefined,compileMs:performance.now()-start});
+  postMessage({scene,bounds,previousNetworkSaveCompatibility:networkUpgrade ? networkHash : undefined,repairNavigation:repairNavigation(scene),previousSupplySaveCompatibility:supplyUpgrade ? supplyHash : undefined,previousRepairSaveCompatibility:repairUpgrade ? repairHash : undefined,navigation:ambientGraph(scene),contacts:sceneContactData(scene),saveCompatibility,previousParkingSaveCompatibility:parkingUpgrade ? parkingHash : undefined,previousMarketSaveCompatibility:upgrade && previousMarketHash===R45_COMPATIBILITY ? previousMarketHash : undefined,previousSaveCompatibility:upgrade ? previousSaveCompatibility : undefined,emptyEconomySaveCompatibility:upgrade ? emptyEconomySaveCompatibility : undefined,previousSaveSource:upgrade ? previousSaveSource : undefined,compileMs:performance.now()-start});
   onmessage=({data})=>{
     try {
       const root=buildWorldChunk(scene,data.region),{packet,transfer}=packChunk(root);

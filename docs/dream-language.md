@@ -42,3 +42,9 @@ Ground populations can use Dream 2 `walk` and `roam` motion under explicit ambie
 Playable markets use one bounded `economy()` block with `good`, `account`, `market`, `lot`, `work`, `delivery` and `repair` data. Player controls and NPC policies share conserved transactions, food, reserved wages and timed production. [Market guide and runnable world](dream/commerce.md). This is separate from the logical Lab scenario language.
 
 Dream repair services connect category-selected damage, finite market kits/pay and bounded local worker journeys. `kinds` shares one policy across several measured categories; delivery `price` pays a supplier from the receiving business, with goods and money reserved together. [Rules and runnable example](dream/commerce.md#repair-work).
+
+
+Repair `grounds` connects declared work areas through the existing pedestrian
+network. The engine derives bounded routes, preserves work during streaming and
+saves, and rejects unreachable targets. [Connected repairs](dream/commerce.md#connected-service-grounds)
+includes a complete street-and-crossing example.

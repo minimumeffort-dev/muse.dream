@@ -93,3 +93,10 @@ Static world geometry streams around the player, using the existing instancing a
 ![Woodland with habitat-specific ground wildlife and understory](media/population-woodland.jpg)
 
 [Inspect the garden and habitat additions](media/population-assets.jpg).
+
+
+The park seating pocket and east station bench now have concrete paving joined
+to their sidewalks. Existing parked scooters, lamp and planter are preserved by
+explicit furnishing-ground allowances. A Dream repair service connects these
+areas to the market supply home using the same accepted pedestrian infrastructure.
+[Connected service grounds](dream/commerce.md#connected-service-grounds).

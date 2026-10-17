@@ -1,3 +1,4 @@
+import {repairAccessProblems} from '../sim/repair';
 import {ambientProblems} from './ambient-navigation';
 import {validateSites,siteEntry,onWalkway} from './sites';
 import {distanceToPolygon,partition,polygonArea,triangulatePolygon} from './polygons';
@@ -19,6 +20,7 @@ import {streetPolygons,bridgeFitsStreet,onPolygon,streetFootprints,markingPolygo
 
 export interface SceneProblem {
   code:
+    | "repair-not-connected"
     | "population-not-clear"
     | "site-not-connected"
     | "road-bend-too-tight"
@@ -56,6 +58,7 @@ export function validateScenePlayability(
 ): SceneProblem[] {
   const problems: SceneProblem[] = [];
   for(const message of ambientProblems(scene))problems.push({code:"population-not-clear",message});
+  for(const message of repairAccessProblems(scene))problems.push({code:"repair-not-connected",message});
   const reference=scene.player?.dslVersion===2 && scene.player.measure?.kind==="car" ? scene.player.measure.meters : undefined;
   if(reference)for(const object of scene.objects){
     const spec=object.spec && "dslVersion" in object.spec && object.spec.dslVersion===2 ? object.spec : undefined;

@@ -77,3 +77,19 @@ export function cargoReviewStart(state:CarState,world:World,id:string|null):CarS
  const next=stepInteractive(foot,{steer:0,throttle:0,commerce:{kind:'collect',delivery:task.id}},1/120,world);
  return next.economy?.accounts.some(a=>a.delivery?.id===id) ? resetCar(next,world.scene) : state;
 }
+
+/** Dev-only fixed-step review: real park impacts and dispatch, then a clear view behind the worker. */
+export function maintenanceReviewStart(state:CarState,world:World):CarState{
+ if(!world.scene.economy?.repairs.some(r=>r.grounds))return state;
+ let next=drivingReviewStart(state,world,'voxels');
+ for(let i=0;i<132;i++)next=stepInteractive(next,{steer:0,throttle:1},1/120,world);
+ for(let i=0;i<78;i++)next=stepInteractive(next,{steer:0,throttle:-1},1/120,world);
+ next=toggleRide(next,world);
+ for(let i=210;i<5280;i++)next=stepInteractive(next,{steer:0,throttle:0},1/120,world);
+ const task=next.economy?.accounts.find(a=>a.repair?.phase==='out')?.repair;if(!task)return state;
+ for(let side=0;side<8;side++){
+  const angle=task.headingRad+Math.PI+side*Math.PI/4,x=task.x+Math.cos(angle)*50,y=task.y+Math.sin(angle)*50,elevation=drivingHeight(world.scene.terrain,x,y),foot:CarState={...next,control:{kind:'foot'},x,y,elevation,vx:0,vy:0,vz:0,surface:'paper'};
+  if(carFootprintClear(bodyWorld(foot,world),x,y,elevation,next.timeS,foot))return foot;
+ }
+ return next;
+}

@@ -16,6 +16,7 @@ Driving, vehicle switching, jumping, swimming and destruction are exported at **
 | Swimming in the city canal | [swimming.gif](swimming.gif) | [swimming.mp4](swimming.mp4) | 6 seconds |
 | Aircraft takeoff, climb, bank and descent | [flight.gif](flight.gif) | [flight.mp4](flight.mp4) | 10 seconds |
 | Delivery pickup and vehicle carry | [delivery.gif](delivery.gif) | [delivery.mp4](delivery.mp4) | 12 seconds |
+| Public-pavement maintenance journey | [maintenance.gif](maintenance.gif) | [maintenance.mp4](maintenance.mp4) | 20 seconds |
 | Caretaker repair and return | [repair.gif](repair.gif) | [repair.mp4](repair.mp4) | 28 seconds |
 | Food, trade and paid work | [commerce.gif](commerce.gif) | [commerce.mp4](commerce.mp4) | 12 seconds |
 | Day and night | [daynight.gif](daynight.gif) | [daynight.mp4](daynight.mp4) | 12 seconds |
@@ -472,3 +473,29 @@ The exporter permits only the `repair` clip to reach frame 839. Other clips keep
 the earlier 600-frame request ceiling; same-origin PNG/content/size checks are
 unchanged. [Repair verification](../evidence/maintenance/verification.md).
 The r49 refresh is documented in [replacement-supply verification](../evidence/supply/verification.md).
+
+
+## Connected neighborhood repairs, r50
+
+`maintenance.mp4`, `maintenance.gif` and `maintenance.jpg` show the caretaker
+walking along the accepted market pavement and crossing toward a distant repair.
+The dev review first runs 44 seconds of real fixed-step driving, damage and
+worker dispatch, then follows the worker with the review camera. It exports
+600 actual rendered frames over the next 20 simulation seconds; the poster uses
+frame 300. This is a short journey excerpt, not the full eleven-minute round trip
+or a live performance measurement. The fixed-engine replay in the
+[verification](../evidence/network-repair/verification.md) covers that entire trip.
+
+Repair (840 frames, still 720), commerce (360, still 300), conversation (240,
+still 60) and delivery (360, still 100) are re-exported for the new neighborhood
+job label and smoother maintenance presentation. All five sets retain paired HD
+video, GIF and native 2400 x 1350 stills. The new maintenance GIF follows the
+existing repair settings: 1280 x 720, 256 colors, no dithering and loss 80.
+Every source frame is rendered at 30 per simulation second; none is interpolated.
+
+The city map is regenerated from the accepted scene to include the two connected
+seating pockets. Native park evidence shows the paving and damage restoration.
+Existing asset sheets, isolated destruction clips, lighting, vehicles, sports,
+vegetation and general movement retain their represented geometry and controls.
+Existing district stills show the same buildings and street layout; the dedicated
+park view records the new small seating surface. Backup controls are unchanged.
