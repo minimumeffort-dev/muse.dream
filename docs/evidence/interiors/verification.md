@@ -151,3 +151,23 @@ Existing Vite large-chunk warnings remain visible. README, language/model/contra
 asset construction/library, behavior, commerce, persistence, rendering, priorities
 and media were reviewed and refreshed. Published documentation uses the existing
 Minimum Effort theme.
+
+## Publication follow-up
+
+The first immutable GitHub run on `069c893` reached the existing ten-minute job
+limit. It had reported 75 files / 1,124 tests passing, with no assertion failure;
+twelve tests in five remaining files had not completed. Publication was skipped,
+while the independently verified Vercel build remained usable.
+
+The migration file took 270.41 seconds on that runner and compiled the same
+accepted city twelve times. It now reuses one accepted geometry fixture. Every
+case retains its own simulation state, compatibility setup and storage; a final
+snapshot assertion rejects mutation of the shared scene. All fourteen migration
+tests pass in a 35.65-second focused local run on the M3 Ultra. That local time is
+not directly comparable with the GitHub runner measurement. Per-test timeouts,
+worker reporting yields, job limits, assertion coverage and publication gates
+remain unchanged.
+
+This follow-up changes test preparation only. README, language guides and media
+were reviewed; their current controls, geometry and recordings remain accurate,
+so no new gameplay captures are needed.

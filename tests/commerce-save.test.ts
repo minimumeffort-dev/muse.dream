@@ -1,4 +1,4 @@
-import {it,expect} from 'vitest';
+import {afterAll,it,expect} from 'vitest';
 import {walkingHeight} from '../src/scene/interiors';
 import {ambientNavigation} from '../src/scene/ambient-navigation';
 import type {CarState} from '../src/sim/car';
@@ -20,6 +20,14 @@ import {cargoReviewStart} from '../src/game/review-start';
 import {gameSave} from '../src/game/save';
 import {INTERIOR_COMPATIBILITY,preInteriorScene,preInteriorCompatibilitySource,saveCompatibilitySource,preCommerceCompatibilitySource,sha256,registeredLegacySource,supportsPreCommerceUpgrade,preDeliveryCompatibilitySource,DELIVERY_COMPATIBILITY,PARKING_COMPATIBILITY,REPAIR_COMPATIBILITY,SUPPLY_COMPATIBILITY,COURIER_COMPATIBILITY,preCourierScene,preCourierCompatibilitySource,NATURAL_COMPATIBILITY,PLANT_COMPATIBILITY,preFinishScene,preFinishCompatibilitySource,prePlantScene,prePlantCompatibilitySource,VERGE_COMPATIBILITY,preVergeScene,POOL_COMPATIBILITY,preVergeCompatibilitySource,prePoolCompatibilitySource,NETWORK_COMPATIBILITY,preNetworkCompatibilitySource,preSupplyCompatibilitySource,preRepairCompatibilitySource,preParkingScene,preParkingCompatibilitySource} from '../src/scene/save-compatibility';
 
+// Historical saves share accepted geometry, while every test owns its state and storage.
+let accepted:Scene|undefined,acceptedSnapshot:string|undefined;
+function currentScene(){
+ if(!accepted){accepted=createWorldScene();acceptedSnapshot=JSON.stringify(accepted);}
+ return accepted;
+}
+afterAll(()=>{if(accepted)expect(JSON.stringify(accepted)).toBe(acceptedSnapshot);});
+
 function expectPopulation(state:CarState,previous:any,scene:Scene,prior=preVergeScene(scene)){
  const normalize=(population:any,world:Scene)=>{const nodes=ambientNavigation(world).nodes;return {...population,members:population.members.map((m:any)=>({...m,node:m.node<0 ? m.node : nodes[m.node],previous:m.previous<0 ? m.previous : nodes[m.previous]})).map(({node,previous,...m}:any)=>({...m,node:node && typeof node==='object' ? {x:node.x,y:node.y} : node,previous:previous && typeof previous==='object' ? {x:previous.x,y:previous.y} : previous}))};};
  expect(normalize(state.population,scene)).toEqual(normalize(previous,prior));
@@ -39,7 +47,7 @@ it('round-trips reserved work, balances, materials, needs and shared NPC decisio
 });
 
 it('upgrades actual r44 browser saves into the registered first market while preserving their physical world',async()=>{
- const scene=createWorldScene('first-market'),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousSaveCompatibility=await sha256(preCommerceCompatibilitySource(preParkingScene(scene))),emptyEconomySaveCompatibility=await sha256(preCommerceCompatibilitySource(preParkingScene(scene),2)),previousSaveSource=registeredLegacySource(emptyEconomySaveCompatibility);
+ const scene=currentScene(),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousSaveCompatibility=await sha256(preCommerceCompatibilitySource(preParkingScene(scene))),emptyEconomySaveCompatibility=await sha256(preCommerceCompatibilitySource(preParkingScene(scene),2)),previousSaveSource=registeredLegacySource(emptyEconomySaveCompatibility);
  expect(saveCompatibility).toBe(INTERIOR_COMPATIBILITY);expect(supportsPreCommerceUpgrade(scene,saveCompatibility)).toBe(true);expect(previousSaveSource).toBe(oldSave.sourceHash);
  const world:World={scene,saveCompatibility,previousInteriorSaveCompatibility:COURIER_COMPATIBILITY,previousCourierSaveCompatibility:NATURAL_COMPATIBILITY,previousFinishSaveCompatibility:PLANT_COMPATIBILITY,previousPlantSaveCompatibility:VERGE_COMPATIBILITY,previousVergeSaveCompatibility:POOL_COMPATIBILITY,previousRepairSaveCompatibility:PARKING_COMPATIBILITY,previousParkingSaveCompatibility:DELIVERY_COMPATIBILITY,previousSaveCompatibility,emptyEconomySaveCompatibility,previousSaveSource,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11};
  const old=JSON.stringify(oldSave),copy=decodeSave(old,world);expect(copy.migrated).toBe(true);expect(copy.state.x).toBe(oldSave.state.x);expect(copy.state.elevation).toBe(walkingHeight(scene,copy.state.x,copy.state.y));expect(copy.state.vehicles).toEqual(oldSave.state.vehicles);expect(copy.state.npcs).toEqual(oldSave.state.npcs);expectPopulation(copy.state,oldSave.state.population,scene);expect(copy.worldTime).toBe(oldSave.worldTime);expect(copy.state.economy!.atS).toBe(oldSave.state.timeS);expect(copy.state.economy!.accounts[0]!.credits).toBe(20);checkEconomyState(copy.state,scene);
@@ -52,7 +60,7 @@ it('upgrades actual r44 browser saves into the registered first market while pre
 });
 
 it('migrates an actual reserved format 3 batch without resetting stock, credits, needs or work time',async()=>{
- const scene=createWorldScene('delivery-upgrade'),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousMarketSaveCompatibility=await sha256(preDeliveryCompatibilitySource(preParkingScene(scene)));
+ const scene=currentScene(),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousMarketSaveCompatibility=await sha256(preDeliveryCompatibilitySource(preParkingScene(scene)));
  expect(previousMarketSaveCompatibility).toBe(marketSave.compatibilityHash);expect(saveCompatibility).toBe(INTERIOR_COMPATIBILITY);
  const world:World={scene,saveCompatibility,previousInteriorSaveCompatibility:COURIER_COMPATIBILITY,previousCourierSaveCompatibility:NATURAL_COMPATIBILITY,previousFinishSaveCompatibility:PLANT_COMPATIBILITY,previousPlantSaveCompatibility:VERGE_COMPATIBILITY,previousVergeSaveCompatibility:POOL_COMPATIBILITY,previousRepairSaveCompatibility:PARKING_COMPATIBILITY,previousParkingSaveCompatibility:DELIVERY_COMPATIBILITY,previousMarketSaveCompatibility,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11};
  const fresh=createCarAtSpawn(scene),profile=cargoReviewStart(fresh,world,'school_run');expect(cargoReviewStart(fresh,world,null)).toBe(fresh);expect(profile.control.kind).toBe('car');expect(profile.economy!.accounts[0]!.delivery?.id).toBe('school_run');checkEconomyState(profile,scene);
@@ -70,7 +78,7 @@ it('round-trips sealed cargo through pause, vehicle travel and completion withou
 });
 
 it('upgrades the actual format 4 delivery backup, rejects forged old ownership and keeps its slot intact',async()=>{
- const scene=createWorldScene('parking-upgrade'),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousParkingSaveCompatibility=await sha256(preParkingCompatibilitySource(scene));
+ const scene=currentScene(),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousParkingSaveCompatibility=await sha256(preParkingCompatibilitySource(scene));
  expect(previousParkingSaveCompatibility).toBe(deliverySave.compatibilityHash);expect(saveCompatibility).toBe(INTERIOR_COMPATIBILITY);
  const world:World={scene,saveCompatibility,previousInteriorSaveCompatibility:COURIER_COMPATIBILITY,previousCourierSaveCompatibility:NATURAL_COMPATIBILITY,previousFinishSaveCompatibility:PLANT_COMPATIBILITY,previousPlantSaveCompatibility:VERGE_COMPATIBILITY,previousVergeSaveCompatibility:POOL_COMPATIBILITY,previousRepairSaveCompatibility:PARKING_COMPATIBILITY,previousParkingSaveCompatibility,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11};
  const text=JSON.stringify(deliverySave),copy=decodeSave(text,world);expect(copy.migrated).toBe(true);for(const a of deliverySave.state.economy.accounts)expect(copy.state.economy!.accounts.find(b=>b.id===a.id)).toMatchObject(a);for(const m of deliverySave.state.economy.markets)expect(copy.state.economy!.markets.find(n=>n.id===m.id)).toMatchObject(m);expect(copy.state.economy!.repaired).toEqual({market_tables:0,orchard_trees:0});expect(copy.state.vehicles).toEqual(deliverySave.state.vehicles);expectPopulation(copy.state,deliverySave.state.population,scene);expect(copy.state.npcs).toEqual(deliverySave.state.npcs);expect(copy.worldTime).toBe(deliverySave.worldTime);
@@ -83,7 +91,7 @@ it('upgrades the actual format 4 delivery backup, rejects forged old ownership a
 
  it('upgrades the actual format 5 parked bicycle without losing fleet ownership, needs, accounts or memory',async()=>{
  const {default:old}=await import('./fixtures/save-v5-r47.json');
- const scene=createWorldScene('repair-upgrade'),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousRepairSaveCompatibility=await sha256(preRepairCompatibilitySource(scene));
+ const scene=currentScene(),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousRepairSaveCompatibility=await sha256(preRepairCompatibilitySource(scene));
  expect(previousRepairSaveCompatibility).toBe(old.compatibilityHash);expect(saveCompatibility).toBe(INTERIOR_COMPATIBILITY);
  const world:World={scene,saveCompatibility,previousInteriorSaveCompatibility:COURIER_COMPATIBILITY,previousCourierSaveCompatibility:NATURAL_COMPATIBILITY,previousFinishSaveCompatibility:PLANT_COMPATIBILITY,previousPlantSaveCompatibility:VERGE_COMPATIBILITY,previousVergeSaveCompatibility:POOL_COMPATIBILITY,previousRepairSaveCompatibility,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11};
  const text=JSON.stringify(old),copy=decodeSave(text,world);expect(copy.migrated).toBe(true);expect(copy.state.vehicles).toEqual(old.state.vehicles);expect(copy.state.npcs).toEqual(old.state.npcs);expectPopulation(copy.state,old.state.population,scene);
@@ -94,7 +102,7 @@ it('upgrades the actual format 4 delivery backup, rejects forged old ownership a
 
 it('upgrades a real r48 in-progress repair without resetting its ledger, clock, needs, parked vehicles or memories',async()=>{
  const {default:old}=await import('./fixtures/save-v6-r48.json');
- const scene=createWorldScene('supply-upgrade'),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousSupplySaveCompatibility=await sha256(preSupplyCompatibilitySource(scene));
+ const scene=currentScene(),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousSupplySaveCompatibility=await sha256(preSupplyCompatibilitySource(scene));
  expect(previousSupplySaveCompatibility).toBe(old.compatibilityHash);expect(previousSupplySaveCompatibility).toBe(REPAIR_COMPATIBILITY);expect(saveCompatibility).toBe(INTERIOR_COMPATIBILITY);
  const world:World={scene,saveCompatibility,previousInteriorSaveCompatibility:COURIER_COMPATIBILITY,previousCourierSaveCompatibility:NATURAL_COMPATIBILITY,previousFinishSaveCompatibility:PLANT_COMPATIBILITY,previousPlantSaveCompatibility:VERGE_COMPATIBILITY,previousVergeSaveCompatibility:POOL_COMPATIBILITY,previousSupplySaveCompatibility,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11};
  const text=JSON.stringify(old),copy=decodeSave(text,world);expect(copy.migrated).toBe(true);expect(copy.state.vehicles).toEqual(old.state.vehicles);expect(copy.state.npcs).toEqual(old.state.npcs);expectPopulation(copy.state,old.state.population,scene);expect(copy.worldTime).toBe(old.worldTime);
@@ -108,7 +116,7 @@ it('upgrades a real r48 in-progress repair without resetting its ledger, clock, 
 });
 
 it('keeps an actual r49 world intact when adding connected service grounds, including paid procurement and completed repairs',async()=>{
- const {default:old}=await import('./fixtures/save-v6-r49.json'),scene=createWorldScene('network-upgrade'),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousNetworkSaveCompatibility=await sha256(preNetworkCompatibilitySource(scene));
+ const {default:old}=await import('./fixtures/save-v6-r49.json'),scene=currentScene(),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousNetworkSaveCompatibility=await sha256(preNetworkCompatibilitySource(scene));
  expect(saveCompatibility).toBe(INTERIOR_COMPATIBILITY);expect(previousNetworkSaveCompatibility).toBe(old.compatibilityHash);expect(previousNetworkSaveCompatibility).toBe(SUPPLY_COMPATIBILITY);
  const world:World={scene,saveCompatibility,previousInteriorSaveCompatibility:COURIER_COMPATIBILITY,previousCourierSaveCompatibility:NATURAL_COMPATIBILITY,previousFinishSaveCompatibility:PLANT_COMPATIBILITY,previousPlantSaveCompatibility:VERGE_COMPATIBILITY,previousVergeSaveCompatibility:POOL_COMPATIBILITY,previousNetworkSaveCompatibility,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11},text=JSON.stringify(old),copy=decodeSave(text,world);
  expect(copy.migrated).toBe(true);expectState(copy.state,old.state,scene);expect(copy.worldTime).toBe(old.worldTime);expect(copy.state.economy!.delivered.kits_run).toBe(1);expect(copy.state.economy!.repaired.market_tables).toBe(2);checkEconomyState(copy.state,scene);
@@ -118,7 +126,7 @@ it('keeps an actual r49 world intact when adding connected service grounds, incl
 
 
 it('preserves an actual r50 saved repair and return world through pooled lamp destruction',async()=>{
- const {default:old}=await import('./fixtures/save-v6-r50.json'),scene=createWorldScene('pool-upgrade'),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousPoolSaveCompatibility=await sha256(prePoolCompatibilitySource(scene));
+ const {default:old}=await import('./fixtures/save-v6-r50.json'),scene=currentScene(),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousPoolSaveCompatibility=await sha256(prePoolCompatibilitySource(scene));
  expect(saveCompatibility).toBe(INTERIOR_COMPATIBILITY);expect(previousPoolSaveCompatibility).toBe(NETWORK_COMPATIBILITY);expect(previousPoolSaveCompatibility).toBe(old.compatibilityHash);
  const world:World={scene,saveCompatibility,previousInteriorSaveCompatibility:COURIER_COMPATIBILITY,previousCourierSaveCompatibility:NATURAL_COMPATIBILITY,previousFinishSaveCompatibility:PLANT_COMPATIBILITY,previousPlantSaveCompatibility:VERGE_COMPATIBILITY,previousVergeSaveCompatibility:POOL_COMPATIBILITY,previousPoolSaveCompatibility,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11},text=JSON.stringify(old),copy=decodeSave(text,world);
  expect(copy.migrated).toBe(true);expectState(copy.state,old.state,scene);expect(copy.worldTime).toBe(old.worldTime);
@@ -127,7 +135,7 @@ it('preserves an actual r50 saved repair and return world through pooled lamp de
 });
 
 it('rebases actual r51 pedestrian references while preserving damage, the active worker and every other saved field',async()=>{
- const {default:old}=await import('./fixtures/save-v7-r51.json'),scene=createWorldScene('verge-upgrade'),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousVergeSaveCompatibility=await sha256(preVergeCompatibilitySource(scene));
+ const {default:old}=await import('./fixtures/save-v7-r51.json'),scene=currentScene(),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousVergeSaveCompatibility=await sha256(preVergeCompatibilitySource(scene));
  expect(saveCompatibility).toBe(INTERIOR_COMPATIBILITY);expect(previousVergeSaveCompatibility).toBe(POOL_COMPATIBILITY);expect(previousVergeSaveCompatibility).toBe(old.compatibilityHash);
  const world:World={scene,saveCompatibility,previousInteriorSaveCompatibility:COURIER_COMPATIBILITY,previousCourierSaveCompatibility:NATURAL_COMPATIBILITY,previousFinishSaveCompatibility:PLANT_COMPATIBILITY,previousPlantSaveCompatibility:VERGE_COMPATIBILITY,previousVergeSaveCompatibility,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11},text=JSON.stringify(old),copy=decodeSave(text,world);expect(copy.migrated).toBe(true);expectState(copy.state,old.state,scene);expect(copy.worldTime).toBe(old.worldTime);checkEconomyState(copy.state,scene);
  const before=ambientNavigation(preVergeScene(scene)).nodes,after=ambientNavigation(scene).nodes;expect(after.length).toBeGreaterThan(before.length);expect(copy.state.population!.members.some((m,i)=>m.node!==old.state.population.members[i]!.node)).toBe(true);
@@ -136,7 +144,7 @@ it('rebases actual r51 pedestrian references while preserving damage, the active
 });
 
 it('upgrades actual r52 progress with only finite saplings and empty new ledgers initialized',async()=>{
- const {default:old}=await import('./fixtures/save-v7-r52.json'),scene=createWorldScene('plant-upgrade'),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousPlantSaveCompatibility=await sha256(prePlantCompatibilitySource(scene));expect(saveCompatibility).toBe(INTERIOR_COMPATIBILITY);expect(previousPlantSaveCompatibility).toBe(VERGE_COMPATIBILITY);expect(previousPlantSaveCompatibility).toBe(old.compatibilityHash);
+ const {default:old}=await import('./fixtures/save-v7-r52.json'),scene=currentScene(),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousPlantSaveCompatibility=await sha256(prePlantCompatibilitySource(scene));expect(saveCompatibility).toBe(INTERIOR_COMPATIBILITY);expect(previousPlantSaveCompatibility).toBe(VERGE_COMPATIBILITY);expect(previousPlantSaveCompatibility).toBe(old.compatibilityHash);
  const world:World={scene,saveCompatibility,previousInteriorSaveCompatibility:COURIER_COMPATIBILITY,previousCourierSaveCompatibility:NATURAL_COMPATIBILITY,previousFinishSaveCompatibility:PLANT_COMPATIBILITY,previousPlantSaveCompatibility,previousVergeSaveCompatibility:POOL_COMPATIBILITY,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11},text=JSON.stringify(old),copy=decodeSave(text,world),e=copy.state.economy!;expect(copy.migrated).toBe(true);expect({...copy.state,population:old.state.population,economy:priorPlantingEconomy(e)}).toEqual(old.state);expectPopulation(copy.state,old.state.population,scene,preInteriorScene(scene));expect(copy.worldTime).toBe(old.worldTime);expect(copy.state.growing).toBeUndefined();expect(e.accounts.every(a=>a.inventory.sapling===0)).toBe(true);expect(e.markets.find(m=>m.id==='market_stall')!.stock.sapling).toBe(6);expect(e.markets.find(m=>m.id==='station_supplies')!.stock.sapling).toBe(18);expect(e.repaired.orchard_trees).toBe(0);expect(e.delivered.saplings_run).toBe(0);checkEconomyState(copy.state,scene);
  const key=`muse-dream.save.v7.${scene.sceneId}.${previousPlantSaveCompatibility}`,rows=new Map([[key,text]]),storage={getItem:(k:string)=>rows.get(k)??null,setItem:(k:string,v:string)=>{rows.set(k,v);}},slot=gameSave(world,()=>storage);expect(slot.restored?.migrated).toBe(true);expect(slot.write(copy.state,copy.worldTime)).toBe(true);expect(JSON.parse(rows.get(slot.key)!).version).toBe(9);expect(rows.get(key)).toBe(text);rows.set(slot.key,'broken');expect(gameSave(world,()=>storage).blocked).toBe(true);
  const forged=structuredClone(old);(forged.state.economy.accounts[0]!.inventory as any).sapling=1;expect(()=>decodeSave(JSON.stringify(forged),world)).toThrow('invalid world state');expect(()=>decodeSave(text,{...world,previousPlantSaveCompatibility:undefined})).toThrow('different world');
@@ -144,7 +152,7 @@ it('upgrades actual r52 progress with only finite saplings and empty new ledgers
 
 
 it('preserves an actual r53 growing tree, return journey and every ledger through the natural-ground upgrade',async()=>{
- const {default:old}=await import('./fixtures/save-v8-r53.json'),scene=createWorldScene('natural-upgrade'),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousFinishSaveCompatibility=await sha256(preFinishCompatibilitySource(scene));
+ const {default:old}=await import('./fixtures/save-v8-r53.json'),scene=currentScene(),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousFinishSaveCompatibility=await sha256(preFinishCompatibilitySource(scene));
  expect(saveCompatibility).toBe(INTERIOR_COMPATIBILITY);expect(previousFinishSaveCompatibility).toBe(PLANT_COMPATIBILITY);expect(previousFinishSaveCompatibility).toBe(old.compatibilityHash);
  const world:World={scene,saveCompatibility,previousInteriorSaveCompatibility:COURIER_COMPATIBILITY,previousCourierSaveCompatibility:NATURAL_COMPATIBILITY,previousFinishSaveCompatibility,previousPlantSaveCompatibility:VERGE_COMPATIBILITY,previousVergeSaveCompatibility:POOL_COMPATIBILITY,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11},text=JSON.stringify(old),copy=decodeSave(text,world);
  expect(copy.migrated).toBe(true);expect({...copy.state,population:old.state.population}).toEqual(old.state);expectPopulation(copy.state,old.state.population,scene,preInteriorScene(scene));expect(copy.worldTime).toBe(old.worldTime);expect(copy.state.growing).toHaveLength(1);expect(copy.state.economy!.repaired.orchard_trees).toBe(1);expect(ambientNavigation(preInteriorScene(scene)).nodes).toEqual(ambientNavigation(preFinishScene(scene)).nodes);expect(ambientNavigation(scene).nodes.length).toBeGreaterThan(ambientNavigation(preInteriorScene(scene)).nodes.length);checkEconomyState(copy.state,scene);
@@ -153,7 +161,7 @@ it('preserves an actual r53 growing tree, return journey and every ledger throug
 });
 
 it('upgrades the exact r54 backup without changing any state or clocks, while keeping the old slot',async()=>{
- const {default:old}=await import('./fixtures/save-v8-r54.json'),scene=createWorldScene('courier-upgrade'),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousCourierSaveCompatibility=await sha256(preCourierCompatibilitySource(scene));
+ const {default:old}=await import('./fixtures/save-v8-r54.json'),scene=currentScene(),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousCourierSaveCompatibility=await sha256(preCourierCompatibilitySource(scene));
  expect(saveCompatibility).toBe(INTERIOR_COMPATIBILITY);expect(previousCourierSaveCompatibility).toBe(NATURAL_COMPATIBILITY);expect(previousCourierSaveCompatibility).toBe(old.compatibilityHash);
  const world:World={scene,saveCompatibility,previousInteriorSaveCompatibility:COURIER_COMPATIBILITY,previousCourierSaveCompatibility,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11},text=JSON.stringify(old),copy=decodeSave(text,world);
  expect(copy.migrated).toBe(true);expect({...copy.state,population:old.state.population}).toEqual(old.state);expectPopulation(copy.state,old.state.population,scene,preInteriorScene(scene));expect(copy.worldTime).toBe(old.worldTime);checkEconomyState(copy.state,scene);expect(()=>decodeSave(text,{...world,previousCourierSaveCompatibility:undefined})).toThrow('different world');
@@ -161,7 +169,7 @@ it('upgrades the exact r54 backup without changing any state or clocks, while ke
 });
 
 it('upgrades the actual r55 browser backup through the exact old physical projection and retains the old slot',async()=>{
- const {default:old}=await import('./fixtures/save-v9-r55.json'),scene=createWorldScene('interior-upgrade'),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousInteriorSaveCompatibility=await sha256(preInteriorCompatibilitySource(scene));
+ const {default:old}=await import('./fixtures/save-v9-r55.json'),scene=currentScene(),saveCompatibility=await sha256(saveCompatibilitySource(scene)),previousInteriorSaveCompatibility=await sha256(preInteriorCompatibilitySource(scene));
  expect(saveCompatibility).toBe(INTERIOR_COMPATIBILITY);expect(previousInteriorSaveCompatibility).toBe(old.compatibilityHash);
  const world:World={scene,saveCompatibility,previousInteriorSaveCompatibility,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11},text=JSON.stringify(old),copy=decodeSave(text,world);
  expect(copy.migrated).toBe(true);expect({...copy.state,population:old.state.population}).toEqual(old.state);expectPopulation(copy.state,old.state.population,scene,preInteriorScene(scene));expect(copy.worldTime).toBe(old.worldTime);checkEconomyState(copy.state,scene);
