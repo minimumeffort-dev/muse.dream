@@ -14,7 +14,7 @@ source uses `furnish(...,role=controllable)`. Explicit placements can use
 on a validated local copy through `asset.control`; the original exported NPC
 model retains its passenger capability. Labels never select ownership.
 
-Dormant parking supports ground profiles; boats and planes keep their existing resident control/support path. It has a 256-record cap, separate from the 24 resident actors.
+Dormant parking supports ground profiles; boats and planes keep their existing resident control/support path. It has a 256-record cap, separate from the 24 resident route actors or controllable vehicles.
 One occupied fleet rig must fit the existing 24 live-assembly cap, including
 the standing character and original player car. Untouched seeds stay instanced
 in streamed chunks. Occupied/moved seeds collapse in both color and shadow
