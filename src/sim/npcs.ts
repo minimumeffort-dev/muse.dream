@@ -18,6 +18,7 @@ export function nearbyNpc(state:CarState,scene:Scene){
   if(state.control.kind!=='foot' || !state.grounded)return;
   let nearest:{object:SceneObject;distance:number}|undefined;
   for(const object of programmed(scene)){
+    if(repairForActor(state,scene,object.id))continue;
     const program=behaviorFor(scene,object)!,snapshot=state.npcs?.find(n=>n.id===object.id)??initialNpcState(scene,object),active=program.states.find(s=>s.id===snapshot.stateId)!;
     if(!active.transitions.some(t=>t.event==='interact'))continue;
     const pose=actorPose(scene,object,state.timeS,state),distance=Math.hypot(state.x-pose.x,state.y-pose.y,state.elevation-pose.elevation);

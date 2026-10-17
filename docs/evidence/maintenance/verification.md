@@ -118,3 +118,11 @@ was disabled.
 
 The review was a self-review. Low-power laptops, full-city worker routing,
 all-world destruction, tree growth and lamp repair remain untested/unimplemented.
+
+
+A final control regression uses the complete repair example's conversational
+worker: while the work policy owns their body, T selects an available neighbour
+instead of being swallowed by a suspended program. The guide now states this
+boundary. README and recordings remain accurate because the live caretaker's
+ordinary program already has no talk transition; this changes no scene artwork
+or work timing. Focused repair/conversation tests and both builds verify the fix.

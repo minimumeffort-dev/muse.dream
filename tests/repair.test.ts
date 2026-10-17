@@ -3,7 +3,7 @@ import source from '../docs/examples/market-repair.dream?raw';
 import {compileDreamScene,compileDreamWorld,formatDream} from '../src/scene/dream';
 import {createCarAtSpawn,resetCar,type CarState,type World} from '../src/sim/car';
 import {stepCommerce,checkEconomyState,commerceReason,initialEconomy} from '../src/sim/commerce';
-import {stepNpcs} from '../src/sim/npcs';
+import {stepNpcs,nearbyNpc} from '../src/sim/npcs';
 import {actorPose} from '../src/sim/actors';
 import {breakOnContact} from '../src/sim/impacts';
 import {objectContacts} from '../src/scene/contacts';
@@ -91,4 +91,9 @@ it('completes eight seconds of on-site work on the fractional fixed-tick boundar
  const tick=()=>{s=stepCommerce({...s,timeS:s.timeS+1/120},{},1/120,doc);};
  for(let i=0;i<2000 && a(s).repair?.phase!=='work';i++)tick();expect(a(s).repair?.progressS).toBeCloseTo(.25);
  for(let i=0;i<31*30;i++)tick();expect(s.economy!.repaired.yard_tables).toBe(1);expect(s.broken).toEqual([]);checkEconomyState(s,doc);
+});
+
+it('routes talk to an available person instead of a worker whose program is suspended',()=>{
+ const busy={...step(start()),x:620,y:730};expect(nearbyNpc(busy,scene)?.id).toBe('neighbor');
+ const npcs=stepNpcs(busy,.25,scene,true);expect(npcs.find(n=>n.id==='neighbor')!.known).toBe(true);expect(npcs.find(n=>n.id==='customer')!.known).toBe(false);
 });

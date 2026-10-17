@@ -145,7 +145,8 @@ notices the damage, waits 12 seconds for someone to take the job, collects a
 repair kit from the vendor and walks over. Eight seconds of work restores the
 table and its collision body. The bakery pays four credits and loses one kit.
 The caretaker walks back to their starting place before resuming their ordinary
-behaviour. Nothing is spawned from free stock.
+behaviour. A busy worker does not offer its suspended conversation prompt; you
+can still talk to other available people. Nothing is spawned from free stock.
 
 ![The repaired table, with the worker heading home](../media/repair.jpg)
 
