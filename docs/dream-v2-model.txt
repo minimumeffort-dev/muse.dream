@@ -391,7 +391,7 @@ no paving; full radius fits the outer sidewalk, leaving at least 8 units inside 
 Generated objects default to role=prop; motion creates role=ambient. furnish(...,role=controllable) requires rideable(control=...) on every template and emits parked=true.
 For an explicit dormant ride use place(...,at=[x,y],role=controllable,parked=true). No route, behavior, pose=rest or ambient motion; no foundations, damage, emitters, lamps, humanoid or proximity joints. Furnish controllable parking cannot use on=sidewalk.
 Dormant parking supports car/bicycle/skateboard/scooter. Boats and planes keep ordinary resident controllable placements with their existing water/air support.
-At most 256 dormant vehicles, separate from the 24 resident route/controllable cap. Reserve ONE extra slot inside the existing 24 live-assembly cap for the occupied fleet rig; never instantiate all parked rigs. Original seeds and moved local poses stay instanced. Physics/ownership/moved poses remain in simulation and format 5 saves; R preserves parked poses, Start over resets them. No autonomous parking movement or damage. examples/parked-vehicles.dream is runnable.
+At most 256 dormant vehicles, separate from the 24 resident route/controllable cap. Reserve ONE extra slot inside the existing 24 live-assembly cap for the occupied fleet rig; never instantiate all parked rigs. Original seeds and moved local poses stay instanced. Physics/ownership/moved poses remain in simulation and format 6 saves; R preserves parked poses, Start over resets them. No autonomous parking movement or damage. examples/parked-vehicles.dream is runnable.
 <=32 rules, <=2048 candidates/rule, <=128 emitted/rule, <=1024 generated overall, also <=4096
 scene objects. Output has no minimum guarantee; inspect compiled rule/district coverage.
 AMBIENT GROUND MOTION (separate from general NPC programs)
@@ -495,12 +495,12 @@ sport id(kind=football|basketball,surface=surface_id,ball=placement_id,targets=[
 ## commerce
 One optional economy() block owns goods, accounts, markets and work in the playable
 3D world. This is independent of logical scenario/stock/service declarations.
-Use good(label,food=0); account(actor,credits,capacity,satiety,drain_s,shop=false,work?);
+Use good(label,food=0); account(actor,credits,capacity,satiety,drain_s,shop=false,work?,repair?);
 market(label,actor,credits,radius){lot(good,quantity,limit,price?);} and
 work(label,market,input,take,output,make,seconds,pay,effort,capacity,target).
 Labels must contain nonblank text. Every declaration except economy needs a stable ID. Scope IDs are unique; good IDs
 and lot goods must agree. One economy per linked project, with exactly one player
-account. Other account actors are existing role=npc placements. Markets and auto
+account. Other account actors are existing role=npc placements. Markets and production
 workers must be stationary NPCs. NPC shop=true buys and eats food at satiety <=40;
 NPC work refills output up to target. Player accounts never act automatically.
 Prices/pay/quantities/capacities are bounded integers. No price means an ingredient
@@ -517,9 +517,26 @@ integer 1..32, pay integer 1..1000000, capacity integer 1..4. Markets must have
 non-overlapping interaction areas and both must stock the named good with enough
 capacity. Collection reserves source goods, destination wages and both shelf
 capacities. Cargo is separate from owned inventory but counts toward carry limits.
-One work/delivery commitment per account; sealed cargo cannot be sold or eaten.
+One work/delivery/repair commitment per account; sealed cargo cannot be sold or eaten.
 The player may travel in vehicles and must hand over on foot at the destination.
 Completion transfers goods/pay once; cancellation anywhere returns reservations.
 No deadline, offline travel, free supply, NPC courier dispatch or route generation.
 NPC customers can buy/eat delivered food through the same market transactions.
 Owned food can be eaten on foot during a delivery; sealed cargo is never food inventory.
+
+Use repair id(label=...,market=supply_market,on=work_surface,kind=table,
+input=kit,take=1,seconds=8,pay=4,effort=5,dispatch_s=12); inside economy.
+At most 8 services. on is an existing convex ground surface, with at most 4096
+12-unit local grid samples. Supply vendor and stationary worker home must lie in
+it; home must be within market reach. kind selects measure.kind, never labels.
+Eligible ground-accessible break/topple targets and zones retain their original
+geometry/contacts after repair. Input must fit an existing lot; take integer
+1..32; seconds 1..120, pay positive integer <=1000000, effort 1..50, optional
+dispatch_s 0..120 default 12. NPC account.repair=service excludes account.work,
+route/ambient motion and market ownership. Player accounts never automate.
+The engine owns bounded walking paths (128 saved points), notices, one claimant
+per target, supply/wage reservations, work progress, obstruction waiting,
+consumption counters and return home. Player takes the same job at the market,
+stands beside the damage to work, or cancels/refunds. Pause freezes; R and saves
+preserve; Start over resets. No scripts, city-wide dispatch, ladders, free kits,
+new plant growth or implicit destruction. See examples/market-repair.dream.

@@ -1,0 +1,47 @@
+{
+  "version": 6,
+  "sourceHash": "5b534dac64d5ae3f6cf01685d99409b9d1026a78ebbaeef02ff7cb59f1a9924a",
+  "timeS": 162.82500000001625,
+  "worker": {
+    "id": "caretaker",
+    "credits": 4,
+    "inventory": {
+      "bread": 0,
+      "flour": 0,
+      "timber": 0
+    },
+    "satiety": 51.862499999998306,
+    "decisionAtS": 163.25000000001677
+  },
+  "markets": [
+    {
+      "id": "station_supplies",
+      "credits": 0,
+      "stock": {
+        "flour": 80
+      }
+    },
+    {
+      "id": "school_canteen",
+      "credits": 60,
+      "stock": {
+        "bread": 0
+      }
+    },
+    {
+      "id": "market_stall",
+      "credits": 101,
+      "stock": {
+        "bread": 7,
+        "flour": 30,
+        "timber": 11
+      }
+    }
+  ],
+  "broken": [
+    "produce_crate"
+  ],
+  "repaired": {
+    "market_tables": 1
+  }
+}

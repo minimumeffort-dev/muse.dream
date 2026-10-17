@@ -16,6 +16,7 @@ Driving, vehicle switching, jumping, swimming and destruction are exported at **
 | Swimming in the city canal | [swimming.gif](swimming.gif) | [swimming.mp4](swimming.mp4) | 6 seconds |
 | Aircraft takeoff, climb, bank and descent | [flight.gif](flight.gif) | [flight.mp4](flight.mp4) | 10 seconds |
 | Delivery pickup and vehicle carry | [delivery.gif](delivery.gif) | [delivery.mp4](delivery.mp4) | 12 seconds |
+| Caretaker repair and return | [repair.gif](repair.gif) | [repair.mp4](repair.mp4) | 28 seconds |
 | Food, trade and paid work | [commerce.gif](commerce.gif) | [commerce.mp4](commerce.mp4) | 12 seconds |
 | Day and night | [daynight.gif](daynight.gif) | [daynight.mp4](daynight.mp4) | 12 seconds |
 
@@ -447,3 +448,25 @@ recordings retain their UI and journey; default prop geometry has not moved.
 This dedicated sequence shows the newly available parking. Native reload,
 old-save upgrade and diagnostic fleet images remain with the
 [parking evidence](../evidence/parked-fleet/verification.md).
+
+
+## Local repair work
+
+`repair.mp4`, `repair.gif` and `repair.jpg` come from 840 actual rendered frames,
+30 frames per simulation second. The dev recording drives through the table,
+brakes, leaves the car, then watches the caretaker collect a kit, walk to the
+damage, work, restore it and return. The poster is frame 720, after restoration.
+The video is 1600 x 900 and the still retains its native 2400 x 1350 pixels; the 1280 x 720 GIF keeps
+all frames, 256 colours, no dithering and Gifsicle loss 80. This is an offline
+fixed-step render, not a live frame-rate measurement.
+
+Commerce (360 frames, still 300), conversation (240, still 60) and delivery
+(360, still 100) are refreshed together with their GIFs, videos and stills for
+the added repair-kit stock and work option. Their ordinary controls and trips
+stay the same. Other recordings, asset sheets, the city map and existing save
+stills remain accurate: this release changes no geometry, placement, physical
+scale, ordinary movement, lighting or unrelated backup controls.
+
+The exporter permits only the `repair` clip to reach frame 839. Other clips keep
+the earlier 600-frame request ceiling; same-origin PNG/content/size checks are
+unchanged. [Repair verification](../evidence/maintenance/verification.md).

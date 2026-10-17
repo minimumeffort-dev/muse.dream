@@ -17,6 +17,8 @@ export interface ActorPose {id:string;x:number;y:number;elevation:number;heading
 const actors=new WeakMap<Scene,SceneObject[]>();
 export function routeObjects(scene:Scene) {let objects=actors.get(scene);if(!objects){objects=scene.objects.filter(isResidentActor);actors.set(scene,objects);}return objects;}
 const bases=new WeakMap<Scene,Map<string,number>>();
+const repairOwners=new WeakMap<Scene,Map<string,string>>();
+export function repairForActor(state:CarState|undefined,scene:Scene,id:string){let owners=repairOwners.get(scene);if(!owners){owners=new Map(scene.economy?.accounts.filter(a=>a.repair).map(a=>[a.actor,a.id]));repairOwners.set(scene,owners);}const account=owners.get(id);return account ? state?.economy?.accounts.find(a=>a.id===account)?.repair : undefined;}
 export function actorPose(scene:Scene,object:SceneObject,timeS:number,state?:CarState):ActorPose {
   const control=controlFor(object),route=object.route && scene.routes.find(r=>r.id===object.route!.id)!,program=behaviorFor(scene,object);
   const profile=controlOf(object.spec);
@@ -32,6 +34,8 @@ export function actorPose(scene:Scene,object:SceneObject,timeS:number,state?:Car
     const water=control==="boat" ? waterAt(scene.terrain,object.x,object.y,elevation) : undefined;
     return {id:object.id,x:object.x,y:object.y,elevation:water ? water.level-2 : elevation,headingRad:object.headingRad??0,kind,speed:0,distance:0,travelled:0,vx:0,vy:0};
   }
+  const maintenance=repairForActor(state,scene,object.id);
+  if(maintenance)return {id:object.id,x:maintenance.x,y:maintenance.y,elevation:drivingHeight(scene.terrain,maintenance.x,maintenance.y),headingRad:maintenance.headingRad,speed:maintenance.speed,distance:maintenance.distance,travelled:maintenance.distance,kind,activity:maintenance.phase==='work' ? 'perform' : 'patrol',animationTimeS:timeS,vx:0,vy:0};
   if(program){
     const clock=state?.npcs?.find(n=>n.id===object.id)??initialNpcState(scene,object),active=program.states.find(s=>s.id===clock.stateId)!;
     const point=route ? routePose(route,clock.routeTimeS+(object.route!.phaseS??0),object.route!.offset) : {x:object.x,y:object.y,distance:0,travelled:0};

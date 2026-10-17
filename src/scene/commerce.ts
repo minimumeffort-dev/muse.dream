@@ -1,20 +1,26 @@
 import {z} from 'zod';
+import {MEASURE_KINDS} from './measure';
+import {impactOf,zonesOf} from './object-dsl';
+import {onPolygon} from './streets';
+import {polygonBounds} from './polygons';
+import {objectContacts} from './contacts';
 import type {Scene} from './schema';
 import {roleOf} from './agents';
 import {waterAt,drivingHeight} from './terrain';
 
-export const COMMERCE_LIMITS=Object.freeze({goods:8,accounts:16,markets:8,jobs:16,deliveries:16,money:1_000_000,quantity:10_000,capacity:32,decisionS:.25});
+export const COMMERCE_LIMITS=Object.freeze({goods:8,accounts:16,markets:8,jobs:16,deliveries:16,repairs:8,repairNodes:4096,repairPath:128,money:1_000_000,quantity:10_000,capacity:32,decisionS:.25});
 const ref=z.string().regex(/^[a-z][a-z0-9_]{0,31}$/),money=z.number().int().min(0).max(COMMERCE_LIMITS.money),quantity=z.number().int().min(0).max(COMMERCE_LIMITS.quantity);
 const label=z.string().min(1).max(40).refine(s=>s.trim().length>0,'label must contain text');
 const good=z.object({id:ref,label,food:z.number().finite().min(0).max(100).default(0)}).strict();
-const account=z.object({id:ref,actor:ref,credits:money,capacity:z.number().int().min(1).max(COMMERCE_LIMITS.capacity),satiety:z.number().finite().min(0).max(100),drainPerS:z.number().finite().min(0).max(.25),shop:z.boolean().default(false),work:ref.optional()}).strict();
+const account=z.object({id:ref,actor:ref,credits:money,capacity:z.number().int().min(1).max(COMMERCE_LIMITS.capacity),satiety:z.number().finite().min(0).max(100),drainPerS:z.number().finite().min(0).max(.25),shop:z.boolean().default(false),work:ref.optional(),repair:ref.optional()}).strict();
 const lot=z.object({id:ref,good:ref,quantity,limit:quantity.refine(n=>n>0),price:z.number().int().min(1).max(10_000).optional()}).strict();
 const market=z.object({id:ref,label,actor:ref,credits:money,radius:z.number().finite().min(20).max(80),lots:z.array(lot).min(1).max(COMMERCE_LIMITS.goods)}).strict();
 const job=z.object({id:ref,label,market:ref,input:ref,take:quantity.refine(n=>n>0),output:ref,make:quantity.refine(n=>n>0),seconds:z.number().finite().min(1).max(120),pay:money.refine(n=>n>0),effort:z.number().finite().min(1).max(50),capacity:z.number().int().min(1).max(4),target:quantity}).strict();
 const delivery=z.object({id:ref,label,from:ref,to:ref,good:ref,quantity:z.number().int().min(1).max(COMMERCE_LIMITS.capacity),pay:money.refine(n=>n>0),capacity:z.number().int().min(1).max(4)}).strict();
-export const economySchema=z.object({goods:z.array(good).min(1).max(COMMERCE_LIMITS.goods),accounts:z.array(account).min(1).max(COMMERCE_LIMITS.accounts),markets:z.array(market).min(1).max(COMMERCE_LIMITS.markets),jobs:z.array(job).max(COMMERCE_LIMITS.jobs),deliveries:z.array(delivery).max(COMMERCE_LIMITS.deliveries).default([])}).strict().superRefine((e,ctx)=>{
+const repair=z.object({id:ref,label,market:ref,on:ref,kind:z.enum(MEASURE_KINDS),input:ref,take:z.number().int().min(1).max(COMMERCE_LIMITS.capacity),seconds:z.number().finite().min(1).max(120),pay:money.refine(n=>n>0),effort:z.number().finite().min(1).max(50),dispatch_s:z.number().finite().min(0).max(120).default(12)}).strict();
+export const economySchema=z.object({goods:z.array(good).min(1).max(COMMERCE_LIMITS.goods),accounts:z.array(account).min(1).max(COMMERCE_LIMITS.accounts),markets:z.array(market).min(1).max(COMMERCE_LIMITS.markets),jobs:z.array(job).max(COMMERCE_LIMITS.jobs),deliveries:z.array(delivery).max(COMMERCE_LIMITS.deliveries).default([]),repairs:z.array(repair).max(COMMERCE_LIMITS.repairs).default([])}).strict().superRefine((e,ctx)=>{
  const issue=(message:string,path:(string|number)[])=>ctx.addIssue({code:'custom',message,path});
- for(const name of ['goods','accounts','markets','jobs','deliveries'] as const)if(new Set(e[name].map(v=>v.id)).size!==e[name].length)issue(`duplicate ${name} ID`,[name]);
+ for(const name of ['goods','accounts','markets','jobs','deliveries','repairs'] as const)if(new Set(e[name].map(v=>v.id)).size!==e[name].length)issue(`duplicate ${name} ID`,[name]);
  if(new Set(e.accounts.map(a=>a.actor)).size!==e.accounts.length)issue('one account per actor',['accounts']);
  if(e.accounts.filter(a=>a.actor==='player').length!==1)issue('economy requires one player account',['accounts']);
  if(new Set(e.markets.map(m=>m.actor)).size!==e.markets.length)issue('one market per actor',['markets']);
@@ -35,17 +41,21 @@ export const economySchema=z.object({goods:z.array(good).min(1).max(COMMERCE_LIM
   if(!output || j.make>output.limit || j.target>output.limit)issue('work output and target must fit an existing market lot',['jobs',i,'output']);
   if(j.input===j.output)issue('work needs different input and output goods',['jobs',i,'output']);
  });
+ e.repairs.forEach((r,i)=>{const lot=e.markets.find(m=>m.id===r.market)?.lots.find(l=>l.good===r.input);if(!lot || lot.limit<r.take)issue('repair input must fit an existing market lot',['repairs',i,'input']);});
  e.accounts.forEach((a,i)=>{
-  if(a.actor==='player' && (a.shop || a.work))issue('the player acts through controls, not automatic policies',['accounts',i]);
+  if(a.actor==='player' && (a.shop || a.work || a.repair))issue('the player acts through controls, not automatic policies',['accounts',i]);
+  if(a.work && a.repair)issue('one automatic work policy per account',['accounts',i]);
+  if(a.repair && !e.repairs.some(r=>r.id===a.repair))issue('unknown account repair',['accounts',i,'repair']);
   if(a.work && !e.jobs.some(j=>j.id===a.work))issue('unknown account work',['accounts',i,'work']);
  });
 });
 export type Economy=z.infer<typeof economySchema>;
 export type Market=Economy['markets'][number];
 export type Job=Economy['jobs'][number];
+export type Repair=Economy['repairs'][number];
 
 /** Linked actor ownership is checked after modules/furnishings have been combined. */
-export function economyProblems(scene:Pick<Scene,'economy'|'objects'|'behaviors'|'terrain'>):string[]{
+export function economyProblems(scene:Pick<Scene,'economy'|'objects'|'behaviors'|'terrain'|'surfaces'>):string[]{
  const e=scene.economy;if(!e)return [];
  const stationary=(id:string)=>{const o=scene.objects.find(o=>o.id===id);return o && roleOf(o)==='npc' && !o.route && !o.ambient && !scene.behaviors.find(b=>b.id===o.behavior)?.states.some(s=>s.action==='patrol');};
  const problems:string[]=[];
@@ -54,5 +64,7 @@ export function economyProblems(scene:Pick<Scene,'economy'|'objects'|'behaviors'
  for(const m of e.markets){const o=scene.objects.find(o=>o.id===m.actor);if(o && waterAt(scene.terrain,o.x,o.y,drivingHeight(scene.terrain,o.x,o.y)))problems.push(`${m.id}: market requires dry ground or a supported deck`);}
  for(const d of e.deliveries){const from=e.markets.find(m=>m.id===d.from),to=e.markets.find(m=>m.id===d.to),a=scene.objects.find(o=>o.id===from?.actor),b=scene.objects.find(o=>o.id===to?.actor);if(from && to && a && b && Math.hypot(a.x-b.x,a.y-b.y)<=from.radius+to.radius)problems.push(`${d.id}: delivery markets must have separate interaction areas`);}
  for(const a of e.accounts)if(a.work){const j=e.jobs.find(j=>j.id===a.work),m=e.markets.find(m=>m.id===j?.market),worker=scene.objects.find(o=>o.id===a.actor),vendor=scene.objects.find(o=>o.id===m?.actor);if(m && worker && vendor && Math.hypot(worker.x-vendor.x,worker.y-vendor.y)>m.radius)problems.push(`${a.id}: worker is outside its market's reach`);}
+ for(const r of e.repairs){const area=scene.surfaces.find(s=>s.id===r.on),vendor=scene.objects.find(o=>o.id===e.markets.find(m=>m.id===r.market)?.actor);if(!area || !vendor || !onPolygon(area.points,vendor.x,vendor.y))problems.push(`${r.id}: repair needs a surface containing its supply market`);if(area){const turns=area.points.map((p,i)=>{const q=area.points[(i+1)%area.points.length]!,r=area.points[(i+2)%area.points.length]!;return Math.sign((q.x-p.x)*(r.y-q.y)-(q.y-p.y)*(r.x-q.x));}).filter(n=>n);if(new Set(turns).size>1)problems.push(`${r.id}: repair area must be convex; split irregular work grounds`);const b=polygonBounds(area.points);if((Math.ceil((b.x1-b.x0)/12)+1)*(Math.ceil((b.y1-b.y0)/12)+1)>COMMERCE_LIMITS.repairNodes)problems.push(`${r.id}: repair area exceeds 4096 local navigation samples`);if(!scene.objects.some(o=>o.spec && 'measure' in o.spec && o.spec.measure?.kind===r.kind && onPolygon(area.points,o.x,o.y) && (['break','topple'].includes(impactOf(o.spec)?.kind??'') || zonesOf(o.spec).length>0 && objectContacts(scene as Scene,o).some(c=>c.zoneId && c.bottom<=drivingHeight(scene.terrain,c.x,c.y)+18))))problems.push(`${r.id}: repair area has no destructible objects of its measured kind`);}}
+ for(const a of e.accounts)if(a.repair){const r=e.repairs.find(r=>r.id===a.repair),area=scene.surfaces.find(s=>s.id===r?.on),o=scene.objects.find(o=>o.id===a.actor),m=e.markets.find(m=>m.id===r?.market),vendor=scene.objects.find(o=>o.id===m?.actor);if(!stationary(a.actor) || e.markets.some(m=>m.actor===a.actor) || !area || !o || !onPolygon(area.points,o.x,o.y) || !m || !vendor || Math.hypot(o.x-vendor.x,o.y-vendor.y)>m.radius)problems.push(`${a.id}: repair worker needs a stationary home inside its service area and supply-market reach; a market owner cannot leave for repairs`);}
  return problems;
 }

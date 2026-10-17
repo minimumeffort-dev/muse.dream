@@ -383,13 +383,13 @@ One optional `economy(){...}` per linked world. [Working guide](commerce.md).
 
 ```text
 good id(label=text,food=n?);
-account id(actor=ref,credits=n,capacity=n,satiety=n,drain_s=n,shop=bool?,work=ref?);
+account id(actor=ref,credits=n,capacity=n,satiety=n,drain_s=n,shop=bool?,work=ref?,repair=ref?);
 market id(label=text,actor=ref,credits=n,radius=n){ lot ... }
 lot id(good=ref,quantity=n,limit=n,price=n?);
 work id(label=text,market=ref,input=ref,take=n,output=ref,make=n,seconds=n,pay=n,effort=n,capacity=n,target=n);
 ```
 
-At most 8 goods, 16 accounts, 8 markets, 16 jobs and 16 delivery contracts; each market has 1..8 lots with unique goods. Exactly one player account; one account per actor. Other owners are existing NPC placements. Market vendors and automatic workers are stationary; a worker must start in range of its market. NPC `shop` and `work` policies are optional; player accounts cannot automate themselves.
+At most 8 goods, 16 accounts, 8 markets, 16 jobs and 16 delivery contracts and 8 repair services; each market has 1..8 lots with unique goods. Exactly one player account; one account per actor. Other owners are existing NPC placements. Market vendors and production workers are stationary. Repair workers start at a stationary home in supply-market reach and travel within a declared work area. NPC `shop` and `work` policies are optional; player accounts cannot automate themselves.
 
 Credits: integer 0..1,000,000. Stock/limits: integer 0..10,000 with positive limits. Price: integer 1..10,000, or omitted for untraded ingredients. Carrying capacity: integer 1..32. Fullness/food: 0..100, drain per second: 0..0.25. Radius: 20..80. Work: 1..120 seconds, positive integer take/make/pay, effort 1..50, capacity 1..4, target within output lot capacity. Input/output goods differ. Labels: 1..40 nonblank characters. IDs follow the ordinary identifier contract.
 
@@ -405,7 +405,7 @@ uses the ordinary nonblank 1..40 character bound.
 
 Collect on foot at `from`: reserve actual stock, destination pay, source refund
 space and destination shelf space atomically. Cargo counts toward carrying
-capacity but is unavailable for trade/food. One production or delivery task per
+capacity but is unavailable for trade/food. One production, delivery or repair task per
 account. Travel/vehicles/R/streaming retain cargo; hand over on foot at `to`
 to transfer it and earn the wage once. Cancel returns cargo/pay without output.
 Completion counts and active reservations are saved and checked against money,
@@ -417,3 +417,29 @@ automatic courier, path planner or unbounded item body. [Complete example](../ex
 `place(...,at=[x,y],role=controllable,parked=true)` declares a stationary available ground vehicle (car, bicycle, skateboard or scooter). Boats and planes retain ordinary resident controllable placements and their existing water/air support. `furnish(...,role=controllable)` creates the same ownership mode for every accepted parking candidate. It requires a solid driver assembly without routes, programs, foundations, damage, emitters, lamps, humanoid or proximity joints. There are at most 256 dormant vehicles in addition to the existing 24 resident route actors or controllable vehicles; one occupied fleet rig must still fit the 24 live-assembly budget. Seeds and moved local poses are instanced. Saved poses retain signed wheel travel and collision bodies after unloading; R preserves them and Start over restores their authored positions. No NPC motion or vehicle damage is added. [Runnable source](../examples/parked-vehicles.dream).
 
 `asset id(module=library,object=vehicle,control=car)` adapts an existing seat on a local copy. The original export and other imports remain unchanged, including NPC passenger seats. Missing seats and invalid driver bodies fail compilation. The module registry remains host-supplied.
+
+## Repair bounds
+
+| Command | Context | Form | Fields |
+| --- | --- | --- | --- |
+| `repair` | economy | ID / no block | `label`, `market`, `on`, `kind`, `input`, `take`, `seconds`, `pay`, `effort`, optional `dispatch_s` |
+
+`repair id(label=text,market=ref,on=ref,kind=measure_kind,input=ref,take=n,seconds=n,pay=n,effort=n,dispatch_s=n?);`
+
+Inside `economy`, at most 8 services. Input must be a matching supply-market lot.
+Take: integer 1..32 within its lot limit. Seconds: 1..120, pay: positive integer
+up to 1,000,000, effort: 1..50, dispatch delay: 0..120 seconds, default 12. `on`
+references a convex surface containing the market and eligible measured-kind
+break/topple objects or ground-accessible zones. The local 12-unit grid is capped
+at 4,096 samples, saved paths at 128 points. Four-unit walking cylinders remain
+inside the surface and clear roads, riding lanes, water and solids.
+
+Optional NPC `account.repair` chooses one service. It excludes automatic `work`,
+route/ambient movement and market ownership; its home starts within market reach.
+The player collects manually. Each damage target has one shared claimant.
+Collection reserves kits, refund space and pay; work progresses only beside the
+damage. Restore waits for clear physical space, consumes inputs, pays once and
+records a completion. Cancel refunds. NPCs walk home before resuming their saved
+program. Journeys, notices, paths, work and conservation ledgers persist. Existing
+actor, rig, reactive-object and fragment limits are unchanged. No city dispatch,
+scaffolds, free restocking or plant growth. [Working guide](commerce.md#repair-work).

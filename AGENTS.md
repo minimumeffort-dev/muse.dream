@@ -371,3 +371,13 @@ shared Dream rules; do not increase per-frame work or per-cell physics to meet
 the goal. Keep auditing road paint, corners, signs and asset attachment details.
 Current loader diagnostics still show long main-thread startup gaps; profile and
 reduce those while expanding interaction. See `docs/world-systems.md`.
+
+
+Repair services live in the economy: `repair` selects a measured category in an
+explicit convex surface; optional NPC account `repair` owns local dispatch.
+Preserve one claimant per damaged object/zone, finite kit/wage escrow, consumed
+material counters, collision-free restoration, saved paths/notices/work/return,
+and program memory. Workers stay inside dry work areas and wait for bodies;
+no city-wide routing or tree growth is implied. Existing actor/rig/destruction
+caps stay unchanged. Registered r47 saves upgrade through a checked projection;
+never reset unrelated progress. See `docs/dream/commerce.md#repair-work`.

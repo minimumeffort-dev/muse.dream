@@ -1,0 +1,108 @@
+{
+  "profile": {
+    "scenario": "drive",
+    "samples": 300,
+    "viewport": [
+      1920,
+      1080
+    ],
+    "pixelRatio": 1.5,
+    "cpuMs": {
+      "mean": 3.303666669726372,
+      "p95": 4.400000035762787
+    },
+    "prepareMs": {
+      "mean": 2.017666669090589,
+      "p95": 2.900000035762787
+    },
+    "submitMs": {
+      "mean": 1.2860000006357828,
+      "p95": 1.5
+    },
+    "rafMs": {
+      "mean": 16.663999999960264,
+      "p95": 18.599999964237213
+    },
+    "gpuMs": {
+      "mean": 1.3087110468227412,
+      "p95": 1.4725
+    },
+    "gpuSamples": 299,
+    "draws": {
+      "mean": 252.99666666666667,
+      "p95": 359
+    },
+    "triangles": {
+      "mean": 647115.1366666667,
+      "p95": 705821
+    },
+    "geometries": 353
+  },
+  "startup": {
+    "totalMs": 12761.199999988079,
+    "firstRenderMs": 158.5,
+    "phases": [
+      {
+        "label": "Reading Dream · checking the world",
+        "startMs": 0.10000002384185791,
+        "endMs": 5117.300000011921
+      },
+      {
+        "label": "Preparing driving and walking",
+        "startMs": 5117.300000011921,
+        "endMs": 5270.5
+      },
+      {
+        "label": "Starting the renderer",
+        "startMs": 5270.5,
+        "endMs": 5286.800000011921
+      },
+      {
+        "label": "Building water and bridges",
+        "startMs": 5286.800000011921,
+        "endMs": 5455.300000011921
+      },
+      {
+        "label": "Building roads and transit",
+        "startMs": 5455.300000011921,
+        "endMs": 5619.300000011921
+      },
+      {
+        "label": "Assembling people and wildlife",
+        "startMs": 5619.300000011921,
+        "endMs": 6514.900000035763
+      },
+      {
+        "label": "Preparing vehicles and interactive objects",
+        "startMs": 6514.900000035763,
+        "endMs": 8795.5
+      },
+      {
+        "label": "Preparing lighting",
+        "startMs": 8795.5,
+        "endMs": 9068.400000035763
+      },
+      {
+        "label": "Loading the first neighbourhood",
+        "startMs": 9068.400000035763,
+        "endMs": 12501.300000011921
+      },
+      {
+        "label": "Preparing the first frame",
+        "startMs": 12501.300000011921,
+        "endMs": 12761.199999988079
+      }
+    ],
+    "heartbeat": {
+      "samples": 223,
+      "maxGapMs": 311.0999999642372
+    }
+  },
+  "state": {
+    "car": "7668.5,4233.0,1.5",
+    "memory": "{\"bytes\":255358898,\"uniqueBuffers\":9955,\"geometries\":1815,\"uniqueTriangles\":1941544}",
+    "parking": "{\"active\":null,\"prototypes\":0,\"instances\":0}",
+    "save": "{\"sourceHash\":\"5b534dac64d5ae3f6cf01685d99409b9d1026a78ebbaeef02ff7cb59f1a9924a\",\"compatibilityHash\":\"5cc3b8f0d07cdd7548cde3f57cef97dc17a900dbaeb6f2efa95c71d6ff0fdb5b\",\"restored\":false,\"enabled\":false,\"review\":false,\"status\":\"Review session: saves disabled.\"}",
+    "streaming": "{\"resident\":30,\"required\":9,\"pending\":0,\"bytes\":192661700,\"peakBytes\":192661700,\"peakResident\":30,\"maxInstallMs\":4.100000023841858,\"maxSliceMs\":3.900000035762787,\"loaded\":30,\"unloaded\":0,\"discarded\":0,\"ready\":true,\"keys\":[\"5600,4000\",\"6400,4000\",\"5600,3200\",\"6400,3200\",\"5600,4800\",\"6400,4800\",\"4800,4000\",\"7200,4000\",\"4800,3200\",\"7200,3200\",\"4800,4800\",\"7200,4800\",\"5600,2400\",\"6400,2400\",\"5600,5600\",\"4800,2400\",\"6400,5600\",\"7200,2400\",\"4800,5600\",\"8000,4000\",\"8000,3200\",\"7200,5600\",\"8000,4800\",\"8000,2400\",\"8000,5600\",\"8800,4000\",\"8800,3200\",\"8800,4800\",\"8800,2400\",\"8800,5600\"]}"
+  }
+}

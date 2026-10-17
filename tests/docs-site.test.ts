@@ -6,6 +6,10 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights repair commands and dispatch fields without consuming longer IDs or authored HTML',()=>{
+    const html=highlight('repair tables(label="<Repair>&",on=yard,kind=table,dispatch_s=12);account worker(repair=tables);');
+    expect(html).toContain('class="dream-keyword">repair</span>');expect(html).toContain('class="dream-field">dispatch_s</span>');expect(html).toContain('&lt;Repair&gt;&amp;');expect(highlight('repairman repairs dispatch_s_extra')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('highlights dormant parking and local control adapters at complete token boundaries',()=>{
     const html=highlight('asset car(module=library,object=van,control=car);place bike(role=controllable,parked=true);furnish bikes(role=controllable); // <script>&');
     expect(html).toContain('class="dream-field">parked</span>');expect(html).toContain('class="dream-field">control</span>');expect(html).toContain('&lt;script&gt;&amp;');expect(highlight('parked_extra parking controller')).not.toMatch(/dream-field/);

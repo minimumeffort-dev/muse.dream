@@ -1,4 +1,4 @@
-import {deliveryTarget} from '../sim/commerce';
+import {deliveryTarget,repairTarget} from '../sim/commerce';
 import { bridgePolygon } from "../scene/landscape-dsl";
 import { roadFootprint } from "../scene/road";
 import type { Point,Scene } from "../scene/schema";
@@ -76,7 +76,7 @@ export function createWorldMap(canvas: HTMLCanvasElement, scene: Scene) {
     for(const actor of actorPoses(scene,car.timeS,car)){
       ctx.beginPath();ctx.arc(padding+actor.x*scale,padding+actor.y*scale,2,0,Math.PI*2);ctx.fillStyle=actor.kind==="water" ? "#8dd6d8" : "#e9d8b2";ctx.fill();
     }
-    const target=deliveryTarget(car,scene);
+    const repair=repairTarget(car,scene),target=deliveryTarget(car,scene)??(repair ? {...repair,market:{label:repair.repair.label}} : undefined);
     if(target){const x=padding+target.x*scale,y=padding+target.y*scale;ctx.save();ctx.strokeStyle='#ffe176';ctx.lineWidth=1.5;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(padding+car.x*scale,padding+car.y*scale);ctx.lineTo(x,y);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#171717';ctx.beginPath();ctx.arc(x,y,8,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#ffe176';ctx.stroke();ctx.fillStyle='#ffe176';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold 12px system-ui';ctx.fillText('↓',x,y);ctx.restore();}
     const parked=car.vehicles.find(v=>v.id===null);
     if(parked){ctx.fillStyle="#e6a46f";ctx.fillRect(padding+parked.x*scale-2,padding+parked.y*scale-2,4,4);}

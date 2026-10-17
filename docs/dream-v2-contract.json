@@ -583,7 +583,8 @@
         "satiety": "n",
         "drain_s": "n",
         "shop": "bool?",
-        "work": "ref?"
+        "work": "ref?",
+        "repair": "ref?"
       }
     },
     "market": {
@@ -628,6 +629,24 @@
         "effort": "n",
         "capacity": "n",
         "target": "n"
+      }
+    },
+    "repair": {
+      "contexts": [
+        "economy"
+      ],
+      "id": true,
+      "fields": {
+        "label": "text",
+        "market": "ref",
+        "on": "ref",
+        "kind": "car|plane|tree|person|bicycle|skateboard|bench|table|building|train|bus|tram|boat|food|custom",
+        "input": "ref",
+        "take": "n",
+        "seconds": "n",
+        "pay": "n",
+        "effort": "n",
+        "dispatch_s": "n?"
       }
     },
     "delivery": {
@@ -1422,6 +1441,9 @@
       "markets": 8,
       "jobs": 16,
       "deliveries": 16,
+      "repairs": 8,
+      "repairNodes": 4096,
+      "repairPath": 128,
       "money": 1000000,
       "quantity": 10000,
       "capacity": 32,
@@ -1483,9 +1505,27 @@
       "deliveryCapacity": [
         1,
         4
-      ]
+      ],
+      "repairTake": [
+        1,
+        32
+      ],
+      "repairSeconds": [
+        1,
+        120
+      ],
+      "repairEffort": [
+        1,
+        50
+      ],
+      "repairDispatchSeconds": [
+        0,
+        120
+      ],
+      "repairGridStep": 12,
+      "repairPathPoints": 128
     },
-    "semantics": "Optional one economy() block per linked world. Goods, accounts, stationary-NPC markets and timed work are bounded data. One player account, one account per actor; NPC shop=true buys/eats when satiety <=40; NPC work refills to its job target and requires a stationary actor in range. The player uses explicit on-foot grounded controls. Market lots buy and sell one unit at their fixed price, with finite stock, treasury and capacity; omitted price means a work ingredient not traded. Transactions conserve credits, reserve inputs/wages/output room, and refund on interrupted work. Work requires satiety >= effort; effort is spent on completion. Needs and NPC decisions use a resident 4 Hz clock, with immediate player actions/cancellation. No scripts, provider calls, offline catch-up, free replenishment or clinical/nutritional realism. State survives R, streaming and saves; Start over resets it. Delivery declares separate from/to markets, good, quantity, pay and capacity. Collect reserves finite source cargo, destination wage and both shelf capacities; sealed cargo counts toward carry capacity and cannot be traded/eaten. Complete on foot at the destination to transfer goods and pay once, or cancel anywhere to return all reservations. Carrying survives vehicles, R, streaming and saves. Deliveries are player-requested; automatic NPC courier dispatch/pathfinding is not implemented. Logical Lab scenarios remain independent."
+    "semantics": "Optional one economy() block per linked world. Goods, accounts, stationary-NPC markets and timed work are bounded data. One player account, one account per actor; NPC shop=true buys/eats when satiety <=40; NPC work refills to its job target and requires a stationary actor in range. The player uses explicit on-foot grounded controls. Market lots buy and sell one unit at their fixed price, with finite stock, treasury and capacity; omitted price means a work ingredient not traded. Transactions conserve credits, reserve inputs/wages/output room, and refund on interrupted work. Work requires satiety >= effort; effort is spent on completion. Needs and NPC decisions use a resident 4 Hz clock, with immediate player actions/cancellation. No scripts, provider calls, offline catch-up, free replenishment or clinical/nutritional realism. State survives R, streaming and saves; Start over resets it. Delivery declares separate from/to markets, good, quantity, pay and capacity. Collect reserves finite source cargo, destination wage and both shelf capacities; sealed cargo counts toward carry capacity and cannot be traded/eaten. Complete on foot at the destination to transfer goods and pay once, or cancel anywhere to return all reservations. Carrying survives vehicles, R, streaming and saves. Deliveries are player-requested; automatic NPC courier dispatch/pathfinding is not implemented. Repair services select measured-kind ground-accessible break/topple objects or zones within an explicit convex surface containing a supply market. NPC account.repair requires a stationary home within that area and market reach, and excludes production work and market ownership. Optional dispatch_s defaults to 12 (0..120) simulation seconds so the player can take the same job first. One claimant per damage target across services; reserve finite kits, wage and refund room, count kits against carrying capacity, work on site, wait for clear restoration space, consume/pay once, and walk home without losing program memory. Local dry navigation has 4096 samples at 12-unit spacing and 128 saved path points; roads, riding lanes, water and solids stay clear. Notices, poses, paths, progress, reservations, material-use counters and returns survive R, streaming and saves. No city dispatch, scaffold or plant growth. Existing actor/rig/destruction budgets stay unchanged. Logical Lab scenarios remain independent."
   },
   "output": "validated Object DSL v2 and Scene v1; authoring-language version is separate"
 }

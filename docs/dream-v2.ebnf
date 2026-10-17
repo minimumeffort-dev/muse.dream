@@ -64,10 +64,13 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    These are data interpreted by the engine, not scripts. See population bounds. *)
 
 (* One economy() block per linked playable world. Its block permits good, account,
-   market, work and delivery. A market block contains lot declarations. Actor references
+   market, work, delivery and repair. A market block contains lot declarations. Actor references
    resolve after linking; goods/work/market references belong to the economy.
    Integer money, stock and conserved transfers are engine-owned, never callbacks. *)
 
 (* place.parked is a boolean on explicit controllable fixed placements.
    furnish.role=controllable emits dormant parking. asset.control adapts an
    existing seat on an isolated validated copy; registry resolution is unchanged. *)
+
+(* repair selects measure.kind inside a convex on=surface work area; account.repair
+   is a bounded engine policy. No generated controller code. *)

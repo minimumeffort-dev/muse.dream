@@ -112,7 +112,22 @@ travel and reload. The school staff can buy the bread you delivered.
 
 [Animated pickup](docs/media/delivery.gif) · [Watch in HD](docs/media/delivery.mp4)
 
-Your world saves on this device. Reload to return to your position, parked vehicles, moved props, damage, NPC memory, market stock, accounts, work and day/night phase. Pause for **Save now**, or open **Backups** to download and restore a world. Comments and dialogue edits can carry progress forward; changes to world rules or geometry keep a separate save. **Start over** resets the saved world. [What is saved and how compatibility works](docs/persistence.md).
+Break the market table and the caretaker can put it back together. They collect
+a kit from the bakery, walk to the damage, work for eight seconds and return.
+The kit is used up and the bakery pays four credits. Leave a car in the way and
+they wait. You can choose **Repair a market table** at the vendor and take the
+same job before the caretaker sets off. Walk beside the damage and stop to work.
+[How repair jobs work in Dream](docs/dream/commerce.md#repair-work).
+
+![The restored market table, with the worker returning home](docs/media/repair.jpg)
+
+[Watch the repair in HD](docs/media/repair.mp4) · [Animated repair](docs/media/repair.gif)
+
+This first service covers tables in the market square. Other existing breakable
+objects keep their damage; city-wide repair, lamp replacement and tree replanting
+are still to come.
+
+Your world saves on this device. Reload to return to your position, parked vehicles, moved props, damage, NPC memory, market stock, accounts, work, repair journeys and day/night phase. Pause for **Save now**, or open **Backups** to download and restore a world. Comments and dialogue edits can carry progress forward; changes to world rules or geometry keep a separate save. **Start over** resets the saved world. [What is saved and how compatibility works](docs/persistence.md).
 
 Press **F** to get out of the car, walk over to another vehicle and press **F** again. You control the bicycle, skateboard, boat or plane yourself. Leave the lane, steer across the pond or take off from the runway. A vehicle stays where you park it, including the car you left behind.
 

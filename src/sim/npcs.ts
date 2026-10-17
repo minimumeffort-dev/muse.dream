@@ -2,7 +2,7 @@ import type {Scene,SceneObject} from '../scene/schema';
 import {behaviorFor,NPC_LIMITS,type Behavior} from '../scene/agents';
 import {routePose} from '../scene/routes';
 import type {CarState} from './car';
-import {actorPose} from './actors';
+import {actorPose,repairForActor} from './actors';
 
 export interface NpcState {id:string;stateId:string;elapsedS:number;routeTimeS:number;animationTimeS:number;headingRad:number;known:boolean;replyAtS?:number}
 const compiled=new WeakMap<Scene,SceneObject[]>();
@@ -42,6 +42,7 @@ export function stepNpcs(state:CarState,dt:number,scene:Scene,talkPressed=false)
   const target=talkPressed ? nearbyNpc(state,scene) : undefined;
   return programmed(scene).map(object=>{
     const program=behaviorFor(scene,object)!,previous=state.npcs?.find(n=>n.id===object.id)??initialNpcState(scene,object),next={...previous,elapsedS:previous.elapsedS+dt};
+    if(repairForActor(state,scene,object.id))return previous;
     let active=program.states.find(s=>s.id===previous.stateId)!;
     const pose=actorPose(scene,object,state.timeS,state),distance=Math.hypot(state.x-pose.x,state.y-pose.y,state.elevation-pose.elevation);
     const transition=active.transitions.find(t=>t.event==='after' ? next.elapsedS+1e-9>=t.seconds! : t.event==='interact' ? target===object && interacts(t,previous.known,distance) : t.event==='near_player' ? distance<=t.radius! : distance>=t.radius!);

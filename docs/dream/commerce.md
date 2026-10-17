@@ -12,7 +12,7 @@ The vendor works when bread runs low. The commuter buys and eats when hungry, us
 
 ## Author it in Dream
 
-One `economy()` block owns the system for a linked world. Goods, accounts, markets and work have explicit IDs. Accounts reference the player or existing NPC placements. Markets and automatic workers require stationary NPCs; customers may use the existing walking routes. The complete-world compiler checks ownership after module linking.
+One `economy()` block owns the system for a linked world. Goods, accounts, markets and work have explicit IDs. Accounts reference the player or existing NPC placements. Markets and production workers require stationary NPCs; repair workers start from a stationary home and travel inside their declared work area. customers may use the existing walking routes. The complete-world compiler checks ownership after module linking.
 
 | Declaration | Meaning |
 | --- | --- |
@@ -116,7 +116,7 @@ can stop for a full shelf, full bag, empty source or insufficient business money
 
 Cargo counts against your bag's capacity but cannot be sold, eaten or used for
 another job. You can eat your own carried food while on foot during a delivery;
-the sealed cargo stays intact. You can hold one production/delivery task at a time. **Cancel
+the sealed cargo stays intact. You can hold one production/delivery/repair task at a time. **Cancel
 delivery** returns cargo and reserved pay, without paying you. Travel, vehicles,
 R, pause, render unloading and save/reload keep the task; Start over resets it.
 The map line is a direction to the destination, not a solved route. Cancellation
@@ -137,3 +137,58 @@ stock; autonomous courier dispatch and delivery route planning remain future wor
 [Download a complete delivery world](../examples/market-delivery.dream). Check it
 with `npm run -s dream -- check docs/examples/market-delivery.dream`. Its short
 example journey is for learning the rules; the live city jobs connect actual places.
+
+## Repair work
+
+Drive into the table in the market square, then clear the wreckage. The caretaker
+notices the damage, waits 12 seconds for someone to take the job, collects a
+repair kit from the vendor and walks over. Eight seconds of work restores the
+table and its collision body. The bakery pays four credits and loses one kit.
+The caretaker walks back to their starting place before resuming their ordinary
+behaviour. Nothing is spawned from free stock.
+
+![The repaired table, with the worker heading home](../media/repair.jpg)
+
+[Watch the complete repair in HD](../media/repair.mp4) · [Animated repair](../media/repair.gif)
+
+You can do it too. Go to the bakery before the caretaker collects the kit, choose
+**Repair a market table** and press **H**. Follow the map marker to the damage and
+stand beside it. Work pauses when you walk away, jump, swim or enter a vehicle;
+return to continue. **Cancel repair** refunds the unused kit and reserved pay.
+You receive the same four credits when the repair finishes.
+
+A car, parked bicycle, boat, loose ball or another solid in the restoration
+footprint keeps it broken until the space is clear. A worker also stops for
+vehicles or the player on their path. Progress, supplies, wages, work position and
+return journey survive render unloading and save/reload. Pause freezes them;
+R preserves them; Start over resets them. There is no offline work.
+
+[Complete runnable repair world](../examples/market-repair.dream). Its short
+example timings make the loop easy to test. The following declarations are the
+repair portion of that file:
+
+```dream
+repair yard_tables(label="Repair a table",market=corner,on=work_yard,kind=table,input=kit,take=1,seconds=2,pay=4,effort=5,dispatch_s=0);
+```
+
+Put the declaration inside `economy`. An NPC account uses `repair=yard_tables` to
+notice and take those jobs automatically. The player never has an automatic
+policy. Production `work` and `repair` policies cannot share one account.
+
+`kind` selects measured categories, as shared destruction rules do. It covers
+eligible break/topple objects and ground-accessible break zones in the named
+surface; it never selects by label or makes one table exempt. One account can
+hold one commitment, and each damaged object or zone has one claimant across all
+repair services. Kits and pay are reserved at collection. Completion consumes
+kits and pays once; cancellation refunds once. The saved repair counter accounts
+for consumed materials, independently of food and recipe batches.
+
+This is bounded local maintenance. The supply vendor and worker's home must lie
+inside the same convex surface, with the home in market reach. Work areas use at
+most 4,096 local navigation samples and paths at most 128 points. Routes stay
+inside that dry area and clear carriageways, cycle tracks, water and solid
+contacts. They do not dispatch workers across the city. Blocked workers wait;
+there is no ladder, construction scaffold or dropped-kit simulation. Trees use
+the same restore mechanism when authored for it; growing a new sapling is still
+a separate missing capability. The live service currently covers the market
+table. It does not make other scenery destructible.
