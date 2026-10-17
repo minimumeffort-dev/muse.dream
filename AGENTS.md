@@ -283,14 +283,14 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 
 ## Saved simulation state
 
-Save format 4 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 3. Only revision/source/provenance and behavior `say` text
+Save format 5 pins exact source plus a host-computed accepted-world fingerprint
+at simulation version 4. Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
 and accepted field. The registered first-market upgrade initializes only new
 commerce state at saved simulation time, after checking the old world. The registered delivery upgrade preserves format 3 balances, stock, needs and
 reserved work, initializing only new destinations/accounts and delivery counters.
-Original format 1/2/3 slots survive. Gate migration to the registered target so incompatible
+The registered parking upgrade preserves the r46 format 4 state after validating its original prop/driver ownership. Keep the 281 saved-pose capacity separate from live actor/rig budgets; older formats retain their 24-pose bound. Original format 1/2/3/4 slots survive. Gate migration to the registered target so incompatible
 future markets cannot silently rewind to pre-market progress. New semantics need
 an explicit tested migration and version bump. Backups preview without writes;
 restore applies only after validation and successful atomic storage. Preserve

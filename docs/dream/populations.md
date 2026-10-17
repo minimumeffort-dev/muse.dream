@@ -98,7 +98,7 @@ The mock distributes 256 birds through 16 city, river, lake, woodland and meadow
 
 ## Transport serves places
 
-The live city has four road cars with three silhouettes, five buses across neighborhood, airport and eastbank medical services, a tram and a regional railcar. Their routes use the connected network and named stops. Passenger-only seats let F board those public services while the engine keeps their schedule. Inputs do not take over a passenger vehicle. Three explicit scooters remain directly controllable; the parked scooters emitted by `furnish` remain scenery.
+The live city has four road cars with three silhouettes, five buses across neighborhood, airport and eastbank medical services, a tram and a regional railcar. Their routes use the connected network and named stops. Passenger-only seats let F board those public services while the engine keeps their schedule. Inputs do not take over a passenger vehicle. The three explicit scooters and all twenty-two generated parked scooters use the same direct controls. Available parking uses `furnish(...,role=controllable)`; default prop furnishing remains scenery.
 
 Use `place.phase_s` to stagger the entire service clock, including waits. A distance offset is useful for carriage spacing but can stack buses at stops. Neither setting supplies traffic signals, overtaking or avoidance; route authoring still owns safe scheduling.
 

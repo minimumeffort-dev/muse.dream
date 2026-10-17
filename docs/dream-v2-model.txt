@@ -362,7 +362,7 @@ Use perform -> idle -> perform with after transitions for timed routines. Existi
 supply the motion; this does not generate sports rules, pathfinding or obstacle avoidance.
 Explicit NPCs need version 2 decor/solid bodies, without foundations,
 knockable bodies or destruction. Ambient routes remain decor-only; boat/plane NPCs need
-routes in their domain. Stationary NPC footprints must be dry and clear. Preserve <=24 route
+routes in their domain. Stationary NPC footprints must be dry and clear. Preserve <=24 resident route
 actors/controllable vehicles and <=24 live jointed assemblies including the player.
 Runtime clocks are per instance outside Scene; pause freezes them; R preserves them and
 Start over resets them. No model calls during simulation.

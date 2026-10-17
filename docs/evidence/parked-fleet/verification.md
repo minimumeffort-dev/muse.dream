@@ -163,3 +163,14 @@ Vehicles remain arcade controls with cylinder contacts. Parking adds no keys,
 prices, fuel, damage or autonomous drivers. Trucks/pickups, general destruction,
 repair workers, interiors and relationships remain separate work in the active
 goal. No lower-powered laptop, long-session heap test or real provider was used.
+
+## Published review correction
+
+The first release passed CI (1,027 tests / 66 files; 349.79 seconds on its runner)
+and published 34 pages. Its live browser review caught an older transport
+paragraph still calling generated scooters scenery. The follow-up corrects that
+paragraph, the urban guide and duplicated AGENTS save-version guidance. It also
+clarifies resident-actor wording in the NPC/reference/model guides. No runtime,
+Dream vocabulary, media or saved rules change. The same captures remain accurate.
+Focused docs/highlighting/example/context checks and the docs build verify this
+text correction; the linked workflow reruns the complete suite after pushing it.
