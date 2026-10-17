@@ -197,7 +197,9 @@ inside the same convex surface, with the home in market reach. Work areas use at
 most 4,096 local navigation samples and paths at most 128 points. Routes stay
 inside that dry area and clear carriageways, cycle tracks, water and solid
 contacts. Optional `grounds` connects explicitly declared service areas through accepted
-pedestrian infrastructure. Without it, workers remain in the primary area.
+pedestrian infrastructure. `streets` also enables network travel, with short dry
+work approaches beside its sidewalks. When both are omitted, workers remain in
+the primary area.
 Blocked workers wait;
 there is no ladder, construction scaffold or dropped-kit simulation. Trees use
 the same restore mechanism when authored for it; growing a new sapling is still
