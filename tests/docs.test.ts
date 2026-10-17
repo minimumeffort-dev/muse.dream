@@ -7,6 +7,10 @@ const examples=import.meta.glob<string>('../docs/examples/*.dream',{query:'?raw'
 const files=Object.keys(import.meta.glob(['../src/**/*','../docs/**/*','../scripts/*','../tests/**/*','../README.md'])).map(p=>p.slice(3));
 
 describe("published Dream documentation",()=>{
+  it('keeps the commerce guide identical to its complete runnable world',()=>{
+    const block=pages['../docs/dream/commerce.md']!.match(/```dream\n([\s\S]*?)```/)![1]!;
+    expect(block.trim()).toBe(examples['../docs/examples/market-work.dream']!.trim());
+  });
   it.each(Object.entries(examples))("compiles the complete example %s",(path,source)=>{
     const result=checkDream(source);
     expect(result.ok,result.ok ? path : JSON.stringify(result.diagnostics)).toBe(true);

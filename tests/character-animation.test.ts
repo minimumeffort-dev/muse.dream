@@ -65,6 +65,12 @@ describe('articulated locomotion',()=>{
   expect(Math.abs(run.bone('left_hip').rotation.z)).toBeLessThan(.03);
   expect(run.bone('root').position.y).toBeCloseTo(25,3);
  });
+ it('works with planted feet, rigid arms and a reduced-motion rest, then returns to idle',()=>{
+  const r=rig(),position=r.bone('left_knee').position.clone();advance(r,{speed:0,working:true});
+  expect(r.bone('left_shoulder').rotation.z).toBeGreaterThan(.75);expect(r.bone('right_elbow').rotation.z).toBeGreaterThan(.5);expect(r.bone('left_knee').position).toEqual(position);
+  advance(r,{speed:0,working:true,enabled:false});expect(Math.abs(r.bone('left_shoulder').rotation.z)).toBeLessThan(.01);
+  advance(r,{speed:0});expect(Math.abs(r.bone('right_shoulder').rotation.z)).toBeLessThan(.01);
+ });
  it('keeps segment lengths and all original mesh dimensions through a stride',()=>{
   const r=rig(),scale=r.bone('left_knee').scale.clone();
   for(let f=0;f<120;f++){

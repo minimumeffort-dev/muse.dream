@@ -488,3 +488,22 @@ For a complete world, put voxel_world(object_cell=1,ground_cell=8,height_step=1)
 ## sports
 SPORTS PRACTICE
 sport id(kind=football|basketball,surface=surface_id,ball=placement_id,targets=[first,second],target_at=[x,y,z],target_size=[width,height]); connects existing world data after linking. At most 8 grounds, each with its own non-overlapping dry surface and distinct bounce ball. Ball is a static prop with a round knockable body: world radius .5..3, height twice radius. Use measure(kind=custom,axis=x,meters=.22/.24) to resolve real ball size from a local body(radius=4,height=8); do not lower legacy body bounds. Targets are two static upright assemblies at least 64 units apart; target_at and target_size use their local units and follow placement heading/scale. Football target is a grounded opening 6..120 wide and 4..50 high, local +Z points out of the field, opposing target normals. Basketball target is a clear X/Z ring diameter 2.5..12, fitting the ball, at height 16..50; local +Z points into the court. Target anchor must lie in the actual assembly bounds and within 32 of the surface. Surface sampled height variation <=3, no water. Existing object/reactive budgets still apply. Engine owns walk-up dribbling, charged shots, scoring, recovery and camera; no generated controller code, team AI, fouls or bank-shot backboard physics. Complete source: examples/sports-practice.dream.
+
+## commerce
+One optional economy() block owns goods, accounts, markets and work in the playable
+3D world. This is independent of logical scenario/stock/service declarations.
+Use good(label,food=0); account(actor,credits,capacity,satiety,drain_s,shop=false,work?);
+market(label,actor,credits,radius){lot(good,quantity,limit,price?);} and
+work(label,market,input,take,output,make,seconds,pay,effort,capacity,target).
+Labels must contain nonblank text. Every declaration except economy needs a stable ID. Scope IDs are unique; good IDs
+and lot goods must agree. One economy per linked project, with exactly one player
+account. Other account actors are existing role=npc placements. Markets and auto
+workers must be stationary NPCs. NPC shop=true buys and eats food at satiety <=40;
+NPC work refills output up to target. Player accounts never act automatically.
+Prices/pay/quantities/capacities are bounded integers. No price means an ingredient
+that cannot be bought or sold. Trade is one unit at the listed price in either direction, with stock, carrying and treasury checks. Work reserves input, wage and output room atomically; leave
+range or cancel to refund without output/pay. Completion spends effort and moves
+reserved wage to the worker. Food restores bounded satiety; drain_s is simulation
+time only. Limits and ranges are in contract.commerce; preserve finite stock,
+conserved money/material, one job per account, shared capacity and saved clocks.
+No scripts, free restocking, offline catch-up or claims of nutritional realism.

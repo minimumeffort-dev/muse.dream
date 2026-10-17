@@ -26,6 +26,7 @@ export function solveLeg(x:number,y:number,upper:number,lower:number):{hip:numbe
 export interface CharacterInput {
   speed:number;swimming:boolean;grounded:boolean;verticalSpeed:number;time:number;enabled:boolean;
   sport?:{kind:'football'|'basketball';possessed:boolean;charging:boolean;shotAge:number};
+  working?:boolean;
 }
 
 /** One cached rig, no mesh traversal, geometry work or physics ownership in the frame loop. */
@@ -39,6 +40,7 @@ export class CharacterAnimator {
   private airborne=0;
   private landing=0;
   private previousVertical=0;
+  private working=0;
   private wasGrounded=true;
   private target=new Quaternion();
   private landRotation=new Quaternion();
@@ -54,7 +56,7 @@ export class CharacterAnimator {
   }
 
   reset(){
-    this.phase=this.swimPhase=this.moving=this.running=this.water=this.airborne=this.landing=0;
+    this.phase=this.swimPhase=this.moving=this.running=this.water=this.airborne=this.landing=this.working=0;
     this.wasGrounded=true;this.previousVertical=0;
     for(const {node,rest,y} of Object.values(this.bones)){node.quaternion.copy(rest);node.position.y=y;}
   }
@@ -108,6 +110,13 @@ export class CharacterAnimator {
       swim[ankle][2]=-.18;
     }
     const effort=active ? this.moving : 0;
+    this.working=active ? mix(this.working,Number(!!input.working && input.grounded && !input.swimming && speed<8),ease) : 0;
+    if(this.working>.001)for(const [side,offset] of [['left',0],['right',Math.PI]] as const){
+      const pulse=Math.sin(input.time*5+offset);
+      land[`${side}_shoulder`][2]=mix(land[`${side}_shoulder`][2],.9+pulse*.07,this.working);
+      land[`${side}_elbow`][2]=mix(land[`${side}_elbow`][2],.7-pulse*.12,this.working);
+    }
+    land.spine[2]=mix(land.spine[2],-.08,this.working);
     swim.root=[0,Math.sin(this.swimPhase*tau)*.11*effort,-mix(.1,Math.PI/2,effort)];
     swim.spine=[0,0,.27*effort];
     if(input.sport && active){

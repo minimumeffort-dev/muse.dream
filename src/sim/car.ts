@@ -1,4 +1,5 @@
 import {initialAmbient,stepAmbient,type AmbientState} from './ambient';
+import {initialEconomy,type EconomyState,type CommerceAction} from './commerce';
 import {routePath} from "../scene/routes";
 import {initialSports,type SportState} from './sports';
 import {initialNpcs,stepNpcs,type NpcState} from './npcs';
@@ -40,6 +41,7 @@ export interface CarInput {
   boostPressed?:boolean;
   shoot?:boolean;shootPressed?:boolean;shootReleased?:boolean;
   talkPressed?:boolean;
+  commerce?:CommerceAction;
   aim?:{x:number;y:number};
 }
 
@@ -95,6 +97,7 @@ export interface CarState {
   vehicles:ParkedVehicle[];
   npcs:NpcState[];
   population?:AmbientState;
+  economy?:EconomyState;
   distance:number;pitch:number;bank:number;
   jump:{held:boolean;bufferUntilS:number;coyoteUntilS:number};
 }
@@ -104,6 +107,9 @@ export interface World {
   scene: Scene;
   /** Host-computed accepted simulation contract; never supplied by Dream. */
   saveCompatibility?:string;
+  previousSaveCompatibility?:string;
+  emptyEconomySaveCompatibility?:string;
+  previousSaveSource?:string;
   /** Racing surface, independent of where the car may travel. */
   roadMask: RasterMask;
   /** Travel boundary. The fixture allows the whole sheet. */
@@ -154,7 +160,7 @@ export function isCarControl(state:CarState,world:World):boolean {
 
 export function createCarAtSpawn(scene: Scene): CarState {
   return {
-    control:{kind:"car"},vehicles:[],npcs:initialNpcs(scene),population:initialAmbient(scene),distance:0,pitch:0,bank:0,
+    control:{kind:"car"},vehicles:[],npcs:initialNpcs(scene),population:initialAmbient(scene),economy:initialEconomy(scene),distance:0,pitch:0,bank:0,
     jump:{held:false,bufferUntilS:0,coyoteUntilS:0},
     x: scene.spawn.x,
     y: scene.spawn.y,
@@ -190,7 +196,7 @@ export function resetCar(state: CarState, scene: Scene, resetRace = false): CarS
     ...fresh,
     vehicles:[...state.vehicles.filter(v=>v.id!==null && !(state.control.kind==="vehicle" && v.id===state.control.id)),...(saveVehicle ? [{id:vehicleId,x:state.x,y:state.y,elevation:state.elevation,headingRad:state.headingRad,distance:state.distance}] : [])],
     timeS: state.timeS,
-    npcs:state.npcs.map(n=>({...n})),population:state.population,
+    npcs:state.npcs.map(n=>({...n})),population:state.population,economy:state.economy,
     lap: state.lap,
     boostReadyAtS: { ...state.boostReadyAtS },
     carBoost:{...fresh.carBoost,held:state.carBoost.held,readyAtS:state.carBoost.readyAtS},

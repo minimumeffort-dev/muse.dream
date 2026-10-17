@@ -81,3 +81,13 @@ body:not([data-loading="ready"])>#talk, body:not([data-loading="ready"])>#npc-sp
 #save-tools p { font-size: 12px; line-height: 1.5; margin: 12px 0; }
 #save-preview { border-top: 1px solid #ffffff28; margin-top: 8px; padding-top: 8px; }
 #backup-status:empty { display: none; }
+#commerce-panel { position: fixed; left: 28px; bottom: 100px; width: min(290px,calc(100% - 56px)); padding: 16px; border: 1px solid #e9e5d73d; border-radius: 12px; background: #172126f5; color: #fafaf7; box-shadow: 0 8px 32px #0004; font-size: 13px; }
+#commerce-panel strong { color: #f7c843; font-size: 13px; }
+#commerce-panel p { margin: 10px 0; line-height: 1.5; }
+#commerce-panel button, #commerce-panel select { width: 100%; padding: 10px 8px; margin: 4px 0; border-radius: 7px; border: 1px solid #f2d8a150; background: #354344; color: #fafaf7; font: inherit; }
+#commerce-panel button:not(:disabled):hover { background: #485958; }
+#commerce-panel button:disabled { cursor: default; color: #bcc2be; border-color: #ffffff20; }
+#commerce-panel output { display: block; color: #f4dca6; line-height: 1.5; }
+#commerce-panel output:empty, #commerce-panel p:empty { display: none; }
+#pocket-status { margin: 16px 0; }
+@media (max-width:600px) { #commerce-panel { left: 16px; bottom: 222px; width: min(290px,calc(100% - 32px)); max-height: calc(100dvh - 350px); overflow-y: auto; } }

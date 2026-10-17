@@ -1,0 +1,200 @@
+{
+  "reserved": {
+    "version": 3,
+    "sourceHash": "aedc10651e6567ca09d2287406818d28b74cb02689f1975d218e8de3363a6fb7",
+    "compatibilityHash": "7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada",
+    "timeS": 1297.3500000027136,
+    "control": {
+      "kind": "foot"
+    },
+    "economy": {
+      "atS": 1297.1083333360439,
+      "turn": 2,
+      "accounts": [
+        {
+          "id": "pocket",
+          "credits": 15,
+          "inventory": {
+            "bread": 0,
+            "flour": 0
+          },
+          "satiety": 91.8299999999851,
+          "decisionAtS": 1273.708333335746,
+          "work": {
+            "id": "bake",
+            "doneAtS": 1298.35000000265
+          }
+        },
+        {
+          "id": "baker",
+          "credits": 0,
+          "inventory": {
+            "bread": 0,
+            "flour": 0
+          },
+          "satiety": 63.829999999985105,
+          "decisionAtS": 1298.1083333360439
+        },
+        {
+          "id": "regular",
+          "credits": 25,
+          "inventory": {
+            "bread": 0,
+            "flour": 0
+          },
+          "satiety": 68.8299999999851,
+          "decisionAtS": 1298.1083333360439
+        }
+      ],
+      "markets": [
+        {
+          "id": "market_stall",
+          "credits": 107,
+          "stock": {
+            "bread": 6,
+            "flour": 29
+          }
+        }
+      ],
+      "consumed": {
+        "bread": 2,
+        "flour": 0
+      },
+      "batches": {
+        "bake": 0
+      },
+      "events": [
+        {
+          "account": "regular",
+          "kind": "buy",
+          "ref": "bread",
+          "atS": 1273.958333335749
+        },
+        {
+          "account": "regular",
+          "kind": "eat",
+          "ref": "bread",
+          "atS": 1274.9583333357618
+        },
+        {
+          "account": "pocket",
+          "kind": "buy",
+          "ref": "bread",
+          "atS": 1291.5416666693063
+        },
+        {
+          "account": "pocket",
+          "kind": "eat",
+          "ref": "bread",
+          "atS": 1291.9583333359783
+        },
+        {
+          "account": "pocket",
+          "kind": "start",
+          "ref": "bake",
+          "atS": 1292.3583333359834
+        }
+      ]
+    }
+  },
+  "paid": {
+    "version": 3,
+    "sourceHash": "aedc10651e6567ca09d2287406818d28b74cb02689f1975d218e8de3363a6fb7",
+    "compatibilityHash": "7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada",
+    "timeS": 1341.2916666699398,
+    "control": {
+      "kind": "foot"
+    },
+    "economy": {
+      "atS": 1341.1083333366041,
+      "turn": 1,
+      "accounts": [
+        {
+          "id": "pocket",
+          "credits": 18,
+          "inventory": {
+            "bread": 0,
+            "flour": 0
+          },
+          "satiety": 77.62999999995709,
+          "decisionAtS": 1273.708333335746
+        },
+        {
+          "id": "baker",
+          "credits": 0,
+          "inventory": {
+            "bread": 0,
+            "flour": 0
+          },
+          "satiety": 61.62999999995709,
+          "decisionAtS": 1342.1083333366041
+        },
+        {
+          "id": "regular",
+          "credits": 25,
+          "inventory": {
+            "bread": 0,
+            "flour": 0
+          },
+          "satiety": 66.62999999995709,
+          "decisionAtS": 1342.1083333366041
+        }
+      ],
+      "markets": [
+        {
+          "id": "market_stall",
+          "credits": 107,
+          "stock": {
+            "bread": 8,
+            "flour": 29
+          }
+        }
+      ],
+      "consumed": {
+        "bread": 2,
+        "flour": 0
+      },
+      "batches": {
+        "bake": 1
+      },
+      "events": [
+        {
+          "account": "regular",
+          "kind": "buy",
+          "ref": "bread",
+          "atS": 1273.958333335749
+        },
+        {
+          "account": "regular",
+          "kind": "eat",
+          "ref": "bread",
+          "atS": 1274.9583333357618
+        },
+        {
+          "account": "pocket",
+          "kind": "buy",
+          "ref": "bread",
+          "atS": 1291.5416666693063
+        },
+        {
+          "account": "pocket",
+          "kind": "eat",
+          "ref": "bread",
+          "atS": 1291.9583333359783
+        },
+        {
+          "account": "pocket",
+          "kind": "start",
+          "ref": "bake",
+          "atS": 1292.3583333359834
+        },
+        {
+          "account": "pocket",
+          "kind": "paid",
+          "ref": "bake",
+          "atS": 1298.3583333360598
+        }
+      ]
+    }
+  }
+}

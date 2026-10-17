@@ -269,16 +269,43 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 
 ## Saved simulation state
 
-Save format 2 pins exact source plus a host-computed accepted-world compatibility
-fingerprint. Only revision/source/provenance and behavior `say` text are excluded;
-preserve all geometry, routes, rules, array order and other accepted data. Bump
-`SAVE_SIMULATION_VERSION` when engine/save semantics change and provide an explicit
-tested migration before accepting older state. Format 1 currently upgrades only
-against exact source and keeps its original slot. Backups preview without writes;
-restore applies only after validation and a successful atomic storage write.
-Preserve input cancellation, ownership/damage/member checks, bounded population
-clock lag, changed-tab safeguards, and isolation of review/capture saves. Files
-are editable single-player state, not signed records. See `docs/persistence.md`.
+Save format 3 pins exact source plus a host-computed accepted-world fingerprint
+at simulation version 2. Only revision/source/provenance and behavior `say` text
+are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
+noise without altering simulation geometry. Keep every other rule, array order
+and accepted field. The registered first-market upgrade initializes only new
+commerce state at saved simulation time, after checking the old world. Original
+format 1/2 slots survive. Gate migration to the registered target so incompatible
+future markets cannot silently rewind to pre-market progress. New semantics need
+an explicit tested migration and version bump. Backups preview without writes;
+restore applies only after validation and successful atomic storage. Preserve
+ownership/damage/member checks, conserved commerce balances/material, bounded
+clock lag, changed-tab safeguards and review/capture isolation. Autosave every
+ten simulation seconds, on economic events, conversation presses, pause and page
+exit. Preserve physical changes, NPC/ambient clocks, vehicles, sports and visual
+time; cancel held inputs and transient flashes. Recover unsafe active poses
+without resetting valid world state. Save now writes immediately; Start over
+replaces the current slot and R preserves world changes. Expose storage failures
+and preserve corrupt or externally changed slots until explicit replacement.
+Never store meshes, generated code or provider data. See `docs/persistence.md`.
+
+## Playable commerce
+
+Dream `economy()` contains bounded `good`, `account`, `market`, `lot` and `work`
+data. Actor ownership resolves after linking; one player account, at most 16
+accounts, 8 goods, 8 markets and 16 jobs. Markets/automatic workers are stationary
+NPCs; customers may use existing validated routes. B/V/H/G are per-press requests,
+accepted on foot, grounded and dry. All accounts use the same finite trade,
+food, capacity and reserved-work rules. Work reserves input/wage/output/refund
+space, completes once, or refunds on cancellation/range loss; no pay on cancel.
+Keep total credits and materials conserved, including escrow, completed batches
+and consumed food. Run commerce once through the complete fixed world tick;
+4 Hz state/needs/work, at most 1 Hz NPC decisions, immediate player actions and
+work interruption. Preserve R, Start over, pause, save/reload and streaming.
+No offline catch-up, new rigs/physics bodies, provider calls or nutrition claims.
+Optional work gestures use existing humanoid bones and reduced-motion rest.
+Future delivery, supply chains, shifts, skills and interior kitchens remain
+separate features. The logical Lab stays independent. See `docs/dream/commerce.md`.
 
 ## Voxel assemblies
 
@@ -310,21 +337,3 @@ world authoring is deferred; preserve the existing Lab without expanding it.
 New asset passes must preserve accepted physical scale, bodies, contacts, foundations and destruction zones unless changing those is part of the task. Object DSL v2 visual dimensions permit .1..128 local units; v1 retains .5..128 and beam endpoint length stays >=.5. Use fine dimensions for trim instead of oversizing it. Check visible glazing, usable floors, roof/support joins, coaxial rolling parts and independently scaled passenger fit. Review the constructed sources in `docs/asset-construction.md` and inspect four rendered angles.
 
 Dream `material(style=brick|wood|stone)` selects engine-owned physical surface finishes. Brick colors are face/mortar; wood base/grain; stone base/mineral. Preserve `surfacePosition` through batching and regenerate it for newly cut voxel fragments. It is separate from shape positions, so object motion cannot make the finish slide. Do not create per-brick meshes or cut large voxel slots for mortar. Keep filtered detail, night emission and existing draw/physics budgets; see `src/game/material-coordinates.ts` and `docs/dream/objects.md`.
-
-
-## Saved simulation state
-
-Normal play restores and atomically autosaves bounded local simulation data every
-ten simulation seconds, after talk presses, on pause and page exit. The pause menu
-provides Save now. Start over replaces the current source-specific slot; R keeps
-world changes. Pin the complete source/module map with SHA-256 in the worker before
-acceptance. Validate save version, source identity, finite fields, exact members,
-NPC states, ownership and damage before use. Keep corrupt or externally changed slots until explicit
-Save current session or Start over; expose storage failures without stopping play. Preserve simulation,
-NPC/ambient clocks, vehicles, props, damage/debris, sports and visual time. Cancel
-held inputs and transient impact flashes. Recover an unsafe active pose while
-retaining valid world state. Never store meshes, generated code or provider data.
-Capture/profiling/review helpers must not touch normal saves; dev test-save uses a
-separate namespace. Source versions have separate slots, without migration yet.
-See `docs/persistence.md` and `src/sim/save.ts`. Bump the save format version when
-changing stored transition meaning or incompatible runtime fields.

@@ -1,0 +1,24 @@
+{
+  "commerce": {
+    "frames": 360,
+    "fps": 30,
+    "size": [
+      2400,
+      1350
+    ],
+    "firstWrite": 1792214087.742388,
+    "lastWrite": 1792214105.71858,
+    "poster": 300
+  },
+  "conversation": {
+    "frames": 240,
+    "fps": 30,
+    "size": [
+      2400,
+      1350
+    ],
+    "firstWrite": 1792214114.9573083,
+    "lastWrite": 1792214126.9232814,
+    "poster": 60
+  }
+}

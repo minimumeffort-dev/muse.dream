@@ -62,3 +62,8 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
 (* place/furnish motion accepts bounded walk(...) or roam(...) constructors.
    place requires role=ambient and fixed at; motion excludes pose/route/behavior.
    These are data interpreted by the engine, not scripts. See population bounds. *)
+
+(* One economy() block per linked playable world. Its block permits good, account,
+   market and work. A market block contains lot declarations. Actor references
+   resolve after linking; goods/work/market references belong to the economy.
+   Integer money, stock and conserved transfers are engine-owned, never callbacks. *)

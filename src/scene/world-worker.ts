@@ -1,7 +1,7 @@
 import {createWorldScene,worldSource,worldModules} from './world-fixture';
 import {buildWorldChunk} from '../game/chunk-builder';
 import {packChunk,disposeChunk} from '../game/chunk-packet';
-import {saveCompatibilitySource,sha256} from './save-compatibility';
+import {saveCompatibilitySource,preCommerceCompatibilitySource,registeredLegacySource,supportsPreCommerceUpgrade,sha256} from './save-compatibility';
 
 // Only accepted engine data and bounded mesh requests cross this boundary.
 async function boot(){try {
@@ -9,7 +9,9 @@ async function boot(){try {
   const sourceHash=await sha256(source);
   const scene=createWorldScene(sourceHash);
   const saveCompatibility=await sha256(saveCompatibilitySource(scene));
-  postMessage({scene,saveCompatibility,compileMs:performance.now()-start});
+  const previousSaveCompatibility=await sha256(preCommerceCompatibilitySource(scene)),emptyEconomySaveCompatibility=await sha256(preCommerceCompatibilitySource(scene,2)),previousSaveSource=registeredLegacySource(emptyEconomySaveCompatibility);
+  const upgrade=supportsPreCommerceUpgrade(scene,saveCompatibility);
+  postMessage({scene,saveCompatibility,previousSaveCompatibility:upgrade ? previousSaveCompatibility : undefined,emptyEconomySaveCompatibility:upgrade ? emptyEconomySaveCompatibility : undefined,previousSaveSource:upgrade ? previousSaveSource : undefined,compileMs:performance.now()-start});
   onmessage=({data})=>{
     try {
       const root=buildWorldChunk(scene,data.region),{packet,transfer}=packChunk(root);

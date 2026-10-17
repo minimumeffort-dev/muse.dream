@@ -6,6 +6,11 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights commerce boundaries and escapes labels without consuming longer IDs',()=>{
+    const html=highlight('economy(){good bread(label="<Bread>&",food=45);account buyer(actor=player,credits=20,capacity=8,satiety=40,drain_s=.05);market stall(label="Bakery",actor=vendor,credits=100,radius=60){lot shelf(good=bread,quantity=8,limit=16,price=5);}work bake(input=flour,take=1,output=bread,make=2,seconds=6,pay=3,effort=12,target=4);}');
+    for(const word of ['economy','good','account','market','lot','work'])expect(html).toContain(`class="dream-keyword">${word}</span>`);
+    expect(html).toContain('&lt;Bread&gt;&amp;');expect(highlight('economical goodness accountant marketplace lottery workplace')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('highlights bounded motion constructors without consuming identifiers or HTML',()=>{
     const html=highlight('place hare(role=ambient,motion=roam(radius=90,speed=5,alert=70,flee_speed=30,recover_s=2,gait=hop)); furnish people(motion=walk(speed=14,wait_s=1)); // <script>');
     for(const word of ['walk','roam'])expect(html).toContain('class="dream-keyword">'+word+'</span>');

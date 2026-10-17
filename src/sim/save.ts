@@ -8,28 +8,33 @@ import {objectFragments} from '../scene/fragments';
 import {actorPose} from './actors';
 import {ambientNavigation} from '../scene/ambient-navigation';
 import {AMBIENT_LIMITS} from '../scene/ambient';
-import {SAVE_SIMULATION_VERSION} from '../scene/save-compatibility';
+import {economyStateSchema,initialEconomy,checkEconomyState} from './commerce';
+import {SAVE_SIMULATION_VERSION,R44_COMPATIBILITIES} from '../scene/save-compatibility';
 
-export const SAVE_VERSION=2,MAX_SAVE_CHARACTERS=1_000_000;
+export const SAVE_VERSION=3,MAX_SAVE_CHARACTERS=1_000_000;
 const n=z.number().finite().min(-1e7).max(1e7),clock=z.number().finite().min(0).max(1e9),count=z.number().int().min(0).max(1e9),id=z.string().min(1).max(128),v2=z.tuple([n,n]),v3=z.tuple([n,n,n]),q=z.tuple([n,n,n,n]).refine(v=>Math.abs(Math.hypot(...v)-1)<.01);
 const prop=z.object({id,x:n,y:n,vx:n,vy:n,elevation:n.optional(),vz:n.optional()}).strict();
 const npc=z.object({id,stateId:id,elapsedS:clock,routeTimeS:clock,animationTimeS:clock,headingRad:n,known:z.boolean(),replyAtS:clock.optional()}).strict();
 const sport=z.object({id,score:count,shots:count,made:count,held:z.boolean(),possessed:z.boolean(),chargeStartS:clock.nullable(),lockUntilS:clock,resetAtS:clock,event:z.enum(['goal','basket','out']).nullable(),eventUntilS:clock,shotFrom:v2.optional(),shotAtS:clock,aim:v2.optional()}).strict();
 const debris=z.object({objectId:id,fragmentId:id,x:n,y:n,elevation:n,vx:n,vy:n,vz:n,pattern:z.enum(['scatter','splinter','crumble']).optional(),topple:z.object({pivot:v3,offset:v3,axis:v3,rest:q,duration:n.positive(),angle:n}).strict().optional(),rotation:q,spin:v3,age:clock,lifetime:n.positive(),settled:z.boolean()}).strict();
 const member=z.object({x:n,y:n,fromX:n,fromY:n,heading:n,fromHeading:n,distance:clock,fromDistance:clock,node:z.number().int().min(-1).max(8191),previous:z.number().int().min(-1).max(8191),random:z.number().int().min(0).max(4294967295),until:clock,pauseUntil:clock,mode:z.enum(['walk','roam','flee','alert']),speed:n}).strict();
-const stateSchema:z.ZodType<CarState>=z.object({
+const stateSchema=z.object({
  x:n,y:n,vx:n,vy:n,headingRad:n,elevation:n,vz:n,grounded:z.boolean(),landingSpeed:n,timeS:clock,lap:count,nextCheckpoint:count,surface:z.enum(['road','paper','ice','water']),
  boostReadyAtS:z.record(clock),boostedThisStep:z.boolean(),carBoost:z.object({held:z.boolean(),activeUntilS:clock,readyAtS:clock}).strict(),
  sports:z.array(sport).max(8),props:z.array(prop).max(4096),broken:z.array(id).max(24),brokenZones:z.array(z.object({objectId:id,zoneId:id}).strict()).max(128),debris:z.array(debris).max(128),impacts:z.array(z.never()).max(0),
  control:z.discriminatedUnion('kind',[z.object({kind:z.literal('car')}).strict(),z.object({kind:z.literal('foot')}).strict(),z.object({kind:z.literal('vehicle'),id}).strict(),z.object({kind:z.literal('passenger'),id}).strict()]),
  vehicles:z.array(z.object({id:id.nullable(),x:n,y:n,elevation:n,headingRad:n,distance:clock}).strict()).max(24),npcs:z.array(npc).max(32),population:z.object({tick:count,members:z.array(member).max(192)}).strict().optional(),distance:clock,pitch:n,bank:n,jump:z.object({held:z.boolean(),bufferUntilS:clock,coyoteUntilS:clock}).strict(),
+ economy:economyStateSchema.optional(),
 }).strict();
-const legacyPacket=z.object({kind:z.literal('dream-save'),version:z.literal(1),sourceHash:z.string().min(1).max(128),sceneId:id,worldTime:clock,state:stateSchema}).strict();
-const packet=legacyPacket.extend({version:z.literal(SAVE_VERSION),compatibilityHash:z.string().regex(/^[a-f0-9]{64}$/).optional()}).strict();
-const supported=z.discriminatedUnion('version',[legacyPacket,packet]);
+const legacyPacket=z.object({kind:z.literal('dream-save'),version:z.literal(1),sourceHash:z.string().min(1).max(128),sceneId:id,worldTime:clock,state:stateSchema.omit({economy:true})}).strict();
+const hash=z.string().regex(/^[a-f0-9]{64}$/).optional();
+const secondPacket=legacyPacket.extend({version:z.literal(2),compatibilityHash:hash}).strict();
+const packet=legacyPacket.extend({version:z.literal(SAVE_VERSION),compatibilityHash:hash,state:stateSchema}).strict();
+const supported=z.discriminatedUnion('version',[legacyPacket,secondPacket,packet]);
 const unique=(values:unknown[])=>new Set(values).size===values.length;
 const expected=new WeakMap<World['scene'],ReturnType<typeof createCarAtSpawn>>();
 function checkState(s:CarState,world:World){
+ checkEconomyState(s,world.scene);
  const scene=world.scene,objects=new Map(scene.objects.map(o=>[o.id,o]));let fresh=expected.get(scene);if(!fresh){fresh=createCarAtSpawn(scene);expected.set(scene,fresh);}
  const ambient=scene.objects.filter(o=>o.ambient);
  const sameIds=(a:{id:string}[],b:{id:string}[])=>{const ids=new Set(b.map(m=>m.id));return a.length===b.length && unique(a.map(n=>n.id)) && a.every(n=>ids.has(n.id));};
@@ -64,11 +69,16 @@ export function decodeSave(text:string,world:World){
  if(text.length>MAX_SAVE_CHARACTERS)throw Error('Save exceeds one million characters');
  let data:z.infer<typeof supported>;
  try{data=supported.parse(JSON.parse(text));}catch{throw Error('This file is not a supported Muse Dream backup.');}
- const compatible=data.version===2 && data.compatibilityHash!==undefined && data.compatibilityHash===world.saveCompatibility;
- // Version 1's untagged rules are known only for simulation version 1.
- if(data.version===1 && Number(SAVE_SIMULATION_VERSION)!==1 || data.sceneId!==world.scene.sceneId || (data.sourceHash!==world.scene.sourceHash && !compatible) || data.version===2 && data.compatibilityHash!==world.saveCompatibility)throw Error('This backup needs a different world or simulation version.');
- try{checkState(data.state,world);}catch{throw Error('This backup contains invalid world state.');}
+ const exact=data.sourceHash===world.scene.sourceHash,compatible=data.version===SAVE_VERSION && data.compatibilityHash!==undefined && data.compatibilityHash===world.saveCompatibility;
+ const untaggedExact=exact && !world.scene.economy;
+ const knownSource=world.previousSaveSource!==undefined && data.sourceHash===world.previousSaveSource;
+ const oldFingerprint=data.version===2 && data.compatibilityHash!==undefined && (data.compatibilityHash===world.previousSaveCompatibility || !!world.previousSaveSource && (R44_COMPATIBILITIES as readonly string[]).includes(data.compatibilityHash));
+ const oldRules=Number(SAVE_SIMULATION_VERSION)===2 && (data.version===2 ? oldFingerprint || knownSource || data.compatibilityHash===undefined && untaggedExact && world.saveCompatibility===undefined : data.version===1 && (knownSource || untaggedExact));
+ const addEconomy=Number(SAVE_SIMULATION_VERSION)===2 && data.version===3 && !data.state.economy && data.compatibilityHash!==undefined && data.compatibilityHash===world.emptyEconomySaveCompatibility;
+ if(data.sceneId!==world.scene.sceneId || !(oldRules || addEconomy || data.version===SAVE_VERSION && (exact || compatible) && data.compatibilityHash===world.saveCompatibility))throw Error('This backup needs a different world or simulation version.');
+ const migrated=!!(oldRules || addEconomy);const restored:CarState=migrated ? {...data.state,economy:initialEconomy(world.scene,data.state.timeS)} : data.state;
+ try{checkState(restored,world);}catch{throw Error('This backup contains invalid world state.');}
  // A valid saved world can outlive a safe active-body pose. Recover only the player.
- const state=data.state.control.kind==='passenger' || carFootprintClear(bodyWorld(data.state,world),data.state.x,data.state.y,data.state.elevation,data.state.timeS,data.state) ? data.state : resetCar({...data.state,grounded:false},world.scene);
- return {state,worldTime:data.worldTime,sourceHash:data.sourceHash,version:data.version,compatible:data.sourceHash!==world.scene.sourceHash};
+ const state=restored.control.kind==='passenger' || carFootprintClear(bodyWorld(restored,world),restored.x,restored.y,restored.elevation,restored.timeS,restored) ? restored : resetCar({...restored,grounded:false},world.scene);
+ return {state,worldTime:data.worldTime,sourceHash:data.sourceHash,version:data.version,migrated,compatible:data.sourceHash!==world.scene.sourceHash};
 }

@@ -49,6 +49,19 @@ One scenario per project. Its IDs are block-local and unique across declaration 
 
 A command with an ID requires a name immediately after its keyword. Commands with a block contain statements in their stated context. The context `top` is the file root; `visual` contains geometry/composition; `path` contains points, constants and repeats. Constructors are nested field values, not standalone statements.
 
+### Playable markets and work
+
+These commands describe the 3D world's resident economy. [Guide](commerce.md) and [bounds](#commerce-bounds).
+
+| Command | Context | ID / block | Fields |
+| --- | --- | --- | --- |
+| `economy` | top | No ID / economy | None |
+| `good` | economy | ID / no block | `label: text`, `food?: n` |
+| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `shop?: bool`, `work?: ref` |
+| `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n` |
+| `lot` | market | ID / no block | `good: ref`, `quantity: n`, `limit: n`, `price?: n` |
+| `work` | economy | ID / no block | `label: text`, `market: ref`, `input: ref`, `take: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n` |
+
 ### Assemblies and composition
 
 | Command | Context | ID / block | Fields |
@@ -361,4 +374,22 @@ City sidewalks, cycle tracks, separators and entrance paving yield to the circui
 
 One optional declaration in the world owner, beside `world` and `road`. `object_cell` is .25..4 local units, `ground_cell` is exactly 4 or 8, and `height_step` is .5..1. Ten world units represent one metre. The compiler applies the policy after module linking and furnishing, storing `voxelWorld` in Scene and `voxelSize` on compiled assembly data. The model continues to write compact shape stamps or explicit fill/cut volumes; compiled construction metadata is not another authoring command.
 
-The engine fits stamps to the original envelope, with 4..32 cells per axis and a separate 16 MiB shared mesh cache. Explicit volume budgets remain unchanged. Solid terrain columns merge within resident 400-unit tiles; infrastructure preserves its lift above the quantized base. Thin paint uses .5-unit cells. Water retains its bounded wave field, with rigid movement per column. Resolution does not vary with the camera. Smooth driving heights and explicit collision contacts remain independent. This does not provide editable terrain, implicit destruction or per-cell physics. See [the full guide](../whole-world-voxels.md).
+The engine fits stamps to the original envelope, with 4..32 cells per axis and a separate 16 MiB shared mesh cache. Explicit volume budgets remain unchanged. Solid terrain columns merge within 400-unit tiles, grouped into streamed 800-unit chunks. Infrastructure uses continuous cut-cell contours and retains its lift above the quantized base; thin paint keeps its fine footprint. Water retains its bounded wave field and shared UV displacement/normals across tile seams. Resolution does not vary with the camera. Smooth driving heights and explicit collision contacts remain independent. This does not provide editable terrain, implicit destruction or per-cell physics. See [the full guide](../whole-world-voxels.md).
+
+## Commerce bounds
+
+One optional `economy(){...}` per linked world. [Working guide](commerce.md).
+
+```text
+good id(label=text,food=n?);
+account id(actor=ref,credits=n,capacity=n,satiety=n,drain_s=n,shop=bool?,work=ref?);
+market id(label=text,actor=ref,credits=n,radius=n){ lot ... }
+lot id(good=ref,quantity=n,limit=n,price=n?);
+work id(label=text,market=ref,input=ref,take=n,output=ref,make=n,seconds=n,pay=n,effort=n,capacity=n,target=n);
+```
+
+At most 8 goods, 16 accounts, 8 markets and 16 jobs; each market has 1..8 lots with unique goods. Exactly one player account; one account per actor. Other owners are existing NPC placements. Market vendors and automatic workers are stationary; a worker must start in range of its market. NPC `shop` and `work` policies are optional; player accounts cannot automate themselves.
+
+Credits: integer 0..1,000,000. Stock/limits: integer 0..10,000 with positive limits. Price: integer 1..10,000, or omitted for untraded ingredients. Carrying capacity: integer 1..32. Fullness/food: 0..100, drain per second: 0..0.25. Radius: 20..80. Work: 1..120 seconds, positive integer take/make/pay, effort 1..50, capacity 1..4, target within output lot capacity. Input/output goods differ. Labels: 1..40 nonblank characters. IDs follow the ordinary identifier contract.
+
+Buy/sell transfers one unit at the listed price. Work reserves input, wage, refund space and output capacity; cancellation refunds, completion pays once and spends effort. Food consumes an owned unit and restores fullness. NPC food decisions occur at fullness <=40; automatic work refills to target. Shared money and material conservation, clock/owner/member bounds and capacity are checked on restore. The simulation owns rules and work time; the renderer owns gestures and feedback. No offline catch-up or generated scripts. Existing NPC, rig, physics and geometry caps are unchanged.

@@ -26,18 +26,24 @@ export function mediaCapture(canvas:HTMLCanvasElement, clips:Record<string,numbe
       if(!clip)return;
       busy=true;
       let output=canvas;
-      const caption=document.querySelector<HTMLElement>('#npc-speech');
-      if(caption && !caption.hidden){
+      const captions=[...document.querySelectorAll<HTMLElement>('#npc-speech:not([hidden]),#commerce-panel:not([hidden])')];
+      if(captions.length){
         composite??=document.createElement('canvas');
         if(composite.width!==canvas.width || composite.height!==canvas.height){composite.width=canvas.width;composite.height=canvas.height;}
-        const ctx=composite.getContext('2d')!,view=canvas.getBoundingClientRect(),box=caption.getBoundingClientRect(),style=getComputedStyle(caption),scale=canvas.width/view.width;
+        const ctx=composite.getContext('2d')!,view=canvas.getBoundingClientRect(),scale=canvas.width/view.width;
         ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(canvas,0,0);ctx.save();ctx.scale(scale,scale);
+        for(const caption of captions){const box=caption.getBoundingClientRect(),style=getComputedStyle(caption);
         const x=box.x-view.x,y=box.y-view.y;ctx.fillStyle=style.backgroundColor;ctx.beginPath();ctx.roundRect(x,y,box.width,box.height,parseFloat(style.borderRadius));ctx.fill();
         ctx.strokeStyle=style.borderColor;ctx.lineWidth=parseFloat(style.borderWidth)||1;ctx.stroke();ctx.textBaseline='top';
-        for(const element of caption.querySelectorAll<HTMLElement>('strong,p')){
+        for(const element of caption.querySelectorAll<HTMLElement>('strong,p,button,output,select')){
+          if(element.hidden || !element.getClientRects().length)continue;
           const rect=element.getBoundingClientRect(),textStyle=getComputedStyle(element),fontSize=parseFloat(textStyle.fontSize),lineHeight=parseFloat(textStyle.lineHeight)||fontSize*1.2;
-          ctx.font=textStyle.font;ctx.fillStyle=textStyle.color;
-          captionLines(element.textContent??'',rect.width,text=>ctx.measureText(text).width).forEach((line,i)=>ctx.fillText(line,rect.x-view.x,rect.y-view.y+(lineHeight-fontSize)/2+i*lineHeight));
+          const padding=parseFloat(textStyle.paddingLeft)||0,top=parseFloat(textStyle.paddingTop)||0;
+          if(element instanceof HTMLButtonElement || element instanceof HTMLSelectElement){ctx.fillStyle=textStyle.backgroundColor;ctx.beginPath();ctx.roundRect(rect.x-view.x,rect.y-view.y,rect.width,rect.height,parseFloat(textStyle.borderRadius)||0);ctx.fill();ctx.strokeStyle=textStyle.borderColor;ctx.lineWidth=parseFloat(textStyle.borderWidth)||1;ctx.stroke();}
+          ctx.font=textStyle.font;ctx.fillStyle=textStyle.color;ctx.textAlign=textStyle.textAlign==='center' ? 'center' : 'left';
+          const text=element instanceof HTMLSelectElement ? element.selectedOptions[0]?.text??'' : element.textContent??'';
+          captionLines(text,rect.width-padding*2,text=>ctx.measureText(text).width).forEach((line,i)=>ctx.fillText(line,rect.x-view.x+(ctx.textAlign==='center' ? rect.width/2 : padding),rect.y-view.y+top+(lineHeight-fontSize)/2+i*lineHeight));
+        }
         }
         ctx.restore();output=composite;
       }

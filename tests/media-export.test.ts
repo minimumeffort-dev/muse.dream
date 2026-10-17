@@ -28,7 +28,7 @@ describe('local capture boundary',()=>{
       expect(await request('/__media/swimming/0000.png')).toBe(204);
       expect(await request('/__media/daynight/0000.png')).toBe(204);
       expect(await request('/__media/flight/0000.png')).toBe(204);
-      expect(await request('/__media/pedestrians/0000.png')).toBe(204);expect(await request('/__media/wildlife/0000.png')).toBe(204);
+      expect(await request('/__media/pedestrians/0000.png')).toBe(204);expect(await request('/__media/wildlife/0000.png')).toBe(204);expect(await request('/__media/commerce/0000.png')).toBe(204);
       expect(await request('/__media/unknown/0000.png')).toBe(400);
       expect(await request('/__media/driving/0001.png','https://other.example')).toBe(403);
       expect(await request('/__media/../../README.md')).toBe(400);

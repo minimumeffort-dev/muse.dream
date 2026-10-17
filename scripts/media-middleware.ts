@@ -5,7 +5,7 @@ export function mediaCapturePlugin():Plugin {
   return {name:'local-media-capture',apply:'serve',configureServer(server){
     server.middlewares.use(async(req,res,next)=>{
       if(!req.url?.startsWith('/__media/'))return next();
-      const match=/^\/__media\/(character|driving|boost|football|basketball|switching|destruction|voxels|locomotion|swimming|daynight|flight|pedestrians|wildlife|conversation)\/(\d{4})\.png$/.exec(req.url);
+      const match=/^\/__media\/(character|driving|boost|football|basketball|switching|destruction|voxels|locomotion|swimming|daynight|flight|pedestrians|wildlife|conversation|commerce)\/(\d{4})\.png$/.exec(req.url);
       if(req.method!=='POST' || !match || Number(match[2])>=600){res.writeHead(400).end();return;}
       // Only the local dev page can write this fixed, ignored capture directory.
       if(req.headers.origin!==`http://${req.headers.host}` || req.headers['content-type']!=='image/png'){res.writeHead(403).end();return;}

@@ -85,7 +85,7 @@ behavior market_chat(start=busy){
  state returning(action=idle,face=player,say="Good to see you again. Welcome back."){
   on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
- state about(action=idle,face=player,say="The river is east of here. I like walking along the banks."){
+ state about(action=idle,face=player,say="I sell bread here. If you want some work, you can help with the next batch."){
   on again(event=interact,to=hello,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
 }
@@ -116,4 +116,17 @@ behavior school_chat(start=busy){
  state about(action=idle,face=player,say="There is a lot to explore around here."){
   on again(event=interact,to=hello,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
+}
+
+economy(){
+ good bread(label="Bread",food=45);
+ good flour(label="Flour");
+ account pocket(actor=player,credits=20,capacity=8,satiety=48,drain_s=.05);
+ account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,work=bake);
+ account regular(actor=market_commuter,credits=30,capacity=4,satiety=25,drain_s=.05,shop=true);
+ market market_stall(label="Market bakery",actor=vendor,credits=100,radius=70){
+  lot bread_shelf(good=bread,quantity=8,limit=16,price=5);
+  lot flour_sack(good=flour,quantity=30,limit=30);
+ }
+ work bake(label="Bake bread",market=market_stall,input=flour,take=1,output=bread,make=2,seconds=6,pay=3,effort=12,capacity=1,target=4);
 }

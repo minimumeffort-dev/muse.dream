@@ -4,7 +4,7 @@ These are captures of the running mock prototype. The game and asset geometry ar
 
 ## Motion you can actually follow
 
-Driving, vehicle switching, jumping, swimming and destruction are exported at **30 frames per simulation second**. Every frame is rendered; there is no frame interpolation. GIFs are 960 × 540 with a palette computed across the clip and Gifsicle compression. The matching 1600 × 900 H.264 videos keep more color and detail at a smaller download size.
+Driving, vehicle switching, jumping, swimming and destruction are exported at **30 frames per simulation second**. Every frame is rendered; there is no frame interpolation. Most GIFs are 960 × 540 with a palette computed across the clip and Gifsicle compression. The market/conversation clips use 1280 × 720, 256 colors and no additional Gifsicle loss to keep UI text readable. The matching 1600 × 900 H.264 videos keep more color and detail at a smaller download size.
 
 | Capture | GIF | HD video | Duration |
 | --- | --- | --- | --- |
@@ -15,6 +15,7 @@ Driving, vehicle switching, jumping, swimming and destruction are exported at **
 | Walking, running and jumping | [locomotion.gif](locomotion.gif) | [locomotion.mp4](locomotion.mp4) | 6 seconds |
 | Swimming in the city canal | [swimming.gif](swimming.gif) | [swimming.mp4](swimming.mp4) | 6 seconds |
 | Aircraft takeoff, climb, bank and descent | [flight.gif](flight.gif) | [flight.mp4](flight.mp4) | 10 seconds |
+| Food, trade and paid work | [commerce.gif](commerce.gif) | [commerce.mp4](commerce.mp4) | 12 seconds |
 | Day and night | [daynight.gif](daynight.gif) | [daynight.mp4](daynight.mp4) | 12 seconds |
 
 The main-game captures use the real simulation, follow camera, scenery, particles and post-processing. The destruction review replays fixed simulation phases. These are offline exports, not frame-rate benchmarks. GIF timing is rounded to hundredths of a second by the format; the video preserves the 30 fps clock.
@@ -371,6 +372,22 @@ and controls; the new contextual reply is shown in this dedicated sequence.
 screenshots of the production build. The pause menu keeps Controls collapsed;
 Backups opens a local file preview before any restore. Source PNGs and browser
 state checks live in [save continuity evidence](../evidence/save-continuity/verification.md).
-There is no image upscaling or interpolated motion. The conversation video/GIF/still
-remain accurate: world geometry, spoken text and interaction timing are unchanged.
-This change adds save tooling, so its captures are native UI stills.
+There is no image upscaling or interpolated motion. That iteration added save tooling with native UI stills. The market pass below
+refreshes these stills and the conversation sequence for the new pocket status
+and vendor wording.
+
+## The playable market
+
+`commerce.gif`, `commerce.mp4` and `commerce.jpg` share 360 actual source frames
+at 30 rendered frames per simulation second. The exporter presses the same buy,
+eat and work controls used by the live UI. It composites visible market/speech
+text and buttons from their DOM bounds/styles over the rendered canvas; it is
+not a general HTML rasterizer. The conversation GIF/video/still are refreshed
+together for the new nearby market UI. Save-menu/backup-preview stills are also
+refreshed for the pocket status. No interpolated frames or offline FPS claims.
+[Verification](../evidence/commerce/verification.md).
+
+The remaining driving, switching, locomotion, swimming, sports, lighting, wildlife
+and destruction captures retain the same represented geometry and controls. Their
+review starts carry no bought food and are outside the market interaction area,
+so the contextual market panel stays hidden there.

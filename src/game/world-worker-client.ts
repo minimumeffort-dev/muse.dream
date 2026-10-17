@@ -6,6 +6,9 @@ import type {ChunkPacket} from './chunk-packet';
 export class WorldWorkerClient {
   readonly scene:Promise<Scene>;
   saveCompatibility?:string;
+  previousSaveCompatibility?:string;
+  emptyEconomySaveCompatibility?:string;
+  previousSaveSource?:string;
   private next=0;
   private pending=new Map<number,{resolve:(packet:ChunkPacket)=>void;reject:(error:Error)=>void}>();
   private failure:Error|undefined;
@@ -15,7 +18,7 @@ export class WorldWorkerClient {
       this.rejectScene=reject;
       worker.onmessage=({data})=>{
         if(data.error){this.fail(new Error(data.error));return;}
-        if(data.scene){this.saveCompatibility=data.saveCompatibility;onCompile(data.compileMs);resolve(data.scene);return;}
+        if(data.scene){this.saveCompatibility=data.saveCompatibility;this.previousSaveCompatibility=data.previousSaveCompatibility;this.emptyEconomySaveCompatibility=data.emptyEconomySaveCompatibility;this.previousSaveSource=data.previousSaveSource;onCompile(data.compileMs);resolve(data.scene);return;}
         const pending=this.pending.get(data.id);if(!pending)return;this.pending.delete(data.id);pending.resolve(data.packet);
       };
     });

@@ -1,4 +1,5 @@
 import {ambientSchema,ambientProblem,AMBIENT_LIMITS} from './ambient';
+import {economySchema,economyProblems} from './commerce';
 import {voxelCells,voxelChunkCount,VOXEL_LIMITS} from './voxels';
 import {voxelWorldSchema} from './voxel-world';
 import {daylightSchema,MAX_LIGHT_POOLS} from './daylight';
@@ -157,6 +158,7 @@ export const sceneSchema = z.object({
   terrain: terrainSchema.default({ hills: [] }),
   routes:z.array(routeSchema).max(12).default([]),
   behaviors:z.array(behaviorSchema).max(NPC_LIMITS.programs).default([]),
+  economy:economySchema.optional(),
   streets:z.array(streetSchema).max(32).default([]),
   surfaces:z.array(surfaceSchema).max(64).default([]),
   markings:z.array(markingSchema).max(128).default([]),
@@ -183,6 +185,7 @@ export const sceneSchema = z.object({
     notes: z.string(),
   }),
 }).superRefine((scene,ctx)=> {
+  for(const message of economyProblems(scene))ctx.addIssue({code:'custom',path:['economy'],message});
   for(const message of sportProblems(scene))ctx.addIssue({code:'custom',path:['sports'],message});
   for(const message of interactionRuleProblems(scene))ctx.addIssue({code:'custom',path:['interactionRules'],message});
   const lamps=scene.objects.filter(o=>o.spec && "lamp" in o.spec && o.spec.lamp);

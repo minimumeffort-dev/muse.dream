@@ -193,3 +193,5 @@ These complete sources compile to the same assemblies used in the live mock worl
 [Talk to a person](../examples/npc-conversation.dream) is a complete playable world
 with two authored replies, interaction range and a timed return to waiting.
 [Conversation semantics](npcs.md#talk-to-a-person).
+
+[Market work](../examples/market-work.dream) is a complete world with two NPCs, finite food, ingredient stock, shared wages, needs and timed work. [Play and author the market loop](commerce.md).

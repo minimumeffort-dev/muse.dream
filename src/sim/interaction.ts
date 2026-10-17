@@ -1,3 +1,4 @@
+import {stepCommerce} from './commerce';
 import {stepAmbient} from './ambient';
 import { applyJump,carFootprintClear,stepCar,TUNING,type CarState,type CarInput,type World,type ParkedVehicle,type CarTuning } from "./car";
 import { actorPose,actorContacts,routeObjects } from "./actors";
@@ -169,7 +170,7 @@ function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,pro
   advanceImpactMotion(s,body,dt);return s;
 }
 export function stepInteractive(state:CarState,input:CarInput,dt:number,world:World):CarState {
-  return stepSports(stepControlled(state,input,dt,world),state,input,dt,world);
+  return stepCommerce(stepSports(stepControlled(state,input,dt,world),state,input,dt,world),input,dt,world.scene);
 }
 function stepControlled(state:CarState,input:CarInput,dt:number,world:World):CarState {
   if(state.control.kind==="car")return stepCar(state,input,dt,world);

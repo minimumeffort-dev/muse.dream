@@ -168,3 +168,12 @@ checkpoint east(at=[828.75,360],dir=[0,-1],width=100);
 checkpoint north(at=[480,107.5],dir=[-1,0],width=100);
 checkpoint west(at=[131.25,360],dir=[0,1],width=100);
 ```
+
+## Accounts, customers and staff
+
+An NPC can own an account through the optional [commerce system](commerce.md).
+The market commuter buys and eats at its actual route position; a stationary
+vendor can replenish stock through the same paid work available to the player.
+Conversation still changes only its authored social state and familiarity.
+Commerce adds explicit inventory, money, needs and work state, without new actor
+or rig slots. It does not add needs-based pathfinding, shifts or relationships.
