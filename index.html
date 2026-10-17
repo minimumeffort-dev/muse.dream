@@ -7,8 +7,18 @@
     <title>Paper Dream</title>
     <link rel="stylesheet" href="/src/style.css" />
   </head>
-  <body>
-    <main id="game" aria-label="Paper Dream" tabindex="0"></main>
+  <body data-loading="loading">
+    <section id="loading" aria-label="Loading Muse Dream">
+      <div class="loading-card">
+        <span class="loading-brand">me.</span>
+        <h1>Muse Dream</h1>
+        <p id="loading-status" role="status" aria-live="polite">Opening your world</p>
+        <div id="loading-track" aria-hidden="true"><span></span></div>
+        <button id="loading-retry" type="button" hidden>Reload</button>
+        <noscript>This world needs JavaScript to run.</noscript>
+      </div>
+    </section>
+    <main id="game" aria-label="Paper Dream" aria-busy="true" tabindex="0"></main>
     <div class="hud">
       <span id="surface" role="status"></span>
       <button id="pause" type="button" aria-label="Pause" aria-pressed="false" data-paused="false">
@@ -36,6 +46,6 @@
         <a href="/lab/">Dream Lab ↗</a>
       </div>
     </dialog>
-    <script type="module" src="/src/game/main.ts"></script>
+    <script type="module" src="/src/game/boot.ts"></script>
   </body>
 </html>

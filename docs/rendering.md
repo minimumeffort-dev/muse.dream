@@ -1,6 +1,39 @@
 # Rendering the whole world
 
-The mock world has 1,327 placed objects across a 14000 × 11000 landscape. It stays resident while you drive, walk or fly. There is no district streaming, distance-based asset replacement or automatic quality reduction.
+The mock world has 1,695 placed objects across a 14000 × 11000 landscape. It stays resident while you drive, walk or fly. There is no district streaming, distance-based asset replacement or automatic quality reduction.
+
+## Loading and memory
+
+The loading screen is part of the first HTML response. It shows the current work before the renderer module loads. Dream compilation, schema checks and complete-world playability validation run in a short-lived worker, which is terminated after transferring the accepted scene. Streets and terrain use cooperative construction steps; the entire world is ready before the loading screen leaves. Driving starts after the first rendered view. Failed compilation, module loading or WebGL startup exposes a Reload button.
+
+![The loading screen during real world construction](evidence/startup-memory/loader.png)
+
+The engine now stores each column face as four vertices and six indices, instead of repeating six complete vertices. Positions, normals, winding, fine road paint, UVs and rigid water anchors retain their meaning. Coordinate lookups use numeric keys, and attribute gradients are calculated once per source triangle. Polygon clipping skips disjoint original bounds, and surface construction yields between ground strips. Identical asset rest bounds share a bounded cache across schema-cloned placements. These changes retain the world's geometry, simulation and rendering settings.
+
+Voxels currently use **more geometry memory** than the same world without whole-world voxel conversion. Greedy meshing helps flat surfaces, but stepped hills, thin paint, water columns and curved object stamps add faces. This representation trades that memory for its cell-built appearance; it does not make destruction per-cell or automatically cheap.
+
+For the major render groups measured locally:
+
+| Representation | Retained geometry buffers |
+| --- | ---: |
+| Shaped world, whole-world conversion disabled | 195.6 MiB |
+| Voxel world before this pass | 535.1 MiB |
+| Voxel world with indexed columns | 400.2 MiB |
+
+That removes **134.8 MiB (25.2%)** from the voxel representation with the same 7,709,918 unique geometry triangles. It still uses about **2.05 times** the shaped world's geometry bytes. These are the groups and exclusions below, not total browser or VRAM usage.
+
+The result depends on what is voxelized. Static scenery shrinks from 49.8 to 26.4 MiB and ambient population geometry from 15.1 to 5.8 MiB. Environment geometry, which includes the stepped terrain and streets, grows from 117.5 to 345.9 MiB. That ground representation is the main remaining memory target.
+
+The reproducible comparison uses the same Dream modules and placements, with only `voxel_world` removed for the shaped baseline. Explicitly authored `voxels` remain in both versions. Run each command in a fresh process:
+
+```sh
+node --expose-gc scripts/profile-world-memory.mjs voxel /tmp/dream-voxel.json
+node --expose-gc scripts/profile-world-memory.mjs shapes /tmp/dream-shapes.json
+```
+
+The report deduplicates resident typed-array backing buffers across environment, water/bridges, routes, flocks, static scenery and ambient populations. It includes indices and every instance buffer. It excludes live actors, the player, effects, textures, render targets, GPU-driver allocations and temporary meshing work. Node process heap/RSS figures include Vite and compiler caches and are not browser heap measurements. The development game's `#game[data-memory]` separately reports geometry buffers for the complete constructed render scene.
+
+[Raw comparisons and browser verification](evidence/startup-memory/verification.md) include source identity, timings and limitations. Construction still needs CPU time and some synchronous phases can delay input briefly. Cooperative startup avoids the original single long task; it does not establish smoothness or memory suitability on every laptop. All districts stay resident after startup.
 
 ## Less work for the same image
 

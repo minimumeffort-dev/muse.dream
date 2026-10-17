@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import {finishBuild} from "./batching";
 import {partition} from "../scene/polygons";
 import { bridgeAt,bridgeCoordinates, bridgePolygon, clipPolygon as clip, type Bridge } from "../scene/landscape-dsl";
 import type { Point, Scene } from "../scene/schema";
@@ -32,7 +33,8 @@ export function voxelSurfaceBase(doc:Scene,x:number,z:number,heightAt?:HeightAt)
 }
 
 /** Clip authored polygons onto the actual ground triangles, rather than sampling a second mesh. */
-export function surfaceGeometry(doc: Scene, polygons: Point[][], lift: number, direction?: Point, heightAt?:HeightAt, cutouts:Point[][]=[]): THREE.BufferGeometry {
+export function surfaceGeometry(doc: Scene, polygons: Point[][], lift: number, direction?: Point, heightAt?:HeightAt, cutouts:Point[][]=[]): THREE.BufferGeometry {return finishBuild(surfaceGeometrySteps(doc,polygons,lift,direction,heightAt,cutouts));}
+export function* surfaceGeometrySteps(doc: Scene, polygons: Point[][], lift: number, direction?: Point, heightAt?:HeightAt, cutouts:Point[][]=[]):Generator<void,THREE.BufferGeometry> {
   const ground:HeightAt=(x,y)=>terrainHeight(doc.terrain,x,y);
   const decks=(doc.terrain.landscape?.bridges ?? []).map(bridge=> {
     const polygon=bridgePolygon(bridge);
@@ -54,44 +56,48 @@ export function surfaceGeometry(doc: Scene, polygons: Point[][], lift: number, d
       const minX = Math.floor(Math.min(...triangle.map(p => p.x)) / step) * step;
       const minY = Math.floor(Math.min(...triangle.map(p => p.y)) / step) * step;
       const maxX = Math.max(...triangle.map(p => p.x)), maxY = Math.max(...triangle.map(p => p.y));
-      for (let x = minX; x < maxX; x += step) for (let y = minY; y < maxY; y += step) {
-        let cell = clip(triangle, p => p.x - x); cell = clip(cell, p => x + step - p.x);
-        cell = clip(cell, p => p.y - y); cell = clip(cell, p => y + step - p.y);
-        if (cell.length < 3) continue;
-        for (const side of [-1, 1]) {
-          const half = clip(cell, p => side * (p.x - x + p.y - y - step));
-          let remaining=[half];
-          for(const hole of holes) {
-            if(x+step<hole.minX || x>hole.maxX || y+step<hole.minY || y>hole.maxY)continue;
-            remaining=remaining.flatMap(polygon=>partition(polygon,hole.polygon).outside);
-          }
-          const patches:{polygon:Point[];sample:HeightAt}[]=[];
-          if(!heightAt) for(const deck of decks) {
-            if(x+step<deck.minX || x>deck.maxX || y+step<deck.minY || y>deck.maxY) continue;
-            const next:Point[][]=[];
-            for(const polygon of remaining) {
-              const {inside,outside}=partition(polygon,deck.polygon);next.push(...outside);
-              if(inside.length>=3) patches.push({polygon:inside,sample:deck.heightAt});
+      for (let x = minX; x < maxX; x += step) {
+        yield;
+        for (let y = minY; y < maxY; y += step) {
+          let cell = clip(triangle, p => p.x - x); cell = clip(cell, p => x + step - p.x);
+          cell = clip(cell, p => p.y - y); cell = clip(cell, p => y + step - p.y);
+          if (cell.length < 3) continue;
+          for (const side of [-1, 1]) {
+            const half = clip(cell, p => side * (p.x - x + p.y - y - step));
+            let remaining=[half];
+            for(const hole of holes) {
+              if(x+step<hole.minX || x>hole.maxX || y+step<hole.minY || y>hole.maxY)continue;
+              remaining=remaining.flatMap(polygon=>partition(polygon,hole.polygon).outside);
             }
-            remaining=next;
-          }
-          patches.push(...remaining.map(polygon=>({polygon,sample:heightAt ?? ground})));
-          for(const {polygon:patch,sample} of patches) for (let i = 1; i < patch.length - 1; i++) {
-            const a = patch[0]!, b = patch[i]!, c = patch[i + 1]!;
-            const area = (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
-            if (Math.abs(area) < 1e-7) continue;
-            for (const p of area > 0 ? [a, c, b] : [a, b, c]) {
-              positions.push(p.x - doc.canonical.width / 2, surfaceHeight(doc, p.x, p.y,sample) + lift, p.y - doc.canonical.height / 2);
-              const slope = sampleTerrain(doc.terrain, p.x, p.y), normal = new THREE.Vector3(-slope.dx, 1, -slope.dy).normalize();
-              normals.push(...normal.toArray());
-              const dx = p.x - origin.x, dy = p.y - origin.y;
-              uv.push((dx * across.x + dy * across.y - minU) / width, (dx * along.x + dy * along.y - minV) / length);
+            const patches:{polygon:Point[];sample:HeightAt}[]=[];
+            if(!heightAt) for(const deck of decks) {
+              if(x+step<deck.minX || x>deck.maxX || y+step<deck.minY || y>deck.maxY) continue;
+              const next:Point[][]=[];
+              for(const polygon of remaining) {
+                const {inside,outside}=partition(polygon,deck.polygon);next.push(...outside);
+                if(inside.length>=3) patches.push({polygon:inside,sample:deck.heightAt});
+              }
+              remaining=next;
+            }
+            patches.push(...remaining.map(polygon=>({polygon,sample:heightAt ?? ground})));
+            for(const {polygon:patch,sample} of patches) for (let i = 1; i < patch.length - 1; i++) {
+              const a = patch[0]!, b = patch[i]!, c = patch[i + 1]!;
+              const area = (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+              if (Math.abs(area) < 1e-7) continue;
+              for (const p of area > 0 ? [a, c, b] : [a, b, c]) {
+                positions.push(p.x - doc.canonical.width / 2, surfaceHeight(doc, p.x, p.y,sample) + lift, p.y - doc.canonical.height / 2);
+                const slope = sampleTerrain(doc.terrain, p.x, p.y), normal = new THREE.Vector3(-slope.dx, 1, -slope.dy).normalize();
+                normals.push(...normal.toArray());
+                const dx = p.x - origin.x, dy = p.y - origin.y;
+                uv.push((dx * across.x + dy * across.y - minU) / width, (dx * along.x + dy * along.y - minV) / length);
+              }
             }
           }
         }
       }
     }
   }
+
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
   geometry.setAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));

@@ -41,3 +41,21 @@ h1 { margin: 0 0 18px; font-size: 26px; font-weight: 600; }
 .menu-card>a{display:inline-block;color:#fff1ce;font-size:12px;margin-top:14px;text-underline-offset:4px}
 .error { display: grid; place-items: center; padding: 40px; color: #243e43; }
 @media (max-width: 600px) { .hud { inset: max(16px, env(safe-area-inset-top)) 16px auto; } #boost, #sport-action { left: 16px; bottom: max(24px, env(safe-area-inset-bottom)); } #interact { bottom: max(164px, calc(env(safe-area-inset-bottom) + 140px)); max-width: calc(100% - 32px); } }
+
+/* This shell paints before the renderer and compiler modules load. */
+@font-face { font-family: Manrope; src: url('../docs/site/fonts/manrope-latin.woff2') format('woff2'); font-display: swap; font-weight: 200 800; }
+@font-face { font-family: Archivo; src: url('../docs/site/fonts/archivo-latin.woff2') format('woff2'); font-display: swap; font-weight: 100 900; }
+body:not([data-loading="ready"])>.hud, body:not([data-loading="ready"])>#world-map,
+body:not([data-loading="ready"])>#interact, body:not([data-loading="ready"])>#boost,
+body:not([data-loading="ready"])>#sport-action { visibility: hidden; }
+#loading { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 32px; background: #fafaf7; color: #171717; font-family: Manrope, system-ui, sans-serif; }
+.loading-card { width: min(360px, 100%); }
+.loading-brand { display: inline-grid; place-items: center; width: 34px; height: 34px; margin-bottom: 32px; background: #f7c843; color: #171717; font-size: 19px; font-weight: 800; letter-spacing: -1px; }
+.loading-card h1 { font-family: Archivo, system-ui, sans-serif; margin: 0 0 16px; font-size: clamp(32px, 6vw, 42px); font-weight: 700; letter-spacing: -1.5px; }
+#loading-status { margin: 0 0 24px; min-height: 44px; font-size: 14px; line-height: 1.6; color: #53534f; }
+#loading-track { height: 3px; overflow: hidden; background: #deddd7; }
+#loading-track span { display: block; width: 35%; height: 100%; background: #191918; animation: loading-slide 1.4s ease-in-out infinite alternate; }
+#loading-retry { padding: 10px 18px; background: #191918; color: #faf9f6; }
+#loading-retry:focus-visible { outline-color: #191918; }
+@keyframes loading-slide { from { transform: translateX(0); } to { transform: translateX(186%); } }
+@media (prefers-reduced-motion: reduce) { #loading-track span { animation: none; } }

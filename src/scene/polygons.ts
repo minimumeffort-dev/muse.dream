@@ -45,11 +45,13 @@ const subtract=(pieces:Point[][],outline:Point[],b:ReturnType<typeof polygonBoun
   const a=polygonBounds(p);
   return a.x1<=b.x0 || a.x0>=b.x1 || a.y1<=b.y0 || a.y0>=b.y1 ? [p] : partition(p,outline).outside;
 });
+const boundsOverlap=(a:ReturnType<typeof polygonBounds>,b:ReturnType<typeof polygonBounds>)=>a.x1>b.x0 && a.x0<b.x1 && a.y1>b.y0 && a.y0<b.y1;
 /** Independent paint ribbons need clipping, without an unnecessary global polygon union. */
 export function subtractPolygons(polygons:Point[][],holes:Point[][]):Point[][]{
   const cuts=holes.map(p=>({p,b:polygonBounds(p)}));
   return polygons.flatMap(polygon=>{
-    let pieces=[polygon];for(const {p,b} of cuts){if(!pieces.length)break;pieces=subtract(pieces,p,b);}return pieces;
+    const a=polygonBounds(polygon);
+    let pieces=[polygon];for(const {p,b} of cuts){if(!pieces.length)break;if(boundsOverlap(a,b))pieces=subtract(pieces,p,b);}return pieces;
   });
 }
 /** Intersect convex pieces without confusing an overlapping bounding box with occupied ground. */
@@ -65,8 +67,10 @@ export function unionPolygons(polygons:Point[][],holes:Point[][]=[]):Point[][]{
   const result:Point[][]=[],bounds:ReturnType<typeof polygonBounds>[]=[];
   const cuts=holes.map(p=>({p,b:polygonBounds(p)}));
   for(const polygon of polygons){
-    let pieces=[polygon];for(const {p,b} of cuts)pieces=subtract(pieces,p,b);
-    for(let i=0;i<result.length && pieces.length;i++)pieces=subtract(pieces,result[i]!,bounds[i]!);
+    // Every remaining piece is contained by its original outline's bounds.
+    const a=polygonBounds(polygon);
+    let pieces=[polygon];for(const {p,b} of cuts)if(boundsOverlap(a,b))pieces=subtract(pieces,p,b);
+    for(let i=0;i<result.length && pieces.length;i++)if(boundsOverlap(a,bounds[i]!))pieces=subtract(pieces,result[i]!,bounds[i]!);
     for(const p of pieces)if(polygonArea(p)>1e-7){result.push(p);bounds.push(polygonBounds(p));}
   }
   return result;

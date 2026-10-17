@@ -1,0 +1,68 @@
+{
+  "startup": {
+    "totalMs": 29033.19999998808,
+    "phases": [
+      {
+        "label": "Reading Dream · checking the world",
+        "startMs": 0,
+        "endMs": 3692.300000011921
+      },
+      {
+        "label": "Preparing driving and walking",
+        "startMs": 3692.300000011921,
+        "endMs": 5126.400000035763
+      },
+      {
+        "label": "Starting the renderer",
+        "startMs": 5126.400000035763,
+        "endMs": 5144.800000011921
+      },
+      {
+        "label": "Building streets, hills and plants",
+        "startMs": 5144.800000011921,
+        "endMs": 26103.80000001192
+      },
+      {
+        "label": "Building water and bridges",
+        "startMs": 26103.80000001192,
+        "endMs": 26919.600000023842
+      },
+      {
+        "label": "Assembling buildings and scenery",
+        "startMs": 26919.600000023842,
+        "endMs": 27908.30000001192
+      },
+      {
+        "label": "Assembling people and wildlife",
+        "startMs": 27908.30000001192,
+        "endMs": 27998.5
+      },
+      {
+        "label": "Preparing vehicles and interactive objects",
+        "startMs": 27998.5,
+        "endMs": 28550.69999998808
+      },
+      {
+        "label": "Preparing lighting",
+        "startMs": 28550.69999998808,
+        "endMs": 28858.69999998808
+      },
+      {
+        "label": "Drawing the first view",
+        "startMs": 28858.69999998808,
+        "endMs": 29033.19999998808
+      }
+    ],
+    "heartbeat": {
+      "samples": 469,
+      "maxGapMs": 1494
+    }
+  },
+  "compileMs": 3547.7000000476837,
+  "memory": {
+    "bytes": 441903300,
+    "uniqueBuffers": 23248,
+    "geometries": 5520,
+    "uniqueTriangles": 7867941
+  }
+}

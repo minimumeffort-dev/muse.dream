@@ -1,0 +1,142 @@
+{
+  "mode": "voxel",
+  "node": "v26.8.1",
+  "scope": "environment, landscape, routes, flocks, static scenery and ambient populations; excludes live actors, player, effects, textures and render targets",
+  "phases": [
+    {
+      "label": "compile",
+      "ms": 8191.069333,
+      "heap": {
+        "rss": 395296768,
+        "heapTotal": 254787584,
+        "heapUsed": 189377952,
+        "external": 38829997,
+        "arrayBuffers": 30916553
+      }
+    },
+    {
+      "label": "game/environment",
+      "ms": 41231.30075,
+      "heap": {
+        "rss": 1305329664,
+        "heapTotal": 491913216,
+        "heapUsed": 314779624,
+        "external": 509819019,
+        "arrayBuffers": 502607176
+      }
+    },
+    {
+      "label": "game/landscape",
+      "ms": 1125.091916999998,
+      "heap": {
+        "rss": 1337180160,
+        "heapTotal": 457031680,
+        "heapUsed": 176043136,
+        "external": 537258331,
+        "arrayBuffers": 530023560
+      }
+    },
+    {
+      "label": "game/routes",
+      "ms": 104.72295799999847,
+      "heap": {
+        "rss": 1338687488,
+        "heapTotal": 458031104,
+        "heapUsed": 200870072,
+        "external": 538801562,
+        "arrayBuffers": 531543175
+      }
+    },
+    {
+      "label": "game/flocks",
+      "ms": 46.84549999999581,
+      "heap": {
+        "rss": 1342898176,
+        "heapTotal": 458031104,
+        "heapUsed": 200788752,
+        "external": 543760414,
+        "arrayBuffers": 536450371
+      }
+    },
+    {
+      "label": "game/scenery",
+      "ms": 1211.3537920000017,
+      "heap": {
+        "rss": 1391476736,
+        "heapTotal": 467238912,
+        "heapUsed": 212896440,
+        "external": 588205349,
+        "arrayBuffers": 580895306
+      }
+    },
+    {
+      "label": "game/ambient-population",
+      "ms": 135.81354199999623,
+      "heap": {
+        "rss": 1388740608,
+        "heapTotal": 364871680,
+        "heapUsed": 143647256,
+        "external": 582502911,
+        "arrayBuffers": 575262792
+      }
+    }
+  ],
+  "geometry": {
+    "bytes": 561078624,
+    "uniqueBuffers": 17837,
+    "geometries": 5102,
+    "uniqueTriangles": 7709918
+  },
+  "groups": [
+    {
+      "name": "environment",
+      "bytes": 495659304,
+      "uniqueBuffers": 13457,
+      "geometries": 3493,
+      "uniqueTriangles": 4949010
+    },
+    {
+      "name": "landscape",
+      "bytes": 28908360,
+      "uniqueBuffers": 414,
+      "geometries": 88,
+      "uniqueTriangles": 228142
+    },
+    {
+      "name": "routes",
+      "bytes": 764832,
+      "uniqueBuffers": 44,
+      "geometries": 12,
+      "uniqueTriangles": 6400
+    },
+    {
+      "name": "flocks",
+      "bytes": 2001920,
+      "uniqueBuffers": 144,
+      "geometries": 16,
+      "uniqueTriangles": 8256
+    },
+    {
+      "name": "scenery",
+      "bytes": 27655852,
+      "uniqueBuffers": 3690,
+      "geometries": 1482,
+      "uniqueTriangles": 2484358
+    },
+    {
+      "name": "populations",
+      "bytes": 6088356,
+      "uniqueBuffers": 88,
+      "geometries": 11,
+      "uniqueTriangles": 33752
+    }
+  ],
+  "resident": {
+    "rss": 1387593728,
+    "heapTotal": 296189952,
+    "heapUsed": 138205304,
+    "external": 582627240,
+    "arrayBuffers": 574041352
+  },
+  "placements": 1695
+}

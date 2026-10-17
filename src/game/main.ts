@@ -18,7 +18,8 @@ import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPa
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { buildMaskForScene } from "../scene/fixture";
-import { createWorldScene } from "../scene/world-fixture";
+import type {Scene} from "../scene/schema";
+import type {Loading} from "./loading";
 import { drivingHeight,waterAt } from "../scene/terrain";
 import { archetypeOf, objectRadius } from "../sim/archetypes";
 import { buildPaperMask } from "../sim/mask";
@@ -31,7 +32,7 @@ import { buildRoutes } from "./routes";
 import { compactObject } from "./compact-object";
 import { worldTime, worldMotion, terrainPlayer, terrainView, worldGradeShader } from "./shaders";
 import { animateObject, buildObject, buildPlayer,MAX_SUSPENSION_COMPRESSION } from "./world3d";
-import { buildEnvironment, roadGeometry, terrainNormal, worldPosition } from "./environment";
+import { buildEnvironmentSteps, roadGeometry, terrainNormal, worldPosition } from "./environment";
 import { cameraPosition, followCamera, followCameraZoom, rideCameraZoom, sportCameraFrame, DEFAULT_CAMERA_ZOOM, type FollowTarget } from "./camera";
 import { cameraZoomInput } from "./camera-input";
 import { hasAnimatedJoints,impactOf,isReactive,controlOf } from "../scene/object-dsl";
@@ -44,6 +45,7 @@ import { WorldParticles } from "./particles";
 import { SceneryOcclusion } from "./occlusion";
 import { WorldScenery } from "./scenery";
 import { createWorldMap } from "./navigation";
+import {geometryMemory} from './geometry-memory';
 
 const container = document.querySelector<HTMLElement>("#game")!;
 const pauseButton = document.querySelector<HTMLButtonElement>("#pause")!;
@@ -56,8 +58,8 @@ const sportButton=document.querySelector<HTMLButtonElement>('#sport-action')!;
 const sportLabel=document.querySelector<HTMLElement>('#sport-action-label')!;
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 
-function start(): void {
-  const doc = createWorldScene();
+export async function start(doc:Scene,loading:Loading):Promise<void> {
+  await loading.stage("Preparing driving and walking");
   const carRadius = playerRadius(doc);
   const roadMask = buildMaskForScene(doc);
   const world: World = { scene: doc, roadMask,
@@ -76,6 +78,7 @@ function start(): void {
   const clearShot=()=>{shootButtonHeld=shootPressed=shootReleased=false;pointerAim=undefined;car=cancelSportAction(car);};
   let mode: "playing" | "paused" = "playing";
 
+  await loading.stage("Starting the renderer");
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   const profileDpr=import.meta.env.DEV && new URLSearchParams(location.search).has('profile') ? Number(new URLSearchParams(location.search).get('profile-dpr')) : 0;
   renderer.setPixelRatio(profileDpr>=1 && profileDpr<=1.5 ? profileDpr : Math.min(devicePixelRatio, 1.5));
@@ -128,12 +131,15 @@ function start(): void {
   scene.add(sun, sun.target);
   const fill = new THREE.DirectionalLight("#a7c4eb", .3);
   fill.position.set(350, 250, -300); scene.add(fill);
-  const environment=buildEnvironment(doc);scene.add(environment);
+  const environment=await loading.build("Building streets, hills and plants",buildEnvironmentSteps(doc));scene.add(environment);
+  await loading.stage("Building water and bridges");
   const landscape=new WorldLandscape(doc);scene.add(landscape.group);
   const routes=buildRoutes(doc);scene.add(routes);
 
   const flocks=buildFlocks(doc);scene.add(flocks);
+  await loading.stage("Assembling buildings and scenery");
   const scenery = new WorldScenery(doc); scene.add(scenery.group);
+  await loading.stage("Assembling people and wildlife");
   const populations=new AmbientPopulation(doc);scene.add(populations.group);
   const propMeshes = new Map<string, THREE.Group>();
   const actorMeshes=new Map<string,THREE.Group>();
@@ -141,6 +147,7 @@ function start(): void {
   const breakMeshes=new Map<string,THREE.Group>();
   const objects: THREE.Group[] = [];
   const characters=new Map<THREE.Group,CharacterAnimator>();
+  await loading.stage("Preparing vehicles and interactive objects");
   for (const object of doc.objects) {
     if (!isActor(object) && !isReactive(object.spec) && archetypeOf(object).interaction !== "knockable" && !hasAnimatedJoints(object.spec)) continue;
     const destructible=isReactive(object.spec) && impactOf(object.spec)?.kind!=="bounce";
@@ -172,6 +179,7 @@ function start(): void {
   const occlusion = new SceneryOcclusion(objects.filter(object=>object!==avatar && !sportBalls.has(object.userData.sceneObject?.id)));
   const updateMap = createWorldMap(document.querySelector<HTMLCanvasElement>("#world-map")!, doc);
 
+  await loading.stage("Preparing lighting");
   const daylight=new WorldDaylight(doc,scene,hemisphere,sun,fill);
   const reviewHour=import.meta.env.DEV ? Number(new URLSearchParams(location.search).get("test-hour")) : NaN;
   const hourOffset=import.meta.env.DEV && new URLSearchParams(location.search).has("test-hour") && Number.isFinite(reviewHour) && reviewHour>=0 && reviewHour<24 && doc.daylight ? ((reviewHour-doc.daylight.startHour+24)%24)/24*doc.daylight.cycleSeconds : 0;
@@ -323,7 +331,7 @@ function start(): void {
     if(frame>=135 && frame<162)keys.add("KeyS");
 
   }) : undefined;
-  renderer.setAnimationLoop(() => {
+  const frame=() => {
     const captureDt=capture?.begin();
     if(captureDt===null)return;
     const now = performance.now(), elapsedMs = now - previous, dt = profile?.begin(elapsedMs) ?? captureDt ?? Math.min(elapsedMs / 1000, .1); previous = now;
@@ -544,13 +552,10 @@ function start(): void {
     composer.render();
     profile?.end();
     capture?.end();
-  });
-}
-
-try { start(); }
-catch (error) {
-  container.textContent = "The world could not start. Please try reloading in a browser with WebGL enabled.";
-  container.classList.add("error"); container.setAttribute("role", "alert");
-  pauseButton.hidden = true;
-  console.error(error);
+    if(document.body.dataset.loading!=="ready")loading.ready();
+  };
+  await loading.stage("Drawing the first view");
+  frame();
+  if(import.meta.env.DEV)container.dataset.memory=JSON.stringify(geometryMemory(scene));
+  renderer.setAnimationLoop(frame);
 }

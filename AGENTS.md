@@ -260,6 +260,13 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 
 ## Voxel assemblies
 
+Keep the initial HTML loading shell ahead of renderer imports. Complete Dream
+acceptance runs in a short-lived worker; terminate it on success or failure.
+Browser construction yields between surface strips/tiles using the same builders
+as synchronous fixtures. Keep column-face indices, all vertex channels and rigid
+water anchors. Memory reports count unique resident buffers and every instance
+buffer; never label them total browser memory or VRAM. See `docs/rendering.md`.
+
 Use Dream 2 `voxels` / `fill` / `cut` for bounded volumetric parts. Read
 `docs/dream/voxels.md`; preserve grid/work/surface/project limits in
 `src/scene/voxels.ts`. Validate before allocating/meshing. Cache CPU mesh data,

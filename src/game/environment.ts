@@ -2,13 +2,13 @@ import * as THREE from "three";
 import {voxelTerrainTile} from './voxel-columns';
 import {voxelStamp} from '../scene/voxel-stamp';
 import {reservedGround,streetPolygons,streetCircuitCrossings,onPolygon} from '../scene/streets';
-import {buildStreets} from './streets';
+import {buildStreetSteps} from './streets';
 import { bridgeAt, bridgeCoordinates, bridgePolygon } from "../scene/landscape-dsl";
 import type { Point, Scene } from "../scene/schema";
 import { sampleTerrain, terrainHeight, drivingHeight, waterAt } from "../scene/terrain";
 import { routeInfrastructure } from "../scene/routes";
 import { distanceToRoad, roadPoints, roadFrames, roadRibbon, ROAD_CURB_WIDTH, ROAD_SURFACE_LIFT, type RoadFrame } from "../scene/road";
-import { tiledMesh, tiledInstances } from "./batching";
+import { finishBuild, tiledMeshSteps, tiledInstances } from "./batching";
 import { groundMaterial, roadMaterial, toonMaterial, zoneMaterial } from "./shaders";
 import { toWorldX, toWorldZ } from "./world3d";
 import { surfaceGeometry, surfaceHeight, surfaceEdge, voxelSurfaceBase,TERRAIN_STEP } from "./surface";
@@ -152,9 +152,11 @@ export function drapedPolygon(doc: Scene, polygon: Point[], lift: number): THREE
   return geometry;
 }
 
-export function buildEnvironment(doc: Scene): THREE.Group {
+export function buildEnvironment(doc: Scene): THREE.Group {return finishBuild(buildEnvironmentSteps(doc));}
+export function* buildEnvironmentSteps(doc:Scene):Generator<void,THREE.Group> {
   const group = new THREE.Group(), { width, height } = doc.canonical;
-  group.add(buildStreets(doc));
+  group.add(yield* buildStreetSteps(doc));
+  yield;
   // Local terrain tiles keep invisible hills out of the main and shadow passes.
   const groundMat = groundMaterial(), low = new THREE.Color("#52744c"), high = new THREE.Color("#70865a"), rock = new THREE.Color("#77817b");
   const tints = (doc.terrain.tints ?? []).map(t => ({ ...t, color: new THREE.Color(t.color) }));
@@ -165,7 +167,7 @@ export function buildEnvironment(doc: Scene): THREE.Group {
         for(const tint of tints)color.lerp(tint.color,THREE.MathUtils.smoothstep(1-Math.hypot(wx-tint.x,wy-tint.y)/tint.radius,0,1)*.8);
         return color;
       });
-      const tile=new THREE.Mesh(ground,groundMat);tile.name='voxel-terrain';tile.receiveShadow=true;tile.matrixAutoUpdate=false;group.add(tile);continue;
+      const tile=new THREE.Mesh(ground,groundMat);tile.name='voxel-terrain';tile.receiveShadow=true;tile.matrixAutoUpdate=false;group.add(tile);yield;continue;
     }
     const ground = new THREE.PlaneGeometry(400, 400, 400 / TERRAIN_STEP, 400 / TERRAIN_STEP); ground.rotateX(-Math.PI / 2);
     ground.translate(x + 200 - width / 2, 0, y + 200 - height / 2);
@@ -178,18 +180,19 @@ export function buildEnvironment(doc: Scene): THREE.Group {
       color.multiplyScalar(.96 + .04 * Math.sin(px * .03) * Math.cos(py * .025)); colors.push(...color.toArray());
     }
     ground.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3)); ground.computeVertexNormals(); ground.computeBoundingSphere();
-    const tile = new THREE.Mesh(ground, groundMat); tile.receiveShadow = true; tile.matrixAutoUpdate = false; group.add(tile);
+    const tile = new THREE.Mesh(ground, groundMat); tile.receiveShadow = true; tile.matrixAutoUpdate = false; group.add(tile);yield;
   }
-  group.add(tiledMesh(roadGeometry(doc), roadMaterial()));
+  group.add(yield* tiledMeshSteps(roadGeometry(doc), roadMaterial()));
   const roadWidth = doc.roadMaskRef.params.roadWidth;
   const curbMaterial = toonMaterial("#ffffff"); curbMaterial.vertexColors = true;
   const paint=roadMarkingGeometry(doc);if(doc.voxelWorld)paint.userData.voxelOptions.cell=.5;
-  group.add(tiledMesh(curbGeometry(doc, 1), curbMaterial), tiledMesh(curbGeometry(doc, -1), curbMaterial),
-    tiledMesh(paint, toonMaterial("#e8e1c8")));
+  group.add(yield* tiledMeshSteps(curbGeometry(doc, 1), curbMaterial));
+  group.add(yield* tiledMeshSteps(curbGeometry(doc, -1), curbMaterial));
+  group.add(yield* tiledMeshSteps(paint, toonMaterial("#e8e1c8")));
   for (const region of doc.regions) {
     const geometry=drapedPolygon(doc,region.polygon,1.65);
     if(doc.voxelWorld)geometry.userData.voxelOptions={cell:2,step:doc.voxelWorld.heightStep,lift:1.65,thickness:.08,baseAt:(x:number,z:number)=>voxelSurfaceBase(doc,x,z)};
-    const surface = doc.voxelWorld ? tiledMesh(geometry,zoneMaterial(region.rule.effect)) : new THREE.Mesh(geometry,zoneMaterial(region.rule.effect));
+    const surface = doc.voxelWorld ? yield* tiledMeshSteps(geometry,zoneMaterial(region.rule.effect)) : new THREE.Mesh(geometry,zoneMaterial(region.rule.effect));
     surface.receiveShadow = true; surface.renderOrder = 1; group.add(surface);
   }
   // The finish line derives from the checkpoint, rather than a fixture coordinate.
@@ -204,7 +207,7 @@ export function buildEnvironment(doc: Scene): THREE.Group {
     }));
     finishPolygons[(i + j) % 2]!.push(polygon);
   }
-  ["#263e4d", "#f8edcf"].forEach((color, i) => group.add(tiledMesh(surfaceGeometry(doc, finishPolygons[i]!, 1.85), toonMaterial(color))));
+  for(const [i,color] of ["#263e4d", "#f8edcf"].entries())group.add(yield* tiledMeshSteps(surfaceGeometry(doc,finishPolygons[i]!,1.85),toonMaterial(color)));
   }
   // Passable decoration is instanced in spatial tiles, never a new collider.
   const corridors=doc.routes.filter(route=>["rail","path","air"].includes(route.kind)).map(route=>{
@@ -215,6 +218,7 @@ export function buildEnvironment(doc: Scene): THREE.Group {
   const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
   const decorationSamples = Math.ceil(width * height / 1200);
   for (let i = 0; i < decorationSamples; i++) {
+    if(i%500===0)yield;
     const x = random() * width, y = random() * height;
     if (reservedGround(doc,x,y) || bridgeAt(doc.terrain.landscape,x,y) || waterAt(doc.terrain,x,y) || distanceToRoad(path, x, y) < roadWidth / 2 + 10 ||
       corridors.some(route=>distanceToRoad(route.points,x,y)<route.radius)) continue;

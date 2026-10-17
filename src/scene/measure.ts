@@ -25,9 +25,13 @@ export function measureProblem(measure:Measure,variation=1):string|undefined {
 }
 
 const boundsCache=new WeakMap<ObjectDsl,Box3>();
+// Schema validation clones placements. Share exact rest bounds across identical geometry too.
+const sharedBounds=new Map<string,Box3>();let boundsKeyBytes=0;
 /** Exact primitive rest-pose bounds, including rigid group and joint transforms. */
 export function assemblyBounds(spec:ObjectDsl):Box3 {
   const cached=boundsCache.get(spec);if(cached)return cached.clone();
+  const key=JSON.stringify([spec.parts.map(p=>[p.shape,p.size,p.position,p.rotation,'parent' in p ? p.parent : null,'taper' in p ? p.taper : null,'outline' in p ? p.outline : null,'deform' in p ? p.deform : null,'voxels' in p ? p.voxels : null]),spec.dslVersion===2 ? spec.joints?.map(j=>[j.id,j.parent,j.position,j.rotation]) : null]);
+  const shared=sharedBounds.get(key);if(shared){boundsCache.set(spec,shared);return shared.clone();}
   const joints=new Map((spec.dslVersion===2 ? spec.joints??[] : []).map(j=>[j.id,j]));
   const frames=new Map<string,Matrix4>();
   const transform=(position:readonly number[],rotation:readonly number[]=[0,0,0],size:readonly number[]=[1,1,1])=>
@@ -51,7 +55,12 @@ export function assemblyBounds(spec:ObjectDsl):Box3 {
     geometry.applyMatrix4(parent.multiply(transform(part.position,part.rotation,part.size)));geometry.computeBoundingBox();
     bounds.union(geometry.boundingBox!);geometry.dispose();
   }
-  boundsCache.set(spec,bounds);return bounds.clone();
+  // Schema refinements can ask for bounds of rejected non-finite input.
+  if([...bounds.min.toArray(),...bounds.max.toArray()].some(n=>!Number.isFinite(n)))return bounds.clone();
+  boundsCache.set(spec,bounds);
+  while(sharedBounds.size && (sharedBounds.size>=128 || boundsKeyBytes+key.length*2>1024*1024)){const oldest=sharedBounds.keys().next().value!;boundsKeyBytes-=oldest.length*2;sharedBounds.delete(oldest);}
+  if(key.length*2<=1024*1024){sharedBounds.set(key,bounds);boundsKeyBytes+=key.length*2;}
+  return bounds.clone();
 }
 const scales=new WeakMap<ObjectDsl,number>();
 /** Resolve once at scene compilation. SceneObject.scale already contains this factor. */

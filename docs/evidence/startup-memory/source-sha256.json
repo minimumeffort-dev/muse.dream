@@ -1,0 +1,23 @@
+{
+  "baseline": "10886b4c2bd7ae52c89453cb09c694f93ca50320",
+  "files": {
+    "index.html": "3ad1eb5e3b08e886b5d8bdf193698fe6b763574dbd2892f17370ece3ea8e0145",
+    "src/style.css": "fee9c50b39b1cdd99ef98539f69b811d5b03d99bb72091a55f788f5482ff6b26",
+    "src/game/boot.ts": "78b032ded0466956cbfcff5096e2756f6965486c84e1a96a90457826de35cccf",
+    "src/game/loading.ts": "63294d4dbb1688e91c976d27e5b81ade2df23f5a695aa0129683b1da7362a782",
+    "src/scene/world-worker.ts": "6f49d9184fbd4e5e043e1e52dc18d2495364fc56c37278ca9725334a400efa97",
+    "src/game/main.ts": "074e071b7296951e0f33c24db66ceb6d0068a19be9b92e47e78f4af40b4e590d",
+    "src/game/batching.ts": "c877e6445f17400df6763cada2dc8dcdb9cd2882b13300ca328b9c93c58cfdbe",
+    "src/game/environment.ts": "8a21b53cebf9d8f18ce2e4dbcbe9056277918bcc94abbd05f5a71eb67752fdf3",
+    "src/game/streets.ts": "7b5e8e57ca12d252aa4b6c5e482b5357575060aab32a2bf0f1cb5166597c55c3",
+    "src/game/surface.ts": "8c6c0ff97e82cdec96f85e2dcc62025649f8e8536563735bd8e4dd7a85c959f7",
+    "src/game/voxel-columns.ts": "067b5aedcb70a697ddbf110771ca6fc004dd0a5801c98d4963e3786e276681a9",
+    "src/game/geometry-memory.ts": "f26d64db66bd89dffb1d0157d2cfbcee174c06b85b05d86c1a3d5e9e29cf5fba",
+    "src/scene/measure.ts": "30911824b383e5815e19538ad10c9355aad67567b314cf5bdb67015f45c06da0",
+    "src/scene/polygons.ts": "0c9a407d51b78a8c70b445bbdf832b69d3cf61a4f249036c18c7930427c07ecf",
+    "src/scene/world/open-world.dream": "868801e58a51253cf09b0b91203e8d92601ccac60f9bf47c43315c2e2b5e4b4b",
+    "scripts/profile-world-memory.mjs": "796033f3aa3b6a74e118b2ffe1984e4437ce2e923524be6d71b9291e7001182c",
+    "tests/startup.test.ts": "1973ae1fd174e5384e796e47d77917f1900d457fef9b278e3e0d3f56a258eba0",
+    "tests/whole-world-voxels.test.ts": "0bdd77312648015d7def1e56a76ba0bd8908ecb1b179166e5da32100e7b18ed0"
+  }
+}

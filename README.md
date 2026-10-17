@@ -14,6 +14,8 @@ Racing is where this started. The idea is to make whatever someone draws playabl
 
 The ground, roads, river, buildings, vehicles, people and plants now go through voxel construction. Dream describes the shapes and connections; the engine fills their cells and merges the visible faces. Wheels still turn, boats still pass under bridges, and breakable objects keep their authored pieces. A voxel doesn't need its own mesh or physics body.
 
+A loading screen appears before the world is built. Dream validation runs in a worker, and terrain and road construction yields between tiles. Column faces share indexed vertices, keeping the same geometry with less buffer memory. [Loading and memory measurements](docs/rendering.md#loading-and-memory).
+
 The world stays resident. Object stamps and terrain tiles use different bounded grids, with fine cells for markings and small fittings. Driving still uses the smooth heightfield and explicit contacts, so stepped graphics don't shake the car. Editable terrain and per-cell destruction are still further work.
 
 ![Voxel terrain and connected city infrastructure](docs/media/voxel-world.jpg)

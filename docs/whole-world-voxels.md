@@ -50,6 +50,8 @@ Collision cylinders, bridge clearance and the smooth driving heightfield remain 
 
 ## Keep the browser in mind
 
+Voxel construction currently uses more geometry-buffer memory than the same city with the world conversion disabled. Indexed column faces reduce that cost without changing the surfaces. The opening loader shows construction phases, and Dream validation runs in a worker. See the [loading and memory comparison](rendering.md#loading-and-memory) for measurements, scope and remaining limits.
+
 The full world stays resident. Static objects still use prototypes, instancing, material batching and spatial culling. Object stamp meshes share a bounded 16 MiB CPU cache; individual stamps never exceed 32,768 cells or the existing surface-quad limit. Landscape meshing works on one bounded tile at a time. No cell becomes a separate Three.js object or physics body, and intact objects don't remesh each frame.
 
 The explicit fill/cut budgets are unchanged. Their project allocation limit describes authored volumes, while the construction cache contains reusable stamp surfaces. Browser measurements and capture provenance are in the [verification record](evidence/whole-world-voxels/verification.md). Offline recordings show the geometry and motion; they aren't frame-rate benchmarks.

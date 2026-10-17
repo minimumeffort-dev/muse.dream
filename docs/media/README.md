@@ -307,3 +307,7 @@ geometry. Their existing captures remain accurate. Existing district stills show
 the same layout at a particular moment; the new clips demonstrate moving
 populations. A separate native browser profile compares full-quality driving,
 with all members resident and the same pixel ratio, viewport and inputs.
+
+## Startup screen
+
+The [loading screenshot](../evidence/startup-memory/loader.png) is a native browser screenshot taken while the live world was actually being constructed. Startup now uses the same bundled Manrope and Archivo files and warm-white, charcoal and yellow identity documented above. Column faces gained indices; the represented surfaces, asset shapes, clocks and animation controls remain unchanged. Existing gameplay recordings and their paired stills remain accurate, so this pass does not replace them.

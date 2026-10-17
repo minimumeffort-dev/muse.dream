@@ -17,7 +17,7 @@ const policy={objectCell:1,groundCell:8 as const,heightStep:1};
 function assertVoxelNormals(g:THREE.BufferGeometry){
  const n=g.getAttribute('normal'),p=g.getAttribute('position');expect(p.count).toBeGreaterThan(0);
  for(let i=0;i<n.count;i++)expect([Math.abs(n.getX(i)),Math.abs(n.getY(i)),Math.abs(n.getZ(i))].sort()).toEqual([0,0,1]);
- for(let i=0;i<p.count;i+=3){const a=new THREE.Vector3().fromBufferAttribute(p,i),b=new THREE.Vector3().fromBufferAttribute(p,i+1),c=new THREE.Vector3().fromBufferAttribute(p,i+2);expect(b.sub(a).cross(c.sub(a)).normalize().dot(new THREE.Vector3().fromBufferAttribute(n,i))).toBeCloseTo(1,5);}
+ const indices=g.index;for(let i=0;i<(indices?.count??p.count);i+=3){const ids=[0,1,2].map(j=>indices ? indices.getX(i+j) : i+j);const a=new THREE.Vector3().fromBufferAttribute(p,ids[0]!),b=new THREE.Vector3().fromBufferAttribute(p,ids[1]!),c=new THREE.Vector3().fromBufferAttribute(p,ids[2]!);expect(b.sub(a).cross(c.sub(a)).normalize().dot(new THREE.Vector3().fromBufferAttribute(n,ids[0]!))).toBeCloseTo(1,5);}
 }
 describe('whole-world voxel construction',()=>{
  it('applies the world policy to every linked template, placement, player and flock, without changing physics',()=>{
@@ -54,7 +54,7 @@ describe('whole-world voxel construction',()=>{
  it('keeps all vertices of a water column on one wave anchor',()=>{
   const source=new THREE.PlaneGeometry(16,16).rotateX(-Math.PI/2),g=voxelSurface(source,{cell:8,step:1,lift:0,thickness:2,maxMerge:1,rigid:true});
   const anchor=g.getAttribute('voxelAnchor');expect(anchor.count).toBe(g.getAttribute('position').count);
-  for(let i=0;i<anchor.count;i+=6)for(let j=1;j<6;j++){expect(anchor.getX(i+j)).toBe(anchor.getX(i));expect(anchor.getY(i+j)).toBe(anchor.getY(i));}
+  for(let i=0;i<anchor.count;i+=4)for(let j=1;j<4;j++){expect(anchor.getX(i+j)).toBe(anchor.getX(i));expect(anchor.getY(i+j)).toBe(anchor.getY(i));}
  });
  it('keeps hillside pavement and paint on their supporting ground columns',()=>{
   const doc=parseScene({...createFixtureScene(),voxelWorld:policy,terrain:{hills:[{id:'hill',x:480,y:360,radiusX:250,radiusY:250,height:80}]}});
@@ -75,7 +75,7 @@ describe('whole-world voxel construction',()=>{
   const source=new THREE.PlaneGeometry(8,4).rotateX(-Math.PI/2).translate(4,3.1,2);
   const geometry=voxelSurface(source,{cell:1,step:1,lift:3.1,thickness:3.6,baseAt:()=>10.8,liftAt:x=>1.25+1.85*x/8});
   const p=geometry.getAttribute('position'),n=geometry.getAttribute('normal');let checked=0;
-  for(let i=0;i<p.count;i+=6)if(n.getY(i)===1){const center=(Math.min(...Array.from({length:6},(_,j)=>p.getX(i+j)))+Math.max(...Array.from({length:6},(_,j)=>p.getX(i+j))))/2;expect(p.getY(i)).toBeCloseTo(10+1.25+1.85*center/8,4);checked++;}
+  for(let i=0;i<p.count;i+=4)if(n.getY(i)===1){const center=(Math.min(...Array.from({length:4},(_,j)=>p.getX(i+j)))+Math.max(...Array.from({length:4},(_,j)=>p.getX(i+j))))/2;expect(p.getY(i)).toBeCloseTo(10+1.25+1.85*center/8,4);checked++;}
   expect(checked).toBeGreaterThan(1);assertVoxelNormals(geometry);
  });
  it('round trips the directive and rejects invalid grids and work before rendering',()=>{
