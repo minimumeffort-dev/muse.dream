@@ -88,7 +88,7 @@ All declared entrances and platforms belong to one pedestrian network. The compi
 
 [Compile a complete city example](examples/connected-city.dream), read the [connection reference](dream/reference.md#connected-city-declarations), or inspect the [research and design notes](city-design.md).
 
-The complete world stays resident, with the existing instancing, geometry tiles and frustum culling. Asset detail, pixel ratio, shadows, particles and post-processing retain their quality settings. Ground driving still has one height per XY; boats and swimmers use the water layer below bridges. There is no automatic road repair, generated terrain excavation or traffic solver.
+Static world geometry streams around the player, using the existing instancing and frustum culling within nearby chunks. Simulation, transit, NPCs and damage remain resident. See [rendering](rendering.md) for coverage and memory limits. Asset detail, pixel ratio, shadows, particles and post-processing retain their quality settings. Ground driving still has one height per XY; boats and swimmers use the water layer below bridges. There is no automatic road repair, generated terrain excavation or traffic solver.
 
 ![Woodland with habitat-specific ground wildlife and understory](media/population-woodland.jpg)
 

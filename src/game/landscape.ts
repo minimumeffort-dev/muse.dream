@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import type {RenderRegion} from "./render-region";
+import type {Water} from "../scene/landscape-dsl";
 import type { Scene } from "../scene/schema";
 import type { CarState } from "../sim/car";
 import { bridgeCoordinates, bridgePolygon } from "../scene/landscape-dsl";
@@ -11,6 +13,20 @@ import { surfaceGeometry, surfaceHeight, bridgeHeightAt } from "./surface";
 import { bridgeMaterial, toonMaterial, waterMaterial } from "./shaders";
 import type { ActorPose } from "../sim/actors";
 
+/** Shared by resident fixtures and background render chunks. */
+export function waterGeometry(doc:Scene,water:Water,region?:RenderRegion):THREE.BufferGeometry{
+  const minX=Math.min(...water.polygon.map(p=>p.x)),minY=Math.min(...water.polygon.map(p=>p.y));
+  const width=Math.max(...water.polygon.map(p=>p.x))-minX,height=Math.max(...water.polygon.map(p=>p.y))-minY;
+  const geometry=surfaceGeometry(doc,[water.polygon],0,undefined,()=>0,[],region),positions=geometry.getAttribute('position'),uv=geometry.getAttribute('uv'),depths=new Float32Array(positions.count);
+  for(let i=0;i<positions.count;i++){
+    depths[i]=water.level-terrainHeight(doc.terrain,positions.getX(i)+doc.canonical.width/2,positions.getZ(i)+doc.canonical.height/2);
+    positions.setY(i,water.level+.25);uv.setXY(i,(positions.getX(i)+doc.canonical.width/2-minX)/width,(positions.getZ(i)+doc.canonical.height/2-minY)/height);
+  }
+  geometry.setAttribute('waterDepth',new THREE.BufferAttribute(depths,1));geometry.computeVertexNormals();geometry.computeBoundingSphere();
+  if(doc.voxelWorld)geometry.userData.voxelOptions={contour:true,cell:8,originX:-doc.canonical.width/2,originZ:-doc.canonical.height/2,step:doc.voxelWorld.heightStep,lift:water.level+.25,thickness:2,maxMerge:1,rigid:true};
+  return geometry;
+}
+
 /** Static bridge meshes plus a small, persistent wave field for each water body. */
 export class WorldLandscape {
   readonly group=new THREE.Group();
@@ -18,27 +34,19 @@ export class WorldLandscape {
   private wakeDistance=0;
   private previousWater:string|undefined;
   private actorWakes=new Map<string,number>();
-  constructor(readonly doc:Scene) {
+  constructor(readonly doc:Scene,streamWater=false) {
     this.group.name="landscape-dsl";
     this.waters=(doc.terrain.landscape?.waters ?? []).map(water=> {
       const waves=new WaterWaves(water,doc.terrain);
       const pixels=new Uint8Array(waves.heights.length).fill(128);
       const texture=new THREE.DataTexture(pixels,waves.columns,waves.rows,THREE.RedFormat);
       texture.minFilter=texture.magFilter=THREE.LinearFilter;texture.needsUpdate=true;
-      const geometry=surfaceGeometry(doc,[water.polygon],0,undefined,()=>0),positions=geometry.getAttribute("position"),uv=geometry.getAttribute("uv");
-      const depths=new Float32Array(positions.count);
-      for(let i=0;i<positions.count;i++) {
-        depths[i]=water.level-terrainHeight(doc.terrain,positions.getX(i)+doc.canonical.width/2,positions.getZ(i)+doc.canonical.height/2);
-        positions.setY(i,water.level+.25);
-        uv.setXY(i,(positions.getX(i)+doc.canonical.width/2-waves.minX)/waves.width,
-          (positions.getZ(i)+doc.canonical.height/2-waves.minY)/waves.height);
+      const material=waterMaterial(water,texture,waves,!!doc.voxelWorld);material.userData.streamShared=true;
+      if(!streamWater){
+        const mesh=tiledMesh(waterGeometry(doc,water),material);mesh.name=`water-${water.id}`;
+        mesh.traverse(tile=>{tile.renderOrder=2;if(tile instanceof THREE.Mesh)tile.geometry.boundingSphere!.radius+=3;});this.group.add(mesh);
       }
-      geometry.setAttribute("waterDepth",new THREE.BufferAttribute(depths,1));
-      geometry.computeVertexNormals();geometry.computeBoundingSphere();geometry.boundingSphere!.radius+=3;
-      if(doc.voxelWorld)geometry.userData.voxelOptions={cell:8,step:doc.voxelWorld.heightStep,lift:water.level+.25,thickness:2,maxMerge:1,rigid:true};
-      const mesh=tiledMesh(geometry,waterMaterial(water,texture,waves,!!doc.voxelWorld));
-      mesh.name=`water-${water.id}`;mesh.traverse(tile=>{tile.renderOrder=2;if(tile instanceof THREE.Mesh)tile.geometry.boundingSphere!.radius+=3;});this.group.add(mesh);
-      return {water,waves,texture,pixels,version:waves.version};
+      return {water,waves,texture,pixels,material,version:waves.version};
     });
     const point=(x:number,y:number,lift:number,heightAt?:(x:number,y:number)=>number)=>new THREE.Vector3(x-doc.canonical.width/2,surfaceHeight(doc,x,y,heightAt)+lift,y-doc.canonical.height/2);
     const beams=new Map<THREE.Material,THREE.Matrix4[]>();

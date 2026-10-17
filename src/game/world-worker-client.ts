@@ -1,0 +1,30 @@
+import type {Scene} from '../scene/schema';
+import type {RenderRegion} from './render-region';
+import type {ChunkPacket} from './chunk-packet';
+
+/** A single producer bounds CPU work and transferred buffers during fast travel. */
+export class WorldWorkerClient {
+  readonly scene:Promise<Scene>;
+  private next=0;
+  private pending=new Map<number,{resolve:(packet:ChunkPacket)=>void;reject:(error:Error)=>void}>();
+  private failure:Error|undefined;
+  private rejectScene!:(error:Error)=>void;
+  constructor(private worker:Worker,onCompile:(ms:number)=>void=()=>{}){
+    this.scene=new Promise((resolve,reject)=>{
+      this.rejectScene=reject;
+      worker.onmessage=({data})=>{
+        if(data.error){this.fail(new Error(data.error));return;}
+        if(data.scene){onCompile(data.compileMs);resolve(data.scene);return;}
+        const pending=this.pending.get(data.id);if(!pending)return;this.pending.delete(data.id);pending.resolve(data.packet);
+      };
+    });
+    worker.onerror=event=>{event.preventDefault();this.fail(new Error(event.message||'World worker failed'));};
+    worker.onmessageerror=()=>this.fail(new Error('World data could not be read'));
+  }
+  build(region:RenderRegion):Promise<ChunkPacket>{
+    if(this.failure)return Promise.reject(this.failure);
+    const id=this.next++;return new Promise((resolve,reject)=>{this.pending.set(id,{resolve,reject});this.worker.postMessage({id,region});});
+  }
+  private fail(error:Error):void{this.failure=error;this.worker.terminate();this.rejectScene(error);this.pending.forEach(p=>p.reject(error));this.pending.clear();}
+  dispose():void{this.fail(new Error('World worker stopped'));}
+}

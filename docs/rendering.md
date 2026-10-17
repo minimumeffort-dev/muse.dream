@@ -1,39 +1,49 @@
 # Rendering the whole world
 
-The mock world has 1,695 placed objects across a 14000 × 11000 landscape. It stays resident while you drive, walk or fly. There is no district streaming, distance-based asset replacement or automatic quality reduction.
+The mock world has 1,695 placed objects across a 14000 × 11000 landscape. Static render geometry now loads around the player and leaves memory behind them. The accepted Dream world and its simulation stay complete.
 
 ## Loading and memory
 
-The loading screen is part of the first HTML response. It shows the current work before the renderer module loads. Dream compilation, schema checks and complete-world playability validation run in a short-lived worker, which is terminated after transferring the accepted scene. Streets and terrain use cooperative construction steps; the entire world is ready before the loading screen leaves. Driving starts after the first rendered view. Failed compilation, module loading or WebGL startup exposes a Reload button.
+The loading screen arrives in the first HTML response. One worker compiles and validates Dream, then builds terrain, streets, water and static object chunks on demand. Finished mesh buffers are transferred to the renderer, along with engine-owned material recipes and per-instance occlusion data. Object stamping and batching stay off the main thread. The first complete view starts the game; the rest of the map is built as it becomes relevant.
 
-![The loading screen during real world construction](media/loading.png)
+![The real startup loader](media/loading.png)
 
-The engine now stores each column face as four vertices and six indices, instead of repeating six complete vertices. Positions, normals, winding, fine road paint, UVs and rigid water anchors retain their meaning. Coordinate lookups use numeric keys, and attribute gradients are calculated once per source triangle. Polygon clipping skips disjoint original bounds, and surface construction yields between ground strips. Identical asset rest bounds share a bounded cache across schema-cloned placements. These changes retain the world's geometry, simulation and rendering settings.
+Chunks cover 800 × 800 world units. Selection includes the orthographic view at the world's height extremes, rotated and zoomed views, object extents and upstream shadow casters. A 400-unit prefetch margin and three seconds of movement lookahead prepare the next area. A wider retention band keeps up to sixteen previously visited chunks warm outside that requested area, avoiding repeated rebuilding near boundaries.
 
-Voxels currently use **more geometry memory** than the same world without whole-world voxel conversion. Greedy meshing helps flat surfaces, but stepped hills, thin paint, water columns and curved object stamps add faces. This representation trades that memory for its cell-built appearance; it does not make destruction per-cell or automatically cheap.
+Eviction removes Three.js geometry, instance buffers and owned materials, then drops their CPU references. Shared water textures and the toon gradient survive. Returning rebuilds the same source-derived geometry. There is one mesh request in flight; outdated results are discarded. Required chunks take priority over prefetch. When a teleport, zoom or rapid travel outruns construction, the last complete frame holds briefly with a loading status. Simulation and frame exports wait, so the car cannot drive into invisible geometry.
 
-For the major render groups measured locally:
+This streams terrain, streets, road paint, ground finishes, small plants, water surfaces and static scenery. Complete scene data, masks, physics, NPC clocks, damage, wave fields, live vehicles/people, ambient populations, flocks, bridges, route infrastructure and light pools remain resident. Streaming does not reset a broken table or stop a bus in another district. There is no distance-based geometry downgrade. Pixel ratio, antialiasing, post-processing, particles and the 2048-pixel shadow map retain their settings. Shadow bounds come from accepted world data, independently of loaded chunks.
 
-| Representation | Retained geometry buffers |
+The matched local survey measures these major render groups:
+
+| Same current geometry | Retained geometry buffers |
 | --- | ---: |
-| Shaped world, whole-world conversion disabled | 195.6 MiB |
-| Voxel world before this pass | 535.1 MiB |
-| Voxel world with indexed columns | 400.2 MiB |
+| Entire map built at once | 443.5 MiB |
+| Town and warmed nearby chunks | 128.2 MiB |
+| Airport after leaving town | 106.4 MiB |
+| Waterfront after leaving the airport | 115.0 MiB |
+| Return to town with nearby chunks kept warm | 163.4 MiB |
 
-That removes **134.8 MiB (25.2%)** from the voxel representation with the same 7,709,918 unique geometry triangles. It still uses about **2.05 times** the shaped world's geometry bytes. These are the groups and exclusions below, not total browser or VRAM usage.
-
-The result depends on what is voxelized. Static scenery shrinks from 49.8 to 26.4 MiB and ambient population geometry from 15.1 to 5.8 MiB. Environment geometry, which includes the stepped terrain and streets, grows from 117.5 to 345.9 MiB. That ground representation is the main remaining memory target.
-
-The reproducible comparison uses the same Dream modules and placements, with only `voxel_world` removed for the shaped baseline. Explicitly authored `voxels` remain in both versions. Run each command in a fresh process:
+The town case retains **71% fewer geometry-buffer bytes** than constructing the same current world at once. The return case keeps four additional nearby chunks; it has released the distant airport geometry. These are deterministic buffer counts, not total browser heap, VRAM or a lower-powered laptop frame-rate claim. The survey includes environment, water/bridges, routes, flocks, static scenery and ambient populations. It excludes live actors, the player, effects, textures, render targets, temporary construction and compiler/worker caches.
 
 ```sh
-node --expose-gc scripts/profile-world-memory.mjs voxel /tmp/dream-voxel.json
-node --expose-gc scripts/profile-world-memory.mjs shapes /tmp/dream-shapes.json
+node --expose-gc scripts/profile-world-memory.mjs voxel /tmp/dream-resident.json
+node --expose-gc scripts/profile-world-streaming.mjs /tmp/dream-streamed.json
 ```
 
-The report deduplicates resident typed-array backing buffers across environment, water/bridges, routes, flocks, static scenery and ambient populations. It includes indices and every instance buffer. It excludes live actors, the player, effects, textures, render targets, GPU-driver allocations and temporary meshing work. Node process heap/RSS figures include Vite and compiler caches and are not browser heap measurements. The development game's `#game[data-memory]` separately reports geometry buffers for the complete constructed render scene.
+The development game's `#game[data-streaming]` reports required/resident chunks, loaded/unloaded/discarded counts, retained chunk bytes and assembly timing. `#game[data-memory]` counts geometry across the constructed render scene, including live actors. Neither represents total browser memory. The worker's support-height cache is bounded to 64,000 entries; stamp mesh caches remain bounded per thread.
 
-[Raw comparisons and browser verification](evidence/startup-memory/verification.md) include source identity, timings and limitations. Construction still needs CPU time and some synchronous phases can delay input briefly. Cooperative startup avoids the original single long task; it does not establish smoothness or memory suitability on every laptop. All districts stay resident after startup.
+[Streaming evidence and limitations](evidence/world-streaming/verification.md) contains the source identity, locality survey, native browser checks and recordings. The [earlier all-resident comparison](evidence/startup-memory/verification.md) remains historical evidence: indexed columns reduced the previous representation from 535.1 to 400.2 MiB. That geometry differs from the new contoured surfaces, so it is not the matched streaming baseline above.
+
+## Diagonals without stair steps
+
+Roads, cycle glyphs, crossings, decks and shorelines use cut-cell contours. The renderer clips their actual outline at supporting ground-cell boundaries, preserves UVs and layer lifts, and merges complete flat interiors. Narrow paint keeps its authored width even when it is smaller than a terrain cell. Adjacent chunks use the same canonical lattice and source-wide UV coordinates.
+
+Curved shaped stamps use a bounded surface net over occupied cells. Flat coplanar faces are merged, and the resulting surface is fitted to the original authored envelope. Tires retain their open centres; pivots, materials and physical contacts keep their existing ownership. Explicit `voxels/fill/cut` volumes retain exact cell faces and fracture cuts. Ground hills retain their stepped column appearance. No finer world-size grid, per-cell meshes or per-cell physics bodies were added.
+
+![Four native views of the plane, bicycle and house](media/voxel-contours.jpg)
+
+Surface nets follow the boundary reconstruction approach described by [Mikola Lysenko](https://0fps.net/2012/07/12/smooth-voxel-terrain-part-2/). Resource ownership follows [Three.js cleanup guidance](https://threejs.org/manual/pages/cleanup.html). The implementation preserves the existing grid and surface limits; these are engine choices, so Dream's command vocabulary stays the same.
 
 ## Less work for the same image
 
@@ -67,7 +77,7 @@ The report includes mean and 95th-percentile times, draw calls including the sha
 
 The [recorded comparison](evidence/render-performance/verification.md) keeps the source revision, measurement conditions, raw reports and screenshots together. The stationary image comparison checks the visible game area outside the profiler panel. Regression tests also compare painted vertices, normals and UVs through rotation and suspension, retain fixed world placement alongside moving objects, and exercise racing, off-road contacts, destruction and vehicle controls.
 
-These measurements come from the development machine. Lower-powered laptop performance still needs testing on those machines, especially integrated GPUs, high-resolution displays and sustained thermal load. The engine keeps the full world in memory, so it still needs enough memory for the accepted scene.
+These measurements come from the development machine. Lower-powered laptop performance still needs testing on those machines, especially integrated GPUs, high-resolution displays and sustained thermal load. Complete simulation data and bounded live render groups still need memory, even when static districts are unloaded.
 
 ## The connected city
 
@@ -75,7 +85,7 @@ The rebuilt city covers 1.4 × 1.1 kilometres, with 1,327 placements and 78 asse
 
 For a fixed comparison render size, the development profiler accepts `profile-dpr=1` through `1.5`. Production keeps its normal device-pixel-ratio policy. Match the drawing buffer, browser viewport and camera between runs. Add `test-driving=town` to profile a clear street in the dense new district; `suburbs` and `sports` are also development review starts. These helpers change the inspection pose, not the production spawn.
 
-The [expansion evidence](evidence/urban-world/verification.md) records raw original-start and town measurements, screenshots, geometry checks and the media audit. More world area does not imply that all its geometry is submitted each frame: the entire accepted scene stays resident, while existing frustum culling skips draws outside the visible and shadow views. These results do not replace testing on lower-powered hardware.
+The [expansion evidence](evidence/urban-world/verification.md) records raw original-start and town measurements, screenshots, geometry checks and the media audit. More world area does not imply that all its geometry is submitted each frame: the renderer now streams static chunks and also culls draws outside the visible and shadow views. These results do not replace testing on lower-powered hardware.
 
 ## Bounded NPC updates
 
@@ -89,7 +99,7 @@ particle, shadow or resident-world settings were reduced.
 
 ## Connected transport expansion
 
-The 1.2 × 1 km world keeps terrain, wave, shadow and asset detail unchanged. Water triangles now use the same resident spatial tiling as roads; UVs, depth attributes and wave displacement bounds survive the split. The solver iterates precomputed wet cells instead of dry cells inside a long waterway’s bounding rectangle. Street driving uses cached riding footprints, including bicycle lanes. No loading, unloading or distance-based asset replacements were added.
+The 1.2 × 1 km world keeps terrain, wave, shadow and asset detail unchanged. Water triangles now use the same resident spatial tiling as roads; UVs, depth attributes and wave displacement bounds survive the split. The solver iterates precomputed wet cells instead of dry cells inside a long waterway’s bounding rectangle. Street driving uses cached riding footprints, including bicycle lanes. That earlier pass added no streaming; the current chunk system is described above.
 
 [Transport verification](evidence/transport-world/verification.md) records the local measurements and limits for this revision.
 

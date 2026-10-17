@@ -311,3 +311,26 @@ with all members resident and the same pixel ratio, viewport and inputs.
 ## Startup screen
 
 The [loading screenshot](loading.png) is a native browser screenshot taken while the live world was actually being constructed. Startup now uses the same bundled Manrope and Archivo files and warm-white, charcoal and yellow identity documented above. Column faces gained indices; the represented surfaces, asset shapes, clocks and animation controls remain unchanged. Existing gameplay recordings and their paired stills remain accurate, so this pass does not replace them.
+
+## Streaming and continuous contours
+
+The streaming pass refreshes driving, boost, switching, locomotion, swimming,
+football, basketball, flight, daynight, pedestrians and wildlife as paired GIF/HD
+video exports, with their corresponding stills. All source frames were rendered
+at 30 per simulation second. This run produced native 1600 × 900 PNG frames;
+[the media audit](../evidence/world-streaming/media-audit.json) records frame counts,
+pixel dimensions and write times. No frames were interpolated. Exports hold while
+required chunks are missing and do not establish live frame rate.
+
+`world.jpg` and `voxel-world.jpg` share the new driving still. `voxel-vehicles.jpg`
+and `voxel-contours.jpg` use the native four-angle car, bicycle, plane and house
+review. Untrimmed captures remain in the [evidence](../evidence/world-streaming/verification.md).
+`loading.png` shows the real first-neighbourhood loading phase.
+
+The explicit fill/cut destruction clips, architectural construction examples,
+material examples, proportion references, maps and original terrain closeups were
+reviewed. They retain useful coverage of unchanged authored dimensions, exact
+carved cuts, finishes, layout and stepped ground. Their dated verification records
+remain historical evidence; use the refreshed world/vehicle captures above for the
+current contoured appearance. Dream vocabulary and its checked examples are
+unchanged by streaming.

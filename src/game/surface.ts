@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import {overlaps,type RenderRegion} from "./render-region";
 import {finishBuild} from "./batching";
 import {partition} from "../scene/polygons";
 import { bridgeAt,bridgeCoordinates, bridgePolygon, clipPolygon as clip, type Bridge } from "../scene/landscape-dsl";
@@ -28,13 +29,13 @@ export function voxelSurfaceBase(doc:Scene,x:number,z:number,heightAt?:HeightAt)
   const ix=Math.floor(px/cell),iy=Math.floor(py/cell),key=`${ix},${iy}`;
   let cache=voxelGroundCache.get(doc);if(!cache){cache=new Map();voxelGroundCache.set(doc,cache);}
   let value=cache.get(key);
-  if(value===undefined){value=terrainHeight(doc.terrain,(ix+.5)*cell,(iy+.5)*cell);if(cache.size<640000)cache.set(key,value);}
+  if(value===undefined){value=terrainHeight(doc.terrain,(ix+.5)*cell,(iy+.5)*cell);if(cache.size>=64000)cache.delete(cache.keys().next().value!);cache.set(key,value);}
   return value;
 }
 
 /** Clip authored polygons onto the actual ground triangles, rather than sampling a second mesh. */
-export function surfaceGeometry(doc: Scene, polygons: Point[][], lift: number, direction?: Point, heightAt?:HeightAt, cutouts:Point[][]=[]): THREE.BufferGeometry {return finishBuild(surfaceGeometrySteps(doc,polygons,lift,direction,heightAt,cutouts));}
-export function* surfaceGeometrySteps(doc: Scene, polygons: Point[][], lift: number, direction?: Point, heightAt?:HeightAt, cutouts:Point[][]=[]):Generator<void,THREE.BufferGeometry> {
+export function surfaceGeometry(doc: Scene, polygons: Point[][], lift: number, direction?: Point, heightAt?:HeightAt, cutouts:Point[][]=[],region?:RenderRegion): THREE.BufferGeometry {return finishBuild(surfaceGeometrySteps(doc,polygons,lift,direction,heightAt,cutouts,region));}
+export function* surfaceGeometrySteps(doc: Scene, polygons: Point[][], lift: number, direction?: Point, heightAt?:HeightAt, cutouts:Point[][]=[],region?:RenderRegion):Generator<void,THREE.BufferGeometry> {
   const ground:HeightAt=(x,y)=>terrainHeight(doc.terrain,x,y);
   const decks=(doc.terrain.landscape?.bridges ?? []).map(bridge=> {
     const polygon=bridgePolygon(bridge);
@@ -45,6 +46,7 @@ export function* surfaceGeometrySteps(doc: Scene, polygons: Point[][], lift: num
     minY:Math.min(...polygon.map(p=>p.y)),maxY:Math.max(...polygon.map(p=>p.y))}));
   const positions: number[] = [], normals: number[] = [], uv: number[] = [], step = TERRAIN_STEP;
   for (const polygon of polygons) {
+    if(region && !overlaps(region,polygon))continue;
     const points = polygon.map(p => new THREE.Vector2(p.x, p.y));
     const origin = points[0]!, along = (direction ? new THREE.Vector2(direction.x, direction.y) : points[1]!.clone().sub(origin)).normalize();
     const across = new THREE.Vector2(-along.y, along.x);
@@ -53,14 +55,15 @@ export function* surfaceGeometrySteps(doc: Scene, polygons: Point[][], lift: num
     const minU = Math.min(...us), minV = Math.min(...vs), width = Math.max(...us) - minU || 1, length = Math.max(...vs) - minV || 1;
     for (const face of THREE.ShapeUtils.triangulateShape(points, [])) {
       const triangle = face.map(i => polygon[i]!);
-      const minX = Math.floor(Math.min(...triangle.map(p => p.x)) / step) * step;
-      const minY = Math.floor(Math.min(...triangle.map(p => p.y)) / step) * step;
-      const maxX = Math.max(...triangle.map(p => p.x)), maxY = Math.max(...triangle.map(p => p.y));
+      const minX = Math.floor(Math.max(region?.x0??-Infinity,Math.min(...triangle.map(p => p.x))) / step) * step;
+      const minY = Math.floor(Math.max(region?.y0??-Infinity,Math.min(...triangle.map(p => p.y))) / step) * step;
+      const maxX = Math.min(region?.x1??Infinity,Math.max(...triangle.map(p => p.x))), maxY = Math.min(region?.y1??Infinity,Math.max(...triangle.map(p => p.y)));
       for (let x = minX; x < maxX; x += step) {
         yield;
         for (let y = minY; y < maxY; y += step) {
           let cell = clip(triangle, p => p.x - x); cell = clip(cell, p => x + step - p.x);
           cell = clip(cell, p => p.y - y); cell = clip(cell, p => y + step - p.y);
+          if(region){cell=clip(cell,p=>p.x-region.x0);cell=clip(cell,p=>region.x1-p.x);cell=clip(cell,p=>p.y-region.y0);cell=clip(cell,p=>region.y1-p.y);}
           if (cell.length < 3) continue;
           for (const side of [-1, 1]) {
             const half = clip(cell, p => side * (p.x - x + p.y - y - step));
@@ -102,7 +105,7 @@ export function* surfaceGeometrySteps(doc: Scene, polygons: Point[][], lift: num
   geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
   geometry.setAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));
   geometry.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
-  if(doc.voxelWorld)geometry.userData.voxelOptions={cell:2,step:doc.voxelWorld.heightStep,lift,thickness:Math.max(.08,lift),maxMerge:200,baseAt:(x:number,z:number)=>voxelSurfaceBase(doc,x,z,heightAt)};
+  if(doc.voxelWorld)geometry.userData.voxelOptions={contour:true,cell:doc.voxelWorld.groundCell,originX:-doc.canonical.width/2,originZ:-doc.canonical.height/2,step:doc.voxelWorld.heightStep,lift,thickness:Math.max(.08,lift),maxMerge:200,baseAt:(x:number,z:number)=>voxelSurfaceBase(doc,x,z,heightAt)};
   return geometry;
 }
 

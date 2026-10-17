@@ -32,7 +32,7 @@ import { buildRoutes } from "./routes";
 import { compactObject } from "./compact-object";
 import { worldTime, worldMotion, terrainPlayer, terrainView, worldGradeShader } from "./shaders";
 import { animateObject, buildObject, buildPlayer,MAX_SUSPENSION_COMPRESSION } from "./world3d";
-import { buildEnvironmentSteps, roadGeometry, terrainNormal, worldPosition } from "./environment";
+import { roadGeometry, terrainNormal, worldPosition } from "./environment";
 import { cameraPosition, followCamera, followCameraZoom, rideCameraZoom, sportCameraFrame, DEFAULT_CAMERA_ZOOM, type FollowTarget } from "./camera";
 import { cameraZoomInput } from "./camera-input";
 import { hasAnimatedJoints,impactOf,isReactive,controlOf } from "../scene/object-dsl";
@@ -43,7 +43,8 @@ import { objectPlacement } from "../scene/placement";
 import { WorldLandscape } from "./landscape";
 import { WorldParticles } from "./particles";
 import { SceneryOcclusion } from "./occlusion";
-import { WorldScenery } from "./scenery";
+import {WorldStreaming} from './world-streaming';
+import type {WorldWorkerClient} from './world-worker-client';
 import { createWorldMap } from "./navigation";
 import {geometryMemory} from './geometry-memory';
 
@@ -58,7 +59,7 @@ const sportButton=document.querySelector<HTMLButtonElement>('#sport-action')!;
 const sportLabel=document.querySelector<HTMLElement>('#sport-action-label')!;
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 
-export async function start(doc:Scene,loading:Loading):Promise<void> {
+export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):Promise<void> {
   await loading.stage("Preparing driving and walking");
   const carRadius = playerRadius(doc);
   const roadMask = buildMaskForScene(doc);
@@ -77,6 +78,7 @@ export async function start(doc:Scene,loading:Loading):Promise<void> {
   let pointerAim:{x:number;y:number}|undefined;
   const clearShot=()=>{shootButtonHeld=shootPressed=shootReleased=false;pointerAim=undefined;car=cancelSportAction(car);};
   let mode: "playing" | "paused" = "playing";
+  let pendingDraw:(()=>void)|undefined;
 
   await loading.stage("Starting the renderer");
   const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -131,14 +133,22 @@ export async function start(doc:Scene,loading:Loading):Promise<void> {
   scene.add(sun, sun.target);
   const fill = new THREE.DirectionalLight("#a7c4eb", .3);
   fill.position.set(350, 250, -300); scene.add(fill);
-  const environment=await loading.build("Building streets, hills and plants",buildEnvironmentSteps(doc));scene.add(environment);
   await loading.stage("Building water and bridges");
-  const landscape=new WorldLandscape(doc);scene.add(landscape.group);
+  const landscape=new WorldLandscape(doc,true);scene.add(landscape.group);
   const routes=buildRoutes(doc);scene.add(routes);
 
   const flocks=buildFlocks(doc);scene.add(flocks);
-  await loading.stage("Assembling buildings and scenery");
-  const scenery = new WorldScenery(doc); scene.add(scenery.group);
+  const scenery=new WorldStreaming(doc,region=>worker.build(region),id=>landscape.waters.find(w=>w.water.id===id)!.material);scene.add(scenery.group);
+  const streamStatus=document.createElement('output');streamStatus.id='world-stream-status';streamStatus.setAttribute('role','status');streamStatus.textContent='Loading nearby world';streamStatus.hidden=true;container.append(streamStatus);
+  let streamWaitStarted=0;
+  const streamState=()=>{
+    if(scenery.error){loading.fail(scenery.error);renderer.setAnimationLoop(null);return false;}
+    if(!scenery.ready){streamWaitStarted ||= performance.now();streamStatus.hidden=performance.now()-streamWaitStarted<200;container.setAttribute('aria-busy','true');}
+    else{streamWaitStarted=0;streamStatus.hidden=true;container.setAttribute('aria-busy','false');}
+    if(import.meta.env.DEV)container.dataset.streaming=JSON.stringify(scenery.stats);
+    return scenery.ready;
+  };
+  addEventListener('pagehide',event=>{if(!event.persisted)scenery.dispose();});
   await loading.stage("Assembling people and wildlife");
   const populations=new AmbientPopulation(doc);scene.add(populations.group);
   const propMeshes = new Map<string, THREE.Group>();
@@ -183,9 +193,8 @@ export async function start(doc:Scene,loading:Loading):Promise<void> {
   const daylight=new WorldDaylight(doc,scene,hemisphere,sun,fill);
   const reviewHour=import.meta.env.DEV ? Number(new URLSearchParams(location.search).get("test-hour")) : NaN;
   const hourOffset=import.meta.env.DEV && new URLSearchParams(location.search).has("test-hour") && Number.isFinite(reviewHour) && reviewHour>=0 && reviewHour<24 && doc.daylight ? ((reviewHour-doc.daylight.startHour+24)%24)/24*doc.daylight.cycleSeconds : 0;
-  const worldBounds=new THREE.Box3().setFromObject(scene);
-  const sunShadows=new SunShadows(sun,worldBounds.min.y-32,worldBounds.max.y+MAX_FLIGHT_CLEARANCE);
-  for(const root of [environment,landscape.group,routes,scenery.group,flocks,daylight.pools,populations.group])freezeStatic(root);
+  const sunShadows=new SunShadows(sun,scenery.bounds.min,scenery.bounds.max+MAX_FLIGHT_CLEARANCE);
+  for(const root of [landscape.group,routes,flocks,daylight.pools,populations.group])freezeStatic(root);
   // Matrices are updated once below, before both occlusion and rendering consume them.
   scene.matrixWorldAutoUpdate=false;
 
@@ -223,6 +232,7 @@ export async function start(doc:Scene,loading:Loading):Promise<void> {
   let flight = { jumps: 0, landings: 0, maxClearance: 0 };
 
   function resetPosition(restartRace = false): void {
+    pendingDraw=undefined;
     car = resetCar(car, doc, restartRace);
     walkerAnimation.reset();
     clearShot();
@@ -331,7 +341,9 @@ export async function start(doc:Scene,loading:Loading):Promise<void> {
     if(frame>=135 && frame<162)keys.add("KeyS");
 
   }) : undefined;
+  let memoryRevision="";
   const frame=() => {
+    if(pendingDraw){if(streamState()){pendingDraw();pendingDraw=undefined;previous=performance.now();}return;}
     const captureDt=capture?.begin();
     if(captureDt===null)return;
     const now = performance.now(), elapsedMs = now - previous, dt = profile?.begin(elapsedMs) ?? captureDt ?? Math.min(elapsedMs / 1000, .1); previous = now;
@@ -488,9 +500,9 @@ export async function start(doc:Scene,loading:Loading):Promise<void> {
     (scene.fog as THREE.Fog).near = camera.position.distanceTo(new THREE.Vector3(follow.x, follow.y, follow.z)) + 650;
     (scene.fog as THREE.Fog).far = (scene.fog as THREE.Fog).near + 1700;
     camera.updateMatrixWorld(); scene.updateMatrixWorld();
-    scenery.update(camera, position.clone().add(new THREE.Vector3(0, 7, 0)), dt, reduced.matches);
     occlusion.update(camera, position.clone().add(new THREE.Vector3(0, playerHeight(doc) / 2, 0)), dt, reduced.matches,occupied ? actorMeshes.get(occupied.id) : undefined);
     daylight.update(captureTime??(worldTime.value+hourOffset));
+    scenery.update(camera,daylight.direction,position.clone().add(new THREE.Vector3(0,7,0)),{x:car.vx,y:car.vy},dt,reduced.matches);
     sunShadows.update(camera,daylight.direction,DEFAULT_CAMERA_ZOOM * manualZoom.factor);
     populations.update(car,camera,sun,mode==='playing' ? dt : 0,reduced.matches);
     hudTime += dt;
@@ -547,14 +559,14 @@ export async function start(doc:Scene,loading:Loading):Promise<void> {
       container.dataset.destruction=JSON.stringify({broken:car.broken,zones:car.brokenZones,debris:car.debris.length,toppling:car.debris.filter(p=>p.topple).map(p=>({id:p.objectId,angle:p.topple!.angle,settled:p.settled})),props:car.props.filter(p=>p.elevation!==undefined).map(p=>({id:p.id,x:p.x,y:p.y,elevation:p.elevation,vz:p.vz}))});
     }
     if (hudTime === 0) updateMap(car, cameraAngle);
-    renderer.info.reset();
-    profile?.beforeRender();
-    composer.render();
-    profile?.end();
-    capture?.end();
-    if(document.body.dataset.loading!=="ready")loading.ready();
+    const draw=()=>{
+      renderer.info.reset();profile?.beforeRender();composer.render();profile?.end();capture?.end();
+      if(document.body.dataset.loading!=="ready")loading.ready();
+      if(import.meta.env.DEV){container.dataset.streaming=JSON.stringify(scenery.stats);const revision=`${scenery.stats.loaded},${scenery.stats.unloaded}`;if(revision!==memoryRevision){memoryRevision=revision;container.dataset.memory=JSON.stringify(geometryMemory(scene));}}
+    };
+    if(streamState())draw();else pendingDraw=draw;
   };
-  await loading.stage("Drawing the first view");
+  await loading.stage("Loading the first neighbourhood");
   frame();
   if(import.meta.env.DEV)container.dataset.memory=JSON.stringify(geometryMemory(scene));
   renderer.setAnimationLoop(frame);

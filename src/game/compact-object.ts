@@ -1,3 +1,4 @@
+import {indexedGeometry} from './indexed-geometry';
 import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import type { ObjectPart } from "../scene/object-dsl";
@@ -26,7 +27,7 @@ export function compactObject(group:THREE.Group):THREE.Group {
     const geometries=items.map(child=>(child.geometry.index ? child.geometry.toNonIndexed() : child.geometry.clone()).applyMatrix4(inverse.clone().multiply(child.matrix)));
     const geometry=mergeGeometries(geometries,false);geometries.forEach(g=>g.dispose());
     if(!geometry)throw new Error("actor parts could not be combined");
-    const first=items[0]!,mesh=new THREE.Mesh(geometry,first.material);
+    const first=items[0]!,mesh=new THREE.Mesh(indexedGeometry(geometry),first.material);
     frame.decompose(mesh.position,mesh.quaternion,mesh.scale);mesh.castShadow=mesh.receiveShadow=true;
     mesh.userData.rest={y:mesh.position.y,rotation:mesh.quaternion.clone(),animation:motion};
     mesh.name=`batch-${first.name}`;

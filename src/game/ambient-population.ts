@@ -1,3 +1,4 @@
+import {indexedGeometry} from './indexed-geometry';
 import * as THREE from 'three';
 import {mergeGeometries} from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import type {Scene,SceneObject} from '../scene/schema';
@@ -21,7 +22,7 @@ export function ambientPrototype(object:SceneObject):THREE.Group{
   const key=node.userData.materialKey??(node.material as THREE.Material).uuid,batch=batches.get(key)??{geometry:[],material:node.material as THREE.Material};batch.geometry.push(geometry);batches.set(key,batch);
  });
  const group=new THREE.Group();
- for(const batch of batches.values()){const geometry=mergeGeometries(batch.geometry,false);if(!geometry)throw Error('ambient assembly could not be combined');group.add(new THREE.Mesh(geometry,batch.material));batch.geometry.forEach(g=>g.dispose());}
+ for(const batch of batches.values()){const geometry=mergeGeometries(batch.geometry,false);if(!geometry)throw Error('ambient assembly could not be combined');group.add(new THREE.Mesh(indexedGeometry(geometry),batch.material));batch.geometry.forEach(g=>g.dispose());}
  source.traverse(node=>{if(node instanceof THREE.Mesh)node.geometry.dispose();});return group;
 }
 type Batch={indices:number[];meshes:THREE.InstancedMesh[];radius:number;meters:number;stride:number};

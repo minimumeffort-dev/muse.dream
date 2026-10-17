@@ -51,11 +51,15 @@ A visual opening does **not** create a traversable opening. Bodies and compound 
 
 Two carved garden walls flank the river-park bench and break into four chunks each. Eleven residential and commercial building templates now use voxel wall shells. The slatted benches use voxel boards inside their existing seven fragment groups. The asset-library bakehouse storefront uses a carved volume with six masonry chunks, plus its canopy and door. Their measured proportions, entrances, foundations, roads and physical contacts remain shared with the existing world.
 
-The live world's remaining curved shapes now become occupied-cell stamps too. The city uses sparse solid ground columns and infrastructure tiles rather than allocating a kilometre-wide 3D array. The world policy leaves older standalone examples readable in their original shaped mode; add it to a complete world to use voxel construction throughout.
+The live world's remaining curved shapes become occupied-cell stamps with continuous surface-net boundaries. Flat faces are merged. Exact carved volumes keep their block boundaries and newly exposed fracture faces. The city uses sparse solid ground columns and infrastructure tiles rather than allocating a kilometre-wide 3D array. The world policy leaves older standalone examples readable in their original shaped mode; add it to a complete world to use voxel construction throughout.
 
 ![Voxel shells and boards retain the surrounding model details](../media/voxel-assets.jpg)
 
 ## Rendering and bounds
+
+The live world streams static geometry around the player. Infrastructure retains exact cut-cell outlines instead of centre-sampled stair steps; water keeps rigid per-cell wave anchors. Complete simulation and damage state remains resident. Streaming and contour choice are engine-owned and add no Dream commands. See [rendering and memory](../rendering.md).
+
+![Continuous voxel contours inspected from four angles](../media/voxel-contours.jpg)
 
 The mesher culls hidden faces and greedily merges coplanar faces within each volume. It caches identical CPU mesh data across validation copies, with an eight MiB / 128-entry bound. Callers own their GPU buffers. Static prototypes continue through the existing material batching, instancing, local bounds and occlusion system. Intact objects don't remesh every frame; debris meshes are built on first fracture and reused after restart.
 

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import type {RenderRegion} from './render-region';
 import type {Scene,Point} from '../scene/schema';
 import {streetPolygons,streetSidewalks,streetCycleTracks,streetCircuitCrossings,markingPolygons,onPolygon} from '../scene/streets';
 import {unionPolygons,subtractPolygons,polygonBounds,polygonArea} from '../scene/polygons';
@@ -9,21 +10,28 @@ import {surfaceGeometrySteps} from './surface';
 import {finishBuild,tiledMeshSteps} from './batching';
 import {toonMaterial} from './shaders';
 
-/** Full resident, terrain-conforming city infrastructure with local culling bounds. */
+type StreetRecipe={polygons:Point[][];color:string;lift:number;name:string};
+const recipes=new WeakMap<Scene,StreetRecipe[]>();
+/** Planar joins and paint are resolved once, before clipping to render chunks. */
 export function buildStreets(scene:Scene):THREE.Group{return finishBuild(buildStreetSteps(scene));}
-export function* buildStreetSteps(scene:Scene):Generator<void,THREE.Group>{
+export function* buildStreetSteps(scene:Scene,region?:RenderRegion):Generator<void,THREE.Group>{
+  let plan=recipes.get(scene);if(!plan){plan=yield* streetRecipeSteps(scene);recipes.set(scene,plan);}
   const group=new THREE.Group();group.name='streets-and-grounds';
+  const timber=(scene.terrain.landscape?.bridges??[]).filter(b=>b.style==='timber').map(bridgePolygon);
+  for(const {polygons,color,lift,name} of plan){
+    const geometry=yield* surfaceGeometrySteps(scene,polygons,lift,undefined,undefined,timber,region);
+    const mesh=yield* tiledMeshSteps(geometry,toonMaterial(color));mesh.name=name;group.add(mesh);
+  }
+  return group;
+}
+function* streetRecipeSteps(scene:Scene):Generator<void,StreetRecipe[]>{
+  const plan:StreetRecipe[]=[];
   const roads=streetPolygons(scene.streets),roadUnion=unionPolygons(roads);
   const loop=roadFootprint(scene),riding=streetPolygons(scene.streets,'riding'),bands=streetCycleTracks(scene);
   const sidewalks=streetSidewalks(scene);
-  const timber=(scene.terrain.landscape?.bridges??[]).filter(b=>b.style==='timber').map(bridgePolygon);
   function* add(polygons:Point[][],color:string,lift:number,name:string):Generator<void>{
-    yield;
-    if(!polygons.length)return;
-    const geometry=yield* surfaceGeometrySteps(scene,polygons,lift,undefined,undefined,timber);
-    if(scene.voxelWorld && /lines|symbols|crossings|markings/.test(name))geometry.userData.voxelOptions.cell=.5;
-    const mesh=yield* tiledMeshSteps(geometry,toonMaterial(color));mesh.name=name;group.add(mesh);
-  };
+    if(polygons.length)plan.push({polygons,color,lift,name});yield;
+  }
   yield* add(roadUnion,'#626e77',1.25,'street-carriageways');
   yield* add(unionPolygons(riding,[...roads,...bands,...loop]),'#c9c3af',1.55,'cycle-separators');
   yield* add(bands,'#a76855',1.4,'street-cycle-tracks');
@@ -91,5 +99,5 @@ export function* buildStreetSteps(scene:Scene):Generator<void,THREE.Group>{
   const markings=new Map<string,Point[][]>();
   for(const s of scene.markings){const polygons=markings.get(s.color)??[];polygons.push(...markingPolygons(s));markings.set(s.color,polygons);}
   for(const [color,polygons] of markings)yield* add(polygons,color,1.9,'authored-markings');
-  return group;
+  return plan;
 }

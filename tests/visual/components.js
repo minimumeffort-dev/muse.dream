@@ -8,7 +8,8 @@ import { worldTime, worldMotion } from '../../src/game/shaders';
 import { inventionExamples } from '../../src/scene/mock-creations';
 import { dreamExamples } from '../../src/scene/dream-creations';
 import { interactiveWorld } from '../../src/scene/interactive-world';
-import { hasAnimatedJoints } from '../../src/scene/object-dsl';
+import {isActor} from '../../src/scene/agents';
+import { hasAnimatedJoints,isReactive } from '../../src/scene/object-dsl';
 import { mockCar } from '../../src/scene/mock-objects';
 
 const doc = createWorldScene(), seen = new Set();
@@ -53,16 +54,16 @@ function dispose(group) {
 }
 function change() {
   dispose(source); dispose(batched);
-  const object = { ...assets[Number(select.value)], x: 3000, y: 2400, scale: assets[Number(select.value)].scale };
+  const object = { ...assets[Number(select.value)], x: doc.canonical.width/2, y: doc.canonical.height/2, scale: assets[Number(select.value)].scale };
   source = buildObject(object); source.position.y = 1.5; left.add(source);
   const spec = object.spec;
   const still = spec && 'dslVersion' in spec ? { ...spec, body: { ...spec.body, interaction: 'solid' } } : spec;
-  const scene = parseScene({ ...doc, terrain: { hills: [] }, objects: [{ ...object, spec: still }] });
-  runtimeActor=hasAnimatedJoints(still);
+  const scene = parseScene({ ...doc, sports:[],sites:[],terrain: { hills: [] }, objects: [{ ...object, spec: still }] });
+  runtimeActor=hasAnimatedJoints(still) || isActor(object) || isReactive(still);
   batched = runtimeActor ? buildObject(object) : new WorldScenery(scene).group;
   if(runtimeActor) batched.position.y=1.5;
   right.add(batched);
-  document.querySelector('#runtime-label').textContent=runtimeActor ? 'Runtime jointed assembly' : 'Instanced world assembly';
+  document.querySelector('#runtime-label').textContent=runtimeActor ? 'Live assembly' : 'Instanced world assembly';
   source.updateMatrixWorld(true);
   const bounds = new THREE.Box3().setFromObject(source), dimensions = bounds.getSize(new THREE.Vector3());
   center = bounds.getCenter(new THREE.Vector3()); size = Math.max(...dimensions.toArray()) * .75;

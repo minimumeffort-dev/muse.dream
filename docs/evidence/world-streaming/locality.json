@@ -1,0 +1,215 @@
+{
+  "node": "v26.8.1",
+  "scope": "same major groups as profile-world-memory; streamed geometry plus resident bridges, routes, flocks and ambient populations; excludes live actors, player, effects, textures, render targets and worker caches",
+  "bounds": {
+    "min": -48,
+    "max": 368,
+    "radius": 320.86169324368814
+  },
+  "views": [
+    {
+      "name": "town",
+      "position": [
+        6330,
+        4233
+      ],
+      "ms": 5674.500917,
+      "stream": {
+        "resident": 19,
+        "required": 12,
+        "pending": 0,
+        "bytes": 112016744,
+        "peakBytes": 112016744,
+        "peakResident": 19,
+        "maxInstallMs": 4.853291999999783,
+        "maxSliceMs": 4.583416999999827,
+        "loaded": 19,
+        "unloaded": 0,
+        "discarded": 0,
+        "ready": true,
+        "keys": [
+          "5600,4000",
+          "6400,4000",
+          "5600,3200",
+          "6400,3200",
+          "5600,4800",
+          "6400,4800",
+          "4800,4000",
+          "7200,4000",
+          "4800,3200",
+          "7200,3200",
+          "4800,4800",
+          "7200,4800",
+          "5600,2400",
+          "6400,2400",
+          "5600,5600",
+          "4800,2400",
+          "6400,5600",
+          "7200,2400",
+          "4800,5600"
+        ]
+      },
+      "geometry": {
+        "bytes": 134419582,
+        "uniqueBuffers": 5499,
+        "geometries": 946,
+        "uniqueTriangles": 984619
+      }
+    },
+    {
+      "name": "airport",
+      "position": [
+        2000,
+        9400
+      ],
+      "ms": 4353.604458,
+      "stream": {
+        "resident": 20,
+        "required": 11,
+        "pending": 0,
+        "bytes": 89171084,
+        "peakBytes": 112016744,
+        "peakResident": 20,
+        "maxInstallMs": 4.853291999999783,
+        "maxSliceMs": 4.583416999999827,
+        "loaded": 39,
+        "unloaded": 19,
+        "discarded": 0,
+        "ready": true,
+        "keys": [
+          "1600,8800",
+          "1600,9600",
+          "800,8800",
+          "2400,8800",
+          "1600,8000",
+          "800,9600",
+          "2400,9600",
+          "800,8000",
+          "2400,8000",
+          "1600,10400",
+          "800,10400",
+          "0,8800",
+          "3200,8800",
+          "2400,10400",
+          "0,9600",
+          "3200,9600",
+          "0,8000",
+          "3200,8000",
+          "0,10400",
+          "3200,10400"
+        ]
+      },
+      "geometry": {
+        "bytes": 111573922,
+        "uniqueBuffers": 2526,
+        "geometries": 377,
+        "uniqueTriangles": 665835
+      }
+    },
+    {
+      "name": "waterfront",
+      "position": [
+        9900,
+        2800
+      ],
+      "ms": 5575.451125000001,
+      "stream": {
+        "resident": 22,
+        "required": 9,
+        "pending": 0,
+        "bytes": 98157806,
+        "peakBytes": 112016744,
+        "peakResident": 22,
+        "maxInstallMs": 4.853291999999783,
+        "maxSliceMs": 4.583416999999827,
+        "loaded": 61,
+        "unloaded": 39,
+        "discarded": 0,
+        "ready": true,
+        "keys": [
+          "9600,2400",
+          "8800,2400",
+          "9600,1600",
+          "9600,3200",
+          "10400,2400",
+          "8800,1600",
+          "8800,3200",
+          "10400,1600",
+          "10400,3200",
+          "8000,2400",
+          "9600,800",
+          "9600,4000",
+          "8000,1600",
+          "11200,2400",
+          "8000,3200",
+          "8800,800",
+          "8800,4000",
+          "10400,800",
+          "10400,4000",
+          "11200,1600",
+          "11200,3200",
+          "8000,4000"
+        ]
+      },
+      "geometry": {
+        "bytes": 120560644,
+        "uniqueBuffers": 4887,
+        "geometries": 855,
+        "uniqueTriangles": 950274
+      }
+    },
+    {
+      "name": "town-return",
+      "position": [
+        6330,
+        4233
+      ],
+      "ms": 5962.642917000001,
+      "stream": {
+        "resident": 23,
+        "required": 12,
+        "pending": 0,
+        "bytes": 148905858,
+        "peakBytes": 148905858,
+        "peakResident": 23,
+        "maxInstallMs": 4.853291999999783,
+        "maxSliceMs": 4.583416999999827,
+        "loaded": 80,
+        "unloaded": 57,
+        "discarded": 0,
+        "ready": true,
+        "keys": [
+          "8000,2400",
+          "8000,1600",
+          "8000,3200",
+          "8000,4000",
+          "5600,4000",
+          "6400,4000",
+          "5600,3200",
+          "6400,3200",
+          "5600,4800",
+          "6400,4800",
+          "4800,4000",
+          "7200,4000",
+          "4800,3200",
+          "7200,3200",
+          "4800,4800",
+          "7200,4800",
+          "5600,2400",
+          "6400,2400",
+          "5600,5600",
+          "4800,2400",
+          "6400,5600",
+          "7200,2400",
+          "4800,5600"
+        ]
+      },
+      "geometry": {
+        "bytes": 171308696,
+        "uniqueBuffers": 6646,
+        "geometries": 1171,
+        "uniqueTriangles": 1293182
+      }
+    }
+  ]
+}

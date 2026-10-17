@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import {contains,overlaps,type RenderRegion} from "./render-region";
 import {voxelTerrainTile} from './voxel-columns';
 import {voxelStamp} from '../scene/voxel-stamp';
 import {reservedGround,streetPolygons,streetCircuitCrossings,onPolygon} from '../scene/streets';
@@ -58,13 +59,13 @@ function timberFootprints(doc: Scene): Point[][] {
 }
 
 /** Road, paint and effects all conform to the same triangles as the terrain. */
-export function roadGeometry(doc: Scene): THREE.BufferGeometry {
+export function roadGeometry(doc: Scene,region?:RenderRegion): THREE.BufferGeometry {
   const sections = roadSections(doc), half = doc.roadMaskRef.params.roadWidth / 2;
-  return surfaceGeometry(doc, sections.slice(1).map((b, i) => roadRibbon(sections[i]!, b, -half, half)), ROAD_SURFACE_LIFT, undefined, undefined, [...timberFootprints(doc),...streetPolygons(doc.streets)]);
+  return surfaceGeometry(doc, sections.slice(1).map((b, i) => roadRibbon(sections[i]!, b, -half, half)), ROAD_SURFACE_LIFT, undefined, undefined, [...timberFootprints(doc),...streetPolygons(doc.streets)],region);
 }
 
 /** Continuous bands, with top and walls split at the underlying terrain edges. */
-export function curbGeometry(doc: Scene, side: -1 | 1): THREE.BufferGeometry {
+export function curbGeometry(doc: Scene, side: -1 | 1,region?:RenderRegion): THREE.BufferGeometry {
   const sections = roadSections(doc), half = doc.roadMaskRef.params.roadWidth / 2;
   const inner = side * (half - ROAD_CURB_WIDTH / 2), outer = side * (half + ROAD_CURB_WIDTH / 2);
   const vertices: number[] = [], colors: number[] = [];
@@ -83,7 +84,9 @@ export function curbGeometry(doc: Scene, side: -1 | 1): THREE.BufferGeometry {
   for (let i = 1; i < sections.length; i++) {
     const a = sections[i - 1]!, b = sections[i]!;
     const color = doc.roadMaskRef.params.style=== "street" ? new THREE.Color("#aaa79a") : Math.floor((a.distance + b.distance) / 28) % 2 ? cream : red;
-    const top = surfaceGeometry(doc, [roadRibbon(a, b, inner, outer)], 3.1, undefined, undefined, cutouts);
+    const polygon=roadRibbon(a,b,inner,outer);
+    if(region && !overlaps(region,polygon))continue;
+    const top = surfaceGeometry(doc, [polygon], 3.1, undefined, undefined, cutouts,region);
     const positions = top.getAttribute("position");
     for (let j = 0; j < positions.count; j++) {
       const x = positions.getX(j) + doc.canonical.width / 2, y = positions.getZ(j) + doc.canonical.height / 2;
@@ -94,6 +97,7 @@ export function curbGeometry(doc: Scene, side: -1 | 1): THREE.BufferGeometry {
       const edge = surfaceEdge(start!, end!, cutouts);
       for (let j = 1; j < edge.length; j++) {
         const a = edge[j - 1]!, b = edge[j]!;
+        if(region && !contains(region,(a.x+b.x)/2,(a.y+b.y)/2))continue;
         if (cutouts.some(p=>onPolygon(p,(a.x+b.x)/2,(a.y+b.y)/2))) continue;
         const point = (p: Point, lift: number) => new THREE.Vector3(p.x - doc.canonical.width / 2, surfaceHeight(doc, p.x, p.y) + curbLift(p.x, p.y, lift), p.y - doc.canonical.height / 2);
         const p = point(edge[j - 1]!, -.5), q = point(edge[j]!, -.5), r = point(edge[j]!, 3.1), t = point(edge[j - 1]!, 3.1);
@@ -103,27 +107,27 @@ export function curbGeometry(doc: Scene, side: -1 | 1): THREE.BufferGeometry {
     while (colors.length < vertices.length) colors.push(...color.toArray());
   }
   const geo = new THREE.BufferGeometry(); geo.setAttribute("position", new THREE.Float32BufferAttribute(vertices, 3));
-  if(doc.voxelWorld)geo.userData.voxelOptions={cell:1,step:doc.voxelWorld.heightStep,lift:3.1,thickness:3.6,baseAt:(x:number,z:number)=>voxelSurfaceBase(doc,x,z),liftAt:(x:number,z:number)=>curbLift(x+doc.canonical.width/2,z+doc.canonical.height/2,3.1)};
+  if(doc.voxelWorld)geo.userData.voxelOptions={contour:true,cell:doc.voxelWorld.groundCell,originX:-doc.canonical.width/2,originZ:-doc.canonical.height/2,step:doc.voxelWorld.heightStep,lift:3.1,thickness:3.6,baseAt:(x:number,z:number)=>voxelSurfaceBase(doc,x,z),liftAt:(x:number,z:number)=>curbLift(x+doc.canonical.width/2,z+doc.canonical.height/2,3.1)};
   geo.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3)); geo.computeVertexNormals(); return geo;
 }
 
-export function roadMarkingGeometry(doc: Scene): THREE.BufferGeometry {
+export function roadMarkingGeometry(doc: Scene,region?:RenderRegion): THREE.BufferGeometry {
   const sections = roadSections(doc), polygons: Point[][] = [];
   for (let i = 1; i < sections.length; i++) {
     const a = sections[i - 1]!, b = sections[i]!;
     if ((a.distance + b.distance) / 2 % 48 < 22) polygons.push(roadRibbon(a, b, -1.25, 1.25));
   }
-  return surfaceGeometry(doc, polygons, 1.8, undefined, undefined, [...timberFootprints(doc),...streetPolygons(doc.streets,'riding'),...streetCircuitCrossings(doc).flatMap(c=>c.polygons)]);
+  return surfaceGeometry(doc, polygons, 1.8, undefined, undefined, [...timberFootprints(doc),...streetPolygons(doc.streets,'riding'),...streetCircuitCrossings(doc).flatMap(c=>c.polygons)],region);
 }
 
-export function drapedPolygon(doc: Scene, polygon: Point[], lift: number): THREE.BufferGeometry {
+export function drapedPolygon(doc: Scene, polygon: Point[], lift: number,region?:RenderRegion): THREE.BufferGeometry {
   const center = polygon.reduce((p, q) => ({ x: p.x + q.x / polygon.length, y: p.y + q.y / polygon.length }), { x: 0, y: 0 });
   const frames = roadFrames(doc);
   const nearest = (p: Point) => frames.reduce((a, b) => Math.hypot(a.x - p.x, a.y - p.y) < Math.hypot(b.x - p.x, b.y - p.y) ? a : b);
   const frame = nearest(center), start = doc.checkpoints[0]!, startFrame = nearest({ x: (start.a.x + start.b.x) / 2, y: (start.a.y + start.b.y) / 2 });
   // A mask's outline winding need not match the race's checkpoint direction.
   const sign = Math.sign(startFrame.ny * start.dir.x - startFrame.nx * start.dir.y) || 1;
-  let geometry = surfaceGeometry(doc, [polygon], lift, { x: frame.ny * sign, y: -frame.nx * sign });
+  let geometry = surfaceGeometry(doc, [polygon], lift, { x: frame.ny * sign, y: -frame.nx * sign },undefined,[],region);
   // Interior and edge samples keep small patches visible when all original corners lie on their outline.
   const weights = [[1,0,0],[0,1,0],[0,0,1],[.5,.5,0],[0,.5,.5],[.5,0,.5],[1/3,1/3,1/3]];
   const faces = [0,3,6,3,1,6,1,4,6,4,2,6,2,5,6,5,0,6], indices: number[] = [];
@@ -153,14 +157,15 @@ export function drapedPolygon(doc: Scene, polygon: Point[], lift: number): THREE
 }
 
 export function buildEnvironment(doc: Scene): THREE.Group {return finishBuild(buildEnvironmentSteps(doc));}
-export function* buildEnvironmentSteps(doc:Scene):Generator<void,THREE.Group> {
+export function* buildEnvironmentSteps(doc:Scene,region?:RenderRegion):Generator<void,THREE.Group> {
   const group = new THREE.Group(), { width, height } = doc.canonical;
-  group.add(yield* buildStreetSteps(doc));
+  group.add(yield* buildStreetSteps(doc,region));
   yield;
   // Local terrain tiles keep invisible hills out of the main and shadow passes.
   const groundMat = groundMaterial(), low = new THREE.Color("#52744c"), high = new THREE.Color("#70865a"), rock = new THREE.Color("#77817b");
   const tints = (doc.terrain.tints ?? []).map(t => ({ ...t, color: new THREE.Color(t.color) }));
   for (let y = -800; y < height + 800; y += 400) for (let x = -800; x < width + 800; x += 400) {
+    if(region && !contains(region,x,y))continue;
     if(doc.voxelWorld){
       const ground=voxelTerrainTile(x-width/2,y-height/2,doc.voxelWorld,(px,pz)=>terrainHeight(doc.terrain,px+width/2,pz+height/2),(px,pz,h)=>{
         const wx=px+width/2,wy=pz+height/2,color=low.clone().lerp(high,h/350);
@@ -182,16 +187,17 @@ export function* buildEnvironmentSteps(doc:Scene):Generator<void,THREE.Group> {
     ground.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3)); ground.computeVertexNormals(); ground.computeBoundingSphere();
     const tile = new THREE.Mesh(ground, groundMat); tile.receiveShadow = true; tile.matrixAutoUpdate = false; group.add(tile);yield;
   }
-  group.add(yield* tiledMeshSteps(roadGeometry(doc), roadMaterial()));
+  group.add(yield* tiledMeshSteps(roadGeometry(doc,region), roadMaterial()));
   const roadWidth = doc.roadMaskRef.params.roadWidth;
   const curbMaterial = toonMaterial("#ffffff"); curbMaterial.vertexColors = true;
-  const paint=roadMarkingGeometry(doc);if(doc.voxelWorld)paint.userData.voxelOptions.cell=.5;
-  group.add(yield* tiledMeshSteps(curbGeometry(doc, 1), curbMaterial));
-  group.add(yield* tiledMeshSteps(curbGeometry(doc, -1), curbMaterial));
+  const paint=roadMarkingGeometry(doc,region);
+  group.add(yield* tiledMeshSteps(curbGeometry(doc, 1,region), curbMaterial));
+  group.add(yield* tiledMeshSteps(curbGeometry(doc, -1,region), curbMaterial));
   group.add(yield* tiledMeshSteps(paint, toonMaterial("#e8e1c8")));
+  const renderRegion=region;
   for (const region of doc.regions) {
-    const geometry=drapedPolygon(doc,region.polygon,1.65);
-    if(doc.voxelWorld)geometry.userData.voxelOptions={cell:2,step:doc.voxelWorld.heightStep,lift:1.65,thickness:.08,baseAt:(x:number,z:number)=>voxelSurfaceBase(doc,x,z)};
+    const geometry=drapedPolygon(doc,region.polygon,1.65,renderRegion);
+    if(doc.voxelWorld)geometry.userData.voxelOptions={contour:true,cell:doc.voxelWorld.groundCell,originX:-doc.canonical.width/2,originZ:-doc.canonical.height/2,step:doc.voxelWorld.heightStep,lift:1.65,thickness:.08,baseAt:(x:number,z:number)=>voxelSurfaceBase(doc,x,z)};
     const surface = doc.voxelWorld ? yield* tiledMeshSteps(geometry,zoneMaterial(region.rule.effect)) : new THREE.Mesh(geometry,zoneMaterial(region.rule.effect));
     surface.receiveShadow = true; surface.renderOrder = 1; group.add(surface);
   }
@@ -207,7 +213,7 @@ export function* buildEnvironmentSteps(doc:Scene):Generator<void,THREE.Group> {
     }));
     finishPolygons[(i + j) % 2]!.push(polygon);
   }
-  for(const [i,color] of ["#263e4d", "#f8edcf"].entries())group.add(yield* tiledMeshSteps(surfaceGeometry(doc,finishPolygons[i]!,1.85),toonMaterial(color)));
+  for(const [i,color] of ["#263e4d", "#f8edcf"].entries())group.add(yield* tiledMeshSteps(surfaceGeometry(doc,finishPolygons[i]!,1.85,undefined,undefined,[],region),toonMaterial(color)));
   }
   // Passable decoration is instanced in spatial tiles, never a new collider.
   const corridors=doc.routes.filter(route=>["rail","path","air"].includes(route.kind)).map(route=>{
@@ -219,11 +225,12 @@ export function* buildEnvironmentSteps(doc:Scene):Generator<void,THREE.Group> {
   const decorationSamples = Math.ceil(width * height / 1200);
   for (let i = 0; i < decorationSamples; i++) {
     if(i%500===0)yield;
-    const x = random() * width, y = random() * height;
+    const x = random() * width, y = random() * height,yaw=random()*6,size=.6+random()*.8;
+    if(region && !contains(region,x,y))continue;
     if (reservedGround(doc,x,y) || bridgeAt(doc.terrain.landscape,x,y) || waterAt(doc.terrain,x,y) || distanceToRoad(path, x, y) < roadWidth / 2 + 10 ||
       corridors.some(route=>distanceToRoad(route.points,x,y)<route.radius)) continue;
-    transform.position.copy(worldPosition(doc, x, y, 3)); transform.rotation.set(.1, random() * 6, .2);
-    transform.scale.setScalar(.6 + random() * .8); transform.updateMatrix(); tufts.push(transform.matrix.clone());
+    transform.position.copy(worldPosition(doc, x, y, 3)); transform.rotation.set(.1,yaw,.2);
+    transform.scale.setScalar(size); transform.updateMatrix(); tufts.push(transform.matrix.clone());
     if (i % 8 === 0) { flowers.push(transform.matrix.clone()); colors.push(new THREE.Color(i % 3 ? "#f8d99e" : "#e9a6b1")); }
   }
   const stamp=(g:THREE.BufferGeometry,size:number[])=>{if(!doc.voxelWorld)return g;const v=voxelStamp(g,size,doc.voxelWorld.objectCell);g.dispose();return v;};

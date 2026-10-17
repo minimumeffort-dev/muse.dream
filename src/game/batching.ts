@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import {contourSurface} from "./voxel-contours";
 import {voxelSurface,type ColumnOptions} from './voxel-columns';
 
 /** Only for world-fixed roots: GPU wind, water and instance fades still animate normally. */
@@ -36,7 +37,7 @@ export function* tiledMeshSteps(geometry: THREE.BufferGeometry, material: THREE.
     }
     geo.computeBoundingSphere();
     const options=geometry.userData.voxelOptions as ColumnOptions|undefined;
-    const rendered=options ? voxelSurface(geo,options) : geo;if(options)geo.dispose();
+    const rendered=options ? (options.contour ? contourSurface(geo,options) : voxelSurface(geo,options)) : geo;if(options)geo.dispose();
     const mesh = new THREE.Mesh(rendered, material); mesh.receiveShadow = true; mesh.matrixAutoUpdate = false; group.add(mesh);
     yield;
   }

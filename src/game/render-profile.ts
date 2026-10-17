@@ -6,7 +6,7 @@ export function renderProfile(renderer:WebGLRenderer,reset:()=>void,input:(drive
   const panel=document.createElement("aside");panel.id="render-profile";
   panel.style.cssText="position:fixed;bottom:16px;left:16px;z-index:99;background:#152825;color:#fff;padding:12px;font:13px monospace;max-width:570px";
   const still=document.createElement("button"),drive=document.createElement("button"),output=document.createElement("pre");
-  still.textContent="Measure still";drive.textContent="Measure drive";output.textContent="Full quality · full resident world · 60 warm-up + 300 measured frames";
+  still.textContent="Measure still";drive.textContent="Measure drive";output.textContent="Full quality · streamed world · 60 warm-up + 300 measured frames";
   panel.append(still,drive,output);document.body.append(panel);
   const gl=renderer.getContext() as WebGL2RenderingContext,ext=gl.getExtension("EXT_disjoint_timer_query_webgl2");
   const pending:{query:WebGLQuery;measured:boolean}[]=[],gpu:number[]=[],samples:{prepare:number;submit:number;frame:number;calls:number;triangles:number}[]=[];

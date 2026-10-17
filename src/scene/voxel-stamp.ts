@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 import {meshVoxelGrid,type VoxelMesh} from './voxels';
+import {meshVoxelContour} from './voxel-contour';
 import {WORLD_VOXEL_LIMITS} from './voxel-world';
 
 const cache=new Map<string,VoxelMesh>();let usedBytes=0;
-/** Scan closed stamp triangles into occupied cells, then greedily merge exterior faces.
+/** Scan closed stamp triangles into occupied cells, then reconstruct their continuous boundary.
  * Geometry is sampled before part transforms, so apertures, wheel pivots and joints survive. */
 export function voxelStamp(source:THREE.BufferGeometry,dimensions:readonly number[],cell:number,key?:string):THREE.BufferGeometry{
   const step=Math.max(cell,Math.max(...dimensions)/WORLD_VOXEL_LIMITS.stampAxis);
@@ -38,7 +39,7 @@ export function voxelStamp(source:THREE.BufferGeometry,dimensions:readonly numbe
         for(let z=start;z<end;z++)cells[i+grid[0]!*grid[1]!*z]=1;
       }
     });
-    data=meshVoxelGrid(grid,cells);
+    data=cells.every(Boolean) ? meshVoxelGrid(grid,cells) : meshVoxelContour(grid,cells);
     if(!data.cells)throw new Error('voxel stamp has no occupied cells');
     const bytes=data.positions.byteLength+data.normals.byteLength+data.uvs.byteLength;
     while(cache.size && usedBytes+bytes>WORLD_VOXEL_LIMITS.stampCacheBytes){const oldest=cache.keys().next().value!;const m=cache.get(oldest)!;usedBytes-=m.positions.byteLength+m.normals.byteLength+m.uvs.byteLength;cache.delete(oldest);}
@@ -52,6 +53,6 @@ export function voxelStamp(source:THREE.BufferGeometry,dimensions:readonly numbe
   // Preserve the authored envelope (not occupancy of deliberately carved volumes).
   result.computeBoundingBox();const sampled=result.boundingBox!,size=sampled.getSize(new THREE.Vector3()),mid=sampled.getCenter(new THREE.Vector3());
   result.translate(-mid.x,-mid.y,-mid.z).scale(extent.x/size.x,extent.y/size.y,extent.z/size.z).translate(center.x,center.y,center.z);
-  result.userData.voxel={kind:'stamp',grid,cells:data.cells,quads:data.quads};
+  result.userData.voxel={kind:'stamp',surface:'net',grid,cells:data.cells,quads:data.quads};
   return result;
 }

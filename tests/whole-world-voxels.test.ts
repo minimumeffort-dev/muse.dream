@@ -14,10 +14,12 @@ import {voxelSurfaceBase} from '../src/game/surface';
 import {WorldParticles} from '../src/game/particles';
 
 const policy={objectCell:1,groundCell:8 as const,heightStep:1};
-function assertVoxelNormals(g:THREE.BufferGeometry){
+function assertVoxelNormals(g:THREE.BufferGeometry,axisAligned=true){
  const n=g.getAttribute('normal'),p=g.getAttribute('position');expect(p.count).toBeGreaterThan(0);
- for(let i=0;i<n.count;i++)expect([Math.abs(n.getX(i)),Math.abs(n.getY(i)),Math.abs(n.getZ(i))].sort()).toEqual([0,0,1]);
- const indices=g.index;for(let i=0;i<(indices?.count??p.count);i+=3){const ids=[0,1,2].map(j=>indices ? indices.getX(i+j) : i+j);const a=new THREE.Vector3().fromBufferAttribute(p,ids[0]!),b=new THREE.Vector3().fromBufferAttribute(p,ids[1]!),c=new THREE.Vector3().fromBufferAttribute(p,ids[2]!);expect(b.sub(a).cross(c.sub(a)).normalize().dot(new THREE.Vector3().fromBufferAttribute(n,ids[0]!))).toBeCloseTo(1,5);}
+ let bad=0,minDot=1;
+ for(let i=0;i<n.count;i++)if(axisAligned && [Math.abs(n.getX(i)),Math.abs(n.getY(i)),Math.abs(n.getZ(i))].sort().join(',')!=='0,0,1')bad++;
+ const indices=g.index;for(let i=0;i<(indices?.count??p.count);i+=3){const ids=[0,1,2].map(j=>indices ? indices.getX(i+j) : i+j);const a=new THREE.Vector3().fromBufferAttribute(p,ids[0]!),b=new THREE.Vector3().fromBufferAttribute(p,ids[1]!),c=new THREE.Vector3().fromBufferAttribute(p,ids[2]!);minDot=Math.min(minDot,b.sub(a).cross(c.sub(a)).normalize().dot(new THREE.Vector3().fromBufferAttribute(n,ids[0]!)));}
+ expect(bad).toBe(0);expect(minDot).toBeCloseTo(1,5);
 }
 describe('whole-world voxel construction',()=>{
  it('applies the world policy to every linked template, placement, player and flock, without changing physics',()=>{
@@ -31,7 +33,7 @@ describe('whole-world voxel construction',()=>{
   const world=compileDreamWorld(worldSource,worldModules);let parts=0;
   for(const spec of world.assemblies){
    expect(spec.voxelSize).toBe(1);
-   for(const part of spec.parts){try{const g=partGeometry(part,spec.voxelSize);assertVoxelNormals(g);expect(g.userData.voxel).toBeDefined();g.dispose();parts++;}catch(error){throw new Error(`${spec.displayName}/${part.id}: ${error}`);}}
+   for(const part of spec.parts){try{const g=partGeometry(part,spec.voxelSize);assertVoxelNormals(g,false);expect(g.userData.voxel).toBeDefined();g.dispose();parts++;}catch(error){throw new Error(`${spec.displayName}/${part.id}: ${error}`);}}
   }
   expect(parts).toBeGreaterThan(1000);
   const spec=world.assemblies.find(s=>s.displayName==='Meadow bicycle')!,group=compactObject(buildObject({id:'bike',kind:'custom',labelText:spec.displayName,x:0,y:0,scale:measuredScale(spec),spec}));

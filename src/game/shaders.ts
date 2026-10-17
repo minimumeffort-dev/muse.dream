@@ -55,7 +55,8 @@ const toonGradient = (() => {
 
 /** Material factory for model-invented objects, by allowlisted style. */
 export function toonMaterial(color: THREE.ColorRepresentation): THREE.MeshToonMaterial {
-  return new THREE.MeshToonMaterial({ color, gradientMap: toonGradient() });
+  const material=new THREE.MeshToonMaterial({ color, gradientMap: toonGradient() });
+  material.userData.streamMaterial={kind:"toon",color:material.color.getHex()};return material;
 }
 
 function baseStyledMaterial(spec: ObjectMaterial, useB = false): THREE.Material {
@@ -159,6 +160,7 @@ function surfaceMaterial(spec: ObjectMaterial): THREE.MeshStandardMaterial {
 /** Night paint travels with geometry through rigid merging, instancing and released fragments. */
 export function nightPaint(material:THREE.Material):void {
   const original=material.onBeforeCompile.bind(material),key=material.customProgramCacheKey();
+  material.userData.streamMaterial={...material.userData.streamMaterial,nightPaint:true};
   material.onBeforeCompile=(shader,renderer)=>{
     original(shader,renderer);shader.uniforms.nightFactor=nightFactor;
     shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\nattribute vec3 nightEmission; varying vec3 vNightEmission;')
@@ -169,7 +171,7 @@ export function nightPaint(material:THREE.Material):void {
   material.customProgramCacheKey=()=>key+'-night-paint';
 }
 export function styledMaterial(spec:ObjectMaterial,useB=false):THREE.Material {
-  const material=baseStyledMaterial(spec,useB);
+  const material=baseStyledMaterial(spec,useB);material.userData.streamMaterial={kind:"styled",spec,useB};
   if(spec.nightColor && !['toon','paper-grain'].includes(spec.shaderStyle)){
     const lit=material as THREE.MeshStandardMaterial;lit.emissive.setRGB(0,0,0);
     const original=material.onBeforeCompile.bind(material),key=material.customProgramCacheKey(),tint=new THREE.Color(spec.nightColor);
@@ -198,7 +200,7 @@ export function groundMaterial(): THREE.MeshStandardMaterial {
   const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1 });
   grainInject(mat, .055);
   terrainCutaway(mat);
-  return mat;
+  mat.userData.streamMaterial={kind:"ground"};return mat;
 }
 
 /** Dither only ground between the eye and the car; steep terrain never forces a camera tilt. */
@@ -216,7 +218,7 @@ function terrainCutaway(material:THREE.MeshStandardMaterial):void {
 
 export function roadMaterial():THREE.MeshStandardMaterial {
   const material=new THREE.MeshStandardMaterial({color:"#374653",roughness:.95});
-  grainInject(material,.025);terrainCutaway(material);return material;
+  grainInject(material,.025);terrainCutaway(material);material.userData.streamMaterial={kind:"road"};return material;
 }
 
 export function bridgeMaterial(style:"timber"|"stone"):THREE.MeshStandardMaterial {
@@ -272,6 +274,7 @@ const surfaceVertex = `varying vec2 v; void main() {
 export function zoneMaterial(effect: Effect): THREE.MeshStandardMaterial {
   const material = new THREE.MeshStandardMaterial({ roughness: effect === "ICE" ? .28 : .8,
     metalness: effect === "ICE" ? .12 : 0, transparent: true, depthWrite: false });
+  material.userData.streamMaterial={kind:"zone",effect};
   material.onBeforeCompile = shader => {
     shader.uniforms.time = worldTime;
     shader.vertexShader = shader.vertexShader.replace("#include <common>", "#include <common>\nattribute float edgeDistance; varying vec2 v; varying vec2 surfaceXZ; varying float surfaceEdge;")
@@ -380,6 +383,7 @@ float sceneryAngle=${theta};transformed=pivot+rigidRotate(transformed-pivot,spin
 /** Per-instance ghosting keeps occlusion local without cloning thousands of materials. */
 export function sceneryMaterial(material:THREE.Material,motion?:ObjectPart["animation"]):THREE.Material {
   const original=material.onBeforeCompile.bind(material),key=material.customProgramCacheKey();
+  material.userData.streamMaterial={kind:"scenery",base:material.userData.streamMaterial,motion};
   material.onBeforeCompile=(shader,renderer)=>{
     original(shader,renderer);sceneryMotion(shader,motion);
     shader.vertexShader=shader.vertexShader.replace("#include <common>","#include <common>\nattribute float visibility; varying float sceneryVisibility;")
@@ -393,6 +397,7 @@ export function sceneryMaterial(material:THREE.Material,motion?:ObjectPart["anim
 
 export function sceneryDepthMaterial(motion?:ObjectPart["animation"],cloth=false):THREE.MeshDepthMaterial {
   const material=new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking});
+  material.userData.streamMaterial={kind:"scenery-depth",motion,cloth};
   if(cloth)addClothWind(material);
   const original=material.onBeforeCompile.bind(material);
   material.onBeforeCompile=(shader,renderer)=>{original(shader,renderer);sceneryMotion(shader,motion);};

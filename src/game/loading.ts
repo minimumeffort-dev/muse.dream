@@ -2,6 +2,7 @@ export interface Loading {
   stage(label:string):Promise<void>;
   build<T>(label:string,steps:Generator<void,T>):Promise<T>;
   ready():void;
+  fail(error:unknown):void;
 }
 const yieldToPage=()=>new Promise<void>(resolve=>setTimeout(resolve,0));
 

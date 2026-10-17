@@ -14,7 +14,7 @@ voxel_world(object_cell=1,ground_cell=8,height_step=1);
 
 [Download a complete runnable world](examples/voxel-world.dream).
 
-The model still writes a roof profile, a wheel, a branch or a beam. The engine treats those shapes as stamps into bounded cell volumes. It meshes the occupied cells, removes internal faces and merges flat faces. Existing `voxels`, `fill` and `cut` remain available when the model needs to carve cells directly.
+The model still writes a roof profile, a wheel, a branch or a beam. The engine treats those shapes as stamps into bounded cell volumes. It meshes the occupied cells, reconstructs continuous boundaries for curved stamps and merges flat faces. Explicit carved volumes retain exact cell faces. Existing `voxels`, `fill` and `cut` remain available when the model needs to carve cells directly.
 
 The policy reaches imported templates, generated street furnishings, the player vehicle and decorative flocks after linking. It preserves their materials, measured envelopes, rigid animation pivots and destruction ownership. A bicycle still has a crank, two tires, a frame, a saddle and handlebars. Converting it doesn't turn it into one box.
 
@@ -26,13 +26,13 @@ The policy reaches imported templates, generated street furnishings, the player 
 | --- | --- |
 | Object parts | Local occupied-cell stamps, 4..32 cells per axis; fitted to the authored envelope |
 | Explicit volumes | The existing exact integer fill/cut grid and optional fracture chunks |
-| Ground | Solid columns in resident 400-unit tiles, with merged tops and exposed steps |
-| Roads, paths and bridge decks | World-aligned columns, preserving their layer lifts and connected footprints |
-| Crossings, cycle symbols and lane paint | Fine .5-unit cells, keeping narrow markings readable |
+| Ground | Solid columns in streamed 400-unit tiles, with merged tops and exposed steps |
+| Roads, paths and bridge decks | Exact cut-cell outlines over supporting columns, preserving lifts and connections |
+| Crossings, cycle symbols and lane paint | Exact thin outlines, retaining their width below the ground-cell size |
 | Water | Eight-unit surface columns, displaced rigidly by the existing bounded wave field |
 | Dust, sparks and splashes | One instanced draw of voxel particles in the existing fixed-size pool |
 
-`object_cell` is .25..4 local units. The stamp fits its grid to the original part dimensions, with a four-cell minimum for small rings and fittings and a 32-cell maximum along each axis. Long beams remain cuboids; curved profiles produce stepped surfaces. Equal cell dimensions are approximate for fitted stamps. Use explicit volumes with equal size/grid ratios when exact cubic cells matter.
+`object_cell` is .25..4 local units. The stamp fits its grid to the original part dimensions, with a four-cell minimum for small rings and fittings and a 32-cell maximum along each axis. Long beams remain cuboids; curved profiles use surface nets rather than stair-step silhouettes. Equal cell dimensions are approximate for fitted stamps. Use explicit volumes with equal size/grid ratios when exact cubic cells matter.
 
 `ground_cell` is exactly 4 or 8 world units. `height_step` is .5..1. Ten world units represent a metre. These are construction settings, fixed for the world, rather than detail levels that change as the camera moves.
 
@@ -50,9 +50,9 @@ Collision cylinders, bridge clearance and the smooth driving heightfield remain 
 
 ## Keep the browser in mind
 
-Voxel construction currently uses more geometry-buffer memory than the same city with the world conversion disabled. Indexed column faces reduce that cost without changing the surfaces. The opening loader shows construction phases, and Dream validation runs in a worker. See the [loading and memory comparison](rendering.md#loading-and-memory) for measurements, scope and remaining limits.
+Voxel construction currently uses more geometry-buffer memory than the same city with the world conversion disabled. Indexed column faces reduce that cost without changing the surfaces. The opening loader shows construction phases, and Dream validation runs in a worker. See the [streaming and memory comparison](rendering.md#loading-and-memory) for measurements, scope and remaining limits.
 
-The full world stays resident. Static objects still use prototypes, instancing, material batching and spatial culling. Object stamp meshes share a bounded 16 MiB CPU cache; individual stamps never exceed 32,768 cells or the existing surface-quad limit. Landscape meshing works on one bounded tile at a time. No cell becomes a separate Three.js object or physics body, and intact objects don't remesh each frame.
+Static geometry streams in 800-unit chunks around the camera/player, including offscreen shadow coverage and movement prefetch. Distant chunk resources are disposed; complete collision, NPC, destruction and wave state remains resident. Bounded live render groups stay loaded. Returning recreates the same geometry. Static objects still use prototypes, instancing, material batching and spatial culling. Object stamp meshes share a bounded 16 MiB CPU cache; individual stamps never exceed 32,768 cells or the existing surface-quad limit. Landscape meshing works on one bounded tile at a time. No cell becomes a separate Three.js object or physics body, and intact objects don't remesh each frame.
 
 The explicit fill/cut budgets are unchanged. Their project allocation limit describes authored volumes, while the construction cache contains reusable stamp surfaces. Browser measurements and capture provenance are in the [verification record](evidence/whole-world-voxels/verification.md). Offline recordings show the geometry and motion; they aren't frame-rate benchmarks.
 
