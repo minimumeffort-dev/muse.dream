@@ -336,3 +336,15 @@ carved cuts, finishes, layout and stepped ground. Their dated verification recor
 remain historical evidence; use the refreshed world/vehicle captures above for the
 current contoured appearance. Dream vocabulary and its checked examples are
 unchanged by streaming.
+
+
+## Night visibility
+
+The night pass re-exports all 360 frames of `daynight.gif` and `daynight.mp4`
+at 30 rendered frames per simulation second. `daynight.jpg` is frame 240;
+`city-day.jpg`, `city-dusk.jpg`, `city-night.jpg` and `city-dawn.jpg` use frames
+30, 117, 180 and 300. The new source images are native 2400 × 1350, with no
+interpolation. Earlier streaming recordings used 1600 × 900 inputs. The [night verification](../evidence/night-visibility/verification.md)
+keeps the earlier still and current native town view. Geometry, daytime light,
+controls and the other clips retain their accepted contracts; those captures
+remain accurate.

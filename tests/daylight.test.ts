@@ -56,6 +56,13 @@ describe('Dream daylight',()=>{
   renderer.update(475);expect(nightFactor.value).toBe(0);expect(renderer.pools.visible).toBe(false);
   const lights:THREE.Light[]=[];root.traverse(n=>{if(n instanceof THREE.Light)lights.push(n);});expect(lights).toHaveLength(3);expect(lights.some(l=>l instanceof THREE.PointLight)).toBe(false);
  });
+ it('maintains navigation fill throughout night and the horizon handoff while retaining exact daytime light',()=>{
+  const root=new THREE.Scene(),sky=new THREE.HemisphereLight(),sun=new THREE.DirectionalLight(),fill=new THREE.DirectionalLight(),config={...scene,daylight:{cycleSeconds:600,startHour:0}};
+  const renderer=new WorldDaylight(config,root,sky,sun,fill);
+  for(const hour of [0,5.99,6,18,18.01,22]){renderer.update(hour/24*600);expect(sky.intensity).toBeGreaterThanOrEqual(1.1);expect(fill.intensity).toBeGreaterThanOrEqual(.3-1e-9);expect(Math.min(sky.groundColor.r,sky.groundColor.g,sky.groundColor.b)).toBeGreaterThan(.03);}
+  renderer.update(300);expect(sky.intensity).toBe(1.25);expect(fill.intensity).toBeCloseTo(.3);expect(sun.intensity).toBe(2.4);expect(sky.color.getHexString()).toBe('bad4e2');expect(sky.groundColor.getHexString()).toBe('384736');
+  renderer.update(0);expect(sun.intensity).toBe(.48);expect(nightFactor.value).toBe(1);
+ });
  it('keeps receivers and offscreen casters inside the moving sun/moon shadow grid',()=>{
   const target=new THREE.Vector3(2300,120,-1800),eye=cameraPosition(target,0),camera=new THREE.OrthographicCamera(-480,480,270,-270,1,10000);camera.position.set(eye.x,eye.y,eye.z);camera.lookAt(target);camera.updateMatrixWorld();
   const light=new THREE.DirectionalLight(),shadows=new SunShadows(light,-40,800),ray=new THREE.Raycaster();

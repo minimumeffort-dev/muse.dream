@@ -1,0 +1,8 @@
+{
+  "car": "6290.4,4146.4,17.2",
+  "control": "{\"kind\":\"foot\"}",
+  "daylight": "{\"hour\":23.860504000000972,\"night\":1,\"direction\":[-0.029058386129729476,0.9543973419849352,0.29712173230449807]}",
+  "flight": "{\"jumps\":0,\"landings\":0,\"maxClearance\":0}",
+  "grounded": "false",
+  "movement": "{\"swimming\":false,\"vz\":-40,\"pitch\":0,\"bank\":0}"
+}

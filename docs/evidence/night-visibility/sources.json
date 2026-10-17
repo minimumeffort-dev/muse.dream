@@ -1,0 +1,8 @@
+{
+  "baseCommit": "311a2577a87e3975a02d7e77ba7ce140a2fa4754",
+  "sha256": {
+    "src/game/daylight.ts": "ffeb1982792bc58da9d079050795bf95203b1b3779346d8ecf620e2ae9dfb336",
+    "src/scene/daylight.ts": "9f7415e4fa1474c844f94e00a5ac8784ae6d9996ce16fe9655f2a3b4e268747c",
+    "tests/daylight.test.ts": "871fffaffe4134c7216e3c915e8d81c56cd9e1efb74cbea8f35a07ca1131899a"
+  }
+}

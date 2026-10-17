@@ -12,6 +12,6 @@ export function sampleDaylight(config:Daylight,elapsed:number){
   const moon=altitude<0,arc=moon ? angle+Math.PI : angle;
   const x=-.75*Math.cos(arc),y=Math.max(.32,.9*Math.sin(arc)),z=.28,length=Math.hypot(x,y,z);
   return {hour,day,night,warm:day*(1-smooth(.18,.65,altitude)),moon,
-    intensity:(moon ? .32 : 2.4)*smooth(.01,.25,Math.abs(altitude)),
+    intensity:(moon ? .48 : 2.4)*smooth(.01,.25,Math.abs(altitude)),
     direction:{x:x/length,y:y/length,z:z/length}};
 }

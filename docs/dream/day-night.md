@@ -2,7 +2,7 @@
 
 [Dream docs](../README.md) / Day and night
 
-The city changes while you explore. The sun moves, shadows lengthen, the sky cools and windows light up. Streetlights leave warm pools on the pavement. Night keeps enough moon and ambient light to see where you are driving.
+The city changes while you explore. The sun moves, shadows lengthen, the sky cools and windows light up. Streetlights leave warm pools on the pavement. Night has a soft blue sky and ground fill, so dark vehicles, people, paths and building walls remain visible away from lamps. Daytime light retains its original colours and intensity.
 
 ![The city after dark, with lit windows and streetlights](../media/daynight.jpg)
 
@@ -43,8 +43,8 @@ A lamp assembly can also declare one `lamp(at=[0,38,0],radius=30,color=#ffd18a)`
 
 ## Rendering and current limits
 
-The world keeps one directional shadow map for the sun and moon. Their direct light fades to darkness during the horizon handoff. Streetlights use shared emissive materials and bounded surface pools, with no per-lamp shadow map. The 400 lights follow city and airport placement rules; the cycle adds no actors or live joints.
+The world keeps one directional shadow map for the sun and moon. Their direct light fades to darkness during the horizon handoff; sky and fill light remain available for navigation. Streetlights use shared emissive materials and bounded surface pools, with no per-lamp shadow map. The 400 lights follow city and airport placement rules; the cycle adds no actors or live joints.
 
 Light pools are stylized, unshadowed ground effects. They do not light building walls or simulate occlusion from objects. Windows glow without simulating interiors or occupancy. Existing NPC programs and transit schedules continue through the night; this feature does not add opening hours, weather or an astronomical calendar.
 
-[Exact fields and bounds](reference.md#daylight-and-night-lighting) · [Rendering evidence](../evidence/day-night/verification.md)
+[Exact fields and bounds](reference.md#daylight-and-night-lighting) · [Original cycle evidence](../evidence/day-night/verification.md) · [Night visibility pass](../evidence/night-visibility/verification.md)

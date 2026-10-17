@@ -57,7 +57,7 @@ Pixel ratio, antialiasing, the 2048 × 2048 sun shadow map, shadow coverage, blo
 
 ## Day and night
 
-The optional Dream daylight clock changes sky/fog colors, hemisphere light and one sun/moon direction. The existing 2,048-pixel directional shadow map remains world-aligned at each phase. Direct light fades out during the sun/moon handoff; camera movement does not drive that phase.
+The optional Dream daylight clock changes sky/fog colors, hemisphere light and one sun/moon direction. The existing 2,048-pixel directional shadow map remains world-aligned at each phase. Direct light fades out during the sun/moon handoff; camera movement does not drive that phase. Nighttime sky and ground fill retain visible paths, people and dark assets outside lamp pools. Daytime colours and intensities remain exact. This uses the existing three lights and one shadow map. [Night visibility check](evidence/night-visibility/verification.md).
 
 Night emission is stored beside vertex paint, preserving rigid merging and instancing across walls and windows. Static lamp pools are tessellated against terrain and decks once, then use the existing resident geometry tiles and shared night uniform. Daytime hides those tiles. There is no point light or shadow map per lamp, and no new actor or joint slot. Pool lighting is unshadowed and affects the ground only. [Day/night verification](evidence/day-night/verification.md) records captures, checks and local full-quality measurements.
 

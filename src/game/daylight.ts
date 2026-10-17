@@ -34,7 +34,7 @@ export function buildLightPools(doc:Scene):THREE.Group {
 }
 
 const palette={skyDay:new THREE.Color('#526b76'),skyNight:new THREE.Color('#101a2c'),skyDusk:new THREE.Color('#79535e'),
-  upperDay:new THREE.Color('#bad4e2'),upperNight:new THREE.Color('#7391ba'),lowerDay:new THREE.Color('#384736'),lowerNight:new THREE.Color('#1c293a'),
+  upperDay:new THREE.Color('#bad4e2'),upperNight:new THREE.Color('#9aacc7'),lowerDay:new THREE.Color('#384736'),lowerNight:new THREE.Color('#485970'),
   sun:new THREE.Color('#ffe5b8'),sunset:new THREE.Color('#ffc28d'),moon:new THREE.Color('#9dbcea')};
 export class WorldDaylight {
   readonly direction=DEFAULT_SUN_DIRECTION.clone();
@@ -51,8 +51,8 @@ export class WorldDaylight {
     this.direction.set(phase.direction.x,phase.direction.y,phase.direction.z);this.pools.visible=phase.night>.001;
     (this.scene.background as THREE.Color).copy(palette.skyNight).lerp(palette.skyDay,phase.day).lerp(palette.skyDusk,phase.warm*.6);
     if(this.scene.fog)this.scene.fog.color.copy(this.scene.background as THREE.Color);
-    this.hemisphere.color.copy(palette.upperNight).lerp(palette.upperDay,phase.day);this.hemisphere.groundColor.copy(palette.lowerNight).lerp(palette.lowerDay,phase.day);this.hemisphere.intensity=.48+.77*phase.day;
+    this.hemisphere.color.copy(palette.upperNight).lerp(palette.upperDay,phase.day);this.hemisphere.groundColor.copy(palette.lowerNight).lerp(palette.lowerDay,phase.day);this.hemisphere.intensity=1.1+.15*phase.day;
     this.sun.color.copy(phase.moon ? palette.moon : palette.sun).lerp(palette.sunset,phase.warm);this.sun.intensity=phase.intensity;
-    this.fill.intensity=.16+.14*phase.day;
+    this.fill.intensity=.34-.04*phase.day;
   }
 }

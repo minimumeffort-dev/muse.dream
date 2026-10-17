@@ -65,9 +65,10 @@ keep the comparison with the implementation.
 
 ## Split a world into modules
 
-Modules organize accepted source. The renderer builds the complete world up front;
-travelling does not load or unload districts. Ordinary camera and shadow frustum
-culling skips invisible draws while their geometry stays resident. The engine's
+Modules organize accepted source. The compiler accepts the complete world before
+play, then the renderer streams static districts as you travel. Physics, NPC clocks
+and damage stay resident; distant static meshes are disposed and rebuilt on return.
+Camera and shadow coverage keep visible geometry ready. The engine's
 [rendering notes](../rendering.md) cover batching, retained visual quality and
 repeatable measurements. No extra Dream fields are needed for these optimizations.
 

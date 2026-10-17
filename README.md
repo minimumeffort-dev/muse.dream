@@ -179,7 +179,7 @@ Ground wildlife roams bounded habitats and moves away when you approach. Pedestr
 
 ## Stay until night
 
-The world has a ten-minute day. Shadows move with the sun, dusk warms the scene, windows light up and streetlights come on. Moonlight keeps the road readable after dark. Dream describes the clock and the light: `daylight(cycle_s=600,start_hour=10)` sets the cycle, while materials and lamp assemblies declare their night appearance.
+The world has a ten-minute day. Shadows move with the sun, dusk warms the scene, windows light up and streetlights come on. Moonlight and soft sky/ground fill keep roads, people and dark vehicles visible beyond streetlights. Dream describes the clock and the light: `daylight(cycle_s=600,start_hour=10)` sets the cycle, while materials and lamp assemblies declare their night appearance.
 
 ![A complete day and night over the mock city](docs/media/daynight.gif)
 

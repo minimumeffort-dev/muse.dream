@@ -1,6 +1,6 @@
 # Worlds with systems
 
-The longer-term product is a way to describe a world, its rules and a task, then watch an agent try to complete it. Paper can become another input to the same authoring boundary. Prompting comes first: intent becomes a proposed Dream program, the compiler checks it, and the engine decides what it actually means.
+The longer-term product is a way to describe a world, its rules and a task, then watch an agent try to complete it. Paper can become another input to the same authoring boundary. The current focus is the playable world and its bounded, authored systems. Prompt interpretation is deferred: when revived, intent becomes a proposed Dream program, the compiler checks it, and the engine decides what it actually means.
 
 The [first working lab](dream/scenarios.md) connects that path using a bounded mock interpreter, explicit task rules, multiple mock policies and replayable local episodes. It is a logical graph environment. Linking those decisions to the existing 3D city's paths and physics is a separate next step, not something the dashboard already does.
 
@@ -29,4 +29,10 @@ For example, staffing a clinic and teaching a class both need a schedule and rol
 
 Keep separate owners for accepted world source, simulation state, policy decisions and evaluation. The policy observes and acts; it cannot set task completion or reward. Unknown intent must remain visible. A failed proposal leaves the accepted world and its records intact. Model output remains data-only; the engine owns executable behavior.
 
-The next product milestone is a real prompt interpreter proposing both a connected 3D world and a logical scenario, with a preview and explicit acceptance. Then bind scenario actions to the actual city, add an external policy adapter and run comparisons across seeds. Persistent dashboards and dataset operations become useful once those runs carry real provenance. Real provider integration still needs separate authorization; current authoring and policies remain mocked.
+The current direction is a playable life simulation: people, work, food, services, relationships, sports and entertainment in connected places. Build those as observable mechanics in the 3D world before expanding prompt authoring. The Lab remains a separate logical exercise. Do not describe a shop as functioning because a vendor stands outside it, or a hospital as a clinical simulation because it has a supply task.
+
+The next shared primitives are player-to-person interactions; bounded accounts, inventories and conserved transfers; timed work and production; and explicit access between spaces. Restaurants can then consume ingredients and sell meals, employers can pay wages from a treasury, and people can follow schedules with actual destinations. Each step needs a small executable example and a second use of the same primitive, with invalid and interrupted actions tested.
+
+Interiors need an explicit floor/space owner, portals, clearance and supported movement, including camera visibility and loading. The current single-height driving field cannot stand in for multiple floors. Skyscrapers, lifts and stairs require that additional layer before they are called usable. Relationships and dating need authored consent, preferences, memory and repeatable social interactions; the current attention state is only a proximity reaction. Sports practice exists; full matches, teams, referees, entertainment venues, weather and everyday needs remain separate missing mechanics.
+
+Night navigation now has readable sky/ground fill outside lamp pools, while static districts load and unload around the player. Those improvements support the larger simulation without adding actors or reducing visual settings. Continue measuring populated districts as new systems land. Keep provider integration and external-policy adapters deferred until separately authorized.
