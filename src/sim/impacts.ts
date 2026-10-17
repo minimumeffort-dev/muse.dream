@@ -1,3 +1,4 @@
+import {DAMAGE_POOL_LIMITS} from '../scene/damage-pool';
 import { playerHeight } from "../scene/measure";
 import { Euler,Quaternion,Vector3 } from "three";
 import type { CarState,World } from "./car";
@@ -6,7 +7,7 @@ import { objectFragments } from "../scene/fragments";
 import { objectPlacement } from "../scene/placement";
 import { drivingHeight } from "../scene/terrain";
 import { sceneContacts,queryStaticContacts,type Contact } from "../scene/contacts";
-import { objectHeight,objectRadius } from "./archetypes";
+import { archetypeOf,objectHeight,objectRadius } from "./archetypes";
 import { objectSupport } from "../scene/object-support";
 import { actorContacts } from "./actors";
 
@@ -28,12 +29,12 @@ export function breakOnContact(state:CarState,world:World,x:number,y:number,cont
     const dx=contact.x-state.x,dy=contact.y-state.y,d=Math.hypot(dx,dy)||1;
     const speed=(state.vx*dx+state.vy*dy)/d,height=world.bodyHeight??playerHeight(world.scene);
     if(speed<impact.speed || state.elevation>=contact.top-.05 || state.elevation+height<=contact.bottom+.05 || Math.hypot(x-contact.x,y-contact.y)>=world.carRadius+contact.r)continue;
-    if(contact.zoneId)state.brokenZones.push({objectId:object.id,zoneId:contact.zoneId});else state.broken.push(object.id);
+    if(contact.zoneId)state.brokenZones=[...state.brokenZones,{objectId:object.id,zoneId:contact.zoneId}];else state.broken=[...state.broken,object.id];
     const spec=object.spec as ObjectDslV2,placement=objectPlacement(world.scene,object);
     for(const [i,fragment] of objectFragments(spec).filter(f=>f.zone===contact.zoneId).entries()){
       const p=fragment.center.clone().multiplyScalar(object.scale).applyQuaternion(placement.rotation);
       if(impact.kind==="topple"){
-        const nx=dx/d,ny=dy/d,r=objectRadius(object);
+        const nx=dx/d,ny=dy/d,r=archetypeOf(object).colliderRadius*object.scale;
         state.debris.push({objectId:object.id,fragmentId:fragment.id,x:object.x+p.x,y:object.y+p.z,elevation:placement.base+p.y,vx:0,vy:0,vz:0,
           rotation:placement.rotation.toArray(),spin:[0,0,0],age:0,lifetime:impact.lifetime,settled:false,
           topple:{pivot:[object.x+nx*r,placement.base,object.y+ny*r],offset:[p.x-nx*r,p.y,p.z-ny*r],axis:[ny,0,-nx],rest:placement.rotation.toArray(),duration:impact.duration,angle:0}});
@@ -46,6 +47,8 @@ export function breakOnContact(state:CarState,world:World,x:number,y:number,cont
         vx,vy,vz:impact.lift*(.75+(i%3)*.125)*(pattern==="crumble" ? .2 : 1),...(impact.pattern ? {pattern:impact.pattern} : {}),
         rotation:placement.rotation.toArray(),spin:[Math.sin(angle)*impact.spin,Math.cos(angle)*impact.spin,Math.sin(angle+1)*impact.spin].map(v=>v*(pattern==="crumble" ? .45 : 1)) as [number,number,number],age:0,lifetime:impact.lifetime,settled:false});
     }
+    // Oldest cosmetic pieces yield capacity; persistent damage never depends on pool space.
+    if(world.scene.damagePool)while(state.debris.length>DAMAGE_POOL_LIMITS.fragments || new Set(state.debris.map(p=>p.objectId)).size>DAMAGE_POOL_LIMITS.assemblies){const oldest=state.debris[0]!.objectId;state.debris=state.debris.filter(p=>p.objectId!==oldest);}
     state.impacts.push({id:object.id,kind:impact.kind,...(impact.kind==="break" && impact.pattern ? {pattern:impact.pattern} : {}),...(contact.zoneId ? {zoneId:contact.zoneId} : {}),x:contact.x,y:contact.y,elevation:contact.zoneId ? contact.bottom : placement.base,speed});
     state.vx*=.82;state.vy*=.82;
   }

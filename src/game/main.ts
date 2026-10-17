@@ -1,3 +1,4 @@
+import {pooledImpact} from '../scene/damage-pool';
 import {gameSave} from './save';
 import {primeAmbientNavigation} from '../scene/ambient-navigation';
 import {primeSceneContacts} from '../scene/contacts';
@@ -16,7 +17,7 @@ import {SunShadows} from "./sun";
 import {mediaCapture} from "./media-capture";
 import {renderProfile} from "./render-profile";
 import {freezeStatic} from "./batching";
-import {vehicleReviewStart,drivingReviewStart,npcReviewStart,cargoReviewStart,maintenanceReviewStart,movementReviewStart,populationReviewStart} from "./review-start";
+import {vehicleReviewStart,drivingReviewStart,npcReviewStart,cargoReviewStart,maintenanceReviewStart,lampRepairReviewSteps,movementReviewStart,populationReviewStart} from "./review-start";
 import { measuredScale, playerRadius, playerHeight } from "../scene/measure";
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -78,7 +79,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   primeRepairNavigation(doc,worker.repairNavigation);
   const carRadius = playerRadius(doc);
   const roadMask = buildMaskForScene(doc);
-  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousParkingSaveCompatibility:worker.previousParkingSaveCompatibility,previousRepairSaveCompatibility:worker.previousRepairSaveCompatibility,previousSupplySaveCompatibility:worker.previousSupplySaveCompatibility,previousNetworkSaveCompatibility:worker.previousNetworkSaveCompatibility,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
+  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousParkingSaveCompatibility:worker.previousParkingSaveCompatibility,previousRepairSaveCompatibility:worker.previousRepairSaveCompatibility,previousSupplySaveCompatibility:worker.previousSupplySaveCompatibility,previousNetworkSaveCompatibility:worker.previousNetworkSaveCompatibility,previousPoolSaveCompatibility:worker.previousPoolSaveCompatibility,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
     driveMask: buildPaperMask(doc.canonical.width, doc.canonical.height), carRadius };
   let car = createCarAtSpawn(doc);
   const repairViews=repairView();
@@ -196,7 +197,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   const {debris,traveler,avatar,walkerSpec,walker,walkerAnimation,carRoot,carMesh,particles,sportVisuals}=await loading.build("Preparing vehicles and interactive objects",(function*(){
   for (const object of doc.objects) {
     if(object.parked)continue;
-    if (!isActor(object) && !isReactive(object.spec) && archetypeOf(object).interaction !== "knockable" && !hasAnimatedJoints(object.spec)) continue;
+    if (!isActor(object) && (!isReactive(object.spec) || pooledImpact(doc,object)) && archetypeOf(object).interaction !== "knockable" && !hasAnimatedJoints(object.spec)) continue;
     yield;
     const destructible=isReactive(object.spec) && impactOf(object.spec)?.kind!=="bounce";
     const group = destructible ? buildDamageObject(object) : compactObject(buildObject(object));
@@ -213,7 +214,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     if(destructible)breakMeshes.set(object.id,group);
   }
   yield;
-  const debris=new WorldDebris(doc);scene.add(debris.group);
+  const debris=new WorldDebris(doc);scene.add(debris.group);addEventListener('pagehide',event=>{if(!event.persisted)debris.dispose();});
   yield;
   const traveler={...interactiveWorld.assemblies.find(a=>a.displayName==="Traveler")!,voxelSize:doc.voxelWorld?.objectCell};
   const avatar=compactObject(buildObject({id:"traveler",kind:"custom",labelText:"Traveler",x:0,y:0,scale:measuredScale(traveler),spec:traveler}));avatar.visible=false;objects.push(avatar);
@@ -371,11 +372,18 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     resetPosition(true);car=drivingReviewStart(car,world,new URLSearchParams(location.search).get("test-driving"));car=cargoReviewStart(car,world,params.get("test-cargo"));worldTime.value=0;
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
   let captureTime:number|undefined,captureActor:string|undefined;
-  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:360,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840,maintenance:600},(clip)=>{
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:360,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840,maintenance:600,lamps:240,lamprepair:360},async(clip)=>{
     captureTime=undefined;captureActor=undefined;
     resetPosition(true);worldTime.value=0;setMode("playing");
     characters.forEach(character=>character.reset());
     if(clip==='maintenance'){car=maintenanceReviewStart(car,world);worldTime.value=car.timeS;captureActor=doc.economy?.accounts.find(a=>car.economy?.accounts.find(b=>b.id===a.id)?.repair)?.actor;}
+    if(clip==='lamps')car=drivingReviewStart(car,world,'lamp');
+    if(clip==='lamprepair'){
+      const steps=lampRepairReviewSteps(car,world);let result=steps.next(),yieldAt=performance.now();
+      while(!result.done){if(performance.now()-yieldAt>=12){await new Promise<void>(resolve=>setTimeout(resolve,0));yieldAt=performance.now();}result=steps.next();}
+      car=result.value;worldTime.value=car.timeS;captureActor=doc.economy?.accounts.find(a=>car.economy?.accounts.find(b=>b.id===a.id)?.repair)?.actor;
+    }
+
     if(clip==='repair')car=drivingReviewStart(car,world,'repair');
     if(clip==='conversation' || clip==='commerce' || clip==='delivery')car=npcReviewStart(car,world,'vendor');
     if(clip==='pedestrians' || clip==='wildlife')car=populationReviewStart(car,world,clip);
@@ -387,6 +395,11 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   },(clip:string,frame:number)=>{
     keys.clear();
     if(clip==='maintenance')return;
+    if(clip==='lamps' || clip==='lamprepair'){
+      const config=doc.daylight;captureTime=config ? ((22-config.startHour+24)%24)/24*config.cycleSeconds+frame/30 : undefined;
+      if(clip==='lamps'){if(frame<33)keys.add('KeyW');if(frame>=33 && frame<78)keys.add('KeyS');if(frame===84)useRide();}return;
+    }
+
     if(clip==='repair'){if(frame<38)keys.add('KeyW');if(frame>=38 && frame<58)keys.add('KeyS');if(frame===60)useRide();return;}
     if(clip==='parking'){
       if(frame===18 || frame===230 || frame===270)useRide();
@@ -430,6 +443,11 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     if(frame>=135 && frame<162)keys.add("KeyS");
 
   }) : undefined;
+  let hiddenBroken:typeof car.broken|undefined,hiddenParking:ReadonlySet<string>|undefined,hiddenSeeds=new Set<string>();
+  function hiddenScenery(){
+    if(hiddenBroken!==car.broken || hiddenParking!==parking.hiddenSeeds){hiddenBroken=car.broken;hiddenParking=parking.hiddenSeeds;hiddenSeeds=new Set([...parking.hiddenSeeds,...car.broken]);}
+    return hiddenSeeds;
+  }
   let memoryRevision="";
   const shadersReady=firstFrameReady(async()=>{
     await loading.stage('Preparing the first frame');
@@ -606,10 +624,10 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     (scene.fog as THREE.Fog).far = (scene.fog as THREE.Fog).near + 1700;
     camera.updateMatrixWorld(); scene.updateMatrixWorld();
     occlusion.update(camera, position.clone().add(new THREE.Vector3(0, playerHeight(doc) / 2, 0)), dt, reduced.matches,occupied ? actorMeshes.get(occupied.id) : undefined);
-    daylight.update(captureTime??(worldTime.value+hourOffset));
+    daylight.update(captureTime??(worldTime.value+hourOffset),car.broken);
     const sceneryPlayer=position.clone().add(new THREE.Vector3(0,7,0));
     parking.update(car,scenery,camera,sceneryPlayer,dt,reduced.matches);
-    scenery.update(camera,daylight.direction,sceneryPlayer,{x:car.vx,y:car.vy},dt,reduced.matches,parking.hiddenSeeds);
+    scenery.update(camera,daylight.direction,sceneryPlayer,{x:car.vx,y:car.vy},dt,reduced.matches,hiddenScenery());
     sunShadows.update(camera,daylight.direction,DEFAULT_CAMERA_ZOOM * manualZoom.factor);
     populations.update(car,camera,sun,mode==='playing' ? dt : 0,reduced.matches);
     hudTime += dt;
@@ -669,7 +687,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       container.dataset.vehicles=JSON.stringify(car.vehicles);
       container.dataset.actors=JSON.stringify(poses.map(p=>({id:p.id,x:p.x,y:p.y,elevation:p.elevation})));
       if(import.meta.env.DEV)container.dataset.npcs=JSON.stringify(poses.filter(p=>p.stateId).map(p=>({id:p.id,state:p.stateId,action:p.activity,x:p.x,y:p.y,heading:p.headingRad,animationTime:p.animationTimeS,known:car.npcs.find(n=>n.id===p.id)?.known})));
-      container.dataset.destruction=JSON.stringify({broken:car.broken,zones:car.brokenZones,debris:car.debris.length,toppling:car.debris.filter(p=>p.topple).map(p=>({id:p.objectId,angle:p.topple!.angle,settled:p.settled})),props:car.props.filter(p=>p.elevation!==undefined).map(p=>({id:p.id,x:p.x,y:p.y,elevation:p.elevation,vz:p.vz}))});
+      container.dataset.destruction=JSON.stringify({broken:car.broken,zones:car.brokenZones,debris:car.debris.length,renderer:debris.stats,toppling:car.debris.filter(p=>p.topple).map(p=>({id:p.objectId,angle:p.topple!.angle,settled:p.settled})),props:car.props.filter(p=>p.elevation!==undefined).map(p=>({id:p.id,x:p.x,y:p.y,elevation:p.elevation,vz:p.vz}))});
     }
     if (hudTime === 0) updateMap(car, cameraAngle);
     const draw=()=>{
@@ -679,12 +697,12 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       const first=document.body.dataset.loading!=="ready",renderStart=first ? performance.now() : 0;
       renderer.info.reset();profile?.beforeRender();composer.render();profile?.end();capture?.end();
       if(first)loading.ready(performance.now()-renderStart);
-      if(import.meta.env.DEV){container.dataset.streaming=JSON.stringify(scenery.stats);container.dataset.parking=JSON.stringify(parking.stats);const revision=`${scenery.stats.loaded},${scenery.stats.unloaded},${car.vehicles.length},${parking.stats.active}`;if(revision!==memoryRevision){memoryRevision=revision;container.dataset.memory=JSON.stringify(geometryMemory(scene));}}
+      if(import.meta.env.DEV){container.dataset.streaming=JSON.stringify(scenery.stats);container.dataset.parking=JSON.stringify(parking.stats);const revision=`${scenery.stats.loaded},${scenery.stats.unloaded},${car.vehicles.length},${parking.stats.active},${debris.stats.templates},${debris.stats.pieces},${debris.stats.cachedFragments}`;if(revision!==memoryRevision){memoryRevision=revision;container.dataset.memory=JSON.stringify(geometryMemory(scene,...debris.cachedRoots));}}
     };
     if(streamState() && shadersReady())draw();else pendingDraw=draw;
   };
   await loading.stage("Loading the first neighbourhood");
   frame();
-  if(import.meta.env.DEV)container.dataset.memory=JSON.stringify(geometryMemory(scene));
+  if(import.meta.env.DEV)container.dataset.memory=JSON.stringify(geometryMemory(scene,...debris.cachedRoots));
   renderer.setAnimationLoop(frame);
 }

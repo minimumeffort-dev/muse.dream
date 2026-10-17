@@ -82,3 +82,12 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    The primary plus extra convex grounds share 4096 local samples. Extra grounds
    use the accepted pedestrian network, with 8192 derived nodes, 32768 directed
    links and 128 saved waypoints. Source/saves never contain graph/controller code. *)
+
+
+(* world.damage_pool is an optional boolean, default false. True keeps static
+   break/topple props instanced, with <=128 pooled template data records and
+   <=4096 total placements. Active assemblies/cache templates <=24; active pieces
+   and cached fragment meshes <=128. Legacy resident limits remain unchanged.
+   A topple without authored fragments compiles one stable rigid fragment.
+   Whole impacts accept at most one centered base contact; lamps may use pooled
+   whole-object damage and disable their light pool until restored. *)

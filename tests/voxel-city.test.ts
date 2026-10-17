@@ -3,6 +3,7 @@ import {createWorldScene} from '../src/scene/world-fixture';
 import {createCarAtSpawn,stepCar,resetCar} from '../src/sim/car';
 import {buildMaskForScene} from '../src/scene/fixture';
 import {buildPaperMask} from '../src/sim/mask';
+import {impactBudget} from '../src/scene/damage-pool';
 import {objectFragments} from '../src/scene/fragments';
 import {drivingReviewStart} from '../src/game/review-start';
 import type {ObjectDslV2} from '../src/scene/object-dsl';
@@ -17,9 +18,9 @@ describe('voxel city integration',()=>{
   const expected=compileDream(wall)[0]!;
   for(const id of ['park_wall_west','park_wall_east'])expect(scene.objects.find(o=>o.id===id)!.spec).toEqual({...expected,voxelSize:scene.voxelWorld?.objectCell});
   const reactive=scene.objects.filter(o=>o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && (o.spec.impact || o.spec.breakZones));
-  expect(reactive).toHaveLength(22);
+  expect(reactive).toHaveLength(422);expect(impactBudget(scene)).toMatchObject({resident:12,residentFragments:27,pooledTemplates:10});
   expect(scene.sports.map(s=>s.ballId).sort()).toEqual(['court_ball','pitch_ball']);
-  expect(reactive.reduce((n,o)=>n+((o.spec as ObjectDslV2).impact?.kind==='bounce' ? 0 : objectFragments(o.spec as ObjectDslV2).length),0)).toBe(73);
+  expect(reactive.reduce((n,o)=>n+((o.spec as ObjectDslV2).impact?.kind==='bounce' ? 0 : objectFragments(o.spec as ObjectDslV2).length),0)).toBe(473);
  });
  it('allows a real off-road car impact to release four chunks and continues driving',()=>{
   const world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11};

@@ -212,3 +212,8 @@ supplier. The receiving business pays for both goods and courier work.
 [Connected neighborhood repairs](../examples/neighborhood-repairs.dream) adds a
 second work ground across a street. The worker must reach it through the authored
 crossing, then return with its pay. [Grounds and routes](commerce.md#connected-service-grounds).
+
+
+[Streetlight destruction and repairs](../examples/streetlight-repairs.dream)
+uses measured lamps, a shared topple rule, pooled static geometry, night light
+pools and finite paid repairs across two connected grounds.

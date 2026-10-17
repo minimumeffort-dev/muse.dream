@@ -137,7 +137,7 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
       if(p.voxels?.chunks && (p.fragment || !(spec.impact?.kind==='break' || p.zone)))ctx.addIssue({code:z.ZodIssueCode.custom,path:['parts',i,'voxels','chunks'],message:'voxel chunks require break behavior or a break zone and cannot belong to a fragment group'});
     });
     const impact=spec.impact;
-    if(impact && (spec.foundation || spec.contacts || spec.rideable || spec.emitter))ctx.addIssue({code:z.ZodIssueCode.custom,message:"impact objects use one body without foundations, contacts, seats or emitters"});
+    if(impact && (spec.foundation || spec.contacts && (impact.kind==='bounce' || spec.contacts.length!==1 || spec.contacts[0]!.position.some(n=>n!==0)) || spec.rideable || spec.emitter))ctx.addIssue({code:z.ZodIssueCode.custom,message:"impact objects use one centered cylinder without foundations, compound/offset contacts, seats or emitters"});
     if(impact && spec.body.interaction!==(impact.kind==="bounce" ? "knockable" : "solid"))ctx.addIssue({code:z.ZodIssueCode.custom,message:"bounce needs a knockable body; break/topple needs a solid body"});
     const zones=spec.breakZones??[],zoneIds=new Set(zones.map(z=>z.id)),fractures=spec.parts.filter(p=>impact?.kind==="break" || impact?.kind==="topple" || p.zone);
     if(zoneIds.size!==zones.length || zones.some(z=>ids.has(z.id)))ctx.addIssue({code:z.ZodIssueCode.custom,message:"break zone ids must be unique"});

@@ -38,7 +38,7 @@ assembly previews and the player.
 
 The generated [contract](dream-v2-contract.json) contains the authoritative
 `proportions.profiles` table: cars use length X, planes wingspan Z, trees and
-people height Y, and bikes, boards and furniture length X. Bounds are game
+people height Y, lamps height Y (1..15 m), and bikes, boards and furniture length X. Bounds are game
 plausibility rules, not a database of real models or species. They reject
 mistakes such as a five-metre skateboard, including attempts to inflate it
 through placement scale. Use `kind=custom` with an explicit axis and size

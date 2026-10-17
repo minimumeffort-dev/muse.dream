@@ -6,6 +6,10 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights pooled destruction fields at complete boundaries and escapes labels',()=>{
+    const html=highlight('world(damage_pool=true);rule lights(kind=lamp,mode=topple(speed=95));object light(label="<Lamp>&");');
+    expect(html).toContain('class="dream-field">damage_pool</span>');expect(html).toContain('class="dream-keyword">topple</span>');expect(html).toContain('&lt;Lamp&gt;&amp;');expect(highlight('damage_pool_extra lamplighter topples')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('highlights repair commands and dispatch fields without consuming longer IDs or authored HTML',()=>{
     const html=highlight('repair tables(label="<Repair>&",on=yard,kind=table,dispatch_s=12);account worker(repair=tables);');
     expect(html).toContain('class="dream-keyword">repair</span>');expect(html).toContain('class="dream-field">dispatch_s</span>');expect(html).toContain('&lt;Repair&gt;&amp;');expect(highlight('repairman repairs dispatch_s_extra')).not.toMatch(/dream-(?:keyword|field)/);

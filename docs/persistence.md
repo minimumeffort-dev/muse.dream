@@ -44,11 +44,11 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-Format 6 retains the exact source hash and the compatibility fingerprint, with simulation version 7. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+Format 7 retains the exact source hash and the compatibility fingerprint, with simulation version 8. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The first market has an explicit registered upgrade from the earlier world. It verifies that every pre-market rule still matches, then initializes only the new accounts/stock/needs at the saved simulation time. Player position, vehicles, damage, sports, NPC memory, population and day/night remain saved. The known r44 format 1 source and format 2 browser fingerprints are supported; original slots are kept. A malformed newer slot blocks writes rather than silently loading an older copy. The registered upgrade chain includes the first-market, first-delivery, usable-parking, local-repair, replacement-supply and connected-repair releases. Later incompatible economy edits cannot silently replay older progress.
 
-Format 1 cannot establish arbitrary cross-source compatibility. Format 2 worlds outside the registered release require their exact earlier fingerprint. Unsupported format 3 economies are rejected. The first-delivery release also upgrades the known format 3 market: it checks the earlier world and economy, preserves existing balances, stock, fullness and reserved work deadlines, and initializes only the depot, canteen, staff account and empty delivery ledger. Sealed cargo and reserved delivery wages round-trip in format 6. Cancelling, recovery and reloading cannot pay a delivery twice. Future engine or economy changes need their own tested migration; no general layout or rule migration exists. A compatibility fingerprint is a safety check, not a signature proving a file's origin.
+Format 1 cannot establish arbitrary cross-source compatibility. Format 2 worlds outside the registered release require their exact earlier fingerprint. Unsupported format 3 economies are rejected. The first-delivery release also upgrades the known format 3 market: it checks the earlier world and economy, preserves existing balances, stock, fullness and reserved work deadlines, and initializes only the depot, canteen, staff account and empty delivery ledger. Sealed cargo and reserved delivery wages round-trip in format 7. Cancelling, recovery and reloading cannot pay a delivery twice. Future engine or economy changes need their own tested migration; no general layout or rule migration exists. A compatibility fingerprint is a safety check, not a signature proving a file's origin.
 
 The parking release upgrades the known r46 format 4 backup only after the host confirms an exact projection of the previous world. It preserves all economic/physical state and validates vehicle ownership against the old prop roles before accepting it. Old slots remain intact. Formats 5 and 6 permit up to 281 saved unoccupied poses (256 dormant parking records, the resident fleet and the original car); old formats keep their 24-record bound. This changes saved metadata capacity, not live animation limits.
 
@@ -101,3 +101,25 @@ grounds, with the same 128-point bound. The large derived graph stays out of sav
 it is prepared by the world worker. Current obstacles can block saved intent
 without invalidating it. Presentation interpolation is transient and resets on
 recovery; it does not change saved contacts or clocks.
+
+
+## Pooled streetlight destruction
+
+Format 7 supports independent damage records for up to 4,096 world objects,
+while active debris remains capped at 24 object assemblies and 128 pieces.
+Unknown IDs, duplicates, incompatible impacts and over-budget active debris are
+rejected. Legacy formats retain their 24-whole-object damage bound. Mesh caches
+and light-pool visibility are derived after restore and are never saved.
+
+The registered r50 projection removes the pool policy and lamp rule, restores
+the earlier lamp categories/ungrouped metadata and keeps exact geometry,
+contacts, placements and economy state. Its fingerprint must match r50 before
+old progress is accepted. Actual r50 backups retain their complete saved state,
+including existing repairs, journeys, kits, credits, needs and parked vehicles.
+Older registered upgrades remain chained. Original slots stay stored.
+
+A lamp stays dark after its falling piece fades, after streaming eviction and
+after reload. A completed repair restores its full collision and light pool;
+R preserves damage and Start over restores the authored world. Capacity pressure
+can retire older cosmetic pieces, never the saved damage record. There is still
+no offline repair or general migration for arbitrary world/rule edits.

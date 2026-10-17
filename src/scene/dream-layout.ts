@@ -8,7 +8,7 @@ import type { ObjectDslV2 } from "./object-dsl";
 import { fail,type Program,type Expr,type DreamNode,type Token } from "./dream-syntax";
 import { exprField,field,listField,wordField } from "./dream-v2";
 
-export type DreamLayout=Pick<Scene,"canonical"|"roadMaskRef"|"spawn"|"terrain"|"checkpoints"|"regions"|"unresolvedLabels"|"player"|"daylight"|"voxelWorld"> & {origin:Token};
+export type DreamLayout=Pick<Scene,"canonical"|"roadMaskRef"|"spawn"|"terrain"|"checkpoints"|"regions"|"unresolvedLabels"|"player"|"daylight"|"voxelWorld"|"damagePool"> & {origin:Token};
 function validated<T>(schema:z.ZodType<T>,data:unknown,node:DreamNode):T {
   const result=schema.safeParse(data);
   if(!result.success){const issue=result.error.issues[0]!;fail(`${issue.path.join(".")}: ${issue.message}`,node.token,"E_SCHEMA");}
@@ -91,6 +91,7 @@ export function compileLayout(program:Program,assemblies:Map<string,ObjectDslV2>
   const player=world.fields.has("player") ? assemblies.get(wordField(world,"player")) : undefined;
   return {
     origin:world.token,
+    ...(world.fields.has("damage_pool") ? {damagePool:world.fields.get("damage_pool") as boolean} : {}),
     ...(voxelNode ? {voxelWorld:validated(voxelWorldSchema,{objectCell:num(voxelNode,'object_cell'),groundCell:num(voxelNode,'ground_cell'),heightStep:num(voxelNode,'height_step')},voxelNode)} : {}),
     canonical:validated(shape.canonical,{width:size[0],height:size[1],coordinateSystem:"top-left-x-right-y-down-px"},world),
     roadMaskRef:validated(shape.roadMaskRef,{kind:"generated-spline-loop",params:{points:points(road),roadWidth:num(road,"width"),...(road.fields.has("style") ? {style:wordField(road,"style")} : {})}},road),

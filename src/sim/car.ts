@@ -113,6 +113,7 @@ export interface World {
   previousRepairSaveCompatibility?:string;
   previousSupplySaveCompatibility?:string;
   previousNetworkSaveCompatibility?:string;
+  previousPoolSaveCompatibility?:string;
   emptyEconomySaveCompatibility?:string;
   previousSaveSource?:string;
   /** Racing surface, independent of where the car may travel. */
@@ -270,7 +271,7 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
     boostedThisStep: false,
     landingSpeed: 0,
     props: state.props.map((p) => ({ ...p })),
-    broken:[...state.broken],brokenZones:state.brokenZones.map(z=>({...z})),debris:[...state.debris],impacts:[],
+    broken:state.broken,brokenZones:state.brokenZones,debris:[...state.debris],impacts:[],
   };
   s.timeS += dt;
 

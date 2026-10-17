@@ -1,3 +1,4 @@
+import {pooledImpact} from '../scene/damage-pool';
 import {indexedGeometry} from './indexed-geometry';
 import {isResidentActor} from '../scene/agents';
 import * as THREE from "three";
@@ -69,7 +70,7 @@ export class WorldScenery {
     const entries: Entry[] = [], prototypes = new Map<string, THREE.Group>();
     const batches = new Map<string, { prototype: THREE.Group; items: { object: SceneObject; entry: Entry }[] }>();
     for (const object of objects) {
-      if(object.ambient || isResidentActor(object) || impactOf(object.spec))continue;
+      if(object.ambient || isResidentActor(object) || impactOf(object.spec) && !pooledImpact(scene,object))continue;
       if (archetypeOf(object).interaction === "knockable") continue;
       const placement=objectPlacement(scene,object),live=!object.parked && hasAnimatedJoints(object.spec) || zonesOf(object.spec).length>0;
       if(live && (!placement.foundation || placement.base-placement.low<=.1)) continue;

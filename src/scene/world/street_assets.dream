@@ -16,7 +16,7 @@ material vehicle_lens(style=toon,colors=[#dfd6bc,#f3e8cf],night=#ffd18a);
 material van_paint(style=toon,colors=[#e1ddcd,#c8c5b7]);
 object avenue_lamp(label="Avenue streetlight"){
  lamp(at=[8,39,0],radius=52,color=#ffc581);
- measure(kind=custom,axis=y,meters=5.2);
+ measure(kind=lamp,axis=y,meters=5.2);
  body(interaction=solid,radius=4,height=40);
  contact pole_body(at=[0,0,0],radius=1.2,height=40);
  part foot(shape=cylinder,material=stone,at=[0,1,0],size=[4,2,4]);
@@ -27,7 +27,7 @@ object avenue_lamp(label="Avenue streetlight"){
 }
 object neighborhood_lamp(label="Neighborhood lantern"){
  lamp(at=[0,32,0],radius=36,color=#ffd18a);
- measure(kind=custom,axis=y,meters=3.8);
+ measure(kind=lamp,axis=y,meters=3.8);
  body(interaction=solid,radius=4,height=38);
  contact pole_body(at=[0,0,0],radius=1.4,height=38);
  part foot(shape=cylinder,material=stone,at=[0,1,0],size=[4,2,4]);

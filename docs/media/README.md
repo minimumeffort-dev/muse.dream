@@ -499,3 +499,24 @@ Existing asset sheets, isolated destruction clips, lighting, vehicles, sports,
 vegetation and general movement retain their represented geometry and controls.
 Existing district stills show the same buildings and street layout; the dedicated
 park view records the new small seating surface. Backup controls are unchanged.
+
+## Streetlights and pooled destruction, r51
+
+`lamps.mp4`, `lamps.gif` and `lamps.jpg` show the existing park streetlight falling
+from an actual car impact, its ground pool switching off and the driver reversing
+clear. The clip has 240 actual rendered frames over eight simulation seconds.
+`lamprepair.mp4`, `lamprepair.gif` and `lamprepair.jpg` show the caretaker finishing
+work, the intact lamp and pool returning, and the start of the return journey.
+Its 360 frames cover twelve simulation seconds. Before that clip, the dev exporter
+cooperatively replays the actual impact, dispatch and pedestrian journey to the
+work phase. It does not teleport the worker. Both clips select 22:00 lighting for
+review; this is not a recording of the full trip or a live performance benchmark.
+
+Both sets use 1600 × 900 H.264 video, 1280 × 720 GIFs with the existing repair
+palette/compression settings, and matching native 2400 × 1350 stills. Existing
+asset, district, city-map, vehicle and movement captures remain accurate: this
+release preserves their geometry, placement, materials and ordinary controls.
+Older repair recordings show the same furniture jobs and connected grounds;
+the new pair records the newly interactive lamps. See the
+[verification and media audit](../evidence/streetlights/verification.md) for the
+executed checks and remaining service-coverage limit.

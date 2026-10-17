@@ -138,3 +138,22 @@ The city uses segment-aligned street polygons for angled roads. Shared junction 
 The r27 world has 1,327 placements plus 256 decorative birds. Static lighting, planting and parked vehicles use the existing compacted instanced scenery. Flocks upload fixed instance buffers once; their color and shadow shaders share elliptical flight and bounded wing flex. Conservative movement bounds keep camera and shadow culling valid, and reduced motion freezes the pose. There is no per-bird NPC, collision body or CPU matrix update.
 
 The existing actor, joint, fragment, route and quality caps remain unchanged. [Street-life verification](evidence/street-life/verification.md) records coverage, current full-quality measurements and the media audit.
+
+
+## Instanced destruction
+
+`world(...,damage_pool=true)` keeps intact static break/topple assemblies in
+streamed scenery. Damage records live in simulation; the instance matrices hide
+both color and shadow geometry, including when a chunk loads after damage.
+Bounce props and partial building zones retain their resident path.
+
+The renderer creates only needed fragment meshes, shares each template across
+active instances, releases expired transforms and evicts unused geometry after
+ten simulation seconds or to make room. Cache bounds are 24 templates and 128
+fragment meshes; active debris has the same 24-object/128-piece bounds. Oldest
+cosmetic debris yields under pressure, while all damaged IDs persist. Cached
+roots are included in resident buffer accounting even when no piece is visible.
+Lamp light-pool attributes change only when damage changes. No per-cell bodies,
+per-lamp lights, resolution reduction or camera LOD is added.
+
+[Dream contract and working example](dream/rules.md#streetlights-and-streamed-destruction).

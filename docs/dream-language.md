@@ -48,3 +48,8 @@ Repair `grounds` connects declared work areas through the existing pedestrian
 network. The engine derives bounded routes, preserves work during streaming and
 saves, and rejects unreachable targets. [Connected repairs](dream/commerce.md#connected-service-grounds)
 includes a complete street-and-crossing example.
+
+
+`world(...,damage_pool=true)` keeps intact break/topple props instanced and gives
+them persistent independent damage with bounded active debris and mesh caches.
+The live streetlights use this path. [Rules and complete repair example](dream/rules.md#streetlights-and-streamed-destruction).

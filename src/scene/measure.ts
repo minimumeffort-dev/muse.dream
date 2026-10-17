@@ -13,6 +13,7 @@ export const MEASURE_PROFILES=Object.freeze({
   building:{axis:"y",min:3,max:40}, train:{axis:"x",min:6,max:20},
   bus:{axis:"x",min:6,max:18}, tram:{axis:"x",min:10,max:35},
   boat:{axis:"x",min:3,max:12}, food:{axis:"x",min:.1,max:.8},
+  lamp:{axis:"y",min:1,max:15},
   custom:{axis:null,min:.05,max:60},
 } as const);
 export const MEASURE_KINDS=Object.keys(MEASURE_PROFILES) as [keyof typeof MEASURE_PROFILES,...(keyof typeof MEASURE_PROFILES)[]];

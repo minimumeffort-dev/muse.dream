@@ -26,7 +26,7 @@ Candidates that cannot fit are skipped. A rule can emit nothing, so compile the 
 
 ## Make the parked vehicles usable
 
-Use `furnish(...,role=controllable)` for available parking. Every template needs an explicit `rideable` control profile. The compiler retains its rolling mechanisms and marks each generated placement `parked=true`. Default prop furnishing remains decorative. The renderer instances unoccupied models and activates one full rig when you board; it does not spend one live actor slot per parked bicycle.
+Use `furnish(...,role=controllable)` for available parking. Every template needs an explicit `rideable` control profile. The compiler retains its rolling mechanisms and marks each generated placement `parked=true`. Default prop furnishing cannot be boarded. Static whole-object break/topple props may use `world(...,damage_pool=true)`; their intact models remain instances and damage stays per placement. See [pooled destruction](rules.md#streetlights-and-streamed-destruction). The renderer instances unoccupied models and activates one full rig when you board; it does not spend one live actor slot per parked bicycle.
 
 Dormant parking supports cars, bicycles, skateboards and scooters. Boats and planes keep ordinary resident controllable placements with their water/air support. There are at most 256 dormant vehicles, with one reserved occupied rig inside the existing 24-assembly cap. Their physical bodies, moved positions and ownership stay in simulation when rendering unloads. Walkers yield to moved vehicles on their paths. This does not add autonomous parking or vehicle damage. [Complete two-bicycle example](../examples/parked-vehicles.dream).
 

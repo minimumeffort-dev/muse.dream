@@ -1,3 +1,4 @@
+import {poolableImpact} from './damage-pool';
 import {ambientMotionSchema,ambientData,type AmbientMotion} from './ambient';
 import {furnishingSchema,flockSchema,furnishWorld,restingTemplate,POPULATION_LIMITS,type Furnishing,type Flock} from './population';
 import {sportSchema,MAX_SPORTS} from './sports';
@@ -262,6 +263,8 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
       else impact=rule.impact;
       metadataOrigins.set('impact',object.token);
     }
+    // A whole rigid fall needs no per-part fragment boilerplate in Dream 2.
+    if(program.version===2 && impact?.kind==='topple' && !parts.some(p=>p.fragment || p.voxels?.chunks)){const fragment=stableId(['$topple']);for(const part of parts)part.fragment=fragment;}
     const result = objectDslSchema.safeParse({ dslVersion: 2, displayName: object.name, body, parts,...(measure ? {measure} : {}),
       ...(joints.length ? { joints } : {}), ...(grounding ? { grounding } : {}), ...(foundation ? { foundation } : {}),
       ...(contacts.length ? {contacts} : {}),...(rideable ? {rideable} : {}),...(emitter ? {emitter} : {}),...(lamp ? {lamp} : {}),...(impact ? {impact} : {}),...(breakZones.length ? {breakZones} : {}) });
@@ -284,7 +287,7 @@ export type DreamModules=Readonly<Record<string,string>>;
 type LinkedWorld={world:DreamWorld;exports:Map<string,ObjectDslV2>};
 /** The same bounded language now authors placements, shared routes and continuous watercourses. */
 export function compileDreamWorld(source:string,modules:DreamModules={}):DreamWorld {
-  const entry=parseDream(source),rules=compileInteractionRules(entry);
+  const entry=parseDream(source),rules=compileInteractionRules(entry),pooled=entry.layout.some(n=>n.kind==='world' && n.fields.get('damage_pool')===true);
   const cache=new Map<string,LinkedWorld>(),active=new Set<string>();
   let characters=0,definitions=0;
   const load=(text:string,name:string,token?:Token):LinkedWorld=>{
@@ -319,7 +322,7 @@ export function compileDreamWorld(source:string,modules:DreamModules={}):DreamWo
       const children=(program.includes??[]).map(node=>{
         const id=wordField(node,"module");if(included.has(id))fail(`module '${id}' is included twice`,node.token,"E_DUPLICATE_ID");included.add(id);return resolve(node).world;
       });
-      const result=compileWorldProgram(program,assets,children,rules);cache.set(name,result);return result;
+      const result=compileWorldProgram(program,assets,children,rules,pooled);cache.set(name,result);return result;
     }catch(error){if(error instanceof DreamError && name!=="<entry>" && !error.diagnostic.module)error.diagnostic.module=name;throw error;}
     finally{active.delete(name);}
   };
@@ -342,7 +345,7 @@ export function compileDreamWorld(source:string,modules:DreamModules={}):DreamWo
   }
   return world;
 }
-function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,children:DreamWorld[],rules:InteractionRule[]) {
+function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,children:DreamWorld[],rules:InteractionRule[],pooled=false) {
   const budget={steps:0},ownAssemblies=compileObjects(program,budget,rules),globals=globalNumbers(program);
   const movement=(node:DreamNode):AmbientMotion=>{
     const n=(key:string,fallback?:number)=>node.fields.has(key) ? numeric(exprField(node,key),globals) : fallback;
@@ -431,7 +434,7 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
         const objects=original.map(spec=>(node.fields.has('pose') || motion) && spec ? restingTemplate(spec) : spec);
         if(node.fields.has('role') && wordField(node,'role')==='controllable' && objects.some(s=>!s || !controlOf(s)))fail('controllable furnishing requires rideable(control=...) on every template',{...node.token,path:`${node.token.path}/role`},'E_POPULATION');
         if(node.fields.has('on') && wordField(node,'on')==='sidewalk' && objects.some(s=>s?.body.interaction!=='decor'))fail('sidewalk furnishing requires passive decor so the walking corridor stays open',node.token,'E_POPULATION');
-        if(!objects.length || objects.length>8 || objects.some(s=>!s || s.body.interaction==='knockable' || s.joints?.some(j=>j.bone || j.proximity || j.animation && !('kind' in j.animation && j.animation.kind==='roll')) || isReactive(s) || s.emitter))fail('furnish needs 1..8 passive static object templates',node.token,'E_POPULATION');
+        if(!objects.length || objects.length>8 || objects.some(s=>!s || s.body.interaction==='knockable' || s.joints?.some(j=>j.bone || j.proximity || j.animation && !('kind' in j.animation && j.animation.kind==='roll')) || isReactive(s) && !(pooled && poolableImpact(s)) || s.emitter))fail('furnish needs 1..8 passive static object templates',node.token,'E_POPULATION');
         const data={id:node.id,spacing:num('spacing'),setback:num('setback'),seed:num('seed'),...(motion ? {motion} : {})};
         for(const key of ['streets','sites','grounds'])if(node.fields.has(key))Object.assign(data,{[key]:listField(node,key).map(e=>e.name!)});
         if(node.fields.has('pose'))Object.assign(data,{pose:wordField(node,'pose')});

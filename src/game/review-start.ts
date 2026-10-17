@@ -50,7 +50,7 @@ export function npcReviewStart(state:CarState,world:World,id:string|null):CarSta
 
 /** Known clear mock-world poses for checking neutral coasting and cross-slope grip. */
 export function drivingReviewStart(state:CarState,world:World,scenario:string|null):CarState {
-  const district=scenario==='repair' ? [6540,4350,Math.PI] : scenario==='voxels' ? [7440,7460,0] : scenario==='airport' ? [2000,9400,Math.PI/2] : scenario==='medical' ? [12000,5200,0] : scenario==='town' ? [6330,4233,0] : scenario==='suburbs' ? [3600,3300,0] : scenario==='sports' ? [10400,5200,0] : scenario==='waterfront' ? [9900,2800,Math.PI/2] : scenario==='canal-bridge' ? [8610,4200,0] : scenario==='lake-bridge' ? [8865,6200,0] : undefined;
+  const district=scenario==='lamp' ? [7510,7350,Math.PI/2] : scenario==='repair' ? [6540,4350,Math.PI] : scenario==='voxels' ? [7440,7460,0] : scenario==='airport' ? [2000,9400,Math.PI/2] : scenario==='medical' ? [12000,5200,0] : scenario==='town' ? [6330,4233,0] : scenario==='suburbs' ? [3600,3300,0] : scenario==='sports' ? [10400,5200,0] : scenario==='waterfront' ? [9900,2800,Math.PI/2] : scenario==='canal-bridge' ? [8610,4200,0] : scenario==='lake-bridge' ? [8865,6200,0] : undefined;
   if(district){const [x,y,headingRad]=district as [number,number,number],elevation=drivingHeight(world.scene.terrain,x,y);
     if(carFootprintClear(world,x,y,elevation,state.timeS,state))return {...state,x,y,headingRad,elevation,vx:0,vy:0};
   }
@@ -92,4 +92,20 @@ export function maintenanceReviewStart(state:CarState,world:World):CarState{
   if(carFootprintClear(bodyWorld(foot,world),x,y,elevation,next.timeS,foot))return foot;
  }
  return next;
+}
+
+
+/** Offline review replays actual impacts, dispatch and pedestrian travel; no worker teleport. */
+export function* lampRepairReviewSteps(state:CarState,world:World):Generator<void,CarState>{
+ if(!world.scene.damagePool)throw Error('The streetlight review needs the pooled world');
+ const lamps=new Set(world.scene.objects.filter(o=>o.spec && 'measure' in o.spec && o.spec.measure?.kind==='lamp').map(o=>o.id));
+ let next=drivingReviewStart(state,world,'lamp');
+ for(let i=0;i<120*1200;i++){
+  if(i===312)next=toggleRide(next,world);
+  next=stepInteractive(next,{steer:0,throttle:i<132 ? 1 : i<312 ? -1 : 0},1/120,world);
+  const worker=next.economy?.accounts.find(a=>a.repair?.phase==='work' && lamps.has(a.repair.objectId));
+  if(worker)return next;
+  if(i%30===0)yield;
+ }
+ throw Error('The streetlight worker did not reach its repair within twenty simulation minutes');
 }

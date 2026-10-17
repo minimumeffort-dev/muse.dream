@@ -132,8 +132,7 @@ journey keeps going while you drive away or unload that part of the world.
 Repairs use finite supplies. After two jobs, you can bring two replacement kits
 from **Station supplies**. The bakery pays the depot six credits and pays you four
 for the delivery. These are transfers between actual balances. The depot starts
-with 32 kits and cannot generate more. City-wide maintenance, lamp replacement
-and tree replanting are still to come. The service currently covers seven
+with 32 kits and cannot generate more. City-wide maintenance and tree replanting are still to come. The service currently covers eight
 objects across three declared grounds; it does not repair arbitrary city damage.
 
 Your world saves on this device. Reload to return to your position, parked vehicles, moved props, damage, NPC memory, market stock, accounts, work, repair journeys and day/night phase. Pause for **Save now**, or open **Backups** to download and restore a world. Comments and dialogue edits can carry progress forward; changes to world rules or geometry keep a separate save. **Start over** resets the saved world. [What is saved and how compatibility works](docs/persistence.md).
@@ -211,9 +210,20 @@ Some things move when you hit them. Others break. A ball bounces away, a bench c
 
 Objects can share a rule too. Declare how tables break once, and every table in
 that category follows it, including imported models and different shapes. Each
-table still breaks independently. The live world uses shared table and bench
+table still breaks independently. The live world uses shared table, bench and lamp
 rules; supported benches can lose their boards while their base stays put.
 [How shared rules work](docs/dream/rules.md).
+
+All 400 streetlights can fall too. Their ground light pools turn off, and the
+damage stays after the district unloads or you reload the game. The caretaker
+can restore the park lamp using a real kit and paid work. Its model, collision
+and light pool return together. Other lamps still need repair-service coverage.
+Intact lamps stay instanced; active debris and cached meshes have fixed limits.
+[How pooled destruction works in Dream](docs/dream/rules.md#streetlights-and-streamed-destruction).
+
+![A streetlight falling at night](docs/media/lamps.jpg)
+
+[Watch the impact in HD](docs/media/lamps.mp4) · [Watch the paid repair](docs/media/lamprepair.mp4)
 
 ![A bench breaking into its authored components after a car impact](docs/media/destruction.gif)
 

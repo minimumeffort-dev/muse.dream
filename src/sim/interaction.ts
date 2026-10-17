@@ -84,7 +84,7 @@ export function toggleRide(state:CarState,world:World):CarState {
   return next;
 }
 function nextMotion(state:CarState,input:CarInput,dt:number,world:World):CarState {
-  return {...state,jump:{...state.jump},carBoost:{...state.carBoost,held:!!input.boost,activeUntilS:0},npcs:stepNpcs(state,dt,world.scene,input.talkPressed),population:stepAmbient(state,dt,world.scene),timeS:state.timeS+dt,props:state.props.map(p=>({...p})),broken:[...state.broken],brokenZones:state.brokenZones.map(z=>({...z})),debris:[...state.debris],impacts:[],boostReadyAtS:{...state.boostReadyAtS},boostedThisStep:false,landingSpeed:0};
+  return {...state,jump:{...state.jump},carBoost:{...state.carBoost,held:!!input.boost,activeUntilS:0},npcs:stepNpcs(state,dt,world.scene,input.talkPressed),population:stepAmbient(state,dt,world.scene),timeS:state.timeS+dt,props:state.props.map(p=>({...p})),broken:state.broken,brokenZones:state.brokenZones,debris:[...state.debris],impacts:[],boostReadyAtS:{...state.boostReadyAtS},boostedThisStep:false,landingSpeed:0};
 }
 export function isSwimming(state:CarState,world:World):boolean {
   const water=state.control.kind==='foot' && waterAt(world.scene.terrain,state.x,state.y,state.elevation);

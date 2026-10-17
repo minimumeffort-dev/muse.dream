@@ -216,7 +216,7 @@ credits and you receive four. No player credits are charged.
 
 ```dream
 delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1);
-repair market_tables(label="Repair neighborhood furniture",market=market_stall,on=market_square,grounds=[park_seating,station_seating],kinds=[table,custom,bench],input=timber,take=1,seconds=8,pay=4,effort=5);
+repair market_tables(label="Repair neighborhood furniture",market=market_stall,on=market_square,grounds=[park_seating,station_seating],kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
 ```
 
 These declarations are the live world's policy. The earlier flour and bread
@@ -235,7 +235,7 @@ paid kit contract. [Verification and remaining limits](../evidence/supply/verifi
 ### Connected service grounds
 
 The live caretaker also serves the park seating area and the east station bench.
-Both have paving connected to their sidewalk. Parked scooters, the lamp and the
+Both have paving connected to their sidewalk. Parked scooters, lamps and the
 planter retain their original positions; the furnishing rules explicitly allow
 these new grounds. Repair selection still uses measured categories and available
 damage, so the worker may restore a nearer wall before a bench.
@@ -266,3 +266,9 @@ It connects two work grounds with a street and an authored crossing. When asking
 an agent to author both services and infrastructure, use
 `node scripts/dream.mjs context --features commerce,city`.
 [Checks, recordings and remaining limits](../evidence/network-repair/verification.md).
+
+The service now covers eight repair targets, including the park streetlight. All
+400 city lamps can fall, but the other 399 lie outside these declared work grounds.
+A damaged lamp loses its ground light pool until repair. See
+[streetlight destruction and repair](rules.md#streetlights-and-streamed-destruction)
+for the shared rule, bounded render pool and complete runnable example.

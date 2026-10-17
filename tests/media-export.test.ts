@@ -31,6 +31,7 @@ describe('local capture boundary',()=>{
       expect(await request('/__media/pedestrians/0000.png')).toBe(204);expect(await request('/__media/wildlife/0000.png')).toBe(204);expect(await request('/__media/commerce/0000.png')).toBe(204);
       expect(await request('/__media/repair/0839.png')).toBe(204);expect(await request('/__media/repair/0840.png')).toBe(400);
       expect(await request('/__media/maintenance/0599.png')).toBe(204);expect(await request('/__media/maintenance/0600.png')).toBe(400);
+      expect(await request('/__media/lamps/0239.png')).toBe(204);expect(await request('/__media/lamprepair/0359.png')).toBe(204);
       expect(await request('/__media/unknown/0000.png')).toBe(400);
       expect(await request('/__media/driving/0001.png','https://other.example')).toBe(403);
       expect(await request('/__media/../../README.md')).toBe(400);

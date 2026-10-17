@@ -165,7 +165,7 @@ The [reference](reference.md#ambient-wildlife) gives the speed, height and scene
 
 A named `zone` declares a separate contact and fracture rule around a set of parts. The building keeps its core contacts and retained geometry while that section disappears. See the [workshop and bakehouse definitions](../../src/scene/world/destructible.dream). A zone must own parts, retain some structure outside it and respect the same fragment budget.
 
-Whole-object impacts cannot also carry a foundation, compound contacts, a seat or an emitter. Partial building zones can retain a foundation and core contacts. The scene permits 24 reactive objects and 128 potential fragments, including zones.
+Whole-object impacts cannot also carry a foundation, compound contacts, a seat or an emitter. Partial building zones can retain a foundation and core contacts. Resident impacts retain 24 reactive objects and 128 potential fragments, including zones. Static whole-object break/topple props may use the explicit [pooled destruction policy](rules.md#streetlights-and-streamed-destruction).
 
 ## State and limits
 

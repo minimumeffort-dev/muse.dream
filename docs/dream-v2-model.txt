@@ -182,7 +182,7 @@ The engine does not invent crossings or reroute invalid layouts.
 Place uses exactly one of at or route; offset 0..2048 only with route;
 scale .5..2; heading_deg -360..360 only for at placements (routes own heading). <=64 placements; scene <=24 resident mobile actors including controllable vehicles,
 <=24 live joint assemblies including the standing engine character; reserve one slot,
-so source objects plus the player vehicle may use at most 23. <=24 impact objects, <=128 fragments,
+so source objects plus the player vehicle may use at most 23. <=24 resident impact objects, <=128 resident potential fragments; see interactions for pooled static destruction,
 <=16 steam emitters. Vehicle route actors need solid bodies without foundation/impact; compound contacts are allowed only on street/tram/rail NPCs;
 ambient route actors require decor bodies instead.
 One driving height per XY. No stacked roads or ground driving under bridges. Boats use the water bed,
@@ -210,8 +210,8 @@ Per-file limits above still apply: at most 16 local objects + asset aliases and
 16 includes, 64 placements, 12 routes, 8 watercourses. Split larger worlds into
 district files. Across reachable files, including entry: <=32 files, depth <=8,
 <=524288 UTF-16 characters, <=128 object definitions, <=4096 placements,
-<=12 routes and <=8 water bodies. Full scene still caps 24 impact objects,
-128 destruction fragments and 24 animated assemblies. The whole project needs
+<=12 routes and <=8 water bodies. Legacy scenes cap 24 impact objects and 128 potential fragments. Pooled worlds
+use the separate data/cache/active limits in interactions. Animated assemblies remain at 24. The whole project needs
 exactly one world/road layout for compileDreamScene; never split checkpoints or
 terrain across district files. Final merged geometry must pass playability.
 
@@ -220,7 +220,8 @@ DESTRUCTION EXTENSIONS
 Bounce: knockable body; restitution in [0.1,0.9], lift in [0.05,0.8].
 Break: solid body; speed 40..400, scatter 0..160, lift 0..180, spin 0..8,
 lifetime 2..8. <=8 static fragments; fragment blocks cannot nest.
-Whole-object impact assemblies cannot have foundations, contacts, seats or emitters.
+Whole-object impacts cannot have foundations, compound/offset contacts, seats or emitters.
+One contact at [0,0,0] is allowed for break/topple; use it for a narrow pole while preserving body radius >=4. Topple uses that root body radius as its hinge envelope; it must clear the visual foot.
 Prefer flat ground for scattering props; foundations cannot fill their downhill gaps.
 Topple uses terrain-aware support and can fall on hills.
 
@@ -229,7 +230,8 @@ Absent pattern preserves original scatter. Splinter throws wood parts forward;
 crumble drops masonry near the contact with low lift, spin and rebound.
 impact(mode=topple(speed=110,duration=1.1,lifetime=8)); topples the entire static
 solid as one rigid fragment about the far edge of its body, away from impact.
-All parts must belong to one fragment. duration .25..2; lifetime 2..8 and >=
+If no part has fragment metadata, Dream 2 compiles all parts into one stable rigid fragment.
+With explicit fragment blocks, all parts must belong to one group. duration .25..2; lifetime 2..8 and >=
 duration+.8. Other whole-object impact restrictions still apply.
 zone facade(at=[42,0,0],radius=16,height=39,mode=break(speed=135,scatter=55,
 lift=45,spin=3,lifetime=7,pattern=crumble)){ visual statements }
@@ -247,7 +249,27 @@ contacts separately so an intact root cylinder does not block the intended
 opening after a zone breaks. Terrain foundations stay intact.
 
 SHARED INTERACTION RULES
-rule wooden_tables(kind=table,mode=break(speed=90,scatter=62,lift=100,spin=4,lifetime=6,pattern=splinter)); declares an authoritative interaction for every object whose measure.kind matches. At most 16 rules, exactly one owner per category, in the entry file only. Loaded modules cannot declare rules. Apply across local/imported templates, placements and furnishing before object validation. A rule replaces local impact settings. A break rule replaces every existing break-zone impact when zones exist; retained core/foundations remain. Bodies, animation and fragment grouping must be compatible; incompatible assets fail compilation, never silently lose construction. Each placement has independent damage. Scene v1 interactionRules is optional for legacy data, defaults to []; serialized placements must match. Keep 24 reactive placements, 8 fragments per assembly and 128 potential scene fragments. rule does not bypass any budget. Select by measure.kind, never labels/position/randomness. custom is one catchall category, not separate bread/rock/ball types. Current live policies cover tables and benches; other categories keep authored defaults. Existing break/topple/bounce constructors only, no scripts or structural/material simulation. Complete example: examples/interaction-rules.dream.
+rule wooden_tables(kind=table,mode=break(speed=90,scatter=62,lift=100,spin=4,lifetime=6,pattern=splinter)); declares an authoritative interaction for every object whose measure.kind matches. At most 16 rules, exactly one owner per category, in the entry file only. Loaded modules cannot declare rules. Apply across local/imported templates, placements and furnishing before object validation. A rule replaces local impact settings. A break rule replaces every existing break-zone impact when zones exist; retained core/foundations remain. Bodies, animation and fragment grouping must be compatible; incompatible assets fail compilation, never silently lose construction. Each placement has independent damage. Scene v1 interactionRules is optional for legacy data, defaults to []; serialized placements must match. Legacy scenes retain 24 reactive placements and 128 potential fragments; all templates retain <=8 fragments. Pooled worlds use the limits below; rules never bypass bounds. Select by measure.kind, never labels/position/randomness. custom is one catchall category, not separate bread/rock/ball types. Current live policies cover tables, benches and street lamps; other categories keep authored defaults. Existing break/topple/bounce constructors only, no scripts or structural/material simulation. Complete example: examples/interaction-rules.dream.
+
+POOLED STATIC DESTRUCTION
+world(...,damage_pool=true) enables instanced static break/topple props across
+linked placements and furnish. Intact geometry streams as ordinary scenery.
+Keep existing source/project/4096-placement bounds; at most 128 distinct pooled
+template records (not preallocated meshes), plus 24 resident impact objects and
+128 resident potential fragments. Bounce props and partial building zones remain
+resident. Active destruction is capped at 24 object assemblies and 128 pieces;
+oldest cosmetic pieces yield when full but all damage remains persistent.
+Mesh caches hold <=24 templates and <=128 fragment meshes, share geometry between
+instances and evict unused data after ten simulation seconds or to make room.
+No generated code, per-cell bodies, automatic damage or free repair.
+Lamps can be pooled static props; their surface light pools turn off while broken
+and return after repair. Use measure(kind=lamp,axis=y,meters=3.8); range 1..15 m.
+The live 400 lamps share the entry's lamp rule. Current repair coverage is the
+existing service grounds, not every streetlight. Keep actor/rig limits unchanged.
+Omit damage_pool (or false) for the original strict budgets. Rest poses, ambient
+motion and controllable parking cannot disable or acquire destruction implicitly.
+See examples/streetlight-repairs.dream. Save format 7, simulation rules 8 preserve
+registered r50 progress through a checked projection; unknown worlds stay separate.
 
 ## city
 Urban layouts: street id(width=100,sidewalk=20,points=[[x,y],...],cycle_width=20);
@@ -380,7 +402,7 @@ grounds=[surface_ids] explicitly permits those visual grounds; other authored gr
 Site-only paving=color adds parking aprons joined to pavement, within 64 scene surfaces.
 Expansion runs after linking; complete visual footprints reserve roads, crossings, entrances,
 bridges, water, ground infrastructure and existing objects. Skip blocked candidates.
-Static templates unless bounded ambient motion is declared below: no proximity joints, knockables, damage or emitters.
+Static templates unless bounded ambient motion is declared below: no proximity joints, knockables or emitters. Static break/topple props are allowed with world.damage_pool; rest, ambient and controllable modes still reject damage.
 pose=rest explicitly bakes bone bindings and part/joint animation at authored rest transforms;
 full geometry, material, measure, body and joint parenting survive. It never disables damage,
 knockables, emitters or proximity interactions. The original template remains live.
@@ -391,7 +413,7 @@ no paving; full radius fits the outer sidewalk, leaving at least 8 units inside 
 Generated objects default to role=prop; motion creates role=ambient. furnish(...,role=controllable) requires rideable(control=...) on every template and emits parked=true.
 For an explicit dormant ride use place(...,at=[x,y],role=controllable,parked=true). No route, behavior, pose=rest or ambient motion; no foundations, damage, emitters, lamps, humanoid or proximity joints. Furnish controllable parking cannot use on=sidewalk.
 Dormant parking supports car/bicycle/skateboard/scooter. Boats and planes keep ordinary resident controllable placements with their existing water/air support.
-At most 256 dormant vehicles, separate from the 24 resident route/controllable cap. Reserve ONE extra slot inside the existing 24 live-assembly cap for the occupied fleet rig; never instantiate all parked rigs. Original seeds and moved local poses stay instanced. Physics/ownership/moved poses remain in simulation and format 6 saves; R preserves parked poses, Start over resets them. No autonomous parking movement or damage. examples/parked-vehicles.dream is runnable.
+At most 256 dormant vehicles, separate from the 24 resident route/controllable cap. Reserve ONE extra slot inside the existing 24 live-assembly cap for the occupied fleet rig; never instantiate all parked rigs. Original seeds and moved local poses stay instanced. Physics/ownership/moved poses remain in simulation and format 7 saves; R preserves parked poses, Start over resets them. No autonomous parking movement or damage. examples/parked-vehicles.dream is runnable.
 <=32 rules, <=2048 candidates/rule, <=128 emitted/rule, <=1024 generated overall, also <=4096
 scene objects. Output has no minimum guarantee; inspect compiled rule/district coverage.
 AMBIENT GROUND MOTION (separate from general NPC programs)
@@ -440,8 +462,9 @@ lamp(at=[0,38,0],radius=30,color=#ffd18a);
 Position X/Z -64..64, Y 0..128. Radius 8..80 local units, scaled with measured placement.
 Projects a soft unshadowed pool below source XZ onto terrain/deck surfaces; source height
 is metadata, not optical falloff. It does not illuminate walls or calculate object occlusion.
-<=512 placed pools per scene. Static props only; no route/NPC/control ownership, knockables,
-damage or player lamp. Flocks cannot carry lamps. Use material.night for glowing windows.
+<=512 placed pools per scene. Static props only; no route/NPC/control ownership, knockables
+or player lamp. Whole-object break/topple is allowed with world.damage_pool; the pool
+turns off while broken and returns after repair. Flocks cannot carry lamps. Use material.night for glowing windows.
 One shared 2048 directional shadow map serves sun/moon; no per-lamp shadow maps.
 NPC routines and transit schedules continue; no opening hours, weather or astronomical calendar.
 

@@ -70,7 +70,7 @@ The mesher culls hidden faces and greedily merges coplanar faces within each vol
 | Assembly | 65,536 allocated cells, 1,048,576 fill/cut cell visits, 32 visual parts |
 | Linked project | 1,048,576 allocated cells across assembly definitions |
 | Scene input | 1,048,576 unique volume cells, including player and flocks |
-| Destruction | Eight fragments per assembly, 24 reactive objects and 128 potential scene fragments |
+| Destruction | Eight fragments per assembly; legacy/resident impacts retain 24 objects and 128 potential fragments. [Pooled static props](rules.md#streetlights-and-streamed-destruction) share 24 active assemblies and 128 active pieces. |
 
 Empty volumes, empty chunks, out-of-grid bounds, fractional indices, excessive work and unsupported fields fail validation. Voxels don't accept deform, cloth or part-level motion; put rigid motion on a joint. Dream 1 remains unchanged.
 

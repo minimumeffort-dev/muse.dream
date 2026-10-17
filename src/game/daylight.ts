@@ -7,11 +7,19 @@ import {surfaceGeometry} from './surface';
 import {nightFactor} from './shaders';
 import {DEFAULT_SUN_DIRECTION} from './sun';
 
+type PoolRange={attribute:THREE.BufferAttribute;first:number;end:number;enabled:boolean};
+const poolData=new WeakMap<THREE.Group,{last:readonly string[]|undefined;entries:Map<string,PoolRange[]>}>();
+export function updateLightPools(group:THREE.Group,broken:readonly string[]):void{
+ const data=poolData.get(group);if(!data || data.last===broken)return;data.last=broken;const hidden=new Set(broken);
+ for(const [id,ranges] of data.entries){const enabled=!hidden.has(id);for(const range of ranges)if(range.enabled!==enabled){range.enabled=enabled;(range.attribute.array as Float32Array).fill(Number(enabled),range.first,range.end);range.attribute.needsUpdate=true;}}
+}
+
 /** Resident terrain-fitted tiles for all static lamp pools. No per-lamp lights or shadow maps. */
 export function buildLightPools(doc:Scene):THREE.Group {
-  const positions:number[]=[],uvs:number[]=[],colors:number[]=[],indices:number[]=[];
+  const positions:number[]=[],uvs:number[]=[],colors:number[]=[],indices:number[]=[],owners:number[]=[],ids:string[]=[];
   for(const object of doc.objects){
     const lamp=object.spec && 'lamp' in object.spec ? object.spec.lamp : undefined;if(!lamp)continue;
+    const owner=ids.length;ids.push(object.id);
     const placement=objectPlacement(doc,object),source=new THREE.Vector3(...lamp.position).multiplyScalar(object.scale).applyQuaternion(placement.rotation);
     const cx=object.x+source.x,cy=object.y+source.z,r=lamp.radius*object.scale,color=new THREE.Color(lamp.color),offset=positions.length/3;
     // Share the exact ground/deck triangles and sit above pavement/paint render layers.
@@ -20,17 +28,22 @@ export function buildLightPools(doc:Scene):THREE.Group {
     for(let i=0;i<points.count;i++){
       const x=points.getX(i),y=points.getY(i),z=points.getZ(i);
       positions.push(x,y,z);uvs.push((x+doc.canonical.width/2-cx)/(2*r)+.5,(z+doc.canonical.height/2-cy)/(2*r)+.5);
-      color.toArray(colors,colors.length);indices.push(offset+i);
+      color.toArray(colors,colors.length);indices.push(offset+i);owners.push(owner);
     }
     patch.dispose();
   }
-  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geometry.setIndex(indices);geometry.computeBoundingSphere();
+  const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geometry.setAttribute('poolOwner',new THREE.Float32BufferAttribute(owners,1));geometry.setAttribute('enabled',new THREE.Float32BufferAttribute(new Float32Array(owners.length).fill(1),1));geometry.setIndex(indices);geometry.computeBoundingSphere();
   const material=new THREE.ShaderMaterial({uniforms:{nightFactor},vertexColors:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-1,
-    vertexShader:'varying vec2 vUv;varying vec3 tint;void main(){vUv=uv;tint=color;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
-    fragmentShader:'uniform float nightFactor;varying vec2 vUv;varying vec3 tint;void main(){float r=length(vUv*2.-1.);float falloff=pow(max(0.,1.-r*r),2.);gl_FragColor=vec4(tint*.38,falloff*nightFactor);\n#include <tonemapping_fragment>\n#include <colorspace_fragment>\n}',
+    vertexShader:'attribute float enabled;varying float vPoolEnabled;varying vec2 vUv;varying vec3 tint;void main(){vPoolEnabled=enabled;vUv=uv;tint=color;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+    fragmentShader:'uniform float nightFactor;varying float vPoolEnabled;varying vec2 vUv;varying vec3 tint;void main(){float r=length(vUv*2.-1.);float falloff=pow(max(0.,1.-r*r),2.);gl_FragColor=vec4(tint*.38,falloff*nightFactor*vPoolEnabled);\n#include <tonemapping_fragment>\n#include <colorspace_fragment>\n}',
   });
   const group=tiledMesh(geometry,material,800);group.name='night-light-pools';
-  group.traverse(node=>{if(node instanceof THREE.Mesh){node.renderOrder=1;node.receiveShadow=false;}});return group;
+  const entries=new Map<string,PoolRange[]>();
+  group.traverse(node=>{if(!(node instanceof THREE.Mesh))return;node.renderOrder=1;node.receiveShadow=false;
+    const owner=node.geometry.getAttribute('poolOwner'),attribute=node.geometry.getAttribute('enabled') as THREE.BufferAttribute;attribute.setUsage(THREE.DynamicDrawUsage);
+    for(let first=0;first<owner.count;){const id=ids[owner.getX(first)]!;let end=first+1;while(end<owner.count && owner.getX(end)===owner.getX(first))end++;const ranges=entries.get(id)??[];ranges.push({attribute,first,end,enabled:true});entries.set(id,ranges);first=end;}
+    node.geometry.deleteAttribute('poolOwner');
+  });poolData.set(group,{last:undefined,entries});return group;
 }
 
 const palette={skyDay:new THREE.Color('#526b76'),skyNight:new THREE.Color('#101a2c'),skyDusk:new THREE.Color('#79535e'),
@@ -44,7 +57,8 @@ export class WorldDaylight {
     if(!(scene.background instanceof THREE.Color))scene.background=new THREE.Color();
     this.pools=buildLightPools(world);scene.add(this.pools);this.update(0);
   }
-  update(seconds:number):void {
+  update(seconds:number,broken:readonly string[]=[]):void {
+    updateLightPools(this.pools,broken);
     const config=this.world.daylight;
     if(!config){nightFactor.value=0;this.pools.visible=false;return;}
     const phase=sampleDaylight(config,seconds);this.hour=phase.hour;nightFactor.value=phase.night;

@@ -103,7 +103,7 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 | Command | Context | ID / block | Fields |
 | --- | --- | --- | --- |
 | `daylight` | top | No ID / no block | `cycle_s: n`, `start_hour: n` |
-| `world` | top | No ID / no block | `size: v2`, `spawn: position2`, `heading_deg: n`, `player?: ref` |
+| `world` | top | No ID / no block | `size: v2`, `spawn: position2`, `heading_deg: n`, `player?: ref`, `damage_pool?: bool` |
 | `road` | top | ID / no block | `width: n`, `points?: points2`, `via?: symbols`, `style?: racing / street` |
 | `street` | top | ID / no block | `width: n`, `sidewalk: n`, `points?: points2`, `via?: symbols`, `cycle_width?: n` |
 | `surface` | top | ID / no block | `color: color`, `points: points2` |
@@ -151,8 +151,9 @@ Rolling joints use the same bounded radius 1..32 as part roll. Their children ro
 `measure.kind`, across linked modules. Entry file only, at most 16 and one per
 category. The rule replaces local impact settings before validation. A `break`
 rule updates every existing break zone when the assembly has zones; retained
-structure survives. Body and fragment compatibility, 24 reactive placements and
-128 potential fragments remain enforced. The complete example has two different
+structure survives. Body and fragment compatibility remain enforced. Legacy/resident impacts retain
+24 reactive placements and 128 potential fragments; pooled static impacts use
+the separate policy below. The complete example has two different
 tables and one shared rule.
 
 ## Sports
@@ -201,7 +202,7 @@ With a measured car player, tree height and plane wingspan must exceed the car's
 | Project | 32 reachable modules including entry, depth 8, 524,288 UTF-16 characters, 128 defined assemblies |
 | Full scene | Dimensions ≤16384 per axis; ≤4096 placements, 12 routes, 24 resident mobile actors, including controllable vehicles; ≤256 dormant parked vehicles |
 | Animation / effects | ≤24 live joint assemblies including player; ≤16 steam emitters |
-| Destruction | ≤24 reactive objects, ≤128 potential fragments, ≤8 fragments per assembly, ≤4 zones per object |
+| Destruction | Resident/legacy: ≤24 reactive objects, ≤128 potential fragments. Pooled static props: ≤128 template records, ≤24 active assemblies, ≤128 active pieces and cached fragment meshes. Every assembly: ≤8 fragments, ≤4 zones. |
 | Terrain | ≤16 hills and 16 tint areas; combined terrain height cap 320 |
 | Infrastructure | 2–64 checkpoints, ≤8 bridges and ≤8 combined water basins/watercourses |
 
@@ -239,7 +240,7 @@ See the [complete two-bird example](../examples/ambient-wildlife.dream) and the 
 
 `pose=rest` explicitly bakes authored joint transforms and removes bone bindings and part/joint animation clocks. Geometry, material, scale, body and joint parenting remain intact. The source template remains live for other placements. Damage, knockables, emitters and proximity interactions cannot be frozen away. A single `place(...,at=[x,y],role=prop,pose=rest)` follows the same policy and rejects routes, behaviors or inferred ownership. Resting scenery is instanced, without spending live-rig or NPC slots. [Runnable example](../examples/resting-population.dream).
 
-The compiler filters full visual footprints against roads, pavements, crossings, entrances, bridges, water, infrastructure and existing placements. `grounds=[surface_id,...]` permits named visual surfaces explicitly. Site-only `paving=#rrggbb` creates parking aprons joined to the sidewalk, within the existing 64-surface budget. Templates cannot be knockable, reactive or emitting; live joints require the bounded ambient motion path, dormant controllable parking or passive `pose=rest`; default generated props cannot be boarded. `role=controllable` requires a driver-capable template, preserves rolling joints and emits `parked=true`; it rejects `pose=rest`, ambient motion and `on=sidewalk`. There is no minimum output guarantee: inspect compiled coverage. Limits are 32 rules, 2,048 candidates per rule, 128 emitted objects per rule and 1,024 generated objects overall, also counted against 4,096 scene placements.
+The compiler filters full visual footprints against roads, pavements, crossings, entrances, bridges, water, infrastructure and existing placements. `grounds=[surface_id,...]` permits named visual surfaces explicitly. Site-only `paving=#rrggbb` creates parking aprons joined to the sidewalk, within the existing 64-surface budget. Templates cannot be knockable or emitting. Static whole-object break/topple templates require `world(...,damage_pool=true)`; other reactive templates remain rejected. Live joints require the bounded ambient motion path, dormant controllable parking or passive `pose=rest`; default generated props cannot be boarded. `role=controllable` requires a driver-capable template, preserves rolling joints and emits `parked=true`; it rejects `pose=rest`, ambient motion and `on=sidewalk`. There is no minimum output guarantee: inspect compiled coverage. Limits are 32 rules, 2,048 candidates per rule, 128 emitted objects per rule and 1,024 generated objects overall, also counted against 4,096 scene placements.
 
 | Constructor | Context | ID / block | Fields |
 | --- | --- | --- | --- |
@@ -264,7 +265,7 @@ Ambient motion excludes passive `pose`, routes, programs, seats, contacts, found
 
 `material(...,night=#rrggbb)` adds an after-dark emission color while preserving the daytime base paint. Emission survives rigid batching, instancing and detachable geometry. It adds no physical collider or point light. The compiled material field is `nightColor`.
 
-Object-root `lamp(at=[x,y,z],radius=30,color=#ffd18a)` projects a soft, unshadowed pool onto the accepted terrain/deck surface below its source's XZ position. Position follows the existing object bounds (XZ ±64, Y 0–128); radius is 8–80 local units and follows measured placement scale. One lamp per assembly, at most 512 placed pools per scene. Lamp placements must be static props without knockable or destructive behavior; they cannot be actors or the player. Pool geometry stays resident in culled tiles. These are ground-light effects; they do not illuminate walls, calculate optical falloff from source height or replace collision geometry.
+Object-root `lamp(at=[x,y,z],radius=30,color=#ffd18a)` projects a soft, unshadowed pool onto the accepted terrain/deck surface below its source's XZ position. Position follows the existing object bounds (XZ ±64, Y 0–128); radius is 8–80 local units and follows measured placement scale. One lamp per assembly, at most 512 placed pools per scene. Lamp placements must be static props without knockable behavior; whole-object damage requires `world(...,damage_pool=true)`. Their surface pools switch off while broken and return on repair; they cannot be actors or the player. Pool geometry stays resident in culled tiles. These are ground-light effects; they do not illuminate walls, calculate optical falloff from source height or replace collision geometry.
 
 One 2,048 × 2,048 directional shadow map serves the stylized sun and moon. Direct light fades out during their horizon handoff. Sky, fog, hemisphere light, night emission and pools blend with the same phase. Ground driving, traffic schedules and collisions retain their existing mechanics.
 
@@ -310,7 +311,7 @@ Named paths and repeat indices derive stable local part/joint/fragment IDs. Unre
 
 The car uses fixed-timestep heightfield physics and cylinder contacts. One ground driving height per XY excludes stacked roads and ground driving under bridge decks. Boats and swimmers separately use the terrain bed and water support below decks, with hull/body and rail headroom. Covered objects can have separate wall/roof contacts, but they don't excavate terrain. Water supports surface waves and current forces. Vehicle activities are authored paths, not independent driver/flight AI.
 
-Break behavior separates authored components; it doesn't cut new shards from an arbitrary mesh. Debris is cosmetic and collides with terrain only. Whole-object impacts exclude foundations, seats, compound contacts and emitters; partial zones preserve retained building structure. Door animation is visual around authored contacts. Source never supplies executable code, callbacks, shader programs or provider credentials.
+Break behavior separates authored components; it doesn't cut new shards from an arbitrary mesh. Debris is cosmetic and collides with terrain only. Whole-object impacts exclude foundations, seats, compound/offset contacts and emitters. One centered base contact is allowed for break/topple; partial zones preserve retained building structure. Door animation is visual around authored contacts. Source never supplies executable code, callbacks, shader programs or provider credentials.
 
 ### Urban ground bounds
 
@@ -463,3 +464,23 @@ edges or controller code. Saved route intent still has at most 128 coordinate-on
 waypoints. Live contacts govern travel/restoration and blocked workers wait.
 Without `grounds`, the original local-yard behavior remains unchanged.
 [Runnable example](../examples/neighborhood-repairs.dream).
+
+
+### Pooled static destruction
+
+Optional `world.damage_pool` is a boolean, default false. True keeps static
+whole-object break/topple props instanced, including `furnish` output. At most
+128 pooled template records fit the existing 4,096-placement and project budgets.
+Resident bounce props/partial zones retain 24-object and 128-potential-fragment
+limits. Each template retains eight fragments. Runtime destruction has at most
+24 active object assemblies and 128 pieces; the renderer caches at most 24
+mesh templates and 128 fragment meshes, evicting unused data after ten simulation
+seconds or to make room. Oldest cosmetic debris yields when full; all damage
+records persist. No per-cell bodies, implicit damage or free repair.
+
+Ungrouped Dream 2 `topple` source compiles one stable rigid fragment; explicit
+fragment groups must still form exactly one. A whole-object impact may use one
+centered base contact, while compound/offset contacts remain rejected. Lamp
+height uses `measure(kind=lamp,axis=y,meters=...)`, 1..15 m. Pooled lamp damage
+switches its terrain/deck light pool off; repair restores it. [Guide](rules.md#streetlights-and-streamed-destruction)
+and [complete example](../examples/streetlight-repairs.dream).

@@ -60,10 +60,11 @@ bench keeps its existing seven-piece construction under the same bench rule.
 - Bodies, foundations, seats, animation and fragment grouping must remain
   compatible with the resulting impact. The compiler rejects incompatible
   models instead of discarding their construction.
-- All 24 reactive-object, eight-fragment-per-assembly and 128 potential scene
-  fragment limits still apply. A rule is not a way around those budgets.
+- Eight fragments per assembly remain. Legacy worlds retain 24 reactive objects
+  and 128 potential fragments; pooled worlds use the separate bounds below.
+  A rule never bypasses the chosen world policy.
 
-The live world currently shares rules for tables and benches. Other categories
+The live world currently shares rules for tables, benches and lamps. Other categories
 retain their authored behaviors until a rule is declared for them. Legacy
 objects without a semantic category are not guessed from their names.
 `kind=custom` is a single category, so a custom rule would affect every custom
@@ -73,3 +74,69 @@ categories can be added as the language grows.
 This is a bounded interaction policy, not a general scripting language or a
 materials/structural solver. The engine still owns contacts and execution.
 Mock-only. [Checks and media audit](../evidence/interaction-rules/verification.md).
+
+
+## Streetlights and streamed destruction
+
+Drive into a streetlight hard enough and the whole lamp falls about its base.
+Its ground light pool turns off. The damage stays after the fallen piece fades,
+after you drive away and unload the district, and after saving or reloading.
+All 400 lamps use their shared category rule, including both lantern and avenue
+models. A gentle touch still leaves them intact.
+
+![A streetlight falling after a car impact](../media/lamps.jpg)
+
+[Watch the impact in HD](../media/lamps.mp4) · [Animated impact](../media/lamps.gif)
+
+Enable pooled static destruction in the world declaration and define the rule:
+
+```dream
+rule street_lamps(kind=lamp,mode=topple(speed=95,duration=1,lifetime=8));
+```
+
+Add `damage_pool=true` to `world(...)`. Declare `measure(kind=lamp,axis=y,meters=3.8)`
+on the model. Lamp height is 1..15 metres. Dream 2 automatically groups an
+otherwise ungrouped topple assembly into one rigid fragment. Authored fragment
+blocks still need exactly one group. An optional single centered `contact`
+keeps a narrow pole's real collision radius; body bounds stay unchanged.
+The rigid fall uses the root body's radius for its hinge envelope, so keep that
+envelope wide enough for the model's foot.
+
+Intact objects remain streamed instances. Their persistent damage records live
+in simulation, alongside their existing cylinder contacts. There is no scene
+node or physics body per voxel. On impact the renderer borrows fragment meshes
+from a bounded template cache. It releases expired transforms and evicts unused
+geometry after ten simulation seconds or when another template needs space.
+
+| Owner | Bound |
+| --- | --- |
+| Accepted world | 4,096 total placements and 128 pooled template records, within existing project limits |
+| Resident impacts | 24 objects and 128 potential fragments; bounce props and partial building zones stay resident |
+| Active destruction | 24 object assemblies and 128 debris pieces |
+| Fragment mesh cache | 24 templates and 128 fragment meshes |
+| Each template | At most eight fragments |
+
+When active capacity fills, the oldest cosmetic debris yields to the new impact.
+The damaged object stays broken. Changing the camera or unloading render tiles
+cannot restore it. Pause freezes simulation and cache time; R preserves damage;
+Start over restores the authored world. Reduced motion applies damage without
+flying pieces. Lamps retain their authored material paint/emission on fragments;
+their declared surface pool is off. This is not an electrical network simulation.
+
+The caretaker can repair the lamp in the park seating pocket with the same finite
+kit and four-credit wage used for furniture. Its full model, collision and light
+pool return together after the work finishes. The service currently covers eight
+targets across three declared grounds. Other damaged streetlights still need
+additional service coverage; neither the renderer nor a category rule grants free
+repairs.
+
+![The caretaker restoring a damaged park lamp](../media/lamprepair.jpg)
+
+[Watch the repair in HD](../media/lamprepair.mp4) · [Animated repair](../media/lamprepair.gif)
+
+[Complete streetlight repair world](../examples/streetlight-repairs.dream).
+Check it with `npm run -s dream -- check docs/examples/streetlight-repairs.dream`.
+It uses two connected grounds and real kit/wage reservations. The live world's
+longer journey uses the accepted sidewalks and crossings.
+
+[Streetlight verification and media audit](../evidence/streetlights/verification.md).

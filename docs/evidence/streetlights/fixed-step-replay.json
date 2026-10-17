@@ -1,0 +1,263 @@
+{
+  "sourceHash": "279449d2653321d47ff31c07f356b215c5a4791f138c15b18f0c3f3b51bdbb68",
+  "simulationVersion": 8,
+  "compatibilityHash": "14d169db7f71cf494d85aacec65a606328bc4a590f20b37685ffb7d17f7b9622",
+  "events": [
+    {
+      "tick": 0,
+      "timeS": 0.008333333333333333,
+      "broken": [],
+      "phase": "idle",
+      "credits": 0,
+      "repaired": 0
+    },
+    {
+      "tick": 90,
+      "timeS": 0.7583333333333331,
+      "broken": [
+        "south_lamps_4_1_r"
+      ],
+      "phase": "idle",
+      "credits": 0,
+      "repaired": 0
+    },
+    {
+      "tick": 120,
+      "timeS": 1.0083333333333322,
+      "broken": [
+        "south_lamps_4_1_r",
+        "park_bench"
+      ],
+      "phase": "idle",
+      "credits": 0,
+      "repaired": 0
+    },
+    {
+      "tick": 1590,
+      "timeS": 13.258333333333221,
+      "broken": [
+        "south_lamps_4_1_r",
+        "park_bench"
+      ],
+      "phase": "out",
+      "target": "south_lamps_4_1_r",
+      "at": [
+        6460,
+        4380
+      ],
+      "credits": 0,
+      "repaired": 0
+    },
+    {
+      "tick": 41130,
+      "timeS": 342.75833333318593,
+      "broken": [
+        "south_lamps_4_1_r",
+        "park_bench"
+      ],
+      "phase": "work",
+      "target": "south_lamps_4_1_r",
+      "at": [
+        7507.249195922662,
+        7401.598716097257
+      ],
+      "credits": 0,
+      "repaired": 0
+    },
+    {
+      "tick": 42060,
+      "timeS": 350.5083333331789,
+      "broken": [
+        "park_bench"
+      ],
+      "phase": "home",
+      "target": "south_lamps_4_1_r",
+      "at": [
+        7507.249195922662,
+        7401.598716097257
+      ],
+      "credits": 4,
+      "repaired": 1
+    },
+    {
+      "tick": 81600,
+      "timeS": 680.0083333328793,
+      "broken": [
+        "park_bench"
+      ],
+      "phase": "idle",
+      "credits": 4,
+      "repaired": 1
+    }
+  ],
+  "final": {
+    "timeS": 680.0083333328793,
+    "broken": [
+      "park_bench"
+    ],
+    "economy": {
+      "atS": 679.9999999995459,
+      "turn": 0,
+      "accounts": [
+        {
+          "id": "pocket",
+          "credits": 20,
+          "inventory": {
+            "bread": 0,
+            "flour": 0,
+            "timber": 0
+          },
+          "satiety": 14.000000000021824,
+          "decisionAtS": 0
+        },
+        {
+          "id": "baker",
+          "credits": 0,
+          "inventory": {
+            "bread": 0,
+            "flour": 0,
+            "timber": 0
+          },
+          "satiety": 31.000000000021828,
+          "decisionAtS": 680.2499999995466
+        },
+        {
+          "id": "regular",
+          "credits": 20,
+          "inventory": {
+            "bread": 0,
+            "flour": 0,
+            "timber": 0
+          },
+          "satiety": 81.0000000000208,
+          "decisionAtS": 680.2499999995466
+        },
+        {
+          "id": "school_staff",
+          "credits": 30,
+          "inventory": {
+            "bread": 0,
+            "flour": 0,
+            "timber": 0
+          },
+          "satiety": 0,
+          "decisionAtS": 680.2499999995466
+        },
+        {
+          "id": "caretaker",
+          "credits": 4,
+          "inventory": {
+            "bread": 0,
+            "flour": 0,
+            "timber": 0
+          },
+          "satiety": 26.000000000021828,
+          "decisionAtS": 680.9999999995459,
+          "repairSeen": {
+            "objectId": "park_bench",
+            "atS": 679.9999999995459
+          }
+        }
+      ],
+      "markets": [
+        {
+          "id": "station_supplies",
+          "credits": 0,
+          "stock": {
+            "flour": 80,
+            "timber": 32
+          }
+        },
+        {
+          "id": "school_canteen",
+          "credits": 60,
+          "stock": {
+            "bread": 0
+          }
+        },
+        {
+          "id": "market_stall",
+          "credits": 106,
+          "stock": {
+            "bread": 6,
+            "flour": 30,
+            "timber": 11
+          }
+        }
+      ],
+      "consumed": {
+        "bread": 2,
+        "flour": 0,
+        "timber": 0
+      },
+      "batches": {
+        "bake": 0
+      },
+      "delivered": {
+        "flour_run": 0,
+        "school_run": 0,
+        "kits_run": 0
+      },
+      "repaired": {
+        "market_tables": 1
+      },
+      "events": [
+        {
+          "account": "caretaker",
+          "kind": "repair_started",
+          "ref": "market_tables",
+          "atS": 13.249999999999888
+        },
+        {
+          "account": "regular",
+          "kind": "buy",
+          "ref": "bread",
+          "atS": 37.24999999999853
+        },
+        {
+          "account": "regular",
+          "kind": "eat",
+          "ref": "bread",
+          "atS": 38.24999999999847
+        },
+        {
+          "account": "caretaker",
+          "kind": "repaired",
+          "ref": "market_tables",
+          "atS": 350.49999999984556
+        },
+        {
+          "account": "regular",
+          "kind": "buy",
+          "ref": "bread",
+          "atS": 644.2499999995784
+        },
+        {
+          "account": "regular",
+          "kind": "eat",
+          "ref": "bread",
+          "atS": 645.2499999995775
+        }
+      ]
+    }
+  },
+  "navigation": [
+    {
+      "id": "market_tables",
+      "nodes": 3353,
+      "links": 10414
+    }
+  ],
+  "cpuMs": {
+    "samples": 81601,
+    "mean": 0.4515399680518653,
+    "p95": 1.7293330000029528,
+    "max": 42.616416000000754
+  },
+  "snapshots": [
+    "mid-route",
+    "working",
+    "returning",
+    "home"
+  ]
+}

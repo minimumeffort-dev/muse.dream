@@ -1,0 +1,21 @@
+{
+  "sourceHash": "279449d2653321d47ff31c07f356b215c5a4791f138c15b18f0c3f3b51bdbb68",
+  "stress": "Synthetic successive contacts on all 400 accepted lamp placements; not a driven route or browser benchmark",
+  "damageRecords": 400,
+  "peakPieces": 24,
+  "peakAssemblies": 24,
+  "peakCacheBytes": 112448,
+  "afterIdle": {
+    "templates": 0,
+    "pieces": 0,
+    "cachedFragments": 0
+  },
+  "afterIdleGeometry": {
+    "bytes": 0,
+    "uniqueBuffers": 0,
+    "geometries": 0,
+    "uniqueTriangles": 0
+  },
+  "unchangedPlacementCount": 1695,
+  "registeredPreviousCompatibility": "482bfddc34e420e75d9eaa762816a09c7eb4810f1649c3e88d24b9d11b4b5657"
+}

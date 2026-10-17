@@ -48,3 +48,9 @@ The world keeps one directional shadow map for the sun and moon. Their direct li
 Light pools are stylized, unshadowed ground effects. They do not light building walls or simulate occlusion from objects. Windows glow without simulating interiors or occupancy. Existing NPC programs and transit schedules continue through the night; this feature does not add opening hours, weather or an astronomical calendar.
 
 [Exact fields and bounds](reference.md#daylight-and-night-lighting) · [Original cycle evidence](../evidence/day-night/verification.md) · [Night visibility pass](../evidence/night-visibility/verification.md)
+
+
+Pooled streetlights can now topple. Their terrain/deck light pool switches off
+while the object is broken and returns after a paid repair. Intact models retain
+the same paint, placement and light geometry. [Destruction and repair](rules.md#streetlights-and-streamed-destruction)
+keeps the material-emission and service-coverage limits explicit.

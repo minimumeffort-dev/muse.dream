@@ -93,13 +93,17 @@ JSON v2 uses `impact: {kind: "bounce", restitution, lift}` or
 
 - Bounce requires a knockable body; break requires a solid body.
 - At most 8 fragments per breakable assembly; existing 32-part bounds remain.
-- At most 24 impact objects and 128 potential fragments in one accepted scene.
-- Impact objects cannot carry foundations, compound contacts, seats or emitters.
+- Legacy scenes retain at most 24 impact objects and 128 potential fragments.
+  `world(...,damage_pool=true)` supports instanced static break/topple props under
+  separate record and active/cache bounds. [Pooled destruction](dream/rules.md#streetlights-and-streamed-destruction).
+- Impact objects cannot carry foundations, compound/offset contacts, seats or emitters.
+  A break/topple object may use one `contact` at `[0,0,0]` for its actual cylinder.
   Player and route actors do not support these impact behaviors yet.
 - Breakable parts/joints must be static so the destruction snapshot has one
   defined rest pose. Bouncing parts may retain supported rigid animation.
 - Intact breakable geometry batches by material. Fragment meshes are created
-  on first use and reused after restart, bounded by the scene's fragment budget.
+  on first use, shared by template, and evicted after ten unused simulation seconds
+  or to make room. Active transforms are released when pieces expire.
   Static scenery remains instanced. Impact puffs share the 256-particle pool.
 
 This slice separates authored components; it does not cut an arbitrary mesh
@@ -130,8 +134,9 @@ zone storefront(at=[42,0,0],radius=16,height=39,
 }
 ```
 
-`topple` requires a solid body, static geometry and exactly one `fragment`
-containing the entire falling assembly. `speed` retains the 40–400 bound;
+`topple` requires a solid body and static geometry. Dream 2 source without
+fragment blocks compiles the entire assembly into one stable rigid fragment.
+Explicit fragment blocks must still form exactly one falling group. `speed` retains the 40–400 bound;
 `duration` is 0.25–2 seconds, and `lifetime` is 2–8 seconds with at least the fall
 plus 0.8 seconds for fading. The engine picks a fixed hinge at the far edge of
 the physical body in the impact direction. The rest pose rotates as one rigid
@@ -155,8 +160,8 @@ allowlisted `breakZones` array and each affected part's `zone` reference. A zone
 can accompany an upright solid's foundation and compound core contacts; it
 cannot accompany whole-object impact, seats, emitters or animated geometry.
 Player/route actors cannot carry zones. There are at most four zones and eight
-total fragments per assembly. The scene still permits at most 24 reactive
-objects and 128 potential fragments. Foundations remain rendered and surveyed
+total fragments per assembly. These resident assemblies still share the 24-object and 128-potential-fragment
+bounds. Whole static impacts may instead use the explicit pooled policy below. Foundations remain rendered and surveyed
 when a section is removed.
 
 R preserves whole-object and zone damage; Start over restores both. Fragment

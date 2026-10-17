@@ -173,8 +173,8 @@ live assembly caps and useful field-specific diagnostics for model repair. See
 
 Dream 2 destruction includes optional splinter/crumble release patterns, rigid
 `topple` behavior, and independent `zone` sections. Core contacts and terrain
-foundations survive zone damage. Keep scene limits at 24 reactive objects and
-128 potential fragments; use `docs/impact-dsl.md` for the full authoring contract.
+foundations survive zone damage. Keep legacy/resident limits at 24 reactive objects and
+128 potential fragments; pooled static props use the bounded policy below; use `docs/impact-dsl.md` for the full authoring contract.
 
 Interaction rules belong in the Dream entry file: `rule id(kind=table,mode=break(...));`
 selects `measure.kind`, never a label or position. One rule per category, at most
@@ -404,3 +404,21 @@ from Dream or saves. Preserve the registered r49 migration and every existing
 parked furnishing when adding paving. Worker presentation may interpolate one
 commerce tick; contacts/clocks remain in simulation and reduced motion/recovery
 snap the view. See `docs/examples/neighborhood-repairs.dream`.
+
+
+Optional `world(...,damage_pool=true)` stages static whole-object break/topple
+props, including furnishing, as streamed intact instances. Legacy scenes keep
+24 reactive objects and 128 potential fragments. Pooled data has at most 128
+template records within 4096 placements; resident bounce/zone impacts retain
+24 objects/128 potential fragments. Preserve eight fragments per template,
+24 active fracture assemblies, 128 active pieces, 24 cached mesh templates and
+128 cached fragment meshes. Oldest cosmetic debris yields under pressure; every
+damaged ID persists. Release inactive transforms and evict unused geometry after
+ten simulation seconds or for capacity. Count cached roots in memory diagnostics.
+Dream 2 ungrouped topple compiles one stable rigid fragment. Whole impacts may
+use one centered base contact; compound/offset contacts remain rejected. Preserve
+narrow lamp contacts, all authored geometry, shared category rules, night paint,
+actor/rig limits and no per-cell bodies. Lamp surface pools turn off while broken
+and return after paid repair. Keep format 7/simulation 8 and the registered r50
+migration chain. Current park-lamp service is not city-wide repair coverage.
+See `docs/examples/streetlight-repairs.dream` and `docs/dream/rules.md`.

@@ -1,6 +1,7 @@
+import {DAMAGE_POOL_LIMITS,impactBudget,pooledImpact} from './damage-pool';
 import {ambientSchema,ambientProblem,AMBIENT_LIMITS} from './ambient';
 import {economySchema,economyProblems} from './commerce';
-import {voxelCells,voxelChunkCount,VOXEL_LIMITS} from './voxels';
+import {voxelCells,VOXEL_LIMITS} from './voxels';
 import {voxelWorldSchema} from './voxel-world';
 import {daylightSchema,MAX_LIGHT_POOLS} from './daylight';
 import {MAX_WORLD_SIZE,MAX_STREET_LENGTH} from './world-bounds';
@@ -154,6 +155,7 @@ export const sceneSchema = z.object({
     y: z.number().finite(),
     headingRad: z.number().finite(),
   }),
+  damagePool:z.boolean().optional(),
   daylight:daylightSchema.optional(),
   voxelWorld:voxelWorldSchema.optional(),
   terrain: terrainSchema.default({ hills: [] }),
@@ -191,7 +193,7 @@ export const sceneSchema = z.object({
   for(const message of interactionRuleProblems(scene))ctx.addIssue({code:'custom',path:['interactionRules'],message});
   const lamps=scene.objects.filter(o=>o.spec && "lamp" in o.spec && o.spec.lamp);
   if(lamps.length>MAX_LIGHT_POOLS)ctx.addIssue({code:"custom",message:"scene exceeds 512 light pools"});
-  for(const o of lamps)if(roleOf(o)!=="prop" || o.route || o.spec && "body" in o.spec && o.spec.body.interaction==="knockable" || isReactive(o.spec))ctx.addIssue({code:"custom",message:`lamp "${o.id}" requires a static prop without damage`});
+  for(const o of lamps)if(roleOf(o)!=="prop" || o.route || o.spec && "body" in o.spec && o.spec.body.interaction==="knockable" || isReactive(o.spec) && !pooledImpact(scene,o))ctx.addIssue({code:"custom",message:`lamp "${o.id}" requires a static prop; damage needs a pooled whole-object impact`});
   const length=(points:Point[])=>points.slice(1).reduce((n,p,i)=>n+Math.hypot(p.x-points[i]!.x,p.y-points[i]!.y),0);
   if(scene.streets.reduce((n,s)=>n+length(s.points),0)>MAX_STREET_LENGTH)ctx.addIssue({code:'custom',message:'scene exceeds 120000 street units'});
   if(scene.markings.reduce((n,s)=>n+length(s.closed ? [...s.points,s.points[0]!] : s.points),0)>40000)ctx.addIssue({code:'custom',message:'scene exceeds 40000 marking units'});
@@ -211,13 +213,10 @@ export const sceneSchema = z.object({
     for(const p of spec.parts)if(p.voxels)voxelData.set(JSON.stringify(p.voxels),voxelCells(p.voxels));
   if([...voxelData.values()].reduce((a,b)=>a+b,0)>VOXEL_LIMITS.projectCells)ctx.addIssue({code:'custom',message:'scene exceeds 1048576 unique voxel cells'});
   const reactive=scene.objects.filter(o=>isReactive(o.spec));
-  if(reactive.length>24)ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 24 impact objects"});
-  const fragments=reactive.reduce((sum,{spec})=>{
-    if(!spec || !("dslVersion" in spec) || spec.dslVersion!==2 || spec.impact?.kind==="bounce")return sum;
-    const parts=spec.impact ? spec.parts : spec.parts.filter(p=>p.zone);
-    return sum+new Set(parts.filter(p=>!p.voxels?.chunks).map(p=>p.fragment ? `group:${p.fragment}` : `part:${p.id}`)).size+parts.reduce((n,p)=>n+(p.voxels?.chunks ? voxelChunkCount(p.voxels) : 0),0);
-  },0);
-  if(fragments>128)ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 128 destruction fragments"});
+  const budget=impactBudget(scene);
+  if(budget.resident>DAMAGE_POOL_LIMITS.assemblies)ctx.addIssue({code:'custom',message:scene.damagePool ? 'scene exceeds 24 resident impact objects' : 'scene exceeds 24 impact objects'});
+  if(budget.pooledTemplates>DAMAGE_POOL_LIMITS.templateRecords)ctx.addIssue({code:'custom',message:'scene exceeds 128 pooled destruction templates'});
+  if(budget.residentFragments>DAMAGE_POOL_LIMITS.fragments)ctx.addIssue({code:'custom',message:'scene exceeds 128 destruction fragments'});
   if(reactive.some(o=>o.route))ctx.addIssue({code:z.ZodIssueCode.custom,message:"route actors cannot carry impact behavior"});
   if(scene.objects.filter(o=>o.spec && "dslVersion" in o.spec && o.spec.dslVersion===2 && o.spec.emitter).length>16)ctx.addIssue({code:z.ZodIssueCode.custom,message:"scene exceeds 16 particle emitters"});
   for(const object of scene.objects)if(object.route){

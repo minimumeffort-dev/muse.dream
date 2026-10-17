@@ -46,7 +46,7 @@ Ground and infrastructure are columns, so the engine doesn't allocate a kilometr
 
 Wheels and rigid joints still animate. Breakable tables, benches, trees and building sections retain their existing fragment groups and impact rules. Explicit chunked volumes expose their new cut faces when they break. Released shaped parts use the same voxel geometry as their intact versions.
 
-Collision cylinders, bridge clearance and the smooth driving heightfield remain the mechanics contract. Hills still affect speed and jumps; visual steps don't add suspension jitter. The voxel surface approximates that smooth height between samples. This is not per-cell collision, editable terrain, arbitrary tunneling or automatic structural collapse. Destruction is still limited to authored reactive objects and the existing fragment budgets.
+Collision cylinders, bridge clearance and the smooth driving heightfield remain the mechanics contract. Hills still affect speed and jumps; visual steps don't add suspension jitter. The voxel surface approximates that smooth height between samples. This is not per-cell collision, editable terrain, arbitrary tunneling or automatic structural collapse. Destruction uses authored impact data. [Pooled static destruction](dream/rules.md#streetlights-and-streamed-destruction) keeps intact props instanced, with bounded active assemblies and fragment mesh caches; it does not make every voxel a physics body.
 
 ## Keep the browser in mind
 
