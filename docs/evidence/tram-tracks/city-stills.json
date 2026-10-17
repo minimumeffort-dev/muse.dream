@@ -1,0 +1,62 @@
+[
+  {
+    "location": "Town center",
+    "file": "town-center",
+    "hour": "10"
+  },
+  {
+    "location": "Central station",
+    "file": "central-station",
+    "hour": "10"
+  },
+  {
+    "location": "City cycle tracks",
+    "file": "city-cycle-lanes",
+    "hour": "10"
+  },
+  {
+    "location": "Connected waterway",
+    "file": "connected-waterway",
+    "hour": "10"
+  },
+  {
+    "location": "School",
+    "file": "school",
+    "hour": "10"
+  },
+  {
+    "location": "Football pitch",
+    "file": "sports-park",
+    "hour": "10"
+  },
+  {
+    "location": "Suburbs",
+    "file": "suburbs",
+    "hour": "10"
+  },
+  {
+    "location": "Town square",
+    "file": "town-square",
+    "hour": "10"
+  },
+  {
+    "location": "Canal bridge",
+    "file": "tram-bridge",
+    "hour": "10"
+  },
+  {
+    "location": "Canal bridge",
+    "file": "tram-bridge-right",
+    "hour": "10"
+  },
+  {
+    "location": "Canal bridge",
+    "file": "tram-bridge-back",
+    "hour": "10"
+  },
+  {
+    "location": "Canal bridge",
+    "file": "tram-bridge-left",
+    "hour": "10"
+  }
+]

@@ -18,7 +18,7 @@ The market hall has a square, produce stalls, a vendor and a commuter who walks 
 
 ![A paved route around the primary school reaches its rear yard](media/school.jpg)
 
-These are mock places and visible routines. There are no working interiors, hospital services or simulated job market.
+The market hall has a playable ground-floor interior with baking, trade, food and delivery work. The other civic buildings remain mock destinations with visible routines; hospital services and a general job market are not implemented.
 
 ## Buses, tram and regional train
 
@@ -26,7 +26,7 @@ Five buses run four services: the garden/market loop, the southern school/hospit
 
 ![The station platform and entrance join the same streets as the football ground](media/central-station.jpg)
 
-F boards a bus, tram or regional railcar as a passenger. The service retains its route clock; driving inputs do not take over. Underground metro and subway tunnels are not implemented yet.
+F boards a bus, tram or regional railcar as a passenger. The service retains its route clock; driving inputs do not take over. Tram heads and grooves follow the constructed street and bridge triangles, including their approaches. Crossing paint leaves the track clear. These static details stream with street chunks; vehicle clocks and passenger ownership stay in simulation. Regional railway rails retain their raised profile and sleepers. Underground metro and subway tunnels are not implemented yet.
 
 Stops have named anchors, waits and platform sites in Dream. Platform paths join the pedestrian network, and served destinations must be reachable from them. The regional train is a single rigid railcar, so a shuttle turnaround cannot stack separate carriages. These vehicles follow authored schedules; they do not implement traffic signals or avoidance.
 

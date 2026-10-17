@@ -1,0 +1,121 @@
+{
+  "rendererSourceSha256": "7dd01c9d1c95d21843b53734c2c60d5ad7a1cb1dcc9a5bfb68bfd9f7e9df29e1",
+  "sourceFreezeAtMs": 1792272973010.288,
+  "recordCorrection": "The persistent collector retained seven earlier completions and their header across helper redefinition. These are the latest sixteen unique native exports; every recorded start and first PNG postdates the final source freeze. Earlier raw record SHA is retained for audit.",
+  "earlierRawRecordSha256": "1fb5c896ada7949ddd55505aef28c1b6de5de6f0ea70a9291471e9ff7a4dbb7c",
+  "clips": [
+    {
+      "clip": "driving",
+      "frames": 210,
+      "startedAtMs": 1792273001357,
+      "completedAtMs": 1792273012964,
+      "status": "Saved 210 frames · complete"
+    },
+    {
+      "clip": "boost",
+      "frames": 210,
+      "startedAtMs": 1792273013061,
+      "completedAtMs": 1792273025579,
+      "status": "Saved 210 frames · complete"
+    },
+    {
+      "clip": "switching",
+      "frames": 240,
+      "startedAtMs": 1792273031629,
+      "completedAtMs": 1792273041932,
+      "status": "Saved 240 frames · complete"
+    },
+    {
+      "clip": "locomotion",
+      "frames": 180,
+      "startedAtMs": 1792273042078,
+      "completedAtMs": 1792273051798,
+      "status": "Saved 180 frames · complete"
+    },
+    {
+      "clip": "daynight",
+      "frames": 360,
+      "startedAtMs": 1792273061146,
+      "completedAtMs": 1792273080872,
+      "status": "Saved 360 frames · complete"
+    },
+    {
+      "clip": "conversation",
+      "frames": 240,
+      "startedAtMs": 1792273080945,
+      "completedAtMs": 1792273095166,
+      "status": "Saved 240 frames · complete"
+    },
+    {
+      "clip": "commerce",
+      "frames": 360,
+      "startedAtMs": 1792273104327,
+      "completedAtMs": 1792273125602,
+      "status": "Saved 360 frames · complete"
+    },
+    {
+      "clip": "delivery",
+      "frames": 360,
+      "startedAtMs": 1792273125662,
+      "completedAtMs": 1792273143183,
+      "status": "Saved 360 frames · complete"
+    },
+    {
+      "clip": "parking",
+      "frames": 360,
+      "startedAtMs": 1792273158816,
+      "completedAtMs": 1792273175029,
+      "status": "Saved 360 frames · complete"
+    },
+    {
+      "clip": "repair",
+      "frames": 840,
+      "startedAtMs": 1792273175118,
+      "completedAtMs": 1792273205197,
+      "status": "Saved 840 frames · complete"
+    },
+    {
+      "clip": "maintenance",
+      "frames": 600,
+      "startedAtMs": 1792273216507,
+      "completedAtMs": 1792273246567,
+      "status": "Saved 600 frames · complete"
+    },
+    {
+      "clip": "streetrepair",
+      "frames": 360,
+      "startedAtMs": 1792273246785,
+      "completedAtMs": 1792273268408,
+      "status": "Saved 360 frames · complete"
+    },
+    {
+      "clip": "courier",
+      "frames": 360,
+      "startedAtMs": 1792273281232,
+      "completedAtMs": 1792273301071,
+      "status": "Saved 360 frames · complete"
+    },
+    {
+      "clip": "handoff",
+      "frames": 540,
+      "startedAfterMs": 1792273301071,
+      "note": "Tool timeout discarded the start timestamp; the native exporter continued without reloading.",
+      "completedAtMs": 1792273387139,
+      "status": "Saved 540 frames · complete"
+    },
+    {
+      "clip": "interior",
+      "frames": 600,
+      "startedAtMs": 1792273389587,
+      "completedAtMs": 1792273426833,
+      "status": "Saved 600 frames · complete"
+    },
+    {
+      "clip": "interiornight",
+      "frames": 240,
+      "startedAtMs": 1792273427220,
+      "completedAtMs": 1792273439390,
+      "status": "Saved 240 frames · complete"
+    }
+  ]
+}

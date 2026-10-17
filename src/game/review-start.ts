@@ -4,7 +4,8 @@ import {carFootprintClear,resetCar,type CarState,type World} from "../sim/car";
 import {drivingHeight,terrainHeight,waterAt} from "../scene/terrain";
 import {actorPose,routeObjects} from "../sim/actors";
 import {toggleRide,stepInteractive,bodyWorld,FOOT_HEIGHT} from "../sim/interaction";
-import {controlFor} from "../scene/agents";
+import {controlFor,roleOf} from "../scene/agents";
+import {controlOf} from '../scene/object-dsl';
 import {aircraftFloor} from '../scene/aircraft-support';
 
 /** Real mock-world positions for exercising terrain contact, jumping and water navigation. */
@@ -34,9 +35,9 @@ export function movementReviewStart(state:CarState,world:World,scenario:string|n
 
 /** Development inspection links start beside a vehicle using the real exit rules. */
 export function vehicleReviewStart(state:CarState,world:World,id:string|null):CarState {
-  const object=world.scene.objects.find(o=>o.id===id && controlFor(o));if(!object)return state;
+  const object=world.scene.objects.find(o=>o.id===id && (controlFor(o) || roleOf(o)==='npc' && o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && o.spec.rideable && !controlOf(o.spec)));if(!object)return state;
   const pose=actorPose(world.scene,object,0);
-  return toggleRide({...state,x:pose.x,y:pose.y,elevation:pose.elevation,headingRad:pose.headingRad,control:{kind:"vehicle",id:object.id},
+  return toggleRide({...state,x:pose.x,y:pose.y,elevation:pose.elevation,headingRad:pose.headingRad,control:{kind:controlFor(object) ? 'vehicle' : 'passenger',id:object.id},
     vehicles:[{id:null,x:state.x,y:state.y,elevation:state.elevation,headingRad:state.headingRad,distance:0}]},world);
 }
 

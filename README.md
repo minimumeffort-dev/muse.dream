@@ -94,6 +94,8 @@ Static districts load as you approach and leave render memory behind you. Physic
 
 World preparation now avoids repeated terrain and outline work. The [query checks](docs/evidence/startup-queries/verification.md) compare the complete accepted world, paths, collisions and save fingerprints against the preceding release, alongside native loading measurements. Detail and visual settings stay the same.
 
+Tram tracks sit in the street and follow the actual road and bridge triangles. Crossings leave room for their narrow grooves. The tracks load and unload with the surrounding streets; the tram keeps its route and passenger controls. [Track construction and checks](docs/evidence/tram-tracks/verification.md).
+
 Walk up to the market vendor, teacher, health worker or commuter on foot and press **T** to talk. Dream defines their replies, return greetings and transitions. People remember meeting you. Conversations pause a commuter's route and let it resume from the same point. [Author an NPC conversation](docs/dream/npcs.md#talk-to-a-person).
 
 ![Talking to the market vendor](docs/media/conversation.jpg)

@@ -37,7 +37,7 @@ node scripts/encode-media.mjs /absolute/path/to/ffmpeg /absolute/path/to/gifsicl
 
 Append clip names to refresh only those captures, for example `switching locomotion swimming`. Refresh each selected clip's GIF, HD video and corresponding still together. `jumping.jpg` and `swimming.jpg` use original frames from their named clips.
 
-The encoder checks for consecutive source frames before replacing a GIF and video. Generated `dist-docs/` files are excluded from the development watcher, so rebuilding the documentation does not restart the game or interrupt a capture. Keep source frames local. Commit only the finished media. Still images use the original render or a native browser screenshot at its full resolution, with high-quality JPEG encoding where useful.
+The encoder checks for consecutive source frames before replacing a GIF and video. Generated `dist-docs/` and `.npm-cache/` files are excluded from the development watcher, so documentation builds, source-comparison archives and frame writes do not restart the game or interrupt a capture. Keep source frames local. Commit only the finished media. Still images use the original render or a native browser screenshot at its full resolution, with high-quality JPEG encoding where useful.
 
 `world.jpg`, `on-foot.jpg` and `riding.jpg` come from the main game. `cycle-meadow.jpg` uses the terrain/road review. `assets.jpg` and `assets-all.jpg` use the Dream assembly gallery. `woodland.jpg` uses the gallery with `?all&asset=Standing%20deadwood&asset=Fallen%20log`; repeated `asset` filters focus a review without changing the world. `ecology.jpg`, `fauna.jpg` and `flora.jpg` are focused native gallery captures of the new wildlife and plants. Sets of more than two focused assets use 360-pixel cards; single objects and pairs retain the larger inspection view. `proportions.jpg` uses the shared metre grid. `code-to-tree.jpg` shows the complete checked tree source beside its rendered result. `pipeline.svg` labels the planned sketch/Muse boundary separately from the implemented engine.
 
@@ -615,3 +615,30 @@ engine replay, native controls, compatibility and performance. The city plan is
 regenerated from the accepted scene. Existing out-of-market vehicle, sports,
 vegetation, destruction and terrain captures retain their represented assets and
 controls; earlier evidence stays pinned to its historical release.
+
+## Embedded tram tracks
+
+The tram refinement refreshes driving, boost, switching, locomotion, daynight,
+conversation, commerce, delivery, parking, repair, maintenance, streetrepair,
+courier, handoff, interior and interiornight. Together they contain 6,060 actual
+2400 × 1350 frames, exported at thirty rendered frames per simulation second.
+The HD videos, GIFs and matching posters are refreshed together with the existing
+encoder settings. Frame choices and output hashes are pinned in the
+[track verification](../evidence/tram-tracks/verification.md). Exporting these
+frames offline does not measure live gameplay FPS.
+
+World/voxel-world use driving frame 40; on-foot/riding use switching 35/110;
+jumping uses locomotion 70. Day/night stills keep frames 30/117/180/240/300.
+Conversation, commerce, delivery, parking, repair, maintenance, streetrepair,
+courier, handoff, interior and interiornight use frames
+60/300/100/100/720/180/180/180/300/430/180 respectively.
+
+Town, station, school, football, suburbs, cycle crossing, waterway and street-life
+stills use the native geometry-review canvas (1920 × 934), reduced proportionally
+without cropping or enlarging. Four additional bridge angles remain in the
+verification record. HUD and car-boost stills come from ordinary native controls
+in a declared review session. The focused NPC-attention view does not show the
+tram corridor and remains accurate. Remote vegetation, wildlife, water/sports,
+airport and isolated destruction recordings retain their unchanged construction;
+asset galleries and the accepted-scene map are unchanged. Historical evidence
+keeps its release-specific images and claims.

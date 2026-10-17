@@ -1,38 +1,64 @@
 import * as THREE from 'three';
-import type {RenderRegion} from './render-region';
+import {overlaps,type RenderRegion} from './render-region';
 import type {Scene,Point} from '../scene/schema';
 import {streetPolygons,streetSidewalks,streetCycleTracks,streetCircuitCrossings,markingPolygons,onPolygon} from '../scene/streets';
 import {unionPolygons,subtractPolygons,polygonBounds,polygonArea} from '../scene/polygons';
 import {roadFootprint} from '../scene/road';
+import {tramTrackPolygons} from './tram-tracks';
 import {sitePolygons,streetFrame,crossingLanes,crossingPolygons} from '../scene/sites';
 import {bridgePolygon,polygonsOverlap,clipPolygon} from '../scene/landscape-dsl';
 import {surfaceGeometrySteps} from './surface';
 import {finishBuild,tiledMeshSteps} from './batching';
 import {toonMaterial} from './shaders';
+import {roadGeometry,bridgeDeckGeometry} from './road-surfaces';
+import {projectSurfaceSteps} from './surface-projection';
 
-type StreetRecipe={polygons:Point[][];color:string;lift:number;name:string};
-const recipes=new WeakMap<Scene,StreetRecipe[]>();
+type StreetRecipe={polygons:Point[][];color:string;lift:number;name:string;support:boolean};
+const recipes=new WeakMap<Scene,{layers:StreetRecipe[];grooves:Point[][];heads:Point[][]}>();
 /** Planar joins and paint are resolved once, before clipping to render chunks. */
 export function buildStreets(scene:Scene):THREE.Group{return finishBuild(buildStreetSteps(scene));}
 export function* buildStreetSteps(scene:Scene,region?:RenderRegion):Generator<void,THREE.Group>{
   let plan=recipes.get(scene);if(!plan){plan=yield* streetRecipeSteps(scene);recipes.set(scene,plan);}
   const group=new THREE.Group();group.name='streets-and-grounds';
   const timber=(scene.terrain.landscape?.bridges??[]).filter(b=>b.style==='timber').map(bridgePolygon);
-  for(const {polygons,color,lift,name} of plan){
+  const support:THREE.BufferGeometry[]=[],collect=(root:THREE.Object3D)=>root.traverse(n=>{if(n instanceof THREE.Mesh)support.push(n.geometry);});
+  for(const {polygons,color,lift,name,support:host} of plan.layers){
     const geometry=yield* surfaceGeometrySteps(scene,polygons,lift,undefined,undefined,timber,region);
     const mesh=yield* tiledMeshSteps(geometry,toonMaterial(color));mesh.name=name;group.add(mesh);
+    if(host)collect(mesh);
+  }
+  const grooves=plan.grooves.filter(p=>!region || overlaps(region,p)),heads=plan.heads.filter(p=>!region || overlaps(region,p));
+  if(grooves.length){
+    const temporary:THREE.BufferGeometry[]=[];let material:THREE.MeshBasicMaterial|undefined;
+    try{
+      const remaining=subtractPolygons(grooves,subtractPolygons(streetPolygons(scene.streets),timber));
+      if(remaining.length){
+        material=new THREE.MeshBasicMaterial();
+        const root=yield* tiledMeshSteps(roadGeometry(scene,region),material);collect(root);root.traverse(n=>{if(n instanceof THREE.Mesh)temporary.push(n.geometry);});
+        for(const bridge of scene.terrain.landscape?.bridges??[])if(bridge.style==='timber' && remaining.some(p=>polygonsOverlap(p,bridgePolygon(bridge)))){
+          const root=yield* tiledMeshSteps(bridgeDeckGeometry(scene,bridge,region),material);collect(root);root.traverse(n=>{if(n instanceof THREE.Mesh)temporary.push(n.geometry);});
+        }
+      }
+      for(const [polygons,color,lift,bias,name] of [[grooves,'#303a3e',.02,1,'tram-rail-grooves'],[heads,'#87938f',.03,2,'tram-rail-heads']] as const){
+        const geometry=yield* projectSurfaceSteps(support,polygons,{x:scene.canonical.width/2,y:scene.canonical.height/2},lift);
+        const material=toonMaterial(color);material.polygonOffset=true;material.polygonOffsetFactor=-bias;material.polygonOffsetUnits=-bias;
+        const mesh=yield* tiledMeshSteps(geometry,material);mesh.name=name;group.add(mesh);
+      }
+    }finally{temporary.forEach(g=>g.dispose());material?.dispose();}
   }
   return group;
 }
-function* streetRecipeSteps(scene:Scene):Generator<void,StreetRecipe[]>{
+function* streetRecipeSteps(scene:Scene):Generator<void,{layers:StreetRecipe[];grooves:Point[][];heads:Point[][]}>{
   const plan:StreetRecipe[]=[];
   const roads=streetPolygons(scene.streets),roadUnion=unionPolygons(roads);
   const loop=roadFootprint(scene),riding=streetPolygons(scene.streets,'riding'),bands=streetCycleTracks(scene);
   const sidewalks=streetSidewalks(scene);
-  function* add(polygons:Point[][],color:string,lift:number,name:string):Generator<void>{
-    if(polygons.length)plan.push({polygons,color,lift,name});yield;
+  function* add(polygons:Point[][],color:string,lift:number,name:string,support=false):Generator<void>{
+    if(polygons.length)plan.push({polygons,color,lift,name,support});yield;
   }
-  yield* add(roadUnion,'#626e77',1.25,'street-carriageways');
+  yield* add(roadUnion,'#626e77',1.25,'street-carriageways',true);
+  const {grooves,heads}=tramTrackPolygons(scene);
+  const paint=(polygons:Point[][])=>subtractPolygons(polygons,grooves);
   yield* add(unionPolygons(riding,[...roads,...bands,...loop]),'#c9c3af',1.55,'cycle-separators');
   yield* add(bands,'#a76855',1.4,'street-cycle-tracks');
   yield* add(sidewalks,'#bcb6a4',1.6,'street-sidewalks');
@@ -55,7 +81,7 @@ function* streetRecipeSteps(scene:Scene):Generator<void,StreetRecipe[]>{
     }
   }
   const crossingClearance=scene.crossings.flatMap(c=>crossingPolygons(scene,{...c,width:c.width+16}));
-  yield* add(subtractPolygons(dashes,[...crossingClearance,...loop]),'#d8d2b7',1.4,'street-centerlines');
+  yield* add(paint(subtractPolygons(dashes,[...crossingClearance,...loop])),'#d8d2b7',1.4,'street-centerlines');
   const symbols:Point[][]=[],symbolBounds:Point[][]=[];
   for(const s of scene.streets.filter(s=>s.cycleWidth))for(let i=1;i<s.points.length;i++){
     const a=s.points[i-1]!,b=s.points[i]!,length=Math.hypot(b.x-a.x,b.y-a.y),dx=(b.x-a.x)/length,dy=(b.y-a.y)/length;
@@ -73,7 +99,7 @@ function* streetRecipeSteps(scene:Scene):Generator<void,StreetRecipe[]>{
       symbols.push(...unionPolygons(glyph));symbolBounds.push(bounds);
     }
   }
-  yield* add(symbols,'#eee8d9',1.85,'cycle-symbols');
+  yield* add(paint(symbols),'#eee8d9',1.85,'cycle-symbols');
   const crossings:Point[][]=[],stopLines:Point[][]=[];
   for(const {street,polygons} of streetCircuitCrossings(scene))for(const polygon of polygons){
     const center=polygon.reduce((p,q)=>({x:p.x+q.x/polygon.length,y:p.y+q.y/polygon.length}),{x:0,y:0}),frame=streetFrame(street,center);
@@ -94,10 +120,10 @@ function* streetRecipeSteps(scene:Scene):Generator<void,StreetRecipe[]>{
       crossings.push(...markingPolygons({id:crossing.id,color:'#eee8d9',closed:false,width:3,points:[{x:x-frame.dx*crossing.width/2,y:y-frame.dy*crossing.width/2},{x:x+frame.dx*crossing.width/2,y:y+frame.dy*crossing.width/2}]}));
     }
   }
-  yield* add(unionPolygons(crossings),'#eee8d9',1.86,'pedestrian-crossings');
-  yield* add(unionPolygons(subtractPolygons(stopLines,crossingClearance)),'#eee8d9',1.86,'crossing-stop-lines');
+  yield* add(paint(unionPolygons(crossings)),'#eee8d9',1.86,'pedestrian-crossings');
+  yield* add(paint(unionPolygons(subtractPolygons(stopLines,crossingClearance))),'#eee8d9',1.86,'crossing-stop-lines');
   const markings=new Map<string,Point[][]>();
   for(const s of scene.markings){const polygons=markings.get(s.color)??[];polygons.push(...markingPolygons(s));markings.set(s.color,polygons);}
-  for(const [color,polygons] of markings)yield* add(polygons,color,1.9,'authored-markings');
-  return plan;
+  for(const [color,polygons] of markings)yield* add(paint(polygons),color,1.9,'authored-markings');
+  return {layers:plan,grooves,heads};
 }

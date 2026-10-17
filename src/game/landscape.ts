@@ -3,12 +3,11 @@ import type {RenderRegion} from "./render-region";
 import type {Water} from "../scene/landscape-dsl";
 import type { Scene } from "../scene/schema";
 import type { CarState } from "../sim/car";
-import { bridgeCoordinates, bridgePolygon } from "../scene/landscape-dsl";
-import { roadFootprint, ROAD_SURFACE_LIFT } from "../scene/road";
+import { bridgeCoordinates } from "../scene/landscape-dsl";
 import { terrainHeight, waterAt } from "../scene/terrain";
 import { WaterWaves } from "../sim/waves";
 import {tiledMesh} from './batching';
-import {streetPolygons} from '../scene/streets';
+import {bridgeDeckGeometry} from './road-surfaces';
 import { surfaceGeometry, surfaceHeight, bridgeHeightAt } from "./surface";
 import { bridgeMaterial, toonMaterial, waterMaterial } from "./shaders";
 import type { ActorPose } from "../sim/actors";
@@ -61,12 +60,7 @@ export class WorldLandscape {
     for(const bridge of doc.terrain.landscape?.bridges ?? []) {
       const {length,ux,uy}=bridgeCoordinates(bridge,bridge.a.x,bridge.a.y);
       const heightAt=bridgeHeightAt(doc,bridge);
-      const footprint=bridgePolygon(bridge),minX=Math.min(...footprint.map(p=>p.x)),maxX=Math.max(...footprint.map(p=>p.x)),
-        minY=Math.min(...footprint.map(p=>p.y)),maxY=Math.max(...footprint.map(p=>p.y));
-      const roadway=[...roadFootprint(doc),...streetPolygons(doc.streets,'riding')].filter(polygon=>Math.max(...polygon.map(p=>p.x))>=minX && Math.min(...polygon.map(p=>p.x))<=maxX &&
-        Math.max(...polygon.map(p=>p.y))>=minY && Math.min(...polygon.map(p=>p.y))<=maxY);
-      // Timber is the driving surface; paved stone bridges retain a road corridor.
-      const deckGeometry=surfaceGeometry(doc,[footprint],ROAD_SURFACE_LIFT,{x:ux,y:uy},heightAt,bridge.style==="timber" ? [] : roadway);
+      const deckGeometry=bridgeDeckGeometry(doc,bridge);
       const deck=doc.voxelWorld ? tiledMesh(deckGeometry,bridgeMaterial(bridge.style)) : new THREE.Mesh(deckGeometry,bridgeMaterial(bridge.style));
       deck.name=`bridge-${bridge.id}`;deck.traverse(n=>{if(n instanceof THREE.Mesh)n.castShadow=n.receiveShadow=true;});this.group.add(deck);
       const wood=toonMaterial(bridge.style==="timber" ? "#73503a" : "#797c82");

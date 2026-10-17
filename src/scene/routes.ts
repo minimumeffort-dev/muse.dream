@@ -75,6 +75,14 @@ export function routeInfrastructure(route:Route) {
   const halfWidth=route.kind==="air" ? 30 : route.kind==="rail" ? 20 : (route.width??28)/2;
   return {points,frames,halfWidth,radius:halfWidth*Math.max(...frames.map(p=>Math.hypot(p.nx,p.ny)))};
 }
+/** Whole authored spans retain the sampled miter, without per-sample paint cutouts. */
+export function railPolygons(route:Route,width:number){
+  const corners=new Set(routePath(route).distances),frames=routeFrames(route).filter(p=>corners.has(p.distance)),gauge=route.gauge??(route.kind==='tram' ? 14.35 : 24);
+  return [-1,1].flatMap(side=>frames.slice(1).map((b,i)=>{
+    const a=frames[i]!,point=(p:typeof a,edge:number)=>({x:p.x+p.nx*(side*gauge/2+edge),y:p.y+p.ny*(side*gauge/2+edge)});
+    return [point(a,-width/2),point(b,-width/2),point(b,width/2),point(a,width/2)];
+  }));
+}
 /** Stateless distance clock keeps all carriages on the same centerline, including corners. */
 export function routePose(route:Route,timeS:number,offset=0) {
   const path=routePath(route),{length}=path,stops=route.stops??[];

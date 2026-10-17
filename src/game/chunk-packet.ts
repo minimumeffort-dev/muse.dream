@@ -3,7 +3,7 @@ import type {ObjectMaterial,ObjectPart} from '../scene/object-dsl';
 import type {Effect} from '../scene/schema';
 import {groundMaterial,roadMaterial,toonMaterial,zoneMaterial,styledMaterial,nightPaint,sceneryMaterial,sceneryDepthMaterial} from './shaders';
 
-type MaterialRecipe=({kind:'ground'}|{kind:'road'}|{kind:'toon';color:number}|{kind:'zone';effect:Effect}|{kind:'water';id:string}|{kind:'styled';spec:ObjectMaterial;useB?:boolean}|{kind:'scenery';base:MaterialRecipe;motion?:ObjectPart['animation']}|{kind:'scenery-depth';motion?:ObjectPart['animation'];cloth:boolean}) & {vertexColors?:boolean;paintColor?:number;nightPaint?:boolean};
+type MaterialRecipe=({kind:'ground'}|{kind:'road'}|{kind:'toon';color:number}|{kind:'zone';effect:Effect}|{kind:'water';id:string}|{kind:'styled';spec:ObjectMaterial;useB?:boolean}|{kind:'scenery';base:MaterialRecipe;motion?:ObjectPart['animation']}|{kind:'scenery-depth';motion?:ObjectPart['animation'];cloth:boolean}) & {vertexColors?:boolean;paintColor?:number;nightPaint?:boolean;polygonOffset?:{factor:number;units:number}};
 type Attribute={array:THREE.TypedArray;size:number;normalized:boolean;instanced?:number};
 type GeometryPacket={attributes:Record<string,Attribute>;index?:Attribute};
 type MeshPacket={geometry:number;material:number;matrix:number[];name:string;cast:boolean;receive:boolean;order:number;depth?:number;sceneryEntries?:number[];cutaway?:string;instances?:Float32Array;colors?:Float32Array};
@@ -19,7 +19,7 @@ export function packChunk(root:THREE.Group):{packet:ChunkPacket;transfer:ArrayBu
   const materialId=(m:THREE.Material)=>{
     let id=materials.get(m);if(id!==undefined)return id;
     if(!m.userData.streamMaterial)throw Error(`missing stream material recipe: ${m.type}`);
-    id=packet.materials.length;materials.set(m,id);packet.materials.push({...m.userData.streamMaterial,vertexColors:'vertexColors' in m && m.vertexColors,paintColor:(m as THREE.MeshStandardMaterial).color?.getHex()});return id;
+    id=packet.materials.length;materials.set(m,id);packet.materials.push({...m.userData.streamMaterial,vertexColors:'vertexColors' in m && m.vertexColors,paintColor:(m as THREE.MeshStandardMaterial).color?.getHex(),polygonOffset:m.polygonOffset ? {factor:m.polygonOffsetFactor,units:m.polygonOffsetUnits} : undefined});return id;
   };
   root.updateMatrixWorld(true);
   root.traverse(node=>{
@@ -40,6 +40,7 @@ export function unpackChunk(packet:ChunkPacket,water:(id:string)=>THREE.Material
     if(recipe.kind==='water')return water(recipe.id);
     const material=recipe.kind==='ground' ? groundMaterial() : recipe.kind==='road' ? roadMaterial() : recipe.kind==='toon' ? toonMaterial(recipe.color) : recipe.kind==='zone' ? zoneMaterial(recipe.effect) : recipe.kind==='styled' ? styledMaterial(recipe.spec,recipe.useB) : recipe.kind==='scenery' ? sceneryMaterial(createMaterial(recipe.base),recipe.motion) : sceneryDepthMaterial(recipe.motion,recipe.cloth);
     if(recipe.nightPaint)nightPaint(material);
+    if(recipe.polygonOffset){material.polygonOffset=true;material.polygonOffsetFactor=recipe.polygonOffset.factor;material.polygonOffsetUnits=recipe.polygonOffset.units;}
     if('vertexColors' in material && recipe.vertexColors!==undefined)material.vertexColors=recipe.vertexColors;
     if(recipe.paintColor!==undefined)(material as THREE.MeshStandardMaterial).color.setHex(recipe.paintColor);return material;
   };

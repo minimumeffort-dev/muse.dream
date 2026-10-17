@@ -4,8 +4,11 @@ import {contains,overlaps,type RenderRegion} from "./render-region";
 import {voxelTerrainTile} from './voxel-columns';
 import {voxelStamp} from '../scene/voxel-stamp';
 import {reservedGround,streetPolygons,streetCircuitCrossings,onPolygon} from '../scene/streets';
+import {roadSections,roadGeometry,timberFootprints} from './road-surfaces';
+export {roadSections,roadGeometry} from './road-surfaces';
 import {buildStreetSteps} from './streets';
-import { bridgeAt, bridgeCoordinates, bridgePolygon } from "../scene/landscape-dsl";
+import {tramTrackPolygons} from './tram-tracks';
+import { bridgeAt, bridgeCoordinates } from "../scene/landscape-dsl";
 import type { Point, Scene } from "../scene/schema";
 import { sampleTerrain, terrainHeight, drivingHeight, waterAt } from "../scene/terrain";
 import { routeInfrastructure } from "../scene/routes";
@@ -27,42 +30,8 @@ export function terrainNormal(doc: Scene, x: number, y: number): THREE.Vector3 {
 
 type RoadSection = RoadFrame;
 
-/** Keep road, curb joints and painted dash boundaries on the same cross-sections. */
-export function roadSections(doc: Scene): RoadSection[] {
-  const points = roadFrames(doc), n = points.length - 1, distances = points.map(p => p.distance);
-  const length = distances[n]!, cuts = distances.map(distance => ({ distance, priority: 0 }));
-  for (let d = 14; d < length; d += 14) cuts.push({ distance: d, priority: 1 });
-  for (let d = 0; d < length; d += 48) { cuts.push({ distance: d, priority: 1 }); if (d + 22 < length) cuts.push({ distance: d + 22, priority: 1 }); }
-  cuts.push({ distance: 0, priority: 2 }, { distance: length, priority: 2 });
-  cuts.sort((a, b) => a.distance - b.distance);
-  // Near-coincident cuts otherwise collapse or invert after Float32 world-coordinate rounding.
-  const merged: typeof cuts = [];
-  for (const cut of cuts) {
-    const last = merged[merged.length - 1];
-    if (last && cut.distance - last.distance < .05) { if (cut.priority > last.priority) merged[merged.length - 1] = cut; }
-    else merged.push(cut);
-  }
-  let segment = 0;
-  return merged.map(({ distance }) => {
-    while (segment < n - 1 && distance > distances[segment + 1]!) segment++;
-    const t = (distance - distances[segment]!) / (distances[segment + 1]! - distances[segment]!);
-    const a = points[segment]!, b = points[segment + 1]!;
-    return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t, nx: a.nx + (b.nx - a.nx) * t, ny: a.ny + (b.ny - a.ny) * t, distance };
-  });
-}
-
 function roadPoint(section: RoadSection, offset: number): Point {
   return { x: section.x + section.nx * offset, y: section.y + section.ny * offset };
-}
-
-function timberFootprints(doc: Scene): Point[][] {
-  return (doc.terrain.landscape?.bridges ?? []).filter(bridge => bridge.style === "timber").map(bridgePolygon);
-}
-
-/** Road, paint and effects all conform to the same triangles as the terrain. */
-export function roadGeometry(doc: Scene,region?:RenderRegion): THREE.BufferGeometry {
-  const sections = roadSections(doc), half = doc.roadMaskRef.params.roadWidth / 2;
-  return surfaceGeometry(doc, sections.slice(1).map((b, i) => roadRibbon(sections[i]!, b, -half, half)), ROAD_SURFACE_LIFT, undefined, undefined, [...timberFootprints(doc),...streetPolygons(doc.streets)],region);
 }
 
 /** Continuous bands, with top and walls split at the underlying terrain edges. */
@@ -118,7 +87,7 @@ export function roadMarkingGeometry(doc: Scene,region?:RenderRegion): THREE.Buff
     const a = sections[i - 1]!, b = sections[i]!;
     if ((a.distance + b.distance) / 2 % 48 < 22) polygons.push(roadRibbon(a, b, -1.25, 1.25));
   }
-  return surfaceGeometry(doc, polygons, 1.8, undefined, undefined, [...timberFootprints(doc),...streetPolygons(doc.streets,'riding'),...streetCircuitCrossings(doc).flatMap(c=>c.polygons)],region);
+  return surfaceGeometry(doc, polygons, 1.8, undefined, undefined, [...timberFootprints(doc),...streetPolygons(doc.streets,'riding'),...streetCircuitCrossings(doc).flatMap(c=>c.polygons),...tramTrackPolygons(doc).grooves],region);
 }
 
 export function drapedPolygon(doc: Scene, polygon: Point[], lift: number,region?:RenderRegion): THREE.BufferGeometry {
@@ -214,7 +183,7 @@ export function* buildEnvironmentSteps(doc:Scene,region?:RenderRegion):Generator
     }));
     finishPolygons[(i + j) % 2]!.push(polygon);
   }
-  for(const [i,color] of ["#263e4d", "#f8edcf"].entries())group.add(yield* tiledMeshSteps(surfaceGeometry(doc,finishPolygons[i]!,1.85,undefined,undefined,[],region),toonMaterial(color)));
+  for(const [i,color] of ["#263e4d", "#f8edcf"].entries())group.add(yield* tiledMeshSteps(surfaceGeometry(doc,finishPolygons[i]!,1.85,undefined,undefined,tramTrackPolygons(doc).grooves,region),toonMaterial(color)));
   }
   // Passable decoration is instanced in spatial tiles, never a new collider.
   const corridors=doc.routes.filter(route=>["rail","path","air"].includes(route.kind)).map(route=>{

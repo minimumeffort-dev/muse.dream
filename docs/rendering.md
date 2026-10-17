@@ -97,6 +97,16 @@ Surface nets follow the boundary reconstruction approach described by [Mikola Ly
 
 ## Less work for the same image
 
+Tram tracks are thin projected surface details rather than elevated boxes. Their
+footprints reuse the route's authored miter frames and gauge. The renderer clips
+them onto actual road/deck top triangles, preserving the same height between
+vertices instead of independently sampling another strip. Grooves and heads sit
+two and three millimetres above that surface for rendering. A small raster depth
+bias survives worker transfer; the geometry still fits the supporting road.
+Crossing and other street paint yields to the same groove footprint. The static
+track loads and releases with its street chunks, while the tram and its clock
+remain resident. [Native views, geometry and resource checks](evidence/tram-tracks/verification.md).
+
 Toon and paper-grain parts now carry their original linear colors on their vertices. Parts with the same shading and rigid motion can share a draw even when their paint differs. Geometry, normals and UVs are preserved. Glow, cloth and stripes retain their separate material behavior; joints, wheel pivots and detachable building sections keep their boundaries.
 
 Brick, wood and stone use separate engine-owned surface shaders and palettes. A `surfacePosition` vertex attribute survives geometry merging and instance prototypes; newly cut voxel fragments regenerate it in the original part frame. Screen-space derivatives recover the physical scale after those transforms, keeping brick courses consistent between differently sized buildings. Mortar and grain provide shallow normal relief, with filtered detail at small projected sizes. The finish adds no per-brick geometry or texture downloads, but separate material groups can require more draws than the old shared flat paint. [Authoring](dream/objects.md#parts-and-materials) · [Verification](evidence/materials/verification.md).

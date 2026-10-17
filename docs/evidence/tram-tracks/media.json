@@ -1,0 +1,860 @@
+{
+  "rendererSourceSha256": "7dd01c9d1c95d21843b53734c2c60d5ad7a1cb1dcc9a5bfb68bfd9f7e9df29e1",
+  "worldSourceSha256": "269c818e0f333fe8fb11fe881219eb363ab59e54da8817787ba24191002c5464",
+  "clips": [
+    {
+      "clip": "driving",
+      "frames": 210,
+      "sourceFrameHashesSha256": "79ce4695622ad6b6f47bac3981a4c61fe9bc2bd9d27038ac9d8bdf260adb75e8",
+      "decodedVideoFrames": 210,
+      "simulationFps": 30
+    },
+    {
+      "clip": "boost",
+      "frames": 210,
+      "sourceFrameHashesSha256": "5177595cf9e448ca92b28e8ffa55bd6bb8e0110cd146d5da6be246237e48501b",
+      "decodedVideoFrames": 210,
+      "simulationFps": 30
+    },
+    {
+      "clip": "switching",
+      "frames": 240,
+      "sourceFrameHashesSha256": "01a762ca63e75035cdfa1fb65618b7134181891cc609b1517488d48d72b7d6d0",
+      "decodedVideoFrames": 240,
+      "simulationFps": 30
+    },
+    {
+      "clip": "locomotion",
+      "frames": 180,
+      "sourceFrameHashesSha256": "23e8a50d7fbab8fbff12d898fc4106d08bb19d91d49598f67e7b81aa75cd7f7c",
+      "decodedVideoFrames": 180,
+      "simulationFps": 30
+    },
+    {
+      "clip": "daynight",
+      "frames": 360,
+      "sourceFrameHashesSha256": "8785bf4a4fd7d007d3f628d87105fd140a938a0e8330677c7fe5ef7a1c953395",
+      "decodedVideoFrames": 360,
+      "simulationFps": 30
+    },
+    {
+      "clip": "conversation",
+      "frames": 240,
+      "sourceFrameHashesSha256": "90bf5e5c05c04bd9f7dadec2a6826f0f26453fa87da32fb900bb83ad1d1880ff",
+      "decodedVideoFrames": 240,
+      "simulationFps": 30
+    },
+    {
+      "clip": "commerce",
+      "frames": 360,
+      "sourceFrameHashesSha256": "a6e915feee5a8490cb155a4fa4e74b2e89d8f851bdabdcc2040fda9813d453b6",
+      "decodedVideoFrames": 360,
+      "simulationFps": 30
+    },
+    {
+      "clip": "delivery",
+      "frames": 360,
+      "sourceFrameHashesSha256": "ea4ec9af84e9b2d12ffae7fa631ce39fbe1c9f8ad06b2ea54b11550402192c6f",
+      "decodedVideoFrames": 360,
+      "simulationFps": 30
+    },
+    {
+      "clip": "parking",
+      "frames": 360,
+      "sourceFrameHashesSha256": "376b93ad34b621689ed494a2f7329012c0191ace84e3f50dc3527dd97a3a6e6d",
+      "decodedVideoFrames": 360,
+      "simulationFps": 30
+    },
+    {
+      "clip": "repair",
+      "frames": 840,
+      "sourceFrameHashesSha256": "c6713a02effb5cba67e1d9a80ec9f87bcdc360d4cf9fc91889b15be91a4a6868",
+      "decodedVideoFrames": 840,
+      "simulationFps": 30
+    },
+    {
+      "clip": "maintenance",
+      "frames": 600,
+      "sourceFrameHashesSha256": "6c098b4c7b0f79c676b710f92df8921a3364f1dec65bc9a98d2ad3646da93a5e",
+      "decodedVideoFrames": 600,
+      "simulationFps": 30
+    },
+    {
+      "clip": "streetrepair",
+      "frames": 360,
+      "sourceFrameHashesSha256": "d30cd932cdbcc91db78d0c26af48c4bfb13606b8868f7c7f1e296ce436a726a8",
+      "decodedVideoFrames": 360,
+      "simulationFps": 30
+    },
+    {
+      "clip": "courier",
+      "frames": 360,
+      "sourceFrameHashesSha256": "19925ee1b1bc003ca558e22a99685a82a21badbb1fb289079bbd655d0afca7e9",
+      "decodedVideoFrames": 360,
+      "simulationFps": 30
+    },
+    {
+      "clip": "handoff",
+      "frames": 540,
+      "sourceFrameHashesSha256": "231919f08753c9b8184fffbf18ce2bcb486e7dc8580fb93d733c94af8ea849b0",
+      "decodedVideoFrames": 540,
+      "simulationFps": 30
+    },
+    {
+      "clip": "interior",
+      "frames": 600,
+      "sourceFrameHashesSha256": "0771a121567981c2eec5be4285840f1cd8b8a9aba838d0d3996618b74241547c",
+      "decodedVideoFrames": 600,
+      "simulationFps": 30
+    },
+    {
+      "clip": "interiornight",
+      "frames": 240,
+      "sourceFrameHashesSha256": "f9a2bc7276fc01723f3df78661540b1ac0f667ca0b8b27fc6cb8048992ad40fc",
+      "decodedVideoFrames": 240,
+      "simulationFps": 30
+    }
+  ],
+  "posters": [
+    {
+      "file": "world.jpg",
+      "clip": "driving",
+      "frame": 40,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "voxel-world.jpg",
+      "clip": "driving",
+      "frame": 40,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "on-foot.jpg",
+      "clip": "switching",
+      "frame": 35,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "riding.jpg",
+      "clip": "switching",
+      "frame": 110,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "jumping.jpg",
+      "clip": "locomotion",
+      "frame": 70,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "daynight.jpg",
+      "clip": "daynight",
+      "frame": 240,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "city-day.jpg",
+      "clip": "daynight",
+      "frame": 30,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "city-dusk.jpg",
+      "clip": "daynight",
+      "frame": 117,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "city-night.jpg",
+      "clip": "daynight",
+      "frame": 180,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "city-dawn.jpg",
+      "clip": "daynight",
+      "frame": 300,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "conversation.jpg",
+      "clip": "conversation",
+      "frame": 60,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "commerce.jpg",
+      "clip": "commerce",
+      "frame": 300,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "delivery.jpg",
+      "clip": "delivery",
+      "frame": 100,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "parking.jpg",
+      "clip": "parking",
+      "frame": 100,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "repair.jpg",
+      "clip": "repair",
+      "frame": 720,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "maintenance.jpg",
+      "clip": "maintenance",
+      "frame": 180,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "streetrepair.jpg",
+      "clip": "streetrepair",
+      "frame": 180,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "courier.jpg",
+      "clip": "courier",
+      "frame": 180,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "handoff.jpg",
+      "clip": "handoff",
+      "frame": 300,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "interior.jpg",
+      "clip": "interior",
+      "frame": 430,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "interiornight.jpg",
+      "clip": "interiornight",
+      "frame": 180,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "outputSize": [
+        1600,
+        900
+      ]
+    },
+    {
+      "file": "docs/evidence/tram-tracks/tram-bridge.jpg",
+      "source": ".npm-cache/tram-tracks/stills/tram-bridge.png",
+      "sourceSize": [
+        1920,
+        934
+      ],
+      "outputSize": [
+        1600,
+        778
+      ]
+    },
+    {
+      "file": "docs/evidence/tram-tracks/tram-bridge-left.jpg",
+      "source": ".npm-cache/tram-tracks/stills/tram-bridge-left.png",
+      "sourceSize": [
+        1920,
+        934
+      ],
+      "outputSize": [
+        1600,
+        778
+      ]
+    },
+    {
+      "file": "docs/media/school.jpg",
+      "source": ".npm-cache/tram-tracks/stills/school.png",
+      "sourceSize": [
+        1920,
+        934
+      ],
+      "outputSize": [
+        1600,
+        778
+      ]
+    },
+    {
+      "file": "docs/media/connected-waterway.jpg",
+      "source": ".npm-cache/tram-tracks/stills/connected-waterway.png",
+      "sourceSize": [
+        1920,
+        934
+      ],
+      "outputSize": [
+        1600,
+        778
+      ]
+    },
+    {
+      "file": "docs/media/sports-park.jpg",
+      "source": ".npm-cache/tram-tracks/stills/sports-park.png",
+      "sourceSize": [
+        1920,
+        934
+      ],
+      "outputSize": [
+        1600,
+        778
+      ]
+    },
+    {
+      "file": "docs/media/central-station.jpg",
+      "source": ".npm-cache/tram-tracks/stills/central-station.png",
+      "sourceSize": [
+        1920,
+        934
+      ],
+      "outputSize": [
+        1600,
+        778
+      ]
+    },
+    {
+      "file": "docs/evidence/tram-tracks/tram-bridge-back.jpg",
+      "source": ".npm-cache/tram-tracks/stills/tram-bridge-back.png",
+      "sourceSize": [
+        1920,
+        934
+      ],
+      "outputSize": [
+        1600,
+        778
+      ]
+    },
+    {
+      "file": "docs/evidence/tram-tracks/tram-bridge-right.jpg",
+      "source": ".npm-cache/tram-tracks/stills/tram-bridge-right.png",
+      "sourceSize": [
+        1920,
+        934
+      ],
+      "outputSize": [
+        1600,
+        778
+      ]
+    },
+    {
+      "file": "docs/evidence/tram-tracks/town-square.jpg",
+      "source": ".npm-cache/tram-tracks/stills/town-square.png",
+      "sourceSize": [
+        1920,
+        934
+      ],
+      "outputSize": [
+        1600,
+        778
+      ]
+    },
+    {
+      "file": "docs/media/suburbs.jpg",
+      "source": ".npm-cache/tram-tracks/stills/suburbs.png",
+      "sourceSize": [
+        1920,
+        934
+      ],
+      "outputSize": [
+        1600,
+        778
+      ]
+    },
+    {
+      "file": "docs/media/city-cycle-lanes.jpg",
+      "source": ".npm-cache/tram-tracks/stills/city-cycle-lanes.png",
+      "sourceSize": [
+        1920,
+        934
+      ],
+      "outputSize": [
+        1600,
+        778
+      ]
+    },
+    {
+      "file": "docs/media/town-center.jpg",
+      "source": ".npm-cache/tram-tracks/stills/town-center.png",
+      "sourceSize": [
+        1920,
+        934
+      ],
+      "outputSize": [
+        1600,
+        778
+      ]
+    }
+  ],
+  "nativeControlStills": [
+    "car-boost.jpg",
+    "exploration-hud.jpg"
+  ],
+  "outputs": [
+    {
+      "file": "docs/media/boost.gif",
+      "bytes": 15076125,
+      "sha256": "98448cb4fe6749c4ce2cdd21f842944bab0f662dea0339d7d6dc3b75db23c013"
+    },
+    {
+      "file": "docs/media/boost.mp4",
+      "bytes": 4517196,
+      "sha256": "f71474145389abc48665fdfa947660873cfe411965d4be64cc3656337d7a55c9"
+    },
+    {
+      "file": "docs/media/car-boost.jpg",
+      "bytes": 222175,
+      "sha256": "7e4845235ab804c528b390ad953325b90179edb202ead94a01aa48426fe7c338"
+    },
+    {
+      "file": "docs/media/central-station.jpg",
+      "bytes": 343050,
+      "sha256": "d8fa9ef3566a2ee7d41011d1f66157a09d22508077912b655d61a04748375baf"
+    },
+    {
+      "file": "docs/media/city-cycle-lanes.jpg",
+      "bytes": 376107,
+      "sha256": "dd60f55b3a3f26e0295fdcaef1ab9aedd914b4592b68b8f9cd6f690819f6876b"
+    },
+    {
+      "file": "docs/media/city-dawn.jpg",
+      "bytes": 331296,
+      "sha256": "868b958cf8c6aa438e4e175aa9ec6a0157c027b2ccf15b37ab99166532ebe57b"
+    },
+    {
+      "file": "docs/media/city-day.jpg",
+      "bytes": 416878,
+      "sha256": "19b0e7ece7e7f74b0d750554d20c0ca7f8a63744a24aaed577a4cddc362a30e1"
+    },
+    {
+      "file": "docs/media/city-dusk.jpg",
+      "bytes": 345679,
+      "sha256": "1ff0e5e78e7d114470e40c7251a9d2074538154d5cbd791590b2bfb34f7948d7"
+    },
+    {
+      "file": "docs/media/city-night.jpg",
+      "bytes": 352944,
+      "sha256": "6cc98aa9533da781511a3ba8a7b1f245d7eadc701b8c875d5ba002f887afec9d"
+    },
+    {
+      "file": "docs/media/commerce.gif",
+      "bytes": 9056411,
+      "sha256": "2e78ee67f97bd7dd92b9b393f99fdc9d4a05b4affb35fb997ce1873e6422a71b"
+    },
+    {
+      "file": "docs/media/commerce.jpg",
+      "bytes": 497368,
+      "sha256": "50586345f1e54926dca94dad58832366cf88641ec8c2ad05340aa0f59434452d"
+    },
+    {
+      "file": "docs/media/commerce.mp4",
+      "bytes": 1246990,
+      "sha256": "4928f4dc1765d7255926c84af3a02301d91149839ca0c45263a3655cb5f39322"
+    },
+    {
+      "file": "docs/media/connected-waterway.jpg",
+      "bytes": 299956,
+      "sha256": "71a2b874067ce14b1bc01c6c04a72edbaf917b327741cd189ab0b6190652d5eb"
+    },
+    {
+      "file": "docs/media/conversation.gif",
+      "bytes": 7538690,
+      "sha256": "d54b1a438069a301bb9786842ee5716b27af0d39538b5c8a3d429aa093116215"
+    },
+    {
+      "file": "docs/media/conversation.jpg",
+      "bytes": 506835,
+      "sha256": "aa56ae64438c0f23275416f68eb48f85ec1962dbc4bbd225e4c129831b17182d"
+    },
+    {
+      "file": "docs/media/conversation.mp4",
+      "bytes": 1287861,
+      "sha256": "b9710c59025e91957e5eb66b67b53189174cc59cfd57f35428f58ec7e62073e6"
+    },
+    {
+      "file": "docs/media/courier.gif",
+      "bytes": 26259432,
+      "sha256": "56aa7e3e1402b7b611830f77d55947ea4389f26e0d3d72e226661e4430b41f5b"
+    },
+    {
+      "file": "docs/media/courier.jpg",
+      "bytes": 435128,
+      "sha256": "dec49ddb624ba37375e9b3b5121763a72d9d0ce0522841947467f300e9efeebc"
+    },
+    {
+      "file": "docs/media/courier.mp4",
+      "bytes": 5348487,
+      "sha256": "7533ac4f4f0d23b65ffd6fdd0e9c84b322b8e8949a0cf25d20d897b315077135"
+    },
+    {
+      "file": "docs/media/daynight.gif",
+      "bytes": 10442513,
+      "sha256": "37b06e62d3e4a2e59989e3c911e8b3c785ecd00ab515ab5f2adb523036c97c5a"
+    },
+    {
+      "file": "docs/media/daynight.jpg",
+      "bytes": 354087,
+      "sha256": "12420d6ca5e9aeb9267107611d2b5d8d8da8e07b64eb7163d51eed3465e56c6f"
+    },
+    {
+      "file": "docs/media/daynight.mp4",
+      "bytes": 2964571,
+      "sha256": "12cf1cab70b3f87a41616126c7ba8e13b1bbfa32f77394041251a8382a31e138"
+    },
+    {
+      "file": "docs/media/delivery.gif",
+      "bytes": 29773783,
+      "sha256": "6ae735cbc9aaddff8c11539b0e8543c381d5601779197e7a279ee44be0be6be4"
+    },
+    {
+      "file": "docs/media/delivery.jpg",
+      "bytes": 299821,
+      "sha256": "0a49e4acc07bc348c9754a72f6298dff17c8a0cf35f974517bea472bdae4e29c"
+    },
+    {
+      "file": "docs/media/delivery.mp4",
+      "bytes": 6002944,
+      "sha256": "1c972c1caed3e41f6ad93eb1edce84357ebe3cfcaf9827e06a381d3df2f55370"
+    },
+    {
+      "file": "docs/media/driving.gif",
+      "bytes": 15597109,
+      "sha256": "750a90cf4c9f5972eff3a7a9f58e607c1ed45150546c4d747f5ba8fcfd4c29af"
+    },
+    {
+      "file": "docs/media/driving.mp4",
+      "bytes": 4205557,
+      "sha256": "a150f47b2117b823fdbfcf3f7821cfcc74c1cd9536cb80bfb1a608eebb3d0e65"
+    },
+    {
+      "file": "docs/media/exploration-hud.jpg",
+      "bytes": 236691,
+      "sha256": "c3657302b47ebdea1f674b75cd7922ec28fb8a9ae143b0341c5a729f2fb6b171"
+    },
+    {
+      "file": "docs/media/handoff.gif",
+      "bytes": 30904554,
+      "sha256": "880287777382d5fc9ef33c028c2195dc5468361a2112052a972dd779f4e5b19c"
+    },
+    {
+      "file": "docs/media/handoff.jpg",
+      "bytes": 491210,
+      "sha256": "5772bcd0bf62f23cce1ea89c9bd52125551687e7c9db9f11c1a14d6800d16436"
+    },
+    {
+      "file": "docs/media/handoff.mp4",
+      "bytes": 6600924,
+      "sha256": "ffbd0f3260f543e9f7c14fb5ee06dbc58674dc776f1365ebb131fa189521e70c"
+    },
+    {
+      "file": "docs/media/interior.gif",
+      "bytes": 29019367,
+      "sha256": "09c3107b761b650bc6cc59672c6f8fffb73d6499f0335e2514e57f3b17ea7e48"
+    },
+    {
+      "file": "docs/media/interior.jpg",
+      "bytes": 233014,
+      "sha256": "486ada46fd8d425e56002cefa2c4e524830975003162a57b7d988f88f86ebdd5"
+    },
+    {
+      "file": "docs/media/interior.mp4",
+      "bytes": 5322742,
+      "sha256": "0158f304c2c90b47255e1fdfc9bf5ee0b47a8f2d160eaafe2b4fd4129a1d196b"
+    },
+    {
+      "file": "docs/media/interiornight.gif",
+      "bytes": 9515540,
+      "sha256": "11191ba9c8b28f14bab219f8092edbb124f19550fa2d3e22c0238c06107053b5"
+    },
+    {
+      "file": "docs/media/interiornight.jpg",
+      "bytes": 200797,
+      "sha256": "68f746e27234a6be4c6472b9e01820e747e4b3b924cb496435ca6306c1137721"
+    },
+    {
+      "file": "docs/media/interiornight.mp4",
+      "bytes": 1443275,
+      "sha256": "64aef7688c66808484ed4a4d8012d9197ab0e413db1ae7c9370f1de1a94ceb03"
+    },
+    {
+      "file": "docs/media/jumping.jpg",
+      "bytes": 547693,
+      "sha256": "4233d37e82856919cbbc1b06afbb70241a8336d0faef7922f94c6819e62a0189"
+    },
+    {
+      "file": "docs/media/locomotion.gif",
+      "bytes": 6641070,
+      "sha256": "ba4f4139dde17a85c2bbb251e28d73ff609a1f9815f3fd5e2147ec631d8f598e"
+    },
+    {
+      "file": "docs/media/locomotion.mp4",
+      "bytes": 4375813,
+      "sha256": "5c9ae48cac5fb79fc5e1d1985f5bc48f6862faf71c59a025c70a905891b8e734"
+    },
+    {
+      "file": "docs/media/maintenance.gif",
+      "bytes": 36415962,
+      "sha256": "c9c4da87e79a5678cde80572ba8d6ad15ff2ca94e561329210e96824464c9425"
+    },
+    {
+      "file": "docs/media/maintenance.jpg",
+      "bytes": 249804,
+      "sha256": "c67f8953625c26b715ecdb82187c7c778d2efeba6f56e2ca6ff8484e79dd1931"
+    },
+    {
+      "file": "docs/media/maintenance.mp4",
+      "bytes": 3659419,
+      "sha256": "b810d2f8ab449323f7259d5a353ff27dcb39d3a1e7e1eddd21090342e36f5e7d"
+    },
+    {
+      "file": "docs/media/on-foot.jpg",
+      "bytes": 281022,
+      "sha256": "fb74c4734f4eaca8b7b881527762e4f481a1301349cd68f5d2c36460ee8aad4b"
+    },
+    {
+      "file": "docs/media/parking.gif",
+      "bytes": 28428105,
+      "sha256": "827b3413da726bcac28b695896d4014791ee2751132fad9df65b6ad95823c933"
+    },
+    {
+      "file": "docs/media/parking.jpg",
+      "bytes": 292890,
+      "sha256": "d2877f6f29a5e50e861645c977b2dd3ba1bbcfb2e9f5951f621da1d4ec10c5e6"
+    },
+    {
+      "file": "docs/media/parking.mp4",
+      "bytes": 5252517,
+      "sha256": "ad0a9c6c2c0a49c8f39d163247a1c8622fcf68ab2a2752f72761aa1b9c1d68e5"
+    },
+    {
+      "file": "docs/media/repair.gif",
+      "bytes": 18651232,
+      "sha256": "d536eab661989a0e75bca214424ec0f99dce696d2d60eefe78a436eb4daddd4e"
+    },
+    {
+      "file": "docs/media/repair.jpg",
+      "bytes": 248429,
+      "sha256": "139f40d3163f473ebc2294050d2272d2b02068759672c824456b09f4e4ea78ce"
+    },
+    {
+      "file": "docs/media/repair.mp4",
+      "bytes": 3761209,
+      "sha256": "90d6a435c2f48f562d3b9a685f0127e895e8355cc1e19a62ce7677a3e438581d"
+    },
+    {
+      "file": "docs/media/riding.jpg",
+      "bytes": 258806,
+      "sha256": "63718fed9a4d336d64d9657e43a95c5951ee0d568df7053dbe5dc5ee94b004fa"
+    },
+    {
+      "file": "docs/media/school.jpg",
+      "bytes": 466012,
+      "sha256": "ad827b374e35122d16cc9cd32c6f7571ebf2e3df993c7d57801e218b8ff80dbc"
+    },
+    {
+      "file": "docs/media/sports-park.jpg",
+      "bytes": 356969,
+      "sha256": "e2ddb1721f170f4eeee039a5fd1ab923bf5617df116b80fa0bd4fcd4b6d6d5ec"
+    },
+    {
+      "file": "docs/media/street-life.jpg",
+      "bytes": 402028,
+      "sha256": "f1afb167dd3cfd9165f0b2e5b12521ce317109893b7524e4668867d53628e278"
+    },
+    {
+      "file": "docs/media/streetrepair.gif",
+      "bytes": 16759226,
+      "sha256": "6e38a1eb66c6316e78a7825fcb7e8496ee3eef40dbc3fe9346f4fe5b45912c13"
+    },
+    {
+      "file": "docs/media/streetrepair.jpg",
+      "bytes": 315871,
+      "sha256": "ff2dc4fb7162147575de467ed34d204cfd70f29dde47bf9a3318e18f80f5479e"
+    },
+    {
+      "file": "docs/media/streetrepair.mp4",
+      "bytes": 1852773,
+      "sha256": "2de3a108829a915033a66ddc186618544c3d91c97d0bf648dfa42395d1f0ba18"
+    },
+    {
+      "file": "docs/media/suburbs.jpg",
+      "bytes": 557004,
+      "sha256": "f5865a1113abfc67a86b527b0f3d620b9bb0aa6d59487e592d4eb378281a93b5"
+    },
+    {
+      "file": "docs/media/switching.gif",
+      "bytes": 6480425,
+      "sha256": "79801010e1edad02846f9a7dc29c15b6fe6ec4c3ef0b9b2d02aa90c6da15c6b0"
+    },
+    {
+      "file": "docs/media/switching.mp4",
+      "bytes": 2326563,
+      "sha256": "4fe100b12eb47b4a343780e949e165c0a378ce9c1aae762ed5f34daafc6a47aa"
+    },
+    {
+      "file": "docs/media/town-center.jpg",
+      "bytes": 580165,
+      "sha256": "fba1a323d884f193864f47703895abfeeaa196086329e1035deb311435c0ae7a"
+    },
+    {
+      "file": "docs/media/voxel-world.jpg",
+      "bytes": 412077,
+      "sha256": "405c1d1aa908fe03d22b59c40c0424185e4290960112ad5c3a870458ac16855e"
+    },
+    {
+      "file": "docs/media/world.jpg",
+      "bytes": 412077,
+      "sha256": "405c1d1aa908fe03d22b59c40c0424185e4290960112ad5c3a870458ac16855e"
+    }
+  ],
+  "outputBytes": 368052268,
+  "scope": "Native offline rendered exports and exact encoded output bytes, not live frame-rate or memory measurements."
+}

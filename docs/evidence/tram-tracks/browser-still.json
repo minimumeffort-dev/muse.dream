@@ -1,0 +1,52 @@
+{
+  "profile": {
+    "scenario": "still",
+    "samples": 300,
+    "viewport": [
+      1920,
+      1080
+    ],
+    "pixelRatio": 1.5,
+    "cpuMs": {
+      "mean": 2.058333334525426,
+      "p95": 2.5
+    },
+    "prepareMs": {
+      "mean": 0.9493333333730698,
+      "p95": 1.100000023841858
+    },
+    "submitMs": {
+      "mean": 1.1090000011523564,
+      "p95": 1.5
+    },
+    "rafMs": {
+      "mean": 16.66566666682561,
+      "p95": 18.399999976158142
+    },
+    "gpuMs": {
+      "mean": 1.3465768227424746,
+      "p95": 1.759
+    },
+    "gpuSamples": 299,
+    "draws": {
+      "mean": 211,
+      "p95": 211
+    },
+    "triangles": {
+      "mean": 636946,
+      "p95": 636946
+    },
+    "geometries": 139
+  },
+  "diagnostics": {
+    "memory": "{\"bytes\":186488296,\"uniqueBuffers\":7188,\"geometries\":1244,\"uniqueTriangles\":1272631}",
+    "streaming": "{\"resident\":16,\"required\":13,\"pending\":0,\"bytes\":129861514,\"peakBytes\":129861514,\"peakResident\":16,\"maxInstallMs\":5.400000035762787,\"maxSliceMs\":5.300000011920929,\"loaded\":16,\"unloaded\":0,\"discarded\":0,\"ready\":true,\"keys\":[\"4000,4000\",\"4800,4000\",\"4000,4800\",\"4800,4800\",\"4000,3200\",\"4800,3200\",\"3200,4000\",\"5600,4000\",\"3200,4800\",\"5600,4800\",\"4000,5600\",\"4800,5600\",\"3200,5600\",\"3200,3200\",\"5600,3200\",\"5600,5600\"]}",
+    "save": "{\"sourceHash\":\"269c818e0f333fe8fb11fe881219eb363ab59e54da8817787ba24191002c5464\",\"compatibilityHash\":\"36a6b350b49fa07044768fde832c838f9a4be007484d285a93c18a8beb77f136\",\"restored\":false,\"enabled\":false,\"review\":false,\"status\":\"Review session: saves disabled.\"}"
+  },
+  "panel": {
+    "height": 652,
+    "width": 266.6328125,
+    "x": 16,
+    "y": 52
+  }
+}

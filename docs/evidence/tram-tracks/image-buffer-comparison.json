@@ -1,0 +1,119 @@
+{
+  "scope": "Frozen native orchard view outside profiler; a retention check rather than a general visual-equivalence claim for deliberately changed tracks. Buffer counts exclude total browser heap and VRAM.",
+  "changedGamePixels": 0,
+  "imageSize": [
+    1280,
+    720
+  ],
+  "excluded": [
+    [
+      16,
+      52,
+      283,
+      704
+    ],
+    [
+      16,
+      52,
+      283,
+      704
+    ]
+  ],
+  "before": {
+    "profile": {
+      "scenario": "still",
+      "samples": 300,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "pixelRatio": 1.5,
+      "cpuMs": {
+        "mean": 2.018333335320155,
+        "p95": 2.300000011920929
+      },
+      "prepareMs": {
+        "mean": 0.9676666676998138,
+        "p95": 1.100000023841858
+      },
+      "submitMs": {
+        "mean": 1.0506666676203409,
+        "p95": 1.300000011920929
+      },
+      "rafMs": {
+        "mean": 16.667000000079472,
+        "p95": 18.600000023841858
+      },
+      "gpuMs": {
+        "mean": 1.34052974916388,
+        "p95": 1.704666
+      },
+      "gpuSamples": 299,
+      "draws": {
+        "mean": 212,
+        "p95": 212
+      },
+      "triangles": {
+        "mean": 654706,
+        "p95": 654706
+      },
+      "geometries": 140
+    },
+    "memory": {
+      "bytes": 186502920,
+      "uniqueBuffers": 7168,
+      "geometries": 1236,
+      "uniqueTriangles": 1271795
+    },
+    "streamedBytes": 129779738
+  },
+  "after": {
+    "profile": {
+      "scenario": "still",
+      "samples": 300,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "pixelRatio": 1.5,
+      "cpuMs": {
+        "mean": 2.058333334525426,
+        "p95": 2.5
+      },
+      "prepareMs": {
+        "mean": 0.9493333333730698,
+        "p95": 1.100000023841858
+      },
+      "submitMs": {
+        "mean": 1.1090000011523564,
+        "p95": 1.5
+      },
+      "rafMs": {
+        "mean": 16.66566666682561,
+        "p95": 18.399999976158142
+      },
+      "gpuMs": {
+        "mean": 1.3465768227424746,
+        "p95": 1.759
+      },
+      "gpuSamples": 299,
+      "draws": {
+        "mean": 211,
+        "p95": 211
+      },
+      "triangles": {
+        "mean": 636946,
+        "p95": 636946
+      },
+      "geometries": 139
+    },
+    "memory": {
+      "bytes": 186488296,
+      "uniqueBuffers": 7188,
+      "geometries": 1244,
+      "uniqueTriangles": 1272631
+    },
+    "streamedBytes": 129861514
+  },
+  "sameChunkKeys": true
+}
