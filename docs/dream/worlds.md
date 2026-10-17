@@ -98,7 +98,19 @@ The live world is now 14000 × 11000 units. A new river city replaces the old la
 
 City pavements, cycle tracks and separators also yield to the main circuit. Where an existing sidewalk crosses that circuit, the engine paints a zebra crossing and opens the curb instead of laying pavement across the road. The walking network keeps that connection. Bicycle symbols are placed only when the whole symbol fits its lane and clears crossings and other symbols. Crowded symbols are omitted whole. The in-game map and published city plan use the same ground footprints.
 
-`surface` fills a simple polygon with color on the actual terrain triangles. Use it for turf, courts, plazas, driveways or sand. Linked scene order defines overlay order, with bounded height offsets to prevent flickering. Each module contributes its local surfaces before its included districts, which follow include order. These are visual ground finishes; they do not flatten hills or invent new physics. `marking` draws an open or closed painted line from a point block. It supports `let`, `repeat`, `sin` and `cos`, so circles need no separate shape command.
+`surface` normally fills a simple polygon with color on the actual terrain triangles. Use it for turf, courts, plazas, driveways or sand. Linked scene order defines overlay order, with bounded height offsets to prevent flickering. Each module contributes its local surfaces before its included districts, which follow include order. These are visual ground finishes; they do not flatten hills or invent new physics. `marking` draws an open or closed painted line from a point block. It supports `let`, `repeat`, `sin` and `cos`, so circles need no separate shape command.
+
+A natural work or activity area can use `finish=terrain` instead. Omit `color`:
+the ground, its texture and cosmetic grass stay visible. The area still reserves
+street furniture and retains the same bounded repair coverage and walking checks.
+It adds no paint mesh, map fill, collider, path or flattened ground. Use actual
+painted surfaces for the garden path, plazas and courts.
+
+This declaration comes from the [complete orchard world](../examples/orchard-replanting.dream):
+
+```dream
+surface work_yard(points=[[530,680],[820,680],[820,816],[530,816]],finish=terrain);
+```
 
 [Compile this complete district module](../examples/planned-neighborhood.dream):
 

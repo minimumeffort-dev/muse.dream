@@ -176,3 +176,11 @@ young crown, so shadows/culling do not retain only the mature canopy. Unloading
 and rebuilding a chunk reapplies the saved growth scale before visibility.
 No new geometry buffer, light or per-cell body is created per growth step.
 [Authoring and limits](dream/growth.md).
+
+
+Natural `surface` areas retain the shared terrain mesh and instanced cosmetic
+plants, without another painted layer. Only painted surfaces appear as filled
+polygons on the in-game and published maps. The source footprint still owns work
+coverage and reserves furniture; geometry and movement bounds are unchanged.
+Existing declaration indices retain their original paint lifts when a natural
+surface is skipped, so later overlays do not move down onto earlier paint.

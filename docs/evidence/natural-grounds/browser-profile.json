@@ -1,0 +1,205 @@
+{
+  "machine": "Apple M3 Ultra",
+  "ramBytes": 103079215104,
+  "note": "One full-quality development orchard driving run. Not a cold-start, low-end laptop or comparative speedup measurement.",
+  "frames": {
+    "scenario": "drive",
+    "samples": 300,
+    "viewport": [
+      1920,
+      1080
+    ],
+    "pixelRatio": 1.5,
+    "cpuMs": {
+      "mean": 3.3506666656335193,
+      "p95": 4.599999964237213
+    },
+    "prepareMs": {
+      "mean": 2.2079999985297523,
+      "p95": 3.300000011920929
+    },
+    "submitMs": {
+      "mean": 1.1426666671037673,
+      "p95": 1.4000000357627869
+    },
+    "rafMs": {
+      "mean": 16.666666666666668,
+      "p95": 17.899999976158142
+    },
+    "gpuMs": {
+      "mean": 1.2346349665551852,
+      "p95": 1.500416
+    },
+    "gpuSamples": 299,
+    "draws": {
+      "mean": 154.79,
+      "p95": 175
+    },
+    "triangles": {
+      "mean": 592198.31,
+      "p95": 641397
+    },
+    "geometries": 277
+  },
+  "loading": {
+    "totalMs": 15926,
+    "firstRenderMs": 287.4000000357628,
+    "phases": [
+      {
+        "label": "Reading Dream · checking the world",
+        "startMs": 0.30000001192092896,
+        "endMs": 7624.300000011921
+      },
+      {
+        "label": "Preparing driving and walking",
+        "startMs": 7624.300000011921,
+        "endMs": 7730.400000035763
+      },
+      {
+        "label": "Starting the renderer",
+        "startMs": 7730.400000035763,
+        "endMs": 7747.900000035763
+      },
+      {
+        "label": "Building water and bridges",
+        "startMs": 7747.900000035763,
+        "endMs": 7893.400000035763
+      },
+      {
+        "label": "Building roads and transit",
+        "startMs": 7893.400000035763,
+        "endMs": 8000.800000011921
+      },
+      {
+        "label": "Assembling people and wildlife",
+        "startMs": 8000.800000011921,
+        "endMs": 8779.100000023842
+      },
+      {
+        "label": "Preparing vehicles and interactive objects",
+        "startMs": 8779.100000023842,
+        "endMs": 10287.400000035763
+      },
+      {
+        "label": "Preparing lighting",
+        "startMs": 10287.400000035763,
+        "endMs": 10561
+      },
+      {
+        "label": "Loading the first neighbourhood",
+        "startMs": 10561,
+        "endMs": 15486.800000011921
+      },
+      {
+        "label": "Preparing the first frame",
+        "startMs": 15486.800000011921,
+        "endMs": 15926
+      }
+    ],
+    "heartbeat": {
+      "samples": 290,
+      "maxGapMs": 318
+    }
+  },
+  "world": {
+    "damage": {
+      "broken": [
+        "orchard_birch"
+      ],
+      "debris": 1,
+      "props": [
+        {
+          "elevation": 0,
+          "id": "pitch_ball",
+          "vz": 0,
+          "x": 10600,
+          "y": 4690
+        },
+        {
+          "elevation": 0.043373494702684,
+          "id": "court_ball",
+          "vz": 0,
+          "x": 7280,
+          "y": 7975
+        },
+        {
+          "elevation": 0.0124521072832481,
+          "id": "festival_ball",
+          "vz": 0,
+          "x": 6270,
+          "y": 4370
+        }
+      ],
+      "renderer": {
+        "cachedFragments": 1,
+        "pieces": 1,
+        "templates": 1
+      },
+      "toppling": [
+        {
+          "angle": 1.4090395097475934,
+          "id": "orchard_birch",
+          "settled": true
+        }
+      ],
+      "zones": []
+    },
+    "memory": {
+      "bytes": 269207136,
+      "geometries": 1723,
+      "uniqueBuffers": 9863,
+      "uniqueTriangles": 1903695
+    },
+    "source": {
+      "compatibilityHash": "9d9cc87cdc01a9d2d67cfd6411a2724109308fcc354af58e13e6b415e9f0604e",
+      "enabled": false,
+      "restored": false,
+      "review": false,
+      "sourceHash": "91365ab4039e6d9ce27554e10df13439d4631dbe70cd6fb97051f5c30246fd23",
+      "status": "Review session: saves disabled."
+    },
+    "streaming": {
+      "bytes": 210790958,
+      "discarded": 0,
+      "keys": [
+        "4000,4000",
+        "4800,4000",
+        "4000,4800",
+        "4800,4800",
+        "4000,3200",
+        "4800,3200",
+        "3200,4000",
+        "5600,4000",
+        "3200,4800",
+        "5600,4800",
+        "4000,5600",
+        "4800,5600",
+        "3200,5600",
+        "3200,3200",
+        "5600,3200",
+        "5600,5600",
+        "4000,6400",
+        "4800,6400",
+        "3200,6400",
+        "5600,6400",
+        "4000,7200",
+        "4800,7200",
+        "3200,7200",
+        "5600,7200",
+        "4000,8000",
+        "4800,8000",
+        "3200,8000"
+      ],
+      "loaded": 27,
+      "maxInstallMs": 5.599999964237213,
+      "maxSliceMs": 5.599999964237213,
+      "peakBytes": 210790958,
+      "peakResident": 27,
+      "pending": 0,
+      "ready": true,
+      "required": 12,
+      "resident": 27,
+      "unloaded": 0
+    }
+  }
+}

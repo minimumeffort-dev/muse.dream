@@ -38,9 +38,9 @@ export function createWorldMap(canvas: HTMLCanvasElement, scene: Scene) {
     map.beginPath();water.polygon.forEach((p,i)=>i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));
     map.closePath();map.fillStyle=water.color;map.fill();
   }
-  for(const surface of scene.surfaces){
+  for(const surface of scene.surfaces.filter(s=>s.finish!=='terrain')){
     map.beginPath();surface.points.forEach((p,i)=>i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));
-    map.closePath();map.fillStyle=surface.color;map.fill();
+    map.closePath();map.fillStyle=surface.color!;map.fill();
   }
   const paint=(polygons:Point[][],color:string)=>{
     map.fillStyle=color;

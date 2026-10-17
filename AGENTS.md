@@ -452,3 +452,13 @@ work grounds require clear full-cylinder portals; parked vehicles affect route
 selection, moving transit causes waits and blocked paths retry without losing
 claims. See `docs/dream/growth.md` and its checked example. Current live coverage
 is three orchard trees, not all 336 measured trees.
+
+
+Surface `finish=terrain` forbids color and preserves natural ground and cosmetic
+grass/flowers, without a surface mesh or map overlay. Painted/default surfaces
+require color; keep their declaration-index paint lifts. Both finishes retain
+polygon/world/riding bounds, furniture reservations, habitat exclusions and
+repair coverage. Do not infer paved access or flatten terrain from an activity
+area. Keep the exact r53 appearance projection, format 8/simulation 10 and all
+older migrations; preserve saved growth/worker state without rebasing current
+node indices. See `docs/dream/worlds.md` and the orchard example.

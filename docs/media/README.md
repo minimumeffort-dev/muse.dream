@@ -549,3 +549,11 @@ Encode with `node scripts/encode-media.mjs /path/to/ffmpeg /path/to/gifsicle pla
 The HD videos, 1280 × 720 GIFs and full-resolution stills are refreshed together.
 These exports do not measure live frame rate. [Guide](../dream/growth.md) and
 [verification](../evidence/tree-recovery/verification.md).
+
+
+The natural-ground refinement refreshes both orchard GIF/HD/poster sets and the
+compiled city plan. The recordings use the same actual planting journey and
+30 rendered frames per simulation second, with the orchard's terrain and grass
+visible. `planting.jpg` is frame 310; `growth.jpg` is frame 750. Historical r53
+evidence describes that release's painted ground and pinned media hashes.
+[Current refinement verification](../evidence/natural-grounds/verification.md).

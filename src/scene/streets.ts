@@ -17,7 +17,9 @@ export const streetSchema=z.object({id,width:z.number().min(60).max(180),sidewal
       ctx.addIssue({code:'custom',message:'street turns must not exceed 120 degrees; split the junction into separate streets'});
   }
 });
-export const surfaceSchema=z.object({id,color,points:z.array(point).min(3).max(64)}).strict().superRefine((s,ctx)=>{
+export const surfaceSchema=z.object({id,color:color.optional(),finish:z.enum(['paint','terrain']).optional(),points:z.array(point).min(3).max(64)}).strict().superRefine((s,ctx)=>{
+  if(s.finish==='terrain' && s.color!==undefined)ctx.addIssue({code:'custom',message:'terrain finish inherits the ground; omit color',path:['color']});
+  if(s.finish!=='terrain' && s.color===undefined)ctx.addIssue({code:'custom',message:'painted surface requires color',path:['color']});
   const cross=(a:Point,b:Point,c:Point)=>(b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x);
   let area=0;
   for(let i=0;i<s.points.length;i++){
@@ -98,7 +100,7 @@ export function streetCircuitCrossings(scene:Scene){
 export const inRect=(r:Rect,x:number,y:number,margin=0)=>x>=r.x0-margin && x<=r.x1+margin && y>=r.y0-margin && y<=r.y1+margin;
 export const onPolygon=(p:Point[],x:number,y:number,margin=0)=>pointInPolygon(x,y,p) || distanceToPolygon(x,y,p)<=margin;
 export function onStreet(scene:Scene,x:number,y:number){return streetFootprints(scene).riding.some(p=>onPolygon(p,x,y));}
-export function reservedGround(scene:Scene,x:number,y:number){return streetFootprints(scene).reserved.some(p=>onPolygon(p,x,y,4)) || scene.surfaces.some(s=>pointInPolygon(x,y,s.points));}
+export function reservedGround(scene:Scene,x:number,y:number){return streetFootprints(scene).reserved.some(p=>onPolygon(p,x,y,4)) || scene.surfaces.some(s=>s.finish!=='terrain' && pointInPolygon(x,y,s.points));}
 /** Mitered paint stays a single ribbon at corners. Limit miter reach for very sharp authored turns. */
 export function markingPolygons(s:Marking):Point[][]{
   const n=s.points.length,frames=s.points.map((p,i)=>{

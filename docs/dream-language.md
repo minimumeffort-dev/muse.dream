@@ -59,3 +59,10 @@ Tree recovery reuses `repair` with `regrow_s` and optional `seed_scale`. Ordered
 `account.repairs` shares one worker across one to four services. The engine owns
 claims, finite inputs/pay, growth and clearance; source remains data-only.
 [Planting guide](dream/growth.md) · [Runnable world](examples/orchard-replanting.dream).
+
+
+`surface(...,finish=terrain)` declares natural work/activity coverage without a
+paint mesh or map fill. It omits `color` and retains cosmetic ground plants;
+ordinary painted surfaces keep their existing syntax and require color.
+Geometry, furniture reservations and movement bounds still apply.
+[Grounds](dream/worlds.md#streets-grounds-and-paint).

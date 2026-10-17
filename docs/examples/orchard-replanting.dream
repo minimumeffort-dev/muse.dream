@@ -63,7 +63,7 @@ street access(width=60,sidewalk=24,points=[[400,590],[400,850]]);
 street main(width=60,sidewalk=24,points=[[400,850],[1400,850]]);
 crossing main_cross(street=main,at=[900,850],width=20);
 place remote_tree(object=rowan,at=[1160,920],role=prop);
-surface work_yard(color=#b2aa96,points=[[530,680],[820,680],[820,816],[530,816]]);
+surface work_yard(points=[[530,680],[820,680],[820,816],[530,816]],finish=terrain);
 economy(){
  good bread(label="Bread",food=45);
  good flour(label="Flour");

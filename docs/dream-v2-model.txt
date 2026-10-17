@@ -284,9 +284,9 @@ sidewalks between rails. Street endpoints must extend 20 units beyond both bridg
 ends. Streets do not create bridges, actor routes or traffic rules.
 Scene limits: <=32 streets, <=120000 total street length. These are separate from
 road's cyclic racing spline and route's moving actors/dedicated paths.
-surface id(color=#rrggbb,points=[[x,y],...]); fills a simple 3..64 point polygon.
+Painted surface id(color=#rrggbb,points=[[x,y],...]); fills a simple 3..64 point polygon.
 Surface area <=1000000, extent <=2000. Split larger grounds. Never cover street carriageways.
-Local surfaces precede included modules; includes follow include order. Later linked surfaces overlay earlier ones. Grounds follow existing terrain; they do not
+Local surfaces precede included modules; includes follow include order. Later linked painted surfaces overlay earlier paint. Grounds follow existing terrain; they do not
 flatten it or change physics. Use for courtyards, driveways, turf, courts and sand.
 marking id(color=#rrggbb,width=1,closed=true){point(at=[x,y]);...}
 Marking blocks accept point/let/repeat; generate circles with sin/cos. 2..64 points,
@@ -342,6 +342,16 @@ Compose buildings using shared wall/roof dimensions: roof base = wall top, glass
 embedded in its wall, canopy touching wall and supported by posts that reach a
 porch slab. Keep all architectural parts attached. Reserve schoolyards, market
 squares, service aprons and entrance paths before placing surrounding housing.
+
+Surface finish: surface area(points=[[...]],finish=terrain); defines bounded
+work/activity coverage on the existing terrain, without a paint mesh or map
+fill. Omit color for terrain finish. Ordinary surfaces default to finish=paint
+and require color; explicit finish=paint is also valid. Natural coverage retains
+cosmetic grass/flowers; furniture, habitats, physical support, road/water bounds,
+clearance and pedestrian connections remain checked as before. It creates no
+shortcut, flattened ground, path, collider or extra growth clock. Prefer terrain
+finish for orchards and natural work grounds; paint real courts, squares and
+paths. Existing surface bounds apply. See examples/orchard-replanting.dream.
 
 ## npcs
 ACTOR OWNERSHIP AND NPC PROGRAMS

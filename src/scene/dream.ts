@@ -460,7 +460,7 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
       if(node.kind==='site')infrastructure.sites.push(result.data as Scene['sites'][number]);else infrastructure.crossings.push(result.data as Scene['crossings'][number]);
       continue;
     }
-    const result=node.kind==='street' ? streetSchema.safeParse({id:node.id,width:value('width'),sidewalk:value('sidewalk'),points:coordinates.points(node),...(node.fields.has('cycle_width') ? {cycleWidth:value('cycle_width')} : {})}) : node.kind==='surface' ? surfaceSchema.safeParse({id:node.id,color:wordField(node,'color'),points:outline()}) : markingSchema.safeParse({id:node.id,color:wordField(node,'color'),width:value('width'),closed:field(node,'closed'),points:points(lowerBlock(node.block!),2,64).map(([x,y])=>({x,y}))});
+    const result=node.kind==='street' ? streetSchema.safeParse({id:node.id,width:value('width'),sidewalk:value('sidewalk'),points:coordinates.points(node),...(node.fields.has('cycle_width') ? {cycleWidth:value('cycle_width')} : {})}) : node.kind==='surface' ? surfaceSchema.safeParse({id:node.id,...(node.fields.has('color') ? {color:wordField(node,'color')} : {}),points:outline(),...(node.fields.has('finish') ? {finish:wordField(node,'finish')} : {})}) : markingSchema.safeParse({id:node.id,color:wordField(node,'color'),width:value('width'),closed:field(node,'closed'),points:points(lowerBlock(node.block!),2,64).map(([x,y])=>({x,y}))});
     if(!result.success)fail(result.error.issues[0]!.message,node.token,'E_SCHEMA');
     if(node.kind==='street')infrastructure.streets.push(result.data as Scene['streets'][number]);
     else if(node.kind==='surface')infrastructure.surfaces.push(result.data as Scene['surfaces'][number]);

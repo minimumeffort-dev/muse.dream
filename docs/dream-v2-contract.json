@@ -853,8 +853,9 @@
       ],
       "id": true,
       "fields": {
-        "color": "color",
-        "points": "points2"
+        "color": "color?",
+        "points": "points2",
+        "finish": "paint|terrain?"
       }
     },
     "sport": {
@@ -1273,7 +1274,8 @@
       ],
       "area": 1000000,
       "extent": 2000,
-      "geometry": "simple polygon; declaration order overlays; cannot cover street riding surfaces"
+      "geometry": "simple polygon; declaration order overlays; cannot cover street riding surfaces",
+      "finish": "paint by default, requiring color; finish=terrain forbids color and preserves the underlying terrain and cosmetic ground plants. Both retain the same bounded work coverage, furniture reservations and walking/physical validation. Terrain areas add no render mesh or map overlay"
     },
     "marking": {
       "points": [

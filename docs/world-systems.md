@@ -48,4 +48,8 @@ Night navigation now has readable sky/ground fill outside lamp pools, while stat
 
 Existing limits remain visible: the city has decorative institutions, bounded NPC routines, arcade vehicles and sports practice. It has a working outdoor food/work/delivery loop, with no employment contracts, enterable restaurant, relationship progression, multi-floor interior movement or weather system yet. Prioritize connected activities over adding more empty buildings.
 
-Visual follow-up: orchard work grounds currently have a simple rectangular finish. Separate activity coverage from natural landscape appearance before expanding these grounds across more planting areas. Keep the shared navigation footprints and full-cylinder joins.
+Natural work grounds now retain the terrain and cosmetic plants through explicit
+Dream `finish=terrain`. Coverage, furniture reservations, contacts and walking
+connections remain unchanged. Next extend recovery to more districts and trees,
+then connect upstream production and NPC procurement. Keep auditing path ends,
+paint joins and small asset details alongside those systems.

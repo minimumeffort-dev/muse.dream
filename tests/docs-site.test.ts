@@ -10,6 +10,10 @@ describe('Dream syntax highlighting',()=>{
     const html=highlight('world(damage_pool=true);rule lights(kind=lamp,mode=topple(speed=95));object light(label="<Lamp>&");');
     expect(html).toContain('class="dream-field">damage_pool</span>');expect(html).toContain('class="dream-keyword">topple</span>');expect(html).toContain('&lt;Lamp&gt;&amp;');expect(highlight('damage_pool_extra lamplighter topples')).not.toMatch(/dream-(?:keyword|field)/);
   });
+  it('highlights natural finish fields without swallowing longer identifiers or HTML',()=>{
+    const html=highlight('surface orchard(points=[[1,2],[3,4],[5,2]],finish=terrain); // <ground>&');
+    expect(html).toContain('class="dream-field">finish</span>');expect(html).toContain('class="dream-symbol">terrain</span>');expect(html).toContain('&lt;ground&gt;&amp;');expect(highlight('finishing finish_extra terrainwork')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('highlights planting fields at complete boundaries and escapes authored labels',()=>{
     const html=highlight('account gardener(repairs=[trees,furniture]);repair trees(label="<Plant>&",regrow_s=180,seed_scale=.15);');
     for(const field of ['repairs','regrow_s','seed_scale'])expect(html).toContain(`class="dream-field">${field}</span>`);

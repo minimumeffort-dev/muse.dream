@@ -234,5 +234,5 @@ crossing repair_high_south(street=high_street,at=[5217.41935483871,6339.35483870
 
 // Orchard work lawn and its continuous two-metre garden path.
 
-surface orchard_work(color=#819461,points=[[4635,4670],[4785,4670],[4785,4975],[4635,4975]]);
+surface orchard_work(points=[[4635,4670],[4785,4670],[4785,4975],[4635,4975]],finish=terrain);
 surface orchard_path(color=#aaa48e,points=[[4775,4696],[5125,4696],[5125,4716],[4775,4716]]);

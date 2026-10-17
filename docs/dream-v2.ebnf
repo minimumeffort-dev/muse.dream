@@ -104,3 +104,7 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    default .15, only with regrow_s. Growing plants plus planting commitments <=32.
    account.repairs is 1..4 unique refs, exclusive with repair and work; priority
    selects available work, one active commitment. Touching grounds use portals. *)
+
+(* surface.finish is paint|terrain, default paint. Paint requires color; terrain
+   forbids it and retains the underlying terrain and cosmetic ground plants.
+   Both keep the existing geometry, reservation and walking bounds. *)

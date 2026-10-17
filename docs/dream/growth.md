@@ -31,9 +31,24 @@ account regular(actor=customer,credits=20,capacity=4,satiety=65,drain_s=.05,shop
 repair tree_care(label="Plant a new tree",market=corner,on=work_yard,streets=[main],verge=24,kind=tree,input=sapling,take=1,seconds=2,pay=4,effort=5,dispatch_s=0,regrow_s=30,seed_scale=.2);
 ```
 
-Run `npm run -s dream -- check docs/examples/orchard-replanting.dream`. The example uses two-second planting and thirty-second growth for testing. The live orchard uses ten seconds and three minutes. Its new garden path overlaps the orchard ground and reaches High Street's sidewalk. Overlapping declared work grounds connect through a clear, full-width walking portal; disconnected surfaces still fail acceptance.
+Run `npm run -s dream -- check docs/examples/orchard-replanting.dream`. The example uses two-second planting and thirty-second growth for testing. The live orchard uses ten seconds and three minutes. Its garden path overlaps the natural orchard work area and reaches High Street's sidewalk. Overlapping declared work grounds connect through a clear, full-width walking portal; disconnected surfaces still fail acceptance.
 
 `repairs` is an ordered list of one to four services. An idle worker tries them in order, skips unavailable or unaffordable work and holds one commitment at a time. It cannot also declare `repair` or automatic `work`. Existing single-service `repair=...` remains supported. Player accounts act through controls and cannot declare either automatic policy.
+
+## Work coverage without a painted patch
+
+The orchard uses `surface(...,finish=terrain)` for its work area. It keeps the
+terrain and scattered grass, while the garden path remains a painted surface.
+This declaration is copied from the same runnable example, outside `economy`:
+
+```dream
+surface work_yard(points=[[530,680],[820,680],[820,816],[530,816]],finish=terrain);
+```
+
+Omit `color` for terrain finish. Ordinary surfaces still require color and default
+to painted ground. Either finish keeps the same coverage, clear walking portals,
+furniture reservations and road/water validation. A natural area creates no
+pavement or new collider. [Surface authoring](worlds.md#streets-grounds-and-paint).
 
 ## What the engine checks
 
@@ -49,7 +64,7 @@ Run `npm run -s dream -- check docs/examples/orchard-replanting.dream`. The exam
 
 Visual cells and geometry are reused. Streamed instances change their transform and bounds; resident assemblies retain their existing meshes. There is no mesh allocation or physics body per growth step or voxel. The immutable accepted scene retains the mature dimensions. The existing actor, rig, debris and navigation limits remain in force.
 
-A planting completion is recorded when the replacement goes into the ground, not when it reaches full size. Restore checks unique plant IDs, service membership, clocks, progress, reserved jobs, money and material conservation. Format 8 / simulation 10 includes a registered upgrade from r52 and the earlier supported releases. [Save rules](../persistence.md).
+A planting completion is recorded when the replacement goes into the ground, not when it reaches full size. Restore checks unique plant IDs, service membership, clocks, progress, reserved jobs, money and material conservation. Format 8 / simulation 10 includes registered upgrades from r53, r52 and the earlier supported releases. The natural-ground upgrade preserves all existing growth, work and ledgers. [Save rules](../persistence.md).
 
 ## Still limited
 

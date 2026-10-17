@@ -12,7 +12,7 @@ describe("published Dream documentation",()=>{
     expect(blocks).toContain(examples['../docs/examples/parked-vehicles.dream']!.trim());
   });
   it('keeps the planting declarations identical to their checked complete example',()=>{
-    const declarations=pages['../docs/dream/growth.md']!.match(/```dream\n([\s\S]*?)```/)![1]!.trim().split('\n');
+    const declarations=[...pages['../docs/dream/growth.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].flatMap(m=>m[1]!.trim().split('\n'));
     for(const declaration of declarations)expect(examples['../docs/examples/orchard-replanting.dream']).toContain(declaration);
   });
   it('keeps the commerce guide identical to its complete runnable world',()=>{

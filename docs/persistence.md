@@ -159,3 +159,15 @@ new completion counters are initialized. The earlier upgrade chain remains
 supported. r52 node indices already belong to the current pedestrian graph and
 are retained; older releases still use their registered graph conversion. No
 other layout or economy change can silently opt into this upgrade.
+
+
+## Natural-ground appearance upgrade
+
+The r53-to-r54 upgrade keeps format 8 / simulation 10. It changes only the
+orchard work area's finish, retaining the same geometry, navigation and physical
+rules. The host verifies the complete r53 projection before exposing its old
+slot. Existing growth progress, worker paths, supplies, money, damage, memories,
+vehicles and clocks remain exact; no new stock or counters are initialized.
+Derived public node indices already match and are retained. Original slots
+remain stored, and a malformed newer slot still blocks fallback. Other layout
+or rule edits require their own migration.

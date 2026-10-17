@@ -38,7 +38,7 @@ function* streetRecipeSteps(scene:Scene):Generator<void,StreetRecipe[]>{
   yield* add(sidewalks,'#bcb6a4',1.6,'street-sidewalks');
   yield* add(unionPolygons(scene.sites.flatMap(s=>sitePolygons(scene,s)),[...streetPolygons(scene.streets,'reserved'),...loop]),'#bcb6a4',1.6,'entrance-paths');
   // Declaration order is paint order. Small bounded offsets prevent overlapping turf/court z-fighting.
-  for(const [i,s] of scene.surfaces.entries())yield* add([s.points],s.color,.65+i*.015,`ground-${s.id}`);
+  for(const [i,s] of scene.surfaces.entries())if(s.finish!=='terrain')yield* add([s.points],s.color!,.65+i*.015,`ground-${s.id}`);
   const dashes:Point[][]=[];
   const segments=scene.streets.flatMap(s=>s.points.slice(1).map((b,i)=>{
     const a=s.points[i]!,polygon=streetPolygons([{...s,sidewalk:0,points:[a,b]}])[0]!;

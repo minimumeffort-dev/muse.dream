@@ -106,7 +106,7 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 | `world` | top | No ID / no block | `size: v2`, `spawn: position2`, `heading_deg: n`, `player?: ref`, `damage_pool?: bool` |
 | `road` | top | ID / no block | `width: n`, `points?: points2`, `via?: symbols`, `style?: racing / street` |
 | `street` | top | ID / no block | `width: n`, `sidewalk: n`, `points?: points2`, `via?: symbols`, `cycle_width?: n` |
-| `surface` | top | ID / no block | `color: color`, `points: points2` |
+| `surface` | top | ID / no block | `color?: color`, `points: points2`, `finish?: paint / terrain` |
 | `sport` | top | ID / no block | `kind: football / basketball`, `surface: ref`, `ball: ref`, `targets: symbols`, `target_at: v3`, `target_size: v2` |
 | `marking` | top | ID / path | `color: color`, `width: n`, `closed: bool` |
 | `hill` | top | ID / no block | `at: v2`, `radius: v2`, `height: n` |
@@ -240,7 +240,7 @@ See the [complete two-bird example](../examples/ambient-wildlife.dream) and the 
 
 `pose=rest` explicitly bakes authored joint transforms and removes bone bindings and part/joint animation clocks. Geometry, material, scale, body and joint parenting remain intact. The source template remains live for other placements. Damage, knockables, emitters and proximity interactions cannot be frozen away. A single `place(...,at=[x,y],role=prop,pose=rest)` follows the same policy and rejects routes, behaviors or inferred ownership. Resting scenery is instanced, without spending live-rig or NPC slots. [Runnable example](../examples/resting-population.dream).
 
-The compiler filters full visual footprints against roads, pavements, crossings, entrances, bridges, water, infrastructure and existing placements. `grounds=[surface_id,...]` permits named visual surfaces explicitly. Site-only `paving=#rrggbb` creates parking aprons joined to the sidewalk, within the existing 64-surface budget. Templates cannot be knockable or emitting. Static whole-object break/topple templates require `world(...,damage_pool=true)`; other reactive templates remain rejected. Live joints require the bounded ambient motion path, dormant controllable parking or passive `pose=rest`; default generated props cannot be boarded. `role=controllable` requires a driver-capable template, preserves rolling joints and emits `parked=true`; it rejects `pose=rest`, ambient motion and `on=sidewalk`. There is no minimum output guarantee: inspect compiled coverage. Limits are 32 rules, 2,048 candidates per rule, 128 emitted objects per rule and 1,024 generated objects overall, also counted against 4,096 scene placements.
+The compiler filters full visual footprints against roads, pavements, crossings, entrances, bridges, water, infrastructure and existing placements. `grounds=[surface_id,...]` permits named ground areas explicitly. Site-only `paving=#rrggbb` creates parking aprons joined to the sidewalk, within the existing 64-surface budget. Templates cannot be knockable or emitting. Static whole-object break/topple templates require `world(...,damage_pool=true)`; other reactive templates remain rejected. Live joints require the bounded ambient motion path, dormant controllable parking or passive `pose=rest`; default generated props cannot be boarded. `role=controllable` requires a driver-capable template, preserves rolling joints and emits `parked=true`; it rejects `pose=rest`, ambient motion and `on=sidewalk`. There is no minimum output guarantee: inspect compiled coverage. Limits are 32 rules, 2,048 candidates per rule, 128 emitted objects per rule and 1,024 generated objects overall, also counted against 4,096 scene placements.
 
 | Constructor | Context | ID / block | Fields |
 | --- | --- | --- | --- |
@@ -317,7 +317,14 @@ Break behavior separates authored components; it doesn't cut new shards from an 
 
 Scenes and linked districts share limits of 32 streets, 64 surfaces and 128 markings. Streets take 2–16 XY anchors, widths 60–180 and sidewalks 0–40 per side. Segments may run in any direction, must be at least 80 units long, and cannot turn more than 120 degrees. Optional `cycle_width=16..40` adds a track on each side, separated from the carriageway by 6 units. Sidewalks move outward; the complete riding envelope gets normal road grip and must stay clear. The total street length is at most 120000 units. The scene compiler checks street connectivity, world boundaries, solid riding-surface clearance and water crossings. An explicit aligned bridge must carry the entire carriageway, both cycle tracks, separators and sidewalks through its open ends, clear of rails; the street must continue at least 20 units past each end.
 
-Surfaces take 3–64 points and must be simple, nonzero polygons, at most 1000000 square units and 2000 units across. Split larger grounds into tiles. They cannot cover street carriageways. Later surfaces in the linked scene overlay earlier surfaces. Markings take 2–64 points, width .5–12, and at least three points when closed. Repeated first points and zero-length segments fail. Total marking length, including closed seams, is at most 40000 units. Grounds and markings stay within the world, follow the shared heightfield and clear procedural tufts. They add no collision body or flattening operation. [Runnable neighborhood](../examples/planned-neighborhood.dream).
+Surfaces take 3–64 points and must be simple, nonzero polygons, at most 1000000 square units and 2000 units across. Split larger grounds into tiles. They cannot cover street carriageways. Later painted surfaces in the linked scene overlay earlier paint. Markings take 2–64 points, width .5–12, and at least three points when closed. Repeated first points and zero-length segments fail. Total marking length, including closed seams, is at most 40000 units. Painted grounds and markings stay within the world, follow the shared heightfield and clear procedural tufts. They add no collision body or flattening operation. [Runnable neighborhood](../examples/planned-neighborhood.dream).
+
+Surface `finish` defaults to `paint`, requiring `color`; explicit `finish=paint`
+is supported. `finish=terrain` forbids `color`, retains the underlying terrain
+and cosmetic grass/flowers, and emits no surface mesh or map overlay. Both
+finishes retain all polygon/world/riding-surface bounds, furniture reservations,
+habitat exclusions and declared repair coverage. Natural coverage adds no path,
+flattening, collision body or road/water shortcut. [Natural ground example](../examples/orchard-replanting.dream).
 
 ## NPC programs
 

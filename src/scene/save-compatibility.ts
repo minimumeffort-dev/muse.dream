@@ -27,7 +27,7 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || hash===PLANT_COMPATIBILITY;
+  return !scene.economy || hash===NATURAL_COMPATIBILITY;
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
@@ -40,9 +40,15 @@ export const NETWORK_COMPATIBILITY='482bfddc34e420e75d9eaa762816a09c7eb4810f1649
 export const POOL_COMPATIBILITY='14d169db7f71cf494d85aacec65a606328bc4a590f20b37685ffb7d17f7b9622';
 export const VERGE_COMPATIBILITY='54269457677d740420e755511a55e932e99f0cd6f28e56d2e92a255f6f34cbb9';
 export const PLANT_COMPATIBILITY='5603fcbdc725e4cfe36e5284d0123a37d6cf46785904c3d235b44e6a52739f05';
+export const NATURAL_COMPATIBILITY='9d9cc87cdc01a9d2d67cfd6411a2724109308fcc354af58e13e6b415e9f0604e';
+/** Registered r53 appearance projection. Movement, ledgers and clocks are identical. */
+export function preFinishScene(scene:Scene):Scene{
+ return {...scene,surfaces:scene.surfaces.map(s=>{if(s.id!=='orchard_work')return s;const {finish,...old}=s;return {...old,color:'#819461'};})};
+}
+export function preFinishCompatibilitySource(scene:Scene):string{return projection(preFinishScene(scene),10);}
 /** Registered r52 projection preserves every placement, contact and public walkway. */
 export function prePlantScene(scene:Scene):Scene{
- const e=scene.economy;return {...scene,surfaces:scene.surfaces.filter(s=>!['orchard_work','orchard_path'].includes(s.id)),economy:e && {...e,goods:e.goods.filter(g=>g.id!=='sapling'),accounts:e.accounts.map(a=>{if(a.id!=='caretaker' || !a.repairs)return a;const {repairs,...old}=a;return {...old,repair:'market_tables'};}),markets:e.markets.map(m=>({...m,lots:m.lots.filter(l=>l.good!=='sapling')})),deliveries:e.deliveries.filter(d=>d.id!=='saplings_run'),repairs:e.repairs.filter(r=>r.id!=='orchard_trees')}};
+ scene=preFinishScene(scene);const e=scene.economy;return {...scene,surfaces:scene.surfaces.filter(s=>!['orchard_work','orchard_path'].includes(s.id)),economy:e && {...e,goods:e.goods.filter(g=>g.id!=='sapling'),accounts:e.accounts.map(a=>{if(a.id!=='caretaker' || !a.repairs)return a;const {repairs,...old}=a;return {...old,repair:'market_tables'};}),markets:e.markets.map(m=>({...m,lots:m.lots.filter(l=>l.good!=='sapling')})),deliveries:e.deliveries.filter(d=>d.id!=='saplings_run'),repairs:e.repairs.filter(r=>r.id!=='orchard_trees')}};
 }
 export function prePlantCompatibilitySource(scene:Scene):string{return projection(prePlantScene(scene),9);}
 /** Registered r51 projection keeps every object, surface and existing crossing. */

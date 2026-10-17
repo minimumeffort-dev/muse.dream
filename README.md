@@ -142,7 +142,9 @@ sapling, walks along a connected garden path and plants a replacement. It starts
 small and grows over three simulation minutes, with its shadow and collision body.
 Stand in the way and growth waits. You can take the same paid planting job, or
 bring more saplings from the station depot. Supplies, wages and growth survive
-travel and reload. [Planting and growth in Dream](docs/dream/growth.md).
+travel and reload. The orchard now keeps its natural ground and grass; its work
+area does not paint a rectangle over the landscape. The connected garden path
+stays visible. [Planting and growth in Dream](docs/dream/growth.md).
 
 ![Planting a replacement tree](docs/media/planting.jpg)
 
