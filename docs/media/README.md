@@ -1130,3 +1130,20 @@ notes now describe both food donors. The city layout, assets, lighting and
 walking construction are unchanged. Their latest capture sets remain accurate.
 Earlier kitchen, shift and other economy recordings retain their pinned
 transactions; the two meal sets demonstrate the current social activity.
+
+## Returning feet through turns, 2026-10-19
+
+The character, pedestrian and locomotion GIF/HD/poster sets are refreshed together
+from 1,080 newly rendered 2400 × 1350 PNG frames at 30 frames per simulation
+second. The close-up uses **Reverse and stop** to show the player and instanced
+walker on the same ground grid. Pedestrians retain their accepted pavement and
+crossing routes; locomotion moves its development-only start to the open park
+so a building cannot hide the run and jump. It keeps the same controls. These are
+offline exports, with no interpolated frames or live FPS claim.
+
+The world, clothing, geometry, materials, proportions and scene/save identity are
+unchanged. Static construction sheets and the city map remain accurate. Earlier
+sports, work and social clips retain their recorded actions and are historical
+motion examples; this set demonstrates the current returning-foot correction.
+Swimming retains its existing crawl/tread recording. Posters use character frame
+68, pedestrians 90 and locomotion 70. [Checks and source/frame provenance](../evidence/walking-swing/verification.md).

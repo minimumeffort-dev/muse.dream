@@ -477,6 +477,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     if(clip==='conversation' || clip==='commerce' || clip==='delivery' || clip==='recipes')car=npcReviewStart(car,world,'vendor');
     if(clip==='pedestrians' || clip==='wildlife')car=populationReviewStart(car,world,clip==='pedestrians' ? 'crowd' : clip);
     if(clip==='switching'){const bike=doc.objects.find(o=>o.id==='village_bike')!;car={...car,x:bike.x-40,y:bike.y,headingRad:0,elevation:drivingHeight(doc.terrain,bike.x-40,bike.y)};}
+    if(clip==='locomotion')car=drivingReviewStart(car,world,'park');
     if(clip==='locomotion' || clip==='swimming')car=movementReviewStart(car,world,clip==='swimming' ? 'swim' : 'walk');
     if(clip==='flight')car=toggleRide(vehicleReviewStart(car,world,'cloudhopper'),world);
     if(clip==='transit')car=vehicleReviewStart(car,world,'market_tram_vehicle');

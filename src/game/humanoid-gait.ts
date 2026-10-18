@@ -5,6 +5,7 @@ export const gaitRun=(speed:number)=>Math.max(0,Math.min(1,(speed-22)/30));
 export const gaitStance=(run:number)=>.62-.2*run;
 export const gaitReach=(run:number)=>12.5+1.5*run;
 export const gaitStride=(run:number)=>2*gaitReach(run)/gaitStance(run);
+export const gaitPlantReach=(upper:number,lower:number)=>(upper+lower)*.72;
 
 /** Linear ground travel during stance; the return clears the support plane. */
 export function strideFoot(phase:number,run:number):{x:number;y:number;toe:number} {
@@ -30,19 +31,37 @@ export function soleSupport(sole:Sole,toe:number):number {
 export type TravelPose={x:number;z:number;heading:number};
 /** Visual contacts only: two anchors, independent of physics and saved simulation state. */
 export class FootPlants {
- private feet=[{x:0,z:0,heading:0,down:false,cycle:0},{x:0,z:0,heading:0,down:false,cycle:0}];
- private result=[{x:0,z:0,yaw:0},{x:0,z:0,yaw:0}];
+ private feet=[{x:0,z:0,heading:0,down:false,cycle:0,valid:false},{x:0,z:0,heading:0,down:false,cycle:0,valid:false}];
+ private result=[{x:0,z:0,yaw:0,lift:0},{x:0,z:0,yaw:0,lift:0}];
  private previous:TravelPose|undefined;
- reset(){this.previous=undefined;for(const foot of this.feet)foot.down=false;}
- begin(pose:TravelPose,scale:number){
-  if(this.previous && Math.hypot(pose.x-this.previous.x,pose.z-this.previous.z)>scale*80)this.reset();
+ private move=0;
+ private turn=0;
+ reset(){this.previous=undefined;for(const foot of this.feet)foot.down=foot.valid=false;}
+ begin(pose:TravelPose,scale:number,dt:number){
+  const distance=this.previous ? Math.hypot(pose.x-this.previous.x,pose.z-this.previous.z) : 0;
+  if(distance>scale*80)this.reset();
+  this.move=Math.max(distance*4,scale*180*Math.max(0,dt));this.turn=12*Math.max(0,dt);
   if(this.previous){this.previous.x=pose.x;this.previous.z=pose.z;this.previous.heading=pose.heading;}
   else this.previous={...pose};
  }
- sample(index:number,pose:TravelPose,scale:number,x:number,z:number,down:boolean,cycle:number){
+ sample(index:number,pose:TravelPose,scale:number,x:number,z:number,down:boolean,cycle:number,unit=1,reach=Infinity){
   const foot=this.feet[index]!,result=this.result[index]!,c=Math.cos(pose.heading),s=Math.sin(pose.heading);
-  if(!foot.down || !down || foot.cycle!==cycle){foot.x=pose.x+scale*(c*x-s*z);foot.z=pose.z+scale*(s*x+c*z);foot.heading=pose.heading;}
-  foot.down=down;foot.cycle=cycle;
+  if(!foot.valid || this.move>0 || this.turn>0){
+   const px=(foot.x-pose.x)/scale,pz=(foot.z-pose.z)/scale;
+   const release=foot.valid && foot.down && (Math.hypot(c*px+s*pz,-s*px+c*pz-z)>reach || foot.cycle!==cycle);
+   if(release)foot.down=false;
+   const targetX=pose.x+scale*(c*x-s*z),targetZ=pose.z+scale*(s*x+c*z);
+   if(!foot.valid){foot.x=targetX;foot.z=targetZ;foot.heading=pose.heading;foot.valid=true;}
+   else if(!foot.down || !down || foot.cycle!==cycle){
+    // Turning the body must not teleport a foot that is already returning through the air.
+    const dx=targetX-foot.x,dz=targetZ-foot.z,t=Math.min(1,this.move/(Math.hypot(dx,dz)||1));
+    foot.x+=dx*t;foot.z+=dz*t;
+    const yaw=Math.atan2(Math.sin(pose.heading-foot.heading),Math.cos(pose.heading-foot.heading));foot.heading+=Math.max(-this.turn,Math.min(this.turn,yaw));
+   }
+   const remaining=Math.hypot(targetX-foot.x,targetZ-foot.z),returning=down && (release || !foot.down && remaining>1e-8);
+   result.lift=returning ? release ? .8*unit : Math.min(.8*unit,remaining/scale) : 0;
+   foot.down=down && !returning;foot.cycle=cycle;
+  }
   const dx=(foot.x-pose.x)/scale,dz=(foot.z-pose.z)/scale;
   result.x=c*dx+s*dz;result.z=-s*dx+c*dz;result.yaw=Math.atan2(Math.sin(pose.heading-foot.heading),Math.cos(pose.heading-foot.heading));
   return result;

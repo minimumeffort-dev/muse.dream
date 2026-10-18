@@ -9,7 +9,7 @@ import {assemblyBounds,assemblyHorizontalRadius} from '../scene/measure';
 import {walkingHeight} from '../scene/interiors';
 import {buildObject,objectGroundLift} from './world3d';
 import {ambientMaterial} from './shaders';
-import {FootPlants,gaitStance,gaitStride,humanoidSoles,strideFoot} from './humanoid-gait';
+import {FootPlants,gaitStance,gaitStride,gaitPlantReach,humanoidSoles,strideFoot} from './humanoid-gait';
 import {finishBuild} from './batching';
 
 /** Bone-local vertices retain rigid parts and filtered material coordinates; no mesh or joint per member. */
@@ -27,7 +27,7 @@ export function ambientPrototype(object:SceneObject,joints=object.ambient?.joint
  for(const batch of batches.values()){const geometry=mergeGeometries(batch.geometry,false);if(!geometry)throw Error('ambient assembly could not be combined');group.add(new THREE.Mesh(indexedGeometry(geometry),batch.material));batch.geometry.forEach(g=>g.dispose());}
  source.traverse(node=>{if(node instanceof THREE.Mesh)node.geometry.dispose();});return group;
 }
-type Batch={indices:number[];meshes:THREE.InstancedMesh[];radius:number;meters:number;stride:number;lift:number;unit:number;hips:number[];planted:boolean};
+type Batch={indices:number[];meshes:THREE.InstancedMesh[];radius:number;meters:number;stride:number;lift:number;unit:number;hips:number[];reaches:number[];planted:boolean};
 export class AmbientPopulation {
  readonly group=new THREE.Group();
  readonly count:number;
@@ -51,12 +51,13 @@ export class AmbientPopulation {
    yield;
    const o=this.objects[indices[0]!]!,spec=o.spec as ObjectDslV2,prototype=ambientPrototype(o),bounds=assemblyBounds(spec),radius=bounds.getSize(new THREE.Vector3()).length()*Math.max(...indices.map(i=>this.objects[i]!.scale))+8,meshes:THREE.InstancedMesh[]=[],soles=humanoidSoles(spec,o.ambient!.joints);
    const planted=o.ambient!.motion.kind==='walk',unit=(o.ambient!.joints.find(j=>j.bone==='root')?.position[1]??25)/25,hips=['left','right'].map(side=>o.ambient!.joints.find(j=>j.bone===`${side}_hip`)?.position[2]??0);
+   const reaches=['left','right'].map(side=>gaitPlantReach(-(o.ambient!.joints.find(j=>j.bone===`${side}_knee`)?.position[1]??-11.5),-(o.ambient!.joints.find(j=>j.bone===`${side}_ankle`)?.position[1]??-10.5)));
    for(const child of prototype.children){const source=child as THREE.Mesh,geometry=source.geometry as THREE.BufferGeometry;geometry.setAttribute('popCycle',new THREE.InstancedBufferAttribute(new Float32Array(indices.length*3),3).setUsage(THREE.DynamicDrawUsage));
-    if(planted){geometry.setAttribute('popPlant',new THREE.InstancedBufferAttribute(new Float32Array(indices.length*4),4).setUsage(THREE.DynamicDrawUsage));geometry.setAttribute('popFacing',new THREE.InstancedBufferAttribute(new Float32Array(indices.length*2),2).setUsage(THREE.DynamicDrawUsage));}
+    if(planted){geometry.setAttribute('popPlant',new THREE.InstancedBufferAttribute(new Float32Array(indices.length*4),4).setUsage(THREE.DynamicDrawUsage));geometry.setAttribute('popFacing',new THREE.InstancedBufferAttribute(new Float32Array(indices.length*2),2).setUsage(THREE.DynamicDrawUsage));geometry.setAttribute('popLift',new THREE.InstancedBufferAttribute(new Float32Array(indices.length*2),2).setUsage(THREE.DynamicDrawUsage));}
     const mesh=new THREE.InstancedMesh(geometry,ambientMaterial(source.material as THREE.Material,o.ambient!.joints,false,false,soles,planted),indices.length);mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     mesh.castShadow=true;mesh.receiveShadow=true;mesh.frustumCulled=false;mesh.customDepthMaterial=ambientMaterial(new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking}),o.ambient!.joints,true,false,soles,planted);this.group.add(mesh);meshes.push(mesh);
    }
-   this.batches.push({indices,meshes,radius,lift:objectGroundLift(o),meters:spec.measure?.meters??1,stride:gaitStride(0)*unit,unit,hips,planted});
+   this.batches.push({indices,meshes,radius,lift:objectGroundLift(o),meters:spec.measure?.meters??1,stride:gaitStride(0)*unit,unit,hips,reaches,planted});
   }
  }
  update(state:CarState,camera:THREE.Camera,light:THREE.DirectionalLight,dt:number,reduced=false){
@@ -70,17 +71,17 @@ export class AmbientPopulation {
     if(batch.planted && !Number.isFinite(this.walkingStarts[i]))this.walkingStarts[i]=p.distance;
     const phase=batch.planted ? gaitStance(0)/2+(p.distance-this.walkingStarts[i]!)/(batch.stride*object.scale) : p.distance/(batch.meters*6),hop=motion.kind==='roam' && motion.gait==='hop' ? Math.max(0,Math.sin(phase*Math.PI*2))*Math.min(4,batch.meters*5)*amount : 0;
     let feet:ReturnType<FootPlants['sample']>[]|undefined;
-    if(batch.planted){const plants=this.plants[i]!,pose={x:p.x,z:p.y,heading:p.heading};if(reduced)plants.reset();plants.begin(pose,object.scale*batch.unit);
-     feet=[0,1].map(side=>{const f=strideFoot(phase+side*.5,0);return plants.sample(side,pose,object.scale,f.x*batch.unit*amount,batch.hips[side]!,f.y===0 || amount<.001,Math.floor(phase+side*.5));});
+    if(batch.planted){const plants=this.plants[i]!,pose={x:p.x,z:p.y,heading:p.heading};if(reduced)plants.reset();plants.begin(pose,object.scale*batch.unit,dt);
+     feet=[0,1].map(side=>{const f=strideFoot(phase+side*.5,0);return plants.sample(side,pose,object.scale,f.x*batch.unit*amount,batch.hips[side]!,f.y===0 || amount<.001,Math.floor(phase+side*.5),batch.unit,batch.reaches[side]!);});
     }
     this.position.set(p.x-this.scene.canonical.width/2,walkingHeight(this.scene,p.x,p.y,this.supportRadii[i]!)+batch.lift+hop,p.y-this.scene.canonical.height/2);
     this.sphere.set(this.position,batch.radius);if(!this.view.intersectsSphere(this.sphere) && !this.shadow.intersectsSphere(this.sphere))continue;
     this.rotation.setFromAxisAngle(this.up,-p.heading);this.scale.setScalar(object.scale);this.matrix.compose(this.position,this.rotation,this.scale);
     for(const mesh of batch.meshes){mesh.setMatrixAt(count,this.matrix);(mesh.geometry.getAttribute('popCycle') as THREE.InstancedBufferAttribute).setXYZ(count,p.distance/(batch.meters*6*.6),phase,amount);
-     if(feet){(mesh.geometry.getAttribute('popPlant') as THREE.InstancedBufferAttribute).setXYZW(count,feet[0]!.x,feet[0]!.z-batch.hips[0]!,feet[1]!.x,feet[1]!.z-batch.hips[1]!);(mesh.geometry.getAttribute('popFacing') as THREE.InstancedBufferAttribute).setXY(count,feet[0]!.yaw,feet[1]!.yaw);}
+     if(feet){(mesh.geometry.getAttribute('popPlant') as THREE.InstancedBufferAttribute).setXYZW(count,feet[0]!.x,feet[0]!.z-batch.hips[0]!,feet[1]!.x,feet[1]!.z-batch.hips[1]!);(mesh.geometry.getAttribute('popFacing') as THREE.InstancedBufferAttribute).setXY(count,feet[0]!.yaw,feet[1]!.yaw);(mesh.geometry.getAttribute('popLift') as THREE.InstancedBufferAttribute).setXY(count,feet[0]!.lift,feet[1]!.lift);}
     }count++;
    }
-   for(const mesh of batch.meshes){mesh.count=count;mesh.visible=count>0;mesh.instanceMatrix.needsUpdate=true;for(const channel of batch.planted ? ['popCycle','popPlant','popFacing'] : ['popCycle'])(mesh.geometry.getAttribute(channel) as THREE.InstancedBufferAttribute).needsUpdate=true;}
+   for(const mesh of batch.meshes){mesh.count=count;mesh.visible=count>0;mesh.instanceMatrix.needsUpdate=true;for(const channel of batch.planted ? ['popCycle','popPlant','popFacing','popLift'] : ['popCycle'])(mesh.geometry.getAttribute(channel) as THREE.InstancedBufferAttribute).needsUpdate=true;}
   }
  }
 }

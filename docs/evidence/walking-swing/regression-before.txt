@@ -1,0 +1,92 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/character-animation.test.ts --maxWorkers=2
+
+
+ RUN  v3.2.7 /Users/horia/.codex/worktrees/walking-motion/muse.dream
+
+ ❯ tests/character-animation.test.ts (37 tests | 3 failed) 1140ms
+   ✓ Dream humanoid bindings > compiles and formats a complete rig without label-based lookup 6ms
+   ✓ Dream humanoid bindings > rejects missing rigs before rendering 1ms
+   ✓ Dream humanoid bindings > rejects duplicate rigs before rendering 1ms
+   ✓ Dream humanoid bindings > rejects wrong parent rigs before rendering 4ms
+   ✓ Dream humanoid bindings > rejects zero limb rigs before rendering 5ms
+   ✓ Dream humanoid bindings > rejects rotated rigs before rendering 6ms
+   ✓ Dream humanoid bindings > rejects custom motion rigs before rendering 1ms
+   ✓ Dream humanoid bindings > rejects unbound part rigs before rendering 5ms
+   ✓ Dream humanoid bindings > rejects wrong body rigs before rendering 1ms
+   ✓ articulated locomotion > holds grounded feet through acceleration, curved travel and a stop 43ms
+   ✓ articulated locomotion > keeps planted feet through a reversal rather than discarding their contacts 72ms
+   × articulated locomotion > does not teleport the returning foot during a mid-step reversal at 30 fps 21ms
+     → expected 214.49627447839885 to be less than 69
+   × articulated locomotion > does not teleport the returning foot during a mid-step reversal at 60 fps 18ms
+     → expected 429.0229005387748 to be less than 69
+   × articulated locomotion > does not teleport the returning foot during a mid-step reversal at 144 fps 21ms
+     → expected 1094.930089456209 to be less than 69
+   ✓ articulated locomotion > takes walking steps in proportion to the resolved human rather than a short shuffle 0ms
+   ✓ articulated locomotion > restarts over the support foot after reduced motion at an arbitrary old phase 21ms
+   ✓ articulated locomotion > restarts over the support foot after seated at an arbitrary old phase 20ms
+   ✓ articulated locomotion > uses observed travel instead of requested speed and preserves planted feet while paused 18ms
+   ✓ articulated locomotion > keeps the stance foot on its support plane and lifts the returning foot 3ms
+   ✓ articulated locomotion > plants the stance foot in world space at scale 0.2 119ms
+   ✓ articulated locomotion > plants the stance foot in world space at scale 0.306 117ms
+   ✓ articulated locomotion > plants the stance foot in world space at scale 1 110ms
+   ✓ articulated locomotion > plants the stance foot in world space at scale 2 111ms
+   ✓ articulated locomotion > solves reachable feet without scaling or reversing knees 0ms
+   ✓ articulated locomotion > has a distinct bent-elbow running pose and settles after stopping 33ms
+   ✓ articulated locomotion > works with planted feet, rigid arms and a reduced-motion rest, then returns to idle 19ms
+   ✓ articulated locomotion > raises a hand for a meal without moving the planted feet and respects reduced motion 35ms
+   ✓ articulated locomotion > keeps segment lengths and all original mesh dimensions through a stride 19ms
+   ✓ articulated locomotion > keeps both soles above the support plane throughout walk and run cycles 78ms
+   ✓ articulated locomotion > treads upright at rest and alternates a prone crawl while moving 36ms
+   ✓ articulated locomotion > passes a stroke wrap and water transitions without a pose snap 23ms
+   ✓ articulated locomotion > keeps the same cadence and pose at 30 rendered fps 36ms
+   ✓ articulated locomotion > keeps the same cadence and pose at 60 rendered fps 46ms
+   ✓ articulated locomotion > keeps the same cadence and pose at 144 rendered fps 38ms
+   ✓ articulated locomotion > freezes while paused and settles reduced motion to an unchanging supported pose 17ms
+   ✓ articulated locomotion > retains jump, landing and sport poses, then clears them when reset 18ms
+   ✓ fits a seated pelvis above the sitting surface and leaves both soles on the floor in reduced motion 19ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/character-animation.test.ts > articulated locomotion > does not teleport the returning foot during a mid-step reversal at 30 fps
+AssertionError: expected 214.49627447839885 to be less than 69
+ ❯ tests/character-animation.test.ts:85:23
+     83|    }
+     84|   }
+     85|   expect(maxStep*fps).toBeLessThan(69);
+       |                       ^
+     86|  });
+     87|  it('takes walking steps in proportion to the resolved human rather th…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/character-animation.test.ts > articulated locomotion > does not teleport the returning foot during a mid-step reversal at 60 fps
+AssertionError: expected 429.0229005387748 to be less than 69
+ ❯ tests/character-animation.test.ts:85:23
+     83|    }
+     84|   }
+     85|   expect(maxStep*fps).toBeLessThan(69);
+       |                       ^
+     86|  });
+     87|  it('takes walking steps in proportion to the resolved human rather th…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/character-animation.test.ts > articulated locomotion > does not teleport the returning foot during a mid-step reversal at 144 fps
+AssertionError: expected 1094.930089456209 to be less than 69
+ ❯ tests/character-animation.test.ts:85:23
+     83|    }
+     84|   }
+     85|   expect(maxStep*fps).toBeLessThan(69);
+       |                       ^
+     86|  });
+     87|  it('takes walking steps in proportion to the resolved human rather th…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 34 passed (37)
+   Start at  04:15:36
+   Duration  1.80s (transform 325ms, setup 10ms, collect 530ms, tests 1.14s, environment 0ms, prepare 30ms)

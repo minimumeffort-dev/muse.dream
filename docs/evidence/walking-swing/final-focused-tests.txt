@@ -1,0 +1,22 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/startup.test.ts tests/media-export.test.ts tests/character-animation.test.ts tests/foot-plants.test.ts tests/ambient-populations.test.ts tests/sports-visuals.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/.codex/worktrees/walking-motion/muse.dream
+
+ ✓ tests/startup.test.ts (13 tests) 2116ms
+   ✓ cooperative route construction retains exact surfaces, paint, rails and sleepers  1060ms
+   ✓ column indexing retains analytic UVs, negative coordinates and large index ranges  898ms
+ ✓ tests/ambient-populations.test.ts (14 tests) 3360ms
+   ✓ bounded moving ambient populations > walks through accepted sidewalk and zebra geometry without cutting across carriageways  2398ms
+ ✓ tests/character-animation.test.ts (37 tests) 1194ms
+ ✓ tests/media-export.test.ts (1 test) 18ms
+ ✓ tests/foot-plants.test.ts (4 tests) 3ms
+ ✓ tests/sports-visuals.test.ts (3 tests) 464ms
+   ✓ renders one shared eleven-person squad with bone/finish channels and releases its owned buffers  380ms
+
+ Test Files  6 passed (6)
+      Tests  72 passed (72)
+   Start at  04:27:23
+   Duration  4.73s (transform 506ms, setup 34ms, collect 1.18s, tests 7.16s, environment 1ms, prepare 173ms)

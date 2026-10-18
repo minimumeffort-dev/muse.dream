@@ -72,6 +72,19 @@ describe('articulated locomotion',()=>{
    expect(contacts).toBeGreaterThan(40);expect(maxDrift).toBeLessThan(.002);
   }
  });
+ it.each([30,60,144])('does not teleport the returning foot during a mid-step reversal at %i fps',fps=>{
+  const r=rig(.306),previous=new Map<string,Vector3>();let x=0,maxStep=0;
+  for(let f=0;f<fps*4;f++){
+   const heading=f/fps>=1.15 ? Math.PI : 0;x+=Math.cos(heading)*14/fps;r.group.position.x=x;r.group.rotation.y=-heading;
+   r.animation.update({...input,speed:14,time:f/fps,travel:{x,z:0,heading}},1/fps);r.group.updateMatrixWorld(true);
+   expect(r.bone('root').position.y).toBeGreaterThan(16);
+   for(const side of ['left','right']){
+    const foot=r.bone(`${side}_ankle`).getWorldPosition(new Vector3()),old=previous.get(side);
+    if(old)maxStep=Math.max(maxStep,Math.hypot(foot.x-old.x,foot.z-old.z));previous.set(side,foot);
+   }
+  }
+  expect(maxStep*fps).toBeLessThan(69);
+ });
  it('takes walking steps in proportion to the resolved human rather than a short shuffle',()=>{
   const strideMeters=gaitStride(0)*.306/10;
   expect(strideMeters).toBeGreaterThan(1.1);expect(strideMeters).toBeLessThan(1.4);

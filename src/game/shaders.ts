@@ -453,25 +453,26 @@ export function ambientMaterial(material:THREE.Material,rig:import('../scene/amb
     original(shader,renderer);Object.assign(shader.uniforms,{popRot:{value:rotations},popPos:{value:positions},popSwing:{value:swings},popRate:{value:rates},popBinding:{value:bindings},popLeft:{value:leg('left')},popRight:{value:leg('right')},popSole:{value:soles.map(s=>new THREE.Vector3(...s))},popEnabled:worldMotion});
     shader.vertexShader=shader.vertexShader.replace('#include <common>',`#include <common>
 attribute float popBone; attribute vec3 popCycle;
-${planted ? 'attribute vec4 popPlant; attribute vec2 popFacing;' : ''}
+${planted ? 'attribute vec4 popPlant; attribute vec2 popFacing; attribute vec2 popLift;' : ''}
 ${sports ? 'attribute vec2 popPlay;' : ''}
 uniform vec4 popRot[13]; uniform vec4 popPos[13]; uniform vec4 popSwing[13];
 uniform float popRate[13]; uniform int popBinding[13]; uniform vec4 popLeft; uniform vec4 popRight; uniform vec3 popSole[2]; uniform float popEnabled;
 vec4 popMul(vec4 a,vec4 b){return vec4(a.w*b.xyz+b.w*a.xyz+cross(a.xyz,b.xyz),a.w*b.w-dot(a.xyz,b.xyz));}
 vec4 popAxis(vec3 axis,float angle){return vec4(axis*sin(angle*.5),cos(angle*.5));}
 vec3 popRotate(vec4 q,vec3 p){return p+2.*cross(q.xyz,cross(q.xyz,p)+q.w*p);}
-vec3 popFoot(float phase,float run,float amount,vec4 dims,vec3 sole){
+vec3 popFoot(float phase,float run,float amount,vec4 dims,vec3 sole,float lift){
  float t=fract(phase),stance=mix(.62,.42,run),reach=mix(${reach[0]!.toFixed(1)},${reach[1]!.toFixed(1)},run),x,y,toe=0.;
  if(t<stance){x=reach*(1.-2.*t/stance);y=0.;}
  else{float u=(t-stance)/(1.-stance),e=u*u*(3.-2.*u);x=reach*(2.*e-1.);y=pow(max(0.,sin(3.14159265359*u)),1.5)*mix(4.5,8.,run);toe=-.25*sin(3.14159265359*u);}
  toe*=amount;float unit=dims.x/25.,ankleY=dims.x+dims.y-dims.z-dims.w;
  ${planted ? 'if(amount<.001)toe=0.;' : ''}
+ if(lift>0.)toe=-.08;
  float support=-min(sole.x*sin(toe),sole.y*sin(toe))-sole.z*cos(toe);
- return vec3(x*unit*amount,ankleY+unit*y*amount+max(0.,support-ankleY),toe);
+ return vec3(x*unit*amount,ankleY+unit*y*amount+lift+max(0.,support-ankleY),toe);
 }
 float popRoot(float phase,float run,float amount){
  float unit=popLeft.x/25.,rootY=popLeft.x+unit*amount*(-mix(1.7,5.5,run)+mix(.8,1.2,run)*(1.-cos(phase*12.56637061436)));
- vec3 a=popFoot(phase,run,amount,popLeft,popSole[0]),b=popFoot(phase+.5,run,amount,popRight,popSole[1]);
+ vec3 a=popFoot(phase,run,amount,popLeft,popSole[0],${planted ? 'popLift.x*popEnabled' : '0.'}),b=popFoot(phase+.5,run,amount,popRight,popSole[1],${planted ? 'popLift.y*popEnabled' : '0.'});
  float lenA=popLeft.z+popLeft.w-.001,lenB=popRight.z+popRight.w-.001;
  ${planted ? 'a.x=popPlant.x*popEnabled;b.x=popPlant.z*popEnabled;float za=popPlant.y*popEnabled,zb=popPlant.w*popEnabled;' : 'float za=0.,zb=0.;'}
  return min(rootY,min(a.y+sqrt(max(0.,lenA*lenA-a.x*a.x-za*za))-popLeft.y,b.y+sqrt(max(0.,lenB*lenB-b.x*b.x-zb*zb))-popRight.y));
@@ -483,7 +484,7 @@ vec4 popHuman(int binding,float phase,float amount,float rootY,out float lift){
  if(binding==2)return popMul(popAxis(vec3(0,1,0),-sin(phase*tau)*.1*amount),popAxis(vec3(0,0,1),-mix(.035,.13,run)*amount));
  if(b==6)return popMul(popAxis(vec3(1,0,0),-signSide*.07*amount),popAxis(vec3(0,0,1),-sin((phase+offset)*tau)*mix(.28,.7,run)*amount));
  if(b==7)return popAxis(vec3(0,0,1),(mix(.12,.8,run)+max(0.,sin((phase+offset)*tau))*mix(.18,.25,run))*amount);
- vec4 dims=left ? popLeft : popRight;vec3 target=popFoot(phase+offset,run,amount,dims,left ? popSole[0] : popSole[1]);
+ vec4 dims=left ? popLeft : popRight;vec3 target=popFoot(phase+offset,run,amount,dims,left ? popSole[0] : popSole[1],${planted ? '(left ? popLift.x : popLift.y)*popEnabled' : '0.'});
  ${planted ? 'target.x=(left ? popPlant.x : popPlant.z)*popEnabled;float lateral=(left ? popPlant.y : popPlant.w)*popEnabled;' : 'float lateral=0.;'}
  vec2 foot=target.xy-vec2(0,rootY+dims.y);
  ${planted ? 'float roll=atan(-lateral,-foot.y);foot.y=-length(vec2(foot.y,lateral));' : ''}

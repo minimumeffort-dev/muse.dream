@@ -1,7 +1,7 @@
 import {Euler,Quaternion,type Group,Object3D} from 'three';
 import {HUMANOID_BONES,type HumanoidBone} from '../scene/humanoid';
 import type {ObjectDslV2} from '../scene/object-dsl';
-import {FootPlants,gaitRun,gaitStance,gaitStride,humanoidSoles,soleSupport,strideFoot,type Sole,type TravelPose} from './humanoid-gait';
+import {FootPlants,gaitRun,gaitStance,gaitStride,gaitPlantReach,humanoidSoles,soleSupport,strideFoot,type Sole,type TravelPose} from './humanoid-gait';
 export {strideFoot} from './humanoid-gait';
 
 type Rotation=[number,number,number];
@@ -72,7 +72,7 @@ export class CharacterAnimator {
     const speed=active ? contact ? this.travel && step>0 && continuous ? distance/step : 0 : input.speed : 0;
     if(contact && (!this.travel || !continuous))this.phase=gaitStance(0)/2;
     if(!contact || !continuous)this.plants.reset();
-    if(contact)this.plants.begin(contact,this.group.scale.x*this.unit);
+    if(contact)this.plants.begin(contact,this.group.scale.x*this.unit,step);
     const ease=1-Math.exp(-step*12),travel=input.swimming ? clamp(speed/25) : Number(speed>.01),run=gaitRun(speed);
     const previousRunning=this.running,previousAir=this.airborne;
     this.moving=mix(this.moving,travel,ease);this.running=mix(this.running,run,ease);
@@ -93,11 +93,12 @@ export class CharacterAnimator {
     let rootY=this.bones.root.y+unit*(moving*(-mix(1.7,5.5,running)+bob)-this.landing);
     land.root=[0,0,0];
     const feet=([['left',0],['right',.5]] as const).map(([side,offset],i)=>{
-      const foot=strideFoot(phase+offset,running),toe=contact && moving<.001 ? 0 : foot.toe*moving;
+      const foot=strideFoot(phase+offset,running);
       const hip=this.bones[`${side}_hip`],upper=-this.bones[`${side}_knee`].y,lower=-this.bones[`${side}_ankle`].y;
       const ankleY=this.bones.root.y+hip.y-upper-lower;
-      const plant=contact ? this.plants.sample(i,contact,this.group.scale.x,foot.x*unit*moving,hip.node.position.z,foot.y===0 || moving<.001,Math.floor(phase+offset)) : undefined;
-      const x=plant?.x??foot.x*unit*moving,z=(plant?.z??hip.node.position.z)-hip.node.position.z,y=ankleY+unit*foot.y*moving+Math.max(0,soleSupport(this.soles[i]!,toe)-ankleY);
+      const plant=contact ? this.plants.sample(i,contact,this.group.scale.x,foot.x*unit*moving,hip.node.position.z,foot.y===0 || moving<.001,Math.floor(phase+offset),unit,gaitPlantReach(upper,lower)) : undefined;
+      const toe=plant?.lift ? -.08 : contact && moving<.001 ? 0 : foot.toe*moving;
+      const x=plant?.x??foot.x*unit*moving,z=(plant?.z??hip.node.position.z)-hip.node.position.z,y=ankleY+unit*foot.y*moving+(plant?.lift??0)+Math.max(0,soleSupport(this.soles[i]!,toe)-ankleY);
       // Lower the pelvis before IK; clamping an unreachable ankle makes the foot skate.
       if(moving>.001 || contact)rootY=Math.min(rootY,y+Math.sqrt(Math.max(0,(upper+lower-.001)**2-x*x-z*z))-hip.y);
       return {x,y,z,toe,yaw:plant?.yaw??0};
