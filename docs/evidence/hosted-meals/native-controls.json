@@ -1,0 +1,11 @@
+{
+  "sourceHash": "45fc3731b78cfc7bffba8a93e384b8160788ef0a95db11dd598ceed60fee7c07",
+  "compatibilityHash": "b1a3a8d992797f3b4d1286b6dd387d11938e4a263b613716a1f4f3b5bcb4f335",
+  "surface": "Native in-app browser, localhost:5223/?test-hosted&test-save, isolated review namespace",
+  "observation": "Implementing agent's native keyboard and public-DOM review, not an independent accessibility audit or performance benchmark",
+  "firstOffer": {"offeredAtS":314.2499999998785,"expiresAtS":344.2499999998785,"pendingBackupAtS":317.45833333320894,"hostCredits":3,"hostBread":2,"guestCredits":20,"guestBread":0},
+  "keyboard": ["Invitation arrives without taking focus", "Tab reaches Join meal", "Enter accepts and returns focus to game", "X declines restored pending offer and returns focus to game", "Y accepts restored offer at narrow width", "P freezes simulation and hides the card behind pause controls"],
+  "nativeBackups": ["native-pending.json", "native-out.json", "native-eating.json", "native-completed.json"],
+  "restore": ["Pending preview retains current completed history until Restore", "Restoring pending and declining retains host food and guest funds", "Restoring eating and reloading completes once with bread consumed=3 including the host's earlier self meal", "T follows returning dialogue to the authored shared-meal memory"],
+  "narrow": {"viewport":[390,620],"card":{"x":16,"y":390.5,"width":344,"height":133.5},"buttons":[[151,44],[151,44]],"minimap":"hidden", "viewportOverrideReset":true}
+}

@@ -63,7 +63,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `price: n?`, `capacity: n`, `on: ref?`, `grounds: symbols?` |
 | `work` | economy | ID / optional recipe block | `label: text`, `market: ref`, `input?: ref`, `take?: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `requires?: ref` |
 
-| `social` | economy | ID / no block | `good: ref`, `seats: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `cooldown_s?: n`, `max_fullness?: n` |
+| `social` | economy | ID / no block | `good: ref`, `seats: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `cooldown_s?: n`, `max_fullness?: n`, `markets?: symbols` |
 | `shift` | economy | ID / no block | `market: ref`, `rest: v2`, `on: ref`, `grounds?: symbols`, `lead_s?: n` |
 | `meal` | economy | ID / no block | `good: ref`, `markets: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `seats?: symbols` |
 | `milestone` | economy | ID / no block | `label: text`, `kind: work / delivery / repair`, `task: ref`, `count: n` |
@@ -668,7 +668,14 @@ be seated, grounded, dry, previously acquainted and within 80 units and clear
 sight. Busy/full/cooling-down or soon-due staff decline. One active invitation;
 consume two reserved portions once only after both finish eating. Interruptions
 refund both once and return the person home. Shared history, paths and ownership
-persist. [Full consent, ownership and save contract](social.md) ·
+persist. Optional `markets=[counter,...]` supplies NPC-hosted offers: 1–4 unique
+priced-food counters, with one reachable from the NPC work placement. The host
+uses its own money and bag; a pending offer holds an adjacent seat for 30
+simulation seconds. **Y** accepts and **X** declines. Purchases remain theirs on
+decline or expiry; an accepted interruption refunds that donor once. The same
+availability, history, consent, fullness and shift-return rules apply. Repeated
+offers also use `cooldown_s`. Omitted `markets` keeps player-funded sharing.
+[Full consent, ownership and save contract](social.md) ·
 [Complete checked example](../examples/shared-meal.dream).
 
 ### Business ownership

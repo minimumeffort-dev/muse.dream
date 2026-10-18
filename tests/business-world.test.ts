@@ -29,7 +29,7 @@ it('migrates the actual repaired-bench return without resetting a prior field, c
  const text=JSON.stringify(prior),copy=decodeSave(text,world);expect(copy.migrated).toBe(true);expect(copy.worldTime).toBe(prior.worldTime);expect(preBusinessState(copy.state)).toEqual(prior.state);
  const seller=copy.state.economy!.accounts.find(a=>a.id==='depot_owner')!,initial=createCarAtSpawn(scene).economy!.accounts.find(a=>a.id==='depot_owner')!;
  expect(seller).toEqual({...initial,decisionAtS:copy.state.timeS});expect(copy.state.economy!.markets.find(m=>m.id==='station_supplies')!.owner).toBe('depot_owner');
- const current=encodeSave(copy.state,copy.worldTime,world);expect(JSON.parse(current).version).toBe(16);expect(decodeSave(current,world).state).toEqual(copy.state);expect(decodeSave(current,world).migrated).toBe(false);
+ const current=encodeSave(copy.state,copy.worldTime,world);expect(JSON.parse(current).version).toBe(17);expect(decodeSave(current,world).state).toEqual(copy.state);expect(decodeSave(current,world).migrated).toBe(false);
 });
 
 it('retains the old format-14 slot and blocks corrupt or unrelated worlds before adding owner records',()=>{

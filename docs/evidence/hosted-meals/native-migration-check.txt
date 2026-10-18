@@ -1,0 +1,1 @@
+The exact public data-economy string after native format-16 restore matches every JavaScript value from the r71 fixture. No UI-transport numeric coercion is used.

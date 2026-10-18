@@ -1,7 +1,7 @@
 import {choiceCards,type Choice} from './choices';
 import {setCaption} from './caption';
 import {setIcon} from './icons';
-import {nearbySocial} from '../sim/social';
+import {nearbySocial,SOCIAL_OFFER_SECONDS} from '../sim/social';
 import {dayHour} from '../scene/daylight';
 import {marketIsOpen,marketOpening,marketIsStaffed} from '../sim/market-hours';
 import {jobInputs,type Market} from '../scene/commerce';
@@ -42,6 +42,10 @@ export function commerceControls(scene:Scene,submit:(action:CommerceAction)=>voi
  const hint=document.querySelector<HTMLElement>('#choice-hint')!;
  const buy=document.querySelector<HTMLButtonElement>('#market-buy')!,work=document.querySelector<HTMLButtonElement>('#market-work')!,eat=document.querySelector<HTMLButtonElement>('#market-eat')!,progress=document.querySelector<HTMLElement>('#market-progress')!;
  const shared=document.querySelector<HTMLButtonElement>('#shared-meal')!;
+ const invitation=document.querySelector<HTMLElement>('#social-invitation')!,invitationTitle=document.querySelector<HTMLElement>('#social-invitation-title')!,invitationTime=document.querySelector<HTMLElement>('#invitation-time')!;
+ const acceptInvitation=document.querySelector<HTMLButtonElement>('#accept-invitation')!,declineInvitation=document.querySelector<HTMLButtonElement>('#decline-invitation')!,declineShared=document.querySelector<HTMLButtonElement>('#decline-shared-meal')!;
+ setIcon(document.querySelector<HTMLElement>('#invitation-icon')!,'food');
+ setCaption(document.querySelector<HTMLElement>('#social-invitation-note')!,`The offer lasts ${SOCIAL_OFFER_SECONDS} seconds while playing. Pause with P to take your time.`);
  const business=document.querySelector<HTMLElement>('#business-panel')!,businessTitle=document.querySelector<HTMLElement>('#business-title')!,ledger=document.querySelector<HTMLElement>('#business-ledger')!,terms=document.querySelector<HTMLElement>('#business-terms')!;
  const acquire=document.querySelector<HTMLButtonElement>('#business-buy')!,deposit=document.querySelector<HTMLButtonElement>('#business-deposit')!,withdraw=document.querySelector<HTMLButtonElement>('#business-withdraw')!,capital=document.querySelector<HTMLElement>('#business-capital')!,amount=document.querySelector<HTMLOutputElement>('#business-amount')!;
  let acquireAction:CommerceAction|undefined,depositAction:CommerceAction|undefined,withdrawAction:CommerceAction|undefined;
@@ -54,8 +58,9 @@ export function commerceControls(scene:Scene,submit:(action:CommerceAction)=>voi
  const player=scene.economy?.accounts.find(a=>a.actor==='player'),definition=scene.economy;
  const stockLabel=document.querySelector<HTMLElement>('#market-stock')!;
  const sell=document.querySelector<HTMLButtonElement>('#market-sell')!,cancel=document.querySelector<HTMLButtonElement>('#market-cancel')!;cancel.addEventListener('click',()=>{if(!cancel.hidden && contextPlaying)submit({kind:'cancel'});});
- let sellAction:CommerceAction|undefined,shareAction:CommerceAction|undefined;
+ let sellAction:CommerceAction|undefined,shareAction:CommerceAction|undefined,declineAction:CommerceAction|undefined;
  const share=()=>{if(shareAction && !shared.disabled && contextPlaying)submit(shareAction);};shared.addEventListener('click',share);
+ const decline=()=>{if(declineAction && contextPlaying)submit(declineAction);};acceptInvitation.addEventListener('click',share);declineInvitation.addEventListener('click',decline);declineShared.addEventListener('click',decline);
  let buyAction:CommerceAction|undefined,workAction:CommerceAction|undefined,eatAction:CommerceAction|undefined;
  let lastViewControl='';
  let updatedAt=-Infinity,seenEconomy:CarState['economy'],wasPlaying=false,lastControl='';
@@ -78,20 +83,20 @@ export function commerceControls(scene:Scene,submit:(action:CommerceAction)=>voi
    if(code==='Enter' || code==='Space'){
     if(repeat)return true;
     if(target instanceof HTMLElement && target.closest('button:not(.choice-card)'))return false;
-    if(!repeat){if(view==='market')action('buy');else if(view==='work')action('work');else if(view==='bag')action('eat');else (acquireAction ? acquire : deposit).click();}return true;
+    if(!repeat){if(view==='market')action('buy');else if(view==='work')action('work');else if(view==='bag'){if(declineAction)share();else action('eat');}else (acquireAction ? acquire : deposit).click();}return true;
    }
    if(code==='Tab' || code==='ShiftLeft' || code==='ShiftRight' || code==='KeyP')return false;
-   if(!['KeyB','KeyH','KeyG','KeyV','KeyY'].includes(code) || view==='business')return true;
+   if(!['KeyB','KeyH','KeyG','KeyV','KeyY','KeyX'].includes(code) || view==='business')return true;
   }
-  if(!repeat && contextPlaying){if(code==='KeyY')share();if(code==='KeyB')action('buy');if(code==='KeyH')action('work');if(code==='KeyG')action('eat');if(code==='KeyV')sellOne();}
+  if(!repeat && contextPlaying){if(code==='KeyY')share();if(code==='KeyX')decline();if(code==='KeyB')action('buy');if(code==='KeyH')action('work');if(code==='KeyG')action('eat');if(code==='KeyV')sellOne();}
   return !!view;
  }
  function update(state:CarState,playing:boolean){
   currentState=state;currentPlaying=playing;
   if(state.economy===seenEconomy && playing===wasPlaying && state.control.kind===lastControl && state.timeS>=updatedAt && state.timeS-updatedAt<.1)return;
   seenEconomy=state.economy;wasPlaying=playing;lastControl=state.control.kind;updatedAt=state.timeS;
-  const hadMenuFocus=panel.contains(document.activeElement);
-  const e=state.economy,a=player && e?.accounts.find(a=>a.id===player.id);if(!a || !definition){close(false);opener.hidden=bag.hidden=toast.hidden=pausePocket.hidden=true;return;}
+  const hadMenuFocus=panel.contains(document.activeElement),hadInvitationFocus=invitation.contains(document.activeElement);
+  const e=state.economy,a=player && e?.accounts.find(a=>a.id===player.id);if(!a || !definition){close(false);invitation.hidden=opener.hidden=bag.hidden=toast.hidden=pausePocket.hidden=true;return;}
   const inventory=definition.goods.filter(g=>a.inventory[g.id]!>0).map(g=>`${g.label} ×${a.inventory[g.id]}`).join(' · ');
   const cargo=a.delivery && definition.deliveries.find(d=>d.id===a.delivery!.id);
   const held=a.repair && definition.repairs.find(r=>r.id===a.repair!.id),planting=held?.regrow_s!==undefined;
@@ -99,17 +104,17 @@ export function commerceControls(scene:Scene,submit:(action:CommerceAction)=>voi
   const growthMessage=nearbyGrowth ? `${nearbyGrowth.o.labelText??'Tree'} · growing ${Math.floor(nearbyGrowth.p.progressS/definition.repairs.find(r=>r.id===nearbyGrowth.p.serviceId)!.regrow_s!*100)}%. Give it room to grow.` : '';
   const balance=`${a.credits} 🪙 · Fullness ${Math.round(a.satiety)}%${inventory ? ' · '+inventory : ''}${cargo ? ` · Cargo ${cargo.quantity} ${definition.goods.find(g=>g.id===cargo.good)!.label}` : ''}${a.repair ? ` · ${definition.goods.find(g=>g.id===held!.input)!.label} ×${held!.take}` : ''}`;
   text(pocket,`${a.credits} 🪙 · Fullness ${Math.round(a.satiety)}%`);text(contents,[inventory,cargo ? `Cargo: ${cargo.quantity} ${definition.goods.find(g=>g.id===cargo.good)!.label}` : '',a.repair ? `${definition.goods.find(g=>g.id===held!.input)!.label} ×${held!.take} · work supplies` : ''].filter(Boolean).join(' · ') || 'Your bag is empty.');const owned=definition.markets.filter(m=>e!.markets.find(s=>s.id===m.id)?.owner===a.id).map(m=>`${m.label} · ${e!.markets.find(s=>s.id===m.id)!.credits} 🪙`);text(pausePocket,balance+(owned.length ? " · Own: "+owned.join("; ") : ""));pausePocket.hidden=false;
-  const target=deliveryTarget(state,scene),repair=repairTarget(state,scene),companion=nearbySocial(state,scene),together=e!.shared,sharing=together && together.phase!=='home',social=definition.socials.find(s=>s.id===(together?.id??companion?.account.social));
-  const companionName=objects.get(definition.accounts.find(a=>a.id===(together?.partner??companion?.account.id))?.actor??'')?.labelText??'your companion';
-  const sharedMessage=sharing ? together.phase==='out' ? `${companionName} is coming over. Two portions reserved; stay seated.` : `Eating together · ${Math.max(0,together.eatUntilS!-state.timeS).toFixed(1)}s left` : together ? `${companionName} is returning to their routine.` : companion && social ? `${definition.goods.find(g=>g.id===social.good)!.label} ×2 · ${companionName}` : '';
+  const target=deliveryTarget(state,scene),repair=repairTarget(state,scene),companion=nearbySocial(state,scene),together=e!.shared,pending=e!.invitation,sharing=together && together.phase!=='home',social=definition.socials.find(s=>s.id===(together?.id??definition.accounts.find(a=>a.id===pending?.partner)?.social??companion?.account.social));
+  const companionName=objects.get(definition.accounts.find(a=>a.id===(together?.partner??pending?.partner??companion?.account.id))?.actor??'')?.labelText??'your companion';
+  const sharedMessage=pending ? `${companionName} is offering ${definition.goods.find(g=>g.id===social?.good)?.label.toLowerCase()??'a meal'}. Their treat.` : sharing ? together.phase==='out' ? `${companionName} is coming over. Two portions reserved; stay seated.` : `Eating together · ${Math.max(0,together.eatUntilS!-state.timeS).toFixed(1)}s left` : together ? `${companionName} is returning to their routine.` : companion && social ? `${definition.goods.find(g=>g.id===social.good)!.label} ×2 · ${companionName}` : '';
   const m=nearbyMarket(state,scene),stock=m && e!.markets.find(s=>s.id===m.id)!,active=a.work && definition.jobs.find(j=>j.id===a.work!.id),latest=[...e!.events].reverse().find(event=>event.account===a.id && state.timeS-event.atS<4);
-  const taskActive=!!(active || target || repair || sharing),foot=state.control.kind==='foot';
+  const taskActive=!!(active || target || repair || sharing || pending),foot=state.control.kind==='foot';
   const id=foot ? m?.id??'' : '';if(contextId!==id || !playing || state.control.kind!==lastViewControl){close(false);contextId=id;}lastViewControl=state.control.kind;
   const hasWork=definition.jobs.some(j=>j.market===m?.id) || definition.deliveries.some(d=>d.from===m?.id) || definition.repairs.some(r=>r.market===m?.id);
-  available=activityViews({foot,market:!!m,work:hasWork,task:taskActive,business:!!m?.owner,sharing:!!sharing});if(view && !available.includes(view))close(false);
-  contextPlaying=playing;canOpen=playing && (!!m && foot || taskActive);defaultView=taskActive ? sharing ? 'bag' : 'work' : m?.lots.some(l=>l.price!==undefined) ? 'market' : hasWork ? 'work' : m?.owner ? 'business' : 'market';
+  available=activityViews({foot,market:!!m,work:hasWork,task:taskActive,business:!!m?.owner,sharing:!!sharing || !!pending});if(view && !available.includes(view))close(false);
+  contextPlaying=playing;canOpen=playing && (!!m && foot || taskActive);defaultView=taskActive ? sharing || pending ? 'bag' : 'work' : m?.lots.some(l=>l.price!==undefined) ? 'market' : hasWork ? 'work' : m?.owner ? 'business' : 'market';
   opener.hidden=!canOpen;bag.hidden=!playing;panel.hidden=!playing || !view;
-  const taskName=sharing ? 'Meal' : repair ? planting ? 'Planting' : 'Repair' : target ? 'Delivery' : active ? 'Working' : 'Market';
+  const taskName=pending ? 'Meal invitation' : sharing ? 'Meal' : repair ? planting ? 'Planting' : 'Repair' : target ? 'Delivery' : active ? 'Working' : 'Market';
   const distance=target ? ` · ${Math.ceil(Math.hypot(target.x-state.x,target.y-state.y)/10)} m` : repair && repair.task.phase!=='work' ? ` · ${Math.ceil(Math.hypot(state.x-repair.x,state.y-repair.y)/10)} m` : active ? ` · ${Math.max(0,Math.ceil(a.work!.doneAtS-state.timeS))}s` : '';
   text(activityLabel,taskName+distance);setIcon(activityIcon,taskActive ? 'work' : 'market');opener.title=taskActive ? taskName : m?.label??'';opener.setAttribute('aria-label',taskActive ? `Open ${taskName.toLowerCase()} details` : `Open ${m?.label??'nearby market'}`);
   text(bagLabel,`${a.credits} 🪙`);bag.style.setProperty('--fullness',String(a.satiety/100));bag.dataset.hungry=String(a.satiety<25);bag.title=`Bag · Fullness ${Math.round(a.satiety)}% (I)`;bag.setAttribute('aria-label',`Open bag · ${a.credits} coins · fullness ${Math.round(a.satiety)} percent`);
@@ -137,13 +142,21 @@ export function commerceControls(scene:Scene,submit:(action:CommerceAction)=>voi
   acquireAction=m && price!==undefined && !ownedHere ? {kind:'acquire',market:m.id} : undefined;
   depositAction=m && ownedHere ? {kind:'deposit',market:m.id,amount:capitalAmount} : undefined;withdrawAction=m && ownedHere ? {kind:'withdraw',market:m.id,amount:capitalAmount} : undefined;
   capital.hidden=!ownedHere;amount.setAttribute('aria-valuenow',String(capitalAmount));text(amount,`${capitalAmount} 🪙`);button(acquire,acquireAction,`Buy business · ${price??0} 🪙`);button(deposit,depositAction,'Deposit');button(withdraw,withdrawAction,'Withdraw');
-  shareAction=sharing ? {kind:'cancel'} : companion ? {kind:'share',partner:companion.account.id} : undefined;
-  button(shared,shareAction,sharing ? 'End meal' : `Share with ${companionName}`);
+  shareAction=sharing ? {kind:'cancel'} : pending ? {kind:'accept_share',partner:pending.partner} : companion ? {kind:'share',partner:companion.account.id} : undefined;
+  declineAction=pending ? {kind:'decline_share',partner:pending.partner} : undefined;
+  button(shared,shareAction,sharing ? 'End meal' : pending ? `Join ${companionName}` : `Share with ${companionName}`);
+  button(declineShared,declineAction,'No thanks');
+  invitation.hidden=!playing || !!view || !pending;
+  if(invitation.hidden && hadInvitationFocus && playing && !view)document.querySelector<HTMLElement>('#game')!.focus({preventScroll:true});
+  text(invitationTitle,pending ? `${companionName} offers ${definition.goods.find(g=>g.id===social?.good)?.label.toLowerCase()??'a meal'}` : '');
+  text(invitationTime,pending ? `${Math.max(0,Math.ceil(pending.expiresAtS-state.timeS))}s` : '');
+  acceptInvitation.disabled=shared.disabled;declineInvitation.disabled=!pending;
+  acceptInvitation.setAttribute('aria-label',`Join ${companionName} for a meal. Their treat. Y`);declineInvitation.setAttribute('aria-label',`Decline ${companionName}'s meal invitation. X`);
   button(buy,buyAction,`Buy ${definition.goods.find(g=>g.id===offer?.good)?.label??''} · ${offer?.price??0} 🪙`);
   button(sell,sellAction,`Sell ${definition.goods.find(g=>g.id===offer?.good)?.label??''} · ${offer?.price??0} 🪙`);
   button(work,workAction,repair ? planting ? 'Cancel planting' : 'Cancel repair' : target ? `Deliver · +${target.delivery.pay} 🪙` : active ? 'Cancel work' : `${task?.label??trip?.label??repairJob?.label??'Work'} · +${task?.pay??trip?.pay??repairJob?.pay??0} 🪙`);
   button(eat,eatAction,`Eat ${meal?.label??'food'}`);
-  if(!foot || sharing){eat.hidden=meals.hidden=true;}if(!foot)shared.hidden=true;if(sharing)cancel.hidden=true;
+  if(!foot || sharing || pending){eat.hidden=meals.hidden=true;}if(!foot)shared.hidden=true;if(sharing)cancel.hidden=true;
   if(shareAction?.kind==='share' && shared.disabled){const reason=commerceReason(state,scene,a.id,shareAction);shared.title=reason==='stock' ? 'Bring two portions in your bag' : reason==='sated' ? 'One of you is too full to eat' : shared.title;}
   const employees=definition.accounts.filter(s=>s.actor!=='player').map(s=>e!.accounts.find(a=>a.id===s.id)!).filter(a=>a.work && definition.jobs.find(j=>j.id===a.work!.id)?.market===m?.id);
   const recipeJob=active??task,recipe=recipeJob && jobInputs(recipeJob).map(i=>`${definition.goods.find(g=>g.id===i.good)!.label} ×${i.take}`).join(' + ')+` → ${definition.goods.find(g=>g.id===recipeJob.output)!.label} ×${recipeJob.make}`;
@@ -160,16 +173,16 @@ export function commerceControls(scene:Scene,submit:(action:CommerceAction)=>voi
   const service=target?.market??m,closed=!!service && !marketIsOpen(scene,service,state.timeS);
   const shift=service && definition.accounts.find(a=>a.actor===service.actor && a.shift),journey=shift && e!.accounts.find(a=>a.id===shift.id)!.shift;
   const staffMessage=journey ? journey.phase==='in' ? 'Staff are walking back to the counter.' : journey.phase==='out' ? 'Staff are leaving the counter.' : 'Staff are off duty.' : '';
-  if(sharing)text(contents,sharedMessage);
+  if(sharing || pending)text(contents,sharedMessage);
   const detail=[sharedMessage,service && marketHoursText(scene,service,state.timeS,marketIsStaffed(scene,service,e)),staffMessage,closed && !active ? undefined : recipe,diningMessage,!active && !target && !repair ? practiceMessage : undefined,courierMessage && !active && !target && !repair ? courierMessage : activity || (worker ? worker.a.repair!.phase==='home' ? 'Worker is returning to the market.' : worker.a.repair!.phase==='work' ? (definition.repairs.find(r=>r.id===worker.a.repair!.id)!.regrow_s!==undefined ? 'Worker is planting ' : 'Worker is repairing ')+(scene.objects.find(o=>o.id===worker.a.repair!.objectId)?.labelText??'the object')+'.' : 'Worker is walking to the work site.' : growthMessage)].filter(value=>value && value!==why.closed).join(' · ');
   text(progress,taskActive ? [activity,closed && service && marketHoursText(scene,service,state.timeS,marketIsStaffed(scene,service,e))].filter(Boolean).join(' · ') : detail);
-  let message='';if(latest){const good=definition.goods.find(g=>g.id===latest.ref),job=definition.jobs.find(j=>j.id===latest.ref),trip=definition.deliveries.find(d=>d.id===latest.ref),service=definition.repairs.find(r=>r.id===latest.ref),plant=service?.regrow_s!==undefined,supply=service && definition.goods.find(g=>g.id===service.input)!.label;message=latest.kind==='acquired' ? `You now own ${definition.markets.find(m=>m.id===latest.ref)!.label}. Paid ${latest.amount} 🪙 to the seller.` : latest.kind==='capital_in' ? `Deposited ${latest.amount} 🪙 in the business.` : latest.kind==='capital_out' ? `Withdrew ${latest.amount} 🪙 from the business.` : latest.kind==='sharing' ? 'Invitation accepted. Your companion is coming over.' : latest.kind==='shared_meal' ? 'You shared a meal. They will remember it.' : latest.kind==='share_cancelled' ? 'Meal ended early. Both portions returned to your bag.' : latest.kind==='repair_started' ? `${supply??'Supplies'} collected. Walk to the work site.` : latest.kind==='repaired' ? `${plant ? 'Tree planted' : 'Repair finished'} · +${service?.pay??0} 🪙` : latest.kind==='repair_cancelled' ? `${plant ? 'Planting' : 'Repair'} cancelled. Supplies and reserved pay returned.` : latest.kind==='collected' ? trip?.price ? `Cargo collected. ${definition.markets.find(m=>m.id===trip.to)!.label} reserved ${trip.quantity*trip.price} 🪙 for the supplier and ${trip.pay} 🪙 for you.` : 'Cargo collected. Follow the marked destination.' : latest.kind==='delivered' ? `Delivery finished · +${trip?.pay??0} 🪙` : latest.kind==='delivery_cancelled' ? 'Delivery cancelled. Cargo returned; no delivery pay.' : latest.kind==='buy' ? `${good?.label??'Food'} added to your bag` : latest.kind==='sell' ? `Sold ${good?.label??'item'}` : latest.kind==='eat' ? `Ate ${good?.label??'food'}` : latest.kind==='start' ? `${job?.label??'Work'} started` : latest.kind==='paid' ? `Work finished · +${job?.pay??0} 🪙` : latest.kind==='cancel' ? 'Work cancelled; supplies and reserved wages returned' : why[latest.reason!]??'Action unavailable';}
-  const primary=view==='market' ? buy : view==='work' ? work : view==='bag' ? eat : acquireAction ? acquire : deposit;
-  const actions=[buy,sell,work,eat,shared,acquire,deposit,withdraw],focused=document.activeElement,enter=focused instanceof HTMLButtonElement && !focused.classList.contains('choice-card') ? actions.find(b=>b===focused) : primary;
+  let message='';if(latest){const good=definition.goods.find(g=>g.id===latest.ref),job=definition.jobs.find(j=>j.id===latest.ref),trip=definition.deliveries.find(d=>d.id===latest.ref),service=definition.repairs.find(r=>r.id===latest.ref),plant=service?.regrow_s!==undefined,supply=service && definition.goods.find(g=>g.id===service.input)!.label;message=latest.kind==='acquired' ? `You now own ${definition.markets.find(m=>m.id===latest.ref)!.label}. Paid ${latest.amount} 🪙 to the seller.` : latest.kind==='capital_in' ? `Deposited ${latest.amount} 🪙 in the business.` : latest.kind==='capital_out' ? `Withdrew ${latest.amount} 🪙 from the business.` : latest.kind==='sharing' ? 'Invitation accepted. Your companion is coming over.' : latest.kind==='shared_meal' ? 'You shared a meal. They will remember it.' : latest.kind==='share_cancelled' ? 'Meal ended early. Unused food returned to its owner.' : latest.kind==='invited' ? '' : latest.kind==='invite_declined' ? 'Invitation declined.' : latest.kind==='repair_started' ? `${supply??'Supplies'} collected. Walk to the work site.` : latest.kind==='repaired' ? `${plant ? 'Tree planted' : 'Repair finished'} · +${service?.pay??0} 🪙` : latest.kind==='repair_cancelled' ? `${plant ? 'Planting' : 'Repair'} cancelled. Supplies and reserved pay returned.` : latest.kind==='collected' ? trip?.price ? `Cargo collected. ${definition.markets.find(m=>m.id===trip.to)!.label} reserved ${trip.quantity*trip.price} 🪙 for the supplier and ${trip.pay} 🪙 for you.` : 'Cargo collected. Follow the marked destination.' : latest.kind==='delivered' ? `Delivery finished · +${trip?.pay??0} 🪙` : latest.kind==='delivery_cancelled' ? 'Delivery cancelled. Cargo returned; no delivery pay.' : latest.kind==='buy' ? `${good?.label??'Food'} added to your bag` : latest.kind==='sell' ? `Sold ${good?.label??'item'}` : latest.kind==='eat' ? `Ate ${good?.label??'food'}` : latest.kind==='start' ? `${job?.label??'Work'} started` : latest.kind==='paid' ? `Work finished · +${job?.pay??0} 🪙` : latest.kind==='cancel' ? 'Work cancelled; supplies and reserved wages returned' : why[latest.reason!]??'Action unavailable';}
+  const primary=view==='market' ? buy : view==='work' ? work : view==='bag' ? pending ? shared : eat : acquireAction ? acquire : deposit;
+  const actions=[buy,sell,work,eat,shared,declineShared,acquire,deposit,withdraw],focused=document.activeElement,enter=focused instanceof HTMLButtonElement && !focused.classList.contains('choice-card') ? actions.find(b=>b===focused) : primary;
   for(const b of actions){const key=b.querySelector<HTMLElement>('.action-key');if(key)key.hidden=b!==enter;if(b===enter)b.setAttribute('aria-keyshortcuts','Enter');else b.removeAttribute('aria-keyshortcuts');}
   text(document.querySelector<HTMLElement>('#activity-keys kbd')!,view==='business' ? '← →' : '↑ ↓');text(document.querySelector<HTMLElement>('#activity-keys span')!,view==='business' ? 'Amount' : 'Select');
   text(hint,primary.disabled && !primary.hidden ? primary.title : '');
-  if(!panel.hidden && (focusView || hadMenuFocus && (!(document.activeElement instanceof HTMLElement) || !panel.contains(document.activeElement) || !document.activeElement.getClientRects().length))){focusView=false;if(view==='business' && ownedHere)amount.focus({preventScroll:true});else if(view==='business' || view==='work' && jobs.hidden)(!primary.hidden && !primary.disabled ? primary : closeButton).focus({preventScroll:true});else if(!(view==='market' ? goods : view==='work' ? jobs : meals).focus())closeButton.focus({preventScroll:true});}
+  if(!panel.hidden && (focusView || hadMenuFocus && (!(document.activeElement instanceof HTMLElement) || !panel.contains(document.activeElement) || !document.activeElement.getClientRects().length))){focusView=false;if(view==='business' && ownedHere)amount.focus({preventScroll:true});else if(view==='business' || view==='work' && jobs.hidden)(!primary.hidden && !primary.disabled ? primary : closeButton).focus({preventScroll:true});else if(pending && view==='bag')shared.focus({preventScroll:true});else if(!(view==='market' ? goods : view==='work' ? jobs : meals).focus())closeButton.focus({preventScroll:true});}
   text(feedback,message);text(toast,message);toast.hidden=!playing || !!view || !message;
  }
  return {close,open:show,key,choose(name:'goods'|'jobs'|'meals',id:string){({goods,jobs,meals})[name].select(id);},resetChoices(){for(const cards of [goods,jobs,meals])cards.reset();},update};

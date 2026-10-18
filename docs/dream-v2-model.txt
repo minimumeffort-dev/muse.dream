@@ -627,7 +627,7 @@ before adding only its zero-funded seller and initial depot owner; keep old slot
 See examples/business-ownership.dream. Hiring, price policy, loans, property deeds
 and starting a new business remain separate.
 
-Shared social meals: social id(good=food,seats=[bench],on=ground,grounds=[extra],eat_s=8,cooldown_s=600,max_fullness=80);
+Shared social meals: social id(good=food,seats=[bench],on=ground,grounds=[extra],eat_s=8,cooldown_s=600,max_fullness=80,markets=[counter]);
 account(...,social=id). At most 8 plans; 1..4 unique furniture placement IDs,
 each with >=2 slots. Positive food, eat_s 1..12, cooldown_s 30..86400 (default 600),
 max_fullness 0..100 (default 80). Only stationary complete humanoid decor NPC
@@ -645,8 +645,24 @@ Pause, streaming and saves retain the activity and history; Start over resets.
 Optional on.shared_meals is an integer 1..1000000000 on event=interact only;
 it gates dialogue on completed player meals with that particular social NPC.
 No authored affection counters, dating, generated callbacks, free food or offline
-progression. Format 14 / simulation 21 keeps registered r63 saves exactly.
+progression. Registered save upgrades retain prior resources and history.
 Complete example: examples/shared-meal.dream. Guide: dream/social.md.
+
+NPC HOSTING
+Optional social.markets=[counter,...] uses 1..4 unique priced-food counters; at
+least one must be within reach of the NPC's authored work placement. No new
+shopping route is implied. A known host can buy two real portions with its own
+credits while an existing counter is open/staffed; capacity >=2, whole-purchase
+funds/stock/headroom and ordinary sight/range apply. No money or food is created.
+At an eligible paired seat, an off-duty host can offer a 30-second invitation to
+the seated player. Y accepts, X declines. One pending offer globally; it reserves
+a seat while food remains in the NPC bag. Acceptance escrows both portions from
+that host. Interruption refunds that donor once. Decline/expiry keeps purchases
+and releases the seat. cooldown_s also bounds repeated offers, remembered per
+account. Consent, shift-return margin, fullness, first meeting and shared history
+use the existing social rules. Pause freezes offer time; R ends it but retains
+its cooldown/history; save/streaming preserve it; Start over resets it. No NPC
+invites another NPC. Omitting markets retains player-funded sharing.
 
 Optional market hours=[6,22] means daily [open,close); hours=[22,6] spans midnight.
 Use two finite different endpoints: 0 <= open < 24, 0 <= close <= 24. Omit hours

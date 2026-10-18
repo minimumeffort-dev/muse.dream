@@ -235,12 +235,12 @@ export function seatingReviewInput(state:CarState,world:World,frame:number,viewA
  return {steer:move ? (dx*Math.cos(a)-dy*Math.sin(a))/d : 0,throttle:move ? (-dx*Math.sin(a)-dy*Math.cos(a))/d : 0};
 }
 
-/** Two paid portions, a first meeting and ordinary walking prepare a shared-meal review. */
-export function* sharedMealReviewSteps(state:CarState,world:World):Generator<void,CarState>{
+/** Real purchases, wages, a first meeting and ordinary walking prepare either meal owner. */
+export function* sharedMealReviewSteps(state:CarState,world:World,hosted=false):Generator<void,CarState>{
  let next=npcReviewStart(state,world,'vendor');
- for(let i=0;i<2;i++)next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:'buy',market:'market_stall',good:'bread'}},1/120,world);
+ for(let i=0;i<(hosted ? 0 : 2);i++)next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:'buy',market:'market_stall',good:'bread'}},1/120,world);
  next=stepInteractive(next,{steer:0,throttle:0,talkPressed:true},1/120,world);
- if(next.economy!.accounts.find(a=>a.id==='pocket')!.inventory.bread!==2 || !next.npcs.find(n=>n.id==='vendor')!.known)throw Error('Shared review needs paid food and a real meeting');
+ if(next.economy!.accounts.find(a=>a.id==='pocket')!.inventory.bread!==(hosted ? 0 : 2) || !next.npcs.find(n=>n.id==='vendor')!.known)throw Error('Shared review needs paid food and a real meeting');
  for(let i=0;i<120*360 && (next.timeS<303 || next.economy!.accounts.find(a=>a.id==='baker')!.shift?.phase!=='rest');i++){
   next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30===0)yield;
  }
@@ -252,5 +252,10 @@ export function* sharedMealReviewSteps(state:CarState,world:World):Generator<voi
    next=stepInteractive(next,{steer:(dx*Math.cos(a)-dy*Math.sin(a))/d,throttle:(-dx*Math.sin(a)-dy*Math.cos(a))/d},1/120,world);if(i%30===0)yield;
   }
  }
- next=toggleRide(next,world);if(!next.seated)throw Error('Shared review could not sit on the bench');return next;
+ next=toggleRide(next,world);if(!next.seated)throw Error('Shared review could not sit on the bench');
+ if(hosted){
+  for(let i=0;i<120*3 && !next.economy!.invitation;i++){next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30===0)yield;}
+  if(next.economy!.invitation?.partner!=='baker' || next.economy!.accounts.find(a=>a.id==='pocket')!.credits!==20)throw Error('Host review needs a real paid offer and unchanged player funds');
+ }
+ return next;
 }

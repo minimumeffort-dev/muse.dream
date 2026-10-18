@@ -61,6 +61,7 @@
       <div data-commerce-view="bag"><div id="meal-good" class="choice-grid" role="group" aria-label="Food in your bag" hidden></div>
       <button id="market-eat" type="button" hidden></button>
       <button id="shared-meal" type="button" hidden></button>
+      <button id="decline-shared-meal" type="button" hidden>No thanks</button>
       <p id="bag-contents"></p></div>
       <button id="market-cancel" type="button" hidden>Cancel delivery</button>
       <p id="choice-hint" role="status" aria-live="polite"></p><div id="activity-keys" aria-hidden="true"><kbd>↑ ↓</kbd><span>Select</span><kbd>Tab</kbd><span>Actions</span><kbd>esc</kbd><span>Back</span></div>
@@ -86,6 +87,11 @@
       <button id="talk" class="action-chip" type="button" hidden><span class="icon-slot" data-icon-name="talk"></span><span class="ui-label">Talk</span><kbd>T</kbd></button>
       <button id="activity-open" class="action-chip" type="button" hidden aria-controls="commerce-panel" aria-expanded="false"><span id="activity-icon" class="icon-slot"></span><span id="activity-label" class="ui-label"></span><kbd>M</kbd></button>
     </div>
+    <aside id="social-invitation" aria-labelledby="social-invitation-title" aria-describedby="social-invitation-note" hidden>
+      <div class="invitation-heading"><span id="invitation-icon" class="icon-slot" aria-hidden="true"></span><div><strong id="social-invitation-title" role="status" aria-live="polite"></strong><span class="caption-text">Their treat</span></div><output id="invitation-time" aria-hidden="true"></output></div>
+      <div class="invitation-actions"><button id="accept-invitation" type="button" aria-keyshortcuts="Y"><span class="ui-label">Join meal</span><kbd>Y</kbd></button><button id="decline-invitation" type="button" aria-keyshortcuts="X"><span class="ui-label">No thanks</span><kbd>X</kbd></button></div>
+      <p id="social-invitation-note" class="sr-only"></p>
+    </aside>
     <aside id="npc-speech" role="status" aria-live="polite" aria-atomic="true" hidden><strong id="npc-speaker"></strong><p id="npc-reply"></p></aside>
 
     <output id="action-feedback" role="status" aria-live="polite" hidden></output>

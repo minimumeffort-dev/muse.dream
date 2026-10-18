@@ -43,8 +43,9 @@ const meal=z.object({id:ref,good:ref,markets:z.array(ref).min(1).max(COMMERCE_LI
  if(new Set(m.markets).size!==m.markets.length)ctx.addIssue({code:"custom",message:"meal markets must be unique",path:["markets"]});
  if(m.grounds && new Set([m.on,...m.grounds]).size!==m.grounds.length+1)ctx.addIssue({code:"custom",message:"meal grounds must be unique and exclude on",path:["grounds"]});
 });
-const social=z.object({id:ref,good:ref,seats:z.array(ref).min(1).max(4),on:ref,grounds:z.array(ref).min(1).max(COMMERCE_LIMITS.repairGrounds-1).optional(),eat_s:z.number().finite().min(1).max(12),cooldown_s:z.number().finite().min(30).max(86400).default(600),max_fullness:z.number().finite().min(0).max(100).default(80)}).strict().superRefine((m,ctx)=>{
+const social=z.object({id:ref,good:ref,seats:z.array(ref).min(1).max(4),on:ref,grounds:z.array(ref).min(1).max(COMMERCE_LIMITS.repairGrounds-1).optional(),eat_s:z.number().finite().min(1).max(12),cooldown_s:z.number().finite().min(30).max(86400).default(600),max_fullness:z.number().finite().min(0).max(100).default(80),markets:z.array(ref).min(1).max(COMMERCE_LIMITS.mealMarkets).optional()}).strict().superRefine((m,ctx)=>{
  if(new Set(m.seats).size!==m.seats.length)ctx.addIssue({code:'custom',message:'social seats must be unique furniture placement IDs',path:['seats']});
+ if(m.markets && new Set(m.markets).size!==m.markets.length)ctx.addIssue({code:'custom',message:'social markets must be unique',path:['markets']});
  if(m.grounds && new Set([m.on,...m.grounds]).size!==m.grounds.length+1)ctx.addIssue({code:'custom',message:'social grounds must be unique and exclude on',path:['grounds']});
 });
 const milestone=z.object({id:ref,label,kind:z.enum(['work','delivery','repair']),task:ref,count:z.number().int().min(1).max(1e9)}).strict();
@@ -87,9 +88,12 @@ export const economySchema=z.object({goods:z.array(good).min(1).max(COMMERCE_LIM
   if(!e.goods.some(g=>g.id===m.good && g.food>0))issue("meal good must be food",["meals",i,"good"]);
   for(const id of m.markets)if(!e.markets.some(v=>v.id===id && v.lots.some(l=>l.good===m.good && l.price)))issue("meal markets need a priced lot for this food",["meals",i,"markets"]);
  });
- e.socials.forEach((m,i)=>{if(!e.goods.some(g=>g.id===m.good && g.food>0))issue('social good must be food',['socials',i,'good']);});
+ e.socials.forEach((m,i)=>{if(!e.goods.some(g=>g.id===m.good && g.food>0))issue('social good must be food',['socials',i,'good']);
+  for(const id of m.markets??[])if(!e.markets.some(v=>v.id===id && v.lots.some(l=>l.good===m.good && l.price)))issue('social markets need a priced lot for this food',['socials',i,'markets']);
+ });
  e.accounts.forEach((a,i)=>{
   if(a.social && (a.actor==='player' || !e.socials.some(m=>m.id===a.social)))issue('social needs an existing plan and an NPC account',['accounts',i,'social']);
+  if(a.social && e.socials.find(s=>s.id===a.social)?.markets && a.capacity<2)issue('social hosts need room for two portions',['accounts',i,'capacity']);
   if(a.shift && (!e.shifts.some(s=>s.id===a.shift) || a.actor==='player' || a.meal || accountRepairs(a).length || a.deliveries))issue('shift needs an existing plan and an NPC staff account without meal, repair or delivery policies',['accounts',i,'shift']);
   if(a.shift){const plan=e.shifts.find(s=>s.id===a.shift);if(plan && (accountJobs(a).some(id=>e.jobs.find(j=>j.id===id)?.market!==plan.market) || e.markets.some(m=>m.actor===a.actor && m.id!==plan.market)))issue('shift work and operated counter must use its market',['accounts',i,'shift']);}
   if(a.meal && (!e.meals.some(m=>m.id===a.meal) || a.shop || accountJobs(a).length || accountRepairs(a).length || a.deliveries))issue("meal needs an existing plan and excludes other automatic economy policies",["accounts",i,"meal"]);
@@ -159,6 +163,8 @@ export function economyProblems(scene:Scene):string[]{
  }
  for(const a of e.accounts)if(a.social){const o=scene.objects.find(o=>o.id===a.actor),spec=o?.spec;
   if(!stationary(a.actor) || !o?.behavior || !spec || !('dslVersion' in spec) || spec.dslVersion!==2 || spec.measure?.kind!=='person' || spec.body.interaction!=='decor' || spec.body.colliderRadius*(o.scale??1)>8 || (spec.body.colliderHeight??18)*(o.scale??1)>32 || !HUMANOID_BONES.every(b=>spec.joints?.some(j=>j.bone===b)))problems.push(`${a.id}: social meals need a stationary complete humanoid NPC program and decor body within 8 radius and 32 height`);
+  const plan=e.socials.find(s=>s.id===a.social);
+  if(plan?.markets && o && !plan.markets.some(id=>{const m=e.markets.find(m=>m.id===id)!,vendor=scene.objects.find(v=>v.id===m.actor);return vendor && Math.hypot(o.x-vendor.x,o.y-vendor.y)<=m.radius;}))problems.push(`${a.id}: social hosts need a supply counter within reach of their work placement; hosting does not add a shopping journey`);
  }
  for(const b of scene.behaviors)for(const s of b.states)for(const t of s.transitions)if(t.shared_meals!==undefined && scene.objects.some(o=>o.behavior===b.id && !e.accounts.some(a=>a.actor===o.id && a.social)))problems.push(`${b.id}/${t.id}: shared_meals requires social capability on every using NPC account`);
  for(const m of e.socials)for(const id of m.seats)if(worldSeats(scene).filter(s=>s.objectId===id).length<2)problems.push(`${m.id}: social seats require furniture with at least two slots`);

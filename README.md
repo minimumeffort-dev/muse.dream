@@ -502,20 +502,21 @@ This is a pre-hackathon prototype. Pre-start code eligibility still needs checki
 
 ## Stay for a meal
 
-Buy two portions, meet someone and take a seat. Y invites them over. They can
-say no when busy or full, or when their shift is about to start. Stay through
-the meal and they remember spending that time with you. Leave early and the
-food comes back to your bag while they walk home.
+Meet someone and take a seat. You can bring two portions and invite them with
+Y, or accept when they offer to host. Their food comes from their own money and
+finite counter stock. Y accepts, X declines, and pause gives you time to decide.
+Stay through the meal and they remember spending that time with you.
 
-![Sharing bread after the bakery closes](docs/media/shared.gif)
+![The baker offers to share their bread](docs/media/hosted.gif)
 
-[Watch in HD](docs/media/shared.mp4) · [Shared meals in Dream](docs/dream/social.md) · [Build the example](docs/examples/shared-meal.dream)
+[Watch in HD](docs/media/hosted.mp4) · [Shared meals in Dream](docs/dream/social.md) · [Build the example](docs/examples/hosted-meal.dream)
 
 The baker and school staff use the same capability on their own grounds and
-schedules. Their history survives travel, streaming and saves. This is a first
-shared social activity; NPC invitations, dating and a general relationship
-system remain to be built.
-
+schedules. An offer needs food, a free adjacent seat and time before work.
+Leaving early returns unfinished portions to their owner while the other person
+walks home. History, purchases and invitations survive travel, streaming and
+saves. NPC-to-NPC invitations, dating and a general relationship system remain
+to be built.
 
 ## Own a business
 

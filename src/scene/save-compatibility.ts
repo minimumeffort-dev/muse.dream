@@ -7,7 +7,7 @@ import type {ObjectDslV2} from './object-dsl';
 import peopleR70 from './compatibility/r70-people.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=29;
+export const SAVE_SIMULATION_VERSION=30;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -64,7 +64,7 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY || hash===SHIFT_COMPATIBILITY || hash===SOCIAL_COMPATIBILITY || hash===SCHOOL_REPAIR_COMPATIBILITY || hash===BUSINESS_COMPATIBILITY || hash===MATCH_COMPATIBILITY || hash===CITY_COMPATIBILITY || hash===PARK_COMPATIBILITY || hash===SPACING_COMPATIBILITY || hash===JUNCTION_COMPATIBILITY || hash===PEOPLE_COMPATIBILITY);
+  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY || hash===SHIFT_COMPATIBILITY || hash===SOCIAL_COMPATIBILITY || hash===SCHOOL_REPAIR_COMPATIBILITY || hash===BUSINESS_COMPATIBILITY || hash===MATCH_COMPATIBILITY || hash===CITY_COMPATIBILITY || hash===PARK_COMPATIBILITY || hash===SPACING_COMPATIBILITY || hash===JUNCTION_COMPATIBILITY || hash===PEOPLE_COMPATIBILITY || hash===INVITATION_COMPATIBILITY);
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
@@ -90,8 +90,14 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
-/** r71 replaces person geometry without moving identities or changing their physical size. */
+/** r72 adds invitations and one more prepared lunch; prior ledgers stay exact. */
+export function preInvitationScene(scene:Scene):Scene{
+ return {...scene,economy:scene.economy && {...scene.economy,socials:scene.economy.socials.map(({markets,...plan})=>plan),jobs:scene.economy.jobs.map(j=>j.id==='pack_lunch' && j.market==='market_stall' ? {...j,target:2} : j)}};
+}
+export function preInvitationCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preInvitationScene(scene),29,true,encode);}
+export const INVITATION_COMPATIBILITY='b1a3a8d992797f3b4d1286b6dd387d11938e4a263b613716a1f4f3b5bcb4f335';
 export function prePeopleScene(scene:Scene):Scene{
+ scene=preInvitationScene(scene);
  const templates=peopleR70.templates as unknown as {spec:ObjectDslV2;joints?:NonNullable<Scene['objects'][number]['ambient']>['joints']}[];
  const objects=new Map(peopleR70.objects.map(o=>[o.id,o])),sports=new Map(peopleR70.sports.map(s=>[s.id,s]));
  return {...scene,objects:scene.objects.map(o=>{
@@ -128,7 +134,7 @@ export function preCityScene(scene:Scene):Scene{scene=preParkScene(scene);return
 export function preCityCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preCityScene(scene),24,true,encode);}
 export const MATCH_COMPATIBILITY='b06274e07914b9b26b720ac81f155e6e6f51406adb84768a5a1c1ec01e49b082';
 /** r67 adds match rules; the previous complete physical world remains exact. */
-export function preMatchScene(scene:Scene):Scene{return {...scene,objects:scene.objects.map(o=>['pitch_goal_0','pitch_goal_1'].includes(o.id) && o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 ? {...o,spec:{...o.spec,parts:o.spec.parts.slice(0,17)}} : o),sports:scene.sports.map(s=>{const {match,netDepth,...old}=s;return old;})};}
+export function preMatchScene(scene:Scene):Scene{scene=preInvitationScene(scene);return {...scene,objects:scene.objects.map(o=>['pitch_goal_0','pitch_goal_1'].includes(o.id) && o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 ? {...o,spec:{...o.spec,parts:o.spec.parts.slice(0,17)}} : o),sports:scene.sports.map(s=>{const {match,netDepth,...old}=s;return old;})};}
 export function preMatchCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preMatchScene(scene),23,true,encode);}
 export const BUSINESS_COMPATIBILITY='2ed89b889367d51c6ff3f458bc6faf16028e48076482fdbe4cdb3e69125276ab';
 /** r66 adds depot ownership and a zero-funded seller, without rebasing old state. */

@@ -107,7 +107,7 @@ it('upgrades an exact-source format 1 slot without removing it, and never guesse
  const saveCompatibility=await sha256(saveCompatibilitySource(scene)),current={...world,saveCompatibility};
  const data=JSON.parse(encodeSave(met(),40,world));data.version=1;delete data.compatibilityHash;
  const legacyKey=`muse-dream.save.v1.${scene.sceneId}.${scene.sourceHash}`,text=JSON.stringify(data),rows=new Map([[legacyKey,text]]),storage={getItem:(k:string)=>rows.get(k)??null,setItem:(k:string,v:string)=>{rows.set(k,v);}};
- const slot=gameSave(current,()=>storage);expect(slot.restored?.version).toBe(1);expect(slot.restored?.state.npcs[0]!.known).toBe(true);expect(slot.write(slot.restored!.state,40)).toBe(true);expect(rows.get(legacyKey)).toBe(text);expect(JSON.parse(rows.get(slot.key)!).version).toBe(16);
+ const slot=gameSave(current,()=>storage);expect(slot.restored?.version).toBe(1);expect(slot.restored?.state.npcs[0]!.known).toBe(true);expect(slot.write(slot.restored!.state,40)).toBe(true);expect(rows.get(legacyKey)).toBe(text);expect(JSON.parse(rows.get(slot.key)!).version).toBe(17);
  expect(()=>decodeSave(text,{...current,scene:{...scene,sourceHash:'changed'}})).toThrow('different world');
  rows.set(slot.key,'corrupt');expect(gameSave(current,()=>storage).blocked).toBe(true);expect(rows.get(legacyKey)).toBe(text);
 });

@@ -1,0 +1,12 @@
+{
+  "baseline": "e7045c74bb1fefab8ae4f52401605c4cf39e48a3",
+  "fixture": "Released engine in Node, using ordinary paid purchases, acquaintance, walking and player-hosted eating; not a native browser backup.",
+  "version": 16,
+  "source": "1d19ee0a8684bfb081d4e896b3cf33e1f5146001509263768260f9f09ef897d9",
+  "previous": "5297667c16ec9218ef46e6cbf82cfdffe826220f92572f16d85f88ef5c8c2c53",
+  "current": "b1a3a8d992797f3b4d1286b6dd387d11938e4a263b613716a1f4f3b5bcb4f335",
+  "stateExact": true,
+  "worldTimeExact": true,
+  "priorSceneExact": true,
+  "historicalFingerprintsExact": 29
+}

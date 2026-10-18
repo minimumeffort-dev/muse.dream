@@ -745,7 +745,7 @@ Counter trade, production and cargo handoff wait for attendance. The baker and
 school staff use it in the live mock; no idle wages or employment contracts exist.
 
 
-[Shared meals](social.md) reserve two player-owned portions and an adjacent seat, use actual NPC travel and consume both once on completion. Interruptions refund food; completed time changes that person's remembered dialogue.
+[Shared meals](social.md) reserve two portions from the player or NPC host and an adjacent seat. NPC hosts buy food with their own money and wait for Y/X consent. The companion physically walks over; both portions are consumed once on completion. Interruptions refund the same owner, and completed time changes that person’s remembered dialogue.
 
 
 ### Garden park furniture

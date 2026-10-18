@@ -176,7 +176,7 @@ kbd { display:inline-block; font:700 10px Manrope,system-ui,sans-serif; min-widt
 .error { display:grid; place-items:center; padding:40px; color:var(--paper); }
 #world-stream-status { position:absolute; left:50%; bottom:8rem; transform:translateX(-50%); padding:8px 12px; background:var(--hud); color:var(--paper); border:1px solid var(--line); border-radius:6px; font-size:12px; pointer-events:none; }
 body:has(#commerce-panel:not([hidden])) #map-frame { visibility:hidden; }
-body:not([data-loading="ready"])>.hud,body:not([data-loading="ready"])>#map-frame,body:not([data-loading="ready"])>#action-bar,body:not([data-loading="ready"])>#npc-speech { visibility:hidden; }
+body:not([data-loading="ready"])>.hud,body:not([data-loading="ready"])>#map-frame,body:not([data-loading="ready"])>#action-bar,body:not([data-loading="ready"])>#npc-speech,body:not([data-loading="ready"])>#social-invitation { visibility:hidden; }
 @media(max-width:900px) { #action-bar { max-width:calc(100% - var(--gutter)*2); } #map-frame { bottom:104px; width:150px; } #world-map { width:134px; height:108px; } }
 @media(max-width:600px) { :root { --gutter:16px; } #surface { max-width:110px; font-size:11px; } #player-status { gap:6px; padding-inline:9px; } #bag-open { padding-inline:9px; } .fullness-track { right:38px; } #action-bar .action-chip { min-width:90px; padding:8px 10px; gap:7px; } #action-bar .action-chip>kbd { margin-left:0; } #commerce-panel { bottom:96px; max-height:calc(100dvh - 176px); padding:14px; } #action-feedback { bottom:96px; } #map-frame { bottom:96px; } .choice-label { font-size:11px; } .choice-copy { gap:6px; } #activity-keys { gap:4px; } #activity-keys span { margin-right:3px; } }
 /* This shell paints before the renderer and compiler modules load. */
@@ -204,3 +204,17 @@ body:not([data-loading="ready"])>#sport-action { visibility: hidden; }
 body:has(#match-score:not([hidden])) #map-frame { display:none; }
 body:has(#match-score:not([hidden])) #action-bar { flex-wrap:wrap; }
 body:not([data-loading="ready"])>#match-score { visibility:hidden; }
+
+#social-invitation { position:fixed; z-index:7; left:24px; bottom:104px; width:min(344px,calc(100% - 48px)); padding:16px; border:1px solid var(--line); border-radius:12px; background:var(--hud); color:var(--paper); box-shadow:0 5px 24px #0003; }
+.invitation-heading { display:flex; align-items:center; gap:12px; }
+.invitation-heading>.icon-slot { width:28px; height:28px; color:var(--yellow); flex:none; }
+.invitation-heading>div { min-width:0; flex:1; }
+.invitation-heading strong { display:block; font-size:13px; line-height:1.5; }
+.invitation-heading div>span,#invitation-time { color:var(--muted); font-size:11px; }
+#invitation-time { flex:none; font-variant-numeric:tabular-nums; }
+.invitation-actions { display:flex; gap:8px; margin-top:14px; }
+.invitation-actions button { display:flex; justify-content:space-between; align-items:center; gap:12px; flex:1; min-height:44px; border:1px solid var(--line); border-radius:7px; background:transparent; color:var(--paper); font:inherit; font-size:12px; padding:8px 10px; }
+.invitation-actions button:not(:disabled):hover { background:#34362f; }
+.invitation-actions button:focus-visible { outline:2px solid var(--yellow); outline-offset:3px; }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); clip-path:inset(50%); white-space:nowrap; border:0; }
+@media(max-width:720px) { body:has(#social-invitation:not([hidden])) #map-frame { visibility:hidden; } #social-invitation { left:var(--gutter); width:min(344px,calc(100% - var(--gutter)*2)); bottom:96px; } }

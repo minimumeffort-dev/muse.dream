@@ -101,7 +101,7 @@ a rest destination and an early return. Service waits for actual arrival; NPC
 programs and remembered meetings continue at rest. [Guide and executable example](dream/shifts.md).
 
 
-`social` and `account.social` connect carried food, paired seating, consent and persistent shared meals. Interact-only `shared_meals` branches on actual time spent together. [Guide and complete example](dream/social.md).
+`social` and `account.social` connect carried food, paired seating, consent and persistent shared meals. Optional `social.markets` lets known NPCs buy two portions with their own money and offer to host. Interact-only `shared_meals` branches on actual time spent together. [Guide and complete example](dream/social.md).
 
 
 Optional `market(...,owner=account_id,sale=15)` makes an existing counter ownable.

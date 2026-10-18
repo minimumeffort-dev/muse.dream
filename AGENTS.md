@@ -298,8 +298,8 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 
 ## Saved simulation state
 
-Current save format 16 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 29. Historical formats retain their registered projections.
+Current save format 17 pins exact source plus a host-computed accepted-world fingerprint
+at simulation version 30. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -631,7 +631,7 @@ units onto existing entrance paving. No idle wages, weekly calendars or offline
 travel. See `docs/dream/shifts.md` and its runnable example.
 
 
-Shared social meals use economy `social(good,seats,on,grounds?,eat_s,cooldown_s?,max_fullness?)`
+Shared social meals use economy `social(good,seats,on,grounds?,eat_s,cooldown_s?,max_fullness?,markets?)`
 and NPC `account.social`. Keep 8 plans, 1..4 paired furniture IDs, positive food,
 eat_s 1..12, cooldown 30..86400 default 600 and max_fullness 0..100 default 80.
 Only stationary complete humanoid decor NPCs, actual radius <=8 / height <=32.
@@ -644,10 +644,17 @@ the person physically before their program/shift resumes. One journey owner;
 reuse identical prepared staff paths and existing actor/rig/navigation budgets.
 Interact-only `shared_meals` checks this particular social NPC's completed player
 meals, never talk counts or authored rewards. Persist paths, clocks, claims and
-sparse history through pause/streaming/saves; Start over resets. Format 14 /
-simulation 21 registers exact r63 projection and retains every old saved field
-and original slot. No NPC-hosted invitations, dating, general affection score,
-physical food items, offline progression or provider calls. See docs/dream/social.md.
+sparse history through pause/streaming/saves; Start over resets. Optional 1..4
+`markets` enable NPC-funded invitations through ordinary reachable open/staffed
+counter purchases. Check the entire needed purchase before spending; keep food
+in the host bag until Y accepts, X declines or the 30-second simulation deadline
+expires. One pending invitation reserves one adjacent seat; persist per-NPC offer
+cooldowns. Pause freezes time. Interrupted accepted meals refund the actual donor,
+never the guest. Format 17 / simulation 30 validates the exact r71 projection,
+removing supply lists and restoring only bakery pack_lunch.target=2. Keep every
+saved resource, clock, state and original slot. No NPC-to-NPC invitations, dating,
+general affection score, physical food items, offline progression or provider
+calls. See docs/dream/social.md.
 
 
 The r65 furniture service adds school_yard, school_yard_access and

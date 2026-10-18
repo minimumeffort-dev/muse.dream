@@ -1,4 +1,4 @@
-import {socialOffer,startSharedMeal,endSharedMeal,stepSharedMeal,checkSharedMeal} from './social';
+import {socialOffer,startSharedMeal,endSharedMeal,stepSharedMeal,checkSharedMeal,stepSocialInvitation,offerHostedMeal,declineSocialInvitation,hostedMealReason} from './social';
 import {marketIsOpen,marketIsStaffed} from './market-hours';
 import {stepStaffShifts,checkShiftState} from './shifts';
 import {findSeat,worldSeats} from '../scene/seating';
@@ -41,9 +41,11 @@ const shiftState=courierState.extend({phase:z.enum(['out','rest','in'])}).strict
 export const shiftEconomyStateSchema=hoursEconomyStateSchema.extend({accounts:z.array(hoursEconomyStateSchema.shape.accounts.element.extend({shift:shiftState.optional()}).strict()).max(L.accounts),events:z.array(hoursEconomyStateSchema.shape.events.element.extend({reason:z.enum([...hoursEconomyStateSchema.shape.events.element.shape.reason.unwrap().options,'unstaffed']).optional()}).strict()).max(12)}).strict();
 const sharedState=courierState.omit({phase:true}).extend({partner:id,phase:z.enum(['out','eat','home']),playerSeat:z.object({objectId:id,seatId:id}).strict(),seat:z.object({objectId:id,seatId:id}).strict(),home:point,startedAtS:clock,eatUntilS:clock.optional(),portions:z.union([z.literal(0),z.literal(2)])}).strict();
 export const socialEconomyStateSchema=shiftEconomyStateSchema.extend({shared:sharedState.optional(),socialHistory:z.record(z.object({meals:count.min(1),lastAtS:clock}).strict()).optional(),events:z.array(shiftEconomyStateSchema.shape.events.element.extend({kind:z.enum([...shiftEconomyStateSchema.shape.events.element.shape.kind.options,'sharing','shared_meal','share_cancelled']),reason:z.enum([...shiftEconomyStateSchema.shape.events.element.shape.reason.unwrap().options,'seat','unfamiliar','cooldown']).optional()}).strict()).max(12)}).strict();
-export const economyStateSchema=socialEconomyStateSchema.extend({markets:z.array(socialEconomyStateSchema.shape.markets.element.extend({owner:id.optional(),acquiredAtS:clock.optional()}).strict()).max(L.markets),events:z.array(socialEconomyStateSchema.shape.events.element.extend({kind:z.enum([...socialEconomyStateSchema.shape.events.element.shape.kind.options,'acquired','capital_in','capital_out']),amount:money.positive().optional(),reason:z.enum([...socialEconomyStateSchema.shape.events.element.shape.reason.unwrap().options,'ownership','not_for_sale','amount','headroom']).optional()}).strict()).max(12)}).strict();
+export const priorInvitationEconomyStateSchema=socialEconomyStateSchema.extend({markets:z.array(socialEconomyStateSchema.shape.markets.element.extend({owner:id.optional(),acquiredAtS:clock.optional()}).strict()).max(L.markets),events:z.array(socialEconomyStateSchema.shape.events.element.extend({kind:z.enum([...socialEconomyStateSchema.shape.events.element.shape.kind.options,'acquired','capital_in','capital_out']),amount:money.positive().optional(),reason:z.enum([...socialEconomyStateSchema.shape.events.element.shape.reason.unwrap().options,'ownership','not_for_sale','amount','headroom']).optional()}).strict()).max(12)}).strict();
+const seatRef=z.object({objectId:id,seatId:id}).strict();
+export const economyStateSchema=priorInvitationEconomyStateSchema.extend({accounts:z.array(priorInvitationEconomyStateSchema.shape.accounts.element.extend({invitedAtS:clock.optional()}).strict()).max(L.accounts),shared:sharedState.extend({host:id.optional()}).strict().optional(),invitation:z.object({partner:id,playerSeat:seatRef,seat:seatRef,offeredAtS:clock,expiresAtS:clock}).strict().optional(),events:z.array(priorInvitationEconomyStateSchema.shape.events.element.extend({kind:z.enum([...priorInvitationEconomyStateSchema.shape.events.element.shape.kind.options,'invited','invite_declined'])}).strict()).max(12)}).strict();
 export type EconomyState=z.infer<typeof economyStateSchema>;
-export type CommerceAction={kind:'buy';market:string;good:string}|{kind:'sell';market:string;good:string}|{kind:'eat';good:string}|{kind:'work';job:string}|{kind:'collect';delivery:string}|{kind:'deliver'}|{kind:'cancel'}|{kind:'repair';repair:string}|{kind:'share';partner:string}|{kind:'acquire';market:string}|{kind:'deposit';market:string;amount:number}|{kind:'withdraw';market:string;amount:number};
+export type CommerceAction={kind:'buy';market:string;good:string}|{kind:'sell';market:string;good:string}|{kind:'eat';good:string}|{kind:'work';job:string}|{kind:'collect';delivery:string}|{kind:'deliver'}|{kind:'cancel'}|{kind:'repair';repair:string}|{kind:'share';partner:string}|{kind:'accept_share';partner:string}|{kind:'decline_share';partner:string}|{kind:'acquire';market:string}|{kind:'deposit';market:string;amount:number}|{kind:'withdraw';market:string;amount:number};
 type Account=EconomyState['accounts'][number];
 type Reason=NonNullable<EconomyState['events'][number]['reason']>;
 type Pose={x:number;y:number;elevation:number};
@@ -117,6 +119,8 @@ function purchaseReason(scene:Scene,e:EconomyState,a:Account,market:string,good:
 function reason(state:CarState,scene:Scene,e:EconomyState,a:Account,action:CommerceAction):Reason|undefined{
  const c=data(scene),definition=c.accounts.get(a.id)!;
  if(action.kind==='share')return definition.actor==='player' ? socialOffer(state,scene,action.partner).reason : 'busy';
+ if(action.kind==='accept_share' || action.kind==='decline_share')return definition.actor==='player' ? hostedMealReason(state,scene,action.partner,action.kind==='decline_share') : 'busy';
+ if(e.invitation?.partner===a.id)return 'busy';
  if(e.shared && (definition.actor==='player' && e.shared.phase!=='home' || e.shared.partner===a.id))return action.kind==='cancel' && definition.actor==='player' && e.shared.phase!=='home' ? undefined : 'busy';
  if(action.kind==='cancel')return a.work || a.delivery || a.repair && a.repair.phase!=='home' ? undefined : 'busy';
  if(definition.actor==='player' && state.seated && action.kind!=='eat')return 'busy';
@@ -143,7 +147,8 @@ function reason(state:CarState,scene:Scene,e:EconomyState,a:Account,action:Comme
  if(action.kind==='eat'){
   if(!(c.goods.get(action.good)?.food))return 'not_food';
   if(!a.inventory[action.good])return 'stock';
-  if(e.consumed[action.good]!+(e.shared?.portions && scene.economy!.socials.find(p=>p.id===e.shared!.id)!.good===action.good ? e.shared.portions : 0)>=1e9)return 'capacity';
+  const pending=e.invitation && c.e.socials.find(p=>p.id===c.accounts.get(e.invitation!.partner)!.social)?.good===action.good ? 2 : 0;
+  if(e.consumed[action.good]!+pending+(e.shared?.portions && scene.economy!.socials.find(p=>p.id===e.shared!.id)!.good===action.good ? e.shared.portions : 0)>=1e9)return 'capacity';
   return a.satiety>=100 ? 'sated' : undefined;
  }
  if(action.kind==='acquire' || action.kind==='deposit' || action.kind==='withdraw'){
@@ -209,7 +214,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
  if(!scene.economy)return state;
  const c=data(scene),old=state.economy??initialEconomy(scene,state.timeS-dt)!,player=old.accounts.find(a=>c.accounts.get(a.id)!.actor==='player')!;
  const interrupted=player.work && (state.seated || !inReach(state,scene,player,c.markets.get(c.jobs.get(player.work.id)!.market)!)) || player.repair?.phase==='work' && !!state.seated;
- const lostSeat=old.accounts.some(a=>a.meal?.seat && state.broken.includes(a.meal.seat.objectId)) || !!old.shared && old.shared.phase!=='home' && (!state.seated || state.broken.includes(old.shared.seat.objectId));
+ const lostSeat=old.accounts.some(a=>a.meal?.seat && state.broken.includes(a.meal.seat.objectId)) || !!old.invitation && (!state.seated || state.broken.includes(old.invitation.seat.objectId)) || !!old.shared && old.shared.phase!=='home' && (!state.seated || state.broken.includes(old.shared.seat.objectId));
  if(state.economy && !input.commerce && !interrupted && !lostSeat && state.timeS-old.atS<L.decisionS-1e-8)return state;
  const now=state.timeS,e:EconomyState={...old,...(old.shared ? {shared:{...old.shared,home:{...old.shared.home},at:{...old.shared.at},path:old.shared.path.map(p=>({...p}))}} : {}),...(old.socialHistory ? {socialHistory:{...old.socialHistory}} : {}),atS:now,turn:(old.turn+1)%old.accounts.length,accounts:old.accounts.map(a=>({...a,completed:{work:{...a.completed.work},delivery:{...a.completed.delivery},repair:{...a.completed.repair}},inventory:{...a.inventory},...(a.shift ? {shift:{...a.shift,at:{...a.shift.at},path:a.shift.path.map(p=>({...p}))}} : {}),...(a.meal ? {meal:{...a.meal,home:{...a.meal.home},at:{...a.meal.at},path:a.meal.path.map(p=>({...p}))}} : {}),...(a.work ? {work:{...a.work}} : {}),...(a.repair ? {repair:{...a.repair,path:a.repair.path.map(p=>({...p}))}} : {}),...(a.courier ? {courier:{...a.courier,path:a.courier.path.map(p=>({...p})),at:{...a.courier.at}}} : {}),satiety:Math.max(0,a.satiety-(now-old.atS)*c.accounts.get(a.id)!.drainPerS)})),markets:old.markets.map(m=>({...m,stock:{...m.stock}})),consumed:{...old.consumed},batches:{...old.batches},delivered:{...old.delivered},repaired:{...old.repaired},events:[...old.events]};
  let current:CarState=advanceGrowth({...state,economy:e},now-old.atS,scene);
@@ -221,6 +226,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
   if(now+1e-8>=a.work.doneAtS){m.stock[j.output]!+=j.make;a.credits+=j.pay;a.satiety=Math.max(0,a.satiety-j.effort);e.batches[j.id]!++;a.completed.work[j.id]!++;a.work=undefined;report(a,'paid',j.id);}
  }
  current=stepStaffShifts(current,now-old.atS,scene);
+ stepSocialInvitation(current,scene);
  stepSharedMeal(current,now-old.atS,scene);
  const finishRepair=(a:Account,refund:boolean)=>{const t=a.repair!,r=c.repairs.get(t.id)!,m=e.markets.find(m=>m.id===r.market)!;if(refund){m.stock[r.input]!+=r.take;m.credits+=r.pay;report(a,'repair_cancelled',r.id);}else{a.credits+=r.pay;a.satiety=Math.max(0,a.satiety-r.effort);e.repaired[r.id]!++;a.completed.repair[r.id]!++;current={...current,broken:current.broken.filter(id=>id!==t.objectId || t.zoneId!==undefined),brokenZones:current.brokenZones.filter(z=>z.objectId!==t.objectId || z.zoneId!==t.zoneId),debris:current.debris.filter(p=>p.objectId!==t.objectId || t.zoneId!==undefined && !objectFragments(c.objects.get(t.objectId)!.spec as ObjectDslV2).some(f=>f.id===p.fragmentId && f.zone===t.zoneId))};if(r.regrow_s!==undefined)current={...current,growing:[...(current.growing??[]),{objectId:t.objectId,serviceId:r.id,plantedAtS:now,progressS:0}]};report(a,'repaired',r.id);}
   if(c.accounts.get(a.id)!.actor==='player')a.repair=undefined;else{t.phase='home';t.progressS=0;t.path=[];t.routeAtS=0;}
@@ -254,6 +260,8 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
    e.events.push({account:a.id,kind:action.kind==='acquire' ? 'acquired' : action.kind==='deposit' ? 'capital_in' : 'capital_out',ref:m.id,amount,atS:now});e.events=e.events.slice(-12);return;
   }
   if(action.kind==='share'){startSharedMeal(current,scene,action.partner);report(a,'sharing',e.shared!.id);return;}
+  if(action.kind==='accept_share'){startSharedMeal(current,scene,action.partner,true);report(a,'sharing',e.shared!.id);return;}
+  if(action.kind==='decline_share'){const plan=c.accounts.get(action.partner)!.social!;declineSocialInvitation(current);report(a,'invite_declined',plan);return;}
   if(action.kind==='repair'){const r=c.repairs.get(action.repair)!,offer=repairOffer(current,scene,e,a,r.id)!,p=ownerPose(current,scene,a)!,m=e.markets.find(m=>m.id===r.market)!;m.stock[r.input]!-=r.take;m.credits-=r.pay;const npc=c.accounts.get(a.id)!.actor!=='player';a.repairSeen=undefined;a.repair={id:r.id,objectId:offer.target.objectId,...(offer.target.zoneId ? {zoneId:offer.target.zoneId} : {}),phase:'out',at:offer.end,x:npc ? p.x : offer.end.x,y:npc ? p.y : offer.end.y,headingRad:0,distance:0,progressS:0,speed:0,path:npc ? offer.path : [],routeAtS:now};report(a,'repair_started',r.id);return;}
   if(action.kind==='collect'){const d=c.deliveries.get(action.delivery)!;e.markets.find(m=>m.id===d.from)!.stock[d.good]!-=d.quantity;e.markets.find(m=>m.id===d.to)!.credits-=d.pay+deliveryBill(d);a.delivery={id:d.id,startedAtS:now};report(a,'collected',d.id);return;}
   if(action.kind==='deliver'){const d=c.deliveries.get(a.delivery!.id)!;e.markets.find(m=>m.id===d.to)!.stock[d.good]!+=d.quantity;e.markets.find(m=>m.id===d.from)!.credits+=deliveryBill(d);a.credits+=d.pay;a.delivery=undefined;e.delivered[d.id]!++;a.completed.delivery[d.id]!++;report(a,'delivered',d.id);return;}
@@ -295,7 +303,18 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
  for(let i=0;i<e.accounts.length;i++){
   const a=e.accounts[(i+old.turn)%e.accounts.length]!,spec=c.accounts.get(a.id)!;
   if(spec.actor==='player'){if(input.commerce)perform(a,input.commerce);continue;}
-  if(e.shared?.partner===a.id || now+1e-8<a.decisionAtS || a.work || a.delivery || a.repair || a.courier || a.meal || a.shift && a.shift.phase!=='rest')continue;a.decisionAtS=now+1;
+  if(e.shared?.partner===a.id || e.invitation?.partner===a.id || now+1e-8<a.decisionAtS || a.work || a.delivery || a.repair || a.courier || a.meal || a.shift && a.shift.phase!=='rest')continue;a.decisionAtS=now+1;
+  const social=c.e.socials.find(p=>p.id===spec.social);
+  if(social?.markets && current.npcs.find(n=>n.id===spec.actor)?.known && a.satiety<=social.max_fullness){
+   const need=Math.max(0,2-a.inventory[social.good]!);
+   if(need && (a.satiety>40 || current.seated && social.seats.includes(current.seated.objectId))){
+    for(const id of social.markets){const market=c.markets.get(id)!,stock=e.markets.find(m=>m.id===id)!,price=market.lots.find(l=>l.good===social.good)!.price!,buy={kind:'buy' as const,market:id,good:social.good};
+     if(reason(current,scene,e,a,buy) || a.credits<price*need || stock.stock[social.good]!<need || Object.values(a.inventory).reduce((n,v)=>n+v,0)+need>spec.capacity || stock.credits+reserved(e,c.e,id)+price*need>L.money)continue;
+     for(let n=0;n<need;n++)perform(a,buy);break;
+    }
+   }
+   if(offerHostedMeal(current,scene,a.id)){report(player,'invited',social.id);continue;}
+  }
   if(a.satiety<=40){
    const food=c.e.goods.find(g=>g.food>0 && a.inventory[g.id]!>0);if(food){perform(a,{kind:'eat',good:food.id});continue;}
    if(spec.meal){const meal=c.meals.get(spec.meal)!,p=ownerPose(current,scene,a)!;
@@ -314,6 +333,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
   if(a.courier)continue;
   for(const id of accountJobs(spec)){const j=c.jobs.get(id)!,m=e.markets.find(m=>m.id===j.market)!;if(m.stock[j.output]!+reserved(e,c.e,m.id,j.output)<j.target && !reason(current,scene,e,a,{kind:'work',job:id})){perform(a,{kind:'work',job:id});break;}}
  }
+ if(input.commerce && e.invitation)stepSocialInvitation(current,scene);
  return current;
 }
 
@@ -376,5 +396,5 @@ export function checkEconomyState(state:CarState,scene:Scene):void{
   const actual=(e.shared?.portions && d.socials.find(p=>p.id===e.shared!.id)!.good===g.id ? e.shared.portions : 0)+e.markets.reduce((n,m)=>n+(m.stock[g.id]??0),0)+e.accounts.reduce((n,a)=>n+a.inventory[g.id]!+(a.work ? jobTake(d.jobs.find(j=>j.id===a.work!.id)!,g.id) : 0)+(a.delivery && d.deliveries.find(t=>t.id===a.delivery!.id)!.good===g.id ? d.deliveries.find(t=>t.id===a.delivery!.id)!.quantity : 0)+(a.repair && a.repair.phase!=='home' && d.repairs.find(r=>r.id===a.repair!.id)!.input===g.id ? d.repairs.find(r=>r.id===a.repair!.id)!.take : 0),0);
   if(actual!==expected || !g.food && e.consumed[g.id]!==0)throw Error('Goods are not conserved');
  }
- for(const event of e.events){const reference=event.kind==='blocked' ? event.ref==='action' && !!event.reason : ['acquired','capital_in','capital_out'].includes(event.kind) ? d.markets.some(m=>m.id===event.ref && m.owner) && event.amount!==undefined && event.amount>0 : event.kind==='buy' || event.kind==='sell' || event.kind==='eat' ? d.goods.some(g=>g.id===event.ref) : ['sharing','shared_meal','share_cancelled'].includes(event.kind) ? d.socials.some(p=>p.id===event.ref) : ['collected','delivered','delivery_cancelled','courier_started'].includes(event.kind) ? d.deliveries.some(d=>d.id===event.ref) : ['repair_started','repaired','repair_cancelled'].includes(event.kind) ? d.repairs.some(r=>r.id===event.ref) : d.jobs.some(j=>j.id===event.ref);if(!d.accounts.some(a=>a.id===event.account) || event.atS>e.atS+1e-6 || !reference)throw Error('Invalid economy event');}
+ for(const event of e.events){const reference=event.kind==='blocked' ? event.ref==='action' && !!event.reason : ['acquired','capital_in','capital_out'].includes(event.kind) ? d.markets.some(m=>m.id===event.ref && m.owner) && event.amount!==undefined && event.amount>0 : event.kind==='buy' || event.kind==='sell' || event.kind==='eat' ? d.goods.some(g=>g.id===event.ref) : ['sharing','shared_meal','share_cancelled','invited','invite_declined'].includes(event.kind) ? d.socials.some(p=>p.id===event.ref) : ['collected','delivered','delivery_cancelled','courier_started'].includes(event.kind) ? d.deliveries.some(d=>d.id===event.ref) : ['repair_started','repaired','repair_cancelled'].includes(event.kind) ? d.repairs.some(r=>r.id===event.ref) : d.jobs.some(j=>j.id===event.ref);if(!d.accounts.some(a=>a.id===event.account) || event.atS>e.atS+1e-6 || !reference)throw Error('Invalid economy event');}
 }

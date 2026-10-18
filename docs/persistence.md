@@ -52,7 +52,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-Format 15 retains the exact source hash and the compatibility fingerprint, with simulation version 23. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 17 retains the exact source hash and compatibility fingerprint, with simulation version 30. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -446,3 +446,24 @@ not introduce residents, replay older transactions or relocate people. The old
 format-16 slot remains stored after a successful new write, and all 28 historical
 backups continue through the checked chain. Other geometry edits do not receive
 automatic compatibility. [Character and upgrade checks](evidence/character-wardrobe/verification.md).
+
+
+## NPC-hosted meals, r72
+
+Format 17 / simulation 30 adds an optional pending invitation with its host,
+reserved adjacent seat and 30-second simulation deadline. An optional per-account
+last-offer clock prevents repeated invitations. Accepted meals record the NPC
+food donor; its absence retains the existing player-funded meaning. Pending food
+stays in the host’s bag. Acceptance escrows two portions; interruption refunds
+that same owner exactly once. Save/restore cannot repurchase, consume twice,
+assign the guest a refund or award a meal before eating finishes.
+
+The registered r71 projection removes only the optional social supply lists and
+restores the bakery lunch refill target from three to two. Its entire accepted
+world must match before migration. The transition preserves every saved field,
+clock, wallet, shelf, job, meal, relationship history, population coordinate and
+physical change. It adds no resources and runs no older initialization again.
+Format 16 stays strict and cannot contain the new fields. The original slot is
+kept after the first successful format-17 write; the earlier migration chain
+remains available. New worlds outside this exact registered projection do not
+gain automatic compatibility.

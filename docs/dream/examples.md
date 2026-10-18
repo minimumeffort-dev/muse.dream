@@ -273,4 +273,4 @@ The [seating guide](seating.md) explains approaches, claims and saved meals.
 [Staff shifts](shifts.md) · [Complete daytime bakery and overnight depot](../examples/staff-shifts.dream): physical rest/return, attendance checks and saved journeys.
 
 
-[Shared meals](social.md) · [Complete executable source](../examples/shared-meal.dream): two paid portions, a consenting companion, saved seat claims and dialogue that remembers completed time together.
+[Shared meals](social.md) · [Player-hosted source](../examples/shared-meal.dream) · [NPC-hosted source](../examples/hosted-meal.dream): two paid portions, Y/X consent, saved seat claims and dialogue that remembers completed time together. NPC hosts use their own finite money and food.

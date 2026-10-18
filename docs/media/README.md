@@ -1102,3 +1102,31 @@ new 30 fps rendered PNGs, the existing GIF/HD encoder and matching posters.
 Older activity footage retains its recorded transactions; it does not demonstrate
 this stride revision. Swimming and static asset sheets remain accurate.
 [Verification and exact frame manifest](../evidence/walking-transitions/verification.md).
+
+## NPC-hosted meals, r72
+
+`hosted.gif`, `hosted.mp4` and `hosted.jpg` show a known baker offering its own
+bread, consent with Y, the walk to the adjacent seat and a completed shared meal.
+The pre-roll uses real paid lunch packing/baking and finite counter purchases;
+it does not grant food or money. `shared.gif`, `shared.mp4` and `shared.jpg` are
+refreshed with the same runtime and keep the player-funded path: decline the
+pending NPC offer, invite with the player's purchased bread, eat and speak again.
+
+Together these use 1,140 actually rendered 2400 × 1350 PNG frames, at 30 frames
+per simulation second: 420 hosted frames and 720 shared frames. The GIFs retain
+1280 × 720, 256 colors, no dithering and loss 20. HD uses the existing 1600 × 900
+H.264 CRF-18 encoder. Posters use hosted frame 30 and shared frame 120, JPEG
+quality 95 without chroma subsampling. There is no frame interpolation or browser
+FPS claim. Capture preparation runs the ordinary fixed-step simulation; its
+elapsed time is not part of the clip's duration.
+
+The two clips use the existing daylight capture preset for legibility, while
+simulation time, needs, opening hours, wages and resource changes remain real.
+Native consent, narrow HUD and save/restore screenshots in the evidence folder
+retain their actual visual clock. [Source/frame/output manifest and checks](../evidence/hosted-meals/verification.md).
+
+README, social/commerce guides, the examples index, model contract and persistence
+notes now describe both food donors. The city layout, assets, lighting and
+walking construction are unchanged. Their latest capture sets remain accurate.
+Earlier kitchen, shift and other economy recordings retain their pinned
+transactions; the two meal sets demonstrate the current social activity.

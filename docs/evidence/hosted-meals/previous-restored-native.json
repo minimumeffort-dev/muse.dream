@@ -1,0 +1,438 @@
+{
+  "economy": {
+    "atS": 314.61666666654486,
+    "turn": 1,
+    "accounts": [
+      {
+        "id": "pocket",
+        "credits": 10,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0,
+          "sapling": 0,
+          "vegetables": 0,
+          "lunch": 0,
+          "boards": 0,
+          "fasteners": 0
+        },
+        "satiety": 32.26916666667188,
+        "decisionAtS": 0,
+        "completed": {
+          "work": {
+            "bake": 0,
+            "large_bake": 0,
+            "pack_lunch": 0,
+            "assemble_kit": 0
+          },
+          "delivery": {
+            "flour_run": 0,
+            "school_run": 0,
+            "kits_run": 0,
+            "saplings_run": 0
+          },
+          "repair": {
+            "market_tables": 0,
+            "orchard_trees": 0
+          }
+        }
+      },
+      {
+        "id": "baker",
+        "credits": 7,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0,
+          "sapling": 0,
+          "vegetables": 0,
+          "lunch": 0,
+          "boards": 0,
+          "fasteners": 0
+        },
+        "satiety": 64.26916666667007,
+        "decisionAtS": 314.0166666665463,
+        "completed": {
+          "work": {
+            "bake": 1,
+            "large_bake": 0,
+            "pack_lunch": 3,
+            "assemble_kit": 0
+          },
+          "delivery": {
+            "flour_run": 0,
+            "school_run": 0,
+            "kits_run": 0,
+            "saplings_run": 0
+          },
+          "repair": {
+            "market_tables": 0,
+            "orchard_trees": 0
+          }
+        },
+        "shift": {
+          "id": "bakery_day",
+          "phase": "rest",
+          "at": {
+            "x": 6360,
+            "y": 4490
+          },
+          "x": 6360,
+          "y": 4490,
+          "headingRad": 2.373406195116962,
+          "speed": 0,
+          "distance": 157.47763161668132,
+          "path": [],
+          "routeAtS": 301.01666666655814
+        }
+      },
+      {
+        "id": "regular",
+        "credits": 22,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0,
+          "sapling": 0,
+          "vegetables": 0,
+          "lunch": 0,
+          "boards": 0,
+          "fasteners": 0
+        },
+        "satiety": 74.26916666667098,
+        "decisionAtS": 314.86666666654554,
+        "completed": {
+          "work": {
+            "bake": 0,
+            "large_bake": 0,
+            "pack_lunch": 0,
+            "assemble_kit": 0
+          },
+          "delivery": {
+            "flour_run": 0,
+            "school_run": 0,
+            "kits_run": 0,
+            "saplings_run": 0
+          },
+          "repair": {
+            "market_tables": 0,
+            "orchard_trees": 0
+          }
+        }
+      },
+      {
+        "id": "school_staff",
+        "credits": 30,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0,
+          "sapling": 0,
+          "vegetables": 0,
+          "lunch": 0,
+          "boards": 0,
+          "fasteners": 0
+        },
+        "satiety": 12.269166666672792,
+        "decisionAtS": 315.61666666654486,
+        "completed": {
+          "work": {
+            "bake": 0,
+            "large_bake": 0,
+            "pack_lunch": 0,
+            "assemble_kit": 0
+          },
+          "delivery": {
+            "flour_run": 0,
+            "school_run": 0,
+            "kits_run": 0,
+            "saplings_run": 0
+          },
+          "repair": {
+            "market_tables": 0,
+            "orchard_trees": 0
+          }
+        },
+        "shift": {
+          "id": "school_day",
+          "phase": "rest",
+          "at": {
+            "x": 4320,
+            "y": 3860
+          },
+          "x": 4320,
+          "y": 3860,
+          "headingRad": 0.8864502406280386,
+          "speed": 0,
+          "distance": 598.40809329067,
+          "path": [],
+          "routeAtS": 176.01666666667182
+        }
+      },
+      {
+        "id": "caretaker",
+        "credits": 0,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0,
+          "sapling": 0,
+          "vegetables": 0,
+          "lunch": 0,
+          "boards": 0,
+          "fasteners": 0
+        },
+        "satiety": 49.26916666667188,
+        "decisionAtS": 315.1166666665453,
+        "completed": {
+          "work": {
+            "bake": 0,
+            "large_bake": 0,
+            "pack_lunch": 0,
+            "assemble_kit": 0
+          },
+          "delivery": {
+            "flour_run": 0,
+            "school_run": 0,
+            "kits_run": 0,
+            "saplings_run": 0
+          },
+          "repair": {
+            "market_tables": 0,
+            "orchard_trees": 0
+          }
+        }
+      },
+      {
+        "id": "depot_owner",
+        "credits": 0,
+        "inventory": {
+          "bread": 0,
+          "flour": 0,
+          "timber": 0,
+          "sapling": 0,
+          "vegetables": 0,
+          "lunch": 0,
+          "boards": 0,
+          "fasteners": 0
+        },
+        "satiety": 65,
+        "decisionAtS": 315.1166666665453,
+        "completed": {
+          "work": {
+            "bake": 0,
+            "large_bake": 0,
+            "pack_lunch": 0,
+            "assemble_kit": 0
+          },
+          "delivery": {
+            "flour_run": 0,
+            "school_run": 0,
+            "kits_run": 0,
+            "saplings_run": 0
+          },
+          "repair": {
+            "market_tables": 0,
+            "orchard_trees": 0
+          }
+        }
+      }
+    ],
+    "markets": [
+      {
+        "id": "station_supplies",
+        "credits": 0,
+        "stock": {
+          "flour": 80,
+          "timber": 32,
+          "sapling": 18
+        },
+        "owner": "depot_owner"
+      },
+      {
+        "id": "school_canteen",
+        "credits": 60,
+        "stock": {
+          "bread": 0
+        }
+      },
+      {
+        "id": "market_stall",
+        "credits": 111,
+        "stock": {
+          "bread": 4,
+          "flour": 29,
+          "timber": 12,
+          "sapling": 6,
+          "vegetables": 5,
+          "lunch": 2,
+          "boards": 8,
+          "fasteners": 8
+        }
+      }
+    ],
+    "consumed": {
+      "bread": 1,
+      "flour": 0,
+      "timber": 0,
+      "sapling": 0,
+      "vegetables": 0,
+      "lunch": 1,
+      "boards": 0,
+      "fasteners": 0
+    },
+    "batches": {
+      "bake": 1,
+      "large_bake": 0,
+      "pack_lunch": 3,
+      "assemble_kit": 0
+    },
+    "events": [
+      {
+        "account": "baker",
+        "kind": "paid",
+        "ref": "pack_lunch",
+        "atS": 5.016666666666706
+      },
+      {
+        "account": "baker",
+        "kind": "start",
+        "ref": "pack_lunch",
+        "atS": 5.016666666666706
+      },
+      {
+        "account": "baker",
+        "kind": "paid",
+        "ref": "pack_lunch",
+        "atS": 10.016666666666739
+      },
+      {
+        "account": "regular",
+        "kind": "buy",
+        "ref": "lunch",
+        "atS": 47.51666666666461
+      },
+      {
+        "account": "baker",
+        "kind": "start",
+        "ref": "pack_lunch",
+        "atS": 48.016666666664584
+      },
+      {
+        "account": "baker",
+        "kind": "paid",
+        "ref": "pack_lunch",
+        "atS": 53.0166666666643
+      },
+      {
+        "account": "baker",
+        "kind": "start",
+        "ref": "bake",
+        "atS": 53.0166666666643
+      },
+      {
+        "account": "baker",
+        "kind": "paid",
+        "ref": "bake",
+        "atS": 59.01666666666396
+      },
+      {
+        "account": "baker",
+        "kind": "buy",
+        "ref": "bread",
+        "atS": 59.01666666666396
+      },
+      {
+        "account": "baker",
+        "kind": "eat",
+        "ref": "bread",
+        "atS": 60.0166666666639
+      },
+      {
+        "account": "regular",
+        "kind": "eat",
+        "ref": "lunch",
+        "atS": 62.766666666663745
+      },
+      {
+        "account": "pocket",
+        "kind": "sharing",
+        "ref": "hall_break",
+        "atS": 313.366666666546
+      }
+    ],
+    "delivered": {
+      "flour_run": 0,
+      "school_run": 0,
+      "kits_run": 0,
+      "saplings_run": 0
+    },
+    "repaired": {
+      "market_tables": 0,
+      "orchard_trees": 0
+    },
+    "unattributed": {
+      "work": {
+        "bake": 0,
+        "large_bake": 0,
+        "pack_lunch": 0,
+        "assemble_kit": 0
+      },
+      "delivery": {
+        "flour_run": 0,
+        "school_run": 0,
+        "kits_run": 0,
+        "saplings_run": 0
+      },
+      "repair": {
+        "market_tables": 0,
+        "orchard_trees": 0
+      }
+    },
+    "shared": {
+      "id": "hall_break",
+      "at": {
+        "x": 6376.1,
+        "y": 4485.6
+      },
+      "x": 6376.1,
+      "y": 4485.6,
+      "headingRad": -0.2667775351771597,
+      "speed": 0,
+      "distance": 16.690416411820532,
+      "path": [],
+      "routeAtS": 313.366666666546,
+      "partner": "baker",
+      "phase": "eat",
+      "playerSeat": {
+        "objectId": "hall_bench",
+        "seatId": "left"
+      },
+      "seat": {
+        "objectId": "hall_bench",
+        "seatId": "right"
+      },
+      "home": {
+        "x": 6360,
+        "y": 4490
+      },
+      "startedAtS": 313.366666666546,
+      "eatUntilS": 322.61666666654486,
+      "portions": 2
+    }
+  },
+  "save": {
+    "characters": 73906,
+    "compatibilityHash": "b1a3a8d992797f3b4d1286b6dd387d11938e4a263b613716a1f4f3b5bcb4f335",
+    "known": [
+      "vendor"
+    ],
+    "ms": 1.199999988079071,
+    "restored": true,
+    "review": true,
+    "saved": true,
+    "sourceHash": "45fc3731b78cfc7bffba8a93e384b8160788ef0a95db11dd598ceed60fee7c07",
+    "status": "Saved on this device.",
+    "timeS": 314.61666666654486
+  }
+}
