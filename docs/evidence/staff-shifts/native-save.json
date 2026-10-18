@@ -1,0 +1,13 @@
+{
+  "sourceHash": "74b6bcada924d94608b99cc604bd24cfdc33842b3f97cb42e0ec539a0d91363b",
+  "compatibility": "d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023",
+  "previous": "d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023",
+  "oldVersion": 13,
+  "newVersion": 13,
+  "playerCredits": 15,
+  "idleTicks": 2710,
+  "visualClockDelta": 22.591200000050435,
+  "restoredStateExact": true,
+  "restoredStateMatchesFixedReplay": true,
+  "origin": "http://127.0.0.1:5196"
+}

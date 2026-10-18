@@ -178,11 +178,15 @@ The market commuter buys and eats at its actual route position; a stationary
 vendor can replenish stock through the same paid work available to the player.
 Conversation still changes only its authored social state and familiarity.
 Commerce adds explicit inventory, money, needs and work state, without new actor
-or rig slots. It does not add needs-based pathfinding, shifts or relationships.
+or rig slots. [Meal plans](commerce.md#customers-with-somewhere-to-go) and
+[daily shifts](shifts.md) add bounded journeys through the pedestrian network;
+general needs planning and relationship progression remain separate work.
 
 The school staff account can buy and eat bread after a player delivery fills its
 market lot. Delivery cargo remains separate from owned food. Contracts currently
-require player collection/handoff; NPC dispatch and routing are not implemented.
+use shared player/NPC collection and handoff checks. Assigned helpers can carry
+finite supplies on foot; opening hours and physical counter attendance can make
+them wait.
 
 
 Repair accounts can temporarily own a stationary NPC's movement. Optional service

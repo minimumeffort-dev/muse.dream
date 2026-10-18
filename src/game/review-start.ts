@@ -199,6 +199,13 @@ export function* hoursReviewSteps(state:CarState,world:World,stage='closing'):Ge
  return next;
 }
 
+/** Follow the staff's actual journey through ordinary walking controls. */
+export function shiftReviewInput(state:CarState,world:World,frame:number,viewAngle=0):CarInput{
+ const vendor=world.scene.objects.find(o=>o.id==='vendor')!,pose=actorPose(world.scene,vendor,state.timeS,state);
+ const dx=pose.x+14-state.x,dy=pose.y-10-state.y,d=Math.hypot(dx,dy),a=Math.atan2(180,480)+viewAngle,move=frame>=90 && d>3;
+ return {steer:move ? (dx*Math.cos(a)-dy*Math.sin(a))/d : 0,throttle:move ? (-dx*Math.sin(a)-dy*Math.cos(a))/d : 0,...(frame===540 ? {talkPressed:true} : {})};
+}
+
 
 /** Real staff purchases and meal travel precede a review-only starting pose in the hall. */
 export function* seatingReviewSteps(state:CarState,world:World):Generator<void,CarState>{

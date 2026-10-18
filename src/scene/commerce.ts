@@ -13,11 +13,11 @@ import type {Scene} from './schema';
 import {roleOf} from './agents';
 import {waterAt,drivingHeight} from './terrain';
 
-export const COMMERCE_LIMITS=Object.freeze({goods:8,accounts:16,markets:8,jobs:16,meals:8,mealMarkets:4,milestones:16,workerJobs:4,ingredients:4,deliveries:16,courierContracts:4,repairs:8,repairNodes:4096,repairNetworkNodes:8192,repairNetworkLinks:32768,repairGrounds:8,repairStreetTargets:512,repairAccessPieces:2048,repairVerge:32,repairRadius:4,repairPath:128,money:1_000_000,quantity:10_000,capacity:32,decisionS:.25});
+export const COMMERCE_LIMITS=Object.freeze({goods:8,accounts:16,markets:8,jobs:16,meals:8,shifts:8,mealMarkets:4,milestones:16,workerJobs:4,ingredients:4,deliveries:16,courierContracts:4,repairs:8,repairNodes:4096,repairNetworkNodes:8192,repairNetworkLinks:32768,repairGrounds:8,repairStreetTargets:512,repairAccessPieces:2048,repairVerge:32,repairRadius:4,repairPath:128,money:1_000_000,quantity:10_000,capacity:32,decisionS:.25});
 const ref=z.string().regex(/^[a-z][a-z0-9_]{0,31}$/),money=z.number().int().min(0).max(COMMERCE_LIMITS.money),quantity=z.number().int().min(0).max(COMMERCE_LIMITS.quantity);
 const label=z.string().min(1).max(40).refine(s=>s.trim().length>0,'label must contain text');
 const good=z.object({id:ref,label,food:z.number().finite().min(0).max(100).default(0)}).strict();
-const account=z.object({id:ref,actor:ref,credits:money,capacity:z.number().int().min(1).max(COMMERCE_LIMITS.capacity),satiety:z.number().finite().min(0).max(100),drainPerS:z.number().finite().min(0).max(.25),shop:z.boolean().default(false),meal:ref.optional(),work:ref.optional(),works:z.array(ref).min(1).max(COMMERCE_LIMITS.workerJobs).optional(),repair:ref.optional(),repairs:z.array(ref).min(1).max(GROWTH_LIMITS.workerServices).optional(),deliveries:z.array(ref).min(1).max(COMMERCE_LIMITS.courierContracts).optional()}).strict();
+const account=z.object({id:ref,actor:ref,credits:money,capacity:z.number().int().min(1).max(COMMERCE_LIMITS.capacity),satiety:z.number().finite().min(0).max(100),drainPerS:z.number().finite().min(0).max(.25),shop:z.boolean().default(false),shift:ref.optional(),meal:ref.optional(),work:ref.optional(),works:z.array(ref).min(1).max(COMMERCE_LIMITS.workerJobs).optional(),repair:ref.optional(),repairs:z.array(ref).min(1).max(GROWTH_LIMITS.workerServices).optional(),deliveries:z.array(ref).min(1).max(COMMERCE_LIMITS.courierContracts).optional()}).strict();
 const lot=z.object({id:ref,good:ref,quantity,limit:quantity.refine(n=>n>0),price:z.number().int().min(1).max(10_000).optional()}).strict();
 const hours=z.tuple([z.number().finite().min(0).lt(24),z.number().finite().min(0).max(24)]).refine(([start,end])=>start!==end,'hours need different opening and closing times; omit for all-day service');
 const market=z.object({id:ref,label,actor:ref,credits:money,radius:z.number().finite().min(20).max(80),hours:hours.optional(),lots:z.array(lot).min(1).max(COMMERCE_LIMITS.goods)}).strict();
@@ -44,9 +44,12 @@ const meal=z.object({id:ref,good:ref,markets:z.array(ref).min(1).max(COMMERCE_LI
  if(m.grounds && new Set([m.on,...m.grounds]).size!==m.grounds.length+1)ctx.addIssue({code:"custom",message:"meal grounds must be unique and exclude on",path:["grounds"]});
 });
 const milestone=z.object({id:ref,label,kind:z.enum(['work','delivery','repair']),task:ref,count:z.number().int().min(1).max(1e9)}).strict();
-export const economySchema=z.object({goods:z.array(good).min(1).max(COMMERCE_LIMITS.goods),accounts:z.array(account).min(1).max(COMMERCE_LIMITS.accounts),markets:z.array(market).min(1).max(COMMERCE_LIMITS.markets),jobs:z.array(job).max(COMMERCE_LIMITS.jobs),meals:z.array(meal).max(COMMERCE_LIMITS.meals).default([]),milestones:z.array(milestone).max(COMMERCE_LIMITS.milestones).default([]),deliveries:z.array(delivery).max(COMMERCE_LIMITS.deliveries).default([]),repairs:z.array(repair).max(COMMERCE_LIMITS.repairs).default([])}).strict().superRefine((e,ctx)=>{
+const shift=z.object({id:ref,market:ref,rest:z.object({x:z.number().finite().min(0).max(16384),y:z.number().finite().min(0).max(16384)}).strict(),on:ref,grounds:z.array(ref).min(1).max(COMMERCE_LIMITS.repairGrounds-1).optional(),lead_s:z.number().finite().min(0).max(120).default(15)}).strict().superRefine((s,ctx)=>{if(s.grounds && new Set([s.on,...s.grounds]).size!==s.grounds.length+1)ctx.addIssue({code:'custom',message:'shift grounds must be unique and exclude on',path:['grounds']});});
+export const economySchema=z.object({goods:z.array(good).min(1).max(COMMERCE_LIMITS.goods),accounts:z.array(account).min(1).max(COMMERCE_LIMITS.accounts),markets:z.array(market).min(1).max(COMMERCE_LIMITS.markets),jobs:z.array(job).max(COMMERCE_LIMITS.jobs),meals:z.array(meal).max(COMMERCE_LIMITS.meals).default([]),shifts:z.array(shift).max(COMMERCE_LIMITS.shifts).default([]),milestones:z.array(milestone).max(COMMERCE_LIMITS.milestones).default([]),deliveries:z.array(delivery).max(COMMERCE_LIMITS.deliveries).default([]),repairs:z.array(repair).max(COMMERCE_LIMITS.repairs).default([])}).strict().superRefine((e,ctx)=>{
  const issue=(message:string,path:(string|number)[])=>ctx.addIssue({code:'custom',message,path});
- for(const name of ['goods','accounts','markets','jobs','deliveries','repairs','milestones','meals'] as const)if(new Set(e[name].map(v=>v.id)).size!==e[name].length)issue(`duplicate ${name} ID`,[name]);
+ for(const name of ['goods','accounts','markets','jobs','deliveries','repairs','milestones','meals','shifts'] as const)if(new Set(e[name].map(v=>v.id)).size!==e[name].length)issue(`duplicate ${name} ID`,[name]);
+ if(new Set(e.accounts.flatMap(a=>a.shift ? [a.shift] : [])).size!==e.accounts.filter(a=>a.shift).length)issue('one account per shift plan',['accounts']);
+ e.shifts.forEach((s,i)=>{if(!e.markets.some(m=>m.id===s.market && m.hours))issue('shift needs a market with daily hours',['shifts',i,'market']);});
  if(new Set(e.accounts.map(a=>a.actor)).size!==e.accounts.length)issue('one account per actor',['accounts']);
  if(e.accounts.filter(a=>a.actor==='player').length!==1)issue('economy requires one player account',['accounts']);
  if(new Set(e.markets.map(m=>m.actor)).size!==e.markets.length)issue('one market per actor',['markets']);
@@ -79,6 +82,8 @@ export const economySchema=z.object({goods:z.array(good).min(1).max(COMMERCE_LIM
   for(const id of m.markets)if(!e.markets.some(v=>v.id===id && v.lots.some(l=>l.good===m.good && l.price)))issue("meal markets need a priced lot for this food",["meals",i,"markets"]);
  });
  e.accounts.forEach((a,i)=>{
+  if(a.shift && (!e.shifts.some(s=>s.id===a.shift) || a.actor==='player' || a.meal || accountRepairs(a).length || a.deliveries))issue('shift needs an existing plan and an NPC staff account without meal, repair or delivery policies',['accounts',i,'shift']);
+  if(a.shift){const plan=e.shifts.find(s=>s.id===a.shift);if(plan && (accountJobs(a).some(id=>e.jobs.find(j=>j.id===id)?.market!==plan.market) || e.markets.some(m=>m.actor===a.actor && m.id!==plan.market)))issue('shift work and owned counter must use its market',['accounts',i,'shift']);}
   if(a.meal && (!e.meals.some(m=>m.id===a.meal) || a.shop || accountJobs(a).length || accountRepairs(a).length || a.deliveries))issue("meal needs an existing plan and excludes other automatic economy policies",["accounts",i,"meal"]);
   if(a.work && a.works || a.works && new Set(a.works).size!==a.works.length)issue('choose work or a unique works list',['accounts',i,'works']);
   if(a.repair && a.repairs || a.repairs && new Set(a.repairs).size!==a.repairs.length)issue('choose repair or a unique repairs list',['accounts',i,'repairs']);
@@ -100,6 +105,7 @@ export const jobTake=(job:Job,good:string)=>job.ingredients ? job.ingredients.fi
 export type Repair=Economy['repairs'][number];
 export const accountJobs=(a:{work?:string;works?:string[]})=>a.works??(a.work ? [a.work] : []);
 export type Meal=Economy['meals'][number];
+export type Shift=Economy['shifts'][number];
 export type Delivery=Economy['deliveries'][number];
 export const accountRepairs=(a:{repair?:string;repairs?:string[]})=>a.repairs??(a.repair ? [a.repair] : []);
 export const repairGrounds=(r:Repair)=>[r.on,...(r.grounds??[])];
@@ -136,6 +142,16 @@ export function economyProblems(scene:Scene):string[]{
  const stationary=(id:string)=>{const o=scene.objects.find(o=>o.id===id);return o && roleOf(o)==='npc' && !o.route && !o.ambient && !scene.behaviors.find(b=>b.id===o.behavior)?.states.some(s=>s.action==='patrol');};
  const problems:string[]=[];
  if(e.markets.some(m=>m.hours) && !scene.daylight)problems.push('market hours require a world daylight clock');
+ for(const a of e.accounts)if(a.shift){
+  const plan=e.shifts.find(s=>s.id===a.shift),o=scene.objects.find(o=>o.id===a.actor),spec=o?.spec,m=e.markets.find(m=>m.id===plan?.market),vendor=scene.objects.find(o=>o.id===m?.actor);
+  if(!stationary(a.actor) || !o?.behavior || !spec || !('dslVersion' in spec) || spec.dslVersion!==2 || spec.measure?.kind!=='person' || spec.body.interaction!=='decor' || spec.body.colliderRadius*(o.scale??1)>8 || (spec.body.colliderHeight??18)*(o.scale??1)>32)problems.push(`${a.id}: shift staff need a stationary person NPC program and a decor body within 8 radius and 32 height; paths use the actual body`);
+  if(plan && o && Math.hypot(o.x-plan.rest.x,o.y-plan.rest.y)<16)problems.push(`${a.id}: shift rest point must be at least 16 units from work`);
+  if(o && m && vendor && Math.hypot(o.x-vendor.x,o.y-vendor.y)>m.radius)problems.push(`${a.id}: shift work placement must be within its counter reach`);
+ }
+ for(const s of e.shifts){
+  const m=e.markets.find(m=>m.id===s.market);if(m?.hours && scene.daylight){const [start,end]=m.hours,open=end>start ? end-start : 24-start+end,closed=(24-open)/24*scene.daylight.cycleSeconds;if(s.lead_s>=closed)problems.push(`${s.id}: lead_s must be shorter than the market's closed interval`);}
+  let samples=0;for(const id of [s.on,...(s.grounds??[])]){const ground=workGround(scene,id);if(!ground){problems.push(`${s.id}: unknown shift ground ${id}`);continue;}const p=ground.points,turns=p.map((a,i)=>{const b=p[(i+1)%p.length]!,c=p[(i+2)%p.length]!;return Math.sign((b.x-a.x)*(c.y-b.y)-(b.y-a.y)*(c.x-b.x));}).filter(Boolean);if(new Set(turns).size>1)problems.push(`${s.id}: shift grounds must be convex`);const b=polygonBounds(p);samples+=(Math.ceil((b.x1-b.x0)/12)+1)*(Math.ceil((b.y1-b.y0)/12)+1);}if(samples>COMMERCE_LIMITS.repairNodes)problems.push(`${s.id}: shift grounds exceed 4096 local navigation samples`);
+ }
  for(const {b,t} of guarded){
   const m=e.milestones.find(m=>m.id===t.requires);if(!m){problems.push(`${b.id}/${t.id}: unknown conversation milestone ${t.requires}`);continue;}
   const market=m.kind==='work' ? e.jobs.find(j=>j.id===m.task)?.market : m.kind==='delivery' ? e.deliveries.find(d=>d.id===m.task)?.to : e.repairs.find(r=>r.id===m.task)?.market;

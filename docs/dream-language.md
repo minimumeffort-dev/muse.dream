@@ -95,3 +95,7 @@ and restoration rules. [Seating contract and runnable world](dream/seating.md).
 configuration and saved simulation time. Overnight pairs wrap midnight. Player
 and NPC trade, work starts and delivery counters share the rule, with safe waits
 for committed cargo. [Hours and the complete example](dream/hours.md).
+
+`shift` plus `account.shift` connects daily counter hours to physical staff travel,
+a rest destination and an early return. Service waits for actual arrival; NPC
+programs and remembered meetings continue at rest. [Guide and executable example](dream/shifts.md).

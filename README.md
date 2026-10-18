@@ -138,6 +138,13 @@ The bakery and depot open from **06:00 to 22:00**; the school canteen serves
 committed batch, eat your own food or keep a delivery safe until its receiver
 opens. NPCs use the same hours. [Opening hours in Dream](docs/dream/hours.md).
 
+The baker and school staff now physically leave and return. The baker rests in
+the market hall; the teacher uses the school yard. If returning staff are late,
+customers and couriers wait. You can still talk to someone off duty. Journeys
+and remembered meetings survive saving. [Staff shifts in Dream](docs/dream/shifts.md).
+
+![The baker leaving after closing](docs/media/shifts.gif)
+
 You can also take delivery work. Bring flour from the station depot to the bakery,
 or carry bread to the school canteen. Pick up with **H**, follow the marked
 location, then hand over on foot to get paid. Cargo, stock and money survive

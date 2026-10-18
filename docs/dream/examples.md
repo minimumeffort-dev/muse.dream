@@ -257,3 +257,5 @@ The [complete market assembly](../examples/enterable-market.dream) declares a re
 [Shared seating](../examples/shared-seating.dream) is a complete checked world
 with a breakable two-seat bench, a humanoid customer and finite bread purchases.
 The [seating guide](seating.md) explains approaches, claims and saved meals.
+
+[Staff shifts](shifts.md) · [Complete daytime bakery and overnight depot](../examples/staff-shifts.dream): physical rest/return, attendance checks and saved journeys.

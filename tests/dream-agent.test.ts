@@ -64,3 +64,5 @@ describe('bounded agent context packets',()=>{
     expect(readFileSync(path,'utf8')).toBe(source);
   },30000);
 });
+
+it('includes bounded staff shift authoring in the commerce packet',()=>{const packet=dreamAgentContext(['commerce']);expect(packet.contract.commands.shift!.fields.rest).toBe('v2');expect(packet.contract.commands.account!.fields.shift).toBe('ref?');expect(packet.instructions).toContain('physical daily staff attendance');expect(packet.contract).toHaveProperty('commerce.shifts');});

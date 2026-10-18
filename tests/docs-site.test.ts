@@ -6,6 +6,10 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights shift declarations and fields at full boundaries and escapes text',()=>{
+    const html=highlight('shift morning(market=bakery,rest=[20,30],on=plaza,lead_s=15);account vendor(shift=morning); // <Staff>&');
+    expect(html).toContain('class="dream-keyword">shift</span>');for(const word of ['rest','lead_s'])expect(html).toContain(`class="dream-field">${word}</span>`);expect(html).toContain('&lt;Staff&gt;&amp;');expect(highlight('shifts rest_extra lead_s_extra')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('highlights service hours at exact field boundaries and escapes market labels',()=>{
     const html=highlight('market bakery(label="<Counter>&",hours=[6,22]);');
     expect(html).toContain('class="dream-field">hours</span>');expect(html).toContain('&lt;Counter&gt;&amp;');expect(highlight('hours_extra afterhours')).not.toMatch(/dream-(?:keyword|field)/);

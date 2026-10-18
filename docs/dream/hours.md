@@ -137,3 +137,6 @@ The r62 update retains save format 12 and moves simulation semantics to version
 seats, meals, jobs, needs, stock, money, history and both clocks stay exact. The
 original slot is retained. Changing any unrelated accepted rule still requires
 its own migration. [Saving and compatibility](../persistence.md).
+
+Hours can now connect to [physical staff shifts](shifts.md). Hours alone still
+require no travel; an assigned counter owner must actually return before service.

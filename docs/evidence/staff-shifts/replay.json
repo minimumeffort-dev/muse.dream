@@ -1,0 +1,72 @@
+{
+  "sourceHash": "74b6bcada924d94608b99cc604bd24cfdc33842b3f97cb42e0ec539a0d91363b",
+  "compatibilityHash": "d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023",
+  "simulationVersion": 20,
+  "events": [
+    {
+      "account": "baker",
+      "phase": "work",
+      "timeS": 297.04166666656084
+    },
+    {
+      "account": "school_staff",
+      "phase": "rest",
+      "timeS": 297.04166666656084,
+      "position": {
+        "x": 4320,
+        "y": 3860
+      }
+    },
+    {
+      "account": "baker",
+      "phase": "out",
+      "timeS": 300.0416666665581,
+      "position": {
+        "x": 6400,
+        "y": 4353.499999999996
+      }
+    },
+    {
+      "account": "baker",
+      "phase": "rest",
+      "timeS": 311.0416666665481,
+      "position": {
+        "x": 6360,
+        "y": 4490
+      }
+    },
+    {
+      "account": "baker",
+      "phase": "in",
+      "timeS": 485.0166666663899,
+      "position": {
+        "x": 6362.517101854759,
+        "y": 4487.568087531849
+      }
+    },
+    {
+      "account": "baker",
+      "phase": "work",
+      "timeS": 496.0166666663799
+    },
+    {
+      "account": "school_staff",
+      "phase": "in",
+      "timeS": 500.01666666637624,
+      "position": {
+        "x": 4317.787417344647,
+        "y": 3857.288085917067
+      }
+    },
+    {
+      "account": "school_staff",
+      "phase": "work",
+      "timeS": 542.5166666663376
+    }
+  ],
+  "player": {
+    "x": 6329.969244067803,
+    "y": 4490.0074944348335
+  },
+  "vendorKnown": true
+}

@@ -2,7 +2,7 @@ import marketR55 from './compatibility/r55-market.json';
 import type {Scene} from './schema';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=19;
+export const SAVE_SIMULATION_VERSION=20;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -36,6 +36,7 @@ export function saveCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder
 function projection(scene:Scene,simulationVersion:number,rounded=true,encode?:CompatibilityEncoder):string {
   const {revisionId,sourceHash,provenance,...world}=scene;
   let economy=world.economy;
+  if(economy && simulationVersion<20){const {shifts,...old}=economy;economy=old as typeof economy;}
   if(economy && simulationVersion<16){const {meals,...old}=economy;economy=old as typeof economy;}
   if(economy && simulationVersion<15){const {milestones,...old}=economy;economy=old as typeof economy;}
   const data={simulationVersion,world:{...world,...(economy ? {economy} : {}),...(simulationVersion<5 && world.economy ? {economy:{...economy,repairs:undefined}} : {}),behaviors:scene.behaviors.map(program=>({...program,states:program.states.map(state=>{
@@ -57,7 +58,7 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY);
+  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY || hash===SHIFT_COMPATIBILITY);
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
@@ -80,9 +81,15 @@ export const MEAL_COMPATIBILITY='b797ee47140b40a889d0bd5b28de4926b01b6fdbf916260
 export const KITCHEN_COMPATIBILITY='6d52318e971ff660899fd39229f652d6ff3df011e109a71629a062c818c7587c';
 export const SEATING_COMPATIBILITY='34e38f9a8ccb723174d60d26eabf3f28246df880a0ae6a21208d010bb54bfc74';
 export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363b9643a4362b47d576c';
+export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
+/** r63 adds staff journeys, centers the teacher and splits the existing L-shaped path. */
+export function preShiftScene(scene:Scene):Scene{
+ return {...scene,surfaces:scene.surfaces.filter(s=>s.id!=='school_yard_return').map(s=>s.id==='school_yard_access' ? {...s,points:[[4435,3500],[4435,3516],[4288,3516],[4288,3770],[4272,3770],[4272,3500]].map(([x,y])=>({x:x!,y:y!}))} : s),objects:scene.objects.map(o=>o.id==='teacher' && o.x===4436 ? {...o,x:4430} : o),economy:scene.economy && {...scene.economy,shifts:[],accounts:scene.economy.accounts.map(a=>{const {shift,...old}=a;return old;})}};
+}
+export function preShiftCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preShiftScene(scene),19,true,encode);}
 /** r62 adds counter hours without changing saved fields, geometry or resources. */
 export function preHoursScene(scene:Scene):Scene{
- return {...scene,economy:scene.economy && {...scene.economy,markets:scene.economy.markets.map(m=>{const {hours,...old}=m;return old;})}};
+ scene=preShiftScene(scene);return {...scene,economy:scene.economy && {...scene.economy,markets:scene.economy.markets.map(m=>{const {hours,...old}=m;return old;})}};
 }
 export function preHoursCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preHoursScene(scene),18,true,encode);}
 /** r61 adds furniture metadata and a meal destination, retaining geometry and ledgers. */

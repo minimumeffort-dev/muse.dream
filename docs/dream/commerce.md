@@ -91,7 +91,7 @@ Needs and work settle on a resident 4 Hz simulation clock. NPC decisions are at 
 
 [Save format and the first-market migration](../persistence.md) preserve earlier world changes while introducing this new system. Later changes to economy rules still need an explicit migration. Limits are in the generated [command contract](../dream-v2-contract.json) and [reference](reference.md#commerce-bounds). Logical Lab scenarios remain independent.
 
-The market has a usable ground-floor interior and short food and repair-supply chains. Enterable kitchens, staff shifts, supply production, relationship progression and broader needs planning remain future work. Bounded food destinations are now available through the meal trips below. The supply ledger is working; those institutions should not be described as complete yet.
+The market has a usable ground-floor interior and short food and repair-supply chains. Enterable kitchens, supply production, relationship progression and broader needs planning remain future work. Bounded food destinations are now available through the meal trips below. The supply ledger is working; those institutions should not be described as complete yet.
 
 ## Counter hours
 
@@ -582,7 +582,7 @@ travel. Identical ordered delivery grounds share one prepared topology; the same
 Existing NPC, live-rig, physics and render-quality limits stay unchanged.
 
 This is walking resupply through a finite depot. It adds no upstream production,
-courier vehicle AI, shifts, general logistics scheduler or item pickup body.
+courier vehicle AI, general logistics scheduler or item pickup body.
 
 Pickup and handoff approaches stay less than four world units above/below the vendor. A steep unsupported counter needs a level, connected approach before the courier can use it.
 
@@ -694,3 +694,10 @@ its remaining simulation time.
 Furniture seats are named object-root `seat` declarations. Optional `meal.seats`
 references 1–4 unique furniture placements, with complete humanoids, connected
 approaches and shared player/NPC claims. [Author shared seating](seating.md).
+
+## Staff attendance
+
+An optional [daily shift](shifts.md) gives a stationary staff account a connected
+rest destination. Finish committed work, walk out, rest and physically return.
+Counter trade, production and cargo handoff wait for attendance. The baker and
+school staff use it in the live mock; no idle wages or employment contracts exist.

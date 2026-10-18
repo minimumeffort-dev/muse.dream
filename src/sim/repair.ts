@@ -1,6 +1,7 @@
 import {walkingHeight} from '../scene/interiors';
 import {contactOverlaps} from '../scene/contact-geometry';
 import {errandAreas} from './courier';
+import {shiftAreas} from './shifts';
 import {workClear,workSegment,workPath,workNetwork,primeWorkNetworks,type WalkingArea,type WorkNode} from './work-navigation';
 import {growthContact} from '../scene/growth';
 import {objectPlacement} from '../scene/placement';
@@ -25,10 +26,10 @@ export const repairSegment=(scene:Scene,r:Repair,a:Point,b:Point,state:CarState|
 export const repairPath=(scene:Scene,r:Repair,start:Point,end:Point,state?:CarState)=>workPath(scene,repairArea(scene,r),start,end,state);
 export const repairNetwork=(scene:Scene,r:Repair)=>workNetwork(scene,repairArea(scene,r));
 export interface RepairNavigation {sourceHash:string;services:{id:string;nodes:WorkNode[]}[]}
-export function repairNavigation(scene:Scene):RepairNavigation{return {sourceHash:scene.sourceHash,services:[...(scene.economy?.repairs??[]).filter(r=>r.grounds || r.streets).map(r=>({id:r.id,nodes:repairNetwork(scene,r)})),...errandAreas(scene).map(a=>({id:a.id,nodes:workNetwork(scene,a)}))]};}
+export function repairNavigation(scene:Scene):RepairNavigation{return {sourceHash:scene.sourceHash,services:[...(scene.economy?.repairs??[]).filter(r=>r.grounds || r.streets).map(r=>({id:r.id,nodes:repairNetwork(scene,r)})),...[...errandAreas(scene),...shiftAreas(scene)].map(a=>({id:a.id,nodes:workNetwork(scene,a)}))]};}
 /** Prepared topology comes only from the accepted world's own worker, never Dream or saves. */
 export function primeRepairNavigation(scene:Scene,packet:RepairNavigation):void{
- const expected=(scene.economy?.repairs??[]).filter(r=>r.grounds || r.streets).map(r=>r.id).concat(errandAreas(scene).map(a=>a.id)),bad=()=>{throw Error('Invalid prepared repair navigation');};
+ const expected=(scene.economy?.repairs??[]).filter(r=>r.grounds || r.streets).map(r=>r.id).concat([...errandAreas(scene),...shiftAreas(scene)].map(a=>a.id)),bad=()=>{throw Error('Invalid prepared repair navigation');};
  if(!packet || packet.sourceHash!==scene.sourceHash || !Array.isArray(packet.services) || packet.services.length!==expected.length || packet.services.some(s=>!s || typeof s.id!=='string') || new Set(packet.services.map(s=>s.id)).size!==expected.length)bad();
  const prepared=new Map<string,WorkNode[]>();
  for(const service of packet.services){if(!expected.includes(service.id) || !Array.isArray(service.nodes) || !service.nodes.length || service.nodes.length>COMMERCE_LIMITS.repairNetworkNodes)bad();

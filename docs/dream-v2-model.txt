@@ -574,13 +574,36 @@ the counter check. Committed work finishes after closing; owned food, refunds an
 local repair services remain usable. Couriers already traveling wait at closed
 counters, retaining real cargo/escrow and retrying after opening. Meal customers
 skip closed shops and return empty-handed if closing occurs before purchase.
-Hours do not add staff travel, shifts, wages for idle time or offline catch-up.
+Hours alone do not add staff travel. Add an explicit shift plan below; no idle wages or offline catch-up.
 See examples/market-hours.dream. Format 12/simulation 19 registers r61 by removing
 only market hours; retain all saved fields, clocks, seats, meals and resources.
 
+Use shift id(market=counter,rest=[x,y],on=rest_ground,grounds=[extra_ground],lead_s=15);
+and account(...,shift=id) for physical daily staff attendance. At most 8 plans,
+one NPC per plan. The market needs explicit hours; lead_s is 0..120 and strictly
+shorter than its closed interval. Rest is at least 16 world units from work.
+The actor is a stationary measured-person decor NPC with a program, no route,
+meal, repair or delivery policy. shop and matching production may coexist;
+owned counter and every assigned job must use shift.market. The work placement
+must be in counter reach. Paths use the actual body, rounded upward to .1 units,
+with radius <=8 and height <=32. on plus 0..7 unique convex grounds share 4096
+local samples; existing pedestrian nodes, links, waypoints and actor budgets stay.
+Finish committed production before leaving. Walk to rest after closing and start
+returning lead_s before reopening. Reversing a journey preserves physical position.
+A counter owner must reach the original work anchor before service resumes, even
+if its scheduled opening has passed. Player/NPC trade, new production and cargo
+pickup/handoff share this rule. Couriers wait with their escrow. At rest, staff can
+talk and remember meetings through existing NPC programs; walking pauses those
+clocks. No idle wages, employment contracts, homes or weekly calendar are implied.
+Persist out/rest/in pose, path, speed, distance and retry time. R and streaming
+retain them; Start over resets. Format 13/simulation 20 validates the registered
+r62 world before retaining every saved field/clock; it splits the existing school
+path without changing its footprint and centers the teacher on the entrance.
+See examples/staff-shifts.dream.
+
 One optional economy() block owns goods, accounts, markets and work in the playable
 3D world. This is independent of logical scenario/stock/service declarations.
-Use good(label,food=0); account(actor,credits,capacity,satiety,drain_s,shop=false,work?,works?,repair?);
+Use good(label,food=0); account(actor,credits,capacity,satiety,drain_s,shop=false,shift?,work?,works?,repair?);
 market(label,actor,credits,radius,hours?){lot(good,quantity,limit,price?);} and
 work id(label,market,input,take,output,make,seconds,pay,effort,capacity,target);
 For multiple inputs omit input/take and use a work block:
@@ -748,6 +771,6 @@ pauses the NPC program. Live contacts may block the route; wait/retry without te
 Pickup/carry/return state survives R, streaming and saves, with no offline travel.
 Identical ordered delivery grounds share one prepared graph; retain 8192 nodes,
 32768 links, 128 saved waypoints and existing actor/rig caps. No courier vehicle AI,
-item bodies, shifts or upstream production. See examples/courier-resupply.dream.
+item bodies or upstream production. See examples/courier-resupply.dream.
 
 Pickup/handoff approaches must be less than 4 world units above/below their vendor. Author a level connected approach; steep unsupported counters are rejected.

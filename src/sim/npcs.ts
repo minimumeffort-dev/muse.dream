@@ -20,7 +20,7 @@ export function nearbyNpc(state:CarState,scene:Scene){
   if(state.control.kind!=='foot' || !state.grounded)return;
   let nearest:{object:SceneObject;distance:number}|undefined;
   for(const object of programmed(scene)){
-    if(workJourneyForActor(state,scene,object.id))continue;
+    const journey=workJourneyForActor(state,scene,object.id);if(journey && journey.phase!=='rest')continue;
     const program=behaviorFor(scene,object)!,snapshot=state.npcs?.find(n=>n.id===object.id)??initialNpcState(scene,object),active=program.states.find(s=>s.id===snapshot.stateId)!;
     if(!active.transitions.some(t=>t.event==='interact'))continue;
     const pose=actorPose(scene,object,state.timeS,state),distance=Math.hypot(state.x-pose.x,state.y-pose.y,state.elevation-pose.elevation);
@@ -45,7 +45,7 @@ export function stepNpcs(state:CarState,dt:number,scene:Scene,talkPressed=false)
   const target=talkPressed ? nearbyNpc(state,scene) : undefined;
   return programmed(scene).map(object=>{
     const program=behaviorFor(scene,object)!,previous=state.npcs?.find(n=>n.id===object.id)??initialNpcState(scene,object),next={...previous,elapsedS:previous.elapsedS+dt};
-    if(workJourneyForActor(state,scene,object.id))return previous;
+    const journey=workJourneyForActor(state,scene,object.id);if(journey && journey.phase!=='rest')return previous;
     let active=program.states.find(s=>s.id===previous.stateId)!;
     const pose=actorPose(scene,object,state.timeS,state),distance=Math.hypot(state.x-pose.x,state.y-pose.y,state.elevation-pose.elevation);
     const transition=active.transitions.find(t=>t.event==='after' ? next.elapsedS+1e-9>=t.seconds! : t.event==='interact' ? target===object && interacts(t,previous.known,distance,state,scene) : t.event==='near_player' ? distance<=t.radius! : distance>=t.radius!);

@@ -52,7 +52,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-Format 12 retains the exact source hash and the compatibility fingerprint, with simulation version 19. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+Format 13 retains the exact source hash and the compatibility fingerprint, with simulation version 20. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -305,3 +305,15 @@ stock and personal history continue. Couriers waiting outside service hours save
 the same real journey and escrow; reopening resumes the transaction once. No
 extra timer or offline work is inferred. The old slot is kept, and a corrupt or
 concurrently changed newer slot still blocks replacement.
+
+### Staff travel (r63)
+
+Format 13 / simulation 20 saves each assigned account's out/rest/in phase,
+physical position, heading, speed, distance, target, path and retry clock. Staff
+programs pause during travel, remain available at rest and keep meeting memory.
+No offline catch-up runs. The registered r62 projection removes only shift policy,
+restores the teacher's old six-unit-offset entrance anchor and merges the same
+school path footprint back into its prior declaration. Every old state field and
+both clocks remain exact; original format-12 slots remain. Older migrations
+still validate their registered worlds first. Unrelated world changes cannot use
+this upgrade to reset progress. See [staff shifts](dream/shifts.md).

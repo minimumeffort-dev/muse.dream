@@ -790,3 +790,22 @@ Other counter recordings retain their daytime actions and older UI captions;
 use this new clip to inspect availability and the clock. Existing roofs, assets,
 interiors, vehicles, sports, plant/animal motion and destruction keep unchanged
 geometry and demonstrated rules. [Verification](../evidence/market-hours/verification.md).
+
+
+## Staff leave and return, 2026-10-18
+
+`shifts.gif`, `shifts.mp4` and `shifts.jpg` show 600 actually rendered PNG frames
+at 30 frames per simulation second. The review buys bread through the ordinary
+counter, advances the complete simulation to closing time and follows the baker
+through normal walking controls into the hall. Frame 540 presses talk; the still
+is frame 570. The shared transaction ledger, path and NPC memory remain real
+mock simulation state. No actor pose or task completion is assigned for the shot.
+
+The hours GIF/HD video/still are refreshed together from 480 newly rendered frames,
+with poster frame 300, because its staff now leave the counter. The map is
+regenerated from the accepted scene; the split school path retains its paved
+union. Existing daytime business/seating, assets, driving, destruction, sports,
+lighting and interior captures retain their represented geometry and mechanics.
+Earlier evidence remains pinned to its own source. The tiny school work-anchor
+correction is outside those focused views. These offline exports do not measure
+live FPS or low-powered-laptop performance. See [verification](../evidence/staff-shifts/verification.md).

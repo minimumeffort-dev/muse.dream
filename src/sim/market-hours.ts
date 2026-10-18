@@ -1,6 +1,7 @@
 import {dayHour} from '../scene/daylight';
 import type {Scene} from '../scene/schema';
 import type {Market} from '../scene/commerce';
+import type {EconomyState} from './commerce';
 
 /** Economic hours follow simulation time; reduced motion freezes only the sky. */
 export function marketIsOpen(scene:Pick<Scene,'daylight'>,market:Pick<Market,'hours'>,timeS:number):boolean{
@@ -12,4 +13,8 @@ export function marketOpening(scene:Pick<Scene,'daylight'>,market:Pick<Market,'h
  if(!market.hours || marketIsOpen(scene,market,timeS))return;
  const hour=dayHour(scene.daylight!,timeS),[start]=market.hours;
  return {hour:start,seconds:((start-hour+24)%24)/24*scene.daylight!.cycleSeconds};
+}
+export function marketIsStaffed(scene:Pick<Scene,'economy'>,market:Pick<Market,'actor'>,state:Pick<EconomyState,'accounts'>|undefined):boolean{
+ const staff=scene.economy?.accounts.find(a=>a.actor===market.actor);
+ return !staff?.shift || !state?.accounts.find(a=>a.id===staff.id)?.shift;
 }

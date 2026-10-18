@@ -283,8 +283,8 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 
 ## Saved simulation state
 
-Current save format 12 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 19. Historical formats retain their registered projections.
+Current save format 13 pins exact source plus a host-computed accepted-world fingerprint
+at simulation version 20. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -597,3 +597,20 @@ No staff shifts, offline catch-up or new actor/render/navigation budgets. Format
 12/simulation 19 registers r61 through a projection removing only counter hours;
 preserve every saved field and clock, the old slot and the full migration chain.
 See `docs/dream/hours.md` and `docs/examples/market-hours.dream`.
+
+
+Daily staff attendance uses economy `shift(market,rest,on,grounds?,lead_s?)` and
+`account.shift`. Keep one account per plan, at most eight, explicit daily hours,
+lead 0..120 shorter than closure, convex declared grounds and existing graph caps.
+Stationary measured-person decor NPC programs may shop and do matching production,
+but cannot also own routes, meal/repair/courier policies. Paths use actual body
+clearance rounded upward to .1 (radius <=8, height <=32), never shrunken people.
+Finish own committed work before departure; return early without teleporting.
+Shifted counter owners must actually reach work before shared player/NPC trade,
+new production and cargo service. Rest allows existing conversation/memory; travel
+pauses program clocks. Preserve out/rest/in poses, paths, retries and distance.
+Format 13/simulation 20 registers r62 through the exact pre-shift projection and
+retains every saved field/clock, old slots and the full chain. The school path is
+split without changing its paved union; only the teacher work anchor moves six
+units onto existing entrance paving. No idle wages, weekly calendars or offline
+travel. See `docs/dream/shifts.md` and its runnable example.

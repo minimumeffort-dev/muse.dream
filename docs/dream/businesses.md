@@ -35,7 +35,7 @@ The helper can spend earned pay on food after returning. Kit and sapling supply
 and available repair work retain their existing priorities before flour trips.
 The counter now follows [daily service hours](hours.md), shared by player and
 NPC transactions. This is a working counter and supply loop, with shared bench seating, without table
-service, shifts, upstream farming or business ownership yet.
+service, upstream farming or business ownership yet.
 
 ## Compose the existing Dream rules
 
@@ -147,3 +147,7 @@ The commuter can now take their purchased lunch to a free slot on the indoor
 bench. Player and customer claims use the same furniture metadata; standing is
 the fallback when seats are busy or broken. [Shared seating](seating.md) adds no
 restaurant staff, queue or table service.
+
+The baker now has a [physical daily shift](shifts.md): finish committed work,
+walk into the hall after closing and return before morning service. Counter
+attendance gates the same transactions for the player, shoppers and couriers.
