@@ -73,12 +73,15 @@ export function stepAmbient(state:CarState,dt:number,scene:Scene):AmbientState|u
     }
     // Waiting sees moving vehicles and the player's active body before entering their swept space.
     const floor=walkingHeight(scene,m.x,m.y);
-    const next={x:m.x+Math.cos(heading)*speed*AMBIENT_LIMITS.tickSeconds,y:m.y+Math.sin(heading)*speed*AMBIENT_LIMITS.tickSeconds};
+    const vx=Math.cos(heading)*speed,vy=Math.sin(heading)*speed,next={x:m.x+vx*AMBIENT_LIMITS.tickSeconds,y:m.y+vy*AMBIENT_LIMITS.tickSeconds};
     if(movedParkingContacts(scene,m.x,m.y,nav.radius(o)+speed*AMBIENT_LIMITS.tickSeconds,state).some(c=>c.top>floor+.1 && c.bottom<floor+22 && distanceToRoad([m,next],c.x,c.y)<c.r+nav.radius(o)))return finish();
     if(hazards.some(c=>{
      if(c.bottom>floor+24 || c.top<floor)return false;
-     const vx=(c.vx??0)-Math.cos(heading)*speed,vy=(c.vy??0)-Math.sin(heading)*speed,dx=c.x-m.x,dy=c.y-m.y,t=Math.max(0,Math.min(2,-(dx*vx+dy*vy)/(vx*vx+vy*vy||1)));
-     return Math.hypot(dx+vx*t,dy+vy*t)<c.r+nav.radius(o)+5;
+     const rx=(c.vx??0)-vx,ry=(c.vy??0)-vy,dx=c.x-m.x,dy=c.y-m.y,reach=c.r+own!.r+5;
+     // Conservative two-second envelope; keep a margin for boundary rounding.
+     if(Math.abs(dx)-Math.abs(rx)*2>reach+1e-7 || Math.abs(dy)-Math.abs(ry)*2>reach+1e-7)return false;
+     const t=Math.max(0,Math.min(2,-(dx*rx+dy*ry)/(rx*rx+ry*ry||1)));
+     return Math.hypot(dx+rx*t,dy+ry*t)<reach;
     }))return finish();
    }else{
     const distance=Math.hypot(state.x-m.x,state.y-m.y,state.elevation-drivingHeight(scene.terrain,m.x,m.y));

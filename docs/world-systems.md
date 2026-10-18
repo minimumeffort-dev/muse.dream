@@ -204,3 +204,8 @@ foot position/facing through a turn or stop. Instanced sidewalk walkers share th
 policy without more scene rigs or physics bodies. Terrain-aware per-foot steps
 and the sports squads' direction changes remain animation work; this pass does
 not change movement rules or saved lives. [Contact checks](evidence/foot-contacts/verification.md).
+
+The latest movement-query pass retains every tick of the school repair and crowd
+replay while reducing repeated contact and spatial-index work. Continue checking
+CI timing variance and populated browser scenes before increasing simulation
+load. [Matched replay and limits](evidence/movement-queries/verification.md).

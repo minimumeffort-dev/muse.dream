@@ -5,7 +5,7 @@ import type {Scene,Point,SceneObject} from './schema';
 import {walkingNetwork} from './sites';
 import {streetFootprints,onPolygon} from './streets';
 import {polygonBounds,distanceToPolygon} from './polygons';
-import {queryStaticContacts} from './contacts';
+import {queryStaticContacts,type Contact} from './contacts';
 import type {CarState} from '../sim/car';
 import {drivingHeight,waterAt} from './terrain';
 import {assemblyHorizontalRadius} from './measure';
@@ -46,10 +46,10 @@ function buildNavigation(scene:Scene,prepared?:AmbientGraph){
  const blockedBins=new Map<string,number[]>(),margin=Math.max(0,...members.map(radius))+2;
  const waters=(scene.terrain.landscape?.waters??[]).map(w=>polygonBounds(w.polygon));
  for(const [i,p] of blocked.entries()){const b=polygonBounds(p);for(let y=Math.floor((b.y0-margin)/256);y<=Math.floor((b.y1+margin)/256);y++)for(let x=Math.floor((b.x0-margin)/256);x<=Math.floor((b.x1+margin)/256);x++){const key=x+','+y,cell=blockedBins.get(key)??[];cell.push(i);blockedBins.set(key,cell);}}
- const clear=(x:number,y:number,rr:number,walk:boolean,state?:CarState)=>{
+ const clear=(x:number,y:number,rr:number,walk:boolean,state?:CarState,contacts?:Contact[])=>{
   if(x<rr || y<rr || x>scene.canonical.width-rr || y>scene.canonical.height-rr)return false;
   const floor=walkingHeight(scene,x,y,rr);
-  if(queryStaticContacts(scene,x,y,rr,state).some(c=>contactOverlaps(c,x,y,rr) && c.top>floor+.1 && c.bottom<floor+22))return false;
+  if((contacts??queryStaticContacts(scene,x,y,rr,state)).some(c=>contactOverlaps(c,x,y,rr) && c.top>floor+.1 && c.bottom<floor+22))return false;
   const nearWater=waters.some(b=>x+rr>=b.x0 && x-rr<=b.x1 && y+rr>=b.y0 && y-rr<=b.y1);
   if(walk || nearWater)for(let i=0;i<9;i++){const px=x+(i ? Math.cos(i*Math.PI/4)*rr : 0),py=y+(i ? Math.sin(i*Math.PI/4)*rr : 0);if(nearWater && waterAt(scene.terrain,px,py,drivingHeight(scene.terrain,px,py)) || walk && !paved(px,py))return false;}
   return walk || !(blockedBins.get(Math.floor(x/256)+','+Math.floor(y/256))??[]).some(i=>onPolygon(blocked[i]!,x,y) || distanceToPolygon(x,y,blocked[i]!)<rr+2);
@@ -57,11 +57,13 @@ function buildNavigation(scene:Scene,prepared?:AmbientGraph){
  const segment=(a:Point,b:Point,rr:number,walk:boolean,state?:CarState)=>{
   const length=Math.hypot(b.x-a.x,b.y-a.y);
   if(walk && !pavedSegment(a,b,rr))return false;
-  for(const c of queryStaticContacts(scene,(a.x+b.x)/2,(a.y+b.y)/2,length/2+rr,state))if(segmentContactDistance(c,a,b)<rr){
+  // This enclosing query also covers every sampled point's footprint.
+  const contacts=queryStaticContacts(scene,(a.x+b.x)/2,(a.y+b.y)/2,length/2+rr,state);
+  for(const c of contacts)if(segmentContactDistance(c,a,b)<rr){
    const t=length ? Math.max(0,Math.min(1,((c.x-a.x)*(b.x-a.x)+(c.y-a.y)*(b.y-a.y))/(length*length))) : 0,floor=walkingHeight(scene,a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t,rr);
    if(c.top>floor+.1 && c.bottom<floor+22)return false;
   }
-  const n=Math.max(1,Math.ceil(length/8));for(let i=0;i<=n;i++)if(!clear(a.x+(b.x-a.x)*i/n,a.y+(b.y-a.y)*i/n,rr,walk,state))return false;return true;
+  const n=Math.max(1,Math.ceil(length/8));for(let i=0;i<=n;i++)if(!clear(a.x+(b.x-a.x)*i/n,a.y+(b.y-a.y)*i/n,rr,walk,state,contacts))return false;return true;
  };
  if(prepared)return {...prepared,radius,clear,segment};
  const nodes:WalkNode[]=[],centers:number[]=[];

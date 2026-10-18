@@ -1,0 +1,16 @@
+{
+  "files": [
+    {
+      "path": "src/sim/spatial.ts",
+      "sha256": "a9ab8fa91a17a0eeef37a02bd114597b2a04cd082250b49eefbbbb0aba46e5a1"
+    },
+    {
+      "path": "src/sim/ambient.ts",
+      "sha256": "13d9f3cec02defa1932d0421a12e8fed33df08c6c7ccb70d1ee3a4c2567571c9"
+    },
+    {
+      "path": "src/scene/ambient-navigation.ts",
+      "sha256": "3582423b586508b967ab98a6f6a4e8977f9c53b37cdff29abb7dd7a1ef42a7bb"
+    }
+  ]
+}

@@ -1057,3 +1057,10 @@ architecture, roads and the city map remain accurate because source geometry and
 placements are unchanged. Older activity clips retain their recorded actions and
 construction; this set is the current reference for walking contacts. Swimming
 keeps its unchanged crawl/tread policy and recording.
+
+## Movement query cost, 2026-10-19
+
+This pass changes no rendered asset, pose, placement, control or world trajectory.
+The existing matched GIF/HD/still sets remain accurate. New native comparisons
+and CPU diagnostics are recorded in `docs/evidence/movement-queries/`; they do
+not replace product footage or establish performance on weaker laptops.

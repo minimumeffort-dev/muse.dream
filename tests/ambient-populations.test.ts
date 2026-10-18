@@ -125,6 +125,17 @@ describe('bounded moving ambient populations',()=>{
   expect(resumed.speed).toBe(14);expect(Math.hypot(resumed.x-m.x,resumed.y-m.y)).toBeCloseTo(.7);
   const legacy={...near,population:undefined,timeS:1000};expect(stepAmbient(legacy,.05,scene)!.tick).toBe(20001);
  });
+ it('keeps exact vehicle forecasts for fast, oblique and grazing approaches',()=>{
+  const o=scene.objects.find(o=>o.ambient!.motion.kind==='walk')!,solo={...scene,objects:[o]},nav=ambientNavigation(solo);
+  let state={...createCarAtSpawn(solo),x:100,y:2200};for(let i=0;i<10;i++)state={...state,population:stepAmbient(state,.05,solo),timeS:state.timeS+.05};
+  const m=state.population!.members[0]!,goal=nav.nodes[m.node]!,h=Math.atan2(goal.y-m.y,goal.x-m.x),v=Math.min(o.ambient!.motion.speed,Math.hypot(goal.x-m.x,goal.y-m.y)/.05),radius=nav.radius(o),reach=12+radius+5;
+  for(const angle of [0,.3,Math.PI/4,Math.PI/2,Math.PI,Math.PI*1.5])for(const speed of [0,50,300])for(const margin of [-1e-8,0,1e-8,100]){
+   const vx=Math.cos(angle)*speed,vy=Math.sin(angle)*speed,rx=vx-Math.cos(h)*v,ry=vy-Math.sin(h)*v,dx=-rx*2+Math.cos(angle+Math.PI/2)*(reach+margin),dy=-ry*2+Math.sin(angle+Math.PI/2)*(reach+margin);
+   const near={...state,x:m.x+dx,y:m.y+dy,vx,vy,elevation:walkingHeight(solo,m.x,m.y)};
+   const actualX=near.x-m.x,actualY=near.y-m.y,t=Math.max(0,Math.min(2,-(actualX*rx+actualY*ry)/(rx*rx+ry*ry||1))),blocked=Math.hypot(actualX+rx*t,actualY+ry*t)<reach;
+   expect(stepAmbient(near,.05,solo)!.members[0]!.speed,JSON.stringify({angle,speed,margin})).toBe(blocked ? 0 : v);
+  }
+ });
  it('is replayable across frame divisions and preserves live state on R while Start over resets it',()=>{
   const a=advance(createCarAtSpawn(scene),3,.05),b=advance(createCarAtSpawn(scene),3,1/120);
   for(let i=0;i<a.population!.members.length;i++){expect(a.population!.members[i]!.x).toBeCloseTo(b.population!.members[i]!.x,8);expect(a.population!.members[i]!.y).toBeCloseTo(b.population!.members[i]!.y,8);}

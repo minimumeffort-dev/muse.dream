@@ -1,0 +1,1 @@
+{"ok":true,"characters":2445,"syntaxTokens":976,"assemblies":2,"parts":10,"joints":0,"placements":2,"routes":1,"waters":2,"scenarios":0,"fullWorld":true}
