@@ -117,6 +117,14 @@ repair work. Supplies and business money stay finite. [Recipes in Dream](docs/dr
 
 [Watch the market in HD](docs/media/commerce.mp4)
 
+Work now remembers who did it. Bake three batches to unlock a larger batch with
+more bread and better pay. The baker earns that practice separately, and the vendor
+recognizes your contribution when you talk. Deliver bread to the school and the
+teacher can thank you for it. These conditions are authored in Dream.
+[Personal work and recognition](docs/dream/commerce.md#personal-work-and-recognition).
+
+![Earned work at the market](docs/media/progression.gif)
+
 You can also take delivery work. Bring flour from the station depot to the bakery,
 or carry bread to the school canteen. Pick up with **H**, follow the marked
 location, then hand over on foot to get paid. Cargo, stock and money survive

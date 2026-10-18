@@ -6,6 +6,10 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights personal milestone guards at exact boundaries and escapes labels',()=>{
+    const html=highlight('milestone practice(label="<Practice>&",kind=work,task=bake,count=3);work large(requires=practice);account baker(works=[large,bake]);');
+    expect(html).toContain('class="dream-keyword">milestone</span>');for(const word of ['requires','works','task'])expect(html).toContain(`class="dream-field">${word}</span>`);expect(html).toContain('&lt;Practice&gt;&amp;');expect(highlight('milestones requires_extra works_extra task_extra')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('highlights recipe ingredients at full boundaries and escapes authored text',()=>{
     const html=highlight('work lunch(label="<Lunch>&"){ingredient(good=bread,take=1);ingredient(good=greens,take=2);}');
     expect(html).toContain('class="dream-keyword">ingredient</span>');expect(html).toContain('&lt;Lunch&gt;&amp;');expect(highlight('ingredients ingredient_extra good_extra takes')).not.toMatch(/dream-(?:keyword|field)/);

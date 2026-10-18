@@ -1,0 +1,22 @@
+{
+  "baseline": "3942b11b90e296a90ee40c630f694d3f31a7f2b7",
+  "checks": {
+    "acceptedPreviousFields": "exact",
+    "hash": "exact",
+    "worldStreamBounds": "exact; packet source identities independently checked",
+    "sceneContactData": "exact; packet source identities independently checked",
+    "ambientGraph": "exact; packet source identities independently checked",
+    "repairNavigation": "exact; packet source identities independently checked"
+  },
+  "geometry": {
+    "objects": 1699,
+    "routes": 12,
+    "streets": 32
+  },
+  "freshEconomyJsonBytes": {
+    "before": 1450,
+    "after": 2656,
+    "delta": 1206
+  },
+  "limits": "No actor, rig, physics, render quality or navigation budget change. Serialized byte counts are not JS heap, GPU memory or frame-time measurements."
+}

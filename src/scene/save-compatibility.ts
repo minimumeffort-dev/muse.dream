@@ -2,7 +2,7 @@ import marketR55 from './compatibility/r55-market.json';
 import type {Scene} from './schema';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=14;
+export const SAVE_SIMULATION_VERSION=15;
 
 /** A conservative contract: only host provenance and spoken text may differ. */
 export function saveCompatibilitySource(scene:Scene):string {
@@ -10,7 +10,8 @@ export function saveCompatibilitySource(scene:Scene):string {
 }
 function projection(scene:Scene,simulationVersion:number,rounded=true):string {
   const {revisionId,sourceHash,provenance,...world}=scene;
-  const data={simulationVersion,world:{...world,...(simulationVersion<5 && world.economy ? {economy:{...world.economy,repairs:undefined}} : {}),behaviors:scene.behaviors.map(program=>({...program,states:program.states.map(state=>{
+  const economy=world.economy && simulationVersion<15 ? (({milestones,...old})=>old)(world.economy) : world.economy;
+  const data={simulationVersion,world:{...world,...(economy ? {economy} : {}),...(simulationVersion<5 && world.economy ? {economy:{...economy,repairs:undefined}} : {}),behaviors:scene.behaviors.map(program=>({...program,states:program.states.map(state=>{
     const {say,...rules}=state;return rules;
   })}))}};
   // Property insertion order is not part of the contract; array order still is.
@@ -28,7 +29,7 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || hash===RECIPE_COMPATIBILITY;
+  return !scene.economy || hash===PROGRESS_COMPATIBILITY;
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
@@ -46,9 +47,16 @@ export const COURIER_COMPATIBILITY='e0ae71a17aa055c0ca146651434ccd52341ed2d5a179
 export const INTERIOR_COMPATIBILITY='36a6b350b49fa07044768fde832c838f9a4be007484d285a93c18a8beb77f136';
 export const EGRESS_COMPATIBILITY='f7b5f8bc696e111422148d51e068413050785a6dc03dcc418cbeb80d9f8adcfc';
 export const RECIPE_COMPATIBILITY='97f4bf439e7eb4a1998c36851128724123b16861e4ce277d295d1e4e182ab5a4';
+export const PROGRESS_COMPATIBILITY='46a0824a39fbddaae24bae941554b33cddaf84437d24dfb0d9eaea8daed6bbcd';
+/** Registered r58 adds personal progression; geometry and previous task rules are unchanged. */
+export function preProgressScene(scene:Scene):Scene{
+ const e=scene.economy;
+ return {...scene,behaviors:scene.behaviors.map(b=>!['market_chat','school_chat'].includes(b.id) ? b : {...b,states:b.states.filter(s=>s.id!==(b.id==='market_chat' ? 'recognized' : 'helped')).map(s=>({...s,transitions:s.transitions.filter(t=>!t.requires)}))}),economy:e && {...e,milestones:[],jobs:e.jobs.filter(j=>j.id!=='large_bake'),accounts:e.accounts.map(a=>{if(a.id!=='baker' || !a.works)return a;const {works,...old}=a;return {...old,work:'bake'};})}};
+}
+export function preProgressCompatibilitySource(scene:Scene):string{return projection(preProgressScene(scene),14);}
 /** Registered r57 keeps all old rules and initial ledgers; only new recipes/lots are removed. */
 export function preRecipeScene(scene:Scene):Scene{
- const e=scene.economy;if(!e)return scene;
+ scene=preProgressScene(scene);const e=scene.economy;if(!e)return scene;
  const added=new Set(['vegetables','lunch','boards','fasteners']);
  return {...scene,economy:{...e,goods:e.goods.filter(g=>!added.has(g.id)),markets:e.markets.map(m=>({...m,lots:m.lots.filter(l=>!added.has(l.good))})),jobs:e.jobs.filter(j=>!['pack_lunch','assemble_kit'].includes(j.id))}};
 }

@@ -57,12 +57,13 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | --- | --- | --- | --- |
 | `economy` | top | No ID / economy | None |
 | `good` | economy | ID / no block | `label: text`, `food?: n` |
-| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `shop?: bool`, `work?: ref`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
+| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `shop?: bool`, `work?: ref`, `works?: symbols`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
 | `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n` |
 | `lot` | market | ID / no block | `good: ref`, `quantity: n`, `limit: n`, `price?: n` |
 | `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `price: n?`, `capacity: n`, `on: ref?`, `grounds: symbols?` |
-| `work` | economy | ID / optional recipe block | `label: text`, `market: ref`, `input?: ref`, `take?: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n` |
+| `work` | economy | ID / optional recipe block | `label: text`, `market: ref`, `input?: ref`, `take?: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `requires?: ref` |
 
+| `milestone` | economy | ID / no block | `label: text`, `kind: work / delivery / repair`, `task: ref`, `count: n` |
 | `ingredient` | recipe | No ID / no block | `good: ref`, `take: n` |
 
 ### Assemblies and composition
@@ -124,7 +125,7 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 | `point` | path / route_path | No ID / no block | `at: point` |
 | `behavior` | top | ID / behavior | `start: ref` |
 | `state` | behavior | ID / npc_state | `action: idle / patrol / perform`, `face?: none / player`, `say?: text` |
-| `on` | npc_state | ID / no block | `event: after / near_player / far_player / interact`, `to: ref`, `seconds?: n`, `radius?: n`, `familiar?: bool` |
+| `on` | npc_state | ID / no block | `event: after / near_player / far_player / interact`, `to: ref`, `seconds?: n`, `radius?: n`, `familiar?: bool`, `requires?: ref` |
 | `furnish` | top | ID / no block | `objects: symbols`, `streets?: symbols`, `sites?: symbols`, `grounds?: symbols`, `paving?: color`, `spacing: n`, `setback: n`, `seed: n`, `side?: left / right / both`, `facing?: along / street / varied`, `jitter?: n`, `count?: n`, `pose?: rest`, `on?: verge / sidewalk`, `motion?: ambient_motion`, `role?: prop / controllable` |
 | `flock` | top | ID / no block | `object: ref`, `at: v2`, `radius: v2`, `count: n`, `altitude: n`, `speed: n`, `seed: n`, `flap_hz?: n`, `flap_deg?: n` |
 | `place` | top | ID / no block | `object: ref`, `at?: v2`, `route?: ref`, `offset?: n`, `phase_s?: n`, `scale?: n`, `heading_deg?: n`, `role?: prop / npc / controllable / ambient`, `behavior?: ref`, `pose?: rest`, `motion?: ambient_motion`, `parked?: bool` |
@@ -396,10 +397,10 @@ One optional `economy(){...}` per linked world. [Working guide](commerce.md).
 
 ```text
 good id(label=text,food=n?);
-account id(actor=ref,credits=n,capacity=n,satiety=n,drain_s=n,shop=bool?,work=ref?,repair=ref?,repairs=symbols?);
+account id(actor=ref,credits=n,capacity=n,satiety=n,drain_s=n,shop=bool?,work=ref?,works=symbols?,repair=ref?,repairs=symbols?);
 market id(label=text,actor=ref,credits=n,radius=n){ lot ... }
 lot id(good=ref,quantity=n,limit=n,price=n?);
-work id(label=text,market=ref,input=ref,take=n,output=ref,make=n,seconds=n,pay=n,effort=n,capacity=n,target=n);
+work id(label=text,market=ref,input=ref,take=n,output=ref,make=n,seconds=n,pay=n,effort=n,capacity=n,target=n,requires=ref?);
 ```
 
 At most 8 goods, 16 accounts, 8 markets, 16 jobs and 16 delivery contracts and 8 repair services; each market has 1..8 lots with unique goods. Exactly one player account; one account per actor. Other owners are existing NPC placements. Market vendors and production workers are stationary. Repair workers start at a stationary home in supply-market reach and travel within declared grounds and their pedestrian connections. NPC `shop` and `work` policies are optional; player accounts cannot automate themselves.
@@ -407,6 +408,27 @@ At most 8 goods, 16 accounts, 8 markets, 16 jobs and 16 delivery contracts and 8
 Credits: integer 0..1,000,000. Stock/limits: integer 0..10,000 with positive limits. Price: integer 1..10,000, or omitted for untraded ingredients. Carrying capacity: integer 1..32. Fullness/food: 0..100, drain per second: 0..0.25. Radius: 20..80. Work: 1..120 seconds, positive integer take/make/pay, effort 1..50, capacity 1..4, target within output lot capacity. Use exactly scalar `input`/`take` or a block of 1..4 `ingredient(good=...,take=...)` statements with unique goods. No empty block or mixed forms. Every input has a matching market lot, take within its capacity, and differs from the output. Labels: 1..40 nonblank characters. IDs follow the ordinary identifier contract.
 
 Buy/sell transfers one unit at the listed price. Work reserves every input, wage, refund space for each input and output capacity atomically; cancellation refunds, completion pays once and spends effort. Food consumes an owned unit and restores fullness. NPC food decisions occur at fullness <=40; automatic work refills to target. Shared money and material conservation, clock/owner/member bounds and capacity are checked on restore. The simulation owns rules and work time; the renderer owns gestures and feedback. No offline catch-up or generated scripts. Existing NPC, rig, physics and geometry caps are unchanged.
+
+### Personal work and recognition
+
+`milestone id(label=text,kind=work|delivery|repair,task=ref,count=n);` lives in
+`economy`. At most 16, with a matching existing task, integer count 1..1,000,000,000
+and the ordinary 1..40-character label. `work.requires` checks that worker's own
+record. Work prerequisite cycles fail. `account.works=[advanced,basic]` tries
+1..4 unique jobs in order, each eligible and below target; it excludes `work`,
+repair duties, deliveries and player ownership. Existing stationary/range checks apply.
+
+`on.requires` is interact-only and checks the player. After linking, every placement
+using that guard must be the task's receiving market actor: `work.market`,
+`repair.market` or `delivery.to`. Unknown, unrelated or absent-economy guards fail.
+Completion increments only when paid work, a handoff or a repair succeeds. Cancel,
+pickup and another account's work do not count. Milestones award no resources.
+
+Saved personal counters and unassigned old counts sum exactly to shared totals.
+Strict IDs, integer bounds and qualified active work are checked on restore.
+Format 10/simulation 15 preserves previous totals unassigned because older saves
+had no complete ownership history. New personal records start at zero; old active
+jobs count when completed. [Runnable example](../examples/work-progression.dream).
 
 ### Delivery bounds
 

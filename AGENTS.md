@@ -283,8 +283,8 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 
 ## Saved simulation state
 
-Current save format 9 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 14. Historical formats retain their registered projections.
+Current save format 10 pins exact source plus a host-computed accepted-world fingerprint
+at simulation version 15. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -428,8 +428,8 @@ Dream 2 ungrouped topple compiles one stable rigid fragment. Whole impacts may
 use one centered base contact; compound/offset contacts remain rejected. Preserve
 narrow lamp contacts, all authored geometry, shared category rules, night paint,
 actor/rig limits and no per-cell bodies. Lamp surface pools turn off while broken
-and return after paid repair. Keep format 9/simulation 11 and the registered r50/r51/r52
-migration chain. Current service covers 84 targets including 77 lamps; other
+and return after paid repair. Keep the registered format 9/simulation 11 projections and the r50/r51/r52
+migration chain. Current service covers 88 targets including 77 lamps; other
 districts still need declared coverage.
 See `docs/examples/streetlight-repairs.dream` and `docs/dream/rules.md`.
 
@@ -455,8 +455,8 @@ At most 32 growing records plus reserved planting jobs. Scale renderer and
 contacts from one immutable growth snapshot; pause expansion for occupied space.
 Re-destruction captures current size, clears growth and never refunds a planted
 input. Keep streamed culling/shadow bounds valid for young crowns, reapply growth
-on chunk install and allocate no per-step geometry. Preserve format 9/simulation
-11, the exact registered r52 projection and older graph migrations. Overlapping
+on chunk install and allocate no per-step geometry. Preserve the registered format 9/simulation
+11 chain, the exact r52 projection and older graph migrations. Overlapping
 work grounds require clear full-cylinder portals; parked vehicles affect route
 selection, moving transit causes waits and blocked paths retry without losing
 claims. See `docs/dream/growth.md` and its checked example. Current live coverage
@@ -468,7 +468,7 @@ grass/flowers, without a surface mesh or map overlay. Painted/default surfaces
 require color; keep their declaration-index paint lifts. Both finishes retain
 polygon/world/riding bounds, furniture reservations, habitat exclusions and
 repair coverage. Do not infer paved access or flatten terrain from an activity
-area. Keep the exact r53 appearance projection, format 9/simulation 11 and all
+area. Keep the exact r53 appearance projection, historical format 9/simulation 11 chain and all
 older migrations; preserve saved growth/worker state without rebasing current
 node indices. See `docs/dream/worlds.md` and the orchard example.
 
@@ -505,3 +505,24 @@ refund. Never add per-item render/physics bodies. The simulation-13 to 14 upgrad
 adds only the four finite market supplies/empty lunch shelf and zeroed new
 inventory/consumption/batch fields; preserve old state and its slot, with no
 population/floor rebasing for this upgrade. See `docs/examples/multi-input-work.dream`.
+
+Personal task completion is engine state: `account.completed.work|delivery|repair`
+and economy `unattributed` sum exactly to shared counters. Increment only on paid
+completion/handoff/successful repair, never start/cancel/collection. `milestone`
+is bounded to 16 existing matching tasks with integer counts 1..1e9. Work
+`requires` checks the acting account and rejects dependency cycles. Interact-only
+`on.requires` checks the player at the task receiving market actor after linking;
+never infer contributions from global counts or labels. `account.works` is an
+ordered 1..4 unique production list, exclusive with work, repair duties,
+deliveries and player ownership. Both actors use the same eligible transactions.
+Keep the existing actor/rig/physics/navigation/render bounds.
+
+Format 10/simulation 15 keeps all registered old fingerprints and validates before
+adding personal history. Old global totals stay unassigned because ownership was
+not fully recorded; new personal counters start at zero. Old active tasks earn
+personal credit when completed. R/streaming preserve records, Start over resets,
+ordinary reload never reapplies migration. Preserve the original slot, corrupt
+newer-slot and concurrent-tab blocking, and exact clocks/paths/vehicles/materials.
+The r57 projection removes only progression definitions/policy/guarded states;
+pure r57-to-r58 upgrades never rebase population or move saved bodies. See
+`docs/examples/work-progression.dream` and `docs/persistence.md`.

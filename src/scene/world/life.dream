@@ -77,8 +77,8 @@ include understory(module=flora);
 include woodland_edges(module=nature);
 
 behavior market_chat(start=busy){
- state busy(action=perform){on talk(event=interact,to=hello,radius=55,familiar=false);on welcome_back(event=interact,to=returning,radius=55,familiar=true);on look(event=near_player,to=watching,radius=90);}
- state watching(action=idle,face=player){on talk(event=interact,to=hello,radius=55,familiar=false);on welcome_back(event=interact,to=returning,radius=55,familiar=true);on leave(event=far_player,to=busy,radius=130);}
+ state busy(action=perform){on recognize(event=interact,to=recognized,radius=55,requires=practiced_baker);on talk(event=interact,to=hello,radius=55,familiar=false);on welcome_back(event=interact,to=returning,radius=55,familiar=true);on look(event=near_player,to=watching,radius=90);}
+ state watching(action=idle,face=player){on recognize(event=interact,to=recognized,radius=55,requires=practiced_baker);on talk(event=interact,to=hello,radius=55,familiar=false);on welcome_back(event=interact,to=returning,radius=55,familiar=true);on leave(event=far_player,to=busy,radius=130);}
  state hello(action=idle,face=player,say="Hello. Welcome to the market."){
   on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
@@ -87,6 +87,9 @@ behavior market_chat(start=busy){
  }
  state about(action=idle,face=player,say="You can bake bread, pack lunches, assemble repair kits, deliver to the school or help repair the neighborhood."){
   on again(event=interact,to=hello,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
+ }
+ state recognized(action=idle,face=player,say="You have baked three batches here. You can take the larger batch now, with more bread and better pay."){
+  on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
 }
 
@@ -105,8 +108,8 @@ behavior health_chat(start=busy){
 }
 
 behavior school_chat(start=busy){
- state busy(action=perform){on talk(event=interact,to=hello,radius=55,familiar=false);on welcome_back(event=interact,to=returning,radius=55,familiar=true);on look(event=near_player,to=watching,radius=90);}
- state watching(action=idle,face=player){on talk(event=interact,to=hello,radius=55,familiar=false);on welcome_back(event=interact,to=returning,radius=55,familiar=true);on leave(event=far_player,to=busy,radius=130);}
+ state busy(action=perform){on recognize(event=interact,to=helped,radius=55,requires=school_helper);on talk(event=interact,to=hello,radius=55,familiar=false);on welcome_back(event=interact,to=returning,radius=55,familiar=true);on look(event=near_player,to=watching,radius=90);}
+ state watching(action=idle,face=player){on recognize(event=interact,to=helped,radius=55,requires=school_helper);on talk(event=interact,to=hello,radius=55,familiar=false);on welcome_back(event=interact,to=returning,radius=55,familiar=true);on leave(event=far_player,to=busy,radius=130);}
  state hello(action=idle,face=player,say="Hello. Good to see a new face in the neighborhood."){
   on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
@@ -115,6 +118,9 @@ behavior school_chat(start=busy){
  }
  state about(action=idle,face=player,say="Our canteen takes bread deliveries from the market. The food goes into real stock here."){
   on again(event=interact,to=hello,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
+ }
+ state helped(action=idle,face=player,say="Thank you for bringing bread to the school. It is on the canteen shelf, ready for people to buy."){
+  on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
 }
 
@@ -128,7 +134,7 @@ economy(){
  good boards(label="Timber boards");
  good fasteners(label="Fasteners");
  account pocket(actor=player,credits=20,capacity=8,satiety=48,drain_s=.05);
- account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,work=bake);
+ account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,works=[large_bake,bake]);
  account regular(actor=market_commuter,credits=30,capacity=4,satiety=25,drain_s=.05,shop=true);
  account school_staff(actor=teacher,credits=30,capacity=4,satiety=28,drain_s=.05,shop=true);
  account caretaker(actor=market_neighbor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,repairs=[market_tables,orchard_trees],deliveries=[kits_run,saplings_run]);
@@ -157,6 +163,9 @@ economy(){
  delivery saplings_run(label="Bring saplings to the market",from=station_supplies,to=market_stall,good=sapling,quantity=2,pay=4,price=2,capacity=1,on=market_square);
  repair orchard_trees(label="Plant a new tree",market=market_stall,on=market_square,grounds=[orchard_work,orchard_path],kind=tree,input=sapling,take=1,seconds=10,pay=6,effort=6,regrow_s=180,seed_scale=.15);
  work bake(label="Bake bread",market=market_stall,input=flour,take=1,output=bread,make=2,seconds=6,pay=3,effort=12,capacity=1,target=4);
+ milestone practiced_baker(label="Bake bread batches",kind=work,task=bake,count=3);
+ milestone school_helper(label="Deliver bread to school",kind=delivery,task=school_run,count=1);
+ work large_bake(label="Bake a larger batch",market=market_stall,input=flour,take=2,output=bread,make=5,seconds=9,pay=5,effort=16,capacity=1,target=6,requires=practiced_baker);
  work pack_lunch(label="Pack lunch",market=market_stall,output=lunch,make=1,seconds=5,pay=3,effort=6,capacity=1,target=2){
   ingredient(good=bread,take=1);
   ingredient(good=vegetables,take=1);

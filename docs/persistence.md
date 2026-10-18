@@ -44,7 +44,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-Format 9 retains the exact source hash and the compatibility fingerprint, with simulation version 14. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+Format 10 retains the exact source hash and the compatibility fingerprint, with simulation version 15. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -220,3 +220,26 @@ release. The earlier registered upgrades still pass through their own checked
 physical projections before receiving the new definitions. A change to another
 world, price or recipe remains incompatible. Ingredient reservations are derived
 from the accepted recipe and active work ID; saves cannot supply a custom recipe.
+
+## Personal completion history
+
+Format 10 / simulation 15 adds per-account counts for completed work, deliveries
+and repairs, plus unassigned earlier totals. The registered r57 upgrade first
+validates the old world and complete economy. It preserves every previous saved
+field, initializes only the larger job's empty batch counter and the new history,
+and leaves previous shared counts unassigned. Older event buffers were truncated;
+they cannot safely identify every worker. New personal records start at zero.
+
+An active saved job keeps its deadline and reservations. Its actual completion
+then adds one personal record and the ordinary wage. NPC work never increments the
+player's record. Restore checks exact task IDs, integer bounds, totals and any
+active job's qualification before applying state. A normal format 10 reload does
+not repeat the migration or erase personal progress. The old slot is kept; a
+corrupt or concurrently changed newer slot still blocks writes and fallback.
+
+The exact registered projection removes only the larger job, milestones, ordered
+baker policy and guarded conversation additions. Previous world geometry, contacts,
+paths, initial inventories and task rules retain their existing fingerprints.
+All earlier registered upgrades remain tested. Pure r57-to-r58 upgrades do not
+rebase the population, move vehicles, adjust floors or advance simulation time.
+A save is locally editable data; these checks do not prove who actually played it.

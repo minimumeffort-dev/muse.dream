@@ -70,3 +70,9 @@ Geometry, furniture reservations and movement bounds still apply.
 Multi-input work uses a bounded `work` block of `ingredient(good=...,take=...)`
 statements. The existing `input`/`take` form remains valid. Both compile to the
 same conserved production ledger. [Recipes and the complete example](dream/commerce.md#recipes-with-several-ingredients).
+
+Personal progression uses `milestone(kind=work|delivery|repair,task=...,count=...)`
+inside `economy`. `work.requires` checks the worker's own completions; an interact
+`on.requires` recognizes the player's contribution at the receiving market actor.
+`account.works` orders up to four eligible production jobs. These are bounded
+conditions, not scripts or authored rewards. [Runnable guide](dream/commerce.md#personal-work-and-recognition).

@@ -18,8 +18,8 @@ it('reserves actual cargo, destination wages and both shelves, then pays only at
  const before=start(),copy=structuredClone(before);let s=step(before,{kind:'collect',delivery:'lunch_run'});
  expect(pocket(s).credits).toBe(20);expect(pocket(s).inventory.bread).toBe(0);expect(stock(s,'corner').stock.bread).toBe(5);expect(stock(s,'lunch_counter').credits).toBe(36);expect(stock(s,'lunch_counter').stock.bread).toBe(0);checkEconomyState(s,scene);expect(before).toEqual(copy);
  expect(commerceReason(s,scene,'pocket',{kind:'deliver'})).toBe('range');expect(commerceReason(s,scene,'pocket',{kind:'sell',market:'corner',good:'bread'})).toBe('busy');
- s=step({...s,x:1100,y:750},{kind:'deliver'});expect(pocket(s).credits).toBe(24);expect(pocket(s).delivery).toBeUndefined();expect(stock(s,'lunch_counter').stock.bread).toBe(2);expect(s.economy!.delivered.lunch_run).toBe(1);checkEconomyState(s,scene);
- s=step(s,{kind:'deliver'});expect(pocket(s).credits).toBe(24);expect(s.economy!.delivered.lunch_run).toBe(1);
+ s=step({...s,x:1100,y:750},{kind:'deliver'});expect(pocket(s).credits).toBe(24);expect(pocket(s).delivery).toBeUndefined();expect(stock(s,'lunch_counter').stock.bread).toBe(2);expect(s.economy!.delivered.lunch_run).toBe(1);expect(pocket(s).completed.delivery.lunch_run).toBe(1);checkEconomyState(s,scene);
+ s=step(s,{kind:'deliver'});expect(pocket(s).credits).toBe(24);expect(s.economy!.delivered.lunch_run).toBe(1);expect(pocket(s).completed.delivery.lunch_run).toBe(1);
  for(let i=0;i<8;i++)s=step(s);expect(s.economy!.accounts.find(a=>a.id==='lunch_staff')!.satiety).toBeGreaterThan(60);expect(stock(s,'lunch_counter').stock.bread).toBe(1);checkEconomyState(s,scene);
 });
 it('keeps cargo through travel, vehicle ownership and R, and resets it on Start over',()=>{
@@ -30,7 +30,7 @@ it('keeps cargo through travel, vehicle ownership and R, and resets it on Start 
 it('refunds cargo and wages exactly once, even after travelling away',()=>{
  let s=step(start(),{kind:'collect',delivery:'lunch_run'});s=step({...s,x:1800,control:{kind:'car'}},{kind:'cancel'});
  expect(pocket(s).delivery).toBeUndefined();expect(pocket(s).credits).toBe(20);expect(stock(s,'corner').stock.bread).toBe(7);expect(stock(s,'lunch_counter').credits).toBe(40);checkEconomyState(s,scene);
- const copy=structuredClone(s.economy);s=step(s,{kind:'cancel'});expect(s.economy!.markets).toEqual(copy!.markets);expect(s.economy!.delivered.lunch_run).toBe(0);
+ const copy=structuredClone(s.economy);s=step(s,{kind:'cancel'});expect(s.economy!.markets).toEqual(copy!.markets);expect(s.economy!.delivered.lunch_run).toBe(0);expect(pocket(s).completed.delivery.lunch_run).toBe(0);
 });
 it('rejects full bags, full recipients and unaffordable or overbooked shipments without partial reservation',()=>{
  const s=start();pocket(s).inventory.bread=7;expect(commerceReason(s,scene,'pocket',{kind:'collect',delivery:'lunch_run'})).toBe('full');

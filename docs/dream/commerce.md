@@ -198,6 +198,102 @@ jobs keep the example short; the live city uses five and seven seconds. Saved
 work keeps its original deadline and reserved supplies. Reloading, leaving a
 render chunk or changing vehicles never finishes a job twice.
 
+## Personal work and recognition
+
+At the live bakery, bake three batches to unlock **Bake a larger batch**. It uses
+two flour, makes five bread and pays five credits for nine seconds of work.
+You still need enough fullness, ingredients and shelf room. Buying food, packing
+lunches and school deliveries make room for more baking. The vendor recognizes
+your practice when you talk; the teacher thanks you after your own school delivery.
+
+The baker earns the same qualification independently. Their work does not unlock
+yours. `milestone` reads an account's completed tasks, and `work.requires` uses it
+as a condition. Starting or cancelling a task earns no progress. Collection does
+not count as delivery. Recognition changes the authored conversation; it creates
+no stock, pay or relationship score.
+
+![The vendor recognizes completed practice and the larger batch unlocks](../media/progression.jpg)
+
+[Watch the work in HD](../media/progression.mp4) · [Animated version](../media/progression.gif)
+
+This complete [runnable world](../examples/work-progression.dream) uses shorter work
+times for checking the rule. `works=[large_bake,bake]` gives NPCs an ordered list:
+try eligible work below its target, using the same reservations and pay as you.
+
+```dream
+dream 2;
+material blue(style=toon,colors=[#537eaa,#3c5f87]);
+material skin(style=toon,colors=[#c59774,#a97655]);
+object pedestrian(label="Pedestrian"){
+  measure(kind=person,axis=y,meters=1.8);
+  body(interaction=decor,radius=4,height=18);
+  part torso(shape=capsule,material=blue,at=[0,11,0],size=[5,6,4]);
+  part head(shape=sphere,material=skin,at=[0,16,0],size=[4,4,4]);
+  part nose(shape=sphere,material=skin,at=[2,16,0],size=[1,1,1]);
+  repeat legs(index=i,count=2){
+    joint leg(at=[0,8,i*3-1.5],motion=swing(axis=z,deg=18,hz=.6,phase_deg=i*180)){
+      part shin(shape=capsule,material=blue,at=[0,-4,0],size=[2,8,2]);
+    }
+  }
+}
+behavior welcome(start=waiting){
+  state waiting(action=idle){on recognize(event=interact,to=recognized,radius=55,requires=practiced_baker);on talk(event=interact,to=hello,radius=55,familiar=false);on again(event=interact,to=returning,radius=55,familiar=true);}
+  state hello(action=idle,face=player,say="Hello. Welcome to the neighborhood."){
+    on ask(event=interact,to=about,radius=55);
+    on finish(event=after,to=waiting,seconds=6);
+  }
+  state returning(action=idle,face=player,say="Good to see you again."){
+    on finish(event=after,to=waiting,seconds=6);
+  }
+  state about(action=idle,face=player,say="I like walking by the river. See you around."){
+    on finish(event=after,to=waiting,seconds=6);
+  }
+  state recognized(action=idle,face=player,say="You have helped here. The larger batch is now available."){
+    on finish(event=after,to=waiting,seconds=6);
+  }
+}
+place neighbor(object=pedestrian,at=[580,710],role=npc,behavior=welcome);
+world(size=[4000,2400],spawn=[525,609],heading_deg=0);
+road circuit(width=118,points=[[300,590],[660,590],[810,500],[810,220],[660,130],[300,130],[150,220],[150,500]]);
+
+checkpoint start(at=[480,612.5],dir=[1,0],width=100);
+checkpoint east(at=[828.75,360],dir=[0,-1],width=100);
+checkpoint north(at=[480,107.5],dir=[-1,0],width=100);
+checkpoint west(at=[131.25,360],dir=[0,1],width=100);
+
+behavior customer_wait(start=rest){state rest(action=idle){}}
+place customer(object=pedestrian,at=[1000,730],role=npc,behavior=customer_wait);
+economy(){
+ good bread(label="Bread",food=45);
+ good flour(label="Flour");
+ account pocket(actor=player,credits=20,capacity=8,satiety=80,drain_s=0);
+ account baker(actor=neighbor,credits=0,capacity=4,satiety=65,drain_s=0,shop=true,works=[large_bake,bake]);
+ account regular(actor=customer,credits=20,capacity=4,satiety=25,drain_s=0,shop=true);
+ market corner(label="Corner bakery",actor=neighbor,credits=100,radius=70){
+  lot bread_shelf(good=bread,quantity=1,limit=16,price=5);
+  lot flour_sack(good=flour,quantity=12,limit=12);
+ }
+ work bake(label="Bake bread",market=corner,input=flour,take=1,output=bread,make=2,seconds=1,pay=3,effort=1,capacity=1,target=7);
+ milestone practiced_baker(label="Bake bread batches",kind=work,task=bake,count=3);
+ work large_bake(label="Bake a larger batch",market=corner,input=flour,take=2,output=bread,make=5,seconds=2,pay=5,effort=2,capacity=1,target=12,requires=practiced_baker);
+}
+```
+
+There can be 16 milestones. Each names an existing `work`, `delivery` or `repair`
+task and a positive integer completion count. Work requirements cannot form cycles.
+An interact-only `on.requires` can recognize the player's contribution at the
+task's receiving market actor: `work.market`, `repair.market` or `delivery.to`.
+This is checked after linking, including every placement using that program.
+Use the `commerce` agent context when authoring these conditions.
+
+Personal work, delivery and repair counters persist independently of render chunks,
+R, NPC clocks and camera movement. Format 10 checks that personal records plus
+unassigned historical counts equal the shared totals. Earlier saves kept shared
+counts but no complete ownership history, so those counts remain unassigned and
+new personal records start at zero. An earlier saved job still counts for its
+owner when it finishes. The [upgrade](../persistence.md#personal-completion-history)
+keeps balances, materials, deadlines and the original save slot.
+
 ## Deliveries
 
 At the bakery, choose **Take bread to school** in the work menu and press **H**.

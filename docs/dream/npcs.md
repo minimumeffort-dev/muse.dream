@@ -196,3 +196,18 @@ Repair workers can also serve explicitly named sidewalks and bounded dry verges.
 They still use pedestrian crossings between streets, pause for live obstructions
 and return home after consuming finite supplies. This is the same automatic
 repair policy, not an extra NPC controller. [Street services](commerce.md#street-verges).
+
+## Recognize what the player has done
+
+An interact transition can use `requires=milestone_id` from the world's economy.
+It checks the player's personal completion record. The teacher can recognize a
+school delivery, and the vendor can recognize paid work at their own market.
+A completed NPC task cannot produce that response for the player. Every placement
+using the program must be the task's receiving market actor; unknown or unrelated
+guards fail complete-world acceptance. Keep a normal greeting as the fallback,
+and put the guarded response first because declaration order still wins.
+
+See [personal work and recognition](commerce.md#personal-work-and-recognition)
+for the checked complete example. Speech remains authored text, with the same
+range, sight, timing, per-instance familiarity and state limits. It does not
+transfer resources or add a friendship score.

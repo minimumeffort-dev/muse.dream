@@ -28,12 +28,12 @@ it('walks to damage, works, restores contacts and returns without teleporting or
  let s=start();const original=s,untouched=structuredClone(s);s=step(s);expect(a(s).repair?.phase).toBe('out');expect(market(s).stock.kit).toBe(2);expect(a(s).credits).toBe(20);checkEconomyState(s,scene);
  let previous=actorPose(scene,scene.objects.find(o=>o.id==='customer')!,s.timeS,s),worked=false;
  for(let i=0;i<100;i++){const old=s;s=step(s);const pose=actorPose(scene,scene.objects.find(o=>o.id==='customer')!,s.timeS,s);expect(Math.hypot(pose.x-previous.x,pose.y-previous.y)).toBeLessThanOrEqual(3.501);previous=pose;worked ||= a(s).repair?.phase==='work';expect(()=>encodeSave(s,1,world)).not.toThrow();checkEconomyState(s,scene);expect(old.economy).not.toBe(s.economy);}
- expect(worked).toBe(true);expect(s.broken).toEqual([]);expect(a(s).repair).toBeUndefined();expect(a(s).credits).toBe(24);expect(s.economy!.repaired.yard_tables).toBe(1);expect(market(s).stock.kit).toBe(2);expect(original).toEqual(untouched);
+ expect(worked).toBe(true);expect(s.broken).toEqual([]);expect(a(s).repair).toBeUndefined();expect(a(s).credits).toBe(24);expect(s.economy!.repaired.yard_tables).toBe(1);expect(a(s).completed.repair.yard_tables).toBe(1);expect(market(s).stock.kit).toBe(2);expect(original).toEqual(untouched);
 });
 it('lets the player claim the same kit and wage, pauses while travelling and refunds cancellation once',()=>{
  let s=step(start(),{kind:'repair',repair:'yard_tables'});expect(a(s,'pocket').repair).toBeDefined();expect(a(s).repair).toBeUndefined();
  for(let i=0;i<12;i++)s=step(s);expect(a(s,'pocket').repair?.progressS).toBe(0);checkEconomyState(s,scene);
- const t=a(s,'pocket').repair!;s={...s,x:t.at.x,y:t.at.y};for(let i=0;i<8;i++)s=step(s);expect(s.broken).toEqual([]);expect(a(s,'pocket').credits).toBe(24);checkEconomyState(s,scene);
+ const t=a(s,'pocket').repair!;s={...s,x:t.at.x,y:t.at.y};for(let i=0;i<8;i++)s=step(s);expect(s.broken).toEqual([]);expect(a(s,'pocket').credits).toBe(24);expect(a(s,'pocket').completed.repair.yard_tables).toBe(1);checkEconomyState(s,scene);
  s={...s,broken:['yard_table'],x:580,y:750};s=step(s,{kind:'repair',repair:'yard_tables'});s=step(s,{kind:'cancel'});expect(a(s,'pocket').credits).toBe(24);expect(market(s).stock.kit).toBe(2);checkEconomyState(s,scene);
 });
 it('waits for a body in the restoration footprint and preserves repair progress through R and reload',()=>{

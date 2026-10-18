@@ -273,7 +273,7 @@ The live 400 lamps share the entry's lamp rule. Current repair coverage is the
 existing service grounds, not every streetlight. Keep actor/rig limits unchanged.
 Omit damage_pool (or false) for the original strict budgets. Rest poses, ambient
 motion and controllable parking cannot disable or acquire destruction implicitly.
-See examples/streetlight-repairs.dream. Save format 9, simulation rules 11 preserve
+See examples/streetlight-repairs.dream. Save format 10, simulation rules 15 preserve
 registered r50 progress through a checked projection; unknown worlds stay separate.
 
 ## city
@@ -402,7 +402,9 @@ turning <=2.5 rad/s. Asset forward is +X. No arbitrary poses, scripts or callbac
 on event=after requires only seconds (.1..300); near_player/far_player requires only radius
 (10..240 units), using 3D distance <= / >=. Use separated near/far radii for hysteresis.
 For player conversations use on talk(event=interact,to=reply,radius=55). interact requires
-only radius, 10..80 units; one grounded on-foot talk press selects one nearest eligible
+radius, 10..80 units; optional requires uses a personal economy milestone (request commerce context).
+Use requires only at the task receiving market actor: work/repair.market or delivery.to.
+It checks the player account, never another NPC or the shared total. One grounded on-foot talk press selects one nearest eligible
 NPC by 3D distance, with stable ID ties. Optional familiar=false matches a first meeting;
 familiar=true matches a known person. familiar is only valid for interact. A successful
 interaction marks that NPC known; this persists on R, render unloads and local save/load,
@@ -552,7 +554,7 @@ sport id(kind=football|basketball,surface=surface_id,ball=placement_id,targets=[
 ## commerce
 One optional economy() block owns goods, accounts, markets and work in the playable
 3D world. This is independent of logical scenario/stock/service declarations.
-Use good(label,food=0); account(actor,credits,capacity,satiety,drain_s,shop=false,work?,repair?);
+Use good(label,food=0); account(actor,credits,capacity,satiety,drain_s,shop=false,work?,works?,repair?);
 market(label,actor,credits,radius){lot(good,quantity,limit,price?);} and
 work id(label,market,input,take,output,make,seconds,pay,effort,capacity,target);
 For multiple inputs omit input/take and use a work block:
@@ -569,7 +571,24 @@ Labels must contain nonblank text. Every declaration except economy and ingredie
 and lot goods must agree. One economy per linked project, with exactly one player
 account. Other account actors are existing role=npc placements. Markets and production
 workers must be stationary NPCs. NPC shop=true buys and eats food at satiety <=40;
-NPC work refills output up to target. Player accounts never act automatically.
+NPC work refills output up to target. Alternatively works=[advanced,basic] is an
+ordered list of 1..4 unique work IDs, exclusive with work, repairs and deliveries.
+Try the first eligible job below target; no extra actors, commitments or free stock.
+Player accounts never act automatically.
+Use milestone id(label="Bake bread batches",kind=work,task=bake,count=3); inside economy.
+At most 16; kind=work|delivery|repair references an existing matching task, count
+integer 1..1000000000. Optional work.requires=milestone_id checks the acting account.
+Work prerequisite cycles fail. Only actual paid completion, delivery handoff or
+successful repair increments personal history; starting, cancelling, collecting,
+NPC completions and shared totals never qualify the player. Optional on.requires
+is interact-only and checks the player; after linking every using placement must
+be the receiving market actor of that task (work/repair.market or delivery.to).
+Milestones award no goods/pay and execute no code. Existing bounds stay fixed.
+Personal counters plus unassigned history equal global counts. Save format 10,
+simulation 15 preserves old totals unassigned and starts personal records at zero;
+old active work earns its owner credit only on completion. Start over resets all.
+See examples/work-progression.dream. This is task recognition and earned work,
+not a friendship score, qualifications in the real world or generated dialogue.
 Prices/pay/quantities/capacities are bounded integers. No price means an ingredient
 that cannot be bought or sold. Trade is one unit at the listed price in either direction, with stock, carrying and treasury checks. Work reserves input, wage and output room atomically; leave
 range or cancel to refund without output/pay. Completion spends effort and moves

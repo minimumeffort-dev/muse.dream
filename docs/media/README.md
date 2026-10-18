@@ -18,6 +18,7 @@ Driving, vehicle switching, jumping, swimming and destruction are exported at **
 | Delivery pickup and vehicle carry | [delivery.gif](delivery.gif) | [delivery.mp4](delivery.mp4) | 12 seconds |
 | Public-pavement maintenance journey | [maintenance.gif](maintenance.gif) | [maintenance.mp4](maintenance.mp4) | 20 seconds |
 | Caretaker repair and return | [repair.gif](repair.gif) | [repair.mp4](repair.mp4) | 28 seconds |
+| Earned work and vendor recognition | [progression.gif](progression.gif) | [progression.mp4](progression.mp4) | 16 seconds |
 | Packed lunches and recipe work | [recipes.gif](recipes.gif) | [recipes.mp4](recipes.mp4) | 12 seconds |
 | Food, trade and paid work | [commerce.gif](commerce.gif) | [commerce.mp4](commerce.mp4) | 12 seconds |
 | Day and night | [daynight.gif](daynight.gif) | [daynight.mp4](daynight.mp4) | 12 seconds |
@@ -688,3 +689,11 @@ work is checked separately. Maintenance, lamp/street repair, planting/growth,
 transit and other world/asset recordings retain their unchanged visible scene
 and controls; none shows the altered market goods/recipe panel. The school
 handoff still remains accurate. These offline captures do not measure live FPS.
+
+`progression` prepares three paid bread batches through the ordinary fixed-step
+simulation, then records vendor recognition and a larger paid batch. Its 480
+source PNGs are native rendered frames. `progression.jpg` is frame 90 from that
+same export. Preparation is a dev-only mock review start, not a recorded journey
+or live performance measurement. Existing recipe, market, delivery, interior and
+repair captures still show accurate transactions and geometry; their selected
+jobs do not use the new requirement or its changed conversation state.

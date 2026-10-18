@@ -142,3 +142,19 @@ export function interiorReviewInput(state:CarState,world:World,frame:number,view
  const dx=target.x-state.x,dy=target.y-state.y,d=Math.hypot(dx,dy),a=Math.atan2(180,480)+viewAngle,c=Math.cos(a),s=Math.sin(a),move=d>1.5;
  return {steer:move ? (dx*c-dy*s)/d : 0,throttle:move ? (-dx*s-dy*c)/d : 0,...(!night && frame===60 ? {commerce:{kind:'work',job:'bake'} as const} : !night && frame===270 ? {commerce:{kind:'buy',market:'market_stall',good:'bread'} as const} : !night && frame===280 ? {commerce:{kind:'eat',good:'bread'} as const} : {})};
 }
+
+/** Capture setup earns practice through ordinary paid work; no completion counters are assigned. */
+export function* progressionReviewSteps(state:CarState,world:World):Generator<void,CarState>{
+ let next=npcReviewStart(state,world,'vendor');
+ const tick=(commerce?:CarInput['commerce'])=>{next=stepInteractive(next,{steer:0,throttle:0,commerce},1/120,world);};
+ const player=()=>next.economy!.accounts.find(a=>a.id===world.scene.economy!.accounts.find(a=>a.actor==='player')!.id)!;
+ for(let batch=0;batch<3;batch++){
+  tick({kind:'work',job:'bake'});if(!player().work)throw Error('Review could not start bread work');
+  for(let i=0;i<840 && player().work;i++){tick();if(i%30===0)yield;}
+  if(player().completed.work.bake!==batch+1)throw Error('Review did not complete bread work');
+ }
+ // The larger batch needs shelf room and enough fullness, through the same finite stock.
+ for(let i=0;i<3;i++)tick({kind:'buy',market:'market_stall',good:'bread'});
+ tick({kind:'eat',good:'bread'});
+ return next;
+}

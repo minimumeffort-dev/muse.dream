@@ -4,7 +4,7 @@ import {compileDreamScene,formatDream} from '../src/scene/dream';
 import {buildMaskForScene} from '../src/scene/fixture';
 import {buildPaperMask} from '../src/sim/mask';
 import {createCarAtSpawn,type CarState,type World} from '../src/sim/car';
-import {stepCommerce,checkEconomyState,commerceReason,initialEconomy} from '../src/sim/commerce';
+import {stepCommerce,checkEconomyState,commerceReason,hasMilestone,initialEconomy} from '../src/sim/commerce';
 import {actorPose,workJourneyForActor} from '../src/sim/actors';
 import {stepNpcs} from '../src/sim/npcs';
 import {encodeSave,decodeSave} from '../src/sim/save';
@@ -60,4 +60,10 @@ it('reserves one courier slot without reserving goods or a wage on the walk to p
  expect(s.economy!.markets[1]!.stock.kit).toBe(12);expect(s.economy!.markets[1]!.credits).toBe(0);expect(s.economy!.markets[0]!.credits).toBeGreaterThanOrEqual(92);
  const inDepot={...s,x:1120,y:970};expect(commerceReason(inDepot,scene,'pocket',{kind:'collect',delivery:'kits_run'})).toBe('busy');
  const packet=repairNavigation(scene);expect(packet.services.filter(s=>s.id.startsWith('delivery/'))).toHaveLength(1);
+});
+
+it('records a physical NPC handoff for that courier without qualifying the player',()=>{
+ const doc=compileDreamScene(source.replace('economy(){','economy(){milestone supplied(label="Bring repair supplies",kind=delivery,task=kits_run,count=1);'),{sceneId:'personal-courier',revisionId:'r1',sourceHash:'personal-courier'});let s:CarState={...start(),economy:initialEconomy(doc)};
+ for(let i=0;i<2200 && !s.economy!.delivered.kits_run;i++)s=stepCommerce({...s,timeS:s.timeS+.25},{},.25,doc);
+ expect(worker(s).completed.delivery.kits_run).toBe(1);expect(s.economy!.accounts[0]!.completed.delivery.kits_run).toBe(0);expect(hasMilestone(s,doc,'regular','supplied')).toBe(true);expect(hasMilestone(s,doc,'pocket','supplied')).toBe(false);checkEconomyState(s,doc);
 });

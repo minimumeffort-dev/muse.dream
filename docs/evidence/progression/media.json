@@ -1,0 +1,43 @@
+{
+  "clip": "progression",
+  "runtimeSourceSha256": "d1aeaf7418a943617e5297dbb07b69c96d46c4338c13a47947ab3f3a475fc0be",
+  "worldSourceSha256": "e6a0c4b3fdff3e554a4d04af0f4bbd36888f4e7240456d73a8a673245abb8c16",
+  "renderedFps": 30,
+  "sourceSize": [
+    2400,
+    1350
+  ],
+  "renderedFrames": 480,
+  "durationS": 16,
+  "videoFrames": 480,
+  "posterFrame": 90,
+  "sourceFrameDigest": "42c13c878e2329461589840c5969312de64ff4f1bc82fe6bc10451aff0c498d5",
+  "outputs": [
+    {
+      "file": "docs/media/progression.mp4",
+      "bytes": 1796010,
+      "sha256": "34456875572822813cedbf8a9ba7604cf167a9faa9d35424a246093104a4b0ab"
+    },
+    {
+      "file": "docs/media/progression.gif",
+      "bytes": 8215748,
+      "sha256": "f59b744c0e8d516e190d878b51d6eac65094469befc76acfc33e7f92c62c8e16"
+    },
+    {
+      "file": "docs/media/progression.jpg",
+      "bytes": 1738370,
+      "sha256": "130159bc0873eb4da263512ff3bf57369011b4f3d01ffde49a35aa3ed77d56c2"
+    }
+  ],
+  "scope": "Native DEV capture; ordinary fixed-step preparation and transactions. No interpolated frames. Offline export, not live performance.",
+  "gifFrames": 480,
+  "gifSize": [
+    1280,
+    720
+  ],
+  "gifDurationMs": 16000,
+  "posterSize": [
+    2400,
+    1350
+  ]
+}
