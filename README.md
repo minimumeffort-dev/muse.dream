@@ -110,6 +110,9 @@ open it; Shop, Work, Bag and Business have their own views. **M** opens activiti
 Arrow keys select item slots, Enter acts, 1–4 switch sections and Tab reaches
 secondary actions. There are no gameplay dropdowns or number fields.
 [How the contextual controls work](docs/context-actions.md).
+The food icon is a fork and knife. Cycle lanes and the riding prompt share one
+bicycle outline, with joined frame tubes and evenly sized wheels.
+[View the symbols](docs/evidence/symbols/verification.md).
 
 ![Nearby actions without an automatically opened panel](docs/media/context-actions.png)
 

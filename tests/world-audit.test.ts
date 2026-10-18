@@ -66,8 +66,8 @@ describe('street and crossing detail',()=>{
     const street={id:'main',width:100,cycleWidth:20,sidewalk:20,points:[{x:100,y:360},{x:850,y:360}]};
     const scene=parseScene({...createFixtureScene(),objects:[],regions:[],terrain:{hills:[]},streets:[street],crossings:[{id:'walk',street:'main',at:{x:270,y:360},width:24,junction:false}]});
     const root=buildStreets(scene),symbols=root.getObjectByName('cycle-symbols')!,ray=new Raycaster();
-    const hits=(x:number)=>{ray.set(new Vector3(x-480,50,426.6-360),new Vector3(0,-1,0));return ray.intersectObject(symbols,true).length;};
-    expect(hits(239.2)).toBe(0);expect(hits(539.2)).toBeGreaterThan(0);
+    const hits=(x:number)=>{ray.set(new Vector3(x-480,50,430-360),new Vector3(0,-1,0));return ray.intersectObject(symbols,true).length;};
+    expect(hits(239.6)).toBe(0);expect(hits(539.6)).toBeGreaterThan(0);
   });
   it('clips stop paint out of nearby crossings and does not stack duplicate zebra stripes',()=>{
     const street={id:'main',width:100,sidewalk:20,points:[{x:100,y:360},{x:850,y:360}]};

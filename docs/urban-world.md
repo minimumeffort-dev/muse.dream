@@ -128,3 +128,10 @@ navigation graph for `market_square`; the existing supplier already stands on
 station pavement. No new paving or prop placement is needed. Declared courier
 homes, endpoints and complete return routes are checked before the world is
 accepted. [Supply rules](dream/commerce.md#npc-supply-trips).
+
+
+Cycle-lane paint and the HUD share one bicycle outline. Both wheels use the same
+radius and axle height; the two frame triangles join at the crank, with a separate
+saddle and steering fork. The paint retains terrain projection, lane-direction
+rotation and whole-symbol crossing clearance.
+[Rendered symbol review](evidence/symbols/verification.md).

@@ -2,11 +2,26 @@
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
-## Current HUD and depot ownership, r66
+## Food and bicycle symbols
+
+`symbols.png` is a native browser capture of the shared bicycle outline and the
+fork-and-knife food icon, alongside actual terrain-projected lane paint.
+The [symbol review](../evidence/symbols/verification.md) retains four angles.
+The `commerce`, `switching`, `driving` and `business` GIF, HD video and matching
+stills are refreshed for this change; the source renders run at 30 frames per
+simulation second. Contextual-control screenshots are refreshed where those
+symbols appear. Older domain recordings below remain historical captures of
+their recorded appearance and unchanged mechanics. The final world image now
+uses SMAA at the existing drawing-buffer size; all four refreshed recordings
+include it. The current market capture and Work-tab evidence also remove the
+yellow selection underline.
+
+## Keyboard HUD and depot ownership, r66
 
 The current game uses a compact charcoal HUD with aligned action rows, keyboard
-item selection and coin icons. `context-actions.png`, `market-controls.png` and
-`business-controls.png` are native browser screenshots. The narrow review is a
+item selection and coin icons. `context-actions.png` and `market-controls.png` are native browser screenshots.
+`business-controls.png` uses the actual rendered business source frame 500 from
+the subsequent symbol refresh. The narrow review is a
 real 390 × 620 game viewport, with selection, a locked job reason and the action
 footer visible together. See the [control checks](../evidence/context-actions/verification.md).
 
@@ -22,9 +37,10 @@ See the [business checks](../evidence/business-ownership/verification.md).
 Other main-game recordings below retain the HUD of their recorded release. They
 are historical demonstrations of unchanged movement, NPC, repair, food, seating
 and destruction mechanics, rather than references for today's controls. Asset
-galleries, construction views and the source-derived city map remain accurate:
-this change adds account metadata and UI, with no geometry, placement, terrain,
-contact, navigation or actor-budget changes.
+galleries, construction views and the source-derived city map remain accurate.
+The subsequent symbol refinement changes icon paths, cycle-lane paint and final
+edge coverage;
+placements, terrain, contacts, navigation and actor budgets stay unchanged.
 
 The r65 roof recheck adds four unmodified native gallery PNGs and a city view under
 [`evidence/roof-surfaces/current-review`](../evidence/roof-surfaces/verification.md#current-world-recheck).

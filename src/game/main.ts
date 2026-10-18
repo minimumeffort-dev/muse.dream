@@ -23,6 +23,7 @@ import {freezeStatic} from "./batching";
 import {sharedMealReviewSteps,shiftReviewInput,hoursReviewSteps,seatingReviewSteps,seatingReviewInput,kitchenReviewSteps,mealReviewSteps,progressionReviewSteps,interiorReviewStart,interiorReviewInput,vehicleReviewStart,drivingReviewStart,npcReviewStart,cargoReviewStart,maintenanceReviewStart,repairReviewSteps,businessReviewSteps,courierReviewSteps,movementReviewStart,populationReviewStart} from "./review-start";
 import { measuredScale, playerRadius, playerHeight } from "../scene/measure";
 import * as THREE from "three";
+import {worldEdgeSmoothing,prepareWorldEdges} from './edge-smoothing';
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
@@ -174,6 +175,8 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   composer.addPass(bloom);
   composer.addPass(new ShaderPass(worldGradeShader));
   composer.addPass(new OutputPass());
+  const smoothing=await worldEdgeSmoothing();composer.addPass(smoothing);
+  addEventListener('pagehide',e=>{if(!e.persisted)smoothing.dispose();});
 
   function resize(): void {
     const width = container.clientWidth, height = container.clientHeight;
@@ -561,6 +564,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     await loading.stage('Preparing the first frame');
     const start=performance.now();
     await renderer.compileAsync(scene,camera);
+    await prepareWorldEdges(renderer,smoothing);
     if(import.meta.env.DEV)container.dataset.shaderWarmup=JSON.stringify({ms:performance.now()-start,parallel:renderer.extensions.has('KHR_parallel_shader_compile')});
   },error=>{renderer.setAnimationLoop(null);scenery.dispose();worker.dispose();loading.fail(error);});
   const frame=() => {

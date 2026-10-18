@@ -37,9 +37,16 @@ using Command, Control or Alt remain available. The world continues while
 you browse, so staff, opening hours and supply trips keep moving.
 
 The HUD uses one left alignment, a compact charcoal action dock and activity
-rows, Manrope labels and Archivo headings. Yellow marks the current selection;
+rows, Manrope labels and Archivo headings. A quiet fill and yellow text mark
+the current selection, with no bottom stripe;
 a separate light outline shows keyboard focus. The framed map stays north-up. The wallet includes a small fullness
 gauge; its coin icon replaces the old currency abbreviation.
+
+The food icon uses a fork and knife with a clear gap between them. The bicycle
+icon shares its wheels, frame, saddle and fork with the cycle-lane stencil.
+Both remain legible at their small HUD sizes. [Four rendered paint angles](evidence/symbols/verification.md).
+
+![Food and bicycle symbols in the HUD and on cycle lanes](media/symbols.png)
 
 Icons have short visible labels, accessible names and keyboard hints. Disabled
 choices retain the engine's reason. None of this changes Dream's interaction

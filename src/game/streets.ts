@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {bicycleSymbol} from './bicycle-symbol';
 import {overlaps,type RenderRegion} from './render-region';
 import type {Scene,Point} from '../scene/schema';
 import {streetPolygons,streetSidewalks,streetCycleTracks,streetCircuitCrossings,markingPolygons,onPolygon} from '../scene/streets';
@@ -89,12 +90,13 @@ function* streetRecipeSteps(scene:Scene):Generator<void,{layers:StreetRecipe[];g
       const offset=s.width/2+6+s.cycleWidth!/2,x=a.x+dx*d-dy*offset*side,y=a.y+dy*d+dx*offset*side;
       if(segments.some(other=>!(other.a===a && other.b===b) && near(other,x,y,40)))continue;
       const point=(along:number,across:number)=>({x:x+side*(dx*along-dy*across),y:y+side*(dy*along+dx*across)});
-      const bounds=[point(-12,-8),point(25,-8),point(25,7),point(-12,7)];
+      const bounds=[point(-12,-8),point(25,-8),point(25,8),point(-12,8)];
       if([...crossingClearance,...symbolBounds].some(p=>polygonsOverlap(p,bounds)) || subtractPolygons([bounds],bands).some(p=>polygonArea(p)>.01))continue;
       const glyph:Point[][]=[];
       const line=(points:Point[],closed=false)=>glyph.push(...markingPolygons({id:'cycle-symbol',color:'#eee8d9',width:1,closed,points}));
-      for(const wheel of [-7,7])line(Array.from({length:12},(_,n)=>point(wheel+4*Math.cos(n*Math.PI/6),4*Math.sin(n*Math.PI/6))),true);
-      line([point(-7,0),point(-3,-5),point(2,0),point(-7,0),point(0,-4),point(7,0),point(4,-6)]);
+      const bikePoint=(u:number,v:number)=>point(u-12,(v-12)*.8);
+      for(const {x:cx,y:cy,r} of bicycleSymbol.wheels)line(Array.from({length:24},(_,n)=>bikePoint(cx+r*Math.cos(n*Math.PI/12),cy+r*Math.sin(n*Math.PI/12))),true);
+      for(const stroke of bicycleSymbol.lines)line(stroke.map(([u,v])=>bikePoint(u,v)));
       line([point(18,-4),point(22,0),point(18,4)]);
       symbols.push(...unionPolygons(glyph));symbolBounds.push(bounds);
     }

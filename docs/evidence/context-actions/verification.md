@@ -1,5 +1,9 @@
 # Contextual keyboard HUD, r66
 
+This r66 record retains the original release hashes. Current food/bicycle media
+was subsequently replaced in the [symbol refresh](../symbols/verification.md),
+whose media audit pins the new files.
+
 The HUD now keeps a single left edge for status, actions and activity panels.
 It uses charcoal surfaces, warm white labels, yellow selection and a separate
 light keyboard-focus outline. Fixed SVG coins have the accessible name “coins”.

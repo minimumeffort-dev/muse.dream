@@ -1,3 +1,19 @@
+# Rendering
+
+The final image now has a spatial antialiasing pass after output conversion.
+Canvas antialiasing did not cover the offscreen post-processing targets, leaving
+stair-stepped cycle stencils and other fine diagonals. SMAA finds edges and blends
+their coverage at the existing drawing-buffer size. It changes no world geometry,
+textures, camera resolution, simulation or HUD text. The two normalized targets
+use six bytes per drawing-buffer pixel in total, excluding driver overhead and
+the existing composer buffers. Their embedded lookup images and shader programs
+are ready before the first-frame handoff; failure follows the ordinary loader.
+The pass releases its targets, textures and materials on final page exit.
+A matched 1080p town drive on the local M3 Ultra added .180 ms mean GPU time
+and three full-screen draws, with the same world geometry. Frame intervals stayed
+near 16.67 ms. This does not establish performance on weaker laptops.
+[Raw timings and verification](evidence/symbols/verification.md).
+
 # Rendering the whole world
 
 The mock world has 1,700 placed objects across a 14000 × 11000 landscape. Static render geometry now loads around the player and leaves memory behind them. The accepted Dream world and its simulation stay complete.
