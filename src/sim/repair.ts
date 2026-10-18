@@ -9,7 +9,7 @@ import {objectPlacement} from '../scene/placement';
 import type {Scene,Point} from '../scene/schema';
 import type {Repair} from '../scene/commerce';
 import type {CarState} from './car';
-import {COMMERCE_LIMITS,accountRepairs,repairGrounds,repairTargets,repairCoverage,type RepairTarget} from '../scene/commerce';
+import {COMMERCE_LIMITS,accountRepairs,repairGrounds,repairTargets,repairCoverage,primeRepairCoverage,type RepairCoverage,type RepairTarget} from '../scene/commerce';
 import {objectContacts,queryStaticContacts,sceneContacts,type Contact} from '../scene/contacts';
 import {isBroken} from './impacts';
 import {actorContacts,actorPoses} from './actors';
@@ -26,9 +26,9 @@ export const repairClear=(scene:Scene,r:Repair,p:Point,state?:CarState)=>workCle
 export const repairSegment=(scene:Scene,r:Repair,a:Point,b:Point,state:CarState|undefined,areaOnly=false)=>workSegment(scene,repairArea(scene,r),a,b,state,areaOnly);
 export const repairPath=(scene:Scene,r:Repair,start:Point,end:Point,state?:CarState)=>workPath(scene,repairArea(scene,r),start,end,state);
 export const repairNetwork=(scene:Scene,r:Repair)=>workNetwork(scene,repairArea(scene,r));
-export interface RepairNavigation {sourceHash:string;services:{id:string;nodes:WorkNode[]}[]}
+export interface RepairNavigation {sourceHash:string;services:{id:string;nodes:WorkNode[];coverage?:RepairCoverage}[]}
 const journeyAreas=(scene:Scene)=>[...new Map([...errandAreas(scene),...shiftAreas(scene),...socialAreas(scene)].map(a=>[a.id,a])).values()];
-export function repairNavigation(scene:Scene):RepairNavigation{return {sourceHash:scene.sourceHash,services:[...(scene.economy?.repairs??[]).filter(r=>r.grounds || r.streets).map(r=>({id:r.id,nodes:repairNetwork(scene,r)})),...journeyAreas(scene).map(a=>({id:a.id,nodes:workNetwork(scene,a)}))]};}
+export function repairNavigation(scene:Scene):RepairNavigation{return {sourceHash:scene.sourceHash,services:[...(scene.economy?.repairs??[]).filter(r=>r.grounds || r.streets).map(r=>({id:r.id,nodes:repairNetwork(scene,r),coverage:repairCoverage(scene,r)})),...journeyAreas(scene).map(a=>({id:a.id,nodes:workNetwork(scene,a)}))]};}
 /** Prepared topology comes only from the accepted world's own worker, never Dream or saves. */
 export function primeRepairNavigation(scene:Scene,packet:RepairNavigation):void{
  const expected=(scene.economy?.repairs??[]).filter(r=>r.grounds || r.streets).map(r=>r.id).concat(journeyAreas(scene).map(a=>a.id)),bad=()=>{throw Error('Invalid prepared repair navigation');};
@@ -39,6 +39,9 @@ export function primeRepairNavigation(scene:Scene,packet:RepairNavigation):void{
   for(let i=0;i<nodes.length;i++){const n=nodes[i]!;if(!n || !Number.isFinite(n.x) || !Number.isFinite(n.y) || n.x<0 || n.y<0 || n.x>scene.canonical.width || n.y>scene.canonical.height || !Array.isArray(n.links))bad();links+=n.links.length;if(links>COMMERCE_LIMITS.repairNetworkLinks || new Set(n.links).size!==n.links.length || n.links.some(j=>!Number.isInteger(j) || j<0 || j>=nodes.length || j===i))bad();}
   const sets=nodes.map(n=>new Set(n.links));if(nodes.some((n,i)=>n.links.some(j=>!sets[j]!.has(i))))bad();prepared.set(service.id,nodes);
  }
+ const coverage=new Map(packet.services.filter(s=>scene.economy?.repairs.some(r=>r.id===s.id)).map(s=>[s.id,s.coverage!]));
+ if(packet.services.some(s=>!coverage.has(s.id) && s.coverage!==undefined))bad();
+ primeRepairCoverage(scene,coverage);
  primeWorkNetworks(scene,prepared);
 }
 export function repairAccessProblems(scene:Scene):string[]{

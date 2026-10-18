@@ -349,3 +349,29 @@ browser replay pair adds about 0.29 ms of CPU work per rendered frame on this
 desktop, with the same submitted triangles, draw calls and geometry counts. This
 is added behavior, not a rendering speedup or a guarantee on a weaker laptop.
 [Conditions, raw reports, limits and regressions](evidence/pedestrian-spacing/verification.md).
+
+## City repair preparation, r73
+
+The worker bootstrap now transfers ordered repair targets, exact contact data
+and bounded verge polygons beside the existing work graphs. The client checks
+the complete packet before priming either cache. Targets remain in scene/zone
+order; malformed source identity, contacts, ordering, bounds or polygon data
+leave existing caches intact. These are host-derived caches, outside Dream and
+saved state. The accepted scene, geometry, simulation detail and actor budgets
+are unchanged by the handoff.
+
+A paired Node diagnostic compares the released navigation consumer against the
+new one, with the same accepted 431-target scene, contacts, population graph and
+work nodes. It checks identical initial simulation outcomes. Seven measured
+pairs follow one warm-up pair, with alternating order. This isolates the repair
+coverage handoff; it is not a full old-release benchmark, browser FPS, complete
+loading time or total browser memory. See the [samples and script](evidence/city-repairs/verification.md).
+
+Development review reloads also check for a valid saved review before preparing
+its offline journey. The observed airport review had spent 50.76 seconds replaying
+a trip it then discarded. Its saved reload now skips that stage and retains the
+exact economy state. The two observed total loads were 68.23 and 17.77 seconds on
+an Apple M3 Ultra with 96 GiB memory. They are individual review observations,
+not production startup or weak-laptop measurements. Worker compilation and other
+startup work remain; the first draw is still recorded separately and waits for
+required chunks and shader preparation.

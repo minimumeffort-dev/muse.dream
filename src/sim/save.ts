@@ -3,7 +3,7 @@ import {cityJourneys} from './city-upgrade';
 import {checkSeatingState} from './seating';
 import {interactionSight} from './sight';
 import {walkingHeight} from '../scene/interiors';
-import {repairTargets} from '../scene/commerce';
+import {repairTargets,inheritPriorRepairCoverage} from '../scene/commerce';
 import {GROWTH_LIMITS} from '../scene/growth';
 import {DAMAGE_POOL_LIMITS} from '../scene/damage-pool';
 import {z} from 'zod';
@@ -17,7 +17,7 @@ import {objectFragments} from '../scene/fragments';
 import {actorPose} from './actors';
 import {AMBIENT_LIMITS} from '../scene/ambient';
 import {priorInvitationEconomyStateSchema,economyStateSchema,socialEconomyStateSchema,shiftEconomyStateSchema,hoursEconomyStateSchema,mealEconomyStateSchema,progressEconomyStateSchema,recipeEconomyStateSchema,withPersonalHistory,priorCourierEconomyStateSchema,priorGrowthEconomyStateSchema,parkingEconomyStateSchema,previousEconomyStateSchema,initialEconomy,checkEconomyState} from './commerce';
-import {INVITATION_COMPATIBILITY,preInvitationScene,SAVE_SIMULATION_VERSION,PEOPLE_COMPATIBILITY,prePeopleScene,JUNCTION_COMPATIBILITY,preJunctionScene,SPACING_COMPATIBILITY,PARK_COMPATIBILITY,preParkScene,CITY_COMPATIBILITY,preCityScene,MATCH_COMPATIBILITY,preMatchScene,BUSINESS_COMPATIBILITY,preBusinessScene,SCHOOL_REPAIR_COMPATIBILITY,preSchoolRepairScene,SOCIAL_COMPATIBILITY,preSocialScene,SHIFT_COMPATIBILITY,preShiftScene,HOURS_COMPATIBILITY,preHoursScene,SEATING_COMPATIBILITY,preSeatingScene,KITCHEN_COMPATIBILITY,preKitchenScene,MEAL_COMPATIBILITY,preMealScene,PROGRESS_COMPATIBILITY,preProgressScene,RECIPE_COMPATIBILITY,preRecipeScene,EGRESS_COMPATIBILITY,INTERIOR_COMPATIBILITY,preInteriorScene,COURIER_COMPATIBILITY,preCourierScene,NATURAL_COMPATIBILITY,preFinishScene,PLANT_COMPATIBILITY,VERGE_COMPATIBILITY,prePlantScene,R44_COMPATIBILITIES,preDeliveryScene,preParkingScene,preRepairScene,preSupplyScene,preNetworkScene,prePoolScene,preVergeScene} from '../scene/save-compatibility';
+import {COVERAGE_COMPATIBILITY,preCoverageScene,INVITATION_COMPATIBILITY,preInvitationScene,SAVE_SIMULATION_VERSION,PEOPLE_COMPATIBILITY,prePeopleScene,JUNCTION_COMPATIBILITY,preJunctionScene,SPACING_COMPATIBILITY,PARK_COMPATIBILITY,preParkScene,CITY_COMPATIBILITY,preCityScene,MATCH_COMPATIBILITY,preMatchScene,BUSINESS_COMPATIBILITY,preBusinessScene,SCHOOL_REPAIR_COMPATIBILITY,preSchoolRepairScene,SOCIAL_COMPATIBILITY,preSocialScene,SHIFT_COMPATIBILITY,preShiftScene,HOURS_COMPATIBILITY,preHoursScene,SEATING_COMPATIBILITY,preSeatingScene,KITCHEN_COMPATIBILITY,preKitchenScene,MEAL_COMPATIBILITY,preMealScene,PROGRESS_COMPATIBILITY,preProgressScene,RECIPE_COMPATIBILITY,preRecipeScene,EGRESS_COMPATIBILITY,INTERIOR_COMPATIBILITY,preInteriorScene,COURIER_COMPATIBILITY,preCourierScene,NATURAL_COMPATIBILITY,preFinishScene,PLANT_COMPATIBILITY,VERGE_COMPATIBILITY,prePlantScene,R44_COMPATIBILITIES,preDeliveryScene,preParkingScene,preRepairScene,preSupplyScene,preNetworkScene,prePoolScene,preVergeScene} from '../scene/save-compatibility';
 import {primeSceneContacts,sceneContactData} from '../scene/contacts';
 import {primeAmbientNavigation,ambientGraph,ambientNavigation} from '../scene/ambient-navigation';
 import {PARKING_LIMITS} from '../scene/agents';
@@ -71,33 +71,35 @@ const supported=z.discriminatedUnion('version',[legacyPacket,secondPacket,thirdP
 const unique=(values:unknown[])=>new Set(values).size===values.length;
 const expected=new WeakMap<World['scene'],ReturnType<typeof createCarAtSpawn>>();
 const previousWorlds=new WeakMap<World['scene'],Map<string,World['scene']>>();
-function previousPhysicalScene(world:World,stage:'invitation'|'people'|'junction'|'park'|'city'|'match'|'business'|'schoolRepair'|'social'|'shift'|'hours'|'seating'|'kitchen'|'meal'|'progress'|'recipe'|'interior'|'courier'|'finish'|'plant'|'verge'|'pool'|'network'|'supply'|'repair'|'parking'|'delivery'|'commerce'='repair'):World['scene']{
+function previousPhysicalScene(world:World,stage:'coverage'|'invitation'|'people'|'junction'|'park'|'city'|'match'|'business'|'schoolRepair'|'social'|'shift'|'hours'|'seating'|'kitchen'|'meal'|'progress'|'recipe'|'interior'|'courier'|'finish'|'plant'|'verge'|'pool'|'network'|'supply'|'repair'|'parking'|'delivery'|'commerce'='repair'):World['scene']{
  let stages=previousWorlds.get(world.scene);if(!stages){stages=new Map();previousWorlds.set(world.scene,stages);}
  let scene=stages.get(stage);if(scene)return scene;
- if(stage==='invitation'){const prior=preInvitationScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));stages.set(stage,prior);return prior;}
- if(stage==='people'){const prior=prePeopleScene(world.scene);if(world.previousPeopleContacts)primeSceneContacts(prior,world.previousPeopleContacts);if(world.previousPeopleNavigation)primeAmbientNavigation(prior,world.previousPeopleNavigation);stages.set(stage,prior);return prior;}
- if(stage==='junction'){const prior=preJunctionScene(world.scene);if(world.previousJunctionContacts)primeSceneContacts(prior,world.previousJunctionContacts);if(world.previousJunctionNavigation)primeAmbientNavigation(prior,world.previousJunctionNavigation);stages.set(stage,prior);return prior;}
- if(stage==='park'){const prior=preParkScene(world.scene),ids=new Set(world.scene.objects.filter(o=>!prior.objects.some(p=>p.id===o.id)).map(o=>o.id)),contacts=sceneContactData(world.scene);primeSceneContacts(prior,{...contacts,contacts:contacts.contacts.filter(c=>!c.id || !ids.has(c.id))});if(world.previousParkNavigation)primeAmbientNavigation(prior,world.previousParkNavigation);stages.set(stage,prior);return prior;}
- if(stage==='city'){const prior=preCityScene(world.scene),ids=new Set(world.scene.objects.filter(o=>!prior.objects.some(p=>p.id===o.id)).map(o=>o.id)),contacts=sceneContactData(world.scene);primeSceneContacts(prior,{...contacts,contacts:contacts.contacts.filter(c=>!c.id || !ids.has(c.id))});if(world.previousCityNavigation)primeAmbientNavigation(prior,world.previousCityNavigation);stages.set(stage,prior);return prior;}
- if(stage==='match'){const prior=preMatchScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));stages.set(stage,prior);return prior;}
- if(stage==='business'){const prior=preBusinessScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));stages.set(stage,prior);return prior;}
- if(stage==='schoolRepair'){const prior=preSchoolRepairScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));stages.set(stage,prior);return prior;}
- if(stage==='social'){const prior=preSocialScene(world.scene),data=sceneContactData(world.scene);primeSceneContacts(prior,{...data,contacts:data.contacts.filter(c=>c.id!=='school_bench')});primeAmbientNavigation(prior,ambientGraph(world.scene));stages.set(stage,prior);return prior;}
- if(stage==='shift'){const prior=preShiftScene(world.scene);primeSceneContacts(prior,sceneContactData(previousPhysicalScene(world,'social')));primeAmbientNavigation(prior,ambientGraph(world.scene));stages.set(stage,prior);return prior;}
- if(stage==='hours'){const prior=preHoursScene(world.scene);primeSceneContacts(prior,sceneContactData(previousPhysicalScene(world,'social')));primeAmbientNavigation(prior,ambientGraph(world.scene));stages.set(stage,prior);return prior;}
- if(stage==='seating'){const prior=preSeatingScene(world.scene);primeSceneContacts(prior,sceneContactData(previousPhysicalScene(world,'social')));primeAmbientNavigation(prior,ambientGraph(world.scene));stages.set(stage,prior);return prior;}
- if(stage==='kitchen'){const prior=preKitchenScene(world.scene);primeSceneContacts(prior,sceneContactData(previousPhysicalScene(world,'social')));primeAmbientNavigation(prior,ambientGraph(world.scene));stages.set(stage,prior);return prior;}
- if(stage==='meal'){const prior=preMealScene(world.scene);primeSceneContacts(prior,sceneContactData(previousPhysicalScene(world,'social')));primeAmbientNavigation(prior,ambientGraph(world.scene));stages.set(stage,prior);return prior;}
- if(stage==='progress'){const prior=preProgressScene(world.scene);primeSceneContacts(prior,sceneContactData(previousPhysicalScene(world,'social')));primeAmbientNavigation(prior,ambientGraph(world.scene));stages.set(stage,prior);return prior;}
- if(stage==='recipe'){const prior=preRecipeScene(world.scene);primeSceneContacts(prior,sceneContactData(previousPhysicalScene(world,'social')));primeAmbientNavigation(prior,ambientGraph(world.scene));stages.set(stage,prior);return prior;}
+ const remember=(prior:World['scene'])=>{inheritPriorRepairCoverage(prior,stage==='coverage' ? undefined : world.scene);stages!.set(stage,prior);return prior;};
+ if(stage==='coverage'){const prior=preCoverageScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
+ if(stage==='invitation'){const prior=preInvitationScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
+ if(stage==='people'){const prior=prePeopleScene(world.scene);if(world.previousPeopleContacts)primeSceneContacts(prior,world.previousPeopleContacts);if(world.previousPeopleNavigation)primeAmbientNavigation(prior,world.previousPeopleNavigation);return remember(prior);}
+ if(stage==='junction'){const prior=preJunctionScene(world.scene);if(world.previousJunctionContacts)primeSceneContacts(prior,world.previousJunctionContacts);if(world.previousJunctionNavigation)primeAmbientNavigation(prior,world.previousJunctionNavigation);return remember(prior);}
+ if(stage==='park'){const prior=preParkScene(world.scene),ids=new Set(world.scene.objects.filter(o=>!prior.objects.some(p=>p.id===o.id)).map(o=>o.id)),contacts=sceneContactData(world.scene);primeSceneContacts(prior,{...contacts,contacts:contacts.contacts.filter(c=>!c.id || !ids.has(c.id))});if(world.previousParkNavigation)primeAmbientNavigation(prior,world.previousParkNavigation);return remember(prior);}
+ if(stage==='city'){const prior=preCityScene(world.scene),ids=new Set(world.scene.objects.filter(o=>!prior.objects.some(p=>p.id===o.id)).map(o=>o.id)),contacts=sceneContactData(world.scene);primeSceneContacts(prior,{...contacts,contacts:contacts.contacts.filter(c=>!c.id || !ids.has(c.id))});if(world.previousCityNavigation)primeAmbientNavigation(prior,world.previousCityNavigation);return remember(prior);}
+ if(stage==='match'){const prior=preMatchScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
+ if(stage==='business'){const prior=preBusinessScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
+ if(stage==='schoolRepair'){const prior=preSchoolRepairScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
+ if(stage==='social'){const prior=preSocialScene(world.scene),data=sceneContactData(world.scene);primeSceneContacts(prior,{...data,contacts:data.contacts.filter(c=>c.id!=='school_bench')});primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
+ if(stage==='shift'){const prior=preShiftScene(world.scene);primeSceneContacts(prior,sceneContactData(previousPhysicalScene(world,'social')));primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
+ if(stage==='hours'){const prior=preHoursScene(world.scene);primeSceneContacts(prior,sceneContactData(previousPhysicalScene(world,'social')));primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
+ if(stage==='seating'){const prior=preSeatingScene(world.scene);primeSceneContacts(prior,sceneContactData(previousPhysicalScene(world,'social')));primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
+ if(stage==='kitchen'){const prior=preKitchenScene(world.scene);primeSceneContacts(prior,sceneContactData(previousPhysicalScene(world,'social')));primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
+ if(stage==='meal'){const prior=preMealScene(world.scene);primeSceneContacts(prior,sceneContactData(previousPhysicalScene(world,'social')));primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
+ if(stage==='progress'){const prior=preProgressScene(world.scene);primeSceneContacts(prior,sceneContactData(previousPhysicalScene(world,'social')));primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
+ if(stage==='recipe'){const prior=preRecipeScene(world.scene);primeSceneContacts(prior,sceneContactData(previousPhysicalScene(world,'social')));primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
  const physical=stage==='interior' ? preInteriorScene(world.scene) : world.previousInteriorSaveCompatibility ? previousPhysicalScene(world,'interior') : world.scene;
- if(stage==='interior'){if(world.previousInteriorContacts)primeSceneContacts(physical,world.previousInteriorContacts);if(world.previousInteriorNavigation)primeAmbientNavigation(physical,world.previousInteriorNavigation);stages.set(stage,physical);return physical;}
+ if(stage==='interior'){if(world.previousInteriorContacts)primeSceneContacts(physical,world.previousInteriorContacts);if(world.previousInteriorNavigation)primeAmbientNavigation(physical,world.previousInteriorNavigation);return remember(physical);}
 
- if(stage==='courier'){scene=preCourierScene(physical);primeSceneContacts(scene,sceneContactData(physical));primeAmbientNavigation(scene,ambientGraph(physical));stages.set(stage,scene);return scene;}
- if(stage==='finish'){scene=preFinishScene(physical);primeSceneContacts(scene,sceneContactData(physical));primeAmbientNavigation(scene,ambientGraph(physical));stages.set(stage,scene);return scene;}
- if(stage==='plant'){scene=prePlantScene(physical);primeSceneContacts(scene,sceneContactData(physical));primeAmbientNavigation(scene,ambientGraph(physical));stages.set(stage,scene);return scene;}
+ if(stage==='courier'){scene=preCourierScene(physical);primeSceneContacts(scene,sceneContactData(physical));primeAmbientNavigation(scene,ambientGraph(physical));return remember(scene);}
+ if(stage==='finish'){scene=preFinishScene(physical);primeSceneContacts(scene,sceneContactData(physical));primeAmbientNavigation(scene,ambientGraph(physical));return remember(scene);}
+ if(stage==='plant'){scene=prePlantScene(physical);primeSceneContacts(scene,sceneContactData(physical));primeAmbientNavigation(scene,ambientGraph(physical));return remember(scene);}
  const plantBase=world.previousPlantSaveCompatibility ? previousPhysicalScene(world,'plant') : physical;
- if(stage==='verge'){scene=preVergeScene(plantBase);primeSceneContacts(scene,sceneContactData(physical));if(world.previousVergeNavigation)primeAmbientNavigation(scene,world.previousVergeNavigation);stages.set(stage,scene);return scene;}
+ if(stage==='verge'){scene=preVergeScene(plantBase);primeSceneContacts(scene,sceneContactData(physical));if(world.previousVergeNavigation)primeAmbientNavigation(scene,world.previousVergeNavigation);return remember(scene);}
  const base=world.previousVergeSaveCompatibility ? previousPhysicalScene(world,'verge') : plantBase;
  const original=world.previousPoolSaveCompatibility ? prePoolScene(base) : base;
  const upgraded=stage==='pool' ? original : world.previousNetworkSaveCompatibility ? preNetworkScene(original) : original;
@@ -106,7 +108,7 @@ function previousPhysicalScene(world:World,stage:'invitation'|'people'|'junction
  const staged=stage==='pool' || stage==='network' || stage==='supply' || stage==='repair' ? prior : world.previousParkingSaveCompatibility ? preParkingScene(prior) : prior;
  scene=stage==='delivery' ? preDeliveryScene(staged) : stage==='commerce' ? {...staged,economy:undefined} : staged;
  // Older stages share the registered pre-crossing pavement and unchanged contacts.
- primeSceneContacts(scene,sceneContactData(physical));primeAmbientNavigation(scene,ambientGraph(base));stages.set(stage,scene);return scene;
+ primeSceneContacts(scene,sceneContactData(physical));primeAmbientNavigation(scene,ambientGraph(base));return remember(scene);
 }
 /** Rebase derived node indices; positions, travel history, random state and clocks stay saved. */
 function rebasePopulation(state:CarState,previous:World['scene'],current:World['scene'],retarget=false,relocate=false):CarState{
@@ -189,6 +191,12 @@ export function decodeSave(text:string,world:World):{state:CarState;worldTime:nu
  if(text.length>MAX_SAVE_CHARACTERS)throw Error('Save exceeds one million characters');
  let data:z.infer<typeof supported>;
  try{data=supported.parse(JSON.parse(text));}catch{throw Error('This file is not a supported Muse Dream backup.');}
+ if(world.saveCompatibility===COVERAGE_COMPATIBILITY && (data.version===1 || data.compatibilityHash!==COVERAGE_COMPATIBILITY)){
+  if(world.previousCoverageSaveCompatibility!==INVITATION_COMPATIBILITY)throw Error('This backup needs a different world or simulation version.');
+  const restored=decodeSave(text,{...world,scene:previousPhysicalScene(world,'coverage'),saveCompatibility:INVITATION_COMPATIBILITY,previousCoverageSaveCompatibility:undefined});
+  try{checkState(restored.state,world);}catch{throw Error('This backup contains invalid world state.');}
+  return {...restored,migrated:true,compatible:data.sourceHash!==world.scene.sourceHash};
+ }
  if(world.saveCompatibility===INVITATION_COMPATIBILITY && (data.version===1 || data.compatibilityHash!==INVITATION_COMPATIBILITY)){
   if(world.previousInvitationSaveCompatibility!==PEOPLE_COMPATIBILITY)throw Error('This backup needs a different world or simulation version.');
   const restored=decodeSave(text,{...world,scene:previousPhysicalScene(world,'invitation'),saveCompatibility:PEOPLE_COMPATIBILITY,previousInvitationSaveCompatibility:undefined});
@@ -303,22 +311,22 @@ export function decodeSave(text:string,world:World):{state:CarState;worldTime:nu
  const untaggedExact=exact && !world.scene.economy;
  const knownSource=world.previousSaveSource!==undefined && data.sourceHash===world.previousSaveSource;
  const oldFingerprint=data.version===2 && data.compatibilityHash!==undefined && (data.compatibilityHash===world.previousSaveCompatibility || !!world.previousSaveSource && (R44_COMPATIBILITIES as readonly string[]).includes(data.compatibilityHash));
- const oldRules=Number(SAVE_SIMULATION_VERSION)===30 && (data.version===2 ? oldFingerprint || knownSource || data.compatibilityHash===undefined && untaggedExact && world.saveCompatibility===undefined : data.version===1 && (knownSource || untaggedExact));
- const addEconomy=Number(SAVE_SIMULATION_VERSION)===30 && data.version===3 && !data.state.economy && data.compatibilityHash!==undefined && data.compatibilityHash===world.emptyEconomySaveCompatibility;
- const addDeliveries=Number(SAVE_SIMULATION_VERSION)===30 && data.version===3 && !!data.state.economy && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousMarketSaveCompatibility;
- const addProgress=Number(SAVE_SIMULATION_VERSION)===30 && data.version===9 && world.saveCompatibility===PROGRESS_COMPATIBILITY && world.previousProgressSaveCompatibility===RECIPE_COMPATIBILITY && data.compatibilityHash===world.previousProgressSaveCompatibility;
- const addRecipes=Number(SAVE_SIMULATION_VERSION)===30 && data.version===9 && (world.saveCompatibility===RECIPE_COMPATIBILITY || world.saveCompatibility===PROGRESS_COMPATIBILITY) && world.previousRecipeSaveCompatibility===EGRESS_COMPATIBILITY && data.compatibilityHash===world.previousRecipeSaveCompatibility;
- const updateEgress=Number(SAVE_SIMULATION_VERSION)===30 && data.version===9 && (world.saveCompatibility===EGRESS_COMPATIBILITY || world.saveCompatibility===RECIPE_COMPATIBILITY || world.saveCompatibility===PROGRESS_COMPATIBILITY) && world.previousEgressSaveCompatibility===INTERIOR_COMPATIBILITY && data.compatibilityHash===world.previousEgressSaveCompatibility;
- const addInterior=Number(SAVE_SIMULATION_VERSION)===30 && data.version===9 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousInteriorSaveCompatibility;
- const addCourier=Number(SAVE_SIMULATION_VERSION)===30 && data.version===8 && data.compatibilityHash===world.previousCourierSaveCompatibility && data.compatibilityHash!==undefined;
- const addFinish=Number(SAVE_SIMULATION_VERSION)===30 && data.version===8 && data.compatibilityHash===world.previousFinishSaveCompatibility && data.compatibilityHash!==undefined;
- const addPlant=Number(SAVE_SIMULATION_VERSION)===30 && data.version===7 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousPlantSaveCompatibility;
- const addVerge=Number(SAVE_SIMULATION_VERSION)===30 && data.version===7 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousVergeSaveCompatibility;
- const addPool=Number(SAVE_SIMULATION_VERSION)===30 && data.version===6 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousPoolSaveCompatibility;
- const addNetwork=Number(SAVE_SIMULATION_VERSION)===30 && data.version===6 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousNetworkSaveCompatibility;
- const addSupply=Number(SAVE_SIMULATION_VERSION)===30 && data.version===6 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousSupplySaveCompatibility;
- const addRepairs=Number(SAVE_SIMULATION_VERSION)===30 && data.version===5 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousRepairSaveCompatibility;
- const addParking=Number(SAVE_SIMULATION_VERSION)===30 && data.version===4 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousParkingSaveCompatibility;
+ const oldRules=Number(SAVE_SIMULATION_VERSION)===31 && (data.version===2 ? oldFingerprint || knownSource || data.compatibilityHash===undefined && untaggedExact && world.saveCompatibility===undefined : data.version===1 && (knownSource || untaggedExact));
+ const addEconomy=Number(SAVE_SIMULATION_VERSION)===31 && data.version===3 && !data.state.economy && data.compatibilityHash!==undefined && data.compatibilityHash===world.emptyEconomySaveCompatibility;
+ const addDeliveries=Number(SAVE_SIMULATION_VERSION)===31 && data.version===3 && !!data.state.economy && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousMarketSaveCompatibility;
+ const addProgress=Number(SAVE_SIMULATION_VERSION)===31 && data.version===9 && world.saveCompatibility===PROGRESS_COMPATIBILITY && world.previousProgressSaveCompatibility===RECIPE_COMPATIBILITY && data.compatibilityHash===world.previousProgressSaveCompatibility;
+ const addRecipes=Number(SAVE_SIMULATION_VERSION)===31 && data.version===9 && (world.saveCompatibility===RECIPE_COMPATIBILITY || world.saveCompatibility===PROGRESS_COMPATIBILITY) && world.previousRecipeSaveCompatibility===EGRESS_COMPATIBILITY && data.compatibilityHash===world.previousRecipeSaveCompatibility;
+ const updateEgress=Number(SAVE_SIMULATION_VERSION)===31 && data.version===9 && (world.saveCompatibility===EGRESS_COMPATIBILITY || world.saveCompatibility===RECIPE_COMPATIBILITY || world.saveCompatibility===PROGRESS_COMPATIBILITY) && world.previousEgressSaveCompatibility===INTERIOR_COMPATIBILITY && data.compatibilityHash===world.previousEgressSaveCompatibility;
+ const addInterior=Number(SAVE_SIMULATION_VERSION)===31 && data.version===9 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousInteriorSaveCompatibility;
+ const addCourier=Number(SAVE_SIMULATION_VERSION)===31 && data.version===8 && data.compatibilityHash===world.previousCourierSaveCompatibility && data.compatibilityHash!==undefined;
+ const addFinish=Number(SAVE_SIMULATION_VERSION)===31 && data.version===8 && data.compatibilityHash===world.previousFinishSaveCompatibility && data.compatibilityHash!==undefined;
+ const addPlant=Number(SAVE_SIMULATION_VERSION)===31 && data.version===7 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousPlantSaveCompatibility;
+ const addVerge=Number(SAVE_SIMULATION_VERSION)===31 && data.version===7 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousVergeSaveCompatibility;
+ const addPool=Number(SAVE_SIMULATION_VERSION)===31 && data.version===6 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousPoolSaveCompatibility;
+ const addNetwork=Number(SAVE_SIMULATION_VERSION)===31 && data.version===6 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousNetworkSaveCompatibility;
+ const addSupply=Number(SAVE_SIMULATION_VERSION)===31 && data.version===6 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousSupplySaveCompatibility;
+ const addRepairs=Number(SAVE_SIMULATION_VERSION)===31 && data.version===5 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousRepairSaveCompatibility;
+ const addParking=Number(SAVE_SIMULATION_VERSION)===31 && data.version===4 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousParkingSaveCompatibility;
  if(data.sceneId!==world.scene.sceneId || !(addProgress || addRecipes || updateEgress || oldRules || addEconomy || addDeliveries || addParking || addRepairs || addSupply || addNetwork || addPool || addVerge || addPlant || addFinish || addCourier || addInterior || currentFormat && data.version!==1 && (exact || compatible) && data.compatibilityHash===world.saveCompatibility))throw Error('This backup needs a different world or simulation version.');
  const legacyMigrated=!!(oldRules || addEconomy || addDeliveries || addParking || addRepairs || addSupply || addNetwork || addPool || addVerge || addPlant || addFinish || addCourier || addInterior);
  const migrated=legacyMigrated || updateEgress || addRecipes || addProgress;

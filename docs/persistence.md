@@ -52,7 +52,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 17 retains the exact source hash and compatibility fingerprint, with simulation version 30. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 17 retains the exact source hash and compatibility fingerprint, with simulation version 31. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -467,3 +467,26 @@ Format 16 stays strict and cannot contain the new fields. The original slot is
 kept after the first successful format-17 write; the earlier migration chain
 remains available. New worlds outside this exact registered projection do not
 gain automatic compatibility.
+
+
+### City repair coverage (r73)
+
+R73 keeps format 17 and advances simulation rules to 31. Its checked projection
+restores the r72 fixture service label and three-street selection before decoding
+an older save. All saved fields and visual time remain unchanged, including
+invitations, reserved food, repair progress, worker paths and physical damage.
+The original format-17 slot is retained. A malformed newer slot still blocks
+automatic fallback.
+
+Historical projections retain the released repair access footprints, selected
+before their work areas are prepared and inherited through the existing migration
+chain. The wider live approaches cannot alter an older migration's waypoints.
+These are host-side cache rules, never Dream fields or saved flags. The native
+airport work/return checkpoints and 33 prior backups are covered by the
+[coverage verification](evidence/city-repairs/verification.md).
+
+Development inspection links with `test-save` now read their compatible saved
+world before preparing a review. A valid restored review skips its offline
+preparation and retains its exact state; a fresh review still runs the full
+fixed-step preparation. Production restore, paused clocks and capture isolation
+keep their existing behavior.

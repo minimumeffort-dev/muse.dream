@@ -12,6 +12,7 @@ import {gameSave} from '../src/game/save';
 import {sceneContactData} from '../src/scene/contacts';
 import {ambientGraph} from '../src/scene/ambient-navigation';
 import {repairNavigation} from '../src/sim/repair';
+import {inheritPriorRepairCoverage} from '../src/scene/commerce';
 import {preBusinessState} from './pre-business-state';
 import prior from './fixtures/save-v14-r65-return.json';
 import owned from './fixtures/save-v15-r66-business.json';
@@ -19,7 +20,7 @@ import owned from './fixtures/save-v15-r66-business.json';
 const scene=createWorldScene(),world:World={scene,saveCompatibility:MATCH_COMPATIBILITY,previousMatchSaveCompatibility:BUSINESS_COMPATIBILITY,previousBusinessSaveCompatibility:SCHOOL_REPAIR_COMPATIBILITY,previousSchoolRepairSaveCompatibility:SOCIAL_COMPATIBILITY,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11};
 
 it('registers exactly the new depot capability and zero-funded owner with unchanged geometry and walking networks',async()=>{
- const old=preBusinessScene(scene);expect(await sha256(saveCompatibilitySource(scene))).toBe(MATCH_COMPATIBILITY);expect(await sha256(preBusinessCompatibilitySource(scene))).toBe(SCHOOL_REPAIR_COMPATIBILITY);
+ const old=preBusinessScene(scene);inheritPriorRepairCoverage(old,scene);expect(await sha256(saveCompatibilitySource(scene))).toBe(MATCH_COMPATIBILITY);expect(await sha256(preBusinessCompatibilitySource(scene))).toBe(SCHOOL_REPAIR_COMPATIBILITY);
  expect(preMatchScene(scene).objects).toEqual(old.objects);expect(scene.objects).toHaveLength(1700);expect(sceneContactData(scene)).toEqual(sceneContactData(old));expect(ambientGraph(scene)).toEqual(ambientGraph(old));expect(repairNavigation(scene)).toEqual(repairNavigation(old));
  expect(scene.economy!.accounts).toEqual([...old.economy!.accounts,{id:'depot_owner',actor:'station_resident',credits:0,capacity:4,satiety:65,drainPerS:0,shop:false}]);
  expect(scene.economy!.markets[0]).toEqual({...old.economy!.markets[0],owner:'depot_owner',sale:15});

@@ -1,0 +1,16 @@
+{
+  targets: 431,
+  allInitialStatesExact: true,
+  before: {
+    primeMs: 4.338500000001659,
+    initialStateMs: 14.476040999999896,
+    firstEconomyMs: 179.78012500000114,
+    totalMs: 197.296875
+  },
+  after: {
+    primeMs: 6.208458999999493,
+    initialStateMs: 14.739916000000449,
+    firstEconomyMs: 51.54583300000013,
+    totalMs: 72.46479199999885
+  }
+}

@@ -1,0 +1,333 @@
+{
+  progressS: 0.008333333333333333,
+  phase: undefined,
+  x: undefined,
+  y: undefined,
+  speed: undefined,
+  wallMs: 24.99945900000057
+}
+{
+  stage: 'out',
+  timeS: 13.249999999999888,
+  worker: { x: 6460, y: 4380, distance: 0 },
+  credits: 0,
+  satiety: 64.33749999999985,
+  broken: true,
+  populationTick: 265,
+  wallMs: 887.3479590000006
+}
+{
+  progressS: 60.00833333333057,
+  phase: 'out',
+  x: 6169.088631219748,
+  y: 4114.6418059802145,
+  speed: 13.999999999999886,
+  wallMs: 2642.716875
+}
+{
+  progressS: 120.0083333333749,
+  phase: 'out',
+  x: 5507.162744656995,
+  y: 4288.215585711958,
+  speed: 13.999999999999773,
+  wallMs: 5002.010084
+}
+{
+  progressS: 180.00833333333395,
+  phase: 'out',
+  x: 5278.468347844855,
+  y: 4910.383619355427,
+  speed: 14,
+  wallMs: 7459.723834
+}
+{
+  progressS: 240.00833333327938,
+  phase: 'out',
+  x: 5118.323656873818,
+  y: 5603.413963471906,
+  speed: 14,
+  wallMs: 10256.907667
+}
+{
+  progressS: 300.0083333332248,
+  phase: 'out',
+  x: 5123.6061278024445,
+  y: 6431.576599808551,
+  speed: 14,
+  wallMs: 13370.814209
+}
+{
+  progressS: 360.00833333317024,
+  phase: 'out',
+  x: 4301.6728887485715,
+  y: 6579.012906937789,
+  speed: 13.999999999998181,
+  wallMs: 16641.85175
+}
+{
+  progressS: 420.0083333331157,
+  phase: 'out',
+  x: 3492.9729129715734,
+  y: 6583.092354344424,
+  speed: 13.999999999998181,
+  wallMs: 19908.484959
+}
+{
+  progressS: 480.0083333330611,
+  phase: 'out',
+  x: 3052,
+  y: 6742.587941614651,
+  speed: 13.999999999998181,
+  wallMs: 23327.475416999998
+}
+{
+  progressS: 540.0083333330066,
+  phase: 'out',
+  x: 3052,
+  y: 7582.587941613832,
+  speed: 13.999999999998181,
+  wallMs: 26739.6775
+}
+{
+  progressS: 600.008333332952,
+  phase: 'out',
+  x: 2599.1902984583407,
+  y: 8186.522980162982,
+  speed: 13.999999999998181,
+  wallMs: 30330.238333999998
+}
+{
+  progressS: 660.0083333328975,
+  phase: 'out',
+  x: 1953.5419578029803,
+  y: 8581.997331509674,
+  speed: 13.999999999998181,
+  wallMs: 34341.789959
+}
+{
+  stage: 'approach',
+  timeS: 698.7499999995289,
+  worker: { x: 1948, y: 9124.439903413177, distance: 9460.499999992708 },
+  credits: 0,
+  satiety: 30.06250000002268,
+  broken: true,
+  populationTick: 13975,
+  wallMs: 36918.592875
+}
+{
+  stage: 'work',
+  timeS: 703.2499999995248,
+  worker: {
+    x: 1936.2235956018255,
+    y: 9183.260217737583,
+    distance: 9521.343602421506
+  },
+  credits: 0,
+  satiety: 29.837500000022885,
+  broken: true,
+  populationTick: 14065,
+  wallMs: 37210.157584
+}
+{
+  stage: 'home',
+  timeS: 710.9999999995177,
+  worker: {
+    x: 1936.2235956018255,
+    y: 9183.260217737583,
+    distance: 9521.343602421506
+  },
+  credits: 4,
+  satiety: 24.450000000023238,
+  broken: false,
+  populationTick: 14220,
+  wallMs: 37707.347292000006
+}
+{
+  progressS: 720.0083333328429,
+  phase: 'home',
+  x: 1948,
+  y: 9059.283505842106,
+  speed: 13.999999999998181,
+  wallMs: 38291.191542
+}
+{
+  progressS: 780.0083333327883,
+  phase: 'home',
+  x: 2222.8145434188964,
+  y: 8480.11828972671,
+  speed: 13.999999999998181,
+  wallMs: 42108.622124999994
+}
+{
+  progressS: 840.0083333327337,
+  phase: 'home',
+  x: 2883.0799306928507,
+  y: 7960.857851163976,
+  speed: 13.999999999998181,
+  wallMs: 45953.660875
+}
+{
+  progressS: 900.0083333326792,
+  phase: 'home',
+  x: 3052,
+  y: 7219.931544043073,
+  speed: 13.999999999998181,
+  wallMs: 49867.306
+}
+{
+  progressS: 960.0083333326246,
+  phase: 'home',
+  x: 3224,
+  y: 6643.055951527416,
+  speed: 13.999999999998181,
+  wallMs: 53699.299042
+}
+{
+  progressS: 1020.00833333257,
+  phase: 'home',
+  x: 3855.573768633644,
+  y: 6589.439178129113,
+  speed: 13.999999999998181,
+  wallMs: 57628.32612499999
+}
+{
+  progressS: 1080.0083333332796,
+  phase: 'home',
+  x: 4659.011722568844,
+  y: 6517.137059058929,
+  speed: 13.999999999996362,
+  wallMs: 61667.905291999996
+}
+{
+  progressS: 1140.0083333340435,
+  phase: 'home',
+  x: 5118.987538245159,
+  y: 6080.68109573941,
+  speed: 13.999999999996362,
+  wallMs: 66059.6505
+}
+{
+  progressS: 1200.0083333348075,
+  phase: 'home',
+  x: 5120.712281699457,
+  y: 5240.765432253408,
+  speed: 13.999999999996362,
+  wallMs: 70531.0775
+}
+{
+  progressS: 1260.0083333355715,
+  phase: 'home',
+  x: 5282,
+  y: 4547.754889680536,
+  speed: 13.999999999996362,
+  wallMs: 74916.812834
+}
+{
+  progressS: 1320.0083333363355,
+  phase: 'home',
+  x: 5869.782736148434,
+  y: 4283.390350443705,
+  speed: 13.999999999996362,
+  wallMs: 79378.72
+}
+{
+  progressS: 1380.0083333370994,
+  phase: 'home',
+  x: 6400,
+  y: 4249.459417553041,
+  speed: 13.999999999996362,
+  wallMs: 83807.841417
+}
+{
+  stage: 'returned',
+  timeS: 1392.250000003922,
+  worker: undefined,
+  credits: 2,
+  satiety: 0,
+  broken: false,
+  populationTick: 27845,
+  wallMs: 84745.22995899999
+}
+{
+  source: '2304fe3bf70a859299e0ac82e66dac3cb60cd5322cc46b9591a8d7a8bda4c812',
+  hash: 'c0f1953c39994af33d2e5f3fed33c1fda6bad6e648577d6309081ae55ae4589c',
+  target: 'airport_lamps_1_5_r',
+  simulationHz: 120,
+  allSystemsAdvanced: true,
+  seededDamage: false,
+  providerCalls: false,
+  kind: 'Full engine replay in Node, not native browser play or browser FPS',
+  wallMs: 84822.912417,
+  phases: [
+    {
+      stage: 'out',
+      timeS: 13.249999999999888,
+      worker: [Object],
+      credits: 0,
+      satiety: 64.33749999999985,
+      broken: true,
+      populationTick: 265,
+      wallMs: 887.3479590000006
+    },
+    {
+      stage: 'approach',
+      timeS: 698.7499999995289,
+      worker: [Object],
+      credits: 0,
+      satiety: 30.06250000002268,
+      broken: true,
+      populationTick: 13975,
+      wallMs: 36918.592875
+    },
+    {
+      stage: 'work',
+      timeS: 703.2499999995248,
+      worker: [Object],
+      credits: 0,
+      satiety: 29.837500000022885,
+      broken: true,
+      populationTick: 14065,
+      wallMs: 37210.157584
+    },
+    {
+      stage: 'home',
+      timeS: 710.9999999995177,
+      worker: [Object],
+      credits: 4,
+      satiety: 24.450000000023238,
+      broken: false,
+      populationTick: 14220,
+      wallMs: 37707.347292000006
+    },
+    {
+      stage: 'returned',
+      timeS: 1392.250000003922,
+      worker: undefined,
+      credits: 2,
+      satiety: 0,
+      broken: false,
+      populationTick: 27845,
+      wallMs: 84745.22995899999
+    }
+  ],
+  finishedAtS: 1393.2500000039347,
+  finalWorker: {
+    id: 'caretaker',
+    credits: 2,
+    inventory: {
+      bread: 0,
+      flour: 0,
+      timber: 0,
+      sapling: 0,
+      vegetables: 0,
+      lunch: 0,
+      boards: 0,
+      fasteners: 0
+    },
+    satiety: 20,
+    decisionAtS: 1394.2500000039347,
+    completed: { work: [Object], delivery: [Object], repair: [Object] },
+    repairSeen: undefined,
+    repair: undefined
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "kind": "Assertions over actual native-browser backup downloads and public serialized DOM state",
+  "target": "airport_lamps_1_5_r",
+  "workAtS": 703.2499999995248,
+  "homeAtS": 770.0833333327973,
+  "walkedWorldUnits": 9521.343602421506,
+  "onePaidRepair": true,
+  "restoredWorkEconomyExact": true,
+  "priorSavedStateAndVisualClockExact": true,
+  "savedReview": {
+    "beforeMs": 68230.89999997616,
+    "afterMs": 17772,
+    "scope": "Single saved dev-review reload on Apple M3 Ultra / 96 GiB, not production startup or browser FPS"
+  }
+}

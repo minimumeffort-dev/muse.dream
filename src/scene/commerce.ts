@@ -6,9 +6,9 @@ import {GROWTH_LIMITS} from './growth';
 import {MEASURE_KINDS} from './measure';
 import {impactOf,zonesOf} from './object-dsl';
 import {onPolygon,streetPolygons,streetFootprints,rectPolygon} from './streets';
-import {polygonBounds,distanceToPolygon,unionPolygons,intersectPolygons,triangulatePolygon} from './polygons';
+import {polygonBounds,polygonArea,distanceToPolygon,unionPolygons,intersectPolygons,triangulatePolygon} from './polygons';
 import {roadFootprint} from './road';
-import {objectContacts,type Contact} from './contacts';
+import {objectContacts,sceneContacts,type Contact} from './contacts';
 import type {Scene} from './schema';
 import {roleOf} from './agents';
 import {waterAt,drivingHeight} from './terrain';
@@ -126,7 +126,15 @@ export const repairKinds=(r:Repair)=>r.kinds??[r.kind!];
 export const deliveryBill=(d:Economy['deliveries'][number])=>d.quantity*(d.price??0);
 
 export interface RepairTarget {objectId:string;zoneId?:string;contact:Contact}
-const coverageCache=new WeakMap<Scene,Map<string,{targets:RepairTarget[];access:Scene['surfaces'][number]['points'][]}>>();
+export interface RepairCoverage {targets:RepairTarget[];access:Scene['surfaces'][number]['points'][]}
+const coverageCache=new WeakMap<Scene,Map<string,RepairCoverage>>();
+const priorCoverage=new WeakSet<Scene>();
+/** Registered save projections retain the released access geometry, never an authored or saved field. */
+export function inheritPriorRepairCoverage(scene:Scene,from?:Scene){
+ if(from && !priorCoverage.has(from) || priorCoverage.has(scene))return;
+ if(coverageCache.has(scene))throw Error('Prior repair coverage must be selected before preparing work areas');
+ priorCoverage.add(scene);
+}
 /** Short work approaches extend named sidewalks only near declared category contacts. */
 export function repairCoverage(scene:Scene,r:Repair){
  let entries=coverageCache.get(scene);if(!entries){entries=new Map();coverageCache.set(scene,entries);}const cached=entries.get(r.id);if(cached)return cached;
@@ -141,12 +149,36 @@ export function repairCoverage(scene:Scene,r:Repair){
   for(const t of candidates){const c=t.contact,street=sidewalks.some(p=>onPolygon(p,c.x,c.y) || distanceToPolygon(c.x,c.y,p)<=verge);if(local || street)targets.push(t);if(street)streetTargets.push(t);}
  }
  if(streetTargets.length>COMMERCE_LIMITS.repairStreetTargets)throw Error(`${r.id}: repair exceeds 512 street targets; split service districts`);
- const boxes=streetTargets.map(t=>{const c=t.contact,radius=c.r+12+COMMERCE_LIMITS.repairRadius;return rectPolygon({x0:Math.max(0,c.x-radius),y0:Math.max(0,c.y-radius),x1:Math.min(scene.canonical.width,c.x+radius),y1:Math.min(scene.canonical.height,c.y+radius)});});
+ // Include body clearance where verge approaches join the pavement.
+ const boxes=streetTargets.map(t=>{const c=t.contact,reach=c.r+12+COMMERCE_LIMITS.repairRadius,radius=priorCoverage.has(scene) ? reach : Math.max(reach,verge+COMMERCE_LIMITS.repairRadius*2);return rectPolygon({x0:Math.max(0,c.x-radius),y0:Math.max(0,c.y-radius),x1:Math.min(scene.canonical.width,c.x+radius),y1:Math.min(scene.canonical.height,c.y+radius)});});
  const access=r.streets ? unionPolygons(intersectPolygons(verges,boxes),[...riding,...road,...(scene.terrain.landscape?.waters??[]).flatMap(w=>triangulatePolygon(w.polygon))]) : [];
  if(access.length>COMMERCE_LIMITS.repairAccessPieces)throw Error(`${r.id}: repair exceeds 2048 verge access pieces; split service districts`);
  const result={targets,access};entries.set(r.id,result);return result;
 }
 export const repairTargets=(scene:Scene,r:Repair)=>repairCoverage(scene,r).targets;
+
+/** Internal worker data only; validate the complete packet before replacing any cached coverage. */
+export function primeRepairCoverage(scene:Scene,prepared:Map<string,RepairCoverage>):void{
+ const definitions=scene.economy?.repairs.filter(r=>r.grounds || r.streets)??[],bad=()=>{throw Error('Invalid prepared repair coverage');};
+ if(prepared.size!==definitions.length || definitions.some(r=>!prepared.has(r.id)))bad();
+ const objectOrder=new Map(scene.objects.map((o,i)=>[o.id,i])),objects=sceneContacts(scene).objects,contacts=new Map<string,Map<string|undefined,Contact>>();
+ for(const c of sceneContacts(scene).contacts)if(c.id){let zones=contacts.get(c.id);if(!zones){zones=new Map();contacts.set(c.id,zones);}if(!zones.has(c.zoneId))zones.set(c.zoneId,c);}
+ for(const r of definitions){
+  const value=prepared.get(r.id)!;if(!value || !Array.isArray(value.targets) || !value.targets.length || value.targets.length>scene.objects.length*33 || !Array.isArray(value.access) || value.access.length>COMMERCE_LIMITS.repairAccessPieces)bad();
+  let previousObject=-1,previousZone=-2;
+  for(const t of value.targets){
+   const object=t && objects.get(t.objectId),index=t && objectOrder.get(t.objectId),spec=object?.spec;
+   if(!object || index===undefined || !spec || !('measure' in spec) || !spec.measure || !repairKinds(r).includes(spec.measure.kind))bad();
+   const zones=zonesOf(spec),zone=t.zoneId===undefined ? -1 : zones.findIndex(z=>z.id===t.zoneId);
+   if(t.zoneId===undefined ? !['break','topple'].includes(impactOf(spec)?.kind??'') : zone<0)bad();
+   if(index!<previousObject || index===previousObject && zone<=previousZone)bad();previousObject=index!;previousZone=zone;
+   const reference=contacts.get(t.objectId)?.get(t.zoneId)??objectContacts(scene,object!).find(c=>c.zoneId===t.zoneId);
+   if(!t.contact || ![t.contact.x,t.contact.y,t.contact.r,t.contact.top].every(Number.isFinite) || !(Number.isFinite(t.contact.bottom) || t.contact.bottom===-Infinity) || !reference || JSON.stringify(reference)!==JSON.stringify(t.contact))bad();
+  }
+  if(value.access.some(p=>!Array.isArray(p) || p.length<3 || p.some(v=>!v || !Number.isFinite(v.x) || !Number.isFinite(v.y) || v.x<0 || v.y<0 || v.x>scene.canonical.width || v.y>scene.canonical.height) || Math.abs(polygonArea(p))<1e-8))bad();
+ }
+ const next=new Map(coverageCache.get(scene));for(const [id,value] of prepared)next.set(id,value);coverageCache.set(scene,next);
+}
 
 /** Linked actor ownership is checked after modules/furnishings have been combined. */
 export function economyProblems(scene:Scene):string[]{

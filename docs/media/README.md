@@ -1147,3 +1147,27 @@ sports, work and social clips retain their recorded actions and are historical
 motion examples; this set demonstrates the current returning-foot correction.
 Swimming retains its existing crawl/tread recording. Posters use character frame
 68, pedestrians 90 and locomotion 70. [Checks and source/frame provenance](../evidence/walking-swing/verification.md).
+
+## City-wide lamp repairs, r73
+
+`airportrepair.gif`, `airportrepair.mp4` and `airportrepair.jpg` show the existing
+caretaker walking the last approach, doing paid work and leaving the restored
+streetlight. Preparation uses the complete 120 Hz engine: a real car impact,
+finite dispatch and a 952-metre walk from the market. No worker position, supplies
+or money are granted to prepare the clip. It follows the worker through the
+existing inspection camera and uses the existing 14:00 capture lighting preset;
+simulation time and needs retain their real prepared values.
+
+The set uses 600 actually rendered 2400 × 1350 PNG frames, 30 frames per
+simulation second. The encoder retains the existing 1280 × 720 GIF settings and
+1600 × 900 H.264 video; the matching poster uses frame 240. These are offline
+exports, without interpolated frames or a live FPS claim. Native backups and
+screenshots separately record the browser work, completed repair and older-save
+restore. [Provenance and checks](../evidence/city-repairs/verification.md).
+
+README, the repair guide, persistence, rendering and world-systems notes now
+reflect full lamp coverage. Static construction sheets and the source-derived
+city map remain accurate: no object, road, terrain or placement changes. Earlier
+repair, planting and supplier footage retains its recorded mechanics; the new
+set demonstrates the expanded reach. The current walking sets retain the
+released returning-foot correction.

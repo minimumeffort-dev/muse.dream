@@ -102,6 +102,7 @@ function collectionReason(scene:Scene,e:EconomyState,a:Account,id:string,timeS:n
  if(to.stock[d.good]!+reserved(e,c.e,d.to,d.good)+d.quantity>lot.limit)return 'capacity';
 }
 export function repairOffer(state:CarState,scene:Scene,e:EconomyState,a:Account,id:string){
+ if(!state.broken.length && !state.brokenZones.length)return;
  const c=data(scene),r=c.repairs.get(id),p=ownerPose(state,scene,a);if(!r || !p)return;
  const targets=c.repairTargets.get(r.id)!.filter(t=>targetBroken(state,t) && !e.accounts.some(a=>a.repair && a.repair.phase!=='home' && a.repair.objectId===t.objectId && a.repair.zoneId===t.zoneId)).sort((a,b)=>Math.hypot(a.contact.x-p.x,a.contact.y-p.y)-Math.hypot(b.contact.x-p.x,b.contact.y-p.y) || (a.objectId<b.objectId ? -1 : a.objectId>b.objectId ? 1 : 0));
  for(const target of targets){const approach=repairApproach(scene,r,target,p,state);if(approach)return {target,...approach};}

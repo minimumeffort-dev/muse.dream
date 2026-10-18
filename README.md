@@ -210,9 +210,9 @@ journey keeps going while you drive away or unload that part of the world.
 Repairs use finite supplies. After two jobs, you can bring two replacement kits
 from **Station supplies**. The bakery pays the depot six credits and pays you four
 for the delivery. These are transfers between actual balances. The depot starts
-with 32 kits and cannot generate more. The service covers 100 targets: furniture at the market, park, station and school,
-plus 82 lamps beside Market Avenue, High Street and Civic Walk. The caretaker steps off the sidewalk for nearby repairs, using
-crossings between streets. Other districts still need connected service areas.
+with 32 kits and cannot generate more. The service covers 431 targets: the existing furniture at the market, park, station and school,
+plus all 413 lamps across the city’s 32 streets. The caretaker steps off the sidewalk for nearby repairs, using
+crossings between streets. Distant jobs take several simulation minutes.
 
 The school-yard bench now comes back after damage too. The caretaker uses the
 existing pavements and school access path, waits if something blocks the repair,
@@ -353,8 +353,8 @@ rules; supported benches can lose their boards while their base stays put.
 
 All 413 streetlights can fall too. Their ground light pools turn off, and the
 damage stays after the district unloads or you reload the game. The caretaker
-can restore 77 of them using real kits and paid work. Their models, collisions
-and light pools return together. The remaining 323 lamps need service coverage.
+can restore every one using real kits and paid work. Their models, collisions
+and light pools return together. They use connected sidewalks and crossings to reach distant jobs.
 Intact lamps stay instanced; active debris and cached meshes have fixed limits.
 [How pooled destruction works in Dream](docs/dream/rules.md#streetlights-and-streamed-destruction).
 
@@ -365,6 +365,10 @@ Intact lamps stay instanced; active debris and cached meshes have fixed limits.
 ![Repairing a lamp beside Market Avenue](docs/media/streetrepair.jpg)
 
 [Street repair in HD](docs/media/streetrepair.mp4) · [Animated repair](docs/media/streetrepair.gif) · [Declare service streets in Dream](docs/dream/commerce.md#street-verges)
+
+![Repairing an airport streetlight after walking from the market](docs/media/airportrepair.jpg)
+
+[Airport repair in HD](docs/media/airportrepair.mp4) · [What the coverage and save checks prove](docs/evidence/city-repairs/verification.md)
 
 ![A bench breaking into its authored components after a car impact](docs/media/destruction.gif)
 

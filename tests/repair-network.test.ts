@@ -49,3 +49,12 @@ it('connects adjoining work grounds through a full-cylinder portal and rejects a
  const accepted=compileDreamScene(joined,{sceneId:'joined-work',revisionId:'r1',sourceHash:'joined'});expect(accepted.surfaces.find(s=>s.id==='outer_bed')).toBeDefined();
  expect(()=>compileDreamScene(joined.replace('[[1080,1010],[1260,1010]','[[1080,1040],[1260,1040]'),{sceneId:'gap',revisionId:'r1',sourceHash:'gap'})).toThrow('clear connection');
 });
+
+it('primes exact target/contact order and access footprints atomically, rejecting damaged worker caches',async()=>{
+ const {repairNavigation,primeRepairNavigation,repairArea}=await import('../src/sim/repair');const {repairTargets,repairCoverage}=await import('../src/scene/commerce'),packet=repairNavigation(scene),copy={...scene};primeRepairNavigation(copy,packet);
+ expect(repairTargets(copy,r)).toEqual(repairTargets(scene,r));expect(repairCoverage(copy,r).access).toEqual(repairCoverage(scene,r).access);expect(repairArea(copy,r).access).toBe(packet.services[0]!.coverage!.access);
+ const valid=repairCoverage(copy,r),nodes=repairNetwork(copy,r);
+ for(const change of [(p:typeof packet)=>{p.services[0]!.coverage=undefined;},(p:typeof packet)=>{p.services[0]!.coverage!.targets[0]!.objectId='missing';},(p:typeof packet)=>{p.services[0]!.coverage!.targets.push(p.services[0]!.coverage!.targets[0]!);},(p:typeof packet)=>{p.services[0]!.coverage!.targets[0]!.contact.r++;},(p:typeof packet)=>{p.services[0]!.coverage!.targets[0]!.contact.bottom=NaN;},(p:typeof packet)=>{p.services[0]!.coverage!.access=[[{x:0,y:0},{x:1,y:1},{x:2,y:2}]];},(p:typeof packet)=>{p.services[0]!.coverage!.access=[[{x:0,y:0},{x:1,y:1},{x:NaN,y:2}]];}]){
+  const invalid=structuredClone(packet);change(invalid);expect(()=>primeRepairNavigation(copy,invalid)).toThrow('prepared repair coverage');expect(repairCoverage(copy,r)).toBe(valid);expect(repairNetwork(copy,r)).toBe(nodes);
+ }
+});

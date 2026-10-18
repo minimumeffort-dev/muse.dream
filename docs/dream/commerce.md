@@ -370,7 +370,7 @@ can still talk to other available people. Nothing is spawned from free stock.
 [Watch the complete repair in HD](../media/repair.mp4) · [Animated repair](../media/repair.gif)
 
 You can do it too. Go to the bakery before the caretaker collects the kit, choose
-**Repair neighborhood furniture** and press **H**. Follow the map marker to the damage and
+**Repair city fixtures** and press **H**. Follow the map marker to the damage and
 stand beside it. Work pauses when you walk away, jump, swim or enter a vehicle;
 return to continue. **Cancel repair** refunds the unused kit and reserved pay.
 You receive the same four credits when the repair finishes.
@@ -417,8 +417,8 @@ the primary area.
 Blocked workers wait;
 there is no ladder, construction scaffold or dropped-kit simulation. Trees use
 a `regrow_s` repair service for paid planting and physical growth.
-[Planting guide and runnable source](growth.md). The live service covers market furniture, the park/station/school benches,
-nearby lamps and the two park wall sections. It does not make other scenery destructible.
+[Planting guide and runnable source](growth.md). The live fixture service covers 431 targets: existing market, park, station and school
+furniture, the two park wall sections, and all 413 streetlights across 32 streets. It does not make other scenery destructible.
 
 
 ### Replacement supplies
@@ -432,7 +432,7 @@ credits and you receive four. No player credits are charged.
 
 ```dream
 delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_square);
-repair market_tables(label="Repair neighborhood furniture",market=market_stall,on=market_square,grounds=[park_seating,station_seating,market_hall,school_yard,school_yard_access,school_yard_return,garden_work],streets=[market_avenue,high_street,civic_walk],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
+repair market_tables(label="Repair city fixtures",market=market_stall,on=market_square,grounds=[park_seating,station_seating,market_hall,school_yard,school_yard_access,school_yard_return,garden_work],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
 ```
 
 These declarations are the live world's policy. The earlier flour and bread
@@ -440,7 +440,7 @@ contracts omit `price` and retain their zero-price cargo transfers. Supplier
 prices are integers 0..10,000 per unit; invoice plus wage must fit the
 1,000,000-credit treasury bound. Shelves, carrying limits, treasury headroom and
 shared contract capacity still apply. The depot can run out and the bakery can
-run out of money. The caretaker can now fetch these shipments through [NPC supply trips](#npc-supply-trips); upstream kit production remains future work.
+run out of money. The caretaker can now fetch these shipments through [NPC supply trips](#npc-supply-trips); the workshop can also assemble kits from finite boards and fasteners through the recipe above.
 
 [Complete maintenance and procurement example](../examples/market-maintenance.dream).
 Run `npm run -s dream -- check docs/examples/market-maintenance.dream`. It includes
@@ -485,8 +485,9 @@ an agent to author both services and infrastructure, use
 
 ### Street verges
 
-The same service now reaches 100 targets, including 82 of the 413 city lamps.
-`streets=[market_avenue,high_street,civic_walk]` declares which sidewalks it serves.
+The live service reaches 431 targets, including all 413 city lamps.
+A subset such as `streets=[market_avenue,high_street,civic_walk]` declares which
+sidewalks a service covers; the live city lists all 32 streets.
 `verge=24` permits a short approach up to 2.4 metres beyond those sidewalks, near
 eligible object contacts. Measured categories still select the targets; names
 and coordinates cannot grant a special repair policy.
@@ -516,7 +517,7 @@ It connects a home yard to a lamp outside the opposite sidewalk using a real
 crossing, without a second work-ground surface. Ask for `commerce,city` in an
 agent context packet when authoring these routes.
 
-Other districts still need connected recovery coverage. The caretaker now shares furniture and [tree replanting](growth.md) duties and can [fetch supplies](#npc-supply-trips) from the depot. Damaged lamps lose their ground light
+New repair categories still need declared, connected coverage. The caretaker now shares furniture and [tree replanting](growth.md) duties and can [fetch supplies](#npc-supply-trips) from the depot. Damaged lamps lose their ground light
 pool until repair. [Streetlight destruction](rules.md#streetlights-and-streamed-destruction)
 uses the same pooled geometry and saved damage as before.
 [Verification and media audit](../evidence/verge-repairs/verification.md).
@@ -535,7 +536,7 @@ the restoration space keeps the job waiting. The worker then walks home.
 
 [HD journey and repair](../media/schoolrepair.mp4) · [Animated repair](../media/schoolrepair.gif)
 
-You can claim **Repair neighborhood furniture** at the bakery before dispatch.
+You can claim **Repair city fixtures** at the bakery before dispatch.
 Carry the kit to the map marker, then stand beside the bench to work. The same
 finite stock, wages, cancellation refund and clearance checks apply. The trip,
 work and return survive saves and render streaming. Breaking a seat also cancels
@@ -555,10 +556,9 @@ It reuses the existing `repair` and `grounds` vocabulary:
  );
 ```
 
-The live service now covers 100 targets, including 82 lamps. This extends one
-existing worker's connected grounds; other districts still need their own
-validated coverage. It adds no worker, rig, physics body or general city-wide
-dispatch system.
+The school grounds share the live 431-target service, including all 413 lamps.
+This extends one existing worker's connected area. It adds no worker, rig or
+physics body; every new destination still needs validated access.
 
 ## Planting and growth
 
@@ -753,6 +753,30 @@ school staff use it in the live mock; no idle wages or employment contracts exis
 `garden_work` extends the existing furniture service to six more benches and four
 lamps. Both park entrances join the accepted pedestrian network; the caretaker
 walks from the market, reserves a real kit and wage, and restores the same usable
-furniture. This adds ten targets, for 100 overall, including 82 lamps. The ground
+furniture. These ten targets are part of the live 431-target service. The ground
 uses the remaining existing service-ground slot and stays within the 4096 local
 sample and 8192 network-node budgets. [Paths and park authoring](paths.md).
+
+### City fixture coverage
+
+The live caretaker can reach all 413 lamps across the city's 32 streets, alongside
+18 existing furniture and wall targets. Dream still declares the service's
+streets, grounds, categories, kit, pay and duration. The engine derives short
+access patches with room for the worker's complete body to join the sidewalk.
+Approaches remain inside the declared verge and clear riding surfaces and water;
+they do not create paths across arbitrary grass.
+
+[Compile the full-verge example](../examples/full-verge-repairs.dream). Its lamp
+stands 22 units beyond the outer sidewalk edge, within the declared 24-unit
+verge. A connected worker approach reaches it through the crossing. The example
+uses a complete measured humanoid rig, the same twelve bone bindings as the city.
+
+![The caretaker repairing an airport lamp](../media/airportrepair.jpg)
+
+[Airport repair in HD](../media/airportrepair.mp4) · [Animated repair](../media/airportrepair.gif) · [Coverage, migration and native checks](../evidence/city-repairs/verification.md)
+
+The same caretaker and finite market stock serve these jobs. Distant walks can
+be long; there are no regional crews or maintenance vehicles yet. Returning,
+eating, supplier deliveries and other duties use their existing rules. The three
+orchard trees retain their separate planting service. Trees outside that orchard
+and other structural damage still need declared recovery coverage.

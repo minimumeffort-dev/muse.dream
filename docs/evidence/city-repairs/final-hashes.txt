@@ -1,0 +1,1 @@
+189 runtime sources and 3 media outputs match the capture manifest exactly.

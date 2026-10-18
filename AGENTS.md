@@ -299,7 +299,7 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 ## Saved simulation state
 
 Current save format 17 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 30. Historical formats retain their registered projections.
+at simulation version 31. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -749,3 +749,19 @@ Apply the person projection before the r70 junction and all older projections.
 Keep the entire registered chain and the old format-16 slot. Rounded contour
 merging must include its dominant projection axis in the plane key, so tied
 normals cannot combine incompatible projected coordinates.
+
+
+The r73 fixture service covers 431 targets, including all 413 lamps across the
+32 declared streets. Keep body-width joins from target-local access patches to
+pavement, while clipping approaches away from riding surfaces and water. No
+new actor, fragment, network or supply budgets are granted by wider coverage.
+Worker packets also supply ordered repair targets, exact contacts and bounded
+access polygons. Validate the whole packet before priming either coverage or
+work networks; keep these caches outside Dream and saved data.
+
+The registered r72 projection retains the released repair access geometry,
+including through older projections. Select that host cache policy before work
+areas are prepared; never infer it from labels or save fields. Existing world
+positions, waypoints, ledgers and visual clocks survive this coverage upgrade.
+A compatible saved development review skips its discarded offline preparation;
+fresh reviews and captures still use the complete fixed-step engine.
