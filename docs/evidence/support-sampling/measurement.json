@@ -1,0 +1,19 @@
+{
+  "baseCommit": "8312e90fef8af71ba839f3dc7c92b71213f3bf1a",
+  "baselineSourceSha256": "72cdc0ef2c649459fda12dd2b281883751f1317b3bfd2ee0d0d33741173ba92b",
+  "candidateSourceSha256": "65469387ce9ea40f4676aa3d9d65aae79c5220bce53be8b23219eff32a528e2b",
+  "platform": "Darwin",
+  "machine": "arm64",
+  "node": "v26.8.1",
+  "trials": 5,
+  "medianRebuildAndHashMs": {
+    "baseline": 886.6746250000015,
+    "candidate": 855.7684579999996
+  },
+  "cloneCalls": {
+    "baseline": 1107316,
+    "candidate": 344895
+  },
+  "orderedSamplesSha256": "31f5bb7bc67a2214ac5c6be302c48fb86bc529ad7115a82b0fbe0e312f9a0450",
+  "allTrialsSameSamples": true
+}

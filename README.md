@@ -33,6 +33,8 @@ Diagonal roads and painted lines keep their actual outline. Curved object stamps
 
 The opening loader waits for the first neighbourhood. Validated pedestrian paths and collision cylinders are reused from the worker; road/transit and interactive-asset preparation yield between build steps. Camera rotation, manual zoom and offscreen shadow casters are included in streaming coverage. [How loading and memory work](docs/rendering.md#loading-and-memory).
 
+Ground fitting now reuses temporary vectors while keeping every support sample unchanged. [The allocation check](docs/evidence/support-sampling/verification.md) separates that measured change from browser frame rate.
+
 Driving still uses the smooth heightfield and explicit contacts, so visual steps don't shake the car. Editable terrain and per-cell destruction are still further work.
 
 ![Connected diagonal roads in the streamed voxel city](docs/media/voxel-world.jpg)

@@ -1,0 +1,43 @@
+{
+  "tag": "candidate",
+  "sourceCommit": "8312e90-scratch-candidate",
+  "context": "Node fixture benchmark; geometry warm, support profiles cold per cloned accepted world. No browser frame-rate or memory claim.",
+  "objects": 1760,
+  "trials": [
+    {
+      "ms": 888.0063749999999,
+      "clones": 344895,
+      "profiles": 104,
+      "points": 2156022,
+      "sha256": "31f5bb7bc67a2214ac5c6be302c48fb86bc529ad7115a82b0fbe0e312f9a0450"
+    },
+    {
+      "ms": 862.5467920000001,
+      "clones": 344895,
+      "profiles": 104,
+      "points": 2156022,
+      "sha256": "31f5bb7bc67a2214ac5c6be302c48fb86bc529ad7115a82b0fbe0e312f9a0450"
+    },
+    {
+      "ms": 855.7684579999996,
+      "clones": 344895,
+      "profiles": 104,
+      "points": 2156022,
+      "sha256": "31f5bb7bc67a2214ac5c6be302c48fb86bc529ad7115a82b0fbe0e312f9a0450"
+    },
+    {
+      "ms": 842.7061249999988,
+      "clones": 344895,
+      "profiles": 104,
+      "points": 2156022,
+      "sha256": "31f5bb7bc67a2214ac5c6be302c48fb86bc529ad7115a82b0fbe0e312f9a0450"
+    },
+    {
+      "ms": 836.6427500000009,
+      "clones": 344895,
+      "profiles": 104,
+      "points": 2156022,
+      "sha256": "31f5bb7bc67a2214ac5c6be302c48fb86bc529ad7115a82b0fbe0e312f9a0450"
+    }
+  ]
+}

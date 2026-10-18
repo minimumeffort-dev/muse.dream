@@ -2,6 +2,13 @@
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
+## Ground-fitting allocation pass
+
+The support builder keeps the exact ordered sample coordinates. No asset, camera,
+material, animation or physical placement changes, so the existing r69 captures
+remain accurate. The [support check](../evidence/support-sampling/verification.md)
+records the fixed profile hashes, local allocation benchmark and native verification.
+
 ## Garden park, r69
 
 `park.mp4`, `park.gif` and `park.jpg` share 360 consecutive 2400 × 1350 source

@@ -18,20 +18,24 @@ export function objectSupport(scene: Scene, object: SceneObject): readonly THREE
   const points = new Map<string, THREE.Vector3>();
   const add = (p: THREE.Vector3) => {
     const key = `${p.x.toFixed(4)},${p.z.toFixed(4)}`;
-    if (!points.has(key) || p.y < points.get(key)!.y) points.set(key, p.clone());
+    const previous=points.get(key);
+    if (!previous || p.y < previous.y) points.set(key, p.clone());
   };
   const append = (geometry: THREE.BufferGeometry, matrix = new THREE.Matrix4()) => {
     geometry.applyMatrix4(matrix);
     const vertices = geometry.getAttribute("position"), index = geometry.index;
-    for (let i = 0; i < vertices.count; i++) add(new THREE.Vector3().fromBufferAttribute(vertices, i));
+    const sample=new THREE.Vector3(),a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3(),ab=new THREE.Vector3(),ac=new THREE.Vector3();
+    for (let i = 0; i < vertices.count; i++) add(sample.fromBufferAttribute(vertices, i));
     // Broad bottom faces need interior contacts too: a hill crest can lie between corners.
     const count = index?.count ?? vertices.count;
     for (let i = 0; i < count; i += 3) {
-      const [a,b,c] = [0,1,2].map(j => new THREE.Vector3().fromBufferAttribute(vertices, index ? index.getX(i+j) : i+j));
-      if (new THREE.Vector3().subVectors(b!,a!).cross(new THREE.Vector3().subVectors(c!,a!)).y >= -1e-6) continue;
-      const n = Math.ceil(Math.max(a!.distanceTo(b!),b!.distanceTo(c!),c!.distanceTo(a!))/8);
+      a.fromBufferAttribute(vertices,index ? index.getX(i) : i);
+      b.fromBufferAttribute(vertices,index ? index.getX(i+1) : i+1);
+      c.fromBufferAttribute(vertices,index ? index.getX(i+2) : i+2);
+      if (ab.subVectors(b,a).cross(ac.subVectors(c,a)).y >= -1e-6) continue;
+      const n = Math.ceil(Math.max(a.distanceTo(b),b.distanceTo(c),c.distanceTo(a))/8);
       for (let u=0;u<=n;u++) for (let v=0;v<=n-u;v++)
-        add(a!.clone().multiplyScalar(1-(u+v)/n).addScaledVector(b!,u/n).addScaledVector(c!,v/n));
+        add(sample.copy(a).multiplyScalar(1-(u+v)/n).addScaledVector(b,u/n).addScaledVector(c,v/n));
     }
     geometry.dispose();
   };

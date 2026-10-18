@@ -307,3 +307,20 @@ an absolute sample of that scene, not a before/after optimization or weaker-lapt
 claim. Other desktop applications were running. The development profiler accepts
 `profile-match&test-movement=football` to exercise the complete match through its
 ordinary join input. [Raw results and verification](evidence/team-sports/verification.md).
+
+
+## Ground-fitting allocations
+
+The underside support builder now reuses scratch vectors while keeping the
+same triangle visits, 8-unit interior sampling, four-decimal X/Z grouping,
+lowest Y per group and insertion order. Stored samples still own their vectors.
+No mesh, contact, foundation, slope or destruction detail is removed.
+
+A five-trial Node fixture benchmark over the r69 world rebuilt 104 cold support
+profiles with warm geometry. `Vector3.clone` calls fell from 1,107,316 to 344,895;
+all 2,156,022 returned sample entries across 1,760 placements retain the same
+ordered hash. The rebuild-and-hash harness median changed from 886.67 to 855.77 ms.
+This includes counting/hashing overhead, not browser startup, frame time, total
+memory or VRAM. [Inputs, results and regression checks](evidence/support-sampling/verification.md).
+Existing screenshots and recordings remain accurate because support coordinates
+and the resulting placement rules are unchanged.
