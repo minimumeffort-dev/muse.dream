@@ -35,7 +35,7 @@ Dream 2 fixes existing field meanings, units, scopes and identity paths. Compati
 
 Dream 1 remains supported through the same compiler. See [the compatibility guide](dream-v1.md). Dream source versions, Object DSL versions and Scene versions describe separate contracts. The complete live world is Dream 2; the older TypeScript fixtures remain for regression tests.
 
-Urban districts use bounded `street`, `surface` and `marking` declarations. They link through the same closed module registry as assets and placements. See [streets, grounds and paint](dream/worlds.md#streets-grounds-and-paint), the [reference bounds](dream/reference.md#urban-ground-bounds) and the [runnable neighborhood](examples/planned-neighborhood.dream).
+Urban districts use bounded `street`, `surface` and `marking` declarations. Explicit [`walkable` surfaces](dream/paths.md) connect park paths to the pedestrian network; `site.label` names a destination independently of the object template. They link through the same closed module registry as assets and placements. See [streets, grounds and paint](dream/worlds.md#streets-grounds-and-paint), the [reference bounds](dream/reference.md#urban-ground-bounds) and the [runnable neighborhood](examples/planned-neighborhood.dream).
 
 Ground populations can use Dream 2 `walk` and `roam` motion under explicit ambient ownership. The engine derives walking portals from accepted pavement and executes nearby animal reactions at 20 Hz; full geometry and joint poses stay instanced. [Population guide](dream/populations.md).
 

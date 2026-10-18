@@ -379,7 +379,7 @@ possession while keeping progress; Start over creates new ready matches.
 
 ## Street-only city, r68
 
-Save format 16 now pins simulation 25. The registered update verifies the exact
+The r68 save format 16 pins simulation 25. The registered update verifies the exact
 r67 physical world before loading its state. Existing people, vehicles, businesses,
 work, damage, sports results and world clocks survive. Pedestrian node references
 are mapped to the new pavement graph while valid positions, random state and clocks
@@ -389,3 +389,19 @@ destinations. Commitments, supplies and wages remain reserved. The retired circu
 cooldowns are removed. A newly occupied static footprint uses the existing safe
 player recovery. The old format-16 slot stays intact until and after a successful
 write to the new fingerprint slot. Earlier upgrades still run through r67 first.
+
+
+## Connected park, r69
+
+Format 16 / simulation 26 checks the exact r68 world before adding Garden park.
+All 1,719 released objects remain identical. The projection removes only the new
+park objects, surfaces, destination and furniture repair ground. Earlier upgrades
+still run through their own registered projections and original slots.
+
+Old ambient members are matched by stable object ID, with positions, random state,
+travel history and clocks retained; derived node indices are rebased. Eight new
+visitors start at the saved simulation time with zero travel, without offline
+catch-up. Existing businesses, financial ledgers, work commitments, physical
+changes, parked vehicles, sports matches and NPC memory remain saved. Unsafe
+active poses use the existing local clearance recovery before the ordinary reset
+fallback. The previous format-16 slot stays intact after a successful new write.

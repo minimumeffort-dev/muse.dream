@@ -16,6 +16,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [City design](city-design.md) | Research, connected destinations and the source-derived map |
 | [Asset library](asset-library.md) | The mock-world assemblies and their construction details |
 | [Enterable buildings](dream/interiors.md) | Supported ground floors, real doorways, cutaway views and connected work |
+| [Connected paths](dream/paths.md) | Walkable park loops, named destinations and usable shared furniture |
 | [Build a world](dream/worlds.md) | Terrain, roads, bridges, water, dedicated paths and moving vehicles |
 | [Populate streets and habitats](dream/populations.md) | Connected lighting, planting, destination parking, birds and transit |
 | [Day and night](dream/day-night.md) | A shared clock, changing sunlight, window glow and street lighting |

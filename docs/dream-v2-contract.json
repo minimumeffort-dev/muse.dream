@@ -451,6 +451,7 @@
       "fields": {
         "object": "ref",
         "kind": "home|market|school|hospital|work|civic|park|station|airport|stop",
+        "label": "text?",
         "entry": "v2",
         "street": "ref",
         "width": "n",
@@ -970,7 +971,8 @@
       "fields": {
         "color": "color?",
         "points": "points2",
-        "finish": "paint|terrain?"
+        "finish": "paint|terrain?",
+        "walkable": "bool?"
       }
     },
     "sport": {
@@ -1433,7 +1435,7 @@
       "cycleSeparator": 6,
       "minimumSegment": 80,
       "geometry": "open polyline in any direction; turns at most 120 degrees; bounded miter joins with square endpoint caps; non-overlapping junctions; city paving, cycle tracks and separators yield to the circuit; sidewalk strips across it become painted walkable crossings with open curbs and clear center paint; complete cycle glyph envelopes must fit a lane and clear crossings and other glyphs; optional cycle tracks",
-      "acceptance": "every component reaches driving loop; riding surface clear of solids; water crossings require an aligned bridge carrying the full street, cycle tracks and sidewalks between rails; dedicated paths remain separate"
+      "acceptance": "every component reaches the circuit or street-only spawn with full car clearance; riding surface clear of solids; water crossings require an aligned bridge carrying the full street, cycle tracks and sidewalks between rails; dedicated paths remain separate"
     },
     "surface": {
       "points": [
@@ -1443,6 +1445,7 @@
       "area": 1000000,
       "extent": 2000,
       "geometry": "simple polygon; declaration order overlays; cannot cover street riding surfaces",
+      "walkable": "optional boolean, false when omitted; true requires convex clear pieces joined to existing pedestrian pavement, dry or fully bridge-supported; no rail/runway overlap or side entry onto bridges; adds pavement for walkers and work travel, not road grip or flattening",
       "finish": "paint by default, requiring color; finish=terrain forbids color and preserves the underlying terrain and cosmetic ground plants. Both retain the same bounded work coverage, furniture reservations and walking/physical validation. Terrain areas add no render mesh or map overlay"
     },
     "marking": {
@@ -1465,6 +1468,7 @@
     "sites": 256,
     "crossings": 64,
     "site": {
+      "label": "optional nonblank plain text, 1..80 characters; names the destination independently of the reused object template; no generated behavior",
       "entry": "object-local [X,Z], transformed with placement heading and resolved scale",
       "points": "world XY, entry is prepended; last point must lie inside the named sidewalk",
       "width": [

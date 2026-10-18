@@ -10,6 +10,19 @@ Racing is where this started. The idea is to make whatever someone draws playabl
 
 **The playable world is a handmade mock today.** The renderer, driving simulation and Dream 2 compiler work. Photo upload and Muse interpretation are still to come. There are no model calls or API keys to configure.
 
+## Take a walk in Garden park
+
+The old circuit is gone from the live city. Its western strip now has a park with
+two sidewalk entrances, a walking loop, six benches, three bicycles and three
+scooters. Eight visitors move through it. Sit with **F**, take a ride, or drive
+somewhere else and come back. Damaged benches and lamps join the existing
+caretaker's finite repair work.
+
+![Garden park, connected to the neighborhood](docs/media/garden-park.jpg)
+
+[Watch the park](docs/media/park.mp4) · [GIF](docs/media/park.gif) ·
+[Build connected paths in Dream](docs/dream/paths.md)
+
 ## The whole world is made of voxels
 
 The ground, roads, river, buildings, vehicles, people and plants now go through voxel construction. Dream describes the shapes and connections; the engine fills their cells and merges the visible faces. Wheels still turn, boats still pass under bridges, and breakable objects keep their authored pieces. A voxel doesn't need its own mesh or physics body.
@@ -187,8 +200,8 @@ journey keeps going while you drive away or unload that part of the world.
 Repairs use finite supplies. After two jobs, you can bring two replacement kits
 from **Station supplies**. The bakery pays the depot six credits and pays you four
 for the delivery. These are transfers between actual balances. The depot starts
-with 32 kits and cannot generate more. The service covers 89 targets: furniture at the market, park, station and school,
-plus 77 lamps beside Market Avenue, High Street and Civic Walk. The caretaker steps off the sidewalk for nearby repairs, using
+with 32 kits and cannot generate more. The service covers 100 targets: furniture at the market, park, station and school,
+plus 82 lamps beside Market Avenue, High Street and Civic Walk. The caretaker steps off the sidewalk for nearby repairs, using
 crossings between streets. Other districts still need connected service areas.
 
 The school-yard bench now comes back after damage too. The caretaker uses the
@@ -324,7 +337,7 @@ table still breaks independently. The live world uses shared table, bench and la
 rules; supported benches can lose their boards while their base stays put.
 [How shared rules work](docs/dream/rules.md).
 
-All 400 streetlights can fall too. Their ground light pools turn off, and the
+All 409 streetlights can fall too. Their ground light pools turn off, and the
 damage stays after the district unloads or you reload the game. The caretaker
 can restore 77 of them using real kits and paid work. Their models, collisions
 and light pools return together. The remaining 323 lamps need service coverage.
@@ -387,7 +400,7 @@ The [checked examples](docs/dream/examples.md) also include a bouncing ball, bre
 
 Streetlights now follow streets, bicycle and scooter parking sits beside destinations, and birds fly across sixteen habitats. Dream’s `furnish` and `flock` commands describe those populations with bounded rules.
 
-There are 123 residents, 60 additional ground animals and birds, 336 trees, 45 parked bicycles, 22 parked scooters and 14 parked cars alongside four road cars, five buses and boardable tram and rail services. 111 residents walk on the pedestrian network and 60 ground animals and birds roam and react nearby. Twelve people retain their individual NPC routines. The new populations share complete instanced models; the existing NPC and CPU rig limits stay the same. [See how populations work](docs/dream/populations.md).
+There are 131 residents, 60 additional ground animals and birds, 345 trees, 48 parked bicycles, 25 parked scooters and 14 parked cars alongside four road cars, five buses and boardable tram and rail services. 119 residents walk on the pedestrian network and 60 ground animals and birds roam and react nearby. Twelve people retain their individual NPC routines. The new populations share complete instanced models; the existing NPC and CPU rig limits stay the same. [See how populations work](docs/dream/populations.md).
 
 ![People walk along the connected pavement](docs/media/pedestrians.gif)
 
@@ -434,7 +447,7 @@ Manual zoom keeps your framing as you move and switch vehicles. Smaller rides st
 
 ## Take the parked bike
 
-The 45 parked bicycles, 22 scooters and 14 cars/vans beside destinations are now available rides. Walk up, press F, drive somewhere and leave it there. Its position and rolling phase return after reloading; the renderer keeps unoccupied vehicles instanced and activates one full rig when you board.
+The 48 parked bicycles, 25 scooters and 14 cars/vans beside destinations are now available rides. Walk up, press F, drive somewhere and leave it there. Its position and rolling phase return after reloading; the renderer keeps unoccupied vehicles instanced and activates one full rig when you board.
 
 ![A destination bicycle ridden away from its original parking spot](docs/media/parking.jpg)
 

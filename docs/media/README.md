@@ -2,6 +2,19 @@
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
+## Garden park, r69
+
+`park.mp4`, `park.gif` and `park.jpg` share 360 consecutive 2400 × 1350 source
+frames from `?capture`, at 30 rendered frames per simulation second. The still is
+frame 90. The video is 1600 × 900 and GIF 1280 × 720; no interpolation or live
+frame-rate claim. `garden-park.jpg` and the four-angle evidence are native browser
+screenshots. `city-plan.svg` is regenerated from the accepted paths and destination.
+The new language guide includes the complete checked `park-paths.dream` example.
+Existing assets and their atlas remain accurate because this reuses their exact
+templates and physical scale. The r68 driving/crossing captures remain accurate:
+the park does not alter those streets, paint groups or vehicle mechanics.
+[Placement and saved-state checks](../evidence/garden-park/verification.md).
+
 ## Street-only city, r68
 
 The live circuit, its checkpoints, track effects and derived zebras are removed.

@@ -6,14 +6,17 @@ import {z} from 'zod';
 import type {Point,Scene} from './schema';
 import {pointInPolygon} from '../sim/mask';
 import {streetPolygons,streetSidewalks,streetCircuitCrossings,markingPolygons,onPolygon} from './streets';
-import {distanceToPolygon,polygonBounds,unionPolygons,partition,polygonArea,subtractPolygons} from './polygons';
+import {distanceToPolygon,polygonBounds,unionPolygons,partition,polygonArea,subtractPolygons,intersectPolygons,triangulatePolygon} from './polygons';
 import {sceneContacts} from './contacts';
 import {assemblyBounds} from './measure';
 import {drivingHeight,waterAt} from './terrain';
+import {bridgePolygon,bridgeCoordinates,clipPolygon,polygonsOverlap} from './landscape-dsl';
+import {routeInfrastructure} from './routes';
 
 const ref=z.string().regex(/^[a-z][a-z0-9_]{0,39}$/);
 const point=z.object({x:z.number().finite().min(0).max(MAX_WORLD_SIZE),y:z.number().finite().min(0).max(MAX_WORLD_SIZE)}).strict();
 export const siteSchema=z.object({id:ref,objectId:ref,kind:z.enum(['home','market','school','hospital','work','civic','park','station','airport','stop']),
+  label:z.string().trim().min(1).max(80).optional(),
   entry:z.object({x:z.number().finite().min(-128).max(128),y:z.number().finite().min(-128).max(128)}).strict(),street:ref,width:z.number().min(12).max(40),
   points:z.array(point).min(1).max(16),serves:z.array(ref).max(8).default([]),
 }).strict().superRefine((s,ctx)=>{
@@ -87,6 +90,7 @@ export function walkingNetwork(scene:Scene){
   const sites=new Map<string,number>();
   for(const site of scene.sites){sites.set(site.id,polygons.length);polygons.push(...sitePolygons(scene,site));}
   polygons.push(...sceneInteriors(scene).map(f=>f.polygon));
+  polygons.push(...scene.surfaces.filter(s=>s.walkable).map(s=>s.points));
   const roots=polygons.map((_,i)=>i),bounds=polygons.map(polygonBounds);
   const root=(i:number):number=>roots[i]===i ? i : roots[i]=root(roots[i]!);
   const connected=(a:Point[],b:Point[])=>{
@@ -112,7 +116,7 @@ export function onWalkway(scene:Scene,x:number,y:number,radius=0){
   return Array.from({length:radius ? 9 : 1},(_,i)=>i===0 ? {x,y} : {x:x+Math.cos(i*Math.PI/4)*radius,y:y+Math.sin(i*Math.PI/4)*radius}).every(p=>polygons.some(polygon=>onPolygon(polygon,p.x,p.y,.01)));
 }
 export function validateSites(scene:Scene):string[]{
-  if(!scene.sites.length && !scene.crossings.length)return [];
+  if(!scene.sites.length && !scene.crossings.length && !scene.surfaces.some(s=>s.walkable))return [];
   const problems:string[]=[],ids=new Set<string>();
   for(const item of [...scene.sites,...scene.crossings]){if(ids.has(item.id))problems.push(`duplicate access ID "${item.id}"`);ids.add(item.id);}
   for(const c of scene.crossings){const street=scene.streets.find(s=>s.id===c.street);
@@ -123,6 +127,22 @@ export function validateSites(scene:Scene):string[]{
     if(missed)problems.push(`street "${street.id}" must meet "${missed.id}" at its centerline; share a junction instead of overlapping short endpoints`);
   }
   const contacts=sceneContacts(scene),network=walkingNetwork(scene);
+  const paths=scene.surfaces.filter(s=>s.walkable),base=network.polygons.length-paths.length,connectedRoots=new Set(network.roots.slice(0,base));
+  const water=paths.length ? (scene.terrain.landscape?.waters??[]).flatMap(w=>triangulatePolygon(w.polygon)) : [],decks=(scene.terrain.landscape?.bridges??[]).map(bridgePolygon);
+  for(const [i,path] of paths.entries()){
+    if(!connectedRoots.has(network.roots[base+i]!))problems.push(`walkable surface "${path.id}" needs a full-width connection to accepted pedestrian pavement`);
+    if(subtractPolygons(intersectPolygons([path.points],water),decks).some(p=>polygonArea(p)>.01))problems.push(`walkable surface "${path.id}" crosses water without a supporting bridge`);
+    for(const bridge of scene.terrain.landscape?.bridges??[])if(polygonsOverlap(path.points,bridgePolygon(bridge))){
+      const outline=path.points.map(p=>{const q=bridgeCoordinates(bridge,p.x,p.y);return {x:q.t,y:q.across};}),inside=clipPolygon(clipPolygon(outline,p=>p.x),p=>1-p.x);
+      if(inside.some(p=>Math.abs(p.y)>bridge.width/2-(bridge.rails ? 6 : 0)+.001))problems.push(`walkable surface "${path.id}" must enter bridge "${bridge.id}" through its open ends and clear its rails`);
+    }
+    for(const route of scene.routes.filter(r=>r.kind==='rail' || r.kind==='air')){
+      const corridor=routeInfrastructure(route),polygons=markingPolygons({id:route.id,color:'#000000',closed:false,width:corridor.radius*2,points:corridor.points});
+      if(polygons.some(p=>polygonsOverlap(path.points,p)))problems.push(`walkable surface "${path.id}" must stay clear of rail and runway corridors`);
+    }
+    const b=polygonBounds(path.points),x=(b.x0+b.x1)/2,y=(b.y0+b.y1)/2,r=Math.hypot(b.x1-b.x0,b.y1-b.y0)/2;
+    if(contacts.solids.query(x,y,r+contacts.maxRadius).some(c=>contactTouchesPolygon(c,path.points) && c.top>walkingHeight(scene,c.x,c.y)+.1 && c.bottom<walkingHeight(scene,c.x,c.y)+20))problems.push(`walkable surface "${path.id}" needs a clear footprint; place furniture beside the path`);
+  }
   for(const site of scene.sites){
     const object=scene.objects.find(o=>o.id===site.objectId),street=scene.streets.find(s=>s.id===site.street);
     if(!object || isActor(object) || object.route || !object.spec || !('dslVersion' in object.spec)){problems.push(`site "${site.id}" needs a static assembly`);continue;}

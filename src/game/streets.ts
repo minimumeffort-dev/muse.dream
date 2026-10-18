@@ -64,9 +64,10 @@ function* streetRecipeSteps(scene:Scene):Generator<void,{layers:StreetRecipe[];g
   yield* add(unionPolygons(riding,[...roads,...bands,...loop]),'#c9c3af',1.55,'cycle-separators');
   yield* add(bands,'#a76855',1.4,'street-cycle-tracks');
   yield* add(sidewalks,'#bcb6a4',1.6,'street-sidewalks');
-  yield* add(unionPolygons(scene.sites.flatMap(s=>sitePolygons(scene,s)),[...streetPolygons(scene.streets,'reserved'),...loop]),'#bcb6a4',1.6,'entrance-paths');
+  const sharedPaving=scene.surfaces.filter(s=>s.walkable && s.finish!=='terrain' && s.color==='#bcb6a4');
+  yield* add(unionPolygons([...scene.sites.flatMap(s=>sitePolygons(scene,s)),...sharedPaving.map(s=>s.points)],[...streetPolygons(scene.streets,'reserved'),...loop]),'#bcb6a4',1.6,'entrance-paths');
   // Declaration order is paint order. Small bounded offsets prevent overlapping turf/court z-fighting.
-  for(const [i,s] of scene.surfaces.entries())if(s.finish!=='terrain')yield* add([s.points],s.color!,.65+i*.015,`ground-${s.id}`);
+  for(const [i,s] of scene.surfaces.entries())if(s.finish!=='terrain' && !sharedPaving.includes(s))yield* add([s.points],s.color!,.65+i*.015,`ground-${s.id}`);
   const dashes:Point[][]=[];
   const segments=scene.streets.flatMap(s=>s.points.slice(1).map((b,i)=>{
     const a=s.points[i]!,polygon=streetPolygons([{...s,sidewalk:0,points:[a,b]}])[0]!;

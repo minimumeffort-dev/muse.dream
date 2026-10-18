@@ -33,6 +33,7 @@ describe("published Dream documentation",()=>{
     const example=examples['../docs/examples/enterable-market.dream']!.trim(),blocks=[...pages['../docs/dream/interiors.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
     expect(blocks).toContain(example);expect(liveMarket.trim()).toBe(example);
   });
+  it('keeps the connected-path guide identical to its runnable source',()=>{const blocks=[...pages['../docs/dream/paths.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());expect(blocks).toContain(examples['../docs/examples/park-paths.dream']!.trim());});
   it('keeps the parking guide identical to its runnable source',()=>{
     const blocks=[...pages['../docs/dream/populations.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
     expect(blocks).toContain(examples['../docs/examples/parked-vehicles.dream']!.trim());

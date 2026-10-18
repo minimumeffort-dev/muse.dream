@@ -17,10 +17,12 @@ export const streetSchema=z.object({id,width:z.number().min(60).max(180),sidewal
       ctx.addIssue({code:'custom',message:'street turns must not exceed 120 degrees; split the junction into separate streets'});
   }
 });
-export const surfaceSchema=z.object({id,color:color.optional(),finish:z.enum(['paint','terrain']).optional(),points:z.array(point).min(3).max(64)}).strict().superRefine((s,ctx)=>{
+export const surfaceSchema=z.object({id,color:color.optional(),finish:z.enum(['paint','terrain']).optional(),walkable:z.boolean().optional(),points:z.array(point).min(3).max(64)}).strict().superRefine((s,ctx)=>{
   if(s.finish==='terrain' && s.color!==undefined)ctx.addIssue({code:'custom',message:'terrain finish inherits the ground; omit color',path:['color']});
   if(s.finish!=='terrain' && s.color===undefined)ctx.addIssue({code:'custom',message:'painted surface requires color',path:['color']});
   const cross=(a:Point,b:Point,c:Point)=>(b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x);
+  if(s.walkable && new Set(s.points.map((a,i)=>Math.sign(cross(a,s.points[(i+1)%s.points.length]!,s.points[(i+2)%s.points.length]!))).filter(Boolean)).size>1)
+    ctx.addIssue({code:'custom',path:['points'],message:'walkable surfaces must be convex; join clear path pieces instead'});
   let area=0;
   for(let i=0;i<s.points.length;i++){
     const a=s.points[i]!,b=s.points[(i+1)%s.points.length]!;area+=a.x*b.y-b.x*a.y;

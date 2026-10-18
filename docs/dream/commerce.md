@@ -432,7 +432,7 @@ credits and you receive four. No player credits are charged.
 
 ```dream
 delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_square);
-repair market_tables(label="Repair neighborhood furniture",market=market_stall,on=market_square,grounds=[park_seating,station_seating,market_hall,school_yard,school_yard_access,school_yard_return],streets=[market_avenue,high_street,civic_walk],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
+repair market_tables(label="Repair neighborhood furniture",market=market_stall,on=market_square,grounds=[park_seating,station_seating,market_hall,school_yard,school_yard_access,school_yard_return,garden_work],streets=[market_avenue,high_street,civic_walk],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
 ```
 
 These declarations are the live world's policy. The earlier flour and bread
@@ -485,7 +485,7 @@ an agent to author both services and infrastructure, use
 
 ### Street verges
 
-The same service now reaches 89 targets, including 77 of the 400 city lamps.
+The same service now reaches 100 targets, including 82 of the 409 city lamps.
 `streets=[market_avenue,high_street,civic_walk]` declares which sidewalks it serves.
 `verge=24` permits a short approach up to 2.4 metres beyond those sidewalks, near
 eligible object contacts. Measured categories still select the targets; names
@@ -555,7 +555,7 @@ It reuses the existing `repair` and `grounds` vocabulary:
  );
 ```
 
-The live service now covers 89 targets, including 77 lamps. This extends one
+The live service now covers 100 targets, including 82 lamps. This extends one
 existing worker's connected grounds; other districts still need their own
 validated coverage. It adds no worker, rig, physics body or general city-wide
 dispatch system.
@@ -746,3 +746,13 @@ school staff use it in the live mock; no idle wages or employment contracts exis
 
 
 [Shared meals](social.md) reserve two player-owned portions and an adjacent seat, use actual NPC travel and consume both once on completion. Interruptions refund food; completed time changes that person's remembered dialogue.
+
+
+### Garden park furniture
+
+`garden_work` extends the existing furniture service to six more benches and four
+lamps. Both park entrances join the accepted pedestrian network; the caretaker
+walks from the market, reserves a real kit and wage, and restores the same usable
+furniture. This adds ten targets, for 100 overall, including 82 lamps. The ground
+uses the remaining existing service-ground slot and stays within the 4096 local
+sample and 8192 network-node budgets. [Paths and park authoring](paths.md).

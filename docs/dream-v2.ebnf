@@ -111,7 +111,12 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
 
 (* surface.finish is paint|terrain, default paint. Paint requires color; terrain
    forbids it and retains the underlying terrain and cosmetic ground plants.
-   Both keep the existing geometry, reservation and walking bounds. *)
+   Both keep the existing geometry, reservation and walking bounds.
+   Optional surface.walkable=true adds convex clear pieces to pedestrian pavement;
+   full-width joins to existing pavement, dry/bridge-supported, no rail/runway
+   overlap or bridge side entries. Omitted/false remains ground finish only.
+   Optional site.label is 1..80 nonblank plain-text characters naming the place
+   independently of its reused object. Neither field creates actors or behavior. *)
 
 
 (* account.deliveries is 1..4 unique ordered delivery refs, compatible with repair

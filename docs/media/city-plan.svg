@@ -26,6 +26,14 @@
 <polygon points="7460.00,7392.00 7580.00,7392.00 7580.00,7500.00 7460.00,7500.00" fill="#bcb6a4"/>
 <polygon points="11140.00,4040.00 11210.00,4040.00 11210.00,4112.00 11140.00,4112.00" fill="#bcb6a4"/>
 <polygon points="4272.00,3516.00 4288.00,3516.00 4288.00,3770.00 4272.00,3770.00" fill="#bcb6a4"/>
+<polygon points="2200.00,3420.00 2720.00,3420.00 2720.00,3444.00 2200.00,3444.00" fill="#bcb6a4"/>
+<polygon points="2200.00,3840.00 2720.00,3840.00 2720.00,3864.00 2200.00,3864.00" fill="#bcb6a4"/>
+<polygon points="2200.00,3420.00 2224.00,3420.00 2224.00,3864.00 2200.00,3864.00" fill="#bcb6a4"/>
+<polygon points="2696.00,3420.00 2720.00,3420.00 2720.00,3864.00 2696.00,3864.00" fill="#bcb6a4"/>
+<polygon points="2696.00,3598.00 2840.00,3598.00 2840.00,3622.00 2696.00,3622.00" fill="#bcb6a4"/>
+<polygon points="2491.98,3852.65 2471.98,4220.65 2448.02,4219.35 2468.02,3851.35" fill="#bcb6a4"/>
+<polygon points="2495.00,3864.00 2560.00,3864.00 2560.00,3900.00 2495.00,3900.00" fill="#a6aaa0"/>
+<polygon points="2760.00,3622.00 2810.00,3622.00 2810.00,3656.00 2760.00,3656.00" fill="#a6aaa0"/>
 <polygon points="4312.77,3387.80 4515.17,3401.30 4513.35,3428.58 4310.95,3415.09" fill="#aaa99f"/>
 <polygon points="5844.32,7261.95 6021.07,7267.84 6021.98,7240.51 5845.23,7234.62" fill="#aaa99f"/>
 <polygon points="7264.93,2497.50 7627.42,2497.50 7627.42,2549.15 7264.93,2549.15" fill="#aaa99f"/>
@@ -1215,6 +1223,7 @@
 <polyline points="2617.00,9460.00 2758.00,9460.00" fill="none" stroke="#b8aa89" stroke-width="20"/>
 <polyline points="1786.25,9150.00 1948.00,9150.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="1925.00,9550.00 1948.00,9550.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
+<polyline points="2400.00,3415.50 2400.00,3432.00 2708.00,3432.00 2708.00,3610.00 2840.00,3610.00" fill="none" stroke="#b8aa89" stroke-width="12"/>
 <g><title>Eastbank medical center · east_medical_center</title><polygon points="11901.00,5437.00 12099.00,5437.00 12099.00,5596.00 11901.00,5596.00" fill="#827565"/></g>
 <g><title>Covered market hall · market_hall</title><polygon points="6271.93,4391.88 6528.07,4391.88 6528.07,4576.52 6271.93,4576.52" fill="#827565"/></g>
 <g><title>River hospital · hospital</title><polygon points="3749.60,6701.00 4050.40,6701.00 4050.40,6937.00 3749.60,6937.00" fill="#827565"/></g>
@@ -1419,6 +1428,11 @@
 <g><title>Regional airport terminal · airport_terminal</title><polygon points="1791.00,9317.00 1791.00,9583.00 1633.50,9583.00 1633.50,9317.00" fill="#827565"/></g>
 <g><title>Aircraft maintenance hangar · airport_hangar</title><polygon points="2450.50,9556.00 2450.50,9364.00 2612.50,9364.00 2612.50,9556.00" fill="#827565"/></g>
 <g><title>Airport control tower · airport_tower</title><polygon points="1782.50,9097.50 1782.50,9202.50 1677.50,9202.50 1677.50,9097.50" fill="#827565"/></g>
+<circle cx="2310" cy="3630" r="32" fill="#789266"/>
+<circle cx="2590" cy="3730" r="32" fill="#789266"/>
+<circle cx="2475" cy="3500" r="32" fill="#789266"/>
+<circle cx="2350" cy="3790" r="32" fill="#789266"/>
+<circle cx="2655" cy="3515" r="32" fill="#789266"/>
 <circle cx="2400.568" cy="1999.184" r="32" fill="#789266"/>
 <circle cx="1450.957" cy="7407.115" r="32" fill="#789266"/>
 <circle cx="2180.216" cy="8198.852" r="32" fill="#789266"/>
@@ -1808,6 +1822,7 @@
 <circle cx="1700" cy="9450" r="85" fill="#f7c843"/><text x="1700" y="9490" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">23</text>
 <circle cx="2530" cy="9460" r="85" fill="#f7c843"/><text x="2530" y="9500" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">24</text>
 <circle cx="1730" cy="9150" r="85" fill="#f7c843"/><text x="1730" y="9190" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">25</text>
+<circle cx="2400" cy="3411" r="85" fill="#f7c843"/><text x="2400" y="3451" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">26</text>
 </g><g font-family="system-ui,sans-serif" fill="#3d3d38" font-size="15">
 <text x="50" y="1250">Charcoal: rail · Rust: tram · Violet: buses · Green: cycle tracks · Tan: entrance paths · Dots: route stops</text>
 <text x="50" y="1280">1. Eastbank medical center</text>
@@ -1835,4 +1850,5 @@
 <text x="770" y="1380">23. Regional airport terminal</text>
 <text x="1130" y="1380">24. Aircraft maintenance hangar</text>
 <text x="50" y="1400">25. Airport control tower</text>
+<text x="410" y="1400">26. Garden park</text>
 </g></svg>

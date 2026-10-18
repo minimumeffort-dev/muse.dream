@@ -50,7 +50,7 @@ The apron meets the side of the continuous runway. Public entrance paths stay ou
 
 ![Eastbank medical center and its street-connected bus stop](media/east-medical-center.jpg)
 
-The minimap marks schools and college with **S**, medical destinations with **+**, the airport with **A** and railway stations with **R**. These symbols come from Dream's declared site kinds. Hover the map for the key.
+The minimap marks schools and college with **S**, medical destinations with **+**, the airport with **A** railway stations with **R** and parks with **P**. These symbols come from Dream's declared site kinds. Hover the map for the key.
 
 ## River, lake and parks
 
@@ -58,23 +58,38 @@ The river enters at the north edge, passes under three bridges and widens into a
 
 ![The continuous river and lake](media/connected-waterway.jpg)
 
-The eastbank has a 100 × 64-metre football pitch. A basketball court, sports pavilion and golf fairway occupy the southern park area. Football and basketball now support [on-foot practice](dream/sports.md): dribble, aim, charge shots and score, with a closer camera. Paved access strips join both sports grounds to their adjacent sidewalks. Paths also wrap around the two neighborhood schools to reach their rear yards, with full walking-body clearance. These ground finishes do not add NPC route planning. The other people retain their ambient routines. Full matches and golf controls are still to come.
+The eastbank has a 100 × 64-metre football pitch. A basketball court, sports pavilion and golf fairway occupy the southern park area. Football and basketball now support [on-foot practice](dream/sports.md): dribble, aim, charge shots and score, with a closer camera. Paved access strips join both sports grounds to their adjacent sidewalks. Paths also wrap around the two neighborhood schools to reach their rear yards, with full walking-body clearance. These ground finishes do not add NPC route planning. The other people retain their ambient routines. Football and basketball also support six-a-side matches, goalkeepers, passes and tackles; golf controls remain future work.
 
 ![The football ground between eastbank streets](media/sports-park.jpg)
 
 Woodland and meadow surround the city. Oaks, birches, firs, rowan, apple trees and willows mix with understory plants. Deer have a clear habitat, and gulls fly over the river. Destructible trees and benches remain, alongside breakable market props and shop porches.
 
+## Garden park
+
+The land west of Garden Crescent now has a neighborhood park with a 52 × 44-metre
+walking loop. One entrance joins Garden Crescent; the other reaches Market Avenue.
+Six benches face the paths, three bicycles and three scooters use two connected
+parking pockets, and eight visitors walk through the same network as city residents.
+The lawn keeps open space between shade trees and planted edges.
+
+![The park paths, seating and street connections](media/garden-park.jpg)
+
+Benches support F to sit or stand and share the city's splinter behavior. The
+existing caretaker can repair all six benches and four lamps, with finite supplies,
+wages and actual sidewalk travel. Dream declares the paths as `walkable` surfaces
+and names the destination with `site.label`. [Author connected parks](dream/paths.md).
+
 ## Everyday street life
 
-The city has 400 streetlights along six networks, 89 additional street trees, 275 mixed street planting groups and 16 destination planters, plus 64 additional garden and understory clusters and 64 woodland trees. Forty-five parked bicycles and twenty-two scooters sit beside schools, services and transit stops on paved aprons joined to the sidewalk. Fourteen parked cars use connected civic and eastbank aprons. All of that destination parking is now usable, alongside the explicit scooters near the market, airport and eastbank medical center. Dream declares their ownership through `furnish(...,role=controllable)` and activates one dormant fleet rig when occupied.
+The city has 409 streetlights along six networks, 89 additional street trees, 275 mixed street planting groups and 16 destination planters, plus 64 additional garden and understory clusters and 64 woodland trees. Forty-eight parked bicycles and twenty-five scooters sit beside schools, services and transit stops on paved aprons joined to the sidewalk. Fourteen parked cars use connected civic and eastbank aprons. All of that destination parking is now usable, alongside the explicit scooters near the market, airport and eastbank medical center. Dream declares their ownership through `furnish(...,role=controllable)` and activates one dormant fleet rig when occupied.
 
-The city has 123 people across its center, neighborhoods and eastbank: 111 sidewalk residents, four new greeting NPCs and eight existing activity/commuter NPCs. Sidewalk groups preserve a walking corridor and avoid entrance paths and crossings. The 111 sidewalk residents now follow the connected pedestrian network and use crossings. Sixty deer, hares, foxes, dogs, cats and sparrows roam clear, dry habitats and flee nearby players; the existing live deer, route gull and 256 flock birds keep their routines. Ambient populations share full geometry and GPU joint poses without allocating per-member scene rigs. [Population authoring](dream/populations.md).
+The city has 131 people across its center, neighborhoods and eastbank: 119 walking residents, four new greeting NPCs and eight existing activity/commuter NPCs. Sidewalk groups preserve a walking corridor and avoid entrance paths and crossings. The 119 walking residents now follow the connected pedestrian network and use crossings. Sixty deer, hares, foxes, dogs, cats and sparrows roam clear, dry habitats and flee nearby players; the existing live deer, route gull and 256 flock birds keep their routines. Ambient populations share full geometry and GPU joint poses without allocating per-member scene rigs. [Population authoring](dream/populations.md).
 
 Four road cars use three different silhouettes: rally car, hatchback and delivery van. Transit and ordinary resident rides keep their existing actor slots; destination parking reserves one occupied rig within the live-assembly cap. Sixteen habitats distribute 256 decorative birds across city blocks, river, lake, woodland and meadow. These populations come from [Dream rules](dream/populations.md), filtered against the accepted streets, entrances, water and existing objects.
 
 ## Day and night
 
-The mock starts at 10:00 and completes a day in ten minutes of play. Sun and moon lighting share one shadow map. Windows and the 400 streetlights fade on after dusk, with soft light pools fitted to the pavement. [Dream owns the clock and light declarations](dream/day-night.md).
+The mock starts at 10:00 and completes a day in ten minutes of play. Sun and moon lighting share one shadow map. Windows and the 409 streetlights fade on after dusk, with soft light pools fitted to the pavement. [Dream owns the clock and light declarations](dream/day-night.md).
 
 ![The market square at night](media/city-night.jpg)
 

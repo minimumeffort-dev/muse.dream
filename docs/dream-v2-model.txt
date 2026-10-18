@@ -297,7 +297,7 @@ Streets use open polylines in any direction, turns <=120 degrees: 2..16 anchors,
 sidewalk 0..40 per side. Optional cycle_width 16..40 adds one lane per side outside
 the carriageway, each with a 6-unit separator; sidewalks move outward. Use this for
 connected city bicycle lanes, not isolated path loops. Intersections join the tracks
-with painted crossings. All street components must reach the racing circuit.
+with painted crossings. All street components must reach the circuit or the street-only world spawn with full car clearance.
 Reserve the entire riding width from solids and ground finishes. Water crossings
 need explicit aligned bridges carrying carriageway, both lanes, separators and
 sidewalks between rails. Street endpoints must extend 20 units beyond both bridge
@@ -308,6 +308,16 @@ Painted surface id(color=#rrggbb,points=[[x,y],...]); fills a simple 3..64 point
 Surface area <=1000000, extent <=2000. Split larger grounds. Never cover street carriageways.
 Local surfaces precede included modules; includes follow include order. Later linked painted surfaces overlay earlier paint. Grounds follow existing terrain; they do not
 flatten it or change physics. Use for courtyards, driveways, turf, courts and sand.
+Explicit pedestrian paths: surface id(color=#bcb6a4,points=[[x,y],...],walkable=true);
+Optional walkable defaults false. True requires a convex, clear path piece joined
+at full width to existing sidewalks, crossings, entrances or interior pavement.
+Join convex strips into bends and loops. No point-only joins, unsupported water,
+rail/runway overlaps or bridge side entries; fit the full path between bridge rails.
+Place benches, lamps and parking beside the path. It adds accepted pavement for
+ambient walkers and existing work journeys, never road grip, flattening or actors.
+Terrain finish can also be walkable, with no painted mesh. Existing surface and
+navigation budgets still apply. Same-colored standard paving merges with entrances.
+See examples/park-paths.dream. Ordinary paint alone is not pedestrian pavement.
 marking id(color=#rrggbb,width=1,closed=true){point(at=[x,y]);...}
 Marking blocks accept point/let/repeat; generate circles with sin/cos. 2..64 points,
 closed needs >=3, width .5..12. Never repeat the first point at the end. No zero edges.
@@ -332,7 +342,9 @@ curbs and no center paint. Cycle symbols require their entire envelope to fit
 inside a lane and outside crossing clearance; crowded symbols are omitted whole.
 road.style=racing default; street makes neutral curbs and removes start paint.
 site id(object=placement_id,kind=home|market|school|hospital|work|civic|park|station|airport|stop,
-entry=[local_x,local_z],street=street_id,width=16,points=[[world_x,world_y],...]);
+entry=[local_x,local_z],street=street_id,width=16,points=[[world_x,world_y],...],label="Garden park");
+Optional label is 1..80 nonblank plain-text characters, independent of the object
+template name. It names a destination without generating any activity or behavior.
 Entry follows the owner's placement heading and resolved measured scale; points are
 world XY and the engine prepends that entrance. 1..16 points; path width 12..40;
 length <=800. End the full path width inside its named sidewalk. Keep the entire
@@ -372,7 +384,8 @@ fill. Omit color for terrain finish. Ordinary surfaces default to finish=paint
 and require color; explicit finish=paint is also valid. Natural coverage retains
 cosmetic grass/flowers; furniture, habitats, physical support, road/water bounds,
 clearance and pedestrian connections remain checked as before. It creates no
-shortcut, flattened ground, path, collider or extra growth clock. Prefer terrain
+shortcut, flattened ground, collider or extra growth clock. It adds pedestrian
+pavement only with explicit walkable=true, under the city path rules. Prefer terrain
 finish for orchards and natural work grounds; paint real courts, squares and
 paths. Existing surface bounds apply. See examples/orchard-replanting.dream.
 

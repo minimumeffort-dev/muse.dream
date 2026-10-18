@@ -79,3 +79,5 @@ surface south_yard_access(color=#bcb6a4,points=[[5906,7140],[5906,7156],[5752,71
 surface park_seating(color=#bcb6a4,points=[[7460,7392],[7580,7392],[7580,7500],[7460,7500]]);
 surface station_seating(color=#bcb6a4,points=[[11140,4040],[11210,4040],[11210,4112],[11140,4112]]);
 surface school_yard_return(color=#bcb6a4,points=[[4272,3516],[4288,3516],[4288,3770],[4272,3770]]);
+
+include garden_park(module=garden_park);

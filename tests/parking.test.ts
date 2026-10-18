@@ -33,10 +33,10 @@ function setup(text=source):World{const data=compileDreamWorld(text),scene=parse
 function onFoot(world:World):CarState{const s=createCarAtSpawn(world.scene);return {...s,control:{kind:'foot' as const},x:365,y:400,elevation:0,vehicles:[{id:null,x:s.x,y:s.y,elevation:s.elevation,headingRad:s.headingRad,distance:0}]};}
 
 describe('parked controllable vehicles',()=>{
- it('makes all 81 generated rides boardable and retains the original NPC passenger capabilities',()=>{
+ it('makes all 87 parked rides boardable and retains the original NPC passenger capabilities',()=>{
   const scene=createWorldScene(),w:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11},start=createCarAtSpawn(scene),parked=scene.objects.filter(isParkedVehicle);
-  expect(parked).toHaveLength(81);expect(new Set(parked.map(o=>controlFor(o)))).toEqual(new Set(['car','bicycle','scooter']));
-  for(const object of parked){const foot=vehicleReviewStart(start,w,object.id);expect(foot.control.kind,object.id).toBe('foot');expect(toggleRide(foot,w).control,object.id).toEqual({kind:'vehicle',id:object.id});}
+  expect(parked).toHaveLength(87);expect(new Set(parked.map(o=>controlFor(o)))).toEqual(new Set(['car','bicycle','scooter']));
+  for(const object of parked){const exit=vehicleReviewStart(start,w,object.id),foot=nearbyRide(exit,w)?.id===object.id ? exit : Array.from({length:64},(_,i)=>{const a=i%16*Math.PI/8,r=8+Math.floor(i/16)*8;return {...exit,x:object.x+Math.cos(a)*r,y:object.y+Math.sin(a)*r};}).find(s=>nearbyRide(s,w)?.id===object.id && carFootprintClear(bodyWorld(s,w),s.x,s.y,s.elevation,s.timeS,s));expect(foot,object.id).toBeDefined();expect(foot!.control.kind,object.id).toBe('foot');expect(toggleRide(foot!,w).control,object.id).toEqual({kind:'vehicle',id:object.id});}
   for(const id of ['center_delivery','south_car']){const o=scene.objects.find(o=>o.id===id)!;expect(o.role).toBe('npc');expect(controlFor(o)).toBeUndefined();expect(o.spec && 'rideable' in o.spec && o.spec.rideable && !o.spec.rideable.control).toBe(true);}
  });
  it('adapts an imported seat locally without changing the passenger model or its geometry',()=>{

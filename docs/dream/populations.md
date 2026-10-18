@@ -69,13 +69,13 @@ furnish neighbors(objects=[explorer],streets=[avenue],spacing=160,setback=0,seed
 place garden_hare(object=hare,at=[2400,2100],role=ambient,motion=roam(radius=90,speed=5,alert=70,flee_speed=30,recover_s=2,gait=hop));
 ```
 
-`walk` uses a cached graph derived from accepted sidewalks, entrance paths and zebras. Pedestrians choose connected segments, pause briefly at their ends and wait for the swept space of approaching vehicles. They never invent a straight shortcut across a carriageway. `speed` is 4–24 world units per second and `wait_s` is 0–5, default 1.
+`walk` uses a cached graph derived from accepted sidewalks, entrance paths, explicit walkable surfaces and zebras. Pedestrians choose connected segments, pause briefly at their ends and wait for the swept space of approaching vehicles. They never invent a straight shortcut across a carriageway. `speed` is 4–24 world units per second and `wait_s` is 0–5, default 1.
 
 `roam` stays within `radius` of the authored home. Animals avoid water, roads, reserved grounds, solids and world edges. A player within `alert` triggers flight at `flee_speed`; after separation, `recover_s` settles them back to roaming. Height matters, so a high aircraft does not frighten everything underneath it. Hares and sparrows use `gait=hop`; quadrupeds retain their authored swing joints. If no safe direction fits, the animal waits rather than jumping through an obstacle.
 
 ![A deer moves away from the approaching player](../media/wildlife.gif)
 
-These instances have explicit `role=ambient`, or acquire it from `furnish(...,motion=...)`. They are cosmetic populations, separate from general NPC programs, seats and physical contacts. Their validated rig and full voxel geometry are shared in GPU instances. Pure movement runs at 20 Hz with interpolated rendering. All 171 members remain resident; frustum culling checks both the camera and shadow view. The cap is 192 ambient members and 8,192 cached walking nodes. The existing NPC, route, vehicle and CPU live-rig limits stay unchanged.
+These instances have explicit `role=ambient`, or acquire it from `furnish(...,motion=...)`. They are cosmetic populations, separate from general NPC programs, seats and physical contacts. Their validated rig and full voxel geometry are shared in GPU instances. Pure movement runs at 20 Hz with interpolated rendering. All 179 members remain resident; frustum culling checks both the camera and shadow view. The cap is 192 ambient members and 8,192 cached walking nodes. The existing NPC, route, vehicle and CPU live-rig limits stay unchanged.
 
 Pause freezes the population clock. R preserves it; Start over restores its seed and home poses. Reduced motion rests limb and hopping animation. This is bounded walking and avoidance, without crowd collision, traffic signals, full animal intelligence or ecological simulation. Use a full `role=npc` program when an individual needs custom states or a transit route.
 
@@ -105,3 +105,9 @@ Use `place.phase_s` to stagger the entire service clock, including waits. A dist
 Underground metro and subway service is still pending. It needs connected entrances, platforms, tunnels, vertical clearance, navigation and boarding support. Hiding a railcar under the terrain would not provide that contract.
 
 [Complete runnable neighborhood](../examples/populated-neighborhood.dream) · [Fields and bounds](reference.md#contextual-populations) · [Live population rules](../../src/scene/world/street_life.dream)
+
+
+Garden park adds eight explicit walking placements using the existing humanoid
+assets and `motion=walk(...)`, and six dormant bikes/scooters beside its entrances.
+Its [walkable paths](paths.md) join the city pavement. These visitors use the same
+resident population clock, GPU transforms, crossing waits and saved movement state.

@@ -8,10 +8,10 @@ import {streetPolygons,streetCycleTracks} from '../scene/streets';
 
 /** Destination meaning comes from Dream sites, never inferred from building labels. */
 export function mapDestinations(scene:Scene){
-  const symbols:Partial<Record<Scene['sites'][number]['kind'],string>>={school:'S',hospital:'+',airport:'A',station:'R'};
+  const symbols:Partial<Record<Scene['sites'][number]['kind'],string>>={school:'S',hospital:'+',airport:'A',station:'R',park:'P'};
   const sites=scene.sites.flatMap(site=>{
     const symbol=symbols[site.kind],object=scene.objects.find(o=>o.id===site.objectId);
-    return symbol && object ? [{id:site.id,kind:site.kind,symbol,label:object.labelText,x:object.x,y:object.y}] : [];
+    return symbol && object ? [{id:site.id,kind:site.kind,symbol,label:site.label??object.labelText,x:object.x,y:object.y}] : [];
   });
   return [...sites,...scene.sports.map(sport=>{
     const ground=scene.surfaces.find(s=>s.id===sport.surfaceId)!;
@@ -69,8 +69,8 @@ export function createWorldMap(canvas: HTMLCanvasElement, scene: Scene) {
     map.beginPath();map.arc(x,y,7,0,Math.PI*2);map.fillStyle='#f7c843';map.fill();map.lineWidth=1;map.strokeStyle='#171717';map.stroke();
     map.fillStyle='#171717';map.fillText(destination.symbol,x,y+.5);
   }
-  canvas.title='S · school / college   + · hospital   A · airport   R · railway station   F · football   B · basketball';
-  canvas.setAttribute('aria-label','World map with your position. S: school or college. Plus: hospital. A: airport. R: railway station. F: football. B: basketball.');
+  canvas.title='S · school / college   + · hospital   A · airport   R · railway station   P · park   F · football   B · basketball';
+  canvas.setAttribute('aria-label','World map with your position. S: school or college. Plus: hospital. A: airport. R: railway station. P: park. F: football. B: basketball.');
   return (car: CarState, angle: number): void => {
     ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.drawImage(base, 0, 0);
     for(const actor of actorPoses(scene,car.timeS,car)){

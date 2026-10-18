@@ -49,6 +49,6 @@ try{
  }
  s.push('</g><g font-family="system-ui,sans-serif" fill="#3d3d38" font-size="15">');
  s.push('<text x="50" y="1250">Charcoal: rail · Rust: tram · Violet: buses · Green: cycle tracks · Tan: entrance paths · Dots: route stops</text>');
- for(let i=0;i<destinations.length;i++){const site=destinations[i],o=scene.objects.find(o=>o.id===site.objectId);s.push(`<text x="${50+(i%4)*360}" y="${1280+Math.floor(i/4)*20}">${i+1}. ${esc(o.spec.displayName)}</text>`);}
+ for(let i=0;i<destinations.length;i++){const site=destinations[i],o=scene.objects.find(o=>o.id===site.objectId);s.push(`<text x="${50+(i%4)*360}" y="${1280+Math.floor(i/4)*20}">${i+1}. ${esc(site.label??o.spec.displayName)}</text>`);}
  s.push('</g></svg>');writeFileSync('docs/media/city-plan.svg',s.join('\n'));console.log('Map rendered from compiled geometry:',scene.streets.length,'streets',scene.sites.length,'entrances');
 }finally{await server.close();}

@@ -1,0 +1,73 @@
+{
+  "sourceHash": "0575d681bac51dec7e592c172153c6a12805b0219e0eaf820eabbfde4747b473",
+  "worldFingerprint": "3c0314d1b78aa9b819a68d2727d76ad62d8e12f1a9f609b917d6192e458a39b4",
+  "note": "Actual rendered frames and native geometry exports; no interpolation or offline performance claim",
+  "sourceFrames": 360,
+  "sourceSize": [
+    2400,
+    1350
+  ],
+  "renderedFramesPerSimulationSecond": 30,
+  "outputs": [
+    {
+      "file": "docs/media/park.gif",
+      "bytes": 17490883,
+      "sha256": "aee25e4dd6135e014ef275fbdc32277ffaff538b2051f298a4ed4078b91ba5c7",
+      "decodedFrames": 360
+    },
+    {
+      "file": "docs/media/park.mp4",
+      "bytes": 2998026,
+      "sha256": "84a89e5e9480a15a40055f354e240921496f383345cf8d43fa517b0ac0c80ff9",
+      "decodedFrames": 360
+    }
+  ],
+  "stills": [
+    {
+      "file": "docs/media/garden-park.jpg",
+      "bytes": 73051,
+      "sha256": "76671bff44c53e2e649b58e79bffdbf3effe627c3198aec590df088079795780"
+    },
+    {
+      "file": "docs/media/park.jpg",
+      "bytes": 232066,
+      "sha256": "47b524021f7f9114ac57d51595f5ed65e43f085d777d951efd9bb8a51c037fee"
+    },
+    {
+      "file": "docs/media/city-plan.svg",
+      "bytes": 186810,
+      "sha256": "297796ad405e2319c9ff861b15b5362c65267c1b53a1f301f1c4477c5e291f74"
+    },
+    {
+      "file": "docs/evidence/garden-park/east.jpg",
+      "bytes": 74730,
+      "sha256": "68a63ccb74abf6213846b04dd849ade986e0e3c28bf696929aa210eff8fb4b11"
+    },
+    {
+      "file": "docs/evidence/garden-park/south.jpg",
+      "bytes": 76432,
+      "sha256": "96fda918f36f689420bc039e87c3a86cbd366042cc0dcae2481b67177ee658ac"
+    },
+    {
+      "file": "docs/evidence/garden-park/west.jpg",
+      "bytes": 77793,
+      "sha256": "ba3b5f0c5b3ace9dec0fe241f9d77084a870be3dc9108c55e6cba0ea5b1a803e"
+    },
+    {
+      "file": "docs/evidence/garden-park/seated.jpg",
+      "bytes": 53776,
+      "sha256": "270d6ca35afa69eebf23fd1b0e1a8c6b9e160da0b5505995e80d42a0f6a56b8c"
+    },
+    {
+      "file": "docs/evidence/garden-park/reloaded.jpg",
+      "bytes": 53284,
+      "sha256": "6640f3fd527dd4a21e45313eadaca99d4ddda1dab71ea219b37b7476d9caf83e"
+    },
+    {
+      "file": "docs/evidence/garden-park/bicycle.jpg",
+      "bytes": 55698,
+      "sha256": "a0ab6153ed9236b1f1ce37f6421a9623d560dbc5a3f89ae06aea2dcb77f1b60c"
+    }
+  ],
+  "orderedFrameHash": "a9dc5d889e86828cd708c6aa46a9f81cd26a445670e33db29f33ec4d4ab2e05a"
+}

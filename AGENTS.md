@@ -294,7 +294,7 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 ## Saved simulation state
 
 Current save format 16 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 25. Historical formats retain their registered projections.
+at simulation version 26. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -685,3 +685,15 @@ shortcuts. Menu focus releases held movement/shot inputs without cancelling an
 already submitted simulation request. Keep coin icons accessible as coins.
 
 Street-only worlds omit `road` and `checkpoint`; their driving mask uses accepted street riding footprints, with all street components connected to spawn. Optional circuits retain legacy checkpoint validation. The r68 city migration checks the exact r67 projection before rebasing pedestrian node references and retiring checkpoint/pad state; preserve lives, commerce, matches, physical changes and the old slot. Parallel crossing paint shares a world-aligned stripe phase over merged envelopes; keep the accepted pedestrian geometry and paint clearance.
+
+
+Explicit `surface.walkable=true` adds convex clear pieces to the pedestrian network,
+joined at full width to existing pavement. Preserve dry/bridge support, open bridge
+ends and rail/runway clearance. Ordinary paint remains visual-only. Standard paving
+merges with entrance paths to avoid duplicate paint. Optional `site.label` names a
+place independently of its reused object, plain text 1..80 characters, with no new
+behavior. The r69 park migration checks the exact r68 projection, matches old ambient
+members by ID, rebases only derived nodes and initializes eight new visitors at the
+saved tick. Keep every old object, ledger, task, clock and slot. Garden park uses
+existing asset templates, controls, seating, shared damage and finite repair rules;
+no actor, navigation, source or GPU rig budget increase. See docs/dream/paths.md.

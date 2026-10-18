@@ -1,0 +1,15 @@
+{
+  "car": "2510.0,3988.5,4.2",
+  "control": {
+    "id": "garden_bike_south_0",
+    "kind": "vehicle"
+  },
+  "grounded": "false",
+  "movement": {
+    "bank": 0,
+    "pitch": 0.120365,
+    "swimming": false,
+    "vz": 75
+  },
+  "speed": "0.0"
+}

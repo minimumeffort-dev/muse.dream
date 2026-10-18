@@ -115,7 +115,7 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 | `world` | top | No ID / no block | `size: v2`, `spawn: position2`, `heading_deg: n`, `player?: ref`, `damage_pool?: bool` |
 | `road` | top | ID / no block | `width: n`, `points?: points2`, `via?: symbols`, `style?: racing / street` |
 | `street` | top | ID / no block | `width: n`, `sidewalk: n`, `points?: points2`, `via?: symbols`, `cycle_width?: n` |
-| `surface` | top | ID / no block | `color?: color`, `points: points2`, `finish?: paint / terrain` |
+| `surface` | top | ID / no block | `color?: color`, `points: points2`, `finish?: paint / terrain`, `walkable?: bool` |
 | `sport` | top | ID / optional sport block | `kind: football / basketball`, `surface: ref`, `ball: ref`, `targets: symbols`, `target_at: v3`, `target_size: v2`, `net_depth: n?`, `roster: symbol?`, `team_size: n?`, `duration_s: n?`, `score_to: n?` |
 | `team` | sport | home or away ID / no block | `object: ref?` XOR `objects: symbols?`, `role: npc`, `members: symbols?`, `keeper: n?`, `keeper_object: ref?`, `style: balanced / press / counter?`, `skill: n?` |
 | `marking` | top | ID / path | `color: color`, `width: n`, `closed: bool` |
@@ -334,8 +334,17 @@ Surface `finish` defaults to `paint`, requiring `color`; explicit `finish=paint`
 is supported. `finish=terrain` forbids `color`, retains the underlying terrain
 and cosmetic grass/flowers, and emits no surface mesh or map overlay. Both
 finishes retain all polygon/world/riding-surface bounds, furniture reservations,
-habitat exclusions and declared repair coverage. Natural coverage adds no path,
-flattening, collision body or road/water shortcut. [Natural ground example](../examples/orchard-replanting.dream).
+habitat exclusions and declared repair coverage. Natural coverage adds no path unless `walkable=true` is explicit. Neither finish
+adds flattening, a collision body or a road/water shortcut. [Natural ground example](../examples/orchard-replanting.dream).
+
+Optional `walkable=true` adds a convex surface to the accepted pedestrian network.
+Each connected group must join existing sidewalk, crossing, entrance or interior
+pavement at full width. Keep the entire piece clear of solids, unsupported water,
+rail and runway corridors. Bridge paths must fit between the rails and enter through
+open ends. Join convex strips for bends or loops; touching only at a corner fails.
+Existing walker, work, surface and graph budgets remain. Standard paving
+`#bcb6a4` merges with entrance paths into one painted surface.
+[Guide and runnable example](paths.md).
 
 ## NPC programs
 
@@ -356,13 +365,13 @@ Water polygons have 3–32 vertices, area 400–8,000,000 square units and exten
 | Command | Context | ID / block | Fields |
 | --- | --- | --- | --- |
 | `stop` | route_path | ID / no block | `at: v2`, `wait_s: n`, `site: ref` |
-| `site` | top | ID / no block | `object: ref`, `kind: home / market / school / hospital / work / civic / park / station / airport / stop`, `entry: v2`, `street: ref`, `width: n`, `points: points2`, `serves?: symbols` |
+| `site` | top | ID / no block | `object: ref`, `kind: home / market / school / hospital / work / civic / park / station / airport / stop`, `label?: text`, `entry: v2`, `street: ref`, `width: n`, `points: points2`, `serves?: symbols` |
 | `crossing` | top | ID / no block | `street: ref`, `at: v2`, `width: n`, `junction?: bool` |
 | `junction` | top | ID / no block | `at: v2` |
 
 `junction` binds a file-local XY point. `road` and `street` require exactly one of `points` or `via`; the latter takes junction IDs. A world's `spawn` and a bridge's `from`/`to` also accept these IDs. Includes merge world data, and keep coordinate symbols local. Keep a connected network in one module so its joins share coordinates. Up to 128 junctions per source. Street bends use bounded miter joins, with square caps only at the two endpoints. Road grip, placement reservations, sidewalks and the rendered street share that footprint.
 
-`site` attaches a use and entrance to a static object. `entry` is object-local X/Z, transformed by the placement's heading and resolved scale. `points` are world XY; the engine prepends the entrance. The last point must join the named street's sidewalk with the full 12–40-unit path width. Paths stay dry, unobstructed and at most 800 units long. Every static measured building in a site-authored city needs an access site. Up to 256 sites per scene. Stops may `serves=[site_id,...]` up to eight reachable destinations.
+`site` attaches a use and entrance to a static object. Optional `label` is 1–80 nonblank plain-text characters and names the place independently of its object template. It adds no behavior. `entry` is object-local X/Z, transformed by the placement's heading and resolved scale. `points` are world XY; the engine prepends the entrance. The last point must join the named street's sidewalk with the full 12–40-unit path width. Paths stay dry, unobstructed and at most 800 units long. Every static measured building in a site-authored city needs an access site. Up to 256 sites per scene. Stops may `serves=[site_id,...]` up to eight reachable destinations.
 
 `crossing` connects both sidewalks. Optional `junction=true` expands one declaration into zebra crossings on every street arm, outside the intersection. Duplicate zebra stripes merge into one surface. Centerlines, cycle symbols and neighboring stop lines leave clearance around the crossings; tram rails continue through them. Up to 64 crossing declarations. Sidewalks, entrance paths and crossings form the validated pedestrian network. Short overlapping street endpoints are rejected in site-authored cities; use shared junctions for exact centerline connections.
 

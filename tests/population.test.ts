@@ -134,7 +134,7 @@ describe('live district populations and transport',()=>{
     if(!nav.clear(p.x,p.y,nav.radius(o),motion.kind==='walk') || motion.kind==='roam' && Math.hypot(p.x-o.x,p.y-o.y)>motion.radius+1e-6)unsafe.add(o.id);
    }
   }
-  expect([...unsafe]).toEqual([]);expect(state.population!.members.filter(m=>m.distance>20)).toHaveLength(171);
+  expect([...unsafe]).toEqual([]);expect(state.population!.members.filter(m=>m.distance>20)).toHaveLength(179);
   expect(nav.segment({x:2939.5379564469386,y:4700},{x:2952.8310501211927,y:4674.986300727158},3.960441356140415,true)).toBe(false);
  });
  it('advances ambient motion in every direct control mode and in transit seats',async()=>{
