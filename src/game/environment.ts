@@ -1,4 +1,5 @@
 import {sceneInteriors} from '../scene/interiors';
+import {streetFrame} from '../scene/sites';
 import * as THREE from "three";
 import {contains,overlaps,type RenderRegion} from "./render-region";
 import {voxelTerrainTile} from './voxel-columns';
@@ -94,9 +95,10 @@ export function drapedPolygon(doc: Scene, polygon: Point[], lift: number,region?
   const center = polygon.reduce((p, q) => ({ x: p.x + q.x / polygon.length, y: p.y + q.y / polygon.length }), { x: 0, y: 0 });
   const frames = roadFrames(doc);
   const nearest = (p: Point) => frames.reduce((a, b) => Math.hypot(a.x - p.x, a.y - p.y) < Math.hypot(b.x - p.x, b.y - p.y) ? a : b);
-  const frame = nearest(center), start = doc.checkpoints[0]!, startFrame = nearest({ x: (start.a.x + start.b.x) / 2, y: (start.a.y + start.b.y) / 2 });
+  const street=doc.streets.map(s=>streetFrame(s,center)).sort((a,b)=>a.distance-b.distance)[0];
+  const frame = frames.length ? nearest(center) : {nx:-street!.dy,ny:street!.dx}, start = doc.checkpoints[0], startFrame = start && nearest({ x: (start.a.x + start.b.x) / 2, y: (start.a.y + start.b.y) / 2 });
   // A mask's outline winding need not match the race's checkpoint direction.
-  const sign = Math.sign(startFrame.ny * start.dir.x - startFrame.nx * start.dir.y) || 1;
+  const sign = start && startFrame ? Math.sign(startFrame.ny * start.dir.x - startFrame.nx * start.dir.y) || 1 : 1;
   let geometry = surfaceGeometry(doc, [polygon], lift, { x: frame.ny * sign, y: -frame.nx * sign },undefined,[],region);
   // Interior and edge samples keep small patches visible when all original corners lie on their outline.
   const weights = [[1,0,0],[0,1,0],[0,0,1],[.5,.5,0],[0,.5,.5],[.5,0,.5],[1/3,1/3,1/3]];

@@ -6,12 +6,10 @@ The [first working lab](dream/scenarios.md) connects that path using a bounded m
 
 ## Next playable work
 
-Retire the live racing circuit. Make streets the city's connected driving system,
-resolve each crossing/junction once instead of overlapping paint, and reuse the
-released ground for connected parks and other destinations. The original circuit
-belongs in the explicit legacy regression fixture. This requires accepted Dream,
-mask, reservation, rendering, pedestrian and save changes together; hiding its
-paint alone is incomplete.
+The live circuit is retired. Streets now own the driving mask and the city
+layout; close junctions share outer-arm crossings. Reuse the released ground
+for connected parks and other destinations, with useful paths and activities.
+Keep the old circuit in its registered migration and regression fixtures.
 
 The six-a-side grounds now connect goalkeepers, opposing/player tackles, passes,
 charged shots and net containment, with saved match ownership, scores, venue and
@@ -179,7 +177,7 @@ ownable bakery with workers and customers in the checked example. It adds no
 render geometry or actor slots. Ownership and every prior world record survive
 the registered format-15 upgrade.
 
-Next priorities: retire the live circuit and clean up junction crossings; apply
+Next priorities: develop the released city edges into connected park destinations; apply
 seating consistently to benches; add varied daily jobs and destinations;
 upstream supplies that can be produced and purchased;
 further shared activities with NPC invitations, useful indoor service and more

@@ -1,6 +1,7 @@
+import {saveCompatibilitySource} from './fixtures/pre-city-world';
 import {it,expect} from 'vitest';
-import {createWorldScene} from '../src/scene/world-fixture';
-import {MATCH_COMPATIBILITY,BUSINESS_COMPATIBILITY,SCHOOL_REPAIR_COMPATIBILITY,SOCIAL_COMPATIBILITY,preMatchScene,preBusinessScene,preBusinessCompatibilitySource,saveCompatibilitySource,sha256} from '../src/scene/save-compatibility';
+import {createWorldScene} from './fixtures/pre-city-world';
+import {MATCH_COMPATIBILITY,BUSINESS_COMPATIBILITY,SCHOOL_REPAIR_COMPATIBILITY,SOCIAL_COMPATIBILITY,preMatchScene,preBusinessScene,preBusinessCompatibilitySource,sha256} from '../src/scene/save-compatibility';
 import {createCarAtSpawn,type World} from '../src/sim/car';
 import {stepInteractive} from '../src/sim/interaction';
 import {commerceReason} from '../src/sim/commerce';

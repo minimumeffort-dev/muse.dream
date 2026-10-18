@@ -1,3 +1,4 @@
+import {saveCompatibilitySource} from './fixtures/pre-city-world';
 import {preBusinessState} from './pre-business-state';
 import {it,expect} from 'vitest';
 import source from '../docs/examples/shared-meal.dream?raw';
@@ -80,8 +81,8 @@ it('builds remembered familiarity through three actual meals rather than repeate
  s=until(s,s=>s.npcs.find(n=>n.id==='customer')!.stateId==='waiting',doc);s=tick(s,doc,undefined,true);expect(npcSpeech(s,doc)?.text).toBe('I look forward to these breaks with you.');expect(account(s).inventory.bread).toBe(0);expect(s.economy!.consumed.bread).toBe(6);
 });
 it('registers r63 migration without rewriting any saved field, reserves its old slot and refuses unrelated worlds',async()=>{
- const c=await import('../src/scene/save-compatibility'),{createWorldScene}=await import('../src/scene/world-fixture'),old=(await import('./fixtures/save-v13-r63-rest.json')).default,{gameSave}=await import('../src/game/save');
- const doc=createWorldScene(),hash=await c.sha256(c.saveCompatibilitySource(doc));expect(hash).toBe(c.MATCH_COMPATIBILITY);expect(await c.sha256(c.preSocialCompatibilitySource(doc))).toBe(c.SHIFT_COMPATIBILITY);
+ const c=await import('../src/scene/save-compatibility'),{createWorldScene}=await import('./fixtures/pre-city-world'),old=(await import('./fixtures/save-v13-r63-rest.json')).default,{gameSave}=await import('../src/game/save');
+ const doc=createWorldScene(),hash=await c.sha256(saveCompatibilitySource(doc));expect(hash).toBe(c.MATCH_COMPATIBILITY);expect(await c.sha256(c.preSocialCompatibilitySource(doc))).toBe(c.SHIFT_COMPATIBILITY);
  const world={...worldFor(doc),saveCompatibility:hash,previousMatchSaveCompatibility:c.BUSINESS_COMPATIBILITY,previousBusinessSaveCompatibility:c.SCHOOL_REPAIR_COMPATIBILITY,previousSchoolRepairSaveCompatibility:c.SOCIAL_COMPATIBILITY,previousSocialSaveCompatibility:c.SHIFT_COMPATIBILITY},text=JSON.stringify(old),copy=decodeSave(text,world);expect(copy.migrated).toBe(true);expect(preBusinessState(copy.state)).toEqual(old.state);expect(copy.worldTime).toBe(old.worldTime);expect(copy.state.economy!.socialHistory).toBeUndefined();expect(decodeSave(encodeSave(copy.state,copy.worldTime,world),world).migrated).toBe(false);
  const key=`social.v13.${doc.sceneId}.${c.SHIFT_COMPATIBILITY}`,rows=new Map([[key,text]]),storage={getItem:(k:string)=>rows.get(k)??null,setItem:(k:string,v:string)=>{rows.set(k,v);}};const saves=gameSave(world,()=>storage,'social');expect(preBusinessState(saves.restored?.state)).toEqual(old.state);expect(saves.write(copy.state,copy.worldTime)).toBe(true);expect(rows.get(key)).toBe(text);rows.set(saves.key,'corrupt');expect(gameSave(world,()=>storage,'social').blocked).toBe(true);
  expect(()=>decodeSave(text,{...world,previousSocialSaveCompatibility:undefined})).toThrow();expect(()=>decodeSave(text,{...world,saveCompatibility:'f'.repeat(64)})).toThrow();
@@ -89,7 +90,7 @@ it('registers r63 migration without rewriting any saved field, reserves its old 
 });
 
 it('resumes the actual native shared meal once without repurchasing or losing the staffed-world state',async()=>{
- const {createWorldScene}=await import('../src/scene/world-fixture'),c=await import('../src/scene/save-compatibility'),old=(await import('./fixtures/save-v14-r64-shared-meal.json')).default,doc=createWorldScene(),world={...worldFor(doc),previousMatchSaveCompatibility:c.BUSINESS_COMPATIBILITY,previousBusinessSaveCompatibility:c.SCHOOL_REPAIR_COMPATIBILITY,previousSchoolRepairSaveCompatibility:c.SOCIAL_COMPATIBILITY,saveCompatibility:await c.sha256(c.saveCompatibilitySource(doc))};
+ const {createWorldScene}=await import('./fixtures/pre-city-world'),c=await import('../src/scene/save-compatibility'),old=(await import('./fixtures/save-v14-r64-shared-meal.json')).default,doc=createWorldScene(),world={...worldFor(doc),previousMatchSaveCompatibility:c.BUSINESS_COMPATIBILITY,previousBusinessSaveCompatibility:c.SCHOOL_REPAIR_COMPATIBILITY,previousSchoolRepairSaveCompatibility:c.SOCIAL_COMPATIBILITY,saveCompatibility:await c.sha256(saveCompatibilitySource(doc))};
  let state=decodeSave(JSON.stringify(old),world).state;expect(preBusinessState(state)).toEqual(old.state);expect(state.economy!.shared?.phase).toBe('eat');const consumed=state.economy!.consumed.bread!,credits=account(state).credits;
  for(let i=0;i<922;i++)state=stepInteractive(state,{steer:0,throttle:0},1/120,world);
  expect(state.economy!.shared).toBeUndefined();expect(state.economy!.socialHistory!.baker!.meals).toBe(1);expect(state.economy!.consumed.bread).toBe(consumed+2);expect(account(state).credits).toBe(credits);expect(account(state,'baker').shift?.phase).toBe('rest');expect(decodeSave(encodeSave(state,state.timeS,world),world).state).toEqual(JSON.parse(JSON.stringify(state)));

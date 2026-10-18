@@ -55,14 +55,20 @@ export function crossingLanes(scene:Scene,crossing:Crossing){
       if(prior<0)arms.push(arm);else if(s.width>arms[prior]!.street.width)arms[prior]=arm;
     }
   }
-  return arms.map(arm=>{
+  return arms.flatMap(arm=>{
     let offset=0;
     for(const other of arms){const sine=Math.abs(arm.dx*other.dy-arm.dy*other.dx);if(sine<.1)continue;
       const s=other.street,r=s.width/2+(s.cycleWidth ? s.cycleWidth+6 : 0)+s.sidewalk;
       offset=Math.max(offset,r/sine);
     }
     offset=Math.min(arm.length/2,offset+crossing.width/2+2);
-    return {street:arm.street,at:{x:center.x+arm.dx*offset,y:center.y+arm.dy*offset}};
+    // Close junctions form one intersection area; cross its outer arms, not the short internal link.
+    if(scene.roadMaskRef.kind==='street-network' && scene.crossings.some(other=>{
+      if(!other.junction || other===crossing)return false;
+      const dx=other.at.x-center.x,dy=other.at.y-center.y,d=dx*arm.dx+dy*arm.dy;
+      return d>1 && d<2*offset+crossing.width+4 && Math.abs(dx*arm.dy-dy*arm.dx)<1 && streetFrame(arm.street,other.at).distance<=1;
+    }))return [];
+    return [{street:arm.street,at:{x:center.x+arm.dx*offset,y:center.y+arm.dy*offset}}];
   });
 }
 export function crossingPolygons(scene:Scene,crossing:Crossing):Point[][]{

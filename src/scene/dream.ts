@@ -527,7 +527,7 @@ export function migrateDream(source:string,modules:DreamModules={}):string {
 
 export interface DreamSceneIdentity {sceneId:string;revisionId:string;sourceHash:string}
 function sceneFromWorld(world:DreamWorld,identity:DreamSceneIdentity):Scene {
-  if(!world.layout)fail("compileDreamScene requires world/road declarations",undefined,"E_WORLD");
+  if(!world.layout)fail("compileDreamScene requires a world declaration",undefined,"E_WORLD");
   const {origin,...layout}=world.layout;
   let scene:Scene;
   try {scene=parseScene({schemaVersion:1,...identity,...layout,routes:world.routes,objects:world.objects,streets:world.streets,surfaces:world.surfaces,markings:world.markings,behaviors:world.behaviors,flocks:world.flocks,sites:world.sites,crossings:world.crossings,sports:world.sports,interactionRules:world.interactionRules,economy:world.economy,provenance:{source:"handmade-fixture",notes:"Compiled Dream 2 mock world. No model calls."}});}

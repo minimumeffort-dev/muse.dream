@@ -1,8 +1,9 @@
 import marketR55 from './compatibility/r55-market.json';
+import cityR67 from './compatibility/r67-city.json';
 import type {Scene} from './schema';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=24;
+export const SAVE_SIMULATION_VERSION=25;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -59,7 +60,7 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY || hash===SHIFT_COMPATIBILITY || hash===SOCIAL_COMPATIBILITY || hash===SCHOOL_REPAIR_COMPATIBILITY || hash===BUSINESS_COMPATIBILITY || hash===MATCH_COMPATIBILITY);
+  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY || hash===SHIFT_COMPATIBILITY || hash===SOCIAL_COMPATIBILITY || hash===SCHOOL_REPAIR_COMPATIBILITY || hash===BUSINESS_COMPATIBILITY || hash===MATCH_COMPATIBILITY || hash===CITY_COMPATIBILITY);
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
@@ -85,6 +86,10 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+export const CITY_COMPATIBILITY='14dd5d35da484b860586a706311ca7c0adcfedbce87464b8414816cfe51ba6e7';
+/** r68 removes only the circuit and releases nineteen previously reserved furnishings. */
+export function preCityScene(scene:Scene):Scene{return {...scene,roadMaskRef:cityR67.roadMaskRef as Scene['roadMaskRef'],checkpoints:cityR67.checkpoints,regions:cityR67.regions as Scene['regions'],objects:scene.objects.filter(o=>!cityR67.addedObjects.includes(o.id))};}
+export function preCityCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preCityScene(scene),24,true,encode);}
 export const MATCH_COMPATIBILITY='b06274e07914b9b26b720ac81f155e6e6f51406adb84768a5a1c1ec01e49b082';
 /** r67 adds match rules; the previous complete physical world remains exact. */
 export function preMatchScene(scene:Scene):Scene{return {...scene,objects:scene.objects.map(o=>['pitch_goal_0','pitch_goal_1'].includes(o.id) && o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 ? {...o,spec:{...o.spec,parts:o.spec.parts.slice(0,17)}} : o),sports:scene.sports.map(s=>{const {match,netDepth,...old}=s;return old;})};}

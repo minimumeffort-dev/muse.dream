@@ -94,7 +94,6 @@ junction j84(at=[2000,9700]);
 junction airport_service_corner(at=[2800,8600]);
 junction airport_service_end(at=[2800,9700]);
 junction medical_interchange(at=[11200,5200]);
-road regional_ring(width=130,via=[j0,j1,j2,j3,j4,j5,j6,j7,j8,j9,j10,j11,j12,j13],style=street);
 street market_avenue(width=100,sidewalk=24,via=[j13,j14,j54,j15,j16,j50,j36,j17,j67,j18],cycle_width=20);
 street north_avenue(width=100,sidewalk=22,via=[j1,j19,j20,j21,j49,j35,j22,j66,j23,j78,j24],cycle_width=20);
 street south_avenue(width=100,sidewalk=22,via=[j12,j25,j60,j26,j27,j37,j28,j68,j29],cycle_width=20);
@@ -148,14 +147,6 @@ watercourse river_lake(level=0,depth=16,bank=38,color=#477f99,flow=[0,12],ends=o
 bridge north_bridge(from=[8700,2400],to=[9300,2400],width=240,arch=40,style=stone,rails=true);
 bridge market_bridge(from=[8700,4200],to=[9300,4200],width=240,arch=40,style=stone,rails=true);
 bridge south_bridge(from=[8955,6200],to=[9555,6200],width=240,arch=40,style=stone,rails=true);
-checkpoint ring_0(at=[2900,3000],dir=[1100,-2700],width=128);
-checkpoint ring_1(at=[5000,1200],dir=[3500,-300],width=128);
-checkpoint ring_2(at=[8150,2300],dir=[1400,2500],width=128);
-checkpoint ring_3(at=[8200,5300],dir=[200,2900],width=128);
-checkpoint ring_4(at=[8000,8600],dir=[-2000,2300],width=128);
-checkpoint ring_5(at=[4500,8800],dir=[-3500,-1300],width=128);
-checkpoint ring_6(at=[2200,6000],dir=[-700,-3400],width=128);
-checkpoint ring_7(at=[2300,4400],dir=[700,-3000],width=128);
 crossing cross_j15(street=market_avenue,at=[3800,4100],width=24,junction=true);
 crossing cross_j16(street=market_avenue,at=[5200,4200],width=24,junction=true);
 crossing cross_j17(street=market_avenue,at=[8200,4200],width=24,junction=true);
@@ -226,8 +217,6 @@ include habitat_4(module=habitat_4);
 include breakables(module=breakables);
 include street_life(module=street_life);
 include life(module=life);
-effect ice(kind=ice,points=[[7784.400989459487,1921.1853037863984],[7938.576815707252,2069.397815833469],[7990.248075573635,2022.1740834119346],[7829.782732421187,1867.8889867864568]]);
-effect boost(kind=boost,points=[[3815.718,8520.737],[3622.042,8400.872],[3660.776,8342.565],[3850.684,8460.096]]);
 
 // The two streets intersect between their original layout anchors.
 crossing repair_high_south(street=high_street,at=[5217.41935483871,6339.354838709678],width=24,junction=true);

@@ -4,6 +4,7 @@ import { bridgeCoordinates, bridgePolygon, polygonsOverlap, clipPolygon, type Br
 /** Shared sampled centerline: mask, road mesh, markings and map use identical geometry. */
 export function roadPoints(scene: Scene): Point[] {
   const ref = scene.roadMaskRef;
+  if(ref.kind==='street-network')return [];
   if (ref.kind === "generated-spline-loop") {
     const points = ref.params.points, result: Point[] = [];
     for (let i = 0;i < points.length;i++) {

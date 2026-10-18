@@ -1,3 +1,4 @@
+import {saveCompatibilitySource} from './fixtures/pre-city-world';
 import {preMatchState,preBusinessState,preBusinessEconomy} from './pre-business-state';
 import {afterAll,it,expect} from 'vitest';
 import {walkingHeight} from '../src/scene/interiors';
@@ -11,7 +12,7 @@ import passengerR56 from './fixtures/save-v9-r56.json';
 import lifeR56 from './fixtures/save-v9-r56-life.json';
 import source from '../docs/examples/market-work.dream?raw';
 import deliverySource from '../docs/examples/market-delivery.dream?raw';
-import {createWorldScene} from '../src/scene/world-fixture';
+import {createWorldScene} from './fixtures/pre-city-world';
 import {compileDreamScene} from '../src/scene/dream';
 import {buildMaskForScene} from '../src/scene/fixture';
 import {buildPaperMask} from '../src/sim/mask';
@@ -21,7 +22,7 @@ import {stepCommerce,checkEconomyState} from '../src/sim/commerce';
 import {encodeSave,decodeSave} from '../src/sim/save';
 import {cargoReviewStart} from '../src/game/review-start';
 import {gameSave} from '../src/game/save';
-import {MATCH_COMPATIBILITY,BUSINESS_COMPATIBILITY,SCHOOL_REPAIR_COMPATIBILITY,SOCIAL_COMPATIBILITY,SHIFT_COMPATIBILITY,HOURS_COMPATIBILITY,preHoursCompatibilitySource,SEATING_COMPATIBILITY,preSeatingCompatibilitySource,KITCHEN_COMPATIBILITY,preKitchenCompatibilitySource,MEAL_COMPATIBILITY,PROGRESS_COMPATIBILITY,preProgressCompatibilitySource,RECIPE_COMPATIBILITY,preRecipeScene,preRecipeCompatibilitySource,EGRESS_COMPATIBILITY,preEgressCompatibilitySource,INTERIOR_COMPATIBILITY,preInteriorScene,preInteriorCompatibilitySource,saveCompatibilitySource,preCommerceCompatibilitySource,sha256,registeredLegacySource,supportsPreCommerceUpgrade,preDeliveryCompatibilitySource,DELIVERY_COMPATIBILITY,PARKING_COMPATIBILITY,REPAIR_COMPATIBILITY,SUPPLY_COMPATIBILITY,COURIER_COMPATIBILITY,preCourierScene,preCourierCompatibilitySource,NATURAL_COMPATIBILITY,PLANT_COMPATIBILITY,preFinishScene,preFinishCompatibilitySource,prePlantScene,prePlantCompatibilitySource,VERGE_COMPATIBILITY,preVergeScene,POOL_COMPATIBILITY,preVergeCompatibilitySource,prePoolCompatibilitySource,NETWORK_COMPATIBILITY,preNetworkCompatibilitySource,preSupplyCompatibilitySource,preRepairCompatibilitySource,preParkingScene,preParkingCompatibilitySource} from '../src/scene/save-compatibility';
+import {MATCH_COMPATIBILITY,BUSINESS_COMPATIBILITY,SCHOOL_REPAIR_COMPATIBILITY,SOCIAL_COMPATIBILITY,SHIFT_COMPATIBILITY,HOURS_COMPATIBILITY,preHoursCompatibilitySource,SEATING_COMPATIBILITY,preSeatingCompatibilitySource,KITCHEN_COMPATIBILITY,preKitchenCompatibilitySource,MEAL_COMPATIBILITY,PROGRESS_COMPATIBILITY,preProgressCompatibilitySource,RECIPE_COMPATIBILITY,preRecipeScene,preRecipeCompatibilitySource,EGRESS_COMPATIBILITY,preEgressCompatibilitySource,INTERIOR_COMPATIBILITY,preInteriorScene,preInteriorCompatibilitySource,preCommerceCompatibilitySource,sha256,registeredLegacySource,supportsPreCommerceUpgrade,preDeliveryCompatibilitySource,DELIVERY_COMPATIBILITY,PARKING_COMPATIBILITY,REPAIR_COMPATIBILITY,SUPPLY_COMPATIBILITY,COURIER_COMPATIBILITY,preCourierScene,preCourierCompatibilitySource,NATURAL_COMPATIBILITY,PLANT_COMPATIBILITY,preFinishScene,preFinishCompatibilitySource,prePlantScene,prePlantCompatibilitySource,VERGE_COMPATIBILITY,preVergeScene,POOL_COMPATIBILITY,preVergeCompatibilitySource,prePoolCompatibilitySource,NETWORK_COMPATIBILITY,preNetworkCompatibilitySource,preSupplyCompatibilitySource,preRepairCompatibilitySource,preParkingScene,preParkingCompatibilitySource} from '../src/scene/save-compatibility';
 
 // Historical saves share accepted geometry, while every test owns its state and storage.
 let accepted:Scene|undefined,acceptedSnapshot:string|undefined;
@@ -299,7 +300,7 @@ it('preserves every live and historical fingerprint byte through a bounded start
   const source=c[name] as (input:typeof scene,encoder?:typeof encode)=>string;
   expect(source(scene,encode)===source(scene),name).toBe(true);
  }
- expect(await c.sha256(c.saveCompatibilitySource(scene,encode))).toBe(c.MATCH_COMPATIBILITY);
+ expect(await c.sha256(saveCompatibilitySource(scene,encode))).toBe(c.MATCH_COMPATIBILITY);
  const parking=c.preParkingScene(scene);
  for(const version of [1,2])expect(c.preCommerceCompatibilitySource(parking,version,encode)===c.preCommerceCompatibilitySource(parking,version)).toBe(true);
  expect(c.preDeliveryCompatibilitySource(parking,encode)===c.preDeliveryCompatibilitySource(parking)).toBe(true);

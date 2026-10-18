@@ -9,6 +9,7 @@ type RoadSection=RoadFrame;
 
 /** Keep road, curb joints and painted dash boundaries on the same cross-sections. */
 export function roadSections(doc: Scene): RoadSection[] {
+  if(doc.roadMaskRef.kind==='street-network')return [];
   const points = roadFrames(doc), n = points.length - 1, distances = points.map(p => p.distance);
   const length = distances[n]!, cuts = distances.map(distance => ({ distance, priority: 0 }));
   for (let d = 14; d < length; d += 14) cuts.push({ distance: d, priority: 1 });

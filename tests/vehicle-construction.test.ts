@@ -85,5 +85,5 @@ it('retains parked bicycle cranks for bounded activation inside the existing liv
   expect(hasAnimatedJoints(spec('Meadow bicycle'))).toBe(true);
   const count=scene.objects.filter(o=>!o.parked && hasAnimatedJoints(o.spec)).length+Number(scene.objects.some(o=>o.parked && hasAnimatedJoints(o.spec)))+Number(hasAnimatedJoints(scene.player))+1;
   expect(count).toBeLessThanOrEqual(MAX_ANIMATED_ASSEMBLIES);
-  expect(scene.objects.length).toBe(1700);expect(scene.checkpoints).toHaveLength(8);
+  expect(scene.objects.length).toBe(1719);expect(scene.checkpoints).toHaveLength(0);
 });

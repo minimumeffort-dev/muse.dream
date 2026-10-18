@@ -97,8 +97,8 @@ pipeline depends on.
   outlines into physics bodies, no mixing physics engines.
 - Scenes are versioned documents: scene/revision IDs, source hash,
   canonical dimensions, coordinate system, road-mask reference (legacy rounded
-  rectangle or a bounded closed curve shared by the mask, mesh and map), safe
-  spawn, ordered checkpoint segments, stable region IDs, bounded rules,
+  rectangle, a bounded closed curve or an accepted street-only network shared
+  by the mask, mesh and map), safe spawn, optional ordered circuit checkpoints, stable region IDs, bounded rules,
   unresolved labels, provenance. Appearance, collision, and behavior stay
   separate. Keep source-to-canonical transforms with every scan.
 - Mechanics live in ordinary tested code: ICE reduces lateral grip and

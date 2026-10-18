@@ -79,7 +79,7 @@ describe('street and crossing detail',()=>{
     expect(faces(stops,421,380)).toBe(0);
     expect(faces(stops,379,380)).toBeGreaterThan(0);
     // A point inside one stripe, away from its diagonal, gets one surface hit.
-    expect(faces(zebras,399.3,360.4)).toBe(1);
+    expect(faces(zebras,399.3,358.4)).toBe(1);
     stops.traverse(n=>{if(n instanceof Mesh){const p=n.geometry.getAttribute('position');for(let i=0;i<p.count;i++)expect(crossingPolygons(scene,crossing).some(poly=>onPolygon(poly,p.getX(i)+480,p.getZ(i)+360,-.01))).toBe(false);}});
   });
 });

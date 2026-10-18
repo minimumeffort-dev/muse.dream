@@ -174,3 +174,6 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    roster shares one squad across grounds. keeper/keeper_object are football-only.
    net_depth describes the target-local triangular side/back net. Tactics,
    possession, scoring and input are bounded engine rules, never statements/code. *)
+
+(* Complete worlds: one world; connected streets may omit road/checkpoint.
+   An optional circuit requires one road and 2..64 checkpoints. *)

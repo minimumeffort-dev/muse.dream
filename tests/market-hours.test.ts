@@ -1,3 +1,4 @@
+import {saveCompatibilitySource} from './fixtures/pre-city-world';
 import {preBusinessState} from './pre-business-state';
 import {it,expect} from 'vitest';
 import source from '../docs/examples/market-hours.dream?raw';
@@ -13,8 +14,8 @@ import {buildMaskForScene} from '../src/scene/fixture';
 import {buildPaperMask} from '../src/sim/mask';
 import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
-import {createWorldScene} from '../src/scene/world-fixture';
-import {MATCH_COMPATIBILITY,BUSINESS_COMPATIBILITY,SCHOOL_REPAIR_COMPATIBILITY,SOCIAL_COMPATIBILITY,SHIFT_COMPATIBILITY,HOURS_COMPATIBILITY,SEATING_COMPATIBILITY,preHoursCompatibilitySource,saveCompatibilitySource,sha256} from '../src/scene/save-compatibility';
+import {createWorldScene} from './fixtures/pre-city-world';
+import {MATCH_COMPATIBILITY,BUSINESS_COMPATIBILITY,SCHOOL_REPAIR_COMPATIBILITY,SOCIAL_COMPATIBILITY,SHIFT_COMPATIBILITY,HOURS_COMPATIBILITY,SEATING_COMPATIBILITY,preHoursCompatibilitySource,sha256} from '../src/scene/save-compatibility';
 
 const scene=compileDreamScene(source,{sceneId:'hours',revisionId:'r1',sourceHash:'hours'});
 const start=(doc=scene):CarState=>({...createCarAtSpawn(doc),control:{kind:'foot'},x:580,y:750,elevation:0,surface:'paper',vehicles:[{id:null,x:525,y:609,elevation:0,headingRad:0,distance:0}]});

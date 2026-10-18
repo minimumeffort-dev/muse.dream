@@ -1,6 +1,6 @@
 import {it,expect} from 'vitest';
 import legacy from './fixtures/save-v15-r66-business.json?raw';
-import {createWorldScene} from '../src/scene/world-fixture';
+import {createWorldScene} from './fixtures/pre-city-world';
 import {MATCH_COMPATIBILITY,BUSINESS_COMPATIBILITY,preMatchScene} from '../src/scene/save-compatibility';
 import {buildMaskForScene} from '../src/scene/fixture';
 import {buildPaperMask} from '../src/sim/mask';

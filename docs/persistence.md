@@ -376,3 +376,16 @@ scores, round, result and bounded tactics/action clocks. Shared rosters keep one
 visible venue and at most one playing match. Restore cancels held input and shot
 charge; it does not take the ball away from its saved owner. R releases current
 possession while keeping progress; Start over creates new ready matches.
+
+## Street-only city, r68
+
+Save format 16 now pins simulation 25. The registered update verifies the exact
+r67 physical world before loading its state. Existing people, vehicles, businesses,
+work, damage, sports results and world clocks survive. Pedestrian node references
+are mapped to the new pavement graph while valid positions, random state and clocks
+remain saved. Walkers on a removed internal zebra move to nearby clear pavement;
+obsolete staff, repair, courier, meal and shared paths reroute to their existing
+destinations. Commitments, supplies and wages remain reserved. The retired circuit checkpoint index becomes zero and its pad
+cooldowns are removed. A newly occupied static footprint uses the existing safe
+player recovery. The old format-16 slot stays intact until and after a successful
+write to the new fingerprint slot. Earlier upgrades still run through r67 first.

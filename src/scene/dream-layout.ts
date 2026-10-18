@@ -58,8 +58,8 @@ export function compileLayout(program:Program,assemblies:Map<string,ObjectDslV2>
   program={...program,layout:program.layout.filter(n=>!['street','surface','marking','behavior','site','crossing','junction','furnish','flock','scenario','sport','rule','economy'].includes(n.kind))};
   if(!program.layout.length)return undefined;
   const worlds=program.layout.filter(n=>n.kind==="world"),roads=program.layout.filter(n=>n.kind==="road");
-  if(worlds.length!==1 || roads.length!==1)fail("a full world needs exactly one world and one road declaration",program.layout[0]!.token,"E_WORLD");
-  const world=worlds[0]!,road=roads[0]!,daylightNodes=program.layout.filter(n=>n.kind==="daylight");
+  if(worlds.length!==1 || roads.length>1)fail("a full world needs exactly one world and at most one circuit road declaration",program.layout[0]!.token,"E_WORLD");
+  const world=worlds[0]!,road=roads[0],daylightNodes=program.layout.filter(n=>n.kind==="daylight");
   if(daylightNodes.length>1)fail("only one daylight declaration is allowed",daylightNodes[1]!.token,"E_WORLD");
   const num=(node:DreamNode,key:string)=>evaluate(exprField(node,key));
   const vec=(node:DreamNode,key:string)=>listField(node,key).map(evaluate);
@@ -94,7 +94,7 @@ export function compileLayout(program:Program,assemblies:Map<string,ObjectDslV2>
     ...(world.fields.has("damage_pool") ? {damagePool:world.fields.get("damage_pool") as boolean} : {}),
     ...(voxelNode ? {voxelWorld:validated(voxelWorldSchema,{objectCell:num(voxelNode,'object_cell'),groundCell:num(voxelNode,'ground_cell'),heightStep:num(voxelNode,'height_step')},voxelNode)} : {}),
     canonical:validated(shape.canonical,{width:size[0],height:size[1],coordinateSystem:"top-left-x-right-y-down-px"},world),
-    roadMaskRef:validated(shape.roadMaskRef,{kind:"generated-spline-loop",params:{points:points(road),roadWidth:num(road,"width"),...(road.fields.has("style") ? {style:wordField(road,"style")} : {})}},road),
+    roadMaskRef:road ? validated(shape.roadMaskRef,{kind:"generated-spline-loop",params:{points:points(road),roadWidth:num(road,"width"),...(road.fields.has("style") ? {style:wordField(road,"style")} : {})}},road) : {kind:'street-network',params:{roadWidth:0,style:'street'}},
     spawn:validated(shape.spawn,{...spawn,headingRad:num(world,"heading_deg")*Math.PI/180},world),
     ...(daylightNodes[0] ? {daylight:validated(daylightSchema,{cycleSeconds:num(daylightNodes[0],"cycle_s"),startHour:num(daylightNodes[0],"start_hour")},daylightNodes[0])} : {}),
     terrain,checkpoints:validated(shape.checkpoints,checkpoints,world),regions,unresolvedLabels,...(player ? {player} : {}),

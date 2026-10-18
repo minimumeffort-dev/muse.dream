@@ -1,6 +1,6 @@
 import {streetPolygons} from './streets';
 import { roadPoints } from "./road";
-import { buildLoopMask, buildRibbonMask, paintPolygons, type RasterMask } from "../sim/mask";
+import { buildLoopMask, buildRibbonMask, paintPolygons, RasterMask } from "../sim/mask";
 import { parseScene, type Scene } from "./schema";
 import { mockCastle, mockMushroom, mockMushroomRover } from "./mock-objects";
 
@@ -122,7 +122,7 @@ export function createFixtureScene(): Scene {
 }
 
 export function buildMaskForScene(scene: Scene): RasterMask {
-  const ref=scene.roadMaskRef,mask=ref.kind==='generated-spline-loop' ? buildRibbonMask(scene.canonical.width,scene.canonical.height,roadPoints(scene),ref.params.roadWidth) : buildLoopMask(scene.canonical.width,scene.canonical.height,ref.params.outer,ref.params.roadWidth);
+  const ref=scene.roadMaskRef,mask=ref.kind==='street-network' ? new RasterMask(scene.canonical.width,scene.canonical.height,undefined,4) : ref.kind==='generated-spline-loop' ? buildRibbonMask(scene.canonical.width,scene.canonical.height,roadPoints(scene),ref.params.roadWidth) : buildLoopMask(scene.canonical.width,scene.canonical.height,ref.params.outer,ref.params.roadWidth);
   // City streets participate in the same accepted road network, including spawn/checkpoint reachability.
   paintPolygons(mask,streetPolygons(scene.streets,'riding'));
   return mask;

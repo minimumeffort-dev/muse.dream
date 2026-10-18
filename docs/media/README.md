@@ -2,6 +2,23 @@
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
+## Street-only city, r68
+
+The live circuit, its checkpoints, track effects and derived zebras are removed.
+`city-plan.svg` was regenerated from the compiled streets and entrances.
+`driving.gif` and `driving.mp4` use 210 consecutive rendered 2400 × 1350 frames,
+at 30 frames per simulation second. `world.jpg`, `voxel-world.jpg` and
+`town-center.jpg` share the actual first frame. The GIF is 960 × 540 and the
+HD video 1600 × 900. They are offline exports, not live performance measurements.
+Native geometry exports in the street evidence show the merged market zebra and
+the removal of internal crossings between close junctions. The earlier civic
+review image is retained as the before comparison.
+
+Existing asset, sports, vehicle, nature and commerce captures still describe
+their local mechanics and construction. Earlier city recordings below are
+historical layout references. No new asset template required an atlas refresh.
+[Street checks and media hashes](../evidence/city-streets/verification.md).
+
 ## Food and bicycle symbols
 
 `symbols.png` is a native browser capture of the shared bicycle outline and the

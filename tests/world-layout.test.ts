@@ -1,3 +1,4 @@
+import {preCityScene} from '../src/scene/save-compatibility';
 import {describe,it,expect} from 'vitest';
 import {Mesh,Box3,Vector3,Euler,Quaternion,Matrix4} from 'three';
 import {buildStreets} from '../src/game/streets';
@@ -116,10 +117,11 @@ describe('connected river city',()=>{
   for(let i=0;i<600;i++)state=stepInteractive(state,{throttle:1,steer:0},1/120,world) as typeof state;
   expect(state.y).toBeGreaterThan(4350);expect(state.elevation).toBeCloseTo(-2);expect(state.grounded).toBe(true);
  });
- it('drives the entire new ring through all eight ordered checkpoints with clear ice and boost footprints',()=>{
-  const world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11};
-  const frames=roadFrames(scene),path=roadPoints(scene),n=path.length-1,first=frames[0]!,next=frames[1]!;
-  let car={...createCarAtSpawn(scene),x:first.x,y:first.y,elevation:drivingHeight(scene.terrain,first.x,first.y),headingRad:Math.atan2(next.y-first.y,next.x-first.x)},cursor=0;const seen=new Set<number>();
+ it('retains the r67 circuit as an explicit migration regression with all checkpoint and effect rules',()=>{
+  const prior=preCityScene(scene);
+  const world:World={scene:prior,roadMask:buildMaskForScene(prior),driveMask:buildPaperMask(prior.canonical.width,prior.canonical.height),carRadius:11};
+  const frames=roadFrames(prior),path=roadPoints(prior),n=path.length-1,first=frames[0]!,next=frames[1]!;
+  let car={...createCarAtSpawn(prior),x:first.x,y:first.y,elevation:drivingHeight(prior.terrain,first.x,first.y),headingRad:Math.atan2(next.y-first.y,next.x-first.x)},cursor=0;const seen=new Set<number>();
   for(let i=0;i<28000 && !car.lap;i++){
    let best=Infinity,old=cursor;
    for(let j=-5;j<25;j++){const index=(old+j+n)%n,p=path[index]!,distance=Math.hypot(car.x-p.x,car.y-p.y);if(distance<best){best=distance;cursor=index;}}
@@ -128,8 +130,8 @@ describe('connected river city',()=>{
    car=stepCar(car,{throttle:Math.hypot(car.vx,car.vy)>215 ? -1:1,steer:Math.max(-1,Math.min(1,error*2))},1/120,world);seen.add(car.nextCheckpoint);
   }
   expect(car.lap).toBe(1);expect(seen.size).toBe(8);expect(distanceToRoad(path,car.x,car.y)).toBeLessThan(65);
-  expect(scene.regions.map(r=>r.rule.effect).sort()).toEqual(['BOOST','ICE']);
-  for(const region of scene.regions)expect(streetPolygons(scene.streets,'reserved').some(p=>polygonsOverlap(p,region.polygon)),`${region.id}: effect overlaps an urban junction or pavement`).toBe(false);
-  for(const region of scene.regions)for(let i=0;i<region.polygon.length;i++){const a=region.polygon[i]!,b=region.polygon[(i+1)%region.polygon.length]!;for(let j=0;j<=10;j++)expect(world.roadMask.footprintClear(a.x+(b.x-a.x)*j/10,a.y+(b.y-a.y)*j/10,20)).toBe(true);}
+  expect(prior.regions.map(r=>r.rule.effect).sort()).toEqual(['BOOST','ICE']);
+  for(const region of prior.regions)expect(streetPolygons(prior.streets,'reserved').some(p=>polygonsOverlap(p,region.polygon)),`${region.id}: effect overlaps an urban junction or pavement`).toBe(false);
+  for(const region of prior.regions)for(let i=0;i<region.polygon.length;i++){const a=region.polygon[i]!,b=region.polygon[(i+1)%region.polygon.length]!;for(let j=0;j<=10;j++)expect(world.roadMask.footprintClear(a.x+(b.x-a.x)*j/10,a.y+(b.y-a.y)*j/10,20)).toBe(true);}
  });
 });

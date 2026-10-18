@@ -10,7 +10,7 @@ for that future pipeline. The engine compiles validated scene/DSL data
 into Three.js and tested mechanics; model output remains data-only.
 
 Current state: **mock open world** — a 14000 x 11000 handmade landscape with a
-winding eight-checkpoint circuit, composed assets, heightfield driving/jumps,
+connected street network without a circuit or checkpoints, composed assets, heightfield driving/jumps,
 ICE/BOOST, off-road collisions, fixed-angle camera, walking, direct vehicle controls,
 a rebuilt river city with connected entrances, schools, two medical destinations, a regional airport, markets, workplaces, five buses, tram, regional rail, cycle tracks and sports grounds, ambient wildlife, layered vegetation and instanced scenery. Walking supports running, jumping, low contact steps and surface swimming. F prefers dry exits, permits water disembarking and boards nearby on foot. Bicycles,
 skateboards, scooters, boats and planes are player-controlled; public transport retains autonomous routes and exposes passenger seats.
@@ -267,7 +267,7 @@ implied pedestrian travel, fouls or competition rules. See `docs/dream/sports.md
 
 City connections are Dream data: file-local `junction` references share road/street coordinates; `site` attaches an object-local entrance to a named sidewalk; `crossing(junction=true)` supplies crossings on all street arms; route `stop` ties a wait to a platform/destination. Street/tram NPCs use existing carriageways; walking routes stay on the pedestrian network. Preserve the 256-site, 64-crossing, 128-local-junction and 16-stops-per-route bounds. The published map is generated with `node scripts/render-city-map.mjs` from the accepted scene, never drawn independently. Reserve entrances and civic grounds before placing housing. New architecture needs attached roof/façade/porch checks and inspected multi-angle renders.
 
-The pre-redesign r24 snapshot in `tests/fixtures/legacy-world.json` is an explicit engine regression fixture. It preserves timber bridge, older terrain and interaction cases without constraining the live layout. Live city acceptance, exact joins, pedestrian reachability, architecture attachment, transit and the replacement racing loop are tested separately.
+The pre-redesign r24 snapshot in `tests/fixtures/legacy-world.json` is an explicit engine regression fixture. It preserves timber bridge, older terrain and interaction cases without constraining the live layout. Live city acceptance, exact joins, pedestrian reachability, architecture attachment, transit and the street-only live world are tested separately.
 
 ## Build populations and networks
 
@@ -294,7 +294,7 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 ## Saved simulation state
 
 Current save format 16 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 24. Historical formats retain their registered projections.
+at simulation version 25. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -683,3 +683,5 @@ section cycling, contained Tab/Shift+Tab focus and Escape back. Update selection
 synchronously before activation. Keep +/−/0 camera keys and browser modifier
 shortcuts. Menu focus releases held movement/shot inputs without cancelling an
 already submitted simulation request. Keep coin icons accessible as coins.
+
+Street-only worlds omit `road` and `checkpoint`; their driving mask uses accepted street riding footprints, with all street components connected to spawn. Optional circuits retain legacy checkpoint validation. The r68 city migration checks the exact r67 projection before rebasing pedestrian node references and retiring checkpoint/pad state; preserve lives, commerce, matches, physical changes and the old slot. Parallel crossing paint shares a world-aligned stripe phase over merged envelopes; keep the accepted pedestrian geometry and paint clearance.

@@ -72,7 +72,7 @@ The local gallery has four viewing angles and fixed animation phases for checkin
 
 ## What's implemented
 
-The entire playable mock is Dream 2 source, including its player, terrain, circuit and placed objects. Supported behaviors run in the engine's tested simulation. The separate [Dream Lab](https://musedream.vercel.app/lab/) now exercises prompt → proposed Dream → validated logical scenario → mock agents → local episode records. Its interpreter is a bounded town template, and its agent travel is a logical graph. It does not yet change or control the playable city. Real prompt/sketch interpretation, photo capture and the rescan workflow remain unconnected.
+The entire playable mock is Dream 2 source, including its player, terrain, street network and placed objects. Supported behaviors run in the engine's tested simulation. The separate [Dream Lab](https://musedream.vercel.app/lab/) now exercises prompt → proposed Dream → validated logical scenario → mock agents → local episode records. Its interpreter is a bounded town template, and its agent travel is a logical graph. It does not yet change or control the playable city. Real prompt/sketch interpretation, photo capture and the rescan workflow remain unconnected.
 
 ## Contract and compatibility
 

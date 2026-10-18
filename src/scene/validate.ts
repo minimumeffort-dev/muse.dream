@@ -37,6 +37,7 @@ export interface SceneProblem {
     | "spawn-not-clear"
     | "checkpoint-not-on-road"
     | "checkpoint-unreachable"
+    | "street-unreachable"
     | "region-off-road"
     | "region-out-of-bounds"
     | "duplicate-id"
@@ -202,6 +203,10 @@ export function validateScenePlayability(
     }
   }
 
+  if(scene.roadMaskRef.kind==='street-network')for(const street of scene.streets){
+    if(street.points.some(p=>!reachedAt(p.x,p.y)))problems.push({code:'street-unreachable',message:`street "${street.id}" has no route from spawn with full car clearance`});
+  }
+
   for (const region of scene.regions) {
     for (const p of region.polygon) {
       if (p.x < 0 || p.y < 0 || p.x > width || p.y > height) {
@@ -284,13 +289,13 @@ export function validateScenePlayability(
     }));
     if(contact)problems.push({code:'route-not-clear',message:`street "${street.id}" is obstructed near ${Math.round(contact.x)},${Math.round(contact.y)}`});
   }
-  // Every street component must connect to the driving loop, including diagonal junctions.
+  // Every street component connects to the circuit or the street-only spawn.
   const pending=new Set(scene.streets),connected:Point[][]=[];
   let changed=true;
   while(changed){changed=false;for(const street of pending){const polygons=streetPolygons([street]);
-    if(polygons.some(p=>path.some(v=>pointInPolygon(v.x,v.y,p) || distanceToPolygon(v.x,v.y,p)<=halfRoad) || connected.some(c=>polygonsOverlap(p,c)))){pending.delete(street);connected.push(...polygons);changed=true;}
+    if(polygons.some(p=>scene.roadMaskRef.kind==='street-network' && pointInPolygon(scene.spawn.x,scene.spawn.y,p) || path.some(v=>pointInPolygon(v.x,v.y,p) || distanceToPolygon(v.x,v.y,p)<=halfRoad) || connected.some(c=>polygonsOverlap(p,c)))){pending.delete(street);connected.push(...polygons);changed=true;}
   }}
-  for(const street of pending)problems.push({code:'route-not-clear',message:`street "${street.id}" has no connection to the driving loop`});
+  for(const street of pending)problems.push({code:'route-not-clear',message:`street "${street.id}" has no connection to the driving network`});
   const groundRoutes=scene.routes.filter(r=>["rail","path","air"].includes(r.kind)).map(route=>({route,...routeInfrastructure(route)}));
   for(const route of scene.routes.filter(r=>r.kind==="path" && r.width!==undefined)){
     let obstruction:string|undefined;

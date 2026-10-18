@@ -29,7 +29,7 @@ it('embeds narrow tram heads in the street, keeps the route continuous and leave
   const y=360+side*14.35/2,road=hits(roads,x,y)[0]!,head=hits(root,x,y)[0]!;
   expect(head.point.y-road.point.y).toBeCloseTo(.03,4);
   expect(hits(root,x,y+.45)[0]!.point.y-road.point.y).toBeCloseTo(.02,4);
-  expect(hits(root,x,y+.7)[0]!.point.y).toBeCloseTo(1.86,4);
+  expect(hits(root,x,y-.7)[0]!.point.y).toBeCloseTo(1.86,4);
  }
  // Rail geometry lives in ordinary streamed street chunks, not resident route rigs.
  expect(buildRoutes(scene).children).toHaveLength(0);
@@ -39,7 +39,7 @@ it('embeds narrow tram heads in the street, keeps the route continuous and leave
   expect(hits(heads,x,360+side*7.175+.31)).toHaveLength(0);
   expect(hits(grooves,x,360+side*7.175+.45).length).toBeGreaterThan(0);
  }
- expect(hits(root,480,360)[0]!.point.y).toBeCloseTo(1.86,4);
+ expect(hits(root,480,358.4)[0]!.point.y).toBeCloseTo(1.86,4);
 });
 
 it.each(['stone','timber'] as const)('fits %s bridge approaches and both independently built voxel chunks',style=>{

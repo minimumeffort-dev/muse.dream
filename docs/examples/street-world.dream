@@ -1,0 +1,12 @@
+dream 2;
+material red(style=toon,colors=[#b85a44,#b85a44]);
+object car(label="Town car"){
+  measure(kind=car,axis=x,meters=4);
+  body(interaction=solid,radius=11,height=15);
+  part bodywork(shape=box,material=red,at=[0,8,0],size=[40,12,18]);
+}
+world(size=[1600,1200],spawn=square,heading_deg=0,player=car);
+junction square(at=[800,500]);
+street main(width=80,sidewalk=24,points=[[200,500],[1400,500]]);
+street north(width=80,sidewalk=24,points=[[800,200],[800,500]]);
+crossing square_access(street=main,at=[800,500],width=24,junction=true);

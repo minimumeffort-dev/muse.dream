@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {bicycleSymbol} from './bicycle-symbol';
+import {crossingPaint} from './crossing-paint';
 import {overlaps,type RenderRegion} from './render-region';
 import type {Scene,Point} from '../scene/schema';
 import {streetPolygons,streetSidewalks,streetCycleTracks,streetCircuitCrossings,markingPolygons,onPolygon} from '../scene/streets';
@@ -112,16 +113,13 @@ function* streetRecipeSteps(scene:Scene):Generator<void,{layers:StreetRecipe[];g
     }
   }
   for(const crossing of scene.crossings)for(const {street,at} of crossingLanes(scene,crossing)){
-    const frame=streetFrame(street,at),half=street.width/2+(street.cycleWidth ? street.cycleWidth+6 : 0);
+    const frame=streetFrame(street,at);
     for(const sign of [-1,1]){
       const along=sign*(crossing.width/2+9),side=-sign;
       stopLines.push(...markingPolygons({id:crossing.id,color:'#eee8d9',closed:false,width:2,points:[3,street.width/2-4].map(across=>({x:frame.x+frame.dx*along-frame.dy*across*side,y:frame.y+frame.dy*along+frame.dx*across*side}))}));
     }
-    for(let offset=-half+2;offset<half;offset+=7){
-      const x=frame.x-frame.dy*offset,y=frame.y+frame.dx*offset;
-      crossings.push(...markingPolygons({id:crossing.id,color:'#eee8d9',closed:false,width:3,points:[{x:x-frame.dx*crossing.width/2,y:y-frame.dy*crossing.width/2},{x:x+frame.dx*crossing.width/2,y:y+frame.dy*crossing.width/2}]}));
-    }
   }
+  crossings.push(...crossingPaint(scene).polygons);
   yield* add(paint(unionPolygons(crossings)),'#eee8d9',1.86,'pedestrian-crossings');
   yield* add(paint(unionPolygons(subtractPolygons(stopLines,crossingClearance))),'#eee8d9',1.86,'crossing-stop-lines');
   const markings=new Map<string,Point[][]>();

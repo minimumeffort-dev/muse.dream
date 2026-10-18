@@ -193,7 +193,7 @@ describe("whole-world authoring boundary",()=>{
     expect(result.ok).toBe(false);if(!result.ok)expect(result.diagnostics[0]!.code).toBe("E_SCENE_SPAWN_NOT_CLEAR");
     expect(accepted.spawn).toEqual({x:525,y:609,headingRad:0});
     expect(()=>compileDream(fullWorld)).toThrow("compileDreamWorld");
-    expect(()=>compileDreamScene(object(part),identity)).toThrow("world/road");
+    expect(()=>compileDreamScene(object(part),identity)).toThrow("world declaration");
   });
   it.each([
     fullWorld.replace('size=[960,900]','size=[9000,720]'),

@@ -1,0 +1,22 @@
+{
+  "save": {
+    "characters": 69789,
+    "compatibilityHash": "14dd5d35da484b860586a706311ca7c0adcfedbce87464b8414816cfe51ba6e7",
+    "known": [],
+    "ms": 1.2999999523162842,
+    "restored": true,
+    "review": true,
+    "saved": true,
+    "sourceHash": "fc58cce16b786720be6815c5f9eac9f1f11a69491b10701c11a5ce69e1accde6",
+    "status": "Saved on this device.",
+    "timeS": 83.88333333334616
+  },
+  "visiblePocket": "2  · Fullness 44% · Own: Station supplies · 3 ",
+  "world": {
+    "birds": 256,
+    "checkpoints": 0,
+    "height": 11000,
+    "objects": 1719,
+    "width": 14000
+  }
+}

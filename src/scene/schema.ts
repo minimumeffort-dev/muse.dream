@@ -131,6 +131,7 @@ export const sceneSchema = z.object({
     coordinateSystem: z.literal("top-left-x-right-y-down-px"),
   }),
   roadMaskRef: z.discriminatedUnion("kind", [
+    z.object({kind:z.literal('street-network'),params:z.object({roadWidth:z.literal(0),style:z.literal('street')}).strict()}).strict(),
     z.object({
     kind: z.literal("generated-rounded-rect-loop"),
     params: z.object({
@@ -177,7 +178,7 @@ export const sceneSchema = z.object({
     .refine(spec=>!spec || spec.dslVersion!==2 || !spec.contacts && !spec.rideable && !spec.emitter && !spec.lamp && !isReactive(spec),
       {message:"player uses its driving cylinder; contacts, rideable seats, lamps and emitters belong on world objects"}),
   /** Ordered: index 0 is start/finish; laps require 1..n-1 in order first. */
-  checkpoints: z.array(checkpointSchema).min(2).max(64),
+  checkpoints: z.array(checkpointSchema).max(64),
   regions: z.array(regionSchema).max(128),
   objects: z.array(sceneObjectSchema).max(4096),
   /** Labels read on paper that no supported effect claims. Never executed. */
@@ -189,6 +190,8 @@ export const sceneSchema = z.object({
     notes: z.string(),
   }),
 }).superRefine((scene,ctx)=> {
+  if(scene.roadMaskRef.kind==='street-network' ? scene.checkpoints.length!==0 || !scene.streets.length : scene.checkpoints.length<2)
+    ctx.addIssue({code:'custom',path:['checkpoints'],message:'street-only worlds need streets and no checkpoints; a circuit needs 2..64 checkpoints'});
   for(const message of seatingProblems(scene))ctx.addIssue({code:'custom',path:['objects'],message});
   for(const message of economyProblems(scene))ctx.addIssue({code:'custom',path:['economy'],message});
   for(const message of sportProblems(scene))ctx.addIssue({code:'custom',path:['sports'],message});

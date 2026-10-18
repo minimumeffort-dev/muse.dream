@@ -160,7 +160,9 @@ humanoid fitting, occupancy and animation add no actor, rig or physics budgets.
 Broken furniture releases claims; repairs restore the same seats.
 
 ## world
-For a full world emit exactly one world and one road, and 2..64 ordered checkpoints.
+For a full world emit exactly one world. For a city, use connected street declarations
+and omit road and checkpoint entirely. A circuit uses exactly one road and 2..64
+ordered checkpoints; do not add a decorative circuit to a street-only world.
 world size positive integers <=16384. Host supplies identity, source hash/provenance.
 Player is an object ID with a solid body, no foundation/contacts/seat/emitter/impact/break zones.
 Road: 6..64 cyclic anchors, adjacent distances>8, width 40..240. Keep its complete
@@ -230,7 +232,7 @@ district files. Across reachable files, including entry: <=32 files, depth <=8,
 <=524288 UTF-16 characters, <=128 object definitions, <=4096 placements,
 <=12 routes and <=8 water bodies. Legacy scenes cap 24 impact objects and 128 potential fragments. Pooled worlds
 use the separate data/cache/active limits in interactions. Animated assemblies remain at 24. The whole project needs
-exactly one world/road layout for compileDreamScene; never split checkpoints or
+exactly one world-owning layout for compileDreamScene; never split checkpoints or
 terrain across district files. Final merged geometry must pass playability.
 
 ## interactions
@@ -315,6 +317,9 @@ Keep all ground features inside world bounds. The full scene acceptance boundary
 checks them after linking. The model still writes only bounded data.
 
 CONNECTED CITY DATA
+In street-only worlds, nearby junctions share an intersection area: crossing expansion
+omits their short internal links and keeps zebras on the outer arms. Do not add
+extra mid-junction zebras; overlapping parallel paint shares one stripe phase.
 junction id(at=[x,y]); binds one file-local point; <=128 per source. road and street
 require exactly one of points=[[x,y],...] or via=[junction_id,...]. world.spawn and
 bridge.from/to accept either an XY pair or junction ID. Includes never export symbols.

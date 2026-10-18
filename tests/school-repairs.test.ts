@@ -1,6 +1,7 @@
+import {saveCompatibilitySource} from './fixtures/pre-city-world';
 import {preBusinessState} from './pre-business-state';
 import {it,expect} from 'vitest';
-import {createWorldScene} from '../src/scene/world-fixture';
+import {createWorldScene} from './fixtures/pre-city-world';
 import {createCarAtSpawn,type CarState,type World} from '../src/sim/car';
 import {stepNpcs} from '../src/sim/npcs';
 import {stepAmbient} from '../src/sim/ambient';
@@ -11,7 +12,7 @@ import {buildPaperMask} from '../src/sim/mask';
 import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
 import {npcReviewStart,repairReviewSteps} from '../src/game/review-start';
-import {MATCH_COMPATIBILITY,BUSINESS_COMPATIBILITY,SCHOOL_REPAIR_COMPATIBILITY,SOCIAL_COMPATIBILITY,preMatchScene,preSchoolRepairScene,preSchoolRepairCompatibilitySource,saveCompatibilitySource,sha256} from '../src/scene/save-compatibility';
+import {MATCH_COMPATIBILITY,BUSINESS_COMPATIBILITY,SCHOOL_REPAIR_COMPATIBILITY,SOCIAL_COMPATIBILITY,preMatchScene,preSchoolRepairScene,preSchoolRepairCompatibilitySource,sha256} from '../src/scene/save-compatibility';
 import {sceneContactData} from '../src/scene/contacts';
 import {ambientGraph} from '../src/scene/ambient-navigation';
 import {worldSeats} from '../src/scene/seating';

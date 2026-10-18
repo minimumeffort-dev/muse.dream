@@ -1384,6 +1384,7 @@
     "lightPools": 512
   },
   "worldLimits": {
+    "layout": "one world; street-only worlds omit road and checkpoints and require a spawn-connected street network; optional circuit road requires 2..64 ordered checkpoints",
     "dimension": 16384,
     "waterArea": 8000000,
     "waveCellsPerBody": 131072,
@@ -1459,6 +1460,7 @@
     "semantics": "visual ground follows terrain/decks; streets and cycle tracks add normal road grip; explicit bridges only, no generated controllers, flattening or traffic"
   },
   "cityAccess": {
+    "streetOnlyJunctions": "nearby junctions share outer-arm crossings; short internal links have no crossing; parallel overlapping zebra envelopes share one world-aligned stripe phase",
     "junctionsPerFile": 128,
     "sites": 256,
     "crossings": 64,

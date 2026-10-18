@@ -1,3 +1,4 @@
+import {saveCompatibilitySource} from './fixtures/pre-city-world';
 import {preBusinessState} from './pre-business-state';
 import {it,expect} from 'vitest';
 import source from '../docs/examples/staff-shifts.dream?raw';
@@ -16,9 +17,9 @@ import {buildMaskForScene} from '../src/scene/fixture';
 import {buildPaperMask} from '../src/sim/mask';
 import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
-import {createWorldScene} from '../src/scene/world-fixture';
+import {createWorldScene} from './fixtures/pre-city-world';
 import {polygonArea,triangulatePolygon,subtractPolygons} from '../src/scene/polygons';
-import {MATCH_COMPATIBILITY,BUSINESS_COMPATIBILITY,SCHOOL_REPAIR_COMPATIBILITY,SOCIAL_COMPATIBILITY,SHIFT_COMPATIBILITY,HOURS_COMPATIBILITY,preShiftScene,preShiftCompatibilitySource,saveCompatibilitySource,sha256} from '../src/scene/save-compatibility';
+import {MATCH_COMPATIBILITY,BUSINESS_COMPATIBILITY,SCHOOL_REPAIR_COMPATIBILITY,SOCIAL_COMPATIBILITY,SHIFT_COMPATIBILITY,HOURS_COMPATIBILITY,preShiftScene,preShiftCompatibilitySource,sha256} from '../src/scene/save-compatibility';
 
 const compile=(text=source)=>compileDreamScene(text,{sceneId:'shifts',revisionId:'r1',sourceHash:'shifts'});
 const scene=compile();

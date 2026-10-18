@@ -62,7 +62,7 @@ Drive through the city or head out into the hills. Climbing slows the car down, 
 
 The world now covers 1.4 × 1.1 kilometres. It has been rebuilt around places people need: homes, markets, schools, a hospital, workplaces, a library and stations. The center has tighter frontages; garden streets and the southern neighborhood have more space around the houses. Streets, entrance paths, crossings and platforms actually connect. Street and cycle-track bends now share a continuous ribbon, crossing paint stays clear, and paved paths reach the courts, pitch and school yards.
 
-City pavements and bicycle tracks now leave the outer circuit open too. Walking connections cross it on painted zebras, and crowded bicycle symbols leave a gap instead of a broken wheel. The world and both maps share those road footprints.
+The city now runs on its connected street network. The old racing circuit, checkpoints and track effects have been removed from the live world. Sidewalks and cycle tracks continue through the released space. Overlapping parallel crossings share one zebra pattern, and road lines stop before crossings. [See the street checks](docs/evidence/city-streets/verification.md).
 
 ![Homes, shops and the tram avenue](docs/media/town-center.jpg)
 
@@ -383,7 +383,7 @@ Agents can ask for just the language they need: `node scripts/dream.mjs context 
 
 The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation uses Minimum Effort's Manrope and Archivo fonts, warm white, charcoal and yellow, with the same page gutters and spacing. Dream commands, fields, references, colors and expressions are highlighted, with copy buttons for complete examples.
 
-[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 103 assemblies and 1,700 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
+[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 1,719 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
 
 Streetlights now follow streets, bicycle and scooter parking sits beside destinations, and birds fly across sixteen habitats. Dream’s `furnish` and `flock` commands describe those populations with bounded rules.
 
@@ -428,7 +428,7 @@ For local development, open `http://127.0.0.1:5173/` on your machine. You can al
 | Shift / Boost button | Boost a car; Shift also runs, swims faster, or descends in the plane |
 | P / Escape | Pause |
 | R | Return to the start, keeping changes to the world |
-| Start over, in the pause menu | Reset the race and restore destroyed objects |
+| Start over, in the pause menu | Reset progress and restore destroyed objects |
 
 Manual zoom keeps your framing as you move and switch vehicles. Smaller rides still bring the camera closer automatically. R keeps your zoom; Start over restores it.
 

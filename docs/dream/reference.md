@@ -215,7 +215,7 @@ With a measured car player, tree height and plane wingspan must exceed the car's
 | Animation / effects | ≤24 live joint assemblies including player; ≤16 steam emitters |
 | Destruction | Resident/legacy: ≤24 reactive objects, ≤128 potential fragments. Pooled static props: ≤128 template records, ≤24 active assemblies, ≤128 active pieces and cached fragment meshes. Every assembly: ≤8 fragments, ≤4 zones. |
 | Terrain | ≤16 hills and 16 tint areas; combined terrain height cap 320 |
-| Infrastructure | 2–64 checkpoints, ≤8 bridges and ≤8 combined water basins/watercourses |
+| Infrastructure | Street-only worlds: no circuit or checkpoints. Optional circuit: 2–64 checkpoints, ≤8 bridges and ≤8 combined water basins/watercourses |
 
 The live jointed-assembly budget is 24 including the engine character; source objects and the player vehicle share the remaining 23 slots. A fleet with animated parked models reserves one of those slots for its single occupied rig.
 
@@ -366,11 +366,15 @@ Water polygons have 3–32 vertices, area 400–8,000,000 square units and exten
 
 `crossing` connects both sidewalks. Optional `junction=true` expands one declaration into zebra crossings on every street arm, outside the intersection. Duplicate zebra stripes merge into one surface. Centerlines, cycle symbols and neighboring stop lines leave clearance around the crossings; tram rails continue through them. Up to 64 crossing declarations. Sidewalks, entrance paths and crossings form the validated pedestrian network. Short overlapping street endpoints are rejected in site-authored cities; use shared junctions for exact centerline connections.
 
-City sidewalks, cycle tracks, separators and entrance paving yield to the circuit carriageway. Existing sidewalk strips crossing the circuit become derived painted crosswalks, with curb openings and clear circuit center paint. They remain part of the pedestrian network and need no extra Dream declarations. Cycle symbols require their complete envelope inside a cycle track and outside crossing and symbol clearance; the renderer omits a crowded symbol instead of clipping its individual strokes. Maps reuse these same road and cycle-track footprints.
+In sources that declare a circuit, city sidewalks, cycle tracks, separators and entrance paving yield to its carriageway. Existing sidewalk strips crossing the circuit become derived painted crosswalks, with curb openings and clear circuit center paint. They remain part of the pedestrian network and need no extra Dream declarations. Cycle symbols require their complete envelope inside a cycle track and outside crossing and symbol clearance; the renderer omits a crowded symbol instead of clipping its individual strokes. Maps reuse these same road and cycle-track footprints.
 
 `route(kind=street)` places vehicles on existing carriageways; it creates no extra surface. `tram` adds rails in the existing road, and `walk` uses the pedestrian network without paving it. `rail` and `tram` accept a 10–24-unit gauge. A `stop` is a named route anchor, with a .1–30-second wait and a site within 120 units. Street, tram and rail stops use station/platform sites; walking stops can visit homes, markets and other destinations. Up to 16 stops within the existing 64 route anchors. Shuttle returns visit stops in reverse order. Rail, tram and street NPCs may use up to eight compound contacts for their long bodies; controlled vehicles retain their existing cylinder boundary.
 
-`road(style=street)` uses neutral curbs and omits the racing start paint. The default remains `racing` for existing sources. `watercourse(ends=open)` removes round caps; use open ends at the world boundary to continue a river beyond the map. The default is `round`.
+Nearby junctions in a street-only world share an intersection area. Crossings stay on its outer arms; the short internal links receive no crossing. Parallel overlapping declarations share a zebra envelope and world-aligned stripe phase.
+
+For a street-only world, declare `world` and connected `street` data, omit `road` and `checkpoint`, and put the spawn on a street. Every street component must connect to the spawn with full car clearance. A corner-only contact that cannot carry the car rejects with `E_SCENE_STREET_UNREACHABLE`. [Runnable example](../examples/street-world.dream).
+
+An optional `road(style=street)` circuit uses neutral curbs and omits the racing start paint. The default remains `racing` for existing sources. `watercourse(ends=open)` removes round caps; use open ends at the world boundary to continue a river beyond the map. The default is `round`.
 
 [Compile the complete connected city](../examples/connected-city.dream). The [source-derived world map](../media/city-plan.svg) uses the same compiled coordinates, footprints, paths, routes and bridges as the game.
 
