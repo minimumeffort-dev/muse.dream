@@ -1,5 +1,13 @@
 # Media and Dream highlighting
 
+The latest walking recordings use longer steps and retain planted feet through
+sharp reversals. Character, pedestrians, locomotion, switching, sports and park
+GIF/HD pairs and their stills are refreshed together. Character poster frame 40
+shows the forward step; the six-second clip also reverses and stops. The park
+poster uses frame 90, before standing and walking. Older sections below record
+their release's captures; the shared media filenames point to the latest set.
+[Current source and frame audit](../evidence/walking-transitions/verification.md).
+
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
 ## Connected cycle junctions, 2026-10-19
@@ -1082,3 +1090,15 @@ This pass changes no rendered asset, pose, placement, control or world trajector
 The existing matched GIF/HD/still sets remain accurate. New native comparisons
 and CPU diagnostics are recorded in `docs/evidence/movement-queries/`; they do
 not replace product footage or establish performance on weaker laptops.
+
+## Longer strides and reversals, 2026-10-19
+
+The character close-up adds a **Reverse and stop** path. The player and instanced
+walker take longer steps, keep grounded feet through the reversal, and stop over
+the same fixed grid. The source-derived geometry, wardrobe, roads and city plan
+are unchanged. The primary walking sets are refreshed together: character,
+pedestrians, locomotion, switching, football, basketball and park. Each uses
+new 30 fps rendered PNGs, the existing GIF/HD encoder and matching posters.
+Older activity footage retains its recorded transactions; it does not demonstrate
+this stride revision. Swimming and static asset sheets remain accurate.
+[Verification and exact frame manifest](../evidence/walking-transitions/verification.md).

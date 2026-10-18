@@ -7,7 +7,7 @@ import {HUMANOID_BONES} from '../src/scene/humanoid';
 import {buildObject} from '../src/game/world3d';
 import {compactObject} from '../src/game/compact-object';
 import {CharacterAnimator,solveLeg,strideFoot,type CharacterInput} from '../src/game/character-animation';
-import {humanoidSoles} from '../src/game/humanoid-gait';
+import {gaitStride,humanoidSoles} from '../src/game/humanoid-gait';
 import source from '../docs/examples/humanoid.dream?raw';
 const spec=interactiveWorld.assemblies.find(s=>s.displayName==='Explorer')!;
 const input:CharacterInput={speed:55,grounded:true,swimming:false,verticalSpeed:0,time:0,enabled:true};
@@ -56,6 +56,41 @@ describe('articulated locomotion',()=>{
    }
   }
   expect(contacts).toBeGreaterThan(200);expect(maxDrift).toBeLessThan(.002);
+ });
+ it('keeps planted feet through a reversal rather than discarding their contacts',()=>{
+  for(const fps of [30,60,144]){
+   const r=rig(.306),previous=new Map<string,Vector3>();let x=0,maxDrift=0,contacts=0;
+   for(let f=0;f<fps*3;f++){
+    const heading=f>fps ? Math.PI : 0;x+=Math.cos(heading)*14/fps;r.group.position.x=x;r.group.rotation.y=-heading;
+    r.animation.update({...input,speed:14,time:f/fps,travel:{x,z:0,heading}},1/fps);r.group.updateMatrixWorld(true);
+    for(const side of ['left','right']){
+     const ankle=r.bone(`${side}_ankle`),flat=new Vector3(0,1,0).applyQuaternion(ankle.getWorldQuaternion(ankle.quaternion.clone())).y>1-1e-12,foot=ankle.getWorldPosition(new Vector3()),old=previous.get(side);
+     if(flat && old){maxDrift=Math.max(maxDrift,Math.hypot(foot.x-old.x,foot.z-old.z));contacts++;}
+     if(flat)previous.set(side,foot);else previous.delete(side);
+    }
+   }
+   expect(contacts).toBeGreaterThan(40);expect(maxDrift).toBeLessThan(.002);
+  }
+ });
+ it('takes walking steps in proportion to the resolved human rather than a short shuffle',()=>{
+  const strideMeters=gaitStride(0)*.306/10;
+  expect(strideMeters).toBeGreaterThan(1.1);expect(strideMeters).toBeLessThan(1.4);
+  expect(2*1.4/strideMeters).toBeGreaterThan(2);expect(2*1.4/strideMeters).toBeLessThan(2.6);
+ });
+ it.each(['reduced motion','seated'])('restarts over the support foot after %s at an arbitrary old phase',mode=>{
+  const r=rig(.306),previous=new Map<string,Vector3>();let x=0,maxDrift=0;
+  const walk=(time:number)=>{x+=14/60;r.group.position.x=x;r.animation.update({...input,speed:14,time,travel:{x,z:0,heading:0}},1/60);r.group.updateMatrixWorld(true);};
+  for(let f=0;f<38;f++)walk(f/60);
+  for(let f=0;f<120;f++)r.animation.update({...input,speed:0,time:1+f/60,travel:{x,z:0,heading:0},...(mode==='seated' ? {sittingHeight:18} : {enabled:false})},1/60);
+  for(let f=0;f<180;f++){
+   walk(3+f/60);
+   for(const side of ['left','right']){
+    const ankle=r.bone(`${side}_ankle`),flat=new Vector3(0,1,0).applyQuaternion(ankle.getWorldQuaternion(ankle.quaternion.clone())).y>1-1e-12,foot=ankle.getWorldPosition(new Vector3()),old=previous.get(side);
+    if(flat && old)maxDrift=Math.max(maxDrift,Math.hypot(foot.x-old.x,foot.z-old.z));
+    if(flat)previous.set(side,foot);else previous.delete(side);
+   }
+  }
+  expect(maxDrift).toBeLessThan(.002);
  });
  it('uses observed travel instead of requested speed and preserves planted feet while paused',()=>{
   const r=rig(.306),travel={x:10,z:20,heading:.4};r.group.position.set(10,0,20);r.group.rotation.y=-.4;

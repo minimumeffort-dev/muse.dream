@@ -1,7 +1,7 @@
 import {Euler,Quaternion,type Group,Object3D} from 'three';
 import {HUMANOID_BONES,type HumanoidBone} from '../scene/humanoid';
 import type {ObjectDslV2} from '../scene/object-dsl';
-import {FootPlants,gaitRun,gaitStride,humanoidSoles,soleSupport,strideFoot,type Sole,type TravelPose} from './humanoid-gait';
+import {FootPlants,gaitRun,gaitStance,gaitStride,humanoidSoles,soleSupport,strideFoot,type Sole,type TravelPose} from './humanoid-gait';
 export {strideFoot} from './humanoid-gait';
 
 type Rotation=[number,number,number];
@@ -29,7 +29,7 @@ export interface CharacterInput {
 /** One cached rig, no mesh traversal, geometry work or physics ownership in the frame loop. */
 export class CharacterAnimator {
   private bones:Record<HumanoidBone,{node:Object3D;rest:Quaternion;y:number}>;
-  private phase=0;
+  private phase=gaitStance(0)/2;
   private swimPhase=0;
   private moving=0;
   private running=0;
@@ -58,7 +58,7 @@ export class CharacterAnimator {
   }
 
   reset(){
-    this.phase=this.swimPhase=this.moving=this.running=this.water=this.airborne=this.landing=this.working=this.eating=0;
+    this.phase=gaitStance(0)/2;this.swimPhase=this.moving=this.running=this.water=this.airborne=this.landing=this.working=this.eating=0;
     this.wasGrounded=true;this.previousVertical=0;
     this.plants.reset();this.travel=undefined;
     for(const {node,rest,y} of Object.values(this.bones)){node.quaternion.copy(rest);node.position.y=y;}
@@ -70,6 +70,7 @@ export class CharacterAnimator {
     const distance=contact && this.travel ? Math.hypot(contact.x-this.travel.x,contact.z-this.travel.z) : 0;
     const continuous=distance<this.group.scale.x*this.unit*80;
     const speed=active ? contact ? this.travel && step>0 && continuous ? distance/step : 0 : input.speed : 0;
+    if(contact && (!this.travel || !continuous))this.phase=gaitStance(0)/2;
     if(!contact || !continuous)this.plants.reset();
     if(contact)this.plants.begin(contact,this.group.scale.x*this.unit);
     const ease=1-Math.exp(-step*12),travel=input.swimming ? clamp(speed/25) : Number(speed>.01),run=gaitRun(speed);

@@ -6,7 +6,7 @@ import {compactObject} from '../../src/game/compact-object';
 import {CharacterAnimator} from '../../src/game/character-animation';
 import {ambientPrototype} from '../../src/game/ambient-population';
 import {ambientMaterial} from '../../src/game/shaders';
-import {FootPlants,humanoidSoles,gaitStride,gaitRun,strideFoot} from '../../src/game/humanoid-gait';
+import {FootPlants,humanoidSoles,gaitStride,gaitRun,gaitStance,strideFoot} from '../../src/game/humanoid-gait';
 import {mediaCapture} from '../../src/game/media-capture';
 const canvas=document.querySelector('canvas'),phase=document.querySelector('#phase'),view=document.querySelector('#view'),path=document.querySelector('#path');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setScissorTest(true);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
@@ -28,10 +28,10 @@ const items=[{speed:14},{speed:14,gpu:true},{speed:55},{speed:48,swimming:true}]
   const floor=new THREE.Mesh(new THREE.BoxGeometry(2000,1,2000),new THREE.MeshToonMaterial({color:swimming?'#639a9d':'#c6c9bb',transparent:!!swimming,opacity:swimming?.5:1,depthWrite:!swimming}));floor.position.y=-.5;floor.receiveShadow=!swimming;scene.add(floor);
   const grid=swimming ? undefined : new THREE.GridHelper(2000,400,0xb2b4aa,0xb2b4aa);if(grid){grid.position.y=.01;scene.add(grid);}
   const animation=gpu ? undefined : new CharacterAnimator(group,spec),camera=new THREE.OrthographicCamera(-20,20,20,-20,.1,500);
-  return {scene,group,animation,camera,sun,floor,grid,speed,swimming,gpu,plants:new FootPlants(),cycle:0,amount:0};
+  return {scene,group,animation,camera,sun,floor,grid,speed,swimming,gpu,plants:new FootPlants(),cycle:gaitStance(0)/2,amount:0};
 });
 const pose=(item,t,dt)=>{
- const speed=item.speed*(path.value==='turn' && !item.swimming ? Math.min(1,t/.8)*Number(t<4.5) : 1),heading=path.value==='turn' && !item.swimming ? Math.min(Math.PI/2,Math.max(0,t-1.5)*.75) : 0;
+ const speed=item.speed*(path.value!=='straight' && !item.swimming ? Math.min(1,t/.8)*Number(t<4.5) : 1),heading=item.swimming ? 0 : path.value==='reverse' ? Number(t>=2)*Math.PI : path.value==='turn' ? Math.min(Math.PI/2,Math.max(0,t-1.5)*.75) : 0;
  item.group.position.x+=Math.cos(heading)*speed*dt;item.group.position.z+=Math.sin(heading)*speed*dt;item.group.rotation.y=-heading;
  item.floor.position.x=Math.floor(item.group.position.x/5)*5;item.floor.position.z=Math.floor(item.group.position.z/5)*5;if(item.grid){item.grid.position.x=item.floor.position.x;item.grid.position.z=item.floor.position.z;}
  const travel={x:item.group.position.x,z:item.group.position.z,heading};
@@ -44,7 +44,7 @@ const pose=(item,t,dt)=>{
   for(const mesh of item.group.children){mesh.geometry.getAttribute('popCycle').setXYZ(0,t,item.cycle,item.amount);mesh.geometry.getAttribute('popPlant').setXYZW(0,feet[0].x,feet[0].z-hips[0],feet[1].x,feet[1].z-hips[1]);mesh.geometry.getAttribute('popFacing').setXY(0,feet[0].yaw,feet[1].yaw);for(const name of ['popCycle','popPlant','popFacing'])mesh.geometry.getAttribute(name).needsUpdate=true;}
  }
 };
-const reset=()=>{time=0;for(const item of items){item.animation?.reset();item.plants.reset();item.cycle=item.amount=0;item.group.position.x=item.group.position.z=0;pose(item,0,0);}};
+const reset=()=>{time=0;for(const item of items){item.animation?.reset();item.plants.reset();item.cycle=gaitStance(0)/2;item.amount=0;item.group.position.x=item.group.position.z=0;pose(item,0,0);}};
 phase.oninput=()=>{const end=Number(phase.value);reset();playing=false;time=end;document.querySelector('#motion').textContent='Play animation';for(let f=1;f<=Math.round(time*60);f++)for(const item of items)pose(item,f/60,1/60);};
 path.onchange=()=>{reset();playing=true;document.querySelector('#motion').textContent='Pause animation';};
 const capture=mediaCapture(canvas,{character:180},()=>{reset();playing=true;},()=>{});

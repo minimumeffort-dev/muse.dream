@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import type {Sole} from "./humanoid-gait";
+import {gaitReach,type Sole} from "./humanoid-gait";
 import type { Effect } from "../scene/schema";
 import type { ObjectMaterial, ObjectPart } from "../scene/object-dsl";
 import type { Water } from "../scene/landscape-dsl";
@@ -446,6 +446,8 @@ export function ambientMaterial(material:THREE.Material,rig:import('../scene/amb
     swings.push(new THREE.Vector4(a?.axis==='x' ? a.amplitudeRad : 0,a?.axis==='y' ? a.amplitudeRad : 0,a?.axis==='z' ? a.amplitudeRad : 0,a?.phase??0));rates.push(a?.speed??0);bindings.push(j.bone ? bones.indexOf(j.bone)+1 : 0);
   }
   while(positions.length<13){positions.push(new THREE.Vector4());rotations.push(new THREE.Vector4(0,0,0,1));swings.push(new THREE.Vector4());rates.push(0);bindings.push(0);}
+  // Sports cadence is saved simulation data; its existing stride dimensions stay fixed.
+  const reach=planted ? [gaitReach(0),gaitReach(1)] : [6.8,14];
   const leg=(side:string)=>{const get=(bone:string)=>rig.find(j=>j.bone===bone);return new THREE.Vector4(get('root')?.position[1]??25,get(side+'_hip')?.position[1]??0,-(get(side+'_knee')?.position[1]??-11.5),-(get(side+'_ankle')?.position[1]??-10.5));};
   material.onBeforeCompile=(shader,renderer)=>{
     original(shader,renderer);Object.assign(shader.uniforms,{popRot:{value:rotations},popPos:{value:positions},popSwing:{value:swings},popRate:{value:rates},popBinding:{value:bindings},popLeft:{value:leg('left')},popRight:{value:leg('right')},popSole:{value:soles.map(s=>new THREE.Vector3(...s))},popEnabled:worldMotion});
@@ -459,7 +461,7 @@ vec4 popMul(vec4 a,vec4 b){return vec4(a.w*b.xyz+b.w*a.xyz+cross(a.xyz,b.xyz),a.
 vec4 popAxis(vec3 axis,float angle){return vec4(axis*sin(angle*.5),cos(angle*.5));}
 vec3 popRotate(vec4 q,vec3 p){return p+2.*cross(q.xyz,cross(q.xyz,p)+q.w*p);}
 vec3 popFoot(float phase,float run,float amount,vec4 dims,vec3 sole){
- float t=fract(phase),stance=mix(.62,.42,run),reach=mix(6.8,14.,run),x,y,toe=0.;
+ float t=fract(phase),stance=mix(.62,.42,run),reach=mix(${reach[0]!.toFixed(1)},${reach[1]!.toFixed(1)},run),x,y,toe=0.;
  if(t<stance){x=reach*(1.-2.*t/stance);y=0.;}
  else{float u=(t-stance)/(1.-stance),e=u*u*(3.-2.*u);x=reach*(2.*e-1.);y=pow(max(0.,sin(3.14159265359*u)),1.5)*mix(4.5,8.,run);toe=-.25*sin(3.14159265359*u);}
  toe*=amount;float unit=dims.x/25.,ankleY=dims.x+dims.y-dims.z-dims.w;

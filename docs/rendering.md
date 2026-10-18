@@ -28,6 +28,8 @@ The ambient movement pass caches immutable rest radii and accepts a pavement ste
 
 Segment samples now share their enclosing contact query, and distant vehicle forecasts yield before the exact two-second closest-approach calculation. Numeric cell rows avoid repeated string keys while keeping query order and moving-record buckets unchanged. The [matched replay](evidence/movement-queries/verification.md) records the exact state trace and local CPU timings; population and visual quality are unchanged.
 
+Walking feet retain their anchors during sharp reversals. CPU rigs and sidewalk shaders share the longer stride dimensions; the crowd keeps its existing six contact floats per instance and adds one starting-distance number per member on the CPU. There are no additional draws, meshes, navigation decisions or physics bodies. Sports squads retain their saved match cadence and corresponding shader dimensions. [Animation checks](evidence/walking-transitions/verification.md).
+
 ## Loading and memory
 
 Cycle surfaces are resolved once per accepted Scene before chunk clipping.

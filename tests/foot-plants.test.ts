@@ -18,5 +18,6 @@ it('drops visual anchors on a teleport or reset without retaining an old locatio
  const moved={x:500,z:600,heading:1};plants.begin(moved,.3);expect(plants.sample(0,moved,.3,0,4,true,0).x).toBeCloseTo(0);
  plants.reset();expect(plants.sample(0,moved,.3,3,4,true,0).x).toBeCloseTo(3);
  plants.begin(moved,.3);const reversed={...moved,heading:1-Math.PI};plants.begin(reversed,.3);
- expect(plants.sample(0,reversed,.3,0,4,true,0)).toMatchObject({x:expect.closeTo(0),z:expect.closeTo(4),yaw:0});
+ const foot=plants.sample(0,reversed,.3,0,4,true,0);
+ expect(foot).toMatchObject({x:expect.closeTo(-3),z:expect.closeTo(-4),yaw:expect.closeTo(-Math.PI)});
 });

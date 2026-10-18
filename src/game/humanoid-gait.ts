@@ -3,7 +3,7 @@ import {assemblyBounds} from '../scene/measure';
 
 export const gaitRun=(speed:number)=>Math.max(0,Math.min(1,(speed-22)/30));
 export const gaitStance=(run:number)=>.62-.2*run;
-export const gaitReach=(run:number)=>6.8+7.2*run;
+export const gaitReach=(run:number)=>12.5+1.5*run;
 export const gaitStride=(run:number)=>2*gaitReach(run)/gaitStance(run);
 
 /** Linear ground travel during stance; the return clears the support plane. */
@@ -35,7 +35,7 @@ export class FootPlants {
  private previous:TravelPose|undefined;
  reset(){this.previous=undefined;for(const foot of this.feet)foot.down=false;}
  begin(pose:TravelPose,scale:number){
-  if(this.previous && (Math.hypot(pose.x-this.previous.x,pose.z-this.previous.z)>scale*80 || Math.abs(Math.atan2(Math.sin(pose.heading-this.previous.heading),Math.cos(pose.heading-this.previous.heading)))>Math.PI*.6))this.reset();
+  if(this.previous && Math.hypot(pose.x-this.previous.x,pose.z-this.previous.z)>scale*80)this.reset();
   if(this.previous){this.previous.x=pose.x;this.previous.z=pose.z;this.previous.heading=pose.heading;}
   else this.previous={...pose};
  }

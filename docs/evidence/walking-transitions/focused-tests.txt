@@ -1,0 +1,14 @@
+
+ RUN  v3.2.7 /Users/horia/.codex/worktrees/walking-motion/muse.dream
+
+ ✓ tests/character-animation.test.ts (34 tests) 1171ms
+ ✓ tests/sports-visuals.test.ts (3 tests) 491ms
+   ✓ renders one shared eleven-person squad with bone/finish channels and releases its owned buffers  403ms
+ ✓ tests/foot-plants.test.ts (2 tests) 2ms
+ ✓ tests/ambient-populations.test.ts (14 tests) 3448ms
+   ✓ bounded moving ambient populations > walks through accepted sidewalk and zebra geometry without cutting across carriageways  2474ms
+
+ Test Files  4 passed (4)
+      Tests  53 passed (53)
+   Start at  03:05:49
+   Duration  4.20s (transform 471ms, setup 31ms, collect 1.39s, tests 5.11s, environment 0ms, prepare 126ms)

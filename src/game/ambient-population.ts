@@ -9,7 +9,7 @@ import {assemblyBounds,assemblyHorizontalRadius} from '../scene/measure';
 import {walkingHeight} from '../scene/interiors';
 import {buildObject,objectGroundLift} from './world3d';
 import {ambientMaterial} from './shaders';
-import {FootPlants,gaitStride,humanoidSoles,strideFoot} from './humanoid-gait';
+import {FootPlants,gaitStance,gaitStride,humanoidSoles,strideFoot} from './humanoid-gait';
 import {finishBuild} from './batching';
 
 /** Bone-local vertices retain rigid parts and filtered material coordinates; no mesh or joint per member. */
@@ -37,10 +37,11 @@ export class AmbientPopulation {
  private matrix=new THREE.Matrix4();private rotation=new THREE.Quaternion();private position=new THREE.Vector3();private scale=new THREE.Vector3();private sphere=new THREE.Sphere();
  private view=new THREE.Frustum();private shadow=new THREE.Frustum();private projection=new THREE.Matrix4();private up=new THREE.Vector3(0,1,0);
  private amounts:Float32Array;
+ private walkingStarts:Float64Array;
  private plants:FootPlants[];
  private tick=0;
  constructor(private scene:Scene,deferBuild=false){
-  this.objects=ambientObjects(scene);this.supportRadii=this.objects.map(o=>assemblyHorizontalRadius(o.spec as ObjectDslV2,o.scale));this.count=this.objects.length;this.amounts=new Float32Array(this.count);this.plants=this.objects.map(()=>new FootPlants());this.group.name='ambient-populations';
+  this.objects=ambientObjects(scene);this.supportRadii=this.objects.map(o=>assemblyHorizontalRadius(o.spec as ObjectDslV2,o.scale));this.count=this.objects.length;this.amounts=new Float32Array(this.count);this.walkingStarts=new Float64Array(this.count).fill(NaN);this.plants=this.objects.map(()=>new FootPlants());this.group.name='ambient-populations';
   if(!deferBuild)finishBuild(this.assemble());
  }
  static *buildSteps(scene:Scene):Generator<void,AmbientPopulation>{const population=new AmbientPopulation(scene,true);yield* population.assemble();return population;}
@@ -59,13 +60,15 @@ export class AmbientPopulation {
   }
  }
  update(state:CarState,camera:THREE.Camera,light:THREE.DirectionalLight,dt:number,reduced=false){
-  const population=state.population??initialAmbient(this.scene);if(population.tick<this.tick){this.amounts.fill(0);this.plants.forEach(p=>p.reset());}this.tick=population.tick;
+  const population=state.population??initialAmbient(this.scene);if(population.tick<this.tick){this.amounts.fill(0);this.walkingStarts.fill(NaN);this.plants.forEach(p=>p.reset());}this.tick=population.tick;
   this.view.setFromProjectionMatrix(this.projection.multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse));
   this.shadow.setFromProjectionMatrix(this.projection.multiplyMatrices(light.shadow.camera.projectionMatrix,light.shadow.camera.matrixWorldInverse));
   for(const batch of this.batches){let count=0;
    for(const i of batch.indices){const object=this.objects[i]!,p=ambientPose(population,i,state.timeS),motion=object.ambient!.motion;
     this.amounts[i]!+=(Number(p.speed>.01)-this.amounts[i]!)*(1-Math.exp(-dt*12));const amount=reduced ? 0 : this.amounts[i]!;
-    const phase=p.distance/(motion.kind==='walk' ? batch.stride*object.scale : batch.meters*6),hop=motion.kind==='roam' && motion.gait==='hop' ? Math.max(0,Math.sin(phase*Math.PI*2))*Math.min(4,batch.meters*5)*amount : 0;
+    // Start a restored walker over its support foot, rather than holding an arbitrary long half-step from rest.
+    if(batch.planted && !Number.isFinite(this.walkingStarts[i]))this.walkingStarts[i]=p.distance;
+    const phase=batch.planted ? gaitStance(0)/2+(p.distance-this.walkingStarts[i]!)/(batch.stride*object.scale) : p.distance/(batch.meters*6),hop=motion.kind==='roam' && motion.gait==='hop' ? Math.max(0,Math.sin(phase*Math.PI*2))*Math.min(4,batch.meters*5)*amount : 0;
     let feet:ReturnType<FootPlants['sample']>[]|undefined;
     if(batch.planted){const plants=this.plants[i]!,pose={x:p.x,z:p.y,heading:p.heading};if(reduced)plants.reset();plants.begin(pose,object.scale*batch.unit);
      feet=[0,1].map(side=>{const f=strideFoot(phase+side*.5,0);return plants.sample(side,pose,object.scale,f.x*batch.unit*amount,batch.hips[side]!,f.y===0 || amount<.001,Math.floor(phase+side*.5));});

@@ -1,0 +1,17 @@
+{
+  "method": "Native CUA R/F car handoff, W/S press and release, then P and held W. Review origin, saves disabled. Final animation source.",
+  "releasedSpeed": 0,
+  "before": {
+    "car": "6329.5,4272.3,1.5",
+    "mode": "paused",
+    "speed": "0.0",
+    "time": 75.96666666667319
+  },
+  "after": {
+    "car": "6329.5,4272.3,1.5",
+    "mode": "paused",
+    "speed": "0.0",
+    "time": 75.96666666667319
+  },
+  "logs": []
+}
