@@ -5,6 +5,14 @@ import {finishBuild,tiledMesh} from './batching';
 import {waterGeometry} from './landscape';
 import {WorldScenery} from './scenery';
 import {contains,overlaps,type RenderRegion,WORLD_CHUNK_SIZE} from './render-region';
+import {pooledImpact} from '../scene/damage-pool';
+
+/** Restored offscreen fragments use the same accepted scenery builder and worker. */
+export function buildToppleChunk(doc:Scene,objectId:string):THREE.Group{
+ const object=doc.objects.find(o=>o.id===objectId);
+ if(!object || !pooledImpact(doc,object) || !object.spec || !('impact' in object.spec) || object.spec.impact?.kind!=='topple')throw Error('invalid topple prototype');
+ return new WorldScenery(doc,[object]).group;
+}
 
 export function validChunkRegion(doc:Scene,region:RenderRegion):boolean{
   return [region.x0,region.y0,region.x1,region.y1].every(Number.isFinite) && region.x1-region.x0===WORLD_CHUNK_SIZE && region.y1-region.y0===WORLD_CHUNK_SIZE && region.x0%WORLD_CHUNK_SIZE===0 && region.y0%WORLD_CHUNK_SIZE===0 && region.x0>=-800 && region.y0>=-800 && region.x0<doc.canonical.width+800 && region.y0<doc.canonical.height+800;

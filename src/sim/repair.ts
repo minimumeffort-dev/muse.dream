@@ -19,8 +19,9 @@ import {playerHeight,playerRadius} from '../scene/measure';
 export {repairTargets,type RepairTarget} from '../scene/commerce';
 export const REPAIR_RADIUS=COMMERCE_LIMITS.repairRadius,REPAIR_SPEED=14,REPAIR_REACH=12;
 const repairAreas=new WeakMap<Scene,Map<string,WalkingArea>>();
+// Preserve released narrow-service paths; wider verges need worker-sized corner turns.
 export function repairArea(scene:Scene,r:Repair):WalkingArea{
- let entries=repairAreas.get(scene);if(!entries){entries=new Map();repairAreas.set(scene,entries);}let area=entries.get(r.id);if(!area){area={id:r.id,grounds:repairGrounds(r),access:repairCoverage(scene,r).access,network:!!(r.grounds || r.streets)};entries.set(r.id,area);}return area;
+ let entries=repairAreas.get(scene);if(!entries){entries=new Map();repairAreas.set(scene,entries);}let area=entries.get(r.id);if(!area){area={id:r.id,grounds:repairGrounds(r),access:repairCoverage(scene,r).access,network:!!(r.grounds || r.streets),wideAccess:(r.verge??24)>32};entries.set(r.id,area);}return area;
 }
 export const repairClear=(scene:Scene,r:Repair,p:Point,state?:CarState)=>workClear(scene,repairArea(scene,r),p,state);
 export const repairSegment=(scene:Scene,r:Repair,a:Point,b:Point,state:CarState|undefined,areaOnly=false)=>workSegment(scene,repairArea(scene,r),a,b,state,areaOnly);

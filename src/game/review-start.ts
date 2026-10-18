@@ -57,6 +57,12 @@ export function npcReviewStart(state:CarState,world:World,id:string|null):CarSta
 
 /** Known clear mock-world poses for checking neutral coasting and cross-slope grip. */
 export function drivingReviewStart(state:CarState,world:World,scenario:string|null):CarState {
+  if(scenario==='street-tree'){
+    const tree=world.scene.objects.find(o=>o.id==='garden_rowan_north');if(!tree)throw Error('Street tree review target is missing');
+    const x=tree.x,y=tree.y-140,elevation=drivingHeight(world.scene.terrain,x,y);
+    if(!carFootprintClear(world,x,y,elevation,state.timeS,state))throw Error('Street tree review start is blocked');
+    return {...state,x,y,elevation,headingRad:Math.PI/2,vx:0,vy:0};
+  }
   if(scenario==='airport-lamp'){
     const lamp=world.scene.objects.find(o=>o.id==='airport_lamps_1_5_r');if(!lamp)throw Error('Airport lamp review target is missing');
     const x=lamp.x,y=lamp.y-140,elevation=drivingHeight(world.scene.terrain,x,y);
@@ -109,9 +115,9 @@ export function maintenanceReviewStart(state:CarState,world:World):CarState{
 
 
 /** Offline review replays actual impacts, dispatch and pedestrian travel; no worker teleport. */
-export function* repairReviewSteps(state:CarState,world:World,scenario:'lamp'|'street-lamp'|'airport-lamp'|'orchard'|'school-bench'='lamp',stage:'approach'|'work'|'planted'='work'):Generator<void,CarState>{
+export function* repairReviewSteps(state:CarState,world:World,scenario:'lamp'|'street-lamp'|'airport-lamp'|'orchard'|'street-tree'|'school-bench'='lamp',stage:'approach'|'work'|'planted'='work'):Generator<void,CarState>{
  if(!world.scene.damagePool)throw Error('The maintenance review needs the pooled world');
- const targets=new Set(world.scene.objects.filter(o=>scenario==='airport-lamp' ? o.id==='airport_lamps_1_5_r' : scenario==='school-bench' ? o.id==='school_bench' : o.spec && 'measure' in o.spec && o.spec.measure?.kind===(scenario==='orchard' ? 'tree' : 'lamp')).map(o=>o.id));
+ const targets=new Set(world.scene.objects.filter(o=>scenario==='airport-lamp' ? o.id==='airport_lamps_1_5_r' : scenario==='school-bench' ? o.id==='school_bench' : o.spec && 'measure' in o.spec && o.spec.measure?.kind===(scenario==='orchard' || scenario==='street-tree' ? 'tree' : 'lamp')).map(o=>o.id));
  let next=drivingReviewStart(state,world,scenario);const driving=scenario==='school-bench' ? 240 : scenario!=='lamp' ? 180 : 132,exit=scenario==='school-bench' ? 720 : scenario!=='lamp' ? 336 : 312;
  for(let i=0;i<120*1200;i++){
   if(i===exit)next=toggleRide(next,world);

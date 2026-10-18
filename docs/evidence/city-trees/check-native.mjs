@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile} from 'node:fs/promises';
+const dir='docs/evidence/city-trees/',read=async file=>JSON.parse(await readFile(file,'utf8'));
+const work=await read(dir+'native-work.json'),planted=await read(dir+'native-planted.json'),reloaded=await read(dir+'native-reloaded.json'),reset=await read(dir+'native-r-preserved.json'),old=await read('docs/evidence/city-repairs/native-work.json'),upgraded=await read(dir+'native-r73-upgraded.json'),identity=await read(dir+'migration.json');
+for(const backup of [work,planted,reloaded,reset,upgraded]){assert.equal(backup.version,17);assert.equal(backup.sourceHash,identity.newSource);assert.equal(backup.compatibilityHash,identity.current);}
+assert.deepEqual(upgraded.state,old.state);assert.equal(upgraded.worldTime,old.worldTime);
+assert.deepEqual(reloaded.state,planted.state);assert.equal(reloaded.worldTime,planted.worldTime);
+assert.deepEqual(work.state.economy,await read(dir+'native-work-economy.json'));assert.deepEqual(work.state.economy,await read(dir+'native-work-restored-economy.json'));assert.deepEqual(planted.state.economy,await read(dir+'native-planted-economy.json'));
+// Planting inputs are conserved through the repair ledger; consumed tracks food only.
+const target='garden_rowan_north',worker=s=>s.economy.accounts.find(a=>a.id==='caretaker');
+assert(work.state.broken.includes(target));assert.equal(worker(work.state).repair.phase,'work');assert(worker(work.state).repair.distance>7200);
+for(const {state} of [planted,reloaded,reset]){assert(!state.broken.includes(target));assert.equal(worker(state).repair.phase,'home');assert.equal(worker(state).credits,6);assert.equal(worker(state).completed.repair.orchard_trees,1);assert.equal(state.economy.repaired.orchard_trees,1);assert.equal(state.economy.consumed.sapling,0);assert.equal(state.economy.markets.find(m=>m.id==='market_stall').stock.sapling,work.state.economy.markets.find(m=>m.id==='market_stall').stock.sapling);assert.equal(state.growing[0].objectId,target);}
+assert.equal(reset.state.growing[0].plantedAtS,planted.state.growing[0].plantedAtS);assert(reset.state.growing[0].progressS>=planted.state.growing[0].progressS);assert.equal(reset.state.control.kind,'car');
+const initial=await read(dir+'native-loader.json'),reload=await read(dir+'native-reloaded-loader.json');assert(initial.phases.some(p=>p.label==='Following the tree planting journey'));assert(!reload.phases.some(p=>p.label==='Following the tree planting journey'));
+await writeFile(dir+'native-check.json',JSON.stringify({kind:'Assertions over actual native-browser backup downloads and public serialized DOM state',target,workAtS:work.state.timeS,plantedAtS:planted.state.growing[0].plantedAtS,growthAtReload:reloaded.state.growing[0].progressS,oneSaplingAndWage:true,restoredWorkEconomyExact:true,entireR73StateAndVisualClockExact:true,entirePlantedReloadStateAndClockExact:true,resetPreservesTree:true,reviewLoading:{initialMs:initial.totalMs,reloadMs:reload.totalMs,scope:'Individual dev-review observations during test/capture work on M3 Ultra / 96 GiB. Not a controlled comparison, production startup or FPS.'}},null,2)+'\n');
+console.log('Native r73 upgrade and planted reload retain every state field and visual clock; planting consumes one sapling and pays once; R preserves growth.');

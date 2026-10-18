@@ -368,19 +368,28 @@ export const worldGradeShader = {
 type CompiledShader=Parameters<THREE.Material["onBeforeCompile"]>[0];
 
 /** The color and shadow passes must deform the same vertices. */
-function sceneryMotion(shader:CompiledShader,motion?:ObjectPart["animation"]):void {
+function sceneryMotion(shader:CompiledShader,motion?:ObjectPart["animation"],seed?:{value:number}):void {
   shader.uniforms.sceneryTime=worldTime;shader.uniforms.sceneryMotion=worldMotion;
+  if(seed)shader.uniforms.scenerySeed=seed;
   let theta="0.";
-  if(motion?.kind === "sway")theta=`sin(sceneryTime*${motion.speed.toFixed(4)}+instanceMatrix[3].x*.01)*${motion.amplitudeRad.toFixed(4)}*sceneryMotion`;
+  if(motion?.kind === "sway")theta=`sin(sceneryTime*${motion.speed.toFixed(4)}+${seed ? 'scenerySeed' : 'instanceMatrix[3].x'}*.01)*${motion.amplitudeRad.toFixed(4)}*sceneryMotion`;
   if(motion?.kind === "spin")theta=`sceneryTime*${motion.speed.toFixed(4)}*sceneryMotion`;
   shader.vertexShader=shader.vertexShader.replace("#include <common>",`#include <common>
     attribute vec3 pivot; attribute vec3 spinAxis;
     uniform float sceneryTime; uniform float sceneryMotion;
+    ${seed ? 'uniform float scenerySeed;' : ''}
     vec3 rigidRotate(vec3 p,vec3 axis,float a){return p*cos(a)+cross(axis,p)*sin(a)+axis*dot(axis,p)*(1.-cos(a));}`)
     .replace("#include <beginnormal_vertex>",`#include <beginnormal_vertex>
 objectNormal=rigidRotate(objectNormal,spinAxis,${theta});`)
     .replace("#include <begin_vertex>",`#include <begin_vertex>
 float sceneryAngle=${theta};transformed=pivot+rigidRotate(transformed-pivot,spinAxis,sceneryAngle);`);
+}
+
+/** A falling assembly keeps its original wind phase in both colour and shadow passes. */
+export function toppleMaterial(material:THREE.Material,motion:ObjectPart['animation'],seed:{value:number}):THREE.Material{
+ const original=material.onBeforeCompile.bind(material),key=material.customProgramCacheKey();
+ material.onBeforeCompile=(shader,renderer)=>{original(shader,renderer);sceneryMotion(shader,motion,seed);};
+ material.customProgramCacheKey=()=>`topple-${key}-${JSON.stringify(motion)}`;return material;
 }
 
 /** Per-instance ghosting keeps occlusion local without cloning thousands of materials. */

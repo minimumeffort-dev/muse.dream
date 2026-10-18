@@ -3,11 +3,25 @@ import type {ObjectMaterial,ObjectPart} from '../scene/object-dsl';
 import type {Effect} from '../scene/schema';
 import {groundMaterial,roadMaterial,toonMaterial,zoneMaterial,styledMaterial,nightPaint,sceneryMaterial,sceneryDepthMaterial} from './shaders';
 
-type MaterialRecipe=({kind:'ground'}|{kind:'road'}|{kind:'toon';color:number}|{kind:'zone';effect:Effect}|{kind:'water';id:string}|{kind:'styled';spec:ObjectMaterial;useB?:boolean}|{kind:'scenery';base:MaterialRecipe;motion?:ObjectPart['animation']}|{kind:'scenery-depth';motion?:ObjectPart['animation'];cloth:boolean}) & {vertexColors?:boolean;paintColor?:number;nightPaint?:boolean;polygonOffset?:{factor:number;units:number}};
+export type MaterialRecipe=({kind:'ground'}|{kind:'road'}|{kind:'toon';color:number}|{kind:'zone';effect:Effect}|{kind:'water';id:string}|{kind:'styled';spec:ObjectMaterial;useB?:boolean}|{kind:'scenery';base:MaterialRecipe;motion?:ObjectPart['animation']}|{kind:'scenery-depth';motion?:ObjectPart['animation'];cloth:boolean}) & {vertexColors?:boolean;paintColor?:number;nightPaint?:boolean;polygonOffset?:{factor:number;units:number}};
 type Attribute={array:THREE.TypedArray;size:number;normalized:boolean;instanced?:number};
 type GeometryPacket={attributes:Record<string,Attribute>;index?:Attribute};
 type MeshPacket={geometry:number;material:number;matrix:number[];name:string;cast:boolean;receive:boolean;order:number;depth?:number;sceneryEntries?:number[];cutaway?:string;instances?:Float32Array;colors?:Float32Array};
 export type ChunkPacket={occlusion?:{objectId?:string;x:number;y:number;min:number[];max:number[]}[];geometries:GeometryPacket[];materials:(MaterialRecipe & {vertexColors?:boolean})[];meshes:MeshPacket[]};
+
+export function materialRecipe(material:THREE.Material):MaterialRecipe{
+ if(!material.userData.streamMaterial)throw Error(`missing stream material recipe: ${material.type}`);
+ return {...material.userData.streamMaterial,vertexColors:'vertexColors' in material && material.vertexColors,paintColor:(material as THREE.MeshStandardMaterial).color?.getHex(),polygonOffset:material.polygonOffset ? {factor:material.polygonOffsetFactor,units:material.polygonOffsetUnits} : undefined};
+}
+export function materialFromRecipe(recipe:MaterialRecipe,water:(id:string)=>THREE.Material=()=>{throw Error('unexpected water material');}):THREE.Material{
+ // Water recipes reference a persistent main-thread wave material, not placeholder paint.
+ if(recipe.kind==='water')return water(recipe.id);
+ const material=recipe.kind==='ground' ? groundMaterial() : recipe.kind==='road' ? roadMaterial() : recipe.kind==='toon' ? toonMaterial(recipe.color) : recipe.kind==='zone' ? zoneMaterial(recipe.effect) : recipe.kind==='styled' ? styledMaterial(recipe.spec,recipe.useB) : recipe.kind==='scenery' ? sceneryMaterial(materialFromRecipe(recipe.base,water),recipe.motion) : sceneryDepthMaterial(recipe.motion,recipe.cloth);
+ if(recipe.nightPaint)nightPaint(material);
+ if(recipe.polygonOffset){material.polygonOffset=true;material.polygonOffsetFactor=recipe.polygonOffset.factor;material.polygonOffsetUnits=recipe.polygonOffset.units;}
+ if('vertexColors' in material && recipe.vertexColors!==undefined)material.vertexColors=recipe.vertexColors;
+ if(recipe.paintColor!==undefined)(material as THREE.MeshStandardMaterial).color.setHex(recipe.paintColor);return material;
+}
 
 /** Only engine-owned factories cross the worker boundary, never serialized shader code. */
 export function packChunk(root:THREE.Group):{packet:ChunkPacket;transfer:ArrayBuffer[]}{
@@ -18,8 +32,7 @@ export function packChunk(root:THREE.Group):{packet:ChunkPacket;transfer:ArrayBu
   };
   const materialId=(m:THREE.Material)=>{
     let id=materials.get(m);if(id!==undefined)return id;
-    if(!m.userData.streamMaterial)throw Error(`missing stream material recipe: ${m.type}`);
-    id=packet.materials.length;materials.set(m,id);packet.materials.push({...m.userData.streamMaterial,vertexColors:'vertexColors' in m && m.vertexColors,paintColor:(m as THREE.MeshStandardMaterial).color?.getHex(),polygonOffset:m.polygonOffset ? {factor:m.polygonOffsetFactor,units:m.polygonOffsetUnits} : undefined});return id;
+    id=packet.materials.length;materials.set(m,id);packet.materials.push(materialRecipe(m));return id;
   };
   root.updateMatrixWorld(true);
   root.traverse(node=>{
@@ -35,16 +48,7 @@ export function packChunk(root:THREE.Group):{packet:ChunkPacket;transfer:ArrayBu
 export function unpackChunk(packet:ChunkPacket,water:(id:string)=>THREE.Material):THREE.Group{
   const attribute=(a:Attribute)=>a.instanced ? new THREE.InstancedBufferAttribute(a.array,a.size,a.normalized,a.instanced) : new THREE.BufferAttribute(a.array,a.size,a.normalized);
   const geometries=packet.geometries.map(g=>{const geometry=new THREE.BufferGeometry();for(const [name,a] of Object.entries(g.attributes))geometry.setAttribute(name,attribute(a));if(g.index)geometry.setIndex(attribute(g.index));geometry.computeBoundingSphere();return geometry;});
-  const createMaterial=(recipe:MaterialRecipe):THREE.Material=>{
-    // Water recipes reference a persistent main-thread wave material, not placeholder paint.
-    if(recipe.kind==='water')return water(recipe.id);
-    const material=recipe.kind==='ground' ? groundMaterial() : recipe.kind==='road' ? roadMaterial() : recipe.kind==='toon' ? toonMaterial(recipe.color) : recipe.kind==='zone' ? zoneMaterial(recipe.effect) : recipe.kind==='styled' ? styledMaterial(recipe.spec,recipe.useB) : recipe.kind==='scenery' ? sceneryMaterial(createMaterial(recipe.base),recipe.motion) : sceneryDepthMaterial(recipe.motion,recipe.cloth);
-    if(recipe.nightPaint)nightPaint(material);
-    if(recipe.polygonOffset){material.polygonOffset=true;material.polygonOffsetFactor=recipe.polygonOffset.factor;material.polygonOffsetUnits=recipe.polygonOffset.units;}
-    if('vertexColors' in material && recipe.vertexColors!==undefined)material.vertexColors=recipe.vertexColors;
-    if(recipe.paintColor!==undefined)(material as THREE.MeshStandardMaterial).color.setHex(recipe.paintColor);return material;
-  };
-  const materials=packet.materials.map(createMaterial);
+  const materials=packet.materials.map(recipe=>materialFromRecipe(recipe,water));
   const group=new THREE.Group();
   for(const item of packet.meshes){
     const g=geometries[item.geometry]!,m=materials[item.material]!,mesh=item.instances ? new THREE.InstancedMesh(g,m,item.instances.length/16) : new THREE.Mesh(g,m);

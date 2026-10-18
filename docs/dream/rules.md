@@ -64,7 +64,7 @@ bench keeps its existing seven-piece construction under the same bench rule.
   and 128 potential fragments; pooled worlds use the separate bounds below.
   A rule never bypasses the chosen world policy.
 
-The live world currently shares rules for tables, benches and lamps. Other categories
+The live world currently shares rules for tables, benches, lamps and trees. Other categories
 retain their authored behaviors until a rule is declared for them. Legacy
 objects without a semantic category are not guessed from their names.
 `kind=custom` is a single category, so a custom rule would affect every custom
@@ -81,7 +81,7 @@ Mock-only. [Checks and media audit](../evidence/interaction-rules/verification.m
 Drive into a streetlight hard enough and the whole lamp falls about its base.
 Its ground light pool turns off. The damage stays after the fallen piece fades,
 after you drive away and unload the district, and after saving or reloading.
-All 400 lamps use their shared category rule, including both lantern and avenue
+All 413 lamps use their shared category rule, including both lantern and avenue
 models. A gentle touch still leaves them intact.
 
 ![A streetlight falling after a car impact](../media/lamps.jpg)
@@ -123,10 +123,10 @@ Start over restores the authored world. Reduced motion applies damage without
 flying pieces. Lamps retain their authored material paint/emission on fragments;
 their declared surface pool is off. This is not an electrical network simulation.
 
-The caretaker can repair 77 lamps beside the declared service streets and grounds
+The caretaker can repair all 413 lamps beside the declared service streets and grounds
 with the same finite kit and four-credit wage used for furniture. The full model,
-collision and light pool return together. The service covers 84 targets in total;
-the remaining 323 lamps need additional service coverage.
+collision and light pool return together. The service covers 431 targets in total,
+including furniture and wall sections.
 [Street verges](commerce.md#street-verges) connect nearby work to sidewalks and
 crossings. Neither the renderer nor a category rule grants free repairs.
 
@@ -144,7 +144,31 @@ the sidewalk without inventing paving. [Watch that repair](../media/streetrepair
 [Streetlight verification and media audit](../evidence/streetlights/verification.md).
 
 
-Whole-tree topple rules can now feed a finite-sapling planting service. A young
+## Trees share one fall policy
+
+The live entry file applies one rule to all 345 measured trees:
+
+```dream
+rule living_trees(kind=tree,mode=topple(speed=110,duration=1.1,lifetime=8));
+```
+
+This includes the 342 wind-animated trees. Their crowns keep swaying with the
+same phase as the intact object while the trunk and crown fall together. The
+compiler permits only part-level sway on pooled static topplers; moving joints,
+spin, rolling parts, cloth and animated break zones stay rejected. Instance
+geometry stays shared until an actual impact needs a falling piece.
+
+![A street tree falling after an impact](../media/treefall.jpg)
+
+[Impact in HD](../media/treefall.mp4) · [Animated impact](../media/treefall.gif)
+
+The existing caretaker can plant replacements for 106 trees, including all 93
+furnished street trees. The remaining 239 trees have no declared recovery service
+and remain damaged. Supplies and pay still come from the finite economy.
+
+Whole-tree topple rules feed that finite-sapling planting service. A young
 replacement uses its current scale when hit, including its retained debris, and
 loses its growth record without refunding its planted input.
-[Planting and shared worker policies](growth.md).
+[Planting and shared worker policies](growth.md) ·
+[Complete wind-tree world](../examples/city-tree-replanting.dream) ·
+[Checks and media](../evidence/city-trees/verification.md).

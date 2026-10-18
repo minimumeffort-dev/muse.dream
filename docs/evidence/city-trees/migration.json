@@ -1,0 +1,147 @@
+{
+  "baseline": "0e49ef1861e851bb9834a1a85e8db56ea7a33f8e",
+  "oldSource": "2304fe3bf70a859299e0ac82e66dac3cb60cd5322cc46b9591a8d7a8bda4c812",
+  "newSource": "f7653b908f783ca1dcae62681b00f71ad400c54ed422e810d1340b5354b8832c",
+  "previous": "c0f1953c39994af33d2e5f3fed33c1fda6bad6e648577d6309081ae55ae4589c",
+  "current": "9a92fe4e540748a1420268ce0221458d161d5a9ee6180f7dd21c4b59bc95b3f7",
+  "priorAcceptedSceneExact": true,
+  "historicalFingerprints": [
+    {
+      "name": "preCommerceCompatibilitySource",
+      "version": 1
+    },
+    {
+      "name": "preCommerceCompatibilitySource",
+      "version": 2
+    },
+    {
+      "name": "preCoverageCompatibilitySource"
+    },
+    {
+      "name": "preInvitationCompatibilitySource"
+    },
+    {
+      "name": "prePeopleCompatibilitySource"
+    },
+    {
+      "name": "preJunctionCompatibilitySource"
+    },
+    {
+      "name": "preSpacingCompatibilitySource"
+    },
+    {
+      "name": "preParkCompatibilitySource"
+    },
+    {
+      "name": "preCityCompatibilitySource"
+    },
+    {
+      "name": "preMatchCompatibilitySource"
+    },
+    {
+      "name": "preBusinessCompatibilitySource"
+    },
+    {
+      "name": "preSchoolRepairCompatibilitySource"
+    },
+    {
+      "name": "preSocialCompatibilitySource"
+    },
+    {
+      "name": "preShiftCompatibilitySource"
+    },
+    {
+      "name": "preHoursCompatibilitySource"
+    },
+    {
+      "name": "preSeatingCompatibilitySource"
+    },
+    {
+      "name": "preKitchenCompatibilitySource"
+    },
+    {
+      "name": "preMealCompatibilitySource"
+    },
+    {
+      "name": "preProgressCompatibilitySource"
+    },
+    {
+      "name": "preRecipeCompatibilitySource"
+    },
+    {
+      "name": "preEgressCompatibilitySource"
+    },
+    {
+      "name": "preInteriorCompatibilitySource"
+    },
+    {
+      "name": "preCourierCompatibilitySource"
+    },
+    {
+      "name": "preFinishCompatibilitySource"
+    },
+    {
+      "name": "prePlantCompatibilitySource"
+    },
+    {
+      "name": "preVergeCompatibilitySource"
+    },
+    {
+      "name": "prePoolCompatibilitySource"
+    },
+    {
+      "name": "preNetworkCompatibilitySource"
+    },
+    {
+      "name": "preSupplyCompatibilitySource"
+    },
+    {
+      "name": "preRepairCompatibilitySource"
+    },
+    {
+      "name": "preParkingCompatibilitySource"
+    },
+    {
+      "name": "preDeliveryCompatibilitySource"
+    }
+  ],
+  "backups": [
+    "tests/fixtures/save-v10-r58-completed.json",
+    "tests/fixtures/save-v10-r58-practice.json",
+    "tests/fixtures/save-v11-r59-meal.json",
+    "tests/fixtures/save-v12-r61-seated.json",
+    "tests/fixtures/save-v12-r62-hours.json",
+    "tests/fixtures/save-v13-r63-rest.json",
+    "tests/fixtures/save-v14-r64-shared-meal.json",
+    "tests/fixtures/save-v14-r65-return.json",
+    "tests/fixtures/save-v15-r66-business.json",
+    "tests/fixtures/save-v16-r67-city.json",
+    "tests/fixtures/save-v2-r44.json",
+    "tests/fixtures/save-v3-r45.json",
+    "tests/fixtures/save-v4-r46.json",
+    "tests/fixtures/save-v5-r47.json",
+    "tests/fixtures/save-v6-r48-complete.json",
+    "tests/fixtures/save-v6-r48.json",
+    "tests/fixtures/save-v6-r49.json",
+    "tests/fixtures/save-v6-r50.json",
+    "tests/fixtures/save-v7-r51.json",
+    "tests/fixtures/save-v7-r52.json",
+    "tests/fixtures/save-v8-r53.json",
+    "tests/fixtures/save-v8-r54.json",
+    "tests/fixtures/save-v9-r55.json",
+    "tests/fixtures/save-v9-r56-life.json",
+    "tests/fixtures/save-v9-r56.json",
+    "tests/fixtures/save-v9-r57-recipe.json",
+    "tests/fixtures/save-v9-sim13-life.json",
+    "tests/fixtures/save-v9-sim13-work.json",
+    "tests/fixtures/hosted-meal-r71-save-v16.json",
+    "docs/evidence/hosted-meals/native-pending.json",
+    "docs/evidence/hosted-meals/native-out.json",
+    "docs/evidence/hosted-meals/native-eating.json",
+    "docs/evidence/hosted-meals/native-completed.json",
+    "docs/evidence/city-repairs/native-work.json",
+    "docs/evidence/city-repairs/native-home.json",
+    "docs/evidence/city-repairs/engine-fed.json"
+  ],
+  "all36StatesAndVisualClocksExact": true
+}

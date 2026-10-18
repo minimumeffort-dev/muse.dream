@@ -5,9 +5,10 @@ import junctionR69 from './compatibility/r69-junction.json';
 import type {Scene} from './schema';
 import type {ObjectDslV2} from './object-dsl';
 import peopleR70 from './compatibility/r70-people.json';
+import treesR73 from './compatibility/r73-trees.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=31;
+export const SAVE_SIMULATION_VERSION=32;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -64,7 +65,7 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY || hash===SHIFT_COMPATIBILITY || hash===SOCIAL_COMPATIBILITY || hash===SCHOOL_REPAIR_COMPATIBILITY || hash===BUSINESS_COMPATIBILITY || hash===MATCH_COMPATIBILITY || hash===CITY_COMPATIBILITY || hash===PARK_COMPATIBILITY || hash===SPACING_COMPATIBILITY || hash===JUNCTION_COMPATIBILITY || hash===PEOPLE_COMPATIBILITY || hash===INVITATION_COMPATIBILITY || hash===COVERAGE_COMPATIBILITY);
+  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY || hash===SHIFT_COMPATIBILITY || hash===SOCIAL_COMPATIBILITY || hash===SCHOOL_REPAIR_COMPATIBILITY || hash===BUSINESS_COMPATIBILITY || hash===MATCH_COMPATIBILITY || hash===CITY_COMPATIBILITY || hash===PARK_COMPATIBILITY || hash===SPACING_COMPATIBILITY || hash===JUNCTION_COMPATIBILITY || hash===PEOPLE_COMPATIBILITY || hash===INVITATION_COMPATIBILITY || hash===COVERAGE_COMPATIBILITY || hash===TREE_COMPATIBILITY);
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
@@ -91,7 +92,23 @@ export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
 /** r73 expands the existing city's service coverage without changing any saved field. */
+/** r74 extends shared toppling and connected replanting; the prior shapes stay exact. */
+const treeProjections=new WeakMap<Scene,Scene>();
+export function preTreeScene(scene:Scene):Scene{
+ if(!scene.interactionRules.some(r=>r.id==='living_trees'))return scene;
+ const cached=treeProjections.get(scene);if(cached)return cached;
+ const snapshots=new Map(treesR73.templates.flatMap(t=>t.objects.map(id=>[id,t] as const))),old=treesR73.rule;
+ const prior:Scene={...scene,interactionRules:scene.interactionRules.filter(r=>r.id!=='living_trees'),objects:scene.objects.map(o=>{
+  const prior=snapshots.get(o.id);if(!prior || !o.spec || !('dslVersion' in o.spec) || o.spec.dslVersion!==2)return o;
+  const fragments=new Map(prior.fragments.map(p=>[p.id,'fragment' in p ? p.fragment : undefined])),{impact,parts,...spec}=o.spec;
+  return {...o,spec:{...spec,...('impact' in prior ? {impact:prior.impact as ObjectDslV2['impact']} : {}),parts:parts.map(({fragment,...p})=>{const f=fragments.get(p.id);return {...p,...(f!==undefined ? {fragment:f} : {})};})}};
+ }),economy:scene.economy && {...scene.economy,repairs:scene.economy.repairs.map(r=>{if(r.id!==old.id || r.market!==old.market)return r;const {streets,verge,...fields}=r;return {...fields,label:old.label,grounds:old.grounds};})}};
+ treeProjections.set(scene,prior);return prior;
+}
+export function preTreeCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preTreeScene(scene),31,true,encode);}
+export const TREE_COMPATIBILITY='9a92fe4e540748a1420268ce0221458d161d5a9ee6180f7dd21c4b59bc95b3f7';
 export function preCoverageScene(scene:Scene):Scene{
+ scene=preTreeScene(scene);
  return {...scene,economy:scene.economy && {...scene.economy,repairs:scene.economy.repairs.map(r=>r.id==='market_tables' && r.market==='market_stall' ? {...r,label:'Repair neighborhood furniture',streets:['market_avenue','high_street','civic_walk']} : r)}};
 }
 export function preCoverageCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preCoverageScene(scene),30,true,encode);}

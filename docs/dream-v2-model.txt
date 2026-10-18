@@ -265,6 +265,11 @@ solid as one rigid fragment about the far edge of its body, away from impact.
 If no part has fragment metadata, Dream 2 compiles all parts into one stable rigid fragment.
 With explicit fragment blocks, all parts must belong to one group. duration .25..2; lifetime 2..8 and >=
 duration+.8. Other whole-object impact restrictions still apply.
+Whole topple may retain engine-owned part sway on a pooled static prop with
+world(...,damage_pool=true). The same GPU phase, pivots, finishes and colour/shadow
+motion survive release. Spin, roll, cloth, animated joints, break-zone motion and
+animated scatter fragments remain invalid. No live rig or per-cell body is added.
+Complete world and finite replanting example: examples/city-tree-replanting.dream.
 zone facade(at=[42,0,0],radius=16,height=39,mode=break(speed=135,scatter=55,
 lift=45,spin=3,lifetime=7,pattern=crumble)){ visual statements }
 Zone at is an object-local cylinder base; visual coordinates inside are relative
@@ -281,7 +286,7 @@ contacts separately so an intact root cylinder does not block the intended
 opening after a zone breaks. Terrain foundations stay intact.
 
 SHARED INTERACTION RULES
-rule wooden_tables(kind=table,mode=break(speed=90,scatter=62,lift=100,spin=4,lifetime=6,pattern=splinter)); declares an authoritative interaction for every object whose measure.kind matches. At most 16 rules, exactly one owner per category, in the entry file only. Loaded modules cannot declare rules. Apply across local/imported templates, placements and furnishing before object validation. A rule replaces local impact settings. A break rule replaces every existing break-zone impact when zones exist; retained core/foundations remain. Bodies, animation and fragment grouping must be compatible; incompatible assets fail compilation, never silently lose construction. Each placement has independent damage. Scene v1 interactionRules is optional for legacy data, defaults to []; serialized placements must match. Legacy scenes retain 24 reactive placements and 128 potential fragments; all templates retain <=8 fragments. Pooled worlds use the limits below; rules never bypass bounds. Select by measure.kind, never labels/position/randomness. custom is one catchall category, not separate bread/rock/ball types. Current live policies cover tables, benches and street lamps; other categories keep authored defaults. Existing break/topple/bounce constructors only, no scripts or structural/material simulation. Complete example: examples/interaction-rules.dream.
+rule wooden_tables(kind=table,mode=break(speed=90,scatter=62,lift=100,spin=4,lifetime=6,pattern=splinter)); declares an authoritative interaction for every object whose measure.kind matches. At most 16 rules, exactly one owner per category, in the entry file only. Loaded modules cannot declare rules. Apply across local/imported templates, placements and furnishing before object validation. A rule replaces local impact settings. A break rule replaces every existing break-zone impact when zones exist; retained core/foundations remain. Bodies, animation and fragment grouping must be compatible; incompatible assets fail compilation, never silently lose construction. Each placement has independent damage. Scene v1 interactionRules is optional for legacy data, defaults to []; serialized placements must match. Legacy scenes retain 24 reactive placements and 128 potential fragments; all templates retain <=8 fragments. Pooled worlds use the limits below; rules never bypass bounds. Select by measure.kind, never labels/position/randomness. custom is one catchall category, not separate bread/rock/ball types. Current live policies cover tables, benches, street lamps and trees; other categories keep authored defaults. Existing break/topple/bounce constructors only, no scripts or structural/material simulation. Complete example: examples/interaction-rules.dream.
 
 POOLED STATIC DESTRUCTION
 world(...,damage_pool=true) enables instanced static break/topple props across
@@ -296,8 +301,11 @@ instances and evict unused data after ten simulation seconds or to make room.
 No generated code, per-cell bodies, automatic damage or free repair.
 Lamps can be pooled static props; their surface light pools turn off while broken
 and return after repair. Use measure(kind=lamp,axis=y,meters=3.8); range 1..15 m.
-The live 400 lamps share the entry's lamp rule. Current repair coverage is the
-existing service grounds, not every streetlight. Keep actor/rig limits unchanged.
+The live 413 lamps share the entry's lamp rule and connected repair coverage.
+All 345 trees share the tree rule; 106 have declared finite-sapling replanting,
+including all 93 furnished street trees. The other 239 stay broken. Keep
+actor/rig limits unchanged. Whole pooled static topplers allow only part sway;
+their falling crown retains its original wind phase, material finish and shadow.
 Omit damage_pool (or false) for the original strict budgets. Rest poses, ambient
 motion and controllable parking cannot disable or acquire destruction implicitly.
 See examples/streetlight-repairs.dream. Save format 10, simulation rules 15 preserve
@@ -818,7 +826,7 @@ resident simulation time; walking across a city may take several minutes.
 Repair street coverage: add streets=[avenue,high_street] and optional verge=24 to
 repair(...). Streets are 1..32 unique existing IDs with sidewalks >=8 units wide.
 The service selects its existing measured kind/kinds near those sidewalks, plus
-its existing on/grounds targets. Verge is 0..32 world units, default 24, and needs
+its existing on/grounds targets. Verge is 0..128 world units, default 24, and needs
 streets. The engine derives short dry approaches only near matching damage
 contacts; it never creates roads or paving. Keep all riding surfaces, circuit and
 water clear, and supply real crossings at street intersections. Approaches join

@@ -1,0 +1,7 @@
+{
+  previous: 'c0f1953c39994af33d2e5f3fed33c1fda6bad6e648577d6309081ae55ae4589c',
+  current: '9a92fe4e540748a1420268ce0221458d161d5a9ee6180f7dd21c4b59bc95b3f7',
+  priorAcceptedSceneExact: true,
+  fingerprintChecks: 32,
+  backupsExact: 36
+}

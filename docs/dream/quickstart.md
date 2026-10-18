@@ -18,13 +18,17 @@ object oak(label="Oak"){
   impact(mode=topple(speed=110,duration=1.1,lifetime=8));
   fragment tree(){
     part trunk(shape=cylinder,material=bark,at=[0,24,0],size=[6,48,6]);
-    part crown(shape=icosphere,material=leaf,at=[0,52,0],size=[36,34,32]);
-    part branch(shape=icosphere,material=leaf,at=[-12,44,3],size=[24,24,23]);
+    part crown(shape=icosphere,material=leaf,at=[0,52,0],size=[36,34,32],motion=sway(deg=2,hz=.2));
+    part branch(shape=icosphere,material=leaf,at=[-12,44,3],size=[24,24,23],motion=sway(deg=1.5,hz=.17));
   }
 }
 ```
 
 The parts describe the shape. `measure` makes the assembled tree ten metres tall without stretching one axis. `body` supplies its collision cylinder. Everything in `fragment tree` stays connected when `topple` releases it.
+
+The foliage keeps its sway during the fall. Place this asset with explicit prop
+ownership in a world with `damage_pool=true`. The [complete street-tree example](../examples/city-tree-replanting.dream)
+adds that world, a shared category rule and paid replanting.
 
 Check the source from the repository root:
 

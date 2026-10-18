@@ -52,7 +52,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 17 retains the exact source hash and compatibility fingerprint, with simulation version 31. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 17 retains the exact source hash and compatibility fingerprint, with simulation version 32. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -490,3 +490,21 @@ world before preparing a review. A valid restored review skips its offline
 preparation and retains its exact state; a fresh review still runs the full
 fixed-step preparation. Production restore, paused clocks and capture isolation
 keep their existing behavior.
+
+
+### City trees (r74)
+
+Format 17 / simulation 32 registers the tree rule and expanded planting coverage.
+The r73 projection restores each tree's original impact and fragment ownership,
+and the original three-tree planting service, before validating its backup.
+The prior accepted world is exact apart from host provenance. Every saved field
+and visual clock survives, including an old sapling already falling, active
+repair paths, stock, money, meals and relationships. Original slots remain.
+No new inventory, work or time is granted by the upgrade.
+
+Intact tree geometry and public pedestrian node order stay unchanged. Wider
+work verges can use supported corner turns in the worker's derived graph;
+released narrow-service paths retain their previous behavior. These graphs and
+render prototypes remain host caches, outside Dream source and saved state.
+[Thirty-six checkpoint comparisons](evidence/city-trees/migration.json) and
+[complete verification](evidence/city-trees/verification.md).

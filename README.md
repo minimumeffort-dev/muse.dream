@@ -236,8 +236,8 @@ no stock appears just because the camera moved away.
 
 [Watch the supply trip in HD](docs/media/courier.mp4) · [Watch the handoff](docs/media/handoff.mp4) · [Author a courier in Dream](docs/dream/commerce.md#npc-supply-trips)
 
-The three existing orchard trees can now come back too. The caretaker collects a
-sapling, walks along a connected garden path and plants a replacement. It starts
+The caretaker can now replant 106 trees, including all 93 furnished street trees, the orchard and the park. They collect a
+sapling, walk there on connected sidewalks and local work approaches, and plant a replacement. It starts
 small and grows over three simulation minutes, with its shadow and collision body.
 Stand in the way and growth waits. You can take the same paid planting job, or
 bring more saplings from the station depot. Supplies, wages and growth survive
@@ -351,7 +351,7 @@ Some things move when you hit them. Others break. A ball bounces away, a bench c
 
 Objects can share a rule too. Declare how tables break once, and every table in
 that category follows it, including imported models and different shapes. Each
-table still breaks independently. The live world uses shared table, bench and lamp
+table still breaks independently. The live world uses shared table, bench, lamp and tree
 rules; supported benches can lose their boards while their base stays put.
 [How shared rules work](docs/dream/rules.md).
 
@@ -361,6 +361,17 @@ can restore every one using real kits and paid work. Their models, collisions
 and light pools return together. They use connected sidewalks and crossings to reach distant jobs.
 Intact lamps stay instanced; active debris and cached meshes have fixed limits.
 [How pooled destruction works in Dream](docs/dream/rules.md#streetlights-and-streamed-destruction).
+
+All 345 measured trees follow the same falling rule. Their crowns keep moving in
+the wind as the whole tree falls, and their materials and shadows stay attached.
+Intact trees remain instances. Falling copies reuse prepared geometry, within
+the existing destruction limits. The 239 trees outside declared work coverage
+remain broken until that coverage is extended.
+[Tree rules, recovery and checks](docs/evidence/city-trees/verification.md).
+
+![A wind-animated tree falling in Garden park](docs/media/treefall.gif)
+
+[Tree impact in HD](docs/media/treefall.mp4) · [Author a complete planting world](docs/examples/city-tree-replanting.dream)
 
 ![A streetlight falling at night](docs/media/lamps.jpg)
 
@@ -396,7 +407,7 @@ Dream 2 is a compact text language for composing objects and worlds. It has name
 
 ![A ten-metre tree rendered beside the complete Dream 2 source that defines it](docs/media/code-to-tree.jpg)
 
-A complete tree looks like this:
+A complete tree looks like this. Place it as a static prop in a pooled world to keep the crown swaying through its fall:
 
 ```dream
 dream 2;
@@ -408,8 +419,8 @@ object oak(label="Oak"){
   impact(mode=topple(speed=110,duration=1.1,lifetime=8));
   fragment tree(){
     part trunk(shape=cylinder,material=bark,at=[0,24,0],size=[6,48,6]);
-    part crown(shape=icosphere,material=leaf,at=[0,52,0],size=[36,34,32]);
-    part branch(shape=icosphere,material=leaf,at=[-12,44,3],size=[24,24,23]);
+    part crown(shape=icosphere,material=leaf,at=[0,52,0],size=[36,34,32],motion=sway(deg=2,hz=.2));
+    part branch(shape=icosphere,material=leaf,at=[-12,44,3],size=[24,24,23],motion=sway(deg=1.5,hz=.17));
   }
 }
 ```
@@ -418,7 +429,7 @@ Agents can ask for just the language they need: `node scripts/dream.mjs context 
 
 The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation uses Minimum Effort's Manrope and Archivo fonts, warm white, charcoal and yellow, with the same page gutters and spacing. Dream commands, fields, references, colors and expressions are highlighted, with copy buttons for complete examples.
 
-[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 1,719 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
+[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 1,769 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
 
 Streetlights now follow streets, bicycle and scooter parking sits beside destinations, and birds fly across sixteen habitats. Dream’s `furnish` and `flock` commands describe those populations with bounded rules.
 

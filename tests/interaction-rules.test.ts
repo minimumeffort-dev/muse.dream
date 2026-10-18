@@ -111,7 +111,7 @@ describe('category-wide Dream interaction rules',()=>{
     expect(()=>parseScene({...scene,objects:[{...object,spec:{...spec,breakZones:spec.breakZones!.map(z=>({...z,impact:{...z.impact,speed:200}}))}}]})).toThrow('must follow interaction rule');
   });
   it('enforces live tables and benches, including the older bench with retained supports',()=>{
-    const scene=createWorldScene();expect(scene.interactionRules.map(r=>r.kind)).toEqual(['lamp','table','bench']);
+    const scene=createWorldScene();expect(scene.interactionRules.map(r=>r.kind)).toEqual(['lamp','tree','table','bench']);
     const furniture=scene.objects.filter(o=>o.spec && 'measure' in o.spec && ['table','bench'].includes(o.spec.measure?.kind??''));
     expect(furniture).toHaveLength(13);expect(furniture.map(o=>o.id)).toEqual(expect.arrayContaining(['hall_table_west','hall_table_east','hall_bench','school_bench']));
     for(const object of furniture){const spec=object.spec as ObjectDslV2;expect(spec.impact).toEqual(scene.interactionRules.find(r=>r.kind===spec.measure!.kind)!.impact);}

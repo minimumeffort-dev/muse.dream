@@ -390,3 +390,27 @@ adds no persistent cache and keeps moving contacts live. The
 separate Node acceptance timings, profiling and native browser observations.
 Existing world and motion captures remain accurate because the accepted scene
 and ordered routes are unchanged.
+
+## Wind-safe tree destruction, r74
+
+Whole pooled topplers reuse the already prepared, assembly-local scenery meshes
+from a resident chunk. The fragment cache owns cloned geometry buffers; unloading
+the source chunk cannot dispose a falling tree. Copies replay the same engine
+material recipes, including vertex paint, night emission and surface finishes.
+Each falling placement retains its original wind seed. Color and depth passes
+share the same sway and clock, without a CPU loop over crown parts.
+
+A restored fall outside resident chunks requests its prototype from the existing
+world worker. Chunks and prototypes share one serialized producer. Queued
+cancellation removes the request; cancelling active work drains its reply before
+starting another build. Reset, reduced motion and disposal discard obsolete
+results. Required prototypes hold the last complete frame and simulation tick
+until ready; failures use the existing terminal reload screen. There is no second
+worker, per-cell body or increase to active debris and template-cache limits.
+
+All 345 trees now use a shared fall rule. Their intact meshes, materials, scale,
+contacts and public crowd graph are unchanged. New supported work turns belong
+only to services whose declared verge exceeds the previous 32-unit bound; earlier
+service paths and saved states retain their released semantics. The tree service
+uses 5,380 nodes and 20,422 directed links within the same 8,192/32,768 caps.
+[Acceptance, replay, migration and native checks](evidence/city-trees/verification.md).

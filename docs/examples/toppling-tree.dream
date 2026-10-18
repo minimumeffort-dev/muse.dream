@@ -7,7 +7,7 @@ object oak(label="Oak"){
   impact(mode=topple(speed=110,duration=1.1,lifetime=8));
   fragment tree(){
     part trunk(shape=cylinder,material=bark,at=[0,24,0],size=[6,48,6]);
-    part crown(shape=icosphere,material=leaf,at=[0,52,0],size=[36,34,32]);
-    part branch(shape=icosphere,material=leaf,at=[-12,44,3],size=[24,24,23]);
+    part crown(shape=icosphere,material=leaf,at=[0,52,0],size=[36,34,32],motion=sway(deg=2,hz=.2));
+    part branch(shape=icosphere,material=leaf,at=[-12,44,3],size=[24,24,23],motion=sway(deg=1.5,hz=.17));
   }
 }

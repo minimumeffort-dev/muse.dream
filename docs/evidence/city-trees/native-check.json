@@ -1,0 +1,17 @@
+{
+  "kind": "Assertions over actual native-browser backup downloads and public serialized DOM state",
+  "target": "garden_rowan_north",
+  "workAtS": 541.9999999996714,
+  "plantedAtS": 551.7499999996626,
+  "growthAtReload": 20.9999999999809,
+  "oneSaplingAndWage": true,
+  "restoredWorkEconomyExact": true,
+  "entireR73StateAndVisualClockExact": true,
+  "entirePlantedReloadStateAndClockExact": true,
+  "resetPreservesTree": true,
+  "reviewLoading": {
+    "initialMs": 48877.19999998808,
+    "reloadMs": 19100.599999964237,
+    "scope": "Individual dev-review observations during test/capture work on M3 Ultra / 96 GiB. Not a controlled comparison, production startup or FPS."
+  }
+}

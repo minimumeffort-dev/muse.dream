@@ -25,7 +25,7 @@ it('keeps released access geometry on prior copies while current worlds retain f
 });
 it('declares bounded street coverage and rejects unknown, duplicate or unsupported sidewalk references',()=>{
  expect(formatDream(formatDream(source))).toBe(formatDream(source));expect(r.streets).toEqual(['main']);expect(repairTargets(scene,r).map(t=>t.objectId).sort()).toEqual(['remote_lamp','yard_crate','yard_lamp']);expect(repairCoverage(scene,r).access.length).toBeGreaterThan(0);
- for(const invalid of [source.replace('streets=[main]','streets=[]'),source.replace('streets=[main]','streets=[main,main]'),source.replace('streets=[main]','streets=[missing]'),source.replace('verge=24','verge=33'),source.replace('streets=[main],','')])expect(()=>compileDreamScene(invalid,identity)).toThrow();
+ for(const invalid of [source.replace('streets=[main]','streets=[]'),source.replace('streets=[main]','streets=[main,main]'),source.replace('streets=[main]','streets=[missing]'),source.replace('verge=24','verge=129'),source.replace('streets=[main],','')])expect(()=>compileDreamScene(invalid,identity)).toThrow();
  const nav=repairNetwork(scene,r);expect(nav.length).toBeLessThanOrEqual(8192);expect(nav.reduce((n,p)=>n+p.links.length,0)).toBeLessThanOrEqual(32768);
 });
 it('reaches a street lamp, repairs with finite supplies and returns while retaining valid saves',()=>{

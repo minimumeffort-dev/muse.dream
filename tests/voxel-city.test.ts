@@ -19,9 +19,9 @@ describe('voxel city integration',()=>{
   const expected=compileDream(wall)[0]!;
   for(const id of ['park_wall_west','park_wall_east'])expect(scene.objects.find(o=>o.id===id)!.spec).toEqual({...expected,voxelSize:scene.voxelWorld?.objectCell});
   const reactive=scene.objects.filter(o=>o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && (o.spec.impact || o.spec.breakZones));
-  expect(reactive).toHaveLength(446);expect(impactBudget(scene)).toMatchObject({resident:12,residentFragments:27,pooledTemplates:10});
+  expect(reactive).toHaveLength(788);expect(impactBudget(scene)).toMatchObject({resident:12,residentFragments:27,pooledTemplates:18});
   expect(scene.sports.map(s=>s.ballId).sort()).toEqual(['court_ball','pitch_ball']);
-  expect(reactive.reduce((n,o)=>n+((o.spec as ObjectDslV2).impact?.kind==='bounce' ? 0 : objectFragments(o.spec as ObjectDslV2).length),0)).toBe(564);
+  expect(reactive.reduce((n,o)=>n+((o.spec as ObjectDslV2).impact?.kind==='bounce' ? 0 : objectFragments(o.spec as ObjectDslV2).length),0)).toBe(906);
  });
  it('allows a real off-road car impact to release four chunks and continues driving',()=>{
   const world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11};

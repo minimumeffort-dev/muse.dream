@@ -1,0 +1,20 @@
+{
+  "kind": "Native in-app-browser screenshot of the complete compiled tree and exact runnable source",
+  "url": "http://127.0.0.1:5223/tests/visual/docs.html",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "fullSourceMatches": true,
+  "sourceFits": true,
+  "canvas": {
+    "bottom": 720,
+    "height": 636,
+    "left": 0,
+    "right": 486.3984375,
+    "top": 84,
+    "width": 486.3984375,
+    "x": 0,
+    "y": 84
+  }
+}

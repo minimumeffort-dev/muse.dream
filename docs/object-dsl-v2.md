@@ -141,6 +141,11 @@ Optional `impact` and per-part `fragment` fields support bouncing bodies and
 destruction of authored components. See [impact authoring](impact-dsl.md) for
 the JSON contract, Dream syntax, bounds and physical limits.
 
+Part-level sway can remain on a whole-object toppler in a pooled world, with
+static prop ownership. The falling crown keeps its original wind phase and
+material finish. Other moving parts and break-zone animation remain rejected.
+[Complete Dream tree and replanting world](examples/city-tree-replanting.dream).
+
 V2 also accepts bounded `contacts` for upright wall and roof cylinders,
 `rideable: {seat: [x,y,z], control?: "car"|"bicycle"|"skateboard"|"scooter"|"boat"|"plane"}`, one `emitter: {kind: "steam", position: [x,y,z], rate}`,
 and `proximity` on a joint. Proximity selects an axis, opening angle in radians

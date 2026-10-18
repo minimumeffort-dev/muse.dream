@@ -173,7 +173,8 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
     if(zones.length && !spec.parts.some(p=>!p.zone))ctx.addIssue({code:z.ZodIssueCode.custom,message:"partial destruction requires retained structural parts"});
     if(impact?.kind!=="break" && impact?.kind!=="topple" && spec.parts.some(p=>p.fragment && !p.zone))ctx.addIssue({code:z.ZodIssueCode.custom,message:"fragment groups require break/topple behavior or a break zone"});
     const fragmentCount=new Set(fractures.filter(p=>!p.voxels?.chunks).map(p=>p.fragment ? `group:${p.fragment}` : `part:${p.id}`)).size+fractures.reduce((n,p)=>n+(p.voxels?.chunks ? voxelChunkCount(p.voxels) : 0),0);
-    if(fractures.length && (fragmentCount>8 || spec.parts.some(p=>p.animation) || spec.joints?.some(j=>j.animation || j.proximity || j.bone)))ctx.addIssue({code:z.ZodIssueCode.custom,message:"break assemblies need at most 8 static fragments"});
+    const movingFragment=spec.parts.findIndex(p=>p.animation && !(impact?.kind==='topple' && p.animation.kind==='sway'));
+    if(fractures.length && (fragmentCount>8 || movingFragment>=0 || spec.joints?.some(j=>j.animation || j.proximity || j.bone)))ctx.addIssue({code:z.ZodIssueCode.custom,path:movingFragment>=0 ? ['parts',movingFragment,'animation'] : [],message:"break assemblies need at most 8 static fragments; whole-object topple also permits part sway"});
     if(impact?.kind==="topple" && fragmentCount!==1)ctx.addIssue({code:z.ZodIssueCode.custom,message:"topple needs exactly one rigid fragment"});
     if(impact?.kind==="topple" && impact.lifetime<impact.duration+.8)ctx.addIssue({code:z.ZodIssueCode.custom,message:"topple lifetime must allow its fall and final 0.8 second fade"});
     const ownership=new Map<string,string|undefined>();

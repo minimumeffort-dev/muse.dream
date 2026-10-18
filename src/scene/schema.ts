@@ -219,6 +219,7 @@ export const sceneSchema = z.object({
     for(const p of spec.parts)if(p.voxels)voxelData.set(JSON.stringify(p.voxels),voxelCells(p.voxels));
   if([...voxelData.values()].reduce((a,b)=>a+b,0)>VOXEL_LIMITS.projectCells)ctx.addIssue({code:'custom',message:'scene exceeds 1048576 unique voxel cells'});
   const reactive=scene.objects.filter(o=>isReactive(o.spec));
+  for(const object of reactive)if(object.spec && 'dslVersion' in object.spec && object.spec.dslVersion===2 && object.spec.impact?.kind==='topple' && object.spec.parts.some(p=>p.animation) && !pooledImpact(scene,object))ctx.addIssue({code:'custom',path:scene.damagePool ? ['objects',scene.objects.indexOf(object),'role'] : ['damagePool'],message:`${object.id}: swaying topple requires a pooled static prop and damage_pool=true`});
   const budget=impactBudget(scene);
   if(budget.resident>DAMAGE_POOL_LIMITS.assemblies)ctx.addIssue({code:'custom',message:scene.damagePool ? 'scene exceeds 24 resident impact objects' : 'scene exceeds 24 impact objects'});
   if(budget.pooledTemplates>DAMAGE_POOL_LIMITS.templateRecords)ctx.addIssue({code:'custom',message:'scene exceeds 128 pooled destruction templates'});

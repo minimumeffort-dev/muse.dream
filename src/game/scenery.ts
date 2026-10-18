@@ -66,6 +66,8 @@ export class WorldScenery {
   private hidden:ReadonlySet<string>|undefined;
   private growth:ReadonlyMap<string,number>|undefined;
   get objectCount():number{return this.count;}
+  /** Batched vertices are already in assembly-local space; callers must copy owned buffers. */
+  objectMeshes(id:string):THREE.Mesh[]|undefined{return this.entries.find(e=>e.objectId===id)?.transforms.map(t=>t.mesh);}
 
   constructor(private scene: Scene,objects=scene.objects) {
     const foundations=new Map<string,{color:string;items:{entry:Entry;matrix:THREE.Matrix4}[]}>();

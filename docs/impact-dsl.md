@@ -99,8 +99,8 @@ JSON v2 uses `impact: {kind: "bounce", restitution, lift}` or
 - Impact objects cannot carry foundations, compound/offset contacts, seats or emitters.
   A break/topple object may use one `contact` at `[0,0,0]` for its actual cylinder.
   Player and route actors do not support these impact behaviors yet.
-- Breakable parts/joints must be static so the destruction snapshot has one
-  defined rest pose. Bouncing parts may retain supported rigid animation.
+- Scattered parts and joints use a defined static rest pose. A pooled whole-object
+  topple can retain part sway; bouncing parts retain their supported rigid motion.
 - Intact breakable geometry batches by material. Fragment meshes are created
   on first use, shared by template, and evicted after ten unused simulation seconds
   or to make room. Active transforms are released when pieces expire.
@@ -134,7 +134,12 @@ zone storefront(at=[42,0,0],radius=16,height=39,
 }
 ```
 
-`topple` requires a solid body and static geometry. Dream 2 source without
+`topple` requires a solid body. Pooled static props may keep engine-owned part sway;
+spin, roll, cloth and moving joints remain invalid. The crown retains its original
+GPU wind phase, material finish and matching shadow throughout the fall. Use
+`world(...,damage_pool=true)` with explicit prop ownership. [A complete wind-tree
+and finite replanting world](examples/city-tree-replanting.dream) is runnable.
+Dream 2 source without
 fragment blocks compiles the entire assembly into one stable rigid fragment.
 Explicit fragment blocks must still form exactly one falling group. `speed` retains the 40–400 bound;
 `duration` is 0.25–2 seconds, and `lifetime` is 2–8 seconds with at least the fall

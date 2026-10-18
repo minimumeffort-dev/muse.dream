@@ -299,7 +299,7 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 ## Saved simulation state
 
 Current save format 17 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 31. Historical formats retain their registered projections.
+at simulation version 32. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -444,12 +444,12 @@ use one centered base contact; compound/offset contacts remain rejected. Preserv
 narrow lamp contacts, all authored geometry, shared category rules, night paint,
 actor/rig limits and no per-cell bodies. Lamp surface pools turn off while broken
 and return after paid repair. Keep the registered format 9/simulation 11 projections and the r50/r51/r52
-migration chain. Current service covers 89 targets including 77 lamps; other
-districts still need declared coverage.
+migration chain. Current fixture service covers 431 targets including all 413
+lamps. The tree service has its separate declared coverage below.
 See `docs/examples/streetlight-repairs.dream` and `docs/dream/rules.md`.
 
 
-Repair `streets` declares 1..32 unique sidewalk streets; optional `verge` is 0..32
+Repair `streets` declares 1..32 unique sidewalk streets; optional `verge` is 0..128
 world units (default 24), only with streets. Derive short target-local approaches
 from shared street footprints, clipped away from riding surfaces, the circuit and
 water. Cap each service at 512 street targets and 2048 access polygons; retain all
@@ -475,7 +475,7 @@ on chunk install and allocate no per-step geometry. Preserve the registered form
 work grounds require clear full-cylinder portals; parked vehicles affect route
 selection, moving transit causes waits and blocked paths retry without losing
 claims. See `docs/dream/growth.md` and its checked example. Current live coverage
-is three orchard trees, not all 336 measured trees.
+is 106 of the 345 measured trees, including all 93 furnished street trees.
 
 
 Surface `finish=terrain` forbids color and preserves natural ground and cosmetic
@@ -659,7 +659,7 @@ calls. See docs/dream/social.md.
 
 The r65 furniture service adds school_yard, school_yard_access and
 school_yard_return to the existing market repair grounds. Keep all three and the
-accepted sidewalk/crossing path; no grass or carriageway shortcut. Coverage is
+accepted sidewalk/crossing path; no grass or carriageway shortcut. At r65, coverage was
 89 targets (77 lamps), with 4305 derived nodes / 14368 directed links and existing
 worker/rig/navigation/fragment limits. Format 14 / simulation 22 registers the
 exact r64 projection by removing only these three grounds. Preserve every saved
@@ -771,3 +771,31 @@ contact footprint, with an outward rounding margin. Preserve exact distance and
 vertical tests for remaining candidates, broken-object filtering and live moving
 contacts. A box's broad circle must never fill its doorway. Keep the accepted
 world, ordered routes and saved states exact when optimizing these queries.
+
+
+## Wind-safe city trees, r74
+
+All 345 measured trees follow one Dream topple rule. Preserve their intact shapes,
+physical scales, contacts, wind phase, material coordinates and matching shadows.
+Part sway is allowed only on pooled static whole-object topplers; spin, roll,
+cloth, animated joints and scattering/zone motion stay rejected. Intact trees
+remain instances. Falling copies own bounded cloned buffers from prepared scenery;
+unloaded/restored prototypes use the existing single worker queue. Cancel obsolete
+requests, discard late packets, hold the last complete frame until required pieces
+are ready, and dispose owned materials/buffers. Do not remesh trees on the impact
+frame or add per-cell bodies/CPU rigs.
+
+The finite planting service covers 106 trees, including all 93 furnished street
+trees. Its 112-unit verge fits the new 0..128 bound; target/access/node/link/path
+budgets remain unchanged. Wider approaches can turn through existing worker-sized
+pavement corners, without new paint, road crossings or arbitrary grass shortcuts.
+Keep released <=32-unit routing intact. The remaining 239 woodland trees lack
+service coverage and must not be described as automatically replanted.
+
+Format 17 / simulation 32 validates the exact r73 projection before carrying every
+saved field and visual clock forward. Preserve old per-tree impacts and fragment
+IDs, finite stock/wages/growth, ongoing journeys, all prior slots and the complete
+migration chain. Projections cache immutable accepted scenes only. New Dream
+examples and the model/command contract must retain these restrictions. Review
+media at 30 rendered frames per simulation second; the four-angle fall and updated
+planting/growth sets are offline exports, never browser FPS measurements.

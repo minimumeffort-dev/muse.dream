@@ -504,7 +504,7 @@ an authored four-arm crossing; without it, four lamp jobs are unreachable and
 complete-world validation rejects the world.
 
 A service can name 1..32 unique existing streets with sidewalks at least eight
-world units wide. Verge is 0..32 units, defaults to 24 and requires `streets`.
+world units wide. Verge is 0..128 units, defaults to 24 and requires `streets`.
 At most 512 street targets and 2,048 derived approach polygons are allowed per
 service. The existing local-sample, network and saved-path limits above still
 apply. `on` remains the supply market and worker home; `grounds` stays optional.
@@ -777,6 +777,11 @@ uses a complete measured humanoid rig, the same twelve bone bindings as the city
 
 The same caretaker and finite market stock serve these jobs. Distant walks can
 be long; there are no regional crews or maintenance vehicles yet. Returning,
-eating, supplier deliveries and other duties use their existing rules. The three
-orchard trees retain their separate planting service. Trees outside that orchard
-and other structural damage still need declared recovery coverage.
+eating, supplier deliveries and other duties use their existing rules. The separate
+planting service now covers 106 trees, including all 93 furnished street trees,
+using `verge=112` and the same connected sidewalks. Wide services derive supported
+turns around pavement corners when a straight connection would cut the road.
+They create no new paving. Its 5,380 navigation nodes and 20,422 directed links
+fit the unchanged network caps. [Wind-tree example](../examples/city-tree-replanting.dream).
+The 239 trees beyond those work areas and other structural damage still need
+declared recovery coverage.

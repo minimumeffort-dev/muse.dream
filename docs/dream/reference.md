@@ -562,12 +562,17 @@ height uses `measure(kind=lamp,axis=y,meters=...)`, 1..15 m. Pooled lamp damage
 switches its terrain/deck light pool off; repair restores it. [Guide](rules.md#streetlights-and-streamed-destruction)
 and [complete example](../examples/streetlight-repairs.dream).
 
+Whole topplers may retain part-level `sway` when placed as static props in a
+pooled world. Falling foliage keeps its original wind phase in both color and
+shadow rendering. Spin, roll, cloth, moving joints, scatter and break-zone
+animation remain rejected. [Wind tree and finite replanting example](../examples/city-tree-replanting.dream).
+
 
 ### Repair street coverage
 
 `repair(...,streets=[...],verge=24)` adds service sidewalks and nearby dry work
 approaches to `on` and optional `grounds`. Name 1..32 unique streets with sidewalks
-at least eight world units wide. Verge is 0..32, defaults to 24 and requires streets.
+at least eight world units wide. Verge is 0..128, defaults to 24 and requires streets.
 Per service: at most 512 street targets and 2,048 derived approach polygons.
 Categories still use `measure.kind`; carriageways, cycle tracks, the circuit and
 water are excluded. Full-world compilation checks every target from every worker

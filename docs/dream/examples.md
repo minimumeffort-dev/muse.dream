@@ -137,7 +137,7 @@ object sign(label="Wind over the bicycle lane"){
 
 ## A tree that falls as one piece
 
-The trunk and crown stay connected inside one fragment. `topple` gives the whole tree a terrain-aware fall instead of scattering its parts.
+The trunk and crown stay connected inside one fragment. `topple` gives the whole tree a terrain-aware fall instead of scattering its parts. Place this swaying asset as a static prop in a world with `damage_pool=true`.
 
 [Download toppling-tree.dream](../examples/toppling-tree.dream)
 
@@ -151,8 +151,8 @@ object oak(label="Oak"){
   impact(mode=topple(speed=110,duration=1.1,lifetime=8));
   fragment tree(){
     part trunk(shape=cylinder,material=bark,at=[0,24,0],size=[6,48,6]);
-    part crown(shape=icosphere,material=leaf,at=[0,52,0],size=[36,34,32]);
-    part branch(shape=icosphere,material=leaf,at=[-12,44,3],size=[24,24,23]);
+    part crown(shape=icosphere,material=leaf,at=[0,52,0],size=[36,34,32],motion=sway(deg=2,hz=.2));
+    part branch(shape=icosphere,material=leaf,at=[-12,44,3],size=[24,24,23],motion=sway(deg=1.5,hz=.17));
   }
 }
 ```
@@ -254,6 +254,10 @@ node scripts/dream.mjs check docs/examples/street-verge-repairs.dream
 topple rule, finite saplings, two repair policies on one worker and persistent
 physical growth. Check it with `npm run -s dream -- check docs/examples/orchard-replanting.dream`.
 The [guide](growth.md) explains the shorter example timings and live-city loop.
+
+[Street-tree recovery](../examples/city-tree-replanting.dream) adds a wind-animated
+voxel tree, the shared category rule and connected work beyond a sidewalk through
+`verge=112`. Check it with `npm run -s dream -- check docs/examples/city-tree-replanting.dream`.
 
 
 [Courier resupply](../examples/courier-resupply.dream) lets the same worker repair

@@ -3,7 +3,7 @@ import family from '../docs/examples/city-person.dream?raw';
 import live from '../src/scene/world/city_people.dream?raw';
 import {compileDreamWorld,formatDream} from '../src/scene/dream';
 import {createWorldScene} from '../src/scene/world-fixture';
-import {prePeopleScene} from '../src/scene/save-compatibility';
+import {prePeopleScene,preTreeScene} from '../src/scene/save-compatibility';
 import {interactiveWorld} from '../src/scene/interactive-world';
 import {assemblyBounds,measuredScale} from '../src/scene/measure';
 import {hasAnimatedJoints} from '../src/scene/object-dsl';
@@ -20,7 +20,8 @@ it('ships the exact live wardrobe as a complete bounded runnable example',()=>{
  expect(shapes.size).toBeGreaterThanOrEqual(10);
 });
 it('changes only the 133 existing person visuals while retaining all other world data and live rig owners',()=>{
- const scene=createWorldScene(),old=prePeopleScene(scene),changed=scene.objects.filter((o,i)=>JSON.stringify(o)!==JSON.stringify(old.objects[i]));
+ // Compare wardrobe construction before the later, independent tree impact policy.
+ const scene=preTreeScene(createWorldScene()),old=prePeopleScene(scene),changed=scene.objects.filter((o,i)=>JSON.stringify(o)!==JSON.stringify(old.objects[i]));
  expect(changed).toHaveLength(133);expect(changed.every(o=>o.spec && 'measure' in o.spec && o.spec.measure?.kind==='person')).toBe(true);
  const rigs=(s:typeof scene)=>s.objects.filter(o=>hasAnimatedJoints(o.spec)).map(o=>o.id);expect(rigs(scene)).toEqual(rigs(old));
  for(const [i,o] of scene.objects.entries())if(!changed.includes(o))expect(o).toEqual(old.objects[i]);

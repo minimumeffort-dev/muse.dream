@@ -8,6 +8,11 @@ poster uses frame 90, before standing and walking. Older sections below record
 their release's captures; the shared media filenames point to the latest set.
 [Current source and frame audit](../evidence/walking-transitions/verification.md).
 
+The newer [returning-foot correction](../evidence/walking-swing/verification.md)
+refreshes character, pedestrian and locomotion sets again. The current character
+poster is frame 68; its close-up uses Reverse and stop. This retains the same
+distance-driven steps while keeping returning feet continuous through turns.
+
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
 ## Connected cycle junctions, 2026-10-19
@@ -1171,3 +1176,31 @@ city map remain accurate: no object, road, terrain or placement changes. Earlier
 repair, planting and supplier footage retains its recorded mechanics; the new
 set demonstrates the expanded reach. The current walking sets retain the
 released returning-foot correction.
+
+## Wind-safe trees and street replanting, r74
+
+`treefall`, `planting` and `growth` each refresh their GIF, HD video and still.
+They use 240, 360 and 900 actual 2400 × 1350 rendered PNG frames, respectively,
+from the native dev exporter at 30 frames per simulation second. The shared
+encoder keeps 1280 × 720 GIFs, 256 colors without dithering, loss 80, and
+1600 × 900 H.264 CRF-18 video. Posters use frames 150, 325 and 450.
+There is no interpolated frame or live FPS claim.
+
+The source-to-tree still is also refreshed from the native illustration page.
+Its code matches the complete swaying tree example, with the full tree and source
+visible at the ordinary 1280 × 720 viewport. The illustration uses the shared
+Minimum Effort fonts and colors and no longer grows beyond its grid row.
+
+Treefall records a real car impact and four camera views. Planting and growth
+now follow `garden_rowan_north` in Garden park. Preparation simulates the impact,
+dispatch and complete caretaker walk using the ordinary 120 Hz engine, finite
+saplings and pay. The daylight preset keeps foliage and shadows readable;
+simulation and economy clocks remain real. Growth shows the first thirty seconds
+of the three-minute replacement process. [Source/frame manifest and native save checks](../evidence/city-trees/verification.md).
+
+README, shared rules, growth, commerce, object and behavior guides, language/model
+contract, rendering and persistence notes were reviewed and refreshed. Static
+asset sheets and the city map remain accurate because intact construction and
+layout are unchanged. Current walking and social sets retain their released
+behavior. Historical lamp and orchard footage keeps its recorded transactions;
+the new sets demonstrate street-tree coverage and the shared wind-safe fall.

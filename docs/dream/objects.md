@@ -128,7 +128,7 @@ A rolling joint turns its whole child assembly around one bearing by traveled di
 
 Use `joint(...,bone=left_knee)` and the complete twelve-bone humanoid contract for people who walk, run and swim. The engine chooses the movement cycle; the model supplies connected anatomy. [Rig, source and close-up motion](behavior.md#humanoid-motion). Ordinary machinery keeps `roll`, `swing` and `open`.
 
-Animated parts aren't interchangeable with destructible fragments. Breakable assemblies require a static rest pose so their release frames are deterministic. Full shape, position, motion and expansion bounds are in the [reference](reference.md).
+Scattered fragments require a static rest pose so their release frames are deterministic. A whole-object `topple` may retain part `sway` on a pooled static prop with `world(...,damage_pool=true)`. Its crown keeps the same wind phase while the assembly falls, including its shadow and material finishes. Spin, roll, cloth and animated joints remain incompatible. [Compile a complete planting world](../examples/city-tree-replanting.dream). Full shape, position, motion and expansion bounds are in the [reference](reference.md).
 
 [Next: world layout](worlds.md) · [Behavior and destruction](behavior.md)
 

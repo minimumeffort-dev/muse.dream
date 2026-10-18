@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import type {Scene,Point} from '../scene/schema';
+import type {Scene,Point,SceneObject} from '../scene/schema';
 import {assemblyBounds} from '../scene/measure';
 import {objectPlacement} from '../scene/placement';
 import {clipPolygon} from '../scene/landscape-dsl';
@@ -82,6 +82,7 @@ export class WorldStreaming {
   get obscuredCount():number{return [...this.residents.values()].reduce((n,r)=>n+r.scenery.obscuredCount,0);}
   get revision():number{return this.loaded+this.unloaded;}
   contains(x:number,y:number):boolean{return this.residents.has(`${Math.floor(x/WORLD_CHUNK_SIZE)*WORLD_CHUNK_SIZE},${Math.floor(y/WORLD_CHUNK_SIZE)*WORLD_CHUNK_SIZE}`);}
+  objectMeshes(object:SceneObject):THREE.Mesh[]|undefined{return this.residents.get(`${Math.floor(object.x/WORLD_CHUNK_SIZE)*WORLD_CHUNK_SIZE},${Math.floor(object.y/WORLD_CHUNK_SIZE)*WORLD_CHUNK_SIZE}`)?.scenery.objectMeshes(object.id);}
   update(camera:THREE.OrthographicCamera,sun:THREE.Vector3,player:THREE.Vector3,velocity:Point,dt:number,reduced:boolean,hidden=nothingHidden,growth=nothingGrowing):void{
     this.hidden=hidden;this.growth=growth;
     const signature=[camera.left,camera.right,camera.top,camera.bottom,Math.round(camera.position.x/32),Math.round(camera.position.y/16),Math.round(camera.position.z/32),...camera.quaternion.toArray().map(n=>Math.round(n*128)),Math.round(camera.zoom*100),Math.round(sun.x*64),Math.round(sun.y*64),Math.round(sun.z*64)].join(',');

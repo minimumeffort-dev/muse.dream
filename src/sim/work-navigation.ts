@@ -17,7 +17,7 @@ import {pavementSurface,pavementPortal,pavementInsetPoint} from '../scene/paveme
 const REPAIR_RADIUS=COMMERCE_LIMITS.repairRadius;
 
 /** Engine-owned work coverage; IDs are host cache keys, not source or saved graph data. */
-export interface WalkingArea {id:string;grounds:string[];access:Point[][];network:boolean;radius?:number;height?:number}
+export interface WalkingArea {id:string;grounds:string[];access:Point[][];network:boolean;radius?:number;height?:number;wideAccess?:boolean}
 const cache=new WeakMap<Scene,Map<string,ReturnType<typeof area>>>();
 function area(scene:Scene,r:WalkingArea){
  const radius=r.radius??REPAIR_RADIUS;
@@ -108,6 +108,28 @@ export function workNetwork(scene:Scene,r:WalkingArea){
   if(inner && Math.hypot(inner.x-p.x,inner.y-p.y)>.01){const j=add(inner);if(connect(i,j))link=j;}
   connectLocal(i,p);
   let linked=0;for(const {j} of publicNodes.map((n,j)=>({j,d:Math.hypot(n.x-p.x,n.y-p.y)})).filter(({j})=>publicNodes[j]!.links.length).sort((a,b)=>a.d-b.d || a.j-b.j).slice(0,32))if(connect(link,j) && ++linked===8)break;
+ }
+ // Wider service areas need supported corner turns omitted for larger cosmetic rigs.
+ if(r.wideAccess){
+  const roots=nodes.map((_,i)=>i),root=(i:number):number=>{while(roots[i]!==i){roots[i]=roots[roots[i]!]!;i=roots[i]!;}return i;};
+  for(let i=0;i<nodes.length;i++)for(const j of nodes[i]!.links)roots[root(i)]=root(j);
+  const positions=new Map(nodes.map((n,i)=>[`${n.x},${n.y}`,i]));
+  for(let i=0;i<publicNodes.length;i++){
+   const a=nodes[i]!;
+   for(const {i:j} of publicGrid.query(a.x,a.y,128).filter(p=>p.i>i && Math.hypot(p.x-a.x,p.y-a.y)<=128).sort((p,q)=>Math.hypot(p.x-a.x,p.y-a.y)-Math.hypot(q.x-a.x,q.y-a.y) || p.i-q.i).slice(0,32)){
+    if(root(i)===root(j))continue;const b=nodes[j]!,near=new Set<number>();
+    for(let y=Math.floor((Math.min(a.y,b.y)-radius)/256);y<=Math.floor((Math.max(a.y,b.y)+radius)/256);y++)for(let x=Math.floor((Math.min(a.x,b.x)-radius)/256);x<=Math.floor((Math.max(a.x,b.x)+radius)/256);x++)for(const k of g.surface!.bins.get(x+','+y)??[])if(k<pavement.length)near.add(k);
+    let joined=false;
+    for(const k of near){const polygon=pavement[k]!.polygon,center={x:polygon.reduce((n,p)=>n+p.x,0)/polygon.length,y:polygon.reduce((n,p)=>n+p.y,0)/polygon.length};
+     for(const p of [center,pavementInsetPoint(polygon,a,radius),pavementInsetPoint(polygon,b,radius)]){
+      if(!p || !workSegment(scene,r,a,p,undefined) || !workSegment(scene,r,p,b,undefined))continue;
+      const key=`${p.x},${p.y}`;let n=positions.get(key);if(n===undefined){n=add(p);roots.push(n);positions.set(key,n);}
+      connect(i,n);connect(n,j);roots[root(i)]=root(j);roots[root(n)]=root(j);joined=true;break;
+     }
+     if(joined)break;
+    }
+   }
+  }
  }
  if(nodes.reduce((n,p)=>n+p.links.length,0)>COMMERCE_LIMITS.repairNetworkLinks)throw Error(`${r.id}: repair network exceeds 32768 links`);
  entries.set(r.id,nodes);return nodes;

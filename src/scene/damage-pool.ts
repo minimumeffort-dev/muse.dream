@@ -6,7 +6,7 @@ import {roleOf} from './agents';
 /** Persistent records are cheap; moving fracture assemblies and mesh templates stay bounded. */
 export const DAMAGE_POOL_LIMITS=Object.freeze({assemblies:24,fragments:128,templateRecords:128,instances:4096,idleSeconds:10});
 export function poolableImpact(spec:ObjectDslV2):boolean{
- return !!spec.impact && spec.impact.kind!=='bounce' && !spec.breakZones?.length && !spec.foundation && (!spec.contacts || spec.contacts.length===1 && spec.contacts[0]!.position.every(n=>n===0)) && !spec.rideable && !spec.emitter && !spec.parts.some(p=>p.animation || p.material.shaderStyle==='cloth') && !spec.joints?.some(j=>j.animation || j.proximity || j.bone);
+ return !!spec.impact && spec.impact.kind!=='bounce' && !spec.breakZones?.length && !spec.foundation && (!spec.contacts || spec.contacts.length===1 && spec.contacts[0]!.position.every(n=>n===0)) && !spec.rideable && !spec.emitter && !spec.parts.some(p=>p.animation && !(spec.impact?.kind==='topple' && p.animation.kind==='sway') || p.material.shaderStyle==='cloth') && !spec.joints?.some(j=>j.animation || j.proximity || j.bone);
 }
 export function pooledImpact(scene:Pick<Scene,'damagePool'>,object:SceneObject):boolean{
  return !!scene.damagePool && roleOf(object)==='prop' && !object.route && !object.behavior && !object.ambient && !!object.spec && 'dslVersion' in object.spec && object.spec.dslVersion===2 && poolableImpact(object.spec);

@@ -1,8 +1,8 @@
 # Bring a tree back
 
-Knock down one of the three trees in the orchard west of High Street, then park clear of the garden path. The caretaker can collect a sapling from the market, walk over and plant a replacement. You can take the same job at the vendor before they leave.
+Knock down a street or park tree, then park clear of the walking approach. The caretaker can collect a sapling from the market, walk over and plant a replacement. You can take the same job at the vendor before they leave. The live service covers 106 trees, including all 93 furnished street trees and the original orchard.
 
-![Planting a replacement in the orchard](../media/planting.jpg)
+![Planting a replacement in Garden park](../media/planting.jpg)
 
 [Watch the planting](../media/planting.mp4) · [Animated planting](../media/planting.gif)
 
@@ -22,7 +22,7 @@ The live bakery starts with six saplings. Planting takes ten seconds, consumes o
 
 When the bakery has room for two saplings, collect **Bring saplings to the market** at Station supplies. The depot starts with eighteen. The bakery pays two credits per sapling to the depot and four to the courier at handoff. Goods, supplier payment and wages use the existing reserved delivery ledger. No free stock or money appears.
 
-The worker travels on actual sidewalks, crossings and the connected garden path at 1.4 m/s. The inspected round trip took about nine simulation minutes. Player work uses the same supplies, claim, clearance and payment checks. Collect at the vendor, follow the map marker, stand beside the fallen tree and stop to plant. **H** starts the job; **Cancel planting** returns its unused sapling and reserved pay. Once planted, a sapling is spent. Knocking the young tree down does not refund it.
+The worker travels on actual sidewalks, crossings and local dry approaches at 1.4 m/s. The inspected Garden park round trip took about 18 simulation minutes; planting and growth are not shortcuts around that journey. Player work uses the same supplies, claim, clearance and payment checks. Collect at the vendor, follow the map marker, stand beside the fallen tree and stop to plant. **H** starts the job; **Cancel planting** returns its unused sapling and reserved pay. Once planted, a sapling is spent. Knocking the young tree down does not refund it.
 
 ## Describe it once in Dream
 
@@ -35,7 +35,7 @@ account regular(actor=customer,credits=20,capacity=4,satiety=65,drain_s=.05,shop
 repair tree_care(label="Plant a new tree",market=corner,on=work_yard,streets=[main],verge=24,kind=tree,input=sapling,take=1,seconds=2,pay=4,effort=5,dispatch_s=0,regrow_s=30,seed_scale=.2);
 ```
 
-Run `npm run -s dream -- check docs/examples/orchard-replanting.dream`. The example uses two-second planting and thirty-second growth for testing. The live orchard uses ten seconds and three minutes. Its garden path overlaps the natural orchard work area and reaches High Street's sidewalk. Overlapping declared work grounds connect through a clear, full-width walking portal; disconnected surfaces still fail acceptance.
+Run `npm run -s dream -- check docs/examples/orchard-replanting.dream`. The example uses two-second planting and thirty-second growth for testing. The live city uses ten seconds and three minutes. Its garden path overlaps the natural orchard work area and reaches High Street's sidewalk. Overlapping declared work grounds connect through a clear, full-width walking portal; disconnected surfaces still fail acceptance.
 
 `repairs` is an ordered list of one to four services. An idle worker tries them in order, skips unavailable or unaffordable work and holds one commitment at a time. It cannot also declare `repair` or automatic `work`. Existing single-service `repair=...` remains supported. Player accounts act through controls and cannot declare either automatic policy.
 
@@ -53,6 +53,20 @@ Omit `color` for terrain finish. Ordinary surfaces still require color and defau
 to painted ground. Either finish keeps the same coverage, clear walking portals,
 furniture reservations and road/water validation. A natural area creates no
 pavement or new collider. [Surface authoring](worlds.md#streets-grounds-and-paint).
+
+## Street trees and wind
+
+[Compile the complete city-tree example](../examples/city-tree-replanting.dream).
+It combines a shared tree rule, part sway, voxel construction, finite saplings,
+paid planting and a 112-unit verge. A verge may now be 0..128 world units, or up
+to 12.8 metres. This is a bounded local work approach around selected contacts;
+it grants no road or water shortcut and creates no paving. The compiler checks
+outbound and return access within the existing graph limits.
+
+The falling crown retains the intact tree's GPU wind phase, material coordinates
+and shadow deformation. It adds no per-tree CPU rig or per-cell body. Spinning
+parts, cloth and moving joints remain incompatible with whole-tree release.
+[Coverage, saves, source and native evidence](../evidence/city-trees/verification.md).
 
 ## What the engine checks
 
@@ -72,7 +86,7 @@ A planting completion is recorded when the replacement goes into the ground, not
 
 ## Still limited
 
-The live planting service covers the existing birch, spruce and sapling in this orchard. The other 333 measured trees are still outside this destruction/replanting loop. Their wind animation has not been removed to fit them into static destruction batches. More coverage needs a bounded animated destruction path and connected work areas.
+All 345 measured trees can fall, including wind-animated species. The service replants 106 of them. The remaining 239 trees lie outside its declared connected grounds and verges, so they stay broken. Remote woodland needs real service access before workers can restore it.
 
 This is a recovery mechanic with authored timings. There is no soil, water, season, reproduction or biological model. Saplings have inventory units, rather than carried plant meshes. The worker performs a general planting gesture; there is no digging or terrain excavation. Growth checks solid player/vehicle/actor footprints; cosmetic ambient populations do not block it. The station supply is finite, and closed pages do no work.
 

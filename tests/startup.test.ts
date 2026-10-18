@@ -33,6 +33,17 @@ it('carries the accepted worker graph and fails scene/chunk waiters on bootstrap
  await expect(bad.build({x0:0,y0:0,x1:800,y1:800})).rejects.toThrow('Graph preparation failed');
 });
 
+it('serializes chunk and topple requests, cancelling queued work and draining obsolete in-flight replies',async()=>{
+ const worker={onmessage:null as any,postMessage:vi.fn(),terminate:vi.fn()},client=new WorldWorkerClient(worker as unknown as Worker),scene=createFixtureScene();worker.onmessage({data:{scene}});await client.scene;
+ const region={x0:0,y0:0,x1:800,y1:800},first=client.build(region),queued=new AbortController(),active=new AbortController(),last=new AbortController();
+ const cancelled=client.topple('queued-tree',queued.signal).catch(e=>e.message),second=client.topple('active-tree',active.signal).catch(e=>e.message),third=client.topple('last-tree',last.signal);
+ expect(worker.postMessage).toHaveBeenCalledTimes(1);queued.abort();expect(await cancelled).toBe('World request cancelled');
+ worker.onmessage({data:{id:0,packet:{meshes:[]}}});expect(await first).toEqual({meshes:[]});expect(worker.postMessage.mock.calls[1]![0]).toEqual({id:2,topple:'active-tree'});
+ active.abort();expect(await second).toBe('World request cancelled');expect(worker.postMessage).toHaveBeenCalledTimes(2);
+ worker.onmessage({data:{id:2,packet:{meshes:[]}}});expect(worker.postMessage.mock.calls[2]![0]).toEqual({id:3,topple:'last-tree'});worker.onmessage({data:{id:3,packet:{meshes:['last']}}});expect(await third).toEqual({meshes:['last']});
+ client.dispose();expect(worker.terminate).toHaveBeenCalledOnce();
+});
+
 it('retains exact static contact order and rejects broken prepared cylinders',()=>{
  const scene=createFixtureScene(),valid=sceneContactData(scene),copy=structuredClone(scene),source=JSON.stringify(copy);
  primeSceneContacts(copy,structuredClone(valid));expect(sceneContacts(copy).contacts).toEqual(sceneContacts(scene).contacts);

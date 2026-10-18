@@ -27,6 +27,7 @@ export class WorldWorkerClient {
   previousCourierSaveCompatibility?:string;
   previousPeopleSaveCompatibility?:string;
   previousInvitationSaveCompatibility?:string;
+  previousTreeSaveCompatibility?:string;
   previousCoverageSaveCompatibility?:string;
   previousPeopleNavigation?:import('../scene/ambient-navigation').AmbientGraph;
   previousPeopleContacts?:import('../scene/contacts').SceneContactData;
@@ -57,6 +58,8 @@ export class WorldWorkerClient {
   previousSaveSource?:string;
   private next=0;
   private pending=new Map<number,{resolve:(packet:ChunkPacket)=>void;reject:(error:Error)=>void}>();
+  private queue:{id:number;region?:RenderRegion;topple?:string}[]=[];
+  private active:number|undefined;
   private failure:Error|undefined;
   private rejectScene!:(error:Error)=>void;
   constructor(private worker:Worker,onCompile:(ms:number)=>void=()=>{}){
@@ -64,17 +67,29 @@ export class WorldWorkerClient {
       this.rejectScene=reject;
       worker.onmessage=({data})=>{
         if(data.error){this.fail(new Error(data.error));return;}
-        if(data.scene){this.navigation=data.navigation;this.repairNavigation=data.repairNavigation;this.contacts=data.contacts;this.bounds=data.bounds;this.saveCompatibility=data.saveCompatibility;this.previousParkingSaveCompatibility=data.previousParkingSaveCompatibility;this.previousRepairSaveCompatibility=data.previousRepairSaveCompatibility;this.previousSupplySaveCompatibility=data.previousSupplySaveCompatibility;this.previousNetworkSaveCompatibility=data.previousNetworkSaveCompatibility;this.previousPoolSaveCompatibility=data.previousPoolSaveCompatibility;this.previousVergeSaveCompatibility=data.previousVergeSaveCompatibility;this.previousPlantSaveCompatibility=data.previousPlantSaveCompatibility;this.previousFinishSaveCompatibility=data.previousFinishSaveCompatibility;this.previousCourierSaveCompatibility=data.previousCourierSaveCompatibility;this.previousCoverageSaveCompatibility=data.previousCoverageSaveCompatibility;this.previousInvitationSaveCompatibility=data.previousInvitationSaveCompatibility;this.previousPeopleSaveCompatibility=data.previousPeopleSaveCompatibility;this.previousPeopleNavigation=data.previousPeopleNavigation;this.previousPeopleContacts=data.previousPeopleContacts;this.previousJunctionSaveCompatibility=data.previousJunctionSaveCompatibility;this.previousJunctionNavigation=data.previousJunctionNavigation;this.previousJunctionContacts=data.previousJunctionContacts;this.previousSpacingSaveCompatibility=data.previousSpacingSaveCompatibility;this.previousParkSaveCompatibility=data.previousParkSaveCompatibility;this.previousParkNavigation=data.previousParkNavigation;this.previousCitySaveCompatibility=data.previousCitySaveCompatibility;this.previousCityNavigation=data.previousCityNavigation;this.previousMatchSaveCompatibility=data.previousMatchSaveCompatibility;this.previousBusinessSaveCompatibility=data.previousBusinessSaveCompatibility;this.previousSchoolRepairSaveCompatibility=data.previousSchoolRepairSaveCompatibility;this.previousSocialSaveCompatibility=data.previousSocialSaveCompatibility;this.previousShiftSaveCompatibility=data.previousShiftSaveCompatibility;this.previousHoursSaveCompatibility=data.previousHoursSaveCompatibility;this.previousSeatingSaveCompatibility=data.previousSeatingSaveCompatibility;this.previousKitchenSaveCompatibility=data.previousKitchenSaveCompatibility;this.previousMealSaveCompatibility=data.previousMealSaveCompatibility;this.previousProgressSaveCompatibility=data.previousProgressSaveCompatibility;this.previousRecipeSaveCompatibility=data.previousRecipeSaveCompatibility;this.previousEgressSaveCompatibility=data.previousEgressSaveCompatibility;this.previousInteriorSaveCompatibility=data.previousInteriorSaveCompatibility;this.previousInteriorNavigation=data.previousInteriorNavigation;this.previousInteriorContacts=data.previousInteriorContacts;this.previousVergeNavigation=data.previousVergeNavigation;this.previousSaveCompatibility=data.previousSaveCompatibility;this.previousMarketSaveCompatibility=data.previousMarketSaveCompatibility;this.emptyEconomySaveCompatibility=data.emptyEconomySaveCompatibility;this.previousSaveSource=data.previousSaveSource;onCompile(data.compileMs);resolve(data.scene);return;}
-        const pending=this.pending.get(data.id);if(!pending)return;this.pending.delete(data.id);pending.resolve(data.packet);
+        if(data.scene){this.navigation=data.navigation;this.repairNavigation=data.repairNavigation;this.contacts=data.contacts;this.bounds=data.bounds;this.saveCompatibility=data.saveCompatibility;this.previousParkingSaveCompatibility=data.previousParkingSaveCompatibility;this.previousRepairSaveCompatibility=data.previousRepairSaveCompatibility;this.previousSupplySaveCompatibility=data.previousSupplySaveCompatibility;this.previousNetworkSaveCompatibility=data.previousNetworkSaveCompatibility;this.previousPoolSaveCompatibility=data.previousPoolSaveCompatibility;this.previousVergeSaveCompatibility=data.previousVergeSaveCompatibility;this.previousPlantSaveCompatibility=data.previousPlantSaveCompatibility;this.previousFinishSaveCompatibility=data.previousFinishSaveCompatibility;this.previousCourierSaveCompatibility=data.previousCourierSaveCompatibility;this.previousTreeSaveCompatibility=data.previousTreeSaveCompatibility;this.previousCoverageSaveCompatibility=data.previousCoverageSaveCompatibility;this.previousInvitationSaveCompatibility=data.previousInvitationSaveCompatibility;this.previousPeopleSaveCompatibility=data.previousPeopleSaveCompatibility;this.previousPeopleNavigation=data.previousPeopleNavigation;this.previousPeopleContacts=data.previousPeopleContacts;this.previousJunctionSaveCompatibility=data.previousJunctionSaveCompatibility;this.previousJunctionNavigation=data.previousJunctionNavigation;this.previousJunctionContacts=data.previousJunctionContacts;this.previousSpacingSaveCompatibility=data.previousSpacingSaveCompatibility;this.previousParkSaveCompatibility=data.previousParkSaveCompatibility;this.previousParkNavigation=data.previousParkNavigation;this.previousCitySaveCompatibility=data.previousCitySaveCompatibility;this.previousCityNavigation=data.previousCityNavigation;this.previousMatchSaveCompatibility=data.previousMatchSaveCompatibility;this.previousBusinessSaveCompatibility=data.previousBusinessSaveCompatibility;this.previousSchoolRepairSaveCompatibility=data.previousSchoolRepairSaveCompatibility;this.previousSocialSaveCompatibility=data.previousSocialSaveCompatibility;this.previousShiftSaveCompatibility=data.previousShiftSaveCompatibility;this.previousHoursSaveCompatibility=data.previousHoursSaveCompatibility;this.previousSeatingSaveCompatibility=data.previousSeatingSaveCompatibility;this.previousKitchenSaveCompatibility=data.previousKitchenSaveCompatibility;this.previousMealSaveCompatibility=data.previousMealSaveCompatibility;this.previousProgressSaveCompatibility=data.previousProgressSaveCompatibility;this.previousRecipeSaveCompatibility=data.previousRecipeSaveCompatibility;this.previousEgressSaveCompatibility=data.previousEgressSaveCompatibility;this.previousInteriorSaveCompatibility=data.previousInteriorSaveCompatibility;this.previousInteriorNavigation=data.previousInteriorNavigation;this.previousInteriorContacts=data.previousInteriorContacts;this.previousVergeNavigation=data.previousVergeNavigation;this.previousSaveCompatibility=data.previousSaveCompatibility;this.previousMarketSaveCompatibility=data.previousMarketSaveCompatibility;this.emptyEconomySaveCompatibility=data.emptyEconomySaveCompatibility;this.previousSaveSource=data.previousSaveSource;onCompile(data.compileMs);resolve(data.scene);return;}
+        if(data.id===this.active)this.active=undefined;
+        const pending=this.pending.get(data.id);this.pending.delete(data.id);pending?.resolve(data.packet);this.pump();
       };
     });
     worker.onerror=event=>{event.preventDefault();this.fail(new Error(event.message||'World worker failed'));};
     worker.onmessageerror=()=>this.fail(new Error('World data could not be read'));
   }
   build(region:RenderRegion):Promise<ChunkPacket>{
-    if(this.failure)return Promise.reject(this.failure);
-    const id=this.next++;return new Promise((resolve,reject)=>{this.pending.set(id,{resolve,reject});this.worker.postMessage({id,region});});
+    return this.request({region});
   }
-  private fail(error:Error):void{this.failure=error;this.worker.terminate();this.rejectScene(error);this.pending.forEach(p=>p.reject(error));this.pending.clear();}
+  topple(objectId:string,signal:AbortSignal):Promise<ChunkPacket>{return this.request({topple:objectId},signal);}
+  private request(message:{region?:RenderRegion;topple?:string},signal?:AbortSignal):Promise<ChunkPacket>{
+    if(this.failure)return Promise.reject(this.failure);
+    if(signal?.aborted)return Promise.reject(new Error('World request cancelled'));
+    const id=this.next++;return new Promise((resolve,reject)=>{
+      const abort=()=>{this.queue=this.queue.filter(request=>request.id!==id);this.pending.delete(id);reject(new Error('World request cancelled'));};
+      const finish=()=>signal?.removeEventListener('abort',abort);
+      this.pending.set(id,{resolve:packet=>{finish();resolve(packet);},reject:error=>{finish();reject(error);}});
+      signal?.addEventListener('abort',abort,{once:true});this.queue.push({id,...message});this.pump();
+    });
+  }
+  private pump():void{if(this.failure || this.active!==undefined)return;const next=this.queue.shift();if(next){this.active=next.id;try{this.worker.postMessage(next);}catch(error){this.fail(error instanceof Error ? error : new Error(String(error)));}}}
+  private fail(error:Error):void{this.failure=error;this.worker.terminate();this.rejectScene(error);this.pending.forEach(p=>p.reject(error));this.pending.clear();this.queue=[];}
   dispose():void{this.fail(new Error('World worker stopped'));}
 }
