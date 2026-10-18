@@ -638,7 +638,8 @@
         "label": "text",
         "actor": "ref",
         "credits": "n",
-        "radius": "n"
+        "radius": "n",
+        "hours": "v2?"
       },
       "block": "market"
     },
@@ -1565,6 +1566,12 @@
     "phase": "place.phase_s 0..3600 only with route; shifts the entire route clock including stops. offset remains a carriage distance."
   },
   "commerce": {
+    "hours": {
+      "source": "market(...,hours=[open_hour,close_hour])",
+      "bounds": "two finite hours: 0 <= open < 24, 0 <= close <= 24, different endpoints; omit for all-day service",
+      "clock": "requires world daylight; simulation time owns service, not the visual clock or wall time; reduced motion freezes only the sky",
+      "transactions": "[open,close), wraps midnight when close < open; shared buy/sell, new production, supplier pickup and destination handoff checks for player and NPCs. Committed work finishes after closing. Owned food, refunds and local repairs remain available. Couriers wait at closed counters with saved pose/path/escrow; meal customers return without purchase if closed on arrival. No offline catch-up, staff shifts or generated controllers."
+    },
     "limits": {
       "goods": 8,
       "accounts": 16,

@@ -186,6 +186,19 @@ export function* kitchenReviewSteps(state:CarState,world:World):Generator<void,C
  throw Error('Review staff could not serve the hungry customer');
 }
 
+/** Review setup advances the complete simulation, including every resource and clock. */
+export function* hoursReviewSteps(state:CarState,world:World,stage='closing'):Generator<void,CarState>{
+ let next=npcReviewStart(state,world,'vendor');
+ const config=world.scene.daylight!,targetHour=stage==='opening' ? 6 : 22;
+ const target=((targetHour-config.startHour+24)%24)/24*config.cycleSeconds+(stage==='closed' ? 3 : -3);
+ next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:'buy',market:'market_stall',good:'bread'}},1/120,world);
+ if(!next.economy!.accounts.find(a=>a.id==='pocket')!.inventory.bread)throw Error('Hours review could not buy food during service');
+ for(let i=0;next.timeS<target;i++){
+  next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30===0)yield;
+ }
+ return next;
+}
+
 
 /** Real staff purchases and meal travel precede a review-only starting pose in the hall. */
 export function* seatingReviewSteps(state:CarState,world:World):Generator<void,CarState>{

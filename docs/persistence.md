@@ -52,7 +52,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-Format 12 retains the exact source hash and the compatibility fingerprint, with simulation version 18. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+Format 12 retains the exact source hash and the compatibility fingerprint, with simulation version 19. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -294,3 +294,14 @@ active trip; older standing meals finish in place. No geometry, population or
 stock is rebased. The original format-11 slot remains intact. New saves retain
 the player seat and NPC reservations and reject duplicate, missing, broken or
 displaced claims. A corrupt newer slot still blocks fallback.
+
+
+### Counter hours (r62)
+
+Format 12 / simulation 19 registers the exact released r61 world. Its projection
+removes only `market.hours`; every saved state field and visual clock remains
+unchanged. Seats, ongoing meals, reserved batches, cargo, repairs, needs, money,
+stock and personal history continue. Couriers waiting outside service hours save
+the same real journey and escrow; reopening resumes the transaction once. No
+extra timer or offline work is inferred. The old slot is kept, and a corrupt or
+concurrently changed newer slot still blocks replacement.

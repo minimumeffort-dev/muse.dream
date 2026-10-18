@@ -284,7 +284,7 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 ## Saved simulation state
 
 Current save format 12 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 18. Historical formats retain their registered projections.
+at simulation version 19. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -584,3 +584,16 @@ reduced-motion posture and existing actor/rig/physics budgets. Format 12 /
 simulation 18 registers r60 by removing only new seating metadata/options; old
 state stays exact, with no attribution, stock, floor or population rebasing.
 See `docs/dream/seating.md` and `docs/examples/shared-seating.dream`.
+
+
+Market `hours=[open,close]` is an optional finite numeric pair, open in [0,24),
+close in [0,24], different endpoints, with midnight wrap. Requires world daylight;
+service derives from simulation time, independently of reduced-motion sky time.
+Player/NPC buy/sell, new production, supplier pickup and receiver handoff share
+the check. Finish committed batches after closing; preserve owned food, refunds
+and local repairs. Traveling couriers wait at closed counters with saved
+pose/path/escrow; meal customers return empty-handed if closing precedes purchase.
+No staff shifts, offline catch-up or new actor/render/navigation budgets. Format
+12/simulation 19 registers r61 through a projection removing only counter hours;
+preserve every saved field and clock, the old slot and the full migration chain.
+See `docs/dream/hours.md` and `docs/examples/market-hours.dream`.

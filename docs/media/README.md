@@ -18,6 +18,7 @@ Driving, vehicle switching, jumping, swimming and destruction are exported at **
 | Delivery pickup and vehicle carry | [delivery.gif](delivery.gif) | [delivery.mp4](delivery.mp4) | 12 seconds |
 | Public-pavement maintenance journey | [maintenance.gif](maintenance.gif) | [maintenance.mp4](maintenance.mp4) | 20 seconds |
 | Caretaker repair and return | [repair.gif](repair.gif) | [repair.mp4](repair.mp4) | 28 seconds |
+| Counter opening hours | [hours.gif](hours.gif) | [hours.mp4](hours.mp4) | 16 seconds |
 | Shared market seating | [seating.gif](seating.gif) | [seating.mp4](seating.mp4) | 16 seconds |
 | Staffed bakery | [kitchen.gif](kitchen.gif) | [kitchen.mp4](kitchen.mp4) | 16 seconds |
 | Customer meal journey | [meals.gif](meals.gif) | [meals.mp4](meals.mp4) | 16 seconds |
@@ -773,3 +774,19 @@ the indoor meal. These are offline exports, not live performance measurements.
 Existing roof, driving, material, destruction and interior-shell captures keep
 the same geometry, scale and demonstrated actions. The new seating guide links
 the new footage and runnable source. [Verification](../evidence/shared-seating/verification.md).
+
+
+## Daily counter hours refresh
+
+The r62 `hours` recording uses 480 rendered PNGs at 30 frames per simulation
+second. Preparation buys one loaf and advances the complete city to three
+seconds before 22:00, including all people, needs, resources and clocks. At frame
+30 the player starts baking; the batch finishes after closing with its reserved
+wage, and frame 300 eats the carried loaf. Lighting follows the same elapsed
+time in this recording. The GIF, HD video and full-size still are refreshed
+together. The export is not a live performance benchmark.
+
+Other counter recordings retain their daytime actions and older UI captions;
+use this new clip to inspect availability and the clock. Existing roofs, assets,
+interiors, vehicles, sports, plant/animal motion and destruction keep unchanged
+geometry and demonstrated rules. [Verification](../evidence/market-hours/verification.md).

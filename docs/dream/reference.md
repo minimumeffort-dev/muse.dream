@@ -400,10 +400,17 @@ One optional `economy(){...}` per linked world. [Working guide](commerce.md).
 ```text
 good id(label=text,food=n?);
 account id(actor=ref,credits=n,capacity=n,satiety=n,drain_s=n,shop=bool?,meal=ref?,work=ref?,works=symbols?,repair=ref?,repairs=symbols?);
-market id(label=text,actor=ref,credits=n,radius=n){ lot ... }
+market id(label=text,actor=ref,credits=n,radius=n,hours=[6,22]){ lot ... }
 lot id(good=ref,quantity=n,limit=n,price=n?);
 work id(label=text,market=ref,input=ref,take=n,output=ref,make=n,seconds=n,pay=n,effort=n,capacity=n,target=n,requires=ref?);
 ```
+
+Market `hours` is an optional numeric pair: opening 0..less than 24, closing
+0..24, different endpoints. `[6,22]` includes 06:00 and excludes 22:00; `[22,6]`
+wraps midnight. Omit it for all-day service. Requires `daylight` in the world.
+Simulation time owns availability, independently of the visual sky. Player and
+NPC transactions share the same check. See [opening hours](hours.md) for work,
+courier waits, refunds, reduced motion and the complete example.
 
 At most 8 goods, 16 accounts, 8 markets, 16 jobs and 16 delivery contracts and 8 repair services; each market has 1..8 lots with unique goods. Exactly one player account; one account per actor. Other owners are existing NPC placements. Market vendors and production workers are stationary. Repair workers start at a stationary home in supply-market reach and travel within declared grounds and their pedestrian connections. NPC `shop` and `work` policies are optional; player accounts cannot automate themselves.
 

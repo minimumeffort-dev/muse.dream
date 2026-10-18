@@ -89,3 +89,15 @@ Claims, paths and timers survive streaming and format-12 saves. Existing bodies,
 fragments, rigs, NPCs, market resources and camera controls remain in use.
 Restaurant queues, table service, more furniture types and scheduled social
 activities remain separate work. See [shared seating](dream/seating.md).
+
+
+### Daily counter hours (r62)
+
+The bakery and depot now serve 06:00–22:00 and the school 08:00–17:00. Shared
+player/NPC counter checks gate trade, new production, pickup and handoff. Existing
+work finishes; couriers wait with their saved cargo/escrow; hungry diners can
+return without buying. Food, refunds and maintenance remain available. This adds
+a first schedule consequence to the existing day, with no new actors or render
+geometry. Next connect staff destinations, shifts and richer social decisions;
+opening a counter does not yet move staff or create an employment contract.
+See [opening hours](dream/hours.md).

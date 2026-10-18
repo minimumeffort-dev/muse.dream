@@ -91,7 +91,14 @@ Needs and work settle on a resident 4 Hz simulation clock. NPC decisions are at 
 
 [Save format and the first-market migration](../persistence.md) preserve earlier world changes while introducing this new system. Later changes to economy rules still need an explicit migration. Limits are in the generated [command contract](../dream-v2-contract.json) and [reference](reference.md#commerce-bounds). Logical Lab scenarios remain independent.
 
-The market has a usable ground-floor interior and short food and repair-supply chains. Enterable kitchens, opening hours, shifts, supply production, relationship progression and broader needs planning remain future work. Bounded food destinations are now available through the meal trips below. The supply ledger is working; those institutions should not be described as complete yet.
+The market has a usable ground-floor interior and short food and repair-supply chains. Enterable kitchens, staff shifts, supply production, relationship progression and broader needs planning remain future work. Bounded food destinations are now available through the meal trips below. The supply ledger is working; those institutions should not be described as complete yet.
+
+## Counter hours
+
+Markets optionally declare `hours=[6,22]`, requiring a world daylight clock.
+Player and NPC trade, production starts, shipment pickup and handoff share service
+hours. Committed jobs still finish, couriers can wait with real escrow, and owned
+food, refunds and repairs remain usable. [Full contract and runnable world](hours.md).
 
 ## Recipes with several ingredients
 

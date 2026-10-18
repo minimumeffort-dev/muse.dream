@@ -33,7 +33,8 @@ The business starts with finite bread, flour, vegetables and money. It can stop
 for missing ingredients, a full shelf, a hungry worker or insufficient wages.
 The helper can spend earned pay on food after returning. Kit and sapling supply
 and available repair work retain their existing priorities before flour trips.
-This is a working counter and supply loop, with shared bench seating, without table
+The counter now follows [daily service hours](hours.md), shared by player and
+NPC transactions. This is a working counter and supply loop, with shared bench seating, without table
 service, shifts, upstream farming or business ownership yet.
 
 ## Compose the existing Dream rules

@@ -44,6 +44,9 @@ describe('bounded agent context packets',()=>{
     packet.availableFeatures.pop();
     expect(dreamAgentContext(['all']).availableFeatures).toEqual(Object.keys(DREAM_AGENT_FEATURES));
   });
+  it('includes the required world clock when authoring markets with service hours',()=>{
+    const packet=dreamAgentContext(['commerce']);expect(packet.contract.commands.market!.fields.hours).toBe('v2?');expect(packet.contract.commands).toHaveProperty('daylight');expect(packet.instructions).toContain('simulation time');expect(packet.contract).toMatchObject({commerce:{hours:{source:'market(...,hours=[open_hour,close_hour])'}}});
+  });
   it.each([[],['unknown'],['__proto__'],['constructor'],['all','objects'],Array(17).fill('objects')].map(features=>[features]))('rejects invalid feature requests: %j',features=>{
     expect(()=>dreamAgentContext(features)).toThrow();
   });

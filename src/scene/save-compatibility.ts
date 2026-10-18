@@ -2,7 +2,7 @@ import marketR55 from './compatibility/r55-market.json';
 import type {Scene} from './schema';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=18;
+export const SAVE_SIMULATION_VERSION=19;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -57,7 +57,7 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY);
+  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY);
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
@@ -79,9 +79,15 @@ export const PROGRESS_COMPATIBILITY='46a0824a39fbddaae24bae941554b33cddaf84437d2
 export const MEAL_COMPATIBILITY='b797ee47140b40a889d0bd5b28de4926b01b6fdbf916260139974993cdb7d634';
 export const KITCHEN_COMPATIBILITY='6d52318e971ff660899fd39229f652d6ff3df011e109a71629a062c818c7587c';
 export const SEATING_COMPATIBILITY='34e38f9a8ccb723174d60d26eabf3f28246df880a0ae6a21208d010bb54bfc74';
+export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363b9643a4362b47d576c';
+/** r62 adds counter hours without changing saved fields, geometry or resources. */
+export function preHoursScene(scene:Scene):Scene{
+ return {...scene,economy:scene.economy && {...scene.economy,markets:scene.economy.markets.map(m=>{const {hours,...old}=m;return old;})}};
+}
+export function preHoursCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preHoursScene(scene),18,true,encode);}
 /** r61 adds furniture metadata and a meal destination, retaining geometry and ledgers. */
 export function preSeatingScene(scene:Scene):Scene{
- return {...scene,objects:scene.objects.map(o=>{if(!o.spec || !('seats' in o.spec) || !o.spec.seats)return o;const {seats,...spec}=o.spec;return {...o,spec};}),economy:scene.economy && {...scene.economy,meals:scene.economy.meals.map(m=>{if(m.id!=='market_break')return m;const {seats,grounds,...old}=m;return old;})}};
+ scene=preHoursScene(scene);return {...scene,objects:scene.objects.map(o=>{if(!o.spec || !('seats' in o.spec) || !o.spec.seats)return o;const {seats,...spec}=o.spec;return {...o,spec};}),economy:scene.economy && {...scene.economy,meals:scene.economy.meals.map(m=>{if(m.id!=='market_break')return m;const {seats,grounds,...old}=m;return old;})}};
 }
 export function preSeatingCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preSeatingScene(scene),17,true,encode);}
 /** r60 changes only existing staff duties; no new world or ledger members. */

@@ -89,3 +89,9 @@ the complete small example works without repairs or ambient walkers.
 Static furniture can declare named `seat` slots with local sitting surfaces,
 approaches and facing. Meal customers and the player share occupancy, damage
 and restoration rules. [Seating contract and runnable world](dream/seating.md).
+
+
+`market(...,hours=[6,22])` adds daily counter service using the world's daylight
+configuration and saved simulation time. Overnight pairs wrap midnight. Player
+and NPC trade, work starts and delivery counters share the rule, with safe waits
+for committed cargo. [Hours and the complete example](dream/hours.md).

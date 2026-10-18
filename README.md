@@ -133,6 +133,11 @@ money and journeys stay real and finite, and survive leaving or reloading.
 
 ![A working bakery counter](docs/media/kitchen.gif)
 
+The bakery and depot open from **06:00 to 22:00**; the school canteen serves
+**08:00 to 17:00**. After closing, the counter shows when to return. Finish a
+committed batch, eat your own food or keep a delivery safe until its receiver
+opens. NPCs use the same hours. [Opening hours in Dream](docs/dream/hours.md).
+
 You can also take delivery work. Bring flour from the station depot to the bakery,
 or carry bread to the school canteen. Pick up with **H**, follow the marked
 location, then hand over on foot to get paid. Cargo, stock and money survive

@@ -6,6 +6,10 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights service hours at exact field boundaries and escapes market labels',()=>{
+    const html=highlight('market bakery(label="<Counter>&",hours=[6,22]);');
+    expect(html).toContain('class="dream-field">hours</span>');expect(html).toContain('&lt;Counter&gt;&amp;');expect(highlight('hours_extra afterhours')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('highlights furniture seats at complete boundaries and escapes authored labels',()=>{
     const text='seat left(at=[-13,18,8],approach=[-13,48],heading_deg=90); meal lunch(good=bread,markets=[shop],on=plaza,eat_s=4,seats=[bench]); seatbelt(seating=1); "<img src=x onerror=bad>"';
     const html=highlight(text);

@@ -1,3 +1,4 @@
+import {marketIsOpen} from './market-hours';
 import {findSeat,worldSeats} from '../scene/seating';
 import {seatAvailable} from './seating';
 import {interactionSight} from './sight';
@@ -33,7 +34,7 @@ const completions=z.object({work:z.record(count),delivery:z.record(count),repair
 export const progressEconomyStateSchema=recipeEconomyStateSchema.extend({accounts:z.array(recipeEconomyStateSchema.shape.accounts.element.extend({completed:completions}).strict()).max(L.accounts),unattributed:completions,events:z.array(recipeEconomyStateSchema.shape.events.element.extend({reason:z.enum([...recipeEconomyStateSchema.shape.events.element.shape.reason.unwrap().options,'qualification']).optional()}).strict()).max(12)}).strict();
 const mealState=courierState.omit({phase:true}).extend({id,market:id,phase:z.enum(['out','seat','eat','home']),home:point,eatUntilS:clock.optional(),seat:z.object({objectId:id,seatId:id}).strict().optional()}).strict();
 export const mealEconomyStateSchema=progressEconomyStateSchema.extend({accounts:z.array(progressEconomyStateSchema.shape.accounts.element.extend({meal:mealState.omit({seat:true}).extend({phase:z.enum(['out','eat','home'])}).strict().optional()}).strict()).max(L.accounts)}).strict();
-export const economyStateSchema=progressEconomyStateSchema.extend({accounts:z.array(progressEconomyStateSchema.shape.accounts.element.extend({meal:mealState.optional()}).strict()).max(L.accounts)}).strict();
+export const economyStateSchema=progressEconomyStateSchema.extend({accounts:z.array(progressEconomyStateSchema.shape.accounts.element.extend({meal:mealState.optional()}).strict()).max(L.accounts),events:z.array(progressEconomyStateSchema.shape.events.element.extend({reason:z.enum([...progressEconomyStateSchema.shape.events.element.shape.reason.unwrap().options,'closed']).optional()}).strict()).max(12)}).strict();
 export type EconomyState=z.infer<typeof economyStateSchema>;
 export type CommerceAction={kind:'buy';market:string;good:string}|{kind:'sell';market:string;good:string}|{kind:'eat';good:string}|{kind:'work';job:string}|{kind:'collect';delivery:string}|{kind:'deliver'}|{kind:'cancel'}|{kind:'repair';repair:string};
 type Account=EconomyState['accounts'][number];
@@ -72,8 +73,9 @@ function reserved(e:EconomyState,definition:Economy,market:string,good?:string){
  return n;
 }
 function deliveryCommitments(e:EconomyState,id:string,except?:Account){return e.accounts.filter(a=>a!==except && (a.delivery?.id===id || a.courier?.id===id && a.courier.phase==='pickup')).length;}
-function collectionReason(scene:Scene,e:EconomyState,a:Account,id:string):Reason|undefined{
+function collectionReason(scene:Scene,e:EconomyState,a:Account,id:string,timeS:number):Reason|undefined{
  const c=data(scene),d=c.deliveries.get(id);if(!d)return 'range';
+ if(!marketIsOpen(scene,c.markets.get(d.from)!,timeS))return 'closed';
  const from=e.markets.find(m=>m.id===d.from)!,to=e.markets.find(m=>m.id===d.to)!,lot=c.markets.get(d.to)!.lots.find(l=>l.good===d.good)!;
  const n=deliveryCommitments(e,d.id,a);if(e.delivered[d.id]!+n>=1e9)return 'capacity';if(n>=d.capacity)return 'busy';
  if(from.stock[d.good]!<d.quantity)return 'stock';
@@ -87,8 +89,9 @@ export function repairOffer(state:CarState,scene:Scene,e:EconomyState,a:Account,
  for(const target of targets){const approach=repairApproach(scene,r,target,p,state);if(approach)return {target,...approach};}
 }
 export function repairTarget(state:CarState,scene:Scene){const c=scene.economy && data(scene),a=c && state.economy?.accounts.find(a=>c.accounts.get(a.id)!.actor==='player'),task=a?.repair,r=task && c!.repairs.get(task.id);return task && r ? {task,repair:r,x:task.at.x,y:task.at.y} : undefined;}
-function purchaseReason(scene:Scene,e:EconomyState,a:Account,market:string,good:string):Reason|undefined{
+function purchaseReason(scene:Scene,e:EconomyState,a:Account,market:string,good:string,timeS:number):Reason|undefined{
  const c=data(scene),m=c.markets.get(market),stock=e.markets.find(s=>s.id===market),lot=m?.lots.find(l=>l.good===good);
+ if(m && !marketIsOpen(scene,m,timeS))return 'closed';
  if(!stock || !lot?.price || !stock.stock[good])return 'stock';
  if(a.credits<lot.price)return 'funds';
  if(Object.values(a.inventory).reduce((n,v)=>n+v,0)>=c.accounts.get(a.id)!.capacity)return 'full';
@@ -100,7 +103,8 @@ function reason(state:CarState,scene:Scene,e:EconomyState,a:Account,action:Comme
  if(definition.actor==='player' && state.seated && action.kind!=='eat')return 'busy';
  if(definition.actor==='player' && !ownerPose(state,scene,a) && !(state.seated && action.kind==='eat'))return 'range';
  if(action.kind==='deliver'){
-  const d=a.delivery && c.deliveries.get(a.delivery.id);return d && inReach(state,scene,a,c.markets.get(d.to)!) ? undefined : 'range';
+  const d=a.delivery && c.deliveries.get(a.delivery.id);if(!d || !inReach(state,scene,a,c.markets.get(d.to)!))return 'range';
+  return marketIsOpen(scene,c.markets.get(d.to)!,state.timeS) ? undefined : 'closed';
  }
  if(a.meal && !(a.meal.phase==='out' && action.kind==='buy' && action.market===a.meal.market && action.good===c.meals.get(a.meal.id)!.good || a.meal.phase==='eat' && action.kind==='eat' && action.good===c.meals.get(a.meal.id)!.good))return 'busy';
  if(a.work || a.repair || a.courier && !(action.kind==='collect' && a.courier.phase==='pickup' && a.courier.id===action.delivery) || a.delivery && action.kind!=='eat')return 'busy';
@@ -113,7 +117,7 @@ function reason(state:CarState,scene:Scene,e:EconomyState,a:Account,action:Comme
  }
  if(action.kind==='collect'){
   const d=c.deliveries.get(action.delivery);if(!d || !inReach(state,scene,a,c.markets.get(d.from)!))return 'range';
-  return collectionReason(scene,e,a,d.id);
+  return collectionReason(scene,e,a,d.id,state.timeS);
  }
  if(action.kind==='eat'){
   if(!(c.goods.get(action.good)?.food))return 'not_food';
@@ -123,13 +127,14 @@ function reason(state:CarState,scene:Scene,e:EconomyState,a:Account,action:Comme
  }
  const m=action.kind==='buy' || action.kind==='sell' ? c.markets.get(action.market) : c.markets.get(c.jobs.get(action.job)?.market??'');
  if(!m || !inReach(state,scene,a,m))return 'range';
+ if(!marketIsOpen(scene,m,state.timeS))return 'closed';
  const stock=e.markets.find(s=>s.id===m.id)!;
  if(action.kind==='sell'){
   const lot=m.lots.find(l=>l.good===action.good);if(!lot?.price || !a.inventory[action.good])return 'stock';
   if(stock.credits<lot.price || a.credits+lot.price>L.money)return 'treasury';
   if(stock.stock[action.good]!+reserved(e,c.e,m.id,action.good)+1>lot.limit)return 'capacity';
  }else if(action.kind==='buy'){
-  return purchaseReason(scene,e,a,m.id,action.good);
+  return purchaseReason(scene,e,a,m.id,action.good,state.timeS);
  }else{
   const j=c.jobs.get(action.job)!;
   if(j.requires && !hasMilestone({economy:e},scene,a.id,j.requires))return 'qualification';
@@ -209,6 +214,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
   if(Math.hypot(t.x-t.at.x,t.y-t.at.y)>.1)continue;
   if(t.phase==='home'){a.courier=undefined;current={...current,npcs:current.npcs.map(n=>n.id===home.id ? {...n,headingRad:t.headingRad} : n)};continue;}
   if(t.phase==='pickup'){
+   if(reason(current,scene,e,a,{kind:'collect',delivery:d.id})==='closed')continue;
    const onward=courierApproach(scene,d,d.to,t,current);
    if(!onward || reason(current,scene,e,a,{kind:'collect',delivery:d.id})){returnCourier(a);continue;}
    perform(a,{kind:'collect',delivery:d.id});t.phase='dropoff';t.at=onward.end;t.path=onward.path;t.routeAtS=now;continue;
@@ -238,7 +244,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
   if(a.satiety<=40){
    const food=c.e.goods.find(g=>g.food>0 && a.inventory[g.id]!>0);if(food){perform(a,{kind:'eat',good:food.id});continue;}
    if(spec.meal){const meal=c.meals.get(spec.meal)!,p=ownerPose(current,scene,a)!;
-    for(const market of meal.markets){if(purchaseReason(scene,e,a,market,meal.good))continue;const offer=courierApproach(scene,meal,market,p,current);if(!offer || !workPath(scene,deliveryArea(meal),offer.end,p,current))continue;
+    for(const market of meal.markets){if(purchaseReason(scene,e,a,market,meal.good,now))continue;const offer=courierApproach(scene,meal,market,p,current);if(!offer || !workPath(scene,deliveryArea(meal),offer.end,p,current))continue;
      a.meal={id:meal.id,market,phase:'out',home:{x:p.x,y:p.y},at:offer.end,x:p.x,y:p.y,headingRad:actorPose(scene,c.objects.get(spec.actor)!,now,current).headingRad,distance:0,speed:0,path:offer.path,routeAtS:now};break;
     }if(a.meal)continue;
    }
@@ -246,7 +252,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
   }
   const services=accountRepairs(spec);if(services.length){const id=services.find(id=>spec.repairs || spec.deliveries ? !reason(current,scene,e,a,{kind:'repair',repair:id}) : !!repairOffer(current,scene,e,a,id)),offer=id && repairOffer(current,scene,e,a,id);if(!offer)a.repairSeen=undefined;else{const {target}=offer;if(a.repairSeen?.objectId!==target.objectId || a.repairSeen.zoneId!==target.zoneId || (a.repairSeen.serviceId??services[0])!==id)a.repairSeen={...(spec.repairs ? {serviceId:id!} : {}),objectId:target.objectId,...(target.zoneId ? {zoneId:target.zoneId} : {}),atS:now};if(now-a.repairSeen.atS+1e-8>=c.repairs.get(id as string)!.dispatch_s)perform(a,{kind:'repair',repair:id as string});continue;}}
   for(const id of spec.deliveries??[]){
-   if(collectionReason(scene,e,a,id))continue;const d=c.deliveries.get(id)!,p=ownerPose(current,scene,a)!,offer=courierApproach(scene,d,d.from,p,current);if(!offer)continue;
+   if(collectionReason(scene,e,a,id,now))continue;const d=c.deliveries.get(id)!,p=ownerPose(current,scene,a)!,offer=courierApproach(scene,d,d.from,p,current);if(!offer)continue;
    a.courier={id,phase:'pickup',at:offer.end,x:p.x,y:p.y,headingRad:c.objects.get(spec.actor)!.headingRad??0,distance:0,speed:0,path:offer.path,routeAtS:now};a.repairSeen=undefined;report(a,'courier_started',id);break;
   }
   if(a.courier)continue;

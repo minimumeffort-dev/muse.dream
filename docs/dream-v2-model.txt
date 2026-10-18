@@ -515,7 +515,7 @@ is metadata, not optical falloff. It does not illuminate walls or calculate obje
 or player lamp. Whole-object break/topple is allowed with world.damage_pool; the pool
 turns off while broken and returns after repair. Flocks cannot carry lamps. Use material.night for glowing windows.
 One shared 2048 directional shadow map serves sun/moon; no per-lamp shadow maps.
-NPC routines and transit schedules continue; no opening hours, weather or astronomical calendar.
+NPC routines and transit continue; market hours use simulation time, even when reduced motion freezes the sky. No weather or astronomical calendar.
 
 ## scenarios
 LOGICAL TASK SCENARIOS
@@ -565,10 +565,23 @@ SPORTS PRACTICE
 sport id(kind=football|basketball,surface=surface_id,ball=placement_id,targets=[first,second],target_at=[x,y,z],target_size=[width,height]); connects existing world data after linking. At most 8 grounds, each with its own non-overlapping dry surface and distinct bounce ball. Ball is a static prop with a round knockable body: world radius .5..3, height twice radius. Use measure(kind=custom,axis=x,meters=.22/.24) to resolve real ball size from a local body(radius=4,height=8); do not lower legacy body bounds. Targets are two static upright assemblies at least 64 units apart; target_at and target_size use their local units and follow placement heading/scale. Football target is a grounded opening 6..120 wide and 4..50 high, local +Z points out of the field, opposing target normals. Basketball target is a clear X/Z ring diameter 2.5..12, fitting the ball, at height 16..50; local +Z points into the court. Target anchor must lie in the actual assembly bounds and within 32 of the surface. Surface sampled height variation <=3, no water. Existing object/reactive budgets still apply. Engine owns walk-up dribbling, charged shots, scoring, recovery and camera; no generated controller code, team AI, fouls or bank-shot backboard physics. Complete source: examples/sports-practice.dream.
 
 ## commerce
+Optional market hours=[6,22] means daily [open,close); hours=[22,6] spans midnight.
+Use two finite different endpoints: 0 <= open < 24, 0 <= close <= 24. Omit hours
+for all-day service. Requires world daylight(cycle_s,start_hour). Economic service
+uses simulation time, independent of the paused/reduced-motion visual sky clock.
+Player and NPC buy/sell, new work, supplier pickup and destination handoff share
+the counter check. Committed work finishes after closing; owned food, refunds and
+local repair services remain usable. Couriers already traveling wait at closed
+counters, retaining real cargo/escrow and retrying after opening. Meal customers
+skip closed shops and return empty-handed if closing occurs before purchase.
+Hours do not add staff travel, shifts, wages for idle time or offline catch-up.
+See examples/market-hours.dream. Format 12/simulation 19 registers r61 by removing
+only market hours; retain all saved fields, clocks, seats, meals and resources.
+
 One optional economy() block owns goods, accounts, markets and work in the playable
 3D world. This is independent of logical scenario/stock/service declarations.
 Use good(label,food=0); account(actor,credits,capacity,satiety,drain_s,shop=false,work?,works?,repair?);
-market(label,actor,credits,radius){lot(good,quantity,limit,price?);} and
+market(label,actor,credits,radius,hours?){lot(good,quantity,limit,price?);} and
 work id(label,market,input,take,output,make,seconds,pay,effort,capacity,target);
 For multiple inputs omit input/take and use a work block:
 work id(label,market,output,make,seconds,pay,effort,capacity,target){
@@ -606,7 +619,7 @@ without refund or pay. Success waits eat_s, consumes its owned unit once, restor
 fullness, then returns to the captured routine position. Program clocks pause
 through travel/eating/return; moving transit/player contacts can cause waits and
 bounded replans. Save paths, timers and ownership outside Scene. No item bodies,
-new rigs, seating, queues, generated navigation or offline catch-up. See
+new rigs, queues, generated navigation or offline catch-up. See
 examples/meal-trips.dream. Compose works=[pack_lunch,bake], account.deliveries
 and meal for a finite staffed business; see examples/market-production.dream.
 Courier/meal scenes prepare pedestrian routing independently of repairs or ambient

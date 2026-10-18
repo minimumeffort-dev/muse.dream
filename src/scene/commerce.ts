@@ -19,7 +19,8 @@ const label=z.string().min(1).max(40).refine(s=>s.trim().length>0,'label must co
 const good=z.object({id:ref,label,food:z.number().finite().min(0).max(100).default(0)}).strict();
 const account=z.object({id:ref,actor:ref,credits:money,capacity:z.number().int().min(1).max(COMMERCE_LIMITS.capacity),satiety:z.number().finite().min(0).max(100),drainPerS:z.number().finite().min(0).max(.25),shop:z.boolean().default(false),meal:ref.optional(),work:ref.optional(),works:z.array(ref).min(1).max(COMMERCE_LIMITS.workerJobs).optional(),repair:ref.optional(),repairs:z.array(ref).min(1).max(GROWTH_LIMITS.workerServices).optional(),deliveries:z.array(ref).min(1).max(COMMERCE_LIMITS.courierContracts).optional()}).strict();
 const lot=z.object({id:ref,good:ref,quantity,limit:quantity.refine(n=>n>0),price:z.number().int().min(1).max(10_000).optional()}).strict();
-const market=z.object({id:ref,label,actor:ref,credits:money,radius:z.number().finite().min(20).max(80),lots:z.array(lot).min(1).max(COMMERCE_LIMITS.goods)}).strict();
+const hours=z.tuple([z.number().finite().min(0).lt(24),z.number().finite().min(0).max(24)]).refine(([start,end])=>start!==end,'hours need different opening and closing times; omit for all-day service');
+const market=z.object({id:ref,label,actor:ref,credits:money,radius:z.number().finite().min(20).max(80),hours:hours.optional(),lots:z.array(lot).min(1).max(COMMERCE_LIMITS.goods)}).strict();
 const ingredient=z.object({good:ref,take:quantity.refine(n=>n>0)}).strict();
 const job=z.object({id:ref,label,market:ref,input:ref.optional(),take:quantity.refine(n=>n>0).optional(),ingredients:z.array(ingredient).min(1).max(COMMERCE_LIMITS.ingredients).optional(),output:ref,make:quantity.refine(n=>n>0),seconds:z.number().finite().min(1).max(120),pay:money.refine(n=>n>0),effort:z.number().finite().min(1).max(50),capacity:z.number().int().min(1).max(4),target:quantity,requires:ref.optional()}).strict().superRefine((j,ctx)=>{
  if(j.ingredients ? j.input!==undefined || j.take!==undefined : j.input===undefined || j.take===undefined)ctx.addIssue({code:'custom',message:'work needs input and take, or an ingredient block, never both',path:['ingredients']});
@@ -134,6 +135,7 @@ export function economyProblems(scene:Scene):string[]{
  if(!e)return guarded.map(({b,t})=>`${b.id}/${t.id}: requires needs an economy milestone`);
  const stationary=(id:string)=>{const o=scene.objects.find(o=>o.id===id);return o && roleOf(o)==='npc' && !o.route && !o.ambient && !scene.behaviors.find(b=>b.id===o.behavior)?.states.some(s=>s.action==='patrol');};
  const problems:string[]=[];
+ if(e.markets.some(m=>m.hours) && !scene.daylight)problems.push('market hours require a world daylight clock');
  for(const {b,t} of guarded){
   const m=e.milestones.find(m=>m.id===t.requires);if(!m){problems.push(`${b.id}/${t.id}: unknown conversation milestone ${t.requires}`);continue;}
   const market=m.kind==='work' ? e.jobs.find(j=>j.id===m.task)?.market : m.kind==='delivery' ? e.deliveries.find(d=>d.id===m.task)?.to : e.repairs.find(r=>r.id===m.task)?.market;

@@ -9,6 +9,10 @@ const examples=import.meta.glob<string>('../docs/examples/*.dream',{query:'?raw'
 const files=Object.keys(import.meta.glob(['../src/**/*','../docs/**/*','../scripts/*','../tests/**/*','../README.md'])).map(p=>p.slice(3));
 
 describe("published Dream documentation",()=>{
+  it('keeps the complete counter-hours guide identical to its runnable world',()=>{
+    const blocks=[...pages['../docs/dream/hours.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
+    expect(blocks).toContain(examples['../docs/examples/market-hours.dream']!.trim());
+  });
   it('keeps the complete business guide identical to its independently runnable world',()=>{
     const blocks=[...pages['../docs/dream/businesses.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
     expect(blocks).toContain(examples['../docs/examples/market-production.dream']!.trim());

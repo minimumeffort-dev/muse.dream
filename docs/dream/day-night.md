@@ -45,7 +45,7 @@ A lamp assembly can also declare one `lamp(at=[0,38,0],radius=30,color=#ffd18a)`
 
 The world keeps one directional shadow map for the sun and moon. Their direct light fades to darkness during the horizon handoff; sky and fill light remain available for navigation. Streetlights use shared emissive materials and bounded surface pools, with no per-lamp shadow map. The 400 lights follow city and airport placement rules; the cycle adds no actors or live joints.
 
-Light pools are stylized, unshadowed ground effects. They do not light building walls or simulate occlusion from objects. Windows glow without simulating interiors or occupancy. Existing NPC programs and transit schedules continue through the night; this feature does not add opening hours, weather or an astronomical calendar.
+Light pools are stylized, unshadowed ground effects. They do not light building walls or simulate occlusion from objects. Windows glow without simulating interiors or occupancy. Existing NPC programs and transit schedules continue through the night; [counter hours](hours.md) use simulation time independently of reduced-motion lighting. Staff shifts, weather and an astronomical calendar remain separate work.
 
 [Exact fields and bounds](reference.md#daylight-and-night-lighting) · [Original cycle evidence](../evidence/day-night/verification.md) · [Night visibility pass](../evidence/night-visibility/verification.md)
 
