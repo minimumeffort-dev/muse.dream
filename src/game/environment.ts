@@ -5,11 +5,11 @@ import {contains,overlaps,type RenderRegion} from "./render-region";
 import {voxelTerrainTile} from './voxel-columns';
 import {voxelStamp} from '../scene/voxel-stamp';
 import {reservedGround,streetPolygons,streetCircuitCrossings,onPolygon} from '../scene/streets';
-import {roadSections,roadGeometry,timberFootprints} from './road-surfaces';
+import {roadSections,roadGeometry,timberFootprints,curbLiftAt} from './road-surfaces';
 export {roadSections,roadGeometry} from './road-surfaces';
 import {buildStreetSteps} from './streets';
 import {tramTrackPolygons} from './tram-tracks';
-import { bridgeAt, bridgeCoordinates } from "../scene/landscape-dsl";
+import { bridgeAt } from "../scene/landscape-dsl";
 import type { Point, Scene } from "../scene/schema";
 import { sampleTerrain, terrainHeight, drivingHeight, waterAt } from "../scene/terrain";
 import { routeInfrastructure } from "../scene/routes";
@@ -41,16 +41,7 @@ export function curbGeometry(doc: Scene, side: -1 | 1,region?:RenderRegion): THR
   const inner = side * (half - ROAD_CURB_WIDTH / 2), outer = side * (half + ROAD_CURB_WIDTH / 2);
   const vertices: number[] = [], colors: number[] = [];
   const cutouts = [...timberFootprints(doc),...streetPolygons(doc.streets,'reserved')];
-  const timber = (doc.terrain.landscape?.bridges ?? []).filter(bridge => bridge.style === "timber");
-  const curbLift = (x: number, y: number, lift: number) => {
-    let distance = Infinity;
-    for (const bridge of timber) {
-      const p = bridgeCoordinates(bridge, x, y);
-      distance = Math.min(distance, Math.hypot(Math.max(-p.t, p.t - 1, 0) * p.length, Math.max(Math.abs(p.across) - bridge.width / 2, 0)));
-    }
-    // Collapse the complete curb section into the deck, leaving no open end cap or raised lip.
-    return ROAD_SURFACE_LIFT + (lift - ROAD_SURFACE_LIFT) * THREE.MathUtils.smoothstep(distance, 0, 24);
-  };
+  const curbLift=curbLiftAt(doc);
   const cream = new THREE.Color("#f7ddbe"), red = new THREE.Color("#ce776d");
   for (let i = 1; i < sections.length; i++) {
     const a = sections[i - 1]!, b = sections[i]!;

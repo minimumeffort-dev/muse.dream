@@ -214,9 +214,13 @@ retains old progress. [Controls, source and limits](dream/sports.md).
 
 Grounded player and CPU pedestrians now use visible travel for cadence and retain
 foot position/facing through a turn or stop. Instanced sidewalk walkers share this
-policy without more scene rigs or physics bodies. Terrain-aware per-foot steps
-and the sports squads' direction changes remain animation work; this pass does
-not change movement rules or saved lives. [Contact checks](evidence/foot-contacts/verification.md).
+policy without more scene rigs or physics bodies. Feet now retain world height
+and follow terrain, pavement, bridge and reachable contact support; both rigid
+legs fit before solving. Crowd probes stay at most 20 Hz per returning foot,
+using a bounded worker-prepared surface cache and the same four attribute slots.
+Sports squads' direction changes and richer authored stair-climbing remain
+animation work. Movement rules and saved lives are unchanged.
+[Terrain-contact checks and measured overhead](evidence/terrain-footing/verification.md).
 
 The latest movement-query pass retains every tick of the school repair and crowd
 replay while reducing repeated contact and spatial-index work. Continue checking

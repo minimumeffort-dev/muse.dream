@@ -16,12 +16,15 @@ import {toonMaterial} from './shaders';
 import {roadGeometry,bridgeDeckGeometry} from './road-surfaces';
 import {projectSurfaceSteps} from './surface-projection';
 
-type StreetRecipe={polygons:Point[][];color:string;lift:number;name:string;support:boolean};
+type StreetRecipe={polygons:Point[][];color:string;lift:number;name:string;support:boolean;footing:boolean};
 const recipes=new WeakMap<Scene,{layers:StreetRecipe[];grooves:Point[][];heads:Point[][]}>();
+export function* streetPlanSteps(scene:Scene):Generator<void,NonNullable<ReturnType<typeof recipes.get>>>{
+ let plan=recipes.get(scene);if(!plan){plan=yield* streetRecipeSteps(scene);recipes.set(scene,plan);}return plan;
+}
 /** Planar joins and paint are resolved once, before clipping to render chunks. */
 export function buildStreets(scene:Scene):THREE.Group{return finishBuild(buildStreetSteps(scene));}
 export function* buildStreetSteps(scene:Scene,region?:RenderRegion):Generator<void,THREE.Group>{
-  let plan=recipes.get(scene);if(!plan){plan=yield* streetRecipeSteps(scene);recipes.set(scene,plan);}
+  const plan=yield* streetPlanSteps(scene);
   const group=new THREE.Group();group.name='streets-and-grounds';
   const timber=(scene.terrain.landscape?.bridges??[]).filter(b=>b.style==='timber').map(bridgePolygon);
   const support:THREE.BufferGeometry[]=[],collect=(root:THREE.Object3D)=>root.traverse(n=>{if(n instanceof THREE.Mesh)support.push(n.geometry);});
@@ -56,8 +59,8 @@ function* streetRecipeSteps(scene:Scene):Generator<void,{layers:StreetRecipe[];g
   const roads=streetPolygons(scene.streets),roadUnion=unionPolygons(roads);
   const loop=roadFootprint(scene),riding=streetPolygons(scene.streets,'riding'),bands=streetCycleSurface(scene),dedicated=streetCycleTracks(scene);
   const sidewalks=streetSidewalks(scene);
-  function* add(polygons:Point[][],color:string,lift:number,name:string,support=false):Generator<void>{
-    if(polygons.length)plan.push({polygons,color,lift,name,support});yield;
+  function* add(polygons:Point[][],color:string,lift:number,name:string,support=false,footing=true):Generator<void>{
+    if(polygons.length)plan.push({polygons,color,lift,name,support,footing});yield;
   }
   yield* add(roadUnion,'#626e77',1.25,'street-carriageways',true);
   const {grooves,heads}=tramTrackPolygons(scene);
@@ -104,7 +107,8 @@ function* streetRecipeSteps(scene:Scene):Generator<void,{layers:StreetRecipe[];g
       symbols.push(...unionPolygons(glyph));symbolBounds.push(bounds);
     }
   }
-  yield* add(paint(symbols),'#eee8d9',1.85,'cycle-symbols');
+  // The fine bicycle stencil is cosmetic; it cannot raise or tilt a planted foot.
+  yield* add(paint(symbols),'#eee8d9',1.85,'cycle-symbols',false,false);
   const crossings:Point[][]=[],stopLines:Point[][]=[];
   for(const {street,polygons} of streetCircuitCrossings(scene))for(const polygon of polygons){
     const center=polygon.reduce((p,q)=>({x:p.x+q.x/polygon.length,y:p.y+q.y/polygon.length}),{x:0,y:0}),frame=streetFrame(street,center);

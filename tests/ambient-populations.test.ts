@@ -51,7 +51,7 @@ describe('bounded moving ambient populations',()=>{
   const people={...scene,objects:scene.objects.filter(o=>o.ambient!.motion.kind==='walk')},population=new AmbientPopulation(people),camera=new OrthographicCamera(-5000,5000,5000,-5000,.1,10000),sun=new DirectionalLight();
   camera.position.set(0,3000,3000);camera.lookAt(0,0,0);camera.updateMatrixWorld();sun.shadow.camera.updateMatrixWorld();population.update(createCarAtSpawn(people),camera,sun,1/60,true);
   const matrix=new Matrix4();for(const mesh of population.group.children as InstancedMesh[]){expect(mesh.count).toBe(people.objects.length);for(const [i,o] of people.objects.entries()){
-   mesh.getMatrixAt(i,matrix);expect(matrix.elements[13]).toBeCloseTo(walkingHeight(people,o.x,o.y,assemblyHorizontalRadius(o.spec as import('../src/scene/object-dsl').ObjectDslV2,o.scale))+.2,5);
+   mesh.getMatrixAt(i,matrix);expect(matrix.elements[13]).toBeCloseTo(walkingHeight(people,o.x,o.y,assemblyHorizontalRadius(o.spec as import('../src/scene/object-dsl').ObjectDslV2,o.scale))+1.6+.2,5);
   }}
   expect(objectGroundLift(scene.objects.find(o=>o.id==='rabbit')!)).toBe(1.5);
  });
@@ -75,7 +75,7 @@ describe('bounded moving ambient populations',()=>{
     previous[i]=down ? {x:p.x,z:p.z,heading:rotation} : undefined;
    }
   }
-  expect(contacts).toBeGreaterThan(200);expect(maxDrift).toBeLessThan(.002);expect(maxStep*120).toBeLessThan(57);expect(population.group.children.length).toBe(draws);expect(mesh.geometry.getAttribute('popPlant')).toMatchObject({meshPerAttribute:1});expect(mesh.geometry.getAttribute('popLift')).toMatchObject({meshPerAttribute:1,itemSize:2});
+  expect(contacts).toBeGreaterThan(200);expect(maxDrift).toBeLessThan(.002);expect(maxStep*120).toBeLessThan(57);expect(population.group.children.length).toBe(draws);expect(mesh.geometry.getAttribute('popPlant')).toMatchObject({meshPerAttribute:1});expect(mesh.geometry.getAttribute('popLift')).toMatchObject({meshPerAttribute:1,itemSize:4});
  });
  it('starts a restored crowd over its support foot, then measures visible travel without a saved-phase lurch',()=>{
   const people={...scene,objects:scene.objects.filter(o=>o.ambient!.motion.kind==='walk')},population=new AmbientPopulation(people),state=createCarAtSpawn(people),camera=new OrthographicCamera(-5000,5000,5000,-5000,.1,10000),sun=new DirectionalLight();

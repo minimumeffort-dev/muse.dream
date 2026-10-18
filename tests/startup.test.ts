@@ -10,6 +10,7 @@ import {WorldWorkerClient} from '../src/game/world-worker-client';
 import {ambientGraph,ambientNavigation,primeAmbientNavigation} from '../src/scene/ambient-navigation';
 import {createFixtureScene} from '../src/scene/fixture';
 import {sceneContactData,primeSceneContacts,sceneContacts} from '../src/scene/contacts';
+import {prepareCharacterGround,primeCharacterGround} from '../src/game/character-ground';
 import {buildRoutes,buildRoutesSteps} from '../src/game/routes';
 import {routeSchema} from '../src/scene/routes';
 
@@ -23,8 +24,9 @@ it('carries the accepted worker graph and fails scene/chunk waiters on bootstrap
  const makeWorker=()=>({onmessage:null as any,postMessage:vi.fn(),terminate:vi.fn()});
  const worker=makeWorker(),compile=vi.fn(),client=new WorldWorkerClient(worker as unknown as Worker,compile),scene=createFixtureScene();
  const navigation=structuredClone(ambientGraph(scene)),received=structuredClone(scene);
- worker.onmessage({data:{scene:received,navigation,contacts:structuredClone(sceneContactData(scene)),compileMs:12,saveCompatibility:'current',previousCoverageSaveCompatibility:'r72',previousInvitationSaveCompatibility:'r71'}});
- expect(await client.scene).toBe(received);primeSceneContacts(received,client.contacts);primeAmbientNavigation(received,client.navigation);expect(compile).toHaveBeenCalledWith(12);expect(client.saveCompatibility).toBe('current');expect(client.previousInvitationSaveCompatibility).toBe('r71');expect(client.previousCoverageSaveCompatibility).toBe('r72');expect(ambientNavigation(received).nodes).toEqual(navigation.nodes);
+ const ground=structuredClone(prepareCharacterGround(scene));
+ worker.onmessage({data:{scene:received,navigation,characterGround:ground,contacts:structuredClone(sceneContactData(scene)),compileMs:12,saveCompatibility:'current',previousCoverageSaveCompatibility:'r72',previousInvitationSaveCompatibility:'r71'}});
+ expect(await client.scene).toBe(received);primeSceneContacts(received,client.contacts);primeAmbientNavigation(received,client.navigation);primeCharacterGround(received,client.characterGround);expect(client.characterGround).toEqual(ground);expect(compile).toHaveBeenCalledWith(12);expect(client.saveCompatibility).toBe('current');expect(client.previousInvitationSaveCompatibility).toBe('r71');expect(client.previousCoverageSaveCompatibility).toBe('r72');expect(ambientNavigation(received).nodes).toEqual(navigation.nodes);
  client.dispose();
  const broken=makeWorker(),bad=new WorldWorkerClient(broken as unknown as Worker),failure=bad.scene.catch(e=>e.message);
  const pending=bad.build({x0:0,y0:0,x1:800,y1:800}).catch(e=>e.message);

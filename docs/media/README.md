@@ -13,6 +13,13 @@ refreshes character, pedestrian and locomotion sets again. The current character
 poster is frame 68; its close-up uses Reverse and stop. This retains the same
 distance-driven steps while keeping returning feet continuous through turns.
 
+The [terrain-footing pass](../evidence/terrain-footing/verification.md) refreshes
+character, pedestrians and locomotion again. The character close-up now uses Hill
+and Reverse and stop, showing player and instanced feet on the same slope.
+Its poster uses frame 40. The matching GIF, HD video and stills come from
+180/720/180 consecutive rendered PNG frames at 30 frames per simulation second.
+These exports are motion evidence, not live frame-rate measurements.
+
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
 ## Connected cycle junctions, 2026-10-19

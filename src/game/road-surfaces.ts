@@ -37,6 +37,15 @@ export function timberFootprints(doc: Scene): Point[][] {
   return (doc.terrain.landscape?.bridges ?? []).filter(bridge => bridge.style === "timber").map(bridgePolygon);
 }
 
+export function curbLiftAt(doc:Scene){
+ const timber=(doc.terrain.landscape?.bridges??[]).filter(b=>b.style==='timber');
+ return (x:number,y:number,lift:number)=>{
+  let distance=Infinity;
+  for(const bridge of timber){const p=bridgeCoordinates(bridge,x,y);distance=Math.min(distance,Math.hypot(Math.max(-p.t,p.t-1,0)*p.length,Math.max(Math.abs(p.across)-bridge.width/2,0)));}
+  const t=Math.max(0,Math.min(1,distance/24));return ROAD_SURFACE_LIFT+(lift-ROAD_SURFACE_LIFT)*t*t*(3-2*t);
+ };
+}
+
 /** Road, paint and effects all conform to the same triangles as the terrain. */
 export function roadGeometry(doc: Scene,region?:RenderRegion): BufferGeometry {
   const sections = roadSections(doc), half = doc.roadMaskRef.params.roadWidth / 2;
