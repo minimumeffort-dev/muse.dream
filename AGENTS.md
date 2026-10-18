@@ -765,3 +765,9 @@ areas are prepared; never infer it from labels or save fields. Existing world
 positions, waypoints, ledgers and visual clocks survive this coverage upgrade.
 A compatible saved development review skips its discarded offline preparation;
 fresh reviews and captures still use the complete fixed-step engine.
+
+Work-path broad-phase rejection must enclose the complete swept body and rotated
+contact footprint, with an outward rounding margin. Preserve exact distance and
+vertical tests for remaining candidates, broken-object filtering and live moving
+contacts. A box's broad circle must never fill its doorway. Keep the accepted
+world, ordered routes and saved states exact when optimizing these queries.

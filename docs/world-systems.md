@@ -73,6 +73,12 @@ Night navigation now has readable sky/ground fill outside lamp pools, while stat
 
 Existing limits remain visible: the city has decorative institutions, bounded NPC routines, arcade vehicles and six-a-side sports. It has a working food/work/delivery loop and one enterable market ground floor, with no employment contracts, enterable restaurant, relationship progression, multi-floor interior movement or weather system yet. Prioritize connected activities over adding more empty buildings.
 
+The next recovery step needs more than a wider tree service. Wind-animated
+assemblies are currently excluded from the static damage pool. Support their
+existing wind and materials during bounded toppling first, then connect more
+trees to finite replanting work. Freezing the foliage or allocating a live body
+for every tree would lose the existing visual or performance behavior.
+
 The raised tram rails found in the street audit now use projected street details,
 with crossing clearance and shared road/deck support. Their geometry streams with
 the district; the tram's route, passenger controls and saved clock stay resident.

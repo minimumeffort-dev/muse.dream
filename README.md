@@ -117,6 +117,10 @@ Static districts load as you approach and leave render memory behind you. Physic
 
 World preparation avoids repeated terrain and outline work, and now reuses unchanged object data while checking historical save fingerprints. [Startup measurements](docs/evidence/startup-fingerprints/verification.md) compare the complete accepted world, paths, collisions and save contracts against the preceding release. Detail and visual settings stay the same.
 
+Work-route checks also discard distant collision geometry before testing its exact
+shape. The city, navigation and saved journeys retain the same results.
+[Measurements and comparisons](docs/evidence/route-contact-bounds/verification.md).
+
 Tram tracks sit in the street and follow the actual road and bridge triangles. Crossings leave room for their narrow grooves. The tracks load and unload with the surrounding streets; the tram keeps its route and passenger controls. [Track construction and checks](docs/evidence/tram-tracks/verification.md).
 
 Press **F** beside a bus, tram or train to board as a passenger, then F to leave. Long vehicles now place you beside their actual collision body instead of several metres away. The route keeps moving; your parked car stays where you left it. [Controls and limits](docs/dream/behavior.md#leave-a-vehicle).

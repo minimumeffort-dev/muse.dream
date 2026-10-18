@@ -1,0 +1,39 @@
+{
+  baseline: '7608dc7ff996f309950d2109e41a8c8fbf251562',
+  codeSha: '5ddc87ddff9d5fe0aea7d92379006e814dd3bda38acf0f33378e546b3200a588',
+  conditions: 'Three sequential development reloads before and after at 1280x720 in the native in-app browser, same paused fresh-review URL, full settings, Apple M3 Ultra / 96 GiB. No concurrent local tests or Node benchmarks. Other desktop applications were open.',
+  url: 'http://127.0.0.1:5223/?profile&test-paused',
+  before: {
+    total: { medianMs: 17509, minMs: 17498, maxMs: 17734.099999964237 },
+    worker: {
+      medianMs: 11592.300000011921,
+      minMs: 11543.5,
+      maxMs: 11895.899999976158
+    },
+    firstDraw: { medianMs: 136.10000002384186, minMs: 134.5, maxMs: 164.5 },
+    maximumHeartbeatGapMs: 259.80000001192093
+  },
+  after: {
+    total: {
+      medianMs: 16874.69999998808,
+      minMs: 16415.69999998808,
+      maxMs: 17676.399999976158
+    },
+    worker: {
+      medianMs: 10433.400000035763,
+      minMs: 10362.100000023842,
+      maxMs: 10592.5
+    },
+    firstDraw: {
+      medianMs: 176.60000002384186,
+      minMs: 174.30000001192093,
+      maxMs: 179.39999997615814
+    },
+    maximumHeartbeatGapMs: 266.5
+  },
+  limits: 'Small desktop sample; total ranges overlap, first draw and heartbeat did not improve. Not a browser FPS, memory, production-network or low-powered-laptop benchmark.',
+  restoredNativeStateAndClockExact: true,
+  onePaidRepair: true,
+  workAtS: 703.2499999995248,
+  returnAtS: 734.4749999994964
+}

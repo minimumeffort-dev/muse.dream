@@ -375,3 +375,18 @@ an Apple M3 Ultra with 96 GiB memory. They are individual review observations,
 not production startup or weak-laptop measurements. Worker compilation and other
 startup work remain; the first draw is still recorded separately and waits for
 required chunks and shader preparation.
+
+## Work-path contact bounds
+
+The static grid deliberately returns conservative candidates. Work-path sweeps
+now reject a candidate whose complete footprint is outside the swept body's
+axis-aligned bounds. A rotated rectangle uses the sum of its half-extents as a
+conservative envelope, with a small outward rounding margin. Remaining candidates
+keep the same exact distance, broken-state and vertical-headroom checks.
+
+This changes no paths, contacts, actor budgets, geometry or render settings. It
+adds no persistent cache and keeps moving contacts live. The
+[release comparison and startup samples](evidence/route-contact-bounds/verification.md)
+separate Node acceptance timings, profiling and native browser observations.
+Existing world and motion captures remain accurate because the accepted scene
+and ordered routes are unchanged.

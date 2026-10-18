@@ -57,9 +57,12 @@ export function workSegment(scene:Scene,r:WalkingArea,a:Point,b:Point,state:CarS
 }
 /** Graph edges already have immutable pavement/water support; contacts remain live. */
 function segmentClear(scene:Scene,a:Point,b:Point,state?:CarState,live:Contact[]=[],radius:number=REPAIR_RADIUS,height=18):boolean{
- const length=Math.hypot(b.x-a.x,b.y-a.y);
+ const length=Math.hypot(b.x-a.x,b.y-a.y),x0=Math.min(a.x,b.x)-radius,x1=Math.max(a.x,b.x)+radius,y0=Math.min(a.y,b.y)-radius,y1=Math.max(a.y,b.y)+radius;
  return ![...queryStaticContacts(scene,(a.x+b.x)/2,(a.y+b.y)/2,length/2+radius,state),...live].some(c=>{
-   if(state && isBroken(state,c) || segmentContactDistance(c,a,b)>=radius)return false;
+   if(state && isBroken(state,c))return false;
+   // A conservative box envelope avoids exact corner tests for distant grid-cell contacts.
+   const reach=(c.box ? c.box.halfX+c.box.halfY : c.r)+1e-6;
+   if(c.x+reach<x0 || c.x-reach>x1 || c.y+reach<y0 || c.y-reach>y1 || segmentContactDistance(c,a,b)>=radius)return false;
    const t=length ? Math.max(0,Math.min(1,((c.x-a.x)*(b.x-a.x)+(c.y-a.y)*(b.y-a.y))/(length*length))) : 0,floor=walkingHeight(scene,a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t);
    return c.top>floor && c.bottom<floor+height;
   });

@@ -1,0 +1,1001 @@
+{
+  "kind": "Single cold complete-world acceptance CPU profile in Node after module loading; profiling overhead included, not a startup benchmark or browser FPS",
+  "node": "v26.8.1",
+  "source": "2304fe3bf70a859299e0ac82e66dac3cb60cd5322cc46b9591a8d7a8bda4c812",
+  "fingerprint": "c0f1953c39994af33d2e5f3fed33c1fda6bad6e648577d6309081ae55ae4589c",
+  "objects": 1769,
+  "wallMs": 10401.374542,
+  "profileDurationUs": 10459390,
+  "samples": 7657,
+  "self": [
+    {
+      "function": "",
+      "url": "file:///Users/horia/Projects/muse.dream/src/sim/work-navigation.ts",
+      "line": 87,
+      "samples": 711
+    },
+    {
+      "function": "segmentContactDistance",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/contact-geometry.ts",
+      "line": 47,
+      "samples": 553
+    },
+    {
+      "function": "pointSegment",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/contact-geometry.ts",
+      "line": 43,
+      "samples": 443
+    },
+    {
+      "function": "near",
+      "url": "file:///Users/horia/Projects/muse.dream/src/sim/work-navigation.ts",
+      "line": 194,
+      "samples": 367
+    },
+    {
+      "function": "meshVoxelGrid",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/voxels.ts",
+      "line": 84,
+      "samples": 199
+    },
+    {
+      "function": "(garbage collector)",
+      "url": "",
+      "line": 0,
+      "samples": 178
+    },
+    {
+      "function": "pointInPolygon",
+      "url": "",
+      "line": 119,
+      "samples": 161
+    },
+    {
+      "function": "pointSegment",
+      "url": "",
+      "line": 43,
+      "samples": 156
+    },
+    {
+      "function": "segmentClear",
+      "url": "file:///Users/horia/Projects/muse.dream/src/sim/work-navigation.ts",
+      "line": 85,
+      "samples": 153
+    },
+    {
+      "function": "footprintClear",
+      "url": "file:///Users/horia/Projects/muse.dream/src/sim/mask.ts",
+      "line": 40,
+      "samples": 132
+    },
+    {
+      "function": "add",
+      "url": "",
+      "line": 25,
+      "samples": 130
+    },
+    {
+      "function": "networkPath",
+      "url": "file:///Users/horia/Projects/muse.dream/src/sim/work-navigation.ts",
+      "line": 191,
+      "samples": 125
+    },
+    {
+      "function": "",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/contact-geometry.ts",
+      "line": 66,
+      "samples": 125
+    },
+    {
+      "function": "add",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/object-support.ts",
+      "line": 25,
+      "samples": 118
+    },
+    {
+      "function": "query",
+      "url": "file:///Users/horia/Projects/muse.dream/src/sim/spatial.ts",
+      "line": 21,
+      "samples": 105
+    },
+    {
+      "function": "(program)",
+      "url": "",
+      "line": 0,
+      "samples": 103
+    },
+    {
+      "function": "contactOverlaps",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/contact-geometry.ts",
+      "line": 37,
+      "samples": 95
+    },
+    {
+      "function": "workNetwork",
+      "url": "file:///Users/horia/Projects/muse.dream/src/sim/work-navigation.ts",
+      "line": 119,
+      "samples": 84
+    },
+    {
+      "function": "sceneFromWorld",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/dream.ts",
+      "line": 760,
+      "samples": 82
+    },
+    {
+      "function": "",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/validate.ts",
+      "line": 133,
+      "samples": 80
+    },
+    {
+      "function": "validateScenePlayability",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/validate.ts",
+      "line": 27,
+      "samples": 75
+    },
+    {
+      "function": "",
+      "url": "file:///Users/horia/Projects/muse.dream/src/sim/work-navigation.ts",
+      "line": 194,
+      "samples": 67
+    },
+    {
+      "function": "distance",
+      "url": "file:///Users/horia/Projects/muse.dream/src/sim/work-navigation.ts",
+      "line": 223,
+      "samples": 63
+    },
+    {
+      "function": "",
+      "url": "file:///Users/horia/Projects/muse.dream/src/sim/work-navigation.ts",
+      "line": 194,
+      "samples": 51
+    },
+    {
+      "function": "baseTerrain",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/terrain.ts",
+      "line": 37,
+      "samples": 46
+    },
+    {
+      "function": "distance",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/contact-geometry.ts",
+      "line": 65,
+      "samples": 37
+    },
+    {
+      "function": "",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/validate.ts",
+      "line": 312,
+      "samples": 36
+    },
+    {
+      "function": "add",
+      "url": "",
+      "line": 25,
+      "samples": 36
+    },
+    {
+      "function": "local",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/contact-geometry.ts",
+      "line": 10,
+      "samples": 35
+    },
+    {
+      "function": "query",
+      "url": "file:///Users/horia/Projects/muse.dream/src/sim/spatial.ts",
+      "line": 21,
+      "samples": 35
+    },
+    {
+      "function": "isDrivableAtPixel",
+      "url": "",
+      "line": 28,
+      "samples": 35
+    },
+    {
+      "function": "pavedSegment",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/pavement.ts",
+      "line": 31,
+      "samples": 30
+    },
+    {
+      "function": "getUv",
+      "url": "file:///Users/horia/Projects/muse.dream/node_modules/three/examples/jsm/geometries/RoundedBoxGeometry.js",
+      "line": 8,
+      "samples": 29
+    },
+    {
+      "function": "pop",
+      "url": "",
+      "line": 208,
+      "samples": 28
+    },
+    {
+      "function": "paintPolygons",
+      "url": "file:///Users/horia/Projects/muse.dream/src/sim/mask.ts",
+      "line": 129,
+      "samples": 27
+    },
+    {
+      "function": "meshVoxelGrid",
+      "url": "",
+      "line": 84,
+      "samples": 25
+    },
+    {
+      "function": "voxelOccupancy",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/voxels.ts",
+      "line": 45,
+      "samples": 24
+    },
+    {
+      "function": "terrainHeight",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/terrain.ts",
+      "line": 51,
+      "samples": 24
+    },
+    {
+      "function": "terrainHeight",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/terrain.ts",
+      "line": 51,
+      "samples": 24
+    },
+    {
+      "function": "buildNavigation",
+      "url": "file:///Users/horia/Projects/muse.dream/src/scene/ambient-navigation.ts",
+      "line": 49,
+      "samples": 24
+    }
+  ],
+  "sources": [
+    {
+      "file": "src/authoring/prompt.ts",
+      "sha256": "25f2facddd9187157cb63227dc0428d5e93268d83b9d58f4c12056fdb9a02bd4"
+    },
+    {
+      "file": "src/experiment/recording.ts",
+      "sha256": "375e554cbfee00043cd9b4fdeacb67356426a15f05de6c566f738b699333d719"
+    },
+    {
+      "file": "src/game/ambient-population.ts",
+      "sha256": "3efcffb3aa278c5f327618950bf673ce327b178057d28db6b83440707a7413f8"
+    },
+    {
+      "file": "src/game/batching.ts",
+      "sha256": "1828400a7f0ab8ff7416ee526aa3b0d92bb4a33480523d03b707ff090b95c7fd"
+    },
+    {
+      "file": "src/game/bicycle-symbol.ts",
+      "sha256": "80dfb8fb77311fc927335095672b602b838069c9097ac7ed1205afbf8936a290"
+    },
+    {
+      "file": "src/game/boot.ts",
+      "sha256": "3f823e0c3b2cc92fd88dfe3d39471ce9a398ee48512e2394dcafe5b35b89c32c"
+    },
+    {
+      "file": "src/game/camera-input.ts",
+      "sha256": "50ed76c47981a4993eda8ed686c7f9ec5be058062eaf01e5e9983e4601fb5df0"
+    },
+    {
+      "file": "src/game/camera.ts",
+      "sha256": "b16812dfece758775ad1ee0a9b8ca29f0c5cba1e89bb2429a945dd7398412653"
+    },
+    {
+      "file": "src/game/caption.ts",
+      "sha256": "a257ade7954b493ec9dba954851958f0ccd442d54be41dae9f8be23087041e21"
+    },
+    {
+      "file": "src/game/character-animation.ts",
+      "sha256": "14cac63ad58c615da1a828e514d632416cd9b36e44689026c5b447257775aa4b"
+    },
+    {
+      "file": "src/game/choices.ts",
+      "sha256": "c0be156ab9a03d7095cb6eb57f7a3bf774b7488ee395c578186977a4e44a652d"
+    },
+    {
+      "file": "src/game/chunk-builder.ts",
+      "sha256": "44ca6d54173a371d5fedb5b0f65ac1e1677853cfba184251f911e66ac08a35f2"
+    },
+    {
+      "file": "src/game/chunk-packet.ts",
+      "sha256": "584a9c77238236f7fba592d6f98d2416456cb4a402637e821abd18da45edf7cf"
+    },
+    {
+      "file": "src/game/commerce.ts",
+      "sha256": "686ab832ab3579fc571ed171e660f1f243684b91075167200f5a664c186f4020"
+    },
+    {
+      "file": "src/game/compact-object.ts",
+      "sha256": "aa99be9d76adc54fb3fdc20dba48493cef219387c4849995b01eab547b2d43de"
+    },
+    {
+      "file": "src/game/control-guide.ts",
+      "sha256": "d17c35188170e9442ff13742b83bcf775d812b515585f56dc9928c4ba5af50f4"
+    },
+    {
+      "file": "src/game/crossing-paint.ts",
+      "sha256": "acddf9de107ec0f673148c411a264fdc4ab0c76a93c214d17d8dae039dee83bb"
+    },
+    {
+      "file": "src/game/damage.ts",
+      "sha256": "9ce3a1b5c7505b85acdeb0b41cd7a9f764ed43bf2da10003100b71c13ec734c1"
+    },
+    {
+      "file": "src/game/daylight.ts",
+      "sha256": "c85e38d76a0a4887851324d0f8e185f58a5af5f94c397ea37b526191902e2548"
+    },
+    {
+      "file": "src/game/debris.ts",
+      "sha256": "b1307a6564fda5710eb2bd274730a68cab67fafd3ac289a8e5efac7e59bc7dec"
+    },
+    {
+      "file": "src/game/edge-smoothing.ts",
+      "sha256": "af71db022c802f28369570a1843d0c2bac71398195fd130a3fd402b82f03ccaf"
+    },
+    {
+      "file": "src/game/environment.ts",
+      "sha256": "486ee34fe4b483ccb4e9eac492db2e3da50921f56606b3dd5e908b08e75c0fe2"
+    },
+    {
+      "file": "src/game/flocks.ts",
+      "sha256": "111acb7cb5ee3183833a77b9dbb5df4c4a52c8c85c3f58545595b982306a8a8c"
+    },
+    {
+      "file": "src/game/geometry-memory.ts",
+      "sha256": "0a18ed62bfbf396b7319823ef42684b6c17720d8d4e66fab5894c720225db3b3"
+    },
+    {
+      "file": "src/game/humanoid-gait.ts",
+      "sha256": "3ad019aed140a3fbccbd566394c51f616f5d8ad945be54621e384e0ab60e7452"
+    },
+    {
+      "file": "src/game/icons.ts",
+      "sha256": "743d1025aed5e00fdc75f224e1c3b0aaabdc40a9fbe0cf0a94b12d8062a88550"
+    },
+    {
+      "file": "src/game/indexed-geometry.ts",
+      "sha256": "c595aa49505b32bbb4aa09dc10f7d3a802846c2d8ee9fc32add6e38231d07b0b"
+    },
+    {
+      "file": "src/game/landscape.ts",
+      "sha256": "9e6a76c780b2187c69b2cf76050446a1b60ea8b3cdd266a1b400d101b946b0a3"
+    },
+    {
+      "file": "src/game/loading.ts",
+      "sha256": "68c4b9cdd4f9e61fc4ddc923b1977a4cb07fa124005834952e4311cf9c3ddb81"
+    },
+    {
+      "file": "src/game/main.ts",
+      "sha256": "e49b2ebe0c413627389516938d1bc8ad65d92a3deef869c48fea956b8ca3c297"
+    },
+    {
+      "file": "src/game/material-coordinates.ts",
+      "sha256": "adf8d272a87c1e176db1b0a87ddbbe506685034b6f8d2275963f15f73025a611"
+    },
+    {
+      "file": "src/game/media-capture.ts",
+      "sha256": "67fbc2a6574efe0f0e67062b4df526e9aff0b93ea51060045dcfd816ac9bbb91"
+    },
+    {
+      "file": "src/game/navigation.ts",
+      "sha256": "a69292ab382439a03f920171a61a0fc7bd724ba4f845aa932d6546232a293ac5"
+    },
+    {
+      "file": "src/game/occlusion.ts",
+      "sha256": "e18a1acbc5d0ce1d2be9effb47738123af4261268e972c91b21f794a5253ff59"
+    },
+    {
+      "file": "src/game/parking.ts",
+      "sha256": "1fd7e8cfc3b61a4b7ba23b1c417803a28b6dbe283eaa59433bc29609ed67fb34"
+    },
+    {
+      "file": "src/game/particles.ts",
+      "sha256": "d09a625577dbbb8529b98343058a480a9e00b0cf2d0f433832a047685b4ba858"
+    },
+    {
+      "file": "src/game/render-profile.ts",
+      "sha256": "7f6e1747525c2a477a7c602c6dd05f2b92848842c7aa154c555cea94471a85bf"
+    },
+    {
+      "file": "src/game/render-region.ts",
+      "sha256": "f47f586ad8c20df7691e506433f81523ff476560af09c42b88c096ec870f5325"
+    },
+    {
+      "file": "src/game/repair-view.ts",
+      "sha256": "419f1f38a793e0f1df302cce3152e12887dadabf7320a10d33c74d1493885c88"
+    },
+    {
+      "file": "src/game/review-start.ts",
+      "sha256": "256c0740d0ddae4ae1ef035a077e66677ac8770d207cc4eb572054bba0e8974a"
+    },
+    {
+      "file": "src/game/road-surfaces.ts",
+      "sha256": "2464edb5dd225f6965f9c87f2d3502bc370a196626a2b77efcffaa4dee26f9ba"
+    },
+    {
+      "file": "src/game/routes.ts",
+      "sha256": "2813f6516a47b41b2ed543a0e0e82ae5ab8ab39b3cbd4df5b8d094403a6659a1"
+    },
+    {
+      "file": "src/game/save-tools.ts",
+      "sha256": "6e56366e873bcfc23bb4be06741468da982d3977c18c904b4bd54eabee2c1616"
+    },
+    {
+      "file": "src/game/save.ts",
+      "sha256": "2ce5e0ea63a969fbe1b31aa5620a4ba17db731b13fc882fdeb812597e5ec1098"
+    },
+    {
+      "file": "src/game/scenery.ts",
+      "sha256": "5bd2b0d5a22d9136f7e174c6d6cab84584c76c171ec5f5144d1506db7555c25f"
+    },
+    {
+      "file": "src/game/shaders.ts",
+      "sha256": "badc2b13adf0e2e14645791ef55642dca957794a94188843dd42b0cc8cf47882"
+    },
+    {
+      "file": "src/game/sports.ts",
+      "sha256": "d69b998bc8353983cd289cf7031d1c9bfa611097ae9f92d949c0b937def8ba71"
+    },
+    {
+      "file": "src/game/streets.ts",
+      "sha256": "1feb84e85cf6bb2f7ff460323bf3de7af940ee1072f8f74d17869c8c668cb3a2"
+    },
+    {
+      "file": "src/game/sun.ts",
+      "sha256": "d812ee59126ca328821a5489525800eee8efd013d9c8709c020b3948b93e036a"
+    },
+    {
+      "file": "src/game/surface-projection.ts",
+      "sha256": "0dfc54c49c3f992db86147edee46f0b4a19a6e615d0d4ba71c1569a042687ca3"
+    },
+    {
+      "file": "src/game/surface.ts",
+      "sha256": "48fab2f433569d5bdd09121f5948d3645cc14931ad962f7ceb6f3b87fdaa3e86"
+    },
+    {
+      "file": "src/game/tram-tracks.ts",
+      "sha256": "fa6a4008f319143dfe54ec3d0ab9728b2c7a716ec1e449f2914c4ca66287f1de"
+    },
+    {
+      "file": "src/game/voxel-columns.ts",
+      "sha256": "773f40802f52d3e5ca8e9927169996a41095bb30ebaeee07dc1dcc275d038776"
+    },
+    {
+      "file": "src/game/voxel-contours.ts",
+      "sha256": "0d570bef0d7dddf642166c794601af6c708c91c59bd866c595855ed4134db215"
+    },
+    {
+      "file": "src/game/world-streaming.ts",
+      "sha256": "271a628e4b23adec5d5b3ecd35d3ef9a903d89d2c8805f480d5866fc647aed7e"
+    },
+    {
+      "file": "src/game/world-worker-client.ts",
+      "sha256": "e9ceb1fc110890aaf066270b8346526975135f2552fd920902387156f16bc6ae"
+    },
+    {
+      "file": "src/game/world3d.ts",
+      "sha256": "1df7b500d8c5b654b2e536d449c044e01d3c654477a8dc17d5f6d6ed738f5486"
+    },
+    {
+      "file": "src/lab/main.ts",
+      "sha256": "bf40c051357dc34f79cca5f0e60cd2ccd87ea2284fe392f90b528ef27bb4313c"
+    },
+    {
+      "file": "src/lab/style.css",
+      "sha256": "bae0d1cce711273f7be61720b26de54cd5d1aba54da76d4e01b65b793005d368"
+    },
+    {
+      "file": "src/scene/agents.ts",
+      "sha256": "6370f66722549aabfec4295215981fd1619bce8c0dd08fe243c49e0116b4328b"
+    },
+    {
+      "file": "src/scene/aircraft-support.ts",
+      "sha256": "df35e4344014b5af8bb181e8186431d981aaa483c71073dc7d06512f4fd2397e"
+    },
+    {
+      "file": "src/scene/ambient-navigation.ts",
+      "sha256": "3582423b586508b967ab98a6f6a4e8977f9c53b37cdff29abb7dd7a1ef42a7bb"
+    },
+    {
+      "file": "src/scene/ambient.ts",
+      "sha256": "8e54261c431ec1c48a7d25be269e1970e846f98971670a1e6a3706eb29a0dbe7"
+    },
+    {
+      "file": "src/scene/commerce.ts",
+      "sha256": "cf590cbe7b8c9e459d4e335d4c52a93525af9b43dba6ef7cb545575fb4c3a8a5"
+    },
+    {
+      "file": "src/scene/compatibility/r55-market.json",
+      "sha256": "538732d690dc614382fd03879b29e108a27088825f5c7836f5f0866741dc3d75"
+    },
+    {
+      "file": "src/scene/compatibility/r67-city.json",
+      "sha256": "ce843056d9320713b1520c179b3623d96fa1af6e2d89cc74885fe056e9103540"
+    },
+    {
+      "file": "src/scene/compatibility/r68-park.json",
+      "sha256": "d9fbbf78ec9a012dc306e8a7fae92517c2cc55c9fa650fa6096224861d578d46"
+    },
+    {
+      "file": "src/scene/compatibility/r69-junction.json",
+      "sha256": "c7ec1bd7a19df3010ecf0930564f257e7a51d0158a02a998a059041b613e1d34"
+    },
+    {
+      "file": "src/scene/compatibility/r70-people.json",
+      "sha256": "c694c0bf5327bd828f657041c248d16afd49ccd848db51aa367878973fa94e57"
+    },
+    {
+      "file": "src/scene/contact-geometry.ts",
+      "sha256": "d43e2e8cfa0b3617b617211b8199b7a325c6c8d420f135d8d052d290ce1f1b65"
+    },
+    {
+      "file": "src/scene/contacts.ts",
+      "sha256": "6c317666e3ef88f9d82514e4d0c22586c941573c17d3079c4fc288a8c2a8a0e2"
+    },
+    {
+      "file": "src/scene/cycle-surface.ts",
+      "sha256": "f066241a581d0ca0ffa5592f41b3b1967fb168aaadbab1ae290b6f85cbe8737a"
+    },
+    {
+      "file": "src/scene/damage-pool.ts",
+      "sha256": "b6ac91413f07d70d21b136fc8eee363d1e18b626b50ca53a58d3d44efcb8d45f"
+    },
+    {
+      "file": "src/scene/daylight.ts",
+      "sha256": "a075108bfbdf9846616b6d430e536c7f520c5a92105b5aec2ea173f0b1ed5ee3"
+    },
+    {
+      "file": "src/scene/dream-agent.ts",
+      "sha256": "57cec7a11e4b98c1ff082ca16145f79eae80452d43ea770d51efa6f0e7405336"
+    },
+    {
+      "file": "src/scene/dream-commerce.ts",
+      "sha256": "8a30973bdfe32eeae0d1945ba1bd66b1c3f397db42e38a649820b32bd23020fe"
+    },
+    {
+      "file": "src/scene/dream-contract.ts",
+      "sha256": "e348e147b0b8d4c55e519bb3ebaff460f1c23c63ac7b8bed0aafd58ed7134c83"
+    },
+    {
+      "file": "src/scene/dream-creations.dream",
+      "sha256": "9ae69b0833f7fd88cb755a915a66b84254a09db0aeba9327782b273f9aba196e"
+    },
+    {
+      "file": "src/scene/dream-creations.ts",
+      "sha256": "c281cc06127e39b4c52ea8f3d7fc931b43fe7d05f59ce35fe1c41701af4e8542"
+    },
+    {
+      "file": "src/scene/dream-layout.ts",
+      "sha256": "97f0377162ef82a140ab0c268208255c2c20a0cc77ab49c5a846348d34f3de29"
+    },
+    {
+      "file": "src/scene/dream-migrate.ts",
+      "sha256": "f17820f06b345ff4ba1b53829cefa7f4c4b3e7f0812783077d82a6fcf1b9bc80"
+    },
+    {
+      "file": "src/scene/dream-syntax.ts",
+      "sha256": "353ec9aea8d1f2a8b78f20b082509210b321e9ecc259b5160fc897919cfe02de"
+    },
+    {
+      "file": "src/scene/dream-v2.ts",
+      "sha256": "eb1e405300be31a87eae7064cce3a26260952fd96f79ebb78340c8dc9c7dc52b"
+    },
+    {
+      "file": "src/scene/dream.ts",
+      "sha256": "3369b6d9d947c595ed9e26df3ed6880b3ef61b6a0188a7fef003dc3082079140"
+    },
+    {
+      "file": "src/scene/fixture.ts",
+      "sha256": "6f6596b8e4b881afb3a617868c3df320d09460060101e849e0d1d78220ada3c0"
+    },
+    {
+      "file": "src/scene/fragments.ts",
+      "sha256": "35e8fd032008b97527885725f359849ceba247f00d56ded4ff3472a015eeed2d"
+    },
+    {
+      "file": "src/scene/growth.ts",
+      "sha256": "f2befa735520418f93472d18392da1c562b4be45966f0d83b87ad25fef252829"
+    },
+    {
+      "file": "src/scene/humanoid.ts",
+      "sha256": "8012383e0923f6fddae4fbaababb95d1ae68cd31c299092e534d66b44fe11c1a"
+    },
+    {
+      "file": "src/scene/impact-creations.dream",
+      "sha256": "743b81d5e43dc96c3ad9207f2091a8b2ed87ab95442c314cd7381e0f2d119d3d"
+    },
+    {
+      "file": "src/scene/impact-creations.ts",
+      "sha256": "d9572a56526177200cf54c9b2cec8c9b0ab42bcaf0672f264a5d169e4c5a9b79"
+    },
+    {
+      "file": "src/scene/interaction-rules.ts",
+      "sha256": "7440d4b5f48fcc261ba9c92b44f32746a27d84eb509330cb141fe26590ff68fa"
+    },
+    {
+      "file": "src/scene/interactive-world.dream",
+      "sha256": "82d08cb0e44c021914f8dcc7d9fda440b961a4e5cc5e33a3d735892a8c8ff4d9"
+    },
+    {
+      "file": "src/scene/interactive-world.ts",
+      "sha256": "43bfb5feb6805ba53cf566766ab45c6a58dea7b351350974426a2607331d6197"
+    },
+    {
+      "file": "src/scene/interiors.ts",
+      "sha256": "644b6904b438ca41ada003cb02ac55cc0c3ef2e2340fd0762aebc9c13c996c96"
+    },
+    {
+      "file": "src/scene/landscape-dsl.ts",
+      "sha256": "db0b81e381c8b84adc831d4e5d2546af52ba829345bcb5e70f221845ae9df7ed"
+    },
+    {
+      "file": "src/scene/measure.ts",
+      "sha256": "5f37f0d53c61b644c850d914daa451291ecafcc7b2dfb0b6f10f8b90dbd17d1f"
+    },
+    {
+      "file": "src/scene/mock-creations.ts",
+      "sha256": "babe58132717fc78f6761687717963f78ec2a7fbfd1ed78bc98f3f1abce26994"
+    },
+    {
+      "file": "src/scene/mock-landscape.ts",
+      "sha256": "f7e03ac0dd97c15f1458fa924351ea6be144146e8362522da375f6cdefd26274"
+    },
+    {
+      "file": "src/scene/mock-objects.ts",
+      "sha256": "e9b011c63b1da40672169b4e96d031a945ea181b0b4bade0c0a283b02ef1395f"
+    },
+    {
+      "file": "src/scene/object-dsl.ts",
+      "sha256": "645cbfdd91857aa264d9a028be327c2d0547000fe7703c8d5994eb0e0fc550a5"
+    },
+    {
+      "file": "src/scene/object-geometry.ts",
+      "sha256": "e6eb9e92dac35fa0a5cfc44652308c29edfd8ee89418f40d0b8b01c3ae575513"
+    },
+    {
+      "file": "src/scene/object-support.ts",
+      "sha256": "65469387ce9ea40f4676aa3d9d65aae79c5220bce53be8b23219eff32a528e2b"
+    },
+    {
+      "file": "src/scene/pavement.ts",
+      "sha256": "93a02202f3c9e85dcedb77290c3bc9313782acbfa6a159720ad76eab001ffc93"
+    },
+    {
+      "file": "src/scene/placement.ts",
+      "sha256": "87dcd05f44bdd9c6ca5b1637dfdfb9a0068fcb77e03ef9726c4c1b3e356e100f"
+    },
+    {
+      "file": "src/scene/polygons.ts",
+      "sha256": "0c9a407d51b78a8c70b445bbdf832b69d3cf61a4f249036c18c7930427c07ecf"
+    },
+    {
+      "file": "src/scene/population.ts",
+      "sha256": "e3cf228c703f9d3821fca3be40c408ea8a2eae43350c114da58b31aba376f0e5"
+    },
+    {
+      "file": "src/scene/profile.ts",
+      "sha256": "c28d454599832fd2306fa71c1eb67eb9b828e46fc279b2f5df391bd32d973b3f"
+    },
+    {
+      "file": "src/scene/road.ts",
+      "sha256": "eb0045a5e9c9d6a97c545d53b738c9e0ea0924f0fd3fab8b0cb3407224a9c9b1"
+    },
+    {
+      "file": "src/scene/routes.ts",
+      "sha256": "80d87639bf443dd0ece2dee2162150447be88dd4184a3357bef07ad8c8f6dd9e"
+    },
+    {
+      "file": "src/scene/save-compatibility.ts",
+      "sha256": "03e1b3ab3d819b4caf9e329f936975ceba0ecf912b9e236f87768d0433fa9959"
+    },
+    {
+      "file": "src/scene/scenario.ts",
+      "sha256": "1f7b4d4b48abdb8a8cf11064682e0d27899bbc36a7b979d6d6f816f46aa602bc"
+    },
+    {
+      "file": "src/scene/schema.ts",
+      "sha256": "8dcd4a24546779f58fee29983d9342e5b91cf42565f9501b2615a9f8c6b2942c"
+    },
+    {
+      "file": "src/scene/seating.ts",
+      "sha256": "d05ff327feaa7eaf02102bc6464625247482da5de6521205cb6352df4aa1a400"
+    },
+    {
+      "file": "src/scene/sites.ts",
+      "sha256": "6c5fba8c3198a8170202010e782f4a6816f3e2e3f5c43b53f9822f94d8a462b0"
+    },
+    {
+      "file": "src/scene/sports-match.ts",
+      "sha256": "054785a0231125cd501b20ec9a75f96414089d44f31885f7f911f0b34cbcf459"
+    },
+    {
+      "file": "src/scene/sports.ts",
+      "sha256": "a029c00d4778d51f97969ffb25e96afde37c87ce2d0776f25f93f6f18445d86d"
+    },
+    {
+      "file": "src/scene/streets.ts",
+      "sha256": "3cdac4b502ce7a2acb7b66561daea1ba7d5d079e95d287ceed46e549f88517c6"
+    },
+    {
+      "file": "src/scene/terrain.ts",
+      "sha256": "05eeef9badd3250fdc8adb22a6e7404c2165d71049dbe8b789a424727274844d"
+    },
+    {
+      "file": "src/scene/validate.ts",
+      "sha256": "d5564681f119ccde69108e8e63232e2bed36702e1c87e24f68a36f3b33225c8d"
+    },
+    {
+      "file": "src/scene/voxel-contour.ts",
+      "sha256": "d2821dbfad75b4c996f0bcb875d7813e6625d44015fd02e48db02c62c9b8884e"
+    },
+    {
+      "file": "src/scene/voxel-stamp.ts",
+      "sha256": "b41728d62d6392e67e6bca972233f539ccac045b6a453079e8ebf06b2f7a1844"
+    },
+    {
+      "file": "src/scene/voxel-world.ts",
+      "sha256": "73efce829b2833a256b51430d850aaa8cec0813c186c06ef5279ccd5d29ef110"
+    },
+    {
+      "file": "src/scene/voxels.ts",
+      "sha256": "ffaf7089ddf5a5a91776828dffcc189ed02664a1a4b8266d6de9ec53c1c76e25"
+    },
+    {
+      "file": "src/scene/world-bounds.ts",
+      "sha256": "b7a9f94f616f4ae14150e851e61c4d6ac917be66f1ffd8a5f5f8f339021afeca"
+    },
+    {
+      "file": "src/scene/world-fixture.ts",
+      "sha256": "907c4e75eb7a4eacbc632a025826aef7409afce9ef8c42dd835673067ced2722"
+    },
+    {
+      "file": "src/scene/world-worker.ts",
+      "sha256": "bf46f85211265fbc016d80a9eb46368d71ef052e0726561e4a54362e81a8aead"
+    },
+    {
+      "file": "src/scene/world/architecture.dream",
+      "sha256": "68e570c705183e0f166849a93cf9b3b56e2e175c2c210e4b43ef631d7b1a3b32"
+    },
+    {
+      "file": "src/scene/world/breakables.dream",
+      "sha256": "8be493fe3fca4fabf44c1202e4a5d135d20091fc352829d1d78eb07725b63aff"
+    },
+    {
+      "file": "src/scene/world/city_people.dream",
+      "sha256": "0c6ed4f7c9210cef5fd98ebf488257c26e30319a1dfb7a86b2fe41ae0bd4a2cb"
+    },
+    {
+      "file": "src/scene/world/civic.dream",
+      "sha256": "3e3a2649360c4394f5cc0c550e968a3c10c4da09817b2a997ab7d56f6a1a1fac"
+    },
+    {
+      "file": "src/scene/world/civic_assets.dream",
+      "sha256": "768f3764560b1acada96c9711a35b843cfa81c159ef9993c031e6d5e4076e82b"
+    },
+    {
+      "file": "src/scene/world/creations.dream",
+      "sha256": "e2500121578b7abbec5a9f82cbce9af5a8966747ee61267e4ddcbd634c59f624"
+    },
+    {
+      "file": "src/scene/world/destructible.dream",
+      "sha256": "8a7b5ea56ed48a54f3066b04c8b4fe3d4dda966c6b0d129d3b978bff69b58e53"
+    },
+    {
+      "file": "src/scene/world/fauna.dream",
+      "sha256": "d3cc700e894df4a31ad80237cff1f200ad0fbf8164d46a656ec8a47984624b3b"
+    },
+    {
+      "file": "src/scene/world/flora.dream",
+      "sha256": "90b6f7e8e90a2108abe65d11a628b58964c2abd4ce2e716a21cba75fa32716b2"
+    },
+    {
+      "file": "src/scene/world/frontage_0.dream",
+      "sha256": "8a464c752a5aec04cd7b7a23e9ab5c588bdbc947ee620916aa407db5405bbba3"
+    },
+    {
+      "file": "src/scene/world/frontage_1.dream",
+      "sha256": "e04a8c0d817c450bfcfc8bb06996d3980e04ca287832a68a750ab371357ddb64"
+    },
+    {
+      "file": "src/scene/world/frontage_2.dream",
+      "sha256": "897e82f83a90f431ddf89faa225b46954747fa1a0bf2f9d4990fa1dbeadba133"
+    },
+    {
+      "file": "src/scene/world/frontage_3.dream",
+      "sha256": "4bfeb6bb35249b14df1ac09a904747ab7d61d4e7733d6a6e2279f367ab0eba3e"
+    },
+    {
+      "file": "src/scene/world/garden_park.dream",
+      "sha256": "6d4c8747dc76bf47bf71d6abfa015c30ada5e5a857b99f169288f1d7643eee3d"
+    },
+    {
+      "file": "src/scene/world/habitat_0.dream",
+      "sha256": "bb3f4ec882755b58cee71c55142f038f77dc076c1077c8101669322e3a792886"
+    },
+    {
+      "file": "src/scene/world/habitat_1.dream",
+      "sha256": "a633abd1582d5fe1259a4a7c28c65d84399f42ae3c77276b4e24bf0a890753d5"
+    },
+    {
+      "file": "src/scene/world/habitat_2.dream",
+      "sha256": "18612f58174d660795793f727efa89bacdac0cabf5016de043c9789045b4b534"
+    },
+    {
+      "file": "src/scene/world/habitat_3.dream",
+      "sha256": "7e23cc51ad1bad2b370fb38d31cf6908f40c4c72fec9ae41ce1902ee673bc5b0"
+    },
+    {
+      "file": "src/scene/world/habitat_4.dream",
+      "sha256": "16ccfa1468eb2dd7fdb61a76b1d98e722dba2f22d627c1416db9e5cf767083e4"
+    },
+    {
+      "file": "src/scene/world/landmarks.dream",
+      "sha256": "85f67866fed63e0f359ae22389a4d9752fe50b1128fff0e1a95816076190b177"
+    },
+    {
+      "file": "src/scene/world/life.dream",
+      "sha256": "9f5cc8afcee9b2aee0ddbd8e8c8b6b8d4bca1fb93aa87286e2f41688480502c4"
+    },
+    {
+      "file": "src/scene/world/market_interior.dream",
+      "sha256": "82d8524f7d14ae20c8dcb85472dea6b30a684450517b9e9ca157a6a016b2367b"
+    },
+    {
+      "file": "src/scene/world/nature.dream",
+      "sha256": "38a59abdf5d82ade77acbbf64e26fb14d5309872309cfc0e94bc3ee92f75ec8b"
+    },
+    {
+      "file": "src/scene/world/open-world.dream",
+      "sha256": "837ccbcd306037414b75184fffefce1481aa38e41d34188af31f50741e60eb0f"
+    },
+    {
+      "file": "src/scene/world/parks.dream",
+      "sha256": "4bd2383e4a1bf4115993abde76a535a893c4ac38109f3a73dcf5e730f6197333"
+    },
+    {
+      "file": "src/scene/world/sports_assets.dream",
+      "sha256": "eaa7e2433da18df16bc6773cb251e3971b1e29c11f01192685c5ed383cd98c5b"
+    },
+    {
+      "file": "src/scene/world/stations.dream",
+      "sha256": "69129af49a9aa9d9f9bf616ae77c10664872ed3dfd0e0eb59c5f4c6c2b57e165"
+    },
+    {
+      "file": "src/scene/world/street_assets.dream",
+      "sha256": "80009580b4800adbf3af63cb2eb8e6e80404499d38bf3e450d0b5a2b511586ab"
+    },
+    {
+      "file": "src/scene/world/street_life.dream",
+      "sha256": "395b90ce0b25a46029543c320aa7f886c42acf99864ced6a0b6b354e42b410ba"
+    },
+    {
+      "file": "src/scene/world/transit_assets.dream",
+      "sha256": "6e9eee9e47547ddfe2906fcf5b8e5b3aaf2ea946e3579b126b551afe3930c212"
+    },
+    {
+      "file": "src/scene/world/transport.dream",
+      "sha256": "e78703eb6d246fe7688feefc0da66885ac760ca0456144c21250b1bb336562cb"
+    },
+    {
+      "file": "src/sim/actors.ts",
+      "sha256": "c341e5f074edfbc32163956d450b238dfc2253da8eda3b7d6d8b30543eea4e75"
+    },
+    {
+      "file": "src/sim/ambient.ts",
+      "sha256": "13d9f3cec02defa1932d0421a12e8fed33df08c6c7ccb70d1ee3a4c2567571c9"
+    },
+    {
+      "file": "src/sim/archetypes.ts",
+      "sha256": "f26de90a20bf1722e3bf1a97e611bde7c98f3446b277a4b3db7eaeba6eba74ab"
+    },
+    {
+      "file": "src/sim/car.ts",
+      "sha256": "de8151d881eb98c78eef8a87275bc3aeb1797f2721ee9a15b7efb6f88251f375"
+    },
+    {
+      "file": "src/sim/city-upgrade.ts",
+      "sha256": "61b1f695d2e3223afa8677278fd7e15dba88962440255e37943f53608992a9ce"
+    },
+    {
+      "file": "src/sim/commerce.ts",
+      "sha256": "afaa67fdd3d75b598675f16d4cff702db3bb9e47c72bca5832e49d8da9c92c3d"
+    },
+    {
+      "file": "src/sim/courier.ts",
+      "sha256": "57d9d791f338a8385f7b0006349375a90e5bd3315ba9f2a9d676fe310c308c4d"
+    },
+    {
+      "file": "src/sim/episode.ts",
+      "sha256": "f5e9349835add7bde97e751fc459c8bff68bb9eef4ef225dc2ba825511dee8d1"
+    },
+    {
+      "file": "src/sim/growth.ts",
+      "sha256": "04e97019bb816e47d6ab571df8fcb8bded5224578e3f3e7dec5cc7a28debe87b"
+    },
+    {
+      "file": "src/sim/impacts.ts",
+      "sha256": "e331112d9cbb3f7985a30947842e895589fb784da19ab0d4647468dd7ba109fa"
+    },
+    {
+      "file": "src/sim/interaction.ts",
+      "sha256": "e684577a0a4547f2e981a5fb7a83eba77755f34eb7e9fc72bee5b8bea7d9a3f9"
+    },
+    {
+      "file": "src/sim/market-hours.ts",
+      "sha256": "3bf66cda21f2afd0727db0d294d9b34edb8596fcec6b3ea72d01262757d8ed3d"
+    },
+    {
+      "file": "src/sim/mask.ts",
+      "sha256": "0160293af79171135e268f0480b7bc9640ef45600fc6fcb0d17b3dbe17e1dcdf"
+    },
+    {
+      "file": "src/sim/npcs.ts",
+      "sha256": "3b1f8eefd71337d25597de7bec0118fe5972e44859f8b727faef4af5ddf90ce1"
+    },
+    {
+      "file": "src/sim/parking.ts",
+      "sha256": "1c2f808d546b47971da1d1455884c38156a2f944299bb952244c08352bfe45c2"
+    },
+    {
+      "file": "src/sim/repair.ts",
+      "sha256": "9a926576881e3872c4e1cc0eb5227406b49271c2f3bcd183f5df1b063fd0d325"
+    },
+    {
+      "file": "src/sim/save.ts",
+      "sha256": "e0105b2189d5821b4c00112b782c050026bba183dc451b2646ee988753fb8475"
+    },
+    {
+      "file": "src/sim/seating.ts",
+      "sha256": "00314166e84225e1262bb510e3ec421103426339290eed88e2c48b9162a5af7d"
+    },
+    {
+      "file": "src/sim/shifts.ts",
+      "sha256": "e9a9cebfbd1f8e2d9f75be0e85a6bd4b62c01e3aa0c1351f64b7de9264a61345"
+    },
+    {
+      "file": "src/sim/sight.ts",
+      "sha256": "18f1615949c02ff1f9c158e1e5ccf47d57d907549958a16effdcbf6e48dad4ed"
+    },
+    {
+      "file": "src/sim/social.ts",
+      "sha256": "178bae083e7c460700673e66b26c986da8f42b3336cb724364e8d3accb5e6a18"
+    },
+    {
+      "file": "src/sim/spatial.ts",
+      "sha256": "a9ab8fa91a17a0eeef37a02bd114597b2a04cd082250b49eefbbbb0aba46e5a1"
+    },
+    {
+      "file": "src/sim/sports.ts",
+      "sha256": "0207987e46b7e05563ffc0a859a26d9fabdc70a06fc1c75f68c7671c732bde1d"
+    },
+    {
+      "file": "src/sim/team-sports.ts",
+      "sha256": "e4b40ea6049cbdf688169930d1afb700943bb648659ca8ad59962e8f2fdaf4b0"
+    },
+    {
+      "file": "src/sim/waves.ts",
+      "sha256": "cb64fcf0e6ca7ce072a9ee024d622fe2b37912d23290dce7eb0d706e7b0c27f8"
+    },
+    {
+      "file": "src/sim/work-journey.ts",
+      "sha256": "9223ff0ec344c3b015a86d1508044e302fd0bd45f9c26883ba913cd7bc3910da"
+    },
+    {
+      "file": "src/sim/work-navigation.ts",
+      "sha256": "f9bd4f555c6fd1a0fc7abf1ad08197df9c5e5f7179bb938d15afea4b005cf32f"
+    },
+    {
+      "file": "src/style.css",
+      "sha256": "eefcc425b0d6a20cf92c77bc222efd740b8932198a7170b6841810998206c646"
+    },
+    {
+      "file": "src/vite-env.d.ts",
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    }
+  ],
+  "omittedSelfFrames": 1156,
+  "summary": "The 40 highest self-sample frames and all runtime source hashes. Full trace is retained locally and can be regenerated with profile-acceptance.mjs.",
+  "traceSha256": "49d5f049370a17432a0ef022e5ef4aad7d8105b491fff61ba2dde401599af65f"
+}
