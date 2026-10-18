@@ -1,3 +1,4 @@
+import {controlGuide,type GuideContext} from './control-guide';
 import {controlIcon,setIcon,type Icon} from './icons';
 import {nearbySeat,seatedPose} from '../sim/seating';
 import {growthScale,growthScales} from '../scene/growth';
@@ -78,7 +79,7 @@ const sportButton=document.querySelector<HTMLButtonElement>('#sport-action')!;
 const matchButton=document.querySelector<HTMLButtonElement>('#match-action')!,matchLabel=document.querySelector<HTMLElement>('#match-action-label')!,passButton=document.querySelector<HTMLButtonElement>('#pass-action')!,passLabel=document.querySelector<HTMLElement>('#pass-action-label')!;
 const matchScore=document.querySelector<HTMLElement>('#match-score')!,matchState=document.querySelector<HTMLElement>('#match-state')!,matchClock=document.querySelector<HTMLElement>('#match-clock')!,matchScoreline=document.querySelector<HTMLElement>('#match-scoreline')!;
 const sportLabel=document.querySelector<HTMLElement>('#sport-action-label')!;
-const saveButton=document.querySelector<HTMLButtonElement>("#save-game")!,saveStatus=document.querySelector<HTMLElement>("#save-status")!,saveError=document.querySelector<HTMLElement>("#save-error")!;
+const saveButton=document.querySelector<HTMLButtonElement>("#save-game")!,saveLabel=document.querySelector<HTMLElement>("#save-label")!,saveStatus=document.querySelector<HTMLElement>("#save-status")!,saveError=document.querySelector<HTMLElement>("#save-error")!;
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 
 export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):Promise<void> {
@@ -122,9 +123,9 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   if(saves?.restored){car=saves.restored.state;worldTime.value=saves.restored.worldTime;}
   let saveAt=car.timeS,saveDirty=false;
   const saveIdentity={sourceHash:doc.sourceHash,compatibilityHash:world.saveCompatibility};
-  saveButton.hidden=!saves;saveButton.textContent=saves?.blocked ? "Save current session" : "Save now";saveStatus.textContent=saves?.status??'Review session: saves disabled.';
+  saveButton.hidden=!saves;saveLabel.textContent=saves?.blocked ? "Save current session" : "Save now";saveStatus.textContent=saves?.status??'Review session: saves disabled.';
   const saveNow=(replace=false,state=car,time=worldTime.value)=>{
-    if(!saves)return false;const start=performance.now(),saved=saves.write(state,time,replace),ms=performance.now()-start;saveAt=car.timeS;saveDirty=false;saveStatus.textContent=saves.status;saveButton.textContent=saves.blocked ? "Save current session" : "Save now";saveError.hidden=saved;const warning=saved ? "" : saves.status;if(saveError.textContent!==warning)saveError.textContent=warning;
+    if(!saves)return false;const start=performance.now(),saved=saves.write(state,time,replace),ms=performance.now()-start;saveAt=car.timeS;saveDirty=false;saveStatus.textContent=saves.status;saveLabel.textContent=saves.blocked ? "Save current session" : "Save now";saveError.hidden=saved;const warning=saved ? "" : saves.status;if(saveError.textContent!==warning)saveError.textContent=warning;
     container.dataset.save=JSON.stringify({...saveIdentity,restored:!!saves.restored,saved,ms,characters:saves.characters,timeS:state.timeS,known:state.npcs.filter(n=>n.known).map(n=>n.id),review:reviewSave,status:saves.status});return saved;
   };
   container.dataset.save=JSON.stringify({...saveIdentity,restored:!!saves?.restored,enabled:!!saves,review:reviewSave,status:saveStatus.textContent});
@@ -140,6 +141,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   let mode: "playing" | "paused" = "playing";
   let pendingCommerce:CommerceAction|undefined;
   const commerce=commerceControls(doc,action=>{if(mode==='playing')pendingCommerce=action;if(document.querySelector<HTMLElement>('#commerce-panel')!.hidden)container.focus({preventScroll:true});},()=>{keys.clear();boostRequested=false;talkRequested=false;matchRequested=passRequested=false;clearShot();});
+  const controls=controlGuide();
   const accountOwners=new Map(doc.economy?.accounts.map(a=>[a.id,a.actor]));
   let pendingDraw:(()=>void)|undefined;
 
@@ -314,7 +316,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   let flight = { jumps: 0, landings: 0, maxClearance: 0 };
   document.querySelector<HTMLElement>('#save-tools')!.hidden=!saves;
   const backups=saves ? saveTools(world,()=>({state:car,worldTime:worldTime.value}),snapshot=>saveNow(true,snapshot.state,snapshot.worldTime),snapshot=>{
-    car=snapshot.state;worldTime.value=snapshot.worldTime;saveDirty=false;saveAt=car.timeS;resetPresentation();saveStatus.textContent='Backup restored on this device.';
+    car=snapshot.state;worldTime.value=snapshot.worldTime;saveDirty=false;saveAt=car.timeS;resetPresentation();updateControlGuide();saveStatus.textContent='Backup restored on this device.';
   }) : undefined;
 
   function resetPosition(restartRace = false): void {
@@ -340,12 +342,19 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     if(resetProps)for (const group of propMeshes.values()) group.userData.distance = 0;
   }
 
+  function updateControlGuide():void{
+    const context:GuideContext=car.seated ? 'seated' : car.control.kind==='foot' ? activeSport(car,doc) ? 'sport' : isSwimming(car,world) ? 'swim' : 'foot' : car.control.kind==='passenger' ? 'passenger' : controlOf(occupiedObject(car,world)?.spec)??'car';
+    controls.update(context);
+  }
   function setMode(next: typeof mode): void {
     commerce.close(false);
     pendingCommerce=undefined;
     if(next==='playing')backups?.close();
     mode = next; keys.clear(); boostRequested=false;talkRequested=false;matchRequested=passRequested=false; pointerAim=undefined; clearShot(); stepper.reset();
-    if(next === "paused") cameraAngle=viewAngle;
+    if(next === "paused"){
+      cameraAngle=viewAngle;
+      updateControlGuide();
+    }else controls.close();
     if (next === "paused" && !pauseMenu.open) pauseMenu.showModal();
     else if (next === "playing" && pauseMenu.open) pauseMenu.close();
     pauseButton.setAttribute("aria-label", next === "paused" ? "Resume" : "Pause");
@@ -382,6 +391,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   });
   addEventListener("keydown", (e) => {
     if(e.metaKey || e.ctrlKey || e.altKey)return;
+    if(mode==='paused'){if(!e.repeat && (e.code==='Escape' || e.code==='KeyP')){e.preventDefault();setMode('playing');}return;}
     if(commerce.key(e.code,e.target,e.repeat,e.shiftKey)){e.preventDefault();return;}
     if(e.target instanceof HTMLElement && e.target.closest('button,input,select,summary') && e.code!=='Escape' && e.code!=='KeyP')return;
     if(!e.ctrlKey && !e.metaKey && !e.altKey && manualZoom.key(e.code)){e.preventDefault();return;}

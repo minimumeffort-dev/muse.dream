@@ -2,6 +2,20 @@
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
+## Pause controls and exit arrow
+
+`pause-controls.jpg`, `save-menu.jpg`, `backup-preview.jpg` and `cargo-save.jpg`
+are refreshed from the native redesigned dialog. The guide uses icon sections,
+aligned keycaps and an independently scrollable panel. Native evidence includes
+390 × 620 keyboard scrolling and a restored delivery with two loaves; the
+temporary viewport override was reset. [Checks and retained source](../evidence/pause-menu/verification.md).
+
+The exit arrow's shaft now meets its arrowhead. A full native seated HUD view
+retains the shared Stand/Exit glyph. Existing motion exports do not open the
+pause dialog and keep their represented controls and simulation. Their prior
+exit glyph remains historical; the focused HUD evidence records the new icon.
+No geometry, animation, camera, accepted world, save format or mechanics change.
+
 ## Character wardrobe, r71
 
 The current people and player sheets, complete 109-assembly atlas, sports sheets,

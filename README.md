@@ -445,11 +445,18 @@ For local development, open `http://127.0.0.1:5173/` on your machine. You can al
 | Q / E | Rotate the view |
 | Trackpad pinch / two-finger scroll, or mouse wheel | Zoom in / out over the world |
 | F | Exit a vehicle, or enter one nearby while on foot |
-| Space | Jump on foot/bike/skateboard, hop a boat, swim faster, or climb in the plane |
+| Space | Jump on foot/bicycle/skateboard/scooter, hop a boat, swim faster, or climb in the plane |
 | Shift / Boost button | Boost a car; Shift also runs, swims faster, or descends in the plane |
 | P / Escape | Pause |
 | R | Return to the start, keeping changes to the world |
 | Start over, in the pause menu | Reset progress and restore destroyed objects |
+
+Pause and open **Controls** for a visual key guide. It starts with what you're
+doing: walking, swimming, riding, flying or playing a sport. Arrow keys switch
+between its five sections; Tab reaches the next control and Escape resumes.
+Gameplay keys stay inactive while paused.
+
+![Contextual controls in the pause menu](docs/media/pause-controls.jpg)
 
 Manual zoom keeps your framing as you move and switch vehicles. Smaller rides still bring the camera closer automatically. R keeps your zoom; Start over restores it.
 

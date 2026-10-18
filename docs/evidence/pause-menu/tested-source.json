@@ -1,0 +1,8 @@
+{
+  "index.html": "94f3a127df5fbb8bdc56ca3233cec564cbce6fe109fc4f5226585c9ddf995435",
+  "src/game/main.ts": "a6d69aa94b520850e969780c5c5d0ea2f032741e2c794f23bad2ec058e93c288",
+  "src/game/control-guide.ts": "015a648ac7f2a4d4c8d6070e228ef9f55fad5b36aa59a0fd9e10b74f881473d6",
+  "src/game/icons.ts": "743d1025aed5e00fdc75f224e1c3b0aaabdc40a9fbe0cf0a94b12d8062a88550",
+  "src/style.css": "637c4919701c84f6c87180193489f61e594a8a4e159cfc6ce4bd9ecd053b327d",
+  "tests/control-guide.test.ts": "4dd0c77d25eaed8a6ba4161dd5721e80891765e2302fbffc6f8105ae3e755224"
+}

@@ -23,7 +23,10 @@ const paths={
  boat:'M3 13h18l-4 7H7l-4-7Zm9-10v10m0-10 7 7h-7M2 23l4-1 4 1 4-1 4 1 4-1',
  plane:'m12 2-2 8-8 5v2l8-2v4l-3 2v1l5-1 5 1v-1l-3-2v-4l8 2v-2l-8-5-2-8Z',
  seat:'M5 3v11h14V8M5 9h10v5M5 14v7m14-7v7',
- exit:'M10 3H4v18h6m3-14 5 5-5 5m-5-5h13',
+ exit:'M10 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4M15 7l5 5-5 5M9 12h11',
+ view:'M3 8h18v12H3V8Zm5 0 2-4h4l2 4M16 14a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z',
+ keys:'M3 5h18v14H3V5Zm4 4h1m3 0h1m3 0h1m-9 4h1m3 0h1m3 0h1M7 16h10',
+ play:'m8 5 11 7-11 7V5Z',
  sport:'M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-13-8c7 5 7 11 0 16M3 12h18m-5-8c-7 5-7 11 0 16',
  close:'m6 6 12 12M6 18 18 6',
 } as const;

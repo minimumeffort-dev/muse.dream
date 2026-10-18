@@ -61,4 +61,6 @@ world and asks the same fixed-step simulation to act.
 
 This is a keyboard-and-pointer game. These prompts do not add touch steering or
 a controller binding system. Full movement controls remain under Pause → Controls. **P** opens Pause; its
-actions, controls and backup tools also work with Tab and Enter.
+actions, controls and backup tools also work with Tab and Enter. The [contextual
+key guide](dream/behavior.md#pause-and-find-the-controls) starts with the current
+movement or sport, then uses arrow-key sections instead of one long text list.

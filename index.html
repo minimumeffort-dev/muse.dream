@@ -91,27 +91,34 @@
     <output id="action-feedback" role="status" aria-live="polite" hidden></output>
     <dialog id="pause-menu" aria-label="Pause menu">
       <div class="menu-card">
-        <h1>Paused</h1>
-        <button id="resume" type="button">Continue</button>
-        <p id="pocket-status" hidden></p>
-        <details id="control-guide"><summary>Controls</summary><p>WASD or arrows to walk, swim or drive<br />Shift or Boost for a car burst<br />On sports grounds: N joins or rests a match<br />Hold J, release to shoot · K passes / calls / tackles<br />Space to jump or hop a boat<br />Shift to run or swim faster<br />Space / Shift to climb / descend in a plane<br />+ / − to zoom · 0 resets framing<br />Pinch or scroll also zooms<br />Q / E to rotate the view<br />F to sit / stand or enter / exit a vehicle<br />T to talk to a nearby person<br />M for nearby activities · I for your bag<br />In activities: arrows or WASD select, Enter acts<br />1–4 or Q/E change section; Tab reaches every action<br />Escape closes actions, then pauses<br />B to buy · V to sell · H to work / collect / deliver · G to eat<br />Y to share food with someone while seated<br />R to return to the start</p></details>
-        <button id="save-game" class="quiet" type="button">Save now</button>
-        <p id="save-status" role="status" aria-live="polite">Progress saves on this device.</p>
-        <details id="save-tools">
-          <summary>Backups</summary>
-          <a id="export-save" download>Download current world</a>
-          <button id="open-save" class="quiet" type="button">Open backup…</button>
-          <input id="import-save" type="file" accept=".json,application/json" aria-label="Choose a Muse Dream backup" hidden />
-          <section id="save-preview" hidden aria-label="Backup preview">
-            <p id="backup-summary"></p>
-            <p>Restore replaces your current progress on this device. Download a backup first to keep it.</p>
-            <button id="restore-save" type="button">Restore this backup</button>
-            <button id="cancel-restore" class="quiet" type="button">Cancel</button>
+        <header class="pause-heading"><h1>Paused</h1><span class="pause-context"><span id="pause-context-icon" class="icon-slot"></span><span id="pause-context"></span></span></header>
+        <div class="pause-layout">
+          <nav class="pause-actions" aria-label="Paused game">
+            <button id="resume" type="button" aria-label="Continue" aria-keyshortcuts="Escape P"><span class="icon-slot" data-icon-name="play"></span><span>Continue</span><kbd>Esc</kbd></button>
+            <button id="toggle-controls" type="button" aria-controls="control-guide" aria-expanded="false"><span class="icon-slot" data-icon-name="keys"></span><span>Controls</span></button>
+            <button id="save-game" type="button"><span class="icon-slot" data-icon-name="box"></span><span id="save-label">Save now</span></button>
+            <details id="save-tools">
+              <summary aria-label="Backups"><span class="icon-slot" data-icon-name="box"></span>Backups</summary>
+              <a id="export-save" download>Download current world</a>
+              <button id="open-save" class="quiet" type="button">Open backup…</button>
+              <input id="import-save" type="file" accept=".json,application/json" aria-label="Choose a Muse Dream backup" hidden />
+              <section id="save-preview" hidden aria-label="Backup preview">
+                <p id="backup-summary"></p>
+                <p>Restore replaces your current progress on this device. Download a backup first to keep it.</p>
+                <button id="restore-save" type="button">Restore this backup</button>
+                <button id="cancel-restore" class="quiet" type="button">Cancel</button>
+              </section>
+              <p id="backup-status" role="status" aria-live="polite"></p>
+            </details>
+            <button id="restart" class="quiet" type="button">Start over</button>
+            <a href="/lab/">Dream Lab ↗</a>
+          </nav>
+          <section id="control-guide" aria-label="Game controls" hidden>
+            <div id="control-tabs" role="tablist" aria-label="Control categories"></div>
+            <section id="control-panel" role="tabpanel" tabindex="0"></section>
           </section>
-          <p id="backup-status" role="status" aria-live="polite"></p>
-        </details>
-        <button id="restart" class="quiet" type="button">Start over</button>
-        <a href="/lab/">Dream Lab ↗</a>
+        </div>
+        <footer class="pause-footer"><p id="pocket-status" hidden></p><p id="save-status" role="status" aria-live="polite">Progress saves on this device.</p></footer>
       </div>
     </dialog>
     <script type="module" src="/src/game/boot.ts"></script>

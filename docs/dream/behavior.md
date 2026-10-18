@@ -18,6 +18,21 @@ Pinch the trackpad or scroll vertically over the world to zoom in and out. Mouse
 
 [Wider overview of the same position](../media/zoom-overview.jpg) · [Input and camera checks](../evidence/trackpad-zoom/verification.md)
 
+## Pause and find the controls
+
+**P** or **Escape** pauses the world. **Controls** opens a key guide with Explore,
+Vehicles, Sports, Activities and View sections. It selects the current movement
+or sports context first. Use arrow keys, Home or End within the category tabs,
+then Tab into the key list. The list scrolls independently on a short screen.
+Escape or P resumes; gameplay input, including R, stays inactive while paused.
+
+The compact menu keeps Save now, Backups and Start over available when the guide
+is closed. These controls keep their existing save and reset rules. The HUD's
+exit arrow now meets its arrowhead cleanly for both leaving a vehicle and standing
+up.
+
+![The pause menu and contextual key guide](../media/pause-controls.jpg)
+
 ## Sit on furniture
 
 **F** also sits on an available furniture seat when you reach its approach.
