@@ -380,6 +380,18 @@ Water polygons have 3–32 vertices, area 400–8,000,000 square units and exten
 
 `crossing` connects both sidewalks. Optional `junction=true` expands one declaration into zebra crossings on every street arm, outside the intersection. Duplicate zebra stripes merge into one surface. Centerlines, cycle symbols and neighboring stop lines leave clearance around the crossings; tram rails continue through them. Up to 64 crossing declarations. Sidewalks, entrance paths and crossings form the validated pedestrian network. Short overlapping street endpoints are rejected in site-authored cities; use shared junctions for exact centerline connections.
 
+A junction declaration also connects existing `cycle_width` surfaces across its
+carriageways. Through lanes retain their ribbon; an ending cycle street reaches
+the connected cycle street's riding edge, or ends on its approach when no cycle
+facility continues. The colored surface is bounded by the crossing arms and
+existing riding footprints. Centerlines, separators and stop bars clear it;
+zebras overlay it. This is visual continuity, not a priority rule or a new path.
+Legacy circuit and timber-deck exclusions remain. See the complete runnable
+[cycle junction example](../examples/cycle-junctions.dream).
+At a declared junction, a street returning exactly to its first point joins that cycle-paint corner with
+the same bounded miters, clipped to its existing riding footprint. Its physical
+endpoint caps remain unchanged.
+
 In sources that declare a circuit, city sidewalks, cycle tracks, separators and entrance paving yield to its carriageway. Existing sidewalk strips crossing the circuit become derived painted crosswalks, with curb openings and clear circuit center paint. They remain part of the pedestrian network and need no extra Dream declarations. Cycle symbols require their complete envelope inside a cycle track and outside crossing and symbol clearance; the renderer omits a crowded symbol instead of clipping its individual strokes. Maps reuse these same road and cycle-track footprints.
 
 `route(kind=street)` places vehicles on existing carriageways; it creates no extra surface. `tram` adds rails in the existing road, and `walk` uses the pedestrian network without paving it. `rail` and `tram` accept a 10–24-unit gauge. A `stop` is a named route anchor, with a .1–30-second wait and a site within 120 units. Street, tram and rail stops use station/platform sites; walking stops can visit homes, markets and other destinations. Up to 16 stops within the existing 64 route anchors. Shuttle returns visit stops in reverse order. Rail, tram and street NPCs may use up to eight compound contacts for their long bodies; controlled vehicles retain their existing cylinder boundary.

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {bicycleSymbol} from './bicycle-symbol';
+import {streetCycleSurface} from '../scene/cycle-surface';
 import {crossingPaint} from './crossing-paint';
 import {overlaps,type RenderRegion} from './render-region';
 import type {Scene,Point} from '../scene/schema';
@@ -53,7 +54,7 @@ export function* buildStreetSteps(scene:Scene,region?:RenderRegion):Generator<vo
 function* streetRecipeSteps(scene:Scene):Generator<void,{layers:StreetRecipe[];grooves:Point[][];heads:Point[][]}>{
   const plan:StreetRecipe[]=[];
   const roads=streetPolygons(scene.streets),roadUnion=unionPolygons(roads);
-  const loop=roadFootprint(scene),riding=streetPolygons(scene.streets,'riding'),bands=streetCycleTracks(scene);
+  const loop=roadFootprint(scene),riding=streetPolygons(scene.streets,'riding'),bands=streetCycleSurface(scene),dedicated=streetCycleTracks(scene);
   const sidewalks=streetSidewalks(scene);
   function* add(polygons:Point[][],color:string,lift:number,name:string,support=false):Generator<void>{
     if(polygons.length)plan.push({polygons,color,lift,name,support});yield;
@@ -84,7 +85,7 @@ function* streetRecipeSteps(scene:Scene):Generator<void,{layers:StreetRecipe[];g
     }
   }
   const crossingClearance=scene.crossings.flatMap(c=>crossingPolygons(scene,{...c,width:c.width+16}));
-  yield* add(paint(subtractPolygons(dashes,[...crossingClearance,...loop])),'#d8d2b7',1.4,'street-centerlines');
+  yield* add(paint(subtractPolygons(dashes,[...crossingClearance,...bands,...loop])),'#d8d2b7',1.4,'street-centerlines');
   const symbols:Point[][]=[],symbolBounds:Point[][]=[];
   for(const s of scene.streets.filter(s=>s.cycleWidth))for(let i=1;i<s.points.length;i++){
     const a=s.points[i-1]!,b=s.points[i]!,length=Math.hypot(b.x-a.x,b.y-a.y),dx=(b.x-a.x)/length,dy=(b.y-a.y)/length;
@@ -93,7 +94,7 @@ function* streetRecipeSteps(scene:Scene):Generator<void,{layers:StreetRecipe[];g
       if(segments.some(other=>!(other.a===a && other.b===b) && near(other,x,y,40)))continue;
       const point=(along:number,across:number)=>({x:x+side*(dx*along-dy*across),y:y+side*(dy*along+dx*across)});
       const bounds=[point(-12,-8),point(25,-8),point(25,8),point(-12,8)];
-      if([...crossingClearance,...symbolBounds].some(p=>polygonsOverlap(p,bounds)) || subtractPolygons([bounds],bands).some(p=>polygonArea(p)>.01))continue;
+      if([...crossingClearance,...symbolBounds].some(p=>polygonsOverlap(p,bounds)) || subtractPolygons([bounds],dedicated).some(p=>polygonArea(p)>.01))continue;
       const glyph:Point[][]=[];
       const line=(points:Point[],closed=false)=>glyph.push(...markingPolygons({id:'cycle-symbol',color:'#eee8d9',width:1,closed,points}));
       const bikePoint=(u:number,v:number)=>point(u-12,(v-12)*.8);
@@ -122,7 +123,7 @@ function* streetRecipeSteps(scene:Scene):Generator<void,{layers:StreetRecipe[];g
   }
   crossings.push(...crossingPaint(scene).polygons);
   yield* add(paint(unionPolygons(crossings)),'#eee8d9',1.86,'pedestrian-crossings');
-  yield* add(paint(unionPolygons(subtractPolygons(stopLines,crossingClearance))),'#eee8d9',1.86,'crossing-stop-lines');
+  yield* add(paint(unionPolygons(subtractPolygons(stopLines,[...crossingClearance,...bands]))),'#eee8d9',1.86,'crossing-stop-lines');
   const markings=new Map<string,Point[][]>();
   for(const s of scene.markings){const polygons=markings.get(s.color)??[];polygons.push(...markingPolygons(s));markings.set(s.color,polygons);}
   for(const [color,polygons] of markings)yield* add(paint(polygons),color,1.9,'authored-markings');

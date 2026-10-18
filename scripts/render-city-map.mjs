@@ -1,9 +1,10 @@
 import {createServer} from 'vite';
 import {readFileSync,readdirSync,writeFileSync} from 'node:fs';
-const server=await createServer({configFile:false,server:{middlewareMode:true,watch:null},appType:'custom'});
+const server=await createServer({configFile:false,server:{middlewareMode:true,watch:null,hmr:false},appType:'custom'});
 try{
  const {compileDreamScene}=await server.ssrLoadModule('/src/scene/dream.ts');
- const {streetFootprints,streetCycleTracks}=await server.ssrLoadModule('/src/scene/streets.ts');
+ const {streetFootprints}=await server.ssrLoadModule('/src/scene/streets.ts');
+ const {streetCycleSurface}=await server.ssrLoadModule('/src/scene/cycle-surface.ts');
  const {unionPolygons}=await server.ssrLoadModule('/src/scene/polygons.ts');
  const {roadFootprint}=await server.ssrLoadModule('/src/scene/road.ts');
  const {sitePath}=await server.ssrLoadModule('/src/scene/sites.ts');
@@ -17,7 +18,7 @@ try{
  const polygon=(p,color)=>`<polygon points="${points(p)}" fill="${color}"/>`;
  const ring=roadFootprint(scene),streets=streetFootprints(scene);
  const reserved=unionPolygons(streets.reserved,[...streets.roads,...ring]);
- const roads=[...ring,...unionPolygons(streets.roads)],riding=streetCycleTracks(scene);
+ const roads=[...ring,...unionPolygons(streets.roads)],riding=streetCycleSurface(scene);
  const destinations=scene.sites.filter(s=>['market','hospital','school','work','civic','station','airport','park'].includes(s.kind) && !s.id.includes('oldtown_'));
  const height=1300+Math.ceil(destinations.length/4)*20;
  const s=[`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 ${height}" role="img" aria-labelledby="title desc"><title id="title">River town, compiled Dream geometry</title><desc id="desc">Roads and intersections are unions of the actual world geometry. Building footprints, entrances, transit stops and bridges come from the same compiled Dream source as the game.</desc><rect width="1500" height="${height}" fill="#fafaf7"/><g font-family="system-ui,sans-serif" fill="#171717"><text x="50" y="52" font-size="30" font-weight="700">A city has to make sense.</text><text x="50" y="86" font-size="17" fill="#5e5e56">Compiled Dream geometry · 1.4 × 1.1 km · roads, entrances, platforms and bridges share the game source</text></g><g transform="translate(50 120) scale(.1)"><rect width="14000" height="11000" fill="#dce2d1"/>`];
@@ -26,8 +27,8 @@ try{
  for(const p of scene.surfaces.filter(s=>s.finish!=='terrain'))s.push(polygon(p.points,p.color));
  for(const b of scene.terrain.landscape.bridges)s.push(polygon(bridgePolygon(b),'#8c9490'));
  for(const p of reserved)s.push(polygon(p,'#f2eee0'));
- for(const p of riding)s.push(polygon(p,'#9caf8f'));
  for(const p of roads)s.push(polygon(p,'#737d7c'));
+ for(const p of riding)s.push(polygon(p,'#9caf8f'));
  // Entrance paths and real building footprints, rather than colored zoning rectangles.
  for(const site of scene.sites)s.push(`<polyline points="${points(sitePath(scene,site))}" fill="none" stroke="#b8aa89" stroke-width="${site.width}"/>`);
  for(const o of scene.objects){

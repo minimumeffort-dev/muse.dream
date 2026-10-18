@@ -1,0 +1,123 @@
+{
+  "baselineCommit": "552dc941c227514f5ee73cae5485ebad810f4b2f",
+  "currentCommit": "552dc941c227514f5ee73cae5485ebad810f4b2f",
+  "workingSourceDiffSha256": "a786ee168cc7feb05f7a84e97626351ed33d2cb26b631264f08339a1d0f59974",
+  "node": "v26.8.1",
+  "scope": "two cold Node SSR constructions; exact accepted data, placements, masks, current/legacy navigation and terrain samples; not browser startup, frame rate, heap or VRAM",
+  "before": [
+    {
+      "name": "compile and accept world",
+      "ms": 5396.761958
+    },
+    {
+      "name": "streaming bounds",
+      "ms": 562.9991659999996
+    },
+    {
+      "name": "current and historical fingerprints",
+      "ms": 573.7520000000004
+    },
+    {
+      "name": "previous interior graph and contacts",
+      "ms": 619.0711670000001
+    },
+    {
+      "name": "previous verge graph",
+      "ms": 586.5336670000006
+    }
+  ],
+  "after": [
+    {
+      "name": "compile and accept world",
+      "ms": 5340.8427919999995
+    },
+    {
+      "name": "streaming bounds",
+      "ms": 536.1590840000008
+    },
+    {
+      "name": "current and historical fingerprints",
+      "ms": 593.4622920000002
+    },
+    {
+      "name": "previous interior graph and contacts",
+      "ms": 616.6419580000002
+    },
+    {
+      "name": "previous verge graph",
+      "ms": 582.1256250000024
+    }
+  ],
+  "fingerprintHeap": {
+    "scope": "Node JS heap at explicit GC checkpoints; not peak or browser memory",
+    "before": {
+      "before": 115807416,
+      "cached": 131695056,
+      "released": 115444672
+    },
+    "after": {
+      "before": 162767480,
+      "cached": 173634424,
+      "released": 157361904
+    }
+  },
+  "objects": 1769,
+  "terrainSamples": 2761,
+  "checks": [
+    {
+      "name": "scene",
+      "sha256": "d7ad026d5c6e999bb7fdee88fc524aeff0f48e8eb1de60ca8ce5141a2abd810f",
+      "exact": true
+    },
+    {
+      "name": "bounds",
+      "sha256": "ec08e57d2bac0ef154620432bee33daade0cb44c36d2e0fb0841e91d3d56c0b1",
+      "exact": true
+    },
+    {
+      "name": "compatibility",
+      "sha256": "5146a22ef9bb55e9c2404073b4751264517b9a3a91d3548904a081930e0908b0",
+      "exact": true
+    },
+    {
+      "name": "contacts",
+      "sha256": "b55890e7b8a410415605574d2557ffe875bd45c7380278105a40fa648639acd6",
+      "exact": true
+    },
+    {
+      "name": "navigation",
+      "sha256": "146558414a9142c2c335f40703b58fcf10ef625d2cd930306f73d421a9733d3f",
+      "exact": true
+    },
+    {
+      "name": "repairs",
+      "sha256": "5a38328243ebbb19849ff1022df03769f0d2767f3cfd586bf30630c6bdc15a8f",
+      "exact": true
+    },
+    {
+      "name": "oldInterior",
+      "sha256": "eeb2184ed5ef6a3a4c2edd0732d7ce4110f0caeedfd392d2e86ffeb7b6dfb596",
+      "exact": true
+    },
+    {
+      "name": "oldVerge",
+      "sha256": "7f6c79f4586a1397d90acac49de03c677a69b0638f5aef47804a1fb7bafca91d",
+      "exact": true
+    },
+    {
+      "name": "placements",
+      "sha256": "12e2f87cc93a1720761139d0aad231a93ab4b593f4be21e29b6ab77b492a510f",
+      "exact": true
+    },
+    {
+      "name": "samples",
+      "sha256": "05d508b6f99b4d00c66c7139acd8df986488913a751c8e5904b3a23293cf369c",
+      "exact": true
+    },
+    {
+      "name": "mask",
+      "sha256": "773da554e2e9a249a0e2e89df4fcb648cb4f26c5787e06b5efcd47f7717be854",
+      "exact": true
+    }
+  ]
+}

@@ -181,6 +181,10 @@ The source files are the examples. Tests compare these complete snippets with th
 
 [The complete neighborhood module](../examples/planned-neighborhood.dream) joins two streets and paints a basketball court with a repeated center circle. It can be included in a full world. The [planned-world guide](../urban-world.md) shows the larger town, suburbs and sports park built from the same primitives.
 
+[Connected cycle junctions](../examples/cycle-junctions.dream) uses shared anchors
+for a T-junction and a four-way intersection. `cycle_width` and explicit junction
+crossings supply the connected surface; no overlapping paint patches are needed.
+
 [Programmable pedestrian](../examples/npc-behavior.dream) pauses its route near the player and turns toward them. The [NPC guide](npcs.md) includes the complete source and explains timed routines, roles and runtime ownership.
 
 ## A carved voxel wall

@@ -38,7 +38,27 @@ Stops have named anchors, waits and platform sites in Dream. Platform paths join
 
 ![The airport approach meets the avenue separately from hospital street](media/hospital-junction.jpg)
 
-The airport connector meets South avenue at `[3000,6500]`; hospital street meets it at `[3300,6500]`. This replaces their former thirteen-degree merge, which left a long triangular cycle lane between two carriageways. The shuttle uses the revised approach, and its lamps follow that road. Each junction has its own arm crossings. The southern terrace fork and the remaining cycle corner details are still under review. [Geometry and save checks](evidence/cycle-junctions/verification.md).
+The airport connector meets South avenue at `[3000,6500]`; hospital street meets it at `[3300,6500]`. This replaces their former thirteen-degree merge, which left a long triangular cycle lane between two carriageways. The shuttle uses the revised approach, and its lamps follow that road. Each junction has its own arm crossings. [Geometry and save checks](evidence/cycle-junctions/verification.md).
+
+## Cycle connections
+
+![Continuous cycle paint at the hospital and southern terrace fork](media/cycle-junction.jpg)
+
+At `crossing(...,junction=true)`, cycle tracks now keep their colored surface
+across the connected carriageways. An ending cycle street reaches the other
+street's cycle tracks, stopping flush with its riding envelope. If there is no
+cycle route to join, it ends on its approach instead of leaving an isolated cap
+on the far side. The bounded connection area follows the crossing arms.
+
+The renderer, minimap and source-generated city plan share these outlines.
+Centerlines, separators and stop bars clear the cycle surface; zebra stripes
+remain visible above it. Bicycle glyphs stay on the dedicated approach lanes.
+This changes paint, not physical pavement, navigation, traffic priority or saves.
+The shallow terrace fork remains a wide junction; this is not a claim that every
+urban layout detail has been resolved. [Native views and checks](evidence/cycle-crossings/verification.md).
+
+[Run the T-junction and four-way example](examples/cycle-junctions.dream):
+`npm run -s dream -- check docs/examples/cycle-junctions.dream`.
 
 Bicycle tracks follow the avenues and continue across the three bridges. Painted symbols and road center lines leave clear gaps at zebra crossings. Junction declarations create the crossings on the street arms, with stop lines before them. Duplicate stripes merge and neighboring stop lines leave the zebra clear. Street and cycle-track bends use a shared mitered ribbon, so interior anchors no longer protrude as square tiles. Walkers, drivers and cyclists share one world; you still choose your own route when controlling a vehicle.
 

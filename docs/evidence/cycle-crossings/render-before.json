@@ -1,0 +1,51 @@
+{
+  "profile": {
+    "scenario": "still",
+    "samples": 300,
+    "viewport": [
+      1920,
+      1080
+    ],
+    "pixelRatio": 1.5,
+    "cpuMs": {
+      "mean": 2.0746666673819223,
+      "p95": 2.300000011920929
+    },
+    "prepareMs": {
+      "mean": 0.9596666673819224,
+      "p95": 1.0999999642372131
+    },
+    "submitMs": {
+      "mean": 1.115,
+      "p95": 1.300000011920929
+    },
+    "rafMs": {
+      "mean": 16.67,
+      "p95": 18.30000001192093
+    },
+    "gpuMs": {
+      "mean": 1.5682260836120396,
+      "p95": 2.026916
+    },
+    "gpuSamples": 299,
+    "draws": {
+      "mean": 203,
+      "p95": 203
+    },
+    "triangles": {
+      "mean": 612594,
+      "p95": 612594
+    },
+    "geometries": 136
+  },
+  "data": {
+    "economy": "{\"atS\":0,\"turn\":0,\"accounts\":[{\"id\":\"pocket\",\"credits\":20,\"inventory\":{\"bread\":0,\"flour\":0,\"timber\":0,\"sapling\":0,\"vegetables\":0,\"lunch\":0,\"boards\":0,\"fasteners\":0},\"satiety\":48,\"decisionAtS\":0,\"completed\":{\"work\":{\"bake\":0,\"large_bake\":0,\"pack_lunch\":0,\"assemble_kit\":0},\"delivery\":{\"flour_run\":0,\"school_run\":0,\"kits_run\":0,\"saplings_run\":0},\"repair\":{\"market_tables\":0,\"orchard_trees\":0}}},{\"id\":\"baker\",\"credits\":0,\"inventory\":{\"bread\":0,\"flour\":0,\"timber\":0,\"sapling\":0,\"vegetables\":0,\"lunch\":0,\"boards\":0,\"fasteners\":0},\"satiety\":65,\"decisionAtS\":0,\"completed\":{\"work\":{\"bake\":0,\"large_bake\":0,\"pack_lunch\":0,\"assemble_kit\":0},\"delivery\":{\"flour_run\":0,\"school_run\":0,\"kits_run\":0,\"saplings_run\":0},\"repair\":{\"market_tables\":0,\"orchard_trees\":0}}},{\"id\":\"regular\",\"credits\":30,\"inventory\":{\"bread\":0,\"flour\":0,\"timber\":0,\"sapling\":0,\"vegetables\":0,\"lunch\":0,\"boards\":0,\"fasteners\":0},\"satiety\":25,\"decisionAtS\":0,\"completed\":{\"work\":{\"bake\":0,\"large_bake\":0,\"pack_lunch\":0,\"assemble_kit\":0},\"delivery\":{\"flour_run\":0,\"school_run\":0,\"kits_run\":0,\"saplings_run\":0},\"repair\":{\"market_tables\":0,\"orchard_trees\":0}}},{\"id\":\"school_staff\",\"credits\":30,\"inventory\":{\"bread\":0,\"flour\":0,\"timber\":0,\"sapling\":0,\"vegetables\":0,\"lunch\":0,\"boards\":0,\"fasteners\":0},\"satiety\":28,\"decisionAtS\":0,\"completed\":{\"work\":{\"bake\":0,\"large_bake\":0,\"pack_lunch\":0,\"assemble_kit\":0},\"delivery\":{\"flour_run\":0,\"school_run\":0,\"kits_run\":0,\"saplings_run\":0},\"repair\":{\"market_tables\":0,\"orchard_trees\":0}}},{\"id\":\"caretaker\",\"credits\":0,\"inventory\":{\"bread\":0,\"flour\":0,\"timber\":0,\"sapling\":0,\"vegetables\":0,\"lunch\":0,\"boards\":0,\"fasteners\":0},\"satiety\":65,\"decisionAtS\":0,\"completed\":{\"work\":{\"bake\":0,\"large_bake\":0,\"pack_lunch\":0,\"assemble_kit\":0},\"delivery\":{\"flour_run\":0,\"school_run\":0,\"kits_run\":0,\"saplings_run\":0},\"repair\":{\"market_tables\":0,\"orchard_trees\":0}}},{\"id\":\"depot_owner\",\"credits\":0,\"inventory\":{\"bread\":0,\"flour\":0,\"timber\":0,\"sapling\":0,\"vegetables\":0,\"lunch\":0,\"boards\":0,\"fasteners\":0},\"satiety\":65,\"decisionAtS\":0,\"completed\":{\"work\":{\"bake\":0,\"large_bake\":0,\"pack_lunch\":0,\"assemble_kit\":0},\"delivery\":{\"flour_run\":0,\"school_run\":0,\"kits_run\":0,\"saplings_run\":0},\"repair\":{\"market_tables\":0,\"orchard_trees\":0}}}],\"unattributed\":{\"work\":{\"bake\":0,\"large_bake\":0,\"pack_lunch\":0,\"assemble_kit\":0},\"delivery\":{\"flour_run\":0,\"school_run\":0,\"kits_run\":0,\"saplings_run\":0},\"repair\":{\"market_tables\":0,\"orchard_trees\":0}},\"markets\":[{\"id\":\"station_supplies\",\"credits\":0,\"owner\":\"depot_owner\",\"stock\":{\"flour\":80,\"timber\":32,\"sapling\":18}},{\"id\":\"school_canteen\",\"credits\":60,\"stock\":{\"bread\":0}},{\"id\":\"market_stall\",\"credits\":100,\"stock\":{\"bread\":8,\"flour\":30,\"timber\":12,\"sapling\":6,\"vegetables\":8,\"lunch\":0,\"boards\":8,\"fasteners\":8}}],\"consumed\":{\"bread\":0,\"flour\":0,\"timber\":0,\"sapling\":0,\"vegetables\":0,\"lunch\":0,\"boards\":0,\"fasteners\":0},\"batches\":{\"bake\":0,\"large_bake\":0,\"pack_lunch\":0,\"assemble_kit\":0},\"delivered\":{\"flour_run\":0,\"school_run\":0,\"kits_run\":0,\"saplings_run\":0},\"repaired\":{\"market_tables\":0,\"orchard_trees\":0},\"events\":[]}",
+    "memory": "{\"bytes\":125824716,\"uniqueBuffers\":6162,\"geometries\":1047,\"uniqueTriangles\":918704}",
+    "parking": "{\"active\":null,\"prototypes\":0,\"instances\":0}",
+    "save": "{\"sourceHash\":\"1d19ee0a8684bfb081d4e896b3cf33e1f5146001509263768260f9f09ef897d9\",\"compatibilityHash\":\"5297667c16ec9218ef46e6cbf82cfdffe826220f92572f16d85f88ef5c8c2c53\",\"restored\":false,\"enabled\":false,\"review\":false,\"status\":\"Review session: saves disabled.\"}",
+    "shaderWarmup": "{\"ms\":122.69999998807907,\"parallel\":true}",
+    "source": "dream-2",
+    "streaming": "{\"resident\":20,\"required\":11,\"pending\":0,\"bytes\":88795966,\"peakBytes\":88795966,\"peakResident\":20,\"maxInstallMs\":6.100000023841858,\"maxSliceMs\":6,\"loaded\":20,\"unloaded\":0,\"discarded\":0,\"ready\":true,\"keys\":[\"4000,7200\",\"4000,8000\",\"4800,7200\",\"3200,7200\",\"4000,6400\",\"4800,8000\",\"3200,8000\",\"4800,6400\",\"3200,6400\",\"4000,8800\",\"3200,8800\",\"5600,7200\",\"4800,8800\",\"5600,8000\",\"2400,7200\",\"2400,8000\",\"5600,6400\",\"2400,6400\",\"5600,8800\",\"2400,8800\"]}",
+    "world": "{\"width\":14000,\"height\":11000,\"objects\":1769,\"checkpoints\":0,\"birds\":256}"
+  }
+}

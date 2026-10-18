@@ -127,6 +127,11 @@ caps. Preserve that geometry across masks, reservations, rendering and maps. Mer
 duplicate crossing paint and clear centerlines, cycle glyphs and neighboring stop
 lines around zebras. Audit new ground effects against sidewalks and junctions.
 City sidewalks, cycle tracks, separators and entrance paving yield to the circuit.
+Dedicated cycle footprints remain physical data. Use the shared derived cycle
+surface for renderer and maps: declared junctions connect existing facilities,
+ending tracks clip to the receiving riding envelope. Where no facility continues,
+remove far-side cap islands. Clear separators, centerlines and stop bars against it;
+glyph envelopes still fit dedicated lanes. Preserve pavement, navigation and saves.
 Keep existing sidewalk/circuit connections as derived painted crossings in both
 rendering and walking validation; clear circuit curbs and paint there. Place cycle
 glyphs only when their whole envelope fits a lane and clears crossings/other

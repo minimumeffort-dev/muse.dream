@@ -23,6 +23,12 @@ caretaker's finite repair work.
 [Watch the park](docs/media/park.mp4) · [GIF](docs/media/park.gif) ·
 [Build connected paths in Dream](docs/dream/paths.md)
 
+Cycle tracks now carry their orange surface through declared junctions. A side
+street can join both sides of an existing cycle route; an ending lane no longer
+leaves an isolated orange cap across the road. Centerlines and stop bars leave
+these connections clear. The minimap and city plan use the same outlines.
+[Junction example and checks](docs/urban-world.md#cycle-connections).
+
 ## The whole world is made of voxels
 
 The ground, roads, river, buildings, vehicles, people and plants now go through voxel construction. Dream describes the shapes and connections; the engine fills their cells and merges the visible faces. Wheels still turn, boats still pass under bridges, and breakable objects keep their authored pieces. A voxel doesn't need its own mesh or physics body.

@@ -79,6 +79,12 @@ the district; the tram's route, passenger controls and saved clock stay resident
 Keep auditing paint, junctions and attachments as new systems land. World equality
 checks alone do not certify every placement or marking is correct.
 
+Cycle paint now continues through declared junctions, with shared map outlines
+and no centerlines or stop bars across it. Ending facilities join an existing
+cycle street or terminate on their approach. The hospital/terrace fork retains
+its wide physical layout; signal priority, cyclist routing and a complete street
+design audit remain separate work. [Junction checks](evidence/cycle-crossings/verification.md).
+
 Compound passenger exits now use their actual contact envelope, with the same
 bounded collision and dry-ground checks. They retain NPC route ownership and
 parked vehicles. A registered save upgrade keeps the existing world intact.

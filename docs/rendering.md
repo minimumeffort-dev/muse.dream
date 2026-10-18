@@ -30,6 +30,14 @@ Segment samples now share their enclosing contact query, and distant vehicle for
 
 ## Loading and memory
 
+Cycle surfaces are resolved once per accepted Scene before chunk clipping.
+Declared junctions connect existing cycle facilities within the shared riding
+footprints and crossing-arm bounds. Their convex pieces are unioned once, so
+matching orange ribbons do not stack. Separators, centerlines and stop bars yield
+to this surface, while glyph placement still checks the dedicated lanes. Maps
+reuse the same helper. Collision masks and pedestrian envelopes are unchanged.
+[Geometry and native checks](evidence/cycle-crossings/verification.md).
+
 The loading screen arrives in the first HTML response. One worker compiles and validates Dream, then builds terrain, streets, water and static object chunks on demand. Finished mesh buffers are transferred to the renderer, along with engine-owned material recipes and per-instance occlusion data. Object stamping and batching stay off the main thread. The first complete view starts the game; the rest of the map is built as it becomes relevant.
 
 The worker also supplies the pedestrian portal graph, surveyed static collision

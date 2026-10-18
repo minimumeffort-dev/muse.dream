@@ -4,7 +4,8 @@ import { roadFootprint } from "../scene/road";
 import type { Point,Scene } from "../scene/schema";
 import type { CarState } from "../sim/car";
 import { actorPoses } from "../sim/actors";
-import {streetPolygons,streetCycleTracks} from '../scene/streets';
+import {streetPolygons} from '../scene/streets';
+import {streetCycleSurface} from '../scene/cycle-surface';
 
 /** Destination meaning comes from Dream sites, never inferred from building labels. */
 export function mapDestinations(scene:Scene){
@@ -49,7 +50,7 @@ export function createWorldMap(canvas: HTMLCanvasElement, scene: Scene) {
   paint((scene.terrain.landscape?.bridges??[]).map(bridgePolygon),'#c9a77a');
   paint(roadFootprint(scene),'#829493');
   paint(streetPolygons(scene.streets),'#a7aca5');
-  paint(streetCycleTracks(scene),'#c78d75');
+  paint(streetCycleSurface(scene),'#c78d75');
   for(const route of scene.routes)if(route.kind==="rail" || route.kind==="tram" || route.kind==="path"){
     map.beginPath();route.points.forEach((p,i)=>i ? map.lineTo(p.x,p.y) : map.moveTo(p.x,p.y));if(route.mode==="loop")map.closePath();
     map.strokeStyle=route.surface==="cycle" ? "#76ad9c" : route.surface==="paved" ? "#a5afb0" : "#c9ac7c";map.lineWidth=route.width??12;map.stroke();

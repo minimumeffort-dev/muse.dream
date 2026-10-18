@@ -2,6 +2,24 @@
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
+## Connected cycle junctions, 2026-10-19
+
+`cycle-junction.jpg` is a native main-game still of the hospital/terrace fork.
+The before/after evidence uses one frozen camera. `city-plan.svg` is regenerated
+from the same cycle surface as the renderer and minimap. Driving, boost and
+vehicle-switching GIF/HD pairs and corresponding stills are refreshed together:
+660 actual 2400 × 1350 source frames, at 30 rendered frames per simulation second.
+The world/town/voxel-world posters use driving frame 0; car-boost uses boost
+frame 40; switching/on-foot use switching frame 35 and riding uses frame 110.
+No frame interpolation or live frame-rate claim.
+The adjacent `hospital-junction.jpg` still is refreshed after ordinary driving
+and manual zoom, showing the same separated approaches with the current paint.
+
+Asset sheets and walking-contact recordings retain their unchanged construction
+and motion. Other focused activity captures retain their recorded mechanics
+with historical background paint; use the current driving set and junction
+still for this surface. [Native views, geometry counts and checks](../evidence/cycle-crossings/verification.md).
+
 ## Pause controls and exit arrow
 
 `pause-controls.jpg`, `save-menu.jpg`, `backup-preview.jpg` and `cargo-save.jpg`

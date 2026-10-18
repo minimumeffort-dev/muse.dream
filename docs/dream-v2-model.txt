@@ -342,6 +342,15 @@ CONNECTED CITY DATA
 In street-only worlds, nearby junctions share an intersection area: crossing expansion
 omits their short internal links and keeps zebras on the outer arms. Do not add
 extra mid-junction zebras; overlapping parallel paint shares one stripe phase.
+At junction=true, existing cycle_width ribbons continue across connected roads.
+Ending cycle streets join the other cycle street's riding edge, or end on their
+approach if no cycle facility continues. Engine-owned paint stays within existing
+riding footprints and crossing-arm bounds. Do not add overlapping surface/marking
+patches to imitate these connections. Centerlines, separators and stop bars clear
+the cycle surface; zebra stripes overlay it. No traffic-priority rule is implied.
+See examples/cycle-junctions.dream. Physical pavement and navigation are unchanged.
+At a declared junction, a street returning exactly to its first point joins its cycle-paint corner inside
+the existing riding footprint; no closed field is added to street.
 junction id(at=[x,y]); binds one file-local point; <=128 per source. road and street
 require exactly one of points=[[x,y],...] or via=[junction_id,...]. world.spawn and
 bridge.from/to accept either an XY pair or junction ID. Includes never export symbols.

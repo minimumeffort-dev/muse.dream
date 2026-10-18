@@ -1,0 +1,111 @@
+{
+  "offlineExport": true,
+  "livePerformanceMeasurement": false,
+  "sourceFrames": 660,
+  "clips": [
+    {
+      "clip": "driving",
+      "sourceFrames": 210,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "renderedFramesPerSimulationSecond": 30,
+      "files": [
+        {
+          "path": "docs/media/driving.gif",
+          "sha256": "a40ee652d06c95dc5364c0d71602e2dc49bac6879f4ec08ed0a530935ab449d1",
+          "decodedFrames": 210
+        },
+        {
+          "path": "docs/media/driving.mp4",
+          "sha256": "4d65d7ce2223e358f99f6cde7e0686620a4f88cfd2e8a143b4bf7b62cbd8e3c5",
+          "decodedFrames": 210
+        }
+      ],
+      "stills": [
+        {
+          "path": "docs/media/world.jpg",
+          "sourceFrame": 0,
+          "sha256": "b97bb167ba35f0d57f90e480636bc10ba2edeb548da1f74d2dc346c2a12ceb1f"
+        },
+        {
+          "path": "docs/media/voxel-world.jpg",
+          "sourceFrame": 0,
+          "sha256": "b97bb167ba35f0d57f90e480636bc10ba2edeb548da1f74d2dc346c2a12ceb1f"
+        },
+        {
+          "path": "docs/media/town-center.jpg",
+          "sourceFrame": 0,
+          "sha256": "b97bb167ba35f0d57f90e480636bc10ba2edeb548da1f74d2dc346c2a12ceb1f"
+        }
+      ]
+    },
+    {
+      "clip": "boost",
+      "sourceFrames": 210,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "renderedFramesPerSimulationSecond": 30,
+      "files": [
+        {
+          "path": "docs/media/boost.gif",
+          "sha256": "ac4a3d388dc4cb4a66305745501edd6f544d6e276f86da174a1dd0cd35363867",
+          "decodedFrames": 210
+        },
+        {
+          "path": "docs/media/boost.mp4",
+          "sha256": "ab768b9c5aa91b81692fb56b33fc35b3ca849af973313df22d122167941407f6",
+          "decodedFrames": 210
+        }
+      ],
+      "stills": [
+        {
+          "path": "docs/media/car-boost.jpg",
+          "sourceFrame": 40,
+          "sha256": "f844a0e9342ce14ecdd28ced74af89bf2a0e83fae55b29ce69c954df2b4481b4"
+        }
+      ]
+    },
+    {
+      "clip": "switching",
+      "sourceFrames": 240,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "renderedFramesPerSimulationSecond": 30,
+      "files": [
+        {
+          "path": "docs/media/switching.gif",
+          "sha256": "0f72bafc09a98898518f025a51dc0460a8d0ec94b854a6a6e0d4185989a5a3fc",
+          "decodedFrames": 240
+        },
+        {
+          "path": "docs/media/switching.mp4",
+          "sha256": "859351781c1667318a160691572ea17f8763f00ff1c6df7b3a18f47bd43b1940",
+          "decodedFrames": 240
+        }
+      ],
+      "stills": [
+        {
+          "path": "docs/media/switching.jpg",
+          "sourceFrame": 35,
+          "sha256": "2b30526cf2700f26d12693632ca5a6aced2bd86671c2ee1946161a02276f52c7"
+        },
+        {
+          "path": "docs/media/on-foot.jpg",
+          "sourceFrame": 35,
+          "sha256": "2b30526cf2700f26d12693632ca5a6aced2bd86671c2ee1946161a02276f52c7"
+        },
+        {
+          "path": "docs/media/riding.jpg",
+          "sourceFrame": 110,
+          "sha256": "da367b21e0b07b2f07dcc767016336bf014b839cb14ea33b15a9acf402b96125"
+        }
+      ]
+    }
+  ]
+}

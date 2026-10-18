@@ -1,0 +1,71 @@
+{
+  "sourceHash": "1d19ee0a8684bfb081d4e896b3cf33e1f5146001509263768260f9f09ef897d9",
+  "fingerprint": "5297667c16ec9218ef46e6cbf82cfdffe826220f92572f16d85f88ef5c8c2c53",
+  "scope": "Native browser screenshots, with no image generation. Before/after use one frozen camera. Ordinary driving and docs/map views are separate checks.",
+  "consoleWarningsAndErrors": [],
+  "files": [
+    {
+      "path": "docs/evidence/cycle-crossings/before.jpg",
+      "size": [
+        1280,
+        720
+      ],
+      "format": "JPEG",
+      "sha256": "e83cd32dca697ec7e0f4469aafd23acb777000eddb7f9831bbad0ef8c1a5199a"
+    },
+    {
+      "path": "docs/evidence/cycle-crossings/after.jpg",
+      "size": [
+        1280,
+        720
+      ],
+      "format": "JPEG",
+      "sha256": "1199e4db9ff53eecdd85eeab900ba1fff3d0f58f0617d66477c1c0f1b69df434"
+    },
+    {
+      "path": "docs/evidence/cycle-crossings/driven.jpg",
+      "size": [
+        1280,
+        720
+      ],
+      "format": "JPEG",
+      "sha256": "75ef71633d827e5a75b439fa62aae150d664cbfa6098b387037ab03ebf1313d9"
+    },
+    {
+      "path": "docs/evidence/cycle-crossings/map.jpg",
+      "size": [
+        1280,
+        720
+      ],
+      "format": "JPEG",
+      "sha256": "c1bf5c50db173f7041eedbd67d33a8760f8c792c9f1e956fce286e5d44da6bd3"
+    },
+    {
+      "path": "docs/evidence/cycle-crossings/docs.jpg",
+      "size": [
+        1280,
+        720
+      ],
+      "format": "JPEG",
+      "sha256": "72c888b644e56917e7b509b184af990257fc11ec81868838de7881300fb6a0e1"
+    },
+    {
+      "path": "docs/media/cycle-junction.jpg",
+      "size": [
+        1280,
+        720
+      ],
+      "format": "JPEG",
+      "sha256": "4fa82fd0e82f2334399c774ed4715ca076b046c1a80be616d65668de01c0cf7e"
+    },
+    {
+      "path": "docs/media/hospital-junction.jpg",
+      "size": [
+        1280,
+        720
+      ],
+      "format": "JPEG",
+      "sha256": "8625431fd98e83f0f757b1798baf7424884acfd5709c5e2b9ec756848d8a4c4e"
+    }
+  ]
+}

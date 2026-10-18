@@ -1,0 +1,21 @@
+
+> muse-dream@0.1.0 test
+> vitest run --maxWorkers=2 --testTimeout=60000 tests/cycle-surface.test.ts tests/street-world.test.ts tests/airport-junction.test.ts tests/transport-network.test.ts
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/cycle-surface.test.ts (6 tests) 5525ms
+   ✓ retains continuous color through the live shallow fork within existing pavement  5368ms
+ ✓ tests/street-world.test.ts (3 tests) 51ms
+ ✓ tests/airport-junction.test.ts (2 tests) 46ms
+ ✓ tests/transport-network.test.ts (12 tests) 17761ms
+   ✓ connected larger world > drives the waterfront streets without losing the dry riding surface  5614ms
+   ✓ connected larger world > drives the canal-bridge streets without losing the dry riding surface  5304ms
+   ✓ connected larger world > drives the lake-bridge streets without losing the dry riding surface  5167ms
+   ✓ connected larger world > sails beneath a city bridge while cars use its elevated deck  1101ms
+
+ Test Files  4 passed (4)
+      Tests  23 passed (23)
+   Start at  02:11:54
+   Duration  18.79s (transform 516ms, setup 25ms, collect 7.17s, tests 23.38s, environment 0ms, prepare 116ms)

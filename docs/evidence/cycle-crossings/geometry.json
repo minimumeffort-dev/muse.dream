@@ -1,0 +1,448 @@
+{
+  "baseline": "552dc941c227514f5ee73cae5485ebad810f4b2f",
+  "scope": "Complete Node street meshes and exact accepted source. Buffer bytes count street geometry arrays only, not browser memory or VRAM.",
+  "before": {
+    "source": "1d19ee0a8684bfb081d4e896b3cf33e1f5146001509263768260f9f09ef897d9",
+    "fingerprint": "5297667c16ec9218ef46e6cbf82cfdffe826220f92572f16d85f88ef5c8c2c53",
+    "objects": 1769,
+    "ambient": 181,
+    "cycleHits": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "layers": {
+      "street-carriageways": {
+        "meshes": 300,
+        "triangles": 389623
+      },
+      "cycle-separators": {
+        "meshes": 224,
+        "triangles": 359759
+      },
+      "street-cycle-tracks": {
+        "meshes": 230,
+        "triangles": 408626
+      },
+      "street-sidewalks": {
+        "meshes": 316,
+        "triangles": 589275
+      },
+      "entrance-paths": {
+        "meshes": 117,
+        "triangles": 47217
+      },
+      "ground-orchard_path": {
+        "meshes": 4,
+        "triangles": 1223
+      },
+      "ground-east_medical_apron": {
+        "meshes": 1,
+        "triangles": 936
+      },
+      "ground-airfield_runway": {
+        "meshes": 8,
+        "triangles": 3933
+      },
+      "ground-airfield_apron": {
+        "meshes": 4,
+        "triangles": 2664
+      },
+      "ground-airport_forecourt": {
+        "meshes": 4,
+        "triangles": 1667
+      },
+      "ground-hangar_service_apron": {
+        "meshes": 2,
+        "triangles": 816
+      },
+      "ground-market_square": {
+        "meshes": 3,
+        "triangles": 1157
+      },
+      "ground-school_yard": {
+        "meshes": 2,
+        "triangles": 2402
+      },
+      "ground-south_school_yard": {
+        "meshes": 4,
+        "triangles": 1531
+      },
+      "ground-hospital_apron": {
+        "meshes": 2,
+        "triangles": 1209
+      },
+      "ground-workshop_yard": {
+        "meshes": 2,
+        "triangles": 1784
+      },
+      "ground-football_turf": {
+        "meshes": 8,
+        "triangles": 9377
+      },
+      "ground-basketball_court": {
+        "meshes": 2,
+        "triangles": 942
+      },
+      "ground-golf_fairway": {
+        "meshes": 5,
+        "triangles": 8914
+      },
+      "ground-basketball_access": {
+        "meshes": 1,
+        "triangles": 171
+      },
+      "ground-football_access": {
+        "meshes": 4,
+        "triangles": 218
+      },
+      "ground-school_yard_access": {
+        "meshes": 1,
+        "triangles": 392
+      },
+      "ground-south_yard_access": {
+        "meshes": 3,
+        "triangles": 666
+      },
+      "ground-park_seating": {
+        "meshes": 1,
+        "triangles": 370
+      },
+      "ground-station_seating": {
+        "meshes": 1,
+        "triangles": 264
+      },
+      "ground-school_yard_return": {
+        "meshes": 1,
+        "triangles": 416
+      },
+      "ground-garden_south_parking": {
+        "meshes": 1,
+        "triangles": 179
+      },
+      "ground-garden_east_parking": {
+        "meshes": 1,
+        "triangles": 145
+      },
+      "ground-parking_1al3ers": {
+        "meshes": 1,
+        "triangles": 637
+      },
+      "ground-parking_18wxx93": {
+        "meshes": 1,
+        "triangles": 558
+      },
+      "ground-parking_9iq816": {
+        "meshes": 2,
+        "triangles": 1352
+      },
+      "ground-parking_pn1p5j": {
+        "meshes": 1,
+        "triangles": 656
+      },
+      "ground-parking_s64dg0": {
+        "meshes": 2,
+        "triangles": 884
+      },
+      "ground-parking_1w7zdha": {
+        "meshes": 1,
+        "triangles": 217
+      },
+      "ground-parking_pfwnn5": {
+        "meshes": 1,
+        "triangles": 320
+      },
+      "ground-parking_14eqexn": {
+        "meshes": 2,
+        "triangles": 559
+      },
+      "ground-parking_18lj01x": {
+        "meshes": 2,
+        "triangles": 167
+      },
+      "ground-parking_rstmn6": {
+        "meshes": 2,
+        "triangles": 1063
+      },
+      "ground-parking_di37vv": {
+        "meshes": 1,
+        "triangles": 1097
+      },
+      "ground-parking_1q4ktdg": {
+        "meshes": 2,
+        "triangles": 1686
+      },
+      "ground-parking_1kqfeiu": {
+        "meshes": 2,
+        "triangles": 516
+      },
+      "ground-parking_1byb56i": {
+        "meshes": 2,
+        "triangles": 1263
+      },
+      "ground-parking_1hz36io": {
+        "meshes": 2,
+        "triangles": 1751
+      },
+      "ground-parking_3krbr8": {
+        "meshes": 4,
+        "triangles": 2349
+      },
+      "street-centerlines": {
+        "meshes": 272,
+        "triangles": 125265
+      },
+      "cycle-symbols": {
+        "meshes": 198,
+        "triangles": 492425
+      },
+      "pedestrian-crossings": {
+        "meshes": 110,
+        "triangles": 184116
+      },
+      "crossing-stop-lines": {
+        "meshes": 86,
+        "triangles": 14702
+      },
+      "authored-markings": {
+        "meshes": 12,
+        "triangles": 20141
+      },
+      "tram-rail-grooves": {
+        "meshes": 16,
+        "triangles": 2200
+      },
+      "tram-rail-heads": {
+        "meshes": 16,
+        "triangles": 2188
+      }
+    },
+    "meshes": 2003,
+    "triangles": 2698787,
+    "buffers": 7980,
+    "bytes": 204283354
+  },
+  "after": {
+    "source": "1d19ee0a8684bfb081d4e896b3cf33e1f5146001509263768260f9f09ef897d9",
+    "fingerprint": "5297667c16ec9218ef46e6cbf82cfdffe826220f92572f16d85f88ef5c8c2c53",
+    "objects": 1769,
+    "ambient": 181,
+    "cycleHits": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "layers": {
+      "street-carriageways": {
+        "meshes": 300,
+        "triangles": 389623
+      },
+      "cycle-separators": {
+        "meshes": 224,
+        "triangles": 361309
+      },
+      "street-cycle-tracks": {
+        "meshes": 230,
+        "triangles": 425086
+      },
+      "street-sidewalks": {
+        "meshes": 316,
+        "triangles": 589275
+      },
+      "entrance-paths": {
+        "meshes": 117,
+        "triangles": 47217
+      },
+      "ground-orchard_path": {
+        "meshes": 4,
+        "triangles": 1223
+      },
+      "ground-east_medical_apron": {
+        "meshes": 1,
+        "triangles": 936
+      },
+      "ground-airfield_runway": {
+        "meshes": 8,
+        "triangles": 3933
+      },
+      "ground-airfield_apron": {
+        "meshes": 4,
+        "triangles": 2664
+      },
+      "ground-airport_forecourt": {
+        "meshes": 4,
+        "triangles": 1667
+      },
+      "ground-hangar_service_apron": {
+        "meshes": 2,
+        "triangles": 816
+      },
+      "ground-market_square": {
+        "meshes": 3,
+        "triangles": 1157
+      },
+      "ground-school_yard": {
+        "meshes": 2,
+        "triangles": 2402
+      },
+      "ground-south_school_yard": {
+        "meshes": 4,
+        "triangles": 1531
+      },
+      "ground-hospital_apron": {
+        "meshes": 2,
+        "triangles": 1209
+      },
+      "ground-workshop_yard": {
+        "meshes": 2,
+        "triangles": 1784
+      },
+      "ground-football_turf": {
+        "meshes": 8,
+        "triangles": 9377
+      },
+      "ground-basketball_court": {
+        "meshes": 2,
+        "triangles": 942
+      },
+      "ground-golf_fairway": {
+        "meshes": 5,
+        "triangles": 8914
+      },
+      "ground-basketball_access": {
+        "meshes": 1,
+        "triangles": 171
+      },
+      "ground-football_access": {
+        "meshes": 4,
+        "triangles": 218
+      },
+      "ground-school_yard_access": {
+        "meshes": 1,
+        "triangles": 392
+      },
+      "ground-south_yard_access": {
+        "meshes": 3,
+        "triangles": 666
+      },
+      "ground-park_seating": {
+        "meshes": 1,
+        "triangles": 370
+      },
+      "ground-station_seating": {
+        "meshes": 1,
+        "triangles": 264
+      },
+      "ground-school_yard_return": {
+        "meshes": 1,
+        "triangles": 416
+      },
+      "ground-garden_south_parking": {
+        "meshes": 1,
+        "triangles": 179
+      },
+      "ground-garden_east_parking": {
+        "meshes": 1,
+        "triangles": 145
+      },
+      "ground-parking_1al3ers": {
+        "meshes": 1,
+        "triangles": 637
+      },
+      "ground-parking_18wxx93": {
+        "meshes": 1,
+        "triangles": 558
+      },
+      "ground-parking_9iq816": {
+        "meshes": 2,
+        "triangles": 1352
+      },
+      "ground-parking_pn1p5j": {
+        "meshes": 1,
+        "triangles": 656
+      },
+      "ground-parking_s64dg0": {
+        "meshes": 2,
+        "triangles": 884
+      },
+      "ground-parking_1w7zdha": {
+        "meshes": 1,
+        "triangles": 217
+      },
+      "ground-parking_pfwnn5": {
+        "meshes": 1,
+        "triangles": 320
+      },
+      "ground-parking_14eqexn": {
+        "meshes": 2,
+        "triangles": 559
+      },
+      "ground-parking_18lj01x": {
+        "meshes": 2,
+        "triangles": 167
+      },
+      "ground-parking_rstmn6": {
+        "meshes": 2,
+        "triangles": 1063
+      },
+      "ground-parking_di37vv": {
+        "meshes": 1,
+        "triangles": 1097
+      },
+      "ground-parking_1q4ktdg": {
+        "meshes": 2,
+        "triangles": 1686
+      },
+      "ground-parking_1kqfeiu": {
+        "meshes": 2,
+        "triangles": 516
+      },
+      "ground-parking_1byb56i": {
+        "meshes": 2,
+        "triangles": 1263
+      },
+      "ground-parking_1hz36io": {
+        "meshes": 2,
+        "triangles": 1751
+      },
+      "ground-parking_3krbr8": {
+        "meshes": 4,
+        "triangles": 2349
+      },
+      "street-centerlines": {
+        "meshes": 272,
+        "triangles": 125211
+      },
+      "cycle-symbols": {
+        "meshes": 198,
+        "triangles": 492425
+      },
+      "pedestrian-crossings": {
+        "meshes": 110,
+        "triangles": 184116
+      },
+      "crossing-stop-lines": {
+        "meshes": 86,
+        "triangles": 14618
+      },
+      "authored-markings": {
+        "meshes": 12,
+        "triangles": 20141
+      },
+      "tram-rail-grooves": {
+        "meshes": 16,
+        "triangles": 2200
+      },
+      "tram-rail-heads": {
+        "meshes": 16,
+        "triangles": 2188
+      }
+    },
+    "meshes": 2003,
+    "triangles": 2716659,
+    "buffers": 7980,
+    "bytes": 205648890
+  }
+}
