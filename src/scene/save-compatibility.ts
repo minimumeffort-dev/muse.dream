@@ -4,11 +4,36 @@ import type {Scene} from './schema';
 // Bump when simulation/save semantics change, even if the Dream source does not.
 export const SAVE_SIMULATION_VERSION=17;
 
-/** A conservative contract: only host provenance and spoken text may differ. */
-export function saveCompatibilitySource(scene:Scene):string {
-  return projection(scene,SAVE_SIMULATION_VERSION);
+type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
+/** One immutable worker-bootstrap batch; release before chunk construction. */
+export function compatibilityBatchEncoder():CompatibilityEncoder {
+ const roundedCache=new WeakMap<object,string>(),rawCache=new WeakMap<object,string>();
+ let cachedUnits=0;
+ const encode=(value:unknown,rounded:boolean,depth:number):string|undefined=>{
+  if(value===null || typeof value!=='object')return JSON.stringify(typeof value==='number' && rounded ? Math.round(value*1e8)/1e8 : value);
+  // Shared world-list entries avoid caching every nested vertex or projected root.
+  const cache=rounded ? roundedCache : rawCache,remember=depth===3,cached=remember ? cache.get(value) : undefined;
+  if(cached!==undefined)return cached;
+  const parts:string[]=[];
+  if(Array.isArray(value)){
+   for(let i=0;i<value.length;i++)parts.push(encode(value[i],rounded,depth+1)??'null');
+  }else{
+   const record=value as Record<string,unknown>,indices:string[]=[],names:string[]=[];
+   for(const key of Object.keys(record))(String(Number(key)>>>0)===key && key!=='4294967295' ? indices : names).push(key);
+   for(const key of indices.concat(names.sort())){const text=encode(record[key],rounded,depth+1);if(text!==undefined)parts.push(JSON.stringify(key)+':'+text);}
+  }
+  const text=Array.isArray(value) ? '['+parts.join(',')+']' : '{'+parts.join(',')+'}';
+  // Limit retained UTF-16 text to 32 MiB; full checks continue when reuse is full.
+  if(remember && cachedUnits+text.length<=16*1024*1024){cache.set(value,text);cachedUnits+=text.length;}return text;
+ };
+ return (value,rounded)=>encode(value,rounded,0)!;
 }
-function projection(scene:Scene,simulationVersion:number,rounded=true):string {
+
+/** A conservative contract: only host provenance and spoken text may differ. */
+export function saveCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string {
+  return projection(scene,SAVE_SIMULATION_VERSION,true,encode);
+}
+function projection(scene:Scene,simulationVersion:number,rounded=true,encode?:CompatibilityEncoder):string {
   const {revisionId,sourceHash,provenance,...world}=scene;
   let economy=world.economy;
   if(economy && simulationVersion<16){const {meals,...old}=economy;economy=old as typeof economy;}
@@ -16,6 +41,7 @@ function projection(scene:Scene,simulationVersion:number,rounded=true):string {
   const data={simulationVersion,world:{...world,...(economy ? {economy} : {}),...(simulationVersion<5 && world.economy ? {economy:{...economy,repairs:undefined}} : {}),behaviors:scene.behaviors.map(program=>({...program,states:program.states.map(state=>{
     const {say,...rules}=state;return rules;
   })}))}};
+  if(encode)return encode(data,rounded);
   // Property insertion order is not part of the contract; array order still is.
   // Derived trig transforms vary at machine precision across browser engines.
   return JSON.stringify(data,(_key,value)=>typeof value==='number' && rounded ? Math.round(value*1e8)/1e8 : value && typeof value==='object' && !Array.isArray(value)
@@ -23,8 +49,8 @@ function projection(scene:Scene,simulationVersion:number,rounded=true):string {
 }
 
 /** Pre-market rules for the registered upgrade chain; every physical field stays. */
-export function preCommerceCompatibilitySource(scene:Scene,simulationVersion=1):string{
-  return projection({...scene,economy:undefined},simulationVersion,simulationVersion!==1);
+export function preCommerceCompatibilitySource(scene:Scene,simulationVersion=1,encode?:CompatibilityEncoder):string{
+  return projection({...scene,economy:undefined},simulationVersion,simulationVersion!==1,encode);
 }
 export const R44_SAVE_SOURCE='6dd2a1418f815c48b445ede8a08a83cb455028a6712f4e59d4d17057f243fbc9';
 export function registeredLegacySource(hash:string):string|undefined{
@@ -56,55 +82,55 @@ export const KITCHEN_COMPATIBILITY='6d52318e971ff660899fd39229f652d6ff3df011e109
 export function preKitchenScene(scene:Scene):Scene{
  const e=scene.economy;return {...scene,economy:e && {...e,accounts:e.accounts.map(a=>a.id==='baker' && a.works ? {...a,works:a.works.filter(id=>id!=='pack_lunch')} : a.id==='caretaker' && a.deliveries ? {...a,deliveries:a.deliveries.filter(id=>id!=='flour_run')} : a),deliveries:e.deliveries.map(d=>{if(d.id!=='flour_run' || d.on!=='market_square')return d;const {on,grounds,...old}=d;return old;})}};
 }
-export function preKitchenCompatibilitySource(scene:Scene):string{return projection(preKitchenScene(scene),16);}
+export function preKitchenCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preKitchenScene(scene),16,true,encode);}
 /** Registered r59 changes one customer's policy, without new stock, money or geometry. */
 export function preMealScene(scene:Scene):Scene{
  scene=preKitchenScene(scene);const e=scene.economy;return {...scene,economy:e && {...e,meals:e.meals.filter(m=>m.id!=='market_break'),accounts:e.accounts.map(a=>{if(a.id!=='regular' || a.meal!=='market_break')return a;const {meal,...old}=a;return {...old,shop:true};})}};
 }
-export function preMealCompatibilitySource(scene:Scene):string{return projection(preMealScene(scene),15);}
+export function preMealCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preMealScene(scene),15,true,encode);}
 /** Registered r58 adds personal progression; geometry and previous task rules are unchanged. */
 export function preProgressScene(scene:Scene):Scene{
  scene=preMealScene(scene);const e=scene.economy;
  return {...scene,behaviors:scene.behaviors.map(b=>!['market_chat','school_chat'].includes(b.id) ? b : {...b,states:b.states.filter(s=>s.id!==(b.id==='market_chat' ? 'recognized' : 'helped')).map(s=>({...s,transitions:s.transitions.filter(t=>!t.requires)}))}),economy:e && {...e,milestones:[],jobs:e.jobs.filter(j=>j.id!=='large_bake'),accounts:e.accounts.map(a=>{if(a.id!=='baker' || !a.works)return a;const {works,...old}=a;return {...old,work:'bake'};})}};
 }
-export function preProgressCompatibilitySource(scene:Scene):string{return projection(preProgressScene(scene),14);}
+export function preProgressCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preProgressScene(scene),14,true,encode);}
 /** Registered r57 keeps all old rules and initial ledgers; only new recipes/lots are removed. */
 export function preRecipeScene(scene:Scene):Scene{
  scene=preProgressScene(scene);const e=scene.economy;if(!e)return scene;
  const added=new Set(['vegetables','lunch','boards','fasteners']);
  return {...scene,economy:{...e,goods:e.goods.filter(g=>!added.has(g.id)),markets:e.markets.map(m=>({...m,lots:m.lots.filter(l=>!added.has(l.good))})),jobs:e.jobs.filter(j=>!['pack_lunch','assemble_kit'].includes(j.id))}};
 }
-export function preRecipeCompatibilitySource(scene:Scene):string{return projection(preRecipeScene(scene),13);}
+export function preRecipeCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preRecipeScene(scene),13,true,encode);}
 /** Same physical world and ledgers; only passenger exit selection changes. */
-export function preEgressCompatibilitySource(scene:Scene):string{return projection(preRecipeScene(scene),12);}
+export function preEgressCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preRecipeScene(scene),12,true,encode);}
 /** The pinned r55 building and entrance are host migration data, never Dream policy. */
 export function preInteriorScene(scene:Scene):Scene{
  scene=preRecipeScene(scene);
  if(!scene.objects.some(o=>o.id==='market_hall' && o.spec && 'interior' in o.spec && o.spec.interior))return scene;
  return {...scene,objects:scene.objects.filter(o=>!['hall_table_west','hall_table_east','hall_bench','hall_produce_crate'].includes(o.id)).map(o=>o.id==='market_hall' ? marketR55 as Scene['objects'][number] : o),sites:scene.sites.map(s=>s.id==='access_market_hall' ? {...s,entry:{x:0,y:-26.25}} : s),economy:scene.economy && {...scene.economy,markets:scene.economy.markets.map(m=>m.id==='market_stall' ? {...m,radius:70} : m),repairs:scene.economy.repairs.map(r=>r.id==='market_tables' ? {...r,grounds:r.grounds?.filter(id=>id!=='market_hall')} : r)}};
 }
-export function preInteriorCompatibilitySource(scene:Scene):string{return projection(preInteriorScene(scene),11);}
+export function preInteriorCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preInteriorScene(scene),11,true,encode);}
 /** Registered r54 projection preserves geometry, clocks and every existing ledger field. */
 export function preCourierScene(scene:Scene):Scene{
  scene=preInteriorScene(scene);return {...scene,economy:scene.economy && {...scene.economy,accounts:scene.economy.accounts.map(a=>{const {deliveries,...old}=a;return old;}),deliveries:scene.economy.deliveries.map(d=>{const {on,grounds,...old}=d;return old;})}};
 }
-export function preCourierCompatibilitySource(scene:Scene):string{return projection(preCourierScene(scene),10);}
+export function preCourierCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preCourierScene(scene),10,true,encode);}
 /** Registered r53 appearance projection. Movement, ledgers and clocks are identical. */
 export function preFinishScene(scene:Scene):Scene{
  scene=preCourierScene(scene);return {...scene,surfaces:scene.surfaces.map(s=>{if(s.id!=='orchard_work')return s;const {finish,...old}=s;return {...old,color:'#819461'};})};
 }
-export function preFinishCompatibilitySource(scene:Scene):string{return projection(preFinishScene(scene),10);}
+export function preFinishCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preFinishScene(scene),10,true,encode);}
 /** Registered r52 projection preserves every placement, contact and public walkway. */
 export function prePlantScene(scene:Scene):Scene{
  scene=preFinishScene(scene);const e=scene.economy;return {...scene,surfaces:scene.surfaces.filter(s=>!['orchard_work','orchard_path'].includes(s.id)),economy:e && {...e,goods:e.goods.filter(g=>g.id!=='sapling'),accounts:e.accounts.map(a=>{if(a.id!=='caretaker' || !a.repairs)return a;const {repairs,...old}=a;return {...old,repair:'market_tables'};}),markets:e.markets.map(m=>({...m,lots:m.lots.filter(l=>l.good!=='sapling')})),deliveries:e.deliveries.filter(d=>d.id!=='saplings_run'),repairs:e.repairs.filter(r=>r.id!=='orchard_trees')}};
 }
-export function prePlantCompatibilitySource(scene:Scene):string{return projection(prePlantScene(scene),9);}
+export function prePlantCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(prePlantScene(scene),9,true,encode);}
 /** Registered r51 projection keeps every object, surface and existing crossing. */
 export function preVergeScene(scene:Scene):Scene{
  scene=prePlantScene(scene);
  return {...scene,crossings:scene.crossings.filter(c=>c.id!=='repair_high_south'),economy:scene.economy && {...scene.economy,repairs:scene.economy.repairs.map(r=>{if(r.id!=='market_tables')return r;const {streets,verge,...old}=r;return old;})}};
 }
-export function preVergeCompatibilitySource(scene:Scene):string{return projection(preVergeScene(scene),8);}
+export function preVergeCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preVergeScene(scene),8,true,encode);}
 /** Registered r50 projection: lamp geometry, contacts and every existing placement are retained. */
 export function prePoolScene(scene:Scene):Scene{
  scene=preVergeScene(scene);
@@ -115,25 +141,25 @@ export function prePoolScene(scene:Scene):Scene{
   const {impact,...spec}=o.spec;return {...o,spec:{...spec,measure:{...spec.measure!,kind:'custom'},parts:spec.parts.map(({fragment,...p})=>p)}};
  }),economy:scene.economy && {...scene.economy,repairs:scene.economy.repairs.map(r=>r.kinds ? {...r,kinds:r.kinds.filter(k=>k!=='lamp')} : r)}};
 }
-export function prePoolCompatibilitySource(scene:Scene):string{return projection(prePoolScene(scene),7);}
+export function prePoolCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(prePoolScene(scene),7,true,encode);}
 /** Registered r49 projection: the two added seating grounds leave all objects/contacts intact. */
 export function preNetworkScene(scene:Scene):Scene{
  scene=prePoolScene(scene);
  return {...scene,surfaces:scene.surfaces.filter(s=>!['park_seating','station_seating'].includes(s.id)),economy:scene.economy && {...scene.economy,repairs:scene.economy.repairs.map(r=>{if(r.id!=='market_tables')return r;const {grounds,...old}=r;return {...old,label:'Repair market furniture',kinds:['table','custom']};})}};
 }
-export function preNetworkCompatibilitySource(scene:Scene):string{return projection(preNetworkScene(scene),6);}
+export function preNetworkCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preNetworkScene(scene),6,true,encode);}
 /** Reconstruct the registered r48 economy without changing any physical field. */
 export function preSupplyScene(scene:Scene):Scene{
  scene=preNetworkScene(scene);const e=scene.economy;if(!e)return scene;
  return {...scene,economy:{...e,deliveries:e.deliveries.filter(d=>d.id!=='kits_run').map(({price,...d})=>d),markets:e.markets.map(m=>({...m,lots:m.lots.filter(l=>l.id!=='depot_kits')})),repairs:e.repairs.map(r=>{if(r.id!=='market_tables')return r;const {kinds,...old}=r;return {...old,label:'Repair a market table',kind:'table'};})}};
 }
-export function preSupplyCompatibilitySource(scene:Scene):string{return projection(preSupplyScene(scene),5);}
+export function preSupplyCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preSupplyScene(scene),5,true,encode);}
 /** Only the registered market repair release adds these members. Physical fields are untouched. */
 export function preRepairScene(scene:Scene):Scene{
  scene=preSupplyScene(scene);const e=scene.economy;if(!e)return scene;
  return {...scene,economy:{...e,repairs:[],goods:e.goods.filter(g=>g.id!=='timber'),accounts:e.accounts.filter(a=>a.id!=='caretaker'),markets:e.markets.map(m=>({...m,lots:m.lots.filter(l=>l.id!=='repair_kits')}))}};
 }
-export function preRepairCompatibilitySource(scene:Scene):string{return projection(preRepairScene(scene),4);}
+export function preRepairCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preRepairScene(scene),4,true,encode);}
 // These r46 seats were passenger-only props. Original moving NPC templates stay unchanged.
 const adaptedParking=new Set(['civic_parking_3_7_r','civic_parking_4_7_r','east_parking_0_4_r','east_parking_0_5_r','east_parking_0_6_r','east_parking_1_7_l','east_parking_2_5_r','east_parking_3_4_r','east_parking_3_5_r','east_parking_3_6_r']);
 export function preParkingScene(scene:Scene):Scene{
@@ -145,14 +171,14 @@ export function preParkingScene(scene:Scene):Scene{
   return {...old,role:'prop',spec:{...spec,...(spec.joints ? {joints:spec.joints.map(({animation,...joint})=>joint)} : {}),...(adaptedParking.has(o.id) && spec.rideable ? {rideable:{seat:spec.rideable.seat}} : {})}};
  })};
 }
-export function preParkingCompatibilitySource(scene:Scene):string{return projection(preParkingScene(scene),3);}
+export function preParkingCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preParkingScene(scene),3,true,encode);}
 export function preDeliveryScene(scene:Scene):Scene{
  scene=preRepairScene(scene);const e=scene.economy;if(!e)return scene;
  return {...scene,economy:{...e,accounts:e.accounts.filter(a=>['pocket','baker','regular'].includes(a.id)),markets:e.markets.filter(m=>m.id==='market_stall'),deliveries:[]}};
 }
-export function preDeliveryCompatibilitySource(scene:Scene):string{
+export function preDeliveryCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{
  const old=preDeliveryScene(scene);
- return projection({...old,economy:old.economy && {...old.economy,deliveries:undefined}} as Scene,2);
+ return projection({...old,economy:old.economy && {...old.economy,deliveries:undefined}} as Scene,2,true,encode);
 }
 
 export const R44_COMPATIBILITIES=['3dcc5c36ef9319b57520f2b561a988259cddebc4aedcc3a41fa27b9fbdc85ab9','1b54ff160d6487ca8cac74e702fa99c9af15aced255444ea7af5adc818c5de63'] as const;

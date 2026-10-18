@@ -1,0 +1,78 @@
+{
+  "run": "isolated-before-b",
+  "loading": {
+    "totalMs": 15325.5,
+    "firstRenderMs": 174.5,
+    "phases": [
+      {
+        "label": "Reading Dream · checking the world",
+        "startMs": 0.20000004768371582,
+        "endMs": 8320.300000011921
+      },
+      {
+        "label": "Preparing driving and walking",
+        "startMs": 8320.300000011921,
+        "endMs": 8545
+      },
+      {
+        "label": "Starting the renderer",
+        "startMs": 8545,
+        "endMs": 8559.200000047684
+      },
+      {
+        "label": "Building water and bridges",
+        "startMs": 8559.200000047684,
+        "endMs": 8813.900000035763
+      },
+      {
+        "label": "Building roads and transit",
+        "startMs": 8813.900000035763,
+        "endMs": 9003.5
+      },
+      {
+        "label": "Assembling people and wildlife",
+        "startMs": 9003.5,
+        "endMs": 9919.200000047684
+      },
+      {
+        "label": "Preparing vehicles and interactive objects",
+        "startMs": 9919.200000047684,
+        "endMs": 11392.100000023842
+      },
+      {
+        "label": "Preparing lighting",
+        "startMs": 11392.100000023842,
+        "endMs": 11587.800000011921
+      },
+      {
+        "label": "Loading the first neighbourhood",
+        "startMs": 11587.800000011921,
+        "endMs": 15048.5
+      },
+      {
+        "label": "Preparing the first frame",
+        "startMs": 15048.5,
+        "endMs": 15325.5
+      }
+    ],
+    "heartbeat": {
+      "samples": 277,
+      "maxGapMs": 295
+    }
+  },
+  "view": {
+    "buffer": [
+      2400,
+      1350
+    ],
+    "css": [
+      1600,
+      900
+    ],
+    "viewport": [
+      1280,
+      720
+    ],
+    "visibility": "visible"
+  }
+}

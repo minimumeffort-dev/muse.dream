@@ -552,3 +552,20 @@ validation and live-city topology. Format 11/simulation 17 registers the exact
 r59 projection and retains every saved field, history and active journey without
 rebasing live population/floors. No new actors, rigs, bodies or initial resources.
 See `docs/examples/market-production.dream` and `docs/dream/businesses.md`.
+
+
+Startup fingerprint reuse is scoped to one immutable worker-bootstrap batch.
+Keep retained canonical text within its 32 MiB UTF-16 budget; overflow must
+continue the full check uncached. Release its encoder before chunk construction;
+never keep a global memo or use
+one across mutable scene edits. Preserve numeric-property ordering, JSON escaping,
+array order, omitted values and the historical raw/rounded split. Every current
+and legacy source must remain byte-identical; no version bump or migration is
+needed for this encoding-only optimization. Compare against the reference path
+and released source, including ordinary save reload. See `docs/evidence/startup-fingerprints/verification.md`.
+
+Vite's dependency cache stays in this checkout's ignored `.npm-cache/vite`, so
+managed worktrees may share installed dependencies without sharing optimized
+module identities. Side-by-side browser checks must use distinct cache roots,
+fixed render dimensions and warmed origins. Reject resized or stale-dependency
+samples instead of treating less visible geometry as a performance improvement.

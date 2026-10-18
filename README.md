@@ -92,7 +92,7 @@ Press **Shift** or click **Boost** for a one-second car burst, then give it five
 
 Static districts load as you approach and leave render memory behind you. Physics, NPCs and damage keep their state across the whole world. The renderer batches differently colored parts into fewer draws and reuses fixed transforms, keeping the same assets, shadows, particles and post-processing. The [rendering notes](docs/rendering.md) include before/after measurements and a local profiler for checking changes.
 
-World preparation now avoids repeated terrain and outline work. The [query checks](docs/evidence/startup-queries/verification.md) compare the complete accepted world, paths, collisions and save fingerprints against the preceding release, alongside native loading measurements. Detail and visual settings stay the same.
+World preparation avoids repeated terrain and outline work, and now reuses unchanged object data while checking historical save fingerprints. [Startup measurements](docs/evidence/startup-fingerprints/verification.md) compare the complete accepted world, paths, collisions and save contracts against the preceding release. Detail and visual settings stay the same.
 
 Tram tracks sit in the street and follow the actual road and bridge triangles. Crossings leave room for their narrow grooves. The tracks load and unload with the surrounding streets; the tram keeps its route and passenger controls. [Track construction and checks](docs/evidence/tram-tracks/verification.md).
 

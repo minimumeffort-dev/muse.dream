@@ -34,22 +34,52 @@ still took 11.5–12.2 seconds; this mainly improves page responsiveness. Matche
 drives retained the same draws, triangles and roughly 16.7 ms frame intervals.
 [Measurement conditions, raw reports and limits](evidence/startup-responsiveness/verification.md).
 
-The current query pass skips hills outside their compact support, rejects distant
+The terrain-query pass skips hills outside their compact support, rejects distant
 water/pavement outlines before exact polygon tests and reuses immutable bridge
 frames. It changes no terrain samples, contours or render detail. An exact
 comparison against the preceding release checks the complete accepted world,
 navigation, masks, contacts, placement transforms and eleven save fingerprints.
-The [current query evidence](evidence/startup-queries/verification.md) separates
+The [query evidence](evidence/startup-queries/verification.md) separates
 construction timings from native browser measurements. On the same local M3 Ultra,
 two quiet development reloads took 15.6–15.7 seconds, against a 17.9-second baseline
-of this market world. All use full settings; cold-network loads and lower-powered
+of that market revision. All use full settings; cold-network loads and lower-powered
 laptops remain unmeasured. Startup still takes time, and first-neighborhood mesh
 construction remains about five seconds.
+
+Save compatibility now shares canonical world-list entries within one immutable
+worker bootstrap. The current and historical checks keep their exact byte format,
+including numeric key order, escaping, array order and the separate old unrounded
+contract. The encoder is dropped before navigation packets and render chunks are
+prepared. Retained canonical text has a shared 32 MiB UTF-16 budget; when it
+fills, remaining checks continue uncached. This budget excludes map/key overhead
+and is not a browser-memory estimate. The encoder is not a global cache, scene
+field or saved data. Individual source
+checks still read their current input normally.
+
+Three local Node comparisons reduced the median nineteen-fingerprint phase from
+1.712 seconds to 0.378 seconds. The full ranges are 1.700–1.735 and 0.376–0.870
+seconds; the third candidate also had slower construction and support steps.
+Explicit-GC checkpoints show a 10.5–13.2 MiB JavaScript heap increase with the
+cache held, then a released checkpoint below the initial level. These are Node diagnostic measurements,
+not peak memory or browser heap. The [matched browser and world checks](evidence/startup-fingerprints/verification.md)
+cover loading, full-quality drawing and the exact accepted scene. This does not
+change frame-by-frame rendering cost, world contents or save semantics.
+
+Two clean, warmed development reloads at a fixed 1600 × 900 CSS canvas and
+1.5 pixel ratio recorded world checking at 7.31–8.32 seconds before and
+6.43–6.49 seconds after. Whole-loader times were 14.02–15.33 and
+13.23–13.45 seconds. Host activity was not isolated, and the slower baseline is
+retained. These are local measurements, not cold-network or lower-powered-device
+predictions. Render counts and resident buffers match under the same graphics
+settings; the browser reports retain all timing variation.
+
+The development dependency cache lives in each checkout's `.npm-cache/vite`, so
+worktrees sharing installed dependencies do not share optimized module identities.
 
 For adjacent revisions that retain the same Dream world, reproduce that comparison:
 
 ```sh
-node scripts/profile-world-acceptance.mjs f83a0b02fde379052a757729dcd37a62b96351d6 /tmp/dream-acceptance.json
+node --expose-gc scripts/profile-world-acceptance.mjs a2a21fe087cdaf4c523d3da15bc58de99cc549b5 /tmp/dream-acceptance.json
 ```
 
 It uses an isolated source archive from Git and fails if any compared data changes.

@@ -747,3 +747,13 @@ The source-generated map, carved-volume destruction fixtures and organic/charact
 closeups retain their represented geometry. Historical verification and economic
 scenario clips stay pinned to their earlier source; their mechanics remain
 accurate, while the new roof images show current roof appearance.
+
+
+## Startup fingerprint preparation
+
+This pass changes no world, asset, animation, controls, shader or visual setting.
+Existing matched HD/GIF/still sets and the loader image remain accurate. Native
+before/after frozen-view screenshots, buffer counts and live render reports are
+kept in `docs/evidence/startup-fingerprints/`; those screenshots are retention
+evidence, not new product footage. Loader timings come from actual warmed browser
+reloads; the separate Node/GC reports are not browser memory or frame-rate claims.

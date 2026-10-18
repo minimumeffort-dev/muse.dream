@@ -289,3 +289,17 @@ it('upgrades the released meal world into staffed production without changing an
  rows.set(slot.key,'broken');expect(gameSave(world,()=>storage).blocked).toBe(true);expect(()=>decodeSave(text,{...world,previousKitchenSaveCompatibility:undefined})).toThrow('different world');
  const bad=structuredClone(packet);bad.state.economy.accounts[0]!.completed.work.pack_lunch++;expect(()=>decodeSave(JSON.stringify(bad),world)).toThrow('invalid');
 });
+
+it('preserves every live and historical fingerprint byte through a bounded startup batch',async()=>{
+ const c=await import('../src/scene/save-compatibility'),scene=currentScene(),encode=c.compatibilityBatchEncoder();
+ const names=Object.keys(c).filter(name=>name.endsWith('CompatibilitySource')) as (keyof typeof c)[];
+ for(const name of names){
+  if(name==='preCommerceCompatibilitySource'){for(const version of [1,2])expect(c.preCommerceCompatibilitySource(scene,version,encode)===c.preCommerceCompatibilitySource(scene,version),name+version).toBe(true);continue;}
+  const source=c[name] as (input:typeof scene,encoder?:typeof encode)=>string;
+  expect(source(scene,encode)===source(scene),name).toBe(true);
+ }
+ expect(await c.sha256(c.saveCompatibilitySource(scene,encode))).toBe(c.KITCHEN_COMPATIBILITY);
+ const parking=c.preParkingScene(scene);
+ for(const version of [1,2])expect(c.preCommerceCompatibilitySource(parking,version,encode)===c.preCommerceCompatibilitySource(parking,version)).toBe(true);
+ expect(c.preDeliveryCompatibilitySource(parking,encode)===c.preDeliveryCompatibilitySource(parking)).toBe(true);
+});

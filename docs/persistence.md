@@ -24,6 +24,13 @@ balance; reloading keeps its destination and reserved pay.
 
 ![A saved delivery with two loaves still in transit](media/cargo-save.jpg)
 
+Startup checks now reuse unchanged object encodings within one worker-owned
+batch with a 32 MiB retained-text budget and an uncached overflow path. The
+temporary encoder is discarded before chunk building. Canonical bytes,
+all nineteen current/historical fingerprints, format 11, simulation version 17,
+source identity and every existing slot/migration remain unchanged. Ordinary
+one-off checks never use a global cache. [Verification](evidence/startup-fingerprints/verification.md).
+
 ## Take a backup with you
 
 Pause, open **Backups**, then choose **Download current world**. The JSON file contains the current simulation state, its source identity and a compatibility fingerprint. It contains no meshes or executable code. Keep it somewhere you can find again, or move it to another browser or device yourself.

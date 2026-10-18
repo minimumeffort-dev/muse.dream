@@ -24,7 +24,13 @@ async function inspect(directory){
   const sourceHash=await compat.sha256(JSON.stringify([fixture.worldSource,Object.entries(fixture.worldModules).sort(([a],[b])=>a<b ? -1 : a>b ? 1 : 0)]));
   const scene=await measure('compile and accept world',()=>fixture.createWorldScene(sourceHash)),bounds=await measure('streaming bounds',()=>worldStreamBounds(scene));
   const compatibility={};
-  await measure('current and historical fingerprints',async()=>{for(const name of ['saveCompatibilitySource','preInteriorCompatibilitySource','preCourierCompatibilitySource','preFinishCompatibilitySource','prePlantCompatibilitySource','preVergeCompatibilitySource','prePoolCompatibilitySource','preNetworkCompatibilitySource','preSupplyCompatibilitySource','preRepairCompatibilitySource','preParkingCompatibilitySource'])compatibility[name]=await compat.sha256(compat[name](scene));});
+  const fingerprintHeap=global.gc ? {} : undefined;
+  if(fingerprintHeap){global.gc();fingerprintHeap.before=process.memoryUsage().heapUsed;}
+  let encode=compat.compatibilityBatchEncoder?.();
+  await measure('current and historical fingerprints',async()=>{for(const name of Object.keys(compat).filter(n=>n.endsWith('CompatibilitySource')).sort()){compatibility[name]=await compat.sha256(name==='preCommerceCompatibilitySource' ? compat[name](scene,1,encode) : compat[name](scene,encode));}compatibility.preCommerceVersion2=await compat.sha256(compat.preCommerceCompatibilitySource(scene,2,encode));});
+  if(fingerprintHeap){global.gc();fingerprintHeap.cached=process.memoryUsage().heapUsed;}
+  encode=undefined;
+  if(fingerprintHeap){await new Promise(resolve=>setImmediate(resolve));global.gc();fingerprintHeap.released=process.memoryUsage().heapUsed;}
   const graph=doc=>{const g=ambientGraph(doc);return {...g,starts:[...g.starts]};};
   const previousInterior=compat.preInteriorScene(scene),previousVerge=compat.preVergeScene(scene);
   const oldInterior=await measure('previous interior graph and contacts',()=>({navigation:graph(previousInterior),contacts:sceneContactData(previousInterior)}));
@@ -37,7 +43,7 @@ async function inspect(directory){
   for(const water of scene.terrain.landscape?.waters??[])for(const p of water.polygon)for(const e of [-.01,0,.01])points.push({x:p.x+e,y:p.y-e});
   for(const b of scene.terrain.landscape?.bridges??[])for(let i=-2;i<=22;i++)for(const side of [-1,0,1]){const length=Math.hypot(b.b.x-b.a.x,b.b.y-b.a.y),t=i/20;points.push({x:b.a.x+(b.b.x-b.a.x)*t-(b.b.y-b.a.y)/length*b.width/2*side,y:b.a.y+(b.b.y-b.a.y)*t+(b.b.x-b.a.x)/length*b.width/2*side});}
   const samples=points.map(p=>({x:p.x,y:p.y,height:terrain.terrainHeight(scene.terrain,p.x,p.y),driving:terrain.drivingHeight(scene.terrain,p.x,p.y),surface:terrain.terrainSurfaceHeight(scene.terrain,p.x,p.y),slope:terrain.sampleTerrain(scene.terrain,p.x,p.y,83,-37),water:terrain.waterAt(scene.terrain,p.x,p.y)?.id}));
-  return {timings,data:{scene,bounds,compatibility,contacts,navigation,repairs,oldInterior,oldVerge,placements,samples,mask:{width:mask.width,height:mask.height,cellSize:mask.cellSize,data:mask.data}}};
+  return {timings,fingerprintHeap,data:{scene,bounds,compatibility,contacts,navigation,repairs,oldInterior,oldVerge,placements,samples,mask:{width:mask.width,height:mask.height,cellSize:mask.cellSize,data:mask.data}}};
  }finally{await server.close();}
 }
 
@@ -48,6 +54,6 @@ try{
   assert.equal(isDeepStrictEqual(before.data[name],after.data[name]),true,name+' changed');
   checks.push({name,sha256:digest(after.data[name]),exact:true});
  }
- const result={baselineCommit,currentCommit:git(['rev-parse','HEAD']).toString().trim(),workingSourceDiffSha256:digest(git(['diff','--','src']).toString()),node:process.version,scope:'two cold Node SSR constructions; exact accepted data, placements, masks, current/legacy navigation and terrain samples; not browser startup, frame rate, heap or VRAM',before:before.timings,after:after.timings,objects:after.data.scene.objects.length,terrainSamples:after.data.samples.length,checks};
+ const result={baselineCommit,currentCommit:git(['rev-parse','HEAD']).toString().trim(),workingSourceDiffSha256:digest(git(['diff','--','src']).toString()),node:process.version,scope:'two cold Node SSR constructions; exact accepted data, placements, masks, current/legacy navigation and terrain samples; not browser startup, frame rate, heap or VRAM',before:before.timings,after:after.timings,fingerprintHeap:{scope:'Node JS heap at explicit GC checkpoints; not peak or browser memory',before:before.fingerprintHeap,after:after.fingerprintHeap},objects:after.data.scene.objects.length,terrainSamples:after.data.samples.length,checks};
  await writeFile(resolve(process.argv[3]),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));
 }finally{await rm(baselineRoot,{recursive:true,force:true});}
