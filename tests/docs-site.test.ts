@@ -34,6 +34,11 @@ describe('Dream syntax highlighting',()=>{
     const html=highlight('milestone practice(label="<Practice>&",kind=work,task=bake,count=3);work large(requires=practice);account baker(works=[large,bake]);');
     expect(html).toContain('class="dream-keyword">milestone</span>');for(const word of ['requires','works','task'])expect(html).toContain(`class="dream-field">${word}</span>`);expect(html).toContain('&lt;Practice&gt;&amp;');expect(highlight('milestones requires_extra works_extra task_extra')).not.toMatch(/dream-(?:keyword|field)/);
   });
+  it('highlights business fields at full boundaries and escapes authored labels',()=>{
+    const html=highlight('market depot(label="<Depot>&",owner=seller,sale=15){lot stock(good=flour,quantity=3,limit=3);}');
+    for(const field of ['owner','sale'])expect(html).toContain(`class="dream-field">${field}</span>`);
+    expect(html).toContain('&lt;Depot&gt;&amp;');expect(highlight('ownership owner_extra sales sale_extra')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('highlights recipe ingredients at full boundaries and escapes authored text',()=>{
     const html=highlight('work lunch(label="<Lunch>&"){ingredient(good=bread,take=1);ingredient(good=greens,take=2);}');
     expect(html).toContain('class="dream-keyword">ingredient</span>');expect(html).toContain('&lt;Lunch&gt;&amp;');expect(highlight('ingredients ingredient_extra good_extra takes')).not.toMatch(/dream-(?:keyword|field)/);

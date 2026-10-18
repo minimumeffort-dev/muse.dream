@@ -10,7 +10,7 @@ The useful shared primitives are entities with typed state, ownership, resources
 
 | Domain | What works now | Next executable test | Missing mechanics |
 | --- | --- | --- | --- |
-| Businesses and economics | Playable market with finite stock, conserved trade, inventory, food, paid recipe work and player flour/bread deliveries between 3D destinations; table/crate/planter/bench/wall and 77-lamp repairs across three grounds and three service streets with finite kits/pay, saved worker paths and paid kit procurement, walking NPC resupply and separate Lab exercises | Extend connected recovery coverage and upstream production | Business ownership, upstream production chains, contracts, weekly schedules, general skills and pricing policy |
+| Businesses and economics | Playable market with finite stock, conserved trade, inventory, food, paid recipe work and player flour/bread deliveries between 3D destinations; table/crate/planter/bench/wall and 77-lamp repairs across three grounds and three service streets with finite kits/pay, saved worker paths and paid kit procurement, walking NPC resupply and separate Lab exercises; depot ownership and conserved company transfers | Extend connected recovery coverage and upstream production | Upstream production chains, contracts, weekly schedules, general skills and pricing policy |
 | Education | Lesson-pack delivery and a capacity-limited session exercise | Several learners choose a prerequisite class and share a timetable | Prerequisites, attendance, skills, feedback, curriculum and an explicit learning model |
 | Healthcare operations | Supply logistics and a timed service queue | A clinic schedules staff and routes supplies through shortages | Appointments, staff roles, equipment, staffing constraints and queue discipline; clinical outcomes need a separately justified model |
 | Flora | Three orchard trees replant through finite saplings, paid player/NPC work and saved physical growth; authored vegetation and a separate Lab task | Plants compete for finite water through a changing season | Broader destructible-tree coverage, soil/water/light/season conditions, reproduction and a justified biological model |
@@ -70,8 +70,8 @@ The market's new recipes share atomic multi-input reservations, capacity,
 completion, refunds and saved material accounting with the existing bread work.
 Packed lunches can be bought and eaten; assembled kits supply existing repairs.
 These are finite initial supplies and short production chains. Upstream farms,
-forestry, factories, NPC kit production, shifts and business ownership remain
-missing. Keep those separate from functioning cooking or manufacturing jobs.
+forestry, factories and NPC kit production remain missing. Daily staff shifts
+and acquisition/capital management for an existing business now work. Keep those separate from functioning cooking or manufacturing jobs.
 
 Personal completion history now connects paid work, advanced production and NPC
 recognition. The player and baker qualify separately; the school responds to the
@@ -127,8 +127,8 @@ restore it with a finite kit and reserved pay, returning its usable seats.
 
 Next priorities remain: another social activity and NPC invitations, broader
 repair coverage, then indoor service and upstream supply with actual ownership.
-Multiple floors, business ownership, weekly employment, dating and general life
-planning remain unimplemented. [Authoring and current limits](dream/social.md).
+Multiple floors, starting a new business, weekly employment, dating and general
+life planning remain unimplemented. [Authoring and current limits](dream/social.md).
 
 ### Connected school recovery (r65)
 
@@ -140,3 +140,21 @@ refunds and persistent work. The prior source/fingerprint and complete state
 survive the registered simulation-22 upgrade. Next expand connected recovery
 and upstream supplies; adding another bench does not supply city-wide repair.
 See [school-yard repairs](dream/commerce.md#school-yard-repairs).
+
+
+### Owned businesses (r66)
+
+The station depot can now be bought with real credits. Its seller keeps the sale
+payment; kit/sapling invoices still require a physical delivery and become
+available company cash. The player can fund or withdraw from that counter while
+existing commitments remain protected. The same Dream capability supports an
+ownable bakery with workers and customers in the checked example. It adds no
+render geometry or actor slots. Ownership and every prior world record survive
+the registered format-15 upgrade.
+
+Next priorities: playable six-a-side sports with NPC teammates and opponents,
+passing and a match camera; upstream supplies that can be produced and purchased;
+further shared activities with NPC invitations, useful indoor service and more
+connected repair coverage. Sports still use the solo practice rules today. Starting companies, hiring, pricing, property, multi-floor
+movement, dating, weather and sound remain separate missing capabilities.
+[Business rules and limitations](dream/businesses.md#own-the-station-depot).

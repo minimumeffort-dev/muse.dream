@@ -567,6 +567,21 @@ sport id(kind=football|basketball,surface=surface_id,ball=placement_id,targets=[
 
 ## commerce
 
+Business ownership: market(...,owner=account_id,sale=15){lot(...);}
+owner references an existing personal account, separately from the counter actor.
+sale is an optional integer 1..1000000, requiring a non-player initial owner.
+The quote is sale + current available company cash. A free standing, dry, grounded
+buyer in reach/sight purchases once while the counter is open and staffed; pay
+the seller account, never the acquired treasury. Stock, workers and commitments
+stay in place. No resale. Only the current owner may deposit/withdraw positive
+whole credits locally, even when closed; protect market refund/invoice and account
+pending wage headroom. No minted income, generated callbacks, role changes or
+new actor/rig slots. R, pause, streaming and saves retain ownership and capital;
+Start over restores the initial owner. Format 15/simulation 23 validates r65
+before adding only its zero-funded seller and initial depot owner; keep old slots.
+See examples/business-ownership.dream. Hiring, price policy, loans, property deeds
+and starting a new business remain separate.
+
 Shared social meals: social id(good=food,seats=[bench],on=ground,grounds=[extra],eat_s=8,cooldown_s=600,max_fullness=80);
 account(...,social=id). At most 8 plans; 1..4 unique furniture placement IDs,
 each with >=2 slots. Positive food, eat_s 1..12, cooldown_s 30..86400 (default 600),
@@ -607,7 +622,7 @@ one NPC per plan. The market needs explicit hours; lead_s is 0..120 and strictly
 shorter than its closed interval. Rest is at least 16 world units from work.
 The actor is a stationary measured-person decor NPC with a program, no route,
 meal, repair or delivery policy. shop and matching production may coexist;
-owned counter and every assigned job must use shift.market. The work placement
+operated counter and every assigned job must use shift.market. The work placement
 must be in counter reach. Paths use the actual body, rounded upward to .1 units,
 with radius <=8 and height <=32. on plus 0..7 unique convex grounds share 4096
 local samples; existing pedestrian nodes, links, waypoints and actor budgets stay.
@@ -627,7 +642,7 @@ See examples/staff-shifts.dream.
 One optional economy() block owns goods, accounts, markets and work in the playable
 3D world. This is independent of logical scenario/stock/service declarations.
 Use good(label,food=0); account(actor,credits,capacity,satiety,drain_s,shop=false,shift?,work?,works?,repair?);
-market(label,actor,credits,radius,hours?){lot(good,quantity,limit,price?);} and
+market(label,actor,credits,radius,hours?,owner?,sale?){lot(good,quantity,limit,price?);} and
 work id(label,market,input,take,output,make,seconds,pay,effort,capacity,target);
 For multiple inputs omit input/take and use a work block:
 work id(label,market,output,make,seconds,pay,effort,capacity,target){
@@ -657,7 +672,7 @@ At most 8 plans, 1..4 unique ordered markets, a positive-food good with a priced
 lot in every market, and eat_s=1..12 seconds. on plus 0..7 unique extra convex
 work grounds share the 4096 local-sample budget and accepted pedestrian network.
 A meal account is a measured person decor NPC with a program, optional walk route,
-no market ownership, and no shop/work/repair/delivery policy. Hungry at <=40, it
+no counter operator role, and no shop/work/repair/delivery policy. Hungry at <=40, it
 eats carried food first; otherwise it walks to the first stocked affordable shop
 with a clear outbound/return path. No reservation before arrival. The shared buy
 transaction rechecks stock, funds, bag and treasury. Failure returns empty-handed,

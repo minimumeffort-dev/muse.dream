@@ -52,7 +52,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-Format 14 retains the exact source hash and the compatibility fingerprint, with simulation version 22. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+Format 15 retains the exact source hash and the compatibility fingerprint, with simulation version 23. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -345,3 +345,20 @@ remains available under its original fingerprint. Restore validates against the
 old world first, then the expanded service, without rebasing navigation, bodies,
 inventories or task attribution. Existing r63 and earlier upgrades remain chained.
 There is no offline repair or replenishment.
+
+
+### Business ownership (r66)
+
+Format 15 / simulation 23 saves each authored business's current owner and optional
+purchase time with its existing stock and cash. Acquisition and capital events
+retain bounded amounts; restore checks account membership, sale eligibility,
+clocks, ownership and credit/material conservation. Deposits protect company
+refund/invoice headroom; transfers to a person protect pending wage headroom.
+
+The registered r65 upgrade first validates its exact previous world. It appends
+only a zero-credit depot owner with empty inventory/history at saved simulation
+time, and initializes the station market's authored owner. No old field, job,
+balance, food, memory, physical pose or clock is rebased. All earlier projections
+still apply before this step, including both format-14 worlds. The original
+format-14 slot stays intact; corrupt or externally changed newer progress blocks
+fallback and replacement. No offline income is calculated.

@@ -58,7 +58,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `economy` | top | No ID / economy | None |
 | `good` | economy | ID / no block | `label: text`, `food?: n` |
 | `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `shop?: bool`, `social?: ref`, `shift?: ref`, `meal?: ref`, `work?: ref`, `works?: symbols`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
-| `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n`, `hours?: v2` |
+| `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n`, `hours?: v2`, `owner?: ref`, `sale?: n` |
 | `lot` | market | ID / no block | `good: ref`, `quantity: n`, `limit: n`, `price?: n` |
 | `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `price: n?`, `capacity: n`, `on: ref?`, `grounds: symbols?` |
 | `work` | economy | ID / optional recipe block | `label: text`, `market: ref`, `input?: ref`, `take?: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `requires?: ref` |
@@ -639,3 +639,15 @@ consume two reserved portions once only after both finish eating. Interruptions
 refund both once and return the person home. Shared history, paths and ownership
 persist. [Full consent, ownership and save contract](social.md) ·
 [Complete checked example](../examples/shared-meal.dream).
+
+### Business ownership
+
+`market.owner` names a personal account, independently of the stationary counter
+actor. Optional `sale` is an integer base price from 1 to 1,000,000 and requires a
+non-player initial owner. The current quote includes available company cash.
+Buying pays the seller account once; stock and commitments stay with the business.
+Only the new owner can transfer positive whole credits locally, with wage, invoice
+and refund headroom protected. Acquisition needs open/staffed counter service;
+capital transfers can happen while closed. No resale, hiring, automatic profits,
+new businesses or property deeds. [Complete example](../examples/business-ownership.dream)
+and [playable ownership guide](businesses.md#own-the-station-depot).

@@ -1,3 +1,4 @@
+import {controlIcon,setIcon,type Icon} from './icons';
 import {nearbySeat,seatedPose} from '../sim/seating';
 import {growthScale,growthScales} from '../scene/growth';
 import {pooledImpact} from '../scene/damage-pool';
@@ -19,7 +20,7 @@ import {SunShadows} from "./sun";
 import {mediaCapture} from "./media-capture";
 import {renderProfile} from "./render-profile";
 import {freezeStatic} from "./batching";
-import {sharedMealReviewSteps,shiftReviewInput,hoursReviewSteps,seatingReviewSteps,seatingReviewInput,kitchenReviewSteps,mealReviewSteps,progressionReviewSteps,interiorReviewStart,interiorReviewInput,vehicleReviewStart,drivingReviewStart,npcReviewStart,cargoReviewStart,maintenanceReviewStart,repairReviewSteps,courierReviewSteps,movementReviewStart,populationReviewStart} from "./review-start";
+import {sharedMealReviewSteps,shiftReviewInput,hoursReviewSteps,seatingReviewSteps,seatingReviewInput,kitchenReviewSteps,mealReviewSteps,progressionReviewSteps,interiorReviewStart,interiorReviewInput,vehicleReviewStart,drivingReviewStart,npcReviewStart,cargoReviewStart,maintenanceReviewStart,repairReviewSteps,businessReviewSteps,courierReviewSteps,movementReviewStart,populationReviewStart} from "./review-start";
 import { measuredScale, playerRadius, playerHeight } from "../scene/measure";
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -64,8 +65,10 @@ import {geometryMemory} from './geometry-memory';
 const container = document.querySelector<HTMLElement>("#game")!;
 const pauseButton = document.querySelector<HTMLButtonElement>("#pause")!;
 const pauseMenu = document.querySelector<HTMLDialogElement>("#pause-menu")!;
-const surface = document.querySelector<HTMLElement>("#surface")!;
+const surface = document.querySelector<HTMLElement>("#surface")!,statusIcon=document.querySelector<HTMLElement>("#status-icon")!;
 const interact=document.querySelector<HTMLButtonElement>("#interact")!;
+const interactLabel=document.querySelector<HTMLElement>('#interact-label')!,interactIcon=document.querySelector<HTMLElement>('#interact-icon')!;
+for(const slot of document.querySelectorAll<HTMLElement>('[data-icon-name]'))setIcon(slot,slot.dataset.iconName as Icon);
 const talkButton=document.querySelector<HTMLButtonElement>("#talk")!,speech=document.querySelector<HTMLElement>("#npc-speech")!,speaker=document.querySelector<HTMLElement>("#npc-speaker")!,replyText=document.querySelector<HTMLElement>("#npc-reply")!;
 const boostButton=document.querySelector<HTMLButtonElement>("#boost")!;
 const boostLabel=document.querySelector<HTMLElement>("#boost-label")!;
@@ -81,7 +84,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   primeRepairNavigation(doc,worker.repairNavigation);
   const carRadius = playerRadius(doc);
   const roadMask = buildMaskForScene(doc);
-  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousParkingSaveCompatibility:worker.previousParkingSaveCompatibility,previousRepairSaveCompatibility:worker.previousRepairSaveCompatibility,previousSupplySaveCompatibility:worker.previousSupplySaveCompatibility,previousNetworkSaveCompatibility:worker.previousNetworkSaveCompatibility,previousPoolSaveCompatibility:worker.previousPoolSaveCompatibility,previousVergeSaveCompatibility:worker.previousVergeSaveCompatibility,previousPlantSaveCompatibility:worker.previousPlantSaveCompatibility,previousFinishSaveCompatibility:worker.previousFinishSaveCompatibility,previousCourierSaveCompatibility:worker.previousCourierSaveCompatibility,previousSchoolRepairSaveCompatibility:worker.previousSchoolRepairSaveCompatibility,previousSocialSaveCompatibility:worker.previousSocialSaveCompatibility,previousShiftSaveCompatibility:worker.previousShiftSaveCompatibility,previousHoursSaveCompatibility:worker.previousHoursSaveCompatibility,previousSeatingSaveCompatibility:worker.previousSeatingSaveCompatibility,previousKitchenSaveCompatibility:worker.previousKitchenSaveCompatibility,previousMealSaveCompatibility:worker.previousMealSaveCompatibility,previousProgressSaveCompatibility:worker.previousProgressSaveCompatibility,previousRecipeSaveCompatibility:worker.previousRecipeSaveCompatibility,previousEgressSaveCompatibility:worker.previousEgressSaveCompatibility,previousInteriorSaveCompatibility:worker.previousInteriorSaveCompatibility,previousInteriorNavigation:worker.previousInteriorNavigation,previousInteriorContacts:worker.previousInteriorContacts,previousVergeNavigation:worker.previousVergeNavigation,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
+  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousParkingSaveCompatibility:worker.previousParkingSaveCompatibility,previousRepairSaveCompatibility:worker.previousRepairSaveCompatibility,previousSupplySaveCompatibility:worker.previousSupplySaveCompatibility,previousNetworkSaveCompatibility:worker.previousNetworkSaveCompatibility,previousPoolSaveCompatibility:worker.previousPoolSaveCompatibility,previousVergeSaveCompatibility:worker.previousVergeSaveCompatibility,previousPlantSaveCompatibility:worker.previousPlantSaveCompatibility,previousFinishSaveCompatibility:worker.previousFinishSaveCompatibility,previousCourierSaveCompatibility:worker.previousCourierSaveCompatibility,previousBusinessSaveCompatibility:worker.previousBusinessSaveCompatibility,previousSchoolRepairSaveCompatibility:worker.previousSchoolRepairSaveCompatibility,previousSocialSaveCompatibility:worker.previousSocialSaveCompatibility,previousShiftSaveCompatibility:worker.previousShiftSaveCompatibility,previousHoursSaveCompatibility:worker.previousHoursSaveCompatibility,previousSeatingSaveCompatibility:worker.previousSeatingSaveCompatibility,previousKitchenSaveCompatibility:worker.previousKitchenSaveCompatibility,previousMealSaveCompatibility:worker.previousMealSaveCompatibility,previousProgressSaveCompatibility:worker.previousProgressSaveCompatibility,previousRecipeSaveCompatibility:worker.previousRecipeSaveCompatibility,previousEgressSaveCompatibility:worker.previousEgressSaveCompatibility,previousInteriorSaveCompatibility:worker.previousInteriorSaveCompatibility,previousInteriorNavigation:worker.previousInteriorNavigation,previousInteriorContacts:worker.previousInteriorContacts,previousVergeNavigation:worker.previousVergeNavigation,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
     driveMask: buildPaperMask(doc.canonical.width, doc.canonical.height), carRadius };
   let car = createCarAtSpawn(doc);
   const repairViews=repairView();
@@ -106,8 +109,12 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     await loading.stage('Following the school repair journey');const steps=repairReviewSteps(car,world,'school-bench',params.get('test-school-repair')==='work' ? 'work' : 'approach');let result=steps.next(),yieldAt=performance.now();
     while(!result.done){if(performance.now()-yieldAt>8){await new Promise<void>(resolve=>setTimeout(resolve,0));yieldAt=performance.now();}result=steps.next();}car=result.value;worldTime.value=car.timeS;
   }
+  if(import.meta.env.DEV && params.has('test-business')){
+    await loading.stage('Following the depot supply journey');const steps=businessReviewSteps(car,world);let result=steps.next(),yieldAt=performance.now();
+    while(!result.done){if(performance.now()-yieldAt>8){await new Promise<void>(resolve=>setTimeout(resolve,0));yieldAt=performance.now();}result=steps.next();}car=result.value;worldTime.value=car.timeS;
+  }
   const reviewSave=import.meta.env.DEV && params.has('test-save') && !params.has('capture') && !params.has('profile');
-  const saves=!review || reviewSave ? gameSave(world,()=>localStorage,reviewSave ? params.has('test-social') ? 'muse-dream.review-social' : params.has('test-school-repair') ? 'muse-dream.review-school' : 'muse-dream.review-save' : 'muse-dream.save') : undefined;
+  const saves=!review || reviewSave ? gameSave(world,()=>localStorage,reviewSave ? params.has('test-business') ? 'muse-dream.review-business' : params.has('test-social') ? 'muse-dream.review-social' : params.has('test-school-repair') ? 'muse-dream.review-school' : 'muse-dream.review-save' : 'muse-dream.save') : undefined;
   if(saves?.restored){car=saves.restored.state;worldTime.value=saves.restored.worldTime;}
   let saveAt=car.timeS,saveDirty=false;
   const saveIdentity={sourceHash:doc.sourceHash,compatibilityHash:world.saveCompatibility};
@@ -128,7 +135,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   const clearShot=()=>{shootButtonHeld=shootPressed=shootReleased=false;pointerAim=undefined;car=cancelSportAction(car);};
   let mode: "playing" | "paused" = "playing";
   let pendingCommerce:CommerceAction|undefined;
-  const commerce=commerceControls(doc,action=>{if(mode==='playing')pendingCommerce=action;container.focus({preventScroll:true});});
+  const commerce=commerceControls(doc,action=>{if(mode==='playing')pendingCommerce=action;if(document.querySelector<HTMLElement>('#commerce-panel')!.hidden)container.focus({preventScroll:true});},()=>{keys.clear();boostRequested=false;talkRequested=false;clearShot();});
   const accountOwners=new Map(doc.economy?.accounts.map(a=>[a.id,a.actor]));
   let pendingDraw:(()=>void)|undefined;
 
@@ -142,7 +149,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
-  renderer.domElement.setAttribute("aria-label", "WASD walks, swims or drives. On sports grounds, approach the ball, hold J or the shot button, then release to kick or shoot. Shift or the Boost button gives a car burst. F sits, stands, or enters or exits a vehicle. T talks to nearby people. B buys, V sells, H starts work, collects cargo or completes a delivery; G eats carried food. Y invites a nearby person to share food while seated. Space jumps on foot or on a bicycle, skateboard or scooter, and hops a boat. Shift runs or swims faster. In an aircraft Space climbs and Shift descends. Pinch or scroll to zoom. Q and E rotate the view. P pauses; R returns to the start.");
+  renderer.domElement.setAttribute("aria-label", "WASD walks, swims or drives. On sports grounds, approach the ball, hold J or the shot button, then release to kick or shoot. Shift or the Boost button gives a car burst. F sits, stands, or enters or exits a vehicle. T talks to nearby people. B buys, V sells, H starts work, collects cargo or completes a delivery; G eats carried food. Y invites a nearby person to share food while seated. Space jumps on foot or on a bicycle, skateboard or scooter, and hops a boat. Shift runs or swims faster. In an aircraft Space climbs and Shift descends. Plus and minus, pinch or scroll to zoom; 0 resets framing. Q and E rotate the view. P pauses; R returns to the start.");
   container.append(renderer.domElement);
   const manualZoom = cameraZoomInput(renderer.domElement, () => mode === "playing");
   const scene = new THREE.Scene();
@@ -310,6 +317,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     if(restartRace){worldTime.value=0;manualZoom.factor=1;}
   }
   function resetPresentation(resetProps=true):void{
+    commerce.close(false);
     repairViews.reset();
     pendingCommerce=undefined;
     pendingDraw=undefined;
@@ -325,6 +333,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   }
 
   function setMode(next: typeof mode): void {
+    commerce.close(false);
     pendingCommerce=undefined;
     if(next==='playing')backups?.close();
     mode = next; keys.clear(); boostRequested=false;talkRequested=false; pointerAim=undefined; clearShot(); stepper.reset();
@@ -336,6 +345,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     pauseButton.dataset.paused = String(next === "paused");
     if(next==="playing")container.focus({preventScroll:true});
     else saveNow();
+    commerce.update(car,next==="playing");
   }
   pauseButton.addEventListener("click", () => setMode(mode === "playing" ? "paused" : "playing"));
   const useRide=()=>{if(mode==="playing" && !pendingDraw){car=toggleRide(car,world);pendingCommerce=undefined;boostRequested=false;talkRequested=false;clearShot();container.focus({preventScroll:true});}};
@@ -361,6 +371,10 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     setMode("playing");
   });
   addEventListener("keydown", (e) => {
+    if(e.metaKey || e.ctrlKey || e.altKey)return;
+    if(commerce.key(e.code,e.target,e.repeat,e.shiftKey)){e.preventDefault();return;}
+    if(e.target instanceof HTMLElement && e.target.closest('button,input,select,summary') && e.code!=='Escape' && e.code!=='KeyP')return;
+    if(!e.ctrlKey && !e.metaKey && !e.altKey && manualZoom.key(e.code)){e.preventDefault();return;}
     if (e.code.startsWith("Arrow") || e.code === "Space" && e.target === container) e.preventDefault();
     if (!e.repeat) {
       if (e.code === "KeyP" || e.code === "Escape") setMode(mode === "playing" ? "paused" : "playing");
@@ -372,7 +386,6 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       if(mode==='playing' && (e.code==='ShiftLeft' || e.code==='ShiftRight'))boostRequested=true;
       if(mode==='playing' && e.code==='KeyJ')shootPressed=true;
       if(mode==='playing' && e.code==='KeyT')talkRequested=true;
-      if(mode==='playing')commerce.key(e.code);
     }
     keys.add(e.code);
     if(!e.repeat && ['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))pointerAim=undefined;
@@ -389,10 +402,10 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
   let captureWalk:ReturnType<typeof interiorReviewInput>|undefined;
   let captureTime:number|undefined,captureActor:string|undefined,captureFocus:THREE.Vector3|undefined;
-  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:360,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840,maintenance:600,lamps:240,lamprepair:360,streetrepair:360,planting:360,growth:900,courier:360,handoff:540,interior:600,interiornight:240,transit:240,recipes:360,progression:480,meals:480,kitchen:480,seating:480,hours:480,shifts:600,shared:720,schoolrepair:600},async(clip)=>{
-    captureTime=undefined;captureActor=undefined;captureFocus=undefined;captureWalk=undefined;
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:360,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840,maintenance:600,lamps:240,lamprepair:360,streetrepair:360,planting:360,growth:900,courier:360,handoff:540,interior:600,interiornight:240,transit:240,recipes:360,progression:480,meals:480,kitchen:480,seating:480,hours:480,shifts:600,shared:720,schoolrepair:600,business:600},async(clip)=>{
+    captureTime=undefined;captureActor=undefined;captureFocus=undefined;captureWalk=undefined;viewAngle=0;cameraAngle=0;
     resetPosition(true);worldTime.value=0;setMode("playing");
-    for(const select of document.querySelectorAll<HTMLSelectElement>('#market-good,#market-job,#meal-good')){select.selectedIndex=0;select.dispatchEvent(new Event('change'));}
+    commerce.resetChoices();
     characters.forEach(character=>character.reset());
     if(clip==='interior' || clip==='interiornight')car=interiorReviewStart(car,world,clip==='interiornight');
     if(clip==='maintenance'){car=maintenanceReviewStart(car,world);worldTime.value=car.timeS;captureActor=doc.economy?.accounts.find(a=>car.economy?.accounts.find(b=>b.id===a.id)?.repair)?.actor;}
@@ -407,6 +420,11 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       const steps=courierReviewSteps(car,world,clip==='courier' ? 'pickup' : 'handoff');let result=steps.next(),yieldAt=performance.now();
       while(!result.done){if(performance.now()-yieldAt>=12){await new Promise<void>(resolve=>setTimeout(resolve,0));yieldAt=performance.now();}result=steps.next();}
       car=result.value;worldTime.value=car.timeS;captureActor=doc.economy?.accounts.find(a=>car.economy?.accounts.find(b=>b.id===a.id)?.courier)?.actor;
+    }
+    if(clip==='business'){
+      const steps=businessReviewSteps(car,world);let result=steps.next(),yieldAt=performance.now();
+      while(!result.done){if(performance.now()-yieldAt>8){await new Promise<void>(resolve=>setTimeout(resolve,0));yieldAt=performance.now();}result=steps.next();}
+      car=result.value;worldTime.value=car.timeS;viewAngle=Math.PI;manualZoom.factor=1.5;
     }
     if(clip==='schoolrepair'){
       const steps=repairReviewSteps(car,world,'school-bench','approach');let result=steps.next(),yieldAt=performance.now();
@@ -458,10 +476,19 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     }
     if(clip==='transit'){if(frame===20 || frame===105 || frame===120 || frame===210)useRide();return;}
     if(clip==='maintenance')return;
+    if(clip==='business'){
+      const config=doc.daylight;captureTime=config ? ((14-config.startHour+24)%24)/24*config.cycleSeconds+frame/30 : undefined;
+      if(frame===1)commerce.open('business');
+      if(frame===30)document.querySelector<HTMLButtonElement>('#business-buy')!.click();
+      if(frame===90)document.querySelector<HTMLButtonElement>('#business-deposit')!.click();
+      if(frame===420)document.querySelector<HTMLButtonElement>('#business-withdraw')!.click();
+      if(frame===599 && (car.economy?.markets.find(m=>m.id==='station_supplies')?.owner!=='pocket' || !car.economy.delivered.kits_run))throw Error('The ownership capture did not complete its purchase and supplier payment');
+      return;
+    }
     if(clip==='schoolrepair'){const config=doc.daylight;captureTime=config ? ((14-config.startHour+24)%24)/24*config.cycleSeconds+frame/30 : undefined;return;}
     if(clip==='kitchen'){
       const config=doc.daylight;captureTime=config ? ((14-config.startHour+24)%24)/24*config.cycleSeconds+frame/30 : undefined;
-      if(frame===5){const select=document.querySelector<HTMLSelectElement>('#market-good')!;select.value='lunch';select.dispatchEvent(new Event('change'));}
+      if(frame===5){commerce.choose('goods','lunch');}
       if(frame===15)commerce.key('KeyB');if(frame===90)commerce.key('KeyG');return;
     }
     if(clip==='planting' || clip==='growth' || clip==='courier' || clip==='handoff' || clip==='meals'){const config=doc.daylight;captureTime=config ? ((14-config.startHour+24)%24)/24*config.cycleSeconds+frame/30 : undefined;return;}
@@ -478,7 +505,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       if(frame>=165 && frame<195)keys.add('KeyS');return;
     }
     if(clip==='delivery'){
-      if(frame===5){const select=document.querySelector<HTMLSelectElement>('#market-job')!;select.value='delivery:school_run';select.dispatchEvent(new Event('change'));}
+      if(frame===5){commerce.choose('jobs','delivery:school_run');}
       if(frame===20)commerce.key('KeyH');
       if(frame>=40 && frame<100)keys.add('KeyW');
       if(frame>=100 && frame<136){keys.add('KeyW');keys.add('KeyA');}
@@ -486,17 +513,17 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       if(frame>=160 && frame<270)keys.add('KeyS');return;
     }
     if(clip==='progression'){
-      if(frame===5){const select=document.querySelector<HTMLSelectElement>('#market-job')!;select.value='work:large_bake';select.dispatchEvent(new Event('change'));}
+      if(frame===5){commerce.choose('jobs','work:large_bake');}
       if(frame===15)talkRequested=true;
       if(frame===150)commerce.key('KeyH');return;
     }
     if(clip==='recipes'){
-      if(frame===5){const select=document.querySelector<HTMLSelectElement>('#market-job')!;select.value='work:pack_lunch';select.dispatchEvent(new Event('change'));}
+      if(frame===5){commerce.choose('jobs','work:pack_lunch');}
       if(frame===20)commerce.key('KeyH');
-      if(frame===195){const select=document.querySelector<HTMLSelectElement>('#market-good')!;select.value='lunch';select.dispatchEvent(new Event('change'));}
+      if(frame===195){commerce.choose('goods','lunch');}
       if(frame===205)commerce.key('KeyB');if(frame===230)commerce.key('KeyG');return;
     }
-    if(clip==='commerce'){if(frame===20)commerce.key('KeyB');if(frame===45)commerce.key('KeyG');if(frame===75)commerce.key('KeyH');return;}
+    if(clip==='commerce'){if(frame===1)commerce.open('market');if(frame===30)commerce.open('bag');if(frame===65)commerce.open('work');if(frame===315)commerce.close(false);if(frame===20)commerce.key('KeyB');if(frame===45)commerce.key('KeyG');if(frame===75)commerce.key('KeyH');return;}
     if(clip==='conversation'){if(frame===25 || frame===125)talkRequested=true;return;}
     if(clip==='pedestrians' || clip==='wildlife')return;
     if(clip==="daynight"){captureTime=frame/359*(doc.daylight?.cycleSeconds??600);return;}
@@ -720,15 +747,16 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     hudTime += dt;
     if (hudTime > .1) {
       hudTime = 0;
-      const sportsStatus=court && sportGame ? `${court.sport.kind==='football' ? 'Football' : 'Basketball'} · ${sportGame.score} ${court.sport.kind==='football' ? sportGame.score===1 ? 'goal' : 'goals' : 'pts'} · ${sportGame.event==='goal' ? 'Goal!' : sportGame.event==='basket' ? 'Basket!' : sportGame.event==='out' ? 'Out · ball returning' : !sportGame.possessed ? 'Move to the ball' : court.sport.kind==='football' ? 'WASD aim · J kick' : 'Release J at the gold mark'}` : '';
-      const surfaceText = sportsStatus || (occupied ? occupied.labelText+(controlOf(occupied.spec)==="plane" ? " · Space ↑ / Shift ↓" : controlOf(occupied.spec)==='bicycle' || controlOf(occupied.spec)==='skateboard' || controlOf(occupied.spec)==='scooter' ? ' · Space jump' : controlOf(occupied.spec)==='boat' ? ' · Space hop' : "") : car.control.kind==="foot" ? car.seated ? 'Seated · F stand / G eat' : isSwimming(car,world) ? 'Swimming · Shift faster' : 'On foot · Space jump / Shift run' : !car.grounded ? "Airborne" : car.timeS < boostUntil ? "Boost" : car.surface === "ice" ? "Sliding" : car.surface === "water" ? "Water" : "");
+      const sportsStatus=court && sportGame ? `${court.sport.kind==='football' ? 'Football' : 'Basketball'} · ${sportGame.score} ${court.sport.kind==='football' ? sportGame.score===1 ? 'goal' : 'goals' : 'pts'} · ${sportGame.event==='goal' ? 'Goal!' : sportGame.event==='basket' ? 'Basket!' : sportGame.event==='out' ? 'Out · ball returning' : !sportGame.possessed ? 'Move to the ball' : court.sport.kind==='football' ? 'Ready to kick' : 'Ready to shoot'}` : '';
+      const surfaceText = sportsStatus || (occupied ? occupied.labelText : car.control.kind==='foot' ? car.seated ? 'Seated' : isSwimming(car,world) ? 'Swimming' : 'On foot' : !car.grounded ? 'Airborne' : car.timeS < boostUntil ? 'Boost' : car.surface==='ice' ? 'Ice' : 'Driving');
       if(surface.textContent!==surfaceText)surface.textContent=surfaceText;
+      setIcon(statusIcon,court ? 'sport' : car.control.kind==='foot' ? isSwimming(car,world) ? 'swim' : car.seated ? 'seat' : 'walking' : car.control.kind==='passenger' ? 'seat' : controlIcon(occupied ? controlOf(occupied.spec) : undefined));
       surface.dataset.effect = car.surface === "ice" ? "ice" : "boost";
       sportButton.hidden=mode!=='playing' || !court;
       sportButton.disabled=!sportGame?.possessed || !!sportGame.resetAtS;
       sportButton.dataset.kind=court?.sport.kind??'';
       const power=sportGame ? sportCharge(car,sportGame) : 0;
-      sportLabel.textContent=!sportGame?.possessed ? 'Find the ball' : court?.sport.kind==='football' ? 'Hold J · Kick' : 'Hold J · Shoot';
+      sportLabel.textContent=!sportGame?.possessed ? 'Get ball' : court?.sport.kind==='football' ? 'Kick' : 'Shoot';
       sportButton.setAttribute('aria-label',`${court?.sport.kind==='football' ? 'Kick' : 'Shoot'}: hold J or this button, release for power${court?.sport.kind==='basketball' ? '. Release at the gold mark' : ''}`);
       if(import.meta.env.DEV && car.population)container.dataset.population=JSON.stringify({count:populations.count,moving:car.population.members.filter(m=>m.speed>0).length,fleeing:car.population.members.filter(m=>m.mode==='flee').length,time:car.timeS,sample:doc.objects.filter(o=>o.ambient).map((o,i)=>({id:o.id,...car.population!.members[i]!})).sort((a,b)=>Math.hypot(a.x-car.x,a.y-car.y)-Math.hypot(b.x-car.x,b.y-car.y)).slice(0,6)});
       container.dataset.sport=JSON.stringify({active:court?.sport.id??null,possessed:sportGame?.possessed??false,power,games:car.sports,balls:doc.sports.map(s=>car.props.find(p=>p.id===s.ballId))});
@@ -738,7 +766,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       boostButton.disabled=boostWait>0 || boostBlocked;
       boostButton.dataset.active=String(boostActive);
       boostButton.style.setProperty('--charge',String(boostActive ? 1 : Math.max(0,1-boostWait/CAR_BOOST.rechargeS)));
-      boostLabel.textContent=boostActive ? 'Boosting' : boostWait>0 ? `Boost · ${boostWait.toFixed(1)}s` : 'Boost';
+      boostLabel.textContent=boostActive ? 'Boosting' : boostWait>0 ? `${Math.ceil(boostWait)}s` : 'Boost';
       boostButton.setAttribute('aria-label',boostActive ? 'Boost active' : boostWait>0 ? `Boost recharging, ${Math.ceil(boostWait)} seconds` : boostBlocked ? 'Boost unavailable: drive forward on dry ground' : 'Boost (Shift)');
       container.dataset.boost=JSON.stringify({active:boostActive,ready:carControl && boostWait===0 && !boostBlocked,remaining:boostWait,timeS:car.timeS});
       // DOM diagnostics let browser checks observe real simulation and camera state.
@@ -761,14 +789,18 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       const seat=nearbySeat(car,world),canStand=car.seated ? !standUp(car,world).seated : false;
       const foot=car.control.kind==="foot",nearby=foot ? nearbyRide(car,world) : undefined,exit=foot ? undefined : exitPosition(car,world);
       const person=mode==='playing' ? nearbyNpc(car,doc) : undefined,reply=mode==='playing' ? npcSpeech(car,doc) : undefined;
-      talkButton.hidden=!person;talkButton.textContent=`T · Talk to ${person?.labelText??'neighbor'}`;
+      talkButton.hidden=!person;talkButton.title=`Talk to ${person?.labelText??'neighbor'} (T)`;talkButton.setAttribute('aria-label',`Talk to ${person?.labelText??'neighbor'} (T)`);
       speech.hidden=!reply;
       const nextSpeech=reply ? JSON.stringify(reply) : '';
       if(nextSpeech!==speechKey){speaker.textContent=reply?.label??'';replyText.textContent=reply?.text??'';speechKey=nextSpeech;}
       if(import.meta.env.DEV)container.dataset.speech=nextSpeech;
       interact.hidden=mode!=="playing" || foot && !nearby && !seat && !car.seated;
       interact.disabled=car.seated ? !canStand : !foot && !exit;
-      interact.textContent=car.seated ? canStand ? 'F · Stand up' : 'Waiting for a clear exit' : seat ? 'F · Sit down' : foot ? `F · ${nearby?.object && !controlOf(nearby.object.spec) ? "Ride" : "Drive"} ${nearby?.labelText??""}` : exit ? 'F · Exit vehicle' : !car.grounded ? 'Land to exit' : 'Move to a clear exit';
+      const nearbyControl=nearby?.object && controlOf(nearby.object.spec);
+      interactLabel.textContent=car.seated ? 'Stand' : !foot ? 'Exit' : seat ? 'Sit' : nearbyControl==='plane' ? 'Fly' : nearbyControl==='boat' ? 'Sail' : nearbyControl==='bicycle' || nearbyControl==='scooter' || nearbyControl==='skateboard' || nearby?.object && !nearbyControl ? 'Ride' : 'Drive';
+      setIcon(interactIcon,car.seated || !foot ? 'exit' : seat ? 'seat' : controlIcon(nearbyControl));
+      interact.title=car.seated ? canStand ? 'Stand up (F)' : 'Waiting for a clear exit' : seat ? 'Sit down (F)' : foot ? `${interactLabel.textContent} ${nearby?.labelText??''} (F)` : exit ? 'Exit vehicle (F)' : !car.grounded ? 'Land to exit' : 'Move to a clear exit';
+      interact.setAttribute('aria-label',interact.title);
       container.dataset.riding=occupied?.id??"";
       container.dataset.control=JSON.stringify(car.control);
       container.dataset.seated=car.seated ? JSON.stringify(car.seated) : "";

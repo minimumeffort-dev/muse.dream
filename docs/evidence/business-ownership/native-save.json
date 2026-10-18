@@ -1,0 +1,14 @@
+{
+  "sourceHash": "3e224c82b8ace5352ccbcf1b003035981eb8f77f0bc115e9bf997937000d2ea6",
+  "compatibility": "2ed89b889367d51c6ff3f458bc6faf16028e48076482fdbe4cdb3e69125276ab",
+  "saveVersion": 15,
+  "simulationVersion": 23,
+  "exactAfterIdleTicks": 2426,
+  "playerCredits": 2,
+  "sellerCredits": 15,
+  "businessCredits": 3,
+  "owner": "pocket",
+  "wholeStateMatch": true,
+  "visualClockWithinFixedTick": true,
+  "visualClockDeltaS": 20.219399999975963
+}

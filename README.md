@@ -104,6 +104,15 @@ Walk up to the market vendor, teacher, health worker or commuter on foot and pre
 
 ![Talking to the market vendor](docs/media/conversation.jpg)
 
+Nearby actions now use icons and short labels. The market stays closed until you
+open it; Shop, Work, Bag and Business have their own views. **M** opens activities,
+**I** opens your bag, and **Escape** closes a panel before pausing.
+Arrow keys select item slots, Enter acts, 1–4 switch sections and Tab reaches
+secondary actions. There are no gameplay dropdowns or number fields.
+[How the contextual controls work](docs/context-actions.md).
+
+![Nearby actions without an automatically opened panel](docs/media/context-actions.png)
+
 At the market, **B** buys bread, **G** eats it and **V** sells an item back. **H** starts paid work: six seconds, one bag of flour, two loaves on the shelf and three credits for you. The baker replenishes stock and the commuter buys food through the same finite supplies and accounts. [The working market and its Dream source](docs/dream/commerce.md).
 
 The market also pays for packing lunches from bread and vegetables, or assembling
@@ -466,3 +475,23 @@ The baker and school staff use the same capability on their own grounds and
 schedules. Their history survives travel, streaming and saves. This is a first
 shared social activity; NPC invitations, dating and a general relationship
 system remain to be built.
+
+
+## Own a business
+
+You can buy Station supplies in the railway quarter. Its stock, existing delivery
+contracts and cash come with it. The seller gets paid; later kit and sapling
+invoices go into the company. Deposit money, withdraw available cash and keep the
+business through save/reload. Wages, invoices and refunds remain protected.
+
+The same Dream fields can describe an ownable bakery with real paid production
+and customers. There is no idle owner income, resale, hiring or business
+creation yet. [Play and author ownership](docs/dream/businesses.md#own-the-station-depot)
+or [run the complete bakery example](docs/examples/business-ownership.dream).
+
+
+![Buy the depot, then receive a real supplier invoice](docs/media/business.gif)
+
+[Ownership in HD](docs/media/business.mp4). This 20-second recording buys the
+depot before a courier hands over two repair kits, then shows its cash after a
+deposit and withdrawal. The supplier receives six credits only at handoff.

@@ -2,6 +2,30 @@
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
+## Current HUD and depot ownership, r66
+
+The current game uses a compact charcoal HUD with aligned action rows, keyboard
+item selection and coin icons. `context-actions.png`, `market-controls.png` and
+`business-controls.png` are native browser screenshots. The narrow review is a
+real 390 × 620 game viewport, with selection, a locked job reason and the action
+footer visible together. See the [control checks](../evidence/context-actions/verification.md).
+
+`business` adds 600 actual rendered frames: buy the depot, deposit five coins,
+receive the existing courier's six-coin supplier invoice and withdraw five.
+`commerce`, `driving` and `switching` are refreshed with the same HUD, together
+with their GIF, HD video and matching stills. The exporter draws the actual DOM
+layout, captions and fixed SVG assets over each rendered world frame; item lists
+retain their viewport clipping. Each new capture resets camera rotation; focused review clips then apply their
+authored framing. These are offline exports, not live FPS results.
+See the [business checks](../evidence/business-ownership/verification.md).
+
+Other main-game recordings below retain the HUD of their recorded release. They
+are historical demonstrations of unchanged movement, NPC, repair, food, seating
+and destruction mechanics, rather than references for today's controls. Asset
+galleries, construction views and the source-derived city map remain accurate:
+this change adds account metadata and UI, with no geometry, placement, terrain,
+contact, navigation or actor-budget changes.
+
 The r65 roof recheck adds four unmodified native gallery PNGs and a city view under
 [`evidence/roof-surfaces/current-review`](../evidence/roof-surfaces/verification.md#current-world-recheck).
 The construction guide uses their front view, also saved as `roof-surfaces.png`.
@@ -32,6 +56,7 @@ Driving, vehicle switching, jumping, swimming and destruction are exported at **
 | Customer meal journey | [meals.gif](meals.gif) | [meals.mp4](meals.mp4) | 16 seconds |
 | Earned work and vendor recognition | [progression.gif](progression.gif) | [progression.mp4](progression.mp4) | 16 seconds |
 | Packed lunches and recipe work | [recipes.gif](recipes.gif) | [recipes.mp4](recipes.mp4) | 12 seconds |
+| Depot purchase and supplier income | [business.gif](business.gif) | [business.mp4](business.mp4) | 20 seconds |
 | Food, trade and paid work | [commerce.gif](commerce.gif) | [commerce.mp4](commerce.mp4) | 12 seconds |
 | Day and night | [daynight.gif](daynight.gif) | [daynight.mp4](daynight.mp4) | 12 seconds |
 
@@ -57,7 +82,7 @@ The encoder checks for consecutive source frames before replacing a GIF and vide
 
 ![Highlighted, copyable Dream source in the documentation](highlighted-docs.png)
 
-`exploration-hud.jpg` is a native main-game screenshot of the current HUD, with lap progress and checkpoint targets removed. The motion exports capture the WebGL canvas without HTML controls.
+`exploration-hud.jpg` is a native main-game screenshot of the current HUD, with lap progress and checkpoint targets removed. This older screenshot predates the current keyboard HUD. Recent motion exports composite the visible HUD over the WebGL canvas.
 
 The birch refinement refreshes `birch.jpg`, the complete `assets-all.jpg` atlas, the shared-scale `proportions.jpg`, the cycle meadow and HUD screenshots, both driving/switching GIF and HD-video pairs, and their `world.jpg`, `on-foot.jpg` and `riding.jpg` stills. The clips include a birch near the castle. The focused birch gallery uses `?all&asset=Birch&asset=Leaning%20birch`; both trees are checked from four sides. See the [media audit](../evidence/birch-assets/verification.md) for captures kept unchanged and why.
 

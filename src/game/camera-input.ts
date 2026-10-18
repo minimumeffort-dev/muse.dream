@@ -1,6 +1,13 @@
 /** User framing stays relative to the current vehicle's automatic framing. */
-export function cameraZoomInput(canvas: HTMLElement, enabled: () => boolean): { factor: number } {
-  const zoom = { factor: 1 };
+export function cameraZoomInput(canvas: HTMLElement, enabled: () => boolean): { factor: number; key(code:string):boolean } {
+  const zoom = { factor: 1, key(code:string){
+    if(!enabled())return false;
+    if(code==='Equal' || code==='NumpadAdd')set(zoom.factor*1.15);
+    else if(code==='Minus' || code==='NumpadSubtract')set(zoom.factor/1.15);
+    else if(code==='Digit0' || code==='Numpad0')set(1);
+    else return false;
+    return true;
+  } };
   let gestureBase: number | undefined;
   const set = (factor: number) => { zoom.factor = Math.max(.5, Math.min(3, factor)); };
 

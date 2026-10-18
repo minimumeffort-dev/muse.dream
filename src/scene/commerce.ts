@@ -20,7 +20,7 @@ const good=z.object({id:ref,label,food:z.number().finite().min(0).max(100).defau
 const account=z.object({id:ref,actor:ref,credits:money,capacity:z.number().int().min(1).max(COMMERCE_LIMITS.capacity),satiety:z.number().finite().min(0).max(100),drainPerS:z.number().finite().min(0).max(.25),shop:z.boolean().default(false),social:ref.optional(),shift:ref.optional(),meal:ref.optional(),work:ref.optional(),works:z.array(ref).min(1).max(COMMERCE_LIMITS.workerJobs).optional(),repair:ref.optional(),repairs:z.array(ref).min(1).max(GROWTH_LIMITS.workerServices).optional(),deliveries:z.array(ref).min(1).max(COMMERCE_LIMITS.courierContracts).optional()}).strict();
 const lot=z.object({id:ref,good:ref,quantity,limit:quantity.refine(n=>n>0),price:z.number().int().min(1).max(10_000).optional()}).strict();
 const hours=z.tuple([z.number().finite().min(0).lt(24),z.number().finite().min(0).max(24)]).refine(([start,end])=>start!==end,'hours need different opening and closing times; omit for all-day service');
-const market=z.object({id:ref,label,actor:ref,credits:money,radius:z.number().finite().min(20).max(80),hours:hours.optional(),lots:z.array(lot).min(1).max(COMMERCE_LIMITS.goods)}).strict();
+const market=z.object({id:ref,label,actor:ref,credits:money,radius:z.number().finite().min(20).max(80),hours:hours.optional(),owner:ref.optional(),sale:money.positive().optional(),lots:z.array(lot).min(1).max(COMMERCE_LIMITS.goods)}).strict();
 const ingredient=z.object({good:ref,take:quantity.refine(n=>n>0)}).strict();
 const job=z.object({id:ref,label,market:ref,input:ref.optional(),take:quantity.refine(n=>n>0).optional(),ingredients:z.array(ingredient).min(1).max(COMMERCE_LIMITS.ingredients).optional(),output:ref,make:quantity.refine(n=>n>0),seconds:z.number().finite().min(1).max(120),pay:money.refine(n=>n>0),effort:z.number().finite().min(1).max(50),capacity:z.number().int().min(1).max(4),target:quantity,requires:ref.optional()}).strict().superRefine((j,ctx)=>{
  if(j.ingredients ? j.input!==undefined || j.take!==undefined : j.input===undefined || j.take===undefined)ctx.addIssue({code:'custom',message:'work needs input and take, or an ingredient block, never both',path:['ingredients']});
@@ -58,6 +58,8 @@ export const economySchema=z.object({goods:z.array(good).min(1).max(COMMERCE_LIM
  if(e.accounts.filter(a=>a.actor==='player').length!==1)issue('economy requires one player account',['accounts']);
  if(new Set(e.markets.map(m=>m.actor)).size!==e.markets.length)issue('one market per actor',['markets']);
  e.markets.forEach((m,i)=>{
+  if(m.owner && !e.accounts.some(a=>a.id===m.owner))issue('market owner must be an existing account',['markets',i,'owner']);
+  if(m.sale!==undefined && (!m.owner || e.accounts.find(a=>a.id===m.owner)?.actor==='player'))issue('sale needs an existing non-player owner account',['markets',i,'sale']);
   if(new Set(m.lots.map(l=>l.id)).size!==m.lots.length || new Set(m.lots.map(l=>l.good)).size!==m.lots.length)issue('market lots need unique IDs and goods',['markets',i,'lots']);
   m.lots.forEach((l,j)=>{if(!e.goods.some(g=>g.id===l.good))issue('unknown lot good',['markets',i,'lots',j,'good']);if(l.quantity>l.limit)issue('initial quantity exceeds lot limit',['markets',i,'lots',j,'quantity']);});
  });
@@ -89,7 +91,7 @@ export const economySchema=z.object({goods:z.array(good).min(1).max(COMMERCE_LIM
  e.accounts.forEach((a,i)=>{
   if(a.social && (a.actor==='player' || !e.socials.some(m=>m.id===a.social)))issue('social needs an existing plan and an NPC account',['accounts',i,'social']);
   if(a.shift && (!e.shifts.some(s=>s.id===a.shift) || a.actor==='player' || a.meal || accountRepairs(a).length || a.deliveries))issue('shift needs an existing plan and an NPC staff account without meal, repair or delivery policies',['accounts',i,'shift']);
-  if(a.shift){const plan=e.shifts.find(s=>s.id===a.shift);if(plan && (accountJobs(a).some(id=>e.jobs.find(j=>j.id===id)?.market!==plan.market) || e.markets.some(m=>m.actor===a.actor && m.id!==plan.market)))issue('shift work and owned counter must use its market',['accounts',i,'shift']);}
+  if(a.shift){const plan=e.shifts.find(s=>s.id===a.shift);if(plan && (accountJobs(a).some(id=>e.jobs.find(j=>j.id===id)?.market!==plan.market) || e.markets.some(m=>m.actor===a.actor && m.id!==plan.market)))issue('shift work and operated counter must use its market',['accounts',i,'shift']);}
   if(a.meal && (!e.meals.some(m=>m.id===a.meal) || a.shop || accountJobs(a).length || accountRepairs(a).length || a.deliveries))issue("meal needs an existing plan and excludes other automatic economy policies",["accounts",i,"meal"]);
   if(a.work && a.works || a.works && new Set(a.works).size!==a.works.length)issue('choose work or a unique works list',['accounts',i,'works']);
   if(a.repair && a.repairs || a.repairs && new Set(a.repairs).size!==a.repairs.length)issue('choose repair or a unique repairs list',['accounts',i,'repairs']);

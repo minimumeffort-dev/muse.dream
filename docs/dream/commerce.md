@@ -1,5 +1,9 @@
 # A market you can use
 
+The market now opens on request: use its icon or **M**, then choose Shop or Work.
+Use **I** for carried food. Only the current view is shown, and leaving the
+counter closes its actions. [Contextual controls](../context-actions.md).
+
 Walk up to the market vendor and buy bread with **B**. Shelf stock drops by one, your credits move to the business and your bag records one loaf. **G** eats it and restores fullness. **V** sells an owned item back at the listed price, if the business has money and room for it.
 
 Want to earn some credits? **H** starts a six-second bread batch. The business reserves flour, three credits and space on its shelf. Stay nearby until the batch finishes: two loaves reach the shelf, the reserved wage reaches you and work uses some fullness. Press H again or leave the work area to cancel; the reservations return without a wage or finished bread.

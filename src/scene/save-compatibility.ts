@@ -2,7 +2,7 @@ import marketR55 from './compatibility/r55-market.json';
 import type {Scene} from './schema';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=22;
+export const SAVE_SIMULATION_VERSION=23;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -59,7 +59,7 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY || hash===SHIFT_COMPATIBILITY || hash===SOCIAL_COMPATIBILITY || hash===SCHOOL_REPAIR_COMPATIBILITY);
+  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY || hash===SHIFT_COMPATIBILITY || hash===SOCIAL_COMPATIBILITY || hash===SCHOOL_REPAIR_COMPATIBILITY || hash===BUSINESS_COMPATIBILITY);
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
@@ -85,9 +85,15 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+export const BUSINESS_COMPATIBILITY='2ed89b889367d51c6ff3f458bc6faf16028e48076482fdbe4cdb3e69125276ab';
+/** r66 adds depot ownership and a zero-funded seller, without rebasing old state. */
+export function preBusinessScene(scene:Scene):Scene{
+ return {...scene,economy:scene.economy && {...scene.economy,accounts:scene.economy.accounts.filter(a=>a.id!=='depot_owner'),markets:scene.economy.markets.map(m=>{if(m.id!=='station_supplies')return m;const {owner,sale,...old}=m;return old;})}};
+}
+export function preBusinessCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preBusinessScene(scene),22,true,encode);}
 /** r65 connects the existing school bench to the caretaker; old state stays exact. */
 export function preSchoolRepairScene(scene:Scene):Scene{
- return {...scene,economy:scene.economy && {...scene.economy,repairs:scene.economy.repairs.map(r=>r.id==='market_tables' && r.grounds ? {...r,grounds:r.grounds.filter(id=>!['school_yard','school_yard_access','school_yard_return'].includes(id))} : r)}};
+ scene=preBusinessScene(scene);return {...scene,economy:scene.economy && {...scene.economy,repairs:scene.economy.repairs.map(r=>r.id==='market_tables' && r.grounds ? {...r,grounds:r.grounds.filter(id=>!['school_yard','school_yard_access','school_yard_return'].includes(id))} : r)}};
 }
 export function preSchoolRepairCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preSchoolRepairScene(scene),21,true,encode);}
 /** r64 adds social plans, remembered meals and one bench; old state stays exact. */

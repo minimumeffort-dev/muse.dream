@@ -283,8 +283,8 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 
 ## Saved simulation state
 
-Current save format 14 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 22. Historical formats retain their registered projections.
+Current save format 15 pins exact source plus a host-computed accepted-world fingerprint
+at simulation version 23. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -644,3 +644,32 @@ exact r64 projection by removing only these three grounds. Preserve every saved
 field, the old format-14 slot and the entire earlier chain; do not rebase population,
 physical poses, food, credits or personal history for this coverage-only upgrade.
 See docs/examples/school-repairs.dream and docs/dream/commerce.md#school-yard-repairs.
+
+
+Business ownership uses optional market `owner` (personal account reference) and
+`sale` (positive integer base price <=1,000,000, only a non-player initial owner).
+Acquisition costs base + available company cash and pays the personal seller once,
+never the acquired treasury. Ownership does not change counter actor roles.
+Only the saved owner can transfer positive whole credits locally; standing, dry,
+grounded reach/sight and task availability apply. Buying needs open/staffed service;
+capital access remains available while closed. Preserve existing stock/jobs,
+account pending wages, company refund/invoice headroom and finite conserved money.
+No resale, idle income or new actor/rig budgets. Format 15/simulation 23 validates
+r65 before adding only its zero-funded depot seller and initial ownership, with
+all prior fields/slots and both format-14 upgrades retained. See
+`docs/examples/business-ownership.dream` and `docs/dream/businesses.md`.
+
+
+Gameplay HUD uses engine-owned SVG icons and short contextual labels. Keep detailed
+commerce behind explicit M/activity or I/bag opening; show one applicable view at
+a time. Preserve direct transaction shortcuts while closed, Escape-before-pause,
+focus isolation, input release, range/control-mode invalidation and accessible
+names. Do not bring back automatic inventory/work/finance walls of text. UI pages
+must not change simulation eligibility, time, money or ownership.
+
+Gameplay HUD choices use contextual item/action slots, never dropdowns or numeric
+form fields. Preserve arrow/WASD selection, Enter activation, 1–4 sections, Q/E
+section cycling, contained Tab/Shift+Tab focus and Escape back. Update selections
+synchronously before activation. Keep +/−/0 camera keys and browser modifier
+shortcuts. Menu focus releases held movement/shot inputs without cancelling an
+already submitted simulation request. Keep coin icons accessible as coins.

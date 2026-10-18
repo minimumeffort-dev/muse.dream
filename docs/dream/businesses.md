@@ -35,7 +35,7 @@ The helper can spend earned pay on food after returning. Kit and sapling supply
 and available repair work retain their existing priorities before flour trips.
 The counter now follows [daily service hours](hours.md), shared by player and
 NPC transactions. This is a working counter and supply loop, with shared bench seating, without table
-service, upstream farming or business ownership yet.
+service or upstream farming. Ownership is now available at the station depot.
 
 ## Compose the existing Dream rules
 
@@ -151,3 +151,72 @@ restaurant staff, queue or table service.
 The baker now has a [physical daily shift](shifts.md): finish committed work,
 walk into the hall after closing and return before morning service. Counter
 attendance gates the same transactions for the player, shoppers and couriers.
+
+
+## Own the station depot
+
+Walk to Station supplies in the railway quarter and open the market with **M**, then choose **Business**. The depot
+has finite flour, repair kits and saplings. Buy it for the listed base price of
+15 credits plus its available cash. The seller receives that payment in their
+personal account; it does not become cash you can immediately withdraw from
+your new company. These are mock prices, not a business valuation model.
+
+Ownership includes the existing stock and delivery commitments. If the caretaker
+or player carries two repair kits to the bakery, the bakery pays the depot six
+credits and the courier four after handoff. Two delivered saplings pay the depot
+four credits. Picking up cargo does not create supplier income. Flour remains a
+zero-invoice supply contract. No money appears because time passed or a player
+owns a counter.
+
+At your counter, choose a whole-coin amount with left/right and **Deposit** or **Withdraw**.
+You can transfer available cash while the counter is closed, but buying the
+business needs open, staffed service. Wage, cargo, invoice and refund commitments
+remain protected. Existing jobs keep their staff, supplies and pay after a sale.
+The pause menu lists the businesses you own and their available cash; transfers
+still require standing at the counter. Car, seated, airborne and swimming controls
+cannot make these transactions.
+
+![An owned depot receiving its supplier payment](../media/business.gif)
+
+[Watch in HD](../media/business.mp4). Purchase, deposit, an actual two-kit handoff
+and withdrawal use 600 rendered frames at 30 frames per simulation second.
+The pre-roll drives the damage and supply journey through the ordinary engine;
+it does not give the player money or create cargo. This is an offline recording,
+not a performance benchmark.
+
+### Describe another ownable business
+
+The [complete runnable bakery](../examples/business-ownership.dream) uses the
+same capability with paid production and hungry customers. Here is its market
+block, unchanged from the file:
+
+```dream
+ market corner(label="Corner bakery",actor=neighbor,credits=10,radius=70,owner=baker,sale=15){
+  lot bread_shelf(good=bread,quantity=8,limit=16,price=5);
+  lot flour_sack(good=flour,quantity=12,limit=12);
+ }
+```
+
+`owner` references a personal `account`; `actor` continues to operate the counter.
+The account's initial balance, inventory and policies remain distinct from the
+company's treasury and shelves. Omit `sale` for an owned business that is not for
+sale. `owner=pocket` can give the player an initial business without a purchase.
+A sale needs a non-player initial owner and a positive integer base price of at
+most 1,000,000. The final quote and all balances must fit that same money bound.
+Existing limits remain eight markets and sixteen accounts, with no additional
+NPC, body or rig slots.
+
+The current capability supports one acquisition per business. It does not add
+resale, hiring, price setting, loans, property deeds, idle owner income or a way
+to start a new business. Station stock can run out; upstream production remains
+unfinished. The bakery example proves that depositing capital can restart paid
+production without free ingredients or wages.
+
+### Keep what you bought
+
+Ownership, purchase time, stock, available cash and active commitments live in
+resident simulation state. Chunk unloading, R, pause and save/reload retain them;
+Start over restores the authored owner and balances. Format 15 / simulation 23
+validates the exact r65 world before adding only its zero-funded depot seller and
+initial owner reference. Every older field and original save slot stays intact.
+[Save rules and migration](../persistence.md#business-ownership-r66).

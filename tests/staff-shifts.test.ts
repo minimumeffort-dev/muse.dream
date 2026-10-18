@@ -1,3 +1,4 @@
+import {preBusinessState} from './pre-business-state';
 import {it,expect} from 'vitest';
 import source from '../docs/examples/staff-shifts.dream?raw';
 import previous from './fixtures/save-v12-r62-hours.json';
@@ -17,7 +18,7 @@ import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
 import {createWorldScene} from '../src/scene/world-fixture';
 import {polygonArea,triangulatePolygon,subtractPolygons} from '../src/scene/polygons';
-import {SCHOOL_REPAIR_COMPATIBILITY,SOCIAL_COMPATIBILITY,SHIFT_COMPATIBILITY,HOURS_COMPATIBILITY,preShiftScene,preShiftCompatibilitySource,saveCompatibilitySource,sha256} from '../src/scene/save-compatibility';
+import {BUSINESS_COMPATIBILITY,SCHOOL_REPAIR_COMPATIBILITY,SOCIAL_COMPATIBILITY,SHIFT_COMPATIBILITY,HOURS_COMPATIBILITY,preShiftScene,preShiftCompatibilitySource,saveCompatibilitySource,sha256} from '../src/scene/save-compatibility';
 
 const compile=(text=source)=>compileDreamScene(text,{sceneId:'shifts',revisionId:'r1',sourceHash:'shifts'});
 const scene=compile();
@@ -100,12 +101,12 @@ it('prepares bounded body-sized paths even when no repair or meal policy asks fo
 });
 
 it('registers the live shift world and migrates r62 without rewriting clocks, cargo, money or history',async()=>{
- const doc=createWorldScene(),hash=await sha256(saveCompatibilitySource(doc));expect(hash).toBe(SCHOOL_REPAIR_COMPATIBILITY);expect(await sha256(preShiftCompatibilitySource(doc))).toBe(HOURS_COMPATIBILITY);
+ const doc=createWorldScene(),hash=await sha256(saveCompatibilitySource(doc));expect(hash).toBe(BUSINESS_COMPATIBILITY);expect(await sha256(preShiftCompatibilitySource(doc))).toBe(HOURS_COMPATIBILITY);
  const old=preShiftScene(doc).surfaces.find(s=>s.id==='school_yard_access')!.points,parts=doc.surfaces.filter(s=>['school_yard_access','school_yard_return'].includes(s.id)).map(s=>s.points),area=(polygons:typeof parts)=>polygons.reduce((n,p)=>n+polygonArea(p),0);
  expect(area(subtractPolygons(triangulatePolygon(old),parts))).toBe(0);expect(area(subtractPolygons(parts,triangulatePolygon(old)))).toBe(0);
- const world={...worldFor(doc),saveCompatibility:hash,previousSchoolRepairSaveCompatibility:SOCIAL_COMPATIBILITY,previousSocialSaveCompatibility:SHIFT_COMPATIBILITY,previousShiftSaveCompatibility:HOURS_COMPATIBILITY},text=JSON.stringify(previous),restored=decodeSave(text,world);
- expect(restored.migrated).toBe(true);expect(restored.state).toEqual(previous.state);expect(restored.worldTime).toBe(previous.worldTime);expect(decodeSave(encodeSave(restored.state,restored.worldTime,world),world).migrated).toBe(false);
+ const world={...worldFor(doc),saveCompatibility:hash,previousBusinessSaveCompatibility:SCHOOL_REPAIR_COMPATIBILITY,previousSchoolRepairSaveCompatibility:SOCIAL_COMPATIBILITY,previousSocialSaveCompatibility:SHIFT_COMPATIBILITY,previousShiftSaveCompatibility:HOURS_COMPATIBILITY},text=JSON.stringify(previous),restored=decodeSave(text,world);
+ expect(restored.migrated).toBe(true);expect(preBusinessState(restored.state)).toEqual(previous.state);expect(restored.worldTime).toBe(previous.worldTime);expect(decodeSave(encodeSave(restored.state,restored.worldTime,world),world).migrated).toBe(false);
  const oldKey=`shifts.v12.${doc.sceneId}.${HOURS_COMPATIBILITY}`,rows=new Map([[oldKey,text]]),storage={getItem:(key:string)=>rows.get(key)??null,setItem:(key:string,value:string)=>{rows.set(key,value);}};
- const saves=gameSave(world,()=>storage,'shifts');expect(saves.restored?.state).toEqual(previous.state);expect(saves.write(restored.state,restored.worldTime)).toBe(true);expect(rows.get(oldKey)).toBe(text);rows.set(saves.key,'corrupt');expect(gameSave(world,()=>storage,'shifts').blocked).toBe(true);
+ const saves=gameSave(world,()=>storage,'shifts');expect(preBusinessState(saves.restored?.state)).toEqual(previous.state);expect(saves.write(restored.state,restored.worldTime)).toBe(true);expect(rows.get(oldKey)).toBe(text);rows.set(saves.key,'corrupt');expect(gameSave(world,()=>storage,'shifts').blocked).toBe(true);
  for(const a of doc.economy!.accounts.filter(a=>a.shift)){const plan=doc.economy!.shifts.find(s=>s.id===a.shift)!,area=shiftArea(doc,plan),o=doc.objects.find(o=>o.id===a.actor)!;expect(workPath(doc,area,o,plan.rest)).toBeDefined();expect(workPath(doc,area,plan.rest,o)).toBeDefined();}
 });

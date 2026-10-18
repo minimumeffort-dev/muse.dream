@@ -23,6 +23,8 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [Shared seating](dream/seating.md) | Sit on furniture, share seats with customers and preserve occupancy |
 | [Staff shifts](dream/shifts.md) | Physical attendance, connected rest destinations and persistent journeys |
 | [Opening hours](dream/hours.md) | Daily counter service, overnight suppliers and saved courier waits |
+| [Business ownership](dream/businesses.md#own-the-station-depot) | Buy the depot, transfer capital and retain its real stock and contracts |
+| [Contextual actions](context-actions.md) | Icons for nearby activities; focused Shop, Work, Bag and Business views |
 | [A working market and deliveries](dream/commerce.md) | Buy food, eat, sell, work for wages and share stock with NPCs |
 | [Planting and growth](dream/growth.md) | Replant fallen trees with finite saplings, paid work and persistent physical growth |
 | [NPCs and control](dream/npcs.md) | Explicit ownership, reusable state machines, proximity and timed routines |

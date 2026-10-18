@@ -1,3 +1,4 @@
+import {preBusinessState} from './pre-business-state';
 import {it,expect} from 'vitest';
 import source from '../docs/examples/market-hours.dream?raw';
 import previous from './fixtures/save-v12-r61-seated.json';
@@ -13,7 +14,7 @@ import {buildPaperMask} from '../src/sim/mask';
 import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
 import {createWorldScene} from '../src/scene/world-fixture';
-import {SCHOOL_REPAIR_COMPATIBILITY,SOCIAL_COMPATIBILITY,SHIFT_COMPATIBILITY,HOURS_COMPATIBILITY,SEATING_COMPATIBILITY,preHoursCompatibilitySource,saveCompatibilitySource,sha256} from '../src/scene/save-compatibility';
+import {BUSINESS_COMPATIBILITY,SCHOOL_REPAIR_COMPATIBILITY,SOCIAL_COMPATIBILITY,SHIFT_COMPATIBILITY,HOURS_COMPATIBILITY,SEATING_COMPATIBILITY,preHoursCompatibilitySource,saveCompatibilitySource,sha256} from '../src/scene/save-compatibility';
 
 const scene=compileDreamScene(source,{sceneId:'hours',revisionId:'r1',sourceHash:'hours'});
 const start=(doc=scene):CarState=>({...createCarAtSpawn(doc),control:{kind:'foot'},x:580,y:750,elevation:0,surface:'paper',vehicles:[{id:null,x:525,y:609,elevation:0,headingRad:0,distance:0}]});
@@ -113,11 +114,11 @@ it('returns a meal customer empty-handed if the counter closes during the walk',
 });
 
 it('migrates the registered seated r61 world exactly, retains its slot and rejects unrelated changes',async()=>{
- const doc=createWorldScene(),hash=await sha256(saveCompatibilitySource(doc));expect(hash).toBe(SCHOOL_REPAIR_COMPATIBILITY);expect(await sha256(preHoursCompatibilitySource(doc))).toBe(SEATING_COMPATIBILITY);
- const world={...worldFor(doc),saveCompatibility:hash,previousSchoolRepairSaveCompatibility:SOCIAL_COMPATIBILITY,previousSocialSaveCompatibility:SHIFT_COMPATIBILITY,previousShiftSaveCompatibility:HOURS_COMPATIBILITY,previousHoursSaveCompatibility:SEATING_COMPATIBILITY},text=JSON.stringify(previous),restored=decodeSave(text,world);
- expect(restored.migrated).toBe(true);expect(restored.state).toEqual(previous.state);expect(restored.worldTime).toBe(previous.worldTime);expect(decodeSave(encodeSave(restored.state,restored.worldTime,world),world).migrated).toBe(false);
+ const doc=createWorldScene(),hash=await sha256(saveCompatibilitySource(doc));expect(hash).toBe(BUSINESS_COMPATIBILITY);expect(await sha256(preHoursCompatibilitySource(doc))).toBe(SEATING_COMPATIBILITY);
+ const world={...worldFor(doc),saveCompatibility:hash,previousBusinessSaveCompatibility:SCHOOL_REPAIR_COMPATIBILITY,previousSchoolRepairSaveCompatibility:SOCIAL_COMPATIBILITY,previousSocialSaveCompatibility:SHIFT_COMPATIBILITY,previousShiftSaveCompatibility:HOURS_COMPATIBILITY,previousHoursSaveCompatibility:SEATING_COMPATIBILITY},text=JSON.stringify(previous),restored=decodeSave(text,world);
+ expect(restored.migrated).toBe(true);expect(preBusinessState(restored.state)).toEqual(previous.state);expect(restored.worldTime).toBe(previous.worldTime);expect(decodeSave(encodeSave(restored.state,restored.worldTime,world),world).migrated).toBe(false);
  const oldKey=`hours.v12.${doc.sceneId}.${SEATING_COMPATIBILITY}`,rows=new Map([[oldKey,text]]),storage={getItem:(key:string)=>rows.get(key)??null,setItem:(key:string,value:string)=>{rows.set(key,value);}};
- const saves=gameSave(world,()=>storage,'hours');expect(saves.restored?.state).toEqual(previous.state);expect(saves.write(restored.state,restored.worldTime)).toBe(true);expect(rows.get(oldKey)).toBe(text);
+ const saves=gameSave(world,()=>storage,'hours');expect(preBusinessState(saves.restored?.state)).toEqual(previous.state);expect(saves.write(restored.state,restored.worldTime)).toBe(true);expect(rows.get(oldKey)).toBe(text);
  rows.set(saves.key,'corrupt');expect(gameSave(world,()=>storage,'hours').blocked).toBe(true);
  const changed={...doc,economy:{...doc.economy!,markets:doc.economy!.markets.map(m=>({...m,credits:m.credits+1}))}};const changedHash=await sha256(saveCompatibilitySource(changed));expect(()=>decodeSave(text,{...world,scene:changed,saveCompatibility:changedHash})).toThrow('different world');
 });

@@ -1,0 +1,53 @@
+{
+  "assumption": "HUD composited over white, the brightest underlying scene; declared CSS text and focus states only",
+  "checks": [
+    {
+      "label": "HUD labels",
+      "foreground": "#fafaf7",
+      "contrast": 13.24,
+      "minimum": 4.5
+    },
+    {
+      "label": "Work details",
+      "foreground": "#bdc4b4",
+      "contrast": 7.73,
+      "minimum": 4.5
+    },
+    {
+      "label": "Choice details",
+      "foreground": "#c0c7b5",
+      "contrast": 7.33,
+      "minimum": 4.5
+    },
+    {
+      "label": "Disabled actions",
+      "foreground": "#b0b5a7",
+      "contrast": 5.93,
+      "minimum": 4.5
+    },
+    {
+      "label": "Unavailable reason",
+      "foreground": "#f4cd81",
+      "contrast": 9.16,
+      "minimum": 4.5
+    },
+    {
+      "label": "Keyboard hints",
+      "foreground": "#edece3",
+      "contrast": 9.99,
+      "minimum": 4.5
+    },
+    {
+      "label": "Primary action",
+      "foreground": "#171717",
+      "contrast": 11.35,
+      "minimum": 4.5
+    },
+    {
+      "label": "Focus outline",
+      "foreground": "#fafaf7",
+      "contrast": 11.26,
+      "minimum": 3
+    }
+  ]
+}

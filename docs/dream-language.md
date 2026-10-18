@@ -102,3 +102,9 @@ programs and remembered meetings continue at rest. [Guide and executable example
 
 
 `social` and `account.social` connect carried food, paired seating, consent and persistent shared meals. Interact-only `shared_meals` branches on actual time spent together. [Guide and complete example](dream/social.md).
+
+
+Optional `market(...,owner=account_id,sale=15)` makes an existing counter ownable.
+The base sale price plus available cash is paid to its personal seller once;
+stock and commitments stay with the business. Owners can transfer available
+capital locally through conserved transactions. [Ownership rules and example](dream/businesses.md#own-the-station-depot).

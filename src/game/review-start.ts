@@ -131,6 +131,13 @@ export function* courierReviewSteps(state:CarState,world:World,stage:'pickup'|'h
  throw Error('The supply courier did not reach its review stage within thirty simulation minutes');
 }
 
+/** Review setup retains real repair demand, cargo and the complete courier journey. */
+export function* businessReviewSteps(state:CarState,world:World):Generator<CarState,CarState>{
+ const prepared=yield* courierReviewSteps(state,world,'handoff');
+ if(!prepared.economy?.accounts.some(a=>a.courier?.id==='kits_run' && a.courier.phase==='dropoff'))throw Error('The depot review needs a real pending supplier payment');
+ return {...npcReviewStart(prepared,world,'station_resident'),vehicles:prepared.vehicles};
+}
+
 /** Dev-only ground-floor walkthrough; all movement and transactions use the ordinary engine. */
 export function interiorReviewStart(state:CarState,world:World,night=false):CarState{
  const f=sceneInteriors(world.scene).find(f=>f.object.id==='market_hall');if(!f)return state;

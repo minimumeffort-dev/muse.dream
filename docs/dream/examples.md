@@ -26,6 +26,10 @@ fragments and damage. [Read the shared-rule contract](rules.md).
 counter hours, finite recipes, hungry customers and a physical courier.
 [Check closing, reopening and saved waits](hours.md).
 
+[An ownable bakery](../examples/business-ownership.dream) separates the operator,
+personal owner account and company treasury. The same owner/sale capability is
+playable at the live station depot. [Business ownership](businesses.md#own-the-station-depot).
+
 ## Two finishes, one assembly
 
 These [two tables](../examples/material-components.dream) share their top and four legs. Numeric parameters set dimensions; material parameters select a finish and pass it through nested components. The complete file compiles to ten parts, with no special renderer recipe.

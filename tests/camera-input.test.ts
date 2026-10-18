@@ -84,3 +84,10 @@ describe("trackpad camera zoom", () => {
     expect(zoom.factor).toBeGreaterThan(1);
   });
 });
+
+ it("supports bounded keyboard zoom and reset while leaving paused controls alone",()=>{
+  const {zoom,pause,resume}=input();expect(zoom.key('Equal')).toBe(true);expect(zoom.factor).toBeCloseTo(1.15);
+  zoom.key('Minus');expect(zoom.factor).toBeCloseTo(1);for(let i=0;i<100;i++)zoom.key('NumpadAdd');expect(zoom.factor).toBe(3);
+  zoom.key('Digit0');expect(zoom.factor).toBe(1);pause();expect(zoom.key('Minus')).toBe(false);expect(zoom.factor).toBe(1);
+  resume();expect(zoom.key('KeyW')).toBe(false);zoom.key('NumpadSubtract');expect(zoom.factor).toBeLessThan(1);zoom.key('Numpad0');expect(zoom.factor).toBe(1);
+ });

@@ -1,3 +1,4 @@
+import {preBusinessState} from './pre-business-state';
 import {it,expect} from 'vitest';
 import {createWorldScene} from '../src/scene/world-fixture';
 import {createCarAtSpawn,type CarState,type World} from '../src/sim/car';
@@ -10,7 +11,7 @@ import {buildPaperMask} from '../src/sim/mask';
 import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
 import {npcReviewStart,repairReviewSteps} from '../src/game/review-start';
-import {SCHOOL_REPAIR_COMPATIBILITY,SOCIAL_COMPATIBILITY,preSchoolRepairScene,preSchoolRepairCompatibilitySource,saveCompatibilitySource,sha256} from '../src/scene/save-compatibility';
+import {BUSINESS_COMPATIBILITY,SCHOOL_REPAIR_COMPATIBILITY,SOCIAL_COMPATIBILITY,preSchoolRepairScene,preSchoolRepairCompatibilitySource,saveCompatibilitySource,sha256} from '../src/scene/save-compatibility';
 import {sceneContactData} from '../src/scene/contacts';
 import {ambientGraph} from '../src/scene/ambient-navigation';
 import {worldSeats} from '../src/scene/seating';
@@ -18,12 +19,12 @@ import {walkingHeight} from '../src/scene/interiors';
 import {stepInteractive,toggleRide} from '../src/sim/interaction';
 import prior from './fixtures/save-v14-r64-shared-meal.json';
 const scene=createWorldScene(),service=scene.economy!.repairs.find(r=>r.id==='market_tables')!,target=repairTargets(scene,service).find(t=>t.objectId==='school_bench')!;
-const world:World={scene,saveCompatibility:SCHOOL_REPAIR_COMPATIBILITY,previousSchoolRepairSaveCompatibility:SOCIAL_COMPATIBILITY,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11};
+const world:World={scene,saveCompatibility:BUSINESS_COMPATIBILITY,previousBusinessSaveCompatibility:SCHOOL_REPAIR_COMPATIBILITY,previousSchoolRepairSaveCompatibility:SOCIAL_COMPATIBILITY,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11};
 const worker=(s:CarState)=>s.economy!.accounts.find(a=>a.id==='caretaker')!,market=(s:CarState)=>s.economy!.markets.find(m=>m.id==='market_stall')!,pocket=(s:CarState)=>s.economy!.accounts.find(a=>a.id==='pocket')!;
 const tick=(s:CarState,commerce?:import('../src/sim/commerce').CommerceAction)=>stepCommerce({...s,npcs:stepNpcs(s,.25,scene),population:stepAmbient(s,.25,scene),timeS:s.timeS+.25},{commerce},.25,scene);
 it('adds exactly the school bench to existing coverage with unchanged geometry, public navigation and finite graph limits',async()=>{
  const old=preSchoolRepairScene(scene),before=repairTargets(old,old.economy!.repairs.find(r=>r.id===service.id)!);
- expect(await sha256(saveCompatibilitySource(scene))).toBe(SCHOOL_REPAIR_COMPATIBILITY);expect(await sha256(preSchoolRepairCompatibilitySource(scene))).toBe(SOCIAL_COMPATIBILITY);
+ expect(await sha256(saveCompatibilitySource(scene))).toBe(BUSINESS_COMPATIBILITY);expect(await sha256(preSchoolRepairCompatibilitySource(scene))).toBe(SOCIAL_COMPATIBILITY);
  expect(repairTargets(scene,service)).toHaveLength(89);expect(before).toHaveLength(88);expect(repairTargets(scene,service).filter(t=>!before.some(b=>b.objectId===t.objectId&&b.zoneId===t.zoneId)).map(t=>t.objectId)).toEqual(['school_bench']);
  expect(scene.objects).toBe(old.objects);expect(sceneContactData(scene)).toEqual(sceneContactData(old));expect(ambientGraph(scene)).toEqual(ambientGraph(old));
  const graph=repairNetwork(scene,service);expect(graph.length).toBe(4305);expect(graph.reduce((n,p)=>n+p.links.length,0)).toBe(14368);expect(service.grounds).toEqual(['park_seating','station_seating','market_hall','school_yard','school_yard_access','school_yard_return']);
@@ -50,8 +51,8 @@ it('lets the player claim the same service before dispatch and refunds once on c
  const seat=worldSeats(scene).find(s=>s.objectId==='school_bench')!;s=toggleRide({...s,x:seat.approach.x,y:seat.approach.y,elevation:walkingHeight(scene,seat.approach.x,seat.approach.y)},world);expect(s.seated).toEqual({objectId:seat.objectId,seatId:seat.seatId});expect(encodeSave(s,s.timeS,world)).toBeTypeOf('string');
 });
 it('keeps r64 shared meals, history, damage and every saved field exact, and preserves its original format-14 slot',()=>{
- const old={...prior,state:{...prior.state,broken:['school_bench']}};const text=JSON.stringify(old),restored=decodeSave(text,world);expect(restored.migrated).toBe(true);expect(restored.state).toEqual(old.state);expect(restored.worldTime).toBe(old.worldTime);expect(decodeSave(encodeSave(restored.state,restored.worldTime,world),world).migrated).toBe(false);
- const key=`school.v14.${scene.sceneId}.${SOCIAL_COMPATIBILITY}`,rows=new Map([[key,text]]),storage={getItem:(k:string)=>rows.get(k)??null,setItem:(k:string,v:string)=>{rows.set(k,v);}},saves=gameSave(world,()=>storage,'school');expect(saves.restored?.state).toEqual(old.state);expect(saves.write(restored.state,restored.worldTime)).toBe(true);expect(rows.get(key)).toBe(text);rows.set(saves.key,'corrupt');expect(gameSave(world,()=>storage,'school').blocked).toBe(true);
+ const old={...prior,state:{...prior.state,broken:['school_bench']}};const text=JSON.stringify(old),restored=decodeSave(text,world);expect(restored.migrated).toBe(true);expect(preBusinessState(restored.state)).toEqual(old.state);expect(restored.worldTime).toBe(old.worldTime);expect(decodeSave(encodeSave(restored.state,restored.worldTime,world),world).migrated).toBe(false);
+ const key=`school.v14.${scene.sceneId}.${SOCIAL_COMPATIBILITY}`,rows=new Map([[key,text]]),storage={getItem:(k:string)=>rows.get(k)??null,setItem:(k:string,v:string)=>{rows.set(k,v);}},saves=gameSave(world,()=>storage,'school');expect(preBusinessState(saves.restored?.state)).toEqual(old.state);expect(saves.write(restored.state,restored.worldTime)).toBe(true);expect(rows.get(key)).toBe(text);rows.set(saves.key,'corrupt');expect(gameSave(world,()=>storage,'school').blocked).toBe(true);
  expect(()=>decodeSave(text,{...world,previousSchoolRepairSaveCompatibility:undefined})).toThrow();expect(()=>decodeSave(text,{...world,saveCompatibility:'f'.repeat(64)})).toThrow();
 });
 it('prepares the native review through real driving, impact, dispatch and every pedestrian step',()=>{
@@ -63,7 +64,7 @@ it('prepares the native review through real driving, impact, dispatch and every 
 it('retains an earned shared-meal memory exactly through the coverage upgrade',()=>{
  const previous={...world,scene:preSchoolRepairScene(scene),saveCompatibility:SOCIAL_COMPATIBILITY,previousSchoolRepairSaveCompatibility:undefined};let state=decodeSave(JSON.stringify(prior),previous).state;
  for(let i=0;i<922;i++)state=stepInteractive(state,{steer:0,throttle:0},1/120,previous);
- expect(state.economy!.socialHistory!.baker!.meals).toBe(1);const restored=decodeSave(encodeSave(state,state.timeS,previous),world);expect(restored.migrated).toBe(true);expect(restored.state).toEqual(JSON.parse(JSON.stringify(state)));
+ expect(state.economy!.socialHistory!.baker!.meals).toBe(1);const restored=decodeSave(encodeSave(state,state.timeS,previous),world);expect(restored.migrated).toBe(true);expect(preBusinessState(restored.state)).toEqual(JSON.parse(JSON.stringify(state)));
 });
 
 it('replays the actual native repaired-bench return while retaining its usable seat and one paid repair',async()=>{
