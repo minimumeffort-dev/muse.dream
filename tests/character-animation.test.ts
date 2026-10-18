@@ -7,11 +7,12 @@ import {HUMANOID_BONES} from '../src/scene/humanoid';
 import {buildObject} from '../src/game/world3d';
 import {compactObject} from '../src/game/compact-object';
 import {CharacterAnimator,solveLeg,strideFoot,type CharacterInput} from '../src/game/character-animation';
+import {humanoidSoles} from '../src/game/humanoid-gait';
 import source from '../docs/examples/humanoid.dream?raw';
 const spec=interactiveWorld.assemblies.find(s=>s.displayName==='Explorer')!;
 const input:CharacterInput={speed:55,grounded:true,swimming:false,verticalSpeed:0,time:0,enabled:true};
-function rig(){
- const group=compactObject(buildObject({id:'person',kind:'custom',labelText:'Explorer',x:0,y:0,scale:1,spec}));
+function rig(scale=1){
+ const group=compactObject(buildObject({id:'person',kind:'custom',labelText:'Explorer',x:0,y:0,scale,spec}));
  const animation=new CharacterAnimator(group,spec);
  const bone=(name:string)=>group.getObjectByName(spec.joints!.find(j=>j.bone===name)!.id)!;
  return {group,animation,bone};
@@ -50,6 +51,22 @@ describe('articulated locomotion',()=>{
    }
   }
  });
+ it.each([.2,.306,1,2])('plants the stance foot in world space at scale %s',scale=>{
+  for(const speed of [4,14,35,55,95]){
+   const r=rig(scale);advance(r,{speed},3,120);
+   const previous=new Map<string,Vector3>();let planted=0,maxDrift=0;
+   for(let f=0;f<720;f++){
+    r.group.position.x+=speed/120;r.animation.update({...input,speed,time:3+f/120},1/120);r.group.updateMatrixWorld(true);
+    for(const side of ['left','right']){
+     const ankle=r.bone(`${side}_ankle`),flat=Math.abs(ankle.getWorldQuaternion(ankle.quaternion.clone()).z)<1e-6;
+     const foot=ankle.getWorldPosition(new Vector3()),old=previous.get(side);
+     if(flat && old){maxDrift=Math.max(maxDrift,foot.distanceTo(old));planted++;}
+     if(flat)previous.set(side,foot);else previous.delete(side);
+    }
+   }
+   expect(planted).toBeGreaterThan(100);expect(maxDrift).toBeLessThan(.002);
+  }
+ });
  it('solves reachable feet without scaling or reversing knees',()=>{
   for(const x of [-9,0,9]){
    const {hip,knee}=solveLeg(x,-19,11.5,10.5);
@@ -59,7 +76,7 @@ describe('articulated locomotion',()=>{
   }
  });
  it('has a distinct bent-elbow running pose and settles after stopping',()=>{
-  const walk=rig(),run=rig();advance(walk,{});advance(run,{speed:95});
+  const walk=rig(),run=rig();advance(walk,{speed:14});advance(run,{speed:95});
   expect(run.bone('left_elbow').rotation.z).toBeGreaterThan(walk.bone('left_elbow').rotation.z+.4);
   advance(run,{speed:0});
   expect(Math.abs(run.bone('left_hip').rotation.z)).toBeLessThan(.03);
@@ -87,12 +104,13 @@ describe('articulated locomotion',()=>{
   }
  });
  it('keeps both soles above the support plane throughout walk and run cycles',()=>{
-  for(const speed of [55,95]){
+  const soles=humanoidSoles(spec);
+  for(const speed of [14,55,95]){
    const r=rig();
    for(let f=0;f<240;f++){
     r.animation.update({...input,speed,time:f/60},1/60);r.group.updateMatrixWorld(true);
-    for(const side of ['left','right'])for(const x of [-2.2,6.8])for(const z of [-3.1,3.1]){
-     const corner=new Vector3(x,-3,z).applyMatrix4(r.bone(side+'_ankle').matrixWorld);
+    for(const [i,side] of ['left','right'].entries())for(const x of [soles[i]![0],soles[i]![1]])for(const z of [-3.1,3.1]){
+     const corner=new Vector3(x,soles[i]![2],z).applyMatrix4(r.bone(side+'_ankle').matrixWorld);
      expect(corner.y).toBeGreaterThanOrEqual(-.01);
     }
    }

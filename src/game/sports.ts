@@ -55,6 +55,7 @@ import type {SceneObject} from '../scene/schema';
 import {matchRoster} from '../scene/sports-match';
 import {measuredScale,assemblyBounds} from '../scene/measure';
 import {ambientPrototype} from './ambient-population';
+import {humanoidSoles} from './humanoid-gait';
 import {ambientMaterial} from './shaders';
 import {teamPose,teamVenue} from '../sim/team-sports';
 import {walkingHeight} from '../scene/interiors';
@@ -76,10 +77,10 @@ export class SportsTeamsVisuals {
   }
   for(const {spec,rows} of groups.values()){
    yield;
-   const object:SceneObject={id:rows[0]!.id,kind:'custom',role:'npc',x:0,y:0,scale:1,spec,labelText:spec.displayName},root=ambientPrototype(object),meshes:THREE.InstancedMesh[]=[],joints=spec.joints!;
+   const object:SceneObject={id:rows[0]!.id,kind:'custom',role:'npc',x:0,y:0,scale:1,spec,labelText:spec.displayName},root=ambientPrototype(object),meshes:THREE.InstancedMesh[]=[],joints=spec.joints!,soles=humanoidSoles(spec);
    for(const child of root.children){const source=child as THREE.Mesh,geometry=source.geometry;
     geometry.setAttribute('popCycle',new THREE.InstancedBufferAttribute(new Float32Array(rows.length*3),3).setUsage(THREE.DynamicDrawUsage));geometry.setAttribute('popPlay',new THREE.InstancedBufferAttribute(new Float32Array(rows.length*2),2).setUsage(THREE.DynamicDrawUsage));
-    const mesh=new THREE.InstancedMesh(geometry,ambientMaterial(source.material as THREE.Material,joints,false,true),rows.length);mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);mesh.castShadow=mesh.receiveShadow=true;mesh.frustumCulled=false;mesh.customDepthMaterial=ambientMaterial(new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking}),joints,true,true);this.group.add(mesh);meshes.push(mesh);
+    const mesh=new THREE.InstancedMesh(geometry,ambientMaterial(source.material as THREE.Material,joints,false,true,soles),rows.length);mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);mesh.castShadow=mesh.receiveShadow=true;mesh.frustumCulled=false;mesh.customDepthMaterial=ambientMaterial(new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking}),joints,true,true,soles);this.group.add(mesh);meshes.push(mesh);
    }
    const radius=assemblyBounds(spec).getSize(new THREE.Vector3()).length()*Math.max(...rows.map(r=>r.scale))+8;
    this.batches.push({rows,meshes,radius});

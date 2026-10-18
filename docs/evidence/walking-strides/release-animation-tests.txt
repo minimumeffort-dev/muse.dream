@@ -1,0 +1,13 @@
+
+> muse-dream@0.1.0 test
+> vitest run --maxWorkers=2 --testTimeout=60000 tests/character-animation.test.ts
+
+
+ RUN  v3.2.7 /Users/horia/.codex/worktrees/crowd-cost/muse.dream/.npm-cache/walking-release
+
+ ✓ tests/character-animation.test.ts (28 tests) 1034ms
+
+ Test Files  1 passed (1)
+      Tests  28 passed (28)
+   Start at  23:59:03
+   Duration  1.75s (transform 352ms, setup 11ms, collect 576ms, tests 1.03s, environment 0ms, prepare 31ms)

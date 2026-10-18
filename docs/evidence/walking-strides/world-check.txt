@@ -1,0 +1,5 @@
+{
+  fingerprint: 'dc6d2c4b9ab4648a7ff99d47a20e60792c1d940e299e90bbe6fa047fb4e4b66f',
+  maxDrift: 0.000010065126714045148,
+  cases: 20
+}

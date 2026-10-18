@@ -1,0 +1,6 @@
+character: GIF and HD video decode successfully
+locomotion: GIF and HD video decode successfully
+pedestrians: GIF and HD video decode successfully
+football: GIF and HD video decode successfully
+basketball: GIF and HD video decode successfully
+swimming: GIF and HD video decode successfully

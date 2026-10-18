@@ -1,6 +1,8 @@
 import {Euler,Quaternion,type Group,Object3D} from 'three';
 import {HUMANOID_BONES,type HumanoidBone} from '../scene/humanoid';
 import type {ObjectDslV2} from '../scene/object-dsl';
+import {gaitRun,gaitStride,humanoidSoles,soleSupport,strideFoot,type Sole} from './humanoid-gait';
+export {strideFoot} from './humanoid-gait';
 
 type Rotation=[number,number,number];
 type Pose=Record<HumanoidBone,Rotation>;
@@ -8,14 +10,6 @@ const clamp=(n:number,a=0,b=1)=>Math.max(a,Math.min(b,n));
 const mix=(a:number,b:number,t:number)=>a+(b-a)*t;
 const tau=Math.PI*2;
 const emptyPose=()=>Object.fromEntries(HUMANOID_BONES.map(b=>[b,[0,0,0]])) as Pose;
-
-/** A planted stance and a lifted return, with a level sole resolved by two-bone IK. */
-export function strideFoot(phase:number,run:number):{x:number;y:number;toe:number} {
-  const t=((phase%1)+1)%1,stance=mix(.62,.42,run),reach=mix(6.8,11,run);
-  if(t<stance){const u=t/stance;return {x:mix(reach,-reach,u),y:0,toe:.16*(1-u)-.38*u**5};}
-  const u=(t-stance)/(1-stance),ease=u*u*(3-2*u);
-  return {x:mix(-reach,reach,ease),y:Math.sin(Math.PI*u)**1.5*mix(4.5,12,run),toe:mix(-.38,.16,ease)+.12*Math.sin(Math.PI*u)};
-}
 
 export function solveLeg(x:number,y:number,upper:number,lower:number):{hip:number;knee:number} {
   const d=clamp(Math.hypot(x,y),Math.abs(upper-lower)+.001,upper+lower-.001);
@@ -50,12 +44,13 @@ export class CharacterAnimator {
   private swimRotation=new Quaternion();
   private angles=new Euler();
   private readonly unit:number;
-  constructor(group:Group,spec:ObjectDslV2){
+  private readonly soles:[Sole,Sole];
+  constructor(private group:Group,spec:ObjectDslV2){
     this.bones=Object.fromEntries(spec.joints!.filter(j=>j.bone).map(j=>{
       const node=group.getObjectByName(j.id)!;
       return [j.bone,{node,rest:node.quaternion.clone(),y:node.position.y}];
     })) as typeof this.bones;
-    this.unit=this.bones.root.y/25;
+    this.unit=this.bones.root.y/25;this.soles=humanoidSoles(spec);
   }
 
   reset(){
@@ -66,8 +61,8 @@ export class CharacterAnimator {
 
   update(input:CharacterInput,dt:number){
     const step=Math.max(0,Math.min(.1,dt)),active=input.enabled,speed=active ? input.speed : 0;
-    const ease=1-Math.exp(-step*12),travel=clamp(speed/25),run=clamp((speed-60)/30);
-    const previousMoving=this.moving,previousRunning=this.running,previousAir=this.airborne;
+    const ease=1-Math.exp(-step*12),travel=input.swimming ? clamp(speed/25) : Number(speed>.01),run=gaitRun(speed);
+    const previousRunning=this.running,previousAir=this.airborne;
     this.moving=mix(this.moving,travel,ease);this.running=mix(this.running,run,ease);
     this.water=mix(this.water,Number(input.swimming),active ? 1-Math.exp(-step*9) : 1);
     this.airborne=mix(this.airborne,Number(!input.grounded && !input.swimming),ease);
@@ -75,22 +70,29 @@ export class CharacterAnimator {
     this.wasGrounded=input.grounded;this.previousVertical=input.verticalSpeed;
     this.landing*=Math.exp(-step*15);
     if(active){
-      this.phase=(this.phase+step*mix(1.65,2.45,(previousRunning+this.running)/2)*clamp(speed/55,.25,1.25)*(previousMoving+this.moving)/2*(1-(previousAir+this.airborne)/2))%1;
+      this.phase=(this.phase+step*speed/(this.group.scale.x*this.unit*gaitStride((previousRunning+this.running)/2))*(1-(previousAir+this.airborne)/2))%1;
       this.swimPhase=(this.swimPhase+step*mix(.55,1.05,clamp(speed/48)))%1;
     }else this.moving=this.running=this.airborne=this.landing=0;
     const moving=this.moving,running=this.running,phase=this.phase,unit=this.unit;
     const land=emptyPose(),swim=emptyPose();
-    const bob=mix(.8*(1-Math.cos(phase*tau*2)),2.5*Math.max(0,Math.cos((phase-.45)*tau*2)),running);
-    let rootY=this.bones.root.y+unit*(moving*(-1.7+bob)-this.landing);
-    land.root=[0,Math.sin(phase*tau)*.055*moving,0];
+    const bob=mix(.8,1.2,running)*(1-Math.cos(phase*tau*2));
+    let rootY=this.bones.root.y+unit*(moving*(-mix(1.7,5.5,running)+bob)-this.landing);
+    land.root=[0,0,0];
+    const feet=([['left',0],['right',.5]] as const).map(([side,offset],i)=>{
+      const foot=strideFoot(phase+offset,running),toe=foot.toe*moving;
+      const hip=this.bones[`${side}_hip`],upper=-this.bones[`${side}_knee`].y,lower=-this.bones[`${side}_ankle`].y;
+      const ankleY=this.bones.root.y+hip.y-upper-lower;
+      const x=foot.x*unit*moving,y=ankleY+unit*foot.y*moving+Math.max(0,soleSupport(this.soles[i]!,toe)-ankleY);
+      // Lower the pelvis before IK; clamping an unreachable ankle makes the foot skate.
+      if(moving>.001)rootY=Math.min(rootY,y+Math.sqrt(Math.max(0,(upper+lower-.001)**2-x*x))-hip.y);
+      return {x,y,toe};
+    });
     land.spine=[0,-Math.sin(phase*tau)*.10*moving,-mix(.035,.19,running)*moving];
-    for(const [side,offset,sign] of [['left',0,1],['right',.5,-1]] as const){
+    for(const [side,offset,sign,index] of [['left',0,1,0],['right',.5,-1,1]] as const){
       const hip=`${side}_hip` as const,knee=`${side}_knee` as const,ankle=`${side}_ankle` as const;
       const shoulder=`${side}_shoulder` as const,elbow=`${side}_elbow` as const;
-      const foot=strideFoot(phase+offset,running),toe=foot.toe*moving;
-      const soleLift=Math.max(0,-toe*6.8,toe*2.2);
-      const ankleY=this.bones.root.y+this.bones[hip].y+this.bones[knee].y+this.bones[ankle].y;
-      const leg=solveLeg(foot.x*unit*moving,(ankleY+unit*(foot.y*moving+soleLift))-rootY-this.bones[hip].y,-this.bones[knee].y,-this.bones[ankle].y);
+      const foot=feet[index]!,toe=foot.toe;
+      const leg=solveLeg(foot.x,foot.y-rootY-this.bones[hip].y,-this.bones[knee].y,-this.bones[ankle].y);
       land[hip][2]=mix(leg.hip,.35+sign*.12,this.airborne);
       land[knee][2]=mix(leg.knee,-.8-clamp(input.verticalSpeed/140,-.3,.3),this.airborne);
       land[ankle][2]=-land[hip][2]-land[knee][2]+toe;

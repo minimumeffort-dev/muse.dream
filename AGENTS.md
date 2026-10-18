@@ -200,7 +200,7 @@ objects plus the player vehicle may use the remaining 23.
 
 Humanoid animation uses explicit `joint.bone` bindings, not labels or height guesses.
 Keep the complete 12-bone hierarchy, unrotated +X-forward rest frames, rigid segment
-lengths and existing live assembly budget. Cache bone references outside frame loops.
+lengths and existing live assembly budget. Cache bone references outside frame loops. Land stride phase must account for world distance and resolved rig scale. Keep stance soles flat, shoe support cached from authored ankle parts, and both ankle targets reachable before solving rigid legs; pelvis sway must not rotate planted feet. Apply matching reach/support rules to instanced color and shadow poses without changing saved crowd or match cycles.
 Walk/run, jump/landing, crawl/tread and sports limb poses stay renderer-owned;
 water-relative speed determines stroke effort, not current drift. Preserve reduced
 motion, pause, standing ride resets and seated ownership. See

@@ -2,6 +2,17 @@
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
+## Distance-driven walking
+
+The current character close-up adds an instanced walker alongside the CPU walker,
+runner and swimmer, moving over a fixed ground grid. Character, locomotion,
+pedestrians, swimming, football and basketball GIF/HD video pairs and their matching stills
+are refreshed together at 30 rendered frames per simulation second. Static model
+and city images retain their exact source geometry. Older activity recordings
+retain their recorded mechanics; they do not demonstrate the corrected cadence.
+The [stride review](../evidence/walking-strides/verification.md) records the
+release snapshot, native controls, stance checks and remaining terrain limits.
+
 ## Pedestrian query cost
 
 The movement optimization changes no asset, motion result, camera or HUD. Existing pedestrian GIF, HD video and still remain accurate together. The [replay and pavement checks](../evidence/pedestrian-cost/verification.md) retain exact saved-state and geometry comparisons.

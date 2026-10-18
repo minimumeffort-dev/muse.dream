@@ -9,6 +9,7 @@ import {assemblyBounds,assemblyHorizontalRadius} from '../scene/measure';
 import {walkingHeight} from '../scene/interiors';
 import {buildObject} from './world3d';
 import {ambientMaterial} from './shaders';
+import {gaitStride,humanoidSoles} from './humanoid-gait';
 import {finishBuild} from './batching';
 
 /** Bone-local vertices retain rigid parts and filtered material coordinates; no mesh or joint per member. */
@@ -46,12 +47,12 @@ export class AmbientPopulation {
   const groups=new Map<string,number[]>();for(const [i,o] of this.objects.entries()){const key=JSON.stringify([o.spec,o.ambient!.joints]);const list=groups.get(key)??[];list.push(i);groups.set(key,list);}
   for(const indices of groups.values()){
    yield;
-   const o=this.objects[indices[0]!]!,spec=o.spec as ObjectDslV2,prototype=ambientPrototype(o),bounds=assemblyBounds(spec),radius=bounds.getSize(new THREE.Vector3()).length()*Math.max(...indices.map(i=>this.objects[i]!.scale))+8,meshes:THREE.InstancedMesh[]=[];
+   const o=this.objects[indices[0]!]!,spec=o.spec as ObjectDslV2,prototype=ambientPrototype(o),bounds=assemblyBounds(spec),radius=bounds.getSize(new THREE.Vector3()).length()*Math.max(...indices.map(i=>this.objects[i]!.scale))+8,meshes:THREE.InstancedMesh[]=[],soles=humanoidSoles(spec,o.ambient!.joints);
    for(const child of prototype.children){const source=child as THREE.Mesh,geometry=source.geometry as THREE.BufferGeometry;geometry.setAttribute('popCycle',new THREE.InstancedBufferAttribute(new Float32Array(indices.length*3),3).setUsage(THREE.DynamicDrawUsage));
-    const mesh=new THREE.InstancedMesh(geometry,ambientMaterial(source.material as THREE.Material,o.ambient!.joints),indices.length);mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-    mesh.castShadow=true;mesh.receiveShadow=true;mesh.frustumCulled=false;mesh.customDepthMaterial=ambientMaterial(new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking}),o.ambient!.joints,true);this.group.add(mesh);meshes.push(mesh);
+    const mesh=new THREE.InstancedMesh(geometry,ambientMaterial(source.material as THREE.Material,o.ambient!.joints,false,false,soles),indices.length);mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    mesh.castShadow=true;mesh.receiveShadow=true;mesh.frustumCulled=false;mesh.customDepthMaterial=ambientMaterial(new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking}),o.ambient!.joints,true,false,soles);this.group.add(mesh);meshes.push(mesh);
    }
-   this.batches.push({indices,meshes,radius,meters:spec.measure?.meters??1,stride:13.6*(o.ambient!.joints.find(j=>j.bone==='root')?.position[1]??25)/25/.62});
+   this.batches.push({indices,meshes,radius,meters:spec.measure?.meters??1,stride:gaitStride(0)*(o.ambient!.joints.find(j=>j.bone==='root')?.position[1]??25)/25});
   }
  }
  update(state:CarState,camera:THREE.Camera,light:THREE.DirectionalLight,dt:number,reduced=false){
