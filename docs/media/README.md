@@ -2,6 +2,13 @@
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
+The r65 roof recheck adds four unmodified native gallery PNGs and a city view under
+[`evidence/roof-surfaces/current-review`](../evidence/roof-surfaces/verification.md#current-world-recheck).
+The construction guide uses their front view, also saved as `roof-surfaces.png`.
+These verify the existing roof
+correction in the current world; the geometry, motion exports and matching
+stills remain unchanged.
+
 ## Motion you can actually follow
 
 Driving, vehicle switching, jumping, swimming and destruction are exported at **30 frames per simulation second**. Every frame is rendered; there is no frame interpolation. Most GIFs are 960 × 540 with a palette computed across the clip and Gifsicle compression. The market/conversation clips use 1280 × 720, 256 colors to keep UI text readable. The seating GIF uses Gifsicle loss level 20; other clips retain their existing compression settings. The matching 1600 × 900 H.264 videos keep more color and detail at a smaller download size.

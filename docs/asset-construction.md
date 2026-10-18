@@ -35,7 +35,7 @@ The examples compile to the exact live assemblies. The rest of the family is in 
 
 ## Continuous roofs
 
-![Closed gable and flat hip-roof surfaces in the voxel renderer](media/roof-surfaces.jpg)
+![Current gable and hip roofs with continuous surfaces](media/roof-surfaces.png)
 
 Thin gable shells used to disappear between voxel sample rays, exposing the attic in stripes. Hip roofs also picked up false contour bands from the sampled surface normals. Undeformed prisms and pyramids now keep their exact planar boundaries inside the bounded stamp grid. There are no extra per-cell meshes, thicker roof caps or changed building contacts. [Before/after checks and four-angle review](evidence/roof-surfaces/verification.md).
 

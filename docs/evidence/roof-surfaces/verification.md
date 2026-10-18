@@ -1,5 +1,37 @@
 # Continuous roofs
 
+## Current-world recheck
+
+Rechecked the released r65 world at `377b3cd`. The correction below is already
+present in this version; this recheck changes documentation evidence only.
+The new native gallery captures show the live Brick terrace and Ochre terrace
+from the [front](current-review/front.png), [right](current-review/right.png),
+[back](current-review/back.png) and [left](current-review/left.png). The gable
+panels remain closed, and the hip slopes have no artificial contour stripes.
+The [running city view](current-review/city.png) was captured after ordinary W
+driving and E camera rotation in a save-isolated suburban review.
+
+All 12 published application files match the local production build byte for
+byte, including the renderer and world worker: 2,291,444 bytes in total.
+The [file hashes](current-review/published-app.json) pin the checked release.
+This verifies that the existing correction is deployed, rather than assuming
+that a source edit reached the browser. An already-open browser tab can retain
+its loaded renderer until it reloads; no old tab was inspected in this check.
+
+Reviewed the README, construction, rendering and voxel guides. The construction
+guide now uses the current native capture. Existing motion exports and their
+matching stills remain accurate because neither geometry nor simulation changed
+in this recheck. No new performance claim or Dream vocabulary is introduced.
+
+Checks for this recheck: all 1,286 tests in 94 files pass (236.93 seconds),
+including the ten-template roof scan and hollow-underside/cache tests.
+Production build and TypeScript pass; the existing bundle-size advisory remains.
+The docs build produces 41 pages, the terraced-house example passes `dream check`,
+both project skills validate, and `git diff --check` is clean. This is a
+self-review, with no new low-powered-laptop performance measurement.
+
+## Original correction
+
 The roof stripes were holes. Centre-ray voxel sampling missed thin gable panels,
 leaving the attic visible between isolated roof strips. Binary surface-net normals
 also broke flat hip slopes into contour bands.
