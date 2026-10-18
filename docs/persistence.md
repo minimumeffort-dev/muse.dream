@@ -52,7 +52,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-Format 13 retains the exact source hash and the compatibility fingerprint, with simulation version 20. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+Format 14 retains the exact source hash and the compatibility fingerprint, with simulation version 21. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -317,3 +317,19 @@ school path footprint back into its prior declaration. Every old state field and
 both clocks remain exact; original format-12 slots remain. Older migrations
 still validate their registered worlds first. Unrelated world changes cannot use
 this upgrade to reset progress. See [staff shifts](dream/shifts.md).
+
+### Shared social time (r64)
+
+Format 14 / simulation 21 records one optional player-hosted meal: plan, partner,
+both seat refs, reserved portions, captured home, path, pose, distance, retry and
+eating timers. Sparse per-partner history records only completed meals and their
+last completion time. Restore checks capability, unique claims, original home,
+paths, timers, refund space and conserved material, including both portions.
+Immediate F/R exits refund on a copy before a save can observe invalid ownership.
+
+The registered r63 projection removes only new social plans/account capability,
+guarded dialogue/states and the school bench. The previous accepted fingerprint
+must match before decoding; existing state remains exact, with no invented
+history, population rebasing, changed clocks, resources or first meetings. Keep
+the format-13 slot and every earlier migration. Unknown future worlds cannot use
+this upgrade to rewind progress. [Gameplay and bounds](dream/social.md).

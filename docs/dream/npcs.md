@@ -220,3 +220,6 @@ Programmed person NPCs can take [meal trips](commerce.md#customers-with-somewher
 through `account.meal`. Their program clocks pause while walking, eating and
 returning, then resume at the same routine position. They use the existing
 pedestrian planner and finite player transactions, with no extra NPC/rig slots.
+
+
+[Shared meals](social.md) add per-person activity history. Optional `on.shared_meals` gates interact-only dialogue on completed player meals with this particular social NPC; unknown accounts, non-interact guards and programs used by people without the capability fail acceptance. Their original program pauses until they return home.

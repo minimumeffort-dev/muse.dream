@@ -1,6 +1,6 @@
 # Rendering the whole world
 
-The mock world has 1,699 placed objects across a 14000 × 11000 landscape. Static render geometry now loads around the player and leaves memory behind them. The accepted Dream world and its simulation stay complete.
+The mock world has 1,700 placed objects across a 14000 × 11000 landscape. Static render geometry now loads around the player and leaves memory behind them. The accepted Dream world and its simulation stay complete.
 
 ## Usable parked vehicles
 

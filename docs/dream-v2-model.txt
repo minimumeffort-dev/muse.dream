@@ -416,6 +416,7 @@ on event=after requires only seconds (.1..300); near_player/far_player requires 
 (10..240 units), using 3D distance <= / >=. Use separated near/far radii for hysteresis.
 For player conversations use on talk(event=interact,to=reply,radius=55). interact requires
 radius, 10..80 units; optional requires uses a personal economy milestone (request commerce context).
+Optional interact-only shared_meals checks completed meals with this social NPC; request commerce context for its capability, consent, bounds and ownership.
 Use requires only at the task receiving market actor: work/repair.market or delivery.to.
 It checks the player account, never another NPC or the shared total. One grounded on-foot talk press selects one nearest eligible
 NPC by 3D distance, with stable ID ties. Optional familiar=false matches a first meeting;
@@ -565,6 +566,28 @@ SPORTS PRACTICE
 sport id(kind=football|basketball,surface=surface_id,ball=placement_id,targets=[first,second],target_at=[x,y,z],target_size=[width,height]); connects existing world data after linking. At most 8 grounds, each with its own non-overlapping dry surface and distinct bounce ball. Ball is a static prop with a round knockable body: world radius .5..3, height twice radius. Use measure(kind=custom,axis=x,meters=.22/.24) to resolve real ball size from a local body(radius=4,height=8); do not lower legacy body bounds. Targets are two static upright assemblies at least 64 units apart; target_at and target_size use their local units and follow placement heading/scale. Football target is a grounded opening 6..120 wide and 4..50 high, local +Z points out of the field, opposing target normals. Basketball target is a clear X/Z ring diameter 2.5..12, fitting the ball, at height 16..50; local +Z points into the court. Target anchor must lie in the actual assembly bounds and within 32 of the surface. Surface sampled height variation <=3, no water. Existing object/reactive budgets still apply. Engine owns walk-up dribbling, charged shots, scoring, recovery and camera; no generated controller code, team AI, fouls or bank-shot backboard physics. Complete source: examples/sports-practice.dream.
 
 ## commerce
+
+Shared social meals: social id(good=food,seats=[bench],on=ground,grounds=[extra],eat_s=8,cooldown_s=600,max_fullness=80);
+account(...,social=id). At most 8 plans; 1..4 unique furniture placement IDs,
+each with >=2 slots. Positive food, eat_s 1..12, cooldown_s 30..86400 (default 600),
+max_fullness 0..100 (default 80). Only stationary complete humanoid decor NPC
+programs with world body radius <=8 and height <=32; actual body-sized paths
+reuse accepted pavement and bounded convex grounds (4096 local samples,
+8192 nodes, 32768 links, 128 waypoints). No new NPC, body or rig slots.
+The seated player presses Y, after meeting the person with T, within 80 units
+and clear sight. Busy, too-full, unknown, cooling-down or soon-due staff decline.
+Reserve two owned food units, their refund capacity and an adjacent slot.
+The person walks over. Consume once after both spend eat_s together; update both
+fullness values and this NPC's completed-meal history. Leaving, F, R, end meal,
+broken furniture or a due shift refunds both portions once and returns the person
+home before their routine resumes. No completion credit for an interrupted meal.
+Pause, streaming and saves retain the activity and history; Start over resets.
+Optional on.shared_meals is an integer 1..1000000000 on event=interact only;
+it gates dialogue on completed player meals with that particular social NPC.
+No authored affection counters, dating, generated callbacks, free food or offline
+progression. Format 14 / simulation 21 keeps registered r63 saves exactly.
+Complete example: examples/shared-meal.dream. Guide: dream/social.md.
+
 Optional market hours=[6,22] means daily [open,close); hours=[22,6] spans midnight.
 Use two finite different endpoints: 0 <= open < 24, 0 <= close <= 24. Omit hours
 for all-day service. Requires world daylight(cycle_s,start_hour). Economic service

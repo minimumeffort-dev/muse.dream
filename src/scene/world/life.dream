@@ -83,12 +83,20 @@ behavior market_chat(start=busy){
   on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
  state returning(action=idle,face=player,say="Good to see you again. Welcome back."){
+  on meal_memory(event=interact,to=shared_lunch,radius=55,shared_meals=1);
   on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
  state about(action=idle,face=player,say="You can bake bread, pack lunches, assemble repair kits, deliver to the school or help repair the neighborhood."){
   on again(event=interact,to=hello,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
  state recognized(action=idle,face=player,say="You have baked three batches here. You can take the larger batch now, with more bread and better pay."){
+  on meal_memory(event=interact,to=shared_lunch,radius=55,shared_meals=1);
+  on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
+ }
+ state shared_lunch(action=idle,face=player,say="I enjoyed sharing that meal with you. It is good to have company during a break."){
+  on friends(event=interact,to=friend,radius=55,shared_meals=3);on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
+ }
+ state friend(action=idle,face=player,say="We have shared a few meals now. I look forward to these breaks with you."){
   on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
 }
@@ -114,12 +122,20 @@ behavior school_chat(start=busy){
   on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
  state returning(action=idle,face=player,say="Good to see you again. Welcome back."){
+  on meal_memory(event=interact,to=shared_lunch,radius=55,shared_meals=1);
   on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
  state about(action=idle,face=player,say="Our canteen takes bread deliveries from the market. The food goes into real stock here."){
   on again(event=interact,to=hello,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
  state helped(action=idle,face=player,say="Thank you for bringing bread to the school. It is on the canteen shelf, ready for people to buy."){
+  on meal_memory(event=interact,to=shared_lunch,radius=55,shared_meals=1);
+  on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
+ }
+ state shared_lunch(action=idle,face=player,say="I enjoyed sharing that meal with you. It is good to have company during a break."){
+  on friends(event=interact,to=friend,radius=55,shared_meals=3);on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
+ }
+ state friend(action=idle,face=player,say="We have shared a few meals now. I look forward to these breaks with you."){
   on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
 }
@@ -134,12 +150,14 @@ economy(){
  good boards(label="Timber boards");
  good fasteners(label="Fasteners");
  account pocket(actor=player,credits=20,capacity=8,satiety=48,drain_s=.05);
- account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,shift=bakery_day,works=[pack_lunch,large_bake,bake]);
+ account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,social=hall_break,shift=bakery_day,works=[pack_lunch,large_bake,bake]);
+ social hall_break(good=bread,seats=[hall_bench],on=market_square,grounds=[market_hall],eat_s=8,cooldown_s=600);
+ social school_break(good=bread,seats=[school_bench],on=school_yard,eat_s=8,cooldown_s=600);
  shift bakery_day(market=market_stall,rest=[6360,4490],on=market_square,grounds=[market_hall],lead_s=15);
  shift school_day(market=school_canteen,rest=[4320,3860],on=school_yard,grounds=[school_yard_access,school_yard_return],lead_s=50);
  meal market_break(good=lunch,markets=[market_stall],on=market_square,grounds=[market_hall],eat_s=4,seats=[hall_bench]);
  account regular(actor=market_commuter,credits=30,capacity=4,satiety=25,drain_s=.05,meal=market_break);
- account school_staff(actor=teacher,credits=30,capacity=4,satiety=28,drain_s=.05,shop=true,shift=school_day);
+ account school_staff(actor=teacher,credits=30,capacity=4,satiety=28,drain_s=.05,shop=true,social=school_break,shift=school_day);
  account caretaker(actor=market_neighbor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,repairs=[market_tables,orchard_trees],deliveries=[kits_run,saplings_run,flour_run]);
  market station_supplies(label="Station supplies",actor=station_resident,credits=0,radius=70,hours=[6,22]){
   lot flour_store(good=flour,quantity=80,limit=80);

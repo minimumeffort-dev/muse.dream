@@ -6,6 +6,10 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights social plans and meal-history guards at exact boundaries with HTML escaping',()=>{
+    const html=highlight('social break_time(good=bread,seats=[bench],on=plaza,eat_s=8,cooldown_s=600,max_fullness=80);on memory(event=interact,to=hello,radius=55,shared_meals=1); // <Meal>&');
+    expect(html).toContain('class="dream-keyword">social</span>');for(const word of ['cooldown_s','max_fullness','shared_meals'])expect(html).toContain(`class="dream-field">${word}</span>`);expect(html).toContain('&lt;Meal&gt;&amp;');expect(highlight('socials social_extra shared_meals_extra cooldown_s_extra')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('highlights shift declarations and fields at full boundaries and escapes text',()=>{
     const html=highlight('shift morning(market=bakery,rest=[20,30],on=plaza,lead_s=15);account vendor(shift=morning); // <Staff>&');
     expect(html).toContain('class="dream-keyword">shift</span>');for(const word of ['rest','lead_s'])expect(html).toContain(`class="dream-field">${word}</span>`);expect(html).toContain('&lt;Staff&gt;&amp;');expect(highlight('shifts rest_extra lead_s_extra')).not.toMatch(/dream-(?:keyword|field)/);

@@ -57,12 +57,13 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | --- | --- | --- | --- |
 | `economy` | top | No ID / economy | None |
 | `good` | economy | ID / no block | `label: text`, `food?: n` |
-| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `shop?: bool`, `shift?: ref`, `meal?: ref`, `work?: ref`, `works?: symbols`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
+| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `shop?: bool`, `social?: ref`, `shift?: ref`, `meal?: ref`, `work?: ref`, `works?: symbols`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
 | `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n`, `hours?: v2` |
 | `lot` | market | ID / no block | `good: ref`, `quantity: n`, `limit: n`, `price?: n` |
 | `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `price: n?`, `capacity: n`, `on: ref?`, `grounds: symbols?` |
 | `work` | economy | ID / optional recipe block | `label: text`, `market: ref`, `input?: ref`, `take?: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `requires?: ref` |
 
+| `social` | economy | ID / no block | `good: ref`, `seats: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `cooldown_s?: n`, `max_fullness?: n` |
 | `shift` | economy | ID / no block | `market: ref`, `rest: v2`, `on: ref`, `grounds?: symbols`, `lead_s?: n` |
 | `meal` | economy | ID / no block | `good: ref`, `markets: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `seats?: symbols` |
 | `milestone` | economy | ID / no block | `label: text`, `kind: work / delivery / repair`, `task: ref`, `count: n` |
@@ -128,7 +129,7 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 | `point` | path / route_path | No ID / no block | `at: point` |
 | `behavior` | top | ID / behavior | `start: ref` |
 | `state` | behavior | ID / npc_state | `action: idle / patrol / perform`, `face?: none / player`, `say?: text` |
-| `on` | npc_state | ID / no block | `event: after / near_player / far_player / interact`, `to: ref`, `seconds?: n`, `radius?: n`, `familiar?: bool`, `requires?: ref` |
+| `on` | npc_state | ID / no block | `event: after / near_player / far_player / interact`, `to: ref`, `seconds?: n`, `radius?: n`, `familiar?: bool`, `requires?: ref`, `shared_meals?: n` |
 | `furnish` | top | ID / no block | `objects: symbols`, `streets?: symbols`, `sites?: symbols`, `grounds?: symbols`, `paving?: color`, `spacing: n`, `setback: n`, `seed: n`, `side?: left / right / both`, `facing?: along / street / varied`, `jitter?: n`, `count?: n`, `pose?: rest`, `on?: verge / sidewalk`, `motion?: ambient_motion`, `role?: prop / controllable` |
 | `flock` | top | ID / no block | `object: ref`, `at: v2`, `radius: v2`, `count: n`, `altitude: n`, `speed: n`, `seed: n`, `flap_hz?: n`, `flap_deg?: n` |
 | `place` | top | ID / no block | `object: ref`, `at?: v2`, `route?: ref`, `offset?: n`, `phase_s?: n`, `scale?: n`, `heading_deg?: n`, `role?: prop / npc / controllable / ambient`, `behavior?: ref`, `pose?: rest`, `motion?: ambient_motion`, `parked?: bool` |
@@ -623,3 +624,18 @@ references 1–4 unique furniture placements, with complete humanoids, connected
 approaches and shared player/NPC claims. [Author shared seating](seating.md).
 
 Daily [staff shifts](shifts.md) reuse explicit market hours, body-sized connected paths and existing NPC programs. The [complete example](../examples/staff-shifts.dream) includes a daytime bakery and overnight depot. Counter service waits for physical attendance.
+
+### Shared seated meals
+
+`social` plus `account.social` connects two carried food portions, paired seating,
+body-sized walking and per-person shared history. `on.shared_meals` gates interact
+dialogue on actual completed meals with this NPC. Eight plans, four furniture
+placements per plan, eat_s 1..12, cooldown_s 30..86400 (default 600), max_fullness
+0..100 (default 80). Stationary complete humanoid decor NPCs, radius <=8 and
+height <=32, use the existing ground/navigation/actor budgets. The player must
+be seated, grounded, dry, previously acquainted and within 80 units and clear
+sight. Busy/full/cooling-down or soon-due staff decline. One active invitation;
+consume two reserved portions once only after both finish eating. Interruptions
+refund both once and return the person home. Shared history, paths and ownership
+persist. [Full consent, ownership and save contract](social.md) ·
+[Complete checked example](../examples/shared-meal.dream).

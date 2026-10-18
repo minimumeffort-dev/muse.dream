@@ -259,3 +259,6 @@ with a breakable two-seat bench, a humanoid customer and finite bread purchases.
 The [seating guide](seating.md) explains approaches, claims and saved meals.
 
 [Staff shifts](shifts.md) · [Complete daytime bakery and overnight depot](../examples/staff-shifts.dream): physical rest/return, attendance checks and saved journeys.
+
+
+[Shared meals](social.md) · [Complete executable source](../examples/shared-meal.dream): two paid portions, a consenting companion, saved seat claims and dialogue that remembers completed time together.

@@ -360,7 +360,7 @@ Agents can ask for just the language they need: `node scripts/dream.mjs context 
 
 The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation uses Minimum Effort's Manrope and Archivo fonts, warm white, charcoal and yellow, with the same page gutters and spacing. Dream commands, fields, references, colors and expressions are highlighted, with copy buttons for complete examples.
 
-[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 103 assemblies and 1,699 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
+[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 103 assemblies and 1,700 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
 
 Streetlights now follow streets, bicycle and scooter parking sits beside destinations, and birds fly across sixteen habitats. Dream’s `furnish` and `flock` commands describe those populations with bounded rules.
 
@@ -442,3 +442,19 @@ npm run build  # TypeScript + production build
 The engine is split between [`src/scene`](src/scene), [`src/sim`](src/sim) and [`src/game`](src/game). [Current limits](docs/dream/reference.md#runtime-boundaries) include one driving height per XY, cylinder-based contacts and cosmetic debris. Water has surface waves and currents, rather than a volumetric fluid solver.
 
 This is a pre-hackathon prototype. Pre-start code eligibility still needs checking against the official rules before a submission. [Provenance and verification notes](docs/agent-workflow.md) stay with the project.
+
+## Stay for a meal
+
+Buy two portions, meet someone and take a seat. Y invites them over. They can
+say no when busy or full, or when their shift is about to start. Stay through
+the meal and they remember spending that time with you. Leave early and the
+food comes back to your bag while they walk home.
+
+![Sharing bread after the bakery closes](docs/media/shared.gif)
+
+[Watch in HD](docs/media/shared.mp4) · [Shared meals in Dream](docs/dream/social.md) · [Build the example](docs/examples/shared-meal.dream)
+
+The baker and school staff use the same capability on their own grounds and
+schedules. Their history survives travel, streaming and saves. This is a first
+shared social activity; NPC invitations, dating and a general relationship
+system remain to be built.

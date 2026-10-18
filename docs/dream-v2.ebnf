@@ -154,3 +154,10 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    body-sized connected pavement and bounded convex grounds. Finish committed
    work, walk out, rest, return early; service waits for actual counter arrival.
    See dream/shifts.md and examples/staff-shifts.dream. *)
+
+(* social(good,seats,on,grounds?,eat_s,cooldown_s?,max_fullness?) and account.social
+   connect a stationary complete person NPC to a shared seated meal. Two owned
+   portions and an adjacent slot are reserved, then consumed once on completion.
+   Interrupted meals refund once; the NPC walks home. Interact-only shared_meals
+   gates dialogue using this person's actual completed meal history. Bounds and
+   consent rules live in the command contract; no scripts or arbitrary rewards. *)

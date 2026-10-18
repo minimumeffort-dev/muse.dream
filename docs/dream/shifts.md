@@ -80,3 +80,5 @@ every saved field and both clocks. The original slot remains. The school path's
 two sections retain its old paved footprint, and the teacher's work anchor is
 centered on the existing entrance. [Persistence](../persistence.md) ·
 [Verification and limits](../evidence/staff-shifts/verification.md).
+
+Off-duty staff can now join [shared meals](social.md) at their break destinations. Current saves use format 14 / simulation 21; the shift upgrade above remains in the preserved migration chain.

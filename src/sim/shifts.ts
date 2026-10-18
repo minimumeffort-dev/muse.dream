@@ -29,7 +29,7 @@ export function shiftAccessProblems(scene:Scene):string[]{
 export function stepStaffShifts(state:CarState,dt:number,scene:Scene):CarState{
  const e=state.economy!,definition=scene.economy!;let next=state;
  for(const a of e.accounts){
-  const spec=definition.accounts.find(s=>s.id===a.id)!;if(!spec.shift)continue;
+  const spec=definition.accounts.find(s=>s.id===a.id)!;if(!spec.shift || e.shared?.partner===a.id)continue;
   const plan=definition.shifts.find(s=>s.id===spec.shift)!,market=definition.markets.find(m=>m.id===plan.market)!,work=scene.objects.find(o=>o.id===spec.actor)!,area=shiftArea(scene,plan);
   const opening=marketOpening(scene,market,state.timeS),returning=marketIsOpen(scene,market,state.timeS) || !!opening && opening.seconds<=plan.lead_s;
   if(!a.shift){

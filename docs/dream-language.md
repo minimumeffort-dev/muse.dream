@@ -99,3 +99,6 @@ for committed cargo. [Hours and the complete example](dream/hours.md).
 `shift` plus `account.shift` connects daily counter hours to physical staff travel,
 a rest destination and an early return. Service waits for actual arrival; NPC
 programs and remembered meetings continue at rest. [Guide and executable example](dream/shifts.md).
+
+
+`social` and `account.social` connect carried food, paired seating, consent and persistent shared meals. Interact-only `shared_meals` branches on actual time spent together. [Guide and complete example](dream/social.md).

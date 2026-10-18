@@ -809,3 +809,23 @@ lighting and interior captures retain their represented geometry and mechanics.
 Earlier evidence remains pinned to its own source. The tiny school work-anchor
 correction is outside those focused views. These offline exports do not measure
 live FPS or low-powered-laptop performance. See [verification](../evidence/staff-shifts/verification.md).
+
+## Shared meals (r64)
+
+`shared.gif`, `shared.mp4` and `shared.jpg` come from `?capture`'s `shared`
+sequence: 720 actual rendered PNG frames at 2400 × 1350 and 30 frames per
+simulation second. Setup buys two portions, meets the baker, advances the full
+simulation through closing and walks through the hall doorway to the bench.
+Y invites; the companion walks over, both eat, and later dialogue remembers the
+completed meal. Frame 180 supplies the still, encoded at JPEG q2 with 4:4:4
+chroma. The repository encoder makes the matching 1600 × 900 HD video and
+1280 × 720 GIF; it does not interpolate missing frames. These are offline
+captures, not live frame-rate measurements.
+
+The [verification record](../evidence/shared-meals/verification.md) includes native
+ordinary-input screenshots and a whole-state replay across an actual saved meal.
+The school bench reuses the unchanged slatted-bench template; the asset sheets,
+roof views and earlier scenario recordings retain their represented geometry.
+The source-generated map's roads, access paths and destination positions are
+unchanged. Earlier captures remain pinned to the experience they demonstrate;
+the shared sequence is the current social activity reference.

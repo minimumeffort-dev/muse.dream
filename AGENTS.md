@@ -283,8 +283,8 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 
 ## Saved simulation state
 
-Current save format 13 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 20. Historical formats retain their registered projections.
+Current save format 14 pins exact source plus a host-computed accepted-world fingerprint
+at simulation version 21. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -614,3 +614,22 @@ retains every saved field/clock, old slots and the full chain. The school path i
 split without changing its paved union; only the teacher work anchor moves six
 units onto existing entrance paving. No idle wages, weekly calendars or offline
 travel. See `docs/dream/shifts.md` and its runnable example.
+
+
+Shared social meals use economy `social(good,seats,on,grounds?,eat_s,cooldown_s?,max_fullness?)`
+and NPC `account.social`. Keep 8 plans, 1..4 paired furniture IDs, positive food,
+eat_s 1..12, cooldown 30..86400 default 600 and max_fullness 0..100 default 80.
+Only stationary complete humanoid decor NPCs, actual radius <=8 / height <=32.
+Player Y invitations require a seated, dry, grounded first acquaintance within
+80 and sight, two owned portions, a free adjacent slot and both paths. Busy,
+full, cooling-down and soon-due staff decline. Reserve food/refund capacity and
+consumption-counter room; consume once after the full shared duration. End/F/R,
+movement, jumping, shift return or bench destruction refunds once and returns
+the person physically before their program/shift resumes. One journey owner;
+reuse identical prepared staff paths and existing actor/rig/navigation budgets.
+Interact-only `shared_meals` checks this particular social NPC's completed player
+meals, never talk counts or authored rewards. Persist paths, clocks, claims and
+sparse history through pause/streaming/saves; Start over resets. Format 14 /
+simulation 21 registers exact r63 projection and retains every old saved field
+and original slot. No NPC-hosted invitations, dating, general affection score,
+physical food items, offline progression or provider calls. See docs/dream/social.md.

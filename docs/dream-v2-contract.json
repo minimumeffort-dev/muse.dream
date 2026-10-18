@@ -588,7 +588,8 @@
         "seconds": "n?",
         "radius": "n?",
         "familiar": "bool?",
-        "requires": "ref?"
+        "requires": "ref?",
+        "shared_meals": "n?"
       }
     },
     "economy": {
@@ -621,6 +622,7 @@
         "satiety": "n",
         "drain_s": "n",
         "shop": "bool?",
+        "social": "ref?",
         "shift": "ref?",
         "meal": "ref?",
         "work": "ref?",
@@ -689,6 +691,21 @@
         "grounds": "symbols?",
         "eat_s": "n",
         "seats": "symbols?"
+      }
+    },
+    "social": {
+      "contexts": [
+        "economy"
+      ],
+      "id": true,
+      "fields": {
+        "good": "ref",
+        "seats": "symbols",
+        "on": "ref",
+        "grounds": "symbols?",
+        "eat_s": "n",
+        "cooldown_s": "n?",
+        "max_fullness": "n?"
       }
     },
     "shift": {
@@ -1326,7 +1343,7 @@
       "after": "only seconds, since state entry",
       "near_player": "only radius; 3D distance <= radius",
       "far_player": "only radius; 3D distance >= radius",
-      "interact": "only radius, 10..80; one player talk press, nearest eligible NPC within 3D range; on foot and grounded only; optional familiar matches whether this NPC has already interacted with the player; optional requires checks a personal economy milestone, restricted to the task receiving market actor after linking (use the commerce feature packet)"
+      "interact": "only radius, 10..80; one player talk press, nearest eligible NPC within 3D range; on foot and grounded only; optional familiar matches whether this NPC has already interacted with the player; optional requires checks a personal economy milestone, restricted to the task receiving market actor after linking; optional shared_meals checks completed meals with this particular social NPC (use the commerce feature packet)"
     },
     "execution": "one transition per fixed tick, first matching declaration wins; elapsed resets on transition; per-instance clocks live outside Scene; patrol resumes without teleport; face=player turns stationary actors at 2.5 rad/s",
     "boundary": "data-only bounded state machines; no scripts, pathfinding, generated input profiles or model calls; root world.player remains the original car"
@@ -1580,6 +1597,11 @@
     "phase": "place.phase_s 0..3600 only with route; shifts the entire route clock including stops. offset remains a carriage distance."
   },
   "commerce": {
+    "social": {
+      "source": "social id(good=food,seats=[bench],on=ground,grounds=[extra],eat_s=8,cooldown_s=600,max_fullness=80); account(...,social=id);",
+      "bounds": "8 plans; 1..4 unique furniture IDs with at least 2 slots each; positive food; eat_s 1..12, cooldown_s 30..86400 default 600, max_fullness 0..100 default 80; stationary complete humanoid decor NPC program, body radius <=8 and height <=32; existing convex grounds and walking limits",
+      "semantics": "Y invites while seated; T must have established a first meeting. One player-hosted meal at a time. A nearby person within 80 units and sight accepts only when free, below max_fullness, not full, outside completed-meal cooldown and with enough off-duty time for both paths and eating. Two real player-owned portions plus refund capacity and an adjacent slot are reserved. The person walks over; both portions are consumed once only after the complete eating duration, restoring both fullness values and recording per-partner shared meal count and completion time. Leaving, F, R, cancellation, shift return or broken seating refunds unconsumed food once and releases the slot; the person physically returns before resuming their program/shift. No idle pay, new resources, actors or rigs. Pause/streaming/save retain paths, clocks and history; Start over resets. Optional interact-only on.shared_meals >=1 checks actual completed meals with that NPC and requires its social capability after linking. No generic affection score, dating, arbitrary event scripts or offline progression. Format 14/simulation 21 registers the exact r63 projection and preserves every old saved field. See examples/shared-meal.dream."
+    },
     "shifts": {
       "source": "shift id(market=counter,rest=[x,y],on=ground,grounds=[extra],lead_s=15); account(...,shift=id);",
       "bounds": "at most 8 plans, one NPC per plan; existing market with daily hours; rest at least 16 units from work; lead_s 0..120 and shorter than the closed interval; on plus 0..7 unique convex grounds, 4096 local samples",
@@ -1599,6 +1621,7 @@
       "jobs": 16,
       "meals": 8,
       "shifts": 8,
+      "socials": 8,
       "mealMarkets": 4,
       "milestones": 16,
       "workerJobs": 4,

@@ -1,3 +1,4 @@
+import {leaveSharedMeal} from './social';
 import {contactOverlaps} from '../scene/contact-geometry';
 import {initialAmbient,stepAmbient,type AmbientState} from './ambient';
 import {initialEconomy,type EconomyState,type CommerceAction} from './commerce';
@@ -121,6 +122,7 @@ export interface World {
   previousPlantSaveCompatibility?:string;
   previousFinishSaveCompatibility?:string;
   previousCourierSaveCompatibility?:string;
+  previousSocialSaveCompatibility?:string;
   previousShiftSaveCompatibility?:string;
   previousHoursSaveCompatibility?:string;
   previousSeatingSaveCompatibility?:string;
@@ -214,6 +216,7 @@ export function createCarAtSpawn(scene: Scene): CarState {
 export function resetCar(state: CarState, scene: Scene, resetRace = false): CarState {
   const fresh = createCarAtSpawn(scene);
   if (resetRace) return fresh;
+  state=leaveSharedMeal(state,scene);
   const vehicleId=state.control.kind==="vehicle" ? state.control.id : undefined;
   const saveVehicle=vehicleId && state.grounded && !(controlOf(scene.objects.find(o=>o.id===vehicleId)?.spec)==="plane" && waterAt(scene.terrain,state.x,state.y,drivingHeight(scene.terrain,state.x,state.y)));
   // Car-only reset leaves knocked props and safely parked vehicles where they lie.

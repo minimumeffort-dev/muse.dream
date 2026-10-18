@@ -1,0 +1,26 @@
+{
+  "renderedFrames": 720,
+  "renderedSize": [
+    2400,
+    1350
+  ],
+  "renderedFramesPerSimulationSecond": 30,
+  "sequenceNameAndBytesSha256": "f82296382edf66c423d253b466154ef72e9ad58566ac8c6fc4eb279eae14c423",
+  "rawBytes": 2393480308,
+  "posterFrame": 180,
+  "outputs": {
+    "shared.jpg": {
+      "bytes": 139525,
+      "sha256": "3c18c8d634e8b40e5a840e31f3e4e3e6f0a75654cb385fc56a940270467290eb"
+    },
+    "shared.gif": {
+      "bytes": 18997291,
+      "sha256": "0b3367d8defd623df616db3008f46b9ebae7605d70efe4b34d432e3eba316c6f"
+    },
+    "shared.mp4": {
+      "bytes": 4743911,
+      "sha256": "8721334582d0b2a125593b5bbe49972e64204a5f4276f09e954a324010e13972"
+    }
+  },
+  "measurement": "Offline rendered capture; no live FPS or low-end performance claim."
+}

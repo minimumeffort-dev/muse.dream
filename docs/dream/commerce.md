@@ -701,3 +701,6 @@ An optional [daily shift](shifts.md) gives a stationary staff account a connecte
 rest destination. Finish committed work, walk out, rest and physically return.
 Counter trade, production and cargo handoff wait for attendance. The baker and
 school staff use it in the live mock; no idle wages or employment contracts exist.
+
+
+[Shared meals](social.md) reserve two player-owned portions and an adjacent seat, use actual NPC travel and consume both once on completion. Interruptions refund food; completed time changes that person's remembered dialogue.

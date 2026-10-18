@@ -43,7 +43,7 @@ Night navigation now has readable sky/ground fill outside lamp pools, while stat
 1. The social foundation now has authored conversations, recognition on return, local saves and inspected backup restore, including physical changes. Comments and spoken wording can change without resetting progress. The first market has a registered migration that preserves the earlier world and initializes only its new state. Later geometry, population, economy and rule changes still need explicit migrations.
 2. The market now connects finite stock, buy/sell, meals, fullness, paid recipe work and NPC staff/customers. Player delivery now brings finite flour from the station and bread to the school. The market caretaker now repairs 88 targets, including 77 lamps, across the market, park, station and three service streets using finite kits/pay, pedestrian-network travel and saved work. Paid player procurement replenishes kits from finite station stock; the player can take the same job. All 400 streetlights now share pooled topple behavior and persistent light-pool damage. The caretaker now also replants the three orchard trees through finite saplings and a connected garden path; saved physical growth waits for clearance. Multi-input recipes now connect bread and vegetables to packed lunches, and boards/fasteners to repair kits used by the existing repair service. Next extend recovery to the remaining 323 lamps and 333 measured trees, then upstream production and schedules: the depot and customers still have finite budgets, and work has personal completion requirements with daily physical shifts but no general skill system. The caretaker can now resupply kits and saplings from finite station stock through physical pedestrian trips and the shared delivery ledger. Keep sharing transactions with NPCs. The Lab remains separate.
 3. The market now has an explicit ground-floor space, checked portal, physical walls/floor/ceiling, cutaway view and connected furniture repair. Expand useful indoor activities and hand tools next. Multiple floors, stairs and lifts must connect real movement layers; hiding a car beneath a roof is insufficient.
-4. Staff now prepare lunches, the commuter takes a real meal detour, and the helper can resupply flour, using finite credits/stock, a timed meal and a saved return to the paused routine. Shared indoor seating now connects that trip to the hall. Next add indoor service, more resident purposes and upstream production, then schedules and relationship history that change choices. Familiarity is currently one remembered meeting flag, not friendship or dating.
+4. Staff now prepare lunches, the commuter takes a real meal detour, and the helper can resupply flour, using finite credits/stock, a timed meal and a saved return to the paused routine. Shared indoor seating now connects that trip to the hall. Next add indoor service, more resident purposes and upstream production, then schedules and relationship history that change choices. Completed shared meals now add per-person history and authored return dialogue, with availability/fullness/cooldown boundaries. Next add another shared activity and NPC invitations; dating and a general relationship system remain separate.
 5. The 81 generated parked vehicles now share direct controls through bounded activation, with instanced parked poses and persistent contacts. Add trucks/pickups through the shared control system, and keep auditing road paint, corners, signs and asset attachments. Expand force-based destruction consistently across the world and make it persistent. The first repair worker now uses connected pedestrian routes, waits for obstructions and restores selected market/park/station furniture. Pooled static destruction now supports the 400 streetlights without making their intact geometry resident scene nodes. Extend repair coverage to the remaining lamps and trees, then more structural categories. The current orchard grows three replanted trees with matching contact bodies and finite delivered saplings. Active debris and mesh caches remain bounded at 24 assemblies/templates and 128 pieces/fragment meshes; legacy limits stay unchanged. Add coherent weather and sound alongside those systems. Measure dense scenes, interiors, long travel and save responsiveness. Extend save migration when the world schema changes. Files can move progress between compatible browsers/devices manually; there is no cloud sync.
 
 Existing limits remain visible: the city has decorative institutions, bounded NPC routines, arcade vehicles and sports practice. It has a working food/work/delivery loop and one enterable market ground floor, with no employment contracts, enterable restaurant, relationship progression, multi-floor interior movement or weather system yet. Prioritize connected activities over adding more empty buildings.
@@ -82,7 +82,7 @@ employment contract or real-world qualification claim in this slice.
 
 ### Shared furniture seats (r61)
 
-The three slatted benches now provide six usable seats. The player can sit, eat
+The four slatted benches now provide eight usable seats. The player can sit, eat
 carried food and stand safely. The commuter buys lunch, walks into the hall,
 claims a free slot, eats and returns; busy or broken seats use standing meals.
 Claims, paths and timers survive streaming and format-12 saves. Existing bodies,
@@ -113,3 +113,18 @@ implied. Journeys and the full old ledger survive format-13 saves. Next add
 meaningful social progression and useful indoor activities; daily attendance is
 a foundation for richer roles, not a complete restaurant or school simulation.
 See [staff shifts](dream/shifts.md).
+
+### Shared off-duty meals (r64)
+
+The baker and school staff can join the seated player for two carried portions,
+using their actual rest positions, schedules and body-sized paths. They decline
+when unavailable or full. Completing time together feeds both and changes their
+remembered dialogue; interruptions refund food and return them to their day.
+History, in-progress meals and claims persist. The school-yard bench is placed
+on existing paving beside the staff break point, with the shared destructible
+bench policy. Local market repairs do not yet cover the school yard.
+
+Next priorities remain: another social activity and NPC invitations, broader
+repair coverage, then indoor service and upstream supply with actual ownership.
+Multiple floors, business ownership, weekly employment, dating and general life
+planning remain unimplemented. [Authoring and current limits](dream/social.md).

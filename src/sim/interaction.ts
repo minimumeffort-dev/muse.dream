@@ -1,3 +1,4 @@
+import {leaveSharedMeal} from './social';
 import {nearbySeat,seatedPose} from './seating';
 import {walkingHeight} from '../scene/interiors';
 import {contactOverlaps} from '../scene/contact-geometry';
@@ -85,11 +86,11 @@ export function exitPosition(state:CarState,world:World) {
 /** A furniture transfer uses its authored approach, with ordinary body clearance. */
 export function standUp(state:CarState,world:World):CarState {
  const seat=seatedPose(state,world.scene);if(!state.seated)return state;
- if(!seat)return {...state,seated:undefined};
+ if(!seat)return leaveSharedMeal({...state,seated:undefined},world.scene);
  const next={...state,seated:undefined,x:seat.approach.x,y:seat.approach.y,elevation:walkingHeight(world.scene,seat.approach.x,seat.approach.y,FOOT_RADIUS)};
- if(carFootprintClear({...bodyWorld(next,world),dryGround:true},next.x,next.y,next.elevation,next.timeS,next))return next;
+ if(carFootprintClear({...bodyWorld(next,world),dryGround:true},next.x,next.y,next.elevation,next.timeS,next))return leaveSharedMeal(next,world.scene);
  const exit=exitPosition({...state,seated:undefined,control:{kind:'passenger',id:seat.objectId}},world);
- return exit ? {...next,...exit} : state;
+ return exit ? leaveSharedMeal({...next,...exit},world.scene) : state;
 }
 /** F leaves the current vehicle. On foot it takes over the nearest reachable seat. */
 export function toggleRide(state:CarState,world:World):CarState {

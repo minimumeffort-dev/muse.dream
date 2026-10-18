@@ -19,6 +19,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [Build a world](dream/worlds.md) | Terrain, roads, bridges, water, dedicated paths and moving vehicles |
 | [Populate streets and habitats](dream/populations.md) | Connected lighting, planting, destination parking, birds and transit |
 | [Day and night](dream/day-night.md) | A shared clock, changing sunlight, window glow and street lighting |
+| [Shared meals](dream/social.md) | Invite an off-duty person, share carried food and build remembered history |
 | [Shared seating](dream/seating.md) | Sit on furniture, share seats with customers and preserve occupancy |
 | [Staff shifts](dream/shifts.md) | Physical attendance, connected rest destinations and persistent journeys |
 | [Opening hours](dream/hours.md) | Daily counter service, overnight suppliers and saved courier waits |

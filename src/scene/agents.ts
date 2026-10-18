@@ -6,9 +6,10 @@ export const roleSchema=z.enum(['prop','npc','controllable','ambient']);
 export const PARKING_LIMITS=Object.freeze({vehicles:256});
 export const NPC_LIMITS=Object.freeze({programs:16,actors:32,states:8,transitions:4,seconds:[.1,300] as const,radius:[10,240] as const,turnRadS:2.5,interactRadius:80,speechCharacters:240,speechSeconds:8});
 const id=z.string().regex(/^[a-z][a-z0-9_]{0,31}$/);
-const transitionSchema=z.object({id,event:z.enum(['after','near_player','far_player','interact']),to:id,seconds:z.number().finite().min(NPC_LIMITS.seconds[0]).max(NPC_LIMITS.seconds[1]).optional(),radius:z.number().finite().min(NPC_LIMITS.radius[0]).max(NPC_LIMITS.radius[1]).optional(),familiar:z.boolean().optional(),requires:id.optional()}).strict().superRefine((t,ctx)=>{
+const transitionSchema=z.object({id,event:z.enum(['after','near_player','far_player','interact']),to:id,seconds:z.number().finite().min(NPC_LIMITS.seconds[0]).max(NPC_LIMITS.seconds[1]).optional(),radius:z.number().finite().min(NPC_LIMITS.radius[0]).max(NPC_LIMITS.radius[1]).optional(),familiar:z.boolean().optional(),shared_meals:z.number().int().min(1).max(1e9).optional(),requires:id.optional()}).strict().superRefine((t,ctx)=>{
   if(t.event==='after' ? t.seconds===undefined || t.radius!==undefined : t.radius===undefined || t.seconds!==undefined)
     ctx.addIssue({code:'custom',message:'after requires only seconds; proximity/interact requires only radius'});
+  if(t.shared_meals!==undefined && t.event!=='interact')ctx.addIssue({code:'custom',path:['shared_meals'],message:'shared_meals requires event=interact'});
   if(t.requires!==undefined && t.event!=='interact')ctx.addIssue({code:'custom',path:['requires'],message:'requires needs event=interact'});
   if(t.familiar!==undefined && t.event!=='interact')ctx.addIssue({code:'custom',path:['familiar'],message:'familiar requires event=interact'});
   if(t.event==='interact' && t.radius!>NPC_LIMITS.interactRadius)ctx.addIssue({code:'custom',path:['radius'],message:'interact radius must be at most 80'});

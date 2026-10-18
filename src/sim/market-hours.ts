@@ -14,7 +14,7 @@ export function marketOpening(scene:Pick<Scene,'daylight'>,market:Pick<Market,'h
  const hour=dayHour(scene.daylight!,timeS),[start]=market.hours;
  return {hour:start,seconds:((start-hour+24)%24)/24*scene.daylight!.cycleSeconds};
 }
-export function marketIsStaffed(scene:Pick<Scene,'economy'>,market:Pick<Market,'actor'>,state:Pick<EconomyState,'accounts'>|undefined):boolean{
+export function marketIsStaffed(scene:Pick<Scene,'economy'>,market:Pick<Market,'actor'>,state:Pick<EconomyState,'accounts'|'shared'>|undefined):boolean{
  const staff=scene.economy?.accounts.find(a=>a.actor===market.actor);
- return !staff?.shift || !state?.accounts.find(a=>a.id===staff.id)?.shift;
+ return (!state?.shared || state.shared.partner!==staff?.id) && (!staff?.shift || !state?.accounts.find(a=>a.id===staff.id)?.shift);
 }

@@ -66,3 +66,5 @@ describe('bounded agent context packets',()=>{
 });
 
 it('includes bounded staff shift authoring in the commerce packet',()=>{const packet=dreamAgentContext(['commerce']);expect(packet.contract.commands.shift!.fields.rest).toBe('v2');expect(packet.contract.commands.account!.fields.shift).toBe('ref?');expect(packet.instructions).toContain('physical daily staff attendance');expect(packet.contract).toHaveProperty('commerce.shifts');});
+
+it('includes bounded social meals and remembered interaction guards in the commerce packet',()=>{const packet=dreamAgentContext(['commerce']);expect(packet.contract.commands.social!.fields.seats).toBe('symbols');expect(packet.contract.commands.account!.fields.social).toBe('ref?');expect(packet.contract.commands.on!.fields.shared_meals).toBe('n?');expect(packet.instructions).toContain('Shared social meals:');expect(packet.contract).toHaveProperty('commerce.social');});

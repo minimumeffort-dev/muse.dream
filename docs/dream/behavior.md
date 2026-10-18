@@ -236,3 +236,6 @@ NPC [meal trips](commerce.md#customers-with-somewhere-to-go) add a renderer-owne
 hand-to-mouth gesture using the existing humanoid bones. Feet stay planted during
 the eating timer, segment lengths remain rigid, and reduced motion uses the idle
 pose. Food ownership, consumption and timing belong to the fixed-step economy.
+
+
+[Shared meals](social.md) use existing seated humanoids and body-sized pedestrian travel. F, movement, jumping or R ends an unfinished meal and refunds both reserved portions before returning the companion to their routine.

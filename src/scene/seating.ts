@@ -27,15 +27,16 @@ export function worldSeats(scene:Scene):WorldSeat[]{
 export const sameSeat=(a:SeatRef|undefined,b:SeatRef|undefined)=>!!a && !!b && a.objectId===b.objectId && a.seatId===b.seatId;
 export const findSeat=(scene:Scene,ref:SeatRef|undefined)=>ref && worldSeats(scene).find(s=>sameSeat(s,ref));
 /** The furniture itself is the only solid omitted from its short authored transfer. */
-export function seatAccessClear(scene:Scene,seat:WorldSeat,broken:readonly string[]=[]):boolean{
+export function seatAccessClear(scene:Scene,seat:WorldSeat,broken:readonly string[]=[],profile:{radius:number;height:number}={radius:SEATING_LIMITS.radius,height:SEATING_LIMITS.height}):boolean{
+ const {radius,height}=profile;
  if(broken.includes(seat.objectId))return false;
  const distance=Math.hypot(seat.x-seat.approach.x,seat.y-seat.approach.y);if(distance<6 || distance>40 || seat.hipHeight<3 || seat.hipHeight>9)return false;
- const steps=Math.ceil(distance/2);let previous=walkingHeight(scene,seat.approach.x,seat.approach.y,3);
+ const steps=Math.ceil(distance/2);let previous=walkingHeight(scene,seat.approach.x,seat.approach.y,radius);
  for(let i=0;i<=steps;i++){
-  const t=i/steps,x=seat.approach.x+(seat.x-seat.approach.x)*t,y=seat.approach.y+(seat.y-seat.approach.y)*t,elevation=walkingHeight(scene,x,y,3);
-  if(x<3 || y<3 || x>scene.canonical.width-3 || y>scene.canonical.height-3 || Math.abs(elevation-previous)>4 || waterAt(scene.terrain,x,y,elevation))return false;
-  for(let side=0;side<8;side++){const px=x+Math.cos(side*Math.PI/4)*3,py=y+Math.sin(side*Math.PI/4)*3;if(waterAt(scene.terrain,px,py,walkingHeight(scene,px,py,0)))return false;}
-  if(queryStaticContacts(scene,x,y,3).some(c=>(i===0 || c.id!==seat.objectId) && (!c.id || !broken.includes(c.id)) && elevation<c.top-.05 && elevation+17.5>c.bottom+.05 && contactOverlaps(c,x,y,3)))return false;
+  const t=i/steps,x=seat.approach.x+(seat.x-seat.approach.x)*t,y=seat.approach.y+(seat.y-seat.approach.y)*t,elevation=walkingHeight(scene,x,y,radius);
+  if(x<radius || y<radius || x>scene.canonical.width-radius || y>scene.canonical.height-radius || Math.abs(elevation-previous)>4 || waterAt(scene.terrain,x,y,elevation))return false;
+  for(let side=0;side<8;side++){const px=x+Math.cos(side*Math.PI/4)*radius,py=y+Math.sin(side*Math.PI/4)*radius;if(waterAt(scene.terrain,px,py,walkingHeight(scene,px,py,0)))return false;}
+  if(queryStaticContacts(scene,x,y,radius).some(c=>(i===0 || c.id!==seat.objectId) && (!c.id || !broken.includes(c.id)) && elevation<c.top-.05 && elevation+height>c.bottom+.05 && contactOverlaps(c,x,y,radius)))return false;
   previous=elevation;
  }
  return true;

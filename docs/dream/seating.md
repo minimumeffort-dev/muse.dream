@@ -78,4 +78,6 @@ idle or eating movement. Work, trade, vehicle boarding and sports require standi
 
 Seats add metadata and one bounded shared claim, with no new physics bodies,
 per-cell simulation, NPCs or animated rigs. The current live world has two slots
-on each of its three slatted benches: the market hall, civic park and station.
+on each of its four slatted benches: the market hall, civic park, station and school yard.
+
+[Shared meals](social.md) reserve the other slot for an invited person and record the time you finish together. Leaving early returns the reserved food; ordinary customer meals keep their own claims.
