@@ -1,0 +1,307 @@
+{
+  "offlineExport": true,
+  "livePerformanceMeasurement": false,
+  "sourceFrames": 3540,
+  "clips": [
+    {
+      "clip": "character",
+      "sourceFrames": 180,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "renderedFramesPerSimulationSecond": 30,
+      "files": [
+        {
+          "path": "docs/media/character.gif",
+          "sha256": "7821e106f6d024b0ae020752c5751f6848d1ce0e8714db0ea2f70bb133fe262f",
+          "decodedFrames": 180
+        },
+        {
+          "path": "docs/media/character.mp4",
+          "sha256": "73099fa6b198750e15f6bc35e391ccca1da7cdd1b4d58421ab23b40b3534116d",
+          "decodedFrames": 180
+        }
+      ],
+      "stills": [
+        {
+          "path": "docs/media/character-motion.jpg",
+          "sourceFrame": 60,
+          "sha256": "b8610b7194d9edf291d866f34acb579394c3c22a32a32a78702681046e95a1fa"
+        }
+      ]
+    },
+    {
+      "clip": "pedestrians",
+      "sourceFrames": 720,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "renderedFramesPerSimulationSecond": 30,
+      "files": [
+        {
+          "path": "docs/media/pedestrians.gif",
+          "sha256": "aed86bbe4cd39d607947b126520c95ece43931bcf28d644d0cd978acb52c4dd9",
+          "decodedFrames": 720
+        },
+        {
+          "path": "docs/media/pedestrians.mp4",
+          "sha256": "92f976200621b68f5a87f1ee1dfa496f5d7f85ab9e2db69b1e76327f198b995d",
+          "decodedFrames": 720
+        }
+      ],
+      "stills": [
+        {
+          "path": "docs/media/pedestrians.jpg",
+          "sourceFrame": 90,
+          "sha256": "4792c6f90962d4eecab50e0b188e1af81c1e7985a66babf3ad253fe4c767fffe"
+        }
+      ]
+    },
+    {
+      "clip": "football",
+      "sourceFrames": 480,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "renderedFramesPerSimulationSecond": 30,
+      "files": [
+        {
+          "path": "docs/media/football.gif",
+          "sha256": "5a7b07b38ae9bdb389497bb8768ac3077e9d607377d6cd8e6d395865b9e1e382",
+          "decodedFrames": 480
+        },
+        {
+          "path": "docs/media/football.mp4",
+          "sha256": "ff460495d7149501015b99909c2c1d96a26ea89d01468e1958a52162c4be4272",
+          "decodedFrames": 480
+        }
+      ],
+      "stills": [
+        {
+          "path": "docs/media/football-practice.jpg",
+          "sourceFrame": 180,
+          "sha256": "621fb15b8a98d21c04c524f0a7f33e6b9d2b22bf33d30d0482bdbbdae39179e0"
+        },
+        {
+          "path": "docs/media/sports-park.jpg",
+          "sourceFrame": 180,
+          "sha256": "621fb15b8a98d21c04c524f0a7f33e6b9d2b22bf33d30d0482bdbbdae39179e0"
+        }
+      ]
+    },
+    {
+      "clip": "basketball",
+      "sourceFrames": 480,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "renderedFramesPerSimulationSecond": 30,
+      "files": [
+        {
+          "path": "docs/media/basketball.gif",
+          "sha256": "d038c3b38717f27af0f61c727550e576d20043cd8c35e0cb2f56b5d2db7b9f2f",
+          "decodedFrames": 480
+        },
+        {
+          "path": "docs/media/basketball.mp4",
+          "sha256": "8ab243fd30b0a250dce2df8f0cc9545e1af52f057b2d6386f3fe30ae0d28f4ba",
+          "decodedFrames": 480
+        }
+      ],
+      "stills": [
+        {
+          "path": "docs/media/basketball-practice.jpg",
+          "sourceFrame": 180,
+          "sha256": "8bb2fc0f89586640615d00f699ee940358fb9a2c022842201fb7b1e4cb2922dc"
+        },
+        {
+          "path": "docs/media/basketball.jpg",
+          "sourceFrame": 180,
+          "sha256": "8bb2fc0f89586640615d00f699ee940358fb9a2c022842201fb7b1e4cb2922dc"
+        },
+        {
+          "path": "docs/media/basketball-court.jpg",
+          "sourceFrame": 180,
+          "sha256": "8bb2fc0f89586640615d00f699ee940358fb9a2c022842201fb7b1e4cb2922dc"
+        }
+      ]
+    },
+    {
+      "clip": "locomotion",
+      "sourceFrames": 180,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "renderedFramesPerSimulationSecond": 30,
+      "files": [
+        {
+          "path": "docs/media/locomotion.gif",
+          "sha256": "bdfe796bd88d4ebf62c71429022cc4757db88b570af56b0c33bf10500a921e38",
+          "decodedFrames": 180
+        },
+        {
+          "path": "docs/media/locomotion.mp4",
+          "sha256": "ea6b036b4ec0981979eabc21f759d0a98e76deacda27a1534d7de747b7467831",
+          "decodedFrames": 180
+        }
+      ],
+      "stills": [
+        {
+          "path": "docs/media/jumping.jpg",
+          "sourceFrame": 70,
+          "sha256": "f4b95f96c1eb0af4fb3e0dbd1f53aedf2271c94a8a0807fd9e255dfa8ea6aa8d"
+        }
+      ]
+    },
+    {
+      "clip": "swimming",
+      "sourceFrames": 180,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "renderedFramesPerSimulationSecond": 30,
+      "files": [
+        {
+          "path": "docs/media/swimming.gif",
+          "sha256": "d76bd2cb221f69515b6b64a8556fff95abd120ac53771bb97dd79898c149e260",
+          "decodedFrames": 180
+        },
+        {
+          "path": "docs/media/swimming.mp4",
+          "sha256": "f76c4748a6a7c0a6f4ad2e2d4732e65ccc696fe826c4fe6534ad4d33c3faba55",
+          "decodedFrames": 180
+        }
+      ],
+      "stills": [
+        {
+          "path": "docs/media/swimming.jpg",
+          "sourceFrame": 60,
+          "sha256": "16c43c171cd9f4e33b3c1930ed44a9eb208ce17a480fbe2ae69805e490c6bff6"
+        }
+      ]
+    },
+    {
+      "clip": "switching",
+      "sourceFrames": 240,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "renderedFramesPerSimulationSecond": 30,
+      "files": [
+        {
+          "path": "docs/media/switching.gif",
+          "sha256": "2e92cbeb1641da2b35bbcab830b730524662eb8fc611c532aefa6779c4a4fcb2",
+          "decodedFrames": 240
+        },
+        {
+          "path": "docs/media/switching.mp4",
+          "sha256": "59c6071ca09ca9c2fffaca66e999992cffcbdc1d25de37b87996bd3a202f449e",
+          "decodedFrames": 240
+        }
+      ],
+      "stills": [
+        {
+          "path": "docs/media/on-foot.jpg",
+          "sourceFrame": 35,
+          "sha256": "61e4c7080d4fe69715db77d108de48f5a010129a2a6e33d7bc3c67352ec2424b"
+        },
+        {
+          "path": "docs/media/riding.jpg",
+          "sourceFrame": 110,
+          "sha256": "eaee85d36842e0f117d4591e1081e479f2f1fb93819349e76ecaff814f391eb7"
+        }
+      ]
+    },
+    {
+      "clip": "seating",
+      "sourceFrames": 480,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "renderedFramesPerSimulationSecond": 30,
+      "files": [
+        {
+          "path": "docs/media/seating.gif",
+          "sha256": "262e6a01038ef27311f568052ab94e04de0230c75e4f00043798efc962127702",
+          "decodedFrames": 461
+        },
+        {
+          "path": "docs/media/seating.mp4",
+          "sha256": "7fdac7cc6bdab5925388b24f0239fb41b099daff0d691feb715b3e01c956003b",
+          "decodedFrames": 480
+        }
+      ],
+      "stills": [
+        {
+          "path": "docs/media/seating.jpg",
+          "sourceFrame": 90,
+          "sha256": "3b8e3c3f2af9486777e000b675b42dcca63a959938be0f14a2371c1f8f5712ef"
+        }
+      ]
+    },
+    {
+      "clip": "commerce",
+      "sourceFrames": 360,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "renderedFramesPerSimulationSecond": 30,
+      "files": [
+        {
+          "path": "docs/media/commerce.gif",
+          "sha256": "f48c37494b586cd078d0b33dd7d14f2a62c8db5dc8bc325a8b9dde08763a5ca9",
+          "decodedFrames": 360
+        },
+        {
+          "path": "docs/media/commerce.mp4",
+          "sha256": "5848f47be5f9d9934670751879b282ae0345145537a1343ff999d948d68a0e83",
+          "decodedFrames": 360
+        }
+      ],
+      "stills": [
+        {
+          "path": "docs/media/commerce.jpg",
+          "sourceFrame": 300,
+          "sha256": "851cb34bb8a310a2fccfc34aa257c01abca70da7f4fa9223e6f5a310a34de087"
+        }
+      ]
+    },
+    {
+      "clip": "conversation",
+      "sourceFrames": 240,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "renderedFramesPerSimulationSecond": 30,
+      "files": [
+        {
+          "path": "docs/media/conversation.gif",
+          "sha256": "955051cdb2441cf1ab4fb2b6003572c1115edf5eff57cacd614944e43bed7b0c",
+          "decodedFrames": 240
+        },
+        {
+          "path": "docs/media/conversation.mp4",
+          "sha256": "d42e71e30bf7d8592b9b7906af5e6bd6cebb72348b13f1865ae5ce3494b0fb40",
+          "decodedFrames": 240
+        }
+      ],
+      "stills": [
+        {
+          "path": "docs/media/conversation.jpg",
+          "sourceFrame": 60,
+          "sha256": "ecd7322111b206f6ed8528675f4083fe10fbcddb0e9b9738ec9c81860b4989b8"
+        }
+      ]
+    }
+  ]
+}

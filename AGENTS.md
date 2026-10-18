@@ -294,7 +294,7 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 ## Saved simulation state
 
 Current save format 16 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 26. Historical formats retain their registered projections.
+at simulation version 29. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -717,3 +717,23 @@ walkers at the saved tick. Preserve ledger/task/damage/vehicle/match/NPC state
 and old slots. An airport-bus passenger remains aboard at the saved time on the
 revised route. Keep historical projections before their older semantic transforms;
 never restore r69 lamp fields after a pre-pool projection has removed them.
+
+
+## Connected character wardrobe, r71
+
+Object-root `mount` adds visuals in one previously declared semantic bone frame
+without another joint. Keep its reference diagnostics, lexical bindings, 32-part,
+12-joint and expansion limits. Optional v2 body `clearance` is a 4..128 local
+minimum furnishing reservation, at least the collider radius; actual visual
+bounds still win. Keep it out of contacts, navigation radii and render culling.
+The complete `city-person.dream` example stays identical to the live character
+library. Seated and standing faces share construction at their independent
+physical size; preserve the static passenger's existing roof/deck envelope.
+
+Format 16 / simulation 29 verifies the exact released r70 person projection,
+then retains every life, ledger, physical pose and clock. Rebase only derived
+ambient portals; do not relocate people, add members or replay previous setup.
+Apply the person projection before the r70 junction and all older projections.
+Keep the entire registered chain and the old format-16 slot. Rounded contour
+merging must include its dominant projection axis in the plane key, so tied
+normals cannot combine incompatible projected coordinates.

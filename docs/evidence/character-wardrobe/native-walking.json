@@ -1,0 +1,21 @@
+{
+  "input": "W held for 700 ms, then released",
+  "before": {
+    "control": "foot",
+    "position": [
+      6429.7,
+      4379.7,
+      1.5
+    ]
+  },
+  "after": {
+    "control": "foot",
+    "position": [
+      6416,
+      4343.2,
+      1.5
+    ],
+    "reportedSpeed": 0
+  },
+  "method": "Native keyboard input and public #game DOM diagnostics; no frame-rate measurement"
+}

@@ -201,6 +201,9 @@ export function buildPlayer(scene: Scene): THREE.Group {
     x: 0, y: 0, scale: measuredScale(scene.player), spec: scene.player }) : buildCar();
 }
 
+/** People share the standing character's foot plane; other assets keep their existing lift. */
+export const objectGroundLift=(object:Pick<SceneObject,'spec'>):number=>object.spec && 'dslVersion' in object.spec && object.spec.dslVersion===2 && object.spec.measure?.kind==='person' ? .2 : 1.5;
+
 export function buildObject(object: SceneObject): THREE.Group {
   switch (object.kind) {
     case "tree": return buildTree(object.scale);

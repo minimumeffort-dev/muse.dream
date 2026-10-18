@@ -2,7 +2,7 @@
 
 [Dream 2 docs](README.md) / Assets
 
-The mock world contains 103 reusable assemblies, all written in Dream 2. The assemblies include vehicles, buildings, wildlife and several layers of vegetation, with window frames, wheel hubs, bark markings and irregular foliage. Footballs and basketballs are measured bounce props, connected to playable grounds through [sports data](dream/sports.md).
+The mock world contains 109 reusable assemblies, all written in Dream 2. The assemblies include vehicles, buildings, wildlife and several layers of vegetation, with window frames, wheel hubs, bark markings and irregular foliage. Footballs and basketballs are measured bounce props, connected to playable grounds through [sports data](dream/sports.md).
 
 The live world's `voxel_world` policy converts all of these to occupied-cell geometry after linking. Profiles and beams remain compact shape stamps in Dream, with materials, measured envelopes, joints and destruction ownership preserved. [How the whole world is constructed](whole-world-voxels.md). Standalone examples without a world policy retain their original shaped rendering.
 
@@ -11,7 +11,7 @@ policy per category. The older Wayside bench now has detachable boards and
 armrests, with its foundation and supports retained. Its intact dimensions,
 materials and joins stay the same.
 
-![Vehicles, buildings and a seated traveler built from Dream parts](media/assets.jpg)
+![Buildings and transport built from Dream parts](media/assets.jpg)
 
 ![Shelter seating, mounted hoop, supported table and produce stall](media/public-space-assets.jpg)
 
@@ -30,11 +30,13 @@ Shelter seats stand on two supports. Table planks rest on crossrails that stay a
 | Vegetation | Oak, pine, amber tree, birch, fir, rowan, apple, willow, ferns, flowers and shrubs | [Nature](../src/scene/world/nature.dream), [flora](../src/scene/world/flora.dream), [landmarks](../src/scene/world/landmarks.dream) |
 | Props and destruction | Produce stalls, table, crate, planter, ball, slatted benches, toppling trees and breakable shop porches | [Civic assets](../src/scene/world/civic_assets.dream), [impact props](../src/scene/impact-creations.dream), [destructible furniture](../src/scene/world/destructible.dream) |
 
-The seated traveler and standing Explorer are separate engine-provided Dream assemblies. The Explorer and eight civic pedestrian models use twelve bound joints for articulated walking and running. The Explorer also crawls and treads in water, and keeps its own physical size when switching to a seated vehicle pose. Bread and a harvest bowl remain standalone authoring examples. [Open the full atlas](media/assets-all.jpg), or follow the [local gallery setup](README.md#try-it-locally) for interactive inspection. Front, right, back and left views share the same geometry. The phase selector exposes wheel and joint motion.
+The seated traveler and standing Explorer are separate engine-provided Dream assemblies, with a shared face and matching clothes. The Explorer, eight civic characters and four sports variants use twelve bound joints for walking and running. The outfits include coats, aprons, skirts, hoodies, gloves, backpacks and carried items, with different hair, glasses and facial hair. The Explorer also crawls and treads in water, and keeps its own physical size when switching to a seated vehicle pose. Bread and a harvest bowl remain standalone authoring examples. [Open the full atlas](media/assets-all.jpg), or follow the [local gallery setup](README.md#try-it-locally) for interactive inspection. Front, right, back and left views share the same geometry. The phase selector exposes wheel and joint motion.
 
-![The civic pedestrian rigs](media/city-people.jpg)
+![Twelve character variants built with the same bound anatomy](media/people-wardrobe.png)
 
-[Character motion, bone bindings and complete source](dream/behavior.md#humanoid-motion).
+![Matching standing and seated player construction](media/player-characters.png)
+
+[Compose people and clothing](dream/people.md) · [Character motion and bone bindings](dream/behavior.md#humanoid-motion).
 
 ## Buildings and transport with recognizable construction
 
@@ -56,7 +58,7 @@ The rally coupe, cream-roof town car, compact hatchback and panel van now have d
 
 The bicycle is a step-through city frame with paired rear stays, fork blades, mounted axles and a chain line between its rear cog and chainring. Crank arms and pedals turn together around the bottom bracket as it travels. The scooter has a lower deck, paired fork and rear supports, shaped fenders, a brake mount and a headlight housing. The existing collision cylinders and measured vehicle lengths are preserved; neither model adds mesh-shaped physics.
 
-[Complete car](examples/city-car.dream) · [Complete bicycle](examples/city-bicycle.dream) · [Prisms and rolling joints](dream/objects.md) · [Verification and media audit](evidence/ground-vehicles/verification.md). Unoccupied bicycle cranks keep their saved phase in instanced poses, then animate by distance when boarded. The cars batch into three or four meshes each, and the bicycle into four. The shared seated rider remains a placeholder; its legs do not yet follow the pedals.
+[Complete car](examples/city-car.dream) · [Complete bicycle](examples/city-bicycle.dream) · [Prisms and rolling joints](dream/objects.md) · [Verification and media audit](evidence/ground-vehicles/verification.md). Unoccupied bicycle cranks keep their saved phase in instanced poses, then animate by distance when boarded. The cars batch into three or four meshes each, and the bicycle into four. The shared seated rider has the Explorer's face and clothes; its static legs do not yet follow the pedals.
 
 ## A light aircraft that holds together
 
@@ -86,7 +88,7 @@ Both birches use pale tapered stems, rising forks and fine hanging twigs. Smalle
 
 The [birch verification record](evidence/birch-assets/verification.md) includes four viewing angles, terrain placement, destruction checks and the documentation media audit.
 
-Details belong to their supporting coordinate frame. The baker's ears, straps and pocket follow its torso joint. A bench's armrests leave with its frame; the new bakery's canopy and posts leave in its porch zone. Adding a bolt must not create an extra independent fragment. The usual limits still apply: 32 parts per object, eight release groups per breakable assembly, and the existing scene-wide animation and debris budgets.
+Details belong to their supporting coordinate frame. The baker's apron follows its torso; its cap and moustache follow its head frame. A bench's armrests leave with its frame; the new bakery's canopy and posts leave in its porch zone. Adding a bolt must not create an extra independent fragment. The usual limits still apply: 32 parts per object, eight release groups per breakable assembly, and the existing scene-wide animation and debris budgets.
 
 Rigid parts sharing a material are batched inside each joint frame. Wheels and propellers keep their own pivots. Repeated scenery remains instanced, including its foliage motion and occlusion fade. Added visual detail doesn't add mesh colliders: roads, clearance, driving and impacts still use the engine's existing masks, heightfield and bounded bodies.
 

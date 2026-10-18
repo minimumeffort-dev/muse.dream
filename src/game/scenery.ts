@@ -9,7 +9,7 @@ import { hasAnimatedJoints,impactOf,zonesOf } from "../scene/object-dsl";
 import type { ObjectPart } from "../scene/object-dsl";
 import { archetypeOf } from "../sim/archetypes";
 import { SpatialGrid } from "../sim/spatial";
-import { buildObject } from "./world3d";
+import { buildObject,objectGroundLift } from "./world3d";
 import { worldPosition } from "./environment";
 import { sceneryMaterial, sceneryDepthMaterial, toonMaterial } from "./shaders";
 import { objectPlacement } from "../scene/placement";
@@ -79,7 +79,7 @@ export class WorldScenery {
       const key = JSON.stringify(object.spec ?? object.kind);
       let prototype = prototypes.get(key);
       if (!live && !prototype) { prototype = batchPrototype(buildObject({ ...object, scale: 1 })); prototype.updateMatrixWorld(true); prototypes.set(key, prototype); }
-      const position = worldPosition(scene, object.x, object.y, 1.5);position.y=placement.base+1.5;
+      const position = worldPosition(scene, object.x, object.y, 1.5);position.y=placement.base+objectGroundLift(object);
       const transform = new THREE.Matrix4().compose(position, placement.rotation, new THREE.Vector3().setScalar(object.scale));
       const entry: Entry = {id:entries.length,objectId:object.id,x: position.x, y: position.z, box: prototype ? new THREE.Box3().setFromObject(prototype).applyMatrix4(transform) : new THREE.Box3(), opacity: 1, instances: [],transforms:[] };
       entries.push(entry);
@@ -108,7 +108,7 @@ export class WorldScenery {
       const mesh = new THREE.InstancedMesh(geometry, material, items.length), partTransform = new THREE.Matrix4().compose(child.position, child.quaternion, child.scale);
       items.forEach(({ object, entry }, i) => {
         const placement=objectPlacement(scene,object);
-        const position=worldPosition(scene,object.x,object.y,1.5);position.y=placement.base+1.5;
+        const position=worldPosition(scene,object.x,object.y,1.5);position.y=placement.base+objectGroundLift(object);
         const matrix = new THREE.Matrix4().compose(position, placement.rotation, new THREE.Vector3().setScalar(object.scale));
         mesh.setMatrixAt(i, matrix.multiply(partTransform)); entry.instances.push({ attribute: visibility, index: i,cutaway:child.userData.cutaway });entry.transforms.push({mesh,index:i});
       });
@@ -172,7 +172,7 @@ export class WorldScenery {
   setGrowth(scales:ReadonlyMap<string,number>):void{
     if(this.growth===scales)return;this.growth=scales;
     for(const entry of this.entries){const scale=entry.objectId ? scales.get(entry.objectId)??1 : 1;if(scale===(entry.growthScale??1))continue;entry.growthScale=scale;
-      if(scale!==1){if(!entry.growthPivot){const object=this.scene.objects.find(o=>o.id===entry.objectId)!;entry.growthPivot=new THREE.Vector3(entry.x,objectPlacement(this.scene,object).base+1.5,entry.y);}entry.originalBox??=entry.box.clone();const p=entry.growthPivot;entry.box.copy(entry.originalBox);entry.box.min.sub(p).multiplyScalar(scale).add(p);entry.box.max.sub(p).multiplyScalar(scale).add(p);}
+      if(scale!==1){if(!entry.growthPivot){const object=this.scene.objects.find(o=>o.id===entry.objectId)!;entry.growthPivot=new THREE.Vector3(entry.x,objectPlacement(this.scene,object).base+objectGroundLift(object),entry.y);}entry.originalBox??=entry.box.clone();const p=entry.growthPivot;entry.box.copy(entry.originalBox);entry.box.min.sub(p).multiplyScalar(scale).add(p);entry.box.max.sub(p).multiplyScalar(scale).add(p);}
       else if(entry.originalBox){entry.box.copy(entry.originalBox);entry.originalBox=undefined;}
       this.transform(entry);
     }

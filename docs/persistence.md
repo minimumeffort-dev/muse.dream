@@ -74,7 +74,7 @@ Incompatible worlds keep separate local slots. An update that adds buildings or 
 
 Render chunks remain replaceable. Simulation and damage state live outside them, so unloading scenery cannot reset a person, repair a building or move a parked car. Wave texture disturbances and temporary particles are visual effects and are rebuilt after reload; water settings and clocks remain authored/saved.
 
-Development capture, profiling and review starts are isolated from normal saves. A dev-only `test-save` review uses a separate local namespace for reload verification. These helpers are absent from the production build.
+Development capture, profiling and review starts are isolated from normal saves. A dev-only `test-save` review uses a separate local namespace for reload verification. Pair it with `test-paused` to inspect a restored state before any simulation tick. These helpers are absent from the production build.
 
 [Talk to people](dream/npcs.md#talk-to-a-person) · [World systems and next capabilities](world-systems.md)
 
@@ -431,3 +431,18 @@ remain saved. A passenger aboard the airport bus stays aboard at the same simula
 time on its revised route; their pose is fitted to that bus. Other passenger routes
 are unchanged. The old format-16 slot remains intact after writing the new slot.
 The registered chain still accepts all 28 pinned historical backups.
+
+## Character wardrobe, r71
+
+Format 16 / simulation 29 verifies an exact projection of the released r70
+person templates before accepting previous saves. All object IDs, positions,
+measured heights and physical cylinders stay fixed. Existing people retain
+their population poses, distance, random state, waits and clocks; only derived
+walking portal indices are rebased for the new visual envelopes.
+
+Jobs, money, stock, ownership, conversations, shared-meal history, damage,
+parked vehicles, seats, matches and visual time remain saved. The upgrade does
+not introduce residents, replay older transactions or relocate people. The old
+format-16 slot remains stored after a successful new write, and all 28 historical
+backups continue through the checked chain. Other geometry edits do not receive
+automatic compatibility. [Character and upgrade checks](evidence/character-wardrobe/verification.md).

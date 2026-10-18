@@ -150,7 +150,7 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
           case "body": {
             if (body) fail("duplicate body", token);
             const [colliderRadius, colliderHeight, frictionPerS] = statement.args!.map(number);
-            body = { interaction: statement.interaction as ObjectDslV2["body"]["interaction"], colliderRadius: colliderRadius!, colliderHeight: colliderHeight!, ...(frictionPerS === undefined ? {} : { frictionPerS }) }; break;
+            body = { interaction: statement.interaction as ObjectDslV2["body"]["interaction"], colliderRadius: colliderRadius!, colliderHeight: colliderHeight!, ...(statement.clearance ? {clearanceRadius:number(statement.clearance)} : {}), ...(frictionPerS === undefined ? {} : { frictionPerS }) }; break;
           }
           case "lamp":if(lamp)fail("duplicate lamp",token);lamp={position:vector(statement.at,env).toArray(),radius:number(statement.args![0]!),color:statement.name!};metadataOrigins.set("lamp",token);break;
           case "ground": if (grounding) fail("duplicate ground", token); grounding = statement.name as ObjectDslV2["grounding"]; break;
@@ -203,6 +203,11 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
             walk(component.block, {...transform(frame, statement, env),path}, scope, [...stack, statement.name!], false, depth + 1,bindings); break;
           }
           case "group": walk(statement.block!, {...transform(frame, statement, env),path}, env, stack, false, depth + 1,materials); break;
+          case "mount": {
+            const matches=joints.filter(j=>j.bone===statement.bone);
+            if(matches.length!==1)fail('mount needs one previously declared '+statement.bone+' bone; use the anatomy component first',{...token,path:token.path+'/bone'},'E_REFERENCE');
+            walk(statement.block!,{...identity(),parent:matches[0]!.id,path},env,stack,false,depth+1,materials);break;
+          }
           case "joint": {
             if (joints.length >= 12) fail("joint budget exceeds 12", token,"E_BUDGET");
             const local = transform(frame, statement, env), jointId = id(), motion = statement.motion;

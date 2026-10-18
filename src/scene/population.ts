@@ -4,7 +4,7 @@ import {ambientMotionSchema,type Ambient} from './ambient';
 import {z} from 'zod';
 import type {Scene,SceneObject,Point} from './schema';
 import {objectDslSchema,isReactive,type ObjectDslV2} from './object-dsl';
-import {assemblyHorizontalRadius,measuredScale} from './measure';
+import {assemblyPlacementRadius,measuredScale} from './measure';
 import {isActor,controlFor} from './agents';
 import {streetFootprints,streetSidewalks,onPolygon} from './streets';
 import {sitePath,streetFrame,crossingPolygons} from './sites';
@@ -48,7 +48,7 @@ export const flockSchema=z.object({id:z.string().regex(/^[a-z][a-z0-9_]{0,31}$/)
   flapHz:z.number().finite().min(0).max(6).default(2),flapDeg:z.number().finite().min(0).max(25).default(12),seed:z.number().int().min(0).max(65535),
 }).strict().superRefine((f,ctx)=>{
   if(f.spec.body.interaction!=='decor' || isReactive(f.spec) || f.spec.foundation || f.spec.dslVersion===2 && (f.spec.rideable || f.spec.emitter || f.spec.contacts || f.spec.lamp))ctx.addIssue({code:'custom',message:'flocks require passive decor without contacts, seats, foundations, damage or emitters'});
-  if(assemblyHorizontalRadius(f.spec,measuredScale(f.spec))>20)ctx.addIssue({code:'custom',message:'flock members must fit a 20-unit horizontal radius'});
+  if(assemblyPlacementRadius(f.spec,measuredScale(f.spec))>20)ctx.addIssue({code:'custom',message:'flock members must fit a 20-unit horizontal radius'});
 });
 export type Flock=z.infer<typeof flockSchema>;
 export function seededRandom(seed:number){let n=seed>>>0;return ()=>{n=(Math.imul(n,1664525)+1013904223)>>>0;return n/4294967296;};}
@@ -57,7 +57,7 @@ export function seededRandom(seed:number){let n=seed>>>0;return ()=>{n=(Math.imu
 export function furnishWorld(scene:Scene,rules:Furnishing[]):{objects:SceneObject[];surfaces:Scene['surfaces']}{
   const occupied=new SpatialGrid<ContactFootprint>([]),existing=scene.objects.filter(o=>!isActor(o) || !o.route);
   let maxRadius=0;
-  for(const o of existing){const r=o.spec && 'dslVersion' in o.spec ? assemblyHorizontalRadius(o.spec,o.scale)+(controlFor(o) ? 16 : isActor(o) ? 4 : 0) : 30;if(o.spec && 'interior' in o.spec && o.spec.interior){
+  for(const o of existing){const r=o.spec && 'dslVersion' in o.spec ? assemblyPlacementRadius(o.spec,o.scale)+(controlFor(o) ? 16 : isActor(o) ? 4 : 0) : 30;if(o.spec && 'interior' in o.spec && o.spec.interior){
     const b=assemblyBounds(o.spec),a=o.headingRad??0,c=Math.cos(a),s=Math.sin(a),x=(b.min.x+b.max.x)/2*o.scale,y=(b.min.z+b.max.z)/2*o.scale,halfX=(b.max.x-b.min.x)/2*o.scale,halfY=(b.max.z-b.min.z)/2*o.scale;
     const contact={x:o.x+x*c-y*s,y:o.y+x*s+y*c,r:Math.hypot(halfX,halfY),box:{halfX,halfY,headingRad:a}};occupied.insert(contact);maxRadius=Math.max(maxRadius,contact.r);
    }else{occupied.insert({x:o.x,y:o.y,r});maxRadius=Math.max(maxRadius,r);}}
@@ -94,7 +94,7 @@ export function furnishWorld(scene:Scene,rules:Furnishing[]):{objects:SceneObjec
       const a=street.points[segment-1]!,b=street.points[segment]!,length=lengths[segment]!-lengths[segment-1]!,dx=(b.x-a.x)/length,dy=(b.y-a.y)/length,d=candidate.distance-lengths[segment-1]!;
       const sides=candidate.side ? [candidate.side] : rule.side==='both' ? [-1,1] : [rule.side==='left' ? -1 : 1];
       for(const side of sides){
-        const choice=Math.floor(random()*rule.objects.length),spec=rule.objects[choice]!,scale=measuredScale(spec),r=assemblyHorizontalRadius(spec,scale),riding=street.width/2+(street.cycleWidth ? street.cycleWidth+6 : 0);
+        const choice=Math.floor(random()*rule.objects.length),spec=rule.objects[choice]!,scale=measuredScale(spec),r=assemblyPlacementRadius(spec,scale),riding=street.width/2+(street.cycleWidth ? street.cycleWidth+6 : 0);
         if(rule.on==='sidewalk' && (spec.body.interaction!=='decor' || street.sidewalk<2*r+9))continue;
         const offset=rule.on==='sidewalk' ? riding+street.sidewalk-r-1 : riding+street.sidewalk+rule.setback+r;
         const x=a.x+dx*d-dy*offset*side,y=a.y+dy*d+dx*offset*side;

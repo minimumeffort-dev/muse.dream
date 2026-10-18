@@ -11,11 +11,11 @@ import {ambientObjects} from '../src/sim/ambient';
 import {stepInteractive} from '../src/sim/interaction';
 import {gameSave} from '../src/game/save';
 import {type World} from '../src/sim/car';
-const scene=createWorldScene(),previous=c.preJunctionScene(scene),pairs=[['Spacing','PARK'],['Park','CITY'],['City','MATCH'],['Match','BUSINESS'],['Business','SCHOOL_REPAIR'],['SchoolRepair','SOCIAL'],['Social','SHIFT'],['Shift','HOURS'],['Hours','SEATING'],['Seating','KITCHEN'],['Kitchen','MEAL'],['Meal','PROGRESS'],['Progress','RECIPE'],['Recipe','EGRESS'],['Egress','INTERIOR'],['Interior','COURIER'],['Courier','NATURAL'],['Finish','PLANT'],['Plant','VERGE'],['Verge','POOL'],['Pool','NETWORK'],['Network','SUPPLY'],['Supply','REPAIR'],['Repair','PARKING'],['Parking','DELIVERY']];
+const scene=c.prePeopleScene(createWorldScene()),previous=c.preJunctionScene(scene),pairs=[['Spacing','PARK'],['Park','CITY'],['City','MATCH'],['Match','BUSINESS'],['Business','SCHOOL_REPAIR'],['SchoolRepair','SOCIAL'],['Social','SHIFT'],['Shift','HOURS'],['Hours','SEATING'],['Seating','KITCHEN'],['Kitchen','MEAL'],['Meal','PROGRESS'],['Progress','RECIPE'],['Recipe','EGRESS'],['Egress','INTERIOR'],['Interior','COURIER'],['Courier','NATURAL'],['Finish','PLANT'],['Plant','VERGE'],['Verge','POOL'],['Pool','NETWORK'],['Network','SUPPLY'],['Supply','REPAIR'],['Repair','PARKING'],['Parking','DELIVERY']];
 const lineage=Object.fromEntries(pairs.map(([field,key])=>['previous'+field+'SaveCompatibility',c[(key+'_COMPATIBILITY') as keyof typeof c]]));
 const world:World={...lineage,scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.JUNCTION_COMPATIBILITY,previousJunctionSaveCompatibility:c.SPACING_COMPATIBILITY,previousJunctionNavigation:ambientGraph(previous),previousParkNavigation:ambientGraph(c.preParkScene(scene)),previousCityNavigation:ambientGraph(c.preCityScene(scene))},oldWorld={...world,scene:previous,saveCompatibility:c.SPACING_COMPATIBILITY,previousJunctionSaveCompatibility:undefined};
 it('pins the complete previous world and gates the layout migration to its registered target',async()=>{
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.JUNCTION_COMPATIBILITY);
+ expect(await c.sha256(c.prePeopleCompatibilitySource(scene))).toBe(c.JUNCTION_COMPATIBILITY);
  expect(await c.sha256(c.preJunctionCompatibilitySource(scene))).toBe(c.SPACING_COMPATIBILITY);
  expect(previous.objects).toHaveLength(1760);expect(scene.objects).toHaveLength(1769);
  expect(await c.sha256(c.preJunctionCompatibilitySource({...scene,objects:scene.objects.slice(1)}))).not.toBe(c.SPACING_COMPATIBILITY);

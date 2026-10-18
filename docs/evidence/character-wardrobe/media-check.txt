@@ -1,0 +1,10 @@
+character: 180 source frames; GIF and HD decode successfully
+pedestrians: 720 source frames; GIF and HD decode successfully
+football: 480 source frames; GIF and HD decode successfully
+basketball: 480 source frames; GIF and HD decode successfully
+locomotion: 180 source frames; GIF and HD decode successfully
+swimming: 180 source frames; GIF and HD decode successfully
+switching: 240 source frames; GIF and HD decode successfully
+seating: 480 source frames; GIF and HD decode successfully
+commerce: 360 source frames; GIF and HD decode successfully
+conversation: 240 source frames; GIF and HD decode successfully

@@ -80,7 +80,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `object` | top | ID / object | `label: text` |
 | `asset` | top | ID / no block | `module: ref`, `object: ref`, `control?: car / bicycle / skateboard / scooter / boat / plane` |
 | `include` | top | ID / no block | `module: ref` |
-| `body` | object | No ID / no block | `interaction: solid / knockable / decor`, `radius: n`, `height: n`, `friction?: n` |
+| `body` | object | No ID / no block | `interaction: solid / knockable / decor`, `radius: n`, `height: n`, `clearance?: n`, `friction?: n` |
 | `measure` | object | No ID / no block | `kind: car / plane / tree / person / bicycle / skateboard / bench / table / building / train / bus / tram / boat / food / custom`, `axis: x / y / z`, `meters: n` |
 | `ground` | object | No ID / no block | `mode: upright / surface` |
 | `foundation` | object | No ID / no block | `size: v2`, `color: color` |
@@ -96,10 +96,15 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `zone` | object | ID / visual | `at: v3`, `radius: n`, `height: n`, `mode: fracture` |
 | `group` | object / visual | ID / visual | `at?: v3`, `rot_deg?: v3`, `scale?: n` |
 | `joint` | object / visual | ID / visual | `at?: v3`, `rot_deg?: v3`, `bone?: humanoid binding`, `motion?: joint_motion` |
+| `mount` | object | ID / visual | `bone: humanoid binding` |
 | `repeat` | object / visual / path / route_path / voxel_ops | ID / inherit | `index: symbol`, `count: n` |
 | `use` | object / visual | ID / no block | `component: ref`, `args?: nums`, `materials?: symbols`, `at?: v3`, `rot_deg?: v3`, `scale?: n` |
 | `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus / prism`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `outline?: points2`, `taper?: n`, `deform?: deform`, `motion?: part_motion`, `cutaway?: roof / front / back / left / right` |
 | `beam` | object / visual | ID / no block | `shape: box / cylinder / capsule`, `material: ref`, `from: v3`, `to: v3`, `width: n`, `depth: n`, `taper?: n`, `deform?: deform`, `motion?: part_motion` |
+
+Optional Dream 2 `body.clearance` is a 4..128 local-unit minimum furnishing reservation, at least the collision radius. Visible bounds can require more space. It does not change contacts, driving, navigation radii or render culling. Compiled Object DSL uses `body.clearanceRadius`; v1 data remains strict. [People and clothing](people.md).
+
+Object-root `mount detail(bone=spine){...}` adds visuals to exactly one previously declared humanoid bone. Declare or `use` the anatomy first. Its block starts in that bone’s local frame; it creates no new joint. All part, depth, source and expansion budgets still apply. Missing or ambiguous bindings are `E_REFERENCE`; other objects and labels cannot be targets. [Complete character example](../examples/city-person.dream).
 
 Components allow eight unique numeric/material formals combined: `params=[height]` and `materials=[finish]`. `use.args` binds numeric expressions; `use.materials` binds material IDs or enclosing material formals. Both lists require exact arity in declaration order, including zero when omitted. Material formals cannot collide with numeric formals or global numeric constants; numeric-only shadowing retains its existing semantics. Material formals may shadow global materials. Callees receive globals plus explicit bindings, without caller-local leakage. Material bindings apply to parts, beams, voxels and nested uses. No recursion; source, expansion, part and joint limits remain unchanged. [Complete nested example](../examples/material-components.dream).
 

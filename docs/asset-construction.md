@@ -49,7 +49,7 @@ Static scenery still uses shared instancing. Rigid moving parts compact within t
 
 Volvo's [7900 Electric](https://www.volvobuses.com/wca-en/buses-coaches/all-models/volvo-7900-electric.html) and [specifications](https://www.volvobuses.com/wca-en/buses-coaches/all-models/volvo-7900-electric/specifications.html) informed bus door, axle and cab relationships. Stadler's [FLIRT reference](https://www.stadlerrail.com/solutions/references/flirt-db-arriva-nl-limburg) and [technical drawing](https://stadlerrail.com/api/docs/x/dda445987e/flirt-160_neutral_en.pdf) informed cab, window-band and bogie relationships. The game assets are independent simplified designs, not branded replicas.
 
-The remaining civic, organic and character families retain their existing models. Boat buoyancy and rail suspension are still arcade abstractions; the seated rider's hands and legs don't articulate to each vehicle. The task lab and future prompt/sketch interpretation are unchanged.
+The remaining civic and organic families retain their existing models. Boat buoyancy and rail suspension are still arcade abstractions; the seated rider's hands and legs don't articulate to each vehicle. The task lab and future prompt/sketch interpretation are unchanged.
 
 The neighborhood dog and garden cat now have four attached hip joints and a standing rest pose for roaming. The population renderer shares those rigid parts across instances; contacts and full NPC limits remain separate. [Movement and reactions](dream/populations.md).
 
@@ -67,3 +67,19 @@ Their materials use rigid toon shading. Dream's current `cloth` finish supplies
 flag-like wind, so it does not belong on these fitted uniforms. The gallery's
 Save PNG button exports the whole actual render buffer, including lower rows;
 four-angle evidence is retained with the match verification.
+
+## Shared character construction
+
+![The current character wardrobe](media/people-wardrobe.png)
+
+Twelve civic and sports templates now share a connected voxel body, face and
+articulated hands and feet. Clothing, hair, facial hair, glasses, hats and carried
+items use reusable components mounted on semantic bones. The standing Explorer
+and static seated passenger use the same face construction at their own measured
+size. Sleeve, elbow, knee and shoe joins stay connected in the seated pose.
+
+These replace 133 person placements and the two sports grounds’ team templates
+without moving their identities or changing their physical dimensions. Existing
+CPU rigs and instanced populations retain their limits. The [complete source](examples/city-person.dream)
+matches the live city library; the [people guide](dream/people.md) explains the
+construction and its rigid-clothing limits. [Native views and saved-state checks](evidence/character-wardrobe/verification.md).

@@ -41,7 +41,8 @@ export function meshVoxelContour(size:readonly number[],cells:Uint8Array):VoxelM
     const distance=normal.reduce((n,v,j)=>n+v*a[j]!,0),drop=normal.map(Math.abs).indexOf(Math.max(...normal.map(Math.abs))),axes=[0,1,2].filter(j=>j!==drop);
     const us=points.map(p=>Math.round(p[axes[0]!]!*1e6)),vs=points.map(p=>Math.round(p[axes[1]!]!*1e6)),loU=Math.min(...us),hiU=Math.max(...us),loV=Math.min(...vs),hiV=Math.max(...vs);
     if(Math.abs(normal.reduce((n,v,j)=>n+v*d[j]!,0)-distance)<1e-8 && points.every((_,i)=>(us[i]===loU||us[i]===hiU)&&(vs[i]===loV||vs[i]===hiV)) && new Set(us.map((u,i)=>`${u},${vs[i]}`)).size===4){
-      const key=[...normal,distance].map(n=>Math.round(n*1e6)).join(','),plane=planes.get(key)??{normal,distance,axis,rects:[]};
+      // Tied normal components may choose different projection axes after rounding.
+      const key=drop+':'+[...normal,distance].map(n=>Math.round(n*1e6)).join(','),plane=planes.get(key)??{normal,distance,axis,rects:[]};
       plane.rects.push([loU,loV,hiU,hiV]);planes.set(key,plane);
     }else emit(points,axis);
   };

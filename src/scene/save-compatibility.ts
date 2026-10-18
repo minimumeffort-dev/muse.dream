@@ -3,9 +3,11 @@ import cityR67 from './compatibility/r67-city.json';
 import parkR68 from './compatibility/r68-park.json';
 import junctionR69 from './compatibility/r69-junction.json';
 import type {Scene} from './schema';
+import type {ObjectDslV2} from './object-dsl';
+import peopleR70 from './compatibility/r70-people.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=28;
+export const SAVE_SIMULATION_VERSION=29;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -62,7 +64,7 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY || hash===SHIFT_COMPATIBILITY || hash===SOCIAL_COMPATIBILITY || hash===SCHOOL_REPAIR_COMPATIBILITY || hash===BUSINESS_COMPATIBILITY || hash===MATCH_COMPATIBILITY || hash===CITY_COMPATIBILITY || hash===PARK_COMPATIBILITY || hash===SPACING_COMPATIBILITY || hash===JUNCTION_COMPATIBILITY);
+  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY || hash===SHIFT_COMPATIBILITY || hash===SOCIAL_COMPATIBILITY || hash===SCHOOL_REPAIR_COMPATIBILITY || hash===BUSINESS_COMPATIBILITY || hash===MATCH_COMPATIBILITY || hash===CITY_COMPATIBILITY || hash===PARK_COMPATIBILITY || hash===SPACING_COMPATIBILITY || hash===JUNCTION_COMPATIBILITY || hash===PEOPLE_COMPATIBILITY);
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
@@ -88,8 +90,23 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r71 replaces person geometry without moving identities or changing their physical size. */
+export function prePeopleScene(scene:Scene):Scene{
+ const templates=peopleR70.templates as unknown as {spec:ObjectDslV2;joints?:NonNullable<Scene['objects'][number]['ambient']>['joints']}[];
+ const objects=new Map(peopleR70.objects.map(o=>[o.id,o])),sports=new Map(peopleR70.sports.map(s=>[s.id,s]));
+ return {...scene,objects:scene.objects.map(o=>{
+  const prior=objects.get(o.id);if(!prior)return o;const template=templates[prior.template]!;
+  return {...o,spec:template.spec,scale:prior.scale,...(o.ambient && template.joints ? {ambient:{...o.ambient,joints:template.joints}} : {})};
+ }),sports:scene.sports.map(s=>{
+  const prior=sports.get(s.id);if(!prior || !s.match)return s;
+  return {...s,match:{...s.match,teams:s.match.teams.map((t,i)=>{const old=prior.teams[i]!;return {...t,specs:old.specs.map(n=>templates[n]!.spec),...('keeperSpec' in old ? {keeperSpec:templates[old.keeperSpec!]!.spec} : {})};})}};
+ })};
+}
+export function prePeopleCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(prePeopleScene(scene),28,true,encode);}
+export const PEOPLE_COMPATIBILITY='5297667c16ec9218ef46e6cbf82cfdffe826220f92572f16d85f88ef5c8c2c53';
 /** r70 replaces the acute airport merge; retain exact r69 data for registered backups. */
 export function preJunctionScene(scene:Scene):Scene{
+ scene=prePeopleScene(scene);
  const restore=<T extends {id:string}>(rows:T[],patch:{added:string[];changed:unknown[]}):T[]=>{
   const added=new Set(patch.added),changed=new Map((patch.changed as T[]).map(row=>[row.id,row]));
   return rows.filter(row=>!added.has(row.id)).map(row=>changed.get(row.id)??row);

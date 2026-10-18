@@ -1,0 +1,42 @@
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {writeFile} from 'node:fs/promises';
+import {createServer} from 'vite';
+const vite=await createServer({configFile:false,cacheDir:'.npm-cache/wardrobe-check',optimizeDeps:{noDiscovery:true,include:[]},server:{middlewareMode:true,watch:null},appType:'custom'});
+try{
+ const {createWorldScene}=await vite.ssrLoadModule('/src/scene/world-fixture.ts');
+ const {saveCompatibilitySource,prePeopleScene,prePeopleCompatibilitySource,PEOPLE_COMPATIBILITY,JUNCTION_COMPATIBILITY}=await vite.ssrLoadModule('/src/scene/save-compatibility.ts');
+ const scene=createWorldScene(),fingerprint=createHash('sha256').update(saveCompatibilitySource(scene)).digest('hex');
+ assert.equal(fingerprint,PEOPLE_COMPATIBILITY,'registered r71 world must match');
+ const previousFingerprint=createHash('sha256').update(prePeopleCompatibilitySource(scene)).digest('hex');assert.equal(previousFingerprint,JUNCTION_COMPATIBILITY);
+ const previous=prePeopleScene(scene);assert.equal(scene.objects.length,previous.objects.length);
+ let changed=0,physicalError=0;
+ for(const [i,object] of scene.objects.entries()){
+  const prior=previous.objects[i];assert.deepEqual([object.id,object.x,object.y,object.headingRad,object.role,object.labelText],[prior.id,prior.x,prior.y,prior.headingRad,prior.role,prior.labelText]);
+  if(JSON.stringify(object)!==JSON.stringify(prior)){changed++;assert.equal(object.spec.measure.kind,'person');}
+  if(object.spec?.measure?.kind==='person')for(const key of ['colliderRadius','colliderHeight'])physicalError=Math.max(physicalError,Math.abs(object.spec.body[key]*object.scale-prior.spec.body[key]*prior.scale));
+ }
+ assert.equal(changed,133);assert(physicalError<1e-12);
+ const {CharacterAnimator}=await vite.ssrLoadModule('/src/game/character-animation.ts');
+ const {buildObject}=await vite.ssrLoadModule('/src/game/world3d.ts');
+ const {interactiveWorld}=await vite.ssrLoadModule('/src/scene/interactive-world.ts');
+ const {Vector3,Quaternion}=await import('three');
+ const spec=interactiveWorld.assemblies.find(s=>s.displayName==='Explorer'),rows=[];
+ for(const scale of [.2,.306,1,2])for(const speed of [4,14,35,55,95]){
+  const group=buildObject({id:'check',kind:'custom',labelText:'Stride check',x:0,y:0,scale,spec}),animation=new CharacterAnimator(group,spec);
+  const input={speed,grounded:true,swimming:false,verticalSpeed:0,enabled:true,time:0};
+  for(let f=0;f<360;f++)animation.update({...input,time:f/120},1/120);
+  const ankles=['left','right'].map(side=>group.getObjectByName(spec.joints.find(j=>j.bone===`${side}_ankle`).id));
+  const prior=[null,null],rotation=new Quaternion();let contacts=0,maxDrift=0;
+  for(let f=0;f<720;f++){
+   group.position.x+=speed/120;animation.update({...input,time:3+f/120},1/120);group.updateMatrixWorld(true);
+   for(const [i,ankle] of ankles.entries()){
+    const flat=Math.abs(ankle.getWorldQuaternion(rotation).z)<1e-6,p=ankle.getWorldPosition(new Vector3());
+    if(flat && prior[i]){contacts++;maxDrift=Math.max(maxDrift,p.distanceTo(prior[i]));}prior[i]=flat ? p : null;
+   }
+  }
+  assert(contacts>100);assert(maxDrift<.002);rows.push({scale,speed,contacts,maxDrift});
+ }
+ const result={priorCommit:'f19e215',previousFingerprint,changedPeople:changed,maxPhysicalError:physicalError,sceneRevision:scene.revisionId,fingerprint,objects:scene.objects.length,ambient:scene.objects.filter(o=>o.ambient).length,stepSeconds:1/120,rows};
+ await writeFile('docs/evidence/character-wardrobe/metrics.json',JSON.stringify(result,null,2)+'\n');console.log({fingerprint,maxDrift:Math.max(...rows.map(r=>r.maxDrift)),cases:rows.length});
+}finally{await vite.close();}

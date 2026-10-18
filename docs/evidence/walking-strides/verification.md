@@ -45,7 +45,9 @@ The [world and stance metrics](metrics.json) pin the unchanged r70 save fingerpr
 `dc6d2c4b9ab4648a7ff99d47a20e60792c1d940e299e90bbe6fa047fb4e4b66f`,
 1,769 objects and 181 ambient members. Across the 20 steady-travel cases, maximum
 measured stance-frame drift was 0.0000101 world units. Reproduce from this release
-with `node docs/evidence/walking-strides/check-world.mjs`. Test/build totals and
+after checking out commit `f19e215`, with
+`node docs/evidence/walking-strides/check-world.mjs`. The later r71 wardrobe
+changes the accepted character source; it has its own verification record. Test/build totals and
 media hashes are recorded after the release checks below.
 
 ## Media and limits

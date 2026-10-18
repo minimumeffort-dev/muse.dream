@@ -79,3 +79,8 @@ export function assemblyHorizontalRadius(spec:ObjectDsl,scale:number):number {
   const bounds=assemblyBounds(spec);
   return Math.hypot(Math.max(Math.abs(bounds.min.x),Math.abs(bounds.max.x)),Math.max(Math.abs(bounds.min.z),Math.abs(bounds.max.z)))*scale;
 }
+
+/** Stable furnishing space can exceed clothing geometry; it never shrinks visual clearance. */
+export function assemblyPlacementRadius(spec:ObjectDsl,scale:number):number {
+ return Math.max(assemblyHorizontalRadius(spec,scale),spec.dslVersion===2 ? (spec.body.clearanceRadius??0)*scale : 0);
+}

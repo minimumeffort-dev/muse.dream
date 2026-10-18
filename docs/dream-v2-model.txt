@@ -55,6 +55,17 @@ Cylinder part/beam taper is optional, finite .1..1 (default 1): +Y/to diameter
 divided by -Y/from diameter. width/depth/size remain full base dimensions.
 Use taper for continuous trunks and branches; use groups for rigid transforms,
 joints for connected articulation. Keep physical bodies separate from visual parts.
+Optional body clearance=4..128 local units reserves minimum furnishing space and
+must be >= radius. Actual visual bounds still win. Use it to keep placement stable
+when clothes or details change; it never changes contacts, driving, walking
+navigation or culling. Omitted retains bounds-based placement.
+After declaring a humanoid anatomy component, use mount detail(bone=spine){...}
+at object root to add hair, facial hair, headwear, glasses or clothing components.
+The selected bone must already exist exactly once in this object. Coordinates
+are local to that bone; mount starts an identity frame and adds no joint. Use
+groups inside it for local transforms. Existing part, joint, depth and expansion
+budgets include every mounted part. Mounts cannot name labels, other objects or
+create new runtime behavior. Keep accessories physically attached.
 Within the 32-part limit, add identifying details such as window frames, wheel hubs,
 forks, bark marks and food scores. Keep them attached to the same joint or fragment
 as their support. Detail must not bridge independent break zones or close a doorway.
@@ -137,7 +148,8 @@ root -> left_hip -> left_knee -> left_ankle; mirror right_hip/right_knee/right_a
 Rest frames unrotated, facing +X, +Y up, left +Z. root=[0,positive_height,0],
 spine=[0,nonnegative_height,0], hip=[0,0,signed_width], shoulder=[0,positive_height,signed_width].
 Elbow/knee/ankle=[0,-length,0], length >= .5. Root height >=1.
-Every visual part belongs to a bone; overlap rounded joint caps at elbows/knees.
+Every visual part belongs to a bone. Join rigid limb segments with a small overlap;
+keep knee/elbow centers attached, without oversized caps or independent motion.
 No independent part/bone motion, fragments or zones. Keep feet at Y=0 in assembled rest.
 Engine owns walk/run blending, lifted steps, two-bone legs, jump/landing, crawl/tread,
 reduced-motion poses and sports overrides. Body and movement physics stay separate.

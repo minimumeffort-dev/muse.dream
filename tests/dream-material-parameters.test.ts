@@ -3,7 +3,7 @@ import {compileDream,checkDream,formatDream} from '../src/scene/dream';
 import {lex} from '../src/scene/dream-syntax';
 import type {ObjectDslV2} from '../src/scene/object-dsl';
 import example from '../docs/examples/material-components.dream?raw';
-import people from '../src/scene/world/city_people.dream?raw';
+import people from './fixtures/city-people-materials.dream?raw';
 import beforePeople from './fixtures/city-people-v38.dream?raw';
 
 const palette='dream 2; material red(style=toon,colors=[#bb5544,#bb5544]);material blue(style=toon,colors=[#335588,#335588]);';
@@ -71,12 +71,12 @@ describe('typed material parameters',()=>{
     const numeric=`let h(value=99);component painted(params=[h],materials=[a,b,c,d,e,f,g]){${block.replace('finish','a').replace('size=[10,10,10]','size=[h,10,10]')}}`;
     expect(compileDream(source(numeric,'use item(component=painted,args=[6],materials=[blue,red,red,red,red,red,red]);'))[0]!.parts[0]!.size).toEqual([6,10,10]);
   });
-  it('reduces the actual civic source without changing compiled anatomy, appearance or behavior',()=>{
+  it('keeps the historical civic material refactor equivalent to its unparameterized source',()=>{
     const before=compileDream(beforePeople),after=compileDream(people).filter(s=>before.some(original=>original.displayName===s.displayName));
     expect(after.map(anatomy)).toEqual(before.map(anatomy));
     expect(after.map(a=>[a.parts.length,a.joints!.length])).toEqual([[25,12],[25,12],[25,12],[25,12]]);
     expect(after[0]!.parts[0]!.id).not.toBe(before[0]!.parts[0]!.id);
-    const originalFour=people.slice(0,people.indexOf("material coat_rust"));
+    const originalFour=people;
     expect(compileDream(originalFour).map(anatomy)).toEqual(before.map(anatomy));
     expect(originalFour.length).toBeLessThan(beforePeople.length*.5);
     expect(lex(originalFour).length).toBeLessThan(lex(beforePeople).length*.5);

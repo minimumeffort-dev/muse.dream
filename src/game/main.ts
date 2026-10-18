@@ -46,7 +46,7 @@ import { interactiveWorld } from "../scene/interactive-world";
 import { buildRoutesSteps } from "./routes";
 import { compactObject } from "./compact-object";
 import { worldTime, worldMotion, terrainPlayer, terrainView, worldGradeShader } from "./shaders";
-import { animateObject, buildObject, buildPlayer,MAX_SUSPENSION_COMPRESSION } from "./world3d";
+import { animateObject, buildObject, buildPlayer,objectGroundLift,MAX_SUSPENSION_COMPRESSION } from "./world3d";
 import { roadGeometry, terrainNormal, worldPosition } from "./environment";
 import { cameraPosition, followCamera, followCameraZoom, rideCameraZoom, sportCameraFrame, DEFAULT_CAMERA_ZOOM, type FollowTarget } from "./camera";
 import { cameraZoomInput } from "./camera-input";
@@ -88,7 +88,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   primeRepairNavigation(doc,worker.repairNavigation);
   const carRadius = playerRadius(doc);
   const roadMask = buildMaskForScene(doc);
-  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousParkingSaveCompatibility:worker.previousParkingSaveCompatibility,previousRepairSaveCompatibility:worker.previousRepairSaveCompatibility,previousSupplySaveCompatibility:worker.previousSupplySaveCompatibility,previousNetworkSaveCompatibility:worker.previousNetworkSaveCompatibility,previousPoolSaveCompatibility:worker.previousPoolSaveCompatibility,previousVergeSaveCompatibility:worker.previousVergeSaveCompatibility,previousPlantSaveCompatibility:worker.previousPlantSaveCompatibility,previousFinishSaveCompatibility:worker.previousFinishSaveCompatibility,previousCourierSaveCompatibility:worker.previousCourierSaveCompatibility,previousJunctionSaveCompatibility:worker.previousJunctionSaveCompatibility,previousJunctionNavigation:worker.previousJunctionNavigation,previousJunctionContacts:worker.previousJunctionContacts,previousSpacingSaveCompatibility:worker.previousSpacingSaveCompatibility,previousParkSaveCompatibility:worker.previousParkSaveCompatibility,previousParkNavigation:worker.previousParkNavigation,previousCitySaveCompatibility:worker.previousCitySaveCompatibility,previousCityNavigation:worker.previousCityNavigation,previousMatchSaveCompatibility:worker.previousMatchSaveCompatibility,previousBusinessSaveCompatibility:worker.previousBusinessSaveCompatibility,previousSchoolRepairSaveCompatibility:worker.previousSchoolRepairSaveCompatibility,previousSocialSaveCompatibility:worker.previousSocialSaveCompatibility,previousShiftSaveCompatibility:worker.previousShiftSaveCompatibility,previousHoursSaveCompatibility:worker.previousHoursSaveCompatibility,previousSeatingSaveCompatibility:worker.previousSeatingSaveCompatibility,previousKitchenSaveCompatibility:worker.previousKitchenSaveCompatibility,previousMealSaveCompatibility:worker.previousMealSaveCompatibility,previousProgressSaveCompatibility:worker.previousProgressSaveCompatibility,previousRecipeSaveCompatibility:worker.previousRecipeSaveCompatibility,previousEgressSaveCompatibility:worker.previousEgressSaveCompatibility,previousInteriorSaveCompatibility:worker.previousInteriorSaveCompatibility,previousInteriorNavigation:worker.previousInteriorNavigation,previousInteriorContacts:worker.previousInteriorContacts,previousVergeNavigation:worker.previousVergeNavigation,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
+  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousParkingSaveCompatibility:worker.previousParkingSaveCompatibility,previousRepairSaveCompatibility:worker.previousRepairSaveCompatibility,previousSupplySaveCompatibility:worker.previousSupplySaveCompatibility,previousNetworkSaveCompatibility:worker.previousNetworkSaveCompatibility,previousPoolSaveCompatibility:worker.previousPoolSaveCompatibility,previousVergeSaveCompatibility:worker.previousVergeSaveCompatibility,previousPlantSaveCompatibility:worker.previousPlantSaveCompatibility,previousFinishSaveCompatibility:worker.previousFinishSaveCompatibility,previousCourierSaveCompatibility:worker.previousCourierSaveCompatibility,previousPeopleSaveCompatibility:worker.previousPeopleSaveCompatibility,previousPeopleNavigation:worker.previousPeopleNavigation,previousPeopleContacts:worker.previousPeopleContacts,previousJunctionSaveCompatibility:worker.previousJunctionSaveCompatibility,previousJunctionNavigation:worker.previousJunctionNavigation,previousJunctionContacts:worker.previousJunctionContacts,previousSpacingSaveCompatibility:worker.previousSpacingSaveCompatibility,previousParkSaveCompatibility:worker.previousParkSaveCompatibility,previousParkNavigation:worker.previousParkNavigation,previousCitySaveCompatibility:worker.previousCitySaveCompatibility,previousCityNavigation:worker.previousCityNavigation,previousMatchSaveCompatibility:worker.previousMatchSaveCompatibility,previousBusinessSaveCompatibility:worker.previousBusinessSaveCompatibility,previousSchoolRepairSaveCompatibility:worker.previousSchoolRepairSaveCompatibility,previousSocialSaveCompatibility:worker.previousSocialSaveCompatibility,previousShiftSaveCompatibility:worker.previousShiftSaveCompatibility,previousHoursSaveCompatibility:worker.previousHoursSaveCompatibility,previousSeatingSaveCompatibility:worker.previousSeatingSaveCompatibility,previousKitchenSaveCompatibility:worker.previousKitchenSaveCompatibility,previousMealSaveCompatibility:worker.previousMealSaveCompatibility,previousProgressSaveCompatibility:worker.previousProgressSaveCompatibility,previousRecipeSaveCompatibility:worker.previousRecipeSaveCompatibility,previousEgressSaveCompatibility:worker.previousEgressSaveCompatibility,previousInteriorSaveCompatibility:worker.previousInteriorSaveCompatibility,previousInteriorNavigation:worker.previousInteriorNavigation,previousInteriorContacts:worker.previousInteriorContacts,previousVergeNavigation:worker.previousVergeNavigation,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
     driveMask: buildPaperMask(doc.canonical.width, doc.canonical.height), carRadius };
   let car = createCarAtSpawn(doc);
   const repairViews=repairView();
@@ -233,8 +233,8 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     const group = destructible ? buildDamageObject(object) : compactObject(buildObject(object));
     group.position.copy(worldPosition(doc, object.x, object.y, 1.5));
     const placement=objectPlacement(doc,object);
-    group.position.y=placement.base+1.5;group.quaternion.copy(placement.rotation);
-    group.userData.sceneObject=object;
+    group.position.y=placement.base+objectGroundLift(object);group.quaternion.copy(placement.rotation);
+    group.userData.sceneObject=object;group.userData.groundLift=objectGroundLift(object);
     group.userData.ambient=!!object.route && ["ambient","walk"].includes(doc.routes.find(r=>r.id===object.route!.id)?.kind??"");
     scene.add(group);
     objects.push(group);
@@ -680,7 +680,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       const journey=workJourneyForActor(car,doc,rawPose.id);
       const pose=repairViews.sample(rawPose,!!journey && journey.phase!=='rest',car.economy?.atS??car.timeS,car.timeS,snap || reduced.matches);
       const group=actorMeshes.get(pose.id)!;
-      group.position.copy(worldPosition(doc,pose.x,pose.y));group.position.y=pose.elevation+(pose.seatHeight===undefined ? 1.5 : .2);
+      group.position.copy(worldPosition(doc,pose.x,pose.y));group.position.y=pose.elevation+(pose.seatHeight===undefined ? group.userData.groundLift??1.5 : .2);
       const spec=group.userData.sceneObject.spec;
       const upright=pose.activity && spec?.grounding!=='surface';
       const normal=!upright && (pose.kind==="rail" || pose.kind==="path") ? terrainNormal(doc,pose.x,pose.y) : new THREE.Vector3(0,1,0);
@@ -849,6 +849,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     if(streamState() && shadersReady())draw();else pendingDraw=draw;
   };
   await loading.stage("Loading the first neighbourhood");
+  if(import.meta.env.DEV && params.has('test-paused'))setMode('paused');
   frame();
   if(import.meta.env.DEV)container.dataset.memory=JSON.stringify(geometryMemory(scene,...debris.cachedRoots));
   renderer.setAnimationLoop(frame);

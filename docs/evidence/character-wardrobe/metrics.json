@@ -1,0 +1,133 @@
+{
+  "priorCommit": "f19e215",
+  "previousFingerprint": "dc6d2c4b9ab4648a7ff99d47a20e60792c1d940e299e90bbe6fa047fb4e4b66f",
+  "changedPeople": 133,
+  "maxPhysicalError": 8.881784197001252e-16,
+  "sceneRevision": "r71",
+  "fingerprint": "5297667c16ec9218ef46e6cbf82cfdffe826220f92572f16d85f88ef5c8c2c53",
+  "objects": 1769,
+  "ambient": 181,
+  "stepSeconds": 0.008333333333333333,
+  "rows": [
+    {
+      "scale": 0.2,
+      "speed": 4,
+      "contacts": 882,
+      "maxDrift": 3.559992061850885e-14
+    },
+    {
+      "scale": 0.2,
+      "speed": 14,
+      "contacts": 851,
+      "maxDrift": 4.3459523954196826e-14
+    },
+    {
+      "scale": 0.2,
+      "speed": 35,
+      "contacts": 711,
+      "maxDrift": 5.687116766346677e-14
+    },
+    {
+      "scale": 0.2,
+      "speed": 55,
+      "contacts": 556,
+      "maxDrift": 1.1368683772161603e-13
+    },
+    {
+      "scale": 0.2,
+      "speed": 95,
+      "contacts": 521,
+      "maxDrift": 0.000010027697197404712
+    },
+    {
+      "scale": 0.306,
+      "speed": 4,
+      "contacts": 881,
+      "maxDrift": 7.28861204275862e-14
+    },
+    {
+      "scale": 0.306,
+      "speed": 14,
+      "contacts": 866,
+      "maxDrift": 5.224422199693188e-14
+    },
+    {
+      "scale": 0.306,
+      "speed": 35,
+      "contacts": 730,
+      "maxDrift": 5.690583463874556e-14
+    },
+    {
+      "scale": 0.306,
+      "speed": 55,
+      "contacts": 568,
+      "maxDrift": 1.1368770508004532e-13
+    },
+    {
+      "scale": 0.306,
+      "speed": 95,
+      "contacts": 550,
+      "maxDrift": 1.1374233532693354e-13
+    },
+    {
+      "scale": 1,
+      "speed": 4,
+      "contacts": 922,
+      "maxDrift": 2.8314927426963657e-13
+    },
+    {
+      "scale": 1,
+      "speed": 14,
+      "contacts": 887,
+      "maxDrift": 1.9943511937781523e-13
+    },
+    {
+      "scale": 1,
+      "speed": 35,
+      "contacts": 757,
+      "maxDrift": 5.709267256288867e-14
+    },
+    {
+      "scale": 1,
+      "speed": 55,
+      "contacts": 592,
+      "maxDrift": 1.6257547364049106e-13
+    },
+    {
+      "scale": 1,
+      "speed": 95,
+      "contacts": 583,
+      "maxDrift": 2.4221718197332137e-13
+    },
+    {
+      "scale": 2,
+      "speed": 4,
+      "contacts": 876,
+      "maxDrift": 5.84202689171163e-13
+    },
+    {
+      "scale": 2,
+      "speed": 14,
+      "contacts": 895,
+      "maxDrift": 3.488585745167758e-13
+    },
+    {
+      "scale": 2,
+      "speed": 35,
+      "contacts": 765,
+      "maxDrift": 8.556067554929069e-14
+    },
+    {
+      "scale": 2,
+      "speed": 55,
+      "contacts": 598,
+      "maxDrift": 3.0685246886277446e-13
+    },
+    {
+      "scale": 2,
+      "speed": 95,
+      "contacts": 590,
+      "maxDrift": 2.6626398042924013e-13
+    }
+  ]
+}

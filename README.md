@@ -247,6 +247,10 @@ Press **F** to get out of the car, walk over to another vehicle and press **F** 
 
 [Watch the vehicle switch in HD](docs/media/switching.mp4)
 
+The city now has twelve connected character templates: different hair, facial hair, glasses, uniforms, coats, aprons, skirts, hoodies and carried items. They share a body and reusable parts through Dream, with clothing attached to the bones that move it. [Build people in Dream](docs/dream/people.md).
+
+![The live character wardrobe](docs/media/people-wardrobe.png)
+
 Walking and running tie their stride to distance travelled and character scale, with bent knees, articulated elbows and planted stance feet. Swimming alternates a crawl with upright treading when you stop. The same Dream bone bindings animate the city pedestrians. [Character rig and motion](docs/dream/behavior.md#humanoid-motion).
 
 ![Walking, running and swimming with one connected Dream rig](docs/media/character.gif)

@@ -11,6 +11,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [Runnable examples](dream/examples.md) | Bouncing ball, breakable bench, hinged sign and toppling tree |
 | [Quickstart](dream/quickstart.md) | Compile a complete object, then a playable world |
 | [Compose objects](dream/objects.md) | Parts, materials, components, joints and physical size |
+| [People and clothing](dream/people.md) | Shared anatomy, attached accessories, distinct outfits and stable physical size |
 | [Build with voxels](dream/voxels.md) | Fill, carve, merge faces and break volumes into bounded chunks |
 | [A whole voxel world](whole-world-voxels.md) | Construct the terrain, city, vehicles, plants and water from cells |
 | [City design](city-design.md) | Research, connected destinations and the source-derived map |

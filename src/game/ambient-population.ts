@@ -7,7 +7,7 @@ import type {CarState} from '../sim/car';
 import {ambientObjects,ambientPose,initialAmbient} from '../sim/ambient';
 import {assemblyBounds,assemblyHorizontalRadius} from '../scene/measure';
 import {walkingHeight} from '../scene/interiors';
-import {buildObject} from './world3d';
+import {buildObject,objectGroundLift} from './world3d';
 import {ambientMaterial} from './shaders';
 import {gaitStride,humanoidSoles} from './humanoid-gait';
 import {finishBuild} from './batching';
@@ -27,7 +27,7 @@ export function ambientPrototype(object:SceneObject,joints=object.ambient?.joint
  for(const batch of batches.values()){const geometry=mergeGeometries(batch.geometry,false);if(!geometry)throw Error('ambient assembly could not be combined');group.add(new THREE.Mesh(indexedGeometry(geometry),batch.material));batch.geometry.forEach(g=>g.dispose());}
  source.traverse(node=>{if(node instanceof THREE.Mesh)node.geometry.dispose();});return group;
 }
-type Batch={indices:number[];meshes:THREE.InstancedMesh[];radius:number;meters:number;stride:number};
+type Batch={indices:number[];meshes:THREE.InstancedMesh[];radius:number;meters:number;stride:number;lift:number};
 export class AmbientPopulation {
  readonly group=new THREE.Group();
  readonly count:number;
@@ -52,7 +52,7 @@ export class AmbientPopulation {
     const mesh=new THREE.InstancedMesh(geometry,ambientMaterial(source.material as THREE.Material,o.ambient!.joints,false,false,soles),indices.length);mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     mesh.castShadow=true;mesh.receiveShadow=true;mesh.frustumCulled=false;mesh.customDepthMaterial=ambientMaterial(new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking}),o.ambient!.joints,true,false,soles);this.group.add(mesh);meshes.push(mesh);
    }
-   this.batches.push({indices,meshes,radius,meters:spec.measure?.meters??1,stride:gaitStride(0)*(o.ambient!.joints.find(j=>j.bone==='root')?.position[1]??25)/25});
+   this.batches.push({indices,meshes,radius,lift:objectGroundLift(o),meters:spec.measure?.meters??1,stride:gaitStride(0)*(o.ambient!.joints.find(j=>j.bone==='root')?.position[1]??25)/25});
   }
  }
  update(state:CarState,camera:THREE.Camera,light:THREE.DirectionalLight,dt:number,reduced=false){
@@ -63,7 +63,7 @@ export class AmbientPopulation {
    for(const i of batch.indices){const object=this.objects[i]!,p=ambientPose(population,i,state.timeS),motion=object.ambient!.motion;
     this.amounts[i]!+=(Number(p.speed>.01)-this.amounts[i]!)*(1-Math.exp(-dt*12));const amount=reduced ? 0 : this.amounts[i]!;
     const phase=p.distance/(motion.kind==='walk' ? batch.stride*object.scale : batch.meters*6),hop=motion.kind==='roam' && motion.gait==='hop' ? Math.max(0,Math.sin(phase*Math.PI*2))*Math.min(4,batch.meters*5)*amount : 0;
-    this.position.set(p.x-this.scene.canonical.width/2,walkingHeight(this.scene,p.x,p.y,this.supportRadii[i]!)+1.5+hop,p.y-this.scene.canonical.height/2);
+    this.position.set(p.x-this.scene.canonical.width/2,walkingHeight(this.scene,p.x,p.y,this.supportRadii[i]!)+batch.lift+hop,p.y-this.scene.canonical.height/2);
     this.sphere.set(this.position,batch.radius);if(!this.view.intersectsSphere(this.sphere) && !this.shadow.intersectsSphere(this.sphere))continue;
     this.rotation.setFromAxisAngle(this.up,-p.heading);this.scale.setScalar(object.scale);this.matrix.compose(this.position,this.rotation,this.scale);
     for(const mesh of batch.meshes){mesh.setMatrixAt(count,this.matrix);(mesh.geometry.getAttribute('popCycle') as THREE.InstancedBufferAttribute).setXYZ(count,p.distance/(batch.meters*6*.6),phase,amount);}count++;

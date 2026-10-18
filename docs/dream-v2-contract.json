@@ -130,6 +130,7 @@
         "interaction": "solid|knockable|decor",
         "radius": "n",
         "height": "n",
+        "clearance": "n?",
         "friction": "n?"
       }
     },
@@ -297,6 +298,16 @@
         "rot_deg": "v3?",
         "bone": "root|spine|left_hip|left_knee|left_ankle|left_shoulder|left_elbow|right_hip|right_knee|right_ankle|right_shoulder|right_elbow?",
         "motion": "joint_motion?"
+      },
+      "block": "visual"
+    },
+    "mount": {
+      "contexts": [
+        "object"
+      ],
+      "id": true,
+      "fields": {
+        "bone": "root|spine|left_hip|left_knee|left_ankle|left_shoulder|left_elbow|right_hip|right_knee|right_ankle|right_shoulder|right_elbow"
       },
       "block": "visual"
     },
@@ -1242,7 +1253,7 @@
       "right_shoulder",
       "right_elbow"
     ],
-    "semantics": "Optional joint.bone binds a complete 12-joint humanoid on a measured decor person. Required tree: root -> spine -> shoulder -> elbow, root -> hip -> knee -> ankle, paired left/right. Rest faces +X, +Y up, left +Z; unrotated frames, root centered with positive height, hips at root height, shoulders above spine, downward knee/ankle/elbow offsets >= .5. All parts parent to bones, no independent motion/fractures. Engine owns speed-blended walk/run, two-bone leg poses, jump/landing and crawl/tread transitions. Existing 12-joint/depth-4/32-part and 24-live-assembly limits apply. Furnish requires pose=rest for passive rigs or motion=walk(...) for instanced ambient walkers. Ambient GPU joints preserve the full validated hierarchy without per-member CPU rigs. Collision and terrain support remain separate; no skinning, terrain foot probes or generated animation scripts."
+    "semantics": "Optional joint.bone binds a complete 12-joint humanoid on a measured decor person. Required tree: root -> spine -> shoulder -> elbow, root -> hip -> knee -> ankle, paired left/right. Rest faces +X, +Y up, left +Z; unrotated frames, root centered with positive height, hips at root height, shoulders above spine, downward knee/ankle/elbow offsets >= .5. All parts parent to bones, no independent motion/fractures. After declaring anatomy, object-root mount detail(bone=spine) adds visual parts/components in the local frame of one previously declared bone, without another joint. Mounts count toward the same 32-part budget. Engine owns speed-blended walk/run, two-bone leg poses, jump/landing and crawl/tread transitions. Existing 12-joint/depth-4/32-part and 24-live-assembly limits apply. Furnish requires pose=rest for passive rigs or motion=walk(...) for instanced ambient walkers. Ambient GPU joints preserve the full validated hierarchy without per-member CPU rigs. Collision and terrain support remain separate; no skinning, terrain foot probes or generated animation scripts."
   },
   "seating": {
     "limits": {
@@ -1609,6 +1620,7 @@
       "bicycle": "smaller",
       "skateboard": "smaller"
     },
+    "layoutClearance": "Optional v2 body.clearance (compiled body.clearanceRadius), finite 4..128 local units and at least the collision radius, is a minimum furnishing reservation. It cannot reduce the actual visual footprint and never changes body contacts, driving, walking navigation or render culling. Omitted retains exact legacy bounds-based placement.",
     "rule": "measure sets one rest-pose extent; uniform scale preserves shape, physics and attachments. place.scale is 0.5..2 variation and must stay in the profile range. kind=custom permits deliberate fantasy sizes. Omit measure only for legacy local-unit assets."
   },
   "modules": {

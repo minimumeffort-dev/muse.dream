@@ -140,7 +140,7 @@ export function lowerBlock(nodes:DreamNode[]):Statement[] {
     if(node.fields.has("deform")){const deform=field(node,"deform") as DreamNode;statement.deform=[exprField(deform,"seed"),exprField(deform,"amount")];}
     switch(kind) {
       case "let":statement.value=n("value");break;
-      case "body":statement.interaction=wordField(node,"interaction");statement.args=[n("radius"),n("height"),...(node.fields.has("friction") ? [n("friction")] : [])];break;
+      case "body":if(node.fields.has("clearance"))statement.clearance=n("clearance");statement.interaction=wordField(node,"interaction");statement.args=[n("radius"),n("height"),...(node.fields.has("friction") ? [n("friction")] : [])];break;
       case "measure":statement.name=wordField(node,"kind");statement.axis=wordField(node,"axis");statement.value=n("meters");break;
       case "ground":statement.name=wordField(node,"mode");break;
       case "foundation":statement.args=listField(node,"size");statement.color=wordField(node,"color");break;

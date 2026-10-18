@@ -1,5 +1,5 @@
 import {describe,it,expect,beforeAll} from 'vitest';
-import {InstancedMesh,Mesh,Vector3,Box3} from 'three';
+import {InstancedMesh,Mesh,Vector3,Box3,Matrix4,OrthographicCamera,DirectionalLight} from 'three';
 import {compileDreamScene,compileDreamWorld,checkDream,formatDream} from '../src/scene/dream';
 import {ambientNavigation,ambientProblems,ambientGraph,primeAmbientNavigation} from '../src/scene/ambient-navigation';
 import {initialAmbient,stepAmbient,ambientObjects,ambientPose} from '../src/sim/ambient';
@@ -7,10 +7,12 @@ import {createCarAtSpawn,resetCar} from '../src/sim/car';
 import {stepInteractive} from '../src/sim/interaction';
 import {onWalkway,crossingPolygons} from '../src/scene/sites';
 import {onPolygon} from '../src/scene/streets';
+import {walkingHeight} from '../src/scene/interiors';
+import {assemblyHorizontalRadius} from '../src/scene/measure';
 import {drivingHeight} from '../src/scene/terrain';
 import {hasAnimatedJoints} from '../src/scene/object-dsl';
 import {AmbientPopulation,ambientPrototype} from '../src/game/ambient-population';
-import {buildObject} from '../src/game/world3d';
+import {buildObject,objectGroundLift} from '../src/game/world3d';
 import {parseScene,type Scene} from '../src/scene/schema';
 import {buildMaskForScene} from '../src/scene/fixture';
 import {buildPaperMask} from '../src/sim/mask';
@@ -43,6 +45,14 @@ describe('bounded moving ambient populations',()=>{
   const sync=new AmbientPopulation(scene),steps=AmbientPopulation.buildSteps(scene);let result=steps.next(),yields=0;while(!result.done){yields++;result=steps.next();}
   const staged=result.value;expect(yields).toBeGreaterThanOrEqual(2);expect(staged.count).toBe(sync.count);expect(staged.group.children.length).toBe(sync.group.children.length);
   for(const [i,child] of sync.group.children.entries()){const a=child as InstancedMesh,b=staged.group.children[i] as InstancedMesh;expect(b.count).toBe(a.count);expect(b.castShadow).toBe(a.castShadow);expect(b.customDepthMaterial!.customProgramCacheKey()).toBe(a.customDepthMaterial!.customProgramCacheKey());for(const [name,attribute] of Object.entries(a.geometry.attributes))expect(b.geometry.getAttribute(name).array).toEqual(attribute.array);expect(b.geometry.index!.array).toEqual(a.geometry.index!.array);}
+ });
+ it('places instanced people at the shared foot plane without lowering animals',()=>{
+  const people={...scene,objects:scene.objects.filter(o=>o.ambient!.motion.kind==='walk')},population=new AmbientPopulation(people),camera=new OrthographicCamera(-5000,5000,5000,-5000,.1,10000),sun=new DirectionalLight();
+  camera.position.set(0,3000,3000);camera.lookAt(0,0,0);camera.updateMatrixWorld();sun.shadow.camera.updateMatrixWorld();population.update(createCarAtSpawn(people),camera,sun,1/60,true);
+  const matrix=new Matrix4();for(const mesh of population.group.children as InstancedMesh[]){expect(mesh.count).toBe(people.objects.length);for(const [i,o] of people.objects.entries()){
+   mesh.getMatrixAt(i,matrix);expect(matrix.elements[13]).toBeCloseTo(walkingHeight(people,o.x,o.y,assemblyHorizontalRadius(o.spec as import('../src/scene/object-dsl').ObjectDslV2,o.scale))+.2,5);
+  }}
+  expect(objectGroundLift(scene.objects.find(o=>o.id==='rabbit')!)).toBe(1.5);
  });
  it('rejects mismatched, oversized or broken prepared graphs without changing the fallback',()=>{
   const valid=ambientGraph(scene),node=valid.nodes.findIndex(n=>n.links.length>0);

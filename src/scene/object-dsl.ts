@@ -96,6 +96,7 @@ const objectV2PartSchema=objectPartSchema.extend({
   zone:z.string().min(1).max(40).optional(),
 }).strict();
 const objectDslV2Schema=objectV1Schema.extend({
+  body:objectV1Schema.shape.body.extend({clearanceRadius:z.number().finite().min(4).max(128).optional()}).strict(),
   voxelSize:z.number().finite().min(.25).max(4).optional(),
   measure:z.object({kind:z.enum(MEASURE_KINDS),axis:z.enum(["x","y","z"]),meters:z.number().finite().min(.05).max(60)}).strict().optional(),
   dslVersion:z.literal(2),joints:z.array(jointSchema).max(12).optional(),parts:z.array(objectV2PartSchema).min(1).max(32),
@@ -124,6 +125,7 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
     ids.add(part.id);
   });
   if(spec.dslVersion===2) {
+    if(spec.body.clearanceRadius!==undefined && spec.body.clearanceRadius<spec.body.colliderRadius)ctx.addIssue({code:"custom",path:["body","clearanceRadius"],message:"layout clearance must be at least the collision radius"});
     if(spec.seats){
       if(new Set(spec.seats.map(s=>s.id)).size!==spec.seats.length)ctx.addIssue({code:'custom',path:['seats'],message:'seat IDs must be unique'});
       if(spec.body.interaction!=='solid' || spec.foundation || spec.interior || spec.contacts || spec.rideable || spec.grounding==='surface' || spec.joints?.length || spec.parts.some(p=>p.animation) || spec.breakZones?.length || spec.impact && spec.impact.kind!=='break')ctx.addIssue({code:'custom',path:['seats'],message:'furniture seats require one upright static cylinder without contacts, foundations, interiors, transport seats, joints, break zones or moving impacts'});

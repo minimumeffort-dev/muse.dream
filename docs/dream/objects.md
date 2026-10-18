@@ -115,6 +115,11 @@ Parameters work with `part`, `beam` and `voxels`, including geometry inside grou
 
 A `group` applies a rigid position, rotation and uniform scale to its contents. Use `joint` when parts need a connected coordinate frame. Joint transforms don't inherit primitive dimension scaling, so a hand doesn't stretch when an upper arm gets longer. Local constants resolve in order. Components see globals and their parameters, not the caller's local bindings.
 
+`mount` adds a component in a previously declared humanoid bone's frame. It is
+useful for coats, hair, hats and carried objects, without introducing another
+joint. [People and connected clothing](people.md) includes the complete live
+character library and the bone, scope and placement-clearance rules.
+
 ## Animate a connection
 
 Parts support `spin`, distance-driven `roll` and rigid `sway`. Joints support `roll`, oscillating `swing` or a proximity-driven `open`. Arguments use named fields: `spin(axis=x,deg_s=90)` or `swing(axis=z,deg=20,hz=.25,phase_deg=0)`.

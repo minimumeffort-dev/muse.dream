@@ -2,13 +2,37 @@
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
+## Character wardrobe, r71
+
+The current people and player sheets, complete 109-assembly atlas, sports sheets,
+main asset overview and measured-scale lineup show the connected voxel models.
+The twelve-template family and standing/seated pair were checked from four sides.
+`people-wardrobe.png` and `player-characters.png` use native full-canvas gallery
+exports, including rows below the viewport. `city-people.jpg` uses the same family
+export; `team-assets.png` and `sports-assets.jpg` use the actual live team sources.
+
+Character, pedestrians, football, basketball, locomotion, swimming, switching,
+seating, commerce and conversation GIF/HD pairs are refreshed together with their
+stills. These ten sets contain 3,540 actual 2400 × 1350 rendered source frames at
+30 frames per simulation second. The repository encoder keeps 1600 × 900 H.264
+video and the existing per-clip GIF settings. No interpolation or live FPS claim.
+Still frame choices are 60, 90, 180, 180, 70, 60, 35/110, 90, 300 and 60 in that
+order; sports-park/basketball/court images share their sport's frame 180.
+
+The keyboard Work-panel screenshot shows the current models and unchanged HUD
+layout. The source-generated city map retains the same streets, entrances and
+placement coordinates. Earlier domain recordings remain historical examples of
+their rules and older character construction. The new sheets and motion sets
+show current appearance; historical evidence retains its release-specific images
+and claims. [Native checks, source identity and media manifest](../evidence/character-wardrobe/verification.md).
+
 ## Distance-driven walking
 
 The current character close-up adds an instanced walker alongside the CPU walker,
 runner and swimmer, moving over a fixed ground grid. Character, locomotion,
 pedestrians, swimming, football and basketball GIF/HD video pairs and their matching stills
-are refreshed together at 30 rendered frames per simulation second. Static model
-and city images retain their exact source geometry. Older activity recordings
+are refreshed together at 30 rendered frames per simulation second. The r71 wardrobe refresh below replaces these characters while keeping the
+distance-driven poses. Older activity recordings
 retain their recorded mechanics; they do not demonstrate the corrected cadence.
 The [stride review](../evidence/walking-strides/verification.md) records the
 release snapshot, native controls, stance checks and remaining terrain limits.
@@ -78,7 +102,7 @@ those same current recordings. These are offline exports, not frame-rate tests.
 The capture viewport fixes DPR 1.5 so hidden review tabs keep the same source size.
 
 `team-assets.png` and four evidence angles are native full-canvas gallery exports
-of the four new 32-part, twelve-bone kits. `sports-assets.jpg` includes those kits,
+of the four twelve-bone kits. `sports-assets.jpg` includes those kits,
 the goals and both balls. `assets-all.jpg` is the complete current 109-template
 Dream library export (1600 × 8680). The gallery's Save PNG includes rows below
 the viewport. No generated concept art or interpolation is used.

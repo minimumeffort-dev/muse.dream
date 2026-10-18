@@ -6,6 +6,10 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights bone mounts and layout clearance at whole-token boundaries and escapes authored text',()=>{
+    const html=highlight('mount hair(bone=spine){use detail(component=haircut);}body(clearance=14); // <Hair>&');
+    expect(html).toContain('class="dream-keyword">mount</span>');for(const field of ['bone','clearance'])expect(html).toContain(`class="dream-field">${field}</span>`);expect(html).toContain('&lt;Hair&gt;&amp;');expect(highlight('mounted mount_extra clearances clearance_extra backbone')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('highlights social plans and meal-history guards at exact boundaries with HTML escaping',()=>{
     const html=highlight('social break_time(good=bread,seats=[bench],on=plaza,eat_s=8,cooldown_s=600,max_fullness=80);on memory(event=interact,to=hello,radius=55,shared_meals=1); // <Meal>&');
     expect(html).toContain('class="dream-keyword">social</span>');for(const word of ['cooldown_s','max_fullness','shared_meals'])expect(html).toContain(`class="dream-field">${word}</span>`);expect(html).toContain('&lt;Meal&gt;&amp;');expect(highlight('socials social_extra shared_meals_extra cooldown_s_extra')).not.toMatch(/dream-(?:keyword|field)/);

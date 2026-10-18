@@ -54,3 +54,13 @@ Authors still design an appropriate body or contact layout. Collision remains
 the existing cylinder/heightfield simulation. Animated poses can extend beyond
 the measured rest pose. Acceptance still requires complete-world road, spawn
 and route validation.
+
+## A stable space for clothing
+
+Dream 2 can declare `body(interaction=decor,radius=13,height=57,clearance=14)`.
+The optional clearance reserves at least that local radius during furnishing,
+after the measured uniform scale is resolved. It is bounded to 4..128 and cannot
+be smaller than the collision radius. Actual visual bounds still win when larger.
+It does not alter the cylinder, visible size, navigation clearance or culling.
+This lets a character's clothing change inside an existing planning envelope
+without shuffling a deterministic street population. [Complete character library](examples/city-person.dream).
