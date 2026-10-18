@@ -24,6 +24,8 @@ The 87 parked bicycles, scooters and cars retain their full construction. Untouc
 
 The 256-record dormant fleet cap leaves the limits at 24 resident route actors or controllable vehicles, 32 NPCs and 24 live joint assemblies. One active fleet rig is reserved. The matched original drive retained 253 mean draws, 647,115 triangles and 255,358,898 counted buffer bytes, with a 16.667 ms mean frame interval on the local M3 Ultra / 96 GiB. This is one local retention check, not a speed or low-powered-device claim. [Checks and browser evidence](evidence/parked-fleet/verification.md).
 
+The ambient movement pass caches immutable rest radii and accepts a pavement step early only when its complete swept footprint fits strictly inside one convex piece. Boundary joins, concave pieces, thin gaps, water and physical contacts keep their existing checks. Candidate steps stop accumulating nonnegative spacing costs once they cannot beat the current choice. The [complete repair replay](evidence/pedestrian-cost/verification.md) compares exact saved results and local CPU time; it is not a browser FPS claim.
+
 ## Loading and memory
 
 The loading screen arrives in the first HTML response. One worker compiles and validates Dream, then builds terrain, streets, water and static object chunks on demand. Finished mesh buffers are transferred to the renderer, along with engine-owned material recipes and per-instance occlusion data. Object stamping and batching stay off the main thread. The first complete view starts the game; the rest of the map is built as it becomes relevant.

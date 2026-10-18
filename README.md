@@ -402,7 +402,7 @@ The [checked examples](docs/dream/examples.md) also include a bouncing ball, bre
 
 Streetlights now follow streets, bicycle and scooter parking sits beside destinations, and birds fly across sixteen habitats. Dream’s `furnish` and `flock` commands describe those populations with bounded rules.
 
-There are 131 residents, 60 additional ground animals and birds, 345 trees, 48 parked bicycles, 25 parked scooters and 14 parked cars alongside four road cars, five buses and boardable tram and rail services. 119 residents walk on the pedestrian network and 60 ground animals and birds roam and react nearby. Twelve people retain their individual NPC routines. The new populations share complete instanced models; the existing NPC and CPU rig limits stay the same. [See how populations work](docs/dream/populations.md).
+There are 131 residents, 60 additional ground animals and birds, 345 trees, 48 parked bicycles, 25 parked scooters and 14 parked cars alongside four road cars, five buses and boardable tram and rail services. 119 residents walk on the pedestrian network and 60 ground animals and birds roam and react nearby. Twelve people retain their individual NPC routines. The new populations share complete instanced models; the existing NPC and CPU rig limits stay the same. [See how populations work](docs/dream/populations.md). The movement checks reuse exact body radii and skip redundant pavement work; the [replay comparison](docs/evidence/pedestrian-cost/verification.md) checks the same paths and saved results.
 
 ![People walk along the connected pavement](docs/media/pedestrians.gif)
 

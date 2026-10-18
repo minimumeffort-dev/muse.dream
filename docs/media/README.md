@@ -2,6 +2,10 @@
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
+## Pedestrian query cost
+
+The movement optimization changes no asset, motion result, camera or HUD. Existing pedestrian GIF, HD video and still remain accurate together. The [replay and pavement checks](../evidence/pedestrian-cost/verification.md) retain exact saved-state and geometry comparisons.
+
 ## Ground-fitting allocation pass
 
 The support builder keeps the exact ordered sample coordinates. No asset, camera,

@@ -35,9 +35,10 @@ export function primeAmbientNavigation(scene:Scene,graph:AmbientGraph):void{
  if(edges>AMBIENT_LIMITS.graphNodes*4 || nodes.some((node,i)=>node.links.some(j=>!nodes[j]!.links.includes(i))) || walkers.some(o=>!Number.isInteger(starts.get(o.id)) || !nodes[starts.get(o.id)!]?.links.length))invalid();
  cache.set(scene,buildNavigation(scene,graph));
 }
-const radius=(o:SceneObject)=>assemblyHorizontalRadius(o.spec as ObjectDslV2,o.scale);
 /** Sparse polygon portals reuse accepted pavement. No raster of the whole world or runtime path search. */
 function buildNavigation(scene:Scene,prepared?:AmbientGraph){
+ const radii=new WeakMap<SceneObject,number>();
+ const radius=(o:SceneObject)=>{let value=radii.get(o);if(value===undefined){value=assemblyHorizontalRadius(o.spec as ObjectDslV2,o.scale);radii.set(o,value);}return value;};
  const members=scene.objects.filter(o=>!!o.ambient),walkers=members.filter(o=>o.ambient!.motion.kind==='walk');
  const networkWork=scene.economy?.repairs.some(r=>r.grounds?.length || r.streets?.length) || scene.economy?.deliveries.some(d=>d.on) || !!scene.economy?.meals.length || !!scene.economy?.shifts.length,r=Math.max(3,networkWork ? COMMERCE_LIMITS.repairRadius : 0,...walkers.map(radius)),polygons=walkers.length || networkWork ? walkingNetwork(scene).polygons : [];
  const {bins,bounds,paved,segment:pavedSegment}=pavementSurface(polygons);

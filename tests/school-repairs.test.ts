@@ -1,6 +1,7 @@
 import {saveCompatibilitySource} from './fixtures/pre-city-world';
 import {preBusinessState} from './pre-business-state';
 import {it,expect} from 'vitest';
+import {setImmediate} from 'node:timers/promises';
 import {createWorldScene} from './fixtures/pre-city-world';
 import {createCarAtSpawn,type CarState,type World} from '../src/sim/car';
 import {stepNpcs} from '../src/sim/npcs';
@@ -30,7 +31,7 @@ it('adds exactly the school bench to existing coverage with unchanged geometry, 
  expect(preMatchScene(scene).objects).toEqual(old.objects);expect(sceneContactData(scene)).toEqual(sceneContactData(old));expect(ambientGraph(scene)).toEqual(ambientGraph(old));
  const graph=repairNetwork(scene,service);expect(graph.length).toBe(4305);expect(graph.reduce((n,p)=>n+p.links.length,0)).toBe(14368);expect(service.grounds).toEqual(['park_seating','station_seating','market_hall','school_yard','school_yard_access','school_yard_return']);
 });
-it('walks the complete route, reserves and consumes one kit, waits for a parked car, saves each phase and pays once',()=>{
+it('walks the complete route, reserves and consumes one kit, waits for a parked car, saves each phase and pays once',async()=>{
  let s={...npcReviewStart(createCarAtSpawn(scene),world,'vendor'),broken:['school_bench']},previous={x:scene.objects.find(o=>o.id==='market_neighbor')!.x,y:scene.objects.find(o=>o.id==='market_neighbor')!.y},waited=false,arrived=false,returned=false,paidOnce=false;const phases=new Set<string>();
  for(let i=0;i<3600;i++){
   s=tick(s);const task=worker(s).repair;
@@ -39,7 +40,7 @@ it('walks the complete route, reserves and consumes one kit, waits for a parked 
    if(task.phase==='home'&&!paidOnce){expect(worker(s).credits).toBe(4);expect(s.economy!.repaired.market_tables).toBe(1);paidOnce=true;}
    if(task.phase==='work'&&!waited){arrived=true;const original=s.vehicles;s={...s,vehicles:s.vehicles.map(v=>v.id===null ? {...v,x:target.contact.x,y:target.contact.y,elevation:walkingHeight(scene,target.contact.x,target.contact.y)} : v)};expect(repairSpaceClear(scene,target,s)).toBe(false);for(let j=0;j<48;j++)s=tick(s);expect(s.broken).toContain('school_bench');expect(s.economy!.repaired.market_tables).toBe(0);expect(worker(s).credits).toBe(0);s=decodeSave(encodeSave(s,s.timeS,world),world).state;s={...s,vehicles:original};waited=true;}
   }else if(arrived){returned=true;break;}
-  if(i%80===0)checkEconomyState(s,scene);
+  if(i%80===0){checkEconomyState(s,scene);await setImmediate();}
  }
  // On reaching home, the hungry caretaker buys two-credit vegetables with the earned wage.
  expect([...phases]).toEqual(['out','work','home']);expect(arrived&&waited&&returned&&paidOnce).toBe(true);expect(s.broken).not.toContain('school_bench');expect(s.economy!.repaired.market_tables).toBe(1);expect(worker(s).completed.repair.market_tables).toBe(1);expect(worker(s).credits).toBe(2);expect(worker(s).inventory.vegetables).toBe(1);expect(market(s).stock.timber).toBe(11);expect(worldSeats(scene).filter(s=>s.objectId==='school_bench')).toHaveLength(2);checkEconomyState(s,scene);

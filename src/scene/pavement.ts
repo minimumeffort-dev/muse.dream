@@ -6,6 +6,11 @@ import {clipPolygon} from './landscape-dsl';
 /** Exact support across the union of accepted pavement polygons. */
 export function pavementSurface(polygons:Point[][]){
  const bins=new Map<string,number[]>(),bounds=polygons.map(polygonBounds);
+ const interiors=polygons.map(p=>{
+  const winding=Math.sign(p.reduce((n,a,i)=>{const b=p[(i+1)%p.length]!;return n+a.x*b.y-b.x*a.y;},0));
+  const edges=p.map((a,i)=>{const b=p[(i+1)%p.length]!,dx=b.x-a.x,dy=b.y-a.y;return {x:a.x,y:a.y,dx,dy,length:Math.hypot(dx,dy)};});
+  return winding && edges.every(e=>e.length>0 && p.every(q=>winding*(e.dx*(q.y-e.y)-e.dy*(q.x-e.x))>=0)) ? {winding,edges} : undefined;
+ });
  for(const [i,b] of bounds.entries())for(let y=Math.floor(b.y0/256);y<=Math.floor(b.y1/256);y++)for(let x=Math.floor(b.x0/256);x<=Math.floor(b.x1/256);x++){const key=x+','+y,cell=bins.get(key)??[];cell.push(i);bins.set(key,cell);}
  const paved=(x:number,y:number)=>bins.get(Math.floor(x/256)+','+Math.floor(y/256))?.some(i=>{
   const b=bounds[i]!,margin=.01+1e-9;
@@ -14,7 +19,10 @@ export function pavementSurface(polygons:Point[][]){
  // Check every pavement boundary, so short gaps at an oblique portal cannot fall between samples.
  const pavedSegment=(a:Point,b:Point,rr:number)=>{
   const candidates=new Set<number>();
-  for(let y=Math.floor((Math.min(a.y,b.y)-rr)/256);y<=Math.floor((Math.max(a.y,b.y)+rr)/256);y++)for(let x=Math.floor((Math.min(a.x,b.x)-rr)/256);x<=Math.floor((Math.max(a.x,b.x)+rr)/256);x++)for(const i of bins.get(x+','+y)??[])candidates.add(i);
+  const x0=Math.min(a.x,b.x)-rr-.01,x1=Math.max(a.x,b.x)+rr+.01,y0=Math.min(a.y,b.y)-rr-.01,y1=Math.max(a.y,b.y)+rr+.01;
+  for(let y=Math.floor((Math.min(a.y,b.y)-rr)/256);y<=Math.floor((Math.max(a.y,b.y)+rr)/256);y++)for(let x=Math.floor((Math.min(a.x,b.x)-rr)/256);x<=Math.floor((Math.max(a.x,b.x)+rr)/256);x++)for(const i of bins.get(x+','+y)??[]){const p=bounds[i]!;if(p.x1>=x0 && p.x0<=x1 && p.y1>=y0 && p.y0<=y1)candidates.add(i);}
+  // A complete capsule strictly inside one convex piece cannot cross a union boundary.
+  for(const i of candidates){const inner=interiors[i];if(inner && inner.edges.every(e=>Math.min(inner.winding*(e.dx*(a.y-e.y)-e.dy*(a.x-e.x)),inner.winding*(e.dx*(b.y-e.y)-e.dy*(b.x-e.x)))>(rr+.01)*e.length))return true;}
   const dx=b.x-a.x,dy=b.y-a.y,d2=dx*dx+dy*dy;if(d2<1e-10)return true;
   for(let sample=0;sample<9;sample++){
    const x=a.x+(sample ? Math.cos(sample*Math.PI/4)*rr : 0),y=a.y+(sample ? Math.sin(sample*Math.PI/4)*rr : 0),cuts=[0,1];

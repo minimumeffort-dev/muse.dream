@@ -14,3 +14,14 @@ it('supports overlaps and rejects body envelopes outside a narrow pavement',()=>
  const a=rect(0,0,20,20),b=rect(15,0,20,20),s=pavementSurface([a,b]);
  expect(pavementPortal(a,b,4)).toEqual({x:17.5,y:10});expect(s.segment({x:5,y:2},{x:30,y:2},4)).toBe(false);
 });
+it('keeps full footprints inside rotated convex paving and retains concave boundary checks',()=>{
+ const diamond=[{x:0,y:20},{x:20,y:0},{x:40,y:20},{x:20,y:40}],s=pavementSurface([diamond]);
+ for(const points of [diamond,[...diamond].reverse()]){
+  const surface=pavementSurface([points]);
+  expect(surface.segment({x:15,y:20},{x:25,y:20},4)).toBe(true);
+  expect(surface.segment({x:5,y:20},{x:20,y:5},4)).toBe(false);
+ }
+ const concave=[{x:0,y:0},{x:40,y:0},{x:40,y:40},{x:30,y:40},{x:30,y:10},{x:10,y:10},{x:10,y:40},{x:0,y:40}];
+ expect(pavementSurface([concave]).segment({x:5,y:30},{x:35,y:30},2)).toBe(false);
+ expect(s.segment({x:20,y:10},{x:20,y:30},4)).toBe(true);
+});

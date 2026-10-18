@@ -24,8 +24,9 @@ export function stepAmbient(state:CarState,dt:number,scene:Scene):AmbientState|u
  if(!ambientObjects(scene).length)return state.population;
  let population=state.population??{...initialAmbient(scene),tick:Math.floor(state.timeS/AMBIENT_LIMITS.tickSeconds)};const target=Math.floor((state.timeS+dt+1e-8)/AMBIENT_LIMITS.tickSeconds);
  const nav=ambientNavigation(scene),objects=ambientObjects(scene);
+ const hazards=target>population.tick ? [...actorContacts(scene,state.timeS,state),{x:state.x,y:state.y,vx:state.vx,vy:state.vy,r:state.control.kind==='foot' ? 3.5 : 12,bottom:state.elevation,top:state.elevation+20}] : [];
  for(let tick=population.tick+1;tick<=target;tick++){
-  const time=tick*AMBIENT_LIMITS.tickSeconds,hazards=[...actorContacts(scene,state.timeS,state),{x:state.x,y:state.y,vx:state.vx,vy:state.vy,r:state.control.kind==='foot' ? 3.5 : 12,bottom:state.elevation,top:state.elevation+20}];
+  const time=tick*AMBIENT_LIMITS.tickSeconds;
   const bodies=population.members.flatMap((m,i)=>objects[i]!.ambient!.motion.kind==='walk' ? [{i,id:objects[i]!.id,x:m.x,y:m.y,oldX:m.x,oldY:m.y,r:nav.radius(objects[i]!),vx:Math.cos(m.heading)*m.speed,vy:Math.sin(m.heading)*m.speed}] : []),byIndex=new Map(bodies.map(b=>[b.i,b])),grid=new SpatialGrid(bodies,32),maxRadius=Math.max(0,...bodies.map(b=>b.r));
   const members=population.members.map((old,i)=>{
    const o=objects[i]!,motion=o.ambient!.motion,m={...old,fromX:old.x,fromY:old.y,fromHeading:old.heading,fromDistance:old.distance,speed:0};
@@ -51,6 +52,7 @@ export function stepAmbient(state:CarState,dt:number,scene:Scene):AmbientState|u
      search: for(const scale of [1,.5,0])for(const offset of scale ? offsets : [0]){
       const h=heading+offset,v=speed*scale,vx=Math.cos(h)*v,vy=Math.sin(h)*v,x=m.x+vx*AMBIENT_LIMITS.tickSeconds,y=m.y+vy*AMBIENT_LIMITS.tickSeconds;
       let cost=Math.hypot(goal.x-x,goal.y-y)-distance+Math.abs(offset)*.04+(v ? 0 : .15),safe=true;
+      if(best && cost>=best.cost)continue;
       for(const b of near){
        // Check the whole relative step, including already accepted neighbours.
        const dx=m.x-b.oldX,dy=m.y-b.oldY,rx=(x-m.x)-(b.x-b.oldX),ry=(y-m.y)-(b.y-b.oldY),t=Math.max(0,Math.min(1,-(dx*rx+dy*ry)/(rx*rx+ry*ry||1))),start=Math.hypot(dx,dy),end=Math.hypot(x-b.x,y-b.y),radius=own!.r+b.r;
@@ -58,6 +60,8 @@ export function stepAmbient(state:CarState,dt:number,scene:Scene):AmbientState|u
        if(start>=radius-.0001 ? Math.hypot(dx+rx*t,dy+ry*t)<radius-.0001 : end<start+.00001 || Math.hypot(dx+rx*t,dy+ry*t)<start-.0001){safe=false;break;}
        const px=b.x-m.x,py=b.y-m.y,rvx=b.vx-vx,rvy=b.vy-vy,future=Math.max(0,Math.min(.7,-(px*rvx+py*rvy)/(rvx*rvx+rvy*rvy||1))),gap=Math.hypot(px+rvx*future,py+rvy*future);
        cost+=Math.max(0,radius+.5-gap)**2*.4;
+       // Remaining neighbour penalties are nonnegative, so this candidate cannot win.
+       if(best && cost>=best.cost){safe=false;break;}
       }
       if(safe && (!best || cost<best.cost) && (!v || nav.segment(m,{x,y},own!.r,true,state))){
        best={heading:h,speed:v,cost};
