@@ -84,3 +84,8 @@ resume their paused routines after returning. [Meal trips](dream/commerce.md#cus
 A [staffed business](dream/businesses.md) combines existing ordered `works`, `meal`
 and `deliveries` rules. The live bakery now prepares food and can fetch flour;
 the complete small example works without repairs or ambient walkers.
+
+
+Static furniture can declare named `seat` slots with local sitting surfaces,
+approaches and facing. Meal customers and the player share occupancy, damage
+and restoration rules. [Seating contract and runnable world](dream/seating.md).

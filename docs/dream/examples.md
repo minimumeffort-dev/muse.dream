@@ -248,3 +248,8 @@ collection-time checks and saved walking phases.
 ## An enterable market
 
 The [complete market assembly](../examples/enterable-market.dream) declares a real floor, static rectangle walls, an opening and shell cutaways. [Interiors](interiors.md) explains how to place it, connect work and keep the floor readable at night.
+
+
+[Shared seating](../examples/shared-seating.dream) is a complete checked world
+with a breakable two-seat bench, a humanoid customer and finite bread purchases.
+The [seating guide](seating.md) explains approaches, claims and saved meals.

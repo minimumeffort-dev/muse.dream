@@ -27,8 +27,9 @@ balance; reloading keeps its destination and reserved pay.
 Startup checks now reuse unchanged object encodings within one worker-owned
 batch with a 32 MiB retained-text budget and an uncached overflow path. The
 temporary encoder is discarded before chunk building. Canonical bytes,
-all nineteen current/historical fingerprints, format 11, simulation version 17,
-source identity and every existing slot/migration remain unchanged. Ordinary
+the nineteen current/historical fingerprints at that release, format 11,
+simulation version 17 and every existing slot stayed unchanged. Seating later
+adds its explicitly registered format-12 / simulation-18 upgrade below. Ordinary
 one-off checks never use a global cache. [Verification](evidence/startup-fingerprints/verification.md).
 
 ## Take a backup with you
@@ -51,7 +52,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-Format 10 retains the exact source hash and the compatibility fingerprint, with simulation version 15. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+Format 12 retains the exact source hash and the compatibility fingerprint, with simulation version 18. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -284,3 +285,12 @@ paths continue under ordinary fixed ticks after loading. The older format-11 slo
 is kept under its original fingerprint, and normal reload never repeats the
 upgrade. The earlier registered chain and corrupt/newer/concurrent-tab guards
 remain intact. This is a host-pinned upgrade, never authored Dream migration code.
+
+
+The r60-to-r61 upgrade uses format 12 / simulation 18. Its registered projection
+removes only the bench seat metadata and the commuter's indoor seating option.
+It preserves every old state field, clock, ledger, personal counter, vehicle and
+active trip; older standing meals finish in place. No geometry, population or
+stock is rebased. The original format-11 slot remains intact. New saves retain
+the player seat and NPC reservations and reject duplicate, missing, broken or
+displaced claims. A corrupt newer slot still blocks fallback.

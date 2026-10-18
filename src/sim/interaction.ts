@@ -1,3 +1,4 @@
+import {nearbySeat,seatedPose} from './seating';
 import {walkingHeight} from '../scene/interiors';
 import {contactOverlaps} from '../scene/contact-geometry';
 import {stepCommerce} from './commerce';
@@ -81,8 +82,20 @@ export function exitPosition(state:CarState,world:World) {
   }
   return undefined;
 }
+/** A furniture transfer uses its authored approach, with ordinary body clearance. */
+export function standUp(state:CarState,world:World):CarState {
+ const seat=seatedPose(state,world.scene);if(!state.seated)return state;
+ if(!seat)return {...state,seated:undefined};
+ const next={...state,seated:undefined,x:seat.approach.x,y:seat.approach.y,elevation:walkingHeight(world.scene,seat.approach.x,seat.approach.y,FOOT_RADIUS)};
+ if(carFootprintClear({...bodyWorld(next,world),dryGround:true},next.x,next.y,next.elevation,next.timeS,next))return next;
+ const exit=exitPosition({...state,seated:undefined,control:{kind:'passenger',id:seat.objectId}},world);
+ return exit ? {...next,...exit} : state;
+}
 /** F leaves the current vehicle. On foot it takes over the nearest reachable seat. */
 export function toggleRide(state:CarState,world:World):CarState {
+  if(state.seated)return standUp(state,world);
+  const seat=nearbySeat(state,world);
+  if(seat && carFootprintClear({...bodyWorld(state,world),dryGround:true},seat.approach.x,seat.approach.y,walkingHeight(world.scene,seat.approach.x,seat.approach.y,FOOT_RADIUS),state.timeS,state))return {...state,seated:{objectId:seat.objectId,seatId:seat.seatId},x:seat.x,y:seat.y,elevation:seat.elevation,headingRad:seat.headingRad,vx:0,vy:0,vz:0,pitch:0,bank:0,jump:{...state.jump,bufferUntilS:0,coyoteUntilS:0}};
   if(state.control.kind!=="foot"){
     const exit=exitPosition(state,world);if(!exit)return state;
     return {...state,...exit,control:{kind:"foot"},vx:0,vy:0,vz:0,grounded:true,landingSpeed:0,pitch:0,bank:0,boostedThisStep:false,carBoost:{...state.carBoost,activeUntilS:0},jump:{held:state.jump.held,bufferUntilS:0,coyoteUntilS:0}};
@@ -186,6 +199,14 @@ export function stepInteractive(state:CarState,input:CarInput,dt:number,world:Wo
   return stepCommerce(stepSports(stepControlled(state,input,dt,world),state,input,dt,world),input,dt,world.scene);
 }
 function stepControlled(state:CarState,input:CarInput,dt:number,world:World):CarState {
+  if(state.seated){
+    const seat=seatedPose(state,world.scene);
+    // Accepted furniture is static; damage is the only change to sitting support.
+    if(!seat || state.broken.includes(seat.objectId) || input.jump || input.steer || input.throttle){
+      const standing=standUp(state,world);if(!standing.seated)return stepControlled(standing,input,dt,world);
+    }
+    const s=nextMotion(state,input,dt,world);s.jump.held=!!input.jump;advanceImpactMotion(s,bodyWorld(s,world),dt);return s;
+  }
   if(state.control.kind==="car")return stepCar(state,input,dt,world);
   if(state.control.kind==="foot"){
     const angle=Math.atan2(180,480)+(input.viewAngle??0),length=Math.max(1,Math.hypot(input.steer,input.throttle));

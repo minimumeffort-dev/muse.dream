@@ -212,6 +212,16 @@ WASD walks, swims or drives. Space jumps on foot, a bicycle or skateboard, and g
 
 The market now has an actual doorway, walls and a supported floor. Walk in and the roof and near walls cut away, leaving the furniture and people visible. You can bake for wages, buy bread and eat from the foyer using the same finite stock as the people outside. The caretaker can reach damaged furniture inside through the doorway.
 
+You can sit on the market, park and station benches with **F**, then stand or
+move away when the exit is clear. **G** eats food you carry. The commuter buys a
+lunch, walks inside, takes a free seat and returns to their routine afterward.
+Broken benches release their occupants; repaired ones work again.
+[Shared seats in Dream](docs/dream/seating.md).
+
+![A shared lunch bench inside the market](docs/media/seating.jpg)
+
+[Watch seating in HD](docs/media/seating.mp4)
+
 ![Inside the covered market](docs/media/interior.jpg)
 
 [Walkthrough](docs/media/interior.mp4) · [Night view](docs/media/interiornight.mp4) · [Author an interior in Dream](docs/dream/interiors.md)

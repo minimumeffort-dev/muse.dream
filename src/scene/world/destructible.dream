@@ -76,6 +76,8 @@ object amber_sapling(label="Amber sapling"){
 object slatted_bench(label="Slatted park bench"){
   measure(kind=bench,axis=x,meters=1.8);
   body(interaction=solid,radius=28,height=31);
+  seat left(at=[-13,18,12],approach=[-13,48],heading_deg=90);
+  seat right(at=[13,18,12],approach=[13,48],heading_deg=90);
   impact(mode=break(speed=95,scatter=65,lift=65,spin=4,lifetime=6,pattern=splinter));
   repeat slats(index=i,count=4){
     fragment plank(){voxels seat(material=wood,at=[0,16,-12+i*8],size=[60,4,6],grid=[30,2,3]){fill board(from=[0,0,0],to=[30,2,3]);}}

@@ -595,14 +595,15 @@ first, they return without it. Money and food use the same transactions as yours
 ![A customer buys and eats a packed lunch](../media/meals.gif)
 
 [Watch in HD](../media/meals.mp4). This sixteen-second recording starts near the
-end of the actual walk to the market and shows eating and the beginning of the
-return. The complete return takes longer. It is an offline capture with 30 rendered frames per simulation second, not a live performance measurement.
+end of the actual walk to the market and shows the purchase and the walk toward the hall. The [seating clip](seating.md)
+shows eating inside and the beginning of the return. The complete return takes longer. It is an offline capture with 30 rendered frames per simulation second, not a live performance measurement.
 
 The shop panel shows waiting demand, approaching customers and eating. Their
 routine pauses until they get back; their position, food, clock and money survive
-leaving the area and reloading. There are no reservations during the walk. Another
+leaving the area and reloading. Food is not reserved before arriving at the shop. Another
 customer can take the last item, and a vehicle can make the walker wait. This is
-a meal errand, without restaurant seating or queues yet.
+a meal errand. Optional [shared bench seating](seating.md) connects the meal to
+the indoor floor; restaurant queues and table service remain separate work.
 
 Dream owns the choice of food, ordered markets, walking grounds and eating time:
 
@@ -681,3 +682,8 @@ The [staffed bakery](businesses.md) composes the same jobs, customer meal plan a
 flour delivery. It works without player cooking, while keeping player jobs and
 all finite transaction checks available. The panel names active staff work and
 its remaining simulation time.
+
+
+Furniture seats are named object-root `seat` declarations. Optional `meal.seats`
+references 1–4 unique furniture placements, with complete humanoids, connected
+approaches and shared player/NPC claims. [Author shared seating](seating.md).

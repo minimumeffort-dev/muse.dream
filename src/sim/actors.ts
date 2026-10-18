@@ -1,3 +1,4 @@
+import {findSeat} from '../scene/seating';
 import {walkingHeight} from '../scene/interiors';
 import {objectContacts} from "../scene/contacts";
 import type { Scene,SceneObject } from "../scene/schema";
@@ -14,7 +15,7 @@ import {aircraftFloor} from '../scene/aircraft-support';
 import type {CarState} from "./car";
 import {parkingDefinitions} from './parking';
 
-export interface ActorPose {id:string;x:number;y:number;elevation:number;headingRad:number;speed:number;distance:number;travelled:number;kind:"rail"|"path"|"water"|"air";vx?:number;vy?:number;pitch?:number;bank?:number;activity?:'idle'|'patrol'|'perform';animationTimeS?:number;stateId?:string}
+export interface ActorPose {id:string;x:number;y:number;elevation:number;headingRad:number;speed:number;distance:number;travelled:number;kind:"rail"|"path"|"water"|"air";vx?:number;vy?:number;pitch?:number;bank?:number;activity?:'idle'|'patrol'|'perform';animationTimeS?:number;stateId?:string;seatHeight?:number}
 const actors=new WeakMap<Scene,SceneObject[]>();
 export function routeObjects(scene:Scene) {let objects=actors.get(scene);if(!objects){objects=scene.objects.filter(isResidentActor);actors.set(scene,objects);}return objects;}
 const bases=new WeakMap<Scene,Map<string,number>>();
@@ -36,6 +37,8 @@ export function actorPose(scene:Scene,object:SceneObject,timeS:number,state?:Car
     return {id:object.id,x:object.x,y:object.y,elevation:water ? water.level-2 : elevation,headingRad:object.headingRad??0,kind,speed:0,distance:0,travelled:0,vx:0,vy:0};
   }
   const maintenance=workJourneyForActor(state,scene,object.id);
+  const seated=maintenance && 'seat' in maintenance && maintenance.phase==='eat' ? findSeat(scene,maintenance.seat) : undefined;
+  if(seated)return {id:object.id,x:seated.x,y:seated.y,elevation:seated.elevation,headingRad:seated.headingRad,speed:0,distance:maintenance!.distance,travelled:maintenance!.distance,kind,activity:'perform',animationTimeS:timeS,seatHeight:seated.hipHeight,vx:0,vy:0};
   if(maintenance)return {id:object.id,x:maintenance.x,y:maintenance.y,elevation:walkingHeight(scene,maintenance.x,maintenance.y),headingRad:maintenance.headingRad,speed:maintenance.speed,distance:maintenance.distance,travelled:maintenance.distance,kind,activity:maintenance.phase==='work' || maintenance.phase==='eat' ? 'perform' : 'patrol',animationTimeS:timeS,vx:0,vy:0};
   if(program){
     const clock=state?.npcs?.find(n=>n.id===object.id)??initialNpcState(scene,object),active=program.states.find(s=>s.id===clock.stateId)!;

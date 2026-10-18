@@ -144,6 +144,7 @@ export function lowerBlock(nodes:DreamNode[]):Statement[] {
       case "measure":statement.name=wordField(node,"kind");statement.axis=wordField(node,"axis");statement.value=n("meters");break;
       case "ground":statement.name=wordField(node,"mode");break;
       case "foundation":statement.args=listField(node,"size");statement.color=wordField(node,"color");break;
+      case "seat":statement.approach=listField(node,"approach");statement.heading=n("heading_deg");break;
       case "rideable":if(node.fields.has("control"))statement.control=wordField(node,"control");break;
       case "contact":statement.value=n("height");if(node.fields.has("radius"))statement.args=[n("radius")];if(node.fields.has("size"))statement.contactSize=listField(node,"size");if(node.fields.has("heading_deg"))statement.heading=n("heading_deg");break;
       case "interior":statement.size=v("size");break;

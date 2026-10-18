@@ -101,6 +101,7 @@ const objectDslV2Schema=objectV1Schema.extend({
   dslVersion:z.literal(2),joints:z.array(jointSchema).max(12).optional(),parts:z.array(objectV2PartSchema).min(1).max(32),
   contacts:z.array(z.object({position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),radius:z.number().finite().min(1).max(64).optional(),size:z.tuple([z.number().finite().min(.1).max(128),z.number().finite().min(.1).max(128)]).optional(),headingRad:z.number().finite().min(-2*Math.PI).max(2*Math.PI).optional(),height:z.number().finite().min(.1).max(160)}).strict()).min(1).max(8).optional(),
   interior:z.object({position:z.tuple([offset,z.number().finite().min(.1).max(64),offset]),size:z.tuple([z.number().finite().min(2).max(128),z.number().finite().min(1).max(128),z.number().finite().min(2).max(128)]),portals:z.array(z.object({id:z.string().min(1).max(40),side:z.enum(["front","back","left","right"]),offset:z.number().finite().min(-64).max(64),width:z.number().finite().min(1).max(32),height:z.number().finite().min(1).max(64)}).strict()).min(1).max(4)}).strict().optional(),
+  seats:z.array(z.object({id:z.string().regex(/^[a-z][a-z0-9_]{0,31}$/),position:z.tuple([offset,z.number().finite().min(.1).max(128),offset]),approach:z.tuple([offset,offset]),headingRad:z.number().finite().min(-2*Math.PI).max(2*Math.PI)}).strict()).min(1).max(4).optional(),
   rideable:z.object({seat:z.tuple([offset,z.number().finite().min(0).max(128),offset]),control:z.enum(["car","bicycle","skateboard","scooter","boat","plane"]).optional()}).strict().optional(),
   lamp:z.object({position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),radius:z.number().finite().min(8).max(80),color:z.string().regex(/^#[0-9a-fA-F]{6}$/)}).strict().optional(),
   emitter:z.object({kind:z.literal("steam"),position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),rate:z.number().finite().min(1).max(12)}).strict().optional(),
@@ -123,6 +124,10 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
     ids.add(part.id);
   });
   if(spec.dslVersion===2) {
+    if(spec.seats){
+      if(new Set(spec.seats.map(s=>s.id)).size!==spec.seats.length)ctx.addIssue({code:'custom',path:['seats'],message:'seat IDs must be unique'});
+      if(spec.body.interaction!=='solid' || spec.foundation || spec.interior || spec.contacts || spec.rideable || spec.grounding==='surface' || spec.joints?.length || spec.parts.some(p=>p.animation) || spec.breakZones?.length || spec.impact && spec.impact.kind!=='break')ctx.addIssue({code:'custom',path:['seats'],message:'furniture seats require one upright static cylinder without contacts, foundations, interiors, transport seats, joints, break zones or moving impacts'});
+    }
     let geometryValid=true;
     spec.parts.forEach((part,index)=>{
       if(part.shape==='voxel' && (!part.voxels || !voxelSchema.safeParse(part.voxels).success))geometryValid=false;

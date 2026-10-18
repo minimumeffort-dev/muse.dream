@@ -110,3 +110,8 @@ node scripts/dream.mjs context --features interiors,commerce
 The current limits are 32 placed interiors, four portals per interior, eight contacts and 32 visual parts per assembly. Existing NPC, live rig, destruction, fragment, source and navigation limits remain unchanged. Floors and room ownership live in accepted Dream data; saved people, goods, jobs and damage remain simulation state. Unloading a render chunk resets neither.
 
 [Verification, migration and performance](../evidence/interiors/verification.md) · [World systems still to build](../world-systems.md)
+
+
+The indoor bench now has two usable slots shared by the player and meal customer.
+Its authored approaches fit the existing floor and doorway network. Furniture
+remains destructible and repairable. See [shared seating](seating.md).

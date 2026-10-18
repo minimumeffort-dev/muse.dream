@@ -28,6 +28,7 @@ export interface CharacterInput {
   sport?:{kind:'football'|'basketball';possessed:boolean;charging:boolean;shotAge:number};
   working?:boolean;
   eating?:boolean;
+  sittingHeight?:number;
 }
 
 /** One cached rig, no mesh traversal, geometry work or physics ownership in the frame loop. */
@@ -80,7 +81,7 @@ export class CharacterAnimator {
     const moving=this.moving,running=this.running,phase=this.phase,unit=this.unit;
     const land=emptyPose(),swim=emptyPose();
     const bob=mix(.8*(1-Math.cos(phase*tau*2)),2.5*Math.max(0,Math.cos((phase-.45)*tau*2)),running);
-    const rootY=this.bones.root.y+unit*(moving*(-1.7+bob)-this.landing);
+    let rootY=this.bones.root.y+unit*(moving*(-1.7+bob)-this.landing);
     land.root=[0,Math.sin(phase*tau)*.055*moving,0];
     land.spine=[0,-Math.sin(phase*tau)*.10*moving,-mix(.035,.19,running)*moving];
     for(const [side,offset,sign] of [['left',0,1],['right',.5,-1]] as const){
@@ -110,6 +111,14 @@ export class CharacterAnimator {
       swim[hip][2]=mix(sign*tread*.15,Math.sin(angle*2)*.18,effort);
       swim[knee][2]=mix(-.4,-.15-Math.max(0,-Math.sin(angle*2))*.4,effort);
       swim[ankle][2]=-.18;
+    }
+    if(input.sittingHeight!==undefined){
+      rootY=input.sittingHeight+unit*3;land.root=[0,0,0];land.spine=[0,0,-.04];
+      for(const side of ['left','right'] as const){
+        const upper=-this.bones[`${side}_knee`].y,lower=-this.bones[`${side}_ankle`].y,leg=solveLeg(upper*.9,unit*3-rootY,upper,lower);
+        land[`${side}_hip`][2]=leg.hip;land[`${side}_knee`][2]=leg.knee;land[`${side}_ankle`][2]=-leg.hip-leg.knee;
+        land[`${side}_shoulder`][2]=.2;land[`${side}_elbow`][2]=.65;
+      }
     }
     const effort=active ? this.moving : 0;
     this.working=active ? mix(this.working,Number(!!input.working && input.grounded && !input.swimming && speed<8),ease) : 0;

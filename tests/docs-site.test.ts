@@ -6,6 +6,12 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights furniture seats at complete boundaries and escapes authored labels',()=>{
+    const text='seat left(at=[-13,18,8],approach=[-13,48],heading_deg=90); meal lunch(good=bread,markets=[shop],on=plaza,eat_s=4,seats=[bench]); seatbelt(seating=1); "<img src=x onerror=bad>"';
+    const html=highlight(text);
+    for(const word of ['seat','approach','heading_deg','seats'])expect(html).toContain(`>${word}</span>`);
+    expect(html).not.toContain('>seat</span>belt');expect(html).not.toContain('<img');expect(html).toContain('&lt;img');
+  });
   it('highlights meal commands and fields without swallowing identifiers or authored HTML',()=>{
     const html=highlight('meal lunch(good=bread,markets=[corner],on=plaza,eat_s=4);account visitor(meal=lunch); // <Lunch>&');
     for(const word of ['meal'])expect(html).toContain(`class="dream-keyword">${word}</span>`);

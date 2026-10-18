@@ -125,6 +125,7 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
       ids.set(id,key);return id;
     };
     let body: ObjectDslV2["body"] | undefined, grounding: ObjectDslV2["grounding"], foundation: ObjectDslV2["foundation"];
+    const seats:NonNullable<ObjectDslV2["seats"]>=[];
     const contacts:NonNullable<ObjectDslV2["contacts"]>=[];let rideable:ObjectDslV2["rideable"];
     let emitter:ObjectDslV2["emitter"],lamp:ObjectDslV2["lamp"];
     let impact:ObjectDslV2["impact"];
@@ -139,7 +140,7 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
         const number = (expr: Expr) => numeric(expr, env);
         const path=[...(frame.path??[]),statement.scope??statement.name??kind];
         const id = () => program.version===2 ? stableId(path) : `${statement.name!.slice(0, 25)}-${serial++}`;
-        if (["body", "measure", "ground", "foundation","contact","interior","rideable","lamp","emit","impact","zone"].includes(kind) && !root) fail(`${kind} belongs directly inside an object`, token);
+        if (["body", "measure", "ground", "foundation","contact","interior","seat","rideable","lamp","emit","impact","zone"].includes(kind) && !root) fail(`${kind} belongs directly inside an object`, token);
         if(root && ["body","measure","ground","foundation","interior","rideable","emit","impact"].includes(kind))metadataOrigins.set(kind==="ground" ? "grounding" : kind==="emit" ? "emitter" : kind,token);
         switch (kind) {
           case "measure":measure={kind:statement.name as NonNullable<ObjectDslV2["measure"]>["kind"],axis:statement.axis as "x"|"y"|"z",meters:number(statement.value!)};break;
@@ -167,6 +168,9 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
           case "fragment":
             if(frame.fragment)fail("fragment groups cannot nest",token,"E_CONTEXT");
             walk(statement.block!,{...frame,fragment:id(),path},env,stack,false,depth+1,materials);break;
+          case "seat":
+            if(seats.length>=4)fail('seat budget exceeds 4',token,'E_BUDGET');
+            seats.push({id:statement.scope!,position:vector(statement.at,env).toArray(),approach:statement.approach!.map(number) as [number,number],headingRad:number(statement.heading!)*RAD});metadataOrigins.set('seats',token);break;
           case "rideable": if(rideable)fail("duplicate rideable",token);rideable={seat:statement.at ? vector(statement.at,env).toArray() : [0,16,0],...(statement.control ? {control:statement.control as NonNullable<ObjectDslV2["rideable"]>["control"]} : {})};break;
           case "emit":if(emitter)fail("duplicate emitter",token);emitter={kind:statement.name as "steam",position:vector(statement.at,env).toArray(),rate:number(statement.value!)};break;
           case "contact":
@@ -272,7 +276,7 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
     if(program.version===2 && impact?.kind==='topple' && !parts.some(p=>p.fragment || p.voxels?.chunks)){const fragment=stableId(['$topple']);for(const part of parts)part.fragment=fragment;}
     const result = objectDslSchema.safeParse({ dslVersion: 2, displayName: object.name, body, parts,...(measure ? {measure} : {}),
       ...(joints.length ? { joints } : {}), ...(grounding ? { grounding } : {}), ...(foundation ? { foundation } : {}),
-      ...(contacts.length ? {contacts} : {}),...(interior ? {interior} : {}),...(rideable ? {rideable} : {}),...(emitter ? {emitter} : {}),...(lamp ? {lamp} : {}),...(impact ? {impact} : {}),...(breakZones.length ? {breakZones} : {}) });
+      ...(seats.length ? {seats} : {}),...(contacts.length ? {contacts} : {}),...(interior ? {interior} : {}),...(rideable ? {rideable} : {}),...(emitter ? {emitter} : {}),...(lamp ? {lamp} : {}),...(impact ? {impact} : {}),...(breakZones.length ? {breakZones} : {}) });
     if (!result.success) {
       const error=result.error.issues[0]!;
       // Preserve the specific axis/radius diagnostic instead of an opaque union error.

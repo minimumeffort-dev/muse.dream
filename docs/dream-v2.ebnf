@@ -136,6 +136,11 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    automatic work duties. Only actual completion increments personal history;
    no authored counters, rewards, scripts or controller callbacks. *)
 
-(* meal(good,markets,on,grounds?,eat_s) and account.meal own bounded walking food trips.
+(* meal(good,markets,on,grounds?,eat_s,seats?) and account.meal own bounded walking food trips.
    8 plans, 1..4 ordered markets, eat_s 1..12; food and priced lots required.
    Same finite transactions, pedestrian bounds, paused program and persistent return. *)
+
+(* Object-root seat id(at,approach,heading_deg) describes a static furniture slot.
+   1..4 per object, 512 per world; sitting surface 3..9 world units above the
+   floor, dry clear 6..40-unit transfer. Shared player/NPC occupancy is saved.
+   meal.seats names 1..4 furniture placements; seated meals need humanoid bones. *)

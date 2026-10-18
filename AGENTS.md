@@ -283,8 +283,8 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 
 ## Saved simulation state
 
-Current save format 11 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 17. Historical formats retain their registered projections.
+Current save format 12 pins exact source plus a host-computed accepted-world fingerprint
+at simulation version 18. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -569,3 +569,18 @@ managed worktrees may share installed dependencies without sharing optimized
 module identities. Side-by-side browser checks must use distinct cache roots,
 fixed render dimensions and warmed origins. Reject resized or stale-dependency
 samples instead of treating less visible geometry as a performance improvement.
+
+
+Furniture seating uses object-root `seat` slots, separate from transport rideable.
+Keep four per object, 512 per world, one upright static cylinder without
+contacts/foundations/interiors, prop ownership and shared
+player/NPC claims. Whole-break furniture releases occupants and repair restores
+slots. Validate sitting height, dry transfer/headroom, reach, unique ownership
+and saved positions. Meals may reference four furniture placements; complete
+humanoids reserve only after buying, walk to an approach, eat once and return.
+Busy/broken seats fall back to standing without losing owned food. Movement or
+jump first requests a safe exit. Keep work/trade/sports/boarding standing-only,
+reduced-motion posture and existing actor/rig/physics budgets. Format 12 /
+simulation 18 registers r60 by removing only new seating metadata/options; old
+state stays exact, with no attribution, stock, floor or population rebasing.
+See `docs/dream/seating.md` and `docs/examples/shared-seating.dream`.

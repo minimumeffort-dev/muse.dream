@@ -1,3 +1,5 @@
+import {HUMANOID_BONES} from './humanoid';
+import {worldSeats} from './seating';
 import {workGround} from './interiors';
 import {z} from 'zod';
 import {GROWTH_LIMITS} from './growth';
@@ -35,7 +37,8 @@ const repair=z.object({id:ref,label,market:ref,on:ref,streets:z.array(ref).min(1
  if(r.regrow_s!==undefined && (r.kind!=='tree' || r.kinds))ctx.addIssue({code:'custom',message:'regrow_s requires kind=tree',path:['regrow_s']});
  if(r.kinds && new Set(r.kinds).size!==r.kinds.length)ctx.addIssue({code:'custom',message:'repair kinds must be unique',path:['kinds']});
 });
-const meal=z.object({id:ref,good:ref,markets:z.array(ref).min(1).max(COMMERCE_LIMITS.mealMarkets),on:ref,grounds:z.array(ref).min(1).max(COMMERCE_LIMITS.repairGrounds-1).optional(),eat_s:z.number().finite().min(1).max(12)}).strict().superRefine((m,ctx)=>{
+const meal=z.object({id:ref,good:ref,markets:z.array(ref).min(1).max(COMMERCE_LIMITS.mealMarkets),on:ref,grounds:z.array(ref).min(1).max(COMMERCE_LIMITS.repairGrounds-1).optional(),eat_s:z.number().finite().min(1).max(12),seats:z.array(ref).min(1).max(4).optional()}).strict().superRefine((m,ctx)=>{
+ if(m.seats && new Set(m.seats).size!==m.seats.length)ctx.addIssue({code:'custom',message:'meal seats must be unique furniture placement IDs',path:['seats']});
  if(new Set(m.markets).size!==m.markets.length)ctx.addIssue({code:"custom",message:"meal markets must be unique",path:["markets"]});
  if(m.grounds && new Set([m.on,...m.grounds]).size!==m.grounds.length+1)ctx.addIssue({code:"custom",message:"meal grounds must be unique and exclude on",path:["grounds"]});
 });
@@ -139,7 +142,9 @@ export function economyProblems(scene:Scene):string[]{
  }
  for(const a of e.accounts){const o=scene.objects.find(o=>o.id===a.actor);if(a.actor!=='player' && (!o || roleOf(o)!=='npc'))problems.push(`${a.id}: account actor must be player or an NPC placement`);if(accountJobs(a).length && !stationary(a.actor))problems.push(`${a.id}: automatic workers must be stationary NPCs`);}
  for(const a of e.accounts)if(a.meal){const o=scene.objects.find(o=>o.id===a.actor);if(!o?.behavior || o.ambient || !o.spec || !('dslVersion' in o.spec) || o.spec.dslVersion!==2 || o.spec.measure?.kind!=='person' || o.spec.body.interaction!=='decor' || e.markets.some(m=>m.actor===a.actor) || o.route && scene.routes.find(r=>r.id===o.route!.id)?.kind!=='walk')problems.push(`${a.id}: meal trips need a person NPC program, a walking route or stationary home, and no market ownership`);}
+ for(const a of e.accounts)if(a.meal && e.meals.find(m=>m.id===a.meal)?.seats){const o=scene.objects.find(o=>o.id===a.actor),spec=o?.spec;if(!spec || !('joints' in spec) || !HUMANOID_BONES.every(b=>spec.joints?.some(j=>j.bone===b)))problems.push(`${a.id}: seated meals require a complete humanoid rig`);}
  for(const m of e.meals){let samples=0;for(const id of [m.on,...(m.grounds??[])]){const ground=workGround(scene,id);if(!ground){problems.push(`${m.id}: unknown meal ground ${id}`);continue;}const p=ground.points,turns=p.map((a,i)=>{const b=p[(i+1)%p.length]!,c=p[(i+2)%p.length]!;return Math.sign((b.x-a.x)*(c.y-b.y)-(b.y-a.y)*(c.x-b.x));}).filter(Boolean);if(new Set(turns).size>1)problems.push(`${m.id}: meal grounds must be convex`);const b=polygonBounds(p);samples+=(Math.ceil((b.x1-b.x0)/12)+1)*(Math.ceil((b.y1-b.y0)/12)+1);}if(samples>COMMERCE_LIMITS.repairNodes)problems.push(`${m.id}: meal grounds exceed 4096 local navigation samples`);}
+ for(const m of e.meals)for(const id of m.seats??[])if(!worldSeats(scene).some(s=>s.objectId===id))problems.push(`${m.id}: unknown seat furniture ${id}`);
  for(const m of e.markets)if(!stationary(m.actor))problems.push(`${m.id}: market requires a stationary NPC placement`);
  for(const m of e.markets){const o=scene.objects.find(o=>o.id===m.actor);if(o && waterAt(scene.terrain,o.x,o.y,drivingHeight(scene.terrain,o.x,o.y)))problems.push(`${m.id}: market requires dry ground or a supported deck`);}
  for(const d of e.deliveries){const from=e.markets.find(m=>m.id===d.from),to=e.markets.find(m=>m.id===d.to),a=scene.objects.find(o=>o.id===from?.actor),b=scene.objects.find(o=>o.id===to?.actor);if(from && to && a && b && Math.hypot(a.x-b.x,a.y-b.y)<=from.radius+to.radius)problems.push(`${d.id}: delivery markets must have separate interaction areas`);}

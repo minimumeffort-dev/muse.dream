@@ -95,6 +95,7 @@ export interface CarState {
   debris:DebrisState[];
   impacts:ImpactEvent[];
   control:PlayerControl;
+  seated?:import('../scene/seating').SeatRef;
   /** Only unoccupied vehicles are stored here; the active body is this state. */
   vehicles:ParkedVehicle[];
   npcs:NpcState[];
@@ -120,6 +121,7 @@ export interface World {
   previousPlantSaveCompatibility?:string;
   previousFinishSaveCompatibility?:string;
   previousCourierSaveCompatibility?:string;
+  previousSeatingSaveCompatibility?:string;
   previousKitchenSaveCompatibility?:string;
   previousMealSaveCompatibility?:string;
   previousProgressSaveCompatibility?:string;
@@ -260,7 +262,7 @@ function crossedCheckpoint(
 export function carFootprintClear(world:World,x:number,y:number,elevation:number,timeS:number,state?:CarState):boolean {
   const height=world.bodyHeight??playerHeight(world.scene);
   return world.driveMask.footprintClear(x,y,world.carRadius) && (!world.dryGround || !waterAt(world.scene.terrain,x,y,drivingHeight(world.scene.terrain,x,y))) && !(world.waterSupport && elevation<drivingHeight(world.scene.terrain,x,y)-.05 && elevation+height>waterCeiling(world.scene.terrain,x,y,world.carRadius)) && ![...queryStaticContacts(world.scene,x,y,world.carRadius,state),...actorContacts(world.scene,timeS,state)]
-    .some(s=>(!state || !isBroken(state,s)) && elevation<s.top-.05 && elevation+height>s.bottom+.05 && contactOverlaps(s,x,y,world.carRadius));
+    .some(s=>(!state?.seated || s.id!==state.seated.objectId) && (!state || !isBroken(state,s)) && elevation<s.top-.05 && elevation+height>s.bottom+.05 && contactOverlaps(s,x,y,world.carRadius));
 }
 
 /** A press is buffered across a landing; holding Space never repeats a jump. */

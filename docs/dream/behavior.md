@@ -18,6 +18,13 @@ Pinch the trackpad or scroll vertically over the world to zoom in and out. Mouse
 
 [Wider overview of the same position](../media/zoom-overview.jpg) · [Input and camera checks](../evidence/trackpad-zoom/verification.md)
 
+## Sit on furniture
+
+**F** also sits on an available furniture seat when you reach its approach.
+Move, jump or press F to request a clear exit; **G** eats owned food. Work,
+trade, sports and boarding require standing. The same named slots can be claimed
+by meal customers. [Seating, damage and saved ownership](seating.md).
+
 ## Bodies, contacts and boarding
 
 Every object declares a body with a radius and height. A static upright solid can replace its default footprint with named `contact` cylinders or upright rectangles. Separate wall, floor and ceiling contacts leave a real doorway with headroom. Dream 2 rectangles use `size=[width,depth]` and optional `heading_deg`; moving vehicles retain cylinders. See [enterable buildings](interiors.md) for a complete assembly.

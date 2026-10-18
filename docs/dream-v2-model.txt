@@ -146,6 +146,19 @@ No extra joints, generated controllers, skinning, or terrain foot probes. Existi
 Use examples/humanoid.dream as a complete template; keep binding names, vary geometry,
 colors and measured size. Labels/generated IDs do not choose anatomy or behavior.
 
+Furniture seating: object-root seat id(at=[x,y,z],approach=[x,z],heading_deg=n);
+1..4 unique seats on a static upright solid prop; at is the sitting surface.
+Use one body cylinder, without explicit contacts, foundations, interiors,
+rideable, moving parts/joints, surface grounding, zones or bounce/topple.
+Whole-object break works. Measured placement gives sitting height 3..9 world units,
+transfer length 6..40, dry 3-radius/17.5-height clearance and <=4-unit steps.
+The sitting point must lie on actual furniture geometry. Keep seat centers and
+approaches at least 6 world units apart, outside the furniture body, with clear
+transfers. Complete scenes cap seats at 512.
+F sits/stands; movement/jump requests a safe exit, G eats owned food. Engine-owned
+humanoid fitting, occupancy and animation add no actor, rig or physics budgets.
+Broken furniture releases claims; repairs restore the same seats.
+
 ## world
 For a full world emit exactly one world and one road, and 2..64 ordered checkpoints.
 world size positive integers <=16384. Host supplies identity, source hash/provenance.
@@ -575,7 +588,12 @@ NPC work refills output up to target. Alternatively works=[advanced,basic] is an
 ordered list of 1..4 unique work IDs, exclusive with work, repairs and deliveries.
 Try the first eligible job below target; no extra actors, commitments or free stock.
 Player accounts never act automatically.
-NPC meal trips use meal id(good=food_id,markets=[first_shop,second_shop],on=home_ground,grounds=[extra_ground],eat_s=4); and account.meal=meal_id.
+NPC meal trips use meal id(good=food_id,markets=[first_shop,second_shop],on=home_ground,grounds=[extra_ground],eat_s=4,seats=[bench_placement]); and account.meal=meal_id.
+Optional seats lists 1..4 unique static furniture placement IDs. Seated customers
+require complete humanoid bones. After purchase, reserve a reachable free slot,
+walk to its approach, sit and eat; release before returning home. Shared claims
+include the player and customers walking to seats. Full/broken furniture falls
+back to standing, retaining the purchased food. No queues or table service.
 At most 8 plans, 1..4 unique ordered markets, a positive-food good with a priced
 lot in every market, and eat_s=1..12 seconds. on plus 0..7 unique extra convex
 work grounds share the 4096 local-sample budget and accepted pedestrian network.

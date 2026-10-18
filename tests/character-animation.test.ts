@@ -131,3 +131,11 @@ describe('articulated locomotion',()=>{
   r.animation.reset();expect(r.bone('left_shoulder').rotation.z).toBeCloseTo(0,8);expect(r.bone('root').position.y).toBe(25);
  });
 });
+
+
+it('fits a seated pelvis above the sitting surface and leaves both soles on the floor in reduced motion',()=>{
+ const r=rig();advance(r,{speed:0,sittingHeight:18,enabled:false});r.group.updateMatrixWorld(true);
+ expect(r.bone('root').position.y).toBeCloseTo(21);
+ for(const side of ['left','right']){const ankle=r.bone(`${side}_ankle`).getWorldPosition(new Vector3());expect(ankle.y).toBeCloseTo(3);expect(ankle.x).toBeGreaterThan(8);}
+ const first=r.bone('left_knee').quaternion.toArray();advance(r,{speed:0,sittingHeight:18,enabled:false,eating:true},3);expect(r.bone('left_knee').quaternion.toArray()).toEqual(first);
+});

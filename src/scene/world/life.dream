@@ -135,7 +135,7 @@ economy(){
  good fasteners(label="Fasteners");
  account pocket(actor=player,credits=20,capacity=8,satiety=48,drain_s=.05);
  account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,works=[pack_lunch,large_bake,bake]);
- meal market_break(good=lunch,markets=[market_stall],on=market_square,eat_s=4);
+ meal market_break(good=lunch,markets=[market_stall],on=market_square,grounds=[market_hall],eat_s=4,seats=[hall_bench]);
  account regular(actor=market_commuter,credits=30,capacity=4,satiety=25,drain_s=.05,meal=market_break);
  account school_staff(actor=teacher,credits=30,capacity=4,satiety=28,drain_s=.05,shop=true);
  account caretaker(actor=market_neighbor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,repairs=[market_tables,orchard_trees],deliveries=[kits_run,saplings_run,flour_run]);

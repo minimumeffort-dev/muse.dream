@@ -27,7 +27,7 @@ function compileCourts(scene:Scene){
 }
 export function sportsCourts(scene:Scene){let value=cache.get(scene);if(!value){value=compileCourts(scene);cache.set(scene,value);}return value;}
 export function activeSport(state:CarState,scene:Scene){
-  if(state.control.kind!=='foot' || Math.abs(state.elevation-drivingHeight(scene.terrain,state.x,state.y))>25)return;
+  if(state.seated || state.control.kind!=='foot' || Math.abs(state.elevation-drivingHeight(scene.terrain,state.x,state.y))>25)return;
   return sportsCourts(scene).find(c=>pointInPolygon(state.x,state.y,c.ground.points));
 }
 export function sportCharge(state:CarState,game:SportState):number{return game.chargeStartS===null ? 0 : Math.min(1,(state.timeS-game.chargeStartS)/SPORT_CHARGE_S);}

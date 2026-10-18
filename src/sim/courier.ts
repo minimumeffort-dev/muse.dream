@@ -1,3 +1,4 @@
+import {worldSeats} from '../scene/seating';
 import {walkingHeight} from '../scene/interiors';
 import type {Scene,Point} from '../scene/schema';
 import type {Delivery} from '../scene/commerce';
@@ -16,6 +17,7 @@ export function errandAreas(scene:Scene):WalkingArea[]{return [...new Map([...de
 export function mealAccessProblems(scene:Scene):string[]{
  const e=scene.economy;if(!e)return [];const problems:string[]=[];
  for(const a of e.accounts)if(a.meal){const m=e.meals.find(m=>m.id===a.meal),home=scene.objects.find(o=>o.id===a.actor);if(!m || !home)continue;for(const id of m.markets)try{const offer=courierApproach(scene,m,id,home);if(!offer || !workPath(scene,deliveryArea(m),offer.end,home))problems.push(`${a.id}: ${m.id} needs connected meal markets and home on the pedestrian network`);}catch(error){problems.push(error instanceof Error ? error.message : String(error));}}
+ for(const m of e.meals)for(const s of worldSeats(scene).filter(s=>m.seats?.includes(s.objectId)))for(const id of m.markets){const vendor=scene.objects.find(o=>o.id===e.markets.find(v=>v.id===id)!.actor)!;const offer=courierApproach(scene,m,id,vendor);if(!offer || !workPath(scene,deliveryArea(m),offer.end,s.approach))problems.push(`${m.id}: seat ${s.objectId}/${s.seatId} needs a connected meal approach`);}
  return problems;
 }
 export function courierApproach(scene:Scene,d:Pick<Delivery,'on'|'grounds'>,marketId:string,start:Point,state?:import('./car').CarState){

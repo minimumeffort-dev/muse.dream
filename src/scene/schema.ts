@@ -1,3 +1,4 @@
+import {seatingProblems} from './seating';
 import {DAMAGE_POOL_LIMITS,impactBudget,pooledImpact} from './damage-pool';
 import {ambientSchema,ambientProblem,AMBIENT_LIMITS} from './ambient';
 import {economySchema,economyProblems} from './commerce';
@@ -188,6 +189,7 @@ export const sceneSchema = z.object({
     notes: z.string(),
   }),
 }).superRefine((scene,ctx)=> {
+  for(const message of seatingProblems(scene))ctx.addIssue({code:'custom',path:['objects'],message});
   for(const message of economyProblems(scene))ctx.addIssue({code:'custom',path:['economy'],message});
   for(const message of sportProblems(scene))ctx.addIssue({code:'custom',path:['sports'],message});
   for(const message of interactionRuleProblems(scene))ctx.addIssue({code:'custom',path:['interactionRules'],message});

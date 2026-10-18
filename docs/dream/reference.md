@@ -63,7 +63,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `price: n?`, `capacity: n`, `on: ref?`, `grounds: symbols?` |
 | `work` | economy | ID / optional recipe block | `label: text`, `market: ref`, `input?: ref`, `take?: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `requires?: ref` |
 
-| `meal` | economy | ID / no block | `good: ref`, `markets: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n` |
+| `meal` | economy | ID / no block | `good: ref`, `markets: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `seats?: symbols` |
 | `milestone` | economy | ID / no block | `label: text`, `kind: work / delivery / repair`, `task: ref`, `count: n` |
 | `ingredient` | recipe | No ID / no block | `good: ref`, `take: n` |
 
@@ -85,6 +85,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `contact` | object | ID / no block | `at: v3`, `radius?: n`, `size?: v2`, `height: n`, `heading_deg?: n`; exactly one radius or size |
 | `interior` | object | No ID / interior | `at: v3`, `size: v3` |
 | `portal` | interior | ID / no block | `side: front / back / left / right`, `offset: n`, `width: n`, `height: n` |
+| `seat` | object | ID / no block | `at: v3`, `approach: v2`, `heading_deg: n` |
 | `rideable` | object | No ID / no block | `at: v3`, `control?: car / bicycle / skateboard / scooter / boat / plane` |
 | `lamp` | object | No ID / no block | `at: v3`, `radius: n`, `color: color` |
 | `emit` | object | No ID / no block | `kind: steam`, `at: v3`, `rate_s: n` |
@@ -600,9 +601,15 @@ reserved during travel. An empty shelf, full bag, blocked sight or lost purchasi
 power sends the customer home without a meal or refund. A purchased meal stays
 in their inventory for `eat_s`, then the ordinary eat transaction consumes it once.
 Return to the frozen routine pose before resuming the program. Live contact waits,
-paths, timers, needs and balances survive unloading, recovery and saves. No seating,
-queues, extra rigs, per-item bodies or offline travel. [Complete example](../examples/meal-trips.dream).
+paths, timers, needs and balances survive unloading, recovery and saves. Optional `seats=[bench_placement]` reserves a reachable shared furniture slot
+after purchase. See [seating](seating.md) for posture, claims and standing fallback.
+No queues, extra rigs, per-item bodies or offline travel. [Complete example](../examples/meal-trips.dream).
 
 The [staffed business example](../examples/market-production.dream) composes these
 existing policies. Meal/courier public navigation prepares without a repair
 service or ambient population. The same graph, path, actor and rig bounds apply.
+
+
+Furniture seats are named object-root `seat` declarations. Optional `meal.seats`
+references 1–4 unique furniture placements, with complete humanoids, connected
+approaches and shared player/NPC claims. [Author shared seating](seating.md).

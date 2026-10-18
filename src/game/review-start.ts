@@ -1,3 +1,4 @@
+import {worldSeats} from '../scene/seating';
 import {sceneInteriors,portalPoints,walkingHeight} from '../scene/interiors';
 import type {CarInput} from '../sim/car';
 import {carFootprintClear,resetCar,type CarState,type World} from "../sim/car";
@@ -10,6 +11,7 @@ import {aircraftFloor} from '../scene/aircraft-support';
 
 /** Real mock-world positions for exercising terrain contact, jumping and water navigation. */
 export function movementReviewStart(state:CarState,world:World,scenario:string|null):CarState {
+  if(scenario==='seating'){const seat=worldSeats(world.scene).find(s=>s.objectId==='hall_bench')!;const foot=interiorReviewStart(state,world,true);return {...foot,x:seat.approach.x,y:seat.approach.y,elevation:walkingHeight(world.scene,seat.approach.x,seat.approach.y)};}
   if(scenario==='interior')return interiorReviewStart(state,world,true);
   if(scenario==='walk')return toggleRide(state,world);
   if(scenario==='football' || scenario==='basketball'){
@@ -182,4 +184,25 @@ export function* kitchenReviewSteps(state:CarState,world:World):Generator<void,C
   if(meal?.phase==='out' && Math.hypot(meal.x-meal.at.x,meal.y-meal.at.y)<18)return next;
  }
  throw Error('Review staff could not serve the hungry customer');
+}
+
+
+/** Real staff purchases and meal travel precede a review-only starting pose in the hall. */
+export function* seatingReviewSteps(state:CarState,world:World):Generator<void,CarState>{
+ let next=npcReviewStart(state,world,'vendor');
+ next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:'buy',market:'market_stall',good:'bread'}},1/120,world);
+ for(let i=0;i<120*180;i++){
+  next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30===0)yield;
+  const meal=next.economy!.accounts.find(a=>a.id==='regular')?.meal;
+  if(meal?.phase!=='eat' || !meal.seat)continue;
+  const seat=worldSeats(world.scene).find(s=>s.objectId==='hall_bench' && s.seatId!==meal.seat!.seatId)!;
+  next={...next,x:seat.approach.x,y:seat.approach.y,elevation:walkingHeight(world.scene,seat.approach.x,seat.approach.y)};
+  next=toggleRide(next,world);if(!next.seated)throw Error('Review could not sit beside the customer');return next;
+ }
+ throw Error('Review customer could not reach a seat');
+}
+export function seatingReviewInput(state:CarState,world:World,frame:number,viewAngle=0):CarInput{
+ const seat=worldSeats(world.scene).find(s=>s.objectId==='hall_bench' && s.seatId==='right')!,far=frame>=120 && frame<180;
+ const target={x:seat.approach.x+(far ? 25 : 0),y:seat.approach.y-(far ? 25 : 0)},dx=target.x-state.x,dy=target.y-state.y,d=Math.hypot(dx,dy),a=Math.atan2(180,480)+viewAngle,move=frame>=120 && frame<270 && d>1;
+ return {steer:move ? (dx*Math.cos(a)-dy*Math.sin(a))/d : 0,throttle:move ? (-dx*Math.sin(a)-dy*Math.cos(a))/d : 0};
 }

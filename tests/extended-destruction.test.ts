@@ -1,3 +1,4 @@
+import {measuredScale} from '../src/scene/measure';
 import {describe,it,expect} from "vitest";
 import {Box3,Quaternion,Vector3} from "three";
 import source from "../src/scene/world/destructible.dream?raw";
@@ -20,9 +21,9 @@ import {WorldDebris} from "../src/game/debris";
 import {WorldScenery} from "../src/game/scenery";
 import {WorldParticles} from "../src/game/particles";
 const examples=compileDreamWorld(source),spec=(name:string)=>examples.assemblies.find(s=>s.displayName===name)!;
-// Local-unit fracture replays; complete-world contacts exercise resolved sizing separately.
+// Local-unit replays drop measurement; explicitly resolved scales retain their physical profile.
 function worldFor(assembly:ObjectDslV2,scale=1,headingRad=0):World{
-  const scene=parseScene({...createFixtureScene(),objects:[{id:"target",kind:"custom",labelText:assembly.displayName,x:480,y:360,scale,headingRad,spec:{...assembly,measure:undefined}}],regions:[],terrain:{hills:[]}});
+  const scene=parseScene({...createFixtureScene(),objects:[{id:"target",kind:"custom",labelText:assembly.displayName,x:480,y:360,scale,headingRad,spec:{...assembly,measure:scale===measuredScale(assembly) ? assembly.measure : undefined}}],regions:[],terrain:{hills:[]}});
   return {scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(960,720),carRadius:11};
 }
 function aimed(world:World,zone=false,speed=240){
@@ -66,7 +67,7 @@ describe("Dream 2 destruction authoring",()=>{
 
 describe("distinct fracture motion",()=>{
   it("sends splinters forward while masonry drops near its original position",()=>{
-    const bench=spec("Slatted park bench"),splinter=worldFor(bench),crumble=worldFor({...bench,impact:{...bench.impact as Extract<NonNullable<ObjectDslV2['impact']>,{kind:'break'}>,pattern:'crumble'}});
+    const bench=spec("Slatted park bench"),splinter=worldFor(bench,measuredScale(bench)),crumble=worldFor({...bench,impact:{...bench.impact as Extract<NonNullable<ObjectDslV2['impact']>,{kind:'break'}>,pattern:'crumble'}},measuredScale(bench));
     const a=stepCar(aimed(splinter),idle,1/120,splinter),b=stepCar(aimed(crumble),idle,1/120,crumble);
     expect(a.debris).toHaveLength(7);expect(b.debris).toHaveLength(7);
     expect(a.debris.every(p=>p.vx>100)).toBe(true);expect(Math.max(...b.debris.map(p=>Math.abs(p.vx)))).toBeLessThan(45);

@@ -4,7 +4,7 @@ These are captures of the running mock prototype. The game and asset geometry ar
 
 ## Motion you can actually follow
 
-Driving, vehicle switching, jumping, swimming and destruction are exported at **30 frames per simulation second**. Every frame is rendered; there is no frame interpolation. Most GIFs are 960 × 540 with a palette computed across the clip and Gifsicle compression. The market/conversation clips use 1280 × 720, 256 colors and no additional Gifsicle loss to keep UI text readable. The matching 1600 × 900 H.264 videos keep more color and detail at a smaller download size.
+Driving, vehicle switching, jumping, swimming and destruction are exported at **30 frames per simulation second**. Every frame is rendered; there is no frame interpolation. Most GIFs are 960 × 540 with a palette computed across the clip and Gifsicle compression. The market/conversation clips use 1280 × 720, 256 colors to keep UI text readable. The seating GIF uses Gifsicle loss level 20; other clips retain their existing compression settings. The matching 1600 × 900 H.264 videos keep more color and detail at a smaller download size.
 
 | Capture | GIF | HD video | Duration |
 | --- | --- | --- | --- |
@@ -18,6 +18,7 @@ Driving, vehicle switching, jumping, swimming and destruction are exported at **
 | Delivery pickup and vehicle carry | [delivery.gif](delivery.gif) | [delivery.mp4](delivery.mp4) | 12 seconds |
 | Public-pavement maintenance journey | [maintenance.gif](maintenance.gif) | [maintenance.mp4](maintenance.mp4) | 20 seconds |
 | Caretaker repair and return | [repair.gif](repair.gif) | [repair.mp4](repair.mp4) | 28 seconds |
+| Shared market seating | [seating.gif](seating.gif) | [seating.mp4](seating.mp4) | 16 seconds |
 | Staffed bakery | [kitchen.gif](kitchen.gif) | [kitchen.mp4](kitchen.mp4) | 16 seconds |
 | Customer meal journey | [meals.gif](meals.gif) | [meals.mp4](meals.mp4) | 16 seconds |
 | Earned work and vendor recognition | [progression.gif](progression.gif) | [progression.mp4](progression.mp4) | 16 seconds |
@@ -757,3 +758,18 @@ before/after frozen-view screenshots, buffer counts and live render reports are
 kept in `docs/evidence/startup-fingerprints/`; those screenshots are retention
 evidence, not new product footage. Loader timings come from actual warmed browser
 reloads; the separate Node/GC reports are not browser memory or frame-rate claims.
+
+
+## Shared seating refresh
+
+The r61 pass refreshes `seating`, `meals` and `kitchen` as matching 30 fps HD
+video, 1280 × 720 GIF and 2400 × 1350 stills. Each uses 480 actual 2400 × 1350
+rendered frames. The seating clip prepares real purchased food and a completed
+customer approach, then places the review player at the other bench slot. It
+shows shared occupancy, eating, standing and sitting again. Meal and bakery clips
+show the counter purchase and movement toward the hall; the seating clip shows
+the indoor meal. These are offline exports, not live performance measurements.
+
+Existing roof, driving, material, destruction and interior-shell captures keep
+the same geometry, scale and demonstrated actions. The new seating guide links
+the new footage and runnable source. [Verification](../evidence/shared-seating/verification.md).
