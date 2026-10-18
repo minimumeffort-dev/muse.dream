@@ -405,3 +405,13 @@ catch-up. Existing businesses, financial ledgers, work commitments, physical
 changes, parked vehicles, sports matches and NPC memory remain saved. Unsafe
 active poses use the existing local clearance recovery before the ordinary reset
 fallback. The previous format-16 slot stays intact after a successful new write.
+
+
+## Walking spacing update
+
+Format 16 / simulation 27 validates the exact released r69 world before applying
+the new ambient walking rules. Geometry and saved fields are unchanged. Keep
+every population pose, node, distance, random state, wait and clock exactly, along
+with jobs, money, ownership, seats, matches and damage. Existing overlapping
+people separate through ordinary future movement, without a reset or offline
+catch-up. The old format-16 slot and the full earlier migration chain remain.

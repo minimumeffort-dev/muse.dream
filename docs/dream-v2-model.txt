@@ -491,7 +491,9 @@ place motion requires explicit role=ambient, fixed at, no pose, route or behavio
 Furnish motion creates ambient ownership; walk requires on=sidewalk. Cannot combine pose and motion.
 walk needs a complete measured humanoid rig; speed 4..24, wait_s 0..5 default 1.
 Engine caches portals from accepted sidewalk/crossing/entrance polygons; no paths invented across roads.
-Full visual footprints stay on pavement and wait for approaching swept vehicle space.
+Full rest footprints stay on pavement, wait for approaching swept vehicles and locally space ambient walkers.
+Engine-owned bounded passing/slowing/backing uses stable ID yielding; old overlaps separate without teleport.
+Narrow bottlenecks may wait/back away. This does not add pushing or avoidance of decor NPC people.
 roam stays within authored radius 20..180, speed 2..16; alert 20..180 uses 3D player distance.
 flee_speed 8..60 and >= speed; recover_s .5..10 default 2 after separation; gait walk default or hop.
 Animals avoid road/ground reservations, solids, water and world bounds. Blocked movement rests in alert.
@@ -500,7 +502,7 @@ Validated humanoid bindings or swing joints animate rigid complete geometry in s
 <=192 ambient members, deterministic 20 Hz simulation with render interpolation; <=8192 cached walk nodes.
 All populations remain resident; existing 32 NPC/24 route+control/24 CPU live-rig caps do not increase.
 Pause freezes state, R preserves it, Start over resets it. Reduced motion rests limb/hop poses.
-No generated scripts, mutual crowd collision, general NPC programs, signals or ecological simulation.
+No generated scripts, general crowd physics, general NPC programs, signals or ecological simulation.
 flock id(object=bird_ref,at=[x,y],radius=[rx,ry],count=16,altitude=65,speed=32,seed=101,flap_hz=3.2,flap_deg=18);
 Passive decor only: no seat, contact, foundation, impact or emitter; measured horizontal radius <=20.
 Radius axes 40..1200; count 1..32; altitude 60..300; speed 5..80; seed integer 0..65535;

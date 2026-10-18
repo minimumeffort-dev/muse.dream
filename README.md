@@ -14,7 +14,7 @@ Racing is where this started. The idea is to make whatever someone draws playabl
 
 The old circuit is gone from the live city. Its western strip now has a park with
 two sidewalk entrances, a walking loop, six benches, three bicycles and three
-scooters. Eight visitors move through it. Sit with **F**, take a ride, or drive
+scooters. Eight visitors move through it, giving each other room on the paths. Sit with **F**, take a ride, or drive
 somewhere else and come back. Damaged benches and lamps join the existing
 caretaker's finite repair work.
 
@@ -360,7 +360,7 @@ The asset library includes gulls, red kites, deer, foxes and hares. The live cit
 
 ![Wildlife and plants composed from Dream 2](docs/media/ecology.jpg)
 
-Ground wildlife roams bounded habitats and moves away when you approach. Pedestrians follow connected sidewalks and crossings, waiting for approaching vehicles. Full models share GPU instances, while movement runs at 20 Hz. Plants stay instanced, and flying flocks retain their shared flight shaders. These are authored mock behaviors, without crowd physics or an ecosystem simulation. [See the assets](docs/asset-library.md), or [write a pair of flying birds](docs/examples/ambient-wildlife.dream).
+Ground wildlife roams bounded habitats and moves away when you approach. Pedestrians follow connected sidewalks and crossings, wait for approaching vehicles and give other ambient walkers room to pass. Full models share GPU instances, while movement runs at 20 Hz. Plants stay instanced, and flying flocks retain their shared flight shaders. These are authored mock behaviors, without crowd physics or an ecosystem simulation. [See the assets](docs/asset-library.md), or [write a pair of flying birds](docs/examples/ambient-wildlife.dream).
 
 ## Stay until night
 

@@ -697,3 +697,13 @@ members by ID, rebases only derived nodes and initializes eight new visitors at 
 saved tick. Keep every old object, ledger, task, clock and slot. Garden park uses
 existing asset templates, controls, seating, shared damage and finite repair rules;
 no actor, navigation, source or GPU rig budget increase. See docs/dream/paths.md.
+
+
+Ambient walking includes bounded local spacing using complete rest radii, accepted
+pavement and swept relative steps. Keep deterministic scene/ID priority, 20 Hz
+updates, render interpolation, vehicle waits and existing population/rig caps.
+Existing overlapping poses separate gradually; never teleport or shrink people.
+Narrow bottlenecks may wait/back away; this is no general crowd physics or decor
+NPC/animal avoidance. Format 16 / simulation 27 registers the exact unchanged r69
+world with no saved-field, population, commerce or navigation rebase. Preserve
+every old slot and the earlier migration chain.

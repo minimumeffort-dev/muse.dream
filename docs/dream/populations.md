@@ -73,11 +73,21 @@ place garden_hare(object=hare,at=[2400,2100],role=ambient,motion=roam(radius=90,
 
 `roam` stays within `radius` of the authored home. Animals avoid water, roads, reserved grounds, solids and world edges. A player within `alert` triggers flight at `flee_speed`; after separation, `recover_s` settles them back to roaming. Height matters, so a high aircraft does not frighten everything underneath it. Hares and sparrows use `gait=hop`; quadrupeds retain their authored swing joints. If no safe direction fits, the animal waits rather than jumping through an obstacle.
 
+Ambient walkers also give each other room. They choose a short passing step,
+slow down or back away while their complete rest footprints stay on accepted
+pavement. Stable placement IDs decide who may yield. The rule also separates
+people that already overlap in an older save, without moving them instantly.
+A narrow bottleneck may still make people wait or back away. This applies to
+ambient walkers; it does not make animals or individual decor NPCs physical crowd
+obstacles.
+
+![Visitors give each other room on Garden park paths](../media/pedestrians.gif)
+
 ![A deer moves away from the approaching player](../media/wildlife.gif)
 
 These instances have explicit `role=ambient`, or acquire it from `furnish(...,motion=...)`. They are cosmetic populations, separate from general NPC programs, seats and physical contacts. Their validated rig and full voxel geometry are shared in GPU instances. Pure movement runs at 20 Hz with interpolated rendering. All 179 members remain resident; frustum culling checks both the camera and shadow view. The cap is 192 ambient members and 8,192 cached walking nodes. The existing NPC, route, vehicle and CPU live-rig limits stay unchanged.
 
-Pause freezes the population clock. R preserves it; Start over restores its seed and home poses. Reduced motion rests limb and hopping animation. This is bounded walking and avoidance, without crowd collision, traffic signals, full animal intelligence or ecological simulation. Use a full `role=npc` program when an individual needs custom states or a transit route.
+Pause freezes the population clock. R preserves it; Start over restores its seed and home poses. Reduced motion rests limb and hopping animation. This is bounded walking and avoidance, without pushing, general crowd physics, traffic signals, full animal intelligence or ecological simulation. Use a full `role=npc` program when an individual needs custom states or a transit route.
 
 `motion` cannot combine with `pose=rest`, routes, behavior programs, seats, contacts, foundations, impacts, emitters, lamps, part clocks, proximity or rolling joints. Walking requires the complete measured humanoid rig. [Complete runnable moving population](../examples/moving-population.dream) · [HD pedestrians](../media/pedestrians.mp4) · [HD wildlife](../media/wildlife.mp4).
 

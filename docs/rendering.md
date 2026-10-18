@@ -324,3 +324,14 @@ This includes counting/hashing overhead, not browser startup, frame time, total
 memory or VRAM. [Inputs, results and regression checks](evidence/support-sampling/verification.md).
 Existing screenshots and recordings remain accurate because support coordinates
 and the resulting placement rules are unchanged.
+
+## Local pedestrian spacing
+
+Ambient walkers now use bounded local passing/slowing/backing choices with their
+complete rest footprints. One 20 Hz spatial grid serves the same resident crowd;
+geometry, instance buffers, actor limits and rendering quality stay unchanged.
+The two-minute Node fixture adds about 0.79 ms per crowd update. One matched native
+browser replay pair adds about 0.29 ms of CPU work per rendered frame on this
+desktop, with the same submitted triangles, draw calls and geometry counts. This
+is added behavior, not a rendering speedup or a guarantee on a weaker laptop.
+[Conditions, raw reports, limits and regressions](evidence/pedestrian-spacing/verification.md).

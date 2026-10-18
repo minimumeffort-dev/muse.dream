@@ -963,3 +963,14 @@ high JPEG quality without chroma subsampling. All other assets, infrastructure,
 lighting and shared-meal captures retain their represented geometry/mechanics;
 this change extends an existing repair area without moving a placement or
 altering an asset. [Native checks and source identity](../evidence/school-repairs/verification.md).
+
+## Pedestrian spacing
+
+The current `pedestrians` export uses 720 actual rendered source frames at 30 fps,
+2400 × 1350, showing eight visitors on Garden park's shared paths. Its HD video,
+GIF and matching JPEG are refreshed together. It is an offline recording, not an
+FPS measurement. The earlier moving-population section records that release's
+360-frame city clip; this park recording supersedes it as the current walking
+behavior example. Asset geometry, the city plan and other local mechanics are
+unchanged. Older world recordings retain the paths taken in their recorded
+release. [Spacing checks and measured costs](../evidence/pedestrian-spacing/verification.md).
