@@ -81,3 +81,7 @@ per-cell simulation, NPCs or animated rigs. The current live world has two slots
 on each of its four slatted benches: the market hall, civic park, station and school yard.
 
 [Shared meals](social.md) reserve the other slot for an invited person and record the time you finish together. Leaving early returns the reserved food; ordinary customer meals keep their own claims.
+
+The [school repair connection](commerce.md#school-yard-repairs) now restores that
+bench through the same finite caretaker service. Damage releases its claims;
+paid restoration returns the same two slots, with no new seat or physics body.

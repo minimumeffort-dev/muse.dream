@@ -175,10 +175,18 @@ journey keeps going while you drive away or unload that part of the world.
 Repairs use finite supplies. After two jobs, you can bring two replacement kits
 from **Station supplies**. The bakery pays the depot six credits and pays you four
 for the delivery. These are transfers between actual balances. The depot starts
-with 32 kits and cannot generate more. The service covers 88 targets: furniture
-on the three work grounds and 77 lamps beside Market Avenue, High Street and
-Civic Walk. The caretaker steps off the sidewalk for nearby repairs, using
+with 32 kits and cannot generate more. The service covers 89 targets: furniture at the market, park, station and school,
+plus 77 lamps beside Market Avenue, High Street and Civic Walk. The caretaker steps off the sidewalk for nearby repairs, using
 crossings between streets. Other districts still need connected service areas.
+
+The school-yard bench now comes back after damage too. The caretaker uses the
+existing pavements and school access path, waits if something blocks the repair,
+then restores the same two usable seats. You can take this job from the bakery
+before dispatch, using the same kit and pay.
+
+![The caretaker repairing the school-yard bench](docs/media/schoolrepair.jpg)
+
+[Watch in HD](docs/media/schoolrepair.mp4) · [Author connected repairs](docs/dream/commerce.md#school-yard-repairs)
 
 The caretaker can now bring supplies back too. When a whole shipment fits, they
 walk to the station, collect two kits or saplings, carry them back and return

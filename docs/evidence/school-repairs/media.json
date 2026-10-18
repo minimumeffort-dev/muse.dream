@@ -1,0 +1,29 @@
+{
+  "frames": 600,
+  "fps": 30,
+  "width": 2400,
+  "height": 1350,
+  "rawBytes": 457104878,
+  "sequenceSha256": "0e6d1267827e13c1dd1110df3df2f8278e2242cafdbdc457d39310fe0dace89f",
+  "sequenceHashMethod": "SHA256 of each sorted filename followed by binary SHA256 of that frame",
+  "posterFrame": 450,
+  "visualHour": 14,
+  "simulationClock": "ordinary progressed engine time",
+  "outputs": [
+    {
+      "path": "docs/media/schoolrepair.jpg",
+      "bytes": 161813,
+      "sha256": "26ed397e0e2a39ee36ecaa29d6b5d0bcdaf05c8e160b6de54502e355e7e750c7"
+    },
+    {
+      "path": "docs/media/schoolrepair.gif",
+      "bytes": 17489340,
+      "sha256": "1349035757dff37353326a68f7b762f794670acc646fc5d2cdca1548c334dc86"
+    },
+    {
+      "path": "docs/media/schoolrepair.mp4",
+      "bytes": 2393382,
+      "sha256": "30300430a1a0b352c2e6f0caf07bb730e6ef229cd8bee37eb75eb829cc2a7857"
+    }
+  ]
+}

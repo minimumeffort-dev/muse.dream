@@ -122,6 +122,7 @@ export interface World {
   previousPlantSaveCompatibility?:string;
   previousFinishSaveCompatibility?:string;
   previousCourierSaveCompatibility?:string;
+  previousSchoolRepairSaveCompatibility?:string;
   previousSocialSaveCompatibility?:string;
   previousShiftSaveCompatibility?:string;
   previousHoursSaveCompatibility?:string;

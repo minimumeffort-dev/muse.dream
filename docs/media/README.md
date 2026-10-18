@@ -18,6 +18,7 @@ Driving, vehicle switching, jumping, swimming and destruction are exported at **
 | Delivery pickup and vehicle carry | [delivery.gif](delivery.gif) | [delivery.mp4](delivery.mp4) | 12 seconds |
 | Public-pavement maintenance journey | [maintenance.gif](maintenance.gif) | [maintenance.mp4](maintenance.mp4) | 20 seconds |
 | Caretaker repair and return | [repair.gif](repair.gif) | [repair.mp4](repair.mp4) | 28 seconds |
+| School bench recovery | [schoolrepair.gif](schoolrepair.gif) | [schoolrepair.mp4](schoolrepair.mp4) | 20 seconds |
 | Counter opening hours | [hours.gif](hours.gif) | [hours.mp4](hours.mp4) | 16 seconds |
 | Shared market seating | [seating.gif](seating.gif) | [seating.mp4](seating.mp4) | 16 seconds |
 | Staffed bakery | [kitchen.gif](kitchen.gif) | [kitchen.mp4](kitchen.mp4) | 16 seconds |
@@ -829,3 +830,29 @@ roof views and earlier scenario recordings retain their represented geometry.
 The source-generated map's roads, access paths and destination positions are
 unchanged. Earlier captures remain pinned to the experience they demonstrate;
 the shared sequence is the current social activity reference.
+
+## School bench recovery (r65)
+
+`schoolrepair.gif`, `schoolrepair.mp4` and `schoolrepair.jpg` share 600 actual
+rendered 2400 × 1350 PNG frames at 30 frames per simulation second. The sequence
+starts within 60 units of the caretaker's approach, then shows the eight-second
+repair, restored bench and start of the physical return. Its pre-roll uses the
+ordinary car impact, a real reverse/exit to clear the footprint, finite dispatch
+and every pedestrian step from the market. No worker pose is injected.
+
+The capture's visual clock is set to 14:00 for legibility; simulation time,
+market hours, needs, pay and travel retain their actual progressed values. This
+is offline documentation footage, not live FPS or a performance measurement.
+The dev-only exporter limits this clip to frames 0000–0599, with unchanged
+same-origin, PNG, 12 MB and path checks. Encode with:
+
+```sh
+node scripts/encode-media.mjs /path/to/ffmpeg /path/to/gifsicle schoolrepair
+```
+
+HD remains 1600 × 900 H.264 CRF 18; the GIF is 1280 × 720, 256 colors,
+no dithering and loss 20. The matching still is source frame 450, encoded at
+high JPEG quality without chroma subsampling. All other assets, infrastructure,
+lighting and shared-meal captures retain their represented geometry/mechanics;
+this change extends an existing repair area without moving a placement or
+altering an asset. [Native checks and source identity](../evidence/school-repairs/verification.md).

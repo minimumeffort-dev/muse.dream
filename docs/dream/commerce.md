@@ -413,8 +413,8 @@ the primary area.
 Blocked workers wait;
 there is no ladder, construction scaffold or dropped-kit simulation. Trees use
 a `regrow_s` repair service for paid planting and physical growth.
-[Planting guide and runnable source](growth.md). The live service covers the market table, crate and planter, both benches
-at the park/station and the two park wall sections. It does not make other scenery destructible.
+[Planting guide and runnable source](growth.md). The live service covers market furniture, the park/station/school benches,
+nearby lamps and the two park wall sections. It does not make other scenery destructible.
 
 
 ### Replacement supplies
@@ -428,7 +428,7 @@ credits and you receive four. No player credits are charged.
 
 ```dream
 delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_square);
-repair market_tables(label="Repair neighborhood furniture",market=market_stall,on=market_square,grounds=[park_seating,station_seating,market_hall],streets=[market_avenue,high_street,civic_walk],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
+repair market_tables(label="Repair neighborhood furniture",market=market_stall,on=market_square,grounds=[park_seating,station_seating,market_hall,school_yard,school_yard_access,school_yard_return],streets=[market_avenue,high_street,civic_walk],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
 ```
 
 These declarations are the live world's policy. The earlier flour and bread
@@ -446,8 +446,8 @@ paid kit contract. [Verification and remaining limits](../evidence/supply/verifi
 
 ### Connected service grounds
 
-The live caretaker also serves the park seating area and the east station bench.
-Both have paving connected to their sidewalk. Parked scooters, lamps and the
+The live caretaker also serves the park seating area, east station bench and school-yard bench.
+All use paving connected to their sidewalks. Parked scooters, lamps and the
 planter retain their original positions; the furnishing rules explicitly allow
 these new grounds. Repair selection still uses measured categories and available
 damage, so the worker may restore a nearer wall before a bench.
@@ -481,7 +481,7 @@ an agent to author both services and infrastructure, use
 
 ### Street verges
 
-The same service now reaches 88 targets, including 77 of the 400 city lamps.
+The same service now reaches 89 targets, including 77 of the 400 city lamps.
 `streets=[market_avenue,high_street,civic_walk]` declares which sidewalks it serves.
 `verge=24` permits a short approach up to 2.4 metres beyond those sidewalks, near
 eligible object contacts. Measured categories still select the targets; names
@@ -517,6 +517,44 @@ pool until repair. [Streetlight destruction](rules.md#streetlights-and-streamed-
 uses the same pooled geometry and saved damage as before.
 [Verification and media audit](../evidence/verge-repairs/verification.md).
 
+
+## School-yard repairs
+
+The school bench follows the same rule as the market furniture. Break it with a
+car, move clear and the caretaker notices the damage. After the 12-second
+claim window, they collect one kit and four credits of reserved pay, then walk
+from the market through the existing sidewalks, crossings and school access
+paths. Eight seconds of work restores the bench and its two seats. A body in
+the restoration space keeps the job waiting. The worker then walks home.
+
+![School bench restoration](../media/schoolrepair.jpg)
+
+[HD journey and repair](../media/schoolrepair.mp4) · [Animated repair](../media/schoolrepair.gif)
+
+You can claim **Repair neighborhood furniture** at the bakery before dispatch.
+Carry the kit to the map marker, then stand beside the bench to work. The same
+finite stock, wages, cancellation refund and clearance checks apply. The trip,
+work and return survive saves and render streaming. Breaking a seat also cancels
+an unfinished shared meal and returns its food; restoration makes it usable again.
+
+[Complete runnable connected-bench example](../examples/school-repairs.dream).
+It reuses the existing `repair` and `grounds` vocabulary:
+
+```dream
+ repair school_furniture(
+  label="Repair school furniture",
+  market=corner,on=work_yard,
+  grounds=[school_access,school_yard],
+  kind=bench,input=kit,take=1,
+  seconds=8,pay=4,effort=5,
+  dispatch_s=12
+ );
+```
+
+The live service now covers 89 targets, including 77 lamps. This extends one
+existing worker's connected grounds; other districts still need their own
+validated coverage. It adds no worker, rig, physics body or general city-wide
+dispatch system.
 
 ## Planting and growth
 

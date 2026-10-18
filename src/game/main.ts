@@ -81,7 +81,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   primeRepairNavigation(doc,worker.repairNavigation);
   const carRadius = playerRadius(doc);
   const roadMask = buildMaskForScene(doc);
-  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousParkingSaveCompatibility:worker.previousParkingSaveCompatibility,previousRepairSaveCompatibility:worker.previousRepairSaveCompatibility,previousSupplySaveCompatibility:worker.previousSupplySaveCompatibility,previousNetworkSaveCompatibility:worker.previousNetworkSaveCompatibility,previousPoolSaveCompatibility:worker.previousPoolSaveCompatibility,previousVergeSaveCompatibility:worker.previousVergeSaveCompatibility,previousPlantSaveCompatibility:worker.previousPlantSaveCompatibility,previousFinishSaveCompatibility:worker.previousFinishSaveCompatibility,previousCourierSaveCompatibility:worker.previousCourierSaveCompatibility,previousSocialSaveCompatibility:worker.previousSocialSaveCompatibility,previousShiftSaveCompatibility:worker.previousShiftSaveCompatibility,previousHoursSaveCompatibility:worker.previousHoursSaveCompatibility,previousSeatingSaveCompatibility:worker.previousSeatingSaveCompatibility,previousKitchenSaveCompatibility:worker.previousKitchenSaveCompatibility,previousMealSaveCompatibility:worker.previousMealSaveCompatibility,previousProgressSaveCompatibility:worker.previousProgressSaveCompatibility,previousRecipeSaveCompatibility:worker.previousRecipeSaveCompatibility,previousEgressSaveCompatibility:worker.previousEgressSaveCompatibility,previousInteriorSaveCompatibility:worker.previousInteriorSaveCompatibility,previousInteriorNavigation:worker.previousInteriorNavigation,previousInteriorContacts:worker.previousInteriorContacts,previousVergeNavigation:worker.previousVergeNavigation,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
+  const world: World = { scene: doc, roadMask,saveCompatibility:worker.saveCompatibility,previousParkingSaveCompatibility:worker.previousParkingSaveCompatibility,previousRepairSaveCompatibility:worker.previousRepairSaveCompatibility,previousSupplySaveCompatibility:worker.previousSupplySaveCompatibility,previousNetworkSaveCompatibility:worker.previousNetworkSaveCompatibility,previousPoolSaveCompatibility:worker.previousPoolSaveCompatibility,previousVergeSaveCompatibility:worker.previousVergeSaveCompatibility,previousPlantSaveCompatibility:worker.previousPlantSaveCompatibility,previousFinishSaveCompatibility:worker.previousFinishSaveCompatibility,previousCourierSaveCompatibility:worker.previousCourierSaveCompatibility,previousSchoolRepairSaveCompatibility:worker.previousSchoolRepairSaveCompatibility,previousSocialSaveCompatibility:worker.previousSocialSaveCompatibility,previousShiftSaveCompatibility:worker.previousShiftSaveCompatibility,previousHoursSaveCompatibility:worker.previousHoursSaveCompatibility,previousSeatingSaveCompatibility:worker.previousSeatingSaveCompatibility,previousKitchenSaveCompatibility:worker.previousKitchenSaveCompatibility,previousMealSaveCompatibility:worker.previousMealSaveCompatibility,previousProgressSaveCompatibility:worker.previousProgressSaveCompatibility,previousRecipeSaveCompatibility:worker.previousRecipeSaveCompatibility,previousEgressSaveCompatibility:worker.previousEgressSaveCompatibility,previousInteriorSaveCompatibility:worker.previousInteriorSaveCompatibility,previousInteriorNavigation:worker.previousInteriorNavigation,previousInteriorContacts:worker.previousInteriorContacts,previousVergeNavigation:worker.previousVergeNavigation,previousMarketSaveCompatibility:worker.previousMarketSaveCompatibility,previousSaveCompatibility:worker.previousSaveCompatibility,emptyEconomySaveCompatibility:worker.emptyEconomySaveCompatibility,previousSaveSource:worker.previousSaveSource,
     driveMask: buildPaperMask(doc.canonical.width, doc.canonical.height), carRadius };
   let car = createCarAtSpawn(doc);
   const repairViews=repairView();
@@ -102,8 +102,12 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     await loading.stage('Preparing the shared-meal review');const steps=sharedMealReviewSteps(car,world);let result=steps.next(),yieldAt=performance.now();
     while(!result.done){if(performance.now()-yieldAt>8){await new Promise<void>(resolve=>setTimeout(resolve,0));yieldAt=performance.now();}result=steps.next();}car=result.value;worldTime.value=car.timeS;
   }
+  if(import.meta.env.DEV && params.has('test-school-repair')){
+    await loading.stage('Following the school repair journey');const steps=repairReviewSteps(car,world,'school-bench',params.get('test-school-repair')==='work' ? 'work' : 'approach');let result=steps.next(),yieldAt=performance.now();
+    while(!result.done){if(performance.now()-yieldAt>8){await new Promise<void>(resolve=>setTimeout(resolve,0));yieldAt=performance.now();}result=steps.next();}car=result.value;worldTime.value=car.timeS;
+  }
   const reviewSave=import.meta.env.DEV && params.has('test-save') && !params.has('capture') && !params.has('profile');
-  const saves=!review || reviewSave ? gameSave(world,()=>localStorage,reviewSave ? params.has('test-social') ? 'muse-dream.review-social' : 'muse-dream.review-save' : 'muse-dream.save') : undefined;
+  const saves=!review || reviewSave ? gameSave(world,()=>localStorage,reviewSave ? params.has('test-social') ? 'muse-dream.review-social' : params.has('test-school-repair') ? 'muse-dream.review-school' : 'muse-dream.review-save' : 'muse-dream.save') : undefined;
   if(saves?.restored){car=saves.restored.state;worldTime.value=saves.restored.worldTime;}
   let saveAt=car.timeS,saveDirty=false;
   const saveIdentity={sourceHash:doc.sourceHash,compatibilityHash:world.saveCompatibility};
@@ -385,7 +389,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
   let captureWalk:ReturnType<typeof interiorReviewInput>|undefined;
   let captureTime:number|undefined,captureActor:string|undefined,captureFocus:THREE.Vector3|undefined;
-  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:360,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840,maintenance:600,lamps:240,lamprepair:360,streetrepair:360,planting:360,growth:900,courier:360,handoff:540,interior:600,interiornight:240,transit:240,recipes:360,progression:480,meals:480,kitchen:480,seating:480,hours:480,shifts:600,shared:720},async(clip)=>{
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{driving:210,boost:210,football:240,basketball:210,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:360,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840,maintenance:600,lamps:240,lamprepair:360,streetrepair:360,planting:360,growth:900,courier:360,handoff:540,interior:600,interiornight:240,transit:240,recipes:360,progression:480,meals:480,kitchen:480,seating:480,hours:480,shifts:600,shared:720,schoolrepair:600},async(clip)=>{
     captureTime=undefined;captureActor=undefined;captureFocus=undefined;captureWalk=undefined;
     resetPosition(true);worldTime.value=0;setMode("playing");
     for(const select of document.querySelectorAll<HTMLSelectElement>('#market-good,#market-job,#meal-good')){select.selectedIndex=0;select.dispatchEvent(new Event('change'));}
@@ -403,6 +407,11 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       const steps=courierReviewSteps(car,world,clip==='courier' ? 'pickup' : 'handoff');let result=steps.next(),yieldAt=performance.now();
       while(!result.done){if(performance.now()-yieldAt>=12){await new Promise<void>(resolve=>setTimeout(resolve,0));yieldAt=performance.now();}result=steps.next();}
       car=result.value;worldTime.value=car.timeS;captureActor=doc.economy?.accounts.find(a=>car.economy?.accounts.find(b=>b.id===a.id)?.courier)?.actor;
+    }
+    if(clip==='schoolrepair'){
+      const steps=repairReviewSteps(car,world,'school-bench','approach');let result=steps.next(),yieldAt=performance.now();
+      while(!result.done){if(performance.now()-yieldAt>8){await new Promise<void>(resolve=>setTimeout(resolve,0));yieldAt=performance.now();}result=steps.next();}
+      car=result.value;worldTime.value=car.timeS;captureActor=doc.economy?.accounts.find(a=>car.economy?.accounts.find(b=>b.id===a.id)?.repair)?.actor;viewAngle=Math.PI;manualZoom.factor=1.5;
     }
     if(clip==='shared'){
       const steps=sharedMealReviewSteps(car,world);let result=steps.next(),yieldAt=performance.now();
@@ -449,6 +458,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     }
     if(clip==='transit'){if(frame===20 || frame===105 || frame===120 || frame===210)useRide();return;}
     if(clip==='maintenance')return;
+    if(clip==='schoolrepair'){const config=doc.daylight;captureTime=config ? ((14-config.startHour+24)%24)/24*config.cycleSeconds+frame/30 : undefined;return;}
     if(clip==='kitchen'){
       const config=doc.daylight;captureTime=config ? ((14-config.startHour+24)%24)/24*config.cycleSeconds+frame/30 : undefined;
       if(frame===5){const select=document.querySelector<HTMLSelectElement>('#market-good')!;select.value='lunch';select.dispatchEvent(new Event('change'));}

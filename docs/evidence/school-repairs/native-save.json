@@ -1,0 +1,16 @@
+{
+  "sourceHash": "3a6c3f2032c3dac3cc96753db58d6cdae12472f709e29219cc2ffb734da8c12c",
+  "compatibility": "2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7",
+  "saveVersion": 14,
+  "simulationVersion": 22,
+  "exactAfterIdleTicks": 3824,
+  "playerCredits": 20,
+  "workerCredits": 4,
+  "completedRepairs": 1,
+  "phase": "home",
+  "wholeStateMatch": true,
+  "visualClockWithinFixedTick": true,
+  "visualClockDeltaS": 31.872699999986935,
+  "returnDistanceBefore": 4455.831318300172,
+  "returnDistanceAfter": 4903.831318299712
+}

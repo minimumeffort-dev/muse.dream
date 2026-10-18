@@ -52,7 +52,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-Format 14 retains the exact source hash and the compatibility fingerprint, with simulation version 21. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+Format 14 retains the exact source hash and the compatibility fingerprint, with simulation version 22. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -333,3 +333,15 @@ must match before decoding; existing state remains exact, with no invented
 history, population rebasing, changed clocks, resources or first meetings. Keep
 the format-13 slot and every earlier migration. Unknown future worlds cannot use
 this upgrade to rewind progress. [Gameplay and bounds](dream/social.md).
+
+### Connected school repair coverage (r65)
+
+Format 14 / simulation 22 adds the school yard and its two access patches to the
+existing furniture service. The registered r64 projection removes exactly those
+three grounds and reproduces the old fingerprint. No saved field changes: retain
+shared meals/history, remembered acquaintances, stock, balances, cargo, work,
+repair paths, damage, vehicles, population and clocks. The old format-14 slot
+remains available under its original fingerprint. Restore validates against the
+old world first, then the expanded service, without rebasing navigation, bodies,
+inventories or task attribution. Existing r63 and earlier upgrades remain chained.
+There is no offline repair or replenishment.

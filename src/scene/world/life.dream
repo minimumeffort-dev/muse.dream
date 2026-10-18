@@ -180,7 +180,7 @@ economy(){
  delivery flour_run(label="Bring flour to the bakery",from=station_supplies,to=market_stall,good=flour,quantity=2,pay=4,capacity=1,on=market_square);
  delivery school_run(label="Take bread to school",from=market_stall,to=school_canteen,good=bread,quantity=2,pay=5,capacity=1);
  delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_square);
- repair market_tables(label="Repair neighborhood furniture",market=market_stall,on=market_square,grounds=[park_seating,station_seating,market_hall],streets=[market_avenue,high_street,civic_walk],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
+ repair market_tables(label="Repair neighborhood furniture",market=market_stall,on=market_square,grounds=[park_seating,station_seating,market_hall,school_yard,school_yard_access,school_yard_return],streets=[market_avenue,high_street,civic_walk],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
  delivery saplings_run(label="Bring saplings to the market",from=station_supplies,to=market_stall,good=sapling,quantity=2,pay=4,price=2,capacity=1,on=market_square);
  repair orchard_trees(label="Plant a new tree",market=market_stall,on=market_square,grounds=[orchard_work,orchard_path],kind=tree,input=sapling,take=1,seconds=10,pay=6,effort=6,regrow_s=180,seed_scale=.15);
  work bake(label="Bake bread",market=market_stall,input=flour,take=1,output=bread,make=2,seconds=6,pay=3,effort=12,capacity=1,target=4);

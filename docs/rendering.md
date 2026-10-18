@@ -262,3 +262,13 @@ are recorded separately in [courier verification](evidence/courier/verification.
 The market shell keeps explicit roof/front/back/left/right groups through compaction, instancing and worker transfer. Inside the room, per-instance visibility hides the roof and camera-facing sides while the floor, contents and far walls remain opaque. Changing Q/E changes only the view. Streamed chunks apply that view on installation; the accepted scene and physical contacts stay resident. Roof shadows remain stable.
 
 Interior floor pools add a bounded always-on surface effect to the existing lighting batch, clipped to the declared floor. They add no point light or shadow map and do not provide wall illumination or object occlusion. Cosmetic terrain tufts now yield to interior floors. See the [measured r56 checks](evidence/interiors/verification.md); offline walkthroughs are not FPS measurements.
+
+## School recovery coverage
+
+The existing caretaker now reaches the school bench through declared grounds.
+Only prepared repair navigation and source compatibility change: 4,305 nodes and
+14,368 directed links, under the unchanged 8,192 / 32,768 caps. The 1,700
+placements, meshes, contacts, public pedestrian graph, streamed chunks and quality
+settings stay identical. Seat restoration uses the existing damage path.
+No new actor, live rig, light, per-frame scan or physics body is added.
+See [the connected repair](dream/commerce.md#school-yard-repairs).

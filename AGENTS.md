@@ -284,7 +284,7 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 ## Saved simulation state
 
 Current save format 14 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 21. Historical formats retain their registered projections.
+at simulation version 22. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -335,7 +335,7 @@ restore. Player requests and explicit NPC delivery policies share finite contrac
 shoppers consume delivered food through existing transactions.
 No offline catch-up, new rigs/physics bodies, provider calls or nutrition claims.
 Optional work gestures use existing humanoid bones and reduced-motion rest.
-Upstream production, shifts, skills and interior kitchens remain
+Upstream production, general skills and interior kitchens remain
 separate features. The logical Lab stays independent. See `docs/dream/commerce.md`.
 
 ## Voxel assemblies
@@ -429,7 +429,7 @@ use one centered base contact; compound/offset contacts remain rejected. Preserv
 narrow lamp contacts, all authored geometry, shared category rules, night paint,
 actor/rig limits and no per-cell bodies. Lamp surface pools turn off while broken
 and return after paid repair. Keep the registered format 9/simulation 11 projections and the r50/r51/r52
-migration chain. Current service covers 88 targets including 77 lamps; other
+migration chain. Current service covers 89 targets including 77 lamps; other
 districts still need declared coverage.
 See `docs/examples/streetlight-repairs.dream` and `docs/dream/rules.md`.
 
@@ -633,3 +633,14 @@ sparse history through pause/streaming/saves; Start over resets. Format 14 /
 simulation 21 registers exact r63 projection and retains every old saved field
 and original slot. No NPC-hosted invitations, dating, general affection score,
 physical food items, offline progression or provider calls. See docs/dream/social.md.
+
+
+The r65 furniture service adds school_yard, school_yard_access and
+school_yard_return to the existing market repair grounds. Keep all three and the
+accepted sidewalk/crossing path; no grass or carriageway shortcut. Coverage is
+89 targets (77 lamps), with 4305 derived nodes / 14368 directed links and existing
+worker/rig/navigation/fragment limits. Format 14 / simulation 22 registers the
+exact r64 projection by removing only these three grounds. Preserve every saved
+field, the old format-14 slot and the entire earlier chain; do not rebase population,
+physical poses, food, credits or personal history for this coverage-only upgrade.
+See docs/examples/school-repairs.dream and docs/dream/commerce.md#school-yard-repairs.

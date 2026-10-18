@@ -213,6 +213,10 @@ supplier. The receiving business pays for both goods and courier work.
 [Finite supplies and payment rules](commerce.md#replacement-supplies).
 
 
+[Connected school-bench repair](../examples/school-repairs.dream) reuses paired
+furniture seats, shared destruction and one finite paid service across two
+adjoining school grounds and an authored crossing. [Try it in the city](commerce.md#school-yard-repairs).
+
 [Connected neighborhood repairs](../examples/neighborhood-repairs.dream) adds a
 second work ground across a street. The worker must reach it through the authored
 crossing, then return with its pay. [Grounds and routes](commerce.md#connected-service-grounds).

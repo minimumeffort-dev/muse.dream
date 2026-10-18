@@ -74,13 +74,14 @@ once when the whole meal finishes, and restores both participants' fullness.
 Stand, move, jump, press **Y** to end it or use **R**, and unfinished portions
 return once. The person walks home before resuming their shift or program.
 A broken bench follows the same cancellation rule. A blocked return waits for
-clearance. The school bench is destructible; the current local repair service
-does not extend into the school yard.
+clearance. The school bench is destructible. The [caretaker service](commerce.md#school-yard-repairs)
+now follows the school access paths to restore it with a paid kit; both seats
+become usable again after the space is clear.
 
 Pause freezes time. Streaming keeps the activity resident. Save/load preserves
 claims, paths, eating time, returning poses and completed history. **R** keeps
 completed history while ending the present meal; **Start over** resets it.
-Format 14 / simulation 21 upgrades the registered r63 world without rewriting
+Format 14 / simulation 22 retains the registered r63 and r64 worlds without rewriting
 its stored fields, clocks, resources or remembered first meetings. Older slots
 remain available. Nothing progresses while the page is closed.
 
