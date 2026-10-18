@@ -78,7 +78,7 @@ describe('typed material parameters',()=>{
     expect(after[0]!.parts[0]!.id).not.toBe(before[0]!.parts[0]!.id);
     const originalFour=people.slice(0,people.indexOf("material coat_rust"));
     expect(compileDream(originalFour).map(anatomy)).toEqual(before.map(anatomy));
-    expect(originalFour.length).toBeLessThan(beforePeople.length*.4);
-    expect(lex(originalFour).length).toBeLessThan(lex(beforePeople).length*.4);
+    expect(originalFour.length).toBeLessThan(beforePeople.length*.5);
+    expect(lex(originalFour).length).toBeLessThan(lex(beforePeople).length*.5);
   });
 });

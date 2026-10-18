@@ -1,4 +1,6 @@
 import {z} from 'zod';
+import {matchSchema,matchFrame,matchCoordinates,matchRoster} from './sports-match';
+import {NPC_LIMITS} from './agents';
 import type {Scene} from './schema';
 import {impactOf,hasAnimatedJoints} from './object-dsl';
 import {roleOf} from './agents';
@@ -16,6 +18,7 @@ export const sportSchema=z.object({
   id,kind:z.enum(['football','basketball']),surfaceId:id,ballId:id,
   targets:z.array(id).length(2).refine(ids=>ids[0]!==ids[1],'sport needs two different targets'),
   targetAt:z.tuple([z.number().finite().min(-128).max(128),z.number().finite().min(0).max(128),z.number().finite().min(-128).max(128)]),
+  match:matchSchema.optional(),netDepth:z.number().finite().min(6).max(64).optional(),
   targetSize:z.tuple([z.number().finite().min(1).max(128),z.number().finite().min(1).max(128)]),
 }).strict();
 export type Sport=z.infer<typeof sportSchema>;
@@ -34,8 +37,20 @@ export function sportTargets(scene:Scene,sport:Sport){
 export function sportProblems(scene:Scene):string[]{
   const problems:string[]=[],ids=new Set<string>(),balls=new Set<string>(),grounds=new Set<string>();
   const areas:Scene['surfaces']=[];
+  const assigned=new Map<string,string>(),pools=new Map<string,string>(),extra=new Set<string>();
   for(const sport of scene.sports){
     const fail=(message:string)=>problems.push(`${sport.id}: ${message}`);
+    if(sport.netDepth!==undefined && sport.kind!=='football')fail('net_depth is football-only');
+    if(sport.match){
+      if(sport.kind==='basketball' && sport.match.teams.some(t=>t.keeper!==undefined || t.keeperSpec!==undefined))fail('keeper is football-only');
+      const pool=sport.match.rosterId ? `shared:${sport.match.rosterId}` : `court:${sport.id}`,identity=JSON.stringify([sport.match.teamSize,[...sport.match.teams].sort((a,b)=>a.id.localeCompare(b.id)).map(t=>[t.id,t.members])]);
+      if(pools.has(pool) && pools.get(pool)!==identity)fail('a shared roster must keep team sizes and member identities');pools.set(pool,identity);
+      for(const member of matchRoster(sport.id,sport.match)){const owner=pool+'.'+member.side;if(assigned.has(member.id) && assigned.get(member.id)!==owner)fail('an NPC may belong to only one team');assigned.set(member.id,owner);if(!member.team.members.includes(member.id))extra.add(member.id);}
+      for(const team of sport.match.teams)for(const id of team.members){
+        const member=scene.objects.find(o=>o.id===id),spec=member?.spec,program=scene.behaviors.find(b=>b.id===member?.behavior);
+        if(!member || roleOf(member)!=='npc' || member.route || !spec || !('dslVersion' in spec) || spec.dslVersion!==2 || spec.measure?.kind!=='person' || spec.body.interaction!=='decor' || scene.economy?.accounts.some(a=>a.actor===id) || program?.states.some(s=>s.say || s.action==='patrol' || s.transitions.some(t=>t.event==='interact')))fail(`team member '${id}' needs an unassigned stationary decor person NPC, without commerce or conversation`);
+      }
+    }
     if(ids.has(sport.id))fail('duplicate sport ID');ids.add(sport.id);
     if(balls.has(sport.ballId))fail('each sport needs its own ball');balls.add(sport.ballId);
     if(grounds.has(sport.surfaceId))fail('each sport needs its own surface');grounds.add(sport.surfaceId);
@@ -61,6 +76,11 @@ export function sportProblems(scene:Scene):string[]{
     }
     if(!valid)continue;
     const targets=sportTargets(scene,sport);
+    if(sport.match){
+      const frame=matchFrame(ground.points,targets),members=matchRoster(sport.id,sport.match);
+      if(ground.points.length!==4 || frame.length<108 || frame.width<70 || ground.points.some(p=>{const q=matchCoordinates(frame,p);return Math.abs(Math.abs(q.u)-frame.length/2)>.1 || Math.abs(Math.abs(q.v)-frame.width/2)>.1;}) || targets.some(t=>Math.abs(t.nx*frame.ux+t.ny*frame.uy)<.98))fail('matches need a rectangular court of at least 108 by 70, aligned with the targets');
+      for(const member of members)if(!member.team.members.includes(member.id) && scene.objects.some(o=>o.id===member.id))fail('generated team identity collides with an existing object');
+    }
     if(Math.hypot(targets[0]!.x-targets[1]!.x,targets[0]!.y-targets[1]!.y)<64)fail('targets must be at least 64 units apart');
     if(sport.kind==='football' && targets[0]!.nx*targets[1]!.nx+targets[0]!.ny*targets[1]!.ny>-.8)fail('football targets must face opposite ends');
     for(const target of targets){
@@ -69,5 +89,6 @@ export function sportProblems(scene:Scene):string[]{
       if(sport.kind==='basketball' && (target.width<2.5 || target.width>12 || target.height<2.5 || target.height>12 || Math.min(target.width,target.height)<=radius*2 || target.elevation-drivingHeight(scene.terrain,target.x,target.y)<16 || target.elevation-drivingHeight(scene.terrain,target.x,target.y)>50 || (center.x-target.x)*target.nx+(center.y-target.y)*target.ny<=0))fail('basketball target needs a fitting 2.5..12 ring at height 16..50 facing into the court');
     }
   }
+  if(scene.objects.filter(o=>roleOf(o)==='npc').length+extra.size>NPC_LIMITS.actors)problems.push('sports teams and existing NPCs exceed the shared 32 NPC budget');
   return problems;
 }

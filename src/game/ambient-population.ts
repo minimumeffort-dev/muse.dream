@@ -12,8 +12,8 @@ import {ambientMaterial} from './shaders';
 import {finishBuild} from './batching';
 
 /** Bone-local vertices retain rigid parts and filtered material coordinates; no mesh or joint per member. */
-export function ambientPrototype(object:SceneObject):THREE.Group{
- const source=buildObject({...object,scale:1}),joints=object.ambient!.joints,index=new Map(joints.map((j,i)=>[j.id,i+1])),batches=new Map<string,{geometry:THREE.BufferGeometry[];material:THREE.Material}>();
+export function ambientPrototype(object:SceneObject,joints=object.ambient?.joints??(object.spec as ObjectDslV2).joints!):THREE.Group{
+ const source=buildObject({...object,scale:1}),index=new Map(joints.map((j,i)=>[j.id,i+1])),batches=new Map<string,{geometry:THREE.BufferGeometry[];material:THREE.Material}>();
  source.updateMatrixWorld(true);
  source.traverse(node=>{if(!(node instanceof THREE.Mesh))return;
   let parent:THREE.Object3D|null=node.parent;while(parent && !index.has(parent.name))parent=parent.parent;

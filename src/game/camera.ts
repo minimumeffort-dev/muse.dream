@@ -8,11 +8,11 @@ export interface FollowTarget { x: number; y: number; z: number }
 export const DEFAULT_CAMERA_ZOOM = 1.18;
 
 /** Close while dribbling; widen around player and free ball without rotating the view. */
-export function sportCameraFrame(player:{x:number;y:number},ball:{x:number;y:number},kind:'football'|'basketball',target?:{x:number;y:number}){
+export function sportCameraFrame(player:{x:number;y:number},ball:{x:number;y:number},kind:'football'|'basketball',target?:{x:number;y:number},team=false){
   const distance=Math.hypot(ball.x-player.x,ball.y-player.y),blend=distance>20 ? .5 : .25;
   return {x:player.x+(ball.x-player.x)*blend+(target ? (target.x-player.x)*.15 : 0),
     y:player.y+(ball.y-player.y)*blend+(target ? (target.y-player.y)*.15 : 0),
-    zoom:Math.max(DEFAULT_CAMERA_ZOOM,(kind==='basketball' ? 4 : 3.2)/(1+Math.max(0,distance-20)/160))};
+    zoom:Math.max(team && kind==='football' ? .85 : DEFAULT_CAMERA_ZOOM,(kind==='basketball' ? team ? 3 : 4 : team ? 1.6 : 3.2)/(1+Math.max(0,distance-20)/(team ? 300 : 160)))};
 }
 
 function assemblySpan(spec: ObjectDsl, scale: number): number {

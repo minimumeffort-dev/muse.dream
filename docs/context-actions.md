@@ -3,7 +3,9 @@
 Walk up to something. The actions you can use appear beside an icon: drive,
 sit, talk or open the market. Drive away and those prompts go away. A delivery
 replaces the market prompt with its destination distance; a repair points you
-towards the work. Boost belongs to the car, and shooting belongs to the court.
+towards the work. Boost belongs to the car. On a court, N joins or rests a match, J charges a shot,
+and K changes between passing, calling for the ball and tackling. A compact
+score/time panel replaces the minimap there.
 
 ![Exploring without an automatically opened panel](media/context-actions.png)
 

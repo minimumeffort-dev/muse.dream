@@ -67,17 +67,20 @@
       <output id="market-feedback" role="status" aria-live="polite"></output>
     </section>
     <figure id="map-frame"><figcaption><span class="ui-label">World</span><span class="ui-label compass">N ↑</span></figcaption><canvas id="world-map" width="304" height="244" role="img" aria-label="World map with your position"></canvas></figure>
+    <section id="match-score" aria-label="Match" hidden><div><span id="match-state">Ready</span><span id="match-clock"></span></div><output id="match-scoreline" aria-live="polite"></output></section>
     <div id="action-bar" aria-label="Nearby actions">
     <button id="boost" class="action-chip" type="button" title="Boost (Shift)" disabled hidden>
       <span class="boost-fill" aria-hidden="true"></span>
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 2-9 12h6l-1 8 9-12h-6z" /></svg>
       <span id="boost-label">Boost</span><kbd aria-hidden="true">⇧</kbd>
     </button>
+    <button id="match-action" class="action-chip" type="button" aria-keyshortcuts="N" hidden><span class="icon-slot" data-icon-name="sport"></span><span id="match-action-label" class="ui-label">Join 6v6</span><kbd>N</kbd></button>
     <button id="sport-action" class="action-chip" type="button" hidden disabled>
       <span class="icon-slot" data-icon-name="sport"></span>
       <span id="sport-action-label" class="ui-label">Shoot</span><kbd>J</kbd>
       <span class="sport-meter" aria-hidden="true"><i></i><b></b></span>
     </button>
+    <button id="pass-action" class="action-chip" type="button" aria-keyshortcuts="K" hidden disabled><span class="icon-slot" data-icon-name="pass"></span><span id="pass-action-label" class="ui-label">Pass</span><kbd>K</kbd></button>
 
       <button id="interact" class="action-chip" type="button" hidden><span id="interact-icon" class="icon-slot"></span><span id="interact-label" class="ui-label"></span><kbd>F</kbd></button>
       <button id="talk" class="action-chip" type="button" hidden><span class="icon-slot" data-icon-name="talk"></span><span class="ui-label">Talk</span><kbd>T</kbd></button>
@@ -91,7 +94,7 @@
         <h1>Paused</h1>
         <button id="resume" type="button">Continue</button>
         <p id="pocket-status" hidden></p>
-        <details id="control-guide"><summary>Controls</summary><p>WASD or arrows to walk, swim or drive<br />Shift or Boost for a car burst<br />On sports grounds: hold J or the shot button,<br />then release to kick or shoot<br />Space to jump or hop a boat<br />Shift to run or swim faster<br />Space / Shift to climb / descend in a plane<br />+ / − to zoom · 0 resets framing<br />Pinch or scroll also zooms<br />Q / E to rotate the view<br />F to sit / stand or enter / exit a vehicle<br />T to talk to a nearby person<br />M for nearby activities · I for your bag<br />In activities: arrows or WASD select, Enter acts<br />1–4 or Q/E change section; Tab reaches every action<br />Escape closes actions, then pauses<br />B to buy · V to sell · H to work / collect / deliver · G to eat<br />Y to share food with someone while seated<br />R to return to the start</p></details>
+        <details id="control-guide"><summary>Controls</summary><p>WASD or arrows to walk, swim or drive<br />Shift or Boost for a car burst<br />On sports grounds: N joins or rests a match<br />Hold J, release to shoot · K passes / calls / tackles<br />Space to jump or hop a boat<br />Shift to run or swim faster<br />Space / Shift to climb / descend in a plane<br />+ / − to zoom · 0 resets framing<br />Pinch or scroll also zooms<br />Q / E to rotate the view<br />F to sit / stand or enter / exit a vehicle<br />T to talk to a nearby person<br />M for nearby activities · I for your bag<br />In activities: arrows or WASD select, Enter acts<br />1–4 or Q/E change section; Tab reaches every action<br />Escape closes actions, then pauses<br />B to buy · V to sell · H to work / collect / deliver · G to eat<br />Y to share food with someone while seated<br />R to return to the start</p></details>
         <button id="save-game" class="quiet" type="button">Save now</button>
         <p id="save-status" role="status" aria-live="polite">Progress saves on this device.</p>
         <details id="save-tools">

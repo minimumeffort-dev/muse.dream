@@ -216,6 +216,7 @@ function validateReferences(nodes:DreamNode[]):void {
         if(node.fields.has("heading_deg") && node.fields.has("route"))fail("heading_deg applies to at placements; a route owns its actor heading",{...node.token,path:`${node.token.path}/heading_deg`},"E_PLACEMENT");
       }
       if(node.kind==='flock')reference(node,'object','object');
+      if(node.kind==='team'){if(node.fields.has('keeper_object'))reference(node,'keeper_object','object');if(Number(node.fields.has('object'))+Number(node.fields.has('objects'))!==1)fail('team needs exactly one of object or objects',node.token,'E_REFERENCE');if(node.fields.has('object'))reference(node,'object','object');else for(const ref of listField(node,'objects'))reference({...node,fields:new Map([['object',ref]])},'object','object');}
       if(node.kind==='furnish')for(const ref of listField(node,'objects'))reference({...node,fields:new Map([['object',ref]])},'object','object');
       if(node.kind==='place' && node.fields.has('phase_s') && !node.fields.has('route'))fail('phase_s requires a route',node.token,'E_PLACEMENT');
       if(node.kind==="world" && node.fields.has("player"))reference(node,"player","object");

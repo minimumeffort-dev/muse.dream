@@ -42,6 +42,7 @@ export interface CarInput {
   /** A fresh UI press, consumed for one fixed tick (also preserves quick taps). */
   boostPressed?:boolean;
   shoot?:boolean;shootPressed?:boolean;shootReleased?:boolean;
+  matchPressed?:boolean;passPressed?:boolean;
   talkPressed?:boolean;
   commerce?:CommerceAction;
   aim?:{x:number;y:number};
@@ -122,6 +123,7 @@ export interface World {
   previousPlantSaveCompatibility?:string;
   previousFinishSaveCompatibility?:string;
   previousCourierSaveCompatibility?:string;
+  previousMatchSaveCompatibility?:string;
   previousBusinessSaveCompatibility?:string;previousSchoolRepairSaveCompatibility?:string;
   previousSocialSaveCompatibility?:string;
   previousShiftSaveCompatibility?:string;
@@ -229,7 +231,7 @@ export function resetCar(state: CarState, scene: Scene, resetRace = false): CarS
     lap: state.lap,
     boostReadyAtS: { ...state.boostReadyAtS },
     carBoost:{...fresh.carBoost,held:state.carBoost.held,readyAtS:state.carBoost.readyAtS},
-    sports:state.sports.map(game=>({...game,held:false,possessed:false,chargeStartS:null})),
+    sports:state.sports.map(game=>({...game,held:false,possessed:false,chargeStartS:null,...(game.match ? {match:{...game.match,owner:null}} : {})})),
     props: state.props.map((p) => ({ ...p })),
     growing:state.growing,broken:[...state.broken],brokenZones:state.brokenZones.map(z=>({...z})),debris:state.debris.map(p=>({...p})),
   };

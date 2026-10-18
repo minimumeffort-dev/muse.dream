@@ -167,3 +167,10 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    pays base plus available company cash to that personal seller once. Saved
    ownership permits local conserved deposits/withdrawals, protects commitments
    and does not change actor roles. See examples/business-ownership.dream. *)
+
+(* sport permits an optional block with exactly team home and team away.
+   A team is a semicolon statement, role=npc, exactly object or objects.
+   team_size counts the home player. members reuses stationary NPC identities;
+   roster shares one squad across grounds. keeper/keeper_object are football-only.
+   net_depth describes the target-local triangular side/back net. Tactics,
+   possession, scoring and input are bounded engine rules, never statements/code. *)

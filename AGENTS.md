@@ -253,7 +253,17 @@ round ball bodies and validation after linking. On-foot practice, possession,
 charged shots, scores and recovery live in `src/sim/sports.ts`; props retain their
 existing physics. Camera framing never changes heading. Preserve manual zoom,
 movement/jump/sprint controls, charge cancellation and R/Start over semantics.
-Ambient people remain NPCs, not full-match opponents. See `docs/dream/sports.md`.
+Optional sport match blocks define bounded team home/away templates and explicit
+NPC ownership. Home includes the player; team_size is 2..6, with at most eleven
+GPU-animated opponents/teammates per match. Count every unique identity inside the
+existing 32 NPC cap; reusable members must be stationary decor people without
+commerce or conversation. A shared roster has one visible venue and one playing
+match. Keep 20 Hz tactics, one real ball owner, passes/calls/tackle recovery,
+keeper catches, score/time results and full-sphere net containment in pure fixed
+steps. Match clocks, poses, ownership and results persist; R preserves them and
+Start over resets. Color/shadow GPU poses share complete bone bindings without
+raising CPU rig/route/ambient caps. Shared squads assemble at a venue, without
+implied pedestrian travel, fouls or competition rules. See `docs/dream/sports.md`.
 
 City connections are Dream data: file-local `junction` references share road/street coordinates; `site` attaches an object-local entrance to a named sidewalk; `crossing(junction=true)` supplies crossings on all street arms; route `stop` ties a wait to a platform/destination. Street/tram NPCs use existing carriageways; walking routes stay on the pedestrian network. Preserve the 256-site, 64-crossing, 128-local-junction and 16-stops-per-route bounds. The published map is generated with `node scripts/render-city-map.mjs` from the accepted scene, never drawn independently. Reserve entrances and civic grounds before placing housing. New architecture needs attached roof/façade/porch checks and inspected multi-angle renders.
 
@@ -283,8 +293,8 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 
 ## Saved simulation state
 
-Current save format 15 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 23. Historical formats retain their registered projections.
+Current save format 16 pins exact source plus a host-computed accepted-world fingerprint
+at simulation version 24. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order

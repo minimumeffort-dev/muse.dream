@@ -16,6 +16,28 @@ uses SMAA at the existing drawing-buffer size; all four refreshed recordings
 include it. The current market capture and Work-tab evidence also remove the
 yellow selection underline.
 
+## Six-a-side matches, r67
+
+Football and basketball now use 480 actual source frames each, at 30 rendered
+frames per simulation second and 2400 × 1350 pixels. The matching H.264 videos,
+1280 × 720 GIFs and `football-practice` / `basketball-practice` stills are refreshed
+together. `sports-park`, `basketball-court` and `basketball.jpg` use frame 180 from
+those same current recordings. These are offline exports, not frame-rate tests.
+The capture viewport fixes DPR 1.5 so hidden review tabs keep the same source size.
+
+`team-assets.png` and four evidence angles are native full-canvas gallery exports
+of the four new 32-part, twelve-bone kits. `sports-assets.jpg` includes those kits,
+the goals and both balls. `assets-all.jpg` is the complete current 109-template
+Dream library export (1600 × 8680). The gallery's Save PNG includes rows below
+the viewport. No generated concept art or interpolation is used.
+
+Existing world, vehicle, commerce, repair, nature and material recordings retain
+their accurate local geometry and controls; their camera views do not contain the
+new athletes or goal sides. Older focused people/sport sheets remain construction
+references for their retained templates. The current sports appearance is shown
+by the captures above. The map, movement, transport and non-sports civic geometry
+are unchanged. [Source, native controls, saves and media audit](../evidence/team-sports/verification.md).
+
 ## Keyboard HUD and depot ownership, r66
 
 The current game uses a compact charcoal HUD with aligned action rows, keyboard

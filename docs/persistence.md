@@ -9,7 +9,7 @@ Autosave runs every ten simulation seconds, after a conversation press or commit
 | Player and vehicles | Position, active control, motion, signed wheel travel and parked poses |
 | People | Program state, routine clocks, facing and whether you have met |
 | Physical changes | Moved props, damaged objects/building zones and remaining debris |
-| Sports | Scores, balls and practice state |
+| Sports | Balls, home/away scores, match time/results, team poses, possession and tactic/action clocks |
 | Market life | Credits, inventory, fullness, shelf stock, consumed food, completed batches, reserved work, sealed cargo, completed deliveries, repair claims/journeys, courier pickup/carry/return paths, consumed supplies and planted-tree progress |
 | World clocks | Simulation time, ambient population state and day/night phase |
 
@@ -362,3 +362,17 @@ balance, food, memory, physical pose or clock is rebased. All earlier projection
 still apply before this step, including both format-14 worlds. The original
 format-14 slot stays intact; corrupt or externally changed newer progress blocks
 fallback and replacement. No offline income is calculated.
+
+### Six-a-side matches (r67)
+
+Format 16 / simulation 24 first verifies the exact r66 world and its previous
+format-15 state. It adds ready match records while keeping old scores, balls,
+NPC history, money, company ownership, work, repair and other world state. Held
+shot controls are cancelled. The old slot remains available. Every earlier
+registered upgrade still passes through its own checked projection.
+
+A current match restores its per-member poses, ownership, elapsed time, home/away
+scores, round, result and bounded tactics/action clocks. Shared rosters keep one
+visible venue and at most one playing match. Restore cancels held input and shot
+charge; it does not take the ball away from its saved owner. R releases current
+possession while keeping progress; Start over creates new ready matches.

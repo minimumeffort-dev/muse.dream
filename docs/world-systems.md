@@ -4,6 +4,33 @@ The longer-term product is a way to describe a world, its rules and a task, then
 
 The [first working lab](dream/scenarios.md) connects that path using a bounded mock interpreter, explicit task rules, multiple mock policies and replayable local episodes. It is a logical graph environment. Linking those decisions to the existing 3D city's paths and physics is a separate next step, not something the dashboard already does.
 
+## Next playable work
+
+Retire the live racing circuit. Make streets the city's connected driving system,
+resolve each crossing/junction once instead of overlapping paint, and reuse the
+released ground for connected parks and other destinations. The original circuit
+belongs in the explicit legacy regression fixture. This requires accepted Dream,
+mask, reservation, rendering, pedestrian and save changes together; hiding its
+paint alone is incomplete.
+
+The six-a-side grounds now connect goalkeepers, opposing/player tackles, passes,
+charged shots and net containment, with saved match ownership, scores, venue and
+clocks. The city shares one bounded squad; it assembles at the chosen ground.
+NPC-hosted games, fouls and league schedules remain further work.
+
+Then audit shared capabilities across the world. Every bench should have usable
+seat data when its construction permits sitting, rather than a few demonstration
+placements. Apply the same category-wide consistency to other furniture and
+vehicles, preserving collision-free approaches and persistent state.
+
+The city needs more varied daily activity: people and traffic with destinations,
+different workplaces and practical jobs for teachers, doctors and firefighters,
+with recognizable clothes and work actions. Health and education content remains
+a bounded game exercise. More themed buildings or decorative labels alone do
+not supply a working service. Extend habitats and planting by district alongside
+this work. Measure bounded activation and rendering before expanding populations;
+keep the current mock/provider boundary.
+
 ## Grow the language through working scenarios
 
 The useful shared primitives are entities with typed state, ownership, resources, transactions, time, access, capacity, relationships and measurable goals. A school, shop, nursery and clinic can share those mechanisms while retaining different domain rules. Adding a new building label cannot make its institution work.
@@ -33,7 +60,7 @@ The current direction is a playable life simulation: people, work, food, service
 
 Player-to-person authored conversations now use the existing bounded state machines. They are local text interactions with remembered familiarity and saved routine state, with personal work/delivery recognition now available; broader relationship progression still missing. The playable market now adds bounded accounts, inventories, conserved trade, food, fullness and timed paid work. NPC staff and a customer use the same transactions as the player. The vendor now packs lunches and bakes according to shelf demand; the helper can fetch finite flour. The commuter can now leave a routine to buy a lunch, eat and return through the pedestrian network, with persistent trip state and shared finite stock. Delivery commitments now reserve finite goods/pay and connect the station depot, bakery and school. The next shared primitives are upstream supply production, richer employment schedules and explicit access between spaces. Restaurants can then consume ingredients and sell meals, employers can pay wages from a treasury, and people can follow schedules with actual destinations. Each step needs a small executable example and a second use of the same primitive, with invalid and interrupted actions tested.
 
-The first enterable market now has an explicit floor/space owner, portals, clearance, supported movement, a cutaway view and streaming. The current single-height driving field cannot stand in for multiple floors. Skyscrapers, lifts and stairs require that additional layer before they are called usable. Relationships and dating need authored consent, preferences, memory and repeatable social interactions; the current attention state is only a proximity reaction. Sports practice exists; full matches, teams, referees, entertainment venues, weather and needs beyond market fullness remain separate missing mechanics.
+The first enterable market now has an explicit floor/space owner, portals, clearance, supported movement, a cutaway view and streaming. The current single-height driving field cannot stand in for multiple floors. Skyscrapers, lifts and stairs require that additional layer before they are called usable. Relationships and dating need authored consent, preferences, memory and repeatable social interactions; the current attention state is only a proximity reaction. Six-a-side arcade matches now work; referees, competition rulebooks, entertainment venues, weather and needs beyond market fullness remain separate missing mechanics.
 
 Night navigation now has readable sky/ground fill outside lamp pools, while static districts load and unload around the player. Startup reuses worker-prepared paths, contacts and culling bounds, batches canonical save fingerprints without changing their bytes, yields during route/asset assembly and waits for shader readiness. Terrain and outline queries now avoid repeated work while preserving the exact accepted scene, graphs, contacts and saved-world fingerprints. The [query evidence](evidence/startup-queries/verification.md) records construction and native browser checks separately. These improvements support the larger simulation without adding actors or reducing visual settings. Continue measuring populated districts as new systems land, especially on lower-powered laptops and cold loads. Keep provider integration and external-policy adapters deferred until separately authorized.
 
@@ -46,7 +73,7 @@ Night navigation now has readable sky/ground fill outside lamp pools, while stat
 4. Staff now prepare lunches, the commuter takes a real meal detour, and the helper can resupply flour, using finite credits/stock, a timed meal and a saved return to the paused routine. Shared indoor seating now connects that trip to the hall. Next add indoor service, more resident purposes and upstream production, then schedules and relationship history that change choices. Completed shared meals now add per-person history and authored return dialogue, with availability/fullness/cooldown boundaries. Next add another shared activity and NPC invitations; dating and a general relationship system remain separate.
 5. The 81 generated parked vehicles now share direct controls through bounded activation, with instanced parked poses and persistent contacts. Add trucks/pickups through the shared control system, and keep auditing road paint, corners, signs and asset attachments. Expand force-based destruction consistently across the world and make it persistent. The first repair worker now uses connected pedestrian routes, waits for obstructions and restores selected market/park/station furniture. Pooled static destruction now supports the 400 streetlights without making their intact geometry resident scene nodes. Extend repair coverage to the remaining lamps and trees, then more structural categories. The current orchard grows three replanted trees with matching contact bodies and finite delivered saplings. Active debris and mesh caches remain bounded at 24 assemblies/templates and 128 pieces/fragment meshes; legacy limits stay unchanged. Add coherent weather and sound alongside those systems. Measure dense scenes, interiors, long travel and save responsiveness. Extend save migration when the world schema changes. Files can move progress between compatible browsers/devices manually; there is no cloud sync.
 
-Existing limits remain visible: the city has decorative institutions, bounded NPC routines, arcade vehicles and sports practice. It has a working food/work/delivery loop and one enterable market ground floor, with no employment contracts, enterable restaurant, relationship progression, multi-floor interior movement or weather system yet. Prioritize connected activities over adding more empty buildings.
+Existing limits remain visible: the city has decorative institutions, bounded NPC routines, arcade vehicles and six-a-side sports. It has a working food/work/delivery loop and one enterable market ground floor, with no employment contracts, enterable restaurant, relationship progression, multi-floor interior movement or weather system yet. Prioritize connected activities over adding more empty buildings.
 
 The raised tram rails found in the street audit now use projected street details,
 with crossing clearance and shared road/deck support. Their geometry streams with
@@ -152,9 +179,22 @@ ownable bakery with workers and customers in the checked example. It adds no
 render geometry or actor slots. Ownership and every prior world record survive
 the registered format-15 upgrade.
 
-Next priorities: playable six-a-side sports with NPC teammates and opponents,
-passing and a match camera; upstream supplies that can be produced and purchased;
+Next priorities: retire the live circuit and clean up junction crossings; apply
+seating consistently to benches; add varied daily jobs and destinations;
+upstream supplies that can be produced and purchased;
 further shared activities with NPC invitations, useful indoor service and more
-connected repair coverage. Sports still use the solo practice rules today. Starting companies, hiring, pricing, property, multi-floor
+connected repair coverage. Starting companies, hiring, pricing, property, multi-floor
 movement, dating, weather and sound remain separate missing capabilities.
 [Business rules and limitations](dream/businesses.md#own-the-station-depot).
+
+### Shared six-a-side grounds (r67)
+
+Football and basketball now use Dream-authored home/away templates, variants,
+tactics, duration and score targets. The player joins five teammates against
+six opponents, with keepers at both football goals, physical passes, possession,
+steals, tackles, shot timing and contained goal nets. Eleven shared NPC identities
+fit beside civic life and transit in the existing 32-NPC budget. GPU bone poses
+share color/depth transforms; tactics run at 20 Hz and balls retain fixed-step
+physics. Matches rest on leaving the court, with no claim of independent city-wide
+sports schedules. Format 16/simulation 24 registers the exact r66 projection and
+retains old progress. [Controls, source and limits](dream/sports.md).

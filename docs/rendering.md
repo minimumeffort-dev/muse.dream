@@ -288,3 +288,22 @@ placements, meshes, contacts, public pedestrian graph, streamed chunks and quali
 settings stay identical. Seat restoration uses the existing damage path.
 No new actor, live rig, light, per-frame scan or physics body is added.
 See [the connected repair](dream/commerce.md#school-yard-repairs).
+
+## Six-a-side athletes
+
+The shared eleven-NPC squad uses complete measured humanoids with GPU bone
+transforms in both color and shadow passes. Templates batch by material; no
+CPU joint hierarchy is added per athlete. Instanced cycles and kick/throw/contest
+poses retain rigid segments, finish coordinates and reduced-motion rest. Running
+uses a longer distance-driven stride. Tactics update at 20 Hz; rendering samples
+those poses between ticks. Only one venue shows a shared roster. The existing
+32-NPC, 24-route/live-vehicle, 24-CPU-rig and 192-ambient caps stay in place.
+
+A local active football sample used 60 warm-up and 300 measured frames at
+1920 × 1080, DPR 1.5, in the in-app Chromium browser on an M3 Ultra / 96 GB.
+Mean CPU preparation/submission was 3.847 ms, GPU queries 1.647 ms and frame
+interval 16.667 ms, with 185.463 draws and 632,080 triangles on average. This is
+an absolute sample of that scene, not a before/after optimization or weaker-laptop
+claim. Other desktop applications were running. The development profiler accepts
+`profile-match&test-movement=football` to exercise the complete match through its
+ordinary join input. [Raw results and verification](evidence/team-sports/verification.md).

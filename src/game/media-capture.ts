@@ -11,7 +11,7 @@ export function captionLines(text:string,width:number,measure:(text:string)=>num
 // Development-only, frame-by-frame PNG export through Vite. No interpolated frames.
 export function mediaCapture(canvas:HTMLCanvasElement, clips:Record<string,number>, start:(clip:string)=>void|Promise<void>, input:(clip:string,frame:number)=>void=()=>{}) {
   if(!new URLSearchParams(location.search).has('capture'))return;
-  const style=document.createElement('style');style.textContent='body{position:relative;width:1600px;height:900px;overflow:hidden}.hud,#npc-speech,#commerce-panel,#map-frame,#action-bar{position:absolute}#commerce-panel{bottom:104px;left:24px;width:344px;max-height:708px;overflow:auto}#action-bar{bottom:24px;max-width:calc(100% - 440px)}#map-frame{bottom:24px;width:184px}#world-map{width:168px;height:135px}#game{position:absolute;width:1600px;height:900px;inset:0}body>canvas:not(#world-map){width:1600px!important;height:900px!important}#media-capture{position:fixed;bottom:12px;left:16px;z-index:99;padding:10px;background:#17241f;color:#e6e9df;font:14px system-ui;display:flex;gap:10px}';document.head.append(style);
+  const style=document.createElement('style');style.textContent='body{position:relative;width:1600px;height:900px;overflow:hidden}.hud,#npc-speech,#commerce-panel,#map-frame,#action-bar,#match-score{position:absolute}#commerce-panel{bottom:104px;left:24px;width:344px;max-height:708px;overflow:auto}#action-bar{bottom:24px;max-width:calc(100% - 440px)}#map-frame{bottom:24px;width:184px}#world-map{width:168px;height:135px}#game{position:absolute;width:1600px;height:900px;inset:0}body>canvas:not(#world-map){width:1600px!important;height:900px!important}#media-capture{position:fixed;bottom:12px;left:16px;z-index:99;padding:10px;background:#17241f;color:#e6e9df;font:14px system-ui;display:flex;gap:10px}';document.head.append(style);
   const panel=document.createElement('div');panel.id='media-capture';
   const select=document.createElement('select');select.setAttribute('aria-label','Capture clip');
   for(const [name,frames] of Object.entries(clips))select.add(new Option(`${name} · ${frames} frames`,name));
@@ -26,7 +26,7 @@ export function mediaCapture(canvas:HTMLCanvasElement, clips:Record<string,numbe
       if(!clip)return;
       busy=true;
       let output=canvas;
-      const captions=[...document.querySelectorAll<HTMLElement>('#npc-speech:not([hidden]),#commerce-panel:not([hidden]),#action-bar,.hud,#map-frame,#action-feedback:not([hidden])')];
+      const captions=[...document.querySelectorAll<HTMLElement>('#npc-speech:not([hidden]),#commerce-panel:not([hidden]),#action-bar,.hud,#map-frame,#action-feedback:not([hidden]),#match-score:not([hidden])')];
       if(captions.length){
         composite??=document.createElement('canvas');
         if(composite.width!==canvas.width || composite.height!==canvas.height){composite.width=canvas.width;composite.height=canvas.height;}
@@ -36,7 +36,7 @@ export function mediaCapture(canvas:HTMLCanvasElement, clips:Record<string,numbe
         for(const caption of captions){if(getComputedStyle(caption).visibility==='hidden' || !caption.getClientRects().length)continue;const box=caption.getBoundingClientRect(),style=getComputedStyle(caption);
         const x=box.x-view.x,y=box.y-view.y;ctx.fillStyle=style.backgroundColor;ctx.beginPath();ctx.roundRect(x,y,box.width,box.height,parseFloat(style.borderRadius)||0);ctx.fill();
         if(parseFloat(style.borderWidth)>0){ctx.strokeStyle=style.borderColor;ctx.lineWidth=parseFloat(style.borderWidth);ctx.stroke();}ctx.save();ctx.clip();ctx.textBaseline='top';
-        for(const element of [caption,...caption.querySelectorAll<HTMLElement>('strong,p,button,output,select,summary,label,input,.caption-text,.choice-label,.choice-detail,.action-copy,#activity-keys span,.ui-label,kbd,#boost-label,.boost-fill,.sport-meter,.sport-meter i,.sport-meter b,.status-card,.icon-slot,.fullness-track,.fullness-track i,#commerce-views')]){
+        for(const element of [caption,...caption.querySelectorAll<HTMLElement>('strong,p,button,output,select,summary,label,input,.caption-text,.choice-label,.choice-detail,.action-copy,#activity-keys span,.ui-label,kbd,#boost-label,.boost-fill,.sport-meter,.sport-meter i,.sport-meter b,.status-card,.icon-slot,.fullness-track,.fullness-track i,#commerce-views,#match-state,#match-clock')]){
           if(element.hidden || !element.getClientRects().length)continue;
           ctx.save();try{clipSlots(element);
           const rect=element.getBoundingClientRect(),textStyle=getComputedStyle(element),fontSize=parseFloat(textStyle.fontSize),lineHeight=parseFloat(textStyle.lineHeight)||fontSize*1.2;
@@ -64,7 +64,7 @@ export function mediaCapture(canvas:HTMLCanvasElement, clips:Record<string,numbe
         }
         ctx.restore();
         }
-        {const map=document.querySelector<HTMLCanvasElement>('#world-map');if(map && !map.hidden && getComputedStyle(map).visibility!=='hidden'){const r=map.getBoundingClientRect();ctx.save();ctx.beginPath();ctx.roundRect(r.x-view.x,r.y-view.y,r.width,r.height,parseFloat(getComputedStyle(map).borderRadius)||0);ctx.clip();ctx.drawImage(map,r.x-view.x,r.y-view.y,r.width,r.height);ctx.restore();}}
+        {const map=document.querySelector<HTMLCanvasElement>('#world-map');if(map && !map.hidden && map.getClientRects().length && getComputedStyle(map).visibility!=='hidden'){const r=map.getBoundingClientRect();ctx.save();ctx.beginPath();ctx.roundRect(r.x-view.x,r.y-view.y,r.width,r.height,parseFloat(getComputedStyle(map).borderRadius)||0);ctx.clip();ctx.drawImage(map,r.x-view.x,r.y-view.y,r.width,r.height);ctx.restore();}}
         ctx.restore();output=composite;
       }
       output.toBlob(async blob=>{

@@ -17,7 +17,7 @@ export const DREAM_AGENT_FEATURES={
   lighting:feature('daylight lamp',['daylight'],['objects']),
   scenarios:feature('scenario item location link stock service agent objective',['scenarios']),
   voxels:feature('voxels fill cut voxel_world',['voxels'],['objects','interactions']),
-  sports:feature('sport',['sports'],['city','interactions']),
+  sports:feature('sport team',['sports'],['city','interactions']),
 } as const satisfies Record<string,Feature>;
 export type DreamAgentFeature=keyof typeof DREAM_AGENT_FEATURES;
 const names=Object.keys(DREAM_AGENT_FEATURES) as DreamAgentFeature[];

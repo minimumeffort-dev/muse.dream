@@ -436,7 +436,7 @@ export function flockDepthMaterial(flock:import('../scene/population').Flock,sca
 }
 
 /** Rigid GPU joint transforms share full authored geometry across ambient members. */
-export function ambientMaterial(material:THREE.Material,rig:import('../scene/ambient').Ambient['joints'],depth=false):THREE.Material{
+export function ambientMaterial(material:THREE.Material,rig:import('../scene/ambient').Ambient['joints'],depth=false,sports=false):THREE.Material{
   const original=material.onBeforeCompile.bind(material),key=material.customProgramCacheKey();
   const bones=['root','spine','left_hip','left_knee','left_ankle','left_shoulder','left_elbow','right_hip','right_knee','right_ankle','right_shoulder','right_elbow'];
   const ids=new Map(rig.map((j,i)=>[j.id,i+1])),rotations=[new THREE.Vector4(0,0,0,1)],positions=[new THREE.Vector4()],swings=[new THREE.Vector4()],rates=[0],bindings=[0];
@@ -450,22 +450,24 @@ export function ambientMaterial(material:THREE.Material,rig:import('../scene/amb
     original(shader,renderer);Object.assign(shader.uniforms,{popRot:{value:rotations},popPos:{value:positions},popSwing:{value:swings},popRate:{value:rates},popBinding:{value:bindings},popLeft:{value:leg('left')},popRight:{value:leg('right')},popEnabled:worldMotion});
     shader.vertexShader=shader.vertexShader.replace('#include <common>',`#include <common>
 attribute float popBone; attribute vec3 popCycle;
+${sports ? 'attribute vec2 popPlay;' : ''}
 uniform vec4 popRot[13]; uniform vec4 popPos[13]; uniform vec4 popSwing[13];
 uniform float popRate[13]; uniform int popBinding[13]; uniform vec4 popLeft; uniform vec4 popRight; uniform float popEnabled;
 vec4 popMul(vec4 a,vec4 b){return vec4(a.w*b.xyz+b.w*a.xyz+cross(a.xyz,b.xyz),a.w*b.w-dot(a.xyz,b.xyz));}
 vec4 popAxis(vec3 axis,float angle){return vec4(axis*sin(angle*.5),cos(angle*.5));}
 vec3 popRotate(vec4 q,vec3 p){return p+2.*cross(q.xyz,cross(q.xyz,p)+q.w*p);}
 vec4 popHuman(int binding,float phase,float amount,out float lift){
+ float run=clamp(amount-1.,0.,1.);amount=min(amount,1.);
  float tau=6.28318530718;lift=0.;bool left=binding<8;int b=left ? binding : binding-5;float offset=left ? 0. : .5,signSide=left ? 1. : -1.;
  float unit=popLeft.x/25.;
- if(binding==1){lift=unit*amount*(-1.7+.8*(1.-cos(phase*tau*2.)));return popAxis(vec3(0,1,0),sin(phase*tau)*.055*amount);}
- if(binding==2)return popMul(popAxis(vec3(0,1,0),-sin(phase*tau)*.1*amount),popAxis(vec3(0,0,1),-.035*amount));
- if(b==6)return popMul(popAxis(vec3(1,0,0),-signSide*.07*amount),popAxis(vec3(0,0,1),-sin((phase+offset)*tau)*.28*amount));
- if(b==7)return popAxis(vec3(0,0,1),(.12+max(0.,sin((phase+offset)*tau))*.18)*amount);
- vec4 dims=left ? popLeft : popRight;float t=fract(phase+offset),x,y,toe;
- if(t<.62){float u=t/.62;x=mix(6.8,-6.8,u);y=0.;toe=.16*(1.-u)-.38*pow(u,5.);}
- else{float u=(t-.62)/.38,e=u*u*(3.-2.*u);x=mix(-6.8,6.8,e);y=pow(max(0.,sin(3.14159265359*u)),1.5)*4.5;toe=mix(-.38,.16,e)+.12*sin(3.14159265359*u);}
- toe*=amount;float rootY=dims.x+unit*amount*(-1.7+.8*(1.-cos(phase*tau*2.)));
+ if(binding==1){lift=unit*amount*(-mix(1.7,5.5,run)+mix(.8,1.2,run)*(1.-cos(phase*tau*2.)));return popAxis(vec3(0,1,0),sin(phase*tau)*mix(.055,.09,run)*amount);}
+ if(binding==2)return popMul(popAxis(vec3(0,1,0),-sin(phase*tau)*.1*amount),popAxis(vec3(0,0,1),-mix(.035,.13,run)*amount));
+ if(b==6)return popMul(popAxis(vec3(1,0,0),-signSide*.07*amount),popAxis(vec3(0,0,1),-sin((phase+offset)*tau)*mix(.28,.7,run)*amount));
+ if(b==7)return popAxis(vec3(0,0,1),(mix(.12,.8,run)+max(0.,sin((phase+offset)*tau))*mix(.18,.25,run))*amount);
+ vec4 dims=left ? popLeft : popRight;float t=fract(phase+offset),x,y,toe,stance=mix(.62,.42,run),reach=mix(6.8,14.,run);
+ if(t<stance){float u=t/stance;x=mix(reach,-reach,u);y=0.;toe=.16*(1.-u)-.38*pow(u,5.);}
+ else{float u=(t-stance)/(1.-stance),e=u*u*(3.-2.*u);x=mix(-reach,reach,e);y=pow(max(0.,sin(3.14159265359*u)),1.5)*mix(4.5,8.,run);toe=mix(-.38,.16,e)+.12*sin(3.14159265359*u);}
+ toe*=amount;float rootY=dims.x+unit*amount*(-mix(1.7,5.5,run)+mix(.8,1.2,run)*(1.-cos(phase*tau*2.)));
  float ankleY=dims.x+dims.y-dims.z-dims.w;
  vec2 foot=vec2(x*unit*amount,ankleY+unit*(y*amount+max(0.,max(-toe*6.8,toe*2.2)))-rootY-dims.y);
  float d=clamp(length(foot),abs(dims.z-dims.w)+.001,dims.z+dims.w-.001);
@@ -481,6 +483,14 @@ vec3 popTransform(vec3 p,bool direction){
    if(binding>0)motion=popHuman(binding,popCycle.y,amount,lift);
    else{vec3 a=popSwing[j].xyz;float amplitude=length(a);if(amplitude>0.)motion=popAxis(a/amplitude,sin(popCycle.x*popRate[j]+popSwing[j].w)*amplitude*amount);}
   }
+  ${sports ? `float play=sin(clamp(popPlay.y,0.,1.)*3.14159265)*popEnabled;
+  if(popPlay.x>0.5 && play>0.){
+   float action=popPlay.x;float angle=0.;
+   if(action<1.5){if(binding==8)angle=1.05*play;if(binding==9)angle=-.45*play;if(binding==2)angle=-.18*play;}
+   else if(action<2.5){if(binding==6 || binding==11)angle=1.7*play;if(binding==7 || binding==12)angle=-.65*play;}
+   else{if(binding==8)angle=.8*play;if(binding==3)angle=-.3*play;if(binding==2)angle=-.3*play;}
+   motion=popMul(motion,popAxis(vec3(0,0,1),angle));
+  }` : ''}
   p=popRotate(popMul(popRot[j],motion),p);if(!direction)p+=popPos[j].xyz+vec3(0,lift,0);j=int(popPos[j].w+.5);
  }
  return p;
@@ -488,5 +498,5 @@ vec3 popTransform(vec3 p,bool direction){
     .replace('#include <beginnormal_vertex>','#include <beginnormal_vertex>\nobjectNormal=popTransform(objectNormal,true);')
     .replace('#include <begin_vertex>','#include <begin_vertex>\ntransformed=popTransform(transformed,false);');
   };
-  material.customProgramCacheKey=()=>`ambient-${key}-${JSON.stringify(rig)}-${depth}`;return material;
+  material.customProgramCacheKey=()=>`ambient-${key}-${JSON.stringify(rig)}-${depth}-${sports}`;return material;
 }

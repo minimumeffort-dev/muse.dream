@@ -1,0 +1,144 @@
+{
+  "sourceHash": "517c73ac86916f9c36691af4c1defa218991f7e2a0a22ba2338a9d1d103bee03",
+  "worldFingerprint": "b06274e07914b9b26b720ac81f155e6e6f51406adb84768a5a1c1ec01e49b082",
+  "note": "Actual rendered source frames, no interpolation or offline FPS claim",
+  "clips": [
+    {
+      "clip": "football",
+      "sourceFrames": 480,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "renderedFramesPerSimulationSecond": 30,
+      "sourceFirstModified": "2026-10-18T11:08:42.323Z",
+      "sourceLastModified": "2026-10-18T11:08:59.744Z",
+      "orderedFrameHash": "2cc1902d7b0a929b81f103c26a1658c81dacc17f53225a41e2e7603d59b79ed4",
+      "outputs": [
+        {
+          "file": "docs/media/football.mp4",
+          "bytes": 3244323,
+          "sha256": "b66d6b94b139dade2f4c434949c222ce54e38fbce58731c6df52e3dcdd789a30",
+          "decodedFrames": 480
+        },
+        {
+          "file": "docs/media/football.gif",
+          "bytes": 23650851,
+          "sha256": "eb6a5f6bc122a83c47af7540843fc1af85db31d5b5d6bf60c82b214e614cdf95",
+          "decodedFrames": 480
+        }
+      ]
+    },
+    {
+      "clip": "basketball",
+      "sourceFrames": 480,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "renderedFramesPerSimulationSecond": 30,
+      "sourceFirstModified": "2026-10-18T11:09:44.587Z",
+      "sourceLastModified": "2026-10-18T11:10:06.729Z",
+      "orderedFrameHash": "29c57c2581a0e2922b1893e8d5351eae2ad16cd55554c5d9cf56084e1a4924f0",
+      "outputs": [
+        {
+          "file": "docs/media/basketball.mp4",
+          "bytes": 5687905,
+          "sha256": "b55e84a5eb37384507f5e0976d8f65b6c42622059f56139e47ce15b7d72ccbb0",
+          "decodedFrames": 480
+        },
+        {
+          "file": "docs/media/basketball.gif",
+          "bytes": 39372104,
+          "sha256": "4cccd9744229018ca9e4ce364c3d7cd4ef97eef151e7710ea69bc5c78037a1ad",
+          "decodedFrames": 480
+        }
+      ]
+    }
+  ],
+  "stills": [
+    {
+      "file": "docs/media/football-practice.jpg",
+      "bytes": 208991,
+      "sha256": "1b83fea97fccc80b000086565121eb3fd5f75bfa9ea8fece2f22478353614a53"
+    },
+    {
+      "file": "docs/media/basketball-practice.jpg",
+      "bytes": 308080,
+      "sha256": "6c2741ae66175353f0b241ba94b29131d0dbcb4df0a2436c9e8222aa81efea82"
+    },
+    {
+      "file": "docs/media/sports-park.jpg",
+      "bytes": 208991,
+      "sha256": "1b83fea97fccc80b000086565121eb3fd5f75bfa9ea8fece2f22478353614a53"
+    },
+    {
+      "file": "docs/media/basketball-court.jpg",
+      "bytes": 308080,
+      "sha256": "6c2741ae66175353f0b241ba94b29131d0dbcb4df0a2436c9e8222aa81efea82"
+    },
+    {
+      "file": "docs/media/basketball.jpg",
+      "bytes": 308080,
+      "sha256": "6c2741ae66175353f0b241ba94b29131d0dbcb4df0a2436c9e8222aa81efea82"
+    },
+    {
+      "file": "docs/media/team-assets.png",
+      "bytes": 75792,
+      "sha256": "9320d512fed31fe3aa9d495af95180fa4b2cb0e1eb1a33f07e77b5925171e338"
+    },
+    {
+      "file": "docs/media/assets-all.jpg",
+      "bytes": 1010457,
+      "sha256": "ab2bbe06d5c53f92529fe715bc8c2b3009e7fcdd4bcbd067e5682fa14213785c"
+    },
+    {
+      "file": "docs/media/sports-assets.jpg",
+      "bytes": 108896,
+      "sha256": "6f46f74309b82aeb4e4970a9a1f224a44ff94230a071bf2bf825498af38b5bf8"
+    },
+    {
+      "file": "docs/evidence/team-sports/front.png",
+      "size": [
+        1280,
+        720
+      ],
+      "bytes": 75792,
+      "sha256": "9320d512fed31fe3aa9d495af95180fa4b2cb0e1eb1a33f07e77b5925171e338"
+    },
+    {
+      "file": "docs/evidence/team-sports/right.png",
+      "size": [
+        1280,
+        720
+      ],
+      "bytes": 78813,
+      "sha256": "2b7e0e57ff984427545c06b7fc1d05a28912a86d1e0d119173707cd0762125d1"
+    },
+    {
+      "file": "docs/evidence/team-sports/back.png",
+      "size": [
+        1280,
+        720
+      ],
+      "bytes": 71852,
+      "sha256": "cca080fe675394fa29f7323addd75e31ca2b330310e11bbe92c22509afa3ae14"
+    },
+    {
+      "file": "docs/evidence/team-sports/left.png",
+      "size": [
+        1280,
+        720
+      ],
+      "bytes": 72060,
+      "sha256": "3f392216bbd06a9d87981da55dd0879e7ed1b64b0e9bbb20e524c8a04d1b8423"
+    }
+  ],
+  "nativeReload": {
+    "exactMatchRecords": true,
+    "review": true,
+    "home": 3,
+    "away": 9,
+    "elapsedS": 26.383333333332477
+  }
+}

@@ -1,3 +1,4 @@
+import {teamMember} from './team-sports';
 import {findSeat} from '../scene/seating';
 import {walkingHeight} from '../scene/interiors';
 import {objectContacts} from "../scene/contacts";
@@ -36,6 +37,7 @@ export function actorPose(scene:Scene,object:SceneObject,timeS:number,state?:Car
     const water=control==="boat" ? waterAt(scene.terrain,object.x,object.y,elevation) : undefined;
     return {id:object.id,x:object.x,y:object.y,elevation:water ? water.level-2 : elevation,headingRad:object.headingRad??0,kind,speed:0,distance:0,travelled:0,vx:0,vy:0};
   }
+  const athlete=state && teamMember(scene,state,object.id);if(athlete)return {...athlete,headingRad:athlete.heading,kind:'path',travelled:athlete.distance,vx:Math.cos(athlete.heading)*athlete.speed,vy:Math.sin(athlete.heading)*athlete.speed};
   const maintenance=workJourneyForActor(state,scene,object.id);
   const seated=maintenance && 'seat' in maintenance && maintenance.phase==='eat' ? findSeat(scene,maintenance.seat) : undefined;
   if(seated)return {id:object.id,x:seated.x,y:seated.y,elevation:seated.elevation,headingRad:seated.headingRad,speed:0,distance:maintenance!.distance,travelled:maintenance!.distance,kind,activity:'perform',animationTimeS:timeS,seatHeight:seated.hipHeight,vx:0,vy:0};

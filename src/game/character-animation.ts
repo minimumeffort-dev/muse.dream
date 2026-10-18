@@ -25,7 +25,7 @@ export function solveLeg(x:number,y:number,upper:number,lower:number):{hip:numbe
 
 export interface CharacterInput {
   speed:number;swimming:boolean;grounded:boolean;verticalSpeed:number;time:number;enabled:boolean;
-  sport?:{kind:'football'|'basketball';possessed:boolean;charging:boolean;shotAge:number};
+  sport?:{kind:'football'|'basketball';possessed:boolean;charging:boolean;shotAge:number;action?:{kind:'kick'|'throw'|'contest';age:number}};
   working?:boolean;
   eating?:boolean;
   sittingHeight?:number;
@@ -142,6 +142,11 @@ export class CharacterAnimator {
         land.left_shoulder[2]=charging || shotAge<.4 ? 2.45 : .35;
         land.right_shoulder[2]=charging || shotAge<.4 ? 2.45 : .25+Math.sin(input.time*9)*.2;
         land.left_elbow[2]=land.right_elbow[2]=charging ? -.9 : shotAge<.4 ? -.15 : .65;
+      }
+      const action=input.sport.action;if(action && action.age>=0 && action.age<.45){const effort=Math.sin(action.age/.45*Math.PI);
+        if(action.kind==='contest'){land.right_hip[2]=effort*.8;land.left_hip[2]=-effort*.3;land.spine[2]=-effort*.3;}
+        if(action.kind==='kick'){land.right_hip[2]=effort*1.05;land.right_knee[2]=-effort*.45;}
+        if(action.kind==='throw'){land.left_shoulder[2]=land.right_shoulder[2]=effort*1.7;land.left_elbow[2]=land.right_elbow[2]=-effort*.65;}
       }
       if(kind==='football' && shotAge<.35){const kick=Math.sin(shotAge/.35*Math.PI);land.left_hip[2]=kick*1.1;land.left_knee[2]=-.2;land.left_ankle[2]=-kick*.5;}
     }

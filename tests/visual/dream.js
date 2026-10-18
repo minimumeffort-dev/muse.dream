@@ -58,3 +58,9 @@ renderer.setAnimationLoop(()=>{
   }
   document.body.dataset.ready='true';
 });
+
+// Export the complete rendered canvas, including rows below the browser viewport.
+const download=document.createElement('button');download.textContent='Save PNG';document.querySelector('header').append(download);
+download.onclick=()=>canvas.toBlob(blob=>{
+ if(!blob)return;const link=document.createElement('a'),url=URL.createObjectURL(blob);link.href=url;link.download='dream-assets.png';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+});

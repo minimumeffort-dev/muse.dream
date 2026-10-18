@@ -56,3 +56,14 @@ The neighborhood dog and garden cat now have four attached hip joints and a stan
 ## An enterable civic building
 
 The covered market now uses an attached wall shell around a supported floor, a real front opening and an overhead contact beneath its roof. The porch uses wall brackets instead of freestanding decorative posts. Two tables, a bench and a produce crate stand on the same floor. [Live Dream assembly and room contract](dream/interiors.md). Other civic buildings remain exterior models.
+
+## Team kits
+
+The six-a-side templates share the civic twelve-bone anatomy with
+separate shorts on each thigh, attached socks, goalkeeper gloves, skin/hair
+materials and a chest stripe. Home kits are
+teal, away kits orange and football keepers yellow, with measured height variants.
+Their materials use rigid toon shading. Dream's current `cloth` finish supplies
+flag-like wind, so it does not belong on these fitted uniforms. The gallery's
+Save PNG button exports the whole actual render buffer, including lower rows;
+four-angle evidence is retained with the match verification.

@@ -984,7 +984,29 @@
         "ball": "ref",
         "targets": "symbols",
         "target_at": "v3",
-        "target_size": "v2"
+        "target_size": "v2",
+        "net_depth": "n?",
+        "roster": "symbol?",
+        "team_size": "n?",
+        "duration_s": "n?",
+        "score_to": "n?"
+      },
+      "block": "sport?"
+    },
+    "team": {
+      "contexts": [
+        "sport"
+      ],
+      "id": true,
+      "fields": {
+        "object": "ref?",
+        "objects": "symbols?",
+        "role": "npc",
+        "members": "symbols?",
+        "keeper": "n?",
+        "keeper_object": "ref?",
+        "style": "balanced|press|counter?",
+        "skill": "n?"
       }
     },
     "marking": {
@@ -1373,7 +1395,16 @@
   },
   "sports": {
     "maximum": 8,
-    "semantics": "Walk-up practice on a dry nearly level named surface. One distinct bounce ball and two static target placements per ground. target_at and target_size use target-local units, transformed with the actual placement; football size is opening width/height with local +Z pointing outward, basketball size is ring X/Z diameter. Ball body radius .5..3 world units and height twice radius. Engine owns dribbling, charged kicks/shots, goals/baskets, out-of-bounds recovery and camera. No generated controls or full-team match AI."
+    "matchLimits": {
+      "teamSize": 6,
+      "seconds": [
+        30,
+        900
+      ],
+      "score": 21,
+      "tickSeconds": 0.05
+    },
+    "semantics": "A dry nearly level named surface connects one distinct bounce ball and two static targets. target_at/target_size use target-local units; football local +Z points outward, basketball +Z into the court. Optional sport block has exactly team home and team away, each role=npc and exactly object or objects (1..4 complete measured decor humanoid variants). team_size=2..6 includes the player on home; engine supplies the other NPCs. Optional members reuses stationary decor person NPC identities without commerce, conversation or routes; all identities count toward the existing 32 NPC cap. The member ID player is reserved for the active player. Optional roster shares the same team sizes/member lists across grounds; only the latest joined venue renders that squad and only one match plays. Engine-owned deterministic 20 Hz tactics, one ball owner, passes, catches, charged shots, tackles with cooldown and score/time results; no generated code. Football keeper defaults to NPC index 0 per side; keeper_object replaces its outfit, keeper selects its index. Optional football net_depth=6..64 matches the visible triangular side/back net in target-local Z and contains full ball spheres, leaving the mouth open. Match time, results, member poses, possession and actions persist. GPU humanoid instances preserve the CPU rig, route and ambient limits. No fouls, offside, bank-shot backboard physics or general crowd collisions."
   },
   "urbanGround": {
     "streets": 32,

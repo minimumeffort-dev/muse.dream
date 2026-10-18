@@ -146,3 +146,11 @@ body:not([data-loading="ready"])>#sport-action { visibility: hidden; }
 #loading-retry:focus-visible { outline-color: #191918; }
 @keyframes loading-slide { from { transform: translateX(0); } to { transform: translateX(186%); } }
 @media (prefers-reduced-motion: reduce) { #loading-track span { animation: none; } }
+
+#match-score { position:fixed; left:var(--gutter); top:76px; min-width:214px; padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:var(--hud); color:var(--paper); pointer-events:none; }
+#match-score>div { display:flex; justify-content:space-between; gap:20px; font-size:11px; color:#c6cabe; }
+#match-scoreline { display:block; margin-top:5px; font:650 17px Archivo,system-ui,sans-serif; word-spacing:5px; }
+#match-clock { font-variant-numeric:tabular-nums; color:var(--paper); }
+body:has(#match-score:not([hidden])) #map-frame { display:none; }
+body:has(#match-score:not([hidden])) #action-bar { flex-wrap:wrap; }
+body:not([data-loading="ready"])>#match-score { visibility:hidden; }

@@ -271,9 +271,12 @@ The camera moves closer on the ground and widens around a travelling ball.
 Goals and baskets count, and an out-of-bounds ball comes back instead of getting lost
 somewhere in the city. Find the grounds at F and B on the map.
 
-These are practice sessions. The other people keep their ambient routines;
-opponent teams and full matches are still to come. The playable connections
-live in Dream's new `sport` command. [Controls and Dream source](docs/dream/sports.md).
+Press N to join six-a-side, with five teammates and six opponents. K passes,
+calls for a pass or tackles a nearby ball carrier. Goalkeepers defend both ends;
+the side and back nets keep a scored ball in the goal. The scoreboard tracks
+both sides and match time, and your progress survives saving. The city shares
+one squad between its two grounds. Teams, kits, tactics and net dimensions
+live in Dream's `sport` and `team` data. [Controls and Dream source](docs/dream/sports.md).
 
 ![A charged kick, travelling ball and goal in the mock world](docs/media/football.gif)
 
@@ -376,7 +379,7 @@ object oak(label="Oak"){
 }
 ```
 
-Agents can ask for just the language they need: `node scripts/dream.mjs context --features objects,voxels` returns scoped instructions and compiler metadata. Components also accept material parameters, so one rig can dress several people and one table can have several finishes. The eight civic characters share one rig instead of repeating it. [Authoring and repair](docs/dream/model-authoring.md) · [Two finishes, one assembly](docs/examples/material-components.dream).
+Agents can ask for just the language they need: `node scripts/dream.mjs context --features objects,voxels` returns scoped instructions and compiler metadata. Components also accept material parameters, so one rig can dress several people and one table can have several finishes. Civic characters and athletes share one rig instead of repeating it. [Authoring and repair](docs/dream/model-authoring.md) · [Two finishes, one assembly](docs/examples/material-components.dream).
 
 The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation uses Minimum Effort's Manrope and Archivo fonts, warm white, charcoal and yellow, with the same page gutters and spacing. Dream commands, fields, references, colors and expressions are highlighted, with copy buttons for complete examples.
 

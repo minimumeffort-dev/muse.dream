@@ -212,7 +212,7 @@ export const sceneSchema = z.object({
   if(scene.objects.filter(o=>o.role==='ambient').length>AMBIENT_LIMITS.members)ctx.addIssue({code:'custom',message:'scene exceeds 192 instanced ambient members'});
   for(const object of scene.objects){const problem=agentProblem(object,scene.behaviors,scene.routes);if(problem)ctx.addIssue({code:'custom',message:`${object.id}: ${problem}`});}
   const voxelData=new Map<string,number>();
-  for(const spec of [scene.player,...scene.objects.map(o=>o.spec),...scene.flocks.map(f=>f.spec)])if(spec && 'dslVersion' in spec && spec.dslVersion===2)
+  for(const spec of [scene.player,...scene.objects.map(o=>o.spec),...scene.flocks.map(f=>f.spec),...scene.sports.flatMap(s=>s.match?.teams.flatMap(t=>[...t.specs,...(t.keeperSpec ? [t.keeperSpec] : [])])??[])])if(spec && 'dslVersion' in spec && spec.dslVersion===2)
     for(const p of spec.parts)if(p.voxels)voxelData.set(JSON.stringify(p.voxels),voxelCells(p.voxels));
   if([...voxelData.values()].reduce((a,b)=>a+b,0)>VOXEL_LIMITS.projectCells)ctx.addIssue({code:'custom',message:'scene exceeds 1048576 unique voxel cells'});
   const reactive=scene.objects.filter(o=>isReactive(o.spec));

@@ -1,4 +1,9 @@
 dream 2;
+asset a_home_athlete(module=city_people,object=home_athlete);
+asset a_home_athlete_warm(module=city_people,object=home_athlete_warm);
+asset a_away_athlete(module=city_people,object=away_athlete);
+asset a_keeper_athlete(module=city_people,object=keeper_athlete);
+
 asset a_football_goal(module=sports_assets,object=football_goal);
 asset a_basketball_hoop(module=sports_assets,object=basketball_hoop);
 asset a_golf_pin(module=sports_assets,object=golf_pin);
@@ -45,7 +50,10 @@ marking football_center(color=#e8e3ce,width=1.4,closed=true){point(at=[10691,469
 place pitch_goal_0(object=a_football_goal,at=[10100,4690],heading_deg=90);
 place pitch_goal_1(object=a_football_goal,at=[11100,4690],heading_deg=-90);
 place pitch_ball(object=a_football,at=[10600,4690]);
-sport football_practice(kind=football,surface=football_turf,ball=pitch_ball,targets=[pitch_goal_0,pitch_goal_1],target_at=[0,12,0],target_size=[72,24]);
+sport football_practice(kind=football,surface=football_turf,ball=pitch_ball,targets=[pitch_goal_0,pitch_goal_1],target_at=[0,12,0],target_size=[72,24],net_depth=18,roster=park_players,team_size=6,duration_s=180,score_to=5){
+ team home(objects=[a_home_athlete,a_home_athlete_warm],role=npc,members=[footballer_a,basketballer_a],keeper=0,keeper_object=a_keeper_athlete,style=balanced,skill=.7);
+ team away(object=a_away_athlete,role=npc,members=[footballer_b,basketballer_b],keeper=0,keeper_object=a_keeper_athlete,style=press,skill=.7);
+}
 surface basketball_court(color=#647f8b,points=[[7140,7900],[7420,7900],[7420,8050],[7140,8050]]);
 marking basketball_touchlines(color=#e8e3ce,width=1,closed=true){point(at=[7140,7900]);point(at=[7420,7900]);point(at=[7420,8050]);point(at=[7140,8050]);}
 marking basketball_half(color=#e8e3ce,width=1,closed=false){point(at=[7280,7900]);point(at=[7280,8050]);}
@@ -57,7 +65,10 @@ marking basketball_center(color=#e8e3ce,width=1,closed=true){repeat circle(index
 place court_hoop_0(object=a_basketball_hoop,at=[7132,7975],heading_deg=-90);
 place court_hoop_1(object=a_basketball_hoop,at=[7428,7975],heading_deg=90);
 place court_ball(object=a_basketball,at=[7280,7975]);
-sport basketball_practice(kind=basketball,surface=basketball_court,ball=court_ball,targets=[court_hoop_0,court_hoop_1],target_at=[0,30,12],target_size=[4.3,4.3]);
+sport basketball_practice(kind=basketball,surface=basketball_court,ball=court_ball,targets=[court_hoop_0,court_hoop_1],target_at=[0,30,12],target_size=[4.3,4.3],roster=park_players,team_size=6,duration_s=180,score_to=21){
+ team home(objects=[a_home_athlete,a_home_athlete_warm],role=npc,members=[footballer_a,basketballer_a],style=balanced,skill=.7);
+ team away(object=a_away_athlete,role=npc,members=[footballer_b,basketballer_b],style=press,skill=.7);
+}
 surface golf_fairway(color=#79965f,points=[[5820,9160],[6030,9240],[6120,9580],[6500,9690],[6610,9820],[6370,9920],[5970,9710],[5850,9440]]);
 place golf_flag(object=a_golf_pin,at=[6450,9810],heading_deg=0);
 surface basketball_access(color=#bcb6a4,points=[[7080,7907],[7140,7907],[7140,7923],[7080,7923]]);
