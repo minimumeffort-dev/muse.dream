@@ -120,6 +120,7 @@ export interface World {
   previousPlantSaveCompatibility?:string;
   previousFinishSaveCompatibility?:string;
   previousCourierSaveCompatibility?:string;
+  previousKitchenSaveCompatibility?:string;
   previousMealSaveCompatibility?:string;
   previousProgressSaveCompatibility?:string;
   previousRecipeSaveCompatibility?:string;

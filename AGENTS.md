@@ -283,8 +283,8 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 
 ## Saved simulation state
 
-Current save format 10 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 15. Historical formats retain their registered projections.
+Current save format 11 pins exact source plus a host-computed accepted-world fingerprint
+at simulation version 17. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -331,11 +331,11 @@ Cargo counts toward carry capacity and cannot be traded or eaten. One work or
 delivery task per account; hand over on foot at the destination to pay once, or
 cancel to refund once. Travel, vehicle changes and R retain sealed cargo. Preserve
 conservation, counters, clear on-foot interaction ranges, map guidance and safe
-restore. Delivery contracts are player-requested; NPC shoppers consume delivered
-food through existing transactions. No automatic courier dispatch is implemented.
+restore. Player requests and explicit NPC delivery policies share finite contracts; NPC
+shoppers consume delivered food through existing transactions.
 No offline catch-up, new rigs/physics bodies, provider calls or nutrition claims.
 Optional work gestures use existing humanoid bones and reduced-motion rest.
-Future autonomous supply chains, shifts, skills and interior kitchens remain
+Upstream production, shifts, skills and interior kitchens remain
 separate features. The logical Lab stays independent. See `docs/dream/commerce.md`.
 
 ## Voxel assemblies
@@ -540,3 +540,15 @@ per-item bodies are implied. Format 11/simulation 16 preserves format-10 persona
 records exactly; never reapply historical attribution. The r58 projection removes
 only the commuter meal policy; no geometry or ledger rebasing. See
 `docs/examples/meal-trips.dream` and `docs/dream/commerce.md`.
+
+
+The r60 bakery composes existing policies: vendor works prioritize pack_lunch,
+then qualified large_bake and bake; the market helper adds flour_run after kit
+and sapling contracts, behind available repairs. Keep finite shared recipes,
+stock, wages, effort and capacity; no free supplies or worker/player exemptions.
+Prepared public walking is needed by assigned meal/courier networks independently
+of repair services and ambient walkers. Preserve all graph limits, worker packet
+validation and live-city topology. Format 11/simulation 17 registers the exact
+r59 projection and retains every saved field, history and active journey without
+rebasing live population/floors. No new actors, rigs, bodies or initial resources.
+See `docs/examples/market-production.dream` and `docs/dream/businesses.md`.

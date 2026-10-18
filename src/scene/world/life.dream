@@ -134,11 +134,11 @@ economy(){
  good boards(label="Timber boards");
  good fasteners(label="Fasteners");
  account pocket(actor=player,credits=20,capacity=8,satiety=48,drain_s=.05);
- account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,works=[large_bake,bake]);
+ account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,works=[pack_lunch,large_bake,bake]);
  meal market_break(good=lunch,markets=[market_stall],on=market_square,eat_s=4);
  account regular(actor=market_commuter,credits=30,capacity=4,satiety=25,drain_s=.05,meal=market_break);
  account school_staff(actor=teacher,credits=30,capacity=4,satiety=28,drain_s=.05,shop=true);
- account caretaker(actor=market_neighbor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,repairs=[market_tables,orchard_trees],deliveries=[kits_run,saplings_run]);
+ account caretaker(actor=market_neighbor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,repairs=[market_tables,orchard_trees],deliveries=[kits_run,saplings_run,flour_run]);
  market station_supplies(label="Station supplies",actor=station_resident,credits=0,radius=70){
   lot flour_store(good=flour,quantity=80,limit=80);
   lot depot_kits(good=timber,quantity=32,limit=32);
@@ -157,7 +157,7 @@ economy(){
   lot workshop_boards(good=boards,quantity=8,limit=8);
   lot workshop_fasteners(good=fasteners,quantity=8,limit=8);
  }
- delivery flour_run(label="Bring flour to the bakery",from=station_supplies,to=market_stall,good=flour,quantity=2,pay=4,capacity=1);
+ delivery flour_run(label="Bring flour to the bakery",from=station_supplies,to=market_stall,good=flour,quantity=2,pay=4,capacity=1,on=market_square);
  delivery school_run(label="Take bread to school",from=market_stall,to=school_canteen,good=bread,quantity=2,pay=5,capacity=1);
  delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_square);
  repair market_tables(label="Repair neighborhood furniture",market=market_stall,on=market_square,grounds=[park_seating,station_seating,market_hall],streets=[market_avenue,high_street,civic_walk],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);

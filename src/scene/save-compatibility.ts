@@ -2,7 +2,7 @@ import marketR55 from './compatibility/r55-market.json';
 import type {Scene} from './schema';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=16;
+export const SAVE_SIMULATION_VERSION=17;
 
 /** A conservative contract: only host provenance and spoken text may differ. */
 export function saveCompatibilitySource(scene:Scene):string {
@@ -31,7 +31,7 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY);
+  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY);
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
@@ -51,9 +51,15 @@ export const EGRESS_COMPATIBILITY='f7b5f8bc696e111422148d51e068413050785a6dc03dc
 export const RECIPE_COMPATIBILITY='97f4bf439e7eb4a1998c36851128724123b16861e4ce277d295d1e4e182ab5a4';
 export const PROGRESS_COMPATIBILITY='46a0824a39fbddaae24bae941554b33cddaf84437d24dfb0d9eaea8daed6bbcd';
 export const MEAL_COMPATIBILITY='b797ee47140b40a889d0bd5b28de4926b01b6fdbf916260139974993cdb7d634';
+export const KITCHEN_COMPATIBILITY='6d52318e971ff660899fd39229f652d6ff3df011e109a71629a062c818c7587c';
+/** r60 changes only existing staff duties; no new world or ledger members. */
+export function preKitchenScene(scene:Scene):Scene{
+ const e=scene.economy;return {...scene,economy:e && {...e,accounts:e.accounts.map(a=>a.id==='baker' && a.works ? {...a,works:a.works.filter(id=>id!=='pack_lunch')} : a.id==='caretaker' && a.deliveries ? {...a,deliveries:a.deliveries.filter(id=>id!=='flour_run')} : a),deliveries:e.deliveries.map(d=>{if(d.id!=='flour_run' || d.on!=='market_square')return d;const {on,grounds,...old}=d;return old;})}};
+}
+export function preKitchenCompatibilitySource(scene:Scene):string{return projection(preKitchenScene(scene),16);}
 /** Registered r59 changes one customer's policy, without new stock, money or geometry. */
 export function preMealScene(scene:Scene):Scene{
- const e=scene.economy;return {...scene,economy:e && {...e,meals:e.meals.filter(m=>m.id!=='market_break'),accounts:e.accounts.map(a=>{if(a.id!=='regular' || a.meal!=='market_break')return a;const {meal,...old}=a;return {...old,shop:true};})}};
+ scene=preKitchenScene(scene);const e=scene.economy;return {...scene,economy:e && {...e,meals:e.meals.filter(m=>m.id!=='market_break'),accounts:e.accounts.map(a=>{if(a.id!=='regular' || a.meal!=='market_break')return a;const {meal,...old}=a;return {...old,shop:true};})}};
 }
 export function preMealCompatibilitySource(scene:Scene):string{return projection(preMealScene(scene),15);}
 /** Registered r58 adds personal progression; geometry and previous task rules are unchanged. */

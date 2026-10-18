@@ -18,6 +18,7 @@ Driving, vehicle switching, jumping, swimming and destruction are exported at **
 | Delivery pickup and vehicle carry | [delivery.gif](delivery.gif) | [delivery.mp4](delivery.mp4) | 12 seconds |
 | Public-pavement maintenance journey | [maintenance.gif](maintenance.gif) | [maintenance.mp4](maintenance.mp4) | 20 seconds |
 | Caretaker repair and return | [repair.gif](repair.gif) | [repair.mp4](repair.mp4) | 28 seconds |
+| Staffed bakery | [kitchen.gif](kitchen.gif) | [kitchen.mp4](kitchen.mp4) | 16 seconds |
 | Customer meal journey | [meals.gif](meals.gif) | [meals.mp4](meals.mp4) | 16 seconds |
 | Earned work and vendor recognition | [progression.gif](progression.gif) | [progression.mp4](progression.mp4) | 16 seconds |
 | Packed lunches and recipe work | [recipes.gif](recipes.gif) | [recipes.mp4](recipes.mp4) | 12 seconds |
@@ -714,3 +715,19 @@ behavior evidence. See `docs/evidence/meals/verification.md` for the checked sta
 Existing captures still show supported controls, recipes, work, interiors and
 geometry. Their selected actions remain valid; they do not claim to show the new
 meal policy. The new GIF/video/still document this policy together.
+
+### Staffed bakery
+
+`kitchen` lets the actual vendor prepare the initial lunches and advances the
+customer's real walk until they are within 18 world units of arrival. The player
+uses the isolated vendor review start, then buys one lunch at frame 15 and eats
+it at frame 90 through ordinary controls. Staff refill the finite shelf while
+the customer buys and eats. Export 480 native 2400×1350 PNGs at 30 rendered frames
+per simulation second. Encode with `node scripts/encode-media.mjs <ffmpeg>
+<gifsicle> kitchen`; keep the 1600×900 video, 1280×720 GIF and native frame-90 JPG
+together. No interpolation or live FPS claim. `scripts/replay-kitchen.mjs` checks
+this counter flow and a separate complete flour pickup/handoff/return.
+Existing recipe and work examples remain available; the earlier meal recording
+shows the player-made version of the same transaction. This new recording covers
+autonomous production and shared player/customer demand. Historical captures keep
+their pinned sources; they do not claim to show the new vendor policy.

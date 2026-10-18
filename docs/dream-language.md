@@ -80,3 +80,7 @@ conditions, not scripts or authored rewards. [Runnable guide](dream/commerce.md#
 NPC food trips use `meal` plus `account.meal`: choose food, ordered shops, convex
 walking grounds and eating time. Customers share finite player transactions and
 resume their paused routines after returning. [Meal trips](dream/commerce.md#customers-with-somewhere-to-go).
+
+A [staffed business](dream/businesses.md) combines existing ordered `works`, `meal`
+and `deliveries` rules. The live bakery now prepares food and can fetch flour;
+the complete small example works without repairs or ambient walkers.

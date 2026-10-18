@@ -602,3 +602,7 @@ in their inventory for `eat_s`, then the ordinary eat transaction consumes it on
 Return to the frozen routine pose before resuming the program. Live contact waits,
 paths, timers, needs and balances survive unloading, recovery and saves. No seating,
 queues, extra rigs, per-item bodies or offline travel. [Complete example](../examples/meal-trips.dream).
+
+The [staffed business example](../examples/market-production.dream) composes these
+existing policies. Meal/courier public navigation prepares without a repair
+service or ambient population. The same graph, path, actor and rig bounds apply.

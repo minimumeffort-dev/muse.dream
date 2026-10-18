@@ -260,3 +260,20 @@ Older formats still pass through their original registered checks before this
 upgrade. No population or floor rebasing happens for the pure format-10 upgrade.
 The original slot remains, and corrupt/newer or changed-tab saves still block
 replacement. R and chunk unloading retain the journey; Start over clears it.
+
+## Staffed business update
+
+The r59-to-r60 update keeps format 11 and moves the simulation fingerprint to
+version 17. The existing vendor's ordered jobs add lunch preparation, and the
+existing market helper adds the existing flour contract on its market ground.
+Standalone meal/courier scenes now prepare public walking independently of
+repairs and ambient walkers. No initial stock, money, objects or ledger members
+are added. Current live-city geometry, contacts and prepared graphs are equal.
+
+Restore validates against the registered r59 world before accepting any state.
+Every prior field and world time stays exact: no history attribution, population
+rebasing, floor adjustment or restarted timer. Active work and customer/courier
+paths continue under ordinary fixed ticks after loading. The older format-11 slot
+is kept under its original fingerprint, and normal reload never repeats the
+upgrade. The earlier registered chain and corrupt/newer/concurrent-tab guards
+remain intact. This is a host-pinned upgrade, never authored Dream migration code.

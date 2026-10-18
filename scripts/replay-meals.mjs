@@ -15,7 +15,7 @@ try{
   assert.deepEqual(state.npcs.find(n=>n.id==='market_commuter'),routine);
   state=stepInteractive(state,{steer:0,throttle:0},1/120,world);
  }
- assert(finished,'Customer did not return to routine');assert.equal(account().credits,startCredits-8);assert.equal(account().inventory.lunch,0);assert.equal(state.economy.consumed.lunch,1);assert.equal(state.economy.batches.pack_lunch,1);assert.equal(state.economy.accounts[0].completed.work.pack_lunch,1);
+ assert(finished,'Customer did not return to routine');assert.equal(account().credits,startCredits-8);assert.equal(account().inventory.lunch,0);assert.equal(state.economy.consumed.lunch,1);assert.equal(state.economy.batches.pack_lunch,3);assert.equal(state.economy.accounts.find(a=>a.id==='baker').completed.work.pack_lunch,2);assert.equal(state.economy.accounts[0].completed.work.pack_lunch,1);
  const pose=actorPose(scene,scene.objects.find(o=>o.id==='market_commuter'),state.timeS,state);assert(Math.hypot(pose.x-home.x,pose.y-home.y)<.01);
  await writeFile(`${directory}/verification.json`,JSON.stringify({sourceHash,simulationVersion:SAVE_SIMULATION_VERSION,compatibilityHash:world.saveCompatibility,events,final:state.economy,home,navigation:repairNavigation(scene).services.map(a=>({id:a.id,nodes:a.nodes.length,links:a.nodes.reduce((n,p)=>n+p.links.length,0)}))},null,2));console.log(JSON.stringify({sourceHash,events,home,finished}));
 }catch(error){console.error(error);process.exitCode=1;}finally{await server.close();}

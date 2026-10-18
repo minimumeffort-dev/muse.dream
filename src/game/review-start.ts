@@ -172,3 +172,14 @@ export function* mealReviewSteps(state:CarState,world:World):Generator<void,CarS
  }
  throw Error('Review customer could not reach the market');
 }
+
+/** Existing staff make lunch, and the customer takes a normal walking meal trip. */
+export function* kitchenReviewSteps(state:CarState,world:World):Generator<void,CarState>{
+ let next=npcReviewStart(state,world,'vendor');
+ for(let i=0;i<120*180;i++){
+  next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30===0)yield;
+  const meal=next.economy!.accounts.find(a=>a.id==='regular')?.meal;
+  if(meal?.phase==='out' && Math.hypot(meal.x-meal.at.x,meal.y-meal.at.y)<18)return next;
+ }
+ throw Error('Review staff could not serve the hungry customer');
+}

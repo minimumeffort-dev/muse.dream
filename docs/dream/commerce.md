@@ -8,7 +8,7 @@ Want to earn some credits? **H** starts a six-second bread batch. The business r
 
 [Watch in HD](../media/commerce.mp4)
 
-The vendor works when bread runs low. The commuter buys and eats when hungry, using actual route positions and the same transactions as the player. Neither gets free food or money. Flour is finite, customers have finite budgets and work stops when ingredients, shelf space, wages or fullness run out. Player delivery jobs now connect the station depot, bakery and school canteen; there is no automatic supply generation.
+The vendor packs lunches and bakes when bread runs low. The commuter buys and eats when hungry, using actual route positions and the same transactions as the player. Neither gets free food or money. Flour is finite, customers have finite budgets and work stops when ingredients, shelf space, wages or fullness run out. Player delivery jobs now connect the station depot, bakery and school canteen; there is no automatic supply generation.
 
 ## Author it in Dream
 
@@ -113,7 +113,7 @@ The work panel shows the selected recipe. A missing ingredient blocks the whole
 start; it cannot take the bread and fail halfway through taking vegetables.
 Wages, output room and room to refund every ingredient stay reserved. Cancel or
 walk away before completion to return all inputs and wages without output or pay.
-NPC workers use the same rule; the live baker keeps its existing bread duty.
+NPC workers use the same rule; the live vendor now packs lunches before restocking bread through its ordered work policy.
 
 ![Packing, buying and eating a lunch](../media/recipes.gif)
 
@@ -587,8 +587,8 @@ The market hall now has a [usable ground floor](interiors.md). Stand in its foye
 
 ## Customers with somewhere to go
 
-The commuter now takes a meal break. Pack a lunch at the market and leave it on
-the shelf. When hungry, they walk there, pay 8 credits, take one lunch, eat, and
+The commuter now takes a meal break. You or the vendor can prepare a lunch at
+the market and leave it on the shelf. When hungry, they walk there, pay 8 credits, take one lunch, eat, and
 return to the point where they left their usual route. If you buy the last lunch
 first, they return without it. Money and food use the same transactions as yours.
 
@@ -676,3 +676,8 @@ Arrival rechecks range, sight, funds, stock, capacity and treasury before paying
 Purchased food remains owned until the eating timer completes. Failed purchases
 return empty-handed. Saving an outgoing, eating or returning customer preserves
 that phase and cannot repeat a purchase or consumption.
+
+The [staffed bakery](businesses.md) composes the same jobs, customer meal plan and
+flour delivery. It works without player cooking, while keeping player jobs and
+all finite transaction checks available. The panel names active staff work and
+its remaining simulation time.

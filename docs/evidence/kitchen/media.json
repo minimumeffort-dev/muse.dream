@@ -1,0 +1,53 @@
+{
+  "sourceFramesSha256": "1363a1659f4c74041fc0cd93036940b7fd755a0ffd36919c046e1238d0a22a78",
+  "method": "Native 30-rendered-frame-per-simulation-second DEV export, no interpolation; not live FPS",
+  "sourceFrames": 480,
+  "sourceResolution": [
+    2400,
+    1350
+  ],
+  "videoFrames": 480,
+  "videoResolution": [
+    1600,
+    900
+  ],
+  "gifFrames": 480,
+  "gifResolution": [
+    1280,
+    720
+  ],
+  "gifDurationMs": 16000,
+  "stillSourceFrame": 90,
+  "files": [
+    {
+      "file": ".npm-cache/media/kitchen/0000.png",
+      "bytes": 768187,
+      "sha256": "1134bae531b5f5039b639e4565d7b0d90aaf604eca50d6d94e967112b9ce3e17"
+    },
+    {
+      "file": ".npm-cache/media/kitchen/0090.png",
+      "bytes": 1001963,
+      "sha256": "e17f67788fbf0b64980136c90d1e854ec496c93ea0538bb7cb25f45ea07c485f"
+    },
+    {
+      "file": ".npm-cache/media/kitchen/0479.png",
+      "bytes": 1015219,
+      "sha256": "103620380b863bc830c482b92baaf16e7e660358d6620419661bd8c9ae183309"
+    },
+    {
+      "file": "docs/media/kitchen.gif",
+      "bytes": 7435078,
+      "sha256": "6998de886e5e5e02fb60a6dc7d545815ebf9109f3e3c31697f09dbd18a8bcf70"
+    },
+    {
+      "file": "docs/media/kitchen.mp4",
+      "bytes": 1461305,
+      "sha256": "5b16f0d5f7ebcb2fe8c25247de9890f95c4c9be61ca21baa43854135c2522ee4"
+    },
+    {
+      "file": "docs/media/kitchen.jpg",
+      "bytes": 866289,
+      "sha256": "978f6d4030d54ce7b69f90bd1f0a1fcf97cae22ffe717364e0d8c15dd2f39a4e"
+    }
+  ]
+}

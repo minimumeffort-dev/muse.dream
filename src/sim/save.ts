@@ -13,7 +13,7 @@ import {objectFragments} from '../scene/fragments';
 import {actorPose} from './actors';
 import {AMBIENT_LIMITS} from '../scene/ambient';
 import {economyStateSchema,progressEconomyStateSchema,recipeEconomyStateSchema,withPersonalHistory,priorCourierEconomyStateSchema,priorGrowthEconomyStateSchema,parkingEconomyStateSchema,previousEconomyStateSchema,initialEconomy,checkEconomyState} from './commerce';
-import {SAVE_SIMULATION_VERSION,MEAL_COMPATIBILITY,preMealScene,PROGRESS_COMPATIBILITY,preProgressScene,RECIPE_COMPATIBILITY,preRecipeScene,EGRESS_COMPATIBILITY,INTERIOR_COMPATIBILITY,preInteriorScene,COURIER_COMPATIBILITY,preCourierScene,NATURAL_COMPATIBILITY,preFinishScene,PLANT_COMPATIBILITY,VERGE_COMPATIBILITY,prePlantScene,R44_COMPATIBILITIES,preDeliveryScene,preParkingScene,preRepairScene,preSupplyScene,preNetworkScene,prePoolScene,preVergeScene} from '../scene/save-compatibility';
+import {SAVE_SIMULATION_VERSION,KITCHEN_COMPATIBILITY,preKitchenScene,MEAL_COMPATIBILITY,preMealScene,PROGRESS_COMPATIBILITY,preProgressScene,RECIPE_COMPATIBILITY,preRecipeScene,EGRESS_COMPATIBILITY,INTERIOR_COMPATIBILITY,preInteriorScene,COURIER_COMPATIBILITY,preCourierScene,NATURAL_COMPATIBILITY,preFinishScene,PLANT_COMPATIBILITY,VERGE_COMPATIBILITY,prePlantScene,R44_COMPATIBILITIES,preDeliveryScene,preParkingScene,preRepairScene,preSupplyScene,preNetworkScene,prePoolScene,preVergeScene} from '../scene/save-compatibility';
 import {primeSceneContacts,sceneContactData} from '../scene/contacts';
 import {primeAmbientNavigation,ambientGraph,ambientNavigation} from '../scene/ambient-navigation';
 import {PARKING_LIMITS} from '../scene/agents';
@@ -57,9 +57,10 @@ const supported=z.discriminatedUnion('version',[legacyPacket,secondPacket,thirdP
 const unique=(values:unknown[])=>new Set(values).size===values.length;
 const expected=new WeakMap<World['scene'],ReturnType<typeof createCarAtSpawn>>();
 const previousWorlds=new WeakMap<World['scene'],Map<string,World['scene']>>();
-function previousPhysicalScene(world:World,stage:'meal'|'progress'|'recipe'|'interior'|'courier'|'finish'|'plant'|'verge'|'pool'|'network'|'supply'|'repair'|'parking'|'delivery'|'commerce'='repair'):World['scene']{
+function previousPhysicalScene(world:World,stage:'kitchen'|'meal'|'progress'|'recipe'|'interior'|'courier'|'finish'|'plant'|'verge'|'pool'|'network'|'supply'|'repair'|'parking'|'delivery'|'commerce'='repair'):World['scene']{
  let stages=previousWorlds.get(world.scene);if(!stages){stages=new Map();previousWorlds.set(world.scene,stages);}
  let scene=stages.get(stage);if(scene)return scene;
+ if(stage==='kitchen'){const prior=preKitchenScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));stages.set(stage,prior);return prior;}
  if(stage==='meal'){const prior=preMealScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));stages.set(stage,prior);return prior;}
  if(stage==='progress'){const prior=preProgressScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));stages.set(stage,prior);return prior;}
  if(stage==='recipe'){const prior=preRecipeScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));stages.set(stage,prior);return prior;}
@@ -155,6 +156,13 @@ export function decodeSave(text:string,world:World):{state:CarState;worldTime:nu
  if(text.length>MAX_SAVE_CHARACTERS)throw Error('Save exceeds one million characters');
  let data:z.infer<typeof supported>;
  try{data=supported.parse(JSON.parse(text));}catch{throw Error('This file is not a supported Muse Dream backup.');}
+ // The registered staff/navigation upgrade retains the packet shape and saved fields.
+ if(world.saveCompatibility===KITCHEN_COMPATIBILITY && (data.version===1 || data.compatibilityHash!==KITCHEN_COMPATIBILITY)){
+  if(world.previousKitchenSaveCompatibility!==MEAL_COMPATIBILITY)throw Error('This backup needs a different world or simulation version.');
+  const restored=decodeSave(text,{...world,scene:previousPhysicalScene(world,'kitchen'),saveCompatibility:MEAL_COMPATIBILITY,previousKitchenSaveCompatibility:undefined});
+  try{checkState(restored.state,world);}catch{throw Error('This backup contains invalid world state.');}
+  return {...restored,migrated:true,compatible:data.sourceHash!==world.scene.sourceHash};
+ }
  // The registered rules-only upgrade first validates using the complete prior contract.
  // Existing records are retained exactly; do not run historical attribution again.
  if(world.saveCompatibility===MEAL_COMPATIBILITY && data.version<11){
@@ -168,22 +176,22 @@ export function decodeSave(text:string,world:World):{state:CarState;worldTime:nu
  const untaggedExact=exact && !world.scene.economy;
  const knownSource=world.previousSaveSource!==undefined && data.sourceHash===world.previousSaveSource;
  const oldFingerprint=data.version===2 && data.compatibilityHash!==undefined && (data.compatibilityHash===world.previousSaveCompatibility || !!world.previousSaveSource && (R44_COMPATIBILITIES as readonly string[]).includes(data.compatibilityHash));
- const oldRules=Number(SAVE_SIMULATION_VERSION)===16 && (data.version===2 ? oldFingerprint || knownSource || data.compatibilityHash===undefined && untaggedExact && world.saveCompatibility===undefined : data.version===1 && (knownSource || untaggedExact));
- const addEconomy=Number(SAVE_SIMULATION_VERSION)===16 && data.version===3 && !data.state.economy && data.compatibilityHash!==undefined && data.compatibilityHash===world.emptyEconomySaveCompatibility;
- const addDeliveries=Number(SAVE_SIMULATION_VERSION)===16 && data.version===3 && !!data.state.economy && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousMarketSaveCompatibility;
- const addProgress=Number(SAVE_SIMULATION_VERSION)===16 && data.version===9 && world.saveCompatibility===PROGRESS_COMPATIBILITY && world.previousProgressSaveCompatibility===RECIPE_COMPATIBILITY && data.compatibilityHash===world.previousProgressSaveCompatibility;
- const addRecipes=Number(SAVE_SIMULATION_VERSION)===16 && data.version===9 && (world.saveCompatibility===RECIPE_COMPATIBILITY || world.saveCompatibility===PROGRESS_COMPATIBILITY) && world.previousRecipeSaveCompatibility===EGRESS_COMPATIBILITY && data.compatibilityHash===world.previousRecipeSaveCompatibility;
- const updateEgress=Number(SAVE_SIMULATION_VERSION)===16 && data.version===9 && (world.saveCompatibility===EGRESS_COMPATIBILITY || world.saveCompatibility===RECIPE_COMPATIBILITY || world.saveCompatibility===PROGRESS_COMPATIBILITY) && world.previousEgressSaveCompatibility===INTERIOR_COMPATIBILITY && data.compatibilityHash===world.previousEgressSaveCompatibility;
- const addInterior=Number(SAVE_SIMULATION_VERSION)===16 && data.version===9 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousInteriorSaveCompatibility;
- const addCourier=Number(SAVE_SIMULATION_VERSION)===16 && data.version===8 && data.compatibilityHash===world.previousCourierSaveCompatibility && data.compatibilityHash!==undefined;
- const addFinish=Number(SAVE_SIMULATION_VERSION)===16 && data.version===8 && data.compatibilityHash===world.previousFinishSaveCompatibility && data.compatibilityHash!==undefined;
- const addPlant=Number(SAVE_SIMULATION_VERSION)===16 && data.version===7 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousPlantSaveCompatibility;
- const addVerge=Number(SAVE_SIMULATION_VERSION)===16 && data.version===7 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousVergeSaveCompatibility;
- const addPool=Number(SAVE_SIMULATION_VERSION)===16 && data.version===6 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousPoolSaveCompatibility;
- const addNetwork=Number(SAVE_SIMULATION_VERSION)===16 && data.version===6 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousNetworkSaveCompatibility;
- const addSupply=Number(SAVE_SIMULATION_VERSION)===16 && data.version===6 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousSupplySaveCompatibility;
- const addRepairs=Number(SAVE_SIMULATION_VERSION)===16 && data.version===5 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousRepairSaveCompatibility;
- const addParking=Number(SAVE_SIMULATION_VERSION)===16 && data.version===4 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousParkingSaveCompatibility;
+ const oldRules=Number(SAVE_SIMULATION_VERSION)===17 && (data.version===2 ? oldFingerprint || knownSource || data.compatibilityHash===undefined && untaggedExact && world.saveCompatibility===undefined : data.version===1 && (knownSource || untaggedExact));
+ const addEconomy=Number(SAVE_SIMULATION_VERSION)===17 && data.version===3 && !data.state.economy && data.compatibilityHash!==undefined && data.compatibilityHash===world.emptyEconomySaveCompatibility;
+ const addDeliveries=Number(SAVE_SIMULATION_VERSION)===17 && data.version===3 && !!data.state.economy && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousMarketSaveCompatibility;
+ const addProgress=Number(SAVE_SIMULATION_VERSION)===17 && data.version===9 && world.saveCompatibility===PROGRESS_COMPATIBILITY && world.previousProgressSaveCompatibility===RECIPE_COMPATIBILITY && data.compatibilityHash===world.previousProgressSaveCompatibility;
+ const addRecipes=Number(SAVE_SIMULATION_VERSION)===17 && data.version===9 && (world.saveCompatibility===RECIPE_COMPATIBILITY || world.saveCompatibility===PROGRESS_COMPATIBILITY) && world.previousRecipeSaveCompatibility===EGRESS_COMPATIBILITY && data.compatibilityHash===world.previousRecipeSaveCompatibility;
+ const updateEgress=Number(SAVE_SIMULATION_VERSION)===17 && data.version===9 && (world.saveCompatibility===EGRESS_COMPATIBILITY || world.saveCompatibility===RECIPE_COMPATIBILITY || world.saveCompatibility===PROGRESS_COMPATIBILITY) && world.previousEgressSaveCompatibility===INTERIOR_COMPATIBILITY && data.compatibilityHash===world.previousEgressSaveCompatibility;
+ const addInterior=Number(SAVE_SIMULATION_VERSION)===17 && data.version===9 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousInteriorSaveCompatibility;
+ const addCourier=Number(SAVE_SIMULATION_VERSION)===17 && data.version===8 && data.compatibilityHash===world.previousCourierSaveCompatibility && data.compatibilityHash!==undefined;
+ const addFinish=Number(SAVE_SIMULATION_VERSION)===17 && data.version===8 && data.compatibilityHash===world.previousFinishSaveCompatibility && data.compatibilityHash!==undefined;
+ const addPlant=Number(SAVE_SIMULATION_VERSION)===17 && data.version===7 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousPlantSaveCompatibility;
+ const addVerge=Number(SAVE_SIMULATION_VERSION)===17 && data.version===7 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousVergeSaveCompatibility;
+ const addPool=Number(SAVE_SIMULATION_VERSION)===17 && data.version===6 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousPoolSaveCompatibility;
+ const addNetwork=Number(SAVE_SIMULATION_VERSION)===17 && data.version===6 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousNetworkSaveCompatibility;
+ const addSupply=Number(SAVE_SIMULATION_VERSION)===17 && data.version===6 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousSupplySaveCompatibility;
+ const addRepairs=Number(SAVE_SIMULATION_VERSION)===17 && data.version===5 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousRepairSaveCompatibility;
+ const addParking=Number(SAVE_SIMULATION_VERSION)===17 && data.version===4 && data.compatibilityHash!==undefined && data.compatibilityHash===world.previousParkingSaveCompatibility;
  if(data.sceneId!==world.scene.sceneId || !(addProgress || addRecipes || updateEgress || oldRules || addEconomy || addDeliveries || addParking || addRepairs || addSupply || addNetwork || addPool || addVerge || addPlant || addFinish || addCourier || addInterior || currentFormat && data.version!==1 && (exact || compatible) && data.compatibilityHash===world.saveCompatibility))throw Error('This backup needs a different world or simulation version.');
  const legacyMigrated=!!(oldRules || addEconomy || addDeliveries || addParking || addRepairs || addSupply || addNetwork || addPool || addVerge || addPlant || addFinish || addCourier || addInterior);
  const migrated=legacyMigrated || updateEgress || addRecipes || addProgress;

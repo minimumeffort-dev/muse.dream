@@ -589,8 +589,11 @@ fullness, then returns to the captured routine position. Program clocks pause
 through travel/eating/return; moving transit/player contacts can cause waits and
 bounded replans. Save paths, timers and ownership outside Scene. No item bodies,
 new rigs, seating, queues, generated navigation or offline catch-up. See
-examples/meal-trips.dream. Format 11/simulation 16 preserves format-10 personal
-records exactly, with no population/floor rebasing or new money/stock.
+examples/meal-trips.dream. Compose works=[pack_lunch,bake], account.deliveries
+and meal for a finite staffed business; see examples/market-production.dream.
+Courier/meal scenes prepare pedestrian routing independently of repairs or ambient
+walkers. Format 11/simulation 17 preserves registered previous worlds, all personal
+records and active tasks, without new money/stock or live-city graph rebasing.
 
 Use milestone id(label="Bake bread batches",kind=work,task=bake,count=3); inside economy.
 At most 16; kind=work|delivery|repair references an existing matching task, count
