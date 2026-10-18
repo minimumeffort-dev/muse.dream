@@ -728,14 +728,14 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       const speed=Math.hypot(car.vx-(water ? water.flow.x : 0),car.vy-(water ? water.flow.y : 0));
       const seat=seatedPose(car,doc);
       const eating=car.economy?.shared?.phase==='eat' || car.economy?.events.some(e=>e.kind==='eat' && accountOwners.get(e.account)==='player' && car.timeS-e.atS<1.4);
-      walkerAnimation.update({eating,sittingHeight:seat ? seat.hipHeight/walker.scale.x : undefined,speed,swimming,grounded:car.grounded,verticalSpeed:car.vz,time:car.timeS,enabled:!reduced.matches,
+      walkerAnimation.update({travel:{x:walker.position.x,z:walker.position.z,heading:car.headingRad},eating,sittingHeight:seat ? seat.hipHeight/walker.scale.x : undefined,speed,swimming,grounded:car.grounded,verticalSpeed:car.vz,time:car.timeS,enabled:!reduced.matches,
         working:!!car.economy?.accounts.find(a=>accountOwners.get(a.id)==='player')?.work || car.economy?.accounts.find(a=>accountOwners.get(a.id)==='player')?.repair?.phase==='work',
         sport:court && sportGame ? {kind:court.sport.kind,possessed:sportGame.possessed,charging:sportGame.chargeStartS!==null,shotAge:sportGame.shots ? car.timeS-sportGame.shotAtS : Infinity,...(sportGame.match?.playerAction ? {action:{kind:sportGame.match.playerAction.kind,age:sportGame.match.elapsedS-sportGame.match.playerAction.atS}} : {})} : undefined},mode==='playing' ? dt : 0);
     }
     for (const object of objects) {
       const spec=object.userData.sceneObject;
       const character=characters.get(object);
-      if(character){const account=car.economy?.accounts.find(a=>accountOwners.get(a.id)===spec?.id),working=!!account?.work || account?.repair?.phase==='work';character.update({speed:object.userData.npcActive===false ? 0 : object.userData.speed??0,swimming:false,grounded:true,verticalSpeed:0,time:working ? car.timeS : object.userData.npcTime??worldTime.value,enabled:!reduced.matches,sittingHeight:object.userData.seatHeight===undefined ? undefined : object.userData.seatHeight/object.scale.x,working,eating:account?.meal?.phase==='eat' || car.economy?.shared?.partner===account?.id && car.economy?.shared?.phase==='eat'},mode==='playing' ? dt : 0);continue;}
+      if(character){const account=car.economy?.accounts.find(a=>accountOwners.get(a.id)===spec?.id),working=!!account?.work || account?.repair?.phase==='work';character.update({travel:{x:object.position.x,z:object.position.z,heading:-object.rotation.y},speed:object.userData.npcActive===false ? 0 : object.userData.speed??0,swimming:false,grounded:true,verticalSpeed:0,time:working ? car.timeS : object.userData.npcTime??worldTime.value,enabled:!reduced.matches,sittingHeight:object.userData.seatHeight===undefined ? undefined : object.userData.seatHeight/object.scale.x,working,eating:account?.meal?.phase==='eat' || car.economy?.shared?.partner===account?.id && car.economy?.shared?.phase==='eat'},mode==='playing' ? dt : 0);continue;}
       animateObject(object, object.userData.npcTime??worldTime.value, !reduced.matches && (object.userData.npcActive??(!object.userData.ambient || object.userData.moving)), object.userData.distance ?? 0,0,
         spec ? Math.hypot(object.position.x-position.x,object.position.z-position.z)/spec.scale : Infinity);
     }

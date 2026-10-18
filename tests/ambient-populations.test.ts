@@ -54,6 +54,26 @@ describe('bounded moving ambient populations',()=>{
   }}
   expect(objectGroundLift(scene.objects.find(o=>o.id==='rabbit')!)).toBe(1.5);
  });
+ it('holds instanced foot targets and facing through a turn and stop without new draws or rigs',()=>{
+  const people={...scene,objects:scene.objects.filter(o=>o.ambient!.motion.kind==='walk')},population=new AmbientPopulation(people),state=createCarAtSpawn(people),camera=new OrthographicCamera(-5000,5000,5000,-5000,.1,10000),sun=new DirectionalLight();
+  camera.position.set(0,3000,3000);camera.lookAt(0,0,0);camera.updateMatrixWorld();sun.shadow.camera.updateMatrixWorld();
+  const mesh=population.group.children[0] as InstancedMesh,draws=population.group.children.length,matrix=new Matrix4(),previous=[undefined,undefined] as ({x:number;z:number;heading:number}|undefined)[];
+  const o=people.objects[0]!,joints=o.ambient!.joints,hips=['left','right'].map(side=>joints.find(j=>j.bone===`${side}_hip`)!.position[2]),stride=21.93548387096774*o.scale;let distance=0,x=o.x,y=o.y,contacts=0,maxDrift=0;
+  state.population=initialAmbient(people);
+  for(let f=0;f<720;f++){
+   const t=f/120,speed=t<4 ? 14 : 0,heading=Math.min(1.2,t*.3);distance+=speed/120;x+=Math.cos(heading)*speed/120;y+=Math.sin(heading)*speed/120;
+   const m=state.population.members[0]!;Object.assign(m,{x,y,fromX:x,fromY:y,heading,fromHeading:heading,distance,fromDistance:distance,speed});
+   population.update(state,camera,sun,1/120);mesh.getMatrixAt(0,matrix);
+   const feet=mesh.geometry.getAttribute('popPlant'),facing=mesh.geometry.getAttribute('popFacing'),amount=mesh.geometry.getAttribute('popCycle').getZ(0);
+   for(let i=0;i<2;i++){
+    const phase=((distance/stride+i*.5)%1+1)%1,down=phase<.62 || amount<.001;
+    const fx=i ? feet.getZ(0) : feet.getX(0),fz=(i ? feet.getW(0) : feet.getY(0))+hips[i]!,p=new Vector3(fx,0,fz).applyMatrix4(matrix),rotation=heading-(i ? facing.getY(0) : facing.getX(0)),old=previous[i];
+    if(down && old){maxDrift=Math.max(maxDrift,Math.hypot(p.x-old.x,p.z-old.z));expect(Math.abs(rotation-old.heading)).toBeLessThan(.0001);contacts++;}
+    previous[i]=down ? {x:p.x,z:p.z,heading:rotation} : undefined;
+   }
+  }
+  expect(contacts).toBeGreaterThan(200);expect(maxDrift).toBeLessThan(.002);expect(population.group.children.length).toBe(draws);expect(mesh.geometry.getAttribute('popPlant')).toMatchObject({meshPerAttribute:1});
+ });
  it('rejects mismatched, oversized or broken prepared graphs without changing the fallback',()=>{
   const valid=ambientGraph(scene),node=valid.nodes.findIndex(n=>n.links.length>0);
   const corrupt=[

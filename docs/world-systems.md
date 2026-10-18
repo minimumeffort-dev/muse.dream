@@ -196,3 +196,11 @@ share color/depth transforms; tactics run at 20 Hz and balls retain fixed-step
 physics. Matches rest on leaving the court, with no claim of independent city-wide
 sports schedules. Format 16/simulation 24 registers the exact r66 projection and
 retains old progress. [Controls, source and limits](dream/sports.md).
+
+### Walking contacts
+
+Grounded player and CPU pedestrians now use visible travel for cadence and retain
+foot position/facing through a turn or stop. Instanced sidewalk walkers share this
+policy without more scene rigs or physics bodies. Terrain-aware per-foot steps
+and the sports squads' direction changes remain animation work; this pass does
+not change movement rules or saved lives. [Contact checks](evidence/foot-contacts/verification.md).

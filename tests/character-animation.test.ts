@@ -41,6 +41,30 @@ describe('Dream humanoid bindings',()=>{
  });
 });
 describe('articulated locomotion',()=>{
+ it('holds grounded feet through acceleration, curved travel and a stop',()=>{
+  const r=rig(.306),previous=new Map<string,Vector3>();let x=0,z=0,maxDrift=0,contacts=0;
+  for(let f=0;f<960;f++){
+   const t=f/120,speed=t<1 ? t*14 : t<5 ? 14 : 0,heading=Math.min(Math.PI/2,Math.max(0,t-2)*.5);
+   x+=Math.cos(heading)*speed/120;z+=Math.sin(heading)*speed/120;
+   r.group.position.set(x,0,z);r.group.rotation.y=-heading;
+   r.animation.update({...input,speed,time:t,travel:{x,z,heading}},1/120);r.group.updateMatrixWorld(true);
+   for(const side of ['left','right']){
+    const ankle=r.bone(`${side}_ankle`),flat=new Vector3(0,1,0).applyQuaternion(ankle.getWorldQuaternion(ankle.quaternion.clone())).y>1-1e-12;
+    const foot=ankle.getWorldPosition(new Vector3()),old=previous.get(side);
+    if(flat && old){maxDrift=Math.max(maxDrift,Math.hypot(foot.x-old.x,foot.z-old.z));contacts++;}
+    if(flat)previous.set(side,foot);else previous.delete(side);
+   }
+  }
+  expect(contacts).toBeGreaterThan(200);expect(maxDrift).toBeLessThan(.002);
+ });
+ it('uses observed travel instead of requested speed and preserves planted feet while paused',()=>{
+  const r=rig(.306),travel={x:10,z:20,heading:.4};r.group.position.set(10,0,20);r.group.rotation.y=-.4;
+  advance(r,{speed:55,travel},2);r.group.updateMatrixWorld(true);
+  const foot=r.bone('left_ankle').getWorldPosition(new Vector3()),before=r.bone('left_hip').quaternion.clone();
+  r.animation.update({...input,speed:55,travel},0);r.group.updateMatrixWorld(true);
+  expect(r.bone('left_hip').quaternion.angleTo(before)).toBeLessThan(1e-6);expect(r.bone('left_ankle').getWorldPosition(new Vector3()).distanceTo(foot)).toBeLessThan(1e-8);
+  expect(Math.abs(r.bone('left_hip').rotation.z)).toBeLessThan(.04);
+ });
  it('keeps the stance foot on its support plane and lifts the returning foot',()=>{
   for(const run of [0,1]){
    expect(strideFoot(.2,run).y).toBe(0);

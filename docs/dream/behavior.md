@@ -217,7 +217,7 @@ Passenger-only seats may use compound contacts on solid transit vehicles. The mo
 
 ## Humanoid motion
 
-Walking, running and swimming use one connected voxel rig, with twelve semantic bone bindings. Elbows and knees bend around their own pivots; shoes stay attached to ankle frames. Walking has a grounded stance and lifted return. Running adds knee lift, stronger arm drive, a forward torso lean and a flight beat. Jumping tucks the legs, and a landing briefly compresses the pose. Starting, stopping and entering water blend the movement weights instead of freezing halfway through a step.
+Walking, running and swimming use one connected voxel rig, with twelve semantic bone bindings. Elbows and knees bend around their own pivots; shoes stay attached to ankle frames. Walking has a grounded stance and lifted return. Running adds knee lift, stronger arm drive, a forward torso lean and a flight beat. Jumping tucks the legs, and a landing briefly compresses the pose. Arms and body effort blend through starts and stops. Planted feet keep their ground contacts while a returning foot settles; entering water blends into swimming.
 
 ![Walk, run and crawl on the same Dream rig](../media/character-motion.jpg)
 
@@ -242,7 +242,11 @@ This is a fragment; the [complete example](../examples/humanoid.dream) supplies 
 
 Walking people now use the same small ground lift as the player, including static street residents and instanced walkers. This removes the inherited vehicle-sized hover gap without changing their physical support or movement.
 
-The renderer caches bone references and solves a small two-segment leg pose. It does not rebuild geometry each frame, add animated-assembly slots, or change walking speed, jumps, water support, collisions or vehicle ownership. This is rigid articulation, not skinned animation or a terrain-aware foot-placement solver. Stride phase follows distance travelled and the resolved character scale. A flat stance sole and a reachable ankle target keep the planted foot still during steady forward travel; upper-body sway no longer rotates both planted feet. Shoe support is measured once from the authored ankle parts, including their size and rotation. The instanced pedestrian and sports shaders use the same support and reach rules in color and shadow passes. Starting, stopping, turning and uneven terrain still blend an arcade pose rather than solve independent world-space foot anchors. [Stride checks and current recordings](../evidence/walking-strides/verification.md). [Verification and media audit](../evidence/character-animation/verification.md).
+The renderer caches bone references and solves rigid two-segment legs. On the player and CPU pedestrians, stride phase follows the visible distance travelled and the resolved character scale. A requested speed cannot animate walking while the body stays still. Each grounded foot keeps a horizontal world anchor and its facing through stance, including turns and stops. Hips can lean sideways to reach that contact, while the ankle keeps the sole flat. A returning foot settles when movement stops. Jumping, swimming, sitting, reduced motion, reset and a discontinuous pose clear these visual anchors.
+
+Instanced sidewalk people use the same two-anchor policy, with six additional floats per instance/material batch. Their color and shadow shaders use identical leg and ankle transforms. Anchors update for offscreen members too, so camera culling does not restart a step. There are no new meshes, physics bodies, actor slots, navigation decisions or saved fields. Existing sports squads keep their distance-driven match cycles and action poses.
+
+Shoe support is measured once from the authored ankle parts. The pelvis lowers before solving so both targets remain reachable without stretching a segment. This is rigid arcade articulation on the body's support plane; feet do not independently sample uneven terrain or steps. [Current contact checks and recordings](../evidence/foot-contacts/verification.md), [earlier steady-stride correction](../evidence/walking-strides/verification.md) and [original motion verification](../evidence/character-animation/verification.md).
 
 Existing complete humanoid rigs also support a renderer-owned planted work gesture
 while a [commerce job](commerce.md) is active. Cached shoulder/elbow bindings animate

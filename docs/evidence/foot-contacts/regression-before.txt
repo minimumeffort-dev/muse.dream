@@ -1,0 +1,58 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/character-animation.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ❯ tests/character-animation.test.ts (29 tests | 1 failed) 969ms
+   ✓ Dream humanoid bindings > compiles and formats a complete rig without label-based lookup 6ms
+   ✓ Dream humanoid bindings > rejects missing rigs before rendering 1ms
+   ✓ Dream humanoid bindings > rejects duplicate rigs before rendering 1ms
+   ✓ Dream humanoid bindings > rejects wrong parent rigs before rendering 4ms
+   ✓ Dream humanoid bindings > rejects zero limb rigs before rendering 4ms
+   ✓ Dream humanoid bindings > rejects rotated rigs before rendering 4ms
+   ✓ Dream humanoid bindings > rejects custom motion rigs before rendering 1ms
+   ✓ Dream humanoid bindings > rejects unbound part rigs before rendering 8ms
+   ✓ Dream humanoid bindings > rejects wrong body rigs before rendering 1ms
+   × articulated locomotion > holds grounded feet through acceleration, curved travel and a stop 42ms
+     → expected 0.19889400359613568 to be less than 0.002
+   ✓ articulated locomotion > keeps the stance foot on its support plane and lifts the returning foot 3ms
+   ✓ articulated locomotion > plants the stance foot in world space at scale 0.2 131ms
+   ✓ articulated locomotion > plants the stance foot in world space at scale 0.306 120ms
+   ✓ articulated locomotion > plants the stance foot in world space at scale 1 115ms
+   ✓ articulated locomotion > plants the stance foot in world space at scale 2 111ms
+   ✓ articulated locomotion > solves reachable feet without scaling or reversing knees 0ms
+   ✓ articulated locomotion > has a distinct bent-elbow running pose and settles after stopping 33ms
+   ✓ articulated locomotion > works with planted feet, rigid arms and a reduced-motion rest, then returns to idle 20ms
+   ✓ articulated locomotion > raises a hand for a meal without moving the planted feet and respects reduced motion 36ms
+   ✓ articulated locomotion > keeps segment lengths and all original mesh dimensions through a stride 19ms
+   ✓ articulated locomotion > keeps both soles above the support plane throughout walk and run cycles 80ms
+   ✓ articulated locomotion > treads upright at rest and alternates a prone crawl while moving 35ms
+   ✓ articulated locomotion > passes a stroke wrap and water transitions without a pose snap 23ms
+   ✓ articulated locomotion > keeps the same cadence and pose at 30 rendered fps 37ms
+   ✓ articulated locomotion > keeps the same cadence and pose at 60 rendered fps 37ms
+   ✓ articulated locomotion > keeps the same cadence and pose at 144 rendered fps 40ms
+   ✓ articulated locomotion > freezes while paused and settles reduced motion to an unchanging supported pose 18ms
+   ✓ articulated locomotion > retains jump, landing and sport poses, then clears them when reset 18ms
+   ✓ fits a seated pelvis above the sitting surface and leaves both soles on the floor in reduced motion 19ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/character-animation.test.ts > articulated locomotion > holds grounded feet through acceleration, curved travel and a stop
+AssertionError: expected 0.19889400359613568 to be less than 0.002
+ ❯ tests/character-animation.test.ts:58:58
+     56|    }
+     57|   }
+     58|   expect(contacts).toBeGreaterThan(200);expect(maxDrift).toBeLessThan(…
+       |                                                          ^
+     59|  });
+     60|  it('keeps the stance foot on its support plane and lifts the returnin…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 28 passed (29)
+   Start at  01:19:15
+   Duration  1.68s (transform 339ms, setup 11ms, collect 563ms, tests 969ms, environment 0ms, prepare 35ms)

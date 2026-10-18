@@ -1038,3 +1038,22 @@ Existing transport recordings show the main avenue, station and bridge; the
 driving, park and activity clips do not traverse this changed approach, so their
 represented local geometry and mechanics remain accurate. There is no new motion
 export in this change. These stills are visual evidence, not frame-time measurements.
+
+## Planted walking contacts, 2026-10-19
+
+`character`, `pedestrians`, `locomotion`, `switching`, `football` and `basketball`
+are refreshed together from 2,280 actually rendered 2400 × 1350 PNG frames at
+30 frames per simulation second. The close-up uses the native **Turn and stop**
+review: accelerate, turn through 90 degrees and stop, beside the same instanced
+walker, a runner and a swimmer. The city clips keep their ordinary fixed-step
+movement, vehicle handoff and sports controls. No frame interpolation is used.
+
+The repository encoder retains each clip's existing GIF settings and 1600 × 900
+H.264 video. Matching stills use character frame 90, pedestrians 90, locomotion
+70, switching 35/110 and both sports 180. The complete source/frame/output audit
+is in [contact verification](../evidence/foot-contacts/verification.md).
+These are offline exports, not browser performance measurements. Static people,
+architecture, roads and the city map remain accurate because source geometry and
+placements are unchanged. Older activity clips retain their recorded actions and
+construction; this set is the current reference for walking contacts. Swimming
+keeps its unchanged crawl/tread policy and recording.

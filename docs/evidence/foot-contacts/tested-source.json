@@ -1,0 +1,45 @@
+{
+  "parent": "98a1fb9bdf78786d1908019c6a808dd3ddab979a",
+  "files": [
+    {
+      "path": "src/game/humanoid-gait.ts",
+      "sha256": "f6eaabbd0b1c5c31aa4176c51764f6f6e556bd830ba5042a61e75e4cbf6738be"
+    },
+    {
+      "path": "src/game/character-animation.ts",
+      "sha256": "255eac7ea2c01d35349ef5467d18e661b57ab26afd936980417f938c25a16ca7"
+    },
+    {
+      "path": "src/game/ambient-population.ts",
+      "sha256": "f4c75709dd8ddb69e6ae15ddeec86f9254442989883c2f09afefec6b634fc8d7"
+    },
+    {
+      "path": "src/game/shaders.ts",
+      "sha256": "68e39edf8014bae3f52b4aa596730be62b8f9ed33923db2e8b0d0e05c44afe3c"
+    },
+    {
+      "path": "src/game/main.ts",
+      "sha256": "77b047419e9fca3d01e3ac9c5d157b717381429e27980374f9a4c7a6c39f69fd"
+    },
+    {
+      "path": "tests/visual/locomotion.js",
+      "sha256": "e7b13d9a2d4355af7e4291343e29531e143d6b1aa8f2d36eed87e59603b0b276"
+    },
+    {
+      "path": "tests/visual/locomotion.html",
+      "sha256": "53c611f973b26bc6eed6f46959d717182ce1cf66bbf45ff1ca7691cbbb5923c7"
+    },
+    {
+      "path": "tests/character-animation.test.ts",
+      "sha256": "f203b0ca6171a61e7c4fdde8fa40bdbcee76b8c28f90a4d77eda5e1e4fc93fcd"
+    },
+    {
+      "path": "tests/ambient-populations.test.ts",
+      "sha256": "6b75afd59802c012d26249013afc625ab81722d568af6acf6a4900adb1901cc8"
+    },
+    {
+      "path": "tests/foot-plants.test.ts",
+      "sha256": "b64a5d471e2f142b70fbc02890322369ad4f3556ff9afd42ff57fca2a6cd0857"
+    }
+  ]
+}

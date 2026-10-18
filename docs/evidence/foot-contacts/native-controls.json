@@ -1,0 +1,16 @@
+{
+  "review": "native W then D, P, held W while paused",
+  "pausedHeld": true,
+  "before": {
+    "car": "2362.6,3503.2,1.5",
+    "control": "{\"kind\":\"foot\"}",
+    "population": "{\"count\":181,\"moving\":175,\"fleeing\":0,\"time\":40.1583333333317,\"sample\":[{\"id\":\"garden_visitor_6\",\"x\":2284.050000000024,\"y\":3432,\"fromX\":2283.5000000000236,\"fromY\":3432,\"heading\":0,\"fromHeading\":0,\"distance\":380.9809791799361,\"fromDistance\":380.4309791799361,\"node\":744,\"previous\":1712,\"random\":3684988278,\"until\":0,\"pauseUntil\":33.12393457787111,\"mode\":\"walk\",\"speed\":11},{\"id\":\"garden_visitor_5\",\"x\":2240.8000000000065,\"y\":3432,\"fromX\":2240.0000000000064,\"fromY\":3432,\"heading\":0,\"fromHeading\":0,\"distance\":557.6527582371482,\"fromDistance\":556.8527582371482,\"node\":744,\"previous\":1712,\"random\":4068915366,\"until\":0,\"pauseUntil\":38.3947363672778,\"mode\":\"walk\",\"speed\":16},{\"id\":\"garden_visitor_0\",\"x\":2708,\"y\":3528.800000000001,\"fromX\":2708,\"fromY\":3528.150000000001,\"heading\":1.5707963267948966,\"fromHeading\":1.5707963267948966,\"distance\":484.79999999992714,\"fromDistance\":484.14999999992716,\"node\":747,\"previous\":1409,\"random\":1853340512,\"until\":0,\"pauseUntil\":39.56302892863751,\"mode\":\"walk\",\"speed\":13},{\"id\":\"center_residents_0_0_l\",\"x\":2470.4999999999973,\"y\":3852,\"fromX\":2469.7999999999975,\"fromY\":3852,\"heading\":0,\"fromHeading\":0,\"distance\":518.9785234606815,\"fromDistance\":518.2785234606814,\"node\":771,\"previous\":745,\"random\":3648540239,\"until\":0,\"pauseUntil\":39.449491972243415,\"mode\":\"walk\",\"speed\":14},{\"id\":\"neighborhood_residents_1_0_r\",\"x\":2711.4199605092963,\"y\":3623.7602106170834,\"fromX\":2711.5489624838315,\"fromY\":3623.0722000862293,\"heading\":1.7561442767905637,\"fromHeading\":1.7561442767905662,\"distance\":499.63864165026683,\"fromDistance\":498.93864165026685,\"node\":747,\"previous\":1419,\"random\":4243799434,\"until\":0,\"pauseUntil\":39.18808655375615,\"mode\":\"walk\",\"speed\":14},{\"id\":\"garden_visitor_7\",\"x\":2211.389286965437,\"y\":3844.931825973547,\"fromX\":2211.5202672084656,\"fromY\":3844.244189313721,\"heading\":1.7590204025056027,\"fromHeading\":1.7813090761810255,\"distance\":511.52746943949535,\"fromDistance\":510.82746943949536,\"node\":769,\"previous\":746,\"random\":3558933144,\"until\":0,\"pauseUntil\":25.65725738927722,\"mode\":\"walk\",\"speed\":14}]}",
+    "speed": "55.0"
+  },
+  "logs": [],
+  "afterRelease": {
+    "control": "{\"kind\":\"foot\"}",
+    "position": "6410.3,4290.2,1.5",
+    "speed": "0.0"
+  }
+}

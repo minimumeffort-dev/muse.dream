@@ -1,0 +1,6 @@
+character: source sequence, GIF, HD and matching still verified
+pedestrians: source sequence, GIF, HD and matching still verified
+football: source sequence, GIF, HD and matching still verified
+basketball: source sequence, GIF, HD and matching still verified
+locomotion: source sequence, GIF, HD and matching still verified
+switching: source sequence, GIF, HD and matching still verified

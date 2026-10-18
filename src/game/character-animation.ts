@@ -1,7 +1,7 @@
 import {Euler,Quaternion,type Group,Object3D} from 'three';
 import {HUMANOID_BONES,type HumanoidBone} from '../scene/humanoid';
 import type {ObjectDslV2} from '../scene/object-dsl';
-import {gaitRun,gaitStride,humanoidSoles,soleSupport,strideFoot,type Sole} from './humanoid-gait';
+import {FootPlants,gaitRun,gaitStride,humanoidSoles,soleSupport,strideFoot,type Sole,type TravelPose} from './humanoid-gait';
 export {strideFoot} from './humanoid-gait';
 
 type Rotation=[number,number,number];
@@ -19,6 +19,7 @@ export function solveLeg(x:number,y:number,upper:number,lower:number):{hip:numbe
 
 export interface CharacterInput {
   speed:number;swimming:boolean;grounded:boolean;verticalSpeed:number;time:number;enabled:boolean;
+  travel?:TravelPose;
   sport?:{kind:'football'|'basketball';possessed:boolean;charging:boolean;shotAge:number;action?:{kind:'kick'|'throw'|'contest';age:number}};
   working?:boolean;
   eating?:boolean;
@@ -45,6 +46,9 @@ export class CharacterAnimator {
   private angles=new Euler();
   private readonly unit:number;
   private readonly soles:[Sole,Sole];
+  private plants=new FootPlants();
+  private travel:TravelPose|undefined;
+  private ankles=[new Quaternion(),new Quaternion()];
   constructor(private group:Group,spec:ObjectDslV2){
     this.bones=Object.fromEntries(spec.joints!.filter(j=>j.bone).map(j=>{
       const node=group.getObjectByName(j.id)!;
@@ -56,11 +60,18 @@ export class CharacterAnimator {
   reset(){
     this.phase=this.swimPhase=this.moving=this.running=this.water=this.airborne=this.landing=this.working=this.eating=0;
     this.wasGrounded=true;this.previousVertical=0;
+    this.plants.reset();this.travel=undefined;
     for(const {node,rest,y} of Object.values(this.bones)){node.quaternion.copy(rest);node.position.y=y;}
   }
 
   update(input:CharacterInput,dt:number){
-    const step=Math.max(0,Math.min(.1,dt)),active=input.enabled,speed=active ? input.speed : 0;
+    const step=Math.max(0,Math.min(.1,dt)),active=input.enabled;
+    const contact=active && input.travel && input.grounded && !input.swimming && input.sittingHeight===undefined ? input.travel : undefined;
+    const distance=contact && this.travel ? Math.hypot(contact.x-this.travel.x,contact.z-this.travel.z) : 0;
+    const continuous=distance<this.group.scale.x*this.unit*80;
+    const speed=active ? contact ? this.travel && step>0 && continuous ? distance/step : 0 : input.speed : 0;
+    if(!contact || !continuous)this.plants.reset();
+    if(contact)this.plants.begin(contact,this.group.scale.x*this.unit);
     const ease=1-Math.exp(-step*12),travel=input.swimming ? clamp(speed/25) : Number(speed>.01),run=gaitRun(speed);
     const previousRunning=this.running,previousAir=this.airborne;
     this.moving=mix(this.moving,travel,ease);this.running=mix(this.running,run,ease);
@@ -70,32 +81,39 @@ export class CharacterAnimator {
     this.wasGrounded=input.grounded;this.previousVertical=input.verticalSpeed;
     this.landing*=Math.exp(-step*15);
     if(active){
-      this.phase=(this.phase+step*speed/(this.group.scale.x*this.unit*gaitStride((previousRunning+this.running)/2))*(1-(previousAir+this.airborne)/2))%1;
+      const travelled=contact ? continuous ? distance : 0 : step*speed*(1-(previousAir+this.airborne)/2);
+      this.phase+=travelled/(this.group.scale.x*this.unit*gaitStride((previousRunning+this.running)/2));
       this.swimPhase=(this.swimPhase+step*mix(.55,1.05,clamp(speed/48)))%1;
     }else this.moving=this.running=this.airborne=this.landing=0;
+    this.travel=contact ? {...contact} : undefined;
     const moving=this.moving,running=this.running,phase=this.phase,unit=this.unit;
     const land=emptyPose(),swim=emptyPose();
     const bob=mix(.8,1.2,running)*(1-Math.cos(phase*tau*2));
     let rootY=this.bones.root.y+unit*(moving*(-mix(1.7,5.5,running)+bob)-this.landing);
     land.root=[0,0,0];
     const feet=([['left',0],['right',.5]] as const).map(([side,offset],i)=>{
-      const foot=strideFoot(phase+offset,running),toe=foot.toe*moving;
+      const foot=strideFoot(phase+offset,running),toe=contact && moving<.001 ? 0 : foot.toe*moving;
       const hip=this.bones[`${side}_hip`],upper=-this.bones[`${side}_knee`].y,lower=-this.bones[`${side}_ankle`].y;
       const ankleY=this.bones.root.y+hip.y-upper-lower;
-      const x=foot.x*unit*moving,y=ankleY+unit*foot.y*moving+Math.max(0,soleSupport(this.soles[i]!,toe)-ankleY);
+      const plant=contact ? this.plants.sample(i,contact,this.group.scale.x,foot.x*unit*moving,hip.node.position.z,foot.y===0 || moving<.001,Math.floor(phase+offset)) : undefined;
+      const x=plant?.x??foot.x*unit*moving,z=(plant?.z??hip.node.position.z)-hip.node.position.z,y=ankleY+unit*foot.y*moving+Math.max(0,soleSupport(this.soles[i]!,toe)-ankleY);
       // Lower the pelvis before IK; clamping an unreachable ankle makes the foot skate.
-      if(moving>.001)rootY=Math.min(rootY,y+Math.sqrt(Math.max(0,(upper+lower-.001)**2-x*x))-hip.y);
-      return {x,y,toe};
+      if(moving>.001 || contact)rootY=Math.min(rootY,y+Math.sqrt(Math.max(0,(upper+lower-.001)**2-x*x-z*z))-hip.y);
+      return {x,y,z,toe,yaw:plant?.yaw??0};
     });
     land.spine=[0,-Math.sin(phase*tau)*.10*moving,-mix(.035,.19,running)*moving];
     for(const [side,offset,sign,index] of [['left',0,1,0],['right',.5,-1,1]] as const){
       const hip=`${side}_hip` as const,knee=`${side}_knee` as const,ankle=`${side}_ankle` as const;
       const shoulder=`${side}_shoulder` as const,elbow=`${side}_elbow` as const;
       const foot=feet[index]!,toe=foot.toe;
-      const leg=solveLeg(foot.x,foot.y-rootY-this.bones[hip].y,-this.bones[knee].y,-this.bones[ankle].y);
+      const vertical=foot.y-rootY-this.bones[hip].y,roll=Math.atan2(-foot.z,-vertical);
+      const leg=solveLeg(foot.x,-Math.hypot(vertical,foot.z),-this.bones[knee].y,-this.bones[ankle].y);
+      land[hip][0]=roll;
       land[hip][2]=mix(leg.hip,.35+sign*.12,this.airborne);
       land[knee][2]=mix(leg.knee,-.8-clamp(input.verticalSpeed/140,-.3,.3),this.airborne);
       land[ankle][2]=-land[hip][2]-land[knee][2]+toe;
+      this.ankles[index]!.setFromEuler(this.angles.set(roll,0,land[hip][2]+land[knee][2])).invert()
+        .multiply(this.target.setFromEuler(this.angles.set(0,foot.yaw,0))).multiply(this.target.setFromEuler(this.angles.set(0,0,toe)));
       land[shoulder]=[-sign*.07,0,mix(-Math.sin((phase+offset)*tau)*mix(.28,.65,running)*moving,-.3,this.airborne)];
       land[elbow][2]=mix(.12+running*.9+Math.max(0,Math.sin((phase+offset)*tau))*.18*moving,.85,this.airborne);
       const stroke=this.swimPhase+offset,angle=stroke*tau;
@@ -154,7 +172,9 @@ export class CharacterAnimator {
     }
     for(const bone of HUMANOID_BONES){
       const {node,rest}=this.bones[bone];
-      this.landRotation.setFromEuler(this.angles.set(...land[bone]));this.swimRotation.setFromEuler(this.angles.set(...swim[bone]));
+      if(contact && bone.endsWith('_ankle'))this.landRotation.copy(this.ankles[bone.startsWith('left') ? 0 : 1]!);
+      else this.landRotation.setFromEuler(this.angles.set(...land[bone]));
+      this.swimRotation.setFromEuler(this.angles.set(...swim[bone]));
       this.target.copy(rest).multiply(this.landRotation.slerp(this.swimRotation,this.water));
       if(active && this.water>.001 && this.water<.999)node.quaternion.rotateTowards(this.target,step*12);
       else node.quaternion.copy(this.target);

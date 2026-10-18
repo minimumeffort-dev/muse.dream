@@ -251,7 +251,7 @@ The city now has twelve connected character templates: different hair, facial ha
 
 ![The live character wardrobe](docs/media/people-wardrobe.png)
 
-Walking and running tie their stride to distance travelled and character scale, with bent knees, articulated elbows and planted stance feet. Swimming alternates a crawl with upright treading when you stop. The same Dream bone bindings animate the city pedestrians. [Character rig and motion](docs/dream/behavior.md#humanoid-motion).
+Walking and running tie their stride to distance travelled and character scale, with bent knees and articulated elbows. Grounded feet keep their position and facing through turns and stops, including the instanced sidewalk crowds. Swimming alternates a crawl with upright treading when you stop. The same Dream bone bindings animate the city pedestrians. [Character rig and motion](docs/dream/behavior.md#humanoid-motion).
 
 ![Walking, running and swimming with one connected Dream rig](docs/media/character.gif)
 

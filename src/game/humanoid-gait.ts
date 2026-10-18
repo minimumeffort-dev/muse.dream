@@ -26,3 +26,25 @@ export function humanoidSoles(spec:ObjectDslV2,joints=spec.joints!):[Sole,Sole]{
 export function soleSupport(sole:Sole,toe:number):number {
  return -Math.min(sole[0]*Math.sin(toe),sole[1]*Math.sin(toe))-sole[2]*Math.cos(toe);
 }
+
+export type TravelPose={x:number;z:number;heading:number};
+/** Visual contacts only: two anchors, independent of physics and saved simulation state. */
+export class FootPlants {
+ private feet=[{x:0,z:0,heading:0,down:false,cycle:0},{x:0,z:0,heading:0,down:false,cycle:0}];
+ private result=[{x:0,z:0,yaw:0},{x:0,z:0,yaw:0}];
+ private previous:TravelPose|undefined;
+ reset(){this.previous=undefined;for(const foot of this.feet)foot.down=false;}
+ begin(pose:TravelPose,scale:number){
+  if(this.previous && (Math.hypot(pose.x-this.previous.x,pose.z-this.previous.z)>scale*80 || Math.abs(Math.atan2(Math.sin(pose.heading-this.previous.heading),Math.cos(pose.heading-this.previous.heading)))>Math.PI*.6))this.reset();
+  if(this.previous){this.previous.x=pose.x;this.previous.z=pose.z;this.previous.heading=pose.heading;}
+  else this.previous={...pose};
+ }
+ sample(index:number,pose:TravelPose,scale:number,x:number,z:number,down:boolean,cycle:number){
+  const foot=this.feet[index]!,result=this.result[index]!,c=Math.cos(pose.heading),s=Math.sin(pose.heading);
+  if(!foot.down || !down || foot.cycle!==cycle){foot.x=pose.x+scale*(c*x-s*z);foot.z=pose.z+scale*(s*x+c*z);foot.heading=pose.heading;}
+  foot.down=down;foot.cycle=cycle;
+  const dx=(foot.x-pose.x)/scale,dz=(foot.z-pose.z)/scale;
+  result.x=c*dx+s*dz;result.z=-s*dx+c*dz;result.yaw=Math.atan2(Math.sin(pose.heading-foot.heading),Math.cos(pose.heading-foot.heading));
+  return result;
+ }
+}

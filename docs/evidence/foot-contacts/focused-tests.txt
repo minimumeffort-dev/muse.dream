@@ -1,0 +1,18 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/character-animation.test.ts tests/ambient-populations.test.ts tests/foot-plants.test.ts tests/sports-visuals.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/character-animation.test.ts (30 tests) 1048ms
+ ✓ tests/sports-visuals.test.ts (2 tests) 439ms
+   ✓ renders one shared eleven-person squad with bone/finish channels and releases its owned buffers  389ms
+ ✓ tests/foot-plants.test.ts (2 tests) 2ms
+ ✓ tests/ambient-populations.test.ts (11 tests) 3525ms
+   ✓ bounded moving ambient populations > walks through accepted sidewalk and zebra geometry without cutting across carriageways  2604ms
+
+ Test Files  4 passed (4)
+      Tests  45 passed (45)
+   Start at  01:26:33
+   Duration  4.25s (transform 451ms, setup 30ms, collect 1.30s, tests 5.01s, environment 0ms, prepare 153ms)

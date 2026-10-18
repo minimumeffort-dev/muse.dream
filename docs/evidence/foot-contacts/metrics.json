@@ -1,0 +1,431 @@
+{
+  "sceneRevision": "r71",
+  "fingerprint": "5297667c16ec9218ef46e6cbf82cfdffe826220f92572f16d85f88ef5c8c2c53",
+  "objects": 1769,
+  "ambient": 181,
+  "cases": 60,
+  "maxDrift": 1.094241580447691e-12,
+  "units": "world units, horizontal ankle displacement between consecutive flat-sole frames",
+  "rows": [
+    {
+      "scale": 0.2,
+      "speed": 4,
+      "fps": 30,
+      "contacts": 366,
+      "maxDrift": 2.920927388849748e-14
+    },
+    {
+      "scale": 0.2,
+      "speed": 4,
+      "fps": 60,
+      "contacts": 743,
+      "maxDrift": 2.9042740434803704e-14
+    },
+    {
+      "scale": 0.2,
+      "speed": 4,
+      "fps": 144,
+      "contacts": 1797,
+      "maxDrift": 3.557151798805476e-14
+    },
+    {
+      "scale": 0.2,
+      "speed": 14,
+      "fps": 30,
+      "contacts": 321,
+      "maxDrift": 6.750155989720952e-14
+    },
+    {
+      "scale": 0.2,
+      "speed": 14,
+      "fps": 60,
+      "contacts": 673,
+      "maxDrift": 1.2434497875801753e-13
+    },
+    {
+      "scale": 0.2,
+      "speed": 14,
+      "fps": 144,
+      "contacts": 1667,
+      "maxDrift": 6.750155989720952e-14
+    },
+    {
+      "scale": 0.2,
+      "speed": 35,
+      "fps": 30,
+      "contacts": 283,
+      "maxDrift": 2.864289338439558e-14
+    },
+    {
+      "scale": 0.2,
+      "speed": 35,
+      "fps": 60,
+      "contacts": 616,
+      "maxDrift": 5.17282919736354e-14
+    },
+    {
+      "scale": 0.2,
+      "speed": 35,
+      "fps": 144,
+      "contacts": 1543,
+      "maxDrift": 3.552713678800501e-14
+    },
+    {
+      "scale": 0.2,
+      "speed": 55,
+      "fps": 30,
+      "contacts": 270,
+      "maxDrift": 5.859285502108464e-14
+    },
+    {
+      "scale": 0.2,
+      "speed": 55,
+      "fps": 60,
+      "contacts": 567,
+      "maxDrift": 6.355287432313019e-14
+    },
+    {
+      "scale": 0.2,
+      "speed": 55,
+      "fps": 144,
+      "contacts": 1395,
+      "maxDrift": 5.695433295429594e-14
+    },
+    {
+      "scale": 0.2,
+      "speed": 95,
+      "fps": 30,
+      "contacts": 227,
+      "maxDrift": 8.526512829121202e-14
+    },
+    {
+      "scale": 0.2,
+      "speed": 95,
+      "fps": 60,
+      "contacts": 524,
+      "maxDrift": 1.1457157353758233e-13
+    },
+    {
+      "scale": 0.2,
+      "speed": 95,
+      "fps": 144,
+      "contacts": 1349,
+      "maxDrift": 1.1457157353758233e-13
+    },
+    {
+      "scale": 0.306,
+      "speed": 4,
+      "fps": 30,
+      "contacts": 354,
+      "maxDrift": 5.3290705182007514e-14
+    },
+    {
+      "scale": 0.306,
+      "speed": 4,
+      "fps": 60,
+      "contacts": 716,
+      "maxDrift": 6.466036496704425e-14
+    },
+    {
+      "scale": 0.306,
+      "speed": 4,
+      "fps": 144,
+      "contacts": 1730,
+      "maxDrift": 7.649436639667329e-14
+    },
+    {
+      "scale": 0.306,
+      "speed": 14,
+      "fps": 30,
+      "contacts": 333,
+      "maxDrift": 9.237055564881302e-14
+    },
+    {
+      "scale": 0.306,
+      "speed": 14,
+      "fps": 60,
+      "contacts": 687,
+      "maxDrift": 9.592326932761353e-14
+    },
+    {
+      "scale": 0.306,
+      "speed": 14,
+      "fps": 144,
+      "contacts": 1681,
+      "maxDrift": 1.5342623443138723e-13
+    },
+    {
+      "scale": 0.306,
+      "speed": 35,
+      "fps": 30,
+      "contacts": 312,
+      "maxDrift": 4.263256414560601e-14
+    },
+    {
+      "scale": 0.306,
+      "speed": 35,
+      "fps": 60,
+      "contacts": 630,
+      "maxDrift": 4.234113060164191e-14
+    },
+    {
+      "scale": 0.306,
+      "speed": 35,
+      "fps": 144,
+      "contacts": 1561,
+      "maxDrift": 4.263256414560601e-14
+    },
+    {
+      "scale": 0.306,
+      "speed": 55,
+      "fps": 30,
+      "contacts": 272,
+      "maxDrift": 5.684341886080802e-14
+    },
+    {
+      "scale": 0.306,
+      "speed": 55,
+      "fps": 60,
+      "contacts": 568,
+      "maxDrift": 5.859285502108464e-14
+    },
+    {
+      "scale": 0.306,
+      "speed": 55,
+      "fps": 144,
+      "contacts": 1409,
+      "maxDrift": 5.859285502108464e-14
+    },
+    {
+      "scale": 0.306,
+      "speed": 95,
+      "fps": 30,
+      "contacts": 251,
+      "maxDrift": 1.1457157353758233e-13
+    },
+    {
+      "scale": 0.306,
+      "speed": 95,
+      "fps": 60,
+      "contacts": 550,
+      "maxDrift": 1.1718571004216928e-13
+    },
+    {
+      "scale": 0.306,
+      "speed": 95,
+      "fps": 144,
+      "contacts": 1381,
+      "maxDrift": 1.1718571004216928e-13
+    },
+    {
+      "scale": 1,
+      "speed": 4,
+      "fps": 30,
+      "contacts": 364,
+      "maxDrift": 5.175893557008935e-13
+    },
+    {
+      "scale": 1,
+      "speed": 4,
+      "fps": 60,
+      "contacts": 730,
+      "maxDrift": 5.423163901165294e-13
+    },
+    {
+      "scale": 1,
+      "speed": 4,
+      "fps": 144,
+      "contacts": 1760,
+      "maxDrift": 5.454126065728942e-13
+    },
+    {
+      "scale": 1,
+      "speed": 14,
+      "fps": 30,
+      "contacts": 350,
+      "maxDrift": 4.009456670482735e-13
+    },
+    {
+      "scale": 1,
+      "speed": 14,
+      "fps": 60,
+      "contacts": 710,
+      "maxDrift": 2.297727184807799e-13
+    },
+    {
+      "scale": 1,
+      "speed": 14,
+      "fps": 144,
+      "contacts": 1718,
+      "maxDrift": 2.1390168887322672e-13
+    },
+    {
+      "scale": 1,
+      "speed": 35,
+      "fps": 30,
+      "contacts": 324,
+      "maxDrift": 1.5644430195749237e-13
+    },
+    {
+      "scale": 1,
+      "speed": 35,
+      "fps": 60,
+      "contacts": 658,
+      "maxDrift": 1.2868476258827026e-13
+    },
+    {
+      "scale": 1,
+      "speed": 35,
+      "fps": 144,
+      "contacts": 1595,
+      "maxDrift": 1.6342482922482304e-13
+    },
+    {
+      "scale": 1,
+      "speed": 55,
+      "fps": 30,
+      "contacts": 298,
+      "maxDrift": 1.4223344724229037e-13
+    },
+    {
+      "scale": 1,
+      "speed": 55,
+      "fps": 60,
+      "contacts": 596,
+      "maxDrift": 1.631056401052433e-13
+    },
+    {
+      "scale": 1,
+      "speed": 55,
+      "fps": 144,
+      "contacts": 1445,
+      "maxDrift": 1.6120438317557273e-13
+    },
+    {
+      "scale": 1,
+      "speed": 95,
+      "fps": 30,
+      "contacts": 283,
+      "maxDrift": 1.9895196601282805e-13
+    },
+    {
+      "scale": 1,
+      "speed": 95,
+      "fps": 60,
+      "contacts": 580,
+      "maxDrift": 1.4210854715202004e-13
+    },
+    {
+      "scale": 1,
+      "speed": 95,
+      "fps": 144,
+      "contacts": 1419,
+      "maxDrift": 2.5579538487363607e-13
+    },
+    {
+      "scale": 2,
+      "speed": 4,
+      "fps": 30,
+      "contacts": 364,
+      "maxDrift": 1.082359837428903e-12
+    },
+    {
+      "scale": 2,
+      "speed": 4,
+      "fps": 60,
+      "contacts": 732,
+      "maxDrift": 1.0846327802330588e-12
+    },
+    {
+      "scale": 2,
+      "speed": 4,
+      "fps": 144,
+      "contacts": 1761,
+      "maxDrift": 1.094241580447691e-12
+    },
+    {
+      "scale": 2,
+      "speed": 14,
+      "fps": 30,
+      "contacts": 356,
+      "maxDrift": 3.022313384435032e-13
+    },
+    {
+      "scale": 2,
+      "speed": 14,
+      "fps": 60,
+      "contacts": 719,
+      "maxDrift": 3.8657704262548816e-13
+    },
+    {
+      "scale": 2,
+      "speed": 14,
+      "fps": 144,
+      "contacts": 1730,
+      "maxDrift": 9.526412267421995e-13
+    },
+    {
+      "scale": 2,
+      "speed": 35,
+      "fps": 30,
+      "contacts": 331,
+      "maxDrift": 3.765876499528531e-13
+    },
+    {
+      "scale": 2,
+      "speed": 35,
+      "fps": 60,
+      "contacts": 669,
+      "maxDrift": 3.1296161105196403e-13
+    },
+    {
+      "scale": 2,
+      "speed": 35,
+      "fps": 144,
+      "contacts": 1616,
+      "maxDrift": 6.680613338143734e-13
+    },
+    {
+      "scale": 2,
+      "speed": 55,
+      "fps": 30,
+      "contacts": 312,
+      "maxDrift": 2.9977830862618737e-13
+    },
+    {
+      "scale": 2,
+      "speed": 55,
+      "fps": 60,
+      "contacts": 627,
+      "maxDrift": 3.6060043839825084e-13
+    },
+    {
+      "scale": 2,
+      "speed": 55,
+      "fps": 144,
+      "contacts": 1516,
+      "maxDrift": 9.821952287227004e-13
+    },
+    {
+      "scale": 2,
+      "speed": 95,
+      "fps": 30,
+      "contacts": 295,
+      "maxDrift": 2.942368571012821e-13
+    },
+    {
+      "scale": 2,
+      "speed": 95,
+      "fps": 60,
+      "contacts": 596,
+      "maxDrift": 3.1866176364303556e-13
+    },
+    {
+      "scale": 2,
+      "speed": 95,
+      "fps": 144,
+      "contacts": 1441,
+      "maxDrift": 3.126388037344441e-13
+    }
+  ]
+}
