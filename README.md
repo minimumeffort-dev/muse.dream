@@ -125,6 +125,13 @@ teacher can thank you for it. These conditions are authored in Dream.
 
 ![Earned work at the market](docs/media/progression.gif)
 
+Make a packed lunch and someone now comes to buy it. The commuter leaves their
+usual walk, pays from their own wallet, eats, and returns to where they left off.
+Take the last lunch first and they go back empty-handed. Their trip survives
+walking away and reloading. [Customer meal trips](docs/dream/commerce.md#customers-with-somewhere-to-go).
+
+![A real customer meal break](docs/media/meals.gif)
+
 You can also take delivery work. Bring flour from the station depot to the bakery,
 or carry bread to the school canteen. Pick up with **H**, follow the marked
 location, then hand over on foot to get paid. Cargo, stock and money survive

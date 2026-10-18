@@ -27,6 +27,7 @@ export interface CharacterInput {
   speed:number;swimming:boolean;grounded:boolean;verticalSpeed:number;time:number;enabled:boolean;
   sport?:{kind:'football'|'basketball';possessed:boolean;charging:boolean;shotAge:number};
   working?:boolean;
+  eating?:boolean;
 }
 
 /** One cached rig, no mesh traversal, geometry work or physics ownership in the frame loop. */
@@ -41,6 +42,7 @@ export class CharacterAnimator {
   private landing=0;
   private previousVertical=0;
   private working=0;
+  private eating=0;
   private wasGrounded=true;
   private target=new Quaternion();
   private landRotation=new Quaternion();
@@ -56,7 +58,7 @@ export class CharacterAnimator {
   }
 
   reset(){
-    this.phase=this.swimPhase=this.moving=this.running=this.water=this.airborne=this.landing=this.working=0;
+    this.phase=this.swimPhase=this.moving=this.running=this.water=this.airborne=this.landing=this.working=this.eating=0;
     this.wasGrounded=true;this.previousVertical=0;
     for(const {node,rest,y} of Object.values(this.bones)){node.quaternion.copy(rest);node.position.y=y;}
   }
@@ -117,6 +119,12 @@ export class CharacterAnimator {
       land[`${side}_elbow`][2]=mix(land[`${side}_elbow`][2],.7-pulse*.12,this.working);
     }
     land.spine[2]=mix(land.spine[2],-.08,this.working);
+    this.eating=active ? mix(this.eating,Number(!!input.eating && input.grounded && !input.swimming && speed<1),ease) : 0;
+    if(this.eating>.001){const bite=(Math.sin(input.time*2.4)+1)/2;
+      land.right_shoulder[2]=mix(land.right_shoulder[2],.6+bite*.28,this.eating);
+      land.right_elbow[2]=mix(land.right_elbow[2],1.35+bite*.18,this.eating);
+      land.left_shoulder[2]=mix(land.left_shoulder[2],.3,this.eating);land.left_elbow[2]=mix(land.left_elbow[2],.8,this.eating);
+    }
     swim.root=[0,Math.sin(this.swimPhase*tau)*.11*effort,-mix(.1,Math.PI/2,effort)];
     swim.spine=[0,0,.27*effort];
     if(input.sport && active){

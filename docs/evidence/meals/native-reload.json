@@ -1,0 +1,33 @@
+{
+  "provenance": "Mock simulation fixture, imported only into isolated local review storage; not a user save",
+  "sourceHash": "0fce8a770f61aef043d71be7454c1668ab0c3b448a0702d1473593a9c0ab361e",
+  "fixture": "tests/fixtures/save-v11-r59-meal.json",
+  "initialPhase": "eat",
+  "resumedPhase": "home",
+  "ordinaryIdleTicks": 1953,
+  "allStateMatchedAtGrid": 1e-7,
+  "visualClockRemainderSeconds": 0.006599999964805647,
+  "visualClockWithinOneFixedTick": true,
+  "credits": 22,
+  "lunchInventory": 0,
+  "consumedLunch": 1,
+  "personalRecordsPreserved": true,
+  "returnPath": [
+    {
+      "x": 6400,
+      "y": 4118
+    },
+    {
+      "x": 6332,
+      "y": 4112
+    },
+    {
+      "x": 6493.348,
+      "y": 4106
+    },
+    {
+      "x": 6493.348,
+      "y": 4064.717
+    }
+  ]
+}

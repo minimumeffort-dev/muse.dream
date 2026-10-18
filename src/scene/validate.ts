@@ -1,6 +1,6 @@
 import {interiorProblems} from './interiors';
 import {contactOverlaps,contactTouchesPolygon} from './contact-geometry';
-import {courierAccessProblems} from '../sim/courier';
+import {courierAccessProblems,mealAccessProblems} from '../sim/courier';
 import {repairAccessProblems} from '../sim/repair';
 import {ambientProblems} from './ambient-navigation';
 import {validateSites,siteEntry,onWalkway} from './sites';
@@ -25,7 +25,7 @@ export interface SceneProblem {
   code:
     | "interior-not-clear"
     | "repair-not-connected"
-    | "courier-not-connected"
+    | "meal-not-connected" | "courier-not-connected"
     | "population-not-clear"
     | "site-not-connected"
     | "road-bend-too-tight"
@@ -66,6 +66,7 @@ export function validateScenePlayability(
   for(const message of ambientProblems(scene))problems.push({code:"population-not-clear",message});
   for(const message of repairAccessProblems(scene))problems.push({code:"repair-not-connected",message});
   for(const message of courierAccessProblems(scene))problems.push({code:"courier-not-connected",message});
+  for(const message of mealAccessProblems(scene))problems.push({code:"meal-not-connected",message});
   const reference=scene.player?.dslVersion===2 && scene.player.measure?.kind==="car" ? scene.player.measure.meters : undefined;
   if(reference)for(const object of scene.objects){
     const spec=object.spec && "dslVersion" in object.spec && object.spec.dslVersion===2 ? object.spec : undefined;

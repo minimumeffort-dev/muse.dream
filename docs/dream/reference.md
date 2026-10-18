@@ -57,12 +57,13 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | --- | --- | --- | --- |
 | `economy` | top | No ID / economy | None |
 | `good` | economy | ID / no block | `label: text`, `food?: n` |
-| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `shop?: bool`, `work?: ref`, `works?: symbols`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
+| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `shop?: bool`, `meal?: ref`, `work?: ref`, `works?: symbols`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
 | `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n` |
 | `lot` | market | ID / no block | `good: ref`, `quantity: n`, `limit: n`, `price?: n` |
 | `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `price: n?`, `capacity: n`, `on: ref?`, `grounds: symbols?` |
 | `work` | economy | ID / optional recipe block | `label: text`, `market: ref`, `input?: ref`, `take?: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `requires?: ref` |
 
+| `meal` | economy | ID / no block | `good: ref`, `markets: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n` |
 | `milestone` | economy | ID / no block | `label: text`, `kind: work / delivery / repair`, `task: ref`, `count: n` |
 | `ingredient` | recipe | No ID / no block | `good: ref`, `take: n` |
 
@@ -397,7 +398,7 @@ One optional `economy(){...}` per linked world. [Working guide](commerce.md).
 
 ```text
 good id(label=text,food=n?);
-account id(actor=ref,credits=n,capacity=n,satiety=n,drain_s=n,shop=bool?,work=ref?,works=symbols?,repair=ref?,repairs=symbols?);
+account id(actor=ref,credits=n,capacity=n,satiety=n,drain_s=n,shop=bool?,meal=ref?,work=ref?,works=symbols?,repair=ref?,repairs=symbols?);
 market id(label=text,actor=ref,credits=n,radius=n){ lot ... }
 lot id(good=ref,quantity=n,limit=n,price=n?);
 work id(label=text,market=ref,input=ref,take=n,output=ref,make=n,seconds=n,pay=n,effort=n,capacity=n,target=n,requires=ref?);
@@ -582,3 +583,22 @@ Pickup and handoff approaches stay less than four world units above/below the ve
 ## Enterable ground floors
 
 [Interiors](interiors.md) defines supported floors, actual doorways, shell cutaways, sight and work coverage. A doorway is checked against physical contacts; a painted door does not create an opening. [Complete market assembly](../examples/enterable-market.dream).
+
+### Meal trips
+
+`meal id(good=ref,markets=symbols,on=ref,grounds=symbols?,eat_s=n);` lives in
+`economy`; `account.meal` assigns it to a person NPC. There are at most 8 plans,
+1..4 unique ordered markets and 1..12 seconds to eat. Every market must sell that
+positive-food good. Grounds are the same convex work surfaces or interior floors,
+with 4096 local samples and existing 8192-node/32768-link/128-waypoint bounds.
+The actor needs a measured person decor body and program, optional walking route,
+no market ownership and no other automatic commerce policy.
+
+At fullness <=40, eat carried food or walk to the first stocked affordable market
+with a complete round trip. Arrival rechecks the ordinary buy action. Nothing is
+reserved during travel. An empty shelf, full bag, blocked sight or lost purchasing
+power sends the customer home without a meal or refund. A purchased meal stays
+in their inventory for `eat_s`, then the ordinary eat transaction consumes it once.
+Return to the frozen routine pose before resuming the program. Live contact waits,
+paths, timers, needs and balances survive unloading, recovery and saves. No seating,
+queues, extra rigs, per-item bodies or offline travel. [Complete example](../examples/meal-trips.dream).

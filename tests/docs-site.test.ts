@@ -6,6 +6,12 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights meal commands and fields without swallowing identifiers or authored HTML',()=>{
+    const html=highlight('meal lunch(good=bread,markets=[corner],on=plaza,eat_s=4);account visitor(meal=lunch); // <Lunch>&');
+    for(const word of ['meal'])expect(html).toContain(`class="dream-keyword">${word}</span>`);
+    for(const word of ['markets','eat_s'])expect(html).toContain(`class="dream-field">${word}</span>`);
+    expect(html).toContain('&lt;Lunch&gt;&amp;');expect(highlight('meals meal_extra markets_extra eat_s_extra')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('highlights personal milestone guards at exact boundaries and escapes labels',()=>{
     const html=highlight('milestone practice(label="<Practice>&",kind=work,task=bake,count=3);work large(requires=practice);account baker(works=[large,bake]);');
     expect(html).toContain('class="dream-keyword">milestone</span>');for(const word of ['requires','works','task'])expect(html).toContain(`class="dream-field">${word}</span>`);expect(html).toContain('&lt;Practice&gt;&amp;');expect(highlight('milestones requires_extra works_extra task_extra')).not.toMatch(/dream-(?:keyword|field)/);

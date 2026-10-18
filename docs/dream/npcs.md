@@ -211,3 +211,8 @@ See [personal work and recognition](commerce.md#personal-work-and-recognition)
 for the checked complete example. Speech remains authored text, with the same
 range, sight, timing, per-instance familiarity and state limits. It does not
 transfer resources or add a friendship score.
+
+Programmed person NPCs can take [meal trips](commerce.md#customers-with-somewhere-to-go)
+through `account.meal`. Their program clocks pause while walking, eating and
+returning, then resume at the same routine position. They use the existing
+pedestrian planner and finite player transactions, with no extra NPC/rig slots.

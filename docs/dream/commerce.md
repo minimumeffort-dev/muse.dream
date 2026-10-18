@@ -91,7 +91,7 @@ Needs and work settle on a resident 4 Hz simulation clock. NPC decisions are at 
 
 [Save format and the first-market migration](../persistence.md) preserve earlier world changes while introducing this new system. Later changes to economy rules still need an explicit migration. Limits are in the generated [command contract](../dream-v2-contract.json) and [reference](reference.md#commerce-bounds). Logical Lab scenarios remain independent.
 
-The market has a usable ground-floor interior and short food and repair-supply chains. Enterable kitchens, opening hours, shifts, supply production, relationship progression and customer pathfinding driven by needs remain future work. The supply ledger is working; those institutions should not be described as complete yet.
+The market has a usable ground-floor interior and short food and repair-supply chains. Enterable kitchens, opening hours, shifts, supply production, relationship progression and broader needs planning remain future work. Bounded food destinations are now available through the meal trips below. The supply ledger is working; those institutions should not be described as complete yet.
 
 ## Recipes with several ingredients
 
@@ -584,3 +584,95 @@ Pickup and handoff approaches stay less than four world units above/below the ve
 The market hall now has a [usable ground floor](interiors.md). Stand in its foyer with a clear line through the doorway to buy, sell, begin baking or talk to the vendor. Walls block these interactions. Existing work cancellation, finite stock and conserved wages still apply. The vendor remains at the entrance; this does not add a restaurant or another business.
 
 `repair.on` / `repair.grounds` and delivery grounds may name a placed building with an interior. The engine reuses its rotated floor footprint instead of a separate painted polygon. The live furniture service adds `market_hall` to its extra grounds; the worker uses the same doorway, floor and wall contacts as the player. No new worker, actor slot, inventory or money is created.
+
+## Customers with somewhere to go
+
+The commuter now takes a meal break. Pack a lunch at the market and leave it on
+the shelf. When hungry, they walk there, pay 8 credits, take one lunch, eat, and
+return to the point where they left their usual route. If you buy the last lunch
+first, they return without it. Money and food use the same transactions as yours.
+
+![A customer buys and eats a packed lunch](../media/meals.gif)
+
+[Watch in HD](../media/meals.mp4). This sixteen-second recording starts near the
+end of the actual walk to the market and shows eating and the beginning of the
+return. The complete return takes longer. It is an offline capture with 30 rendered frames per simulation second, not a live performance measurement.
+
+The shop panel shows waiting demand, approaching customers and eating. Their
+routine pauses until they get back; their position, food, clock and money survive
+leaving the area and reloading. There are no reservations during the walk. Another
+customer can take the last item, and a vehicle can make the walker wait. This is
+a meal errand, without restaurant seating or queues yet.
+
+Dream owns the choice of food, ordered markets, walking grounds and eating time:
+
+```dream
+dream 2;
+material blue(style=toon,colors=[#537eaa,#3c5f87]);
+material skin(style=toon,colors=[#c59774,#a97655]);
+object pedestrian(label="Pedestrian"){
+  measure(kind=person,axis=y,meters=1.8);
+  body(interaction=decor,radius=4,height=18);
+  part torso(shape=capsule,material=blue,at=[0,11,0],size=[5,6,4]);
+  part head(shape=sphere,material=skin,at=[0,16,0],size=[4,4,4]);
+  part nose(shape=sphere,material=skin,at=[2,16,0],size=[1,1,1]);
+  repeat legs(index=i,count=2){
+    joint leg(at=[0,8,i*3-1.5],motion=swing(axis=z,deg=18,hz=.6,phase_deg=i*180)){
+      part shin(shape=capsule,material=blue,at=[0,-4,0],size=[2,8,2]);
+    }
+  }
+}
+behavior welcome(start=waiting){
+  state waiting(action=idle){on talk(event=interact,to=hello,radius=55,familiar=false);on again(event=interact,to=returning,radius=55,familiar=true);}
+  state hello(action=idle,face=player,say="Hello. Welcome to the neighborhood."){
+    on ask(event=interact,to=about,radius=55);
+    on finish(event=after,to=waiting,seconds=6);
+  }
+  state returning(action=idle,face=player,say="Good to see you again."){
+    on finish(event=after,to=waiting,seconds=6);
+  }
+  state about(action=idle,face=player,say="I like walking by the river. See you around."){
+    on finish(event=after,to=waiting,seconds=6);
+  }
+}
+place neighbor(object=pedestrian,at=[580,710],role=npc,behavior=welcome);
+world(size=[4000,2400],spawn=[525,609],heading_deg=0);
+road circuit(width=118,points=[[300,590],[660,590],[810,500],[810,220],[660,130],[300,130],[150,220],[150,500]]);
+
+checkpoint start(at=[480,612.5],dir=[1,0],width=100);
+checkpoint east(at=[828.75,360],dir=[0,-1],width=100);
+checkpoint north(at=[480,107.5],dir=[-1,0],width=100);
+checkpoint west(at=[131.25,360],dir=[0,1],width=100);
+
+place customer(object=pedestrian,at=[760,730],role=npc,behavior=welcome);
+surface plaza(finish=terrain,points=[[530,680],[820,680],[820,816],[530,816]]);
+economy(){
+ good bread(label="Bread",food=45);
+ good flour(label="Flour");
+ account pocket(actor=player,credits=20,capacity=8,satiety=40,drain_s=.05);
+ account baker(actor=neighbor,credits=0,capacity=4,satiety=65,drain_s=.05);
+ meal bakery_break(good=bread,markets=[corner],on=plaza,eat_s=4);
+ account regular(actor=customer,credits=20,capacity=4,satiety=25,drain_s=.05,meal=bakery_break);
+ market corner(label="Corner bakery",actor=neighbor,credits=100,radius=70){
+  lot bread_shelf(good=bread,quantity=8,limit=16,price=5);
+  lot flour_sack(good=flour,quantity=12,limit=12);
+ }
+ work bake(label="Bake bread",market=corner,input=flour,take=1,output=bread,make=2,seconds=2,pay=3,effort=12,capacity=1,target=4);
+}
+```
+
+`meal` allows up to eight plans and four unique markets per plan. Every listed
+market needs a priced lot for the selected food. `eat_s` is 1..12 simulation seconds.
+`on` and up to seven additional `grounds` use convex activity surfaces or interior
+floors and the existing pedestrian network. Complete-world acceptance checks every
+assigned home, shop approach and return. It creates no sidewalks or road shortcuts.
+The local grid, sparse graph, path, actor, rig and physics limits stay unchanged.
+
+A `meal` account is a measured person NPC with a decor body and a program. It may
+have a walking route. It cannot own a market or mix this policy with `shop`,
+production, repair or delivery duties. At fullness <=40 it eats carried food first,
+otherwise checks markets in authored order for an affordable, stocked round trip.
+Arrival rechecks range, sight, funds, stock, capacity and treasury before paying.
+Purchased food remains owned until the eating timer completes. Failed purchases
+return empty-handed. Saving an outgoing, eating or returning customer preserves
+that phase and cannot repeat a purchase or consumption.

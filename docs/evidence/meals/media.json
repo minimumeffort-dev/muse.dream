@@ -1,0 +1,53 @@
+{
+  "sourceFramesSha256": "f79c11654ebe2dd4f2f7d1b2168c2f3426f74f8b1853c3f590fdbd69c2cf85b7",
+  "method": "Native 30-rendered-frame-per-simulation-second DEV export, no interpolation; not live FPS",
+  "sourceFrames": 480,
+  "sourceResolution": [
+    2400,
+    1350
+  ],
+  "videoFrames": 480,
+  "videoResolution": [
+    1600,
+    900
+  ],
+  "gifFrames": 480,
+  "gifResolution": [
+    1280,
+    720
+  ],
+  "gifDurationMs": 16000,
+  "stillSourceFrame": 90,
+  "files": [
+    {
+      "file": ".npm-cache/media/meals/0000.png",
+      "bytes": 766516,
+      "sha256": "2ddd99249ccb3506ab96d9fc30cf759a3f7a39b37fbb6287d92af386b62ab6e5"
+    },
+    {
+      "file": ".npm-cache/media/meals/0090.png",
+      "bytes": 985104,
+      "sha256": "ffbe91eb07d8fb8b833391a4ac8748feb3c5b99ca27c6f382d811311187df719"
+    },
+    {
+      "file": ".npm-cache/media/meals/0479.png",
+      "bytes": 1004476,
+      "sha256": "9d7bf19da6a83580ad7904b65341fb91c45241a224975a184da9841344dc4db3"
+    },
+    {
+      "file": "docs/media/meals.gif",
+      "bytes": 7212902,
+      "sha256": "c453cef0bfd74d8c83b1d0551b74d9320f7bc6ae7efa8a48048af54d5eabfdeb"
+    },
+    {
+      "file": "docs/media/meals.mp4",
+      "bytes": 1353661,
+      "sha256": "a644412796b7472bada84c1ea93769420eb7abf3033a92c8d46e9e8c55b27e7d"
+    },
+    {
+      "file": "docs/media/meals.jpg",
+      "bytes": 860597,
+      "sha256": "b7c81644f05212bd58e895655428e3c777ef46a483cfff77c1109f1e7827c45e"
+    }
+  ]
+}

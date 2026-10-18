@@ -64,7 +64,7 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    These are data interpreted by the engine, not scripts. See population bounds. *)
 
 (* One economy() block per linked playable world. Its block permits good, account,
-   market, work, milestone, delivery and repair. A market block contains lot declarations. Actor references
+   market, work, milestone, meal, delivery and repair. A market block contains lot declarations. Actor references
    resolve after linking; goods/work/market references belong to the economy.
    Work permits either input/take with a semicolon or an optional recipe block of
    1..4 ingredient(good=ref,take=n) statements, no ingredient IDs. Exactly one
@@ -135,3 +135,7 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    account.works is an ordered 1..4 unique job list, exclusive with work and other
    automatic work duties. Only actual completion increments personal history;
    no authored counters, rewards, scripts or controller callbacks. *)
+
+(* meal(good,markets,on,grounds?,eat_s) and account.meal own bounded walking food trips.
+   8 plans, 1..4 ordered markets, eat_s 1..12; food and priced lots required.
+   Same finite transactions, pedestrian bounds, paused program and persistent return. *)

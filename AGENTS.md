@@ -526,3 +526,17 @@ newer-slot and concurrent-tab blocking, and exact clocks/paths/vehicles/material
 The r57 projection removes only progression definitions/policy/guarded states;
 pure r57-to-r58 upgrades never rebase population or move saved bodies. See
 `docs/examples/work-progression.dream` and `docs/persistence.md`.
+
+
+NPC `account.meal` references a bounded `meal(good,markets,on,grounds?,eat_s)` plan.
+Keep 8 plans, 1..4 unique priced food markets, 1..12 eating seconds and all existing
+navigation/actor/rig/physics budgets. Only programmed measured-person decor NPCs,
+optionally on walking routes, without market ownership or other automatic economy
+policies. At <=40 fullness, shared finite purchases/eating own stock and money;
+no reservation while walking, arrival rechecks, failed purchases return empty.
+Freeze routine clocks until returning to the captured home, persist all phases,
+paths and timers, and validate ownership/support on restore. No seating/queues or
+per-item bodies are implied. Format 11/simulation 16 preserves format-10 personal
+records exactly; never reapply historical attribution. The r58 projection removes
+only the commuter meal policy; no geometry or ledger rebasing. See
+`docs/examples/meal-trips.dream` and `docs/dream/commerce.md`.

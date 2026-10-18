@@ -76,3 +76,7 @@ inside `economy`. `work.requires` checks the worker's own completions; an intera
 `on.requires` recognizes the player's contribution at the receiving market actor.
 `account.works` orders up to four eligible production jobs. These are bounded
 conditions, not scripts or authored rewards. [Runnable guide](dream/commerce.md#personal-work-and-recognition).
+
+NPC food trips use `meal` plus `account.meal`: choose food, ordered shops, convex
+walking grounds and eating time. Customers share finite player transactions and
+resume their paused routines after returning. [Meal trips](dream/commerce.md#customers-with-somewhere-to-go).

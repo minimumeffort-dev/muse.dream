@@ -575,6 +575,23 @@ NPC work refills output up to target. Alternatively works=[advanced,basic] is an
 ordered list of 1..4 unique work IDs, exclusive with work, repairs and deliveries.
 Try the first eligible job below target; no extra actors, commitments or free stock.
 Player accounts never act automatically.
+NPC meal trips use meal id(good=food_id,markets=[first_shop,second_shop],on=home_ground,grounds=[extra_ground],eat_s=4); and account.meal=meal_id.
+At most 8 plans, 1..4 unique ordered markets, a positive-food good with a priced
+lot in every market, and eat_s=1..12 seconds. on plus 0..7 unique extra convex
+work grounds share the 4096 local-sample budget and accepted pedestrian network.
+A meal account is a measured person decor NPC with a program, optional walk route,
+no market ownership, and no shop/work/repair/delivery policy. Hungry at <=40, it
+eats carried food first; otherwise it walks to the first stocked affordable shop
+with a clear outbound/return path. No reservation before arrival. The shared buy
+transaction rechecks stock, funds, bag and treasury. Failure returns empty-handed,
+without refund or pay. Success waits eat_s, consumes its owned unit once, restores
+fullness, then returns to the captured routine position. Program clocks pause
+through travel/eating/return; moving transit/player contacts can cause waits and
+bounded replans. Save paths, timers and ownership outside Scene. No item bodies,
+new rigs, seating, queues, generated navigation or offline catch-up. See
+examples/meal-trips.dream. Format 11/simulation 16 preserves format-10 personal
+records exactly, with no population/floor rebasing or new money/stock.
+
 Use milestone id(label="Bake bread batches",kind=work,task=bake,count=3); inside economy.
 At most 16; kind=work|delivery|repair references an existing matching task, count
 integer 1..1000000000. Optional work.requires=milestone_id checks the acting account.

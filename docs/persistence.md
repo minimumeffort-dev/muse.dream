@@ -243,3 +243,20 @@ paths, initial inventories and task rules retain their existing fingerprints.
 All earlier registered upgrades remain tested. Pure r57-to-r58 upgrades do not
 rebase the population, move vehicles, adjust floors or advance simulation time.
 A save is locally editable data; these checks do not prove who actually played it.
+
+## Meal journeys
+
+Format 11 / simulation 16 adds optional per-account meal travel: plan/market,
+outgoing/eating/return phase, paused routine home, position, heading, distance,
+retry clock, bounded waypoints and the eating deadline. Restore verifies the
+program's frozen home, assigned market/food, dry pedestrian support, path segments,
+phase ownership and timers, plus ordinary credit/material conservation. A purchased
+meal is owned inventory; eating consumes it once. No offline catch-up occurs.
+
+The registered r58-to-r59 projection changes only the commuter's food policy.
+It adds no accounts, balances, stock, geometry or population. Format-10 personal
+history is retained exactly; it is never put through historical attribution again.
+Older formats still pass through their original registered checks before this
+upgrade. No population or floor rebasing happens for the pure format-10 upgrade.
+The original slot remains, and corrupt/newer or changed-tab saves still block
+replacement. R and chunk unloading retain the journey; Start over clears it.

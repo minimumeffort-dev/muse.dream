@@ -18,6 +18,7 @@ Driving, vehicle switching, jumping, swimming and destruction are exported at **
 | Delivery pickup and vehicle carry | [delivery.gif](delivery.gif) | [delivery.mp4](delivery.mp4) | 12 seconds |
 | Public-pavement maintenance journey | [maintenance.gif](maintenance.gif) | [maintenance.mp4](maintenance.mp4) | 20 seconds |
 | Caretaker repair and return | [repair.gif](repair.gif) | [repair.mp4](repair.mp4) | 28 seconds |
+| Customer meal journey | [meals.gif](meals.gif) | [meals.mp4](meals.mp4) | 16 seconds |
 | Earned work and vendor recognition | [progression.gif](progression.gif) | [progression.mp4](progression.mp4) | 16 seconds |
 | Packed lunches and recipe work | [recipes.gif](recipes.gif) | [recipes.mp4](recipes.mp4) | 12 seconds |
 | Food, trade and paid work | [commerce.gif](commerce.gif) | [commerce.mp4](commerce.mp4) | 12 seconds |
@@ -697,3 +698,19 @@ same export. Preparation is a dev-only mock review start, not a recorded journey
 or live performance measurement. Existing recipe, market, delivery, interior and
 repair captures still show accurate transactions and geometry; their selected
 jobs do not use the new requirement or its changed conversation state.
+
+### Customer meal journey
+
+`meals` prepares a player-made packed lunch and advances the existing commuter's
+outgoing trip through the complete fixed-step engine. The player uses the review
+start beside the real shop; the NPC is never moved to the counter. Recording starts
+within 18 world units of arrival. Export 480 native frames through `?capture`,
+then `node scripts/encode-media.mjs <ffmpeg> <gifsicle> meals`. HD video is 1600×900,
+GIF 1280×720; `meals.jpg` is native frame 90 at 2400×1350. No interpolated frames.
+The clip shows arrival, eating and part of a longer return, not the entire journey.
+`node scripts/replay-meals.mjs` checks the complete trip and outgoing/eating/return
+save round trips. These are mock simulation/capture checks, not live FPS or human
+behavior evidence. See `docs/evidence/meals/verification.md` for the checked state.
+Existing captures still show supported controls, recipes, work, interiors and
+geometry. Their selected actions remain valid; they do not claim to show the new
+meal policy. The new GIF/video/still document this policy together.

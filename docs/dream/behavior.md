@@ -224,3 +224,8 @@ Existing complete humanoid rigs also support a renderer-owned planted work gestu
 while a [commerce job](commerce.md) is active. Cached shoulder/elbow bindings animate
 without changing segment lengths, contacts or rig budgets. Walking away cancels
 the job through simulation rules; reduced motion rests the gesture.
+
+NPC [meal trips](commerce.md#customers-with-somewhere-to-go) add a renderer-owned
+hand-to-mouth gesture using the existing humanoid bones. Feet stay planted during
+the eating timer, segment lengths remain rigid, and reduced motion uses the idle
+pose. Food ownership, consumption and timing belong to the fixed-step economy.

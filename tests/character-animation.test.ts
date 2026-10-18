@@ -71,6 +71,12 @@ describe('articulated locomotion',()=>{
   advance(r,{speed:0,working:true,enabled:false});expect(Math.abs(r.bone('left_shoulder').rotation.z)).toBeLessThan(.01);
   advance(r,{speed:0});expect(Math.abs(r.bone('right_shoulder').rotation.z)).toBeLessThan(.01);
  });
+ it('raises a hand for a meal without moving the planted feet and respects reduced motion',()=>{
+  const r=rig(),ankle=r.bone('right_ankle').position.clone();advance(r,{speed:0,eating:true});
+  expect(r.bone('right_elbow').rotation.z).toBeGreaterThan(1.3);expect(r.bone('right_shoulder').rotation.z).toBeGreaterThan(.6);expect(r.bone('right_ankle').position).toEqual(ankle);
+  advance(r,{speed:0,eating:true,enabled:false});const rest=rig();advance(rest,{speed:0,enabled:false});expect(r.bone('right_elbow').rotation.z).toBeCloseTo(rest.bone('right_elbow').rotation.z,8);
+  advance(r,{speed:0});expect(Math.abs(r.bone('right_shoulder').rotation.z)).toBeLessThan(.01);
+ });
  it('keeps segment lengths and all original mesh dimensions through a stride',()=>{
   const r=rig(),scale=r.bone('left_knee').scale.clone();
   for(let f=0;f<120;f++){

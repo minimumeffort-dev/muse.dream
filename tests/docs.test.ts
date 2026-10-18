@@ -9,6 +9,10 @@ const examples=import.meta.glob<string>('../docs/examples/*.dream',{query:'?raw'
 const files=Object.keys(import.meta.glob(['../src/**/*','../docs/**/*','../scripts/*','../tests/**/*','../README.md'])).map(p=>p.slice(3));
 
 describe("published Dream documentation",()=>{
+  it('keeps the complete meal guide identical to its runnable world',()=>{
+    const blocks=[...pages['../docs/dream/commerce.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
+    expect(blocks).toContain(examples['../docs/examples/meal-trips.dream']!.trim());
+  });
   it('keeps the complete personal-progression guide identical to its runnable world',()=>{
     const blocks=[...pages['../docs/dream/commerce.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
     expect(blocks).toContain(examples['../docs/examples/work-progression.dream']!.trim());
