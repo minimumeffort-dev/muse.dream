@@ -39,6 +39,7 @@ for(const object of doc.objects.filter(o=>isReactive(o.spec)))locations.push({na
 for(const bridge of doc.terrain.landscape?.bridges ?? []) locations.push({name:bridge.id,x:(bridge.a.x+bridge.b.x)/2,y:(bridge.a.y+bridge.b.y)/2});
 for(const object of doc.objects.filter(object=>['orchard_cart','orchard_bench','orchard_bread','farm_naturalist','pond_tortoise','farm_sunflowers','ridge_cairn'].includes(object.id))) locations.push({name:object.id,x:object.x,y:object.y});
 for(const object of doc.objects.filter(o=>o.route || ['meadow_station','lake_boathouse','rail_passage'].includes(o.id)))locations.push({name:object.id,x:object.x,y:object.y,object,...(object.route && doc.routes.find(r=>r.id===object.route.id)?.kind==='ambient' ? {half:80} : {})});
+if(!dreamV2)locations.push({name:'Hospital airport junction',x:3300,y:6770,half:420},{name:'Hospital corner',x:3300,y:6500,half:260});
 if(!dreamV2)locations.push({name:'Joined civic crossings',x:6800,y:3250,half:280},{name:'Joined market crossings',x:8080,y:4200,half:320});
 if(!dreamV2)locations.push({name:'City cycle tracks',x:9000,y:4200,half:420});
 if(!dreamV2)locations.push({name:'Regional airport',x:2180,y:9340,half:850},{name:'Airport terminal',x:1700,y:9450,half:230},{name:'Airport hangar',x:2530,y:9460,half:230},{name:'Airport tower',x:1730,y:9150,half:210},{name:'Eastbank medical center',x:12000,y:5500,half:350});

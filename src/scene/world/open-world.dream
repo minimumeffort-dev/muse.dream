@@ -125,7 +125,7 @@ street east_station_road(width=80,sidewalk=24,via=[j24,j80]);
 street farm_road(width=60,sidewalk=10,via=[j13,j81,j82]);
 street airfield_road(width=80,sidewalk=24,via=[j11,j83,j84]);
 street airport_service(width=60,sidewalk=24,via=[j83,airport_service_corner,airport_service_end]);
-street airport_connector(width=80,sidewalk=24,via=[j11,j60]);
+street airport_connector(width=80,sidewalk=24,via=[j11,j25]);
 crossing airport_access(street=airfield_road,at=[2000,9150],width=24);
 crossing airport_service_junction(street=airfield_road,at=[2000,8600],width=24,junction=true);
 hill western_ridge(at=[1000,1700],radius=[1300,1600],height=145);
@@ -181,6 +181,7 @@ crossing cross_j53(street=garden_crescent,at=[2800,3300],width=24,junction=true)
 crossing cross_j54(street=market_avenue,at=[3000,4100],width=24,junction=true);
 crossing cross_j56(street=garden_collector,at=[3800,3300],width=24,junction=true);
 crossing cross_j59(street=garden_collector,at=[3950,4700],width=24,junction=true);
+crossing cross_airport_north(street=south_avenue,at=[3000,6500],width=24,junction=true);
 crossing cross_j60(street=south_avenue,at=[3300,6500],width=24,junction=true);
 crossing cross_j62(street=hospital_street,at=[4400,7750],width=24,junction=true);
 crossing cross_j64(street=civic_walk,at=[7000,7350],width=24,junction=true);

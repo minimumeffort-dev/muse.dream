@@ -77,7 +77,7 @@ place center_delivery(object=a_hatchback,route=center_traffic,offset=1600,role=n
 route airport_bus(kind=street,mode=shuttle,speed=42){
  point(at=[2000,9620]);
  stop airport(at=[2000,9550],wait_s=6,site=access_airport_bus);
- point(at=[2000,8600]);point(at=[3000,7800]);point(at=[3300,6500]);
+ point(at=[2000,8600]);point(at=[3000,7800]);point(at=[3000,6500]);point(at=[3300,6500]);
  stop hospital(at=[3830,6500],wait_s=6,site=access_bus_hospital);
  point(at=[3900,6500]);
 }

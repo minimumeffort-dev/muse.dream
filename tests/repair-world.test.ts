@@ -3,9 +3,9 @@ import {createWorldScene} from '../src/scene/world-fixture';
 import {createCarAtSpawn} from '../src/sim/car';
 import {stepCommerce,checkEconomyState,commerceReason} from '../src/sim/commerce';
 import {repairTargets} from '../src/sim/repair';
-it('shares damage across all 409 lamps, repairs neighborhood furniture, keeps paid player procurement available while the worker returns',()=>{
+it('shares damage across all 413 lamps, repairs neighborhood furniture, keeps paid player procurement available while the worker returns',()=>{
  const scene=createWorldScene(),r=scene.economy!.repairs[0]!;
- const lamps=scene.objects.filter(o=>o.spec && 'measure' in o.spec && o.spec.measure?.kind==='lamp');expect(lamps).toHaveLength(409);expect(scene.damagePool).toBe(true);expect(new Set(lamps.map(o=>o.spec!.displayName)).size).toBe(2);for(const o of lamps){const spec=o.spec as import('../src/scene/object-dsl').ObjectDslV2;expect(spec.impact).toEqual({kind:'topple',speed:95,duration:1,lifetime:8});expect(spec.contacts).toHaveLength(1);expect(spec.contacts![0]!.position).toEqual([0,0,0]);expect([1.2,1.4]).toContain(spec.contacts![0]!.radius);}
+ const lamps=scene.objects.filter(o=>o.spec && 'measure' in o.spec && o.spec.measure?.kind==='lamp');expect(lamps).toHaveLength(413);expect(scene.damagePool).toBe(true);expect(new Set(lamps.map(o=>o.spec!.displayName)).size).toBe(2);for(const o of lamps){const spec=o.spec as import('../src/scene/object-dsl').ObjectDslV2;expect(spec.impact).toEqual({kind:'topple',speed:95,duration:1,lifetime:8});expect(spec.contacts).toHaveLength(1);expect(spec.contacts![0]!.position).toEqual([0,0,0]);expect([1.2,1.4]).toContain(spec.contacts![0]!.radius);}
 
  expect(repairTargets(scene,r)).toHaveLength(100);expect(repairTargets(scene,r).map(t=>t.objectId)).toEqual(expect.arrayContaining(['hall_table_west','hall_table_east','hall_bench','hall_produce_crate','market_planter','park_bench','park_wall_east','park_wall_west','picnic_table','produce_crate','south_lamps_4_1_r','station_bench','school_bench']));
  let s={...createCarAtSpawn(scene),broken:['market_planter','picnic_table','produce_crate']};

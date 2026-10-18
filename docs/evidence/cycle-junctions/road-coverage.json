@@ -1,0 +1,19 @@
+{
+  "source": "9866be976ef67c029cfc0e6169c80643c25906cbbf01d311722f856a69ac0e9e",
+  "revision": "r70",
+  "streets": 32,
+  "triangles": 255868,
+  "checked": 68385,
+  "missing": [],
+  "shallowForks": [
+    {
+      "at": "4400,7750",
+      "streets": [
+        "hospital_street",
+        "south_terrace"
+      ],
+      "degrees": 25.11142888332412
+    }
+  ],
+  "limits": "Projected carriageway coverage only. This does not establish topmost paint, streamed seams, vehicle turn clearance or complete visual correctness."
+}

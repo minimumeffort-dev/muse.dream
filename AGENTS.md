@@ -707,3 +707,13 @@ Narrow bottlenecks may wait/back away; this is no general crowd physics or decor
 NPC/animal avoidance. Format 16 / simulation 27 registers the exact unchanged r69
 world with no saved-field, population, commerce or navigation rebase. Preserve
 every old slot and the earlier migration chain.
+
+
+The r70 airport connector meets South avenue separately from hospital street.
+Keep its bus on the accepted new carriageway. Format 16 / simulation 28 checks
+the exact r69 projection, retains every old object ID, rebases only derived
+population portals and obsolete journeys, and initializes two newly admitted
+walkers at the saved tick. Preserve ledger/task/damage/vehicle/match/NPC state
+and old slots. An airport-bus passenger remains aboard at the saved time on the
+revised route. Keep historical projections before their older semantic transforms;
+never restore r69 lamp fields after a pre-pool projection has removed them.

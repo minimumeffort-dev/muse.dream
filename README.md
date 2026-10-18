@@ -81,6 +81,8 @@ The city now runs on its connected street network. The old racing circuit, check
 
 ![Homes, shops and the tram avenue](docs/media/town-center.jpg)
 
+The airport approach and hospital street now meet the avenue at separate T-junctions, with a clear block between them. The shuttle follows those streets; its lamps and crossings come from the same layout. [See the junction](docs/urban-world.md#buses-tram-and-regional-train).
+
 Five buses serve the neighborhoods, schools, both medical centers, station and airport across four routes. A tram shares the main avenue, and a regional train stops at the stations. F boards those services as a passenger. Three scooters are available to drive near the market, medical center and airport. Schools, hospitals, airport and railway stations have symbols on the map. [Explore the city](docs/urban-world.md).
 
 The regional airport has a glazed terminal, control tower, maintenance hangar and a continuous runway, with a separate apron and service road. Its bus stop, entrance paths and bicycle parking connect to town. The eastbank has its own medical center beside the station bus route. These are explorable mock places; interiors, clinical services and airport operations are still to come.
@@ -339,7 +341,7 @@ table still breaks independently. The live world uses shared table, bench and la
 rules; supported benches can lose their boards while their base stays put.
 [How shared rules work](docs/dream/rules.md).
 
-All 409 streetlights can fall too. Their ground light pools turn off, and the
+All 413 streetlights can fall too. Their ground light pools turn off, and the
 damage stays after the district unloads or you reload the game. The caretaker
 can restore 77 of them using real kits and paid work. Their models, collisions
 and light pools return together. The remaining 323 lamps need service coverage.

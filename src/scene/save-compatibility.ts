@@ -1,10 +1,11 @@
 import marketR55 from './compatibility/r55-market.json';
 import cityR67 from './compatibility/r67-city.json';
 import parkR68 from './compatibility/r68-park.json';
+import junctionR69 from './compatibility/r69-junction.json';
 import type {Scene} from './schema';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=27;
+export const SAVE_SIMULATION_VERSION=28;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -61,7 +62,7 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY || hash===SHIFT_COMPATIBILITY || hash===SOCIAL_COMPATIBILITY || hash===SCHOOL_REPAIR_COMPATIBILITY || hash===BUSINESS_COMPATIBILITY || hash===MATCH_COMPATIBILITY || hash===CITY_COMPATIBILITY || hash===PARK_COMPATIBILITY || hash===SPACING_COMPATIBILITY);
+  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY || hash===SHIFT_COMPATIBILITY || hash===SOCIAL_COMPATIBILITY || hash===SCHOOL_REPAIR_COMPATIBILITY || hash===BUSINESS_COMPATIBILITY || hash===MATCH_COMPATIBILITY || hash===CITY_COMPATIBILITY || hash===PARK_COMPATIBILITY || hash===SPACING_COMPATIBILITY || hash===JUNCTION_COMPATIBILITY);
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
@@ -87,12 +88,22 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r70 replaces the acute airport merge; retain exact r69 data for registered backups. */
+export function preJunctionScene(scene:Scene):Scene{
+ const restore=<T extends {id:string}>(rows:T[],patch:{added:string[];changed:unknown[]}):T[]=>{
+  const added=new Set(patch.added),changed=new Map((patch.changed as T[]).map(row=>[row.id,row]));
+  return rows.filter(row=>!added.has(row.id)).map(row=>changed.get(row.id)??row);
+ };
+ return {...scene,streets:restore(scene.streets,junctionR69.streets),routes:restore(scene.routes,junctionR69.routes),crossings:restore(scene.crossings,junctionR69.crossings),objects:restore(scene.objects,junctionR69.objects)};
+}
+export function preJunctionCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preJunctionScene(scene),27,true,encode);}
+export const JUNCTION_COMPATIBILITY='dc6d2c4b9ab4648a7ff99d47a20e60792c1d940e299e90bbe6fa047fb4e4b66f';
 /** Walking spacing changes only future steps, without changing saved data or geometry. */
-export function preSpacingCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(scene,26,true,encode);}
+export function preSpacingCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preJunctionScene(scene),26,true,encode);}
 export const SPACING_COMPATIBILITY='c411ce31c403cec896c2b6161fb925a0c2d72db6524c342a40009cb3ed4c68a6';
 export const PARK_COMPATIBILITY='3c0314d1b78aa9b819a68d2727d76ad62d8e12f1a9f609b917d6192e458a39b4';
 /** r69 adds connected park paths, furnishings and ambient visitors; old objects remain exact. */
-export function preParkScene(scene:Scene):Scene{return {...scene,objects:scene.objects.filter(o=>!parkR68.objects.includes(o.id)),surfaces:scene.surfaces.filter(s=>!parkR68.surfaces.includes(s.id)),sites:scene.sites.filter(s=>!parkR68.sites.includes(s.id)),economy:scene.economy && {...scene.economy,repairs:scene.economy.repairs.map(r=>r.id==='market_tables' && r.grounds ? {...r,grounds:r.grounds.filter(id=>id!=='garden_work')} : r)}};}
+export function preParkScene(scene:Scene):Scene{scene=preJunctionScene(scene);return {...scene,objects:scene.objects.filter(o=>!parkR68.objects.includes(o.id)),surfaces:scene.surfaces.filter(s=>!parkR68.surfaces.includes(s.id)),sites:scene.sites.filter(s=>!parkR68.sites.includes(s.id)),economy:scene.economy && {...scene.economy,repairs:scene.economy.repairs.map(r=>r.id==='market_tables' && r.grounds ? {...r,grounds:r.grounds.filter(id=>id!=='garden_work')} : r)}};}
 export function preParkCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preParkScene(scene),25,true,encode);}
 export const CITY_COMPATIBILITY='14dd5d35da484b860586a706311ca7c0adcfedbce87464b8414816cfe51ba6e7';
 /** r68 removes only the circuit and releases nineteen previously reserved furnishings. */

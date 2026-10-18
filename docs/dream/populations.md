@@ -85,7 +85,7 @@ obstacles.
 
 ![A deer moves away from the approaching player](../media/wildlife.gif)
 
-These instances have explicit `role=ambient`, or acquire it from `furnish(...,motion=...)`. They are cosmetic populations, separate from general NPC programs, seats and physical contacts. Their validated rig and full voxel geometry are shared in GPU instances. Pure movement runs at 20 Hz with interpolated rendering. All 179 members remain resident; frustum culling checks both the camera and shadow view. The cap is 192 ambient members and 8,192 cached walking nodes. The existing NPC, route, vehicle and CPU live-rig limits stay unchanged.
+These instances have explicit `role=ambient`, or acquire it from `furnish(...,motion=...)`. They are cosmetic populations, separate from general NPC programs, seats and physical contacts. Their validated rig and full voxel geometry are shared in GPU instances. Pure movement runs at 20 Hz with interpolated rendering. All 181 members remain resident; frustum culling checks both the camera and shadow view. The cap is 192 ambient members and 8,192 cached walking nodes. The existing NPC, route, vehicle and CPU live-rig limits stay unchanged.
 
 Pause freezes the population clock. R preserves it; Start over restores its seed and home poses. Reduced motion rests limb and hopping animation. This is bounded walking and avoidance, without pushing, general crowd physics, traffic signals, full animal intelligence or ecological simulation. Use a full `role=npc` program when an individual needs custom states or a transit route.
 

@@ -485,7 +485,7 @@ an agent to author both services and infrastructure, use
 
 ### Street verges
 
-The same service now reaches 100 targets, including 82 of the 409 city lamps.
+The same service now reaches 100 targets, including 82 of the 413 city lamps.
 `streets=[market_avenue,high_street,civic_walk]` declares which sidewalks it serves.
 `verge=24` permits a short approach up to 2.4 metres beyond those sidewalks, near
 eligible object contacts. Measured categories still select the targets; names

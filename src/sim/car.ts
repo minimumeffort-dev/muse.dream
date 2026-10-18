@@ -123,6 +123,9 @@ export interface World {
   previousPlantSaveCompatibility?:string;
   previousFinishSaveCompatibility?:string;
   previousCourierSaveCompatibility?:string;
+  previousJunctionSaveCompatibility?:string;
+  previousJunctionNavigation?:import('../scene/ambient-navigation').AmbientGraph;
+  previousJunctionContacts?:import('../scene/contacts').SceneContactData;
   previousSpacingSaveCompatibility?:string;
   previousParkSaveCompatibility?:string;
   previousParkNavigation?:import('../scene/ambient-navigation').AmbientGraph;

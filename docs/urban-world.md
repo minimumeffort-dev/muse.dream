@@ -36,6 +36,10 @@ Stops have named anchors, waits and platform sites in Dream. Platform paths join
 
 ![A connected canal bridge carrying the street and cycle tracks](media/city-cycle-lanes.jpg)
 
+![The airport approach meets the avenue separately from hospital street](media/hospital-junction.jpg)
+
+The airport connector meets South avenue at `[3000,6500]`; hospital street meets it at `[3300,6500]`. This replaces their former thirteen-degree merge, which left a long triangular cycle lane between two carriageways. The shuttle uses the revised approach, and its lamps follow that road. Each junction has its own arm crossings. The southern terrace fork and the remaining cycle corner details are still under review. [Geometry and save checks](evidence/cycle-junctions/verification.md).
+
 Bicycle tracks follow the avenues and continue across the three bridges. Painted symbols and road center lines leave clear gaps at zebra crossings. Junction declarations create the crossings on the street arms, with stop lines before them. Duplicate stripes merge and neighboring stop lines leave the zebra clear. Street and cycle-track bends use a shared mitered ribbon, so interior anchors no longer protrude as square tiles. Walkers, drivers and cyclists share one world; you still choose your own route when controlling a vehicle.
 
 The live world has no race circuit. Its streets supply the driving mask, bridge connections and maps. Sidewalks and cycle tracks occupy their full accepted footprints, with no invisible track reservation. Nearby junctions keep crossings on their outer arms, removing ten internal arm crossings. The remaining overlapping parallel pair shares a zebra envelope and stripe phase. Centerlines and stop lines keep their crossing clearance. [Street and save checks](evidence/city-streets/verification.md).
@@ -81,7 +85,7 @@ and names the destination with `site.label`. [Author connected parks](dream/path
 
 ## Everyday street life
 
-The city has 409 streetlights along six networks, 89 additional street trees, 275 mixed street planting groups and 16 destination planters, plus 64 additional garden and understory clusters and 64 woodland trees. Forty-eight parked bicycles and twenty-five scooters sit beside schools, services and transit stops on paved aprons joined to the sidewalk. Fourteen parked cars use connected civic and eastbank aprons. All of that destination parking is now usable, alongside the explicit scooters near the market, airport and eastbank medical center. Dream declares their ownership through `furnish(...,role=controllable)` and activates one dormant fleet rig when occupied.
+The city has 413 streetlights along six networks, 89 additional street trees, 278 mixed street planting groups and 16 destination planters, plus 64 additional garden and understory clusters and 64 woodland trees. Forty-eight parked bicycles and twenty-five scooters sit beside schools, services and transit stops on paved aprons joined to the sidewalk. Fourteen parked cars use connected civic and eastbank aprons. All of that destination parking is now usable, alongside the explicit scooters near the market, airport and eastbank medical center. Dream declares their ownership through `furnish(...,role=controllable)` and activates one dormant fleet rig when occupied.
 
 The city has 131 people across its center, neighborhoods and eastbank: 119 walking residents, four new greeting NPCs and eight existing activity/commuter NPCs. Sidewalk groups preserve a walking corridor and avoid entrance paths and crossings. The 119 walking residents now follow the connected pedestrian network and use crossings. Sixty deer, hares, foxes, dogs, cats and sparrows roam clear, dry habitats and flee nearby players; the existing live deer, route gull and 256 flock birds keep their routines. Ambient populations share full geometry and GPU joint poses without allocating per-member scene rigs. [Population authoring](dream/populations.md).
 
@@ -89,7 +93,7 @@ Four road cars use three different silhouettes: rally car, hatchback and deliver
 
 ## Day and night
 
-The mock starts at 10:00 and completes a day in ten minutes of play. Sun and moon lighting share one shadow map. Windows and the 409 streetlights fade on after dusk, with soft light pools fitted to the pavement. [Dream owns the clock and light declarations](dream/day-night.md).
+The mock starts at 10:00 and completes a day in ten minutes of play. Sun and moon lighting share one shadow map. Windows and the 413 streetlights fade on after dusk, with soft light pools fitted to the pavement. [Dream owns the clock and light declarations](dream/day-night.md).
 
 ![The market square at night](media/city-night.jpg)
 

@@ -1,6 +1,6 @@
 import {it,expect} from 'vitest';
 import {createWorldScene} from '../src/scene/world-fixture';
-import {preSpacingCompatibilitySource,preParkScene,preParkCompatibilitySource,saveCompatibilitySource,sha256,SPACING_COMPATIBILITY,PARK_COMPATIBILITY,CITY_COMPATIBILITY} from '../src/scene/save-compatibility';
+import {preJunctionCompatibilitySource,JUNCTION_COMPATIBILITY,preSpacingCompatibilitySource,preParkScene,preParkCompatibilitySource,saveCompatibilitySource,sha256,SPACING_COMPATIBILITY,PARK_COMPATIBILITY,CITY_COMPATIBILITY} from '../src/scene/save-compatibility';
 import {worldSeats} from '../src/scene/seating';
 import {walkingNetwork,onWalkway} from '../src/scene/sites';
 import {ambientNavigation} from '../src/scene/ambient-navigation';
@@ -16,9 +16,9 @@ import {impactOf} from '../src/scene/object-dsl';
 import {stepCommerce} from '../src/sim/commerce';
 const scene=createWorldScene(),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11},idle={steer:0,throttle:0};
 it('adds a connected park without replacing any released object or raising live budgets',async()=>{
- expect(await sha256(saveCompatibilitySource(scene))).toBe(SPACING_COMPATIBILITY);expect(await sha256(preSpacingCompatibilitySource(scene))).toBe(PARK_COMPATIBILITY);expect(await sha256(preParkCompatibilitySource(scene))).toBe(CITY_COMPATIBILITY);
- expect(scene.objects).toHaveLength(1760);expect(preParkScene(scene).objects).toHaveLength(1719);expect(scene.surfaces).toHaveLength(47);expect(scene.sites).toHaveLength(219);
- expect(scene.objects.filter(o=>o.ambient)).toHaveLength(179);expect(scene.objects.filter(o=>o.parked)).toHaveLength(87);
+ expect(await sha256(saveCompatibilitySource(scene))).toBe(JUNCTION_COMPATIBILITY);expect(await sha256(preJunctionCompatibilitySource(scene))).toBe(SPACING_COMPATIBILITY);expect(await sha256(preSpacingCompatibilitySource(scene))).toBe(PARK_COMPATIBILITY);expect(await sha256(preParkCompatibilitySource(scene))).toBe(CITY_COMPATIBILITY);
+ expect(scene.objects).toHaveLength(1769);expect(preParkScene(scene).objects).toHaveLength(1719);expect(scene.surfaces).toHaveLength(47);expect(scene.sites).toHaveLength(219);
+ expect(scene.objects.filter(o=>o.ambient)).toHaveLength(181);expect(scene.objects.filter(o=>o.parked)).toHaveLength(87);
  const n=walkingNetwork(scene),park=scene.sites.find(s=>s.id==='access_garden_park')!,market=scene.sites.find(s=>s.id==='access_market_hall')!;
  expect(n.roots[n.sites.get(park.id)!]).toBe(n.roots[n.sites.get(market.id)!]);expect(park.label).toBe('Garden park');
  const nav=ambientNavigation(scene);for(const [a,b] of [[{x:2708,y:3610},{x:2840,y:3610}],[{x:2480,y:3852},{x:2460,y:4220}]] as const)expect(nav.segment(a,b,4,true)).toBe(true);

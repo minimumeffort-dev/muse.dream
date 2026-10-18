@@ -415,3 +415,19 @@ every population pose, node, distance, random state, wait and clock exactly, alo
 with jobs, money, ownership, seats, matches and damage. Existing overlapping
 people separate through ordinary future movement, without a reset or offline
 catch-up. The old format-16 slot and the full earlier migration chain remain.
+
+
+## Separate airport approach, r70
+
+Format 16 / simulation 28 checks the exact r69 world before applying the airport
+junction change. All previous object IDs remain. Six lamps move with the airport
+road; newly clear space admits seven static furnishings and two walking residents.
+Existing population members retain their saved state, with derived portals rebased
+and only a walker on obsolete pavement moved to nearby clear ground. New residents
+start at the saved tick. Obsolete work paths reroute without restarting commitments.
+
+Money, ownership, stock, work, damage, vehicle poses, matches, NPC memory and clocks
+remain saved. A passenger aboard the airport bus stays aboard at the same simulation
+time on its revised route; their pose is fitted to that bus. Other passenger routes
+are unchanged. The old format-16 slot remains intact after writing the new slot.
+The registered chain still accepts all 28 pinned historical backups.

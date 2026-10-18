@@ -978,3 +978,14 @@ FPS measurement. The earlier moving-population section records that release's
 behavior example. Asset geometry, the city plan and other local mechanics are
 unchanged. Older world recordings retain the paths taken in their recorded
 release. [Spacing checks and measured costs](../evidence/pedestrian-spacing/verification.md).
+
+
+## Airport junction, r70
+
+`hospital-junction.jpg` is a native rendered still of the separate airport and
+hospital approaches. `city-plan.svg` is regenerated from the accepted r70 scene.
+The before/after browser captures live in `docs/evidence/cycle-junctions/`.
+Existing transport recordings show the main avenue, station and bridge; the
+driving, park and activity clips do not traverse this changed approach, so their
+represented local geometry and mechanics remain accurate. There is no new motion
+export in this change. These stills are visual evidence, not frame-time measurements.
