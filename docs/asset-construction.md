@@ -33,6 +33,12 @@ Dream 2 permits `.1` local-unit visual dimensions so glazing, rails and pipes ca
 
 The examples compile to the exact live assemblies. The rest of the family is in [architecture](../src/scene/world/architecture.dream), [transit](../src/scene/world/transit_assets.dream) and [interactive assets](../src/scene/interactive-world.dream).
 
+## Continuous roofs
+
+![Closed gable and flat hip-roof surfaces in the voxel renderer](media/roof-surfaces.jpg)
+
+Thin gable shells used to disappear between voxel sample rays, exposing the attic in stripes. Hip roofs also picked up false contour bands from the sampled surface normals. Undeformed prisms and pyramids now keep their exact planar boundaries inside the bounded stamp grid. There are no extra per-cell meshes, thicker roof caps or changed building contacts. [Before/after checks and four-angle review](evidence/roof-surfaces/verification.md).
+
 ## Check the joins
 
 Inspect front, right, back and left. A schema can accept a pipe that floats next to its gutter. Ray checks verify that glass remains visible through the carved frames; transformed bounds verify bogie support. Transit hub end faces sit proud of tire faces to avoid coplanar color flicker, and passenger seats keep independently scaled heads below their cabin roofs. The launch's rider is measured independently: feet rest above its deck and the head clears the wheelhouse roof. The bakery keeps its breakable porch, while its structural contacts survive damage.

@@ -731,3 +731,19 @@ Existing recipe and work examples remain available; the earlier meal recording
 shows the player-made version of the same transaction. This new recording covers
 autonomous production and shared player/customer demand. Historical captures keep
 their pinned sources; they do not claim to show the new vendor policy.
+
+## Continuous roof panels, 2026-10-18
+
+`roof-surfaces.jpg` shows the corrected gable and hip roof surfaces. The construction
+sheet and complete live atlas are refreshed from the same accepted Dream source.
+The four-angle native comparisons and the full-world geometry comparison are in
+[the roof verification](../evidence/roof-surfaces/verification.md). The renderer
+now preserves planar boundary contours instead of leaving thin panels between
+sample rays or adding false bands to flat slopes.
+
+Driving, switching, locomotion, swimming, day/night and flight use newly rendered
+30 fps source frames; their GIF/HD pairs and matching stills are refreshed together.
+The source-generated map, carved-volume destruction fixtures and organic/character
+closeups retain their represented geometry. Historical verification and economic
+scenario clips stay pinned to their earlier source; their mechanics remain
+accurate, while the new roof images show current roof appearance.

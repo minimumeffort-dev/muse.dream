@@ -1,0 +1,142 @@
+[
+  {
+    "asset": "Brick terrace",
+    "shape": "prism",
+    "samples": 511,
+    "missing": 364,
+    "buried": 0,
+    "maxError": 0.49999999254941585,
+    "topNormalDirections": 13,
+    "grid": [
+      20,
+      5,
+      27
+    ]
+  },
+  {
+    "asset": "Ochre terrace",
+    "shape": "pyramid",
+    "samples": 511,
+    "missing": 0,
+    "buried": 0,
+    "maxError": 0.6395823943730505,
+    "topNormalDirections": 55,
+    "grid": [
+      22,
+      6,
+      29
+    ]
+  },
+  {
+    "asset": "Blue terrace",
+    "shape": "prism",
+    "samples": 511,
+    "missing": 392,
+    "buried": 0,
+    "maxError": 0.6250000447034836,
+    "topNormalDirections": 3,
+    "grid": [
+      19,
+      5,
+      26
+    ]
+  },
+  {
+    "asset": "Garden house",
+    "shape": "prism",
+    "samples": 511,
+    "missing": 441,
+    "buried": 0,
+    "maxError": 0.7000000059604545,
+    "topNormalDirections": 3,
+    "grid": [
+      25,
+      4,
+      26
+    ]
+  },
+  {
+    "asset": "Courtyard house",
+    "shape": "pyramid",
+    "samples": 511,
+    "missing": 0,
+    "buried": 0,
+    "maxError": 0.7291668531382385,
+    "topNormalDirections": 55,
+    "grid": [
+      28,
+      5,
+      24
+    ]
+  },
+  {
+    "asset": "Brick apartments",
+    "shape": "pyramid",
+    "samples": 511,
+    "missing": 0,
+    "buried": 0,
+    "maxError": 0.8809522925861089,
+    "topNormalDirections": 47,
+    "grid": [
+      32,
+      7,
+      26
+    ]
+  },
+  {
+    "asset": "Corner apartments",
+    "shape": "pyramid",
+    "samples": 511,
+    "missing": 0,
+    "buried": 0,
+    "maxError": 0.8809522925861089,
+    "topNormalDirections": 51,
+    "grid": [
+      32,
+      7,
+      28
+    ]
+  },
+  {
+    "asset": "Canal apartments",
+    "shape": "pyramid",
+    "samples": 511,
+    "missing": 0,
+    "buried": 0,
+    "maxError": 0.8809522925861017,
+    "topNormalDirections": 47,
+    "grid": [
+      32,
+      7,
+      27
+    ]
+  },
+  {
+    "asset": "Corner shop",
+    "shape": "pyramid",
+    "samples": 511,
+    "missing": 0,
+    "buried": 0,
+    "maxError": 5,
+    "topNormalDirections": 47,
+    "grid": [
+      24,
+      5,
+      27
+    ]
+  },
+  {
+    "asset": "Neighborhood bakery",
+    "shape": "pyramid",
+    "samples": 511,
+    "missing": 0,
+    "buried": 0,
+    "maxError": 0.7187483413765179,
+    "topNormalDirections": 47,
+    "grid": [
+      26,
+      6,
+      28
+    ]
+  }
+]

@@ -16,7 +16,7 @@ The ground, roads, river, buildings, vehicles, people and plants now go through 
 
 The world loads around you as you drive, walk or fly. Terrain, streets, river surfaces and static objects are built in nearby chunks, with more prepared ahead of movement. Distant geometry is released. NPCs, collisions, water simulation and destruction keep their state when a district leaves view.
 
-Diagonal roads and painted lines keep their actual outline. Curved object stamps use continuous voxel contours, so tires, roof slopes and aircraft parts don't need a staircase silhouette. Bridge ramps and their paint share a continuous surface, and water tiles share wave samples. Explicit fill/cut volumes keep their carved cells and fracture chunks.
+Diagonal roads and painted lines keep their actual outline. Curved object stamps use continuous voxel contours. Undeformed prism and hip-roof stamps retain their exact planar boundaries, so thin roof panels stay closed and flat slopes don't turn into stripes. Bridge ramps and their paint share a continuous surface, and water tiles share wave samples. Explicit fill/cut volumes keep their carved cells and fracture chunks.
 
 The opening loader waits for the first neighbourhood. Validated pedestrian paths and collision cylinders are reused from the worker; road/transit and interactive-asset preparation yield between build steps. Camera rotation, manual zoom and offscreen shadow casters are included in streaming coverage. [How loading and memory work](docs/rendering.md#loading-and-memory).
 
@@ -44,7 +44,7 @@ Houses now have framed glazing, readable floor heights, supported porches, roof 
 
 ![Rebuilt houses, public transport and cabin launch](docs/media/constructed-assets.jpg)
 
-The construction library includes 15 rebuilt assembly types used by 197 objects in the mock city. Dream 2 permits fine visual dimensions, so a pipe or window frame can keep its proportions when it becomes a voxel stamp. Bodies, contacts, world scale and part budgets stay bounded. [See how they're constructed](docs/asset-construction.md), or build the [house](docs/examples/terraced-house.dream), [bus](docs/examples/city-bus.dream) and [boat](docs/examples/cabin-launch.dream).
+Roof panels now stay continuous across the gabled and hip-roof buildings. [See the roof check](docs/evidence/roof-surfaces/verification.md). The construction library includes 15 rebuilt assembly types used by 197 objects in the mock city. Dream 2 permits fine visual dimensions, so a pipe or window frame can keep its proportions when it becomes a voxel stamp. Bodies, contacts, world scale and part budgets stay bounded. [See how they're constructed](docs/asset-construction.md), or build the [house](docs/examples/terraced-house.dream), [bus](docs/examples/city-bus.dream) and [boat](docs/examples/cabin-launch.dream).
 
 ## Give the world a task
 

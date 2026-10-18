@@ -51,9 +51,9 @@ A visual opening does **not** create a traversable opening. Bodies and compound 
 
 Two carved garden walls flank the river-park bench and break into four chunks each. Eleven residential and commercial building templates now use voxel wall shells. The slatted benches use voxel boards inside their existing seven fragment groups. The asset-library bakehouse storefront uses a carved volume with six masonry chunks, plus its canopy and door. Their measured proportions, entrances, foundations, roads and physical contacts remain shared with the existing world.
 
-The live world's remaining curved shapes become occupied-cell stamps with continuous surface-net boundaries. Flat faces are merged. Exact carved volumes keep their block boundaries and newly exposed fracture faces. The city uses sparse solid ground columns and infrastructure tiles rather than allocating a kilometre-wide 3D array. The world policy leaves older standalone examples readable in their original shaped mode; add it to a complete world to use voxel construction throughout.
+The live world's remaining curved shapes become occupied-cell stamps with continuous surface-net boundaries. Undeformed prism and pyramid stamps instead retain exact merged planar contours in their boundary cells, so thin gable shells stay closed and hip slopes stay flat. Exact carved volumes keep their block boundaries and newly exposed fracture faces. The city uses sparse solid ground columns and infrastructure tiles rather than allocating a kilometre-wide 3D array. The world policy leaves older standalone examples readable in their original shaped mode; add it to a complete world to use voxel construction throughout.
 
-![Voxel shells and boards retain the surrounding model details](../media/voxel-assets.jpg)
+![Voxel wall openings, roofs and transport profiles retain their surrounding detail](../media/voxel-assets.jpg)
 
 ## Rendering and bounds
 

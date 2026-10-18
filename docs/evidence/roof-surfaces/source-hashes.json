@@ -1,0 +1,9 @@
+{
+  "src/scene/voxel-stamp.ts": "b41728d62d6392e67e6bca972233f539ccac045b6a453079e8ebf06b2f7a1844",
+  "src/scene/object-geometry.ts": "e6eb9e92dac35fa0a5cfc44652308c29edfd8ee89418f40d0b8b01c3ae575513",
+  "src/scene/dream-contract.ts": "c79ec7d55755f8a25f9f1487fd50c2ff942fa098190e1f78d1e5ba159bea6d8e",
+  "tests/roof-surfaces.test.ts": "5c1ed92b5a556ac296efc51763149424db68530114d125a10ea997006cc96814",
+  "docs/dream-v2-contract.json": "bbf1ae563b9ed15212b85ac2af81815904842c33476b90b241698b8b78239950",
+  "docs/dream-v2-model.txt": "b21f7fea1eccba0a40dd6a197e76c33ec8130cc322ccbed8d8602387511acf7a",
+  "src/scene/world/architecture.dream": "68e570c705183e0f166849a93cf9b3b56e2e175c2c210e4b43ef631d7b1a3b32"
+}
