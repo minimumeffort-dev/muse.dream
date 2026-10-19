@@ -223,3 +223,15 @@ existing solid contact. They add no picking, harvesting, growth or biological
 simulation. The separate breakable clay planter retains its existing fragment
 construction and remains in the prop-family review.
 [Construction, save and native-render checks](evidence/plant-construction/verification.md).
+
+## Small ground details
+
+![Constructed background grass and flowers](media/cover.jpg)
+
+Background grass and flowers are engine-provided Dream assemblies, separate
+from the 109 exported world templates. Three pointed blades form the grass;
+flower leaves join their stalk beneath the petals and solid pollen center.
+The [complete example](examples/ground-cover.dream) includes their shared
+components and a combined inspection object. The engine compacts the two types
+for tiled instancing. They add no physics bodies or interactive plant state.
+The seeded scatter density and palette remain engine-owned.

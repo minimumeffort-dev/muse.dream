@@ -160,3 +160,8 @@ The [construction guide](../asset-construction.md) follows complete live [house]
 ## Enterable assemblies
 
 A static measured building can declare an `interior` with named `portal` openings. It needs explicit rectangle floor/ceiling contacts, an actual doorway and shell parts tagged with `cutaway`. The original cylinder contact form remains compatible. Read [interiors](interiors.md) and the [complete market assembly](../examples/enterable-market.dream); a painted door creates no passage.
+
+[Background ground cover](../examples/ground-cover.dream) reuses grass and flower
+components in separate objects and one combined inspection form. Keep leaf roots
+on their stalk and grass tips below petals. The engine uses these same small
+prototypes; its scatter density and palette remain engine-owned.

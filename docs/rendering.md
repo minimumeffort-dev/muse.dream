@@ -445,3 +445,20 @@ Unique geometry and instance-buffer bytes fall from 15,384,968 to 4,011,480.
 These are whole-family counts from the ordinary full-detail scenery builder,
 not per-frame draw calls, browser memory, VRAM or an FPS speedup.
 [Raw counts and verification](evidence/plant-construction/verification.md).
+
+## Constructed background ground cover
+
+The small grass and flower prototypes now compile from a shared Dream library.
+Each compacts into one vertex-painted mesh before tiling. The same 106,824 grass
+instances and 13,357 flowers retain their seeded positions and scales. Upright
+roots sit just below the visible column top or smooth surface. They do not add
+colliders, rig slots or saved state. Density and palette remain engine-owned.
+
+At the live voxel cell size of 1, grass falls from 138 to 36 triangles per
+prototype, and flowers from 140 to 124. Across the whole world, submitted
+triangles fall from 16,611,692 to 5,501,932, with the same 1,984 local instance
+batches. These are complete-world geometry counts, not per-frame draws or an
+FPS measurement. Unique geometry/instance buffers change from 7,878,556 to
+7,863,196 bytes; instance data dominates this count. The smooth regression
+fixture uses more prototype triangles than its former simple cones and dots.
+[Raw counts and checks](evidence/ground-cover/verification.md).

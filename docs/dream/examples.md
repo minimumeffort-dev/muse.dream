@@ -293,3 +293,7 @@ The [faceted fir](../examples/faceted-canopy.dream) uses the live tree’s compl
 [Complete plant constructions](../examples/plant-construction.dream) reuse rooted
 leaf and petal profiles, joined foxglove panels and a pot rim across four live
 objects. Existing measure frames and furnishing reservations are explicit.
+
+[Background ground cover](../examples/ground-cover.dream) defines two reusable
+components, grass and a flower, plus their combined inspection object. These
+are the engine's small passable details. Scatter density remains engine-owned.

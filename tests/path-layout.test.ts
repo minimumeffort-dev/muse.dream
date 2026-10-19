@@ -91,7 +91,7 @@ describe("full-size mock activities",()=>{
   it("keeps grass and flowers outside the newly reserved surfaces",()=>{
     const environment=buildEnvironment(scene),paths=scene.routes.filter(r=>r.kind==="path"),matrix=new Matrix4();let decorations=0;
     environment.traverse(node=>{
-      if(!(node instanceof InstancedMesh) || !["ConeGeometry","IcosahedronGeometry"].includes(node.geometry.type))return;
+      if(!(node instanceof InstancedMesh) || !node.name.startsWith('ground-cover-'))return;
       for(let i=0;i<node.count;i++){
         node.getMatrixAt(i,matrix);const x=matrix.elements[12]!+scene.canonical.width/2,y=matrix.elements[14]!+scene.canonical.height/2;
         for(const path of paths)expect(distanceToRoad(routePath(path).points,x,y)).toBeGreaterThan(path.width!/2+3.99);

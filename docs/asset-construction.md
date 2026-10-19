@@ -26,9 +26,9 @@ exports. Repeated exports remain listed. The
 engine-provided player rigs, background ground cover, infrastructure and optional example catalogue also
 belong in the pass; the loaded-library list does not certify those separately.
 
-The current world review also catches pale background flower dots intersecting
-their grass tufts. Those engine-provided instances are separate from the thirteen
-Dream plant templates below and remain a priority for the next construction pass.
+The engine-provided ground cover has its own checked Dream construction,
+separate from the thirteen placed plant templates below. Furnishings, animals,
+people, transport, buildings and infrastructure remain on the review queue.
 
 Start with a silhouette that reads at the ordinary game camera. Use a few
 coherent masses, deliberate edge shapes, recessed openings and a small palette
@@ -174,3 +174,20 @@ The [complete four-plant example](examples/plant-construction.dream) matches the
 live definitions. Tests probe actual voxelized surfaces for leaf roots, panel
 edges, flower centers, pot openings and visible soil. All thirteen were reviewed
 from four angles. [Evidence](evidence/plant-construction/verification.md).
+
+## Background ground cover
+
+![Grass, flower and their combined construction](media/cover.jpg)
+
+The previous grass cones grew through the flower centers. Three rooted blades
+now form a sprig. Each flower has a stalk, two attached leaves, one five-lobed
+petal profile and a solid pollen center. The grass tips stay below the petals.
+The [complete source](examples/ground-cover.dream) reuses both components in a
+combined inspection object. It is also the engine's source, rather than a
+separate illustration of it.
+
+The ordinary asset builder compacts each type into one painted mesh. Seeded
+positions, scales and exclusions remain the same, with roots fitted to the
+visible voxel column or smooth ground surface. They remain static, passable
+detail, with no new actor, contact, save field or language command. Scatter
+density and palette remain engine-owned. [Checks](evidence/ground-cover/verification.md).

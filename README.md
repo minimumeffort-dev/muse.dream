@@ -479,6 +479,15 @@ and the planted tub has a continuous rim above visible soil. These are reusable
 Dream profiles and panels. Their measured sizes, collision bodies and street
 reservations stay in place. [Complete plant constructions](docs/examples/plant-construction.dream).
 
+The small background flowers now have attached stems, leaves, petals and solid
+centers. Grass blades stay below the blooms instead of poking through them.
+These details use [Dream components too](docs/examples/ground-cover.dream),
+compacted into two instanced plant types. Their roots follow the visible ground.
+The scatter pattern remains engine-owned; these are passable details, not new
+interactive plants.
+
+![The background grass and flower, separately and together](docs/media/cover.jpg)
+
 ![Fallen log and deadwood built with connected, tapered wood parts](docs/media/woodland.jpg)
 
 Cylinder `part` and `beam` commands accept a bounded `taper` ratio, so a trunk can narrow without stacking separate tubes. [Try the complete wood example](docs/examples/tapered-wood.dream).

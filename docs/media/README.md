@@ -1298,3 +1298,25 @@ and remain valid for their recorded controls and transactions. Vehicle, person,
 tree, deadwood and architecture close-ups retain their unchanged construction.
 The separate breakable terracotta planter remains in the pending prop pass.
 [Verification and source/frame manifest](../evidence/plant-construction/verification.md).
+
+## Constructed ground cover, 2026-10-19
+
+The cover turntable shows the two actual engine-provided Dream templates and
+their combined inspection object. It records 240 native 2400 × 1350 PNG frames
+at 30 rendered frames per simulation second. Current driving, wildlife and
+pedestrian sets refresh 210, 360 and 720 rendered frames, respectively. The
+shared encoder retains 960 × 540, 192-color GIFs at loss 100 for cover, driving
+and wildlife; pedestrians retain 1280 × 720, 256 colors and loss 20. HD video
+remains 1600 × 900 H.264 CRF 18. All paired posters use frame zero. There is no
+interpolation or live performance claim.
+
+Four gallery angles inspect blade roots, attached leaves and the solid flower
+center. The matched wildlife frame retains the preceding plant release as its
+baseline. README and the construction, asset, example, object, model, rendering
+and media notes now describe the shared Dream source. The generated command
+contract and language reference were reviewed; no vocabulary changes. The
+109-export atlas, other construction close-ups and compiled map stay accurate:
+their object geometry and accepted layout are unchanged. Other recordings keep
+their historical background details and recorded mechanics. Scatter density
+and palette remain engine-owned.
+[Verification and source/frame manifest](../evidence/ground-cover/verification.md).

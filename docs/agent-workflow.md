@@ -69,12 +69,16 @@ workflow in `AGENTS.md`; pushes can trigger the linked Vercel deployment.
 
 ## Evidence requirements
 
-- The Pages build job allows 20 minutes for dependency installation, the complete
+- The Pages build job allows 30 minutes for dependency installation, the complete
   test suite, docs generation and artifact upload. Run `39103792685` passed its
   tests in 8 minutes 54 seconds and built the docs, then reached the previous
   10-minute job limit during upload. The 60-second per-test timeout and all
   checks remain unchanged. This workflow-only correction needs no new gameplay
   screenshots; the shared-meal captures still show the released behavior.
+- Run `39192415261` was canceled at the 20-minute job limit. Its log reports all
+  1,540 tests passing after 1,151.76 seconds, then cancellation prevented the docs
+  build and upload. The job now allows 30 minutes for the complete pipeline.
+  Per-test and worker-reporting timeouts remain unchanged; no check is skipped.
 - Every slice ships with checks actually executed in that session; report
   commands, results, what was skipped, and the remaining risk.
 - Fixture evidence, browser evidence, and live-camera evidence are reported

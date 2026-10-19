@@ -1,0 +1,8 @@
+https://github.com/minimumeffort-dev/muse.dream/actions/runs/39192415261
+Job started 2026-10-19T02:58:02Z; cancelled 2026-10-19T03:18:14Z.
+Tests began 02:59:00 UTC. Docs generation and upload were skipped.
+
+build	Run npm test -- --maxWorkers=2 --testTimeout=60000	2026-10-19T03:18:11.8084512Z  Test Files  136 passed (136)
+build	Run npm test -- --maxWorkers=2 --testTimeout=60000	2026-10-19T03:18:11.8089431Z       Tests  1540 passed (1540)
+build	Run npm test -- --maxWorkers=2 --testTimeout=60000	2026-10-19T03:18:11.8096281Z    Duration  1151.76s (transform 5.13s, setup 1.27s, collect 639.57s, tests 1627.73s, environment 34ms, prepare 11.45s)
+build	Run npm test -- --maxWorkers=2 --testTimeout=60000	2026-10-19T03:18:11.9533735Z ##[error]The operation was canceled.

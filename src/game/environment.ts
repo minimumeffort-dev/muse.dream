@@ -3,7 +3,7 @@ import {streetFrame} from '../scene/sites';
 import * as THREE from "three";
 import {contains,overlaps,type RenderRegion} from "./render-region";
 import {voxelTerrainTile} from './voxel-columns';
-import {voxelStamp} from '../scene/voxel-stamp';
+import {groundCoverGeometry} from './ground-cover';
 import {reservedGround,streetPolygons,streetCircuitCrossings,onPolygon} from '../scene/streets';
 import {roadSections,roadGeometry,timberFootprints,curbLiftAt} from './road-surfaces';
 export {roadSections,roadGeometry} from './road-surfaces';
@@ -193,12 +193,13 @@ export function* buildEnvironmentSteps(doc:Scene,region?:RenderRegion):Generator
     if(region && !contains(region,x,y))continue;
     if (interiors.some(f=>f.contains(x,y,-5)) || reservedGround(doc,x,y) || bridgeAt(doc.terrain.landscape,x,y) || waterAt(doc.terrain,x,y) || distanceToRoad(path, x, y) < roadWidth / 2 + 10 ||
       corridors.some(route=>distanceToRoad(route.points,x,y)<route.radius)) continue;
-    transform.position.copy(worldPosition(doc, x, y, 3)); transform.rotation.set(.1,yaw,.2);
+    const base=doc.voxelWorld ? Math.floor(voxelSurfaceBase(doc,x-width/2,y-height/2)/doc.voxelWorld.heightStep)*doc.voxelWorld.heightStep : surfaceHeight(doc,x,y);
+    transform.position.set(toWorldX(x,width),base-.12,toWorldZ(y,height)); transform.rotation.set(0,yaw,0);
     transform.scale.setScalar(size); transform.updateMatrix(); tufts.push(transform.matrix.clone());
     if (i % 8 === 0) { flowers.push(transform.matrix.clone()); colors.push(new THREE.Color(i % 3 ? "#f8d99e" : "#e9a6b1")); }
   }
-  const stamp=(g:THREE.BufferGeometry,size:number[])=>{if(!doc.voxelWorld)return g;const v=voxelStamp(g,size,doc.voxelWorld.objectCell);g.dispose();return v;};
-  group.add(tiledInstances(stamp(new THREE.ConeGeometry(1.8,7,3),[3.6,7,3.6]),toonMaterial("#557d4a"),tufts),
-    tiledInstances(stamp(new THREE.IcosahedronGeometry(2,0),[4,4,4]),toonMaterial("#ffffff"),flowers,colors));
+  const material=toonMaterial('#ffffff');material.vertexColors=true;
+  const grass=tiledInstances(groundCoverGeometry('grass',doc.voxelWorld?.objectCell),material,tufts),bloom=tiledInstances(groundCoverGeometry('flower',doc.voxelWorld?.objectCell),material,flowers,colors);
+  for(const [name,root] of [['grass',grass],['flower',bloom]] as const){root.name=`ground-cover-${name}`;root.traverse(node=>{if(node instanceof THREE.InstancedMesh)node.name=root.name;});}group.add(grass,bloom);
   return group;
 }

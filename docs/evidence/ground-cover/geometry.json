@@ -1,0 +1,27 @@
+{
+  "scope": "All engine-provided ground-cover instances at live voxel cell 1. Geometry/instance-buffer counts, not FPS, browser memory or VRAM.",
+  "r77": {
+    "counts": {
+      "grass": 106824,
+      "flower": 13357
+    },
+    "batches": 1984,
+    "submittedTriangles": 16611692,
+    "bytes": 7878556,
+    "uniqueBuffers": 2980,
+    "geometries": 2,
+    "uniqueTriangles": 278
+  },
+  "constructed": {
+    "counts": {
+      "grass": 106824,
+      "flower": 13357
+    },
+    "batches": 1984,
+    "submittedTriangles": 5501932,
+    "bytes": 7863196,
+    "uniqueBuffers": 2982,
+    "geometries": 2,
+    "uniqueTriangles": 160
+  }
+}

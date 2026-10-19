@@ -54,6 +54,9 @@ the use. Separate leaf and rounded petal profiles. Joined panels can form an ope
 bell or rim without a new primitive; keep soil above hidden container caps and
 clear exposed faces. See examples/plant-construction.dream. Preserve measured
 frames and existing furnishing clearance when refining a released object.
+For small ground details, keep grass tips below flower heads and join leaf roots
+to the stalk. The reusable ground-cover example includes both individual objects
+and their combined inspection form; its scatter density remains engine-owned.
 A contact needs radius OR size=[width,depth], never both. size permits a static
 upright rectangle with optional heading_deg; radius remains a cylinder. Rectangles
 use .1..128 sides and .1..160 height, cylinders use radius 1..64 and height 1..160.

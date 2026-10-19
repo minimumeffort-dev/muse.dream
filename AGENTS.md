@@ -864,3 +864,16 @@ and all earlier save stages. Format 17 / simulation 32 and every saved state fie
 remain unchanged. Never read a public save from an isolated review prefix.
 Use docs/examples/plant-construction.dream and the four-angle/voxel surface tests
 when refining these models. The wider asset review remains incomplete.
+
+## Background ground cover
+
+The engine's small grass/flower prototypes use src/scene/ground-cover.dream,
+identical to docs/examples/ground-cover.dream. Keep roots at zero, all leaf/stalk
+joins, grass tips below the petals and the solid flower center. Compile ordinary
+Dream parts, compact static paint, clone owned geometry and retain vertex colors
+through worker transfer. Keep the existing seed, XY positions, scales, exclusion
+rules and two tiled instance groups. Fit upright roots just below the visible
+voxel-column top or smooth surface. This is renderer detail, not new contacts,
+actors or saved state. Scatter density and palette remain engine-owned; do not
+claim they are configurable Dream world data. The full 109-export asset review
+and separate interactive plant capabilities remain unfinished.
