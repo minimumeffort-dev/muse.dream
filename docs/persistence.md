@@ -531,3 +531,19 @@ and derived placements before every earlier compatibility stage. Old slots
 remain intact. The worker supplies the prior contact cache with the projection's
 source identity before old-state validation. Save format 17 and simulation 32
 stay unchanged. [Native and historical checks](evidence/tree-construction/verification.md).
+
+### Landscape plant construction (r77)
+
+The registered plant update retains format 17 and simulation 32. It replaces
+thirteen landscape and street-plant templates, while an explicit projection
+restores their released r76 definitions and 460 placements. That reproduces the
+exact canopy-world fingerprint before any earlier migration runs. Existing
+bodies, ordered contacts and the complete pedestrian graph remain equal.
+The worker supplies the prior contacts with the matching source identity before
+navigation is primed on that exact scene.
+
+Old progress, occupied and parked vehicles, cargo, damage, falling/growing trees,
+work journeys, ledgers and visual time survive. Original slots are retained.
+Migration honors the supplied storage prefix, including isolated review slots;
+it cannot fall back from a review namespace to a public save.
+[Checks and native backup](evidence/plant-construction/verification.md).

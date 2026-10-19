@@ -847,3 +847,20 @@ all earlier save stages. The registered visual upgrade keeps format 17 /
 simulation 32 and every state field; do not replace its old slots or reinitialize
 lives, damage, cargo, growing trees or paid work. The rest of the asset library
 remains pending in the construction catalogue.
+
+## Landscape plant construction, r77
+
+Thirteen landscape and street-plant templates cover 460 placements. Rooted leaf
+and rounded-petal prisms attach at their component origins; foxglove panels
+meet around open throats. The planted tub's two half-rim profiles retain a real
+opening, with soil above its hidden body cap and below its lip. Keep final visual
+dimensions >= .1 after group scaling, the 32-part cap, continuous leaf/stalk
+joins and the old measure frame. Its explicit clearance retains the previous
+furnishing reservation. This adds no new language vocabulary, rigs or contacts.
+The separate breakable clay planter remains in the pending prop-family review.
+
+Preserve the checked r76 plant/placement projection, matching prior host contacts
+and all earlier save stages. Format 17 / simulation 32 and every saved state field
+remain unchanged. Never read a public save from an isolated review prefix.
+Use docs/examples/plant-construction.dream and the four-angle/voxel surface tests
+when refining these models. The wider asset review remains incomplete.

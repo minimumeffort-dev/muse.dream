@@ -460,7 +460,8 @@ The [asset library](docs/asset-library.md) covers the live world assemblies. Car
 The construction pass takes inspiration from [Kenney's kits](https://kenney.nl/starter-kits)
 across the whole library: buildings, transport, people, animals, plants and props.
 The [construction guide](docs/asset-construction.md#the-next-pass-covers-the-whole-library)
-tracks the scope and review rules. Trees are the first completed family; the rest remains pending.
+tracks the scope and review rules. Trees and landscape plants have completed
+this pass; the other families remain pending.
 
 ![Cleaner crowns, supported branches and smaller fruit](docs/media/canopy.gif)
 
@@ -469,6 +470,14 @@ supports, the willow has a continuous crown and paired hanging boughs, and fruit
 is small enough to belong on the tree. Dream's explicit `faceted=true` keeps
 these faces clean inside the voxel world. Toppling, replanting and saved progress
 keep working. Fruit is visual; harvesting is still separate work.
+
+![Rooted leaves, open flowers and a joined pot rim](docs/media/botany.gif)
+
+The thirteen landscape and street-plant templates cover 460 placements. Leaves
+join their stems, daisies have rounded petals, foxglove bells have open throats,
+and the planted tub has a continuous rim above visible soil. These are reusable
+Dream profiles and panels. Their measured sizes, collision bodies and street
+reservations stay in place. [Complete plant constructions](docs/examples/plant-construction.dream).
 
 ![Fallen log and deadwood built with connected, tapered wood parts](docs/media/woodland.jpg)
 

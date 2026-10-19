@@ -12,6 +12,7 @@ import personExample from '../../docs/examples/city-person.dream?raw';
 import {mediaCapture} from '../../src/game/media-capture';
 import utilityExample from '../../docs/examples/utility-vehicles.dream?raw';
 import priorTrees from '../../src/scene/compatibility/r75-trees.json';
+import priorPlants from '../../src/scene/compatibility/r76-plants.json';
 
 const canvas=document.querySelector('canvas'),grid=document.querySelector('.grid');
 const view=document.querySelector('#view'),phase=document.querySelector('#phase');
@@ -19,11 +20,11 @@ const view=document.querySelector('#view'),phase=document.querySelector('#phase'
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,1.5)); renderer.setScissorTest(true);
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
-const params=new URLSearchParams(location.search),canopyExamples=params.has('canopy'),focus=canopyExamples ? ['Young rowan','Silver fir','Weeping willow','Old apple tree'] : params.getAll('asset');
+const params=new URLSearchParams(location.search),canopyExamples=params.has('canopy'),botanyExamples=params.has('botany'),focus=botanyExamples ? ['Woodland fern','Pink foxglove','Planted street tub','Blue hydrangea'] : canopyExamples ? ['Young rowan','Silver fir','Weeping willow','Old apple tree'] : params.getAll('asset');
 const utilityExamples=params.has('utility');
 if(utilityExamples)document.querySelector('header a').href='/docs/examples/utility-vehicles.dream';
 const peopleExamples=params.has('people');
-const neutral=peopleExamples || utilityExamples || canopyExamples || params.has('neutral');
+const neutral=peopleExamples || utilityExamples || canopyExamples || botanyExamples || params.has('neutral');
 if(neutral)document.body.classList.add('people');
 if(peopleExamples){document.querySelector('header a').href='/docs/examples/city-person.dream';}
 const worldExamples=params.has('world');
@@ -31,12 +32,13 @@ const allExamples=params.has('all');
 // A full native-resolution atlas must fit within the WebGL renderbuffer height.
 // The ordinary responsive two-column view can exceed it with the full asset library.
 if(params.has('sheet')){document.body.style.width='1600px';grid.style.gridTemplateColumns='repeat(4,1fr)';}
-if((utilityExamples || canopyExamples) && params.has('capture'))document.body.style.width='1600px';
-const focusHeight=canopyExamples && params.has('capture') ? '450px' : utilityExamples && params.has('capture') ? '900px' : focus.length>2 ? '360px' : '650px';
+if((utilityExamples || canopyExamples || botanyExamples) && params.has('capture'))document.body.style.width='1600px';
+const focusHeight=(canopyExamples || botanyExamples) && params.has('capture') ? '450px' : utilityExamples && params.has('capture') ? '900px' : focus.length>2 ? '360px' : '650px';
 if(focus.length){grid.style.gridTemplateColumns=`repeat(${Math.min(2,focus.length)},1fr)`;document.querySelector('main').style.setProperty('min-height',focusHeight);}
 if(worldExamples)document.querySelector('header a').href='/src/scene/interactive-world.dream';
-if(allExamples || canopyExamples)document.querySelector('header a').href='/src/scene/world/open-world.dream';
-const items=(utilityExamples ? compileDreamWorld(utilityExample).assemblies.map(s=>({...s,voxelSize:1})) : peopleExamples ? compileDreamWorld(personExample).assemblies.map(s=>({...s,voxelSize:1})) : params.has('materials') ? compileDreamWorld(materialExample).assemblies : allExamples || canopyExamples ? compileDreamWorld(worldSource,worldModules).assemblies : worldExamples ? interactiveWorld.assemblies : dreamExamples).filter(spec=>!focus.length || focus.includes(spec.displayName)).map(spec=>params.has('tree-before') ? priorTrees.templates.find(t=>t.spec.displayName===spec.displayName)?.spec??spec : spec).map(spec=>{
+if(allExamples || canopyExamples || botanyExamples)document.querySelector('header a').href='/src/scene/world/open-world.dream';
+if(botanyExamples)document.querySelector('header a').href='/docs/examples/plant-construction.dream';
+const items=(utilityExamples ? compileDreamWorld(utilityExample).assemblies.map(s=>({...s,voxelSize:1})) : peopleExamples ? compileDreamWorld(personExample).assemblies.map(s=>({...s,voxelSize:1})) : params.has('materials') ? compileDreamWorld(materialExample).assemblies : allExamples || canopyExamples || botanyExamples ? compileDreamWorld(worldSource,worldModules).assemblies : worldExamples ? interactiveWorld.assemblies : dreamExamples).filter(spec=>!focus.length || focus.includes(spec.displayName)).map(spec=>params.has('tree-before') ? priorTrees.templates.find(t=>t.spec.displayName===spec.displayName)?.spec??spec : params.has('plants-before') ? priorPlants.templates.find(t=>t.spec.displayName===spec.displayName)?.spec??spec : spec).map(spec=>{
   const cell=document.createElement('article'),name=document.createElement('strong'),detail=document.createElement('small');
   if(focus.length)cell.style.height=focusHeight;
   name.textContent=spec.displayName;detail.textContent=`${spec.parts.length} parts · ${spec.joints?.length??0} joints`;
@@ -51,14 +53,17 @@ const items=(utilityExamples ? compileDreamWorld(utilityExample).assemblies.map(
   const size=Math.max(...bounds.getSize(new THREE.Vector3()).toArray())*(params.has('materials') ? .4 : .76);
   return {cell,scene,group,center,size,character:spec.joints?.some(j=>j.bone) ? new CharacterAnimator(group,spec) : undefined,phase:-1,camera:new THREE.OrthographicCamera(-1,1,1,-1,.1,2000)};
 });
+// Center a lone final specimen instead of leaving an unrendered atlas cell.
+if(items.length%2===1 && (focus.length || items.length%4===1))items.at(-1).cell.style.gridColumn='1 / -1';
 new ResizeObserver(()=>renderer.setSize(canvas.clientWidth,canvas.clientHeight,false)).observe(canvas);
 let capturePhase,captureAngle;
-const capture=utilityExamples || canopyExamples ? mediaCapture(canvas,canopyExamples ? {canopy:240} : {utility:240},()=>{},(_clip,frame)=>{capturePhase=frame/30;captureAngle=frame/240*Math.PI*2;}) : undefined;
+const capture=utilityExamples || canopyExamples || botanyExamples ? mediaCapture(canvas,botanyExamples ? {botany:240} : canopyExamples ? {canopy:240} : {utility:240},()=>{},(_clip,frame)=>{capturePhase=frame/30;captureAngle=frame/240*Math.PI*2;}) : undefined;
 view.onchange=phase.onchange=()=>{capturePhase=captureAngle=undefined;};
 renderer.setAnimationLoop(()=>{
   if(capture?.begin()===null)return;
   const time=capturePhase??Number(phase.value);worldTime.value=time;worldMotion.value=1;
   const bounds=canvas.getBoundingClientRect();
+  renderer.setScissorTest(false);renderer.setClearColor(neutral ? '#e9e7df' : '#52714d');renderer.clear();renderer.setScissorTest(true);
   for(const item of items){
     const rect=item.cell.getBoundingClientRect(),aspect=rect.width/rect.height,half=Math.max(item.size,item.size/aspect);
     const camera=item.camera,angle=captureAngle??Number(view.value);

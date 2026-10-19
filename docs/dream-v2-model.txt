@@ -49,6 +49,11 @@ polygonal faces, including exact cut-cell contours in voxel worlds. A cylinder
 beam may use it too. Other shapes and positive deformation reject the field.
 False or omission keeps ordinary curved reconstruction. Choose facets for clean
 canopies, small fruit or stylized mechanical surfaces; no grid/part budget changes.
+For foliage, root a reusable prism blade at its stem connection before orienting
+the use. Separate leaf and rounded petal profiles. Joined panels can form an open
+bell or rim without a new primitive; keep soil above hidden container caps and
+clear exposed faces. See examples/plant-construction.dream. Preserve measured
+frames and existing furnishing clearance when refining a released object.
 A contact needs radius OR size=[width,depth], never both. size permits a static
 upright rectangle with optional heading_deg; radius remains a cylinder. Rectangles
 use .1..128 sides and .1..160 height, cylinders use radius 1..64 and height 1..160.

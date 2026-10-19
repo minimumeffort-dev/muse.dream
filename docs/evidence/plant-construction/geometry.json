@@ -1,0 +1,21 @@
+{
+  "scope": "Complete 460-plant static scenery, using identical full-resolution fixture builders; geometry counts only, not FPS or total browser memory.",
+  "r76": {
+    "objects": 460,
+    "batches": 361,
+    "submittedTriangles": 2435552,
+    "bytes": 15384968,
+    "uniqueBuffers": 850,
+    "geometries": 361,
+    "uniqueTriangles": 1633328
+  },
+  "r77": {
+    "objects": 460,
+    "batches": 321,
+    "submittedTriangles": 685016,
+    "bytes": 4011480,
+    "uniqueBuffers": 753,
+    "geometries": 321,
+    "uniqueTriangles": 460660
+  }
+}

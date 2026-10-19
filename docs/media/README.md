@@ -1270,3 +1270,31 @@ character and architectural sheets retain their existing construction.
 README, asset/construction guides, Dream reference/model/contract, voxel,
 rendering and persistence guides were reviewed and updated. The complete new fir
 example is compiler-checked. [Verification and frame manifest](../evidence/tree-construction/verification.md).
+
+## Landscape plants, r77
+
+The botany turntable uses 240 native 2400 × 1350 PNG frames at 30 rendered
+frames per simulation second. It orbits the current fern, foxglove, planted tub
+and hydrangea. Driving, wildlife and pedestrian sets refresh their GIFs, HD
+videos and stills from 210, 360 and 720 actual rendered frames. The shared
+encoder retains 960 × 540, 192-color GIFs at loss 100 for botany, driving and
+wildlife; pedestrians use 1280 × 720, 256 colors and loss 20. HD video remains
+1600 × 900 H.264 CRF 18. Paired stills use frame zero. These are offline
+exports, with no interpolation or live performance claim.
+
+The complete 109-export atlas, six-species flora sheet, ten-export street kit
+(including the two hatchback/van aliases), five-object neighborhood sheet and
+thirteen-plant family sheet come from the native gallery's Save PNG action.
+Matched front/right/back/left captures compare the released r76 plant templates
+with r77 on the same neutral stage. A lone final atlas specimen now spans its
+row. The compiled city map is regenerated from the accepted scene; placement
+and infrastructure are unchanged.
+
+README, construction, assets, object authoring, model instructions, persistence
+and rendering notes are refreshed with the compiler-checked plant example.
+The generated contract and language reference were reviewed; no command or
+field was added. Other activity recordings retain their historical vegetation
+and remain valid for their recorded controls and transactions. Vehicle, person,
+tree, deadwood and architecture close-ups retain their unchanged construction.
+The separate breakable terracotta planter remains in the pending prop pass.
+[Verification and source/frame manifest](../evidence/plant-construction/verification.md).

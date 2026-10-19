@@ -88,22 +88,46 @@ object young_rowan(label="Young rowan"){
   use upper_cluster(component=rowan_cluster,args=[1,29,6.4],materials=[m9,m3]);
   use side_cluster(component=rowan_cluster,args=[5,21,5.9],materials=[m9,m3]);
 }
+material shrub_leaf(style=toon,colors=[#648355,#496b49]);
+material shrub_shade(style=toon,colors=[#54734c,#3e5d40]);
+material juniper_leaf(style=toon,colors=[#56736b,#3e5b55]);
+
 object wild_shrub(label="Wild shrub"){
   measure(kind=custom,axis=y,meters=0.8);
-  body(interaction=decor,radius=12,height=15);
-  part left(shape=icosphere,material=m2,at=[-8,6,0],size=[18,12,17],deform=deform(seed=18368,amount=.14));
-  part center(shape=icosphere,material=m1,at=[2,8,-3],size=[22,16,18],deform=deform(seed=18399,amount=.14));
-  part right(shape=icosphere,material=m2,at=[11,5,3],size=[13,10,13],deform=deform(seed=18430,amount=.14));
-  beam stem(shape=cylinder,material=m3,from=[0,1,0],to=[-5,9,0],width=1.5,depth=1.5);
-  part new_growth(shape=icosphere,material=m1,at=[6,11,4],size=[12,8,10],deform=deform(seed=337,amount=.17));
+  body(interaction=decor,radius=12,height=15,clearance=21.219095173923);
+
+ // Preserve the released measure frame and furnishing reservation.
+ group silhouette(at=[0,0,0],scale=1){
+ part left(shape=icosphere,material=shrub_shade,at=[-8,6,0],size=[18,12,17],faceted=true);
+  part center(shape=icosphere,material=shrub_leaf,at=[2,8,-3],size=[22,16,18],faceted=true);
+  part right(shape=icosphere,material=shrub_shade,at=[11,5,3],size=[13,10,13],faceted=true);
+  beam stem(shape=cylinder,material=m3,from=[0,1,0],to=[-5,9,0],width=1.5,depth=1.5,taper=.45);
+  beam right_fork(shape=cylinder,material=m3,from=[-.625,2,0],to=[10,6,3],width=.8,depth=.8,taper=.4);
+  beam new_fork(shape=cylinder,material=m3,from=[-1.25,3,0],to=[6,10,4],width=.7,depth=.7,taper=.4);
+  part new_growth(shape=icosphere,material=shrub_leaf,at=[6,11,4],size=[12,8,10],faceted=true);
+ }
 }
 object juniper_scrub(label="Juniper scrub"){
   measure(kind=custom,axis=y,meters=1.2);
-  body(interaction=decor,radius=10,height=23);
-  part bush(shape=icosphere,material=m2,at=[0,9,0],size=[22,18,21],deform=deform(seed=23944,amount=.14));
-  part shoot(shape=cone,material=m1,at=[-4,15,1],size=[12,19,11],deform=deform(seed=23975,amount=.14));
-  repeat berries(index=b,count=3){part berry(shape=sphere,material=m8,at=[b*4-4,12+b,8],size=[2,2,2]);}
-  part branch(shape=cylinder,material=m3,at=[0,5,0],size=[3,10,3]);
+  body(interaction=decor,radius=10,height=23,clearance=15.206905667257);
+
+ // Preserve the released measure frame and furnishing reservation.
+ group silhouette(at=[0,0,0],scale=1){
+ part bush(shape=icosphere,material=juniper_leaf,at=[0,9,0],size=[22,18,21],faceted=true);
+  part shoot(shape=cone,material=juniper_leaf,at=[-4,15,1],size=[12,19,11],faceted=true);
+  part side_bough(shape=cone,material=juniper_leaf,at=[3,10,2],size=[11,14,10],rot_deg=[0,0,-25],faceted=true);
+  part rear_bough(shape=cone,material=juniper_leaf,at=[-2,11,-4],size=[10,14,10],rot_deg=[0,0,18],faceted=true);
+  part branch(shape=cylinder,material=m3,at=[0,5,0],size=[3,10,3],taper=.5,faceted=true);
+  beam side_support(shape=cylinder,material=m3,from=[0,5,0],to=[3,11,2],width=.65,depth=.65,taper=.3);
+  beam rear_support(shape=cylinder,material=m3,from=[0,5,0],to=[-2,12,-4],width=.65,depth=.65,taper=.3);
+  beam leader(shape=cylinder,material=m3,from=[0,5,0],to=[-4,16,1],width=.7,depth=.7,taper=.3);
+  repeat clusters(index=b,count=3){
+   let x(value=b*3-3);
+   let z(value=6.3-x*x*.05);
+   beam twig(shape=cylinder,material=m3,from=[x*.7,6,z-1.5],to=[x,7,z],width=.1,depth=.1,taper=.4);
+   repeat berries(index=c,count=2){part berry(shape=icosphere,material=m8,at=[x+(c-.5)*.26,7-c*.12,z],size=[.35,.35,.35],faceted=true);}
+  }
+ }
 }
 
 

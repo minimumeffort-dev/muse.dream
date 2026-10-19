@@ -1,0 +1,26 @@
+{
+  "valid": true,
+  "id": "ponytail",
+  "source_path": ".agents/skills/ponytail",
+  "files": [
+    {
+      "relative_path": "SKILL.md",
+      "sha256": "sha256:9be088fe4fe0b6fe12155c7d2ed3c278de19258688791a1f3ea9acba3ffa7253",
+      "bytes": 3811
+    }
+  ],
+  "diagnostics": [],
+  "compatibility": {
+    "profile": "agent-skills-common-subset",
+    "result": "compatible",
+    "known_fields": [
+      "argument-hint",
+      "description",
+      "license",
+      "name"
+    ],
+    "unknown_fields": [],
+    "unsupported_fields": [],
+    "allowed_tools": []
+  }
+}

@@ -37,6 +37,12 @@ positive deformation reject the field; `false` or omission keeps the existing
 curved reconstruction. Part, grid, contact and fracture budgets stay unchanged.
 [Complete faceted fir](../examples/faceted-canopy.dream).
 
+A rooted prism profile can form leaves along a fern rib or foxglove stem, with
+another profile for rounded petals. Joined panels form open flowers and pot
+rims. Keep the connection at the component origin, then orient `use` on the
+supporting stem. The [complete plant library](../examples/plant-construction.dream)
+contains four checked live constructions using the existing vocabulary.
+
 | Style | Surface | Two colors |
 | --- | --- | --- |
 | `brick` | Staggered 24 × 7.5 cm courses, thin recessed mortar and variation between bricks | Fired face / mortar |

@@ -4,7 +4,7 @@ A bus needs to read as a bus before it needs another material. Its wheels belong
 
 ![The constructed asset pass](media/constructed-assets.jpg)
 
-The current pass rebuilds eleven housing, shop and office templates plus the bus, tram, railcar and cabin launch. Those fifteen templates appear in 197 live placements. These are stylized handmade mocks, not imported meshes or a claim of architectural or vehicle engineering accuracy.
+Eleven housing, shop and office templates plus the bus, tram, railcar and cabin launch use this construction approach. Those fifteen templates appear in 197 live placements. These are stylized handmade mocks, not imported meshes or a claim of architectural or vehicle engineering accuracy.
 
 ## The next pass covers the whole library
 
@@ -13,16 +13,22 @@ for the whole library. The [Car Kit](https://kenney.nl/assets/car-kit),
 [industrial city kit](https://kenney.nl/assets/city-kit-industrial) and
 [Mini Forest](https://kenney.nl/assets/mini-forest) previews were inspected on
 2026-10-19. The construction rules below are our interpretation of those visual
-references. Trees are the first completed family. The rest of the catalogue
-still needs this pass.
+references. Trees and landscape plants have completed this pass. The remaining
+families still need it.
 
 The [r75 catalogue](evidence/asset-direction/catalogue.json) lists all 109 loaded
 assembly exports at the start of this pass. The [r76 catalogue](evidence/asset-direction/r76-catalogue.json)
 records eleven refined live tree templates and the reviewed, retained deadwood.
-The other 97 exports remain pending, including 28 buildings and 14 person
+The [r77 catalogue](evidence/asset-direction/r77-catalogue.json) adds thirteen
+refined landscape and street-plant templates. The other 84 exports remain
+pending, including 28 buildings and 14 person
 exports. Repeated exports remain listed. The
-engine-provided player rigs, infrastructure and optional example catalogue also
+engine-provided player rigs, background ground cover, infrastructure and optional example catalogue also
 belong in the pass; the loaded-library list does not certify those separately.
+
+The current world review also catches pale background flower dots intersecting
+their grass tufts. Those engine-provided instances are separate from the thirteen
+Dream plant templates below and remain a priority for the next construction pass.
 
 Start with a silhouette that reads at the ordinary game camera. Use a few
 coherent masses, deliberate edge shapes, recessed openings and a small palette
@@ -91,7 +97,7 @@ Static scenery still uses shared instancing. Rigid moving parts compact within t
 
 Volvo's [7900 Electric](https://www.volvobuses.com/wca-en/buses-coaches/all-models/volvo-7900-electric.html) and [specifications](https://www.volvobuses.com/wca-en/buses-coaches/all-models/volvo-7900-electric/specifications.html) informed bus door, axle and cab relationships. Stadler's [FLIRT reference](https://www.stadlerrail.com/solutions/references/flirt-db-arriva-nl-limburg) and [technical drawing](https://stadlerrail.com/api/docs/x/dda445987e/flirt-160_neutral_en.pdf) informed cab, window-band and bogie relationships. The game assets are independent simplified designs, not branded replicas.
 
-The remaining civic and organic families retain their existing models. Boat buoyancy and rail suspension are still arcade abstractions; the seated rider's hands and legs don't articulate to each vehicle. The task lab and future prompt/sketch interpretation are unchanged.
+Other civic buildings retain their existing models. The tree and plant refinements are described below. Boat buoyancy and rail suspension are still arcade abstractions; the seated rider's hands and legs don't articulate to each vehicle. The task lab and future prompt/sketch interpretation are unchanged.
 
 The neighborhood dog and garden cat now have four attached hip joints and a standing rest pose for roaming. The population renderer shares those rigid parts across instances; contacts and full NPC limits remain separate. [Movement and reactions](dream/populations.md).
 
@@ -146,3 +152,25 @@ bounded `faceted` option on existing primitives rather than a denser voxel grid.
 file supplies its shared toppling rule. Attachment tests check actual transformed
 primitive surfaces, including each willow branch and fruit stalk. Body dimensions
 and measured scales stay exact. The remaining asset families are still pending.
+
+## Plant family, r77
+
+Thirteen landscape and street-plant templates cover 460 existing placements.
+Rooted leaf profiles replace disconnected or chunky blades. A separate rounded
+profile forms daisy and pot-flower petals. Repeated joined panels form hollow
+foxglove bells; two concave half-rim profiles close the tub lip. Its soil clears
+the hidden body cap and stays below the rim. Thin faces retain the existing
+voxel cut-cell path and the final `.1` local-unit dimension minimum.
+
+![The complete landscape plant family](media/plant-family.jpg)
+
+The source keeps the released measure frame and adds its previous furnishing
+radius as explicit `body.clearance`. The visual group owns its fitting transform;
+the body keeps its dimensions. Refined silhouettes fit that reservation, so
+neighbouring assets and walking paths retain their positions. This adds no
+runtime groups, contacts, rigs or per-frame model construction.
+
+The [complete four-plant example](examples/plant-construction.dream) matches the
+live definitions. Tests probe actual voxelized surfaces for leaf roots, panel
+edges, flower centers, pot openings and visible soil. All thirteen were reviewed
+from four angles. [Evidence](evidence/plant-construction/verification.md).

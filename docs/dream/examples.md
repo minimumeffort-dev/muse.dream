@@ -289,3 +289,7 @@ fully jointed worker to a lamp near the edge of its declared street verge, with
 finite supplies, pay and a required crossing.
 
 The [faceted fir](../examples/faceted-canopy.dream) uses the live tree’s complete visual construction, with tapered branch supports and explicit flat canopy faces. The world entry file supplies its shared toppling rule.
+
+[Complete plant constructions](../examples/plant-construction.dream) reuse rooted
+leaf and petal profiles, joined foxglove panels and a pot rim across four live
+objects. Existing measure frames and furnishing reservations are explicit.

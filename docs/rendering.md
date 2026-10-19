@@ -16,7 +16,7 @@ near 16.67 ms. This does not establish performance on weaker laptops.
 
 # Rendering the whole world
 
-The mock world has 1,769 placed objects across a 14000 × 11000 landscape. Static render geometry now loads around the player and leaves memory behind them. The accepted Dream world and its simulation stay complete.
+The mock world has 1,773 placed objects across a 14000 × 11000 landscape. Static render geometry now loads around the player and leaves memory behind them. The accepted Dream world and its simulation stay complete.
 
 ## Usable parked vehicles
 
@@ -430,3 +430,18 @@ that fixture fall from 34,324,672 to 5,450,060 bytes. Mesh batches rise from 548
 582 because the models include more branch supports and stalks. These are
 whole-family geometry counts, not per-frame draw calls, FPS, total browser memory
 or VRAM. [Exact fixture counts](evidence/tree-construction/geometry.json).
+
+## Landscape plant construction
+
+The r77 plant pass keeps the same construction resolution and streaming rules.
+Rooted prism leaves, rounded petals, joined flower panels and pot-rim profiles
+compile to static parts with shared instances. Grass uses the existing bounded
+wind shader. Visual fitting groups compile away; they add no CPU rigs, scene
+controllers or per-frame geometry work.
+
+The complete 460-plant fixture submits 685,016 triangles across 321 batches,
+compared with 2,435,552 triangles and 361 batches for the released models.
+Unique geometry and instance-buffer bytes fall from 15,384,968 to 4,011,480.
+These are whole-family counts from the ordinary full-detail scenery builder,
+not per-frame draw calls, browser memory, VRAM or an FPS speedup.
+[Raw counts and verification](evidence/plant-construction/verification.md).

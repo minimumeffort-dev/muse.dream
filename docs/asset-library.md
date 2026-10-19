@@ -196,3 +196,30 @@ These are stylized crowns, not individually modeled leaves or a botanical
 simulation. Fruit remains decorative. Existing body dimensions, scales,
 toppling, finite replanting supplies and growth behavior stay in place. Other
 asset families remain on the [construction review](asset-construction.md).
+
+## Plants built from their stems
+
+The thirteen landscape and street-plant templates cover all 460 of their current
+placements. Fern pinnae and dock leaves root on their petioles. Lavender has
+smaller florets, reeds have pointed blades, and grass tapers to a tip. Hazel
+catkins hang from small twigs; juniper berries remain small. Hydrangea blossoms
+sit on supported calyces. Shrubs retain their distinct crown masses with cleaner
+faces.
+
+![Four complete plant constructions](media/botany.jpg)
+
+[All thirteen templates](media/plant-family.jpg) · [Turntable in HD](media/botany.mp4) ·
+[GIF](media/botany.gif) · [Complete Dream source](examples/plant-construction.dream).
+
+Foxglove bells use four joined panels with an open throat. The planted tub has a
+flared body and two concave half-rim profiles that meet around its opening. Soil
+sits above the hidden container cap and below the lip, so the surfaces do not
+compete at the same depth. These constructions use existing prisms, components,
+material bindings and bounded repeats, within 32 parts per object.
+
+The measured frame and existing furnishing clearance keep bodies, street
+placement and navigation stable. These plants remain scenery, with the tub's
+existing solid contact. They add no picking, harvesting, growth or biological
+simulation. The separate breakable clay planter retains its existing fragment
+construction and remains in the prop-family review.
+[Construction, save and native-render checks](evidence/plant-construction/verification.md).

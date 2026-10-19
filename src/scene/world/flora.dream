@@ -4,7 +4,6 @@ material fern_leaf(style=toon,colors=[#6c9652,#3e6d45]);
 material dock_leaf(style=toon,colors=[#789455,#496c43]);
 material purple(style=toon,colors=[#9a719d,#694c7d]);
 material bell_pink(style=toon,colors=[#c788a0,#985e80]);
-material bell_inner(style=toon,colors=[#704967,#533953]);
 material reed_leaf(style=toon,colors=[#829659,#566d42]);
 material reed_head(style=toon,colors=[#8b6744,#634e38]);
 material cream(style=toon,colors=[#eee4bd,#d3cba8]);
@@ -13,88 +12,138 @@ material bark(style=toon,colors=[#806447,#544b37]);
 material hazel_leaf(style=toon,colors=[#789451,#4d7042]);
 material willow_leaf(style=toon,colors=[#829565,#5d7954]);
 
+component rooted_blade(params=[length,width,thick],materials=[coat]){
+ part blade(shape=prism,material=coat,at=[length/2,0,0],size=[length,width,thick],rot_deg=[90,0,0],outline=[[0,.5],[.18,.16],[.6,0],[1,.5],[.6,1],[.18,.84]]);
+}
+component rooted_petal(params=[length,width,thick],materials=[coat]){
+ part blade(shape=prism,material=coat,at=[length/2,0,0],size=[length,width,thick],rot_deg=[90,0,0],outline=[[0,.5],[.15,.25],[.65,0],[.88,.15],[1,.35],[1,.65],[.88,.85],[.65,1],[.15,.75]]);
+}
+component hydrangea_floret(materials=[coat]){
+ part petals(shape=prism,material=coat,at=[0,0,0],size=[5,5,.2],rot_deg=[90,0,0],outline=[[1,.5],[.88065,.6775],[.62728,.62728],[.6775,.88065],[.5,1],[.3225,.88065],[.37272,.62728],[.11935,.6775],[0,.5],[.11935,.3225],[.37272,.37272],[.3225,.11935],[.5,0],[.6775,.11935],[.62728,.37272],[.88065,.3225]]);
+}
+component bell_shell(materials=[coat]){
+ // Four tapered panels meet around a seven-unit rise and one-unit flare.
+ repeat panels(index=p,count=4){group side(rot_deg=[0,p*90,0]){
+  part wall(shape=prism,material=coat,at=[0,0,2],size=[5,7.0710678118655,.16],rot_deg=[-8.130102354156,0,0],outline=[[0,0],[1,0],[.8,1],[.2,1]]);
+ }}
+}
+material lavender_tip(style=toon,colors=[#ab96b7,#857294]);
+material hydrangea_light(style=toon,colors=[#a8b6d1,#829dbf]);
+material hydrangea_center(style=toon,colors=[#d7dccb,#a7b9b4]);
+
 object woodland_fern(label="Woodland fern"){
   measure(kind=custom,axis=y,meters=.9);
-  body(interaction=decor,radius=4,height=15);
+  body(interaction=decor,radius=4,height=15,clearance=18.050850028231);
   ground(mode=surface);
-  repeat fronds(index=f,count=4){
-    group fan(rot_deg=[0,f*92,0]){
-      beam rib(shape=cylinder,material=stem,from=[0,1,0],to=[12,14,0],width=.7,depth=.7,taper=.25);
-      repeat leaflets(index=l,count=3){
-        part left(shape=icosphere,material=fern_leaf,at=[3+l*3,4+l*3,-1.5],size=[6-l,1.2,4-l*.5],rot_deg=[0,-35,30]);
-        part right(shape=icosphere,material=fern_leaf,at=[3+l*3,4+l*3,1.5],size=[6-l,1.2,4-l*.5],rot_deg=[0,35,30]);
-      }
-      part tip(shape=icosphere,material=fern_leaf,at=[11,13,0],size=[5,1,3],rot_deg=[0,0,45]);
-    }
-  }
+
+ // Preserve the released measure frame and furnishing reservation.
+ group silhouette(at=[0,0,0],scale=1){
+ repeat fronds(index=f,count=4){group fan(rot_deg=[0,f*92,0]){
+   beam rib(shape=cylinder,material=stem,from=[0,1,0],to=[12,14,0],width=.7,depth=.7,taper=.25);
+   repeat leaflets(index=l,count=3){
+    let x(value=3+l*3);
+    let y(value=1+x*13/12);
+    use left(component=rooted_blade,args=[5.2-l,1.7-l*.25,.16],materials=[fern_leaf],at=[x,y,0],rot_deg=[0,62,12]);
+    use right(component=rooted_blade,args=[5.2-l,1.7-l*.25,.16],materials=[fern_leaf],at=[x,y,0],rot_deg=[0,-62,12]);
+   }
+   part tip(shape=icosphere,material=fern_leaf,at=[11,13,0],size=[5,1,3],rot_deg=[0,0,45],faceted=true);
+  }}
+ }
 }
 object broadleaf_dock(label="Broadleaf dock"){
   measure(kind=custom,axis=y,meters=1.05);
-  body(interaction=decor,radius=4,height=18);
+  body(interaction=decor,radius=4,height=18,clearance=24.402190398391);
   ground(mode=surface);
-  repeat leaves(index=l,count=6){
-    group leaf(rot_deg=[0,l*61,0]){
-      beam stalk(shape=cylinder,material=stem,from=[0,0,0],to=[9,10+l*.5,0],width=.8,depth=.8,taper=.35);
-      part blade(shape=icosphere,material=dock_leaf,at=[11,11+l*.5,0],size=[15,2,7],rot_deg=[0,0,20],deform=deform(seed=52+l,amount=.12),motion=sway(deg=2,hz=.18));
-    }
-  }
+
+ // Preserve the released measure frame and furnishing reservation.
+ group silhouette(at=[0.015970319518455,-0.13582364011387,0.049666232235326],scale=1.0004657918467){
+ repeat leaves(index=l,count=6){group leaf(rot_deg=[0,l*61,0]){
+   beam stalk(shape=cylinder,material=stem,from=[0,0,0],to=[7,8+l*.5,0],width=.4,depth=.4,taper=.35);
+   use blade(component=rooted_blade,args=[12,5.5,.22],materials=[dock_leaf],at=[7,8+l*.5,0],rot_deg=[0,0,28]);
+  }}
+ }
 }
 object foxglove(label="Pink foxglove"){
   measure(kind=custom,axis=y,meters=1.5);
-  body(interaction=decor,radius=4,height=50);
-  beam stalk(shape=cylinder,material=stem,from=[0,0,0],to=[1,48,0],width=1.2,depth=1.2,taper=.35);
-  repeat leaves(index=l,count=4){part blade(shape=icosphere,material=dock_leaf,at=[cos(l*97)*5,4+l*2,sin(l*97)*5],size=[14,1.5,5],rot_deg=[0,l*97,20]);}
-  repeat bells(index=b,count=6){
-    group flower(at=[cos(b*137)*3,19+b*4,sin(b*137)*3],rot_deg=[0,b*137,20]){
-      part bell(shape=capsule,material=bell_pink,at=[0,0,0],size=[5.5,8,5.5]);
-      part mouth(shape=cylinder,material=bell_inner,at=[0,-3.5,0],size=[4.2,.6,4.2]);
-    }
+  body(interaction=decor,radius=4,height=50,clearance=16.31264117723);
+
+ // Preserve the released measure frame and furnishing reservation.
+ group silhouette(at=[-0.10004377365112,0,0.63315629959106],scale=1){
+ beam stalk(shape=cylinder,material=stem,from=[0,0,0],to=[1,48,0],width=1.2,depth=1.2,taper=.35);
+  repeat leaves(index=l,count=4){
+   let y(value=4+l*2);
+   use blade(component=rooted_blade,args=[10.5,4,.18],materials=[dock_leaf],at=[y/48,y,0],rot_deg=[0,l*97,20]);
   }
-  part bud(shape=icosphere,material=bell_pink,at=[1,47,0],size=[3.5,5,3.5]);
+  repeat bells(index=b,count=5){
+   let a(value=b*137);
+   let y(value=19+b*5.1);
+   beam pedicel(shape=cylinder,material=stem,from=[(y+3.5)/48,y+3.5,0],to=[cos(a)*1.5,y+3.5,sin(a)*1.5],width=.25,depth=.25,taper=.45);
+   use flower(component=bell_shell,materials=[bell_pink],at=[cos(a)*3,y,sin(a)*3],rot_deg=[0,-a,0]);
+  }
+  part bud(shape=icosphere,material=bell_pink,at=[1,47,0],size=[3.5,5,3.5],faceted=true);
+ }
 }
 object wild_lavender(label="Wild lavender"){
   measure(kind=custom,axis=y,meters=.9);
-  body(interaction=decor,radius=4,height=32);
+  body(interaction=decor,radius=4,height=32,clearance=13.593148128552);
   ground(mode=surface);
-  repeat spires(index=s,count=3){
-    group spike(at=[s*5-5,0,sin(s*130)*4],rot_deg=[0,s*73,s*7-7]){
-      beam stalk(shape=cylinder,material=stem,from=[0,0,0],to=[0,31-s*2,0],width=.8,depth=.8,taper=.3);
-      repeat florets(index=f,count=3){part flower(shape=icosphere,material=purple,at=[0,18+f*4-s*2,0],size=[5-f*.6,5,4.5-f*.5],deform=deform(seed=s*11+f,amount=.12));}
-      part leaves(shape=icosphere,material=reed_leaf,at=[0,7,0],size=[12,1.5,3],rot_deg=[0,s*60,20]);
-    }
-  }
+
+ // Preserve the released measure frame and furnishing reservation.
+ group silhouette(at=[-0.9709046763777,-0.027395917993805,-1.9313324616829],scale=1.0011574337553){
+ repeat spires(index=s,count=3){group spike(at=[s*5-5,0,sin(s*130)*4],rot_deg=[0,s*73,s*7-7]){
+   beam stalk(shape=cylinder,material=stem,from=[0,0,0],to=[0,31-s*2,0],width=.35,depth=.35,taper=.3,faceted=true);
+   repeat florets(index=f,count=5){part flower(shape=icosphere,material=purple,at=[0,18+f*2.2-s*2,0],size=[3.5-f*.35,2.5,3.3-f*.3],faceted=true);}
+   part tip(shape=icosphere,material=lavender_tip,at=[0,29.5-s*2,0],size=[1.8,3,1.8],faceted=true);
+   use left(component=rooted_blade,args=[5.5,1,.14],materials=[reed_leaf],at=[0,7,0],rot_deg=[0,0,15]);
+   use right(component=rooted_blade,args=[5.5,1,.14],materials=[reed_leaf],at=[0,7,0],rot_deg=[0,180,15]);
+  }}
+ }
 }
 object river_reeds(label="River reeds"){
   measure(kind=custom,axis=y,meters=1.8);
-  body(interaction=decor,radius=4,height=52);
+  body(interaction=decor,radius=4,height=52,clearance=18.300037415536);
   ground(mode=surface);
-  repeat reeds(index=r,count=5){
-    group stalk(at=[cos(r*137)*6,0,sin(r*137)*6],rot_deg=[0,r*137,r*2-4]){
-      beam stem(shape=cylinder,material=stem,from=[0,0,0],to=[0,38+r*2,0],width=.9,depth=.9,taper=.4);
-      part seed_head(shape=capsule,material=reed_head,at=[0,35+r*2,0],size=[3.2,10,3.2]);
-      part blade(shape=icosphere,material=reed_leaf,at=[4,15,0],size=[3,30,1.3],rot_deg=[0,0,-18],motion=sway(deg=2,hz=.2));
-    }
-  }
+
+ // Preserve the released measure frame and furnishing reservation.
+ group silhouette(at=[-0.19178533606486,-0.013986768043382,-0.039511092712116],scale=0.99796594889075){
+ repeat reeds(index=r,count=5){group stalk(at=[cos(r*137)*6,0,sin(r*137)*6],rot_deg=[0,r*137,r*2-4]){
+   beam stem(shape=cylinder,material=stem,from=[0,0,0],to=[0,38+r*2,0],width=.5,depth=.5,taper=.4,faceted=true);
+   part seed_head(shape=cylinder,material=reed_head,at=[0,35+r*2,0],size=[3.2,10,3.2],faceted=true);
+   use blade(component=rooted_blade,args=[24,2,.16],materials=[reed_leaf],at=[0,8,0],rot_deg=[0,0,70]);
+  }}
+ }
 }
 object meadow_daisies(label="Meadow daisies"){
   measure(kind=custom,axis=x,meters=1.15);
-  body(interaction=decor,radius=4,height=30);
+  body(interaction=decor,radius=4,height=30,clearance=19.916569298083);
   ground(mode=surface);
-  repeat flowers(index=f,count=3){
-    group bloom(at=[f*10-10,0,sin(f*130)*5]){
-      beam stalk(shape=cylinder,material=stem,from=[0,0,0],to=[0,18+f*4,0],width=.8,depth=.8,taper=.4);
-      part center(shape=sphere,material=pollen,at=[0,18+f*4,0],size=[4,2.5,4]);
-      repeat petals(index=p,count=6){part petal(shape=icosphere,material=cream,at=[cos(p*60)*3.6,18+f*4,sin(p*60)*3.6],size=[6,1.2,3],rot_deg=[0,-p*60,0]);}
-      part leaf(shape=icosphere,material=fern_leaf,at=[3,7+f,0],size=[9,1.5,3],rot_deg=[0,f*80,25]);
-    }
-  }
+
+ // Preserve the released measure frame and furnishing reservation.
+ group silhouette(at=[0.11621379852295,0,-0.051244448088656],scale=1.0070008310754){
+ repeat flowers(index=f,count=3){group bloom(at=[f*10-10,0,sin(f*130)*4.5]){
+   beam stalk(shape=cylinder,material=stem,from=[0,0,0],to=[0,18+f*4,0],width=.35,depth=.35,taper=.4,faceted=true);
+   part center(shape=icosphere,material=pollen,at=[0,18+f*4,0],size=[4,2.5,4],faceted=true);
+   repeat petals(index=p,count=6){use petal(component=rooted_petal,args=[6.6,2,.16],materials=[cream],at=[0,18+f*4,0],rot_deg=[0,-p*60,0]);}
+   use leaf(component=rooted_blade,args=[9,2.5,.16],materials=[fern_leaf],at=[0,7+f,0],rot_deg=[0,f*80,25]);
+  }}
+ }
 }
 object hazel_bush(label="Hazel thicket"){
   measure(kind=custom,axis=y,meters=2.5);
-  body(interaction=decor,radius=6,height=40);
-  repeat stems(index=s,count=3){beam branch(shape=cylinder,material=bark,from=[0,0,0],to=[s*10-10,26,sin(s*130)*6],width=2.2,depth=2.2,taper=.4);}
-  repeat crowns(index=c,count=4){part crown(shape=icosphere,material=hazel_leaf,at=[cos(c*100)*9,22+sin(c*100)*3,sin(c*100)*8],size=[25,23,21],deform=deform(seed=283+c*41,amount=.14),motion=sway(deg=1.5,hz=.15));}
-  repeat catkins(index=c,count=5){part catkin(shape=capsule,material=pollen,at=[cos(c*137)*15,16+c,sin(c*137)*14],size=[1.8,6,1.8]);}
+  body(interaction=decor,radius=6,height=40,clearance=28.284586960433);
+
+ // Preserve the released measure frame and furnishing reservation.
+ group silhouette(at=[0,0,0],scale=1){
+ repeat stems(index=s,count=3){beam branch(shape=cylinder,material=bark,from=[0,0,0],to=[s*10-10,26,sin(s*130)*6],width=2.2,depth=2.2,taper=.4);}
+  repeat crowns(index=c,count=4){
+   let x(value=cos(c*100)*9);
+   let y(value=22+sin(c*100)*3);
+   let z(value=sin(c*100)*8);
+   part crown(shape=icosphere,material=hazel_leaf,at=[x,y,z],size=[25,23,21],faceted=true,motion=sway(deg=1.5,hz=.15));
+   beam twig(shape=cylinder,material=bark,from=[x+6,y-3,z+3],to=[x+9,y-9,z+5],width=.2,depth=.2,taper=.3);
+   part catkin(shape=cylinder,material=pollen,at=[x+9,y-10,z+5],size=[.65,4,.65],faceted=true);
+  }
+ }
 }
 object weeping_willow(label="Weeping willow"){
   measure(kind=tree,axis=y,meters=10);
@@ -115,24 +164,38 @@ object weeping_willow(label="Weeping willow"){
 }
 
 material grass_gold(style=toon,colors=[#9ba969,#71844e]);
-material blue_petal(style=toon,colors=[#829bbf,#627b9e]);
 object meadow_grass(label="Meadow grass clump"){
  measure(kind=custom,axis=y,meters=.7);
- body(interaction=decor,radius=4,height=20);
+ body(interaction=decor,radius=4,height=20,clearance=11.591889448122);
  ground(mode=surface);
+
+ // Preserve the released measure frame and furnishing reservation.
+ group silhouette(at=[-0.013455811024447,-0.12088715285063,0.0082099706175386],scale=1.0107386571666){
  repeat blades(index=i,count=9){
-  beam blade(shape=box,material=grass_gold,from=[cos(i*137)*i*.6,0,sin(i*137)*i*.6],to=[cos(i*137)*(i*.6+4),10+i,sin(i*137)*(i*.6+4)],width=.7,depth=.25);
+   let a(value=i*137);
+   part blade(shape=prism,material=grass_gold,at=[cos(a)*(i*.6+2),(10+i)/2,sin(a)*(i*.6+2)],size=[4,10+i,.16],rot_deg=[0,-a,0],outline=[[0,0],[.1,0],[.36,.45],[1,1],[.68,.82],[.2,.48]],motion=sway(deg=1.4,hz=.21));
+  }
  }
 }
 object blue_hydrangea(label="Blue hydrangea"){
  measure(kind=custom,axis=y,meters=1.1);
- body(interaction=decor,radius=4,height=24);
+ body(interaction=decor,radius=4,height=24,clearance=15.052682846732);
+
+ // Preserve the released measure frame and furnishing reservation.
+ group silhouette(at=[0.13077890678953,-0.096261417737309,-0.6639205815655],scale=1.0231958470646){
  repeat branches(index=i,count=4){
-  let x(value=cos(i*137)*6);
-  let z(value=sin(i*137)*6);
-  beam stem(shape=cylinder,material=bark,from=[0,0,0],to=[x,15,z],width=1,depth=1);
-  part leaves(shape=icosphere,material=hazel_leaf,at=[x*.8,10,z*.8],size=[12,8,10],deform=deform(seed=681+i,amount=.14));
-  part flower_head(shape=icosphere,material=blue_petal,at=[x,17+i,z],size=[9,8,9],deform=deform(seed=901+i,amount=.1));
+   let x(value=cos(i*137)*6);
+   let z(value=sin(i*137)*6);
+   beam stem(shape=cylinder,material=bark,from=[0,0,0],to=[x,19.7+i,z],width=.6,depth=.6,taper=.4);
+   use left(component=rooted_blade,args=[7,3.5,.2],materials=[hazel_leaf],at=[x*.5,(19.7+i)*.5,z*.5],rot_deg=[0,-i*137+65,20]);
+   use right(component=rooted_blade,args=[7,3.5,.2],materials=[hazel_leaf],at=[x*.6,(19.7+i)*.6,z*.6],rot_deg=[0,-i*137-65,20]);
+   part hub(shape=cylinder,material=hazel_leaf,at=[x,19.7+i,z],size=[5.5,.6,5.5],faceted=true);
+   repeat flowers(index=f,count=2){
+    let side(value=f*2-1);
+    use blossom(component=hydrangea_floret,materials=[hydrangea_light],at=[x+side*1.7,20.05+i,z+side*.6],rot_deg=[0,f*35+i*17,0]);
+    part center(shape=icosphere,material=hydrangea_center,at=[x+side*1.7,20.3+i,z+side*.6],size=[.55,.5,.55],faceted=true);
+   }
+  }
  }
 }
 
