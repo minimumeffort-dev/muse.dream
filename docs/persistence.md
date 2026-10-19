@@ -521,3 +521,13 @@ search is deterministic and bounded to 256 candidates within 32 metres per seed;
 if it cannot find space, restoration fails without replacing the old slot. The
 existing unsafe-active-pose recovery remains as a final safeguard. Original slots remain intact.
 Save format 17 and simulation version 32 are unchanged.
+
+## Tree construction upgrade
+
+The registered r76 update replaces tree visuals while preserving saved lives,
+vehicles, cargo, accounts, damage, falling trees, worker journeys and growing
+replacements. Its explicit projection restores the released r75 tree definitions
+and derived placements before every earlier compatibility stage. Old slots
+remain intact. The worker supplies the prior contact cache with the projection's
+source identity before old-state validation. Save format 17 and simulation 32
+stay unchanged. [Native and historical checks](evidence/tree-construction/verification.md).

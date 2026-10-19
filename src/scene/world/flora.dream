@@ -11,7 +11,7 @@ material cream(style=toon,colors=[#eee4bd,#d3cba8]);
 material pollen(style=toon,colors=[#d9aa45,#b38634]);
 material bark(style=toon,colors=[#806447,#544b37]);
 material hazel_leaf(style=toon,colors=[#789451,#4d7042]);
-material willow_leaf(style=toon,colors=[#9da45c,#687f48]);
+material willow_leaf(style=toon,colors=[#829565,#5d7954]);
 
 object woodland_fern(label="Woodland fern"){
   measure(kind=custom,axis=y,meters=.9);
@@ -100,12 +100,18 @@ object weeping_willow(label="Weeping willow"){
   measure(kind=tree,axis=y,meters=10);
   body(interaction=solid,radius=9,height=62);
   beam trunk(shape=cylinder,material=bark,from=[0,0,0],to=[2,39,0],width=7,depth=7,taper=.55);
-  repeat boughs(index=b,count=3){beam branch(shape=cylinder,material=bark,from=[1,24,0],to=[cos(b*120)*19,43,sin(b*120)*19],width=3,depth=3,taper=.35);}
-  repeat crowns(index=c,count=4){part crown(shape=icosphere,material=willow_leaf,at=[cos(c*90)*12,43,sin(c*90)*12],size=[30,23,29],deform=deform(seed=521+c*21,amount=.14));}
-  repeat curtains(index=c,count=8){
-    part frond(shape=icosphere,material=willow_leaf,at=[cos(c*45)*23,29+sin(c*97)*3,sin(c*45)*23],size=[3.4,29,3],rot_deg=[sin(c*45)*8,0,cos(c*45)*8],deform=deform(seed=871+c*17,amount=.12),motion=sway(deg=2,hz=.18));
-    part inner_frond(shape=icosphere,material=fern_leaf,at=[cos(c*45)*20,24+sin(c*97)*3,sin(c*45)*20],size=[3.4,22,3],deform=deform(seed=921+c*17,amount=.12),motion=sway(deg=2,hz=.18));
+  repeat boughs(index=b,count=6){
+    let x(value=cos(b*60));
+    let z(value=sin(b*60));
+    beam rising_branch(shape=cylinder,material=bark,from=[1,26,0],to=[x*17,43,z*17],width=1.8,depth=1.8,taper=.4);
+    repeat sides(index=s,count=2){
+      let a(value=b*60+(s*2-1)*15);
+      let droop(value=sin((b*2+s)*97)*3);
+      beam falling_branch(shape=cylinder,material=bark,from=[x*17,42.8,z*17],to=[cos(a)*23,25+droop,sin(a)*23],width=.72,depth=.72,taper=.3);
+      part frond(shape=icosphere,material=willow_leaf,at=[cos(a)*22.5,31+droop,sin(a)*22.5],size=[4.5,26,2.5],rot_deg=[0,-a,0],faceted=true,motion=sway(deg=1.2,hz=.18));
+    }
   }
+  part crown(shape=icosphere,material=willow_leaf,at=[0,41.5,0],size=[54,26,53],faceted=true,motion=sway(deg=.6,hz=.14));
 }
 
 material grass_gold(style=toon,colors=[#9ba969,#71844e]);

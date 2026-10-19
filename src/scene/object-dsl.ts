@@ -91,6 +91,7 @@ const objectV2PartSchema=objectPartSchema.extend({
   parent:z.string().min(1).max(40).optional(),
   position:z.tuple([offset,z.number().finite().min(-128).max(128),offset]),
   taper:z.number().finite().min(.1).max(1).optional(),
+  faceted:z.boolean().optional(),
   deform:z.object({seed:z.number().int().min(0).max(65535),amount:z.number().finite().min(0).max(.24)}).strict().optional(),
   fragment:z.string().min(1).max(40).optional(),
   zone:z.string().min(1).max(40).optional(),
@@ -134,6 +135,7 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
     spec.parts.forEach((part,index)=>{
       if(part.shape==='voxel' && (!part.voxels || !voxelSchema.safeParse(part.voxels).success))geometryValid=false;
       if(part.taper!==undefined && part.shape!=="cylinder"){geometryValid=false;ctx.addIssue({code:z.ZodIssueCode.custom,path:["parts",index,"taper"],message:"taper requires a cylinder"});}
+      if((part.faceted!==undefined && !['cylinder','cone','icosphere'].includes(part.shape)) || (part.faceted && part.deform?.amount)){geometryValid=false;ctx.addIssue({code:'custom',path:['parts',index,'faceted'],message:'faceted requires an undeformed cylinder, cone or icosphere'});}
       const problem=part.shape==='prism' ? part.outline ? profileProblem(part.outline) : 'prism requires an outline' : part.outline ? 'outline requires a prism' : undefined;
       if(problem){geometryValid=false;ctx.addIssue({code:z.ZodIssueCode.custom,path:['parts',index,'outline'],message:problem});}
     });

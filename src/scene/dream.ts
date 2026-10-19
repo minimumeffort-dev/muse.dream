@@ -261,6 +261,7 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
               position: position.toArray(), size: size.toArray(), rotation: angles(orient), ...(frame.parent ? { parent: frame.parent } : {}),
               ...(voxels ? {voxels} : {}),...(statement.cutaway ? {cutaway:statement.cutaway as "roof"|"front"|"back"|"left"|"right"} : {}),
               ...(statement.taper ? {taper:number(statement.taper)} : {}),
+              ...(statement.faceted!==undefined ? {faceted:statement.faceted} : {}),
               ...(statement.outline ? {outline:statement.outline.map(point=>point.map(number) as [number,number])} : {}),
               ...(frame.fragment ? {fragment:frame.fragment} : {}),...(frame.zone ? {zone:frame.zone} : {}),...(statement.deform ? { deform: { seed: number(statement.deform[0]), amount: number(statement.deform[1]) } } : {}), ...(animation ? { animation } : {}) });
             origins.push(token); break;

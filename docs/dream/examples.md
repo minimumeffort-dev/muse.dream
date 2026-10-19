@@ -287,3 +287,5 @@ The [seating guide](seating.md) explains approaches, claims and saved meals.
 [Full-verge repair](../examples/full-verge-repairs.dream) connects a measured,
 fully jointed worker to a lamp near the edge of its declared street verge, with
 finite supplies, pay and a required crossing.
+
+The [faceted fir](../examples/faceted-canopy.dream) uses the live tree’s complete visual construction, with tapered branch supports and explicit flat canopy faces. The world entry file supplies its shared toppling rule.

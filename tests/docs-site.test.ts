@@ -6,6 +6,10 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights the facet field at whole-token boundaries and escapes authored labels',()=>{
+    const html=highlight('part leaf(shape=icosphere,faceted=true); // <Tree>&');
+    expect(html).toContain('class="dream-field">faceted</span>');expect(html).toContain('&lt;Tree&gt;&amp;');expect(highlight('facetedness faceted_extra')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('highlights utility proportion kinds at whole-token boundaries and escapes authored labels',()=>{
     const html=highlight('measure(kind=pickup,axis=x,meters=4.95);measure(kind=truck,axis=x,meters=6.6); // <Fleet>&');
     for(const word of ['pickup','truck'])expect(html).toContain(`class="dream-symbol">${word}</span>`);

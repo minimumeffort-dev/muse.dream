@@ -27,6 +27,12 @@ and their handmade source in `src/scene/mock-creations.ts`.
 
 Version 2 parts also accept `shape: "prism"` with a bounded `outline` of normalized XY pairs. The engine extrudes it through Z; legacy version 1 stays unchanged. Joints may use `animation: {kind: "roll", axis: "z", radius: 8}` for rigid distance-driven mechanisms. Existing swing animation objects retain their original format. [Dream authoring and bounds](dream/objects.md).
 
+Optional `faceted: true` on an undeformed cylinder, cone or icosphere retains its
+flat polygon faces, including exact planar contours under voxel construction.
+It changes appearance, not the body or cell budget. Other shapes and positive
+deformation reject it. Omitted or false retains the curved path. Version 1 stays
+strict and does not accept this field. [Complete Dream example](examples/faceted-canopy.dream).
+
 ## The composition contract
 
 Every object has a display name, `parts` and one independent `body`.

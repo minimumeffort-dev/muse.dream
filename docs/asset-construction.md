@@ -13,11 +13,14 @@ for the whole library. The [Car Kit](https://kenney.nl/assets/car-kit),
 [industrial city kit](https://kenney.nl/assets/city-kit-industrial) and
 [Mini Forest](https://kenney.nl/assets/mini-forest) previews were inspected on
 2026-10-19. The construction rules below are our interpretation of those visual
-references. The current catalogue has not yet received this complete pass.
+references. Trees are the first completed family. The rest of the catalogue
+still needs this pass.
 
 The [r75 catalogue](evidence/asset-direction/catalogue.json) lists all 109 loaded
-assembly exports with explicit pending review status. That includes 28 buildings,
-14 person exports and 12 tree exports. Repeated exports remain listed. The
+assembly exports at the start of this pass. The [r76 catalogue](evidence/asset-direction/r76-catalogue.json)
+records eleven refined live tree templates and the reviewed, retained deadwood.
+The other 97 exports remain pending, including 28 buildings and 14 person
+exports. Repeated exports remain listed. The
 engine-provided player rigs, infrastructure and optional example catalogue also
 belong in the pass; the loaded-library list does not certify those separately.
 
@@ -127,3 +130,19 @@ The [utility library](examples/utility-vehicles.dream) is shared verbatim with t
 street asset module. Check the independent passenger against the inside of the
 cab roof, not just its outer bounds. The pickup keeps over 4 cm of headroom;
 its parked role never replaces the authored car control capability.
+
+## Tree family, r76
+
+The twelve tree exports have been reviewed from four angles. Eleven live
+templates now cover all 345 city and woodland trees; the unused standing deadwood
+retains its geometry. The review replaces noisy crowns with explicit flat faces,
+connects conifer boughs to continuous trunks, gives the willow attached paired
+branches and makes fruit smaller with connected stalks. The source uses the
+bounded `faceted` option on existing primitives rather than a denser voxel grid.
+
+![Current tree construction](media/canopy.jpg)
+
+[Complete live fir construction](examples/faceted-canopy.dream). The world entry
+file supplies its shared toppling rule. Attachment tests check actual transformed
+primitive surfaces, including each willow branch and fruit stalk. Body dimensions
+and measured scales stay exact. The remaining asset families are still pending.

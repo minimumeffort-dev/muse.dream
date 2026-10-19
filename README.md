@@ -457,10 +457,18 @@ Objects share physical units. The car is 3.55 metres long, the plane has a 10.8-
 
 The [asset library](docs/asset-library.md) covers the live world assemblies. Cars have window pillars and wheel hubs, bikes have chains and pedals, and the new buildings have attached roofs, embedded façade details and supported canopies. Birches have pale tapered stems, visible forks, hanging twigs and smaller leaf clusters, with bark marks on both sides. The destructible birch falls as one connected tree. Deadwood uses tapered trunks and branches; fallen logs have cut ends, moss and varied headings on the ground. These details are Dream parts too, including the pieces released when something breaks.
 
-The next construction pass takes inspiration from [Kenney's kits](https://kenney.nl/starter-kits)
+The construction pass takes inspiration from [Kenney's kits](https://kenney.nl/starter-kits)
 across the whole library: buildings, transport, people, animals, plants and props.
 The [construction guide](docs/asset-construction.md#the-next-pass-covers-the-whole-library)
-tracks the scope and review rules. That full visual pass is still pending.
+tracks the scope and review rules. Trees are the first completed family; the rest remains pending.
+
+![Cleaner crowns, supported branches and smaller fruit](docs/media/canopy.gif)
+
+All 345 live trees now use the refined models. Firs have connected branch
+supports, the willow has a continuous crown and paired hanging boughs, and fruit
+is small enough to belong on the tree. Dream's explicit `faceted=true` keeps
+these faces clean inside the voxel world. Toppling, replanting and saved progress
+keep working. Fruit is visual; harvesting is still separate work.
 
 ![Fallen log and deadwood built with connected, tapered wood parts](docs/media/woodland.jpg)
 

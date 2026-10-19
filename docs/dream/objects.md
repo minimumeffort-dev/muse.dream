@@ -28,6 +28,15 @@ Box bevels follow the smallest physical dimension, so a long plank keeps crisp e
 
 Materials are engine-owned styles, each with two hex colors. `deform(seed=...,amount=...)` adds bounded, deterministic variation to supported parts.
 
+Use `faceted=true` on an undeformed `icosphere`, `cone` or `cylinder` when the
+polygonal faces belong to the design. Cylinder beams accept it too. The engine
+retains flat faces in ordinary rendering and exact cut-cell contours in voxel
+worlds, instead of reconstructing a curved surface. This makes small fruit and
+layered crowns readable without increasing grid resolution. Other shapes and
+positive deformation reject the field; `false` or omission keeps the existing
+curved reconstruction. Part, grid, contact and fracture budgets stay unchanged.
+[Complete faceted fir](../examples/faceted-canopy.dream).
+
 | Style | Surface | Two colors |
 | --- | --- | --- |
 | `brick` | Staggered 24 × 7.5 cm courses, thin recessed mortar and variation between bricks | Fired face / mortar |

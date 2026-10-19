@@ -1,0 +1,20 @@
+dream 2;
+material m3(style=toon,colors=[#655140,#3c3830]);
+material fir_needle(style=toon,colors=[#56745d,#405b49]);
+material fir_tip(style=toon,colors=[#5e8062,#46634c]);
+object silver_fir(label="Silver fir"){
+  measure(kind=tree,axis=y,meters=13);
+  body(interaction=solid,radius=13,height=76);
+  part trunk(shape=cylinder,material=m3,at=[0,30,0],size=[5,60,5],taper=.5,faceted=true);
+  part bough_0(shape=cone,material=fir_needle,at=[0,22,0],size=[39,22,33.15],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),faceted=true);
+  part bough_1(shape=cone,material=fir_tip,at=[-2,35,0],size=[32,23,27.2],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),faceted=true);
+  part bough_2(shape=cone,material=fir_needle,at=[1,48,0],size=[25,23,21.25],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),faceted=true);
+  part bough_3(shape=cone,material=fir_tip,at=[0,62,0],size=[16,28,13.6],motion=sway(deg=1.0313240312354817,hz=0.1432394487827058),faceted=true);
+  beam exposed_root(shape=cylinder,material=m3,from=[-5,1,0],to=[0,6,0],width=2,depth=2);
+  repeat boughs(index=s,count=2){
+    let side(value=s*2-1);
+    beam lower_support(shape=cylinder,material=m3,from=[0,16,0],to=[side*13,18,0],width=1.2,depth=1.2,taper=.35);
+    beam middle_support(shape=cylinder,material=m3,from=[0,28,0],to=[-2+side*9,30,0],width=1,depth=1,taper=.35);
+    beam upper_support(shape=cylinder,material=m3,from=[0,40,0],to=[1+side*7,43,0],width=.8,depth=.8,taper=.35);
+  }
+}

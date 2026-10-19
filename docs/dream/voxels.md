@@ -75,3 +75,10 @@ The mesher culls hidden faces and greedily merges coplanar faces within each vol
 Empty volumes, empty chunks, out-of-grid bounds, fractional indices, excessive work and unsupported fields fail validation. Voxels don't accept deform, cloth or part-level motion; put rigid motion on a joint. Dream 1 remains unchanged.
 
 A test block with 4,096 occupied cells needs six quads, compared with 24,576 faces if each cell were drawn as a cube. This measures geometry, not browser frame rate. The approach follows Mikola Lysenko's [greedy meshing explanation](https://0fps.net/2012/06/30/meshing-in-a-minecraft-game/). See the [verification record](../evidence/voxels/verification.md) for the live-city geometry comparison and capture audit.
+
+Explicit `faceted=true` keeps undeformed cylinder, cone and icosphere faces as
+exact planar cell contours. This is useful for clean crowns and small fruit:
+the source still describes bounded occupied cells, but their boundary need not
+become a noisy curved reconstruction. The flag does not raise grid, part, work
+or fracture limits. Other shapes and positive deformation reject it; omission
+or false preserves the ordinary curved path. [Complete fir](../examples/faceted-canopy.dream).

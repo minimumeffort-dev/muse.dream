@@ -12,7 +12,7 @@ export type Statement = {
   value?: Expr; args?: Expr[]; at?: Vec; size?: Vec; to?: Vec; rotate?: Vec; scale?: Expr;
   clearance?:Expr;approach?:Expr[];contactSize?:Expr[];heading?:Expr;cutaway?:string;
   grid?:Vec;chunks?:Vec;bone?:string;materials?:string[];
-  taper?: Expr; outline?:[Expr,Expr][]; deform?: [Expr, Expr]; motion?: Motion; block?: Statement[]; interaction?: string; color?: string;
+  taper?: Expr; faceted?:boolean; outline?:[Expr,Expr][]; deform?: [Expr, Expr]; motion?: Motion; block?: Statement[]; interaction?: string; color?: string;
   site?:string;pattern?:string;axis?:string;control?:string;damage?:{kind:string;args:Expr[];pattern?:string};
 };
 export type Component = { token: Token; params: string[]; materials?:string[]; block: Statement[] };

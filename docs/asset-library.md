@@ -136,7 +136,7 @@ Dream 2 now supports bounded filled/carved voxel parts, greedy surface meshing a
 
 ## A fuller city and its habitats
 
-The live city now contains 123 people, 336 trees and 60 additional roaming ground animals and birds. Shoppers, students and neighbors have varied clothing, hair and complexions; dogs, cats and sparrows join the woodland deer, hares and foxes. Meadow grass and hydrangeas add two more planting forms.
+The live city contains 133 placed people and 345 trees, alongside roaming ground animals and birds. Shoppers, students and neighbors have varied clothing, hair and complexions; dogs, cats and sparrows join the woodland deer, hares and foxes. Meadow grass and hydrangeas add two more planting forms.
 
 ![New neighborhood animals and garden plants](media/population-assets.jpg)
 
@@ -175,3 +175,24 @@ The unused Weathered boulder and Exposed stone slab studies remain in the
 [optional creations catalogue](../src/scene/world/creations.dream), with their
 released shapes and materials. This leaves the active project's 128-definition
 budget unchanged.
+
+## A tree family with clearer construction
+
+All 345 live trees now use explicit faceted crowns. Firs and pines have supported
+boughs and continuous trunks. The willow has one broad crown, six rising boughs
+and twelve attached hanging branches with leaf curtains. Rowan berries form small
+clusters; apples have stalks rooted inside the canopy. The amber tree and its
+sapling keep distinct crown proportions. Birch branches retain their existing
+construction, with cleaner leaf masses. The unused deadwood model was reviewed
+and retained.
+
+![The refined tree family](media/canopy.jpg)
+
+[Turntable in HD](media/canopy.mp4) · [GIF](media/canopy.gif) ·
+[Complete fir source](examples/faceted-canopy.dream) ·
+[Four-angle and save checks](evidence/tree-construction/verification.md).
+
+These are stylized crowns, not individually modeled leaves or a botanical
+simulation. Fruit remains decorative. Existing body dimensions, scales,
+toppling, finite replanting supplies and growth behavior stay in place. Other
+asset families remain on the [construction review](asset-construction.md).

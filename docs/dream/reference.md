@@ -99,8 +99,8 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `mount` | object | ID / visual | `bone: humanoid binding` |
 | `repeat` | object / visual / path / route_path / voxel_ops | ID / inherit | `index: symbol`, `count: n` |
 | `use` | object / visual | ID / no block | `component: ref`, `args?: nums`, `materials?: symbols`, `at?: v3`, `rot_deg?: v3`, `scale?: n` |
-| `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus / prism`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `outline?: points2`, `taper?: n`, `deform?: deform`, `motion?: part_motion`, `cutaway?: roof / front / back / left / right` |
-| `beam` | object / visual | ID / no block | `shape: box / cylinder / capsule`, `material: ref`, `from: v3`, `to: v3`, `width: n`, `depth: n`, `taper?: n`, `deform?: deform`, `motion?: part_motion` |
+| `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus / prism`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `outline?: points2`, `taper?: n`, `faceted?: bool`, `deform?: deform`, `motion?: part_motion`, `cutaway?: roof / front / back / left / right` |
+| `beam` | object / visual | ID / no block | `shape: box / cylinder / capsule`, `material: ref`, `from: v3`, `to: v3`, `width: n`, `depth: n`, `taper?: n`, `faceted?: bool`, `deform?: deform`, `motion?: part_motion` |
 
 Optional Dream 2 `body.clearance` is a 4..128 local-unit minimum furnishing reservation, at least the collision radius. Visible bounds can require more space. It does not change contacts, driving, navigation radii or render culling. Compiled Object DSL uses `body.clearanceRadius`; v1 data remains strict. [People and clothing](people.md).
 
@@ -109,6 +109,12 @@ Object-root `mount detail(bone=spine){...}` adds visuals to exactly one previous
 Components allow eight unique numeric/material formals combined: `params=[height]` and `materials=[finish]`. `use.args` binds numeric expressions; `use.materials` binds material IDs or enclosing material formals. Both lists require exact arity in declaration order, including zero when omitted. Material formals cannot collide with numeric formals or global numeric constants; numeric-only shadowing retains its existing semantics. Material formals may shadow global materials. Callees receive globals plus explicit bindings, without caller-local leakage. Material bindings apply to parts, beams, voxels and nested uses. No recursion; source, expansion, part and joint limits remain unchanged. [Complete nested example](../examples/material-components.dream).
 
 Prism parts require `outline: points2`: 3..24 vertices in normalized XY, each coordinate in 0..1, spanning 0..1 on both axes and area at least `.01`. Either winding is accepted. No holes, repeated closing point, zero-length edges, foldbacks, crossed edges or self-touching. The engine centers it across full size X/Y and extrudes through full size Z. Only prisms accept an outline. Rotation, uniform scaling, measurement, batching and material rules remain the same.
+
+Optional `faceted: bool` applies only to undeformed cylinder, cone and icosphere
+parts, including cylinder beams. True keeps flat faces and exact planar voxel
+contours; false or omission keeps curved reconstruction. Positive deformation
+and other shapes reject the field. It adds no cells, contacts or fragment slots.
+[Complete fir](../examples/faceted-canopy.dream).
 
 For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1` to `1`, default `1`. It sets the +Y end diameter relative to the −Y base, or `to` relative to `from` for a beam. Full `size` dimensions and beam `width`/`depth` describe the base. Rotation and uniform group scaling preserve the ratio. Seeded deformation may vary the surface; grounding, measurement and rendering use the same resulting geometry. Other shapes reject this field. See the [complete tapered wood example](../examples/tapered-wood.dream).
 

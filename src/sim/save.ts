@@ -24,7 +24,7 @@ import {objectFragments} from '../scene/fragments';
 import {actorPose} from './actors';
 import {AMBIENT_LIMITS} from '../scene/ambient';
 import {priorInvitationEconomyStateSchema,economyStateSchema,socialEconomyStateSchema,shiftEconomyStateSchema,hoursEconomyStateSchema,mealEconomyStateSchema,progressEconomyStateSchema,recipeEconomyStateSchema,withPersonalHistory,priorCourierEconomyStateSchema,priorGrowthEconomyStateSchema,parkingEconomyStateSchema,previousEconomyStateSchema,initialEconomy,checkEconomyState} from './commerce';
-import {FLEET_COMPATIBILITY,preFleetScene,TREE_COMPATIBILITY,preTreeScene,COVERAGE_COMPATIBILITY,preCoverageScene,INVITATION_COMPATIBILITY,preInvitationScene,SAVE_SIMULATION_VERSION,PEOPLE_COMPATIBILITY,prePeopleScene,JUNCTION_COMPATIBILITY,preJunctionScene,SPACING_COMPATIBILITY,PARK_COMPATIBILITY,preParkScene,CITY_COMPATIBILITY,preCityScene,MATCH_COMPATIBILITY,preMatchScene,BUSINESS_COMPATIBILITY,preBusinessScene,SCHOOL_REPAIR_COMPATIBILITY,preSchoolRepairScene,SOCIAL_COMPATIBILITY,preSocialScene,SHIFT_COMPATIBILITY,preShiftScene,HOURS_COMPATIBILITY,preHoursScene,SEATING_COMPATIBILITY,preSeatingScene,KITCHEN_COMPATIBILITY,preKitchenScene,MEAL_COMPATIBILITY,preMealScene,PROGRESS_COMPATIBILITY,preProgressScene,RECIPE_COMPATIBILITY,preRecipeScene,EGRESS_COMPATIBILITY,INTERIOR_COMPATIBILITY,preInteriorScene,COURIER_COMPATIBILITY,preCourierScene,NATURAL_COMPATIBILITY,preFinishScene,PLANT_COMPATIBILITY,VERGE_COMPATIBILITY,prePlantScene,R44_COMPATIBILITIES,preDeliveryScene,preParkingScene,preRepairScene,preSupplyScene,preNetworkScene,prePoolScene,preVergeScene} from '../scene/save-compatibility';
+import {CANOPY_COMPATIBILITY,preCanopyScene,FLEET_COMPATIBILITY,preFleetScene,TREE_COMPATIBILITY,preTreeScene,COVERAGE_COMPATIBILITY,preCoverageScene,INVITATION_COMPATIBILITY,preInvitationScene,SAVE_SIMULATION_VERSION,PEOPLE_COMPATIBILITY,prePeopleScene,JUNCTION_COMPATIBILITY,preJunctionScene,SPACING_COMPATIBILITY,PARK_COMPATIBILITY,preParkScene,CITY_COMPATIBILITY,preCityScene,MATCH_COMPATIBILITY,preMatchScene,BUSINESS_COMPATIBILITY,preBusinessScene,SCHOOL_REPAIR_COMPATIBILITY,preSchoolRepairScene,SOCIAL_COMPATIBILITY,preSocialScene,SHIFT_COMPATIBILITY,preShiftScene,HOURS_COMPATIBILITY,preHoursScene,SEATING_COMPATIBILITY,preSeatingScene,KITCHEN_COMPATIBILITY,preKitchenScene,MEAL_COMPATIBILITY,preMealScene,PROGRESS_COMPATIBILITY,preProgressScene,RECIPE_COMPATIBILITY,preRecipeScene,EGRESS_COMPATIBILITY,INTERIOR_COMPATIBILITY,preInteriorScene,COURIER_COMPATIBILITY,preCourierScene,NATURAL_COMPATIBILITY,preFinishScene,PLANT_COMPATIBILITY,VERGE_COMPATIBILITY,prePlantScene,R44_COMPATIBILITIES,preDeliveryScene,preParkingScene,preRepairScene,preSupplyScene,preNetworkScene,prePoolScene,preVergeScene} from '../scene/save-compatibility';
 import {primeSceneContacts,sceneContactData} from '../scene/contacts';
 import {primeAmbientNavigation,ambientGraph,ambientNavigation} from '../scene/ambient-navigation';
 import {PARKING_LIMITS} from '../scene/agents';
@@ -78,10 +78,11 @@ const supported=z.discriminatedUnion('version',[legacyPacket,secondPacket,thirdP
 const unique=(values:unknown[])=>new Set(values).size===values.length;
 const expected=new WeakMap<World['scene'],ReturnType<typeof createCarAtSpawn>>();
 const previousWorlds=new WeakMap<World['scene'],Map<string,World['scene']>>();
-function previousPhysicalScene(world:World,stage:'fleet'|'tree'|'coverage'|'invitation'|'people'|'junction'|'park'|'city'|'match'|'business'|'schoolRepair'|'social'|'shift'|'hours'|'seating'|'kitchen'|'meal'|'progress'|'recipe'|'interior'|'courier'|'finish'|'plant'|'verge'|'pool'|'network'|'supply'|'repair'|'parking'|'delivery'|'commerce'='repair'):World['scene']{
+function previousPhysicalScene(world:World,stage:'canopy'|'fleet'|'tree'|'coverage'|'invitation'|'people'|'junction'|'park'|'city'|'match'|'business'|'schoolRepair'|'social'|'shift'|'hours'|'seating'|'kitchen'|'meal'|'progress'|'recipe'|'interior'|'courier'|'finish'|'plant'|'verge'|'pool'|'network'|'supply'|'repair'|'parking'|'delivery'|'commerce'='repair'):World['scene']{
  let stages=previousWorlds.get(world.scene);if(!stages){stages=new Map();previousWorlds.set(world.scene,stages);}
  let scene=stages.get(stage);if(scene)return scene;
  const remember=(prior:World['scene'])=>{inheritPriorRepairCoverage(prior,stage==='coverage' ? undefined : world.scene);stages!.set(stage,prior);return prior;};
+ if(stage==='canopy'){const prior=preCanopyScene(world.scene);if(world.previousCanopyContacts)primeSceneContacts(prior,world.previousCanopyContacts);primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
  if(stage==='fleet'){
   const prior=preFleetScene(world.scene),ids=new Set(prior.objects.map(o=>o.id)),contacts=sceneContactData(world.scene);
   primeSceneContacts(prior,{...contacts,contacts:contacts.contacts.filter(c=>!c.id || ids.has(c.id))});
@@ -240,6 +241,12 @@ export function decodeSave(text:string,world:World):{state:CarState;worldTime:nu
  if(text.length>MAX_SAVE_CHARACTERS)throw Error('Save exceeds one million characters');
  let data:z.infer<typeof supported>;
  try{data=supported.parse(JSON.parse(text));}catch{throw Error('This file is not a supported Muse Dream backup.');}
+ if(world.saveCompatibility===CANOPY_COMPATIBILITY && (data.version===1 || data.compatibilityHash!==CANOPY_COMPATIBILITY)){
+  if(world.previousCanopySaveCompatibility!==FLEET_COMPATIBILITY)throw Error('This backup needs a different world or simulation version.');
+  const restored=decodeSave(text,{...world,scene:previousPhysicalScene(world,'canopy'),saveCompatibility:FLEET_COMPATIBILITY,previousCanopySaveCompatibility:undefined});
+  try{checkState(restored.state,world);}catch{throw Error('This backup contains invalid world state.');}
+  return {...restored,migrated:true,compatible:data.sourceHash!==world.scene.sourceHash};
+ }
  if(world.saveCompatibility===FLEET_COMPATIBILITY && (data.version===1 || data.compatibilityHash!==FLEET_COMPATIBILITY)){
   if(world.previousFleetSaveCompatibility!==TREE_COMPATIBILITY)throw Error('This backup needs a different world or simulation version.');
   const previous=previousPhysicalScene(world,'fleet'),restored=decodeSave(text,{...world,scene:previous,saveCompatibility:TREE_COMPATIBILITY,previousFleetSaveCompatibility:undefined});

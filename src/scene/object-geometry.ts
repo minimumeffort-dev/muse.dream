@@ -42,7 +42,8 @@ export function voxelGeometry(volume:VoxelVolume,slice?:VoxelSlice):THREE.Buffer
 /** Variation is deterministic from position, so duplicated seam vertices remain joined. */
 export function partGeometry(part:ObjectPart,voxelCell?:number):THREE.BufferGeometry {
   if(part.shape==='voxel' && 'voxels' in part && part.voxels)return voxelGeometry(part.voxels);
-  const geometry=basePartGeometry(part.shape,part.size,"taper" in part ? part.taper : undefined,'outline' in part ? part.outline : undefined);
+  let geometry=basePartGeometry(part.shape,part.size,"taper" in part ? part.taper : undefined,'outline' in part ? part.outline : undefined);
+  const faceted='faceted' in part && part.faceted===true;
   const deform="deform" in part ? part.deform : undefined;
   if(deform?.amount) {
     const positions=geometry.getAttribute("position");
@@ -56,7 +57,8 @@ export function partGeometry(part:ObjectPart,voxelCell?:number):THREE.BufferGeom
     geometry.computeBoundingBox();const bounds=geometry.boundingBox!,center=bounds.getCenter(new THREE.Vector3()),size=bounds.getSize(new THREE.Vector3());
     geometry.translate(-center.x,-center.y,-center.z);geometry.scale(1/size.x,1/size.y,1/size.z);geometry.computeVertexNormals();
   }
-  if(voxelCell){const result=voxelStamp(geometry,part.size,voxelCell,JSON.stringify([part.shape,part.size,'taper' in part ? part.taper : null,'outline' in part ? part.outline : null,deform]),!deform?.amount && (part.shape==='prism'||part.shape==='pyramid'));geometry.dispose();return result;}
+  if(faceted){if(geometry.index){const flat=geometry.toNonIndexed();geometry.dispose();geometry=flat;}geometry.computeVertexNormals();}
+  if(voxelCell){const result=voxelStamp(geometry,part.size,voxelCell,JSON.stringify([part.shape,part.size,'taper' in part ? part.taper : null,'outline' in part ? part.outline : null,deform,faceted]),!deform?.amount && (faceted || part.shape==='prism'||part.shape==='pyramid'));geometry.dispose();return result;}
   return geometry;
 }
 

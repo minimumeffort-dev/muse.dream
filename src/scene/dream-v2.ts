@@ -131,6 +131,7 @@ export function lowerBlock(nodes:DreamNode[]):Statement[] {
     if(node.fields.has("rot_deg"))statement.rotate=v("rot_deg");
     if(node.fields.has("scale"))statement.scale=n("scale");
     if(node.fields.has("taper"))statement.taper=n("taper");
+    if(node.fields.has('faceted'))statement.faceted=field(node,'faceted') as boolean;
     if(node.fields.has('outline'))statement.outline=node.fields.get('outline') as [Expr,Expr][];
     if(node.fields.has("at"))statement.at=v("at");
     if(node.fields.has("cutaway"))statement.cutaway=wordField(node,"cutaway");

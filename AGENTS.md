@@ -829,3 +829,21 @@ animals, plants, furniture, food, props and infrastructure. Do not describe the
 complete library as refreshed until every template is reviewed. Preserve measured
 scales, physical behavior, rig budgets and save compatibility through complete
 verified slices. Keep HUD/docs in Minimum Effort's identity.
+
+## Faceted tree construction, r76
+
+Dream 2 part/beam `faceted` is optional boolean data, restricted to undeformed
+cylinder/cone/icosphere parts and cylinder beams. True retains flat polygon faces
+and exact cut-cell contours. False/omission keeps the old curved path; positive
+deformation, other shapes and v1 reject it. Preserve all grid, part, work,
+contact, animation and fragment limits and owned vertex channels.
+
+All 345 live trees use the refined family, with exact body dimensions and scales.
+Eleven live templates and the retained unused deadwood were reviewed from four
+angles. Preserve supported boughs, trunk continuity, small fruit and stalk
+attachments. Fruit is decorative; no harvesting is implied. Keep the explicit
+r75 template/placement projection, prior host contact cache/source identity and
+all earlier save stages. The registered visual upgrade keeps format 17 /
+simulation 32 and every state field; do not replace its old slots or reinitialize
+lives, damage, cargo, growing trees or paid work. The rest of the asset library
+remains pending in the construction catalogue.

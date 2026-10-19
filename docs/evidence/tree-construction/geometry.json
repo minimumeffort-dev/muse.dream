@@ -1,0 +1,21 @@
+{
+  "scope": "Complete 345-tree static scenery, using identical full-resolution fixture builders; geometry counts only, not FPS or total browser memory.",
+  "r75": {
+    "objects": 345,
+    "batches": 548,
+    "submittedTriangles": 4880054,
+    "bytes": 34324672,
+    "uniqueBuffers": 1280,
+    "geometries": 548,
+    "uniqueTriangles": 3576130
+  },
+  "r76": {
+    "objects": 345,
+    "batches": 582,
+    "submittedTriangles": 902330,
+    "bytes": 5450060,
+    "uniqueBuffers": 1349,
+    "geometries": 582,
+    "uniqueTriangles": 632082
+  }
+}

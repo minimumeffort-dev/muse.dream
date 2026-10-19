@@ -414,3 +414,19 @@ only to services whose declared verge exceeds the previous 32-unit bound; earlie
 service paths and saved states retain their released semantics. The tree service
 uses 5,380 nodes and 20,422 directed links within the same 8,192/32,768 caps.
 [Acceptance, replay, migration and native checks](evidence/city-trees/verification.md).
+
+## Explicit faceted stamps
+
+Dream parts may opt into `faceted=true` for undeformed cylinders, cones and
+icospheres. Their existing polygonal exterior retains exact cut-cell contours,
+including sub-cell fruit. The bounded occupancy grid, owned buffer copies,
+material coordinates, wind and shadow paths remain shared. Other primitives and
+ordinary curved/deformed stamps retain their existing paths. This is an authored
+surface choice, with no camera detail reduction or extra cell bodies.
+
+The complete 345-tree scenery comparison submits 4,880,054 triangles before the
+construction pass and 902,330 afterward. Resident geometry/instance buffers in
+that fixture fall from 34,324,672 to 5,450,060 bytes. Mesh batches rise from 548 to
+582 because the models include more branch supports and stalks. These are
+whole-family geometry counts, not per-frame draw calls, FPS, total browser memory
+or VRAM. [Exact fixture counts](evidence/tree-construction/geometry.json).

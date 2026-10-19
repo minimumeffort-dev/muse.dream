@@ -24,5 +24,5 @@ for(const [name,x] of examples){
   metrics.push({name,meters:spec.measure.meters,axis:spec.measure.axis,scale,size:new THREE.Box3().setFromObject(group,true).getSize(new THREE.Vector3()).toArray()});
 }
 const camera=new THREE.OrthographicCamera(-1,1,1,-1,.1,1200);camera.position.set(15,190,340);camera.lookAt(0,35,0);
-function render(){const width=canvas.clientWidth,height=canvas.clientHeight,half=108;renderer.setSize(width,height,false);Object.assign(camera,{left:-half*width/height,right:half*width/height,top:half,bottom:-half});camera.updateProjectionMatrix();renderer.render(scene,camera);document.body.dataset.ready='true';document.body.dataset.metrics=JSON.stringify(metrics);}
+function render(){const width=canvas.clientWidth,height=canvas.clientHeight,half=Math.max(108,190*height/width);renderer.setSize(width,height,false);Object.assign(camera,{left:-half*width/height,right:half*width/height,top:half,bottom:-half});camera.updateProjectionMatrix();renderer.render(scene,camera);document.body.dataset.ready='true';document.body.dataset.metrics=JSON.stringify(metrics);}
 new ResizeObserver(render).observe(canvas);render();

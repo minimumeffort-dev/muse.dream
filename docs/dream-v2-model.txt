@@ -44,6 +44,11 @@ duplicate closing point, crossed/touching edges or zero-length edges. The
 engine centers the outline in full size X/Y and extrudes through full size Z.
 Use concave outlines for wheel openings and sloped outlines for cabins/panels.
 Only prism parts accept outline; beams remain box/cylinder/capsule.
+Optional faceted=true on undeformed cylinder/cone/icosphere parts preserves flat
+polygonal faces, including exact cut-cell contours in voxel worlds. A cylinder
+beam may use it too. Other shapes and positive deformation reject the field.
+False or omission keeps ordinary curved reconstruction. Choose facets for clean
+canopies, small fruit or stylized mechanical surfaces; no grid/part budget changes.
 A contact needs radius OR size=[width,depth], never both. size permits a static
 upright rectangle with optional heading_deg; radius remains a cylinder. Rectangles
 use .1..128 sides and .1..160 height, cylinders use radius 1..64 and height 1..160.
@@ -609,7 +614,7 @@ Optional chunks must divide grid axes exactly into at most 8 nonempty pieces. Re
 Construction: silhouette and measure first. Doors/window heights follow usable floors; glazing must remain visible through carved frames. Roofs meet walls, porch posts meet base/canopy, gutters meet leaders. Rolling tires/hubs stay coaxial, bogies support their shell, and rideable seats must fit an independently measured rider. Check transformed multi-angle renders, not only schemas. Checked live constructions: examples/terraced-house.dream, examples/city-bus.dream, examples/cabin-launch.dream.
 
 WHOLE-WORLD VOXELS
-For a complete world, put voxel_world(object_cell=1,ground_cell=8,height_step=1); beside world/road in the owner file. Exactly one declaration; object_cell .25..4 local units, ground_cell exactly 4 or 8, height_step .5..1. The compiler applies it to all linked templates, furnishings, player and flocks. Continue writing part/beam as compact shape stamps; the engine constructs their occupied cells, fits the authored envelope, and retains material/joint/fragment ownership. Undeformed prism/pyramid stamps retain exact planar boundary contours, including thin roof shells; curved/deformed stamps use sampled continuous contours. Explicit voxels/fill/cut remain exact and keep existing budgets. Ground and infrastructure use resident column tiles; paint keeps fine cells/layer separation and water keeps rigid column wave anchors. Fixed construction resolution, no camera LOD. Physics remains explicit contacts plus the smooth driving heightfield. No editable terrain, automatic destructibility or per-cell physics. Do not output voxelSize/voxelWorld compiler metadata in source.
+For a complete world, put voxel_world(object_cell=1,ground_cell=8,height_step=1); beside world/road in the owner file. Exactly one declaration; object_cell .25..4 local units, ground_cell exactly 4 or 8, height_step .5..1. The compiler applies it to all linked templates, furnishings, player and flocks. Continue writing part/beam as compact shape stamps; the engine constructs their occupied cells, fits the authored envelope, and retains material/joint/fragment ownership. Undeformed prism/pyramid stamps and explicit faceted cylinder/cone/icosphere stamps retain exact planar boundary contours, including thin roof shells; curved/deformed stamps use sampled continuous contours. Explicit voxels/fill/cut remain exact and keep existing budgets. Ground and infrastructure use resident column tiles; paint keeps fine cells/layer separation and water keeps rigid column wave anchors. Fixed construction resolution, no camera LOD. Physics remains explicit contacts plus the smooth driving heightfield. No editable terrain, automatic destructibility or per-cell physics. Do not output voxelSize/voxelWorld compiler metadata in source.
 
 ## sports
 SPORTS PRACTICE

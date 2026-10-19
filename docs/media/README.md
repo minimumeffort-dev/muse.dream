@@ -1244,3 +1244,29 @@ rendering, world systems and the language/model contract were reviewed and
 updated. Other vehicle and city captures retain their recorded geometry and
 mechanics; the new fleet set shows the new vehicles and bays. The current walking
 recordings retain the released upright-foot correction.
+
+## Tree construction, r76
+
+The canopy set records 240 native 2400 × 1350 frames at 30 rendered frames per
+simulation second. Four species orbit with their existing wind motion. The
+shared encoder produces a 960 × 540, 192-color GIF at loss 100 and 1600 × 900
+H.264 CRF-18 video. Frame zero supplies `canopy.jpg`.
+
+Driving, switching, treefall, planting and growth GIF/HD sets and their paired
+stills are refreshed from the current mock world. Treefall, planting and growth
+retain their 150/325/450 poster frames and existing encoder settings. Growth
+shows thirty seconds of the three-minute process; preparation uses ordinary
+fixed-step damage, dispatch, walk and finite sapling/pay transactions. No frames
+are interpolated and offline exports are not live performance measurements.
+
+The complete atlas, birch pair, mixed plant sheet, twelve-tree sheet, shared-scale
+view and compiled city map are also refreshed. The shared-scale development view
+now fits its complete lineup and labels at narrow widths. Four-angle tree
+captures compare the released models with the current models on the same neutral
+stage. Other activity recordings retain their historical vegetation and remain
+valid for their recorded controls and transactions. Unchanged deadwood, vehicle,
+character and architectural sheets retain their existing construction.
+
+README, asset/construction guides, Dream reference/model/contract, voxel,
+rendering and persistence guides were reviewed and updated. The complete new fir
+example is compiler-checked. [Verification and frame manifest](../evidence/tree-construction/verification.md).
