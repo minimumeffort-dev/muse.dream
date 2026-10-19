@@ -83,20 +83,8 @@ object juniper_scrub(label="Juniper scrub"){
   repeat berries(index=b,count=3){part berry(shape=sphere,material=m8,at=[b*4-4,12+b,8],size=[2,2,2]);}
   part branch(shape=cylinder,material=m3,at=[0,5,0],size=[3,10,3]);
 }
-object weathered_boulder(label="Weathered boulder"){
-  measure(kind=custom,axis=y,meters=2);
-  body(interaction=solid,radius=21,height=34);
-  ground(mode=surface);
-  part stone(shape=icosphere,material=m4,at=[0,14,0],size=[37,32,29],rot_deg=[0,29.79380534680281,6.875493541569878],deform=deform(seed=418,amount=.18));
-  part lichen_patch(shape=icosphere,material=lichen,at=[-4,25,0],size=[18,2,14],deform=deform(seed=61,amount=.21));
-}
-object exposed_stone_slab(label="Exposed stone slab"){
-  measure(kind=custom,axis=x,meters=3);
-  body(interaction=solid,radius=27,height=14);
-  ground(mode=surface);
-  part slab(shape=icosphere,material=m4,at=[0,5,0],size=[51,14,30],rot_deg=[0,-22.91831180523293,3.437746770784939],deform=deform(seed=637,amount=.18));
-  part lichen_patch(shape=icosphere,material=lichen,at=[-4,10,0],size=[18,2,14],deform=deform(seed=61,amount=.21));
-}
+
+
 object standing_deadwood(label="Standing deadwood"){
   measure(kind=tree,axis=y,meters=6);
   body(interaction=solid,radius=9,height=42);

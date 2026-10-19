@@ -6,6 +6,43 @@ A bus needs to read as a bus before it needs another material. Its wheels belong
 
 The current pass rebuilds eleven housing, shop and office templates plus the bus, tram, railcar and cabin launch. Those fifteen templates appear in 197 live placements. These are stylized handmade mocks, not imported meshes or a claim of architectural or vehicle engineering accuracy.
 
+## The next pass covers the whole library
+
+Kenney's [starter kits](https://kenney.nl/starter-kits) are the user's reference
+for the whole library. The [Car Kit](https://kenney.nl/assets/car-kit),
+[industrial city kit](https://kenney.nl/assets/city-kit-industrial) and
+[Mini Forest](https://kenney.nl/assets/mini-forest) previews were inspected on
+2026-10-19. The construction rules below are our interpretation of those visual
+references. The current catalogue has not yet received this complete pass.
+
+The [r75 catalogue](evidence/asset-direction/catalogue.json) lists all 109 loaded
+assembly exports with explicit pending review status. That includes 28 buildings,
+14 person exports and 12 tree exports. Repeated exports remain listed. The
+engine-provided player rigs, infrastructure and optional example catalogue also
+belong in the pass; the loaded-library list does not certify those separately.
+
+Start with a silhouette that reads at the ordinary game camera. Use a few
+coherent masses, deliberate edge shapes, recessed openings and a small palette
+with distinct body, glass, rubber, foliage and trim. Add details where they
+explain construction or use. A larger part count alone does not meet the goal.
+
+| Family | What the pass must resolve |
+| --- | --- |
+| Every vehicle, including rail, boats, aircraft and bicycles | Recognizable body profile, wheel or hull fit, attached mechanisms, passenger clearance and useful detail from the driving camera |
+| Every building | Legible floors and openings, roofs and eaves that meet walls, entrances at ground level and attached façade equipment |
+| Every person and animal | Distinct silhouettes and proportions, clothing or species cues, connected limbs and motion that stays planted |
+| Every tree and plant | Species-specific trunk, branching and crown structure, grounded stems and varied massing instead of repeated scaled clumps |
+| Every furnishing, food item and loose prop | Recognizable construction, believable thickness and supports, clear scale and interaction affordances |
+| Roads, crossings, signs and sports equipment | Continuous joins, clean markings, mounted signs and readable shapes without overlapping paint |
+
+Review each template from four angles and at the real game zoom. Preserve its
+measured size, support, collision, destruction and interaction behavior unless a
+separate verified change needs to alter those. Keep variants related without
+making them scaled copies. Reuse Dream components for coherent construction;
+extend Dream only when an actual asset exposes a missing capability. Refresh
+affected example files and native media with each completed family. The product
+HUD and documentation retain Minimum Effort's identity.
+
 ## Start with the envelope
 
 Declare `measure` first. Keep the physical body and ground level distinct from the visual parts. The current house and transport replacements retain their previous measured scales, contact cylinders and foundations, so improvements to appearance don't quietly change driving clearance.
@@ -17,6 +54,8 @@ Then spend the part budget on structure:
 | Homes | Two usable floor bands, framed glazing, panel door, gable or hip roof, eaves and drainage |
 | Apartments | Three or four floor bands, balcony slab and thin guard, roof and drain connections |
 | Office | Six repeated floor bands, framed curtain glazing and roof plant |
+| Field pickup | Wheel-arched shell, open bed, joined cab and mirrors, independent passenger fit and two coaxial axles |
+| Parcel truck | Supported box body, cab steps, joined glazing, rear doors and a shared disc/axle construction |
 | Bus | Profiled shell with wheel openings, two axles, passenger doors, glazing, mirrors and cooling unit |
 | Tram and railcar | Sloped cab ends, window bays, doors and two supported four-wheel bogies |
 | Launch | Keel and pointed hull, planked deck, wheelhouse, guard rail, outboard and helm seat |
@@ -83,3 +122,8 @@ without moving their identities or changing their physical dimensions. Existing
 CPU rigs and instanced populations retain their limits. The [complete source](examples/city-person.dream)
 matches the live city library; the [people guide](dream/people.md) explains the
 construction and its rigid-clothing limits. [Native views and saved-state checks](evidence/character-wardrobe/verification.md).
+
+The [utility library](examples/utility-vehicles.dream) is shared verbatim with the
+street asset module. Check the independent passenger against the inside of the
+cab roof, not just its outer bounds. The pickup keeps over 4 cm of headroom;
+its parked role never replaces the authored car control capability.

@@ -508,3 +508,16 @@ released narrow-service paths retain their previous behavior. These graphs and
 render prototypes remain host caches, outside Dream source and saved state.
 [Thirty-six checkpoint comparisons](evidence/city-trees/migration.json) and
 [complete verification](evidence/city-trees/verification.md).
+
+## Depot fleet upgrade
+
+The registered r75 update adds four parked utility vehicles and their loading
+aprons. Its projection preserves the complete r74 world data and all earlier
+upgrade stages. Saved vehicles, cargo, jobs, ledgers, damage, people, growth and
+clocks keep their state. If a new seed conflicts with saved vehicles, people or work paths, the new
+vehicle takes nearby dry parking clear of roads, entrances, old paved grounds
+and rail/runway corridors. Existing poses stay where they were saved. The
+search is deterministic and bounded to 256 candidates within 32 metres per seed;
+if it cannot find space, restoration fails without replacing the old slot. The
+existing unsafe-active-pose recovery remains as a final safeguard. Original slots remain intact.
+Save format 17 and simulation version 32 are unchanged.

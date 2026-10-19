@@ -1,3 +1,10 @@
+import {objectPlacement} from '../scene/placement';
+import {streetFootprints,onPolygon} from '../scene/streets';
+import {sitePolygons} from '../scene/sites';
+import {routeInfrastructure} from '../scene/routes';
+import {distanceToRoad} from '../scene/road';
+import {playerHeight,assemblyHorizontalRadius} from '../scene/measure';
+import {objectHeight} from './archetypes';
 import {initialAmbient,ambientObjects} from './ambient';
 import {cityJourneys} from './city-upgrade';
 import {checkSeatingState} from './seating';
@@ -11,13 +18,13 @@ import {createCarAtSpawn,carFootprintClear,resetCar,type CarState,type World} fr
 import {bodyWorld} from './interaction';
 import {cancelSportAction,initialSports} from './sports';
 import {teamStateSchema,checkTeams} from './team-sports';
-import {controlFor,behaviorFor} from '../scene/agents';
+import {isParkedVehicle,controlFor,behaviorFor} from '../scene/agents';
 import {controlOf,impactOf,zonesOf} from '../scene/object-dsl';
 import {objectFragments} from '../scene/fragments';
 import {actorPose} from './actors';
 import {AMBIENT_LIMITS} from '../scene/ambient';
 import {priorInvitationEconomyStateSchema,economyStateSchema,socialEconomyStateSchema,shiftEconomyStateSchema,hoursEconomyStateSchema,mealEconomyStateSchema,progressEconomyStateSchema,recipeEconomyStateSchema,withPersonalHistory,priorCourierEconomyStateSchema,priorGrowthEconomyStateSchema,parkingEconomyStateSchema,previousEconomyStateSchema,initialEconomy,checkEconomyState} from './commerce';
-import {TREE_COMPATIBILITY,preTreeScene,COVERAGE_COMPATIBILITY,preCoverageScene,INVITATION_COMPATIBILITY,preInvitationScene,SAVE_SIMULATION_VERSION,PEOPLE_COMPATIBILITY,prePeopleScene,JUNCTION_COMPATIBILITY,preJunctionScene,SPACING_COMPATIBILITY,PARK_COMPATIBILITY,preParkScene,CITY_COMPATIBILITY,preCityScene,MATCH_COMPATIBILITY,preMatchScene,BUSINESS_COMPATIBILITY,preBusinessScene,SCHOOL_REPAIR_COMPATIBILITY,preSchoolRepairScene,SOCIAL_COMPATIBILITY,preSocialScene,SHIFT_COMPATIBILITY,preShiftScene,HOURS_COMPATIBILITY,preHoursScene,SEATING_COMPATIBILITY,preSeatingScene,KITCHEN_COMPATIBILITY,preKitchenScene,MEAL_COMPATIBILITY,preMealScene,PROGRESS_COMPATIBILITY,preProgressScene,RECIPE_COMPATIBILITY,preRecipeScene,EGRESS_COMPATIBILITY,INTERIOR_COMPATIBILITY,preInteriorScene,COURIER_COMPATIBILITY,preCourierScene,NATURAL_COMPATIBILITY,preFinishScene,PLANT_COMPATIBILITY,VERGE_COMPATIBILITY,prePlantScene,R44_COMPATIBILITIES,preDeliveryScene,preParkingScene,preRepairScene,preSupplyScene,preNetworkScene,prePoolScene,preVergeScene} from '../scene/save-compatibility';
+import {FLEET_COMPATIBILITY,preFleetScene,TREE_COMPATIBILITY,preTreeScene,COVERAGE_COMPATIBILITY,preCoverageScene,INVITATION_COMPATIBILITY,preInvitationScene,SAVE_SIMULATION_VERSION,PEOPLE_COMPATIBILITY,prePeopleScene,JUNCTION_COMPATIBILITY,preJunctionScene,SPACING_COMPATIBILITY,PARK_COMPATIBILITY,preParkScene,CITY_COMPATIBILITY,preCityScene,MATCH_COMPATIBILITY,preMatchScene,BUSINESS_COMPATIBILITY,preBusinessScene,SCHOOL_REPAIR_COMPATIBILITY,preSchoolRepairScene,SOCIAL_COMPATIBILITY,preSocialScene,SHIFT_COMPATIBILITY,preShiftScene,HOURS_COMPATIBILITY,preHoursScene,SEATING_COMPATIBILITY,preSeatingScene,KITCHEN_COMPATIBILITY,preKitchenScene,MEAL_COMPATIBILITY,preMealScene,PROGRESS_COMPATIBILITY,preProgressScene,RECIPE_COMPATIBILITY,preRecipeScene,EGRESS_COMPATIBILITY,INTERIOR_COMPATIBILITY,preInteriorScene,COURIER_COMPATIBILITY,preCourierScene,NATURAL_COMPATIBILITY,preFinishScene,PLANT_COMPATIBILITY,VERGE_COMPATIBILITY,prePlantScene,R44_COMPATIBILITIES,preDeliveryScene,preParkingScene,preRepairScene,preSupplyScene,preNetworkScene,prePoolScene,preVergeScene} from '../scene/save-compatibility';
 import {primeSceneContacts,sceneContactData} from '../scene/contacts';
 import {primeAmbientNavigation,ambientGraph,ambientNavigation} from '../scene/ambient-navigation';
 import {PARKING_LIMITS} from '../scene/agents';
@@ -71,10 +78,15 @@ const supported=z.discriminatedUnion('version',[legacyPacket,secondPacket,thirdP
 const unique=(values:unknown[])=>new Set(values).size===values.length;
 const expected=new WeakMap<World['scene'],ReturnType<typeof createCarAtSpawn>>();
 const previousWorlds=new WeakMap<World['scene'],Map<string,World['scene']>>();
-function previousPhysicalScene(world:World,stage:'tree'|'coverage'|'invitation'|'people'|'junction'|'park'|'city'|'match'|'business'|'schoolRepair'|'social'|'shift'|'hours'|'seating'|'kitchen'|'meal'|'progress'|'recipe'|'interior'|'courier'|'finish'|'plant'|'verge'|'pool'|'network'|'supply'|'repair'|'parking'|'delivery'|'commerce'='repair'):World['scene']{
+function previousPhysicalScene(world:World,stage:'fleet'|'tree'|'coverage'|'invitation'|'people'|'junction'|'park'|'city'|'match'|'business'|'schoolRepair'|'social'|'shift'|'hours'|'seating'|'kitchen'|'meal'|'progress'|'recipe'|'interior'|'courier'|'finish'|'plant'|'verge'|'pool'|'network'|'supply'|'repair'|'parking'|'delivery'|'commerce'='repair'):World['scene']{
  let stages=previousWorlds.get(world.scene);if(!stages){stages=new Map();previousWorlds.set(world.scene,stages);}
  let scene=stages.get(stage);if(scene)return scene;
  const remember=(prior:World['scene'])=>{inheritPriorRepairCoverage(prior,stage==='coverage' ? undefined : world.scene);stages!.set(stage,prior);return prior;};
+ if(stage==='fleet'){
+  const prior=preFleetScene(world.scene),ids=new Set(prior.objects.map(o=>o.id)),contacts=sceneContactData(world.scene);
+  primeSceneContacts(prior,{...contacts,contacts:contacts.contacts.filter(c=>!c.id || ids.has(c.id))});
+  primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);
+ }
  if(stage==='tree'){const prior=preTreeScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
  if(stage==='coverage'){const prior=preCoverageScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
  if(stage==='invitation'){const prior=preInvitationScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
@@ -110,6 +122,42 @@ function previousPhysicalScene(world:World,stage:'tree'|'coverage'|'invitation'|
  scene=stage==='delivery' ? preDeliveryScene(staged) : stage==='commerce' ? {...staged,economy:undefined} : staged;
  // Older stages share the registered pre-crossing pavement and unchanged contacts.
  primeSceneContacts(scene,sceneContactData(physical));primeAmbientNavigation(scene,ambientGraph(base));return remember(scene);
+}
+/** A new seed yields to saved bodies; never move the player's existing parked vehicles. */
+function fleetParking(state:CarState,world:World,previous:World['scene']):CarState{
+ const oldIds=new Set(previous.objects.map(o=>o.id)),oldSurfaces=new Set(previous.surfaces.map(s=>s.id));
+ const activeBody=bodyWorld(state,world),activeHeight=activeBody.bodyHeight??playerHeight(world.scene);
+ const active=state.control.kind==='car' || state.control.kind==='vehicle' ? {id:state.control.kind==='car' ? null : state.control.id,x:state.x,y:state.y,elevation:state.elevation,headingRad:state.headingRad,distance:state.distance} : undefined;
+ const people=previous.objects.filter(o=>o.role==='npc' && o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && o.spec.measure?.kind==='person').map(o=>({...actorPose(previous,o,state.timeS,state),radius:assemblyHorizontalRadius(o.spec as import('../scene/object-dsl').ObjectDslV2,o.scale),height:objectHeight(o)}));
+ const journeys=(state.economy?.accounts??[]).flatMap(a=>{
+  const owner=previous.economy?.accounts.find(d=>d.id===a.id)?.actor;if(!owner || owner==='player')return [];
+  return [a.repair,a.courier,a.meal,a.shift].flatMap(t=>t?.path.length ? [{points:t.path,radius:people.find(p=>p.id===owner)?.radius??7}] : []);
+ });
+ if(state.economy?.shared?.path.length)journeys.push({points:state.economy.shared.path,radius:7});
+ let result=state,protectedGround:ReturnType<typeof streetFootprints>['reserved']|undefined;
+ const corridors=world.scene.routes.filter(r=>r.kind==='rail' || r.kind==='path' || r.kind==='air').map(routeInfrastructure);
+ for(const object of world.scene.objects.filter(o=>isParkedVehicle(o) && !oldIds.has(o.id))){
+  const vehicles=active ? [...result.vehicles,active] : result.vehicles;
+  const pose=(x:number,y:number)=>({id:object.id,x,y,elevation:objectPlacement(world.scene,object,x,y).base,headingRad:object.headingRad??0,distance:0});
+  const home=pose(object.x,object.y),probe={...result,...home,seated:undefined,control:{kind:'vehicle' as const,id:object.id},vehicles};
+  const body={...bodyWorld(probe,world),dryGround:true},radius=body.carRadius,height=body.bodyHeight!;
+  const clear=(p:ReturnType<typeof pose>)=>{
+   if(state.control.kind!=='passenger' && p.elevation<state.elevation+activeHeight && p.elevation+height>state.elevation && Math.hypot(p.x-state.x,p.y-state.y)<radius+activeBody.carRadius)return false;
+   if(people.some(n=>p.elevation<n.elevation+n.height && p.elevation+height>n.elevation && Math.hypot(p.x-n.x,p.y-n.y)<radius+n.radius+2) || journeys.some(j=>distanceToRoad(j.points,p.x,p.y)<radius+j.radius+2))return false;
+   return carFootprintClear(body,p.x,p.y,p.elevation,state.timeS,{...probe,...p});
+  };
+  if(clear(home))continue;
+  protectedGround??=[...streetFootprints(world.scene).reserved,...world.scene.sites.flatMap(s=>sitePolygons(world.scene,s)),...world.scene.surfaces.filter(s=>oldSurfaces.has(s.id) && s.finish!=='terrain').map(s=>s.points),...(world.scene.terrain.landscape?.waters??[]).map(w=>w.polygon)];
+  let chosen:ReturnType<typeof pose>|undefined;
+  for(let ring=1;ring<=16 && !chosen;ring++)for(let side=0;side<16;side++){
+   const angle=side*Math.PI/8,x=home.x+Math.cos(angle)*ring*20,y=home.y+Math.sin(angle)*ring*20;
+   if(protectedGround.some(p=>onPolygon(p,x,y,radius+4)) || corridors.some(c=>distanceToRoad(c.points,x,y)<c.radius+radius+4))continue;
+   const p=pose(x,y);if(clear(p)){chosen=p;break;}
+  }
+  if(!chosen)throw Error('This world update needs clear parking near '+object.id+'. Your original save is unchanged.');
+  result={...result,vehicles:[...result.vehicles,chosen]};
+ }
+ return result;
 }
 /** Rebase derived node indices; positions, travel history, random state and clocks stay saved. */
 function rebasePopulation(state:CarState,previous:World['scene'],current:World['scene'],retarget=false,relocate=false):CarState{
@@ -192,6 +240,14 @@ export function decodeSave(text:string,world:World):{state:CarState;worldTime:nu
  if(text.length>MAX_SAVE_CHARACTERS)throw Error('Save exceeds one million characters');
  let data:z.infer<typeof supported>;
  try{data=supported.parse(JSON.parse(text));}catch{throw Error('This file is not a supported Muse Dream backup.');}
+ if(world.saveCompatibility===FLEET_COMPATIBILITY && (data.version===1 || data.compatibilityHash!==FLEET_COMPATIBILITY)){
+  if(world.previousFleetSaveCompatibility!==TREE_COMPATIBILITY)throw Error('This backup needs a different world or simulation version.');
+  const previous=previousPhysicalScene(world,'fleet'),restored=decodeSave(text,{...world,scene:previous,saveCompatibility:TREE_COMPATIBILITY,previousFleetSaveCompatibility:undefined});
+  const initialized=fleetParking(restored.state,world,previous);
+  try{checkState(initialized,world);}catch{throw Error('This backup contains invalid world state.');}
+  const state=initialized,safe=state.control.kind==='passenger' || carFootprintClear(bodyWorld(state,world),state.x,state.y,state.elevation,state.timeS,state) ? state : resetCar({...state,grounded:false},world.scene);
+  return {...restored,state:safe,migrated:true,compatible:data.sourceHash!==world.scene.sourceHash};
+ }
  if(world.saveCompatibility===TREE_COMPATIBILITY && (data.version===1 || data.compatibilityHash!==TREE_COMPATIBILITY)){
   if(world.previousTreeSaveCompatibility!==COVERAGE_COMPATIBILITY)throw Error('This backup needs a different world or simulation version.');
   const restored=decodeSave(text,{...world,scene:previousPhysicalScene(world,'tree'),saveCompatibility:COVERAGE_COMPATIBILITY,previousTreeSaveCompatibility:undefined});

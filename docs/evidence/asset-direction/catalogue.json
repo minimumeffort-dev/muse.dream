@@ -1,0 +1,1425 @@
+{
+  "sceneId": "mock-open-world",
+  "revisionId": "r75",
+  "sourceHash": "handmade-city-life-v75",
+  "scope": "Loaded Dream assemblies, including repeated exports; not a completed visual audit. Engine-provided player rigs and infrastructure also require review.",
+  "rows": [
+    {
+      "index": 0,
+      "name": "Little rally car",
+      "kind": "car",
+      "measure": {
+        "kind": "car",
+        "axis": "x",
+        "meters": 3.55
+      },
+      "parts": 32,
+      "joints": 2,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 1,
+      "name": "Field pickup",
+      "kind": "pickup",
+      "measure": {
+        "kind": "pickup",
+        "axis": "x",
+        "meters": 4.95
+      },
+      "parts": 32,
+      "joints": 2,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 2,
+      "name": "Parcel truck",
+      "kind": "truck",
+      "measure": {
+        "kind": "truck",
+        "axis": "x",
+        "meters": 6.6
+      },
+      "parts": 32,
+      "joints": 2,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 3,
+      "name": "Covered market hall",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 11
+      },
+      "parts": 22,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 4,
+      "name": "River hospital",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 16
+      },
+      "parts": 29,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 5,
+      "name": "Garden primary school",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 10
+      },
+      "parts": 23,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 6,
+      "name": "South neighborhood school",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 10
+      },
+      "parts": 23,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 7,
+      "name": "Public library",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 11
+      },
+      "parts": 22,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 8,
+      "name": "Office studios",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 24
+      },
+      "parts": 32,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 9,
+      "name": "Technical college",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 15
+      },
+      "parts": 29,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 10,
+      "name": "Harbor workshops",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 7
+      },
+      "parts": 16,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 11,
+      "name": "Harbor food market",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 8
+      },
+      "parts": 16,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 12,
+      "name": "Sports pavilion",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 6
+      },
+      "parts": 14,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 13,
+      "name": "Public boat landing",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 5
+      },
+      "parts": 14,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 14,
+      "name": "Eastbank medical center",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 9
+      },
+      "parts": 18,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 15,
+      "name": "Central station hall",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 8
+      },
+      "parts": 16,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 16,
+      "name": "East station hall",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 8
+      },
+      "parts": 14,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 17,
+      "name": "Transit shelter",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "y",
+        "meters": 2.8
+      },
+      "parts": 9,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 18,
+      "name": "Ochre terrace",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 10
+      },
+      "parts": 30,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 19,
+      "name": "Brick terrace",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 9
+      },
+      "parts": 32,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 20,
+      "name": "Neighborhood bakery",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 9.5
+      },
+      "parts": 32,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 21,
+      "name": "Blue terrace",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 8.5
+      },
+      "parts": 32,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 22,
+      "name": "Corner shop",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 9
+      },
+      "parts": 32,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 23,
+      "name": "Corner apartments",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 14
+      },
+      "parts": 28,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 24,
+      "name": "Garden house",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 7.5
+      },
+      "parts": 32,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 25,
+      "name": "Courtyard house",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 8
+      },
+      "parts": 32,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 26,
+      "name": "Canal apartments",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 15
+      },
+      "parts": 28,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 27,
+      "name": "Brick apartments",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 17
+      },
+      "parts": 32,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 28,
+      "name": "City tram",
+      "kind": "tram",
+      "measure": {
+        "kind": "tram",
+        "axis": "x",
+        "meters": 16
+      },
+      "parts": 31,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 29,
+      "name": "City bus",
+      "kind": "bus",
+      "measure": {
+        "kind": "bus",
+        "axis": "x",
+        "meters": 9.4
+      },
+      "parts": 30,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 30,
+      "name": "Regional electric train",
+      "kind": "train",
+      "measure": {
+        "kind": "train",
+        "axis": "x",
+        "meters": 20
+      },
+      "parts": 31,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 31,
+      "name": "Meadow bicycle",
+      "kind": "bicycle",
+      "measure": {
+        "kind": "bicycle",
+        "axis": "x",
+        "meters": 1.8
+      },
+      "parts": 32,
+      "joints": 1,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 32,
+      "name": "Maple skateboard",
+      "kind": "skateboard",
+      "measure": {
+        "kind": "skateboard",
+        "axis": "x",
+        "meters": 0.82
+      },
+      "parts": 20,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 33,
+      "name": "Town car",
+      "kind": "car",
+      "measure": {
+        "kind": "car",
+        "axis": "x",
+        "meters": 3.55
+      },
+      "parts": 32,
+      "joints": 2,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 34,
+      "name": "Willow launch",
+      "kind": "boat",
+      "measure": {
+        "kind": "boat",
+        "axis": "x",
+        "meters": 6
+      },
+      "parts": 32,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 35,
+      "name": "Cloudhopper plane",
+      "kind": "plane",
+      "measure": {
+        "kind": "plane",
+        "axis": "z",
+        "meters": 10.8
+      },
+      "parts": 31,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 36,
+      "name": "City hatchback",
+      "kind": "car",
+      "measure": {
+        "kind": "car",
+        "axis": "x",
+        "meters": 3.8
+      },
+      "parts": 32,
+      "joints": 2,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 37,
+      "name": "Neighborhood delivery van",
+      "kind": "car",
+      "measure": {
+        "kind": "car",
+        "axis": "x",
+        "meters": 4.8
+      },
+      "parts": 32,
+      "joints": 2,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 38,
+      "name": "Electric city scooter",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "x",
+        "meters": 1.25
+      },
+      "parts": 22,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 39,
+      "name": "Home athlete",
+      "kind": "person",
+      "measure": {
+        "kind": "person",
+        "axis": "y",
+        "meters": 1.8
+      },
+      "parts": 31,
+      "joints": 12,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 40,
+      "name": "Home athlete",
+      "kind": "person",
+      "measure": {
+        "kind": "person",
+        "axis": "y",
+        "meters": 1.72
+      },
+      "parts": 31,
+      "joints": 12,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 41,
+      "name": "Away athlete",
+      "kind": "person",
+      "measure": {
+        "kind": "person",
+        "axis": "y",
+        "meters": 1.84
+      },
+      "parts": 31,
+      "joints": 12,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 42,
+      "name": "Goalkeeper",
+      "kind": "person",
+      "measure": {
+        "kind": "person",
+        "axis": "y",
+        "meters": 1.86
+      },
+      "parts": 32,
+      "joints": 12,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 43,
+      "name": "Football goal",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "x",
+        "meters": 7.4
+      },
+      "parts": 29,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 44,
+      "name": "Basketball hoop",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "y",
+        "meters": 4
+      },
+      "parts": 27,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 45,
+      "name": "Golf flag",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "y",
+        "meters": 2.2
+      },
+      "parts": 3,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 46,
+      "name": "Football",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "x",
+        "meters": 0.22
+      },
+      "parts": 8,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 47,
+      "name": "Basketball",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "x",
+        "meters": 0.24
+      },
+      "parts": 4,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 48,
+      "name": "Regional airport terminal",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 7.7
+      },
+      "parts": 24,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 49,
+      "name": "Aircraft maintenance hangar",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 10.8
+      },
+      "parts": 13,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 50,
+      "name": "Airport control tower",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 18
+      },
+      "parts": 10,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 51,
+      "name": "Slatted park bench",
+      "kind": "bench",
+      "measure": {
+        "kind": "bench",
+        "axis": "x",
+        "meters": 1.8
+      },
+      "parts": 18,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 52,
+      "name": "Neighborhood lantern",
+      "kind": "lamp",
+      "measure": {
+        "kind": "lamp",
+        "axis": "y",
+        "meters": 3.8
+      },
+      "parts": 9,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 53,
+      "name": "Young rowan",
+      "kind": "tree",
+      "measure": {
+        "kind": "tree",
+        "axis": "y",
+        "meters": 5.5
+      },
+      "parts": 7,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 54,
+      "name": "Oak",
+      "kind": "tree",
+      "measure": {
+        "kind": "tree",
+        "axis": "y",
+        "meters": 10
+      },
+      "parts": 9,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 55,
+      "name": "Wild lavender",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "y",
+        "meters": 0.9
+      },
+      "parts": 15,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 56,
+      "name": "Woodland fern",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "y",
+        "meters": 0.9
+      },
+      "parts": 32,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 57,
+      "name": "Meadow daisies",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "x",
+        "meters": 1.15
+      },
+      "parts": 27,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 58,
+      "name": "River shopper",
+      "kind": "person",
+      "measure": {
+        "kind": "person",
+        "axis": "y",
+        "meters": 1.75
+      },
+      "parts": 28,
+      "joints": 12,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 59,
+      "name": "Campus student",
+      "kind": "person",
+      "measure": {
+        "kind": "person",
+        "axis": "y",
+        "meters": 1.65
+      },
+      "parts": 30,
+      "joints": 12,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 60,
+      "name": "Park neighbor",
+      "kind": "person",
+      "measure": {
+        "kind": "person",
+        "axis": "y",
+        "meters": 1.8
+      },
+      "parts": 27,
+      "joints": 12,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 61,
+      "name": "City resident",
+      "kind": "person",
+      "measure": {
+        "kind": "person",
+        "axis": "y",
+        "meters": 1.85
+      },
+      "parts": 27,
+      "joints": 12,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 62,
+      "name": "Silver fir",
+      "kind": "tree",
+      "measure": {
+        "kind": "tree",
+        "axis": "y",
+        "meters": 13
+      },
+      "parts": 9,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 63,
+      "name": "Birch",
+      "kind": "tree",
+      "measure": {
+        "kind": "tree",
+        "axis": "y",
+        "meters": 10
+      },
+      "parts": 26,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 64,
+      "name": "Pine",
+      "kind": "tree",
+      "measure": {
+        "kind": "tree",
+        "axis": "y",
+        "meters": 12
+      },
+      "parts": 8,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 65,
+      "name": "Amber tree",
+      "kind": "tree",
+      "measure": {
+        "kind": "tree",
+        "axis": "y",
+        "meters": 7
+      },
+      "parts": 9,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 66,
+      "name": "Weeping willow",
+      "kind": "tree",
+      "measure": {
+        "kind": "tree",
+        "axis": "y",
+        "meters": 10
+      },
+      "parts": 24,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 67,
+      "name": "Old apple tree",
+      "kind": "tree",
+      "measure": {
+        "kind": "tree",
+        "axis": "y",
+        "meters": 5.5
+      },
+      "parts": 11,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 68,
+      "name": "Wild shrub",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "y",
+        "meters": 0.8
+      },
+      "parts": 5,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 69,
+      "name": "Broadleaf dock",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "y",
+        "meters": 1.05
+      },
+      "parts": 12,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 70,
+      "name": "Juniper scrub",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "y",
+        "meters": 1.2
+      },
+      "parts": 6,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 71,
+      "name": "Hazel thicket",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "y",
+        "meters": 2.5
+      },
+      "parts": 12,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 72,
+      "name": "Pink foxglove",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "y",
+        "meters": 1.5
+      },
+      "parts": 18,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 73,
+      "name": "Fallen log",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "x",
+        "meters": 3
+      },
+      "parts": 15,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 74,
+      "name": "Festival ball",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "x",
+        "meters": 0.65
+      },
+      "parts": 3,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 75,
+      "name": "Breakaway table",
+      "kind": "table",
+      "measure": {
+        "kind": "table",
+        "axis": "x",
+        "meters": 2.2
+      },
+      "parts": 19,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 76,
+      "name": "Produce crate",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "x",
+        "meters": 0.8
+      },
+      "parts": 23,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 77,
+      "name": "Terracotta planter",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "y",
+        "meters": 0.85
+      },
+      "parts": 14,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 78,
+      "name": "Leaning birch",
+      "kind": "tree",
+      "measure": {
+        "kind": "tree",
+        "axis": "y",
+        "meters": 10
+      },
+      "parts": 26,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 79,
+      "name": "Silver spruce",
+      "kind": "tree",
+      "measure": {
+        "kind": "tree",
+        "axis": "y",
+        "meters": 12
+      },
+      "parts": 10,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 80,
+      "name": "Amber sapling",
+      "kind": "tree",
+      "measure": {
+        "kind": "tree",
+        "axis": "y",
+        "meters": 4.5
+      },
+      "parts": 9,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 81,
+      "name": "Produce stall",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "y",
+        "meters": 2.65
+      },
+      "parts": 14,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 82,
+      "name": "Voxel garden wall",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "x",
+        "meters": 3
+      },
+      "parts": 1,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 83,
+      "name": "Avenue streetlight",
+      "kind": "lamp",
+      "measure": {
+        "kind": "lamp",
+        "axis": "y",
+        "meters": 5.2
+      },
+      "parts": 5,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 84,
+      "name": "Planted street tub",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "x",
+        "meters": 1.2
+      },
+      "parts": 9,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 85,
+      "name": "Mixed verge flowers",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "x",
+        "meters": 1.7
+      },
+      "parts": 21,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 86,
+      "name": "City pigeon",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "z",
+        "meters": 0.72
+      },
+      "parts": 9,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 87,
+      "name": "River gull",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "z",
+        "meters": 1.8
+      },
+      "parts": 11,
+      "joints": 2,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 88,
+      "name": "Roe deer",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "x",
+        "meters": 1.9
+      },
+      "parts": 24,
+      "joints": 5,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 89,
+      "name": "Market vendor",
+      "kind": "person",
+      "measure": {
+        "kind": "person",
+        "axis": "y",
+        "meters": 1.8
+      },
+      "parts": 31,
+      "joints": 12,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 90,
+      "name": "Health worker",
+      "kind": "person",
+      "measure": {
+        "kind": "person",
+        "axis": "y",
+        "meters": 1.8
+      },
+      "parts": 32,
+      "joints": 12,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 91,
+      "name": "Teacher",
+      "kind": "person",
+      "measure": {
+        "kind": "person",
+        "axis": "y",
+        "meters": 1.8
+      },
+      "parts": 29,
+      "joints": 12,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 92,
+      "name": "Football player",
+      "kind": "person",
+      "measure": {
+        "kind": "person",
+        "axis": "y",
+        "meters": 1.8
+      },
+      "parts": 30,
+      "joints": 12,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 93,
+      "name": "Basketball player",
+      "kind": "person",
+      "measure": {
+        "kind": "person",
+        "axis": "y",
+        "meters": 1.8
+      },
+      "parts": 30,
+      "joints": 12,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 94,
+      "name": "Commuter",
+      "kind": "person",
+      "measure": {
+        "kind": "person",
+        "axis": "y",
+        "meters": 1.8
+      },
+      "parts": 31,
+      "joints": 12,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 95,
+      "name": "City hatchback",
+      "kind": "car",
+      "measure": {
+        "kind": "car",
+        "axis": "x",
+        "meters": 3.8
+      },
+      "parts": 32,
+      "joints": 2,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 96,
+      "name": "Neighborhood delivery van",
+      "kind": "car",
+      "measure": {
+        "kind": "car",
+        "axis": "x",
+        "meters": 4.8
+      },
+      "parts": 32,
+      "joints": 2,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 97,
+      "name": "Meadow hare",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "x",
+        "meters": 0.85
+      },
+      "parts": 19,
+      "joints": 1,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 98,
+      "name": "Copper fox",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "x",
+        "meters": 1.4
+      },
+      "parts": 25,
+      "joints": 4,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 99,
+      "name": "Red kite",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "z",
+        "meters": 1.7
+      },
+      "parts": 19,
+      "joints": 2,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 100,
+      "name": "Neighborhood dog",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "x",
+        "meters": 1.15
+      },
+      "parts": 20,
+      "joints": 4,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 101,
+      "name": "Garden cat",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "y",
+        "meters": 0.4
+      },
+      "parts": 20,
+      "joints": 4,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 102,
+      "name": "Perched sparrow",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "x",
+        "meters": 0.25
+      },
+      "parts": 12,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 103,
+      "name": "River reeds",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "y",
+        "meters": 1.8
+      },
+      "parts": 15,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 104,
+      "name": "Meadow grass clump",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "y",
+        "meters": 0.7
+      },
+      "parts": 9,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 105,
+      "name": "Blue hydrangea",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "y",
+        "meters": 1.1
+      },
+      "parts": 12,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 106,
+      "name": "Standing deadwood",
+      "kind": "tree",
+      "measure": {
+        "kind": "tree",
+        "axis": "y",
+        "meters": 6
+      },
+      "parts": 13,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 107,
+      "name": "Timber barn",
+      "kind": "building",
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 8
+      },
+      "parts": 16,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    },
+    {
+      "index": 108,
+      "name": "Village well",
+      "kind": "custom",
+      "measure": {
+        "kind": "custom",
+        "axis": "y",
+        "meters": 2.5
+      },
+      "parts": 18,
+      "joints": 0,
+      "review": "pending whole-library reference pass"
+    }
+  ]
+}

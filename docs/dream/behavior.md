@@ -50,7 +50,7 @@ Every object declares a body with a radius and height. A static upright solid ca
 
 [HD recording](../media/parking.mp4) · [GIF](../media/parking.gif)
 
-The destination parking now uses these same controls: 45 bicycles, 22 scooters and 14 cars/vans. Use `furnish(...,role=controllable)` or `place(...,role=controllable,parked=true)` to declare dormant available rides. [Parking rules and complete source](populations.md#make-the-parked-vehicles-usable).
+The destination parking now uses these same controls: 48 bicycles, 25 scooters, 14 cars/vans, two pickups and two parcel trucks. Use `furnish(...,role=controllable)` or `place(...,role=controllable,parked=true)` to declare dormant available rides. [Parking rules and complete source](populations.md#make-the-parked-vehicles-usable).
 
 **F** gets you out of the current vehicle. Walk to another one, then press **F** to enter it. Boarding uses distance from the body's edge, up to 60 canonical units, and an elevation difference below 28 units. The car and other vehicles remain where you leave them. You can return on foot and take them over again. **R** returns to the starting car while keeping parked vehicles and world damage; Start over restores everything. Resetting during flight or after a water landing returns the abandoned aircraft to its authored start.
 

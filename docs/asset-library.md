@@ -21,7 +21,7 @@ Shelter seats stand on two supports. Table planks rest on crossrails that stay a
 
 | Family | Assemblies | Source |
 | --- | --- | --- |
-| Transport | Rally car, town car, hatchback, delivery van, scooter, city bus, tram, regional train, plane, launch, bicycle, skateboard | [Street assets](../src/scene/world/street_assets.dream), [Transit](../src/scene/world/transit_assets.dream), [landmarks](../src/scene/world/landmarks.dream), [activities](../src/scene/interactive-world.dream) |
+| Transport | Field pickup, parcel truck, rally car, town car, hatchback, delivery van, scooter, city bus, tram, regional train, plane, launch, bicycle, skateboard | [Street assets](../src/scene/world/street_assets.dream), [Transit](../src/scene/world/transit_assets.dream), [landmarks](../src/scene/world/landmarks.dream), [activities](../src/scene/interactive-world.dream) |
 | Housing and shops | Three terraces, garden and courtyard homes, three apartment types, corner shop, bakery | [Architecture](../src/scene/world/architecture.dream) |
 | Civic and work | Enterable market hall, hospital, two schools, college, offices, library, workshops, stations, boathouse and pavilion | [Market interior](../src/scene/world/market_interior.dream), [civic assets](../src/scene/world/civic_assets.dream), [architecture](../src/scene/world/architecture.dream) |
 | Airport and eastbank care | Glazed terminal, gabled hangar, control tower and medical center | [Airport assets](../src/scene/world/transit_assets.dream), [Civic assets](../src/scene/world/civic_assets.dream) |
@@ -141,3 +141,37 @@ The live city now contains 123 people, 336 trees and 60 additional roaming groun
 ![New neighborhood animals and garden plants](media/population-assets.jpg)
 
 The added residents and wildlife share complete instanced geometry at explicit rest poses. Four new neighbors use live greeting programs. Fourteen usable parked cars/vans have solid bodies on connected parking aprons; the four moving road cars retain their routes. [Rest poses, sidewalk placement and population bounds](dream/populations.md).
+
+
+## Pickups and parcel trucks
+
+The 4.95-metre pickup has an open bed, wheel openings, supported cab, mirrors,
+lamps and two rolling axles. The 6.6-metre truck has a supported cargo box,
+rear-door seam, cab steps and its own axle spacing. Each uses 32 parts and two
+joints. Tires and hubs retain their sixteen-sided contours at the live voxel
+size, including the small hub faces.
+
+![Pickup and parcel truck](media/utility.jpg)
+
+[Turntable in HD](media/utility.mp4) · [GIF](media/utility.gif) ·
+[Complete Dream library](examples/utility-vehicles.dream).
+
+Two pickups and two trucks are parked on connected loading aprons at the
+station, harbor workshops and airport hangar. Walk up and press **F** to drive.
+WASD, Shift boost, parking, reboarding and saved positions use the existing car
+controller. Sealed delivery cargo stays with the player through these changes;
+the bed and cargo box do not add a separate inventory or carrying capacity.
+There is no new autonomous truck route, trailer or vehicle-damage system.
+
+`measure(kind=pickup,axis=x,meters=4.95)` and
+`measure(kind=truck,axis=x,meters=6.6)` select proportion ranges, while
+`rideable(...,control=car)` declares the controls. The names never infer driving
+behavior. The disc component owns one outline; the axle passes numeric arguments
+and material bindings to it. This takes 2,522 Dream syntax tokens for the complete
+library, compared with 2,697 when the same outline was repeated. These are compiler
+syntax counts, not measured model tokens or generation accuracy.
+
+The unused Weathered boulder and Exposed stone slab studies remain in the
+[optional creations catalogue](../src/scene/world/creations.dream), with their
+released shapes and materials. This leaves the active project's 128-definition
+budget unchanged.

@@ -185,6 +185,8 @@ Declare `measure` directly inside an object. It sets one rest-pose dimension, re
 | Kind | Axis | Permitted metres after placement variation |
 | --- | --- | --- |
 | `car` | x | 2.5–6 |
+| `pickup` | x | 4–6.8 |
+| `truck` | x | 5.5–12 |
 | `plane` | z | 7–24 |
 | `tree` | y | 4–30 |
 | `person` | y | 1.4–2.2 |

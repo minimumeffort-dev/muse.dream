@@ -253,6 +253,13 @@ Your world saves on this device. Reload to return to your position, parked vehic
 
 Press **F** to get out of the car, walk over to another vehicle and press **F** again. You control the bicycle, skateboard, boat or plane yourself. Leave the lane, steer across the pond or take off from the runway. A vehicle stays where you park it, including the car you left behind.
 
+Two pickups and two parcel trucks now wait at connected station, workshop and
+airport loading bays. Walk up, press **F** and drive. They use the same boost,
+parking and save rules as the other cars, and keep your delivery cargo with you.
+[Their construction and complete Dream source](docs/asset-library.md#pickups-and-parcel-trucks).
+
+![Pickup and parcel truck](docs/media/utility.gif)
+
 ![Leaving the car, walking to the bicycle and steering it yourself](docs/media/switching.gif)
 
 [Watch the vehicle switch in HD](docs/media/switching.mp4)
@@ -432,7 +439,7 @@ Agents can ask for just the language they need: `node scripts/dream.mjs context 
 
 The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation uses Minimum Effort's Manrope and Archivo fonts, warm white, charcoal and yellow, with the same page gutters and spacing. Dream commands, fields, references, colors and expressions are highlighted, with copy buttons for complete examples.
 
-[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 1,769 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
+[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 1,773 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
 
 Streetlights now follow streets, bicycle and scooter parking sits beside destinations, and birds fly across sixteen habitats. Dream’s `furnish` and `flock` commands describe those populations with bounded rules.
 
@@ -449,6 +456,11 @@ There are 131 residents, 60 additional ground animals and birds, 345 trees, 48 p
 Objects share physical units. The car is 3.55 metres long, the plane has a 10.8-metre wingspan, and the skateboard is 0.82 metres long. A size declaration scales the geometry, collision body, seats and broken pieces together. The compiler checks proportions too, so a skateboard can't quietly become larger than the car.
 
 The [asset library](docs/asset-library.md) covers the live world assemblies. Cars have window pillars and wheel hubs, bikes have chains and pedals, and the new buildings have attached roofs, embedded façade details and supported canopies. Birches have pale tapered stems, visible forks, hanging twigs and smaller leaf clusters, with bark marks on both sides. The destructible birch falls as one connected tree. Deadwood uses tapered trunks and branches; fallen logs have cut ends, moss and varied headings on the ground. These details are Dream parts too, including the pieces released when something breaks.
+
+The next construction pass takes inspiration from [Kenney's kits](https://kenney.nl/starter-kits)
+across the whole library: buildings, transport, people, animals, plants and props.
+The [construction guide](docs/asset-construction.md#the-next-pass-covers-the-whole-library)
+tracks the scope and review rules. That full visual pass is still pending.
 
 ![Fallen log and deadwood built with connected, tapered wood parts](docs/media/woodland.jpg)
 

@@ -1222,3 +1222,25 @@ sheets and the city map remain accurate: geometry, layout and materials are
 unchanged. Other activity recordings retain their historical walking poses;
 use the refreshed walking set for current motion. No live performance claim.
 [Verification](../evidence/walker-orientation/verification.md).
+
+## Utility fleet, r75
+
+`utility.gif`, `utility.mp4` and `utility.jpg` show the checked pickup and parcel
+truck together. The native gallery exporter records 240 unique 2400 × 1350 PNG
+frames at 30 frames per simulation second, with rolling axles and a complete
+camera orbit. The shared encoder produces a 960 × 540 GIF with 192 colors and
+loss 100, plus 1600 × 900 H.264 CRF-18 video. The still uses frame zero.
+No frames are interpolated and this is not a live performance measurement.
+
+The complete 109-assembly atlas is refreshed from the native gallery's Save PNG
+action. Two unused rock studies move to the optional creations catalogue while
+the pickup and truck join the loaded library. The source-derived city map now
+includes four connected loading aprons. Four untrimmed construction angles and
+the actual truck boarding/reload screenshots are retained in the
+[verification record](../evidence/utility-fleet/verification.md).
+
+README, construction, assets, proportions, behavior, populations, persistence,
+rendering, world systems and the language/model contract were reviewed and
+updated. Other vehicle and city captures retain their recorded geometry and
+mechanics; the new fleet set shows the new vehicles and bays. The current walking
+recordings retain the released upright-foot correction.

@@ -133,3 +133,21 @@ object orchard_picnic(label="Orchard picnic"){
     part food_stem_2(shape=cylinder,material=m9,at=[18.7,39.2,-6.5],size=[0.7,2.0999999999999996,0.7],rot_deg=[0,0,11.459155902616464]);
   }
 }
+
+// Optional rock studies remain available without occupying active-world definitions.
+material catalog_rock(style=toon,colors=[#89918a,#535e60]);
+material catalog_lichen(style=toon,colors=[#708257,#708257]);
+object weathered_boulder(label="Weathered boulder"){
+  measure(kind=custom,axis=y,meters=2);
+  body(interaction=solid,radius=21,height=34);
+  ground(mode=surface);
+  part stone(shape=icosphere,material=catalog_rock,at=[0,14,0],size=[37,32,29],rot_deg=[0,29.79380534680281,6.875493541569878],deform=deform(seed=418,amount=.18));
+  part lichen_patch(shape=icosphere,material=catalog_lichen,at=[-4,25,0],size=[18,2,14],deform=deform(seed=61,amount=.21));
+}
+object exposed_stone_slab(label="Exposed stone slab"){
+  measure(kind=custom,axis=x,meters=3);
+  body(interaction=solid,radius=27,height=14);
+  ground(mode=surface);
+  part slab(shape=icosphere,material=catalog_rock,at=[0,5,0],size=[51,14,30],rot_deg=[0,-22.91831180523293,3.437746770784939],deform=deform(seed=637,amount=.18));
+  part lichen_patch(shape=icosphere,material=catalog_lichen,at=[-4,10,0],size=[18,2,14],deform=deform(seed=61,amount=.21));
+}

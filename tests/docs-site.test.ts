@@ -6,6 +6,11 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights utility proportion kinds at whole-token boundaries and escapes authored labels',()=>{
+    const html=highlight('measure(kind=pickup,axis=x,meters=4.95);measure(kind=truck,axis=x,meters=6.6); // <Fleet>&');
+    for(const word of ['pickup','truck'])expect(html).toContain(`class="dream-symbol">${word}</span>`);
+    expect(html).toContain('&lt;Fleet&gt;&amp;');const longer=highlight('pickup_extra trucks trucking');for(const word of ['pickup_extra','trucks','trucking'])expect(longer).toContain(`>${word}</span>`);expect(longer).not.toMatch(/>(?:pickup|truck)<\/span>/);
+  });
   it('highlights bone mounts and layout clearance at whole-token boundaries and escapes authored text',()=>{
     const html=highlight('mount hair(bone=spine){use detail(component=haircut);}body(clearance=14); // <Hair>&');
     expect(html).toContain('class="dream-keyword">mount</span>');for(const field of ['bone','clearance'])expect(html).toContain(`class="dream-field">${field}</span>`);expect(html).toContain('&lt;Hair&gt;&amp;');expect(highlight('mounted mount_extra clearances clearance_extra backbone')).not.toMatch(/dream-(?:keyword|field)/);

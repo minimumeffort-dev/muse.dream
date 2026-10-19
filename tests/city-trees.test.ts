@@ -5,7 +5,7 @@ import working from '../docs/evidence/city-repairs/native-work.json?raw';
 import oldTrees from '../src/scene/compatibility/r73-trees.json';
 import {createWorldScene} from '../src/scene/world-fixture';
 import {compileDreamScene} from '../src/scene/dream';
-import {preTreeScene,preTreeCompatibilitySource,saveCompatibilitySource,sha256,TREE_COMPATIBILITY,COVERAGE_COMPATIBILITY} from '../src/scene/save-compatibility';
+import {preFleetScene,preTreeScene,preTreeCompatibilitySource,saveCompatibilitySource,sha256,TREE_COMPATIBILITY,COVERAGE_COMPATIBILITY} from '../src/scene/save-compatibility';
 import {pooledImpact,impactBudget} from '../src/scene/damage-pool';
 import {objectContacts,sceneContactData} from '../src/scene/contacts';
 import {objectPlacement} from '../src/scene/placement';
@@ -21,7 +21,7 @@ import {gameSave} from '../src/game/save';
 import {WorldScenery} from '../src/game/scenery';
 import {disposeChunk} from '../src/game/chunk-packet';
 import {drivingReviewStart} from '../src/game/review-start';
-const scene=createWorldScene(),previous={...preTreeScene(scene),sourceHash:oldTrees.source,revisionId:'r73'},trees=scene.objects.filter(o=>o.spec && 'measure' in o.spec && o.spec.measure?.kind==='tree'),service=scene.economy!.repairs.find(r=>r.id==='orchard_trees')!;
+const scene=preFleetScene(createWorldScene()),previous={...preTreeScene(scene),sourceHash:oldTrees.source,revisionId:'r73'},trees=scene.objects.filter(o=>o.spec && 'measure' in o.spec && o.spec.measure?.kind==='tree'),service=scene.economy!.repairs.find(r=>r.id==='orchard_trees')!;
 const world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:TREE_COMPATIBILITY,previousTreeSaveCompatibility:COVERAGE_COMPATIBILITY},oldWorld:World={...world,scene:previous,saveCompatibility:COVERAGE_COMPATIBILITY,previousTreeSaveCompatibility:undefined};
 
 it('makes every measured city tree independently topple through one shared rule without changing its construction',()=>{

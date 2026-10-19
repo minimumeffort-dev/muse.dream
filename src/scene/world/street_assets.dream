@@ -158,3 +158,80 @@ object delivery_van(label="Neighborhood delivery van"){
     }
   }
 }
+
+// Shared utility fleet. Complete source: docs/examples/utility-vehicles.dream.
+material utility_rubber(style=toon,colors=[#252a2d,#171b20]);
+material utility_steel(style=toon,colors=[#a9b4b4,#637780]);
+material utility_glazing(style=toon,colors=[#8baebb,#385b70]);
+material utility_ochre(style=toon,colors=[#c69d4f,#80643a]);
+material utility_blue(style=toon,colors=[#4d788a,#2f4b5e]);
+material utility_ivory(style=toon,colors=[#e4dfcf,#a0a59d]);
+material utility_headlamp(style=glow,colors=[#f4e7b8,#f4eee0]);
+material utility_tail_lamp(style=toon,colors=[#c95842,#7a322d]);
+let utility_pickup_scale(value=.7);
+let utility_truck_scale(value=.55);
+component utility_disc(params=[diameter,depth,offset],materials=[finish]){
+ part disc(shape=prism,material=finish,at=[0,0,offset],size=[diameter,diameter,depth],outline=[[1,.5],[.96194,.691342],[.853553,.853553],[.691342,.96194],[.5,1],[.308658,.96194],[.146447,.853553],[.03806,.691342],[0,.5],[.03806,.308658],[.146447,.146447],[.308658,.03806],[.5,0],[.691342,.03806],[.853553,.146447],[.96194,.308658]]);
+}
+component utility_axle(params=[x,h,track,r,tread,s],materials=[rubber,metal]){
+ joint bearing(at=[x,h,0],rot_deg=[0,180,0],motion=roll(axis=z,radius=r)){
+  use shaft(component=utility_disc,args=[s,track*2,0],materials=[metal]);
+  repeat sides(index=i,count=2){
+   let side(value=i*2-1);
+   use tire(component=utility_disc,args=[r*2,tread,side*track],materials=[rubber]);
+   use hub(component=utility_disc,args=[r*1.12,tread+.2*s,side*track],materials=[metal]);
+  }
+ }
+}
+object field_pickup(label="Field pickup"){
+ measure(kind=pickup,axis=x,meters=4.95);
+ body(interaction=solid,radius=30,height=27.7*utility_pickup_scale);
+ rideable(at=[4*utility_pickup_scale,13.5*utility_pickup_scale,0],control=car);
+ part frame(shape=box,material=utility_rubber,at=[0,6.25*utility_pickup_scale,0],size=[58*utility_pickup_scale,2.5*utility_pickup_scale,16*utility_pickup_scale]);
+ part shell(shape=prism,material=utility_ochre,at=[0,11*utility_pickup_scale,0],size=[70*utility_pickup_scale,10*utility_pickup_scale,28*utility_pickup_scale],outline=[[0,0],[.1,0],[.1,.2],[.128571,.5],[.185714,.6],[.242857,.5],[.271429,.2],[.271429,0],[.728571,0],[.728571,.2],[.757143,.5],[.814286,.6],[.871429,.5],[.9,.2],[.9,0],[1,0],[1,.7],[.942857,1],[.028571,1],[0,.7]]);
+ part cabin(shape=prism,material=utility_glazing,at=[4.75*utility_pickup_scale,21.5*utility_pickup_scale,0],size=[20.5*utility_pickup_scale,11*utility_pickup_scale,25.8*utility_pickup_scale],outline=[[0,0],[1,0],[.68,1],[.03,1]]);
+ part roof(shape=box,material=utility_ochre,at=[1.25*utility_pickup_scale,27.15*utility_pickup_scale,0],size=[15*utility_pickup_scale,1.1*utility_pickup_scale,28*utility_pickup_scale]);
+ part liner(shape=box,material=utility_rubber,at=[-20*utility_pickup_scale,16.3*utility_pickup_scale,0],size=[26*utility_pickup_scale,.6*utility_pickup_scale,23*utility_pickup_scale]);
+ part bulkhead(shape=box,material=utility_ochre,at=[-6.5*utility_pickup_scale,19*utility_pickup_scale,0],size=[1.2*utility_pickup_scale,6*utility_pickup_scale,25.2*utility_pickup_scale]);
+ part tailgate(shape=box,material=utility_ochre,at=[-34.3*utility_pickup_scale,19*utility_pickup_scale,0],size=[1.2*utility_pickup_scale,6*utility_pickup_scale,25.2*utility_pickup_scale]);
+ repeat sides(index=i,count=2){
+  let side(value=i*2-1);
+  part bed_side(shape=box,material=utility_ochre,at=[-20.4*utility_pickup_scale,19*utility_pickup_scale,side*13.2*utility_pickup_scale],size=[28.5*utility_pickup_scale,6*utility_pickup_scale,1.6*utility_pickup_scale]);
+  beam pillar(shape=box,material=utility_ochre,from=[15*utility_pickup_scale,16*utility_pickup_scale,side*13*utility_pickup_scale],to=[8.4*utility_pickup_scale,27*utility_pickup_scale,side*13*utility_pickup_scale],width=1.1*utility_pickup_scale,depth=1.1*utility_pickup_scale);
+  beam mirror_arm(shape=box,material=utility_steel,from=[12*utility_pickup_scale,21*utility_pickup_scale,side*13*utility_pickup_scale],to=[13*utility_pickup_scale,22*utility_pickup_scale,side*17*utility_pickup_scale],width=utility_pickup_scale,depth=utility_pickup_scale);
+  part mirror(shape=box,material=utility_glazing,at=[13*utility_pickup_scale,22*utility_pickup_scale,side*17*utility_pickup_scale],size=[2.2*utility_pickup_scale,3*utility_pickup_scale,1.2*utility_pickup_scale]);
+  part headlight(shape=box,material=utility_headlamp,at=[35.2*utility_pickup_scale,12.2*utility_pickup_scale,side*9*utility_pickup_scale],size=[1.1*utility_pickup_scale,3.1*utility_pickup_scale,5*utility_pickup_scale]);
+  part taillight(shape=box,material=utility_tail_lamp,at=[-35.1*utility_pickup_scale,12.8*utility_pickup_scale,side*11.2*utility_pickup_scale],size=[1.2*utility_pickup_scale,4.2*utility_pickup_scale,2.8*utility_pickup_scale]);
+ }
+ part front_bumper(shape=box,material=utility_rubber,at=[35.4*utility_pickup_scale,7.3*utility_pickup_scale,0],size=[1.8*utility_pickup_scale,2*utility_pickup_scale,28*utility_pickup_scale]);
+ part rear_bumper(shape=box,material=utility_steel,at=[-35.1*utility_pickup_scale,6.8*utility_pickup_scale,0],size=[1.8*utility_pickup_scale,1.6*utility_pickup_scale,28*utility_pickup_scale]);
+ part grille(shape=box,material=utility_rubber,at=[35.35*utility_pickup_scale,12*utility_pickup_scale,0],size=[1.2*utility_pickup_scale,3.5*utility_pickup_scale,9*utility_pickup_scale]);
+ use front_axle(component=utility_axle,args=[22*utility_pickup_scale,5*utility_pickup_scale,13.5*utility_pickup_scale,5*utility_pickup_scale,4*utility_pickup_scale,utility_pickup_scale],materials=[utility_rubber,utility_steel]);
+ use rear_axle(component=utility_axle,args=[-22*utility_pickup_scale,5*utility_pickup_scale,13.5*utility_pickup_scale,5*utility_pickup_scale,4*utility_pickup_scale,utility_pickup_scale],materials=[utility_rubber,utility_steel]);
+}
+object parcel_truck(label="Parcel truck"){
+ measure(kind=truck,axis=x,meters=6.6);
+ body(interaction=solid,radius=30,height=47*utility_truck_scale);
+ rideable(at=[28*utility_truck_scale,20*utility_truck_scale,0],control=car);
+ part chassis(shape=box,material=utility_rubber,at=[-2*utility_truck_scale,6.25*utility_truck_scale,0],size=[90*utility_truck_scale,3.5*utility_truck_scale,30*utility_truck_scale]);
+ part cab_shell(shape=prism,material=utility_blue,at=[29*utility_truck_scale,17.5*utility_truck_scale,0],size=[32*utility_truck_scale,19*utility_truck_scale,34*utility_truck_scale],outline=[[0,0],[.34,0],[.36,.08],[.41,.16],[.53,.2],[.65,.16],[.7,.08],[.72,0],[1,0],[1,.84],[.94,1],[0,1]]);
+ part cabin(shape=prism,material=utility_glazing,at=[28.5*utility_truck_scale,31.5*utility_truck_scale,0],size=[30*utility_truck_scale,9*utility_truck_scale,31*utility_truck_scale],outline=[[0,0],[1,0],[.9,1],[.05,1]]);
+ part roof(shape=box,material=utility_blue,at=[28*utility_truck_scale,36.5*utility_truck_scale,0],size=[30*utility_truck_scale,1.4*utility_truck_scale,34*utility_truck_scale]);
+ part box_support(shape=box,material=utility_rubber,at=[-17*utility_truck_scale,11.5*utility_truck_scale,0],size=[62*utility_truck_scale,7*utility_truck_scale,30*utility_truck_scale]);
+ part box(shape=box,material=utility_ivory,at=[-17*utility_truck_scale,31*utility_truck_scale,0],size=[62*utility_truck_scale,32*utility_truck_scale,36*utility_truck_scale]);
+ part door_seam(shape=box,material=utility_steel,at=[-48.1*utility_truck_scale,31*utility_truck_scale,0],size=[.4*utility_truck_scale,27*utility_truck_scale,.55*utility_truck_scale]);
+ repeat sides(index=i,count=2){
+  let side(value=i*2-1);
+  part step(shape=box,material=utility_steel,at=[20*utility_truck_scale,11*utility_truck_scale,side*18.2*utility_truck_scale],size=[10*utility_truck_scale,2*utility_truck_scale,3.8*utility_truck_scale]);
+  beam pillar(shape=box,material=utility_blue,from=[43.5*utility_truck_scale,27*utility_truck_scale,side*15.5*utility_truck_scale],to=[40.5*utility_truck_scale,36*utility_truck_scale,side*15.5*utility_truck_scale],width=1.2*utility_truck_scale,depth=1.2*utility_truck_scale);
+  beam mirror_arm(shape=box,material=utility_steel,from=[42.2*utility_truck_scale,31*utility_truck_scale,side*15.5*utility_truck_scale],to=[41*utility_truck_scale,31.5*utility_truck_scale,side*22*utility_truck_scale],width=utility_truck_scale,depth=utility_truck_scale);
+  part mirror(shape=box,material=utility_glazing,at=[41*utility_truck_scale,31.5*utility_truck_scale,side*22*utility_truck_scale],size=[2.2*utility_truck_scale,4*utility_truck_scale,1.6*utility_truck_scale]);
+  part headlight(shape=box,material=utility_headlamp,at=[45.6*utility_truck_scale,15*utility_truck_scale,side*12.5*utility_truck_scale],size=[utility_truck_scale,4.5*utility_truck_scale,6*utility_truck_scale]);
+  part taillight(shape=box,material=utility_tail_lamp,at=[-48.4*utility_truck_scale,17.3*utility_truck_scale,side*14*utility_truck_scale],size=[1.3*utility_truck_scale,4*utility_truck_scale,4*utility_truck_scale]);
+ }
+ part front_bumper(shape=box,material=utility_steel,at=[46*utility_truck_scale,10*utility_truck_scale,0],size=[3*utility_truck_scale,3*utility_truck_scale,36*utility_truck_scale]);
+ part rear_bumper(shape=box,material=utility_steel,at=[-49*utility_truck_scale,10*utility_truck_scale,0],size=[3*utility_truck_scale,3*utility_truck_scale,36*utility_truck_scale]);
+ part grille(shape=box,material=utility_rubber,at=[45.5*utility_truck_scale,18*utility_truck_scale,0],size=[utility_truck_scale,7*utility_truck_scale,15*utility_truck_scale]);
+ use front_axle(component=utility_axle,args=[30*utility_truck_scale,5*utility_truck_scale,18*utility_truck_scale,5*utility_truck_scale,5*utility_truck_scale,utility_truck_scale],materials=[utility_rubber,utility_steel]);
+ use rear_axle(component=utility_axle,args=[-30*utility_truck_scale,5*utility_truck_scale,18*utility_truck_scale,5*utility_truck_scale,5*utility_truck_scale,utility_truck_scale],materials=[utility_rubber,utility_steel]);
+}

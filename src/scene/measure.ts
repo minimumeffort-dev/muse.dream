@@ -6,7 +6,7 @@ import { partGeometry } from "./object-geometry";
 export const UNITS_PER_METER=10;
 export const CAR_PROPORTION_RULES=Object.freeze({tree:"larger",plane:"larger",bicycle:"smaller",skateboard:"smaller"} as const);
 export const MEASURE_PROFILES=Object.freeze({
-  car:{axis:"x",min:2.5,max:6}, plane:{axis:"z",min:7,max:24},
+  car:{axis:"x",min:2.5,max:6}, pickup:{axis:"x",min:4,max:6.8}, truck:{axis:"x",min:5.5,max:12}, plane:{axis:"z",min:7,max:24},
   tree:{axis:"y",min:4,max:30}, person:{axis:"y",min:1.4,max:2.2},
   bicycle:{axis:"x",min:1.4,max:2.4}, skateboard:{axis:"x",min:.5,max:1.2},
   bench:{axis:"x",min:1.2,max:2.8}, table:{axis:"x",min:1,max:3},

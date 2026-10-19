@@ -65,7 +65,7 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY || hash===SHIFT_COMPATIBILITY || hash===SOCIAL_COMPATIBILITY || hash===SCHOOL_REPAIR_COMPATIBILITY || hash===BUSINESS_COMPATIBILITY || hash===MATCH_COMPATIBILITY || hash===CITY_COMPATIBILITY || hash===PARK_COMPATIBILITY || hash===SPACING_COMPATIBILITY || hash===JUNCTION_COMPATIBILITY || hash===PEOPLE_COMPATIBILITY || hash===INVITATION_COMPATIBILITY || hash===COVERAGE_COMPATIBILITY || hash===TREE_COMPATIBILITY);
+  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY || hash===SHIFT_COMPATIBILITY || hash===SOCIAL_COMPATIBILITY || hash===SCHOOL_REPAIR_COMPATIBILITY || hash===BUSINESS_COMPATIBILITY || hash===MATCH_COMPATIBILITY || hash===CITY_COMPATIBILITY || hash===PARK_COMPATIBILITY || hash===SPACING_COMPATIBILITY || hash===JUNCTION_COMPATIBILITY || hash===PEOPLE_COMPATIBILITY || hash===INVITATION_COMPATIBILITY || hash===COVERAGE_COMPATIBILITY || hash===TREE_COMPATIBILITY || hash===FLEET_COMPATIBILITY);
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
@@ -92,9 +92,22 @@ export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
 /** r73 expands the existing city's service coverage without changing any saved field. */
+/** r75 adds four dormant utility vehicles and connected loading aprons. */
+export const FLEET_COMPATIBILITY='705def1dcb0ef796f4017bf3b93074bf2ac9a0fddfc27c0ee54b6e98d4ee2ca5';
+const fleetObjects=new Set(['station_field_pickup','station_parcel_truck','harbor_field_pickup','airport_parcel_truck']);
+const fleetSurfaces=new Set(['station_loading_apron','east_depot_apron','workshop_loading_apron','airport_freight_apron']);
+const fleetProjections=new WeakMap<Scene,Scene>();
+export function preFleetScene(scene:Scene):Scene{
+ if(!scene.objects.some(o=>fleetObjects.has(o.id)))return scene;
+ const cached=fleetProjections.get(scene);if(cached)return cached;
+ const prior={...scene,objects:scene.objects.filter(o=>!fleetObjects.has(o.id)),surfaces:scene.surfaces.filter(s=>!fleetSurfaces.has(s.id))};
+ fleetProjections.set(scene,prior);return prior;
+}
+export function preFleetCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preFleetScene(scene),32,true,encode);}
 /** r74 extends shared toppling and connected replanting; the prior shapes stay exact. */
 const treeProjections=new WeakMap<Scene,Scene>();
 export function preTreeScene(scene:Scene):Scene{
+ scene=preFleetScene(scene);
  if(!scene.interactionRules.some(r=>r.id==='living_trees'))return scene;
  const cached=treeProjections.get(scene);if(cached)return cached;
  const snapshots=new Map(treesR73.templates.flatMap(t=>t.objects.map(id=>[id,t] as const))),old=treesR73.rule;

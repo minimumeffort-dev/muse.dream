@@ -5,6 +5,7 @@ import {objectDslSchema,type ObjectPart} from "../src/scene/object-dsl";
 import {partGeometry} from "../src/scene/object-geometry";
 import {createWorldScene} from "../src/scene/world-fixture";
 import example from "../docs/examples/tapered-wood.dream?raw";
+import catalogue from "../src/scene/world/creations.dream?raw";
 import nature from "../src/scene/world/nature.dream?raw";
 import landmarks from "../src/scene/world/landmarks.dream?raw";
 import destructible from "../src/scene/world/destructible.dream?raw";
@@ -12,7 +13,7 @@ import {assemblyBounds,measuredScale} from "../src/scene/measure";
 import {objectFragments} from "../src/scene/fragments";
 
 const scene=createWorldScene();
-const assemblies=[...compileDreamWorld(nature).assemblies,...compileDream(landmarks),...compileDreamWorld(destructible).assemblies];
+const assemblies=[...compileDreamWorld(catalogue).assemblies,...compileDreamWorld(nature).assemblies,...compileDream(landmarks),...compileDreamWorld(destructible).assemblies];
 const spec=(name:string)=>assemblies.find(o=>o.displayName===name)!;
 const mesh=(part:ObjectPart)=>{
   const result=new Mesh(partGeometry(part),new MeshBasicMaterial());

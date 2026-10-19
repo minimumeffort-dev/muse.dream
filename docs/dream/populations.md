@@ -30,7 +30,7 @@ Use `furnish(...,role=controllable)` for available parking. Every template needs
 
 Dormant parking supports cars, bicycles, skateboards and scooters. Boats and planes keep ordinary resident controllable placements with their water/air support. There are at most 256 dormant vehicles, with one reserved occupied rig inside the existing 24-assembly cap. Their physical bodies, moved positions and ownership stay in simulation when rendering unloads. Walkers yield to moved vehicles on their paths. This does not add autonomous parking or vehicle damage. [Complete two-bicycle example](../examples/parked-vehicles.dream).
 
-The live mock has 45 usable parked bicycles, 22 scooters and 14 cars/vans at destinations, plus the original controllable rides. The market scooter uses WASD and a press of Space to jump.
+The live mock has 48 usable parked bicycles, 25 scooters, 14 cars/vans, two pickups and two parcel trucks at destinations, plus the original controllable rides. The market scooter uses WASD and a press of Space to jump.
 
 Compile the complete parking example:
 

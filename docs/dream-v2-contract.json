@@ -63,7 +63,7 @@
       ],
       "id": true,
       "fields": {
-        "kind": "car|plane|tree|person|bicycle|skateboard|bench|table|building|train|bus|tram|boat|food|lamp|custom",
+        "kind": "car|pickup|truck|plane|tree|person|bicycle|skateboard|bench|table|building|train|bus|tram|boat|food|lamp|custom",
         "mode": "impact"
       }
     },
@@ -140,7 +140,7 @@
       ],
       "id": false,
       "fields": {
-        "kind": "car|plane|tree|person|bicycle|skateboard|bench|table|building|train|bus|tram|boat|food|lamp|custom",
+        "kind": "car|pickup|truck|plane|tree|person|bicycle|skateboard|bench|table|building|train|bus|tram|boat|food|lamp|custom",
         "axis": "x|y|z",
         "meters": "n"
       }
@@ -770,7 +770,7 @@
         "grounds": "symbols?",
         "streets": "symbols?",
         "verge": "n?",
-        "kind": "car|plane|tree|person|bicycle|skateboard|bench|table|building|train|bus|tram|boat|food|lamp|custom?",
+        "kind": "car|pickup|truck|plane|tree|person|bicycle|skateboard|bench|table|building|train|bus|tram|boat|food|lamp|custom?",
         "kinds": "symbols?",
         "input": "ref",
         "take": "n",
@@ -1539,6 +1539,16 @@
         "min": 2.5,
         "max": 6
       },
+      "pickup": {
+        "axis": "x",
+        "min": 4,
+        "max": 6.8
+      },
+      "truck": {
+        "axis": "x",
+        "min": 5.5,
+        "max": 12
+      },
       "plane": {
         "axis": "z",
         "min": 7,
@@ -1785,6 +1795,8 @@
       ],
       "repairKinds": [
         "car",
+        "pickup",
+        "truck",
         "plane",
         "tree",
         "person",

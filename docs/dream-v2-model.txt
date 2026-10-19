@@ -103,11 +103,12 @@ For every new object emit measure(kind=...,axis=...,meters=...) directly inside 
 geometry AND all physical contacts, foundations, seats, wheels and fragments.
 Keep local part dimensions inside the existing bounds; do not pre-scale them.
 Profiles/axes/ranges are in contract.proportions.profiles. Examples:
-car x 3.55; tree y 10; plane z 10.8; person y 1.75; bicycle x 1.8;
+car x 3.55; pickup x 4.95; truck x 6.6; tree y 10; plane z 10.8; person y 1.75; bicycle x 1.8;
 skateboard x .82; bench x 1.8; table x 2.4; bread: food x .35.
 place.scale is 0.5..2 variation after measurement, still inside the kind's range.
 Resolved scale must be .05..4. Use kind=custom for deliberate fantasy sizes.
 In car worlds: tree height and plane span > player length; bike/board length < player length.
+Pickup/truck measure categories set length bounds only; use rideable(control=car) for the shared arcade driving profile.
 Never infer a proportion class from a label. Omit measure only for legacy assets.
 Joint offsets: each -64..64. Body radius 4..30, height 4..160, friction .5..5.
 Foundation size .5..128; only upright solids, no mobile objects/player.

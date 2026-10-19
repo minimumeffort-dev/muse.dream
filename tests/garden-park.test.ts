@@ -1,6 +1,6 @@
 import {it,expect} from 'vitest';
 import {createWorldScene} from '../src/scene/world-fixture';
-import {TREE_COMPATIBILITY,preTreeCompatibilitySource,preInvitationCompatibilitySource,COVERAGE_COMPATIBILITY,preCoverageCompatibilitySource,INVITATION_COMPATIBILITY,prePeopleCompatibilitySource,PEOPLE_COMPATIBILITY,preJunctionCompatibilitySource,JUNCTION_COMPATIBILITY,preSpacingCompatibilitySource,preParkScene,preParkCompatibilitySource,saveCompatibilitySource,sha256,SPACING_COMPATIBILITY,PARK_COMPATIBILITY,CITY_COMPATIBILITY} from '../src/scene/save-compatibility';
+import {preFleetScene,TREE_COMPATIBILITY,preTreeCompatibilitySource,preInvitationCompatibilitySource,COVERAGE_COMPATIBILITY,preCoverageCompatibilitySource,INVITATION_COMPATIBILITY,prePeopleCompatibilitySource,PEOPLE_COMPATIBILITY,preJunctionCompatibilitySource,JUNCTION_COMPATIBILITY,preSpacingCompatibilitySource,preParkScene,preParkCompatibilitySource,saveCompatibilitySource,sha256,SPACING_COMPATIBILITY,PARK_COMPATIBILITY,CITY_COMPATIBILITY} from '../src/scene/save-compatibility';
 import {worldSeats} from '../src/scene/seating';
 import {walkingNetwork,onWalkway} from '../src/scene/sites';
 import {ambientNavigation} from '../src/scene/ambient-navigation';
@@ -14,7 +14,7 @@ import {walkingHeight} from '../src/scene/interiors';
 import {vehicleReviewStart} from '../src/game/review-start';
 import {impactOf} from '../src/scene/object-dsl';
 import {stepCommerce} from '../src/sim/commerce';
-const scene=createWorldScene(),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11},idle={steer:0,throttle:0};
+const scene=preFleetScene(createWorldScene()),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11},idle={steer:0,throttle:0};
 it('adds a connected park without replacing any released object or raising live budgets',async()=>{
  expect(await sha256(saveCompatibilitySource(scene))).toBe(TREE_COMPATIBILITY);expect(await sha256(preTreeCompatibilitySource(scene))).toBe(COVERAGE_COMPATIBILITY);expect(await sha256(preCoverageCompatibilitySource(scene))).toBe(INVITATION_COMPATIBILITY);expect(await sha256(preInvitationCompatibilitySource(scene))).toBe(PEOPLE_COMPATIBILITY);expect(await sha256(prePeopleCompatibilitySource(scene))).toBe(JUNCTION_COMPATIBILITY);expect(await sha256(preJunctionCompatibilitySource(scene))).toBe(SPACING_COMPATIBILITY);expect(await sha256(preSpacingCompatibilitySource(scene))).toBe(PARK_COMPATIBILITY);expect(await sha256(preParkCompatibilitySource(scene))).toBe(CITY_COMPATIBILITY);
  expect(scene.objects).toHaveLength(1769);expect(preParkScene(scene).objects).toHaveLength(1719);expect(scene.surfaces).toHaveLength(47);expect(scene.sites).toHaveLength(219);

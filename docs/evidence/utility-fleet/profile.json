@@ -1,0 +1,157 @@
+{
+  "hardware": "Apple M3 Ultra",
+  "macOS": "26.7.1",
+  "surface": "Codex in-app browser",
+  "startupCaveat": "Startup overlapped the two-worker test suite. Frame measurement began after that suite exited.",
+  "loading": {
+    "firstRenderMs": 243.0999999642372,
+    "heartbeat": {
+      "maxGapMs": 350.5,
+      "samples": 307
+    },
+    "phases": [
+      {
+        "endMs": 12412.30000001192,
+        "label": "Reading Dream · checking the world",
+        "startMs": 0.19999998807907104
+      },
+      {
+        "endMs": 12650.5,
+        "label": "Preparing driving and walking",
+        "startMs": 12412.30000001192
+      },
+      {
+        "endMs": 12676.69999998808,
+        "label": "Starting the renderer",
+        "startMs": 12650.5
+      },
+      {
+        "endMs": 12919.599999964235,
+        "label": "Building water and bridges",
+        "startMs": 12676.69999998808
+      },
+      {
+        "endMs": 13056.30000001192,
+        "label": "Building roads and transit",
+        "startMs": 12919.599999964235
+      },
+      {
+        "endMs": 13658.5,
+        "label": "Assembling people and wildlife",
+        "startMs": 13056.30000001192
+      },
+      {
+        "endMs": 14663.5,
+        "label": "Preparing vehicles and interactive objects",
+        "startMs": 13658.5
+      },
+      {
+        "endMs": 14850.899999976158,
+        "label": "Preparing lighting",
+        "startMs": 14663.5
+      },
+      {
+        "endMs": 16195.599999964235,
+        "label": "Loading the first neighbourhood",
+        "startMs": 14850.899999976158
+      },
+      {
+        "endMs": 16756.599999964237,
+        "label": "Preparing the first frame",
+        "startMs": 16195.599999964235
+      }
+    ],
+    "totalMs": 16756.69999998808
+  },
+  "memory": {
+    "bytes": 146433164,
+    "geometries": 1386,
+    "uniqueBuffers": 7917,
+    "uniqueTriangles": 1160604
+  },
+  "parking": {
+    "active": "station_parcel_truck",
+    "instances": 0,
+    "prototypes": 0
+  },
+  "profile": {
+    "cpuMs": {
+      "mean": 3.8646666661898297,
+      "p95": 4.899999976158142
+    },
+    "draws": {
+      "mean": 188.36,
+      "p95": 194
+    },
+    "geometries": 163,
+    "gpuMs": {
+      "mean": 1.1152404481605351,
+      "p95": 1.436083
+    },
+    "gpuSamples": 299,
+    "pixelRatio": 1.5,
+    "prepareMs": {
+      "mean": 2.531333331465721,
+      "p95": 3.400000035762787
+    },
+    "rafMs": {
+      "mean": 16.66633333325386,
+      "p95": 17.400000035762787
+    },
+    "samples": 300,
+    "scenario": "drive",
+    "submitMs": {
+      "mean": 1.3333333347241083,
+      "p95": 1.5
+    },
+    "triangles": {
+      "mean": 214282.13666666663,
+      "p95": 279922
+    },
+    "viewport": [
+      949,
+      1122
+    ]
+  },
+  "streaming": {
+    "bytes": 109233282,
+    "discarded": 0,
+    "keys": [
+      "11200,4000",
+      "10400,4000",
+      "11200,3200",
+      "10400,3200",
+      "11200,4800",
+      "12000,4000",
+      "10400,4800",
+      "12000,3200",
+      "12000,4800",
+      "9600,4000",
+      "9600,3200",
+      "9600,4800",
+      "11200,5600",
+      "10400,5600",
+      "9600,5600",
+      "11200,2400",
+      "10400,2400",
+      "12000,2400",
+      "12000,5600",
+      "9600,2400",
+      "8800,4000",
+      "8800,3200",
+      "8800,4800",
+      "8800,5600",
+      "8800,2400"
+    ],
+    "loaded": 25,
+    "maxInstallMs": 3.5,
+    "maxSliceMs": 3.399999976158142,
+    "peakBytes": 109233282,
+    "peakResident": 25,
+    "pending": 0,
+    "ready": true,
+    "required": 9,
+    "resident": 25,
+    "unloaded": 0
+  }
+}

@@ -390,8 +390,9 @@ Dream `material(style=brick|wood|stone)` selects engine-owned physical surface f
 ## Current expansion priorities
 
 The user wants every object to support interaction and enough force to destroy
-it, with workers repairing lamps and replanting trees. Parked cars/scooters must
-become usable, including future trucks/pickups. Existing passive furnishing and
+it, with workers repairing lamps and replanting trees. Dormant cars, scooters,
+pickups and parcel trucks now share direct controls; keep expanding reusable
+vehicle capabilities. Existing passive furnishing and
 reactive-object caps describe today's limitations, not a desired permanent end
 state. Evolve them through measured bounded activation, persistent state and
 shared Dream rules; do not increase per-frame work or per-cell physics to meet
@@ -802,3 +803,29 @@ migration chain. Projections cache immutable accepted scenes only. New Dream
 examples and the model/command contract must retain these restrictions. Review
 media at 30 rendered frames per simulation second; the four-angle fall and updated
 planting/growth sets are offline exports, never browser FPS measurements.
+
+## Utility fleet, r75
+
+Two measured pickups and two parcel trucks use the existing car control profile
+and dormant-parking path. Keep 91 dormant seeds separate from the 256-record cap,
+with one active rig, independent passenger fit, coaxial wheels and no cargo-box
+inventory or trailer claim. The registered fleet projection removes only its four
+seed IDs and four apron IDs before every historical stage. Preserve the r74
+fingerprint, exact old object/contact order, pedestrian graph, finite ledgers and
+all save fields. New seeds yield to saved vehicles, people and work paths through a bounded
+32-metre clear-parking search. Preserve old poses and all original slots; retain
+unsafe-active-pose recovery as the final safeguard. Save
+format 17 and simulation 32 stay unchanged. The two unplaced rock studies live in
+the optional creations catalogue; do not raise the 128-definition project bound.
+
+## Whole-library asset direction
+
+The user supplied https://kenney.nl/starter-kits as inspiration for every asset
+family, not only new vehicles. Follow the construction review in
+`docs/asset-construction.md`: coherent silhouettes, deliberate edge shapes,
+recessed openings, distinct material roles, attached structure and readable
+detail at the ordinary game camera. Cover buildings, all transport, people,
+animals, plants, furniture, food, props and infrastructure. Do not describe the
+complete library as refreshed until every template is reviewed. Preserve measured
+scales, physical behavior, rig budgets and save compatibility through complete
+verified slices. Keep HUD/docs in Minimum Effort's identity.

@@ -37,12 +37,14 @@ JSON scene consumers must use the already resolved placement scale, not apply
 assembly previews and the player.
 
 The generated [contract](dream-v2-contract.json) contains the authoritative
-`proportions.profiles` table: cars use length X, planes wingspan Z, trees and
+`proportions.profiles` table: cars, pickups and trucks use length X, planes wingspan Z, trees and
 people height Y, lamps height Y (1..15 m), and bikes, boards and furniture length X. Bounds are game
 plausibility rules, not a database of real models or species. They reject
 mistakes such as a five-metre skateboard, including attempts to inflate it
 through placement scale. Use `kind=custom` with an explicit axis and size
 for unusual inventions or deliberate fantasy proportions. Labels have no effect.
+
+Pickups allow 4..6.8 m and trucks 5.5..12 m. The utility example measures its pickup at 4.95 m and parcel truck at 6.6 m. Their `rideable(control=car)` capability shares the existing arcade controller; the measure category supplies size bounds. Neither name creates special handling or cargo storage. [Complete vehicle source](examples/utility-vehicles.dream).
 
 For a measured player car, full-scene validation also requires tree height
 and plane wingspan to exceed its length, and bicycle/skateboard length to

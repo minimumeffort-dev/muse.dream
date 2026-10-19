@@ -1,0 +1,2 @@
+{"assemblies":109}
+{"nativeReload":"exact state and visual clock","truck":{"id":"station_parcel_truck","x":11112.0682048899,"y":4325,"elevation":0,"headingRad":3.141592653589793,"distance":242.9317951100958},"worldTime":7.248499999999992,"timeS":7.25000000000015}
