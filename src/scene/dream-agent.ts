@@ -5,7 +5,7 @@ import {fail} from './dream-syntax';
 type Feature={commands:readonly string[];rules:readonly (keyof typeof contract)[];requires:readonly string[]};
 const feature=(commands:string,rules:(keyof typeof contract)[],requires:string[]=[]):Feature=>({commands:commands.split(' '),rules,requires});
 export const DREAM_AGENT_FEATURES={
-  objects:feature('material let component object body measure ground foundation contact seat rideable emit group joint mount repeat use part beam spin roll sway swing open deform',['components','geometry','humanoid','proportions','seating']),
+  objects:feature('material let component object body measure ground foundation contact seat rideable emit group joint mount repeat use part beam spin roll sway swing stride open deform',['components','geometry','humanoid','proportions','seating']),
   world:feature('world road junction checkpoint hill tint bridge water watercourse route point place effect unresolved',['worldLimits','agents','transit'],['objects']),
   modules:feature('asset include',['modules'],['objects']),
   interactions:feature('rule impact fragment zone bounce break topple',['interactionRules','destruction'],['objects']),

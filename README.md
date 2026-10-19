@@ -460,8 +460,8 @@ The [asset library](docs/asset-library.md) covers the live world assemblies. Car
 The construction pass takes inspiration from [Kenney's kits](https://kenney.nl/starter-kits)
 across the whole library: buildings, transport, people, animals, plants and props.
 The [construction guide](docs/asset-construction.md#the-next-pass-covers-the-whole-library)
-tracks the scope and review rules. Trees, landscape plants and the first five furniture/container templates have
-completed this pass; the other families remain pending.
+tracks the scope and review rules. Trees, landscape plants, the first five furniture/container templates and all nine
+animal templates have completed this pass; the other families remain pending.
 
 ![Cleaner crowns, supported branches and smaller fruit](docs/media/canopy.gif)
 
@@ -494,6 +494,15 @@ All ten slatted benches, three breakaway tables, two produce crates, the clay
 planter and both produce stalls use the rebuilt constructions. Tables now stand
 about 78 cm high. Seats still work, furniture still breaks and repairs, and old
 saves retain their progress. [Five complete Dream objects](docs/examples/furniture-construction.dream).
+
+![Nine rebuilt animals with travel-driven leg cycles](docs/media/fauna.gif)
+
+The deer, hare, fox, dog and cat have connected two-segment legs and clearer
+faces. Birds have tapered wings, tails and visible eyes. All 60 roamers, the
+route deer and gull, and 256 flock birds use these constructions. Dream's new
+`stride` joint follows distance travelled, so a fleeing animal steps faster.
+These are rigid stylized strides, without animal foot-contact IK or new animal
+interactions. [Nine complete animal definitions](docs/examples/wildlife-construction.dream).
 
 ![Fallen log and deadwood built with connected, tapered wood parts](docs/media/woodland.jpg)
 

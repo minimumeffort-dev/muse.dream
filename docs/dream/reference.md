@@ -150,7 +150,7 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 `joint(...,bone=...)` binds engine-owned humanoid motion. Use all twelve bindings once:
 `root`, `spine`, `left_hip`, `left_knee`, `left_ankle`, `left_shoulder`, `left_elbow`, and the five corresponding `right_` bindings. The hierarchy is `root → spine → shoulder → elbow` and `root → hip → knee → ankle` on both sides. Rest frames face +X, +Y up, left +Z, with zero rotation. Root is centered above the ground; spine is directly above root; hips lie at root height, shoulders above spine. Knee, ankle and elbow offsets point straight down by at least .5 local units. Hip/shoulder lateral offsets choose their declared side. The object must be a measured decor person, all parts must belong to bones, and bone motion cannot combine with `motion` or fracture groups. Bindings count as live animation, including without `swing`, and require explicit `pose=rest` for passive `furnish`. Other joints keep their existing behavior. [Complete rig and motion notes](behavior.md#humanoid-motion).
 
-Rolling joints use the same bounded radius 1..32 as part roll. Their children rotate rigidly by traveled distance / resolved radius; their bearing positions remain fixed during visual suspension compression. Radius follows uniform group/placement scale. Reduced motion rests the pose. Prop `furnish` templates bake roll joints at rest; controllable furnishings retain them for activation; swing/open templates require explicit `pose=rest`. Live rolling assemblies retain the 24-assembly and 12-joint caps.
+Rolling joints use the same bounded radius 1..32 as part roll. Their children rotate rigidly by traveled distance / resolved radius; their bearing positions remain fixed during visual suspension compression. Radius follows uniform group/placement scale. Reduced motion rests the pose. Prop `furnish` templates bake roll joints at rest; controllable furnishings retain them for activation; swing/stride/open templates require explicit `pose=rest`. Live rolling assemblies retain the 24-assembly and 12-joint caps.
 
 ### Value constructors
 
@@ -159,6 +159,7 @@ Rolling joints use the same bounded radius 1..32 as part roll. Their children ro
 | `spin` | part_motion | No ID / no block | `axis: x / y / z`, `deg_s: n` |
 | `roll` | part_motion / joint_motion | No ID / no block | `axis: x / y / z`, `radius: n` |
 | `sway` | part_motion | No ID / no block | `deg: n`, `hz: n` |
+| `stride` | joint_motion | No ID / no block | `axis: x / y / z`, `deg: n`, `length: n`, `phase_deg: n` |
 | `swing` | joint_motion | No ID / no block | `axis: x / y / z`, `deg: n`, `hz: n`, `phase_deg: n` |
 | `open` | joint_motion | No ID / no block | `axis: x / y / z`, `deg: n`, `radius: n` |
 | `deform` | deform | No ID / no block | `seed: n`, `amount: n` |
@@ -275,7 +276,7 @@ The compiler filters full visual footprints against roads, pavements, crossings,
 
 `motion=roam(radius=90,speed=5,alert=70,flee_speed=30,recover_s=2,gait=hop)` stays dry, clear of solids and outside roads/grounds. Radius and alert are 20–180; speed is 2–16; flee speed is 8–60 and at least speed; recovery is .5–10 seconds, default 2. Gait is `walk` (default) or `hop`. Player distance includes elevation. Blocked members wait rather than teleporting.
 
-Ambient motion excludes passive `pose`, routes, programs, seats, contacts, foundations, damage, lamps, emitters, part clocks and proximity/rolling joints. Original humanoid bindings or swing joints survive as validated metadata beside the resting assembly. At most 192 members use fixed 20 Hz movement, render interpolation and shared GPU geometry/rig transforms; the graph has at most 8,192 nodes. All remain resident. Existing NPC/route/CPU rig limits are unchanged. Pause freezes state, R preserves it and Start over resets it; reduced motion rests gait/hops. This adds no physics bodies, pushing or avoidance of decor NPC people. There is no general crowd physics, generated code, signal solving or ecosystem simulation. [Runnable example](../examples/moving-population.dream).
+Ambient motion excludes passive `pose`, routes, programs, seats, contacts, foundations, damage, lamps, emitters, part clocks and proximity/rolling joints. Original humanoid bindings, swing or stride joints survive as validated metadata beside the resting assembly. At most 192 members use fixed 20 Hz movement, render interpolation and shared GPU geometry/rig transforms; the graph has at most 8,192 nodes. All remain resident. Existing NPC/route/CPU rig limits are unchanged. Pause freezes state, R preserves it and Start over resets it; reduced motion rests gait/hops. This adds no physics bodies, pushing or avoidance of decor NPC people. There is no general crowd physics, generated code, signal solving or ecosystem simulation. [Runnable example](../examples/moving-population.dream).
 
 `flock` declares a decorative instanced population, separate from NPC ownership. Its template must be passive decor, without seats, contacts, foundations, emitters or impacts, and fit a 20-unit horizontal radius. `radius` is 40–1,200 per axis, `count` 1–32, `altitude` 60–300, `speed` 5–80, `flap_hz` 0–6 (default 2), `flap_deg` 0–25 (default 12), and integer `seed` 0–65,535. The complete habitat must fit the world. Altitude clears terrain and nearby roofs; authored joints are baked at rest and the shader flexes wings along local Z. The resident cap is 16 flocks and 256 birds. These birds do not collide, react or receive behavior programs. Reduced motion freezes their pose.
 
@@ -702,3 +703,10 @@ and refund headroom protected. Acquisition needs open/staffed counter service;
 capital transfers can happen while closed. No resale, hiring, automatic profits,
 new businesses or property deeds. [Complete example](../examples/business-ownership.dream)
 and [playable ownership guide](businesses.md#own-the-station-depot).
+
+
+`stride` joints use one sinusoidal cycle per 1..128 expanded local units of
+travel. Angle amplitude is 0..1.4 radians and phase -pi..pi after conversion.
+Resolved object scale converts world distance; primitive size does not change
+the bearing. This is visual articulation, without a foot-contact solver or saved
+clock. [Complete example](../examples/joint-stride.dream).

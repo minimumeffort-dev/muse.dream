@@ -107,15 +107,17 @@ object city_scooter(label="Electric city scooter"){
 }
 object city_pigeon(label="City pigeon"){
  measure(kind=custom,axis=z,meters=.72);
- body(interaction=decor,radius=4,height=4);
- part body(shape=icosphere,material=pigeon_gray,at=[0,3,0],size=[5,3,2]);
- part breast(shape=icosphere,material=throat,at=[2,3.5,0],size=[2,2.5,1.8]);
- part head(shape=sphere,material=pigeon_gray,at=[3,5,0],size=[2,2,1.7]);
- beam beak(shape=box,material=iron,from=[3.8,5,0],to=[4.7,4.8,0],width=.6,depth=.6);
- part tail(shape=box,material=iron,at=[-3,3,0],size=[3,.6,2.5],rot_deg=[0,0,-8]);
- part wing_left(shape=box,material=pigeon_gray,at=[-.5,3.8,-3.5],size=[4,.5,7],rot_deg=[0,-12,-3]);
- part wing_right(shape=box,material=pigeon_gray,at=[-.5,3.8,3.5],size=[4,.5,7],rot_deg=[0,12,-3]);
- repeat eyes(index=i,count=2){part eye(shape=sphere,material=iron,at=[3.5,5.2,i*1.4-.7],size=[.5,.5,.5]);}
+ body(interaction=decor,radius=4,height=4,clearance=8.732841885098388);
+ part body(shape=icosphere,material=pigeon_gray,at=[0,3,0],size=[5,3,2.4],faceted=true);
+ part breast(shape=icosphere,material=throat,at=[2,3.5,0],size=[2,2.5,1.8],faceted=true);
+ part head(shape=icosphere,material=pigeon_gray,at=[3,5,0],size=[2,2,1.7],faceted=true);
+ part beak(shape=prism,material=iron,at=[4.3,4.9,0],size=[.898920440673828,.6,.6],outline=[[0,0],[1,.5],[0,1]]);
+ part tail(shape=prism,material=iron,at=[-3,3,0],size=[3.03426742553711,3,.5],rot_deg=[90,0,0],outline=[[0,0],[1,.3],[1,.7],[0,1],[.1,.5]]);
+ repeat wings(index=s,count=2){let side(value=s*2-1);
+  part wing(shape=prism,material=pigeon_gray,at=[-.5,3.8,side*4.064190053939819],size=[5,6.528380107879639,.5],rot_deg=[side*90,0,0],outline=[[.15,0],[1,0],[.9,.45],[.35,1],[0,.9],[.1,.45]]);
+  part stripe(shape=prism,material=iron,at=[-.6,4.08,side*3.7],size=[3,1,.12],rot_deg=[side*90,0,0],outline=[[0,0],[1,0],[.9,1],[.1,1]]);
+  part eye(shape=icosphere,material=iron,at=[3.5,5.2,side*.7],size=[.5,.5,.5],faceted=true);
+ }
 }
 object city_hatchback(label="City hatchback"){
   measure(kind=car,axis=x,meters=3.8);

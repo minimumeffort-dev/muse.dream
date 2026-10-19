@@ -6,6 +6,10 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights stride at token boundaries and escapes authored labels',()=>{
+    const html=highlight('joint hip(motion=stride(axis=z,deg=24,length=20,phase_deg=0)); // <Paw>&');
+    expect(html).toContain('class="dream-keyword">stride</span>');expect(html).toContain('&lt;Paw&gt;&amp;');expect(highlight('strider stride_extra')).not.toMatch(/>stride<\/span>/);
+  });
   it('highlights the facet field at whole-token boundaries and escapes authored labels',()=>{
     const html=highlight('part leaf(shape=icosphere,faceted=true); // <Tree>&');
     expect(html).toContain('class="dream-field">faceted</span>');expect(html).toContain('&lt;Tree&gt;&amp;');expect(highlight('facetedness faceted_extra')).not.toMatch(/dream-(?:keyword|field)/);

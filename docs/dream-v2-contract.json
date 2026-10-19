@@ -1150,6 +1150,18 @@
         "hz": "n"
       }
     },
+    "stride": {
+      "contexts": [
+        "joint_motion"
+      ],
+      "id": false,
+      "fields": {
+        "axis": "x|y|z",
+        "deg": "n",
+        "length": "n",
+        "phase_deg": "n"
+      }
+    },
     "swing": {
       "contexts": [
         "joint_motion"
@@ -1280,6 +1292,22 @@
     "semantics": "One optional object-root interior(at=[x,floor_y,z],size=[width,clear_height,depth]) with 1..4 named portal records. Requires a static solid foundation, a matching rectangle floor contact covering the complete interior with its top at floor_y, a matching ceiling contact with its bottom at floor_y + clear_height, and explicit part.cutaway roof tags. Portals use front=-Z, back=+Z, left=-X, right=+X; offset runs along X for front/back and Z for left/right. Width/height are local full dimensions. Complete scenes prove a 9-unit doorway, 20-unit headroom and unobstructed approach with steps <=4. Existing 32-part/8-contact budgets apply. Explicit cutaway=roof|front|back|left|right keeps floor, contents and far walls opaque inside; shell tags survive instancing and streaming. The ordinary simulation supports the physical floor and ceiling. The placed object ID may be used in repair/delivery grounds without independent polygon coordinates. One ground floor per building; no stacked floors, stairs, lifts or inferred rooms. A room-owning lamp supplies a floor-clipped always-on surface pool; it does not light walls or occlude other objects."
   },
   "geometry": {
+    "stride": {
+      "source": "joint(motion=stride(axis=z,deg=24,length=20,phase_deg=0))",
+      "length": [
+        1,
+        128
+      ],
+      "amplitudeRad": [
+        0,
+        1.4
+      ],
+      "phaseRad": [
+        -3.141592653589793,
+        3.141592653589793
+      ],
+      "semantics": "One cycle per length local units traveled after group/placement scale. Renderer-owned rigid rotation; no new physics or saved clock. Joint-only; explicit rest for passive furnishing; ambient instancing shares color/depth poses."
+    },
     "faceted": "optional boolean on undeformed cylinder, cone and icosphere parts/beams; true retains flat polygonal faces as exact cut-cell contours; false preserves curved reconstruction; no new contact, grid or part budgets",
     "partSizeMinimum": 0.1,
     "legacyPartSizeMinimum": 0.5,

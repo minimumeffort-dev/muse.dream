@@ -95,7 +95,14 @@ mechanism by traveled distance / resolved radius. Use one bearing frame for
 an axle's tires, hubs and shaft, or a bicycle's chainring, arms and pedals.
 The bearing stays fixed during visual body suspension travel. Orient bearings
 so forward travel rolls their wheels forward; keep shafts inside the hubs.
-Prop furnish templates bake roll joints at rest; controllable parking retains them for activation; swing/open joints remain
+stride(axis=z,deg=24,length=20,phase_deg=0) rotates a rigid joint by
+sin(2*pi*traveled_local_distance/length+phase)*amplitude. Use the same cycle
+length for an animal's hip and knee pairs; opposite legs use phases 0/180.
+Length is 1..128 expanded local units; amplitude 0..1.4 radians, phase -pi..pi.
+Travel is divided by the resolved object scale. It is joint-only, with no saved
+clock or foot-contact solver. Reduced motion uses rest. Ambient instances share
+color/shadow poses and retain existing budgets. See examples/joint-stride.dream.
+Prop furnish templates bake roll joints at rest; controllable parking retains them for activation; swing/stride/open joints remain
 ineligible for furnishings unless explicitly baked with pose=rest. Live roll joints count toward existing jointed
 assembly budgets. No controller scripts or independent part orbit callbacks.
 

@@ -25,7 +25,7 @@ and their handmade source in `src/scene/mock-creations.ts`.
 | Bread | Horizontal capsule with slight seeded variation, crust grain and cream-colored scoring detail parts |
 | A scene of these things | Place assemblies in scene coordinates; compose the bread and fruit onto a picnic table as another assembly |
 
-Version 2 parts also accept `shape: "prism"` with a bounded `outline` of normalized XY pairs. The engine extrudes it through Z; legacy version 1 stays unchanged. Joints may use `animation: {kind: "roll", axis: "z", radius: 8}` for rigid distance-driven mechanisms. Existing swing animation objects retain their original format. [Dream authoring and bounds](dream/objects.md).
+Version 2 parts also accept `shape: "prism"` with a bounded `outline` of normalized XY pairs. The engine extrudes it through Z; legacy version 1 stays unchanged. Joints may use `animation: {kind: "roll", axis: "z", radius: 8}` for rigid distance-driven mechanisms. Joints also accept `animation: {kind: "stride", axis: "z", amplitudeRad: .4, strideLength: 20, phase: 0}` for distance-paced rigid steps. Stride length is 1..128 local units, amplitude 0..1.4 radians and phase -pi..pi. Existing swing animation objects retain their original format. [Dream authoring and bounds](dream/objects.md).
 
 Optional `faceted: true` on an undeformed cylinder, cone or icosphere retains its
 flat polygon faces, including exact planar contours under voxel construction.

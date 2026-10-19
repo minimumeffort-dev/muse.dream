@@ -34,6 +34,11 @@ counter hours, finite recipes, hungry customers and a physical courier.
 personal owner account and company treasury. The same owner/sale capability is
 playable at the live station depot. [Business ownership](businesses.md#own-the-station-depot).
 
+[Wildlife constructions](../examples/wildlife-construction.dream) contains the nine
+complete live animals. [Distance-driven joints](../examples/joint-stride.dream)
+is a smaller five-part example: hip and knee cycles follow travel while the
+head retains a separate swing. [Bounds and rendered source](objects.md#pace-a-joint-by-travel).
+
 ## Two finishes, one assembly
 
 These [two tables](../examples/material-components.dream) share their top and four legs. Numeric parameters set dimensions; material parameters select a finish and pass it through nested components. The complete file compiles to ten parts, with no special renderer recipe.

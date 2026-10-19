@@ -214,6 +214,7 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
             joints.push({ id: jointId, ...(frame.parent ? { parent: frame.parent } : {}), position: local.position.toArray(), rotation: angles(local.rotation),
               ...(statement.bone ? {bone:statement.bone as NonNullable<ObjectDslV2['joints']>[number]['bone']} : {}),
               ...(motion?.kind==="swing" ? { animation: { axis: motion.axis as "x" | "y" | "z", amplitudeRad: number(motion.args[0]!) * RAD, speed: number(motion.args[1]!), phase: number(motion.args[2]!) * RAD } } : {}),
+              ...(motion?.kind==='stride' ? {animation:{kind:'stride' as const,axis:motion.axis as 'x'|'y'|'z',amplitudeRad:number(motion.args[0]!)*RAD,strideLength:number(motion.args[1]!)*local.scale,phase:number(motion.args[2]!)*RAD}} : {}),
               ...(motion?.kind==='roll' ? {animation:{kind:'roll' as const,axis:motion.axis as 'x'|'y'|'z',radius:number(motion.args[0]!)*local.scale}} : {}),
               ...(motion?.kind==="open" ? {proximity:{axis:motion.axis as "x"|"y"|"z",angleRad:number(motion.args[0]!)*RAD,radius:number(motion.args[1]!)}} : {}) });
             jointOrigins.push(token);

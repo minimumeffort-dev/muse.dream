@@ -225,8 +225,8 @@ material bindings and bounded repeats, within 32 parts per object.
 The measured frame and existing furnishing clearance keep bodies, street
 placement and navigation stable. These plants remain scenery, with the tub's
 existing solid contact. They add no picking, harvesting, growth or biological
-simulation. The separate breakable clay planter retains its existing fragment
-construction and remains in the prop-family review.
+simulation. The separate breakable clay planter now has the joined shell and rim documented
+in the furniture construction pass.
 [Construction, save and native-render checks](evidence/plant-construction/verification.md).
 
 ## Small ground details
@@ -240,3 +240,20 @@ The [complete example](examples/ground-cover.dream) includes their shared
 components and a combined inspection object. The engine compacts the two types
 for tiled instancing. They add no physics bodies or interactive plant state.
 The seeded scatter density and palette remain engine-owned.
+
+## Animals built around their movement
+
+![The complete reconstructed wildlife family](media/fauna.jpg)
+
+All nine animal exports have been reviewed from four angles. The five ground
+species use two-segment legs with distance-driven `stride` joints. The birds
+have tapered wings and tails; eyes and ear panels remain visible above the
+surrounding surfaces. Sixty ambient members, the route deer and gull, and all
+256 flock birds retain their homes, movement rules, physical sizes and saves.
+Red kite remains an unplaced library export.
+
+[Construction and limits](asset-construction.md#wildlife-construction-r79) ·
+[Complete source](examples/wildlife-construction.dream) · [Motion in HD](media/fauna.mp4).
+These remain stylized rigid strides, without animal foot planting, pet care or
+new wildlife interactions. The continuing library review has 70 of 109 exports
+pending, plus the separately tracked engine and optional examples.

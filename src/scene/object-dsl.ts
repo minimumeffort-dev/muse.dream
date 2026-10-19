@@ -77,7 +77,7 @@ export const jointSchema=z.object({
   id:z.string().min(1).max(40),parent:z.string().min(1).max(40).optional(),
   bone:z.enum(HUMANOID_BONES).optional(),
   position:z.tuple([offset,offset,offset]),rotation:z.tuple([angle,angle,angle]).optional(),
-  animation:z.union([jointAnimationSchema,z.object({kind:z.literal('roll'),axis:z.enum(['x','y','z']),radius:z.number().finite().min(1).max(32)}).strict()]).optional(),
+  animation:z.union([jointAnimationSchema,z.object({kind:z.literal('roll'),axis:z.enum(['x','y','z']),radius:z.number().finite().min(1).max(32)}).strict(),z.object({kind:z.literal('stride'),axis:z.enum(['x','y','z']),amplitudeRad:z.number().finite().min(0).max(1.4),strideLength:z.number().finite().min(1).max(128),phase:z.number().finite().min(-Math.PI).max(Math.PI)}).strict()]).optional(),
   proximity:z.object({axis:z.enum(["x","y","z"]),angleRad:z.number().finite().min(-Math.PI).max(Math.PI),radius:z.number().finite().min(20).max(160)}).strict().optional(),
 }).strict();
 export const MIN_DETAIL_SIZE=.1;

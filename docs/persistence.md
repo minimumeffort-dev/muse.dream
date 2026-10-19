@@ -565,3 +565,17 @@ lower. A walker saved standing on the previous cap falls safely onto its new
 height during ordinary fixed steps, without resetting progress.
 
 [Checks and native backups](evidence/furniture-construction/verification.md).
+
+### Wildlife construction (r79)
+
+The registered r78 projection restores the nine original templates, all 62
+animal placements/ambient rigs and the sixteen original flock specifications.
+It reproduces the released world fingerprint and matching contact source before
+navigation. Earlier projections first remove this visual revision. Isolated
+review prefixes never borrow a public save.
+
+Format 17 / simulation 32 and every state field remain unchanged. New `stride`
+joints read existing travel only; no new clock is saved. Homes, bounds, routes,
+reactions, economies, damage and vehicle ownership retain their state. The
+reconstructed ear silhouettes and subsequent limb poses differ intentionally.
+[Historical matrix and native round trip](evidence/wildlife-construction/verification.md).

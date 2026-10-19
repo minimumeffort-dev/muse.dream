@@ -142,11 +142,11 @@ character library and the bone, scope and placement-clearance rules.
 
 ## Animate a connection
 
-Parts support `spin`, distance-driven `roll` and rigid `sway`. Joints support `roll`, oscillating `swing` or a proximity-driven `open`. Arguments use named fields: `spin(axis=x,deg_s=90)` or `swing(axis=z,deg=20,hz=.25,phase_deg=0)`.
+Parts support `spin`, distance-driven `roll` and rigid `sway`. Joints support `roll`, distance-driven `stride`, oscillating `swing` or a proximity-driven `open`. Arguments use named fields: `spin(axis=x,deg_s=90)` or `swing(axis=z,deg=20,hz=.25,phase_deg=0)`.
 
-A rolling joint turns its whole child assembly around one bearing by traveled distance divided by its resolved radius. Tires, hubs and a shaft can share one axle frame; a chainring, crank arms and pedals can share another. All children retain their distances from the bearing. Orient the local axis to match forward wheel travel. Reduced motion rests the mechanism, and prop furnishings bake its rest pose without allocating live joints. Controllable furnishings retain the mechanism for their single occupied fleet rig and instance its unoccupied pose. Swinging or proximity-operated templates remain ineligible for furnishings. [The complete bicycle](../examples/city-bicycle.dream) uses a rolling crank with paired forks and stays.
+A rolling joint turns its whole child assembly around one bearing by traveled distance divided by its resolved radius. Tires, hubs and a shaft can share one axle frame; a chainring, crank arms and pedals can share another. All children retain their distances from the bearing. Orient the local axis to match forward wheel travel. Reduced motion rests the mechanism, and prop furnishings bake its rest pose without allocating live joints. Controllable furnishings retain the mechanism for their single occupied fleet rig and instance its unoccupied pose. Stride, swinging or proximity-operated templates remain ineligible for furnishings. [The complete bicycle](../examples/city-bicycle.dream) uses a rolling crank with paired forks and stays.
 
-Use `joint(...,bone=left_knee)` and the complete twelve-bone humanoid contract for people who walk, run and swim. The engine chooses the movement cycle; the model supplies connected anatomy. [Rig, source and close-up motion](behavior.md#humanoid-motion). Ordinary machinery keeps `roll`, `swing` and `open`.
+Use `joint(...,bone=left_knee)` and the complete twelve-bone humanoid contract for people who walk, run and swim. The engine chooses the movement cycle; the model supplies connected anatomy. [Rig, source and close-up motion](behavior.md#humanoid-motion). Ordinary machinery keeps `roll`, `stride`, `swing` and `open`.
 
 Scattered fragments require a static rest pose so their release frames are deterministic. A whole-object `topple` may retain part `sway` on a pooled static prop with `world(...,damage_pool=true)`. Its crown keeps the same wind phase while the assembly falls, including its shadow and material finishes. Spin, roll, cloth and animated joints remain incompatible. [Compile a complete planting world](../examples/city-tree-replanting.dream). Full shape, position, motion and expansion bounds are in the [reference](reference.md).
 
@@ -170,3 +170,39 @@ A static measured building can declare an `interior` with named `portal` opening
 components in separate objects and one combined inspection form. Keep leaf roots
 on their stalk and grass tips below petals. The engine uses these same small
 prototypes; its scatter density and palette remain engine-owned.
+
+## Pace a joint by travel
+
+`stride` is joint-only. `length` is 1–128 local units per cycle; `deg` is a
+0–1.4-radian amplitude expressed in degrees, and `phase_deg` stays within ±180.
+Nested uniform scales resolve the length before object scale is applied.
+Time alone does not advance the joint. It uses a rigid sinusoidal rotation,
+without a foot-contact solver. Reduced motion and parked roll-only updates rest it.
+Humanoid walking continues to use its separate complete bone contract.
+
+This complete example is identical to [joint-stride.dream](../examples/joint-stride.dream):
+
+```dream
+dream 2;
+material coat(style=toon,colors=[#b78352,#8f6847]);
+material foot(style=toon,colors=[#3c413a,#3c413a]);
+object stride_limb(label="Distance-driven limb"){
+ measure(kind=custom,axis=y,meters=.7);
+ body(interaction=decor,radius=4,height=28);
+ part body(shape=icosphere,material=coat,at=[0,22,0],size=[8,8,6],faceted=true);
+ joint hip(at=[0,20,0],motion=stride(axis=z,deg=24,length=20,phase_deg=0)){
+  beam thigh(shape=cylinder,material=coat,from=[0,0,0],to=[0,-10,0],width=2,depth=2,faceted=true);
+  joint knee(at=[0,-10,0],motion=stride(axis=z,deg=9.6,length=20,phase_deg=0)){
+   beam shin(shape=cylinder,material=coat,from=[0,0,0],to=[0,-9,0],width=1.5,depth=1.5,faceted=true);
+   part paw(shape=box,material=foot,at=[1,-9,0],size=[5,2,3]);
+  }
+ }
+ joint glance(at=[0,24,0],motion=swing(axis=y,deg=5,hz=.2,phase_deg=0)){
+  part head(shape=icosphere,material=coat,at=[0,2,0],size=[4,4,4],faceted=true);
+ }
+}
+```
+
+[All nine animal constructions](../examples/wildlife-construction.dream) reuse
+this mechanism. Ambient animals share GPU geometry and color/shadow transforms;
+new motion vocabulary does not raise their population or joint limits.

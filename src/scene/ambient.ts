@@ -19,7 +19,7 @@ export function ambientProblem(o:Pick<SceneObject,'kind'|'role'|'spec'|'route'|'
  if(o.role!=='ambient')return o.ambient ? 'ambient motion requires explicit ambient ownership' : undefined;
  const s=o.spec;
  if(o.kind!=='custom' || !o.ambient || o.route || o.behavior || !s || !('dslVersion' in s) || s.dslVersion!==2 || s.body.interaction!=='decor' || isReactive(s) || s.foundation || s.contacts || s.rideable || s.emitter || s.lamp || s.parts.some(p=>p.animation) || s.joints?.some(j=>j.bone || j.animation || j.proximity))return 'ambient populations require resting decor without routes, programs, contacts, damage, seats, foundations, emitters or lamps';
- if(o.ambient.joints.some(j=>j.proximity || j.animation && 'kind' in j.animation))return 'ambient joints support humanoid bindings or bounded swing only';
+ if(o.ambient.joints.some(j=>j.proximity || j.animation && 'kind' in j.animation && j.animation.kind!=='stride'))return 'ambient joints support humanoid bindings or bounded swing/stride only';
  const restored=objectDslSchema.safeParse({...s,joints:o.ambient.joints});
  if(!restored.success || JSON.stringify(s.joints??[])!==JSON.stringify(o.ambient.joints.map(({bone,animation,...joint})=>joint)))return 'ambient rig must match the resting assembly and preserve its complete validated hierarchy';
  if(o.ambient.motion.kind==='walk' && !o.ambient.joints.some(j=>j.bone))return 'walking populations require the complete humanoid rig';

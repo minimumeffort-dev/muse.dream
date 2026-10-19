@@ -177,7 +177,7 @@ export function animateObject(group: THREE.Group, time: number, enabled:boolean|
       part.quaternion.copy(joint.rotation);
       if(enabled && joint.animation && (enabled!=='roll' || joint.animation.kind==='roll')) {
         const motion=joint.animation,axis=new THREE.Vector3(Number(motion.axis==="x"),Number(motion.axis==="y"),Number(motion.axis==="z"));
-        part.rotateOnAxis(axis,'kind' in motion ? distance/(motion.radius*group.scale.x) : Math.sin(time*motion.speed+motion.phase)*motion.amplitudeRad);
+        part.rotateOnAxis(axis,'kind' in motion ? motion.kind==='roll' ? distance/(motion.radius*group.scale.x) : Math.sin(distance/(motion.strideLength*group.scale.x)*Math.PI*2+motion.phase)*motion.amplitudeRad : Math.sin(time*motion.speed+motion.phase)*motion.amplitudeRad);
       }
       if(joint.proximity) {
         const motion=joint.proximity,t=THREE.MathUtils.clamp((motion.radius-listenerDistance)/24,0,1),open=t*t*(3-2*t);

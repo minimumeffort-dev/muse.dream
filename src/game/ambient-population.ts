@@ -28,7 +28,7 @@ export function ambientPrototype(object:SceneObject,joints=object.ambient?.joint
  for(const batch of batches.values()){const geometry=mergeGeometries(batch.geometry,false);if(!geometry)throw Error('ambient assembly could not be combined');group.add(new THREE.Mesh(indexedGeometry(geometry),batch.material));batch.geometry.forEach(g=>g.dispose());}
  source.traverse(node=>{if(node instanceof THREE.Mesh)node.geometry.dispose();});return group;
 }
-type Batch={indices:number[];meshes:THREE.InstancedMesh[];radius:number;soleRadius:number;meters:number;stride:number;lift:number;unit:number;hips:number[];reaches:number[];planted:boolean};
+type Batch={indices:number[];meshes:THREE.InstancedMesh[];radius:number;soleRadius:number;meters:number;stridePeriod?:number;stride:number;lift:number;unit:number;hips:number[];reaches:number[];planted:boolean};
 export class AmbientPopulation {
  readonly group=new THREE.Group();
  readonly count:number;
@@ -52,6 +52,7 @@ export class AmbientPopulation {
   for(const indices of groups.values()){
    yield;
    const o=this.objects[indices[0]!]!,spec=o.spec as ObjectDslV2,prototype=ambientPrototype(o),bounds=assemblyBounds(spec),radius=bounds.getSize(new THREE.Vector3()).length()*Math.max(...indices.map(i=>this.objects[i]!.scale))+8,meshes:THREE.InstancedMesh[]=[],feet=humanoidFeet(spec,o.ambient!.joints),soles=feet.map(f=>f.sole) as [Sole,Sole];
+   const strideLengths=new Set(o.ambient!.joints.flatMap(j=>j.animation && 'kind' in j.animation && j.animation.kind==='stride' ? [j.animation.strideLength] : [])),stridePeriod=strideLengths.size===1 ? [...strideLengths][0] : undefined;
    const planted=o.ambient!.motion.kind==='walk',unit=(o.ambient!.joints.find(j=>j.bone==='root')?.position[1]??25)/25,hips=['left','right'].map(side=>o.ambient!.joints.find(j=>j.bone===`${side}_hip`)?.position[2]??0);
    const reaches=['left','right'].map(side=>gaitPlantReach(-(o.ambient!.joints.find(j=>j.bone===`${side}_knee`)?.position[1]??-11.5),-(o.ambient!.joints.find(j=>j.bone===`${side}_ankle`)?.position[1]??-10.5)));
    for(const child of prototype.children){const source=child as THREE.Mesh,geometry=source.geometry as THREE.BufferGeometry;const channels=planted ? 4 : 3;geometry.setAttribute('popCycle',new THREE.InstancedBufferAttribute(new Float32Array(indices.length*channels),channels).setUsage(THREE.DynamicDrawUsage));
@@ -59,7 +60,7 @@ export class AmbientPopulation {
     const mesh=new THREE.InstancedMesh(geometry,ambientMaterial(source.material as THREE.Material,o.ambient!.joints,false,false,soles,planted),indices.length);mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
     mesh.castShadow=true;mesh.receiveShadow=true;mesh.frustumCulled=false;mesh.customDepthMaterial=ambientMaterial(new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking}),o.ambient!.joints,true,false,soles,planted);this.group.add(mesh);meshes.push(mesh);
    }
-   this.batches.push({indices,meshes,radius,soleRadius:Math.max(...feet.map(f=>f.radius)),lift:objectGroundLift(o),meters:spec.measure?.meters??1,stride:gaitStride(0)*unit,unit,hips,reaches,planted});
+   this.batches.push({indices,meshes,radius,soleRadius:Math.max(...feet.map(f=>f.radius)),lift:objectGroundLift(o),meters:spec.measure?.meters??1,stridePeriod,stride:gaitStride(0)*unit,unit,hips,reaches,planted});
   }
  }
  update(state:CarState,camera:THREE.Camera,light:THREE.DirectionalLight,dt:number,reduced=false){
@@ -71,7 +72,7 @@ export class AmbientPopulation {
     this.amounts[i]!+=(Number(p.speed>.01)-this.amounts[i]!)*(1-Math.exp(-dt*12));const amount=reduced ? 0 : this.amounts[i]!;
     // Start a restored walker over its support foot, rather than holding an arbitrary long half-step from rest.
     if(batch.planted && !Number.isFinite(this.walkingStarts[i]))this.walkingStarts[i]=p.distance;
-    const phase=batch.planted ? gaitStance(0)/2+(p.distance-this.walkingStarts[i]!)/(batch.stride*object.scale) : p.distance/(batch.meters*6),hop=motion.kind==='roam' && motion.gait==='hop' ? Math.max(0,Math.sin(phase*Math.PI*2))*Math.min(4,batch.meters*5)*amount : 0;
+    const phase=batch.planted ? gaitStance(0)/2+(p.distance-this.walkingStarts[i]!)/(batch.stride*object.scale) : p.distance/(batch.stridePeriod ? batch.stridePeriod*object.scale : batch.meters*6),hop=motion.kind==='roam' && motion.gait==='hop' ? Math.max(0,Math.sin(phase*Math.PI*2))*Math.min(4,batch.meters*5)*amount : 0;
     const floor=walkingHeight(this.scene,p.x,p.y,this.supportRadii[i]!)+batch.lift;
     let feet:ReturnType<FootPlants['sample']>[]|undefined;
     if(batch.planted){const plants=this.plants[i]!,pose={x:p.x,y:floor,z:p.y,heading:p.heading};if(reduced)plants.reset();plants.begin(pose,object.scale*batch.unit,dt,this.ground,batch.soleRadius*object.scale);
@@ -83,7 +84,8 @@ export class AmbientPopulation {
     for(const mesh of batch.meshes){mesh.setMatrixAt(count,this.matrix);
      // Bound humanoids do not use the animal clock; pack ground planes without another vertex attribute.
      if(feet){(mesh.geometry.getAttribute('popCycle') as THREE.InstancedBufferAttribute).setXYZW(count,feet[0]!.slopeX,phase,amount,feet[1]!.slopeZ);(mesh.geometry.getAttribute('popPlant') as THREE.InstancedBufferAttribute).setXYZW(count,feet[0]!.x,feet[0]!.z-batch.hips[0]!,feet[1]!.x,feet[1]!.z-batch.hips[1]!);(mesh.geometry.getAttribute('popFacing') as THREE.InstancedBufferAttribute).setXYZW(count,feet[0]!.yaw,feet[1]!.yaw,feet[1]!.slopeX,feet[0]!.slopeZ);(mesh.geometry.getAttribute('popLift') as THREE.InstancedBufferAttribute).setXYZW(count,feet[0]!.lift,feet[1]!.lift,feet[0]!.rise,feet[1]!.rise);}
-     else (mesh.geometry.getAttribute('popCycle') as THREE.InstancedBufferAttribute).setXYZ(count,p.distance/(batch.meters*6*.6),phase,amount);
+     // Wrap a shared cycle before float32 upload; saved travel stays untouched.
+     else (mesh.geometry.getAttribute('popCycle') as THREE.InstancedBufferAttribute).setXYZ(count,batch.stridePeriod ? (p.distance/object.scale)%batch.stridePeriod : p.distance/object.scale,p.distance/(batch.meters*6*.6),amount);
     }count++;
    }
    for(const mesh of batch.meshes){mesh.count=count;mesh.visible=count>0;mesh.instanceMatrix.needsUpdate=true;for(const channel of batch.planted ? ['popCycle','popPlant','popFacing','popLift'] : ['popCycle'])(mesh.geometry.getAttribute(channel) as THREE.InstancedBufferAttribute).needsUpdate=true;}

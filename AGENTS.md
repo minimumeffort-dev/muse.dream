@@ -857,7 +857,7 @@ opening, with soil above its hidden body cap and below its lip. Keep final visua
 dimensions >= .1 after group scaling, the 32-part cap, continuous leaf/stalk
 joins and the old measure frame. Its explicit clearance retains the previous
 furnishing reservation. This adds no new language vocabulary, rigs or contacts.
-The separate breakable clay planter remains in the pending prop-family review.
+The separate breakable clay planter now uses the r78 joined shell/rim construction.
 
 Preserve the checked r76 plant/placement projection, matching prior host contacts
 and all earlier save stages. Format 17 / simulation 32 and every saved state field
@@ -895,5 +895,29 @@ stage, with its matching host contact source identity before navigation. Format
 seats, active debris, repair claims and cargo. A walker on the old taller table
 settles onto the lower cap through ordinary fixed steps. Fragment extents follow
 the new geometry; do not promise identical later debris trajectories. The wider
-whole-library pass still has 79 loaded exports pending, plus separate engine and
+whole-library pass had 79 loaded exports pending at r78, plus separate engine and
 optional families.
+
+
+## Wildlife construction, r79
+
+Nine animal exports cover 60 ambient members, two route actors and 256 flock
+birds; Red kite stays unplaced. Keep all physical bodies, measured frames,
+placement scales, floors, visual radii, old furnishing clearances and habitats.
+Deer/hare ear height is deliberately reduced outside their measured X axes. Use the complete
+32-part/twelve-joint limits, connected faceted limbs, knee caps, eye exposure
+and tapered bird profiles in docs/examples/wildlife-construction.dream.
+
+Dream joint-only stride(axis,deg,length,phase_deg) rotates by existing travel in
+local units, with uniform group/object scaling, not a saved or timed clock.
+Preserve strict 1..128 length, amplitude <=1.4 radians, phase ±pi and joint-only
+validation. Ambient motion allows swing/stride only. Color/depth instances share
+the existing three animal floats; use local distance for stride and the legacy
+time-derived cycle for swing. Wrap a shared period before float32 upload; align
+an existing hop to it. Humanoid contacts and sports packing stay separate.
+Reduced motion rests joints/hops. These are rigid arcade gaits, not animal IK.
+
+Preserve the exact r78 snapshot projection, prior host contacts and all earlier
+save stages. Format 17 / simulation 32 and every saved field remain unchanged.
+The whole-library pass has 39/109 exports reviewed, 70 pending, plus separate
+engine/infrastructure and optional examples. Do not claim the review is complete.

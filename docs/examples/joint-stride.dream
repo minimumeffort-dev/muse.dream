@@ -1,0 +1,18 @@
+dream 2;
+material coat(style=toon,colors=[#b78352,#8f6847]);
+material foot(style=toon,colors=[#3c413a,#3c413a]);
+object stride_limb(label="Distance-driven limb"){
+ measure(kind=custom,axis=y,meters=.7);
+ body(interaction=decor,radius=4,height=28);
+ part body(shape=icosphere,material=coat,at=[0,22,0],size=[8,8,6],faceted=true);
+ joint hip(at=[0,20,0],motion=stride(axis=z,deg=24,length=20,phase_deg=0)){
+  beam thigh(shape=cylinder,material=coat,from=[0,0,0],to=[0,-10,0],width=2,depth=2,faceted=true);
+  joint knee(at=[0,-10,0],motion=stride(axis=z,deg=9.6,length=20,phase_deg=0)){
+   beam shin(shape=cylinder,material=coat,from=[0,0,0],to=[0,-9,0],width=1.5,depth=1.5,faceted=true);
+   part paw(shape=box,material=foot,at=[1,-9,0],size=[5,2,3]);
+  }
+ }
+ joint glance(at=[0,24,0],motion=swing(axis=y,deg=5,hz=.2,phase_deg=0)){
+  part head(shape=icosphere,material=coat,at=[0,2,0],size=[4,4,4],faceted=true);
+ }
+}

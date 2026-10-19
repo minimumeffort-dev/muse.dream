@@ -1,0 +1,25 @@
+{
+  "scope": "Complete resident wildlife geometry: 60 ambient animals, two route animals, 256 flock birds. Full-detail builders; unique typed-array buffers include instance attributes. Meshes are family batches, not per-frame draws. This is not FPS, browser heap or VRAM.",
+  "r78": {
+    "ambientMembers": 60,
+    "routeActors": 2,
+    "flockBirds": 256,
+    "meshes": 57,
+    "submittedTriangles": 839182,
+    "bytes": 15703656,
+    "uniqueBuffers": 389,
+    "geometries": 57,
+    "uniqueTriangles": 87284
+  },
+  "r79": {
+    "ambientMembers": 60,
+    "routeActors": 2,
+    "flockBirds": 256,
+    "meshes": 64,
+    "submittedTriangles": 205000,
+    "bytes": 3474272,
+    "uniqueBuffers": 424,
+    "geometries": 64,
+    "uniqueTriangles": 18788
+  }
+}

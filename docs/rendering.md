@@ -462,3 +462,22 @@ FPS measurement. Unique geometry/instance buffers change from 7,878,556 to
 7,863,196 bytes; instance data dominates this count. The smooth regression
 fixture uses more prototype triangles than its former simple cones and dots.
 [Raw counts and checks](evidence/ground-cover/verification.md).
+
+## Distance-driven animal joints
+
+R79 animals retain full geometry in the existing ambient instance batches.
+`stride` joints use interpolated travel divided by resolved object scale. Timed
+swings use the existing animal clock independently. The same bounded joint
+uniforms deform color and depth passes. A common stride period is wrapped before
+float32 upload, retaining precision during long sessions without changing saved
+distance; that period also aligns the existing hare hop. Mixed-period rigs keep
+their unwrapped local travel. No extra vertex attribute, CPU rig or per-member
+mesh is added. Species remain within 32 parts and twelve joints. There is no
+animal foot-contact IK. [Construction checks](evidence/wildlife-construction/verification.md).
+
+The complete resident wildlife fixture contains 60 ambient members, two route
+actors and 256 flock birds. Its geometry/instance typed arrays change from
+15,703,656 to 3,474,272 bytes; submitted full-family triangles change from 839,182
+to 205,000. Family meshes rise from 57 to 64 because of distinct limb/face
+materials. These are full-detail fixture counts, not per-frame draws, total
+browser memory, VRAM or an FPS improvement. [Raw counts](evidence/wildlife-construction/geometry.json).

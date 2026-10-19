@@ -1344,3 +1344,37 @@ and model guides were reviewed and updated. The language reference, generated
 command contract and highlighter need no vocabulary changes. Source/frame hashes,
 checks, native save/reload evidence and limitations are recorded in the
 [furniture verification](../evidence/furniture-construction/verification.md).
+
+
+## Wildlife construction, r79
+
+`fauna.gif`, `fauna.mp4` and `fauna.jpg` share the native `?fauna&capture`
+sequence: all nine live animal exports, 240 rendered PNGs, 30 frames per
+simulation second, an eight-second turntable. The three-column stage has no
+floor so a bird's wing motion remains visible. It changes no in-world support.
+GIF uses 1280 × 720, 256 colors and loss 20; HD video uses 1600 × 900, CRF 18.
+The poster is original frame 0. Four matching 2400 × 2700 still exports retain
+r78 and r79 from front/right/back/left views.
+
+The main-game wildlife, driving and park sequences are refreshed with 360, 210
+and 360 real rendered frames respectively. Their GIF/HD pairs and matching
+wildlife/world/park posters come from the same sequences, frames 180/120/180.
+Wildlife and driving retain the 960 × 540 / 192-color encoder settings; park
+retains 1280 × 720 / 256 colors / loss 20. All source PNGs are 2400 × 1350.
+These offline exports do not measure live frame rate or interpolate frames.
+
+`ecology.jpg`, `population-assets.jpg`, `street-assets.jpg` and the complete
+109-export `assets-all.jpg` are fresh native Save PNG gallery exports, encoded
+as high-quality JPEGs. The street filter selects ten unique names and retains
+two repeated hatchback/van exports. The new fauna poster replaces the older
+four-animal sheet with the complete nine-template family. Other focused sheets
+keep their unchanged construction geometry. The compiled map keeps the same
+coordinates and physical envelopes. Earlier economic and sports recordings
+retain their historical background wildlife; they document their recorded rules.
+
+README and construction, asset, object, population, rendering, persistence and
+model guides were reviewed and updated. The language reference, generated
+compiler contract, feature packets and highlighting include joint `stride`.
+Two complete executable examples are checked. Source and frame hashes, native
+save evidence and checks live in the
+[wildlife verification](../evidence/wildlife-construction/verification.md).

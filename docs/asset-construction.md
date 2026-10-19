@@ -13,21 +13,22 @@ for the whole library. The [Car Kit](https://kenney.nl/assets/car-kit),
 [industrial city kit](https://kenney.nl/assets/city-kit-industrial) and
 [Mini Forest](https://kenney.nl/assets/mini-forest) previews were inspected on
 2026-10-19. The construction rules below are our interpretation of those visual
-references. Trees, landscape plants and the first five furniture/container templates have
-completed this pass. The remaining families still need it.
+references. Trees, landscape plants, the first five furniture/container templates and all nine
+animal templates have completed this pass. The remaining families still need it.
 
 The [r75 catalogue](evidence/asset-direction/catalogue.json) lists all 109 loaded
 assembly exports at the start of this pass. The [r76 catalogue](evidence/asset-direction/r76-catalogue.json)
 records eleven refined live tree templates and the reviewed, retained deadwood.
 The [r77 catalogue](evidence/asset-direction/r77-catalogue.json) adds thirteen
 refined landscape and street-plant templates. The [r78 catalogue](evidence/asset-direction/r78-catalogue.json) adds five
-furniture/container templates across all 18 of their placements. The other 79
-exports remain pending, including 28 buildings and 14 person exports. Repeated exports remain listed. The
+furniture/container templates across all 18 of their placements. The [r79 catalogue](evidence/asset-direction/r79-catalogue.json)
+adds all nine animal templates, covering 62 placements and 256 flock birds. Thirty-nine
+exports are reviewed; the other 70 remain pending, including 28 buildings and 14 person exports. Repeated exports remain listed. The
 engine-provided player rigs, background ground cover, infrastructure and optional example catalogue also
 belong in the pass; the loaded-library list does not certify those separately.
 
 The engine-provided ground cover has its own checked Dream construction,
-separate from the thirteen placed plant templates below. Other furnishings, animals, people, transport, buildings and infrastructure
+separate from the thirteen placed plant templates below. Other furnishings, people, transport, buildings and infrastructure
 remain on the review queue.
 
 Start with a silhouette that reads at the ordinary game camera. Use a few
@@ -226,7 +227,50 @@ the live definitions. There is no new command or larger geometry budget.
 [left](evidence/furniture-construction/after-left.png) inspect the voxel models.
 [Verification, persistence and media provenance](evidence/furniture-construction/verification.md).
 
-The next construction priorities are moving fauna and people, then the remaining
+The next construction priorities are people, then the remaining
 transport and buildings. Each pass keeps its existing motion, interaction and
 save contracts while checking silhouettes and connected parts. Street furniture,
 sports equipment, food and optional examples remain in the same review queue.
+
+## Wildlife construction, r79
+
+![Nine species, built and animated in Dream](media/fauna.gif)
+
+Deer, hares, foxes, dogs and cats have connected limb segments, knee caps and
+small shaped feet. Broad faceted masses define their chest, haunches and face.
+The birds have tapered wing and tail profiles, visible eyes and attached beaks.
+Hare and deer ears are shorter; inner ear panels meet the outer ear.
+Kenney's [Cube Pets preview](https://kenney.nl/assets/cube-pets) informed the
+silhouette review. These Dream constructions are independently authored.
+
+| Template | Parts | Joints | Live use |
+| --- | ---: | ---: | --- |
+| City pigeon | 11 | 0 | 208 flock birds |
+| River gull | 10 | 2 | One route actor, 48 flock birds |
+| Roe deer | 32 | 9 | Route actor and ambient habitats |
+| Meadow hare | 23 | 5 | Ambient habitats |
+| Copper fox | 32 | 8 | Ambient habitats |
+| Neighborhood dog | 30 | 8 | Neighborhood green areas |
+| Garden cat | 32 | 8 | Neighborhood green areas |
+| Perched sparrow | 14 | 0 | Garden and park habitats |
+| Red kite | 12 | 2 | Exported, currently unplaced |
+
+The five ground species total 60 ambient members with the sparrows. Their
+body dimensions, measured scales, floors, visual clearance radii and habitat
+rules remain fixed. The deer and hare measure their X length; shorter ears do not change that
+frame or their resolved scale. No extra actor, rig, attribute slot or physics body
+is allocated. [Complete live definitions](examples/wildlife-construction.dream).
+
+`joint(...,motion=stride(axis=z,deg=24,length=20,phase_deg=0))` rotates a rigid
+limb once per 20 local units travelled. Uniform group scale and resolved object
+scale both count. Timed head glances can coexist with these distance-driven
+legs. Color and shadow instances share the same transforms. The hare's existing
+hop follows its shared stride cycle; pausing holds the pose and reduced motion
+rests it. This is an arcade gait, without animal foot-contact IK. Wing flex in
+cosmetic flocks still uses the existing bounded shader.
+
+[Front](evidence/wildlife-construction/after-front.png),
+[right](evidence/wildlife-construction/after-right.png),
+[back](evidence/wildlife-construction/after-back.png) and
+[left](evidence/wildlife-construction/after-left.png) retain matching reviews.
+[Checks, saves and capture provenance](evidence/wildlife-construction/verification.md).

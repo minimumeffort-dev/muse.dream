@@ -12,192 +12,187 @@ material gold(style=toon,colors=[#d5aa54,#a67b3c]);
 material kite_coat(style=toon,colors=[#a5744d,#6e5041]);
 material kite_wing(style=toon,colors=[#705c4c,#4b473d]);
 
-component deer_leg(params=[phase]){
-  joint hip(motion=swing(axis=z,deg=30,hz=.6,phase_deg=phase)){
-    beam leg(shape=capsule,material=deer_coat,from=[0,0,0],to=[1,-20,0],width=3,depth=3);
-    part hoof(shape=box,material=dark,at=[1,-20,0],size=[4,4,4]);
-  }
-}
-component fox_leg(params=[phase]){
-  joint hip(motion=swing(axis=z,deg=32,hz=.6,phase_deg=phase)){
-    beam leg(shape=capsule,material=fox_dark,from=[0,0,0],to=[1,-12,0],width=3.5,depth=3.5);
-    part paw(shape=capsule,material=dark,at=[2,-12,0],size=[4,6,4],rot_deg=[0,0,-90]);
-  }
-}
-object roe_deer(label="Roe deer"){
-  measure(kind=custom,axis=x,meters=1.9);
-  body(interaction=decor,radius=4,height=56);
-  part body(shape=capsule,material=deer_coat,at=[0,24,0],size=[14,33,16],rot_deg=[0,0,-90]);
-  part chest(shape=icosphere,material=deer_coat,at=[11,25,0],size=[15,20,17]);
-  part rump(shape=icosphere,material=deer_coat,at=[-12,25,0],size=[15,19,17]);
-  part belly(shape=capsule,material=deer_light,at=[0,19,0],size=[7,27,11],rot_deg=[0,0,-90]);
-  beam neck(shape=cylinder,material=deer_coat,from=[12,27,0],to=[18,39,0],width=8,depth=8,taper=.65);
-  joint head(at=[18,39,0],motion=swing(axis=z,deg=5,hz=.14,phase_deg=90)){
-    part skull(shape=capsule,material=deer_coat,at=[3,0,0],size=[8,13,8],rot_deg=[0,0,-90]);
-    part muzzle(shape=capsule,material=deer_light,at=[9,-2,0],size=[5,9,6],rot_deg=[0,0,-90]);
-    part nose(shape=icosphere,material=dark,at=[13,-2,0],size=[3,3,4]);
-    repeat ears(index=e,count=2){
-      group ear(at=[0,0,e*6-3],rot_deg=[e*28-14,0,-12]){
-        part outer(shape=capsule,material=deer_coat,at=[0,7,0],size=[5,14,3]);
-        part inner(shape=icosphere,material=ear_inner,at=[.5,8,1],size=[3,9,1.2]);
-      }
-      part eye(shape=sphere,material=dark,at=[5,2,e*7.4-3.7],size=[1.6,1.6,1.1]);
-    }
-  }
-  use front_left(component=deer_leg,args=[0],at=[11,22,-6]);
-  use front_right(component=deer_leg,args=[180],at=[11,22,6]);
-  use back_left(component=deer_leg,args=[180],at=[-11,22,-6]);
-  use back_right(component=deer_leg,args=[0],at=[-11,22,6]);
-  part white_rump(shape=icosphere,material=cream,at=[-17,24,0],size=[3,10,10]);
-  part tail(shape=capsule,material=deer_coat,at=[-20,26,0],size=[3,7,3],rot_deg=[0,0,75]);
-}
-object meadow_hare(label="Meadow hare"){
-  measure(kind=custom,axis=x,meters=.85);
-  body(interaction=decor,radius=4,height=40);
-  part body(shape=capsule,material=hare_coat,at=[-1,9,0],size=[14,23,14],rot_deg=[0,0,-90]);
-  part haunch(shape=icosphere,material=hare_coat,at=[-7,9,0],size=[15,18,16]);
-  part chest(shape=icosphere,material=cream,at=[7,10,0],size=[6,11,9]);
-  repeat feet(index=f,count=2){
-    part hind_foot(shape=capsule,material=hare_coat,at=[-4,2,f*11-5.5],size=[4,16,4],rot_deg=[0,0,-90]);
-    part front_paw(shape=capsule,material=hare_coat,at=[9,2,f*7-3.5],size=[3,8,3],rot_deg=[0,0,-90]);
-  }
-  part tail(shape=sphere,material=cream,at=[-16,8,0],size=[5,5,5]);
-  joint head(at=[11,14,0],motion=swing(axis=y,deg=7,hz=.18,phase_deg=30)){
-    part skull(shape=icosphere,material=hare_coat,at=[1,0,0],size=[11,10,10]);
-    part cheeks(shape=icosphere,material=cream,at=[5,-2,0],size=[7,5,8]);
-    part nose(shape=icosphere,material=ear_inner,at=[9,-1,0],size=[2,1.5,2]);
-    repeat ears(index=e,count=2){
-      group ear(at=[0,0,e*6-3],rot_deg=[e*12-6,0,8]){
-        part outer(shape=capsule,material=hare_coat,at=[0,12,0],size=[4.5,22,2.8]);
-        part inner(shape=icosphere,material=ear_inner,at=[.5,13,1],size=[2.5,16,1]);
-        part dark_tip(shape=capsule,material=dark,at=[0,21,0],size=[3.7,4,2.5]);
-      }
-      part eye(shape=sphere,material=dark,at=[3,1,e*8.2-4.1],size=[2,2,1.2]);
-    }
-  }
-}
-object copper_fox(label="Copper fox"){
-  measure(kind=custom,axis=x,meters=1.4);
-  body(interaction=decor,radius=4,height=38);
-  part body(shape=capsule,material=fox_coat,at=[0,16,0],size=[12,29,13],rot_deg=[0,0,-90]);
-  part chest(shape=icosphere,material=fox_coat,at=[10,18,0],size=[13,16,14]);
-  part bib(shape=icosphere,material=cream,at=[15,18,0],size=[5,12,10]);
-  part belly(shape=icosphere,material=cream,at=[0,11,0],size=[23,3,9]);
-  beam tail(shape=capsule,material=fox_coat,from=[-12,18,0],to=[-32,15,-1],width=10,depth=10);
-  part tail_tip(shape=cone,material=cream,at=[-35,15,-1],size=[8,11,8],rot_deg=[0,0,90]);
-  part head(shape=icosphere,material=fox_coat,at=[18,25,0],size=[13,12,12]);
-  part muzzle(shape=cone,material=fox_coat,at=[25,22,0],size=[7,13,7],rot_deg=[0,0,-90]);
-  part nose(shape=icosphere,material=dark,at=[31,22,0],size=[2.5,2.5,3]);
-  repeat details(index=e,count=2){
-    part cheek(shape=icosphere,material=cream,at=[22,22,e*8-4],size=[8,3,2],rot_deg=[0,e*30-15,0]);
-    part ear(shape=cone,material=fox_coat,at=[16,33,e*8-4],size=[6,11,4]);
-    part ear_inner(shape=cone,material=fox_dark,at=[16.8,33,e*8-4],size=[3.5,7,2.5]);
-    part eye(shape=sphere,material=dark,at=[22,26,e*8.2-4.1],size=[1.8,1.8,1]);
-  }
-  use front_left(component=fox_leg,args=[0],at=[10,14,-4]);
-  use front_right(component=fox_leg,args=[180],at=[10,14,4]);
-  use back_left(component=fox_leg,args=[180],at=[-10,14,-4]);
-  use back_right(component=fox_leg,args=[0],at=[-10,14,4]);
-}
-object river_gull(label="River gull"){
-  measure(kind=custom,axis=z,meters=1.8);
-  body(interaction=decor,radius=4,height=24);
-  part body(shape=capsule,material=gull_feather,at=[0,7,0],size=[7,22,8],rot_deg=[0,0,-90]);
-  part head(shape=sphere,material=cream,at=[11,9,0],size=[8,8,8]);
-  part beak(shape=cone,material=gold,at=[17,8,0],size=[3,8,3],rot_deg=[0,0,-90]);
-  repeat sides(index=s,count=2){
-    let side(value=s*2-1);
-    part eye(shape=sphere,material=dark,at=[13,10,side*3.6],size=[1.2,1.2,1]);
-    part tail(shape=icosphere,material=cream,at=[-14,7,side*3],size=[13,1.5,6],rot_deg=[0,side*16,0]);
-    joint wing(at=[0,7,side*3],rot_deg=[0,-side*16,0],motion=swing(axis=x,deg=24,hz=.5,phase_deg=s*180)){
-      beam inner(shape=cylinder,material=gull_feather,from=[0,0,0],to=[0,0,side*24],width=17,depth=2.4,taper=.25);
-      beam dark_tip(shape=cylinder,material=dark,from=[0,0,side*20],to=[0,0,side*30],width=6,depth=1.5,taper=.15);
-    }
-  }
-}
-object red_kite(label="Red kite"){
-  measure(kind=custom,axis=z,meters=1.7);
-  body(interaction=decor,radius=4,height=24);
-  part body(shape=capsule,material=kite_coat,at=[0,7,0],size=[7,24,7],rot_deg=[0,0,-90]);
-  part head(shape=icosphere,material=cream,at=[12,8,0],size=[7,7,7]);
-  part beak(shape=cone,material=dark,at=[17,7,0],size=[3,6,3],rot_deg=[0,0,-90]);
-  repeat sides(index=s,count=2){
-    let side(value=s*2-1);
-    part eye(shape=sphere,material=dark,at=[13,9,side*3],size=[1.2,1.2,1]);
-    part fork_tail(shape=icosphere,material=kite_coat,at=[-17,7,side*4],size=[19,1.5,5],rot_deg=[0,side*23,0]);
-    joint wing(at=[0,7,side*3],rot_deg=[0,-side*10,0],motion=swing(axis=x,deg=16,hz=.28,phase_deg=s*180)){
-      beam inner(shape=cylinder,material=kite_coat,from=[0,0,0],to=[0,0,side*25],width=19,depth=2.5,taper=.4);
-      beam outer(shape=cylinder,material=kite_wing,from=[0,0,side*20],to=[0,0,side*31],width=9,depth=1.6,taper=.3);
-      part pale_patch(shape=icosphere,material=cream,at=[0,.9,side*14],size=[9,1,8]);
-      repeat feathers(index=f,count=3){beam finger(shape=cylinder,material=dark,from=[(f-1)*2,0,side*26],to=[(f-1)*4,0,side*(33+f)],width=2.2,depth=1.2,taper=.25);}
-    }
-  }
-}
-
 material dog_coat(style=toon,colors=[#c4a16f,#9b774f]);
 material cat_coat(style=toon,colors=[#8c969d,#616b74]);
+
+component animal_leg(params=[length,bend,width,paw,phase,stride],materials=[coat,foot]){
+ joint hip(motion=stride(axis=z,deg=24,length=stride,phase_deg=phase)){
+  beam thigh(shape=cylinder,material=coat,from=[0,0,0],to=[bend,-length*.48,0],width=width*1.15,depth=width*1.15,taper=.8,faceted=true);
+  joint knee(at=[bend,-length*.48,0],motion=stride(axis=z,deg=9.6,length=stride,phase_deg=phase)){
+   part knee(shape=icosphere,material=coat,at=[0,0,0],size=[width*1.05,width*1.05,width*1.05],faceted=true);
+   beam shin(shape=cylinder,material=coat,from=[0,0,0],to=[1-bend,-length*.52,0],width=width*.8,depth=width*.8,taper=.7,faceted=true);
+   part paw(shape=prism,material=foot,at=[1-bend,-length*.52,0],size=[paw,width*.9,width*1.14],outline=[[0,.25],[.15,0],[.85,0],[1,.3],[1,.8],[.8,1],[.15,1],[0,.75]]);
+  }
+ }
+}
+component pointed_ear(params=[height,width],materials=[coat,lining]){
+ part ear(shape=prism,material=coat,at=[0,height/2,0],size=[width,height,2.4],outline=[[.15,0],[.85,0],[1,.35],[.6,1],[.35,.95],[0,.35]]);
+ part inner(shape=prism,material=lining,at=[0,height*.55,1.22],size=[width*.52,height*.65,.15],outline=[[.1,0],[.9,0],[1,.25],[.5,1],[0,.25]]);
+}
+object roe_deer(label="Roe deer"){
+ measure(kind=custom,axis=x,meters=1.9);
+ body(interaction=decor,radius=4,height=56,clearance=33.59315406448165);
+ part body(shape=icosphere,material=deer_coat,at=[0,25,0],size=[34,17,16],faceted=true);
+ part chest(shape=icosphere,material=deer_coat,at=[11,25,0],size=[15,20,17],faceted=true);
+ part rump(shape=icosphere,material=deer_coat,at=[-12,25,0],size=[15,19,17],faceted=true);
+ part belly(shape=icosphere,material=deer_light,at=[0,19,0],size=[26,6,11],faceted=true);
+ beam neck(shape=cylinder,material=deer_coat,from=[12,27,0],to=[18,39,0],width=8,depth=8,taper=.65,faceted=true);
+ joint head(at=[18,39,0],motion=swing(axis=z,deg=4,hz=.14,phase_deg=90)){
+  part skull(shape=icosphere,material=deer_coat,at=[3,0,0],size=[13,8,8],faceted=true);
+  part muzzle(shape=prism,material=deer_light,at=[9,-2,0],size=[9,5,6],outline=[[0,.05],[.65,0],[1,.3],[.95,.8],[.4,1],[0,.85]]);
+  part nose(shape=icosphere,material=dark,at=[13,-2,0],size=[3,3,4],faceted=true);
+  repeat ears(index=e,count=2){
+   use ear(component=pointed_ear,args=[9,4.5],materials=[deer_coat,ear_inner],at=[0,2,e*6-3],rot_deg=[e*24-12,0,-20]);
+   part eye(shape=icosphere,material=dark,at=[5,2,e*7.4-3.7],size=[1.6,1.6,1.1],faceted=true);
+  }
+ }
+ use front_left(component=animal_leg,args=[20.65,-2.5,3,4,0,40],materials=[deer_coat,dark],at=[11,22,-6]);
+ use front_right(component=animal_leg,args=[20.65,-2.5,3,4,180,40],materials=[deer_coat,dark],at=[11,22,6]);
+ use back_left(component=animal_leg,args=[20.65,4,3,4,90,40],materials=[deer_coat,dark],at=[-11,22,-6]);
+ use back_right(component=animal_leg,args=[20.65,4,3,4,-90,40],materials=[deer_coat,dark],at=[-11,22,6]);
+ part white_rump(shape=icosphere,material=cream,at=[-17,24,0],size=[3,10,10],faceted=true);
+ part tail(shape=prism,material=deer_coat,at=[-20.210330963134765,26,0],size=[6.42066192626953,4,3],outline=[[0,.5],[.3,0],[1,.2],[1,.8],[.3,1]]);
+}
+object meadow_hare(label="Meadow hare"){
+ measure(kind=custom,axis=x,meters=.85);
+ body(interaction=decor,radius=4,height=40,clearance=22.472205054244228);
+ part body(shape=icosphere,material=hare_coat,at=[-1,10,0],size=[25,16,14],faceted=true);
+ part haunch(shape=icosphere,material=hare_coat,at=[-7,10,0],size=[15,18,16],faceted=true);
+ part chest(shape=icosphere,material=cream,at=[7,10,0],size=[6,11,9],faceted=true);
+ repeat feet(index=f,count=2){
+  joint hind_hip(at=[-8,9,f*11-5.5],motion=stride(axis=z,deg=16,length=24,phase_deg=180)){
+   beam shin(shape=cylinder,material=hare_coat,from=[0,0,0],to=[1,-6.5,0],width=3.5,depth=3.5,taper=.7,faceted=true);
+   part hind_foot(shape=prism,material=hare_coat,at=[4,-7,0],size=[16,4,4],outline=[[0,.2],[.85,0],[1,.35],[1,.8],[.8,1],[.1,1],[0,.7]]);
+  }
+  joint front_hip(at=[7,9,f*7-3.5],motion=stride(axis=z,deg=15,length=24,phase_deg=0)){
+   beam foreleg(shape=cylinder,material=hare_coat,from=[0,0,0],to=[1,-6.5,0],width=2.6,depth=2.6,taper=.65,faceted=true);
+   part front_paw(shape=prism,material=hare_coat,at=[2,-7.5,0],size=[8,3,3],outline=[[0,.2],[.85,0],[1,.35],[1,.8],[.8,1],[.1,1],[0,.7]]);
+  }
+ }
+ part tail(shape=icosphere,material=cream,at=[-16,8,0],size=[5,5,5],faceted=true);
+ joint head(at=[11,14,0],motion=swing(axis=y,deg=6,hz=.18,phase_deg=30)){
+  part skull(shape=icosphere,material=hare_coat,at=[1,0,0],size=[11,10,10],faceted=true);
+  part cheeks(shape=icosphere,material=cream,at=[5,-2,0],size=[7,5,8],faceted=true);
+  part nose(shape=icosphere,material=ear_inner,at=[9,-1,0],size=[2,1.5,2],faceted=true);
+  repeat ears(index=e,count=2){
+   group ear(at=[0,2,e*6-3],rot_deg=[e*12-6,0,8]){
+    part outer(shape=prism,material=hare_coat,at=[0,8,0],size=[4.5,16,2.8],outline=[[.2,0],[.8,0],[1,.55],[.8,.9],[.5,1],[.2,.9],[0,.55]]);
+    part inner(shape=prism,material=ear_inner,at=[0,8.5,1.42],size=[2.5,12,.15],outline=[[.15,0],[.85,0],[1,.55],[.5,1],[0,.55]]);
+    part dark_tip(shape=prism,material=dark,at=[0,15.1,0],size=[3,1.8,2.8],outline=[[0,0],[1,0],[.5,1]]);
+   }
+   part eye(shape=icosphere,material=dark,at=[3,1,e*9-4.5],size=[2,2,1.2],faceted=true);
+  }
+ }
+}
+object copper_fox(label="Copper fox"){
+ measure(kind=custom,axis=x,meters=1.4);
+ body(interaction=decor,radius=4,height=38,clearance=41.100486615124154);
+ part body(shape=icosphere,material=fox_coat,at=[0,16,0],size=[30,13,13],faceted=true);
+ part chest(shape=icosphere,material=fox_coat,at=[10,18,0],size=[13,16,14],faceted=true);
+ part bib(shape=prism,material=cream,at=[14,18,0],size=[5,12,10],outline=[[0,0],[.5,.15],[1,.8],[.7,1],[0,.9]]);
+ beam tail(shape=cylinder,material=fox_coat,from=[-12,18,0],to=[-32,15,-1],width=10,depth=10,taper=.65,faceted=true);
+ part tail_tip(shape=prism,material=cream,at=[-35,15,-1],size=[11,8,8],outline=[[0,.5],[.3,0],[1,.15],[1,.85],[.3,1]]);
+ beam neck(shape=cylinder,material=fox_coat,from=[11,18,0],to=[17,25,0],width=8,depth=8,taper=.8,faceted=true);
+ part head(shape=icosphere,material=fox_coat,at=[18,25,0],size=[13,12,12],faceted=true);
+ part muzzle(shape=prism,material=fox_coat,at=[25,22,0],size=[13,7,7],outline=[[0.0,0.0],[1.0,0.27777777777777773],[1.0,0.5555555555555556],[0.1,1.0],[0.0,0.7777777777777778]]);
+ part nose(shape=icosphere,material=dark,at=[31,22,0],size=[2.5,2.5,3],faceted=true);
+ part lower_jaw(shape=prism,material=cream,at=[22,21.6,0],size=[11,2.5,8],outline=[[0,0],[1,.3],[.9,1],[.1,.8]]);
+ repeat details(index=e,count=2){
+  use ear(component=pointed_ear,args=[11,6],materials=[fox_coat,fox_dark],at=[16,27.5,e*8-4],rot_deg=[0,90,0]);
+  part eye(shape=icosphere,material=dark,at=[22,26,e*9.4-4.7],size=[1.8,1.8,1],faceted=true);
+ }
+ use front_left(component=animal_leg,args=[12.425,-2,3.5,6,0,24],materials=[fox_dark,dark],at=[10,14,-4]);
+ use front_right(component=animal_leg,args=[12.425,-2,3.5,6,180,24],materials=[fox_dark,dark],at=[10,14,4]);
+ use back_left(component=animal_leg,args=[12.425,3,3.5,6,90,24],materials=[fox_dark,dark],at=[-10,14,-4]);
+ use back_right(component=animal_leg,args=[12.425,3,3.5,6,-90,24],materials=[fox_dark,dark],at=[-10,14,4]);
+}
+object river_gull(label="River gull"){
+ measure(kind=custom,axis=z,meters=1.8);
+ body(interaction=decor,radius=4,height=24,clearance=38.24346014142787);
+ part body(shape=icosphere,material=gull_feather,at=[0,7,0],size=[22,7,8],faceted=true);
+ part head(shape=icosphere,material=cream,at=[11,9,0],size=[8,8,8],faceted=true);
+ part beak(shape=prism,material=gold,at=[17,8,0],size=[8,3,3],outline=[[0,0],[1,.4],[1,.6],[0,1]]);
+ part tail(shape=prism,material=cream,at=[-14,7,0],size=[12.496402740478516,9,1.5],outline=[[0.0,0.0],[1.0,0.2142857142857143],[1.0,0.7857142857142857],[0.0,1.0]],rot_deg=[90,0,0]);
+ repeat sides(index=s,count=2){
+  let side(value=s*2-1);
+  part eye(shape=icosphere,material=dark,at=[13,10,side*3.6],size=[1.2,1.2,1],faceted=true);
+  joint wing(at=[0,7,side*3],motion=swing(axis=x,deg=24,hz=.5,phase_deg=s*180)){
+   part inner(shape=prism,material=gull_feather,at=[-2,0,side*12],size=[18,24,.8],rot_deg=[side*90,0,0],outline=[[.15,0],[1,0],[.85,.45],[.5,1],[0,.9],[.15,.4]]);
+   part tip(shape=prism,material=dark,at=[-5,0,side*24.48094367980957],size=[10,8.96188735961914,.7],rot_deg=[side*90,0,0],outline=[[.15,0],[1,0],[.75,.45],[.25,1],[0,.9]]);
+  }
+ }
+}
+object red_kite(label="Red kite"){
+ measure(kind=custom,axis=z,meters=1.7);
+ body(interaction=decor,radius=4,height=24,clearance=46.04457613575537);
+ part body(shape=icosphere,material=kite_coat,at=[0,7,0],size=[24,7,7],faceted=true);
+ part head(shape=icosphere,material=cream,at=[12,8,0],size=[7,7,7],faceted=true);
+ part beak(shape=prism,material=dark,at=[17,7,0],size=[6,3,3],outline=[[0,0],[.75,.1],[1,.6],[.65,.75],[0,1]]);
+ part fork_tail(shape=prism,material=kite_coat,at=[-18.372398376464844,7,0],size=[14.744796752929688,11,1],rot_deg=[90,0,0],outline=[[0,0],[1,.3],[1,.7],[0,1],[.35,.5]]);
+ repeat sides(index=s,count=2){
+  let side(value=s*2-1);
+  part eye(shape=icosphere,material=dark,at=[13,9,side*3],size=[1.2,1.2,1],faceted=true);
+  joint wing(at=[0,7,side*3],motion=swing(axis=x,deg=16,hz=.28,phase_deg=s*180)){
+   part inner(shape=prism,material=kite_coat,at=[-2,0,side*13],size=[20,26,1],rot_deg=[side*90,0,0],outline=[[.1,0],[1,.1],[.9,.45],[.45,1],[0,.85],[.1,.4]]);
+   part outer(shape=prism,material=kite_wing,at=[-7,0,side*27.08735466003418],size=[14,16.17470932006836,.8],rot_deg=[side*90,0,0],outline=[[.4,0],[1,0],[.85,.8],[.7,1],[.58,.7],[.45,.95],[.35,.62],[.2,.85],[0,.5]]);
+   part pale_patch(shape=prism,material=cream,at=[-1,.55,side*14],size=[9,8,.15],rot_deg=[side*90,0,0],outline=[[0,0],[1,.1],[.75,1],[.1,.9]]);
+  }
+ }
+}
 object neighborhood_dog(label="Neighborhood dog"){
  measure(kind=custom,axis=x,meters=1.15);
- body(interaction=decor,radius=4,height=26);
- part body(shape=capsule,material=dog_coat,at=[0,14,0],size=[12,26,12],rot_deg=[0,0,90]);
- part chest(shape=icosphere,material=dog_coat,at=[9,15,0],size=[12,17,13]);
+ body(interaction=decor,radius=4,height=26,clearance=28.24734846214919);
+ part body(shape=icosphere,material=dog_coat,at=[0,14,0],size=[28,13,12],faceted=true);
+ part chest(shape=icosphere,material=dog_coat,at=[9,15,0],size=[12,17,13],faceted=true);
+ part belly(shape=icosphere,material=cream,at=[0,9.2,0],size=[23,3,9],faceted=true);
  repeat sides(index=s,count=2){
   let z(value=s*8-4);
-  joint front_hip(at=[8,15,z],motion=swing(axis=z,deg=28,hz=.6,phase_deg=s*180)){
-   beam leg(shape=capsule,material=dog_coat,from=[0,0,0],to=[1,-12,0],width=3,depth=3);
-   part paw(shape=capsule,material=cream,at=[2,-13,0],size=[4,6,4],rot_deg=[0,0,90]);
-  }
-  joint back_hip(at=[-9,14,z],motion=swing(axis=z,deg=28,hz=.6,phase_deg=180-s*180)){
-   beam leg(shape=capsule,material=dog_coat,from=[0,0,0],to=[1,-11,0],width=3.5,depth=3.5);
-   part paw(shape=capsule,material=dog_coat,at=[2,-12,0],size=[4,6,4],rot_deg=[0,0,90]);
-  }
-  part ear(shape=capsule,material=fox_dark,at=[12,21,s*10-5],size=[3,10,4],rot_deg=[s*20-10,0,-10]);
-  part eye(shape=sphere,material=dark,at=[17,24,s*7-3.5],size=[1.2,1.2,.8]);
+  use front_leg(component=animal_leg,args=[13.65,-2,3,6,s*180,25],materials=[dog_coat,cream],at=[8,15,z]);
+  use back_leg(component=animal_leg,args=[12.425,3,3.5,6,90-s*180,25],materials=[dog_coat,dog_coat],at=[-9,14,z]);
+  part ear(shape=prism,material=fox_dark,at=[12,21,s*10-5],size=[3,10,4.879542350769043],outline=[[.2,0],[.8,0],[1,.45],[.75,1],[.1,.9],[0,.35]]);
+  part eye(shape=icosphere,material=dark,at=[18.5,25,s*8-4],size=[1.2,1.2,.8],faceted=true);
  }
- beam neck(shape=capsule,material=dog_coat,from=[9,16,0],to=[13,23,0],width=9,depth=9);
- part head(shape=icosphere,material=dog_coat,at=[15,24,0],size=[11,10,10]);
- part muzzle(shape=capsule,material=cream,at=[21,21,0],size=[5,10,6],rot_deg=[0,0,90]);
- part nose(shape=icosphere,material=dark,at=[26,21,0],size=[2.5,2.5,4]);
- beam tail_base(shape=capsule,material=dog_coat,from=[-11,17,0],to=[-18,22,1],width=3,depth=3);
- beam tail_tip(shape=capsule,material=dog_coat,from=[-18,22,1],to=[-21,28,2],width=2.5,depth=2.5);
+ beam neck(shape=cylinder,material=dog_coat,from=[9,16,0],to=[13,23,0],width=9,depth=9,taper=.8,faceted=true);
+ part head(shape=icosphere,material=dog_coat,at=[15,24,0],size=[11,10,10],faceted=true);
+ part muzzle(shape=prism,material=cream,at=[21,21,0],size=[10,5,6],outline=[[0,.05],[.75,0],[1,.3],[1,.75],[.8,1],[0,.9]]);
+ part nose(shape=icosphere,material=dark,at=[26,21,0],size=[2.5,2.5,4],faceted=true);
+ part mouth(shape=prism,material=fox_dark,at=[21,20,0],size=[7,.3,6.05],outline=[[0,0],[1,.1],[1,.9],[0,1]]);
+ beam tail_base(shape=cylinder,material=dog_coat,from=[-11,17,0],to=[-18,22,1],width=3,depth=3,taper=.8,faceted=true);
+ part tail_tip(shape=prism,material=dog_coat,at=[-19.79856300354004,25,2],size=[3.597126007080078,8,2.4],outline=[[.1,0],[.8,0],[1,.7],[.5,1],[0,.7]]);
 }
 object garden_cat(label="Garden cat"){
  measure(kind=custom,axis=y,meters=.4);
- body(interaction=decor,radius=4,height=21);
- part body(shape=capsule,material=cat_coat,at=[0,10,0],size=[8,20,9],rot_deg=[0,0,90]);
- part chest(shape=icosphere,material=cat_coat,at=[7,11,0],size=[8,12,9]);
+ body(interaction=decor,radius=4,height=21,clearance=17.585505395068974);
+ part body(shape=icosphere,material=cat_coat,at=[0,10,0],size=[21,9,9],faceted=true);
+ part chest(shape=icosphere,material=cat_coat,at=[7,11,0],size=[8,12,9],faceted=true);
  repeat sides(index=s,count=2){
-  joint foreleg(at=[7,10,s*6-3],motion=swing(axis=z,deg=25,hz=.6,phase_deg=s*180)){
-   beam shin(shape=capsule,material=cat_coat,from=[0,0,0],to=[1,-8,0],width=2.5,depth=2.5);
-   part paw(shape=capsule,material=cream,at=[2,-8.5,0],size=[3,5,3],rot_deg=[0,0,90]);
-  }
-  joint hindleg(at=[-7,10,s*6-3],motion=swing(axis=z,deg=25,hz=.6,phase_deg=180-s*180)){
-   beam shin(shape=capsule,material=cat_coat,from=[0,0,0],to=[1,-8,0],width=2.8,depth=2.8);
-   part paw(shape=capsule,material=cat_coat,at=[2,-8.5,0],size=[3,5,3],rot_deg=[0,0,90]);
-  }
-  part ear(shape=cone,material=cat_coat,at=[10,21,s*6-3],size=[4,6,3]);
-  part eye(shape=sphere,material=gold,at=[14,17,s*5-2.5],size=[1,1.2,.8]);
+  use foreleg(component=animal_leg,args=[8.875,-1.5,2.5,5,s*180,17],materials=[cat_coat,cream],at=[7,10,s*6-3]);
+  use hindleg(component=animal_leg,args=[8.83,2,2.6,5,90-s*180,17],materials=[cat_coat,cat_coat],at=[-7,10,s*6-3]);
+  use ear(component=pointed_ear,args=[6,3],materials=[cat_coat,ear_inner],at=[10,18,s*6-3],rot_deg=[0,90,0]);
+  part eye(shape=icosphere,material=gold,at=[14,17,s*5-2.5],size=[1,1.2,.8],faceted=true);
+  part pupil(shape=box,material=dark,at=[14.15,17,s*5-2.5],size=[.4,.9,.85]);
  }
- beam neck(shape=capsule,material=cat_coat,from=[7,10,0],to=[10,17,0],width=6,depth=6);
- part head(shape=sphere,material=cat_coat,at=[11,17,0],size=[9,8,8]);
- part muzzle(shape=icosphere,material=cream,at=[15,15.5,0],size=[3,3,4]);
- part nose(shape=icosphere,material=ear_inner,at=[16.5,16,0],size=[1,1,1]);
- beam tail_base(shape=capsule,material=cat_coat,from=[-9,12,0],to=[-16,17,2],width=2,depth=2);
- beam tail_tip(shape=capsule,material=cat_coat,from=[-16,17,2],to=[-15,22,3],width=2,depth=2);
+ beam neck(shape=cylinder,material=cat_coat,from=[7,10,0],to=[10,17,0],width=6,depth=6,taper=.8,faceted=true);
+ part head(shape=icosphere,material=cat_coat,at=[11,17,0],size=[9,8,8],faceted=true);
+ part muzzle(shape=icosphere,material=cream,at=[15,15.5,0],size=[3,3,4],faceted=true);
+ part nose(shape=icosphere,material=ear_inner,at=[16.5,16,0],size=[1,1,1],faceted=true);
+ beam tail_base(shape=cylinder,material=cat_coat,from=[-9,12,0],to=[-16,17,2],width=2,depth=2,taper=.85,faceted=true);
+ part tail_tip(shape=prism,material=cat_coat,at=[-15.380180358886719,19.5,3],size=[2.7603607177734375,7,2],outline=[[0,.1],[.7,0],[1,.7],[.5,1],[0,.7]]);
 }
 object perched_sparrow(label="Perched sparrow"){
  measure(kind=custom,axis=x,meters=.25);
- body(interaction=decor,radius=4,height=6);
- part body(shape=icosphere,material=hare_coat,at=[0,3,0],size=[7,4,3.5]);
- part breast(shape=icosphere,material=cream,at=[2,3,0],size=[3,3,3]);
- part head(shape=sphere,material=fox_dark,at=[3,5,0],size=[3,3,3]);
- part cheek(shape=icosphere,material=cream,at=[4,4.5,0],size=[2,2,2.7]);
- beam beak(shape=box,material=gold,from=[4.5,4.8,0],to=[6,4.6,0],width=.5,depth=.5);
- part tail(shape=prism,material=fox_dark,at=[-5,3,0],size=[5,.5,2.5],outline=[[0,0],[1,0],[1,1],[0,1]],rot_deg=[0,0,-8]);
+ body(interaction=decor,radius=4,height=6,clearance=7.747067700438805);
+ part body(shape=icosphere,material=hare_coat,at=[0,3,0],size=[7,4,3.5],faceted=true);
+ part breast(shape=icosphere,material=cream,at=[2,3,0],size=[3,3,3],faceted=true);
+ part head(shape=icosphere,material=fox_dark,at=[3,5,0],size=[3,3,3],faceted=true);
+ part cheek(shape=icosphere,material=cream,at=[4,4.5,0],size=[2,2,2.7],faceted=true);
+ part beak(shape=prism,material=gold,at=[5.25,4.7,0],size=[1.550222396850586,.6,.6],outline=[[0,0],[1,.5],[0,1]]);
+ part tail(shape=prism,material=fox_dark,at=[-5,3,0],size=[5,.5,2.5],outline=[[0,0],[1,.2],[1,.8],[0,1],[.15,.5]],rot_deg=[0,0,-8]);
  repeat sides(index=s,count=2){
-  part folded_wing(shape=icosphere,material=deer_coat,at=[-.8,3.5,s*3-1.5],size=[5,2.5,.8]);
-  part eye(shape=sphere,material=dark,at=[4.1,5.4,s*2-1],size=[.5,.5,.5]);
-  beam leg(shape=cylinder,material=gold,from=[1,1.8,s*1.5-.75],to=[1,0,s*1.5-.75],width=.4,depth=.4);
+  part folded_wing(shape=prism,material=deer_coat,at=[-.8,3.5,s*3.2-1.6],size=[5,2.5,.6],outline=[[0,.25],[.45,1],[1,.8],[.85,.2],[.2,0]]);
+  part eye(shape=icosphere,material=dark,at=[4.1,5.4,s*2-1],size=[.5,.5,.5],faceted=true);
+  beam leg(shape=cylinder,material=gold,from=[1,1.8,s*1.5-.75],to=[1,.2,s*1.5-.75],width=.4,depth=.4,faceted=true);
+  beam toes(shape=cylinder,material=gold,from=[.7,.2,s*1.5-.75],to=[2,.2,s*1.5-.75],width=.4,depth=.4,faceted=true);
  }
 }
 

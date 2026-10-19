@@ -148,7 +148,7 @@ A joint can use `open(axis=y,deg=105,radius=100)` for a proximity door. Its decl
 
 Birds can circle above the terrain while deer and a fox move through their clearings. Hares idle in the meadow. Their bodies, wings, ears and legs are Dream parts. The current world adds five animal forms and eight plant forms, including ferns, reeds, foxgloves, lavender and weeping willows.
 
-![Deer, a hare, a fox and a gull composed in Dream 2](../media/fauna.jpg)
+![Nine animal species composed in Dream 2](../media/fauna.jpg)
 
 An `ambient` route creates no road or runway. It accepts only a `decor` body and leaves racing collisions to the existing physical objects. Ground movement follows terrain; optional `altitude` keeps a bird airborne through the whole loop. Routes alone provide authored travel. The route deer adds a nearby-player attention program; the 60 added ground animals use Dream `roam` motion to flee and recover inside safe habitats. Ambient `walk` populations follow the accepted pedestrian network. [Population motion](populations.md) is separate from general NPC programs and hunting is not implemented. Wing and leg joints respect reduced motion and return to rest during route waits.
 
