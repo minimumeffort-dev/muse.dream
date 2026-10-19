@@ -178,3 +178,10 @@ porch and a brick storefront. Existing table/crate/planter/ball examples remain.
 ## Voxel geometry
 
 Dream 2 now supports bounded filled/carved voxel parts, greedy surface meshing and optional fracture chunks. The city uses voxel building shells, bench boards and carved park walls; the library bakehouse adds chunked masonry; measured proportions and explicit contacts remain unchanged. See the [voxel guide](dream/voxels.md) for syntax, limits, a complete example and current boundaries.
+
+
+The [r78 furniture example](examples/furniture-construction.dream) retains the
+bench, table, crate and planter's original break-group identities while refining
+their construction. Additional supporting parts stay inside those groups. Saved
+pieces keep their motion; reconstructed extents follow the new shapes. All
+fragment and live-assembly budgets remain unchanged.

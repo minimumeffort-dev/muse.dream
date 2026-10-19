@@ -1,0 +1,10 @@
+RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/docs.test.ts (118 tests) 1174ms
+ ✓ tests/dream-agent.test.ts (15 tests) 2034ms
+   ✓ bounded agent context packets > exports machine-readable CLI context and preserves source/check boundaries  2028ms
+
+ Test Files  2 passed (2)
+      Tests  133 passed (133)
+   Start at  11:55:15
+   Duration  2.61s (transform 448ms, setup 17ms, collect 916ms, tests 3.21s, environment 0ms, prepare 56ms)

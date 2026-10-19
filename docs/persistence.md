@@ -547,3 +547,21 @@ work journeys, ledgers and visual time survive. Original slots are retained.
 Migration honors the supplied storage prefix, including isolated review slots;
 it cannot fall back from a review namespace to a public save.
 [Checks and native backup](evidence/plant-construction/verification.md).
+
+
+### Furniture construction (r78)
+
+The registered upgrade validates the exact r77 world through its five original
+furniture templates and eighteen original placements. The worker supplies that
+projection's contacts before navigation is primed. All earlier projections run
+after removing the furniture revision. Review prefixes retain their own slots.
+
+Format 17 and simulation version 32 remain unchanged. The upgrade retains every
+saved field, including occupied seats, broken groups, live fragment poses,
+repairs, jobs, money, food and delivery cargo. Fragment identities stay stable;
+their new visual geometry also supplies their new physical extents, so later
+fragment trajectories need not match the old shapes. The table cap is deliberately
+lower. A walker saved standing on the previous cap falls safely onto its new
+height during ordinary fixed steps, without resetting progress.
+
+[Checks and native backups](evidence/furniture-construction/verification.md).

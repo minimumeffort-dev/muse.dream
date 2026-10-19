@@ -24,11 +24,14 @@ describe('constructed public-space assets',()=>{
     while(changed){changed=false;for(let i=0;i<boxes.length;i++)if(!connected.has(i) && [...connected].some(j=>boxes[i]!.clone().expandByScalar(.02).intersectsBox(boxes[j]!))){connected.add(i);changed=true;}}
     expect(connected.size).toBe(spec.parts.length);
   });
-  it('rests the crate produce on its floor and retains bounded destruction groups',()=>{
+  it('supports the crate produce in attached stacks and retains bounded destruction groups',()=>{
     const {spec,boxes}=model('Produce crate'),floor=boxes[0]!.max.y;
-    const apples=spec.parts.map((p,i)=>p.shape==='sphere' ? boxes[i]! : undefined).filter(Boolean) as Box3[];
-    expect(apples).toHaveLength(3);
-    for(const apple of apples)expect(Math.abs(apple.min.y-floor)).toBeLessThan(.5);
+    const apples=spec.parts.map((p,i)=>p.shape==='icosphere' ? boxes[i]! : undefined).filter(Boolean) as Box3[];
+    expect(apples).toHaveLength(12);
+    for(let i=0;i<apples.length;i+=4){
+      for(const j of [0,1])expect(Math.abs(apples[i+j]!.min.y-floor)).toBeLessThan(.02);
+      expect(apples[i+2]!.intersectsBox(apples[i]!)).toBe(true);expect(apples[i+2]!.intersectsBox(apples[i+1]!)).toBe(true);expect(apples[i+3]!.intersectsBox(apples[i+2]!)).toBe(true);
+    }
     for(const name of ['Produce crate','Breakaway table']){
       const spec=model(name).spec;expect(spec.parts.length).toBeLessThanOrEqual(32);
       expect(new Set(spec.parts.map(p=>p.fragment)).size).toBe(name==='Produce crate' ? 8 : 7);

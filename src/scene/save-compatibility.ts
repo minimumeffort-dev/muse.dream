@@ -8,6 +8,7 @@ import peopleR70 from './compatibility/r70-people.json';
 import treesR73 from './compatibility/r73-trees.json';
 import treesR75 from './compatibility/r75-trees.json';
 import plantsR76 from './compatibility/r76-plants.json';
+import furnitureR77 from './compatibility/r77-furniture.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
 export const SAVE_SIMULATION_VERSION=32;
@@ -67,7 +68,7 @@ export function registeredLegacySource(hash:string):string|undefined{
   return hash==='4ecdf39e61caed3fbf59e451ce973d9ac99d5893a93525de754f4a24b639cb0b' ? R44_SAVE_SOURCE : undefined;
 }
 export function supportsPreCommerceUpgrade(scene:Pick<Scene,'economy'>,hash:string):boolean{
-  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY || hash===SHIFT_COMPATIBILITY || hash===SOCIAL_COMPATIBILITY || hash===SCHOOL_REPAIR_COMPATIBILITY || hash===BUSINESS_COMPATIBILITY || hash===MATCH_COMPATIBILITY || hash===CITY_COMPATIBILITY || hash===PARK_COMPATIBILITY || hash===SPACING_COMPATIBILITY || hash===JUNCTION_COMPATIBILITY || hash===PEOPLE_COMPATIBILITY || hash===INVITATION_COMPATIBILITY || hash===COVERAGE_COMPATIBILITY || hash===TREE_COMPATIBILITY || hash===FLEET_COMPATIBILITY || hash===CANOPY_COMPATIBILITY || hash===BOTANY_COMPATIBILITY);
+  return !scene.economy || (hash===PROGRESS_COMPATIBILITY || hash===MEAL_COMPATIBILITY || hash===KITCHEN_COMPATIBILITY || hash===SEATING_COMPATIBILITY || hash===HOURS_COMPATIBILITY || hash===SHIFT_COMPATIBILITY || hash===SOCIAL_COMPATIBILITY || hash===SCHOOL_REPAIR_COMPATIBILITY || hash===BUSINESS_COMPATIBILITY || hash===MATCH_COMPATIBILITY || hash===CITY_COMPATIBILITY || hash===PARK_COMPATIBILITY || hash===SPACING_COMPATIBILITY || hash===JUNCTION_COMPATIBILITY || hash===PEOPLE_COMPATIBILITY || hash===INVITATION_COMPATIBILITY || hash===COVERAGE_COMPATIBILITY || hash===TREE_COMPATIBILITY || hash===FLEET_COMPATIBILITY || hash===CANOPY_COMPATIBILITY || hash===BOTANY_COMPATIBILITY || hash===FURNITURE_COMPATIBILITY);
 }
 
 export const R45_COMPATIBILITY='7e7924b86ad629d97771b9717f6817a25105005329ace6032573df39b4469ada';
@@ -93,11 +94,23 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r78 refines furniture, retaining the released r77 data for save validation. */
+export const FURNITURE_COMPATIBILITY='8cf9454f4f42b1961b68c408f05d349cff8138a135ca701e7cef711ad3ec80ed';
+const furnitureTemplates=new Map(furnitureR77.templates.flatMap(t=>t.objects.map(id=>[id,t.spec as unknown as ObjectDslV2] as const))),furniturePlacements=new Map(furnitureR77.placements.map(p=>[p.id,p]));
+const furnitureProjections=new WeakMap<Scene,Scene>();
+export function preFurnitureScene(scene:Scene):Scene{
+ if(!scene.objects.some(o=>furnitureTemplates.has(o.id) && o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && o.spec.body.clearanceRadius!==undefined))return scene;
+ const cached=furnitureProjections.get(scene);if(cached)return cached;
+ const prior={...scene,objects:scene.objects.map(o=>{const spec=furnitureTemplates.get(o.id),pose=furniturePlacements.get(o.id);return spec && pose ? {...o,spec,x:pose.x,y:pose.y,scale:pose.scale} : o;})};
+ furnitureProjections.set(scene,prior);return prior;
+}
+export function preFurnitureCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preFurnitureScene(scene),32,true,encode);}
 /** r77 refines the plant family without changing saved simulation semantics. */
 export const BOTANY_COMPATIBILITY='4c720d4d842a8941a91ee4743f49beb894aa24fe8456a50a32cdd0bd769c57e3';
 const botanyTemplates=new Map(plantsR76.templates.flatMap(t=>t.objects.map(id=>[id,t.spec as unknown as ObjectDslV2] as const))),botanyPlacements=new Map(plantsR76.placements.map(p=>[p.id,p]));
 const botanyProjections=new WeakMap<Scene,Scene>();
 export function preBotanyScene(scene:Scene):Scene{
+ scene=preFurnitureScene(scene);
  if(!scene.objects.some(o=>botanyTemplates.has(o.id) && o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && o.spec.body.clearanceRadius!==undefined))return scene;
  const cached=botanyProjections.get(scene);if(cached)return cached;
  const prior={...scene,objects:scene.objects.map(o=>{const spec=botanyTemplates.get(o.id),pose=botanyPlacements.get(o.id);return spec && pose ? {...o,spec,x:pose.x,y:pose.y,scale:pose.scale} : o;})};

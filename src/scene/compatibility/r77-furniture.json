@@ -1,0 +1,5046 @@
+{
+  "baselineCommit": "faf27fd",
+  "compatibility": "4c720d4d842a8941a91ee4743f49beb894aa24fe8456a50a32cdd0bd769c57e3",
+  "templates": [
+    {
+      "name": "Slatted park bench",
+      "spec": {
+        "dslVersion": 2,
+        "displayName": "Slatted park bench",
+        "parts": [
+          {
+            "id": "d_6ec6f3ebf26441f4",
+            "shape": "voxel",
+            "position": [
+              0,
+              16,
+              -12
+            ],
+            "size": [
+              60,
+              4,
+              6
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#91613f",
+              "colorB": "#bb915d"
+            },
+            "voxels": {
+              "grid": [
+                30,
+                2,
+                3
+              ],
+              "operations": [
+                {
+                  "mode": "fill",
+                  "shape": "box",
+                  "from": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "to": [
+                    30,
+                    2,
+                    3
+                  ]
+                }
+              ]
+            },
+            "fragment": "d_d465b1efa5f710c4"
+          },
+          {
+            "id": "d_3fbf2ed8e7e09505",
+            "shape": "voxel",
+            "position": [
+              0,
+              16,
+              -4
+            ],
+            "size": [
+              60,
+              4,
+              6
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#91613f",
+              "colorB": "#bb915d"
+            },
+            "voxels": {
+              "grid": [
+                30,
+                2,
+                3
+              ],
+              "operations": [
+                {
+                  "mode": "fill",
+                  "shape": "box",
+                  "from": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "to": [
+                    30,
+                    2,
+                    3
+                  ]
+                }
+              ]
+            },
+            "fragment": "d_d806822358b07cd3"
+          },
+          {
+            "id": "d_66803f880b8a5ec2",
+            "shape": "voxel",
+            "position": [
+              0,
+              16,
+              4
+            ],
+            "size": [
+              60,
+              4,
+              6
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#91613f",
+              "colorB": "#bb915d"
+            },
+            "voxels": {
+              "grid": [
+                30,
+                2,
+                3
+              ],
+              "operations": [
+                {
+                  "mode": "fill",
+                  "shape": "box",
+                  "from": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "to": [
+                    30,
+                    2,
+                    3
+                  ]
+                }
+              ]
+            },
+            "fragment": "d_f6b1767ad1eb7a26"
+          },
+          {
+            "id": "d_c2b2c0073093f74b",
+            "shape": "voxel",
+            "position": [
+              0,
+              16,
+              12
+            ],
+            "size": [
+              60,
+              4,
+              6
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#91613f",
+              "colorB": "#bb915d"
+            },
+            "voxels": {
+              "grid": [
+                30,
+                2,
+                3
+              ],
+              "operations": [
+                {
+                  "mode": "fill",
+                  "shape": "box",
+                  "from": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "to": [
+                    30,
+                    2,
+                    3
+                  ]
+                }
+              ]
+            },
+            "fragment": "d_ca0b28495291405d"
+          },
+          {
+            "id": "d_7c5063c8d4011a5f",
+            "shape": "voxel",
+            "position": [
+              -22,
+              6.5,
+              12
+            ],
+            "size": [
+              5,
+              13,
+              6
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#5e4735",
+              "colorB": "#40372d"
+            },
+            "voxels": {
+              "grid": [
+                2,
+                6,
+                3
+              ],
+              "operations": [
+                {
+                  "mode": "fill",
+                  "shape": "box",
+                  "from": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "to": [
+                    2,
+                    6,
+                    3
+                  ]
+                }
+              ]
+            },
+            "fragment": "d_00adf80cf8aff698"
+          },
+          {
+            "id": "d_e005431ef690d1b3",
+            "shape": "voxel",
+            "position": [
+              -22,
+              15,
+              -13
+            ],
+            "size": [
+              5,
+              30,
+              6
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#5e4735",
+              "colorB": "#40372d"
+            },
+            "voxels": {
+              "grid": [
+                2,
+                15,
+                3
+              ],
+              "operations": [
+                {
+                  "mode": "fill",
+                  "shape": "box",
+                  "from": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "to": [
+                    2,
+                    15,
+                    3
+                  ]
+                }
+              ]
+            },
+            "fragment": "d_00adf80cf8aff698"
+          },
+          {
+            "id": "d_28bad71b905e1ec8",
+            "shape": "voxel",
+            "position": [
+              -22,
+              12,
+              0
+            ],
+            "size": [
+              6,
+              4,
+              29
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#5e4735",
+              "colorB": "#40372d"
+            },
+            "voxels": {
+              "grid": [
+                3,
+                2,
+                14
+              ],
+              "operations": [
+                {
+                  "mode": "fill",
+                  "shape": "box",
+                  "from": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "to": [
+                    3,
+                    2,
+                    14
+                  ]
+                }
+              ]
+            },
+            "fragment": "d_00adf80cf8aff698"
+          },
+          {
+            "id": "d_ea863d575f95de77",
+            "shape": "voxel",
+            "position": [
+              -22,
+              24,
+              0
+            ],
+            "size": [
+              5,
+              3,
+              29
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#91613f",
+              "colorB": "#bb915d"
+            },
+            "voxels": {
+              "grid": [
+                2,
+                2,
+                14
+              ],
+              "operations": [
+                {
+                  "mode": "fill",
+                  "shape": "box",
+                  "from": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "to": [
+                    2,
+                    2,
+                    14
+                  ]
+                }
+              ]
+            },
+            "fragment": "d_00adf80cf8aff698"
+          },
+          {
+            "id": "d_8a2137eaf6fab1dd",
+            "shape": "voxel",
+            "position": [
+              -22,
+              20,
+              12
+            ],
+            "size": [
+              3,
+              8,
+              3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#5e4735",
+              "colorB": "#40372d"
+            },
+            "voxels": {
+              "grid": [
+                2,
+                4,
+                2
+              ],
+              "operations": [
+                {
+                  "mode": "fill",
+                  "shape": "box",
+                  "from": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "to": [
+                    2,
+                    4,
+                    2
+                  ]
+                }
+              ]
+            },
+            "fragment": "d_00adf80cf8aff698"
+          },
+          {
+            "id": "d_8027b1fbf21ddf98",
+            "shape": "voxel",
+            "position": [
+              22,
+              6.5,
+              12
+            ],
+            "size": [
+              5,
+              13,
+              6
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#5e4735",
+              "colorB": "#40372d"
+            },
+            "voxels": {
+              "grid": [
+                2,
+                6,
+                3
+              ],
+              "operations": [
+                {
+                  "mode": "fill",
+                  "shape": "box",
+                  "from": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "to": [
+                    2,
+                    6,
+                    3
+                  ]
+                }
+              ]
+            },
+            "fragment": "d_3f392571113751db"
+          },
+          {
+            "id": "d_fc206b514e0f90e2",
+            "shape": "voxel",
+            "position": [
+              22,
+              15,
+              -13
+            ],
+            "size": [
+              5,
+              30,
+              6
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#5e4735",
+              "colorB": "#40372d"
+            },
+            "voxels": {
+              "grid": [
+                2,
+                15,
+                3
+              ],
+              "operations": [
+                {
+                  "mode": "fill",
+                  "shape": "box",
+                  "from": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "to": [
+                    2,
+                    15,
+                    3
+                  ]
+                }
+              ]
+            },
+            "fragment": "d_3f392571113751db"
+          },
+          {
+            "id": "d_9868b5e7886a60b7",
+            "shape": "voxel",
+            "position": [
+              22,
+              12,
+              0
+            ],
+            "size": [
+              6,
+              4,
+              29
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#5e4735",
+              "colorB": "#40372d"
+            },
+            "voxels": {
+              "grid": [
+                3,
+                2,
+                14
+              ],
+              "operations": [
+                {
+                  "mode": "fill",
+                  "shape": "box",
+                  "from": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "to": [
+                    3,
+                    2,
+                    14
+                  ]
+                }
+              ]
+            },
+            "fragment": "d_3f392571113751db"
+          },
+          {
+            "id": "d_0dd3b9ba63695e44",
+            "shape": "voxel",
+            "position": [
+              22,
+              24,
+              0
+            ],
+            "size": [
+              5,
+              3,
+              29
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#91613f",
+              "colorB": "#bb915d"
+            },
+            "voxels": {
+              "grid": [
+                2,
+                2,
+                14
+              ],
+              "operations": [
+                {
+                  "mode": "fill",
+                  "shape": "box",
+                  "from": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "to": [
+                    2,
+                    2,
+                    14
+                  ]
+                }
+              ]
+            },
+            "fragment": "d_3f392571113751db"
+          },
+          {
+            "id": "d_7da215d69d35ed46",
+            "shape": "voxel",
+            "position": [
+              22,
+              20,
+              12
+            ],
+            "size": [
+              3,
+              8,
+              3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#5e4735",
+              "colorB": "#40372d"
+            },
+            "voxels": {
+              "grid": [
+                2,
+                4,
+                2
+              ],
+              "operations": [
+                {
+                  "mode": "fill",
+                  "shape": "box",
+                  "from": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "to": [
+                    2,
+                    4,
+                    2
+                  ]
+                }
+              ]
+            },
+            "fragment": "d_3f392571113751db"
+          },
+          {
+            "id": "d_ad8e3bb4779f6d61",
+            "shape": "voxel",
+            "position": [
+              0,
+              27,
+              -16
+            ],
+            "size": [
+              60,
+              6,
+              4
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#91613f",
+              "colorB": "#bb915d"
+            },
+            "voxels": {
+              "grid": [
+                30,
+                3,
+                2
+              ],
+              "operations": [
+                {
+                  "mode": "fill",
+                  "shape": "box",
+                  "from": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "to": [
+                    30,
+                    3,
+                    2
+                  ]
+                }
+              ]
+            },
+            "fragment": "d_9a46ff9baa276602"
+          },
+          {
+            "id": "d_4e2dc7c2f9b9843c",
+            "shape": "voxel",
+            "position": [
+              0,
+              21,
+              -16
+            ],
+            "size": [
+              60,
+              6,
+              4
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#91613f",
+              "colorB": "#bb915d"
+            },
+            "voxels": {
+              "grid": [
+                30,
+                3,
+                2
+              ],
+              "operations": [
+                {
+                  "mode": "fill",
+                  "shape": "box",
+                  "from": [
+                    0,
+                    0,
+                    0
+                  ],
+                  "to": [
+                    30,
+                    3,
+                    2
+                  ]
+                }
+              ]
+            },
+            "fragment": "d_9a46ff9baa276602"
+          },
+          {
+            "id": "d_cddbf9b7c25dc22c",
+            "shape": "sphere",
+            "position": [
+              -22,
+              27,
+              -13.7
+            ],
+            "size": [
+              1,
+              1,
+              1
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#8f9b94",
+              "colorB": "#8f9b94"
+            },
+            "fragment": "d_9a46ff9baa276602"
+          },
+          {
+            "id": "d_c82c1ce9b8639745",
+            "shape": "sphere",
+            "position": [
+              22,
+              27,
+              -13.7
+            ],
+            "size": [
+              1,
+              1,
+              1
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#8f9b94",
+              "colorB": "#8f9b94"
+            },
+            "fragment": "d_9a46ff9baa276602"
+          }
+        ],
+        "body": {
+          "interaction": "solid",
+          "colliderRadius": 28,
+          "colliderHeight": 31
+        },
+        "voxelSize": 1,
+        "measure": {
+          "kind": "bench",
+          "axis": "x",
+          "meters": 1.8
+        },
+        "seats": [
+          {
+            "id": "left",
+            "position": [
+              -13,
+              18,
+              12
+            ],
+            "approach": [
+              -13,
+              48
+            ],
+            "headingRad": 1.5707963267948966
+          },
+          {
+            "id": "right",
+            "position": [
+              13,
+              18,
+              12
+            ],
+            "approach": [
+              13,
+              48
+            ],
+            "headingRad": 1.5707963267948966
+          }
+        ],
+        "impact": {
+          "kind": "break",
+          "speed": 95,
+          "scatter": 65,
+          "lift": 65,
+          "spin": 4,
+          "lifetime": 6,
+          "pattern": "splinter"
+        }
+      },
+      "objects": [
+        "garden_bench_nw",
+        "garden_bench_ne",
+        "garden_bench_sw",
+        "garden_bench_se",
+        "garden_bench_west",
+        "garden_bench_east",
+        "park_bench",
+        "station_bench",
+        "hall_bench",
+        "school_bench"
+      ],
+      "oldFrame": {
+        "min": [
+          -30,
+          0,
+          -18
+        ],
+        "max": [
+          30,
+          30,
+          15
+        ],
+        "radius": 34.9857113690718
+      },
+      "fragments": [
+        {
+          "id": "group:d_d465b1efa5f710c4",
+          "center": [
+            0,
+            16,
+            -12
+          ],
+          "corners": [
+            [
+              -30,
+              -2,
+              -3
+            ],
+            [
+              30,
+              -2,
+              -3
+            ],
+            [
+              -30,
+              2,
+              -3
+            ],
+            [
+              30,
+              2,
+              -3
+            ],
+            [
+              -30,
+              -2,
+              3
+            ],
+            [
+              30,
+              -2,
+              3
+            ],
+            [
+              -30,
+              2,
+              3
+            ],
+            [
+              30,
+              2,
+              3
+            ]
+          ]
+        },
+        {
+          "id": "group:d_d806822358b07cd3",
+          "center": [
+            0,
+            16,
+            -4
+          ],
+          "corners": [
+            [
+              -30,
+              -2,
+              -3
+            ],
+            [
+              30,
+              -2,
+              -3
+            ],
+            [
+              -30,
+              2,
+              -3
+            ],
+            [
+              30,
+              2,
+              -3
+            ],
+            [
+              -30,
+              -2,
+              3
+            ],
+            [
+              30,
+              -2,
+              3
+            ],
+            [
+              -30,
+              2,
+              3
+            ],
+            [
+              30,
+              2,
+              3
+            ]
+          ]
+        },
+        {
+          "id": "group:d_f6b1767ad1eb7a26",
+          "center": [
+            0,
+            16,
+            4
+          ],
+          "corners": [
+            [
+              -30,
+              -2,
+              -3
+            ],
+            [
+              30,
+              -2,
+              -3
+            ],
+            [
+              -30,
+              2,
+              -3
+            ],
+            [
+              30,
+              2,
+              -3
+            ],
+            [
+              -30,
+              -2,
+              3
+            ],
+            [
+              30,
+              -2,
+              3
+            ],
+            [
+              -30,
+              2,
+              3
+            ],
+            [
+              30,
+              2,
+              3
+            ]
+          ]
+        },
+        {
+          "id": "group:d_ca0b28495291405d",
+          "center": [
+            0,
+            16,
+            12
+          ],
+          "corners": [
+            [
+              -30,
+              -2,
+              -3
+            ],
+            [
+              30,
+              -2,
+              -3
+            ],
+            [
+              -30,
+              2,
+              -3
+            ],
+            [
+              30,
+              2,
+              -3
+            ],
+            [
+              -30,
+              -2,
+              3
+            ],
+            [
+              30,
+              -2,
+              3
+            ],
+            [
+              -30,
+              2,
+              3
+            ],
+            [
+              30,
+              2,
+              3
+            ]
+          ]
+        },
+        {
+          "id": "group:d_00adf80cf8aff698",
+          "center": [
+            -22,
+            15,
+            -0.5
+          ],
+          "corners": [
+            [
+              -3,
+              -15,
+              -15.5
+            ],
+            [
+              3,
+              -15,
+              -15.5
+            ],
+            [
+              -3,
+              15,
+              -15.5
+            ],
+            [
+              3,
+              15,
+              -15.5
+            ],
+            [
+              -3,
+              -15,
+              15.5
+            ],
+            [
+              3,
+              -15,
+              15.5
+            ],
+            [
+              -3,
+              15,
+              15.5
+            ],
+            [
+              3,
+              15,
+              15.5
+            ]
+          ]
+        },
+        {
+          "id": "group:d_3f392571113751db",
+          "center": [
+            22,
+            15,
+            -0.5
+          ],
+          "corners": [
+            [
+              -3,
+              -15,
+              -15.5
+            ],
+            [
+              3,
+              -15,
+              -15.5
+            ],
+            [
+              -3,
+              15,
+              -15.5
+            ],
+            [
+              3,
+              15,
+              -15.5
+            ],
+            [
+              -3,
+              -15,
+              15.5
+            ],
+            [
+              3,
+              -15,
+              15.5
+            ],
+            [
+              -3,
+              15,
+              15.5
+            ],
+            [
+              3,
+              15,
+              15.5
+            ]
+          ]
+        },
+        {
+          "id": "group:d_9a46ff9baa276602",
+          "center": [
+            0,
+            24,
+            -15.599999904632568
+          ],
+          "corners": [
+            [
+              -30,
+              -6,
+              -2.4000000953674316
+            ],
+            [
+              30,
+              -6,
+              -2.4000000953674316
+            ],
+            [
+              -30,
+              6,
+              -2.4000000953674316
+            ],
+            [
+              30,
+              6,
+              -2.4000000953674316
+            ],
+            [
+              -30,
+              -6,
+              2.4000000953674316
+            ],
+            [
+              30,
+              -6,
+              2.4000000953674316
+            ],
+            [
+              -30,
+              6,
+              2.4000000953674316
+            ],
+            [
+              30,
+              6,
+              2.4000000953674316
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Breakaway table",
+      "spec": {
+        "dslVersion": 2,
+        "displayName": "Breakaway table",
+        "parts": [
+          {
+            "id": "d_0574461d1013ead1",
+            "shape": "box",
+            "position": [
+              0,
+              29,
+              -10
+            ],
+            "size": [
+              54,
+              4,
+              9
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_59d8f31ebce4112d"
+          },
+          {
+            "id": "d_2ea94b63b1286412",
+            "shape": "box",
+            "position": [
+              0,
+              29,
+              0
+            ],
+            "size": [
+              54,
+              4,
+              9
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_89461d060ad167f6"
+          },
+          {
+            "id": "d_b7d2fe649aa27647",
+            "shape": "box",
+            "position": [
+              0,
+              29,
+              10
+            ],
+            "size": [
+              54,
+              4,
+              9
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_8f64ced15be35323"
+          },
+          {
+            "id": "d_69adf208da2264c8",
+            "shape": "box",
+            "position": [
+              -21,
+              13,
+              -10
+            ],
+            "size": [
+              5,
+              26,
+              5
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_b720f06ddab57eab"
+          },
+          {
+            "id": "d_8445ab5ee9213b10",
+            "shape": "box",
+            "position": [
+              -21,
+              2,
+              -10
+            ],
+            "size": [
+              7,
+              4,
+              7
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_b720f06ddab57eab"
+          },
+          {
+            "id": "d_02d988e909aaff67",
+            "shape": "box",
+            "position": [
+              -17.85,
+              22.5,
+              -8.5
+            ],
+            "size": [
+              3,
+              9.88382517044894,
+              3
+            ],
+            "rotation": [
+              0.31045491580999646,
+              -0.11350075866844847,
+              -0.6964948602746124
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_b720f06ddab57eab"
+          },
+          {
+            "id": "d_d273d7035c17ec22",
+            "shape": "box",
+            "position": [
+              -21,
+              26,
+              -7
+            ],
+            "size": [
+              3,
+              14,
+              3
+            ],
+            "rotation": [
+              1.5707963267948963,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_b720f06ddab57eab"
+          },
+          {
+            "id": "d_c209ee801a932c65",
+            "shape": "box",
+            "position": [
+              -21,
+              13,
+              10
+            ],
+            "size": [
+              5,
+              26,
+              5
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_7a23ade9fdd00fa6"
+          },
+          {
+            "id": "d_14450ede1168b743",
+            "shape": "box",
+            "position": [
+              -21,
+              2,
+              10
+            ],
+            "size": [
+              7,
+              4,
+              7
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_7a23ade9fdd00fa6"
+          },
+          {
+            "id": "d_edbe2746546c8b36",
+            "shape": "box",
+            "position": [
+              -17.85,
+              22.5,
+              8.5
+            ],
+            "size": [
+              3,
+              9.88382517044894,
+              3
+            ],
+            "rotation": [
+              -0.31045491580999646,
+              0.11350075866844847,
+              -0.6964948602746124
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_7a23ade9fdd00fa6"
+          },
+          {
+            "id": "d_50a85be8a3f74ebf",
+            "shape": "box",
+            "position": [
+              -21,
+              26,
+              7
+            ],
+            "size": [
+              3,
+              14,
+              3
+            ],
+            "rotation": [
+              -1.5707963267948963,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_7a23ade9fdd00fa6"
+          },
+          {
+            "id": "d_cce962eb20f56a22",
+            "shape": "box",
+            "position": [
+              21,
+              13,
+              -10
+            ],
+            "size": [
+              5,
+              26,
+              5
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_62044fe497fd43dd"
+          },
+          {
+            "id": "d_81e6f135fb0bfa56",
+            "shape": "box",
+            "position": [
+              21,
+              2,
+              -10
+            ],
+            "size": [
+              7,
+              4,
+              7
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_62044fe497fd43dd"
+          },
+          {
+            "id": "d_6963879e55665b49",
+            "shape": "box",
+            "position": [
+              17.85,
+              22.5,
+              -8.5
+            ],
+            "size": [
+              3,
+              9.88382517044894,
+              3
+            ],
+            "rotation": [
+              0.31045491580999646,
+              0.11350075866844847,
+              0.6964948602746124
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_62044fe497fd43dd"
+          },
+          {
+            "id": "d_ee2c6b543bfc3340",
+            "shape": "box",
+            "position": [
+              21,
+              26,
+              -7
+            ],
+            "size": [
+              3,
+              14,
+              3
+            ],
+            "rotation": [
+              1.5707963267948963,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_62044fe497fd43dd"
+          },
+          {
+            "id": "d_e99574627e81f153",
+            "shape": "box",
+            "position": [
+              21,
+              13,
+              10
+            ],
+            "size": [
+              5,
+              26,
+              5
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_bcba39ee0689ffa4"
+          },
+          {
+            "id": "d_accc0028ae83ddc5",
+            "shape": "box",
+            "position": [
+              21,
+              2,
+              10
+            ],
+            "size": [
+              7,
+              4,
+              7
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_bcba39ee0689ffa4"
+          },
+          {
+            "id": "d_75d55f0e4c30e074",
+            "shape": "box",
+            "position": [
+              17.85,
+              22.5,
+              8.5
+            ],
+            "size": [
+              3,
+              9.88382517044894,
+              3
+            ],
+            "rotation": [
+              -0.31045491580999646,
+              -0.11350075866844847,
+              0.6964948602746124
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_bcba39ee0689ffa4"
+          },
+          {
+            "id": "d_ceedd007b3b75c11",
+            "shape": "box",
+            "position": [
+              21,
+              26,
+              7
+            ],
+            "size": [
+              3,
+              14,
+              3
+            ],
+            "rotation": [
+              -1.5707963267948963,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_bcba39ee0689ffa4"
+          }
+        ],
+        "body": {
+          "interaction": "solid",
+          "colliderRadius": 29,
+          "colliderHeight": 31
+        },
+        "voxelSize": 1,
+        "measure": {
+          "kind": "table",
+          "axis": "x",
+          "meters": 2.2
+        },
+        "impact": {
+          "kind": "break",
+          "speed": 90,
+          "scatter": 62,
+          "lift": 100,
+          "spin": 4,
+          "lifetime": 6
+        }
+      },
+      "objects": [
+        "picnic_table",
+        "hall_table_west",
+        "hall_table_east"
+      ],
+      "oldFrame": {
+        "min": [
+          -27,
+          0,
+          -14.5
+        ],
+        "max": [
+          27,
+          31,
+          14.5
+        ],
+        "radius": 30.64718584144391
+      },
+      "fragments": [
+        {
+          "id": "group:d_59d8f31ebce4112d",
+          "center": [
+            0,
+            29,
+            -10
+          ],
+          "corners": [
+            [
+              -27,
+              -2,
+              -4.5
+            ],
+            [
+              27,
+              -2,
+              -4.5
+            ],
+            [
+              -27,
+              2,
+              -4.5
+            ],
+            [
+              27,
+              2,
+              -4.5
+            ],
+            [
+              -27,
+              -2,
+              4.5
+            ],
+            [
+              27,
+              -2,
+              4.5
+            ],
+            [
+              -27,
+              2,
+              4.5
+            ],
+            [
+              27,
+              2,
+              4.5
+            ]
+          ]
+        },
+        {
+          "id": "group:d_89461d060ad167f6",
+          "center": [
+            0,
+            29,
+            0
+          ],
+          "corners": [
+            [
+              -27,
+              -2,
+              -4.5
+            ],
+            [
+              27,
+              -2,
+              -4.5
+            ],
+            [
+              -27,
+              2,
+              -4.5
+            ],
+            [
+              27,
+              2,
+              -4.5
+            ],
+            [
+              -27,
+              -2,
+              4.5
+            ],
+            [
+              27,
+              -2,
+              4.5
+            ],
+            [
+              -27,
+              2,
+              4.5
+            ],
+            [
+              27,
+              2,
+              4.5
+            ]
+          ]
+        },
+        {
+          "id": "group:d_8f64ced15be35323",
+          "center": [
+            0,
+            29,
+            10
+          ],
+          "corners": [
+            [
+              -27,
+              -2,
+              -4.5
+            ],
+            [
+              27,
+              -2,
+              -4.5
+            ],
+            [
+              -27,
+              2,
+              -4.5
+            ],
+            [
+              27,
+              2,
+              -4.5
+            ],
+            [
+              -27,
+              -2,
+              4.5
+            ],
+            [
+              27,
+              -2,
+              4.5
+            ],
+            [
+              -27,
+              2,
+              4.5
+            ],
+            [
+              27,
+              2,
+              4.5
+            ]
+          ]
+        },
+        {
+          "id": "group:d_b720f06ddab57eab",
+          "center": [
+            -19.037609577178955,
+            13.75,
+            -6.999999999999999
+          ],
+          "corners": [
+            [
+              -5.462390422821045,
+              -13.75,
+              -7.000000000000001
+            ],
+            [
+              5.462390422821045,
+              -13.75,
+              -7.000000000000001
+            ],
+            [
+              -5.462390422821045,
+              13.75,
+              -7.000000000000001
+            ],
+            [
+              5.462390422821045,
+              13.75,
+              -7.000000000000001
+            ],
+            [
+              -5.462390422821045,
+              -13.75,
+              7.000000000000001
+            ],
+            [
+              5.462390422821045,
+              -13.75,
+              7.000000000000001
+            ],
+            [
+              -5.462390422821045,
+              13.75,
+              7.000000000000001
+            ],
+            [
+              5.462390422821045,
+              13.75,
+              7.000000000000001
+            ]
+          ]
+        },
+        {
+          "id": "group:d_7a23ade9fdd00fa6",
+          "center": [
+            -19.037609577178955,
+            13.75,
+            6.999999999999999
+          ],
+          "corners": [
+            [
+              -5.462390422821045,
+              -13.75,
+              -7.000000000000001
+            ],
+            [
+              5.462390422821045,
+              -13.75,
+              -7.000000000000001
+            ],
+            [
+              -5.462390422821045,
+              13.75,
+              -7.000000000000001
+            ],
+            [
+              5.462390422821045,
+              13.75,
+              -7.000000000000001
+            ],
+            [
+              -5.462390422821045,
+              -13.75,
+              7.000000000000001
+            ],
+            [
+              5.462390422821045,
+              -13.75,
+              7.000000000000001
+            ],
+            [
+              -5.462390422821045,
+              13.75,
+              7.000000000000001
+            ],
+            [
+              5.462390422821045,
+              13.75,
+              7.000000000000001
+            ]
+          ]
+        },
+        {
+          "id": "group:d_62044fe497fd43dd",
+          "center": [
+            19.037609577178955,
+            13.75,
+            -6.999999999999999
+          ],
+          "corners": [
+            [
+              -5.462390422821045,
+              -13.75,
+              -7.000000000000001
+            ],
+            [
+              5.462390422821045,
+              -13.75,
+              -7.000000000000001
+            ],
+            [
+              -5.462390422821045,
+              13.75,
+              -7.000000000000001
+            ],
+            [
+              5.462390422821045,
+              13.75,
+              -7.000000000000001
+            ],
+            [
+              -5.462390422821045,
+              -13.75,
+              7.000000000000001
+            ],
+            [
+              5.462390422821045,
+              -13.75,
+              7.000000000000001
+            ],
+            [
+              -5.462390422821045,
+              13.75,
+              7.000000000000001
+            ],
+            [
+              5.462390422821045,
+              13.75,
+              7.000000000000001
+            ]
+          ]
+        },
+        {
+          "id": "group:d_bcba39ee0689ffa4",
+          "center": [
+            19.037609577178955,
+            13.75,
+            6.999999999999999
+          ],
+          "corners": [
+            [
+              -5.462390422821045,
+              -13.75,
+              -7.000000000000001
+            ],
+            [
+              5.462390422821045,
+              -13.75,
+              -7.000000000000001
+            ],
+            [
+              -5.462390422821045,
+              13.75,
+              -7.000000000000001
+            ],
+            [
+              5.462390422821045,
+              13.75,
+              -7.000000000000001
+            ],
+            [
+              -5.462390422821045,
+              -13.75,
+              7.000000000000001
+            ],
+            [
+              5.462390422821045,
+              -13.75,
+              7.000000000000001
+            ],
+            [
+              -5.462390422821045,
+              13.75,
+              7.000000000000001
+            ],
+            [
+              5.462390422821045,
+              13.75,
+              7.000000000000001
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Produce crate",
+      "spec": {
+        "dslVersion": 2,
+        "displayName": "Produce crate",
+        "parts": [
+          {
+            "id": "d_513d171073a931c8",
+            "shape": "box",
+            "position": [
+              0,
+              3,
+              0
+            ],
+            "size": [
+              33,
+              6,
+              29
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_9a7ce19baa54c278"
+          },
+          {
+            "id": "d_470860cfe373737a",
+            "shape": "box",
+            "position": [
+              -15,
+              14,
+              -14
+            ],
+            "size": [
+              3,
+              24,
+              3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_83026672554302ac"
+          },
+          {
+            "id": "d_1ef11065e65fc2bb",
+            "shape": "box",
+            "position": [
+              15,
+              14,
+              -14
+            ],
+            "size": [
+              3,
+              24,
+              3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_83026672554302ac"
+          },
+          {
+            "id": "d_64796001d31258a1",
+            "shape": "box",
+            "position": [
+              0,
+              9,
+              -14
+            ],
+            "size": [
+              35,
+              6,
+              3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_83026672554302ac"
+          },
+          {
+            "id": "d_fe5d970ad9840f02",
+            "shape": "box",
+            "position": [
+              0,
+              17,
+              -14
+            ],
+            "size": [
+              35,
+              6,
+              3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_83026672554302ac"
+          },
+          {
+            "id": "d_0cf46fbb158d48e3",
+            "shape": "box",
+            "position": [
+              0,
+              25,
+              -14
+            ],
+            "size": [
+              35,
+              6,
+              3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_83026672554302ac"
+          },
+          {
+            "id": "d_695f9bd1db425d6c",
+            "shape": "box",
+            "position": [
+              -16,
+              9,
+              0
+            ],
+            "size": [
+              3,
+              6,
+              26
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_940a979ca7127db9"
+          },
+          {
+            "id": "d_1f983aecd9ecb113",
+            "shape": "box",
+            "position": [
+              -16,
+              17,
+              0
+            ],
+            "size": [
+              3,
+              6,
+              26
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_940a979ca7127db9"
+          },
+          {
+            "id": "d_9c57428a5f4bcf72",
+            "shape": "box",
+            "position": [
+              -16,
+              25,
+              0
+            ],
+            "size": [
+              3,
+              6,
+              26
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_940a979ca7127db9"
+          },
+          {
+            "id": "d_0b3be353a4615c4d",
+            "shape": "box",
+            "position": [
+              -15,
+              14,
+              14
+            ],
+            "size": [
+              3,
+              24,
+              3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_b87f7b91cf157757"
+          },
+          {
+            "id": "d_efe8da84fd04c3d4",
+            "shape": "box",
+            "position": [
+              15,
+              14,
+              14
+            ],
+            "size": [
+              3,
+              24,
+              3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_b87f7b91cf157757"
+          },
+          {
+            "id": "d_76bd2c9ace11f886",
+            "shape": "box",
+            "position": [
+              0,
+              9,
+              14
+            ],
+            "size": [
+              35,
+              6,
+              3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_b87f7b91cf157757"
+          },
+          {
+            "id": "d_d9730591c4bd3455",
+            "shape": "box",
+            "position": [
+              0,
+              17,
+              14
+            ],
+            "size": [
+              35,
+              6,
+              3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_b87f7b91cf157757"
+          },
+          {
+            "id": "d_1096995777452300",
+            "shape": "box",
+            "position": [
+              0,
+              25,
+              14
+            ],
+            "size": [
+              35,
+              6,
+              3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_b87f7b91cf157757"
+          },
+          {
+            "id": "d_4a6e04405e442c4b",
+            "shape": "box",
+            "position": [
+              16,
+              9,
+              0
+            ],
+            "size": [
+              3,
+              6,
+              26
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_369986a425cbb352"
+          },
+          {
+            "id": "d_6232db210ec83604",
+            "shape": "box",
+            "position": [
+              16,
+              17,
+              0
+            ],
+            "size": [
+              3,
+              6,
+              26
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_369986a425cbb352"
+          },
+          {
+            "id": "d_ef75c7470ccf4789",
+            "shape": "box",
+            "position": [
+              16,
+              25,
+              0
+            ],
+            "size": [
+              3,
+              6,
+              26
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#92613d",
+              "colorB": "#bd905d"
+            },
+            "fragment": "d_369986a425cbb352"
+          },
+          {
+            "id": "d_e31e7c291d1749ee",
+            "shape": "sphere",
+            "position": [
+              -9,
+              10,
+              0
+            ],
+            "size": [
+              8,
+              8,
+              8
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#d97054",
+              "colorB": "#d97054"
+            },
+            "deform": {
+              "seed": 52,
+              "amount": 0.06
+            },
+            "fragment": "d_b3a77738d4dc9391"
+          },
+          {
+            "id": "d_540aebe781cf704f",
+            "shape": "cylinder",
+            "position": [
+              -9,
+              14.5,
+              0
+            ],
+            "size": [
+              0.6,
+              2,
+              0.6
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_b3a77738d4dc9391"
+          },
+          {
+            "id": "d_6aa0d79f035b0575",
+            "shape": "sphere",
+            "position": [
+              0,
+              10,
+              0
+            ],
+            "size": [
+              8,
+              8,
+              8
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#d97054",
+              "colorB": "#d97054"
+            },
+            "deform": {
+              "seed": 61,
+              "amount": 0.06
+            },
+            "fragment": "d_abcdb260fee5f9ea"
+          },
+          {
+            "id": "d_5e8e73ba48b9e2a6",
+            "shape": "cylinder",
+            "position": [
+              0,
+              14.5,
+              0
+            ],
+            "size": [
+              0.6,
+              2,
+              0.6
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_abcdb260fee5f9ea"
+          },
+          {
+            "id": "d_0da3a71bd5bb74cc",
+            "shape": "sphere",
+            "position": [
+              9,
+              10,
+              0
+            ],
+            "size": [
+              8,
+              8,
+              8
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#d97054",
+              "colorB": "#d97054"
+            },
+            "deform": {
+              "seed": 70,
+              "amount": 0.06
+            },
+            "fragment": "d_e6b1f440fbf5a903"
+          },
+          {
+            "id": "d_2c317da83f2c063d",
+            "shape": "cylinder",
+            "position": [
+              9,
+              14.5,
+              0
+            ],
+            "size": [
+              0.6,
+              2,
+              0.6
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#654632",
+              "colorB": "#654632"
+            },
+            "fragment": "d_e6b1f440fbf5a903"
+          }
+        ],
+        "body": {
+          "interaction": "solid",
+          "colliderRadius": 22,
+          "colliderHeight": 31
+        },
+        "voxelSize": 1,
+        "measure": {
+          "kind": "custom",
+          "axis": "x",
+          "meters": 0.8
+        },
+        "impact": {
+          "kind": "break",
+          "speed": 75,
+          "scatter": 82,
+          "lift": 115,
+          "spin": 5,
+          "lifetime": 5
+        }
+      },
+      "objects": [
+        "produce_crate",
+        "hall_produce_crate"
+      ],
+      "oldFrame": {
+        "min": [
+          -17.5,
+          0,
+          -15.5
+        ],
+        "max": [
+          17.5,
+          28,
+          15.5
+        ],
+        "radius": 23.37733945512192
+      },
+      "fragments": [
+        {
+          "id": "group:d_9a7ce19baa54c278",
+          "center": [
+            0,
+            3,
+            0
+          ],
+          "corners": [
+            [
+              -16.5,
+              -3,
+              -14.5
+            ],
+            [
+              16.5,
+              -3,
+              -14.5
+            ],
+            [
+              -16.5,
+              3,
+              -14.5
+            ],
+            [
+              16.5,
+              3,
+              -14.5
+            ],
+            [
+              -16.5,
+              -3,
+              14.5
+            ],
+            [
+              16.5,
+              -3,
+              14.5
+            ],
+            [
+              -16.5,
+              3,
+              14.5
+            ],
+            [
+              16.5,
+              3,
+              14.5
+            ]
+          ]
+        },
+        {
+          "id": "group:d_83026672554302ac",
+          "center": [
+            0,
+            15,
+            -14
+          ],
+          "corners": [
+            [
+              -17.5,
+              -13,
+              -1.5
+            ],
+            [
+              17.5,
+              -13,
+              -1.5
+            ],
+            [
+              -17.5,
+              13,
+              -1.5
+            ],
+            [
+              17.5,
+              13,
+              -1.5
+            ],
+            [
+              -17.5,
+              -13,
+              1.5
+            ],
+            [
+              17.5,
+              -13,
+              1.5
+            ],
+            [
+              -17.5,
+              13,
+              1.5
+            ],
+            [
+              17.5,
+              13,
+              1.5
+            ]
+          ]
+        },
+        {
+          "id": "group:d_940a979ca7127db9",
+          "center": [
+            -16,
+            17,
+            0
+          ],
+          "corners": [
+            [
+              -1.5,
+              -11,
+              -13
+            ],
+            [
+              1.5,
+              -11,
+              -13
+            ],
+            [
+              -1.5,
+              11,
+              -13
+            ],
+            [
+              1.5,
+              11,
+              -13
+            ],
+            [
+              -1.5,
+              -11,
+              13
+            ],
+            [
+              1.5,
+              -11,
+              13
+            ],
+            [
+              -1.5,
+              11,
+              13
+            ],
+            [
+              1.5,
+              11,
+              13
+            ]
+          ]
+        },
+        {
+          "id": "group:d_b87f7b91cf157757",
+          "center": [
+            0,
+            15,
+            14
+          ],
+          "corners": [
+            [
+              -17.5,
+              -13,
+              -1.5
+            ],
+            [
+              17.5,
+              -13,
+              -1.5
+            ],
+            [
+              -17.5,
+              13,
+              -1.5
+            ],
+            [
+              17.5,
+              13,
+              -1.5
+            ],
+            [
+              -17.5,
+              -13,
+              1.5
+            ],
+            [
+              17.5,
+              -13,
+              1.5
+            ],
+            [
+              -17.5,
+              13,
+              1.5
+            ],
+            [
+              17.5,
+              13,
+              1.5
+            ]
+          ]
+        },
+        {
+          "id": "group:d_369986a425cbb352",
+          "center": [
+            16,
+            17,
+            0
+          ],
+          "corners": [
+            [
+              -1.5,
+              -11,
+              -13
+            ],
+            [
+              1.5,
+              -11,
+              -13
+            ],
+            [
+              -1.5,
+              11,
+              -13
+            ],
+            [
+              1.5,
+              11,
+              -13
+            ],
+            [
+              -1.5,
+              -11,
+              13
+            ],
+            [
+              1.5,
+              -11,
+              13
+            ],
+            [
+              -1.5,
+              11,
+              13
+            ],
+            [
+              1.5,
+              11,
+              13
+            ]
+          ]
+        },
+        {
+          "id": "group:d_b3a77738d4dc9391",
+          "center": [
+            -9,
+            10.75,
+            0
+          ],
+          "corners": [
+            [
+              -4,
+              -4.75,
+              -4
+            ],
+            [
+              4,
+              -4.75,
+              -4
+            ],
+            [
+              -4,
+              4.75,
+              -4
+            ],
+            [
+              4,
+              4.75,
+              -4
+            ],
+            [
+              -4,
+              -4.75,
+              4
+            ],
+            [
+              4,
+              -4.75,
+              4
+            ],
+            [
+              -4,
+              4.75,
+              4
+            ],
+            [
+              4,
+              4.75,
+              4
+            ]
+          ]
+        },
+        {
+          "id": "group:d_abcdb260fee5f9ea",
+          "center": [
+            0,
+            10.75,
+            0
+          ],
+          "corners": [
+            [
+              -4,
+              -4.75,
+              -4
+            ],
+            [
+              4,
+              -4.75,
+              -4
+            ],
+            [
+              -4,
+              4.75,
+              -4
+            ],
+            [
+              4,
+              4.75,
+              -4
+            ],
+            [
+              -4,
+              -4.75,
+              4
+            ],
+            [
+              4,
+              -4.75,
+              4
+            ],
+            [
+              -4,
+              4.75,
+              4
+            ],
+            [
+              4,
+              4.75,
+              4
+            ]
+          ]
+        },
+        {
+          "id": "group:d_e6b1f440fbf5a903",
+          "center": [
+            9,
+            10.75,
+            0
+          ],
+          "corners": [
+            [
+              -4,
+              -4.75,
+              -4
+            ],
+            [
+              4,
+              -4.75,
+              -4
+            ],
+            [
+              -4,
+              4.75,
+              -4
+            ],
+            [
+              4,
+              4.75,
+              -4
+            ],
+            [
+              -4,
+              -4.75,
+              4
+            ],
+            [
+              4,
+              -4.75,
+              4
+            ],
+            [
+              -4,
+              4.75,
+              4
+            ],
+            [
+              4,
+              4.75,
+              4
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Terracotta planter",
+      "spec": {
+        "dslVersion": 2,
+        "displayName": "Terracotta planter",
+        "parts": [
+          {
+            "id": "d_01674bf57f06d6e2",
+            "shape": "box",
+            "position": [
+              13,
+              13,
+              0
+            ],
+            "size": [
+              3,
+              23,
+              11
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "paper-grain",
+              "colorA": "#b86747",
+              "colorB": "#d88c62"
+            },
+            "fragment": "d_a22443698f59e65d"
+          },
+          {
+            "id": "d_83f1103fa62b6797",
+            "shape": "box",
+            "position": [
+              9.19238815542512,
+              13,
+              9.192388155425117
+            ],
+            "size": [
+              3,
+              23,
+              11
+            ],
+            "rotation": [
+              0,
+              -0.7853981633974484,
+              0
+            ],
+            "material": {
+              "shaderStyle": "paper-grain",
+              "colorA": "#b86747",
+              "colorB": "#d88c62"
+            },
+            "fragment": "d_a22443698f59e65d"
+          },
+          {
+            "id": "d_95cb1a60f6e019a1",
+            "shape": "box",
+            "position": [
+              7.960204194457795e-16,
+              13,
+              13
+            ],
+            "size": [
+              3,
+              23,
+              11
+            ],
+            "rotation": [
+              0,
+              -1.5707963267948966,
+              0
+            ],
+            "material": {
+              "shaderStyle": "paper-grain",
+              "colorA": "#b86747",
+              "colorB": "#d88c62"
+            },
+            "fragment": "d_171a18ef16278866"
+          },
+          {
+            "id": "d_296045a45c925094",
+            "shape": "box",
+            "position": [
+              -9.192388155425117,
+              13,
+              9.19238815542512
+            ],
+            "size": [
+              3,
+              23,
+              11
+            ],
+            "rotation": [
+              3.141592653589793,
+              -0.7853981633974485,
+              3.141592653589793
+            ],
+            "material": {
+              "shaderStyle": "paper-grain",
+              "colorA": "#b86747",
+              "colorB": "#d88c62"
+            },
+            "fragment": "d_171a18ef16278866"
+          },
+          {
+            "id": "d_4e72b6f01c36b5ac",
+            "shape": "box",
+            "position": [
+              -13,
+              13,
+              1.592040838891559e-15
+            ],
+            "size": [
+              3,
+              23,
+              11
+            ],
+            "rotation": [
+              3.141592653589793,
+              -1.2246467991473532e-16,
+              3.141592653589793
+            ],
+            "material": {
+              "shaderStyle": "paper-grain",
+              "colorA": "#b86747",
+              "colorB": "#d88c62"
+            },
+            "fragment": "d_76fef81d7e018cf3"
+          },
+          {
+            "id": "d_68104a9f7ce1ecf9",
+            "shape": "box",
+            "position": [
+              -9.19238815542512,
+              13,
+              -9.192388155425117
+            ],
+            "size": [
+              3,
+              23,
+              11
+            ],
+            "rotation": [
+              -3.141592653589793,
+              0.7853981633974482,
+              -3.141592653589793
+            ],
+            "material": {
+              "shaderStyle": "paper-grain",
+              "colorA": "#b86747",
+              "colorB": "#d88c62"
+            },
+            "fragment": "d_76fef81d7e018cf3"
+          },
+          {
+            "id": "d_ca5f209a532f2bfb",
+            "shape": "box",
+            "position": [
+              -2.3880612583373385e-15,
+              13,
+              -13
+            ],
+            "size": [
+              3,
+              23,
+              11
+            ],
+            "rotation": [
+              0,
+              1.5707963267948966,
+              0
+            ],
+            "material": {
+              "shaderStyle": "paper-grain",
+              "colorA": "#b86747",
+              "colorB": "#d88c62"
+            },
+            "fragment": "d_005b5f4941dcd2f4"
+          },
+          {
+            "id": "d_e25bfa5466f42f06",
+            "shape": "box",
+            "position": [
+              9.192388155425116,
+              13,
+              -9.19238815542512
+            ],
+            "size": [
+              3,
+              23,
+              11
+            ],
+            "rotation": [
+              0,
+              0.7853981633974485,
+              0
+            ],
+            "material": {
+              "shaderStyle": "paper-grain",
+              "colorA": "#b86747",
+              "colorB": "#d88c62"
+            },
+            "fragment": "d_005b5f4941dcd2f4"
+          },
+          {
+            "id": "d_32b5b3c02130c1bc",
+            "shape": "torus",
+            "position": [
+              0,
+              25,
+              0
+            ],
+            "size": [
+              36,
+              36,
+              6
+            ],
+            "rotation": [
+              1.5707963267948963,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "paper-grain",
+              "colorA": "#b86747",
+              "colorB": "#d88c62"
+            },
+            "fragment": "d_8a11c7196116237b"
+          },
+          {
+            "id": "d_0cc09a6e783d7b84",
+            "shape": "cylinder",
+            "position": [
+              0,
+              23,
+              0
+            ],
+            "size": [
+              26,
+              3,
+              26
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#584832",
+              "colorB": "#584832"
+            },
+            "fragment": "d_fd5e014e1660fc72"
+          },
+          {
+            "id": "d_af5adc6e43df7b9e",
+            "shape": "cylinder",
+            "position": [
+              0,
+              28,
+              0
+            ],
+            "size": [
+              3,
+              12,
+              3
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#648650",
+              "colorB": "#648650"
+            },
+            "fragment": "d_fd5e014e1660fc72"
+          },
+          {
+            "id": "d_7d1a49274007cfb3",
+            "shape": "icosphere",
+            "position": [
+              0,
+              34,
+              0
+            ],
+            "size": [
+              24,
+              12,
+              19
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#648650",
+              "colorB": "#648650"
+            },
+            "fragment": "d_fd5e014e1660fc72"
+          },
+          {
+            "id": "d_7a918d0aaf224310",
+            "shape": "capsule",
+            "position": [
+              -5.5,
+              31.5,
+              0
+            ],
+            "size": [
+              5,
+              13.038404810405298,
+              2
+            ],
+            "rotation": [
+              0,
+              0,
+              1.00406710927139
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#648650",
+              "colorB": "#648650"
+            },
+            "fragment": "d_fd5e014e1660fc72"
+          },
+          {
+            "id": "d_d91dd55143e76ea1",
+            "shape": "capsule",
+            "position": [
+              5.5,
+              31.5,
+              0
+            ],
+            "size": [
+              5,
+              13.038404810405298,
+              2
+            ],
+            "rotation": [
+              0,
+              0,
+              -1.00406710927139
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#648650",
+              "colorB": "#648650"
+            },
+            "fragment": "d_fd5e014e1660fc72"
+          }
+        ],
+        "body": {
+          "interaction": "solid",
+          "colliderRadius": 18,
+          "colliderHeight": 36
+        },
+        "voxelSize": 1,
+        "measure": {
+          "kind": "custom",
+          "axis": "y",
+          "meters": 0.85
+        },
+        "impact": {
+          "kind": "break",
+          "speed": 65,
+          "scatter": 45,
+          "lift": 75,
+          "spin": 3,
+          "lifetime": 5
+        }
+      },
+      "objects": [
+        "market_planter"
+      ],
+      "oldFrame": {
+        "min": [
+          -18,
+          1.5,
+          -18
+        ],
+        "max": [
+          18,
+          40,
+          18
+        ],
+        "radius": 25.455844122715714
+      },
+      "fragments": [
+        {
+          "id": "group:d_a22443698f59e65d",
+          "center": [
+            9.445878744125366,
+            13,
+            4.246509552001953
+          ],
+          "corners": [
+            [
+              -5.054121255874634,
+              -11.5,
+              -9.746509552001953
+            ],
+            [
+              5.054121255874634,
+              -11.5,
+              -9.746509552001953
+            ],
+            [
+              -5.054121255874634,
+              11.5,
+              -9.746509552001953
+            ],
+            [
+              5.054121255874634,
+              11.5,
+              -9.746509552001953
+            ],
+            [
+              -5.054121255874634,
+              -11.5,
+              9.746509552001953
+            ],
+            [
+              5.054121255874634,
+              -11.5,
+              9.746509552001953
+            ],
+            [
+              -5.054121255874634,
+              11.5,
+              9.746509552001953
+            ],
+            [
+              5.054121255874634,
+              11.5,
+              9.746509552001953
+            ]
+          ]
+        },
+        {
+          "id": "group:d_171a18ef16278866",
+          "center": [
+            -4.246509552001953,
+            13,
+            9.445878744125366
+          ],
+          "corners": [
+            [
+              -9.746509552001953,
+              -11.5,
+              -5.054121255874634
+            ],
+            [
+              9.746509552001953,
+              -11.5,
+              -5.054121255874634
+            ],
+            [
+              -9.746509552001953,
+              11.5,
+              -5.054121255874634
+            ],
+            [
+              9.746509552001953,
+              11.5,
+              -5.054121255874634
+            ],
+            [
+              -9.746509552001953,
+              -11.5,
+              5.054121255874634
+            ],
+            [
+              9.746509552001953,
+              -11.5,
+              5.054121255874634
+            ],
+            [
+              -9.746509552001953,
+              11.5,
+              5.054121255874634
+            ],
+            [
+              9.746509552001953,
+              11.5,
+              5.054121255874634
+            ]
+          ]
+        },
+        {
+          "id": "group:d_76fef81d7e018cf3",
+          "center": [
+            -9.445878744125366,
+            13,
+            -4.246509552001953
+          ],
+          "corners": [
+            [
+              -5.054121255874634,
+              -11.5,
+              -9.746509552001953
+            ],
+            [
+              5.054121255874634,
+              -11.5,
+              -9.746509552001953
+            ],
+            [
+              -5.054121255874634,
+              11.5,
+              -9.746509552001953
+            ],
+            [
+              5.054121255874634,
+              11.5,
+              -9.746509552001953
+            ],
+            [
+              -5.054121255874634,
+              -11.5,
+              9.746509552001953
+            ],
+            [
+              5.054121255874634,
+              -11.5,
+              9.746509552001953
+            ],
+            [
+              -5.054121255874634,
+              11.5,
+              9.746509552001953
+            ],
+            [
+              5.054121255874634,
+              11.5,
+              9.746509552001953
+            ]
+          ]
+        },
+        {
+          "id": "group:d_005b5f4941dcd2f4",
+          "center": [
+            4.246509552001953,
+            13,
+            -9.445878744125366
+          ],
+          "corners": [
+            [
+              -9.746509552001953,
+              -11.5,
+              -5.054121255874634
+            ],
+            [
+              9.746509552001953,
+              -11.5,
+              -5.054121255874634
+            ],
+            [
+              -9.746509552001953,
+              11.5,
+              -5.054121255874634
+            ],
+            [
+              9.746509552001953,
+              11.5,
+              -5.054121255874634
+            ],
+            [
+              -9.746509552001953,
+              -11.5,
+              5.054121255874634
+            ],
+            [
+              9.746509552001953,
+              -11.5,
+              5.054121255874634
+            ],
+            [
+              -9.746509552001953,
+              11.5,
+              5.054121255874634
+            ],
+            [
+              9.746509552001953,
+              11.5,
+              5.054121255874634
+            ]
+          ]
+        },
+        {
+          "id": "group:d_8a11c7196116237b",
+          "center": [
+            0,
+            25,
+            0
+          ],
+          "corners": [
+            [
+              -18,
+              -3,
+              -18
+            ],
+            [
+              18,
+              -3,
+              -18
+            ],
+            [
+              -18,
+              3,
+              -18
+            ],
+            [
+              18,
+              3,
+              -18
+            ],
+            [
+              -18,
+              -3,
+              18
+            ],
+            [
+              18,
+              -3,
+              18
+            ],
+            [
+              -18,
+              3,
+              18
+            ],
+            [
+              18,
+              3,
+              18
+            ]
+          ]
+        },
+        {
+          "id": "group:d_fd5e014e1660fc72",
+          "center": [
+            0,
+            30.75,
+            0
+          ],
+          "corners": [
+            [
+              -13,
+              -9.25,
+              -13
+            ],
+            [
+              13,
+              -9.25,
+              -13
+            ],
+            [
+              -13,
+              9.25,
+              -13
+            ],
+            [
+              13,
+              9.25,
+              -13
+            ],
+            [
+              -13,
+              -9.25,
+              13
+            ],
+            [
+              13,
+              -9.25,
+              13
+            ],
+            [
+              -13,
+              9.25,
+              13
+            ],
+            [
+              13,
+              9.25,
+              13
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Produce stall",
+      "spec": {
+        "dslVersion": 2,
+        "displayName": "Produce stall",
+        "parts": [
+          {
+            "id": "d_77976c7416517c63",
+            "shape": "box",
+            "position": [
+              0,
+              9,
+              0
+            ],
+            "size": [
+              32,
+              2,
+              18
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#805c40",
+              "colorB": "#aa815a"
+            }
+          },
+          {
+            "id": "d_138dec7960f7a9e8",
+            "shape": "box",
+            "position": [
+              -14,
+              4,
+              -7
+            ],
+            "size": [
+              2,
+              8,
+              2
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#805c40",
+              "colorB": "#aa815a"
+            }
+          },
+          {
+            "id": "d_6d778efb993bd833",
+            "shape": "box",
+            "position": [
+              -14,
+              16.5,
+              -7
+            ],
+            "size": [
+              1,
+              15,
+              1
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#805c40",
+              "colorB": "#aa815a"
+            }
+          },
+          {
+            "id": "d_4ec2bf8135393b47",
+            "shape": "box",
+            "position": [
+              -14,
+              4,
+              7
+            ],
+            "size": [
+              2,
+              8,
+              2
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#805c40",
+              "colorB": "#aa815a"
+            }
+          },
+          {
+            "id": "d_12e06e76ab16cb58",
+            "shape": "box",
+            "position": [
+              -14,
+              16.5,
+              7
+            ],
+            "size": [
+              1,
+              15,
+              1
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#805c40",
+              "colorB": "#aa815a"
+            }
+          },
+          {
+            "id": "d_b582a1cc7c175757",
+            "shape": "box",
+            "position": [
+              14,
+              4,
+              -7
+            ],
+            "size": [
+              2,
+              8,
+              2
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#805c40",
+              "colorB": "#aa815a"
+            }
+          },
+          {
+            "id": "d_4de853cbbba0c668",
+            "shape": "box",
+            "position": [
+              14,
+              16.5,
+              -7
+            ],
+            "size": [
+              1,
+              15,
+              1
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#805c40",
+              "colorB": "#aa815a"
+            }
+          },
+          {
+            "id": "d_f58810dde118b238",
+            "shape": "box",
+            "position": [
+              14,
+              4,
+              7
+            ],
+            "size": [
+              2,
+              8,
+              2
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#805c40",
+              "colorB": "#aa815a"
+            }
+          },
+          {
+            "id": "d_b3cf7bc713448403",
+            "shape": "box",
+            "position": [
+              14,
+              16.5,
+              7
+            ],
+            "size": [
+              1,
+              15,
+              1
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "wood",
+              "colorA": "#805c40",
+              "colorB": "#aa815a"
+            }
+          },
+          {
+            "id": "d_6893d1aa5d2a4a89",
+            "shape": "pyramid",
+            "position": [
+              0,
+              25,
+              0
+            ],
+            "size": [
+              36,
+              3,
+              22
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#5e7c73",
+              "colorB": "#405d55"
+            }
+          },
+          {
+            "id": "d_eebfd5c95ab08abd",
+            "shape": "icosphere",
+            "position": [
+              -9,
+              11,
+              0
+            ],
+            "size": [
+              7,
+              3,
+              5
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#d4b378",
+              "colorB": "#b9955f"
+            }
+          },
+          {
+            "id": "d_2b6cc7f589501650",
+            "shape": "icosphere",
+            "position": [
+              0,
+              11,
+              0
+            ],
+            "size": [
+              7,
+              3,
+              5
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#d4b378",
+              "colorB": "#b9955f"
+            }
+          },
+          {
+            "id": "d_9ce688dabbec5a67",
+            "shape": "icosphere",
+            "position": [
+              9,
+              11,
+              0
+            ],
+            "size": [
+              7,
+              3,
+              5
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#d4b378",
+              "colorB": "#b9955f"
+            }
+          },
+          {
+            "id": "d_0dfdf64e3de141eb",
+            "shape": "box",
+            "position": [
+              0,
+              22,
+              -7.5
+            ],
+            "size": [
+              29,
+              2,
+              1
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "material": {
+              "shaderStyle": "toon",
+              "colorA": "#e4b948",
+              "colorB": "#c79435"
+            }
+          }
+        ],
+        "body": {
+          "interaction": "solid",
+          "colliderRadius": 12,
+          "colliderHeight": 27
+        },
+        "voxelSize": 1,
+        "measure": {
+          "kind": "custom",
+          "axis": "y",
+          "meters": 2.65
+        }
+      },
+      "objects": [
+        "market_stall_west",
+        "market_stall_east"
+      ],
+      "oldFrame": {
+        "min": [
+          -18,
+          0,
+          -11
+        ],
+        "max": [
+          18,
+          26.5,
+          11
+        ],
+        "radius": 21.095023109728988
+      },
+      "fragments": [
+        {
+          "id": "part:d_77976c7416517c63",
+          "center": [
+            0,
+            9,
+            0
+          ],
+          "corners": [
+            [
+              -16,
+              -1,
+              -9
+            ],
+            [
+              16,
+              -1,
+              -9
+            ],
+            [
+              -16,
+              1,
+              -9
+            ],
+            [
+              16,
+              1,
+              -9
+            ],
+            [
+              -16,
+              -1,
+              9
+            ],
+            [
+              16,
+              -1,
+              9
+            ],
+            [
+              -16,
+              1,
+              9
+            ],
+            [
+              16,
+              1,
+              9
+            ]
+          ]
+        },
+        {
+          "id": "part:d_138dec7960f7a9e8",
+          "center": [
+            -14,
+            4,
+            -7
+          ],
+          "corners": [
+            [
+              -1,
+              -4,
+              -1
+            ],
+            [
+              1,
+              -4,
+              -1
+            ],
+            [
+              -1,
+              4,
+              -1
+            ],
+            [
+              1,
+              4,
+              -1
+            ],
+            [
+              -1,
+              -4,
+              1
+            ],
+            [
+              1,
+              -4,
+              1
+            ],
+            [
+              -1,
+              4,
+              1
+            ],
+            [
+              1,
+              4,
+              1
+            ]
+          ]
+        },
+        {
+          "id": "part:d_6d778efb993bd833",
+          "center": [
+            -14,
+            16.5,
+            -7
+          ],
+          "corners": [
+            [
+              -0.5,
+              -7.5,
+              -0.5
+            ],
+            [
+              0.5,
+              -7.5,
+              -0.5
+            ],
+            [
+              -0.5,
+              7.5,
+              -0.5
+            ],
+            [
+              0.5,
+              7.5,
+              -0.5
+            ],
+            [
+              -0.5,
+              -7.5,
+              0.5
+            ],
+            [
+              0.5,
+              -7.5,
+              0.5
+            ],
+            [
+              -0.5,
+              7.5,
+              0.5
+            ],
+            [
+              0.5,
+              7.5,
+              0.5
+            ]
+          ]
+        },
+        {
+          "id": "part:d_4ec2bf8135393b47",
+          "center": [
+            -14,
+            4,
+            7
+          ],
+          "corners": [
+            [
+              -1,
+              -4,
+              -1
+            ],
+            [
+              1,
+              -4,
+              -1
+            ],
+            [
+              -1,
+              4,
+              -1
+            ],
+            [
+              1,
+              4,
+              -1
+            ],
+            [
+              -1,
+              -4,
+              1
+            ],
+            [
+              1,
+              -4,
+              1
+            ],
+            [
+              -1,
+              4,
+              1
+            ],
+            [
+              1,
+              4,
+              1
+            ]
+          ]
+        },
+        {
+          "id": "part:d_12e06e76ab16cb58",
+          "center": [
+            -14,
+            16.5,
+            7
+          ],
+          "corners": [
+            [
+              -0.5,
+              -7.5,
+              -0.5
+            ],
+            [
+              0.5,
+              -7.5,
+              -0.5
+            ],
+            [
+              -0.5,
+              7.5,
+              -0.5
+            ],
+            [
+              0.5,
+              7.5,
+              -0.5
+            ],
+            [
+              -0.5,
+              -7.5,
+              0.5
+            ],
+            [
+              0.5,
+              -7.5,
+              0.5
+            ],
+            [
+              -0.5,
+              7.5,
+              0.5
+            ],
+            [
+              0.5,
+              7.5,
+              0.5
+            ]
+          ]
+        },
+        {
+          "id": "part:d_b582a1cc7c175757",
+          "center": [
+            14,
+            4,
+            -7
+          ],
+          "corners": [
+            [
+              -1,
+              -4,
+              -1
+            ],
+            [
+              1,
+              -4,
+              -1
+            ],
+            [
+              -1,
+              4,
+              -1
+            ],
+            [
+              1,
+              4,
+              -1
+            ],
+            [
+              -1,
+              -4,
+              1
+            ],
+            [
+              1,
+              -4,
+              1
+            ],
+            [
+              -1,
+              4,
+              1
+            ],
+            [
+              1,
+              4,
+              1
+            ]
+          ]
+        },
+        {
+          "id": "part:d_4de853cbbba0c668",
+          "center": [
+            14,
+            16.5,
+            -7
+          ],
+          "corners": [
+            [
+              -0.5,
+              -7.5,
+              -0.5
+            ],
+            [
+              0.5,
+              -7.5,
+              -0.5
+            ],
+            [
+              -0.5,
+              7.5,
+              -0.5
+            ],
+            [
+              0.5,
+              7.5,
+              -0.5
+            ],
+            [
+              -0.5,
+              -7.5,
+              0.5
+            ],
+            [
+              0.5,
+              -7.5,
+              0.5
+            ],
+            [
+              -0.5,
+              7.5,
+              0.5
+            ],
+            [
+              0.5,
+              7.5,
+              0.5
+            ]
+          ]
+        },
+        {
+          "id": "part:d_f58810dde118b238",
+          "center": [
+            14,
+            4,
+            7
+          ],
+          "corners": [
+            [
+              -1,
+              -4,
+              -1
+            ],
+            [
+              1,
+              -4,
+              -1
+            ],
+            [
+              -1,
+              4,
+              -1
+            ],
+            [
+              1,
+              4,
+              -1
+            ],
+            [
+              -1,
+              -4,
+              1
+            ],
+            [
+              1,
+              -4,
+              1
+            ],
+            [
+              -1,
+              4,
+              1
+            ],
+            [
+              1,
+              4,
+              1
+            ]
+          ]
+        },
+        {
+          "id": "part:d_b3cf7bc713448403",
+          "center": [
+            14,
+            16.5,
+            7
+          ],
+          "corners": [
+            [
+              -0.5,
+              -7.5,
+              -0.5
+            ],
+            [
+              0.5,
+              -7.5,
+              -0.5
+            ],
+            [
+              -0.5,
+              7.5,
+              -0.5
+            ],
+            [
+              0.5,
+              7.5,
+              -0.5
+            ],
+            [
+              -0.5,
+              -7.5,
+              0.5
+            ],
+            [
+              0.5,
+              -7.5,
+              0.5
+            ],
+            [
+              -0.5,
+              7.5,
+              0.5
+            ],
+            [
+              0.5,
+              7.5,
+              0.5
+            ]
+          ]
+        },
+        {
+          "id": "part:d_6893d1aa5d2a4a89",
+          "center": [
+            0,
+            25,
+            0
+          ],
+          "corners": [
+            [
+              -18,
+              -1.5,
+              -11
+            ],
+            [
+              18,
+              -1.5,
+              -11
+            ],
+            [
+              -18,
+              1.5,
+              -11
+            ],
+            [
+              18,
+              1.5,
+              -11
+            ],
+            [
+              -18,
+              -1.5,
+              11
+            ],
+            [
+              18,
+              -1.5,
+              11
+            ],
+            [
+              -18,
+              1.5,
+              11
+            ],
+            [
+              18,
+              1.5,
+              11
+            ]
+          ]
+        },
+        {
+          "id": "part:d_eebfd5c95ab08abd",
+          "center": [
+            -9,
+            11,
+            0
+          ],
+          "corners": [
+            [
+              -3.5,
+              -1.5,
+              -2.5
+            ],
+            [
+              3.5,
+              -1.5,
+              -2.5
+            ],
+            [
+              -3.5,
+              1.5,
+              -2.5
+            ],
+            [
+              3.5,
+              1.5,
+              -2.5
+            ],
+            [
+              -3.5,
+              -1.5,
+              2.5
+            ],
+            [
+              3.5,
+              -1.5,
+              2.5
+            ],
+            [
+              -3.5,
+              1.5,
+              2.5
+            ],
+            [
+              3.5,
+              1.5,
+              2.5
+            ]
+          ]
+        },
+        {
+          "id": "part:d_2b6cc7f589501650",
+          "center": [
+            0,
+            11,
+            0
+          ],
+          "corners": [
+            [
+              -3.5,
+              -1.5,
+              -2.5
+            ],
+            [
+              3.5,
+              -1.5,
+              -2.5
+            ],
+            [
+              -3.5,
+              1.5,
+              -2.5
+            ],
+            [
+              3.5,
+              1.5,
+              -2.5
+            ],
+            [
+              -3.5,
+              -1.5,
+              2.5
+            ],
+            [
+              3.5,
+              -1.5,
+              2.5
+            ],
+            [
+              -3.5,
+              1.5,
+              2.5
+            ],
+            [
+              3.5,
+              1.5,
+              2.5
+            ]
+          ]
+        },
+        {
+          "id": "part:d_9ce688dabbec5a67",
+          "center": [
+            9,
+            11,
+            0
+          ],
+          "corners": [
+            [
+              -3.5,
+              -1.5,
+              -2.5
+            ],
+            [
+              3.5,
+              -1.5,
+              -2.5
+            ],
+            [
+              -3.5,
+              1.5,
+              -2.5
+            ],
+            [
+              3.5,
+              1.5,
+              -2.5
+            ],
+            [
+              -3.5,
+              -1.5,
+              2.5
+            ],
+            [
+              3.5,
+              -1.5,
+              2.5
+            ],
+            [
+              -3.5,
+              1.5,
+              2.5
+            ],
+            [
+              3.5,
+              1.5,
+              2.5
+            ]
+          ]
+        },
+        {
+          "id": "part:d_0dfdf64e3de141eb",
+          "center": [
+            0,
+            22,
+            -7.5
+          ],
+          "corners": [
+            [
+              -14.5,
+              -1,
+              -0.5
+            ],
+            [
+              14.5,
+              -1,
+              -0.5
+            ],
+            [
+              -14.5,
+              1,
+              -0.5
+            ],
+            [
+              14.5,
+              1,
+              -0.5
+            ],
+            [
+              -14.5,
+              -1,
+              0.5
+            ],
+            [
+              14.5,
+              -1,
+              0.5
+            ],
+            [
+              -14.5,
+              1,
+              0.5
+            ],
+            [
+              14.5,
+              1,
+              0.5
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "placements": [
+    {
+      "id": "garden_bench_nw",
+      "x": 2400,
+      "y": 3411,
+      "scale": 0.3
+    },
+    {
+      "id": "garden_bench_ne",
+      "x": 2600,
+      "y": 3411,
+      "scale": 0.3
+    },
+    {
+      "id": "garden_bench_sw",
+      "x": 2400,
+      "y": 3875,
+      "scale": 0.3
+    },
+    {
+      "id": "garden_bench_se",
+      "x": 2600,
+      "y": 3875,
+      "scale": 0.3
+    },
+    {
+      "id": "garden_bench_west",
+      "x": 2190,
+      "y": 3650,
+      "scale": 0.3
+    },
+    {
+      "id": "garden_bench_east",
+      "x": 2730,
+      "y": 3650,
+      "scale": 0.3
+    },
+    {
+      "id": "picnic_table",
+      "x": 6500,
+      "y": 4350,
+      "scale": 0.4074074074074074
+    },
+    {
+      "id": "produce_crate",
+      "x": 6450,
+      "y": 4350,
+      "scale": 0.22857142857142856
+    },
+    {
+      "id": "market_planter",
+      "x": 6180,
+      "y": 4350,
+      "scale": 0.22077922077922077
+    },
+    {
+      "id": "park_bench",
+      "x": 7520,
+      "y": 7460,
+      "scale": 0.3
+    },
+    {
+      "id": "station_bench",
+      "x": 11180,
+      "y": 4070,
+      "scale": 0.3
+    },
+    {
+      "id": "market_stall_west",
+      "x": 6150,
+      "y": 4350,
+      "scale": 1
+    },
+    {
+      "id": "market_stall_east",
+      "x": 6580,
+      "y": 4350,
+      "scale": 1
+    },
+    {
+      "id": "hall_table_west",
+      "x": 6338,
+      "y": 4455,
+      "scale": 0.4074074074074074
+    },
+    {
+      "id": "hall_table_east",
+      "x": 6455,
+      "y": 4455,
+      "scale": 0.4074074074074074
+    },
+    {
+      "id": "hall_bench",
+      "x": 6380,
+      "y": 4500,
+      "scale": 0.3
+    },
+    {
+      "id": "hall_produce_crate",
+      "x": 6440,
+      "y": 4440,
+      "scale": 0.22857142857142856
+    },
+    {
+      "id": "school_bench",
+      "x": 4330,
+      "y": 3890,
+      "scale": 0.3
+    }
+  ]
+}

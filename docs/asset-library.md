@@ -15,7 +15,12 @@ materials and joins stay the same.
 
 ![Shelter seating, mounted hoop, supported table and produce stall](media/public-space-assets.jpg)
 
-Shelter seats stand on two supports. Table planks rest on crossrails that stay attached to their leg fragments when the table breaks. The produce stall's sign reaches its posts, and apples in the breakable crate sit on its floor. The [world audit](evidence/world-audit/verification.md) records the construction and path checks.
+Shelter seats stand on two supports. Table planks rest on crossrails that stay attached to their leg fragments when the table breaks. The produce stall has a supported canopy and lower shelf. Fruit in the breakable crate forms contacting stacks supported by its floor. The [world audit](evidence/world-audit/verification.md) records the construction and path checks.
+
+The [furniture construction pass](asset-construction.md#furniture-and-containers-r78)
+covers all 18 placements of the slatted bench, breakaway table, produce crate,
+clay planter and produce stall. The table is about 78 cm high; all ten slatted
+benches keep their usable seats. [Complete Dream source](examples/furniture-construction.dream).
 
 ## What's in the world
 

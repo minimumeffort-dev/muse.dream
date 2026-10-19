@@ -12,10 +12,11 @@ import wall from '../docs/examples/voxel-wall.dream?raw';
 
 const scene=createWorldScene();
 describe('voxel city integration',()=>{
- it('uses voxels across architecture, transit, boat fittings, benches, people and paired park boundaries',()=>{
+ it('uses voxels across architecture, transit, boat fittings, people and paired park boundaries',()=>{
   const objects=scene.objects.filter(o=>o.spec && 'parts' in o.spec && o.spec.parts.some(p=>'voxels' in p && p.voxels));
   const people=scene.objects.filter(o=>o.spec && 'measure' in o.spec && o.spec.measure?.kind==='person'),infrastructure=objects.filter(o=>!people.includes(o));
-  expect(infrastructure).toHaveLength(209);expect(new Set(infrastructure.map(o=>o.spec!.displayName)).size).toBe(17);expect(people).toHaveLength(133);expect(people.every(o=>objects.includes(o))).toBe(true);expect(objects).toHaveLength(infrastructure.length+people.length);
+  expect(infrastructure).toHaveLength(199);expect(new Set(infrastructure.map(o=>o.spec!.displayName)).size).toBe(16);expect(people).toHaveLength(133);expect(people.every(o=>objects.includes(o))).toBe(true);expect(objects).toHaveLength(infrastructure.length+people.length);
+  const benches=scene.objects.filter(o=>o.spec?.displayName==='Slatted park bench');expect(benches).toHaveLength(10);expect(benches.every(o=>'voxelSize' in o.spec! && o.spec.voxelSize===scene.voxelWorld?.objectCell)).toBe(true);
   const expected=compileDream(wall)[0]!;
   for(const id of ['park_wall_west','park_wall_east'])expect(scene.objects.find(o=>o.id===id)!.spec).toEqual({...expected,voxelSize:scene.voxelWorld?.objectCell});
   const reactive=scene.objects.filter(o=>o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && (o.spec.impact || o.spec.breakZones));

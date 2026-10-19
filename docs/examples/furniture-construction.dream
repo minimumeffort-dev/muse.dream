@@ -1,0 +1,159 @@
+dream 2;
+
+material impact_coral(style=toon,colors=[#d97054,#d97054]);
+
+material impact_wood(style=wood,colors=[#92613d,#bd905d]);
+
+material impact_dark(style=toon,colors=[#654632,#654632]);
+
+material impact_clay(style=grain,colors=[#b86747,#d88c62]);
+
+material impact_soil(style=toon,colors=[#584832,#584832]);
+
+material impact_green(style=toon,colors=[#648650,#648650]);
+
+component table_leg(params=[x,z]){
+ fragment leg(){
+  part leg(shape=box,material=impact_dark,at=[x,7.1,z],size=[4,14.2,4]);
+  part foot(shape=box,material=impact_wood,at=[x,1,z],size=[6,2,6]);
+  beam brace(shape=box,material=impact_dark,from=[x,8.5,z],to=[x*.72,14,z*.72],width=2,depth=2);
+  beam stretcher(shape=box,material=impact_dark,from=[x,14.2,z*1.4],to=[x,14.2,0],width=3,depth=2);
+  beam apron(shape=box,material=impact_wood,from=[x,13.7,z],to=[0,13.7,z],width=3,depth=2);
+ }
+}
+
+component pot_leaf(params=[length,width]){
+ part leaf(shape=prism,material=impact_green,at=[length/2,0,0],size=[length,width,.25],rot_deg=[90,0,0],outline=[[0,.5],[.22,.12],[.65,0],[1,.5],[.65,1],[.22,.88]]);
+}
+
+object breakaway_table(label="Breakaway table"){
+  measure(kind=table,axis=x,meters=2.2);
+  body(interaction=solid,radius=29,height=19.2,clearance=30.64718584144391);
+  impact(mode=break(speed=90,scatter=62,lift=100,spin=4,lifetime=6));
+  repeat repeat_plank(index=plank,count=3){
+    fragment plank(){
+      part top(shape=prism,material=impact_wood,at=[0,17.2,(plank-1)*10],size=[54,4,9],outline=[[.012,0],[.988,0],[1,.15],[1,.85],[.988,1],[.012,1],[0,.85],[0,.15]]);
+    }
+  }
+  use table_leg(component=table_leg,args=[-21,-10]);
+  use table_leg_2(component=table_leg,args=[-21,10]);
+  use table_leg_3(component=table_leg,args=[21,-10]);
+  use table_leg_4(component=table_leg,args=[21,10]);
+}
+
+object produce_crate(label="Produce crate"){
+  measure(kind=custom,axis=x,meters=0.8);
+  body(interaction=solid,radius=22,height=31,clearance=23.37733945512192);
+  impact(mode=break(speed=75,scatter=82,lift=115,spin=5,lifetime=5));
+  fragment base(){
+    part base(shape=box,material=impact_dark,at=[0,3,0],size=[33,6,29]);
+  }
+  repeat repeat_side(index=side,count=2){
+    fragment long_side(){
+      repeat corner_posts(index=p,count=2){part post(shape=box,material=impact_dark,at=[p*30-15,14,side*28-14],size=[3,24,3]);}
+      repeat repeat_slat(index=slat,count=3){
+        part board(shape=box,material=impact_wood,at=[0,9+slat*8,side*28-14],size=[35,6,3]);
+      }
+    }
+    fragment end(){
+      repeat repeat_slat(index=slat,count=3){
+        part board(shape=box,material=impact_wood,at=[side*32-16,9+slat*8,0],size=[3,6,26]);
+      }
+    }
+  }
+  repeat repeat_apple(index=apple,count=3){
+    fragment produce(){
+      part lower_front(shape=icosphere,material=impact_coral,at=[(apple-1)*9,10,-4],size=[8,8,8],faceted=true);
+      part lower_back(shape=icosphere,material=impact_coral,at=[(apple-1)*9,10,4],size=[8,8,8],faceted=true);
+      part middle(shape=icosphere,material=impact_coral,at=[(apple-1)*9,16.2,0],size=[8,8,8],faceted=true);
+      part apple(shape=icosphere,material=impact_coral,at=[(apple-1)*9,23.8,0],size=[8,8,8],faceted=true);
+      part stem(shape=cylinder,material=impact_dark,at=[(apple-1)*9,28.3,0],size=[.6,1.4,.6],faceted=true);
+    }
+  }
+}
+
+object terracotta_planter(label="Terracotta planter"){
+ measure(kind=custom,axis=y,meters=.85);
+ body(interaction=solid,radius=18,height=36,clearance=25.455844122715714);
+ impact(mode=break(speed=65,scatter=45,lift=75,spin=3,lifetime=5));
+ repeat repeat_side(index=side,count=4){
+  fragment clay_side(){
+   repeat facets(index=f,count=2){group face(rot_deg=[0,side*90+f*45,0]){
+    part wall(shape=prism,material=impact_clay,at=[0,13.25,12.312218814687894],size=[12.592092296142088,23.652425308496046,1.4],rot_deg=[10.72103995652585,0,0],outline=[[.144736842105263,0],[.855263157894737,0],[1,1],[0,1]]);
+   }}
+   group quadrant(rot_deg=[0,side*90,0]){part base(shape=prism,material=impact_clay,at=[5.4,2.5,5.4],size=[10.8,10.8,2],rot_deg=[90,0,0],outline=[[0,0],[1,0],[1,.414213562373095],[.414213562373095,1],[0,1]]);}
+  }
+ }
+ fragment rim(){repeat halves(index=h,count=2){group lip(rot_deg=[0,h*180,0]){
+  part rim(shape=prism,material=impact_clay,at=[0,25.6,9],size=[36,18,3.2],rot_deg=[90,0,0],outline=[[1,0],[.96194,.38268],[.85355,.70711],[.69134,.92388],[.5,1],[.30866,.92388],[.14645,.70711],[.03806,.38268],[0,0],[.1,0],[.13045,.30615],[.21716,.56569],[.34693,.7391],[.5,.8],[.65307,.7391],[.78284,.56569],[.86955,.30615],[.9,0]]);
+ }}}
+ fragment plant(){
+  part soil(shape=cylinder,material=impact_soil,at=[0,24,0],size=[28.8,2,28.8],faceted=true);
+  part stem(shape=cylinder,material=impact_green,at=[0,29.4,0],size=[1.4,9.4,1.4],faceted=true);
+  repeat leaves(index=l,count=5){use blade(component=pot_leaf,args=[8+l*1.24587341226347,4.5],at=[0,31+l*.6,0],rot_deg=[0,l*137,30]);}
+ }
+}
+
+material park_steel(style=toon,colors=[#8f9b94,#8f9b94]);
+
+material park_wood(style=wood,colors=[#91613f,#bb915d]);
+
+material park_dark_wood(style=toon,colors=[#5e4735,#40372d]);
+
+object slatted_bench(label="Slatted park bench"){
+ measure(kind=bench,axis=x,meters=1.8);
+ body(interaction=solid,radius=28,height=31,clearance=34.9857113690718);
+ seat left(at=[-13,18,12],approach=[-13,48],heading_deg=90);
+ seat right(at=[13,18,12],approach=[13,48],heading_deg=90);
+ impact(mode=break(speed=95,scatter=65,lift=65,spin=4,lifetime=6,pattern=splinter));
+ repeat slats(index=i,count=4){fragment plank(){
+  part seat(shape=prism,material=park_wood,at=[0,16,-12+i*8],size=[60,4,6],outline=[[.012,0],[.988,0],[1,.15],[1,.85],[.988,1],[.012,1],[0,.85],[0,.15]]);
+  repeat fasteners(index=b,count=2){part bolt(shape=cylinder,material=park_steel,at=[b*44-22,18.08,-12+i*8],size=[.8,.16,.8],faceted=true);}
+ }}
+ repeat supports(index=i,count=2){fragment frame(){
+  part leg_front(shape=box,material=park_dark_wood,at=[i*44-22,6.5,12],size=[5,13,6]);
+  part leg_back(shape=prism,material=park_dark_wood,at=[i*44-22,15,-13.75],size=[6.5,30,5],rot_deg=[0,90,0],outline=[[.769230769230769,0],[0,0],[0,.533333333333333],[.538461538461538,1],[1,1],[.769230769230769,.533333333333333]]);
+  part brace(shape=box,material=park_dark_wood,at=[i*44-22,12,0],size=[6,4,29]);
+  part armrest(shape=prism,material=park_wood,at=[i*44-22,24,0],size=[5,3,29],outline=[[.012,0],[.988,0],[1,.15],[1,.85],[.988,1],[.012,1],[0,.85],[0,.15]]);
+  part arm_support(shape=box,material=park_dark_wood,at=[i*44-22,20,12],size=[3,8,3]);
+ }}
+ fragment back(){repeat boards(index=b,count=3){
+  let y(value=19.675133091918468+b*4.324866908081532);
+  let z(value=-16.709984863039555+(28.324866908081532-y)*0.2125565616700221);
+  part board(shape=prism,material=park_wood,at=[0,y,z],size=[60,3,2],rot_deg=[-12,0,0],outline=[[.012,0],[.988,0],[1,.15],[1,.85],[.988,1],[.012,1],[0,.85],[0,.15]]);
+  repeat fasteners(index=f,count=2){part bolt(shape=cylinder,material=park_steel,at=[f*44-22,y,z+1.13],size=[.8,.2,.8],rot_deg=[90,0,0],faceted=true);}
+ }}
+}
+
+material market_ochre(style=toon,colors=[#d4b378,#b9955f]);
+
+material market_trim(style=toon,colors=[#e5decd,#c5bfae]);
+
+material market_wood(style=wood,colors=[#805c40,#aa815a]);
+
+material market_green(style=toon,colors=[#5e7c73,#405d55]);
+
+material market_sign(style=toon,colors=[#e4b948,#c79435]);
+
+component display_loaf(){
+ part loaf(shape=capsule,material=market_ochre,at=[0,11.5,0],size=[3,7,4],rot_deg=[0,0,90]);
+ repeat scores(index=s,count=3){part score(shape=prism,material=market_trim,at=[s*1.7-1.7,12.865,0],size=[2.4,.37,.18],rot_deg=[0,65,0],outline=[[0,.08],[.25,.71],[.5,1],[.75,.71],[1,.08],[1,0],[.75,.55],[.5,.84],[.25,.55],[0,0]]);}
+}
+
+object market_stall(label="Produce stall"){
+ measure(kind=custom,axis=y,meters=2.65);
+ body(interaction=solid,radius=12,height=27,clearance=21.095023109728988);
+ part counter(shape=prism,material=market_wood,at=[0,9,0],size=[32,2,18],outline=[[.012,0],[.988,0],[1,.15],[1,.85],[.988,1],[.012,1],[0,.85],[0,.15]]);
+ repeat posts(index=p,count=2){repeat sides(index=s,count=2){
+  part leg(shape=box,material=market_wood,at=[p*28-14,4,s*14-7],size=[2,8,2]);
+  part support(shape=box,material=market_wood,at=[p*28-14,16.5,s*14-7],size=[1,15,1]);
+ }}
+ part canopy(shape=prism,material=market_green,at=[0,25,0],size=[36,3,22],outline=[[0,0],[1,0],[1,.25],[.5,1],[0,.25]]);
+ repeat rails(index=r,count=2){
+  part roof_rail(shape=box,material=market_wood,at=[0,23.2,r*14-7],size=[30,1.6,1.4]);
+  part apron(shape=box,material=market_wood,at=[0,6.8,r*14-7],size=[28,2.4,1]);
+ }
+ part shelf(shape=box,material=market_wood,at=[0,3,0],size=[28,1,14]);
+ repeat bread(index=b,count=3){use bread(component=display_loaf,at=[b*9-9,0,0]);}
+ part front_board(shape=box,material=market_sign,at=[0,22,-7.5],size=[29,2,1]);
+}

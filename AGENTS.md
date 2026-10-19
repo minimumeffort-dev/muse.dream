@@ -877,3 +877,23 @@ voxel-column top or smooth surface. This is renderer detail, not new contacts,
 actors or saved state. Scatter density and palette remain engine-owned; do not
 claim they are configurable Dream world data. The full 109-export asset review
 and separate interactive plant capabilities remain unfinished.
+
+
+## Furniture construction, r78
+
+The slatted bench, breakaway table, produce crate, clay planter and produce stall
+cover all 18 live placements. Keep all 32-part/fragment limits, attached rails
+and boards, contacting fruit stacks, open pot lip and closed wall/bottom joins.
+The table top and collider are intentionally about 78 cm high; other body sizes,
+measured frames, bench seats, fragment identities and old furnishing reservations
+stay fixed. Existing parts/components/profiles express the constructions; no
+new vocabulary is required. Use docs/examples/furniture-construction.dream.
+
+Preserve the exact r77 template/placement projection before every older save
+stage, with its matching host contact source identity before navigation. Format
+17 / simulation 32 retain all saved fields and old slots, including occupied
+seats, active debris, repair claims and cargo. A walker on the old taller table
+settles onto the lower cap through ordinary fixed steps. Fragment extents follow
+the new geometry; do not promise identical later debris trajectories. The wider
+whole-library pass still has 79 loaded exports pending, plus separate engine and
+optional families.

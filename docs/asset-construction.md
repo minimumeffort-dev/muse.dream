@@ -13,22 +13,22 @@ for the whole library. The [Car Kit](https://kenney.nl/assets/car-kit),
 [industrial city kit](https://kenney.nl/assets/city-kit-industrial) and
 [Mini Forest](https://kenney.nl/assets/mini-forest) previews were inspected on
 2026-10-19. The construction rules below are our interpretation of those visual
-references. Trees and landscape plants have completed this pass. The remaining
-families still need it.
+references. Trees, landscape plants and the first five furniture/container templates have
+completed this pass. The remaining families still need it.
 
 The [r75 catalogue](evidence/asset-direction/catalogue.json) lists all 109 loaded
 assembly exports at the start of this pass. The [r76 catalogue](evidence/asset-direction/r76-catalogue.json)
 records eleven refined live tree templates and the reviewed, retained deadwood.
 The [r77 catalogue](evidence/asset-direction/r77-catalogue.json) adds thirteen
-refined landscape and street-plant templates. The other 84 exports remain
-pending, including 28 buildings and 14 person
-exports. Repeated exports remain listed. The
+refined landscape and street-plant templates. The [r78 catalogue](evidence/asset-direction/r78-catalogue.json) adds five
+furniture/container templates across all 18 of their placements. The other 79
+exports remain pending, including 28 buildings and 14 person exports. Repeated exports remain listed. The
 engine-provided player rigs, background ground cover, infrastructure and optional example catalogue also
 belong in the pass; the loaded-library list does not certify those separately.
 
 The engine-provided ground cover has its own checked Dream construction,
-separate from the thirteen placed plant templates below. Furnishings, animals,
-people, transport, buildings and infrastructure remain on the review queue.
+separate from the thirteen placed plant templates below. Other furnishings, animals, people, transport, buildings and infrastructure
+remain on the review queue.
 
 Start with a silhouette that reads at the ordinary game camera. Use a few
 coherent masses, deliberate edge shapes, recessed openings and a small palette
@@ -191,3 +191,42 @@ positions, scales and exclusions remain the same, with roots fitted to the
 visible voxel column or smooth ground surface. They remain static, passable
 detail, with no new actor, contact, save field or language command. Scatter
 density and palette remain engine-owned. [Checks](evidence/ground-cover/verification.md).
+
+## Furniture and containers, r78
+
+![The five reconstructed furnishings](media/furniture.gif)
+
+The slatted bench has rounded plank ends, visible fasteners, a leaning back
+and a bent rear support. Its two seat positions stay fixed. The table has
+three chamfered boards carried by crossrails and leg aprons. It was 1.26 metres
+tall; the replacement and its collision cap are about 78 cm high, with the
+same 2.2-metre width and ground footprint.
+
+The crate contains twelve contacting fruit shapes. Six sit on the floor,
+three sit between them and three remain visible above the rim. The planter
+uses eight joined tapering wall panels, quarter bottom panels and two halves
+of an open lip. Soil sits inside the lip, with leaves rooted in the stem.
+The produce stall has a supported gable canopy, lower shelf and three scored
+loaves resting on its counter.
+
+| Template | Live placements | Parts | Released pieces |
+| --- | ---: | ---: | ---: |
+| Slatted park bench | 10 | 31 | 7 |
+| Breakaway table | 3 | 23 | 7 |
+| Produce crate | 2 | 32 | 8 |
+| Terracotta planter | 1 | 21 | 6 |
+| Produce stall | 2 | 28 | Not breakable |
+
+All five use existing Dream parts, profiles, beams, components and fragments.
+The [complete executable example](examples/furniture-construction.dream) matches
+the live definitions. There is no new command or larger geometry budget.
+[Front](evidence/furniture-construction/after-front.png),
+[right](evidence/furniture-construction/after-right.png),
+[back](evidence/furniture-construction/after-back.png) and
+[left](evidence/furniture-construction/after-left.png) inspect the voxel models.
+[Verification, persistence and media provenance](evidence/furniture-construction/verification.md).
+
+The next construction priorities are moving fauna and people, then the remaining
+transport and buildings. Each pass keeps its existing motion, interaction and
+save contracts while checking silhouettes and connected parts. Street furniture,
+sports equipment, food and optional examples remain in the same review queue.

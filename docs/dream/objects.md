@@ -9,6 +9,11 @@ A person, a loaf of bread and a plane use the same assembly format. Their names 
 The gallery frames each asset independently to show its construction. The
 [shared-scale lineup](../media/proportions.jpg) shows their relative dimensions.
 
+[Five complete furniture constructions](../examples/furniture-construction.dream)
+show how the same vocabulary makes a slatted bench, supported table, stacked
+fruit, hollow clay pot and market stall. Their parts still belong to explicit
+break groups; changing appearance does not create a new interaction rule.
+
 ## Parts and materials
 
 `part` has a shape, material, local position and full bounding dimensions. A sphere with `size=[10,10,10]` is ten units across, not a radius-ten sphere. Rotation is Euler XYZ in degrees.

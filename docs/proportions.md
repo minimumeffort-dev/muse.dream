@@ -66,3 +66,10 @@ be smaller than the collision radius. Actual visual bounds still win when larger
 It does not alter the cylinder, visible size, navigation clearance or culling.
 This lets a character's clothing change inside an existing planning envelope
 without shuffling a deterministic street population. [Complete character library](examples/city-person.dream).
+
+
+The r78 breakaway table keeps its 2.2-metre width, placement and horizontal
+collision radius, but its top and collision height now agree at about 78 cm.
+The previous model was 1.26 metres tall. Bench seat positions, planter height
+and the other furniture measures remain unchanged.
+[Construction and save checks](evidence/furniture-construction/verification.md).

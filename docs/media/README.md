@@ -1320,3 +1320,27 @@ their object geometry and accepted layout are unchanged. Other recordings keep
 their historical background details and recorded mechanics. Scatter density
 and palette remain engine-owned.
 [Verification and source/frame manifest](../evidence/ground-cover/verification.md).
+
+
+## Furniture construction, r78
+
+`furniture.gif`, `furniture.mp4` and `furniture.jpg` come from the native gallery's
+`?furniture&capture` exporter: five live voxel assemblies, 240 rendered frames
+at 30 fps, no interpolation. The five cards use three 300-pixel rows on a
+1600-pixel-wide canvas. Four 2400 × 1620 native stills retain the preceding
+r77 models and the rebuilt versions from matching angles.
+
+Driving, seating and furniture repair GIF/MP4 pairs and their posters are refreshed
+together from 210/480/840 main-game rendered frames. The slatted bench destruction
+pair uses 120 actual frames from the destruction review. `assets-all.jpg` and
+`public-space-assets.jpg` show the updated live definitions. The existing
+constructed architecture/transit, flora, fauna and shared-scale sheets keep their
+unchanged focus objects. The generated map has unchanged coordinates and
+footprints. Older economic recordings retain their recorded background furniture;
+current seating and repair footage demonstrate the new models with the same rules.
+
+The README and construction, library, object, proportions, persistence, impact
+and model guides were reviewed and updated. The language reference, generated
+command contract and highlighter need no vocabulary changes. Source/frame hashes,
+checks, native save/reload evidence and limitations are recorded in the
+[furniture verification](../evidence/furniture-construction/verification.md).

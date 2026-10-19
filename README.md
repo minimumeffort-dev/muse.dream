@@ -460,8 +460,8 @@ The [asset library](docs/asset-library.md) covers the live world assemblies. Car
 The construction pass takes inspiration from [Kenney's kits](https://kenney.nl/starter-kits)
 across the whole library: buildings, transport, people, animals, plants and props.
 The [construction guide](docs/asset-construction.md#the-next-pass-covers-the-whole-library)
-tracks the scope and review rules. Trees and landscape plants have completed
-this pass; the other families remain pending.
+tracks the scope and review rules. Trees, landscape plants and the first five furniture/container templates have
+completed this pass; the other families remain pending.
 
 ![Cleaner crowns, supported branches and smaller fruit](docs/media/canopy.gif)
 
@@ -487,6 +487,13 @@ The scatter pattern remains engine-owned; these are passable details, not new
 interactive plants.
 
 ![The background grass and flower, separately and together](docs/media/cover.jpg)
+
+![Joined bench slats, supported tables, stacked fruit and an open clay planter](docs/media/furniture.gif)
+
+All ten slatted benches, three breakaway tables, two produce crates, the clay
+planter and both produce stalls use the rebuilt constructions. Tables now stand
+about 78 cm high. Seats still work, furniture still breaks and repairs, and old
+saves retain their progress. [Five complete Dream objects](docs/examples/furniture-construction.dream).
 
 ![Fallen log and deadwood built with connected, tapered wood parts](docs/media/woodland.jpg)
 

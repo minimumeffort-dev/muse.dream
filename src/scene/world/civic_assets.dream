@@ -398,17 +398,24 @@ object boathouse(label="Public boat landing"){
   part signboard(shape=box,material=dark,at=[0,11,-9.4],size=[16,3,1]);
   part sign_stripe(shape=box,material=sign,at=[0,11,-10],size=[13,0.7,0.5]);
 }
+component display_loaf(){
+ part loaf(shape=capsule,material=ochre,at=[0,11.5,0],size=[3,7,4],rot_deg=[0,0,90]);
+ repeat scores(index=s,count=3){part score(shape=prism,material=trim,at=[s*1.7-1.7,12.865,0],size=[2.4,.37,.18],rot_deg=[0,65,0],outline=[[0,.08],[.25,.71],[.5,1],[.75,.71],[1,.08],[1,0],[.75,.55],[.5,.84],[.25,.55],[0,0]]);}
+}
 object market_stall(label="Produce stall"){
  measure(kind=custom,axis=y,meters=2.65);
- body(interaction=solid,radius=12,height=27);
- part counter(shape=box,material=wood,at=[0,9,0],size=[32,2,18]);
- repeat posts(index=p,count=2){
-  repeat sides(index=s,count=2){
-   part leg(shape=box,material=wood,at=[p*28-14,4,s*14-7],size=[2,8,2]);
-   part support(shape=box,material=wood,at=[p*28-14,16.5,s*14-7],size=[1,15,1]);
-  }
+ body(interaction=solid,radius=12,height=27,clearance=21.095023109728988);
+ part counter(shape=prism,material=wood,at=[0,9,0],size=[32,2,18],outline=[[.012,0],[.988,0],[1,.15],[1,.85],[.988,1],[.012,1],[0,.85],[0,.15]]);
+ repeat posts(index=p,count=2){repeat sides(index=s,count=2){
+  part leg(shape=box,material=wood,at=[p*28-14,4,s*14-7],size=[2,8,2]);
+  part support(shape=box,material=wood,at=[p*28-14,16.5,s*14-7],size=[1,15,1]);
+ }}
+ part canopy(shape=prism,material=green,at=[0,25,0],size=[36,3,22],outline=[[0,0],[1,0],[1,.25],[.5,1],[0,.25]]);
+ repeat rails(index=r,count=2){
+  part roof_rail(shape=box,material=wood,at=[0,23.2,r*14-7],size=[30,1.6,1.4]);
+  part apron(shape=box,material=wood,at=[0,6.8,r*14-7],size=[28,2.4,1]);
  }
- part canopy(shape=pyramid,material=green,at=[0,25,0],size=[36,3,22]);
- repeat bread(index=b,count=3){part loaf(shape=icosphere,material=ochre,at=[b*9-9,11,0],size=[7,3,5]);}
+ part shelf(shape=box,material=wood,at=[0,3,0],size=[28,1,14]);
+ repeat bread(index=b,count=3){use bread(component=display_loaf,at=[b*9-9,0,0]);}
  part front_board(shape=box,material=sign,at=[0,22,-7.5],size=[29,2,1]);
 }

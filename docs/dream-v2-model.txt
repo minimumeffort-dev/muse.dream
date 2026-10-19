@@ -54,6 +54,11 @@ the use. Separate leaf and rounded petal profiles. Joined panels can form an ope
 bell or rim without a new primitive; keep soil above hidden container caps and
 clear exposed faces. See examples/plant-construction.dream. Preserve measured
 frames and existing furnishing clearance when refining a released object.
+For furniture, support each tabletop board with rails or aprons, retain clear
+seat approaches and keep fragment ownership stable. Join container walls and
+bottom panels, leave an open lip above soil and support stacked produce on
+contacting shapes. Curved score profiles can follow a loaf instead of floating
+over it. See examples/furniture-construction.dream.
 For small ground details, keep grass tips below flower heads and join leaf roots
 to the stalk. The reusable ground-cover example includes both individual objects
 and their combined inspection form; its scatter density remains engine-owned.
