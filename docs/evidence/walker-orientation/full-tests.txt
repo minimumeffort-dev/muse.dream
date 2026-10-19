@@ -1,0 +1,373 @@
+
+> muse-dream@0.1.0 test
+> vitest run --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream/.npm-cache/walker-release
+
+ ✓ tests/docs-site.test.ts (35 tests) 693ms
+   ✓ published site > builds highlighted source with project-relative navigation and working downloads  683ms
+ ✓ tests/world-streaming.test.ts (16 tests) 698ms
+   ✓ joins water tiles through continuous shared UV waves without transparent internal skirts  399ms
+ ✓ tests/ambient-populations.test.ts (14 tests) 3606ms
+   ✓ bounded moving ambient populations > walks through accepted sidewalk and zebra geometry without cutting across carriageways  2509ms
+ ✓ tests/interactive-world.test.ts (27 tests) 9259ms
+   ✓ Dream world authoring > rejects routes without a safe world footprint or water support  3581ms
+   ✓ Dream world authoring > rejects a boat crossing a bridge deck even when its side rails are disabled  3721ms
+   ✓ fixed-clock vehicles and passenger rides > batches vehicle bodies and matching wheel parts without changing poses or rolling bounds  319ms
+   ✓ continuous watercourse and boat wakes > keeps the boat afloat around its full route and emits a wake independently of the car  1189ms
+ ✓ tests/vehicle-control.test.ts (31 tests) 10999ms
+   ✓ Dream control profiles > can reboard village_bike from its real dry exit point  836ms
+   ✓ boat and aircraft controls > keeps the complete live aircraft above hills while landing, banking and taxiing  8916ms
+ ✓ tests/commerce-save.test.ts (29 tests) 39212ms
+   ✓ upgrades actual r44 browser saves into the registered first market while preserving their physical world  14230ms
+   ✓ migrates an actual reserved format 3 batch without resetting stock, credits, needs or work time  1280ms
+   ✓ upgrades the actual format 4 delivery backup, rejects forged old ownership and keeps its slot intact  969ms
+   ✓ upgrades the actual format 5 parked bicycle without losing fleet ownership, needs, accounts or memory  907ms
+   ✓ upgrades a real r48 in-progress repair without resetting its ledger, clock, needs, parked vehicles or memories  1694ms
+   ✓ keeps an actual r49 world intact when adding connected service grounds, including paid procurement and completed repairs  1013ms
+   ✓ preserves an actual r50 saved repair and return world through pooled lamp destruction  993ms
+   ✓ rebases actual r51 pedestrian references while preserving damage, the active worker and every other saved field  1610ms
+   ✓ upgrades actual r52 progress with only finite saplings and empty new ledgers initialized  956ms
+   ✓ preserves an actual r53 growing tree, return journey and every ledger through the natural-ground upgrade  2990ms
+   ✓ upgrades the exact r54 backup without changing any state or clocks, while keeping the old slot  889ms
+   ✓ upgrades the actual r55 browser backup through the exact old physical projection and retains the old slot  973ms
+   ✓ upgrades the released format 9 'passenger' save without rebasing any world state  434ms
+   ✓ upgrades the released format 9 'growth and returning work' save without rebasing any world state  306ms
+   ✓ adds recipes to the released simulation-13 work backup without changing old progress  414ms
+   ✓ adds recipes to the released simulation-13 life backup without changing old progress  316ms
+   ✓ replays the actual native simulation-14 saved lunch job with its courier and conserved workshop stock  851ms
+   ✓ adds personal history to the exact released recipe backup without assigning old shared work to anyone  615ms
+   ✓ prepares the live progression capture only through ordinary paid work and food transactions  795ms
+   ✓ replays the new mock practice backup without clearing qualifications or paying the large batch twice  608ms
+   ✓ resumes the native mock meal return without repurchasing, consuming twice or clearing the paused routine  1083ms
+   ✓ preserves every live and historical fingerprint byte through a bounded startup batch  3630ms
+   ✓ upgrades the released staffed bakery into seating without changing a saved field  929ms
+ ✓ tests/shared-meal.test.ts (18 tests) 20446ms
+   ✓ registers r63 migration without rewriting any saved field, reserves its old slot and refuses unrelated worlds  10190ms
+   ✓ resumes the actual native shared meal once without repurchasing or losing the staffed-world state  9983ms
+ ✓ tests/dream-v2.test.ts (66 tests) 545ms
+ ✓ tests/extended-destruction.test.ts (27 tests) 3132ms
+   ✓ distinct fracture motion > supports a scaled, rotated tree falling over a hill without burying its geometry  1562ms
+   ✓ preserved destructible-world regression > allows an actual off-road impact on park_bench without damaging the circuit  908ms
+ ✓ tests/population.test.ts (11 tests) 14121ms
+   ✓ live district populations and transport > preserves the complete live graph, contact broad phase and crowd state across worker bootstrap  2466ms
+   ✓ live district populations and transport > keeps every live ambient member clear throughout two minutes of city movement  2473ms
+ ✓ tests/locomotion.test.ts (25 tests) 824ms
+ ✓ tests/character-animation.test.ts (37 tests) 1192ms
+ ✓ tests/startup.test.ts (14 tests) 2056ms
+   ✓ cooperative route construction retains exact surfaces, paint, rails and sleepers  1012ms
+   ✓ column indexing retains analytic UVs, negative coordinates and large index ranges  885ms
+ ✓ tests/sim.test.ts (18 tests) 62ms
+ ✓ tests/team-sports.test.ts (21 tests) 9266ms
+   ✓ adds unused athlete variants without changing any accepted r66 world field  8782ms
+ ✓ tests/destruction.test.ts (24 tests) 3653ms
+   ✓ impact DSL > authors distinct bounce, table, crate and planter behaviors without object-name recipes  2017ms
+   ✓ destruction simulation > keeps destruction moving while a controlled bicycle is stationary  1010ms
+ ✓ tests/save.test.ts (12 tests) 8722ms
+   ✓ round-trips the live population, damage and every control domain without resetting ownership  8668ms
+ ✓ tests/staff-shifts.test.ts (11 tests) 10951ms
+   ✓ registers the live shift world and migrates r62 without rewriting clocks, cargo, money or history  10682ms
+ ✓ tests/terrain-driving.test.ts (19 tests) 2112ms
+   ✓ terrain driving > starts driving reviews at clear real-world poses and leaves normal starts untouched  1049ms
+   ✓ terrain driving > lets the mock player drive the opening road crest, jump and land without a scripted impulse  983ms
+ ✓ tests/component-geometry.test.ts (19 tests) 3035ms
+   ✓ continuous road trim > joins every curb face, including the loop seam on side -1  1410ms
+   ✓ continuous road trim > joins every curb face, including the loop seam on side 1  1366ms
+ ✓ tests/repair.test.ts (15 tests) 214ms
+ ✓ tests/dream.test.ts (43 tests) 370ms
+ ✓ tests/scenario.test.ts (31 tests) 58ms
+ ✓ tests/market-hours.test.ts (9 tests) 10778ms
+   ✓ migrates the registered seated r61 world exactly, retains its slot and rejects unrelated changes  10636ms
+ ✓ tests/interiors.test.ts (11 tests) 329ms
+ ✓ tests/npc-behavior.test.ts (23 tests) 1676ms
+   ✓ fixed-step NPC programs > uses a live cylinder for solid stationary NPC contacts and validates their dry footprint  343ms
+   ✓ authors every live person as an NPC and every driveable instance explicitly; real review starts nearby on foot  941ms
+ ✓ tests/water-bridges.test.ts (13 tests) 3878ms
+   ✓ bounded landscape DSL > rejects off-world, overlapping and submerged bridge proposals  2524ms
+   ✓ one shared bridge driving surface > keeps the mock deck edges and interiors on the same triangulated surface as its rails  1164ms
+ ✓ tests/hosted-meal.test.ts (18 tests) 272ms
+ ✓ tests/parking.test.ts (7 tests) 8822ms
+   ✓ parked controllable vehicles > makes all 87 parked rides boardable and retains the original NPC passenger capabilities  8695ms
+ ✓ tests/sports.test.ts (21 tests) 8903ms
+   ✓ Dream sports contracts > connects both actual mock grounds, physical balls and local target anchors  8657ms
+ ✓ tests/world-layout.test.ts (9 tests) 36450ms
+   ✓ connected river city > rebuilds the full world deterministically with distinct districts and civic destinations  8486ms
+   ✓ connected river city > shares exact junction coordinates and rejects a short overlapping branch  5228ms
+   ✓ connected river city > builds finite city meshes without duplicating the cached sidewalk network  17327ms
+   ✓ connected river city > retains the r67 circuit as an explicit migration regression with all checkpoint and effect rules  4842ms
+ ✓ tests/transport-network.test.ts (12 tests) 28049ms
+   ✓ connected larger world > drives the waterfront streets without losing the dry riding surface  8893ms
+   ✓ connected larger world > drives the canal-bridge streets without losing the dry riding surface  8761ms
+   ✓ connected larger world > drives the lake-bridge streets without losing the dry riding surface  8747ms
+   ✓ connected larger world > sails beneath a city bridge while cars use its elevated deck  1093ms
+ ✓ tests/urban-world.test.ts (14 tests) 28874ms
+   ✓ continuous, terrain-conforming streets > rejects disconnected streets, blocked carriageways and water crossings before scene acceptance  588ms
+   ✓ expanded planned world > retains the circuit, controls and destruction inside existing scene limits  1850ms
+   ✓ expanded planned world > lets the original car drive the town streets with normal grip  8956ms
+   ✓ expanded planned world > lets the original car drive the suburbs streets with normal grip  8693ms
+   ✓ expanded planned world > lets the original car drive the sports streets with normal grip  8506ms
+ ✓ tests/interaction-rules.test.ts (11 tests) 9015ms
+   ✓ category-wide Dream interaction rules > enforces live tables and benches, including the older bench with retained supports  8795ms
+ ✓ tests/object-dsl-v2.test.ts (27 tests) 473ms
+ ✓ tests/city-access.test.ts (14 tests) 232ms
+ ✓ tests/seating.test.ts (11 tests) 172ms
+ ✓ tests/voxels.test.ts (20 tests) 103ms
+ ✓ tests/school-repairs.test.ts (7 tests) 37692ms
+   ✓ adds exactly the school bench to existing coverage with unchanged geometry, public navigation and finite graph limits  1855ms
+   ✓ walks the complete route, reserves and consumes one kit, waits for a parked car, saves each phase and pays once  18167ms
+   ✓ prepares the native review through real driving, impact, dispatch and every pedestrian step  15650ms
+   ✓ retains an earned shared-meal memory exactly through the coverage upgrade  1029ms
+   ✓ replays the actual native repaired-bench return while retaining its usable seat and one paid repair  508ms
+ ✓ tests/open-world.test.ts (10 tests) 6101ms
+   ✓ bounded open-world scene > expands to organized districts beyond the original landscape, a winding circuit and diverse assemblies  1761ms
+   ✓ bounded open-world scene > rejects collapsed, unbounded or off-sheet road proposals  3513ms
+   ✓ bounded open-world scene > finishes the full winding circuit through every ordered checkpoint  642ms
+ ✓ tests/business-ownership.test.ts (9 tests) 209ms
+ ✓ tests/ecology.test.ts (18 tests) 695ms
+   ✓ bounded ambient routes > rejects a ground habitat in water or through solids but allows clear overhead flight  334ms
+ ✓ tests/bridge-continuity.test.ts (13 tests) 3905ms
+   ✓ one continuous road across a bridge > stops painted dashes and raised curbs at timber banks  397ms
+   ✓ one continuous road across a bridge > tapers both curb sections into the timber without exposed ends  377ms
+   ✓ one continuous road across a bridge > retains asphalt over a stone road bridge  1903ms
+   ✓ bridge/road semantic validation > accepts either end order, curved contained crossings and unrelated footbridges  502ms
+ ✓ tests/wind-topple.test.ts (4 tests) 62ms
+ ✓ tests/delivery.test.ts (11 tests) 55ms
+ ✓ tests/landscape.test.ts (11 tests) 3624ms
+   ✓ paper-authored landscape data > keeps the larger mock world's racing road playable  1851ms
+   ✓ terrain and render alignment > subdivides long road straights and drapes every vertex over the same height field  941ms
+   ✓ terrain and render alignment > keeps triangle interiors above the rendered ground, including ice, boost and the road crest  717ms
+ ✓ tests/city-trees.test.ts (7 tests) 12950ms
+   ✓ makes every measured city tree independently topple through one shared rule without changing its construction  895ms
+   ✓ covers every furnished street tree, retains finite supplies and proves each selected worker approach  692ms
+   ✓ routes the airport approach through a supported corner rather than cutting diagonally across the road  322ms
+   ✓ preserves every native r73 repair field and old slot through the exact registered projection  484ms
+   ✓ keeps intact instance geometry, wind and material programs identical across the tree policy change  10475ms
+ ✓ tests/city-retirement-save.test.ts (6 tests) 10700ms
+   ✓ retains lives, businesses, damaged objects, vehicles, clocks and matches, rebasing only retired road/navigation state  860ms
+   ✓ carries every pinned historical browser backup through the full chain into the street-only world  9248ms
+ ✓ tests/tram-tracks.test.ts (8 tests) 1933ms
+   ✓ fits timber bridge approaches and both independently built voxel chunks  898ms
+   ✓ supports circuit-only tram tracks and retains fitted geometry and depth bias through worker transfer  706ms
+ ✓ tests/damage-pool.test.ts (9 tests) 1105ms
+   ✓ streams through many template records without retaining more than 24 mesh templates or 128 fragment meshes  505ms
+   ✓ keeps the mesh cache within 128 pieces while many eight-part templates fracture in succession  349ms
+ ✓ tests/progression.test.ts (6 tests) 86ms
+ ✓ tests/growth.test.ts (9 tests) 226ms
+ ✓ tests/object-placement.test.ts (12 tests) 6016ms
+   ✓ objects supported on hills > places every current world assembly above the rendered surface  5845ms
+ ✓ tests/asset-construction.test.ts (11 tests) 205ms
+ ✓ tests/car-boost.test.ts (20 tests) 63ms
+ ✓ tests/courier.test.ts (6 tests) 406ms
+ ✓ tests/world-presentation.test.ts (8 tests) 379ms
+ ✓ tests/people-save.test.ts (6 tests) 15161ms
+   ✓ restores exactly the released person templates and gates upgrades to the registered world  322ms
+   ✓ keeps every lived state and population coordinate while rebasing only derived walking portals  2075ms
+   ✓ retains all 28 historical backups without replaying completed work or changing ledgers  12479ms
+ ✓ tests/dream-project.test.ts (17 tests) 17234ms
+   ✓ complete Dream 2 mock world > accepts the whole world from text and revalidates an invalid included placement  17179ms
+ ✓ tests/daylight.test.ts (8 tests) 87ms
+ ✓ tests/path-layout.test.ts (9 tests) 8892ms
+   ✓ full-size mock activities > keeps the skate circuit and connects cycling to city streets  1759ms
+   ✓ full-size mock activities > keeps grass and flowers outside the newly reserved surfaces  6226ms
+ ✓ tests/whole-world-voxels.test.ts (9 tests) 13616ms
+   ✓ whole-world voxel construction > applies the world policy to every linked template, placement, player and flock, without changing physics  9832ms
+   ✓ whole-world voxel construction > voxelizes every shaped part in the complete library, retaining holes, thin fittings and rigid animation frames  2339ms
+   ✓ whole-world voxel construction > round trips the directive and rejects invalid grids and work before rendering  1409ms
+ ✓ tests/city-repairs.test.ts (4 tests) 16915ms
+   ✓ keeps all 33 prior backups and exact ledgers while registering only this coverage upgrade  16040ms
+   ✓ resumes the native airport repair once, retains the return journey and conserves the whole world ledger  708ms
+ ✓ tests/terrain-footing.test.ts (9 tests) 476ms
+ ✓ tests/junction-save.test.ts (5 tests) 13344ms
+   ✓ preserves native progress and old slots, rebasing derived portals and adding only the two new residents  1234ms
+   ✓ retains every historical migration without replaying completed jobs or changing ledgers  11781ms
+ ✓ tests/docs.test.ts (113 tests) 1158ms
+stderr | tests/woodland-assets.test.ts > bounded cylinder taper > rejects taper on other shapes and from legacy data
+THREE.BufferGeometry.computeBoundingBox(): Computed min/max have NaN values. The "position" attribute is likely to have NaN values. CylinderGeometry {
+  isBufferGeometry: true,
+  uuid: '1b25b154-abbe-4e9d-9702-d174e6c9eaca',
+  name: '',
+  type: 'CylinderGeometry',
+  index: Uint16BufferAttribute {
+    isBufferAttribute: true,
+    name: '',
+    array: Uint16Array(192) [
+       0, 17,  1, 17, 18,  1,  1, 18,  2, 18, 19,  2,
+       2, 19,  3, 19, 20,  3,  3, 20,  4, 20, 21,  4,
+       4, 21,  5, 21, 22,  5,  5, 22,  6, 22, 23,  6,
+       6, 23,  7, 23, 24,  7,  7, 24,  8, 24, 25,  8,
+       8, 25,  9, 25, 26,  9,  9, 26, 10, 26, 27, 10,
+      10, 27, 11, 27, 28, 11, 11, 28, 12, 28, 29, 12,
+      12, 29, 13, 29, 30, 13, 13, 30, 14, 30, 31, 14,
+      14, 31, 15, 31, 32, 15, 15, 32, 16, 32, 33, 16,
+      50, 51, 34, 51,
+      ... 92 more items
+    ],
+    itemSize: 1,
+    count: 192,
+    normalized: false,
+    usage: 35044,
+    updateRanges: [],
+    gpuType: 1015,
+    version: 0
+  },
+  indirect: null,
+  attributes: {
+    position: Float32BufferAttribute {
+      isBufferAttribute: true,
+      name: '',
+      array: [Float32Array],
+      itemSize: 3,
+      count: 100,
+      normalized: false,
+      usage: 35044,
+      updateRanges: [],
+      gpuType: 1015,
+      version: 1
+    },
+    normal: Float32BufferAttribute {
+      isBufferAttribute: true,
+      name: '',
+      array: [Float32Array],
+      itemSize: 3,
+      count: 100,
+      normalized: false,
+      usage: 35044,
+      updateRanges: [],
+      gpuType: 1015,
+      version: 1
+    },
+    uv: Float32BufferAttribute {
+      isBufferAttribute: true,
+      name: '',
+      array: [Float32Array],
+      itemSize: 2,
+      count: 100,
+      normalized: false,
+      usage: 35044,
+      updateRanges: [],
+      gpuType: 1015,
+      version: 0
+    }
+  },
+  morphAttributes: {},
+  morphTargetsRelative: false,
+  groups: [
+    { start: 0, count: 96, materialIndex: 0 },
+    { start: 96, count: 48, materialIndex: 1 },
+    { start: 144, count: 48, materialIndex: 2 }
+  ],
+  boundingBox: Box3 {
+    isBox3: true,
+    min: Vector3 { x: NaN, y: NaN, z: NaN },
+    max: Vector3 { x: NaN, y: NaN, z: NaN }
+  },
+  boundingSphere: null,
+  drawRange: { start: 0, count: Infinity },
+  userData: {},
+  parameters: {
+    radiusTop: Infinity,
+    radiusBottom: 0.5,
+    height: 1,
+    radialSegments: 16,
+    heightSegments: 1,
+    openEnded: false,
+    thetaStart: 0,
+    thetaLength: 6.283185307179586
+  }
+}
+
+ ✓ tests/woodland-assets.test.ts (13 tests) 53ms
+ ✓ tests/proportions.test.ts (15 tests) 8725ms
+   ✓ the complete mock world's proportion rules > rejects a valid per-kind size that contradicts the player car's proportions  8677ms
+ ✓ tests/dream-material-parameters.test.ts (16 tests) 49ms
+ ✓ tests/meals.test.ts (6 tests) 93ms
+ ✓ tests/cycle-surface.test.ts (9 tests) 8862ms
+   ✓ retains continuous color through the live shallow fork within existing pavement  8655ms
+ ✓ tests/vehicle-construction.test.ts (11 tests) 8833ms
+   ✓ retains parked bicycle cranks for bounded activation inside the existing live-animation cap  8667ms
+ ✓ tests/profile-mechanisms.test.ts (20 tests) 39ms
+ ✓ tests/commerce.test.ts (9 tests) 26ms
+ ✓ tests/city-services.test.ts (7 tests) 8935ms
+ ✓ tests/recipes.test.ts (7 tests) 44ms
+ ✓ tests/repair-network.test.ts (7 tests) 306ms
+ ✓ tests/dream-agent.test.ts (15 tests) 2303ms
+   ✓ bounded agent context packets > exports machine-readable CLI context and preserves source/check boundaries  2295ms
+ ✓ tests/repair-verge.test.ts (7 tests) 209ms
+ ✓ tests/aircraft-assets.test.ts (6 tests) 9078ms
+   ✓ boards the live aircraft, takes off, banks, rejects a midair exit and recovers without changing race progress  9024ms
+ ✓ tests/world-audit.test.ts (9 tests) 127ms
+ ✓ tests/npc-conversation.test.ts (6 tests) 100ms
+ ✓ tests/garden-park.test.ts (4 tests) 2993ms
+   ✓ adds a connected park without replacing any released object or raising live budgets  779ms
+   ✓ uses the same sitting, damage and ride controls on every new bench, bicycle and scooter  510ms
+   ✓ moves every new visitor over accepted pavement without a CPU actor or new population clock  1074ms
+   ✓ connects all ten breakable park furnishings to the existing finite repair service  630ms
+ ✓ tests/materials.test.ts (5 tests) 144ms
+ ✓ tests/kitchen.test.ts (5 tests) 120ms
+ ✓ tests/object-dsl.test.ts (26 tests) 36ms
+ ✓ tests/scene.test.ts (11 tests) 919ms
+ ✓ tests/hosted-save.test.ts (6 tests) 32488ms
+   ✓ registers the exact previous world and keeps all 29 historical states and original slots  16574ms
+   ✓ funds the live invitation through real production, purchases and walking, then consumes once after acceptance  15874ms
+ ✓ tests/render-batching.test.ts (3 tests) 124ms
+ ✓ tests/park-save.test.ts (4 tests) 11593ms
+   ✓ adds only new visitors at saved time and preserves old lives, resources, ownership, damage, matches and vehicle poses  830ms
+   ✓ carries the complete historical save matrix through the city and park migrations  10738ms
+ ✓ tests/landscape-queries.test.ts (4 tests) 219ms
+ ✓ tests/rest-population.test.ts (8 tests) 194ms
+ ✓ tests/business-world.test.ts (4 tests) 4206ms
+   ✓ registers exactly the new depot capability and zero-funded owner with unchanged geometry and walking networks  3563ms
+   ✓ migrates the actual repaired-bench return without resetting a prior field, clock, seat, balance or job  373ms
+ ✓ tests/natural-grounds.test.ts (4 tests) 175ms
+ ✓ tests/transit-exits.test.ts (5 tests) 26ms
+ ✓ tests/media-export.test.ts (1 test) 16ms
+ ✓ tests/save-tools.test.ts (3 tests) 7ms
+ ✓ tests/park-paths.test.ts (6 tests) 8979ms
+   ✓ leaves the released world byte-compatible when the new optional fields are absent  8858ms
+ ✓ tests/camera-input.test.ts (7 tests) 2ms
+ ✓ tests/sports-visuals.test.ts (3 tests) 463ms
+   ✓ renders one shared eleven-person squad with bone/finish channels and releases its owned buffers  379ms
+ ✓ tests/pedestrian-spacing.test.ts (3 tests) 225ms
+ ✓ tests/spacing-save.test.ts (3 tests) 8175ms
+   ✓ preserves every native saved field, exact clock and bench claim without population rebasing  754ms
+   ✓ retains the complete historical migration chain without replaying park or commerce initialization  7131ms
+ ✓ tests/sun.test.ts (3 tests) 277ms
+ ✓ tests/growth-render.test.ts (2 tests) 24ms
+ ✓ tests/walker-orientation.test.ts (7 tests) 40ms
+ ✓ tests/repair-world.test.ts (2 tests) 19613ms
+   ✓ shares damage across all 413 lamps, repairs neighborhood furniture, keeps paid player procurement available while the worker returns  8995ms
+   ✓ prepares the rendered crossing review through actual driving, damage and dispatch with valid saved state  10617ms
+ ✓ tests/street-world.test.ts (3 tests) 50ms
+ ✓ tests/team-sports-save.test.ts (3 tests) 1023ms
+   ✓ registers the exact r66 migration without resetting physical, personal or company progress  889ms
+ ✓ tests/roof-surfaces.test.ts (2 tests) 82ms
+ ✓ tests/world3d.test.ts (5 tests) 24ms
+ ✓ tests/character-family.test.ts (3 tests) 8714ms
+   ✓ changes only the 133 existing person visuals while retaining all other world data and live rig owners  8625ms
+ ✓ tests/foot-plants.test.ts (4 tests) 3ms
+ ✓ tests/layout-clearance.test.ts (3 tests) 54ms
+ ✓ tests/edge-smoothing.test.ts (4 tests) 5ms
+ ✓ tests/humanoid-mount.test.ts (3 tests) 45ms
+ ✓ tests/voxel-city.test.ts (2 tests) 514ms
+   ✓ voxel city integration > uses voxels across architecture, transit, boat fittings, benches, people and paired park boundaries  441ms
+ ✓ tests/control-guide.test.ts (3 tests) 5ms
+ ✓ tests/compatibility-encoder.test.ts (3 tests) 94ms
+ ✓ tests/growth-world.test.ts (2 tests) 2088ms
+   ✓ connects the orchard through its actual garden path and preserves the previous physical world  2075ms
+ ✓ tests/work-navigation.test.ts (2 tests) 33ms
+ ✓ tests/spatial-grid.test.ts (3 tests) 21ms
+ ✓ tests/rounded-voxels.test.ts (6 tests) 63ms
+ ✓ tests/repair-view.test.ts (3 tests) 3ms
+ ✓ tests/airport-junction.test.ts (2 tests) 44ms
+ ✓ tests/pavement.test.ts (4 tests) 4ms
+ ✓ tests/activity-context.test.ts (3 tests) 2ms
+ ✓ tests/support-sampling.test.ts (1 test) 87ms
+ ✓ tests/choice-navigation.test.ts (2 tests) 17ms
+ ✓ tests/repair-verge-world.test.ts (2 tests) 9079ms
+   ✓ rejects the same service coverage when its real street crossing is removed  9048ms
+
+ Test Files  129 passed (129)
+      Tests  1508 passed (1508)
+   Start at  08:01:50
+   Duration  426.10s (transform 1.53s, setup 372ms, collect 219.46s, tests 617.44s, environment 11ms, prepare 3.35s)

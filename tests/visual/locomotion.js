@@ -4,6 +4,8 @@ import {measuredScale} from '../../src/scene/measure';
 import {buildObject} from '../../src/game/world3d';
 import {compactObject} from '../../src/game/compact-object';
 import {CharacterAnimator} from '../../src/game/character-animation';
+import {actorOrientation} from '../../src/game/actor-orientation';
+import {createFixtureScene} from '../../src/scene/fixture';
 import {ambientPrototype} from '../../src/game/ambient-population';
 import {ambientMaterial} from '../../src/game/shaders';
 import {FootPlants,humanoidSoles,humanoidFeet,gaitStride,gaitRun,gaitStance,gaitPlantReach,strideFoot} from '../../src/game/humanoid-gait';
@@ -11,6 +13,7 @@ import {mediaCapture} from '../../src/game/media-capture';
 const canvas=document.querySelector('canvas'),phase=document.querySelector('#phase'),view=document.querySelector('#view'),path=document.querySelector('#path'),ground=document.querySelector('#ground');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setScissorTest(true);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;
 let playing=true,time=0,last=performance.now();
+const orientationScene=createFixtureScene();
 document.querySelector('#motion').onclick=()=>{playing=!playing;document.querySelector('#motion').textContent=playing?'Pause animation':'Play animation';};
 const spec={...interactiveWorld.assemblies.find(s=>s.displayName==='Explorer'),voxelSize:1};
 const groundHeight=x=>ground.value==='hill' ? x*.2 : ground.value==='steps' ? Math.floor((x+1e-8)/8)*2 : 0;
@@ -51,6 +54,7 @@ const items=[{speed:14},{speed:14,gpu:true},{speed:55},{speed:48,swimming:true}]
 const pose=(item,t,dt)=>{
  const speed=item.speed*(path.value!=='straight' && !item.swimming ? Math.min(1,t/.8)*Number(t<4.5) : 1),heading=item.swimming ? 0 : path.value==='reverse' ? Number(t>=2)*Math.PI : path.value==='turn' ? Math.min(Math.PI/2,Math.max(0,t-1.5)*.75) : 0;
  item.group.position.x+=Math.cos(heading)*speed*dt;item.group.position.z+=Math.sin(heading)*speed*dt;item.group.rotation.y=-heading;
+ if(item.animation && !item.swimming)item.group.quaternion.copy(actorOrientation(orientationScene,{x:item.group.position.x,y:item.group.position.z,kind:'path',headingRad:heading},true));
  if(!item.swimming){item.group.position.y=groundHeight(item.group.position.x);item.floor.position.set(Math.floor(item.group.position.x/8)*8,0,Math.floor(item.group.position.z/8)*8);item.floor.position.y=groundHeight(item.floor.position.x);item.grid.position.copy(item.floor.position);}
  const travel={x:item.group.position.x,y:item.group.position.y,z:item.group.position.z,heading};
  if(item.animation)item.animation.update({travel,ground:item.swimming ? undefined : groundSample,speed,swimming:!!item.swimming,grounded:true,verticalSpeed:0,time:t,enabled:true},dt);

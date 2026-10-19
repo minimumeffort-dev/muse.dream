@@ -1211,3 +1211,14 @@ asset sheets and the city map remain accurate because intact construction and
 layout are unchanged. Current walking and social sets retain their released
 behavior. Historical lamp and orchard footage keeps its recorded transactions;
 the new sets demonstrate street-tree coverage and the shared wind-safe fall.
+
+## Route walkers on slopes, 2026-10-19
+
+The shared actor transform keeps bound people upright before their feet fit the
+ground. Refreshed character, pedestrian and locomotion GIF/HD sets and matching
+stills use 180/720/180 actual rendered frames at 30 frames per simulation second.
+The close-up uses Hill, Turn and stop and the three-quarter view. Static asset
+sheets and the city map remain accurate: geometry, layout and materials are
+unchanged. Other activity recordings retain their historical walking poses;
+use the refreshed walking set for current motion. No live performance claim.
+[Verification](../evidence/walker-orientation/verification.md).

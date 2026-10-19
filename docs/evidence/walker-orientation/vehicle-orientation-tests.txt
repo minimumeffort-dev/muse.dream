@@ -1,0 +1,13 @@
+
+> muse-dream@0.1.0 test
+> vitest run --maxWorkers=2 --testTimeout=60000 tests/walker-orientation.test.ts
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/walker-orientation.test.ts (7 tests) 50ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  08:02:49
+   Duration  825ms (transform 389ms, setup 10ms, collect 635ms, tests 50ms, environment 0ms, prepare 31ms)

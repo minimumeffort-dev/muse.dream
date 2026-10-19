@@ -248,6 +248,11 @@ Walking now has a longer stride: at the .306 review scale, one two-step cycle co
 
 Instanced sidewalk people use the same two-anchor policy, with fourteen contact floats per instance/material batch, including support height, slope and pending touchdown lift. These reuse four existing attribute slots. One renderer-owned starting-distance number per ambient member gives restored crowds the same supported start; it is not saved simulation state. Their color and shadow shaders use identical leg and ankle transforms. Anchors update for offscreen members too, so camera culling does not restart a step. There are no new meshes, physics bodies, actor slots, navigation decisions or saved fields. Existing sports squads keep their distance-driven match cycles and action poses.
 
+The complete character stays upright on a sloping route. Ground normals fit its
+individual feet; they do not tilt the whole person as they do a vehicle. This
+applies to route-only walkers as well as people with NPC programs or work
+journeys. [Route-walker regression](../evidence/walker-orientation/verification.md).
+
 Shoe support is measured once from the authored ankle parts. The pelvis lowers before solving so both targets remain reachable without stretching a segment. Each foot samples the visible terrain, bridge, pavement or reachable contact cap, then retains that height and normal through stance. The pelvis fits both contacts before solving; a foot beyond a cliff cannot pull it down into the void. Crowd support probes run at most 20 Hz per returning foot. Reduced-motion figures retain a fitted resting height. This is bounded arcade footing, not full mesh collision or an authored stair-climbing animation. Fine bicycle paint remains cosmetic; it cannot raise or tilt a foot. [Terrain and step checks](../evidence/terrain-footing/verification.md). [Returning-foot checks](../evidence/walking-swing/verification.md), [reversal and stride checks](../evidence/walking-transitions/verification.md), [earlier contact checks](../evidence/foot-contacts/verification.md), [earlier steady-stride correction](../evidence/walking-strides/verification.md) and [original motion verification](../evidence/character-animation/verification.md).
 
 Existing complete humanoid rigs also support a renderer-owned planted work gesture

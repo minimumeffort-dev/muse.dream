@@ -1,0 +1,19 @@
+
+> muse-dream@0.1.0 test
+> vitest run --maxWorkers=2 --testTimeout=60000 tests/walker-orientation.test.ts tests/character-animation.test.ts tests/terrain-footing.test.ts tests/foot-plants.test.ts tests/ambient-populations.test.ts tests/humanoid-mount.test.ts
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/character-animation.test.ts (37 tests) 1183ms
+ ✓ tests/terrain-footing.test.ts (9 tests) 468ms
+ ✓ tests/walker-orientation.test.ts (7 tests) 40ms
+ ✓ tests/humanoid-mount.test.ts (3 tests) 44ms
+ ✓ tests/foot-plants.test.ts (4 tests) 3ms
+ ✓ tests/ambient-populations.test.ts (14 tests) 3468ms
+   ✓ bounded moving ambient populations > walks through accepted sidewalk and zebra geometry without cutting across carriageways  2408ms
+
+ Test Files  6 passed (6)
+      Tests  74 passed (74)
+   Start at  08:00:36
+   Duration  4.13s (transform 422ms, setup 31ms, collect 1.55s, tests 5.21s, environment 0ms, prepare 159ms)

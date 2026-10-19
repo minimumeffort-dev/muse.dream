@@ -263,6 +263,9 @@ The city now has twelve connected character templates: different hair, facial ha
 
 Walking and running tie their stride to distance travelled and character scale, with bent knees and articulated elbows. Walkers take longer steps, and sharp reversals keep a planted shoe in place instead of resetting it. Grounded feet keep their position and facing through turns and stops, including the instanced sidewalk crowds. Shoes now follow hills, visible pavement and low contact steps, with the pelvis adjusting so the legs keep their length. Returning feet move through a sharp turn instead of snapping to a new position, and take a recovery step before a leg overextends. Swimming alternates a crawl with upright treading when you stop. The same Dream bone bindings animate the city pedestrians. [Character rig and motion](docs/dream/behavior.md#humanoid-motion).
 
+Route walkers stay upright on hills too. Their feet fit the slope independently;
+the vehicle tilt no longer moves planted shoes through the ground.
+
 ![Walking, running and swimming with one connected Dream rig](docs/media/character.gif)
 
 WASD walks, swims or drives. Space jumps on foot, a bicycle or skateboard, and gives the boat a small hop. Shift runs or swims faster. Walk up low steps, jump a small obstacle, or leave a boat and swim back to shore. Exits prefer dry ground when there is room. Land the plane before getting out; Space climbs and Shift descends while flying.

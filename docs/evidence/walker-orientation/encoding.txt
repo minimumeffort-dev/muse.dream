@@ -1,0 +1,2 @@
+character: 180 frames at 30 fps · GIF 2.45 MB
+pedestrians: 720 frames at 30 fps · GIF 20.01 MB
