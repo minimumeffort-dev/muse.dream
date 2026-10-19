@@ -9,6 +9,13 @@ Two project skills govern work here, with disjoint jobs:
 
 This note is provenance and evidence policy, not a third rulebook.
 
+Per-slice invariants live in [`agent-invariants.md`](../agent-invariants.md)
+at the repo root, moved verbatim out of `AGENTS.md` so that file stays under
+the 65536-byte startup-context limit for rules files (guarded at 60000 bytes
+by `tests/agents-size.test.ts`). They carry the same weight as `AGENTS.md`;
+the index at the end of `AGENTS.md` says which areas they cover. New
+per-slice invariants go in `agent-invariants.md`, not back into `AGENTS.md`.
+
 ## Sources checked 2026-10-15
 
 | Source | Pinned reference | Status |
