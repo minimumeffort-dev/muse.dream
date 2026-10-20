@@ -579,3 +579,15 @@ joints read existing travel only; no new clock is saved. Homes, bounds, routes,
 reactions, economies, damage and vehicle ownership retain their state. The
 reconstructed ear silhouettes and subsequent limb poses differ intentionally.
 [Historical matrix and native round trip](evidence/wildlife-construction/verification.md).
+
+### Street furniture toppling (r80)
+
+The sixteen planted street tubs and two produce stalls gain pooled whole-object
+topple impacts. Construction, contacts, placements and scales are unchanged.
+The registered r79 projection restores the two original template records and
+reproduces the released fingerprint before every earlier stage. Format 17 /
+simulation 32 and every saved field remain unchanged; existing damage, repair
+claims, stock and credits carry over. A tub or stall first knocked down after
+the upgrade enters the existing broken-object state and the same paid repair
+service, which now covers 449 targets.
+[Checks and browser evidence](evidence/street-furniture/verification.md).

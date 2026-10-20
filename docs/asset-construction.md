@@ -216,7 +216,7 @@ loaves resting on its counter.
 | Breakaway table | 3 | 23 | 7 |
 | Produce crate | 2 | 32 | 8 |
 | Terracotta planter | 1 | 21 | 6 |
-| Produce stall | 2 | 28 | Not breakable |
+| Produce stall | 2 | 28 | 1 rigid toppler |
 
 All five use existing Dream parts, profiles, beams, components and fragments.
 The [complete executable example](examples/furniture-construction.dream) matches

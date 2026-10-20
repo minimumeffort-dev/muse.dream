@@ -449,7 +449,7 @@ use one centered base contact; compound/offset contacts remain rejected. Preserv
 narrow lamp contacts, all authored geometry, shared category rules, night paint,
 actor/rig limits and no per-cell bodies. Lamp surface pools turn off while broken
 and return after paid repair. Keep the registered format 9/simulation 11 projections and the r50/r51/r52
-migration chain. Current fixture service covers 431 targets including all 413
+migration chain. Current fixture service covers 449 targets including all 413
 lamps. The tree service has its separate declared coverage below.
 See `docs/examples/streetlight-repairs.dream` and `docs/dream/rules.md`.
 
@@ -521,7 +521,8 @@ ownership, gameplay HUD choices, street-only worlds, walkable surfaces,
 ambient walking spacing, the r70 airport connector, character wardrobe
 (r71), the r72/r73 fixture service, wind-safe trees (r74), the utility fleet
 (r75), whole-library asset direction, and faceted tree, landscape plant,
-ground cover, furniture and wildlife construction (r76 to r79). That file is
+ground cover, furniture and wildlife construction (r76 to r79), and street
+furniture toppling (r80). That file is
 not loaded automatically, so read the relevant section there, alongside its
 linked guide, before changing a covered area.
 

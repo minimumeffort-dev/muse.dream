@@ -1378,3 +1378,24 @@ compiler contract, feature packets and highlighting include joint `stride`.
 Two complete executable examples are checked. Source and frame hashes, native
 save evidence and checks live in the
 [wildlife verification](../evidence/wildlife-construction/verification.md).
+
+## Street furniture toppling, r80
+
+`fixturefall.gif` / `.mp4` show a real car impact at the east produce stall.
+`fixturerepair.gif` / `.mp4` follow the existing caretaker restoring a planted
+street tub. Both come from the native main-game `?capture` exporter: 240 and
+600 consecutive 2400 × 1350 PNGs at 30 rendered frames per simulation second.
+The repair setup advances ordinary fixed steps through driving, impact, foot
+exit, dispatch and the full pedestrian journey before recording work. The
+camera follows the caretaker; daytime is held for visibility. Nothing grants
+free repair or advances an economic clock independently.
+
+GIFs use 1280 × 720, 256 colors and loss 20. HD videos use 1600 × 900, CRF 18.
+Matching posters use source frames 85 and 270. The impact before/after stills
+use frames 0, 85 and 190. No interpolation or live performance claim.
+The existing construction galleries and compiled map remain accurate because
+this change preserves geometry, materials, body envelopes and placement.
+Earlier recordings retain their historical behavior and background details.
+README, asset, impact, repair and persistence guides were reviewed and updated;
+the model instructions, compiler contract and highlighting need no vocabulary
+change. [Checks, native saves and source/frame manifest](../evidence/street-furniture/verification.md).

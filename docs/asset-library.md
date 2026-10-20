@@ -223,8 +223,9 @@ compete at the same depth. These constructions use existing prisms, components,
 material bindings and bounded repeats, within 32 parts per object.
 
 The measured frame and existing furnishing clearance keep bodies, street
-placement and navigation stable. These plants remain scenery, with the tub's
-existing solid contact. They add no picking, harvesting, growth or biological
+placement and navigation stable. The sixteen solid planted tubs now topple on
+a hard hit and return through the caretaker’s paid repair service. Other plants
+remain scenery. They add no picking, harvesting, growth or biological
 simulation. The separate breakable clay planter now has the joined shell and rim documented
 in the furniture construction pass.
 [Construction, save and native-render checks](evidence/plant-construction/verification.md).
@@ -257,3 +258,22 @@ Red kite remains an unplaced library export.
 These remain stylized rigid strides, without animal foot planting, pet care or
 new wildlife interactions. The continuing library review has 70 of 109 exports
 pending, plus the separately tracked engine and optional examples.
+
+## Street fixtures that fall and return
+
+The sixteen planted tubs and both produce stalls use local Dream `topple`
+impacts. The tub falls at speed 65; the larger stall needs 90. Each falls as one
+rigid assembly, keeping the connected canopy or planting together. Their bodies,
+geometry and street positions are unchanged. The existing caretaker service
+covers all eighteen, using one kit and paying four credits for each repair.
+
+![The caretaker restoring a street tub](media/fixturerepair.jpg)
+
+[Repair in HD](media/fixturerepair.mp4) · [GIF](media/fixturerepair.gif) ·
+[Impact recording](media/fixturefall.mp4) ·
+[Checks and limits](evidence/street-furniture/verification.md).
+
+The [furniture](examples/furniture-construction.dream) and
+[plant](examples/plant-construction.dream) examples contain the complete objects.
+Local impact data avoids applying a blanket rule to unrelated custom scenery.
+Shelters with compound contacts and sports targets retain their existing behavior.

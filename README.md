@@ -214,9 +214,13 @@ journey keeps going while you drive away or unload that part of the world.
 Repairs use finite supplies. After two jobs, you can bring two replacement kits
 from **Station supplies**. The bakery pays the depot six credits and pays you four
 for the delivery. These are transfers between actual balances. The depot starts
-with 32 kits and cannot generate more. The service covers 431 targets: the existing furniture at the market, park, station and school,
-plus all 413 lamps across the city’s 32 streets. The caretaker steps off the sidewalk for nearby repairs, using
+with 32 kits and cannot generate more. The service covers 449 targets: the existing furniture at the market, park, station and school,
+the sixteen planted street tubs and two produce stalls, plus all 413 lamps across the city’s 32 streets. Tubs and stalls topple when hit hard and are restored by the same paid repair work. The caretaker steps off the sidewalk for nearby repairs, using
 crossings between streets. Distant jobs take several simulation minutes.
+
+![A produce stall falling after a car impact](docs/media/fixturefall.gif)
+
+[Impact in HD](docs/media/fixturefall.mp4) · [The caretaker restoring a planted tub](docs/media/fixturerepair.mp4) · [Dream rules and verification](docs/evidence/street-furniture/verification.md)
 
 The school-yard bench now comes back after damage too. The caretaker uses the
 existing pavements and school access path, waits if something blocks the repair,

@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-20",
+  "baseCommit": "f78639d",
+  "previousRelease": "0052e4cfdcb76078235c6b00981fa6762aa154d4",
+  "sourceHash": "1286b69d40c1859d3d31832e3c8fee9a87db75f409c529d52c8c8fc9a194a366",
+  "compatibilityHash": "1c5352790e1f50878a43c4054eb9bb28af1e9bd970d3c5bf1f4636225acd8e76",
+  "sourceFiles": {
+    "src/scene/world/civic_assets.dream": "5234c97c1f94a05fc173cb5d44239a2a65c11df90d7b371326419c4e79612c44",
+    "src/scene/world/street_assets.dream": "3d73f12f3a4982d04809236473db20d453b8c6102c7e8ebeca2b811dee051993",
+    "src/scene/compatibility/r79-street-furniture.json": "16b836a2d9334ade6404ba879118f9df6a187d30686e82349f69b7bbf0a91758",
+    "src/game/review-start.ts": "cccaee2a319d635c08647aba0cc2883e14fcad110257706aa2e6419fc3656e35",
+    "src/game/main.ts": "dbdc1131a7527e2b9c4f279893bf2694b847d8f4cd8fac1ef5f8a0b634ade940",
+    "src/scene/save-compatibility.ts": "d0372e87e18bf8acfc133174229baa28727ff330d328e9e0936379034881c75e",
+    "src/sim/save.ts": "f236663ea17a04d89234caa20f57a73fa4361883af1538337152413362abab4d",
+    "scripts/encode-media.mjs": "fd7f8ceef5bae758ddc399e26d78c3d7558d1f32e638af4cb242f3a55aec01cc"
+  },
+  "capture": "Native IAB main-game exporter; 30 rendered frames per simulation second; no interpolation; not a live FPS measurement",
+  "clips": [
+    {
+      "name": "fixturefall",
+      "frames": 240,
+      "uniqueFrames": 240,
+      "fps": 30,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "orderedFrameHash": "cd0ac66d5655fada8b9ec79e4bb14d468fbffe114cf85abf43a2b5d502ebe0e6",
+      "posterFrame": 85,
+      "posterSourceHash": "fdc3658840a590edb3e203f4d380a8057caaf1022bc368f0aa2058d6c85122b7",
+      "outputs": {
+        "docs/media/fixturefall.gif": "892bfa2bfdda37581905ba5870744bd36580410ea3e4edd65904dd6b26123f87",
+        "docs/media/fixturefall.mp4": "ce832dae231307e20ad39387bf19046b3388fefc050302e9804004bcc785c1eb",
+        "docs/media/fixturefall.jpg": "f37b932e9f4cefc92449e6ef2cf5c6145a58c8c2439f986563c7a39444a81bf7"
+      }
+    },
+    {
+      "name": "fixturerepair",
+      "frames": 600,
+      "uniqueFrames": 600,
+      "fps": 30,
+      "sourceSize": [
+        2400,
+        1350
+      ],
+      "orderedFrameHash": "9e080b2554083ff4216c5fe91589b9a48e8f60310c2a6a81a07132665bedd3bb",
+      "posterFrame": 270,
+      "posterSourceHash": "efe11d07f9a984905725b72df7b93ff8cf2e868ecab9faf53a3c8a0d977c9873",
+      "outputs": {
+        "docs/media/fixturerepair.gif": "c9c86dee620a7ba6c6144eaee653ccbec3bde5b17eb1f11c2c2de56d6122b198",
+        "docs/media/fixturerepair.mp4": "4f5e56374eb112cdaac92c7665453faa96a06c646bae3f3397543b406e7dcc63",
+        "docs/media/fixturerepair.jpg": "57b300562ae241c6987b1d641372f2352a88934f35055a1688fe0708ce2ac255"
+      }
+    }
+  ],
+  "saves": {
+    "native-paid.json": "8488277ac58e1c0cd5409494fbb6d3473e34f52951c087a0fa1dd838ffc09986",
+    "native-paid-reloaded.json": "8488277ac58e1c0cd5409494fbb6d3473e34f52951c087a0fa1dd838ffc09986",
+    "native-work.json": "96fdbd74bfb5310395787c4e8087dacad05b12bd8d29ef7ad4b4ef465dd89350",
+    "native-work-reloaded.json": "96fdbd74bfb5310395787c4e8087dacad05b12bd8d29ef7ad4b4ef465dd89350",
+    "native-hit.json": "b624419e35fc7e4f8d2b467531a66de9764c72ada42261dae333a785fa5ae925"
+  },
+  "roundTrips": {
+    "work": "exact JSON equality",
+    "paid": "exact JSON equality",
+    "caretakerCreditsBefore": 0,
+    "caretakerCreditsAfter": 4,
+    "repairsAfter": 1
+  },
+  "encoder": {
+    "mp4": "1600x900 H264 CRF18 slow",
+    "gif": "1280x720 256 colors gifsicle loss20"
+  }
+}

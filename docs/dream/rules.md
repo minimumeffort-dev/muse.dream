@@ -125,8 +125,8 @@ their declared surface pool is off. This is not an electrical network simulation
 
 The caretaker can repair all 413 lamps beside the declared service streets and grounds
 with the same finite kit and four-credit wage used for furniture. The full model,
-collision and light pool return together. The service covers 431 targets in total,
-including furniture and wall sections.
+collision and light pool return together. The service covers 449 targets in total,
+including furniture, wall sections, planted street tubs and produce stalls.
 [Street verges](commerce.md#street-verges) connect nearby work to sidewalks and
 crossings. Neither the renderer nor a category rule grants free repairs.
 

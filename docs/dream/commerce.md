@@ -417,8 +417,8 @@ the primary area.
 Blocked workers wait;
 there is no ladder, construction scaffold or dropped-kit simulation. Trees use
 a `regrow_s` repair service for paid planting and physical growth.
-[Planting guide and runnable source](growth.md). The live fixture service covers 431 targets: existing market, park, station and school
-furniture, the two park wall sections, and all 413 streetlights across 32 streets. It does not make other scenery destructible.
+[Planting guide and runnable source](growth.md). The live fixture service covers 449 targets: existing market, park, station and school
+furniture, the two park wall sections, sixteen planted street tubs, two produce stalls, and all 413 streetlights across 32 streets. It does not make other scenery destructible.
 
 
 ### Replacement supplies
@@ -485,7 +485,7 @@ an agent to author both services and infrastructure, use
 
 ### Street verges
 
-The live service reaches 431 targets, including all 413 city lamps.
+The live service reaches 449 targets, including all 413 city lamps.
 A subset such as `streets=[market_avenue,high_street,civic_walk]` declares which
 sidewalks a service covers; the live city lists all 32 streets.
 `verge=24` permits a short approach up to 2.4 metres beyond those sidewalks, near
@@ -556,7 +556,7 @@ It reuses the existing `repair` and `grounds` vocabulary:
  );
 ```
 
-The school grounds share the live 431-target service, including all 413 lamps.
+The school grounds share the live 449-target service, including all 413 lamps.
 This extends one existing worker's connected area. It adds no worker, rig or
 physics body; every new destination still needs validated access.
 
@@ -753,7 +753,7 @@ school staff use it in the live mock; no idle wages or employment contracts exis
 `garden_work` extends the existing furniture service to six more benches and four
 lamps. Both park entrances join the accepted pedestrian network; the caretaker
 walks from the market, reserves a real kit and wage, and restores the same usable
-furniture. These ten targets are part of the live 431-target service. The ground
+furniture. These ten targets are part of the live 449-target service. The ground
 uses the remaining existing service-ground slot and stays within the 4096 local
 sample and 8192 network-node budgets. [Paths and park authoring](paths.md).
 

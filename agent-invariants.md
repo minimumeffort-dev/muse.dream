@@ -419,3 +419,18 @@ Preserve the exact r78 snapshot projection, prior host contacts and all earlier
 save stages. Format 17 / simulation 32 and every saved field remain unchanged.
 The whole-library pass has 39/109 exports reviewed, 70 pending, plus separate
 engine/infrastructure and optional examples. Do not claim the review is complete.
+
+## Street furniture toppling, r80
+
+The sixteen planted street tubs and two produce stalls use local pooled
+`topple` impacts (tub speed=65/duration=.7, stall speed=90/duration=1), not a
+`kind=custom` rule, so other custom scenery gains no impact. Construction,
+contacts, placements and fragment budgets (32 templates / 74 fragments / 20
+pooled) and actor limits stay within existing bounds. All eighteen placements
+are targets of the existing `market_tables` service, which now covers 449
+targets; every worker approach validates from the caretaker home. Preserve the
+exact r79 snapshot projection in `src/scene/compatibility/r79-street-furniture.json`
+and the whole earlier chain. Format 17 / simulation 32 stay unchanged.
+Decor plants, transit shelters (compound contacts), sports targets and
+buildings remain outside pooled destruction. See
+`docs/evidence/street-furniture/verification.md`.

@@ -81,6 +81,7 @@ object foxglove(label="Pink foxglove"){
 object planted_tub(label="Planted street tub"){
  measure(kind=custom,axis=x,meters=1.2);
  body(interaction=solid,radius=5,height=8,clearance=7.778174593052);
+ impact(mode=topple(speed=65,duration=.7,lifetime=6));
 
  // Preserve the released measure frame and furnishing reservation.
  group silhouette(at=[0,0,0],scale=1){

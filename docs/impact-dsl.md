@@ -116,6 +116,13 @@ Everything remains a handmade mock; Muse provider integration is unchanged.
 
 ## Dream 2: toppling, splinters and building sections
 
+The live world's sixteen planted tubs and two produce stalls now use local
+whole-object `topple` impacts. They return through the finite caretaker service,
+with no new physics bodies or fragment budget. The complete
+[plant](examples/plant-construction.dream) and
+[furniture](examples/furniture-construction.dream) examples use the same data.
+[Impact and paid repair recordings](evidence/street-furniture/verification.md).
+
 The [destructible world library](../src/scene/world/destructible.dream) contains
 six complete, executable mock definitions and ten placements. Whole-object
 break behavior now accepts optional `pattern=scatter|splinter|crumble`.
