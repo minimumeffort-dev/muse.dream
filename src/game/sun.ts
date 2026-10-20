@@ -16,6 +16,7 @@ export class SunShadows {
   private origin=new THREE.Vector3();
   private view=new THREE.Vector3();
   private center=new THREE.Vector3();
+  private halfX=0;private halfY=0;
 
   constructor(readonly light:THREE.DirectionalLight,readonly minHeight:number,readonly maxHeight:number){
     light.castShadow=true;
@@ -38,9 +39,11 @@ export class SunShadows {
         this.bounds.expandByPoint(this.point);
       }
     }
-    // Quantize the extents too, so floating-point noise cannot resize the grid.
-    const halfX=Math.ceil(((this.bounds.max.x-this.bounds.min.x)/2+margin)/16)*16;
-    const halfY=Math.ceil(((this.bounds.max.y-this.bounds.min.y)/2+margin)/16)*16;
+    // Ignore translation noise, but let sun/zoom changes resize continuously instead of jumping 16 units.
+    const width=(this.bounds.max.x-this.bounds.min.x)/2+margin,height=(this.bounds.max.y-this.bounds.min.y)/2+margin;
+    if(Math.abs(width-this.halfX)>1e-7)this.halfX=width;
+    if(Math.abs(height-this.halfY)>1e-7)this.halfY=height;
+    const halfX=this.halfX,halfY=this.halfY;
     const texelX=2*halfX/this.light.shadow.mapSize.x,texelY=2*halfY/this.light.shadow.mapSize.y;
     const x=Math.round((this.bounds.min.x+this.bounds.max.x)/2/texelX)*texelX;
     const y=Math.round((this.bounds.min.y+this.bounds.max.y)/2/texelY)*texelY;

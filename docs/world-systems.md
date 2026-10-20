@@ -19,6 +19,12 @@ planning remains separate. Priorities are connected
 activities and shared interactions below, useful indoor service and broader
 consistent destruction/recovery; the full asset review also remains unfinished.
 
+The current motion pass aligns player/vehicle/camera poses between fixed ticks,
+keeps sports balls with visible carriers and removes shadow extent jumps.
+Further visual review should distinguish those timing artifacts from ordinary
+small-detail aliasing and the existing stippled scenery cutaways. Frame pacing
+on lower-powered hardware remains a separate measurement task.
+
 The live circuit is retired. Streets now own the driving mask and the city
 layout; close junctions share outer-arm crossings. Reuse the released ground
 for connected parks and other destinations, with useful paths and activities. Garden park now supplies connected pedestrian paths, six usable benches, six parked rides, eight moving visitors and finite caretaker coverage. Theme-park rides and ticketing remain future systems.

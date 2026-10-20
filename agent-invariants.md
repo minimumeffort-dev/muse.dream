@@ -472,3 +472,16 @@ one restores task guidance and cannot cancel work. T / Find task only changes
 map framing. Remove task markers on completion/cancellation and ignore NPC work.
 Nearby is a distance cue, never proof of handoff, repair or payment. Keep this
 derived UI state out of world saves and preserve ordinary activity controls.
+
+## Render motion continuity
+
+Presentation samples the last two fixed player/prop poses using the stepper's
+remaining fraction. Never feed this derived state back into simulation, saves,
+transactions or contacts. Keep camera and occupied rides on that same sample;
+snap ownership changes, reset clocks and discontinuous travel. Preserve the
+complete accepted state and the single body owner. Sports carrier and ball
+poses share squad interpolation through 20 Hz boundaries; spin follows visual
+travel and ignores pause, reduced motion and reset teleports. Color and shadow
+passes retain identical group/instance transforms. Shadow centers remain on
+world texels; resize extents continuously for sun/zoom changes, ignoring only
+translation roundoff. Preserve map resolution, caster coverage and all budgets.

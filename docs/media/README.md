@@ -1446,3 +1446,21 @@ No upscaling or generated frames. The earlier personal-waypoint stills remain
 accurate for their context. Existing economic videos show the same cargo,
 handoff, repair and payment mechanics with their recorded HUD; these new stills
 document the added guidance. No motion clip, geometry or Dream example changed.
+
+## Animation continuity
+
+Football's GIF, HD video, `football-practice.jpg` and `sports-park.jpg` are
+refreshed from 480 native `?capture` PNG frames, with frame 180 for the stills.
+The new `scooter.gif`, `.mp4` and `.jpg` use 240 native frames and still frame
+95, showing direct riding, a turn, jump and braking. All source frames are
+2400 × 1350, at 30 rendered frames per simulation second. HD uses 1600 × 900
+at CRF 18; GIF uses 1280 × 720 and 256 colours, with Gifsicle loss level 20.
+No missing video frames are interpolated. Runtime pose interpolation reads
+actual fixed physics poses before each rendered frame; it is not video frame
+generation. These offline clips are not browser frame-rate measurements.
+
+README, rendering, sports and the motion invariants document the common
+presentation clock, carrier ball alignment and continuous shadow extents.
+Other recordings retain their recorded presentation; their geometry, controls,
+commerce and saves remain accurate. No Dream vocabulary or example changed.
+[Source hashes, checks and remaining limits](../evidence/animation-continuity/verification.md).

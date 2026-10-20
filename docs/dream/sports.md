@@ -13,6 +13,11 @@ lane; it never rotates to follow a shot.
 
 [Football recording](../media/football.gif) · [HD video](../media/football.mp4)
 
+The rendered ball follows the same interpolated pose as its carrier, including
+NPCs, and rolls with visible travel. This is presentation only: possession,
+shots, tackles, contacts, scores and saved matches still use fixed simulation
+steps. [Motion verification](../evidence/animation-continuity/verification.md).
+
 | Control | Football | Basketball |
 | --- | --- | --- |
 | N | Join, rest, resume or start a new match | Same |

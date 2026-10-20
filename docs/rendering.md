@@ -182,6 +182,24 @@ Brick, wood and stone use separate engine-owned surface shaders and palettes. A 
 
 The engine computes fixed terrain, road, bridge and instanced-scenery transforms once. Wind, water waves and local occlusion fades still animate on the GPU. Moving vehicles, people and debris keep their live transforms. The scene's matrices are updated once before occlusion and rendering, actor poses are reused within a frame, and a character is reparented only when changing vehicles.
 
+Player bodies, live rides, props, sports squads and camera framing share a
+presentation sample between the last two 120 Hz simulation poses. This adds
+at most one fixed tick of visual delay, without extrapolation or new physics.
+Resets, control changes and teleports snap. Owned sports balls use the visible
+carrier pose, including the squad's 20 Hz movement interpolation, and roll from
+visible displacement even when possession sets physical velocity to zero.
+Contacts, input, save data and transactions keep the accepted simulation state.
+
+Shadow centers still snap to world-aligned shadow texels. The projection's
+extents now follow sunlight and zoom continuously; translation noise cannot
+resize them. This removes the former 16-unit half-extent jumps during motion.
+The 2048 map, caster coverage, bias and filtering stay unchanged.
+[Regression checks and native captures](evidence/animation-continuity/verification.md).
+
+![Scooter turning and jumping beside the market](media/scooter.jpg)
+
+[Scooter in HD](media/scooter.mp4) · [GIF](media/scooter.gif)
+
 Pixel ratio, antialiasing, the 2048 × 2048 sun shadow map, shadow coverage, bloom, color grading, particle counts, asset detail and the fixed simulation timestep stay the same. Frustum culling avoids drawing geometry outside a camera or light's view; it never removes that geometry from memory.
 
 ## Day and night

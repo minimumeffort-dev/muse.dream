@@ -587,6 +587,9 @@ export class FixedStepper {
     this.stepDt = stepDt;
   }
 
+  /** Fraction between the last two fixed poses; presentation never advances physics. */
+  get alpha():number{return this.accumulator/this.stepDt;}
+
   /** Returns how many fixed steps to run for this render frame. */
   push(frameDtS: number): number {
     // Cap pathological frames (tab switch) instead of spiralling.

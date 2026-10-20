@@ -2,6 +2,7 @@ import {describe,it,expect} from 'vitest';
 import * as THREE from 'three';
 import {SunShadows} from '../src/game/sun';
 import {cameraPosition} from '../src/game/camera';
+import {sampleDaylight} from '../src/scene/daylight';
 
 function view(aspect=16/9,angle=0,elevation=12,zoom=1.18,x=0,z=0){
   const half=Math.max(270,205/aspect),camera=new THREE.OrthographicCamera(-half*aspect,half*aspect,half,-half,1,10000);
@@ -14,6 +15,15 @@ function screenPoint(camera:THREE.OrthographicCamera,x:number,y:number,height:nu
 }
 
 describe('sun shadow continuity',()=>{
+  it('changes projection size continuously through moving sunlight and a sports zoom transition',()=>{
+    const light=new THREE.DirectionalLight(),shadows=new SunShadows(light,-40,800),camera=view();let previous:number[]|undefined,max=0;
+    for(let frame=0;frame<1200;frame++){
+      const phase=sampleDaylight({cycleSeconds:1200,startHour:10},frame/60),direction=new THREE.Vector3(phase.direction.x,phase.direction.y,phase.direction.z);
+      camera.zoom=1.18-(1.18-.85)*(1-Math.exp(-frame/60/.35));camera.updateProjectionMatrix();shadows.update(camera,direction);
+      const size=[light.shadow.camera.right,light.shadow.camera.top];if(previous)max=Math.max(max,...size.map((n,i)=>Math.abs(n-previous![i]!)));previous=size;
+    }
+    expect(max).toBeLessThan(8);expect(light.shadow.mapSize.toArray()).toEqual([2048,2048]);
+  });
   it('covers visible receivers and their offscreen casters through hills, flight, rotation, zoom and resize',()=>{
     const light=new THREE.DirectionalLight(),shadows=new SunShadows(light,-40,800),direction=new THREE.Vector3(-300,690,220).normalize();
     for(const aspect of [9/19.5,4/3,16/9,32/9])for(const angle of [0,.6,Math.PI/2,Math.PI,Math.PI*1.5])for(const elevation of [12,190,770])for(const zoom of [.59,1.18,1.6,2.8,8.4]){

@@ -121,6 +121,12 @@ Press **Shift** or click **Boost** for a one-second car burst, then give it five
 
 Static districts load as you approach and leave render memory behind you. Physics, NPCs and damage keep their state across the whole world. The renderer batches differently colored parts into fewer draws and reuses fixed transforms, keeping the same assets, shadows, particles and post-processing. The [rendering notes](docs/rendering.md) include before/after measurements and a local profiler for checking changes.
 
+Player movement, live vehicles and rolling balls now share a render pose between fixed
+simulation ticks. A football stays with its visible carrier, including NPCs,
+and rolls as it travels. Sun and camera zoom changes resize the shadow view
+continuously instead of stepping its bounds. [Motion checks](docs/evidence/animation-continuity/verification.md).
+[Scooter ride and jump in HD](docs/media/scooter.mp4) · [GIF](docs/media/scooter.gif).
+
 World preparation avoids repeated terrain and outline work, and now reuses unchanged object data while checking historical save fingerprints. [Startup measurements](docs/evidence/startup-fingerprints/verification.md) compare the complete accepted world, paths, collisions and save contracts against the preceding release. Detail and visual settings stay the same.
 
 Work-route checks also discard distant collision geometry before testing its exact
