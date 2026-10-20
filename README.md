@@ -127,6 +127,10 @@ and rolls as it travels. Sun and camera zoom changes resize the shadow view
 continuously instead of stepping its bounds. [Motion checks](docs/evidence/animation-continuity/verification.md).
 [Scooter ride and jump in HD](docs/media/scooter.mp4) · [GIF](docs/media/scooter.gif).
 
+Foreground roofs and hills now open a clean view around the player instead of
+drawing a speckled layer over them. The rest of the building stays visible;
+its shadows and collisions remain. [Cutaway checks](docs/evidence/clean-cutaways/verification.md).
+
 World preparation avoids repeated terrain and outline work, and now reuses unchanged object data while checking historical save fingerprints. [Startup measurements](docs/evidence/startup-fingerprints/verification.md) compare the complete accepted world, paths, collisions and save contracts against the preceding release. Detail and visual settings stay the same.
 
 Work-route checks also discard distant collision geometry before testing its exact

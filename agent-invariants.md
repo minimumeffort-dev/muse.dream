@@ -485,3 +485,15 @@ travel and ignores pause, reduced motion and reset teleports. Color and shadow
 passes retain identical group/instance transforms. Shadow centers remain on
 world texels; resize extents continuously for sun/zoom changes, ignoring only
 translation roundoff. Preserve map resolution, caster coverage and all budgets.
+
+## Clean sight cutaways
+
+Static scenery/terrain/road reveals use a continuous world-space sight opening,
+not screen-pixel stippling. Preserve the existing per-instance visibility float:
+one is opaque, zero completely hides an authored interior part in colour only.
+Apply rigid motion and instancing before sampling the sight field. Keep ordinary
+neighbours opaque, shared player/view uniforms, full shadow casters, exact
+geometry/contact/save data and existing buffers/draw budgets. Live object
+opacity fades remain independent. The native cutaway fixture checks moving
+player pixels, restoration, hidden parts, neighbouring surfaces and unchanged
+shadow-map bytes; a source-string check alone does not prove a working shader.

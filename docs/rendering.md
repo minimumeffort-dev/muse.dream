@@ -202,6 +202,16 @@ The 2048 map, caster coverage, bias and filtering stay unchanged.
 
 Pixel ratio, antialiasing, the 2048 × 2048 sun shadow map, shadow coverage, bloom, color grading, particle counts, asset detail and the fixed simulation timestep stay the same. Frustum culling avoids drawing geometry outside a camera or light's view; it never removes that geometry from memory.
 
+Static foreground scenery, terrain and hill roads use a clean sight opening
+around the player. There is no screen-pixel stipple over the character. The
+existing visibility value expands or closes that opening; authored interior
+roof/wall tags still disappear completely at zero. Nearby opaque instances
+stay intact. The fragment shader samples the world position after rigid motion
+and instancing, using the same player/view uniforms as terrain. Shadow passes
+keep the full caster, and contacts, geometry, instance buffers and draw counts
+are unchanged. Live unbatched objects retain their ordinary opacity fade.
+[GPU pixel checks and the moving scooter example](evidence/clean-cutaways/verification.md).
+
 ## Day and night
 
 The optional Dream daylight clock changes sky/fog colors, hemisphere light and one sun/moon direction. The existing 2,048-pixel directional shadow map remains world-aligned at each phase. Direct light fades out during the sun/moon handoff; camera movement does not drive that phase. Nighttime sky and ground fill retain visible paths, people and dark assets outside lamp pools. Daytime colours and intensities remain exact. This uses the existing three lights and one shadow map. [Night visibility check](evidence/night-visibility/verification.md).

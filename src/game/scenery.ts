@@ -166,7 +166,7 @@ export class WorldScenery {
       t.mesh.visible=!(t.mesh.userData.sceneryEntries as number[]).every(id=>this.entries[id]!.hidden);
     }
   }
-  /** Collapse both colour and shadow geometry; ghosting still keeps ordinary shadows. */
+  /** Collapse both colour and shadow geometry; visual reveals keep ordinary shadows. */
   setHidden(ids:ReadonlySet<string>):void{
     if(this.hidden===ids)return;this.hidden=ids;
     for(const entry of this.entries){const hidden=!!entry.objectId && ids.has(entry.objectId);if(hidden===!!entry.hidden)continue;entry.hidden=hidden;this.transform(entry);}

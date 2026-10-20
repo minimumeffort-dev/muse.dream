@@ -32,6 +32,10 @@ Rectangle contacts use `size=[width,depth]`, plus `at`, `height` and optional `h
 
 Tag the appropriate static parts with `cutaway=roof|front|back|left|right`. The directions describe the object, including its placement heading. Keep the floor and contents untagged. The camera hides the roof and the near sides while you are below the ceiling and inside the room. Q/E changes which sides are hidden, without changing the character's heading.
 
+The reveal opens cleanly instead of stippling the player. Fully hidden tagged
+parts still cast their ordinary shadows; the floor, contents and physical
+contacts stay intact. [GPU visibility checks](../evidence/clean-cutaways/verification.md).
+
 The tags survive compaction, instancing and worker transfer. A newly loaded chunk immediately uses the current room view. Cutaways affect the view; the walls and ceiling still collide and the building retains its shadow. Ordinary foreground occlusion still works outside the building.
 
 ## Connect work and lighting

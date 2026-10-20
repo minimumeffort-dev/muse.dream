@@ -21,9 +21,10 @@ consistent destruction/recovery; the full asset review also remains unfinished.
 
 The current motion pass aligns player/vehicle/camera poses between fixed ticks,
 keeps sports balls with visible carriers and removes shadow extent jumps.
-Further visual review should distinguish those timing artifacts from ordinary
-small-detail aliasing and the existing stippled scenery cutaways. Frame pacing
-on lower-powered hardware remains a separate measurement task.
+Stippled scenery, hill and road cutaways now use clean sight openings, retaining
+full shadows and physical contacts. Further visual review should distinguish
+timing artifacts from ordinary small-detail aliasing. Frame pacing on
+lower-powered hardware remains a separate measurement task.
 
 The live circuit is retired. Streets now own the driving mask and the city
 layout; close junctions share outer-arm crossings. Reuse the released ground

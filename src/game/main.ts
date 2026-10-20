@@ -569,7 +569,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       if(clip==='lamps'){if(frame<33)keys.add('KeyW');if(frame>=33 && frame<78)keys.add('KeyS');if(frame===84)useRide();}return;
     }
 
-    if(clip==='scooter'){if(frame<150)keys.add('KeyW');if(frame>=40 && frame<65)keys.add('KeyA');if(frame>=90 && frame<100)keys.add('Space');if(frame>=150 && frame<210)keys.add('KeyS');return;}
+    if(clip==='scooter'){if(frame<150)keys.add('KeyW');if(frame>=40 && frame<65)keys.add('KeyD');if(frame>=90 && frame<100)keys.add('Space');if(frame>=150 && frame<210)keys.add('KeyS');return;}
     if(clip==='repair'){if(frame<38)keys.add('KeyW');if(frame>=38 && frame<58)keys.add('KeyS');if(frame===60)useRide();return;}
     if(clip==='parking'){
       if(frame===18 || frame===230 || frame===270)useRide();

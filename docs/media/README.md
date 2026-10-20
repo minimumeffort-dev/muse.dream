@@ -1464,3 +1464,17 @@ presentation clock, carrier ball alignment and continuous shadow extents.
 Other recordings retain their recorded presentation; their geometry, controls,
 commerce and saves remain accurate. No Dream vocabulary or example changed.
 [Source hashes, checks and remaining limits](../evidence/animation-continuity/verification.md).
+
+## Clean foreground reveals
+
+The scooter GIF, HD video and frame-95 still are refreshed together from 240
+native `?capture` frames. This pass turns behind the market roof to show the
+clean opening while riding and jumping. The source remains 2400 × 1350 at 30
+rendered frames per simulation second, with the same encoder settings above.
+There is no missing-frame interpolation or live performance claim.
+
+README, rendering, interiors and world priorities explain the changed reveal.
+The other asset, sports and economic captures retain their recorded presentation;
+their construction and interaction rules are unchanged. Interior stills with
+fully hidden tagged parts remain accurate because the final visibility state
+is unchanged. [Native GPU and world evidence](../evidence/clean-cutaways/verification.md).
