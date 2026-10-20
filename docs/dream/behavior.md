@@ -287,3 +287,57 @@ pose. Food ownership, consumption and timing belong to the fixed-step economy.
 
 
 [Shared meals](social.md) use existing seated humanoids and body-sized pedestrian travel. F, movement, jumping or R ends an unfinished meal and refunds both reserved portions before returning the companion to their routine.
+
+
+## On-foot strikes
+
+Walk toward a reachable prop and press **K**, or use the contextual **Hit** button.
+Your character must stand on dry ground and face it. A wall, height difference,
+seat or vehicle can prevent a hit. On sports grounds K retains its pass/tackle
+controls; sports-owned balls and NPCs are excluded from hand strikes.
+
+![Breaking and repairing a bakery table on foot](../media/hand.jpg)
+
+[The full sequence](../media/hand.mp4) · [GIF](../media/hand.gif) ·
+[Complete runnable world](../examples/on-foot-strike.dream)
+
+Enable the action once, alongside `world`, in the world-owning file:
+
+```dream
+strike(reach=10,speed=100,cooldown_s=.6);
+```
+
+`reach` is 6–16 world units from the player centre to the nearest contact surface.
+Ten units represent a metre. `speed` is 20–120 equivalent closing-speed units,
+using the existing impact thresholds. It is an arcade strength setting, not a
+force or damage-health model. `cooldown_s` is .35–2 simulation seconds. Unknown
+fields, out-of-range values and duplicate declarations fail compilation.
+
+The engine chooses one forward target with a clear straight contact path. It
+checks the actual cylinder or rectangle, vertical reach and intervening contacts,
+including another solid section of the same building. Existing Dream impact data
+decides what happens: a ball bounces, a table breaks, a weaker topple prop falls,
+and a sturdier object stays intact. Only the chosen object or section is affected.
+Category rules still apply to every matching prop; names do not grant exceptions.
+The hand does not move the player's physical body or give a vehicle extra speed.
+
+The bakery table is equipment. Hitting it interrupts reserved work and refunds
+its ingredients and wages. Open **M → Work**, select **Repair city fixtures** with
+the arrow keys and accept with **Enter**. That repair uses real kits, time and
+payment. Once the table is restored, baking is available again. The existing
+caretaker can claim it instead if you leave it unclaimed.
+
+Cooldown survives vehicle changes, R, streaming and save/reload; pause freezes
+simulation time, and Start over clears it. The gesture uses the existing bound
+humanoid joints, keeps planted feet and rigid limbs, and rests for reduced motion.
+No additional mesh, rig, item inventory or physics body is allocated. A world
+without `strike` keeps its earlier on-foot controls.
+
+```sh
+npm run -s dream -- check docs/examples/on-foot-strike.dream
+node scripts/dream.mjs context --features world,interactions
+```
+
+This is an unarmed prop interaction. Handheld tools, pickup/carry controls,
+terrain editing and NPC combat are separate capabilities.
+[Native verification and save upgrade](../evidence/on-foot-strike/verification.md).

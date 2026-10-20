@@ -542,3 +542,26 @@ rebasing graphs. Preserve every earlier migration, original slot and unaffected
 commitment. Historical appearance fixtures use the pinned simulation-32 source,
 not the current rules fingerprint. The dev capture replays a real collision from
 a car placed inside the hall; it does not imply hand tools or doorway car access.
+
+
+## On-foot strikes, r84
+
+One optional world-owner `strike(reach,speed,cooldown_s)` enables the grounded dry
+standing K action outside sport grounds. Reach 6..16 is centre-to-contact surface;
+speed 20..120 is an equivalent closing speed; cooldown .35..2 uses simulation
+time. Target only one forward reactive prop, with exact contact distance/height,
+static sight and stable ID ties. Another core/zone of the same object can block
+sight. Never hit NPCs or sports-owned balls. Keep K pass/tackle priority, menu
+input isolation, per-press ownership and all existing actor/body/fragment budgets.
+
+Reuse shared break/topple and bounce response, including immediate ordinary
+contact/world-boundary containment after a hand impulse. Preserve player momentum
+and cloned input state. The existing humanoid rig supplies the gesture without
+new meshes/joints; keep stance feet, rigid limb lengths, reduced motion and pause.
+No hand-held item inventory, damage-health model or generated controller.
+
+Format 18/simulation 34 registers exact r83/simulation 33 by removing only strike
+data. Initialize only `strikeReadyAtS` at saved time; no other field, clock or
+resource changes. Old formats retain strict field sets. Preserve every earlier
+projection and slot, R/vehicle cooldowns and current round trips. The current
+native hand recording walks through the doorway; it does not place a car inside.

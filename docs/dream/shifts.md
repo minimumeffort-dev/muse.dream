@@ -87,4 +87,4 @@ two sections retain its old paved footprint, and the teacher's work anchor is
 centered on the existing entrance. [Persistence](../persistence.md) ·
 [Verification and limits](../evidence/staff-shifts/verification.md).
 
-Off-duty staff can now join [shared meals](social.md) at their break destinations. Current saves use format 17 / simulation 33; the shift upgrade above remains in the preserved migration chain.
+Off-duty staff can now join [shared meals](social.md) at their break destinations. Current saves use format 18 / simulation 34; the shift upgrade above remains in the preserved migration chain.

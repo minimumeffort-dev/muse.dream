@@ -15,7 +15,7 @@ import charactersR80 from './compatibility/r80-characters.json';
 import serviceR81 from './compatibility/r81-indoor-service.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=33;
+export const SAVE_SIMULATION_VERSION=34;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -98,10 +98,21 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r84 adds bounded on-foot strikes and a saved cooldown; all old geometry stays exact. */
+export const STRIKE_COMPATIBILITY='f1a8ec4b7803b4bbd21984e5baef2689b3fc6378f81cca0c95060e8d34d374f3';
+const strikeProjections=new WeakMap<Scene,Scene>();
+export function preStrikeScene(scene:Scene):Scene{
+ if(!scene.strike)return scene;
+ const cached=strikeProjections.get(scene);if(cached)return cached;
+ const {strike,...prior}=scene;strikeProjections.set(scene,prior);return prior;
+}
+export function preStrikeCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preStrikeScene(scene),33,true,encode);}
+
 /** r83 binds work to existing physical equipment; the prior world keeps simulation 32. */
 export const EQUIPMENT_COMPATIBILITY='a5b345f631855363a24d67e40268357e95970974fefd991788c46bf1c7f086ce';
 const equipmentProjections=new WeakMap<Scene,Scene>();
 export function preEquipmentScene(scene:Scene):Scene{
+ scene=preStrikeScene(scene);
  if(!scene.economy?.jobs.some(j=>j.equipment))return scene;
  const cached=equipmentProjections.get(scene);if(cached)return cached;
  const prior={...scene,economy:{...scene.economy,jobs:scene.economy.jobs.map(({equipment,...job})=>job)}};

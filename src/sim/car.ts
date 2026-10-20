@@ -43,7 +43,7 @@ export interface CarInput {
   boostPressed?:boolean;
   shoot?:boolean;shootPressed?:boolean;shootReleased?:boolean;
   matchPressed?:boolean;passPressed?:boolean;
-  talkPressed?:boolean;
+  talkPressed?:boolean;strikePressed?:boolean;
   commerce?:CommerceAction;
   aim?:{x:number;y:number};
 }
@@ -88,6 +88,7 @@ export interface CarState {
   /** True for the single step in which a boost fired (HUD flash). */
   boostedThisStep: boolean;
   carBoost:{held:boolean;activeUntilS:number;readyAtS:number};
+  strikeReadyAtS?:number;
   sports:SportState[];
   /** Live knockable props, in scene-object order. Solids never move. */
   props: PropState[];
@@ -125,6 +126,7 @@ export interface World {
   previousCourierSaveCompatibility?:string;
   previousPeopleSaveCompatibility?:string;
   previousInvitationSaveCompatibility?:string;
+  previousStrikeSaveCompatibility?:string;
   previousEquipmentSaveCompatibility?:string;
   previousServiceSaveCompatibility?:string;
   previousServiceNavigation?:import('../scene/ambient-navigation').AmbientGraph;
@@ -214,6 +216,7 @@ export function createCarAtSpawn(scene: Scene): CarState {
   return {
     control:{kind:"car"},vehicles:[],npcs:initialNpcs(scene),population:initialAmbient(scene),economy:initialEconomy(scene),distance:0,pitch:0,bank:0,
     jump:{held:false,bufferUntilS:0,coyoteUntilS:0},
+    ...(scene.strike ? {strikeReadyAtS:0} : {}),
     x: scene.spawn.x,
     y: scene.spawn.y,
     vx: 0,
@@ -252,6 +255,7 @@ export function resetCar(state: CarState, scene: Scene, resetRace = false): CarS
     npcs:state.npcs.map(n=>({...n})),population:state.population,economy:state.economy,
     lap: state.lap,
     boostReadyAtS: { ...state.boostReadyAtS },
+    ...(scene.strike ? {strikeReadyAtS:state.strikeReadyAtS} : {}),
     carBoost:{...fresh.carBoost,held:state.carBoost.held,readyAtS:state.carBoost.readyAtS},
     sports:state.sports.map(game=>({...game,held:false,possessed:false,chargeStartS:null,...(game.match ? {match:{...game.match,owner:null}} : {})})),
     props: state.props.map((p) => ({ ...p })),

@@ -64,7 +64,7 @@ it('keeps the omitted field compatible and rejects malformed supply lists with c
 
 it.each(['pending','out','eat','home'] as const)('saves and replays the %s phase with the same owner, clocks and food',phase=>{
  let s=ready();if(phase!=='pending'){s=tick(s,{kind:'accept_share',partner:'regular'});s=until(s,s=>s.economy!.shared?.phase===phase);}
- const w=world(),text=encodeSave(s,77,w),loaded=decodeSave(text,w);expect(JSON.parse(text).version).toBe(17);expect(loaded.worldTime).toBe(77);expect(loaded.state).toEqual(JSON.parse(JSON.stringify(s)));
+ const w=world(),text=encodeSave(s,77,w),loaded=decodeSave(text,w);expect(JSON.parse(text).version).toBe(18);expect(loaded.worldTime).toBe(77);expect(loaded.state).toEqual(JSON.parse(JSON.stringify(s)));
  let replay=loaded.state;for(let i=0;i<120;i++){s=tick(s);replay=tick(replay);}expect(replay).toEqual(s);expect(account(s).credits).toBe(20);expect(account(s).inventory.bread).toBe(0);
 });
 it.each(['pending','out','eat'] as const)('releases the %s claim on movement, jump, F, R or a broken bench without charging the guest',phase=>{

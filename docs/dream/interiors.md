@@ -10,7 +10,7 @@ The covered market now has a doorway you can walk through, a floor you can stand
 
 Leave your vehicle with **F**, then walk through the market's front entrance. The vendor now stands inside, behind the existing table: **H** starts paid baking, **B** buys bread and **G** eats what you carry. Walk around the table to the counter. The outdoor square is outside its forty-unit reach. Staff, customers and supply workers use the same doorway and clear interior aisle. A wall blocks buying, starting work and conversation; proximity alone is not enough. Leaving the work area or jumping cancels a batch and returns its reserved supplies and wage.
 
-This is one usable ground floor. It is not a restaurant, a system of stacked floors or a finished interior library. There is no hand-tool or furniture-grabbing control yet. The hall's tables, bench and crate use the existing impact and repair rules; the caretaker can walk to them through the doorway after damage.
+This is one usable ground floor. It is not a restaurant, a system of stacked floors or a finished interior library. K can now hit reachable props on foot. Handheld tools and furniture pickup are not implemented. The hall's tables, bench and crate use the existing impact and repair rules; the caretaker can walk to them through the doorway after damage.
 
 ## Give the floor an owner
 

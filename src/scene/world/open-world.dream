@@ -4,6 +4,7 @@ rule living_trees(kind=tree,mode=topple(speed=110,duration=1.1,lifetime=8));
 rule wooden_tables(kind=table,mode=break(speed=90,scatter=62,lift=100,spin=4,lifetime=6));
 rule wooden_benches(kind=bench,mode=break(speed=95,scatter=65,lift=65,spin=4,lifetime=6,pattern=splinter));
 voxel_world(object_cell=1,ground_cell=8,height_step=1);
+strike(reach=10,speed=100,cooldown_s=.6);
 daylight(cycle_s=600,start_hour=10);
 asset player_car(module=landmarks,object=little_rally_car);
 world(size=[14000,11000],spawn=[6330,4233],heading_deg=0,player=player_car,damage_pool=true);

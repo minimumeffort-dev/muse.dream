@@ -1532,3 +1532,24 @@ and city-map captures keep the same geometry and controls. The map needs no new
 image because no placement, terrain, street or entrance moves. Historical
 recordings remain pinned to their original source.
 [Native events, source hashes and verification](../evidence/work-equipment/verification.md).
+
+## On-foot prop interaction, r84
+
+`hand.gif`, `hand.mp4` and `hand.jpg` are refreshed together from 600
+consecutive native 2400 × 1350 PNG frames at 30 rendered frames per simulation
+second. The still is frame 32. The existing encoder produces 1600 × 900 HD
+video and a 1280 × 720 GIF, without missing-frame interpolation. This offline
+recording is not a live frame-rate measurement.
+
+The dev setup walks the player through the actual doorway and starts an ordinary
+paid bake. At frame 30 the player hits the table; the equipment interruption
+refunds that batch. At frame 60 the player requests the existing repair service,
+and at frame 330 starts a new bake. The final public diagnostic confirms one
+paid repair, one paid bake, an intact table and 27 coins. No car is seeded indoors
+and no damage is seeded. A separate native keyboard check verifies K dispatch.
+
+README, behavior, commerce, interior, language and persistence guides now describe
+this flow. The earlier equipment recording remains historical evidence of the
+r83 car-based dev fixture. No asset placement, road, terrain or entrance changed,
+so existing construction atlases and the city map remain accurate.
+[Native evidence, source hashes and checks](../evidence/on-foot-strike/verification.md).

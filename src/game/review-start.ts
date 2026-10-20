@@ -1,3 +1,5 @@
+import {strikeTarget} from '../sim/strike';
+import {objectContacts} from '../scene/contacts';
 import {worldSeats} from '../scene/seating';
 import {sceneInteriors,portalPoints,walkingHeight} from '../scene/interiors';
 import type {CarInput} from '../sim/car';
@@ -156,6 +158,27 @@ export function* businessReviewSteps(state:CarState,world:World):Generator<CarSt
  const prepared=yield* courierReviewSteps(state,world,'handoff');
  if(!prepared.economy?.accounts.some(a=>a.courier?.id==='kits_run' && a.courier.phase==='dropoff'))throw Error('The depot review needs a real pending supplier payment');
  return {...npcReviewStart(prepared,world,'station_resident'),vehicles:prepared.vehicles};
+}
+
+/** Walk from the public doorway to the table; no indoor car or seeded damage. */
+export function* handReviewSteps(state:CarState,world:World,working=false):Generator<void,CarState>{
+ const table=world.scene.objects.find(o=>o.id==='hall_table_east');if(!table)throw Error('The hand review needs the hall table');
+ const contact=objectContacts(world.scene,table)[0]!,approach={x:contact.x+contact.r+7,y:contact.y};
+ let next=interiorReviewStart(state,world);
+ for(let i=0;i<120*8;i++){const input=interiorReviewInput(next,world,Math.floor(i/4));next=stepInteractive(next,{steer:input.steer,throttle:input.throttle},1/120,world);if(i%30===0)yield;}
+ for(const at of [{x:approach.x+20,y:approach.y},approach]){
+  let arrived=false;
+  for(let i=0;i<120*10;i++){
+   const dx=at.x-next.x,dy=at.y-next.y,d=Math.hypot(dx,dy),a=Math.atan2(180,480);
+   if(d<1){arrived=true;break;}
+   next=stepInteractive(next,{steer:(dx*Math.cos(a)-dy*Math.sin(a))/d,throttle:(-dx*Math.sin(a)-dy*Math.cos(a))/d},1/120,world);if(i%30===0)yield;
+  }
+  if(!arrived)throw Error('The hand review did not reach its table approach');
+ }
+ for(let i=0;i<24;i++)next=stepInteractive(next,{steer:0,throttle:0},1/120,world);
+ if(strikeTarget(next,world)?.id!==table.id)throw Error('The on-foot review cannot reach its work table: '+JSON.stringify({x:next.x,y:next.y,heading:next.headingRad,elevation:next.elevation,grounded:next.grounded,target:strikeTarget(next,world)?.id,contact}));
+ if(working){next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:'work',job:'bake'}},1/120,world);if(next.economy?.accounts.find(a=>a.id==='pocket')?.work?.id!=='bake')throw Error('The hand review did not start its paid batch');}
+ return next;
 }
 
 /** Dev fixture starts a car inside the hall; damage and the complete repair still use real fixed steps. */

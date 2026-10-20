@@ -331,12 +331,15 @@ returning reserved ingredients and wages once. The caretaker repairs it from the
 same finite stock, then work resumes. Dream uses the same `equipment` rule for
 food preparation and workshop jobs. [How to author it](docs/dream/commerce.md#work-needs-equipment).
 
-![The caretaker repairs the bakery's equipment](docs/media/equipment.gif)
+![Hit, repair and return to paid work](docs/media/hand.gif)
 
-[Watch the recovery in HD](docs/media/equipment.mp4). This dev recording starts
-with a car inside the hall; ordinary play still has no hand tool.
+You can now hit reachable props on foot with **K**. Break the table, choose its
+repair from **M → Work**, then go back to baking. Balls use their existing bounce
+rules. Walls, reach and cooldown still matter; K keeps its sports controls on the
+pitch. [Watch the sequence in HD](docs/media/hand.mp4) ·
+[Author the interaction in Dream](docs/dream/behavior.md#on-foot-strikes).
 
-This is the first usable ground floor. Multiple floors, stairs, lifts and a hand-tool control for furniture are still to come. Existing saves have an explicit upgrade; business state survives visiting and unloading the hall.
+This is the first usable ground floor. Multiple floors, stairs, lifts, handheld tools and furniture pickup are still to come. Existing saves have an explicit upgrade; business state survives visiting and unloading the hall.
 
 ## Get out and play
 

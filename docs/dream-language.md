@@ -112,3 +112,8 @@ Optional `market(...,owner=account_id,sale=15)` makes an existing counter ownabl
 The base sale price plus available cash is paid to its personal seller once;
 stock and commitments stay with the business. Owners can transfer available
 capital locally through conserved transactions. [Ownership rules and example](dream/businesses.md#own-the-station-depot).
+
+Optional world-owner `strike(reach=10,speed=100,cooldown_s=.6)` enables bounded
+on-foot hits through the existing impact data. The engine owns target selection,
+wall/height checks, response and saved cooldown. It adds no generated controller,
+item body or NPC combat. [Controls and complete example](dream/behavior.md#on-foot-strikes).

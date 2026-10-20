@@ -229,3 +229,15 @@ it('fits a seated pelvis above the sitting surface and leaves both soles on the 
  for(const side of ['left','right']){const ankle=r.bone(`${side}_ankle`).getWorldPosition(new Vector3());expect(ankle.y).toBeCloseTo(3);expect(ankle.x).toBeGreaterThan(8);}
  const first=r.bone('left_knee').quaternion.toArray();advance(r,{speed:0,sittingHeight:18,enabled:false,eating:true},3);expect(r.bone('left_knee').quaternion.toArray()).toEqual(first);
 });
+
+it('extends the striking arm without moving planted feet or changing rigid lengths, and rests for reduced motion',()=>{
+ const resting=rig(),hitting=rig();advance(resting,{speed:0});advance(hitting,{speed:0});
+ resting.animation.update({...input,speed:0,time:2},1/60);hitting.animation.update({...input,speed:0,time:2,striking:.5},1/60);
+ resting.group.updateMatrixWorld(true);hitting.group.updateMatrixWorld(true);
+ const at=(r:ReturnType<typeof rig>,bone:string)=>r.bone(bone).getWorldPosition(new Vector3());
+ expect(at(hitting,'right_elbow').x).toBeGreaterThan(at(resting,'right_elbow').x+1);
+ for(const side of ['left','right'])expect(at(hitting,side+'_ankle').distanceTo(at(resting,side+'_ankle'))).toBeLessThan(1e-8);
+ expect(at(hitting,'right_shoulder').distanceTo(at(hitting,'right_elbow'))).toBeCloseTo(at(resting,'right_shoulder').distanceTo(at(resting,'right_elbow')),10);
+ const reduced=rig(),idle=rig();reduced.animation.update({...input,speed:0,enabled:false,striking:.5},1/60);idle.animation.update({...input,speed:0,enabled:false},1/60);
+ expect(reduced.bone('right_shoulder').quaternion.toArray()).toEqual(idle.bone('right_shoulder').quaternion.toArray());
+});

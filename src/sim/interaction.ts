@@ -1,3 +1,4 @@
+import {stepStrike} from './strike';
 import {leaveSharedMeal} from './social';
 import {nearbySeat,seatedPose} from './seating';
 import {walkingHeight} from '../scene/interiors';
@@ -197,7 +198,7 @@ function stepFreeVehicle(state:CarState,input:CarInput,dt:number,world:World,pro
   advanceImpactMotion(s,body,dt);return s;
 }
 export function stepInteractive(state:CarState,input:CarInput,dt:number,world:World):CarState {
-  return stepCommerce(stepSports(stepControlled(state,input,dt,world),state,input,dt,world),input,dt,world.scene);
+  return stepCommerce(stepSports(stepStrike(stepControlled(state,input,dt,world),input,world),state,input,dt,world),input,dt,world.scene);
 }
 function stepControlled(state:CarState,input:CarInput,dt:number,world:World):CarState {
   if(state.seated){

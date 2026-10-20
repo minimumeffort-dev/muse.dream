@@ -798,9 +798,9 @@ practice. The caretaker can repair the table using the existing finite supplies,
 then production becomes available again. Buying food, delivering supplies and
 repairing remain available during the interruption.
 
-![The caretaker restoring the bakery table](../media/equipment.jpg)
+![Repairing the bakery table after an on-foot hit](../media/hand.jpg)
 
-[Damage and recovery recording](../media/equipment.mp4) · [GIF](../media/equipment.gif)
+[On-foot damage and recovery](../media/hand.mp4) · [GIF](../media/hand.gif)
 
 Add `equipment` to an existing job. This exact recipe comes from the complete
 [work-equipment.dream](../examples/work-equipment.dream) example:
@@ -832,7 +832,8 @@ npm run -s dream -- check docs/examples/work-equipment.dream
 node scripts/dream.mjs context --features commerce,interactions
 ```
 
-The recording uses a dev fixture with a car already inside the hall. It replays a
-real collision and the caretaker's complete approach before recording repair and
-resumed work. This does not add a hand tool or a way to drive through the doorway.
-[Verification and save upgrade](../evidence/work-equipment/verification.md).
+The current recording walks through the doorway, hits the table on foot, refunds
+an interrupted batch, performs the shared repair and completes a new paid batch.
+[On-foot controls and Dream data](behavior.md#on-foot-strikes) ·
+[Equipment verification](../evidence/work-equipment/verification.md) ·
+[Current native sequence](../evidence/on-foot-strike/verification.md).

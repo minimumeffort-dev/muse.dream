@@ -71,9 +71,9 @@ it('requires every listed item and refunds a prior commitment without advancing 
 });
 
 it('pins r82 exactly, preserves old progress and refuses unregistered upgrade targets',async()=>{
- const current=createWorldScene(),old=c.preEquipmentScene(current);
- expect(await c.sha256(c.saveCompatibilitySource(current))).toBe(c.EQUIPMENT_COMPATIBILITY);expect(await c.sha256(c.preEquipmentCompatibilitySource(current))).toBe(c.SERVICE_COMPATIBILITY);
- expect(current.economy!.jobs.filter(j=>['bake','large_bake','pack_lunch'].includes(j.id)).map(j=>j.equipment)).toEqual([['hall_table_east'],['hall_table_east'],['hall_table_east']]);expect(c.SAVE_SIMULATION_VERSION).toBe(33);expect(current.objects).toBe(old.objects);expect(current.surfaces).toBe(old.surfaces);
+ const current=c.preStrikeScene(createWorldScene()),old=c.preEquipmentScene(current);
+ expect(await c.sha256(c.preStrikeCompatibilitySource(current))).toBe(c.EQUIPMENT_COMPATIBILITY);expect(await c.sha256(c.preEquipmentCompatibilitySource(current))).toBe(c.SERVICE_COMPATIBILITY);
+ expect(current.economy!.jobs.filter(j=>['bake','large_bake','pack_lunch'].includes(j.id)).map(j=>j.equipment)).toEqual([['hall_table_east'],['hall_table_east'],['hall_table_east']]);expect(current.objects).toBe(old.objects);expect(current.surfaces).toBe(old.surfaces);
  const w:World={...body(current),saveCompatibility:c.EQUIPMENT_COMPATIBILITY,previousEquipmentSaveCompatibility:c.SERVICE_COMPATIBILITY},oldWorld={...body(old),saveCompatibility:c.SERVICE_COMPATIBILITY};
  let s=npcReviewStart(createCarAtSpawn(old),oldWorld,'vendor');s=stepInteractive(s,{steer:0,throttle:0,commerce:{kind:'work',job:'bake'}},1/120,oldWorld);
  const prior={...s,broken:['hall_table_east']},packet=encodeSave(prior,71,oldWorld),restored=decodeSave(packet,w);

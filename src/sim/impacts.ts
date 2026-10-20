@@ -1,3 +1,4 @@
+import type {SceneObject} from '../scene/schema';
 import {contactSeparation} from '../scene/contact-geometry';
 import {growthScale} from '../scene/growth';
 import {DAMAGE_POOL_LIMITS} from '../scene/damage-pool';
@@ -59,34 +60,52 @@ export function breakOnContact(state:CarState,world:World,x:number,y:number,cont
   }
 }
 
+/** Shared closing-speed response for vehicle contacts and the bounded hand collider. */
+export function bounceOnContact(state:CarState,world:World,prop:CarState['props'][number],object:SceneObject):void{
+ const impact=impactOf(object.spec);if(impact?.kind!=='bounce')return;
+ const radius=objectRadius(object),height=objectHeight(object),elevation=prop.elevation??objectPlacement(world.scene,object,prop.x,prop.y).base;
+ const dx=prop.x-state.x,dy=prop.y-state.y,distance=Math.hypot(dx,dy),nx=distance>1e-6 ? dx/distance : Math.cos(state.headingRad),ny=distance>1e-6 ? dy/distance : Math.sin(state.headingRad);
+ const closing=(state.vx-prop.vx)*nx+(state.vy-prop.vy)*ny;
+ if(distance>=world.carRadius+radius || state.elevation>=elevation+height || state.elevation+(world.bodyHeight??playerHeight(world.scene))<=elevation || closing<=8)return;
+ prop.vx+=nx*closing*(1+impact.restitution);prop.vy+=ny*closing*(1+impact.restitution);prop.vz=Math.max(prop.vz??0,Math.min(220,closing*impact.lift));
+ prop.x=state.x+nx*(world.carRadius+radius+.1);prop.y=state.y+ny*(world.carRadius+radius+.1);
+ state.impacts.push({id:prop.id,kind:'bounce',x:prop.x,y:prop.y,elevation,speed:closing});
+}
+
+export function capBounceSpeed(prop:CarState['props'][number]):void{
+ const speed=Math.hypot(prop.vx,prop.vy);if(speed>560){prop.vx*=560/speed;prop.vy*=560/speed;}
+}
+
+/** Reuse the ordinary contact/boundary solve after an instantaneous hand impulse. */
+export function constrainBounce(state:CarState,world:World,prop:CarState['props'][number],object:SceneObject,elevation=prop.elevation??objectPlacement(world.scene,object,prop.x,prop.y).base,actors=actorContacts(world.scene,state.timeS,state)):void{
+ const {scene}=world,impact=impactOf(object.spec);if(impact?.kind!=='bounce')return;
+ const radius=objectRadius(object),height=objectHeight(object);
+ const contacts=[...queryStaticContacts(scene,prop.x,prop.y,radius,state),...actors];
+ for(const c of contacts){
+   const {distance,nx:ax,ny:ay}=contactSeparation(c,prop.x,prop.y);
+   if(isBroken(state,c) || distance>=radius || elevation>=c.top || elevation+height<=c.bottom)continue;
+   const dot=prop.vx*ax+prop.vy*ay;
+   prop.x+=ax*(radius-distance+.1);prop.y+=ay*(radius-distance+.1);
+   if(dot<0){prop.vx-=ax*dot*(1+impact.restitution);prop.vy-=ay*dot*(1+impact.restitution);}
+ }
+ if(prop.x<radius || prop.x>scene.canonical.width-radius){prop.x=Math.max(radius,Math.min(scene.canonical.width-radius,prop.x));prop.vx*=-impact.restitution;}
+ if(prop.y<radius || prop.y>scene.canonical.height-radius){prop.y=Math.max(radius,Math.min(scene.canonical.height-radius,prop.y));prop.vy*=-impact.restitution;}
+}
+
 /** Bounded ballistic pieces are cosmetic contacts with terrain; they never block the racing line. */
 export function advanceImpactMotion(state:CarState,world:World,dt:number,hitCar=true):void {
   const {scene}=world,data=sceneContacts(scene),actors=actorContacts(scene,state.timeS,state);
   for(const prop of state.props){
     const object=data.objects.get(prop.id)!,impact=impactOf(object.spec);if(impact?.kind!=="bounce")continue;
-    const radius=objectRadius(object),height=objectHeight(object),placement=objectPlacement(scene,object,prop.x,prop.y);
+    const placement=objectPlacement(scene,object,prop.x,prop.y);
     let elevation=prop.elevation??placement.base,vz=prop.vz??0;
-    const dx=prop.x-state.x,dy=prop.y-state.y,distance=Math.hypot(dx,dy),nx=distance>1e-6 ? dx/distance : Math.cos(state.headingRad),ny=distance>1e-6 ? dy/distance : Math.sin(state.headingRad);
-    const closing=(state.vx-prop.vx)*nx+(state.vy-prop.vy)*ny;
-    if(hitCar && distance<world.carRadius+radius && state.elevation<elevation+height && state.elevation+(world.bodyHeight??playerHeight(scene))>elevation && closing>8){
-      prop.vx+=nx*closing*(1+impact.restitution);prop.vy+=ny*closing*(1+impact.restitution);vz=Math.max(vz,Math.min(220,closing*impact.lift));
-      prop.x=state.x+nx*(world.carRadius+radius+.1);prop.y=state.y+ny*(world.carRadius+radius+.1);
-      state.impacts.push({id:prop.id,kind:"bounce",x:prop.x,y:prop.y,elevation,speed:closing});
-    }
+    if(hitCar)bounceOnContact(state,world,prop,object);
+    vz=prop.vz??0;
     const damping=Math.exp(-(object.spec && "dslVersion" in object.spec ? object.spec.body.frictionPerS??.7 : .7)*dt);
     prop.vx*=damping;prop.vy*=damping;
-    const speed=Math.hypot(prop.vx,prop.vy);if(speed>560){prop.vx*=560/speed;prop.vy*=560/speed;}
+    capBounceSpeed(prop);
     prop.x+=prop.vx*dt;prop.y+=prop.vy*dt;
-    const contacts=[...queryStaticContacts(scene,prop.x,prop.y,radius,state),...actors];
-    for(const c of contacts){
-      const {distance,nx:ax,ny:ay}=contactSeparation(c,prop.x,prop.y);
-      if(isBroken(state,c) || distance>=radius || elevation>=c.top || elevation+height<=c.bottom)continue;
-      const dot=prop.vx*ax+prop.vy*ay;
-      prop.x+=ax*(radius-distance+.1);prop.y+=ay*(radius-distance+.1);
-      if(dot<0){prop.vx-=ax*dot*(1+impact.restitution);prop.vy-=ay*dot*(1+impact.restitution);}
-    }
-    if(prop.x<radius || prop.x>scene.canonical.width-radius){prop.x=Math.max(radius,Math.min(scene.canonical.width-radius,prop.x));prop.vx*=-impact.restitution;}
-    if(prop.y<radius || prop.y>scene.canonical.height-radius){prop.y=Math.max(radius,Math.min(scene.canonical.height-radius,prop.y));prop.vy*=-impact.restitution;}
+    constrainBounce(state,world,prop,object,elevation,actors);
     const floor=objectPlacement(scene,object,prop.x,prop.y).base;
     elevation+=vz*dt-150*dt*dt;vz-=300*dt;
     if(elevation<=floor){elevation=floor;vz=Math.abs(vz)>18 ? Math.abs(vz)*impact.restitution : 0;}

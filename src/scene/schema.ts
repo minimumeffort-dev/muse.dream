@@ -1,3 +1,4 @@
+import {strikeSchema} from './strike';
 import {seatingProblems} from './seating';
 import {DAMAGE_POOL_LIMITS,impactBudget,pooledImpact} from './damage-pool';
 import {ambientSchema,ambientProblem,AMBIENT_LIMITS} from './ambient';
@@ -159,6 +160,7 @@ export const sceneSchema = z.object({
   }),
   damagePool:z.boolean().optional(),
   daylight:daylightSchema.optional(),
+  strike:strikeSchema.optional(),
   voxelWorld:voxelWorldSchema.optional(),
   terrain: terrainSchema.default({ hills: [] }),
   routes:z.array(routeSchema).max(12).default([]),

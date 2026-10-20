@@ -919,6 +919,17 @@
         "at": "v2"
       }
     },
+    "strike": {
+      "contexts": [
+        "top"
+      ],
+      "id": false,
+      "fields": {
+        "reach": "n",
+        "speed": "n",
+        "cooldown_s": "n"
+      }
+    },
     "daylight": {
       "contexts": [
         "top"
@@ -1417,6 +1428,24 @@
     },
     "execution": "one transition per fixed tick, first matching declaration wins; elapsed resets on transition; per-instance clocks live outside Scene; patrol resumes without teleport; face=player turns stationary actors at 2.5 rad/s",
     "boundary": "data-only bounded state machines; no scripts, pathfinding, generated input profiles or model calls; root world.player remains the original car"
+  },
+  "striking": {
+    "limits": {
+      "reach": [
+        6,
+        16
+      ],
+      "speed": [
+        20,
+        120
+      ],
+      "cooldownS": [
+        0.35,
+        2
+      ],
+      "handRadius": 1
+    },
+    "semantics": "Optional one world-owner strike(reach,speed,cooldown_s). A grounded dry standing player can hit one reachable prop in front with K, outside sports grounds. Engine checks exact contact boundaries, vertical reach and intervening solid contacts. Reuse authored bounce/break/topple thresholds and existing fragment budgets. speed is an arcade equivalent closing speed, not force or damage health. Too-sturdy props remain intact. Cooldown advances in fixed simulation time and survives R, vehicles, streaming and saves. No NPC combat, item inventory, new body, generated controller or hand tool mesh."
   },
   "daylight": {
     "cycleSeconds": [

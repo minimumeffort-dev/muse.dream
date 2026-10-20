@@ -122,6 +122,7 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 
 | Command | Context | ID / block | Fields |
 | --- | --- | --- | --- |
+| `strike` | top | no ID / no block | `reach: n`, `speed: n`, `cooldown_s: n` |
 | `daylight` | top | No ID / no block | `cycle_s: n`, `start_hour: n` |
 | `world` | top | No ID / no block | `size: v2`, `spawn: position2`, `heading_deg: n`, `player?: ref`, `damage_pool?: bool` |
 | `road` | top | ID / no block | `width: n`, `points?: points2`, `via?: symbols`, `style?: racing / street` |

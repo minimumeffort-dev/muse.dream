@@ -52,7 +52,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 17 retains the exact source hash and compatibility fingerprint, with simulation version 33. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 18 retains the exact source hash and compatibility fingerprint, with simulation version 34. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -634,3 +634,24 @@ time advance or NPC decisions. Other saved fields, journeys, funds, materials,
 damage, bodies, seats and clocks remain. Unaffected commitments finish normally.
 The old slot stays intact; subsequent current reloads do not refund again.
 [Tests and native recording](evidence/work-equipment/verification.md).
+
+
+## On-foot strikes, r84
+
+Format 18 / simulation 34 adds only optional `strikeReadyAtS` to simulation state.
+It is required in worlds declaring `strike`, finite and no later than the saved
+time plus the declared cooldown. It cannot create damage on reload. Worlds
+without the declaration retain an absent field. Pending presses and impact
+flashes are not saved. R and vehicle changes retain the deadline; Start over
+uses zero, and pause freezes simulation time.
+
+The exact registered r83 projection removes only `Scene.strike` and pins
+simulation 33. Decode its original format-17 shape first, preserving every body,
+ledger, task, damage record and clock. Initialize the new cooldown to saved time,
+so it is immediately available without a false initial gesture. No graph, floor,
+resource, position or attribution rebase occurs. Retain the original slot; new
+writes use a format-18 key. Current reloads do not reapply migration.
+
+Earlier formats retain their strict field sets and registered projections. A
+format-17 packet cannot smuggle in the new cooldown; unknown targets and missing
+registration still fail. [Checks and native sequence](evidence/on-foot-strike/verification.md).

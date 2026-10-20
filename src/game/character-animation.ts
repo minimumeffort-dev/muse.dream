@@ -22,7 +22,7 @@ export interface CharacterInput {
   travel?:TravelPose;
   ground?:GroundSampler;
   sport?:{kind:'football'|'basketball';possessed:boolean;charging:boolean;shotAge:number;action?:{kind:'kick'|'throw'|'contest';age:number}};
-  working?:boolean;
+  working?:boolean;striking?:number;
   eating?:boolean;
   sittingHeight?:number;
 }
@@ -163,6 +163,11 @@ export class CharacterAnimator {
       land.right_shoulder[2]=mix(land.right_shoulder[2],.6+bite*.28,this.eating);
       land.right_elbow[2]=mix(land.right_elbow[2],1.35+bite*.18,this.eating);
       land.left_shoulder[2]=mix(land.left_shoulder[2],.3,this.eating);land.left_elbow[2]=mix(land.left_elbow[2],.8,this.eating);
+    }
+    if(active && input.grounded && !input.swimming && input.sittingHeight===undefined && input.striking!==undefined && input.striking>=0 && input.striking<=1){
+      const hit=Math.sin(Math.sqrt(input.striking)*Math.PI)**.6;
+      land.right_shoulder[2]=mix(land.right_shoulder[2],1.45,hit);land.right_elbow[2]=mix(land.right_elbow[2],.08,hit);
+      land.left_shoulder[2]=mix(land.left_shoulder[2],.65,hit);land.left_elbow[2]=mix(land.left_elbow[2],.5,hit);land.spine[1]-=.1*hit;
     }
     swim.root=[0,Math.sin(this.swimPhase*tau)*.11*effort,-mix(.1,Math.PI/2,effort)];
     swim.spine=[0,0,.27*effort];

@@ -8,7 +8,7 @@ export const DREAM_AGENT_FEATURES={
   objects:feature('material let component object body measure ground foundation contact seat rideable emit group joint mount repeat use part beam spin roll sway swing stride open deform',['components','geometry','humanoid','proportions','seating']),
   world:feature('world road junction checkpoint hill tint bridge water watercourse route point place effect unresolved',['worldLimits','agents','transit'],['objects']),
   modules:feature('asset include',['modules'],['objects']),
-  interactions:feature('rule impact fragment zone bounce break topple',['interactionRules','destruction'],['objects']),
+  interactions:feature('rule impact fragment zone bounce break topple strike',['interactionRules','destruction','striking'],['objects']),
   city:feature('street surface marking site crossing stop',['urbanGround','cityAccess','transit'],['world','npcs']),
   interiors:feature('interior portal',['interiors'],['city']),
   npcs:feature('behavior state on',['agents'],['world']),

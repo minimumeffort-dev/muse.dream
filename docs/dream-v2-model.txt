@@ -274,6 +274,18 @@ exactly one world-owning layout for compileDreamScene; never split checkpoints o
 terrain across district files. Final merged geometry must pass playability.
 
 ## interactions
+Optional once in the world-owning file:
+strike(reach=10,speed=100,cooldown_s=.6);
+This enables the player's K hit on dry grounded feet outside sports grounds.
+reach is 6..16 world units from the player centre; speed is 20..120 equivalent
+closing-speed units, not force/health; cooldown_s is .35..2 simulation seconds.
+Engine selects one forward reachable prop with clear contact sight and height.
+Existing bounce/break/topple/zone rules decide the response. All matching props
+use the same rule; no labels or one-off immunity. NPCs and sports-owned balls
+cannot be hit. No tool inventory, new bodies, generated controller or NPC combat.
+Cooldown and damage survive R, vehicles, streaming and saves. No strike declaration
+keeps legacy on-foot behavior. See examples/on-foot-strike.dream.
+
 DESTRUCTION EXTENSIONS
 Bounce: knockable body; restitution in [0.1,0.9], lift in [0.05,0.8].
 Break: solid body; speed 40..400, scatter 0..160, lift 0..180, spin 0..8,

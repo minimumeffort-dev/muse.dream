@@ -6,6 +6,11 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights on-foot strike declarations at full boundaries and escapes authored HTML',()=>{
+    const html=highlight('strike(reach=10,speed=100,cooldown_s=.6); // <Hand>&');
+    expect(html).toContain('class="dream-keyword">strike</span>');expect(html).toContain('class="dream-field">reach</span>');expect(html).toContain('&lt;Hand&gt;&amp;');expect(highlight('striker strike_extra reacher reach_extra')).not.toMatch(/dream-(?:keyword|field)/);
+  });
+
   it('highlights equipment only at field boundaries and escapes labels and comments',()=>{
     const html=highlight('work bake(label="<Bench>&",equipment=[table_one]); // <Tool>&');
     expect(html).toContain('class="dream-field">equipment</span>');expect(html).toContain('&lt;Bench&gt;&amp;');expect(html).toContain('&lt;Tool&gt;&amp;');expect(highlight('equipments equipment_extra unequipment')).not.toMatch(/dream-(?:keyword|field)/);
