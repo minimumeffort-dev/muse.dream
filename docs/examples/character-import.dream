@@ -1,0 +1,3 @@
+dream 2;
+asset explorer(module=city_people,object=walker);
+asset passenger(module=city_people,object=traveler);

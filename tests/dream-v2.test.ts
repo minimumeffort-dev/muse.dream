@@ -1,3 +1,4 @@
+import characters from "../src/scene/world/city_people.dream?raw";
 import { describe,expect,it } from "vitest";
 import { compileDream,compileDreamWorld,compileDreamScene,checkDream,formatDream,migrateDream,DreamError } from "../src/scene/dream";
 import contractSnapshot from "../docs/dream-v2-contract.json";
@@ -146,7 +147,8 @@ describe("located repair diagnostics and atomic rejection",()=>{
     [liveActivities,"rideable(at=[-19,18,0]);","group forbidden(){rideable(at=[0,16,0]);}"],
   ])("rejects a mutated live v2 library (case %#)",(source,from,to)=>{
     const changed=source.replace(from,to);expect(changed).not.toBe(source);
-    expect(checkDream(changed).ok).toBe(false);
+    expect(checkDream(source,{city_people:characters}).ok).toBe(true);
+    expect(checkDream(changed,{city_people:characters}).ok).toBe(false);
   });
   it("locates the exact field and includes allowed replacements",()=>{
     const result=checkDream(`${palette}\nobject toy(label="Toy"){\n${body}\npart block(shape=box,material=red,at=[0,5,0],dimensions=[10,10,10]);\n}`);

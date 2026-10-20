@@ -37,7 +37,7 @@ benches keep their usable seats. [Complete Dream source](examples/furniture-cons
 
 The seated traveler and standing Explorer are separate engine-provided Dream assemblies, with a shared face and matching clothes. The Explorer, eight civic characters and four sports variants use twelve bound joints for walking and running. The outfits include coats, aprons, skirts, hoodies, gloves, backpacks and carried items, with different hair, glasses and facial hair. The Explorer also crawls and treads in water, and keeps its own physical size when switching to a seated vehicle pose. Bread and a harvest bowl remain standalone authoring examples. [Open the full atlas](media/assets-all.jpg), or follow the [local gallery setup](README.md#try-it-locally) for interactive inspection. Front, right, back and left views share the same geometry. The phase selector exposes wheel and joint motion.
 
-![Twelve character variants built with the same bound anatomy](media/people-wardrobe.png)
+![Sixteen character constructions built from the same bound anatomy](media/people-wardrobe.png)
 
 ![Matching standing and seated player construction](media/player-characters.png)
 
@@ -277,3 +277,16 @@ The [furniture](examples/furniture-construction.dream) and
 [plant](examples/plant-construction.dream) examples contain the complete objects.
 Local impact data avoids applying a blanket rule to unrelated custom scenery.
 Shelters with compound contacts and sports targets retain their existing behavior.
+
+## One source for city people and the player
+
+All fourteen exported person templates, the Explorer and the seated Traveler
+now share [one complete library](examples/city-person.dream). Shaped shoulders,
+waists and sleeves replace the square shirt silhouette. Faces have chamfered
+corners, ears and brows; hair, facial hair and hats retain distinct profiles.
+The player and passenger share the same measured head, with independent body
+sizes. Existing clothing, conversations, work, sports and ownership stay in place.
+
+There are still 133 placed people. Bodies, scales, joints and pedestrian nodes
+are equal to r80; the registered upgrade preserves saved state. These remain
+stylized rigid assemblies. [Motion and measured costs](evidence/character-construction/verification.md).

@@ -481,3 +481,13 @@ actors and 256 flock birds. Its geometry/instance typed arrays change from
 to 205,000. Family meshes rise from 57 to 64 because of distinct limb/face
 materials. These are full-detail fixture counts, not per-frame draws, total
 browser memory, VRAM or an FPS improvement. [Raw counts](evidence/wildlife-construction/geometry.json).
+
+## Character construction, r81
+
+The refined people keep the existing instanced attributes, live rigs, joint
+frames and color/depth pose paths. Sixteen prototype specimens use 1,535,712
+geometry-buffer bytes and 13,768 triangles, versus 993,844 bytes and 8,230
+triangles before; both sets contain sixteen compacted meshes. This is a bounded
+increase in asset detail, not a rendering speedup. These source-buffer counts
+exclude live instance records, total browser memory and VRAM.
+[Conditions and raw rows](evidence/character-construction/prototype-metrics.json).

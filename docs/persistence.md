@@ -591,3 +591,13 @@ claims, stock and credits carry over. A tub or stall first knocked down after
 the upgrade enters the existing broken-object state and the same paid repair
 service, which now covers 449 targets.
 [Checks and browser evidence](evidence/street-furniture/verification.md).
+
+### Shared character construction (r81)
+
+All 133 placed people and both squads gain the refined visuals. A registered
+r80 projection restores their exact prior specifications, scales and squad
+templates before the earlier migration chain. Bodies, joints, contacts and the
+pedestrian graph remain equal. Format 17, simulation 32 and saved fields stay
+unchanged. Old slots remain intact while a new slot stores the upgraded world.
+Native repair progress, every ledger and world time survive the upgrade and
+reload exactly. [Evidence](evidence/character-construction/verification.md).

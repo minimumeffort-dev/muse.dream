@@ -1399,3 +1399,25 @@ Earlier recordings retain their historical behavior and background details.
 README, asset, impact, repair and persistence guides were reviewed and updated;
 the model instructions, compiler contract and highlighting need no vocabulary
 change. [Checks, native saves and source/frame manifest](../evidence/street-furniture/verification.md).
+
+## Shared character construction, r81
+
+`wardrobe.gif` / `.mp4` and `wardrobe.jpg` show all sixteen shared constructions
+from the native `?people&capture` gallery: 240 actual rendered PNGs at 30 frames
+per simulation second, poster frame 0. GIF uses 1280 × 720, 256 colors and loss
+20; HD uses 1600 × 900, CRF 18. The character closeup uses the same settings
+for 180 frames, with `character-motion.jpg` from frame 60.
+
+Driving, locomotion, swimming, football, basketball and switching are refreshed
+from 210/180/180/480/480/240 native main-game frames. Their GIF/HD pairs and
+matching world/driving, on-foot/jumping, swimming, sports-park, basketball and
+riding/switching posters share those sources. Source frames are 2400 × 1350.
+No interpolation or performance measurement. The complete asset, sports,
+people, player and squad sheets are fresh native gallery exports. The four-angle
+people stills are 2400 × 1860. Other focused sheets retain unchanged focus
+geometry; earlier conversation and economic recordings retain their historical
+costumes and revision. The generated map has unchanged layout and footprints.
+
+README, people, construction, library, model-authoring, rendering and persistence
+guides are updated. No compiler vocabulary changed.
+[Source/frame manifest, native saves, checks and limitations](../evidence/character-construction/verification.md).

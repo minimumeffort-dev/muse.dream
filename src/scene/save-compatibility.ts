@@ -11,6 +11,7 @@ import plantsR76 from './compatibility/r76-plants.json';
 import furnitureR77 from './compatibility/r77-furniture.json';
 import wildlifeR78 from './compatibility/r78-wildlife.json';
 import fixturesR79 from './compatibility/r79-street-furniture.json';
+import charactersR80 from './compatibility/r80-characters.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
 export const SAVE_SIMULATION_VERSION=32;
@@ -96,11 +97,24 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r81 refines the shared character family, retaining the exact r80 world. */
+export const CHARACTERS_COMPATIBILITY='5bd553a8bc5a9639513a5d19a2bcad969ec74e06b46627ffd6448b60067f16b3';
+const characterPoses=new Map(charactersR80.placements.map(p=>[p.id,p])),characterSports=new Map(charactersR80.sports.map(s=>[s.id,s]));
+const characterProjections=new WeakMap<Scene,Scene>();
+export function preCharactersScene(scene:Scene):Scene{
+ if(!scene.objects.some(o=>characterPoses.has(o.id) && o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && o.spec.parts.some(p=>p.shape==='prism' && p.size[0]===12 && p.size[1]===18)))return scene;
+ const cached=characterProjections.get(scene);if(cached)return cached;
+ const template=(index:number)=>charactersR80.templates[index] as unknown as ObjectDslV2;
+ const prior={...scene,objects:scene.objects.map(o=>{const p=characterPoses.get(o.id);return p ? {...o,spec:template(p.template),scale:p.scale} : o;}),sports:scene.sports.map(s=>{const before=characterSports.get(s.id);return !before || !s.match ? s : {...s,match:{...s.match,teams:s.match.teams.map((t,i)=>{const old=before.teams[i]!;return {...t,specs:old.specs.map(template),...('keeperSpec' in old ? {keeperSpec:template(old.keeperSpec!)} : {})};})}};})};
+ characterProjections.set(scene,prior);return prior;
+}
+export function preCharactersCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preCharactersScene(scene),32,true,encode);}
 /** r80 makes street tubs and produce stalls topple, retaining exact released r79 data. */
 export const FIXTURES_COMPATIBILITY='1c5352790e1f50878a43c4054eb9bb28af1e9bd970d3c5bf1f4636225acd8e76';
 const fixturesTemplates=new Map(fixturesR79.templates.flatMap(t=>t.objects.map(id=>[id,t.spec as unknown as ObjectDslV2] as const))),fixturesPlacements=new Map(fixturesR79.placements.map(p=>[p.id,p]));
 const fixturesProjections=new WeakMap<Scene,Scene>();
 export function preFixturesScene(scene:Scene):Scene{
+ scene=preCharactersScene(scene);
  if(!scene.objects.some(o=>fixturesTemplates.has(o.id) && o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && o.spec.impact))return scene;
  const cached=fixturesProjections.get(scene);if(cached)return cached;
  const prior={...scene,objects:scene.objects.map(o=>{const spec=fixturesTemplates.get(o.id),pose=fixturesPlacements.get(o.id);return spec && pose ? {...o,spec,x:pose.x,y:pose.y,scale:pose.scale} : o;})};

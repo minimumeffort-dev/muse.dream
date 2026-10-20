@@ -29,6 +29,12 @@ Two skills govern all work here: [Ponytail](.agents/skills/ponytail/SKILL.md)
 [`paper-game`](.agents/skills/paper-game/SKILL.md) (domain invariants).
 Provenance and evidence rules: [`docs/agent-workflow.md`](docs/agent-workflow.md).
 
+Use focused checks for the affected behavior during iteration. Run the full suite
+once before merge/deployment, or after broad changes to shared compiler, physics
+or save behavior. Do not rerun a passing full suite for subsequent prose or capture
+updates; check those affected paths instead. CI retains the complete suite.
+Keep slices small enough to review and push without collecting unrelated work.
+
 ## Commit and push every change
 
 After each completed change, run the appropriate checks, update the required
@@ -522,7 +528,7 @@ ambient walking spacing, the r70 airport connector, character wardrobe
 (r71), the r72/r73 fixture service, wind-safe trees (r74), the utility fleet
 (r75), whole-library asset direction, and faceted tree, landscape plant,
 ground cover, furniture and wildlife construction (r76 to r79), and street
-furniture toppling (r80). That file is
+furniture toppling (r80) and shared character construction (r81). That file is
 not loaded automatically, so read the relevant section there, alongside its
 linked guide, before changing a covered area.
 

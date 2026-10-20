@@ -73,7 +73,7 @@ object golf_pin(label="Golf flag"){
   part flag(shape=box,material=yellow,at=[3,19,0],size=[6,4,0.5],motion=sway(deg=4,hz=0.3));
   part cup(shape=cylinder,material=dark,at=[0,0.3,0],size=[2,0.5,2]);
 }
-component person(params=[]){
+component person(){
   part body(shape=capsule,material=blue,at=[0,10,0],size=[5,6,3.5]);
   part shorts(shape=box,material=dark,at=[0,7,0],size=[5,2,3.5]);
   part head(shape=sphere,material=skin,at=[0,15,0],size=[3.5,4,3.5]);
@@ -83,128 +83,8 @@ component person(params=[]){
   }
   part nose(shape=sphere,material=skin,at=[0,14.8,1.9],size=[.7,.8,.7]);
 }
-let legacy_human_unit(value=57.20000076293945/17.100000381469727);
-material deep_skin(style=toon,colors=[#925e45,#714631]);
-component civic_person(params=[athletic,long_sleeves,bag],materials=[top,complexion,handwear,trousers,shoes]){
- joint pelvis(bone=root,at=[0,25,0]){
-  part hips(shape=box,material=top,at=[0,-.5,0],size=[7.8,4,11.6]);
-
-  joint chest(bone=spine,at=[0,1,0]){
-   part torso(shape=box,material=top,at=[0,8.5,0],size=[8.3,18,12]);
-   part neck(shape=box,material=complexion,at=[0,19,0],size=[3.6,4.2,3.8]);
-   part head(shape=box,material=complexion,at=[0,25.4,0],size=[9.2,9.2,8.8]);
-
-   part nose(shape=box,material=complexion,at=[5,24.5,0],size=[1,1.4,1.4]);
-   part mouth(shape=box,material=dark,at=[4.65,22.8,0],size=[.2,.35,1.1]);
-   repeat face(index=s,count=2){
-    let side(value=s*2-1);
-    part eye(shape=box,material=dark,at=[4.65,26.1,side*2],size=[.2,1,.9]);
-    part collar(shape=box,material=white,at=[4.22,16.8,side*1.5],size=[.25,1.2,1.3]);
-   }
-   repeat uniform(index=u,count=athletic){part stripe(shape=box,material=white,at=[4.22,12.5,0],size=[.25,1,10.4]);}
-
-   repeat backpack(index=b,count=bag){
-    part pack(shape=box,material=dark,at=[-5.25,8,0],size=[3.4,11,8.8]);
-    repeat straps(index=s,count=2){
-     voxels strap(material=dark,at=[0,10.3,s*7.6-3.8],size=[9.1,14.6,1.4],grid=[10,16,2]){
-      fill front(from=[9,0,0],to=[10,16,2]);
-      fill back(from=[0,0,0],to=[1,16,2]);
-      fill shoulder(from=[1,15,0],to=[9,16,2]);
-     }
-    }
-   }
-   repeat details(index=d,count=1-athletic){
-    part pocket_seam(shape=box,material=dark,at=[4.2,11,-3.2],size=[.2,.35,2.8]);
-   }
-   joint left_arm(bone=left_shoulder,at=[0,16.4,7.2]){
-    part sleeve(shape=box,material=top,at=[0,-4.5,0],size=[3.8,10.5,4]);
-    joint left_forearm(bone=left_elbow,at=[0,-9.5,0]){
-     repeat bare(index=a,count=1-long_sleeves){part forearm(shape=box,material=complexion,at=[0,-4.3,0],size=[3.2,9.6,3.4]);}
-     repeat covered(index=a,count=long_sleeves){part forearm(shape=box,material=top,at=[0,-4.3,0],size=[3.2,9.6,3.4]);}
-     voxels hand(material=handwear,at=[.4,-9.9,0],size=[3.6,4.5,2.7],grid=[4,5,3]){
-      fill palm(from=[0,0,0],to=[3,5,3]);
-      fill thumb(from=[3,2,0],to=[4,4,2]);
-     }
-    }
-   }
-   joint right_arm(bone=right_shoulder,at=[0,16.4,-7.2]){
-    part sleeve(shape=box,material=top,at=[0,-4.5,0],size=[3.8,10.5,4]);
-    joint right_forearm(bone=right_elbow,at=[0,-9.5,0]){
-     repeat bare(index=a,count=1-long_sleeves){part forearm(shape=box,material=complexion,at=[0,-4.3,0],size=[3.2,9.6,3.4]);}
-     repeat covered(index=a,count=long_sleeves){part forearm(shape=box,material=top,at=[0,-4.3,0],size=[3.2,9.6,3.4]);}
-     voxels hand(material=handwear,at=[.4,-9.9,0],size=[3.6,4.5,2.7],grid=[4,5,3]){
-      fill palm(from=[0,0,0],to=[3,5,3]);
-      fill thumb(from=[3,2,0],to=[4,4,2]);
-     }
-    }
-   }
-  }
-  joint left_leg(bone=left_hip,at=[0,0,3.3]){
-   repeat trousers(index=t,count=1-athletic){part thigh(shape=box,material=trousers,at=[0,-5.5,0],size=[4.2,11.5,4.4]);}
-   repeat bare(index=t,count=athletic){part thigh(shape=box,material=complexion,at=[0,-5.5,0],size=[4.2,11.5,4.4]);}
-   repeat uniform(index=u,count=athletic){part shorts(shape=box,material=top,at=[0,-3.1,0],size=[5.4,8.2,5.5]);}
-   joint left_shin(bone=left_knee,at=[0,-11.5,0]){
-    repeat trousers(index=t,count=1-athletic){part calf(shape=box,material=trousers,at=[0,-5,0],size=[3.8,10.6,4]);}
-    repeat bare(index=t,count=athletic){part calf(shape=box,material=complexion,at=[0,-5,0],size=[3.8,10.6,4]);}
-    joint left_foot(bone=left_ankle,at=[0,-10.5,0]){
-     repeat uniform(index=u,count=athletic){part sock(shape=box,material=white,at=[0,3,0],size=[4.2,6,4.5]);}
-     part shoe(shape=prism,material=shoes,at=[1.4,-1.2,0],size=[7.3,2.9,4.4],outline=[[0,.18],[.12,0],[.78,0],[1,.2],[1,.5],[.87,.72],[.45,.75],[.4,1],[.05,1],[0,.7]]);
-     part sole(shape=box,material=white,at=[1.5,-2.7,0],size=[7.6,.6,4.6]);
-    }
-   }
-  }
-  joint right_leg(bone=right_hip,at=[0,0,-3.3]){
-   repeat trousers(index=t,count=1-athletic){part thigh(shape=box,material=trousers,at=[0,-5.5,0],size=[4.2,11.5,4.4]);}
-   repeat bare(index=t,count=athletic){part thigh(shape=box,material=complexion,at=[0,-5.5,0],size=[4.2,11.5,4.4]);}
-   repeat uniform(index=u,count=athletic){part shorts(shape=box,material=top,at=[0,-3.1,0],size=[5.4,8.2,5.5]);}
-   joint right_shin(bone=right_knee,at=[0,-11.5,0]){
-    repeat trousers(index=t,count=1-athletic){part calf(shape=box,material=trousers,at=[0,-5,0],size=[3.8,10.6,4]);}
-    repeat bare(index=t,count=athletic){part calf(shape=box,material=complexion,at=[0,-5,0],size=[3.8,10.6,4]);}
-    joint right_foot(bone=right_ankle,at=[0,-10.5,0]){
-     repeat uniform(index=u,count=athletic){part sock(shape=box,material=white,at=[0,3,0],size=[4.2,6,4.5]);}
-     part shoe(shape=prism,material=shoes,at=[1.4,-1.2,0],size=[7.3,2.9,4.4],outline=[[0,.18],[.12,0],[.78,0],[1,.2],[1,.5],[.87,.72],[.45,.75],[.4,1],[.05,1],[0,.7]]);
-     part sole(shape=box,material=white,at=[1.5,-2.7,0],size=[7.6,.6,4.6]);
-    }
-   }
-  }
- }
-}
-
-component hair_cut(params=[long_hair],materials=[tone]){
- voxels hair(material=tone,at=[-.3,25.1,0],size=[10.2,12.2,10],grid=[10,12,10]){
-  fill crown(from=[0,10,0],to=[10,12,10]);
-  fill back(from=[0,4-long_hair*4,0],to=[2,10,10]);
-  fill left(from=[2,5-long_hair*5,0],to=[8,10,1]);
-  fill right(from=[2,5-long_hair*5,9],to=[8,10,10]);
-  fill fringe_left(from=[8,9,0],to=[10,10,4]);
-  fill fringe_right(from=[8,9,6],to=[10,10,10]);
- }
-}
-component curls(params=[],materials=[tone]){
- voxels hair(material=tone,at=[-.3,25.1,0],size=[10.2,12.2,10],grid=[10,12,10]){
-  fill crown(from=[1,8,1],to=[9,12,9]);
-  fill left(from=[1,6,0],to=[8,11,2]);
-  fill right(from=[1,6,8],to=[8,11,10]);
-  fill back(from=[0,4,1],to=[3,11,9]);
-  fill fringe(from=[8,8,1],to=[10,11,9]);
-  cut corner_a(from=[1,11,1],to=[3,12,3]);
-  cut corner_b(from=[7,11,1],to=[9,12,3]);
-  cut corner_c(from=[1,11,7],to=[3,12,9]);
-  cut corner_d(from=[7,11,7],to=[9,12,9]);
- }
-}
-object football_player(label="Football player"){
- measure(kind=person,axis=y,meters=1.8);
- body(interaction=decor,radius=4*legacy_human_unit,height=18*legacy_human_unit);
- use anatomy(component=civic_person,args=[1,0,0],materials=[blue,skin,skin,dark,white]);
- mount head(bone=spine){use hair(component=hair_cut,args=[0],materials=[hair]);}
-}
-object basketball_player(label="Basketball player"){
- measure(kind=person,axis=y,meters=1.8);
- body(interaction=decor,radius=4*legacy_human_unit,height=18*legacy_human_unit);
- use anatomy(component=civic_person,args=[1,0,0],materials=[blue,deep_skin,deep_skin,dark,dark]);
- mount head(bone=spine){use hair(component=curls,materials=[hair]);}
-}
+asset football_player(module=city_people,object=football_player);
+asset basketball_player(module=city_people,object=basketball_player);
 object town_walker(label="Town pedestrian"){
   measure(kind=person,axis=y,meters=1.8);
   body(interaction=decor,radius=4,height=18);

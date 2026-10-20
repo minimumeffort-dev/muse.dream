@@ -268,9 +268,11 @@ parking and save rules as the other cars, and keep your delivery cargo with you.
 
 [Watch the vehicle switch in HD](docs/media/switching.mp4)
 
-The city now has twelve connected character templates: different hair, facial hair, glasses, uniforms, coats, aprons, skirts, hoodies and carried items. They share a body and reusable parts through Dream, with clothing attached to the bones that move it. [Build people in Dream](docs/dream/people.md).
+Fourteen exported person templates and the standing/seated player now share one Dream library: different hair, facial hair, glasses, uniforms, coats, aprons, skirts, hoodies and carried items. They share a body and reusable parts through Dream, with clothing attached to the bones that move it. [Build people in Dream](docs/dream/people.md).
 
-![The live character wardrobe](docs/media/people-wardrobe.png)
+![The shared character wardrobe in motion](docs/media/wardrobe.gif)
+
+[Wardrobe in HD](docs/media/wardrobe.mp4) · [All sixteen constructions](docs/media/people-wardrobe.png) · [Complete Dream source](docs/examples/city-person.dream)
 
 Walking and running tie their stride to distance travelled and character scale, with bent knees and articulated elbows. Walkers take longer steps, and sharp reversals keep a planted shoe in place instead of resetting it. Grounded feet keep their position and facing through turns and stops, including the instanced sidewalk crowds. Shoes now follow hills, visible pavement and low contact steps, with the pelvis adjusting so the legs keep their length. Returning feet move through a sharp turn instead of snapping to a new position, and take a recovery step before a leg overextends. Swimming alternates a crawl with upright treading when you stop. The same Dream bone bindings animate the city pedestrians. [Character rig and motion](docs/dream/behavior.md#humanoid-motion).
 

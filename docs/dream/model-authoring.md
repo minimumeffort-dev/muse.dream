@@ -103,3 +103,9 @@ Source cannot set provenance, credentials, arbitrary URLs, callbacks or executab
 [Compiler APIs and diagnostics](reference.md) · [Version policy](../dream-language.md)
 
 Use `motion=walk(...)` for measured humanoids on the accepted pedestrian network and `motion=roam(...)` for animals with bounded nearby flight. These use explicit ambient ownership and shared GPU rigs, separate from full NPC programs. [Bounds, examples and limits](populations.md).
+
+The live character family shares its geometry between civic people, sports and
+the standing/seated player. [Import two complete characters](../examples/character-import.dream)
+from a host-listed module, or [compose the full family](../examples/city-person.dream).
+Repeated limbs use material parameters; imported assets still obey the same
+source and expansion budgets. [People and module scope](people.md).

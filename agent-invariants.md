@@ -434,3 +434,21 @@ and the whole earlier chain. Format 17 / simulation 32 stay unchanged.
 Decor plants, transit shelters (compound contacts), sports targets and
 buildings remain outside pooled destruction. See
 `docs/evidence/street-furniture/verification.md`.
+
+## Shared character construction, r81
+
+The city_people Dream module owns sixteen definitions: twelve civic/squad
+outfits, two court-side athletes, Explorer and Traveler. Sports and the
+interactive library import its complete objects through the closed host map.
+Keep the byte-identical city-person example, 32-module project bound,
+16-definition file bound, 32 parts per object and twelve-bone moving rigs.
+The passenger remains a 31-part static pose inside its existing seat envelope.
+Keep the 133 placements, exact body dimensions/scales/joint frames, contacts and
+pedestrian graph. Foot support stays derived from real sole geometry.
+
+Preserve the exact r80 character/squad projection before every earlier save
+stage. Format 17 / simulation 32 and saved fields stay unchanged. Face, clothing
+and hair are rigid geometry, without cloth, fingers or facial animation.
+The current whole-library review is 53/109 exports, 56 pending, with engine rigs
+reviewed separately and infrastructure/optional examples still pending.
+See docs/evidence/character-construction/verification.md.
