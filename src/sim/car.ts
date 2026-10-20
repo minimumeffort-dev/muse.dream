@@ -125,6 +125,7 @@ export interface World {
   previousCourierSaveCompatibility?:string;
   previousPeopleSaveCompatibility?:string;
   previousInvitationSaveCompatibility?:string;
+  previousEquipmentSaveCompatibility?:string;
   previousServiceSaveCompatibility?:string;
   previousServiceNavigation?:import('../scene/ambient-navigation').AmbientGraph;
   previousCharactersSaveCompatibility?:string;

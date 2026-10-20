@@ -33,7 +33,7 @@ it('makes every street tub and produce stall a pooled toppler without changing c
  expect(scene.objects.filter(o=>!ids.has(o.id))).toEqual(previous.objects.filter(o=>!ids.has(o.id)));
  expect(sceneContactData(scene).contacts).toEqual(sceneContactData(previous).contacts);expect(ambientGraph(scene)).toEqual(ambientGraph(previous));
  expect(impactBudget(scene)).toEqual({templates:32,fragments:74,resident:12,residentFragments:27,pooledTemplates:20});
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.FIXTURES_COMPATIBILITY);expect(await c.sha256(c.preFixturesCompatibilitySource(scene))).toBe(c.WILDLIFE_COMPATIBILITY);
+ expect(await c.sha256(c.preEquipmentCompatibilitySource(scene))).toBe(c.FIXTURES_COMPATIBILITY);expect(await c.sha256(c.preFixturesCompatibilitySource(scene))).toBe(c.WILDLIFE_COMPATIBILITY);
 });
 it('topples each tub and stall on a car hit and routes the existing caretaker to every one',()=>{
  const first=createCarAtSpawn(scene);

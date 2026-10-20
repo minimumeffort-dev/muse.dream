@@ -1509,3 +1509,26 @@ architecture, vehicle, sports and vegetation captures retain their geometry.
 The compiled map was regenerated; its visible footprint is unchanged because
 the new service aisle uses `finish=terrain`.
 [Source hashes and native results](../evidence/indoor-service/verification.md).
+
+
+## Physical work equipment, r83
+
+`equipment.gif`, `equipment.mp4` and `equipment.jpg` come from 480 consecutive
+2400 × 1350 PNG frames at thirty rendered frames per simulation second. The
+existing encoder produces 1600 × 900 HD video and a 1280 × 720 GIF; frame 120
+is the still. No missing frames were interpolated. This is an offline native
+recording, not a live performance sample.
+
+The dev setup places a car inside the hall, replays an actual table collision,
+backs away and follows the caretaker's entire dispatch/approach. Recording
+starts as repair work begins. The work panel shows the equipment requirement;
+once repair finishes, the player starts one bake and is paid once. The baker's
+interrupted lunch batch refunds once and their ordinary production resumes.
+The fixture does not provide an on-foot tool or car access through the doorway.
+
+README, commerce, interior, language and persistence guides describe the new
+binding and retain those limits. Current intact-hall, vehicle, plant, wildlife
+and city-map captures keep the same geometry and controls. The map needs no new
+image because no placement, terrain, street or entrance moves. Historical
+recordings remain pinned to their original source.
+[Native events, source hashes and verification](../evidence/work-equipment/verification.md).

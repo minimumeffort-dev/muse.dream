@@ -522,3 +522,23 @@ actor homes; repair.at remains the task approach. Rebase derived ambient indices
 against the worker-prepared prior graph. Only an active grounded paid worker may
 move to a checked safe counter position to preserve reserved work. Ordinary
 players do not relocate. Do not apply legacy repair-coverage policy to r81.
+
+
+## Physical work equipment, r83
+
+Optional `work.equipment` lists 1..4 unique static solid prop placement IDs within
+the counter's horizontal reach. Validate after linking; reject unknown/templates,
+actors, routes, ambient motion and rideable objects. A whole break or any broken
+zone blocks player/NPC starts. Damage during a batch refunds all reserved inputs
+and wage once before completion, including between 4 Hz updates. No pay, output
+or completion credit on cancellation. Repairs restore availability through the
+existing finite ledger; trade, deliveries and repairs cannot deadlock on equipment.
+Keep all geometry, physics, actor, worker, navigation and rendering budgets.
+
+Format 17/simulation 33 registers the exact r82 simulation-32 projection by
+removing only bindings. Refund incompatible prior active work through the shared
+transaction, without advancing clocks, making NPC decisions, moving bodies or
+rebasing graphs. Preserve every earlier migration, original slot and unaffected
+commitment. Historical appearance fixtures use the pinned simulation-32 source,
+not the current rules fingerprint. The dev capture replays a real collision from
+a car placed inside the hall; it does not imply hand tools or doorway car access.

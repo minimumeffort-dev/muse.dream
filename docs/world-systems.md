@@ -32,6 +32,11 @@ staff and supply workers share the doorway. The caretaker keeps all 449 repair
 and 106 replanting targets through connected work grounds and the public orchard
 path. Registered saves retain their ledgers, journeys and committed work.
 [Indoor service checks](evidence/indoor-service/verification.md).
+Baking now names the existing table as equipment. Damage refunds interrupted
+batches for players and staff; the caretaker restores production through its
+existing repair service. The same declaration works for food and workshop jobs.
+Hand tools, powered machinery and upstream supply production remain separate.
+[Equipment checks](evidence/work-equipment/verification.md).
 
 The live circuit is retired. Streets now own the driving mask and the city
 layout; close junctions share outer-arm crossings. Reuse the released ground

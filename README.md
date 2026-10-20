@@ -326,6 +326,16 @@ Broken benches release their occupants; repaired ones work again.
 
 [Walkthrough](docs/media/interior.mp4) · [Earlier night view, before indoor service](docs/media/interiornight.mp4) · [Author an interior in Dream](docs/dream/interiors.md)
 
+Baking now depends on the table. Damage interrupts both your batch and the baker's,
+returning reserved ingredients and wages once. The caretaker repairs it from the
+same finite stock, then work resumes. Dream uses the same `equipment` rule for
+food preparation and workshop jobs. [How to author it](docs/dream/commerce.md#work-needs-equipment).
+
+![The caretaker repairs the bakery's equipment](docs/media/equipment.gif)
+
+[Watch the recovery in HD](docs/media/equipment.mp4). This dev recording starts
+with a car inside the hall; ordinary play still has no hand tool.
+
 This is the first usable ground floor. Multiple floors, stairs, lifts and a hand-tool control for furniture are still to come. Existing saves have an explicit upgrade; business state survives visiting and unloading the hall.
 
 ## Get out and play

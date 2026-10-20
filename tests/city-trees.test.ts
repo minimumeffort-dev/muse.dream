@@ -5,7 +5,7 @@ import working from '../docs/evidence/city-repairs/native-work.json?raw';
 import oldTrees from '../src/scene/compatibility/r73-trees.json';
 import {createWorldScene} from '../src/scene/world-fixture';
 import {compileDreamScene} from '../src/scene/dream';
-import {preFleetScene,preTreeScene,preTreeCompatibilitySource,saveCompatibilitySource,sha256,TREE_COMPATIBILITY,COVERAGE_COMPATIBILITY} from '../src/scene/save-compatibility';
+import {preFleetScene,preTreeScene,preTreeCompatibilitySource,preEquipmentCompatibilitySource,sha256,TREE_COMPATIBILITY,COVERAGE_COMPATIBILITY} from '../src/scene/save-compatibility';
 import {pooledImpact,impactBudget} from '../src/scene/damage-pool';
 import {objectContacts,sceneContactData} from '../src/scene/contacts';
 import {objectPlacement} from '../src/scene/placement';
@@ -51,7 +51,7 @@ it('routes the airport approach through a supported corner rather than cutting d
 });
 
 it('preserves every native r73 repair field and old slot through the exact registered projection',async()=>{
- expect(await sha256(saveCompatibilitySource(scene))).toBe(TREE_COMPATIBILITY);expect(await sha256(preTreeCompatibilitySource(scene))).toBe(COVERAGE_COMPATIBILITY);
+ expect(await sha256(preEquipmentCompatibilitySource(scene))).toBe(TREE_COMPATIBILITY);expect(await sha256(preTreeCompatibilitySource(scene))).toBe(COVERAGE_COMPATIBILITY);
  const changed={...scene,objects:scene.objects.map(o=>o.id==='garden_rowan_north' ? {...o,x:o.x+1} : o)};expect(await sha256(preTreeCompatibilitySource(changed))).not.toBe(COVERAGE_COMPATIBILITY);
  const before=decodeSave(working,oldWorld),after=decodeSave(working,world);expect(after.state).toEqual(before.state);expect(after.worldTime).toBe(before.worldTime);expect(after.migrated).toBe(true);
  const oldKey=`muse-dream.save.v17.${scene.sceneId}.${COVERAGE_COMPATIBILITY}`,rows=new Map([[oldKey,working]]),slot=gameSave(world,()=>({getItem:k=>rows.get(k)??null,setItem:(k,v)=>{rows.set(k,v);}}));expect(slot.restored?.migrated).toBe(true);expect(slot.write(after.state,after.worldTime)).toBe(true);expect(rows.get(oldKey)).toBe(working);expect(rows.size).toBe(2);

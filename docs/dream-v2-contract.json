@@ -691,7 +691,8 @@
         "effort": "n",
         "capacity": "n",
         "target": "n",
-        "requires": "ref?"
+        "requires": "ref?",
+        "equipment": "symbols?"
       },
       "block": "recipe?"
     },
@@ -1724,6 +1725,7 @@
       "milestones": 16,
       "workerJobs": 4,
       "ingredients": 4,
+      "equipment": 4,
       "deliveries": 16,
       "courierContracts": 4,
       "repairs": 8,

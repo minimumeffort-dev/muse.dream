@@ -15,7 +15,7 @@ import charactersR80 from './compatibility/r80-characters.json';
 import serviceR81 from './compatibility/r81-indoor-service.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=32;
+export const SAVE_SIMULATION_VERSION=33;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -98,6 +98,17 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r83 binds work to existing physical equipment; the prior world keeps simulation 32. */
+export const EQUIPMENT_COMPATIBILITY='a5b345f631855363a24d67e40268357e95970974fefd991788c46bf1c7f086ce';
+const equipmentProjections=new WeakMap<Scene,Scene>();
+export function preEquipmentScene(scene:Scene):Scene{
+ if(!scene.economy?.jobs.some(j=>j.equipment))return scene;
+ const cached=equipmentProjections.get(scene);if(cached)return cached;
+ const prior={...scene,economy:{...scene.economy,jobs:scene.economy.jobs.map(({equipment,...job})=>job)}};
+ equipmentProjections.set(scene,prior);return prior;
+}
+export function preEquipmentCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preEquipmentScene(scene),32,true,encode);}
+
 /** r82 moves service indoors without changing any physical assembly or supply rule. */
 export const SERVICE_COMPATIBILITY='08c37a536a120c91b5175e8a5771f04c12230bfe179ebe7da6afdc924938cada';
 const serviceProjections=new WeakMap<Scene,Scene>();
@@ -105,6 +116,7 @@ function priorGrounds<T extends {id:string;on?:string;grounds?:string[]}>(rules:
  return rules.map(rule=>{const old=prior.find(p=>p.id===rule.id);return old ? {...rule,on:old.on,grounds:old.grounds} : rule;});
 }
 export function preServiceScene(scene:Scene):Scene{
+ scene=preEquipmentScene(scene);
  if(!scene.surfaces.some(s=>s.id==='hall_service'))return scene;
  const cached=serviceProjections.get(scene);if(cached)return cached;
  const e=scene.economy!,old=serviceR81.economy;

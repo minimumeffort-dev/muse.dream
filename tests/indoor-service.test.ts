@@ -1,6 +1,6 @@
 import {it,expect} from 'vitest';
 import {createWorldScene} from '../src/scene/world-fixture';
-import {SERVICE_COMPATIBILITY,CHARACTERS_COMPATIBILITY,preServiceScene,preServiceCompatibilitySource,saveCompatibilitySource,sha256} from '../src/scene/save-compatibility';
+import {SERVICE_COMPATIBILITY,CHARACTERS_COMPATIBILITY,preEquipmentScene,preServiceScene,preServiceCompatibilitySource,preEquipmentCompatibilitySource,sha256} from '../src/scene/save-compatibility';
 import {sceneContactData} from '../src/scene/contacts';
 import {ambientGraph} from '../src/scene/ambient-navigation';
 import {sceneInteriors,walkingHeight} from '../src/scene/interiors';
@@ -14,13 +14,13 @@ import {stepNpcs} from '../src/sim/npcs';
 import {decodeSave,encodeSave} from '../src/sim/save';
 import {npcReviewStart} from '../src/game/review-start';
 import {gameSave} from '../src/game/save';
-const scene=createWorldScene(),previous=preServiceScene(scene),hall=sceneInteriors(scene).find(f=>f.object.id==='market_hall')!;
+const scene=preEquipmentScene(createWorldScene()),previous=preServiceScene(scene),hall=sceneInteriors(scene).find(f=>f.object.id==='market_hall')!;
 const world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:SERVICE_COMPATIBILITY,previousServiceSaveCompatibility:CHARACTERS_COMPATIBILITY,previousServiceNavigation:ambientGraph(previous)};
 const oldWorld:World={...world,scene:previous,saveCompatibility:CHARACTERS_COMPATIBILITY,previousServiceSaveCompatibility:undefined,previousServiceNavigation:undefined};
 const account=(s:CarState,id='pocket')=>s.economy!.accounts.find(a=>a.id===id)!;
 
 it('registers the exact previous world, reuses physical assets and keeps every maintenance target',async()=>{
- expect(await sha256(saveCompatibilitySource(scene))).toBe(SERVICE_COMPATIBILITY);expect(await sha256(preServiceCompatibilitySource(scene))).toBe(CHARACTERS_COMPATIBILITY);
+ expect(await sha256(preEquipmentCompatibilitySource(scene))).toBe(SERVICE_COMPATIBILITY);expect(await sha256(preServiceCompatibilitySource(scene))).toBe(CHARACTERS_COMPATIBILITY);
  expect(scene.objects.length).toBe(previous.objects.length);expect(sceneContactData(scene)).toEqual(sceneContactData(previous));
  for(const id of ['vendor','market_neighbor']){const o=scene.objects.find(o=>o.id===id)!;expect(hall.contains(o.x,o.y,4)).toBe(true);}
  for(const r of scene.economy!.repairs)expect(repairTargets(scene,r).map(t=>[t.objectId,t.zoneId])).toEqual(repairTargets(previous,previous.economy!.repairs.find(p=>p.id===r.id)!).map(t=>[t.objectId,t.zoneId]));

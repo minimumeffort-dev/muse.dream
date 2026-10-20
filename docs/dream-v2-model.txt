@@ -749,6 +749,16 @@ lot at that market. All ingredients and all refund space reserve atomically;
 a shortage changes nothing, cancellation returns every input, completion consumes
 once. The same rules apply to food recipes and manufactured repair supplies.
 Use examples/multi-input-work.dream. Existing scalar input/take work stays readable.
+Optional work.equipment=[placement_id,...] binds production to 1..4 unique static
+solid prop placements within its counter reach, not asset template IDs. No actors,
+rideable objects or moving props. All listed equipment must be intact: whole-object
+or any broken zone blocks new work for player and NPCs. Damage during a batch
+refunds every reserved ingredient and wage once, even at completion time; no output,
+pay or personal completion. Existing repair services restore availability. Trade,
+food, delivery and repair remain available; no circular repair lock. Missing
+positions, scripts or geometry are not inferred. Request interactions to author
+breakable equipment. See examples/work-equipment.dream.
+
 Labels must contain nonblank text. Every declaration except economy and ingredient needs a stable ID. Scope IDs are unique; good IDs
 and lot goods must agree. One economy per linked project, with exactly one player
 account. Other account actors are existing role=npc placements. Markets and production

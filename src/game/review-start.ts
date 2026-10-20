@@ -158,6 +158,26 @@ export function* businessReviewSteps(state:CarState,world:World):Generator<CarSt
  return {...npcReviewStart(prepared,world,'station_resident'),vehicles:prepared.vehicles};
 }
 
+/** Dev fixture starts a car inside the hall; damage and the complete repair still use real fixed steps. */
+export function* equipmentReviewSteps(state:CarState,world:World):Generator<void,CarState>{
+ const table=world.scene.objects.find(o=>o.id==='hall_table_east');if(!table)throw Error('The equipment review needs the hall table');
+ let next:CarState={...state,control:{kind:'car'},x:table.x,y:table.y+65,elevation:walkingHeight(world.scene,table.x,table.y+65),headingRad:-Math.PI/2,vx:0,vy:0,vz:0,grounded:true,vehicles:[]};
+ if(!carFootprintClear(world,next.x,next.y,next.elevation,next.timeS,next))throw Error('The equipment review car needs a clear starting pose');
+ let hit=false;
+ for(let i=0;i<120*3;i++){next=stepInteractive(next,{steer:0,throttle:1},1/120,world);if(next.broken.includes(table.id)){hit=true;break;}if(i%30===0)yield;}
+ if(!hit)throw Error('The review car did not damage its work table');
+ for(let i=0;i<120*3;i++){next=stepInteractive(next,{steer:0,throttle:-1},1/120,world);if(i%30===0)yield;}
+ next=npcReviewStart(next,world,'vendor');
+ for(let i=0;i<120*90;i++){
+  next=stepInteractive(next,{steer:0,throttle:0},1/120,world);
+  const task=next.economy?.accounts.find(a=>a.repair?.objectId===table.id)?.repair;
+  if(task?.phase==='work')return next;
+  if(!next.broken.includes(table.id))throw Error('The table was repaired before its review start');
+  if(i%30===0)yield;
+ }
+ throw Error('The caretaker did not reach the damaged equipment');
+}
+
 /** Dev-only ground-floor walkthrough; all movement and transactions use the ordinary engine. */
 export function interiorReviewStart(state:CarState,world:World,night=false):CarState{
  const f=sceneInteriors(world.scene).find(f=>f.object.id==='market_hall');if(!f)return state;

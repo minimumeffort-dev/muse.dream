@@ -119,3 +119,5 @@ The current limits are 32 placed interiors, four portals per interior, eight con
 The indoor bench now has two usable slots shared by the player and meal customer.
 Its authored approaches fit the existing floor and doorway network. Furniture
 remains destructible and repairable. See [shared seating](seating.md).
+
+Baking now depends on the existing table through [work equipment](commerce.md#work-needs-equipment). Damage refunds unfinished batches; repair restores production. Trade and repair remain usable.

@@ -26,7 +26,7 @@ it('rebuilds all nine animal exports, sixty roamers, two route animals and every
  }
  expect(scene.objects.filter(o=>!ids.has(o.id))).toEqual(previous.objects.filter(o=>!ids.has(o.id)));expect(scene.objects).toHaveLength(1773);expect(scene.flocks.reduce((n,f)=>n+f.count,0)).toBe(256);
  expect(scene.flocks.map(({spec,...f})=>f)).toEqual(previous.flocks.map(({spec,...f})=>f));expect(sceneContactData(scene).contacts).toEqual(sceneContactData(previous).contacts);expect(ambientGraph(scene)).toEqual(ambientGraph(previous));
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.WILDLIFE_COMPATIBILITY);expect(await c.sha256(c.preWildlifeCompatibilitySource(scene))).toBe(c.FURNITURE_COMPATIBILITY);
+ expect(await c.sha256(c.preEquipmentCompatibilitySource(scene))).toBe(c.WILDLIFE_COMPATIBILITY);expect(await c.sha256(c.preWildlifeCompatibilitySource(scene))).toBe(c.FURNITURE_COMPATIBILITY);
 });
 it('retains every crowd clock and the same deterministic movement/reaction decisions across the visual upgrade',()=>{
  const animal=scene.objects.find(o=>o.id==='wildlife_infill_001')!,initial={...createCarAtSpawn(previous),x:animal.x-45,y:animal.y,elevation:drivingHeight(scene.terrain,animal.x-45,animal.y)};let before=initial,after=decodeSave(encodeSave(initial,3,oldWorld),world).state;

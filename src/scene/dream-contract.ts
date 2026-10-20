@@ -73,7 +73,7 @@ export const DREAM_V2_COMMANDS: Readonly<Record<string,DreamCommand>> = Object.f
   account: command('economy',true,{actor:'ref',credits:'n',capacity:'n',satiety:'n',drain_s:'n',shop:'bool?',social:'ref?',shift:'ref?',meal:'ref?',work:'ref?',works:'symbols?',repair:'ref?',repairs:'symbols?',deliveries:'symbols?'}),
   market: command('economy',true,{label:'text',actor:'ref',credits:'n',radius:'n',hours:'v2?',owner:'ref?',sale:'n?'},'market'),
   lot: command('market',true,{good:'ref',quantity:'n',limit:'n',price:'n?'}),
-  work: command('economy',true,{label:'text',market:'ref',input:'ref?',take:'n?',output:'ref',make:'n',seconds:'n',pay:'n',effort:'n',capacity:'n',target:'n',requires:'ref?'},'recipe?'),
+  work: command('economy',true,{label:'text',market:'ref',input:'ref?',take:'n?',output:'ref',make:'n',seconds:'n',pay:'n',effort:'n',capacity:'n',target:'n',requires:'ref?',equipment:'symbols?'},'recipe?'),
   meal: command('economy',true,{good:'ref',markets:'symbols',on:'ref',grounds:'symbols?',eat_s:'n',seats:'symbols?'}),
   social: command('economy',true,{good:'ref',seats:'symbols',on:'ref',grounds:'symbols?',eat_s:'n',cooldown_s:'n?',max_fullness:'n?',markets:'symbols?'}),
   shift: command('economy',true,{market:'ref',rest:'v2',on:'ref',grounds:'symbols?',lead_s:'n?'}),

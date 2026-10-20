@@ -13,7 +13,7 @@ import type {Scene} from './schema';
 import {roleOf} from './agents';
 import {waterAt,drivingHeight} from './terrain';
 
-export const COMMERCE_LIMITS=Object.freeze({goods:8,accounts:16,markets:8,jobs:16,meals:8,shifts:8,socials:8,mealMarkets:4,milestones:16,workerJobs:4,ingredients:4,deliveries:16,courierContracts:4,repairs:8,repairNodes:4096,repairNetworkNodes:8192,repairNetworkLinks:32768,repairGrounds:8,repairStreetTargets:512,repairAccessPieces:2048,repairVerge:128,repairRadius:4,repairPath:128,money:1_000_000,quantity:10_000,capacity:32,decisionS:.25});
+export const COMMERCE_LIMITS=Object.freeze({goods:8,accounts:16,markets:8,jobs:16,meals:8,shifts:8,socials:8,mealMarkets:4,milestones:16,workerJobs:4,ingredients:4,equipment:4,deliveries:16,courierContracts:4,repairs:8,repairNodes:4096,repairNetworkNodes:8192,repairNetworkLinks:32768,repairGrounds:8,repairStreetTargets:512,repairAccessPieces:2048,repairVerge:128,repairRadius:4,repairPath:128,money:1_000_000,quantity:10_000,capacity:32,decisionS:.25});
 const ref=z.string().regex(/^[a-z][a-z0-9_]{0,31}$/),money=z.number().int().min(0).max(COMMERCE_LIMITS.money),quantity=z.number().int().min(0).max(COMMERCE_LIMITS.quantity);
 const label=z.string().min(1).max(40).refine(s=>s.trim().length>0,'label must contain text');
 const good=z.object({id:ref,label,food:z.number().finite().min(0).max(100).default(0)}).strict();
@@ -22,7 +22,8 @@ const lot=z.object({id:ref,good:ref,quantity,limit:quantity.refine(n=>n>0),price
 const hours=z.tuple([z.number().finite().min(0).lt(24),z.number().finite().min(0).max(24)]).refine(([start,end])=>start!==end,'hours need different opening and closing times; omit for all-day service');
 const market=z.object({id:ref,label,actor:ref,credits:money,radius:z.number().finite().min(20).max(80),hours:hours.optional(),owner:ref.optional(),sale:money.positive().optional(),lots:z.array(lot).min(1).max(COMMERCE_LIMITS.goods)}).strict();
 const ingredient=z.object({good:ref,take:quantity.refine(n=>n>0)}).strict();
-const job=z.object({id:ref,label,market:ref,input:ref.optional(),take:quantity.refine(n=>n>0).optional(),ingredients:z.array(ingredient).min(1).max(COMMERCE_LIMITS.ingredients).optional(),output:ref,make:quantity.refine(n=>n>0),seconds:z.number().finite().min(1).max(120),pay:money.refine(n=>n>0),effort:z.number().finite().min(1).max(50),capacity:z.number().int().min(1).max(4),target:quantity,requires:ref.optional()}).strict().superRefine((j,ctx)=>{
+const job=z.object({id:ref,label,market:ref,input:ref.optional(),take:quantity.refine(n=>n>0).optional(),ingredients:z.array(ingredient).min(1).max(COMMERCE_LIMITS.ingredients).optional(),output:ref,make:quantity.refine(n=>n>0),seconds:z.number().finite().min(1).max(120),pay:money.refine(n=>n>0),effort:z.number().finite().min(1).max(50),capacity:z.number().int().min(1).max(4),target:quantity,requires:ref.optional(),equipment:z.array(ref).min(1).max(COMMERCE_LIMITS.equipment).optional()}).strict().superRefine((j,ctx)=>{
+ if(j.equipment && new Set(j.equipment).size!==j.equipment.length)ctx.addIssue({code:'custom',message:'work equipment needs unique placement IDs',path:['equipment']});
  if(j.ingredients ? j.input!==undefined || j.take!==undefined : j.input===undefined || j.take===undefined)ctx.addIssue({code:'custom',message:'work needs input and take, or an ingredient block, never both',path:['ingredients']});
  if(j.ingredients && new Set(j.ingredients.map(i=>i.good)).size!==j.ingredients.length)ctx.addIssue({code:'custom',message:'work ingredients need unique goods',path:['ingredients']});
 });
@@ -186,6 +187,12 @@ export function economyProblems(scene:Scene):string[]{
  if(!e)return [...guarded.map(({b,t})=>`${b.id}/${t.id}: requires needs an economy milestone`),...scene.behaviors.flatMap(b=>b.states.flatMap(s=>s.transitions.filter(t=>t.shared_meals!==undefined).map(t=>`${b.id}/${t.id}: shared_meals needs an economy social account`)))];
  const stationary=(id:string)=>{const o=scene.objects.find(o=>o.id===id);return o && roleOf(o)==='npc' && !o.route && !o.ambient && !scene.behaviors.find(b=>b.id===o.behavior)?.states.some(s=>s.action==='patrol');};
  const problems:string[]=[];
+ for(const j of e.jobs)for(const id of j.equipment??[]){
+  const o=scene.objects.find(o=>o.id===id),m=e.markets.find(m=>m.id===j.market)!,vendor=scene.objects.find(o=>o.id===m.actor),spec=o?.spec;
+  if(!o || roleOf(o)!=='prop' || o.route || o.ambient || !spec || !('dslVersion' in spec) || spec.dslVersion!==2 || spec.body.interaction!=='solid' || spec.rideable)problems.push(`${j.id}: equipment '${id}' needs a static solid prop placement`);
+  else if(vendor && Math.hypot(o.x-vendor.x,o.y-vendor.y)>m.radius)problems.push(`${j.id}: equipment '${id}' must be within its market reach`);
+ }
+
  if(e.markets.some(m=>m.hours) && !scene.daylight)problems.push('market hours require a world daylight clock');
  for(const a of e.accounts)if(a.shift){
   const plan=e.shifts.find(s=>s.id===a.shift),o=scene.objects.find(o=>o.id===a.actor),spec=o?.spec,m=e.markets.find(m=>m.id===plan?.market),vendor=scene.objects.find(o=>o.id===m?.actor);

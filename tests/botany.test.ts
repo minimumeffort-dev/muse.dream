@@ -26,7 +26,7 @@ it('refines all 460 plants while preserving physical measures, contacts, reserva
   const a=assemblyBounds(spec),b=assemblyBounds(prior),axis=spec.measure!.axis;expect((a.max[axis]-a.min[axis])*o.scale).toBeCloseTo((b.max[axis]-b.min[axis])*p.scale,5);expect(a.min.y-b.min.y).toBeCloseTo(0,5);
  }
  expect(impactBudget(scene)).toEqual(impactBudget(previous));expect(sceneContactData(scene).contacts).toEqual(sceneContactData(previous).contacts);expect(ambientGraph(scene)).toEqual(ambientGraph(c.preBotanyScene(scene)));
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.BOTANY_COMPATIBILITY);expect(await c.sha256(c.preBotanyCompatibilitySource(scene))).toBe(c.CANOPY_COMPATIBILITY);
+ expect(await c.sha256(c.preEquipmentCompatibilitySource(scene))).toBe(c.BOTANY_COMPATIBILITY);expect(await c.sha256(c.preBotanyCompatibilitySource(scene))).toBe(c.CANOPY_COMPATIBILITY);
 });
 it('keeps every historical state and isolates review-prefix migrations through the registered visual upgrade',async()=>{
  const parking=c.preParkingScene(c.preCityScene(previous)),empty=await c.sha256(c.preCommerceCompatibilitySource(parking,2)),legacy={previousSaveCompatibility:await c.sha256(c.preCommerceCompatibilitySource(parking)),emptyEconomySaveCompatibility:empty,previousSaveSource:c.registeredLegacySource(empty),previousMarketSaveCompatibility:await c.sha256(c.preDeliveryCompatibilitySource(parking))};

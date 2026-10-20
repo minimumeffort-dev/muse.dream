@@ -787,3 +787,52 @@ They create no new paving. Its 5,380 navigation nodes and 20,422 directed links
 fit the unchanged network caps. [Wind-tree example](../examples/city-tree-replanting.dream).
 The 239 trees beyond those work areas and other structural damage still need
 declared recovery coverage.
+
+
+## Work needs equipment
+
+A job can name the physical props it uses. The bakery now uses the table inside
+the hall. If it breaks, both the player and baker stop production. Every reserved
+ingredient and wage returns once; an interrupted batch earns no output, pay or
+practice. The caretaker can repair the table using the existing finite supplies,
+then production becomes available again. Buying food, delivering supplies and
+repairing remain available during the interruption.
+
+![The caretaker restoring the bakery table](../media/equipment.jpg)
+
+[Damage and recovery recording](../media/equipment.mp4) · [GIF](../media/equipment.gif)
+
+Add `equipment` to an existing job. This exact recipe comes from the complete
+[work-equipment.dream](../examples/work-equipment.dream) example:
+
+```dream
+ work pack_lunch(label="Pack lunch",market=corner,output=lunch,make=1,seconds=2,pay=3,effort=6,capacity=1,target=2,equipment=[food_table]){
+  ingredient(good=bread,take=1);
+  ingredient(good=vegetables,take=1);
+ }
+```
+
+The example also binds repair-kit production to a different workbench. Breaking
+one workplace does not stop the other. Its caretaker repairs either through the
+same category-based service; the rule does not depend on a label or coordinate.
+
+`equipment` takes one to four unique **placement IDs**, including IDs from linked
+districts. Each must be a static solid prop within the market's horizontal reach.
+A template name, missing placement, moving actor or rideable vehicle fails complete
+world acceptance. Every listed item must be intact. Any broken section disables
+the whole declared item; part-level tool selection is not implied.
+
+The engine checks damage before paying a completed batch, including the same
+fixed tick. The next fixed tick handles interruptions even between the regular
+quarter-second commerce updates. Holds, refunds and capacity use the existing
+ledger. Jobs with no equipment field keep their earlier behavior.
+
+```sh
+npm run -s dream -- check docs/examples/work-equipment.dream
+node scripts/dream.mjs context --features commerce,interactions
+```
+
+The recording uses a dev fixture with a car already inside the hall. It replays a
+real collision and the caretaker's complete approach before recording repair and
+resumed work. This does not add a hand tool or a way to drive through the doorway.
+[Verification and save upgrade](../evidence/work-equipment/verification.md).

@@ -23,7 +23,7 @@ it('refines all 133 person placements and both squads while keeping exact bodies
  expect(scene.objects.filter(o=>!ids.has(o.id))).toEqual(previous.objects.filter(o=>!ids.has(o.id)));expect(scene.player).toEqual(previous.player);
  expect(sceneContactData(scene)).toEqual(sceneContactData(previous));expect(ambientGraph(scene)).toEqual(ambientGraph(previous));
  expect(scene.sports.map(s=>s.match?.teams.map(t=>t.specs))).not.toEqual(previous.sports.map(s=>s.match?.teams.map(t=>t.specs)));
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.CHARACTERS_COMPATIBILITY);expect(await c.sha256(c.preCharactersCompatibilitySource(scene))).toBe(c.FIXTURES_COMPATIBILITY);
+ expect(await c.sha256(c.preEquipmentCompatibilitySource(scene))).toBe(c.CHARACTERS_COMPATIBILITY);expect(await c.sha256(c.preCharactersCompatibilitySource(scene))).toBe(c.FIXTURES_COMPATIBILITY);
 });
 it('keeps every historical backup and current repair ledger exact through the character layer',async()=>{
  const parking=c.preParkingScene(c.preCityScene(previous)),empty=await c.sha256(c.preCommerceCompatibilitySource(parking,2)),legacy={previousSaveCompatibility:await c.sha256(c.preCommerceCompatibilitySource(parking)),emptyEconomySaveCompatibility:empty,previousSaveSource:c.registeredLegacySource(empty),previousMarketSaveCompatibility:await c.sha256(c.preDeliveryCompatibilitySource(parking))};

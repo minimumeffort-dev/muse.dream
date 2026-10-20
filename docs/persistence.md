@@ -52,7 +52,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 17 retains the exact source hash and compatibility fingerprint, with simulation version 32. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 17 retains the exact source hash and compatibility fingerprint, with simulation version 33. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -618,3 +618,19 @@ a paid batch underway follows the counter to a validated clear indoor position
 so the update does not cancel reserved work. Other players stay where they were.
 The old slot remains intact. Unknown fingerprints still fail rather than reset
 progress. [Migration checks](evidence/indoor-service/verification.md).
+
+
+## Physical work equipment, r83
+
+Format 17 now pins simulation 33. Its registered r82 projection removes only
+job equipment bindings and uses the original simulation-32 fingerprint. Geometry,
+contacts, paths, stock and initial accounts stay exact. Every earlier registered
+projection still validates its own world before the equipment upgrade runs.
+
+A prior saved batch whose new equipment is broken receives the ordinary full
+ingredient/wage refund once, without output, pay or completion credit. It records
+the cancellation at the existing settled commerce clock, with no simulation
+time advance or NPC decisions. Other saved fields, journeys, funds, materials,
+damage, bodies, seats and clocks remain. Unaffected commitments finish normally.
+The old slot stays intact; subsequent current reloads do not refund again.
+[Tests and native recording](evidence/work-equipment/verification.md).
