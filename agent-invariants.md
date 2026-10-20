@@ -504,3 +504,21 @@ geometry/contact/save data and existing buffers/draw budgets. Live object
 opacity fades remain independent. The native cutaway fixture checks moving
 player pixels, restoration, hidden parts, neighbouring surfaces and unchanged
 shadow-map bytes; a source-string check alone does not prove a working shader.
+
+
+## Indoor service, r82
+
+The bakery vendor and caretaker start inside the existing market hall. Reuse its
+table and doorway; keep exact contacts and all 449 repair / 106 replanting
+targets. The forty-unit counter reach cannot trade through walls or from the
+square. Work grounds use the hall, a narrow terrain-finish service aisle and the
+public orchard path within existing navigation budgets. No new vocabulary or
+actor slots are needed.
+
+Preserve the exact r81 projection and prior migration chain at format 17 /
+simulation 32. Retarget pending service paths while keeping physical positions,
+ledgers, cargo, timers and distance. Repair home destinations remain implicit
+actor homes; repair.at remains the task approach. Rebase derived ambient indices
+against the worker-prepared prior graph. Only an active grounded paid worker may
+move to a checked safe counter position to preserve reserved work. Ordinary
+players do not relocate. Do not apply legacy repair-coverage policy to r81.

@@ -226,7 +226,7 @@ crossing repair_high_south(street=high_street,at=[5217.41935483871,6339.35483870
 // Orchard work lawn and its continuous two-metre garden path.
 
 surface orchard_work(points=[[4635,4670],[4785,4670],[4785,4975],[4635,4975]],finish=terrain);
-surface orchard_path(color=#aaa48e,points=[[4775,4696],[5125,4696],[5125,4716],[4775,4716]]);
+surface orchard_path(walkable=true,color=#aaa48e,points=[[4775,4696],[5125,4696],[5125,4716],[4775,4716]]);
 
 // Depot fleet: useful parked rides on connected service aprons.
 asset depot_pickup(module=street_assets,object=field_pickup);asset depot_truck(module=street_assets,object=parcel_truck);
@@ -238,3 +238,6 @@ place station_parcel_truck(object=depot_truck,at=[11355,4325],heading_deg=180,ro
 place harbor_field_pickup(object=depot_pickup,at=[12220,6327],heading_deg=270,role=controllable,parked=true);
 surface airport_freight_apron(color=#92998f,points=[[2652,9358],[2746.5,9358],[2746.5,9442],[2652,9442]]);
 place airport_parcel_truck(object=depot_truck,at=[2700,9400],heading_deg=0,role=controllable,parked=true);
+
+// The clear service aisle joins the hall doorway to the existing counter table.
+surface hall_service(finish=terrain,points=[[6388,4416],[6494,4416],[6494,4490],[6388,4490]]);

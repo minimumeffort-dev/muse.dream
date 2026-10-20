@@ -10,6 +10,7 @@ import {stepCommerce,commerceReason,checkEconomyState,type CommerceAction} from 
 import {stepNpcs,nearbyNpc} from '../src/sim/npcs';
 import {actorPose} from '../src/sim/actors';
 import {repairView} from '../src/game/repair-view';
+import {indoorServiceUpgrade} from '../src/sim/indoor-service-upgrade';
 import {shiftArea} from '../src/sim/shifts';
 import {workClear,workPath,workSegment} from '../src/sim/work-navigation';
 import {marketIsOpen,marketIsStaffed} from '../src/sim/market-hours';
@@ -71,6 +72,12 @@ it('uses the overnight counter schedule, physically returns early, and keeps jou
  s=until(s,s=>account(s,'depot_staff').shift?.phase==='rest');expect(marketIsOpen(scene,scene.economy!.markets[1]!,s.timeS)).toBe(false);checkEconomyState(s,scene);
 });
 
+it('redirects a returning employee to the moved counter without resetting travel or serving early',()=>{
+ const moved=compile(source.replace('at=[580,710]','at=[600,710]')),world=worldFor(moved),old=until(start(),s=>account(s).shift?.phase==='in');
+ let s=indoorServiceUpgrade(old,scene,world);expect(account(s).shift!.at).toEqual({x:600,y:710});expect(account(s).shift!.distance).toBe(account(old).shift!.distance);expect(marketIsStaffed(moved,moved.economy!.markets[0]!,s.economy)).toBe(false);
+ checkEconomyState(s,moved);s=decodeSave(encodeSave(s,s.timeS,world),world).state;
+ s=until(s,s=>!account(s).shift,moved);expect(actorPose(moved,moved.objects.find(o=>o.id==='neighbor')!,s.timeS,s)).toMatchObject({x:600,y:710});expect(marketIsStaffed(moved,moved.economy!.markets[0]!,s.economy)).toBe(true);
+});
 it('waits for returning staff after opening and uses the same presence check for trade, work and cargo',()=>{
  const doc=compile(source.replace('lead_s=18','lead_s=0'));let s=until(start(doc),s=>s.timeS>=42.5,doc),m=doc.economy!.markets[0]!;
  expect(marketIsOpen(doc,m,s.timeS)).toBe(true);expect(marketIsStaffed(doc,m,s.economy)).toBe(false);expect(account(s).shift?.phase).toBe('in');

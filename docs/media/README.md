@@ -1489,3 +1489,23 @@ The other asset, sports and economic captures retain their recorded presentation
 their construction and interaction rules are unchanged. Interior stills with
 fully hidden tagged parts remain accurate because the final visibility state
 is unchanged. [Native GPU and world evidence](../evidence/clean-cutaways/verification.md).
+
+
+## Indoor bakery service, r82
+
+`interior.gif`, `interior.mp4` and `interior.jpg` are refreshed together from
+600 newly rendered 2400 × 1350 PNG frames at 30 frames per simulation second.
+The player walks through the real doorway, around the existing table, starts
+paid baking at frame 240, buys bread at 450, eats at 460 and walks outside.
+The still is frame 390. The existing encoder produces 1600 × 900 HD video and
+a 1280 × 720 GIF. No interpolation or synthetic frames were used. This is an
+offline native capture, not a live frame-rate measurement.
+
+README, interior, commerce and shift guides now show or link this current flow.
+Earlier outdoor-counter recordings, including kitchen, commerce, progression,
+shifts and interiornight, remain historical evidence of those controls before
+the relocation; their old actor coordinates do not describe r82. Unchanged
+architecture, vehicle, sports and vegetation captures retain their geometry.
+The compiled map was regenerated; its visible footprint is unchanged because
+the new service aisle uses `finish=terrain`.
+[Source hashes and native results](../evidence/indoor-service/verification.md).

@@ -1,5 +1,7 @@
 # A market you can use
 
+The bakery counter now operates [inside the market hall](interiors.md). Earlier outdoor-counter recordings on this page show the same finite transactions before the r82 relocation.
+
 The market now opens on request: use its icon or **M**, then choose Shop or Work.
 Use **I** for carried food. Only the current view is shown, and leaving the
 counter closes its actions. [Contextual controls](../context-actions.md).
@@ -630,9 +632,9 @@ Pickup and handoff approaches stay less than four world units above/below the ve
 
 ## Work inside a building
 
-The market hall now has a [usable ground floor](interiors.md). Stand in its foyer with a clear line through the doorway to buy, sell, begin baking or talk to the vendor. Walls block these interactions. Existing work cancellation, finite stock and conserved wages still apply. The vendor remains at the entrance; this does not add a restaurant or another business.
+The market hall now has a [working indoor counter](interiors.md). Enter through the doorway and walk around the existing table to buy, sell, begin baking or talk to the vendor. Walls and the forty-unit counter reach block transactions from the square. Existing work cancellation, finite stock and conserved wages still apply. Customers and supply workers enter the same room; this remains one bakery, with no restaurant or new business.
 
-`repair.on` / `repair.grounds` and delivery grounds may name a placed building with an interior. The engine reuses its rotated floor footprint instead of a separate painted polygon. The live furniture service adds `market_hall` to its extra grounds; the worker uses the same doorway, floor and wall contacts as the player. No new worker, actor slot, inventory or money is created.
+`repair.on` / `repair.grounds` and delivery grounds may name a placed building with an interior. The engine reuses its rotated floor footprint instead of a separate painted polygon. The live furniture service uses `on=market_hall` with the square and existing outdoor grounds. Tree work uses a narrow unpainted service aisle and the public orchard path, keeping the same 449 repair and 106 replanting targets. The worker uses the same doorway, floor and wall contacts as the player. No new worker, actor slot, inventory or money is created.
 
 ## Customers with somewhere to go
 

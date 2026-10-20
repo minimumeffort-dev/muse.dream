@@ -186,7 +186,9 @@ flour from the station. You can cook, buy and take the same delivery jobs. Stock
 money and journeys stay real and finite, and survive leaving or reloading.
 [How the business works](docs/dream/businesses.md).
 
-![A working bakery counter](docs/media/kitchen.gif)
+![Walk inside to work, buy bread and eat](docs/media/interior.gif)
+
+[Indoor counter walkthrough](docs/media/interior.mp4). Earlier outdoor-counter recordings below document the same controls before the r82 relocation.
 
 The bakery and depot open from **06:00 to 22:00**; the school canteen serves
 **08:00 to 17:00**. After closing, the counter shows when to return. Finish a
@@ -201,7 +203,7 @@ Their walking stays smooth when a purchase or meal advances the business clock
 between its regular updates. Contacts and transactions still use the fixed-step
 simulation. [Motion checks](docs/evidence/worker-continuity/verification.md).
 
-![The baker leaving after closing](docs/media/shifts.gif)
+[Earlier shift recording, before the counter moved indoors](docs/media/shifts.mp4). Staff still walk to rest and return before service.
 
 You can also take delivery work. Bring flour from the station depot to the bakery,
 or carry bread to the school canteen. Pick up with **H**, follow the marked
@@ -308,7 +310,7 @@ WASD walks, swims or drives. Space jumps on foot, a bicycle or skateboard, and g
 
 ## Walk into the market
 
-The market now has an actual doorway, walls and a supported floor. Walk in and the roof and near walls cut away, leaving the furniture and people visible. You can bake for wages, buy bread and eat from the foyer using the same finite stock as the people outside. The caretaker can reach damaged furniture inside through the doorway.
+The market now has an actual doorway, walls and a supported floor. Walk in and the roof and near walls cut away, leaving the furniture and people visible. The baker serves from inside, behind the existing table. Walk around it to bake for wages, buy bread and eat. Customers and supply workers use the same doorway and finite stock. The caretaker starts inside and can still reach the same damaged furniture and trees outside.
 
 You can sit on the market, park and station benches with **F**, then stand or
 move away when the exit is clear. **G** eats food you carry. The commuter buys a
@@ -322,7 +324,7 @@ Broken benches release their occupants; repaired ones work again.
 
 ![Inside the covered market](docs/media/interior.jpg)
 
-[Walkthrough](docs/media/interior.mp4) · [Night view](docs/media/interiornight.mp4) · [Author an interior in Dream](docs/dream/interiors.md)
+[Walkthrough](docs/media/interior.mp4) · [Earlier night view, before indoor service](docs/media/interiornight.mp4) · [Author an interior in Dream](docs/dream/interiors.md)
 
 This is the first usable ground floor. Multiple floors, stairs, lifts and a hand-tool control for furniture are still to come. Existing saves have an explicit upgrade; business state survives visiting and unloading the hall.
 

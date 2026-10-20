@@ -18,7 +18,7 @@ The market hall has a square, produce stalls, a vendor and a commuter who walks 
 
 ![A paved route around the primary school reaches its rear yard](media/school.jpg)
 
-The market hall has a playable ground-floor interior with baking, trade, food and delivery work. The other civic buildings remain mock destinations with visible routines; hospital services and a general job market are not implemented.
+The market hall has a playable ground-floor interior. Its baker serves behind a table, customers enter to buy food, and supply workers use the same doorway for delivery work. The caretaker starts inside and retains the same outdoor repair and replanting coverage. The other civic buildings remain mock destinations with visible routines; hospital services and a general job market are not implemented.
 
 ## Buses, tram and regional train
 

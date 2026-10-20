@@ -48,8 +48,9 @@ export function vehicleReviewStart(state:CarState,world:World,id:string|null):Ca
 export function npcReviewStart(state:CarState,world:World,id:string|null):CarState {
   const object=world.scene.objects.find(o=>o.id===id && o.behavior);if(!object)return state;
   const pose=actorPose(world.scene,object,0,state),foot:CarState={...state,control:{kind:'foot'},vehicles:[{id:null,x:state.x,y:state.y,elevation:state.elevation,headingRad:state.headingRad,distance:0}]};
+  const market=world.scene.economy?.markets.find(m=>m.actor===object.id),reach=Math.min(42,(market?.radius??80)-4);
   for(let side=0;side<8;side++){
-    const angle=side*Math.PI/4,x=pose.x+Math.cos(angle)*42,y=pose.y+Math.sin(angle)*42,elevation=drivingHeight(world.scene.terrain,x,y);
+    const angle=side*Math.PI/4,x=pose.x+Math.cos(angle)*reach,y=pose.y+Math.sin(angle)*reach,elevation=walkingHeight(world.scene,x,y);
     if(carFootprintClear(bodyWorld(foot,world),x,y,elevation,0,foot))return {...foot,x,y,elevation,vx:0,vy:0};
   }
   return state;
@@ -166,9 +167,10 @@ export function interiorReviewStart(state:CarState,world:World,night=false):CarS
 }
 export function interiorReviewInput(state:CarState,world:World,frame:number,viewAngle=0,night=false):CarInput{
  const f=sceneInteriors(world.scene).find(f=>f.object.id==='market_hall');if(!f)return {steer:0,throttle:0};
- const target=night ? f.toWorld(frame<120 ? 12 : -12,-4) : frame<300 ? f.toWorld(0,-18) : frame<360 ? f.toWorld(0,-4) : frame<450 ? f.toWorld(14,-4) : frame<540 ? f.toWorld(-14,-4) : f.toWorld(0,-18);
+ const vendor=world.scene.objects.find(o=>o.id==='vendor')!,aisle=f.toWorld(0,-2.5),counter={x:vendor.x+36,y:aisle.y};
+ const target=night ? f.toWorld(frame<120 ? 12 : -12,-4) : frame<90 ? f.toWorld(0,-15) : frame<480 ? state.y<aisle.y-2 && state.x<vendor.x-20 ? aisle : counter : frame<540 ? aisle : portalPoints(f,f.room.portals[0]!,24).outside;
  const dx=target.x-state.x,dy=target.y-state.y,d=Math.hypot(dx,dy),a=Math.atan2(180,480)+viewAngle,c=Math.cos(a),s=Math.sin(a),move=d>1.5;
- return {steer:move ? (dx*c-dy*s)/d : 0,throttle:move ? (-dx*s-dy*c)/d : 0,...(!night && frame===60 ? {commerce:{kind:'work',job:'bake'} as const} : !night && frame===270 ? {commerce:{kind:'buy',market:'market_stall',good:'bread'} as const} : !night && frame===280 ? {commerce:{kind:'eat',good:'bread'} as const} : {})};
+ return {steer:move ? (dx*c-dy*s)/d : 0,throttle:move ? (-dx*s-dy*c)/d : 0,...(!night && frame===240 ? {commerce:{kind:'work',job:'bake'} as const} : !night && frame===450 ? {commerce:{kind:'buy',market:'market_stall',good:'bread'} as const} : !night && frame===460 ? {commerce:{kind:'eat',good:'bread'} as const} : {})};
 }
 
 /** Capture setup earns practice through ordinary paid work; no completion counters are assigned. */

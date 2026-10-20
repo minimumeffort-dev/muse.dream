@@ -7,6 +7,7 @@ import {playerHeight,assemblyHorizontalRadius} from '../scene/measure';
 import {objectHeight} from './archetypes';
 import {initialAmbient,ambientObjects} from './ambient';
 import {cityJourneys} from './city-upgrade';
+import {indoorServiceUpgrade} from './indoor-service-upgrade';
 import {checkSeatingState} from './seating';
 import {interactionSight} from './sight';
 import {walkingHeight} from '../scene/interiors';
@@ -24,7 +25,7 @@ import {objectFragments} from '../scene/fragments';
 import {actorPose} from './actors';
 import {AMBIENT_LIMITS} from '../scene/ambient';
 import {priorInvitationEconomyStateSchema,economyStateSchema,socialEconomyStateSchema,shiftEconomyStateSchema,hoursEconomyStateSchema,mealEconomyStateSchema,progressEconomyStateSchema,recipeEconomyStateSchema,withPersonalHistory,priorCourierEconomyStateSchema,priorGrowthEconomyStateSchema,parkingEconomyStateSchema,previousEconomyStateSchema,initialEconomy,checkEconomyState} from './commerce';
-import {CHARACTERS_COMPATIBILITY,preCharactersScene,FIXTURES_COMPATIBILITY,preFixturesScene,WILDLIFE_COMPATIBILITY,preWildlifeScene,FURNITURE_COMPATIBILITY,preFurnitureScene,BOTANY_COMPATIBILITY,preBotanyScene,CANOPY_COMPATIBILITY,preCanopyScene,FLEET_COMPATIBILITY,preFleetScene,TREE_COMPATIBILITY,preTreeScene,COVERAGE_COMPATIBILITY,preCoverageScene,INVITATION_COMPATIBILITY,preInvitationScene,SAVE_SIMULATION_VERSION,PEOPLE_COMPATIBILITY,prePeopleScene,JUNCTION_COMPATIBILITY,preJunctionScene,SPACING_COMPATIBILITY,PARK_COMPATIBILITY,preParkScene,CITY_COMPATIBILITY,preCityScene,MATCH_COMPATIBILITY,preMatchScene,BUSINESS_COMPATIBILITY,preBusinessScene,SCHOOL_REPAIR_COMPATIBILITY,preSchoolRepairScene,SOCIAL_COMPATIBILITY,preSocialScene,SHIFT_COMPATIBILITY,preShiftScene,HOURS_COMPATIBILITY,preHoursScene,SEATING_COMPATIBILITY,preSeatingScene,KITCHEN_COMPATIBILITY,preKitchenScene,MEAL_COMPATIBILITY,preMealScene,PROGRESS_COMPATIBILITY,preProgressScene,RECIPE_COMPATIBILITY,preRecipeScene,EGRESS_COMPATIBILITY,INTERIOR_COMPATIBILITY,preInteriorScene,COURIER_COMPATIBILITY,preCourierScene,NATURAL_COMPATIBILITY,preFinishScene,PLANT_COMPATIBILITY,VERGE_COMPATIBILITY,prePlantScene,R44_COMPATIBILITIES,preDeliveryScene,preParkingScene,preRepairScene,preSupplyScene,preNetworkScene,prePoolScene,preVergeScene} from '../scene/save-compatibility';
+import {SERVICE_COMPATIBILITY,preServiceScene,CHARACTERS_COMPATIBILITY,preCharactersScene,FIXTURES_COMPATIBILITY,preFixturesScene,WILDLIFE_COMPATIBILITY,preWildlifeScene,FURNITURE_COMPATIBILITY,preFurnitureScene,BOTANY_COMPATIBILITY,preBotanyScene,CANOPY_COMPATIBILITY,preCanopyScene,FLEET_COMPATIBILITY,preFleetScene,TREE_COMPATIBILITY,preTreeScene,COVERAGE_COMPATIBILITY,preCoverageScene,INVITATION_COMPATIBILITY,preInvitationScene,SAVE_SIMULATION_VERSION,PEOPLE_COMPATIBILITY,prePeopleScene,JUNCTION_COMPATIBILITY,preJunctionScene,SPACING_COMPATIBILITY,PARK_COMPATIBILITY,preParkScene,CITY_COMPATIBILITY,preCityScene,MATCH_COMPATIBILITY,preMatchScene,BUSINESS_COMPATIBILITY,preBusinessScene,SCHOOL_REPAIR_COMPATIBILITY,preSchoolRepairScene,SOCIAL_COMPATIBILITY,preSocialScene,SHIFT_COMPATIBILITY,preShiftScene,HOURS_COMPATIBILITY,preHoursScene,SEATING_COMPATIBILITY,preSeatingScene,KITCHEN_COMPATIBILITY,preKitchenScene,MEAL_COMPATIBILITY,preMealScene,PROGRESS_COMPATIBILITY,preProgressScene,RECIPE_COMPATIBILITY,preRecipeScene,EGRESS_COMPATIBILITY,INTERIOR_COMPATIBILITY,preInteriorScene,COURIER_COMPATIBILITY,preCourierScene,NATURAL_COMPATIBILITY,preFinishScene,PLANT_COMPATIBILITY,VERGE_COMPATIBILITY,prePlantScene,R44_COMPATIBILITIES,preDeliveryScene,preParkingScene,preRepairScene,preSupplyScene,preNetworkScene,prePoolScene,preVergeScene} from '../scene/save-compatibility';
 import {primeSceneContacts,sceneContactData} from '../scene/contacts';
 import {primeAmbientNavigation,ambientGraph,ambientNavigation} from '../scene/ambient-navigation';
 import {PARKING_LIMITS} from '../scene/agents';
@@ -78,10 +79,11 @@ const supported=z.discriminatedUnion('version',[legacyPacket,secondPacket,thirdP
 const unique=(values:unknown[])=>new Set(values).size===values.length;
 const expected=new WeakMap<World['scene'],ReturnType<typeof createCarAtSpawn>>();
 const previousWorlds=new WeakMap<World['scene'],Map<string,World['scene']>>();
-function previousPhysicalScene(world:World,stage:'characters'|'fixtures'|'wildlife'|'furniture'|'botany'|'canopy'|'fleet'|'tree'|'coverage'|'invitation'|'people'|'junction'|'park'|'city'|'match'|'business'|'schoolRepair'|'social'|'shift'|'hours'|'seating'|'kitchen'|'meal'|'progress'|'recipe'|'interior'|'courier'|'finish'|'plant'|'verge'|'pool'|'network'|'supply'|'repair'|'parking'|'delivery'|'commerce'='repair'):World['scene']{
+function previousPhysicalScene(world:World,stage:'service'|'characters'|'fixtures'|'wildlife'|'furniture'|'botany'|'canopy'|'fleet'|'tree'|'coverage'|'invitation'|'people'|'junction'|'park'|'city'|'match'|'business'|'schoolRepair'|'social'|'shift'|'hours'|'seating'|'kitchen'|'meal'|'progress'|'recipe'|'interior'|'courier'|'finish'|'plant'|'verge'|'pool'|'network'|'supply'|'repair'|'parking'|'delivery'|'commerce'='repair'):World['scene']{
  let stages=previousWorlds.get(world.scene);if(!stages){stages=new Map();previousWorlds.set(world.scene,stages);}
  let scene=stages.get(stage);if(scene)return scene;
- const remember=(prior:World['scene'])=>{inheritPriorRepairCoverage(prior,stage==='coverage' ? undefined : world.scene);stages!.set(stage,prior);return prior;};
+ const remember=(prior:World['scene'])=>{if(stage!=='service')inheritPriorRepairCoverage(prior,stage==='coverage' ? undefined : world.scene);stages!.set(stage,prior);return prior;};
+ if(stage==='service'){const prior=preServiceScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));if(world.previousServiceNavigation)primeAmbientNavigation(prior,world.previousServiceNavigation);return remember(prior);}
  if(stage==='characters'){const prior=preCharactersScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
  if(stage==='fixtures'){const prior=preFixturesScene(world.scene);primeSceneContacts(prior,sceneContactData(world.scene));primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
  if(stage==='wildlife'){const prior=preWildlifeScene(world.scene);if(world.previousWildlifeContacts)primeSceneContacts(prior,world.previousWildlifeContacts);primeAmbientNavigation(prior,ambientGraph(world.scene));return remember(prior);}
@@ -246,6 +248,13 @@ export function decodeSave(text:string,world:World):{state:CarState;worldTime:nu
  if(text.length>MAX_SAVE_CHARACTERS)throw Error('Save exceeds one million characters');
  let data:z.infer<typeof supported>;
  try{data=supported.parse(JSON.parse(text));}catch{throw Error('This file is not a supported Muse Dream backup.');}
+ if(world.saveCompatibility===SERVICE_COMPATIBILITY && (data.version===1 || data.compatibilityHash!==SERVICE_COMPATIBILITY)){
+  if(world.previousServiceSaveCompatibility!==CHARACTERS_COMPATIBILITY)throw Error('This backup needs a different world or simulation version.');
+  const previous=previousPhysicalScene(world,'service'),restored=decodeSave(text,{...world,scene:previous,saveCompatibility:CHARACTERS_COMPATIBILITY,previousServiceSaveCompatibility:undefined,previousServiceNavigation:undefined});
+  const state=indoorServiceUpgrade(rebasePopulation(restored.state,previous,world.scene,true),previous,world);
+  try{checkState(state,world);}catch(cause){throw Error('This backup contains invalid world state.',{cause});}
+  return {...restored,state,migrated:true,compatible:data.sourceHash!==world.scene.sourceHash};
+ }
  if(world.saveCompatibility===CHARACTERS_COMPATIBILITY && (data.version===1 || data.compatibilityHash!==CHARACTERS_COMPATIBILITY)){
   if(world.previousCharactersSaveCompatibility!==FIXTURES_COMPATIBILITY)throw Error('This backup needs a different world or simulation version.');
   const restored=decodeSave(text,{...world,scene:previousPhysicalScene(world,'characters'),saveCompatibility:FIXTURES_COMPATIBILITY,previousCharactersSaveCompatibility:undefined});

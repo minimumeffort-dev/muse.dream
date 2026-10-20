@@ -601,3 +601,20 @@ pedestrian graph remain equal. Format 17, simulation 32 and saved fields stay
 unchanged. Old slots remain intact while a new slot stores the upgraded world.
 Native repair progress, every ledger and world time survive the upgrade and
 reload exactly. [Evidence](evidence/character-construction/verification.md).
+
+
+## Indoor bakery service, r82
+
+This authored relocation keeps format 17 and simulation 32. Its registered r81
+projection restores both old actor positions, the eighty-unit counter reach,
+work grounds and the orchard path before validating the old backup. The new
+world keeps every balance, stock item, reservation, completed task and clock.
+
+Customers and couriers keep their physical positions, distance and sealed cargo;
+only their remaining counter approach changes. Returning staff and caretakers
+replan toward their new home. Ambient node indices rebase against the old graph,
+without moving residents or changing their random state. A grounded player with
+a paid batch underway follows the counter to a validated clear indoor position
+so the update does not cancel reserved work. Other players stay where they were.
+The old slot remains intact. Unknown fingerprints still fail rather than reset
+progress. [Migration checks](evidence/indoor-service/verification.md).

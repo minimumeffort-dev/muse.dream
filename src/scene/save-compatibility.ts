@@ -12,6 +12,7 @@ import furnitureR77 from './compatibility/r77-furniture.json';
 import wildlifeR78 from './compatibility/r78-wildlife.json';
 import fixturesR79 from './compatibility/r79-street-furniture.json';
 import charactersR80 from './compatibility/r80-characters.json';
+import serviceR81 from './compatibility/r81-indoor-service.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
 export const SAVE_SIMULATION_VERSION=32;
@@ -97,11 +98,27 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r82 moves service indoors without changing any physical assembly or supply rule. */
+export const SERVICE_COMPATIBILITY='08c37a536a120c91b5175e8a5771f04c12230bfe179ebe7da6afdc924938cada';
+const serviceProjections=new WeakMap<Scene,Scene>();
+function priorGrounds<T extends {id:string;on?:string;grounds?:string[]}>(rules:T[],prior:{id:string;on:string;grounds?:string[]}[]):T[]{
+ return rules.map(rule=>{const old=prior.find(p=>p.id===rule.id);return old ? {...rule,on:old.on,grounds:old.grounds} : rule;});
+}
+export function preServiceScene(scene:Scene):Scene{
+ if(!scene.surfaces.some(s=>s.id==='hall_service'))return scene;
+ const cached=serviceProjections.get(scene);if(cached)return cached;
+ const e=scene.economy!,old=serviceR81.economy;
+ const prior={...scene,objects:scene.objects.map(o=>{const p=serviceR81.objects.find(p=>p.id===o.id);return p ? {...o,x:p.x,y:p.y} : o;}),surfaces:scene.surfaces.filter(s=>s.id!=='hall_service').map(s=>s.id===serviceR81.orchardPath.id ? {...s,...serviceR81.orchardPath,walkable:undefined} : s),economy:{...e,markets:e.markets.map(m=>{const p=old.markets.find(p=>p.id===m.id);return p ? {...m,radius:p.radius} : m;}),deliveries:priorGrounds(e.deliveries,old.deliveries),repairs:priorGrounds(e.repairs,old.repairs),socials:priorGrounds(e.socials,old.socials),shifts:priorGrounds(e.shifts,old.shifts),meals:priorGrounds(e.meals,old.meals)}};
+ serviceProjections.set(scene,prior);return prior;
+}
+export function preServiceCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preServiceScene(scene),32,true,encode);}
+
 /** r81 refines the shared character family, retaining the exact r80 world. */
 export const CHARACTERS_COMPATIBILITY='5bd553a8bc5a9639513a5d19a2bcad969ec74e06b46627ffd6448b60067f16b3';
 const characterPoses=new Map(charactersR80.placements.map(p=>[p.id,p])),characterSports=new Map(charactersR80.sports.map(s=>[s.id,s]));
 const characterProjections=new WeakMap<Scene,Scene>();
 export function preCharactersScene(scene:Scene):Scene{
+ scene=preServiceScene(scene);
  if(!scene.objects.some(o=>characterPoses.has(o.id) && o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && o.spec.parts.some(p=>p.shape==='prism' && p.size[0]===12 && p.size[1]===18)))return scene;
  const cached=characterProjections.get(scene);if(cached)return cached;
  const template=(index:number)=>charactersR80.templates[index] as unknown as ObjectDslV2;

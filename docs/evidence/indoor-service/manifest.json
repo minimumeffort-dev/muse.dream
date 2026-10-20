@@ -1,0 +1,124 @@
+{
+  "date": "2026-10-20",
+  "baseCommit": "eff32d1eaba59f8fe6e8ee4953a34402571eba23",
+  "sources": [
+    {
+      "path": "src/scene/world/life.dream",
+      "bytes": 16909,
+      "sha256": "b06dedeff7811dba352bc267fb4e1ed9299425954371238daa6271fb6e298f28"
+    },
+    {
+      "path": "src/scene/world/open-world.dream",
+      "bytes": 13545,
+      "sha256": "7ba3ab274b0c54c8dd0bfbfffe0cd3806041cdd9dd2d06a2bc7b9a7de110123c"
+    },
+    {
+      "path": "src/sim/indoor-service-upgrade.ts",
+      "bytes": 3591,
+      "sha256": "4b521c514f70b6bc65d987cf8d98d2a69c8957dd336aa489053902483bcf7de2"
+    },
+    {
+      "path": "src/scene/save-compatibility.ts",
+      "bytes": 40962,
+      "sha256": "89166fb48fc0040f4110f5fbae237c571a0cd778555354912ab68e88423d021c"
+    },
+    {
+      "path": "src/sim/save.ts",
+      "bytes": 65923,
+      "sha256": "704a80bb915dd8a6ded6f1f87f907fd238295061550f2cdb8d0fbcd3648b2df2"
+    },
+    {
+      "path": "src/game/review-start.ts",
+      "bytes": 23359,
+      "sha256": "b573a0d40c759de5110df2dd7236899653ba0750f20179530c87770677920cd6"
+    },
+    {
+      "path": "tests/indoor-service.test.ts",
+      "bytes": 8037,
+      "sha256": "49a46767811188ec7eea0a45e53eee844e3bc9e9c1a4f4775940908be8c50084"
+    },
+    {
+      "path": "scripts/encode-media.mjs",
+      "bytes": 4153,
+      "sha256": "ee594992b6739ee2c2894e75161b8d2761a681d91b3c2438307663e219c52cf3"
+    }
+  ],
+  "frames": {
+    "count": 600,
+    "dimensions": [
+      2400,
+      1350
+    ],
+    "renderedPerSimulationSecond": 30,
+    "aggregateSha256": "58a818843d17310c0c8d133e950fb25f042c3999fb21f32cc958ac85c9d076b6",
+    "selected": [
+      {
+        "name": "0000.png",
+        "bytes": 969303,
+        "sha256": "c9f257403e5cd1784c61d79b3f61b9655259c5a9e194b8e79823284367911efe"
+      },
+      {
+        "name": "0240.png",
+        "bytes": 2172331,
+        "sha256": "2a418e3310c7f372900ed10fc32938484eba7fd8c29af8c309acafba146b019d"
+      },
+      {
+        "name": "0390.png",
+        "bytes": 1900317,
+        "sha256": "abfc50bb4d99850ae6a16ffadca4f64a2384f196e11dcc0215f034a6a4e148f3"
+      },
+      {
+        "name": "0450.png",
+        "bytes": 1894542,
+        "sha256": "8f30dbb08e7dfaa969c3ea73fa2c8bda58171ea15c46d4e8ede01fbf4268ea92"
+      },
+      {
+        "name": "0460.png",
+        "bytes": 1896678,
+        "sha256": "063fcbf84b1bbc271c9c2ad4b14d3790be9fc07c11308eedf28cebe43ff031d4"
+      },
+      {
+        "name": "0599.png",
+        "bytes": 1229254,
+        "sha256": "50ae9eba7fa1b563460edad4ff420d26d22fb636f63e29895af5ccb5306be00f"
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "path": "docs/media/interior.mp4",
+      "bytes": 3994832,
+      "sha256": "0d63ba2a4385402410f4fc1f01704d2edf1a6ce92ee862107cca8829f64bf30d"
+    },
+    {
+      "path": "docs/media/interior.gif",
+      "bytes": 29817905,
+      "sha256": "224df27a2e9ccc4160d689e1ec5727d2427176c82e082237d0a1e2a99b50087e"
+    },
+    {
+      "path": "docs/media/interior.jpg",
+      "bytes": 239837,
+      "sha256": "825b01988107c4cbfe69ce84c3494fdc308a099dc03e6c6a28030dae77bd3c1e"
+    }
+  ],
+  "native": [
+    {
+      "path": "docs/evidence/indoor-service/native-walkthrough.json",
+      "bytes": 8570,
+      "sha256": "4b9dcc1c277d490da3a8a7d5802da0a3eddb90cccabd0130d9f3717fb76c7600"
+    }
+  ],
+  "videoCheck": [
+    "  Duration: 00:00:20.00, start: 0.000000, bitrate: 1597 kb/s",
+    "frame=  600 fps=0.0 q=-1.0 Lsize=N/A time=00:00:19.93 bitrate=N/A speed=1.15e+04x    "
+  ],
+  "gifCheck": [
+    "* docs/media/interior.gif 600 images",
+    "  logical screen 1280x720"
+  ],
+  "commands": [
+    "node scripts/encode-media.mjs .npm-cache/media-tools/imageio_ffmpeg/binaries/ffmpeg-macos-aarch64-v7.1 .npm-cache/media-tools/node_modules/gifsicle/vendor/gifsicle interior",
+    ".npm-cache/media-tools/imageio_ffmpeg/binaries/ffmpeg-macos-aarch64-v7.1 -y -i .npm-cache/media/interior/0390.png -frames:v 1 -q:v 2 docs/media/interior.jpg"
+  ],
+  "limits": "Offline native frames, not live performance, total browser memory or hardware comparison."
+}

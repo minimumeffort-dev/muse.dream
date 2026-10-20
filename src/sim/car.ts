@@ -125,6 +125,8 @@ export interface World {
   previousCourierSaveCompatibility?:string;
   previousPeopleSaveCompatibility?:string;
   previousInvitationSaveCompatibility?:string;
+  previousServiceSaveCompatibility?:string;
+  previousServiceNavigation?:import('../scene/ambient-navigation').AmbientGraph;
   previousCharactersSaveCompatibility?:string;
   previousFixturesSaveCompatibility?:string;
   previousWildlifeSaveCompatibility?:string;previousWildlifeContacts?:import('../scene/contacts').SceneContactData;previousFurnitureSaveCompatibility?:string;previousFurnitureContacts?:import('../scene/contacts').SceneContactData;previousBotanySaveCompatibility?:string;previousBotanyContacts?:import('../scene/contacts').SceneContactData;previousCanopySaveCompatibility?:string;

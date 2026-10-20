@@ -28,7 +28,7 @@ behavior public_life(start=busy){
  state busy(action=perform,face=none){on look(event=near_player,radius=90,to=hello);}
  state hello(action=idle,face=player){on resume(event=far_player,radius=130,to=busy);}
 }
-place vendor(object=a_market_vendor,at=[6400,4350],role=npc,behavior=market_chat);
+place vendor(object=a_market_vendor,at=[6455,4475],role=npc,behavior=market_chat);
 place doctor(object=a_health_worker,at=[3900,6600],role=npc,behavior=health_chat);
 place teacher(object=a_teacher,at=[4436,3420],role=npc,behavior=school_chat);
 place footballer_a(object=a_football_player,at=[10400,4650],role=npc,behavior=public_life);
@@ -68,7 +68,7 @@ behavior neighborhood_greeting(start=rest){
  state rest(action=idle,face=none){on hello(event=near_player,radius=80,to=greet);}
  state greet(action=idle,face=player){on resume(event=far_player,radius=120,to=rest);}
 }
-place market_neighbor(object=neighbor,at=[6460,4380],role=npc,behavior=neighborhood_greeting);
+place market_neighbor(object=neighbor,at=[6480,4475],role=npc,behavior=neighborhood_greeting);
 place hospital_visitor(object=shopper,at=[4040,6610],role=npc,behavior=neighborhood_greeting);
 place school_student(object=student,at=[4490,3470],role=npc,behavior=neighborhood_greeting);
 place station_resident(object=resident,at=[11000,4112],role=npc,behavior=neighborhood_greeting);
@@ -151,11 +151,11 @@ economy(){
  good fasteners(label="Fasteners");
  account pocket(actor=player,credits=20,capacity=8,satiety=48,drain_s=.05);
  account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,social=hall_break,shift=bakery_day,works=[pack_lunch,large_bake,bake]);
- social hall_break(good=bread,seats=[hall_bench],on=market_square,grounds=[market_hall],eat_s=8,cooldown_s=600,markets=[market_stall]);
+ social hall_break(good=bread,seats=[hall_bench],on=market_hall,grounds=[market_square],eat_s=8,cooldown_s=600,markets=[market_stall]);
  social school_break(good=bread,seats=[school_bench],on=school_yard,eat_s=8,cooldown_s=600,markets=[school_canteen]);
- shift bakery_day(market=market_stall,rest=[6360,4490],on=market_square,grounds=[market_hall],lead_s=15);
+ shift bakery_day(market=market_stall,rest=[6360,4490],on=market_hall,grounds=[market_square],lead_s=15);
  shift school_day(market=school_canteen,rest=[4320,3860],on=school_yard,grounds=[school_yard_access,school_yard_return],lead_s=50);
- meal market_break(good=lunch,markets=[market_stall],on=market_square,grounds=[market_hall],eat_s=4,seats=[hall_bench]);
+ meal market_break(good=lunch,markets=[market_stall],on=market_hall,grounds=[market_square],eat_s=4,seats=[hall_bench]);
  account regular(actor=market_commuter,credits=30,capacity=4,satiety=25,drain_s=.05,meal=market_break);
  account school_staff(actor=teacher,credits=30,capacity=4,satiety=28,drain_s=.05,shop=true,social=school_break,shift=school_day);
  account caretaker(actor=market_neighbor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,repairs=[market_tables,orchard_trees],deliveries=[kits_run,saplings_run,flour_run]);
@@ -168,7 +168,7 @@ economy(){
  market school_canteen(label="School canteen",actor=teacher,credits=60,radius=70,hours=[8,17]){
   lot bread_counter(good=bread,quantity=0,limit=12,price=5);
  }
- market market_stall(label="Market bakery",actor=vendor,credits=100,radius=80,hours=[6,22]){
+ market market_stall(label="Market bakery",actor=vendor,credits=100,radius=40,hours=[6,22]){
   lot bread_shelf(good=bread,quantity=8,limit=16,price=5);
   lot flour_sack(good=flour,quantity=30,limit=30);
   lot repair_kits(good=timber,quantity=12,limit=12);
@@ -178,12 +178,12 @@ economy(){
   lot workshop_boards(good=boards,quantity=8,limit=8);
   lot workshop_fasteners(good=fasteners,quantity=8,limit=8);
  }
- delivery flour_run(label="Bring flour to the bakery",from=station_supplies,to=market_stall,good=flour,quantity=2,pay=4,capacity=1,on=market_square);
+ delivery flour_run(label="Bring flour to the bakery",from=station_supplies,to=market_stall,good=flour,quantity=2,pay=4,capacity=1,on=market_hall,grounds=[market_square]);
  delivery school_run(label="Take bread to school",from=market_stall,to=school_canteen,good=bread,quantity=2,pay=5,capacity=1);
- delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_square);
- repair market_tables(label="Repair city fixtures",market=market_stall,on=market_square,grounds=[park_seating,station_seating,market_hall,school_yard,school_yard_access,school_yard_return,garden_work],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
- delivery saplings_run(label="Bring saplings to the market",from=station_supplies,to=market_stall,good=sapling,quantity=2,pay=4,price=2,capacity=1,on=market_square);
- repair orchard_trees(label="Replant city trees",market=market_stall,on=market_square,grounds=[orchard_work,orchard_path,garden_work,park_seating,station_seating,school_yard,school_yard_access],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=112,kind=tree,input=sapling,take=1,seconds=10,pay=6,effort=6,regrow_s=180,seed_scale=.15);
+ delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_hall,grounds=[market_square]);
+ repair market_tables(label="Repair city fixtures",market=market_stall,on=market_hall,grounds=[park_seating,station_seating,market_square,school_yard,school_yard_access,school_yard_return,garden_work],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
+ delivery saplings_run(label="Bring saplings to the market",from=station_supplies,to=market_stall,good=sapling,quantity=2,pay=4,price=2,capacity=1,on=market_hall,grounds=[market_square]);
+ repair orchard_trees(label="Replant city trees",market=market_stall,on=hall_service,grounds=[orchard_work,market_square,garden_work,park_seating,station_seating,school_yard,school_yard_access],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=112,kind=tree,input=sapling,take=1,seconds=10,pay=6,effort=6,regrow_s=180,seed_scale=.15);
  work bake(label="Bake bread",market=market_stall,input=flour,take=1,output=bread,make=2,seconds=6,pay=3,effort=12,capacity=1,target=4);
  milestone practiced_baker(label="Bake bread batches",kind=work,task=bake,count=3);
  milestone school_helper(label="Deliver bread to school",kind=delivery,task=school_run,count=1);

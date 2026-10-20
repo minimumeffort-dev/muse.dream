@@ -71,6 +71,15 @@ Use Horia's editorial voice: concrete, conversational prose, useful visuals,
 no hype, no invented claims and no em dashes. Preserve the distinction between
 working mock mechanics and the future sketch/Muse pipeline.
 
+## Keep the feedback loop short
+
+Pick one complete slice and finish it before expanding scope. Batch relevant
+checks and reuse successful results until code changes or a failure requires
+another run. Use focused regression tests for branch pushes; run the full suite
+before merging/releasing or when shared engine changes need broad coverage.
+For visual changes, capture one representative current flow and refresh its
+GIF, video and still together. Mark older affected recordings as historical.
+
 ## Run and test (verified 2026-10-15)
 
 ```sh
@@ -528,7 +537,7 @@ ambient walking spacing, the r70 airport connector, character wardrobe
 (r71), the r72/r73 fixture service, wind-safe trees (r74), the utility fleet
 (r75), whole-library asset direction, and faceted tree, landscape plant,
 ground cover, furniture and wildlife construction (r76 to r79), and street
-furniture toppling (r80), shared character construction (r81) and world-map/waypoint UI. That file is
+furniture toppling (r80), shared character construction (r81), indoor bakery service (r82) and world-map/waypoint UI. That file is
 not loaded automatically, so read the relevant section there, alongside its
 linked guide, before changing a covered area.
 

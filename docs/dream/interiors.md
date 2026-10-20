@@ -8,7 +8,7 @@ The covered market now has a doorway you can walk through, a floor you can stand
 
 [Watch the walkthrough](../media/interior.mp4) · [30 fps GIF](../media/interior.gif) · [Complete Dream source](../examples/enterable-market.dream)
 
-Leave your vehicle with **F**, then walk through the market's front entrance. The stall at the entrance still uses the existing economy: **H** starts paid baking, **B** buys bread and **G** eats what you carry. Stand in the foyer with a clear line through the doorway. A wall blocks buying, starting work and conversation; proximity alone is not enough. Leaving the work area or jumping cancels a batch and returns its reserved supplies and wage.
+Leave your vehicle with **F**, then walk through the market's front entrance. The vendor now stands inside, behind the existing table: **H** starts paid baking, **B** buys bread and **G** eats what you carry. Walk around the table to the counter. The outdoor square is outside its forty-unit reach. Staff, customers and supply workers use the same doorway and clear interior aisle. A wall blocks buying, starting work and conversation; proximity alone is not enough. Leaving the work area or jumping cancels a batch and returns its reserved supplies and wage.
 
 This is one usable ground floor. It is not a restaurant, a system of stacked floors or a finished interior library. There is no hand-tool or furniture-grabbing control yet. The hall's tables, bench and crate use the existing impact and repair rules; the caretaker can walk to them through the doorway after damage.
 
@@ -44,9 +44,9 @@ A work ground can name the **placed building ID** instead of another painted pol
 
 A room-owning `lamp` draws an always-on pool clipped to that floor. It remains readable at night, with no extra point light or shadow map. It is a surface effect: it does not light walls or calculate object occlusion.
 
-![The same ground floor at night](../media/interiornight.jpg)
+![The same ground floor at night, before the r82 counter relocation](../media/interiornight.jpg)
 
-[Night walkthrough](../media/interiornight.mp4) · [30 fps GIF](../media/interiornight.gif)
+[Earlier night walkthrough, before indoor service](../media/interiornight.mp4) · [30 fps GIF](../media/interiornight.gif)
 
 ## Complete assembly
 
@@ -113,7 +113,7 @@ node scripts/dream.mjs context --features interiors,commerce
 
 The current limits are 32 placed interiors, four portals per interior, eight contacts and 32 visual parts per assembly. Existing NPC, live rig, destruction, fragment, source and navigation limits remain unchanged. Floors and room ownership live in accepted Dream data; saved people, goods, jobs and damage remain simulation state. Unloading a render chunk resets neither.
 
-[Verification, migration and performance](../evidence/interiors/verification.md) · [World systems still to build](../world-systems.md)
+[Indoor service and migration checks](../evidence/indoor-service/verification.md) · [Original interior verification](../evidence/interiors/verification.md) · [World systems still to build](../world-systems.md)
 
 
 The indoor bench now has two usable slots shared by the player and meal customer.

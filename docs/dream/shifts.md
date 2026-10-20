@@ -1,12 +1,12 @@
 # People leave work
 
-The counter closes. The baker finishes the batch already underway, walks into
-the market hall and rests. Before morning service, they walk back. A clock alone
+The counter closes. The baker finishes the batch already underway, leaves the indoor counter
+and walks to the hall's rest area. Before morning service, they walk back. A clock alone
 cannot serve a customer: the counter waits if its owner has not arrived.
 
-![The baker walking away after closing](../media/shifts.gif)
+![The current indoor workplace](../media/interior.jpg)
 
-[HD recording](../media/shifts.mp4) · [Complete runnable world](../examples/staff-shifts.dream)
+[Current counter walkthrough](../media/interior.mp4) · [Earlier closing-shift recording, before indoor service](../media/shifts.mp4) · [Complete runnable world](../examples/staff-shifts.dream)
 
 ## Give a shift a destination
 

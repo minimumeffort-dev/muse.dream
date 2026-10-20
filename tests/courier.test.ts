@@ -10,6 +10,7 @@ import {stepNpcs} from '../src/sim/npcs';
 import {encodeSave,decodeSave} from '../src/sim/save';
 import {onWalkway} from '../src/scene/sites';
 import {deliveryArea} from '../src/sim/courier';
+import {indoorServiceUpgrade} from '../src/sim/indoor-service-upgrade';
 import {workSegment} from '../src/sim/work-navigation';
 import {repairNavigation,primeRepairNavigation} from '../src/sim/repair';
 const scene=compileDreamScene(source,{sceneId:'courier',revisionId:'r1',sourceHash:'courier'}),d=scene.economy!.deliveries[0]!;
@@ -17,6 +18,20 @@ const world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperM
 const start=():CarState=>({...createCarAtSpawn(scene),control:{kind:'foot'},x:560,y:740,elevation:0,surface:'paper',vehicles:[{id:null,x:525,y:609,elevation:0,headingRad:0,distance:0}],broken:['yard_table','remote_table']});
 const worker=(s:CarState)=>s.economy!.accounts.find(a=>a.id==='regular')!;
 const step=(s:CarState)=>stepCommerce({...s,timeS:s.timeS+.25},{},.25,scene);
+it('retargets real pickup, cargo and home journeys when the receiving counter moves, paying once',()=>{
+ const moved=compileDreamScene(source.replace('at=[580,710]','at=[600,710]').replace('at=[620,730]','at=[630,750]'),{sceneId:'courier',revisionId:'r2',sourceHash:'moved'}),nextWorld={...world,scene:moved};
+ const phases=new Map<string,CarState>();let state=start();
+ for(let i=0;i<2200 && phases.size<3;i++){state=step(state);const phase=worker(state).courier?.phase;if(phase && !phases.has(phase))phases.set(phase,structuredClone(state));}
+ expect([...phases.keys()]).toEqual(['pickup','dropoff','home']);
+ for(const [phase,before] of phases){
+  let next=indoorServiceUpgrade(before,scene,nextWorld);checkEconomyState(next,moved);
+  expect(next.economy!.markets,phase).toEqual(before.economy!.markets);expect(worker(next).delivery,phase).toEqual(worker(before).delivery);
+  expect(worker(next).credits,phase).toBe(worker(before).credits);expect(worker(next).courier!.distance,phase).toBe(worker(before).courier!.distance);
+  next=decodeSave(encodeSave(next,next.timeS,nextWorld),nextWorld).state;
+  for(let i=0;i<2200 && worker(next).courier;i++)next=stepCommerce({...next,timeS:next.timeS+.25},{},.25,moved);
+  expect(worker(next).courier,phase).toBeUndefined();expect(next.economy!.delivered.kits_run,phase).toBe(1);expect(worker(next).completed.delivery.kits_run,phase).toBe(1);checkEconomyState(next,moved);
+ }
+});
 it('validates bounded courier policies, grounded endpoints and connected public walking',()=>{
  expect(formatDream(formatDream(source))).toBe(formatDream(source));
  for(const [a,b] of [['deliveries=[kits_run]','deliveries=[missing]'],['deliveries=[kits_run]','deliveries=[kits_run,kits_run]'],['deliveries=[kits_run]','deliveries=[]'],['actor=customer','actor=depot_keeper'],['on=work_yard,grounds=[remote_yard]','on=work_yard,grounds=[work_yard]'],['on=work_yard,grounds=[remote_yard]','on=remote_yard,grounds=[work_yard]'],['at=[1120,970]','at=[1120,1100]']] as const)expect(()=>compileDreamScene(source.replace(a,b),{sceneId:'bad',revisionId:'r1',sourceHash:'bad'}),b).toThrow();
