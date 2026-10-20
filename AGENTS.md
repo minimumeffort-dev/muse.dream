@@ -528,7 +528,7 @@ ambient walking spacing, the r70 airport connector, character wardrobe
 (r71), the r72/r73 fixture service, wind-safe trees (r74), the utility fleet
 (r75), whole-library asset direction, and faceted tree, landscape plant,
 ground cover, furniture and wildlife construction (r76 to r79), and street
-furniture toppling (r80) and shared character construction (r81). That file is
+furniture toppling (r80), shared character construction (r81) and world-map/waypoint UI. That file is
 not loaded automatically, so read the relevant section there, alongside its
 linked guide, before changing a covered area.
 

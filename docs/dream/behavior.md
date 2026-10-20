@@ -18,6 +18,22 @@ Pinch the trackpad or scroll vertically over the world to zoom in and out. Mouse
 
 [Wider overview of the same position](../media/zoom-overview.jpg) · [Input and camera checks](../evidence/trackpad-zoom/verification.md)
 
+## Map and waypoint navigation
+
+Click the minimap or press **C** for the expanded map. Pinch/scroll zooms either
+map; dragging pans the expanded map. Click a destination to place a waypoint.
+The HUD and minimap then show its direct bearing and distance, with Arrived
+within 2.5 metres. Clear it with the × beside the distance or from the map.
+This is direction guidance, without automatic steering or street route planning.
+
+Everything also works from the keyboard: arrows/WASD pan, **+ / −** zoom,
+**Home** centers the player, **0** shows the whole world, **Enter** sets a point
+at the crosshair, **Delete** clears it, and **Escape / C** closes the map. The
+world pauses while you choose; map input cannot drive, jump or rotate the camera.
+Waypoints persist as a bounded local UI preference, separate from exported
+simulation backups. **R** keeps the point; **Start over** clears it.
+[Full map and HUD guide](../context-actions.md).
+
 ## Pause and find the controls
 
 **P** or **Escape** pauses the world. **Controls** opens a key guide with Explore,

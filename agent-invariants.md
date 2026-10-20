@@ -452,3 +452,16 @@ and hair are rigid geometry, without cloth, fingers or facial animation.
 The current whole-library review is 53/109 exports, 56 pending, with engine rigs
 reviewed separately and infrastructure/optional examples still pending.
 See docs/evidence/character-construction/verification.md.
+
+## World map and waypoint UI
+
+Map zoom/pan use the same accepted road/cycle/water footprints as the minimap.
+Reproject pointer coordinates through the current view; zoom around the pointer,
+keep marker sizes readable and clamp views to the finite world. C opens/closes;
+keyboard and pointer actions share one UI owner. Map mode pauses simulation,
+releases held controls and cannot steer or change the gameplay camera. Guidance
+is a direct screen-relative bearing, not street routing or automatic steering.
+Keep bounded version-1 waypoint preferences separate from simulation backups,
+keyed by world ID/dimensions; review/capture sessions never read public preferences.
+R preserves the point, Start over clears it. Release expanded canvas buffers on
+close. Do not change Dream contracts, physical state or save semantics for this UI.

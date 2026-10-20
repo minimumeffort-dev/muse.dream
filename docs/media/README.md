@@ -1421,3 +1421,19 @@ costumes and revision. The generated map has unchanged layout and footprints.
 README, people, construction, library, model-authoring, rendering and persistence
 guides are updated. No compiler vocabulary changed.
 [Source/frame manifest, native saves, checks and limitations](../evidence/character-construction/verification.md).
+
+## Interactive map and waypoint guidance
+
+`world-map.jpg` and `waypoint-guide.jpg` come from native screenshots of the
+expanded map and real driving at a 548 × 748 browser viewport. Their original
+PNGs, public UI diagnostics and exact pointer-coordinate checks are retained in
+[world-map evidence](../evidence/world-map/verification.md). They show map zoom,
+the waypoint marker, current distance and the camera-relative HUD arrow. No
+upscaling, generated assets or motion interpolation was used. The expanded
+map's canvas redraws the accepted geometry at its current view resolution.
+
+The README, context-action and movement guides describe the new controls.
+Earlier gameplay recordings retain their recorded HUD; they still illustrate
+their mechanics. These new stills document map interaction. Dream grammar,
+geometry and world-save behavior are unchanged, so DSL examples and existing
+construction/map-plan captures remain accurate.

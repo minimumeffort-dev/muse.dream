@@ -44,6 +44,26 @@ the current selection, with no bottom stripe;
 a separate light outline shows keyboard focus. The framed map stays north-up. The wallet includes a small fullness
 gauge; its coin icon replaces the old currency abbreviation.
 
+Click the minimap or press **C** to open the world map. Scroll or pinch over
+either map to zoom it independently of the game camera. In the expanded map,
+drag to pan and click to set a waypoint. Arrow keys/WASD pan, **+ / −** zoom,
+**Home** finds you, **0** fits the world and **Enter** places a waypoint at the
+crosshair. **Delete**, Clear waypoint or the HUD’s × removes it. **Escape / C**
+returns to play. The map pauses the world and releases held controls.
+
+![The expanded map and its waypoint controls](media/world-map.jpg)
+
+A waypoint adds a map marker, direct bearing and distance in metres beside the
+minimap. The arrow follows the screen direction after camera rotation; it does
+not steer for you or calculate a turn-by-turn street route. It says Arrived
+within 2.5 metres, keeping the marker until you clear it. The point is remembered
+on this device for the same world and dimensions. It is a separate UI preference,
+not part of exported world backups. Start over clears it; R keeps it. Review
+captures use isolated preferences or disable storage. Closing the map releases
+its large canvas buffers; static geography is cached until the view changes.
+
+![Waypoint guidance while driving](media/waypoint-guide.jpg)
+
 The food icon uses a fork and knife with a clear gap between them. The bicycle
 icon shares its wheels, frame, saddle and fork with the cycle-lane stencil.
 Both remain legible at their small HUD sizes. [Four rendered paint angles](evidence/symbols/verification.md).

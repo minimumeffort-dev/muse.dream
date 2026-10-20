@@ -17,6 +17,6 @@ it('teaches only the actual controls for the occupied vehicle',()=>{
 it('keeps discoverable controls for camera, bags, transactions and keyboard selection in every context',()=>{
  for(const context of ['foot','swim','seated','car','bicycle','boat','plane','sport','passenger'] as const){
   const groups=controlSections(context);expect(new Set(groups.map(s=>s.id)).size).toBe(5);const keys=groups.flatMap(g=>g.rows.flatMap(r=>r.keys));
-  for(const key of ['M','I','Enter','1–4','B','V','H','G','+','−','0','Q','E','R','P','Esc','Tab'])expect(keys,context).toContain(key);
+  for(const key of ['M','I','Enter','1–4','B','V','H','G','C','+','−','0','Q','E','R','P','Esc','Tab'])expect(keys,context).toContain(key);
  }
 });

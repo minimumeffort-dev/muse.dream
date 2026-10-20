@@ -27,6 +27,10 @@ Cycle tracks now carry their orange surface through declared junctions. A side
 street can join both sides of an existing cycle route; an ending lane no longer
 leaves an isolated orange cap across the road. Centerlines and stop bars leave
 these connections clear. The minimap and city plan use the same outlines.
+
+Click the minimap or press **C** to open the full map. Zoom with a trackpad,
+pan, and set a waypoint; the HUD points towards it and shows the distance.
+You can clear it from either view. [Map controls](docs/context-actions.md).
 [Junction example and checks](docs/urban-world.md#cycle-connections).
 
 ## The whole world is made of voxels

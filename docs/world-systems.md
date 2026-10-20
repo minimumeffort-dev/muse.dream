@@ -11,6 +11,12 @@ trailers, vehicle damage and service fleets remain separate work.
 
 ## Next playable work
 
+Navigation now opens from the minimap or C, with map zoom/pan, a removable
+waypoint and direct HUD bearing/distance. The point survives reload as a UI
+preference. Street route planning remains separate. Priorities are connected
+activities and shared interactions below, useful indoor service and broader
+consistent destruction/recovery; the full asset review also remains unfinished.
+
 The live circuit is retired. Streets now own the driving mask and the city
 layout; close junctions share outer-arm crossings. Reuse the released ground
 for connected parks and other destinations, with useful paths and activities. Garden park now supplies connected pedestrian paths, six usable benches, six parked rides, eight moving visitors and finite caretaker coverage. Theme-park rides and ticketing remain future systems.

@@ -64,7 +64,7 @@ import { SceneryOcclusion } from "./occlusion";
 import {WorldStreaming} from './world-streaming';
 import {WorldParking} from './parking';
 import type {WorldWorkerClient} from './world-worker-client';
-import { createWorldMap } from "./navigation";
+import { worldMap } from "./world-map";
 import {geometryMemory} from './geometry-memory';
 
 const container = document.querySelector<HTMLElement>("#game")!;
@@ -161,7 +161,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   let shootButtonHeld=false,shootPressed=false,shootReleased=false,matchRequested=false,passRequested=false;
   let pointerAim:{x:number;y:number}|undefined;
   const clearShot=()=>{shootButtonHeld=shootPressed=shootReleased=matchRequested=passRequested=false;pointerAim=undefined;car=cancelSportAction(car);};
-  let mode: "playing" | "paused" = "playing";
+  let mode: "playing" | "paused" | "map" = "playing";
   let pendingCommerce:CommerceAction|undefined;
   const commerce=commerceControls(doc,action=>{if(mode==='playing')pendingCommerce=action;if(document.querySelector<HTMLElement>('#commerce-panel')!.hidden)container.focus({preventScroll:true});},()=>{keys.clear();boostRequested=false;talkRequested=false;matchRequested=passRequested=false;clearShot();});
   const controls=controlGuide();
@@ -178,7 +178,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
-  renderer.domElement.setAttribute("aria-label", "WASD walks, swims or drives. On sports grounds, N joins or rests a match. Hold J then release to shoot. K passes, calls for a pass or tackles the nearby ball carrier. Shift or the Boost button gives a car burst. F sits, stands, or enters or exits a vehicle. T talks to nearby people. B buys, V sells, H starts work, collects cargo or completes a delivery; G eats carried food. Y shares food or accepts a meal invitation while seated. X declines an invitation. Space jumps on foot or on a bicycle, skateboard or scooter, and hops a boat. Shift runs or swims faster. In an aircraft Space climbs and Shift descends. Plus and minus, pinch or scroll to zoom; 0 resets framing. Q and E rotate the view. P pauses; R returns to the start.");
+  renderer.domElement.setAttribute("aria-label", "WASD walks, swims or drives. On sports grounds, N joins or rests a match. Hold J then release to shoot. K passes, calls for a pass or tackles the nearby ball carrier. Shift or the Boost button gives a car burst. F sits, stands, or enters or exits a vehicle. T talks to nearby people. B buys, V sells, H starts work, collects cargo or completes a delivery; G eats carried food. Y shares food or accepts a meal invitation while seated. X declines an invitation. Space jumps on foot or on a bicycle, skateboard or scooter, and hops a boat. Shift runs or swims faster. In an aircraft Space climbs and Shift descends. Plus and minus, pinch or scroll to zoom; 0 resets framing. Q and E rotate the view. C opens the world map. P pauses; R returns to the start.");
   container.append(renderer.domElement);
   const manualZoom = cameraZoomInput(renderer.domElement, () => mode === "playing");
   const scene = new THREE.Scene();
@@ -295,7 +295,12 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   addEventListener('pagehide',event=>{if(!event.persisted)parking.dispose(releaseParked);});
   const sportBalls=new Set(doc.sports.map(s=>s.ballId));
   const occlusion = new SceneryOcclusion(objects.filter(object=>object!==avatar && !sportBalls.has(object.userData.sceneObject?.id)));
-  const updateMap = createWorldMap(document.querySelector<HTMLCanvasElement>("#world-map")!, doc);
+  const navigation=worldMap(doc,{
+    canOpen:()=>mode==='playing' && document.body.dataset.loading==='ready',
+    onOpen:()=>{setMode('map');navigation.update(car,cameraAngle);},onClose:()=>setMode('playing'),
+    storage:!review || reviewSave || params.has('test-navigation') ? ()=>localStorage : undefined,
+    storageKey:`${review ? 'muse-dream.review-navigation' : 'muse-dream.navigation'}.v1.${doc.sceneId}.${doc.canonical.width}x${doc.canonical.height}`,
+  });
 
   await loading.stage("Preparing lighting");
   const daylight=new WorldDaylight(doc,scene,hemisphere,sun,fill);
@@ -348,7 +353,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     pendingDraw=undefined;saveDirty=true;
     car = resetCar(car, doc, restartRace);
     resetPresentation(restartRace);
-    if(restartRace){worldTime.value=0;manualZoom.factor=1;}
+    if(restartRace){worldTime.value=0;manualZoom.factor=1;navigation.clear();}
   }
   function resetPresentation(resetProps=true):void{
     commerce.close(false);
@@ -371,6 +376,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     controls.update(context);
   }
   function setMode(next: typeof mode): void {
+    if(next!=='map')navigation.close(false);
     commerce.close(false);
     pendingCommerce=undefined;
     if(next==='playing')backups?.close();
@@ -380,7 +386,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       updateControlGuide();
     }else controls.close();
     if (next === "paused" && !pauseMenu.open) pauseMenu.showModal();
-    else if (next === "playing" && pauseMenu.open) pauseMenu.close();
+    else if (next !== "paused" && pauseMenu.open) pauseMenu.close();
     pauseButton.setAttribute("aria-label", next === "paused" ? "Resume" : "Pause");
     pauseButton.setAttribute("aria-pressed", String(next === "paused"));
     pauseButton.dataset.paused = String(next === "paused");
@@ -415,8 +421,10 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   });
   addEventListener("keydown", (e) => {
     if(e.metaKey || e.ctrlKey || e.altKey)return;
+    if(navigation.open){navigation.key(e);return;}
     if(mode==='paused'){if(!e.repeat && (e.code==='Escape' || e.code==='KeyP')){e.preventDefault();setMode('playing');}return;}
     if(commerce.key(e.code,e.target,e.repeat,e.shiftKey)){e.preventDefault();return;}
+    if(e.code==='KeyC'){e.preventDefault();if(!e.repeat)navigation.show();return;}
     if(e.target instanceof HTMLElement && e.target.closest('button,input,select,summary') && e.code!=='Escape' && e.code!=='KeyP')return;
     if(!e.ctrlKey && !e.metaKey && !e.altKey && manualZoom.key(e.code)){e.preventDefault();return;}
     if (e.code.startsWith("Arrow") || e.code === "Space" && e.target === container) e.preventDefault();
@@ -878,7 +886,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       container.dataset.growing=JSON.stringify((car.growing??[]).map(p=>({...p,scale:growthScale(doc,car,p.objectId)})));
       container.dataset.destruction=JSON.stringify({broken:car.broken,zones:car.brokenZones,debris:car.debris.length,renderer:debris.stats,toppling:car.debris.filter(p=>p.topple).map(p=>({id:p.objectId,angle:p.topple!.angle,settled:p.settled})),props:car.props.filter(p=>p.elevation!==undefined).map(p=>({id:p.id,x:p.x,y:p.y,elevation:p.elevation,vz:p.vz}))});
     }
-    if (hudTime === 0) updateMap(car, cameraAngle);
+    if (hudTime === 0) navigation.update(car, cameraAngle);
     const draw=()=>{
       commerce.update(car,mode==='playing');
       if(import.meta.env.DEV && car.economy)container.dataset.economy=JSON.stringify(car.economy);
