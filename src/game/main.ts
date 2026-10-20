@@ -623,7 +623,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     if(import.meta.env.DEV)container.dataset.shaderWarmup=JSON.stringify({ms:performance.now()-start,parallel:renderer.extensions.has('KHR_parallel_shader_compile')});
   },error=>{renderer.setAnimationLoop(null);scenery.dispose();debris.dispose();worker.dispose();loading.fail(error);});
   const frame=() => {
-    if(pendingDraw){debris.update(car,reduced.matches);if(streamState() && shadersReady()){pendingDraw();pendingDraw=undefined;previous=performance.now();}return;}
+    if(pendingDraw){debris.update(car,reduced.matches);if(streamState() && shadersReady()){profile?.resume();pendingDraw();pendingDraw=undefined;previous=performance.now();}return;}
     const captureDt=capture?.begin();
     if(captureDt===null)return;
     const now = performance.now(), elapsedMs = now - previous, dt = profile?.begin(elapsedMs) ?? captureDt ?? Math.min(elapsedMs / 1000, .1); previous = now;
@@ -888,7 +888,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       if(first)loading.ready(performance.now()-renderStart);
       if(import.meta.env.DEV){container.dataset.streaming=JSON.stringify(scenery.stats);container.dataset.parking=JSON.stringify(parking.stats);const revision=`${scenery.stats.loaded},${scenery.stats.unloaded},${car.vehicles.length},${parking.stats.active},${debris.stats.templates},${debris.stats.pieces},${debris.stats.cachedFragments}`;if(revision!==memoryRevision){memoryRevision=revision;container.dataset.memory=JSON.stringify(geometryMemory(scene,...debris.cachedRoots));}}
     };
-    if(streamState() && shadersReady())draw();else pendingDraw=draw;
+    if(streamState() && shadersReady())draw();else {pendingDraw=draw;profile?.hold();}
   };
   await loading.stage("Loading the first neighbourhood");
   if(import.meta.env.DEV && params.has('test-paused'))setMode('paused');

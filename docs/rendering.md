@@ -32,6 +32,15 @@ Walking feet retain world position, height and facing during stance, then return
 
 ## Loading and memory
 
+The development `?profile` panel also has **Measure journey**: use the normal
+controls through 60 warm-up and 3,600 measured rendered frames. Keep the tab
+visible. Unlike the short fixed-input drive, this uses ordinary elapsed simulation
+time and does not steer for you. `presentationMs` includes gaps between completed
+frames; `wait` reports complete-run streaming/shader hold episodes and duration.
+`cpuMs` excludes those hold intervals and is active-frame work, not total browser
+CPU time. `wallMs` includes warm-up. Hidden tabs interrupt instead of publishing
+a partial result. [Checks and a native sample](evidence/travel-profiling/verification.md).
+
 Cycle surfaces are resolved once per accepted Scene before chunk clipping.
 Declared junctions connect existing cycle facilities within the shared riding
 footprints and crossing-arm bounds. Their convex pieces are unioned once, so
