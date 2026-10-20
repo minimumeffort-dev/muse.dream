@@ -13,7 +13,9 @@ trailers, vehicle damage and service fleets remain separate work.
 
 Navigation now opens from the minimap or C, with map zoom/pan, a removable
 waypoint and direct HUD bearing/distance. The point survives reload as a UI
-preference. Street route planning remains separate. Priorities are connected
+preference. Active deliveries and repairs now supply automatic guidance when
+there is no personal waypoint; the map can focus the task with T. Street route
+planning remains separate. Priorities are connected
 activities and shared interactions below, useful indoor service and broader
 consistent destruction/recovery; the full asset review also remains unfinished.
 

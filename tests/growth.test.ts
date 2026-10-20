@@ -13,6 +13,7 @@ import {stepCommerce,checkEconomyState,commerceReason} from '../src/sim/commerce
 import {buildMaskForScene} from '../src/scene/fixture';
 import {buildPaperMask} from '../src/sim/mask';
 import {breakOnContact,advanceImpactMotion} from '../src/sim/impacts';
+import {navigationTarget} from '../src/game/navigation';
 const identity={sceneId:'orchard',revisionId:'r1',sourceHash:'orchard'},scene=compileDreamScene(source,identity),tree=scene.objects.find(o=>o.id==='remote_tree')!;
 const world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(4000,2400),carRadius:11};
 const start=():CarState=>({...createCarAtSpawn(scene),control:{kind:'foot'},vehicles:[{id:null,x:525,y:609,elevation:0,headingRad:0,distance:0}],x:560,y:740,elevation:0,surface:'paper',broken:[tree.id]});
@@ -45,7 +46,10 @@ it('destroys a growing tree at its current size without restarting its growth or
 
 it('lets the player plant using the same stock, wages and current-size restoration rules',()=>{
  let s=start();s=stepCommerce({...s,timeS:.25},{commerce:{kind:'repair',repair:'tree_care'}},.25,scene);const player=s.economy!.accounts.find(a=>a.id==='pocket')!;expect(player.repair?.id).toBe('tree_care');expect(s.economy!.accounts.find(a=>a.id==='regular')!.repair).toBeUndefined();
+ const target=navigationTarget(s,scene)!;expect(target.kind).toBe('planting');expect([target.x,target.y]).toEqual([player.repair!.at.x,player.repair!.at.y]);
+ expect(navigationTarget(decodeSave(encodeSave(s,s.timeS,world),world).state,scene)).toEqual(target);
  s={...s,x:player.repair!.at.x,y:player.repair!.at.y};for(let i=0;i<8;i++)s=step(s);expect(s.growing).toHaveLength(1);expect(s.economy!.accounts.find(a=>a.id==='pocket')!.credits).toBe(24);expect(s.economy!.markets[0]!.stock.sapling).toBe(1);checkEconomyState(s,scene);
+ expect(navigationTarget(s,scene)).toBeUndefined();
 });
 it('skips an unaffordable priority service, then plants without losing either material ledger',()=>{
  const empty=compileDreamScene(source.replace('good=kit,quantity=3,limit=3','good=kit,quantity=0,limit=3'),identity);let s:CarState={...start(),economy:createCarAtSpawn(empty).economy,broken:['yard_crate',tree.id]};

@@ -1437,3 +1437,12 @@ Earlier gameplay recordings retain their recorded HUD; they still illustrate
 their mechanics. These new stills document map interaction. Dream grammar,
 geometry and world-save behavior are unchanged, so DSL examples and existing
 construction/map-plan captures remain accurate.
+
+`task-map.jpg` and `task-guide.jpg` add the active school delivery: its counter
+is focused with T, and its bearing appears automatically without a personal
+waypoint. These are native 548 × 748 screenshots, with original PNGs and public
+UI checks in [task-navigation evidence](../evidence/task-navigation/verification.md).
+No upscaling or generated frames. The earlier personal-waypoint stills remain
+accurate for their context. Existing economic videos show the same cargo,
+handoff, repair and payment mechanics with their recorded HUD; these new stills
+document the added guidance. No motion clip, geometry or Dream example changed.

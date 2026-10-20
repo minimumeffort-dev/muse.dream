@@ -57,7 +57,7 @@ kbd { display:inline-block; font:700 10px Manrope,system-ui,sans-serif; min-widt
 #waypoint-arrow { width:24px; height:24px; fill:var(--yellow); flex:none; }
 #waypoint-guide span { flex:1; min-width:0; }
 #waypoint-distance { display:block; font-size:13px; font-weight:750; }
-#waypoint-caption { display:block; font-size:10px; color:var(--muted); margin-top:2px; }
+#waypoint-caption { display:block; font-size:10px; color:var(--muted); margin-top:2px; overflow-wrap:anywhere; }
 #waypoint-clear { display:grid; place-items:center; width:32px; height:32px; padding:6px; border-radius:6px; background:none; color:var(--muted); }
 #waypoint-clear:hover { color:var(--paper); background:#ffffff12; }
 #waypoint-clear svg,#map-close svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; }

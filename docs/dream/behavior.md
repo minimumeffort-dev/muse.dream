@@ -32,6 +32,10 @@ at the crosshair, **Delete** clears it, and **Escape / C** closes the map. The
 world pauses while you choose; map input cannot drive, jump or rotate the camera.
 Waypoints persist as a bounded local UI preference, separate from exported
 simulation backups. **R** keeps the point; **Start over** clears it.
+Without a personal waypoint, active deliveries, repairs and planting supply
+the HUD target automatically. **T / Find task** in the map centers that work
+destination. Clearing a waypoint never cancels work. Nearby is only a distance
+cue; ordinary on-foot handoff, repair and payment rules still apply.
 [Full map and HUD guide](../context-actions.md).
 
 ## Pause and find the controls

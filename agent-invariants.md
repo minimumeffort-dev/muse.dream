@@ -465,3 +465,10 @@ Keep bounded version-1 waypoint preferences separate from simulation backups,
 keyed by world ID/dimensions; review/capture sessions never read public preferences.
 R preserves the point, Start over clears it. Release expanded canvas buffers on
 close. Do not change Dream contracts, physical state or save semantics for this UI.
+
+Active delivery/repair/planting targets derive from the existing accepted task,
+using the same target on maps and HUD. Personal waypoints take priority; clearing
+one restores task guidance and cannot cancel work. T / Find task only changes
+map framing. Remove task markers on completion/cancellation and ignore NPC work.
+Nearby is a distance cue, never proof of handoff, repair or payment. Keep this
+derived UI state out of world saves and preserve ordinary activity controls.

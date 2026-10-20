@@ -34,7 +34,16 @@ export function waypointGuide(from:Point,to:Point,angle:number){
   const dx=to.x-from.x,dy=to.y-from.y,camera=cameraPosition({x:0,y:0,z:0},angle),distance=Math.hypot(dx,dy);
   return {distance,direction:Math.atan2(dx*camera.z-dy*camera.x,-dx*camera.x-dy*camera.z)*180/Math.PI,arrived:distance<=25};
 }
-export const waypointDistance=(units:number)=>units>=10000 ? `${(units/10000).toFixed(1)} km` : `${Math.round(units/10)} m`;
+export const waypointDistance=(units:number)=>units>=10000 ? `${(units/10000).toFixed(1)} km` : `${Math.ceil(units/10)} m`;
+
+/** Personal destinations take priority; task markers always come from the accepted work state. */
+export function navigationTarget(state:CarState,scene:Scene,waypoint?:Point){
+  if(waypoint)return {...waypoint,kind:'waypoint' as const,id:'waypoint',label:'Waypoint'};
+  const delivery=deliveryTarget(state,scene);
+  if(delivery)return {x:delivery.x,y:delivery.y,kind:'delivery' as const,id:delivery.delivery.id,label:`Delivery · ${delivery.market.label}`};
+  const repair=repairTarget(state,scene);
+  if(repair && repair.task.phase!=='home')return {x:repair.x,y:repair.y,kind:repair.repair.regrow_s===undefined ? 'repair' as const : 'planting' as const,id:`${repair.repair.id}:${repair.task.objectId}:${repair.task.zoneId??''}`,label:repair.repair.label};
+}
 
 /** Destination meaning comes from Dream sites, never inferred from building labels. */
 export function mapDestinations(scene:Scene){
@@ -112,7 +121,7 @@ export function createWorldMap(canvas: HTMLCanvasElement, scene: Scene) {
     for(const actor of actorPoses(scene,car.timeS,car)){
       ctx.beginPath();ctx.arc(tx+actor.x*scale,ty+actor.y*scale,2,0,Math.PI*2);ctx.fillStyle=actor.kind==="water" ? "#8dd6d8" : "#e9d8b2";ctx.fill();
     }
-    const repair=repairTarget(car,scene),target=deliveryTarget(car,scene)??(repair ? {...repair,market:{label:repair.repair.label}} : undefined);
+    const target=navigationTarget(car,scene);
     if(target){const x=tx+target.x*scale,y=ty+target.y*scale;ctx.save();ctx.strokeStyle='#ffe176';ctx.lineWidth=1.5;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(tx+car.x*scale,ty+car.y*scale);ctx.lineTo(x,y);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#171717';ctx.beginPath();ctx.arc(x,y,8,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#ffe176';ctx.stroke();ctx.fillStyle='#ffe176';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold 12px system-ui';ctx.fillText('↓',x,y);ctx.restore();}
     if(waypoint){
       const p=mapToPixel(view,waypoint),player=mapToPixel(view,car);

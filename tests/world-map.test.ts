@@ -30,5 +30,5 @@ it('guides in screen directions after camera rotation and reports arrival in met
  expect(north.distance).toBe(1000);expect(north.arrived).toBe(false);expect(north.direction).toBeCloseTo(110.556045);
  expect(rotated.direction).toBeCloseTo(-159.443955);expect(waypointGuide(from,from,Math.PI).arrived).toBe(true);
  expect(waypointGuide(from,{x:6355,y:4233},0).arrived).toBe(true);expect(waypointGuide(from,{x:6356,y:4233},0).arrived).toBe(false);
- expect(waypointDistance(1000)).toBe('100 m');expect(waypointDistance(12345)).toBe('1.2 km');
+ expect(waypointDistance(1000)).toBe('100 m');expect(waypointDistance(1001)).toBe('101 m');expect(waypointDistance(12345)).toBe('1.2 km');
 });

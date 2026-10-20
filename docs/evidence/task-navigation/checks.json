@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-20",
+  "baseCommit": "c3646f506c5cd31e9a26d312eb671f78ca78051c",
+  "tests": [
+    {
+      "command": "npm test -- tests/world-map.test.ts tests/delivery.test.ts tests/repair.test.ts tests/camera-input.test.ts tests/control-guide.test.ts tests/docs-site.test.ts tests/agents-size.test.ts --maxWorkers=2 --testTimeout=60000",
+      "filesPassed": 7,
+      "testsPassed": 81,
+      "durationSeconds": 1.37
+    },
+    {
+      "command": "npm test -- tests/growth.test.ts --maxWorkers=2 --testTimeout=60000",
+      "filesPassed": 1,
+      "testsPassed": 9,
+      "durationSeconds": 0.898
+    }
+  ],
+  "productionBuild": {"command": "npm run build", "passed": true, "advisory": "Existing chunks larger than 500 kB"},
+  "finalTypecheck": {"command": "npm run typecheck", "passed": true},
+  "docsBuild": {"command": "npm run docs:build", "passed": true, "pages": 44},
+  "native": {
+    "browser": "ChatGPT in-app browser",
+    "url": "http://127.0.0.1:5223/?test-npc=vendor&test-navigation",
+    "captures": ["map.png", "guidance.png"],
+    "captureWidth": 548,
+    "captureHeight": 748,
+    "assertions": "native-checks.json",
+    "warningsOrErrors": 0
+  },
+  "fullSuiteRepeated": false,
+  "independentReview": false,
+  "simulationOrSaveChange": false,
+  "providerCalls": false
+}

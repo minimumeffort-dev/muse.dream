@@ -64,6 +64,22 @@ its large canvas buffers; static geography is cached until the view changes.
 
 ![Waypoint guidance while driving](media/waypoint-guide.jpg)
 
+Delivery, repair and planting jobs also use this guide. With no personal
+waypoint, it points to the delivery counter or the repair approach and names
+the destination. **Find task / T** centers the expanded map there. A personal
+waypoint takes priority; clearing it brings the task guide back without
+cancelling the job. Finishing or cancelling work removes its marker.
+
+![Finding the school delivery destination](media/task-map.jpg)
+
+Nearby means you are within 2.5 metres of the target, not that the task is
+complete. Hand deliveries over on foot through the ordinary activity controls;
+repairs still need a clear work area and time. The guide stays available when
+you change vehicles or use R. It reads the saved task rather than storing a
+second copy of it.
+
+![Automatic delivery guidance while driving](media/task-guide.jpg)
+
 The food icon uses a fork and knife with a clear gap between them. The bicycle
 icon shares its wheels, frame, saddle and fork with the cycle-lane stencil.
 Both remain legible at their small HUD sizes. [Four rendered paint angles](evidence/symbols/verification.md).

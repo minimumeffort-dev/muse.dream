@@ -30,7 +30,9 @@ these connections clear. The minimap and city plan use the same outlines.
 
 Click the minimap or press **C** to open the full map. Zoom with a trackpad,
 pan, and set a waypoint; the HUD points towards it and shows the distance.
-You can clear it from either view. [Map controls](docs/context-actions.md).
+You can clear it from either view. With no personal waypoint, the same guide
+points to your delivery or repair. **T** in the map finds the current work site.
+[Map controls](docs/context-actions.md).
 [Junction example and checks](docs/urban-world.md#cycle-connections).
 
 ## The whole world is made of voxels

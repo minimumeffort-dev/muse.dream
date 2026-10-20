@@ -4,10 +4,20 @@ import {compileDreamScene,compileDreamWorld,formatDream} from '../src/scene/drea
 import {createCarAtSpawn,resetCar,type CarState} from '../src/sim/car';
 import {stepCommerce,checkEconomyState,commerceReason,deliveryTarget} from '../src/sim/commerce';
 import {parseScene} from '../src/scene/schema';
+import {navigationTarget} from '../src/game/navigation';
 const scene=compileDreamScene(source,{sceneId:'delivery',revisionId:'r1',sourceHash:'delivery'});
 const start=()=>({...createCarAtSpawn(scene),control:{kind:'foot' as const},x:580,y:750,elevation:0,surface:'paper' as const});
 const step=(s:CarState,commerce?:Parameters<typeof stepCommerce>[1]['commerce'],dt=.25,doc=scene)=>stepCommerce({...s,timeS:s.timeS+dt},{commerce},dt,doc);
 const pocket=(s:CarState)=>s.economy!.accounts[0]!,stock=(s:CarState,id:string)=>s.economy!.markets.find(m=>m.id===id)!;
+it('guides an active delivery across travel and R, preserving a personal waypoint through handoff or cancellation',()=>{
+ const waypoint={x:1800,y:900},before=start();expect(navigationTarget(before,scene)).toBeUndefined();
+ let s=step(before,{kind:'collect',delivery:'lunch_run'});const untouched=structuredClone(s);
+ expect(navigationTarget(s,scene)).toEqual({x:1100,y:730,kind:'delivery',id:'lunch_run',label:'Delivery · Lunch counter'});
+ expect(navigationTarget(resetCar({...s,control:{kind:'car'}},scene),scene)).toEqual(navigationTarget(s,scene));
+ expect(navigationTarget(s,scene,waypoint)).toEqual({...waypoint,kind:'waypoint',id:'waypoint',label:'Waypoint'});expect(s).toEqual(untouched);
+ const cancelled=step(s,{kind:'cancel'});expect(navigationTarget(cancelled,scene)).toBeUndefined();expect(navigationTarget(cancelled,scene,waypoint)?.kind).toBe('waypoint');
+ s=step({...s,x:1100,y:750},{kind:'deliver'});expect(navigationTarget(s,scene)).toBeUndefined();expect(navigationTarget(s,scene,waypoint)?.x).toBe(1800);expect(pocket(s).credits).toBe(24);
+});
 it('compiles the reusable delivery declaration and rejects references, bounds and overlapping destinations',()=>{
  expect(scene.economy!.deliveries[0]!.quantity).toBe(2);expect(formatDream(formatDream(source))).toBe(formatDream(source));
  expect(()=>compileDreamWorld(source.replace('to=lunch_counter','to=missing'))).toThrow('destination');
