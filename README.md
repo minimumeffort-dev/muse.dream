@@ -197,6 +197,9 @@ The baker and school staff now physically leave and return. The baker rests in
 the market hall; the teacher uses the school yard. If returning staff are late,
 customers and couriers wait. You can still talk to someone off duty. Journeys
 and remembered meetings survive saving. [Staff shifts in Dream](docs/dream/shifts.md).
+Their walking stays smooth when a purchase or meal advances the business clock
+between its regular updates. Contacts and transactions still use the fixed-step
+simulation. [Motion checks](docs/evidence/worker-continuity/verification.md).
 
 ![The baker leaving after closing](docs/media/shifts.gif)
 

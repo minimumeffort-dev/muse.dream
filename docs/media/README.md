@@ -1009,6 +1009,17 @@ Earlier evidence remains pinned to its own source. The tiny school work-anchor
 correction is outside those focused views. These offline exports do not measure
 live FPS or low-powered-laptop performance. See [verification](../evidence/staff-shifts/verification.md).
 
+The 2026-10-20 refresh replaces the shifts GIF, HD video and frame-570 still
+together from 600 new native-renderer frames at 30 frames per simulation second.
+At frame 101, G eats the player's previously purchased bread while the baker
+walks; this is an ordinary transaction between commerce updates. Frame 540
+still talks to the resting baker. Timestamped walking now handles these extra
+updates without restarting interpolation. Source frames are 2400 × 1350;
+HD is 1600 × 900 and GIF 1280 × 720, without interpolated video frames. Other
+economic captures retain their historical presentation and unchanged mechanics;
+asset/DSL definitions and their captures are unchanged. These exports are not
+live performance measurements. [Evidence](../evidence/worker-continuity/verification.md).
+
 ## Shared meals (r64)
 
 `shared.gif`, `shared.mp4` and `shared.jpg` come from `?capture`'s `shared`

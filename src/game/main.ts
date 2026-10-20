@@ -539,7 +539,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     if(clip==='fixturefall'){if(frame<160)keys.add('KeyW');if(frame>=160 && frame<190)keys.add('KeyS');return;}
     if(clip==='hosted'){if(frame===60)commerce.key('KeyY');return;}
     if(clip==='shared'){if(frame===10)commerce.key('KeyX');if(frame===30)commerce.key('KeyY');if(frame===420)useRide();if(frame===450 || frame===480)talkRequested=true;return;}
-    if(clip==='shifts'){captureWalk=shiftReviewInput(car,world,frame,cameraAngle);if(frame===540)talkRequested=true;return;}
+    if(clip==='shifts'){captureWalk=shiftReviewInput(car,world,frame,cameraAngle);if(frame===101)commerce.key('KeyG');if(frame===540)talkRequested=true;return;}
     if(clip==='hours'){if(frame===30)commerce.key('KeyH');if(frame===300)commerce.key('KeyG');return;}
     if(clip==='seating'){
       const config=doc.daylight;captureTime=config ? ((14-config.startHour+24)%24)/24*config.cycleSeconds+frame/30 : undefined;
@@ -734,10 +734,12 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       const object=activeParking.userData.sceneObject;actorMeshes.set(object.id,activeParking);rideZooms.set(object.id,rideCameraZoom(doc.player,object));objects.push(activeParking);
     }
     poses=actorPoses(doc,viewCar.timeS,viewCar);
+    const walkingPresentation=import.meta.env.DEV ? [] as {id:string;x:number;y:number;rawX:number;rawY:number;speed:number;clock?:number}[] : undefined;
     for(const rawPose of poses){
       if(teamResidents.has(rawPose.id))continue;
       const journey=workJourneyForActor(car,doc,rawPose.id);
       const pose=repairViews.sample(rawPose,!!journey && journey.phase!=='rest',car.economy?.atS??car.timeS,viewCar.timeS,snap || reduced.matches);
+      if(journey)walkingPresentation?.push({id:pose.id,x:pose.x,y:pose.y,rawX:rawPose.x,rawY:rawPose.y,speed:pose.speed,clock:pose.animationTimeS});
       const group=actorMeshes.get(pose.id)!;
       group.position.copy(worldPosition(doc,pose.x,pose.y));group.position.y=pose.elevation+(pose.seatHeight===undefined ? group.userData.groundLift??1.5 : .2);
       const spec=group.userData.sceneObject.spec;
@@ -866,7 +868,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       container.dataset.view = camera.quaternion.toArray().map(v => v.toFixed(5)).join(",");
       container.dataset.zoom = camera.zoom.toFixed(3);
       if(import.meta.env.DEV)container.dataset.shadow=JSON.stringify({span:[sun.shadow.camera.right*2,sun.shadow.camera.top*2],map:sun.shadow.mapSize.toArray(),direction:sun.position.clone().sub(sun.target.position).normalize().toArray()});
-      if(import.meta.env.DEV)container.dataset.presentation=JSON.stringify({time:car.timeS,renderTime:viewCar.timeS,alpha:stepper.alpha,player:{x:viewCar.x,y:viewCar.y,elevation:viewCar.elevation},balls:doc.sports.map(s=>{const game=viewCar.sports.find(g=>g.id===s.id)!,ball=viewCar.props.find(p=>p.id===s.ballId)!,owner=game.match?.owner,member=game.match?.members.find(m=>m.id===owner);return {id:ball.id,x:ball.x,y:ball.y,owner,member:member ? teamPose(game.match!,member) : undefined};})});
+      if(import.meta.env.DEV)container.dataset.presentation=JSON.stringify({time:car.timeS,renderTime:viewCar.timeS,alpha:stepper.alpha,player:{x:viewCar.x,y:viewCar.y,elevation:viewCar.elevation},walkers:walkingPresentation,balls:doc.sports.map(s=>{const game=viewCar.sports.find(g=>g.id===s.id)!,ball=viewCar.props.find(p=>p.id===s.ballId)!,owner=game.match?.owner,member=game.match?.members.find(m=>m.id===owner);return {id:ball.id,x:ball.x,y:ball.y,owner,member:member ? teamPose(game.match!,member) : undefined};})});
       container.dataset.render = JSON.stringify({ calls: renderer.info.render.calls, triangles: renderer.info.render.triangles, geometries: renderer.info.memory.geometries });
       const seat=nearbySeat(car,world),canStand=car.seated ? !standUp(car,world).seated : false;
       const foot=car.control.kind==="foot",nearby=foot ? nearbyRide(car,world) : undefined,exit=foot ? undefined : exitPosition(car,world);

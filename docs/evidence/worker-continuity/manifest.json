@@ -1,0 +1,109 @@
+{
+  "date": "2026-10-20",
+  "baseCommit": "629b11c563959ac5f102a58c3f14fa012c339ee8",
+  "sources": [
+    {
+      "path": "src/game/repair-view.ts",
+      "bytes": 2924,
+      "sha256": "c7e716a6abfa83f7d0fac920828562e0529fa14da1f3362f58628ab49dab3c34"
+    },
+    {
+      "path": "src/game/main.ts",
+      "bytes": 83024,
+      "sha256": "6af65a961c107a542ec9534382fb703907a8416ddd68002cc5bedcb29fed9b44"
+    },
+    {
+      "path": "tests/repair-view.test.ts",
+      "bytes": 4198,
+      "sha256": "1ca59ad6d13398a4afa5c58e92ed1103cf2984cfeff38435e90fcd5b2d08acab"
+    },
+    {
+      "path": "tests/staff-shifts.test.ts",
+      "bytes": 14083,
+      "sha256": "38c6fc092a83adc84f19d751bd2bce568da5ecff0c8726add17e30a8e1c070bd"
+    },
+    {
+      "path": "scripts/encode-media.mjs",
+      "bytes": 4153,
+      "sha256": "ee594992b6739ee2c2894e75161b8d2761a681d91b3c2438307663e219c52cf3"
+    }
+  ],
+  "frames": {
+    "count": 600,
+    "dimensions": [
+      2400,
+      1350
+    ],
+    "renderedPerSimulationSecond": 30,
+    "aggregateSha256": "8f177c316999aec3262c2fa663ef7f5393fc29e41abcbf23fb6299faab35e4b7",
+    "selected": [
+      {
+        "name": "0000.png",
+        "bytes": 619780,
+        "sha256": "fbe6cbda8c9e9b4fddd6a44112c771eec48ef9d76605d728b21b2a75e450a428"
+      },
+      {
+        "name": "0101.png",
+        "bytes": 1340425,
+        "sha256": "58636343dda056575328c59dcb377399b4c5b0280998e7279d21bdcce11b94e4"
+      },
+      {
+        "name": "0570.png",
+        "bytes": 1904086,
+        "sha256": "1ae1ab4799359ba2c98912be3b1dbb327fd1d310d8f1e59fdf29761f8f42d3e9"
+      },
+      {
+        "name": "0599.png",
+        "bytes": 1904791,
+        "sha256": "ac1d264c9a8766244052229bed99ca91673881bc7fdb317da8b39c75cc0b0d6a"
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "path": "docs/media/shifts.mp4",
+      "bytes": 3287179,
+      "sha256": "152a0ea9252063fc45ba4ea0eec655170f4188816e847e5342295b595a5b37e4"
+    },
+    {
+      "path": "docs/media/shifts.gif",
+      "bytes": 26053598,
+      "sha256": "4fef2bb7a6590dbb70c6bc940673431718755ad48c19917e3d6822595827cc91"
+    },
+    {
+      "path": "docs/media/shifts.jpg",
+      "bytes": 232163,
+      "sha256": "eb557b3fa97b73ada148c380c84e9561a576aecc8e8e56eccb9b8d115968e1ad"
+    }
+  ],
+  "native": [
+    {
+      "path": "docs/evidence/worker-continuity/native-after.json",
+      "bytes": 3477,
+      "sha256": "16fe1ab1b2fdfd715a01d6ef8a868c2db060415666dc817367dbd0085addd0a6"
+    },
+    {
+      "path": "docs/evidence/worker-continuity/native-during.json",
+      "bytes": 1948,
+      "sha256": "3711dc86e77610a259dea42cfcde701790a79658b86f74dc7d08056139cc49a6"
+    },
+    {
+      "path": "docs/evidence/worker-continuity/native-pause.json",
+      "bytes": 1665,
+      "sha256": "44593cfb16451e0e7643f1ee5bfc6d8e28b8856497d158f8a5559c5bb73c26fe"
+    }
+  ],
+  "videoCheck": [
+    "  Duration: 00:00:20.00, start: 0.000000, bitrate: 1314 kb/s",
+    "frame=  600 fps=0.0 q=-1.0 Lsize=N/A time=00:00:19.93 bitrate=N/A speed=1.33e+04x    "
+  ],
+  "gifCheck": [
+    "* docs/media/shifts.gif 600 images",
+    "  logical screen 1280x720"
+  ],
+  "commands": [
+    "node scripts/encode-media.mjs .npm-cache/media-tools/imageio_ffmpeg/binaries/ffmpeg-macos-aarch64-v7.1 .npm-cache/media-tools/node_modules/gifsicle/vendor/gifsicle shifts",
+    ".npm-cache/media-tools/imageio_ffmpeg/binaries/ffmpeg-macos-aarch64-v7.1 -y -i .npm-cache/media/shifts/0570.png -frames:v 1 -q:v 2 docs/media/shifts.jpg"
+  ],
+  "limits": "Offline native rendering and deterministic replay, not live FPS, total browser memory or a hardware comparison."
+}

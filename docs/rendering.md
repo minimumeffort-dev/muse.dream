@@ -316,6 +316,17 @@ surface is skipped, so later overlays do not move down onto earlier paint.
 
 
 NPC resupply reuses resident maintenance walking and the existing character rigs.
+Staff, repair, meal and courier walking uses a timestamped presentation buffer.
+Player transactions can advance commerce between its regular quarter-second
+updates; those extra samples no longer restart the visual interpolation. Limb
+clocks stay continuous, and a finished stride keeps moving until the rendered
+feet reach their stop. A resumed route retains its visual delay until its next
+stop, then releases the buffer. There are at most 64 pose samples per cached
+account within the existing 16-account cap. Reset, clock rewind, teleport and
+reduced motion clear the samples. The existing quarter-second visual delay
+does not move contacts or alter saved journeys, money or inventory.
+[Replay and native recording](evidence/worker-continuity/verification.md).
+
 The live kit and sapling jobs share one additional prepared graph (3,248 nodes,
 10,000 directed links) for the same receiving ground, rather than building one
 per shipment. Original repair graphs, all 1,695 placements and the 2,813-node

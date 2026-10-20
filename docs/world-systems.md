@@ -25,6 +25,11 @@ Stippled scenery, hill and road cutaways now use clean sight openings, retaining
 full shadows and physical contacts. Further visual review should distinguish
 timing artifacts from ordinary small-detail aliasing. Frame pacing on
 lower-powered hardware remains a separate measurement task.
+Worker walking now also follows irregular commerce timestamps, keeps its limb
+clock continuous and hands back to ordinary routes without a position jump.
+The market inspection still finds an enterable hall with outdoor service;
+moving that service indoors needs connected staff/customer approaches and a
+registered migration for saved work, rather than only a new counter prop.
 
 The live circuit is retired. Streets now own the driving mask and the city
 layout; close junctions share outer-arm crossings. Reuse the released ground

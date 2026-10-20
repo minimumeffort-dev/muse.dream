@@ -9,6 +9,7 @@ import {createCarAtSpawn,resetCar,type CarState,type World} from '../src/sim/car
 import {stepCommerce,commerceReason,checkEconomyState,type CommerceAction} from '../src/sim/commerce';
 import {stepNpcs,nearbyNpc} from '../src/sim/npcs';
 import {actorPose} from '../src/sim/actors';
+import {repairView} from '../src/game/repair-view';
 import {shiftArea} from '../src/sim/shifts';
 import {workClear,workPath,workSegment} from '../src/sim/work-navigation';
 import {marketIsOpen,marketIsStaffed} from '../src/sim/market-hours';
@@ -44,6 +45,21 @@ it('finishes committed production after closing, then walks away without restart
  let last=account(s).shift!;
  while(account(s).shift?.phase==='out'){const next=step(s),t=account(next).shift!;expect(Math.hypot(t.x-last.x,t.y-last.y)).toBeLessThanOrEqual(3.500001);expect(workSegment(scene,shiftArea(scene,scene.economy!.shifts[0]!),last,t,undefined,true)).toBe(true);last=t;s=next;checkEconomyState(s,scene);}
  expect(account(s).shift?.phase).toBe('rest');expect(account(s).completed.work.pack_lunch).toBe(2);expect(resetCar(s,scene).economy).toEqual(s.economy);expect(JSON.stringify(scene)).toBe(before);
+});
+
+it('keeps the rendered worker continuous when failed player purchases advance the real commerce clock',()=>{
+ let s=until(start(),s=>account(s).shift?.phase==='out');
+ const view=repairView(),worker=scene.objects.find(o=>o.id==='neighbor')!,begin=s.timeS,inputs=new Set([37,41,57,64,79]);
+ let last=actorPose(scene,worker,s.timeS,s),largest=0,irregular=0;view.sample(last,true,s.economy!.atS,s.timeS);
+ for(let tick=1;tick<=240;tick++){
+  const dt=1/120,action:CommerceAction|undefined=inputs.has(tick) ? {kind:'buy',market:'corner',good:'bread'} : undefined,at=s.economy!.atS;
+  s=stepCommerce({...s,npcs:stepNpcs(s,dt,scene),timeS:s.timeS+dt},{commerce:action},dt,scene);
+  if(action && s.economy!.atS-at<.24)irregular++;
+  if(tick%2)continue;
+  const before=JSON.stringify(s),p=actorPose(scene,worker,s.timeS,s),visible=view.sample(p,true,s.economy!.atS,s.timeS);
+  largest=Math.max(largest,Math.hypot(visible.x-last.x,visible.y-last.y));last=visible;expect(JSON.stringify(s)).toBe(before);
+ }
+ expect(s.timeS-begin).toBeCloseTo(2);expect(irregular).toBe(inputs.size);expect(largest).toBeGreaterThan(.2);expect(largest).toBeLessThanOrEqual(14/60+1e-6);checkEconomyState(s,scene);
 });
 
 it('uses the overnight counter schedule, physically returns early, and keeps journeys deterministic through saves',()=>{

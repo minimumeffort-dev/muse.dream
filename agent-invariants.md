@@ -486,6 +486,13 @@ passes retain identical group/instance transforms. Shadow centers remain on
 world texels; resize extents continuously for sun/zoom changes, ignoring only
 translation roundoff. Preserve map resolution, caster coverage and all budgets.
 
+Work-journey presentation samples actual commerce timestamps, including per-press
+updates, with the existing quarter-second visual delay. Keep clocks continuous,
+complete visible strides before resting, and retain route handoff continuity
+until the next stop. Bound each cached account to 64 samples within the existing
+16-account cap; reset/rewind/teleport/reduced motion release them. These are
+renderer-owned poses, never saved state or contact positions.
+
 ## Clean sight cutaways
 
 Static scenery/terrain/road reveals use a continuous world-space sight opening,
