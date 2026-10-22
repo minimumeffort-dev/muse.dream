@@ -1,0 +1,16 @@
+{
+  "car": "6330.0,4233.0,1.5",
+  "mode": "map",
+  "navigation": {
+    "center": {
+      "x": 7000,
+      "y": 5500
+    },
+    "miniZoom": 1,
+    "open": true,
+    "target": null,
+    "task": null,
+    "waypoint": null,
+    "zoom": 1
+  }
+}

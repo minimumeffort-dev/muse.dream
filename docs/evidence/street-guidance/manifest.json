@@ -1,0 +1,78 @@
+{
+  "baseCommit": "f42ae7674e014511e1b9318b0e5a7d86667c7d23",
+  "worldRevision": "r94",
+  "worldFingerprint": "f003f9a1a23eac605a5a780ac34e471888fea029ac9b6d05c1d571df0d0f0275",
+  "worldUnchanged": true,
+  "node": "v26.8.1",
+  "cpu": "Apple M3 Ultra",
+  "platform": "darwin",
+  "checks": {
+    "tests": 17,
+    "passed": 17,
+    "failed": 0,
+    "seconds": 6.349576171875
+  },
+  "sources": [
+    {
+      "file": "src/game/street-guide.ts",
+      "sha256": "c364f735ca1ecd1e22cb9665421308fb1c549b6bfc1868ee4501f936d103d8f5"
+    },
+    {
+      "file": "src/game/navigation.ts",
+      "sha256": "054dffc6650823da46f92237cdbdc48ef6e24d8a48f79a7a9ab7e4fd4d2ea98b"
+    },
+    {
+      "file": "src/game/world-map.ts",
+      "sha256": "51183b26eafbed7e4590556f365af00ba1daaf89917f56cd0371e45e3388cab9"
+    },
+    {
+      "file": "src/game/main.ts",
+      "sha256": "b69af76dc1734a5296dc9c2be59f3d4e551f5dc015a968faf689d7e4e73cbaa7"
+    },
+    {
+      "file": "src/game/media-capture.ts",
+      "sha256": "a673c0856a62c68deb50b52d6d8c943d82aaf61e33f427810a6fd0ab3f11431c"
+    }
+  ],
+  "motion": {
+    "frames": 180,
+    "fps": 30,
+    "width": 2400,
+    "height": 1350,
+    "still": 150,
+    "consecutive": true,
+    "frameDigest": "2832399164c19365b82f931e848314cdaf024c49322e548ccbfed2308ae34a08",
+    "outputs": [
+      {
+        "file": "docs/media/navigation.gif",
+        "bytes": 16751622,
+        "sha256": "a042a8fc3f38cea46878c431d2ef08d06c6734da7dd9e2a9f770e40788f36d01"
+      },
+      {
+        "file": "docs/media/navigation.mp4",
+        "bytes": 2486104,
+        "sha256": "1ecae2fa9d463de9904ed7c9c287c0de862f7e8345bdc02bebbb27a73e49ab25"
+      },
+      {
+        "file": "docs/media/navigation.jpg",
+        "bytes": 439339,
+        "sha256": "9c6f81998ead8f731815e3f52bf17d872cfd065fdcdfae1fc9edb74c947daa7b"
+      },
+      {
+        "file": "docs/media/navigation-map.png",
+        "bytes": 60732,
+        "sha256": "47ecd509a97c8c34aca36de0c640f6f0d891a117be74712abc90e8e41d2d85fd"
+      }
+    ],
+    "decodedFrames": {
+      "mp4": 180,
+      "gif": 180
+    }
+  },
+  "docsChecks": {
+    "tests": 43,
+    "passed": 43,
+    "failed": 0,
+    "seconds": 0.968761962890625
+  }
+}

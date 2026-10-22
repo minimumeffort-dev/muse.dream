@@ -385,12 +385,12 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     car=snapshot.state;worldTime.value=snapshot.worldTime;saveDirty=false;saveAt=car.timeS;resetPresentation();updateControlGuide();saveStatus.textContent='Backup restored on this device.';
   }) : undefined;
 
-  function resetPosition(restartRace = false): void {
+  function resetPosition(restartRace = false,keepWaypoint=false): void {
     backups?.close();
     pendingDraw=undefined;saveDirty=true;
     car = resetCar(car, doc, restartRace);
     resetPresentation(restartRace);
-    if(restartRace){worldTime.value=0;manualZoom.factor=1;navigation.clear();}
+    if(restartRace){worldTime.value=0;manualZoom.factor=1;if(!keepWaypoint)navigation.clear();}
   }
   function resetPresentation(resetProps=true):void{
     previousRenderCar=car;
@@ -498,9 +498,9 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
   let captureWalk:ReturnType<typeof interiorReviewInput>|undefined;
   let captureTime:number|undefined,captureActor:string|undefined,captureFocus:THREE.Vector3|undefined;
-  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{home:300,weather:240,schoolroom:600,nursery:420,recovery:300,actions:180,hand:600,equipment:480,fixturefall:240,fixturerepair:600,driving:210,boost:210,football:480,basketball:480,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:720,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840,maintenance:600,lamps:240,treefall:240,lamprepair:360,streetrepair:360,planting:360,growth:900,courier:360,handoff:540,interior:600,interiornight:240,transit:240,recipes:360,progression:480,meals:480,kitchen:480,seating:480,hours:480,shifts:600,shared:720,hosted:420,airportrepair:600,schoolrepair:600,business:600,park:360,scooter:240},async(clip)=>{
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{navigation:180,home:300,weather:240,schoolroom:600,nursery:420,recovery:300,actions:180,hand:600,equipment:480,fixturefall:240,fixturerepair:600,driving:210,boost:210,football:480,basketball:480,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:720,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840,maintenance:600,lamps:240,treefall:240,lamprepair:360,streetrepair:360,planting:360,growth:900,courier:360,handoff:540,interior:600,interiornight:240,transit:240,recipes:360,progression:480,meals:480,kitchen:480,seating:480,hours:480,shifts:600,shared:720,hosted:420,airportrepair:600,schoolrepair:600,business:600,park:360,scooter:240},async(clip)=>{
     captureTime=undefined;captureActor=undefined;captureFocus=undefined;captureWalk=undefined;viewAngle=0;cameraAngle=0;
-    resetPosition(true);worldTime.value=0;setMode("playing");
+    resetPosition(true,clip==='navigation');worldTime.value=0;setMode("playing");
     commerce.resetChoices();
     characters.forEach(character=>character.reset());
     if(clip==='hand' || clip==='actions'){
@@ -583,6 +583,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     if(clip==='football' || clip==='basketball')car=movementReviewStart(car,world,clip);
   },(clip:string,frame:number)=>{
     keys.clear();
+    if(clip==='navigation'){if(frame<150)keys.add('KeyW');if(frame>=150 && frame<165)keys.add('KeyS');return;}
     if(clip==='home'){if(frame===225)useRide();if(frame===260)viewAngle+=Math.PI/2;captureWalk=homeReviewInput(car,world,frame,cameraAngle);return;}
     if(clip==='weather'){if(frame>=120 && frame<210)keys.add('KeyW');return;}
     if(clip==='interior' || clip==='interiornight'){

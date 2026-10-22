@@ -1707,3 +1707,16 @@ for their unchanged venues. The upper storey stays closed.
 
 The native browser separately stood, hit the settee with K and observed its paid
 caretaker repair. [Checks, source identity and media hashes](../evidence/home-interior/verification.md).
+
+## Street-route guidance
+
+`navigation.mp4`, `navigation.gif` and `navigation.jpg` share 180 consecutive
+2400 × 1350 rendered frames at 30 frames per simulation second. Set a waypoint
+through the normal map UI before choosing the dev-only navigation clip; this
+clip preserves that review point while resetting its simulated drive. Other
+captures and ordinary Start over keep their existing point-reset behavior.
+Video is 1600 × 900, GIF 1280 × 720 and the still is full-size frame 150.
+`navigation-map.png` is the native expanded-map review, with its actual keyboard
+focus ring. The earlier direct-bearing map/task captures are historical for
+guidance; their controls still apply. No frame interpolation or FPS claim.
+[Runtime, source and frame evidence](../evidence/street-guidance/verification.md).

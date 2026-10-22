@@ -459,8 +459,14 @@ Map zoom/pan use the same accepted road/cycle/water footprints as the minimap.
 Reproject pointer coordinates through the current view; zoom around the pointer,
 keep marker sizes readable and clamp views to the finite world. C opens/closes;
 keyboard and pointer actions share one UI owner. Map mode pauses simulation,
-releases held controls and cannot steer or change the gameplay camera. Guidance
-is a direct screen-relative bearing, not street routing or automatic steering.
+releases held controls and cannot steer or change the gameplay camera. Ground-vehicle guidance
+uses a bounded cached graph of the accepted street centerlines, split at exact
+intersections and collinear overlaps. Cap it at 2048 nodes / 8192 edges; fall
+back to a direct bearing for disconnected/oversized networks or far-off-road
+positions. Cache one reverse shortest-path solve per destination. HUD and maps
+share the path and next screen-relative aim, with dashed unsurveyed approaches.
+Walking, passengers, boats and planes retain direct bearings. No automatic
+steering, lane/one-way rules, traffic-aware closures or road physics changes.
 Keep bounded version-1 waypoint preferences separate from simulation backups,
 keyed by world ID/dimensions; review/capture sessions never read public preferences.
 R preserves the point, Start over clears it. Release expanded canvas buffers on

@@ -7,6 +7,8 @@ import { actorPoses } from "../sim/actors";
 import {streetPolygons} from '../scene/streets';
 import {streetCycleSurface} from '../scene/cycle-surface';
 import {cameraPosition} from './camera';
+import {controlOf} from '../scene/object-dsl';
+import {streetGuide} from './street-guide';
 
 export type MapView={width:number;height:number;worldWidth:number;worldHeight:number;zoom:number;center:Point;scale:number;tx:number;ty:number};
 export function mapView(width:number,height:number,worldWidth:number,worldHeight:number,zoom=1,center={x:worldWidth/2,y:worldHeight/2}):MapView{
@@ -36,6 +38,13 @@ export function waypointGuide(from:Point,to:Point,angle:number){
 }
 export const waypointDistance=(units:number)=>units>=10000 ? `${(units/10000).toFixed(1)} km` : `${Math.ceil(units/10)} m`;
 
+/** Ground driving uses authored streets; other modes retain their direct destination bearing. */
+export function navigationGuide(scene:Scene,state:CarState,target:Point,angle:number){
+  const direct=waypointGuide(state,target,angle),control=state.control,profile=control.kind==='vehicle' ? controlOf(scene.objects.find(o=>o.id===control.id)?.spec) : undefined;
+  const route=state.control.kind==='car' || profile && ['car','bicycle','scooter','skateboard'].includes(profile) ? streetGuide(scene,state,target) : undefined;
+  return route ? {...waypointGuide(state,route.aim,angle),distance:route.distance,arrived:direct.arrived,route:route.points} : {...direct,route:undefined};
+}
+
 /** Personal destinations take priority; task markers always come from the accepted work state. */
 export function navigationTarget(state:CarState,scene:Scene,waypoint?:Point){
   if(waypoint)return {...waypoint,kind:'waypoint' as const,id:'waypoint',label:'Waypoint'};
@@ -62,7 +71,7 @@ export function mapDestinations(scene:Scene){
 /** Cached accepted geography supports both north-up map views without rebuilding world geometry. */
 export function createWorldMap(canvas: HTMLCanvasElement, scene: Scene) {
   const ctx = canvas.getContext("2d");
-  if (!ctx) { canvas.hidden = true; return Object.assign((_car: CarState, _angle: number,_view?:MapView,_waypoint?:Point) => {},{release:()=>{}}); }
+  if (!ctx) { canvas.hidden = true; return Object.assign((_car: CarState, _angle: number,_view?:MapView,_waypoint?:Point,_route?:Point[]) => {},{release:()=>{}}); }
   const base = document.createElement("canvas");
   const map = base.getContext("2d")!;
   let scale=1,tx=0,ty=0,key='';
@@ -115,18 +124,19 @@ export function createWorldMap(canvas: HTMLCanvasElement, scene: Scene) {
   };
   canvas.title='S · school / college   + · hospital   A · airport   R · railway station   P · park   F · football   B · basketball';
   if(canvas.id==='world-map')canvas.setAttribute('aria-label','World map with your position. S: school or college. Plus: hospital. A: airport. R: railway station. P: park. F: football. B: basketball.');
-  const draw=(car: CarState, angle: number,view=mapView(canvas.width,canvas.height,scene.canonical.width,scene.canonical.height),waypoint?:Point): void => {
+  const draw=(car: CarState, angle: number,view=mapView(canvas.width,canvas.height,scene.canonical.width,scene.canonical.height),waypoint?:Point,route?:Point[]): void => {
     const nextKey=[canvas.width,canvas.height,view.scale,view.tx,view.ty].join(',');
     if(nextKey!==key){key=nextKey;({scale,tx,ty}=view);drawBase(view);}
     ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.drawImage(base, 0, 0);
     for(const actor of actorPoses(scene,car.timeS,car)){
       ctx.beginPath();ctx.arc(tx+actor.x*scale,ty+actor.y*scale,2,0,Math.PI*2);ctx.fillStyle=actor.kind==="water" ? "#8dd6d8" : "#e9d8b2";ctx.fill();
     }
-    const target=navigationTarget(car,scene);
-    if(target){const x=tx+target.x*scale,y=ty+target.y*scale;ctx.save();ctx.strokeStyle='#ffe176';ctx.lineWidth=1.5;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(tx+car.x*scale,ty+car.y*scale);ctx.lineTo(x,y);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#171717';ctx.beginPath();ctx.arc(x,y,8,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#ffe176';ctx.stroke();ctx.fillStyle='#ffe176';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold 12px system-ui';ctx.fillText('↓',x,y);ctx.restore();}
-    if(waypoint){
-      const p=mapToPixel(view,waypoint),player=mapToPixel(view,car);
-      ctx.save();ctx.strokeStyle='#f7c843';ctx.lineWidth=2;ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(player.x,player.y);ctx.lineTo(p.x,p.y);ctx.stroke();ctx.setLineDash([]);
+    const target=navigationTarget(car,scene,waypoint);
+    if(target){
+      const p=mapToPixel(view,target),path=route??[car,target];
+      const line=(points:Point[],dash:number[])=>{ctx.setLineDash(dash);ctx.beginPath();points.forEach((p,i)=>i ? ctx.lineTo(tx+p.x*scale,ty+p.y*scale) : ctx.moveTo(tx+p.x*scale,ty+p.y*scale));ctx.strokeStyle='#171717';ctx.lineWidth=4;ctx.stroke();ctx.strokeStyle='#f7c843';ctx.lineWidth=2;ctx.stroke();};
+      ctx.save();ctx.strokeStyle='#f7c843';ctx.lineWidth=2;ctx.lineJoin='round';ctx.lineCap='round';
+      if(route){line(path.slice(1,-1),[]);line(path.slice(0,2),[4,4]);line(path.slice(-2),[4,4]);}else line(path,[5,5]);ctx.setLineDash([]);
       ctx.beginPath();ctx.arc(p.x,p.y,8,0,Math.PI*2);ctx.fillStyle='#f7c843';ctx.fill();ctx.strokeStyle='#171717';ctx.stroke();ctx.beginPath();ctx.arc(p.x,p.y,2.5,0,Math.PI*2);ctx.fillStyle='#171717';ctx.fill();ctx.restore();
     }
     const parked=car.vehicles.find(v=>v.id===null);

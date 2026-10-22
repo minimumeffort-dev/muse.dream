@@ -1,0 +1,85 @@
+{
+  "before": {
+    "car": "7529.3,4233.0,1.5",
+    "heading": "0.000",
+    "navigation": {
+      "arrived": false,
+      "center": {
+        "x": 7000,
+        "y": 5500
+      },
+      "direction": 88.13989774023982,
+      "distance": 6876.480376478668,
+      "miniZoom": 1,
+      "next": [
+        {
+          "x": 7529.288333241681,
+          "y": 4200
+        },
+        {
+          "x": 8200,
+          "y": 4200
+        }
+      ],
+      "open": false,
+      "routePoints": 9,
+      "routed": true,
+      "target": {
+        "id": "waypoint",
+        "kind": "waypoint",
+        "label": "Waypoint",
+        "x": 12459.45945945946,
+        "y": 6189.189189189189
+      },
+      "task": null,
+      "waypoint": {
+        "x": 12459.45945945946,
+        "y": 6189.189189189189
+      },
+      "zoom": 1
+    }
+  },
+  "after": {
+    "car": "7529.3,4233.0,1.5",
+    "heading": "0.000",
+    "navigation": {
+      "arrived": false,
+      "center": {
+        "x": 7000,
+        "y": 5500
+      },
+      "direction": 178.1398977402398,
+      "distance": 6876.480376478668,
+      "miniZoom": 1,
+      "next": [
+        {
+          "x": 7529.288333241681,
+          "y": 4200
+        },
+        {
+          "x": 8200,
+          "y": 4200
+        }
+      ],
+      "open": false,
+      "routePoints": 9,
+      "routed": true,
+      "target": {
+        "id": "waypoint",
+        "kind": "waypoint",
+        "label": "Waypoint",
+        "x": 12459.45945945946,
+        "y": 6189.189189189189
+      },
+      "task": null,
+      "waypoint": {
+        "x": 12459.45945945946,
+        "y": 6189.189189189189
+      },
+      "zoom": 1
+    },
+    "speed": "0.0",
+    "view": "-0.29701,0.70134,0.42859,0.48603"
+  },
+  "errors": []
+}

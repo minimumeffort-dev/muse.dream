@@ -1,6 +1,6 @@
 import type {Scene,Point} from '../scene/schema';
 import type {CarState} from '../sim/car';
-import {createWorldMap,mapView,pixelToMap,panMap,zoomMap,readWaypoint,waypointGuide,waypointDistance,navigationTarget,type MapView} from './navigation';
+import {createWorldMap,mapView,pixelToMap,panMap,zoomMap,readWaypoint,navigationGuide,waypointDistance,navigationTarget,type MapView} from './navigation';
 
 /** Map gestures, navigation preference and dialog focus have one UI owner. */
 export function worldMap(scene:Scene,options:{canOpen:()=>boolean;onOpen:()=>void;onClose:()=>void;storage?:()=>Pick<Storage,'getItem'|'setItem'>;storageKey:string}){
@@ -16,25 +16,25 @@ export function worldMap(scene:Scene,options:{canOpen:()=>boolean;onOpen:()=>voi
   const miniView=()=>mapView(mini.width,mini.height,width,height,miniZoom,car??view.center);
   const redraw=()=>{
     if(!car)return;
-    paintMini(car,angle,miniView(),waypoint);
-    if(dialog.open)paintLarge(car,angle,view,waypoint);
-    const target=navigationTarget(car,scene,waypoint),task=navigationTarget(car,scene);
+    const target=navigationTarget(car,scene,waypoint),task=navigationTarget(car,scene),hint=target ? navigationGuide(scene,car,target,angle) : undefined;
+    paintMini(car,angle,miniView(),waypoint,hint?.route);
+    if(dialog.open)paintLarge(car,angle,view,waypoint,hint?.route);
     guide.hidden=!target;clearButton.disabled=!waypoint;clearGuide.hidden=!waypoint;taskButton.hidden=!task;
     taskButton.title=task?.label??'';
-    if(target){
-      const hint=waypointGuide(car,target,angle),key=`${target.kind}:${target.id}`;
+    if(target && hint){
+      const key=`${target.kind}:${target.id}`;
       distance.textContent=hint.arrived ? target.kind==='waypoint' ? 'Arrived' : 'Nearby' : waypointDistance(hint.distance);caption.textContent=target.label;
-      guide.title=target.label;
+      guide.title=target.label+(hint.route ? " · Street route; dashed ends are direct approaches" : " · Direct bearing");
       arrow.style.transform=`rotate(${hint.direction}deg)`;arrow.style.visibility=hint.arrived ? 'hidden' : '';
       if(hint.arrived && (!arrived || arrivalTarget!==key))announcement.textContent=target.kind==='waypoint' ? 'You have reached your waypoint.' : `Near ${target.label}. Open activities with M to check the task.`;
       arrived=hint.arrived;arrivalTarget=key;
     }else {arrived=false;arrivalTarget='';}
-    if(import.meta.env.DEV)mini.dataset.navigation=JSON.stringify({waypoint:waypoint??null,target:target??null,task:task??null,miniZoom,open:dialog.open,zoom:view.zoom,center:view.center,...(target ? waypointGuide(car,target,angle) : {})});
+    if(import.meta.env.DEV)mini.dataset.navigation=JSON.stringify({waypoint:waypoint??null,target:target??null,task:task??null,miniZoom,open:dialog.open,zoom:view.zoom,center:view.center,...(hint ? {distance:hint.distance,direction:hint.direction,arrived:hint.arrived,routed:!!hint.route,routePoints:hint.route?.length??0,next:hint.route?.slice(1,3)} : {})});
   };
   const choose=(point:Point|undefined)=>{
     if(point && (!Number.isFinite(point.x) || !Number.isFinite(point.y) || point.x<0 || point.x>width || point.y<0 || point.y>height))return;
     waypoint=point;arrived=false;
-    const message=point ? `Waypoint set${car ? ' · '+waypointDistance(waypointGuide(car,point,angle).distance) : ''}` : 'Waypoint removed';
+    const message=point ? `Waypoint set${car ? ' · '+waypointDistance(navigationGuide(scene,car,point,angle).distance) : ''}` : 'Waypoint removed';
     let saved=true;try{options.storage?.().setItem(options.storageKey,JSON.stringify({version:1,point:point??null}));}catch{saved=false;}
     status.textContent=message+(saved ? '' : ' · session only');announcement.textContent=status.textContent;redraw();
   };
@@ -49,7 +49,7 @@ export function worldMap(scene:Scene,options:{canOpen:()=>boolean;onOpen:()=>voi
     if(dialog.open || !car || !options.canOpen())return;
     dialog.showModal();opener.setAttribute('aria-expanded','true');options.onOpen();resize();
     const target=navigationTarget(car,scene,waypoint);
-    status.textContent=target ? `${target.label} · ${waypointDistance(waypointGuide(car,target,angle).distance)}` : 'Click to set a waypoint';
+    status.textContent=target ? `${target.label} · ${waypointDistance(navigationGuide(scene,car,target,angle).distance)}` : 'Click to set a waypoint';
     large.focus({preventScroll:true});redraw();
   };
   const close=(resume=true)=>{

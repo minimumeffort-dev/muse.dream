@@ -51,18 +51,33 @@ drag to pan and click to set a waypoint. Arrow keys/WASD pan, **+ / −** zoom,
 crosshair. **Delete**, Clear waypoint or the HUD’s × removes it. **Escape / C**
 returns to play. The map pauses the world and releases held controls.
 
-![The expanded map and its waypoint controls](media/world-map.jpg)
+![The expanded map routing through streets and a bridge](media/navigation-map.png)
 
-A waypoint adds a map marker, direct bearing and distance in metres beside the
-minimap. The arrow follows the screen direction after camera rotation; it does
-not steer for you or calculate a turn-by-turn street route. It says Arrived
+A waypoint adds a map marker and distance in metres beside the minimap.
+Cars, bicycles, scooters and skateboards now use the connected Dream streets.
+The solid yellow line follows street centerlines through their real junctions;
+the arrow aims ahead along that same route and distance counts its remaining
+length. It updates as you drive, including after a missed turn. It does not
+steer for you or supply spoken turn instructions.
+
+Dashed ends are direct approaches to or from the street, not checked routes
+through buildings or terrain. Far-off-road positions, disconnected roads,
+walking, passengers, boats and aircraft keep a dashed direct bearing. Routes
+ignore moving traffic and closures and use the current single-height street
+network, without lane rules or one-way restrictions. Arrival always uses the
+actual destination, not the closest street point. It says Arrived
 within 2.5 metres, keeping the marker until you clear it. The point is remembered
 on this device for the same world and dimensions. It is a separate UI preference,
 not part of exported world backups. Start over clears it; R keeps it. Review
 captures use isolated preferences or disable storage. Closing the map releases
 its large canvas buffers; static geography is cached until the view changes.
 
-![Waypoint guidance while driving](media/waypoint-guide.jpg)
+![Street guidance while driving](media/navigation.jpg)
+
+[Street-route walkthrough](media/navigation.mp4) · [GIF](media/navigation.gif) · [Checks](evidence/street-guidance/verification.md)
+
+The earlier [direct-bearing screenshot](media/waypoint-guide.jpg) predates street
+routing; its map controls remain unchanged.
 
 Delivery, repair and planting jobs also use this guide. With no personal
 waypoint, it points to the delivery counter or the repair approach and names
@@ -70,7 +85,10 @@ the destination. **Find task / T** centers the expanded map there. A personal
 waypoint takes priority; clearing it brings the task guide back without
 cancelling the job. Finishing or cancelling work removes its marker.
 
-![Finding the school delivery destination](media/task-map.jpg)
+![Earlier school delivery map, before street-route guidance](media/task-map.jpg)
+
+Personal destinations now replace the task's route and marker on both maps;
+clearing one restores the task without cancelling it.
 
 Nearby means you are within 2.5 metres of the target, not that the task is
 complete. Hand deliveries over on foot through the ordinary activity controls;
@@ -78,7 +96,7 @@ repairs still need a clear work area and time. The guide stays available when
 you change vehicles or use R. It reads the saved task rather than storing a
 second copy of it.
 
-![Automatic delivery guidance while driving](media/task-guide.jpg)
+![Earlier direct delivery bearing, before street routing](media/task-guide.jpg)
 
 The food icon uses a fork and knife with a clear gap between them. The bicycle
 icon shares its wheels, frame, saddle and fork with the cycle-lane stencil.

@@ -12,10 +12,12 @@ trailers, vehicle damage and service fleets remain separate work.
 ## Next playable work
 
 Navigation now opens from the minimap or C, with map zoom/pan, a removable
-waypoint and direct HUD bearing/distance. The point survives reload as a UI
-preference. Active deliveries and repairs now supply automatic guidance when
-there is no personal waypoint; the map can focus the task with T. Street route
-planning remains separate. Priorities are connected
+waypoint and HUD bearing/distance. Ground vehicles now route along the shared
+Dream street centerlines and junctions, showing the same path on both maps.
+The point survives reload as a UI preference. Active deliveries and repairs now supply automatic guidance when
+there is no personal waypoint; the map can focus the task with T.
+Walking/transit routes, lane rules and traffic-aware replanning remain separate.
+Priorities are connected
 activities and shared interactions below, more resident purposes and broader
 consistent destruction/recovery; the full asset review also remains unfinished.
 

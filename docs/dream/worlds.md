@@ -161,3 +161,12 @@ Use [contextual population rules](populations.md) for street lighting, planting,
 ## Time of day
 
 An optional `daylight` declaration gives the world a shared day/night clock. Materials declare their after-dark emission with `night`, and static lamp assemblies declare terrain-fitted pools. [Day and night](day-night.md) includes bounds, lifecycle behavior and a complete runnable example.
+
+## Street guidance
+
+The game's ground-vehicle guide derives its routes from `street` centerlines,
+including shared `junction` coordinates. Declare real connections rather than
+nearby unjoined endpoints. The engine splits true intersections and collinear
+overlaps; a nearby line or a rail route does not invent a street connection.
+No extra Dream command is needed. Try the existing
+[connected-city source](../examples/connected-city.dream). [Player map and route rules](../context-actions.md).
