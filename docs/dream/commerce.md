@@ -438,7 +438,7 @@ finished-kit shipment.
 
 ```dream
 delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_hall,grounds=[market_square]);
-repair market_tables(label="Repair city fixtures",market=market_stall,on=market_hall,grounds=[park_seating,station_seating,market_square,school_yard,school_yard_access,school_yard_return,garden_work],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
+repair market_tables(label="Repair city fixtures",market=market_stall,on=market_hall,grounds=[park_seating,station_seating,market_square,school_yard,school_yard_access,school_yard_return,garden_work],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5,recover=fasteners,amount=1);
 ```
 
 These declarations are the live world's policy. The earlier flour and bread
@@ -852,8 +852,10 @@ and ordinary wage settle once. Return to the market on foot and use **H**,
 without another wage. NPC workers carry it home and use the same transaction.
 A full warehouse still allows ordinary repairs without recovery.
 
-The live city recovers timber during tree replanting. Those boards can feed the
-existing paid kit recipe. Its fasteners and saplings still come from finite
-supply. Young trees must mature before another recovery. Stock, refunds, output
+The live city recovers timber during tree replanting and fasteners during fixture
+repairs. Both can feed the existing paid kit recipe after an actual return.
+Saplings, extra materials and money remain finite. Young trees must mature before
+another timber recovery. Stock, refunds, output
 reservations, cargo, funds and ownership remain conserved through pauses, R,
 streaming and registered saves. [Authoring, controls and limits](growth.md#timber-recovery).
+[Fixture hardware and a complete runnable example](businesses.md#reuse-fixture-hardware).

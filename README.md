@@ -340,6 +340,11 @@ only enters stock after handoff; the planting wage is paid once. Saplings need
 to finish growing before they can supply timber again. Players and caretakers
 share the same rule. [Write it in Dream](docs/dream/growth.md#timber-recovery).
 
+Fixture repairs can also return a fastener. It stays in the worker's bag until
+handoff, then goes into another repair kit. All 449 existing fixture targets use
+the same Dream policy; full storage still permits an ordinary repair.
+[Reuse hardware](docs/dream/businesses.md#reuse-fixture-hardware).
+
 ![Returning recovered timber to the workshop](docs/media/recovery.gif)
 
 [Timber handoff in HD](docs/media/recovery.mp4). This short recording shows the

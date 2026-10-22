@@ -378,3 +378,18 @@ construction; full-suite and browser gains remain unmeasured.
 
 Continue useful indoor activities and renewable inputs next, then richer resident
 choices. The living-world backlog above remains incomplete.
+
+### Reused fixture hardware, r89
+
+The same 449 fixture repairs can now return a fastener to the workshop. Players
+and NPCs carry it home, with future shelf room reserved and no second wage.
+Returned hardware can feed another paid kit recipe. Full storage still allows
+ordinary repairs. This connects damage, repair, material reuse and production
+without new goods, scenery, actors or engine rules.
+
+The registered r88 upgrade adds only a zero fixture-recovery counter and keeps
+old jobs, timber cargo, growth, ledgers and source slots. Supply stocks, saplings
+and money remain finite; this is declared game material reuse, without mining or
+metallurgy. Next connect a useful indoor activity and upstream sapling supply,
+then richer resident schedules and choices.
+[Authoring and a complete example](dream/businesses.md#reuse-fixture-hardware).

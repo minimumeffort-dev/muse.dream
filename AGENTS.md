@@ -541,7 +541,7 @@ ambient walking spacing, the r70 airport connector, character wardrobe
 (r71), the r72/r73 fixture service, wind-safe trees (r74), the utility fleet
 (r75), whole-library asset direction, and faceted tree, landscape plant,
 ground cover, furniture and wildlife construction (r76 to r79), and street
-furniture toppling (r80), shared character construction (r81), indoor bakery service (r82), physical work equipment (r83), on-foot strikes (r84), repair-kit production (r85), workshop supplies (r86), exact work endpoint indexing and immutable edge acceptance reuse, connected resident courier homes (r87), carried material recovery (r88) and world-map/waypoint UI. That file is
+furniture toppling (r80), shared character construction (r81), indoor bakery service (r82), physical work equipment (r83), on-foot strikes (r84), repair-kit production (r85), workshop supplies (r86), exact work endpoint indexing and immutable edge acceptance reuse, connected resident courier homes (r87), carried material recovery (r88), shared fixture hardware (r89) and world-map/waypoint UI. That file is
 not loaded automatically, so read the relevant section there, alongside its
 linked guide, before changing a covered area.
 

@@ -10,6 +10,10 @@ const examples=import.meta.glob<string>('../docs/examples/*.dream',{query:'?raw'
 const files=Object.keys(import.meta.glob(['../src/**/*','../docs/**/*','../scripts/*','../tests/**/*','../README.md'])).map(p=>p.slice(3));
 
 describe("published Dream documentation",()=>{
+  it('keeps the fixture-hardware policy identical to its runnable example',()=>{
+    const section=pages['../docs/dream/businesses.md']!.split('## Reuse fixture hardware')[1]!;
+    const declaration=section.match(/```dream\n([\s\S]*?)```/)![1]!.trim();expect(examples['../docs/examples/hardware-recovery.dream']).toContain(declaration);
+  });
   it('keeps the complete counter-hours guide identical to its runnable world',()=>{
     const blocks=[...pages['../docs/dream/hours.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
     expect(blocks).toContain(examples['../docs/examples/market-hours.dream']!.trim());

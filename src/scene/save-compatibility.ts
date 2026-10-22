@@ -98,6 +98,17 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r89 recovers fixture hardware through the existing carried-output transaction. */
+export const HARDWARE_COMPATIBILITY='ff41ef8540f2b52d963f771948f948ce14f897a57936dad7e9ff30b2fb14096d';
+const hardwareProjections=new WeakMap<Scene,Scene>();
+export function preHardwareScene(scene:Scene):Scene{
+ const cached=hardwareProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.repairs.some(r=>r.id==='market_tables' && r.recover))return scene;
+ const prior={...scene,economy:{...scene.economy,repairs:scene.economy.repairs.map(r=>{if(r.id!=='market_tables')return r;const {recover,amount,...old}=r;return old;})}};
+ hardwareProjections.set(scene,prior);return prior;
+}
+export function preHardwareCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preHardwareScene(scene),35,true,encode);}
+
 /** r88 carries recovered physical materials back to their receiving business. */
 export const RECOVERY_COMPATIBILITY='f47a995c431246b6234b69a05a38f7220a65e56fbd4414d02f54405e817f0f5b';
 const recoveryProjections=new WeakMap<Scene,Scene>();

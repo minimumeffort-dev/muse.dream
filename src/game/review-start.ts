@@ -192,6 +192,7 @@ export function* workshopReviewSteps(state:CarState,world:World):Generator<void,
    next=stepInteractive(next,{steer:0,throttle:0,...(i===239 ? {commerce:{kind:'repair',repair:'market_tables'} as const} : {})},1/120,world);if(i%30===0)yield;
   }
   if(next.broken.includes('hall_table_east') || next.economy!.accounts.find(a=>a.id==='baker')!.completed.work.assemble_kit!<cycle+1)throw Error('Workshop review did not repair and replace its kit');
+  if(next.economy!.accounts.find(a=>a.id==='pocket')!.repair?.recover)return next;
  }
  next=cargoReviewStart(next,world,'fasteners_run');
  if(next.economy!.accounts.find(a=>a.id==='pocket')!.delivery?.id!=='fasteners_run')throw Error('Workshop review did not collect real fasteners');

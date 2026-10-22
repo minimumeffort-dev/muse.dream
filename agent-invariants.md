@@ -655,3 +655,19 @@ fields. Initialize new counters to zero and historical broken/growing sources
 as spent, preserving every old field and slot. Do not retroactively grant wood
 or rebase geometry/navigation. Old format schemas remain strict. Preserve the
 complete earlier migration chain and safe active-pose recovery with cargo.
+
+## Shared fixture hardware, r89
+
+The existing market_tables service uses recover=fasteners,amount=1 across all
+449 targets. Preserve ordinary full-store fallback, finite kit consumption and
+wages, carried output and one guarded return for players/NPCs. Do not infer a
+hardware exemption from a label, category variant or showcase placement. Existing
+tree maturity, growth sources, navigation, actor/rig/render budgets remain exact.
+
+Keep format 19/simulation 35. Validate exact r88 before adding only zero
+recovered.market_tables; retain old timber counts/cargo, spent sources, jobs,
+commitments, clocks, poses and original slot. Old repairs retain their original
+recovery flag, with no retroactive hardware. Preserve the entire predecessor
+chain and reject missing/unrelated targets. Current reloads cannot reinitialize.
+The current workshop review stops at recovered hardware instead of requesting
+a redundant shipment; historical source reviews retain real fastener cargo.

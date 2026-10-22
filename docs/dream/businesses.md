@@ -327,11 +327,36 @@ clocks stay intact, and the original slot is retained. No offline travel or pay.
 
 Replanting can now recover a board from a felled mature tree when the worker and
 workshop have room. It stays in the worker's sealed cargo until returned. That
-board can feed the same paid kit assembly as a delivered depot board. Recovery
-does not create fasteners, saplings or wages, and full storage does not prevent
-ordinary replanting. [Describe recovery in Dream](growth.md#timber-recovery).
+board can feed the same paid kit assembly as a delivered depot board. The tree
+service pays its original planting wage and supplies the declared board; full
+storage still permits ordinary replanting. [Describe recovery in Dream](growth.md#timber-recovery).
 
 The live city retains 106 connected replanting sources and the existing worker.
 Young trees must finish growing before supplying more wood. This connects a
 physical source to the repair chain; mining, fabrication, general forestry and
 renewable upstream sapling production remain further work.
+
+## Reuse fixture hardware
+
+The live fixture service now returns one fastener when shelf and bag capacity
+permit. Its 449 existing targets share that policy, including lamps, tables,
+benches, street tubs and stalls. The worker repairs the fixture with a real kit
+and earns its ordinary wage. The recovered fastener stays sealed until returned
+to the open staffed workshop; it can then feed another kit recipe.
+
+[Run the complete hardware-recovery example](../examples/hardware-recovery.dream):
+
+```dream
+repair workshop_repairs(label="Repair work tables",market=corner,on=work_yard,kind=table,input=kit,take=1,seconds=2,pay=2,effort=2,dispatch_s=0,recover=fasteners,amount=1);
+```
+
+Players use **H** to return materials on foot. NPCs walk home and use the same
+guarded transaction. Full storage still allows a normal repair, without output.
+Future return space is reserved during work; a second delivery cannot claim it.
+The return pays no second wage and does not discard or remotely deposit cargo.
+
+This reuses declared material after actual damage and paid repair. It does not
+make raw metal, saplings or money. Boards, other supplies and business budgets
+still bound the chain. The exact r88 save upgrade adds only a zero recovery
+counter for fixtures; old jobs, damage, timber cargo and source slots survive.
+[Verification and native handoff](../evidence/hardware-recovery/verification.md).

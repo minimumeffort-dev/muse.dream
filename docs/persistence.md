@@ -721,3 +721,18 @@ Start over resets it. Return on foot at an open staffed counter. Sealed output
 cannot be traded, eaten or cancelled into remote stock; a closed counter can
 require waiting. When an old pose needs safe recovery, the cargo still belongs
 to the same task. [Checks and native handoff](evidence/timber-recovery/verification.md).
+
+## Reclaimed fixture hardware, r89
+
+Format 19/simulation 35 stays unchanged. The registered r88 projection removes
+only the fixture service's recovery pair and verifies its exact accepted hash.
+Upgrade adds `recovered.market_tables=0` after validating the old state, retaining
+every old field, including timber counts/cargo, spent sources, commitments,
+growth, ledgers, player pose and all clocks. No old repair gains retroactive
+hardware. Existing repairs keep their original recovery choice.
+
+The original format-19 source slot remains intact. Older registered upgrades
+retain their boundaries, current reloads never reinitialize counters, and an
+unrelated source or missing predecessor is rejected. New recovery cargo uses
+the same reserved capacity and guarded on-foot handoff as timber.
+[Checks and native return](evidence/hardware-recovery/verification.md).

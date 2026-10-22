@@ -11,7 +11,7 @@ import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
 import {workshopReviewSteps} from '../src/game/review-start';
 import type {Scene} from '../src/scene/schema';
-let live:Scene|undefined;const current=()=>live??=createWorldScene();
+let live:Scene|undefined;const current=()=>live??=c.preHardwareScene(createWorldScene());
 const world=(s:Scene):World=>({scene:s,roadMask:buildMaskForScene(s),driveMask:buildPaperMask(s.canonical.width,s.canonical.height),carRadius:11});
 const format18=(text:string)=>JSON.stringify({...JSON.parse(text),version:18});
 const w=()=>({...world(current()),saveCompatibility:c.RECOVERY_COMPATIBILITY,previousRecoverySaveCompatibility:c.RESIDENT_SUPPLY_COMPATIBILITY});
