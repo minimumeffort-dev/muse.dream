@@ -884,3 +884,12 @@ existing actor/rig/navigation budgets. No idle wages, job guarantee, employee
 contract or offline catch-up. Format 19/simulation 44 registers exact r99,
 removing only attendance. Preserve every old field and original slot; old
 one-batch trips finish before new scheduled decisions. See docs/dream/attendance.md.
+
+## Worker foundation reuse
+
+Only immutable worker projections may borrow an already fitted foundation with
+the exact same object and terrain references at its authored XY. Exclude floor
+bindings and ordinary props; preserve already owned target fits and moving-pose
+invalidation. Keep all current/historical contacts, node order, links, support
+polygons, stream bounds, source identity and save fingerprints exact. Reuse is
+host preparation, never an authored Dream field or serialized simulation state.

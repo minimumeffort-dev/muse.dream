@@ -112,6 +112,18 @@ not peak memory or browser heap. The [matched browser and world checks](evidence
 cover loading, full-quality drawing and the exact accepted scene. This does not
 change frame-by-frame rendering cost, world contents or save semantics.
 
+Historical projections now reuse a static foundation's accepted fit when both
+its object and terrain references are identical. Floor-bound furniture, ordinary
+props, changed terrain and independently authored objects keep their own fits.
+An existing target fit is never replaced, and a moved source pose is not seeded.
+The ordinary placement algorithm and its per-scene moving-object cache are unchanged.
+
+The [foundation comparison](evidence/foundation-reuse/verification.md) checks the
+complete bootstrap packet, including all historical fingerprints, contacts,
+navigation, foot support and stream bounds. It measures preparation separately
+from the first draw. This changes no graphics settings, render assets or save
+semantics; it does not establish a frame-rate or total-memory improvement.
+
 Two clean, warmed development reloads at a fixed 1600 × 900 CSS canvas and
 1.5 pixel ratio recorded world checking at 7.31–8.32 seconds before and
 6.43–6.49 seconds after. Whole-loader times were 14.02–15.33 and

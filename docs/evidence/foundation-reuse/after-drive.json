@@ -1,0 +1,7 @@
+{
+  "car": "6537.5,4233.0,1.5",
+  "control": "{\"kind\":\"car\"}",
+  "errors": "ready",
+  "speed": "186.8",
+  "world": "{\"width\":14000,\"height\":11000,\"objects\":1784,\"checkpoints\":0,\"birds\":256}"
+}

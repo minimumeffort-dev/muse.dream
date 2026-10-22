@@ -148,6 +148,10 @@ its shadows and collisions remain. [Cutaway checks](docs/evidence/clean-cutaways
 
 World preparation avoids repeated terrain and outline work, and now reuses unchanged object data while checking historical save fingerprints. [Startup measurements](docs/evidence/startup-fingerprints/verification.md) compare the complete accepted world, paths, collisions and save contracts against the preceding release. Detail and visual settings stay the same.
 
+Historical save preparation also reuses fitted foundations when the object and
+terrain are identical. It keeps the complete bootstrap packet unchanged.
+[Current worker and browser measurements](docs/evidence/foundation-reuse/verification.md).
+
 Work-route checks also discard distant collision geometry before testing its exact
 shape. The city, navigation and saved journeys retain the same results.
 [Measurements and comparisons](docs/evidence/route-contact-bounds/verification.md).

@@ -14,6 +14,18 @@ export interface ObjectPlacement {
 
 // Cache one position per object; moving props invalidate it without accumulating entries.
 const placements = new WeakMap<Scene, Map<SceneObject, {x:number;y:number;placement:ObjectPlacement}>>();
+/** Worker bootstrap only: immutable foundations fit the same object against the same terrain. */
+export function shareFoundationPlacements(scene:Scene,source:Scene):void{
+  if(scene===source || scene.terrain!==source.terrain)return;
+  const from=placements.get(source);if(!from)return;
+  let target=placements.get(scene);
+  for(const object of scene.objects){
+    const spec=object.spec,entry=from.get(object);
+    if(object.floor || !spec || !('dslVersion' in spec) || !spec.foundation || !entry || entry.x!==object.x || entry.y!==object.y || target?.has(object))continue;
+    target??=new Map();target.set(object,entry);
+  }
+  if(target)placements.set(scene,target);
+}
 export function objectPlacement(scene: Scene, object: SceneObject, x=object.x, y=object.y): ObjectPlacement {
   let cache = placements.get(scene);
   if (!cache) { cache = new Map(); placements.set(scene, cache); }

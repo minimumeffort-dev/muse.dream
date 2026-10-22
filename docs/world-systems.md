@@ -37,6 +37,11 @@ topology stays identical. The measured lookup improvement leaves whole-world
 acceptance near 5.7 seconds; voxel construction and broader startup work remain
 open performance tasks. [Measurements](evidence/work-network-build/verification.md).
 
+Historical save preparation now reuses unchanged foundation fits rather than
+surveying them for every old world. The full current/historical bootstrap packet
+remains identical. Broader startup and frame pacing still need work.
+[Current startup measurements](evidence/foundation-reuse/verification.md).
+
 The commuter now uses the open home for a paid meal, sharing separate cushion
 claims with the player. The hall bench remains a fallback, and old hall meals
 finish after upgrade. The home still needs more purposes beyond seating, eating

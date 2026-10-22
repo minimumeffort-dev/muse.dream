@@ -1,0 +1,218 @@
+{
+  "route": "http://127.0.0.1:5173/?test-driving=town",
+  "runs": [
+    {
+      "workerMs": 12053.100000023842,
+      "totalMs": 16530,
+      "firstRenderMs": 136.80000007152557,
+      "phases": [
+        {
+          "label": "Reading Dream \u00b7 checking the world",
+          "startMs": 0.30000007152557373,
+          "endMs": 12334.300000071526
+        },
+        {
+          "label": "Preparing driving and walking",
+          "startMs": 12334.300000071526,
+          "endMs": 12781.800000071526
+        },
+        {
+          "label": "Starting the renderer",
+          "startMs": 12781.800000071526,
+          "endMs": 12797.200000047684
+        },
+        {
+          "label": "Building water and bridges",
+          "startMs": 12797.200000047684,
+          "endMs": 12909.5
+        },
+        {
+          "label": "Building roads and transit",
+          "startMs": 12909.5,
+          "endMs": 12985.200000047684
+        },
+        {
+          "label": "Assembling people and wildlife",
+          "startMs": 12985.200000047684,
+          "endMs": 13225.300000071526
+        },
+        {
+          "label": "Preparing vehicles and interactive objects",
+          "startMs": 13225.300000071526,
+          "endMs": 13997.900000095367
+        },
+        {
+          "label": "Preparing lighting",
+          "startMs": 13997.900000095367,
+          "endMs": 14126.100000023842
+        },
+        {
+          "label": "Loading the first neighbourhood",
+          "startMs": 14126.100000023842,
+          "endMs": 16258.200000047684
+        },
+        {
+          "label": "Preparing the first frame",
+          "startMs": 16258.200000047684,
+          "endMs": 16529.900000095367
+        }
+      ],
+      "heartbeat": {
+        "samples": 311,
+        "maxGapMs": 531.7000000476837
+      },
+      "canvas": {
+        "buffer": [
+          1920,
+          1080
+        ],
+        "css": [
+          1280,
+          720
+        ]
+      }
+    },
+    {
+      "workerMs": 11915.5,
+      "totalMs": 16309.799999952316,
+      "firstRenderMs": 136.09999990463257,
+      "phases": [
+        {
+          "label": "Reading Dream \u00b7 checking the world",
+          "startMs": 0.2999999523162842,
+          "endMs": 12175.199999928474
+        },
+        {
+          "label": "Preparing driving and walking",
+          "startMs": 12175.199999928474,
+          "endMs": 12625.600000023842
+        },
+        {
+          "label": "Starting the renderer",
+          "startMs": 12625.600000023842,
+          "endMs": 12641.299999952316
+        },
+        {
+          "label": "Building water and bridges",
+          "startMs": 12641.299999952316,
+          "endMs": 12755.199999928474
+        },
+        {
+          "label": "Building roads and transit",
+          "startMs": 12755.199999928474,
+          "endMs": 12829.100000023842
+        },
+        {
+          "label": "Assembling people and wildlife",
+          "startMs": 12829.100000023842,
+          "endMs": 13071.600000023842
+        },
+        {
+          "label": "Preparing vehicles and interactive objects",
+          "startMs": 13071.600000023842,
+          "endMs": 13845.899999976158
+        },
+        {
+          "label": "Preparing lighting",
+          "startMs": 13845.899999976158,
+          "endMs": 13975.600000023842
+        },
+        {
+          "label": "Loading the first neighbourhood",
+          "startMs": 13975.600000023842,
+          "endMs": 16038.199999928474
+        },
+        {
+          "label": "Preparing the first frame",
+          "startMs": 16038.199999928474,
+          "endMs": 16309.799999952316
+        }
+      ],
+      "heartbeat": {
+        "samples": 307,
+        "maxGapMs": 574.5
+      },
+      "canvas": {
+        "buffer": [
+          1920,
+          1080
+        ],
+        "css": [
+          1280,
+          720
+        ]
+      }
+    },
+    {
+      "workerMs": 11901.0,
+      "totalMs": 16300.299999952316,
+      "firstRenderMs": 134.79999995231628,
+      "phases": [
+        {
+          "label": "Reading Dream \u00b7 checking the world",
+          "startMs": 0.2999999523162842,
+          "endMs": 12166.099999904633
+        },
+        {
+          "label": "Preparing driving and walking",
+          "startMs": 12166.099999904633,
+          "endMs": 12614.799999952316
+        },
+        {
+          "label": "Starting the renderer",
+          "startMs": 12614.799999952316,
+          "endMs": 12632.099999904633
+        },
+        {
+          "label": "Building water and bridges",
+          "startMs": 12632.099999904633,
+          "endMs": 12748.399999976158
+        },
+        {
+          "label": "Building roads and transit",
+          "startMs": 12748.399999976158,
+          "endMs": 12819.399999976158
+        },
+        {
+          "label": "Assembling people and wildlife",
+          "startMs": 12819.399999976158,
+          "endMs": 13062.899999976158
+        },
+        {
+          "label": "Preparing vehicles and interactive objects",
+          "startMs": 13062.899999976158,
+          "endMs": 13836.799999952316
+        },
+        {
+          "label": "Preparing lighting",
+          "startMs": 13836.799999952316,
+          "endMs": 13964.199999928474
+        },
+        {
+          "label": "Loading the first neighbourhood",
+          "startMs": 13964.199999928474,
+          "endMs": 16030.699999928474
+        },
+        {
+          "label": "Preparing the first frame",
+          "startMs": 16030.699999928474,
+          "endMs": 16300.199999928474
+        }
+      ],
+      "heartbeat": {
+        "samples": 306,
+        "maxGapMs": 564.6000000238419
+      },
+      "canvas": {
+        "buffer": [
+          1920,
+          1080
+        ],
+        "css": [
+          1280,
+          720
+        ]
+      }
+    }
+  ]
+}
