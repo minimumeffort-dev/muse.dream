@@ -18,6 +18,8 @@ export function commuteArea(scene:Scene,a:Pick<Economy['accounts'][number],'acto
  const object=scene.objects.find(o=>o.id===a.actor)!,base=deliveryArea(a),radius=Math.max(4,Math.ceil(objectRadius(object)*10)/10),height=Math.max(18,Math.ceil(objectHeight(object)*10)/10);
  return {...base,id:`commute/${radius}/${height}/${base.id}`,radius,height};
 }
+export function restArea(scene:Scene,a:Economy['accounts'][number]):WalkingArea & {radius:number;height:number}{const plan=scene.economy!.rests!.find(r=>r.id===a.rest)!,area=commuteArea(scene,{actor:a.actor,on:plan.on,grounds:plan.grounds});return {...area,radius:area.radius!,height:area.height!};}
+export function restAreas(scene:Scene):WalkingArea[]{return [...new Map((scene.economy?.accounts??[]).filter(a=>a.rest && a.actor!=='player').map(a=>{const area=restArea(scene,a);return [area.id,area];})).values()];}
 export function commuteAreas(scene:Scene):WalkingArea[]{return [...new Map((scene.economy?.accounts??[]).filter(a=>a.commute).map(a=>{const area=commuteArea(scene,a);return [area.id,area];})).values()];}
 export function commuteAccessProblems(scene:Scene):string[]{
  const e=scene.economy;if(!e)return [];const problems:string[]=[];
@@ -27,7 +29,7 @@ export function commuteAccessProblems(scene:Scene):string[]{
  }
  return problems;
 }
-export function errandAreas(scene:Scene):WalkingArea[]{return [...new Map([...deliveryAreas(scene),...mealAreas(scene),...commuteAreas(scene)].map(a=>[a.id,a])).values()];}
+export function errandAreas(scene:Scene):WalkingArea[]{return [...new Map([...deliveryAreas(scene),...mealAreas(scene),...commuteAreas(scene),...restAreas(scene)].map(a=>[a.id,a])).values()];}
 export function mealAccessProblems(scene:Scene):string[]{
  const e=scene.economy;if(!e)return [];const problems:string[]=[];
  for(const a of e.accounts)if(a.meal){const m=e.meals.find(m=>m.id===a.meal),home=scene.objects.find(o=>o.id===a.actor);if(!m || !home)continue;for(const id of m.markets)try{const offer=courierApproach(scene,m,id,home);if(!offer || !workPath(scene,deliveryArea(m),offer.end,home))problems.push(`${a.id}: ${m.id} needs connected meal markets and home on the pedestrian network`);}catch(error){problems.push(error instanceof Error ? error.message : String(error));}}

@@ -636,6 +636,7 @@
         "capacity": "n",
         "satiety": "n",
         "drain_s": "n",
+        "rest": "ref?",
         "commute": "bool?",
         "on": "ref?",
         "grounds": "symbols?",
@@ -700,6 +701,22 @@
         "equipment": "symbols?"
       },
       "block": "recipe?"
+    },
+    "rest": {
+      "contexts": [
+        "economy"
+      ],
+      "id": true,
+      "fields": {
+        "energy": "n",
+        "drain_s": "n",
+        "recover_s": "n",
+        "below": "n",
+        "until": "n",
+        "seats": "symbols",
+        "on": "ref",
+        "grounds": "symbols?"
+      }
     },
     "ration": {
       "contexts": [
@@ -1764,6 +1781,7 @@
     "phase": "place.phase_s 0..3600 only with route; shifts the entire route clock including stops. offset remains a carriage distance."
   },
   "commerce": {
+    "resting": "Optional economy rest(energy=0..100,drain_s=0..0.25,recover_s=.1..10,below=0..95,until=5..100,seats=[furniture],on=ground,grounds=[extra]); account(...,rest=plan). At most 8 plans, 1..4 unique ordered furniture IDs, until >= below+5 and the existing convex-ground, 4096-sample, 8192-node/32768-link/128-waypoint limits. Player and non-vendor complete humanoid NPC accounts use the same bounded energy rule. NPCs may combine meal and commuting work, excluding other automatic policies. Time drains energy, work and repairs require effort before starting and spend it once on completion. Cancellation never spends effort. Player recovery uses any usable seated furniture, regardless of NPC preferences. Hungry food decisions precede automatic rest. Low-energy NPCs reserve a reachable free seat, physically walk/sit/recover until target, release it and return to the paused routine. Broken or occupied furniture prevents recovery; claims share player/meal capacity. No food, cash, work pay, extra actors or offline catch-up. Energy, seat ownership and out/sit/home paths persist through R, streaming and saves. Registered r96 upgrade initializes only new energy values, preserving all commitments and resources. This is a game need, not a clinical sleep model. See examples/resting.dream.",
     "commuting": "Optional account.commute=true with work/works and on plus 0..7 grounds lets a complete decor humanoid NPC walk to paid work and return. It may coexist with meal, excluding vendor/shop/ration/shift/social/repair/delivery policies. Host-derived body profile rounds up to .1 units with minimum radius 4/headroom 18 and maximum authored radius 8/height 32. Grounds are convex and share 4096 samples; paths keep the existing 8192-node/32768-link/128-waypoint bounds. Ordered eligible work and target shortage dispatch; travel reserves no materials, wage, output room or work slot. Arrival uses ordinary guarded work. Existing work commits once, refunds on interruption and returns without teleporting. Program clocks, paths, ownership, pay and meals persist through pause, R, streaming and saves. No automatic transport or increased actor/rig budgets.",
     "rations": "Optional economy ration(good,market,below=0..95), at most eight plans, referenced by a stationary NPC repair/delivery account with a clear supply counter at home. One owned portion, paid finite stock. Pack only with room for every declared task load, eat once at/below the threshold through ordinary transactions, including during travel. No borrowing sealed cargo, free food, new journeys or forced purchases when unavailable. Player G can eat owned food during work/repair/delivery on dry ground without cancelling the task.",
     "business": {

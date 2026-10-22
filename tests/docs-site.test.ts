@@ -6,6 +6,10 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights rest commands and fields at exact boundaries and escapes authored text',()=>{
+    const html=highlight('rest home(energy=20,recover_s=5,below=25,until=85,seats=[bench],on=yard); account person(rest=home); // <Rest>&');
+    expect(html).toContain('class="dream-keyword">rest</span>');expect(html).toContain('class="dream-field">energy</span>');expect(html).toContain('&lt;Rest&gt;&amp;');expect(highlight('resting rest_plan recover_something')).not.toMatch(/dream-(?:keyword|field)/);
+  });
   it('highlights commuting only at field boundaries and escapes labels',()=>{
     const html=highlight('account worker(commute=true,on=home,grounds=[hall],works=[bake]); // <Work>&');
     expect(html).toContain('class="dream-field">commute</span>');expect(html).toContain('&lt;Work&gt;&amp;');expect(highlight('commutes commute_extra commuter')).not.toMatch(/dream-field/);

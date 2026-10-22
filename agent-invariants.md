@@ -823,3 +823,24 @@ Retain exactly the nearest 32 linked candidates, stable source-index distance
 ties, the pre-clearance cutoff and eight accepted attachments. Never index the
 partially built mutable work graph or cache dynamic contact clearance. This
 changes preparation cost only, not graph order, source, save or movement rules.
+
+## Shared rest and energy, r97
+
+Optional economy rest plans and account.rest add bounded energy, without changing
+unconfigured accounts. Keep food, money, escrow and energy separate. Elapsed
+simulation time drains energy; usable seating recovers it. Work and repairs need
+effort at start and spend it once on completion, not cancellation. Any usable
+player seat recovers energy; the ordered furniture list selects NPC destinations.
+
+Automatic rest uses one out/sit/home journey, actual body-sized access, shared
+seat claims and the paused original routine. Hungry food decisions precede rest.
+Occupied/broken furniture grants no recovery; damage releases the claim and
+returns the resident. Keep existing actor/rig, eight-ground, local sample, graph
+and path caps. Rest may coexist with meal and commuting work; other automatic
+policies and operated counters remain excluded. All time is simulation-owned.
+
+Format 19/simulation 41 registers exact r96. Initialize only energy for newly
+configured accounts, preserve every older commitment, resource, clock and source
+slot, and keep the complete earlier migration chain. No guessed offline needs,
+new food/coins, forced player sleep or clinical sleep claims. See
+`docs/dream/resting.md` and its checked example.

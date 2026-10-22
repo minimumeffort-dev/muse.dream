@@ -11,6 +11,6 @@ export const worldModules:DreamModules=Object.freeze({dream_creations:objects,in
 )});
 export { source as worldSource };
 /** The entire mock world is authored in Dream 2; only revision identity belongs to the host. */
-export function createWorldScene(sourceHash="handmade-city-life-v96") {
-  return compileDreamScene(source,{sceneId:"mock-open-world",revisionId:"r96",sourceHash},worldModules);
+export function createWorldScene(sourceHash="handmade-city-life-v97") {
+  return compileDreamScene(source,{sceneId:"mock-open-world",revisionId:"r97",sourceHash},worldModules);
 }

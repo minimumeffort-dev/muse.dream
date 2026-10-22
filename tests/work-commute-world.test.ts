@@ -12,13 +12,13 @@ import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
 import {homeMealReviewSteps} from '../src/game/home-review';
 import {workCommuteReviewSteps} from '../src/game/work-commute-review';
-const scene=createWorldScene(),snapshot=JSON.stringify(scene),prior=c.preWorkCommuteScene(scene);
+const scene=c.preRestScene(createWorldScene()),snapshot=JSON.stringify(scene),prior=c.preWorkCommuteScene(scene);
 const world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.WORK_COMMUTE_COMPATIBILITY,previousWorkCommuteSaveCompatibility:c.HOME_MEALS_COMPATIBILITY};
 const old:World={...world,scene:prior,saveCompatibility:c.HOME_MEALS_COMPATIBILITY,previousWorkCommuteSaveCompatibility:undefined};
 const regular=(s:ReturnType<typeof createCarAtSpawn>)=>s.economy!.accounts.find(a=>a.id==='regular')!;
 afterAll(()=>expect(JSON.stringify(scene)).toBe(snapshot));
 it('pins r95 exactly while declaring resident work without new geometry, people or money',async()=>{
- expect(c.SAVE_SIMULATION_VERSION).toBe(40);expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.WORK_COMMUTE_COMPATIBILITY);expect(await c.sha256(c.preWorkCommuteCompatibilitySource(scene))).toBe(c.HOME_MEALS_COMPATIBILITY);expect(await c.sha256(c.preHomeMealsCompatibilitySource(scene))).toBe(c.HOME_INTERIOR_COMPATIBILITY);
+ expect(await c.sha256(c.preRestCompatibilitySource(scene))).toBe(c.WORK_COMMUTE_COMPATIBILITY);expect(await c.sha256(c.preWorkCommuteCompatibilitySource(scene))).toBe(c.HOME_MEALS_COMPATIBILITY);expect(await c.sha256(c.preHomeMealsCompatibilitySource(scene))).toBe(c.HOME_INTERIOR_COMPATIBILITY);
  expect(scene.objects).toEqual(prior.objects);expect(scene.routes).toEqual(prior.routes);expect(scene.economy!.markets).toEqual(prior.economy!.markets);expect(commuteArea(scene,scene.economy!.accounts.find(a=>a.id==='regular')!)).toMatchObject({radius:4.1,height:18});
 });
 it('connects an actual meal, purchased demand, doorway/street travel, paid work and a continuous return',()=>{

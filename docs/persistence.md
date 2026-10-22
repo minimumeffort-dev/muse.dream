@@ -1,6 +1,11 @@
 # Leave and come back
 
-The current world uses format 19 / simulation 40. Its registered r95 upgrade
+The current world uses format 19 / simulation 41. Its registered r96 upgrade
+initializes only the newly declared energy values, keeping existing work, food,
+resources, clocks and seat claims. New rest journeys begin through the ordinary
+NPC decisions after restore. No offline drain or recovery is guessed.
+
+The r96 world uses format 19 / simulation 40. Its registered r95 upgrade
 keeps every saved field and adds no implicit work, stock or wages. New work trips
 begin through the ordinary NPC decision loop after restore.
 
@@ -65,7 +70,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 38. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 41. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -863,3 +868,24 @@ one matching ordinary job; other phases cannot hold a paid batch. Restore checks
 body-supported routes, destinations, membership, clocks and all existing resource
 conservation. It never starts a job during migration. Original slots and the
 entire earlier migration chain remain available.
+
+## Shared rest upgrade, r97
+
+The current accepted-world fingerprint is
+`67ec3c6c263434eeb67f2dc17a986d719675505899452a283dedc53b071b8be9`.
+Removing only `economy.rests` and `account.rest` reproduces exact r96 at
+simulation 40:
+`9b818d954cf53fe239b685e7cc54600aa417f0541de32e3b9c99db1bef443cad`.
+
+Validate that exact prior world first. Initialize only energy for newly opted-in
+accounts from their authored plan; do not create a journey, cancel a batch,
+consume food, change resources, advance a clock or discard the old storage slot.
+Historical projections exclude the new source fields and retain their exact
+registered bytes and earlier upgrade chain.
+
+New saves keep per-account energy and optional out/sit/home rest trips. Validate
+source ownership, phase, original routine pose, actual body support, bounded
+paths, clocks, furniture membership and unique shared seat claims. Energy without
+a declared plan or a rest trip owned by the player is invalid. R, pause and
+streaming retain the need and journey; Start over resets them. Player seating
+remains its existing independent owner. [Rest rules](dream/resting.md).

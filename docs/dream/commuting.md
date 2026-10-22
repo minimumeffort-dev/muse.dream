@@ -69,7 +69,10 @@ provide a graph, an NPC position clock or controller code.
 | Derived graph | 8,192 nodes and 32,768 directed links |
 | Saved path | 128 waypoints |
 
-`meal` may coexist with commuting. Other automatic shopping, ration, shift,
+`meal` and [rest](resting.md) may coexist with commuting. A hungry meal comes
+first, then low-energy rest before a new work trip. Tasks require their existing
+effort in energy for configured accounts and spend it once on completion.
+ Other automatic shopping, ration, shift,
 social, repair and delivery policies remain excluded, as does operating a market.
 These restrictions keep one journey and one commitment owner. Existing account,
 NPC and live-rig limits remain unchanged.

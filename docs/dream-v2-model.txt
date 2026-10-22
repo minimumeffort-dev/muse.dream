@@ -812,6 +812,25 @@ NPC work refills output up to target. Alternatively works=[advanced,basic] is an
 ordered list of 1..4 unique work IDs, exclusive with work, repairs and deliveries.
 Try the first eligible job below target; no extra actors, commitments or free stock.
 Player accounts never act automatically.
+Rest is opt-in: rest home_rest(energy=35,drain_s=.1,recover_s=5,below=25,until=85,seats=[settee],on=home,grounds=[entry]); account(...,rest=home_rest).
+At most 8 plans; energy 0..100, drain_s 0..0.25 per second, recover_s .1..10,
+below 0..95, until 5..100 and at least below+5. Use 1..4 unique ordered furniture
+IDs and the existing eight convex grounds, navigation samples and path bounds.
+The initial energy applies separately to each referencing account. Time drains
+energy; work/repair effort is required at start and spent once on completion.
+Cancellation spends no effort. Player seating recovers on any usable furniture;
+the plan's seats choose NPC destinations, not a player-only furniture category.
+NPC rest requires a complete measured humanoid decor program, a stationary home
+or walk route, and body bounds radius <=8/height <=32. Food and commuting work
+may coexist; other automatic policies and operated counters remain excluded.
+Available hungry meals take priority. A tired NPC reserves one reachable free
+seat, walks there, sits until target, releases the claim and walks back before
+resuming its paused routine. Use actual body-sized seat access and shared claims.
+Destroyed or occupied furniture grants no recovery. No new actors, rigs, food,
+stock, coins, idle pay or generated controllers. Keep energy and out/sit/home
+ownership, paths and clocks in saved state. R preserves them; Start over resets.
+No offline catch-up, forced player sleep, medical claims or full sleep model.
+See examples/resting.dream.
 NPC work commuting is opt-in account(...,works=[first_job,second_job],commute=true,on=home_ground,grounds=[extra_ground]).
 Use a complete measured humanoid decor NPC with a program and a stationary home
 or walk route. Other automatic repair/delivery/shop/shift/social/ration policies

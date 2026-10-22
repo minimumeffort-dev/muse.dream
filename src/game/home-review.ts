@@ -10,9 +10,9 @@ export function homeReviewStart(state:CarState,world:World):CarState{
  if(!carFootprintClear(bodyWorld(next,world),next.x,next.y,next.elevation,next.timeS,next))throw Error('Home review entrance is blocked');
  return next;
 }
-export function homeReviewInput(state:CarState,world:World,frame:number,viewAngle=0):CarInput{
+export function homeReviewInput(state:CarState,world:World,frame:number,viewAngle=0,seatId='left'):CarInput{
  if(state.seated)return {steer:0,throttle:0};
- const room=sceneInteriors(world.scene).find(f=>f.object.id==='oldtown_044')!,seat=worldSeats(world.scene).find(s=>s.objectId==='home_settee' && s.seatId==='left')!;
+ const room=sceneInteriors(world.scene).find(f=>f.object.id==='oldtown_044')!,seat=worldSeats(world.scene).find(s=>s.objectId==='home_settee' && s.seatId===seatId)!;
  const target=frame<60 ? portalPoints(room,room.room.portals[0]!,14).inside : frame<135 ? room.toWorld(0,0) : seat.approach;
  const dx=target.x-state.x,dy=target.y-state.y,d=Math.hypot(dx,dy),a=Math.atan2(180,480)+viewAngle;
  return {steer:d>1.5 ? (dx*Math.cos(a)-dy*Math.sin(a))/d : 0,throttle:d>1.5 ? (-dx*Math.sin(a)-dy*Math.cos(a))/d : 0};

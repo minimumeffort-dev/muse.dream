@@ -23,6 +23,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [Day and night](dream/day-night.md) | A shared clock, changing sunlight, window glow and street lighting |
 | [Shared meals](dream/social.md) | Invite an off-duty person or accept their meal, share paid food and build remembered history |
 | [Shared seating](dream/seating.md) | Sit on furniture, share seats with customers and preserve occupancy |
+| [Rest and energy](dream/resting.md) | Recover through shared seating, resident home trips and finite work effort |
 | [Staff shifts](dream/shifts.md) | Physical attendance, connected rest destinations and persistent journeys |
 | [Opening hours](dream/hours.md) | Daily counter service, overnight suppliers and saved courier waits |
 | [Business ownership](dream/businesses.md#own-the-station-depot) | Buy the depot, transfer capital and retain its real stock and contracts |

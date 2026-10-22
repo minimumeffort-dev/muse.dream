@@ -10,6 +10,18 @@ Racing is where this started. The idea is to make whatever someone draws playabl
 
 **The playable world is a handmade mock today.** The renderer, driving simulation and Dream 2 compiler work. Photo upload and Muse interpretation are still to come. There are no model calls or API keys to configure.
 
+## Come home and rest
+
+The resident can now buy lunch, come home, recover on the settee and return to
+paid work. Sit beside them with **F**. Energy recovers while seated; food still
+comes from your bag, and wages still come from completed work. Broken or occupied
+furniture follows the same rules for both of you. [Rest in Dream](docs/dream/resting.md).
+
+![Sharing the home settee while recovering energy](docs/media/rest.jpg)
+
+[Watch the rest flow](docs/media/rest.mp4) · [GIF](docs/media/rest.gif)
+
+
 ## Take a walk in Garden park
 
 The old circuit is gone from the live city. Its western strip now has a park with

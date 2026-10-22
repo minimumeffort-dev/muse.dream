@@ -55,6 +55,11 @@ up.
 
 ## Sit on furniture
 
+With an authored [rest plan](resting.md), F seating also recovers energy. The
+context badge shows the current percentage while resting; the bag retains it
+elsewhere. The player can use any usable seat. Residents reserve reachable seats
+through the same claims, and broken furniture grants no recovery.
+
 **F** also sits on an available furniture seat when you reach its approach.
 Move, jump or press F to request a clear exit; **G** eats owned food. Work,
 trade, sports and boarding require standing. The same named slots can be claimed

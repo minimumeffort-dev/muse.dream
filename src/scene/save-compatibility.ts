@@ -17,7 +17,7 @@ import schoolR90 from './compatibility/r90-school.json';
 import homeR93 from './compatibility/r93-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=40;
+export const SAVE_SIMULATION_VERSION=41;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -49,6 +49,7 @@ export function saveCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder
   return projection(scene,SAVE_SIMULATION_VERSION,true,encode);
 }
 function projection(scene:Scene,simulationVersion:number,rounded=true,encode?:CompatibilityEncoder):string {
+  if(simulationVersion<41)scene=preRestScene(scene);
   const {revisionId,sourceHash,provenance,...world}=scene;
   let economy=world.economy;
   if(economy && simulationVersion<21){const {socials,...old}=economy;economy=old as typeof economy;}
@@ -100,10 +101,21 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r97 adds authored energy and shared seated recovery, preserving existing commitments. */
+export const REST_COMPATIBILITY='67ec3c6c263434eeb67f2dc17a986d719675505899452a283dedc53b071b8be9';
+const restProjections=new WeakMap<Scene,Scene>();
+export function preRestScene(scene:Scene):Scene{
+ const cached=restProjections.get(scene);if(cached)return cached;if(!scene.economy?.rests)return scene;
+ const {rests,...economy}=scene.economy;
+ const prior={...scene,economy:{...economy,accounts:economy.accounts.map(a=>{const {rest,...old}=a;return old;})}};restProjections.set(scene,prior);return prior;
+}
+export function preRestCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preRestScene(scene),40,true,encode);}
+
 /** r96 adds opt-in work journeys without changing existing commitments or physical data. */
 export const WORK_COMMUTE_COMPATIBILITY='9b818d954cf53fe239b685e7cc54600aa417f0541de32e3b9c99db1bef443cad';
 const commuteProjections=new WeakMap<Scene,Scene>();
 export function preWorkCommuteScene(scene:Scene):Scene{
+ scene=preRestScene(scene);
  const cached=commuteProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.accounts.some(a=>a.id==='regular' && a.commute))return scene;
  const accounts=scene.economy.accounts.map(a=>{if(a.id!=='regular')return a;const {commute,on,grounds,works,...old}=a;return old;});

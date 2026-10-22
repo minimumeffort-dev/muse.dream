@@ -22,6 +22,22 @@ These exports are motion evidence, not live frame-rate measurements.
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
+## Shared rest, r97
+
+The new `rest.mp4`, `rest.gif` and frame-60 `rest.jpg` share 360 consecutive
+2400 × 1350 rendered PNGs at 30 frames per simulation second. Video is
+1600 × 900; GIF is 1280 × 720. They show the player sharing the settee while
+recovering energy, then the resident standing and resuming their routine.
+Only the player's initial review pose is seeded. Purchases, needs, NPC travel
+and the player's walk into the home advance through ordinary simulation.
+
+Earlier home and seating recordings retain their source release's policies and
+Seated badge; they do not demonstrate energy or automatic rest. Their geometry
+remains accurate. Other asset/locomotion recordings are unchanged. These exports
+are motion evidence, not a live performance measurement. Native controls,
+save/reload, source and frame checks are recorded in
+[the rest verification note](../evidence/resting/verification.md).
+
 ## Work commute, r96
 
 `work-commute.png` is a native browser still after ordinary player purchases,

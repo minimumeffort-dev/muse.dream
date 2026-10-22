@@ -45,6 +45,11 @@ source slot remains available. [Checks and capture](../evidence/school-interior/
 
 ## The commuter's home
 
+The home now also supports [shared rest and energy](resting.md). Sit beside the
+resident with F; ordinary work and repairs check and spend energy, while usable
+seating recovers it. Automatic home rest shares the existing seat claims and
+finite damage/repair system. This adds no beds or sleeping model.
+
 The brick terrace beside Market Avenue now has an open ground floor, a timber
 settee, a table and a planter. Its existing commuter walks through the doorway
 and waits in the foyer before the next market trip. The route and waits are

@@ -1,3 +1,4 @@
+import {restAccessProblems} from '../sim/rest';
 import {socialAccessProblems} from '../sim/social';
 import {interiorProblems} from './interiors';
 import {contactOverlaps,contactTouchesPolygon} from './contact-geometry';
@@ -27,7 +28,7 @@ export interface SceneProblem {
   code:
     | "interior-not-clear"
     | "repair-not-connected"
-    | "work-not-connected" | "meal-not-connected" | "courier-not-connected" | "social-not-connected"
+    | "rest-not-connected" | "work-not-connected" | "meal-not-connected" | "courier-not-connected" | "social-not-connected"
     | "shift-not-connected"
     | "population-not-clear"
     | "site-not-connected"
@@ -70,6 +71,7 @@ export function validateScenePlayability(
   for(const message of ambientProblems(scene))problems.push({code:"population-not-clear",message});
   for(const message of repairAccessProblems(scene))problems.push({code:"repair-not-connected",message});
   for(const message of courierAccessProblems(scene))problems.push({code:"courier-not-connected",message});
+  for(const message of restAccessProblems(scene))problems.push({code:"rest-not-connected",message});
   for(const message of commuteAccessProblems(scene))problems.push({code:"work-not-connected",message});
   for(const message of mealAccessProblems(scene))problems.push({code:"meal-not-connected",message});
   for(const message of socialAccessProblems(scene))problems.push({code:"social-not-connected",message});
