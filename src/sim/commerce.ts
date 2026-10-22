@@ -95,7 +95,8 @@ function inReach(state:CarState,scene:Scene,account:Account,market:Market):boole
 const active=(e:EconomyState,job:string)=>e.accounts.filter(a=>a.work?.id===job).length;
 function reserved(e:EconomyState,definition:Economy,market:string,good?:string){
  let n=0;for(const a of e.accounts)if(a.repair){const t=a.repair,r=definition.repairs.find(r=>r.id===t.id)!;if(r.market===market){if(t.phase!=='home')n+=good===undefined ? r.pay : r.input===good ? r.take : 0;if(t.recover && good===r.recover)n+=r.amount!;}}
- for(const a of e.accounts)if(a.work){const j=definition.jobs.find(j=>j.id===a.work!.id)!;if(j.market===market)n+=good===undefined ? j.pay : jobTake(j,good!)+(j.output===good ? j.make : 0);}
+ // A batch either refunds its input or produces output; a shared lot needs the larger space once.
+ for(const a of e.accounts)if(a.work){const j=definition.jobs.find(j=>j.id===a.work!.id)!;if(j.market===market)n+=good===undefined ? j.pay : Math.max(jobTake(j,good!),j.output===good ? j.make : 0);}
  for(const a of e.accounts)if(a.delivery){const d=definition.deliveries.find(d=>d.id===a.delivery!.id)!;n+=good===undefined ? (d.to===market ? d.pay+deliveryBill(d) : d.from===market ? deliveryBill(d) : 0) : (d.from===market || d.to===market) && d.good===good ? d.quantity : 0;}
  return n;
 }
@@ -213,7 +214,7 @@ function reason(state:CarState,scene:Scene,e:EconomyState,a:Account,action:Comme
   if(jobInputs(j).some(i=>stock.stock[i.good]!<i.take))return 'input';
   if(stock.credits<j.pay || a.credits+j.pay>L.money)return 'treasury';
   const lot=m.lots.find(l=>l.good===j.output)!;
-  if(stock.stock[j.output]!+reserved(e,c.e,m.id,j.output)+j.make>lot.limit)return 'capacity';
+  if(stock.stock[j.output]!+reserved(e,c.e,m.id,j.output)+j.make-jobTake(j,j.output)>lot.limit)return 'capacity';
  }
 }
 export function commerceReason(state:CarState,scene:Scene,account:string,action:CommerceAction):Reason|undefined{

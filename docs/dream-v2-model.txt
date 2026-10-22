@@ -756,7 +756,10 @@ work id(label,market,output,make,seconds,pay,effort,capacity,target){
  ingredient(good=first_good,take=1); ingredient(good=second_good,take=2);
 }
 Use exactly one form. A block has 1..4 unique ingredient goods, no IDs, no empty
-block, and no input equal to output. Each positive integer take fits an existing
+block. An input may equal output only when make > take for that good. Reserve
+max(input,output) once for that shared lot; do not add its mutually exclusive
+refund and completion space. Seed input is still required; make is the full
+completion output, not the gain. Each positive integer take fits an existing
 lot at that market. All ingredients and all refund space reserve atomically;
 a shortage changes nothing, cancellation returns every input, completion consumes
 once. The same rules apply to food recipes and manufactured repair supplies.

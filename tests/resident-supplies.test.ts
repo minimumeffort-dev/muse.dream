@@ -31,7 +31,7 @@ it('pins the exact r86 world, unchanged contacts and walking graph, and one exis
  expect(scene.objects).toHaveLength(prior.objects.length);expect(scene.surfaces).toBe(prior.surfaces);
  expect(sceneContactData(scene)).toEqual(sceneContactData(prior));expect(ambientGraph(scene)).toEqual(ambientGraph(prior));
  expect(scene.economy!.accounts.find(a=>a.id==='porter')).toMatchObject({actor:'school_student',credits:0,deliveries:['fasteners_run','school_run']});
- expect(prior.economy!.accounts.some(a=>a.id==='porter')).toBe(false);expect(c.SAVE_SIMULATION_VERSION).toBe(35);
+ expect(prior.economy!.accounts.some(a=>a.id==='porter')).toBe(false);expect(JSON.parse(c.preRecoveryCompatibilitySource(scene)).simulationVersion).toBe(34);
 });
 
 it('lets a remote-home courier procure both recipe inputs and return through the shared finite transactions',()=>{

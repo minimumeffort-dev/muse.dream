@@ -22,7 +22,7 @@ it('pins the exact r85 projection and leaves geometry, old stock and runtime bou
  expect(await c.sha256(c.preRecoveryCompatibilitySource(scene))).toBe(c.WORKSHOP_SUPPLY_COMPATIBILITY);expect(await c.sha256(c.preWorkshopSupplyCompatibilitySource(scene))).toBe(c.KIT_PRODUCTION_COMPATIBILITY);
  expect(scene.objects).toBe(prior.objects);expect(scene.surfaces).toBe(prior.surfaces);expect(scene.economy!.accounts.find(a=>a.id==='caretaker')!.deliveries).toEqual(['kits_run','saplings_run','flour_run','boards_run']);
  expect(scene.economy!.markets.find(m=>m.id==='station_supplies')!.lots.slice(-2).map(l=>[l.good,l.quantity])).toEqual([['boards',16],['fasteners',16]]);
- expect(prior.economy!.deliveries).toHaveLength(4);expect(c.SAVE_SIMULATION_VERSION).toBe(35);
+ expect(prior.economy!.deliveries).toHaveLength(4);expect(JSON.parse(c.preRecoveryCompatibilitySource(scene)).simulationVersion).toBe(34);
 });
 
 it('walks NPC board and fastener cargo to a real counter, then crafts kits through the shared finite recipe',()=>{

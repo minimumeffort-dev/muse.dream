@@ -150,7 +150,7 @@ economy(){
  good boards(label="Timber boards");
  good fasteners(label="Fasteners");
  account pocket(actor=player,credits=20,capacity=8,satiety=48,drain_s=.05);
- account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,social=hall_break,shift=bakery_day,works=[assemble_kit,pack_lunch,large_bake,bake]);
+ account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,social=hall_break,shift=bakery_day,works=[assemble_kit,propagate_saplings,pack_lunch,bake]);
  social hall_break(good=bread,seats=[hall_bench],on=market_hall,grounds=[market_square],eat_s=8,cooldown_s=600,markets=[market_stall]);
  social school_break(good=bread,seats=[school_bench],on=school_yard,eat_s=8,cooldown_s=600,markets=[school_canteen]);
  shift bakery_day(market=market_stall,rest=[6360,4490],on=market_hall,grounds=[market_square],lead_s=15);
@@ -199,6 +199,8 @@ economy(){
   ingredient(good=boards,take=1);
   ingredient(good=fasteners,take=1);
  }
+
+ work propagate_saplings(label="Propagate saplings",market=market_stall,input=sapling,take=1,output=sapling,make=2,seconds=12,pay=2,effort=2,capacity=1,target=5,equipment=[hall_table_east]);
 
  delivery boards_run(label="Bring boards to the workshop",from=station_supplies,to=market_stall,good=boards,quantity=2,pay=4,price=1,capacity=1,on=market_hall,grounds=[market_square]);
  delivery fasteners_run(label="Bring fasteners to the workshop",from=station_supplies,to=market_stall,good=fasteners,quantity=2,pay=4,price=1,capacity=1,on=market_hall,grounds=[market_square,school_yard,school_yard_access,school_yard_return]);

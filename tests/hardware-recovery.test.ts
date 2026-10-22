@@ -16,7 +16,7 @@ import {gameSave} from '../src/game/save';
 import {workshopReviewSteps,recoveryReviewSteps} from '../src/game/review-start';
 import type {Scene} from '../src/scene/schema';
 const example=compileDreamScene(source,{sceneId:'hardware',revisionId:'test',sourceHash:'hardware'});
-let scene:Scene|undefined;const live=()=>scene??=createWorldScene();
+let scene:Scene|undefined;const live=()=>scene??=c.preNurseryScene(createWorldScene());
 const world=(s=live()):World=>({scene:s,roadMask:buildMaskForScene(s),driveMask:buildPaperMask(s.canonical.width,s.canonical.height),carRadius:11});
 const current=()=>({...world(),saveCompatibility:c.HARDWARE_COMPATIBILITY,previousHardwareSaveCompatibility:c.RECOVERY_COMPATIBILITY});
 const account=(s:CarState,id='pocket')=>s.economy!.accounts.find(a=>a.id===id)!;
@@ -26,9 +26,9 @@ const review=()=>{if(!reviewed){const steps=workshopReviewSteps(createCarAtSpawn
 
 it('pins the exact r88 world and applies one hardware return policy to every existing fixture target',async()=>{
  const s=live(),prior=c.preHardwareScene(s),r=s.economy!.repairs.find(r=>r.id==='market_tables')!;
- expect(await c.sha256(c.saveCompatibilitySource(s))).toBe(c.HARDWARE_COMPATIBILITY);expect(await c.sha256(c.preHardwareCompatibilitySource(s))).toBe(c.RECOVERY_COMPATIBILITY);
+ expect(await c.sha256(c.preNurseryCompatibilitySource(s))).toBe(c.HARDWARE_COMPATIBILITY);expect(await c.sha256(c.preHardwareCompatibilitySource(s))).toBe(c.RECOVERY_COMPATIBILITY);
  expect(s.objects).toBe(prior.objects);expect(s.surfaces).toBe(prior.surfaces);expect(sceneContactData(s)).toEqual(sceneContactData(prior));expect(ambientGraph(s)).toEqual(ambientGraph(prior));
- expect(r).toMatchObject({recover:'fasteners',amount:1});expect(repairTargets(s,r)).toHaveLength(449);expect(s.objects).toHaveLength(1773);expect(c.SAVE_SIMULATION_VERSION).toBe(35);
+ expect(r).toMatchObject({recover:'fasteners',amount:1});expect(repairTargets(s,r)).toHaveLength(449);expect(s.objects).toHaveLength(1773);expect(JSON.parse(c.preNurseryCompatibilitySource(s)).simulationVersion).toBe(35);
 });
 it('connects actual NPC repair, carried hardware and paid kit production in a runnable Dream world',()=>{
  expect(formatDream(formatDream(source))).toBe(formatDream(source));const w=world(example);

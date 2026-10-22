@@ -671,3 +671,22 @@ recovery flag, with no retroactive hardware. Preserve the entire predecessor
 chain and reject missing/unrelated targets. Current reloads cannot reinitialize.
 The current workshop review stops at recovered hardware instead of requesting
 a redundant shipment; historical source reviews retain real fastener cargo.
+
+## Same-good nursery work, r90
+
+Permit an output among a recipe's inputs only when make exceeds take for that
+good. Keep scalar/block exclusivity, positive bounded quantities and all current
+limits. Reserve max(input,output) once per shared lot; subtract the newly held
+input before accepting its output envelope. Held inputs remain actual material,
+future output does not. Completion contributes make minus take to conservation;
+refunds, trades, deliveries, other batches and recovery must respect that space.
+Preserve finite seed, wages, effort, capacity, hours, equipment and per-action
+guards identically for players/NPCs. No zero-input or no-gain propagation loop.
+
+The live vendor uses four slots: kits, propagation, lunches and basic baking;
+qualified player baking stays available. Nursery target five leaves one spare
+slot, with no added stock, cash, actors, geometry or changed layout. Format 19 /
+simulation 36 registers exact r89 by removing only the job and restoring its
+prior worker policy at simulation 35. Add only zero batch/personal/unattributed
+work counters; preserve every existing saved field, original slot and earlier
+projection. No clock advance, resource seeding or population/navigation rebase.

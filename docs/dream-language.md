@@ -122,3 +122,12 @@ item body or NPC combat. [Controls and complete example](dream/behavior.md#on-fo
 Repair services can also [recover physical material](dream/growth.md#timber-recovery).
 The same bounded declaration covers timber and recovered furniture parts, with
 shared player/NPC returns, conserved stock and persistent source eligibility.
+
+## Recipes that reuse their input
+
+Dream 2 work can consume and produce the same good when the full output exceeds
+that input. One sapling can become two through a bounded paid recipe. Held input,
+refund capacity and future output share one reservation envelope; other inputs
+still reserve independently. The compiler rejects empty-input and no-gain loops.
+[Authoring and controls](dream/businesses.md#nursery-work) ·
+[Complete runnable nursery](examples/sapling-propagation.dream).

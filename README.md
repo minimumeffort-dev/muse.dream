@@ -345,6 +345,16 @@ handoff, then goes into another repair kit. All 449 existing fixture targets use
 the same Dream policy; full storage still permits an ordinary repair.
 [Reuse hardware](docs/dream/businesses.md#reuse-fixture-hardware).
 
+You can now propagate a sapling into two at the market, earning two coins after
+twelve seconds. The original seed and wage reserve first. The vendor takes the
+same job when stock drops below five, then returns to food work. Larger baking
+batches stay available to you. [Nursery work in Dream](docs/dream/businesses.md#nursery-work).
+
+![Paid nursery work inside the market](docs/media/nursery.gif)
+
+[Nursery work in HD](docs/media/nursery.mp4). The seed and wage reserve first;
+completion replaces the input with two saplings and pays once.
+
 ![Returning recovered timber to the workshop](docs/media/recovery.gif)
 
 [Timber handoff in HD](docs/media/recovery.mp4). This short recording shows the

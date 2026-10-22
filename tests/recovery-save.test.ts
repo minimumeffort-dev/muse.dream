@@ -17,8 +17,8 @@ const format18=(text:string)=>JSON.stringify({...JSON.parse(text),version:18});
 const w=()=>({...world(current()),saveCompatibility:c.RECOVERY_COMPATIBILITY,previousRecoverySaveCompatibility:c.RESIDENT_SUPPLY_COMPATIBILITY});
 
 it('pins r87 exactly and retains geometry, contacts, population graph and the 106 physical sources',async()=>{
- const scene=current(),prior=c.preRecoveryScene(scene);expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.RECOVERY_COMPATIBILITY);expect(await c.sha256(c.preRecoveryCompatibilitySource(scene))).toBe(c.RESIDENT_SUPPLY_COMPATIBILITY);
- expect(scene.objects).toBe(prior.objects);expect(scene.surfaces).toBe(prior.surfaces);expect(sceneContactData(scene)).toEqual(sceneContactData(prior));expect(ambientGraph(scene)).toEqual(ambientGraph(prior));expect(recoverySourceIds(scene).size).toBe(106);expect(c.SAVE_SIMULATION_VERSION).toBe(35);
+ const scene=current(),prior=c.preRecoveryScene(scene);expect(await c.sha256(c.preNurseryCompatibilitySource(scene))).toBe(c.RECOVERY_COMPATIBILITY);expect(await c.sha256(c.preRecoveryCompatibilitySource(scene))).toBe(c.RESIDENT_SUPPLY_COMPATIBILITY);
+ expect(scene.objects).toBe(prior.objects);expect(scene.surfaces).toBe(prior.surfaces);expect(sceneContactData(scene)).toEqual(sceneContactData(prior));expect(ambientGraph(scene)).toEqual(ambientGraph(prior));expect(recoverySourceIds(scene).size).toBe(106);expect(JSON.parse(c.preNurseryCompatibilitySource(scene)).simulationVersion).toBe(35);
 });
 it('migrates a genuine format-18 shape with outstanding cargo without changing any old field or source slot',()=>{
  const scene=current(),prior=c.preRecoveryScene(scene),old={...world(prior),saveCompatibility:c.RESIDENT_SUPPLY_COMPATIBILITY};const steps=workshopReviewSteps(createCarAtSpawn(prior),old);let r=steps.next();while(!r.done)r=steps.next();const text=format18(encodeSave(r.value,r.value.timeS,old)),next=w(),loaded=decodeSave(text,next),state=loaded.state;

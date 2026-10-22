@@ -52,7 +52,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 35. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 36. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -736,3 +736,18 @@ retain their boundaries, current reloads never reinitialize counters, and an
 unrelated source or missing predecessor is rejected. New recovery cargo uses
 the same reserved capacity and guarded on-foot handoff as timber.
 [Checks and native return](evidence/hardware-recovery/verification.md).
+
+## Same-good nursery work, r90
+
+Format 19 keeps its shape; simulation version 36 pins the new shared-lot
+reservation rule. A job that consumes and produces one good requires a positive
+quantity gain. Its pending shelf envelope reserves max(take,make), while the
+held input remains real conserved material. No future output is counted as stock
+before completion. Other accepted recipes retain their previous behavior.
+
+The registered r89 projection removes only the nursery job and restores the
+vendor's previous four-job policy, using its pinned simulation-35 fingerprint.
+Migration adds only zero nursery batch and personal/unattributed work counts.
+Existing balances, stock, work, hardware/timber cargo, damage, growth, positions
+and clocks remain intact, with no offline work or rebase. The old format-19 slot
+survives. All older registered projections retain their original versions.

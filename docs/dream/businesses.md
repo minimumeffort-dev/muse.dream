@@ -231,12 +231,12 @@ initial owner reference. Every older field and original save slot stays intact.
 The live market worker now uses this ordered Dream policy:
 
 ```dream
-account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,social=hall_break,shift=bakery_day,works=[assemble_kit,pack_lunch,large_bake,bake]);
+account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,social=hall_break,shift=bakery_day,works=[assemble_kit,propagate_saplings,pack_lunch,bake]);
 ```
 
 `assemble_kit` uses the existing boards-and-fasteners recipe, with `target=12`
 matching the repair-kit shelf limit. The worker first considers assembly, then
-food. Both player and worker need actual ingredients, wages, shelf space, effort
+nursery demand and food. Both player and worker need actual ingredients, wages, shelf space, effort
 and the job's shared capacity. The existing daily shift controls availability.
 No special NPC production transaction is introduced.
 
@@ -360,3 +360,42 @@ make raw metal, saplings or money. Boards, other supplies and business budgets
 still bound the chain. The exact r88 save upgrade adds only a zero recovery
 counter for fixtures; old jobs, damage, timber cargo and source slots survive.
 [Verification and native handoff](../evidence/hardware-recovery/verification.md).
+
+## Nursery work
+
+![A nursery batch running on the existing work system](../media/nursery.jpg)
+
+[HD recording](../media/nursery.mp4) · [GIF](../media/nursery.gif).
+
+One sapling can now supply two through paid work. You still need the first plant,
+an open staffed counter, room for the result and money for wages. This connects
+replanting to replacement supply through the same recipes used for food and kits.
+
+[Run the complete small nursery](../examples/sapling-propagation.dream):
+
+```dream
+work propagate_saplings(label="Propagate saplings",market=corner,input=sapling,take=1,output=sapling,make=2,seconds=2,pay=2,effort=2,capacity=2,target=5);
+```
+
+The live market uses twelve seconds, one worker and the existing food table.
+Press **M**, open **Work**, select **Propagate saplings** with the arrow keys and
+press Enter or H. Stay nearby. Completion pays two coins and spends two fullness
+points. Cancellation returns the held seed and wage once, with no output or pay.
+R, vehicle changes, closing hours and damaged equipment use the same work rules.
+
+`make=2` is the complete output. The net gain after `take=1` is one sapling.
+Input and output may share a good only when make exceeds take for that good.
+This works with scalar input/take or a bounded ingredient block. Other ingredients
+still reserve independently. A batch either refunds or completes, so its shared
+lot reserves the larger outcome once. With five plants on a six-slot shelf,
+starting holds one seed, leaves four on the shelf and reserves two output slots.
+Cancellation restores five; completion leaves six. Another seller or delivery
+cannot use those reserved slots.
+
+The vendor's four-job policy now prioritizes kits, nursery work, lunches and
+ordinary bread. It propagates below five plants, leaving one free shelf slot for
+the player's work. The larger baking recipe stays available to qualified players.
+No person, prop, stock or cash is added, and the existing layout is unchanged.
+Planting and nursery work are bounded game recipes; no botanical validity or
+unlimited production is claimed. Food inputs, effort and business money still
+matter. [Checks, saved progress and runtime evidence](../evidence/nursery/verification.md).

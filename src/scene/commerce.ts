@@ -78,7 +78,7 @@ export const economySchema=z.object({goods:z.array(good).min(1).max(COMMERCE_LIM
   if(!m)issue('unknown work market',['jobs',i,'market']);
   for(const [k,need] of jobInputs(j).entries()){const input=m?.lots.find(l=>l.good===need.good);if(!input || need.take>input.limit)issue('work input must fit an existing market lot',j.ingredients ? ['jobs',i,'ingredients',k,'good'] : ['jobs',i,'input']);}
   if(!output || j.make>output.limit || j.target>output.limit)issue('work output and target must fit an existing market lot',['jobs',i,'output']);
-  if(jobInputs(j).some(i=>i.good===j.output))issue('work needs different input and output goods',['jobs',i,'output']);
+  if(jobTake(j,j.output)>0 && j.make<=jobTake(j,j.output))issue('same-good work must make more than it takes',['jobs',i,'make']);
  });
  e.milestones.forEach((m,i)=>{const tasks=m.kind==='work' ? e.jobs : m.kind==='delivery' ? e.deliveries : e.repairs;if(!tasks.some(t=>t.id===m.task))issue('milestone needs an existing task of its kind',['milestones',i,'task']);});
  e.jobs.forEach((j,i)=>{

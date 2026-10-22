@@ -393,3 +393,19 @@ and money remain finite; this is declared game material reuse, without mining or
 metallurgy. Next connect a useful indoor activity and upstream sapling supply,
 then richer resident schedules and choices.
 [Authoring and a complete example](dream/businesses.md#reuse-fixture-hardware).
+
+### Replacement saplings through paid work, r90
+
+The market now propagates one sapling into two through a bounded paid recipe.
+The vendor's existing four-job policy refills below five plants; the player can
+use the spare sixth shelf slot. Both reserve a real seed, wages and the same
+refund/output envelope. Completion adds one net plant, allowing replanting to
+feed its replacement supply. Inputs, stock, money, effort and attendance still
+matter; this is a game recipe rather than a botanical model.
+
+No geometry, people, placements, starting supplies or cash are added. The
+registered r89 upgrade preserves progress and adds only zero nursery work counts.
+Next deepen purpose-specific indoor work and resident routines, then upstream
+food supply and weather. General relationships, multi-floor interiors and the
+broader living-world requirements remain incomplete.
+[Authoring and boundaries](dream/businesses.md#nursery-work).

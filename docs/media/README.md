@@ -22,6 +22,22 @@ These exports are motion evidence, not live frame-rate measurements.
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
+## Nursery work, r90
+
+`nursery.mp4`, `nursery.gif` and `nursery.jpg` share 420 consecutive 2400 × 1350
+rendered PNG frames, at 30 frames per simulation second. Frame 60 is the matching
+still. The video is 1600 × 900; the GIF is 1280 × 720. No interpolation or live
+performance claim. The positioned review uses actual damage, planting, a timber
+return and paid nursery work. It opens the normal work panel during the batch.
+
+The native control check separately selects the recipe with M, Work, arrow keys
+and H, observing a held seed, one completed output and exactly two coins of pay.
+Earlier food/work recordings are historical for their available-job lists;
+their geometry and named mechanics remain accurate. Current nursery motion
+shows the added recipe. Other graphics recordings need no regeneration because
+assets, placements and controls remain unchanged.
+[Source, controls and verification](../evidence/nursery/verification.md).
+
 ## Connected cycle junctions, 2026-10-19
 
 `cycle-junction.jpg` is a native main-game still of the hospital/terrace fork.

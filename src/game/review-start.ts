@@ -366,3 +366,14 @@ export function* recoveryReviewSteps(state:CarState,world:World,stage:'work'|'co
  }
  if(account().repair?.phase!=='home')throw Error('Recovery review lost its cargo before handoff');return next;
 }
+
+/** One real planting creates nursery demand; both return and propagation use ordinary actions. */
+export function* nurseryReviewSteps(state:CarState,world:World,working=true):Generator<void,CarState>{
+ let next=yield* recoveryReviewSteps(state,world);
+ next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:'deliver'}},1/120,world);
+ if(next.economy!.accounts.find(a=>a.id==='pocket')!.repair)throw Error('Nursery review could not return its timber');
+ if(!working)return next;
+ next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:'work',job:'propagate_saplings'}},1/120,world);
+ if(next.economy!.accounts.find(a=>a.id==='pocket')!.work?.id!=='propagate_saplings')throw Error('Nursery review could not reserve its real seed and wage');
+ return next;
+}
