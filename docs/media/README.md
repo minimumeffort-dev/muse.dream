@@ -1867,3 +1867,19 @@ Earlier maintenance, fixture repair, school repair and planting recordings also
 show the former generic hand motion. Their damage, travel and economic evidence
 remains historical. Unrelated driving, world, weather and upstairs media retain
 their appearance.
+
+
+## Resident companion meals, r105
+
+companions.mp4, companions.gif and companions.jpg share 480 consecutive rendered
+source frames at 30 frames per simulation second, sixteen seconds total. The
+review first runs real wages, purchases and walking until both residents are
+seated. The clip records the meal completing and the start of their return walks;
+the commuter's longer return continues beyond it. The still uses frame 90.
+Video/still are 1600×900; GIF is 1280×720. No interpolated frames or live performance
+claim. [Evidence](../evidence/companion-meals/verification.md).
+
+The bench mesh is unchanged; standard seat centers move from 78 to 84 cm. Older
+shared/hosted/seating recordings remain historical for those anchors and resident
+social activity. Workstation, driving, weather and architecture media retain
+their geometry and appearance, so they were retained.

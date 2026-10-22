@@ -1,3 +1,4 @@
+import {companionJourney} from './social';
 import type {WalkingPoint} from '../scene/floors';
 import {teamMember} from './team-sports';
 import {findSeat} from '../scene/seating';
@@ -22,7 +23,7 @@ const actors=new WeakMap<Scene,SceneObject[]>();
 export function routeObjects(scene:Scene) {let objects=actors.get(scene);if(!objects){objects=scene.objects.filter(isResidentActor);actors.set(scene,objects);}return objects;}
 const bases=new WeakMap<Scene,Map<string,number>>();
 const journeyOwners=new WeakMap<Scene,Map<string,string>>();
-export function workJourneyForActor(state:CarState|undefined,scene:Scene,id:string){let owners=journeyOwners.get(scene);if(!owners){owners=new Map(scene.economy?.accounts.filter(a=>a.rest || a.commute || a.work || a.works?.length || a.social || a.shift || a.meal || a.repair || a.repairs?.length || a.deliveries?.length).map(a=>[a.actor,a.id]));journeyOwners.set(scene,owners);}const account=owners.get(id);const a=account ? state?.economy?.accounts.find(a=>a.id===account) : undefined;return account && state?.economy?.shared?.partner===account ? state.economy.shared : a?.repair??a?.courier??a?.meal??a?.resting??a?.commute??a?.shift;}
+export function workJourneyForActor(state:CarState|undefined,scene:Scene,id:string){let owners=journeyOwners.get(scene);if(!owners){owners=new Map(scene.economy?.accounts.filter(a=>scene.economy?.socials.some(s=>s.peers?.includes(a.id)) || a.rest || a.commute || a.work || a.works?.length || a.social || a.shift || a.meal || a.repair || a.repairs?.length || a.deliveries?.length).map(a=>[a.actor,a.id]));journeyOwners.set(scene,owners);}const account=owners.get(id);const a=account ? state?.economy?.accounts.find(a=>a.id===account) : undefined;const companion=account && state && companionJourney(state,account);if(companion)return companion;return account && state?.economy?.shared?.partner===account ? state.economy.shared : a?.repair??a?.courier??a?.meal??a?.resting??a?.commute??a?.shift;}
 export function actorPose(scene:Scene,object:SceneObject,timeS:number,state?:CarState):ActorPose {
   const control=controlFor(object),route=object.route && scene.routes.find(r=>r.id===object.route!.id)!,program=behaviorFor(scene,object);
   const profile=controlOf(object.spec);

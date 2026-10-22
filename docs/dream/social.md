@@ -138,3 +138,11 @@ people who actually finished the activity. `work.requires_any` permits that
 relationship route alongside ordinary personal practice. The live baker's
 larger bread batch uses both paths; neither route creates money or ingredients.
 See [shared recipes](relationships.md) and the [complete example](../examples/shared-recipe.dream).
+
+
+## Residents can invite each other
+
+Optional `social.peers` names other NPC accounts for [resident companion meals](companions.md).
+They use the same finite purchase and food rules, two real seat claims and their
+own walking journeys. Completed resident meals have separate saved history from
+the player's meals and recipe qualifications.

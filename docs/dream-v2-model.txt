@@ -696,6 +696,25 @@ seasons, floods, general shelter search or biological validity. Optional rest.sh
 connects existing covered seats to rain-aware NPC need trips; see Rest below.
 
 ## commerce
+Resident companion meals: optional social(...,peers=[other_account,...],markets=[counter,...]);
+uses 1..4 unique other NPC account IDs. Requires priced supply markets; peers
+cannot be the player or a host of that same plan. Host keeps account.social and
+stationary complete humanoid/within-counter-reach rules. Peers may be stationary
+or use accepted walk routes, with complete humanoids, radius <=8 and height <=32.
+Validate body-sized ground-floor paired seats and outward/return access from every
+walking peer route corner. No new actor, rig, physics or navigation budgets.
+The host buys missing portions atomically through ordinary finite trade. Both
+residents must be free, not full/cooling down, and able to return before duty.
+Reserve two portions and both seats, walk without teleporting, start eat_s only
+when both arrive, consume/feed once, and physically return before ordinary
+programs and decisions resume. Hold a walking guest's route clock and return to
+its exact interrupted position. Bench damage, due work or 120-second blocked
+approach refunds food to the donor once; purchases remain paid. One global
+social activity across player invitations/meals and resident gatherings. Keep
+<=64 saved plan/host/guest history records and independent player meal credit.
+Pause/streaming/R/reload preserve; Start over resets. General affection, dating,
+groups, upstairs social travel and authored peer-memory dialogue remain absent.
+
 Work motion: economy gesture id(cycle_s=n){key(t=n,left=v3,right=v3);...}
 uses 2..8 anonymous keys per program and at most 8 unique programs. Cycle .6..8
 seconds; keys start at 0 and end at 1, increase by >=.1, and close with identical
@@ -776,8 +795,8 @@ that host. Interruption refunds that donor once. Decline/expiry keeps purchases
 and releases the seat. cooldown_s also bounds repeated offers, remembered per
 account. Consent, shift-return margin, fullness, first meeting and shared history
 use the existing social rules. Pause freezes offer time; R ends it but retains
-its cooldown/history; save/streaming preserve it; Start over resets it. No NPC
-invites another NPC. Omitting markets retains player-funded sharing.
+its cooldown/history; save/streaming preserve it; Start over resets it. Optional peers adds resident-to-resident meals as specified
+above. Omitting markets retains player-funded sharing.
 
 Optional market hours=[6,22] means daily [open,close); hours=[22,6] spans midnight.
 Use two finite different endpoints: 0 <= open < 24, 0 <= close <= 24. Omit hours

@@ -154,9 +154,8 @@ expires. One pending invitation reserves one adjacent seat; persist per-NPC offe
 cooldowns. Pause freezes time. Interrupted accepted meals refund the actual donor,
 never the guest. Format 17 / simulation 30 validates the exact r71 projection,
 removing supply lists and restoring only bakery pack_lunch.target=2. Keep every
-saved resource, clock, state and original slot. No NPC-to-NPC invitations, dating,
-general affection score, physical food items, offline progression or provider
-calls. See docs/dream/social.md.
+saved resource, clock, state and original slot. Resident companion meals are added in r105 below. No dating, general affection
+score, physical food items, offline progression or provider calls. See docs/dream/social.md.
 
 
 The r65 furniture service adds school_yard, school_yard_access and
@@ -970,3 +969,27 @@ Format19/simulation47 registers exact r103 by stripping only new gesture metadat
 validate old and new state, preserve every saved field and original slots, without
 refund, resource/pose/time rebase or changed transaction rules. Maintain the prior
 projection chain. See docs/dream/work-gestures.md.
+
+
+## Resident companion meals, r105
+
+Optional social.peers contains 1..4 unique other NPC account IDs and requires
+priced supply markets. Hosts keep stationary complete humanoid programs; peers
+may use accepted walk routes. Validate actual body-sized ground-floor paired
+seats, outward/return paths and every walking peer route corner. Keep all existing
+account, actor, rig and navigation caps; one global social activity across player
+invitations/meals and resident gatherings. Both physical journeys own their
+bodies and program clocks until return; no interruption of existing commitments.
+Food is bought atomically through finite trade, then two portions held/refunded
+to the real donor or consumed once for both people. Keep 4 Hz progression, 1 Hz
+decisions, due shifts/attendance, bench damage, blocked approach timeout and
+conservation. Preserve interrupted route positions and facing on return. NPC
+pair history never supplies player meal credit; keep <=64 bounded sparse records,
+per-plan/host/guest cooldowns, saved journeys/timers, R and Start over semantics.
+
+The existing bench template moves seat/approach X from +/-13 to +/-14 local units;
+mesh, height, body and part IDs stay identical. Format19/simulation48 registers
+exact r104 by restoring those anchors and removing peer plan metadata/extra hall
+grounds. Validate old state first, fit seated poses and retarget unfinished
+approaches, without advancing clocks or changing resources/history. Old slots and
+earlier projections survive. See docs/dream/companions.md.

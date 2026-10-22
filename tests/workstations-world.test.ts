@@ -17,7 +17,7 @@ import {nearbyNpc,npcSpeech} from '../src/sim/npcs';
 const scene=c.preGestureScene(createWorldScene()),previous=c.preStationScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.STATION_COMPATIBILITY,previousStationSaveCompatibility:c.BOND_COMPATIBILITY},old={...world,scene:previous,saveCompatibility:c.BOND_COMPATIBILITY,previousStationSaveCompatibility:undefined};
 const run=<T>(g:Generator<void,T>)=>{let r=g.next();while(!r.done)r=g.next();return r.value;},pocket=(s:CarState)=>s.economy!.accounts.find(a=>a.id==='pocket')!;
 it('registers exact r102 and earlier fingerprints without changing geometry or initial resources',async()=>{
- expect(c.SAVE_SIMULATION_VERSION).toBe(47);expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.STATION_COMPATIBILITY);expect(await c.sha256(c.preStationCompatibilitySource(scene))).toBe(c.BOND_COMPATIBILITY);expect(await c.sha256(c.preBondCompatibilitySource(scene))).toBe(c.SHELTER_COMPATIBILITY);
+ expect(await c.sha256(c.preGestureCompatibilitySource(scene))).toBe(c.STATION_COMPATIBILITY);expect(await c.sha256(c.preStationCompatibilitySource(scene))).toBe(c.BOND_COMPATIBILITY);expect(await c.sha256(c.preBondCompatibilitySource(scene))).toBe(c.SHELTER_COMPATIBILITY);
  expect(scene.objects).toBe(previous.objects);expect(scene.terrain).toBe(previous.terrain);expect(scene.economy!.accounts).toBe(previous.economy!.accounts);expect(scene.economy!.markets).toBe(previous.economy!.markets);expect(scene.economy!.jobs.every(j=>j.station==='bakery_prep')).toBe(true);
 });
 it('walks the real player to the fitted table, keeps the position through a pending save and pays one batch',()=>{

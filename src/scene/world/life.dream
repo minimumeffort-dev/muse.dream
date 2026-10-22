@@ -155,7 +155,7 @@ economy(){
  good fasteners(label="Fasteners");
  account pocket(rest=player_rest,actor=player,credits=20,capacity=8,satiety=48,drain_s=.05);
  account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,social=hall_break,shift=bakery_day,works=[assemble_kit,propagate_saplings,pack_lunch,bake]);
- social hall_break(good=bread,seats=[hall_bench],on=market_hall,grounds=[market_square],eat_s=8,cooldown_s=600,markets=[market_stall]);
+ social hall_break(peers=[caretaker,regular],good=bread,seats=[hall_bench],on=market_hall,grounds=[market_square,oldtown_044,home_entry],eat_s=8,cooldown_s=600,markets=[market_stall]);
  social school_break(good=bread,seats=[school_bench,school_common_bench,school_reading_bench,school_rear_bench],on=school_yard,grounds=[school_yard_access,school_yard_return,garden_school,school_doorstep],eat_s=8,cooldown_s=600,markets=[school_canteen]);
  shift bakery_day(market=market_stall,rest=[6360,4490],on=market_hall,grounds=[market_square],lead_s=15);
  shift school_day(market=school_canteen,rest=[4390,3590],on=school_yard,grounds=[school_yard_access,school_yard_return,garden_school,school_doorstep],lead_s=50);

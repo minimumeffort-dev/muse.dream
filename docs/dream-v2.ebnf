@@ -200,3 +200,8 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    Smoothstep peak speed <=12 world units/s. Local work-frame XYZ world-unit
    offsets: X +/-1.25, Y .6..3, Z +/-3, left Z>=.6, right Z<=-.6.
    Work.gesture requires station; repair.gesture uses existing repair pose. *)
+
+(* Optional social.peers: 1..4 unique other NPC account refs; requires markets.
+   Hosts stay stationary; peers may use accepted walk routes. One two-person
+   social activity, actual body-sized ground-floor paired seats, finite funding,
+   saved outward/eat/return paths and <=64 sparse plan/host/guest histories. *)

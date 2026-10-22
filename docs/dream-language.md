@@ -151,3 +151,7 @@ in bounded Dream data.
 
 Use [daily attendance](dream/attendance.md) to give an existing commuter a work
 window. Waiting reserves nothing; real jobs still use the shared transaction.
+
+
+[Resident companions](dream/companions.md) adds `social.peers`: ordered NPC account
+references for funded meals, physical shared seating and persistent pair history.

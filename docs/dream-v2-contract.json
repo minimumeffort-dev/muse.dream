@@ -813,6 +813,7 @@
       ],
       "id": true,
       "fields": {
+        "peers": "symbols?",
         "good": "ref",
         "seats": "symbols",
         "on": "ref",
@@ -1846,6 +1847,11 @@
     "phase": "place.phase_s 0..3600 only with route; shifts the entire route clock including stops. offset remains a carriage distance."
   },
   "commerce": {
+    "companions": {
+      "source": "social break(peers=[other_account],good=bread,seats=[bench],on=plaza,eat_s=8,markets=[corner]);",
+      "bounds": "1..4 unique other NPC account refs per plan; needs supply markets. One global shared social activity across invitations, player meals and resident gatherings. Hosts are stationary complete humanoids; peers may use accepted walk routes. Actual body-sized ground-floor seat pairs and outward/return paths, existing 16-account/32-NPC/24-rig/navigation caps; 64 sparse plan/host/guest history records.",
+      "runtime": "NPC hosts buy missing portions through finite trade, may carry them until off duty, and reserve two portions plus both seats. Both residents finish existing commitments, walk, eat once together and return to their exact interrupted positions before decisions/program clocks resume. Cooldown/fullness and due shift/attendance margins apply. Broken seating, a 120-second blocked approach or due work cancels/refunds the donor. Pair history does not grant player meal or recipe credit. Persist journeys, clocks and history through streaming, pause, R/save; Start over resets. No new actors, bodies, generated code, general affection, dating, groups or upstairs social travel."
+    },
     "workGestures": {
       "limits": {
         "gestures": 8,

@@ -17,8 +17,9 @@ height-aware stair trips. Saved travel and claims survive reload. Daily work att
 those needs to an actual workplace window. Rain now brings the free resident
 indoors through the same shared rest journey. Shared meals now have a practical
 consequence: the baker's larger recipe accepts remembered time together or
-personal baking practice. Next priorities are NPC-to-NPC social activity, deeper
-relationship consequences, lifts and further usable interiors.
+personal baking practice. Resident-to-resident meals now connect existing wages, food, seating and routines.
+Next priorities are deeper relationship consequences, lifts and further usable
+interiors. [Companion meals](dream/companions.md).
 [Shared recipes](dream/relationships.md).
 The bakery now uses an authored physical workstation: people walk to its shared
 position, claim it across recipes and reach its supported surface. Jobs now bind
@@ -354,7 +355,7 @@ physics or rendering budget is introduced. The registered format-17 upgrade
 checks the prior accepted world and preserves all saved state.
 
 Next priorities: another shared activity, more resident purposes, more varied
-work and connected repair coverage. NPC-to-NPC social plans, weekly employment,
+work and connected repair coverage. Broader NPC social plans, weekly employment,
 dating, general relationships and multi-floor interiors remain separate work.
 [Authoring and controls](dream/social.md).
 
@@ -513,3 +514,15 @@ Repair motions use a generic forward anchor; exact tool contact, handheld goods,
 fingers and upstairs stations remain open. Next priorities stay integrated life
 systems: NPC social activity, deeper consequences and useful connected interiors.
 [Author motions](dream/work-gestures.md).
+
+
+## Resident companions, r105
+
+The baker's Dream plan names the caretaker and commuter as potential meal
+companions. Both keep actual jobs, needs and seat claims; eligible meetings
+consume paid food, retain pair history and return people to their interrupted
+routines. Walking guests retain their route clocks. The standard bench anchors
+now give two resident bodies enough space without changing its mesh or collision.
+One shared social activity is active at a time. General relationship progression,
+dating, group gatherings and upstairs social plans remain unfinished.
+[Rules and example](dream/companions.md).

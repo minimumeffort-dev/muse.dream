@@ -1,6 +1,11 @@
 # Leave and come back
 
-The current world uses format 19 / simulation 47. The r104 upgrade removes only
+The current world uses format 19 / simulation 48. Its registered r104 upgrade
+adds optional resident gatherings and sparse meal history, retaining prior food,
+money and clocks. Standard bench anchors move three centimetres outward; seated
+poses fit those anchors and unfinished approaches retarget without time advancing.
+
+The r104 world uses format 19 / simulation 47. Its registered r103 upgrade removes only
 new work gesture metadata to validate exact r103 saves, then retains every saved
 field, including pending job deadlines and repair progress. No refund, time advance
 or animation-state initialization occurs. The original slot remains intact.
@@ -94,7 +99,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 47. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 48. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved

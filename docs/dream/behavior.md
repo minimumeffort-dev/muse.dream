@@ -357,3 +357,12 @@ job/repair progress; no new saved clock or rig. Pause freezes the pose; reduced
 motion keeps the existing rest policy. Jobs use their physical station anchor.
 Repair anchors remain generic, without exact contact with each broken asset.
 [Motion guide](work-gestures.md).
+
+
+### Resident meal ownership
+
+A Dream social plan's optional peers can include stationary residents or people
+on accepted walking routes. Meetings own both bodies and hold their program and
+route clocks through outward travel, eating and return. Walking resumes from the
+exact interrupted route position; other commitments stay unavailable until the
+return. [Companion rules](companions.md).

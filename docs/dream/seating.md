@@ -6,6 +6,7 @@ A bench can be furniture you use. Walk to its front and press **F** to sit. Pres
 **F** again to stand, or move or jump to leave through a clear exit. **G** eats
 food from your bag using the same inventory and fullness rules as standing.
 The camera moves closer while seated, retaining your view angle and manual zoom.
+The standard bench now spaces its seat centers 84 cm apart for two resident bodies.
 
 ![Sharing the market bench with a customer](../media/seating.gif)
 
@@ -19,8 +20,8 @@ brings lunch home; the furniture, shared claims and controls work the same way.
 These declarations live directly inside the live `slatted_bench` object:
 
 ```dream
-seat left(at=[-13,18,12],approach=[-13,48],heading_deg=90);
-seat right(at=[13,18,12],approach=[13,48],heading_deg=90);
+seat left(at=[-14,18,12],approach=[-14,48],heading_deg=90);
+seat right(at=[14,18,12],approach=[14,48],heading_deg=90);
 ```
 
 `at` is the sitting surface in object-local coordinates. `approach` is a point on

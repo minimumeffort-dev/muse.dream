@@ -19,7 +19,7 @@ import homeR98 from './compatibility/r98-home.json';
 import homeR97 from './compatibility/r97-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=47;
+export const SAVE_SIMULATION_VERSION=48;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -51,6 +51,7 @@ export function saveCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder
   return projection(scene,SAVE_SIMULATION_VERSION,true,encode);
 }
 function projection(scene:Scene,simulationVersion:number,rounded=true,encode?:CompatibilityEncoder):string {
+  if(simulationVersion<48)scene=preCompanionScene(scene);
   if(simulationVersion<47)scene=preStationScene(scene);
   if(simulationVersion<46)scene=preBondScene(scene);
   if(simulationVersion<45)scene=preShelterScene(scene);
@@ -109,10 +110,22 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r105 connects funded, persistent resident-to-resident meals. */
+export const COMPANION_COMPATIBILITY='8989717956ee55328cf06ae424fff171d91aff76d9ff41638384496506cfa2e1';
+const companionProjections=new WeakMap<Scene,Scene>();
+export function preCompanionScene(scene:Scene):Scene{
+ const cached=companionProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.socials.some(s=>s.peers))return scene;
+ const prior={...scene,objects:scene.objects.map(o=>o.spec && 'measure' in o.spec && o.spec.measure?.kind==='bench' && o.spec.seats?.length===2 && o.spec.seats.every(s=>Math.abs(s.position[0])===14 && s.position[1]===18 && s.position[2]===12 && s.approach[0]===s.position[0]) ? {...o,spec:{...o.spec,seats:o.spec.seats?.map(s=>({...s,position:[s.id==='left' ? -13 : 13,s.position[1],s.position[2]] as [number,number,number],approach:[s.id==='left' ? -13 : 13,s.approach[1]] as [number,number]}))}} : o),economy:{...scene.economy,socials:scene.economy.socials.map(s=>{const {peers,...old}=s;return s.id==='hall_break' ? {...old,grounds:['market_square']} : old;})}};
+ companionProjections.set(scene,prior);return prior;
+}
+export function preCompanionCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preCompanionScene(scene),47,true,encode);}
+
 /** r104 adds data-only work motion without changing simulation transitions. */
 export const GESTURE_COMPATIBILITY='a4107f0d54f50cc0c4c0045ef84ed31e6e64b89416963622c0727a141cd208bb';
 const gestureProjections=new WeakMap<Scene,Scene>();
 export function preGestureScene(scene:Scene):Scene{
+ scene=preCompanionScene(scene);
  const cached=gestureProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.gestures?.some(g=>g.id==='kneading'))return scene;
  const {gestures,...economy}=scene.economy;

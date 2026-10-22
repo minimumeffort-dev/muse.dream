@@ -68,7 +68,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `station` | economy | ID / no block | `object: ref`, `at: v2`, `hands: v3`, `on: ref`, `grounds?: symbols` |
 | `work` | economy | ID / optional recipe block | `label: text`, `market: ref`, `input?: ref`, `take?: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `requires?: ref`, `requires_any?: symbols`, `equipment?: symbols`, `station?: ref`, `gesture?: ref` |
 
-| `social` | economy | ID / no block | `good: ref`, `seats: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `cooldown_s?: n`, `max_fullness?: n`, `markets?: symbols` |
+| `social` | economy | ID / no block | `peers?: symbols`, `good: ref`, `seats: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `cooldown_s?: n`, `max_fullness?: n`, `markets?: symbols` |
 | `shift` | economy | ID / no block | `market: ref`, `rest: v2`, `on: ref`, `grounds?: symbols`, `lead_s?: n` |
 | `meal` | economy | ID / no block | `good: ref`, `markets: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `seats?: symbols` |
 | `milestone` | economy | ID / no block | `label: text`, `kind: work / delivery / repair / shared_meal`, `task: ref`, `count: n` |
@@ -864,3 +864,18 @@ Z ±3; left Z >=.6, right Z <=-.6. A `work.gesture` needs a station; `repair.ges
 uses the existing repair pose with a generic forward anchor. NPCs using either
 need a complete humanoid. No generated scripts, saved motion state, tool bodies
 or extra rigs. [Guide](work-gestures.md) and [runnable source](../examples/work-gestures.dream).
+
+
+### Resident companion bounds
+
+Optional `social.peers` names 1..4 unique other NPC accounts and requires priced
+supply markets. Hosts remain stationary complete humanoids; peers may follow
+accepted walking routes. Validate full body-sized ground-floor paired seats and
+outward/return paths, including every walking route corner. Keep the existing
+account, NPC, rig and navigation caps. One shared social activity covers a player
+invitation, player meal or resident gathering. Two portions are held/refunded to
+the donor or consumed once. Both bodies retain their journeys until physical
+return; route clocks resume from the interrupted position. Pair cooldown and
+fullness, due shift/attendance and a 120-second approach bound apply. At most 64
+saved plan/host/guest history records; these do not award player meal credit.
+[Guide](companions.md), [complete example](../examples/companion-meals.dream).

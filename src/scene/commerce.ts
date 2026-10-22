@@ -50,7 +50,8 @@ const meal=z.object({id:ref,good:ref,markets:z.array(ref).min(1).max(COMMERCE_LI
  if(new Set(m.markets).size!==m.markets.length)ctx.addIssue({code:"custom",message:"meal markets must be unique",path:["markets"]});
  if(m.grounds && new Set([m.on,...m.grounds]).size!==m.grounds.length+1)ctx.addIssue({code:"custom",message:"meal grounds must be unique and exclude on",path:["grounds"]});
 });
-const social=z.object({id:ref,good:ref,seats:z.array(ref).min(1).max(4),on:ref,grounds:z.array(ref).min(1).max(COMMERCE_LIMITS.repairGrounds-1).optional(),eat_s:z.number().finite().min(1).max(12),cooldown_s:z.number().finite().min(30).max(86400).default(600),max_fullness:z.number().finite().min(0).max(100).default(80),markets:z.array(ref).min(1).max(COMMERCE_LIMITS.mealMarkets).optional()}).strict().superRefine((m,ctx)=>{
+const social=z.object({id:ref,peers:z.array(ref).min(1).max(4).optional(),good:ref,seats:z.array(ref).min(1).max(4),on:ref,grounds:z.array(ref).min(1).max(COMMERCE_LIMITS.repairGrounds-1).optional(),eat_s:z.number().finite().min(1).max(12),cooldown_s:z.number().finite().min(30).max(86400).default(600),max_fullness:z.number().finite().min(0).max(100).default(80),markets:z.array(ref).min(1).max(COMMERCE_LIMITS.mealMarkets).optional()}).strict().superRefine((m,ctx)=>{
+ if(m.peers && (!m.markets || new Set(m.peers).size!==m.peers.length))ctx.addIssue({code:'custom',message:'social peers need unique account IDs and supply markets',path:['peers']});
  if(new Set(m.seats).size!==m.seats.length)ctx.addIssue({code:'custom',message:'social seats must be unique furniture placement IDs',path:['seats']});
  if(m.markets && new Set(m.markets).size!==m.markets.length)ctx.addIssue({code:'custom',message:'social markets must be unique',path:['markets']});
  if(m.grounds && new Set([m.on,...m.grounds]).size!==m.grounds.length+1)ctx.addIssue({code:'custom',message:'social grounds must be unique and exclude on',path:['grounds']});
@@ -111,7 +112,7 @@ export const economySchema=z.object({gestures:z.array(workGestureSchema).min(1).
   if(!e.goods.some(g=>g.id===m.good && g.food>0))issue("meal good must be food",["meals",i,"good"]);
   for(const id of m.markets)if(!e.markets.some(v=>v.id===id && v.lots.some(l=>l.good===m.good && l.price)))issue("meal markets need a priced lot for this food",["meals",i,"markets"]);
  });
- e.socials.forEach((m,i)=>{if(!e.goods.some(g=>g.id===m.good && g.food>0))issue('social good must be food',['socials',i,'good']);
+ e.socials.forEach((m,i)=>{for(const peer of m.peers??[])if(!e.accounts.some(a=>a.id===peer && a.actor!=='player' && a.social!==m.id))issue('social peers need another existing NPC account',['socials',i,'peers']);if(!e.goods.some(g=>g.id===m.good && g.food>0))issue('social good must be food',['socials',i,'good']);
   for(const id of m.markets??[])if(!e.markets.some(v=>v.id===id && v.lots.some(l=>l.good===m.good && l.price)))issue('social markets need a priced lot for this food',['socials',i,'markets']);
  });
  if(e.rations && new Set(e.rations.map(r=>r.id)).size!==e.rations.length)issue('duplicate rations ID',['rations']);
@@ -237,8 +238,8 @@ export function economyProblems(scene:Scene):string[]{
   if(plan && o && Math.hypot(o.x-plan.rest.x,o.y-plan.rest.y)<16)problems.push(`${a.id}: shift rest point must be at least 16 units from work`);
   if(o && m && vendor && Math.hypot(o.x-vendor.x,o.y-vendor.y)>m.radius)problems.push(`${a.id}: shift work placement must be within its counter reach`);
  }
- for(const a of e.accounts)if(a.social){const o=scene.objects.find(o=>o.id===a.actor),spec=o?.spec;
-  if(!stationary(a.actor) || !o?.behavior || !spec || !('dslVersion' in spec) || spec.dslVersion!==2 || spec.measure?.kind!=='person' || spec.body.interaction!=='decor' || spec.body.colliderRadius*(o.scale??1)>8 || (spec.body.colliderHeight??18)*(o.scale??1)>32 || !HUMANOID_BONES.every(b=>spec.joints?.some(j=>j.bone===b)))problems.push(`${a.id}: social meals need a stationary complete humanoid NPC program and decor body within 8 radius and 32 height`);
+ for(const a of e.accounts)if(a.social || e.socials.some(s=>s.peers?.includes(a.id))){const o=scene.objects.find(o=>o.id===a.actor),spec=o?.spec;
+  if((a.social ? !stationary(a.actor) : !stationary(a.actor) && !(o?.role==='npc' && !o.ambient && o.route && scene.routes.find(r=>r.id===o.route!.id)?.kind==='walk')) || !o?.behavior || !spec || !('dslVersion' in spec) || spec.dslVersion!==2 || spec.measure?.kind!=='person' || spec.body.interaction!=='decor' || spec.body.colliderRadius*(o.scale??1)>8 || (spec.body.colliderHeight??18)*(o.scale??1)>32 || !HUMANOID_BONES.every(b=>spec.joints?.some(j=>j.bone===b)))problems.push(`${a.id}: social hosts need stationary complete humanoids; peers may use accepted walk routes, with decor bodies within 8 radius and 32 height`);
   const plan=e.socials.find(s=>s.id===a.social);
   if(plan?.markets && o && !plan.markets.some(id=>{const m=e.markets.find(m=>m.id===id)!,vendor=scene.objects.find(v=>v.id===m.actor);return vendor && Math.hypot(o.x-vendor.x,o.y-vendor.y)<=m.radius;}))problems.push(`${a.id}: social hosts need a supply counter within reach of their work placement; hosting does not add a shopping journey`);
  }

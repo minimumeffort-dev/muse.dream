@@ -1,0 +1,120 @@
+{
+  "atS": 396.4999999998037,
+  "gathering": {
+    "guest": "regular",
+    "guestTrip": {
+      "at": {
+        "x": 6493.348,
+        "y": 4092.2170000000015
+      },
+      "distance": 1137.734400525654,
+      "headingRad": -0.03716957502320614,
+      "home": {
+        "x": 6493.348,
+        "y": 4092.2170000000015
+      },
+      "path": [
+        {
+          "x": 6493.348,
+          "y": 4106
+        },
+        {
+          "x": 6493.348,
+          "y": 4092.2170000000015
+        }
+      ],
+      "routeAtS": 360.74999999983714,
+      "seat": {
+        "objectId": "hall_bench",
+        "seatId": "right"
+      },
+      "speed": 14,
+      "x": 6405.457348308381,
+      "y": 4109.268363476145
+    },
+    "host": "baker",
+    "hostTrip": {
+      "at": {
+        "x": 6360,
+        "y": 4490
+      },
+      "distance": 49.19349550499218,
+      "headingRad": 2.9617391537939515,
+      "home": {
+        "x": 6360,
+        "y": 4490
+      },
+      "path": [],
+      "routeAtS": 360.74999999983714,
+      "seat": {
+        "objectId": "hall_bench",
+        "seatId": "left"
+      },
+      "speed": 0,
+      "x": 6360,
+      "y": 4490
+    },
+    "id": "hall_break",
+    "phase": "home",
+    "portions": 0,
+    "startedAtS": 306.9999999998851
+  },
+  "peerHistory": {
+    "hall_break/baker/regular": {
+      "lastAtS": 359.49999999983737,
+      "meals": 1
+    }
+  },
+  "player": {
+    "completed": {
+      "delivery": {
+        "boards_run": 0,
+        "fasteners_run": 0,
+        "flour_run": 0,
+        "kits_run": 0,
+        "saplings_run": 0,
+        "school_run": 0
+      },
+      "repair": {
+        "classroom_furniture": 0,
+        "home_furniture": 0,
+        "market_tables": 0,
+        "orchard_trees": 0
+      },
+      "work": {
+        "assemble_kit": 0,
+        "bake": 0,
+        "large_bake": 0,
+        "pack_lunch": 0,
+        "propagate_saplings": 0
+      }
+    },
+    "credits": 20,
+    "decisionAtS": 0,
+    "energy": 45.175000000008936,
+    "id": "pocket",
+    "inventory": {
+      "boards": 0,
+      "bread": 0,
+      "fasteners": 0,
+      "flour": 0,
+      "lunch": 0,
+      "sapling": 0,
+      "timber": 0,
+      "vegetables": 0
+    },
+    "satiety": 28.175000000008936
+  },
+  "save": {
+    "characters": 76196,
+    "compatibilityHash": "8989717956ee55328cf06ae424fff171d91aff76d9ff41638384496506cfa2e1",
+    "known": [],
+    "ms": 3.299999952316284,
+    "restored": true,
+    "review": true,
+    "saved": true,
+    "sourceHash": "fbd736c00c7acab65ce63d98c26b4569747e9dde55c613f958f0a6b1a17ee8cb",
+    "status": "Saved on this device.",
+    "timeS": 396.583333333137
+  }
+}

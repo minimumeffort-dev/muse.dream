@@ -782,8 +782,9 @@ The baker and school staff use the same capability on their own grounds and
 schedules. An offer needs food, a free adjacent seat and time before work.
 Leaving early returns unfinished portions to their owner while the other person
 walks home. History, purchases and invitations survive travel, streaming and
-saves. NPC-to-NPC invitations, dating and a general relationship system remain
-to be built.
+saves. Residents can also [share meals with authored companions](docs/dream/companions.md),
+using finite food, free seats and their existing off-duty time. Dating and a
+general relationship system remain to be built.
 
 ## Work at the workbench
 
@@ -828,3 +829,15 @@ or [run the complete bakery example](docs/examples/business-ownership.dream).
 [Ownership in HD](docs/media/business.mp4). This 20-second recording buys the
 depot before a courier hands over two repair kits, then shows its cash after a
 deposit and withdrawal. The supplier receives six credits only at handoff.
+
+
+## A break with a neighbor
+
+The baker can share food with the commuter or caretaker. They pay from their own
+accounts, walk to a pair of free seats, eat and return to their routines. Busy
+residents finish their existing commitments. Meals stay in their saved history;
+your own recipe progress keeps its existing meaning.
+
+![Residents sharing an evening break](docs/media/companions.jpg)
+
+[Watch](docs/media/companions.mp4) · [GIF](docs/media/companions.gif) · [Author companions](docs/dream/companions.md)
