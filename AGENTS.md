@@ -77,6 +77,12 @@ Pick one complete slice and finish it before expanding scope. Batch relevant
 checks and reuse successful results until code changes or a failure requires
 another run. Use focused regression tests for branch pushes; run the full suite
 before merging/releasing or when shared engine changes need broad coverage.
+During iteration, use `npm run test:watch -- tests/<affected>.test.ts` to keep
+selected checks running in one process. Include neighboring regression files;
+watch mode does not replace the required full-suite gate. Run either typecheck
+or build as needed: `npm run build` already includes typecheck. Before a full
+suite or motion export, explain which change requires it. Do not wait for an
+unrelated CI/deployment run to finish a verified branch push.
 For visual changes, capture one representative current flow and refresh its
 GIF, video and still together. Mark older affected recordings as historical.
 When rendering and controls are unchanged, retain accurate media and explain why;

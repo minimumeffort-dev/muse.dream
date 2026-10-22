@@ -74,6 +74,36 @@ The user also gave standing authorization to commit and push every completed
 change after verification and required documentation updates. Follow the Git
 workflow in `AGENTS.md`; pushes can trigger the linked Vercel deployment.
 
+## Development loop
+
+Start with the affected test files and neighboring regressions. For repeated
+edits, keep them in one Vitest process:
+
+```sh
+npm run test:watch -- tests/propagation.test.ts
+```
+
+Vitest reruns selected tests when their dependencies change. Press `r` to rerun
+the selection and `q` to quit. Watch mode keeps transforms warm; tests still run
+in isolation and may rebuild their world fixtures. It does not cache a passing
+result across code changes or replace the full-suite gate.
+
+Run the complete suite before merging/releasing or after broad compiler,
+physics or save changes. The [r90 run](evidence/nursery/verification.md) covered
+1,719 tests in 500.50 seconds, with three historical-version assertion failures
+then corrected and checked in the affected files. That is a recorded full-run
+duration, not a watch-mode speed measurement.
+
+`npm run build` already runs typecheck, so do not run both for unchanged code.
+Build docs once after the slice's documentation is ready. Keep accurate existing
+captures when rendering and controls are unchanged; a visual change needs one
+representative current flow with its video, GIF and still refreshed together.
+Explain the need before starting a full suite or motion export. A successful
+branch push does not need to wait for unrelated deployment or CI completion.
+
+This workflow change alters no game behavior or visuals; existing product
+screenshots and recordings remain accurate. No new captures are needed.
+
 ## Evidence requirements
 
 - The Pages build job allows 30 minutes for dependency installation, the complete

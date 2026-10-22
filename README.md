@@ -645,10 +645,17 @@ node scripts/dream.mjs check src/scene/world/open-world.dream --modules src/scen
 [The docs](docs/README.md) cover composition, physical size, terrain, water, routes and destruction. For model integration, start with the [authoring instructions](docs/dream-v2-model.txt) and [generated command contract](docs/dream-v2-contract.json). Dream 2 source compiles to validated scene data; generated code never runs.
 
 ```sh
+npm test -- tests/propagation.test.ts --maxWorkers=2 --testTimeout=60000
+npm run test:watch -- tests/propagation.test.ts # Keep selected checks running
+npm run build      # TypeScript + production build, including typecheck
 npm run docs:build # Highlighted static docs in dist-docs/
-npm test       # Compiler, scene, simulation and rendering behavior
-npm run build  # TypeScript + production build
 ```
+
+Use the test files for the behavior you're changing, including its neighboring
+regressions. Watch mode keeps the test process running between edits. Run the
+complete suite before a merge/release or after broad compiler, physics or save
+changes: `npm test -- --maxWorkers=2 --testTimeout=60000`. Reuse passing checks
+until their code changes. [The development loop](docs/agent-workflow.md#development-loop).
 
 The engine is split between [`src/scene`](src/scene), [`src/sim`](src/sim) and [`src/game`](src/game). [Current limits](docs/dream/reference.md#runtime-boundaries) include one driving height per XY, cylinder-based contacts and cosmetic debris. Water has surface waves and currents, rather than a volumetric fluid solver.
 
