@@ -704,7 +704,10 @@ kept all 13 cases and fell from 16.21 to 10.85 seconds in one local paired run.
 Compiler determinism checks still rebuild the world. Watch mode keeps the test process running between edits. Run the
 complete suite before a merge/release or after broad compiler, physics or save
 changes: `npm test -- --maxWorkers=2 --testTimeout=60000`. Reuse passing checks
-until their code changes. [The development loop](docs/agent-workflow.md#development-loop).
+until their code changes. Documentation-only edits need documentation checks;
+they do not need a game build or gameplay run when those inputs are unchanged.
+The published-site test already builds the docs, so that build counts too.
+[Choose checks by change](docs/agent-workflow.md#check-selection).
 
 The engine is split between [`src/scene`](src/scene), [`src/sim`](src/sim) and [`src/game`](src/game). [Current limits](docs/dream/reference.md#runtime-boundaries) include one driving height per XY, cylinder-based contacts and cosmetic debris. Water has surface waves and currents, rather than a volumetric fluid solver.
 

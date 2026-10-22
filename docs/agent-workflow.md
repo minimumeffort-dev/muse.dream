@@ -76,6 +76,27 @@ workflow in `AGENTS.md`; pushes can trigger the linked Vercel deployment.
 
 ## Development loop
 
+Choose the check scope before running commands. State the behavior being changed,
+the selected files and what will count as finished. Finish that slice, then push.
+
+### Check selection
+
+| Change | Local verification before push |
+|---|---|
+| Documentation or agent instructions only | Build the published docs and run affected documentation checks. No game build, gameplay suite or media export when their inputs are unchanged. |
+| One simulation behavior | Run its named test files and neighboring regressions. Use typecheck or build as appropriate. Verify the changed flow in the browser. |
+| Assets, rendering or HUD | Run affected geometry/control checks and inspect the current flow in the browser. Export one representative sequence when existing media becomes inaccurate. |
+| Broad compiler, physics or save changes | Run the full suite and relevant browser checks. Complete migration checks for changed save semantics. |
+| Merge or release | Run the full suite once and the production build. Reuse results if no relevant code changes afterward. |
+
+Avoid duplicate work: `build` includes typecheck, and the published-site test
+already builds the docs. A passing check can serve both purposes. Keep the complete
+suite in CI. For a command lasting more than a minute, explain its scope and give
+a progress update without starting a duplicate run. Command time is only part of
+the feedback loop; unnecessary planning and expanding the slice delay shipping too.
+
+### During edits
+
 Start with the affected test files and neighboring regressions. For repeated
 edits, keep them in one Vitest process:
 

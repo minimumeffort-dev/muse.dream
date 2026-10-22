@@ -73,6 +73,15 @@ working mock mechanics and the future sketch/Muse pipeline.
 
 ## Keep the feedback loop short
 
+Before running checks, name the changed behavior, the exact test files and the
+completion criteria. Use the [check selection table](docs/agent-workflow.md#check-selection)
+to choose the smallest sufficient scope. For documentation-only changes, build
+the docs and run their affected checks; skip gameplay tests, typecheck, production
+builds and captures when their inputs are unchanged. Do not turn a small fix into
+an adjacent feature or a performance investigation without evidence it is needed.
+If a command runs longer than a minute, report what it is checking and why it is
+still needed. Do not silently repeat it, weaken the checks or claim a fixed ship time.
+
 Pick one complete slice and finish it before expanding scope. Batch relevant
 checks and reuse successful results until code changes or a failure requires
 another run. Use focused regression tests for branch pushes; run the full suite
