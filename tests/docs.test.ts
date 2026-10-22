@@ -10,6 +10,10 @@ const examples=import.meta.glob<string>('../docs/examples/*.dream',{query:'?raw'
 const files=Object.keys(import.meta.glob(['../src/**/*','../docs/**/*','../scripts/*','../tests/**/*','../README.md'])).map(p=>p.slice(3));
 
 describe("published Dream documentation",()=>{
+  it('keeps workstation declarations identical to the complete runnable source',()=>{
+    const snippets=[...pages['../docs/dream/workstations.md']!.matchAll(/```dream\n([\s\S]*?)```/g)];expect(snippets).toHaveLength(2);
+    for(const snippet of snippets)expect(examples['../docs/examples/workstations.dream']).toContain(snippet[1]!.trim());
+  });
   it('keeps relationship qualifications identical to the complete runnable source',()=>{
     const declaration=pages['../docs/dream/relationships.md']!.match(/```dream\n([\s\S]*?)```/)![1]!.trim();expect(examples['../docs/examples/shared-recipe.dream']).toContain(declaration);
   });

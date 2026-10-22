@@ -225,3 +225,7 @@ pedestrian planner and finite player transactions, with no extra NPC/rig slots.
 
 
 [Shared meals](social.md) add per-person activity history. Optional `on.shared_meals` gates interact-only dialogue on completed player meals with this particular social NPC; unknown accounts, non-interact guards and programs used by people without the capability fail acceptance. Their original program pauses until they return home.
+
+## Talking at a workstation
+
+A person holding a [physical workstation](workstations.md) can still receive an ordinary T interaction. It changes only the declared conversation state and familiarity. Their job, facing, physical position and held route/animation clocks retain their existing owners. Moving work trips remain unavailable for conversation; no task, wage or claim is cancelled by talking.

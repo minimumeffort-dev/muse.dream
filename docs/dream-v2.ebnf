@@ -70,7 +70,7 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    These are data interpreted by the engine, not scripts. See population bounds. *)
 
 (* One economy() block per linked playable world. Its block permits good, account,
-   market, work, milestone, meal, shift, delivery and repair. A market block contains lot declarations. Actor references
+   market, station, work, milestone, meal, shift, social, ration, rest, delivery and repair. A market block contains lot declarations. Actor references
    resolve after linking; goods/work/market references belong to the economy.
    Work permits either input/take with a semicolon or an optional recipe block of
    1..4 ingredient(good=ref,take=n) statements, no ingredient IDs. Exactly one
@@ -188,3 +188,9 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
 
 (* Complete worlds: one world; connected streets may omit road/checkpoint.
    An optional circuit requires one road and 2..64 checkpoints. *)
+
+(* station binds a static prop placement: object ref, local XZ at, local XYZ hands,
+   on ground and optional grounds. work.station requires matching equipment and
+   capacity=1. Two-unit standing reach and one shared claim across recipes;
+   NPCs use existing physical work journeys, never authored scripts. See the
+   generated command contract for all geometric and navigation bounds. *)

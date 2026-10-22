@@ -785,6 +785,17 @@ walks home. History, purchases and invitations survive travel, streaming and
 saves. NPC-to-NPC invitations, dating and a general relationship system remain
 to be built.
 
+## Work at the workbench
+
+Walk to the bakery's marked preparation table and start a batch. Your character
+faces the surface and works with planted feet. The baker walks to the same
+station. Different recipes share its capacity, so changing jobs cannot put two
+people in one place. Leaving early or breaking the table refunds the batch.
+
+![Working at the bakery preparation table](docs/media/workstations.jpg)
+
+[Watch the work](docs/media/workstations.mp4) · [GIF](docs/media/workstations.gif) · [Author a workstation](docs/dream/workstations.md)
+
 ## Learn a recipe over lunch
 
 Share a real meal with the baker and you can take the larger bread batch, even
@@ -794,6 +805,8 @@ The meal uses paid food; the job uses real flour and pays only when finished.
 ![The larger bread batch unlocked by a shared meal](docs/media/sharedrecipe.jpg)
 
 [Watch the job](docs/media/sharedrecipe.mp4) · [GIF](docs/media/sharedrecipe.gif) · [Write the rule in Dream](docs/dream/relationships.md)
+
+This earlier recording shows recipe access. The workstation recording above shows current work placement.
 
 ## Own a business
 

@@ -1,9 +1,13 @@
 # Leave and come back
 
-The current world uses format 19 / simulation 46. Its registered r101 upgrade
-adds alternate work qualifications derived from existing completed shared meals.
-It changes no saved field or resource. Existing meals and paid jobs retain their
-claims, clocks and ledgers; future eligibility uses the new rule.
+The current world uses format 19 / simulation 47. Its registered r102 upgrade
+binds paid jobs to physical workstations. Poses, clocks, history and unrelated
+commitments stay intact. A batch incompatible with its new station is refunded
+through ordinary escrow, without output, wages or completion credit.
+
+The r102 world uses format 19 / simulation 46. Its registered r101 upgrade adds
+alternate work qualifications derived from existing completed shared meals,
+without adding saved fields or resources.
 
 The r101 world uses format 19 / simulation 45. Its registered r100 upgrade
 adds covered rest preferences and an independent weather period without changing
@@ -85,7 +89,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 46. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 47. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -983,3 +987,16 @@ Shared history remains per companion and cannot exceed consumed food portions
 per good. This is a consistency bound, not a tamper-proof event log. The current
 slot and every earlier registered source slot remain separate and recoverable.
 [Verification](evidence/social-qualifications/verification.md).
+
+## Physical workstations, r103
+
+Format 19 now pins simulation 47 and the exact accepted station definitions.
+The registered r102 upgrade validates its original world, retains physical
+poses, clocks, history, resources and all unrelated commitments, then refunds
+only active batches incompatible with the new station rules. Refunds use the
+same reserved ingredients and wage; no output, pay or completion is awarded.
+An old outbound counter approach stays a real journey and is retargeted through
+walking before station work can start. Original slots survive; an ordinary
+reload never repeats the upgrade. Station ownership derives from active job
+IDs and poses, with cross-recipe duplicate claims rejected on restore.
+[Workstation rules](dream/workstations.md).

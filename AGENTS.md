@@ -345,7 +345,7 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 ## Saved simulation state
 
 Current save format 19 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 46. Historical formats retain their registered projections.
+at simulation version 47. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -379,7 +379,8 @@ upgrade. Preserve the old format-9 slot and the entire earlier migration chain.
 Dream `economy()` contains bounded `good`, `account`, `market`, `lot` and `work`
 data. Actor ownership resolves after linking; one player account, at most 16
 accounts, 8 goods, 8 markets and 16 jobs. Market operators and workers without
-`commute` stay stationary; explicit commuters use bounded on-foot journeys.
+`commute` retain stationary homes; jobs with a station use bounded local work trips,
+and explicit commuters use their declared home/work network.
 Customers may use existing validated routes. B/V/H/G are per-press requests,
 accepted on foot, grounded and dry. All accounts use the same finite trade,
 food, capacity and reserved-work rules. Work reserves input/wage/output/refund
@@ -565,7 +566,7 @@ ambient walking spacing, the r70 airport connector, character wardrobe
 (r71), the r72/r73 fixture service, wind-safe trees (r74), the utility fleet
 (r75), whole-library asset direction, and faceted tree, landscape plant,
 ground cover, furniture and wildlife construction (r76 to r79), and street
-furniture toppling (r80), shared character construction (r81), indoor bakery service (r82), physical work equipment (r83), on-foot strikes (r84), repair-kit production (r85), workshop supplies (r86), exact work endpoint indexing and immutable edge acceptance reuse, connected resident courier homes (r87), carried material recovery (r88), shared fixture hardware (r89), same-good nursery work (r90), the connected school common room (r91), worker provisions (r92), authored weather (r93), the commuter home (r94), shared rest (r97), physical stairs (r98), named floors and upstairs rest/repairs (r99), daily work attendance (r100), rain-aware shared rest (r101), shared-recipe qualification (r102), and world-map/waypoint UI. That file is
+furniture toppling (r80), shared character construction (r81), indoor bakery service (r82), physical work equipment (r83), on-foot strikes (r84), repair-kit production (r85), workshop supplies (r86), exact work endpoint indexing and immutable edge acceptance reuse, connected resident courier homes (r87), carried material recovery (r88), shared fixture hardware (r89), same-good nursery work (r90), the connected school common room (r91), worker provisions (r92), authored weather (r93), the commuter home (r94), shared rest (r97), physical stairs (r98), named floors and upstairs rest/repairs (r99), daily work attendance (r100), rain-aware shared rest (r101), shared-recipe qualification (r102), physical workstations (r103), and world-map/waypoint UI. That file is
 not loaded automatically, so read the relevant section there, alongside its
 linked guide, before changing a covered area.
 

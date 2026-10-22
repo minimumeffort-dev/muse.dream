@@ -91,8 +91,8 @@ it('pins r82 exactly, preserves old progress and refuses unregistered upgrade ta
  for(const text of Object.values(fixtures)){if(JSON.parse(text).kind!=='dream-save')continue;const copy=decodeSave(text,nativeWorld);expect(copy.migrated).toBe(true);expect(decodeSave(encodeSave(copy.state,copy.worldTime,nativeWorld),nativeWorld).state).toEqual(JSON.parse(JSON.stringify(copy.state)));count++;}expect(count).toBeGreaterThanOrEqual(4);
 });
 
-it('records a real table collision and caretaker approach before the native review starts',()=>{
- const doc=liveScene(),world=body(doc),steps=equipmentReviewSteps(createCarAtSpawn(doc),world);let result=steps.next();while(!result.done)result=steps.next();
+it('retains the r102 table-collision walkthrough as historical equipment evidence',()=>{
+ const doc=c.preStationScene(liveScene()),world=body(doc),steps=equipmentReviewSteps(createCarAtSpawn(doc),world);let result=steps.next();while(!result.done)result=steps.next();
  expect(result.value.broken).toContain('hall_table_east');expect(account(result.value,'caretaker').repair).toMatchObject({objectId:'hall_table_east',phase:'work'});
  expect(commerceReason(result.value,doc,'pocket',{kind:'work',job:'bake'})).toBe('equipment');
  expect(result.value.economy!.events.some(e=>e.kind==='cancel' && e.reason==='equipment')).toBe(true);

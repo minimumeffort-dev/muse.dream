@@ -1845,3 +1845,19 @@ The older shared/hosted recordings remain accurate for their meal, donor, seat
 and return rules. They predate the new work consequence. Current preparation
 uses body-sized walking paths around the market corner, rather than the former
 straight approach. Work/attendance, weather and asset geometry stay unchanged.
+
+## Physical workstations, r103
+
+workstations.mp4, workstations.gif and workstations.jpg share 300 consecutive
+rendered source frames from the dev-only ?capture workstation clip: ten
+simulation seconds at 30 frames per second. It physically walks the player to
+the table, opens Work, submits one bake request and records its finite wage.
+The video/still are 1600×900 and the GIF is 1280×720. No interpolation or live
+performance measurement. Source frames, hashes and native verification live in
+[workstation evidence](../evidence/workstations/verification.md).
+
+Earlier sharedrecipe, commerce, interior, recipes, kitchen, progression and
+equipment recordings remain historical for work location and the old generic
+gesture. Their other systems remain separately useful evidence. The current
+workstation recording replaces that placement demonstration; unrelated driving,
+world, weather and upstairs media retain their accurate appearance.

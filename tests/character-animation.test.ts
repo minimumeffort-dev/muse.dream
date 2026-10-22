@@ -41,6 +41,28 @@ describe('Dream humanoid bindings',()=>{
  });
 });
 describe('articulated locomotion',()=>{
+ it('keeps rigid arms over an authored work surface at different headings and holds the pose while paused',()=>{
+  for(const heading of [0,Math.PI/2,Math.PI]){
+   const r=rig(.306),target=new Vector3(5,9,0).applyAxisAngle(new Vector3(0,1,0),-heading);
+   r.group.rotation.y=-heading;
+   advance(r,{speed:0,working:true,workTarget:target,travel:{x:0,y:0,z:0,heading}},2);
+   r.group.updateMatrixWorld(true);
+   for(const [side,sign] of [['left',1],['right',-1]] as const){
+    const elbow=r.bone(`${side}_elbow`),hand=new Vector3(0,-9.5*1.05,0).applyMatrix4(elbow.matrixWorld),expected=target.clone().add(new Vector3(0,0,sign*3.5*.306).applyAxisAngle(new Vector3(0,1,0),-heading));
+    expect(hand.distanceTo(expected)).toBeLessThan(.25);
+    expect(elbow.getWorldPosition(new Vector3()).distanceTo(r.bone(`${side}_shoulder`).getWorldPosition(new Vector3()))).toBeCloseTo(9.5*.306,10);
+   }
+   const before=r.bone('right_elbow').getWorldQuaternion(r.bone('right_elbow').quaternion.clone());
+   r.animation.update({...input,speed:0,time:119/60,working:true,workTarget:target,travel:{x:0,y:0,z:0,heading}},0);r.group.updateMatrixWorld(true);
+   expect(r.bone('right_elbow').getWorldQuaternion(before.clone()).angleTo(before)).toBeLessThan(.001);
+  }
+ });
+ it('releases a work target continuously when a batch finishes',()=>{
+  const r=rig(.306),target=new Vector3(5,9,0),travel={x:0,y:0,z:0,heading:0};
+  advance(r,{speed:0,working:true,workTarget:target,travel},2);r.group.updateMatrixWorld(true);
+  const elbow=r.bone('right_elbow'),hand=()=>new Vector3(0,-9.5*1.05,0).applyMatrix4(elbow.matrixWorld);let previous=hand();
+  for(let f=0;f<60;f++){r.animation.update({...input,speed:0,time:2+f/60,working:false,travel},1/60);r.group.updateMatrixWorld(true);const p=hand();expect(p.distanceTo(previous)).toBeLessThan(.65);previous=p;}
+ });
  it('holds grounded feet through acceleration, curved travel and a stop',()=>{
   const r=rig(.306),previous=new Map<string,Vector3>();let x=0,z=0,maxDrift=0,contacts=0;
   for(let f=0;f<960;f++){

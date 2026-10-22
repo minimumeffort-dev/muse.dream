@@ -63,7 +63,8 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n`, `hours?: v2`, `owner?: ref`, `sale?: n` |
 | `lot` | market | ID / no block | `good: ref`, `quantity: n`, `limit: n`, `price?: n` |
 | `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `price: n?`, `capacity: n`, `on: ref?`, `grounds: symbols?` |
-| `work` | economy | ID / optional recipe block | `label: text`, `market: ref`, `input?: ref`, `take?: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `requires?: ref`, `requires_any?: symbols`, `equipment?: symbols` |
+| `station` | economy | ID / no block | `object: ref`, `at: v2`, `hands: v3`, `on: ref`, `grounds?: symbols` |
+| `work` | economy | ID / optional recipe block | `label: text`, `market: ref`, `input?: ref`, `take?: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `requires?: ref`, `requires_any?: symbols`, `equipment?: symbols`, `station?: ref` |
 
 | `social` | economy | ID / no block | `good: ref`, `seats: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `cooldown_s?: n`, `max_fullness?: n`, `markets?: symbols` |
 | `shift` | economy | ID / no block | `market: ref`, `rest: v2`, `on: ref`, `grounds?: symbols`, `lead_s?: n` |
@@ -477,11 +478,29 @@ Simulation time owns availability, independently of the visual sky. Player and
 NPC transactions share the same check. See [opening hours](hours.md) for work,
 courier waits, refunds, reduced motion and the complete example.
 
-At most 8 goods, 16 accounts, 8 markets, 16 jobs and 16 delivery contracts and 8 repair services; each market has 1..8 lots with unique goods. Exactly one player account; one account per actor. Other owners are existing NPC placements. Market vendors and production workers without `commute=true` are stationary. Explicit commuters use connected on-foot journeys. Repair workers start at a stationary home in supply-market reach and travel within declared grounds and their pedestrian connections. NPC `shop` and `work` policies are optional; player accounts cannot automate themselves.
+At most 8 goods, 16 accounts, 8 markets, 16 jobs and 16 delivery contracts and 8 repair services; each market has 1..8 lots with unique goods. Exactly one player account; one account per actor. Other owners are existing NPC placements. Market vendors and production workers without `commute=true` retain stationary homes; station-bound jobs add real local work trips. Explicit commuters use connected on-foot journeys. Repair workers start at a stationary home in supply-market reach and travel within declared grounds and their pedestrian connections. NPC `shop` and `work` policies are optional; player accounts cannot automate themselves.
 
 Credits: integer 0..1,000,000. Stock/limits: integer 0..10,000 with positive limits. Price: integer 1..10,000, or omitted for untraded ingredients. Carrying capacity: integer 1..32. Fullness/food: 0..100, drain per second: 0..0.25. Radius: 20..80. Work: 1..120 seconds, positive integer take/make/pay, effort 1..50, capacity 1..4, target within output lot capacity. Use exactly scalar `input`/`take` or a block of 1..4 `ingredient(good=...,take=...)` statements with unique goods. No empty block or mixed forms. Every input has a matching market lot and take within its capacity. An input may equal the output only when make is greater than take for that good. Reserve the larger of refund or completion space once for a shared lot; starting work subtracts its held input before checking future output room. Make is the full output, not the net gain. Labels: 1..40 nonblank characters. IDs follow the ordinary identifier contract.
 
 Buy/sell transfers one unit at the listed price. Work reserves every input, wage, refund space for each input and output capacity atomically; cancellation refunds, completion pays once and spends effort. Food consumes an owned unit and restores fullness. NPC food decisions occur at fullness <=40; automatic work refills to target. Shared money and material conservation, clock/owner/member bounds and capacity are checked on restore. The simulation owns rules and work time; the renderer owns gestures and feedback. No offline catch-up or generated scripts. Existing NPC, rig, physics and geometry caps are unchanged.
+
+### Physical workstations
+
+`station id(object=ref,at=v2,hands=v3,on=ref,grounds=symbols?);`
+
+`work(...,capacity=1,equipment=[object],station=id);` binds one shared work
+position across recipes. At is object-local XZ; hands is local XYZ, fitted and
+rotated with the static prop. Up to 16 stations, local coordinates ±256, hand
+Y 0..256. Require ground-floor upright solid prop geometry without joints or
+animated parts, a dry clear 4.1-radius/18-height stand, a supported surface
+3..7 world units away and 6..12 high, and 10-unit stand separation. Keep the
+station inside counter reach and all grounds convex within existing budgets.
+Stationary workers' stations share ordered grounds; commuters retain their
+accepted grounds. Player/NPC starts and continuation require two-unit proximity.
+NPCs walk before reserving stock/pay. One claimant per station, independent of
+recipe; departure or damage refunds once. Animation uses rigid existing arms,
+not generated code or saved mesh poses. [Working guide](workstations.md) ·
+[Complete source](../examples/workstations.dream).
 
 ### Personal work and recognition
 

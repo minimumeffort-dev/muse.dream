@@ -19,7 +19,7 @@ import homeR98 from './compatibility/r98-home.json';
 import homeR97 from './compatibility/r97-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=46;
+export const SAVE_SIMULATION_VERSION=47;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -51,6 +51,7 @@ export function saveCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder
   return projection(scene,SAVE_SIMULATION_VERSION,true,encode);
 }
 function projection(scene:Scene,simulationVersion:number,rounded=true,encode?:CompatibilityEncoder):string {
+  if(simulationVersion<47)scene=preStationScene(scene);
   if(simulationVersion<46)scene=preBondScene(scene);
   if(simulationVersion<45)scene=preShelterScene(scene);
   if(simulationVersion<44)scene=preAttendanceScene(scene);
@@ -108,10 +109,22 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
-/** r101 adds rain-aware covered rest and an independent 360-second weather cycle. */
+/** r103 binds existing paid jobs to physical shared workstations. */
+export const STATION_COMPATIBILITY='ba0749ebc87cea40ce37bd5d71f8adf69a75970811039062d6b650ca90cc59b3';
+const stationProjections=new WeakMap<Scene,Scene>();
+export function preStationScene(scene:Scene):Scene{
+ const cached=stationProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.stations?.some(s=>s.id==='bakery_prep'))return scene;
+ const {stations,...economy}=scene.economy;
+ const prior={...scene,economy:{...economy,jobs:economy.jobs.map(j=>{const {station,...old}=j;if(j.id!=='assemble_kit')return old;const {equipment,...legacy}=old;return legacy;})}};
+ stationProjections.set(scene,prior);return prior;
+}
+export function preStationCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preStationScene(scene),46,true,encode);}
+
 export const BOND_COMPATIBILITY='924a4c63641fed528986e698d8a5ad3c72c7201d1cf8ed94df4a0264c6b9827c';
 const bondProjections=new WeakMap<Scene,Scene>();
 export function preBondScene(scene:Scene):Scene{
+ scene=preStationScene(scene);
  const cached=bondProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.milestones.some(m=>m.id==='bakers_table' && m.kind==='shared_meal'))return scene;
  const prior={...scene,economy:{...scene.economy,milestones:scene.economy.milestones.filter(m=>m.id!=='bakers_table'),jobs:scene.economy.jobs.map(j=>{if(j.id!=='large_bake')return j;const {requires_any,...old}=j;return {...old,requires:'practiced_baker'};})}};bondProjections.set(scene,prior);return prior;

@@ -37,7 +37,7 @@ social alternative. Existing sources using `requires` keep their previous rule.
    accept their paid invitation. Stay until the meal finishes.
 3. Return when the counter opens at 06:00. Open the nearby panel with **M**,
    choose Work with **2**, and select the larger batch with the arrow keys.
-4. **Enter** or **H** starts the job. Keep the equipment intact and stay nearby.
+4. Close the panel with **Esc** and walk to the [workstation ring](workstations.md) at the east end of the prep table. **H** starts the selected job. Keep the equipment intact and stay at the station.
 
 The Work view shows both alternatives while locked and the fulfilled one once
 available. A cancelled or interrupted meal refunds its donor and earns no shared
@@ -58,7 +58,7 @@ until its remaining eating time completes. A qualified active job retains its
 reserved input, wage, deadline and progress. Original source slots remain intact.
 [Save rules](../persistence.md#shared-recipes-r102).
 
-The city recording uses ordinary fixed ticks for purchases, meeting, walking,
+The r102 city recording is historical for work placement; use the [current station recording](workstations.md) for physical work. It uses ordinary fixed ticks for purchases, meeting, walking,
 sharing and the return to work. The export is 30 rendered frames per simulation
 second, with no interpolation; it is not a live performance measurement.
 

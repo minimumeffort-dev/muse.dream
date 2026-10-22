@@ -42,13 +42,13 @@ export function seatAccessClear(scene:Scene,seat:WorldSeat,broken:readonly strin
  }
  return true;
 }
-function supportedSeat(spec:ObjectDslV2,seat:NonNullable<ObjectDslV2['seats']>[number],tolerance:number):boolean{
- const origin=new Vector3(...seat.position).add(new Vector3(0,tolerance,0)),hit=new Vector3(),a=new Vector3(),b=new Vector3(),c=new Vector3();
+export function supportedObjectPoint(spec:ObjectDslV2,point:[number,number,number],tolerance:number):boolean{
+ const origin=new Vector3(...point).add(new Vector3(0,tolerance,0)),hit=new Vector3(),a=new Vector3(),b=new Vector3(),c=new Vector3();
  for(const part of spec.parts){
   const transform=new Matrix4().compose(new Vector3(...part.position),new Quaternion().setFromEuler(new Euler(...(part.rotation??[0,0,0]))),new Vector3(...part.size));
   const ray=new Ray(origin.clone(),new Vector3(0,-1,0)).applyMatrix4(transform.clone().invert()),g=partGeometry(part),position=g.getAttribute('position'),index=g.index;
   let supported=false;
-  for(let i=0;i<(index?.count??position.count);i+=3){a.fromBufferAttribute(position,index ? index.getX(i) : i);b.fromBufferAttribute(position,index ? index.getX(i+1) : i+1);c.fromBufferAttribute(position,index ? index.getX(i+2) : i+2);if(ray.intersectTriangle(a,b,c,false,hit) && Math.abs(hit.applyMatrix4(transform).y-seat.position[1])<tolerance){supported=true;break;}}
+  for(let i=0;i<(index?.count??position.count);i+=3){a.fromBufferAttribute(position,index ? index.getX(i) : i);b.fromBufferAttribute(position,index ? index.getX(i+1) : i+1);c.fromBufferAttribute(position,index ? index.getX(i+2) : i+2);if(ray.intersectTriangle(a,b,c,false,hit) && Math.abs(hit.applyMatrix4(transform).y-point[1])<tolerance){supported=true;break;}}
   g.dispose();if(supported)return true;
  }
  return false;
@@ -58,7 +58,7 @@ export function seatingProblems(scene:Scene):string[]{
  const seats=worldSeats(scene),problems:string[]=[],support=new Map<string,boolean>();
  for(const o of scene.objects)if(o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && o.spec.seats && (roleOf(o)!=='prop' || o.route || o.behavior))problems.push(`${o.id}: furniture seats require prop ownership without a route or program`);
  for(let i=0;i<seats.length;i++)if(seats.slice(0,i).some(s=>Math.hypot(seats[i]!.x-s.x,seats[i]!.y-s.y,seats[i]!.elevation-s.elevation)<6 || Math.hypot(seats[i]!.approach.x-s.approach.x,seats[i]!.approach.y-s.approach.y,seats[i]!.elevation-s.elevation)<6))problems.push(`${seats[i]!.objectId}/${seats[i]!.seatId}: seats and approaches need 6-unit separation`);
- for(const o of scene.objects){const spec=o.spec;if(!spec || !('dslVersion' in spec) || spec.dslVersion!==2 || !spec.seats)continue;for(const s of spec.seats){const key=JSON.stringify([spec,s.id,o.scale]);let valid=support.get(key);if(valid===undefined){valid=supportedSeat(spec,s,SEATING_LIMITS.supportTolerance/o.scale);support.set(key,valid);}if(!valid)problems.push(`${o.id}/${s.id}: sitting surface needs furniture geometry at the authored point`);}}
+ for(const o of scene.objects){const spec=o.spec;if(!spec || !('dslVersion' in spec) || spec.dslVersion!==2 || !spec.seats)continue;for(const s of spec.seats){const key=JSON.stringify([spec,s.id,o.scale]);let valid=support.get(key);if(valid===undefined){valid=supportedObjectPoint(spec,s.position,SEATING_LIMITS.supportTolerance/o.scale);support.set(key,valid);}if(!valid)problems.push(`${o.id}/${s.id}: sitting surface needs furniture geometry at the authored point`);}}
  for(const s of seats)if(!seatAccessClear(scene,s))problems.push(`${s.objectId}/${s.seatId}: seat needs a dry clear approach 6..40 units away and a sitting height of 3..9 units`);
  return problems;
 }

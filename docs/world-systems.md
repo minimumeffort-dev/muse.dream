@@ -20,8 +20,10 @@ consequence: the baker's larger recipe accepts remembered time together or
 personal baking practice. Next priorities are NPC-to-NPC social activity, deeper
 relationship consequences, lifts and further usable interiors.
 [Shared recipes](dream/relationships.md).
-Work gestures still use the existing counter range; physical workstation poses
-and hand placement remain unfinished. [Floors](dream/floors.md).
+The bakery now uses an authored physical workstation: people walk to its shared
+position, claim it across recipes and reach its supported surface. Tools,
+recipe-specific gestures and upstairs stations remain unfinished.
+[Workstations](dream/workstations.md). [Floors](dream/floors.md).
 
 Shared rest now gives the home another purpose. The commuter can buy food, walk
 to a free home cushion, recover energy and resume the routine before paid work.

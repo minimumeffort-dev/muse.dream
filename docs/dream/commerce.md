@@ -13,7 +13,7 @@ counter closes its actions. [Contextual controls](../context-actions.md).
 
 Walk up to the market vendor and buy bread with **B**. Shelf stock drops by one, your credits move to the business and your bag records one loaf. **G** eats it and restores fullness. **V** sells an owned item back at the listed price, if the business has money and room for it.
 
-Want to earn some credits? **H** starts a six-second bread batch. The business reserves flour, three credits and space on its shelf. Stay nearby until the batch finishes: two loaves reach the shelf, the reserved wage reaches you and work uses some fullness. Press H again or leave the work area to cancel; the reservations return without a wage or finished bread.
+Want to earn some credits? Walk onto the [workstation ring](workstations.md), then **H** starts a six-second bread batch. The business reserves flour, three credits and space on its shelf. Stay at the workbench until the batch finishes: two loaves reach the shelf, the reserved wage reaches you and work uses some fullness. Press H again or leave the work area to cancel; the reservations return without a wage or finished bread.
 
 ![Buying food, eating and completing paid work](../media/commerce.gif)
 
@@ -95,7 +95,7 @@ economy(){
 }
 ```
 
-Run `npm run -s dream -- check docs/examples/market-work.dream`. The example uses short work durations for testing; the live market takes six seconds. The example's simple pedestrian has swing joints; full humanoid rigs in the live world also get a planted work gesture through their explicit bone bindings.
+Run `npm run -s dream -- check docs/examples/market-work.dream`. The example uses short work durations for testing; the live market takes six seconds. The example's simple pedestrian has swing joints; full humanoid rigs can bind physical standing and hand targets through [workstations](workstations.md). The live bakery uses one shared prep station for every recipe.
 
 ## What the engine guarantees
 
@@ -927,3 +927,7 @@ completed meal with the baker. All existing job reservations, inputs, wages,
 hours, equipment and effort checks still apply. The Work view shows the valid
 route; other residents never inherit this pair's progress.
 [Authoring rules and runnable source](relationships.md).
+
+## Physical workstations
+
+The live bakery now uses [one shared prep station](workstations.md). Players walk to its floor ring before starting; staff and commuters take actual bounded walking trips. Every recipe uses the same claim, body, equipment and finite transaction. Leaving or damage refunds once. Earlier recordings of work at counter range are historical; the workstation recording shows current placement and hand contact.

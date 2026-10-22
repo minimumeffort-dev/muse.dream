@@ -141,6 +141,8 @@ Use [stairs and upper floors](dream/stairs.md) to connect physical levels. One D
 Use [rain shelter](dream/shelter.md) to let existing residents wait indoors during
 showers through shared rest, seat claims and physical stairs.
 
+Use [workstations](dream/workstations.md) to attach work to a real piece of equipment, with local standing and hand points and one shared claim across recipes.
+
 Use [shared recipes](dream/relationships.md) to connect remembered meals to
 work eligibility. `requires_any` keeps alternate personal qualification paths
 in bounded Dream data.

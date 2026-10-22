@@ -33,7 +33,7 @@ export function stepStaffShifts(state:CarState,dt:number,scene:Scene):CarState{
   const plan=definition.shifts.find(s=>s.id===spec.shift)!,market=definition.markets.find(m=>m.id===plan.market)!,work=scene.objects.find(o=>o.id===spec.actor)!,area=shiftArea(scene,plan);
   const opening=marketOpening(scene,market,state.timeS),returning=marketIsOpen(scene,market,state.timeS) || !!opening && opening.seconds<=plan.lead_s;
   if(!a.shift){
-   if(returning || a.work)continue;
+   if(returning || a.work || a.commute)continue;
    a.shift={id:plan.id,phase:'out',at:{...plan.rest},x:work.x,y:work.y,headingRad:actorPose(scene,work,state.timeS,next).headingRad,distance:0,speed:0,path:[],routeAtS:0};
   }
   const t=a.shift,phase=returning ? 'in' : t.phase==='in' ? 'out' : t.phase;

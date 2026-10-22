@@ -335,3 +335,7 @@ resident's shared upstairs seat, physical stair trip and persistent return.
 [shared-recipe.dream](../examples/shared-recipe.dream) connects paid food, a shared
 seat, remembered time and alternate work qualifications. The two meal participants
 can qualify for the same finite larger-batch job. [Rules](relationships.md).
+
+## Physical workstations
+
+[Complete workstation world](../examples/workstations.dream) binds a preparation table to one shared job position. The commuter walks there before reserving ingredients or wages. [Controls and bounds](workstations.md).

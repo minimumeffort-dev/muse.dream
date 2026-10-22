@@ -22,7 +22,7 @@ export interface CharacterInput {
   travel?:TravelPose;
   ground?:GroundSampler;
   sport?:{kind:'football'|'basketball';possessed:boolean;charging:boolean;shotAge:number;action?:{kind:'kick'|'throw'|'contest';age:number}};
-  working?:boolean;striking?:number;
+  working?:boolean;workTarget?:{x:number;y:number;z:number};striking?:number;
   eating?:boolean;
   sittingHeight?:number;
 }
@@ -54,6 +54,16 @@ export class CharacterAnimator {
   private ankles=[new Quaternion(),new Quaternion()];
   private up=new Vector3(0,1,0);
   private normal=new Vector3();
+  private workPoint=new Vector3();
+  private hasWorkTarget=false;
+  private armTarget=new Vector3();
+  private armDirection=new Vector3();
+  private armBend=new Vector3();
+  private armUpper=new Vector3();
+  private armLower=new Vector3();
+  private armRotation=new Quaternion();
+  private armInverse=new Quaternion();
+  private down=new Vector3(0,-1,0);
   constructor(private group:Group,spec:ObjectDslV2){
     this.bones=Object.fromEntries(spec.joints!.filter(j=>j.bone).map(j=>{
       const node=group.getObjectByName(j.id)!;
@@ -64,7 +74,7 @@ export class CharacterAnimator {
 
   reset(){
     this.phase=gaitStance(0)/2;this.swimPhase=this.moving=this.running=this.water=this.airborne=this.landing=this.working=this.eating=0;
-    this.wasGrounded=true;this.previousVertical=0;
+    this.hasWorkTarget=false;this.wasGrounded=true;this.previousVertical=0;
     this.plants.reset();this.travel=undefined;this.surfaceOffset=0;
     for(const {node,rest,y} of Object.values(this.bones)){node.quaternion.copy(rest);node.position.y=y;}
   }
@@ -157,7 +167,9 @@ export class CharacterAnimator {
       land[`${side}_shoulder`][2]=mix(land[`${side}_shoulder`][2],.9+pulse*.07,this.working);
       land[`${side}_elbow`][2]=mix(land[`${side}_elbow`][2],.7-pulse*.12,this.working);
     }
-    land.spine[2]=mix(land.spine[2],-.08,this.working);
+    if(input.workTarget){this.workPoint.set(input.workTarget.x,input.workTarget.y,input.workTarget.z);this.hasWorkTarget=true;}else if(this.working<.001)this.hasWorkTarget=false;
+    const reach=this.hasWorkTarget && input.travel ? ((this.workPoint.x-input.travel.x)*Math.cos(input.travel.heading)+(this.workPoint.z-input.travel.z)*Math.sin(input.travel.heading))/this.group.scale.x/unit : 18;
+    land.spine[2]=mix(land.spine[2],this.hasWorkTarget ? -clamp(.16+(reach-18)*.05,.12,.5) : -.08,this.working);
     this.eating=active ? mix(this.eating,Number(!!input.eating && input.grounded && !input.swimming && speed<1),ease) : 0;
     if(this.eating>.001){const bite=(Math.sin(input.time*2.4)+1)/2;
       land.right_shoulder[2]=mix(land.right_shoulder[2],.6+bite*.28,this.eating);
@@ -196,5 +208,27 @@ export class CharacterAnimator {
     }
     const idleBob=active ? Math.sin(input.time*2.8)*.25 : 0;
     this.bones.root.node.position.y=mix(rootY,this.bones.root.y+unit*(effort*8+idleBob),this.water);
+    if(this.hasWorkTarget && this.working>.001 && input.sittingHeight===undefined && !input.swimming){
+      this.group.updateWorldMatrix(true,false);
+      for(const [side,sign] of [['left',1],['right',-1]] as const){
+        const shoulder=this.bones[`${side}_shoulder`].node,elbow=this.bones[`${side}_elbow`].node;
+        shoulder.parent!.updateWorldMatrix(true,false);
+        this.armTarget.copy(this.workPoint);
+        shoulder.parent!.worldToLocal(this.armTarget);this.armTarget.z+=sign*unit*3.5;
+        this.armTarget.x+=Math.sin(input.time*4+sign*.5)*unit*.35;
+        this.armTarget.y+=(1+Math.sin(input.time*4))*unit*.2;
+        this.armTarget.sub(shoulder.position);
+        const upper=-elbow.position.y,lower=upper*1.05,d=clamp(this.armTarget.length(),Math.abs(upper-lower)+.001,upper+lower-.001);
+        this.armDirection.copy(this.armTarget).normalize();
+        this.armBend.copy(this.down).addScaledVector(this.armDirection,-this.down.dot(this.armDirection));
+        if(this.armBend.lengthSq()<1e-8)this.armBend.set(0,0,sign);this.armBend.normalize();
+        const c=clamp((upper*upper+d*d-lower*lower)/(2*upper*d),-1,1);
+        this.armUpper.copy(this.armDirection).multiplyScalar(c).addScaledVector(this.armBend,Math.sqrt(1-c*c));
+        this.armRotation.setFromUnitVectors(this.down,this.armUpper);
+        this.armLower.copy(this.armDirection).multiplyScalar(d).addScaledVector(this.armUpper,-upper).normalize().applyQuaternion(this.armInverse.copy(this.armRotation).invert());
+        shoulder.quaternion.slerp(this.armRotation,this.working);
+        this.armRotation.setFromUnitVectors(this.down,this.armLower);elbow.quaternion.slerp(this.armRotation,this.working);
+      }
+    }
   }
 }

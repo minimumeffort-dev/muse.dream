@@ -322,7 +322,7 @@ export function seatingReviewInput(state:CarState,world:World,frame:number,viewA
 export function* sharedMealReviewSteps(state:CarState,world:World,hosted=false):Generator<void,CarState>{
  let next=npcReviewStart(state,world,'vendor');
  for(let i=0;i<(hosted ? 0 : 2);i++)next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:'buy',market:'market_stall',good:'bread'}},1/120,world);
- next=stepInteractive(next,{steer:0,throttle:0,talkPressed:true},1/120,world);
+ for(let i=0;i<120*30 && !next.npcs.find(n=>n.id==='vendor')!.known;i++){next=stepInteractive(next,{steer:0,throttle:0,talkPressed:i%120===0},1/120,world);if(i%30===0)yield;}
  if(next.economy!.accounts.find(a=>a.id==='pocket')!.inventory.bread!==(hosted ? 0 : 2) || !next.npcs.find(n=>n.id==='vendor')!.known)throw Error('Shared review needs paid food and a real meeting');
  for(let i=0;i<120*360 && (next.timeS<303 || next.economy!.accounts.find(a=>a.id==='baker')!.shift?.phase!=='rest');i++){
   next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30===0)yield;

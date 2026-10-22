@@ -696,6 +696,8 @@ seasons, floods, general shelter search or biological validity. Optional rest.sh
 connects existing covered seats to rain-aware NPC need trips; see Rest below.
 
 ## commerce
+Physical work: optional station id(object=placement,at=v2,hands=v3,on=ground,grounds=symbols?); work(...,equipment=[placement],station=id,capacity=1). At is object-local XZ; hands is local XYZ, fitted and rotated with the placement. Up to 16 stations; coordinates +/-256, hand Y 0..256. Require upright static solid prop without joints or named floor binding; dry clear stand for 4.1-radius/18-height people, supported hand point 3..7 world units away and 6..12 above the floor. Station stands stay 10 units apart and inside their job counter reach. All named grounds must be convex within existing navigation bounds. A station has one claim across all recipes. Player starts within two world units and faces the target without position snapping; walking away or breaking equipment refunds once. NPC complete humanoids use real bounded walking trips before reserving resources, returning after work. Stationary accounts' stations share ordered grounds; explicit commuters retain their own grounds. Stationary station holders can receive ordinary interact transitions without releasing work, facing or route/animation clocks; moving trips retain their guard. No generated animation scripts, extra rigs or item bodies. Example: docs/examples/workstations.dream.
+
 Optional ration id(good=bread,market=corner,below=40); declares one of at most
 8 worker provision plans. Reference account(...,ration=id) only on a stationary
 NPC repair/delivery account, without work/meal/shift/social policies. The supply
@@ -830,7 +832,7 @@ breakable equipment. See examples/work-equipment.dream.
 Labels must contain nonblank text. Every declaration except economy and ingredient needs a stable ID. Scope IDs are unique; good IDs
 and lot goods must agree. One economy per linked project, with exactly one player
 account. Other account actors are existing role=npc placements. Market operators and
-production workers without commute=true must be stationary NPCs. NPC shop=true buys and eats food at satiety <=40;
+production workers without commute=true need stationary home placements; station-bound work adds bounded local trips. NPC shop=true buys and eats food at satiety <=40;
 NPC work refills output up to target. Alternatively works=[advanced,basic] is an
 ordered list of 1..4 unique work IDs, exclusive with work, repairs and deliveries.
 Try the first eligible job below target; no extra actors, commitments or free stock.

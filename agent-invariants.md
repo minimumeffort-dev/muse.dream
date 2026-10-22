@@ -931,3 +931,26 @@ field, unfinished meal, qualified work and original slot. No seeded history,
 resources, offline progression, new bodies/rigs or raised navigation budgets.
 Dev walkthroughs use actual foot-sized navigation and controls around corners,
 with a separate body-profile cache key; never teleport to bypass a blocked path.
+
+## Physical workstations, r103
+
+Economy station binds a static prop's local XZ stand and XYZ supported hand point
+through its actual fitted scale/heading. Keep 16 stations, coordinate bounds,
+dry clear 4.1-radius/18-height stand, supported 3..7-unit reach/6..12-unit height,
+10-unit separation, counter reach and existing convex/navigation bounds. No
+joints, animated parts or named-floor binding. Work.station requires matching
+equipment and capacity=1. One active claim across recipes; real two-unit
+proximity for starts and continuation, body-facing only, no position snap.
+NPC complete humanoids walk before reserving ingredients/pay and return after
+work. T remains available while holding a station; only explicit conversation
+state/familiarity changes, with work body, facing and route/animation clocks held.
+Moving trips retain their interaction guard. Stationary jobs share ordered grounds; commuters keep their own network.
+Keep fixed-step ownership, immediate departure/damage refund, finite resource
+conservation, pause, reduced motion and existing actor/rig/body caps. Visual
+rigid arm targets and the single pooled floor ring are renderer-owned state.
+
+Format 19/simulation 47 registers exact r102 by removing only station metadata
+and its kit equipment binding. Validate old state first, refund only incompatible
+active work through the ordinary escrow, no pay/completion or clock/pose rebase.
+Old outbound counter journeys retarget by walking, never teleport. Preserve
+original slots and all earlier projections. See docs/dream/workstations.md.

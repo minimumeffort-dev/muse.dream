@@ -21,7 +21,8 @@ describe('bounded agent context packets',()=>{
   });
   it('includes the city vocabulary required by courier and repair grounds',()=>{
     const packet=dreamAgentContext(['commerce']);expect(packet.features).toContain('city');
-    for(const command of ['account','meal','delivery','surface','street','crossing','site'])expect(packet.contract.commands).toHaveProperty(command);
+    expect(packet.instructions).toContain('Physical work:');expect(packet.contract.commands.work!.fields.station).toBe('ref?');expect(dreamAgentContext(['lighting']).instructions).not.toContain('Physical work:');
+    for(const command of ['station','account','meal','delivery','surface','street','crossing','site'])expect(packet.contract.commands).toHaveProperty(command);
     expect(packet.instructions).toContain('NPC resupply:');expect(packet.instructions).toContain('NPC meal trips');expect(packet.contract.commands.account!.fields.meal).toBe('ref?');expect(packet.contract.commands.account!.fields.deliveries).toBe('symbols?');
   });
   it('adds required features once in deterministic order',()=>{

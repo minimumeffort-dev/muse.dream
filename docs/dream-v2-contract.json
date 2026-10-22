@@ -725,9 +725,23 @@
         "target": "n",
         "requires": "ref?",
         "requires_any": "symbols?",
-        "equipment": "symbols?"
+        "equipment": "symbols?",
+        "station": "ref?"
       },
       "block": "recipe?"
+    },
+    "station": {
+      "contexts": [
+        "economy"
+      ],
+      "id": true,
+      "fields": {
+        "object": "ref",
+        "at": "v2",
+        "hands": "v3",
+        "on": "ref",
+        "grounds": "symbols?"
+      }
     },
     "rest": {
       "contexts": [
@@ -1809,6 +1823,11 @@
     "phase": "place.phase_s 0..3600 only with route; shifts the entire route clock including stops. offset remains a carriage distance."
   },
   "commerce": {
+    "workstations": {
+      "source": "station prep(object=table,at=[16.5,0],hands=[9.8,10,0],on=work_yard); work(...,capacity=1,equipment=[table],station=prep);",
+      "bounds": "16 stations; at is local XZ and hands local XYZ in object units, each coordinate within +/-256 (hand Y 0..256); upright static solid prop without joints or named-floor binding; dry clear 4.1-radius/18-height stand, supported hands 3..7 world units away and 6..12 high; stands separated by 10 world units",
+      "semantics": "A station is one shared work claim across jobs. Work must name its object in equipment and have capacity=1. Start within two world units on foot; face the hand target without moving the body. Departure or equipment damage refunds once. Complete NPC humanoids walk there through existing bounded journeys before reserving stock/wages and return afterwards. Stationary accounts use matching ordered station grounds; commuters use their own accepted grounds. Stationary station holders accept ordinary interact transitions without handing back body/facing or advancing route/animation clocks; moving trips retain their talk guard. Hands are renderer-only rigid-arm targets. No item bodies, new rigs, generated controllers or offline work."
+    },
     "qualifications": {
       "source": "milestone table_friend(label=\"Share bread\",kind=shared_meal,task=baker,count=1); work(...,requires_any=[practiced,table_friend]);",
       "bounds": "16 milestones, shared_meal task references a non-player account with social; requires_any has 1..4 unique milestone IDs, excludes requires; every prerequisite branch must be acyclic",
@@ -1854,6 +1873,7 @@
       "workerJobs": 4,
       "ingredients": 4,
       "equipment": 4,
+      "stations": 16,
       "deliveries": 16,
       "courierContracts": 4,
       "repairs": 8,

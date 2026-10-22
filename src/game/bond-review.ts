@@ -1,3 +1,4 @@
+import {workstation} from '../scene/workstations';
 import type {CarState,World} from '../sim/car';
 import {stepInteractive,toggleRide} from '../sim/interaction';
 import {socialArea} from '../sim/social';
@@ -25,7 +26,8 @@ export function* bondReviewSteps(state:CarState,world:World,stage:'meal'|'ready'
  next=toggleRide(next,world);
  const social=scene.economy!.socials.find(p=>p.id==='hall_break')!,area=socialArea(scene,'baker'),approach=courierApproach(scene,social,market.id,next,next,area);
  if(!approach)throw Error('Recipe review needs a connected counter approach');
- next=yield* walkReviewSteps(next,world,area,approach.end);
+ next=yield* walkReviewSteps(next,world,area,workstation(scene,job.station)??approach.end);
+ for(let i=0;i<120*30 && commerceReason(next,scene,'pocket',{kind:'work',job:job.id})==='busy';i++){next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30===0)yield;}
  const reason=commerceReason(next,scene,'pocket',{kind:'work',job:job.id});if(reason)throw Error('Recipe review cannot take the earned job: '+reason);
  if(stage==='ready')return next;
  const credits=player().credits;next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:'work',job:job.id}},1/120,world);
