@@ -15,9 +15,13 @@ The commuter now rests upstairs; player seating and finite paid repairs work on
 the same upper floor. Named Dream floors connect retained slabs, furniture and
 height-aware stair trips. Saved travel and claims survive reload. Daily work attendance now connects
 those needs to an actual workplace window. Rain now brings the free resident
-indoors through the same shared rest journey. Next priorities are relationships
-with practical consequences, alongside lifts
-and further usable interiors. [Floors](dream/floors.md).
+indoors through the same shared rest journey. Shared meals now have a practical
+consequence: the baker's larger recipe accepts remembered time together or
+personal baking practice. Next priorities are NPC-to-NPC social activity, deeper
+relationship consequences, lifts and further usable interiors.
+[Shared recipes](dream/relationships.md).
+Work gestures still use the existing counter range; physical workstation poses
+and hand placement remain unfinished. [Floors](dream/floors.md).
 
 Shared rest now gives the home another purpose. The commuter can buy food, walk
 to a free home cushion, recover energy and resume the routine before paid work.

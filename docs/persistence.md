@@ -1,6 +1,11 @@
 # Leave and come back
 
-The current world uses format 19 / simulation 45. Its registered r100 upgrade
+The current world uses format 19 / simulation 46. Its registered r101 upgrade
+adds alternate work qualifications derived from existing completed shared meals.
+It changes no saved field or resource. Existing meals and paid jobs retain their
+claims, clocks and ledgers; future eligibility uses the new rule.
+
+The r101 world uses format 19 / simulation 45. Its registered r100 upgrade
 adds covered rest preferences and an independent weather period without changing
 a saved field. Existing commitments, energy, claims, ledgers and clocks remain
 exact. New shelter decisions begin only through ordinary simulation ticks.
@@ -80,7 +85,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 45. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 46. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -957,3 +962,24 @@ NPC programs and clocks are not rebased or initialized. Future choices use the
 new preference and 360-second rain cycle at the saved time. There is no separate
 saved weather intention or offline weather simulation. Original slots and the
 earlier migration chain remain. [Shelter checks](evidence/shelter/verification.md).
+
+## Shared recipes, r102
+
+Format 19 / simulation 46 registers exact r101 at fingerprint
+`508f47125d575a0d10ff7122fe92a3cbea2495d90235120e50bbb24114167e02`.
+The old projection removes only `bakers_table` and restores the larger bread
+job's original single practice prerequisite. Physics, actors, geometry, stock,
+accounts and all existing counters remain unchanged. The r102 fingerprint is
+`924a4c63641fed528986e698d8a5ad3c72c7201d1cf8ed94df4a0264c6b9827c`.
+
+No friendship field or extra completion counter is initialized. The ordinary
+shared history supplies the new qualification. An unfinished old meal restores
+with the same food/seat escrow and eating time; it earns the consequence only
+on completion. A valid old paid job keeps its original eligibility, inputs, pay
+and deadline. Existing completed meals can qualify their two participants on
+restore, without new money, food or practice.
+
+Shared history remains per companion and cannot exceed consumed food portions
+per good. This is a consistency bound, not a tamper-proof event log. The current
+slot and every earlier registered source slot remain separate and recoverable.
+[Verification](evidence/social-qualifications/verification.md).

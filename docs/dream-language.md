@@ -141,5 +141,9 @@ Use [stairs and upper floors](dream/stairs.md) to connect physical levels. One D
 Use [rain shelter](dream/shelter.md) to let existing residents wait indoors during
 showers through shared rest, seat claims and physical stairs.
 
+Use [shared recipes](dream/relationships.md) to connect remembered meals to
+work eligibility. `requires_any` keeps alternate personal qualification paths
+in bounded Dream data.
+
 Use [daily attendance](dream/attendance.md) to give an existing commuter a work
 window. Waiting reserves nothing; real jobs still use the shared transaction.

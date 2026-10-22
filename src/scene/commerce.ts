@@ -24,7 +24,8 @@ const account=z.object({id:ref,actor:ref,credits:money,capacity:z.number().int()
 const lot=z.object({id:ref,good:ref,quantity,limit:quantity.refine(n=>n>0),price:z.number().int().min(1).max(10_000).optional()}).strict();
 const market=z.object({id:ref,label,actor:ref,credits:money,radius:z.number().finite().min(20).max(80),hours:hours.optional(),owner:ref.optional(),sale:money.positive().optional(),lots:z.array(lot).min(1).max(COMMERCE_LIMITS.goods)}).strict();
 const ingredient=z.object({good:ref,take:quantity.refine(n=>n>0)}).strict();
-const job=z.object({id:ref,label,market:ref,input:ref.optional(),take:quantity.refine(n=>n>0).optional(),ingredients:z.array(ingredient).min(1).max(COMMERCE_LIMITS.ingredients).optional(),output:ref,make:quantity.refine(n=>n>0),seconds:z.number().finite().min(1).max(120),pay:money.refine(n=>n>0),effort:z.number().finite().min(1).max(50),capacity:z.number().int().min(1).max(4),target:quantity,requires:ref.optional(),equipment:z.array(ref).min(1).max(COMMERCE_LIMITS.equipment).optional()}).strict().superRefine((j,ctx)=>{
+const job=z.object({id:ref,label,market:ref,input:ref.optional(),take:quantity.refine(n=>n>0).optional(),ingredients:z.array(ingredient).min(1).max(COMMERCE_LIMITS.ingredients).optional(),output:ref,make:quantity.refine(n=>n>0),seconds:z.number().finite().min(1).max(120),pay:money.refine(n=>n>0),effort:z.number().finite().min(1).max(50),capacity:z.number().int().min(1).max(4),target:quantity,requires:ref.optional(),requires_any:z.array(ref).min(1).max(4).optional(),equipment:z.array(ref).min(1).max(COMMERCE_LIMITS.equipment).optional()}).strict().superRefine((j,ctx)=>{
+ if(j.requires_any && (j.requires || new Set(j.requires_any).size!==j.requires_any.length))ctx.addIssue({code:'custom',message:'requires_any needs unique milestone IDs and excludes requires',path:['requires_any']});
  if(j.equipment && new Set(j.equipment).size!==j.equipment.length)ctx.addIssue({code:'custom',message:'work equipment needs unique placement IDs',path:['equipment']});
  if(j.ingredients ? j.input!==undefined || j.take!==undefined : j.input===undefined || j.take===undefined)ctx.addIssue({code:'custom',message:'work needs input and take, or an ingredient block, never both',path:['ingredients']});
  if(j.ingredients && new Set(j.ingredients.map(i=>i.good)).size!==j.ingredients.length)ctx.addIssue({code:'custom',message:'work ingredients need unique goods',path:['ingredients']});
@@ -58,7 +59,7 @@ const rest=z.object({id:ref,energy:z.number().finite().min(0).max(100),drainPerS
  if(new Set([r.on,...(r.grounds??[])]).size!==1+(r.grounds?.length??0))ctx.addIssue({code:'custom',message:'rest grounds must be unique and exclude on',path:['grounds']});
 });
 const ration=z.object({id:ref,good:ref,market:ref,below:z.number().finite().min(0).max(95)}).strict();
-const milestone=z.object({id:ref,label,kind:z.enum(['work','delivery','repair']),task:ref,count:z.number().int().min(1).max(1e9)}).strict();
+const milestone=z.object({id:ref,label,kind:z.enum(['work','delivery','repair','shared_meal']),task:ref,count:z.number().int().min(1).max(1e9)}).strict();
 const shift=z.object({id:ref,market:ref,rest:z.object({x:z.number().finite().min(0).max(16384),y:z.number().finite().min(0).max(16384)}).strict(),on:ref,grounds:z.array(ref).min(1).max(COMMERCE_LIMITS.repairGrounds-1).optional(),lead_s:z.number().finite().min(0).max(120).default(15)}).strict().superRefine((s,ctx)=>{if(s.grounds && new Set([s.on,...s.grounds]).size!==s.grounds.length+1)ctx.addIssue({code:'custom',message:'shift grounds must be unique and exclude on',path:['grounds']});});
 export const economySchema=z.object({rests:z.array(rest).min(1).max(8).optional(),rations:z.array(ration).min(1).max(COMMERCE_LIMITS.rations).optional(),goods:z.array(good).min(1).max(COMMERCE_LIMITS.goods),accounts:z.array(account).min(1).max(COMMERCE_LIMITS.accounts),markets:z.array(market).min(1).max(COMMERCE_LIMITS.markets),jobs:z.array(job).max(COMMERCE_LIMITS.jobs),meals:z.array(meal).max(COMMERCE_LIMITS.meals).default([]),shifts:z.array(shift).max(COMMERCE_LIMITS.shifts).default([]),socials:z.array(social).max(COMMERCE_LIMITS.socials).default([]),milestones:z.array(milestone).max(COMMERCE_LIMITS.milestones).default([]),deliveries:z.array(delivery).max(COMMERCE_LIMITS.deliveries).default([]),repairs:z.array(repair).max(COMMERCE_LIMITS.repairs).default([])}).strict().superRefine((e,ctx)=>{
  const issue=(message:string,path:(string|number)[])=>ctx.addIssue({code:'custom',message,path});
@@ -88,10 +89,16 @@ export const economySchema=z.object({rests:z.array(rest).min(1).max(8).optional(
   if(!output || j.make>output.limit || j.target>output.limit)issue('work output and target must fit an existing market lot',['jobs',i,'output']);
   if(jobTake(j,j.output)>0 && j.make<=jobTake(j,j.output))issue('same-good work must make more than it takes',['jobs',i,'make']);
  });
- e.milestones.forEach((m,i)=>{const tasks=m.kind==='work' ? e.jobs : m.kind==='delivery' ? e.deliveries : e.repairs;if(!tasks.some(t=>t.id===m.task))issue('milestone needs an existing task of its kind',['milestones',i,'task']);});
+ e.milestones.forEach((m,i)=>{const tasks=m.kind==='work' ? e.jobs : m.kind==='delivery' ? e.deliveries : m.kind==='repair' ? e.repairs : e.accounts.filter(a=>a.actor!=='player' && a.social);if(!tasks.some(t=>t.id===m.task))issue(m.kind==='shared_meal' ? 'shared meal milestone needs an existing NPC social account' : 'milestone needs an existing task of its kind',['milestones',i,'task']);});
  e.jobs.forEach((j,i)=>{
-  if(j.requires && !e.milestones.some(m=>m.id===j.requires))issue('unknown work milestone',['jobs',i,'requires']);
-  const seen=new Set<string>();let next:typeof j|undefined=j;while(next?.requires){if(seen.has(next.id)){issue('work milestone requirements must not form a cycle',['jobs',i,'requires']);break;}seen.add(next.id);const m=e.milestones.find(m=>m.id===next!.requires);next=m?.kind==='work' ? e.jobs.find(j=>j.id===m.task) : undefined;}
+  const field=j.requires_any ? 'requires_any' : 'requires';
+  for(const id of jobRequirements(j))if(!e.milestones.some(m=>m.id===id))issue(`unknown work milestone ${id}`,['jobs',i,field]);
+  const visiting=new Set<string>(),done=new Set<string>();
+  const cyclic=(next:typeof j):boolean=>{if(visiting.has(next.id))return true;if(done.has(next.id))return false;visiting.add(next.id);
+   for(const id of jobRequirements(next)){const m=e.milestones.find(m=>m.id===id),parent=m?.kind==='work' && e.jobs.find(j=>j.id===m.task);if(parent && cyclic(parent))return true;}
+   visiting.delete(next.id);done.add(next.id);return false;
+  };
+  if(cyclic(j))issue('work milestone requirements must not form a cycle',['jobs',i,field]);
  });
  e.repairs.forEach((r,i)=>{const market=e.markets.find(m=>m.id===r.market),lot=market?.lots.find(l=>l.good===r.input);if(!lot || lot.limit<r.take)issue('repair input must fit an existing market lot',['repairs',i,'input']);if(r.recover && !market?.lots.some(l=>l.good===r.recover && l.limit>=r.amount!))issue('recovery must fit an existing market lot',['repairs',i,'recover']);});
  e.meals.forEach((m,i)=>{
@@ -131,6 +138,7 @@ export const economySchema=z.object({rests:z.array(rest).min(1).max(8).optional(
 export type Economy=z.infer<typeof economySchema>;
 export type Market=Economy['markets'][number];
 export type Job=Economy['jobs'][number];
+export const jobRequirements=(job:Pick<Job,'requires'|'requires_any'>)=>job.requires_any??(job.requires ? [job.requires] : []);
 export const jobInputs=(job:Pick<Job,'input'|'take'|'ingredients'>)=>job.ingredients??(job.input!==undefined && job.take!==undefined ? [{good:job.input,take:job.take}] : []);
 export const jobTake=(job:Job,good:string)=>job.ingredients ? job.ingredients.find(i=>i.good===good)?.take??0 : job.input===good ? job.take! : 0;
 export type Repair=Economy['repairs'][number];
@@ -236,7 +244,7 @@ export function economyProblems(scene:Scene):string[]{
  for(const {b,t} of guarded){
   const m=e.milestones.find(m=>m.id===t.requires);if(!m){problems.push(`${b.id}/${t.id}: unknown conversation milestone ${t.requires}`);continue;}
   const market=m.kind==='work' ? e.jobs.find(j=>j.id===m.task)?.market : m.kind==='delivery' ? e.deliveries.find(d=>d.id===m.task)?.to : e.repairs.find(r=>r.id===m.task)?.market;
-  const actor=e.markets.find(m=>m.id===market)?.actor;
+  const actor=m.kind==='shared_meal' ? e.accounts.find(a=>a.id===m.task)?.actor : e.markets.find(m=>m.id===market)?.actor;
   if(scene.objects.some(o=>o.behavior===b.id && o.id!==actor))problems.push(`${b.id}/${t.id}: conversation milestones must belong to this task's receiving market actor`);
  }
  for(const a of e.accounts){const o=scene.objects.find(o=>o.id===a.actor);if(a.actor!=='player' && (!o || roleOf(o)!=='npc'))problems.push(`${a.id}: account actor must be player or an NPC placement`);if(accountJobs(a).length && !a.commute && !stationary(a.actor))problems.push(`${a.id}: automatic workers must be stationary NPCs`);}

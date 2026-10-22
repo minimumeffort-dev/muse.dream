@@ -63,12 +63,12 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n`, `hours?: v2`, `owner?: ref`, `sale?: n` |
 | `lot` | market | ID / no block | `good: ref`, `quantity: n`, `limit: n`, `price?: n` |
 | `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `price: n?`, `capacity: n`, `on: ref?`, `grounds: symbols?` |
-| `work` | economy | ID / optional recipe block | `label: text`, `market: ref`, `input?: ref`, `take?: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `requires?: ref`, `equipment?: symbols` |
+| `work` | economy | ID / optional recipe block | `label: text`, `market: ref`, `input?: ref`, `take?: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `requires?: ref`, `requires_any?: symbols`, `equipment?: symbols` |
 
 | `social` | economy | ID / no block | `good: ref`, `seats: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `cooldown_s?: n`, `max_fullness?: n`, `markets?: symbols` |
 | `shift` | economy | ID / no block | `market: ref`, `rest: v2`, `on: ref`, `grounds?: symbols`, `lead_s?: n` |
 | `meal` | economy | ID / no block | `good: ref`, `markets: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `seats?: symbols` |
-| `milestone` | economy | ID / no block | `label: text`, `kind: work / delivery / repair`, `task: ref`, `count: n` |
+| `milestone` | economy | ID / no block | `label: text`, `kind: work / delivery / repair / shared_meal`, `task: ref`, `count: n` |
 | `ingredient` | recipe | No ID / no block | `good: ref`, `take: n` |
 
 ### Assemblies and composition
@@ -467,7 +467,7 @@ good id(label=text,food=n?);
 account id(actor=ref,credits=n,capacity=n,satiety=n,drain_s=n,rest=ref?,commute=bool?,attendance=v2?,on=ref?,grounds=symbols?,shop=bool?,meal=ref?,work=ref?,works=symbols?,repair=ref?,repairs=symbols?);
 market id(label=text,actor=ref,credits=n,radius=n,hours=[6,22]){ lot ... }
 lot id(good=ref,quantity=n,limit=n,price=n?);
-work id(label=text,market=ref,input=ref,take=n,output=ref,make=n,seconds=n,pay=n,effort=n,capacity=n,target=n,requires=ref?);
+work id(label=text,market=ref,input=ref,take=n,output=ref,make=n,seconds=n,pay=n,effort=n,capacity=n,target=n,requires=ref?,requires_any=symbols?);
 ```
 
 Market `hours` is an optional numeric pair: opening 0..less than 24, closing
@@ -485,20 +485,24 @@ Buy/sell transfers one unit at the listed price. Work reserves every input, wage
 
 ### Personal work and recognition
 
-`milestone id(label=text,kind=work|delivery|repair,task=ref,count=n);` lives in
-`economy`. At most 16, with a matching existing task, integer count 1..1,000,000,000
-and the ordinary 1..40-character label. `work.requires` checks that worker's own
-record. Work prerequisite cycles fail. `account.works=[advanced,basic]` tries
+`milestone id(label=text,kind=work|delivery|repair|shared_meal,task=ref,count=n);`
+lives in `economy`. At most 16, count 1..1,000,000,000 and a 1..40-character label.
+The first three kinds reference a matching task; shared_meal names an NPC social
+account and checks its two participants' existing history. `work.requires` keeps
+one prerequisite; `requires_any` accepts one of 1–4 unique alternatives. They
+exclude each other. Every work prerequisite branch must be acyclic. `account.works=[advanced,basic]` tries
 1..4 unique jobs in order, each eligible and below target; it excludes `work`,
 repair duties, deliveries and player ownership. Existing stationary/range checks apply.
 
 `on.requires` is interact-only and checks the player. After linking, every placement
 using that guard must be the task's receiving market actor: `work.market`,
-`repair.market` or `delivery.to`. Unknown, unrelated or absent-economy guards fail.
-Completion increments only when paid work, a handoff or a repair succeeds. Cancel,
+`repair.market` or `delivery.to`, or the shared-meal account's actor. Unknown,
+unrelated or absent-economy guards fail. Ordinary task completion increments
+only when paid work, a handoff or a repair succeeds. Cancel,
 pickup and another account's work do not count. Milestones award no resources.
 
-Saved personal counters and unassigned old counts sum exactly to shared totals.
+Saved task counters and unassigned old task counts sum exactly to global task
+totals. Shared-meal history remains separate and cannot exceed consumed food.
 Strict IDs, integer bounds and qualified active work are checked on restore.
 Format 10/simulation 15 preserves previous totals unassigned because older saves
 had no complete ownership history. New personal records start at zero; old active
@@ -815,3 +819,14 @@ heights, preserving shared claims and finite paid repairs. Lifts and separate
 stacked-room ownership remain missing. [Floor contract](floors.md).
 
 [Build the two-storey home](../examples/stairs-home.dream) · [Walking guide](stairs.md).
+
+## Alternate work qualifications
+
+`work.requires_any` is 1–4 unique milestone IDs, exclusive with `requires`. Any
+one qualifies the acting account; every prerequisite branch must be acyclic.
+`milestone(kind=shared_meal,task=npc_account,count=n)` derives progress from
+completed meals with that specific social account. Only the player and named
+NPC participant qualify. It changes no money, food or practice counter. Real
+work keeps all ordinary financial, physical and need checks. Conversation
+`on.requires` can reference this milestone only on that account's actor.
+[Shared recipes](relationships.md) · [Complete source](../examples/shared-recipe.dream).

@@ -1828,3 +1828,20 @@ ground-floor rest recordings remain historical layouts.
 The earlier upstairs recording predates synchronized camera/roof snapping on
 the first frame. Its stair, seat and energy behavior remains accurate; use the
 r101 shelter recording for the current immediate interior reveal.
+
+## Shared recipe, r102
+
+`sharedrecipe.mp4`, `sharedrecipe.gif` and `sharedrecipe.jpg` use 480 consecutive
+rendered source frames at 30 frames per simulation second. The dev-only `?capture`
+clip advances real purchases, a meeting, shared seating/food and the next counter
+opening, then walks back through the ordinary foot controller. No food, history,
+practice or money is seeded. The recording shows the relationship-qualified
+larger batch and one real wage, while personal bread-baking count remains zero.
+HD video/still are 1600×900; GIF is 1280×720. Run
+`node scripts/encode-media.mjs <ffmpeg> <gifsicle> sharedrecipe`. No interpolation
+or live performance claim.
+
+The older shared/hosted recordings remain accurate for their meal, donor, seat
+and return rules. They predate the new work consequence. Current preparation
+uses body-sized walking paths around the market corner, rather than the former
+straight approach. Work/attendance, weather and asset geometry stay unchanged.

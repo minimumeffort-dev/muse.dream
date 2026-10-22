@@ -785,6 +785,16 @@ walks home. History, purchases and invitations survive travel, streaming and
 saves. NPC-to-NPC invitations, dating and a general relationship system remain
 to be built.
 
+## Learn a recipe over lunch
+
+Share a real meal with the baker and you can take the larger bread batch, even
+with no baking history. Completing three ordinary batches still works too.
+The meal uses paid food; the job uses real flour and pays only when finished.
+
+![The larger bread batch unlocked by a shared meal](docs/media/sharedrecipe.jpg)
+
+[Watch the job](docs/media/sharedrecipe.mp4) · [GIF](docs/media/sharedrecipe.gif) · [Write the rule in Dream](docs/dream/relationships.md)
+
 ## Own a business
 
 You can buy Station supplies in the railway quarter. Its stock, existing delivery

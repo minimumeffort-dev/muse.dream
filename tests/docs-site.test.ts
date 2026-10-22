@@ -6,6 +6,9 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights alternate requirements at complete boundaries and escapes source text',()=>{
+    const html=highlight('work bake(requires_any=[practice,table_friend]); milestone friend(kind=shared_meal); // <Recipe>&');expect(html).toContain('class="dream-field">requires_any</span>');expect(html).toContain('&lt;Recipe&gt;&amp;');expect(highlight('requires_anything requires_any_extra')).not.toMatch(/dream-field/);
+  });
   it('highlights shelter only at complete boundaries and escapes authored HTML',()=>{
     const html=highlight('rest home(shelter=true,seats=[settee]); // <Cover>&');expect(html).toContain('class="dream-field">shelter</span>');expect(html).toContain('&lt;Cover&gt;&amp;');expect(highlight('sheltered shelter_extra')).not.toMatch(/dream-field/);
   });

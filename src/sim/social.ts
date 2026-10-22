@@ -121,7 +121,13 @@ export function checkSharedMeal(state:CarState,scene:Scene){
   const area=socialArea(scene,a.id),player=e.accounts.find(a=>d.accounts.find(s=>s.id===a.id)!.actor==='player')!,object=scene.objects.find(o=>o.id===spec.actor)!,pose=actorPose(scene,object,state.timeS,state);
   if(state.control.kind!=='foot' || !state.grounded || state.surface==='water' || a.satiety>plan.max_fullness || a.satiety>=100 || player.satiety>=100 || player.work || player.delivery || player.repair || !seatAccessClear(scene,seat,state.broken,area) || Math.hypot(seat.x-own.x,seat.y-own.y)<area.radius+3 || Math.hypot(state.x-pose.x,state.y-pose.y,state.elevation-pose.elevation)>80.01)throw Error('Invalid saved social invitation context');
  }
- for(const [id,h] of Object.entries(e.socialHistory??{}))if(!d.accounts.some(a=>a.id===id && a.social) || h.meals<1 || h.lastAtS>e.atS+1e-6)throw Error('Invalid social history');
+ const sharedFood=new Map<string,number>();
+ for(const [id,h] of Object.entries(e.socialHistory??{})){
+  const spec=d.accounts.find(a=>a.id===id && a.social),plan=d.socials.find(p=>p.id===spec?.social);
+  if(!plan || h.meals<1 || h.lastAtS>e.atS+1e-6)throw Error('Invalid social history');
+  sharedFood.set(plan.good,(sharedFood.get(plan.good)??0)+h.meals*2);
+ }
+ for(const [good,portions] of sharedFood)if(portions>e.consumed[good]!)throw Error('Shared meal history exceeds consumed food');
  const t=e.shared;if(!t)return;
  const a=e.accounts.find(a=>a.id===t.partner),spec=d.accounts.find(a=>a.id===t.partner),plan=d.socials.find(p=>p.id===t.id),object=scene.objects.find(o=>o.id===spec?.actor),player=e.accounts.find(a=>d.accounts.find(s=>s.id===a.id)!.actor==='player')!;
  if(!a || !spec || !plan || spec.social!==plan.id || !object || a.work || a.meal || a.delivery || a.repair || a.courier || a.shift && a.shift.phase!=='rest' || spec.shift && !a.shift || t.startedAtS>e.atS+1e-6 || t.routeAtS>state.timeS+1.01)throw Error('Invalid shared meal ownership');

@@ -1,0 +1,19 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/docs.test.ts tests/docs-site.test.ts tests/dream-agent.test.ts --maxWorkers=2 --testTimeout=60000 --reporter=default --reporter=json --outputFile=/tmp/muse-bond-docs-final.json
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/docs.test.ts (156 tests) 1847ms
+ ✓ tests/dream-agent.test.ts (18 tests) 2290ms
+   ✓ bounded agent context packets > exports machine-readable CLI context and preserves source/check boundaries  2282ms
+ ✓ tests/docs-site.test.ts (50 tests) 774ms
+   ✓ published site > builds highlighted source with project-relative navigation and working downloads  763ms
+
+ Test Files  3 passed (3)
+      Tests  224 passed (224)
+   Start at  05:08:14
+   Duration  3.39s (transform 506ms, setup 18ms, collect 1.03s, tests 4.91s, environment 0ms, prepare 75ms)
+
+JSON report written to /tmp/muse-bond-docs-final.json

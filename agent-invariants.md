@@ -910,3 +910,24 @@ Format 19/simulation 45 registers exact r100 by removing only the live shelter
 flag and restoring its former weather period. Preserve all saved fields and
 original slots, no weather-intent field, rebase, reward or offline progression.
 See docs/dream/shelter.md and its independently runnable world.
+
+## Shared recipes and alternate qualifications, r102
+
+Milestone kind shared_meal names a non-player social account, using its existing
+completed pair history. Only the player and that named NPC qualify. Other people
+and global production do not. Partial/refunded meals grant nothing; aggregate
+shared portions per good cannot exceed consumption. This is a saved-state
+consistency bound, not an authenticated event ledger or NPC-to-NPC friendship.
+
+Work requires_any is 1..4 unique milestone IDs, exclusive with requires; every
+prerequisite branch is acyclic. Use the same qualification helper for manual
+starts, automatic/commuting choices and saved active jobs. Keep ingredients,
+hours/staff, capacity, food, energy, equipment, wages and completion ownership.
+A qualification reserves and awards nothing. Existing single requirements stay.
+
+Format 19/simulation 46 registers exact r101 by removing only the new relationship
+milestone and restoring the old larger-batch prerequisite. Preserve every saved
+field, unfinished meal, qualified work and original slot. No seeded history,
+resources, offline progression, new bodies/rigs or raised navigation budgets.
+Dev walkthroughs use actual foot-sized navigation and controls around corners,
+with a separate body-profile cache key; never teleport to bypass a blocked path.

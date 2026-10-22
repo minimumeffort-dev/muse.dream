@@ -25,6 +25,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [Day and night](dream/day-night.md) | A shared clock, changing sunlight, window glow and street lighting |
 | [Shared meals](dream/social.md) | Invite an off-duty person or accept their meal, share paid food and build remembered history |
 | [Shared seating](dream/seating.md) | Sit on furniture, share seats with customers and preserve occupancy |
+| [Shared recipes](dream/relationships.md) | A real shared meal can unlock work, alongside personal practice |
 | [Daily work attendance](dream/attendance.md) | Arrive, wait unpaid, perform real jobs and come home |
 | [Rain shelter](dream/shelter.md) | Covered seats, shared claims and weather-aware home trips |
 | [Rest and energy](dream/resting.md) | Recover through shared seating, resident home trips and finite work effort |

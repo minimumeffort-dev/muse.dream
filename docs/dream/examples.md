@@ -329,3 +329,9 @@ to daily attendance, unpaid waiting, finite paid batches and a physical return.
 [rain-shelter.dream](../examples/rain-shelter.dream) connects weather to a healthy
 resident's shared upstairs seat, physical stair trip and persistent return.
 [Authoring rules](shelter.md).
+
+## A shared recipe
+
+[shared-recipe.dream](../examples/shared-recipe.dream) connects paid food, a shared
+seat, remembered time and alternate work qualifications. The two meal participants
+can qualify for the same finite larger-batch job. [Rules](relationships.md).

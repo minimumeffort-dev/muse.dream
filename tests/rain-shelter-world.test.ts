@@ -13,10 +13,10 @@ import {sheltered} from '../src/sim/shelter';
 import {actorPose} from '../src/sim/actors';
 import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
-const scene=createWorldScene(),prior=c.preShelterScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.SHELTER_COMPATIBILITY,previousShelterSaveCompatibility:c.ATTENDANCE_COMPATIBILITY},old:World={...world,scene:prior,saveCompatibility:c.ATTENDANCE_COMPATIBILITY,previousShelterSaveCompatibility:undefined};
+const scene=c.preBondScene(createWorldScene()),prior=c.preShelterScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.SHELTER_COMPATIBILITY,previousShelterSaveCompatibility:c.ATTENDANCE_COMPATIBILITY},old:World={...world,scene:prior,saveCompatibility:c.ATTENDANCE_COMPATIBILITY,previousShelterSaveCompatibility:undefined};
 const worker=(s:CarState)=>s.economy!.accounts.find(a=>a.id==='regular')!,run=<T>(steps:Generator<void,T>)=>{let r=steps.next();while(!r.done)r=steps.next();return r.value;};
 it('pins r101 and exact r100 while retaining physical objects, resources and the daylight clock',async()=>{
- expect(c.SAVE_SIMULATION_VERSION).toBe(45);expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.SHELTER_COMPATIBILITY);expect(await c.sha256(c.preShelterCompatibilitySource(scene))).toBe(c.ATTENDANCE_COMPATIBILITY);expect(await c.sha256(c.preAttendanceCompatibilitySource(scene))).toBe(c.FLOORS_COMPATIBILITY);
+ expect(JSON.parse(c.preBondCompatibilitySource(scene)).simulationVersion).toBe(45);expect(await c.sha256(c.preBondCompatibilitySource(scene))).toBe(c.SHELTER_COMPATIBILITY);expect(await c.sha256(c.preShelterCompatibilitySource(scene))).toBe(c.ATTENDANCE_COMPATIBILITY);expect(await c.sha256(c.preAttendanceCompatibilitySource(scene))).toBe(c.FLOORS_COMPATIBILITY);
  expect(prior.weather!.cycleSeconds).toBe(600);expect(scene.weather!.cycleSeconds).toBe(360);expect(scene.objects).toBe(prior.objects);expect(scene.routes).toBe(prior.routes);expect(scene.terrain).toBe(prior.terrain);expect(scene.daylight).toBe(prior.daylight);expect(scene.economy!.markets).toEqual(prior.economy!.markets);
 });
 it('takes a healthy off-duty resident upstairs through rain, keeps a single claim and replays the return',()=>{

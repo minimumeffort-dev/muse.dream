@@ -1,0 +1,44 @@
+{
+  "disabled": true,
+  "panel": "\n      Market bakeryesc\n      \n        Shop1\n        Work2\n        Bag3\n        Business4\n      \n      Use arrow keys or WASD to select an item or change the transfer amount. Enter activates the selection. Use 1 to 4 or Q and E to switch sections, Tab or Shift Tab for other actions, and Escape to close.\n      20  · Fullness 46% · Energy 63%\n      5 Bread available\n      Bread5  · 5 leftVegetables2  · 5 leftPacked lunch8  · 3 left\n      Buy Bread · 5 ↵\n      Sell Bread · 5 ↵\n      \n        Business\n        \n        \n        Buy business · 0 ↵\n        \n          Coins to transfer\n          ←5 →\n          Deposit↵\n          Withdraw↵\n        \n      \n      Bake bread+3 Bake a larger batch+5 Pack lunch+3 Assemble a repair kit+3 Propagate saplings+2 Take bread to school+5 Repair city fixtures+4 Repair school furniture+4 Repair home furniture+4 Replant city trees+6 \n      Bake a larger batch · +5 ↵\n      Flour ×2 → Bread ×511:52 · Open until 22:00\nBake bread batches · 0/3 or Share a meal with the baker · 0/1\nWorker is walking to Market bakery for bread.\n      \n      Eat food↵\n      Share with your companion↵\n      No thanks↵\n      Your bag is empty.\n      Cancel delivery\n      Complete the required practice first↑ ↓SelectTabActionsescBack\n      \n    ",
+  "player": {
+    "completed": {
+      "delivery": {
+        "boards_run": 0,
+        "fasteners_run": 0,
+        "flour_run": 0,
+        "kits_run": 0,
+        "saplings_run": 0,
+        "school_run": 0
+      },
+      "repair": {
+        "classroom_furniture": 0,
+        "home_furniture": 0,
+        "market_tables": 0,
+        "orchard_trees": 0
+      },
+      "work": {
+        "assemble_kit": 0,
+        "bake": 0,
+        "large_bake": 0,
+        "pack_lunch": 0,
+        "propagate_saplings": 0
+      }
+    },
+    "credits": 20,
+    "decisionAtS": 0,
+    "energy": 62.649999999999466,
+    "id": "pocket",
+    "inventory": {
+      "boards": 0,
+      "bread": 0,
+      "fasteners": 0,
+      "flour": 0,
+      "lunch": 0,
+      "sapling": 0,
+      "timber": 0,
+      "vegetables": 0
+    },
+    "satiety": 45.649999999999466
+  }
+}

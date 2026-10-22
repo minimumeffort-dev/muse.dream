@@ -79,3 +79,7 @@ it('includes daily attendance and its one-owner rules in the commerce context',(
 it('includes covered rest and unchanged commitment ownership in commerce packets',()=>{
  const packet=dreamAgentContext(['commerce']);expect(packet.contract.commands.rest!.fields.shelter).toBe('bool?');expect(packet.contract.commands).toHaveProperty('weather');expect(packet.instructions).toContain('Rain shelter:');expect(packet.instructions).toContain('shelter never cancels cargo');expect(packet.contract).toHaveProperty('commerce.resting',expect.stringContaining('shelter'));
 });
+
+it('includes bounded shared-meal qualifications and alternate work gates in commerce packets',()=>{
+ const p=dreamAgentContext(['commerce']);expect(p.contract.commands.work!.fields.requires_any).toBe('symbols?');expect(p.contract.commands.milestone!.fields.kind).toContain('shared_meal');expect(p.instructions).toContain('work(...,requires_any=');expect(p.contract).toHaveProperty('commerce.qualifications');expect(p.instructions).toContain('Completed shared meals qualify only their two participants');
+});

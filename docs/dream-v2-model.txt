@@ -523,8 +523,9 @@ on event=after requires only seconds (.1..300); near_player/far_player requires 
 For player conversations use on talk(event=interact,to=reply,radius=55). interact requires
 radius, 10..80 units; optional requires uses a personal economy milestone (request commerce context).
 Optional interact-only shared_meals checks completed meals with this social NPC; request commerce context for its capability, consent, bounds and ownership.
-Use requires only at the task receiving market actor: work/repair.market or delivery.to.
-It checks the player account, never another NPC or the shared total. One grounded on-foot talk press selects one nearest eligible
+Use requires only at the task receiving market actor: work/repair.market or delivery.to;
+for kind=shared_meal use the named social account actor.
+It checks the player participation, never a third person or global counts. One grounded on-foot talk press selects one nearest eligible
 NPC by 3D distance, with stable ID ties. Optional familiar=false matches a first meeting;
 familiar=true matches a known person. familiar is only valid for interact. A successful
 interaction marks that NPC known; this persists on R, render unloads and local save/load,
@@ -936,12 +937,24 @@ records and active tasks, without new money/stock or live-city graph rebasing.
 
 Use milestone id(label="Bake bread batches",kind=work,task=bake,count=3); inside economy.
 At most 16; kind=work|delivery|repair references an existing matching task, count
-integer 1..1000000000. Optional work.requires=milestone_id checks the acting account.
-Work prerequisite cycles fail. Only actual paid completion, delivery handoff or
-successful repair increments personal history; starting, cancelling, collecting,
-NPC completions and shared totals never qualify the player. Optional on.requires
+integer 1..1000000000. kind=shared_meal instead names an existing non-player
+account with social in task: milestone table_friend(label="Share bread",kind=shared_meal,task=baker,count=1);
+Completed shared meals qualify only their two participants: the player and that
+named NPC account. Use existing saved socialHistory, never another NPC's or
+shared global counts. Partial, cancelled or refunded meals do not qualify;
+shared history cannot exceed consumed portions per food good. No new score,
+resource, NPC-to-NPC friendship, clinical claim or generated script.
+Optional work.requires=milestone_id keeps the single prerequisite. Alternatively
+work(...,requires_any=[practiced_baker,table_friend]) accepts any one of 1..4
+unique milestones, excludes requires and rejects cycles through every branch.
+The same rule gates player/NPC starts, commuting choices and saved active work.
+Keep exact ingredients, capacity, wages, hours, energy, food and equipment; earned
+eligibility never pays or reserves anything. Ordinary work/delivery/repair history
+still belongs to its actual worker; starting, cancelling, collecting, another
+NPC's completion or global totals cannot qualify the player. Optional on.requires
 is interact-only and checks the player; after linking every using placement must
-be the receiving market actor of that task (work/repair.market or delivery.to).
+be the receiving market actor of that task (work/repair.market or delivery.to),
+or the shared_meal milestone's named NPC account actor.
 Milestones award no goods/pay and execute no code. Existing bounds stay fixed.
 Personal counters plus unassigned history equal global counts. Save format 10,
 simulation 15 preserves old totals unassigned and starts personal records at zero;

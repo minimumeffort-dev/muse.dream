@@ -918,3 +918,12 @@ There are at most eight ration plans, with a threshold from 0 to 95. They are
 optional on stationary NPC repair/delivery accounts, without production,
 shift, meal-trip or social policies. This is a bounded game need. It adds no
 nutrition model, food meshes, new actors or new routes.
+
+## A recipe learned over lunch
+
+Shared-meal history can now qualify its two participants for real work. The
+city's larger bread batch accepts either three personal bread batches or a
+completed meal with the baker. All existing job reservations, inputs, wages,
+hours, equipment and effort checks still apply. The Work view shows the valid
+route; other residents never inherit this pair's progress.
+[Authoring rules and runnable source](relationships.md).

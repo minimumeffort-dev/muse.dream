@@ -1,5 +1,7 @@
 import {strikeTarget} from '../sim/strike';
 import {courierApproach} from '../sim/courier';
+import {socialArea} from '../sim/social';
+import {walkReviewSteps} from './walk-review';
 import {objectContacts} from '../scene/contacts';
 import {worldSeats} from '../scene/seating';
 import {sceneInteriors,portalPoints,walkingHeight} from '../scene/interiors';
@@ -326,13 +328,7 @@ export function* sharedMealReviewSteps(state:CarState,world:World,hosted=false):
   next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30===0)yield;
  }
  const hall=sceneInteriors(world.scene).find(f=>f.object.id==='market_hall')!,door=portalPoints(hall,hall.room.portals[0]!,24),seat=worldSeats(world.scene).find(s=>s.objectId==='hall_bench' && s.seatId==='left')!;
- for(const target of [door.outside,door.inside,seat.approach]){
-  for(let i=0;Math.hypot(next.x-target.x,next.y-target.y)>1.5;i++){
-   if(i>=120*20)throw Error('Shared review could not walk through the market door');
-   const dx=target.x-next.x,dy=target.y-next.y,d=Math.hypot(dx,dy),a=Math.atan2(180,480);
-   next=stepInteractive(next,{steer:(dx*Math.cos(a)-dy*Math.sin(a))/d,throttle:(-dx*Math.sin(a)-dy*Math.cos(a))/d},1/120,world);if(i%30===0)yield;
-  }
- }
+ for(const target of [door.outside,door.inside,seat.approach])next=yield* walkReviewSteps(next,world,socialArea(world.scene,'baker'),target);
  next=toggleRide(next,world);if(!next.seated)throw Error('Shared review could not sit on the bench');
  if(hosted){
   for(let i=0;i<120*3 && !next.economy!.invitation;i++){next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30===0)yield;}

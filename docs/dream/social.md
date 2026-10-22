@@ -130,3 +130,11 @@ persist. Nothing progresses while the page is closed.
 
 NPCs do not invite each other. There is no queue, waiter, table service,
 physical food prop, general relationship score or provider call.
+
+## Remembered meals can unlock work
+
+A `milestone(kind=shared_meal,task=npc_account,count=1)` can now qualify the two
+people who actually finished the activity. `work.requires_any` permits that
+relationship route alongside ordinary personal practice. The live baker's
+larger bread batch uses both paths; neither route creates money or ingredients.
+See [shared recipes](relationships.md) and the [complete example](../examples/shared-recipe.dream).

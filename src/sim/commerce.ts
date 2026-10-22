@@ -17,7 +17,7 @@ import {GROWTH_LIMITS} from '../scene/growth';
 import {advanceGrowth} from './growth';
 import type {CarState,CarInput} from './car';
 import type {Scene} from '../scene/schema';
-import {COMMERCE_LIMITS as L,jobInputs,jobTake,accountJobs,accountRepairs,recoverySourceIds,deliveryBill,type Economy,type Market,type Job} from '../scene/commerce';
+import {COMMERCE_LIMITS as L,jobInputs,jobTake,jobRequirements,accountJobs,accountRepairs,recoverySourceIds,deliveryBill,type Economy,type Market,type Job} from '../scene/commerce';
 import {actorPose} from './actors';
 import {repairArea,repairTargets,targetBroken,repairApproach,repairSegment,repairSpaceClear,REPAIR_REACH,REPAIR_SPEED,REPAIR_RADIUS} from './repair';
 import {objectFragments} from '../scene/fragments';
@@ -85,8 +85,9 @@ function data(scene:Scene){let c=cache.get(scene);if(!c){c=prepare(scene);cache.
 function emptyCompletions(e:Economy){return {work:Object.fromEntries(e.jobs.map(j=>[j.id,0])),delivery:Object.fromEntries(e.deliveries.map(d=>[d.id,0])),repair:Object.fromEntries(e.repairs.map(r=>[r.id,0]))};}
 /** Old totals did not retain ownership. Preserve them without guessing who earned them. */
 export function withPersonalHistory(e:Omit<EconomyState,'accounts'|'unattributed'> & {accounts:Omit<Account,'completed'>[]}):EconomyState{return {...e,accounts:e.accounts.map(a=>({...a,completed:{work:Object.fromEntries(Object.keys(e.batches).map(id=>[id,0])),delivery:Object.fromEntries(Object.keys(e.delivered).map(id=>[id,0])),repair:Object.fromEntries(Object.keys(e.repaired).map(id=>[id,0]))}})),unattributed:{work:{...e.batches},delivery:{...e.delivered},repair:{...e.repaired}}};}
-export function milestoneProgress(state:Pick<CarState,'economy'>,scene:Pick<Scene,'economy'>,account:string,required:string){const m=scene.economy?.milestones.find(m=>m.id===required),a=state.economy?.accounts.find(a=>a.id===account);return m && a ? {milestone:m,done:a.completed[m.kind][m.task]??0} : undefined;}
+export function milestoneProgress(state:Pick<CarState,'economy'>,scene:Pick<Scene,'economy'>,account:string,required:string){const m=scene.economy?.milestones.find(m=>m.id===required),a=state.economy?.accounts.find(a=>a.id===account);return m && a ? {milestone:m,done:m.kind==='shared_meal' ? scene.economy?.accounts.some(s=>s.id===account && s.actor==='player') || account===m.task ? state.economy?.socialHistory?.[m.task]?.meals??0 : 0 : a.completed[m.kind][m.task]??0} : undefined;}
 export function hasMilestone(state:Pick<CarState,'economy'>,scene:Pick<Scene,'economy'>,account:string,required:string){const p=milestoneProgress(state,scene,account,required);return !!p && p.done>=p.milestone.count;}
+export function workQualified(state:Pick<CarState,'economy'>,scene:Pick<Scene,'economy'>,account:string,job:Pick<Job,'requires'|'requires_any'>){const required=jobRequirements(job);return !required.length || required.some(id=>hasMilestone(state,scene,account,id));}
 export function initialEconomy(scene:Pick<Scene,'economy'>,timeS=0):EconomyState|undefined{
  const e=scene.economy;if(!e)return;
  return {atS:timeS,turn:0,...(e.repairs.some(r=>r.recover) ? {recovered:Object.fromEntries(e.repairs.filter(r=>r.recover).map(r=>[r.id,0])),recoverySpent:[]} : {}),accounts:e.accounts.map(a=>({id:a.id,credits:a.credits,...(a.rest ? {energy:e.rests!.find(r=>r.id===a.rest)!.energy} : {}),inventory:Object.fromEntries(e.goods.map(g=>[g.id,0])),satiety:a.satiety,decisionAtS:timeS,completed:emptyCompletions(e)})),unattributed:emptyCompletions(e),markets:e.markets.map(m=>({id:m.id,credits:m.credits,...(m.owner ? {owner:m.owner} : {}),stock:Object.fromEntries(m.lots.map(l=>[l.good,l.quantity]))})),consumed:Object.fromEntries(e.goods.map(g=>[g.id,0])),batches:Object.fromEntries(e.jobs.map(j=>[j.id,0])),delivered:Object.fromEntries(e.deliveries.map(d=>[d.id,0])),repaired:Object.fromEntries(e.repairs.map(r=>[r.id,0])),events:[]};
@@ -219,7 +220,7 @@ function reason(state:CarState,scene:Scene,e:EconomyState,a:Account,action:Comme
   return purchaseReason(scene,e,a,m.id,action.good,state.timeS);
  }else{
   const j=c.jobs.get(action.job)!;
-  if(j.requires && !hasMilestone({economy:e},scene,a.id,j.requires))return 'qualification';
+  if(!workQualified({economy:e},scene,a.id,j))return 'qualification';
   if(damagedEquipment(state,j))return 'equipment';
   if(e.batches[j.id]!+active(e,j.id)>=1e9)return 'capacity';
   if(a.energy!==undefined && a.energy<j.effort)return 'energy';
@@ -413,7 +414,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
    const p=ownerPose(current,scene,a)!,area=commuteArea(scene,spec);
    if(spec.attendance && !attendanceOpen(scene,spec.attendance,now))continue;
    for(const id of accountJobs(spec)){const j=c.jobs.get(id)!,m=e.markets.find(m=>m.id===j.market)!,market=c.markets.get(j.market)!;
-    if(spec.attendance ? j.requires && !hasMilestone(current,scene,a.id,j.requires) || !marketIsOpen(scene,market,now) || !marketIsStaffed(scene,market,e) : m.stock[j.output]!+reserved(e,c.e,m.id,j.output)>=j.target || reason(current,scene,e,a,{kind:'work',job:id},true))continue;
+    if(spec.attendance ? !workQualified(current,scene,a.id,j) || !marketIsOpen(scene,market,now) || !marketIsStaffed(scene,market,e) : m.stock[j.output]!+reserved(e,c.e,m.id,j.output)>=j.target || reason(current,scene,e,a,{kind:'work',job:id},true))continue;
     const offer=courierApproach(scene,spec,j.market,p,current,area);if(!offer || !workPath(scene,area,offer.end,p,current))continue;
     a.commute={id,...(spec.attendance ? {dutyAtS:now} : {}),phase:'out',home:{x:p.x,y:p.y},at:offer.end,x:p.x,y:p.y,headingRad:actorPose(scene,c.objects.get(spec.actor)!,current.timeS,current).headingRad,distance:0,speed:0,path:offer.path,routeAtS:now};break;
    }
@@ -439,7 +440,7 @@ export function checkEconomyState(state:CarState,scene:Scene):void{
  if(e.atS>state.timeS+1e-6 || state.timeS-e.atS>L.decisionS+1e-6 || e.turn>=e.accounts.length)throw Error('Invalid economy clock');
  for(const a of e.accounts){const spec=d.accounts.find(s=>s.id===a.id)!;if(!ids(Object.keys(a.inventory),d.goods.map(g=>g.id)) || Object.values(a.inventory).reduce((n,v)=>n+v,0)>spec.capacity || a.decisionAtS>state.timeS+1.01)throw Error('Invalid inventory or decision clock');
   if(a.delivery){const task=d.deliveries.find(t=>t.id===a.delivery!.id);if(!task || a.work || a.repair || a.delivery.startedAtS>e.atS+1e-6 || a.credits+task.pay>L.money || Object.values(a.inventory).reduce((n,v)=>n+v,0)+task.quantity>spec.capacity)throw Error('Invalid saved delivery');}
-  if(a.work){const j=d.jobs.find(j=>j.id===a.work!.id);if(!j || a.repair || damagedEquipment(state,j) || j.requires && !hasMilestone(state,scene,a.id,j.requires) || a.credits+j.pay>L.money || a.work.doneAtS<e.atS-1e-6 || a.work.doneAtS>state.timeS+j.seconds+1e-6)throw Error('Invalid saved work');}
+  if(a.work){const j=d.jobs.find(j=>j.id===a.work!.id);if(!j || a.repair || damagedEquipment(state,j) || !workQualified(state,scene,a.id,j) || a.credits+j.pay>L.money || a.work.doneAtS<e.atS-1e-6 || a.work.doneAtS>state.timeS+j.seconds+1e-6)throw Error('Invalid saved work');}
  }
  for(const a of e.accounts){const spec=d.accounts.find(s=>s.id===a.id)!;
   if(spec.actor!=='player' && a.delivery && (!a.courier || a.courier.phase!=='dropoff'))throw Error('NPC cargo needs a physical courier');
