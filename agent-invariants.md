@@ -580,3 +580,17 @@ projection by removing only the added worker job and restoring its target to
 four. Validate the old fingerprint before applying unchanged saved state, keep
 its original slot, and preserve every historical projection and cooldown.
 No inventory, navigation or physical rebase is permitted for this policy change.
+
+
+## Workshop material supplies, r86
+
+Keep the two finite depot lots and two paid material deliveries in Dream. The
+caretaker's boards_run is its fourth contract after existing priorities; do not
+raise courier/actor limits or infer a live fastener policy. The example uses
+small receiving buffers to make ordered procurement feed both recipe inputs.
+
+Format 18/simulation 34 adds no new transaction semantics. Validate exact r85
+before initializing only station boards/fasteners to sixteen and new shared,
+unattributed and personal delivery counters to zero. Preserve every existing
+saved field, active commitment, source slot and historical projection. Current
+reloads cannot repeat initialization; no population/floor/navigation rebase.

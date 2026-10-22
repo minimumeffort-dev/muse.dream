@@ -1579,3 +1579,13 @@ recorded panel layouts and remain historical evidence of those mechanics.
 Construction, map and asset captures remain accurate. README and the context-action,
 commerce and world-system guides describe the current wrapping recipe and single
 warning. [Current evidence](../evidence/work-panel/verification.md).
+
+
+## Workshop supply contracts, r86
+
+`workshop-supplies.jpg` is a native current screenshot after the player hands over
+sealed fastener cargo. It uses the normal updated activity panel. No renderer,
+asset, animation or control changes, so existing motion and construction/map
+captures remain accurate for their visible mechanics. Earlier supply captures
+retain their original contract lists and source-pinned ledgers.
+[Native state, fixture boundaries and checks](../evidence/workshop-supplies/verification.md).

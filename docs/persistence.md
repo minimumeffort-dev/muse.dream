@@ -668,3 +668,19 @@ active work, reserved supplies, hand cooldowns and NPC journeys. The original
 format-18 slot remains intact; current reloads do not reapply migration.
 No floor, contact, population, attribution or inventory rebase runs.
 [Checks](evidence/kit-production/verification.md).
+
+
+## Workshop procurement, r86
+
+Format 18/simulation 34 remain unchanged because existing lots and delivery
+transactions express this expansion. The registered r85 projection removes
+only the two new depot lots, two delivery contracts and caretaker board policy.
+After decoding the exact old world, initialize sixteen boards and sixteen
+fasteners in the station shelf, plus zero `boards_run`/`fasteners_run` counters
+in shared, unattributed and personal delivery records. Every existing field,
+clock, cargo claim, reserved wage and supplier balance is retained.
+
+The upgrade does not advance time, decide for NPCs, rebase bodies or navigation,
+or replenish the old workshop shelf. Original slots stay intact; current
+round trips never reapply the new stock. Missing registration fails.
+[Checks and native handoff](evidence/workshop-supplies/verification.md).

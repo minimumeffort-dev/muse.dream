@@ -98,10 +98,22 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r86 opens finite workshop-material stock and conserved delivery contracts. */
+export const WORKSHOP_SUPPLY_COMPATIBILITY='595e9821e3a223698fdc272e097ce119730359e85dc65ea75d647409921d4329';
+const workshopProjections=new WeakMap<Scene,Scene>();
+export function preWorkshopSupplyScene(scene:Scene):Scene{
+ const cached=workshopProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.deliveries.some(d=>d.id==='boards_run'))return scene;
+ const prior={...scene,economy:{...scene.economy,deliveries:scene.economy.deliveries.filter(d=>!['boards_run','fasteners_run'].includes(d.id)),accounts:scene.economy.accounts.map(a=>a.id==='caretaker' ? {...a,deliveries:a.deliveries?.filter(id=>id!=='boards_run')} : a),markets:scene.economy.markets.map(m=>m.id==='station_supplies' ? {...m,lots:m.lots.filter(l=>!['boards','fasteners'].includes(l.good))} : m)}};
+ workshopProjections.set(scene,prior);return prior;
+}
+export function preWorkshopSupplyCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preWorkshopSupplyScene(scene),34,true,encode);}
+
 /** r85 uses the existing shared recipe policy to replenish consumed repair kits. */
 export const KIT_PRODUCTION_COMPATIBILITY='c8e3de0f54713b9c887145934b5b84f20511312062347dbd416e75e3321c8d02';
 const kitProjections=new WeakMap<Scene,Scene>();
 export function preKitProductionScene(scene:Scene):Scene{
+ scene=preWorkshopSupplyScene(scene);
  const cached=kitProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.accounts.some(a=>a.id==='baker' && a.works?.includes('assemble_kit')))return scene;
  const prior={...scene,economy:{...scene.economy,accounts:scene.economy.accounts.map(a=>a.id==='baker' && a.works?.includes('assemble_kit') ? {...a,works:a.works.filter(id=>id!=='assemble_kit')} : a),jobs:scene.economy.jobs.map(j=>j.id==='assemble_kit' ? {...j,target:4} : j)}};

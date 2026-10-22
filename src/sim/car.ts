@@ -126,6 +126,7 @@ export interface World {
   previousCourierSaveCompatibility?:string;
   previousPeopleSaveCompatibility?:string;
   previousInvitationSaveCompatibility?:string;
+  previousWorkshopSupplySaveCompatibility?:string;
   previousKitProductionSaveCompatibility?:string;
   previousStrikeSaveCompatibility?:string;
   previousEquipmentSaveCompatibility?:string;

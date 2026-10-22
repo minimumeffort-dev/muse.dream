@@ -257,5 +257,37 @@ not exemptions from a shared damage category.
 Existing format-18 saves have an exact registered r84 upgrade. It preserves every
 ledger, task, body, cooldown and clock and retains the original slot.
 [In-game evidence and focused checks](../evidence/kit-production/verification.md).
-Raw material replenishment, dedicated tools and manufacturing machinery remain
+Raw material generation, dedicated tools and manufacturing machinery remain
 separate capabilities.
+
+
+## Workshop material deliveries
+
+The station depot now keeps sixteen boards and sixteen fasteners. Both have
+paid, two-unit delivery contracts to the market workshop. The receiving business
+reserves four coins for the courier and two coins for the supplier, plus shelf
+space. Handoff transfers real cargo, pays once and records the courier's work.
+Cancellation returns cargo and reserved money. Kits still need actual ingredients
+and wages; a delivery does not manufacture either material.
+
+The caretaker adds `boards_run` after its existing kit, sapling and flour runs,
+within the unchanged four-contract policy limit. The player can collect either
+raw material. Fasteners remain a player delivery in this live policy; the same
+NPC mechanism supports them in the small example. Existing repair, food and
+finished-kit procurement keep their authored priority.
+
+![A completed fastener handoff and the worker's board trip](../media/workshop-supplies.jpg)
+
+[Download the complete supply-chain example](../examples/workshop-supplies.dream).
+It uses two-unit receiving buffers for boards and fasteners: an ordered courier
+fills the first eligible shelf before choosing the next, so a small buffer lets
+both inputs arrive before assembly. Its worker then makes two kits using the
+same conserved recipe. This is ordinary Dream `lot`, `delivery`, `works` and
+`deliveries` composition, with no new command or script.
+
+Old saves receive only the two new supplier lots and zeroed delivery counters
+after exact prior-world validation. Existing bodies, money, stock, tasks, damage
+and clocks stay intact. [Native checks and save evidence](../evidence/workshop-supplies/verification.md).
+Finite depot stock, business cash and carry capacity still limit the chain.
+Forestry, mining, fabrication and autonomous fastener procurement in the live
+city remain further work.

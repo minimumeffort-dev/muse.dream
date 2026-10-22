@@ -293,7 +293,7 @@ The player can take the same recipe and shares its one-worker capacity.
 No resources, actors or render geometry are added. The registered r84 upgrade
 keeps every saved field and clock, changing only future authored choices. Raw
 boards and fasteners still come from finite initial stock; this is not forestry,
-a factory or an unlimited supply chain. Next connect raw-material procurement
+a factory or an unlimited supply chain. Next connect raw-material generation
 and another useful indoor activity. [Authoring and checks](dream/businesses.md#repair-kit-production).
 
 
@@ -304,3 +304,19 @@ current activity. A disabled action names its reason once. Keyboard selection,
 focus ownership and all economic eligibility remain unchanged. This makes
 existing food and workshop recipes inspectable without extending Dream or saves.
 Broader jobs, upstream materials and indoor activities remain the next systems.
+
+
+### Conserved workshop procurement, r86
+
+The existing station now supplies sixteen boards and sixteen fasteners through
+paid two-unit delivery contracts. The caretaker can fetch boards through its
+fourth courier slot; both materials can be carried by the player. Handoff pays
+the supplier and courier from reserved market cash, then real recipes can use the
+stock. No geometry, actors, caps or transaction semantics change. The exact r85
+upgrade adds only these finite new lots and zeroed delivery records.
+
+The checked small example also uses NPC fastener procurement, with receiving
+buffers that let both ingredients reach assembly. The live policy retains its
+existing repair and delivery priorities; raw materials still originate in finite
+stock. Next implement actual raw-material generation and another indoor activity,
+then broaden resident work purposes. [Authoring and limits](dream/businesses.md#workshop-material-deliveries).

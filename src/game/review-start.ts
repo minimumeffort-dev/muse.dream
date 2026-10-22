@@ -181,6 +181,22 @@ export function* handReviewSteps(state:CarState,world:World,working=false):Gener
  return next;
 }
 
+/** Real consumption opens receiving space; the existing cargo fixture uses collect and R. */
+export function* workshopReviewSteps(state:CarState,world:World):Generator<void,CarState>{
+ let next=yield* handReviewSteps(state,world);
+ for(let cycle=0;cycle<2;cycle++){
+  next=stepInteractive(next,{steer:0,throttle:0,strikePressed:true},1/120,world);
+  if(!next.broken.includes('hall_table_east'))throw Error('Workshop review did not break its table');
+  for(let i=0;i<120*25;i++){
+   next=stepInteractive(next,{steer:0,throttle:0,...(i===239 ? {commerce:{kind:'repair',repair:'market_tables'} as const} : {})},1/120,world);if(i%30===0)yield;
+  }
+  if(next.broken.includes('hall_table_east') || next.economy!.accounts.find(a=>a.id==='baker')!.completed.work.assemble_kit!<cycle+1)throw Error('Workshop review did not repair and replace its kit');
+ }
+ next=cargoReviewStart(next,world,'fasteners_run');
+ if(next.economy!.accounts.find(a=>a.id==='pocket')!.delivery?.id!=='fasteners_run')throw Error('Workshop review did not collect real fasteners');
+ return yield* handReviewSteps(next,world);
+}
+
 /** Dev fixture starts a car inside the hall; damage and the complete repair still use real fixed steps. */
 export function* equipmentReviewSteps(state:CarState,world:World):Generator<void,CarState>{
  const table=world.scene.objects.find(o=>o.id==='hall_table_east');if(!table)throw Error('The equipment review needs the hall table');
