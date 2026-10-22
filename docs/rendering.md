@@ -539,3 +539,18 @@ triangles before; both sets contain sixteen compacted meshes. This is a bounded
 increase in asset detail, not a rendering speedup. These source-buffer counts
 exclude live instance records, total browser memory and VRAM.
 [Conditions and raw rows](evidence/character-construction/prototype-metrics.json).
+
+
+## Work-route endpoint lookup
+
+Complete-world validation and runtime work routing now reuse a spatial index
+for each immutable work graph. It returns exactly the nearest 32 linked nodes
+before clearance, including the original distance/index tie order. Sparse and
+distant probes use a bounded fallback. Actor positions, damage and segment
+clearance remain live, and worker-primed graph identity owns the cache.
+
+A local Node v26.8.1 / M3 Ultra three-run median for complete-world compilation
+fell from 8.12 to 7.27 seconds. Both entire service graphs and 24 reference paths
+remain exact. This adds bounded graph indices; it is not a memory reduction or
+measured browser/laptop gain. No geometry, rendering settings, actor budget or
+saved state changes. [Samples, source comparison and native checks](evidence/work-endpoints/verification.md).

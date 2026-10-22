@@ -594,3 +594,14 @@ before initializing only station boards/fasteners to sixteen and new shared,
 unattributed and personal delivery counters to zero. Preserve every existing
 saved field, active commitment, source slot and historical projection. Current
 reloads cannot repeat initialization; no population/floor/navigation rebase.
+
+
+## Exact work endpoint indexing
+
+Endpoint indices are weakly owned by immutable WorkNode arrays, including arrays
+received through worker priming. Preserve exactly the nearest 32 linked nodes
+before clearance and the Math.hypot/distance-then-node-index order. Bound empty
+cell expansion and retain exhaustive ranking for sparse/far probes. Never cache
+actor positions, broken-state decisions or segment clearance. Different prepared
+arrays own different indices. Keep graph/node order, route semantics, source
+fingerprints and save versions unchanged.

@@ -82,6 +82,20 @@ export function workPath(scene:Scene,r:WalkingArea,start:Point,end:Point,state?:
  }return;
 }
 export type WorkNode=Point & {links:number[]};
+const endpointIndices=new WeakMap<WorkNode[],{points:{x:number;y:number;i:number}[];grid:SpatialGrid<{x:number;y:number;i:number}>}>();
+/** Graph geometry is immutable after construction/priming; dynamic clearance is never cached. */
+export function nearestWorkNodes(nodes:WorkNode[],p:Point):{i:number;d:number}[]{
+ let index=endpointIndices.get(nodes);
+ if(!index){const points=nodes.flatMap((n,i)=>n.links.length ? [{x:n.x,y:n.y,i}] : []);index={points,grid:new SpatialGrid(points,128)};endpointIndices.set(nodes,index);}
+ const rank=(points:typeof index.points)=>points.map(n=>({i:n.i,d:Math.hypot(n.x-p.x,n.y-p.y)})).sort((a,b)=>a.d-b.d || a.i-b.i);
+ if(index.points.length<=32)return rank(index.points);
+ for(let radius=64;;radius*=2){
+  // Sparse or far-away probes must not scan more empty cells than a full node query.
+  if((Math.ceil(radius/64)+2)**2>index.points.length*2)return rank(index.points).slice(0,32);
+  const nearest=rank(index.grid.query(p.x,p.y,radius)).filter(n=>n.d<=radius);
+  if(nearest.length>=32)return nearest.slice(0,32);
+ }
+}
 const networks=new WeakMap<Scene,Map<string,WorkNode[]>>();
 /** Reuse the city's sparse pedestrian graph; local grids only cover declared work grounds. */
 export function workNetwork(scene:Scene,r:WalkingArea){
@@ -137,7 +151,7 @@ export function workNetwork(scene:Scene,r:WalkingArea){
 function networkPath(scene:Scene,r:WalkingArea,start:Point,end:Point,state?:CarState):Point[]|undefined{
  const radius=r.radius??REPAIR_RADIUS,height=r.height??18,live=state ? actorContacts(scene,state.timeS,state).filter(c=>!c.id || !sceneContacts(scene).objects.get(c.id)?.route) : [],clear=(a:Point,b:Point)=>workSegment(scene,r,a,b,state,true) && segmentClear(scene,a,b,state,live,radius,height);
  if(clear(start,end))return [{x:end.x,y:end.y}];
- const nodes=workNetwork(scene,r),near=(p:Point)=>nodes.map((n,i)=>({i,d:Math.hypot(n.x-p.x,n.y-p.y)})).filter(v=>nodes[v.i]!.links.length).sort((a,b)=>a.d-b.d || a.i-b.i).slice(0,32).filter(v=>clear(p,nodes[v.i]!));
+ const nodes=workNetwork(scene,r),near=(p:Point)=>nearestWorkNodes(nodes,p).filter(v=>clear(p,nodes[v.i]!));
  const starts=near(start),ends=new Set(near(end).map(n=>n.i)),previous=new Int32Array(nodes.length).fill(-2),cost=new Float64Array(nodes.length).fill(Infinity),closed=new Uint8Array(nodes.length),heap:{i:number;f:number}[]=[];
  const less=(a:{i:number;f:number},b:{i:number;f:number})=>a.f<b.f || a.f===b.f && a.i<b.i;
  const push=(v:{i:number;f:number})=>{let i=heap.length;heap.push(v);while(i>0){const p=(i-1)>>1;if(!less(v,heap[p]!))break;heap[i]=heap[p]!;i=p;}heap[i]=v;};

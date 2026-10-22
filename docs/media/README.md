@@ -1589,3 +1589,12 @@ asset, animation or control changes, so existing motion and construction/map
 captures remain accurate for their visible mechanics. Earlier supply captures
 retain their original contract lists and source-pinned ledgers.
 [Native state, fixture boundaries and checks](../evidence/workshop-supplies/verification.md).
+
+
+## Work endpoint indexing
+
+This changes only graph endpoint selection cost. Existing product stills, GIFs
+and videos retain the exact accepted world, geometry, animation and controls.
+They remain accurate and are not regenerated. A current functional screenshot
+is kept with the [Node measurements and browser check](../evidence/work-endpoints/verification.md);
+no browser FPS, loader speed comparison or memory reduction is inferred from it.

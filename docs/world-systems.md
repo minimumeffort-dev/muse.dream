@@ -48,9 +48,9 @@ charged shots and net containment, with saved match ownership, scores, venue and
 clocks. The city shares one bounded squad; it assembles at the chosen ground.
 NPC-hosted games, fouls and league schedules remain further work.
 
-Then audit shared capabilities across the world. Every bench should have usable
-seat data when its construction permits sitting, rather than a few demonstration
-placements. Apply the same category-wide consistency to other furniture and
+The current audit finds all ten live benches have two authored seats, checked
+for support and dry access by complete-world validation. Keep that coverage when
+adding furniture variants. Apply the same category-wide consistency to other furniture and
 vehicles, preserving collision-free approaches and persistent state.
 
 The city needs more varied daily activity: people and traffic with destinations,
@@ -320,3 +320,14 @@ buffers that let both ingredients reach assembly. The live policy retains its
 existing repair and delivery priorities; raw materials still originate in finite
 stock. Next implement actual raw-material generation and another indoor activity,
 then broaden resident work purposes. [Authoring and limits](dream/businesses.md#workshop-material-deliveries).
+
+
+### Exact route lookup with less compilation work
+
+Work endpoints now use an immutable-graph spatial index, retaining the same
+nearest-32 cutoff, tie order and live contact checks. Local Node compilation
+median fell by 10.44% in three matched samples per version; this is not a browser
+FPS or weaker-device result. Both full service graphs and 24 paths remain exact.
+Existing world systems and visuals are unchanged. Continue raw-material generation
+and useful indoor activities, with shared interactions and explicit resident
+purposes. [Measurements and functional replay](evidence/work-endpoints/verification.md).
