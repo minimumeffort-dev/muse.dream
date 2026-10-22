@@ -477,13 +477,13 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   },(drive,frame)=>{keys.clear();if(drive && frame<300)keys.add("KeyW");}) : undefined;
   let captureWalk:ReturnType<typeof interiorReviewInput>|undefined;
   let captureTime:number|undefined,captureActor:string|undefined,captureFocus:THREE.Vector3|undefined;
-  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{hand:600,equipment:480,fixturefall:240,fixturerepair:600,driving:210,boost:210,football:480,basketball:480,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:720,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840,maintenance:600,lamps:240,treefall:240,lamprepair:360,streetrepair:360,planting:360,growth:900,courier:360,handoff:540,interior:600,interiornight:240,transit:240,recipes:360,progression:480,meals:480,kitchen:480,seating:480,hours:480,shifts:600,shared:720,hosted:420,airportrepair:600,schoolrepair:600,business:600,park:360,scooter:240},async(clip)=>{
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{actions:180,hand:600,equipment:480,fixturefall:240,fixturerepair:600,driving:210,boost:210,football:480,basketball:480,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:720,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840,maintenance:600,lamps:240,treefall:240,lamprepair:360,streetrepair:360,planting:360,growth:900,courier:360,handoff:540,interior:600,interiornight:240,transit:240,recipes:360,progression:480,meals:480,kitchen:480,seating:480,hours:480,shifts:600,shared:720,hosted:420,airportrepair:600,schoolrepair:600,business:600,park:360,scooter:240},async(clip)=>{
     captureTime=undefined;captureActor=undefined;captureFocus=undefined;captureWalk=undefined;viewAngle=0;cameraAngle=0;
     resetPosition(true);worldTime.value=0;setMode("playing");
     commerce.resetChoices();
     characters.forEach(character=>character.reset());
-    if(clip==='hand'){
-      const steps=handReviewSteps(car,world,true);let result=steps.next(),yieldAt=performance.now();
+    if(clip==='hand' || clip==='actions'){
+      const steps=handReviewSteps(car,world,clip==='hand');let result=steps.next(),yieldAt=performance.now();
       while(!result.done){if(performance.now()-yieldAt>8){await new Promise<void>(resolve=>setTimeout(resolve,0));yieldAt=performance.now();}result=steps.next();}
       car=result.value;worldTime.value=car.timeS;manualZoom.factor=1.6;
     }
@@ -561,6 +561,11 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       const night=clip==='interiornight',config=doc.daylight;captureTime=config ? (((night ? 22 : 14)-config.startHour+24)%24)/24*config.cycleSeconds+frame/30 : undefined;
       if(frame===360 && !night || frame===120 && night)viewAngle+=Math.PI/2;
       captureWalk=interiorReviewInput(car,world,frame,cameraAngle,night);pendingCommerce=captureWalk.commerce;return;
+    }
+    if(clip==='actions'){
+      if(frame===2){commerce.open('work');for(let i=0;i<3;i++)commerce.key('ArrowDown');}
+      if(frame===90)commerce.key('ArrowUp');
+      return;
     }
     if(clip==='hand'){
       if(frame===599){

@@ -1563,3 +1563,19 @@ The r84 hand and earlier kitchen recordings are historical source-pinned flows;
 they do not demonstrate the new NPC kit-production priority. A current native
 still and public state checks document this policy without regenerating motion.
 [Current policy verification](../evidence/kit-production/verification.md).
+
+
+## Work-panel details
+
+`actions.gif`, `actions.mp4` and `actions.jpg` use one current six-second flow:
+180 native 2400 × 1350 PNG frames at 30 rendered frames per simulation second,
+with frame 45 as the still. The existing encoder produces 1600 × 900 HD video
+and a 1280 × 720 GIF. No frames are interpolated, and this is not a live FPS
+measurement. The player is placed by the existing real-doorway review walk;
+ordinary activity controls inspect a kit recipe, then a lunch recipe.
+
+Earlier hand, kit-production, market-control and commerce captures keep their
+recorded panel layouts and remain historical evidence of those mechanics.
+Construction, map and asset captures remain accurate. README and the context-action,
+commerce and world-system guides describe the current wrapping recipe and single
+warning. [Current evidence](../evidence/work-panel/verification.md).

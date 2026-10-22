@@ -1,0 +1,19 @@
+{
+  "capture": "Saved 180 frames · complete",
+  "mode": "playing",
+  "save": {
+    "compatibilityHash": "c8e3de0f54713b9c887145934b5b84f20511312062347dbd416e75e3321c8d02",
+    "enabled": false,
+    "restored": false,
+    "review": false,
+    "sourceHash": "051433b146f0538c376da2f68194c5ea0eb173cf5bf722e9ed9ca52448e5beab",
+    "status": "Review session: saves disabled."
+  },
+  "active": {
+    "detail": "Pack lunch · 5.0s left. Stay nearby.",
+    "recipe": "Bread ×1 + Vegetables ×1 → Packed lunch ×1",
+    "text": "\n      Workingesc\n      \n        Shop1\n        Work2\n        Bag3\n        Business4\n      \n      Use arrow keys or WASD to select an item or change the transfer amount. Enter activates the selection. Use 1 to 4 or Q and E to switch sections, Tab or Shift Tab for other actions, and Escape to close.\n      20  · Fullness 45%\n      4 Bread available\n      Bread5  · 4 leftVegetables2  · 4 leftPacked lunch8  · 3 left\n      Buy Bread · 5 ↵\n      Sell Bread · 5 ↵\n      \n        Business\n        \n        \n        Buy business · 0 ↵\n        \n          Coins to transfer\n          ←5 →\n          Deposit↵\n          Withdraw↵\n        \n      \n      Bake bread+3 Bake a larger batch+5 Pack lunch+3 Assemble a repair kit+3 Take bread to school+5 Repair city fixtures+4 Replant city trees+6 \n      Cancel work↵\n      Bread ×1 + Vegetables ×1 → Packed lunch ×1Pack lunch · 5.0s left. Stay nearby.\n      \n      Eat food↵\n      Share with your companion↵\n      No thanks↵\n      Your bag is empty.\n      Cancel delivery\n      ↑ ↓SelectTabActionsescBack\n      Pack lunch started\n    ",
+    "warning": ""
+  },
+  "errors": []
+}

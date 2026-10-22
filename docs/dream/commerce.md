@@ -122,11 +122,13 @@ fastener units. They are finite supplies, added once for existing saves. Neither
 job creates ingredients or business money, and kit assembly does not replace
 all the world's supply needs.
 
-The work panel shows the selected recipe. A missing ingredient blocks the whole
+The work panel shows the complete selected recipe on its own wrapping line, with
+status below and a single reason for a disabled action. [Current panel](../context-actions.md#open-the-part-you-need).
+A missing ingredient blocks the whole
 start; it cannot take the bread and fail halfway through taking vegetables.
 Wages, output room and room to refund every ingredient stay reserved. Cancel or
 walk away before completion to return all inputs and wages without output or pay.
-NPC workers use the same rule; the live vendor now packs lunches before restocking bread through its ordered work policy.
+NPC workers use the same rule; the live vendor replenishes consumed repair kits before preparing lunches and bread through its ordered work policy.
 
 ![Packing, buying and eating a lunch](../media/recipes.gif)
 

@@ -91,7 +91,19 @@ choices retain the engine's reason. None of this changes Dream's interaction
 ranges, ownership, money, inventories or physics. The UI reads the accepted
 world and asks the same fixed-step simulation to act.
 
-![Keyboard item slots at the bakery](media/market-controls.png)
+The Work view keeps the complete recipe separate from opening hours and current
+activity. Long ingredient names wrap instead of disappearing after two lines.
+A disabled action has one warning, and active-task directions stay readable.
+Keyboard selection and focus trapping use the same controls described above.
+
+![Complete recipes and one action warning](media/actions.jpg)
+
+[Current panel in motion](media/actions.mp4) · [GIF](media/actions.gif) ·
+[Browser and focused checks](evidence/work-panel/verification.md).
+Earlier market-control and commerce recordings retain their recorded panel layout;
+they still show the same transactions, not this current text arrangement.
+
+![Earlier keyboard item slots at the bakery](media/market-controls.png)
 
 ![Business finances, opened deliberately](media/business-controls.png)
 

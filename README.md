@@ -152,6 +152,7 @@ open it; Shop, Work, Bag and Business have their own views. **M** opens activiti
 **I** opens your bag, and **Escape** closes a panel before pausing.
 Arrow keys select item slots, Enter acts, 1–4 switch sections and Tab reaches
 secondary actions. There are no gameplay dropdowns or number fields.
+The Work view gives the complete recipe its own line, keeps status below it and shows a blocked-action reason once.
 [How the contextual controls work](docs/context-actions.md).
 The food icon is a fork and knife. Cycle lanes and the riding prompt share one
 bicycle outline, with joined frame tubes and evenly sized wheels.

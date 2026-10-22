@@ -295,3 +295,12 @@ keeps every saved field and clock, changing only future authored choices. Raw
 boards and fasteners still come from finite initial stock; this is not forestry,
 a factory or an unlimited supply chain. Next connect raw-material procurement
 and another useful indoor activity. [Authoring and checks](dream/businesses.md#repair-kit-production).
+
+
+### Readable work details
+
+Recipes now have a complete wrapping line, separate from opening hours and
+current activity. A disabled action names its reason once. Keyboard selection,
+focus ownership and all economic eligibility remain unchanged. This makes
+existing food and workshop recipes inspectable without extending Dream or saves.
+Broader jobs, upstream materials and indoor activities remain the next systems.

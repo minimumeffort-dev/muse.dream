@@ -119,7 +119,8 @@ kbd { display:inline-block; font:700 10px Manrope,system-ui,sans-serif; min-widt
 #commerce-panel output { display:block; margin-top:8px; color:#d6e0bd; font-size:11px; line-height:1.5; }
 #commerce-panel output:empty,#commerce-panel p:empty { display:none; }
 #market-sell,#market-cancel { background:transparent!important; color:var(--paper)!important; border-color:var(--line)!important; }
-#market-progress { color:#bdc4b4; font-size:11px; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; }
+#market-recipe { color:var(--paper); font-size:12px; font-weight:650; overflow-wrap:anywhere; }
+#market-progress { color:#bdc4b4; font-size:11px; white-space:pre-line; overflow-wrap:anywhere; }
 #business-title { font-weight:750; color:var(--yellow); }
 #business-ledger,#business-terms { color:#c8ccbf; }
 #business-capital { display:grid; grid-template-columns:1fr 1fr; gap:4px 8px; }
