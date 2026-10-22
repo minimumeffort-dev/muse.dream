@@ -11,6 +11,11 @@ trailers, vehicle damage and service fleets remain separate work.
 
 ## Next playable work
 
+The commuter now uses the open home for a paid meal, sharing separate cushion
+claims with the player. The hall bench remains a fallback, and old hall meals
+finish after upgrade. The home still needs more purposes beyond seating, eating
+and damage/repair; upper floors, sleep and access rules remain missing.
+
 Navigation now opens from the minimap or C, with map zoom/pan, a removable
 waypoint and HUD bearing/distance. Ground vehicles now route along the shared
 Dream street centerlines and junctions, showing the same path on both maps.
@@ -441,3 +446,18 @@ Next deepen purpose-specific indoor work and resident routines, then upstream
 food supply and weather. General relationships, multi-floor interiors and the
 broader living-world requirements remain incomplete.
 [Authoring and boundaries](dream/businesses.md#nursery-work).
+
+
+### A resident eats at home, r95
+
+The market commuter now buys a real packed lunch and walks through the existing
+home doorway to eat on the settee. A seated player and diner claim different
+cushions. Dream orders preferred furniture, with the hall bench as a second
+choice and ordinary standing meals when no slot is available. The saved r94
+hall meals finish without repurchasing or losing food.
+
+This connects a home to an existing finite daily activity, without new residents,
+rigs, stock or currency. It does not add sleep, housing permissions or a general
+schedule. Next deepen another useful indoor activity and resident choices;
+multi-floor interiors, broader jobs, relationships and the larger living-world
+requirements remain incomplete. [Meal rules](dream/commerce.md).

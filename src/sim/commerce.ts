@@ -324,7 +324,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
   if(t.phase==='seat'){t.phase='eat';t.x=t.at.x;t.y=t.at.y;t.path=[];t.speed=0;t.eatUntilS=now+m.eat_s;continue;}
   if(reason(current,scene,e,a,{kind:'buy',market:t.market,good:m.good})){returnHome();continue;}
   perform(a,{kind:'buy',market:t.market,good:m.good});
-  const offer=worldSeats(scene).filter(s=>m.seats?.includes(s.objectId) && seatAvailable(scene,current,s,a.id)).map(seat=>({seat,path:workPath(scene,area,t,seat.approach,current)})).find(o=>o.path && workPath(scene,area,o.seat.approach,t.home,current));
+  const offer=worldSeats(scene).filter(s=>m.seats?.includes(s.objectId) && seatAvailable(scene,current,s,a.id)).sort((a,b)=>m.seats!.indexOf(a.objectId)-m.seats!.indexOf(b.objectId)).map(seat=>({seat,path:workPath(scene,area,t,seat.approach,current)})).find(o=>o.path && workPath(scene,area,o.seat.approach,t.home,current));
   if(offer){t.seat={objectId:offer.seat.objectId,seatId:offer.seat.seatId};t.phase='seat';t.at={...offer.seat.approach};t.path=offer.path!;t.routeAtS=now;}
   else{t.phase='eat';t.speed=0;t.eatUntilS=now+m.eat_s;}
  }

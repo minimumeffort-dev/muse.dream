@@ -22,6 +22,17 @@ These exports are motion evidence, not live frame-rate measurements.
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
+## Home meal, r95
+
+`home-meal.png` is a native browser still of the player on the left cushion and
+the commuter on the right after buying lunch and walking home. The review
+advances ordinary fixed-step mechanics; only the player's initial review pose is
+seeded. It uses a separate review-save prefix. No motion was re-exported: home
+geometry, cutaway rendering and controls retain the r94 walkthrough behavior.
+That walkthrough remains accurate; its new NPC meal policy is documented by
+this still and [saved-state checks](../evidence/home-meals/verification.md).
+Older meal recordings keep their historical venue and policy.
+
 ## Authored rain, r93
 
 The newer [rain recording](weather.gif), [HD video](weather.mp4) and

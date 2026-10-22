@@ -17,7 +17,7 @@ import schoolR90 from './compatibility/r90-school.json';
 import homeR93 from './compatibility/r93-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=38;
+export const SAVE_SIMULATION_VERSION=39;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -100,10 +100,26 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r95 prefers the commuter's home for meals; existing claims remain valid. */
+export const HOME_MEALS_COMPATIBILITY='62198a1eb0f91bb6793276db568458a0a980823c492c7f1fb7f2e8cf7cc8cdd4';
+const homeMealProjections=new WeakMap<Scene,Scene>();
+export function preHomeMealsScene(scene:Scene):Scene{
+ const cached=homeMealProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.meals.some(m=>m.id==='market_break' && m.seats?.includes('home_settee')))return scene;
+ const objects=scene.objects.map(o=>o.id==='home_settee' && o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2
+  ? {...o,spec:{...o.spec,seats:o.spec.seats!.map(s=>({...s,approach:[s.approach[0],20] as [number,number]}))}} : o);
+ const meals=scene.economy.meals.map(m=>m.id==='market_break'
+  ? {...m,grounds:m.grounds!.filter(id=>id!=='oldtown_044' && id!=='home_entry'),seats:m.seats!.filter(id=>id!=='home_settee')} : m);
+ const prior={...scene,objects,economy:{...scene.economy,meals}};
+ homeMealProjections.set(scene,prior);return prior;
+}
+export function preHomeMealsCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preHomeMealsScene(scene),38,true,encode);}
+
 /** r94 opens the commuter's existing home and adds its shared furniture service. */
 export const HOME_INTERIOR_COMPATIBILITY='f003f9a1a23eac605a5a780ac34e471888fea029ac9b6d05c1d571df0d0f0275';
 const homeProjections=new WeakMap<Scene,Scene>();
 export function preHomeInteriorScene(scene:Scene):Scene{
+ scene=preHomeMealsScene(scene);
  const cached=homeProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.repairs.some(r=>r.id==='home_furniture'))return scene;
  const added=new Set(['home_settee','home_table','home_planter']);

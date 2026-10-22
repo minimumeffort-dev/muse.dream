@@ -813,8 +813,9 @@ ordered list of 1..4 unique work IDs, exclusive with work, repairs and deliverie
 Try the first eligible job below target; no extra actors, commitments or free stock.
 Player accounts never act automatically.
 NPC meal trips use meal id(good=food_id,markets=[first_shop,second_shop],on=home_ground,grounds=[extra_ground],eat_s=4,seats=[bench_placement]); and account.meal=meal_id.
-Optional seats lists 1..4 unique static furniture placement IDs. Seated customers
-require complete humanoid bones. After purchase, reserve a reachable free slot,
+Optional seats lists 1..4 unique static furniture placement IDs in preference
+order; slots within each furniture use their authored order. Seated customers
+require complete humanoid bones. After purchase, reserve the first reachable free slot,
 walk to its approach, sit and eat; release before returning home. Shared claims
 include the player and customers walking to seats. Full/broken furniture falls
 back to standing, retaining the purchased food. No queues or table service.

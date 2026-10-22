@@ -777,3 +777,20 @@ Keep heading, travel, ownership and all other parked poses; reject unrecoverable
 backups without replacing the old slot. Preserve resources, clocks,
 damage, old slots and the complete earlier migration chain. See
 `docs/examples/enterable-home.dream` and `docs/persistence.md`.
+
+
+## Home meal preferences, r95
+
+Meal furniture IDs define preference order; slots within a furniture retain
+source order. Reserve only a reachable free claim after the finite purchase,
+using the same player/NPC claims. Fall back through other furniture and then
+standing without buying twice. Broken furniture retains the existing release
+policy. Keep fixed-step paths, timers, conservation and current actor/rig caps.
+The commuter's home uses existing floor, entrance and corridor data; keep the
+settee approaches clear for both 3-unit player and 4-unit NPC bodies.
+
+Format 19/simulation 39 registers exact r94 by projecting only the new meal
+grounds/preference and the two approach offsets. Existing sitting points remain
+fixed. Preserve every old saved field, including hall seat claims and pending
+meals, before accepting under the new superset policy. Never reroute or repurchase
+an old commitment. Keep the entire earlier migration chain and original slots.

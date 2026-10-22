@@ -15,7 +15,7 @@ const world=(s=scene):World=>({scene:s,roadMask:buildMaskForScene(s),driveMask:b
 const current={...world(),saveCompatibility:c.WEATHER_COMPATIBILITY,previousWeatherSaveCompatibility:c.RATIONS_COMPATIBILITY},old={...world(prior),saveCompatibility:c.RATIONS_COMPATIBILITY};
 it('pins r92 exactly, retains all geometry/resources/navigation and declares outdoor versus indoor work',async()=>{
  expect(await c.sha256(c.preHomeInteriorCompatibilitySource(scene))).toBe(c.WEATHER_COMPATIBILITY);expect(await c.sha256(c.preWeatherCompatibilitySource(scene))).toBe(c.RATIONS_COMPATIBILITY);expect(await c.sha256(c.preRationsCompatibilitySource(scene))).toBe(c.SCHOOL_INTERIOR_COMPATIBILITY);
- for(const key of ['objects','surfaces','terrain','routes','behaviors'] as const)expect(scene[key]).toBe(prior[key]);expect(scene.economy!.markets).toBe(prior.economy!.markets);expect(sceneContactData(scene)).toEqual(sceneContactData(prior));expect(ambientGraph(scene)).toEqual(ambientGraph(prior));expect(c.SAVE_SIMULATION_VERSION).toBe(38);
+ for(const key of ['objects','surfaces','terrain','routes','behaviors'] as const)expect(scene[key]).toBe(prior[key]);expect(scene.economy!.markets).toBe(prior.economy!.markets);expect(sceneContactData(scene)).toEqual(sceneContactData(prior));expect(ambientGraph(scene)).toEqual(ambientGraph(prior));
  expect(scene.economy!.repairs.filter(r=>r.dry).map(r=>r.id)).toEqual(['market_tables','orchard_trees']);expect(scene.economy!.repairs.find(r=>r.id==='classroom_furniture')!.dry).toBeUndefined();
 });
 it('preserves a genuine r92 paid batch field-for-field, derives weather from saved time and retains the original slot',()=>{

@@ -667,6 +667,12 @@ Pickup and handoff approaches stay less than four world units above/below the ve
 
 ### Meal trips
 
+`meal.seats` orders 1..4 unique furniture placement IDs by preference. The first
+reachable free slot wins, retaining authored slot order within each object.
+Busy, broken or inaccessible furniture yields to the next choice; no available
+slot means a standing meal with the food already purchased. Placement order
+never overrides this preference. [Runnable example](../examples/seat-preferences.dream).
+
 `meal id(good=ref,markets=symbols,on=ref,grounds=symbols?,eat_s=n);` lives in
 `economy`; `account.meal` assigns it to a person NPC. There are at most 8 plans,
 1..4 unique ordered markets and 1..12 seconds to eat. Every market must sell that

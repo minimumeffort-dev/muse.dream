@@ -1,5 +1,13 @@
 # Leave and come back
 
+The current world uses format 19 / simulation 39. Its registered r94 upgrade
+checks the exact previous world, then keeps every saved field: a customer already
+walking to or eating at the hall bench finishes that same meal. New purchases
+use the authored home-first preference. The settee's sitting points stay fixed;
+only its standing approaches move outward for NPC clearance. The old storage
+slot remains available. No food, credits, clocks, claims or repairs are reset.
+
+
 The world now saves on this device. Meet someone, park a bicycle, move a ball or break a table, then reload the same world. Those changes return with you. A person you have met can recognize you through their Dream program.
 
 Autosave runs every ten simulation seconds, after a conversation press or committed economic event, when pausing and when leaving the page. **Save now** in the pause menu writes immediately. Reopening the page restores the saved state before the first neighbourhood is loaded.
@@ -798,7 +806,7 @@ The old slot and all earlier registered migrations survive.
 
 ## Commuter-home upgrade, r94
 
-Format 19 / simulation 38 now pins
+The r94 format-19 / simulation-38 world pins
 `f003f9a1a23eac605a5a780ac34e471888fea029ac9b6d05c1d571df0d0f0275`.
 Its registered projection restores the exact r93 house and entrance, removes
 the three indoor props and unpainted doorway corridor, and removes only the
@@ -818,3 +826,18 @@ heading, travel history and ownership. Candidates must clear the complete body,
 other parked vehicles and the active player. Vehicles that fit the doorway can
 retain their position on the new floor. Other parked poses are unchanged; an
 unrecoverable pose rejects migration and keeps the old slot intact.
+
+
+## Home-meal upgrade, r95
+
+Format 19 / simulation 39 pins
+`62198a1eb0f91bb6793276db568458a0a980823c492c7f1fb7f2e8cf7cc8cdd4`.
+The r94 projection removes only the new home grounds and settee preference from
+`market_break`, and restores the settee's two old standing approaches. It
+reproduces `f003f9a1a23eac605a5a780ac34e471888fea029ac9b6d05c1d571df0d0f0275`.
+
+All restored state stays exact, including existing hall meal paths, food, money,
+seat claims and eating deadlines. Hall seating remains allowed, so an existing
+commitment finishes normally before a new trip uses the authored preference.
+Physical geometry and sitting points are unchanged; no pose recovery or resource
+initialization is added. The original slot and earlier migration chain survive.

@@ -59,8 +59,8 @@ object timber_settee(label="Timber settee"){
  measure(kind=bench,axis=x,meters=2.1);
  body(interaction=solid,radius=16,height=15);
  impact(mode=break(speed=95,scatter=65,lift=65,spin=4,lifetime=6,pattern=splinter));
- seat left(at=[-6.5,6.8,1],approach=[-6.5,20],heading_deg=90);
- seat right(at=[6.5,6.8,1],approach=[6.5,20],heading_deg=90);
+ seat left(at=[-6.5,6.8,1],approach=[-6.5,22],heading_deg=90);
+ seat right(at=[6.5,6.8,1],approach=[6.5,22],heading_deg=90);
  fragment frame(){
   part base(shape=box,material=home_wood,at=[0,4,0],size=[30,2,12]);
   part back_rail(shape=box,material=home_wood,at=[0,10,-5.5],size=[30,10,1]);

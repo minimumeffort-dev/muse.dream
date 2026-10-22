@@ -613,6 +613,16 @@ kits, caretaker and paid repair system.
 
 ## Come home from the market
 
+The commuter now buys a packed lunch and brings it home to the settee. Sit on
+one cushion and they can take the other. Dream lists preferred furniture first;
+if the home settee is unavailable, they try the hall bench, then eat standing.
+Food and money stay finite, and saved meals keep their progress.
+[Author seat preferences](docs/examples/seat-preferences.dream).
+
+![The player and commuter occupy different cushions during a paid meal at home](docs/media/home-meal.png)
+
+[Checks and saved-state evidence](docs/evidence/home-meals/verification.md).
+
 The market commuter now walks through a real doorway at the end of the existing
 route. You can enter the same ground floor, sit on either side of the timber
 settee and break its frame, table or planter. The caretaker uses the same paid

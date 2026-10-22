@@ -22,13 +22,13 @@ import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
 import {homeReviewStart,homeReviewInput} from '../src/game/home-review';
 import {nurseryReviewSteps} from '../src/game/review-start';
-const scene=createWorldScene(),prior=c.preHomeInteriorScene(scene);
+const scene=c.preHomeMealsScene(createWorldScene()),prior=c.preHomeInteriorScene(scene);
 const world=(s=scene):World=>({scene:s,roadMask:buildMaskForScene(s),driveMask:buildPaperMask(14000,11000),carRadius:11});
 const current={...world(),saveCompatibility:c.HOME_INTERIOR_COMPATIBILITY,previousHomeInteriorSaveCompatibility:c.WEATHER_COMPATIBILITY,previousHomeInteriorNavigation:ambientGraph(prior),previousHomeInteriorContacts:sceneContactData(prior)},old={...world(prior),saveCompatibility:c.WEATHER_COMPATIBILITY};
 const room=sceneInteriors(scene).find(r=>r.object.id==='oldtown_044')!,ids=['home_settee','home_table','home_planter'];
 const a=(s:CarState,id='pocket')=>s.economy!.accounts.find(a=>a.id===id)!;
 it('retains the exact r93 projection, other placements and commute while opening the existing home',async()=>{
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.HOME_INTERIOR_COMPATIBILITY);expect(await c.sha256(c.preHomeInteriorCompatibilitySource(scene))).toBe(c.WEATHER_COMPATIBILITY);expect(await c.sha256(c.preWeatherCompatibilitySource(scene))).toBe(c.RATIONS_COMPATIBILITY);
+ expect(await c.sha256(c.preHomeMealsCompatibilitySource(scene))).toBe(c.HOME_INTERIOR_COMPATIBILITY);expect(await c.sha256(c.preHomeInteriorCompatibilitySource(scene))).toBe(c.WEATHER_COMPATIBILITY);expect(await c.sha256(c.preWeatherCompatibilitySource(scene))).toBe(c.RATIONS_COMPATIBILITY);
  expect(scene.objects.filter(o=>!ids.includes(o.id) && o.id!=='oldtown_044')).toEqual(prior.objects.filter(o=>o.id!=='oldtown_044'));
  expect(scene.routes).toEqual(prior.routes);expect(scene.behaviors).toEqual(prior.behaviors);expect(scene.economy!.accounts).toHaveLength(prior.economy!.accounts.length);
  const stop=scene.routes.find(r=>r.id==='market_commute')!.points[0]!;expect(occupiedInterior(scene,stop.x,stop.y,room.floor)?.object.id).toBe('oldtown_044');

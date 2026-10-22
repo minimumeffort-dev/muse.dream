@@ -96,3 +96,14 @@ it('rejects outbound detours and seat reservations without their purchased food 
  diner(s).inventory.bread!--;s.economy!.markets[0]!.stock.bread!++;
  expect(()=>checkEconomyState(s,scene)).toThrow('Invalid saved meal food');expect(()=>encodeSave(s,s.timeS,world)).toThrow();
 });
+
+it.each(['free','preferred-broken','all-broken'] as const)('uses authored furniture preference before placement order: %s',async condition=>{
+ const {default:orderedSource}=await import('../docs/examples/seat-preferences.dream?raw');
+ const ordered=compileDreamScene(orderedSource,{sceneId:'preferred',revisionId:'r1',sourceHash:'preferred'});
+ expect(worldSeats(ordered)[0]!.objectId).toBe('lunch_bench');
+ let s:CarState={...createCarAtSpawn(ordered),control:{kind:'foot' as const},x:900,y:730,elevation:0,broken:condition==='free' ? [] : condition==='preferred-broken' ? ['home_bench'] : ['home_bench','lunch_bench']};
+ for(let i=0;i<160 && diner(s).meal?.phase!=='seat' && diner(s).meal?.phase!=='eat';i++)s=stepCommerce({...s,timeS:s.timeS+.25},{},.25,ordered);
+ expect(diner(s).credits).toBe(15);expect(diner(s).inventory.bread).toBe(1);expect(diner(s).meal?.seat?.objectId).toBe(condition==='free' ? 'home_bench' : condition==='preferred-broken' ? 'lunch_bench' : undefined);
+ for(let i=0;i<240 && diner(s).meal;i++)s=stepCommerce({...s,timeS:s.timeS+.25},{},.25,ordered);
+ expect(diner(s).meal).toBeUndefined();expect(diner(s).inventory.bread).toBe(0);expect(diner(s).credits).toBe(15);expect(s.economy!.consumed.bread).toBe(1);checkEconomyState(s,ordered);
+});

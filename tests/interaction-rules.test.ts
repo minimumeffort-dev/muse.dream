@@ -113,7 +113,7 @@ describe('category-wide Dream interaction rules',()=>{
   it('enforces live tables and benches, including the older bench with retained supports',()=>{
     const scene=createWorldScene();expect(scene.interactionRules.map(r=>r.kind)).toEqual(['lamp','tree','table','bench']);
     const furniture=scene.objects.filter(o=>o.spec && 'measure' in o.spec && ['table','bench'].includes(o.spec.measure?.kind??''));
-    expect(furniture).toHaveLength(18);expect(furniture.map(o=>o.id)).toEqual(expect.arrayContaining(['hall_table_west','hall_table_east','hall_bench','school_bench','school_common_bench','school_reading_bench','school_rear_bench','school_table_west','school_table_east']));
+    expect(furniture).toHaveLength(20);expect(furniture.map(o=>o.id)).toEqual(expect.arrayContaining(['home_settee','home_table','hall_table_west','hall_table_east','hall_bench','school_bench','school_common_bench','school_reading_bench','school_rear_bench','school_table_west','school_table_east']));
     for(const object of furniture){const spec=object.spec as ObjectDslV2;expect(spec.impact).toEqual(scene.interactionRules.find(r=>r.kind===spec.measure!.kind)!.impact);}
   });
 });

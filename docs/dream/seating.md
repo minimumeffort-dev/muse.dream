@@ -11,6 +11,9 @@ The camera moves closer while seated, retaining your view angle and manual zoom.
 
 [Watch in HD](../media/seating.mp4) · [Still](../media/seating.jpg) · [Complete runnable Dream world](../examples/shared-seating.dream)
 
+The hall recording shows the earlier meal preference. The current commuter
+brings lunch home; the furniture, shared claims and controls work the same way.
+
 ## Describe a sitting surface
 
 These declarations live directly inside the live `slatted_bench` object:
@@ -32,19 +35,22 @@ the same slots available again.
 
 ## Customers use the same seats
 
-The market's existing meal plan now names the indoor bench and floor:
+The commuter's meal plan lists the home settee first, then the hall bench:
 
 ```dream
-meal market_break(good=lunch,markets=[market_stall],on=market_square,grounds=[market_hall],eat_s=4,seats=[hall_bench]);
+meal market_break(good=lunch,markets=[market_stall],on=market_hall,grounds=[market_square,oldtown_044,home_entry],eat_s=4,seats=[home_settee,hall_bench]);
 ```
 
 A hungry customer walks to the vendor and pays through the ordinary transaction.
-After buying, they reserve a reachable free slot, walk through the market doorway,
+After buying, they reserve the first reachable free slot in that furniture
+preference order, retaining authored slot order inside each piece. They walk
+through the actual doorway,
 sit for the declared eating duration, consume their owned lunch and return to
 their interrupted routine. A player sitting there already owns that slot. A
 customer on the way also holds a claim, so another occupant cannot take it.
 
-Busy or broken furniture falls back to a standing meal. Breaking a reserved
+Busy, broken or unreachable furniture yields to the next preference. Without
+an available slot, the customer eats standing with their purchased food. Breaking a reserved
 bench releases the claim without refunding, duplicating or losing the food.
 There is no seating queue, waiter, restaurant menu or table service yet.
 
@@ -57,7 +63,7 @@ There is no seating queue, waiter, restaurant menu or table service yet.
 | Surface fit tolerance after placement | 0.2 world units (2 cm) |
 | Sitting surface above the floor | 3–9 world units |
 | Approach-to-seat transfer | 6–40 world units |
-| Walking radius and headroom | 3 and 17.5 world units |
+| Player walking radius and headroom | 3 and 17.5 world units |
 | Height change along the transfer | At most 4 world units per step |
 | Furniture placements in one meal plan | 1–4 unique IDs |
 
@@ -78,7 +84,10 @@ idle or eating movement. Work, trade, vehicle boarding and sports require standi
 
 Seats add metadata and one bounded shared claim, with no new physics bodies,
 per-cell simulation, NPCs or animated rigs. The current live world has two slots
-on each of its four slatted benches: the market hall, civic park, station and school yard.
+on the market, civic park, station and school benches, plus the two-cushion home
+settee. Meal-trip walkers retain their existing 4-unit walking radius and 18-unit
+headroom; their full approach must also clear.
+[Compile ordered preferences](../examples/seat-preferences.dream).
 
 [Shared meals](social.md) reserve the other slot for an invited person and record the time you finish together. Leaving early returns the reserved food; ordinary customer meals keep their own claims.
 

@@ -741,8 +741,19 @@ its remaining simulation time.
 
 
 Furniture seats are named object-root `seat` declarations. Optional `meal.seats`
-references 1–4 unique furniture placements, with complete humanoids, connected
-approaches and shared player/NPC claims. [Author shared seating](seating.md).
+references 1–4 unique furniture placements in preference order. Within a piece
+of furniture, slots retain their authored order. Complete humanoids reserve the
+first reachable free slot after buying food; broken, occupied or unreachable
+choices yield to the next one. When none is available, the customer eats standing
+with the portion already purchased. Claims are shared with the player.
+[Author shared seating](seating.md) or compile the
+[ordered example](../examples/seat-preferences.dream).
+
+The live commuter prefers the home settee over the hall bench. The declared home
+floor and doorway corridor connect it to the market through existing sidewalks.
+The two cushion approaches clear both the player and the NPC walking body.
+These are individual meal trips; sitting beside someone does not itself count
+as a shared meal or change relationship history.
 
 ## Staff attendance
 
