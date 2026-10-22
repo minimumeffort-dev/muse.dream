@@ -684,3 +684,16 @@ The upgrade does not advance time, decide for NPCs, rebase bodies or navigation,
 or replenish the old workshop shelf. Original slots stay intact; current
 round trips never reapply the new stock. Missing registration fails.
 [Checks and native handoff](evidence/workshop-supplies/verification.md).
+
+
+## School and workshop courier, r87
+
+Format 18/simulation 34 registers the exact r86 accepted world before adding
+only the existing resident's `porter` account. It starts with zero credits, empty
+inventory and completion records, fullness 65 and decision time equal to the
+saved economy clock. Every earlier account, cargo reservation, job, repair,
+world clock and personal record is kept. The school resident's authored home
+moves to a clear existing pedestrian approach; no scenery or walking topology
+is added or removed. The r85 workshop-stock upgrade still runs only when needed
+through its registered target. Current reloads never reinitialize the account.
+Original browser slots survive; corrupt and changed-slot protections remain.

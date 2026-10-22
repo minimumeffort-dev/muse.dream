@@ -34,7 +34,7 @@ it('retargets real pickup, cargo and home journeys when the receiving counter mo
 });
 it('validates bounded courier policies, grounded endpoints and connected public walking',()=>{
  expect(formatDream(formatDream(source))).toBe(formatDream(source));
- for(const [a,b] of [['deliveries=[kits_run]','deliveries=[missing]'],['deliveries=[kits_run]','deliveries=[kits_run,kits_run]'],['deliveries=[kits_run]','deliveries=[]'],['actor=customer','actor=depot_keeper'],['on=work_yard,grounds=[remote_yard]','on=work_yard,grounds=[work_yard]'],['on=work_yard,grounds=[remote_yard]','on=remote_yard,grounds=[work_yard]'],['at=[1120,970]','at=[1120,1100]']] as const)expect(()=>compileDreamScene(source.replace(a,b),{sceneId:'bad',revisionId:'r1',sourceHash:'bad'}),b).toThrow();
+ for(const [a,b] of [['deliveries=[kits_run]','deliveries=[missing]'],['deliveries=[kits_run]','deliveries=[kits_run,kits_run]'],['deliveries=[kits_run]','deliveries=[]'],['actor=customer','actor=depot_keeper'],['on=work_yard,grounds=[remote_yard]','on=work_yard,grounds=[work_yard]'],['at=[1120,970]','at=[1120,1100]']] as const)expect(()=>compileDreamScene(source.replace(a,b),{sceneId:'bad',revisionId:'r1',sourceHash:'bad'}),b).toThrow();
  expect(()=>compileDreamScene(source.replace('[[1080,884],[1260,884]','[[1080,910],[1260,910]'),{sceneId:'gap',revisionId:'r1',sourceHash:'gap'})).toThrow('connected');
  expect(()=>compileDreamScene(source.replace('at=[1160,970]','at=[760,780]')+'\nhill depot_peak(at=[1120,970],radius=[120,120],height=320);',{sceneId:'peak',revisionId:'r1',sourceHash:'peak'})).toThrow('needs connected delivery grounds');
  expect(workSegment(scene,deliveryArea(d),{x:1100,y:810},{x:1100,y:900},start())).toBe(false);

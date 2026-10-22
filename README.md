@@ -209,7 +209,9 @@ simulation. [Motion checks](docs/evidence/worker-continuity/verification.md).
 You can also take delivery work. Bring flour from the station depot to the bakery,
 or carry bread to the school canteen. Pick up with **H**, follow the marked
 location, then hand over on foot to get paid. Cargo, stock and money survive
-travel and reload. The school staff can buy the bread you delivered.
+travel and reload. The school staff can buy the bread you delivered. One school resident now takes
+the same bread runs and brings missing fasteners to the workshop. They walk the
+actual routes, earn the same wages and can spend their own pay on food.
 [How deliveries work](docs/dream/commerce.md#deliveries).
 
 ![Taking a delivery](docs/media/delivery.jpg)

@@ -612,11 +612,12 @@ ledger counts plantings rather than maturity. [Guide](growth.md) and
 
 Account `deliveries` is 1..4 unique ordered contract refs. It excludes production
 `work` and player accounts; repair duties may coexist, with available repairs
-first. The actor is a stationary non-vendor NPC with a home in the receiving
-market reach and primary `on` ground. A delivery `on` is an existing convex
-surface containing its receiving market. Optional `grounds` adds 1..7 unique
-convex surfaces excluding `on`, with 4096 local grid samples total. A supplier
-already on pedestrian pavement needs no additional ground.
+first. The actor is a stationary non-vendor NPC with a connected home. A delivery
+`on` is an existing convex work ground. Optional `grounds` adds 1..7 unique convex
+surfaces excluding `on`, with 4096 local grid samples total. Home, supplier and
+receiving counter can use these grounds or accepted pedestrian pavement. Home
+need not be in receiving-counter reach, so one courier can serve different
+destinations. Complete-world acceptance still checks every approach and return.
 
 Complete-world acceptance checks every worker's pickup, handoff and return route.
 Walking uses the same engine-owned work network: 8192 nodes, 32768 directed links,

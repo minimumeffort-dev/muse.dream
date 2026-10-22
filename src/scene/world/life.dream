@@ -70,7 +70,7 @@ behavior neighborhood_greeting(start=rest){
 }
 place market_neighbor(object=neighbor,at=[6480,4475],role=npc,behavior=neighborhood_greeting);
 place hospital_visitor(object=shopper,at=[4040,6610],role=npc,behavior=neighborhood_greeting);
-place school_student(object=student,at=[4490,3470],role=npc,behavior=neighborhood_greeting);
+place school_student(object=student,at=[4440,3436],role=npc,behavior=neighborhood_greeting);
 place station_resident(object=resident,at=[11000,4112],role=npc,behavior=neighborhood_greeting);
 include resting_wildlife(module=fauna);
 include understory(module=flora);
@@ -159,6 +159,7 @@ economy(){
  account regular(actor=market_commuter,credits=30,capacity=4,satiety=25,drain_s=.05,meal=market_break);
  account school_staff(actor=teacher,credits=30,capacity=4,satiety=28,drain_s=.05,shop=true,social=school_break,shift=school_day);
  account caretaker(actor=market_neighbor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,repairs=[market_tables,orchard_trees],deliveries=[kits_run,saplings_run,flour_run,boards_run]);
+ account porter(actor=school_student,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,deliveries=[fasteners_run,school_run]);
  account depot_owner(actor=station_resident,credits=0,capacity=4,satiety=65,drain_s=0);
  market station_supplies(label="Station supplies",actor=station_resident,credits=0,radius=70,hours=[6,22],owner=depot_owner,sale=15){
   lot flour_store(good=flour,quantity=80,limit=80);
@@ -181,7 +182,7 @@ economy(){
   lot workshop_fasteners(good=fasteners,quantity=8,limit=8);
  }
  delivery flour_run(label="Bring flour to the bakery",from=station_supplies,to=market_stall,good=flour,quantity=2,pay=4,capacity=1,on=market_hall,grounds=[market_square]);
- delivery school_run(label="Take bread to school",from=market_stall,to=school_canteen,good=bread,quantity=2,pay=5,capacity=1);
+ delivery school_run(label="Take bread to school",from=market_stall,to=school_canteen,good=bread,quantity=2,pay=5,capacity=1,on=school_yard,grounds=[school_yard_access,school_yard_return,market_hall,market_square]);
  delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_hall,grounds=[market_square]);
  repair market_tables(label="Repair city fixtures",market=market_stall,on=market_hall,grounds=[park_seating,station_seating,market_square,school_yard,school_yard_access,school_yard_return,garden_work],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
  delivery saplings_run(label="Bring saplings to the market",from=station_supplies,to=market_stall,good=sapling,quantity=2,pay=4,price=2,capacity=1,on=market_hall,grounds=[market_square]);
@@ -200,6 +201,6 @@ economy(){
  }
 
  delivery boards_run(label="Bring boards to the workshop",from=station_supplies,to=market_stall,good=boards,quantity=2,pay=4,price=1,capacity=1,on=market_hall,grounds=[market_square]);
- delivery fasteners_run(label="Bring fasteners to the workshop",from=station_supplies,to=market_stall,good=fasteners,quantity=2,pay=4,price=1,capacity=1,on=market_hall,grounds=[market_square]);
+ delivery fasteners_run(label="Bring fasteners to the workshop",from=station_supplies,to=market_stall,good=fasteners,quantity=2,pay=4,price=1,capacity=1,on=market_hall,grounds=[market_square,school_yard,school_yard_access,school_yard_return]);
 
 }

@@ -98,10 +98,22 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r87 gives one existing resident connected school and hardware delivery work. */
+export const RESIDENT_SUPPLY_COMPATIBILITY='e2317da9bd916988c3f252eb1f1e1660b8f2c2ebc54113d6f5c02492afca59a8';
+const residentSupplyProjections=new WeakMap<Scene,Scene>();
+export function preResidentSupplyScene(scene:Scene):Scene{
+ const cached=residentSupplyProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.accounts.some(a=>a.id==='porter'))return scene;
+ const prior={...scene,objects:scene.objects.map(o=>o.id==='school_student' ? {...o,x:4490,y:3470} : o),economy:{...scene.economy,accounts:scene.economy.accounts.filter(a=>a.id!=='porter'),deliveries:scene.economy.deliveries.map(d=>{if(d.id==='school_run'){const {on,grounds,...old}=d;return old;}return d.id==='fasteners_run' ? {...d,grounds:['market_square']} : d;})}};
+ residentSupplyProjections.set(scene,prior);return prior;
+}
+export function preResidentSupplyCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preResidentSupplyScene(scene),34,true,encode);}
+
 /** r86 opens finite workshop-material stock and conserved delivery contracts. */
 export const WORKSHOP_SUPPLY_COMPATIBILITY='595e9821e3a223698fdc272e097ce119730359e85dc65ea75d647409921d4329';
 const workshopProjections=new WeakMap<Scene,Scene>();
 export function preWorkshopSupplyScene(scene:Scene):Scene{
+ scene=preResidentSupplyScene(scene);
  const cached=workshopProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.deliveries.some(d=>d.id==='boards_run'))return scene;
  const prior={...scene,economy:{...scene.economy,deliveries:scene.economy.deliveries.filter(d=>!['boards_run','fasteners_run'].includes(d.id)),accounts:scene.economy.accounts.map(a=>a.id==='caretaker' ? {...a,deliveries:a.deliveries?.filter(id=>id!=='boards_run')} : a),markets:scene.economy.markets.map(m=>m.id==='station_supplies' ? {...m,lots:m.lots.filter(l=>!['boards','fasteners'].includes(l.good))} : m)}};

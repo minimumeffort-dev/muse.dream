@@ -272,9 +272,9 @@ and wages; a delivery does not manufacture either material.
 
 The caretaker adds `boards_run` after its existing kit, sapling and flour runs,
 within the unchanged four-contract policy limit. The player can collect either
-raw material. Fasteners remain a player delivery in this live policy; the same
-NPC mechanism supports them in the small example. Existing repair, food and
-finished-kit procurement keep their authored priority.
+raw material. A school resident now takes fastener and school-bread runs through
+a separate two-contract policy. Existing repair, food and finished-kit procurement
+keep their authored priority.
 
 ![A completed fastener handoff and the worker's board trip](../media/workshop-supplies.jpg)
 
@@ -289,5 +289,35 @@ Old saves receive only the two new supplier lots and zeroed delivery counters
 after exact prior-world validation. Existing bodies, money, stock, tasks, damage
 and clocks stay intact. [Native checks and save evidence](../evidence/workshop-supplies/verification.md).
 Finite depot stock, business cash and carry capacity still limit the chain.
-Forestry, mining, fabrication and autonomous fastener procurement in the live
-city remain further work.
+Forestry, mining and fabrication remain further work.
+
+
+## A resident who supplies two destinations
+
+The existing school resident now has a paid courier account. Hardware deliveries
+come first when two fasteners fit the workshop shelf; otherwise they can carry
+bread from the bakery to the school. Their school-frontage home connects to the
+public walking network. No extra person, vehicle, rig or decorative object is
+added. The worker buys food with earned money through the same counter rules.
+
+```dream
+account porter(actor=school_student,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,deliveries=[fasteners_run,school_run]);
+```
+
+A courier no longer needs to live beside each receiving counter. Declared convex
+work grounds and existing sidewalks/crossings must connect home, pickup, handoff
+and return. The complete-world compiler checks those paths, including safe
+approaches, support and vertical clearance. Vendors stay at their counters.
+
+[Run the remote-home courier example](../examples/neighborhood-courier.dream).
+It puts the helper at the depot and feeds both inputs into kit assembly. The
+live city uses the same rule for two different receiving businesses. Pickup
+intent reserves a slot; collection alone commits real cargo and money. Closed
+counters can cause waits, busy contracts remain exclusive, and insufficient
+stock, wages or receiving space can stop dispatch. These are finite supplies and
+walking jobs, without vehicle delivery AI or an unlimited production chain.
+
+The registered r86 upgrade creates only the new zero-credit account at saved
+simulation time. Existing accounts, commitments, ledgers, personal records and
+clocks stay intact, and the original slot is retained. No offline travel or pay.
+[Checks and runtime evidence](../evidence/resident-supplies/verification.md).

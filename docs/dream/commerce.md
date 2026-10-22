@@ -604,10 +604,11 @@ These declarations come from the [complete runnable courier world](../examples/c
 
 `account.deliveries` is an ordered list of 1..4 unique contracts. It can accompany
 repair duties, but excludes automatic production work. The actor needs a stationary
-home inside the receiving market's `on` ground and interaction radius. Market
-vendors stay at their businesses. The player never gets an automatic policy.
+home with connected pickup, handoff and return routes. Home and counters can
+use the declared grounds or accepted pedestrian pavement; home need not be beside
+the receiving counter. Market vendors stay at their businesses. The player never gets an automatic policy.
 
-Delivery `on` declares the receiving work ground. Optional `grounds` adds 1..7
+Delivery `on` declares a work ground. Optional `grounds` adds 1..7
 unique convex areas for off-pavement approaches, such as the example's depot yard.
 A supplier already on accepted pedestrian pavement needs no extra ground. These
 areas create no road or paving. The complete-world compiler checks pickup,

@@ -605,3 +605,20 @@ cell expansion and retain exhaustive ranking for sparse/far probes. Never cache
 actor positions, broken-state decisions or segment clearance. Different prepared
 arrays own different indices. Keep graph/node order, route semantics, source
 fingerprints and save versions unchanged.
+
+
+## Resident courier homes, r87
+
+A stationary non-vendor courier may live away from a receiving counter. Require
+complete connected pickup, handoff and return routes from that exact home, with
+existing convex ground/sample/graph/path caps, supported pedestrian clearance and
+shared finite transactions. `on` anchors declared work grounds; home and both
+counters may use accepted public pavement. Keep market-vendor ownership and
+policy exclusions. No road, water or cycle-track shortcuts.
+
+The live existing school resident uses fasteners_run before school_run, without
+adding actors, rigs, scenery or topology. Format 18/simulation 34 validates exact
+r86 before inserting only the zero-credit porter account at the saved economy
+time. Keep all existing saved state and the original slot; restore the prior
+authored home and delivery metadata when projecting r86. Preserve earlier
+projections, worker handoff and current reloads without reinitialization.

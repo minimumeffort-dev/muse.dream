@@ -910,8 +910,10 @@ Use examples/orchard-replanting.dream; request context features commerce,city.
 
 NPC resupply: account(...,deliveries=[kits_run,saplings_run]) accepts 1..4 unique
 ordered delivery refs, exclusive with automatic work and player accounts, compatible
-with repair/repairs. A courier is a stationary non-vendor NPC with home in the
-receiving market reach and delivery on ground. Add delivery(...,on=work_ground,
+with repair/repairs. A courier is a stationary non-vendor NPC. Its home and both
+counters need clear connected approaches on declared grounds or accepted pedestrian
+pavement. Home need not be beside the receiving counter; one courier can serve
+different destinations. Add delivery(...,on=work_ground,
 grounds=[depot_yard]); grounds optional, 1..7 unique convex surfaces excluding on.
 The supplier may already be on accepted pedestrian pavement, needing no extra
 ground. All declared grounds together retain 4096 local samples. They add no paving.

@@ -331,3 +331,23 @@ FPS or weaker-device result. Both full service graphs and 24 paths remain exact.
 Existing world systems and visuals are unchanged. Continue raw-material generation
 and useful indoor activities, with shared interactions and explicit resident
 purposes. [Measurements and functional replay](evidence/work-endpoints/verification.md).
+
+
+### Connected resident supply work, r87
+
+One existing school resident now carries bakery bread to school and station
+fasteners to the workshop, with hardware first when a full shipment fits. Their
+position, program and walking animation belong to the same saved courier
+commitment. School staff can eat the delivered bread, and the courier can buy
+food with earned pay. This connects another resident purpose to food and repairs
+without another actor or higher limits.
+
+Dream couriers may live away from the receiving counter. Both counters and home
+still need complete connected pickup, handoff and return paths on declared
+grounds and accepted pedestrian pavement. Existing object coverage, scenery
+and navigation topology are retained. Exact registered saves gain only the
+zero-credit account at saved time. [Authoring and boundaries](dream/businesses.md#a-resident-who-supplies-two-destinations).
+
+Next connect raw-material generation and another useful indoor activity, then
+broaden work schedules and resident choices. Finite depot stock and business
+budgets still bound these routes; this is not forestry or a general scheduler.

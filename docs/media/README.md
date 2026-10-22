@@ -1598,3 +1598,16 @@ and videos retain the exact accepted world, geometry, animation and controls.
 They remain accurate and are not regenerated. A current functional screenshot
 is kept with the [Node measurements and browser check](../evidence/work-endpoints/verification.md);
 no browser FPS, loader speed comparison or memory reduction is inferred from it.
+
+
+## Resident courier work, r87
+
+The school resident now walks paid bread and hardware runs using the existing
+courier controller and animation. Rendering, controls, scenery and pedestrian
+topology stay unchanged. Existing caretaker/player recordings remain accurate
+for those mechanics; their source-pinned ledgers are historical and do not show
+the new resident's journey. They are not regenerated for this policy change.
+A current [native school-frontage still and public state observations](../evidence/resident-supplies/verification.md)
+show the new owner moving and pausing. Full deliveries, meals and wages are
+checked separately in the 4 Hz commerce/NPC replay, without browser performance
+claims.

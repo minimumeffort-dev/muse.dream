@@ -12,7 +12,7 @@ import {checkEconomyState,commerceReason} from '../src/sim/commerce';
 import {workshopReviewSteps,handReviewSteps} from '../src/game/review-start';
 import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
-let live:Scene|undefined;const current=()=>live??=createWorldScene();
+let live:Scene|undefined;const current=()=>live??=c.preResidentSupplyScene(createWorldScene());
 const world=(scene:Scene):World=>({scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11});
 const account=(s:CarState,id='pocket')=>s.economy!.accounts.find(a=>a.id===id)!;
 const market=(s:CarState,id:string)=>s.economy!.markets.find(m=>m.id===id)!;
