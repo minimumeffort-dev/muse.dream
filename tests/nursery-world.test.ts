@@ -13,7 +13,7 @@ import {encodeSave,decodeSave,SAVE_VERSION} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
 import {nurseryReviewSteps,workshopReviewSteps} from '../src/game/review-start';
 let live:Scene|undefined,ready:CarState|undefined;
-const scene=()=>live??=createWorldScene(),world=(s=scene()):World=>({scene:s,roadMask:buildMaskForScene(s),driveMask:buildPaperMask(s.canonical.width,s.canonical.height),carRadius:11});
+const scene=()=>live??=c.preSchoolInteriorScene(createWorldScene()),world=(s=scene()):World=>({scene:s,roadMask:buildMaskForScene(s),driveMask:buildPaperMask(s.canonical.width,s.canonical.height),carRadius:11});
 const current=()=>({...world(),saveCompatibility:c.NURSERY_COMPATIBILITY,previousNurserySaveCompatibility:c.HARDWARE_COMPATIBILITY});
 const player=(s:CarState)=>s.economy!.accounts.find(a=>a.id==='pocket')!,market=(s:CarState)=>s.economy!.markets.find(m=>m.id==='market_stall')!;
 const review=()=>{if(!ready){const steps=nurseryReviewSteps(createCarAtSpawn(scene()),current(),false);let r=steps.next();while(!r.done)r=steps.next();ready=r.value;}return structuredClone(ready);};

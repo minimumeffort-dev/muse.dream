@@ -19,6 +19,13 @@ planning remains separate. Priorities are connected
 activities and shared interactions below, more resident purposes and broader
 consistent destruction/recovery; the full asset review also remains unfinished.
 
+The Garden school now has a second usable ground-floor venue: connected common-room
+seating, the teacher's after-hours break, shared food and remembered meals, and
+repairable tables/benches served by the existing caretaker. No new residents or
+starting resources. Upper floors, teaching tasks, homes, weather and broader
+relationships remain missing; prioritize deeper indoor purposes and shared
+resident routines next. [School source and checks](dream/interiors.md#the-school-common-room).
+
 The current motion pass aligns player/vehicle/camera poses between fixed ticks,
 keeps sports balls with visible carriers and removes shadow extent jumps.
 Stippled scenery, hill and road cutaways now use clean sight openings, retaining

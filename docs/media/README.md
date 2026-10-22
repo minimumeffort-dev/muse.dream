@@ -22,6 +22,22 @@ These exports are motion evidence, not live frame-rate measurements.
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
+## School common room, r91
+
+`schoolroom.mp4`, `schoolroom.gif` and `schoolroom.jpg` show the same 600
+consecutive rendered 2400 × 1350 PNG frames, at 30 frames per simulation second.
+The video is 1600 × 900 and GIF 1280 × 720. The still uses frame 180. Preparation
+buys two loaves, meets the teacher, advances their real shift, walks through the
+door and sits through the normal controls. The clip invites the teacher, shares
+food and lets them return to their break spot. No interpolated frames or live
+performance claim.
+
+The older town and asset overviews show the school's former closed shell.
+They remain historical for that building. This common-room set and its native
+entrance/cutaway checks show the new school. Other buildings and assets retain
+their geometry, so their focused recordings need no regeneration.
+[Source and verification](../evidence/school-interior/verification.md).
+
 ## Nursery work, r90
 
 `nursery.mp4`, `nursery.gif` and `nursery.jpg` share 420 consecutive 2400 × 1350

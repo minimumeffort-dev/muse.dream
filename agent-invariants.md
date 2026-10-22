@@ -690,3 +690,23 @@ simulation 36 registers exact r89 by removing only the job and restoring its
 prior worker policy at simulation 35. Add only zero batch/personal/unattributed
 work counters; preserve every existing saved field, original slot and earlier
 projection. No clock advance, resource seeding or population/navigation rebase.
+
+## School common room, r91
+
+The Garden school reuses the existing one-floor interior, doorway, cutaway,
+seating, shared-meal and repair contracts. Preserve its existing entrance and
+furnishing; only the doorstep, shell and five common-room props are added.
+Teacher duty remains at the outdoor canteen, with after-hours rest indoors.
+School furniture follows the shared category damage rules and finite kit/wage/
+recovered-hardware transactions. The caretaker shares its existing capacity.
+No lessons, extra NPCs, new live rigs or stacked floors are implied.
+
+The registered r90 projection restores the exact old school, grounds, break
+plans and caretaker policy. Prepare contacts and navigation on that projected
+scene, never prime it from the new physical world. Retarget an old rest/outward
+shift from its visible position; an active shared meal keeps its pose, portions
+and timer, then returns to the new rest point. A pending unreserved invitation
+can close while the teacher changes break spots. Preserve all money, inventory,
+history, clocks, source slots and earlier registered migrations. Rebase only
+changed pedestrian node references and recover unsafe active poses through the
+existing bounded physical recovery policy. See docs/examples/enterable-school.dream.

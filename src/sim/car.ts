@@ -126,6 +126,9 @@ export interface World {
   previousCourierSaveCompatibility?:string;
   previousPeopleSaveCompatibility?:string;
   previousInvitationSaveCompatibility?:string;
+  previousSchoolInteriorSaveCompatibility?:string;
+  previousSchoolInteriorNavigation?:import('../scene/ambient-navigation').AmbientGraph;
+  previousSchoolInteriorContacts?:import('../scene/contacts').SceneContactData;
   previousNurserySaveCompatibility?:string;
   previousHardwareSaveCompatibility?:string;
   previousRecoverySaveCompatibility?:string;

@@ -1,0 +1,56 @@
+{
+  "car": "4384.9,3615.2,3.5",
+  "control": {
+    "kind": "foot"
+  },
+  "destruction": {
+    "broken": [
+      "school_common_bench"
+    ],
+    "debris": 0,
+    "props": [
+      {
+        "elevation": 0,
+        "id": "pitch_ball",
+        "vz": 0,
+        "x": 10600,
+        "y": 4690
+      },
+      {
+        "elevation": 0.043373494702684,
+        "id": "court_ball",
+        "vz": 0,
+        "x": 7280,
+        "y": 7975
+      },
+      {
+        "elevation": 0.0124521072832481,
+        "id": "festival_ball",
+        "vz": 0,
+        "x": 6270,
+        "y": 4370
+      }
+    ],
+    "renderer": {
+      "cachedFragments": 0,
+      "pieces": 0,
+      "templates": 0
+    },
+    "toppling": [],
+    "zones": []
+  },
+  "source": {
+    "compatibilityHash": "1563d4e8511812ec931cb475b615d75978b72a2efcd8f69e1c4190f24c7bc554",
+    "enabled": false,
+    "restored": false,
+    "review": false,
+    "sourceHash": "811ae664b0a81df399f6bc05382b04d3d616674afeeaf5e40cd0100b5f544ffe",
+    "status": "Review session: saves disabled."
+  },
+  "strike": {
+    "ready": false,
+    "readyAtS": 347.72499999984865,
+    "target": null,
+    "timeS": 365.6916666664984
+  }
+}

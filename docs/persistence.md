@@ -751,3 +751,26 @@ Migration adds only zero nursery batch and personal/unattributed work counts.
 Existing balances, stock, work, hardware/timber cargo, damage, growth, positions
 and clocks remain intact, with no offline work or rebase. The old format-19 slot
 survives. All older registered projections retain their original versions.
+
+## School common-room layout, r91
+
+Format 19 and simulation version 36 remain unchanged. The registered r90
+projection restores the exact closed-school assembly, original break/social
+plans and caretaker duties, removing only the new doorstep, five furnishings
+and furniture service. Old source validation uses that projection's contacts
+and pedestrian graph, rather than the new school's physical caches.
+
+Migration adds zero shared/personal/unattributed furniture-repair counts and
+zero recovered-hardware count. Existing resources, commitments, memories,
+positions and clocks survive. Changed pedestrian node references map by
+coordinate/adjacency. A resting or outward-bound teacher walks from their saved
+position to the new break point. An unfinished shared meal keeps its visible
+pose, portions and timer, with its eventual return retargeted indoors. An
+unreserved invitation can close while the teacher changes break spots.
+A parked vehicle may delay that journey; it does not prevent restoring a valid
+static route or move the saved car.
+
+The existing bounded active-pose recovery handles newly unsafe geometry; the
+original save slot is retained. No initial money, materials or NPCs are added.
+[Assembly and controls](dream/interiors.md#the-school-common-room) ·
+[Verification](evidence/school-interior/verification.md).

@@ -509,7 +509,7 @@ Agents can ask for just the language they need: `node scripts/dream.mjs context 
 
 The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation uses Minimum Effort's Manrope and Archivo fonts, warm white, charcoal and yellow, with the same page gutters and spacing. Dream commands, fields, references, colors and expressions are highlighted, with copy buttons for complete examples.
 
-[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 1,773 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
+[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 1,778 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
 
 Streetlights now follow streets, bicycle and scooter parking sits beside destinations, and birds fly across sixteen habitats. Dream’s `furnish` and `flock` commands describe those populations with bounded rules.
 
@@ -580,6 +580,18 @@ Cylinder `part` and `beam` commands accept a bounded `taper` ratio, so a trunk c
 
 ![Trees, a plane, car, person, bicycle, bench, skateboard and bread shown at the same physical scale](docs/media/proportions.jpg)
 
+## Take a break at school
+
+The Garden school's ground floor now opens onto its existing entrance path.
+Walk inside, take a bench and share the bread you brought with the teacher after
+school closes at 17:00. They walk indoors for their break, eat through the same
+food rules and remember the meal. Damaged benches and tables use the existing
+kits, caretaker and paid repair system.
+
+![A shared meal in the school common room](docs/media/schoolroom.gif)
+
+[Watch the common room](docs/media/schoolroom.mp4) · [Build the school](docs/examples/enterable-school.dream) · [Interiors](docs/dream/interiors.md#the-school-common-room)
+
 ## Run it
 
 World acceptance now reuses checked edges of immutable work-route graphs.
@@ -639,7 +651,7 @@ node scripts/dream.mjs check docs/examples/toppling-tree.dream
 Check the full world, including its module libraries and road/route validation:
 
 ```sh
-node scripts/dream.mjs check src/scene/world/open-world.dream --modules src/scene --modules src/scene/world
+npm test -- tests/world-layout.test.ts --maxWorkers=2 --testTimeout=60000
 ```
 
 [The docs](docs/README.md) cover composition, physical size, terrain, water, routes and destruction. For model integration, start with the [authoring instructions](docs/dream-v2-model.txt) and [generated command contract](docs/dream-v2-contract.json). Dream 2 source compiles to validated scene data; generated code never runs.

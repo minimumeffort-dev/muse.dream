@@ -10,7 +10,38 @@ The covered market now has a doorway you can walk through, a floor you can stand
 
 Leave your vehicle with **F**, then walk through the market's front entrance. The vendor now stands inside, behind the existing table: **H** starts paid baking, **B** buys bread and **G** eats what you carry. Walk around the table to the counter. The outdoor square is outside its forty-unit reach. Staff, customers and supply workers use the same doorway and clear interior aisle. A wall blocks buying, starting work and conversation; proximity alone is not enough. Leaving the work area or jumping cancels a batch and returns its reserved supplies and wage.
 
-This is one usable ground floor. It is not a restaurant, a system of stacked floors or a finished interior library. K can now hit reachable props on foot. Handheld tools and furniture pickup are not implemented. The hall's tables, bench and crate use the existing impact and repair rules; the caretaker can walk to them through the doorway after damage.
+Each building currently has one usable ground floor. It is not a restaurant, a system of stacked floors or a finished interior library. K can now hit reachable props on foot. Handheld tools and furniture pickup are not implemented. The hall's tables, bench and crate use the existing impact and repair rules; the caretaker can walk to them through the doorway after damage.
+
+## The school common room
+
+The Garden primary school's ground floor is now another connected interior.
+Its existing entrance path continues to a 1.6 m doorway, a 20 cm floor step and
+3.2 m of clear headroom. The upper floor remains part of the shell, without
+stairs or a usable second level.
+
+![Sharing bread after the school day](../media/schoolroom.jpg)
+
+[Common-room video](../media/schoolroom.mp4) · [GIF](../media/schoolroom.gif) · [Complete school assembly](../examples/enterable-school.dream)
+
+The teacher still serves the outdoor canteen during its 08:00–17:00 hours.
+After closing, they walk through the door to their indoor break spot. Meet them
+with T, buy two portions of bread while a counter is open, sit on a nearby bench
+with F and invite them with Y. Both consume a portion after the shared meal;
+the teacher's existing per-person memory and return dialogue record it. They
+can decline when busy, full or due back at work. This is a common room, without
+classroom lessons or an education simulation.
+
+All three new benches use the same seating and splintering rules as the yard.
+The two tables also retain their category's break policy. The existing
+caretaker's added `classroom_furniture` service uses finite repair kits, wages
+and the same pedestrian network and doorway. The player can claim that paid
+service too. Repaired seating becomes usable again; reclaimed fasteners return
+to the bakery supply chain. There are no extra NPCs or live rigs.
+
+The registered r90 upgrade keeps saved resources and visible journeys. A teacher
+already resting outside walks to the new break spot. An active outdoor shared
+meal retains its visible pose, food and timer, then returns indoors. The old
+source slot remains available. [Checks and capture](../evidence/school-interior/verification.md).
 
 ## Give the floor an owner
 

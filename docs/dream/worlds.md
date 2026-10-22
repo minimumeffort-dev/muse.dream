@@ -83,7 +83,7 @@ With `nature` supplied in the host's text registry, this imports one object and 
 The compiler never resolves a module ID to a file or URL. The CLI can populate the registry from explicitly supplied directories:
 
 ```sh
-node scripts/dream.mjs check src/scene/world/open-world.dream --modules src/scene --modules src/scene/world
+npm test -- tests/world-layout.test.ts --maxWorkers=2 --testTimeout=60000
 ```
 
 Cycles, duplicate world IDs, multiple layouts, invalid routes and exceeded project budgets reject the whole proposal.

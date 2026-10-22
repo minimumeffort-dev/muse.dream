@@ -13,6 +13,7 @@ import wildlifeR78 from './compatibility/r78-wildlife.json';
 import fixturesR79 from './compatibility/r79-street-furniture.json';
 import charactersR80 from './compatibility/r80-characters.json';
 import serviceR81 from './compatibility/r81-indoor-service.json';
+import schoolR90 from './compatibility/r90-school.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
 export const SAVE_SIMULATION_VERSION=36;
@@ -98,10 +99,23 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r91 opens the school's common room and connects its furniture and staff break. */
+export const SCHOOL_INTERIOR_COMPATIBILITY='1563d4e8511812ec931cb475b615d75978b72a2efcd8f69e1c4190f24c7bc554';
+const schoolInteriorProjections=new WeakMap<Scene,Scene>();
+export function preSchoolInteriorScene(scene:Scene):Scene{
+ const cached=schoolInteriorProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.repairs.some(r=>r.id==='classroom_furniture'))return scene;
+ const added=new Set(['school_common_bench','school_reading_bench','school_rear_bench','school_table_west','school_table_east']);
+ const prior={...scene,objects:scene.objects.filter(o=>!added.has(o.id)).map(o=>o.id==='garden_school' ? schoolR90.object as Scene['objects'][number] : o),surfaces:scene.surfaces.filter(s=>s.id!=='school_doorstep'),economy:{...scene.economy,accounts:scene.economy.accounts.map(a=>a.id==='caretaker' ? {...a,repairs:a.repairs!.filter(id=>id!=='classroom_furniture')} : a),repairs:scene.economy.repairs.filter(r=>r.id!=='classroom_furniture'),shifts:scene.economy.shifts.map(s=>s.id==='school_day' ? schoolR90.shift : s),socials:scene.economy.socials.map(s=>s.id==='school_break' ? schoolR90.social : s)}};
+ schoolInteriorProjections.set(scene,prior);return prior;
+}
+export function preSchoolInteriorCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preSchoolInteriorScene(scene),36,true,encode);}
+
 /** r90 adds bounded same-good nursery work to the existing vendor policy. */
 export const NURSERY_COMPATIBILITY='f2475e551ec0dc5c95f2f98ff04236fb2123a0efbea0f45e0ba694615f589baa';
 const nurseryProjections=new WeakMap<Scene,Scene>();
 export function preNurseryScene(scene:Scene):Scene{
+ scene=preSchoolInteriorScene(scene);
  const cached=nurseryProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.jobs.some(j=>j.id==='propagate_saplings'))return scene;
  const prior={...scene,economy:{...scene.economy,accounts:scene.economy.accounts.map(a=>a.id==='baker' ? {...a,works:['assemble_kit','pack_lunch','large_bake','bake']} : a),jobs:scene.economy.jobs.filter(j=>j.id!=='propagate_saplings')}};
