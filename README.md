@@ -627,12 +627,15 @@ kits, caretaker and paid repair system.
 
 ## Come home from the market
 
-The commuter can now walk to paid work too. A shortage starts the trip; the
-bakery checks the job again on arrival, then pays for completed work. Food,
-materials, wages and the return home all use the existing rules.
-[Write a work commute in Dream](docs/dream/commuting.md).
+The commuter now has a workday. After food and rest, they walk to the bakery,
+wait when there is nothing to make, and take a real job when demand appears.
+Finished batches earn wages and practice. Waiting earns nothing. At 20:00 they
+finish any committed batch and walk home; hunger and low energy can bring them
+home earlier.
 
-![The commuter working at the market after walking from home](docs/media/work-commute.png)
+![The commuter finishing a paid batch and leaving at the end of the workday](docs/media/attendance.gif)
+
+[Watch the workday](docs/media/attendance.mp4) · [Write a schedule in Dream](docs/dream/attendance.md) · [Runnable world](docs/examples/scheduled-workday.dream)
 
 The commuter now buys a packed lunch and brings it home to the settee. Sit on
 one cushion and they can take the other. Dream lists preferred furniture first;

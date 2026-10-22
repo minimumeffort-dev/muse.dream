@@ -19,7 +19,7 @@ import homeR98 from './compatibility/r98-home.json';
 import homeR97 from './compatibility/r97-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=43;
+export const SAVE_SIMULATION_VERSION=44;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -51,6 +51,7 @@ export function saveCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder
   return projection(scene,SAVE_SIMULATION_VERSION,true,encode);
 }
 function projection(scene:Scene,simulationVersion:number,rounded=true,encode?:CompatibilityEncoder):string {
+  if(simulationVersion<44)scene=preAttendanceScene(scene);
   if(simulationVersion<43)scene=preFloorsScene(scene);
   if(simulationVersion<42)scene=preStairsScene(scene);
   if(simulationVersion<41)scene=preRestScene(scene);
@@ -105,10 +106,21 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r100 adds bounded daily attendance; existing one-batch trips finish unchanged. */
+export const ATTENDANCE_COMPATIBILITY='26bc063d3ad03e482ec65626ea6653403c59dec91211227e97687860f772545e';
+const attendanceProjections=new WeakMap<Scene,Scene>();
+export function preAttendanceScene(scene:Scene):Scene{
+ const cached=attendanceProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.accounts.some(a=>a.id==='regular' && a.attendance))return scene;
+ const prior={...scene,economy:{...scene.economy,accounts:scene.economy.accounts.map(a=>{if(a.id!=='regular')return a;const {attendance,...old}=a;return old;})}};attendanceProjections.set(scene,prior);return prior;
+}
+export function preAttendanceCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preAttendanceScene(scene),43,true,encode);}
+
 /** r99 binds upper-storey props and journeys to retained slab/stair contacts. */
 export const FLOORS_COMPATIBILITY='c5eb87dd0dcf58f2c0aff89875203b51bc29673aeab3b40b560f81ee43c906ad';
 const floorProjections=new WeakMap<Scene,Scene>();
 export function preFloorsScene(scene:Scene):Scene{
+ scene=preAttendanceScene(scene);
  const cached=floorProjections.get(scene);if(cached)return cached;if(!scene.floors?.some(f=>f.id==='home_upper'))return scene;
  const {floors,...old}=scene;
  const prior={...old,objects:scene.objects.filter(o=>!['home_upper_settee','home_upper_table','home_upper_planter'].includes(o.id)).map(o=>o.id==='oldtown_044' ? {...o,spec:homeR98 as ObjectDslV2} : o),economy:scene.economy && {...scene.economy,rests:scene.economy.rests?.map(r=>r.id==='home_rest' ? {...r,seats:['home_settee'],grounds:['home_entry','market_square','market_hall']} : r),repairs:scene.economy.repairs.map(r=>r.id==='home_furniture' ? {...r,grounds:['oldtown_044']} : r)}};

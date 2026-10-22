@@ -10,6 +10,9 @@ const examples=import.meta.glob<string>('../docs/examples/*.dream',{query:'?raw'
 const files=Object.keys(import.meta.glob(['../src/**/*','../docs/**/*','../scripts/*','../tests/**/*','../README.md'])).map(p=>p.slice(3));
 
 describe("published Dream documentation",()=>{
+  it('keeps daily attendance identical to the complete runnable source',()=>{
+    const declaration=pages['../docs/dream/attendance.md']!.match(/```dream\n([\s\S]*?)```/)![1]!.trim();expect(examples['../docs/examples/scheduled-workday.dream']).toContain(declaration);
+  });
   it('keeps floor bindings identical to the complete runnable upstairs example',()=>{
     const declaration=pages['../docs/dream/floors.md']!.match(/```dream\n([\s\S]*?)```/)![1]!.trim();expect(examples['../docs/examples/upstairs-rest.dream']).toContain(declaration);
   });

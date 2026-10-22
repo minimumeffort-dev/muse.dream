@@ -4,7 +4,8 @@
 
 A resident can walk from home to a workplace, perform a paid job and return.
 The work uses the same ingredients, capacity, wages, qualification and equipment
-rules as the player. Travelling does not issue a wage or manufacture anything.
+rules as the player. Travelling does not issue a wage or manufacture anything. Optional
+[daily attendance](attendance.md) keeps the resident at work between jobs.
 
 ![A resident at work in the market hall](../media/work-commute.png)
 
@@ -92,7 +93,8 @@ The registered format-19 / simulation-40 upgrade preserves the entire r95 state,
 including an unfinished home meal. It creates no work commitment, wage or stock
 during restore. [Save boundary](../persistence.md#work-commute-upgrade-r96).
 
-This is on-foot work travel. It does not add employee contracts, guaranteed
-hours, vehicle commuting, offline travel or a general daily scheduler. Existing
+This is on-foot work travel. Optional attendance adds a daily workplace window.
+Employee contracts, guaranteed hours, vehicle commuting, offline travel and a
+general daily scheduler remain separate work. Existing
 milestones provide task progression; they are game rules rather than an
 employment or learning model.

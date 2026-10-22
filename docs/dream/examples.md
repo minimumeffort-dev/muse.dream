@@ -317,3 +317,9 @@ are the engine's small passable details. Scatter density remains engine-owned.
 [upstairs-rest.dream](../examples/upstairs-rest.dream) is a complete world with a
 connected doorway, named upper slabs, a settee and shared rest/repair journeys.
 It uses finite supplies and wages. [Floor guide](floors.md).
+
+## A scheduled workday
+
+[scheduled-workday.dream](../examples/scheduled-workday.dream) connects a resident
+to daily attendance, unpaid waiting, finite paid batches and a physical return.
+[Authoring rules](attendance.md).

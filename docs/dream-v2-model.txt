@@ -852,6 +852,24 @@ stock, coins, idle pay or generated controllers. Keep energy and out/sit/home
 ownership, paths and clocks in saved state. R preserves them; Start over resets.
 No offline catch-up, forced player sleep, medical claims or full sleep model.
 See examples/resting.dream.
+Daily work attendance: add account(...,commute=true,attendance=[6,20]). Needs
+world daylight and the same single workplace for all assigned work/works jobs.
+Hours use the market interval rules, including overnight and [0,24]. The NPC
+walks to the workplace even when shelves are full or supplies are missing.
+Travelling and unpaid idle attendance reserve no stock, money or work slot.
+Choose a qualified shortage job at most once per simulation second through the
+same player work transaction. Waiting earns nothing. Finish a committed batch
+past the closing boundary, then physically return home. Affordable food or owned
+food at fullness <=40, and configured low energy, return the worker for ordinary
+home food/rest routines before another trip. Unaffordable food does not block a
+feasible paid job. Equipment damage keeps the existing refund-once and return.
+Only the engine writes dutyAtS and out/idle/work/home state. Pin the workday to
+actual departure so blocked trips cannot roll into tomorrow's window. Keep one
+journey owner, paused program, unchanged body/graph/rig caps and finite ledgers.
+Reload resumes the saved position with no offline pay. Registered old one-batch
+trips finish unchanged before new decisions. No employee contracts, idle wages,
+queue or guaranteed paid task. See examples/scheduled-workday.dream.
+
 NPC work commuting is opt-in account(...,works=[first_job,second_job],commute=true,on=home_ground,grounds=[extra_ground]).
 Use a complete measured humanoid decor NPC with a program and a stationary home
 or walk route. Other automatic repair/delivery/shop/shift/social/ration policies

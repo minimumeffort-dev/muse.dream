@@ -1,9 +1,9 @@
 # Leave and come back
 
-The current world uses format 19 / simulation 43. Its registered r97 upgrade
-opens the home's upper floor, preserves the existing ledger and moves only unsafe
-local poses or obsolete home-table repair approaches. Upstairs player height is
-already part of the saved pose. The old slot is retained.
+The current world uses format 19 / simulation 44. Its registered r99 upgrade
+adds daily work attendance without changing a saved field. Existing rest and
+one-batch work finish before new scheduled decisions begin. Upstairs positions,
+resources, clocks, wages and the old source slot are retained.
 
 The r97 world uses format 19 / simulation 41. Its registered r96 upgrade
 initializes only the newly declared energy values, keeping existing work, food,
@@ -75,7 +75,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 43. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 44. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -921,3 +921,18 @@ points. Restore checks each segment against slabs and generated stair contacts;
 a fabricated floor height or shortcut through a slab is rejected. Upstairs repair
 escrow, carried supplies, progress and wages use the existing ledger. All older
 registered upgrades remain chained. [Checks](evidence/upstairs/verification.md).
+
+## Daily attendance, r100
+
+Format 19 / simulation 44 registers exact r99 by removing only the commuter's
+new attendance window. Restore preserves every saved field, including upstairs
+rest, pending one-batch work and its reservations, positions, clocks, money and
+energy. The old slot stays available. An old commute finishes once under its
+original trip policy before future decisions use the schedule.
+
+New trips save `dutyAtS` and out/idle/work/home ownership. The departure must be
+inside the authored window and no later than the saved commerce clock. Waiting
+has no work reservation or wage; a work phase requires its matching committed
+job. Derive closing from that departure, so a long blockage cannot grant another
+workday. Replay every path, work payment and home return from saved simulation
+time; no offline pay or forced clock advance. [Checks](evidence/attendance/verification.md).

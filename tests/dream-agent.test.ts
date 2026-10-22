@@ -71,3 +71,7 @@ it('includes bounded social meals and remembered interaction guards in the comme
 it('provides the explicit connected-path and named-destination contract in city packets',()=>{
  const packet=dreamAgentContext(['city']);expect(packet.contract.commands.surface!.fields.walkable).toBe('bool?');expect(packet.contract.commands.site!.fields.label).toBe('text?');expect(packet.instructions).toContain('Explicit pedestrian paths:');expect(packet.instructions).toContain('bridge side entries');
 });
+
+it('includes daily attendance and its one-owner rules in the commerce context',()=>{
+ const packet=dreamAgentContext(['commerce']);expect(packet.contract.commands.account!.fields.attendance).toBe('v2?');expect(packet.instructions).toContain('Daily work attendance:');expect(packet.contract).toHaveProperty('commerce.attendance',expect.stringContaining('Waiting earns no wages'));
+});

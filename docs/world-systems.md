@@ -13,9 +13,10 @@ trailers, vehicle damage and service fleets remain separate work.
 
 The commuter now rests upstairs; player seating and finite paid repairs work on
 the same upper floor. Named Dream floors connect retained slabs, furniture and
-height-aware stair trips. Saved travel and claims survive reload. Next priorities:
-a useful daily schedule and needs that influence more of the neighborhood,
-followed by lifts and further usable interiors. [Floors](dream/floors.md).
+height-aware stair trips. Saved travel and claims survive reload. Daily work attendance now connects
+those needs to an actual workplace window. Next priorities are weather-aware
+shelter choices and relationships with practical consequences, alongside lifts
+and further usable interiors. [Floors](dream/floors.md).
 
 Shared rest now gives the home another purpose. The commuter can buy food, walk
 to a free home cushion, recover energy and resume the routine before paid work.
@@ -25,8 +26,10 @@ remain missing. [Rest rules](dream/resting.md).
 
 Resident work commuting now connects existing homes to ordinary paid jobs.
 The commuter can buy food, walk to baking work, earn a wage and return without
-new people, starting money or geometry. Broader schedules, useful indoor roles,
-relationships and broader indoor activity remain priorities.
+new people, starting money or geometry. Attendance now keeps the commuter at
+the bakery between real jobs from 06:00 to 20:00, with unpaid waiting, breaks
+and a physical return. Employee contracts, broader schedules, relationships
+and further indoor roles remain priorities. [Attendance](dream/attendance.md).
 
 Work-ground connection building now reuses the exact nearest-node index instead
 of sorting the public graph at every entrance. All current work and journey

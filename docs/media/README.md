@@ -1792,3 +1792,20 @@ The older stairs recording predates the upper props. Its treads, landing and
 controls remain current. Earlier home/rest recordings are historical layouts.
 Other venues and vehicle/sport captures remain accurate because those assets,
 controls and geometry did not change. [Checks](../evidence/upstairs/verification.md).
+
+## Daily workplace attendance, r100
+
+`attendance.mp4`, `attendance.gif` and `attendance.jpg` share 480 consecutive
+frames from the dev-only `?capture` attendance clip. Preparation follows the
+existing resident through a paid meal, upstairs rest and unpaid bakery attendance.
+Ordinary player purchases create demand shortly before the 20:00 attendance end.
+The clip shows the committed bread batch finishing after that boundary, followed
+by the walk home. The camera follows the resident; the HUD purse is the player's.
+
+Export at 30 rendered frames per simulation second, then run
+`node scripts/encode-media.mjs <ffmpeg> <gifsicle> attendance`.
+HD video/still use 1600×900; the GIF uses 1280×720. This is an offline export,
+not a live performance measurement. The older work-commute recording shows the
+historical one-batch policy. Upstairs rest, venue, asset and transport captures
+remain accurate because their geometry, controls and rendering are unchanged.
+[Checks](../evidence/attendance/verification.md).

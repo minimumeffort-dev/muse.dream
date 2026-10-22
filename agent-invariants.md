@@ -865,3 +865,22 @@ Format 19/simulation 43 registers the exact r98 projection. Existing commitments
 retain claims, paths, clocks, resources and progress; future decisions use the
 new preference. Never seed resources, teleport old trips or replace old slots.
 See docs/dream/floors.md and docs/examples/upstairs-rest.dream.
+
+## Daily workplace attendance, r100
+
+Optional account.attendance uses one daily clock window for a commuting NPC's
+single workplace. Existing work preferences, body, grounds and paths remain.
+Arrive even with full shelves or missing materials; travelling/idle attendance
+reserves no stock, wage or job capacity and earns no pay or practice. Recheck
+ordinary finite work rules at most once per second. Finish committed production
+before leaving at closing; preserve refund-once on equipment/range interruption.
+Affordable food/owned food and configured low energy return the resident for
+ordinary home need routines. Unaffordable food cannot block a feasible wage.
+
+Persist dutyAtS and out/idle/work/home, pinning the day to actual departure.
+Reject future/out-of-window departures, unowned work and moving/unreserved idle
+poses. Preserve program pause/resume, actual paths, R, pause, streaming and all
+existing actor/rig/navigation budgets. No idle wages, job guarantee, employee
+contract or offline catch-up. Format 19/simulation 44 registers exact r99,
+removing only attendance. Preserve every old field and original slot; old
+one-batch trips finish before new scheduled decisions. See docs/dream/attendance.md.

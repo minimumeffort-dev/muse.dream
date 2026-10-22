@@ -16,12 +16,12 @@ import {gameSave} from '../src/game/save';
 import {upstairsReviewSteps} from '../src/game/upstairs-review';
 import {worldSeats} from '../src/scene/seating';
 import {sceneFloors,interiorVisibility} from '../src/scene/floors';
-const scene=createWorldScene(),prior=c.preFloorsScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.FLOORS_COMPATIBILITY,previousFloorsSaveCompatibility:c.STAIRS_COMPATIBILITY,previousFloorsContacts:sceneContactData(prior),previousFloorsNavigation:ambientGraph(prior)},old:World={...world,scene:prior,saveCompatibility:c.STAIRS_COMPATIBILITY,previousFloorsSaveCompatibility:undefined};
+const scene=c.preAttendanceScene(createWorldScene()),prior=c.preFloorsScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.FLOORS_COMPATIBILITY,previousFloorsSaveCompatibility:c.STAIRS_COMPATIBILITY,previousFloorsContacts:sceneContactData(prior),previousFloorsNavigation:ambientGraph(prior)},old:World={...world,scene:prior,saveCompatibility:c.STAIRS_COMPATIBILITY,previousFloorsSaveCompatibility:undefined};
 const account=(s:ReturnType<typeof createCarAtSpawn>,id='regular')=>s.economy!.accounts.find(a=>a.id===id)!;
 const tick=(s:ReturnType<typeof createCarAtSpawn>,doc=scene)=>stepCommerce({...s,timeS:s.timeS+.25,npcs:stepNpcs(s,.25,doc),population:stepAmbient(s,.25,doc)},{},.25,doc);
 const run=<T>(steps:Generator<void,T>)=>{let r=steps.next();while(!r.done)r=steps.next();return r.value;};
 it('pins r99 and the exact r98 projection without adding resources, actors or rigs',async()=>{
- expect(c.SAVE_SIMULATION_VERSION).toBe(43);expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.FLOORS_COMPATIBILITY);expect(await c.sha256(c.preFloorsCompatibilitySource(scene))).toBe(c.STAIRS_COMPATIBILITY);expect(await c.sha256(c.preStairsCompatibilitySource(scene))).toBe(c.REST_COMPATIBILITY);
+ expect(JSON.parse(c.preAttendanceCompatibilitySource(scene)).simulationVersion).toBe(43);expect(await c.sha256(c.preAttendanceCompatibilitySource(scene))).toBe(c.FLOORS_COMPATIBILITY);expect(await c.sha256(c.preFloorsCompatibilitySource(scene))).toBe(c.STAIRS_COMPATIBILITY);expect(await c.sha256(c.preStairsCompatibilitySource(scene))).toBe(c.REST_COMPATIBILITY);
  expect(scene.objects.length-prior.objects.length).toBe(3);expect(scene.economy!.accounts).toEqual(prior.economy!.accounts);expect(scene.economy!.markets).toEqual(prior.economy!.markets);expect(scene.routes).toEqual(prior.routes);expect(ambientGraph(scene)).toEqual(ambientGraph(prior));
 });
 it('walks upstairs to rest, saves every travel phase and returns without a teleport or changing scene data',()=>{
