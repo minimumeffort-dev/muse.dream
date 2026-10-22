@@ -67,6 +67,14 @@ loading screen remains active; other drivers may still block. Simulation waits
 for both the required chunks and shader readiness. A failure exposes Reload,
 stops rendering and releases the streaming worker.
 
+Work-ground entrances now reuse the same exact nearest-node index as live path
+queries. Candidate selection still keeps the nearest 32 linked nodes, distance
+ties retain source order, and at most eight clear links attach an entrance.
+All eleven current work/journey packets remain byte-for-byte identical. A local
+512-probe benchmark reduced median lookup cost from 120.49 ms to 5.55 ms;
+complete world acceptance stayed around 5.7 seconds. This does not establish a
+browser startup or frame-rate gain. [Method and raw results](evidence/work-network-build/verification.md).
+
 On the local M3 Ultra / 96 GiB, the recorded maximum startup heartbeat gap fell
 from 1,949 ms to 289–293 ms across two final samples at full settings. Loading
 still took 11.5–12.2 seconds; this mainly improves page responsiveness. Matched

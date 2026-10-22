@@ -1,0 +1,62 @@
+{
+  "control": "{\"kind\":\"foot\"}",
+  "car": "6402.1,4429.9,3.5",
+  "regular": {
+    "commute": {
+      "at": {
+        "x": 6493.348,
+        "y": 4067.467000000001
+      },
+      "distance": 775.3963633540286,
+      "headingRad": -2.4228787292572673,
+      "home": {
+        "x": 6493.348,
+        "y": 4067.467000000001
+      },
+      "id": "bake",
+      "path": [],
+      "phase": "home",
+      "routeAtS": 238.02499999994876,
+      "speed": 0,
+      "x": 6411.8787526751585,
+      "y": 4430.74861719903
+    },
+    "completed": {
+      "delivery": {
+        "boards_run": 0,
+        "fasteners_run": 0,
+        "flour_run": 0,
+        "kits_run": 0,
+        "saplings_run": 0,
+        "school_run": 0
+      },
+      "repair": {
+        "classroom_furniture": 0,
+        "home_furniture": 0,
+        "market_tables": 0,
+        "orchard_trees": 0
+      },
+      "work": {
+        "assemble_kit": 0,
+        "bake": 1,
+        "large_bake": 0,
+        "pack_lunch": 0,
+        "propagate_saplings": 0
+      }
+    },
+    "credits": 25,
+    "decisionAtS": 127.52500000004676,
+    "id": "regular",
+    "inventory": {
+      "boards": 0,
+      "bread": 0,
+      "fasteners": 0,
+      "flour": 0,
+      "lunch": 0,
+      "sapling": 0,
+      "timber": 0,
+      "vegetables": 0
+    },
+    "satiety": 66.1237500000024
+  }
+}

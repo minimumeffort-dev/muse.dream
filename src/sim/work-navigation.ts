@@ -133,7 +133,7 @@ export function workNetwork(scene:Scene,r:WalkingArea){
   const i=add(p),inner=patch.verge ? pavementInsetPoint(polygon,p,radius) : undefined;let link=i;
   if(inner && Math.hypot(inner.x-p.x,inner.y-p.y)>.01){const j=add(inner);if(connect(i,j))link=j;}
   connectLocal(i,p);
-  let linked=0;for(const {j} of publicNodes.map((n,j)=>({j,d:Math.hypot(n.x-p.x,n.y-p.y)})).filter(({j})=>publicNodes[j]!.links.length).sort((a,b)=>a.d-b.d || a.j-b.j).slice(0,32))if(connect(link,j) && ++linked===8)break;
+  let linked=0;for(const {i:j} of nearestWorkNodes(publicNodes,p))if(connect(link,j) && ++linked===8)break;
  }
  // Wider service areas need supported corner turns omitted for larger cosmetic rigs.
  if(r.wideAccess){

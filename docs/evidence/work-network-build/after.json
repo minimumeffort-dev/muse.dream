@@ -1,0 +1,91 @@
+{
+  "phase": "after",
+  "environment": {
+    "node": "v26.8.1",
+    "platform": "darwin",
+    "arch": "arm64"
+  },
+  "acceptanceMs": 5732.125792,
+  "services": [
+    {
+      "id": "market_tables",
+      "nodes": 5669,
+      "links": 23190
+    },
+    {
+      "id": "classroom_furniture",
+      "nodes": 2021,
+      "links": 5050
+    },
+    {
+      "id": "home_furniture",
+      "nodes": 1845,
+      "links": 4366
+    },
+    {
+      "id": "orchard_trees",
+      "nodes": 5424,
+      "links": 20646
+    },
+    {
+      "id": "delivery/market_hall/market_square",
+      "nodes": 2399,
+      "links": 6512
+    },
+    {
+      "id": "delivery/school_yard/school_yard_access/school_yard_return/market_hall/market_square",
+      "nodes": 2937,
+      "links": 8512
+    },
+    {
+      "id": "delivery/market_hall/market_square/school_yard/school_yard_access/school_yard_return",
+      "nodes": 2937,
+      "links": 8512
+    },
+    {
+      "id": "delivery/market_hall/market_square/oldtown_044/home_entry",
+      "nodes": 2459,
+      "links": 6878
+    },
+    {
+      "id": "commute/4.1/18/delivery/oldtown_044/home_entry/market_square/market_hall",
+      "nodes": 2641,
+      "links": 7668
+    },
+    {
+      "id": "shift/4.1/18/delivery/market_hall/market_square",
+      "nodes": 2543,
+      "links": 7084
+    },
+    {
+      "id": "shift/4.1/18/delivery/school_yard/school_yard_access/school_yard_return/garden_school/school_doorstep",
+      "nodes": 2724,
+      "links": 7746
+    }
+  ],
+  "navigationSha256": "cc74751cb6b4fe4f03407efd9ff9fce1d11550f9f58d44e13f72451a0bc8072b",
+  "publicNodes": 1720,
+  "probes": 512,
+  "indexAndFirstQueryMs": 0.0370840000005046,
+  "referenceMs": [
+    120.48566600000049,
+    122.13837499999954,
+    123.84875000000011,
+    122.0620829999998,
+    117.94079199999942,
+    118.23070899999948,
+    118.16862500000025
+  ],
+  "indexedMs": [
+    5.851416999999856,
+    5.546458000000712,
+    5.850000000000364,
+    5.6984999999995125,
+    5.516125000000102,
+    5.453832999999577,
+    5.322374999999738
+  ],
+  "checksum": 182605836,
+  "note": "Node/Vite SSR lookup benchmark; not browser FPS, total startup or full-suite speed.",
+  "navigationSourceSha256": "368f49c50d913abb4a000655b12c280756026bcb7a0e5d4c0860b444e5adeded"
+}

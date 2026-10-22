@@ -817,3 +817,9 @@ policy fields. Preserve every old saved field and original slot; do not seed
 work, income, counters or resources during restore. Validate phase/job ownership,
 full body-supported paths and shared conservation, retaining every earlier
 registered migration. See docs/dream/commuting.md.
+
+Work-ground portal attachment uses the existing immutable public-node index.
+Retain exactly the nearest 32 linked candidates, stable source-index distance
+ties, the pre-clearance cutoff and eight accepted attachments. Never index the
+partially built mutable work graph or cache dynamic contact clearance. This
+changes preparation cost only, not graph order, source, save or movement rules.

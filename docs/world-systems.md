@@ -16,6 +16,12 @@ The commuter can buy food, walk to baking work, earn a wage and return without
 new people, starting money or geometry. Broader schedules, useful indoor roles,
 relationships and multi-floor access remain priorities.
 
+Work-ground connection building now reuses the exact nearest-node index instead
+of sorting the public graph at every entrance. All current work and journey
+topology stays identical. The measured lookup improvement leaves whole-world
+acceptance near 5.7 seconds; voxel construction and broader startup work remain
+open performance tasks. [Measurements](evidence/work-network-build/verification.md).
+
 The commuter now uses the open home for a paid meal, sharing separate cushion
 claims with the player. The hall bench remains a fallback, and old hall meals
 finish after upgrade. The home still needs more purposes beyond seating, eating
