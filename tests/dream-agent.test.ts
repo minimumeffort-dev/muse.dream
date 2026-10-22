@@ -75,3 +75,7 @@ it('provides the explicit connected-path and named-destination contract in city 
 it('includes daily attendance and its one-owner rules in the commerce context',()=>{
  const packet=dreamAgentContext(['commerce']);expect(packet.contract.commands.account!.fields.attendance).toBe('v2?');expect(packet.instructions).toContain('Daily work attendance:');expect(packet.contract).toHaveProperty('commerce.attendance',expect.stringContaining('Waiting earns no wages'));
 });
+
+it('includes covered rest and unchanged commitment ownership in commerce packets',()=>{
+ const packet=dreamAgentContext(['commerce']);expect(packet.contract.commands.rest!.fields.shelter).toBe('bool?');expect(packet.contract.commands).toHaveProperty('weather');expect(packet.instructions).toContain('Rain shelter:');expect(packet.instructions).toContain('shelter never cancels cargo');expect(packet.contract).toHaveProperty('commerce.resting',expect.stringContaining('shelter'));
+});

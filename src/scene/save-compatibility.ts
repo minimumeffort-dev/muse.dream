@@ -19,7 +19,7 @@ import homeR98 from './compatibility/r98-home.json';
 import homeR97 from './compatibility/r97-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=44;
+export const SAVE_SIMULATION_VERSION=45;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -51,6 +51,7 @@ export function saveCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder
   return projection(scene,SAVE_SIMULATION_VERSION,true,encode);
 }
 function projection(scene:Scene,simulationVersion:number,rounded=true,encode?:CompatibilityEncoder):string {
+  if(simulationVersion<45)scene=preShelterScene(scene);
   if(simulationVersion<44)scene=preAttendanceScene(scene);
   if(simulationVersion<43)scene=preFloorsScene(scene);
   if(simulationVersion<42)scene=preStairsScene(scene);
@@ -106,10 +107,21 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r101 adds rain-aware covered rest and an independent 360-second weather cycle. */
+export const SHELTER_COMPATIBILITY='508f47125d575a0d10ff7122fe92a3cbea2495d90235120e50bbb24114167e02';
+const shelterProjections=new WeakMap<Scene,Scene>();
+export function preShelterScene(scene:Scene):Scene{
+ const cached=shelterProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.rests?.some(r=>r.id==='home_rest' && r.shelter))return scene;
+ const prior={...scene,weather:scene.weather && {...scene.weather,cycleSeconds:600},economy:{...scene.economy,rests:scene.economy.rests.map(r=>{if(r.id!=='home_rest')return r;const {shelter,...old}=r;return old;})}};shelterProjections.set(scene,prior);return prior;
+}
+export function preShelterCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preShelterScene(scene),44,true,encode);}
+
 /** r100 adds bounded daily attendance; existing one-batch trips finish unchanged. */
 export const ATTENDANCE_COMPATIBILITY='26bc063d3ad03e482ec65626ea6653403c59dec91211227e97687860f772545e';
 const attendanceProjections=new WeakMap<Scene,Scene>();
 export function preAttendanceScene(scene:Scene):Scene{
+ scene=preShelterScene(scene);
  const cached=attendanceProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.accounts.some(a=>a.id==='regular' && a.attendance))return scene;
  const prior={...scene,economy:{...scene.economy,accounts:scene.economy.accounts.map(a=>{if(a.id!=='regular')return a;const {attendance,...old}=a;return old;})}};attendanceProjections.set(scene,prior);return prior;

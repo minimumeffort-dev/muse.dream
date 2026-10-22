@@ -52,7 +52,7 @@ const social=z.object({id:ref,good:ref,seats:z.array(ref).min(1).max(4),on:ref,g
  if(m.markets && new Set(m.markets).size!==m.markets.length)ctx.addIssue({code:'custom',message:'social markets must be unique',path:['markets']});
  if(m.grounds && new Set([m.on,...m.grounds]).size!==m.grounds.length+1)ctx.addIssue({code:'custom',message:'social grounds must be unique and exclude on',path:['grounds']});
 });
-const rest=z.object({id:ref,energy:z.number().finite().min(0).max(100),drainPerS:z.number().finite().min(0).max(.25),recover_s:z.number().finite().min(.1).max(10),below:z.number().finite().min(0).max(95),until:z.number().finite().min(5).max(100),seats:z.array(ref).min(1).max(4),on:ref,grounds:z.array(ref).min(1).max(COMMERCE_LIMITS.repairGrounds-1).optional()}).strict().superRefine((r,ctx)=>{
+const rest=z.object({id:ref,energy:z.number().finite().min(0).max(100),drainPerS:z.number().finite().min(0).max(.25),recover_s:z.number().finite().min(.1).max(10),below:z.number().finite().min(0).max(95),until:z.number().finite().min(5).max(100),shelter:z.boolean().optional(),seats:z.array(ref).min(1).max(4),on:ref,grounds:z.array(ref).min(1).max(COMMERCE_LIMITS.repairGrounds-1).optional()}).strict().superRefine((r,ctx)=>{
  if(r.until<r.below+5)ctx.addIssue({code:'custom',message:'rest until must exceed below by at least 5',path:['until']});
  if(new Set(r.seats).size!==r.seats.length)ctx.addIssue({code:'custom',message:'rest seats must be unique furniture IDs',path:['seats']});
  if(new Set([r.on,...(r.grounds??[])]).size!==1+(r.grounds?.length??0))ctx.addIssue({code:'custom',message:'rest grounds must be unique and exclude on',path:['grounds']});

@@ -1,0 +1,14 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/floors.test.ts tests/world-presentation.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/world-presentation.test.ts (8 tests) 370ms
+ ✓ tests/floors.test.ts (4 tests) 238ms
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  04:24:43
+   Duration  861ms (transform 450ms, setup 17ms, collect 751ms, tests 608ms, environment 0ms, prepare 59ms)

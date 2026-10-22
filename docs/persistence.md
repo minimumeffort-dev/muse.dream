@@ -1,6 +1,11 @@
 # Leave and come back
 
-The current world uses format 19 / simulation 44. Its registered r99 upgrade
+The current world uses format 19 / simulation 45. Its registered r100 upgrade
+adds covered rest preferences and an independent weather period without changing
+a saved field. Existing commitments, energy, claims, ledgers and clocks remain
+exact. New shelter decisions begin only through ordinary simulation ticks.
+
+The r100 world uses format 19 / simulation 44. Its registered r99 upgrade
 adds daily work attendance without changing a saved field. Existing rest and
 one-batch work finish before new scheduled decisions begin. Upstairs positions,
 resources, clocks, wages and the old source slot are retained.
@@ -75,7 +80,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 44. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 45. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -936,3 +941,19 @@ has no work reservation or wage; a work phase requires its matching committed
 job. Derive closing from that departure, so a long blockage cannot grant another
 workday. Replay every path, work payment and home return from saved simulation
 time; no offline pay or forced clock advance. [Checks](evidence/attendance/verification.md).
+
+## Rain shelter, r101
+
+Format 19 / simulation 45 registers exact r100 at fingerprint
+`26bc063d3ad03e482ec65626ea6653403c59dec91211227e97687860f772545e`.
+Its projection removes only the live home rest plan's new shelter preference and
+restores the former 600-second weather period. All physical geometry, resources,
+ordered arrays and existing policies remain exact. The r101 fingerprint is
+`508f47125d575a0d10ff7122fe92a3cbea2495d90235120e50bbb24114167e02`.
+
+Restore first validates against the prior accepted world, then retains every
+saved field. Upstairs seat claims, paid batches, cargo, energy, stock, money,
+NPC programs and clocks are not rebased or initialized. Future choices use the
+new preference and 360-second rain cycle at the saved time. There is no separate
+saved weather intention or offline weather simulation. Original slots and the
+earlier migration chain remain. [Shelter checks](evidence/shelter/verification.md).

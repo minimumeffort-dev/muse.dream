@@ -141,7 +141,7 @@ behavior school_chat(start=busy){
 }
 
 economy(){
- rest home_rest(energy=35,drain_s=.1,recover_s=5,below=25,until=85,seats=[home_upper_settee,home_settee],on=oldtown_044,grounds=[home_entry,market_square,market_hall,home_upper,home_landing]);
+ rest home_rest(energy=35,drain_s=.1,recover_s=5,below=25,until=85,shelter=true,seats=[home_upper_settee,home_settee],on=oldtown_044,grounds=[home_entry,market_square,market_hall,home_upper,home_landing]);
  rest player_rest(energy=65,drain_s=.05,recover_s=5,below=25,until=85,seats=[home_settee],on=oldtown_044);
  ration field_snack(good=vegetables,market=market_stall,below=40);
  ration school_snack(good=bread,market=school_canteen,below=40);

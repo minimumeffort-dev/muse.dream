@@ -5,13 +5,14 @@ and maintenance can wait for a dry window. The caretaker can still finish a
 committed job and the school's indoor furniture service stays available.
 
 ```dream
-weather(cycle_s=600,rain_start_s=90,rain_end_s=150,wet_grip=.68);
+weather(cycle_s=360,rain_start_s=90,rain_end_s=150,wet_grip=.68);
 ```
 
-This is the live city's declaration. A cycle lasts ten simulation minutes,
+This is the live city's declaration. A cycle lasts six simulation minutes,
 with one minute of rain starting after ninety seconds. Rain fades in and out
 over five seconds. Surfaces wet over ten seconds and dry over thirty after the
-rain ends. The cycle repeats without a new random clock.
+rain ends. The cycle repeats without a new random clock. Its period is independent of the
+ten-minute day, so showers reach different parts of the daily routine.
 
 Cycle length is 120..3600 seconds. Rain starts at least ten seconds in, lasts
 at least ten seconds and leaves thirty dry seconds before the cycle ends.
@@ -42,6 +43,13 @@ dry-weather requirement.
 [Run the complete example](../examples/rain-work.dream). It uses a shorter cycle
 and the same finite food, delivery and repair rules.
 
+## Residents can take shelter
+
+An existing rest plan can declare `shelter=true` to make a free resident seek a
+covered seat during rain. The destination must be inside a validated interior,
+under a retained core ceiling. Real paths, shared claims and energy rules still
+apply; committed work finishes first. [Shelter rules and runnable example](shelter.md).
+
 ## Rendering, time and limits
 
 Rain shares the existing 256-particle pool and one particle draw. Drops stop at
@@ -55,6 +63,7 @@ Pause holds it, R and streaming retain it, and Start over resets it. There is no
 offline weather progression. The registered r92 save upgrade preserves every
 saved field and the old slot, without creating materials or replaying jobs.
 
-This first weather system has no puddles, flooding, seasons, general shelter
-routing or biological model. Waiting for dry maintenance is a declared game
-rule, not a claim that all city residents react to rain.
+There are no puddles, flooding, seasons, general shelter search or biological
+model. Only explicitly configured residents use covered rest destinations. The
+weather recording shows the unchanged first shower; its initial 90–150-second
+window, rendering and vehicle controls remain accurate after the period change.

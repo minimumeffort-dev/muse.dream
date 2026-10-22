@@ -893,3 +893,20 @@ bindings and ordinary props; preserve already owned target fits and moving-pose
 invalidation. Keep all current/historical contacts, node order, links, support
 polygons, stream bounds, source identity and save fingerprints exact. Reuse is
 host preparation, never an authored Dream field or serialized simulation state.
+
+## Rain-aware shared rest, r101
+
+Optional rest.shelter requires weather and full-footprint furniture cover under
+a retained core ceiling inside an existing interior, with standing headroom.
+A healthy free uncovered NPC may use the ordinary out/sit/home rest journey
+during rain. Already-covered healthy actors retain their routine. Preserve
+existing meals, jobs and journeys before shelter; no extra body owner, actors,
+rigs, graph budgets or resource creation. Keep shared player/meal seat claims,
+physical stairs and energy. Wait until dry and energy reaches until; healthy
+outbound trips can turn back once dry. Lost cover or broken/blocked furniture
+releases the claim. Player seating remains manual. Omission retains old choices.
+
+Format 19/simulation 45 registers exact r100 by removing only the live shelter
+flag and restoring its former weather period. Preserve all saved fields and
+original slots, no weather-intent field, rebase, reward or offline progression.
+See docs/dream/shelter.md and its independently runnable world.

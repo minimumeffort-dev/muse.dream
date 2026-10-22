@@ -1,0 +1,61 @@
+{
+  "platform": "macOS-26.7.1-arm64-arm-64bit-Mach-O",
+  "node": "v26.8.1",
+  "baseCommit": "19dd8558cc288e1a8bb30c5322cf8298947b154f",
+  "source": {
+    "docs/dream-v2-contract.json": "dc9dd41c876c852578fc35c24fdfc7b50c20f8a0b7a42c1799bf7995e8d702e7",
+    "docs/dream-v2-model.txt": "662909b4fc20c051b4546ddb08637ad3948b3b77a2345c990d2f6758941b8505",
+    "src/game/main.ts": "ff076710787301c4d60292f143f2b7598838dfdbee928b3975c9bee630050088",
+    "src/game/save.ts": "c6f829a32066d35437d1d1e3725134b8bd9666c074fabece9513c853d595b76d",
+    "src/game/world-worker-client.ts": "5e889417ba49081640282e57cea054ae4089a4b80ed70d19b0771084e1fca1f4",
+    "src/scene/commerce.ts": "446bb014b6ac598dcde1dda1dbb04ecf8c12acaff8defa320bcd1bdaae737db2",
+    "src/scene/dream-contract.ts": "99c7f432b57f31c70d8e1321ba17b6424b29b29bf6e0df2d9e37a0b652448855",
+    "src/scene/save-compatibility.ts": "373f6266b1e0744ca267a1531cc3369a3b507408c5383fd77d9f674b4e4b92c4",
+    "src/scene/world-fixture.ts": "3f29e333129685c7dbe1db28c34d964e08825734c728ee884b9e9ba2e007c0aa",
+    "src/scene/world-worker.ts": "06d16c5abf44b87c00951144f3711e2d910c7b45978e6ec0243209c40bfeac13",
+    "src/scene/world/life.dream": "4acf6a5b144bdcc6e413b13c50a268be4a4148c1bcb97be5686135e79c2f1e04",
+    "src/scene/world/open-world.dream": "912d0dd082e88068615c02368cf2b3c52d23106577d8a6dac7a6fbf6bcfba31c",
+    "src/sim/car.ts": "f742baf32edcea60fc94f40f302c34e0243efdf645d860a68d2f94650e1c0082",
+    "src/sim/rest.ts": "22fa7f338435c3d9d437b5011bf8f65b8fad82d7776868603ba812d7667f363a",
+    "src/sim/save.ts": "0cec40f4c3e5cd34fe38628d065f27203b2a9c48beb75073b721dbf83d172a28",
+    "tests/docs-site.test.ts": "9d99dbca519bc7b8d2fb459e526b89e18b8c72e66d4ba9644c1cab3c39c4b0f5",
+    "tests/docs.test.ts": "1ff93dca35827ef823ebcc33ace93d59987658dc6e16491c4292330f0b5a083f",
+    "tests/dream-agent.test.ts": "06e2f4af98736eaf58d9911888c075468cc1e1861ef37e263d89408bf71f6c82",
+    "tests/work-attendance-world.test.ts": "434093534d1243799bf5f290c82730986203c94f400e6e9af6d09feaef1a5074",
+    "src/sim/shelter.ts": "a2a39cdf07d233870a426d867b2bfe842c12506f2caf576ae0b162ebeb9cf043",
+    "src/game/shelter-review.ts": "d2e93df68ebb2e712cef24d1529217ee57e46bad3d2265ee76f5fb860c08ab6b",
+    "tests/rain-shelter.test.ts": "04669a5d6519af16250a98399f29b9fac04c41e5eeacf43106573ad2101e09ea",
+    "tests/rain-shelter-world.test.ts": "e566e703cdcdaf22906ab1c6b01b9924d1325a12d1a97b52c6cba8026c71c817",
+    "docs/examples/rain-shelter.dream": "1516821dda73143deb950ec60b32bc993cbf48c324110d8d6b7d3fc7c66ef1d1"
+  },
+  "media": [
+    {
+      "file": "docs/media/shelter.mp4",
+      "bytes": 4608627,
+      "sha256": "7e60c04fd93c1aef4680ca297fb4c4d7b23559ac74f1790c360828f751635f2f",
+      "decode": [
+        "Duration: 00:00:16.00, start: 0.000000, bitrate: 2304 kb/s"
+      ]
+    },
+    {
+      "file": "docs/media/shelter.gif",
+      "bytes": 35334672,
+      "sha256": "6ff42d08bd898a1de8a261c9fe56a57338d50b787fac04d672e42ab4575d6011",
+      "decode": [
+        "Duration: 00:00:16.00, start: 0.000000, bitrate: 17667 kb/s",
+        "Stream #0:0: Video: gif, bgra, 1280x720, 33.33 fps, 30 tbr, 100 tbn",
+        "Stream #0:0: Video: wrapped_avframe, bgra(pc, gbr/unknown/unknown, progressive), 1280x720, q=2-31, 200 kb/s, 30 fps, 30 tbn"
+      ]
+    },
+    {
+      "file": "docs/media/shelter.jpg",
+      "bytes": 129541,
+      "sha256": "b4ef25afee51e8b424cad050619985bf1b7c11dccab6b3b151284c2f381b8e78",
+      "decode": [
+        "Duration: 00:00:00.04, start: 0.000000, bitrate: 25908 kb/s",
+        "Stream #0:0: Video: mjpeg (Baseline), yuvj444p(pc, bt470bg/unknown/unknown), 1600x900, 25 fps, 25 tbr, 25 tbn",
+        "Stream #0:0: Video: wrapped_avframe, yuvj444p(pc, bt470bg/unknown/unknown, progressive), 1600x900, q=2-31, 200 kb/s, 25 fps, 25 tbn"
+      ]
+    }
+  ]
+}

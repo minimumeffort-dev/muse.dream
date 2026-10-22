@@ -323,3 +323,9 @@ It uses finite supplies and wages. [Floor guide](floors.md).
 [scheduled-workday.dream](../examples/scheduled-workday.dream) connects a resident
 to daily attendance, unpaid waiting, finite paid batches and a physical return.
 [Authoring rules](attendance.md).
+
+## A place out of the rain
+
+[rain-shelter.dream](../examples/rain-shelter.dream) connects weather to a healthy
+resident's shared upstairs seat, physical stair trip and persistent return.
+[Authoring rules](shelter.md).

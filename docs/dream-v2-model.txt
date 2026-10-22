@@ -691,7 +691,8 @@ rule for maintenance or planting, not labels or coordinates. Rain uses the
 existing bounded particle pool, with no per-drop physics/shadows. Reduced motion
 suppresses precipitation while physical weather keeps simulation time. Pause
 freezes all; R/reload retain time; Start over resets it. No weather forecast,
-seasons, floods, general shelter routing or biological validity.
+seasons, floods, general shelter search or biological validity. Optional rest.shelter
+connects existing covered seats to rain-aware NPC need trips; see Rest below.
 
 ## commerce
 Optional ration id(good=bread,market=corner,below=40); declares one of at most
@@ -852,6 +853,20 @@ stock, coins, idle pay or generated controllers. Keep energy and out/sit/home
 ownership, paths and clocks in saved state. R preserves them; Start over resets.
 No offline catch-up, forced player sleep, medical claims or full sleep model.
 See examples/resting.dream.
+Rain shelter: optional rest(...,shelter=true) requires world weather. All listed
+furniture slots must fit wholly inside an existing interior and beneath a retained
+core ceiling above standing headroom. The compiler checks actual body footprints;
+a label, outdoor bench or break-zone roof is not cover. A free healthy NPC outside
+cover uses the ordinary out/sit/home rest journey when rain begins. Already-covered
+healthy actors keep their routine. Meals and existing committed journeys/jobs keep
+priority; shelter never cancels cargo or earns wages. Keep shared player/meal seat
+claims, real stair access, energy and paused programs. Wait seated until rain ends
+AND energy reaches until; a healthy outward trip can return early once dry. Lost
+cover or broken/blocked furniture releases the claim and returns home. Omitting
+shelter (or false) retains low-energy-only decisions. The player uses normal F
+seating, without automatic movement or a rain requirement. Persist the existing
+rest phase and simulation clock, with no separate weather-intent field, offline
+catch-up, new bodies/rigs or reserved jobs. See examples/rain-shelter.dream.
 Daily work attendance: add account(...,commute=true,attendance=[6,20]). Needs
 world daylight and the same single workplace for all assigned work/works jobs.
 Hours use the market interval rules, including overnight and [0,24]. The NPC

@@ -1809,3 +1809,22 @@ not a live performance measurement. The older work-commute recording shows the
 historical one-batch policy. Upstairs rest, venue, asset and transport captures
 remain accurate because their geometry, controls and rendering are unchanged.
 [Checks](../evidence/attendance/verification.md).
+
+## Rain shelter, r101
+
+`shelter.mp4`, `shelter.gif` and `shelter.jpg` share 480 consecutive rendered
+frames from the dev-only `?capture` shelter clip, at 30 frames per simulation
+second. Preparation runs ordinary fixed ticks through food, rest, attendance
+and the second shower. Only the distant player's observation pose is seeded.
+The clip starts four seconds before the shower ends, following the resident
+from a covered upper settee as they begin the physical return down the stairs.
+HD video/still use 1600×900; GIF uses 1280×720. Encode with
+`node scripts/encode-media.mjs <ffmpeg> <gifsicle> shelter`. No interpolation or
+live performance claim. The weather clip's initial shower remains exact; the
+attendance and earlier upstairs clips precede the new second-shower choice.
+Their geometry, controls and first-cycle behavior remain accurate. Earlier
+ground-floor rest recordings remain historical layouts.
+
+The earlier upstairs recording predates synchronized camera/roof snapping on
+the first frame. Its stair, seat and energy behavior remains accurate; use the
+r101 shelter recording for the current immediate interior reveal.

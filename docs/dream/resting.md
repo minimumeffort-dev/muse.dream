@@ -85,8 +85,8 @@ resets it. Streaming changes rendered chunks, not the trip or seat ownership.
 The registered r96 upgrade keeps all old stock, money, work, cargo, damage,
 clocks and history. It initializes only the newly declared energy values, without
 guessing elapsed tiredness or interrupting existing jobs. Old source slots remain.
-There are no beds, sleep schedules, dreams, interiors above the ground floor or
-general daily planner yet.
+There are no beds, sleep schedules, dreams or general daily planner yet.
+Named floors now provide upstairs seating through the same shared rules below.
 
 The home layout in this recording is historical, before the upper floor opened. Rest controls and energy rules still apply. See [stairs](stairs.md) for the current house and table position.
 
@@ -96,3 +96,11 @@ The home layout in this recording is historical, before the upper floor opened. 
 the floor IDs and their enclosing building to its grounds. Residents use real
 stair contacts, retain heights on saved paths and share the same claims with the
 player. Broken seats release claims on either level. See the [complete example](../examples/upstairs-rest.dream).
+
+## Wait out a shower
+
+Optional `shelter=true` lets a healthy free resident use those same seats when
+rain begins. The compiler requires weather and a retained interior ceiling over
+every listed slot. Shared claims, physical trips and energy remain unchanged;
+committed activities keep priority. See [rain shelter](shelter.md) and its
+[complete example](../examples/rain-shelter.dream).

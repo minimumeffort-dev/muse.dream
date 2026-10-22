@@ -14,10 +14,10 @@ import {gameSave} from '../src/game/save';
 import {workCommuteReviewSteps} from '../src/game/work-commute-review';
 import {attendanceReviewSteps} from '../src/game/attendance-review';
 import {attendanceEnd} from '../src/sim/attendance';
-const scene=createWorldScene(),prior=c.preAttendanceScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.ATTENDANCE_COMPATIBILITY,previousAttendanceSaveCompatibility:c.FLOORS_COMPATIBILITY},old:World={...world,scene:prior,saveCompatibility:c.FLOORS_COMPATIBILITY,previousAttendanceSaveCompatibility:undefined};
+const scene=c.preShelterScene(createWorldScene()),prior=c.preAttendanceScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.ATTENDANCE_COMPATIBILITY,previousAttendanceSaveCompatibility:c.FLOORS_COMPATIBILITY},old:World={...world,scene:prior,saveCompatibility:c.FLOORS_COMPATIBILITY,previousAttendanceSaveCompatibility:undefined};
 const worker=(s:CarState)=>s.economy!.accounts.find(a=>a.id==='regular')!,run=<T>(steps:Generator<void,T>)=>{let r=steps.next();while(!r.done)r=steps.next();return r.value;};
 it('pins r100 and the exact r99 projection with identical geometry, resources and public graph',async()=>{
- expect(c.SAVE_SIMULATION_VERSION).toBe(44);expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.ATTENDANCE_COMPATIBILITY);expect(await c.sha256(c.preAttendanceCompatibilitySource(scene))).toBe(c.FLOORS_COMPATIBILITY);expect(await c.sha256(c.preFloorsCompatibilitySource(scene))).toBe(c.STAIRS_COMPATIBILITY);
+ expect(JSON.parse(c.preShelterCompatibilitySource(scene)).simulationVersion).toBe(44);expect(await c.sha256(c.preShelterCompatibilitySource(scene))).toBe(c.ATTENDANCE_COMPATIBILITY);expect(await c.sha256(c.preAttendanceCompatibilitySource(scene))).toBe(c.FLOORS_COMPATIBILITY);expect(await c.sha256(c.preFloorsCompatibilitySource(scene))).toBe(c.STAIRS_COMPATIBILITY);
  expect(scene.objects).toBe(prior.objects);expect(scene.routes).toBe(prior.routes);expect(scene.floors).toBe(prior.floors);expect(scene.economy!.markets).toEqual(prior.economy!.markets);expect(ambientGraph(scene)).toEqual(ambientGraph(prior));
 });
 it('connects a real meal, upstairs rest, attendance, purchased demand and one paid batch past its closing time',()=>{

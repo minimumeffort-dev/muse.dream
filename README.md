@@ -605,7 +605,12 @@ The city also has an [authored rain cycle](docs/dream/weather.md). Roads get wet
 braking and tire grip change, and outdoor maintenance can wait for dry weather.
 Committed jobs finish with their supplies and wages intact. Indoor school
 repairs stay available. It is still a bounded mock, without general shelter
-routing, puddles or seasons.
+search, puddles or seasons. A configured resident can now [wait out a shower
+upstairs](docs/dream/shelter.md), using the same seats and stairs as you.
+
+![Waiting upstairs until the shower passes](docs/media/shelter.jpg)
+
+[Watch the shelter trip](docs/media/shelter.mp4) · [GIF](docs/media/shelter.gif) · [Write it in Dream](docs/examples/rain-shelter.dream)
 
 ![Rain builds over the city as the car sets off on wet roads](docs/media/weather.gif)
 

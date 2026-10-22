@@ -58,7 +58,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `economy` | top | No ID / economy | None |
 | `good` | economy | ID / no block | `label: text`, `food?: n` |
 | `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `rest?: ref`, `commute?: bool`, `attendance?: v2`, `on?: ref`, `grounds?: symbols`, `shop?: bool`, `ration?: ref`, `social?: ref`, `shift?: ref`, `meal?: ref`, `work?: ref`, `works?: symbols`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
-| `rest` | economy | ID / no block | `energy: n`, `drain_s: n`, `recover_s: n`, `below: n`, `until: n`, `seats: symbols`, `on: ref`, `grounds?: symbols` |
+| `rest` | economy | ID / no block | `energy: n`, `drain_s: n`, `recover_s: n`, `below: n`, `until: n`, `shelter?: bool`, `seats: symbols`, `on: ref`, `grounds?: symbols` |
 | `ration` | economy | ID / no block | `good: ref`, `market: ref`, `below: n` |
 | `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n`, `hours?: v2`, `owner?: ref`, `sale?: n` |
 | `lot` | market | ID / no block | `good: ref`, `quantity: n`, `limit: n`, `price?: n` |
@@ -787,6 +787,14 @@ Existing claims finish with their resources intact. [Full rules](weather.md)
 and [runnable example](../examples/rain-work.dream).
 
 ## Rest and energy
+
+`rest` fields are `energy:n`, `drain_s:n`, `recover_s:n`, `below:n`, `until:n`,
+`shelter:bool?`, `seats:symbols`, `on:ref`, `grounds:symbols?`. Optional
+`shelter=true` requires weather and every seat slot beneath a retained core
+interior ceiling above standing headroom. A free healthy uncovered NPC takes
+the ordinary rest trip during rain, waits until dry and recovered, and returns.
+Existing work and need journeys keep priority; player F seating stays manual.
+Omitted/false keeps the low-energy-only policy. [Rain shelter](shelter.md).
 
 `rest` declares a bounded game need and ordered NPC seat preferences; `account(...,rest=id)` opts in. Player seating can recover on any usable furniture. Shared work/repair effort, physical trips, claims and persistence are described in [Rest and energy](resting.md), with the [complete runnable example](../examples/resting.dream).
 

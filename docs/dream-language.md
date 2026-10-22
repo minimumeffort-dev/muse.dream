@@ -138,5 +138,8 @@ still reserve independently. The compiler rejects empty-input and no-gain loops.
 
 Use [stairs and upper floors](dream/stairs.md) to connect physical levels. One Dream stair command owns its tread geometry and contacts; named [floors](dream/floors.md) connect furnishing, resident rest and repair journeys to the same slabs.
 
+Use [rain shelter](dream/shelter.md) to let existing residents wait indoors during
+showers through shared rest, seat claims and physical stairs.
+
 Use [daily attendance](dream/attendance.md) to give an existing commuter a work
 window. Waiting reserves nothing; real jobs still use the shared transaction.

@@ -14,8 +14,9 @@ trailers, vehicle damage and service fleets remain separate work.
 The commuter now rests upstairs; player seating and finite paid repairs work on
 the same upper floor. Named Dream floors connect retained slabs, furniture and
 height-aware stair trips. Saved travel and claims survive reload. Daily work attendance now connects
-those needs to an actual workplace window. Next priorities are weather-aware
-shelter choices and relationships with practical consequences, alongside lifts
+those needs to an actual workplace window. Rain now brings the free resident
+indoors through the same shared rest journey. Next priorities are relationships
+with practical consequences, alongside lifts
 and further usable interiors. [Floors](dream/floors.md).
 
 Shared rest now gives the home another purpose. The commuter can buy food, walk
@@ -69,7 +70,7 @@ buy one portion before a trip and eat their own food while committed to work.
 Packing retains room for all declared task loads; sealed cargo and escrow stay
 protected. The player shares the same food transaction during work and repairs.
 No starting cash, stock, geometry or actors are added. Schedules, broader
-resident purposes, indoor activities and shelter choices remain priorities.
+resident purposes, indoor activities and broader social choices remain priorities.
 [Authoring](dream/commerce.md#worker-provisions).
 
 The city now has a Dream-authored rain cycle. Shared ground-vehicle controls
@@ -77,8 +78,10 @@ use gradual wetness for traction and braking, while stationary stopping stays
 stable. Outdoor fixture maintenance and planting require a dry start for both
 players and NPCs; committed jobs finish, and indoor school repairs stay available.
 The rain uses the existing particle pool, with no new bodies, lights or shadow
-maps. Weather, pause and reload share simulation time. General shelter routing,
-puddles, seasons and weather-aware daily routines remain missing.
+maps. Weather, pause and reload share simulation time. Configured rest plans now
+bring a healthy free resident to a covered seat through actual stairs, waiting
+until dry before returning. General cover search, puddles, seasons and broader
+weather decisions remain missing. [Shelter](dream/shelter.md).
 [Weather rules and example](dream/weather.md).
 
 The current motion pass aligns player/vehicle/camera poses between fixed ticks,
