@@ -1,3 +1,4 @@
+import {sceneFloors} from './floors';
 import type {Scene,SceneObject,Point} from './schema';
 import type {ObjectDslV2} from './object-dsl';
 import {objectPlacement} from './placement';
@@ -53,4 +54,4 @@ export function interiorProblems(scene:Scene):string[]{
 }
 
 /** Work grounds may name a painted surface or a placed building's validated interior. */
-export function workGround(scene:Scene,id:string|undefined):{points:Point[]}|undefined{return scene.surfaces.find(s=>s.id===id)??(sceneInteriors(scene).find(f=>f.object.id===id) ? {points:sceneInteriors(scene).find(f=>f.object.id===id)!.polygon} : undefined);}
+export function workGround(scene:Scene,id:string|undefined):{points:Point[]}|undefined{return scene.surfaces.find(s=>s.id===id)??(sceneFloors(scene).find(f=>f.id===id) ? {points:sceneFloors(scene).find(f=>f.id===id)!.points} : undefined)??(sceneInteriors(scene).find(f=>f.object.id===id) ? {points:sceneInteriors(scene).find(f=>f.object.id===id)!.polygon} : undefined);}

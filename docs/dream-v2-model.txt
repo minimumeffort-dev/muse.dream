@@ -482,9 +482,19 @@ and +Z ascends; heading_deg rotates the whole flight. Two flights maximum,
 2..24 integer treads each within the 32-contact/32-part total. After measured scale:
 width >=9, risers <=4 and treads >=6 world units. Supply supported clear landings
 and 18-unit headroom across the flight. Above-tagged slabs hide below their bottom
-and stay visible when standing on them. NPC work grounds/navigation still use the
-ground floor; no automatic upper-floor furnishing, floor-specific NPC destinations
-or lifts. See examples/stairs-home.dream.
+and stay visible when standing on them.
+Named floor id(on=placed_building,at=[local_x,height,local_z],size=[width,depth]);
+binds to an existing full rectangle slab contact, within the enclosure with 20
+world units headroom. At most 32 named floors. Explicit place(...,role=prop,floor=id)
+resolves height once; the complete static prop footprint must fit. No joints,
+controls, knockables or nested interiors. Rest and repair grounds may name floors
+alongside their enclosing building ID. Connected generated stairs carry supported
+height-aware trips; no straight-through-slab travel. Indoor graphs have at most
+1024 nodes; ground plus indoor stays within 8192 nodes, 32768 links and 128 saved
+waypoints. Graph topology is host-derived, never Dream data. Upper props, occupants
+and fragments hide from a viewer below inside the same building; physics and
+shared seat/damage/repair rules persist. No lifts, upstairs commerce or separate
+stacked room ownership. See examples/upstairs-rest.dream.
 
 ## npcs
 ACTOR OWNERSHIP AND NPC PROGRAMS

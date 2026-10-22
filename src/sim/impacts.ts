@@ -1,3 +1,4 @@
+import {furnishingSupport} from '../scene/floors';
 import type {SceneObject} from '../scene/schema';
 import {contactSeparation} from '../scene/contact-geometry';
 import {growthScale} from '../scene/growth';
@@ -122,7 +123,7 @@ export function advanceImpactMotion(state:CarState,world:World,dt:number,hitCar=
       const origin=new Vector3(object.x,objectPlacement(scene,object).base,object.y).sub(pivot),sample=new Vector3();
       const clear=(angle:number)=>{
         const turn=new Quaternion().setFromAxisAngle(axis,angle);
-        return profile.every(local=>{const p=sample.copy(local).multiplyScalar(scale).applyQuaternion(rest).add(origin).applyQuaternion(turn).add(pivot);return p.y>=drivingHeight(scene.terrain,p.x,p.z)-.001;});
+        return profile.every(local=>{const p=sample.copy(local).multiplyScalar(scale).applyQuaternion(rest).add(origin).applyQuaternion(turn).add(pivot);return p.y>=(object.floor ? furnishingSupport(scene,object,p.x,p.z,pivot.y+.05) : drivingHeight(scene.terrain,p.x,p.z))-.001;});
       };
       let angle=target;
       if(!clear(target)){let lo=hinge.angle,hi=target;for(let i=0;i<12;i++){const mid=(lo+hi)/2;if(clear(mid))lo=mid;else hi=mid;}angle=lo;piece.settled=true;}
@@ -131,10 +132,12 @@ export function advanceImpactMotion(state:CarState,world:World,dt:number,hitCar=
       const turn=new Quaternion().setFromAxisAngle(axis,angle),position=new Vector3(...hinge.offset).applyQuaternion(turn).add(pivot);
       piece.x=position.x;piece.y=position.z;piece.elevation=position.y;piece.rotation=turn.multiply(rest).toArray();return [piece];
     }
+    const previousElevation=piece.elevation;
     const rotation=new Quaternion(...piece.rotation).multiply(new Quaternion().setFromEuler(new Euler(...piece.spin.map(v=>v*dt) as [number,number,number])));
     piece.rotation=rotation.toArray();piece.x+=piece.vx*dt;piece.y+=piece.vy*dt;piece.elevation+=piece.vz*dt-150*dt*dt;piece.vz-=300*dt;
     let floor=-Infinity;
-    for(const corner of shape.corners){const p=corner.clone().multiplyScalar(scale).applyQuaternion(rotation);floor=Math.max(floor,drivingHeight(scene.terrain,piece.x+p.x,piece.y+p.z)-p.y);}
+    if(object.floor){const corners=shape.corners.map(c=>c.clone().multiplyScalar(scale).applyQuaternion(rotation)),ceiling=previousElevation+Math.max(...corners.map(p=>p.y))+.5;for(const p of corners)floor=Math.max(floor,furnishingSupport(scene,object,piece.x+p.x,piece.y+p.z,ceiling)-p.y);}
+    else for(const corner of shape.corners){const p=corner.clone().multiplyScalar(scale).applyQuaternion(rotation);floor=Math.max(floor,drivingHeight(scene.terrain,piece.x+p.x,piece.y+p.z)-p.y);}
     if(piece.elevation<=floor){
       piece.elevation=floor;piece.vz=Math.abs(piece.vz)>25 ? Math.abs(piece.vz)*(piece.pattern==="crumble" ? .06 : .23) : 0;piece.vx*=.72;piece.vy*=.72;piece.spin=piece.spin.map(v=>v*.7) as [number,number,number];
       if(Math.hypot(piece.vx,piece.vy,piece.vz,...piece.spin)<3)piece.settled=true;

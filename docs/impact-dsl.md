@@ -192,3 +192,11 @@ bench, table, crate and planter's original break-group identities while refining
 their construction. Additional supporting parts stay inside those groups. Saved
 pieces keep their motion; reconstructed extents follow the new shapes. All
 fragment and live-assembly budgets remain unchanged.
+
+## Furniture on upper floors
+
+A static prop bound with `place.floor` keeps the same category impact policy.
+Its finite contact bottom leaves the room below clear. Splinters use retained
+building slab caps as support; actual stairwell openings remain openings. The
+same floor-aware repair service carries finite supplies upstairs and restores
+its ordinary geometry after checking space. [Named floor authoring](dream/floors.md).

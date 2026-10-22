@@ -1,3 +1,4 @@
+import {walkingDistance} from '../scene/floors';
 import type {Scene} from '../scene/schema';
 import type {CarState} from './car';
 import {findSeat,worldSeats,seatAccessClear} from '../scene/seating';
@@ -19,7 +20,7 @@ export function stepRestNeeds(state:CarState,dt:number,scene:Scene):void{
   if(t.phase!=='home' && (!seat || !seatAvailable(scene,state,seat,a.id) || !seatAccessClear(scene,seat,state.broken,area)))home();
   if(t.phase==='sit'){if(a.energy>=plan.until)home();else continue;}
   advanceWorkJourney(t,t.at,area!,state,dt,scene);
-  if(Math.hypot(t.x-t.at.x,t.y-t.at.y)>.1)continue;
+  if(walkingDistance(scene,t,t.at)>.1)continue;
   if(t.phase==='home'){a.resting=undefined;continue;}
   t.phase='sit';t.speed=0;t.path=[];
  }
@@ -33,7 +34,7 @@ export function startRestTrip(state:CarState,scene:Scene,id:string):boolean{
  for(const id of plan.seats)for(const seat of worldSeats(scene).filter(s=>s.objectId===id)){
   if(!seatAvailable(scene,state,seat,a.id) || !seatAccessClear(scene,seat,state.broken,area))continue;
   const path=workPath(scene,area,p,seat.approach,state);if(!path || !workPath(scene,area,seat.approach,p,state))continue;
-  a.resting={id:plan.id,phase:'out',home:{x:p.x,y:p.y},at:{...seat.approach},seat:{objectId:seat.objectId,seatId:seat.seatId},x:p.x,y:p.y,headingRad:p.headingRad,distance:0,speed:0,path,routeAtS:state.timeS};return true;
+  a.resting={id:plan.id,phase:'out',home:{x:p.x,y:p.y,...(scene.floors ? {elevation:p.elevation} : {})},...(scene.floors ? {elevation:p.elevation} : {}),at:{...seat.approach},seat:{objectId:seat.objectId,seatId:seat.seatId},x:p.x,y:p.y,headingRad:p.headingRad,distance:0,speed:0,path,routeAtS:state.timeS};return true;
  }
  return true;
 }
@@ -51,9 +52,9 @@ export function checkRestState(state:CarState,scene:Scene):void{
   if(!t)continue;
   if(!plan || spec.actor==='player' || t.id!==plan.id || a.work || a.delivery || a.repair || a.courier || a.meal || a.commute || a.shift || t.routeAtS>state.timeS+1.01)throw Error('Invalid saved rest owner');
   const object=scene.objects.find(o=>o.id===spec.actor)!,home=actorPose(scene,object,state.timeS,{...state,economy:undefined}),area=restArea(scene,spec),seat=findSeat(scene,t.seat);
-  if(Math.hypot(t.home.x-home.x,t.home.y-home.y)>.01 || (t.phase==='home' ? !!t.seat || Math.hypot(t.at.x-t.home.x,t.at.y-t.home.y)>.01 : !seat || !plan.seats.includes(seat.objectId) || !seatAvailable(scene,state,seat,a.id) || !seatAccessClear(scene,seat,state.broken,area) || Math.hypot(t.at.x-seat.approach.x,t.at.y-seat.approach.y)>.01))throw Error('Invalid saved rest destination');
-  if(t.phase==='sit' && (t.path.length || t.speed!==0 || Math.hypot(t.x-t.at.x,t.y-t.at.y)>.1))throw Error('Invalid saved resting pose');
+  if(walkingDistance(scene,t.home,home)>.01 || (t.phase==='home' ? !!t.seat || walkingDistance(scene,t.at,t.home)>.01 : !seat || !plan.seats.includes(seat.objectId) || !seatAvailable(scene,state,seat,a.id) || !seatAccessClear(scene,seat,state.broken,area) || walkingDistance(scene,t.at,seat.approach)>.01))throw Error('Invalid saved rest destination');
+  if(t.phase==='sit' && (t.path.length || t.speed!==0 || walkingDistance(scene,t,t.at)>.1))throw Error('Invalid saved resting pose');
   for(const p of [t,t.at,t.home])if(!workSegment(scene,area,p,p,state,true))throw Error('Invalid saved rest support');
-  let previous={x:t.x,y:t.y};for(const p of t.path){if(!workSegment(scene,area,previous,p,state,true))throw Error('Invalid saved rest path');previous=p;}if(t.path.length && Math.hypot(previous.x-t.at.x,previous.y-t.at.y)>.01)throw Error('Invalid saved rest path destination');
+  let previous:import('../scene/floors').WalkingPoint=t;for(const p of t.path){if(!workSegment(scene,area,previous,p,state,true))throw Error('Invalid saved rest path');previous=p;}if(t.path.length && Math.hypot(previous.x-t.at.x,previous.y-t.at.y)>.01)throw Error('Invalid saved rest path destination');
  }
 }

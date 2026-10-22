@@ -113,3 +113,9 @@ place oldtown_049(object=a_brick_terrace,at=[7610.937,3996.087],heading_deg=180)
 site access_oldtown_049(object=oldtown_049,kind=home,entry=[0,-15.75],street=market_avenue,width=16,points=[[7610.937,4112]]);
 
 surface home_entry(finish=terrain,walkable=true,points=[[6489.148,4052],[6497.548,4052],[6497.548,4084],[6489.148,4084]]);
+
+floor home_upper(on=oldtown_044,at=[-3,9,0],size=[12,32]);
+floor home_landing(on=oldtown_044,at=[6,9,13.5],size=[6,5]);
+place home_upper_settee(object=a_home_settee,at=[6508,4005],heading_deg=0,role=prop,floor=home_upper);
+place home_upper_table(object=a_home_table,at=[6508,3975],role=prop,floor=home_upper);
+place home_upper_planter(object=a_home_planter,at=[6519,4032],role=prop,floor=home_upper);

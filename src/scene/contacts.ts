@@ -45,7 +45,7 @@ export function objectContacts(scene:Scene,object:SceneObject,pose?:{x:number;y:
   const foundation=object.spec && "dslVersion" in object.spec && object.spec.foundation;
   const core:Contact[]=contacts ? contacts.map(p=>({id:object.id,x:x+(p.position[0]*c-p.position[2]*s)*object.scale,y:y+(p.position[0]*s+p.position[2]*c)*object.scale,
     r:(p.radius??Math.hypot(...p.size!)/2)*object.scale,...(p.size ? {box:{halfX:p.size[0]*object.scale/2,halfY:p.size[1]*object.scale/2,headingRad:heading+(p.headingRad??0)}} : {}),bottom:foundation && p.position[1]===0 ? -Infinity : base+p.position[1]*object.scale,top:base+(p.position[1]+p.height)*object.scale}))
-    : [{id:object.id,x,y,r:archetypeOf(object).colliderRadius*object.scale,bottom:pose ? base : -Infinity,top:base+objectHeight(object)}];
+    : [{id:object.id,x,y,r:archetypeOf(object).colliderRadius*object.scale,bottom:pose || object.floor ? base : -Infinity,top:base+objectHeight(object)}];
   const zones=object.spec && "dslVersion" in object.spec && object.spec.dslVersion===2 ? object.spec.breakZones??[] : [];
   return [...core,...zones.map(p=>({id:object.id,zoneId:p.id,x:x+(p.position[0]*c-p.position[2]*s)*object.scale,y:y+(p.position[0]*s+p.position[2]*c)*object.scale,
     r:p.radius*object.scale,bottom:base+p.position[1]*object.scale,top:base+(p.position[1]+p.height)*object.scale}))];

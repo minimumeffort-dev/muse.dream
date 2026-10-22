@@ -1,3 +1,4 @@
+import {objectFloor,floorBindings,type FloorFrame} from '../scene/floors';
 import {occupiedInterior} from '../scene/interiors';
 import {pooledImpact} from '../scene/damage-pool';
 import {indexedGeometry} from './indexed-geometry';
@@ -53,7 +54,7 @@ export function batchPrototype(source: THREE.Group): THREE.Group {
 }
 
 type Fade = { attribute: THREE.InstancedBufferAttribute; index: number;cutaway?:string;cutawayHeight?:number };
-type Entry = { id:number;objectId?:string;x: number; y: number; box: THREE.Box3; opacity: number; instances: Fade[];transforms:{mesh:THREE.InstancedMesh;index:number;original?:THREE.Matrix4}[];hidden?:boolean;growthScale?:number;growthPivot?:THREE.Vector3;originalBox?:THREE.Box3 };
+type Entry = { floor?:FloorFrame;id:number;objectId?:string;x: number; y: number; box: THREE.Box3; opacity: number; instances: Fade[];transforms:{mesh:THREE.InstancedMesh;index:number;original?:THREE.Matrix4}[];hidden?:boolean;growthScale?:number;growthPivot?:THREE.Vector3;originalBox?:THREE.Box3 };
 
 /** Static scenery is instanced by assembly and local tile. Only knockables need scene nodes. */
 export class WorldScenery {
@@ -84,7 +85,7 @@ export class WorldScenery {
       if (!live && !prototype) { prototype = batchPrototype(buildObject({ ...object, scale: 1 })); prototype.updateMatrixWorld(true); prototypes.set(key, prototype); }
       const position = worldPosition(scene, object.x, object.y, 1.5);position.y=placement.base+objectGroundLift(object);
       const transform = new THREE.Matrix4().compose(position, placement.rotation, new THREE.Vector3().setScalar(object.scale));
-      const entry: Entry = {id:entries.length,objectId:object.id,x: position.x, y: position.z, box: prototype ? new THREE.Box3().setFromObject(prototype).applyMatrix4(transform) : new THREE.Box3(), opacity: 1, instances: [],transforms:[] };
+      const entry: Entry = {id:entries.length,objectId:object.id,floor:objectFloor(scene,object),x: position.x, y: position.z, box: prototype ? new THREE.Box3().setFromObject(prototype).applyMatrix4(transform) : new THREE.Box3(), opacity: 1, instances: [],transforms:[] };
       entries.push(entry);
       if(placement.foundation && placement.base-placement.low>.1){
         const {width,depth,color}=placement.foundation,height=placement.base-placement.low+4;
@@ -142,7 +143,7 @@ export class WorldScenery {
 
   /** Rebind transferred instance attributes to the same local fade entries. */
   static fromChunk(scene:Scene,group:THREE.Group,data:{objectId?:string;x:number;y:number;min:number[];max:number[]}[]=[]):WorldScenery{
-    const scenery=new WorldScenery(scene,[]),entries:Entry[]=data.map((e,id)=>({id,objectId:e.objectId,x:e.x,y:e.y,box:new THREE.Box3(new THREE.Vector3().fromArray(e.min),new THREE.Vector3().fromArray(e.max)),opacity:1,instances:[],transforms:[]}));
+    const scenery=new WorldScenery(scene,[]),bindings=floorBindings(scene),entries:Entry[]=data.map((e,id)=>({id,objectId:e.objectId,floor:bindings.get(e.objectId??''),x:e.x,y:e.y,box:new THREE.Box3(new THREE.Vector3().fromArray(e.min),new THREE.Vector3().fromArray(e.max)),opacity:1,instances:[],transforms:[]}));
     group.traverse(node=>{
       if(!(node instanceof THREE.Mesh) || !node.userData.sceneryEntries)return;
       const attribute=node.geometry.getAttribute('visibility') as THREE.InstancedBufferAttribute;
@@ -191,14 +192,14 @@ export class WorldScenery {
     const hide=(side:string|undefined)=>!!interior && (side==='roof' || side==='front' && cameraLocal!.y<interior.room.position[2] || side==='back' && cameraLocal!.y>interior.room.position[2] || side==='left' && cameraLocal!.x<interior.room.position[0] || side==='right' && cameraLocal!.x>interior.room.position[0]);
     for (const entry of this.grid.query(player.x, player.z, 700)) {
       if(entry.hidden)continue;
-      if(entry.objectId===interior?.object.id){this.fading.add(entry);continue;}
+      if(entry.objectId===interior?.object.id || entry.floor?.object.id===interior?.object.id && entry.floor!==undefined && player.y-8.5<entry.floor.elevation-.1){this.fading.add(entry);continue;}
       if (this.ray.ray.intersectBox(entry.box, hit) && hit.distanceTo(this.ray.ray.origin) < distance) {
         obscuring.add(entry); this.fading.add(entry);
       }
     }
     this.obscuredCount = obscuring.size;
     for (const entry of this.fading) {
-      const target = obscuring.has(entry) ? .22 : 1;
+      const target = entry.floor && entry.floor.object.id===interior?.object.id && player.y-8.5<entry.floor.elevation-.1 ? 0 : obscuring.has(entry) ? .22 : 1;
       entry.opacity += (target - entry.opacity) * (snap ? 1 : 1 - Math.exp(-dt * 12));
       if (Math.abs(entry.opacity - target) < .002) entry.opacity = target;
       let restored=true;

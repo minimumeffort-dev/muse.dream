@@ -1,6 +1,6 @@
 # Leave and come back
 
-The current world uses format 19 / simulation 42. Its registered r97 upgrade
+The current world uses format 19 / simulation 43. Its registered r97 upgrade
 opens the home's upper floor, preserves the existing ledger and moves only unsafe
 local poses or obsolete home-table repair approaches. Upstairs player height is
 already part of the saved pose. The old slot is retained.
@@ -75,7 +75,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 42. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 43. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -898,7 +898,7 @@ remains its existing independent owner. [Rest rules](dream/resting.md).
 
 ## Stairs upgrade, r98
 
-Current format 19 / simulation 42 accepts registered r97 fingerprint
+The r98 format 19 / simulation 42 stage accepts registered r97 fingerprint
 `67ec3c6c263434eeb67f2dc17a986d719675505899452a283dedc53b071b8be9`.
 The old house projection, ground furniture positions and prior contact/navigation
 packets are checked before applying the new layout. Finite stock, balances,
@@ -908,3 +908,16 @@ supplies, wage and completed work time remain held, with no second payment.
 The saved upstairs height survives ordinary reload. Unsafe player poses recover
 locally using the existing collision guard. No upper-floor NPC policy or offline
 travel is created. [Checks](evidence/stairs/verification.md).
+
+## Upstairs journeys, r99
+
+Format 19 / simulation 43 accepts the exact registered r98 world before adding
+three floor-bound props and the resident's upstairs preference. Existing rest
+commitments finish on their saved cushion; no money, food, energy, clock, claim,
+position or repair progress is initialized. The old slot remains available.
+If a new prop encloses an old player pose, bounded local recovery retains the
+same supported floor or rejects the backup without replacing its slot. New trips carry supported elevation on current positions, destinations and path
+points. Restore checks each segment against slabs and generated stair contacts;
+a fabricated floor height or shortcut through a slab is rejected. Upstairs repair
+escrow, carried supplies, progress and wages use the existing ledger. All older
+registered upgrades remain chained. [Checks](evidence/upstairs/verification.md).

@@ -1,3 +1,4 @@
+import type {WalkingPoint} from '../scene/floors';
 import {teamMember} from './team-sports';
 import {findSeat} from '../scene/seating';
 import {walkingHeight} from '../scene/interiors';
@@ -41,8 +42,8 @@ export function actorPose(scene:Scene,object:SceneObject,timeS:number,state?:Car
   const maintenance=workJourneyForActor(state,scene,object.id);
   const seated=maintenance && 'seat' in maintenance && (maintenance.phase==='eat' || maintenance.phase==='sit') ? findSeat(scene,maintenance.seat) : undefined;
   if(seated)return {id:object.id,x:seated.x,y:seated.y,elevation:seated.elevation,headingRad:seated.headingRad,speed:0,distance:maintenance!.distance,travelled:maintenance!.distance,kind,activity:'perform',animationTimeS:timeS,seatHeight:seated.hipHeight,vx:0,vy:0};
-  if(maintenance?.phase==='rest'){const clock=state!.npcs.find(n=>n.id===object.id)!,active=program!.states.find(s=>s.id===clock.stateId)!;return {id:object.id,x:maintenance.x,y:maintenance.y,elevation:walkingHeight(scene,maintenance.x,maintenance.y),headingRad:clock.headingRad,speed:0,distance:maintenance.distance,travelled:maintenance.distance,kind,activity:active.action,animationTimeS:clock.animationTimeS,stateId:clock.stateId,vx:0,vy:0};}
-  if(maintenance)return {id:object.id,x:maintenance.x,y:maintenance.y,elevation:walkingHeight(scene,maintenance.x,maintenance.y),headingRad:maintenance.headingRad,speed:maintenance.speed,distance:maintenance.distance,travelled:maintenance.distance,kind,activity:maintenance.phase==='work' || maintenance.phase==='eat' ? 'perform' : 'patrol',animationTimeS:timeS,vx:0,vy:0};
+  if(maintenance?.phase==='rest'){const clock=state!.npcs.find(n=>n.id===object.id)!,active=program!.states.find(s=>s.id===clock.stateId)!;return {id:object.id,x:maintenance.x,y:maintenance.y,elevation:(maintenance as WalkingPoint).elevation??walkingHeight(scene,maintenance.x,maintenance.y),headingRad:clock.headingRad,speed:0,distance:maintenance.distance,travelled:maintenance.distance,kind,activity:active.action,animationTimeS:clock.animationTimeS,stateId:clock.stateId,vx:0,vy:0};}
+  if(maintenance)return {id:object.id,x:maintenance.x,y:maintenance.y,elevation:(maintenance as WalkingPoint).elevation??walkingHeight(scene,maintenance.x,maintenance.y),headingRad:maintenance.headingRad,speed:maintenance.speed,distance:maintenance.distance,travelled:maintenance.distance,kind,activity:maintenance.phase==='work' || maintenance.phase==='eat' ? 'perform' : 'patrol',animationTimeS:timeS,vx:0,vy:0};
   if(program){
     const clock=state?.npcs?.find(n=>n.id===object.id)??initialNpcState(scene,object),active=program.states.find(s=>s.id===clock.stateId)!;
     const point=route ? routePose(route,clock.routeTimeS+(object.route!.phaseS??0),object.route!.offset) : {x:object.x,y:object.y,distance:0,travelled:0};

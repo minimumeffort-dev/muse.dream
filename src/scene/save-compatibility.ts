@@ -15,10 +15,11 @@ import charactersR80 from './compatibility/r80-characters.json';
 import serviceR81 from './compatibility/r81-indoor-service.json';
 import schoolR90 from './compatibility/r90-school.json';
 import homeR93 from './compatibility/r93-home.json';
+import homeR98 from './compatibility/r98-home.json';
 import homeR97 from './compatibility/r97-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=42;
+export const SAVE_SIMULATION_VERSION=43;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -50,6 +51,7 @@ export function saveCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder
   return projection(scene,SAVE_SIMULATION_VERSION,true,encode);
 }
 function projection(scene:Scene,simulationVersion:number,rounded=true,encode?:CompatibilityEncoder):string {
+  if(simulationVersion<43)scene=preFloorsScene(scene);
   if(simulationVersion<42)scene=preStairsScene(scene);
   if(simulationVersion<41)scene=preRestScene(scene);
   const {revisionId,sourceHash,provenance,...world}=scene;
@@ -103,10 +105,22 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r99 binds upper-storey props and journeys to retained slab/stair contacts. */
+export const FLOORS_COMPATIBILITY='c5eb87dd0dcf58f2c0aff89875203b51bc29673aeab3b40b560f81ee43c906ad';
+const floorProjections=new WeakMap<Scene,Scene>();
+export function preFloorsScene(scene:Scene):Scene{
+ const cached=floorProjections.get(scene);if(cached)return cached;if(!scene.floors?.some(f=>f.id==='home_upper'))return scene;
+ const {floors,...old}=scene;
+ const prior={...old,objects:scene.objects.filter(o=>!['home_upper_settee','home_upper_table','home_upper_planter'].includes(o.id)).map(o=>o.id==='oldtown_044' ? {...o,spec:homeR98 as ObjectDslV2} : o),economy:scene.economy && {...scene.economy,rests:scene.economy.rests?.map(r=>r.id==='home_rest' ? {...r,seats:['home_settee'],grounds:['home_entry','market_square','market_hall']} : r),repairs:scene.economy.repairs.map(r=>r.id==='home_furniture' ? {...r,grounds:['oldtown_044']} : r)}};
+ floorProjections.set(scene,prior);return prior;
+}
+export function preFloorsCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preFloorsScene(scene),42,true,encode);}
+
 /** r98 opens a physical upper floor without changing the existing life ledger. */
 export const STAIRS_COMPATIBILITY='ced2d2f3ab7f629d8e5f57b344e4aec70bc4bfbfeb2ac667ebf3eec1c2620e85';
 const stairProjections=new WeakMap<Scene,Scene>();
 export function preStairsScene(scene:Scene):Scene{
+ scene=preFloorsScene(scene);
  const cached=stairProjections.get(scene);if(cached)return cached;
  if(!scene.objects.some(o=>o.id==='oldtown_044' && o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && (o.spec.interior?.size[1]??0)>8))return scene;
  const prior={...scene,objects:scene.objects.map(o=>o.id==='oldtown_044' ? {...o,spec:homeR97 as ObjectDslV2} : o.id==='home_table' ? {...o,x:6475} : o)};stairProjections.set(scene,prior);return prior;

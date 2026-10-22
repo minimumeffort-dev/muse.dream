@@ -577,3 +577,13 @@ accepted-data groups and historical hashes unchanged. No browser FPS, loading,
 full-suite timing or lower-powered-device improvement was measured. Existing
 GIFs, videos and stills remain accurate because visuals and controls are unchanged.
 [Measurements, checks and native return](evidence/route-edge-cache/verification.md).
+
+## Storey-aware contents
+
+Named [floors](dream/floors.md) bind furnishing to existing slab contacts. From
+below inside the same building, upper contents use the existing per-instance
+visibility channel; streamed copies rebind that floor identity without another
+mesh or live rig. Actor and fragment views use the same viewer level. Standing
+upstairs keeps the occupied slab and contents opaque. These cutaways change no
+contacts, claims, saved poses or repair rules. The upper-floor walkthrough is an
+offline 30-frame-per-simulation-second export, not a performance benchmark.

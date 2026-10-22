@@ -1,3 +1,4 @@
+import {objectFloor,walkingSupport} from '../scene/floors';
 import {stepStrike} from './strike';
 import {leaveSharedMeal} from './social';
 import {nearbySeat,seatedPose} from './seating';
@@ -62,7 +63,7 @@ export function exitPosition(state:CarState,world:World) {
   const id=state.control.kind==="car" ? null : state.control.id;
   const vehicles=state.control.kind==="passenger" ? state.vehicles : [...state.vehicles.filter(v=>v.id!==id),parkedPose(state,id)];
   const foot:CarState={...state,control:{kind:"foot"},vehicles},footWorld=bodyWorld(foot,world),object=occupiedObject(state,world),bodyRadius=bodyWorld(state,world).carRadius;
-  const profile=controlOf(object?.spec),radius=profile==="plane" || profile==="boat" ? Math.max(bodyRadius,assemblyHorizontalRadius(object!.spec as import("../scene/object-dsl").ObjectDsl,object!.scale)) : bodyRadius;
+  const layer=object && objectFloor(world.scene,object),profile=controlOf(object?.spec),radius=profile==="plane" || profile==="boat" ? Math.max(bodyRadius,assemblyHorizontalRadius(object!.spec as import("../scene/object-dsl").ObjectDsl,object!.scale)) : bodyRadius;
   // Seats with explicit contacts are validated upright passenger cylinders. The
   // enclosing broad-phase radius is useful for queries, not a sideways exit.
   const contacts=object?.spec && 'dslVersion' in object.spec && object.spec.dslVersion===2 && object.spec.contacts ? objectContacts(world.scene,object,state) : undefined,margin=FOOT_RADIUS+5;
@@ -75,7 +76,8 @@ export function exitPosition(state:CarState,world:World) {
     return {dx,dy,r:Math.max(margin,extent??radius+margin)};
   });
   for(const wet of [false,true])for(let ring=0;ring<7;ring++)for(const exit of exits){
-    const r=exit.r+ring*8,x=state.x+exit.dx*r,y=state.y+exit.dy*r,ground=walkingHeight(world.scene,x,y,FOOT_RADIUS),water=waterAt(world.scene.terrain,x,y,terrainHeight(world.scene.terrain,x,y));
+    const r=exit.r+ring*8,x=state.x+exit.dx*r,y=state.y+exit.dy*r,ground=layer ? walkingSupport(world.scene,x,y,state.elevation,FOOT_RADIUS,4,object!.id) : walkingHeight(world.scene,x,y,FOOT_RADIUS),water=waterAt(world.scene.terrain,x,y,terrainHeight(world.scene.terrain,x,y));
+    if(layer && Math.abs(ground-state.elevation)>4)continue;
     const elevation=wet && water ? Math.max(terrainHeight(world.scene.terrain,x,y),water.level-FOOT_HEIGHT*.65) : ground;
     // A boat can leave at the shore, but cannot teleport up through a bridge deck.
     if(!wet && profile==='boat' && bridgeAt(world.scene.terrain.landscape,x,y))continue;
@@ -88,7 +90,7 @@ export function exitPosition(state:CarState,world:World) {
 export function standUp(state:CarState,world:World):CarState {
  const seat=seatedPose(state,world.scene);if(!state.seated)return state;
  if(!seat)return leaveSharedMeal({...state,seated:undefined},world.scene);
- const next={...state,seated:undefined,x:seat.approach.x,y:seat.approach.y,elevation:walkingHeight(world.scene,seat.approach.x,seat.approach.y,FOOT_RADIUS)};
+ const next={...state,seated:undefined,x:seat.approach.x,y:seat.approach.y,elevation:seat.approach.elevation??walkingHeight(world.scene,seat.approach.x,seat.approach.y,FOOT_RADIUS)};
  if(carFootprintClear({...bodyWorld(next,world),dryGround:true},next.x,next.y,next.elevation,next.timeS,next))return leaveSharedMeal(next,world.scene);
  const exit=exitPosition({...state,seated:undefined,control:{kind:'passenger',id:seat.objectId}},world);
  return exit ? leaveSharedMeal({...next,...exit},world.scene) : state;
@@ -97,7 +99,7 @@ export function standUp(state:CarState,world:World):CarState {
 export function toggleRide(state:CarState,world:World):CarState {
   if(state.seated)return standUp(state,world);
   const seat=nearbySeat(state,world);
-  if(seat && carFootprintClear({...bodyWorld(state,world),dryGround:true},seat.approach.x,seat.approach.y,walkingHeight(world.scene,seat.approach.x,seat.approach.y,FOOT_RADIUS),state.timeS,state))return {...state,seated:{objectId:seat.objectId,seatId:seat.seatId},x:seat.x,y:seat.y,elevation:seat.elevation,headingRad:seat.headingRad,vx:0,vy:0,vz:0,pitch:0,bank:0,jump:{...state.jump,bufferUntilS:0,coyoteUntilS:0}};
+  if(seat && carFootprintClear({...bodyWorld(state,world),dryGround:true},seat.approach.x,seat.approach.y,seat.approach.elevation??walkingHeight(world.scene,seat.approach.x,seat.approach.y,FOOT_RADIUS),state.timeS,state))return {...state,seated:{objectId:seat.objectId,seatId:seat.seatId},x:seat.x,y:seat.y,elevation:seat.elevation,headingRad:seat.headingRad,vx:0,vy:0,vz:0,pitch:0,bank:0,jump:{...state.jump,bufferUntilS:0,coyoteUntilS:0}};
   if(state.control.kind!=="foot"){
     const exit=exitPosition(state,world);if(!exit)return state;
     return {...state,...exit,control:{kind:"foot"},vx:0,vy:0,vz:0,grounded:true,landingSpeed:0,pitch:0,bank:0,boostedThisStep:false,carBoost:{...state.carBoost,activeUntilS:0},jump:{held:state.jump.held,bufferUntilS:0,coyoteUntilS:0}};

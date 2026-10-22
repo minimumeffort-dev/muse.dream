@@ -1,3 +1,4 @@
+import {objectFloor,walkingDistance} from '../scene/floors';
 import {stepRestNeeds,startRestTrip,checkRestState} from './rest';
 import {socialOffer,startSharedMeal,endSharedMeal,stepSharedMeal,checkSharedMeal,stepSocialInvitation,offerHostedMeal,declineSocialInvitation,hostedMealReason} from './social';
 import {marketIsOpen,marketIsStaffed} from './market-hours';
@@ -40,7 +41,9 @@ const mealState=courierState.omit({phase:true}).extend({id,market:id,phase:z.enu
 export const mealEconomyStateSchema=progressEconomyStateSchema.extend({accounts:z.array(progressEconomyStateSchema.shape.accounts.element.extend({meal:mealState.omit({seat:true}).extend({phase:z.enum(['out','eat','home'])}).strict().optional()}).strict()).max(L.accounts)}).strict();
 export const hoursEconomyStateSchema=progressEconomyStateSchema.extend({accounts:z.array(progressEconomyStateSchema.shape.accounts.element.extend({meal:mealState.optional()}).strict()).max(L.accounts),events:z.array(progressEconomyStateSchema.shape.events.element.extend({reason:z.enum([...progressEconomyStateSchema.shape.events.element.shape.reason.unwrap().options,'closed']).optional()}).strict()).max(12)}).strict();
 const commuteState=courierState.extend({phase:z.enum(['out','work','home']),home:point}).strict();
-const restState=courierState.extend({phase:z.enum(['out','sit','home']),home:point,seat:z.object({objectId:id,seatId:id}).strict().optional()}).strict();
+const raisedPoint=point.extend({elevation:z.number().finite().min(-4096).max(4096).optional()}).strict();
+const raisedJourney={elevation:raisedPoint.shape.elevation,at:raisedPoint,path:z.array(raisedPoint).max(L.repairPath)};
+const restState=courierState.extend({...raisedJourney,phase:z.enum(['out','sit','home']),home:raisedPoint,seat:z.object({objectId:id,seatId:id}).strict().optional()}).strict();
 const shiftState=courierState.extend({phase:z.enum(['out','rest','in'])}).strict();
 export const shiftEconomyStateSchema=hoursEconomyStateSchema.extend({accounts:z.array(hoursEconomyStateSchema.shape.accounts.element.extend({shift:shiftState.optional()}).strict()).max(L.accounts),events:z.array(hoursEconomyStateSchema.shape.events.element.extend({reason:z.enum([...hoursEconomyStateSchema.shape.events.element.shape.reason.unwrap().options,'unstaffed']).optional()}).strict()).max(12)}).strict();
 const sharedState=courierState.omit({phase:true}).extend({partner:id,phase:z.enum(['out','eat','home']),playerSeat:z.object({objectId:id,seatId:id}).strict(),seat:z.object({objectId:id,seatId:id}).strict(),home:point,startedAtS:clock,eatUntilS:clock.optional(),portions:z.union([z.literal(0),z.literal(2)])}).strict();
@@ -48,7 +51,7 @@ export const socialEconomyStateSchema=shiftEconomyStateSchema.extend({shared:sha
 export const priorInvitationEconomyStateSchema=socialEconomyStateSchema.extend({markets:z.array(socialEconomyStateSchema.shape.markets.element.extend({owner:id.optional(),acquiredAtS:clock.optional()}).strict()).max(L.markets),events:z.array(socialEconomyStateSchema.shape.events.element.extend({kind:z.enum([...socialEconomyStateSchema.shape.events.element.shape.kind.options,'acquired','capital_in','capital_out']),amount:money.positive().optional(),reason:z.enum([...socialEconomyStateSchema.shape.events.element.shape.reason.unwrap().options,'ownership','not_for_sale','amount','headroom']).optional()}).strict()).max(12)}).strict();
 const seatRef=z.object({objectId:id,seatId:id}).strict();
 export const priorRecoveryEconomyStateSchema=priorInvitationEconomyStateSchema.extend({accounts:z.array(priorInvitationEconomyStateSchema.shape.accounts.element.extend({invitedAtS:clock.optional()}).strict()).max(L.accounts),shared:sharedState.extend({host:id.optional()}).strict().optional(),invitation:z.object({partner:id,playerSeat:seatRef,seat:seatRef,offeredAtS:clock,expiresAtS:clock}).strict().optional(),events:z.array(priorInvitationEconomyStateSchema.shape.events.element.extend({kind:z.enum([...priorInvitationEconomyStateSchema.shape.events.element.shape.kind.options,'invited','invite_declined']),reason:z.enum([...priorInvitationEconomyStateSchema.shape.events.element.shape.reason.unwrap().options,'equipment']).optional()}).strict()).max(12)}).strict();
-export const economyStateSchema=priorRecoveryEconomyStateSchema.extend({recovered:z.record(count).optional(),recoverySpent:z.array(z.string().min(1).max(128)).max(L.recoverySources).optional(),events:z.array(priorRecoveryEconomyStateSchema.shape.events.element.extend({kind:z.enum([...priorRecoveryEconomyStateSchema.shape.events.element.shape.kind.options,'recovery_returned']),reason:z.enum([...priorRecoveryEconomyStateSchema.shape.events.element.shape.reason.unwrap().options,'weather','energy']).optional()}).strict()).max(12),accounts:z.array(priorRecoveryEconomyStateSchema.shape.accounts.element.extend({energy:z.number().finite().min(0).max(100).optional(),resting:restState.optional(),commute:commuteState.optional(),repair:repairState.extend({recover:z.literal(true).optional()}).strict().optional()}).strict()).max(L.accounts)}).strict();
+export const economyStateSchema=priorRecoveryEconomyStateSchema.extend({recovered:z.record(count).optional(),recoverySpent:z.array(z.string().min(1).max(128)).max(L.recoverySources).optional(),events:z.array(priorRecoveryEconomyStateSchema.shape.events.element.extend({kind:z.enum([...priorRecoveryEconomyStateSchema.shape.events.element.shape.kind.options,'recovery_returned']),reason:z.enum([...priorRecoveryEconomyStateSchema.shape.events.element.shape.reason.unwrap().options,'weather','energy']).optional()}).strict()).max(12),accounts:z.array(priorRecoveryEconomyStateSchema.shape.accounts.element.extend({energy:z.number().finite().min(0).max(100).optional(),resting:restState.optional(),commute:commuteState.optional(),repair:repairState.extend({...raisedJourney,recover:z.literal(true).optional()}).strict().optional()}).strict()).max(L.accounts)}).strict();
 export type EconomyState=z.infer<typeof economyStateSchema>;
 export type CommerceAction={kind:'buy';market:string;good:string}|{kind:'sell';market:string;good:string}|{kind:'eat';good:string}|{kind:'work';job:string}|{kind:'collect';delivery:string}|{kind:'deliver'}|{kind:'cancel'}|{kind:'repair';repair:string}|{kind:'share';partner:string}|{kind:'accept_share';partner:string}|{kind:'decline_share';partner:string}|{kind:'acquire';market:string}|{kind:'deposit';market:string;amount:number}|{kind:'withdraw';market:string;amount:number};
 type Account=EconomyState['accounts'][number];
@@ -275,7 +278,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
    if(t.phase==='home'){if(Math.hypot(t.x-object!.x,t.y-object!.y)<.1){if(t.recover){if(!reason(current,scene,e,a,{kind:'deliver'}))returnRecovery(a);}else a.repair=undefined;current={...current,npcs:current.npcs.map(n=>n.id===object!.id ? {...n,headingRad:t.headingRad} : n)};}continue;}
   }
   if(t.phase==='home')continue;
-  const p=npc ? t : ownerPose(current,scene,a),atWork=!!p && (npc ? t.path.length===0 : Math.hypot(current.vx,current.vy)<2) && Math.hypot(p.x-target.contact.x,p.y-target.contact.y)<=target.contact.r+REPAIR_REACH && Math.abs(walkingHeight(scene,p.x,p.y)-walkingHeight(scene,target.contact.x,target.contact.y))<4;
+  const p=npc ? t : ownerPose(current,scene,a),atWork=!!p && (npc ? t.path.length===0 : Math.hypot(current.vx,current.vy)<2) && Math.hypot(p.x-target.contact.x,p.y-target.contact.y)<=target.contact.r+REPAIR_REACH && Math.abs((p.elevation??walkingHeight(scene,p.x,p.y))-(objectFloor(scene,c.objects.get(target.objectId)!)?.elevation??walkingHeight(scene,target.contact.x,target.contact.y)))<4;
   if(atWork){t.phase='work';if(npc)t.headingRad=Math.atan2(target.contact.y-t.y,target.contact.x-t.x);t.progressS=Math.min(r.seconds,t.progressS+now-old.atS);if(t.progressS+1e-8>=r.seconds && repairSpaceClear(scene,target,current,r.regrow_s!==undefined ? r.seed_scale??GROWTH_LIMITS.seedScale : 1))finishRepair(a,false);}else t.phase='out';
  }
  const perform=(a:Account,action:CommerceAction)=>{
@@ -299,7 +302,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
   if(action.kind==='share'){startSharedMeal(current,scene,action.partner);report(a,'sharing',e.shared!.id);return;}
   if(action.kind==='accept_share'){startSharedMeal(current,scene,action.partner,true);report(a,'sharing',e.shared!.id);return;}
   if(action.kind==='decline_share'){const plan=c.accounts.get(action.partner)!.social!;declineSocialInvitation(current);report(a,'invite_declined',plan);return;}
-  if(action.kind==='repair'){const r=c.repairs.get(action.repair)!,offer=repairOffer(current,scene,e,a,r.id)!,p=ownerPose(current,scene,a)!,m=e.markets.find(m=>m.id===r.market)!;m.stock[r.input]!-=r.take;m.credits-=r.pay;const npc=c.accounts.get(a.id)!.actor!=='player';a.repairSeen=undefined;const recover=!!r.recover && !e.recoverySpent!.includes(offer.target.objectId) && Object.values(a.inventory).reduce((n,v)=>n+v,0)+r.amount!<=c.accounts.get(a.id)!.capacity && m.stock[r.recover]!+reserved(e,c.e,m.id,r.recover)+(r.input===r.recover ? r.take : 0)+r.amount!<=c.markets.get(m.id)!.lots.find(l=>l.good===r.recover)!.limit;a.repair={...(recover ? {recover:true as const} : {}),id:r.id,objectId:offer.target.objectId,...(offer.target.zoneId ? {zoneId:offer.target.zoneId} : {}),phase:'out',at:offer.end,x:npc ? p.x : offer.end.x,y:npc ? p.y : offer.end.y,headingRad:0,distance:0,progressS:0,speed:0,path:npc ? offer.path : [],routeAtS:now};report(a,'repair_started',r.id);return;}
+  if(action.kind==='repair'){const r=c.repairs.get(action.repair)!,offer=repairOffer(current,scene,e,a,r.id)!,p=ownerPose(current,scene,a)!,m=e.markets.find(m=>m.id===r.market)!;m.stock[r.input]!-=r.take;m.credits-=r.pay;const npc=c.accounts.get(a.id)!.actor!=='player';a.repairSeen=undefined;const recover=!!r.recover && !e.recoverySpent!.includes(offer.target.objectId) && Object.values(a.inventory).reduce((n,v)=>n+v,0)+r.amount!<=c.accounts.get(a.id)!.capacity && m.stock[r.recover]!+reserved(e,c.e,m.id,r.recover)+(r.input===r.recover ? r.take : 0)+r.amount!<=c.markets.get(m.id)!.lots.find(l=>l.good===r.recover)!.limit;a.repair={...(recover ? {recover:true as const} : {}),id:r.id,objectId:offer.target.objectId,...(offer.target.zoneId ? {zoneId:offer.target.zoneId} : {}),phase:'out',at:offer.end,...(offer.end.elevation!==undefined ? {elevation:npc ? p.elevation : offer.end.elevation} : {}),x:npc ? p.x : offer.end.x,y:npc ? p.y : offer.end.y,headingRad:0,distance:0,progressS:0,speed:0,path:npc ? offer.path : [],routeAtS:now};report(a,'repair_started',r.id);return;}
   if(action.kind==='collect'){const d=c.deliveries.get(action.delivery)!;e.markets.find(m=>m.id===d.from)!.stock[d.good]!-=d.quantity;e.markets.find(m=>m.id===d.to)!.credits-=d.pay+deliveryBill(d);a.delivery={id:d.id,startedAtS:now};report(a,'collected',d.id);return;}
   if(action.kind==='deliver' && a.repair?.recover){returnRecovery(a);return;}
   if(action.kind==='deliver'){const d=c.deliveries.get(a.delivery!.id)!;e.markets.find(m=>m.id===d.to)!.stock[d.good]!+=d.quantity;e.markets.find(m=>m.id===d.from)!.credits+=deliveryBill(d);a.credits+=d.pay;a.delivery=undefined;e.delivered[d.id]!++;a.completed.delivery[d.id]!++;report(a,'delivered',d.id);return;}
@@ -312,7 +315,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
  for(const a of e.accounts)if(a.courier){
   const t=a.courier,d=c.deliveries.get(t.id)!,home=c.objects.get(c.accounts.get(a.id)!.actor)!;
   advanceWorkJourney(t,t.at,deliveryArea(d),current,now-old.atS,scene);
-  if(Math.hypot(t.x-t.at.x,t.y-t.at.y)>.1)continue;
+  if(walkingDistance(scene,t,t.at)>.1)continue;
   if(t.phase==='home'){a.courier=undefined;current={...current,npcs:current.npcs.map(n=>n.id===home.id ? {...n,headingRad:t.headingRad} : n)};continue;}
   if(t.phase==='pickup'){
    const blocked=reason(current,scene,e,a,{kind:'collect',delivery:d.id});if(blocked==='closed' || blocked==='unstaffed')continue;
@@ -327,7 +330,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
   const home=()=>{t.phase='home';t.at={...t.home};t.path=[];t.routeAtS=0;t.speed=0;};
   if(t.phase==='work'){if(!a.work)home();continue;}
   advanceWorkJourney(t,t.at,area,current,now-old.atS,scene);
-  if(Math.hypot(t.x-t.at.x,t.y-t.at.y)>.1)continue;
+  if(walkingDistance(scene,t,t.at)>.1)continue;
   if(t.phase==='home'){a.commute=undefined;continue;}
   t.phase='work';if(reason(current,scene,e,a,{kind:'work',job:t.id})){home();continue;}
   t.speed=0;perform(a,{kind:'work',job:t.id});
@@ -338,7 +341,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
   if(t.seat && current.broken.includes(t.seat.objectId)){t.seat=undefined;if(t.phase==='seat'){t.phase='eat';t.at={x:t.x,y:t.y};t.path=[];t.eatUntilS=now+m.eat_s;}}
   if(t.phase==='eat'){t.speed=0;if(now+1e-8>=t.eatUntilS!){perform(a,{kind:'eat',good:m.good});returnHome();}continue;}
   advanceWorkJourney(t,t.at,area,current,now-old.atS,scene);
-  if(Math.hypot(t.x-t.at.x,t.y-t.at.y)>.1)continue;
+  if(walkingDistance(scene,t,t.at)>.1)continue;
   if(t.phase==='home'){a.meal=undefined;continue;}
   if(t.phase==='seat'){t.phase='eat';t.x=t.at.x;t.y=t.at.y;t.path=[];t.speed=0;t.eatUntilS=now+m.eat_s;continue;}
   if(reason(current,scene,e,a,{kind:'buy',market:t.market,good:m.good})){returnHome();continue;}
@@ -426,7 +429,7 @@ export function checkEconomyState(state:CarState,scene:Scene):void{
   const area=deliveryArea(task),market=d.markets.find(m=>m.id===(t.phase==='pickup' ? task.from : task.to))!,vendor=scene.objects.find(o=>o.id===market.actor)!;
   if(t.phase==='home' ? Math.hypot(t.at.x-home.x,t.at.y-home.y)>.01 : Math.hypot(t.at.x-vendor.x,t.at.y-vendor.y)>market.radius || Math.abs(walkingHeight(scene,t.at.x,t.at.y)-walkingHeight(scene,vendor.x,vendor.y))>4)throw Error('Invalid courier destination');
   if(!workSegment(scene,area,t,t,state,true) || !workSegment(scene,area,t.at,t.at,state,true))throw Error('Invalid courier position');
-  let previous={x:t.x,y:t.y};for(const p of t.path){if(!workSegment(scene,area,previous,p,state,true))throw Error('Invalid saved courier path');previous=p;}if(t.path.length && Math.hypot(previous.x-t.at.x,previous.y-t.at.y)>.01)throw Error('Invalid courier path destination');
+  let previous:import('../scene/floors').WalkingPoint=t;for(const p of t.path){if(!workSegment(scene,area,previous,p,state,true))throw Error('Invalid saved courier path');previous=p;}if(t.path.length && Math.hypot(previous.x-t.at.x,previous.y-t.at.y)>.01)throw Error('Invalid courier path destination');
  }
  for(const a of e.accounts)if(a.meal){
   const t=a.meal,spec=d.accounts.find(s=>s.id===a.id)!,plan=d.meals.find(m=>m.id===t.id),object=scene.objects.find(o=>o.id===spec.actor);
@@ -438,7 +441,7 @@ export function checkEconomyState(state:CarState,scene:Scene):void{
   if((t.phase==='seat' || t.phase==='eat') && !a.inventory[plan.good])throw Error('Invalid saved meal food');
   if(t.phase==='eat' ? !a.inventory[plan.good] || t.eatUntilS===undefined || t.eatUntilS<e.atS-1e-6 || t.eatUntilS>e.atS+plan.eat_s+1e-6 || Math.hypot(t.x-t.at.x,t.y-t.at.y)>.1 || t.speed!==0 || t.path.length>0 : t.eatUntilS!==undefined)throw Error('Invalid meal timer');
   if(!workSegment(scene,area,t,t,state,true) || !workSegment(scene,area,t.home,t.home,state,true) || !workSegment(scene,area,t.at,t.at,state,true))throw Error('Invalid meal position');
-  let previous={x:t.x,y:t.y};for(const p of t.path){if(!workSegment(scene,area,previous,p,state,true))throw Error('Invalid saved meal path');previous=p;}if(t.path.length && Math.hypot(previous.x-t.at.x,previous.y-t.at.y)>.01)throw Error('Invalid meal path destination');
+  let previous:import('../scene/floors').WalkingPoint=t;for(const p of t.path){if(!workSegment(scene,area,previous,p,state,true))throw Error('Invalid saved meal path');previous=p;}if(t.path.length && Math.hypot(previous.x-t.at.x,previous.y-t.at.y)>.01)throw Error('Invalid meal path destination');
  }
  for(const a of e.accounts)if(a.commute){
   const t=a.commute,spec=d.accounts.find(s=>s.id===a.id)!,job=d.jobs.find(j=>j.id===t.id),object=scene.objects.find(o=>o.id===spec.actor);
@@ -447,7 +450,7 @@ export function checkEconomyState(state:CarState,scene:Scene):void{
   if(Math.hypot(t.home.x-home.x,t.home.y-home.y)>.01 || (t.phase==='home' ? Math.hypot(t.at.x-home.x,t.at.y-home.y)>.01 : Math.hypot(t.at.x-vendor.x,t.at.y-vendor.y)>market.radius || Math.abs(walkingHeight(scene,t.at.x,t.at.y)-walkingHeight(scene,vendor.x,vendor.y))>=4))throw Error('Invalid commute destination');
   if(t.phase==='work' && (Math.hypot(t.x-t.at.x,t.y-t.at.y)>.1 || t.speed!==0 || t.path.length))throw Error('Invalid commute workplace');
   for(const p of [t,t.home,t.at])if(!workSegment(scene,area,p,p,state,true))throw Error('Invalid commute position');
-  let previous={x:t.x,y:t.y};for(const p of t.path){if(!workSegment(scene,area,previous,p,state,true))throw Error('Invalid commute path');previous=p;}if(t.path.length && Math.hypot(previous.x-t.at.x,previous.y-t.at.y)>.01)throw Error('Invalid commute path destination');
+  let previous:import('../scene/floors').WalkingPoint=t;for(const p of t.path){if(!workSegment(scene,area,previous,p,state,true))throw Error('Invalid commute path');previous=p;}if(t.path.length && Math.hypot(previous.x-t.at.x,previous.y-t.at.y)>.01)throw Error('Invalid commute path destination');
  }
  for(const a of e.accounts)if(d.accounts.find(s=>s.id===a.id)!.commute && a.work && a.commute?.phase!=='work')throw Error('Invalid commute work owner');
  checkRestState(state,scene);
@@ -463,12 +466,13 @@ export function checkEconomyState(state:CarState,scene:Scene):void{
  const claimed=new Set<string>();
  for(const a of e.accounts)if(a.repairSeen){const spec=d.accounts.find(d=>d.id===a.id)!,r=d.repairs.find(r=>r.id===(a.repairSeen!.serviceId??accountRepairs(spec)[0]));if(!r || !accountRepairs(spec).includes(r.id) || a.repairSeen.atS>state.timeS || !repairTargets(scene,r).some(t=>t.objectId===a.repairSeen!.objectId && t.zoneId===a.repairSeen!.zoneId))throw Error('Invalid saved repair notice');}
  for(const a of e.accounts)if(a.repair){const t=a.repair,r=d.repairs.find(r=>r.id===t.id),spec=d.accounts.find(s=>s.id===a.id)!,target=r && repairTargets(scene,r).find(o=>o.objectId===t.objectId && o.zoneId===t.zoneId),key=JSON.stringify([t.objectId,t.zoneId]);
+  if(t.phase==='work' && walkingDistance(scene,t,t.at)>.1)throw Error('Invalid saved repair work height');
   if(!r || !target || a.work || a.delivery || spec.actor!=='player' && !accountRepairs(spec).includes(r.id) || t.progressS>r.seconds || t.phase!=='home' && Object.values(a.inventory).reduce((n,v)=>n+v,0)+r.take>spec.capacity || t.routeAtS>state.timeS+1.01 || t.phase!=='home' && (a.credits+r.pay>L.money || !targetBroken(state,t) || claimed.has(key)) || spec.actor==='player' && t.phase==='home' && !t.recover || t.recover && (!r.recover || (t.phase==='home' ? e.recovered![r.id]===0 : Object.values(a.inventory).reduce((n,v)=>n+v,0)+r.amount!>spec.capacity)))throw Error('Invalid saved repair');
   if(t.recover && t.phase!=='home' && e.recoverySpent!.includes(t.objectId))throw Error('Immature recovery source');
   if(t.phase!=='home')claimed.add(key);
   if(t.recover && t.phase==='home' && Object.values(a.inventory).reduce((n,v)=>n+v,0)+r.amount!>spec.capacity)throw Error('Invalid recovery cargo');
-  if(!repairSegment(scene,r,t.at,t.at,state,true) || Math.hypot(t.at.x-target.contact.x,t.at.y-target.contact.y)>target.contact.r+REPAIR_REACH+.01 || Math.hypot(t.at.x-target.contact.x,t.at.y-target.contact.y)<target.contact.r+REPAIR_RADIUS)throw Error('Invalid repair approach');
-  if(spec.actor!=='player'){if(!repairSegment(scene,r,t,t,state,true))throw Error('Invalid worker position');let previous={x:t.x,y:t.y};for(const p of t.path){if(!repairSegment(scene,r,previous,p,state,true))throw Error('Invalid saved repair path');previous=p;}if(t.path.length && Math.hypot(previous.x-(t.phase==='home' ? scene.objects.find(o=>o.id===spec.actor)!.x : t.at.x),previous.y-(t.phase==='home' ? scene.objects.find(o=>o.id===spec.actor)!.y : t.at.y))>.01)throw Error('Invalid repair destination');}
+  if(Math.abs((t.at.elevation??walkingHeight(scene,t.at.x,t.at.y))-(objectFloor(scene,scene.objects.find(o=>o.id===t.objectId)!)?.elevation??walkingHeight(scene,target.contact.x,target.contact.y)))>4 || !repairSegment(scene,r,t.at,t.at,state,true) || Math.hypot(t.at.x-target.contact.x,t.at.y-target.contact.y)>target.contact.r+REPAIR_REACH+.01 || Math.hypot(t.at.x-target.contact.x,t.at.y-target.contact.y)<target.contact.r+REPAIR_RADIUS)throw Error('Invalid repair approach');
+  if(spec.actor!=='player'){if(!repairSegment(scene,r,t,t,state,true))throw Error('Invalid worker position');let previous:import('../scene/floors').WalkingPoint=t;for(const p of t.path){if(!repairSegment(scene,r,previous,p,state,true))throw Error('Invalid saved repair path');previous=p;}if(t.path.length && Math.hypot(previous.x-(t.phase==='home' ? scene.objects.find(o=>o.id===spec.actor)!.x : t.at.x),previous.y-(t.phase==='home' ? scene.objects.find(o=>o.id===spec.actor)!.y : t.at.y))>.01)throw Error('Invalid repair destination');}
  }
  for(const m of e.markets){const spec=d.markets.find(s=>s.id===m.id)!;if(spec.owner ? !m.owner || !d.accounts.some(a=>a.id===m.owner) || (m.owner===spec.owner ? m.acquiredAtS!==undefined : spec.sale===undefined || m.acquiredAtS===undefined || m.acquiredAtS>e.atS) : m.owner!==undefined || m.acquiredAtS!==undefined)throw Error('Invalid business ownership');if(!ids(Object.keys(m.stock),spec.lots.map(l=>l.good)) || m.credits+reserved(e,d,m.id)>L.money || spec.lots.some(l=>m.stock[l.good]!+reserved(e,d,m.id,l.good)>l.limit))throw Error('Invalid market capacity');}
  if(d.deliveries.some(d=>{const n=deliveryCommitments(e,d.id);return n>d.capacity || e.delivered[d.id]!+n>1e9;}))throw Error('Invalid delivery capacity');

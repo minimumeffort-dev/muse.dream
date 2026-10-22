@@ -89,3 +89,10 @@ There are no beds, sleep schedules, dreams, interiors above the ground floor or
 general daily planner yet.
 
 The home layout in this recording is historical, before the upper floor opened. Rest controls and energy rules still apply. See [stairs](stairs.md) for the current house and table position.
+
+## Rest upstairs
+
+[Named floors](floors.md) let the same plan prefer upper-storey furniture. Add both
+the floor IDs and their enclosing building to its grounds. Residents use real
+stair contacts, retain heights on saved paths and share the same claims with the
+player. Broken seats release claims on either level. See the [complete example](../examples/upstairs-rest.dream).

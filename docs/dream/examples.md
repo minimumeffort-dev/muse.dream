@@ -311,3 +311,9 @@ are the engine's small passable details. Scatter density remains engine-owned.
 [enterable-home.dream](../examples/enterable-home.dream) builds the commuter terrace and timber settee. It uses explicit floor/wall contacts, carved voxel cutaway frames, two seats and five splinter groups. The live placement and repair service are in `frontage_0.dream` and `life.dream`.
 
 [Two-storey home](../examples/stairs-home.dream): one enclosing interior, a generated staircase, an upper slab, a clear landing and floor-aware cutaways. [Authoring rules](stairs.md).
+
+## Upstairs rest and repairs
+
+[upstairs-rest.dream](../examples/upstairs-rest.dream) is a complete world with a
+connected doorway, named upper slabs, a settee and shared rest/repair journeys.
+It uses finite supplies and wages. [Floor guide](floors.md).

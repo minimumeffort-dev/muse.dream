@@ -81,7 +81,7 @@ The r93 save upgrade keeps resources, damage, work and commute clocks. It
 initializes only the new repair counters, retargets derived paths and recovers
 poses blocked by the new shell. A saved car newly enclosed by the home moves
 to a clear nearby exterior position, retaining its heading, travel and ownership. The old source slot survives. The upper storey now has [physical stairs](stairs.md). Sleeping, ownership,
-access permissions and floor-specific NPC destinations remain missing. [Checks](../evidence/home-interior/verification.md).
+access permissions and lifts remain missing. Named [floors](floors.md) now support upstairs rest and repair journeys. [Checks](../evidence/home-interior/verification.md).
 
 ## Give the floor an owner
 

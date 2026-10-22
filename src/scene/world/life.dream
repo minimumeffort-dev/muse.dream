@@ -141,7 +141,7 @@ behavior school_chat(start=busy){
 }
 
 economy(){
- rest home_rest(energy=35,drain_s=.1,recover_s=5,below=25,until=85,seats=[home_settee],on=oldtown_044,grounds=[home_entry,market_square,market_hall]);
+ rest home_rest(energy=35,drain_s=.1,recover_s=5,below=25,until=85,seats=[home_upper_settee,home_settee],on=oldtown_044,grounds=[home_entry,market_square,market_hall,home_upper,home_landing]);
  rest player_rest(energy=65,drain_s=.05,recover_s=5,below=25,until=85,seats=[home_settee],on=oldtown_044);
  ration field_snack(good=vegetables,market=market_stall,below=40);
  ration school_snack(good=bread,market=school_canteen,below=40);
@@ -191,7 +191,7 @@ economy(){
  repair market_tables(dry=true,label="Repair city fixtures",market=market_stall,on=market_hall,grounds=[park_seating,station_seating,market_square,school_yard,school_yard_access,school_yard_return,garden_work],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5,recover=fasteners,amount=1);
  delivery saplings_run(label="Bring saplings to the market",from=station_supplies,to=market_stall,good=sapling,quantity=2,pay=4,price=2,capacity=1,on=market_hall,grounds=[market_square]);
  repair classroom_furniture(label="Repair school furniture",market=market_stall,on=hall_service,grounds=[garden_school,school_doorstep],kinds=[table,bench],input=timber,take=1,seconds=8,pay=4,effort=5,recover=fasteners,amount=1);
- repair home_furniture(label="Repair home furniture",market=market_stall,on=hall_service,grounds=[oldtown_044],kinds=[table,bench,custom],input=timber,take=1,seconds=8,pay=4,effort=5,recover=fasteners,amount=1);
+ repair home_furniture(label="Repair home furniture",market=market_stall,on=hall_service,grounds=[oldtown_044,home_upper,home_landing],kinds=[table,bench,custom],input=timber,take=1,seconds=8,pay=4,effort=5,recover=fasteners,amount=1);
  repair orchard_trees(dry=true,label="Replant city trees",market=market_stall,on=hall_service,grounds=[orchard_work,market_square,garden_work,park_seating,station_seating,school_yard,school_yard_access],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=112,kind=tree,input=sapling,take=1,seconds=10,pay=6,effort=6,regrow_s=180,seed_scale=.15,recover=boards,amount=1);
  work bake(label="Bake bread",market=market_stall,input=flour,take=1,output=bread,make=2,seconds=6,pay=3,effort=12,capacity=1,target=4,equipment=[hall_table_east]);
  milestone practiced_baker(label="Bake bread batches",kind=work,task=bake,count=3);

@@ -1762,7 +1762,7 @@ guidance; their controls still apply. No frame interpolation or FPS claim.
 
 ## Stairs and upper floor, r98
 
-`stairs.mp4`, `stairs.gif` and `stairs.jpg` are one current walkthrough of the
+`stairs.mp4`, `stairs.gif` and `stairs.jpg` are a historical r98 walkthrough of the
 commuter's home: normal fixed-step movement climbs the wooden treads, crosses
 the upper landing and descends again. Export `stairs` from the dev-only
 `?capture` controls: 360 consecutive PNGs, 30 rendered frames per simulation
@@ -1776,3 +1776,19 @@ seat and energy policies. Those policies, controls and character models still
 apply; use the new stairs capture for the current house layout. Other venues,
 transport and sports recordings remain accurate because their inputs and
 presentation did not change. [Checks](../evidence/stairs/verification.md).
+
+## Upstairs rest, r99
+
+`upstairs.mp4`, `upstairs.gif` and `upstairs.jpg` follow the resident up physical
+stairs to the upper settee. They share one export: 480 consecutive rendered
+frames at 30 frames per simulation second. The dev-only `?capture` exporter
+uses the normal resident need, path, support and shared-seat rules; only the
+player's outside observation pose is seeded. The camera follows the resident.
+Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> upstairs`.
+The HD video and still use 1600×900; the GIF uses 1280×720. This deterministic
+offline recording is not a live performance measurement.
+
+The older stairs recording predates the upper props. Its treads, landing and
+controls remain current. Earlier home/rest recordings are historical layouts.
+Other venues and vehicle/sport captures remain accurate because those assets,
+controls and geometry did not change. [Checks](../evidence/upstairs/verification.md).

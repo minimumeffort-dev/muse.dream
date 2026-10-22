@@ -94,7 +94,7 @@ pipeline depends on.
   object, strike a tall one, or land on its cap. Terrain retains one ground height
   per XY position. Bounded static interior contacts also provide upper floors,
   ceilings and generated stairs through the same fixed-step support/collision
-  rules. Floor-specific NPC navigation and lifts remain separate capabilities.
+  rules. Named floor bindings support height-aware rest and repair trips through validated stair contacts; lifts remain a separate capability.
   Solid objects and the travel mask bound movement. No decomposing noisy
   outlines into physics bodies, no mixing physics engines.
 - Scenes are versioned documents: scene/revision IDs, source hash,

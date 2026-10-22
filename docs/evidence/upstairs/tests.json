@@ -1,0 +1,22 @@
+{
+  "fullRun": {
+    "files": 177,
+    "cases": 1838,
+    "passed": 1832,
+    "failed": 6,
+    "seconds": 630.29
+  },
+  "focusedCorrection": {
+    "files": 8,
+    "cases": 43,
+    "passed": 43,
+    "failed": 0,
+    "seconds": 22.48
+  },
+  "latestPerFile": {
+    "files": 177,
+    "cases": 1838,
+    "passed": 1838
+  },
+  "note": "One full run, followed by the eight affected files after updating five fixture counts and correcting prepared-cache reference ownership. This is not a second all-green full run."
+}

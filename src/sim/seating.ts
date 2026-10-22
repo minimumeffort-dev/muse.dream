@@ -1,3 +1,4 @@
+import {walkingSupport} from '../scene/floors';
 import {findSeat,sameSeat,seatAccessClear,worldSeats,type SeatRef,type WorldSeat,SEATING_LIMITS} from '../scene/seating';
 import {walkingHeight} from '../scene/interiors';
 import type {Scene} from '../scene/schema';
@@ -9,13 +10,13 @@ export function seatClaimed(state:CarState,ref:SeatRef,exceptAccount?:string):bo
 export function seatAvailable(scene:Scene,state:CarState,seat:WorldSeat,exceptAccount?:string){return !seatClaimed(state,seat,exceptAccount) && seatAccessClear(scene,seat,state.broken);}
 function clearApproach(state:CarState,world:World,seat:WorldSeat){
  const distance=Math.hypot(seat.approach.x-state.x,seat.approach.y-state.y),steps=Math.max(1,Math.ceil(distance/2)),body={...world,carRadius:3,bodyHeight:17.5,dryGround:true};let previous=state.elevation;
- for(let i=0;i<=steps;i++){const t=i/steps,x=state.x+(seat.approach.x-state.x)*t,y=state.y+(seat.approach.y-state.y)*t,elevation=walkingHeight(world.scene,x,y,3);if(Math.abs(elevation-previous)>4 || !carFootprintClear(body,x,y,elevation,state.timeS,state))return false;previous=elevation;}
+ for(let i=0;i<=steps;i++){const t=i/steps,x=state.x+(seat.approach.x-state.x)*t,y=state.y+(seat.approach.y-state.y)*t,elevation=seat.approach.elevation===undefined ? walkingHeight(world.scene,x,y,3) : walkingSupport(world.scene,x,y,previous,3,4,seat.objectId);if(Math.abs(elevation-previous)>4 || !carFootprintClear(body,x,y,elevation,state.timeS,state))return false;previous=elevation;}
  return true;
 }
 export function nearbySeat(state:CarState,world:World){
  const scene=world.scene;
  if(state.control.kind!=='foot' || state.seated || !state.grounded || state.surface==='water')return;
- return worldSeats(scene).filter(s=>Math.hypot(s.approach.x-state.x,s.approach.y-state.y)<SEATING_LIMITS.reach && Math.abs(walkingHeight(scene,s.approach.x,s.approach.y)-state.elevation)<4 && seatAvailable(scene,state,s) && clearApproach(state,world,s)).sort((a,b)=>Math.hypot(a.approach.x-state.x,a.approach.y-state.y)-Math.hypot(b.approach.x-state.x,b.approach.y-state.y) || (a.objectId<b.objectId ? -1 : a.objectId>b.objectId ? 1 : a.seatId<b.seatId ? -1 : a.seatId>b.seatId ? 1 : 0))[0];
+ return worldSeats(scene).filter(s=>Math.hypot(s.approach.x-state.x,s.approach.y-state.y)<SEATING_LIMITS.reach && Math.abs(s.elevation-state.elevation)<4 && seatAvailable(scene,state,s) && clearApproach(state,world,s)).sort((a,b)=>Math.hypot(a.approach.x-state.x,a.approach.y-state.y)-Math.hypot(b.approach.x-state.x,b.approach.y-state.y) || (a.objectId<b.objectId ? -1 : a.objectId>b.objectId ? 1 : a.seatId<b.seatId ? -1 : a.seatId>b.seatId ? 1 : 0))[0];
 }
 export function seatedPose(state:Pick<CarState,'seated'>,scene:Scene){return findSeat(scene,state.seated);}
 

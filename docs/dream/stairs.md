@@ -2,10 +2,12 @@
 
 A floor should take you somewhere. The commuter's home now has a staircase,
 an upper room and a landing you can walk across, jump on and come back down from.
-Reload upstairs and you stay upstairs. Food, rest and paid repairs continue
-underneath through the existing rules.
+Reload upstairs and you stay upstairs. Named [floors](floors.md) now bring
+furniture, resident rest and paid repairs upstairs too.
 
-![Climbing the wooden stairs and returning through the same landing](../media/stairs.gif)
+The following recording predates upstairs furnishing; the stair geometry and controls remain current.
+
+![Historical stair walkthrough before upstairs furnishing](../media/stairs.gif)
 
 [HD walkthrough](../media/stairs.mp4) · [Complete house source](../examples/stairs-home.dream) · [Verification](../evidence/stairs/verification.md)
 
@@ -49,11 +51,11 @@ passing through an upper slab. Descending uses the same contacts and gravity.
 
 ## Current boundary
 
-This is a usable upper room inside one enclosing volume. It is unfurnished.
-NPC work grounds, automatic object placement, indoor lamp pools and current
-resident routines still use the ground floor. Floor-specific NPC destinations,
-upstairs furnishing, separate stacked room ownership and lifts need further
-language and navigation work. The existing actor and live rig caps stay fixed.
+The room now has named slabs and floor-bound furnishing. Rest and repair plans
+can use the floors and traverse the stairs with supported heights. See the
+[current walkthrough and runnable source](floors.md). Indoor lamp pools still use
+the ground floor; lifts, independent stacked rooms and upstairs commerce remain
+missing. Existing actor, live rig and navigation budgets stay fixed.
 
 The registered r97 save upgrade preserves food, energy, stock, wages, repairs
 and claims. It reroutes an old table repair approach because the table now sits

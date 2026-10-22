@@ -11,7 +11,7 @@ keep only cross-cutting rules in `AGENTS.md` itself.
 
 Dream object-root `interior` owns one static enclosing volume with 1..4 explicit portals. Keep the 32-space scene cap and eight contacts outside interiors, or 32 contacts inside / 32 parts per assembly. Rectangle contacts use size XOR radius, optional rectangle heading, upright static structures only; cylinders remain compatible. Floor and ceiling contacts must span the space at the declared heights. Full-scene acceptance proves doorway cylinder clearance and steps. Use shared contact geometry for every narrow phase and `walkingHeight` for people/work, placement and dry exits. Preserve water/bridge support. No inferred collider from a visual door or floor.
 
-Keep explicit shell `part.cutaway` tags through compaction, instancing and worker transfer; the roof and camera-facing walls disappear inside; `above` parts hide only below their lower bound. Contents and the occupied floor stay opaque, physical contacts and roof shadows survive, reduced motion snaps transitions. A room-owning lamp clips its always-on surface pool to the floor; no new point lights, shadow maps or wall-lighting claims. Work grounds may name the placed building ID and reuse the same floor polygon. Trade and conversation use shared contact sight. Preserve saved jobs, stock, money, damage, bodies and ownership through the registered r55 physical projection and bounded local player recovery. Internal upper slabs and stairs now use ordinary static contact support inside one enclosing volume. `stairs` emits one bounded voxel part and 2..24 matching tread contacts, at most two flights, within the 32-part/32-contact interior caps. Preserve measured riser/run/width checks, supported landings and headroom. `cutaway=above` hides only while below a part lower bound; keep that bound through batching and chunk transfer. NPC work/navigation and automatic furniture placement remain ground-floor only; lifts remain missing. Preserve the exact r97 projection, finite repair escrow/progress and old save slots through the registered r98 geometry upgrade. See `docs/dream/interiors.md`.
+Keep explicit shell `part.cutaway` tags through compaction, instancing and worker transfer; the roof and camera-facing walls disappear inside; `above` parts hide only below their lower bound. Contents and the occupied floor stay opaque, physical contacts and roof shadows survive, reduced motion snaps transitions. A room-owning lamp clips its always-on surface pool to the floor; no new point lights, shadow maps or wall-lighting claims. Work grounds may name the placed building ID and reuse the same floor polygon. Trade and conversation use shared contact sight. Preserve saved jobs, stock, money, damage, bodies and ownership through the registered r55 physical projection and bounded local player recovery. Internal upper slabs and stairs now use ordinary static contact support inside one enclosing volume. `stairs` emits one bounded voxel part and 2..24 matching tread contacts, at most two flights, within the 32-part/32-contact interior caps. Preserve measured riser/run/width checks, supported landings and headroom. `cutaway=above` hides only while below a part lower bound; keep that bound through batching and chunk transfer. Named floors now bind existing slab contacts and static prop placements; rest and repair journeys may traverse generated stairs. Lifts remain missing. Preserve the exact r97 projection, finite repair escrow/progress and old save slots through the registered r98 geometry upgrade. See `docs/dream/interiors.md`.
 
 Multi-input `work` uses an optional recipe block with 1..4 unique
 `ingredient(good=...,take=...)` declarations, exclusive with scalar input/take.
@@ -844,3 +844,24 @@ configured accounts, preserve every older commitment, resource, clock and source
 slot, and keep the complete earlier migration chain. No guessed offline needs,
 new food/coins, forced player sleep or clinical sleep claims. See
 `docs/dream/resting.md` and its checked example.
+
+## Named floors and shared upstairs activity, r99
+
+At most 32 floors bind full rectangle core slab contacts within a static enclosing
+interior, with 20-unit headroom. Floor props are explicit upright static prop
+placements, fully contained, without joints/controls/knockables or nested rooms.
+Their finite contact bottoms leave the lower room usable. Reuse category damage,
+shared seats and finite repair rules; retained building contacts support debris.
+
+Floor-aware rest/repair grounds also name the owning building. Only validated
+stair voxel/tread pairs derive links. Keep 1024 indoor nodes and the existing
+combined 8192 nodes/32768 links/128 waypoints per area; graph topology stays
+worker-owned. Save supported heights on trips, preserve old ground paths, reject
+forged heights and through-slab shortcuts. Storey cutaways hide only upper contents
+from below, including instanced worker chunks and fragments, without mutating
+physics or claims. No actor/live-rig budget increases.
+
+Format 19/simulation 43 registers the exact r98 projection. Existing commitments
+retain claims, paths, clocks, resources and progress; future decisions use the
+new preference. Never seed resources, teleport old trips or replace old slots.
+See docs/dream/floors.md and docs/examples/upstairs-rest.dream.

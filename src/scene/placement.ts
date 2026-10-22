@@ -1,3 +1,4 @@
+import {objectFloor} from './floors';
 import {walkingHeight} from './interiors';
 import type { Scene, SceneObject } from "./schema";
 import { Quaternion, Vector3 } from "three";
@@ -18,7 +19,8 @@ export function objectPlacement(scene: Scene, object: SceneObject, x=object.x, y
   if (!cache) { cache = new Map(); placements.set(scene, cache); }
   const cached = cache.get(object); if (cached?.x===x && cached.y===y) return cached.placement;
   const grounded=object.spec && "dslVersion" in object.spec && !!object.spec.foundation;
-  const height=(x:number,y:number)=>Math.max(grounded ? drivingHeight(scene.terrain,x,y) : walkingHeight(scene,x,y,0),terrainSurfaceHeight(scene.terrain,x,y));
+  const bound=objectFloor(scene,object);
+  const height=(x:number,y:number)=>bound ? bound.elevation : Math.max(grounded ? drivingHeight(scene.terrain,x,y) : walkingHeight(scene,x,y,0),terrainSurfaceHeight(scene.terrain,x,y));
   const rotation = new Quaternion();
   if (object.spec && "dslVersion" in object.spec && object.spec.grounding === "surface") {
     const slope=sampleTerrain(scene.terrain,x,y);

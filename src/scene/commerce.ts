@@ -160,7 +160,7 @@ export function repairCoverage(scene:Scene,r:Repair){
  const sidewalks=r.streets ? unionPolygons(streetPolygons(selected,'reserved'),[...riding,...road]) : [],verge=r.verge??24;
  const verges=r.streets ? streetPolygons(selected.map(s=>({...s,sidewalk:s.sidewalk+verge})),'reserved') : [];
  const targets:RepairTarget[]=[],streetTargets:RepairTarget[]=[];
- for(const o of scene.objects){if(!o.spec || !('measure' in o.spec) || !o.spec.measure || !repairKinds(r).includes(o.spec.measure.kind))continue;
+ for(const o of scene.objects){if(o.floor && !repairGrounds(r).includes(o.floor))continue;if(!o.spec || !('measure' in o.spec) || !o.spec.measure || !repairKinds(r).includes(o.spec.measure.kind))continue;
   const whole=['break','topple'].includes(impactOf(o.spec)?.kind??''),zones=zonesOf(o.spec);if(!whole && !zones.length)continue;
   const contacts=objectContacts(scene,o),local=grounds.some(p=>onPolygon(p,o.x,o.y));
   const candidates=[...(whole ? [{objectId:o.id,contact:contacts[0]!}] : []),...zones.map(z=>({objectId:o.id,zoneId:z.id,contact:contacts.find(c=>c.zoneId===z.id)!})).filter(t=>t.contact.bottom<=drivingHeight(scene.terrain,t.contact.x,t.contact.y)+18)];

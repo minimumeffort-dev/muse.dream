@@ -149,7 +149,8 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 | `on` | npc_state | ID / no block | `event: after / near_player / far_player / interact`, `to: ref`, `seconds?: n`, `radius?: n`, `familiar?: bool`, `requires?: ref`, `shared_meals?: n` |
 | `furnish` | top | ID / no block | `objects: symbols`, `streets?: symbols`, `sites?: symbols`, `grounds?: symbols`, `paving?: color`, `spacing: n`, `setback: n`, `seed: n`, `side?: left / right / both`, `facing?: along / street / varied`, `jitter?: n`, `count?: n`, `pose?: rest`, `on?: verge / sidewalk`, `motion?: ambient_motion`, `role?: prop / controllable` |
 | `flock` | top | ID / no block | `object: ref`, `at: v2`, `radius: v2`, `count: n`, `altitude: n`, `speed: n`, `seed: n`, `flap_hz?: n`, `flap_deg?: n` |
-| `place` | top | ID / no block | `object: ref`, `at?: v2`, `route?: ref`, `offset?: n`, `phase_s?: n`, `scale?: n`, `heading_deg?: n`, `role?: prop / npc / controllable / ambient`, `behavior?: ref`, `pose?: rest`, `motion?: ambient_motion`, `parked?: bool` |
+| `floor` | top | ID / no block | `on: ref`, `at: v3`, `size: v2` |
+| `place` | top | ID / no block | `object: ref`, `at?: v2`, `route?: ref`, `offset?: n`, `phase_s?: n`, `scale?: n`, `heading_deg?: n`, `role?: prop / npc / controllable / ambient`, `behavior?: ref`, `pose?: rest`, `motion?: ambient_motion`, `parked?: bool`, `floor?: ref` |
 | `unresolved` | top | ID / no block | `label: text` |
 
 `joint(...,bone=...)` binds engine-owned humanoid motion. Use all twelve bindings once:
@@ -793,8 +794,10 @@ at base height, `size` is width, rise and run, and +Z ascends before optional
 contacts and 32 parts. Measured width must reach 9 world units, risers at most 4
 and tread depth at least 6. Landings need support and 18 units of headroom.
 `cutaway=above` hides an upper slab when viewed from downstairs and keeps it
-opaque underfoot upstairs, including streamed meshes. The enclosing interior's
-floor polygon remains the ground-floor work/navigation area. Upstairs furniture
-placement, NPC destinations and lifts need further language/runtime work.
+opaque underfoot upstairs, including streamed meshes. Named `floor` declarations bind existing slab contacts; static props use
+`place(...,role=prop,floor=id)`. Rest and repair grounds name both the building
+and its floors. Host-derived routes climb the actual stairs with supported
+heights, preserving shared claims and finite paid repairs. Lifts and separate
+stacked-room ownership remain missing. [Floor contract](floors.md).
 
 [Build the two-storey home](../examples/stairs-home.dream) · [Walking guide](stairs.md).

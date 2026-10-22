@@ -524,7 +524,7 @@ Agents can ask for just the language they need: `node scripts/dream.mjs context 
 
 The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation uses Minimum Effort's Manrope and Archivo fonts, warm white, charcoal and yellow, with the same page gutters and spacing. Dream commands, fields, references, colors and expressions are highlighted, with copy buttons for complete examples.
 
-[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 1,781 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
+[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 1,784 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
 
 Streetlights now follow streets, bicycle and scooter parking sits beside destinations, and birds fly across sixteen habitats. Dream’s `furnish` and `flock` commands describe those populations with bounded rules.
 
@@ -653,18 +653,19 @@ repair kits and recovered hardware as the rest of the neighborhood.
 
 [Walkthrough](docs/media/home.mp4) · [Build the home](docs/examples/enterable-home.dream) · [Interior rules](docs/dream/interiors.md#the-commuters-home)
 
-You can now walk upstairs too. Dream builds the staircase and its contacts from
-one declaration; the upper floor stays solid underfoot and the camera opens the
-house around you. Walk back down or reload upstairs and carry on. The settee,
-meals, energy and paid repairs downstairs keep working.
+The upstairs room now has a purpose. The commuter walks up the actual stairs,
+claims a cushion and rests. You can join them on the other cushion. Break the
+furniture and the caretaker carries supplies upstairs to repair it, earning a
+wage through the same finite ledger used downstairs. Reload during the trip and
+it carries on from the saved floor and step.
 
-![Walking up the home staircase, crossing the upper landing and returning downstairs](docs/media/stairs.gif)
+![The resident climbing upstairs and settling on the settee](docs/media/upstairs.gif)
 
-[Walkthrough](docs/media/stairs.mp4) · [Build the two-storey home](docs/examples/stairs-home.dream) · [Stair rules](docs/dream/stairs.md)
+[Walkthrough](docs/media/upstairs.mp4) · [Runnable Dream world](docs/examples/upstairs-rest.dream) · [Named floors](docs/dream/floors.md)
 
-The upper room is still unfurnished. NPC routines and automatic furniture placement
-use the ground floor; upstairs destinations, lifts, bedrooms, sleeping and property
-permissions remain work to do.
+Dream names existing slabs, binds props to them and lets rest/repair plans use
+those floors. It does not invent routes through the ceiling. Lifts, bedrooms,
+sleeping, upstairs businesses and property permissions remain work to do.
 
 ## Run it
 

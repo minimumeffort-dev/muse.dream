@@ -17,11 +17,11 @@ import {restReviewSteps} from '../src/game/rest-review';
 import {sceneContactData} from '../src/scene/contacts';
 import {ambientGraph} from '../src/scene/ambient-navigation';
 import {sceneInteriors} from '../src/scene/interiors';
-const scene=createWorldScene(),prior=c.preStairsScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.STAIRS_COMPATIBILITY,previousStairsSaveCompatibility:c.REST_COMPATIBILITY,previousStairsContacts:sceneContactData(prior),previousStairsNavigation:ambientGraph(prior)},old:World={...world,scene:prior,saveCompatibility:c.REST_COMPATIBILITY,previousStairsSaveCompatibility:undefined};
+const scene=c.preFloorsScene(createWorldScene()),prior=c.preStairsScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.STAIRS_COMPATIBILITY,previousStairsSaveCompatibility:c.REST_COMPATIBILITY,previousStairsContacts:sceneContactData(prior),previousStairsNavigation:ambientGraph(prior)},old:World={...world,scene:prior,saveCompatibility:c.REST_COMPATIBILITY,previousStairsSaveCompatibility:undefined};
 const run=<T>(steps:Generator<void,T>)=>{let r=steps.next();while(!r.done)r=steps.next();return r.value;};
 it('registers the exact old home and every previous world projection while retaining resources and actor bounds',async()=>{
- expect(c.SAVE_SIMULATION_VERSION).toBe(42);expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.STAIRS_COMPATIBILITY);expect(await c.sha256(c.preStairsCompatibilitySource(scene))).toBe(c.REST_COMPATIBILITY);expect(await c.sha256(c.preRestCompatibilitySource(scene))).toBe(c.WORK_COMMUTE_COMPATIBILITY);
- const {voxelSize,...live}=scene.objects.find(o=>o.id==='oldtown_044')!.spec as import('../src/scene/object-dsl').ObjectDslV2;expect(live).toEqual(compileDream(example)[0]);
+ expect(JSON.parse(c.preFloorsCompatibilitySource(scene)).simulationVersion).toBe(42);expect(await c.sha256(c.preFloorsCompatibilitySource(scene))).toBe(c.STAIRS_COMPATIBILITY);expect(await c.sha256(c.preStairsCompatibilitySource(scene))).toBe(c.REST_COMPATIBILITY);expect(await c.sha256(c.preRestCompatibilitySource(scene))).toBe(c.WORK_COMMUTE_COMPATIBILITY);
+ const {voxelSize,...live}=scene.objects.find(o=>o.id==='oldtown_044')!.spec as import('../src/scene/object-dsl').ObjectDslV2;const {stairways,...compiled}=compileDream(example)[0] as import('../src/scene/object-dsl').ObjectDslV2;expect(live).toEqual(JSON.parse(JSON.stringify(compiled)));
  expect(scene.economy).toEqual(prior.economy);expect(scene.routes).toEqual(prior.routes);expect(scene.objects.length).toBe(prior.objects.length);
 });
 it('walks from the actual door to the upper room and preserves the same upstairs pose on reload and subsequent ticks',()=>{
