@@ -656,6 +656,21 @@ Optional sport block: exactly team home(...) and team away(...), each role=npc w
 
 Football keeper=0..5 selects one NPC index on that side, default 0; keeper_object=complete_humanoid supplies an optional distinct kit. Basketball rejects keeper fields. Optional football net_depth=6..64 is target-local Z extent: author matching triangular side/back net from top mouth to ground behind it. Engine contains full ball spheres against the side and sloping back planes, leaving the mouth open. No per-thread contacts. Match courts require a rectangle >=108 by 70 world units aligned with the targets. N joins/rests/resumes or starts a new round; J charges/releases shots; K passes, calls or tackles based on current ownership, distance, facing and a .6s tackle recovery. Both sides chase, pass, intercept and shoot with one ball owner; keepers defend near their own goal and distribute catches. Tactics run at 20 Hz, ball/movement remain fixed step. Leaving the court rests match time/poses; pause freezes all time; R preserves results; Start over resets. Only one match can play. Match records/possession/poses/results survive saves. GPU athlete instances use the complete authored rigs in color/shadow passes without raising existing CPU joint, route or ambient caps. Full source: examples/team-sports.dream. No fouls, offside, general crowd physics or competition rulebook.
 
+## weather
+Optional world-owner weather(cycle_s=900,rain_start_s=300,rain_end_s=420,wet_grip=.65);
+uses saved simulation time. Cycle 120..3600 seconds; rain starts at least 10
+seconds in, lasts at least 10 seconds and ends at least 30 seconds before the
+cycle ends. wet_grip=.45..1. Rain fades over five seconds, surfaces wet over ten
+and dry over thirty. Ground tire acceleration, braking and lateral grip change;
+ICE, water, air, indoor floors and coast stopping resistance retain their rules.
+Optional repair(...,dry=true) requires weather and blocks new player/NPC starts
+during rain. Committed jobs finish without losing escrow or wages. Use the same
+rule for maintenance or planting, not labels or coordinates. Rain uses the
+existing bounded particle pool, with no per-drop physics/shadows. Reduced motion
+suppresses precipitation while physical weather keeps simulation time. Pause
+freezes all; R/reload retain time; Start over resets it. No weather forecast,
+seasons, floods, general shelter routing or biological validity.
+
 ## commerce
 Optional ration id(good=bread,market=corner,below=40); declares one of at most
 8 worker provision plans. Reference account(...,ration=id) only on a stationary

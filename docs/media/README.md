@@ -22,6 +22,22 @@ These exports are motion evidence, not live frame-rate measurements.
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
+## Authored rain, r93
+
+The newer [rain recording](weather.gif), [HD video](weather.mp4) and
+[frame-180 still](weather.jpg) show the r93 weather policy and wet-tire spray.
+They share 240 consecutive 2400 × 1350 rendered PNGs at 30 frames per simulation
+second. Video is 1600 × 900, GIF 960 × 540 and the still retains source size.
+The review advances ordinary world ticks to two seconds before the shower,
+then drives with normal input. No injected clock, interpolated frames or live
+FPS claim. Geometry, actors and the existing particle draw/pool remain unchanged.
+The sky softens; rain replaces ambient motes and wet tires use small spray.
+Earlier daytime/work/vehicle recordings remain accurate for their shown flows
+and source-pinned conditions, but do not demonstrate weather-aware maintenance.
+The initial export route rejected the new clip until its bounded allowlist was
+extended; the final recording completed all 240 frames.
+[Rules and verification](../evidence/weather/verification.md).
+
 ## Worker provisions, r92
 
 Geometry, animation, camera and HUD layout are unchanged. Existing commerce,

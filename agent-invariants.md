@@ -729,3 +729,22 @@ saved field and original slot before any new decision; no food, money, clock,
 position, attribution or population initialization. Keep all earlier migrations.
 The standing sight helper is shared between runtime and static acceptance,
 without importing simulation ownership into scene-schema initialization.
+
+## Authored weather, r93
+
+Weather is one optional world-owner cycle from simulation time: 120..3600
+seconds; rain starts at least ten seconds in, lasts at least ten and leaves
+thirty seconds before cycle end. Grip is .45..1. Keep five-second rain fades,
+ten-second wetting and thirty-second drying. Ground tires share the sample;
+retain ICE, water, airborne and indoor-floor behavior, static stopping, boost
+ownership and collision/jump rules. No wall clock or saved weather state.
+
+Optional repair.dry requires weather and guards new player/NPC starts only.
+Rain never refunds or abandons commitments. NPCs may take other declared work;
+keep finite escrow, conservation and existing actor/path/rig limits. Rendering
+shares the existing particle pool/draw, with cached drop floors and validated
+room ceilings, no new physical drops, lights or shadow maps. Pause and reduced
+motion retain their existing presentation policy. Registered r92 migration
+removes only the two new data fields at simulation 37, preserves every saved
+field/slot and primes identical physical caches. Current simulation is 38 at
+format 19. No general shelter, seasons, flooding or ecological claims.

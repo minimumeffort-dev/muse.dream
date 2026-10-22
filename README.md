@@ -580,6 +580,16 @@ Cylinder `part` and `beam` commands accept a bounded `taper` ratio, so a trunk c
 
 ![Trees, a plane, car, person, bicycle, bench, skateboard and bread shown at the same physical scale](docs/media/proportions.jpg)
 
+## When it rains
+
+The city also has an [authored rain cycle](docs/dream/weather.md). Roads get wet,
+braking and tire grip change, and outdoor maintenance can wait for dry weather.
+Committed jobs finish with their supplies and wages intact. Indoor school
+repairs stay available. It is still a bounded mock, without general shelter
+routing, puddles or seasons.
+
+![Rain builds over the city as the car sets off on wet roads](docs/media/weather.gif)
+
 ## Food for a long job
 
 The caretaker and school courier can now pack a portion before leaving, using

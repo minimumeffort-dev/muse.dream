@@ -782,6 +782,7 @@
         "label": "text",
         "market": "ref",
         "on": "ref",
+        "dry": "bool?",
         "grounds": "symbols?",
         "streets": "symbols?",
         "verge": "n?",
@@ -952,6 +953,18 @@
       "fields": {
         "cycle_s": "n",
         "start_hour": "n"
+      }
+    },
+    "weather": {
+      "contexts": [
+        "top"
+      ],
+      "id": false,
+      "fields": {
+        "cycle_s": "n",
+        "rain_start_s": "n",
+        "rain_end_s": "n",
+        "wet_grip": "n"
       }
     },
     "voxel_world": {
@@ -1460,6 +1473,19 @@
       "handRadius": 1
     },
     "semantics": "Optional one world-owner strike(reach,speed,cooldown_s). A grounded dry standing player can hit one reachable prop in front with K, outside sports grounds. Engine checks exact contact boundaries, vertical reach and intervening solid contacts. Reuse authored bounce/break/topple thresholds and existing fragment budgets. speed is an arcade equivalent closing speed, not force or damage health. Too-sturdy props remain intact. Cooldown advances in fixed simulation time and survives R, vehicles, streaming and saves. No NPC combat, item inventory, new body, generated controller or hand tool mesh."
+  },
+  "weather": {
+    "cycleSeconds": [
+      120,
+      3600
+    ],
+    "rainStartS": "at least 10",
+    "rainDurationS": "at least 10; end at least 30 seconds before cycle end",
+    "wetGrip": [
+      0.45,
+      1
+    ],
+    "semantics": "Optional world-owner cycle from saved simulation time. Rain fades over five seconds, surfaces wet over ten and dry over thirty after rain. Shared ground tire acceleration/braking/lateral grip scale by wetness; ICE, water, air and indoor floors retain their existing rules. Coast stopping resistance is unchanged. Optional repair dry=true waits before dispatch for both player and NPC; committed jobs finish and keep resources. Sky and existing pooled particles show rain, reduced motion suppresses precipitation. No new clock, bodies, shadows or per-drop physics."
   },
   "daylight": {
     "cycleSeconds": [

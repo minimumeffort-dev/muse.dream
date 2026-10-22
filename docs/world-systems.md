@@ -22,7 +22,7 @@ consistent destruction/recovery; the full asset review also remains unfinished.
 The Garden school now has a second usable ground-floor venue: connected common-room
 seating, the teacher's after-hours break, shared food and remembered meals, and
 repairable tables/benches served by the existing caretaker. No new residents or
-starting resources. Upper floors, teaching tasks, homes, weather and broader
+starting resources. Upper floors, teaching tasks, homes and broader
 relationships remain missing; prioritize deeper indoor purposes and shared
 resident routines next. [School source and checks](dream/interiors.md#the-school-common-room).
 
@@ -31,8 +31,17 @@ buy one portion before a trip and eat their own food while committed to work.
 Packing retains room for all declared task loads; sealed cargo and escrow stay
 protected. The player shares the same food transaction during work and repairs.
 No starting cash, stock, geometry or actors are added. Schedules, broader
-resident purposes, indoor activities and weather remain the next priorities.
+resident purposes, indoor activities and shelter choices remain priorities.
 [Authoring](dream/commerce.md#worker-provisions).
+
+The city now has a Dream-authored rain cycle. Shared ground-vehicle controls
+use gradual wetness for traction and braking, while stationary stopping stays
+stable. Outdoor fixture maintenance and planting require a dry start for both
+players and NPCs; committed jobs finish, and indoor school repairs stay available.
+The rain uses the existing particle pool, with no new bodies, lights or shadow
+maps. Weather, pause and reload share simulation time. General shelter routing,
+puddles, seasons and weather-aware daily routines remain missing.
+[Weather rules and example](dream/weather.md).
 
 The current motion pass aligns player/vehicle/camera poses between fixed ticks,
 keeps sports balls with visible carriers and removes shadow extent jumps.
@@ -63,7 +72,7 @@ charged shots and net containment, with saved match ownership, scores, venue and
 clocks. The city shares one bounded squad; it assembles at the chosen ground.
 NPC-hosted games, fouls and league schedules remain further work.
 
-The current audit finds all ten live benches have two authored seats, checked
+The current audit finds all thirteen slatted park benches have two authored seats, checked
 for support and dry access by complete-world validation. Keep that coverage when
 adding furniture variants. Apply the same category-wide consistency to other furniture and
 vehicles, preserving collision-free approaches and persistent state.
@@ -118,7 +127,7 @@ Night navigation now has readable sky/ground fill outside lamp pools, while stat
 4. Staff now prepare lunches, the commuter takes a real meal detour, and the helper can resupply flour, using finite credits/stock, a timed meal and a saved return to the paused routine. Shared indoor seating now connects that trip to the hall. Next add more resident purposes and upstream production, then schedules and relationship history that change choices. Completed shared meals now add per-person history and authored return dialogue, with availability/fullness/cooldown boundaries. NPC-funded invitations now use that same activity and finite economy. Next add another shared activity; dating and a general relationship system remain separate.
 5. The 91 dormant vehicles now share direct controls through bounded activation, with instanced parked poses and persistent contacts. Pickups and parcel trucks now reuse that shared control system. Keep auditing road paint, corners, signs and asset attachments. Expand force-based destruction consistently across the world and make it persistent. The first repair worker now uses connected pedestrian routes, waits for obstructions and restores selected market/park/station furniture. Pooled static destruction now supports the 413 streetlights without making their intact geometry resident scene nodes. All 345 measured trees now share whole-tree toppling while retaining their foliage wind and material finishes. The service replants 106 trees through connected work areas, with matching contact bodies and finite delivered saplings. Extend recovery to the remaining woodland and more structural categories. Active debris and mesh caches remain bounded at 24 assemblies/templates and 128 pieces/fragment meshes; legacy limits stay unchanged. Add coherent weather and sound alongside those systems. Measure dense scenes, interiors, long travel and save responsiveness. Extend save migration when the world schema changes. Files can move progress between compatible browsers/devices manually; there is no cloud sync.
 
-Existing limits remain visible: the city has decorative institutions, bounded NPC routines, arcade vehicles and six-a-side sports. It has a working food/work/delivery loop and one enterable market ground floor, with no employment contracts, enterable restaurant, relationship progression, multi-floor interior movement or weather system yet. Prioritize connected activities over adding more empty buildings.
+Existing limits remain visible: the city has decorative institutions, bounded NPC routines, arcade vehicles and six-a-side sports. It has a working food/work/delivery loop and one enterable market ground floor, with no employment contracts, enterable restaurant, relationship progression or multi-floor interior movement yet. Rain is the first bounded weather rule. Prioritize connected activities over adding more empty buildings.
 
 Wind-safe toppling now reuses prepared scenery geometry and preserves the crown's
 GPU motion and materials. A missing prototype uses the same bounded worker queue

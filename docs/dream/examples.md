@@ -1,5 +1,8 @@
 # Small things you can build
 
+[Rain and maintenance](../examples/rain-work.dream) connects an authored shower,
+wet-road handling and a dry-weather repair policy. [Weather guide](weather.md).
+
 [Docs](../README.md) / Examples
 
 Start with something you can see and understand. Change one field, run the checker and look at what the engine builds. These are complete Dream 2 files, checked alongside the compiler tests.

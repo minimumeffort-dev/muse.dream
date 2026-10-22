@@ -6,6 +6,7 @@ import {economySchema,economyProblems} from './commerce';
 import {voxelCells,VOXEL_LIMITS} from './voxels';
 import {voxelWorldSchema} from './voxel-world';
 import {daylightSchema,MAX_LIGHT_POOLS} from './daylight';
+import {weatherSchema} from './weather';
 import {MAX_WORLD_SIZE,MAX_STREET_LENGTH} from './world-bounds';
 import { z } from "zod";
 import { assemblyHorizontalRadius, measuredScale, measureProblem } from "./measure";
@@ -160,6 +161,7 @@ export const sceneSchema = z.object({
   }),
   damagePool:z.boolean().optional(),
   daylight:daylightSchema.optional(),
+  weather:weatherSchema.optional(),
   strike:strikeSchema.optional(),
   voxelWorld:voxelWorldSchema.optional(),
   terrain: terrainSchema.default({ hills: [] }),

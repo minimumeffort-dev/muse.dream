@@ -48,6 +48,9 @@ export interface CarInput {
   aim?:{x:number;y:number};
 }
 
+import {sampleWeather} from '../scene/weather';
+import {occupiedInterior} from '../scene/interiors';
+
 export type Surface = "road" | "paper" | "ice" | "water";
 
 /** Live state of one knockable object (its identity/kind stays in the scene). */
@@ -126,6 +129,7 @@ export interface World {
   previousCourierSaveCompatibility?:string;
   previousPeopleSaveCompatibility?:string;
   previousInvitationSaveCompatibility?:string;
+  previousWeatherSaveCompatibility?:string;
   previousRationsSaveCompatibility?:string;
   previousSchoolInteriorSaveCompatibility?:string;
   previousSchoolInteriorNavigation?:import('../scene/ambient-navigation').AmbientGraph;
@@ -438,22 +442,23 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
   let fwd = s.vx * nfx + s.vy * nfy;
   let lat = s.vx * -nfy + s.vy * nfx;
   const beforeEngine = fwd;
+  const weatherGrip=!scene.weather || surface==="ice" || water || occupiedInterior(scene,s.x,s.y,s.elevation) ? 1 : sampleWeather(scene.weather,s.timeS).grip;
 
   if (s.grounded && throttle > 0) {
     const fade = Math.max(0, 1 - fwd / tuning.maxForwardSpeed);
-    fwd += tuning.engineAccel * fade * throttle * dt;
+    fwd += tuning.engineAccel * weatherGrip * fade * throttle * dt;
   } else if (s.grounded && throttle < 0) {
     if (fwd > 1) {
-      fwd = Math.max(0, fwd + tuning.brakeAccel * throttle * dt);
+      fwd = Math.max(0, fwd + tuning.brakeAccel * weatherGrip * throttle * dt);
     } else {
-      fwd = Math.max(-tuning.maxReverseSpeed, fwd + tuning.reverseAccel * throttle * dt);
+      fwd = Math.max(-tuning.maxReverseSpeed, fwd + tuning.reverseAccel * weatherGrip * throttle * dt);
     }
   }
   if(boosting)fwd+=CAR_BOOST.acceleration*dt;
   const engineAccel = (fwd - beforeEngine) / dt;
   const drag = Math.exp(-(s.grounded ? tuning.dragPerS : .04) * dt);
   fwd *= drag;
-  const grip = surface === "ice" ? tuning.iceLateralGrip : tuning.baseLateralGrip;
+  const grip = surface === "ice" ? tuning.iceLateralGrip : tuning.baseLateralGrip*weatherGrip;
   lat *= Math.exp(-(s.grounded ? grip : .04) * dt);
 
   s.vx = nfx * fwd + -nfy * lat;

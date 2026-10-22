@@ -2,7 +2,8 @@ import {sceneInteriors} from '../scene/interiors';
 import * as THREE from "three";
 import type { CarState } from "../sim/car";
 import type { Scene } from "../scene/schema";
-import { waterAt } from "../scene/terrain";
+import { waterAt,drivingHeight } from "../scene/terrain";
+import {sampleWeather} from '../scene/weather';
 import { worldPosition } from "./environment";
 import { particleMaterial,voxelParticleMaterial } from "./shaders";
 import type { ActorPose } from "../sim/actors";
@@ -32,6 +33,8 @@ export class WorldParticles {
   private time = 0;
   private boostLife = 0;
   private emitterClock=new Map<string,number>();
+  private rainClock=0;
+  private rainFloor=new Float32Array(CAP);
   private emitters;
 
   constructor(private doc: Scene) {
@@ -52,6 +55,7 @@ export class WorldParticles {
   clear(): void {
     this.life.fill(0); this.opacity.fill(0); this.emission = 0; this.boostLife=0;
     this.emitterClock.clear();
+    this.rainClock=0;
     this.mesh.geometry.getAttribute("opacity").needsUpdate = true;
   }
   objectImpacts(car:CarState,events:ImpactEvent[],enabled:boolean):void {
@@ -76,13 +80,13 @@ export class WorldParticles {
     position.y=(kind===4 ? waterAt(this.doc.terrain,car.x,car.y,car.elevation)?.level ?? car.elevation : car.elevation)+4;
     position.toArray(this.positions,offset);
     const spark=kind===1, ice=kind===2;
-    (kind===4?WATER:spark?SPARK:ice?ICE:car.surface==="paper"?DUST:ROAD).toArray(this.colors,offset);
+    (kind===4 || kind===7?WATER:spark?SPARK:ice?ICE:car.surface==="paper"?DUST:ROAD).toArray(this.colors,offset);
     const scatter=burst?60:spark?22:ice?38:16;
     this.velocity[offset]=-car.vx*(spark?.3:.08)+Math.cos(theta)*scatter;
-    this.velocity[offset+1]=spark?25+Math.random()*30:ice||kind===4?25+Math.random()*25:8+Math.random()*12;
+    this.velocity[offset+1]=kind===7?5+Math.random()*5:spark?25+Math.random()*30:ice||kind===4?25+Math.random()*25:8+Math.random()*12;
     this.velocity[offset+2]=-car.vy*(spark?.3:.08)+Math.sin(theta)*scatter;
-    this.duration[i]=spark?.45+Math.random()*.3:ice?.65:.9+Math.random()*.4;
-    this.life[i]=this.duration[i]!;this.size[i]=spark?8:ice?7:burst?14:10;
+    this.duration[i]=kind===7?.35+Math.random()*.2:spark?.45+Math.random()*.3:ice?.65:.9+Math.random()*.4;
+    this.life[i]=this.duration[i]!;this.size[i]=kind===7?6:spark?8:ice?7:burst?14:10;
     this.kind[i]=kind;this.angle[i]=theta;
   }
 
@@ -90,10 +94,11 @@ export class WorldParticles {
     if (!enabled) { this.clear(); return; }
     this.time+=dt;this.boostLife=boost?.45:Math.max(0,this.boostLife-dt);
     const speed=car.control.kind==="passenger" || car.control.kind==='foot' && car.surface!=='water' ? 0 : Math.hypot(car.vx,car.vy), slip=Math.abs(-Math.sin(car.headingRad)*car.vx+Math.cos(car.headingRad)*car.vy);
+    const weather=sampleWeather(this.doc.weather,car.timeS),spray=weather.wetness>.1 && !sceneInteriors(this.doc).some(f=>f.contains(car.x,car.y) && car.elevation<f.ceiling);
     const wet=car.surface==="water",icy=car.surface==="ice", dusty=car.surface==="paper", boosting=this.boostLife>0 || car.timeS<car.carBoost.activeUntilS;
     const swimmer=car.control.kind==='foot' && wet,rate=swimmer ? 14 : boosting?110:dusty?65:wet||icy||slip>35?48:12;
     this.emission+=dt*((car.grounded&&speed>(swimmer ? 8 : 45))||boosting?rate:0);
-    while(this.emission>=1){this.emission--;this.emit(car,wet?4:boosting?1:icy?2:0);}
+    while(this.emission>=1){this.emission--;this.emit(car,wet?4:boosting?1:icy?2:spray?7:0);}
     if(boost) for(let i=0;i<20;i++) this.emit(car,1,true);
     if(landingSpeed>25) for(let i=0;i<Math.min(42,Math.ceil(landingSpeed*.2));i++) this.emit(car,wet?4:icy?2:0,true);
     if(collisionSpeed>80) for(let i=0;i<Math.min(24,Math.ceil(collisionSpeed*.07));i++) this.emit(car,1,true);
@@ -110,12 +115,29 @@ export class WorldParticles {
       }
       this.emitterClock.set(object.id,clock);
     }
+    this.rainClock+=dt*weather.rain*100;
+    while(this.rainClock>=1){
+      this.rainClock--;const i=this.index++%CAP,offset=i*3,x=car.x+(Math.random()-.5)*1000,y=car.y+(Math.random()-.5)*1000;
+      if(x<0 || y<0 || x>this.doc.canonical.width || y>this.doc.canonical.height)continue;
+      let floor=drivingHeight(this.doc.terrain,x,y);floor=Math.max(floor,waterAt(this.doc.terrain,x,y,floor)?.level??floor);
+      for(const f of sceneInteriors(this.doc))if(f.contains(x,y))floor=Math.max(floor,f.ceiling+1.5);
+      const height=Math.max(floor,car.elevation)+40+Math.random()*160;
+      const point=worldPosition(this.doc,x,y);point.y=height;point.toArray(this.positions,offset);this.rainFloor[i]=floor;
+      this.colors.set([.65,.78,.85],offset);this.velocity.set([8,-180,3],offset);
+      this.duration[i]=this.life[i]=Math.min(2,(height-floor)/180);this.size[i]=14;this.kind[i]=6;this.angle[i]=0;
+    }
     for(let i=0;i<CAP;i++) {
       this.life[i]=Math.max(0,this.life[i]!-dt);
       const age=1-this.life[i]!/(this.duration[i]||1), kind=this.kind[i]!;
-      this.opacity[i]=this.life[i]!>0?Math.min(1,age*10)*(1-age)*(kind===0 || kind===5?.45:.9):0;
+      this.opacity[i]=this.life[i]!>0?kind===6 ? .4*Math.min(1,age*12) : Math.min(1,age*10)*(1-age)*(kind===7?.25:kind===0 || kind===5?.45:.9):0;
       if(!this.life[i]) continue;
-      const offset=i*3, damping=Math.exp(-dt*(kind===0?1.4:.4));
+      const offset=i*3;
+      if(kind===6){
+        for(let axis=0;axis<3;axis++)this.positions[offset+axis]=this.positions[offset+axis]!+this.velocity[offset+axis]!*dt;
+        if(this.positions[offset+1]!<=this.rainFloor[i]!){this.life[i]=0;this.opacity[i]=0;}
+        continue;
+      }
+      const damping=Math.exp(-dt*(kind===0?1.4:.4));
       this.velocity[offset]=this.velocity[offset]!*damping;
       this.velocity[offset+2]=this.velocity[offset+2]!*damping;
       this.velocity[offset+1]=this.velocity[offset+1]!-dt*(kind===0 || kind===5?-3:85);
@@ -129,7 +151,7 @@ export class WorldParticles {
       const y=(Math.floor(car.y/120)+Math.floor(i/8)-1)*120+(i*41%100);
       const p=worldPosition(this.doc,x,y,16+(i*17%70)+Math.sin(this.time*.7+i)*8);
       p.toArray(this.positions,j*3);this.colors.set(i%3?[1.3,1.1,.5]:[.7,1.3,1.1],j*3);
-      this.opacity[j]=sceneInteriors(this.doc).some(f=>f.contains(x,y) && p.y<f.ceiling+1.5) ? 0 : Math.max(0,1-Math.hypot(x-car.x,y-car.y)/400)*(.3+Math.sin(this.time*1.2+i)*.18);
+      this.opacity[j]=sceneInteriors(this.doc).some(f=>f.contains(x,y) && p.y<f.ceiling+1.5) ? 0 : (1-weather.rain)*Math.max(0,1-Math.hypot(x-car.x,y-car.y)/400)*(.3+Math.sin(this.time*1.2+i)*.18);
       this.size[j]=i%3?3:4;this.kind[j]=3;this.angle[j]=0;
     }
     for(const name of ["position","color","opacity","size","kind","angle"]) this.mesh.geometry.getAttribute(this.doc.voxelWorld && name==='position' ? 'offset' : name).needsUpdate=true;

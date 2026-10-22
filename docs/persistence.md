@@ -52,7 +52,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 37. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 38. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -784,3 +784,14 @@ its original simulation-36 fingerprint. Migration preserves every saved field,
 including active work, stock, balances, owned food, sealed cargo and clocks.
 No purchase or consumption happens during load. The next normal fixed tick can
 make a decision. The original slot and all earlier registered upgrades remain.
+
+## Authored rain, r93
+
+Format 19/simulation 38 registers the exact r92 world. Its projection removes
+only the weather declaration and optional repair `dry` flags, using pinned
+simulation 37. Geometry, contacts, navigation and every saved field remain
+unchanged. No clock rebasing, food purchases, refunds or jobs run during load.
+The restored simulation time determines the current rain and wetness. Existing
+commitments finish even if it is raining; only new dry-weather jobs wait. R and
+streaming retain weather phase, pause freezes it and Start over resets it.
+The old slot and all earlier registered migrations survive.

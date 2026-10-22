@@ -124,6 +124,7 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 | Command | Context | ID / block | Fields |
 | --- | --- | --- | --- |
 | `strike` | top | no ID / no block | `reach: n`, `speed: n`, `cooldown_s: n` |
+| `weather` | top | No ID / no block | `cycle_s: n`, `rain_start_s: n`, `rain_end_s: n`, `wet_grip: n` |
 | `daylight` | top | No ID / no block | `cycle_s: n`, `start_hour: n` |
 | `world` | top | No ID / no block | `size: v2`, `spawn: position2`, `heading_deg: n`, `player?: ref`, `damage_pool?: bool` |
 | `road` | top | ID / no block | `width: n`, `points?: points2`, `via?: symbols`, `style?: racing / street` |
@@ -511,7 +512,7 @@ material and capacity bounds. Start over resets them. There is no timeout or unb
 
 | Command | Context | Form | Fields |
 | --- | --- | --- | --- |
-| `repair` | economy | ID / no block | `label`, `market`, `on`, optional `grounds`, `streets`, `verge`, exactly one of `kind` / `kinds`, `input`, `take`, `seconds`, `pay`, `effort`, optional `dispatch_s`, `regrow_s`, `seed_scale` |
+| `repair` | economy | ID / no block | `label`, `market`, `on`, optional `dry`, `grounds`, `streets`, `verge`, exactly one of `kind` / `kinds`, `input`, `take`, `seconds`, `pay`, `effort`, optional `dispatch_s`, `regrow_s`, `seed_scale` |
 
 `repair id(label=text,market=ref,on=ref,grounds=symbols?,streets=symbols?,verge=n?,kind=measure_kind?,kinds=symbols?,input=ref,take=n,seconds=n,pay=n,effort=n,dispatch_s=n?,regrow_s=n?,seed_scale=n?);`
 
@@ -747,3 +748,14 @@ Stock, hours, staff, funds and capacity still apply. Sealed cargo stays sealed.
 The ration plan owns automatic food decisions, including when `shop=true`.
 No extra food, shopping path or actor. See [worker provisions](commerce.md#worker-provisions)
 and the [complete example](../examples/worker-rations.dream).
+
+### Weather and dry-weather work
+
+One optional world-owner `weather(cycle_s,rain_start_s,rain_end_s,wet_grip)`
+declares a 120..3600-second simulation cycle. Rain starts at least ten seconds
+in, lasts at least ten seconds and ends thirty seconds before the cycle ends.
+Grip is .45..1. Rain fades over five seconds, wetness rises over ten and dries
+over thirty. Omission preserves dry physics. Optional `repair.dry=true` requires
+weather and rejects only new starts during rain for player and NPC alike.
+Existing claims finish with their resources intact. [Full rules](weather.md)
+and [runnable example](../examples/rain-work.dream).

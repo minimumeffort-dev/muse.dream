@@ -348,6 +348,7 @@ export function particleMaterial(): THREE.ShaderMaterial {
         if(shape>1.5 && shape<2.5) a=1.-smoothstep(.22,.38,abs(p.x)+abs(p.y));
         if(shape>2.5 && shape<3.5) a=pow(max(0.,1.-length(p)*2.),2.);
         if(shape>3.5 && shape<4.5) a=(1.-smoothstep(.16,.3,abs(p.x)))*(1.-smoothstep(.2,.48,abs(p.y)));
+        if(shape>5.5 && shape<6.5) a=(1.-smoothstep(.015,.055,abs(p.x)))*(1.-smoothstep(.3,.5,abs(p.y)));
         if(a*alpha<.005) discard;gl_FragColor=vec4(tint,a*alpha);
       }`,
   });
@@ -360,6 +361,8 @@ export function voxelParticleMaterial():THREE.ShaderMaterial{
       varying float alpha;varying vec3 tint;
       void main(){alpha=opacity;float c=cos(angle),s=sin(angle);mat3 turn=mat3(c,0.,-s,0.,1.,0.,s,0.,c);
         vec3 extent=vec3(1.);if(kind>.5&&kind<1.5)extent=vec3(.3,1.8,.3);
+        if(kind>5.5&&kind<6.5)extent=vec3(.05,1.6,.05);
+        if(kind>6.5)extent=vec3(.5,.1,.5);
         vec3 p=turn*(position*extent*max(0.,size)*.35)+offset;
         tint=color*(.65+.35*max(0.,dot(turn*normal,normalize(vec3(-.4,.8,.3)))));
         gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,

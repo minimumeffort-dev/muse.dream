@@ -1,0 +1,63 @@
+{
+  "full": {
+    "tests": 1753,
+    "passed": 1749,
+    "failed": 4,
+    "seconds": 543.4059797363282,
+    "failures": [
+      {
+        "file": "docs.test.ts",
+        "name": "published Dream documentation keeps courier declarations identical to their runnable source"
+      },
+      {
+        "file": "repair-world.test.ts",
+        "name": "shares current lamp repairs and finished-kit procurement when staff are assigned only to food"
+      },
+      {
+        "file": "repair-world.test.ts",
+        "name": "protects the live bakery assembly space before accepting a redundant finished-kit shipment"
+      },
+      {
+        "file": "weather.test.ts",
+        "name": "uses small tire spray instead of road dust on wet ground"
+      }
+    ],
+    "unhandledErrors": []
+  },
+  "focused": {
+    "tests": 191,
+    "passed": 189,
+    "failed": 2,
+    "seconds": 15.252681396484375,
+    "failures": [
+      {
+        "file": "repair-world.test.ts",
+        "name": "shares current lamp repairs and finished-kit procurement when staff are assigned only to food"
+      },
+      {
+        "file": "repair-world.test.ts",
+        "name": "protects the live bakery assembly space before accepting a redundant finished-kit shipment"
+      }
+    ],
+    "unhandledErrors": []
+  },
+  "correctedRepairFixtures": {
+    "tests": 3,
+    "passed": 3,
+    "failed": 0,
+    "seconds": 18.8487294921875,
+    "failures": [],
+    "unhandledErrors": []
+  },
+  "finalParticleAndExport": {
+    "checks": 10,
+    "passed": 10,
+    "seconds": 0.91
+  },
+  "completeWorld": {
+    "checks": 2,
+    "passed": 2
+  },
+  "productionBuild": "passed",
+  "cliExample": "passed"
+}

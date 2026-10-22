@@ -60,16 +60,22 @@ export class WorldDaylight {
     if(!(scene.background instanceof THREE.Color))scene.background=new THREE.Color();
     this.pools=buildLightPools(world);scene.add(this.pools);this.update(0);
   }
-  update(seconds:number,broken:readonly string[]=[]):void {
+  update(seconds:number,broken:readonly string[]=[],rain=0):void {
     updateLightPools(this.pools,broken);
     const config=this.world.daylight;
-    if(!config){nightFactor.value=0;this.pools.visible=!!this.pools.userData.indoor;return;}
-    const phase=sampleDaylight(config,seconds);this.hour=phase.hour;nightFactor.value=phase.night;
+    if(!config && !this.world.weather){nightFactor.value=0;this.pools.visible=!!this.pools.userData.indoor;return;}
+    const phase=sampleDaylight(config??{cycleSeconds:600,startHour:10},config ? seconds : 0);this.hour=phase.hour;nightFactor.value=phase.night;
     this.direction.set(phase.direction.x,phase.direction.y,phase.direction.z);this.pools.visible=phase.night>.001 || !!this.pools.userData.indoor;
     (this.scene.background as THREE.Color).copy(palette.skyNight).lerp(palette.skyDay,phase.day).lerp(palette.skyDusk,phase.warm*.6);
     if(this.scene.fog)this.scene.fog.color.copy(this.scene.background as THREE.Color);
     this.hemisphere.color.copy(palette.upperNight).lerp(palette.upperDay,phase.day);this.hemisphere.groundColor.copy(palette.lowerNight).lerp(palette.lowerDay,phase.day);this.hemisphere.intensity=1.1+.15*phase.day;
     this.sun.color.copy(phase.moon ? palette.moon : palette.sun).lerp(palette.sunset,phase.warm);this.sun.intensity=phase.intensity;
     this.fill.intensity=.34-.04*phase.day;
+    if(rain>0){
+      (this.scene.background as THREE.Color).lerp(stormSky.copy(palette.skyNight).lerp(stormDay,phase.day),rain*.55);
+      if(this.scene.fog)this.scene.fog.color.copy(this.scene.background as THREE.Color);
+      this.sun.intensity*=1-rain*.65;this.hemisphere.intensity*=1-rain*.2;
+    }
   }
 }
+const stormSky=new THREE.Color(),stormDay=new THREE.Color('#344751');

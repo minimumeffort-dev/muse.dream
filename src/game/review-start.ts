@@ -377,3 +377,10 @@ export function* nurseryReviewSteps(state:CarState,world:World,working=true):Gen
  if(next.economy!.accounts.find(a=>a.id==='pocket')!.work?.id!=='propagate_saplings')throw Error('Nursery review could not reserve its real seed and wage');
  return next;
 }
+
+/** Advance ordinary city ticks to the shower; no injected clock or free resources. */
+export function* weatherReviewSteps(state:CarState,world:World):Generator<void,CarState>{
+ const target=(world.scene.weather?.rainStartS??2)-2;let next=state,ticks=0;
+ while(next.timeS+1e-8<target){next=stepInteractive(next,{steer:0,throttle:0},Math.min(1/120,target-next.timeS),world);if(++ticks%60===0)yield;}
+ return drivingReviewStart(next,world,'town');
+}

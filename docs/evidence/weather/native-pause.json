@@ -1,0 +1,101 @@
+{
+  "before": {
+    "daylight": {
+      "direction": [
+        0.6664592676476413,
+        0.6710713465357279,
+        0.32480038858550414
+      ],
+      "hour": 15.333332000002642,
+      "night": 0
+    },
+    "keys": [
+      "save",
+      "world",
+      "source",
+      "streaming",
+      "memory",
+      "shaderWarmup",
+      "economy",
+      "parking",
+      "population",
+      "sport",
+      "strike",
+      "boost",
+      "car",
+      "daylight",
+      "weather",
+      "camera",
+      "mode",
+      "particles",
+      "grounded",
+      "movement",
+      "speed",
+      "flight",
+      "heading",
+      "fps",
+      "occluders",
+      "view",
+      "zoom",
+      "shadow",
+      "presentation",
+      "render",
+      "speech",
+      "riding",
+      "control",
+      "seated",
+      "avatar",
+      "vehicles",
+      "actors",
+      "npcs",
+      "growing",
+      "destruction"
+    ],
+    "mode": "paused",
+    "particles": "66",
+    "save": {
+      "compatibilityHash": "e79bef5a9b68401e438cb2eb94f1ae68e151fb65f29770e2fa166e382db817ec",
+      "enabled": false,
+      "restored": false,
+      "review": false,
+      "sourceHash": "d2dea2957ccc84b549e5ef930da1b6710560a6a1acb8cc38ac2b033a6460c1a9",
+      "status": "Review session: saves disabled."
+    },
+    "weather": {
+      "grip": 0.68,
+      "rain": 1,
+      "raining": true,
+      "wetness": 1
+    }
+  },
+  "after": {
+    "car": "7470.3,4233.0,1.5",
+    "daylight": {
+      "direction": [
+        0.6664592676476413,
+        0.6710713465357279,
+        0.32480038858550414
+      ],
+      "hour": 15.333332000002642,
+      "night": 0
+    },
+    "memory": "{\"bytes\":138808886,\"uniqueBuffers\":10389,\"geometries\":1832,\"uniqueTriangles\":1293381}",
+    "mode": "paused",
+    "particles": "66",
+    "render": "{\"calls\":156,\"triangles\":184004,\"geometries\":344}",
+    "source": {
+      "compatibilityHash": "e79bef5a9b68401e438cb2eb94f1ae68e151fb65f29770e2fa166e382db817ec",
+      "enabled": false,
+      "restored": false,
+      "review": false,
+      "sourceHash": "d2dea2957ccc84b549e5ef930da1b6710560a6a1acb8cc38ac2b033a6460c1a9",
+      "status": "Review session: saves disabled."
+    },
+    "weather": {
+      "grip": 0.68,
+      "rain": 1,
+      "raining": true,
+      "wetness": 1
+    }
+  }
+}
