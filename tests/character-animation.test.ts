@@ -1,7 +1,7 @@
 import {describe,it,expect} from 'vitest';
 import {Vector3} from 'three';
 import {interactiveWorld} from '../src/scene/interactive-world';
-import {compileDream,formatDream} from '../src/scene/dream';
+import {compileDream,compileDreamWorld,formatDream} from '../src/scene/dream';
 import {objectDslSchema,hasAnimatedJoints} from '../src/scene/object-dsl';
 import {HUMANOID_BONES} from '../src/scene/humanoid';
 import {buildObject} from '../src/game/world3d';
@@ -9,12 +9,14 @@ import {compactObject} from '../src/game/compact-object';
 import {CharacterAnimator,solveLeg,strideFoot,type CharacterInput} from '../src/game/character-animation';
 import {gaitStride,humanoidSoles} from '../src/game/humanoid-gait';
 import source from '../docs/examples/humanoid.dream?raw';
+import wardrobe from '../src/scene/world/city_people.dream?raw';
+import {measuredScale} from '../src/scene/measure';
 const spec=interactiveWorld.assemblies.find(s=>s.displayName==='Explorer')!;
 const input:CharacterInput={speed:55,grounded:true,swimming:false,verticalSpeed:0,time:0,enabled:true};
-function rig(scale=1){
- const group=compactObject(buildObject({id:'person',kind:'custom',labelText:'Explorer',x:0,y:0,scale,spec}));
- const animation=new CharacterAnimator(group,spec);
- const bone=(name:string)=>group.getObjectByName(spec.joints!.find(j=>j.bone===name)!.id)!;
+function rig(scale=1,model=spec){
+ const group=compactObject(buildObject({id:'person',kind:'custom',labelText:'Explorer',x:0,y:0,scale,spec:model}));
+ const animation=new CharacterAnimator(group,model);
+ const bone=(name:string)=>group.getObjectByName(model.joints!.find(j=>j.bone===name)!.id)!;
  return {group,animation,bone};
 }
 function advance(r:ReturnType<typeof rig>,state:Partial<CharacterInput>,seconds=2,fps=60){for(let f=0;f<seconds*fps;f++)r.animation.update({...input,...state,time:f/fps},1/fps);}
@@ -262,4 +264,77 @@ it('extends the striking arm without moving planted feet or changing rigid lengt
  expect(at(hitting,'right_shoulder').distanceTo(at(hitting,'right_elbow'))).toBeCloseTo(at(resting,'right_shoulder').distanceTo(at(resting,'right_elbow')),10);
  const reduced=rig(),idle=rig();reduced.animation.update({...input,speed:0,enabled:false,striking:.5},1/60);idle.animation.update({...input,speed:0,enabled:false},1/60);
  expect(reduced.bone('right_shoulder').quaternion.toArray()).toEqual(idle.bone('right_shoulder').quaternion.toArray());
+});
+
+describe('seating transitions',()=>{
+ const frame=(r:ReturnType<typeof rig>,at:{x:number;y:number;z:number;heading:number},height:number|undefined,time:number,dt=1/60,extra:Partial<CharacterInput>={})=>{
+  r.group.position.set(at.x,at.y,at.z);r.group.rotation.y=-at.heading;
+  r.animation.update({...input,speed:0,travel:at,sittingHeight:height,time,...extra},dt);r.group.updateMatrixWorld(true);
+ };
+ const root=(r:ReturnType<typeof rig>)=>r.bone('root').getWorldPosition(new Vector3());
+ it.each([30,60,144])('carries position, turn and rigid limbs continuously into and out of a seat at %i fps',fps=>{
+  const r=rig(.306),standing={x:0,y:.2,z:0,heading:0},seated={x:-3.6,y:.2,z:0,heading:Math.PI},soles=humanoidSoles(spec);
+  frame(r,standing,undefined,0,1/fps);let previous=root(r),minSole=Infinity,maxSpeed=0;
+  for(const [stage,at,height] of [[1,seated,18],[2,standing,undefined]] as const){
+   for(let f=0;f<fps;f++){
+    frame(r,at,height,stage+f/fps,1/fps);const p=root(r);maxSpeed=Math.max(maxSpeed,p.distanceTo(previous)*fps);if(f===0)expect(p.distanceTo(previous)).toBeLessThan(1e-8);previous=p;
+    for(const [i,side] of ['left','right'].entries()){
+     const hip=r.bone(side+'_hip').getWorldPosition(new Vector3()),knee=r.bone(side+'_knee').getWorldPosition(new Vector3()),ankle=r.bone(side+'_ankle');
+     expect(hip.distanceTo(knee)).toBeCloseTo(11.5*.306,8);expect(knee.distanceTo(ankle.getWorldPosition(new Vector3()))).toBeCloseTo(10.5*.306,8);
+     for(const x of [soles[i]![0],soles[i]![1]])for(const z of [-3.1,3.1])minSole=Math.min(minSole,new Vector3(x,soles[i]![2],z).applyMatrix4(ankle.matrixWorld).y);
+    }
+   }
+  }
+  expect(maxSpeed).toBeLessThan(14);expect(minSole).toBeGreaterThanOrEqual(-.01);expect(root(r).x).toBeCloseTo(0,8);expect(r.bone('root').position.y).toBeCloseTo(25,2);
+ });
+ it('fits the complete city wardrobe on an elevated floor without scaling limbs or sinking shoes',()=>{
+  for(const model of compileDreamWorld(wardrobe).assemblies.filter(a=>a.joints?.some(j=>j.bone==='root'))){
+   const r=rig(measuredScale(model),model),soles=humanoidSoles(model),ground=()=>({height:12,slopeX:0,slopeZ:0});
+   const standing={x:0,y:12.2,z:0,heading:.6},seated={x:-3,y:12.2,z:1,heading:1.5};frame(r,standing,undefined,0,1/60,{ground});
+   for(const [at,height] of [[seated,5.4/r.group.scale.x],[standing,undefined]] as const)for(let f=0;f<60;f++){
+    frame(r,at,height,1+f/60,1/60,{ground});
+    for(const [i,side] of ['left','right'].entries())for(const x of [soles[i]![0],soles[i]![1]])for(const z of [-3,3])expect(new Vector3(x,soles[i]![2],z).applyMatrix4(r.bone(side+'_ankle').matrixWorld).y,model.displayName).toBeGreaterThanOrEqual(11.99);
+   }
+  }
+ });
+ it('holds an unfinished transition while paused and can reverse it without snapping',()=>{
+  const r=rig(.306),standing={x:0,y:.2,z:0,heading:.4},seated={x:-3,y:.2,z:1,heading:1.3};frame(r,standing,undefined,0);
+  for(let f=0;f<10;f++)frame(r,seated,18,1+f/60);
+  const p=root(r),q=r.bone('root').getWorldQuaternion(r.bone('root').quaternion.clone());
+  expect(r.animation.seatingPosition?.distanceTo(p)).toBeLessThan(1e-8);
+  for(let f=0;f<20;f++)frame(r,seated,18,1+9/60,0);
+  expect(root(r).distanceTo(p)).toBeLessThan(1e-8);expect(r.bone('root').getWorldQuaternion(q.clone()).angleTo(q)).toBeLessThan(1e-7);
+  frame(r,standing,undefined,2);expect(root(r).distanceTo(p)).toBeLessThan(1e-8);
+  for(let f=0;f<60;f++)frame(r,standing,undefined,2+f/60);
+  expect(r.bone('root').position.x).toBe(0);expect(r.bone('root').position.z).toBe(0);expect(r.bone('root').position.y).toBeCloseTo(25,2);
+  expect(r.animation.seatingPosition).toBeUndefined();
+ });
+ it('can begin sitting in mid-stride without dropping a lifted foot or snapping a joint',()=>{
+  const r=rig(.306);let x=0;
+  for(let f=0;f<45;f++){x+=14/60;frame(r,{x,y:.2,z:0,heading:0},undefined,f/60,1/60,{speed:14});}
+  const before=HUMANOID_BONES.map(b=>r.bone(b).getWorldPosition(new Vector3()));
+  frame(r,{x:x-3,y:.2,z:0,heading:Math.PI},18,1);
+  for(const [i,b] of HUMANOID_BONES.entries())expect(r.bone(b).getWorldPosition(new Vector3()).distanceTo(before[i]!)).toBeLessThan(1e-8);
+ });
+ it.each([14,55,95])('stands into %i-unit/s travel without leaving an unreachable foot behind',speed=>{
+  const r=rig(.306),soles=humanoidSoles(spec),previous=new Map<string,Vector3>();let minRoot=Infinity,maxDrift=0,maxRoll=0;
+  for(let f=0;f<60;f++)frame(r,{x:-10.8,y:.2,z:0,heading:0},18,f/60);
+  for(let f=0;f<180;f++){
+   frame(r,{x:speed*f/60*Math.cos(Math.PI/3),y:.2,z:speed*f/60*Math.sin(Math.PI/3),heading:Math.PI/3},undefined,1+f/60,1/60,{speed});minRoot=Math.min(minRoot,r.bone('root').position.y);
+   for(const [i,side] of ['left','right'].entries()){
+    maxRoll=Math.max(maxRoll,Math.abs(r.bone(side+'_hip').rotation.x));
+    const ankle=r.bone(side+'_ankle'),p=ankle.getWorldPosition(new Vector3()),old=previous.get(side),flat=new Vector3(0,1,0).applyQuaternion(ankle.getWorldQuaternion(ankle.quaternion.clone())).y>1-1e-12;
+    if(old && flat)maxDrift=Math.max(maxDrift,p.distanceTo(old));if(flat)previous.set(side,p);else previous.delete(side);
+    for(const x of [soles[i]![0],soles[i]![1]])for(const z of [-3.1,3.1])expect(new Vector3(x,soles[i]![2],z).applyMatrix4(ankle.matrixWorld).y).toBeGreaterThanOrEqual(-.01);
+   }
+  }
+  expect(minRoot).toBeGreaterThan(speed>22 ? 19 : 16);expect(maxRoll).toBeLessThan(.4);expect(maxDrift).toBeLessThan(.002);
+ });
+ it.each(['reduced','reset','snap','jump','water','teleport'] as const)('clears a seating offset on %s without changing the physical parent',kind=>{
+  const r=rig(.306),standing={x:0,y:.2,z:0,heading:0},seated={x:-3,y:.2,z:0,heading:Math.PI};frame(r,standing,undefined,0);frame(r,seated,18,1);frame(r,seated,18,1.1);
+  if(kind==='reset')r.animation.reset();
+  const at=kind==='teleport'?{...standing,x:500}:standing;
+  frame(r,at,undefined,2,1/60,{enabled:kind!=='reduced',snap:kind==='snap',grounded:kind!=='jump',swimming:kind==='water'});
+  expect(r.group.position.toArray()).toEqual([at.x,at.y,at.z]);expect(r.group.rotation.y).toBe(-at.heading);expect(r.bone('root').position.x).toBe(0);expect(r.bone('root').position.z).toBe(0);
+ });
 });

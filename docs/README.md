@@ -25,6 +25,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [Day and night](dream/day-night.md) | A shared clock, changing sunlight, window glow and street lighting |
 | [Shared meals](dream/social.md) | Invite an off-duty person or accept their meal, share paid food and build remembered history |
 | [Shared seating](dream/seating.md) | Sit on furniture, share seats with customers and preserve occupancy |
+| [Sitting and standing](dream/seating-motion.md) | Smooth body transitions, staggered steps and shared ground support |
 | [Shared recipes](dream/relationships.md) | A real shared meal can unlock work, alongside personal practice |
 | [Resident companions](dream/companions.md) | Finite food, shared seats, remembered meals and resumed routines |
 | [Work motions](dream/work-gestures.md) | Bounded hand keyframes for jobs and repairs, shared by people |

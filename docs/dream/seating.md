@@ -7,6 +7,7 @@ A bench can be furniture you use. Walk to its front and press **F** to sit. Pres
 food from your bag using the same inventory and fullness rules as standing.
 The camera moves closer while seated, retaining your view angle and manual zoom.
 The standard bench now spaces its seat centers 84 cm apart for two resident bodies.
+Player and resident bodies now use the same [smooth sitting and standing motion](seating-motion.md).
 
 ![Sharing the market bench with a customer](../media/seating.gif)
 

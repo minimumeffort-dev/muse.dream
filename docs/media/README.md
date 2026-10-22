@@ -1883,3 +1883,18 @@ The bench mesh is unchanged; standard seat centers move from 78 to 84 cm. Older
 shared/hosted/seating recordings remain historical for those anchors and resident
 social activity. Workstation, driving, weather and architecture media retain
 their geometry and appearance, so they were retained.
+
+## Sitting and standing
+
+seatmotion.mp4, seatmotion.gif and seatmotion.jpg record the current player
+standing, walking away, returning and sitting at the market bench. The existing
+seating review runs real food purchasing and a resident meal before the player's
+observation pose. Export is 480 rendered frames at 30 frames per simulation second,
+sixteen seconds total, without frame interpolation. Video/still are 1600×900;
+GIF is 1280×720. [Current motion](../dream/seating-motion.md) and
+[verification](../evidence/seating-motion/verification.md).
+
+Earlier seating, shared, hosted, rest, home and companion recordings predate the
+body transitions. They remain historical for those motions; their ownership,
+food, work and save evidence remains valid. Static people, building geometry,
+driving, sport and weather are unchanged, so their accurate captures were retained.

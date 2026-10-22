@@ -545,7 +545,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
   let captureTime:number|undefined,captureActor:string|undefined=import.meta.env.DEV && (params.has('test-shelter') || params.has('test-attendance') || params.has('test-commute')) ? 'market_commuter' : undefined,captureFocus:THREE.Vector3|undefined;
   if(import.meta.env.DEV && params.has('test-shelter'))manualZoom.factor=1.8;
   if(import.meta.env.DEV && params.has('test-attendance')){manualZoom.factor=1.6;viewAngle=cameraAngle=Math.PI;}
-  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{companions:480,workstations:480,navigation:180,sharedrecipe:480,shelter:480,attendance:480,upstairs:480,stairs:360,rest:360,home:300,weather:240,schoolroom:600,nursery:420,recovery:300,actions:180,hand:600,equipment:480,fixturefall:240,fixturerepair:600,driving:210,boost:210,football:480,basketball:480,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:720,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840,maintenance:600,lamps:240,treefall:240,lamprepair:360,streetrepair:360,planting:360,growth:900,courier:360,handoff:540,interior:600,interiornight:240,transit:240,recipes:360,progression:480,meals:480,kitchen:480,seating:480,hours:480,shifts:600,shared:720,hosted:420,airportrepair:600,schoolrepair:600,business:600,park:360,scooter:240},async(clip)=>{
+  const capture=import.meta.env.DEV ? mediaCapture(renderer.domElement,{seatmotion:480,companions:480,workstations:480,navigation:180,sharedrecipe:480,shelter:480,attendance:480,upstairs:480,stairs:360,rest:360,home:300,weather:240,schoolroom:600,nursery:420,recovery:300,actions:180,hand:600,equipment:480,fixturefall:240,fixturerepair:600,driving:210,boost:210,football:480,basketball:480,switching:240,locomotion:180,swimming:180,daynight:360,flight:300,pedestrians:720,wildlife:360,conversation:240,commerce:360,delivery:360,parking:360,repair:840,maintenance:600,lamps:240,treefall:240,lamprepair:360,streetrepair:360,planting:360,growth:900,courier:360,handoff:540,interior:600,interiornight:240,transit:240,recipes:360,progression:480,meals:480,kitchen:480,seating:480,hours:480,shifts:600,shared:720,hosted:420,airportrepair:600,schoolrepair:600,business:600,park:360,scooter:240},async(clip)=>{
     captureTime=undefined;captureActor=undefined;captureFocus=undefined;captureWalk=undefined;viewAngle=0;cameraAngle=0;
     resetPosition(true,clip==='navigation');worldTime.value=0;setMode("playing");
     commerce.resetChoices();
@@ -614,10 +614,10 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       while(!result.done){if(performance.now()-yieldAt>8){await new Promise<void>(resolve=>setTimeout(resolve,0));yieldAt=performance.now();}result=steps.next();}
       car=result.value;worldTime.value=car.timeS;const vendor=doc.objects.find(o=>o.id==='vendor')!;captureFocus=worldPosition(doc,vendor.x,vendor.y-60);captureFocus.y=objectPlacement(doc,vendor).base;if(clip==='shifts'){captureFocus=undefined;viewAngle=Math.PI;manualZoom.factor=1.5;}
     }
-    if(clip==='meals' || clip==='kitchen' || clip==='seating'){
-      const steps=clip==='seating' ? seatingReviewSteps(car,world) : clip==='kitchen' ? kitchenReviewSteps(car,world) : mealReviewSteps(car,world);let result=steps.next(),yieldAt=performance.now();
+    if(clip==='meals' || clip==='kitchen' || clip==='seating' || clip==='seatmotion'){
+      const steps=clip==='seating' || clip==='seatmotion' ? seatingReviewSteps(car,world) : clip==='kitchen' ? kitchenReviewSteps(car,world) : mealReviewSteps(car,world);let result=steps.next(),yieldAt=performance.now();
       while(!result.done){if(performance.now()-yieldAt>=12){await new Promise<void>(resolve=>setTimeout(resolve,0));yieldAt=performance.now();}result=steps.next();}
-      car=result.value;worldTime.value=car.timeS;const vendor=doc.objects.find(o=>o.id==='vendor')!;captureFocus=worldPosition(doc,vendor.x,vendor.y-60);captureFocus.y=objectPlacement(doc,vendor).base;if(clip==='seating'){captureFocus=undefined;viewAngle=Math.PI;manualZoom.factor=2;}
+      car=result.value;worldTime.value=car.timeS;const vendor=doc.objects.find(o=>o.id==='vendor')!;captureFocus=worldPosition(doc,vendor.x,vendor.y-60);captureFocus.y=objectPlacement(doc,vendor).base;if(clip==='seating' || clip==='seatmotion'){captureFocus=undefined;viewAngle=cameraAngle=Math.PI;manualZoom.factor=2;}
     }
     if(clip==='progression'){
       const steps=progressionReviewSteps(car,world);let result=steps.next(),yieldAt=performance.now();
@@ -679,7 +679,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     if(clip==='shared'){if(frame===10)commerce.key('KeyX');if(frame===30)commerce.key('KeyY');if(frame===420)useRide();if(frame===450 || frame===480)talkRequested=true;return;}
     if(clip==='shifts'){captureWalk=shiftReviewInput(car,world,frame,cameraAngle);if(frame===101)commerce.key('KeyG');if(frame===540)talkRequested=true;return;}
     if(clip==='hours'){if(frame===30)commerce.key('KeyH');if(frame===300)commerce.key('KeyG');return;}
-    if(clip==='seating'){
+    if(clip==='seating' || clip==='seatmotion'){
       const config=doc.daylight;captureTime=config ? ((14-config.startHour+24)%24)/24*config.cycleSeconds+frame/30 : undefined;
       if(frame===60)commerce.key('KeyG');if(frame===120 || frame===270)useRide();captureWalk=seatingReviewInput(car,world,frame,cameraAngle);return;
     }
@@ -919,7 +919,7 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
       const speed=Math.hypot(car.vx-(water ? water.flow.x : 0),car.vy-(water ? water.flow.y : 0));
       const seat=seatedPose(car,doc);
       const eating=car.economy?.shared?.phase==='eat' || car.economy?.events.some(e=>e.kind==='eat' && accountOwners.get(e.account)==='player' && car.timeS-e.atS<1.4);
-      walkerAnimation.update({ground:sampleFoot,travel:{x:walker.position.x,y:walker.position.y,z:walker.position.z,heading:viewCar.headingRad},eating,sittingHeight:seat ? seat.hipHeight/walker.scale.x : undefined,speed,swimming,grounded:car.grounded,verticalSpeed:car.vz,time:viewCar.timeS,enabled:!reduced.matches,
+      walkerAnimation.update({snap,ground:sampleFoot,travel:{x:walker.position.x,y:walker.position.y,z:walker.position.z,heading:viewCar.headingRad},eating,sittingHeight:seat ? seat.hipHeight/walker.scale.x : undefined,speed,swimming,grounded:car.grounded,verticalSpeed:car.vz,time:viewCar.timeS,enabled:!reduced.matches,
         striking:doc.strike && car.control.kind==='foot' ? (viewCar.timeS-(car.strikeReadyAtS??0)+doc.strike.cooldownS)/Math.min(.3,doc.strike.cooldownS*.7) : undefined,
         workTarget:workTarget(car.economy?.accounts.find(a=>accountOwners.get(a.id)==='player')),workGesture:workGesture(car.economy?.accounts.find(a=>accountOwners.get(a.id)==='player'),viewCar.timeS),
         working:!!car.economy?.accounts.find(a=>accountOwners.get(a.id)==='player')?.work || car.economy?.accounts.find(a=>accountOwners.get(a.id)==='player')?.repair?.phase==='work',
@@ -928,14 +928,15 @@ export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):
     for (const object of objects) {
       const spec=object.userData.sceneObject;
       const character=characters.get(object);
-      if(character){const account=car.economy?.accounts.find(a=>accountOwners.get(a.id)===spec?.id),working=!!account?.work || account?.repair?.phase==='work';character.update({ground:sampleFoot,travel:{x:object.position.x,y:object.position.y,z:object.position.z,heading:-object.rotation.y},speed:object.userData.npcActive===false ? 0 : object.userData.speed??0,swimming:false,grounded:true,verticalSpeed:0,time:working ? car.timeS : object.userData.npcTime??worldTime.value,enabled:!reduced.matches,workTarget:workTarget(account),workGesture:workGesture(account,viewCar.timeS),sittingHeight:object.userData.seatHeight===undefined ? undefined : object.userData.seatHeight/object.scale.x,working,eating:!!account && companionBusy(car,account.id) && car.economy?.gathering?.phase==='eat' || account?.meal?.phase==='eat' || car.economy?.shared?.partner===account?.id && car.economy?.shared?.phase==='eat'},mode==='playing' ? dt : 0);continue;}
+      if(character){const account=car.economy?.accounts.find(a=>accountOwners.get(a.id)===spec?.id),working=!!account?.work || account?.repair?.phase==='work';character.update({snap,ground:sampleFoot,travel:{x:object.position.x,y:object.position.y,z:object.position.z,heading:-object.rotation.y},speed:object.userData.npcActive===false ? 0 : object.userData.speed??0,swimming:false,grounded:true,verticalSpeed:0,time:working ? car.timeS : object.userData.npcTime??worldTime.value,enabled:!reduced.matches,workTarget:workTarget(account),workGesture:workGesture(account,viewCar.timeS),sittingHeight:object.userData.seatHeight===undefined ? undefined : object.userData.seatHeight/object.scale.x,working,eating:!!account && companionBusy(car,account.id) && car.economy?.gathering?.phase==='eat' || account?.meal?.phase==='eat' || car.economy?.shared?.partner===account?.id && car.economy?.shared?.phase==='eat'},mode==='playing' ? dt : 0);continue;}
       animateObject(object, object.userData.npcTime??worldTime.value, !reduced.matches && (object.userData.npcActive??(!object.userData.ambient || object.userData.moving)), object.userData.distance ?? 0,0,
         spec ? Math.hypot(object.position.x-position.x,object.position.z-position.z)/spec.scale : Infinity);
     }
     if(!walker.visible)walkerAnimation.reset();
     const sportBall=court && viewCar.props.find(p=>p.id===court.sport.ballId)!,sportsFrame=court && sportBall && sportCameraFrame(viewCar,sportGame?.event==='out' ? viewCar : sportBall,court.sport.kind,sportGame?.match?.status==='playing' ? attackTarget(court) : court.sport.kind==='basketball' && sportGame?.possessed ? closestSportTarget(court,sportGame.aim?.[0]??viewCar.x,sportGame.aim?.[1]??viewCar.y) : undefined,!!court.sport.match);
     const inspection=import.meta.env.DEV ? captureFocus??(captureActor ? actorMeshes.get(captureActor)?.position : undefined) : undefined;
-    const framing=inspection ?? (sportsFrame ? worldPosition(doc,sportsFrame.x,sportsFrame.y) : position);
+    const seatFrame=car.control.kind==='foot' ? walkerAnimation.seatingPosition : undefined;
+    const framing=inspection ?? (sportsFrame ? worldPosition(doc,sportsFrame.x,sportsFrame.y) : seatFrame ? {x:seatFrame.x,y:position.y,z:seatFrame.z} : position);
     const target = { x: framing.x, y: (inspection ? inspection.y : car.control.kind!=="car" ? viewCar.elevation : drivingHeight(doc.terrain, viewCar.x, viewCar.y)) + 12, z: framing.z };
     if (mode === "playing" || snap) {
       follow = followCamera(follow, target, dt, snap || reduced.matches);

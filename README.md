@@ -838,6 +838,9 @@ accounts, walk to a pair of free seats, eat and return to their routines. Busy
 residents finish their existing commitments. Meals stay in their saved history;
 your own recipe progress keeps its existing meaning.
 
+Sitting and standing now ease the body and take short steps, with the same motion
+for you and the residents. [Watch the current seat transitions](docs/dream/seating-motion.md).
+
 ![Residents sharing an evening break](docs/media/companions.jpg)
 
 [Watch](docs/media/companions.mp4) · [GIF](docs/media/companions.gif) · [Author companions](docs/dream/companions.md)

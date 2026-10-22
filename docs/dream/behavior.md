@@ -265,6 +265,14 @@ joint leg(bone=left_hip,at=[0,0,4]){
 
 This is a fragment; the [complete example](../examples/humanoid.dream) supplies the materials, root, spine, arms and other leg. Bone bindings survive generated IDs, imports and voxel construction. They do not depend on a character's name. The Explorer and twelve civic and sports templates share this connected construction. Hair, coats and carried items bind to the appropriate frame with `mount`; the seated passenger reuses the face in a static driving pose. [People and clothing](people.md). Football kicks and basketball shots override the player's relevant limbs while locomotion continues.
 
+Furniture seating now blends the body, position and facing over 0.7 seconds, with
+staggered foot transfers through the existing support and rigid-leg solvers.
+Pause holds the transition; another seat change can reverse its current pose.
+The final contacts transfer into walking. Loading, reset, reduced motion, water,
+airborne ownership and large discontinuities clear it. Physics, seat claims,
+controls and saved timers respond through their existing immediate rules.
+[Current seating motion and recording](seating-motion.md).
+
 Walking people now use the same small ground lift as the player, including static street residents and instanced walkers. This removes the inherited vehicle-sized hover gap without changing their physical support or movement.
 
 The renderer caches bone references and solves rigid two-segment legs. On the player and CPU pedestrians, stride phase follows the visible distance travelled and the resolved character scale. A requested speed cannot animate walking while the body stays still. Each grounded foot keeps a world anchor in all three axes and its facing through stance, including turns and stops. Hips can lean sideways to reach that contact, while the ankle follows the support normal. A returning foot settles when movement stops. Its returning movement and facing have bounded rates, so a sharp body turn cannot teleport a foot in mid-air. A foot that has not reached its next contact stays lifted; an overextended contact releases into a recovery step before the leg becomes unreachable. Pause holds these unfinished steps too. Jumping, swimming, sitting, reduced motion, reset and a position teleport clear these visual anchors.

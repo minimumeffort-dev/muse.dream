@@ -993,3 +993,16 @@ exact r104 by restoring those anchors and removing peer plan metadata/extra hall
 grounds. Validate old state first, fit seated poses and retarget unfinished
 approaches, without advancing clocks or changing resources/history. Old slots and
 earlier projections survive. See docs/dream/companions.md.
+
+## Furniture seating presentation
+
+CharacterAnimator blends complete humanoid position/facing/posture over .7 seconds
+using renderer-owned offsets and cached bone quaternions. Staggered foot transfers
+reuse FootPlants and rigid two-segment legs; fit the pelvis to both contacts and
+pass their anchors into ordinary walking. Preserve upright roots, rigid lengths,
+sole support, interrupted-pose continuity, pause and identical color/shadow nodes.
+First/restored poses, reduced motion, reset, jump, swim and large discontinuities
+clear transition state. Never delay controls, seize physics ownership or save
+animation offsets; Dream's existing seat/approach/heading data stays authoritative.
+Keep actor/rig/draw budgets unchanged. Vehicle passenger poses remain separate.
+See docs/dream/seating-motion.md.

@@ -20,6 +20,9 @@ consequence: the baker's larger recipe accepts remembered time together or
 personal baking practice. Resident-to-resident meals now connect existing wages, food, seating and routines.
 Next priorities are deeper relationship consequences, lifts and further usable
 interiors. [Companion meals](dream/companions.md).
+Player and resident seating now share a smooth body transition with staggered
+steps and supported feet. Ownership and actions remain immediate in the engine.
+[Sitting and standing](dream/seating-motion.md).
 [Shared recipes](dream/relationships.md).
 The bakery now uses an authored physical workstation: people walk to its shared
 position, claim it across recipes and reach its supported surface. Jobs now bind

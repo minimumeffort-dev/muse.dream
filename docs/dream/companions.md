@@ -78,5 +78,5 @@ Check the complete example with:
 node scripts/dream.mjs check docs/examples/companion-meals.dream
 ```
 
-Seating still uses the existing instant sit/stand transfer. A dedicated transition
-animation remains unfinished.
+Sitting and standing now have a shared [body and foot transition](seating-motion.md).
+The recording above predates that visual update; its meal and return rules still apply.
