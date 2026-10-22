@@ -154,4 +154,3 @@ AssertionError: ../docs/dream/stairs.md: ../media/stairs.gif: expected false to 
       Tests  2 failed | 1817 passed (1819)
    Start at  01:52:07
    Duration  615.41s (transform 2.03s, setup 445ms, collect 302.08s, tests 909.04s, environment 11ms, prepare 3.92s)
-

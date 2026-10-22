@@ -61,5 +61,3 @@ compatible with no diagnostics. [Source fingerprints](source-manifest.json)
 pin the changed source, scripts and tests. This was a self-review, without an
 independent reviewer or deployment. Browser checks ran on macOS arm64 with
 Node v26.8.1; these results do not establish low-powered-laptop performance.
-
-
