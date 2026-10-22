@@ -565,3 +565,18 @@ data. Initialize only `strikeReadyAtS` at saved time; no other field, clock or
 resource changes. Old formats retain strict field sets. Preserve every earlier
 projection and slot, R/vehicle cooldowns and current round trips. The current
 native hand recording walks through the doorway; it does not place a car inside.
+
+
+## Repair-kit production policy, r85
+
+The existing stationary worker's `works` list prioritizes assemble_kit before
+food, with a twelve-kit target and unchanged finite materials, wages, staffing,
+capacity and reservations. Repair refund space counts toward the refill target;
+replenish after actual consumption. Do not add NPC transaction exemptions,
+initial resources, rigs, actors or independent work clocks.
+
+Format 18/simulation 34 retains the existing semantics. Register the exact r84
+projection by removing only the added worker job and restoring its target to
+four. Validate the old fingerprint before applying unchanged saved state, keep
+its original slot, and preserve every historical projection and cooldown.
+No inventory, navigation or physical rebase is permitted for this policy change.

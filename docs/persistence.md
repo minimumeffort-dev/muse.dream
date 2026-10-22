@@ -655,3 +655,16 @@ writes use a format-18 key. Current reloads do not reapply migration.
 Earlier formats retain their strict field sets and registered projections. A
 format-17 packet cannot smuggle in the new cooldown; unknown targets and missing
 registration still fail. [Checks and native sequence](evidence/on-foot-strike/verification.md).
+
+
+## Repair-kit worker policy, r85
+
+Format 18 and simulation 34 stay unchanged: this composes existing production
+behavior and adds no state or transaction semantics. The exact r84 projection
+removes only `assemble_kit` from the baker's ordered work list and restores that
+job's previous target of four. It verifies the registered prior fingerprint
+before decoding. Every saved field and visual clock is retained, including
+active work, reserved supplies, hand cooldowns and NPC journeys. The original
+format-18 slot remains intact; current reloads do not reapply migration.
+No floor, contact, population, attribution or inventory rebase runs.
+[Checks](evidence/kit-production/verification.md).

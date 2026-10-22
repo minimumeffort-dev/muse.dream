@@ -98,10 +98,22 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r85 uses the existing shared recipe policy to replenish consumed repair kits. */
+export const KIT_PRODUCTION_COMPATIBILITY='c8e3de0f54713b9c887145934b5b84f20511312062347dbd416e75e3321c8d02';
+const kitProjections=new WeakMap<Scene,Scene>();
+export function preKitProductionScene(scene:Scene):Scene{
+ const cached=kitProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.accounts.some(a=>a.id==='baker' && a.works?.includes('assemble_kit')))return scene;
+ const prior={...scene,economy:{...scene.economy,accounts:scene.economy.accounts.map(a=>a.id==='baker' && a.works?.includes('assemble_kit') ? {...a,works:a.works.filter(id=>id!=='assemble_kit')} : a),jobs:scene.economy.jobs.map(j=>j.id==='assemble_kit' ? {...j,target:4} : j)}};
+ kitProjections.set(scene,prior);return prior;
+}
+export function preKitProductionCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preKitProductionScene(scene),34,true,encode);}
+
 /** r84 adds bounded on-foot strikes and a saved cooldown; all old geometry stays exact. */
 export const STRIKE_COMPATIBILITY='f1a8ec4b7803b4bbd21984e5baef2689b3fc6378f81cca0c95060e8d34d374f3';
 const strikeProjections=new WeakMap<Scene,Scene>();
 export function preStrikeScene(scene:Scene):Scene{
+ scene=preKitProductionScene(scene);
  if(!scene.strike)return scene;
  const cached=strikeProjections.get(scene);if(cached)return cached;
  const {strike,...prior}=scene;strikeProjections.set(scene,prior);return prior;

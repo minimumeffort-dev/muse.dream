@@ -328,7 +328,7 @@ Broken benches release their occupants; repaired ones work again.
 
 Baking now depends on the table. Damage interrupts both your batch and the baker's,
 returning reserved ingredients and wages once. The caretaker repairs it from the
-same finite stock, then work resumes. Dream uses the same `equipment` rule for
+same finite stock, then work resumes. The market worker now replenishes used repair kits from boards and fasteners, with the same paid recipe available to you. Dream uses the same `equipment` rule for
 food preparation and workshop jobs. [How to author it](docs/dream/commerce.md#work-needs-equipment).
 
 ![Hit, repair and return to paid work](docs/media/hand.gif)

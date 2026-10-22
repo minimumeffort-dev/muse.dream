@@ -4,11 +4,11 @@ The vendor now packs lunches and bakes bread when stock runs low. A hungry
 commuter walks over, buys a meal, eats and returns to their routine. When the
 bakery has room for more flour, the market helper can walk to the station,
 collect two units and bring them back. You can buy, cook and take the same
-transport work. Staff do not get their own free supplies or wages.
+transport work. Used repair kits now trigger paid assembly from boards and fasteners. Staff do not get their own free supplies or wages.
 
 ![Staff preparing food for the player and a customer](../media/kitchen.gif)
 
-[Watch in HD](../media/kitchen.mp4). The recording shows a player purchase and
+[Watch in HD](../media/kitchen.mp4). This historical outdoor-counter recording shows a player purchase and
 meal, a customer purchase, and the vendor replacing the sold food. Flour transport
 takes several simulation minutes and is checked separately; this sixteen-second
 clip does not show that complete journey. These are 30 rendered frames per
@@ -18,6 +18,7 @@ simulation second, not a live performance measurement.
 
 | Activity | Input | Result |
 | --- | --- | --- |
+| Repair-kit assembly | 1 board and 1 fastener, reserved together | 1 kit after 7 seconds; worker earns 3 credits |
 | Basic bread batch | 1 flour, reserved from the bakery | 2 bread after 6 seconds; worker earns 3 credits |
 | Pack lunch | 1 bread and 1 vegetable, reserved together | 1 lunch after 5 seconds; worker earns 3 credits |
 | Buy lunch | 8 credits from the customer's wallet | One owned lunch; the bakery receives the credits |
@@ -39,8 +40,9 @@ service or upstream farming. Ownership is now available at the station depot.
 
 ## Compose the existing Dream rules
 
-`works` chooses eligible jobs below their stock targets in order. Lunch comes
-first; if it needs bread, baking can supply the missing ingredient. `meal`
+`works` chooses eligible jobs below their stock targets in order. The live worker
+first replaces consumed repair kits, then prepares lunch and bread. The small
+food-only example below puts lunch first; baking supplies its missing bread. `meal`
 provides a customer's food destination. `deliveries` connects finite source and
 destination shelves. No special restaurant command or generated controller is
 needed. Public pedestrian routing works in a standalone business scene, without
@@ -220,3 +222,40 @@ Start over restores the authored owner and balances. Format 15 / simulation 23
 validates the exact r65 world before adding only its zero-funded depot seller and
 initial owner reference. Every older field and original save slot stays intact.
 [Save rules and migration](../persistence.md#business-ownership-r66).
+
+
+## Repair-kit production
+
+![The repaired workshop and refilled kit shelf](../media/kit-production.jpg)
+
+The live market worker now uses this ordered Dream policy:
+
+```dream
+account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,social=hall_break,shift=bakery_day,works=[assemble_kit,pack_lunch,large_bake,bake]);
+```
+
+`assemble_kit` uses the existing boards-and-fasteners recipe, with `target=12`
+matching the repair-kit shelf limit. The worker first considers assembly, then
+food. Both player and worker need actual ingredients, wages, shelf space, effort
+and the job's shared capacity. The existing daily shift controls availability.
+No special NPC production transaction is introduced.
+
+A reserved repair kit still needs room if the repair is cancelled. Production
+counts that reservation toward its target and starts after the kit is actually
+consumed. With one completed repair, the worker spends one board and one fastener
+and earns three coins to replace the kit. Food equipment can be broken while
+assembly remains available, avoiding a dependency on the table being repaired.
+Food preparation resumes after repair and restocking.
+
+[Try the complete example](../examples/repair-production.dream): its workshop
+starts without kits, produces them from finite inputs, repairs the food table
+and resumes lunch preparation. Its separate kit bench remains required equipment;
+breaking both benches can still stop this particular example's production.
+The live hand-assembly recipe needs no table. These are authored dependencies,
+not exemptions from a shared damage category.
+
+Existing format-18 saves have an exact registered r84 upgrade. It preserves every
+ledger, task, body, cooldown and clock and retains the original slot.
+[In-game evidence and focused checks](../evidence/kit-production/verification.md).
+Raw material replenishment, dedicated tools and manufacturing machinery remain
+separate capabilities.

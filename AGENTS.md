@@ -79,6 +79,10 @@ another run. Use focused regression tests for branch pushes; run the full suite
 before merging/releasing or when shared engine changes need broad coverage.
 For visual changes, capture one representative current flow and refresh its
 GIF, video and still together. Mark older affected recordings as historical.
+When rendering and controls are unchanged, retain accurate media and explain why;
+do not regenerate motion solely to accompany a code or authored-policy change.
+Ship once the slice meets its success criteria; do not add adjacent features or
+repeat successful checks without a new change, failure or concrete concern.
 
 ## Run and test (verified 2026-10-15)
 
@@ -537,7 +541,7 @@ ambient walking spacing, the r70 airport connector, character wardrobe
 (r71), the r72/r73 fixture service, wind-safe trees (r74), the utility fleet
 (r75), whole-library asset direction, and faceted tree, landscape plant,
 ground cover, furniture and wildlife construction (r76 to r79), and street
-furniture toppling (r80), shared character construction (r81), indoor bakery service (r82), physical work equipment (r83), on-foot strikes (r84) and world-map/waypoint UI. That file is
+furniture toppling (r80), shared character construction (r81), indoor bakery service (r82), physical work equipment (r83), on-foot strikes (r84), repair-kit production (r85) and world-map/waypoint UI. That file is
 not loaded automatically, so read the relevant section there, alongside its
 linked guide, before changing a covered area.
 

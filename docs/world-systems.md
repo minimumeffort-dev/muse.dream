@@ -35,7 +35,7 @@ path. Registered saves retain their ledgers, journeys and committed work.
 Baking now names the existing table as equipment. Damage refunds interrupted
 batches for players and staff; the caretaker restores production through its
 existing repair service. The same declaration works for food and workshop jobs.
-On-foot K hits now use the same impact rules, and the player can break the table, repair it and resume paid work. Handheld tools, powered machinery and upstream supply production remain separate.
+On-foot K hits now use the same impact rules, and the player can break the table, repair it and resume paid work. The market worker now refills consumed repair kits from finite boards and fasteners through the same paid recipe. Handheld tools, powered machinery and raw-material production remain separate.
 [Equipment checks](evidence/work-equipment/verification.md).
 
 The live circuit is retired. Streets now own the driving mask and the city
@@ -140,7 +140,7 @@ The market's new recipes share atomic multi-input reservations, capacity,
 completion, refunds and saved material accounting with the existing bread work.
 Packed lunches can be bought and eaten; assembled kits supply existing repairs.
 These are finite initial supplies and short production chains. Upstream farms,
-forestry, factories and NPC kit production remain missing. Daily staff shifts
+forestry and factories remain missing. NPC kit production is now connected below. Daily staff shifts
 and acquisition/capital management for an existing business now work. Keep those separate from functioning cooking or manufacturing jobs.
 
 Personal completion history now connects paid work, advanced production and NPC
@@ -279,3 +279,19 @@ Next priorities: another shared activity, more resident purposes, more varied
 work and connected repair coverage. NPC-to-NPC social plans, weekly employment,
 dating, general relationships and multi-floor interiors remain separate work.
 [Authoring and controls](dream/social.md).
+
+
+### Demand-driven repair supplies, r85
+
+The market worker now puts repair-kit assembly before food preparation when the
+kit shelf falls below twelve. Existing repair reservations count toward that
+target, so cancelled repairs retain their refund space. A completed repair
+consumes its kit; production then uses one board, one fastener and three coins
+of actual wages to replace it. Food work resumes when the kit target is met.
+The player can take the same recipe and shares its one-worker capacity.
+
+No resources, actors or render geometry are added. The registered r84 upgrade
+keeps every saved field and clock, changing only future authored choices. Raw
+boards and fasteners still come from finite initial stock; this is not forestry,
+a factory or an unlimited supply chain. Next connect raw-material procurement
+and another useful indoor activity. [Authoring and checks](dream/businesses.md#repair-kit-production).

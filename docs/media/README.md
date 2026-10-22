@@ -1553,3 +1553,13 @@ this flow. The earlier equipment recording remains historical evidence of the
 r83 car-based dev fixture. No asset placement, road, terrain or entrance changed,
 so existing construction atlases and the city map remain accurate.
 [Native evidence, source hashes and checks](../evidence/on-foot-strike/verification.md).
+
+
+## Repair-kit policy, r85
+
+No geometry, materials, HUD layout, controls or animation changed. Existing hand,
+food, repair and construction captures remain accurate for their visible mechanics.
+The r84 hand and earlier kitchen recordings are historical source-pinned flows;
+they do not demonstrate the new NPC kit-production priority. A current native
+still and public state checks document this policy without regenerating motion.
+[Current policy verification](../evidence/kit-production/verification.md).

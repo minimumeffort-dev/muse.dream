@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-22",
+  "baseCommit": "7640768dccfb8b5bfcdd4cdf65b4c911e51fce3a",
+  "files": [
+    {
+      "path": "src/scene/world/life.dream",
+      "bytes": 17007,
+      "sha256": "020c7d48da70912803ffb8e07ac677fa9497c962bfe6e4ffb24e4d4015149530"
+    },
+    {
+      "path": "src/scene/world-fixture.ts",
+      "bytes": 1082,
+      "sha256": "088c3b2b7d8e23080a1cd0c5a682789aa665ec84bbda2bc30f3a2ee6f6d19913"
+    },
+    {
+      "path": "src/scene/save-compatibility.ts",
+      "bytes": 43417,
+      "sha256": "ecd50fe1e021e14975259d566ff7e69692b05fc509fd981833309e90192e767d"
+    },
+    {
+      "path": "src/scene/world-worker.ts",
+      "bytes": 17963,
+      "sha256": "4960d4daa42ea5538b590706a70d9fd813642d0f4a3f04c4bf26a3200d6f532e"
+    },
+    {
+      "path": "src/sim/save.ts",
+      "bytes": 69759,
+      "sha256": "6151faa299daac265b99b560eda4fb9e513ef805d7b577b05c11ebc48382c713"
+    },
+    {
+      "path": "src/game/save.ts",
+      "bytes": 8143,
+      "sha256": "71b81f5f3fa371ac4b1a2b8c7dfa4acf1db632080a7174c6409f96f7f12ef33e"
+    },
+    {
+      "path": "tests/kit-production.test.ts",
+      "bytes": 8264,
+      "sha256": "fe47ec9798663a65d1b5d20d770a5021028bd4758bebbd75c4e1f626e74626ff"
+    },
+    {
+      "path": "docs/examples/repair-production.dream",
+      "bytes": 4016,
+      "sha256": "4f6b0d03c7b24a7efe49e2577997acf23afa7a53cd69bc18dd9ae07def871bb0"
+    },
+    {
+      "path": "docs/evidence/kit-production/native.json",
+      "bytes": 7662,
+      "sha256": "e7c3db7eb0fd95da06a2a0567f70d7bd74d1ea73e815cbfd8d127f40fe817e66"
+    },
+    {
+      "path": "docs/evidence/kit-production/native.png",
+      "bytes": 64693,
+      "sha256": "bd715caacd089e3c8327bf9e303be54102b2a0f2916260a5713e7364a74b253d"
+    },
+    {
+      "path": "docs/media/kit-production.jpg",
+      "bytes": 70895,
+      "sha256": "38d649d88201734fe59596f662014a0d60de4c48ab480b9a9025c3a6eb9d013e"
+    }
+  ],
+  "limits": "Native screenshot and public functional diagnostics. No regenerated motion, live performance or browser memory claim."
+}

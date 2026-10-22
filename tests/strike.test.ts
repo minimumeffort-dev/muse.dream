@@ -20,7 +20,7 @@ import {dreamAgentContext} from '../src/scene/dream-agent';
 import * as c from '../src/scene/save-compatibility';
 const identity={sceneId:'strike',revisionId:'test',sourceHash:'strike'};
 const scene=compileDreamScene(source,identity);
-let live:Scene|undefined;const liveScene=()=>live??=createWorldScene();
+let live:Scene|undefined;const liveScene=()=>live??=c.preKitProductionScene(createWorldScene());
 const world=(doc=scene):World=>({scene:doc,roadMask:buildMaskForScene(doc),driveMask:buildPaperMask(doc.canonical.width,doc.canonical.height),carRadius:11});
 const foot=(doc=scene,x=570,y=755):CarState=>({...toggleRide(createCarAtSpawn(doc),world(doc)),x,y,elevation:0,headingRad:0});
 const hit={steer:0,throttle:0,strikePressed:true};
