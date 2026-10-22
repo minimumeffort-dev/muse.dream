@@ -580,6 +580,14 @@ Cylinder `part` and `beam` commands accept a bounded `taper` ratio, so a trunk c
 
 ![Trees, a plane, car, person, bicycle, bench, skateboard and bread shown at the same physical scale](docs/media/proportions.jpg)
 
+## Food for a long job
+
+The caretaker and school courier can now pack a portion before leaving, using
+their own wages and real counter stock. They eat from their own bag when hungry
+without dropping a job or opening sealed delivery cargo. You can also press G
+to eat carried food during work or a repair, keeping the task and its reserved
+supplies. [The Dream policy and runnable example](docs/dream/commerce.md#worker-provisions).
+
 ## Take a break at school
 
 The Garden school's ground floor now opens onto its existing entrance path.

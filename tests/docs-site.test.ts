@@ -6,6 +6,11 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights ration commands and fields at exact boundaries with escaped source',()=>{
+    const html=highlight('ration snack(good=bread,market=corner,below=40); // <Food>&');
+    expect(html).toContain('class="dream-keyword">ration</span>');expect(html).toContain('class="dream-field">below</span>');expect(html).toContain('&lt;Food&gt;&amp;');expect(highlight('rations ration_extra below_extra')).not.toMatch(/dream-(?:keyword|field)/);
+  });
+
   it('highlights recovery fields at exact boundaries and escapes source text',()=>{
     const html=highlight('repair trees(recover=boards,amount=1,label="<Wood>&"); // <Source>&');
     for(const key of ['recover','amount'])expect(html).toContain(`class="dream-field">${key}</span>`);expect(html).toContain('&lt;Wood&gt;&amp;');expect(html).toContain('&lt;Source&gt;&amp;');expect(highlight('recovered recover_extra amounts amount_extra')).not.toMatch(/dream-(?:keyword|field)/);

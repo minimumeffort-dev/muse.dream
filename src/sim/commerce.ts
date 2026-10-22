@@ -70,7 +70,7 @@ export function refundDamagedWork(state:CarState,scene:Scene):CarState{
 const cache=new WeakMap<Scene,ReturnType<typeof prepare>>();
 function prepare(scene:Scene){
  const e=scene.economy!,objects=new Map(scene.objects.map(o=>[o.id,o]));
- return {e,goods:new Map(e.goods.map(g=>[g.id,g])),accounts:new Map(e.accounts.map(a=>[a.id,a])),markets:new Map(e.markets.map(m=>[m.id,m])),meals:new Map(e.meals.map(m=>[m.id,m])),jobs:new Map(e.jobs.map(j=>[j.id,j])),deliveries:new Map(e.deliveries.map(d=>[d.id,d])),repairs:new Map(e.repairs.map(r=>[r.id,r])),repairTargets:new Map(e.repairs.map(r=>[r.id,repairTargets(scene,r)])),objects,
+ return {e,rations:new Map(e.rations?.map(r=>[r.id,r])),rationLoads:new Map(e.accounts.map(a=>[a.id,Math.max(0,...accountRepairs(a).map(id=>{const r=e.repairs.find(r=>r.id===id)!;return Math.max(r.take,r.amount??0);}),...(a.deliveries??[]).map(id=>e.deliveries.find(d=>d.id===id)!.quantity))])),goods:new Map(e.goods.map(g=>[g.id,g])),accounts:new Map(e.accounts.map(a=>[a.id,a])),markets:new Map(e.markets.map(m=>[m.id,m])),meals:new Map(e.meals.map(m=>[m.id,m])),jobs:new Map(e.jobs.map(j=>[j.id,j])),deliveries:new Map(e.deliveries.map(d=>[d.id,d])),repairs:new Map(e.repairs.map(r=>[r.id,r])),repairTargets:new Map(e.repairs.map(r=>[r.id,repairTargets(scene,r)])),objects,
   places:new Map(e.markets.map(m=>[m.id,actorPose(scene,objects.get(m.actor)!,0)]))};
 }
 function data(scene:Scene){let c=cache.get(scene);if(!c){c=prepare(scene);cache.set(scene,c);}return c;}
@@ -152,7 +152,7 @@ function reason(state:CarState,scene:Scene,e:EconomyState,a:Account,action:Comme
  }
  if(a.shift && (a.shift.phase!=='rest' || !['eat','buy','sell'].includes(action.kind)))return 'busy';
  if(a.meal && !(a.meal.phase==='out' && action.kind==='buy' && action.market===a.meal.market && action.good===c.meals.get(a.meal.id)!.good || a.meal.phase==='eat' && action.kind==='eat' && action.good===c.meals.get(a.meal.id)!.good))return 'busy';
- if(a.work || a.repair || a.courier && !(action.kind==='collect' && a.courier.phase==='pickup' && a.courier.id===action.delivery) || a.delivery && action.kind!=='eat')return 'busy';
+ if(action.kind!=='eat' && (a.work || a.repair || a.courier && !(action.kind==='collect' && a.courier.phase==='pickup' && a.courier.id===action.delivery) || a.delivery))return 'busy';
  if(action.kind==='repair'){
   const r=c.repairs.get(action.repair);if(!r || !inReach(state,scene,a,c.markets.get(r.market)!))return 'range';
   const market=e.markets.find(m=>m.id===r.market)!;if(a.satiety<r.effort)return 'satiety';if(Object.values(a.inventory).reduce((n,v)=>n+v,0)+r.take>definition.capacity)return 'full';if(market.stock[r.input]!<r.take)return 'input';if(market.credits<r.pay || a.credits+r.pay>L.money)return 'treasury';
@@ -330,6 +330,14 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
  for(let i=0;i<e.accounts.length;i++){
   const a=e.accounts[(i+old.turn)%e.accounts.length]!,spec=c.accounts.get(a.id)!;
   if(spec.actor==='player'){if(input.commerce)perform(a,input.commerce);continue;}
+  const ration=spec.ration && c.rations.get(spec.ration);
+  if(ration && now+1e-8>=a.decisionAtS && e.shared?.partner!==a.id && e.invitation?.partner!==a.id){
+   const eat={kind:'eat' as const,good:ration.good},buy={kind:'buy' as const,market:ration.market,good:ration.good};
+   if(a.satiety<=ration.below && !reason(current,scene,e,a,eat)){a.decisionAtS=now+1;perform(a,eat);continue;}
+   const busy=a.work || a.delivery || a.repair || a.courier || a.meal || a.shift;
+   if(!busy && !a.inventory[ration.good] && Object.values(a.inventory).reduce((n,v)=>n+v,0)+1+c.rationLoads.get(a.id)!<=spec.capacity && !reason(current,scene,e,a,buy)){a.decisionAtS=now+1;perform(a,buy);continue;}
+   if(busy)a.decisionAtS=now+1;
+  }
   if(e.shared?.partner===a.id || e.invitation?.partner===a.id || now+1e-8<a.decisionAtS || a.work || a.delivery || a.repair || a.courier || a.meal || a.shift && a.shift.phase!=='rest')continue;a.decisionAtS=now+1;
   const social=c.e.socials.find(p=>p.id===spec.social);
   if(social?.markets && current.npcs.find(n=>n.id===spec.actor)?.known && a.satiety<=social.max_fullness){
@@ -342,7 +350,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
    }
    if(offerHostedMeal(current,scene,a.id)){report(player,'invited',social.id);continue;}
   }
-  if(a.satiety<=40){
+  if(!ration && a.satiety<=40){
    const food=c.e.goods.find(g=>g.food>0 && a.inventory[g.id]!>0);if(food){perform(a,{kind:'eat',good:food.id});continue;}
    if(spec.meal){const meal=c.meals.get(spec.meal)!,p=ownerPose(current,scene,a)!;
     for(const market of meal.markets){if(purchaseReason(scene,e,a,market,meal.good,now))continue;const offer=courierApproach(scene,meal,market,p,current);if(!offer || !workPath(scene,deliveryArea(meal),offer.end,p,current))continue;

@@ -636,6 +636,7 @@
         "satiety": "n",
         "drain_s": "n",
         "shop": "bool?",
+        "ration": "ref?",
         "social": "ref?",
         "shift": "ref?",
         "meal": "ref?",
@@ -695,6 +696,17 @@
         "equipment": "symbols?"
       },
       "block": "recipe?"
+    },
+    "ration": {
+      "contexts": [
+        "economy"
+      ],
+      "id": true,
+      "fields": {
+        "good": "ref",
+        "market": "ref",
+        "below": "n"
+      }
     },
     "meal": {
       "contexts": [
@@ -1722,6 +1734,7 @@
     "phase": "place.phase_s 0..3600 only with route; shifts the entire route clock including stops. offset remains a carriage distance."
   },
   "commerce": {
+    "rations": "Optional economy ration(good,market,below=0..95), at most eight plans, referenced by a stationary NPC repair/delivery account with a clear supply counter at home. One owned portion, paid finite stock. Pack only with room for every declared task load, eat once at/below the threshold through ordinary transactions, including during travel. No borrowing sealed cargo, free food, new journeys or forced purchases when unavailable. Player G can eat owned food during work/repair/delivery on dry ground without cancelling the task.",
     "business": {
       "source": "market(...,owner=seller_account,sale=15){lot(...);}",
       "bounds": "owner references an existing account, independent of the counter actor; sale is an optional positive integer 1..1000000 and needs a non-player initial owner; existing 8 markets/16 accounts caps",
@@ -1746,6 +1759,7 @@
     },
     "limits": {
       "goods": 8,
+      "rations": 8,
       "accounts": 16,
       "markets": 8,
       "jobs": 16,

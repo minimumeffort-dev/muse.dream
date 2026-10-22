@@ -657,6 +657,20 @@ Optional sport block: exactly team home(...) and team away(...), each role=npc w
 Football keeper=0..5 selects one NPC index on that side, default 0; keeper_object=complete_humanoid supplies an optional distinct kit. Basketball rejects keeper fields. Optional football net_depth=6..64 is target-local Z extent: author matching triangular side/back net from top mouth to ground behind it. Engine contains full ball spheres against the side and sloping back planes, leaving the mouth open. No per-thread contacts. Match courts require a rectangle >=108 by 70 world units aligned with the targets. N joins/rests/resumes or starts a new round; J charges/releases shots; K passes, calls or tackles based on current ownership, distance, facing and a .6s tackle recovery. Both sides chase, pass, intercept and shoot with one ball owner; keepers defend near their own goal and distribute catches. Tactics run at 20 Hz, ball/movement remain fixed step. Leaving the court rests match time/poses; pause freezes all time; R preserves results; Start over resets. Only one match can play. Match records/possession/poses/results survive saves. GPU athlete instances use the complete authored rigs in color/shadow passes without raising existing CPU joint, route or ambient caps. Full source: examples/team-sports.dream. No fouls, offside, general crowd physics or competition rulebook.
 
 ## commerce
+Optional ration id(good=bread,market=corner,below=40); declares one of at most
+8 worker provision plans. Reference account(...,ration=id) only on a stationary
+NPC repair/delivery account, without work/meal/shift/social policies. The supply
+counter needs a priced food lot and clear reach from the worker's authored home.
+Pack one owned portion through normal paid trade when idle and affordable; retain
+bag room for the largest declared delivery, repair input or recovered output.
+At/below the threshold (0..95), eat owned food once through normal transactions,
+including during travel. Never eat sealed cargo, create money/food, leave a task
+or invent a shopping journey. Missing stock/funds/room does not block ordinary
+work. Ration policy owns automatic food; generic shop must not override its
+threshold or reserved task capacity. Existing G can eat owned food on dry ground during work/repair/delivery
+without cancelling it; shared meals and meal-trip reservations remain protected.
+Use examples/worker-rations.dream. This is a game need, not a nutrition model.
+
 
 Business ownership: market(...,owner=account_id,sale=15){lot(...);}
 owner references an existing personal account, separately from the counter actor.
@@ -843,7 +857,7 @@ The player may travel in vehicles and must hand over on foot at the destination.
 Completion transfers goods/pay once; cancellation anywhere returns reservations.
 No deadline, offline travel or free supply. NPC walking resupply uses the explicit contract below.
 NPC customers can buy/eat delivered food through the same market transactions.
-Owned food can be eaten on foot during a delivery; sealed cargo is never food inventory.
+Owned food can be eaten on dry ground during work, repair or delivery; sealed cargo is never food inventory.
 
 Use repair id(label=...,market=supply_market,on=work_surface,kind=table,
 input=kit,take=1,seconds=8,pay=4,effort=5,dispatch_s=12); inside economy.

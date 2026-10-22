@@ -18,11 +18,11 @@ const current=()=>({...world(),saveCompatibility:c.NURSERY_COMPATIBILITY,previou
 const player=(s:CarState)=>s.economy!.accounts.find(a=>a.id==='pocket')!,market=(s:CarState)=>s.economy!.markets.find(m=>m.id==='market_stall')!;
 const review=()=>{if(!ready){const steps=nurseryReviewSteps(createCarAtSpawn(scene()),current(),false);let r=steps.next();while(!r.done)r=steps.next();ready=r.value;}return structuredClone(ready);};
 it('pins r89 exactly while reusing the complete world, population and finite supplies',async()=>{
- const s=scene(),prior=c.preNurseryScene(s);expect(await c.sha256(c.saveCompatibilitySource(s))).toBe(c.NURSERY_COMPATIBILITY);expect(await c.sha256(c.preNurseryCompatibilitySource(s))).toBe(c.HARDWARE_COMPATIBILITY);
+ const s=scene(),prior=c.preNurseryScene(s);expect(await c.sha256(c.preSchoolInteriorCompatibilitySource(s))).toBe(c.NURSERY_COMPATIBILITY);expect(await c.sha256(c.preNurseryCompatibilitySource(s))).toBe(c.HARDWARE_COMPATIBILITY);
  expect(await c.sha256(c.preHardwareCompatibilitySource(s))).toBe(c.RECOVERY_COMPATIBILITY);expect(await c.sha256(c.preRecoveryCompatibilitySource(s))).toBe(c.RESIDENT_SUPPLY_COMPATIBILITY);
  expect(s.objects).toBe(prior.objects);expect(s.surfaces).toBe(prior.surfaces);expect(s.behaviors).toBe(prior.behaviors);expect(sceneContactData(s)).toEqual(sceneContactData(prior));expect(ambientGraph(s)).toEqual(ambientGraph(prior));
  expect(s.economy!.jobs.slice(0,-1)).toEqual(prior.economy!.jobs);expect(s.economy!.jobs.at(-1)!.id).toBe('propagate_saplings');
- expect(s.economy!.markets).toBe(prior.economy!.markets);expect(s.economy!.accounts.find(a=>a.id==='baker')!.works).toEqual(['assemble_kit','propagate_saplings','pack_lunch','bake']);expect(s.economy!.accounts).toHaveLength(prior.economy!.accounts.length);expect(SAVE_VERSION).toBe(19);expect(c.SAVE_SIMULATION_VERSION).toBe(36);
+ expect(s.economy!.markets).toBe(prior.economy!.markets);expect(s.economy!.accounts.find(a=>a.id==='baker')!.works).toEqual(['assemble_kit','propagate_saplings','pack_lunch','bake']);expect(s.economy!.accounts).toHaveLength(prior.economy!.accounts.length);expect(SAVE_VERSION).toBe(19);expect(JSON.parse(c.preSchoolInteriorCompatibilitySource(s)).simulationVersion).toBe(36);
 });
 it('consumes a real planted sapling, returns its timber, then permits the player to replace the seed stock through paid work',()=>{
  let s=review(),w=current();expect(player(s).repair).toBeUndefined();expect(market(s).stock).toMatchObject({sapling:5,boards:8});expect(player(s).credits).toBe(30);

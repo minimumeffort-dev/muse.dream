@@ -16,7 +16,7 @@ import serviceR81 from './compatibility/r81-indoor-service.json';
 import schoolR90 from './compatibility/r90-school.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=36;
+export const SAVE_SIMULATION_VERSION=37;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -99,10 +99,23 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r92 adds optional worker provisions and shared eating during a commitment. */
+export const RATIONS_COMPATIBILITY='685d508191100e9740e378b70f14fbe60ffe02177e70c7d756aa6c626cb5abd0';
+const rationProjections=new WeakMap<Scene,Scene>();
+export function preRationsScene(scene:Scene):Scene{
+ const cached=rationProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.rations)return scene;
+ const {rations,...economy}=scene.economy;
+ const prior={...scene,economy:{...economy,accounts:economy.accounts.map(a=>{const {ration,...old}=a;return old;})}};
+ rationProjections.set(scene,prior);return prior;
+}
+export function preRationsCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preRationsScene(scene),36,true,encode);}
+
 /** r91 opens the school's common room and connects its furniture and staff break. */
 export const SCHOOL_INTERIOR_COMPATIBILITY='1563d4e8511812ec931cb475b615d75978b72a2efcd8f69e1c4190f24c7bc554';
 const schoolInteriorProjections=new WeakMap<Scene,Scene>();
 export function preSchoolInteriorScene(scene:Scene):Scene{
+ scene=preRationsScene(scene);
  const cached=schoolInteriorProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.repairs.some(r=>r.id==='classroom_furniture'))return scene;
  const added=new Set(['school_common_bench','school_reading_bench','school_rear_bench','school_table_west','school_table_east']);

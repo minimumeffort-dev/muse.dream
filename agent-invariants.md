@@ -710,3 +710,22 @@ can close while the teacher changes break spots. Preserve all money, inventory,
 history, clocks, source slots and earlier registered migrations. Rebase only
 changed pedestrian node references and recover unsafe active poses through the
 existing bounded physical recovery policy. See docs/examples/enterable-school.dream.
+
+## Worker provisions, r92
+
+Optional economy `ration(good,market,below)` has at most eight plans; below is
+0..95. Only stationary NPC repair/delivery accounts may reference one, without
+production, shift, meal-trip or social policies. Require a priced food lot and
+clear counter reach at the authored home. Buy one owned portion while idle,
+using ordinary hours/staff/stock/funds/headroom checks, only with room for the
+largest declared delivery, repair input or recovered output. One decision per
+simulation second. Eating can use owned inventory while committed; never sealed
+cargo, escrow or held recipe inputs. Keep shared-meal/meal-trip ownership and
+all actor/navigation/render budgets. Missing food does not lock ordinary work.
+
+Simulation 37 retains format 19. Register the exact r91 projection, removing
+only ration definitions/references at its pinned simulation 36. Restore every
+saved field and original slot before any new decision; no food, money, clock,
+position, attribution or population initialization. Keep all earlier migrations.
+The standing sight helper is shared between runtime and static acceptance,
+without importing simulation ownership into scene-schema initialization.

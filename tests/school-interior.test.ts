@@ -16,7 +16,7 @@ import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
 import {schoolReviewSteps} from '../src/game/school-review';
 import {npcReviewStart} from '../src/game/review-start';
-const scene=createWorldScene(),old=c.preSchoolInteriorScene(scene);
+const scene=c.preRationsScene(createWorldScene()),old=c.preSchoolInteriorScene(scene);
 const world=(s=scene):World=>({scene:s,roadMask:buildMaskForScene(s),driveMask:buildPaperMask(14000,11000),carRadius:11});
 const current={...world(),saveCompatibility:c.SCHOOL_INTERIOR_COMPATIBILITY,previousSchoolInteriorSaveCompatibility:c.NURSERY_COMPATIBILITY},previous={...world(old),saveCompatibility:c.NURSERY_COMPATIBILITY};
 const account=(s:CarState,id='pocket')=>s.economy!.accounts.find(a=>a.id===id)!;
@@ -35,7 +35,7 @@ const oldReady=()=>{
  return structuredClone(oldPrepared);
 };
 it('opens a measured school room without moving existing scenery, retaining the exact r90 save projection',async()=>{
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.SCHOOL_INTERIOR_COMPATIBILITY);expect(await c.sha256(c.preSchoolInteriorCompatibilitySource(scene))).toBe(c.NURSERY_COMPATIBILITY);
+ expect(await c.sha256(c.preRationsCompatibilitySource(scene))).toBe(c.SCHOOL_INTERIOR_COMPATIBILITY);expect(await c.sha256(c.preSchoolInteriorCompatibilitySource(scene))).toBe(c.NURSERY_COMPATIBILITY);
  expect(await c.sha256(c.preNurseryCompatibilitySource(scene))).toBe(c.HARDWARE_COMPATIBILITY);
  const f=sceneInteriors(scene).find(f=>f.object.id==='garden_school')!;expect(f.floor).toBe(2);expect(f.ceiling-f.floor).toBe(32);expect(f.object.spec).toMatchObject({dslVersion:2});
  expect(scene.objects.filter(o=>!old.objects.some(p=>p.id===o.id))).toHaveLength(5);expect(scene.objects.filter(o=>o.id!=='garden_school' && old.objects.some(p=>p.id===o.id))).toEqual(old.objects.filter(o=>o.id!=='garden_school'));

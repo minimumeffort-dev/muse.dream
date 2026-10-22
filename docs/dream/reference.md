@@ -57,7 +57,8 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | --- | --- | --- | --- |
 | `economy` | top | No ID / economy | None |
 | `good` | economy | ID / no block | `label: text`, `food?: n` |
-| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `shop?: bool`, `social?: ref`, `shift?: ref`, `meal?: ref`, `work?: ref`, `works?: symbols`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
+| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `shop?: bool`, `ration?: ref`, `social?: ref`, `shift?: ref`, `meal?: ref`, `work?: ref`, `works?: symbols`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
+| `ration` | economy | ID / no block | `good: ref`, `market: ref`, `below: n` |
 | `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n`, `hours?: v2`, `owner?: ref`, `sale?: n` |
 | `lot` | market | ID / no block | `good: ref`, `quantity: n`, `limit: n`, `price?: n` |
 | `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `price: n?`, `capacity: n`, `on: ref?`, `grounds: symbols?` |
@@ -730,3 +731,19 @@ travel. Angle amplitude is 0..1.4 radians and phase -pi..pi after conversion.
 Resolved object scale converts world distance; primitive size does not change
 the bearing. This is visual articulation, without a foot-contact solver or saved
 clock. [Complete example](../examples/joint-stride.dream).
+
+### Worker provisions
+
+`ration` is an optional economy declaration.
+
+`ration id(good=bread,market=corner,below=40);` defines one of at most eight
+provision plans. `account.ration` selects it for a stationary repair/delivery
+worker, without production, shift, meal-trip or social policies. The authored
+home must have clear reach to a priced-food counter. While idle, the worker can
+buy one portion with their own money, leaving capacity for the largest declared
+cargo, repair input or recovered output. At or below `below` (0..95), they eat
+owned food through the same transaction as G, including during a commitment.
+Stock, hours, staff, funds and capacity still apply. Sealed cargo stays sealed.
+The ration plan owns automatic food decisions, including when `shop=true`.
+No extra food, shopping path or actor. See [worker provisions](commerce.md#worker-provisions)
+and the [complete example](../examples/worker-rations.dream).

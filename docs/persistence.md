@@ -52,7 +52,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 36. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 37. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -774,3 +774,13 @@ The existing bounded active-pose recovery handles newly unsafe geometry; the
 original save slot is retained. No initial money, materials or NPCs are added.
 [Assembly and controls](dream/interiors.md#the-school-common-room) ·
 [Verification](evidence/school-interior/verification.md).
+
+## Worker food rules, r92
+
+Format 19 is unchanged; simulation version 37 permits eating owned food during
+work/repair/courier commitments and adds optional NPC ration policies. The exact
+r91 projection removes only those definitions and account references, pinning
+its original simulation-36 fingerprint. Migration preserves every saved field,
+including active work, stock, balances, owned food, sealed cargo and clocks.
+No purchase or consumption happens during load. The next normal fixed tick can
+make a decision. The original slot and all earlier registered upgrades remain.

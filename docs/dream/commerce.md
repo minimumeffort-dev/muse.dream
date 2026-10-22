@@ -859,3 +859,41 @@ another timber recovery. Stock, refunds, output
 reservations, cargo, funds and ownership remain conserved through pauses, R,
 streaming and registered saves. [Authoring, controls and limits](growth.md#timber-recovery).
 [Fixture hardware and a complete runnable example](businesses.md#reuse-fixture-hardware).
+
+## Worker provisions
+
+Workers can take food with them before a long job. The food comes from their
+own money and a counter's real stock. In the live city, the caretaker can pack
+vegetables at the bakery and the school courier can pack bread at the canteen,
+when they have earned enough to buy it.
+
+```dream
+ration field_snack(good=bread,market=corner,below=60);
+account regular(actor=customer,credits=20,capacity=4,satiety=65,drain_s=.05,shop=true,ration=field_snack,repair=yard_furniture,deliveries=[kits_run]);
+```
+
+[Compile the complete example](../examples/worker-rations.dream).
+
+The worker buys one portion while idle and within clear reach of the declared
+counter. It needs an open, staffed counter, stock, money and room in the bag.
+Packing leaves capacity for the largest declared delivery, repair input or
+recovered output. A full bag or unavailable food leaves ordinary work available.
+There is no extra shopping journey and no free starting food or cash.
+
+At or below the declared fullness threshold, they eat owned food through the
+same transaction as the player. They keep moving and retain their commitment,
+route, deadline, wage and sealed cargo. Only their own bag supplies the portion.
+The policy makes at most one decision per simulation second; pause stops its
+clock. Its declared threshold and packing room replace generic automatic
+shopping for that worker. Food, fullness, spending and journeys survive R,
+streaming and reload.
+
+G now also eats carried food during a paid batch or repair, on dry ground.
+It does not consume held recipe inputs, repair kits or sealed delivery cargo,
+and does not cancel the job. Shared meals and timed meal-trip reservations
+retain their existing ownership rules.
+
+There are at most eight ration plans, with a threshold from 0 to 95. They are
+optional on stationary NPC repair/delivery accounts, without production,
+shift, meal-trip or social policies. This is a bounded game need. It adds no
+nutrition model, food meshes, new actors or new routes.

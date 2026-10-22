@@ -1,3 +1,5 @@
+import {standingSightClear} from './contact-geometry';
+import {walkingHeight} from './interiors';
 import {HUMANOID_BONES} from './humanoid';
 import {worldSeats} from './seating';
 import {workGround} from './interiors';
@@ -13,11 +15,11 @@ import type {Scene} from './schema';
 import {roleOf} from './agents';
 import {waterAt,drivingHeight} from './terrain';
 
-export const COMMERCE_LIMITS=Object.freeze({goods:8,accounts:16,markets:8,jobs:16,meals:8,shifts:8,socials:8,mealMarkets:4,milestones:16,workerJobs:4,ingredients:4,equipment:4,deliveries:16,courierContracts:4,repairs:8,recoverySources:512,repairNodes:4096,repairNetworkNodes:8192,repairNetworkLinks:32768,repairGrounds:8,repairStreetTargets:512,repairAccessPieces:2048,repairVerge:128,repairRadius:4,repairPath:128,money:1_000_000,quantity:10_000,capacity:32,decisionS:.25});
+export const COMMERCE_LIMITS=Object.freeze({goods:8,rations:8,accounts:16,markets:8,jobs:16,meals:8,shifts:8,socials:8,mealMarkets:4,milestones:16,workerJobs:4,ingredients:4,equipment:4,deliveries:16,courierContracts:4,repairs:8,recoverySources:512,repairNodes:4096,repairNetworkNodes:8192,repairNetworkLinks:32768,repairGrounds:8,repairStreetTargets:512,repairAccessPieces:2048,repairVerge:128,repairRadius:4,repairPath:128,money:1_000_000,quantity:10_000,capacity:32,decisionS:.25});
 const ref=z.string().regex(/^[a-z][a-z0-9_]{0,31}$/),money=z.number().int().min(0).max(COMMERCE_LIMITS.money),quantity=z.number().int().min(0).max(COMMERCE_LIMITS.quantity);
 const label=z.string().min(1).max(40).refine(s=>s.trim().length>0,'label must contain text');
 const good=z.object({id:ref,label,food:z.number().finite().min(0).max(100).default(0)}).strict();
-const account=z.object({id:ref,actor:ref,credits:money,capacity:z.number().int().min(1).max(COMMERCE_LIMITS.capacity),satiety:z.number().finite().min(0).max(100),drainPerS:z.number().finite().min(0).max(.25),shop:z.boolean().default(false),social:ref.optional(),shift:ref.optional(),meal:ref.optional(),work:ref.optional(),works:z.array(ref).min(1).max(COMMERCE_LIMITS.workerJobs).optional(),repair:ref.optional(),repairs:z.array(ref).min(1).max(GROWTH_LIMITS.workerServices).optional(),deliveries:z.array(ref).min(1).max(COMMERCE_LIMITS.courierContracts).optional()}).strict();
+const account=z.object({id:ref,actor:ref,credits:money,capacity:z.number().int().min(1).max(COMMERCE_LIMITS.capacity),satiety:z.number().finite().min(0).max(100),drainPerS:z.number().finite().min(0).max(.25),shop:z.boolean().default(false),ration:ref.optional(),social:ref.optional(),shift:ref.optional(),meal:ref.optional(),work:ref.optional(),works:z.array(ref).min(1).max(COMMERCE_LIMITS.workerJobs).optional(),repair:ref.optional(),repairs:z.array(ref).min(1).max(GROWTH_LIMITS.workerServices).optional(),deliveries:z.array(ref).min(1).max(COMMERCE_LIMITS.courierContracts).optional()}).strict();
 const lot=z.object({id:ref,good:ref,quantity,limit:quantity.refine(n=>n>0),price:z.number().int().min(1).max(10_000).optional()}).strict();
 const hours=z.tuple([z.number().finite().min(0).lt(24),z.number().finite().min(0).max(24)]).refine(([start,end])=>start!==end,'hours need different opening and closing times; omit for all-day service');
 const market=z.object({id:ref,label,actor:ref,credits:money,radius:z.number().finite().min(20).max(80),hours:hours.optional(),owner:ref.optional(),sale:money.positive().optional(),lots:z.array(lot).min(1).max(COMMERCE_LIMITS.goods)}).strict();
@@ -50,9 +52,10 @@ const social=z.object({id:ref,good:ref,seats:z.array(ref).min(1).max(4),on:ref,g
  if(m.markets && new Set(m.markets).size!==m.markets.length)ctx.addIssue({code:'custom',message:'social markets must be unique',path:['markets']});
  if(m.grounds && new Set([m.on,...m.grounds]).size!==m.grounds.length+1)ctx.addIssue({code:'custom',message:'social grounds must be unique and exclude on',path:['grounds']});
 });
+const ration=z.object({id:ref,good:ref,market:ref,below:z.number().finite().min(0).max(95)}).strict();
 const milestone=z.object({id:ref,label,kind:z.enum(['work','delivery','repair']),task:ref,count:z.number().int().min(1).max(1e9)}).strict();
 const shift=z.object({id:ref,market:ref,rest:z.object({x:z.number().finite().min(0).max(16384),y:z.number().finite().min(0).max(16384)}).strict(),on:ref,grounds:z.array(ref).min(1).max(COMMERCE_LIMITS.repairGrounds-1).optional(),lead_s:z.number().finite().min(0).max(120).default(15)}).strict().superRefine((s,ctx)=>{if(s.grounds && new Set([s.on,...s.grounds]).size!==s.grounds.length+1)ctx.addIssue({code:'custom',message:'shift grounds must be unique and exclude on',path:['grounds']});});
-export const economySchema=z.object({goods:z.array(good).min(1).max(COMMERCE_LIMITS.goods),accounts:z.array(account).min(1).max(COMMERCE_LIMITS.accounts),markets:z.array(market).min(1).max(COMMERCE_LIMITS.markets),jobs:z.array(job).max(COMMERCE_LIMITS.jobs),meals:z.array(meal).max(COMMERCE_LIMITS.meals).default([]),shifts:z.array(shift).max(COMMERCE_LIMITS.shifts).default([]),socials:z.array(social).max(COMMERCE_LIMITS.socials).default([]),milestones:z.array(milestone).max(COMMERCE_LIMITS.milestones).default([]),deliveries:z.array(delivery).max(COMMERCE_LIMITS.deliveries).default([]),repairs:z.array(repair).max(COMMERCE_LIMITS.repairs).default([])}).strict().superRefine((e,ctx)=>{
+export const economySchema=z.object({rations:z.array(ration).min(1).max(COMMERCE_LIMITS.rations).optional(),goods:z.array(good).min(1).max(COMMERCE_LIMITS.goods),accounts:z.array(account).min(1).max(COMMERCE_LIMITS.accounts),markets:z.array(market).min(1).max(COMMERCE_LIMITS.markets),jobs:z.array(job).max(COMMERCE_LIMITS.jobs),meals:z.array(meal).max(COMMERCE_LIMITS.meals).default([]),shifts:z.array(shift).max(COMMERCE_LIMITS.shifts).default([]),socials:z.array(social).max(COMMERCE_LIMITS.socials).default([]),milestones:z.array(milestone).max(COMMERCE_LIMITS.milestones).default([]),deliveries:z.array(delivery).max(COMMERCE_LIMITS.deliveries).default([]),repairs:z.array(repair).max(COMMERCE_LIMITS.repairs).default([])}).strict().superRefine((e,ctx)=>{
  const issue=(message:string,path:(string|number)[])=>ctx.addIssue({code:'custom',message,path});
  for(const name of ['goods','accounts','markets','jobs','deliveries','repairs','milestones','meals','shifts','socials'] as const)if(new Set(e[name].map(v=>v.id)).size!==e[name].length)issue(`duplicate ${name} ID`,[name]);
  if(new Set(e.accounts.flatMap(a=>a.shift ? [a.shift] : [])).size!==e.accounts.filter(a=>a.shift).length)issue('one account per shift plan',['accounts']);
@@ -93,7 +96,10 @@ export const economySchema=z.object({goods:z.array(good).min(1).max(COMMERCE_LIM
  e.socials.forEach((m,i)=>{if(!e.goods.some(g=>g.id===m.good && g.food>0))issue('social good must be food',['socials',i,'good']);
   for(const id of m.markets??[])if(!e.markets.some(v=>v.id===id && v.lots.some(l=>l.good===m.good && l.price)))issue('social markets need a priced lot for this food',['socials',i,'markets']);
  });
+ if(e.rations && new Set(e.rations.map(r=>r.id)).size!==e.rations.length)issue('duplicate rations ID',['rations']);
+ e.rations?.forEach((r,i)=>{if(!e.goods.some(g=>g.id===r.good && g.food>0))issue('ration good must be food',['rations',i,'good']);if(!e.markets.some(m=>m.id===r.market && m.lots.some(l=>l.good===r.good && l.price)))issue('ration needs a priced food lot',['rations',i,'market']);});
  e.accounts.forEach((a,i)=>{
+  if(a.ration && (a.actor==='player' || !e.rations?.some(r=>r.id===a.ration) || a.meal || a.social || a.shift || accountJobs(a).length || !accountRepairs(a).length && !a.deliveries))issue('ration needs an existing plan and an NPC repair or delivery account without other routines',['accounts',i,'ration']);
   if(a.social && (a.actor==='player' || !e.socials.some(m=>m.id===a.social)))issue('social needs an existing plan and an NPC account',['accounts',i,'social']);
   if(a.social && e.socials.find(s=>s.id===a.social)?.markets && a.capacity<2)issue('social hosts need room for two portions',['accounts',i,'capacity']);
   if(a.shift && (!e.shifts.some(s=>s.id===a.shift) || a.actor==='player' || a.meal || accountRepairs(a).length || a.deliveries))issue('shift needs an existing plan and an NPC staff account without meal, repair or delivery policies',['accounts',i,'shift']);
@@ -195,6 +201,9 @@ export function economyProblems(scene:Scene):string[]{
  }
 
  if(e.markets.some(m=>m.hours) && !scene.daylight)problems.push('market hours require a world daylight clock');
+ for(const a of e.accounts)if(a.ration){const r=e.rations?.find(r=>r.id===a.ration),o=scene.objects.find(o=>o.id===a.actor),m=e.markets.find(m=>m.id===r?.market),vendor=scene.objects.find(o=>o.id===m?.actor);
+  if(!stationary(a.actor) || !o || !vendor || !m || Math.hypot(o.x-vendor.x,o.y-vendor.y)>m.radius || !standingSightClear(sceneContacts(scene).contacts,{...o,elevation:walkingHeight(scene,o.x,o.y)}, {...vendor,elevation:walkingHeight(scene,vendor.x,vendor.y)},c=>c.id===vendor.id))problems.push(`${a.id}: ration supply needs a stationary worker home within clear counter reach`);
+ }
  for(const a of e.accounts)if(a.shift){
   const plan=e.shifts.find(s=>s.id===a.shift),o=scene.objects.find(o=>o.id===a.actor),spec=o?.spec,m=e.markets.find(m=>m.id===plan?.market),vendor=scene.objects.find(o=>o.id===m?.actor);
   if(!stationary(a.actor) || !o?.behavior || !spec || !('dslVersion' in spec) || spec.dslVersion!==2 || spec.measure?.kind!=='person' || spec.body.interaction!=='decor' || spec.body.colliderRadius*(o.scale??1)>8 || (spec.body.colliderHeight??18)*(o.scale??1)>32)problems.push(`${a.id}: shift staff need a stationary person NPC program and a decor body within 8 radius and 32 height; paths use the actual body`);

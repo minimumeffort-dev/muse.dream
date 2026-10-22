@@ -22,6 +22,14 @@ These exports are motion evidence, not live frame-rate measurements.
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
+## Worker provisions, r92
+
+Geometry, animation, camera and HUD layout are unchanged. Existing commerce,
+work, courier and school recordings remain accurate for the flows they show;
+they do not demonstrate automatic provision use. Native evidence records G
+while a paid batch is active. No motion set was regenerated solely for this
+policy and transaction change. See the [worker-provisions verification note](../evidence/worker-rations/verification.md).
+
 ## School common room, r91
 
 `schoolroom.mp4`, `schoolroom.gif` and `schoolroom.jpg` show the same 600

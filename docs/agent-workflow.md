@@ -94,6 +94,15 @@ physics or save changes. The [r90 run](evidence/nursery/verification.md) covered
 then corrected and checked in the affected files. That is a recorded full-run
 duration, not a watch-mode speed measurement.
 
+The [r92 run](evidence/worker-rations/verification.md) covered 1,738 tests in
+528.35 seconds. Four outdated documentation/world assertions were corrected
+and passed in focused reruns, without restarting the full suite. The seven
+worker-provision checks took 1.03 seconds in a separate process. These are
+different scopes on the same local machine, not a measured watch-mode gain.
+Close agent-owned world review tabs while changing shared source to avoid
+repeated worker/chunk/shader startup, then open one stable runtime review.
+Keep user-owned tabs open.
+
 `npm run build` already runs typecheck, so do not run both for unchanged code.
 Build docs once after the slice's documentation is ready. Keep accurate existing
 captures when rendering and controls are unchanged; a visual change needs one

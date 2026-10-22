@@ -26,6 +26,14 @@ starting resources. Upper floors, teaching tasks, homes, weather and broader
 relationships remain missing; prioritize deeper indoor purposes and shared
 resident routines next. [School source and checks](dream/interiors.md#the-school-common-room).
 
+Optional Dream ration plans now let the existing caretaker and school courier
+buy one portion before a trip and eat their own food while committed to work.
+Packing retains room for all declared task loads; sealed cargo and escrow stay
+protected. The player shares the same food transaction during work and repairs.
+No starting cash, stock, geometry or actors are added. Schedules, broader
+resident purposes, indoor activities and weather remain the next priorities.
+[Authoring](dream/commerce.md#worker-provisions).
+
 The current motion pass aligns player/vehicle/camera poses between fixed ticks,
 keeps sports balls with visible carriers and removes shadow extent jumps.
 Stippled scenery, hill and road cutaways now use clean sight openings, retaining
