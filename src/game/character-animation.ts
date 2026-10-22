@@ -1,3 +1,4 @@
+import {sampleWorkGesture,type WorkGesture} from '../scene/work-gestures';
 import {Euler,Quaternion,Vector3,type Group,Object3D} from 'three';
 import {HUMANOID_BONES,type HumanoidBone} from '../scene/humanoid';
 import type {ObjectDslV2} from '../scene/object-dsl';
@@ -22,7 +23,7 @@ export interface CharacterInput {
   travel?:TravelPose;
   ground?:GroundSampler;
   sport?:{kind:'football'|'basketball';possessed:boolean;charging:boolean;shotAge:number;action?:{kind:'kick'|'throw'|'contest';age:number}};
-  working?:boolean;workTarget?:{x:number;y:number;z:number};striking?:number;
+  workGesture?:{program:WorkGesture;elapsedS:number};working?:boolean;workTarget?:{x:number;y:number;z:number};striking?:number;
   eating?:boolean;
   sittingHeight?:number;
 }
@@ -56,6 +57,13 @@ export class CharacterAnimator {
   private normal=new Vector3();
   private workPoint=new Vector3();
   private hasWorkTarget=false;
+  private workProgram:WorkGesture|undefined;
+  private workElapsed=0;
+  private workHeading=0;
+  private leftRequested=new Vector3();
+  private rightRequested=new Vector3();
+  private leftWork=new Vector3();
+  private rightWork=new Vector3();
   private armTarget=new Vector3();
   private armDirection=new Vector3();
   private armBend=new Vector3();
@@ -74,7 +82,7 @@ export class CharacterAnimator {
 
   reset(){
     this.phase=gaitStance(0)/2;this.swimPhase=this.moving=this.running=this.water=this.airborne=this.landing=this.working=this.eating=0;
-    this.hasWorkTarget=false;this.wasGrounded=true;this.previousVertical=0;
+    this.hasWorkTarget=false;this.workProgram=undefined;this.workElapsed=0;this.leftWork.set(0,0,0);this.rightWork.set(0,0,0);this.wasGrounded=true;this.previousVertical=0;
     this.plants.reset();this.travel=undefined;this.surfaceOffset=0;
     for(const {node,rest,y} of Object.values(this.bones)){node.quaternion.copy(rest);node.position.y=y;}
   }
@@ -167,8 +175,13 @@ export class CharacterAnimator {
       land[`${side}_shoulder`][2]=mix(land[`${side}_shoulder`][2],.9+pulse*.07,this.working);
       land[`${side}_elbow`][2]=mix(land[`${side}_elbow`][2],.7-pulse*.12,this.working);
     }
-    if(input.workTarget){this.workPoint.set(input.workTarget.x,input.workTarget.y,input.workTarget.z);this.hasWorkTarget=true;}else if(this.working<.001)this.hasWorkTarget=false;
-    const reach=this.hasWorkTarget && input.travel ? ((this.workPoint.x-input.travel.x)*Math.cos(input.travel.heading)+(this.workPoint.z-input.travel.z)*Math.sin(input.travel.heading))/this.group.scale.x/unit : 18;
+    if(input.workGesture){this.workProgram=input.workGesture.program;this.workElapsed=input.workGesture.elapsedS;this.workHeading=input.travel?.heading??-this.group.rotation.y;}
+    else if(input.working || this.working<.001)this.workProgram=undefined;
+    if(this.workProgram){sampleWorkGesture(this.workProgram,this.workElapsed,this.leftRequested,this.rightRequested);const blend=1-Math.exp(-step*20);this.leftWork.lerp(this.leftRequested,blend);this.rightWork.lerp(this.rightRequested,blend);}
+    if(input.workTarget){this.workPoint.set(input.workTarget.x,input.workTarget.y,input.workTarget.z);this.hasWorkTarget=true;}
+    else if(input.working && this.workProgram && input.travel){const forward=14*unit*this.group.scale.x;this.workPoint.set(input.travel.x+Math.cos(this.workHeading)*forward,(input.travel.y??0)+27*unit*this.group.scale.x,input.travel.z+Math.sin(this.workHeading)*forward);this.hasWorkTarget=true;}
+    else if(this.working<.001)this.hasWorkTarget=false;
+    const reach=this.hasWorkTarget && input.travel ? (((this.workPoint.x-input.travel.x)*Math.cos(input.travel.heading)+(this.workPoint.z-input.travel.z)*Math.sin(input.travel.heading))+(this.workProgram ? Math.max(this.leftWork.x,this.rightWork.x) : 0))/this.group.scale.x/unit : 18;
     land.spine[2]=mix(land.spine[2],this.hasWorkTarget ? -clamp(.16+(reach-18)*.05,.12,.5) : -.08,this.working);
     this.eating=active ? mix(this.eating,Number(!!input.eating && input.grounded && !input.swimming && speed<1),ease) : 0;
     if(this.eating>.001){const bite=(Math.sin(input.time*2.4)+1)/2;
@@ -214,9 +227,9 @@ export class CharacterAnimator {
         const shoulder=this.bones[`${side}_shoulder`].node,elbow=this.bones[`${side}_elbow`].node;
         shoulder.parent!.updateWorldMatrix(true,false);
         this.armTarget.copy(this.workPoint);
-        shoulder.parent!.worldToLocal(this.armTarget);this.armTarget.z+=sign*unit*3.5;
-        this.armTarget.x+=Math.sin(input.time*4+sign*.5)*unit*.35;
-        this.armTarget.y+=(1+Math.sin(input.time*4))*unit*.2;
+        if(this.workProgram){const offset=sign===1 ? this.leftWork : this.rightWork,c=Math.cos(this.workHeading),s=Math.sin(this.workHeading);this.armTarget.x+=offset.x*c-offset.z*s;this.armTarget.y+=offset.y;this.armTarget.z+=offset.x*s+offset.z*c;}
+        shoulder.parent!.worldToLocal(this.armTarget);
+        if(!this.workProgram){this.armTarget.z+=sign*unit*3.5;this.armTarget.x+=Math.sin(input.time*4+sign*.5)*unit*.35;this.armTarget.y+=(1+Math.sin(input.time*4))*unit*.2;}
         this.armTarget.sub(shoulder.position);
         const upper=-elbow.position.y,lower=upper*1.05,d=clamp(this.armTarget.length(),Math.abs(upper-lower)+.001,upper+lower-.001);
         this.armDirection.copy(this.armTarget).normalize();

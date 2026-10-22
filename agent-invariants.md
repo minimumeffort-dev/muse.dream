@@ -954,3 +954,19 @@ and its kit equipment binding. Validate old state first, refund only incompatibl
 active work through the ordinary escrow, no pay/completion or clock/pose rebase.
 Old outbound counter journeys retarget by walking, never teleport. Preserve
 original slots and all earlier projections. See docs/dream/workstations.md.
+
+
+## Authored work motions, r104
+
+Economy gesture programs contain 2..8 anonymous keyframes, at most eight unique
+programs. Preserve finite bounds, ordered .1 gaps, closed positions and smoothstep
+peak speed <=12 units/s. Coordinates are world units in actor-facing anchor frame,
+not model-scaled limb units. Work references require a station, repair references
+require an existing program; NPCs need complete humanoids. Keep rigid segments,
+planted feet, entry/switch/release blending, pause and reduced-motion policy.
+Only task progress drives phase; no new rigs, item bodies, clocks, saved animation
+state or generated scripts. Repair anchors are generic, not proof of tool contact.
+Format19/simulation47 registers exact r103 by stripping only new gesture metadata;
+validate old and new state, preserve every saved field and original slots, without
+refund, resource/pose/time rebase or changed transaction rules. Maintain the prior
+projection chain. See docs/dream/work-gestures.md.

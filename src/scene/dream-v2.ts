@@ -82,7 +82,7 @@ export class ParserV2 extends Parser {
     while(context==="top" ? !this.is("<end>") : !this.accept("}")) {
       const node=this.node(context,depth,path);
       if(node.id) {if(names.has(node.id))fail(`duplicate ID '${node.id}' in this scope`,node.token,"E_DUPLICATE_ID");names.add(node.id);}
-      else if(!["point","ingredient"].includes(node.kind)) {if(singletons.has(node.kind))fail(`duplicate '${node.kind}'`,node.token,"E_DUPLICATE_ID");singletons.add(node.kind);}
+      else if(!["point","ingredient","key"].includes(node.kind)) {if(singletons.has(node.kind))fail(`duplicate '${node.kind}'`,node.token,"E_DUPLICATE_ID");singletons.add(node.kind);}
       nodes.push(node);
     }
     return nodes;

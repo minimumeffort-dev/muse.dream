@@ -726,9 +726,31 @@
         "requires": "ref?",
         "requires_any": "symbols?",
         "equipment": "symbols?",
-        "station": "ref?"
+        "station": "ref?",
+        "gesture": "ref?"
       },
       "block": "recipe?"
+    },
+    "gesture": {
+      "contexts": [
+        "economy"
+      ],
+      "id": true,
+      "fields": {
+        "cycle_s": "n"
+      },
+      "block": "work_gesture"
+    },
+    "key": {
+      "contexts": [
+        "work_gesture"
+      ],
+      "id": false,
+      "fields": {
+        "t": "n",
+        "left": "v3",
+        "right": "v3"
+      }
     },
     "station": {
       "contexts": [
@@ -842,6 +864,7 @@
       ],
       "id": true,
       "fields": {
+        "gesture": "ref?",
         "label": "text",
         "market": "ref",
         "on": "ref",
@@ -1823,6 +1846,20 @@
     "phase": "place.phase_s 0..3600 only with route; shifts the entire route clock including stops. offset remains a carriage distance."
   },
   "commerce": {
+    "workGestures": {
+      "limits": {
+        "gestures": 8,
+        "keys": 8,
+        "minCycleS": 0.6,
+        "maxCycleS": 8,
+        "minGap": 0.1,
+        "maxSpeed": 12
+      },
+      "source": "gesture id(cycle_s=n){key(t=n,left=v3,right=v3);...}; work(...,station=ref,gesture=ref); repair(...,gesture=ref);",
+      "coordinates": "Offsets in world units (10 per metre) from the work anchor; actor-forward +X, up +Y, left +Z. X -1.25..1.25, Y .6..3, Z -3..3; left Z >= .6 and right Z <= -.6.",
+      "keys": "2..8 ordered anonymous keys, first t=0, last t=1, gap >=.1; first/last hand positions identical within 1e-8. Smoothstep interpolation, peak hand speed <=12 world units/s. 1..8 unique programs, cycle .6..8 seconds.",
+      "runtime": "Render-only rigid arms on existing complete humanoids. Work requires a physical station; repairs use a generic forward anchor, not verified tool contact. Phase derives from saved task progress; no saved animation fields, scripts, tools, item bodies, resource changes or added rigs. Pause and reduced motion retain existing policy."
+    },
     "workstations": {
       "source": "station prep(object=table,at=[16.5,0],hands=[9.8,10,0],on=work_yard); work(...,capacity=1,equipment=[table],station=prep);",
       "bounds": "16 stations; at is local XZ and hands local XYZ in object units, each coordinate within +/-256 (hand Y 0..256); upright static solid prop without joints or named-floor binding; dry clear 4.1-radius/18-height stand, supported hands 3..7 world units away and 6..12 high; stands separated by 10 world units",

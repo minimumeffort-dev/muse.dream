@@ -14,7 +14,7 @@ import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
 import {actorPose} from '../src/sim/actors';
 import {nearbyNpc,npcSpeech} from '../src/sim/npcs';
-const scene=createWorldScene(),previous=c.preStationScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.STATION_COMPATIBILITY,previousStationSaveCompatibility:c.BOND_COMPATIBILITY},old={...world,scene:previous,saveCompatibility:c.BOND_COMPATIBILITY,previousStationSaveCompatibility:undefined};
+const scene=c.preGestureScene(createWorldScene()),previous=c.preStationScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.STATION_COMPATIBILITY,previousStationSaveCompatibility:c.BOND_COMPATIBILITY},old={...world,scene:previous,saveCompatibility:c.BOND_COMPATIBILITY,previousStationSaveCompatibility:undefined};
 const run=<T>(g:Generator<void,T>)=>{let r=g.next();while(!r.done)r=g.next();return r.value;},pocket=(s:CarState)=>s.economy!.accounts.find(a=>a.id==='pocket')!;
 it('registers exact r102 and earlier fingerprints without changing geometry or initial resources',async()=>{
  expect(c.SAVE_SIMULATION_VERSION).toBe(47);expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.STATION_COMPATIBILITY);expect(await c.sha256(c.preStationCompatibilitySource(scene))).toBe(c.BOND_COMPATIBILITY);expect(await c.sha256(c.preBondCompatibilitySource(scene))).toBe(c.SHELTER_COMPATIBILITY);

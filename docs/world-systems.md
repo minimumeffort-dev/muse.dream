@@ -21,8 +21,9 @@ personal baking practice. Next priorities are NPC-to-NPC social activity, deeper
 relationship consequences, lifts and further usable interiors.
 [Shared recipes](dream/relationships.md).
 The bakery now uses an authored physical workstation: people walk to its shared
-position, claim it across recipes and reach its supported surface. Tools,
-recipe-specific gestures and upstairs stations remain unfinished.
+position, claim it across recipes and reach its supported surface. Jobs now bind
+Dream-authored kneading, folding, fastening and tending motions; furniture repairs
+reuse mending. Tools and upstairs stations remain unfinished.
 [Workstations](dream/workstations.md). [Floors](dream/floors.md).
 
 Shared rest now gives the home another purpose. The commuter can buy food, walk
@@ -501,3 +502,14 @@ rigs, stock or currency. It does not add sleep, housing permissions or a general
 schedule. Next deepen another useful indoor activity and resident choices;
 multi-floor interiors, broader jobs, relationships and the larger living-world
 requirements remain incomplete. [Meal rules](dream/commerce.md).
+
+
+## Work motions, r104
+
+Five bounded Dream hand programs replace the shared production gesture. Jobs
+and repairs reference them explicitly, use existing complete humanoids and derive
+their phase from actual task progress. No new actor, physics or saved motion state.
+Repair motions use a generic forward anchor; exact tool contact, handheld goods,
+fingers and upstairs stations remain open. Next priorities stay integrated life
+systems: NPC social activity, deeper consequences and useful connected interiors.
+[Author motions](dream/work-gestures.md).

@@ -1,0 +1,59 @@
+{
+  "atS": 222.116666666629,
+  "pocket": {
+    "completed": {
+      "delivery": {
+        "boards_run": 0,
+        "fasteners_run": 0,
+        "flour_run": 0,
+        "kits_run": 0,
+        "saplings_run": 0,
+        "school_run": 0
+      },
+      "repair": {
+        "classroom_furniture": 0,
+        "home_furniture": 0,
+        "market_tables": 0,
+        "orchard_trees": 0
+      },
+      "work": {
+        "assemble_kit": 0,
+        "bake": 1,
+        "large_bake": 0,
+        "pack_lunch": 0,
+        "propagate_saplings": 0
+      }
+    },
+    "credits": 23,
+    "decisionAtS": 0,
+    "energy": 41.89416666666767,
+    "id": "pocket",
+    "inventory": {
+      "boards": 0,
+      "bread": 0,
+      "fasteners": 0,
+      "flour": 0,
+      "lunch": 0,
+      "sapling": 0,
+      "timber": 0,
+      "vegetables": 0
+    },
+    "satiety": 24.894166666667672,
+    "work": {
+      "doneAtS": 225.35833333329816,
+      "id": "bake"
+    }
+  },
+  "save": {
+    "characters": 75426,
+    "compatibilityHash": "a4107f0d54f50cc0c4c0045ef84ed31e6e64b89416963622c0727a141cd208bb",
+    "known": [],
+    "ms": 1.6999999284744265,
+    "restored": true,
+    "review": true,
+    "saved": true,
+    "sourceHash": "9d9a620e1772b91eb96504e57324837f8dfda03dfe3a89eae03b01134e48ffac",
+    "status": "Saved on this device.",
+    "timeS": 222.25833333329552
+  }
+}

@@ -109,10 +109,23 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r104 adds data-only work motion without changing simulation transitions. */
+export const GESTURE_COMPATIBILITY='a4107f0d54f50cc0c4c0045ef84ed31e6e64b89416963622c0727a141cd208bb';
+const gestureProjections=new WeakMap<Scene,Scene>();
+export function preGestureScene(scene:Scene):Scene{
+ const cached=gestureProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.gestures?.some(g=>g.id==='kneading'))return scene;
+ const {gestures,...economy}=scene.economy;
+ const prior={...scene,economy:{...economy,jobs:economy.jobs.map(j=>{const {gesture,...old}=j;return old;}),repairs:economy.repairs.map(r=>{const {gesture,...old}=r;return old;})}};
+ gestureProjections.set(scene,prior);return prior;
+}
+export function preGestureCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preGestureScene(scene),47,true,encode);}
+
 /** r103 binds existing paid jobs to physical shared workstations. */
 export const STATION_COMPATIBILITY='ba0749ebc87cea40ce37bd5d71f8adf69a75970811039062d6b650ca90cc59b3';
 const stationProjections=new WeakMap<Scene,Scene>();
 export function preStationScene(scene:Scene):Scene{
+ scene=preGestureScene(scene);
  const cached=stationProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.stations?.some(s=>s.id==='bakery_prep'))return scene;
  const {stations,...economy}=scene.economy;

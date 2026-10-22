@@ -1,0 +1,21 @@
+{
+  "baseCommit": "ffe6a16815e51f28c74b3f2f5c4a2dc0804561e8",
+  "environment": {
+    "platform": "macOS-26.7.1-arm64-arm-64bit-Mach-O",
+    "node": "v26.8.1"
+  },
+  "simulationVersion": 47,
+  "saveFormat": 19,
+  "compatibilityHash": "a4107f0d54f50cc0c4c0045ef84ed31e6e64b89416963622c0727a141cd208bb",
+  "previousCompatibilityHash": "ba0749ebc87cea40ce37bd5d71f8adf69a75970811039062d6b650ca90cc59b3",
+  "hashes": {
+    "src/scene/work-gestures.ts": "c4ce673e8a0bbd0b91eebe876a6f3d2ff952404971641f3daefc7e7a152a7ce8",
+    "src/scene/world/life.dream": "50c9566619ec82c84270779b4490ed238da8d03d1123ee2ab62ebe3a46feb6de",
+    "src/game/character-animation.ts": "78341044d8ab2636a67dd59667e7ce3c255b4b4cbf09c5dc594d86e99ba3f5ef",
+    "src/game/main.ts": "2f76dc5bb94b88172b943121c3d46aafc35e12adf144210549311891358810be",
+    "src/scene/save-compatibility.ts": "67637eee032e78f1ba7bb00da89d5b4dbdadb4a999a24c2241f519049be396f9",
+    "docs/dream-v2-contract.json": "045dca6064804463f892b8fdfd0f47a97987a7e90267c27834a8604692a0f224",
+    "docs/dream-v2-model.txt": "f6f11f16c6e040769b23322ad97f831db7cb7c9828603c13ef490c7fc62519a5",
+    "docs/examples/work-gestures.dream": "0597d172f4a4d8ffb3d7481f27f5e8b6398d1864619524388964310330492728"
+  }
+}

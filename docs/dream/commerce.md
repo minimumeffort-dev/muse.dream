@@ -448,7 +448,7 @@ finished-kit shipment.
 
 ```dream
 delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_hall,grounds=[market_square]);
-repair market_tables(dry=true,label="Repair city fixtures",market=market_stall,on=market_hall,grounds=[park_seating,station_seating,market_square,school_yard,school_yard_access,school_yard_return,garden_work],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5,recover=fasteners,amount=1);
+repair market_tables(gesture=mending,dry=true,label="Repair city fixtures",market=market_stall,on=market_hall,grounds=[park_seating,station_seating,market_square,school_yard,school_yard_access,school_yard_return,garden_work],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5,recover=fasteners,amount=1);
 ```
 
 These declarations are the live world's policy. The earlier flour and bread
@@ -931,3 +931,13 @@ route; other residents never inherit this pair's progress.
 ## Physical workstations
 
 The live bakery now uses [one shared prep station](workstations.md). Players walk to its floor ring before starting; staff and commuters take actual bounded walking trips. Every recipe uses the same claim, body, equipment and finite transaction. Leaving or damage refunds once. Earlier recordings of work at counter range are historical; the workstation recording shows current placement and hand contact.
+
+
+## Motions for work and repair
+
+Jobs at the shared preparation table now bind different [Dream hand motions](work-gestures.md).
+Bread uses kneading, lunch packing folds, kit assembly fastens and saplings use
+tending. Furniture repair uses mending. The same programs drive player and worker
+rigs from real task progress. They change no wages, resources or eligibility.
+Repair anchors remain generic; handheld tools and exact contact with each damaged
+part are still unfinished.

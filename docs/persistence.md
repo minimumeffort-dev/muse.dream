@@ -1,6 +1,11 @@
 # Leave and come back
 
-The current world uses format 19 / simulation 47. Its registered r102 upgrade
+The current world uses format 19 / simulation 47. The r104 upgrade removes only
+new work gesture metadata to validate exact r103 saves, then retains every saved
+field, including pending job deadlines and repair progress. No refund, time advance
+or animation-state initialization occurs. The original slot remains intact.
+
+The r103 world also uses format 19 / simulation 47. Its registered r102 upgrade
 binds paid jobs to physical workstations. Poses, clocks, history and unrelated
 commitments stay intact. A batch incompatible with its new station is refunded
 through ordinary escrow, without output, wages or completion credit.
@@ -1000,3 +1005,17 @@ walking before station work can start. Original slots survive; an ordinary
 reload never repeats the upgrade. Station ownership derives from active job
 IDs and poses, with cross-recipe duplicate claims rejected on restore.
 [Workstation rules](dream/workstations.md).
+
+
+## Work motions, r104
+
+The registered exact r103 fingerprint is
+`ba0749ebc87cea40ce37bd5d71f8adf69a75970811039062d6b650ca90cc59b3`.
+Only `economy.gestures`, `work.gesture` and `repair.gesture` disappear in that
+projection. Geometry, all resources and accepted simulation transitions stay
+identical; the simulation remains 47 and format remains 19. Decode validates the
+prior world first and the retained state against the current world. Pending work
+and repairs continue once with their original deadlines/progress. Motion phase
+comes from that progress after reload, with the normal visual entry blend.
+Earlier registered migrations and original slots remain available; arbitrary
+world changes cannot use this upgrade. [Checks](evidence/work-gestures/verification.md).

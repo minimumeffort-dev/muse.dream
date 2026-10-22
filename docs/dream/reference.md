@@ -63,8 +63,10 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n`, `hours?: v2`, `owner?: ref`, `sale?: n` |
 | `lot` | market | ID / no block | `good: ref`, `quantity: n`, `limit: n`, `price?: n` |
 | `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `price: n?`, `capacity: n`, `on: ref?`, `grounds: symbols?` |
+| `gesture` | economy | ID / required work gesture block | `cycle_s: n` |
+| `key` | work gesture | no ID / no block | `t: n`, `left: v3`, `right: v3` |
 | `station` | economy | ID / no block | `object: ref`, `at: v2`, `hands: v3`, `on: ref`, `grounds?: symbols` |
-| `work` | economy | ID / optional recipe block | `label: text`, `market: ref`, `input?: ref`, `take?: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `requires?: ref`, `requires_any?: symbols`, `equipment?: symbols`, `station?: ref` |
+| `work` | economy | ID / optional recipe block | `label: text`, `market: ref`, `input?: ref`, `take?: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `requires?: ref`, `requires_any?: symbols`, `equipment?: symbols`, `station?: ref`, `gesture?: ref` |
 
 | `social` | economy | ID / no block | `good: ref`, `seats: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `cooldown_s?: n`, `max_fullness?: n`, `markets?: symbols` |
 | `shift` | economy | ID / no block | `market: ref`, `rest: v2`, `on: ref`, `grounds?: symbols`, `lead_s?: n` |
@@ -555,7 +557,7 @@ material and capacity bounds. Start over resets them. There is no timeout or unb
 
 | Command | Context | Form | Fields |
 | --- | --- | --- | --- |
-| `repair` | economy | ID / no block | `label`, `market`, `on`, optional `dry`, `grounds`, `streets`, `verge`, exactly one of `kind` / `kinds`, `input`, `take`, `seconds`, `pay`, `effort`, optional `dispatch_s`, `regrow_s`, `seed_scale` |
+| `repair` | economy | ID / no block | `label`, `market`, `on`, optional `gesture`, `dry`, `grounds`, `streets`, `verge`, exactly one of `kind` / `kinds`, `input`, `take`, `seconds`, `pay`, `effort`, optional `dispatch_s`, `regrow_s`, `seed_scale` |
 
 `repair id(label=text,market=ref,on=ref,grounds=symbols?,streets=symbols?,verge=n?,kind=measure_kind?,kinds=symbols?,input=ref,take=n,seconds=n,pay=n,effort=n,dispatch_s=n?,regrow_s=n?,seed_scale=n?);`
 
@@ -849,3 +851,16 @@ NPC participant qualify. It changes no money, food or practice counter. Real
 work keeps all ordinary financial, physical and need checks. Conversation
 `on.requires` can reference this milestone only on that account's actor.
 [Shared recipes](relationships.md) · [Complete source](../examples/shared-recipe.dream).
+
+
+### Work gesture bounds
+
+`gesture` defines a closed 2..8-key hand motion, with at most eight programs per
+economy. `cycle_s` is .6..8 seconds; keys start at 0, end at 1, increase by at
+least .1 and close with identical positions within 1e-8. Smoothstep interpolation
+keeps peak hand speed at most 12 world units/s. Offsets use world units (10/m)
+in the actor-facing work frame: +X forward, +Y up, +Z left. X is ±1.25, Y .6..3,
+Z ±3; left Z >=.6, right Z <=-.6. A `work.gesture` needs a station; `repair.gesture`
+uses the existing repair pose with a generic forward anchor. NPCs using either
+need a complete humanoid. No generated scripts, saved motion state, tool bodies
+or extra rigs. [Guide](work-gestures.md) and [runnable source](../examples/work-gestures.dream).

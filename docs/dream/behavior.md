@@ -346,3 +346,14 @@ node scripts/dream.mjs context --features world,interactions
 This is an unarmed prop interaction. Handheld tools, pickup/carry controls,
 terrain editing and NPC combat are separate capabilities.
 [Native verification and save upgrade](../evidence/on-foot-strike/verification.md).
+
+
+### Authored work motions
+
+Jobs and repairs can reference bounded economy `gesture` hand programs. The
+renderer applies closed smoothstep keyframes to the existing rigid shoulder and
+elbow chain while feet retain their grounded anchors. Phase comes from saved
+job/repair progress; no new saved clock or rig. Pause freezes the pose; reduced
+motion keeps the existing rest policy. Jobs use their physical station anchor.
+Repair anchors remain generic, without exact contact with each broken asset.
+[Motion guide](work-gestures.md).

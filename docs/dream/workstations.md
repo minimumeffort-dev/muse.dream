@@ -1,13 +1,13 @@
 # Work at the workbench
 
 Baking now happens at the table. Walk to the marked end, start a batch and your
-character turns towards the work surface. Their hands follow that surface while
+character turns towards the work surface. Different jobs use their own hand motions. Their hands follow that surface while
 their feet stay planted. The baker walks to the same station, does a real job
 and walks back. A different recipe cannot claim an occupied station.
 
 ![Baking at the shared preparation table](../media/workstations.gif)
 
-[HD recording](../media/workstations.mp4) · [Still](../media/workstations.jpg) · [Complete source](../examples/workstations.dream) · [Verification](../evidence/workstations/verification.md)
+[HD recording](../media/workstations.mp4) · [Still](../media/workstations.jpg) · [Complete source](../examples/workstations.dream) · [Current motion verification](../evidence/work-gestures/verification.md) · [Station verification](../evidence/workstations/verification.md)
 
 ## Bind the activity to furniture
 
@@ -87,7 +87,7 @@ Only a batch that cannot satisfy the new station rules is refunded, without
 advancing time or awarding completion. Its original save slot remains intact.
 
 The work pose uses existing shoulder and elbow bones. It keeps rigid arms and
-planted feet, freezes while paused and respects reduced motion. This is a shared
-preparation gesture. Handheld ingredients, tools, finger animation, separate
-crafting gestures and upstairs workstations remain unfinished. It adds no
+planted feet, freezes while paused and respects reduced motion. Jobs can now bind different [authored hand motions](work-gestures.md): kneading,
+folding, fastening and tending. Handheld ingredients, tools, finger animation
+and upstairs workstations remain unfinished. It adds no
 people, rigs, physical item bodies, lights or generated scripts.

@@ -142,6 +142,8 @@ Use [rain shelter](dream/shelter.md) to let existing residents wait indoors duri
 showers through shared rest, seat claims and physical stairs.
 
 Use [workstations](dream/workstations.md) to attach work to a real piece of equipment, with local standing and hand points and one shared claim across recipes.
+[Work motions](dream/work-gestures.md) adds bounded hand keyframes for jobs and
+repairs, with shared program references and phase derived from saved progress.
 
 Use [shared recipes](dream/relationships.md) to connect remembered meals to
 work eligibility. `requires_any` keeps alternate personal qualification paths

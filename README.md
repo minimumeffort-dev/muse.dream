@@ -788,13 +788,15 @@ to be built.
 ## Work at the workbench
 
 Walk to the bakery's marked preparation table and start a batch. Your character
-faces the surface and works with planted feet. The baker walks to the same
+faces the surface and works with planted feet. Baking kneads, lunch packing folds,
+kit assembly fastens and planting tends. Those motions are bounded Dream data,
+shared by the player and workers. The baker walks to the same
 station. Different recipes share its capacity, so changing jobs cannot put two
 people in one place. Leaving early or breaking the table refunds the batch.
 
 ![Working at the bakery preparation table](docs/media/workstations.jpg)
 
-[Watch the work](docs/media/workstations.mp4) · [GIF](docs/media/workstations.gif) · [Author a workstation](docs/dream/workstations.md)
+[Watch the work](docs/media/workstations.mp4) · [GIF](docs/media/workstations.gif) · [Author a workstation](docs/dream/workstations.md) · [Author work motions](docs/dream/work-gestures.md)
 
 ## Learn a recipe over lunch
 
