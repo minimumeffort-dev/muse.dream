@@ -1,9 +1,9 @@
-import {expect,it} from 'vitest';
+import {afterAll,expect,it} from 'vitest';
 import {createWorldScene} from '../src/scene/world-fixture';
 import * as c from '../src/scene/save-compatibility';
 
 it('pins the r85 policy and exact prior r84 world',async()=>{
- const scene=c.preWorkshopSupplyScene(createWorldScene()),prior=c.preKitProductionScene(scene);
+ const scene=liveScene(),prior=c.preKitProductionScene(scene);
  expect(await c.sha256(c.preRecoveryCompatibilitySource(scene))).toBe(c.KIT_PRODUCTION_COMPATIBILITY);
  expect(await c.sha256(c.preKitProductionCompatibilitySource(scene))).toBe(c.STRIKE_COMPATIBILITY);
  expect(scene.objects).toBe(prior.objects);expect(scene.surfaces).toBe(prior.surfaces);
@@ -25,7 +25,12 @@ import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
 import {ambientGraph} from '../src/scene/ambient-navigation';
 const compile=(text=source)=>compileDreamScene(text,{sceneId:'kit-production',revisionId:'test',sourceHash:'kit-production'});
-const example=compile();let live:Scene|undefined;const liveScene=()=>live??=c.preWorkshopSupplyScene(createWorldScene());
+const example=compile();let live:Scene|undefined,liveSnapshot:string|undefined;
+function liveScene(){
+ if(!live){live=c.preWorkshopSupplyScene(createWorldScene());liveSnapshot=JSON.stringify(live);}
+ return live;
+}
+afterAll(()=>{if(live)expect(JSON.stringify(live)).toBe(liveSnapshot);});
 const world=(scene=example):World=>({scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11});
 const account=(s:CarState,id='pocket')=>s.economy!.accounts.find(a=>a.id===id)!;
 const market=(s:CarState,id='corner')=>s.economy!.markets.find(m=>m.id===id)!;

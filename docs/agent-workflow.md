@@ -88,6 +88,15 @@ the selection and `q` to quit. Watch mode keeps transforms warm; tests still run
 in isolation and may rebuild their world fixtures. It does not cache a passing
 result across code changes or replace the full-suite gate.
 
+Within a behavior file, lazily reuse its accepted immutable world and create new
+simulation state and storage for each case. Guard the shared scene against
+mutation. Keep compiler-acceptance and deterministic-rebuild checks fresh, and
+keep test fixture reuse out of the production compiler. The equipment and
+repair-kit suites now remove one duplicate full-world build each. Their same
+13 checks took 16.21 seconds before and 10.85 after in a local paired run;
+[method and raw reports](evidence/test-world-setup/verification.md). This does not
+measure the full suite, browser startup or rendering performance.
+
 Run the complete suite before merging/releasing or after broad compiler,
 physics or save changes. The [r90 run](evidence/nursery/verification.md) covered
 1,719 tests in 500.50 seconds, with three historical-version assertion failures

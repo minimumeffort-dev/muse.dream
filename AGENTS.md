@@ -77,6 +77,9 @@ Pick one complete slice and finish it before expanding scope. Batch relevant
 checks and reuse successful results until code changes or a failure requires
 another run. Use focused regression tests for branch pushes; run the full suite
 before merging/releasing or when shared engine changes need broad coverage.
+Behavior suites may lazily reuse one accepted immutable world per file, with a
+mutation guard and fresh simulation state/storage per case. Compiler acceptance
+and deterministic-rebuild checks stay fresh; keep test reuse out of production.
 During iteration, use `npm run test:watch -- tests/<affected>.test.ts` to keep
 selected checks running in one process. Include neighboring regression files;
 watch mode does not replace the required full-suite gate. Run either typecheck

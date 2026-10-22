@@ -1,4 +1,4 @@
-import {expect,it} from 'vitest';
+import {afterAll,expect,it} from 'vitest';
 import source from '../docs/examples/work-equipment.dream?raw';
 import {compileDreamScene,checkDream,formatDream} from '../src/scene/dream';
 import {parseScene,type Scene} from '../src/scene/schema';
@@ -14,6 +14,12 @@ import {createWorldScene} from '../src/scene/world-fixture';
 import * as c from '../src/scene/save-compatibility';
 import {ambientGraph} from '../src/scene/ambient-navigation';
 const scene=compileDreamScene(source,{sceneId:'equipment',revisionId:'test',sourceHash:'equipment'});
+let live:Scene|undefined,liveSnapshot:string|undefined;
+function liveScene(){
+ if(!live){live=createWorldScene();liveSnapshot=JSON.stringify(live);}
+ return live;
+}
+afterAll(()=>{if(live)expect(JSON.stringify(live)).toBe(liveSnapshot);});
 const manual=()=>parseScene({...scene,economy:{...scene.economy!,accounts:scene.economy!.accounts.map(a=>({...a,work:undefined,repair:undefined}))}});
 const start=(doc=scene):CarState=>({...toggleRide(createCarAtSpawn(doc),body(doc)),x:555,y:750,elevation:0});
 const step=(s:CarState,job?:string,dt=.25,doc:Scene=scene)=>stepCommerce({...s,timeS:s.timeS+dt},job ? {commerce:{kind:'work',job}} : {},dt,doc);
@@ -71,7 +77,7 @@ it('requires every listed item and refunds a prior commitment without advancing 
 });
 
 it('pins r82 exactly, preserves old progress and refuses unregistered upgrade targets',async()=>{
- const current=c.preStrikeScene(createWorldScene()),old=c.preEquipmentScene(current);
+ const current=c.preStrikeScene(liveScene()),old=c.preEquipmentScene(current);
  expect(await c.sha256(c.preStrikeCompatibilitySource(current))).toBe(c.EQUIPMENT_COMPATIBILITY);expect(await c.sha256(c.preEquipmentCompatibilitySource(current))).toBe(c.SERVICE_COMPATIBILITY);
  expect(current.economy!.jobs.filter(j=>['bake','large_bake','pack_lunch'].includes(j.id)).map(j=>j.equipment)).toEqual([['hall_table_east'],['hall_table_east'],['hall_table_east']]);expect(current.objects).toBe(old.objects);expect(current.surfaces).toBe(old.surfaces);
  const w:World={...body(current),saveCompatibility:c.EQUIPMENT_COMPATIBILITY,previousEquipmentSaveCompatibility:c.SERVICE_COMPATIBILITY},oldWorld={...body(old),saveCompatibility:c.SERVICE_COMPATIBILITY};
@@ -86,7 +92,7 @@ it('pins r82 exactly, preserves old progress and refuses unregistered upgrade ta
 });
 
 it('records a real table collision and caretaker approach before the native review starts',()=>{
- const doc=createWorldScene(),world=body(doc),steps=equipmentReviewSteps(createCarAtSpawn(doc),world);let result=steps.next();while(!result.done)result=steps.next();
+ const doc=liveScene(),world=body(doc),steps=equipmentReviewSteps(createCarAtSpawn(doc),world);let result=steps.next();while(!result.done)result=steps.next();
  expect(result.value.broken).toContain('hall_table_east');expect(account(result.value,'caretaker').repair).toMatchObject({objectId:'hall_table_east',phase:'work'});
  expect(commerceReason(result.value,doc,'pocket',{kind:'work',job:'bake'})).toBe('equipment');
  expect(result.value.economy!.events.some(e=>e.kind==='cancel' && e.reason==='equipment')).toBe(true);

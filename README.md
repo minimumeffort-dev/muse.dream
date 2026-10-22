@@ -697,7 +697,11 @@ npm run docs:build # Highlighted static docs in dist-docs/
 ```
 
 Use the test files for the behavior you're changing, including its neighboring
-regressions. Watch mode keeps the test process running between edits. Run the
+regressions. Behavior suites can reuse one validated, immutable world per
+file while creating fresh simulation state and storage for each case. The
+[equipment/repair-kit checks](docs/evidence/test-world-setup/verification.md)
+kept all 13 cases and fell from 16.21 to 10.85 seconds in one local paired run.
+Compiler determinism checks still rebuild the world. Watch mode keeps the test process running between edits. Run the
 complete suite before a merge/release or after broad compiler, physics or save
 changes: `npm test -- --maxWorkers=2 --testTimeout=60000`. Reuse passing checks
 until their code changes. [The development loop](docs/agent-workflow.md#development-loop).
