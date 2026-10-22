@@ -97,6 +97,18 @@ export function nearestWorkNodes(nodes:WorkNode[],p:Point):{i:number;d:number}[]
  }
 }
 const networks=new WeakMap<Scene,Map<string,WorkNode[]>>();
+const staticEdges=new WeakMap<Scene,WeakMap<WorkNode[],{contacts:ReturnType<typeof sceneContacts>;radius:number;height:number;offsets:Uint32Array;clear:Uint8Array}>>();
+/** Only immutable acceptance queries reuse edge results; gameplay always checks current contacts. */
+function staticEdgeClearance(scene:Scene,nodes:WorkNode[],radius:number,height:number){
+ let entries=staticEdges.get(scene);if(!entries){entries=new WeakMap();staticEdges.set(scene,entries);}
+ const contacts=sceneContacts(scene);let entry=entries.get(nodes);
+ if(!entry || entry.contacts!==contacts || entry.radius!==radius || entry.height!==height){
+  const offsets=new Uint32Array(nodes.length+1);for(let i=0;i<nodes.length;i++)offsets[i+1]=offsets[i]!+nodes[i]!.links.length;
+  entry={contacts,radius,height,offsets,clear:new Uint8Array(offsets[nodes.length]!)};entries.set(nodes,entry);
+ }
+ const memo=entry;
+ return (i:number,k:number)=>{const at=memo.offsets[i]!+k;let result=memo.clear[at]!;if(!result){result=segmentClear(scene,nodes[i]!,nodes[nodes[i]!.links[k]!]!,undefined,[],radius,height) ? 1 : 2;memo.clear[at]=result;}return result===1;};
+}
 /** Reuse the city's sparse pedestrian graph; local grids only cover declared work grounds. */
 export function workNetwork(scene:Scene,r:WalkingArea){
  let entries=networks.get(scene);if(!entries){entries=new Map();networks.set(scene,entries);}const existing=entries.get(r.id);if(existing)return existing;
@@ -151,7 +163,7 @@ export function workNetwork(scene:Scene,r:WalkingArea){
 function networkPath(scene:Scene,r:WalkingArea,start:Point,end:Point,state?:CarState):Point[]|undefined{
  const radius=r.radius??REPAIR_RADIUS,height=r.height??18,live=state ? actorContacts(scene,state.timeS,state).filter(c=>!c.id || !sceneContacts(scene).objects.get(c.id)?.route) : [],clear=(a:Point,b:Point)=>workSegment(scene,r,a,b,state,true) && segmentClear(scene,a,b,state,live,radius,height);
  if(clear(start,end))return [{x:end.x,y:end.y}];
- const nodes=workNetwork(scene,r),near=(p:Point)=>nearestWorkNodes(nodes,p).filter(v=>clear(p,nodes[v.i]!));
+ const nodes=workNetwork(scene,r),near=(p:Point)=>nearestWorkNodes(nodes,p).filter(v=>clear(p,nodes[v.i]!)),edgeClear=state ? (i:number,k:number)=>segmentClear(scene,nodes[i]!,nodes[nodes[i]!.links[k]!]!,state,live,radius,height) : staticEdgeClearance(scene,nodes,radius,height);
  const starts=near(start),ends=new Set(near(end).map(n=>n.i)),previous=new Int32Array(nodes.length).fill(-2),cost=new Float64Array(nodes.length).fill(Infinity),closed=new Uint8Array(nodes.length),heap:{i:number;f:number}[]=[];
  const less=(a:{i:number;f:number},b:{i:number;f:number})=>a.f<b.f || a.f===b.f && a.i<b.i;
  const push=(v:{i:number;f:number})=>{let i=heap.length;heap.push(v);while(i>0){const p=(i-1)>>1;if(!less(v,heap[p]!))break;heap[i]=heap[p]!;i=p;}heap[i]=v;};
@@ -163,8 +175,8 @@ function networkPath(scene:Scene,r:WalkingArea,start:Point,end:Point,state?:CarS
    const compact:Point[]=[];
    for(const p of path){if(compact.length && distance(compact.at(-1)!,p)<.001)continue;while(compact.length>1){const a=compact.at(-2)!,b=compact.at(-1)!,cross=(b.x-a.x)*(p.y-b.y)-(b.y-a.y)*(p.x-b.x),dot=(b.x-a.x)*(p.x-b.x)+(b.y-a.y)*(p.y-b.y);if(dot<0 || Math.abs(cross)>1e-5*(distance(a,b)+distance(b,p)))break;compact.pop();}compact.push(p);}
    return compact.length<=COMMERCE_LIMITS.repairPath ? compact : undefined;}
-  for(const j of nodes[i]!.links){const next=cost[i]!+distance(nodes[i]!,nodes[j]!);if(!closed[j] && next<cost[j]! && segmentClear(scene,nodes[i]!,nodes[j]!,state,live,radius,height)){cost[j]=next;previous[j]=i;push({i:j,f:next+distance(nodes[j]!,end)});}}
+  for(let k=0;k<nodes[i]!.links.length;k++){const j=nodes[i]!.links[k]!,next=cost[i]!+distance(nodes[i]!,nodes[j]!);if(!closed[j] && next<cost[j]! && edgeClear(i,k)){cost[j]=next;previous[j]=i;push({i:j,f:next+distance(nodes[j]!,end)});}}
  }return;
 }
 
-export function primeWorkNetworks(scene:Scene,prepared:Map<string,WorkNode[]>):void{networks.set(scene,prepared);}
+export function primeWorkNetworks(scene:Scene,prepared:Map<string,WorkNode[]>):void{networks.set(scene,prepared);staticEdges.delete(scene);}

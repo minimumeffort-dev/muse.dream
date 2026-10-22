@@ -554,3 +554,18 @@ fell from 8.12 to 7.27 seconds. Both entire service graphs and 24 reference path
 remain exact. This adds bounded graph indices; it is not a memory reduction or
 measured browser/laptop gain. No geometry, rendering settings, actor budget or
 saved state changes. [Samples, source comparison and native checks](evidence/work-endpoints/verification.md).
+
+World acceptance also reuses directed work-graph edge checks when no simulation
+state is supplied. The exact Scene, graph array, contact owner and body profile
+own each entry. Contact replacement or graph priming invalidates it. Stateful
+queries still test current damage, growing objects, parking and live actors;
+endpoints, pavement and dry support retain their normal checks.
+
+Each queried graph adds one byte per directed edge and four bytes per offset,
+within the existing node/link bounds. This is added host cache memory, outside
+Dream, saves and worker transfers. Three matched local Node v26.8.1 comparisons
+reduced median complete-world acceptance from 7.18 to 5.45 seconds, with all eleven
+accepted-data groups and historical hashes unchanged. No browser FPS, loading,
+full-suite timing or lower-powered-device improvement was measured. Existing
+GIFs, videos and stills remain accurate because visuals and controls are unchanged.
+[Measurements, checks and native return](evidence/route-edge-cache/verification.md).

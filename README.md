@@ -567,10 +567,12 @@ Cylinder `part` and `beam` commands accept a bounded `taper` ratio, so a trunk c
 
 ## Run it
 
-Work-route lookup now searches a bounded local node index while keeping the same
-paths and live clearance checks. A local three-run Node benchmark reduced median
-complete-world compilation from 8.12 to 7.27 seconds on an M3 Ultra. This is not a
-browser or lower-powered-laptop claim. [Samples and exact-route checks](docs/evidence/work-endpoints/verification.md).
+World acceptance now reuses checked edges of immutable work-route graphs.
+A local three-run Node comparison reduced median complete-world compilation
+from 7.18 to 5.45 seconds on an M3 Ultra. Gameplay still checks current vehicles,
+damage and actors; world data and save fingerprints match exactly. These are
+compiler timings, without a measured browser or full-test-suite speedup.
+[Samples and boundaries](docs/evidence/route-edge-cache/verification.md).
 
 
 ```sh

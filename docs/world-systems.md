@@ -366,3 +366,15 @@ records without retroactive output. Geometry, contacts, population, navigation
 and render budgets remain unchanged. Saplings, fasteners and money remain
 finite. Next connect another useful indoor activity and renewable upstream
 inputs, then richer schedules and resident choices. [Rules and verified scope](dream/growth.md#timber-recovery).
+
+### Faster acceptance without changing the world
+
+Immutable work-graph edges now retain their checked clearance during world
+acceptance. Gameplay continues to check current parking, actors, damage and
+growth. Three matched local Node samples reduced median compilation by 24.09%,
+with accepted data and save fingerprints unchanged. This helps repeated world
+construction; full-suite and browser gains remain unmeasured.
+[Scope and evidence](evidence/route-edge-cache/verification.md).
+
+Continue useful indoor activities and renewable inputs next, then richer resident
+choices. The living-world backlog above remains incomplete.

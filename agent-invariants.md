@@ -602,9 +602,20 @@ Endpoint indices are weakly owned by immutable WorkNode arrays, including arrays
 received through worker priming. Preserve exactly the nearest 32 linked nodes
 before clearance and the Math.hypot/distance-then-node-index order. Bound empty
 cell expansion and retain exhaustive ranking for sparse/far probes. Never cache
-actor positions, broken-state decisions or segment clearance. Different prepared
+actor positions, broken-state decisions or stateful segment clearance. Different prepared
 arrays own different indices. Keep graph/node order, route semantics, source
 fingerprints and save versions unchanged.
+
+## Immutable work-edge acceptance reuse
+
+Only workPath calls without CarState may reuse directed graph-edge clearance.
+Scope entries to the exact Scene, node array, static contact owner and body
+radius/height. Store one byte per directed link plus four bytes per node offset;
+retain existing 8192-node/32768-link caps and weak ownership. Contact replacement,
+profile changes and network priming invalidate affected results. Preserve edge
+direction, ordering and first-check geometry. Always run endpoint/pavement/water
+checks; every stateful query still checks current actors, parking poses, growth
+and damage. No authored, saved, worker-packet or render fields are added.
 
 
 ## Resident courier homes, r87
