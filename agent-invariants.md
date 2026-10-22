@@ -748,3 +748,26 @@ motion retain their existing presentation policy. Registered r92 migration
 removes only the two new data fields at simulation 37, preserves every saved
 field/slot and primes identical physical caches. Current simulation is 38 at
 format 19. No general shelter, seasons, flooding or ecological claims.
+
+## Commuter home, r94
+
+Keep the market commuter's route and waits unchanged; its existing home stop
+is now inside a foyer. One new ground-floor interior replaces oldtown_044,
+with three supported props, two seats and shared category damage/finite repair
+rules. The existing caretaker uses its fourth service slot; no new actors,
+accounts, starting resources, live rigs or template/module budget increases.
+Keep the optional workshop/bakehouse pack available outside the live graph.
+Upper floors, sleeping and access permissions remain unimplemented.
+
+`voxels.cutaway` uses exactly the existing retained static interior-shell policy
+of `part.cutaway`, including joint/fragment/zone rejection and worker batching.
+Register the exact r93 house/site projection, remove only new props/corridor/
+service, and prepare its own contacts/navigation before validating old saves.
+Initialize only new repair attribution counters, rebase derived paths and use
+bounded local recovery for newly unsafe poses. For ground vehicles newly enclosed
+by this home, preserve safe doorway-fitting poses or search at most 64 units
+for an exterior body-clear position, avoiding the player and other vehicles.
+Keep heading, travel, ownership and all other parked poses; reject unrecoverable
+backups without replacing the old slot. Preserve resources, clocks,
+damage, old slots and the complete earlier migration chain. See
+`docs/examples/enterable-home.dream` and `docs/persistence.md`.

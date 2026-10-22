@@ -137,7 +137,7 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
 (* contact requires exactly one radius or size=[width,depth]; heading_deg is
    rectangle-only. Circles retain existing bounds; rectangles are upright static
    structures. interior is object-root with a block of 1..4 named portal records.
-   part.cutaway tags retained roof/front/back/left/right shell sections. A placed
+   part.cutaway and voxels.cutaway tag retained roof/front/back/left/right shell sections. A placed
    interior's object ID may be used in repair/delivery grounds. Existing source,
    geometry and navigation bounds remain unchanged. One ground floor only. *)
 

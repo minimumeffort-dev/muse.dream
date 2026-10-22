@@ -52,7 +52,7 @@ export const DREAM_V2_COMMANDS: Readonly<Record<string,DreamCommand>> = Object.f
   repeat: command("object visual path route_path voxel_ops",true,{index:"symbol",count:"n"},"inherit"),
   use: command("object visual",true,{component:"ref",args:"nums?",materials:"symbols?",at:"v3?",rot_deg:"v3?",scale:"n?"}),
   part: command("object visual",true,{shape:"box|sphere|cylinder|cone|pyramid|icosphere|capsule|torus|prism",material:"ref",at:"v3",size:"v3",rot_deg:"v3?",outline:"points2?",taper:"n?",faceted:"bool?",deform:"deform?",motion:"part_motion?",cutaway:"roof|front|back|left|right?"}),
-  voxels: command("object visual",true,{material:"ref",at:"v3",size:"v3",grid:"v3",chunks:"v3?",rot_deg:"v3?"},"voxel_ops"),
+  voxels: command("object visual",true,{material:"ref",at:"v3",size:"v3",grid:"v3",chunks:"v3?",rot_deg:"v3?",cutaway:"roof|front|back|left|right?"},"voxel_ops"),
   fill: command("voxel_ops",true,{from:"v3",to:"v3",shape:"box|ellipsoid?"}),
   cut: command("voxel_ops",true,{from:"v3",to:"v3",shape:"box|ellipsoid?"}),
   beam: command("object visual",true,{shape:"box|cylinder|capsule",material:"ref",from:"v3",to:"v3",width:"n",depth:"n",taper:"n?",faceted:"bool?",deform:"deform?",motion:"part_motion?"}),

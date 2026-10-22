@@ -22,7 +22,7 @@ consistent destruction/recovery; the full asset review also remains unfinished.
 The Garden school now has a second usable ground-floor venue: connected common-room
 seating, the teacher's after-hours break, shared food and remembered meals, and
 repairable tables/benches served by the existing caretaker. No new residents or
-starting resources. Upper floors, teaching tasks, homes and broader
+starting resources. Upper floors, teaching tasks and broader
 relationships remain missing; prioritize deeper indoor purposes and shared
 resident routines next. [School source and checks](dream/interiors.md#the-school-common-room).
 
@@ -84,6 +84,12 @@ a bounded game exercise. More themed buildings or decorative labels alone do
 not supply a working service. Extend habitats and planting by district alongside
 this work. Measure bounded activation and rendering before expanding populations;
 keep the current mock/provider boundary.
+
+The existing market commuter now has an enterable home on the same route.
+Its foyer, settee, table and planter use ordinary walking, seating, damage and
+paid repairs; the caretaker shares existing supplies and capacity. The upper
+storey remains closed. Sleeping, ownership, multi-floor access and household
+routines remain priorities. [Home](dream/interiors.md#the-commuters-home).
 
 ## Grow the language through working scenarios
 

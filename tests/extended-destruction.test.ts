@@ -1,7 +1,9 @@
 import {measuredScale} from '../src/scene/measure';
 import {describe,it,expect} from "vitest";
 import {Box3,Quaternion,Vector3} from "three";
-import source from "../src/scene/world/destructible.dream?raw";
+import baseSource from "../src/scene/world/destructible.dream?raw";
+import workshopSource from "../src/scene/world/workshop_architecture.dream?raw";
+const source=baseSource+"\n"+workshopSource.replace(/^dream 2;\n/,"").replace(/^material [^\n]*;$/gm,"");
 import {compileDreamWorld,checkDream} from "../src/scene/dream";
 import {objectDslSchema,type ObjectDslV2,isReactive} from "../src/scene/object-dsl";
 import {objectFragments} from "../src/scene/fragments";
@@ -36,7 +38,7 @@ const idle={throttle:0,steer:0};
 
 describe("Dream 2 destruction authoring",()=>{
   it("compiles topple, splinter and partial crumble as bounded data",()=>{
-    expect(examples.assemblies).toHaveLength(7);expect(spec("Leaning birch").impact).toMatchObject({kind:"topple",duration:1.1});
+    expect(examples.assemblies).toHaveLength(9);expect(spec("Leaning birch").impact).toMatchObject({kind:"topple",duration:1.1});
     expect(objectFragments(spec("Slatted park bench"))).toHaveLength(7);
     const house=spec("Brick bakehouse");expect(house.impact).toBeUndefined();expect(house.breakZones![0]!.impact.pattern).toBe("crumble");
     expect(house.parts.filter(p=>p.zone)).toHaveLength(4);expect(objectFragments(house)).toHaveLength(8);
@@ -169,7 +171,7 @@ describe("preserved destructible-world regression",()=>{
     expect(full.objects).toHaveLength(796);const reactive=full.objects.filter(o=>isReactive(o.spec));expect(reactive).toHaveLength(21);
     expect(reactive.reduce((sum,o)=>sum+(o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && o.spec.impact?.kind!=='bounce' ? objectFragments(o.spec).length : 0),0)).toBe(97);
     expect(examples.objects).toHaveLength(0); // Asset libraries no longer contain hidden live placements.
-    expect(examples.assemblies).toHaveLength(7);
+    expect(examples.assemblies).toHaveLength(9);
   });
   it.each(['park_bench','station_bench','orchard_workshop','wayside_bakehouse'])("allows an actual off-road impact on %s without damaging the circuit",id=>{
     const object=full.objects.find(o=>o.id===id)!,zone=objectContacts(full,object).find(c=>c.zoneId),contact=zone??objectContacts(full,object)[0]!;

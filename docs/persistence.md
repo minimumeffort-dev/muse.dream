@@ -795,3 +795,26 @@ The restored simulation time determines the current rain and wetness. Existing
 commitments finish even if it is raining; only new dry-weather jobs wait. R and
 streaming retain weather phase, pause freezes it and Start over resets it.
 The old slot and all earlier registered migrations survive.
+
+## Commuter-home upgrade, r94
+
+Format 19 / simulation 38 now pins
+`f003f9a1a23eac605a5a780ac34e471888fea029ac9b6d05c1d571df0d0f0275`.
+Its registered projection restores the exact r93 house and entrance, removes
+the three indoor props and unpainted doorway corridor, and removes only the
+new caretaker service and reference. It reproduces
+`e79bef5a9b68401e438cb2eb94f1ae68e151fb65f29770e2fa166e382db817ec`.
+
+Validate the backup against that old scene's own contacts and pedestrian graph
+before upgrading. Preserve money, stock, inventory, damage, work, NPC clocks
+and visible safe positions. Add zero `home_furniture` repair/recovery and
+per-account attribution counters. Retarget derived pedestrian indices and
+work paths for the new walls, locally recovering unsafe positions through the
+existing bounded rules. No transactions or time advance occur during restore.
+The old source slot and every earlier registered migration remain available.
+
+Ground vehicles newly enclosed by this home use a 64-unit local search, retaining
+heading, travel history and ownership. Candidates must clear the complete body,
+other parked vehicles and the active player. Vehicles that fit the doorway can
+retain their position on the new floor. Other parked poses are unchanged; an
+unrecoverable pose rejects migration and keeps the old slot intact.

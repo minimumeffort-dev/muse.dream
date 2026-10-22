@@ -305,3 +305,7 @@ objects. Existing measure frames and furnishing reservations are explicit.
 [Background ground cover](../examples/ground-cover.dream) defines two reusable
 components, grass and a flower, plus their combined inspection object. These
 are the engine's small passable details. Scatter density remains engine-owned.
+
+## A furnished home
+
+[enterable-home.dream](../examples/enterable-home.dream) builds the commuter terrace and timber settee. It uses explicit floor/wall contacts, carved voxel cutaway frames, two seats and five splinter groups. The live placement and repair service are in `frontage_0.dream` and `life.dream`.

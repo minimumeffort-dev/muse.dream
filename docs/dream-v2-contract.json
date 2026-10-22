@@ -373,7 +373,8 @@
         "size": "v3",
         "grid": "v3",
         "chunks": "v3?",
-        "rot_deg": "v3?"
+        "rot_deg": "v3?",
+        "cutaway": "roof|front|back|left|right?"
       },
       "block": "voxel_ops"
     },

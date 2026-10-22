@@ -10,7 +10,7 @@ The covered market now has a doorway you can walk through, a floor you can stand
 
 Leave your vehicle with **F**, then walk through the market's front entrance. The vendor now stands inside, behind the existing table: **H** starts paid baking, **B** buys bread and **G** eats what you carry. Walk around the table to the counter. The outdoor square is outside its forty-unit reach. Staff, customers and supply workers use the same doorway and clear interior aisle. A wall blocks buying, starting work and conversation; proximity alone is not enough. Leaving the work area or jumping cancels a batch and returns its reserved supplies and wage.
 
-Each building currently has one usable ground floor. It is not a restaurant, a system of stacked floors or a finished interior library. K can now hit reachable props on foot. Handheld tools and furniture pickup are not implemented. The hall's tables, bench and crate use the existing impact and repair rules; the caretaker can walk to them through the doorway after damage.
+Each building currently has one usable ground floor. Stacked floors and a finished interior library remain future work. K can now hit reachable props on foot. Handheld tools and furniture pickup are not implemented. The hall's tables, bench and crate use the existing impact and repair rules; the caretaker can walk to them through the doorway after damage.
 
 ## The school common room
 
@@ -43,6 +43,37 @@ already resting outside walks to the new break spot. An active outdoor shared
 meal retains its visible pose, food and timer, then returns indoors. The old
 source slot remains available. [Checks and capture](../evidence/school-interior/verification.md).
 
+## The commuter's home
+
+The brick terrace beside Market Avenue now has an open ground floor, a timber
+settee, a table and a planter. Its existing commuter walks through the doorway
+and waits in the foyer before the next market trip. The route and waits are
+unchanged. You can enter from the street, sit with F, stand with F or movement,
+and hit reachable furniture with K.
+
+![The commuter's ground-floor room](../media/home.jpg)
+
+[Walkthrough](../media/home.mp4) · [GIF](../media/home.gif) · [Complete home and settee source](../examples/enterable-home.dream)
+
+The doorway is about 1.17 m wide, the floor step 20 cm and clear headroom 3.13 m.
+The car stays outside. Window frames are carved voxel parts, with the same
+`cutaway` tags as their walls. Rotating the view hides the appropriate shell;
+floors, contents and physical contacts remain.
+
+The settee uses the shared bench splintering policy. Its frame, cushions and
+arms form five released groups. The table and pot keep their own category
+policies. `home_furniture` connects the interior to the existing caretaker,
+finite repair kits, wages and reclaimed fasteners. The player can claim that
+service at the market counter too. Its existing counter area also covers the
+hall's east table and produce crate. Indoor repairs can start during rain.
+
+The r93 save upgrade keeps resources, damage, work and commute clocks. It
+initializes only the new repair counters, retargets derived paths and recovers
+poses blocked by the new shell. A saved car newly enclosed by the home moves
+to a clear nearby exterior position, retaining its heading, travel and ownership. The old source slot survives. The upper storey
+is a closed visual shell: no stairs, sleeping, ownership or access permissions
+are implemented. [Checks](../evidence/home-interior/verification.md).
+
 ## Give the floor an owner
 
 `interior` belongs directly inside a static object with a solid body and foundation. `at` is the local centre of its floor, including the **top** of that floor in Y. `size` is its full width, clear height and depth. These values scale with the rest of the measured building.
@@ -61,7 +92,7 @@ Rectangle contacts use `size=[width,depth]`, plus `at`, `height` and optional `h
 
 ## Cut away the shell
 
-Tag the appropriate static parts with `cutaway=roof|front|back|left|right`. The directions describe the object, including its placement heading. Keep the floor and contents untagged. The camera hides the roof and the near sides while you are below the ceiling and inside the room. Q/E changes which sides are hidden, without changing the character's heading.
+Tag the appropriate static `part` or `voxels` sections with `cutaway=roof|front|back|left|right`. The directions describe the object, including its placement heading. Keep the floor and contents untagged. The camera hides the roof and the near sides while you are below the ceiling and inside the room. Q/E changes which sides are hidden, without changing the character's heading.
 
 The reveal opens cleanly instead of stippling the player. Fully hidden tagged
 parts still cast their ordinary shadows; the floor, contents and physical

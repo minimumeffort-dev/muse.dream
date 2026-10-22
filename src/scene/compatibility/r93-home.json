@@ -1,0 +1,1751 @@
+{
+  "object": {
+    "id": "oldtown_044",
+    "kind": "custom",
+    "labelText": "Brick terrace",
+    "x": 6493.348,
+    "y": 3996.087,
+    "scale": 3.9130434782608696,
+    "headingRad": 3.141592653589793,
+    "spec": {
+      "dslVersion": 2,
+      "displayName": "Brick terrace",
+      "parts": [
+        {
+          "id": "d_a1e3ae4cf7200f52",
+          "shape": "voxel",
+          "position": [
+            0,
+            9,
+            0
+          ],
+          "size": [
+            19,
+            18,
+            25
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "material": {
+            "shaderStyle": "brick",
+            "colorA": "#a96f55",
+            "colorB": "#bcb1a0"
+          },
+          "voxels": {
+            "grid": [
+              19,
+              18,
+              25
+            ],
+            "operations": [
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  0,
+                  0,
+                  0
+                ],
+                "to": [
+                  19,
+                  18,
+                  25
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "d_a3550b1ff0c47f8f",
+          "shape": "prism",
+          "position": [
+            0,
+            20.5,
+            0
+          ],
+          "size": [
+            19.2,
+            5,
+            26.5
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#535b64",
+            "colorB": "#3b4753"
+          },
+          "outline": [
+            [
+              0,
+              0
+            ],
+            [
+              0.5,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              0.98,
+              0
+            ],
+            [
+              0.5,
+              0.88
+            ],
+            [
+              0.02,
+              0
+            ]
+          ]
+        },
+        {
+          "id": "d_a35207537f6081a7",
+          "shape": "box",
+          "position": [
+            0,
+            17.75,
+            0
+          ],
+          "size": [
+            19.2,
+            0.5,
+            26.5
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#e5decd",
+            "colorB": "#c5bfae"
+          }
+        },
+        {
+          "id": "d_5abe54813cc4414c",
+          "shape": "prism",
+          "position": [
+            0,
+            20.2,
+            0
+          ],
+          "size": [
+            19,
+            4.4,
+            25
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "material": {
+            "shaderStyle": "brick",
+            "colorA": "#a96f55",
+            "colorB": "#bcb1a0"
+          },
+          "outline": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              0.5,
+              1
+            ]
+          ]
+        },
+        {
+          "id": "d_e90a1bce0b38d482",
+          "shape": "box",
+          "position": [
+            -4.94,
+            4.95,
+            -12.52
+          ],
+          "size": [
+            3.002,
+            4.158,
+            0.12
+          ],
+          "rotation": [
+            -3.141592653589793,
+            1.2246467991473532e-16,
+            -3.141592653589793
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#6c929d",
+            "colorB": "#42616f",
+            "nightColor": "#f2bf7e"
+          }
+        },
+        {
+          "id": "d_f449d939f18b63c8",
+          "shape": "voxel",
+          "position": [
+            -4.94,
+            4.95,
+            -12.6
+          ],
+          "size": [
+            3.8,
+            4.95,
+            0.12
+          ],
+          "rotation": [
+            -3.141592653589793,
+            1.2246467991473532e-16,
+            -3.141592653589793
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#e5decd",
+            "colorB": "#c5bfae"
+          },
+          "voxels": {
+            "grid": [
+              16,
+              20,
+              1
+            ],
+            "operations": [
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  0,
+                  0,
+                  0
+                ],
+                "to": [
+                  16,
+                  20,
+                  1
+                ]
+              },
+              {
+                "mode": "cut",
+                "shape": "box",
+                "from": [
+                  2,
+                  2,
+                  0
+                ],
+                "to": [
+                  14,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  7,
+                  2,
+                  0
+                ],
+                "to": [
+                  8,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  2,
+                  10,
+                  0
+                ],
+                "to": [
+                  14,
+                  11,
+                  1
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "d_01623c966edee4cf",
+          "shape": "box",
+          "position": [
+            4.94,
+            4.95,
+            -12.52
+          ],
+          "size": [
+            3.002,
+            4.158,
+            0.12
+          ],
+          "rotation": [
+            -3.141592653589793,
+            1.2246467991473532e-16,
+            -3.141592653589793
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#6c929d",
+            "colorB": "#42616f",
+            "nightColor": "#f2bf7e"
+          }
+        },
+        {
+          "id": "d_bd7c6d622a01612d",
+          "shape": "voxel",
+          "position": [
+            4.94,
+            4.95,
+            -12.6
+          ],
+          "size": [
+            3.8,
+            4.95,
+            0.12
+          ],
+          "rotation": [
+            -3.141592653589793,
+            1.2246467991473532e-16,
+            -3.141592653589793
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#e5decd",
+            "colorB": "#c5bfae"
+          },
+          "voxels": {
+            "grid": [
+              16,
+              20,
+              1
+            ],
+            "operations": [
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  0,
+                  0,
+                  0
+                ],
+                "to": [
+                  16,
+                  20,
+                  1
+                ]
+              },
+              {
+                "mode": "cut",
+                "shape": "box",
+                "from": [
+                  2,
+                  2,
+                  0
+                ],
+                "to": [
+                  14,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  7,
+                  2,
+                  0
+                ],
+                "to": [
+                  8,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  2,
+                  10,
+                  0
+                ],
+                "to": [
+                  14,
+                  11,
+                  1
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "d_c3d512dca9d35c45",
+          "shape": "box",
+          "position": [
+            -4.94,
+            13.950000000000001,
+            -12.52
+          ],
+          "size": [
+            3.002,
+            4.158,
+            0.12
+          ],
+          "rotation": [
+            -3.141592653589793,
+            1.2246467991473532e-16,
+            -3.141592653589793
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#6c929d",
+            "colorB": "#42616f",
+            "nightColor": "#f2bf7e"
+          }
+        },
+        {
+          "id": "d_0f1cf05e572f40e3",
+          "shape": "voxel",
+          "position": [
+            -4.94,
+            13.950000000000001,
+            -12.6
+          ],
+          "size": [
+            3.8,
+            4.95,
+            0.12
+          ],
+          "rotation": [
+            -3.141592653589793,
+            1.2246467991473532e-16,
+            -3.141592653589793
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#e5decd",
+            "colorB": "#c5bfae"
+          },
+          "voxels": {
+            "grid": [
+              16,
+              20,
+              1
+            ],
+            "operations": [
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  0,
+                  0,
+                  0
+                ],
+                "to": [
+                  16,
+                  20,
+                  1
+                ]
+              },
+              {
+                "mode": "cut",
+                "shape": "box",
+                "from": [
+                  2,
+                  2,
+                  0
+                ],
+                "to": [
+                  14,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  7,
+                  2,
+                  0
+                ],
+                "to": [
+                  8,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  2,
+                  10,
+                  0
+                ],
+                "to": [
+                  14,
+                  11,
+                  1
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "d_501a9aeef6de33f0",
+          "shape": "box",
+          "position": [
+            4.94,
+            13.950000000000001,
+            -12.52
+          ],
+          "size": [
+            3.002,
+            4.158,
+            0.12
+          ],
+          "rotation": [
+            -3.141592653589793,
+            1.2246467991473532e-16,
+            -3.141592653589793
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#6c929d",
+            "colorB": "#42616f",
+            "nightColor": "#f2bf7e"
+          }
+        },
+        {
+          "id": "d_1c2e8ebabfa368c6",
+          "shape": "voxel",
+          "position": [
+            4.94,
+            13.950000000000001,
+            -12.6
+          ],
+          "size": [
+            3.8,
+            4.95,
+            0.12
+          ],
+          "rotation": [
+            -3.141592653589793,
+            1.2246467991473532e-16,
+            -3.141592653589793
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#e5decd",
+            "colorB": "#c5bfae"
+          },
+          "voxels": {
+            "grid": [
+              16,
+              20,
+              1
+            ],
+            "operations": [
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  0,
+                  0,
+                  0
+                ],
+                "to": [
+                  16,
+                  20,
+                  1
+                ]
+              },
+              {
+                "mode": "cut",
+                "shape": "box",
+                "from": [
+                  2,
+                  2,
+                  0
+                ],
+                "to": [
+                  14,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  7,
+                  2,
+                  0
+                ],
+                "to": [
+                  8,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  2,
+                  10,
+                  0
+                ],
+                "to": [
+                  14,
+                  11,
+                  1
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "d_5af61d14492a220a",
+          "shape": "box",
+          "position": [
+            -4.94,
+            13.95,
+            12.52
+          ],
+          "size": [
+            3.002,
+            4.158,
+            0.12
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#6c929d",
+            "colorB": "#42616f",
+            "nightColor": "#f2bf7e"
+          }
+        },
+        {
+          "id": "d_7d8b8e18c10a43e0",
+          "shape": "voxel",
+          "position": [
+            -4.94,
+            13.95,
+            12.6
+          ],
+          "size": [
+            3.8,
+            4.95,
+            0.12
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#e5decd",
+            "colorB": "#c5bfae"
+          },
+          "voxels": {
+            "grid": [
+              16,
+              20,
+              1
+            ],
+            "operations": [
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  0,
+                  0,
+                  0
+                ],
+                "to": [
+                  16,
+                  20,
+                  1
+                ]
+              },
+              {
+                "mode": "cut",
+                "shape": "box",
+                "from": [
+                  2,
+                  2,
+                  0
+                ],
+                "to": [
+                  14,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  7,
+                  2,
+                  0
+                ],
+                "to": [
+                  8,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  2,
+                  10,
+                  0
+                ],
+                "to": [
+                  14,
+                  11,
+                  1
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "d_0e3c951c96cb48d7",
+          "shape": "box",
+          "position": [
+            4.94,
+            13.95,
+            12.52
+          ],
+          "size": [
+            3.002,
+            4.158,
+            0.12
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#6c929d",
+            "colorB": "#42616f",
+            "nightColor": "#f2bf7e"
+          }
+        },
+        {
+          "id": "d_d85ec66f7942ee85",
+          "shape": "voxel",
+          "position": [
+            4.94,
+            13.95,
+            12.6
+          ],
+          "size": [
+            3.8,
+            4.95,
+            0.12
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#e5decd",
+            "colorB": "#c5bfae"
+          },
+          "voxels": {
+            "grid": [
+              16,
+              20,
+              1
+            ],
+            "operations": [
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  0,
+                  0,
+                  0
+                ],
+                "to": [
+                  16,
+                  20,
+                  1
+                ]
+              },
+              {
+                "mode": "cut",
+                "shape": "box",
+                "from": [
+                  2,
+                  2,
+                  0
+                ],
+                "to": [
+                  14,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  7,
+                  2,
+                  0
+                ],
+                "to": [
+                  8,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  2,
+                  10,
+                  0
+                ],
+                "to": [
+                  14,
+                  11,
+                  1
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "d_f288ffaa51afa914",
+          "shape": "box",
+          "position": [
+            0,
+            4.95,
+            12.52
+          ],
+          "size": [
+            3.002,
+            4.158,
+            0.12
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#6c929d",
+            "colorB": "#42616f",
+            "nightColor": "#f2bf7e"
+          }
+        },
+        {
+          "id": "d_ccbcd1b6c2700032",
+          "shape": "voxel",
+          "position": [
+            0,
+            4.95,
+            12.6
+          ],
+          "size": [
+            3.8,
+            4.95,
+            0.12
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#e5decd",
+            "colorB": "#c5bfae"
+          },
+          "voxels": {
+            "grid": [
+              16,
+              20,
+              1
+            ],
+            "operations": [
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  0,
+                  0,
+                  0
+                ],
+                "to": [
+                  16,
+                  20,
+                  1
+                ]
+              },
+              {
+                "mode": "cut",
+                "shape": "box",
+                "from": [
+                  2,
+                  2,
+                  0
+                ],
+                "to": [
+                  14,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  7,
+                  2,
+                  0
+                ],
+                "to": [
+                  8,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  2,
+                  10,
+                  0
+                ],
+                "to": [
+                  14,
+                  11,
+                  1
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "d_89a70f399252ce16",
+          "shape": "box",
+          "position": [
+            -9.52,
+            13.95,
+            0
+          ],
+          "size": [
+            3.16,
+            4.158,
+            0.12
+          ],
+          "rotation": [
+            0,
+            -1.5707963267948966,
+            0
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#6c929d",
+            "colorB": "#42616f",
+            "nightColor": "#f2bf7e"
+          }
+        },
+        {
+          "id": "d_5d46cf2f1cadc404",
+          "shape": "voxel",
+          "position": [
+            -9.6,
+            13.95,
+            1.3877787807814457e-17
+          ],
+          "size": [
+            4,
+            4.95,
+            0.12
+          ],
+          "rotation": [
+            0,
+            -1.5707963267948966,
+            0
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#e5decd",
+            "colorB": "#c5bfae"
+          },
+          "voxels": {
+            "grid": [
+              16,
+              20,
+              1
+            ],
+            "operations": [
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  0,
+                  0,
+                  0
+                ],
+                "to": [
+                  16,
+                  20,
+                  1
+                ]
+              },
+              {
+                "mode": "cut",
+                "shape": "box",
+                "from": [
+                  2,
+                  2,
+                  0
+                ],
+                "to": [
+                  14,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  7,
+                  2,
+                  0
+                ],
+                "to": [
+                  8,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  2,
+                  10,
+                  0
+                ],
+                "to": [
+                  14,
+                  11,
+                  1
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "d_9ca3a5e89b7c4673",
+          "shape": "box",
+          "position": [
+            9.52,
+            13.95,
+            0
+          ],
+          "size": [
+            3.16,
+            4.158,
+            0.12
+          ],
+          "rotation": [
+            0,
+            1.5707963267948966,
+            0
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#6c929d",
+            "colorB": "#42616f",
+            "nightColor": "#f2bf7e"
+          }
+        },
+        {
+          "id": "d_ae3f97c8752550a9",
+          "shape": "voxel",
+          "position": [
+            9.6,
+            13.95,
+            1.3877787807814457e-17
+          ],
+          "size": [
+            4,
+            4.95,
+            0.12
+          ],
+          "rotation": [
+            0,
+            1.5707963267948966,
+            0
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#e5decd",
+            "colorB": "#c5bfae"
+          },
+          "voxels": {
+            "grid": [
+              16,
+              20,
+              1
+            ],
+            "operations": [
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  0,
+                  0,
+                  0
+                ],
+                "to": [
+                  16,
+                  20,
+                  1
+                ]
+              },
+              {
+                "mode": "cut",
+                "shape": "box",
+                "from": [
+                  2,
+                  2,
+                  0
+                ],
+                "to": [
+                  14,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  7,
+                  2,
+                  0
+                ],
+                "to": [
+                  8,
+                  18,
+                  1
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  2,
+                  10,
+                  0
+                ],
+                "to": [
+                  14,
+                  11,
+                  1
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "d_d32ce4060a581ed1",
+          "shape": "voxel",
+          "position": [
+            4.898587196589413e-18,
+            3.35,
+            -12.559999999999999
+          ],
+          "size": [
+            4.5,
+            6.7,
+            0.18
+          ],
+          "rotation": [
+            -3.141592653589793,
+            1.2246467991473532e-16,
+            -3.141592653589793
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#e5decd",
+            "colorB": "#c5bfae"
+          },
+          "voxels": {
+            "grid": [
+              20,
+              30,
+              1
+            ],
+            "operations": [
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  0,
+                  0,
+                  0
+                ],
+                "to": [
+                  20,
+                  30,
+                  1
+                ]
+              },
+              {
+                "mode": "cut",
+                "shape": "box",
+                "from": [
+                  2,
+                  0,
+                  0
+                ],
+                "to": [
+                  18,
+                  27,
+                  1
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "d_d38f4fa07976fcbc",
+          "shape": "voxel",
+          "position": [
+            0,
+            3,
+            -12.52
+          ],
+          "size": [
+            3.5,
+            6,
+            0.12
+          ],
+          "rotation": [
+            -3.141592653589793,
+            1.2246467991473532e-16,
+            -3.141592653589793
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#35464c",
+            "colorB": "#28363e"
+          },
+          "voxels": {
+            "grid": [
+              14,
+              24,
+              2
+            ],
+            "operations": [
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  0,
+                  0,
+                  0
+                ],
+                "to": [
+                  14,
+                  24,
+                  2
+                ]
+              },
+              {
+                "mode": "cut",
+                "shape": "box",
+                "from": [
+                  2,
+                  2,
+                  1
+                ],
+                "to": [
+                  12,
+                  10,
+                  2
+                ]
+              },
+              {
+                "mode": "cut",
+                "shape": "box",
+                "from": [
+                  2,
+                  12,
+                  1
+                ],
+                "to": [
+                  12,
+                  20,
+                  2
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "d_af0b4e191da20cef",
+          "shape": "box",
+          "position": [
+            0,
+            0.25,
+            -14
+          ],
+          "size": [
+            7,
+            0.5,
+            3.5
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#e5decd",
+            "colorB": "#c5bfae"
+          }
+        },
+        {
+          "id": "d_9c00516edce60526",
+          "shape": "box",
+          "position": [
+            0,
+            0.5,
+            0
+          ],
+          "size": [
+            19.1,
+            1,
+            25.1
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#e5decd",
+            "colorB": "#c5bfae"
+          }
+        },
+        {
+          "id": "d_72755e0efcf2db50",
+          "shape": "cylinder",
+          "position": [
+            0,
+            18,
+            -13.1
+          ],
+          "size": [
+            0.22,
+            19,
+            0.22
+          ],
+          "rotation": [
+            0,
+            0,
+            -1.5707963267948963
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#35464c",
+            "colorB": "#28363e"
+          }
+        },
+        {
+          "id": "d_849f25627d263a66",
+          "shape": "prism",
+          "position": [
+            9,
+            9.25,
+            -12.87
+          ],
+          "size": [
+            0.74,
+            17.5,
+            0.18
+          ],
+          "rotation": [
+            0,
+            1.5707963267948966,
+            0
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#35464c",
+            "colorB": "#28363e"
+          },
+          "outline": [
+            [
+              0,
+              0
+            ],
+            [
+              0.24,
+              0
+            ],
+            [
+              0.24,
+              0.94
+            ],
+            [
+              1,
+              0.985
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0.76,
+              1
+            ],
+            [
+              0,
+              0.95
+            ]
+          ]
+        },
+        {
+          "id": "d_4a76b1a0f838365a",
+          "shape": "cylinder",
+          "position": [
+            0,
+            18,
+            13.1
+          ],
+          "size": [
+            0.22,
+            19,
+            0.22
+          ],
+          "rotation": [
+            0,
+            0,
+            -1.5707963267948963
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#35464c",
+            "colorB": "#28363e"
+          }
+        },
+        {
+          "id": "d_0eb4065430052f2c",
+          "shape": "prism",
+          "position": [
+            9,
+            9.25,
+            12.87
+          ],
+          "size": [
+            0.74,
+            17.5,
+            0.18
+          ],
+          "rotation": [
+            0,
+            -1.5707963267948966,
+            0
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#35464c",
+            "colorB": "#28363e"
+          },
+          "outline": [
+            [
+              0,
+              0
+            ],
+            [
+              0.24,
+              0
+            ],
+            [
+              0.24,
+              0.94
+            ],
+            [
+              1,
+              0.985
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0.76,
+              1
+            ],
+            [
+              0,
+              0.95
+            ]
+          ]
+        },
+        {
+          "id": "d_08f628b0d6b5c974",
+          "shape": "voxel",
+          "position": [
+            6.08,
+            20.2,
+            3.5
+          ],
+          "size": [
+            2.4,
+            4.4,
+            2.8
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
+          "material": {
+            "shaderStyle": "brick",
+            "colorA": "#a96f55",
+            "colorB": "#bcb1a0"
+          },
+          "voxels": {
+            "grid": [
+              12,
+              16,
+              12
+            ],
+            "operations": [
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  2,
+                  0,
+                  2
+                ],
+                "to": [
+                  10,
+                  14,
+                  10
+                ]
+              },
+              {
+                "mode": "fill",
+                "shape": "box",
+                "from": [
+                  0,
+                  14,
+                  0
+                ],
+                "to": [
+                  12,
+                  16,
+                  12
+                ]
+              },
+              {
+                "mode": "cut",
+                "shape": "box",
+                "from": [
+                  4,
+                  14,
+                  4
+                ],
+                "to": [
+                  8,
+                  16,
+                  8
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "d_5dba3a5349402810",
+          "shape": "cylinder",
+          "position": [
+            0,
+            22.7,
+            0
+          ],
+          "size": [
+            0.6,
+            26.2,
+            0.6
+          ],
+          "rotation": [
+            1.5707963267948963,
+            0,
+            0
+          ],
+          "material": {
+            "shaderStyle": "toon",
+            "colorA": "#535b64",
+            "colorB": "#3b4753"
+          }
+        }
+      ],
+      "foundation": {
+        "footprint": [
+          19.4,
+          25.4
+        ],
+        "color": "#9e9d8c"
+      },
+      "body": {
+        "interaction": "solid",
+        "colliderRadius": 9.5,
+        "colliderHeight": 23
+      },
+      "voxelSize": 1,
+      "measure": {
+        "kind": "building",
+        "axis": "y",
+        "meters": 9
+      },
+      "contacts": [
+        {
+          "position": [
+            -4.75,
+            0,
+            -9.375
+          ],
+          "radius": 5.685783,
+          "height": 18
+        },
+        {
+          "position": [
+            -4.75,
+            0,
+            -3.125
+          ],
+          "radius": 5.685783,
+          "height": 18
+        },
+        {
+          "position": [
+            -4.75,
+            0,
+            3.125
+          ],
+          "radius": 5.685783,
+          "height": 18
+        },
+        {
+          "position": [
+            -4.75,
+            0,
+            9.375
+          ],
+          "radius": 5.685783,
+          "height": 18
+        },
+        {
+          "position": [
+            4.75,
+            0,
+            -9.375
+          ],
+          "radius": 5.685783,
+          "height": 18
+        },
+        {
+          "position": [
+            4.75,
+            0,
+            -3.125
+          ],
+          "radius": 5.685783,
+          "height": 18
+        },
+        {
+          "position": [
+            4.75,
+            0,
+            3.125
+          ],
+          "radius": 5.685783,
+          "height": 18
+        },
+        {
+          "position": [
+            4.75,
+            0,
+            9.375
+          ],
+          "radius": 5.685783,
+          "height": 18
+        }
+      ]
+    }
+  },
+  "site": {
+    "id": "access_oldtown_044",
+    "objectId": "oldtown_044",
+    "kind": "home",
+    "entry": {
+      "x": 0,
+      "y": -15.75
+    },
+    "street": "market_avenue",
+    "width": 16,
+    "points": [
+      {
+        "x": 6493.348,
+        "y": 4112
+      }
+    ],
+    "serves": []
+  }
+}

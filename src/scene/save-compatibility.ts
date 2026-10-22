@@ -14,6 +14,7 @@ import fixturesR79 from './compatibility/r79-street-furniture.json';
 import charactersR80 from './compatibility/r80-characters.json';
 import serviceR81 from './compatibility/r81-indoor-service.json';
 import schoolR90 from './compatibility/r90-school.json';
+import homeR93 from './compatibility/r93-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
 export const SAVE_SIMULATION_VERSION=38;
@@ -99,10 +100,23 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r94 opens the commuter's existing home and adds its shared furniture service. */
+export const HOME_INTERIOR_COMPATIBILITY='f003f9a1a23eac605a5a780ac34e471888fea029ac9b6d05c1d571df0d0f0275';
+const homeProjections=new WeakMap<Scene,Scene>();
+export function preHomeInteriorScene(scene:Scene):Scene{
+ const cached=homeProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.repairs.some(r=>r.id==='home_furniture'))return scene;
+ const added=new Set(['home_settee','home_table','home_planter']);
+ const prior={...scene,objects:scene.objects.filter(o=>!added.has(o.id)).map(o=>o.id==='oldtown_044' ? homeR93.object as Scene['objects'][number] : o),sites:scene.sites.map(s=>s.id==='access_oldtown_044' ? homeR93.site as Scene['sites'][number] : s),surfaces:scene.surfaces.filter(s=>s.id!=='home_entry'),economy:{...scene.economy,repairs:scene.economy.repairs.filter(r=>r.id!=='home_furniture'),accounts:scene.economy.accounts.map(a=>a.id==='caretaker' ? {...a,repairs:a.repairs!.filter(id=>id!=='home_furniture')} : a)}};
+ homeProjections.set(scene,prior);return prior;
+}
+export function preHomeInteriorCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preHomeInteriorScene(scene),38,true,encode);}
+
 /** r93 adds authored weather and dry-weather maintenance rules without new saved fields. */
 export const WEATHER_COMPATIBILITY='e79bef5a9b68401e438cb2eb94f1ae68e151fb65f29770e2fa166e382db817ec';
 const weatherProjections=new WeakMap<Scene,Scene>();
 export function preWeatherScene(scene:Scene):Scene{
+ scene=preHomeInteriorScene(scene);
  const cached=weatherProjections.get(scene);if(cached)return cached;
  if(!scene.weather)return scene;
  const {weather,...rest}=scene;

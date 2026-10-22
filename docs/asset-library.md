@@ -290,3 +290,15 @@ sizes. Existing clothing, conversations, work, sports and ownership stay in plac
 There are still 133 placed people. Bodies, scales, joints and pedestrian nodes
 are equal to r80; the registered upgrade preserves saved state. These remain
 stylized rigid assemblies. [Motion and measured costs](evidence/character-construction/verification.md).
+
+## Commuter home and settee
+
+The [home source](examples/enterable-home.dream) builds one open ground floor
+inside a two-storey terrace shell. Voxel frames follow directional cutaways;
+the doorway, floor and wall contacts are explicit. The measured 2.1 m timber
+settee has two seats, supported cushions and five rigid splinter groups.
+
+The live graph retains its 128-definition and 32-module limits. Two unplaced
+older buildings, the timber workshop and brick bakehouse, remain available in
+[the optional workshop architecture pack](../src/scene/world/workshop_architecture.dream)
+and the all-assets/destruction galleries. They no longer load into the live city.

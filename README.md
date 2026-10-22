@@ -509,7 +509,7 @@ Agents can ask for just the language they need: `node scripts/dream.mjs context 
 
 The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation uses Minimum Effort's Manrope and Archivo fonts, warm white, charcoal and yellow, with the same page gutters and spacing. Dream commands, fields, references, colors and expressions are highlighted, with copy buttons for complete examples.
 
-[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 1,778 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
+[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 1,781 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
 
 Streetlights now follow streets, bicycle and scooter parking sits beside destinations, and birds fly across sixteen habitats. Dream’s `furnish` and `flock` commands describe those populations with bounded rules.
 
@@ -609,6 +609,20 @@ kits, caretaker and paid repair system.
 ![A shared meal in the school common room](docs/media/schoolroom.gif)
 
 [Watch the common room](docs/media/schoolroom.mp4) · [Build the school](docs/examples/enterable-school.dream) · [Interiors](docs/dream/interiors.md#the-school-common-room)
+
+## Come home from the market
+
+The market commuter now walks through a real doorway at the end of the existing
+route. You can enter the same ground floor, sit on either side of the timber
+settee and break its frame, table or planter. The caretaker uses the same paid
+repair kits and recovered hardware as the rest of the neighborhood.
+
+![Walking into the commuter's terrace and sitting down](docs/media/home.gif)
+
+[Walkthrough](docs/media/home.mp4) · [Build the home](docs/examples/enterable-home.dream) · [Interior rules](docs/dream/interiors.md#the-commuters-home)
+
+The upper storey remains a closed shell. Bedrooms, sleeping, property permissions
+and multi-floor access are still missing.
 
 ## Run it
 

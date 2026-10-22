@@ -1695,3 +1695,15 @@ node scripts/encode-media.mjs /path/to/ffmpeg /path/to/gifsicle recovery
 
 [Rules, native state, saves and verification](../evidence/timber-recovery/verification.md).
 The exports are offline recordings, without a browser performance claim.
+
+## Commuter home, r94
+
+`home.mp4`, `home.gif` and `home.jpg` share 300 consecutive 2400 × 1350 rendered
+frames at 30 frames per simulation second. The ten-second walkthrough enters
+the existing terrace, sits on its settee and rotates the camera. Video is
+1600 × 900, GIF 1280 × 720, and the still is full-size frame 240. No interpolation
+or live performance claim. Earlier market and school recordings remain accurate
+for their unchanged venues. The upper storey stays closed.
+
+The native browser separately stood, hit the settee with K and observed its paid
+caretaker repair. [Checks, source identity and media hashes](../evidence/home-interior/verification.md).

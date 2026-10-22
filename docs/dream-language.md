@@ -29,6 +29,10 @@ For a provider integration, use the [model instructions](dream-v2-model.txt), [c
 
 The live world uses `voxel_world(object_cell=1,ground_cell=8,height_step=1);` to construct all assets and landscape surfaces from voxels. See [whole-world construction](whole-world-voxels.md). Explicit voxel volumes add bounded `fill` and `cut` operations, cached greedy surface meshing and optional fracture chunks. Start with the [voxel guide](dream/voxels.md) and [complete wall](examples/voxel-wall.dream). Physical contacts remain explicit and separate from occupied cells.
 
+Carved voxel frames can share an interior wall's `cutaway` tag. The
+[complete home and settee](examples/enterable-home.dream) combines a real doorway,
+supported furniture, seating and category-based destruction.
+
 ## Version policy
 
 Dream 2 fixes existing field meanings, units, scopes and identity paths. Compatible additions require allowlisted fields, bounds, runnable examples, updated docs and regression coverage. Regenerate the command export with `node scripts/dream.mjs contract`. Changing existing syntax, units or identity semantics requires a new major authoring version. Unknown fields keep failing.
