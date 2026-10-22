@@ -384,7 +384,7 @@ rules. Walls, reach and cooldown still matter; K keeps its sports controls on th
 pitch. [Watch the sequence in HD](docs/media/hand.mp4) ·
 [Author the interaction in Dream](docs/dream/behavior.md#on-foot-strikes).
 
-This is the first usable ground floor. Multiple floors, stairs, lifts, handheld tools and furniture pickup are still to come. Existing saves have an explicit upgrade; business state survives visiting and unloading the hall.
+This is the first usable ground floor. The home now has a usable upper floor and stairs. Lifts, handheld tools and furniture pickup are still to come. Existing saves have an explicit upgrade; business state survives visiting and unloading the hall.
 
 ## Get out and play
 
@@ -649,12 +649,22 @@ route. You can enter the same ground floor, sit on either side of the timber
 settee and break its frame, table or planter. The caretaker uses the same paid
 repair kits and recovered hardware as the rest of the neighborhood.
 
-![Walking into the commuter's terrace and sitting down](docs/media/home.gif)
+![Historical ground-floor walkthrough, before the upper floor opened](docs/media/home.gif)
 
 [Walkthrough](docs/media/home.mp4) · [Build the home](docs/examples/enterable-home.dream) · [Interior rules](docs/dream/interiors.md#the-commuters-home)
 
-The upper storey remains a closed shell. Bedrooms, sleeping, property permissions
-and multi-floor access are still missing.
+You can now walk upstairs too. Dream builds the staircase and its contacts from
+one declaration; the upper floor stays solid underfoot and the camera opens the
+house around you. Walk back down or reload upstairs and carry on. The settee,
+meals, energy and paid repairs downstairs keep working.
+
+![Walking up the home staircase, crossing the upper landing and returning downstairs](docs/media/stairs.gif)
+
+[Walkthrough](docs/media/stairs.mp4) · [Build the two-storey home](docs/examples/stairs-home.dream) · [Stair rules](docs/dream/stairs.md)
+
+The upper room is still unfurnished. NPC routines and automatic furniture placement
+use the ground floor; upstairs destinations, lifts, bedrooms, sleeping and property
+permissions remain work to do.
 
 ## Run it
 

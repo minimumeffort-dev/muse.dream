@@ -135,3 +135,5 @@ refund capacity and future output share one reservation envelope; other inputs
 still reserve independently. The compiler rejects empty-input and no-gain loops.
 [Authoring and controls](dream/businesses.md#nursery-work) ·
 [Complete runnable nursery](examples/sapling-propagation.dream).
+
+Use [stairs and upper floors](dream/stairs.md) to connect physical levels. One Dream stair command owns its tread geometry and contacts; upstairs destinations for NPCs remain separate work.

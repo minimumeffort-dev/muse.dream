@@ -87,7 +87,7 @@ const objectV2PartSchema=objectPartSchema.extend({
   shape:z.enum(["box","sphere","cylinder","cone","pyramid","icosphere","capsule","torus","prism","voxel"]),
   voxels:voxelSchema.optional(),
   outline:z.array(z.tuple([z.number().finite(),z.number().finite()])).min(3).max(24).optional(),
-  cutaway:z.enum(["roof","front","back","left","right"]).optional(),
+  cutaway:z.enum(["roof","above","front","back","left","right"]).optional(),
   parent:z.string().min(1).max(40).optional(),
   position:z.tuple([offset,z.number().finite().min(-128).max(128),offset]),
   taper:z.number().finite().min(.1).max(1).optional(),
@@ -101,7 +101,7 @@ const objectDslV2Schema=objectV1Schema.extend({
   voxelSize:z.number().finite().min(.25).max(4).optional(),
   measure:z.object({kind:z.enum(MEASURE_KINDS),axis:z.enum(["x","y","z"]),meters:z.number().finite().min(.05).max(60)}).strict().optional(),
   dslVersion:z.literal(2),joints:z.array(jointSchema).max(12).optional(),parts:z.array(objectV2PartSchema).min(1).max(32),
-  contacts:z.array(z.object({position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),radius:z.number().finite().min(1).max(64).optional(),size:z.tuple([z.number().finite().min(.1).max(128),z.number().finite().min(.1).max(128)]).optional(),headingRad:z.number().finite().min(-2*Math.PI).max(2*Math.PI).optional(),height:z.number().finite().min(.1).max(160)}).strict()).min(1).max(8).optional(),
+  contacts:z.array(z.object({position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),radius:z.number().finite().min(1).max(64).optional(),size:z.tuple([z.number().finite().min(.1).max(128),z.number().finite().min(.1).max(128)]).optional(),headingRad:z.number().finite().min(-2*Math.PI).max(2*Math.PI).optional(),height:z.number().finite().min(.1).max(160)}).strict()).min(1).max(32).optional(),
   interior:z.object({position:z.tuple([offset,z.number().finite().min(.1).max(64),offset]),size:z.tuple([z.number().finite().min(2).max(128),z.number().finite().min(1).max(128),z.number().finite().min(2).max(128)]),portals:z.array(z.object({id:z.string().min(1).max(40),side:z.enum(["front","back","left","right"]),offset:z.number().finite().min(-64).max(64),width:z.number().finite().min(1).max(32),height:z.number().finite().min(1).max(64)}).strict()).min(1).max(4)}).strict().optional(),
   seats:z.array(z.object({id:z.string().regex(/^[a-z][a-z0-9_]{0,31}$/),position:z.tuple([offset,z.number().finite().min(.1).max(128),offset]),approach:z.tuple([offset,offset]),headingRad:z.number().finite().min(-2*Math.PI).max(2*Math.PI)}).strict()).min(1).max(4).optional(),
   rideable:z.object({seat:z.tuple([offset,z.number().finite().min(0).max(128),offset]),control:z.enum(["car","bicycle","skateboard","scooter","boat","plane"]).optional()}).strict().optional(),
@@ -147,6 +147,7 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
       if(p.voxels && (p.deform || p.animation || p.material.shaderStyle==='cloth'))ctx.addIssue({code:z.ZodIssueCode.custom,path:['parts',i,'voxels'],message:'voxels use rigid geometry without deform, cloth or part motion; joints remain available'});
       if(p.voxels?.chunks && (p.fragment || !(spec.impact?.kind==='break' || p.zone)))ctx.addIssue({code:z.ZodIssueCode.custom,path:['parts',i,'voxels','chunks'],message:'voxel chunks require break behavior or a break zone and cannot belong to a fragment group'});
     });
+    if(!spec.interior && (spec.contacts?.length??0)>8)ctx.addIssue({code:"custom",path:["contacts"],message:"contact budget exceeds 8 outside an interior"});
     spec.contacts?.forEach((c,i)=>{
       if((c.radius!==undefined)===(c.size!==undefined))ctx.addIssue({code:z.ZodIssueCode.custom,path:['contacts',i,'size'],message:'contact needs exactly one of radius or size'});
       if(c.headingRad!==undefined && !c.size)ctx.addIssue({code:z.ZodIssueCode.custom,path:['contacts',i,'headingRad'],message:'heading requires a rectangle contact'});

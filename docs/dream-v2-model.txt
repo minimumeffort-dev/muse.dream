@@ -457,8 +457,8 @@ finish for orchards and natural work grounds; paint real courts, squares and
 paths. Existing surface bounds apply. See examples/orchard-replanting.dream.
 
 ## interiors
-Request this feature for enterable buildings. Author one static ground-floor
-interior per object: interior(at=[x,floor_y,z],size=[width,clear_height,depth]){
+Request this feature for enterable buildings. Author one static enclosing
+interior volume per object: interior(at=[x,floor_y,z],size=[width,clear_height,depth]){
 portal entrance(side=front,offset=0,width=4,height=6); }. Values are local units.
 front=-Z, back=+Z, left=-X, right=+X. Offset follows X on front/back, Z on sides.
 Keep a solid foundation, a matching rectangle floor contact whose top equals
@@ -466,14 +466,25 @@ floor_y, a matching ceiling contact starting at floor_y + clear_height, attached
 visible floor/walls/roof and actual openings between contacts.
 Tag shell part or voxels declarations with cutaway=roof|front|back|left|right. Leave contents and floor
 untagged. No joints, seats or whole-building impact. At most 32 placed interiors,
-4 portals each, using the existing 8 contacts and 32 parts per assembly.
+4 portals each, using 32 contacts inside interiors (8 otherwise) and 32 parts per assembly.
 Full scenes prove a clear 9-unit doorway, 20-unit headroom and approach steps <=4.
 The same contacts govern walking, driving, props, NPC paths and sight for trade
 and conversation. Narrow doors can block cars. A room owner may have a lamp;
 its always-on pool fits only the floor, without wall lighting/object occlusion.
 Repair/delivery grounds can name the placed building ID instead of another
 painted surface. This does not add work, stock, staff or markets implicitly.
-One supported ground floor only. Do not claim multiple floors, stairs or lifts.
+For an internal upper floor, author rectangle slab contacts and matching parts
+with cutaway=above. Keep the enclosure floor/ceiling contacts around the full volume;
+leave a real opening in upper slabs. stairs flight(material=wood,at=[6,.5,0],
+size=[4,8.5,22],steps=12); generates one voxel stair and matching tread contacts.
+at is the centre of the flight footprint at its base, size is width/rise/run,
+and +Z ascends; heading_deg rotates the whole flight. Two flights maximum,
+2..24 integer treads each within the 32-contact/32-part total. After measured scale:
+width >=9, risers <=4 and treads >=6 world units. Supply supported clear landings
+and 18-unit headroom across the flight. Above-tagged slabs hide below their bottom
+and stay visible when standing on them. NPC work grounds/navigation still use the
+ground floor; no automatic upper-floor furnishing, floor-specific NPC destinations
+or lifts. See examples/stairs-home.dream.
 
 ## npcs
 ACTOR OWNERSHIP AND NPC PROGRAMS

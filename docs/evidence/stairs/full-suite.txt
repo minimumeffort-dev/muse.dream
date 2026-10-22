@@ -1,0 +1,157 @@
+
+> muse-dream@0.1.0 test
+> vitest run --maxWorkers=2 --testTimeout=60000 --reporter=dot
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+················································································································x··························x···································································································································stdout | tests/resident-supplies.test.ts > replays the accepted city courier at 4 Hz, feeds school staff and pays each handoff once
+resident-supply-replay {"atS":2842.983333333334,"delivered":{"flour_run":1,"school_run":1,"kits_run":0,"saplings_run":0,"boards_run":1,"fasteners_run":1},"porterCredits":4,"schoolCredits":25,"schoolMeal":true,"porterMeal":true,"phases":["pickup","dropoff","home"]}
+
+·····························································································································································································································································································································································stdout | tests/street-guide.test.ts > routes through the actual Dream city while keeping every street leg on its authored centerline
+City graph + first route (32 streets): 1.14 ms
+100 warm city guidance queries: 0.69 ms
+
+·············································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································································stderr | tests/woodland-assets.test.ts > bounded cylinder taper > rejects taper on other shapes and from legacy data
+THREE.BufferGeometry.computeBoundingBox(): Computed min/max have NaN values. The "position" attribute is likely to have NaN values. CylinderGeometry {
+  isBufferGeometry: true,
+  uuid: '8ecf99e1-673f-45d7-9899-9cc97ee225b1',
+  name: '',
+  type: 'CylinderGeometry',
+  index: Uint16BufferAttribute {
+    isBufferAttribute: true,
+    name: '',
+    array: Uint16Array(192) [
+       0, 17,  1, 17, 18,  1,  1, 18,  2, 18, 19,  2,
+       2, 19,  3, 19, 20,  3,  3, 20,  4, 20, 21,  4,
+       4, 21,  5, 21, 22,  5,  5, 22,  6, 22, 23,  6,
+       6, 23,  7, 23, 24,  7,  7, 24,  8, 24, 25,  8,
+       8, 25,  9, 25, 26,  9,  9, 26, 10, 26, 27, 10,
+      10, 27, 11, 27, 28, 11, 11, 28, 12, 28, 29, 12,
+      12, 29, 13, 29, 30, 13, 13, 30, 14, 30, 31, 14,
+      14, 31, 15, 31, 32, 15, 15, 32, 16, 32, 33, 16,
+      50, 51, 34, 51,
+      ... 92 more items
+    ],
+    itemSize: 1,
+    count: 192,
+    normalized: false,
+    usage: 35044,
+    updateRanges: [],
+    gpuType: 1015,
+    version: 0
+  },
+  indirect: null,
+  attributes: {
+    position: Float32BufferAttribute {
+      isBufferAttribute: true,
+      name: '',
+      array: [Float32Array],
+      itemSize: 3,
+      count: 100,
+      normalized: false,
+      usage: 35044,
+      updateRanges: [],
+      gpuType: 1015,
+      version: 1
+    },
+    normal: Float32BufferAttribute {
+      isBufferAttribute: true,
+      name: '',
+      array: [Float32Array],
+      itemSize: 3,
+      count: 100,
+      normalized: false,
+      usage: 35044,
+      updateRanges: [],
+      gpuType: 1015,
+      version: 1
+    },
+    uv: Float32BufferAttribute {
+      isBufferAttribute: true,
+      name: '',
+      array: [Float32Array],
+      itemSize: 2,
+      count: 100,
+      normalized: false,
+      usage: 35044,
+      updateRanges: [],
+      gpuType: 1015,
+      version: 0
+    }
+  },
+  morphAttributes: {},
+  morphTargetsRelative: false,
+  groups: [
+    { start: 0, count: 96, materialIndex: 0 },
+    { start: 96, count: 48, materialIndex: 1 },
+    { start: 144, count: 48, materialIndex: 2 }
+  ],
+  boundingBox: Box3 {
+    isBox3: true,
+    min: Vector3 { x: NaN, y: NaN, z: NaN },
+    max: Vector3 { x: NaN, y: NaN, z: NaN }
+  },
+  boundingSphere: null,
+  drawRange: { start: 0, count: Infinity },
+  userData: {},
+  parameters: {
+    radiusTop: Infinity,
+    radiusBottom: 0.5,
+    height: 1,
+    radialSegments: 16,
+    heightSegments: 1,
+    openEnded: false,
+    thetaStart: 0,
+    thetaLength: 6.283185307179586
+  }
+}
+
+··································································································································
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docs.test.ts > published Dream documentation > keeps local links and images valid in ../README.md
+AssertionError: ../README.md: docs/media/stairs.gif: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/docs.test.ts:112:88
+    110|       if(!target || /^https?:/.test(target))continue;
+    111|       const local=new URL(target,new URL(path.slice(3),'https://docs.l…
+    112|       expect(files.some(p=>p===local || p.startsWith(local+'/')),`${pa…
+       |                                                                                        ^
+    113|     }
+    114|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/docs.test.ts > published Dream documentation > keeps local links and images valid in ../docs/dream/stairs.md
+AssertionError: ../docs/dream/stairs.md: ../media/stairs.gif: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/docs.test.ts:112:88
+    110|       if(!target || /^https?:/.test(target))continue;
+    111|       const local=new URL(target,new URL(path.slice(3),'https://docs.l…
+    112|       expect(files.some(p=>p===local || p.startsWith(local+'/')),`${pa…
+       |                                                                                        ^
+    113|     }
+    114|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 173 passed (174)
+      Tests  2 failed | 1817 passed (1819)
+   Start at  01:52:07
+   Duration  615.41s (transform 2.03s, setup 445ms, collect 302.08s, tests 909.04s, environment 11ms, prepare 3.92s)
+

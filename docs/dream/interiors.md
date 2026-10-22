@@ -45,6 +45,11 @@ source slot remains available. [Checks and capture](../evidence/school-interior/
 
 ## The commuter's home
 
+The same home now has [physical stairs and an upper floor](stairs.md). The earlier
+ground-floor walkthrough below is historical; its seating, food and repairs still
+work. Use [stairs-home.dream](../examples/stairs-home.dream) for the current house.
+
+
 The home now also supports [shared rest and energy](resting.md). Sit beside the
 resident with F; ordinary work and repairs check and spend energy, while usable
 seating recovers it. Automatic home rest shares the existing seat claims and
@@ -75,9 +80,8 @@ hall's east table and produce crate. Indoor repairs can start during rain.
 The r93 save upgrade keeps resources, damage, work and commute clocks. It
 initializes only the new repair counters, retargets derived paths and recovers
 poses blocked by the new shell. A saved car newly enclosed by the home moves
-to a clear nearby exterior position, retaining its heading, travel and ownership. The old source slot survives. The upper storey
-is a closed visual shell: no stairs, sleeping, ownership or access permissions
-are implemented. [Checks](../evidence/home-interior/verification.md).
+to a clear nearby exterior position, retaining its heading, travel and ownership. The old source slot survives. The upper storey now has [physical stairs](stairs.md). Sleeping, ownership,
+access permissions and floor-specific NPC destinations remain missing. [Checks](../evidence/home-interior/verification.md).
 
 ## Give the floor an owner
 
@@ -178,7 +182,7 @@ node scripts/dream.mjs check docs/examples/enterable-market.dream
 node scripts/dream.mjs context --features interiors,commerce
 ```
 
-The current limits are 32 placed interiors, four portals per interior, eight contacts and 32 visual parts per assembly. Existing NPC, live rig, destruction, fragment, source and navigation limits remain unchanged. Floors and room ownership live in accepted Dream data; saved people, goods, jobs and damage remain simulation state. Unloading a render chunk resets neither.
+The current limits are 32 placed interiors, four portals per interior, 32 contacts inside interiors (eight otherwise) and 32 visual parts per assembly. Existing NPC, live rig, destruction, fragment, source and navigation limits remain unchanged. Floors and room ownership live in accepted Dream data; saved people, goods, jobs and damage remain simulation state. Unloading a render chunk resets neither.
 
 [Indoor service and migration checks](../evidence/indoor-service/verification.md) · [Original interior verification](../evidence/interiors/verification.md) · [World systems still to build](../world-systems.md)
 

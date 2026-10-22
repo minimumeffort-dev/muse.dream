@@ -87,6 +87,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `ground` | object | No ID / no block | `mode: upright / surface` |
 | `foundation` | object | No ID / no block | `size: v2`, `color: color` |
 | `contact` | object | ID / no block | `at: v3`, `radius?: n`, `size?: v2`, `height: n`, `heading_deg?: n`; exactly one radius or size |
+| `stairs` | object | ID / no block | `material: ref`, `at: v3`, `size: v3`, `steps: n`, `heading_deg?: n` |
 | `interior` | object | No ID / interior | `at: v3`, `size: v3` |
 | `portal` | interior | ID / no block | `side: front / back / left / right`, `offset: n`, `width: n`, `height: n` |
 | `seat` | object | ID / no block | `at: v3`, `approach: v2`, `heading_deg: n` |
@@ -101,7 +102,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `mount` | object | ID / visual | `bone: humanoid binding` |
 | `repeat` | object / visual / path / route_path / voxel_ops | ID / inherit | `index: symbol`, `count: n` |
 | `use` | object / visual | ID / no block | `component: ref`, `args?: nums`, `materials?: symbols`, `at?: v3`, `rot_deg?: v3`, `scale?: n` |
-| `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus / prism`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `outline?: points2`, `taper?: n`, `faceted?: bool`, `deform?: deform`, `motion?: part_motion`, `cutaway?: roof / front / back / left / right` |
+| `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus / prism`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `outline?: points2`, `taper?: n`, `faceted?: bool`, `deform?: deform`, `motion?: part_motion`, `cutaway?: roof / above / front / back / left / right` |
 | `beam` | object / visual | ID / no block | `shape: box / cylinder / capsule`, `material: ref`, `from: v3`, `to: v3`, `width: n`, `depth: n`, `taper?: n`, `faceted?: bool`, `deform?: deform`, `motion?: part_motion` |
 
 Optional Dream 2 `body.clearance` is a 4..128 local-unit minimum furnishing reservation, at least the collision radius. Visible bounds can require more space. It does not change contacts, driving, navigation radii or render culling. Compiled Object DSL uses `body.clearanceRadius`; v1 data remains strict. [People and clothing](people.md).
@@ -227,7 +228,7 @@ With a measured car player, tree height and plane wingspan must exceed the car's
 | Measured size | Uniform factor .05–4; placement variation .5–2 inside its profile |
 | Unmeasured size | Placement multiplier .5–2 |
 | Compound contacts | 1–8; cylinders radius 1–64, height 1–160; static rectangles sides .1–128, height .1–160; bottom Y 0–128 |
-| Interiors | 32 placed static ground floors; 1–4 portals each; existing part/contact bounds |
+| Interiors | 32 placed static enclosures; 1–4 portals each; 32 parts and 32 contacts inside (8 contacts otherwise) |
 | Project | 32 reachable modules including entry, depth 8, 524,288 UTF-16 characters, 128 defined assemblies |
 | Full scene | Dimensions ≤16384 per axis; ≤4096 placements, 12 routes, 24 resident mobile actors, including controllable vehicles; ≤256 dormant parked vehicles |
 | Animation / effects | ≤24 live joint assemblies including player; ≤16 steam emitters |
@@ -421,7 +422,7 @@ An optional `road(style=street)` circuit uses neutral curbs and omits the racing
 
 | Command | Context | ID / block | Fields |
 | --- | --- | --- | --- |
-| `voxels` | object / visual | ID / voxel_ops | `material: ref`, `at: v3`, `size: v3`, `grid: v3`, `chunks?: v3`, `rot_deg?: v3`, `cutaway?: roof / front / back / left / right` |
+| `voxels` | object / visual | ID / voxel_ops | `material: ref`, `at: v3`, `size: v3`, `grid: v3`, `chunks?: v3`, `rot_deg?: v3`, `cutaway?: roof / above / front / back / left / right` |
 | `fill` | voxel_ops | ID / no block | `from: v3`, `to: v3`, `shape?: box / ellipsoid` |
 | `cut` | voxel_ops | ID / no block | `from: v3`, `to: v3`, `shape?: box / ellipsoid` |
 
@@ -781,3 +782,19 @@ and [runnable example](../examples/rain-work.dream).
 ## Rest and energy
 
 `rest` declares a bounded game need and ordered NPC seat preferences; `account(...,rest=id)` opts in. Player seating can recover on any usable furniture. Shared work/repair effort, physical trips, claims and persistence are described in [Rest and energy](resting.md), with the [complete runnable example](../examples/resting.dream).
+
+
+## Stairs and upper floors
+
+`stairs flight(material=wood,at=[6,.5,0],size=[4,8.5,22],steps=12);`
+creates matching visible treads and static contacts. `at` is the footprint centre
+at base height, `size` is width, rise and run, and +Z ascends before optional
+`heading_deg`. Two flights per interior, 2..24 integer treads each, within 32
+contacts and 32 parts. Measured width must reach 9 world units, risers at most 4
+and tread depth at least 6. Landings need support and 18 units of headroom.
+`cutaway=above` hides an upper slab when viewed from downstairs and keeps it
+opaque underfoot upstairs, including streamed meshes. The enclosing interior's
+floor polygon remains the ground-floor work/navigation area. Upstairs furniture
+placement, NPC destinations and lifts need further language/runtime work.
+
+[Build the two-storey home](../examples/stairs-home.dream) · [Walking guide](stairs.md).

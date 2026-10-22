@@ -91,8 +91,10 @@ pipeline depends on.
   takeoff, ballistic flight and landings remain in the pure fixed-step sim.
   The travel mask always constrains the full footprint, including in flight.
   Objects have independent cylinder radius/height; a jump can clear a low
-  object, strike a tall one, or land on its cap. There is one ground height
-  per XY position, not arbitrary stacked geometry or overhangs.
+  object, strike a tall one, or land on its cap. Terrain retains one ground height
+  per XY position. Bounded static interior contacts also provide upper floors,
+  ceilings and generated stairs through the same fixed-step support/collision
+  rules. Floor-specific NPC navigation and lifts remain separate capabilities.
   Solid objects and the travel mask bound movement. No decomposing noisy
   outlines into physics bodies, no mixing physics engines.
 - Scenes are versioned documents: scene/revision IDs, source hash,

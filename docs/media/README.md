@@ -1758,3 +1758,21 @@ Video is 1600 × 900, GIF 1280 × 720 and the still is full-size frame 150.
 focus ring. The earlier direct-bearing map/task captures are historical for
 guidance; their controls still apply. No frame interpolation or FPS claim.
 [Runtime, source and frame evidence](../evidence/street-guidance/verification.md).
+
+
+## Stairs and upper floor, r98
+
+`stairs.mp4`, `stairs.gif` and `stairs.jpg` are one current walkthrough of the
+commuter's home: normal fixed-step movement climbs the wooden treads, crosses
+the upper landing and descends again. Export `stairs` from the dev-only
+`?capture` controls: 360 consecutive PNGs, 30 rendered frames per simulation
+second. Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> stairs`.
+The HD video is 1600×900 and the GIF is 1280×720; both use the same source frames.
+This is an offline motion export, not measured live browser performance.
+
+Earlier `home`, `home-meal` and `rest` captures predate the upper floor and table
+relocation. They remain historical evidence of the ground-floor food, shared
+seat and energy policies. Those policies, controls and character models still
+apply; use the new stairs capture for the current house layout. Other venues,
+transport and sports recordings remain accurate because their inputs and
+presentation did not change. [Checks](../evidence/stairs/verification.md).

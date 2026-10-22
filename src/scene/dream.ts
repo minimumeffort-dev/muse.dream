@@ -1,3 +1,4 @@
+import {contactOverlaps} from "./contact-geometry";
 import {poolableImpact} from './damage-pool';
 import {ambientMotionSchema,ambientData,type AmbientMotion} from './ambient';
 import {furnishingSchema,flockSchema,furnishWorld,restingTemplate,POPULATION_LIMITS,type Furnishing,type Flock} from './population';
@@ -130,6 +131,7 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
     let emitter:ObjectDslV2["emitter"],lamp:ObjectDslV2["lamp"];
     let impact:ObjectDslV2["impact"];
     let measure:ObjectDslV2["measure"],interior:ObjectDslV2["interior"];
+    const stairFlights:{width:number;rise:number;run:number;steps:number;x:number;y:number;z:number;heading:number;token:Token}[]=[];
     const breakZones:NonNullable<ObjectDslV2["breakZones"]>=[];
     const walk = (block: Statement[], frame: Frame, inherited: Map<string, number>, stack: string[] = [], root = false, depth = 0,materials=program.materials) => {
       if (depth > DREAM_LIMITS.nesting) fail("expanded nesting exceeds 16", block[0]?.token,"E_BUDGET");
@@ -140,7 +142,7 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
         const number = (expr: Expr) => numeric(expr, env);
         const path=[...(frame.path??[]),statement.scope??statement.name??kind];
         const id = () => program.version===2 ? stableId(path) : `${statement.name!.slice(0, 25)}-${serial++}`;
-        if (["body", "measure", "ground", "foundation","contact","interior","seat","rideable","lamp","emit","impact","zone"].includes(kind) && !root) fail(`${kind} belongs directly inside an object`, token);
+        if (["body", "measure", "ground", "foundation","contact","stairs","interior","seat","rideable","lamp","emit","impact","zone"].includes(kind) && !root) fail(`${kind} belongs directly inside an object`, token);
         if(root && ["body","measure","ground","foundation","interior","rideable","emit","impact"].includes(kind))metadataOrigins.set(kind==="ground" ? "grounding" : kind==="emit" ? "emitter" : kind,token);
         switch (kind) {
           case "measure":measure={kind:statement.name as NonNullable<ObjectDslV2["measure"]>["kind"],axis:statement.axis as "x"|"y"|"z",meters:number(statement.value!)};break;
@@ -174,8 +176,24 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
           case "rideable": if(rideable)fail("duplicate rideable",token);rideable={seat:statement.at ? vector(statement.at,env).toArray() : [0,16,0],...(statement.control ? {control:statement.control as NonNullable<ObjectDslV2["rideable"]>["control"]} : {})};break;
           case "emit":if(emitter)fail("duplicate emitter",token);emitter={kind:statement.name as "steam",position:vector(statement.at,env).toArray(),rate:number(statement.value!)};break;
           case "contact":
-            if(contacts.length>=8)fail("contact budget exceeds 8",token);
+            if(contacts.length>=32)fail("interior contact budget exceeds 32",token);
             contacts.push({position:vector(statement.at,env).toArray(),...(program.version===1 ? {radius:number(statement.args![0]!)} : {...(statement.args ? {radius:number(statement.args[0]!)} : {}),...(statement.contactSize ? {size:statement.contactSize.map(number) as [number,number]} : {}),...(statement.heading ? {headingRad:number(statement.heading)*RAD} : {})}),height:number(program.version===1 ? statement.args![1]! : statement.value!)});contactOrigins.push(token);break;
+          case "stairs":{
+            const material=materials.get(statement.material!);if(!material)fail(`unknown material '${statement.material}'`,token,"E_REFERENCE");
+            const [width,rise,run]=vector(statement.size,env).toArray(),[x,y,z]=vector(statement.at,env).toArray(),steps=number(statement.value!),heading=statement.heading ? number(statement.heading)*RAD : 0;
+            if(!Number.isInteger(steps) || steps<2 || steps>24)fail("stairs.steps must be an integer from 2 to 24",{...token,path:`${token.path}/steps`},"E_SCHEMA");
+            if(![width,rise,run].every(n=>n>=.1 && n<=128) || y<0)fail("stairs need positive size in .1..128 and a nonnegative base",token,"E_SCHEMA");
+            if(stairFlights.length>=2 || contacts.length+steps>32)fail("stairs exceed two flights or 32 interior contacts",token,"E_BUDGET");
+            budget.steps+=steps;if(budget.steps>DREAM_LIMITS.steps)fail("expansion budget exceeds 2048 statements",token,"E_BUDGET");
+            const c=Math.cos(heading),s=Math.sin(heading),operations:NonNullable<ObjectDslV2["parts"][number]["voxels"]>["operations"]=[];
+            for(let i=0;i<steps;i++){
+              const offset=-run/2+(i+.5)*run/steps;
+              contacts.push({position:[x-offset*s,y,z+offset*c],size:[width,run/steps],height:rise*(i+1)/steps,...(heading ? {headingRad:heading} : {})});contactOrigins.push(token);
+              operations.push({mode:"fill",shape:"box",from:[0,0,i],to:[1,i+1,i+1]});
+            }
+            parts.push({id:id(),shape:"voxel",material:{...material},position:[x,y+rise/2,z],size:[width,rise,run],rotation:[0,-heading,0],voxels:{grid:[1,steps,steps],operations}});origins.push(token);
+            stairFlights.push({width,rise,run,steps,x,y,z,heading,token});break;
+          }
           case "interior":
             if(interior)fail('duplicate interior',token);
             if(statement.block!.length>4)fail('portal budget exceeds 4',token,'E_BUDGET');
@@ -260,7 +278,7 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
             }
             parts.push({ id: id(), shape: statement.shape as ObjectDslV2["parts"][number]["shape"], material: { ...material },
               position: position.toArray(), size: size.toArray(), rotation: angles(orient), ...(frame.parent ? { parent: frame.parent } : {}),
-              ...(voxels ? {voxels} : {}),...(statement.cutaway ? {cutaway:statement.cutaway as "roof"|"front"|"back"|"left"|"right"} : {}),
+              ...(voxels ? {voxels} : {}),...(statement.cutaway ? {cutaway:statement.cutaway as "roof"|"above"|"front"|"back"|"left"|"right"} : {}),
               ...(statement.taper ? {taper:number(statement.taper)} : {}),
               ...(statement.faceted!==undefined ? {faceted:statement.faceted} : {}),
               ...(statement.outline ? {outline:statement.outline.map(point=>point.map(number) as [number,number])} : {}),
@@ -294,7 +312,19 @@ function compileObjects(program:Program,budget={steps:0},rules:InteractionRule[]
       const token=(typeof index==="number" ? tokens[index] : metadataOrigins.get(field))??object.token;
       fail(`${object.name}${rule ? ` (rule ${rule.id})` : ''}: ${issue.path.join(".") || "assembly"}: ${issue.message}`, token,"E_SCHEMA");
     }
-    return result.data as ObjectDslV2;
+    const compiled=result.data as ObjectDslV2;
+    for(const flight of stairFlights){
+      const scale=compiled.measure ? measuredScale(compiled) : 1;
+      if(!compiled.interior)fail("stairs require an interior enclosure",flight.token,"E_SCHEMA");
+      if(flight.width*scale<9 || flight.rise*scale/flight.steps>4 || flight.run*scale/flight.steps<6)fail("stairs need 9-unit width, risers <=4 and treads >=6 after measured scale",flight.token,"E_SCHEMA");
+      const boxes=compiled.contacts!.map(c=>({x:c.position[0],y:c.position[2],r:c.radius??Math.hypot(...c.size!)/2,bottom:c.position[1],top:c.position[1]+c.height,...(c.size ? {box:{halfX:c.size[0]/2,halfY:c.size[1]/2,headingRad:c.headingRad??0}} : {})})),radius=3/scale,room=compiled.interior!;
+      for(let i=-1;i<=flight.steps;i++){
+        const offset=-flight.run/2+(i+.5)*flight.run/flight.steps,x=flight.x-Math.sin(flight.heading)*offset,z=flight.z+Math.cos(flight.heading)*offset,expected=flight.y+flight.rise*Math.max(0,Math.min(flight.steps,i+1))/flight.steps;
+        const overlapping=boxes.filter(c=>contactOverlaps(c,x,z,radius)),floor=Math.max(-Infinity,...overlapping.filter(c=>c.top<=expected+4/scale+.001).map(c=>c.top));
+        if(Math.abs(x-room.position[0])+radius>room.size[0]/2 || Math.abs(z-room.position[2])+radius>room.size[2]/2 || Math.abs(floor-expected)>4/scale+.001 || overlapping.some(c=>c.top>floor+.001 && c.bottom<floor+18/scale-.001))fail("stairs need clear supported landings and 18-unit headroom along every tread",flight.token,"E_SCHEMA");
+      }
+    }
+    return compiled;
   });
 }
 

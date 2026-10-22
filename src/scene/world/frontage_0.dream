@@ -99,7 +99,7 @@ asset a_home_planter(module=impact_creations,object=terracotta_planter);
 place oldtown_044(object=a_commuter_home,at=[6493.348,4009.391347826087],heading_deg=180);
 site access_oldtown_044(object=oldtown_044,kind=home,entry=[0,-18.6],street=market_avenue,width=16,points=[[6493.348,4112]]);
 place home_settee(object=a_home_settee,at=[6512,3978],heading_deg=0);
-place home_table(object=a_home_table,at=[6475,3990],heading_deg=0);
+place home_table(object=a_home_table,at=[6490,3990],heading_deg=0);
 place home_planter(object=a_home_planter,at=[6514,4035],heading_deg=0);
 place oldtown_045(object=a_bakery,at=[6647.241,3993.542],heading_deg=180);
 site access_oldtown_045(object=oldtown_045,kind=market,entry=[0,-19.25],street=market_avenue,width=16,points=[[6647.241,4112]]);

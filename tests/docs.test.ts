@@ -10,6 +10,9 @@ const examples=import.meta.glob<string>('../docs/examples/*.dream',{query:'?raw'
 const files=Object.keys(import.meta.glob(['../src/**/*','../docs/**/*','../scripts/*','../tests/**/*','../README.md'])).map(p=>p.slice(3));
 
 describe("published Dream documentation",()=>{
+  it('keeps the stair declaration identical to its runnable source and linked live house',()=>{
+    const guide=pages['../docs/dream/stairs.md']!,declaration=guide.match(/```dream\n([\s\S]*?)```/)![1]!.trim();expect(examples['../docs/examples/stairs-home.dream']).toContain(declaration);expect(worldModules.destructible).toContain(declaration);
+  });
   it('keeps the nursery declaration identical to its complete runnable example',()=>{
     const section=pages['../docs/dream/businesses.md']!.split('## Nursery work')[1]!;
     expect(examples['../docs/examples/sapling-propagation.dream']).toContain(section.match(/```dream\n([\s\S]*?)```/)![1]!.trim());

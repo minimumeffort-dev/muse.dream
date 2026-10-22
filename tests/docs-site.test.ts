@@ -6,6 +6,7 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights stairs and steps at exact boundaries while escaping source text',()=>{const html=highlight('stairs flight(material=wood,at=[0,0,0],size=[4,8,22],steps=12); // <Stairs>&');expect(html).toContain('class="dream-keyword">stairs</span>');expect(html).toContain('class="dream-field">steps</span>');expect(html).toContain('&lt;Stairs&gt;&amp;');expect(highlight('upstairs stairs_extra steps_extra')).not.toMatch(/dream-(?:keyword|field)/);});
   it('highlights rest commands and fields at exact boundaries and escapes authored text',()=>{
     const html=highlight('rest home(energy=20,recover_s=5,below=25,until=85,seats=[bench],on=yard); account person(rest=home); // <Rest>&');
     expect(html).toContain('class="dream-keyword">rest</span>');expect(html).toContain('class="dream-field">energy</span>');expect(html).toContain('&lt;Rest&gt;&amp;');expect(highlight('resting rest_plan recover_something')).not.toMatch(/dream-(?:keyword|field)/);

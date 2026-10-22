@@ -13,7 +13,7 @@ import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
 import {workCommuteReviewSteps} from '../src/game/work-commute-review';
 import {restReviewSteps} from '../src/game/rest-review';
-const scene=createWorldScene(),snapshot=JSON.stringify(scene),prior=c.preRestScene(scene);
+const scene=c.preStairsScene(createWorldScene()),snapshot=JSON.stringify(scene),prior=c.preRestScene(scene);
 const world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.REST_COMPATIBILITY,previousRestSaveCompatibility:c.WORK_COMMUTE_COMPATIBILITY,previousWorkCommuteSaveCompatibility:c.HOME_MEALS_COMPATIBILITY};
 const old:World={...world,scene:prior,saveCompatibility:c.WORK_COMMUTE_COMPATIBILITY,previousRestSaveCompatibility:undefined};
 const regular=(s:ReturnType<typeof createCarAtSpawn>)=>s.economy!.accounts.find(a=>a.id==='regular')!;
@@ -21,7 +21,7 @@ const player=(s:ReturnType<typeof createCarAtSpawn>)=>s.economy!.accounts.find(a
 const run=<T>(steps:Generator<void,T>)=>{let r=steps.next();while(!r.done)r=steps.next();return r.value;};
 afterAll(()=>expect(JSON.stringify(scene)).toBe(snapshot));
 it('registers exact r96 without changing physical data, resources, jobs or actor budgets',async()=>{
- expect(c.SAVE_SIMULATION_VERSION).toBe(41);expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.REST_COMPATIBILITY);expect(await c.sha256(c.preRestCompatibilitySource(scene))).toBe(c.WORK_COMMUTE_COMPATIBILITY);expect(await c.sha256(c.preWorkCommuteCompatibilitySource(scene))).toBe(c.HOME_MEALS_COMPATIBILITY);
+ expect(JSON.parse(c.preStairsCompatibilitySource(scene)).simulationVersion).toBe(41);expect(await c.sha256(c.preStairsCompatibilitySource(scene))).toBe(c.REST_COMPATIBILITY);expect(await c.sha256(c.preRestCompatibilitySource(scene))).toBe(c.WORK_COMMUTE_COMPATIBILITY);expect(await c.sha256(c.preWorkCommuteCompatibilitySource(scene))).toBe(c.HOME_MEALS_COMPATIBILITY);
  for(const key of ['objects','routes','streets','terrain','player'] as const)expect(scene[key]).toEqual(prior[key]);expect(scene.economy!.markets).toEqual(prior.economy!.markets);expect(scene.economy!.jobs).toEqual(prior.economy!.jobs);expect(repairNavigation(scene).services).toEqual(repairNavigation(prior).services);expect(prior.economy!.rests).toBeUndefined();expect(prior.economy!.accounts.every(a=>!a.rest)).toBe(true);
 });
 it('shares home seating for real energy recovery after a finite meal and replays the complete return exactly',()=>{

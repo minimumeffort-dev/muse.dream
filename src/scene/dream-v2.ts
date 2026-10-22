@@ -148,6 +148,7 @@ export function lowerBlock(nodes:DreamNode[]):Statement[] {
       case "seat":statement.approach=listField(node,"approach");statement.heading=n("heading_deg");break;
       case "rideable":if(node.fields.has("control"))statement.control=wordField(node,"control");break;
       case "contact":statement.value=n("height");if(node.fields.has("radius"))statement.args=[n("radius")];if(node.fields.has("size"))statement.contactSize=listField(node,"size");if(node.fields.has("heading_deg"))statement.heading=n("heading_deg");break;
+      case "stairs":statement.material=wordField(node,"material");statement.size=v("size");statement.value=n("steps");if(node.fields.has("heading_deg"))statement.heading=n("heading_deg");break;
       case "interior":statement.size=v("size");break;
       case "portal":statement.name=wordField(node,"side");statement.args=[n("offset"),n("width"),n("height")];break;
       case "emit":statement.name=wordField(node,"kind");statement.value=n("rate_s");break;
@@ -197,7 +198,7 @@ function validateReferences(nodes:DreamNode[]):void {
         if(numericTypes.has(type) || type==="position2" && Array.isArray(value))checkNumbers(value,scope);
         if(isNode(value))for(const [innerKey,inner] of value.fields)if(commands[value.kind]!.fields[innerKey]==="n")checkNumbers(inner,scope);
       }
-      if((node.kind==="part" || node.kind==="beam" || node.kind==="voxels") && !materialScope.has(wordField(node,'material')))reference(node,"material","material");
+      if((node.kind==="part" || node.kind==="beam" || node.kind==="voxels" || node.kind==="stairs") && !materialScope.has(wordField(node,'material')))reference(node,"material","material");
       if(node.kind==="use"){
         const target=reference(node,"component","component"),params=(target.fields.get("params") as Expr[]|undefined)??[];
         if(((node.fields.get("args") as Expr[]|undefined)??[]).length!==params.length)fail(`component '${target.id}' expects ${params.length} arguments [${params.map(p=>p.name).join(',')}]`,{...node.token,path:`${node.token.path}/args`},"E_ARITY",params.map(p=>p.name!));

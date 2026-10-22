@@ -87,3 +87,5 @@ clocks and history. It initializes only the newly declared energy values, withou
 guessing elapsed tiredness or interrupting existing jobs. Old source slots remain.
 There are no beds, sleep schedules, dreams, interiors above the ground floor or
 general daily planner yet.
+
+The home layout in this recording is historical, before the upper floor opened. Rest controls and energy rules still apply. See [stairs](stairs.md) for the current house and table position.

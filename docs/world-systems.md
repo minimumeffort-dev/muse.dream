@@ -11,16 +11,23 @@ trailers, vehicle damage and service fleets remain separate work.
 
 ## Next playable work
 
+The commuter's home now has physical stairs and a usable upper room. Player
+walking, jumping, descending, cutaways and upstairs saves use the same ordinary
+contacts. The existing food, rest and work loop stays downstairs. Next: give the
+upper room useful household activity and extend floor-aware NPC destinations;
+lifts and general stacked-room navigation remain missing. [Stairs](dream/stairs.md).
+
+
 Shared rest now gives the home another purpose. The commuter can buy food, walk
 to a free home cushion, recover energy and resume the routine before paid work.
 The player recovers through ordinary seating too. Existing stock, wages and
 repairable furniture remain connected; beds, sleep schedules, emotional needs
-and multi-floor access are still missing. [Rest rules](dream/resting.md).
+and upper-floor routines are still missing. [Rest rules](dream/resting.md).
 
 Resident work commuting now connects existing homes to ordinary paid jobs.
 The commuter can buy food, walk to baking work, earn a wage and return without
 new people, starting money or geometry. Broader schedules, useful indoor roles,
-relationships and multi-floor access remain priorities.
+relationships and useful upstairs activity remain priorities.
 
 Work-ground connection building now reuses the exact nearest-node index instead
 of sorting the public graph at every entrance. All current work and journey
@@ -31,7 +38,7 @@ open performance tasks. [Measurements](evidence/work-network-build/verification.
 The commuter now uses the open home for a paid meal, sharing separate cushion
 claims with the player. The hall bench remains a fallback, and old hall meals
 finish after upgrade. The home still needs more purposes beyond seating, eating
-and damage/repair; upper floors, sleep and access rules remain missing.
+and damage/repair; upper-floor routines, sleep and access rules remain missing.
 
 Navigation now opens from the minimap or C, with map zoom/pan, a removable
 waypoint and HUD bearing/distance. Ground vehicles now route along the shared
@@ -112,8 +119,8 @@ keep the current mock/provider boundary.
 The existing market commuter now has an enterable home on the same route.
 Its foyer, settee, table and planter use ordinary walking, seating, damage and
 paid repairs; the caretaker shares existing supplies and capacity. The upper
-storey remains closed. Sleeping, ownership, multi-floor access and household
-routines remain priorities. [Home](dream/interiors.md#the-commuters-home).
+storey is now reachable by stairs. Sleeping, ownership, floor-specific NPC journeys
+and household routines remain priorities. [Home](dream/interiors.md#the-commuters-home).
 
 ## Grow the language through working scenarios
 
@@ -144,7 +151,7 @@ The current direction is a playable life simulation: people, work, food, service
 
 Player-to-person authored conversations now use the existing bounded state machines. They are local text interactions with remembered familiarity and saved routine state, with personal work/delivery recognition now available; broader relationship progression still missing. The playable market now adds bounded accounts, inventories, conserved trade, food, fullness and timed paid work. NPC staff and a customer use the same transactions as the player. The vendor now packs lunches and bakes according to shelf demand; the helper can fetch finite flour. The commuter can now leave a routine to buy a lunch, eat and return through the pedestrian network, with persistent trip state and shared finite stock. Delivery commitments now reserve finite goods/pay and connect the station depot, bakery and school. The next shared primitives are upstream supply production, richer employment schedules and explicit access between spaces. Restaurants can then consume ingredients and sell meals, employers can pay wages from a treasury, and people can follow schedules with actual destinations. Each step needs a small executable example and a second use of the same primitive, with invalid and interrupted actions tested.
 
-The first enterable market now has an explicit floor/space owner, portals, clearance, supported movement, a cutaway view and streaming. The current single-height driving field cannot stand in for multiple floors. Skyscrapers, lifts and stairs require that additional layer before they are called usable. Relationships and dating need authored consent, preferences, memory and repeatable social interactions; the current attention state is only a proximity reaction. Six-a-side arcade matches now work; referees, competition rulebooks, entertainment venues, weather and needs beyond market fullness remain separate missing mechanics.
+The first enterable market now has an explicit floor/space owner, portals, clearance, supported movement, a cutaway view and streaming. The current single-height driving field cannot stand in for multiple floors. The home now uses bounded static stair and slab contacts inside one enclosure; floor-specific NPC journeys and lifts still require their own movement layer. Relationships and dating need authored consent, preferences, memory and repeatable social interactions; the current attention state is only a proximity reaction. Six-a-side arcade matches now work; referees, competition rulebooks, entertainment venues, weather and needs beyond market fullness remain separate missing mechanics.
 
 Night navigation now has readable sky/ground fill outside lamp pools, while static districts load and unload around the player. Startup reuses worker-prepared paths, contacts and culling bounds, batches canonical save fingerprints without changing their bytes, yields during route/asset assembly and waits for shader readiness. Terrain and outline queries now avoid repeated work while preserving the exact accepted scene, graphs, contacts and saved-world fingerprints. The [query evidence](evidence/startup-queries/verification.md) records construction and native browser checks separately. These improvements support the larger simulation without adding actors or reducing visual settings. Continue measuring populated districts as new systems land, especially on lower-powered laptops and cold loads. Keep provider integration and external-policy adapters deferred until separately authorized.
 
@@ -157,7 +164,7 @@ Night navigation now has readable sky/ground fill outside lamp pools, while stat
 4. Staff now prepare lunches, the commuter takes a real meal detour, and the helper can resupply flour, using finite credits/stock, a timed meal and a saved return to the paused routine. Shared indoor seating now connects that trip to the hall. Next add more resident purposes and upstream production, then schedules and relationship history that change choices. Completed shared meals now add per-person history and authored return dialogue, with availability/fullness/cooldown boundaries. NPC-funded invitations now use that same activity and finite economy. Next add another shared activity; dating and a general relationship system remain separate.
 5. The 91 dormant vehicles now share direct controls through bounded activation, with instanced parked poses and persistent contacts. Pickups and parcel trucks now reuse that shared control system. Keep auditing road paint, corners, signs and asset attachments. Expand force-based destruction consistently across the world and make it persistent. The first repair worker now uses connected pedestrian routes, waits for obstructions and restores selected market/park/station furniture. Pooled static destruction now supports the 413 streetlights without making their intact geometry resident scene nodes. All 345 measured trees now share whole-tree toppling while retaining their foliage wind and material finishes. The service replants 106 trees through connected work areas, with matching contact bodies and finite delivered saplings. Extend recovery to the remaining woodland and more structural categories. Active debris and mesh caches remain bounded at 24 assemblies/templates and 128 pieces/fragment meshes; legacy limits stay unchanged. Add coherent weather and sound alongside those systems. Measure dense scenes, interiors, long travel and save responsiveness. Extend save migration when the world schema changes. Files can move progress between compatible browsers/devices manually; there is no cloud sync.
 
-Existing limits remain visible: the city has decorative institutions, bounded NPC routines, arcade vehicles and six-a-side sports. It has a working food/work/delivery loop and one enterable market ground floor, with no employment contracts, enterable restaurant, relationship progression or multi-floor interior movement yet. Rain is the first bounded weather rule. Prioritize connected activities over adding more empty buildings.
+Existing limits remain visible: the city has decorative institutions, bounded NPC routines, arcade vehicles and six-a-side sports. It has a working food/work/delivery loop and one enterable market ground floor, with no employment contracts, enterable restaurant, relationship progression or general floor-specific NPC navigation yet. Rain is the first bounded weather rule. Prioritize connected activities over adding more empty buildings.
 
 Wind-safe toppling now reuses prepared scenery geometry and preserves the crown's
 GPU motion and materials. A missing prototype uses the same bounded worker queue

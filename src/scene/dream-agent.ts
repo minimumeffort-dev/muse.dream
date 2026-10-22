@@ -10,7 +10,7 @@ export const DREAM_AGENT_FEATURES={
   modules:feature('asset include',['modules'],['objects']),
   interactions:feature('rule impact fragment zone bounce break topple strike',['interactionRules','destruction','striking'],['objects']),
   city:feature('street surface marking site crossing stop',['urbanGround','cityAccess','transit'],['world','npcs']),
-  interiors:feature('interior portal',['interiors'],['city']),
+  interiors:feature('interior portal stairs',['interiors'],['city']),
   npcs:feature('behavior state on',['agents'],['world']),
   commerce:feature('economy good account market lot work ingredient delivery repair milestone meal shift social ration rest',['commerce'],['npcs','city','lighting','weather']),
   population:feature('furnish flock walk roam',['population'],['city','modules','interactions']),
