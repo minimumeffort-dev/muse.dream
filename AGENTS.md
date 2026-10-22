@@ -345,7 +345,7 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 ## Saved simulation state
 
 Current save format 19 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 39. Historical formats retain their registered projections.
+at simulation version 40. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -378,8 +378,9 @@ upgrade. Preserve the old format-9 slot and the entire earlier migration chain.
 
 Dream `economy()` contains bounded `good`, `account`, `market`, `lot` and `work`
 data. Actor ownership resolves after linking; one player account, at most 16
-accounts, 8 goods, 8 markets and 16 jobs. Markets/automatic workers are stationary
-NPCs; customers may use existing validated routes. B/V/H/G are per-press requests,
+accounts, 8 goods, 8 markets and 16 jobs. Market operators and workers without
+`commute` stay stationary; explicit commuters use bounded on-foot journeys.
+Customers may use existing validated routes. B/V/H/G are per-press requests,
 accepted on foot, grounded and dry. All accounts use the same finite trade,
 food, capacity and reserved-work rules. Work reserves input/wage/output/refund
 space, completes once, or refunds on cancellation/range loss; no pay on cancel.

@@ -613,6 +613,13 @@ kits, caretaker and paid repair system.
 
 ## Come home from the market
 
+The commuter can now walk to paid work too. A shortage starts the trip; the
+bakery checks the job again on arrival, then pays for completed work. Food,
+materials, wages and the return home all use the existing rules.
+[Write a work commute in Dream](docs/dream/commuting.md).
+
+![The commuter working at the market after walking from home](docs/media/work-commute.png)
+
 The commuter now buys a packed lunch and brings it home to the settee. Sit on
 one cushion and they can take the other. Dream lists preferred furniture first;
 if the home settee is unavailable, they try the hall bench, then eat standing.

@@ -1,6 +1,11 @@
 # Leave and come back
 
-The current world uses format 19 / simulation 39. Its registered r94 upgrade
+The current world uses format 19 / simulation 40. Its registered r95 upgrade
+keeps every saved field and adds no implicit work, stock or wages. New work trips
+begin through the ordinary NPC decision loop after restore.
+
+
+The r95 world uses format 19 / simulation 39. Its registered r94 upgrade
 checks the exact previous world, then keeps every saved field: a customer already
 walking to or eating at the hall bench finishes that same meal. New purchases
 use the authored home-first preference. The settee's sitting points stay fixed;
@@ -841,3 +846,20 @@ seat claims and eating deadlines. Hall seating remains allowed, so an existing
 commitment finishes normally before a new trip uses the authored preference.
 Physical geometry and sitting points are unchanged; no pose recovery or resource
 initialization is added. The original slot and earlier migration chain survive.
+
+
+## Work-commute upgrade, r96
+
+The accepted-world fingerprint is
+`9b818d954cf53fe239b685e7cc54600aa417f0541de32e3b9c99db1bef443cad`.
+Projecting only the commuter's new `works`, `commute`, `on` and `grounds` fields
+reproduces the exact r95 fingerprint
+`62198a1eb0f91bb6793276db568458a0a980823c492c7f1fb7f2e8cf7cc8cdd4` at simulation 39.
+
+All old state remains exact, including paid batches, sealed deliveries, occupied
+home seats and meal timers. Work trips add an optional per-account state with
+out/work/home phase, the original pose and a bounded path. Work phase owns exactly
+one matching ordinary job; other phases cannot hold a paid batch. Restore checks
+body-supported routes, destinations, membership, clocks and all existing resource
+conservation. It never starts a job during migration. Original slots and the
+entire earlier migration chain remain available.

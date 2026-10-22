@@ -806,12 +806,35 @@ breakable equipment. See examples/work-equipment.dream.
 
 Labels must contain nonblank text. Every declaration except economy and ingredient needs a stable ID. Scope IDs are unique; good IDs
 and lot goods must agree. One economy per linked project, with exactly one player
-account. Other account actors are existing role=npc placements. Markets and production
-workers must be stationary NPCs. NPC shop=true buys and eats food at satiety <=40;
+account. Other account actors are existing role=npc placements. Market operators and
+production workers without commute=true must be stationary NPCs. NPC shop=true buys and eats food at satiety <=40;
 NPC work refills output up to target. Alternatively works=[advanced,basic] is an
 ordered list of 1..4 unique work IDs, exclusive with work, repairs and deliveries.
 Try the first eligible job below target; no extra actors, commitments or free stock.
 Player accounts never act automatically.
+NPC work commuting is opt-in account(...,works=[first_job,second_job],commute=true,on=home_ground,grounds=[extra_ground]).
+Use a complete measured humanoid decor NPC with a program and a stationary home
+or walk route. Other automatic repair/delivery/shop/shift/social/ration policies
+are excluded; meal may coexist and takes priority when a meal is available.
+Only NPC policies commute; the player walks to the same counter and uses normal
+work controls. At most four ordered jobs, eight total convex grounds, 4096 local
+samples, 8192 graph nodes, 32768 links and 128 saved path points per journey.
+The engine fits the actual body rounded up to .1 units, at least radius 4 and
+headroom 18, with authored body bounds radius <=8 and height <=32. Public pavement
+connects the grounds. Complete-world acceptance checks outward and return paths
+for every assigned job. No model-authored graph, runtime pose stream or controller code.
+A target shortage can begin a trip after checking job prerequisites and resources.
+Travel reserves no inputs, output room, wage or work slot. Arrival rechecks the
+same player work rules: actual reach, open/staffed counter, equipment, capacity,
+food effort, materials, treasury and qualification. Unavailable work returns
+empty-handed. A started batch reserves and completes/refunds through ordinary
+work; returning releases the trip and resumes the paused program at its original
+pose. Trips and work are mutually exclusive with other commitments, except the
+single work owned by its work-phase trip. Paths, home, counters and resource
+ownership persist; pause, R, streaming and reload do not reset them. No offline
+travel, automatic transport, guaranteed wages or new actor/rig budgets.
+Complete example: examples/work-commute.dream. Guide: dream/commuting.md.
+
 NPC meal trips use meal id(good=food_id,markets=[first_shop,second_shop],on=home_ground,grounds=[extra_ground],eat_s=4,seats=[bench_placement]); and account.meal=meal_id.
 Optional seats lists 1..4 unique static furniture placement IDs in preference
 order; slots within each furniture use their authored order. Seated customers

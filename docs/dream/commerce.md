@@ -1,5 +1,10 @@
 # A market you can use
 
+Residents can now [walk to paid work](commuting.md). The live commuter keeps
+their home meal plan and can earn baking wages through the same guarded jobs
+as the player. Travel itself earns nothing and reserves no resources.
+
+
 The bakery counter now operates [inside the market hall](interiors.md). Earlier outdoor-counter recordings on this page show the same finite transactions before the r82 relocation.
 
 The market now opens on request: use its icon or **M**, then choose Shop or Work.
@@ -18,7 +23,7 @@ The vendor packs lunches and bakes when bread runs low. The commuter buys and ea
 
 ## Author it in Dream
 
-One `economy()` block owns the system for a linked world. Goods, accounts, markets and work have explicit IDs. Accounts reference the player or existing NPC placements. Markets and production workers require stationary NPCs; repair workers start from a stationary home and use their declared grounds, service streets and connecting pedestrian pavement. Customers may use the existing walking routes. The complete-world compiler checks ownership after module linking.
+One `economy()` block owns the system for a linked world. Goods, accounts, markets and work have explicit IDs. Accounts reference the player or existing NPC placements. Market operators and production workers without `commute=true` require stationary NPCs. Explicit commuters walk from their declared grounds; repair workers start from a stationary home and use their declared grounds, service streets and connecting pedestrian pavement. Customers may use the existing walking routes. The complete-world compiler checks ownership after module linking.
 
 | Declaration | Meaning |
 | --- | --- |

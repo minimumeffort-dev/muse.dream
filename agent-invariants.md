@@ -794,3 +794,26 @@ grounds/preference and the two approach offsets. Existing sitting points remain
 fixed. Preserve every old saved field, including hall seat claims and pending
 meals, before accepting under the new superset policy. Never reroute or repurchase
 an old commitment. Keep the entire earlier migration chain and original slots.
+
+
+## Resident work trips, r96
+
+Explicit account commute=true plus work/works and on/grounds owns one bounded
+out/work/home trip. Complete humanoid decor NPCs may have a stationary home or
+walk route; fit their actual rounded-up body with minimum radius 4/headroom 18
+and authored maximum radius 8/height 32. Keep existing ground, graph, waypoint,
+account, NPC and rig caps. Reuse prepared worker-owned navigation and ordinary
+walking/contact checks; no generated graph or controller code.
+
+Intent reserves no stock, wage, shelf room or work capacity. Arrival uses the
+same guarded job as the player. Completion pays and qualifies the worker once;
+range/equipment interruption refunds once and returns home. Never mutate the
+previous frame's trip when refunding immediately after impact. Keep one owner
+across food/work travel, pause the original NPC program and resume at the same
+pose. Available meal trips take priority; exclude other automatic policies.
+
+Format 19/simulation 40 registers exact r95 by removing only the new commuter
+policy fields. Preserve every old saved field and original slot; do not seed
+work, income, counters or resources during restore. Validate phase/job ownership,
+full body-supported paths and shared conservation, retaining every earlier
+registered migration. See docs/dream/commuting.md.

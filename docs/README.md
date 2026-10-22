@@ -85,3 +85,5 @@ Dream 1 remains readable. [Its syntax](dream-v1.md), [Object DSL v2](object-dsl-
 [Explore the planned town, suburbs, lake and sports park](urban-world.md). The whole mock world is authored in Dream 2, including streets, ground surfaces, markings and people.
 
 [Asset construction](asset-construction.md) explains the live house, bus and launch sources and the checks that keep their parts connected.
+
+[Work commuting](dream/commuting.md) connects resident homes, ordinary paid jobs and a saved return journey.

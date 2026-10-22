@@ -6,6 +6,10 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights commuting only at field boundaries and escapes labels',()=>{
+    const html=highlight('account worker(commute=true,on=home,grounds=[hall],works=[bake]); // <Work>&');
+    expect(html).toContain('class="dream-field">commute</span>');expect(html).toContain('&lt;Work&gt;&amp;');expect(highlight('commutes commute_extra commuter')).not.toMatch(/dream-field/);
+  });
   it('highlights weather and repair conditions at exact boundaries with escaped source',()=>{
     const html=highlight('weather(cycle_s=600,rain_start_s=90,rain_end_s=150,wet_grip=.68); repair kit(dry=true,label="<Rain>&");');
     expect(html).toContain('class="dream-keyword">weather</span>');for(const key of ['rain_start_s','rain_end_s','wet_grip','dry'])expect(html).toContain(`class="dream-field">${key}</span>`);expect(html).toContain('&lt;Rain&gt;&amp;');expect(highlight('weathered weather_extra dry_extra wet_grips')).not.toMatch(/dream-(?:keyword|field)/);

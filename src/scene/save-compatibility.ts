@@ -17,7 +17,7 @@ import schoolR90 from './compatibility/r90-school.json';
 import homeR93 from './compatibility/r93-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=39;
+export const SAVE_SIMULATION_VERSION=40;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -100,10 +100,22 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r96 adds opt-in work journeys without changing existing commitments or physical data. */
+export const WORK_COMMUTE_COMPATIBILITY='9b818d954cf53fe239b685e7cc54600aa417f0541de32e3b9c99db1bef443cad';
+const commuteProjections=new WeakMap<Scene,Scene>();
+export function preWorkCommuteScene(scene:Scene):Scene{
+ const cached=commuteProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.accounts.some(a=>a.id==='regular' && a.commute))return scene;
+ const accounts=scene.economy.accounts.map(a=>{if(a.id!=='regular')return a;const {commute,on,grounds,works,...old}=a;return old;});
+ const prior={...scene,economy:{...scene.economy,accounts}};commuteProjections.set(scene,prior);return prior;
+}
+export function preWorkCommuteCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preWorkCommuteScene(scene),39,true,encode);}
+
 /** r95 prefers the commuter's home for meals; existing claims remain valid. */
 export const HOME_MEALS_COMPATIBILITY='62198a1eb0f91bb6793276db568458a0a980823c492c7f1fb7f2e8cf7cc8cdd4';
 const homeMealProjections=new WeakMap<Scene,Scene>();
 export function preHomeMealsScene(scene:Scene):Scene{
+ scene=preWorkCommuteScene(scene);
  const cached=homeMealProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.meals.some(m=>m.id==='market_break' && m.seats?.includes('home_settee')))return scene;
  const objects=scene.objects.map(o=>o.id==='home_settee' && o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2

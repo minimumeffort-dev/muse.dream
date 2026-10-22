@@ -11,6 +11,11 @@ trailers, vehicle damage and service fleets remain separate work.
 
 ## Next playable work
 
+Resident work commuting now connects existing homes to ordinary paid jobs.
+The commuter can buy food, walk to baking work, earn a wage and return without
+new people, starting money or geometry. Broader schedules, useful indoor roles,
+relationships and multi-floor access remain priorities.
+
 The commuter now uses the open home for a paid meal, sharing separate cushion
 claims with the player. The hall bench remains a fallback, and old hall meals
 finish after upgrade. The home still needs more purposes beyond seating, eating

@@ -14,7 +14,7 @@ import {seatClaimed} from '../src/sim/seating';
 import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
 import {homeMealReviewSteps} from '../src/game/home-review';
-const scene=createWorldScene(),snapshot=JSON.stringify(scene),prior=c.preHomeMealsScene(scene);
+const scene=c.preWorkCommuteScene(createWorldScene()),snapshot=JSON.stringify(scene),prior=c.preHomeMealsScene(scene);
 const world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.HOME_MEALS_COMPATIBILITY,previousHomeMealsSaveCompatibility:c.HOME_INTERIOR_COMPATIBILITY};
 const old:World={...world,scene:prior,saveCompatibility:c.HOME_INTERIOR_COMPATIBILITY,previousHomeMealsSaveCompatibility:undefined};
 const diner=(s:CarState)=>s.economy!.accounts.find(a=>a.id==='regular')!;
@@ -22,7 +22,7 @@ const tick=(s:CarState,w=world)=>stepInteractive(s,{steer:0,throttle:0},1/120,w)
 const quarter=(s:CarState,w:World)=>stepCommerce({...s,timeS:s.timeS+.25,npcs:stepNpcs(s,.25,w.scene),population:stepAmbient(s,.25,w.scene)},{},.25,w.scene);
 afterAll(()=>expect(JSON.stringify(scene)).toBe(snapshot));
 it('pins r94 exactly while adding preferred home seating and a clear NPC approach',async()=>{
- expect(c.SAVE_SIMULATION_VERSION).toBe(39);expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.HOME_MEALS_COMPATIBILITY);expect(await c.sha256(c.preHomeMealsCompatibilitySource(scene))).toBe(c.HOME_INTERIOR_COMPATIBILITY);expect(await c.sha256(c.preHomeInteriorCompatibilitySource(scene))).toBe(c.WEATHER_COMPATIBILITY);
+ expect(await c.sha256(c.preWorkCommuteCompatibilitySource(scene))).toBe(c.HOME_MEALS_COMPATIBILITY);expect(await c.sha256(c.preHomeMealsCompatibilitySource(scene))).toBe(c.HOME_INTERIOR_COMPATIBILITY);expect(await c.sha256(c.preHomeInteriorCompatibilitySource(scene))).toBe(c.WEATHER_COMPATIBILITY);
  expect(scene.routes).toEqual(prior.routes);expect(scene.economy!.accounts).toEqual(prior.economy!.accounts);expect(scene.objects).toHaveLength(prior.objects.length);expect(scene.economy!.meals.find(m=>m.id==='market_break')!.seats).toEqual(['home_settee','hall_bench']);
 });
 it('buys lunch, walks through the home doorway and shares separate cushions with the player',()=>{

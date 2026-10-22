@@ -22,6 +22,17 @@ These exports are motion evidence, not live frame-rate measurements.
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
 
+## Work commute, r96
+
+`work-commute.png` is a native browser still after ordinary player purchases,
+a resident meal and an actual NPC walk to the market. It records an active paid
+batch before the wage is awarded. [State and checks](../evidence/work-commute/verification.md)
+separate that rendered observation from the fixed-step review preparation.
+There are no new meshes, shaders, controls or animation poses in this change;
+existing asset/home recordings remain accurate. Older economic recordings keep
+their release's policies. No motion export or performance claim accompanies
+this policy and simulation change.
+
 ## Home meal, r95
 
 `home-meal.png` is a native browser still of the player on the left cushion and

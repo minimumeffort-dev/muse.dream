@@ -1,7 +1,7 @@
 import {socialAccessProblems} from '../sim/social';
 import {interiorProblems} from './interiors';
 import {contactOverlaps,contactTouchesPolygon} from './contact-geometry';
-import {courierAccessProblems,mealAccessProblems} from '../sim/courier';
+import {courierAccessProblems,mealAccessProblems,commuteAccessProblems} from '../sim/courier';
 import {shiftAccessProblems} from '../sim/shifts';
 import {repairAccessProblems} from '../sim/repair';
 import {ambientProblems} from './ambient-navigation';
@@ -27,7 +27,7 @@ export interface SceneProblem {
   code:
     | "interior-not-clear"
     | "repair-not-connected"
-    | "meal-not-connected" | "courier-not-connected" | "social-not-connected"
+    | "work-not-connected" | "meal-not-connected" | "courier-not-connected" | "social-not-connected"
     | "shift-not-connected"
     | "population-not-clear"
     | "site-not-connected"
@@ -70,6 +70,7 @@ export function validateScenePlayability(
   for(const message of ambientProblems(scene))problems.push({code:"population-not-clear",message});
   for(const message of repairAccessProblems(scene))problems.push({code:"repair-not-connected",message});
   for(const message of courierAccessProblems(scene))problems.push({code:"courier-not-connected",message});
+  for(const message of commuteAccessProblems(scene))problems.push({code:"work-not-connected",message});
   for(const message of mealAccessProblems(scene))problems.push({code:"meal-not-connected",message});
   for(const message of socialAccessProblems(scene))problems.push({code:"social-not-connected",message});
   for(const message of shiftAccessProblems(scene))problems.push({code:"shift-not-connected",message});
