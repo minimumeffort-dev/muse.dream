@@ -98,12 +98,12 @@ it('interrupts paid work in the same fixed tick and lets ordinary finite repair 
 
 it('preserves cooldown, damage and momentum through reset and reload, with strict saved bounds',()=>{
  const w=world(),s=stepStrike(foot(),hit,w),saved=encodeSave(s,55,w),restored=decodeSave(saved,w).state;
- expect(SAVE_VERSION).toBe(18);expect(restored).toEqual(JSON.parse(saved).state);expect(resetCar(s,scene).strikeReadyAtS).toBe(s.strikeReadyAtS);expect(resetCar(s,scene,true).strikeReadyAtS).toBe(0);
+ expect(SAVE_VERSION).toBe(19);expect(restored).toEqual(JSON.parse(saved).state);expect(resetCar(s,scene).strikeReadyAtS).toBe(s.strikeReadyAtS);expect(resetCar(s,scene,true).strikeReadyAtS).toBe(0);
  expect(stepStrike(s,hit,w)).toBe(s);expect(()=>encodeSave({...s,strikeReadyAtS:3},55,w)).toThrow('cooldown');
 });
 
 it('registers exact r83 state and the old slot, adding only an immediately ready hand cooldown',async()=>{
- const current=liveScene(),prior=c.preStrikeScene(current);expect(await c.sha256(c.saveCompatibilitySource(current))).toBe(c.STRIKE_COMPATIBILITY);expect(await c.sha256(c.preStrikeCompatibilitySource(current))).toBe(c.EQUIPMENT_COMPATIBILITY);expect(c.SAVE_SIMULATION_VERSION).toBe(34);
+ const current=liveScene(),prior=c.preStrikeScene(current);expect(await c.sha256(c.preRecoveryCompatibilitySource(current))).toBe(c.STRIKE_COMPATIBILITY);expect(await c.sha256(c.preStrikeCompatibilitySource(current))).toBe(c.EQUIPMENT_COMPATIBILITY);expect(c.SAVE_SIMULATION_VERSION).toBe(35);
  expect(current.objects).toBe(prior.objects);expect(current.surfaces).toBe(prior.surfaces);const old={...world(prior),saveCompatibility:c.EQUIPMENT_COMPATIBILITY};let s=npcReviewStart(createCarAtSpawn(prior),old,'vendor');s=stepInteractive(s,{steer:0,throttle:0,commerce:{kind:'work',job:'bake'}},1/120,old);
  const packet=JSON.parse(encodeSave(s,88,old));packet.version=17;const text=JSON.stringify(packet),w={...world(current),saveCompatibility:c.STRIKE_COMPATIBILITY,previousStrikeSaveCompatibility:c.EQUIPMENT_COMPATIBILITY},after=decodeSave(text,w);
  expect(after.migrated).toBe(true);expect(after.worldTime).toBe(88);expect(after.state).toEqual({...JSON.parse(JSON.stringify(s)),strikeReadyAtS:s.timeS});expect(decodeSave(encodeSave(after.state,88,w),w).state).toEqual(after.state);

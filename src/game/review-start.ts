@@ -1,4 +1,5 @@
 import {strikeTarget} from '../sim/strike';
+import {courierApproach} from '../sim/courier';
 import {objectContacts} from '../scene/contacts';
 import {worldSeats} from '../scene/seating';
 import {sceneInteriors,portalPoints,walkingHeight} from '../scene/interiors';
@@ -337,4 +338,30 @@ export function* sharedMealReviewSteps(state:CarState,world:World,hosted=false):
   if(next.economy!.invitation?.partner!=='baker' || next.economy!.accounts.find(a=>a.id==='pocket')!.credits!==20)throw Error('Host review needs a real paid offer and unchanged player funds');
  }
  return next;
+}
+
+/** Review positions the car and task approach; impacts, work, R and the final walk remain real fixed steps. */
+export function* recoveryReviewSteps(state:CarState,world:World,stage:'work'|'counter'='counter'):Generator<void,CarState>{
+ let next=yield* handReviewSteps(state,world);
+ next=stepInteractive(next,{steer:0,throttle:0,strikePressed:true},1/120,world);
+ for(let i=0;i<120*25;i++){next=stepInteractive(next,{steer:0,throttle:0,...(i===239 ? {commerce:{kind:'repair',repair:'market_tables'} as const} : {})},1/120,world);if(i%30===0)yield;}
+ const account=()=>next.economy!.accounts.find(a=>a.id==='pocket')!,market=()=>next.economy!.markets.find(m=>m.id==='market_stall')!;
+ if(market().stock.boards!==7)throw Error('Recovery review needs one consumed board and real receiving space');
+ next=drivingReviewStart({...next,control:{kind:'car'},vehicles:next.vehicles.filter(v=>v.id!==null)},world,'street-tree');
+ for(let i=0;i<336;i++){next=stepInteractive(next,{steer:0,throttle:i<180 ? 1 : -1},1/120,world);if(i%30===0)yield;}
+ if(!next.broken.includes('garden_rowan_north'))throw Error('Recovery review did not fell its tree');
+ next=npcReviewStart(next,world,'vendor');next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:'repair',repair:'orchard_trees'}},1/120,world);
+ const task=account().repair;if(!task?.recover || task.objectId!=='garden_rowan_north')throw Error('Recovery review did not reserve real tree work and timber space');
+ next={...next,x:task.at.x,y:task.at.y,elevation:walkingHeight(world.scene,task.at.x,task.at.y),vx:0,vy:0,vz:0,grounded:true};
+ if(!carFootprintClear(bodyWorld(next,world),next.x,next.y,next.elevation,next.timeS,next))throw Error('Recovery review needs a clear on-foot work approach');
+ for(let i=0;i<120*(stage==='work' ? 8 : 11);i++){next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30===0)yield;}
+ if(stage==='work')return next;
+ if(account().repair?.phase!=='home' || !account().repair?.recover || market().stock.boards!==7)throw Error('Recovery review did not produce sealed return cargo');
+ next=toggleRide(resetCar(next,world.scene),world);if(next.control.kind!=='foot')throw Error('Recovery review could not leave the recovered car');
+ const r=world.scene.economy!.repairs.find(r=>r.id==='orchard_trees')!,hall=sceneInteriors(world.scene).find(f=>f.object.id==='market_hall')!,door=portalPoints(hall,hall.room.portals[0]!,24),offer=courierApproach(world.scene,r,r.market,door.inside,next);if(!offer)throw Error('Recovery review needs a connected return counter');
+ for(const target of [door.outside,door.inside,...offer.path]){
+  let reached=false;for(let i=0;i<120*20;i++){const dx=target.x-next.x,dy=target.y-next.y,d=Math.hypot(dx,dy),a=Math.atan2(180,480);if(d<1.5){reached=true;break;}next=stepInteractive(next,{steer:(dx*Math.cos(a)-dy*Math.sin(a))/d,throttle:(-dx*Math.sin(a)-dy*Math.cos(a))/d},1/120,world);if(i%30===0)yield;}
+  if(!reached)throw Error('Recovery review could not walk its return waypoint');
+ }
+ if(account().repair?.phase!=='home')throw Error('Recovery review lost its cargo before handoff');return next;
 }

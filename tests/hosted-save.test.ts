@@ -12,7 +12,7 @@ import {buildPaperMask} from '../src/sim/mask';
 import {createCarAtSpawn,type World} from '../src/sim/car';
 import {stepInteractive} from '../src/sim/interaction';
 import {sharedMealReviewSteps} from '../src/game/review-start';
-import {decodeSave,encodeSave} from '../src/sim/save';
+import {SAVE_VERSION,decodeSave,encodeSave} from '../src/sim/save';
 import {checkEconomyState} from '../src/sim/commerce';
 import {gameSave} from '../src/game/save';
 const scene=c.preCoverageScene(createWorldScene()),previous=c.preInvitationScene(scene);
@@ -25,7 +25,7 @@ it('registers the exact previous world and keeps all 29 historical states and or
  const fixtures=import.meta.glob('./fixtures/save-v*.json',{query:'?raw',import:'default',eager:true}) as Record<string,string>;expect(Object.keys(fixtures)).toHaveLength(28);
  for(const [id,text] of Object.entries({...fixtures,r71})){const old=decodeSave(text,{...oldWorld,...legacy}),next=decodeSave(text,{...world,...legacy});expect(next.state,id).toEqual(old.state);expect(next.worldTime,id).toBe(old.worldTime);expect(next.migrated,id).toBe(true);}
  const before=decodeSave(r71,oldWorld),after=decodeSave(r71,world);expect(after.state).toEqual(before.state);expect(after.state.economy!.shared?.host).toBeUndefined();
- const key=`muse-dream.save.v16.${scene.sceneId}.${c.PEOPLE_COMPATIBILITY}`,rows=new Map([[key,r71]]),slot=gameSave(world,()=>({getItem:k=>rows.get(k)??null,setItem:(k,v)=>{rows.set(k,v);}}));expect(slot.restored!.state).toEqual(after.state);expect(rows.size).toBe(1);expect(slot.write(after.state,after.worldTime)).toBe(true);expect(rows.size).toBe(2);expect(rows.get(key)).toBe(r71);expect(JSON.parse(rows.get(slot.key)!).version).toBe(18);
+ const key=`muse-dream.save.v16.${scene.sceneId}.${c.PEOPLE_COMPATIBILITY}`,rows=new Map([[key,r71]]),slot=gameSave(world,()=>({getItem:k=>rows.get(k)??null,setItem:(k,v)=>{rows.set(k,v);}}));expect(slot.restored!.state).toEqual(after.state);expect(rows.size).toBe(1);expect(slot.write(after.state,after.worldTime)).toBe(true);expect(rows.size).toBe(2);expect(rows.get(key)).toBe(r71);expect(JSON.parse(rows.get(slot.key)!).version).toBe(SAVE_VERSION);
  expect(()=>decodeSave(r71,{...world,previousInvitationSaveCompatibility:undefined})).toThrow();expect(()=>decodeSave(r71,{...world,saveCompatibility:'f'.repeat(64)})).toThrow();
  const forged=JSON.parse(r71);forged.state.economy.accounts.find((a:{id:string})=>a.id==='baker').invitedAtS=0;expect(()=>decodeSave(JSON.stringify(forged),world)).toThrow();
 },60000);

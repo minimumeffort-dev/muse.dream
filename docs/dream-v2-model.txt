@@ -908,6 +908,19 @@ join through full-cylinder portals; keep real gaps, roads and water impassable.
 Use examples/orchard-replanting.dream; request context features commerce,city.
 
 
+Repair recovery: optional repair(...,recover=boards,amount=1) uses an existing
+market lot; amount=1..32. Recover only if the source is mature, the worker bag
+fits, and promised output plus refund/incoming shelf space fits. Otherwise repair
+still works without recovery. Completion pays the existing wage once and counts
+one recovery; output stays sealed in the home-phase repair until delivered at
+the open staffed counter. Players use H/deliver on foot; NPCs walk home and use
+the same transaction. Do not grant another wage, expose cargo to trade/eating or
+cancel it into free stock. R, vehicles, streaming and saves retain it.
+Growing sources remain spent until actual unobstructed growth completes, even
+when a sapling is broken. Cap growing recovery sources at 512. Format 19 /
+simulation 35 initializes registered old recovery records without retroactive
+wood; historical broken/growing sources must mature first. See timber-recovery.dream.
+
 NPC resupply: account(...,deliveries=[kits_run,saplings_run]) accepts 1..4 unique
 ordered delivery refs, exclusive with automatic work and player accounts, compatible
 with repair/repairs. A courier is a stationary non-vendor NPC. Its home and both

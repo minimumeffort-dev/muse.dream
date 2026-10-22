@@ -321,3 +321,17 @@ The registered r86 upgrade creates only the new zero-credit account at saved
 simulation time. Existing accounts, commitments, ledgers, personal records and
 clocks stay intact, and the original slot is retained. No offline travel or pay.
 [Checks and runtime evidence](../evidence/resident-supplies/verification.md).
+
+
+## Timber from a physical source
+
+Replanting can now recover a board from a felled mature tree when the worker and
+workshop have room. It stays in the worker's sealed cargo until returned. That
+board can feed the same paid kit assembly as a delivered depot board. Recovery
+does not create fasteners, saplings or wages, and full storage does not prevent
+ordinary replanting. [Describe recovery in Dream](growth.md#timber-recovery).
+
+The live city retains 106 connected replanting sources and the existing worker.
+Young trees must finish growing before supplying more wood. This connects a
+physical source to the repair chain; mining, fabrication, general forestry and
+renewable upstream sapling production remain further work.

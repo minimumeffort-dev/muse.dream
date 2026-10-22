@@ -235,8 +235,8 @@ journey keeps going while you drive away or unload that part of the world.
 
 [Watch the journey in HD](docs/media/maintenance.mp4) · [Animated journey](docs/media/maintenance.gif)
 
-Repairs use finite supplies. After two jobs, you can bring two replacement kits
-from **Station supplies**. The bakery pays the depot six credits and pays you four
+Repairs use finite supplies. When the bakery has room for two finished kits after
+pending assembly, you can bring them from **Station supplies**. The bakery pays the depot six credits and pays you four
 for the delivery. These are transfers between actual balances. The depot starts
 with 32 kits and cannot generate more. The service covers 449 targets: the existing furniture at the market, park, station and school,
 the sixteen planted street tubs and two produce stalls, plus all 413 lamps across the city’s 32 streets. Tubs and stalls topple when hit hard and are restored by the same paid repair work. The caretaker steps off the sidewalk for nearby repairs, using
@@ -333,6 +333,18 @@ Baking now depends on the table. Damage interrupts both your batch and the baker
 returning reserved ingredients and wages once. The caretaker repairs it from the
 same finite stock, then work resumes. The market worker now replenishes used repair kits from boards and fasteners, with the same paid recipe available to you. Paid station deliveries replenish both materials; the caretaker can fetch boards too. Dream uses the same `equipment` rule for
 food preparation and workshop jobs. [How to author it](docs/dream/commerce.md#work-needs-equipment).
+
+Felled mature trees can now supply a board while being replanted, when the bag
+and workshop have room. Carry it back and press **H** at the counter. The board
+only enters stock after handoff; the planting wage is paid once. Saplings need
+to finish growing before they can supply timber again. Players and caretakers
+share the same rule. [Write it in Dream](docs/dream/growth.md#timber-recovery).
+
+![Returning recovered timber to the workshop](docs/media/recovery.gif)
+
+[Timber handoff in HD](docs/media/recovery.mp4). This short recording shows the
+return action; its review setup uses a real impact and planting, then R and a
+walk through the market doorway.
 
 ![Hit, repair and return to paid work](docs/media/hand.gif)
 

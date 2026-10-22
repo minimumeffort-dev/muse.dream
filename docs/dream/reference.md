@@ -590,6 +590,24 @@ home. Existing 4,096 local samples, 8,192 network nodes, 32,768 directed links a
 128 saved waypoints remain the limits. [Working example and routing](commerce.md#street-verges).
 
 
+### Recovery bounds
+
+Optional `repair(...,recover=good,amount=1)` needs both fields. Amount is a whole
+1..32 and must fit an existing receiving-market lot. At dispatch reserve bag
+capacity and shelf space for output, in addition to ordinary input refund space.
+Recover only from an eligible mature source; otherwise ordinary repair proceeds.
+Completion creates sealed return cargo and increments a separate recovery count.
+Its existing wage settles once. `deliver`/H transfers output to stock at the open
+staffed counter; NPCs use that same guarded return after walking home. No second
+pay, output trading/eating/cancellation or remote stock deposit.
+
+At most 512 unique growing recovery sources. After replanting, maturity requires
+actual unblocked growth; sapling destruction retains the spent source. Format
+19/simulation 35 persists reservations, cargo, counts and source eligibility,
+with an exact r87 upgrade and no retroactive wood. Existing work, actor, damage
+and growth caps remain. [Guide](growth.md#timber-recovery) and
+[complete source](../examples/timber-recovery.dream).
+
 ### Planting bounds
 
 `repair(...,kind=tree,regrow_s=180,seed_scale=.15)` consumes the declared input and

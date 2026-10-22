@@ -4,7 +4,7 @@ import * as c from '../src/scene/save-compatibility';
 
 it('pins the r85 policy and exact prior r84 world',async()=>{
  const scene=c.preWorkshopSupplyScene(createWorldScene()),prior=c.preKitProductionScene(scene);
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.KIT_PRODUCTION_COMPATIBILITY);
+ expect(await c.sha256(c.preRecoveryCompatibilitySource(scene))).toBe(c.KIT_PRODUCTION_COMPATIBILITY);
  expect(await c.sha256(c.preKitProductionCompatibilitySource(scene))).toBe(c.STRIKE_COMPATIBILITY);
  expect(scene.objects).toBe(prior.objects);expect(scene.surfaces).toBe(prior.surfaces);
  expect(scene.economy!.accounts.find(a=>a.id==='baker')!.works).toEqual(['assemble_kit','pack_lunch','large_bake','bake']);

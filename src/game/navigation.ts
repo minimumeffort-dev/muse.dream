@@ -42,6 +42,7 @@ export function navigationTarget(state:CarState,scene:Scene,waypoint?:Point){
   const delivery=deliveryTarget(state,scene);
   if(delivery)return {x:delivery.x,y:delivery.y,kind:'delivery' as const,id:delivery.delivery.id,label:`Delivery · ${delivery.market.label}`};
   const repair=repairTarget(state,scene);
+  if(repair?.task.phase==='home' && repair.task.recover)return {x:repair.x,y:repair.y,kind:'delivery' as const,id:`recovery:${repair.repair.id}`,label:`Return materials · ${scene.economy!.markets.find(m=>m.id===repair.repair.market)!.label}`};
   if(repair && repair.task.phase!=='home')return {x:repair.x,y:repair.y,kind:repair.repair.regrow_s===undefined ? 'repair' as const : 'planting' as const,id:`${repair.repair.id}:${repair.task.objectId}:${repair.task.zoneId??''}`,label:repair.repair.label};
 }
 

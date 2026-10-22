@@ -52,7 +52,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 18 retains the exact source hash and compatibility fingerprint, with simulation version 34. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 35. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -697,3 +697,27 @@ moves to a clear existing pedestrian approach; no scenery or walking topology
 is added or removed. The r85 workshop-stock upgrade still runs only when needed
 through its registered target. Current reloads never reinitialize the account.
 Original browser slots survive; corrupt and changed-slot protections remain.
+
+
+## Carried recovery materials, r88
+
+Format 19/simulation 35 adds optional per-service recovery completion counters,
+a bounded list of spent growing sources and a true-only repair recovery flag.
+The flag reserves future output during outbound/work and owns sealed output on
+the return phase. Material conservation includes that cargo, while future output
+reservations are not counted as existing goods. Stock changes only at a guarded
+return; the repair wage is never paid twice.
+
+The exact r87 projection removes only the authored recovery fields. Migration
+initializes counters to zero and marks existing broken/growing recovery sources
+spent. Historical damage grants no retroactive timber, and young sources must
+mature before recovery. All prior saved fields, jobs, cargo, wages, damaged
+objects, growth, NPC clocks and world time remain unchanged. Current reloads do
+not repeat initialization. The registered r85/r86/r87 upgrades retain their
+boundaries and original slots. Older format schemas reject recovery fields.
+
+R, vehicle changes, chunk eviction, pause and storage retain carried output.
+Start over resets it. Return on foot at an open staffed counter. Sealed output
+cannot be traded, eaten or cancelled into remote stock; a closed counter can
+require waiting. When an old pose needs safe recovery, the cargo still belongs
+to the same task. [Checks and native handoff](evidence/timber-recovery/verification.md).

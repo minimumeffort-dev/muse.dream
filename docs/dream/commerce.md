@@ -427,16 +427,18 @@ furniture, the two park wall sections, sixteen planted street tubs, two produce 
 
 ### Replacement supplies
 
-The station depot starts with 32 repair kits. After the caretaker or player has
-used at least two kits, go to **Station supplies**, choose **Bring repair kits to
-the market** and press H. Two kits leave the depot; the bakery reserves six
+The station depot starts with 32 repair kits. When two kits fit after pending
+assembly and refund reservations, go to **Station supplies**, choose **Bring
+repair kits to the market** and press H. Two kits leave the depot; the bakery reserves six
 credits for the supplier and four for the courier. Take the cargo back, get out
 and hand it over with H. The bakery receives two kits, the depot receives six
-credits and you receive four. No player credits are charged.
+credits and you receive four. No player credits are charged. The baker may already be replacing used kits
+from boards and fasteners, so two repairs do not always create space for a
+finished-kit shipment.
 
 ```dream
-delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_square);
-repair market_tables(label="Repair city fixtures",market=market_stall,on=market_square,grounds=[park_seating,station_seating,market_hall,school_yard,school_yard_access,school_yard_return,garden_work],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
+delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_hall,grounds=[market_square]);
+repair market_tables(label="Repair city fixtures",market=market_stall,on=market_hall,grounds=[park_seating,station_seating,market_square,school_yard,school_yard_access,school_yard_return,garden_work],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
 ```
 
 These declarations are the live world's policy. The earlier flour and bread
@@ -840,3 +842,18 @@ an interrupted batch, performs the shared repair and completes a new paid batch.
 [On-foot controls and Dream data](behavior.md#on-foot-strikes) ·
 [Equipment verification](../evidence/work-equipment/verification.md) ·
 [Current native sequence](../evidence/on-foot-strike/verification.md).
+
+
+## Return recovered materials
+
+A repair may declare `recover=good,amount=1`. When mature material, bag room and
+reserved shelf room permit, completion produces sealed return cargo. The input
+and ordinary wage settle once. Return to the market on foot and use **H**,
+without another wage. NPC workers carry it home and use the same transaction.
+A full warehouse still allows ordinary repairs without recovery.
+
+The live city recovers timber during tree replanting. Those boards can feed the
+existing paid kit recipe. Its fasteners and saplings still come from finite
+supply. Young trees must mature before another recovery. Stock, refunds, output
+reservations, cargo, funds and ownership remain conserved through pauses, R,
+streaming and registered saves. [Authoring, controls and limits](growth.md#timber-recovery).

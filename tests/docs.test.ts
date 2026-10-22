@@ -1,4 +1,5 @@
 import liveLife from '../src/scene/world/life.dream?raw';
+import {worldModules} from '../src/scene/world-fixture';
 import liveMarket from '../src/scene/world/market_interior.dream?raw';
 import {describe,it,expect} from "vitest";
 import {checkDream} from "../src/scene/dream";
@@ -38,9 +39,12 @@ describe("published Dream documentation",()=>{
     const blocks=[...pages['../docs/dream/populations.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
     expect(blocks).toContain(examples['../docs/examples/parked-vehicles.dream']!.trim());
   });
-  it('keeps the planting declarations identical to their checked complete example',()=>{
-    const declarations=[...pages['../docs/dream/growth.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].flatMap(m=>m[1]!.trim().split('\n'));
-    for(const declaration of declarations)expect(examples['../docs/examples/orchard-replanting.dream']).toContain(declaration);
+  it('keeps planting and recovery declarations identical to their respective complete examples',()=>{
+    const sections=pages['../docs/dream/growth.md']!.split('## Timber recovery');
+    for(const [i,path] of ['orchard-replanting','timber-recovery'].entries()){
+      const declarations=[...sections[i]!.matchAll(/```dream\n([\s\S]*?)```/g)].flatMap(m=>m[1]!.trim().split('\n'));
+      expect(declarations.length).toBeGreaterThan(0);for(const declaration of declarations)expect(examples[`../docs/examples/${path}.dream`]).toContain(declaration);
+    }
   });
   it('keeps courier declarations identical to their runnable source',()=>{
     const section=pages['../docs/dream/commerce.md']!.split('## NPC supply trips')[1]!;
@@ -54,7 +58,7 @@ describe("published Dream documentation",()=>{
     expect(block.trim()).toBe(examples['../docs/examples/market-work.dream']!.trim());
   });
   it.each(Object.entries(examples))("compiles the complete example %s",(path,source)=>{
-    const result=checkDream(source);
+    const result=checkDream(source,path.endsWith('/character-import.dream') ? worldModules : {});
     expect(result.ok,result.ok ? path : JSON.stringify(result.diagnostics)).toBe(true);
   });
   it("keeps the quickstart's complete tree identical to its runnable source",()=>{

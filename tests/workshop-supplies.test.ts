@@ -19,10 +19,10 @@ const market=(s:CarState,id:string)=>s.economy!.markets.find(m=>m.id===id)!;
 
 it('pins the exact r85 projection and leaves geometry, old stock and runtime bounds intact',async()=>{
  const scene=current(),prior=c.preWorkshopSupplyScene(scene);
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.WORKSHOP_SUPPLY_COMPATIBILITY);expect(await c.sha256(c.preWorkshopSupplyCompatibilitySource(scene))).toBe(c.KIT_PRODUCTION_COMPATIBILITY);
+ expect(await c.sha256(c.preRecoveryCompatibilitySource(scene))).toBe(c.WORKSHOP_SUPPLY_COMPATIBILITY);expect(await c.sha256(c.preWorkshopSupplyCompatibilitySource(scene))).toBe(c.KIT_PRODUCTION_COMPATIBILITY);
  expect(scene.objects).toBe(prior.objects);expect(scene.surfaces).toBe(prior.surfaces);expect(scene.economy!.accounts.find(a=>a.id==='caretaker')!.deliveries).toEqual(['kits_run','saplings_run','flour_run','boards_run']);
  expect(scene.economy!.markets.find(m=>m.id==='station_supplies')!.lots.slice(-2).map(l=>[l.good,l.quantity])).toEqual([['boards',16],['fasteners',16]]);
- expect(prior.economy!.deliveries).toHaveLength(4);expect(c.SAVE_SIMULATION_VERSION).toBe(34);
+ expect(prior.economy!.deliveries).toHaveLength(4);expect(c.SAVE_SIMULATION_VERSION).toBe(35);
 });
 
 it('walks NPC board and fastener cargo to a real counter, then crafts kits through the shared finite recipe',()=>{

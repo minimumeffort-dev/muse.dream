@@ -1,3 +1,4 @@
+// Host modules: npm run -s dream -- check docs/examples/character-import.dream --modules src/scene/world
 dream 2;
 asset explorer(module=city_people,object=walker);
 asset passenger(module=city_people,object=traveler);

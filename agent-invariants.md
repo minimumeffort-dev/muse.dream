@@ -622,3 +622,25 @@ r86 before inserting only the zero-credit porter account at the saved economy
 time. Keep all existing saved state and the original slot; restore the prior
 authored home and delivery metadata when projecting r86. Preserve earlier
 projections, worker handoff and current reloads without reinitialization.
+
+
+## Physical material recovery, r88
+
+Optional repair recover/amount is paired, bounded 1..32 and backed by an existing
+market lot. Recover only with mature source, bag room and reserved output/refund
+shelf room; otherwise preserve ordinary repair. Count generated goods only on
+completion. Hold sealed output in a flagged home-phase repair until the shared
+deliver action at an open staffed counter. No second wage, abandonment, trade,
+eating or remote stock deposit. Player and NPC returns share guards; R, vehicles,
+pause and streaming retain cargo. Keep HUD/bag, guidance and keyboard H aligned.
+
+Spent growing sources survive sapling damage and reset only on actual unblocked
+maturity. Cap unique sources at 512 without new actors or render budgets. Keep
+growth and commerce on one current EconomyState owner. Validate recovery counts
+against completions, generated material, cargo and reserved capacity.
+
+Format 19/simulation 35 registers exact r87 by removing only authored recovery
+fields. Initialize new counters to zero and historical broken/growing sources
+as spent, preserving every old field and slot. Do not retroactively grant wood
+or rebase geometry/navigation. Old format schemas remain strict. Preserve the
+complete earlier migration chain and safe active-pose recovery with cargo.

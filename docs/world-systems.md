@@ -351,3 +351,18 @@ zero-credit account at saved time. [Authoring and boundaries](dream/businesses.m
 Next connect raw-material generation and another useful indoor activity, then
 broaden work schedules and resident choices. Finite depot stock and business
 budgets still bound these routes; this is not forestry or a general scheduler.
+
+
+### Physical timber recovery, r88
+
+The existing 106 replanting sources can now yield a board when mature and storage
+permits. Player and NPC repair jobs reserve capacity, perform the planting and
+carry sealed output home. A guarded counter handoff supplies the workshop, where
+the existing paid recipe can turn boards and fasteners into kits. Full storage
+still permits ordinary replanting; breaking a sapling cannot multiply timber.
+
+Format 19/simulation 35 preserves registered prior progress and starts recovery
+records without retroactive output. Geometry, contacts, population, navigation
+and render budgets remain unchanged. Saplings, fasteners and money remain
+finite. Next connect another useful indoor activity and renewable upstream
+inputs, then richer schedules and resident choices. [Rules and verified scope](dream/growth.md#timber-recovery).

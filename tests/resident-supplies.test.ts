@@ -17,7 +17,7 @@ import {workshopReviewSteps} from '../src/game/review-start';
 import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
 import type {Scene} from '../src/scene/schema';
-let live:Scene|undefined;const current=()=>live??=createWorldScene();
+let live:Scene|undefined;const current=()=>live??=c.preRecoveryScene(createWorldScene());
 const world=(scene:Scene):World=>({scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11});
 const account=(s:CarState,id:string)=>s.economy!.accounts.find(a=>a.id===id)!;
 const market=(s:CarState,id:string)=>s.economy!.markets.find(m=>m.id===id)!;
@@ -25,13 +25,13 @@ const finish=(steps:Generator<void,CarState>)=>{let r=steps.next();while(!r.done
 
 it('pins the exact r86 world, unchanged contacts and walking graph, and one existing resident with two destinations',async()=>{
  const scene=current(),prior=c.preResidentSupplyScene(scene);
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.RESIDENT_SUPPLY_COMPATIBILITY);
+ expect(await c.sha256(c.preRecoveryCompatibilitySource(scene))).toBe(c.RESIDENT_SUPPLY_COMPATIBILITY);
  expect(await c.sha256(c.preResidentSupplyCompatibilitySource(scene))).toBe(c.WORKSHOP_SUPPLY_COMPATIBILITY);
  expect(await c.sha256(c.preWorkshopSupplyCompatibilitySource(scene))).toBe(c.KIT_PRODUCTION_COMPATIBILITY);
  expect(scene.objects).toHaveLength(prior.objects.length);expect(scene.surfaces).toBe(prior.surfaces);
  expect(sceneContactData(scene)).toEqual(sceneContactData(prior));expect(ambientGraph(scene)).toEqual(ambientGraph(prior));
  expect(scene.economy!.accounts.find(a=>a.id==='porter')).toMatchObject({actor:'school_student',credits:0,deliveries:['fasteners_run','school_run']});
- expect(prior.economy!.accounts.some(a=>a.id==='porter')).toBe(false);expect(c.SAVE_SIMULATION_VERSION).toBe(34);
+ expect(prior.economy!.accounts.some(a=>a.id==='porter')).toBe(false);expect(c.SAVE_SIMULATION_VERSION).toBe(35);
 });
 
 it('lets a remote-home courier procure both recipe inputs and return through the shared finite transactions',()=>{

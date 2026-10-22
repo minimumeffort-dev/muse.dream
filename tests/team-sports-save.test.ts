@@ -14,12 +14,12 @@ const scene=createWorldScene(),world:World={scene,roadMask:buildMaskForScene(sce
 it('registers the exact r66 migration without resetting physical, personal or company progress',()=>{
  const old=JSON.parse(legacy),restored=decodeSave(legacy,world),{sports,...before}=old.state,{sports:afterSports,...after}=restored.state;
  expect(after).toEqual(before);expect(restored.worldTime).toBe(old.worldTime);expect(restored.migrated).toBe(true);expect(afterSports.map(({match,...g})=>g)).toEqual(sports);expect(afterSports.every(g=>g.match?.status==='ready' && g.match.members.length===11)).toBe(true);
- const packet=JSON.parse(encodeSave(restored.state,restored.worldTime,world));expect(packet.version).toBe(18);expect(SAVE_VERSION).toBe(18);expect(decodeSave(JSON.stringify(packet),world).state).toEqual(packet.state);
+ const packet=JSON.parse(encodeSave(restored.state,restored.worldTime,world));expect(packet.version).toBe(SAVE_VERSION);expect(SAVE_VERSION).toBe(19);expect(decodeSave(JSON.stringify(packet),world).state).toEqual(packet.state);
  expect(()=>decodeSave(legacy,{...world,previousMatchSaveCompatibility:'unregistered'})).toThrow(/different world/);
 });
 it('preserves the old slot and creates a new slot only after a successful write',()=>{
  const key=`muse-dream.save.v15.${scene.sceneId}.${BUSINESS_COMPATIBILITY}`,rows=new Map([[key,legacy]]),store={getItem:(k:string)=>rows.get(k)??null,setItem:(k:string,v:string)=>{rows.set(k,v);}},slot=gameSave(world,()=>store);
- expect(slot.restored?.migrated).toBe(true);expect(rows.size).toBe(1);expect(slot.write(slot.restored!.state,slot.restored!.worldTime)).toBe(true);expect(rows.get(key)).toBe(legacy);expect(JSON.parse(rows.get(slot.key)!).version).toBe(18);
+ expect(slot.restored?.migrated).toBe(true);expect(rows.size).toBe(1);expect(slot.write(slot.restored!.state,slot.restored!.worldTime)).toBe(true);expect(rows.get(key)).toBe(legacy);expect(JSON.parse(rows.get(slot.key)!).version).toBe(SAVE_VERSION);
 });
 it('saves one physical shared squad and retains both venue results when changing grounds',()=>{
  let state=movementReviewStart(createCarAtSpawn(scene),world,'football');state=stepInteractive(state,{...idle,matchPressed:true},1/120,world);

@@ -1611,3 +1611,31 @@ A current [native school-frontage still and public state observations](../eviden
 show the new owner moving and pausing. Full deliveries, meals and wages are
 checked separately in the 4 Hz commerce/NPC replay, without browser performance
 claims.
+
+
+## Timber recovery, r88
+
+`recovery.gif`, `recovery.mp4` and `recovery.jpg` share 300 consecutive rendered
+frames from the `?capture` recovery clip, at 30 frames per simulation second.
+Source PNGs are 2400 × 1350. The HD video is 1600 × 900 at 30 fps; the GIF is
+1280 × 720 with a full-clip palette and Gifsicle loss level 20. The still comes
+from source frame 60 at its original resolution. No missing frame is interpolated.
+
+The ten-second clip shows sealed timber at the counter and one real H handoff.
+Its pre-roll consumes a kit through an actual table hit/repair, lets the paid
+recipe consume a board, fells the tree with the car, completes a player planting,
+uses R and walks through the doorway. Review setup positions the car and the
+on-foot work approach, so this is not an ordinary outward trip to the tree.
+The board stays outside workshop stock until receipt; the player's 30 coins do
+not change at handoff. Existing planting/growth clips remain accurate for their
+shown geometry and clocks, with their original source-pinned ledgers historical.
+They do not demonstrate the new material return.
+
+Encode only this slice with:
+
+```sh
+node scripts/encode-media.mjs /path/to/ffmpeg /path/to/gifsicle recovery
+```
+
+[Rules, native state, saves and verification](../evidence/timber-recovery/verification.md).
+The exports are offline recordings, without a browser performance claim.

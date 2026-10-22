@@ -117,3 +117,8 @@ Optional world-owner `strike(reach=10,speed=100,cooldown_s=.6)` enables bounded
 on-foot hits through the existing impact data. The engine owns target selection,
 wall/height checks, response and saved cooldown. It adds no generated controller,
 item body or NPC combat. [Controls and complete example](dream/behavior.md#on-foot-strikes).
+
+
+Repair services can also [recover physical material](dream/growth.md#timber-recovery).
+The same bounded declaration covers timber and recovered furniture parts, with
+shared player/NPC returns, conserved stock and persistent source eligibility.
