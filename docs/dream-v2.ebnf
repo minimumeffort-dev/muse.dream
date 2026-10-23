@@ -141,9 +141,10 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    interior's object ID may be used in repair/delivery grounds. Existing source,
    geometry and navigation bounds remain unchanged. One ground floor only. *)
 
-(* milestone is economy-local, with label, kind=work|delivery|repair, task and count.
+(* milestone is economy-local: label, kind=work|delivery|repair|shared_meal, task,
+   optional peer and count.
    Optional work.requires and interact-only on.requires reference a milestone.
-   account.works is an ordered 1..4 unique job list, exclusive with work and other
+   account.works is an ordered 1..5 unique job list, exclusive with work and other
    automatic work duties. Only actual completion increments personal history;
    no authored counters, rewards, scripts or controller callbacks. *)
 
@@ -205,3 +206,9 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    Hosts stay stationary; peers may use accepted walk routes. One two-person
    social activity, actual body-sized ground-floor paired seats, finite funding,
    saved outward/eat/return paths and <=64 sparse plan/host/guest histories. *)
+
+(* Optional milestone.peer is shared_meal-only: task is a social host NPC account,
+   peer a different NPC explicitly listed in its social.peers. Only those two
+   accounts derive qualification from the exact social/task/peer history key.
+   No player on.requires guard may reference an NPC-pair milestone. Omitted peer
+   retains the player/named NPC meaning. account.works permits five unique jobs. *)

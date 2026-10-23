@@ -529,3 +529,16 @@ now give two resident bodies enough space without changing its mesh or collision
 One shared social activity is active at a time. General relationship progression,
 dating, group gatherings and upstairs social plans remain unfinished.
 [Rules and example](dream/companions.md).
+
+## Pair memories and work, r106
+
+The baker and commuter can now qualify for the larger bread recipe through their
+actual shared meal. Dream `milestone.peer` names the second NPC account, uses the
+existing exact pair history and never grants the player another person's credit.
+Both still finish their return and use finite ingredients, equipment and wages.
+The baker retains its four earlier jobs in a five-choice ordered list. No starting
+resources or rendering budgets change. The exact r105 upgrade preserves saved
+state and original slots. [Rules and complete example](dream/companion-recipes.md).
+
+Next gaps remain broader indoor purposes, richer resident decisions and general
+relationships. This is an authored work consequence, not a teaching simulation.

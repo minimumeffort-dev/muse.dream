@@ -154,7 +154,7 @@ economy(){
  good boards(label="Timber boards");
  good fasteners(label="Fasteners");
  account pocket(rest=player_rest,actor=player,credits=20,capacity=8,satiety=48,drain_s=.05);
- account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,social=hall_break,shift=bakery_day,works=[assemble_kit,propagate_saplings,pack_lunch,bake]);
+ account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,social=hall_break,shift=bakery_day,works=[large_bake,assemble_kit,propagate_saplings,pack_lunch,bake]);
  social hall_break(peers=[caretaker,regular],good=bread,seats=[hall_bench],on=market_hall,grounds=[market_square,oldtown_044,home_entry],eat_s=8,cooldown_s=600,markets=[market_stall]);
  social school_break(good=bread,seats=[school_bench,school_common_bench,school_reading_bench,school_rear_bench],on=school_yard,grounds=[school_yard_access,school_yard_return,garden_school,school_doorstep],eat_s=8,cooldown_s=600,markets=[school_canteen]);
  shift bakery_day(market=market_stall,rest=[6360,4490],on=market_hall,grounds=[market_square],lead_s=15);
@@ -231,9 +231,10 @@ economy(){
  station bakery_prep(object=hall_table_east,at=[40,0],hands=[26,19.2,0],on=market_hall,grounds=[market_square]);
  work bake(gesture=kneading,label="Bake bread",market=market_stall,input=flour,take=1,output=bread,make=2,seconds=6,pay=3,effort=12,capacity=1,target=4,equipment=[hall_table_east],station=bakery_prep);
  milestone practiced_baker(label="Bake bread batches",kind=work,task=bake,count=3);
+ milestone bakers_pair(label="Share a break with the commuter",kind=shared_meal,task=baker,peer=regular,count=1);
  milestone bakers_table(label="Share a meal with the baker",kind=shared_meal,task=baker,count=1);
  milestone school_helper(label="Deliver bread to school",kind=delivery,task=school_run,count=1);
- work large_bake(gesture=kneading,label="Bake a larger batch",market=market_stall,input=flour,take=2,output=bread,make=5,seconds=9,pay=5,effort=16,capacity=1,target=6,requires_any=[practiced_baker,bakers_table],equipment=[hall_table_east],station=bakery_prep);
+ work large_bake(gesture=kneading,label="Bake a larger batch",market=market_stall,input=flour,take=2,output=bread,make=5,seconds=9,pay=5,effort=16,capacity=1,target=6,requires_any=[practiced_baker,bakers_table,bakers_pair],equipment=[hall_table_east],station=bakery_prep);
  work pack_lunch(gesture=folding,label="Pack lunch",market=market_stall,output=lunch,make=1,seconds=5,pay=3,effort=6,capacity=1,target=3,equipment=[hall_table_east],station=bakery_prep){
   ingredient(good=bread,take=1);
   ingredient(good=vegetables,take=1);

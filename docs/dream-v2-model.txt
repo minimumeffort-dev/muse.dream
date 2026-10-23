@@ -867,7 +867,7 @@ and lot goods must agree. One economy per linked project, with exactly one playe
 account. Other account actors are existing role=npc placements. Market operators and
 production workers without commute=true need stationary home placements; station-bound work adds bounded local trips. NPC shop=true buys and eats food at satiety <=40;
 NPC work refills output up to target. Alternatively works=[advanced,basic] is an
-ordered list of 1..4 unique work IDs, exclusive with work, repairs and deliveries.
+ordered list of 1..5 unique work IDs, exclusive with work, repairs and deliveries.
 Try the first eligible job below target; no extra actors, commitments or free stock.
 Player accounts never act automatically.
 Rest is opt-in: rest home_rest(energy=35,drain_s=.1,recover_s=5,below=25,until=85,seats=[settee],on=home,grounds=[entry]); account(...,rest=home_rest).
@@ -926,7 +926,7 @@ Use a complete measured humanoid decor NPC with a program and a stationary home
 or walk route. Other automatic repair/delivery/shop/shift/social/ration policies
 are excluded; meal may coexist and takes priority when a meal is available.
 Only NPC policies commute; the player walks to the same counter and uses normal
-work controls. At most four ordered jobs, eight total convex grounds, 4096 local
+work controls. At most five ordered jobs, eight total convex grounds, 4096 local
 samples, 8192 graph nodes, 32768 links and 128 saved path points per journey.
 The engine fits the actual body rounded up to .1 units, at least radius 4 and
 headroom 18, with authored body bounds radius <=8 and height <=32. Public pavement
@@ -974,11 +974,19 @@ Use milestone id(label="Bake bread batches",kind=work,task=bake,count=3); inside
 At most 16; kind=work|delivery|repair references an existing matching task, count
 integer 1..1000000000. kind=shared_meal instead names an existing non-player
 account with social in task: milestone table_friend(label="Share bread",kind=shared_meal,task=baker,count=1);
-Completed shared meals qualify only their two participants: the player and that
-named NPC account. Use existing saved socialHistory, never another NPC's or
-shared global counts. Partial, cancelled or refunded meals do not qualify;
+Without peer, completed shared meals qualify only the player and that named NPC.
+Optional peer=other_account is valid only for kind=shared_meal; it must name a
+different non-player account explicitly listed in task's social.peers. Example:
+milestone pair_recipe(label="Shared break with a companion",kind=shared_meal,task=regular,peer=friend_account,count=1);
+Then only task and peer qualify, using the exact social/task/peer key in saved
+peerHistory; reversed keys and other residents do not qualify. The meal must
+complete; residents finish their physical return before taking work. This NPC-only
+milestone cannot gate a player on.requires conversation. Omit peer for the old
+player/NPC meaning. No new counter or free reward. See examples/companion-recipes.dream.
+Use the corresponding existing saved history, never another pair or shared
+global counts. Partial, cancelled or refunded meals do not qualify;
 shared history cannot exceed consumed portions per food good. No new score,
-resource, NPC-to-NPC friendship, clinical claim or generated script.
+resource, general friendship, clinical claim or generated script.
 Optional work.requires=milestone_id keeps the single prerequisite. Alternatively
 work(...,requires_any=[practiced_baker,table_friend]) accepts any one of 1..4
 unique milestones, excludes requires and rejects cycles through every branch.

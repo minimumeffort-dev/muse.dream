@@ -45,8 +45,7 @@ history. A completed meal consumes two actual portions and feeds both people;
 it grants no wage, goods or baking practice. Only the later completed job pays.
 
 The current larger batch takes two flour, makes five bread and pays five coins.
-Its ordinary three-batch qualification remains available. The live commuter
-keeps using that personal practice route. The standalone example also assigns
+Its ordinary three-batch qualification remains available. The live commuter can also qualify through the [named baker/commuter meal](companion-recipes.md). The standalone example also assigns
 the larger job to the meal's NPC participant, demonstrating the same eligibility
 and finite transaction for both sides.
 
@@ -63,5 +62,4 @@ sharing and the return to work. The export is 30 rendered frames per simulation
 second, with no interpolation; it is not a live performance measurement.
 
 This connects remembered time together to one authored work opportunity. It is
-not a general relationship, dating, teaching or emotional model. NPC-to-NPC
-invitations remain unfinished. Muse prompting stays deferred and mocked.
+not a general relationship, dating, teaching or emotional model. Residents can also [share meals](companions.md) and earn [explicit pair qualifications](companion-recipes.md). Muse prompting stays deferred and mocked.

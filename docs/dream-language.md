@@ -155,3 +155,7 @@ window. Waiting reserves nothing; real jobs still use the shared transaction.
 
 [Resident companions](dream/companions.md) adds `social.peers`: ordered NPC account
 references for funded meals, physical shared seating and persistent pair history.
+
+[Peer recipes](dream/companion-recipes.md) uses optional `milestone.peer` to give
+the two named NPC participants a work qualification from their existing meal
+history. Omitting it preserves the player-and-NPC rule.

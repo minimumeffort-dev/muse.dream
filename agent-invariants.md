@@ -30,7 +30,7 @@ is bounded to 16 existing matching tasks with integer counts 1..1e9. Work
 `requires` checks the acting account and rejects dependency cycles. Interact-only
 `on.requires` checks the player at the task receiving market actor after linking;
 never infer contributions from global counts or labels. `account.works` is an
-ordered 1..4 unique production list, exclusive with work, repair duties,
+ordered 1..5 unique production list, exclusive with work, repair duties,
 deliveries and player ownership. Both actors use the same eligible transactions.
 Keep the existing actor/rig/physics/navigation/render bounds.
 
@@ -1006,3 +1006,21 @@ clear transition state. Never delay controls, seize physics ownership or save
 animation offsets; Dream's existing seat/approach/heading data stays authoritative.
 Keep actor/rig/draw budgets unchanged. Vehicle passenger poses remain separate.
 See docs/dream/seating-motion.md.
+
+## Peer recipe qualifications, r106
+
+Optional milestone.peer is valid only for shared_meal and references a different
+NPC account explicitly listed in task's social.peers. Derive eligibility from the
+exact existing plan/host/peer history for those two accounts only; preserve the
+omitted-peer player/NPC meaning. Reject paired NPC milestones on player
+conversation guards; omit foreign requirements from player-facing job details.
+Partial/cancelled/refunded meals never qualify, and return journeys retain body
+ownership before work. No new saved counters, resources, actors or rigs.
+
+account.works permits five ordered unique jobs, retaining one task per account,
+existing station/job capacity, finite escrow and all navigation/render limits.
+The live baker keeps all four older choices beside large_bake. Format19/simulation49
+registers exact r105 by removing only the named pair milestone and new job-choice/
+requirement references; preserve every saved field and original slot, including
+pair memory and pending work. No resource/time/pose rebasing. See
+`docs/dream/companion-recipes.md` and its runnable example.

@@ -835,8 +835,10 @@ deposit and withdrawal. The supplier receives six credits only at handoff.
 
 The baker can share food with the commuter or caretaker. They pay from their own
 accounts, walk to a pair of free seats, eat and return to their routines. Busy
-residents finish their existing commitments. Meals stay in their saved history;
-your own recipe progress keeps its existing meaning.
+residents finish their existing commitments. Meals stay in their saved history. A completed break between the baker and
+commuter now qualifies both for the larger bread recipe, while your own progress
+keeps its existing meaning. They return to work and use actual flour and wages;
+the memory itself pays nothing. [Author the consequence in Dream](docs/dream/companion-recipes.md).
 
 Sitting and standing now ease the body and take short steps, with the same motion
 for you and the residents. [Watch the current seat transitions](docs/dream/seating-motion.md).

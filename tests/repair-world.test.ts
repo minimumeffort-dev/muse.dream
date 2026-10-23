@@ -7,12 +7,13 @@ import {createCarAtSpawn} from '../src/sim/car';
 import {stepCommerce,checkEconomyState,commerceReason} from '../src/sim/commerce';
 import {repairTargets} from '../src/sim/repair';
 // The player owns procurement in these scenarios; rain must not dispatch a competing NPC shipment.
-function repairOnlyModules(foodOnly=false){const life=worldModules.life!.replace(',deliveries=[kits_run,saplings_run,flour_run,boards_run]','');return {...worldModules,life:foodOnly ? life.replace('works=[assemble_kit,','works=[') : life};}
+function repairOnlyModules(foodOnly=false){const life=worldModules.life!.replace(',deliveries=[kits_run,saplings_run,flour_run,boards_run]','');return {...worldModules,life:foodOnly ? life.replace('works=[large_bake,assemble_kit,','works=[large_bake,') : life};}
 it('shares current lamp repairs and player kit procurement when staff are assigned only to food',()=>{
  const scene=compileDreamScene(worldSource,{sceneId:'finished-kit-procurement',revisionId:'fixture',sourceHash:'finished-kit-procurement'},repairOnlyModules(true)),r=scene.economy!.repairs[0]!;
  const lamps=scene.objects.filter(o=>o.spec && 'measure' in o.spec && o.spec.measure?.kind==='lamp');expect(lamps).toHaveLength(413);expect(scene.damagePool).toBe(true);expect(new Set(lamps.map(o=>o.spec!.displayName)).size).toBe(2);for(const o of lamps){const spec=o.spec as import('../src/scene/object-dsl').ObjectDslV2;expect(spec.impact).toEqual({kind:'topple',speed:95,duration:1,lifetime:8});expect(spec.contacts).toHaveLength(1);expect(spec.contacts![0]!.position).toEqual([0,0,0]);expect([1.2,1.4]).toContain(spec.contacts![0]!.radius);}
 
  expect(repairTargets(scene,r)).toHaveLength(449);expect(repairTargets(scene,r).map(t=>t.objectId)).toEqual(expect.arrayContaining(['hall_table_west','hall_table_east','hall_bench','hall_produce_crate','market_planter','park_bench','park_wall_east','park_wall_west','picnic_table','produce_crate','south_lamps_4_1_r','station_bench','school_bench']));
+ expect(scene.economy!.accounts.find(a=>a.id==='baker')!.works).not.toContain('assemble_kit');
  let s=threeRepairs(scene);
  expect(s.broken).toEqual([]);expect(s.economy!.repaired.market_tables).toBe(3);expect(s.economy!.markets.find(m=>m.id==='market_stall')!.stock.timber).toBe(9);const caretaker=s.economy!.accounts.find(a=>a.id==='caretaker')!;expect(caretaker.credits).toBe(10);expect(caretaker.inventory.vegetables!+s.economy!.consumed.vegetables!).toBe(1);expect(caretaker.repair?.phase).toBe('home');expect(caretaker.courier).toBeUndefined();
  s={...s,control:{kind:'foot'},x:11000,y:4140,elevation:0};expect(commerceReason(s,scene,'pocket',{kind:'collect',delivery:'kits_run'})).toBeUndefined();s=stepCommerce({...s,timeS:s.timeS+.25},{commerce:{kind:'collect',delivery:'kits_run'}},.25,scene);expect(s.economy!.accounts[0]!.delivery?.id).toBe('kits_run');checkEconomyState(s,scene);

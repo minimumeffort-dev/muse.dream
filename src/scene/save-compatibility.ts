@@ -19,7 +19,7 @@ import homeR98 from './compatibility/r98-home.json';
 import homeR97 from './compatibility/r97-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=48;
+export const SAVE_SIMULATION_VERSION=49;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -51,6 +51,7 @@ export function saveCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder
   return projection(scene,SAVE_SIMULATION_VERSION,true,encode);
 }
 function projection(scene:Scene,simulationVersion:number,rounded=true,encode?:CompatibilityEncoder):string {
+  if(simulationVersion<49)scene=prePeerRecipeScene(scene);
   if(simulationVersion<48)scene=preCompanionScene(scene);
   if(simulationVersion<47)scene=preStationScene(scene);
   if(simulationVersion<46)scene=preBondScene(scene);
@@ -110,10 +111,22 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r106 derives recipe eligibility from completed, explicitly named resident pairs. */
+export const PEER_RECIPE_COMPATIBILITY='eac00f9a8d8b0de82607c53e068c66880828c03e3680d8337b40ad81a35cf64e';
+const peerRecipeProjections=new WeakMap<Scene,Scene>();
+export function prePeerRecipeScene(scene:Scene):Scene{
+ const cached=peerRecipeProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.milestones.some(m=>m.id==='bakers_pair' && m.peer==='regular'))return scene;
+ const prior={...scene,economy:{...scene.economy,milestones:scene.economy.milestones.filter(m=>m.id!=='bakers_pair'),accounts:scene.economy.accounts.map(a=>a.id==='baker' ? {...a,works:a.works?.filter(id=>id!=='large_bake')} : a),jobs:scene.economy.jobs.map(j=>j.id==='large_bake' ? {...j,requires_any:j.requires_any?.filter(id=>id!=='bakers_pair')} : j)}};
+ peerRecipeProjections.set(scene,prior);return prior;
+}
+export function prePeerRecipeCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(prePeerRecipeScene(scene),48,true,encode);}
+
 /** r105 connects funded, persistent resident-to-resident meals. */
 export const COMPANION_COMPATIBILITY='8989717956ee55328cf06ae424fff171d91aff76d9ff41638384496506cfa2e1';
 const companionProjections=new WeakMap<Scene,Scene>();
 export function preCompanionScene(scene:Scene):Scene{
+ scene=prePeerRecipeScene(scene);
  const cached=companionProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.socials.some(s=>s.peers))return scene;
  const prior={...scene,objects:scene.objects.map(o=>o.spec && 'measure' in o.spec && o.spec.measure?.kind==='bench' && o.spec.seats?.length===2 && o.spec.seats.every(s=>Math.abs(s.position[0])===14 && s.position[1]===18 && s.position[2]===12 && s.approach[0]===s.position[0]) ? {...o,spec:{...o.spec,seats:o.spec.seats?.map(s=>({...s,position:[s.id==='left' ? -13 : 13,s.position[1],s.position[2]] as [number,number,number],approach:[s.id==='left' ? -13 : 13,s.approach[1]] as [number,number]}))}} : o),economy:{...scene.economy,socials:scene.economy.socials.map(s=>{const {peers,...old}=s;return s.id==='hall_break' ? {...old,grounds:['market_square']} : old;})}};

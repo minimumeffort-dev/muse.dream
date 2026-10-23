@@ -71,7 +71,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `social` | economy | ID / no block | `peers?: symbols`, `good: ref`, `seats: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `cooldown_s?: n`, `max_fullness?: n`, `markets?: symbols` |
 | `shift` | economy | ID / no block | `market: ref`, `rest: v2`, `on: ref`, `grounds?: symbols`, `lead_s?: n` |
 | `meal` | economy | ID / no block | `good: ref`, `markets: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `seats?: symbols` |
-| `milestone` | economy | ID / no block | `label: text`, `kind: work / delivery / repair / shared_meal`, `task: ref`, `count: n` |
+| `milestone` | economy | ID / no block | `label: text`, `kind: work / delivery / repair / shared_meal`, `task: ref`, `peer?: ref`, `count: n` |
 | `ingredient` | recipe | No ID / no block | `good: ref`, `take: n` |
 
 ### Assemblies and composition
@@ -506,13 +506,13 @@ not generated code or saved mesh poses. [Working guide](workstations.md) ·
 
 ### Personal work and recognition
 
-`milestone id(label=text,kind=work|delivery|repair|shared_meal,task=ref,count=n);`
+`milestone id(label=text,kind=work|delivery|repair|shared_meal,task=ref,peer=ref?,count=n);`
 lives in `economy`. At most 16, count 1..1,000,000,000 and a 1..40-character label.
 The first three kinds reference a matching task; shared_meal names an NPC social
-account and checks its two participants' existing history. `work.requires` keeps
+account. Without `peer`, only the player and that NPC qualify through `socialHistory`. Optional `peer=account` is shared_meal-only: it must name a different NPC in the host's `social.peers`. Only that exact host/peer pair qualifies through `peerHistory["social/task/peer"]`; unrelated accounts and reversed keys do not. Paired NPC milestones cannot gate player `on.requires` conversation. Completing the meal grants eligibility, not wages; residents still return before working. [Complete example](../examples/companion-recipes.dream). `work.requires` keeps
 one prerequisite; `requires_any` accepts one of 1–4 unique alternatives. They
 exclude each other. Every work prerequisite branch must be acyclic. `account.works=[advanced,basic]` tries
-1..4 unique jobs in order, each eligible and below target; it excludes `work`,
+1..5 unique jobs in order, each eligible and below target; it excludes `work`,
 repair duties, deliveries and player ownership. Existing stationary/range checks apply.
 
 `on.requires` is interact-only and checks the player. After linking, every placement
@@ -847,7 +847,10 @@ stacked-room ownership remain missing. [Floor contract](floors.md).
 one qualifies the acting account; every prerequisite branch must be acyclic.
 `milestone(kind=shared_meal,task=npc_account,count=n)` derives progress from
 completed meals with that specific social account. Only the player and named
-NPC participant qualify. It changes no money, food or practice counter. Real
+NPC participant qualify when `peer` is omitted. With `peer=other_account`, only
+the explicitly named NPC host and peer qualify through their exact saved pair
+history; the peer must be listed in the host social plan. This paired form
+cannot gate player conversation. It changes no money, food or practice counter. Real
 work keeps all ordinary financial, physical and need checks. Conversation
 `on.requires` can reference this milestone only on that account's actor.
 [Shared recipes](relationships.md) · [Complete source](../examples/shared-recipe.dream).

@@ -88,7 +88,13 @@ function data(scene:Scene){let c=cache.get(scene);if(!c){c=prepare(scene);cache.
 function emptyCompletions(e:Economy){return {work:Object.fromEntries(e.jobs.map(j=>[j.id,0])),delivery:Object.fromEntries(e.deliveries.map(d=>[d.id,0])),repair:Object.fromEntries(e.repairs.map(r=>[r.id,0]))};}
 /** Old totals did not retain ownership. Preserve them without guessing who earned them. */
 export function withPersonalHistory(e:Omit<EconomyState,'accounts'|'unattributed'> & {accounts:Omit<Account,'completed'>[]}):EconomyState{return {...e,accounts:e.accounts.map(a=>({...a,completed:{work:Object.fromEntries(Object.keys(e.batches).map(id=>[id,0])),delivery:Object.fromEntries(Object.keys(e.delivered).map(id=>[id,0])),repair:Object.fromEntries(Object.keys(e.repaired).map(id=>[id,0]))}})),unattributed:{work:{...e.batches},delivery:{...e.delivered},repair:{...e.repaired}}};}
-export function milestoneProgress(state:Pick<CarState,'economy'>,scene:Pick<Scene,'economy'>,account:string,required:string){const m=scene.economy?.milestones.find(m=>m.id===required),a=state.economy?.accounts.find(a=>a.id===account);return m && a ? {milestone:m,done:m.kind==='shared_meal' ? scene.economy?.accounts.some(s=>s.id===account && s.actor==='player') || account===m.task ? state.economy?.socialHistory?.[m.task]?.meals??0 : 0 : a.completed[m.kind][m.task]??0} : undefined;}
+export function milestoneProgress(state:Pick<CarState,'economy'>,scene:Pick<Scene,'economy'>,account:string,required:string){
+ const m=scene.economy?.milestones.find(m=>m.id===required),a=state.economy?.accounts.find(a=>a.id===account);if(!m || !a)return;
+ if(m.kind!=='shared_meal')return {milestone:m,done:a.completed[m.kind][m.task]??0,applicable:true};
+ const applicable=m.peer ? account===m.task || account===m.peer : scene.economy!.accounts.some(s=>s.id===account && s.actor==='player') || account===m.task;
+ const plan=scene.economy!.accounts.find(a=>a.id===m.task)?.social;
+ return {milestone:m,applicable,done:!applicable ? 0 : m.peer ? state.economy?.peerHistory?.[`${plan}/${m.task}/${m.peer}`]?.meals??0 : state.economy?.socialHistory?.[m.task]?.meals??0};
+}
 export function hasMilestone(state:Pick<CarState,'economy'>,scene:Pick<Scene,'economy'>,account:string,required:string){const p=milestoneProgress(state,scene,account,required);return !!p && p.done>=p.milestone.count;}
 export function workQualified(state:Pick<CarState,'economy'>,scene:Pick<Scene,'economy'>,account:string,job:Pick<Job,'requires'|'requires_any'>){const required=jobRequirements(job);return !required.length || required.some(id=>hasMilestone(state,scene,account,id));}
 export function initialEconomy(scene:Pick<Scene,'economy'>,timeS=0):EconomyState|undefined{

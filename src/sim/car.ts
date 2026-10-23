@@ -129,7 +129,7 @@ export interface World {
   previousCourierSaveCompatibility?:string;
   previousPeopleSaveCompatibility?:string;
   previousInvitationSaveCompatibility?:string;
-  previousCompanionSaveCompatibility?:string;previousGestureSaveCompatibility?:string;previousStationSaveCompatibility?:string;previousBondSaveCompatibility?:string;previousShelterSaveCompatibility?:string;previousAttendanceSaveCompatibility?:string;previousFloorsSaveCompatibility?:string;previousFloorsContacts?:import('../scene/contacts').SceneContactData;previousFloorsNavigation?:import('../scene/ambient-navigation').AmbientGraph;
+  previousPeerRecipeSaveCompatibility?:string;previousCompanionSaveCompatibility?:string;previousGestureSaveCompatibility?:string;previousStationSaveCompatibility?:string;previousBondSaveCompatibility?:string;previousShelterSaveCompatibility?:string;previousAttendanceSaveCompatibility?:string;previousFloorsSaveCompatibility?:string;previousFloorsContacts?:import('../scene/contacts').SceneContactData;previousFloorsNavigation?:import('../scene/ambient-navigation').AmbientGraph;
   previousStairsSaveCompatibility?:string;
   previousStairsContacts?:import('../scene/contacts').SceneContactData;
   previousStairsNavigation?:import('../scene/ambient-navigation').AmbientGraph;

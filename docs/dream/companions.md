@@ -3,8 +3,11 @@
 The baker can now share a meal with the commuter or caretaker. They use their own
 money and food, walk to two free seats, eat together and go back to their routines.
 The meal stays in their saved history and controls when they can share another.
+An explicit [peer recipe milestone](companion-recipes.md) can now use that same
+history to qualify both named residents for work.
 
-The recording shows the meal completing and the beginning of the return walks.
+The r105 recording shows the meal completing and the beginning of the return
+walks. It predates the r106 recipe qualification; motion and controls are unchanged.
 
 ![Two residents sharing a break](../media/companions.gif)
 

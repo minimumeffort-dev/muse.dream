@@ -1898,3 +1898,14 @@ Earlier seating, shared, hosted, rest, home and companion recordings predate the
 body transitions. They remain historical for those motions; their ownership,
 food, work and save evidence remains valid. Static people, building geometry,
 driving, sport and weather are unchanged, so their accurate captures were retained.
+
+## Peer recipe policy, r106
+
+This changes eligibility and ordered work choices, with no rendering/control
+changes. Retain the accurate current workstation, companion and seatmotion media;
+the companion recording predates this recipe policy. A fresh native screenshot
+`peer-recipes.png` (copied unchanged from
+`../evidence/peer-qualifications/native-work-panel.png`) shows the player's
+separate unchanged requirements after the resident's actual completed batch.
+There is no new motion export or performance claim. See the
+[verification note](../evidence/peer-qualifications/verification.md).

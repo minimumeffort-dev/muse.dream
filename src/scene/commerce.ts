@@ -16,7 +16,7 @@ import type {Scene} from './schema';
 import {roleOf} from './agents';
 import {waterAt,drivingHeight} from './terrain';
 
-export const COMMERCE_LIMITS=Object.freeze({goods:8,rations:8,accounts:16,markets:8,jobs:16,meals:8,shifts:8,socials:8,mealMarkets:4,milestones:16,workerJobs:4,ingredients:4,equipment:4,stations:16,deliveries:16,courierContracts:4,repairs:8,recoverySources:512,repairNodes:4096,repairNetworkNodes:8192,repairNetworkLinks:32768,repairGrounds:8,repairStreetTargets:512,repairAccessPieces:2048,repairVerge:128,repairRadius:4,repairPath:128,money:1_000_000,quantity:10_000,capacity:32,decisionS:.25});
+export const COMMERCE_LIMITS=Object.freeze({goods:8,rations:8,accounts:16,markets:8,jobs:16,meals:8,shifts:8,socials:8,mealMarkets:4,milestones:16,workerJobs:5,ingredients:4,equipment:4,stations:16,deliveries:16,courierContracts:4,repairs:8,recoverySources:512,repairNodes:4096,repairNetworkNodes:8192,repairNetworkLinks:32768,repairGrounds:8,repairStreetTargets:512,repairAccessPieces:2048,repairVerge:128,repairRadius:4,repairPath:128,money:1_000_000,quantity:10_000,capacity:32,decisionS:.25});
 const ref=z.string().regex(/^[a-z][a-z0-9_]{0,31}$/),money=z.number().int().min(0).max(COMMERCE_LIMITS.money),quantity=z.number().int().min(0).max(COMMERCE_LIMITS.quantity);
 const label=z.string().min(1).max(40).refine(s=>s.trim().length>0,'label must contain text');
 const good=z.object({id:ref,label,food:z.number().finite().min(0).max(100).default(0)}).strict();
@@ -62,7 +62,9 @@ const rest=z.object({id:ref,energy:z.number().finite().min(0).max(100),drainPerS
  if(new Set([r.on,...(r.grounds??[])]).size!==1+(r.grounds?.length??0))ctx.addIssue({code:'custom',message:'rest grounds must be unique and exclude on',path:['grounds']});
 });
 const ration=z.object({id:ref,good:ref,market:ref,below:z.number().finite().min(0).max(95)}).strict();
-const milestone=z.object({id:ref,label,kind:z.enum(['work','delivery','repair','shared_meal']),task:ref,count:z.number().int().min(1).max(1e9)}).strict();
+const milestone=z.object({id:ref,label,kind:z.enum(['work','delivery','repair','shared_meal']),task:ref,peer:ref.optional(),count:z.number().int().min(1).max(1e9)}).strict().superRefine((m,ctx)=>{
+ if(m.peer && m.kind!=='shared_meal')ctx.addIssue({code:'custom',message:'peer is only valid for a shared_meal milestone',path:['peer']});
+});
 const shift=z.object({id:ref,market:ref,rest:z.object({x:z.number().finite().min(0).max(16384),y:z.number().finite().min(0).max(16384)}).strict(),on:ref,grounds:z.array(ref).min(1).max(COMMERCE_LIMITS.repairGrounds-1).optional(),lead_s:z.number().finite().min(0).max(120).default(15)}).strict().superRefine((s,ctx)=>{if(s.grounds && new Set([s.on,...s.grounds]).size!==s.grounds.length+1)ctx.addIssue({code:'custom',message:'shift grounds must be unique and exclude on',path:['grounds']});});
 export const economySchema=z.object({gestures:z.array(workGestureSchema).min(1).max(WORK_GESTURE_LIMITS.gestures).optional(),stations:z.array(station).min(1).max(COMMERCE_LIMITS.stations).optional(),rests:z.array(rest).min(1).max(8).optional(),rations:z.array(ration).min(1).max(COMMERCE_LIMITS.rations).optional(),goods:z.array(good).min(1).max(COMMERCE_LIMITS.goods),accounts:z.array(account).min(1).max(COMMERCE_LIMITS.accounts),markets:z.array(market).min(1).max(COMMERCE_LIMITS.markets),jobs:z.array(job).max(COMMERCE_LIMITS.jobs),meals:z.array(meal).max(COMMERCE_LIMITS.meals).default([]),shifts:z.array(shift).max(COMMERCE_LIMITS.shifts).default([]),socials:z.array(social).max(COMMERCE_LIMITS.socials).default([]),milestones:z.array(milestone).max(COMMERCE_LIMITS.milestones).default([]),deliveries:z.array(delivery).max(COMMERCE_LIMITS.deliveries).default([]),repairs:z.array(repair).max(COMMERCE_LIMITS.repairs).default([])}).strict().superRefine((e,ctx)=>{
  const issue=(message:string,path:(string|number)[])=>ctx.addIssue({code:'custom',message,path});
@@ -97,6 +99,7 @@ export const economySchema=z.object({gestures:z.array(workGestureSchema).min(1).
   if(jobTake(j,j.output)>0 && j.make<=jobTake(j,j.output))issue('same-good work must make more than it takes',['jobs',i,'make']);
  });
  e.milestones.forEach((m,i)=>{const tasks=m.kind==='work' ? e.jobs : m.kind==='delivery' ? e.deliveries : m.kind==='repair' ? e.repairs : e.accounts.filter(a=>a.actor!=='player' && a.social);if(!tasks.some(t=>t.id===m.task))issue(m.kind==='shared_meal' ? 'shared meal milestone needs an existing NPC social account' : 'milestone needs an existing task of its kind',['milestones',i,'task']);});
+ e.milestones.forEach((m,i)=>{if(m.peer){const host=e.accounts.find(a=>a.id===m.task),plan=e.socials.find(s=>s.id===host?.social);if(m.peer===m.task || !e.accounts.some(a=>a.id===m.peer && a.actor!=='player') || !plan?.peers?.includes(m.peer))issue('peer must name another NPC account in the host social plan peers',['milestones',i,'peer']);}});
  e.jobs.forEach((j,i)=>{
   const field=j.requires_any ? 'requires_any' : 'requires';
   for(const id of jobRequirements(j))if(!e.milestones.some(m=>m.id===id))issue(`unknown work milestone ${id}`,['jobs',i,field]);
@@ -251,6 +254,7 @@ export function economyProblems(scene:Scene):string[]{
  }
  for(const {b,t} of guarded){
   const m=e.milestones.find(m=>m.id===t.requires);if(!m){problems.push(`${b.id}/${t.id}: unknown conversation milestone ${t.requires}`);continue;}
+  if(m.peer){problems.push(`${b.id}/${t.id}: player conversation cannot require an NPC peer milestone`);continue;}
   const market=m.kind==='work' ? e.jobs.find(j=>j.id===m.task)?.market : m.kind==='delivery' ? e.deliveries.find(d=>d.id===m.task)?.to : e.repairs.find(r=>r.id===m.task)?.market;
   const actor=m.kind==='shared_meal' ? e.accounts.find(a=>a.id===m.task)?.actor : e.markets.find(m=>m.id===market)?.actor;
   if(scene.objects.some(o=>o.behavior===b.id && o.id!==actor))problems.push(`${b.id}/${t.id}: conversation milestones must belong to this task's receiving market actor`);

@@ -11,10 +11,10 @@ import {stepInteractive} from '../src/sim/interaction';
 import {checkEconomyState} from '../src/sim/commerce';
 import {encodeSave,decodeSave} from '../src/sim/save';
 import {worldSeats} from '../src/scene/seating';
-const scene=createWorldScene(),previous=c.preCompanionScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.COMPANION_COMPATIBILITY,previousCompanionSaveCompatibility:c.GESTURE_COMPATIBILITY},old={...world,scene:previous,saveCompatibility:c.GESTURE_COMPATIBILITY,previousCompanionSaveCompatibility:undefined};
+const live=createWorldScene(),scene=c.prePeerRecipeScene(live),previous=c.preCompanionScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.COMPANION_COMPATIBILITY,previousCompanionSaveCompatibility:c.GESTURE_COMPATIBILITY},old={...world,scene:previous,saveCompatibility:c.GESTURE_COMPATIBILITY,previousCompanionSaveCompatibility:undefined};
 const run=async<T>(g:Generator<unknown,T>)=>{let r=g.next(),n=0;while(!r.done){if(++n%120===0)await new Promise(resolve=>setTimeout(resolve,0));r=g.next();}return r.value;};
 it('registers exact r104 with unchanged mesh/body/resources and two standard bench seats 84cm apart',async()=>{
- expect(c.SAVE_SIMULATION_VERSION).toBe(48);expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.COMPANION_COMPATIBILITY);expect(await c.sha256(c.preCompanionCompatibilitySource(scene))).toBe(c.GESTURE_COMPATIBILITY);expect(await c.sha256(c.preGestureCompatibilitySource(scene))).toBe(c.STATION_COMPATIBILITY);
+ expect(await c.sha256(c.prePeerRecipeCompatibilitySource(live))).toBe(c.COMPANION_COMPATIBILITY);expect(await c.sha256(c.preCompanionCompatibilitySource(scene))).toBe(c.GESTURE_COMPATIBILITY);expect(await c.sha256(c.preGestureCompatibilitySource(scene))).toBe(c.STATION_COMPATIBILITY);
  expect(scene.objects).toHaveLength(previous.objects.length);for(let i=0;i<scene.objects.length;i++){const a=scene.objects[i]!.spec,b=previous.objects[i]!.spec;expect(a && 'parts' in a ? a.parts : a).toBe(b && 'parts' in b ? b.parts : b);}
  expect(scene.economy!.markets).toBe(previous.economy!.markets);expect(scene.economy!.accounts).toBe(previous.economy!.accounts);const seats=worldSeats(scene).filter(s=>s.objectId==='hall_bench');expect(Math.hypot(seats[0]!.x-seats[1]!.x,seats[0]!.y-seats[1]!.y)).toBeCloseTo(8.4);
 });
