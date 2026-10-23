@@ -5,6 +5,9 @@ character turns towards the work surface. Different jobs use their own hand moti
 their feet stay planted. The baker walks to the same station, does a real job
 and walks back. A different recipe cannot claim an occupied station.
 
+The recording below predates the loft. [Upstairs work](upstairs-work.md) shows
+the current hall; the recorded baking controls and motions still apply.
+
 ![Baking at the shared preparation table](../media/workstations.gif)
 
 [HD recording](../media/workstations.mp4) · [Still](../media/workstations.jpg) · [Complete source](../examples/workstations.dream) · [Current motion verification](../evidence/work-gestures/verification.md) · [Station verification](../evidence/workstations/verification.md)
@@ -39,7 +42,8 @@ standing point at the east end of the preparation table. Close the panel with
 surface; it does not move you there. The work panel reports distance in metres
 and explains unavailable work.
 
-All five bakery recipes share this station. Their ingredients, wages, effort,
+Food recipes share this ground-floor station. Kit and sapling work now share
+the [loft bench](upstairs-work.md). Their ingredients, wages, effort,
 qualifications and output remain finite. You still earn the larger recipe by
 baking three batches or sharing a meal with the baker. The station is an
 additional physical requirement, not another unlock.
@@ -66,8 +70,8 @@ there.
 
 - At most 16 stations. `at` coordinates are within ±256 local units; `hands`
   uses the same bound, with Y between 0 and 256.
-- Stations use upright, static solid props without joints, animated parts or a
-  named-floor binding. The current work journey supports ground-floor stations.
+- Stations use upright, static solid props without joints or animated parts. Existing named-floor bindings are now supported; include the floor
+  and enclosing building in the grounds, with connected stairs and one business.
 - The stand needs clearance for a 4.1-unit radius and 18-unit height. The hand
   point needs actual geometry, 3–7 world units of horizontal reach and a height
   of 6–12 above the standing floor. Separate stands stay at least 10 units apart.
@@ -89,5 +93,9 @@ advancing time or awarding completion. Its original save slot remains intact.
 The work pose uses existing shoulder and elbow bones. It keeps rigid arms and
 planted feet, freezes while paused and respects reduced motion. Jobs can now bind different [authored hand motions](work-gestures.md): kneading,
 folding, fastening and tending. Handheld ingredients, tools, finger animation
-and upstairs workstations remain unfinished. It adds no
+remain unfinished. [Upstairs workstations](upstairs-work.md) now share the same rules. It adds no
 people, rigs, physical item bodies, lights or generated scripts.
+
+The earlier hall recording is historical for its flat interior layout and kit/
+sapling work location. Its baking controls, claims, refunds and hand motion remain
+accurate. See [the loft](upstairs-work.md) for the current shared interior.

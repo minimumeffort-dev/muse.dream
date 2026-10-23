@@ -4,6 +4,9 @@ Knead dough. Fold a lunch parcel. Hold one hand steady while the other fastens a
 repair kit. These are now different motions, defined in Dream and shared by
 people doing the same task.
 
+The recording below predates the market loft and still shows the work motions.
+[Upstairs work](upstairs-work.md) shows the current hall and shared stairs.
+
 ![Kneading and packing at the same table](../media/workstations.gif)
 
 [HD recording](../media/workstations.mp4) · [Still](../media/workstations.jpg) · [Complete runnable source](../examples/work-gestures.dream) · [Verification](../evidence/work-gestures/verification.md)

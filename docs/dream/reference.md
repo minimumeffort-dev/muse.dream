@@ -493,10 +493,18 @@ Buy/sell transfers one unit at the listed price. Work reserves every input, wage
 `work(...,capacity=1,equipment=[object],station=id);` binds one shared work
 position across recipes. At is object-local XZ; hands is local XYZ, fitted and
 rotated with the static prop. Up to 16 stations, local coordinates ±256, hand
-Y 0..256. Require ground-floor upright solid prop geometry without joints or
+Y 0..256. Require upright solid prop geometry without joints or
 animated parts, a dry clear 4.1-radius/18-height stand, a supported surface
 3..7 world units away and 6..12 high, and 10-unit stand separation. Keep the
 station inside counter reach and all grounds convex within existing budgets.
+Floor-bound equipment uses existing `place.floor`; name that floor and its
+building in the station grounds. The complete stand must fit, with supported
+feet and headroom. One source business per upper station, with proven connected
+stairs and counter approaches even without assigned NPCs. Production retains
+counter radius, but uses the accepted upstairs bench instead of counter sight.
+Trading and business actions still need sight of the counter. Work/bag context
+appears only on the same floor near the visible bench. Trip poses, destinations,
+homes and paths retain supported heights. [Upstairs example](../examples/upstairs-work.dream).
 Stationary workers' stations share ordered grounds; commuters retain their
 accepted grounds. Player/NPC starts and continuation require two-unit proximity.
 NPCs walk before reserving stock/pay. One claimant per station, independent of

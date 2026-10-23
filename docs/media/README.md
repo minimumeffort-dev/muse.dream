@@ -1909,3 +1909,27 @@ the companion recording predates this recipe policy. A fresh native screenshot
 separate unchanged requirements after the resident's actual completed batch.
 There is no new motion export or performance claim. See the
 [verification note](../evidence/peer-qualifications/verification.md).
+
+
+## Market workshop loft, r107
+
+`loft.mp4`, `loft.gif` and `loft.jpg` share a new native `?capture` sequence:
+540 consecutive 2400 × 1350 source frames, eighteen simulation seconds at
+30 rendered frames per simulation second. The preparation uses two actual table
+break/repair/return cycles to make shelf room. The clip follows ordinary foot
+controls up all seventeen treads, crosses the supported landing, starts a kit
+batch at the timber workbench and records its conserved three-coin payment.
+The review does not add inventory, money, job progress or resident history.
+
+Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> loft`. Video and
+still use 1600 × 900; the GIF uses 1280 × 720. The still comes from source frame
+300 during work. No interpolated frames or browser performance claim.
+The [verification note](../evidence/upstairs-work/verification.md) records the
+source identity, native checks and final test results.
+
+Older `interior`, `workstations`, `sharedrecipe`, `companions` and `seatmotion`
+recordings are historical for the flat hall layout. Their respective entry,
+food, work, social and seat controls still apply. Existing home, outdoor
+transport, vegetation and sports media keep their accurate geometry and remain
+unchanged. The new hall is inspected from two camera angles, including its
+wall connections, support columns, guardrails and shared stair landing.

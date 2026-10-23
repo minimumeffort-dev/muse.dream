@@ -10,11 +10,11 @@ import {gameSave} from '../src/game/save';
 import {peerRecipeReviewSteps} from '../src/game/peer-recipe-review';
 import {stepInteractive} from '../src/sim/interaction';
 import {checkEconomyState,hasMilestone,workQualified} from '../src/sim/commerce';
-const scene=createWorldScene(),prior=c.prePeerRecipeScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.PEER_RECIPE_COMPATIBILITY,previousPeerRecipeSaveCompatibility:c.COMPANION_COMPATIBILITY};
+const live=createWorldScene(),scene=c.preLoftScene(live),prior=c.prePeerRecipeScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.PEER_RECIPE_COMPATIBILITY,previousPeerRecipeSaveCompatibility:c.COMPANION_COMPATIBILITY};
 const old={...world,scene:prior,saveCompatibility:c.COMPANION_COMPATIBILITY,previousPeerRecipeSaveCompatibility:undefined},text=JSON.stringify(backup),account=(s:ReturnType<typeof createCarAtSpawn>,id='baker')=>s.economy!.accounts.find(a=>a.id===id)!;
 const run=async<T>(g:Generator<unknown,T>)=>{let r=g.next(),n=0;while(!r.done){if(++n%120===0)await new Promise(resolve=>setTimeout(resolve,0));r=g.next();}return r.value;};
 it('registers exact r105 and r104 without changing geometry, starting resources or existing production choices',async()=>{
- expect(c.SAVE_SIMULATION_VERSION).toBe(49);expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.PEER_RECIPE_COMPATIBILITY);expect(await c.sha256(c.prePeerRecipeCompatibilitySource(scene))).toBe(c.COMPANION_COMPATIBILITY);expect(await c.sha256(c.preCompanionCompatibilitySource(scene))).toBe(c.GESTURE_COMPATIBILITY);
+ expect(await c.sha256(c.preLoftCompatibilitySource(live))).toBe(c.PEER_RECIPE_COMPATIBILITY);expect(await c.sha256(c.prePeerRecipeCompatibilitySource(scene))).toBe(c.COMPANION_COMPATIBILITY);expect(await c.sha256(c.preCompanionCompatibilitySource(scene))).toBe(c.GESTURE_COMPATIBILITY);
  expect(scene.objects).toBe(prior.objects);expect(scene.terrain).toBe(prior.terrain);expect(scene.streets).toBe(prior.streets);expect(scene.economy!.markets).toBe(prior.economy!.markets);
  expect(scene.economy!.accounts.find(a=>a.id==='baker')!.works).toEqual(['large_bake',...prior.economy!.accounts.find(a=>a.id==='baker')!.works!]);expect(scene.economy!.accounts.map(({works,...a})=>a)).toEqual(prior.economy!.accounts.map(({works,...a})=>a));
 });

@@ -1,6 +1,15 @@
 # Leave and come back
 
-The current world uses format 19 / simulation 49. The registered r105 upgrade
+The current world uses format 19 / simulation 50. Its exact r106 upgrade opens
+the market workshop loft and moves kit/sapling work to its upper bench. Old state
+is validated first. Preserve unrelated commitments, money, history, stock and
+clocks; refund only work incompatible with its moved station, with no output or
+wage. Old ground-bound journeys can finish their approach before retargeting by
+walking. Only unsafe player poses use bounded local recovery. Original slots
+remain intact. Work journeys now retain supported elevation in pose, home,
+destination and path. [Upstairs work](dream/upstairs-work.md).
+
+The r106 world uses format 19 / simulation 49. The registered r105 upgrade
 adds a peer-meal work qualification and one ordered production choice for the
 baker. It preserves every saved field, including the existing pair history,
 active work, money, needs, poses and clocks. No new counters or rewards are
@@ -106,7 +115,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 49. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 50. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved

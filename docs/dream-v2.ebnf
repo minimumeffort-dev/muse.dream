@@ -212,3 +212,10 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    accounts derive qualification from the exact social/task/peer history key.
    No player on.requires guard may reference an NPC-pair milestone. Omitted peer
    retains the player/named NPC meaning. account.works permits five unique jobs. *)
+
+(* A station may bind an existing place.floor prop. Include its floor and owning
+   building among station grounds; fit the entire stand, retain headroom and prove
+   connected stairs to one source business. Production keeps the counter radius;
+   only its counter-sight check yields to the validated upper bench. Trade and
+   ownership controls retain actual counter sight. Work trips save bounded supported
+   elevations, never graph edges. Ground-station source syntax remains unchanged. *)

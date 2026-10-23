@@ -788,6 +788,11 @@ general relationship system remain to be built.
 
 ## Work at the workbench
 
+The hall now has a [workshop loft](docs/dream/upstairs-work.md). Kit assembly and
+sapling work happen upstairs; food stays below. You and the baker use the actual
+stairs and the same finite stock, wages and bench claims. Break the workbench
+and the existing indoor repair service can restore it.
+
 Walk to the bakery's marked preparation table and start a batch. Your character
 faces the surface and works with planted feet. Baking kneads, lunch packing folds,
 kit assembly fastens and planting tends. Those motions are bounded Dream data,
@@ -795,7 +800,13 @@ shared by the player and workers. The baker walks to the same
 station. Different recipes share its capacity, so changing jobs cannot put two
 people in one place. Leaving early or breaking the table refunds the batch.
 
-![Working at the bakery preparation table](docs/media/workstations.jpg)
+![Climbing to the workshop loft and assembling a repair kit](docs/media/loft.jpg)
+
+[Watch the climb and work](docs/media/loft.mp4) · [GIF](docs/media/loft.gif)
+
+The earlier flat-hall recording below still shows the work gestures.
+
+![Working at the bakery preparation table before the loft](docs/media/workstations.jpg)
 
 [Watch the work](docs/media/workstations.mp4) · [GIF](docs/media/workstations.gif) · [Author a workstation](docs/dream/workstations.md) · [Author work motions](docs/dream/work-gestures.md)
 
@@ -809,7 +820,7 @@ The meal uses paid food; the job uses real flour and pays only when finished.
 
 [Watch the job](docs/media/sharedrecipe.mp4) · [GIF](docs/media/sharedrecipe.gif) · [Write the rule in Dream](docs/dream/relationships.md)
 
-This earlier recording shows recipe access. The workstation recording above shows current work placement.
+This earlier recording shows recipe access. The workshop loft recording above shows the current hall layout.
 
 ## Own a business
 

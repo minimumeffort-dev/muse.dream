@@ -159,3 +159,7 @@ references for funded meals, physical shared seating and persistent pair history
 [Peer recipes](dream/companion-recipes.md) uses optional `milestone.peer` to give
 the two named NPC participants a work qualification from their existing meal
 history. Omitting it preserves the player-and-NPC rule.
+
+[Upstairs work](dream/upstairs-work.md) binds ordinary stations to existing
+`place.floor` equipment, with validated stairs and supported work-trip heights.
+The source syntax is the same as a ground-floor station.

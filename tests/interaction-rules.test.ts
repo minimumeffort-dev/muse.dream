@@ -10,6 +10,7 @@ import {createCarAtSpawn,stepCar,type World,type CarState} from '../src/sim/car'
 import {buildPaperMask} from '../src/sim/mask';
 import {isBroken} from '../src/sim/impacts';
 import {objectContacts} from '../src/scene/contacts';
+import {repairTargets} from '../src/scene/commerce';
 import {createWorldScene} from '../src/scene/world-fixture';
 import {MEASURE_KINDS,measuredScale} from '../src/scene/measure';
 import type {ObjectDslV2} from '../src/scene/object-dsl';
@@ -113,7 +114,8 @@ describe('category-wide Dream interaction rules',()=>{
   it('enforces live tables and benches, including the older bench with retained supports',()=>{
     const scene=createWorldScene();expect(scene.interactionRules.map(r=>r.kind)).toEqual(['lamp','tree','table','bench']);
     const furniture=scene.objects.filter(o=>o.spec && 'measure' in o.spec && ['table','bench'].includes(o.spec.measure?.kind??''));
-    expect(furniture).toHaveLength(22);expect(furniture.map(o=>o.id)).toEqual(expect.arrayContaining(['home_upper_settee','home_upper_table','home_settee','home_table','hall_table_west','hall_table_east','hall_bench','school_bench','school_common_bench','school_reading_bench','school_rear_bench','school_table_west','school_table_east']));
+    expect(furniture).toHaveLength(23);expect(furniture.map(o=>o.id)).toEqual(expect.arrayContaining(['hall_workbench','home_upper_settee','home_upper_table','home_settee','home_table','hall_table_west','hall_table_east','hall_bench','school_bench','school_common_bench','school_reading_bench','school_rear_bench','school_table_west','school_table_east']));
+    expect(scene.objects.find(o=>o.id==='hall_workbench')!.floor).toBe('hall_loft');expect(repairTargets(scene,scene.economy!.repairs.find(r=>r.id==='home_furniture')!).some(t=>t.objectId==='hall_workbench')).toBe(true);
     for(const object of furniture){const spec=object.spec as ObjectDslV2;expect(spec.impact).toEqual(scene.interactionRules.find(r=>r.kind===spec.measure!.kind)!.impact);}
   });
 });

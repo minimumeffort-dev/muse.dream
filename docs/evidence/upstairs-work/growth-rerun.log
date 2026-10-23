@@ -1,0 +1,14 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/growth-world.test.ts --maxWorkers=1 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/growth-world.test.ts (2 tests) 1692ms
+   ✓ connects the orchard through its actual garden path and preserves the previous physical world  1683ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  08:51:04
+   Duration  9.05s (transform 403ms, setup 9ms, collect 7.23s, tests 1.69s, environment 0ms, prepare 26ms)

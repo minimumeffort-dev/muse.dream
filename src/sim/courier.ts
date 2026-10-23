@@ -24,11 +24,14 @@ export function restAreas(scene:Scene):WalkingArea[]{return [...new Map((scene.e
 export const usesWorkTravel=(scene:Scene,a:Economy['accounts'][number])=>!!a.commute || a.actor!=='player' && accountJobs(a).some(id=>scene.economy!.jobs.find(j=>j.id===id)?.station);
 export function workApproach(scene:Scene,a:Economy['accounts'][number],job:Job,start:Point,state?:import('./car').CarState,area=commuteArea(scene,a)){
  const station=workstation(scene,job.station);if(!station)return courierApproach(scene,a,job.market,start,state,area);
- const end={x:station.x,y:station.y};if(!workClear(scene,area,end,state))return;const path=workPath(scene,area,start,end,state);return path ? {end,path} : undefined;
+ const end={x:station.x,y:station.y,...(station.floor ? {elevation:station.elevation} : {})};if(!workClear(scene,area,end,state))return;const path=workPath(scene,area,start,end,state);return path ? {end,path} : undefined;
 }
 export function commuteAreas(scene:Scene):WalkingArea[]{return [...new Map((scene.economy?.accounts??[]).filter(a=>usesWorkTravel(scene,a)).map(a=>{const area=commuteArea(scene,a);return [area.id,area];})).values()];}
 export function commuteAccessProblems(scene:Scene):string[]{
  const e=scene.economy;if(!e)return [];const problems:string[]=[];
+ for(const s of e.stations??[]){const point=workstation(scene,s.id);if(!point?.floor)continue;const area={...deliveryArea(s),id:'station/'+s.id,radius:4.1,height:18};
+  for(const market of new Set(e.jobs.filter(j=>j.station===s.id).map(j=>j.market)))try{const approach=courierApproach(scene,s,market,point,undefined,area);if(!approach || !workPath(scene,area,approach.end,point))problems.push(`${s.id}: floor station needs connected stairs and counter approaches`);}catch(error){problems.push(error instanceof Error ? error.message : String(error));}
+ }
  for(const a of e.accounts.filter(a=>usesWorkTravel(scene,a)))for(const id of accountJobs(a)){
   const job=e.jobs.find(j=>j.id===id)!;if(!a.commute && !job.station)continue;const home=scene.objects.find(o=>o.id===a.actor)!;
   try{const area=commuteArea(scene,a),offer=workApproach(scene,a,job,home,undefined,area);if(!offer || !workPath(scene,area,offer.end,home))problems.push(`${a.id}: ${id} needs connected work and home approaches`);}catch(error){problems.push(error instanceof Error ? error.message : String(error));}

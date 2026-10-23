@@ -1024,3 +1024,29 @@ registers exact r105 by removing only the named pair milestone and new job-choic
 requirement references; preserve every saved field and original slot, including
 pair memory and pending work. No resource/time/pose rebasing. See
 `docs/dream/companion-recipes.md` and its runnable example.
+
+## Upper-floor workstations, r107
+
+Station objects may use existing place.floor bindings. Require the named floor,
+its enclosing building, a fully supported dry 4.1-radius/18-height stand, actual
+hand support and the existing reach/separation/budget checks. One source business
+per upper station; prove outward and return stairs/counter access even for
+player-only work. Counter-radius bounds remain. Only production at an accepted
+upper bench replaces counter sight; trades and ownership actions retain it.
+Local HUD offers work/bag only on the same supported floor near a visible bench.
+
+Retain elevation on current commute pose, home, destination and path. Compare
+station distance in XYZ, reuse the existing indoor/body-sized walking network,
+reserve only on arrival and reject forged heights/through-slab routes on restore.
+Keep one claim across recipes, finite inputs/wages/refunds, clocks and all actor,
+rig, contact and navigation caps. Old ground paths retain their representation.
+
+The market loft has 29 parts, 32 contacts and 17 generated treads. Kit/sapling
+work shares its upper bench; food stays downstairs. Existing indoor maintenance
+covers the new table without new accounts, resources or a fifth repair duty.
+Format19/simulation50 registers exact r106 geometry/policy, validates the old
+state first and keeps its original slot. Refund only work incompatible with its
+moved station; preserve unrelated work, ledgers, history, clocks and paths. Fit
+only unsafe player poses through existing bounded recovery. Host bootstrap sends
+source-matched old contacts before old navigation, sharing unchanged foundation
+fits. See docs/dream/upstairs-work.md and its runnable source.

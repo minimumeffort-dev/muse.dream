@@ -96,11 +96,12 @@ describe('enterable ground floors',()=>{
   for(const t of [0,250]){lighting.update(t);expect(lighting.pools.visible).toBe(true);}
   let vertices=0;lighting.pools.traverse(n=>{if(!(n instanceof Mesh))return;const p=n.geometry.getAttribute('position'),indoor=n.geometry.getAttribute('roomLight');for(let i=0;i<p.count;i++){expect(p.getY(i)).toBeCloseTo(room.floor+2.05,4);expect(indoor.getX(i)).toBe(1);vertices++;}});expect(vertices).toBeGreaterThan(0);
  });
- it('preserves shell groups through compaction, instancing and worker transfer, keeping the floor opaque',()=>{
+ it('preserves shell groups through compaction, instancing and worker transfer, keeping the occupied floor opaque',()=>{
   const built=new WorldScenery(scene),packed=packChunk(built.group),root=unpackChunk(packed.packet,()=>{throw Error('No water');}),streamed=WorldScenery.fromChunk(scene,root,packed.packet.occlusion);
   const camera=new OrthographicCamera(-200,200,200,-200,1,2000);camera.position.set(0,300,-300);camera.lookAt(0,20,0);camera.updateMatrixWorld();
   const player=new Vector3(0,room.floor+8.5,0);streamed.update(camera,player,1/30,true);
-  let hidden=0,opaque=0;root.traverse(n=>{if(!(n instanceof Mesh))return;const visibility=n.geometry.getAttribute('visibility');if(!visibility)return;const tag=n.userData.cutaway;if(tag==='roof' || tag==='front'){expect(visibility.getX(0)).toBe(0);hidden++;}else{expect(visibility.getX(0)).toBe(1);opaque++;}});expect(hidden).toBeGreaterThan(1);expect(opaque).toBeGreaterThan(0);
+  let hidden=0,opaque=0,upper=0;root.traverse(n=>{if(!(n instanceof Mesh))return;const visibility=n.geometry.getAttribute('visibility');if(!visibility)return;const tag=n.userData.cutaway;if(tag==='roof' || tag==='front' || tag==='above'){expect(visibility.getX(0)).toBe(0);hidden++;if(tag==='above')upper++;}else{expect(visibility.getX(0)).toBe(1);opaque++;}});expect(hidden).toBeGreaterThan(1);expect(opaque).toBeGreaterThan(0);expect(upper).toBeGreaterThan(0);
+  player.set(14.5*object.scale,9*object.scale+8.5,-5*object.scale);streamed.update(camera,player,1/30,true);root.traverse(n=>{if(n instanceof Mesh && n.userData.cutaway==='above')expect(n.geometry.getAttribute('visibility').getX(0)).toBe(1);});
   player.set(300,150,300);streamed.update(camera,player,1/30,true);root.traverse(n=>{if(n instanceof Mesh && n.geometry.getAttribute('visibility'))expect(n.geometry.getAttribute('visibility').getX(0)).toBe(1);});disposeChunk(root);disposeChunk(built.group);
  });
 });

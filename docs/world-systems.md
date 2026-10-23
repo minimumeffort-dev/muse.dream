@@ -18,8 +18,8 @@ those needs to an actual workplace window. Rain now brings the free resident
 indoors through the same shared rest journey. Shared meals now have a practical
 consequence: the baker's larger recipe accepts remembered time together or
 personal baking practice. Resident-to-resident meals now connect existing wages, food, seating and routines.
-Next priorities are deeper relationship consequences, lifts and further usable
-interiors. [Companion meals](dream/companions.md).
+The market now has a connected workshop loft for kit and sapling production.
+Next priorities remain deeper relationships, lifts and further usable interiors. [Companion meals](dream/companions.md).
 Player and resident seating now share a smooth body transition with staggered
 steps and supported feet. Ownership and actions remain immediate in the engine.
 [Sitting and standing](dream/seating-motion.md).
@@ -27,7 +27,8 @@ steps and supported feet. Ownership and actions remain immediate in the engine.
 The bakery now uses an authored physical workstation: people walk to its shared
 position, claim it across recipes and reach its supported surface. Jobs now bind
 Dream-authored kneading, folding, fastening and tending motions; furniture repairs
-reuse mending. Tools and upstairs stations remain unfinished.
+reuse mending. Tools remain unfinished. [Upstairs stations](dream/upstairs-work.md) now connect
+a workshop loft to the same finite business.
 [Workstations](dream/workstations.md). [Floors](dream/floors.md).
 
 Shared rest now gives the home another purpose. The commuter can buy food, walk
@@ -542,3 +543,17 @@ state and original slots. [Rules and complete example](dream/companion-recipes.m
 
 Next gaps remain broader indoor purposes, richer resident decisions and general
 relationships. This is an authored work consequence, not a teaching simulation.
+
+## A connected market workshop, r107
+
+Kit and sapling production now happen at the market loft's shared workbench.
+Food stays downstairs. Player and resident climbs use real stairs and supported
+heights; claims, materials, wages, damage/refunds and existing indoor repair
+service stay connected. No new accounts or starting resources. The market has
+29 visual parts, 32 contacts and 17 treads, within the existing caps. Floor work
+uses the accepted station while counter trade still needs sight. Exact r106 saves
+retain their state; only incompatible moved work refunds. [Guide](dream/upstairs-work.md).
+
+Lifts, upstairs trading, physical ingredients/tools, broader emotional needs and
+relationships still need implementation. The full living-world objective remains
+unfinished; this adds one usable workplace.

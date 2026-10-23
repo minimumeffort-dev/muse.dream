@@ -190,8 +190,9 @@ export function* workshopReviewSteps(state:CarState,world:World):Generator<void,
  for(let cycle=0;cycle<2;cycle++){
   next=stepInteractive(next,{steer:0,throttle:0,strikePressed:true},1/120,world);
   if(!next.broken.includes('hall_table_east'))throw Error('Workshop review did not break its table');
-  for(let i=0;i<120*25;i++){
+  for(let i=0;i<120*180;i++){
    next=stepInteractive(next,{steer:0,throttle:0,...(i===239 ? {commerce:{kind:'repair',repair:'market_tables'} as const} : {})},1/120,world);if(i%30===0)yield;
+   if(i>=120*25-1 && !next.broken.includes('hall_table_east') && next.economy!.accounts.find(a=>a.id==='baker')!.completed.work.assemble_kit!>=cycle+1)break;
   }
   if(next.broken.includes('hall_table_east') || next.economy!.accounts.find(a=>a.id==='baker')!.completed.work.assemble_kit!<cycle+1)throw Error('Workshop review did not repair and replace its kit');
   if(next.economy!.accounts.find(a=>a.id==='pocket')!.repair?.recover)return next;

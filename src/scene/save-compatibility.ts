@@ -1,4 +1,5 @@
 import marketR55 from './compatibility/r55-market.json';
+import marketR106 from './compatibility/r106-market.json';
 import cityR67 from './compatibility/r67-city.json';
 import parkR68 from './compatibility/r68-park.json';
 import junctionR69 from './compatibility/r69-junction.json';
@@ -19,7 +20,7 @@ import homeR98 from './compatibility/r98-home.json';
 import homeR97 from './compatibility/r97-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=49;
+export const SAVE_SIMULATION_VERSION=50;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -51,6 +52,7 @@ export function saveCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder
   return projection(scene,SAVE_SIMULATION_VERSION,true,encode);
 }
 function projection(scene:Scene,simulationVersion:number,rounded=true,encode?:CompatibilityEncoder):string {
+  if(simulationVersion<50)scene=preLoftScene(scene);
   if(simulationVersion<49)scene=prePeerRecipeScene(scene);
   if(simulationVersion<48)scene=preCompanionScene(scene);
   if(simulationVersion<47)scene=preStationScene(scene);
@@ -111,10 +113,23 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r107 opens a connected workshop loft without adding stock, wages or actors. */
+export const LOFT_COMPATIBILITY='1dc29cda7770917eb18cb167dd0caa5b5149d8f3e983857a253903ad24cd85d6';
+const loftProjections=new WeakMap<Scene,Scene>();
+export function preLoftScene(scene:Scene):Scene{
+ const cached=loftProjections.get(scene);if(cached)return cached;
+ if(!scene.floors?.some(f=>f.id==='hall_loft'))return scene;
+ const grounds=(ids:string[]|undefined)=>ids?.filter(id=>id!=='hall_loft' && id!=='hall_landing');
+ const prior={...scene,floors:scene.floors.filter(f=>f.id!=='hall_loft' && f.id!=='hall_landing'),objects:scene.objects.filter(o=>o.id!=='hall_workbench').map(o=>o.id==='market_hall' ? {...o,spec:marketR106 as ObjectDslV2} : o),economy:scene.economy && {...scene.economy,stations:scene.economy.stations?.filter(s=>s.id!=='workshop_prep').map(s=>({...s,grounds:grounds(s.grounds)})),accounts:scene.economy.accounts.map(a=>a.grounds ? {...a,grounds:grounds(a.grounds)} : a),jobs:scene.economy.jobs.map(j=>j.id==='assemble_kit' || j.id==='propagate_saplings' ? {...j,equipment:['hall_table_east'],station:'bakery_prep'} : j),repairs:scene.economy.repairs.map(r=>r.id==='home_furniture' ? {...r,label:'Repair home furniture',grounds:grounds(r.grounds)?.filter(id=>id!=='market_hall')} : r)}};
+ loftProjections.set(scene,prior);return prior;
+}
+export function preLoftCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preLoftScene(scene),49,true,encode);}
+
 /** r106 derives recipe eligibility from completed, explicitly named resident pairs. */
 export const PEER_RECIPE_COMPATIBILITY='eac00f9a8d8b0de82607c53e068c66880828c03e3680d8337b40ad81a35cf64e';
 const peerRecipeProjections=new WeakMap<Scene,Scene>();
 export function prePeerRecipeScene(scene:Scene):Scene{
+ scene=preLoftScene(scene);
  const cached=peerRecipeProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.milestones.some(m=>m.id==='bakers_pair' && m.peer==='regular'))return scene;
  const prior={...scene,economy:{...scene.economy,milestones:scene.economy.milestones.filter(m=>m.id!=='bakers_pair'),accounts:scene.economy.accounts.map(a=>a.id==='baker' ? {...a,works:a.works?.filter(id=>id!=='large_bake')} : a),jobs:scene.economy.jobs.map(j=>j.id==='large_bake' ? {...j,requires_any:j.requires_any?.filter(id=>id!=='bakers_pair')} : j)}};

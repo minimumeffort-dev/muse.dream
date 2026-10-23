@@ -25,3 +25,8 @@ it('keeps complete work details on separate lines and a blocked reason in its si
  expect(workDetailText(['Walk beside the object. Keep the work area clear.','Closed · opens 06:00'])).toBe('Walk beside the object. Keep the work area clear.\nClosed · opens 06:00');
  expect(workDetailText([undefined,false,''])).toBe('');
 });
+
+it('offers work and the bag at an upstairs bench without exposing shop or business controls',()=>{
+ expect(activityViews({foot:true,market:false,station:true,work:true,task:false,business:true})).toEqual(['work','bag']);
+ expect(activityViews({foot:false,market:false,station:true,work:true,task:false,business:true})).toEqual(['bag']);
+});

@@ -4,13 +4,15 @@
 
 The covered market now has a doorway you can walk through, a floor you can stand on and walls you cannot walk through. Inside, the roof and the walls nearest the camera cut away. The floor, furniture and people stay visible.
 
-![Walking into the covered market](../media/interior.jpg)
+The earlier walkthrough is historical for the flat hall layout. The [workshop loft](upstairs-work.md) is the current interior; entry, counter and baking controls remain the same.
+
+![Historical ground-floor market walkthrough](../media/interior.jpg)
 
 [Watch the walkthrough](../media/interior.mp4) · [30 fps GIF](../media/interior.gif) · [Complete Dream source](../examples/enterable-market.dream)
 
-Leave your vehicle with **F**, then walk through the market's front entrance. The vendor now stands inside, behind the existing table: **H** starts paid baking, **B** buys bread and **G** eats what you carry. Walk around the table to the counter. The outdoor square is outside its forty-unit reach. Staff, customers and supply workers use the same doorway and clear interior aisle. A wall blocks buying, starting work and conversation; proximity alone is not enough. Leaving the work area or jumping cancels a batch and returns its reserved supplies and wage.
+Leave your vehicle with **F**, then walk through the market's front entrance. The vendor now stands inside, behind the existing table: **H** starts paid baking, **B** buys bread and **G** eats what you carry. Walk around the table to the counter. The outdoor square is outside its forty-unit reach. Staff, customers and supply workers use the same doorway and clear interior aisle. Walls block counter trades and conversation; proximity alone is not enough. Production requires its physical workstation. The loft uses a validated upper bench while counter sight remains required for trade. Leaving the work area or jumping cancels a batch and returns its reserved supplies and wage.
 
-Each building currently has one usable ground floor. Stacked floors and a finished interior library remain future work. K can now hit reachable props on foot. Handheld tools and furniture pickup are not implemented. The hall's tables, bench and crate use the existing impact and repair rules; the caretaker can walk to them through the doorway after damage.
+Buildings use one enclosing interior volume. The home and market now have connected upper floors; independent stacked rooms, lifts and a finished interior library remain future work. K can now hit reachable props on foot. Handheld tools and furniture pickup are not implemented. The hall's tables, bench and crate use the existing impact and repair rules; the caretaker can walk to them through the doorway after damage.
 
 ## The school common room
 
@@ -151,6 +153,20 @@ object market_hall(label="Covered market hall"){
   contact c_front_right(at=[17.25,0,-19.5],size=[30.5,1],height=22);
   contact c_lintel(at=[0,6.5,-19.5],size=[4,1],height=15.5);
   contact c_ceiling(at=[0,21.5,0],size=[65,40],height=6.5);
+  contact c_loft(at=[14.5,8,-5],size=[21,28],height=1);
+  contact c_loft_landing(at=[28.25,8,-15.5],size=[6.5,7],height=1);
+  contact c_loft_left_guard(at=[3.85,9,-5],size=[.3,28],height=2.5);
+  contact c_loft_right_guard(at=[25.15,9,-1.4],size=[.3,20.8],height=2.5);
+  contact c_loft_back_guard(at=[14.5,9,9.15],size=[21,.3],height=2.5);
+  contact c_loft_left_post(at=[4.5,.5,8.5],size=[.8,.8],height=7.5);
+  contact c_loft_right_post(at=[24.5,.5,8.5],size=[.8,.8],height=7.5);
+  stairs loft_stairs(material=wood,at=[27,.5,1],size=[4,8.5,26],steps=17,heading_deg=180);
+  part loft_floor(shape=box,material=floorboards,at=[14.5,8.5,-5],size=[21,1,28],cutaway=above);
+  part loft_landing(shape=box,material=floorboards,at=[28.25,8.5,-15.5],size=[6.5,1,7],cutaway=above);
+  voxels loft_supports(material=wood,at=[14.5,4.25,8.5],size=[20.8,7.5,.8],grid=[26,15,1]){fill left(from=[0,0,0],to=[1,15,1]);fill right(from=[25,0,0],to=[26,15,1]);}
+  voxels loft_left_guard(material=wood,at=[3.85,10.25,-5],size=[.3,2.5,28],grid=[1,12,32],cutaway=above){fill rail(from=[0,11,0],to=[1,12,32]);repeat posts(index=i,count=5){fill post(from=[0,0,i*7],to=[1,12,i*7+1]);}}
+  voxels loft_right_guard(material=wood,at=[25.15,10.25,-1.4],size=[.3,2.5,20.8],grid=[1,12,32],cutaway=above){fill rail(from=[0,11,0],to=[1,12,32]);repeat posts(index=i,count=5){fill post(from=[0,0,i*7],to=[1,12,i*7+1]);}}
+  voxels loft_back_guard(material=wood,at=[14.5,10.25,9.15],size=[21,2.5,.3],grid=[32,12,1],cutaway=above){fill rail(from=[0,11,0],to=[32,12,1]);repeat posts(index=i,count=5){fill post(from=[i*7,0,0],to=[i*7+1,12,1]);}}
   part floor(shape=box,material=floorboards,at=[0,.25,0],size=[63,.5,38]);
   part left_wall(shape=box,material=redbrick,at=[-32,11,0],size=[1,22,40],cutaway=left);
   part right_wall(shape=box,material=redbrick,at=[32,11,0],size=[1,22,40],cutaway=right);

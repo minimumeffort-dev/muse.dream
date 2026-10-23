@@ -59,3 +59,10 @@ resources before new decisions use the upstairs preference.
 
 The current home has one enclosing volume. Independent stacked rooms, lifts,
 upstairs businesses, sleeping and access permissions remain separate work.
+
+## Work upstairs
+
+[Floor-bound workstations](upstairs-work.md) now give an upper floor a production
+purpose. Static equipment, a body-sized stand, declared floor/building grounds
+and connected stairs share the existing work/escrow rules. Trade counters and
+lifts remain separate capabilities.

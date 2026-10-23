@@ -8,7 +8,7 @@ import {marketIsOpen,marketOpening,marketIsStaffed} from '../sim/market-hours';
 import {jobInputs,jobRequirements,type Market} from '../scene/commerce';
 import type {Scene} from '../scene/schema';
 import type {CarState} from '../sim/car';
-import {businessPrice,businessReserved,milestoneProgress,nearbyMarket,commerceReason,deliveryTarget,repairTarget,type CommerceAction} from '../sim/commerce';
+import {businessPrice,businessReserved,milestoneProgress,nearbyMarket,nearbyWorkstation,commerceReason,deliveryTarget,repairTarget,type CommerceAction} from '../sim/commerce';
 
 const why={station:'Stand at the workbench before starting',energy:'Sit on a free bench to recover energy before working',weather:'Wait for dry weather before starting this job',equipment:"Repair the required equipment first",ownership:"You do not own this business",not_for_sale:"This business is not for sale",amount:"Choose whole coins from 1 to 1,000,000",headroom:"This transfer would exceed the balance limit or a reserved commitment",seat:'Sit on a free paired bench with room for your companion',unfamiliar:'Talk to them first',cooldown:'They would like some time before another meal',unstaffed:'Waiting for staff to reach the counter',closed:'The counter is closed',qualification:'Meet a listed requirement first',funds:'Not enough coins',stock:'Sold out',full:'Your bag is full',sated:'You are already full',satiety:'Eat before starting work',busy:'Finish your current task or wait for a free place',range:'Walk closer',input:'Missing ingredients',treasury:'The business cannot pay',capacity:'The shelf is full',not_food:'This is not food',damage:'No reachable unclaimed damage in this work area'};
 const hourText=(hour:number)=>{const minute=Math.floor(hour*60+1e-6)%1440;return `${String(Math.floor(minute/60)).padStart(2,'0')}:${String(minute%60).padStart(2,'0')}`;};
@@ -25,9 +25,9 @@ export function workDetailText(lines:readonly (string|false|undefined)[],warning
 }
 export type ActivityView='market'|'work'|'bag'|'business';
 /** Only the current counter and active task can expose contextual pages. */
-export function activityViews(context:{foot:boolean;market:boolean;work:boolean;task:boolean;business:boolean;sharing?:boolean}):ActivityView[]{
+export function activityViews(context:{foot:boolean;market:boolean;work:boolean;task:boolean;business:boolean;station?:boolean;sharing?:boolean}):ActivityView[]{
  if(context.task)return context.sharing ? ['bag'] : ['work','bag'];
- return [...(context.foot && context.market ? ['market' as const] : []),...(context.foot && context.market && context.work ? ['work' as const] : []),'bag',...(context.foot && context.market && context.business ? ['business' as const] : [])];
+ return [...(context.foot && context.market ? ['market' as const] : []),...(context.foot && (context.market || context.station) && context.work ? ['work' as const] : []),'bag',...(context.foot && context.market && context.business ? ['business' as const] : [])];
 }
 export function commerceControls(scene:Scene,submit:(action:CommerceAction)=>void,releaseInputs:()=>void=()=>{}){
  const panel=document.querySelector<HTMLElement>('#commerce-panel')!,title=document.querySelector<HTMLElement>('#market-title')!,pocket=document.querySelector<HTMLElement>('#market-pocket')!,feedback=document.querySelector<HTMLElement>('#market-feedback')!,pausePocket=document.querySelector<HTMLElement>('#pocket-status')!;
@@ -115,26 +115,26 @@ export function commerceControls(scene:Scene,submit:(action:CommerceAction)=>voi
   const target=deliveryTarget(state,scene),repair=repairTarget(state,scene),companion=nearbySocial(state,scene),together=e!.shared,pending=e!.invitation,sharing=together && together.phase!=='home',social=definition.socials.find(s=>s.id===(together?.id??definition.accounts.find(a=>a.id===pending?.partner)?.social??companion?.account.social));
   const companionName=objects.get(definition.accounts.find(a=>a.id===(together?.partner??pending?.partner??companion?.account.id))?.actor??'')?.labelText??'your companion';
   const sharedMessage=pending ? `${companionName} is offering ${definition.goods.find(g=>g.id===social?.good)?.label.toLowerCase()??'a meal'}. Their treat.` : sharing ? together.phase==='out' ? `${companionName} is coming over. Two portions reserved; stay seated.` : `Eating together · ${Math.max(0,together.eatUntilS!-state.timeS).toFixed(1)}s left` : together ? `${companionName} is returning to their routine.` : companion && social ? `${definition.goods.find(g=>g.id===social.good)!.label} ×2 · ${companionName}` : '';
-  const m=nearbyMarket(state,scene),stock=m && e!.markets.find(s=>s.id===m.id)!,active=a.work && definition.jobs.find(j=>j.id===a.work!.id),latest=[...e!.events].reverse().find(event=>event.account===a.id && state.timeS-event.atS<4);
+  const counter=nearbyMarket(state,scene),bench=!counter ? nearbyWorkstation(state,scene) : undefined,m=counter??(bench ? definition.markets.find(m=>m.id===definition.jobs.find(j=>j.station===bench.id)?.market) : undefined),stock=m && e!.markets.find(s=>s.id===m.id)!,active=a.work && definition.jobs.find(j=>j.id===a.work!.id),latest=[...e!.events].reverse().find(event=>event.account===a.id && state.timeS-event.atS<4);
   const taskActive=!!(active || target || repair || sharing || pending),foot=state.control.kind==='foot';
-  const id=foot ? m?.id??'' : '';if(contextId!==id || !playing || state.control.kind!==lastViewControl){close(false);contextId=id;}lastViewControl=state.control.kind;
+  const id=foot ? (m?.id??'')+(bench ? '/'+bench.id : '') : '';if(contextId!==id || !playing || state.control.kind!==lastViewControl){close(false);contextId=id;}lastViewControl=state.control.kind;
   const hasWork=definition.jobs.some(j=>j.market===m?.id) || definition.deliveries.some(d=>d.from===m?.id) || definition.repairs.some(r=>r.market===m?.id);
-  available=activityViews({foot,market:!!m,work:hasWork,task:taskActive,business:!!m?.owner,sharing:!!sharing || !!pending});if(view && !available.includes(view))close(false);
-  contextPlaying=playing;canOpen=playing && (!!m && foot || taskActive);defaultView=taskActive ? sharing || pending ? 'bag' : 'work' : m?.lots.some(l=>l.price!==undefined) ? 'market' : hasWork ? 'work' : m?.owner ? 'business' : 'market';
+  available=activityViews({foot,market:!!counter,station:!!bench,work:hasWork,task:taskActive,business:!!counter?.owner,sharing:!!sharing || !!pending});if(view && !available.includes(view))close(false);
+  contextPlaying=playing;canOpen=playing && (!!m && foot || taskActive);defaultView=taskActive ? sharing || pending ? 'bag' : 'work' : bench ? 'work' : m?.lots.some(l=>l.price!==undefined) ? 'market' : hasWork ? 'work' : m?.owner ? 'business' : 'market';
   opener.hidden=!canOpen;bag.hidden=!playing;panel.hidden=!playing || !view;
-  const taskName=pending ? 'Meal invitation' : sharing ? 'Meal' : repair ? returning ? 'Return materials' : planting ? 'Planting' : 'Repair' : target ? 'Delivery' : active ? 'Working' : 'Market';
+  const taskName=pending ? 'Meal invitation' : sharing ? 'Meal' : repair ? returning ? 'Return materials' : planting ? 'Planting' : 'Repair' : target ? 'Delivery' : active ? 'Working' : bench ? 'Workbench' : 'Market';
   const distance=target ? ` · ${Math.ceil(Math.hypot(target.x-state.x,target.y-state.y)/10)} m` : repair && repair.task.phase!=='work' ? ` · ${Math.ceil(Math.hypot(state.x-repair.x,state.y-repair.y)/10)} m` : active ? ` · ${Math.max(0,Math.ceil(a.work!.doneAtS-state.timeS))}s` : '';
-  text(activityLabel,taskName+distance);setIcon(activityIcon,taskActive ? 'work' : 'market');opener.title=taskActive ? taskName : m?.label??'';opener.setAttribute('aria-label',taskActive ? `Open ${taskName.toLowerCase()} details` : `Open ${m?.label??'nearby market'}`);
+  text(activityLabel,taskName+distance);setIcon(activityIcon,taskActive || bench ? 'work' : 'market');opener.title=taskActive || bench ? taskName : m?.label??'';opener.setAttribute('aria-label',taskActive || bench ? `Open ${taskName.toLowerCase()} details` : `Open ${m?.label??'nearby market'}`);
   text(bagLabel,`${a.credits} 🪙`);bag.style.setProperty('--fullness',String(a.satiety/100));bag.dataset.hungry=String(a.satiety<25);bag.title=`Bag · Fullness ${Math.round(a.satiety)}%${energy} (I)`;bag.setAttribute('aria-label',`Open bag · ${a.credits} coins · fullness ${Math.round(a.satiety)} percent${a.energy===undefined ? '' : ` · energy ${Math.round(a.energy)} percent`}`);
   opener.setAttribute('aria-expanded',String(!!view && view!=='bag'));bag.setAttribute('aria-expanded',String(view==='bag'));
   for(const tab of tabs){if(tab.dataset.view==='market')text(tab.querySelector<HTMLElement>('.ui-label')!,m?.lots.some(l=>l.price!==undefined) ? 'Shop' : 'Stock');tab.hidden=!available.includes(tab.dataset.view as ActivityView);tab.setAttribute('aria-pressed',String(tab.dataset.view===view));}
   for(const page of pages)page.hidden=page.dataset.commerceView!==view;
   setIcon(panelIcon,view==='business' ? 'business' : view==='work' ? 'work' : view==='bag' ? 'bag' : 'market');
-  text(title,view==='bag' ? 'Your bag' : view==='work' && taskActive ? taskName : m?.label??'Your activity');cancel.hidden=returning || !(target || repair || sharing);text(cancel,sharing ? 'End meal' : repair ? planting ? 'Cancel planting' : 'Cancel repair' : 'Cancel delivery');
+  text(title,view==='bag' ? 'Your bag' : view==='work' && (taskActive || bench) ? taskName : m?.label??'Your activity');cancel.hidden=returning || !(target || repair || sharing);text(cancel,sharing ? 'End meal' : repair ? planting ? 'Cancel planting' : 'Cancel repair' : 'Cancel delivery');
   text(stockLabel,m ? 'Stock · '+m.lots.map(l=>`${definition.goods.find(g=>g.id===l.good)!.label} ${stock!.stock[l.good]}`).join(' · ') : '');
-  const repairs=definition.repairs.filter(r=>r.market===m?.id);
-  const delivery=definition.deliveries.filter(d=>d.from===m?.id);
-  const sold=m?.lots.filter(l=>l.price!==undefined)??[],tasks=definition.jobs.filter(j=>j.market===m?.id),food=definition.goods.filter(g=>g.food>0 && a.inventory[g.id]!>0);
+  const repairs=counter ? definition.repairs.filter(r=>r.market===m?.id) : [];
+  const delivery=counter ? definition.deliveries.filter(d=>d.from===m?.id) : [];
+  const sold=counter?.lots.filter(l=>l.price!==undefined)??[],tasks=definition.jobs.filter(j=>bench ? j.station===bench.id : j.market===m?.id),food=definition.goods.filter(g=>g.food>0 && a.inventory[g.id]!>0);
   options(goods,sold.map(l=>({id:l.good,label:definition.goods.find(g=>g.id===l.good)!.label,detail:`${l.price} 🪙 · ${stock!.stock[l.good]} left`,icon:'food'})));
   options(jobs,[...tasks.map<Choice>(j=>({id:'work:'+j.id,label:j.label,detail:`+${j.pay} 🪙`,icon:'work'})),...delivery.map<Choice>(d=>({id:'delivery:'+d.id,label:d.label,detail:`+${d.pay} 🪙`,icon:'box'})),...repairs.map<Choice>(r=>({id:'repair:'+r.id,label:r.label,detail:`+${r.pay} 🪙`,icon:r.regrow_s!==undefined ? 'plant' : 'repair'}))]);if(target || active || repair)jobs.hidden=true;options(meals,food.map(g=>({id:g.id,label:g.label,detail:`×${a.inventory[g.id]}`,icon:'food'})));
   const offer=sold.find(l=>l.good===goods.value),task=tasks.find(j=>'work:'+j.id===jobs.value),trip=delivery.find(d=>'delivery:'+d.id===jobs.value),meal=food.find(g=>g.id===meals.value),repairJob=repairs.find(r=>'repair:'+r.id===jobs.value);

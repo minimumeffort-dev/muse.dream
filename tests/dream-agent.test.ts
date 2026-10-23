@@ -84,3 +84,7 @@ it('includes covered rest and unchanged commitment ownership in commerce packets
 it('includes bounded shared-meal qualifications and alternate work gates in commerce packets',()=>{
  const p=dreamAgentContext(['commerce']);expect(p.contract.commands.work!.fields.requires_any).toBe('symbols?');expect(p.contract.commands.milestone!.fields.kind).toContain('shared_meal');expect(p.contract.commands.milestone!.fields.peer).toBe('ref?');expect(p.instructions).toContain('work(...,requires_any=');expect(p.contract).toHaveProperty('commerce.qualifications');expect(p.instructions).toContain('Without peer, completed shared meals qualify only the player and that named NPC');expect(p.instructions).toContain('using the exact social/task/peer key');expect(p.instructions).toContain('cannot gate a player on.requires');expect(p.contract).toHaveProperty('commerce.limits.workerJobs',5);
 });
+
+it('includes bounded upstairs work and keeps counter trade distinct in combined commerce/interior packets',()=>{
+ const p=dreamAgentContext(['commerce','interiors']);expect(p.contract.commands.place!.fields.floor).toBe('ref?');expect(p.contract.commands).toHaveProperty('floor');expect(p.instructions).toContain('Floor stations must name their floor and enclosing building');expect(p.instructions).toContain('trading and business actions still need counter sight');expect(p.contract).toHaveProperty('commerce.workstations.semantics',expect.stringContaining('Floor stations require one source business'));
+});
