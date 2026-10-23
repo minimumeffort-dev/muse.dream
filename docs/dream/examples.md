@@ -341,3 +341,5 @@ can qualify for the same finite larger-batch job. [Rules](relationships.md).
 [Complete workstation world](../examples/workstations.dream) binds a preparation table to one shared job position. The commuter walks there before reserving ingredients or wages. [Controls and bounds](workstations.md).
 
 [Company needs](../examples/company-needs.dream) adds the same bounded social need to a player and two residents. Actual shared meals restore their participants; [the guide](company.md) covers thresholds, supply planning and persistence.
+
+[Seated meal breaks](../examples/seated-breaks.dream) combines existing companion food and authored energy, with no new command. See [rest rules](resting.md#a-meal-is-also-a-seated-break).

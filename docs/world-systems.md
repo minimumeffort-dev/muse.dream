@@ -19,7 +19,8 @@ indoors through the same shared rest journey. Shared meals now have a practical
 consequence: the baker's larger recipe accepts remembered time together or
 personal baking practice. Resident-to-resident meals now connect existing wages, food, seating and routines.
 The market now has a connected workshop loft for kit and sapling production.
-Company now gives the player and two residents a shared social need. Next priorities remain deeper relationships, lifts and further usable interiors. [Companion meals](dream/companions.md).
+Company now gives the player and two residents a shared social need. Actual seated
+meal breaks also recover the commuter’s energy through the player’s existing rule. Next priorities remain deeper relationships, lifts and further usable interiors. [Companion meals](dream/companions.md).
 Player and resident seating now share a smooth body transition with staggered
 steps and supported feet. Ownership and actions remain immediate in the engine.
 [Sitting and standing](dream/seating-motion.md).
@@ -569,3 +570,15 @@ resource changes. [Rules and runnable source](dream/company.md).
 
 Broader emotions, preferences, relationship consequences, lifts and general
 personal goals remain incomplete. The living-world objective remains active.
+
+
+## Seated meal recovery, r109
+
+The rest audit found that residents lost energy through a seated meal while the
+player recovered in the same situation. Recovery now follows the existing actual
+journey owner: seated eating or resting recovers; reserved approaches, standing
+meals and returns drain. Claims, dry supported seats and damaged furniture remain
+authoritative. No new actor, stock, money, need, animation or journey is added.
+The registered rules-only upgrade preserves the complete r108 state. Deeper
+relationships, lifts, useful interiors and wider daily roles remain unfinished.
+[Authoring and verification](dream/resting.md#a-meal-is-also-a-seated-break).

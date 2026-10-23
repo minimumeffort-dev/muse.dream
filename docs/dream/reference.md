@@ -905,3 +905,5 @@ player invitations remain deliberate. Existing counter hours permit ordinary
 advance purchases when the need will be due by the next opening. No free food,
 extra actor/seat slots, generated policy or affection model.
 [Rules](company.md) · [Complete source](../examples/company-needs.dream).
+
+Energy-enabled residents recover during actual seated solo/companion meals as well as rest trips. Reserved approaches and standing food do not count. [Seated-break rules](resting.md#a-meal-is-also-a-seated-break).

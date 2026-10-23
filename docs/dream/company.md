@@ -79,3 +79,5 @@ catch-up or replayed reward. Original slots remain available.
 
 This is one bounded social need. Preferences, affection, conflict, dating and
 broader emotions remain future work. Providers are mocked and prompting is deferred.
+
+Simulation 52 preserves that state exactly and also applies [ordinary energy recovery](resting.md#a-meal-is-also-a-seated-break) to energy-enabled companions while they are actually seated. Company still restores only on completed shared meals.

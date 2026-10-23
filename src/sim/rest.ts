@@ -6,7 +6,7 @@ import {seatAvailable} from './seating';
 import {restArea} from './courier';
 import {workPath,workSegment} from './work-navigation';
 import {advanceWorkJourney} from './work-journey';
-import {actorPose} from './actors';
+import {actorPose,workJourneyForActor} from './actors';
 import {sampleWeather} from '../scene/weather';
 import {sheltered} from './shelter';
 
@@ -14,8 +14,8 @@ import {sheltered} from './shelter';
 export function stepRestNeeds(state:CarState,dt:number,scene:Scene):void{
  const e=state.economy!,d=scene.economy!;
  for(const a of e.accounts){const spec=d.accounts.find(s=>s.id===a.id)!,plan=d.rests?.find(r=>r.id===spec.rest);if(!plan)continue;
-  const t=a.resting,seat=findSeat(scene,spec.actor==='player' ? state.seated : t?.seat),area=spec.actor==='player' ? undefined : restArea(scene,spec);
-  const seated=!!seat && (spec.actor==='player' ? state.control.kind==='foot' && state.grounded && state.surface!=='water' : t?.phase==='sit' && seatAvailable(scene,state,seat,a.id)) && seatAccessClear(scene,seat,state.broken,area);
+  const t=a.resting,journey=spec.actor==='player' ? undefined : workJourneyForActor(state,scene,spec.actor),seat=findSeat(scene,spec.actor==='player' ? state.seated : journey && 'seat' in journey ? journey.seat : undefined),area=spec.actor==='player' ? undefined : restArea(scene,spec);
+  const seated=!!seat && (spec.actor==='player' ? state.control.kind==='foot' && state.grounded && state.surface!=='water' : (journey?.phase==='sit' || journey?.phase==='eat') && seatAvailable(scene,state,seat,a.id)) && seatAccessClear(scene,seat,state.broken,area);
   a.energy=Math.max(0,Math.min(100,a.energy!+dt*(seated ? plan.recover_s : -plan.drainPerS)));
   if(!t)continue;
   const home=()=>{t.phase='home';t.seat=undefined;t.at={...t.home};t.path=[];t.routeAtS=0;t.speed=0;};

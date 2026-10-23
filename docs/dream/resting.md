@@ -22,9 +22,10 @@ rest home_rest(energy=20,drain_s=.05,recover_s=5,below=25,until=85,seats=[lunch_
 
 The example's `pocket` and `regular` accounts both reference `rest=home_rest`.
 Each starts with its own 20 energy. The plan's furniture list guides automatic
-NPC choices. The player can recover on any usable seated furniture, including a
-bench outside that preference list. Existing seating controls and physical
-claims still apply everywhere.
+NPC rest choices. The player and energy-enabled residents recover on any usable
+furniture they actually occupy, including a solo or companion meal outside that
+preference list. Reserving a seat does not count as sitting. Existing seating
+controls and physical claims still apply everywhere.
 
 ## Shared rules
 
@@ -40,6 +41,27 @@ Existing accounts without a rest plan keep their previous behavior. Energy does
 not slow controls, force the player to sleep or alter a vehicle. An existing
 committed batch can finish if time drain lowers energy during the task; no
 second requirement or extra reservation is applied mid-batch.
+
+## A meal is also a seated break
+
+A resident with `rest=...` now recovers during a solo or companion meal at the
+same authored rate as the player. Recovery begins only in the existing seated
+`eat` phase and stops on return, lost claims or broken furniture. A standing meal
+still drains energy. Food, Company and meal memory keep their own completion
+rules; there is no extra food, wage or recovery payout when a meal finishes.
+
+[Runnable seated-break world](../examples/seated-breaks.dream) ·
+[Current-world checks](../evidence/seated-recovery/verification.md).
+The example gives the invited friend an energy plan; the host retains its
+existing food policy and does not acquire an undeclared energy need.
+
+```dream
+rest break_rest(energy=60,drain_s=.05,recover_s=5,below=25,until=85,seats=[lunch_bench],on=plaza);
+```
+
+Format 19 / simulation 52 preserves every field of the registered r108 save,
+including unfinished meals and energy. It begins the corrected rule on the next
+tick, without catch-up or retroactive recovery. Earlier migration slots remain.
 
 ## Resident choices and seats
 

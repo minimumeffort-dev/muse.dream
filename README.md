@@ -868,3 +868,12 @@ for you and the residents. [Watch the current seat transitions](docs/dream/seati
 ![Residents sharing an evening break](docs/media/companions.jpg)
 
 [Watch](docs/media/companions.mp4) · [GIF](docs/media/companions.gif) · [Author companions](docs/dream/companions.md)
+
+
+### A meal can also be a rest
+
+Energy-enabled residents now recover while actually seated for a solo or shared
+meal, using the same rule as the player. Walking to a reserved seat still costs
+energy; broken furniture stops recovery. Food, Company and remembered meals keep
+their existing completion rules. Old saves retain every value and pending trip.
+[Rest rules and runnable example](docs/dream/resting.md#a-meal-is-also-a-seated-break).

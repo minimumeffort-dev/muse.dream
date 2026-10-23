@@ -87,3 +87,5 @@ The recording above predates that visual update; its meal and return rules still
 ## A reason to meet
 
 Optional [company needs](company.md) now make NPC hosts seek time together at a declared threshold. Existing plans without a need keep their previous behavior. Actual completion restores both configured participants; duties, supplies, claims and pair memories retain their rules.
+
+An invited resident with a rest plan also recovers energy while seated for the meal, through the same rule as the player. Food and Company still restore only on their existing completion boundaries. See [seated breaks](resting.md#a-meal-is-also-a-seated-break).

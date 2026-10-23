@@ -1,6 +1,8 @@
 # Leave and come back
 
-The current world uses format 19 / simulation 51. The exact r107 upgrade
+The current world uses format 19 / simulation 52. The exact r108 upgrade is rules-only: it preserves every saved field, unfinished meal, seat claim and original slot, without time advance or retrospective recovery. Energy-enabled NPCs now recover on actual solo/companion eating seats through the same authored rule as the player.
+
+The simulation 51 upgrade remains registered. The exact r107 upgrade
 initializes only the player, baker and commuter company values at saved time.
 Existing money, stock, needs, paths, claims and history stay intact; pending
 meals earn company only when finished. No offline catch-up or reward replay.
@@ -121,7 +123,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 50. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 52. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved

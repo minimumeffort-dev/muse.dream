@@ -1955,3 +1955,14 @@ food-planning policy. Their geometry, input controls and recorded transactions
 remain valid. The current loft and unrelated transport, plants, characters and
 sports retain their accurate models and motion. The new need adds only one Bag
 row, with no permanent HUD meter or new interactive control.
+
+
+## Seated recovery rules, r109
+
+Rendering, geometry, animation and controls are unchanged. Existing rest clips
+still show accurate dedicated-seat recovery, and the Company player/baker clip
+still shows the same completed meal and Bag. Their source provenance remains
+labelled r108 or earlier. No motion was regenerated solely for this policy fix.
+NPC solo/companion energy trajectories from older recordings are historical; use
+the current [native checks](../evidence/seated-recovery/verification.md) for the
+corrected rule and exact saved-state upgrade.

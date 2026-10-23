@@ -21,7 +21,8 @@ it('pins r100 and the exact r99 projection with identical geometry, resources an
  expect(scene.objects).toBe(prior.objects);expect(scene.routes).toBe(prior.routes);expect(scene.floors).toBe(prior.floors);expect(scene.economy!.markets).toEqual(prior.economy!.markets);expect(ambientGraph(scene)).toEqual(ambientGraph(prior));
 });
 it('connects a real meal, upstairs rest, attendance, purchased demand and one paid batch past its closing time',()=>{
- let s=run(attendanceReviewSteps(createCarAtSpawn(scene),world,'closing')),t=worker(s).commute!,end=attendanceEnd(scene,[6,20],t.dutyAtS!);expect(t.phase).toBe('work');expect(worker(s).work!.doneAtS).toBeGreaterThan(end);expect(s.economy!.consumed.lunch).toBe(1);expect(worker(s).energy).toBeGreaterThan(60);
+ const initial=createCarAtSpawn(scene);worker(initial).energy=15; // Exercise a separate upstairs rest even after the meal's recovery.
+ let s=run(attendanceReviewSteps(initial,world,'closing')),t=worker(s).commute!,end=attendanceEnd(scene,[6,20],t.dutyAtS!);expect(t.phase).toBe('work');expect(worker(s).work!.doneAtS).toBeGreaterThan(end);expect(s.economy!.consumed.lunch).toBe(1);expect(worker(s).energy).toBeGreaterThan(60);
  const before=worker(s).credits,finished=worker(s).completed.work.bake!,text=encodeSave(s,s.timeS,world);let replay=decodeSave(text,world).state;
  for(let i=0;i<120*120 && worker(s).commute;i++){s=stepInteractive(s,{steer:0,throttle:0},1/120,world);replay=stepInteractive(replay,{steer:0,throttle:0},1/120,world);}
  expect(worker(s).commute).toBeUndefined();expect(worker(s).credits).toBe(before+3);expect(worker(s).completed.work.bake).toBe(finished+1);expect(s.economy).toEqual(replay.economy);expect(s.npcs).toEqual(replay.npcs);checkEconomyState(s,scene);

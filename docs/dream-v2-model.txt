@@ -878,8 +878,12 @@ below 0..95, until 5..100 and at least below+5. Use 1..4 unique ordered furnitur
 IDs and the existing eight convex grounds, navigation samples and path bounds.
 The initial energy applies separately to each referencing account. Time drains
 energy; work/repair effort is required at start and spent once on completion.
-Cancellation spends no effort. Player seating recovers on any usable furniture;
-the plan's seats choose NPC destinations, not a player-only furniture category.
+Cancellation spends no effort. Player and energy-enabled NPC seating recovers
+on any usable occupied furniture, including solo/companion eating seats outside
+the rest preference list. Existing eat/sit journey phases own recovery; reserved
+approaches, standing meals and returns still drain. Stop recovery on damage or
+lost claims. No second rest journey, food or completion bonus is created.
+The plan's seats choose automatic rest destinations, not recovery eligibility.
 NPC rest requires a complete measured humanoid decor program, a stationary home
 or walk route, and body bounds radius <=8/height <=32. Food and commuting work
 may coexist; other automatic policies and operated counters remain excluded.

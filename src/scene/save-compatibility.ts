@@ -20,7 +20,7 @@ import homeR98 from './compatibility/r98-home.json';
 import homeR97 from './compatibility/r97-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=51;
+export const SAVE_SIMULATION_VERSION=52;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -114,6 +114,10 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r109 applies authored energy recovery to every occupied meal/rest seat. */
+export const SEATED_REST_COMPATIBILITY='cf4a6bffe75b42fdab3872242948b8350f269c16e3ad19fc1a9d1ecd356f78e0';
+export function preSeatedRestCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(scene,51,true,encode);}
+
 /** r108 gives three existing people a shared, bounded social need. */
 export const COMPANY_COMPATIBILITY='3335e4520386d33466a409caaa0d451b8772d904c09c6a8d76d3371d0390effd';
 const companyProjections=new WeakMap<Scene,Scene>();

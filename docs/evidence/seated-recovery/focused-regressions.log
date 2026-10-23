@@ -1,0 +1,128 @@
+> muse-dream@0.1.0 test:watch
+> vitest watch --maxWorkers=2 --testTimeout=60000 tests/seated-recovery.test.ts tests/resting.test.ts tests/companion-meals.test.ts tests/shared-meal.test.ts tests/meals.test.ts
+
+
+ DEV  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/companion-meals.test.ts (10 tests) 258ms
+ ✓ tests/resting.test.ts (8 tests) 125ms
+ ✓ tests/meals.test.ts (6 tests) 113ms
+ ❯ tests/seated-recovery.test.ts (4 tests | 2 failed) 79ms
+   × recovers a seated meal companion through the same rest rate without adding another trip or rewarding the standing host 8ms
+     → expected 59.73749999999994 to be close to 60.99999999999994, received difference is 1.2625000000000028, but expected 0.005
+   ✓ drains energy on the approach and return instead of recovering merely from a reserved seat 3ms
+   ✓ stops recovery on broken seating, refunds held food once and retains energy on R 5ms
+   × recovers during a real solo food trip without changing its paid portion or completion 62ms
+     → expected 58.94999999999976 to be close to 60.212499999999764, received difference is 1.2625000000000028, but expected 0.005
+ ✓ tests/shared-meal.test.ts (18 tests) 15474ms
+   ✓ registers r63 migration without rewriting any saved field, reserves its old slot and refuses unrelated worlds  7716ms
+   ✓ resumes the actual native shared meal once without repurchasing or losing the staffed-world state  7487ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/seated-recovery.test.ts > recovers a seated meal companion through the same rest rate without adding another trip or rewarding the standing host
+AssertionError: expected 59.73749999999994 to be close to 60.99999999999994, received difference is 1.2625000000000028, but expected 0.005
+ ❯ tests/seated-recovery.test.ts:16:31
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/seated-recovery.test.ts > recovers during a real solo food trip without changing its paid portion or completion
+AssertionError: expected 58.94999999999976 to be close to 60.212499999999764, received difference is 1.2625000000000028, but expected 0.005
+ ❯ tests/seated-recovery.test.ts:27:190
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  2 failed | 44 passed (46)
+   Start at  09:39:07
+   Duration  16.15s (transform 512ms, setup 25ms, collect 1.57s, tests 16.05s, environment 0ms, prepare 122ms)
+
+ FAIL  Tests failed. Watching for file changes...
+       press h to show help, press q to quit
+ RERUN  src/sim/rest.ts
+        Filename pattern: tests/seated-recovery.test.ts, tests/resting.test.ts, tests/companion-meals.test.ts, tests/shared-meal.test.ts, tests/meals.test.ts
+
+ ✓ tests/seated-recovery.test.ts (4 tests) 68ms
+ ✓ tests/companion-meals.test.ts (10 tests) 251ms
+ ✓ tests/resting.test.ts (8 tests) 126ms
+ ✓ tests/meals.test.ts (6 tests) 116ms
+ ✓ tests/shared-meal.test.ts (18 tests) 15096ms
+   ✓ registers r63 migration without rewriting any saved field, reserves its old slot and refuses unrelated worlds  7517ms
+   ✓ resumes the actual native shared meal once without repurchasing or losing the staffed-world state  7300ms
+
+ Test Files  5 passed (5)
+      Tests  46 passed (46)
+   Start at  09:39:48
+   Duration  16.59s
+
+ PASS  Waiting for file changes...
+       press h to show help, press q to quit
+ RERUN  tests/company-needs-world.test.ts
+        Filename pattern: tests/seated-recovery.test.ts, tests/resting.test.ts, tests/companion-meals.test.ts, tests/shared-meal.test.ts, tests/meals.test.ts
+
+ ✓ tests/companion-meals.test.ts (10 tests) 249ms
+ ✓ tests/resting.test.ts (8 tests) 130ms
+ ✓ tests/meals.test.ts (6 tests) 121ms
+ ✓ tests/seated-recovery.test.ts (4 tests) 65ms
+ ✓ tests/shared-meal.test.ts (18 tests) 15371ms
+   ✓ registers r63 migration without rewriting any saved field, reserves its old slot and refuses unrelated worlds  7710ms
+   ✓ resumes the actual native shared meal once without repurchasing or losing the staffed-world state  7376ms
+
+ Test Files  5 passed (5)
+      Tests  46 passed (46)
+   Start at  09:40:12
+   Duration  16.93s
+
+ PASS  Waiting for file changes...
+       press h to show help, press q to quit
+ RERUN  tests/seated-recovery-world.test.ts
+        Filename pattern: tests/seated-recovery.test.ts, tests/resting.test.ts, tests/companion-meals.test.ts, tests/shared-meal.test.ts, tests/meals.test.ts
+
+ ✓ tests/companion-meals.test.ts (10 tests) 266ms
+ ✓ tests/resting.test.ts (8 tests) 129ms
+ ✓ tests/meals.test.ts (6 tests) 118ms
+ ✓ tests/seated-recovery.test.ts (5 tests) 110ms
+ ✓ tests/shared-meal.test.ts (18 tests) 16015ms
+   ✓ registers r63 migration without rewriting any saved field, reserves its old slot and refuses unrelated worlds  7972ms
+   ✓ resumes the actual native shared meal once without repurchasing or losing the staffed-world state  7764ms
+
+ Test Files  5 passed (5)
+      Tests  47 passed (47)
+   Start at  09:41:12
+   Duration  17.59s
+
+ PASS  Waiting for file changes...
+       press h to show help, press q to quit
+ RERUN  src/scene/dream-contract.ts
+        Filename pattern: tests/seated-recovery.test.ts, tests/resting.test.ts, tests/companion-meals.test.ts, tests/shared-meal.test.ts, tests/meals.test.ts
+
+ ✓ tests/companion-meals.test.ts (10 tests) 252ms
+ ✓ tests/resting.test.ts (8 tests) 144ms
+ ✓ tests/meals.test.ts (6 tests) 118ms
+ ✓ tests/seated-recovery.test.ts (5 tests) 114ms
+ ✓ tests/shared-meal.test.ts (18 tests) 16162ms
+   ✓ registers r63 migration without rewriting any saved field, reserves its old slot and refuses unrelated worlds  8111ms
+   ✓ resumes the actual native shared meal once without repurchasing or losing the staffed-world state  7743ms
+
+ Test Files  5 passed (5)
+      Tests  47 passed (47)
+   Start at  09:42:17
+   Duration  17.81s
+
+ PASS  Waiting for file changes...
+       press h to show help, press q to quit
+ RERUN  tests/seated-recovery.test.ts x5
+        Filename pattern: tests/seated-recovery.test.ts, tests/resting.test.ts, tests/companion-meals.test.ts, tests/shared-meal.test.ts, tests/meals.test.ts
+
+ ✓ tests/seated-recovery.test.ts (6 tests) 132ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  09:42:51
+   Duration  288ms
+
+ PASS  Waiting for file changes...
+       press h to show help, press q to quit

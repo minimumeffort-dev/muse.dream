@@ -1065,3 +1065,16 @@ all budgets and deliberate player invitations at high company. Keep the need
 inside Bag, not another permanent HUD control. Format19/simulation51 validates
 exact r107 then initializes only newly declared needs at saved time, preserving
 all existing state, old slots and pending rewards. No offline catch-up.
+
+
+## Shared seated energy, r109
+
+Use the existing actor journey owner to find actual NPC eat/sit occupancy.
+Energy-enabled solo and companion eaters share the player’s authored recovery
+rate, including furniture outside automatic rest preferences. Approach claims,
+standing meals and returns still drain. Require usable dry furniture, actual
+body clearance and exclusive claims; damage stops recovery before departure.
+Keep one journey/clock, existing food/company completion, finite resources and
+all budgets. Format19/simulation52 accepts only the registered exact r108
+rules-only upgrade, preserving every saved field and original slot without
+catch-up. Earlier registered migrations remain intact.

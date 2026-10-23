@@ -30,7 +30,8 @@ it('takes a healthy off-duty resident upstairs through rain, keeps a single clai
  expect([...seen].sort()).toEqual(['home','out','sit']);expect(worker(s).resting).toBeUndefined();expect(worker(s).credits).toBe(before);expect(s.economy).toEqual(replay!.economy);expect(s.npcs).toEqual(replay!.npcs);expect(JSON.stringify(scene)).toBe(source);
 });
 it('restores old r100 upstairs claims and ledgers exactly and retains the original storage slot',()=>{
- let s=createCarAtSpawn(prior);for(let i=0;i<120*240 && worker(s).resting?.phase!=='sit';i++)s=stepInteractive(s,{steer:0,throttle:0},1/120,old);expect(worker(s).resting?.seat?.objectId).toBe('home_upper_settee');
+ let s=createCarAtSpawn(prior);worker(s).energy=15; // Still tired after the now-restorative meal, so this case exercises a rest claim.
+ for(let i=0;i<120*240 && worker(s).resting?.phase!=='sit';i++)s=stepInteractive(s,{steer:0,throttle:0},1/120,old);expect(worker(s).resting?.seat?.objectId).toBe('home_upper_settee');
  const text=encodeSave(s,s.timeS,old),restored=decodeSave(text,world).state;expect(restored).toEqual(JSON.parse(text).state);expect(()=>decodeSave(text,{...world,previousShelterSaveCompatibility:undefined})).toThrow('different world');
  const key=`muse-dream.save.v19.${scene.sceneId}.${c.ATTENDANCE_COMPATIBILITY}`,rows=new Map([[key,text]]),slot=gameSave(world,()=>({getItem:k=>rows.get(k)??null,setItem:(k,v)=>{rows.set(k,v);}}));expect(slot.restored!.state).toEqual(restored);expect(slot.write(restored,s.timeS)).toBe(true);expect(rows.get(key)).toBe(text);expect(rows.size).toBe(2);
 });

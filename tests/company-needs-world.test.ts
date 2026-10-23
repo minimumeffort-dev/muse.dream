@@ -16,7 +16,7 @@ import {ambientGraph} from '../src/scene/ambient-navigation';
 const scene=createWorldScene(),prior=c.preCompanyScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.COMPANY_COMPATIBILITY,previousCompanySaveCompatibility:c.LOFT_COMPATIBILITY},text=JSON.stringify(backup);
 const account=(s:ReturnType<typeof createCarAtSpawn>,id:string)=>s.economy!.accounts.find(a=>a.id===id)!;
 it('pins exact r107 while retaining all geometry, stock, money, actor budgets and prepared pedestrian/contact data',async()=>{
- expect(c.SAVE_SIMULATION_VERSION).toBe(51);expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.COMPANY_COMPATIBILITY);expect(await c.sha256(c.preCompanyCompatibilitySource(scene))).toBe(c.LOFT_COMPATIBILITY);expect(await c.sha256(c.preLoftCompatibilitySource(scene))).toBe(c.PEER_RECIPE_COMPATIBILITY);
+ expect(await c.sha256(c.preSeatedRestCompatibilitySource(scene))).toBe(c.COMPANY_COMPATIBILITY);expect(await c.sha256(c.preCompanyCompatibilitySource(scene))).toBe(c.LOFT_COMPATIBILITY);expect(await c.sha256(c.preLoftCompatibilitySource(scene))).toBe(c.PEER_RECIPE_COMPATIBILITY);
  expect(scene.objects).toEqual(prior.objects);expect(scene.economy!.markets).toEqual(prior.economy!.markets);expect(scene.economy!.accounts.map(({company,...a})=>a)).toEqual(prior.economy!.accounts);expect(sceneContactData(prior)).toEqual(sceneContactData(scene));expect(ambientGraph(prior)).toEqual(ambientGraph(scene));expect(scene.economy!.accounts.filter(a=>a.company).map(a=>a.id)).toEqual(['pocket','baker','regular']);
 });
 it('migrates the actual browser backup by initializing only the three new needs at saved time, retaining the old slot',()=>{

@@ -9,7 +9,8 @@ export function* restReviewSteps(state:CarState,world:World):Generator<void,CarS
  const entrance=homeReviewStart(state,world);
  let next={...entrance,x:entrance.x+24,elevation:walkingHeight(world.scene,entrance.x+24,entrance.y)};
  if(!carFootprintClear(bodyWorld(next,world),next.x,next.y,next.elevation,next.timeS,next))throw Error('Rest review approach is blocked');
- for(let i=0;i<120*300;i++){
+ // Seated meals recover energy too, so ordinary tiredness can begin after five minutes.
+ for(let i=0;i<120*360;i++){
   next=stepInteractive(next,{steer:0,throttle:0},1/120,world);
   const regular=next.economy!.accounts.find(a=>a.id==='regular')!;
   if(regular.resting?.phase==='sit'){
