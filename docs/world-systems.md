@@ -50,10 +50,10 @@ topology stays identical. The measured lookup improvement leaves whole-world
 acceptance near 5.7 seconds; voxel construction and broader startup work remain
 open performance tasks. [Measurements](evidence/work-network-build/verification.md).
 
-Historical save preparation now reuses unchanged foundation fits rather than
-surveying them for every old world. The full current/historical bootstrap packet
+Historical save preparation now reuses unchanged foundation and static prop fits
+rather than surveying them for every old world. The full current/historical bootstrap packet
 remains identical. Broader startup and frame pacing still need work.
-[Current startup measurements](evidence/foundation-reuse/verification.md).
+[Latest startup measurements](evidence/startup-preparation/verification.md).
 
 The commuter now uses the open home for a paid meal, sharing separate cushion
 claims with the player. The hall bench remains a fallback, and old hall meals
@@ -582,3 +582,11 @@ authoritative. No new actor, stock, money, need, animation or journey is added.
 The registered rules-only upgrade preserves the complete r108 state. Deeper
 relationships, lifts, useful interiors and wider daily roles remain unfinished.
 [Authoring and verification](dream/resting.md#a-meal-is-also-a-seated-break).
+
+Static placement reuse now cuts repeated historical preparation while keeping
+the complete bootstrap data identical. Local warm-cache starts reach the first
+complete view about 1.6 seconds sooner at the median of two samples per version.
+Receiving-side indoor navigation validation and interactive assembly preparation
+still cause noticeable loading gaps. Measure and reduce those next without
+weakening structural checks or cutting visual detail. The broader life-simulation
+quest remains unfinished. [Evidence](evidence/startup-preparation/verification.md).

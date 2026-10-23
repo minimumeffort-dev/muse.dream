@@ -1078,3 +1078,16 @@ Keep one journey/clock, existing food/company completion, finite resources and
 all budgets. Format19/simulation52 accepts only the registered exact r108
 rules-only upgrade, preserving every saved field and original slot without
 catch-up. Earlier registered migrations remain intact.
+
+## Static placement reuse during startup
+
+shareStaticPlacements retains the foundation-only reuse policy, then considers
+only immutable static solid prop identities on the same terrain. Compare actual
+interior floor geometry, transforms and fitted heights. Exclude a fit whose
+conservative 3D underside support sphere touches any changed floor AABB; a pivot
+or collider radius alone is insufficient. Keep floor-bound objects, actors,
+knockables, distinct objects, displaced sources and already-owned targets local.
+The scalar support bound stays on the existing private placement entry, with no
+per-frame or unbounded cache. Worker packet values, graph/node/contact order,
+source and historical hashes, physical rules, scene/save versions and all
+rendering/streaming quality must remain unchanged.

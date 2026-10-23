@@ -877,3 +877,11 @@ meal, using the same rule as the player. Walking to a reserved seat still costs
 energy; broken furniture stops recovery. Food, Company and remembered meals keep
 their existing completion rules. Old saves retain every value and pending trip.
 [Rest rules and runnable example](docs/dream/resting.md#a-meal-is-also-a-seated-break).
+
+### Less repeated work before the first view
+
+Startup now reuses unchanged static prop fits while preparing older save worlds.
+Props near a changed interior floor still recompute. Two local warm-cache browser
+starts reached the complete view in 16.2–16.5 seconds, compared with 17.9–18.1
+before, with an identical captured image and geometry buffers. Main-thread
+loading gaps still need work. [Measurements and limits](docs/evidence/startup-preparation/verification.md).

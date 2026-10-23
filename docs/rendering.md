@@ -599,3 +599,25 @@ mesh or live rig. Actor and fragment views use the same viewer level. Standing
 upstairs keeps the occupied slab and contents opaque. These cutaways change no
 contacts, claims, saved poses or repair rules. The upper-floor walkthrough is an
 offline 30-frame-per-simulation-second export, not a performance benchmark.
+
+## Reuse static fits during worker preparation
+
+Historical save layouts now reuse the current world's cached static prop fits
+when the exact object and terrain are unchanged. Changed interior floor regions
+are compared geometrically; a conservative 3D support sphere prevents reuse when
+any underside sample could reach a changed floor. Floor-bound props, moving
+objects, actors, distinct objects and already-owned target fits retain their own
+calculation. The existing foundation-only path remains available.
+
+This is worker bootstrap memoization. It adds no authored Dream field or saved
+state, and does not alter contacts, navigation validation, meshes or streaming.
+The complete decoded packet and all 65 historical fingerprints compare exactly.
+The source remains r109 / simulation 52.
+
+Two quiet warm-cache native starts per version reached the first complete draw
+in 17.9–18.1 seconds before and 16.2–16.5 after. The 1280×720 captured view is
+pixel-identical, with the same 1920×1080 drawing buffer and 95,949,526 tracked
+geometry-buffer bytes. Those bytes are not total browser memory or VRAM. Loading
+heartbeat gaps still reach 0.8–0.9 seconds, and this does not establish a driving
+FPS gain or performance on less powerful laptops.
+[Method, raw data and remaining costs](evidence/startup-preparation/verification.md).

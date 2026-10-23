@@ -1966,3 +1966,13 @@ labelled r108 or earlier. No motion was regenerated solely for this policy fix.
 NPC solo/companion energy trajectories from older recordings are historical; use
 the current [native checks](../evidence/seated-recovery/verification.md) for the
 corrected rule and exact saved-state upgrade.
+
+## Static-fit startup reuse
+
+World source, meshes, shading, animation, camera and controls are unchanged.
+The native before/after startup stills compare pixel-for-pixel, and tracked
+geometry buffers and chunk membership remain identical. Existing HD/GIF/still
+sets therefore remain accurate; no motion export is regenerated for private
+bootstrap memoization. Native startup timings and the separate driving sample
+come from the live browser, not offline frame export. See
+[method and limitations](../evidence/startup-preparation/verification.md).

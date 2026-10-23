@@ -126,6 +126,11 @@ keep unhandled errors fatal; do not hide a reporting failure to publish docs.
 
 Worker bootstrap supplies host-derived pedestrian graph, static contact caches
 and complete-world culling bounds.
+Worker historical preparation may reuse exact static prop fits only for the
+same immutable object and terrain, outside changed interior walking surfaces.
+Keep the conservative support bound, floor-bound/actor/moving exclusions, authored
+source-pose guard and target ownership. These are private caches, never Dream or
+saved fields.
 Prime contacts before navigation on the exact received Scene. Preserve graph node
 order, contact order, source identity, bounds and structural checks; these caches
 are not authored Dream fields or saved data. Keep runtime imports out of the tiny
