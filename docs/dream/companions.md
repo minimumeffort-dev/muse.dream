@@ -83,3 +83,7 @@ node scripts/dream.mjs check docs/examples/companion-meals.dream
 
 Sitting and standing now have a shared [body and foot transition](seating-motion.md).
 The recording above predates that visual update; its meal and return rules still apply.
+
+## A reason to meet
+
+Optional [company needs](company.md) now make NPC hosts seek time together at a declared threshold. Existing plans without a need keep their previous behavior. Actual completion restores both configured participants; duties, supplies, claims and pair memories retain their rules.

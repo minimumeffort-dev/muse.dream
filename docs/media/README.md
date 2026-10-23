@@ -1933,3 +1933,25 @@ food, work, social and seat controls still apply. Existing home, outdoor
 transport, vegetation and sports media keep their accurate geometry and remain
 unchanged. The new hall is inspected from two camera angles, including its
 wall connections, support columns, guardrails and shared stair landing.
+
+
+## Company and shared breaks, r108
+
+`company.mp4`, `company.gif` and `company.jpg` share 360 consecutive native
+2400 × 1350 `?capture` source frames at 30 rendered frames per simulation second,
+twelve seconds total. Real purchases, a first meeting, walking, seat ownership and
+the staff's paid invitation prepare the clip. The player accepts that invitation.
+The recording starts during eating and shows both actual participants gaining
+company, followed by the baker's return. No food, income or history is seeded.
+
+Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> company`. The
+video/still use 1600 × 900, GIF 1280 × 720, and still frame 300 shows the resulting
+Company value in Bag. No interpolation or browser performance claim. The native
+reload and old-save checks are recorded in the
+[verification note](../evidence/company-needs/verification.md).
+
+Earlier social/companion recordings remain historical for the new need and its
+food-planning policy. Their geometry, input controls and recorded transactions
+remain valid. The current loft and unrelated transport, plants, characters and
+sports retain their accurate models and motion. The new need adds only one Bag
+row, with no permanent HUD meter or new interactive control.

@@ -810,6 +810,17 @@ The earlier flat-hall recording below still shows the work gestures.
 
 [Watch the work](docs/media/workstations.mp4) · [GIF](docs/media/workstations.gif) · [Author a workstation](docs/dream/workstations.md) · [Author work motions](docs/dream/work-gestures.md)
 
+## Make time for company
+
+The baker and commuter now have a reason to share a break beyond hunger. Company
+falls with simulation time and recovers when two people finish a real meal.
+They prepare paid food before the shop closes when needed, keep their duties and
+use ordinary free seats. You use the same need; open **I** to see it in Bag.
+
+![A real break restores both participants company](docs/media/company.jpg)
+
+[Watch](docs/media/company.mp4) · [GIF](docs/media/company.gif) · [Write the rule in Dream](docs/dream/company.md)
+
 ## Learn a recipe over lunch
 
 Share a real meal with the baker and you can take the larger bread batch, even

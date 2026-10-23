@@ -29,6 +29,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [Sitting and standing](dream/seating-motion.md) | Smooth body transitions, staggered steps and shared ground support |
 | [Shared recipes](dream/relationships.md) | A real shared meal can unlock work, alongside personal practice |
 | [Peer recipes](dream/companion-recipes.md) | Named resident pairs earn eligibility through their actual shared meals |
+| [Company](dream/company.md) | A shared social need, planned food and actual breaks |
 | [Resident companions](dream/companions.md) | Finite food, shared seats, remembered meals and resumed routines |
 | [Work motions](dream/work-gestures.md) | Bounded hand keyframes for jobs and repairs, shared by people |
 | [Physical workstations](dream/workstations.md) | Standing points, supported hand targets, shared capacity and real worker travel |

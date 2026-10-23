@@ -25,10 +25,10 @@ export class ParserV2 extends Parser {
     if(this.token.text.startsWith('"')) {const token=this.take();try{return JSON.parse(token.text) as string;}catch{fail("invalid quoted string",{...token,path},"E_TYPE");}}
     if(this.is("true") || this.is("false"))return this.take().text==="true";
     if(this.token.text.startsWith("#")){const token=this.take();return {token:{...token,path},name:token.text.toLowerCase()};}
-    if(this.tokens[this.index+1]?.text==="(" && Object.hasOwn(commands,this.token.text) && commands[this.token.text]!.contexts.some(c=>["part_motion","joint_motion","deform","impact","ambient_motion"].includes(c)))
+    if(this.tokens[this.index+1]?.text==="(" && Object.hasOwn(commands,this.token.text) && commands[this.token.text]!.contexts.some(c=>["part_motion","joint_motion","deform","impact","ambient_motion","company_need"].includes(c)))
       return this.node("value",depth+1,path);
     if(/^[A-Za-z_]/.test(this.token.text) && this.tokens[this.index+1]?.text==="(" && !["sin","cos"].includes(this.token.text))
-      fail(`unknown constructor '${this.token.text}'`,{...this.token,path},"E_CONSTRUCTOR",["sin","cos",...Object.keys(commands).filter(k=>commands[k]!.contexts.some(c=>["part_motion","joint_motion","deform","impact","ambient_motion"].includes(c)))]);
+      fail(`unknown constructor '${this.token.text}'`,{...this.token,path},"E_CONSTRUCTOR",["sin","cos",...Object.keys(commands).filter(k=>commands[k]!.contexts.some(c=>["part_motion","joint_motion","deform","impact","ambient_motion","company_need"].includes(c)))]);
     const expr=this.expr();
     const locate=(e:Expr)=>{e.token={...e.token,path};e.args?.forEach(locate);};locate(expr);return expr;
   }
@@ -48,14 +48,14 @@ export class ParserV2 extends Parser {
     else if(type==="text")valid=typeof value==="string";
     else if(type==="bool")valid=typeof value==="boolean";
     else if(type==="symbol" || type==="ref") {valid=!!symbol && identifier.test(symbol);if(valid)checkSymbol(symbol!,token);}
-    else if(["part_motion","joint_motion","deform","impact","ambient_motion","fracture"].includes(type))valid=isNode(value) && commands[value.kind]!.contexts.includes(type);
+    else if(["part_motion","joint_motion","deform","impact","ambient_motion","company_need","fracture"].includes(type))valid=isNode(value) && commands[value.kind]!.contexts.includes(type);
     else valid=!!symbol && type.split("|").includes(symbol);
-    if(!valid)fail(`expected ${type}`,token,"E_TYPE",type.includes("|") ? type.split("|") : ["part_motion","joint_motion","deform","impact","ambient_motion","fracture"].includes(type) ? Object.keys(commands).filter(k=>commands[k]!.contexts.includes(type)) : [type]);
+    if(!valid)fail(`expected ${type}`,token,"E_TYPE",type.includes("|") ? type.split("|") : ["part_motion","joint_motion","deform","impact","ambient_motion","company_need","fracture"].includes(type) ? Object.keys(commands).filter(k=>commands[k]!.contexts.includes(type)) : [type]);
   }
   private node(context:string,depth:number,path:string):DreamNode {
     const original=this.take(),kind=original.text,definition=Object.hasOwn(commands,kind) ? commands[kind] : undefined;
     const token={...original,path};
-    if(!definition || (context==="value" ? !definition.contexts.some(c=>["part_motion","joint_motion","deform","impact","ambient_motion"].includes(c)) : !definition.contexts.includes(context)))
+    if(!definition || (context==="value" ? !definition.contexts.some(c=>["part_motion","joint_motion","deform","impact","ambient_motion","company_need"].includes(c)) : !definition.contexts.includes(context)))
       fail(`'${kind}' is not allowed in ${context}`,token,"E_CONTEXT",Object.keys(commands).filter(k=>commands[k]!.contexts.includes(context)));
     const id=definition.id ? this.name() : undefined;if(id)checkSymbol(id,token);
     token.path=`${path}/${kind}${id ? `:${id}` : ""}`;

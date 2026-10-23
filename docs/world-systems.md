@@ -19,7 +19,7 @@ indoors through the same shared rest journey. Shared meals now have a practical
 consequence: the baker's larger recipe accepts remembered time together or
 personal baking practice. Resident-to-resident meals now connect existing wages, food, seating and routines.
 The market now has a connected workshop loft for kit and sapling production.
-Next priorities remain deeper relationships, lifts and further usable interiors. [Companion meals](dream/companions.md).
+Company now gives the player and two residents a shared social need. Next priorities remain deeper relationships, lifts and further usable interiors. [Companion meals](dream/companions.md).
 Player and resident seating now share a smooth body transition with staggered
 steps and supported feet. Ownership and actions remain immediate in the engine.
 [Sitting and standing](dream/seating-motion.md).
@@ -34,8 +34,7 @@ a workshop loft to the same finite business.
 Shared rest now gives the home another purpose. The commuter can buy food, walk
 to a free home cushion, recover energy and resume the routine before paid work.
 The player recovers through ordinary seating too. Existing stock, wages and
-repairable furniture remain connected; beds, sleep schedules, emotional needs
-remain missing. [Rest rules](dream/resting.md).
+repairable furniture remain connected; beds, sleep schedules and broader emotional needs remain missing. Company is the first bounded social need. [Rest rules](dream/resting.md).
 
 Resident work commuting now connects existing homes to ordinary paid jobs.
 The commuter can buy food, walk to baking work, earn a wage and return without
@@ -557,3 +556,16 @@ retain their state; only incompatible moved work refunds. [Guide](dream/upstairs
 Lifts, upstairs trading, physical ingredients/tools, broader emotional needs and
 relationships still need implementation. The full living-world objective remains
 unfinished; this adds one usable workplace.
+
+
+## Company and planned breaks, r108
+
+The player, baker and commuter now share a bounded company need. Time drains it;
+completed meals restore their actual participants. NPC hosts initiate only below
+their threshold, preparing paid food before a counter closure when needed. Work,
+food, seating, travel, history and refunds remain connected. Exact r107 saves
+initialize only these new needs at saved time. No geometry, actor or starting
+resource changes. [Rules and runnable source](dream/company.md).
+
+Broader emotions, preferences, relationship consequences, lifts and general
+personal goals remain incomplete. The living-world objective remains active.

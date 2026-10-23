@@ -1,3 +1,4 @@
+import {restoreCompany,wantsCompany} from './company';
 import {routePath} from '../scene/routes';
 import {findSeat,sameSeat,seatAccessClear,worldSeats} from '../scene/seating';
 import {walkingHeight} from '../scene/interiors';
@@ -78,7 +79,7 @@ export function startSharedMeal(state:CarState,scene:Scene,id:string,hosted=fals
 export function endSharedMeal(state:CarState,scene:Scene,completed=false){
  const e=state.economy!,t=e.shared;if(!t || t.phase==='home')return;
  const d=scene.economy!,plan=d.socials.find(p=>p.id===t.id)!,partner=e.accounts.find(a=>a.id===t.partner)!,player=e.accounts.find(a=>d.accounts.find(s=>s.id===a.id)!.actor==='player')!;
- if(completed){const food=d.goods.find(g=>g.id===plan.good)!.food;for(const a of [player,partner])a.satiety=Math.min(100,a.satiety+food);e.consumed[plan.good]!+=2;const previous=e.socialHistory?.[t.partner];e.socialHistory={...e.socialHistory,[t.partner]:{meals:(previous?.meals??0)+1,lastAtS:state.timeS}};}
+ if(completed){restoreCompany(state,scene,[player.id,partner.id]);const food=d.goods.find(g=>g.id===plan.good)!.food;for(const a of [player,partner])a.satiety=Math.min(100,a.satiety+food);e.consumed[plan.good]!+=2;const previous=e.socialHistory?.[t.partner];e.socialHistory={...e.socialHistory,[t.partner]:{meals:(previous?.meals??0)+1,lastAtS:state.timeS}};}
  else (t.host ? partner : player).inventory[plan.good]!+=2;
  e.events.push({account:player.id,kind:completed ? 'shared_meal' : 'share_cancelled',ref:t.id,atS:Math.min(e.atS,state.timeS)});e.events=e.events.slice(-12);
  t.portions=0;t.phase='home';t.at={...t.home};t.eatUntilS=undefined;t.path=[];t.routeAtS=state.timeS;t.speed=0;
@@ -93,7 +94,7 @@ export function leaveSharedMeal(state:CarState,scene:Scene):CarState{
 /** Offers hold a seat, while the two purchased portions remain in the host's bag until consent. */
 export function offerHostedMeal(state:CarState,scene:Scene,id:string){
  const e=state.economy!,spec=scene.economy!.accounts.find(a=>a.id===id)!,a=e.accounts.find(a=>a.id===id)!,plan=scene.economy!.socials.find(p=>p.id===spec.social);
- if(!plan?.markets || e.gathering || e.invitation || e.shared || state.timeS>1e9-SOCIAL_OFFER_SECONDS || a.invitedAtS!==undefined && state.timeS-a.invitedAtS<plan.cooldown_s)return false;
+ if(!plan?.markets || !wantsCompany(state,scene,id) || e.gathering || e.invitation || e.shared || state.timeS>1e9-SOCIAL_OFFER_SECONDS || a.invitedAtS!==undefined && state.timeS-a.invitedAtS<plan.cooldown_s)return false;
  const offer=socialOffer(state,scene,id,true);if(offer.reason)return false;
  a.invitedAtS=state.timeS;e.invitation={partner:id,playerSeat:{...state.seated!},seat:{objectId:offer.seat!.objectId,seatId:offer.seat!.seatId},offeredAtS:state.timeS,expiresAtS:state.timeS+SOCIAL_OFFER_SECONDS};return true;
 }
@@ -160,7 +161,7 @@ function companionIdle(state:CarState,scene:Scene,id:string){return companionFre
 const pathLength=(points:{x:number;y:number}[],from:{x:number;y:number})=>points.reduce((sum,p,i)=>sum+Math.hypot(p.x-(i ? points[i-1]! : from).x,p.y-(i ? points[i-1]! : from).y),0);
 export function startCompanionMeal(state:CarState,scene:Scene,id:string):boolean{
  const e=state.economy!,d=scene.economy!,spec=d.accounts.find(a=>a.id===id)!,host=e.accounts.find(a=>a.id===id)!,plan=d.socials.find(p=>p.id===spec.social);
- if(!plan?.peers || e.shared || e.invitation || e.gathering || !companionIdle(state,scene,id) || host.satiety>plan.max_fullness || host.satiety>=100 || host.inventory[plan.good]!<2 || e.consumed[plan.good]!>1e9-2)return false;
+ if(!plan?.peers || !wantsCompany(state,scene,id) || e.shared || e.invitation || e.gathering || !companionIdle(state,scene,id) || host.satiety>plan.max_fullness || host.satiety>=100 || host.inventory[plan.good]!<2 || e.consumed[plan.good]!>1e9-2)return false;
  const hostArea=socialArea(scene,id),hostPose=actorPose(scene,scene.objects.find(o=>o.id===spec.actor)!,state.timeS,state),seats=worldSeats(scene).filter(s=>plan.seats.includes(s.objectId));
  for(const guestId of plan.peers){
   const guest=e.accounts.find(a=>a.id===guestId)!,guestSpec=d.accounts.find(a=>a.id===guestId)!,history=e.peerHistory?.[peerKey(plan.id,id,guestId)];
@@ -180,7 +181,7 @@ export function startCompanionMeal(state:CarState,scene:Scene,id:string):boolean
 }
 function finishCompanionMeal(state:CarState,scene:Scene,completed=false){
  const e=state.economy!,t=e.gathering!;if(t.phase==='home')return;const d=scene.economy!,plan=d.socials.find(p=>p.id===t.id)!,host=e.accounts.find(a=>a.id===t.host)!,guest=e.accounts.find(a=>a.id===t.guest)!;
- if(completed){const food=d.goods.find(g=>g.id===plan.good)!.food;for(const a of [host,guest])a.satiety=Math.min(100,a.satiety+food);e.consumed[plan.good]!+=2;const key=peerKey(t.id,t.host,t.guest),previous=e.peerHistory?.[key];e.peerHistory={...e.peerHistory,[key]:{meals:(previous?.meals??0)+1,lastAtS:state.timeS}};}
+ if(completed){restoreCompany(state,scene,[host.id,guest.id]);const food=d.goods.find(g=>g.id===plan.good)!.food;for(const a of [host,guest])a.satiety=Math.min(100,a.satiety+food);e.consumed[plan.good]!+=2;const key=peerKey(t.id,t.host,t.guest),previous=e.peerHistory?.[key];e.peerHistory={...e.peerHistory,[key]:{meals:(previous?.meals??0)+1,lastAtS:state.timeS}};}
  else host.inventory[plan.good]!+=2;
  e.events.push({account:t.host,kind:completed ? 'shared_meal' : 'share_cancelled',ref:t.id,atS:e.atS});e.events=e.events.slice(-12);
  t.portions=0;t.phase='home';t.eatUntilS=undefined;for(const trip of [t.hostTrip,t.guestTrip]){trip.at={...trip.home};trip.path=[];trip.routeAtS=state.timeS;trip.speed=0;}

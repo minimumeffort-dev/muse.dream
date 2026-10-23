@@ -1,6 +1,12 @@
 # Leave and come back
 
-The current world uses format 19 / simulation 50. Its exact r106 upgrade opens
+The current world uses format 19 / simulation 51. The exact r107 upgrade
+initializes only the player, baker and commuter company values at saved time.
+Existing money, stock, needs, paths, claims and history stay intact; pending
+meals earn company only when finished. No offline catch-up or reward replay.
+Original slots remain intact. [Company](dream/company.md).
+
+The r107 world uses format 19 / simulation 50. Its exact r106 upgrade opens
 the market workshop loft and moves kit/sapling work to its upper bench. Old state
 is validated first. Preserve unrelated commitments, money, history, stock and
 clocks; refund only work incompatible with its moved station, with no output or

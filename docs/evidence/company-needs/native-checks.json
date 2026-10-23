@@ -1,0 +1,19 @@
+{
+  "reloadEconomyEqual": true,
+  "elapsedEconomySeconds": 22.99999999997908,
+  "companyChanges": {
+    "pocket": 33.850000000001046,
+    "baker": 33.850000000001046,
+    "regular": -1.149999999998954
+  },
+  "completedSharedMeals": 1,
+  "consumedBreadDelta": 2,
+  "playerCreditsUnchanged": true,
+  "oldEconomyPreserved": true,
+  "oldTimePreserved": true,
+  "initializedNeeds": {
+    "pocket": 65,
+    "baker": 55,
+    "regular": 60
+  }
+}

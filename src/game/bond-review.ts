@@ -14,7 +14,7 @@ export function* bondReviewSteps(state:CarState,world:World,stage:'meal'|'ready'
  const scene=world.scene,job=scene.economy!.jobs.find(j=>j.id==='large_bake')!,market=scene.economy!.markets.find(m=>m.id===job.market)!;
  const player=()=>next.economy!.accounts.find(a=>a.id==='pocket')!;
  if(workQualified(next,scene,'pocket',job) || player().completed.work.bake)throw Error('Recipe review needs an unqualified player');
- next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:'share',partner:'baker'}},1/120,world);
+ next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:next.economy!.invitation?.partner==='baker' ? 'accept_share' : 'share',partner:'baker'}},1/120,world);
  if(!next.economy!.shared)throw Error('Recipe review could not start its real shared meal');
  for(let i=0;i<120*300;i++){
   const meal=next.economy!.shared;seen ||= meal?.phase==='eat';

@@ -325,12 +325,13 @@ export function* sharedMealReviewSteps(state:CarState,world:World,hosted=false):
  for(let i=0;i<(hosted ? 0 : 2);i++)next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:'buy',market:'market_stall',good:'bread'}},1/120,world);
  for(let i=0;i<120*30 && !next.npcs.find(n=>n.id==='vendor')!.known;i++){next=stepInteractive(next,{steer:0,throttle:0,talkPressed:i%120===0},1/120,world);if(i%30===0)yield;}
  if(next.economy!.accounts.find(a=>a.id==='pocket')!.inventory.bread!==(hosted ? 0 : 2) || !next.npcs.find(n=>n.id==='vendor')!.known)throw Error('Shared review needs paid food and a real meeting');
- for(let i=0;i<120*360 && (next.timeS<303 || next.economy!.accounts.find(a=>a.id==='baker')!.shift?.phase!=='rest');i++){
-  next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30===0)yield;
- }
+ const earlySeat=!!world.scene.economy!.accounts.find(a=>a.actor==='player')!.company;
+ function* waitForBreak():Generator<void,void>{for(let i=0;i<120*360 && (next.timeS<303 || next.economy!.accounts.find(a=>a.id==='baker')!.shift?.phase!=='rest');i++){next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30===0)yield;}}
+ if(!earlySeat)yield* waitForBreak();
  const hall=sceneInteriors(world.scene).find(f=>f.object.id==='market_hall')!,door=portalPoints(hall,hall.room.portals[0]!,24),seat=worldSeats(world.scene).find(s=>s.objectId==='hall_bench' && s.seatId==='left')!;
  for(const target of [door.outside,door.inside,seat.approach])next=yield* walkReviewSteps(next,world,socialArea(world.scene,'baker'),target);
  next=toggleRide(next,world);if(!next.seated)throw Error('Shared review could not sit on the bench');
+ if(earlySeat)yield* waitForBreak();
  if(hosted){
   for(let i=0;i<120*3 && !next.economy!.invitation;i++){next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30===0)yield;}
   if(next.economy!.invitation?.partner!=='baker' || next.economy!.accounts.find(a=>a.id==='pocket')!.credits!==20)throw Error('Host review needs a real paid offer and unchanged player funds');

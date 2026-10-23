@@ -7,6 +7,7 @@ import {modelContext,DEFAULT_PROMPT} from '../src/authoring/prompt';
 import instructions from '../docs/dream-v2-model.txt?raw';
 
 describe('bounded agent context packets',()=>{
+  it('exports company constructor rules in the commerce packet with their bounds and supply policy',()=>{const p=dreamAgentContext(['commerce']);expect(p.contract.commands.account!.fields.company).toBe('company_need?');expect(p.contract.commands.need).toMatchObject({contexts:['company_need'],id:false,fields:{initial:'n',drain_s:'n',below:'n',gain:'n'}});expect(p.instructions).toContain('Company need:');expect(p.instructions).toContain('next opening');expect(p.contract).toMatchObject({commerce:{company:{runtime:expect.stringContaining('only the actual participants')}}});});
   it('gives standalone scenarios a small, complete vocabulary without geometry',()=>{
     const packet=dreamAgentContext(['scenarios']);
     expect(packet.features).toEqual(['scenarios']);

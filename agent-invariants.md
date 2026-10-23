@@ -1050,3 +1050,18 @@ moved station; preserve unrelated work, ledgers, history, clocks and paths. Fit
 only unsafe player poses through existing bounded recovery. Host bootstrap sends
 source-matched old contacts before old navigation, sharing unchanged foundation
 fits. See docs/dream/upstairs-work.md and its runnable source.
+
+
+## Company need, r108
+
+Account company=need(initial,drain_s,below,gain) is optional bounded data, not
+an affection or psychological model. Require real social participation, preserve
+legacy sources and use existing 4 Hz economy time across all controls. Completed
+shared meals restore only their actual participants once; cancellation, solitary
+eating and observation earn nothing. NPC thresholds gate initiation, with paid
+advance supply before closures when the need will be due by next opening.
+Preserve duties, consent, food/fullness, seat/round-trip claims, finite ledgers,
+all budgets and deliberate player invitations at high company. Keep the need
+inside Bag, not another permanent HUD control. Format19/simulation51 validates
+exact r107 then initializes only newly declared needs at saved time, preserving
+all existing state, old slots and pending rewards. No offline catch-up.

@@ -146,3 +146,5 @@ Optional `social.peers` names other NPC accounts for [resident companion meals](
 They use the same finite purchase and food rules, two real seat claims and their
 own walking journeys. Completed resident meals have separate saved history from
 the player's meals and recipe qualifications.
+
+The player and NPCs can now use [company](company.md), an optional bounded need restored by the same completed meal. A player may still choose an invitation at high company; automatic hosts use their need and keep their real food and duty constraints.

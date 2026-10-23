@@ -20,7 +20,7 @@ import homeR98 from './compatibility/r98-home.json';
 import homeR97 from './compatibility/r97-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=50;
+export const SAVE_SIMULATION_VERSION=51;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -52,6 +52,7 @@ export function saveCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder
   return projection(scene,SAVE_SIMULATION_VERSION,true,encode);
 }
 function projection(scene:Scene,simulationVersion:number,rounded=true,encode?:CompatibilityEncoder):string {
+  if(simulationVersion<51)scene=preCompanyScene(scene);
   if(simulationVersion<50)scene=preLoftScene(scene);
   if(simulationVersion<49)scene=prePeerRecipeScene(scene);
   if(simulationVersion<48)scene=preCompanionScene(scene);
@@ -113,10 +114,21 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r108 gives three existing people a shared, bounded social need. */
+export const COMPANY_COMPATIBILITY='3335e4520386d33466a409caaa0d451b8772d904c09c6a8d76d3371d0390effd';
+const companyProjections=new WeakMap<Scene,Scene>();
+export function preCompanyScene(scene:Scene):Scene{
+ const cached=companyProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.accounts.some(a=>a.company))return scene;
+ const prior={...scene,economy:{...scene.economy,accounts:scene.economy.accounts.map(a=>{const {company,...old}=a;return old;})}};companyProjections.set(scene,prior);return prior;
+}
+export function preCompanyCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preCompanyScene(scene),50,true,encode);}
+
 /** r107 opens a connected workshop loft without adding stock, wages or actors. */
 export const LOFT_COMPATIBILITY='1dc29cda7770917eb18cb167dd0caa5b5149d8f3e983857a253903ad24cd85d6';
 const loftProjections=new WeakMap<Scene,Scene>();
 export function preLoftScene(scene:Scene):Scene{
+ scene=preCompanyScene(scene);
  const cached=loftProjections.get(scene);if(cached)return cached;
  if(!scene.floors?.some(f=>f.id==='hall_loft'))return scene;
  const grounds=(ids:string[]|undefined)=>ids?.filter(id=>id!=='hall_loft' && id!=='hall_landing');

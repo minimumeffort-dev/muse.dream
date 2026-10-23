@@ -219,3 +219,10 @@ identifier = lower_letter, { lower_letter | digit | "_" } ;
    only its counter-sight check yields to the validated upper bench. Trade and
    ownership controls retain actual counter sight. Work trips save bounded supported
    elevations, never graph edges. Ground-station source syntax remains unchanged. *)
+
+(* Company need is an account-only constructor: company=need(initial=n,
+   drain_s=n,below=n,gain=n). Initial 0..100, drain 0...25, below 0..95,
+   gain 1..100. Existing social participation required; no extra actor/seat
+   capacity. Time drains; only actual completed shared meals restore the
+   two participants. NPC need gates initiation; deliberate player invitations
+   retain agency. Cancellation earns no gain. See company-needs.dream. *)

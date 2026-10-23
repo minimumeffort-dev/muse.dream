@@ -12,7 +12,7 @@ export const DREAM_AGENT_FEATURES={
   city:feature('street surface marking site crossing stop',['urbanGround','cityAccess','transit'],['world','npcs']),
   interiors:feature('interior portal stairs floor',['interiors'],['city']),
   npcs:feature('behavior state on',['agents'],['world']),
-  commerce:feature('economy good account market lot station gesture key work ingredient delivery repair milestone meal shift social ration rest',['commerce'],['npcs','city','lighting','weather']),
+  commerce:feature('economy good account need market lot station gesture key work ingredient delivery repair milestone meal shift social ration rest',['commerce'],['npcs','city','lighting','weather']),
   population:feature('furnish flock walk roam',['population'],['city','modules','interactions']),
   weather:feature('weather',['weather'],['world']),
   lighting:feature('daylight lamp',['daylight'],['objects']),

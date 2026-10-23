@@ -264,3 +264,5 @@ body:not([data-loading="ready"])>#match-score { visibility:hidden; }
 .invitation-actions button:focus-visible { outline:2px solid var(--yellow); outline-offset:3px; }
 .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); clip-path:inset(50%); white-space:nowrap; border:0; }
 @media(max-width:720px) { body:has(#social-invitation:not([hidden])) #map-frame { visibility:hidden; } #social-invitation { left:var(--gutter); width:min(344px,calc(100% - var(--gutter)*2)); bottom:96px; } }
+
+#company-need{display:flex;align-items:center;gap:8px}

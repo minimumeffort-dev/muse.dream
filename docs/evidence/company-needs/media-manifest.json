@@ -1,0 +1,31 @@
+{
+  "sourceHash": "ac10cef0b007f5f5c38ce0728096e2ef98eeeef5803925f2f92d4328c414f43a",
+  "compatibilityHash": "3335e4520386d33466a409caaa0d451b8772d904c09c6a8d76d3371d0390effd",
+  "simulationVersion": 51,
+  "saveFormat": 19,
+  "sourceFrames": 360,
+  "sourceDimensions": [
+    2400,
+    1350
+  ],
+  "simulationFramesPerSecond": 30,
+  "durationSimulationSeconds": 12,
+  "posterFrame": 300,
+  "files": [
+    {
+      "path": "docs/media/company.mp4",
+      "bytes": 537362,
+      "sha256": "90785425c5036fa805ed811755b713b86fc2ca9d6163b0ec0c2ebf54fdef0401"
+    },
+    {
+      "path": "docs/media/company.gif",
+      "bytes": 493599,
+      "sha256": "622f6b624edfc8efa21ee0aa1855f8a8cb8f69acceb054d737d0afc457ba2eac"
+    },
+    {
+      "path": "docs/media/company.jpg",
+      "bytes": 90863,
+      "sha256": "776a314655d02f6a9e9959cf44834ea6e64af17ff27590f2f4c27434e77d28eb"
+    }
+  ]
+}

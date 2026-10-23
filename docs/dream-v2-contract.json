@@ -14,6 +14,7 @@
   },
   "expressions": "finite numbers, constants, + - * /, sin(degrees), cos(degrees); no general code",
   "types": {
+    "company_need": "need(initial=n,drain_s=n,below=n,gain=n)",
     "n": "numeric expression",
     "v2": "[n,n]",
     "position2": "[n,n] or a file-local junction reference",
@@ -650,6 +651,18 @@
         "food": "n?"
       }
     },
+    "need": {
+      "contexts": [
+        "company_need"
+      ],
+      "id": false,
+      "fields": {
+        "initial": "n",
+        "drain_s": "n",
+        "below": "n",
+        "gain": "n"
+      }
+    },
     "account": {
       "contexts": [
         "economy"
@@ -662,6 +675,7 @@
         "satiety": "n",
         "drain_s": "n",
         "rest": "ref?",
+        "company": "company_need?",
         "commute": "bool?",
         "attendance": "v2?",
         "on": "ref?",
@@ -1848,6 +1862,11 @@
     "phase": "place.phase_s 0..3600 only with route; shifts the entire route clock including stops. offset remains a carriage distance."
   },
   "commerce": {
+    "company": {
+      "source": "account id(...,company=need(initial=65,drain_s=.05,below=40,gain=35));",
+      "bounds": "One optional need per existing account; initial 0..100, drain_s 0...25, below 0..95, gain 1..100; company requires a participating NPC social host/peer, or a player with an existing social host. Existing account/actor/seat/path budgets remain unchanged.",
+      "runtime": "Simulation time lowers company at the existing 4Hz economy cadence in every control mode; pause freezes it. Completed player/NPC or NPC/NPC shared meals restore only the actual participants, once, capped at 100. Cancelled, offered, solitary or interrupted meals grant nothing. NPC hosts offer/start company activities only at or below their own threshold; priced food may be stocked in advance while an open supply counter will close before the need can be served at its next opening; player invitations remain deliberate and available at high company. Existing hunger, fullness, cooldown, consent, duties, finite food/money, round-trip and refund rules still apply. Persist company and current commitments through R, streaming and saves; Start over resets. Exact r107 migration initializes only authored company values at saved simulation time without catch-up, rewards or resource rebasing. A game need, not psychological validity, affection, dating, a general emotional model or provider policy."
+    },
     "companions": {
       "source": "social break(peers=[other_account],good=bread,seats=[bench],on=plaza,eat_s=8,markets=[corner]);",
       "bounds": "1..4 unique other NPC account refs per plan; needs supply markets. One global shared social activity across invitations, player meals and resident gatherings. Hosts are stationary complete humanoids; peers may use accepted walk routes. Actual body-sized ground-floor seat pairs and outward/return paths, existing 16-account/32-NPC/24-rig/navigation caps; 64 sparse plan/host/guest history records.",

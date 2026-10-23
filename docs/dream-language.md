@@ -163,3 +163,5 @@ history. Omitting it preserves the player-and-NPC rule.
 [Upstairs work](dream/upstairs-work.md) binds ordinary stations to existing
 `place.floor` equipment, with validated stairs and supported work-trip heights.
 The source syntax is the same as a ground-floor station.
+
+[Company needs](dream/company.md) give existing player and NPC accounts a bounded reason to share time. The complete example uses `company=need(...)`, ordinary food transactions and existing social seats.

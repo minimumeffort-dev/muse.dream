@@ -57,7 +57,8 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | --- | --- | --- | --- |
 | `economy` | top | No ID / economy | None |
 | `good` | economy | ID / no block | `label: text`, `food?: n` |
-| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `rest?: ref`, `commute?: bool`, `attendance?: v2`, `on?: ref`, `grounds?: symbols`, `shop?: bool`, `ration?: ref`, `social?: ref`, `shift?: ref`, `meal?: ref`, `work?: ref`, `works?: symbols`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
+| `need` | `company_need` constructor | no | `initial`, `drain_s`, `below`, `gain` |
+| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `rest?: ref`, `company?: company_need`, `commute?: bool`, `attendance?: v2`, `on?: ref`, `grounds?: symbols`, `shop?: bool`, `ration?: ref`, `social?: ref`, `shift?: ref`, `meal?: ref`, `work?: ref`, `works?: symbols`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
 | `rest` | economy | ID / no block | `energy: n`, `drain_s: n`, `recover_s: n`, `below: n`, `until: n`, `shelter?: bool`, `seats: symbols`, `on: ref`, `grounds?: symbols` |
 | `ration` | economy | ID / no block | `good: ref`, `market: ref`, `below: n` |
 | `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n`, `hours?: v2`, `owner?: ref`, `sale?: n` |
@@ -890,3 +891,17 @@ return; route clocks resume from the interrupted position. Pair cooldown and
 fullness, due shift/attendance and a 120-second approach bound apply. At most 64
 saved plan/host/guest history records; these do not award player meal credit.
 [Guide](companions.md), [complete example](../examples/companion-meals.dream).
+
+
+## Company need
+
+Optional `account.company` uses the constructor
+`need(initial=n,drain_s=n,below=n,gain=n)`. Bounds are 0..100 initial,
+0..0.25 drain, 0..95 threshold and 1..100 gain. NPCs must participate in an
+existing host/peer social plan; a player requires an existing NPC social host.
+Simulation time drains; only a completed shared meal restores its two actual
+participants once, clamped at 100. The threshold gates NPC initiation, while
+player invitations remain deliberate. Existing counter hours permit ordinary
+advance purchases when the need will be due by the next opening. No free food,
+extra actor/seat slots, generated policy or affection model.
+[Rules](company.md) · [Complete source](../examples/company-needs.dream).
