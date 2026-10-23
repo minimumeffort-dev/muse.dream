@@ -7,7 +7,8 @@ An explicit [peer recipe milestone](companion-recipes.md) can now use that same
 history to qualify both named residents for work.
 
 The r105 recording shows the meal completing and the beginning of the return
-walks. It predates the r106 recipe qualification; motion and controls are unchanged.
+walks. It predates the recipe qualification and upstairs venue. See the current
+[upstairs meal](upstairs-social.md) for stair travel and saved supported heights.
 
 ![Two residents sharing a break](../media/companions.gif)
 
@@ -53,7 +54,8 @@ award the player a qualification.
 
 The live plan names both the caretaker and commuter. Supply trips, work, sleep,
 food needs and occupied furniture can make one unavailable. The plan tries the
-next eligible companion. Dating, a general affection score and authored dialogue
+next eligible companion. [Upstairs meals](upstairs-social.md) now use named floor/building grounds and
+physical stair paths. Dating, a general affection score and authored dialogue
 about these resident meals remain unfinished.
 
 ## Bounds and seating
@@ -67,7 +69,7 @@ plan/host/guest records. No new people, physics bodies or generated scripts.
 
 Hosts remain stationary complete humanoid NPCs with reachable supply counters.
 Peers may also use validated walking routes. Both need the existing body bounds
-of radius <=8 and height <=32, ground-floor paired seating, actual body clearance,
+of radius <=8 and height <=32, supported paired seating, actual body clearance,
 128-waypoint paths and enough time to meet before their next duty.
 
 The town's standard bench now puts its seat centers 84 cm apart. Its mesh,

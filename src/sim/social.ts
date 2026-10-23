@@ -1,4 +1,5 @@
 import {restoreCompany,wantsCompany} from './company';
+import {walkingDistance,type WalkingPoint} from '../scene/floors';
 import {routePath} from '../scene/routes';
 import {findSeat,sameSeat,seatAccessClear,worldSeats} from '../scene/seating';
 import {walkingHeight} from '../scene/interiors';
@@ -32,7 +33,7 @@ export function socialAccessProblems(scene:Scene):string[]{
  for(const host of e.accounts.filter(a=>a.social)){const plan=e.socials.find(p=>p.id===host.social)!;for(const id of plan.peers??[]){
   const a=e.accounts.find(a=>a.id===id)!,object=scene.objects.find(o=>o.id===a.actor)!,homes=a.shift ? [e.shifts.find(s=>s.id===a.shift)!.rest] : object.route ? routePath(scene.routes.find(r=>r.id===object.route!.id)!).points : [object];
   try{const area=socialArea(scene,id,plan.id),hostArea=socialArea(scene,host.id);for(const seat of worldSeats(scene).filter(s=>plan.seats.includes(s.objectId))){
-   if(seat.approach.elevation!==undefined || !seatAccessClear(scene,seat,[],area) || !worldSeats(scene).some(other=>other.objectId===seat.objectId && !sameSeat(other,seat) && Math.hypot(other.x-seat.x,other.y-seat.y)>=area.radius+hostArea.radius) || homes.some(home=>!workPath(scene,area,home,seat.approach) || !workPath(scene,area,seat.approach,home)))problems.push(`${id}: companion seats need paired ground-floor slots and body-sized outward and return paths`);
+   if(!seatAccessClear(scene,seat,[],area) || !worldSeats(scene).some(other=>other.objectId===seat.objectId && !sameSeat(other,seat) && Math.hypot(other.x-seat.x,other.y-seat.y)>=area.radius+hostArea.radius) || homes.some(home=>!workPath(scene,area,home,seat.approach) || !workPath(scene,area,seat.approach,home)))problems.push(`${id}: companion seats need paired supported slots and body-sized outward and return paths`);
   }}catch(error){problems.push(error instanceof Error ? error.message : String(error));}
  }}return problems;
 }
@@ -74,7 +75,7 @@ export function startSharedMeal(state:CarState,scene:Scene,id:string,hosted=fals
  if(hosted){const reason=hostedMealReason(state,scene,id);if(reason)return reason;}
  const offer=socialOffer(state,scene,id,hosted);if(offer.reason)return offer.reason;
  const e=state.economy!,spec=scene.economy!.accounts.find(a=>a.id===id)!,object=scene.objects.find(o=>o.id===spec.actor)!,pose=actorPose(scene,object,state.timeS,state),plan=scene.economy!.socials.find(p=>p.id===spec.social)!,player=e.accounts.find(a=>scene.economy!.accounts.find(s=>s.id===a.id)!.actor==='player')!;
- (hosted ? e.accounts.find(a=>a.id===id)! : player).inventory[plan.good]!-=2;e.invitation=undefined;e.shared={id:plan.id,partner:id,...(hosted ? {host:id} : {}),phase:'out',playerSeat:{...state.seated!},seat:{objectId:offer.seat!.objectId,seatId:offer.seat!.seatId},home:{x:pose.x,y:pose.y},at:{...offer.seat!.approach},x:pose.x,y:pose.y,headingRad:pose.headingRad,speed:0,distance:0,path:offer.path!,routeAtS:state.timeS,startedAtS:state.timeS,portions:2};
+ (hosted ? e.accounts.find(a=>a.id===id)! : player).inventory[plan.good]!-=2;e.invitation=undefined;e.shared={id:plan.id,partner:id,...(hosted ? {host:id} : {}),phase:'out',playerSeat:{...state.seated!},seat:{objectId:offer.seat!.objectId,seatId:offer.seat!.seatId},home:{x:pose.x,y:pose.y,...(scene.floors ? {elevation:pose.elevation} : {})},...(scene.floors ? {elevation:pose.elevation} : {}),at:{...offer.seat!.approach},x:pose.x,y:pose.y,headingRad:pose.headingRad,speed:0,distance:0,path:offer.path!,routeAtS:state.timeS,startedAtS:state.timeS,portions:2};
 }
 export function endSharedMeal(state:CarState,scene:Scene,completed=false){
  const e=state.economy!,t=e.shared;if(!t || t.phase==='home')return;
@@ -115,7 +116,7 @@ export function stepSharedMeal(state:CarState,dt:number,scene:Scene){
  const plan=scene.economy!.socials.find(p=>p.id===t.id)!,area=socialArea(scene,t.partner),seat=findSeat(scene,t.seat);
  if(t.phase!=='home' && (!sameSeat(state.seated,t.playerSeat) || !seat || !seatAccessClear(scene,seat,state.broken,area) || returnDue(state,scene,t.partner) || duties(state,scene,t.partner) || state.timeS-t.startedAtS>120))endSharedMeal(state,scene);
  if(t.phase==='eat'){if(state.timeS+1e-8>=t.eatUntilS!)endSharedMeal(state,scene,true);return;}
- advanceWorkJourney(t,t.at,area,state,dt,scene);if(Math.hypot(t.x-t.at.x,t.y-t.at.y)>.1)return;
+ advanceWorkJourney(t,t.at,area,state,dt,scene);if(walkingDistance(scene,t,t.at)>.1)return;
  if(t.phase==='home'){e.shared=undefined;return;}
  t.phase='eat';t.speed=0;t.path=[];t.eatUntilS=state.timeS+plan.eat_s;
 }
@@ -141,14 +142,14 @@ export function checkSharedMeal(state:CarState,scene:Scene){
  if(!a || !spec || !plan || spec.social!==plan.id || !object || a.work || a.meal || a.delivery || a.repair || a.courier || a.shift && a.shift.phase!=='rest' || spec.shift && !a.shift || t.startedAtS>e.atS+1e-6 || t.routeAtS>state.timeS+1.01)throw Error('Invalid shared meal ownership');
  const home=a.shift ? a.shift.at : object,seat=findSeat(scene,t.seat),own=findSeat(scene,t.playerSeat),area=socialArea(scene,t.partner);
  if(t.host!==undefined && (t.host!==t.partner || !plan.markets))throw Error('Invalid shared meal host');
- if(Math.hypot(t.home.x-home.x,t.home.y-home.y)>.01 || !seat || !own || sameSeat(t.seat,t.playerSeat) || seat.objectId!==own.objectId || !plan.seats.includes(seat.objectId))throw Error('Invalid shared meal furniture or home');
- if(t.phase==='home' ? t.portions!==0 || t.eatUntilS!==undefined || Math.hypot(t.at.x-t.home.x,t.at.y-t.home.y)>.01 : t.portions!==2 || !sameSeat(state.seated,t.playerSeat) || !seatAvailable(scene,state,seat,t.partner) || !seatAccessClear(scene,seat,state.broken,area) || Math.hypot(seat.x-own.x,seat.y-own.y)<area.radius+3 || Math.hypot(t.at.x-seat.approach.x,t.at.y-seat.approach.y)>.01 || player.work || player.delivery || player.repair || state.timeS-t.startedAtS>120.26)throw Error('Invalid shared meal reservation');
- if(t.phase==='eat' ? t.eatUntilS===undefined || t.eatUntilS<e.atS-1e-6 || t.eatUntilS>e.atS+plan.eat_s+1e-6 || Math.hypot(t.x-t.at.x,t.y-t.at.y)>.1 || t.speed!==0 || t.path.length>0 : t.eatUntilS!==undefined)throw Error('Invalid shared meal timer');
+ if(walkingDistance(scene,t.home,home)>.01 || !seat || !own || sameSeat(t.seat,t.playerSeat) || seat.objectId!==own.objectId || !plan.seats.includes(seat.objectId))throw Error('Invalid shared meal furniture or home');
+ if(t.phase==='home' ? t.portions!==0 || t.eatUntilS!==undefined || walkingDistance(scene,t.at,t.home)>.01 : t.portions!==2 || !sameSeat(state.seated,t.playerSeat) || !seatAvailable(scene,state,seat,t.partner) || !seatAccessClear(scene,seat,state.broken,area) || Math.hypot(seat.x-own.x,seat.y-own.y)<area.radius+3 || walkingDistance(scene,t.at,seat.approach)>.01 || player.work || player.delivery || player.repair || state.timeS-t.startedAtS>120.26)throw Error('Invalid shared meal reservation');
+ if(t.phase==='eat' ? t.eatUntilS===undefined || t.eatUntilS<e.atS-1e-6 || t.eatUntilS>e.atS+plan.eat_s+1e-6 || walkingDistance(scene,t,t.at)>.1 || t.speed!==0 || t.path.length>0 : t.eatUntilS!==undefined)throw Error('Invalid shared meal timer');
  if(e.consumed[plan.good]!+t.portions>1e9)throw Error('Invalid shared food counter reservation');
  const host=t.host ? a : player;
  if(Object.values(host.inventory).reduce((n,v)=>n+v,0)+t.portions>d.accounts.find(a=>a.id===host.id)!.capacity)throw Error('Invalid shared meal refund room');
  if(!workSegment(scene,area,t,t,state,true) || !workSegment(scene,area,t.home,t.home,state,true) || !workSegment(scene,area,t.at,t.at,state,true))throw Error('Invalid shared meal position');
- let previous={x:t.x,y:t.y};for(const p of t.path){if(!workSegment(scene,area,previous,p,state,true))throw Error('Invalid shared meal path');previous=p;}if(t.path.length && Math.hypot(previous.x-t.at.x,previous.y-t.at.y)>.01)throw Error('Invalid shared meal destination');
+ let previous:WalkingPoint=t;for(const p of t.path){if(!workSegment(scene,area,previous,p,state,true))throw Error('Invalid shared meal path');previous=p;}if(t.path.length && walkingDistance(scene,previous,t.at)>.01)throw Error('Invalid shared meal destination');
 }
 
 /** A single two-person resident gathering shares the existing social activity budget. */
@@ -158,11 +159,11 @@ const peerKey=(plan:string,host:string,guest:string)=>`${plan}/${host}/${guest}`
 function companionDue(state:CarState,scene:Scene,id:string,seconds=0){const a=scene.economy!.accounts.find(a=>a.id===id)!;if(returnDue(state,scene,id,seconds))return true;const opening=a.attendance && marketOpening(scene,{hours:a.attendance},state.timeS);return !!a.attendance && (!opening || opening.seconds<=seconds);}
 function companionFree(state:CarState,scene:Scene,id:string){const a=state.economy!.accounts.find(a=>a.id===id)!,spec=scene.economy!.accounts.find(a=>a.id===id)!;return !(a.work || a.delivery || a.repair || a.courier || a.meal || a.commute || a.resting || a.shift && a.shift.phase!=='rest' || spec.shift && !a.shift);}
 function companionIdle(state:CarState,scene:Scene,id:string){return companionFree(state,scene,id) && !duties(state,scene,id);}
-const pathLength=(points:{x:number;y:number}[],from:{x:number;y:number})=>points.reduce((sum,p,i)=>sum+Math.hypot(p.x-(i ? points[i-1]! : from).x,p.y-(i ? points[i-1]! : from).y),0);
+const pathLength=(scene:Scene,points:WalkingPoint[],from:WalkingPoint)=>points.reduce((sum,p,i)=>sum+walkingDistance(scene,p,i ? points[i-1]! : from),0);
 export function startCompanionMeal(state:CarState,scene:Scene,id:string):boolean{
  const e=state.economy!,d=scene.economy!,spec=d.accounts.find(a=>a.id===id)!,host=e.accounts.find(a=>a.id===id)!,plan=d.socials.find(p=>p.id===spec.social);
  if(!plan?.peers || !wantsCompany(state,scene,id) || e.shared || e.invitation || e.gathering || !companionIdle(state,scene,id) || host.satiety>plan.max_fullness || host.satiety>=100 || host.inventory[plan.good]!<2 || e.consumed[plan.good]!>1e9-2)return false;
- const hostArea=socialArea(scene,id),hostPose=actorPose(scene,scene.objects.find(o=>o.id===spec.actor)!,state.timeS,state),seats=worldSeats(scene).filter(s=>plan.seats.includes(s.objectId));
+ const hostArea=socialArea(scene,id),hostPose=actorPose(scene,scene.objects.find(o=>o.id===spec.actor)!,state.timeS,state),seats=plan.seats.flatMap(id=>worldSeats(scene).filter(s=>s.objectId===id));
  for(const guestId of plan.peers){
   const guest=e.accounts.find(a=>a.id===guestId)!,guestSpec=d.accounts.find(a=>a.id===guestId)!,history=e.peerHistory?.[peerKey(plan.id,id,guestId)];
   if(!companionIdle(state,scene,guestId) || guest.satiety>plan.max_fullness || guest.satiety>=100 || history && (history.meals>=1e9 || state.timeS-history.lastAtS<plan.cooldown_s))continue;
@@ -171,9 +172,9 @@ export function startCompanionMeal(state:CarState,scene:Scene,id:string):boolean
    if(own.objectId!==other.objectId || sameSeat(own,other) || Math.hypot(own.x-other.x,own.y-other.y)<hostArea.radius+guestArea.radius || !seatAvailable(scene,state,own) || !seatAvailable(scene,state,other) || !seatAccessClear(scene,own,state.broken,hostArea) || !seatAccessClear(scene,other,state.broken,guestArea))continue;
    const out=workPath(scene,hostArea,hostPose,own.approach,state),back=out && workPath(scene,hostArea,own.approach,hostPose,state),guestOut=workPath(scene,guestArea,guestPose,other.approach,state),guestBack=guestOut && workPath(scene,guestArea,other.approach,guestPose,state);
    if(!out || !back || !guestOut || !guestBack)continue;
-   const travel=Math.max(pathLength(out,hostPose),pathLength(guestOut,guestPose))/REPAIR_SPEED,round=travel+plan.eat_s+Math.max(pathLength(back,own.approach),pathLength(guestBack,other.approach))/REPAIR_SPEED+1;
+   const travel=Math.max(pathLength(scene,out,hostPose),pathLength(scene,guestOut,guestPose))/REPAIR_SPEED,round=travel+plan.eat_s+Math.max(pathLength(scene,back,own.approach),pathLength(scene,guestBack,other.approach))/REPAIR_SPEED+1;
    if(travel+plan.eat_s>120 || companionDue(state,scene,id,round) || companionDue(state,scene,guestId,round))continue;
-   const trip=(pose:typeof hostPose,seat:typeof own,path:{x:number;y:number}[])=>({home:{x:pose.x,y:pose.y},at:{...seat.approach},seat:{objectId:seat.objectId,seatId:seat.seatId},x:pose.x,y:pose.y,headingRad:pose.headingRad,speed:0,distance:0,path,routeAtS:state.timeS});
+   const trip=(pose:typeof hostPose,seat:typeof own,path:WalkingPoint[])=>({home:{x:pose.x,y:pose.y,...(scene.floors ? {elevation:pose.elevation} : {})},at:{...seat.approach},seat:{objectId:seat.objectId,seatId:seat.seatId},x:pose.x,y:pose.y,...(scene.floors ? {elevation:pose.elevation} : {}),headingRad:pose.headingRad,speed:0,distance:0,path,routeAtS:state.timeS});
    host.inventory[plan.good]!-=2;e.gathering={id:plan.id,host:id,guest:guestId,phase:'out',hostTrip:trip(hostPose,own,out),guestTrip:trip(guestPose,other,guestOut),startedAtS:state.timeS,portions:2};
    e.events.push({account:id,kind:'sharing',ref:plan.id,atS:e.atS});e.events=e.events.slice(-12);return true;
   }
@@ -191,7 +192,7 @@ export function stepCompanionMeal(state:CarState,dt:number,scene:Scene){
  if(t.phase!=='home' && (state.timeS-t.startedAtS>120 || [t.host,t.guest].some(id=>!companionIdle(state,scene,id) || companionDue(state,scene,id)) || ([[t.host,t.hostTrip],[t.guest,t.guestTrip]] as const).some(([id,trip])=>{const s=findSeat(scene,trip.seat);return !s || !seatAccessClear(scene,s,state.broken,socialArea(scene,id,t.id));})))finishCompanionMeal(state,scene);
  if(t.phase==='eat'){if(state.timeS+1e-8>=t.eatUntilS!)finishCompanionMeal(state,scene,true);return;}
  advanceWorkJourney(t.hostTrip,t.hostTrip.at,socialArea(scene,t.host,t.id),state,dt,scene);advanceWorkJourney(t.guestTrip,t.guestTrip.at,socialArea(scene,t.guest,t.id),state,dt,scene);
- if([t.hostTrip,t.guestTrip].some(p=>Math.hypot(p.x-p.at.x,p.y-p.at.y)>.1))return;
+ if([t.hostTrip,t.guestTrip].some(p=>walkingDistance(scene,p,p.at)>.1))return;
  if(t.phase==='home'){const turns=new Map([[scene.economy!.accounts.find(a=>a.id===t.host)!.actor,t.hostTrip.headingRad],[scene.economy!.accounts.find(a=>a.id===t.guest)!.actor,t.guestTrip.headingRad]]);state.npcs=state.npcs.map(n=>turns.has(n.id) ? {...n,headingRad:turns.get(n.id)!} : n);e.gathering=undefined;return;}
  t.phase='eat';t.eatUntilS=state.timeS+plan.eat_s;for(const p of [t.hostTrip,t.guestTrip]){p.speed=0;p.path=[];}
 }
@@ -210,9 +211,9 @@ export function checkCompanionMeal(state:CarState,scene:Scene){
  if(t.phase==='eat' ? t.eatUntilS===undefined || t.eatUntilS<e.atS-1e-6 || t.eatUntilS>e.atS+plan.eat_s+1e-6 : t.eatUntilS!==undefined)throw Error('Invalid companion timer');
  const donor=e.accounts.find(a=>a.id===t.host)!;if(Object.values(donor.inventory).reduce((sum,n)=>sum+n,0)+t.portions>host.capacity)throw Error('Invalid companion refund capacity');
  for(const [id,trip] of [[t.host,t.hostTrip],[t.guest,t.guestTrip]] as const){const spec=d.accounts.find(a=>a.id===id)!,a=e.accounts.find(a=>a.id===id)!,object=scene.objects.find(o=>o.id===spec.actor)!,home=a.shift ? a.shift.at : actorPose(scene,object,state.timeS,{...state,economy:{...e,gathering:undefined}}),seat=findSeat(scene,trip.seat)!,area=socialArea(scene,id,t.id),end=t.phase==='home' ? trip.home : seat.approach;
-  if(Math.hypot(trip.home.x-home.x,trip.home.y-home.y)>.01 || Math.hypot(trip.at.x-end.x,trip.at.y-end.y)>.01 || trip.routeAtS>state.timeS+1.01 || t.phase==='eat' && (Math.hypot(trip.x-trip.at.x,trip.y-trip.at.y)>.1 || trip.speed!==0 || trip.path.length))throw Error('Invalid companion journey');
+  if(walkingDistance(scene,trip.home,home)>.01 || walkingDistance(scene,trip.at,end)>.01 || trip.routeAtS>state.timeS+1.01 || t.phase==='eat' && (walkingDistance(scene,trip,trip.at)>.1 || trip.speed!==0 || trip.path.length))throw Error('Invalid companion journey');
   if(t.phase!=='home' && (!seatAvailable(scene,state,seat,id) || !seatAccessClear(scene,seat,state.broken,area)))throw Error('Invalid companion seat claim');
   if(!workSegment(scene,area,trip,trip,state,true) || !workSegment(scene,area,trip.home,trip.home,state,true) || !workSegment(scene,area,trip.at,trip.at,state,true))throw Error('Invalid companion position');
-  let previous={x:trip.x,y:trip.y};for(const p of trip.path){if(!workSegment(scene,area,previous,p,state,true))throw Error('Invalid companion path');previous=p;}if(trip.path.length && Math.hypot(previous.x-trip.at.x,previous.y-trip.at.y)>.01)throw Error('Invalid companion destination');
+  let previous:WalkingPoint=trip;for(const p of trip.path){if(!workSegment(scene,area,previous,p,state,true))throw Error('Invalid companion path');previous=p;}if(trip.path.length && walkingDistance(scene,previous,trip.at)>.01)throw Error('Invalid companion destination');
  }
 }

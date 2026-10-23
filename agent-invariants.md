@@ -1091,3 +1091,18 @@ The scalar support bound stays on the existing private placement entry, with no
 per-frame or unbounded cache. Worker packet values, graph/node/contact order,
 source and historical hashes, physical rules, scene/save versions and all
 rendering/streaming quality must remain unchanged.
+
+## Shared upstairs meals, r110
+
+Social furniture selection follows authored plan order. Reuse supported stair
+travel for player/resident and resident/resident journeys, retaining bounded
+optional heights in pose/home/target/path. Named upper grounds require their
+enclosing building and validated outward/return paths. Full 3D arrival and save
+checks prevent through-slab completion; use complete prior trip points when
+validating paths. Keep paired body clearance, exclusive claims, finite food,
+needs/history completion, duty margins and blocked/damaged cancellation. Return
+physically before releasing routines. No new actors, geometry, rigs or budgets.
+Format19/simulation53 first validates exact r109 by stripping only the new upper
+social seat/floor grounds. Preserve every old field and original slot, including
+in-progress downstairs meals. Future decisions use the new preference. No
+retargeting, catch-up, seeded resources or replayed rewards.

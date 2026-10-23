@@ -66,3 +66,7 @@ upstairs businesses, sleeping and access permissions remain separate work.
 purpose. Static equipment, a body-sized stand, declared floor/building grounds
 and connected stairs share the existing work/escrow rules. Trade counters and
 lifts remain separate capabilities.
+
+[Shared meals upstairs](upstairs-social.md) now use these same floor bindings.
+Name both the upper floor and its building in social grounds; both residents
+need supported stair access and a real return path.

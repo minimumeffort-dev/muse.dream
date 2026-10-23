@@ -1048,3 +1048,18 @@ and repairs continue once with their original deadlines/progress. Motion phase
 comes from that progress after reload, with the normal visual entry blend.
 Earlier registered migrations and original slots remain available; arbitrary
 world changes cannot use this upgrade. [Checks](evidence/work-gestures/verification.md).
+
+## Upstairs social trips, r110
+
+Format 19 / simulation 53 registers the exact r109 projection by removing only
+the new hall-break upper-settee preference and its two floor grounds. Validate
+the old world first, then preserve the complete saved state and original slot.
+An unfinished downstairs meeting retains its seats, paths, food, clocks and
+rewards; future gatherings can choose upstairs. No resource initialization,
+retargeting, offline travel or replayed completion occurs.
+
+New shared and companion journeys accept bounded optional supported heights in
+their current position, home, target and path. Existing ground paths stay valid.
+Checks include full 3D arrival, saved support and every segment through the
+retained slabs and stairs. Unsupported layers and through-slab shortcuts fail
+restore. The complete earlier upgrade chain remains registered.

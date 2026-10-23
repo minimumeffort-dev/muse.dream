@@ -882,15 +882,19 @@ or extra rigs. [Guide](work-gestures.md) and [runnable source](../examples/work-
 
 Optional `social.peers` names 1..4 unique other NPC accounts and requires priced
 supply markets. Hosts remain stationary complete humanoids; peers may follow
-accepted walking routes. Validate full body-sized ground-floor paired seats and
-outward/return paths, including every walking route corner. Keep the existing
+accepted walking routes. Validate full body-sized supported paired seats and
+outward/return paths, including every walking route corner. Upper furniture
+requires named floor and enclosing building grounds, reachable validated stairs
+and supported 3D arrivals. The engine saves trip/home/path heights; these are not
+additional Dream fields. Furniture selection follows authored `social.seats` order. Keep the existing
 account, NPC, rig and navigation caps. One shared social activity covers a player
 invitation, player meal or resident gathering. Two portions are held/refunded to
 the donor or consumed once. Both bodies retain their journeys until physical
 return; route clocks resume from the interrupted position. Pair cooldown and
 fullness, due shift/attendance and a 120-second approach bound apply. At most 64
 saved plan/host/guest history records; these do not award player meal credit.
-[Guide](companions.md), [complete example](../examples/companion-meals.dream).
+[Guide](companions.md), [complete example](../examples/companion-meals.dream),
+[upstairs source and rules](upstairs-social.md).
 
 
 ## Company need

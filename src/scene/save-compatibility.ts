@@ -20,7 +20,7 @@ import homeR98 from './compatibility/r98-home.json';
 import homeR97 from './compatibility/r97-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=52;
+export const SAVE_SIMULATION_VERSION=53;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -114,14 +114,26 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r110 shares supported stair travel with social meals; existing claims keep their seats. */
+export const UPSTAIRS_SOCIAL_COMPATIBILITY='4b10448683d5eea828b3d229eaa7ab0bef09f19e6876eafc5f2611c6de09bf4a';
+const upstairsSocialProjections=new WeakMap<Scene,Scene>();
+export function preUpstairsSocialScene(scene:Scene):Scene{
+ const cached=upstairsSocialProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.socials.some(s=>s.id==='hall_break' && s.seats.includes('home_upper_settee')))return scene;
+ const prior={...scene,economy:{...scene.economy,socials:scene.economy.socials.map(s=>s.id==='hall_break' ? {...s,seats:s.seats.filter(id=>id!=='home_upper_settee'),grounds:s.grounds?.filter(id=>id!=='home_upper' && id!=='home_landing')} : s)}};
+ upstairsSocialProjections.set(scene,prior);return prior;
+}
+export function preUpstairsSocialCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preUpstairsSocialScene(scene),52,true,encode);}
+
 /** r109 applies authored energy recovery to every occupied meal/rest seat. */
 export const SEATED_REST_COMPATIBILITY='cf4a6bffe75b42fdab3872242948b8350f269c16e3ad19fc1a9d1ecd356f78e0';
-export function preSeatedRestCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(scene,51,true,encode);}
+export function preSeatedRestCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preUpstairsSocialScene(scene),51,true,encode);}
 
 /** r108 gives three existing people a shared, bounded social need. */
 export const COMPANY_COMPATIBILITY='3335e4520386d33466a409caaa0d451b8772d904c09c6a8d76d3371d0390effd';
 const companyProjections=new WeakMap<Scene,Scene>();
 export function preCompanyScene(scene:Scene):Scene{
+ scene=preUpstairsSocialScene(scene);
  const cached=companyProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.accounts.some(a=>a.company))return scene;
  const prior={...scene,economy:{...scene.economy,accounts:scene.economy.accounts.map(a=>{const {company,...old}=a;return old;})}};companyProjections.set(scene,prior);return prior;

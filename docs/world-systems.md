@@ -20,7 +20,8 @@ consequence: the baker's larger recipe accepts remembered time together or
 personal baking practice. Resident-to-resident meals now connect existing wages, food, seating and routines.
 The market now has a connected workshop loft for kit and sapling production.
 Company now gives the player and two residents a shared social need. Actual seated
-meal breaks also recover the commuter’s energy through the player’s existing rule. Next priorities remain deeper relationships, lifts and further usable interiors. [Companion meals](dream/companions.md).
+meal breaks also recover the commuter’s energy through the player’s existing rule. Shared resident meals now also use the home’s upper settee through actual
+stairs. Deeper relationships, lifts and further usable interiors remain priorities. [Companion meals](dream/companions.md).
 Player and resident seating now share a smooth body transition with staggered
 steps and supported feet. Ownership and actions remain immediate in the engine.
 [Sitting and standing](dream/seating-motion.md).
@@ -186,7 +187,7 @@ Night navigation now has readable sky/ground fill outside lamp pools, while stat
 4. Staff now prepare lunches, the commuter takes a real meal detour, and the helper can resupply flour, using finite credits/stock, a timed meal and a saved return to the paused routine. Shared indoor seating now connects that trip to the hall. Next add more resident purposes and upstream production, then schedules and relationship history that change choices. Completed shared meals now add per-person history and authored return dialogue, with availability/fullness/cooldown boundaries. NPC-funded invitations now use that same activity and finite economy. Next add another shared activity; dating and a general relationship system remain separate.
 5. The 91 dormant vehicles now share direct controls through bounded activation, with instanced parked poses and persistent contacts. Pickups and parcel trucks now reuse that shared control system. Keep auditing road paint, corners, signs and asset attachments. Expand force-based destruction consistently across the world and make it persistent. The first repair worker now uses connected pedestrian routes, waits for obstructions and restores selected market/park/station furniture. Pooled static destruction now supports the 413 streetlights without making their intact geometry resident scene nodes. All 345 measured trees now share whole-tree toppling while retaining their foliage wind and material finishes. The service replants 106 trees through connected work areas, with matching contact bodies and finite delivered saplings. Extend recovery to the remaining woodland and more structural categories. Active debris and mesh caches remain bounded at 24 assemblies/templates and 128 pieces/fragment meshes; legacy limits stay unchanged. Add coherent weather and sound alongside those systems. Measure dense scenes, interiors, long travel and save responsiveness. Extend save migration when the world schema changes. Files can move progress between compatible browsers/devices manually; there is no cloud sync.
 
-Existing limits remain visible: the city has decorative institutions, bounded NPC routines, arcade vehicles and six-a-side sports. It has a working food/work/delivery loop and one enterable market ground floor, with no employment contracts, enterable restaurant, relationship progression or general floor-specific NPC navigation yet. Rain is the first bounded weather rule. Prioritize connected activities over adding more empty buildings.
+Existing limits remain visible: the city has decorative institutions, bounded NPC routines, arcade vehicles and six-a-side sports. Its food/work/delivery loop connects the market, school common room and commuter home, including named upper-floor activities. Employment contracts, an enterable restaurant, general relationship progression and lifts remain missing. Rain is the first bounded weather rule. Prioritize connected activities over adding more empty buildings.
 
 Wind-safe toppling now reuses prepared scenery geometry and preserves the crown's
 GPU motion and materials. A missing prototype uses the same bounded worker queue
@@ -528,7 +529,8 @@ consume paid food, retain pair history and return people to their interrupted
 routines. Walking guests retain their route clocks. The standard bench anchors
 now give two resident bodies enough space without changing its mesh or collision.
 One shared social activity is active at a time. General relationship progression,
-dating, group gatherings and upstairs social plans remain unfinished.
+dating and group gatherings remain unfinished. [Upstairs meals](dream/upstairs-social.md)
+now connect the same residents to the home's upper settee.
 [Rules and example](dream/companions.md).
 
 ## Pair memories and work, r106
@@ -590,3 +592,15 @@ Receiving-side indoor navigation validation and interactive assembly preparation
 still cause noticeable loading gaps. Measure and reduce those next without
 weakening structural checks or cutting visual detail. The broader life-simulation
 quest remains unfinished. [Evidence](evidence/startup-preparation/verification.md).
+
+## Shared meals upstairs, r110
+
+The baker can take an available companion to the home's upper settee, using
+existing floors, body-sized stair paths, food, needs and pair memories. A blocked
+or occupied pair falls back to the hall bench. Both residents arrive on the
+correct layer before eating and return physically afterward. Old meals retain
+their original furniture through the exact r109 save upgrade. No new people,
+stock, geometry or rigs are added.
+
+Broader household purposes, sleep, ownership, lifts and relationship consequences
+remain unfinished. [Source, recording and limits](dream/upstairs-social.md).

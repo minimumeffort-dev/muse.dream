@@ -1,0 +1,15 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/upstairs-social.test.ts tests/media-export.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/media-export.test.ts (1 test) 22ms
+ ✓ tests/upstairs-social.test.ts (6 tests) 990ms
+   ✓ resumes real stair and eating poses identically after reload and R, rejecting forged layers and destinations  412ms
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  10:46:05
+   Duration  1.84s (transform 411ms, setup 17ms, collect 750ms, tests 1.01s, environment 0ms, prepare 52ms)

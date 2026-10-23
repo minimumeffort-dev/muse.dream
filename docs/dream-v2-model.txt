@@ -701,8 +701,12 @@ uses 1..4 unique other NPC account IDs. Requires priced supply markets; peers
 cannot be the player or a host of that same plan. Host keeps account.social and
 stationary complete humanoid/within-counter-reach rules. Peers may be stationary
 or use accepted walk routes, with complete humanoids, radius <=8 and height <=32.
-Validate body-sized ground-floor paired seats and outward/return access from every
-walking peer route corner. No new actor, rig, physics or navigation budgets.
+Validate body-sized supported paired seats and outward/return access from every
+walking peer route corner. Upper seats require named floors plus their enclosing
+building in social grounds and validated stairs; no through-slab shortcuts.
+Save supported trip/home/path heights and check arrivals in 3D. Reuse existing
+indoor graph, body, seat, timeout, duty and conservation limits.
+Example: docs/examples/upstairs-social.dream. No new actor, rig, physics or navigation budgets.
 The host buys missing portions atomically through ordinary finite trade. Both
 residents must be free, not full/cooling down, and able to return before duty.
 Reserve two portions and both seats, walk without teleporting, start eat_s only
@@ -713,7 +717,7 @@ approach refunds food to the donor once; purchases remain paid. One global
 social activity across player invitations/meals and resident gatherings. Keep
 <=64 saved plan/host/guest history records and independent player meal credit.
 Pause/streaming/R/reload preserve; Start over resets. General affection, dating,
-groups, upstairs social travel and authored peer-memory dialogue remain absent.
+groups and authored peer-memory dialogue remain absent.
 
 Work motion: economy gesture id(cycle_s=n){key(t=n,left=v3,right=v3);...}
 uses 2..8 anonymous keys per program and at most 8 unique programs. Cycle .6..8

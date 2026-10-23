@@ -165,3 +165,7 @@ history. Omitting it preserves the player-and-NPC rule.
 The source syntax is the same as a ground-floor station.
 
 [Company needs](dream/company.md) give existing player and NPC accounts a bounded reason to share time. The complete example uses `company=need(...)`, ordinary food transactions and existing social seats.
+
+[Upstairs meals](dream/upstairs-social.md) combine existing floor-bound seats,
+social grounds and supported stair travel. Furniture preference follows
+`social.seats`; saved trip heights prevent arrival on the wrong layer.

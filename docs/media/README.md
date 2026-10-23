@@ -1976,3 +1976,16 @@ sets therefore remain accurate; no motion export is regenerated for private
 bootstrap memoization. Native startup timings and the separate driving sample
 come from the live browser, not offline frame export. See
 [method and limitations](../evidence/startup-preparation/verification.md).
+
+## Shared meals upstairs, r110
+
+upstairsmeal.mp4, upstairsmeal.gif and upstairsmeal.jpg share 600 consecutive
+frames from the dev-only `?capture` exporter, at 30 rendered frames per simulation
+second. The source is 2400×1350; video/still are 1600×900 and GIF 1280×720.
+The still uses frame 450. The clip shows the baker's ascent and the two seated
+residents; later completion and return have separate native and replay checks.
+
+Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> upstairsmeal`.
+There is no interpolated frame or live performance claim. Older companions media
+remains historical for the downstairs venue. [Current rules](../dream/upstairs-social.md)
+and [verification](../evidence/upstairs-social/verification.md).

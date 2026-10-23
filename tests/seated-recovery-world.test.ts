@@ -10,9 +10,9 @@ import {gameSave} from '../src/game/save';
 import {companionReviewSteps} from '../src/game/companion-review';
 import {stepInteractive} from '../src/sim/interaction';
 import {checkEconomyState} from '../src/sim/commerce';
-const scene=createWorldScene(),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.SEATED_REST_COMPATIBILITY,previousSeatedRestSaveCompatibility:c.COMPANY_COMPATIBILITY},text=JSON.stringify(backup);
+const scene=c.preUpstairsSocialScene(createWorldScene()),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.SEATED_REST_COMPATIBILITY,previousSeatedRestSaveCompatibility:c.COMPANY_COMPATIBILITY},text=JSON.stringify(backup);
 it('pins the rules-only upgrade to exact r108 geometry and policies',async()=>{
- expect(c.SAVE_SIMULATION_VERSION).toBe(52);expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.SEATED_REST_COMPATIBILITY);expect(await c.sha256(c.preSeatedRestCompatibilitySource(scene))).toBe(c.COMPANY_COMPATIBILITY);expect(await c.sha256(c.preCompanyCompatibilitySource(scene))).toBe(c.LOFT_COMPATIBILITY);expect(backup.compatibilityHash).toBe(c.COMPANY_COMPATIBILITY);
+ expect(await c.sha256(c.preUpstairsSocialCompatibilitySource(scene))).toBe(c.SEATED_REST_COMPATIBILITY);expect(await c.sha256(c.preSeatedRestCompatibilitySource(scene))).toBe(c.COMPANY_COMPATIBILITY);expect(await c.sha256(c.preCompanyCompatibilitySource(scene))).toBe(c.LOFT_COMPATIBILITY);expect(backup.compatibilityHash).toBe(c.COMPANY_COMPATIBILITY);
 });
 it('preserves every field of the actual r108 browser backup and its original storage slot without catch-up',()=>{
  const loaded=decodeSave(text,world);expect(loaded.migrated).toBe(true);expect(loaded.state).toEqual(backup.state);expect(loaded.worldTime).toBe(backup.worldTime);expect(()=>decodeSave(text,{...world,previousSeatedRestSaveCompatibility:undefined})).toThrow('different world');

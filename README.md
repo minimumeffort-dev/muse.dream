@@ -885,3 +885,9 @@ Props near a changed interior floor still recompute. Two local warm-cache browse
 starts reached the complete view in 16.2–16.5 seconds, compared with 17.9–18.1
 before, with an identical captured image and geometry buffers. Main-thread
 loading gaps still need work. [Measurements and limits](docs/evidence/startup-preparation/verification.md).
+
+### A shared break upstairs
+
+The baker and commuter now use the home's upper settee for a real shared meal.
+They walk the stairs, claim separate seats, eat their paid food and return.
+Old saved meals keep their original seats. [Watch it and build the same activity in Dream](docs/dream/upstairs-social.md).
