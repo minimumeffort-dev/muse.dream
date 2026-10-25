@@ -1,6 +1,6 @@
 import {afterEach,beforeAll,it,expect} from 'vitest';
 import {createWorldScene} from '../src/scene/world-fixture';
-import {preStationMaintenanceScene} from '../src/scene/save-compatibility';
+import {preCrossingAccessScene,preStationMaintenanceScene} from '../src/scene/save-compatibility';
 import {COMMERCE_LIMITS,accountRepairs,repairGrounds} from '../src/scene/commerce';
 import {GROWTH_LIMITS,growthScale} from '../src/scene/growth';
 import {workGround} from '../src/scene/interiors';
@@ -15,7 +15,7 @@ import {stepCommerce,checkEconomyState} from '../src/sim/commerce';
 import {actorPose} from '../src/sim/actors';
 
 let accepted:ReturnType<typeof createWorldScene>|undefined,snapshot:string|undefined;
-function scene(){if(!accepted){accepted=createWorldScene();snapshot=JSON.stringify(accepted);}return accepted;}
+function scene(){if(!accepted){accepted={...preCrossingAccessScene(createWorldScene()),revisionId:'r112'};snapshot=JSON.stringify(accepted);}return accepted;}
 beforeAll(()=>{scene();},60000);
 afterEach(()=>{if(accepted)expect(JSON.stringify(accepted)).toBe(snapshot);});
 const fixtures=['bench_nw','bench_ne','bench_sw','bench_se','home_seat','office_seat','lamp_west','lamp_center','lamp_east','home_planter','work_planter'].map(id=>'station_quarter_'+id);

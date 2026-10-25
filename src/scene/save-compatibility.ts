@@ -115,11 +115,23 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r113 completes four authored junction crossings; only derived pedestrian indices change. */
+export const CROSSING_ACCESS_COMPATIBILITY='5d8cf576772c3ebebead408d764fa6d6e90e060d314a0ed8ba62a9d30b57f15f';
+const crossingAccessProjections=new WeakMap<Scene,Scene>();
+const crossingAccessIds=new Set(['crossing_medical_access','crossing_copper_access','crossing_weavers_access','crossing_terrace_access']);
+export function preCrossingAccessScene(scene:Scene):Scene{
+ const cached=crossingAccessProjections.get(scene);if(cached)return cached;
+ if(!scene.crossings.some(c=>crossingAccessIds.has(c.id)))return scene;
+ const prior={...scene,crossings:scene.crossings.filter(c=>!crossingAccessIds.has(c.id))};crossingAccessProjections.set(scene,prior);return prior;
+}
+export function preCrossingAccessCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preCrossingAccessScene(scene),53,true,encode);}
+
 /** r112 extends existing maintenance coverage without changing physical state or resources. */
 export const STATION_MAINTENANCE_COMPATIBILITY='910bdcc30bce4f13de0c4f7ec52995d8e1c0383520b86e8346505c75a61df02f';
 const stationMaintenanceProjections=new WeakMap<Scene,Scene>();
 const stationMaintenanceGrounds=new Set(['station_repair_work','station_tree_work_west','station_tree_work_center','station_tree_work_east']);
 export function preStationMaintenanceScene(scene:Scene):Scene{
+ scene=preCrossingAccessScene(scene);
  const cached=stationMaintenanceProjections.get(scene);if(cached)return cached;
  if(!scene.surfaces.some(s=>stationMaintenanceGrounds.has(s.id)))return scene;
  const prior={...scene,surfaces:scene.surfaces.filter(s=>!stationMaintenanceGrounds.has(s.id)),economy:scene.economy && {...scene.economy,repairs:scene.economy.repairs.map(r=>(maintenanceR111.find(old=>old.id===r.id)??r) as NonNullable<Scene['economy']>['repairs'][number])}};

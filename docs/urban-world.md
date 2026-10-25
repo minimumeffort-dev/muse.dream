@@ -89,6 +89,37 @@ Bicycle tracks follow the avenues and continue across the three bridges. Painted
 
 The live world has no race circuit. Its streets supply the driving mask, bridge connections and maps. Sidewalks and cycle tracks occupy their full accepted footprints, with no invisible track reservation. Nearby junctions keep crossings on their outer arms, removing ten internal arm crossings. The remaining overlapping parallel pair shares a zebra envelope and stripe phase. Centerlines and stop lines keep their crossing clearance. [Street and save checks](evidence/city-streets/verification.md).
 
+## Four missing crossings
+
+The street audit found four real four-way intersections with no pedestrian
+crossing. All four now have explicit Dream junction crossings:
+
+| Intersection | Coordinate |
+| --- | --- |
+| Station Avenue and Workshop Street, medical interchange | `[11200,5200]` |
+| Copper Street and Copper Lane | `[5900,3200]` |
+| Market Avenue and Weavers Lane | `[7450,4200]` |
+| High Street and South Terrace | `[5345.405405,7363.243243]` |
+
+These join the actual sidewalks. Zebra stripes, stop bars, centerlines and cycle
+paint use the shared street footprints, so the new connections follow the same
+paint-clearance rules as existing junctions. Two-road bends remain ordinary
+bends; changing a street name does not require another zebra.
+
+![The medical interchange with connected pedestrian crossings](media/crossingwalk.jpg)
+
+[Walk through the crossing](media/crossingwalk.mp4) ·
+[GIF](media/crossingwalk.gif)
+
+The r113 city has 62 crossing declarations, up from 58. Its 1,813 objects,
+221 sites, 61 surfaces and 3,458 physical contacts stay unchanged. The accepted
+market-to-station bench route drops from 20,983 to 9,546 world units. Across all
+fourteen station maintenance targets, routes are 9,278–9,689 units, previously
+17,557–21,125. This measures walking distance from the authored supply home,
+without claiming faster rendering or universal shortest paths. Two remaining
+corner detours in the work graph need an engine pass.
+[Crossing and persistence evidence](evidence/crossing-access/verification.md).
+
 ## A regional airport
 
 The western airfield now has a terminal, maintenance hangar, control tower and a lit public approach. Its bus serves River hospital; the entrance paths join the same pedestrian network as the neighborhoods. Bicycle parking and a rideable scooter sit on the public side. The hangar has a separate service road and crew entrance.
@@ -173,7 +204,7 @@ areas to the market supply home using the same accepted pedestrian infrastructur
 High Street and South Avenue now meet at an explicit four-arm pedestrian crossing.
 Its zebras clear neighboring stop lines and center paint through the shared road
 footprints. This connects the four previously isolated lamp work approaches.
-The published plan is regenerated from the accepted 57-crossing scene.
+That earlier release had 57 crossing declarations. The current r113 city has 62.
 [Market-district maintenance](dream/commerce.md#street-verges) serves 84 targets
 without moving any of the 1,695 existing placements or the then-existing 35 work/visual surfaces.
 

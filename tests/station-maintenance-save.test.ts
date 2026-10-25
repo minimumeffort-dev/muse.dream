@@ -19,7 +19,7 @@ import {stepNpcs} from '../src/sim/npcs';
 let scene:ReturnType<typeof createWorldScene>,previous:typeof scene,world:World,oldWorld:World,snapshot:string,oldSnapshot:string;
 const grounds=new Set(['station_repair_work','station_tree_work_west','station_tree_work_center','station_tree_work_east']);
 beforeAll(()=>{
- scene=createWorldScene();previous=c.preStationMaintenanceScene(scene);snapshot=JSON.stringify(scene);oldSnapshot=JSON.stringify(previous);
+ scene=c.preCrossingAccessScene(createWorldScene());previous=c.preStationMaintenanceScene(scene);snapshot=JSON.stringify(scene);oldSnapshot=JSON.stringify(previous);
  const beforeDistrict=c.preDistrictScene(previous);
  world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.STATION_MAINTENANCE_COMPATIBILITY,previousStationMaintenanceSaveCompatibility:c.DISTRICT_COMPATIBILITY,previousDistrictSaveCompatibility:c.UPSTAIRS_SOCIAL_COMPATIBILITY,previousDistrictContacts:sceneContactData(beforeDistrict),previousDistrictNavigation:ambientGraph(beforeDistrict),previousUpstairsSocialSaveCompatibility:c.SEATED_REST_COMPATIBILITY,previousSeatedRestSaveCompatibility:c.COMPANY_COMPATIBILITY};
  oldWorld={...world,scene:previous,saveCompatibility:c.DISTRICT_COMPATIBILITY,previousStationMaintenanceSaveCompatibility:undefined};

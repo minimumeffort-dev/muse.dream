@@ -1,6 +1,16 @@
 # Leave and come back
 
-The current world is r112, using format 19 / simulation 53. Its registered r111
+The current world is r113, using format 19 / simulation 53. Its registered r112
+upgrade adds only the four authored junction crossings. Restore first validates
+the exact prior world, then maps ambient node and previous-node indices onto the current pedestrian graph. Member positions, travel, seeded choices and
+clocks remain; no population restarts. Coordinate work, repair, courier and meal
+paths stay intact, along with damage, claims, resources and completion history.
+Existing journeys finish their saved route; future choices can use the crossings.
+No offline travel, new stock or replayed wages occurs. The original slot and the
+earlier migration chain remain available.
+[Crossing migration evidence](evidence/crossing-access/verification.md).
+
+The r112 world also uses format 19 / simulation 53. Its registered r111
 upgrade extends two existing repair services to the station quarter. It validates
 the exact prior world first and retains every saved field, including damage,
 growing trees, reserved supplies, worker paths, clocks and completion history.

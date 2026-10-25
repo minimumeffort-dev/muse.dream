@@ -61,6 +61,31 @@ shows the same bounded grounds list with twelve breakable tables, twelve finite
 kits and one caretaker. Check it with
 `npm run -s dream -- check docs/examples/station-maintenance.dream`.
 
+## A more direct walk from the market
+
+The quarter's entrances were connected, but missing crossings sent the caretaker
+on a long loop around the eastern lake. Four authored junction crossings now
+connect the medical interchange, Copper Street and Copper Lane, Market Avenue
+and Weavers Lane, and High Street and South Terrace.
+
+The accepted route to the north-west station bench is now 9,546 world units,
+compared with 20,983 in r112. Across all fourteen station targets, route lengths
+are 9,278–9,689 units, previously 17,557–21,125. Ten world units are one metre.
+These are route distances; live contacts and waits still affect travel time.
+They do not measure browser performance.
+
+![Walking through the medical interchange crossing](../media/crossingwalk.jpg)
+
+[Crossing walk in HD](../media/crossingwalk.mp4) ·
+[GIF](../media/crossingwalk.gif) ·
+[Source, routes and save checks](../evidence/crossing-access/verification.md)
+
+The r112 [station repair recording](../media/stationrepair.mp4) remains historical
+for its longer journey. It shows the same repair, supplies and wage rules.
+The current crossing change adds no new model vocabulary or moving actors.
+Two clear corners still cause detours in the sparse work graph; those need a
+separate engine pass and physical route checks.
+
 ## Build the same things in Dream
 
 The [district source](../../src/scene/world/station_quarter.dream) owns placements,

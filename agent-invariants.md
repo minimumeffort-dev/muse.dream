@@ -1143,3 +1143,19 @@ and restoring the two service definitions. Validate the old state first and
 preserve every saved field, damage, growth, claim, resource, clock and path.
 Contacts and public graph may be reused only while identical; derive old repair
 coverage separately. Keep original slots and the complete earlier migration chain.
+
+## Authored crossing access, r113
+
+The four new junction crossings use existing Dream pavement and paint rules.
+Preserve all objects, surfaces, sites, contacts, resources and movement rules.
+Audit geometric four-way intersections as well as named junctions, without
+adding crossings to ordinary two-arm bends. The published map reuses exact
+renderer zebra polygons; paint must remain single-owned and clear of other marks.
+
+Format19/simulation53 registers exact r112 by removing only these four crossings.
+Validate old state before mapping derived pedestrian node/previous references.
+Prepare source-matched prior contacts before its navigation in the worker.
+Keep member positions, seeds, clocks and every coordinate-based paid journey,
+claim, ledger, damage and old storage slot. Existing trips finish their old route;
+only new plans use the added connections. This authored change does not fix the
+separate same-component corner-link detours in work navigation.

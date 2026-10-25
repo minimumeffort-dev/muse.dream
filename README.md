@@ -29,6 +29,16 @@ use the same rule, reached through their doorways.
 [Watch in HD](docs/media/stationquarter.mp4) ·
 [Explore the district and its Dream source](docs/dream/station-quarter.md)
 
+Four missing crossings now join the medical interchange, Copper Street, Weavers
+Lane and South Terrace. They shorten the caretaker's route to a station bench
+from 20,983 to 9,546 world units, about 2.1 km to 955 m. People still use the
+pavement and declared crossings. Two remaining corner detours need a separate
+navigation pass. [Connected crossings and current limits](docs/urban-world.md#four-missing-crossings).
+
+![Walking across the medical interchange](docs/media/crossingwalk.gif)
+
+[Crossing walk in HD](docs/media/crossingwalk.mp4)
+
 ## Come home and rest
 
 The resident can now buy lunch, come home, recover on the settee and return to

@@ -10,6 +10,7 @@ try{
  const {sitePath}=await server.ssrLoadModule('/src/scene/sites.ts');
  const {assemblyBounds}=await server.ssrLoadModule('/src/scene/measure.ts');
  const {bridgePolygon}=await server.ssrLoadModule('/src/scene/landscape-dsl.ts');
+ const {streetPlanSteps}=await server.ssrLoadModule('/src/game/streets.ts');
  const modules=Object.fromEntries(readdirSync('src/scene/world').filter(f=>f.endsWith('.dream')).map(f=>[f.slice(0,-6),readFileSync('src/scene/world/'+f,'utf8')]));
  for(const [id,file] of [['dream_creations','dream-creations'],['interactive_world','interactive-world'],['impact_creations','impact-creations']])modules[id]=readFileSync('src/scene/'+file+'.dream','utf8');
  const scene=compileDreamScene(modules['open-world'],{sceneId:'map',revisionId:'map',sourceHash:'map'},modules);
@@ -29,6 +30,10 @@ try{
  for(const p of reserved)s.push(polygon(p,'#f2eee0'));
  for(const p of roads)s.push(polygon(p,'#737d7c'));
  for(const p of riding)s.push(polygon(p,'#9caf8f'));
+ const build=streetPlanSteps(scene);let plan=build.next();while(!plan.done)plan=build.next();
+ s.push(`<g id="pedestrian-crossings" data-crossings="${scene.crossings.length}">`);
+ for(const layer of plan.value.layers.filter(layer=>layer.name==='pedestrian-crossings'))for(const p of layer.polygons)s.push(polygon(p,layer.color));
+ s.push('</g>');
  // Entrance paths and real building footprints, rather than colored zoning rectangles.
  for(const site of scene.sites)s.push(`<polyline points="${points(sitePath(scene,site))}" fill="none" stroke="#b8aa89" stroke-width="${site.width}"/>`);
  for(const o of scene.objects){
@@ -49,7 +54,7 @@ try{
   s.push(`<circle cx="${o.x}" cy="${o.y}" r="85" fill="#f7c843"/><text x="${o.x}" y="${o.y+40}" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">${i+1}</text>`);
  }
  s.push('</g><g font-family="system-ui,sans-serif" fill="#3d3d38" font-size="15">');
- s.push('<text x="50" y="1250">Charcoal: rail · Rust: tram · Violet: buses · Green: cycle tracks · Tan: entrance paths · Dots: route stops</text>');
+ s.push('<text x="50" y="1250">Charcoal: rail · Rust: tram · Violet: buses · Green: cycle tracks · Tan: entrances · White: crossings · Dots: stops</text>');
  for(let i=0;i<destinations.length;i++){const site=destinations[i],o=scene.objects.find(o=>o.id===site.objectId);s.push(`<text x="${50+(i%4)*360}" y="${1280+Math.floor(i/4)*20}">${i+1}. ${esc(site.label??o.spec.displayName)}</text>`);}
  s.push('</g></svg>');writeFileSync('docs/media/city-plan.svg',s.join('\n'));console.log('Map rendered from compiled geometry:',scene.streets.length,'streets',scene.sites.length,'entrances');
 }finally{await server.close();}

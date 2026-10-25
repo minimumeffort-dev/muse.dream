@@ -18,13 +18,19 @@ daily work/home routines inside the towers, richer shared activities and
 relationships, then lifts and vehicle cargo. Upper-storey labels alone do not
 implement those systems. [Station maintenance](dream/station-quarter.md#damage-has-a-follow-up).
 
-Before expanding tower interiors, audit pedestrian detours and missing nearer
-crossings. In the native station-bench repair recording, the caretaker starts
-work around 1,511 simulation seconds after walking roughly 21,000 world units
-via the eastern airfield, for about 5,300 units of straight-line displacement.
-All fourteen maintenance targets are connected; this observed route does not
-yet establish a navigation bug. Any network correction needs a separate,
-save-compatible change. [Recorded return path](evidence/station-maintenance/native-repaired.json).
+The crossing audit found four missing four-way pedestrian connections. r113 adds
+those authored crossings without changing the pathfinder or physical contacts.
+Station maintenance routes now measure 9,278–9,689 world units, previously
+17,557–21,125. The bench route drops from 20,983 to 9,546 units. These are route
+distances, not frame-rate measurements or a claim of shortest paths everywhere.
+Two clear corners still cause work-graph detours and need a separate engine pass
+before further tower expansion. [Current crossing evidence](evidence/crossing-access/verification.md).
+
+The r112 native station-bench recording is historical: work starts around 1,511
+simulation seconds after roughly 21,000 world units of walking around the eastern
+lake, for about 5,300 units of straight-line displacement. Ten world units are
+one metre. Its finite supplies, work and saved return remain valid evidence for
+that release. [Recorded r112 return path](evidence/station-maintenance/native-repaired.json).
 
 The commuter now rests upstairs; player seating and finite paid repairs work on
 the same upper floor. Named Dream floors connect retained slabs, furniture and

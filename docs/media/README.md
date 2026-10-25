@@ -1,5 +1,22 @@
 # Media and Dream highlighting
 
+## Connected crossings, r113
+
+`crossingwalk` records the full 164-unit walk across the medical interchange,
+from `[11118,5126]` to `[11282,5126]`, using the ordinary foot body and controls.
+Only the initial review pose is seeded. All 240 consecutive 2400x1350 frames
+are rendered at 30 frames per simulation second through the dev-only exporter.
+No missing-frame interpolation or NPC teleport supplies the walk. The fixed
+observer shows the zebra through both cycle lanes and the adjoining sidewalks.
+
+Video and still use 1600x900; GIF uses 1280x720. The poster is frame 45.
+Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> crossingwalk`.
+The published city plan now reuses the renderer's exact zebra polygons for all
+62 crossing declarations. The r112 station-repair clip below is historical for
+its longer journey; its finite work/payment rules and the quarter overview
+remain accurate. These exports are behavioral evidence, not live frame-rate
+measurements. [Checks and native restore](../evidence/crossing-access/verification.md).
+
 ## Station maintenance, r112
 
 `stationrepair` records one real bench repair in the new quarter. The dev-only
