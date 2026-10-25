@@ -1,0 +1,87 @@
+{
+  "clerk": {
+    "completed": {
+      "delivery": {
+        "boards_run": 0,
+        "fasteners_run": 0,
+        "flour_run": 0,
+        "kits_run": 0,
+        "saplings_run": 0,
+        "school_run": 0,
+        "station_bread": 0
+      },
+      "repair": {
+        "classroom_furniture": 0,
+        "home_furniture": 0,
+        "market_tables": 0,
+        "orchard_trees": 0
+      },
+      "work": {
+        "assemble_kit": 0,
+        "bake": 0,
+        "check_records": 4,
+        "large_bake": 0,
+        "pack_lunch": 0,
+        "propagate_saplings": 0,
+        "stocktake": 0
+      }
+    },
+    "credits": 11,
+    "decisionAtS": 960.249999999292,
+    "energy": 82.94999999992456,
+    "id": "office_clerk",
+    "inventory": {
+      "boards": 0,
+      "bread": 0,
+      "fasteners": 0,
+      "flour": 0,
+      "lunch": 0,
+      "sapling": 0,
+      "timber": 0,
+      "vegetables": 0
+    },
+    "resting": {
+      "at": {
+        "elevation": 1.71875,
+        "x": 11644.4,
+        "y": 4694.2
+      },
+      "distance": 55.901699437498955,
+      "elevation": 1.71875,
+      "headingRad": -3.0376520441738957,
+      "home": {
+        "elevation": 1.7187500000000002,
+        "x": 11700,
+        "y": 4700
+      },
+      "id": "office_home_rest",
+      "path": [],
+      "phase": "sit",
+      "routeAtS": 959.249999999292,
+      "seat": {
+        "objectId": "station_quarter_home_seat",
+        "seatId": "left"
+      },
+      "speed": 0,
+      "x": 11644.4,
+      "y": 4694.2
+    },
+    "satiety": 67.56000000001404
+  },
+  "consumed": 6,
+  "delivered": 0,
+  "shop": {
+    "credits": 5,
+    "id": "station_supplies",
+    "owner": "depot_owner",
+    "stock": {
+      "boards": 16,
+      "bread": 3,
+      "fasteners": 16,
+      "flour": 78,
+      "sapling": 18,
+      "timber": 32
+    }
+  },
+  "timeS": 971.9999999992804
+}

@@ -1,6 +1,13 @@
 # Leave and come back
 
-The current world is r116, using format 19 / simulation 57. Restore validates
+The current world is r117, using format 19 / simulation 58. Its registered upgrade
+validates exact r116 before adding four finite station loaves and zero delivery
+counters. Existing accounts, wages, food, tasks, ownership, paths and clocks stay
+intact. Current meal trips now retain supported floor, seat and home elevations;
+forged heights still fail support checks. Original save slots remain available.
+[Food and save checks](evidence/office-food/verification.md).
+
+The preceding r116 world used format 19 / simulation 57. Its restore validates
 exact r115 first, adds the new office account, zero check_records counters and
 one finite 60-coin business, and preserves every old saved state field. The
 resident keeps their old physical position through a normal unpaid home journey

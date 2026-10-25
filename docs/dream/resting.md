@@ -100,8 +100,9 @@ Existing account, actor and live-rig limits are unchanged.
 
 A goods-free service operator with explicit premises can use the same rest and
 commute rules for its own service jobs. The [office clerk](office-work.md) uses
-an existing home bench and real stair journeys. Its food journey is not connected
-yet; the service exception does not enable automatic shopping or meal trips.
+an existing home bench and real stair journeys. It now also follows a declared [meal trip](office-food.md) to Station supplies.
+The service exception still excludes automatic shopping, shifts, repairs and
+delivery policies.
 
 ## What survives
 

@@ -34,6 +34,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [Upstairs meals](dream/upstairs-social.md) | Shared food and seats connected by physical stairs, with saved outward and return trips |
 | [Resident companions](dream/companions.md) | Finite food, shared seats, remembered meals and resumed routines |
 | [Work motions](dream/work-gestures.md) | Bounded hand keyframes for jobs and repairs, shared by people |
+| [Office food](dream/office-food.md) | Earned food, shared seats and finite station resupply |
 | [A working office](dream/office-work.md) | Independent premises, a real stair commute, home breaks and shared tasks |
 | [Service work](dream/service-work.md) | Shared paid tasks at real desks, without recipe goods |
 | [Physical workstations](dream/workstations.md) | Standing points, supported hand targets, shared capacity and real worker travel |

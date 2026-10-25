@@ -89,6 +89,6 @@ when the authored home moves. [Slot omissions](populations.md#keep-a-generated-s
 
 Records checking is a timed service task, without a visitor queue or paperwork
 data. The six-task quota is shared for the lifetime of this world and does not
-refill each day. The clerk has energy and a work schedule; their food demand is
-not connected yet. The usable rooms are the two lobbies and the office
+refill each day. The clerk now spends earned wages on bread at Station supplies and eats at home.
+[Food and resupply](office-food.md). The usable rooms are the two lobbies and the office
 mezzanine. Further storeys, lifts and richer work remain future capabilities.

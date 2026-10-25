@@ -75,8 +75,9 @@ first, then low-energy rest before a new work trip. Tasks require their existing
 effort in energy for configured accounts and spend it once on completion.
  Other automatic shopping, ration, shift,
 social, repair and delivery policies remain excluded. Stocked market operators
-also remain excluded. A goods-free service operator may commute and rest for
-its own jobs with explicit building premises. See [office work](office-work.md).
+also remain excluded. A goods-free service operator may commute, rest and take
+a declared meal trip for its own jobs with explicit building premises. See
+[office work](office-work.md) and [earned office food](office-food.md).
 These restrictions keep one journey and one commitment owner. Existing account,
 NPC and live-rig limits remain unchanged.
 

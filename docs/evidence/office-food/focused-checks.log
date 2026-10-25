@@ -1,0 +1,48 @@
+
+> muse-dream@0.1.0 test
+> vitest run --maxWorkers=2 --testTimeout=60000 tests/office-food-world.test.ts tests/service-meals.test.ts tests/office-work-world.test.ts tests/service-work-world.test.ts tests/dream-agent.test.ts tests/dream-v2.test.ts
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/office-work-world.test.ts (4 tests) 23354ms
+   ✓ registers a supported service office without adding actors, meshes, vehicles, pavement or goods  424ms
+   ✓ keeps every old saved field, physical NPC pose and clock while adding an unpaid relocation and finite office state  2085ms
+   ✓ walks the player upstairs, reserves the same desk, reloads and pays once without producing inventory  1290ms
+   ✓ uses real stairs, wages, energy, a shared home bench and daily attendance without teleporting the clerk  11400ms
+ ✓ tests/service-work-world.test.ts (4 tests) 11873ms
+   ✓ registers only the new finite task and worker preference, preserving physical world and resources  434ms
+   ✓ validates the actual native r114 backup and initializes only zero service counters  1684ms
+   ✓ walks to the live workstation and completes all three shared tasks without creating stock  1102ms
+   ✓ preserves an in-flight old recipe and every existing ledger before future service decisions  383ms
+ ✓ tests/dream-agent.test.ts (23 tests) 2172ms
+   ✓ bounded agent context packets > exports machine-readable CLI context and preserves source/check boundaries  2163ms
+ ✓ tests/service-meals.test.ts (6 tests) 1078ms
+   ✓ takes a purchased meal upstairs, persists its elevation and rejects a forged floor  888ms
+ ✓ tests/dream-v2.test.ts (66 tests) 640ms
+ ✓ tests/office-food-world.test.ts (24 tests) 141408ms
+   ✓ keeps every old saved field and slot while adding exactly four finite loaves and zero delivery counters  884ms
+   ✓ replays the complete city between independent saved checkpoints: 'fresh/0'  6971ms
+   ✓ replays the complete city between independent saved checkpoints: 'fresh/1'  6902ms
+   ✓ replays the complete city between independent saved checkpoints: 'fresh/2'  7385ms
+   ✓ replays the complete city between independent saved checkpoints: 'fresh/3'  7179ms
+   ✓ replays the complete city between independent saved checkpoints: 'fresh/4'  6999ms
+   ✓ replays the complete city between independent saved checkpoints: 'fresh/5'  6807ms
+   ✓ replays the complete city between independent saved checkpoints: 'fresh/6'  7313ms
+   ✓ replays the complete city between independent saved checkpoints: 'fresh/7'  6923ms
+   ✓ replays the complete city between independent saved checkpoints: 'fresh/8'  4866ms
+   ✓ replays the complete city between independent saved checkpoints: 'restored/0'  6869ms
+   ✓ replays the complete city between independent saved checkpoints: 'restored/1'  7218ms
+   ✓ replays the complete city between independent saved checkpoints: 'restored/2'  7125ms
+   ✓ replays the complete city between independent saved checkpoints: 'restored/3'  7195ms
+   ✓ replays the complete city between independent saved checkpoints: 'restored/4'  7286ms
+   ✓ replays the complete city between independent saved checkpoints: 'restored/5'  7395ms
+   ✓ replays the complete city between independent saved checkpoints: 'restored/6'  8179ms
+   ✓ replays the complete city between independent saved checkpoints: 'restored/7'  8188ms
+   ✓ replays the complete city between independent saved checkpoints: 'restored/8'  8077ms
+   ✓ replays the complete city between independent saved checkpoints: 'restored/9'  3080ms
+
+ Test Files  6 passed (6)
+      Tests  127 passed (127)
+   Start at  05:29:19
+   Duration  142.17s (transform 553ms, setup 25ms, collect 2.55s, tests 180.53s, environment 0ms, prepare 144ms)

@@ -16,7 +16,7 @@ import {stepInteractive} from '../src/sim/interaction';
 import {sceneFloors} from '../src/scene/floors';
 let scene:ReturnType<typeof createWorldScene>,prior:typeof scene,world:World,old:World,snapshot:string;
 beforeAll(()=>{
- scene=createWorldScene();prior=c.preOfficeWorkScene(scene);snapshot=JSON.stringify(scene);
+ scene={...c.preOfficeFoodScene(createWorldScene()),revisionId:'r116',sourceHash:'handmade-city-life-v116'};prior=c.preOfficeWorkScene(scene);snapshot=JSON.stringify(scene);
  world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.OFFICE_WORK_COMPATIBILITY,previousOfficeWorkSaveCompatibility:c.SERVICE_WORK_COMPATIBILITY};
  old={...world,scene:prior,saveCompatibility:c.SERVICE_WORK_COMPATIBILITY,previousOfficeWorkSaveCompatibility:undefined};
 },60000);
@@ -27,7 +27,7 @@ const run=async(steps:Generator<void,CarState>)=>{let r=steps.next(),n=0;while(!
 const tick=(s:CarState)=>stepCommerce({...s,timeS:s.timeS+.25,npcs:stepNpcs(s,.25,scene),population:stepAmbient(s,.25,scene)},{},.25,scene);
 
 it('registers a supported service office without adding actors, meshes, vehicles, pavement or goods',async()=>{
- expect(c.SAVE_SIMULATION_VERSION).toBe(57);expect(scene.revisionId).toBe('r116');expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.OFFICE_WORK_COMPATIBILITY);expect(await c.sha256(c.preOfficeWorkCompatibilitySource(scene))).toBe(c.SERVICE_WORK_COMPATIBILITY);
+ expect(JSON.parse(c.preOfficeFoodCompatibilitySource(scene)).simulationVersion).toBe(57);expect(scene.revisionId).toBe('r116');expect(await c.sha256(c.preOfficeFoodCompatibilitySource(scene))).toBe(c.OFFICE_WORK_COMPATIBILITY);expect(await c.sha256(c.preOfficeWorkCompatibilitySource(scene))).toBe(c.SERVICE_WORK_COMPATIBILITY);
  expect(scene.objects.map(o=>o.id)).toEqual(prior.objects.map(o=>o.id));expect(scene.surfaces).toEqual(prior.surfaces);expect(scene.behaviors).toEqual(prior.behaviors);expect(scene.economy!.goods).toEqual(prior.economy!.goods);
  const business=scene.economy!.markets.find(m=>m.id==='office_business')!;expect(business.on).toBe('station_quarter_offices');expect(business.lots).toEqual([]);expect(initialEconomy(scene)!.markets.find(m=>m.id===business.id)!.stock).toEqual({});
 });

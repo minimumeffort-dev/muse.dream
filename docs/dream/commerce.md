@@ -40,7 +40,8 @@ One `economy()` block owns the system for a linked world. Goods, accounts, marke
 
 A [goods-free office](office-work.md) can use an empty market block and
 `on=building` for its supported premises. It needs a physical service task.
-Its operator can commute and rest while working only its own service jobs.
+Its operator can commute, rest and take a declared [meal trip](office-food.md)
+while working only its own service jobs.
 Stocked vendors retain their existing policy. Both businesses use the same
 finite wages, hours, equipment, interruption and save checks.
 

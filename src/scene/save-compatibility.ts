@@ -22,7 +22,7 @@ import homeR98 from './compatibility/r98-home.json';
 import homeR97 from './compatibility/r97-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=57;
+export const SAVE_SIMULATION_VERSION=58;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -116,10 +116,22 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r117 connects office wages, local food, shared seating and finite station resupply. */
+export const OFFICE_FOOD_COMPATIBILITY='643b70b96ca5415687a91955ca4f43a20b9ac2590303d04fd5aacd0d637aa9e6';
+const officeFoodProjections=new WeakMap<Scene,Scene>();
+export function preOfficeFoodScene(scene:Scene):Scene{
+ const cached=officeFoodProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.deliveries?.some(d=>d.id==='station_bread'))return scene;
+ const prior={...scene,economy:{...scene.economy,meals:scene.economy.meals.filter(m=>m.id!=='office_lunch'),deliveries:scene.economy.deliveries.filter(d=>d.id!=='station_bread'),markets:scene.economy.markets.map(m=>m.id==='station_supplies' ? {...m,lots:m.lots.filter(l=>l.id!=='depot_bread')} : m),accounts:scene.economy.accounts.map(a=>{if(a.id==='office_clerk'){const {meal,...old}=a;return {...old,satiety:65,drainPerS:0};}return a.id==='porter' ? {...a,deliveries:a.deliveries?.filter(id=>id!=='station_bread')} : a;})}};
+ officeFoodProjections.set(scene,prior);return prior;
+}
+export function preOfficeFoodCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preOfficeFoodScene(scene),57,true,encode);}
+
 /** r116 connects a goods-free office and an existing resident to nearby home/work premises. */
 export const OFFICE_WORK_COMPATIBILITY='f29382de98ecf72a17233b07c50ea046adbe3625a670fdd8c384ec9fae86dc31';
 const officeWorkProjections=new WeakMap<Scene,Scene>();
 export function preOfficeWorkScene(scene:Scene):Scene{
+ scene=preOfficeFoodScene(scene);
  const cached=officeWorkProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.markets.some(m=>m.id==='office_business'))return scene;
  const prior={...scene,objects:scene.objects.map(o=>o.id==='hospital_visitor' ? {...o,x:4040,y:6610} : o),economy:{...scene.economy,stations:scene.economy.stations?.filter(s=>s.id!=='office_records'),rests:scene.economy.rests?.filter(s=>s.id!=='office_home_rest'),jobs:scene.economy.jobs.filter(j=>j.id!=='check_records'),markets:scene.economy.markets.filter(m=>m.id!=='office_business'),accounts:scene.economy.accounts.filter(a=>a.id!=='office_clerk')}};

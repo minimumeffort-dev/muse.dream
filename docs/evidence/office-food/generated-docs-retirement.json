@@ -1,0 +1,8 @@
+{
+  "retired": "dist-docs",
+  "generatedPages": 64,
+  "apparentBytes": 1452335998,
+  "allocatedUniqueInodeBytes": 1538338816,
+  "validation": "Complete suite passed docs-site.test.ts (52 checks), which runs scripts/docs.mjs and validates output and links",
+  "sourceAndFinalMediaRetained": true
+}

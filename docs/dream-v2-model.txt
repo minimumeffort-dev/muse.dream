@@ -727,8 +727,9 @@ Optional market.on names an existing static enterable building; only goods-free
 service businesses accept it. The building origin, supported by its lobby floor,
 owns counter position and radius independently of the operator's home. Stations,
 equipment, sight, stairs and full-body paths still validate. An operator may use
-commute/rest for their own service jobs only with explicit premises and without
-competing automatic policies. Stocked vendors retain existing restrictions.
+commute/rest for their own service jobs with explicit premises, plus a declared
+meal trip to a stocked food counter. One journey/commitment owns the actor; shop,
+shift, repair and delivery policies remain excluded. Stocked vendors retain existing restrictions.
 Service-only worlds still build the shared pavement graph; ambient walkers,
 meals and repair declarations are not required scaffolding. Keep existing budgets.
 Example: market office(label="Records office",actor=clerk,on=exchange,credits=60,radius=80,hours=[8,18]){}
@@ -1016,13 +1017,18 @@ Optional seats lists 1..4 unique static furniture placement IDs in preference
 order; slots within each furniture use their authored order. Seated customers
 require complete humanoid bones. After purchase, reserve the first reachable free slot,
 walk to its approach, sit and eat; release before returning home. Shared claims
-include the player and customers walking to seats. Full/broken furniture falls
+include the player and customers walking to seats. Named-floor seating needs the
+enclosing building in the same grounds; the engine retains supported XYZ paths,
+arrival, seat and home elevations through saves. Do not author runtime paths or
+clocks. Full/broken furniture falls
 back to standing, retaining the purchased food. No queues or table service.
 At most 8 plans, 1..4 unique ordered markets, a positive-food good with a priced
 lot in every market, and eat_s=1..12 seconds. on plus 0..11 unique extra convex
 work grounds share the 4096 local-sample budget and accepted pedestrian network.
 A meal account is a measured person decor NPC with a program, optional walk route,
-no counter operator role, and no shop/work/repair/delivery policy. Hungry at <=40, it
+no stocked-counter operator role, and no shop/repair/delivery policy. Declared work
+commuting and rest can coexist. An explicit own-service operator can also take a
+meal trip; direct non-commuting work remains excluded. Hungry at <=40, it
 eats carried food first; otherwise it walks to the first stocked affordable shop
 with a clear outbound/return path. No reservation before arrival. The shared buy
 transaction rechecks stock, funds, bag and treasury. Failure returns empty-handed,

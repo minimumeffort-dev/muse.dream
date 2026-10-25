@@ -1,5 +1,22 @@
 # Media and Dream highlighting
 
+## Station food, r117
+
+`stationfood` records a real player purchase and food action at the existing
+station shop. Only the observer pose is seeded. Stock, five-coin payment,
+inventory and food consumption use ordinary controls and fixed simulation ticks.
+The last frame requires one paid loaf, an empty bag and the expected fullness
+gain. This eight-second recording does not show the full clerk or supply trip.
+
+The exporter renders 240 consecutive 2400x1350 PNGs at 30 frames per simulation
+second, without interpolation. Encode with
+`node scripts/encode-media.mjs <ffmpeg> <gifsicle> stationfood`. Video/still are
+1600x900, GIF is 1280x720, and still frame 65 shows the completed purchase.
+Keep the triplet together. The earlier office work recording retains accurate
+geometry/controls; its source, needs and shop stock are historical. This is
+offline behavior evidence, not a live performance measurement.
+[Current native food and save checks](../evidence/office-food/verification.md).
+
 ## Office work, r116
 
 `officework` follows the actual player from the outside doorway, up the existing

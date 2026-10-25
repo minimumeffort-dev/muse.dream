@@ -97,7 +97,7 @@ describe("published Dream documentation",()=>{
     expect(block.trim()).toBe(examples['../docs/examples/market-work.dream']!.trim());
   });
   it.each(Object.entries(examples))("compiles the complete example %s",(path,source)=>{
-    const result=checkDream(source,['/character-import.dream','/ground-floor-seating.dream','/tower-mezzanine.dream','/service-office.dream'].some(name=>path.endsWith(name)) ? worldModules : {});
+    const result=checkDream(source,['/character-import.dream','/ground-floor-seating.dream','/tower-mezzanine.dream','/service-office.dream','/service-office-meals.dream'].some(name=>path.endsWith(name)) ? worldModules : {});
     expect(result.ok,result.ok ? path : JSON.stringify(result.diagnostics)).toBe(true);
   });
   it("keeps the quickstart's complete tree identical to its runnable source",()=>{

@@ -1255,3 +1255,27 @@ Keep sample positions/IDs and the rejection random-draw policy. It creates no
 hidden geometry or paving. Keep the two hospital-side slots clear for relocation;
 the accepted world must retain every previous static prop and pavement. See
 docs/dream/office-work.md and docs/examples/service-office.dream.
+
+
+## Earned office food and station supply, r117 / simulation 58
+
+Only explicit own-service operators may compose existing meal, rest and commute
+policies. Keep stocked vendors and competing shopping/shift/repair/delivery
+policies excluded. Meal journeys retain supported XYZ arrival, seat and home
+points in current saves; historical schemas remain strict. Validate height,
+shared claims, needs, conserved money/material and one journey owner. No model
+runtime paths or controllers. Keep ordinary ground meal behavior and existing
+actor, rig, graph and path bounds.
+
+Station supplies adds exactly four initial bread units, price 5 and capacity 8,
+without new credit, actor, geometry or good. The porter prioritizes a funded
+station resupply before school orders after hardware. Each delivery transfers
+two existing bakery loaves for wholesale 2 plus wage 3 from station takings.
+The clerk starts at fullness 50 with .02 drain; old saved needs are preserved,
+including the older unpaid relocation. Never seed food, wages or progress to
+make the journey work. All six office tasks remain finite shared work.
+
+The registered format-19 upgrade validates exact r116 and retains every old
+state field, adding only the four depot loaves and zero station_bread counters.
+Retain the full earlier migration chain and old slots. No offline catch-up.
+See docs/dream/office-food.md and docs/examples/service-office-meals.dream.

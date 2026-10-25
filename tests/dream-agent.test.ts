@@ -92,3 +92,5 @@ it('includes bounded upstairs work and keeps counter trade distinct in combined 
 });
 
 it('exports bounded slot omissions and anchored service businesses to their feature packets',()=>{const p=dreamAgentContext(['population','commerce']);expect(p.contract.commands.furnish!.fields.omit).toBe('slots?');expect(p.contract.commands.market!.fields.on).toBe('ref?');expect(p.instructions).toContain('Optional furnish.omit');expect(p.instructions).toContain('building origin');expect(p.contract).toHaveProperty('population.omissions.max',32);expect(p.contract).toHaveProperty('population.omissions.idMaxLength',64);expect(p.contract).toHaveProperty('commerce.serviceBusinesses');});
+
+it('teaches explicit own-service meal composition and floor-aware saved journeys',()=>{const p=dreamAgentContext(['commerce','interiors']);expect(p.contract).toHaveProperty('commerce.mealFloors');expect(p.contract).toHaveProperty('commerce.serviceBusinesses.operator',expect.stringContaining('meal trip'));expect(p.instructions).toContain('meal trip to a stocked food counter');expect(p.instructions).toContain('seat and home elevations');});

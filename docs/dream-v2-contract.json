@@ -1876,8 +1876,12 @@
       "goods": "0..8; zero requires service work",
       "lots": "0..8; zero requires a service job at this business",
       "on": "Optional existing static solid enterable building; only goods-free service businesses. Its origin owns counter position independently of the stationary operator home.",
-      "operator": "Explicit premises permit commuting/rest only for own service work, without competing automatic policies. Other vendor restrictions remain.",
+      "operator": "Explicit premises permit commuting/rest for own service work and a declared meal trip to a stocked food counter. One journey/commitment owner; shop, shift, repair and delivery policies remain excluded. Other vendor restrictions remain.",
       "navigation": "Commutes and physical stations build the bounded shared pavement graph even without ambient walkers, meals or repairs."
+    },
+    "mealFloors": {
+      "source": "meal(...,on=building,grounds=[named_floor],seats=[floor_furniture])",
+      "semantics": "Named-floor seating retains supported XYZ paths, full-height arrival, shared claims and exact meal/home elevations through current saves. Include the enclosing building; never author runtime paths or clocks. Existing floor, graph, actor and save budgets remain."
     },
     "serviceWork": {
       "kind": "service",

@@ -511,7 +511,7 @@ A goods-free business may use `market(...,on=building){}`. `on` names an
 existing static solid enterable building; its origin and supported lobby floor
 anchor the counter independently of `actor`'s home. It forbids stocked lots and
 recipe jobs. An operator with explicit premises may commute/rest for its own
-service jobs without competing automatic policies; stocked vendors retain their
+service jobs and take a declared meal trip to a stocked food counter; stocked vendors retain their
 existing restrictions. Counter sight and radius, physical stations, stairs and
 complete-body outward/return paths still validate. See [office work](office-work.md)
 and [the complete example](../examples/service-office.dream).
@@ -758,7 +758,9 @@ never overrides this preference. [Runnable example](../examples/seat-preferences
 positive-food good. Grounds are the same convex work surfaces or interior floors,
 with 4096 local samples and existing 8192-node/32768-link/128-waypoint bounds.
 The actor needs a measured person decor body and program, optional walking route,
-no market ownership and no other automatic commerce policy.
+no stocked-counter ownership and no automatic shopping, repair or delivery policy.
+Work commuting and rest can coexist. An operator with explicit goods-free
+premises can use a meal plan alongside its own service jobs.
 
 At fullness <=40, eat carried food or walk to the first stocked affordable market
 with a complete round trip. Arrival rechecks the ordinary buy action. Nothing is
@@ -768,6 +770,9 @@ in their inventory for `eat_s`, then the ordinary eat transaction consumes it on
 Return to the frozen routine pose before resuming the program. Live contact waits,
 paths, timers, needs and balances survive unloading, recovery and saves. Optional `seats=[bench_placement]` reserves a reachable shared furniture slot
 after purchase. See [seating](seating.md) for posture, claims and standing fallback.
+Named-floor seating retains supported XYZ journeys and full-height arrivals;
+include the enclosing building in the plan grounds. Meal, seat and home elevations
+persist in current saves. [Office food example](../examples/service-office-meals.dream).
 No queues, extra rigs, per-item bodies or offline travel. [Complete example](../examples/meal-trips.dream).
 
 The [staffed business example](../examples/market-production.dream) composes these

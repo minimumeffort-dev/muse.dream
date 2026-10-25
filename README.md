@@ -36,6 +36,18 @@ repaired. The quota does not refill each day yet.
 [Watch in HD](docs/media/officework.mp4) · [GIF](docs/media/officework.gif) ·
 [Build the office in Dream](docs/dream/office-work.md)
 
+## Earn lunch, then bring more bread
+
+Station supplies now sells bread. The office clerk spends earned wages there,
+walks back to Copper Court and eats on the same bench you can use. A courier
+brings replacement loaves from the bakery, paid from the shop's actual takings.
+There is no free meal or automatic stock refill.
+
+![Buying and eating bread at Station supplies](docs/media/stationfood.jpg)
+
+[Watch in HD](docs/media/stationfood.mp4) · [GIF](docs/media/stationfood.gif) ·
+[Build the food routine in Dream](docs/dream/office-food.md)
+
 ## A station quarter with some height
 
 The station side of town now has a 55-metre brick residential tower and a

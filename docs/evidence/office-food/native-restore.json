@@ -1,0 +1,12 @@
+{
+  "oldBackupSha256": "ddc01105fe91e371ee2ab221176bb5ce33b8dc4f3e0a1216013edb4d3ad1e192",
+  "newBackupSha256": "f418ab2e2bf8c4eae82290a1514f4d8ae6e8ebf737b3177b81e43af3e7292e44",
+  "sourceHash": "c4022ccb06d62b3675f428dd76f920573bcf82cf48f290aa1a36d7d58eb2b7dd",
+  "worldTime": 23.633300000041693,
+  "everyOldStateFieldPreserved": true,
+  "added": {
+    "breadAtStation": 4,
+    "stationBreadCounters": 0
+  },
+  "warnings": []
+}
