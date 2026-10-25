@@ -509,6 +509,7 @@
         "streets": "symbols?",
         "sites": "symbols?",
         "grounds": "symbols?",
+        "omit": "slots?",
         "paving": "color?",
         "spacing": "n",
         "setback": "n",
@@ -700,6 +701,7 @@
       "fields": {
         "label": "text",
         "actor": "ref",
+        "on": "ref?",
         "credits": "n",
         "radius": "n",
         "hours": "v2?",
@@ -1845,6 +1847,12 @@
     "errors": "module ID accompanies nested diagnostics; failure returns no partial world"
   },
   "population": {
+    "omissions": {
+      "source": "furnish(...,omit=[rule_0_0_l])",
+      "max": 32,
+      "idMaxLength": 64,
+      "semantics": "Unique existing candidate slot IDs from this rule. Keep candidate IDs and sample positions; consume the same draws as a rejected candidate. Never infer actor immunity, paving or geometry. Varied-facing omissions may change subsequent template/heading draws."
+    },
     "ambient": {
       "members": 192,
       "tickSeconds": 0.05,
@@ -1863,6 +1871,14 @@
     "phase": "place.phase_s 0..3600 only with route; shifts the entire route clock including stops. offset remains a carriage distance."
   },
   "commerce": {
+    "serviceBusinesses": {
+      "source": "market(...,actor=operator,on=building){}",
+      "goods": "0..8; zero requires service work",
+      "lots": "0..8; zero requires a service job at this business",
+      "on": "Optional existing static solid enterable building; only goods-free service businesses. Its origin owns counter position independently of the stationary operator home.",
+      "operator": "Explicit premises permit commuting/rest only for own service work, without competing automatic policies. Other vendor restrictions remain.",
+      "navigation": "Commutes and physical stations build the bounded shared pavement graph even without ambient walkers, meals or repairs."
+    },
     "serviceWork": {
       "kind": "service",
       "recipeDefault": true,

@@ -11,8 +11,9 @@ trailers, vehicle damage and service fleets remain separate work.
 
 Service work now separates a paid task from a production recipe. The bakery's
 three stock checks share a physical station, finite wages and a completion quota
-between the player and commuter. They create no stock. Daily demand, goods-free
-service desks and actual office jobs remain open work. [Service task rules](dream/service-work.md).
+between the player and commuter. They create no stock. Daily demand and richer service tasks remain open work. The first goods-free
+office now connects Copper Court home breaks, a real stair commute and shared
+paid work in Lantern Exchange. [Office rules](dream/office-work.md). [Service task rules](dream/service-work.md).
 
 ## Next playable work
 
@@ -25,7 +26,8 @@ The office tower now has a stair-connected mezzanine with shared seating,
 breakable furniture and finite caretaker repairs. The player climbs, sits and
 walks out; the caretaker climbs to work. Existing saves retain their progress.
 [Office room and checks](dream/station-quarter.md#take-the-stairs).
-Real office/home routines, finer stair proportions and the remaining tower
+The clerk now uses a home bench, scheduled office work and the same stairs.
+Further home/office roles, finer stair proportions and the remaining tower
 storeys remain neighborhood work.
 
 The station quarter's seventeen placed fixtures now connect to existing finite
@@ -44,7 +46,10 @@ Simulation 54 also removes the remaining measured corner detours. It considers
 short supported joins inside connected pavement, reducing those corner walks
 to 236 and 230 units and the station bench to 7,479 units. Existing paid paths
 remain intact; new plans use the new links. Node counts and all graph/actor caps
-stay fixed. [Current routing evidence](evidence/short-links/verification.md).
+stay fixed. Simulation 57 further reduces the bench approach to 7,409 units by
+retaining public endpoint candidates beside dense local grids.
+[Current route](evidence/office-work/routing.json) ·
+[Earlier corner checks](evidence/short-links/verification.md).
 [Historical crossing evidence](evidence/crossing-access/verification.md).
 
 The r112 native station-bench recording is historical: work starts around 1,511

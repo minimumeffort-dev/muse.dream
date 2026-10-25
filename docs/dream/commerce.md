@@ -34,9 +34,15 @@ One `economy()` block owns the system for a linked world. Goods, accounts, marke
 | --- | --- |
 | `good` | A named inventory unit; optional food value restores 0..100 fullness |
 | `account` | Actor-owned integer credits, carrying capacity, fullness and drain per simulation second |
-| `market` | A stationary vendor, treasury and interaction radius of 20..80 world units |
+| `market` | A business operator, treasury and interaction radius of 20..80 world units; service premises may be independent of the operator's home |
 | `lot` | One good's initial stock and capacity; optional positive integer price allows buying and selling |
-| `work` | Timed conversion of one or several input goods into another, with wage, effort, shared capacity and refill target |
+| `work` | A timed recipe or physical service task, with wage, effort and shared capacity; recipes refill stock and services share a completion quota |
+
+A [goods-free office](office-work.md) can use an empty market block and
+`on=building` for its supported premises. It needs a physical service task.
+Its operator can commute and rest while working only its own service jobs.
+Stocked vendors retain their existing policy. Both businesses use the same
+finite wages, hours, equipment, interruption and save checks.
 
 The player acts through controls. NPC `shop=true` attempts food purchases/consumption at fullness 40 or below. Optional account `work` refills its job's output toward `target`. Policies submit the same transactions and meet the same range, capacity, inventory and money checks. These are bounded engine policies, not generated scripts or general life AI.
 

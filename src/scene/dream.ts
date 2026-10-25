@@ -485,7 +485,7 @@ function compileWorldProgram(program:Program,assets:Map<string,ObjectDslV2>,chil
         if(node.fields.has('on') && wordField(node,'on')==='sidewalk' && objects.some(s=>s?.body.interaction!=='decor'))fail('sidewalk furnishing requires passive decor so the walking corridor stays open',node.token,'E_POPULATION');
         if(!objects.length || objects.length>8 || objects.some(s=>!s || s.body.interaction==='knockable' || s.joints?.some(j=>j.bone || j.proximity || j.animation && !('kind' in j.animation && j.animation.kind==='roll')) || isReactive(s) && !(pooled && poolableImpact(s)) || s.emitter))fail('furnish needs 1..8 passive static object templates',node.token,'E_POPULATION');
         const data={id:node.id,spacing:num('spacing'),setback:num('setback'),seed:num('seed'),...(motion ? {motion} : {})};
-        for(const key of ['streets','sites','grounds'])if(node.fields.has(key))Object.assign(data,{[key]:listField(node,key).map(e=>e.name!)});
+        for(const key of ['streets','sites','grounds','omit'])if(node.fields.has(key))Object.assign(data,{[key]:listField(node,key).map(e=>e.name!)});
         if(node.fields.has('pose'))Object.assign(data,{pose:wordField(node,'pose')});
         if(node.fields.has('paving'))Object.assign(data,{paving:wordField(node,'paving')});
         for(const key of ['side','facing','on','role'])if(node.fields.has(key))Object.assign(data,{[key]:wordField(node,key)});

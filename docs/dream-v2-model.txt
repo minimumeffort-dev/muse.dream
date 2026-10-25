@@ -560,6 +560,15 @@ Runtime clocks are per instance outside Scene; pause freezes them; R preserves t
 Start over resets them. No model calls during simulation.
 
 ## population
+
+Optional furnish.omit=[rule_0_0_l] keeps specific generated candidate slots clear.
+Use 1..32 unique slot IDs of up to 64 characters belonging to that same rule.
+Generated slot IDs include the ordinary 1..32-character rule ID and its suffix. Unknown slots and duplicate
+IDs fail. A slot may be omitted even when currently blocked. It emits no object
+or paving and keeps candidate IDs and sampling positions. Omissions consume the
+same random draws as rejected candidates; with facing=varied, later template and
+heading draws may change. Inspect the accepted expansion rather than assuming all
+later variants stay identical. No budgets increase or invisible props are needed.
 CONTEXTUAL POPULATIONS
 furnish id(objects=[object_ref,...],streets=[street_ref,...],spacing=340,setback=2,seed=41,facing=street);
 furnish id(objects=[bicycle],sites=[site_ref,...],spacing=26,setback=4,count=6,seed=82,paving=#aaa99f);
@@ -711,6 +720,19 @@ seasons, floods, general shelter search or biological validity. Optional rest.sh
 connects existing covered seats to rain-aware NPC need trips; see Rest below.
 
 ## commerce
+
+Service businesses may have zero goods and empty market blocks when they supply
+physical service work. An empty business must declare at least one service job.
+Optional market.on names an existing static enterable building; only goods-free
+service businesses accept it. The building origin, supported by its lobby floor,
+owns counter position and radius independently of the operator's home. Stations,
+equipment, sight, stairs and full-body paths still validate. An operator may use
+commute/rest for their own service jobs only with explicit premises and without
+competing automatic policies. Stocked vendors retain existing restrictions.
+Service-only worlds still build the shared pavement graph; ambient walkers,
+meals and repair declarations are not required scaffolding. Keep existing budgets.
+Example: market office(label="Records office",actor=clerk,on=exchange,credits=60,radius=80,hours=[8,18]){}
+See docs/examples/service-desk.dream and docs/examples/service-office.dream.
 
 Walking grounds: account(commute=true), station, delivery, repair, meal, social,
 rest and shift share one bound: on plus 0..11 unique extra grounds, 12 total.
@@ -891,8 +913,7 @@ without consuming or producing goods. NPCs use the same quota, player accounts
 remain manual. No daily quota refill or invented customer demand. Example:
 work stocktake(label="Check bakery stock",kind=service,market=corner,seconds=2,pay=3,effort=2,capacity=1,target=3,equipment=[prep_table],station=preparation);
 See docs/examples/service-work.dream. Omitted kind means recipe; recipe goods
-and output-room requirements remain unchanged. Businesses still require real
-market lots; a goods-free service desk is not supported yet.
+and output-room requirements remain unchanged. Goods-free businesses use empty market blocks; explicit premises keep the workplace independent of its operator home.
 
 Optional work.equipment=[placement_id,...] binds production to 1..4 unique static
 solid prop placements within its counter reach, not asset template IDs. No actors,

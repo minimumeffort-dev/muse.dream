@@ -62,14 +62,14 @@ asset parked_sedan(module=landmarks,object=town_car);
 furnish center_residents(objects=[shopper,resident,a_commuter],streets=[market_avenue,high_street,civic_walk,north_avenue],spacing=600,setback=0,seed=302,side=left,motion=walk(speed=14,wait_s=1),on=sidewalk,facing=varied,jitter=.3);
 furnish neighborhood_residents(objects=[neighbor,resident,student],streets=[garden_collector,garden_crescent,school_street,south_terrace,hospital_street],spacing=600,setback=0,seed=303,motion=walk(speed=14,wait_s=1),on=sidewalk,facing=varied,jitter=.3);
 furnish east_residents(objects=[shopper,student,resident],streets=[eastbank,station_avenue,harbor_street,workshop_street,airfield_road],spacing=600,setback=0,seed=304,side=right,motion=walk(speed=14,wait_s=1),on=sidewalk,facing=varied,jitter=.3);
-furnish civic_parking(objects=[parked_hatchback,parked_sedan],sites=[access_garden_school,access_south_school,access_hospital,access_offices,access_college],spacing=58,setback=5,count=8,seed=311,grounds=[hospital_apron],paving=#aaa99f,role=controllable);
+furnish civic_parking(omit=[civic_parking_2_4_r],objects=[parked_hatchback,parked_sedan],sites=[access_garden_school,access_south_school,access_hospital,access_offices,access_college],spacing=58,setback=5,count=8,seed=311,grounds=[hospital_apron],paving=#aaa99f,role=controllable);
 furnish east_parking(objects=[parked_hatchback,parked_sedan,parked_van],sites=[access_east_medical_center,access_harbor_market,access_airport,access_harbor_workshops],spacing=62,setback=5,count=8,seed=312,grounds=[airport_forecourt,east_medical_apron],paving=#aaa99f,role=controllable);
 behavior neighborhood_greeting(start=rest){
  state rest(action=idle,face=none){on hello(event=near_player,radius=80,to=greet);}
  state greet(action=idle,face=player){on resume(event=far_player,radius=120,to=rest);}
 }
 place market_neighbor(object=neighbor,at=[6480,4475],role=npc,behavior=neighborhood_greeting);
-place hospital_visitor(object=shopper,at=[4040,6610],role=npc,behavior=neighborhood_greeting);
+place hospital_visitor(object=shopper,at=[11700,4700],role=npc,behavior=neighborhood_greeting);
 place school_student(object=student,at=[4440,3436],role=npc,behavior=neighborhood_greeting);
 place station_resident(object=resident,at=[11000,4112],role=npc,behavior=neighborhood_greeting);
 include resting_wildlife(module=fauna);
@@ -252,6 +252,12 @@ economy(){
  delivery boards_run(label="Bring boards to the workshop",from=station_supplies,to=market_stall,good=boards,quantity=2,pay=4,price=1,capacity=1,on=market_hall,grounds=[market_square]);
  delivery fasteners_run(label="Bring fasteners to the workshop",from=station_supplies,to=market_stall,good=fasteners,quantity=2,pay=4,price=1,capacity=1,on=market_hall,grounds=[market_square,school_yard,school_yard_access,school_yard_return]);
 
+ // The resident lives in Copper Court and works across the connected promenade.
+ station office_records(object=station_quarter_gallery_table,at=[40,0],hands=[26.5,19.2,0],on=office_mezzanine,grounds=[station_quarter_offices,office_landing]);
+ rest office_home_rest(energy=35,drain_s=.1,recover_s=5,below=55,until=90,seats=[station_quarter_home_seat],on=station_quarter_residences,grounds=[station_quarter_home_floor,station_repair_work]);
+ account office_clerk(actor=hospital_visitor,credits=0,capacity=4,satiety=65,drain_s=0,rest=office_home_rest,work=check_records,commute=true,attendance=[8,18],on=station_quarter_residences,grounds=[station_quarter_home_floor,station_repair_work,station_quarter_offices,station_quarter_office_floor,office_mezzanine,office_landing,hospital_apron]);
+ market office_business(label="Lantern records office",actor=hospital_visitor,on=station_quarter_offices,credits=60,radius=80,hours=[8,18]){}
+ work check_records(label="Check visitor records",kind=service,market=office_business,seconds=6,pay=4,effort=2,capacity=1,target=6,equipment=[station_quarter_gallery_table],station=office_records,gesture=folding);
 }
 
 include station_quarter(module=station_quarter);

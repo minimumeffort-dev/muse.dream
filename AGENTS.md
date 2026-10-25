@@ -354,7 +354,7 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 ## Saved simulation state
 
 Current save format 19 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 56. Historical formats retain their registered projections.
+at simulation version 57. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order

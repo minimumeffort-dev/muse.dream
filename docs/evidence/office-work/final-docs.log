@@ -1,0 +1,16 @@
+
+> muse-dream@0.1.0 test
+> vitest run --maxWorkers=1 tests/docs.test.ts tests/docs-site.test.ts
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/docs.test.ts (189 tests) 2792ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/service-office.dream  512ms
+ ✓ tests/docs-site.test.ts (52 tests) 837ms
+   ✓ published site > builds highlighted source with project-relative navigation and working downloads  828ms
+
+ Test Files  2 passed (2)
+      Tests  241 passed (241)
+   Start at  04:50:25
+   Duration  4.52s (transform 436ms, setup 10ms, collect 696ms, tests 3.63s, environment 0ms, prepare 43ms)

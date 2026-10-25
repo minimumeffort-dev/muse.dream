@@ -83,7 +83,7 @@ const cache=new WeakMap<Scene,ReturnType<typeof prepare>>();
 function prepare(scene:Scene){
  const e=scene.economy!,objects=new Map(scene.objects.map(o=>[o.id,o]));
  return {e,rations:new Map(e.rations?.map(r=>[r.id,r])),rationLoads:new Map(e.accounts.map(a=>[a.id,Math.max(0,...accountRepairs(a).map(id=>{const r=e.repairs.find(r=>r.id===id)!;return Math.max(r.take,r.amount??0);}),...(a.deliveries??[]).map(id=>e.deliveries.find(d=>d.id===id)!.quantity))])),goods:new Map(e.goods.map(g=>[g.id,g])),accounts:new Map(e.accounts.map(a=>[a.id,a])),markets:new Map(e.markets.map(m=>[m.id,m])),meals:new Map(e.meals.map(m=>[m.id,m])),jobs:new Map(e.jobs.map(j=>[j.id,j])),deliveries:new Map(e.deliveries.map(d=>[d.id,d])),repairs:new Map(e.repairs.map(r=>[r.id,r])),repairTargets:new Map(e.repairs.map(r=>[r.id,repairTargets(scene,r)])),objects,
-  places:new Map(e.markets.map(m=>[m.id,actorPose(scene,objects.get(m.actor)!,0)]))};
+  places:new Map(e.markets.map(m=>{const o=objects.get(m.on??m.actor)!;return [m.id,m.on ? {x:o.x,y:o.y,elevation:walkingHeight(scene,o.x,o.y),headingRad:o.headingRad??0,speed:0,distance:0} : actorPose(scene,o,0)];}))};
 }
 function data(scene:Scene){let c=cache.get(scene);if(!c){c=prepare(scene);cache.set(scene,c);}return c;}
 function emptyCompletions(e:Economy){return {work:Object.fromEntries(e.jobs.map(j=>[j.id,0])),delivery:Object.fromEntries(e.deliveries.map(d=>[d.id,0])),repair:Object.fromEntries(e.repairs.map(r=>[r.id,0]))};}
@@ -516,7 +516,7 @@ export function checkEconomyState(state:CarState,scene:Scene):void{
  for(const a of e.accounts)if(a.commute){
   const t=a.commute,spec=d.accounts.find(s=>s.id===a.id)!,job=d.jobs.find(j=>j.id===t.id),object=scene.objects.find(o=>o.id===spec.actor);
   if(!usesWorkTravel(scene,spec) || !job || !accountJobs(spec).includes(t.id) || !object || a.meal || a.repair || a.delivery || a.courier || a.shift || (t.phase==='work' ? a.work?.id!==t.id : !!a.work) || t.routeAtS>state.timeS+1.01)throw Error('Invalid saved work commute');
-  const home=actorPose(scene,object,state.timeS,{...state,economy:undefined}),area=commuteArea(scene,spec),market=d.markets.find(m=>m.id===job.market)!,vendor=scene.objects.find(o=>o.id===market.actor)!;
+  const home=actorPose(scene,object,state.timeS,{...state,economy:undefined}),area=commuteArea(scene,spec),market=d.markets.find(m=>m.id===job.market)!,vendor=scene.objects.find(o=>o.id===(market.on??market.actor))!;
   const station=workstation(scene,job.station),floorEnd=station?.floor && walkingDistance(scene,t.at,station)<.01;
   if(Math.hypot(t.home.x-home.x,t.home.y-home.y)>.01 || (t.phase==='home' ? Math.hypot(t.at.x-home.x,t.at.y-home.y)>.01 : Math.hypot(t.at.x-vendor.x,t.at.y-vendor.y)>market.radius || !floorEnd && Math.abs((t.at.elevation??walkingHeight(scene,t.at.x,t.at.y))-walkingHeight(scene,vendor.x,vendor.y))>=4))throw Error('Invalid commute destination');
   if((t.phase==='idle' || t.dutyAtS!==undefined) && (!spec.attendance || t.dutyAtS===undefined || t.dutyAtS>e.atS+1e-8 || !attendanceOpen(scene,spec.attendance,t.dutyAtS)))throw Error('Invalid saved work attendance');

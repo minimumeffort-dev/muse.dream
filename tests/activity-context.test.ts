@@ -1,6 +1,11 @@
 import {it,expect} from 'vitest';
 import {activityViews} from '../src/game/commerce';
 
+it('offers work, bag and optional ownership at a service business without an empty stock view',()=>{
+ expect(activityViews({foot:true,market:true,stock:false,work:true,task:false,business:false})).toEqual(['work','bag']);
+ expect(activityViews({foot:true,market:true,stock:false,work:true,task:false,business:true})).toEqual(['work','bag','business']);
+});
+
 it('keeps irrelevant shops, work and business finances out of exploration and driving',()=>{
  expect(activityViews({foot:true,market:false,work:true,task:false,business:true})).toEqual(['bag']);
  expect(activityViews({foot:false,market:true,work:true,task:false,business:true})).toEqual(['bag']);

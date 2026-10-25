@@ -58,8 +58,9 @@ old money, stock, journeys, clocks and jobs. [Save rules](../persistence.md).
 
 This is a bounded service task in the mock world. It does not infer demand,
 customer satisfaction, clinical care, lessons or meaningful paperwork from a
-label. Businesses still need market lots; goods-free service desks remain future
-work. A lifetime quota is deliberate here. Daily task generation needs its own
+label. Goods-free service desks now use empty market blocks, with an optional
+explicit building binding. [A working office](office-work.md) separates premises
+from its operator home. A lifetime quota is deliberate here. Daily task generation needs its own
 bounded, persistent rule before it can be authored.
 
 Compile the example with:

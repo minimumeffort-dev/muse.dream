@@ -12,7 +12,7 @@ import {stepInteractive} from '../src/sim/interaction';
 import {checkEconomyState,serviceRemaining,commerceReason} from '../src/sim/commerce';
 let scene:ReturnType<typeof createWorldScene>,prior:typeof scene,world:World,old:World,snapshot:string;
 beforeAll(()=>{
- scene=createWorldScene();prior=c.preServiceWorkScene(scene);snapshot=JSON.stringify(scene);
+ scene={...c.preOfficeWorkScene(createWorldScene()),revisionId:'r115'};prior=c.preServiceWorkScene(scene);snapshot=JSON.stringify(scene);
  world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.SERVICE_WORK_COMPATIBILITY,previousServiceWorkSaveCompatibility:c.TOWER_ROOM_COMPATIBILITY};
  old={...world,scene:prior,saveCompatibility:c.TOWER_ROOM_COMPATIBILITY,previousServiceWorkSaveCompatibility:undefined};
 },60000);
@@ -21,7 +21,7 @@ const addCounters=(s:CarState)=>({...s,economy:{...s.economy!,batches:{...s.econ
 const run=async(steps:Generator<void,CarState>)=>{let r=steps.next(),n=0;while(!r.done){if(++n%120===0)await new Promise(resolve=>setTimeout(resolve,0));r=steps.next();}return r.value;};
 
 it('registers only the new finite task and worker preference, preserving physical world and resources',async()=>{
- expect(c.SAVE_SIMULATION_VERSION).toBe(56);expect(scene.revisionId).toBe('r115');expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.SERVICE_WORK_COMPATIBILITY);expect(await c.sha256(c.preServiceWorkCompatibilitySource(scene))).toBe(c.TOWER_ROOM_COMPATIBILITY);
+ expect(JSON.parse(c.preOfficeWorkCompatibilitySource(scene)).simulationVersion).toBe(56);expect(scene.revisionId).toBe('r115');expect(await c.sha256(c.preOfficeWorkCompatibilitySource(scene))).toBe(c.SERVICE_WORK_COMPATIBILITY);expect(await c.sha256(c.preServiceWorkCompatibilitySource(scene))).toBe(c.TOWER_ROOM_COMPATIBILITY);
  expect(scene.objects).toEqual(prior.objects);expect(scene.terrain).toEqual(prior.terrain);expect(scene.economy!.markets).toEqual(prior.economy!.markets);expect(scene.economy!.goods).toEqual(prior.economy!.goods);
  expect(scene.economy!.jobs).toHaveLength(prior.economy!.jobs.length+1);expect(scene.economy!.accounts.find(a=>a.id==='regular')!.works).toEqual(['stocktake','large_bake','bake']);
 });

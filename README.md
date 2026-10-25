@@ -23,6 +23,19 @@ survives reload. Daily task replenishment is still to come.
 [Watch in HD](docs/media/servicework.mp4) · [GIF](docs/media/servicework.gif) ·
 [Author a service in Dream](docs/dream/service-work.md)
 
+## An office with actual work upstairs
+
+The clerk lives in Copper Court, takes a break on its bench and walks across the
+promenade to Lantern Exchange. You can take the same stairs and work at the
+same records desk. There are six shared tasks and finite wages, with no pretend
+inventory for a service business. Break the table and work stops until it is
+repaired. The quota does not refill each day yet.
+
+![Going upstairs and working in Lantern Exchange](docs/media/officework.jpg)
+
+[Watch in HD](docs/media/officework.mp4) · [GIF](docs/media/officework.gif) ·
+[Build the office in Dream](docs/dream/office-work.md)
+
 ## A station quarter with some height
 
 The station side of town now has a 55-metre brick residential tower and a
@@ -51,8 +64,9 @@ connects to that service; the caretaker climbs before working and gets paid once
 
 Four missing crossings join the medical interchange, Copper Street, Weavers
 Lane and South Terrace. Work journeys now also use short, supported links around
-clear pavement corners. The caretaker's station-bench route is 7,479 world units,
-about 748 m, down from 9,546 after the crossings and 20,983 before them. Saved
+clear pavement corners. The caretaker's station-bench route is now 7,409 world units,
+about 741 m. It was 7,479 after the first corner fixes, 9,546 after the crossings
+and 20,983 before them. Saved
 jobs keep their original paths; new plans use the shorter connections.
 [Connected crossings and route checks](docs/urban-world.md#short-journeys-around-clear-corners).
 

@@ -1,0 +1,22 @@
+
+> muse-dream@0.1.0 test
+> vitest run --maxWorkers=2 --testTimeout=60000 tests/service-office.test.ts tests/furnish-omit.test.ts tests/dream-agent.test.ts tests/dream-v2.test.ts tests/office-work-world.test.ts tests/work-navigation.test.ts
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/dream-v2.test.ts (66 tests) 660ms
+ ✓ tests/dream-agent.test.ts (22 tests) 2135ms
+   ✓ bounded agent context packets > exports machine-readable CLI context and preserves source/check boundaries  2126ms
+ ✓ tests/work-navigation.test.ts (7 tests) 126ms
+ ✓ tests/service-office.test.ts (6 tests) 144ms
+ ✓ tests/furnish-omit.test.ts (5 tests) 115ms
+ ✓ tests/office-work-world.test.ts (4 tests) 20194ms
+   ✓ keeps every old saved field, physical NPC pose and clock while adding an unpaid relocation and finite office state  837ms
+   ✓ walks the player upstairs, reserves the same desk, reloads and pays once without producing inventory  880ms
+   ✓ uses real stairs, wages, energy, a shared home bench and daily attendance without teleporting the clerk  10419ms
+
+ Test Files  6 passed (6)
+      Tests  110 passed (110)
+   Start at  04:20:18
+   Duration  21.84s (transform 533ms, setup 25ms, collect 2.02s, tests 23.37s, environment 0ms, prepare 133ms)

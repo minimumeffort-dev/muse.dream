@@ -40,7 +40,7 @@ export function workstationProblems(scene:Scene):string[]{
   const reach=Math.hypot(p.hands.x-p.x,p.hands.z-p.y),heightAt=p.hands.y-p.elevation;
   if(reach<3 || reach>7 || heightAt<6 || heightAt>12 || !supportedObjectPoint(spec,s.hands,.25/o.scale))problems.push(`${s.id}: hands need a supported work surface 3..7 units away and 6..12 above the floor`);
   for(const j of scene.economy!.jobs.filter(j=>j.station===s.id)){
-   const market=scene.economy!.markets.find(m=>m.id===j.market)!,vendor=scene.objects.find(o=>o.id===market.actor)!;
+   const market=scene.economy!.markets.find(m=>m.id===j.market)!,vendor=scene.objects.find(o=>o.id===(market.on??market.actor))!;
    if(vendor && Math.hypot(p.x-vendor.x,p.y-vendor.y,p.elevation-walkingHeight(scene,vendor.x,vendor.y))>market.radius)problems.push(`${s.id}: station must remain inside its job's counter reach`);
   }
  }

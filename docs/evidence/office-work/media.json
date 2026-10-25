@@ -1,0 +1,41 @@
+{
+  "sourceFrames": 600,
+  "sourceSize": [
+    2400,
+    1350
+  ],
+  "fps": 30,
+  "simulationSeconds": 20,
+  "posterFrame": 500,
+  "interpolatedFrames": 0,
+  "livePerformanceMeasurement": false,
+  "files": {
+    "officework.mp4": {
+      "bytes": 1520153,
+      "sha256": "d8b4d0a90f9ba23a349cb58012a5fea81b865983c33d4bcc15b5eac0a199b2e5",
+      "frames": 600,
+      "size": [
+        1600,
+        900
+      ]
+    },
+    "officework.gif": {
+      "bytes": 11098076,
+      "sha256": "ca58aec7fa9737d00a9a6b76d48070d6ef7c575590eb6f7da089e666b9a0e094",
+      "frames": 600,
+      "size": [
+        1280,
+        720
+      ]
+    },
+    "officework.jpg": {
+      "bytes": 125761,
+      "sha256": "f9b6b698a10137004482b0683145cf85b98c7421b1e8713bd95d5395f0520664",
+      "frames": 1,
+      "size": [
+        1600,
+        900
+      ]
+    }
+  }
+}

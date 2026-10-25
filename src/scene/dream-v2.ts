@@ -42,7 +42,7 @@ export class ParserV2 extends Parser {
     else if(type==="point")valid=numbers(2)||numbers(3);
     else if(type==="position2")valid=numbers(2) || !!symbol && identifier.test(symbol);
     else if(type==="points2")valid=Array.isArray(value) && value.every(v=>Array.isArray(v) && v.length===2 && v.every(isExpr));
-    else if(type==="symbols")valid=Array.isArray(value) && value.every(v=>isExpr(v) && !!v.name && !v.args && !v.op && identifier.test(v.name));
+    else if(type==="symbols" || type==="slots")valid=Array.isArray(value) && value.every(v=>isExpr(v) && !!v.name && !v.args && !v.op && (type==="slots" ? /^[a-z][a-z0-9_]{0,63}$/ : identifier).test(v.name));
     else if(type==="colors")valid=Array.isArray(value) && value.length===2 && value.every(v=>isExpr(v) && /^#[0-9a-f]{6}$/.test(v.name??""));
     else if(type==="color")valid=!!symbol && /^#[0-9a-f]{6}$/.test(symbol);
     else if(type==="text")valid=typeof value==="string";

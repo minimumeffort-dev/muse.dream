@@ -70,7 +70,7 @@ it('preserves an unfinished paid station repair coordinate path while future rou
  const trip=caretaker(state).repair!;expect(trip).toMatchObject({id:service.id,objectId:target.objectId,phase:'out'});expect(trip.path.length).toBeGreaterThan(0);checkEconomyState(state,previous);
  const loaded=decodeSave(encodeSave(state,state.timeS,oldWorld),world);expect(withoutDerivedIndices(loaded.state)).toEqual(withoutDerivedIndices(state));expect(caretaker(loaded.state).repair).toEqual(trip);expect(loaded.worldTime).toBe(state.timeS);checkEconomyState(loaded.state,scene);
  const home=previous.objects.find(o=>o.id==='market_neighbor')!,oldPath=repairPath(previous,service,home,trip.at)!,nextPath=repairPath(scene,scene.economy!.repairs.find(r=>r.id===service.id)!,home,trip.at)!;
- expect(oldPath).toBeDefined();expect(nextPath).toBeDefined();expect(pathLength(home,oldPath)).toBeCloseTo(19619.94299730439,6);expect(pathLength(home,nextPath)).toBeLessThan(10000);
+ expect(oldPath).toBeDefined();expect(nextPath).toBeDefined();expect(pathLength(home,oldPath)).toBeCloseTo(19549.444057733228,6);expect(pathLength(home,nextPath)).toBeLessThan(10000);
  expect(pathLength(home,nextPath)).toBeLessThan(pathLength(home,oldPath)*.5);
  const beforeStep=advance(state,previous),afterStep=advance(loaded.state,scene);expect(caretaker(afterStep).repair).toEqual(caretaker(beforeStep).repair);expect(afterStep.economy).toEqual(beforeStep.economy);
  expect(decodeSave(encodeSave(loaded.state,loaded.worldTime,world),world).state).toEqual(loaded.state);

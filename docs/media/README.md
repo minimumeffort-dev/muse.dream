@@ -1,5 +1,23 @@
 # Media and Dream highlighting
 
+## Office work, r116
+
+`officework` follows the actual player from the outside doorway, up the existing
+stairs, to one six-second records task at the shared table. Only the initial
+observer pose is seeded. Walking, support, job start, wage escrow, completion and
+the four-coin payment use ordinary fixed-step mechanics. The terminal assertion
+requires the upper-floor pose, one completion and exact payment.
+
+The exporter renders 600 consecutive 2400x1350 PNGs at 30 frames per simulation
+second, without interpolation. Encode with
+`node scripts/encode-media.mjs <ffmpeg> <gifsicle> officework` and keep the
+1600x900 video/still and 1280x720 GIF together. This is offline behavior evidence,
+not a live performance benchmark. The still uses frame 500. The standalone service and older office room
+recordings remain historical for their source and activity lists; their geometry
+and controls remain accurate. The new clip supplies the current Work/Bag context.
+
+[Native flow and checks](../evidence/office-work/verification.md).
+
 ## Service work, r115
 
 `servicework` records one real stocktaking task at the existing bakery desk.
@@ -58,6 +76,10 @@ Current crossing-walk and station-quarter media remain accurate because geometry
 controls and camera policy are unchanged. Older maintenance journey recordings
 remain historical for their longer chosen paths. The connected-service guide
 now uses the current worker-walk GIF, HD video and still together.
+The worker-walk recording retains its simulation-54 route provenance. The
+simulation-57 endpoint search now measures a 7,409-unit station-bench approach;
+the recorded corner geometry and walking controls remain accurate. The current
+office clip supplies the new engine's representative walking/work flow.
 
 ## Connected crossings, r113
 

@@ -87,16 +87,21 @@ its normal finite repair service.
 | `recover_s` | 0.1–10 per second |
 | `below` / `until` | 0–95 / 5–100, with at least 5 points between them |
 | Ordered `seats` | 1–4 unique furniture placements |
-| `on` plus optional `grounds` | 1–8 unique convex grounds, 4,096 local samples |
+| `on` plus optional `grounds` | 1–12 unique convex grounds, 4,096 local samples |
 | Derived graph / saved path | 8,192 nodes, 32,768 links / 128 waypoints |
 
 NPCs need a complete measured humanoid decor rig and program, with a stationary
 home or walking route. Body limits remain radius 8 and height 32; navigation and
 seat access fit the actual body with minimum radius 4 and headroom 18. Meal and
-commuting work can coexist. Market operators and other automatic shopping,
+commuting work can coexist. Stocked market operators and other automatic shopping,
 ration, shift, social, repair and courier policies remain excluded from automatic
 rest in this version. Player work, repairs, food and travel remain manual.
 Existing account, actor and live-rig limits are unchanged.
+
+A goods-free service operator with explicit premises can use the same rest and
+commute rules for its own service jobs. The [office clerk](office-work.md) uses
+an existing home bench and real stair journeys. Its food journey is not connected
+yet; the service exception does not enable automatic shopping or meal trips.
 
 ## What survives
 

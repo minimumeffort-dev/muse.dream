@@ -46,7 +46,7 @@ it('retains every native saved field, pending work and clock while keeping the o
 it('keeps the original paid repair path and escrow while future plans use the shorter connection',()=>{
  const loaded=decodeSave(JSON.stringify(pending),world);expect(loaded.state).toEqual(pending.state);expect(loaded.worldTime).toBe(pending.worldTime);checkEconomyState(loaded.state,scene);
  const task=worker(loaded.state).repair!;expect(task).toMatchObject({id:'classroom_furniture',objectId:'station_quarter_bench_nw',phase:'out'});expect(task.path).toHaveLength(44);expect(length(task,task.path)).toBeCloseTo(9546.475120381727,6);
- const service=scene.economy!.repairs.find(r=>r.id===task.id)!,home=scene.objects.find(o=>o.id==='market_neighbor')!,future=repairPath(scene,service,home,task.at)!;expect(length(home,future)).toBeCloseTo(7479.139198148574,6);
+ const service=scene.economy!.repairs.find(r=>r.id===task.id)!,home=scene.objects.find(o=>o.id==='market_neighbor')!,future=repairPath(scene,service,home,task.at)!;expect(length(home,future)).toBeCloseTo(7408.64025857741,6);
  const next=advance(loaded.state);expect(worker(next).repair!.path).toEqual(task.path);expect(worker(next).repair!.distance).toBeGreaterThan(task.distance);expect(worker(next).credits).toBe(worker(loaded.state).credits);expect(next.economy!.repaired).toEqual(loaded.state.economy!.repaired);
  const replay=advance(decodeSave(encodeSave(loaded.state,loaded.worldTime,world),world).state);expect(replay).toEqual(next);
 });

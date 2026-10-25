@@ -1,5 +1,9 @@
 # A bakery that keeps itself working
 
+The city now also has a [goods-free office](office-work.md), with a separate
+operator home, scheduled stair commute and shared paid tasks. This page covers
+the bakery's stocked business and supply loop.
+
 The vendor now packs lunches and bakes bread when stock runs low. A hungry
 commuter walks over, buys a meal, eats and returns to their routine. When the
 bakery has room for more flour, the market helper can walk to the station,

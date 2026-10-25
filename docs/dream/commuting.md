@@ -19,7 +19,7 @@ account regular(actor=customer,credits=20,capacity=4,satiety=65,drain_s=.05,work
 
 `commute=true` opts an NPC into work travel. `work` or `works` names the jobs;
 `works` retains its existing preference order. `on` names a convex home/work
-ground. Optional `grounds` adds up to seven more, including building floors.
+ground. Optional `grounds` adds up to eleven more, including building floors.
 The accepted pedestrian network joins them. Topology is prepared in the world
 worker and cached by ground set and body profile; live movement still checks
 current blocking contacts. The compiler checks a clear counter
@@ -65,7 +65,7 @@ provide a graph, an NPC position clock or controller code.
 | Data | Bound |
 | --- | --- |
 | Assigned jobs | 1–4, using `work` or a unique ordered `works` list |
-| Declared convex grounds | 1–8, unique |
+| Declared convex grounds | 1–12, unique |
 | Local navigation samples | 4,096 across the grounds |
 | Derived graph | 8,192 nodes and 32,768 directed links |
 | Saved path | 128 waypoints |
@@ -74,7 +74,9 @@ provide a graph, an NPC position clock or controller code.
 first, then low-energy rest before a new work trip. Tasks require their existing
 effort in energy for configured accounts and spend it once on completion.
  Other automatic shopping, ration, shift,
-social, repair and delivery policies remain excluded, as does operating a market.
+social, repair and delivery policies remain excluded. Stocked market operators
+also remain excluded. A goods-free service operator may commute and rest for
+its own jobs with explicit building premises. See [office work](office-work.md).
 These restrictions keep one journey and one commitment owner. Existing account,
 NPC and live-rig limits remain unchanged.
 

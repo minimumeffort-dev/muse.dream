@@ -70,6 +70,22 @@ stair treads, landing and guard. Keep their geometry connected before placing
 furniture. The office remains 75 metres tall and fits the existing 32-part and
 32-contact limits, with 29 parts and 28 contacts.
 
+## Work upstairs and rest across the promenade
+
+The mezzanine table is now a shared records workstation. The clerk lives in
+Copper Court, uses its lobby bench for energy and walks over for scheduled work.
+The player uses the same desk and finite task quota. The business binds to the
+office building independently of its operator home and needs no fake stock.
+
+![Working at the upstairs records table](../media/officework.jpg)
+
+[Current office flow](../media/officework.mp4) · [GIF](../media/officework.gif) ·
+[Rules, controls and complete example](office-work.md)
+
+The earlier room recording still shows the same stairs, seats and geometry. Its
+world activity list predates this office. Higher floors and lifts remain future
+work.
+
 ## Damage has a follow-up
 
 All eight benches, the upstairs table, three lamps and two planters are connected to the caretaker's

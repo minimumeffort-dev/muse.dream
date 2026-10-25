@@ -19,13 +19,14 @@ import {SpatialGrid} from '../sim/spatial';
 
 export const POPULATION_LIMITS=Object.freeze({rules:32,perRule:128,generated:1024,candidatesPerRule:2048,flocks:16,birds:256});
 const refs=z.array(z.string().regex(/^[a-z][a-z0-9_]{0,31}$/)).min(1).max(32);
-export const furnishingSchema=z.object({id:z.string(),streets:refs.optional(),sites:refs.optional(),grounds:refs.optional(),paving:z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),spacing:z.number().finite().min(12).max(800),
+export const furnishingSchema=z.object({id:z.string(),streets:refs.optional(),sites:refs.optional(),grounds:refs.optional(),omit:z.array(z.string().regex(/^[a-z][a-z0-9_]{0,63}$/)).min(1).max(32).optional(),paving:z.string().regex(/^#[0-9a-fA-F]{6}$/).optional(),spacing:z.number().finite().min(12).max(800),
   setback:z.number().finite().min(0).max(120),side:z.enum(['left','right','both']).default('both'),facing:z.enum(['along','street','varied']).default('along'),
   jitter:z.number().finite().min(0).max(.3).default(0),seed:z.number().int().min(0).max(65535),count:z.number().int().min(1).max(12).optional(),
   pose:z.literal('rest').optional(),motion:ambientMotionSchema.optional(),
   role:z.enum(['prop','controllable']).default('prop'),
   on:z.enum(['verge','sidewalk']).default('verge'),
 }).strict().superRefine((r,ctx)=>{
+  if(r.omit && (new Set(r.omit).size!==r.omit.length || r.omit.some(id=>!id.startsWith(r.id+'_'))))ctx.addIssue({code:'custom',message:'omit needs unique slot IDs belonging to this furnish rule',path:['omit']});
   if(Number(!!r.streets)+Number(!!r.sites)!==1 || !!r.sites!==!!r.count)ctx.addIssue({code:'custom',message:'furnish needs streets, or sites with count'});
   if(r.streets && r.spacing<80)ctx.addIssue({code:'custom',message:'street furnishing spacing must be at least 80'});
   if(r.paving && !r.sites)ctx.addIssue({code:'custom',message:'paving belongs to destination furnishing'});
@@ -86,6 +87,8 @@ export function furnishWorld(scene:Scene,rules:Furnishing[]):{objects:SceneObjec
       }
     }
     if(candidates.length*2>POPULATION_LIMITS.candidatesPerRule)throw Error(`furnish "${rule.id}" exceeds candidate budget`);
+    const slots=rule.omit ? new Set(candidates.flatMap(c=>(c.side ? [c.side] : rule.side==='both' ? [-1,1] : [rule.side==='left' ? -1 : 1]).map(side=>`${rule.id}_${c.key}_${side<0 ? 'l':'r'}`))) : undefined;
+    for(const id of rule.omit??[])if(!slots!.has(id))throw Error(`furnish "${rule.id}" has unknown omitted slot "${id}"`);
     let emitted=0;
     for(const candidate of candidates){
       const {street,key}=candidate,lengths=[0];for(let i=1;i<street.points.length;i++)lengths.push(lengths.at(-1)!+Math.hypot(street.points[i]!.x-street.points[i-1]!.x,street.points[i]!.y-street.points[i-1]!.y));
@@ -95,6 +98,7 @@ export function furnishWorld(scene:Scene,rules:Furnishing[]):{objects:SceneObjec
       const sides=candidate.side ? [candidate.side] : rule.side==='both' ? [-1,1] : [rule.side==='left' ? -1 : 1];
       for(const side of sides){
         const choice=Math.floor(random()*rule.objects.length),spec=rule.objects[choice]!,scale=measuredScale(spec),r=assemblyPlacementRadius(spec,scale),riding=street.width/2+(street.cycleWidth ? street.cycleWidth+6 : 0);
+        if(rule.omit?.includes(`${rule.id}_${key}_${side<0 ? 'l':'r'}`))continue;
         if(rule.on==='sidewalk' && (spec.body.interaction!=='decor' || street.sidewalk<2*r+9))continue;
         const offset=rule.on==='sidewalk' ? riding+street.sidewalk-r-1 : riding+street.sidewalk+rule.setback+r;
         const x=a.x+dx*d-dy*offset*side,y=a.y+dy*d+dx*offset*side;

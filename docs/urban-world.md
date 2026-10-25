@@ -129,7 +129,10 @@ inside connected areas too. The body still needs dry supported pavement, and
 search and movement still check static and current contacts.
 
 The two measured corner routes fall from 1,106 and 1,052 units to 236 and 230.
-The station bench is now 7,479 units from the supply home, previously 9,546.
+The station bench fell to 7,479 units from the supply home, previously 9,546.
+Simulation 57 also keeps public endpoint anchors available beside dense local
+grids, bringing the current route to 7,409 units. Every segment retains support
+and body checks. [Current measured path](evidence/office-work/routing.json).
 All fourteen station jobs remain reachable in both directions. Graph node counts
 are unchanged; links remain under the existing 32,768 cap, with no new actors or
 physics bodies. This improves these walking choices without claiming every

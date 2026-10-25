@@ -183,7 +183,10 @@ export function workNetwork(scene:Scene,r:WalkingArea){
 function networkPath(scene:Scene,r:WalkingArea,start:Point,end:Point,state?:CarState):Point[]|undefined{
  const radius=r.radius??REPAIR_RADIUS,height=r.height??18,live=state ? actorContacts(scene,state.timeS,state).filter(c=>!c.id || !sceneContacts(scene).objects.get(c.id)?.route) : [],clear=(a:Point,b:Point)=>workSegment(scene,r,a,b,state,true) && segmentClear(scene,a,b,state,live,radius,height);
  if(clear(start,end))return [{x:end.x,y:end.y}];
- const nodes=workNetwork(scene,r),near=(p:Point)=>nearestWorkNodes(nodes,p).filter(v=>clear(p,nodes[v.i]!)),edgeClear=state ? (i:number,k:number)=>segmentClear(scene,nodes[i]!,nodes[nodes[i]!.links[k]!]!,state,live,radius,height) : staticEdgeClearance(scene,nodes,radius,height);
+ const nodes=workNetwork(scene,r),publicNodes=ambientNavigation(scene).nodes;
+ // Dense local grids must not hide body-clear anchors on the shared pavement.
+ const near=(p:Point)=>{const choices=nearestWorkNodes(nodes,p),seen=new Set(choices.map(v=>v.i));for(const v of nearestWorkNodes(publicNodes,p))if(!seen.has(v.i))choices.push(v);return choices.filter(v=>clear(p,nodes[v.i]!));};
+ const edgeClear=state ? (i:number,k:number)=>segmentClear(scene,nodes[i]!,nodes[nodes[i]!.links[k]!]!,state,live,radius,height) : staticEdgeClearance(scene,nodes,radius,height);
  const starts=near(start),ends=new Set(near(end).map(n=>n.i)),previous=new Int32Array(nodes.length).fill(-2),cost=new Float64Array(nodes.length).fill(Infinity),closed=new Uint8Array(nodes.length),heap:{i:number;f:number}[]=[];
  const less=(a:{i:number;f:number},b:{i:number;f:number})=>a.f<b.f || a.f===b.f && a.i<b.i;
  const push=(v:{i:number;f:number})=>{let i=heap.length;heap.push(v);while(i>0){const p=(i-1)>>1;if(!less(v,heap[p]!))break;heap[i]=heap[p]!;i=p;}heap[i]=v;};

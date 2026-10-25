@@ -40,7 +40,7 @@ function buildNavigation(scene:Scene,prepared?:AmbientGraph){
  const radii=new WeakMap<SceneObject,number>();
  const radius=(o:SceneObject)=>{let value=radii.get(o);if(value===undefined){value=assemblyHorizontalRadius(o.spec as ObjectDslV2,o.scale);radii.set(o,value);}return value;};
  const members=scene.objects.filter(o=>!!o.ambient),walkers=members.filter(o=>o.ambient!.motion.kind==='walk');
- const networkWork=scene.economy?.repairs.some(r=>r.grounds?.length || r.streets?.length) || scene.economy?.deliveries.some(d=>d.on) || !!scene.economy?.meals.length || !!scene.economy?.shifts.length,r=Math.max(3,networkWork ? COMMERCE_LIMITS.repairRadius : 0,...walkers.map(radius)),polygons=walkers.length || networkWork ? walkingNetwork(scene).polygons : [];
+ const networkWork=scene.economy?.repairs.some(r=>r.grounds?.length || r.streets?.length) || scene.economy?.deliveries.some(d=>d.on) || !!scene.economy?.meals.length || !!scene.economy?.shifts.length || !!scene.economy?.stations?.length || !!scene.economy?.socials.length || !!scene.economy?.accounts.some(a=>a.commute || a.rest),r=Math.max(3,networkWork ? COMMERCE_LIMITS.repairRadius : 0,...walkers.map(radius)),polygons=walkers.length || networkWork ? walkingNetwork(scene).polygons : [];
  const {bins,bounds,paved,segment:pavedSegment}=pavementSurface(polygons);
  const blocked=[...streetFootprints(scene).reserved,...roadFootprint(scene),...scene.surfaces.map(s=>s.points),...(scene.terrain.landscape?.bridges??[]).map(bridgePolygon)];
  const blockedBins=new Map<string,number[]>(),margin=Math.max(0,...members.map(radius))+2;

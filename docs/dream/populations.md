@@ -108,6 +108,27 @@ Pause freezes the population clock. R preserves it; Start over restores its seed
 
 ![Dogs, cats, sparrows and two new planting forms](../media/population-assets.jpg)
 
+## Keep a generated slot clear
+
+`furnish(...,omit=[rule_0_0_l])` suppresses an explicit candidate slot from that
+same rule. Use 1..32 unique IDs from its accepted expansion, including the full
+rule prefix and candidate suffix, up to 64 characters per slot ID. Ordinary
+source IDs keep their 32-character bound. Unknown slots,
+foreign rule prefixes and duplicate IDs fail. A currently obstructed slot may
+also be omitted, so moving a resident does not fill their return space with a
+new vehicle or planter.
+
+Omissions keep candidate IDs and street/site sample positions. They follow the
+same random-draw policy as a rejected candidate. With `facing=varied`, later
+template or heading draws can change; inspect the accepted expansion. An omitted
+slot creates no object, contact or parking paving. No budget increases.
+
+[Complete runnable example](../examples/omitted-furnishing.dream):
+
+```sh
+node scripts/dream.mjs check docs/examples/omitted-furnishing.dream
+```
+
 ## Give birds room to fly
 
 ```dream

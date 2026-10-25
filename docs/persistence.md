@@ -1,6 +1,16 @@
 # Leave and come back
 
-The current world is r115, using format 19 / simulation 56. The registered
+The current world is r116, using format 19 / simulation 57. Restore validates
+exact r115 first, adds the new office account, zero check_records counters and
+one finite 60-coin business, and preserves every old saved state field. The
+resident keeps their old physical position through a normal unpaid home journey
+to Copper Court. No earlier task is retargeted, completed or rewarded. Original
+slots remain intact. New work/rest/attendance and the relocation path persist.
+The rules update activates pavement navigation for service-only worlds and keeps
+public anchors available beside dense local work grids; old coordinate paths
+remain valid. [Office verification](evidence/office-work/verification.md).
+
+The preceding r115 world used format 19 / simulation 56. Its registered
 service-work upgrade first validates the exact r114 world and state. It adds
 only zero `stocktake` counters to shared batches, unattributed work and each
 account's completed work. Money, stock, pending recipes, positions, journeys,

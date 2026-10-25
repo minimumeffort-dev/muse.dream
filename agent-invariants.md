@@ -1225,3 +1225,33 @@ stocktake counters in shared batches, unattributed work and each personal work
 history. Preserve pending old recipes, journeys, all resources, clocks, ownership,
 original slots and the complete earlier migration chain. No replayed rewards or
 catch-up. See docs/dream/service-work.md.
+
+## Service premises and office life, r116 / simulation 57
+
+Goods-free economies and empty market blocks require physical service work.
+Optional market.on binds an existing static enterable building; preserve its
+supported origin, radius, counter sight and independent operator home. Only
+explicit goods-free premises allow an operator to commute/rest for own service
+jobs, without competing policies. Stocked vendors retain their restrictions.
+Service-only commutes/stations/rest also prepare the shared pavement graph.
+Endpoint searches retain 32 nearest combined nodes plus 32 public anchors, with
+all existing support/contact checks and unchanged graph/path caps. Crowd graph
+positions and indices remain independent of these private path queries.
+
+The office clerk reuses hospital_visitor, with Copper Court as home, its real
+bench, finite energy, 08:00..18:00 work, the existing stairs and six shared tasks.
+No extra NPC/CPU rig or geometry budget. The registered upgrade validates exact
+r115, retains every old state field and source slot, and adds only office
+account/market state and zero counters. Its 60 initial coins are explicit new
+business capital. Preserve the resident's old physical pose with an unpaid
+supported home journey, without teleport or offline catch-up. Rest/attendance,
+claims, wages and saved paths remain engine-owned.
+
+Furnish omit accepts 1..32 unique existing candidate slot IDs from its own rule.
+Generated slot references allow 64 characters for the rule prefix and suffix;
+ordinary source IDs retain their 32-character bound. Parser, schema, contract
+and model packet must agree on this distinction.
+Keep sample positions/IDs and the rejection random-draw policy. It creates no
+hidden geometry or paving. Keep the two hospital-side slots clear for relocation;
+the accepted world must retain every previous static prop and pavement. See
+docs/dream/office-work.md and docs/examples/service-office.dream.

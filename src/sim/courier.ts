@@ -46,7 +46,7 @@ export function mealAccessProblems(scene:Scene):string[]{
  return problems;
 }
 export function courierApproach(scene:Scene,d:Pick<Delivery,'on'|'grounds'>,marketId:string,start:Point,state?:import('./car').CarState,walkingArea?:WalkingArea){
- const m=scene.economy!.markets.find(m=>m.id===marketId)!,vendor=scene.objects.find(o=>o.id===m.actor)!,area=walkingArea??deliveryArea(d),angle=Math.atan2(start.y-vendor.y,start.x-vendor.x);
+ const m=scene.economy!.markets.find(m=>m.id===marketId)!,vendor=scene.objects.find(o=>o.id===(m.on??m.actor))!,area=walkingArea??deliveryArea(d),angle=Math.atan2(start.y-vendor.y,start.x-vendor.x);
  for(let i=0;i<8;i++){
   const a=angle+i*Math.PI/4,end={x:vendor.x+Math.cos(a)*16,y:vendor.y+Math.sin(a)*16};
   if(Math.abs(walkingHeight(scene,end.x,end.y)-walkingHeight(scene,vendor.x,vendor.y))<4 && workClear(scene,area,end,state)){const path=workPath(scene,area,start,end,state);if(path)return {end,path};}
