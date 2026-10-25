@@ -108,3 +108,26 @@ passing unrelated checks were reused. No merge or deployment is claimed.
 README, the affected guides and current media were reviewed for these test-only
 corrections. Their rendered objects, controls and behavior are unchanged, so
 the current station video, GIF and still remain accurate.
+
+## Resource cleanup follow-up
+
+After the station media was encoded and committed, the older upstairs-meal
+source sequence was retired: 600 PNGs and its palette occupied 1.45 GB. The
+latest 360 station-quarter frames remain available for iteration; finished
+videos, GIFs, stills and evidence remain committed. This follows the earlier
+[capture/worktree cleanup](../route-test-setup/verification.md#authorized-resource-cleanup).
+
+A fresh scan then found 10.21 GB of inode-deduplicated allocated file space in
+the checkout. Removed 1.425 GB of ignored, untracked output: the generated
+`dist-docs/` copy and two inactive Vite inspection caches. The active Vite cache,
+Node dependencies, encoder tools, source and Git history were retained. The
+checkout was 8.78 GB after removal. These are file-allocation measurements,
+not Finder's logical-size total or a claim about browser memory.
+
+[Cleanup inventory and guards](cleanup.json) record the exact paths and sizes.
+[Retired recording](capture-retirement.json) records the older frame sequence.
+The latest frame names, sizes and modification times remained identical, and
+tracked source/media remained clean. The 52 published-doc checks pass and build
+the guide; generated docs are removed again after the final build. README and
+DSL/media guides already describe the retained game and cleanup workflow, so
+no gameplay capture, typecheck or gameplay test rerun accompanies this operation.

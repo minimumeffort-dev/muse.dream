@@ -1,0 +1,53 @@
+{
+  "root": "/Users/horia/Projects/muse.dream",
+  "measurement": "inode-deduplicated allocated file bytes; directories excluded",
+  "before": {
+    "logicalBytes": 10091423919,
+    "allocatedBytes": 10207170560,
+    "files": 14531
+  },
+  "candidates": [
+    {
+      "path": "dist-docs",
+      "allocatedBytes": 1416855552,
+      "files": 508
+    },
+    {
+      "path": ".npm-cache/vite-home-inspect",
+      "allocatedBytes": 4198400,
+      "files": 32
+    },
+    {
+      "path": ".npm-cache/vite-weather-inspect",
+      "allocatedBytes": 4198400,
+      "files": 32
+    }
+  ],
+  "after": {
+    "logicalBytes": 8746068565,
+    "allocatedBytes": 8782184448,
+    "files": 13978
+  },
+  "removedCandidateAllocatedBytes": 1425252352,
+  "retained": [
+    "source",
+    "Git history",
+    "node_modules",
+    "committed docs and media",
+    "latest stationquarter source frames",
+    "media-tools encoder",
+    "active Vite cache"
+  ],
+  "latestCaptureFrameCount": 360,
+  "checks": {
+    "ignoredAndUntracked": true,
+    "noSymlinks": true,
+    "latestFrameMetadataUnchanged": true,
+    "trackedSourceAndMediaUnchanged": true
+  },
+  "afterFinalDocsBuildCleanup": {
+    "allocatedBytes": 8782196736,
+    "logicalBytes": 8746071734,
+    "files": 13981
+  }
+}
