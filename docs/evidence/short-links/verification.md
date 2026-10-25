@@ -144,9 +144,13 @@ original 600-second bound remains.
 
 [Final coverage](final-coverage.log) passes 61 cases across both new world/save files, crossing and station saves/worlds, upstairs social behavior, startup and media export. The final production build passes with the existing large-bundle warning.
 
-The final-source full regression gate will run again before merge/release. This
-branch uses focused rechecks of every failing path and its neighboring world,
-worker, save and media tests. Local environment is macOS arm64, Node v26.8.1 and
+The [final-source full regression gate](full-suite-final.log) now passes all
+2,143 cases across 216 files in 981.19 seconds. [Run registration](release-gate.json)
+pins commit `6d44b668b4a0710b3b3cac41cd062f9c0071974d` and the command. This includes
+the corrected failure paths, added priority case, historical migration matrices,
+physics, NPC routines, controls, worker transfer, rendering and published docs.
+Only documentation/evidence changed afterward. This does not mean simulation 54
+has been deployed to production. Local environment is macOS arm64, Node v26.8.1 and
 the in-app browser; this is distinct from Node 22 CI.
 
 [Final recording check](final-recording-check.json) replays the final source from
@@ -165,3 +169,8 @@ Current crossing and station-quarter recordings retain accurate geometry and
 controls. Earlier maintenance route recordings remain historical for their old
 chosen paths. The new worker-walk HD video, GIF and still replace the affected
 journey view together.
+
+The evidence-only follow-up rebuilds all 61 documentation pages and passes the
+52 published-site checks. [Build](release-docs-build.log) ·
+[Checks](release-docs-check.log). README and existing route media remain accurate;
+no simulation or rendering code changed after the complete gate.

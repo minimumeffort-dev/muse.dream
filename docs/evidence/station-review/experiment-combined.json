@@ -1,0 +1,61 @@
+{
+  "variant": "combined",
+  "simulationSeconds": 30.00000000000682,
+  "diagnosticElapsedMs": 963.2402079999993,
+  "sceneRevision": "r113",
+  "unsupported": 0,
+  "minGap": 0.00040778100574456744,
+  "maxStep": 0.800000000000889,
+  "clearanceScope": "Each focus member against every resident walker, each tick",
+  "seed": "Six native sampled members; other members and NPCs start from fresh simulation state. This is a diagnostic fixture, not a full native replay.",
+  "members": [
+    {
+      "id": "station_quarter_walker_0",
+      "displacement": 225.62771485110522,
+      "walked": 331.5000000000035,
+      "nodeBefore": 1778,
+      "nodeAfter": 293,
+      "speed": 13
+    },
+    {
+      "id": "station_quarter_walker_3",
+      "displacement": 263.5731083236656,
+      "walked": 389.25,
+      "nodeBefore": 1778,
+      "nodeAfter": 293,
+      "speed": 15
+    },
+    {
+      "id": "station_quarter_walker_5",
+      "displacement": 276.30235118215376,
+      "walked": 373.20000000005393,
+      "nodeBefore": 1778,
+      "nodeAfter": 1777,
+      "speed": 16
+    },
+    {
+      "id": "station_quarter_walker_6",
+      "displacement": 266.11945894219406,
+      "walked": 292.600000000006,
+      "nodeBefore": 1778,
+      "nodeAfter": 1777,
+      "speed": 11
+    },
+    {
+      "id": "station_quarter_walker_7",
+      "displacement": 302.16459281405787,
+      "walked": 365.0500000000004,
+      "nodeBefore": 1778,
+      "nodeAfter": 1777,
+      "speed": 14
+    },
+    {
+      "id": "east_residents_3_2_r",
+      "displacement": 353.93959917278374,
+      "walked": 367.8499999999044,
+      "nodeBefore": 1778,
+      "nodeAfter": 1777,
+      "speed": 14
+    }
+  ]
+}

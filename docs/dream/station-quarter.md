@@ -158,6 +158,10 @@ does not create staff or paid work. The taxis are driveable cars; they do not ye
 take passengers or charge fares. The van has no separate cargo-storage mechanic.
 Building shells are not repair targets; maintenance here covers the fourteen
 placed benches, lights, planters and trees.
+A later live review confirmed the office doorway and bench, but found walkers
+stalled around the promenade junction after their waits expired. That congestion
+needs a gameplay fix before adding more people here. [Native review and isolated
+candidate](../evidence/station-review/verification.md).
 The world remains a handmade mock with no provider calls.
 
 [Placement, persistence and runtime evidence](../evidence/station-quarter/verification.md).

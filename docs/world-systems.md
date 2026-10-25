@@ -11,6 +11,13 @@ trailers, vehicle damage and service fleets remain separate work.
 
 ## Next playable work
 
+The latest station play-through found a congestion problem before the next room
+expansion: four sampled pedestrians made no progress for 80.6 simulation seconds
+at the promenade junction, after their authored waits had expired. Their bodies
+remain on the pavement, but the group needs to yield and clear the shared portal.
+Resolve that behavior before adding more residents to this district.
+[Native review and bounded experiments](evidence/station-review/verification.md).
+
 The station quarter's fourteen placed fixtures now connect to existing finite
 repair and replant jobs, including both lobby benches. New visible places need
 these same practical connections. The next priorities remain usable rooms and

@@ -1,0 +1,11 @@
+{
+  "sourceCommit": "6d44b668b4a0710b3b3cac41cd062f9c0071974d",
+  "command": "npm test -- --maxWorkers=2 --testTimeout=60000",
+  "files": 216,
+  "tests": 2143,
+  "failed": 0,
+  "durationSeconds": 981.19,
+  "nodeVersion": "v26.8.1",
+  "scope": "Complete final-source suite. Subsequent changes are documentation/evidence only.",
+  "productionDeploymentPerformed": false
+}
