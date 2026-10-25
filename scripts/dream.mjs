@@ -27,12 +27,13 @@ try {
     const {DREAM_V2_CONTRACT}=await server.ssrLoadModule('/src/scene/dream-contract.ts');
     process.stdout.write(JSON.stringify(DREAM_V2_CONTRACT,null,2)+'\n');
   } else {
+    const {DREAM_PROJECT_LIMITS}=await server.ssrLoadModule('/src/scene/dream-contract.ts');
     const compiler=await server.ssrLoadModule('/src/scene/dream.ts'),path=resolve(files[0]),source=await readFile(path,'utf8'),modules=Object.create(null);
     for(const directory of directories)for(const file of (await readdir(directory)).sort()){
       if(!file.endsWith('.dream') || resolve(directory,file)===path)continue;
       const name=file.slice(0,-6).replaceAll('-','_');
       if(!/^[a-z][a-z0-9_]{0,31}$/.test(name) || Object.hasOwn(modules,name))throw Object.assign(new Error('Invalid or duplicate module filename: '+file),{code:'E_MODULE'});
-      if(Object.keys(modules).length>=31 || (await stat(resolve(directory,file))).size>262144)throw Object.assign(new Error('Module registry exceeds file count or size budget'),{code:'E_BUDGET'});
+      if(Object.keys(modules).length>=DREAM_PROJECT_LIMITS.modules-1 || (await stat(resolve(directory,file))).size>262144)throw Object.assign(new Error('Module registry exceeds file count or size budget'),{code:'E_BUDGET'});
       modules[name]=await readFile(resolve(directory,file),'utf8');
     }
     if(command==='check') {

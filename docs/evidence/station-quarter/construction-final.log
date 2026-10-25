@@ -1,0 +1,19 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/station-district-save.test.ts tests/fleet.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/station-district-save.test.ts (9 tests) 1625ms
+   ✓ projects the exact released r110 city and retains old objects, resources, contacts and legacy fingerprints  382ms
+   ✓ migrates the real native backup without changing money, inventory, physical history, clocks or old storage  368ms
+ ✓ tests/fleet.test.ts (6 tests) 16296ms
+   ✓ adds connected utility parking without displacing an old object, changing a pedestrian node or raising live budgets  1378ms
+   ✓ boards, drives, exits, reboards and restores every utility vehicle through the existing controls  346ms
+   ✓ replays the complete historical backup chain into the fleet without rebasing unrelated state  14395ms
+
+ Test Files  2 passed (2)
+      Tests  15 passed (15)
+   Start at  13:05:44
+   Duration  28.75s (transform 575ms, setup 15ms, collect 20.26s, tests 17.92s, environment 0ms, prepare 51ms)

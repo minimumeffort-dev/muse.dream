@@ -38,3 +38,11 @@ it('retains floor bindings through chunk transfer and hides only the upper insta
  streamed.update(camera,point,1/30,true);expect(values().seat!.every(v=>v===0)).toBe(true);expect(values().lower!.every(v=>v>0)).toBe(true);
  point.y=floor+8.5;streamed.update(camera,point,1/30,true);expect(values().seat!.every(v=>v>0)).toBe(true);disposeChunk(root);disposeChunk(built.group);
 });
+
+it('binds furniture to a supported ground-floor slab while rejecting floors below the room',()=>{
+ const lower=parseScene({...scene,floors:[{id:'ground',objectId:'house',position:[0,.5,0],size:[18,32]}],objects:scene.objects.map(o=>o.id==='seat' ? {...o,floor:'ground'} : o)});
+ const placed=lower.objects.find(o=>o.id==='seat')!;expect(objectPlacement(lower,placed).base).toBeCloseTo(.5*scale);
+ const seat=worldSeats(lower)[0]!,w={...world,scene:lower},foot={...createCarAtSpawn(lower),...seat.approach,elevation:.5*scale,control:{kind:'foot' as const},vehicles:[]};
+ expect(toggleRide(foot,w).seated?.objectId).toBe('seat');expect(standUp(toggleRide(foot,w),w).elevation).toBeCloseTo(.5*scale);
+ expect(()=>parseScene({...lower,floors:[{...lower.floors![0]!,position:[0,.4,0]}]})).toThrow();
+});

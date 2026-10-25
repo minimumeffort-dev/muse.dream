@@ -1106,3 +1106,23 @@ Format19/simulation53 first validates exact r109 by stripping only the new upper
 social seat/floor grounds. Preserve every old field and original slot, including
 in-progress downstairs meals. Future decisions use the new preference. No
 retargeting, catch-up, seeded resources or replayed rewards.
+
+## Station quarter and high-rise authoring
+
+The r111 quarter is additive Dream data north of Workshop Street. Keep the two
+physical lobby doorways, supported floor-bound seats, connected entrance paths,
+shared promenade and parking aprons; its upper tower storeys are not enterable.
+The building measure profile permits 3..120 metres, but all existing part, voxel,
+contact, resolved-scale and actor limits still apply. Projects permit 40 reachable
+modules and 144 definitions with the same per-file/source/depth bounds. The CLI
+reads its module-registry cap from that contract. Named floors may equal the room
+base height only with their existing full slab and headroom checks.
+
+The registered r111 projection removes only station_quarter_ objects, sites,
+surfaces and floor bindings. Validate r110 before rebasing derived pedestrian node
+references and adding new population states. Keep positions, clocks, resources,
+old storage slots and vehicle history. New parking seeds yield to old saved bodies. Recover only released valid ground
+rides newly obstructed by construction, outside the new interiors, retaining their
+ownership, heading and travel. Physically clear poses bypass placement heuristics.
+The gallery camera must frame depth as well as width/height; choose its distance
+and far plane from actual model bounds without changing the viewing angle.

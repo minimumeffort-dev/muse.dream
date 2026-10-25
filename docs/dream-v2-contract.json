@@ -41,10 +41,10 @@
     "repeat": 32
   },
   "projectLimits": {
-    "modules": 32,
+    "modules": 40,
     "depth": 8,
     "characters": 524288,
-    "assemblies": 128
+    "assemblies": 144
   },
   "commands": {
     "material": {
@@ -1790,7 +1790,7 @@
       "building": {
         "axis": "y",
         "min": 3,
-        "max": 40
+        "max": 120
       },
       "train": {
         "axis": "x",

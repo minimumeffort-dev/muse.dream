@@ -1,0 +1,10 @@
+dream 2;
+rule benches(kind=bench,mode=break(speed=95,scatter=65,lift=65,spin=4,lifetime=6,pattern=splinter));
+asset homes(module=tower_assets,object=station_residences);
+asset bench(module=destructible,object=slatted_bench);
+world(size=[2400,1800],spawn=[1400,1400],heading_deg=0);
+street avenue(width=80,sidewalk=24,points=[[200,1400],[2200,1400]]);
+place hall(object=homes,at=[1200,950],heading_deg=180,role=prop);
+site hall_entry(object=hall,kind=civic,entry=[0,-31],street=avenue,width=16,points=[[1200,1348]]);
+floor lobby_floor(on=hall,at=[0,.5,0],size=[70,60]);
+place lobby_bench(object=bench,at=[1130,940],heading_deg=270,role=prop,floor=lobby_floor);

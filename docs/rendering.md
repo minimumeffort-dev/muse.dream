@@ -476,7 +476,7 @@ results. Required prototypes hold the last complete frame and simulation tick
 until ready; failures use the existing terminal reload screen. There is no second
 worker, per-cell body or increase to active debris and template-cache limits.
 
-All 345 trees now use a shared fall rule. Their intact meshes, materials, scale,
+All 348 trees use a shared fall rule. Their intact meshes, materials, scale,
 contacts and public crowd graph are unchanged. New supported work turns belong
 only to services whose declared verge exceeds the previous 32-unit bound; earlier
 service paths and saved states retain their released semantics. The tree service

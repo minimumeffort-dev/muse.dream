@@ -16,6 +16,7 @@ import {aircraftFloor} from '../scene/aircraft-support';
 
 /** Real mock-world positions for exercising terrain contact, jumping and water navigation. */
 export function movementReviewStart(state:CarState,world:World,scenario:string|null):CarState {
+  if(scenario?.startsWith('lobby:'))return interiorReviewStart(state,world,false,scenario.slice(6));
   if(scenario==='park'){const seat=worldSeats(world.scene).find(s=>s.objectId==='garden_bench_nw')!;const foot=toggleRide(drivingReviewStart(state,world,'park'),world);return {...foot,x:seat.approach.x,y:seat.approach.y,elevation:walkingHeight(world.scene,seat.approach.x,seat.approach.y)};}
   if(scenario==='seating'){const seat=worldSeats(world.scene).find(s=>s.objectId==='hall_bench')!;const foot=interiorReviewStart(state,world,true);return {...foot,x:seat.approach.x,y:seat.approach.y,elevation:walkingHeight(world.scene,seat.approach.x,seat.approach.y)};}
   if(scenario==='interior')return interiorReviewStart(state,world,true);
@@ -81,7 +82,7 @@ export function drivingReviewStart(state:CarState,world:World,scenario:string|nu
     if(!carFootprintClear(world,x,y,elevation,state.timeS,state))throw Error('Street fixture review start is blocked');
     return {...state,x,y,elevation,headingRad:tub ? Math.PI/2 : Math.PI,vx:0,vy:0};
   }
-  const district=scenario==='terrace-junction' ? [4470,7753.5,0] : scenario==='hospital-junction' ? [3300,7000,-Math.PI/2] : scenario==='park' ? [2380,3480,0] : scenario==='school-bench' ? [4480,3890,Math.PI] : scenario==='orchard' ? [4750,4620,Math.PI/2] : scenario==='street-crossing' ? [5217.41935483871,6339.354838709678,0] : scenario==='street-lamp' ? [6135.612721988243,4165,-Math.PI/2] : scenario==='lamp' ? [7510,7350,Math.PI/2] : scenario==='repair' ? [6540,4350,Math.PI] : scenario==='voxels' ? [7440,7460,0] : scenario==='airport' ? [2000,9250,Math.PI/2] : scenario==='medical' ? [12000,5200,0] : scenario==='town' ? [6330,4233,0] : scenario==='suburbs' ? [3600,3300,0] : scenario==='sports' ? [10400,5200,0] : scenario==='waterfront' ? [9900,2800,Math.PI/2] : scenario==='canal-bridge' ? [8610,4200,0] : scenario==='lake-bridge' ? [8865,6200,0] : undefined;
+  const district=scenario==='station-quarter' ? [11950,5200,0] : scenario==='terrace-junction' ? [4470,7753.5,0] : scenario==='hospital-junction' ? [3300,7000,-Math.PI/2] : scenario==='park' ? [2380,3480,0] : scenario==='school-bench' ? [4480,3890,Math.PI] : scenario==='orchard' ? [4750,4620,Math.PI/2] : scenario==='street-crossing' ? [5217.41935483871,6339.354838709678,0] : scenario==='street-lamp' ? [6135.612721988243,4165,-Math.PI/2] : scenario==='lamp' ? [7510,7350,Math.PI/2] : scenario==='repair' ? [6540,4350,Math.PI] : scenario==='voxels' ? [7440,7460,0] : scenario==='airport' ? [2000,9250,Math.PI/2] : scenario==='medical' ? [12000,5200,0] : scenario==='town' ? [6330,4233,0] : scenario==='suburbs' ? [3600,3300,0] : scenario==='sports' ? [10400,5200,0] : scenario==='waterfront' ? [9900,2800,Math.PI/2] : scenario==='canal-bridge' ? [8610,4200,0] : scenario==='lake-bridge' ? [8865,6200,0] : undefined;
   if(district){const [x,y,headingRad]=district as [number,number,number],elevation=drivingHeight(world.scene.terrain,x,y);
     if(carFootprintClear(world,x,y,elevation,state.timeS,state))return {...state,x,y,headingRad,elevation,vx:0,vy:0};
   }
@@ -223,8 +224,8 @@ export function* equipmentReviewSteps(state:CarState,world:World):Generator<void
 }
 
 /** Dev-only ground-floor walkthrough; all movement and transactions use the ordinary engine. */
-export function interiorReviewStart(state:CarState,world:World,night=false):CarState{
- const f=sceneInteriors(world.scene).find(f=>f.object.id==='market_hall');if(!f)return state;
+export function interiorReviewStart(state:CarState,world:World,night=false,objectId='market_hall'):CarState{
+ const f=sceneInteriors(world.scene).find(f=>f.object.id===objectId);if(!f)return state;
  const p=night ? f.toWorld(0,-8) : portalPoints(f,f.room.portals[0]!,24).outside;
  const next:CarState={...state,control:{kind:'foot'},x:p.x,y:p.y,elevation:walkingHeight(world.scene,p.x,p.y),vx:0,vy:0,vz:0,headingRad:Math.PI/2,grounded:true,vehicles:[{id:null,x:state.x,y:state.y,elevation:state.elevation,headingRad:state.headingRad,distance:0}]};
  return carFootprintClear(bodyWorld(next,world),next.x,next.y,next.elevation,next.timeS,next) ? next : state;

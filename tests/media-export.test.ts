@@ -20,6 +20,7 @@ describe('local capture boundary',()=>{
     }
     try{
       expect(await request('/__media/upstairsmeal/0599.png')).toBe(204);expect(await request('/__media/upstairsmeal/0600.png')).toBe(400);
+      expect(await request('/__media/stationquarter/0359.png')).toBe(204);expect(await request('/__media/stationquarter/0360.png')).toBe(400);
       expect(await request('/__media/company/0359.png')).toBe(204);expect(await request('/__media/company/0360.png')).toBe(400);
       expect(await request('/__media/loft/0539.png')).toBe(204);expect(await request('/__media/loft/0540.png')).toBe(400);
       expect(await request('/__media/seatmotion/0479.png')).toBe(204);expect(await request('/__media/seatmotion/0480.png')).toBe(400);

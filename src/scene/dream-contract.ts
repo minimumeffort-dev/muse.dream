@@ -22,7 +22,7 @@ import {MAX_WORLD_SIZE,MAX_WATER_AREA,MAX_WAVE_CELLS,MAX_STREET_LENGTH} from './
 
 // This table drives parsing, canonical field order and the model's vocabulary export.
 export interface DreamCommand { contexts: readonly string[]; id: boolean; fields: Readonly<Record<string,string>>; block?: string }
-export const DREAM_PROJECT_LIMITS=Object.freeze({modules:32,depth:8,characters:524288,assemblies:128});
+export const DREAM_PROJECT_LIMITS=Object.freeze({modules:40,depth:8,characters:524288,assemblies:144});
 const command = (contexts: string, id: boolean, fields: Record<string,string>, block?: string): DreamCommand =>
   Object.freeze({contexts:Object.freeze(contexts.split(" ")),id,fields:Object.freeze(fields),...(block ? {block} : {})});
 export const DREAM_V2_COMMANDS: Readonly<Record<string,DreamCommand>> = Object.freeze({

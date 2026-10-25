@@ -1,6 +1,18 @@
 # Leave and come back
 
-The current world uses format 19 / simulation 52. The exact r108 upgrade is rules-only: it preserves every saved field, unfinished meal, seat claim and original slot, without time advance or retrospective recovery. Energy-enabled NPCs now recover on actual solo/companion eating seats through the same authored rule as the player.
+The current world is r111, using format 19 / simulation 53. Its registered r110
+upgrade adds the station quarter without new starting money, stock, jobs or
+completion credit. Old saves validate against the exact released world first.
+Derived walking targets rebase onto the new connected graph, eight new visitors
+initialize at saved time, and old clocks and resources stay intact. New parking
+seeds yield to saved rides. A previously clear parked ground ride blocked by new
+construction recovers nearby, retaining its identity, heading and wheel travel.
+The original slot stays available. [The station quarter](dream/station-quarter.md).
+
+The r110 upgrade still connects resident meals to upstairs seats while retaining
+unfinished downstairs meetings. Earlier registered migrations remain available.
+
+The r109 world uses format 19 / simulation 52. The exact r108 upgrade is rules-only: it preserves every saved field, unfinished meal, seat claim and original slot, without time advance or retrospective recovery. Energy-enabled NPCs now recover on actual solo/companion eating seats through the same authored rule as the player.
 
 The simulation 51 upgrade remains registered. The exact r107 upgrade
 initializes only the player, baker and commuter company values at saved time.

@@ -99,7 +99,7 @@ const objectV2PartSchema=objectPartSchema.extend({
 const objectDslV2Schema=objectV1Schema.extend({
   body:objectV1Schema.shape.body.extend({clearanceRadius:z.number().finite().min(4).max(128).optional()}).strict(),
   voxelSize:z.number().finite().min(.25).max(4).optional(),
-  measure:z.object({kind:z.enum(MEASURE_KINDS),axis:z.enum(["x","y","z"]),meters:z.number().finite().min(.05).max(60)}).strict().optional(),
+  measure:z.object({kind:z.enum(MEASURE_KINDS),axis:z.enum(["x","y","z"]),meters:z.number().finite().min(.05).max(120)}).strict().optional(),
   dslVersion:z.literal(2),joints:z.array(jointSchema).max(12).optional(),parts:z.array(objectV2PartSchema).min(1).max(32),
   contacts:z.array(z.object({position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),radius:z.number().finite().min(1).max(64).optional(),size:z.tuple([z.number().finite().min(.1).max(128),z.number().finite().min(.1).max(128)]).optional(),headingRad:z.number().finite().min(-2*Math.PI).max(2*Math.PI).optional(),height:z.number().finite().min(.1).max(160)}).strict()).min(1).max(32).optional(),
   stairways:z.array(z.object({part:z.string().min(1).max(40),contactStart:z.number().int().min(0).max(31),steps:z.number().int().min(2).max(24)}).strict()).min(1).max(2).optional(),

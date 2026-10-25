@@ -68,6 +68,10 @@ use .1..128 sides and .1..160 height, cylinders use radius 1..64 and height 1..1
 No rectangle seats, moving routes or whole-object impacts. Interiors need the
 interiors packet; do not invent floors by hiding a car under an ordinary roof.
 Keep feet/bases at local Y=0. World placements take only XY, not arbitrary height.
+Building measures allow 3..120 metres on Y. Other category ranges stay in the
+contract. Tall assets still fit resolved scale .05..4, 32 parts, existing voxel
+and contact budgets. Declare real entrances and supported lobbies; height does
+not create enterable upper floors, lifts or businesses.
 Use endpoint beams for connected struts; start each fork inside its trunk.
 Cylinder part/beam taper is optional, finite .1..1 (default 1): +Y/to diameter
 divided by -Y/from diameter. width/depth/size remain full base dimensions.
@@ -266,8 +270,8 @@ libraries compile once. Cycles, duplicate included world IDs and multiple layout
 fail atomically. Diagnostics add module when the error originates in a module.
 Per-file limits above still apply: at most 16 local objects + asset aliases and
 16 includes, 64 placements, 12 routes, 8 watercourses. Split larger worlds into
-district files. Across reachable files, including entry: <=32 files, depth <=8,
-<=524288 UTF-16 characters, <=128 object definitions, <=4096 placements,
+district files. Across reachable files, including entry: <=40 files, depth <=8,
+<=524288 UTF-16 characters, <=144 object definitions, <=4096 placements,
 <=12 routes and <=8 water bodies. Legacy scenes cap 24 impact objects and 128 potential fragments. Pooled worlds
 use the separate data/cache/active limits in interactions. Animated assemblies remain at 24. The whole project needs
 exactly one world-owning layout for compileDreamScene; never split checkpoints or
@@ -483,6 +487,12 @@ and +Z ascends; heading_deg rotates the whole flight. Two flights maximum,
 width >=9, risers <=4 and treads >=6 world units. Supply supported clear landings
 and 18-unit headroom across the flight. Above-tagged slabs hide below their bottom
 and stay visible when standing on them.
+
+Named floor may also bind a supported ground-floor slab at the room base,
+with the same footprint, full-slab contact and 20-world-unit headroom checks.
+A ground-floor binding keeps lobby furniture at its physical support height;
+it adds no stairs, lift, actor or navigation budget.
+
 Named floor id(on=placed_building,at=[local_x,height,local_z],size=[width,depth]);
 binds to an existing full rectangle slab contact, within the enclosure with 20
 world units headroom. At most 32 named floors. Explicit place(...,role=prop,floor=id)

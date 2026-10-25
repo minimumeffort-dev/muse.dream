@@ -10,6 +10,20 @@ Racing is where this started. The idea is to make whatever someone draws playabl
 
 **The playable world is a handmade mock today.** The renderer, driving simulation and Dream 2 compiler work. Photo upload and Muse interpretation are still to come. There are no model calls or API keys to configure.
 
+## A station quarter with some height
+
+The station side of town now has a 55-metre brick residential tower and a
+75-metre office tower. Walk into either lobby, sit on a bench, or take one of the
+four parked taxis and vans. Their entrances, promenade and parking connect to
+Workshop Street; eight residents walk through the same pedestrian network.
+Upper storeys and lifts are still to come. The taxis use the existing car
+controls, without passengers or fares.
+
+![Walk through the station quarter and take a ride](docs/media/stationquarter.gif)
+
+[Watch in HD](docs/media/stationquarter.mp4) ·
+[Explore the district and its Dream source](docs/dream/station-quarter.md)
+
 ## Come home and rest
 
 The resident can now buy lunch, come home, recover on the settee and return to
@@ -454,14 +468,15 @@ table still breaks independently. The live world uses shared table, bench, lamp 
 rules; supported benches can lose their boards while their base stays put.
 [How shared rules work](docs/dream/rules.md).
 
-All 413 streetlights can fall too. Their ground light pools turn off, and the
+All 416 streetlights can fall too. Their ground light pools turn off, and the
 damage stays after the district unloads or you reload the game. The caretaker
-can restore every one using real kits and paid work. Their models, collisions
+can restore the 413 street-network lamps using real kits and paid work. The three
+new promenade lamps are not in a maintenance area yet. Their models, collisions
 and light pools return together. They use connected sidewalks and crossings to reach distant jobs.
 Intact lamps stay instanced; active debris and cached meshes have fixed limits.
 [How pooled destruction works in Dream](docs/dream/rules.md#streetlights-and-streamed-destruction).
 
-All 345 measured trees follow the same falling rule. Their crowns keep moving in
+All 348 measured trees follow the same falling rule. Their crowns keep moving in
 the wind as the whole tree falls, and their materials and shadows stay attached.
 Intact trees remain instances. Falling copies reuse prepared geometry, within
 the existing destruction limits. The 239 trees outside declared work coverage
@@ -532,7 +547,7 @@ The [checked examples](docs/dream/examples.md) also include a bouncing ball, bre
 
 Streetlights now follow streets, bicycle and scooter parking sits beside destinations, and birds fly across sixteen habitats. Dream’s `furnish` and `flock` commands describe those populations with bounded rules.
 
-There are 131 residents, 60 additional ground animals and birds, 345 trees, 48 parked bicycles, 25 parked scooters and 14 parked cars alongside four road cars, five buses and boardable tram and rail services. 119 residents walk on the pedestrian network and 60 ground animals and birds roam and react nearby. Twelve people retain their individual NPC routines. The new populations share complete instanced models; the existing NPC and CPU rig limits stay the same. [See how populations work](docs/dream/populations.md). The movement checks reuse exact body radii, enclosing contact queries and numeric spatial cells. The [matched replay](docs/evidence/movement-queries/verification.md) checks every step against the same paths and saved results.
+There are 141 residents, 60 additional ground animals and birds, 348 trees, 48 parked bicycles, 25 parked scooters and 22 parked cars/utility rides alongside four road cars, five buses and boardable tram and rail services. 129 residents walk on the pedestrian network and 60 ground animals and birds roam and react nearby. Twelve people retain their individual NPC routines. The new populations share complete instanced models; the existing NPC and CPU rig limits stay the same. [See how populations work](docs/dream/populations.md). The movement checks reuse exact body radii, enclosing contact queries and numeric spatial cells. The [matched replay](docs/evidence/movement-queries/verification.md) checks every step against the same paths and saved results.
 
 ![People walk along the connected pavement](docs/media/pedestrians.gif)
 

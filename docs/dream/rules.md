@@ -81,7 +81,7 @@ Mock-only. [Checks and media audit](../evidence/interaction-rules/verification.m
 Drive into a streetlight hard enough and the whole lamp falls about its base.
 Its ground light pool turns off. The damage stays after the fallen piece fades,
 after you drive away and unload the district, and after saving or reloading.
-All 413 lamps use their shared category rule, including both lantern and avenue
+All 416 lamps use their shared category rule, including both lantern and avenue
 models. A gentle touch still leaves them intact.
 
 ![A streetlight falling after a car impact](../media/lamps.jpg)
@@ -146,7 +146,7 @@ the sidewalk without inventing paving. [Watch that repair](../media/streetrepair
 
 ## Trees share one fall policy
 
-The live entry file applies one rule to all 345 measured trees:
+The live entry file applies one rule to all 348 measured trees:
 
 ```dream
 rule living_trees(kind=tree,mode=topple(speed=110,duration=1.1,lifetime=8));

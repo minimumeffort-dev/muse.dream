@@ -13,7 +13,8 @@ import {stepInteractive} from '../src/sim/interaction';
 import {checkEconomyState} from '../src/sim/commerce';
 import {sceneContactData} from '../src/scene/contacts';
 import {ambientGraph} from '../src/scene/ambient-navigation';
-const scene=createWorldScene(),prior=c.preCompanyScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.COMPANY_COMPATIBILITY,previousCompanySaveCompatibility:c.LOFT_COMPATIBILITY},text=JSON.stringify(backup);
+// The r108 company fixture precedes upstairs social preferences and the station quarter.
+const scene=c.preUpstairsSocialScene(createWorldScene()),prior=c.preCompanyScene(scene),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.COMPANY_COMPATIBILITY,previousCompanySaveCompatibility:c.LOFT_COMPATIBILITY},text=JSON.stringify(backup);
 const account=(s:ReturnType<typeof createCarAtSpawn>,id:string)=>s.economy!.accounts.find(a=>a.id===id)!;
 it('pins exact r107 while retaining all geometry, stock, money, actor budgets and prepared pedestrian/contact data',async()=>{
  expect(await c.sha256(c.preSeatedRestCompatibilitySource(scene))).toBe(c.COMPANY_COMPATIBILITY);expect(await c.sha256(c.preCompanyCompatibilitySource(scene))).toBe(c.LOFT_COMPATIBILITY);expect(await c.sha256(c.preLoftCompatibilitySource(scene))).toBe(c.PEER_RECIPE_COMPATIBILITY);

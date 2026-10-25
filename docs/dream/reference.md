@@ -211,7 +211,7 @@ Declare `measure` directly inside an object. It sets one rest-pose dimension, re
 | `skateboard` | x | 0.5–1.2 |
 | `bench` | x | 1.2–2.8 |
 | `table` | x | 1–3 |
-| `building` | y | 3–40 |
+| `building` | y | 3–120 |
 | `train` | x | 6–20 |
 | `boat` | x | 3–12 |
 | `food` | x | 0.1–0.8 |
@@ -234,7 +234,7 @@ With a measured car player, tree height and plane wingspan must exceed the car's
 | Unmeasured size | Placement multiplier .5–2 |
 | Compound contacts | 1–8; cylinders radius 1–64, height 1–160; static rectangles sides .1–128, height .1–160; bottom Y 0–128 |
 | Interiors | 32 placed static enclosures; 1–4 portals each; 32 parts and 32 contacts inside (8 contacts otherwise) |
-| Project | 32 reachable modules including entry, depth 8, 524,288 UTF-16 characters, 128 defined assemblies |
+| Project | 40 reachable modules including entry, depth 8, 524,288 UTF-16 characters, 144 defined assemblies |
 | Full scene | Dimensions ≤16384 per axis; ≤4096 placements, 12 routes, 24 resident mobile actors, including controllable vehicles; ≤256 dormant parked vehicles |
 | Animation / effects | ≤24 live joint assemblies including player; ≤16 steam emitters |
 | Destruction | Resident/legacy: ≤24 reactive objects, ≤128 potential fragments. Pooled static props: ≤128 template records, ≤24 active assemblies, ≤128 active pieces and cached fragment meshes. Every assembly: ≤8 fragments, ≤4 zones. |
@@ -832,6 +832,12 @@ Omitted/false keeps the low-energy-only policy. [Rain shelter](shelter.md).
 
 `rest` declares a bounded game need and ordered NPC seat preferences; `account(...,rest=id)` opts in. Player seating can recover on any usable furniture. Shared work/repair effort, physical trips, claims and persistence are described in [Rest and energy](resting.md), with the [complete runnable example](../examples/resting.dream).
 
+
+
+Named `floor` may also bind a supported ground-floor slab at the room base,
+with the same footprint, full-slab contact and 20-world-unit headroom checks.
+A ground-floor binding keeps lobby furniture at its physical support height;
+it adds no stairs, lift, actor or navigation budget.
 
 ## Stairs and upper floors
 

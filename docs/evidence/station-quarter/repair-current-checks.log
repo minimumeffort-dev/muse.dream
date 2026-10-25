@@ -1,0 +1,16 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/repair-world.test.ts --maxWorkers=1 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/repair-world.test.ts (3 tests) 24536ms
+   ✓ shares current lamp repairs and player kit procurement when staff are assigned only to food  7718ms
+   ✓ protects the live bakery assembly space before accepting a redundant finished-kit shipment  7774ms
+   ✓ prepares the rendered crossing review through actual driving, damage and dispatch with valid saved state  9043ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  13:18:56
+   Duration  25.17s (transform 450ms, setup 8ms, collect 507ms, tests 24.54s, environment 0ms, prepare 25ms)

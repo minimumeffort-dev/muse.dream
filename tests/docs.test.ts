@@ -10,6 +10,10 @@ const examples=import.meta.glob<string>('../docs/examples/*.dream',{query:'?raw'
 const files=Object.keys(import.meta.glob(['../src/**/*','../docs/**/*','../scripts/*','../tests/**/*','../README.md'])).map(p=>p.slice(3));
 
 describe("published Dream documentation",()=>{
+  it('keeps the supported lobby example identical to the product guide',()=>{
+    const source=pages['../docs/dream/station-quarter.md']!.match(/```dream\n([\s\S]*?)```/)![1]!.trim();
+    expect(source).toBe(examples['../docs/examples/ground-floor-seating.dream']!.trim());
+  });
   it('keeps the company declaration identical to its complete runnable world',()=>{const snippets=[...pages['../docs/dream/company.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());expect(snippets).toHaveLength(1);expect(examples['../docs/examples/company-needs.dream']).toContain(snippets[0]);});
   it('keeps upstairs workstation declarations identical to their complete runnable source',()=>{
     const blocks=[...pages['../docs/dream/upstairs-work.md']!.matchAll(/```dream\n([\s\S]*?)```/g)];expect(blocks).toHaveLength(3);for(const block of blocks)expect(examples['../docs/examples/upstairs-work.dream']).toContain(block[1]!.trim());
@@ -92,7 +96,7 @@ describe("published Dream documentation",()=>{
     expect(block.trim()).toBe(examples['../docs/examples/market-work.dream']!.trim());
   });
   it.each(Object.entries(examples))("compiles the complete example %s",(path,source)=>{
-    const result=checkDream(source,path.endsWith('/character-import.dream') ? worldModules : {});
+    const result=checkDream(source,['/character-import.dream','/ground-floor-seating.dream'].some(name=>path.endsWith(name)) ? worldModules : {});
     expect(result.ok,result.ok ? path : JSON.stringify(result.diagnostics)).toBe(true);
   });
   it("keeps the quickstart's complete tree identical to its runnable source",()=>{

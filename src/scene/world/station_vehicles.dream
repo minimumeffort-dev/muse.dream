@@ -1,0 +1,81 @@
+dream 2;
+material station_rubber(style=toon,colors=[#242b30,#172028]);
+material station_steel(style=toon,colors=[#a9b4b7,#637780]);
+material station_glass(style=toon,colors=[#80a3b1,#36556b]);
+material taxi_paint(style=toon,colors=[#d9a843,#aa7833]);
+material van_paint(style=toon,colors=[#ddd9cc,#a3aba7]);
+material van_trim(style=toon,colors=[#527480,#304e61]);
+material station_headlamp(style=toon,colors=[#e7e1ca,#f2ead2],night=#ffe6a2);
+material station_tail_lamp(style=toon,colors=[#bf5948,#833a36],night=#e36f49);
+material taxi_sign(style=toon,colors=[#f4dc95,#d4ba78],night=#f5d88d);
+component station_disc(params=[diameter,depth,offset],materials=[finish]){
+ part disc(shape=prism,material=finish,at=[0,0,offset],size=[diameter,diameter,depth],outline=[[1,.5],[.96194,.691342],[.853553,.853553],[.691342,.96194],[.5,1],[.308658,.96194],[.146447,.853553],[.03806,.691342],[0,.5],[.03806,.308658],[.146447,.146447],[.308658,.03806],[.5,0],[.691342,.03806],[.853553,.146447],[.96194,.308658]]);
+}
+component station_axle(params=[x,r,track,tread]){
+ joint bearing(at=[x,r,0],rot_deg=[0,180,0],motion=roll(axis=z,radius=r)){
+  use shaft(component=station_disc,args=[.9,track*2,0],materials=[station_steel]);
+  repeat sides(index=s,count=2){
+   let side(value=s*2-1);
+   use tire(component=station_disc,args=[r*2,tread,side*track],materials=[station_rubber]);
+   use hub(component=station_disc,args=[r*1.12,tread+.18,side*track],materials=[station_steel]);
+  }
+ }
+}
+object station_taxi(label="Station taxi"){
+ measure(kind=car,axis=x,meters=4.8);
+ body(interaction=solid,radius=25.8,height=16.7);
+ rideable(at=[-.5,5.5,3.1],control=car);
+ part shell(shape=prism,material=taxi_paint,at=[0,5.7,0],size=[46,6.6,18.5],outline=[[0.000000,0.000000],[0.109783,0.000000],[0.109783,0.136364],[0.120413,0.412879],[0.149457,0.615302],[0.189130,0.689394],[0.228804,0.615302],[0.257848,0.412879],[0.268478,0.136364],[0.268478,0.000000],[0.731522,0.000000],[0.731522,0.136364],[0.742152,0.412879],[0.771196,0.615302],[0.810870,0.689394],[0.850543,0.615302],[0.879587,0.412879],[0.890217,0.136364],[0.890217,0.000000],[1.000000,0.000000],[1.000000,0.848485],[0.956522,1.000000],[0.032609,1.000000],[0.000000,0.878788]]);
+ part cabin(shape=prism,material=station_glass,at=[-2.5,11.825,0],size=[23,5.65,16.1],outline=[[0,0],[1,0],[.773913,1],[.2,1]]);
+ part roof(shape=box,material=taxi_paint,at=[-2.6,14.7,0],size=[14.8,.8,16.6]);
+ part roof_sign(shape=prism,material=taxi_sign,at=[-2.6,15.9,0],size=[3.6,1.6,8.4],outline=[[0,0],[1,0],[.8,1],[.2,1]]);
+ repeat sides(index=s,count=2){
+  let side(value=s*2-1);
+  beam front_pillar(shape=box,material=taxi_paint,from=[9,8.7,side*8.1],to=[3.8,14.65,side*8.1],width=.7,depth=.7);
+  beam rear_pillar(shape=box,material=taxi_paint,from=[-14,8.7,side*8.1],to=[-9.4,14.65,side*8.1],width=.85,depth=.7);
+  beam center_pillar(shape=box,material=station_rubber,from=[-2.6,8.7,side*8.1],to=[-2.6,14.65,side*8.1],width=.65,depth=.6);
+  beam mirror(shape=box,material=station_steel,from=[8,10.1,side*8.2],to=[7.7,10.2,side*10.65],width=1.3,depth=1.1);
+  voxels handles(material=station_steel,at=[-2.6,8.2,side*9.35],size=[18,.6,.5],grid=[32,1,1]){
+   fill rear(from=[2,0,0],to=[6,1,1]);fill front(from=[25,0,0],to=[29,1,1]);
+  }
+  part headlight(shape=prism,material=station_headlamp,at=[23.25,6.8,side*6.4],size=[3.4,1.8,.6],rot_deg=[0,90,0],outline=[[0,0],[1,0],[.86,1],[0,1]]);
+  part tail_light(shape=box,material=station_tail_lamp,at=[-23.25,6.7,side*6.5],size=[.6,2.1,4]);
+ }
+ voxels suspension(material=station_rubber,at=[0,5.7,0],size=[31.8,5.2,12.4],grid=[32,13,1]){
+  fill crossmember(from=[0,10,0],to=[32,13,1]);
+  fill rear_yoke(from=[1,0,0],to=[3,13,1]);fill front_yoke(from=[29,0,0],to=[31,13,1]);
+ }
+ part front_bumper(shape=box,material=station_rubber,at=[23.3,3.8,0],size=[1.4,1.5,18.7]);
+ part rear_bumper(shape=box,material=station_rubber,at=[-23.3,3.8,0],size=[1.4,1.5,18.7]);
+ part grille(shape=box,material=station_rubber,at=[23.3,6.5,0],size=[.5,2.3,7.2]);
+ use front_axle(component=station_axle,args=[14.3,3.3,8.3,2.1]);
+ use rear_axle(component=station_axle,args=[-14.3,3.3,8.3,2.1]);
+}
+object station_cargo_van(label="Station cargo van"){
+ measure(kind=car,axis=x,meters=5.2);
+ body(interaction=solid,radius=28.5,height=23);
+ rideable(at=[14,7.2,3.8],control=car);
+ part shell(shape=prism,material=van_trim,at=[0,6.1,0],size=[50,6.2,20.2],outline=[[0.000000,0.000000],[0.098000,0.000000],[0.098000,0.096774],[0.108450,0.411290],[0.137000,0.641532],[0.176000,0.725806],[0.215000,0.641532],[0.243550,0.411290],[0.254000,0.096774],[0.254000,0.000000],[0.746000,0.000000],[0.746000,0.096774],[0.756450,0.411290],[0.785000,0.641532],[0.824000,0.725806],[0.863000,0.641532],[0.891550,0.411290],[0.902000,0.096774],[0.902000,0.000000],[1.000000,0.000000],[1.000000,0.838710],[0.960000,1.000000],[0.030000,1.000000],[0.000000,0.870968]]);
+ part cargo(shape=prism,material=van_paint,at=[-7.8,15.7,0],size=[34.4,13,20.2],outline=[[0,0],[1,0],[1,.95],[.96,1],[.025,1],[0,.95]]);
+ part cabin(shape=prism,material=station_glass,at=[16.6,15.8,0],size=[15.8,13.2,18.5],outline=[[0,0],[1,0],[.95,.4],[.64,1],[0,1]]);
+ part roof(shape=box,material=van_paint,at=[-3,22.6,0],size=[44,.8,20.4]);
+ repeat sides(index=s,count=2){
+  let side(value=s*2-1);
+  beam front_pillar(shape=box,material=van_paint,from=[24,13.9,side*9.3],to=[18.8,22.35,side*9.3],width=.85,depth=.8);
+  beam mirror(shape=box,material=station_steel,from=[21,15.8,side*9.4],to=[20.5,15.8,side*12],width=2.6,depth=1.2);
+  part cab_handle(shape=box,material=station_rubber,at=[11,9.4,side*10.2],size=[2,.65,.65]);
+  part sliding_rail(shape=box,material=van_trim,at=[-5.8,12,side*10.17],size=[24,.6,.45]);
+  part headlight(shape=box,material=station_headlamp,at=[25.12,6.9,side*6.6],size=[.65,2.5,4.1]);
+  part tail_light(shape=box,material=station_tail_lamp,at=[-25.15,9,side*8.7],size=[.6,5,1.7]);
+  part rear_door(shape=box,material=van_paint,at=[-25.05,15.2,side*5.05],size=[.25,13.2,9.65]);
+ }
+ voxels suspension(material=station_rubber,at=[0,6.1,0],size=[36,5.8,14.2],grid=[32,29,1]){
+  fill crossmember(from=[0,21,0],to=[32,29,1]);
+  fill rear_yoke(from=[1,0,0],to=[3,29,1]);fill front_yoke(from=[29,0,0],to=[31,29,1]);
+ }
+ part front_bumper(shape=box,material=station_rubber,at=[25.3,4.3,0],size=[1.4,1.6,20.4]);
+ part rear_bumper(shape=box,material=station_rubber,at=[-25.3,4.3,0],size=[1.4,1.6,20.4]);
+ part grille(shape=box,material=station_rubber,at=[25.2,8.7,0],size=[.5,2.7,8.6]);
+ use front_axle(component=station_axle,args=[16.2,3.6,9.1,2.4]);
+ use rear_axle(component=station_axle,args=[-16.2,3.6,9.1,2.4]);
+}

@@ -302,3 +302,15 @@ The live graph retains its 128-definition and 32-module limits. Two unplaced
 older buildings, the timber workshop and brick bakehouse, remain available in
 [the optional workshop architecture pack](../src/scene/world/workshop_architecture.dream)
 and the all-assets/destruction galleries. They no longer load into the live city.
+
+## Station quarter
+
+Copper Court and Lantern Exchange give the skyline two different forms: a stepped
+brick residential tower and a taller glazed office tower. Their ground floors
+have supported lobbies, doorways and usable seating. The station taxi has a
+separate hood, cabin and trunk; the cargo van has a taller enclosed load body.
+Both use rigid rolling axles and the same direct driving controls.
+
+[Build the towers](examples/station-towers.dream), [build the vehicles](examples/station-vehicles.dream),
+or [walk through the connected quarter](dream/station-quarter.md). Upper storeys,
+lifts and taxi fares remain future work.

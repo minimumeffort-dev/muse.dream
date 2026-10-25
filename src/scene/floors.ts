@@ -29,7 +29,7 @@ export function floorProblems(scene:Scene):string[]{
   const o=scene.objects.find(o=>o.id===f.objectId),spec=o?.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 ? o.spec : undefined,[x,y,z]=f.position,[w,d]=f.size;
   if(!o || o.floor || !spec?.interior || !spec.foundation){issues.push(`${f.id}: floor needs a static enclosing building`);continue;}
   const room=spec.interior;
-  if(Math.abs(x-room.position[0])+w/2>room.size[0]/2+.001 || Math.abs(z-room.position[2])+d/2>room.size[2]/2+.001 || y<=room.position[1] || (room.position[1]+room.size[1]-y)*o.scale<20)issues.push(`${f.id}: floor must fit its enclosure with 20-unit headroom above it`);
+  if(Math.abs(x-room.position[0])+w/2>room.size[0]/2+.001 || Math.abs(z-room.position[2])+d/2>room.size[2]/2+.001 || y<room.position[1]-.001 || (room.position[1]+room.size[1]-y)*o.scale<20)issues.push(`${f.id}: floor must fit its enclosure with 20-unit headroom above it`);
   if(!spec.contacts?.some(c=>c.size && !c.headingRad && Math.abs(c.position[0]-x)+w/2<=c.size[0]/2+.001 && Math.abs(c.position[2]-z)+d/2<=c.size[1]/2+.001 && Math.abs(c.position[1]+c.height-y)<.001))issues.push(`${f.id}: floor needs a matching full rectangle slab contact`);
  }
  for(const o of scene.objects.filter(o=>o.floor)){

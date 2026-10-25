@@ -20,11 +20,30 @@ The market hall has a square, produce stalls, a vendor and a commuter who walks 
 
 The market hall has a playable ground-floor interior. Its baker serves behind a table, customers enter to buy food, and supply workers use the same doorway for delivery work. The caretaker starts inside and retains the same outdoor repair and replanting coverage. The other civic buildings remain mock destinations with visible routines; hospital services and a general job market are not implemented.
 
+## Station quarter
+
+Two towers now sit north of Workshop Street: the 55-metre brick Copper Court
+residences and the 75-metre Lantern Exchange offices. Both entrances face the
+street and join a shared promenade. Walk into either ground-floor lobby and sit
+on its floor-bound bench, or use the four benches outside. Two taxis and two
+cargo vans have their own street-connected aprons and use the existing player
+car controls. Eight residents walk through the connected pedestrian network.
+
+![Towers, lobby entrances and connected station parking](media/stationquarter.jpg)
+
+The quarter adds three lamps, three rowan trees and two planters beside the paths.
+Benches retain the same sitting and breaking rules as the rest of the city.
+The upper tower storeys and lifts remain inaccessible; offices and households
+have no new business routines. Taxis have no passenger or fare system.
+[Walk through it and inspect the Dream examples](dream/station-quarter.md).
+
 ## Buses, tram and regional train
 
 Five buses run four services: the garden/market loop, the southern school/hospital loop, an eastbank medical/station loop and an airport/hospital shuttle. The tram runs along the main avenue to the central station. A regional electric train stops at two connected platforms. Street routes use the actual carriageways; tram rails share the road surface. They do not draw extra paving over streets.
 
 ![The station platform and entrance join the same streets as the football ground](media/central-station.jpg)
+
+Earlier station view, before the Workshop Street towers.
 
 F boards a bus, tram or regional railcar as a passenger. The service retains its route clock; driving inputs do not take over. Tram heads and grooves follow the constructed street and bridge triangles, including their approaches. Crossing paint leaves the track clear. These static details stream with street chunks; vehicle clocks and passenger ownership stay in simulation. Regional railway rails retain their raised profile and sleepers. Underground metro and subway tunnels are not implemented yet.
 
@@ -105,15 +124,15 @@ and names the destination with `site.label`. [Author connected parks](dream/path
 
 ## Everyday street life
 
-The city has 413 streetlights along six networks, 89 additional street trees, 278 mixed street planting groups and 16 destination planters, plus 64 additional garden and understory clusters and 64 woodland trees. Forty-eight parked bicycles and twenty-five scooters sit beside schools, services and transit stops on paved aprons joined to the sidewalk. Fourteen parked cars use connected civic and eastbank aprons. All of that destination parking is now usable, alongside the explicit scooters near the market, airport and eastbank medical center. Dream declares their ownership through `furnish(...,role=controllable)` and activates one dormant fleet rig when occupied.
+The city has 413 streetlights along six networks and three more on the station promenade, 89 additional street trees, 278 mixed street planting groups and 16 destination planters, plus 64 additional garden and understory clusters and 64 woodland trees. Forty-eight parked bicycles and twenty-five scooters sit beside schools, services and transit stops on paved aprons joined to the sidewalk. Fourteen parked cars use connected civic and eastbank aprons. All of that destination parking is now usable, alongside the explicit scooters near the market, airport and eastbank medical center. Dream declares their ownership through `furnish(...,role=controllable)` and activates one dormant fleet rig when occupied.
 
-The city has 131 people across its center, neighborhoods and eastbank: 119 walking residents, four new greeting NPCs and eight existing activity/commuter NPCs. Sidewalk groups preserve a walking corridor and avoid entrance paths and crossings. The 119 walking residents now follow the connected pedestrian network and use crossings. Sixty deer, hares, foxes, dogs, cats and sparrows roam clear, dry habitats and flee nearby players; the existing live deer, route gull and 256 flock birds keep their routines. Ambient populations share full geometry and GPU joint poses without allocating per-member scene rigs. [Population authoring](dream/populations.md).
+The city has 141 people: 129 walking residents, four greeting NPCs and eight existing activity/commuter NPCs. Sidewalk groups keep a walking corridor and avoid entrances and crossings; the eight new station-quarter visitors use the same network. Sixty ground animals and birds roam clear, dry habitats and flee nearby players. The existing route deer, route gull and 256 flock birds retain their routines. Ambient populations share full geometry and GPU joint poses without per-member scene rigs. [Population authoring](dream/populations.md).
 
 Four road cars use three different silhouettes: rally car, hatchback and delivery van. Transit and ordinary resident rides keep their existing actor slots; destination parking reserves one occupied rig within the live-assembly cap. Sixteen habitats distribute 256 decorative birds across city blocks, river, lake, woodland and meadow. These populations come from [Dream rules](dream/populations.md), filtered against the accepted streets, entrances, water and existing objects.
 
 ## Day and night
 
-The mock starts at 10:00 and completes a day in ten minutes of play. Sun and moon lighting share one shadow map. Windows and the 413 streetlights fade on after dusk, with soft light pools fitted to the pavement. [Dream owns the clock and light declarations](dream/day-night.md).
+The mock starts at 10:00 and completes a day in ten minutes of play. Sun and moon lighting share one shadow map. Windows and the 416 streetlights fade on after dusk, with soft light pools fitted to the pavement. [Dream owns the clock and light declarations](dream/day-night.md).
 
 ![The market square at night](media/city-night.jpg)
 

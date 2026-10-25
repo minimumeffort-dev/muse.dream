@@ -20,7 +20,11 @@ place upper_settee(object=timber_settee,at=[748,760],role=prop,floor=upper_room)
 Z; `size` is local width and depth. Rotation and measured scale apply once.
 The rectangle must match retained slab contacts inside the enclosure, with at
 least 20 world units of headroom. A declaration adds no mesh or physics body.
-There are at most 32 named floors.
+There are at most 32 named floors. A named floor can also match the room’s ground-floor
+slab. The same support, fit and headroom checks keep lobby furniture at the
+right height. [The station quarter](station-quarter.md) uses this for both lobby benches.
+[Runnable ground-floor world](../examples/ground-floor-seating.dream):
+`npm run -s dream -- check docs/examples/ground-floor-seating.dream --modules src/scene/world`.
 
 `place.floor` anchors an explicit static prop to the slab height. Its whole
 footprint must fit. Current floor props cannot have joints, controls, knockable

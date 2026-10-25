@@ -251,3 +251,5 @@ economy(){
  delivery fasteners_run(label="Bring fasteners to the workshop",from=station_supplies,to=market_stall,good=fasteners,quantity=2,pay=4,price=1,capacity=1,on=market_hall,grounds=[market_square,school_yard,school_yard_access,school_yard_return]);
 
 }
+
+include station_quarter(module=station_quarter);

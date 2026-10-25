@@ -2003,3 +2003,19 @@ with `npm run docs:build`. Node dependencies and encoder binaries remain useful.
 Inactive managed worktrees whose changes are already integrated can be archived
 through Codex, retaining recoverable Git state. Do not delete branches or rewrite
 history as a cache cleanup.
+
+## Station quarter
+
+`stationquarter` records 360 consecutive 2400×1350 PNGs through the dev-only
+`?capture` exporter: twelve simulation seconds at 30 rendered frames per second.
+The overview camera is fixed on the two towers and their shared promenade. The
+taxi boards through the existing interaction and receives a short forward input;
+walkers retain their real path/traffic behavior. This is an offline illustration,
+not a browser FPS measurement or a claim about less powerful laptops.
+
+Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> stationquarter`.
+Video/still use 1600×900; the GIF uses 1280×720. The still comes from frame 180.
+No frame interpolation is used. Keep all three together: `stationquarter.mp4`,
+`stationquarter.gif` and `stationquarter.jpg`. The earlier central-station view
+is marked historical where this district changes its surroundings. Native
+multi-angle gallery captures and checks are in the station-quarter evidence.

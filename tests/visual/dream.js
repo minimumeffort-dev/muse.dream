@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { dreamExamples } from '../../src/scene/dream-creations';
 import { buildObject, animateObject } from '../../src/game/world3d';
 import {CharacterAnimator} from '../../src/game/character-animation';
+import {positionGalleryCamera} from './gallery-camera';
 import { worldTime, worldMotion } from '../../src/game/shaders';
 import { interactiveWorld } from '../../src/scene/interactive-world';
 import { compileDreamWorld } from '../../src/scene/dream';
@@ -56,8 +57,8 @@ const items=(coverExamples ? compileDreamWorld(coverExample).assemblies.map(s=>(
   const floor=new THREE.Mesh(new THREE.PlaneGeometry(2000,2000),new THREE.MeshStandardMaterial({color:neutral ? '#e9e7df' : '#52714d'}));
   floor.visible=!faunaExamples;floor.rotation.x=-Math.PI/2;floor.position.y=-.5;scene.add(floor);
   const bounds=new THREE.Box3().setFromObject(group,true);group.position.y-=bounds.min.y;bounds.setFromObject(group,true);const center=bounds.getCenter(new THREE.Vector3());
-  const size=Math.max(...bounds.getSize(new THREE.Vector3()).toArray())*(params.has('materials') ? .4 : .76);
-  return {cell,scene,group,center,size,meters:spec.measure?.meters??1,character:spec.joints?.some(j=>j.bone) ? new CharacterAnimator(group,spec) : undefined,phase:-1,camera:new THREE.OrthographicCamera(-1,1,1,-1,.1,2000)};
+  const extent=bounds.getSize(new THREE.Vector3()),radius=extent.length()/2,size=Math.max(...extent.toArray())*(params.has('materials') ? .4 : .76);
+  return {cell,scene,group,center,size,radius,meters:spec.measure?.meters??1,character:spec.joints?.some(j=>j.bone) ? new CharacterAnimator(group,spec) : undefined,phase:-1,camera:new THREE.OrthographicCamera(-1,1,1,-1,.1,2000)};
 });
 // Center a lone final specimen instead of leaving an unrendered atlas cell.
 if(!faunaExamples && items.length%2===1 && (focus.length || items.length%4===1))items.at(-1).cell.style.gridColumn='1 / -1';
@@ -73,9 +74,8 @@ renderer.setAnimationLoop(()=>{
   for(const item of items){
     const rect=item.cell.getBoundingClientRect(),aspect=rect.width/rect.height,half=Math.max(item.size,item.size/aspect);
     const camera=item.camera,angle=captureAngle??Number(view.value);
-    Object.assign(camera,{left:-half*aspect,right:half*aspect,top:half,bottom:-half});camera.updateProjectionMatrix();
-    camera.position.copy(item.center).add(new THREE.Vector3(110*Math.cos(angle)+150*Math.sin(angle),110,150*Math.cos(angle)-110*Math.sin(angle)));
-    camera.lookAt(item.center);
+    Object.assign(camera,{left:-half*aspect,right:half*aspect,top:half,bottom:-half});
+    positionGalleryCamera(camera,item.center,item.radius,angle);camera.updateProjectionMatrix();
     if(item.character){
       if(item.phase!==time){const first=item.phase>=0 && item.phase<=time ? Math.floor(item.phase*60) : 0;if(first===0)item.character.reset();for(let f=first;f<Math.floor(time*60);f++)item.character.update({speed:40,swimming:false,grounded:true,verticalSpeed:0,time:f/60,enabled:true},1/60);item.phase=time;}
     }else animateObject(item.group,time,true,time*(faunaExamples ? item.meters*3 : 40),0,Number(document.querySelector('#near').value));

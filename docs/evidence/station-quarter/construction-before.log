@@ -1,0 +1,74 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/station-district-save.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ❯ tests/station-district-save.test.ts (9 tests | 4 failed) 1395ms
+   ✓ projects the exact released r110 city and retains old objects, resources, contacts and legacy fingerprints  366ms
+   ✓ migrates the real native backup without changing money, inventory, physical history, clocks or old storage  347ms
+   ✓ lets only a new parked seed yield to an old moved bicycle, preserving that pose and all other progress 63ms
+   ✓ boards, drives, exits and restores all four new vehicles using ordinary controls and retains local changes on reload 282ms
+   × recovers an old parked dormant bicycle obstructed by new construction without losing its ownership or travel history 47ms
+     → expected false to be true // Object.is equality
+   × recovers an old parked dormant car obstructed by new construction without losing its ownership or travel history 43ms
+     → expected false to be true // Object.is equality
+   ✓ recovers an old parked original car obstructed by new construction without losing its ownership or travel history 113ms
+   × recovers an old parked resident car obstructed by new construction without losing its ownership or travel history 46ms
+     → expected false to be true // Object.is equality
+   × retains an otherwise clear old parked body beside a real saved courier corridor 86ms
+     → expected [ { id: null, x: 6330, …(4) }, …(1) ] to deeply equal [ { id: null, x: 6330, …(4) }, …(1) ]
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/station-district-save.test.ts > recovers an old parked dormant bicycle obstructed by new construction without losing its ownership or travel history
+ FAIL  tests/station-district-save.test.ts > recovers an old parked dormant car obstructed by new construction without losing its ownership or travel history
+ FAIL  tests/station-district-save.test.ts > recovers an old parked resident car obstructed by new construction without losing its ownership or travel history
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/station-district-save.test.ts:83:154
+     81|  const occupied:CarState={...after,...recovered,control,vehicles:after…
+     82|  expect(carFootprintClear(bodyWorld(occupied,world),occupied.x,occupie…
+     83|  expect(sceneInteriors(scene).filter(f=>added(f.object.id)).every(f=>!…
+       |                                                                                                                                                          ^
+     84|  const foot=toggleRide(occupied,world);expect(foot.control.kind).toBe(…
+     85|  for(let i=0;i<120;i++)driven=stepInteractive(driven,{steer:0,throttle…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/station-district-save.test.ts > retains an otherwise clear old parked body beside a real saved courier corridor
+AssertionError: expected [ { id: null, x: 6330, …(4) }, …(1) ] to deeply equal [ { id: null, x: 6330, …(4) }, …(1) ]
+
+- Expected
++ Received
+
+@@ -10,9 +10,9 @@
+    {
+      "distance": 91,
+      "elevation": 0,
+      "headingRad": 0.45,
+      "id": "garden_bike_south_0",
+-     "x": 8679.410972995625,
+-     "y": 4274.543446551596,
++     "x": 8694.718310290229,
++     "y": 4311.498627852048,
+    },
+  ]
+
+ ❯ tests/station-district-save.test.ts:97:107
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 5 passed (9)
+   Start at  13:05:29
+   Duration  9.06s (transform 435ms, setup 7ms, collect 7.54s, tests 1.40s, environment 0ms, prepare 25ms)

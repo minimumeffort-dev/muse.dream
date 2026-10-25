@@ -342,14 +342,14 @@ export function compileDreamWorld(source:string,modules:DreamModules={}):DreamWo
   const load=(text:string,name:string,token?:Token):LinkedWorld=>{
     if(active.has(name))fail(`cyclic module '${name}'`,token,"E_CYCLE");
     const previous=cache.get(name);if(previous)return previous;
-    if(cache.size+active.size>=DREAM_PROJECT_LIMITS.modules)fail("project module budget exceeds 32",token,"E_BUDGET");
+    if(cache.size+active.size>=DREAM_PROJECT_LIMITS.modules)fail(`project module budget exceeds ${DREAM_PROJECT_LIMITS.modules}`,token,"E_BUDGET");
     characters+=text.length;if(characters>DREAM_PROJECT_LIMITS.characters)fail("project source exceeds 524288 characters",token,"E_BUDGET");
     if(active.size>=DREAM_PROJECT_LIMITS.depth)fail("module dependency depth exceeds 8",token,"E_BUDGET");
     active.add(name);
     let program:Program;
     try{program=name==='<entry>' ? entry : parseDream(text);}catch(error){if(error instanceof DreamError && name!=="<entry>")error.diagnostic.module=name;throw error;}
     if(name!=="<entry>" && program.version!==2)fail("project modules require Dream 2",token,"E_VERSION");
-    definitions+=program.objects.length;if(definitions>DREAM_PROJECT_LIMITS.assemblies)fail("project exceeds 128 assembly definitions",token,"E_BUDGET");
+    definitions+=program.objects.length;if(definitions>DREAM_PROJECT_LIMITS.assemblies)fail(`project exceeds ${DREAM_PROJECT_LIMITS.assemblies} assembly definitions`,token,"E_BUDGET");
     const resolve=(node:NonNullable<Program["nodes"]>[number])=>{
       const id=wordField(node,"module");
       if(!Object.hasOwn(modules,id) || typeof modules[id]!=="string")fail(`unknown module '${id}'`,node.token,"E_MODULE");

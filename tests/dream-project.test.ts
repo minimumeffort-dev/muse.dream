@@ -53,18 +53,23 @@ describe("bounded Dream 2 modules",()=>{
     const depth=checkDream('dream 2;'+include('m0'),deep);expect(depth.ok).toBe(false);if(!depth.ok)expect(depth.diagnostics[0]!.code).toBe('E_BUDGET');
     const large=Object.fromEntries(Array.from({length:9},(_,i)=>['m'+i,library+'\n//'+'.'.repeat(60000)]));
     const size=checkDream('dream 2;'+Object.keys(large).map(include).join(''),large);expect(size.ok).toBe(false);if(!size.ok)expect(size.diagnostics[0]!.code).toBe('E_BUDGET');
-    const many=Object.fromEntries(Array.from({length:9},(_,i)=>['m'+i,library+Array.from({length:15},(_,j)=>`object toy_${j}(label="Toy"){body(interaction=decor,radius=8,height=10);part block(shape=box,material=red,at=[0,5,0],size=[10,10,10]);}`).join('')]));
+    const many=Object.fromEntries(Array.from({length:10},(_,i)=>['m'+i,library+Array.from({length:15},(_,j)=>`object toy_${j}(label="Toy"){body(interaction=decor,radius=8,height=10);part block(shape=box,material=red,at=[0,5,0],size=[10,10,10]);}`).join('')]));
+    const bounded=Object.fromEntries(Object.entries(many).slice(0,9));expect(compileDreamWorld('dream 2;'+Object.keys(bounded).map(include).join(''),bounded).assemblies).toHaveLength(144);
     const count=checkDream('dream 2;'+Object.keys(many).map(include).join(''),many);expect(count.ok).toBe(false);if(!count.ok)expect(count.diagnostics[0]!.code).toBe('E_BUDGET');
   });
   it("retains the per-file object cap and bounds the complete dependency graph",()=>{
     const imports=library+Array.from({length:16},(_,i)=>`asset a_${i}(module=library,object=toy);`).join('');
     const local=checkDream(imports,{library});expect(local.ok).toBe(false);if(!local.ok)expect(local.diagnostics[0]!.code).toBe('E_BUDGET');
-    const graph:Record<string,string>={};
-    for(let i=0;i<30;i++)graph['leaf_'+i]=library;
-    graph.left='dream 2;'+Array.from({length:15},(_,i)=>include('leaf_'+i)).join('');
-    graph.right='dream 2;'+Array.from({length:15},(_,i)=>include('leaf_'+(i+15))).join('');
-    const total=checkDream('dream 2;'+include('left')+include('right'),graph);
-    expect(total.ok).toBe(false);if(!total.ok)expect(total.diagnostics[0]).toMatchObject({code:'E_BUDGET',message:'project module budget exceeds 32'});
+    const graph=(leaves:number)=>{
+      const modules:Record<string,string>={};
+      for(let i=0;i<leaves;i++)modules['leaf_'+i]=library;
+      for(let g=0;g<3;g++)modules['group_'+g]='dream 2;'+Array.from({length:Math.floor(leaves/3)+(g<leaves%3 ? 1 : 0)},(_,i)=>include('leaf_'+(g+3*i))).join('');
+      return modules;
+    };
+    const root='dream 2;'+[0,1,2].map(i=>include('group_'+i)).join('');
+    expect(checkDream(root,graph(36)).ok).toBe(true);
+    const total=checkDream(root,graph(37));
+    expect(total.ok).toBe(false);if(!total.ok)expect(total.diagnostics[0]).toMatchObject({code:'E_BUDGET',message:'project module budget exceeds 40'});
   });
 });
 

@@ -114,10 +114,23 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r111 adds a connected station quarter without changing simulation semantics. */
+export const DISTRICT_COMPATIBILITY='b07395b81db63f19fae5d5688c0a45ab5d8d7b67bd7a63565dfebef37299f337';
+const districtProjections=new WeakMap<Scene,Scene>();
+export function preDistrictScene(scene:Scene):Scene{
+ const cached=districtProjections.get(scene);if(cached)return cached;
+ const added=(id:string)=>id.startsWith('station_quarter_');
+ if(!scene.objects.some(o=>added(o.id)))return scene;
+ const prior={...scene,objects:scene.objects.filter(o=>!added(o.id)),surfaces:scene.surfaces.filter(s=>!added(s.id)),sites:scene.sites.filter(s=>!added(s.id)),floors:scene.floors?.filter(f=>!added(f.id))};
+ districtProjections.set(scene,prior);return prior;
+}
+export function preDistrictCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preDistrictScene(scene),53,true,encode);}
+
 /** r110 shares supported stair travel with social meals; existing claims keep their seats. */
 export const UPSTAIRS_SOCIAL_COMPATIBILITY='4b10448683d5eea828b3d229eaa7ab0bef09f19e6876eafc5f2611c6de09bf4a';
 const upstairsSocialProjections=new WeakMap<Scene,Scene>();
 export function preUpstairsSocialScene(scene:Scene):Scene{
+ scene=preDistrictScene(scene);
  const cached=upstairsSocialProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.socials.some(s=>s.id==='hall_break' && s.seats.includes('home_upper_settee')))return scene;
  const prior={...scene,economy:{...scene.economy,socials:scene.economy.socials.map(s=>s.id==='hall_break' ? {...s,seats:s.seats.filter(id=>id!=='home_upper_settee'),grounds:s.grounds?.filter(id=>id!=='home_upper' && id!=='home_landing')} : s)}};

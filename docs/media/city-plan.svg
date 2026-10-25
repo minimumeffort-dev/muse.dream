@@ -39,6 +39,9 @@
 <polygon points="2491.98,3852.65 2471.98,4220.65 2448.02,4219.35 2468.02,3851.35" fill="#bcb6a4"/>
 <polygon points="2495.00,3864.00 2560.00,3864.00 2560.00,3900.00 2495.00,3900.00" fill="#a6aaa0"/>
 <polygon points="2760.00,3622.00 2810.00,3622.00 2810.00,3656.00 2760.00,3656.00" fill="#a6aaa0"/>
+<polygon points="11520.00,4940.00 12420.00,4940.00 12420.00,4908.00 11520.00,4908.00" fill="#bcb6a4"/>
+<polygon points="11445.00,5152.50 11615.00,5152.50 11615.00,5010.00 11445.00,5010.00" fill="#939a96"/>
+<polygon points="12300.00,5152.50 12470.00,5152.50 12470.00,5010.00 12300.00,5010.00" fill="#939a96"/>
 <polygon points="4312.77,3387.80 4515.17,3401.30 4513.35,3428.58 4310.95,3415.09" fill="#aaa99f"/>
 <polygon points="5844.32,7261.95 6021.07,7267.84 6021.98,7240.51 5845.23,7234.62" fill="#aaa99f"/>
 <polygon points="7264.93,2497.50 7627.42,2497.50 7627.42,2549.15 7264.93,2549.15" fill="#aaa99f"/>
@@ -1130,7 +1133,7 @@
 <polyline points="6040.00,4069.46 6040.00,4112.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="6230.00,4057.72 6230.00,4112.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="6398.35,4069.46 6398.35,4112.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
-<polyline points="6493.35,4057.72 6493.35,4112.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
+<polyline points="6493.35,4082.17 6493.35,4112.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="6647.24,4069.74 6647.24,4112.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="6940.00,4057.56 6940.00,4112.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="7109.55,4057.72 7109.55,4112.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
@@ -1278,6 +1281,8 @@
 <polyline points="1786.25,9150.00 1948.00,9150.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="1925.00,9550.00 1948.00,9550.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <polyline points="2400.00,3415.50 2400.00,3432.00 2708.00,3432.00 2708.00,3610.00 2840.00,3610.00" fill="none" stroke="#b8aa89" stroke-width="12"/>
+<polyline points="11700.00,4806.56 11700.00,5150.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
+<polyline points="12200.00,4809.38 12200.00,5150.00" fill="none" stroke="#b8aa89" stroke-width="16"/>
 <g><title>Eastbank medical center · east_medical_center</title><polygon points="11901.00,5437.00 12099.00,5437.00 12099.00,5596.00 11901.00,5596.00" fill="#827565"/></g>
 <g><title>Covered market hall · market_hall</title><polygon points="6271.93,4391.88 6528.07,4391.88 6528.07,4576.52 6271.93,4576.52" fill="#827565"/></g>
 <g><title>River hospital · hospital</title><polygon points="3749.60,6701.00 4050.40,6701.00 4050.40,6937.00 3749.60,6937.00" fill="#827565"/></g>
@@ -1336,7 +1341,7 @@
 <g><title>Corner shop · oldtown_041</title><polygon points="6085.63,4069.46 5994.37,4069.46 5994.37,3944.24 6085.63,3944.24" fill="#827565"/></g>
 <g><title>Brick terrace · oldtown_042</title><polygon points="6267.80,4057.72 6192.20,4057.72 6192.20,3944.24 6267.80,3944.24" fill="#827565"/></g>
 <g><title>Corner shop · oldtown_043</title><polygon points="6443.97,4069.46 6352.72,4069.46 6352.72,3944.24 6443.97,3944.24" fill="#827565"/></g>
-<g><title>Brick terrace · oldtown_044</title><polygon points="6531.15,4057.72 6455.55,4057.72 6455.55,3944.24 6531.15,3944.24" fill="#827565"/></g>
+<g><title>Commuter's terrace · oldtown_044</title><polygon points="6530.91,4082.17 6455.78,4082.17 6455.78,3942.28 6530.91,3942.28" fill="#827565"/></g>
 <g><title>Neighborhood bakery · oldtown_045</title><polygon points="6697.35,4069.74 6597.13,4069.74 6597.13,3939.11 6697.35,3939.11" fill="#827565"/></g>
 <g><title>Blue terrace · oldtown_046</title><polygon points="6975.39,4057.56 6904.61,4057.56 6904.61,3949.37 6975.39,3949.37" fill="#827565"/></g>
 <g><title>Brick terrace · oldtown_047</title><polygon points="7147.34,4057.72 7071.75,4057.72 7071.75,3944.24 7147.34,3944.24" fill="#827565"/></g>
@@ -1734,6 +1739,11 @@
 <circle cx="1086.07" cy="4072.91" r="32" fill="#789266"/>
 <circle cx="1577.94" cy="6783.41" r="32" fill="#789266"/>
 <circle cx="12141.48" cy="1756" r="32" fill="#789266"/>
+<g><title>Copper Court residences · station_quarter_residences</title><polygon points="11823.75,4822.03 11576.25,4822.03 11576.25,4593.02 11823.75,4593.02" fill="#827565"/></g>
+<g><title>Lantern Exchange offices · station_quarter_offices</title><polygon points="12325.47,4826.95 12074.53,4826.95 12074.53,4590.16 12325.47,4590.16" fill="#827565"/></g>
+<circle cx="11555" cy="4870" r="32" fill="#789266"/>
+<circle cx="11945" cy="4840" r="32" fill="#789266"/>
+<circle cx="12390" cy="4870" r="32" fill="#789266"/>
 <circle cx="2502.6227317910225" cy="4141.285254424321" r="32" fill="#789266"/>
 <circle cx="3219.0832787672202" cy="3959.214137258774" r="32" fill="#789266"/>
 <circle cx="5051.6324291888" cy="4330.546869789348" r="32" fill="#789266"/>
@@ -1877,6 +1887,7 @@
 <circle cx="2530" cy="9460" r="85" fill="#f7c843"/><text x="2530" y="9500" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">24</text>
 <circle cx="1730" cy="9150" r="85" fill="#f7c843"/><text x="1730" y="9190" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">25</text>
 <circle cx="2400" cy="3411" r="85" fill="#f7c843"/><text x="2400" y="3451" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">26</text>
+<circle cx="12200" cy="4700" r="85" fill="#f7c843"/><text x="12200" y="4740" font-family="system-ui,sans-serif" font-size="115" text-anchor="middle" fill="#171717">27</text>
 </g><g font-family="system-ui,sans-serif" fill="#3d3d38" font-size="15">
 <text x="50" y="1250">Charcoal: rail · Rust: tram · Violet: buses · Green: cycle tracks · Tan: entrance paths · Dots: route stops</text>
 <text x="50" y="1280">1. Eastbank medical center</text>
@@ -1905,4 +1916,5 @@
 <text x="1130" y="1380">24. Aircraft maintenance hangar</text>
 <text x="50" y="1400">25. Airport control tower</text>
 <text x="410" y="1400">26. Garden park</text>
+<text x="770" y="1400">27. Lantern Exchange</text>
 </g></svg>
