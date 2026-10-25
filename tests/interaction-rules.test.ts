@@ -111,10 +111,15 @@ describe('category-wide Dream interaction rules',()=>{
     expect(isBroken(state,contacts.find(c=>!c.zoneId)!)).toBe(false);
     expect(()=>parseScene({...scene,objects:[{...object,spec:{...spec,breakZones:spec.breakZones!.map(z=>({...z,impact:{...z.impact,speed:200}}))}}]})).toThrow('must follow interaction rule');
   });
-  it('enforces live tables and benches, including the older bench with retained supports',()=>{
+  it('enforces category rules for the original 23 tables and benches and six station-quarter benches',()=>{
     const scene=createWorldScene();expect(scene.interactionRules.map(r=>r.kind)).toEqual(['lamp','tree','table','bench']);
     const furniture=scene.objects.filter(o=>o.spec && 'measure' in o.spec && ['table','bench'].includes(o.spec.measure?.kind??''));
-    expect(furniture).toHaveLength(23);expect(furniture.map(o=>o.id)).toEqual(expect.arrayContaining(['hall_workbench','home_upper_settee','home_upper_table','home_settee','home_table','hall_table_west','hall_table_east','hall_bench','school_bench','school_common_bench','school_reading_bench','school_rear_bench','school_table_west','school_table_east']));
+    const stationIds=['station_quarter_bench_nw','station_quarter_bench_ne','station_quarter_bench_sw','station_quarter_bench_se','station_quarter_home_seat','station_quarter_office_seat'];
+    const original=furniture.filter(o=>!o.id.startsWith('station_quarter_')),station=furniture.filter(o=>o.id.startsWith('station_quarter_'));
+    expect(furniture).toHaveLength(29);expect(original).toHaveLength(23);expect(station).toHaveLength(6);expect(station.map(o=>o.id).sort()).toEqual([...stationIds].sort());
+    expect(original.map(o=>o.id).sort()).toEqual(['picnic_table','park_bench','station_bench','garden_bench_nw','garden_bench_ne','garden_bench_sw','garden_bench_se','garden_bench_west','garden_bench_east','hall_workbench','home_upper_settee','home_upper_table','home_settee','home_table','hall_table_west','hall_table_east','hall_bench','school_bench','school_common_bench','school_reading_bench','school_rear_bench','school_table_west','school_table_east'].sort());
+    expect(station.every(o=>o.spec && 'measure' in o.spec && o.spec.measure?.kind==='bench')).toBe(true);
+    expect(furniture.map(o=>o.id)).toEqual(expect.arrayContaining(['hall_workbench','home_upper_settee','home_upper_table','home_settee','home_table','hall_table_west','hall_table_east','hall_bench','school_bench','school_common_bench','school_reading_bench','school_rear_bench','school_table_west','school_table_east']));
     expect(scene.objects.find(o=>o.id==='hall_workbench')!.floor).toBe('hall_loft');expect(repairTargets(scene,scene.economy!.repairs.find(r=>r.id==='home_furniture')!).some(t=>t.objectId==='hall_workbench')).toBe(true);
     for(const object of furniture){const spec=object.spec as ObjectDslV2;expect(spec.impact).toEqual(scene.interactionRules.find(r=>r.kind===spec.measure!.kind)!.impact);}
   });

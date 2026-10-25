@@ -61,7 +61,7 @@ coverage are not implemented by these models. The broader quest remains open.
 ## Verification status
 
 Focused compiler, construction, seating/walking, traffic, migration and historical
-fleet checks pass in the retained logs. Full regression results are recorded below when complete. The final build passes,
+fleet checks pass in the retained logs. The terminal broad results are recorded below. The final build passes,
 including TypeScript, with the existing large-chunk warning. Native walking entered
 both lobbies through their real openings; Copper Court also demonstrated keyboard
 F sitting/standing and actual energy recovery on its floor-bound bench. Both tower
@@ -85,6 +85,26 @@ count; pairwise gaps, habitat bounds and clearance requirements remain intact.
 Final documentation checks pass 234 cases, including the complete ground-floor
 example and its identical inline source. The docs build contains 61 pages.
 
-The playable slice is committed/pushed after focused/native/build verification
-while the one broad regression run remains active. No merge or deployment is
-claimed here; append its terminal report before release.
+The one broad run is complete: 208 files / 2,092 cases in 913.53 seconds, with
+201 files and 2,084 cases passing. Its eight failures came from the seven files
+with outdated historical-world or expanded-city assertions described here.
+[Original terminal report](full-suite.log).
+
+The remaining assertions now distinguish the unchanged original objects from
+the station additions: 23 original tables/benches plus six new benches, 91
+original parked rides plus four new ones, and the original voxel infrastructure,
+population and fragment totals plus their exact additions. The boarding loop
+still checks every parked vehicle; damage, driving, category rules, crossings
+and resource assertions remain. The repair-verge case also retains its exact
+449 serviced targets and 413 serviced lamps while checking all 1,813 objects.
+
+All 40 cases across the seven corrected files pass in focused reruns. The
+[furniture/parking](count-regressions.log), [voxel](voxel-current.log) and
+[repair-verge](verge-current.log) reports complete the earlier company, lamp and
+population reports. This is one broad run plus focused corrections, not a
+second zero-failure full run. No production code changed after that run;
+passing unrelated checks were reused. No merge or deployment is claimed.
+
+README, the affected guides and current media were reviewed for these test-only
+corrections. Their rendered objects, controls and behavior are unchanged, so
+the current station video, GIF and still remain accurate.

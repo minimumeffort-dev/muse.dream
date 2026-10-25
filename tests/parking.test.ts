@@ -18,6 +18,7 @@ import {animateObject,buildObject} from '../src/game/world3d';
 import {terrainNormal,worldPosition} from '../src/game/environment';
 import {createWorldScene} from '../src/scene/world-fixture';
 import {vehicleReviewStart} from '../src/game/review-start';
+import {preDistrictScene} from '../src/scene/save-compatibility';
 
 const model=`dream 2;
 material blue(style=toon,colors=[#537eaa,#3c5f87]);
@@ -33,9 +34,12 @@ function setup(text=source):World{const data=compileDreamWorld(text),scene=parse
 function onFoot(world:World):CarState{const s=createCarAtSpawn(world.scene);return {...s,control:{kind:'foot' as const},x:365,y:400,elevation:0,vehicles:[{id:null,x:s.x,y:s.y,elevation:s.elevation,headingRad:s.headingRad,distance:0}]};}
 
 describe('parked controllable vehicles',()=>{
- it('makes all 91 parked rides boardable and retains the original NPC passenger capabilities',()=>{
+ it('makes all 95 parked rides boardable, preserving the original 91 and adding four station-quarter rides',()=>{
   const scene=createWorldScene(),w:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11},start=createCarAtSpawn(scene),parked=scene.objects.filter(isParkedVehicle);
-  expect(parked).toHaveLength(91);expect(new Set(parked.map(o=>controlFor(o)))).toEqual(new Set(['car','bicycle','scooter']));
+  const original=parked.filter(o=>!o.id.startsWith('station_quarter_')),station=parked.filter(o=>o.id.startsWith('station_quarter_'));
+  expect(parked).toHaveLength(95);expect(original).toHaveLength(91);expect(original).toEqual(preDistrictScene(scene).objects.filter(isParkedVehicle));
+  expect(station).toHaveLength(4);expect(station.map(o=>o.id).sort()).toEqual(['station_quarter_taxi_0','station_quarter_taxi_1','station_quarter_van_0','station_quarter_van_1']);expect(station.every(o=>controlFor(o)==='car')).toBe(true);
+  expect(new Set(parked.map(o=>controlFor(o)))).toEqual(new Set(['car','bicycle','scooter']));
   for(const object of parked){const exit=vehicleReviewStart(start,w,object.id),foot=nearbyRide(exit,w)?.id===object.id ? exit : Array.from({length:64},(_,i)=>{const a=i%16*Math.PI/8,r=8+Math.floor(i/16)*8;return {...exit,x:object.x+Math.cos(a)*r,y:object.y+Math.sin(a)*r};}).find(s=>nearbyRide(s,w)?.id===object.id && carFootprintClear(bodyWorld(s,w),s.x,s.y,s.elevation,s.timeS,s));expect(foot,object.id).toBeDefined();expect(foot!.control.kind,object.id).toBe('foot');expect(toggleRide(foot!,w).control,object.id).toEqual({kind:'vehicle',id:object.id});}
   for(const id of ['center_delivery','south_car']){const o=scene.objects.find(o=>o.id===id)!;expect(o.role).toBe('npc');expect(controlFor(o)).toBeUndefined();expect(o.spec && 'rideable' in o.spec && o.spec.rideable && !o.spec.rideable.control).toBe(true);}
  });

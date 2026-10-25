@@ -1,0 +1,14 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/repair-verge-world.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/repair-verge-world.test.ts (2 tests) 6364ms
+   ✓ rejects the same service coverage when its real street crossing is removed  6349ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  13:30:08
+   Duration  13.34s (transform 320ms, setup 7ms, collect 6.86s, tests 6.36s, environment 0ms, prepare 24ms)

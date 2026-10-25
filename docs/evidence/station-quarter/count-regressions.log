@@ -1,0 +1,16 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/interaction-rules.test.ts tests/parking.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/interaction-rules.test.ts (11 tests) 6965ms
+   ✓ category-wide Dream interaction rules > enforces category rules for the original 23 tables and benches and six station-quarter benches  6753ms
+ ✓ tests/parking.test.ts (7 tests) 6909ms
+   ✓ parked controllable vehicles > makes all 95 parked rides boardable, preserving the original 91 and adding four station-quarter rides  6790ms
+
+ Test Files  2 passed (2)
+      Tests  18 passed (18)
+   Start at  13:28:04
+   Duration  7.66s (transform 530ms, setup 17ms, collect 1.14s, tests 13.87s, environment 0ms, prepare 52ms)
