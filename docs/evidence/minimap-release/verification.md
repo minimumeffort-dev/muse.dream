@@ -74,3 +74,29 @@ or Git history was deleted.
 [Final typecheck](release-types.log): passes after the two test-file corrections.
 Application source, entry HTML, dependencies and deployment configuration match
 the already built and browser-checked `2ba6352` tree.
+
+## Public release verified
+
+[PR 1](https://github.com/minimumeffort-dev/muse.dream/pull/1) merged as
+`524628ffb61e042bbcc7d1dfbcce9c05140da399`. [Vercel identity](production.json)
+confirms that exact main commit is READY on `https://musedream.vercel.app/`,
+through deployment `dpl_2tuPUJVBGJdxCLWsVhEuG7o1w3WC`.
+
+The public game loaded its existing save with the current r113 fingerprint and
+no reset. Actual image and header pointer clicks opened the full map. The zoom
+button reached 140%; native scrolling increased it to 340%. Enter placed a
+72-metre waypoint, which appeared in the HUD after Escape. The independent HUD
+clear button removed it without reopening the map. A further pointer click
+placed a 130-metre waypoint; Delete cleared it. No test waypoint was left behind.
+Browser warning/error output was empty. These are browser interaction checks,
+not a physical multi-touch hardware or live frame-rate benchmark.
+
+[Browser results](production-browser.json) ·
+[Public expanded map](production-map.png) ·
+[Public HUD guidance](production-hud-waypoint.png)
+
+The source-matched public build passes the reported flow. The separate GitHub
+Pages workflow for merge commit `524628f` was still running at this observation;
+no claim is made that remote Node 22 CI or documentation deployment completed.
+The next working branch is `codex/living-world-navigation`; the remaining clear
+corner detours in work navigation remain next in the existing backlog.

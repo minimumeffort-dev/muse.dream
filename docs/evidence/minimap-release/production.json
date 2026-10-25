@@ -1,0 +1,15 @@
+{
+  "publicUrl": "https://musedream.vercel.app/",
+  "deploymentId": "dpl_2tuPUJVBGJdxCLWsVhEuG7o1w3WC",
+  "readyState": "READY",
+  "target": "production",
+  "gitRef": "main",
+  "gitSha": "524628ffb61e042bbcc7d1dfbcce9c05140da399",
+  "aliases": [
+    "musedream.vercel.app",
+    "musedream-minimum-effort.vercel.app",
+    "musedream-git-main-minimum-effort.vercel.app"
+  ],
+  "buildingAt": 1792939752683,
+  "readyAt": 1792939855366
+}
