@@ -10,9 +10,10 @@ const examples=import.meta.glob<string>('../docs/examples/*.dream',{query:'?raw'
 const files=Object.keys(import.meta.glob(['../src/**/*','../docs/**/*','../scripts/*','../tests/**/*','../README.md'])).map(p=>p.slice(3));
 
 describe("published Dream documentation",()=>{
-  it('keeps the supported lobby example identical to the product guide',()=>{
-    const source=pages['../docs/dream/station-quarter.md']!.match(/```dream\n([\s\S]*?)```/)![1]!.trim();
-    expect(source).toBe(examples['../docs/examples/ground-floor-seating.dream']!.trim());
+  it('keeps the supported lobby and mezzanine declarations identical to their runnable sources',()=>{
+    const blocks=[...pages['../docs/dream/station-quarter.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
+    expect(blocks).toHaveLength(2);expect(blocks.find(b=>b.startsWith('dream 2;'))).toBe(examples['../docs/examples/ground-floor-seating.dream']!.trim());
+    expect(examples['../docs/examples/tower-mezzanine.dream']).toContain(blocks.find(b=>b.startsWith('floor mezzanine')));
   });
   it('keeps the company declaration identical to its complete runnable world',()=>{const snippets=[...pages['../docs/dream/company.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());expect(snippets).toHaveLength(1);expect(examples['../docs/examples/company-needs.dream']).toContain(snippets[0]);});
   it('keeps upstairs workstation declarations identical to their complete runnable source',()=>{
@@ -96,7 +97,7 @@ describe("published Dream documentation",()=>{
     expect(block.trim()).toBe(examples['../docs/examples/market-work.dream']!.trim());
   });
   it.each(Object.entries(examples))("compiles the complete example %s",(path,source)=>{
-    const result=checkDream(source,['/character-import.dream','/ground-floor-seating.dream'].some(name=>path.endsWith(name)) ? worldModules : {});
+    const result=checkDream(source,['/character-import.dream','/ground-floor-seating.dream','/tower-mezzanine.dream'].some(name=>path.endsWith(name)) ? worldModules : {});
     expect(result.ok,result.ok ? path : JSON.stringify(result.diagnostics)).toBe(true);
   });
   it("keeps the quickstart's complete tree identical to its runnable source",()=>{

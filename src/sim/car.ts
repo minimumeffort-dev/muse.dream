@@ -129,6 +129,7 @@ export interface World {
   previousCourierSaveCompatibility?:string;
   previousPeopleSaveCompatibility?:string;
   previousInvitationSaveCompatibility?:string;
+  previousTowerRoomSaveCompatibility?:string;previousTowerRoomContacts?:import('../scene/contacts').SceneContactData;previousTowerRoomNavigation?:import('../scene/ambient-navigation').AmbientGraph;
   previousCrowdFlowSaveCompatibility?:string;
   previousWalkingLinksSaveCompatibility?:string;
   previousCrossingAccessSaveCompatibility?:string;previousCrossingAccessContacts?:import('../scene/contacts').SceneContactData;previousCrossingAccessNavigation?:import('../scene/ambient-navigation').AmbientGraph;

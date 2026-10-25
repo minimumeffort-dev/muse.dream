@@ -17,7 +17,7 @@ import {checkEconomyState} from '../src/sim/commerce';
 import {AMBIENT_LIMITS} from '../src/scene/ambient';
 let scene:ReturnType<typeof createWorldScene>,world:World,prior:World,snapshot:string;
 beforeAll(()=>{
- scene=createWorldScene();snapshot=JSON.stringify(scene);
+ scene={...c.preTowerRoomScene(createWorldScene()),revisionId:'r113'};snapshot=JSON.stringify(scene);
  world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.CROWD_FLOW_COMPATIBILITY,previousCrowdFlowSaveCompatibility:c.WALKING_LINKS_COMPATIBILITY,previousWalkingLinksSaveCompatibility:c.CROSSING_ACCESS_COMPATIBILITY};
  prior={...world,saveCompatibility:c.WALKING_LINKS_COMPATIBILITY,previousCrowdFlowSaveCompatibility:undefined};
 },60000);

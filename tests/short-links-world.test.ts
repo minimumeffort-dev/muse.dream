@@ -41,13 +41,13 @@ it('keeps current contacts live after warming a path through the new corner link
 });
 
 it('retains all accepted targets and fits all prepared journey graphs inside unchanged bounds',()=>{
- expect(scene.objects).toHaveLength(1813);expect(scene.sites).toHaveLength(221);expect(scene.surfaces).toHaveLength(61);expect(scene.crossings).toHaveLength(62);expect(sceneContactData(scene).contacts).toHaveLength(3458);
+ expect(scene.objects).toHaveLength(1816);expect(scene.sites).toHaveLength(221);expect(scene.surfaces).toHaveLength(61);expect(scene.crossings).toHaveLength(62);expect(sceneContactData(scene).contacts).toHaveLength(3476);
  expect(COMMERCE_LIMITS.repairNetworkNodes).toBe(8192);expect(COMMERCE_LIMITS.repairNetworkLinks).toBe(32768);
- const home=scene.objects.find(o=>o.id==='market_neighbor')!;let targets=0;
+ const home=scene.objects.find(o=>o.id==='market_neighbor')!;let targets=0,originalTargets=0;
  for(const s of scene.economy!.repairs)for(const target of repairTargets(scene,s).filter(t=>t.objectId.startsWith('station_quarter_'))){
-  const approach=repairApproach(scene,s,target,home)!;expect(approach,target.objectId).toBeDefined();expect(length(home,approach.path)).toBeLessThan(8000);targets++;
+  const approach=repairApproach(scene,s,target,home)!;expect(approach,target.objectId).toBeDefined();if(scene.objects.find(o=>o.id===target.objectId)!.floor!=='office_mezzanine'){expect(length(home,approach.path)).toBeLessThan(8000);originalTargets++;}targets++;
  }
- expect(targets).toBe(14);
+ expect(targets).toBe(17);expect(originalTargets).toBe(14);
  const packet=repairNavigation(scene);for(const s of packet.services){expect(s.nodes.length,s.id).toBeLessThanOrEqual(8192);expect(s.nodes.reduce((n,p)=>n+p.links.length,0),s.id).toBeLessThanOrEqual(32768);}
 });
 

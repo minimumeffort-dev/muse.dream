@@ -1,6 +1,6 @@
 import {afterEach,beforeAll,expect,it} from 'vitest';
 import {createWorldScene} from '../src/scene/world-fixture';
-import {preCrossingAccessScene} from '../src/scene/save-compatibility';
+import {preCrossingAccessScene,preTowerRoomScene} from '../src/scene/save-compatibility';
 import type {Point,Scene} from '../src/scene/schema';
 import {crossingLanes,crossingPolygons,onWalkway} from '../src/scene/sites';
 import {polygonArea,polygonBounds,partition} from '../src/scene/polygons';
@@ -19,7 +19,7 @@ import {crossingReviewStart,crossingReviewPath} from '../src/game/crossing-revie
 import {loftReviewInput} from '../src/game/loft-review';
 
 let accepted:Scene|undefined,snapshot:string|undefined;
-function scene(){if(!accepted){accepted=createWorldScene();snapshot=JSON.stringify(accepted);}return accepted;}
+function scene(){if(!accepted){accepted={...preTowerRoomScene(createWorldScene()),revisionId:'r113',sourceHash:'handmade-city-life-v113'};snapshot=JSON.stringify(accepted);}return accepted;}
 beforeAll(()=>{scene();},60000);
 afterEach(()=>{if(accepted)expect(JSON.stringify(accepted)).toBe(snapshot);});
 const added=['crossing_medical_access','crossing_copper_access','crossing_weavers_access','crossing_terrace_access'];

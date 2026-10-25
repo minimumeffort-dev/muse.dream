@@ -1,5 +1,24 @@
 # Media and Dream highlighting
 
+## Office mezzanine, r114
+
+`towerroom` records the real player walking through Lantern Exchange's doorway,
+climbing the twelve-tread flight, sitting upstairs for two seconds and returning
+outside. Only the initial exterior observer pose is seeded; every later pose
+comes from ordinary fixed-step walking and seating. The existing capture exporter
+renders 720 consecutive 2400x1350 PNGs at 30 frames per simulation second. There
+is no frame interpolation or live-performance claim.
+
+Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> towerroom`.
+The HD video and still are 1600x900; the GIF is 1280x720. The still uses frame 180.
+Keep `towerroom.mp4`, `towerroom.gif` and `towerroom.jpg` together. The earlier
+station-quarter overview remains historical for the office's lobby-only geometry;
+its exterior shape, parking and promenade remain unchanged. The new recording
+replaces that earlier view as evidence for the office interior. It does not show
+the caretaker's full repair journey, which has separate behavioral checks.
+
+[Native capture and source checks](../evidence/tower-room/verification.md).
+
 ## Shorter work journeys, simulation 54
 
 `workerwalk` follows the actual caretaker through the Civic corner on a paid

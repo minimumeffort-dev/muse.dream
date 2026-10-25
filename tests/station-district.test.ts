@@ -77,9 +77,9 @@ it('walks from each existing sidewalk through the real tower doorway, across its
  }
 });
 
-it('uses the same F seating and break rule for all six benches, including both named lobby floors',()=>{
+it('uses the same F seating and break rule for all eight benches, including the named lobby and mezzanine floors',()=>{
  const w=world(),{scene}=w,seats=worldSeats(scene).filter(s=>s.objectId.startsWith('station_quarter_'));
- expect(new Set(seats.map(s=>s.objectId)).size).toBe(6);expect(seats).toHaveLength(12);
+ expect(new Set(seats.map(s=>s.objectId)).size).toBe(8);expect(seats).toHaveLength(16);
  const reference=impactOf(scene.objects.find(o=>o.id==='park_bench')!.spec);expect(reference).toMatchObject({kind:'break',pattern:'splinter',speed:95});
  for(const seat of seats){
   expect(seatAccessClear(scene,seat),seat.objectId).toBe(true);

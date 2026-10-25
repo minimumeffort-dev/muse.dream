@@ -12,6 +12,7 @@ asset shopper(module=city_people,object=river_shopper);
 asset student(module=city_people,object=campus_student);
 asset neighbor(module=city_people,object=park_neighbor);
 asset resident(module=city_people,object=city_resident);
+asset table(module=impact_creations,object=breakaway_table);
 
 place station_quarter_residences(object=homes,at=[11700,4700],heading_deg=180,role=prop);
 place station_quarter_offices(object=offices,at=[12200,4700],heading_deg=180,role=prop);
@@ -19,6 +20,8 @@ site station_quarter_home_access(object=station_quarter_residences,kind=home,lab
 site station_quarter_office_access(object=station_quarter_offices,kind=work,label="Lantern Exchange",entry=[0,-28],street=workshop_street,width=16,points=[[12200,5150]]);
 floor station_quarter_home_floor(on=station_quarter_residences,at=[0,.5,0],size=[70,60]);
 floor station_quarter_office_floor(on=station_quarter_offices,at=[0,.5,0],size=[62,54]);
+floor office_mezzanine(on=station_quarter_offices,at=[4,12.5,0],size=[54,54]);
+floor office_landing(on=station_quarter_offices,at=[-27,12.5,23],size=[8,8]);
 
 surface station_quarter_promenade(color=#bcb6a4,walkable=true,points=[[11520,4940],[12420,4940],[12420,4908],[11520,4908]]);
 surface station_quarter_taxi_apron(color=#939a96,points=[[11445,5152.5],[11615,5152.5],[11615,5010],[11445,5010]]);
@@ -35,6 +38,9 @@ place station_quarter_bench_sw(object=bench,at=[11830,4897],heading_deg=0,role=p
 place station_quarter_bench_se(object=bench,at=[12050,4897],heading_deg=0,role=prop);
 place station_quarter_home_seat(object=bench,at=[11630,4690],heading_deg=270,role=prop,floor=station_quarter_home_floor);
 place station_quarter_office_seat(object=bench,at=[12270,4690],heading_deg=90,role=prop,floor=station_quarter_office_floor);
+place station_quarter_gallery_south(object=bench,at=[12168.75,4735.15625],heading_deg=180,role=prop,floor=office_mezzanine);
+place station_quarter_gallery_north(object=bench,at=[12168.75,4664.84375],heading_deg=0,role=prop,floor=office_mezzanine);
+place station_quarter_gallery_table(object=table,at=[12168.75,4700],heading_deg=0,role=prop,floor=office_mezzanine);
 place station_quarter_lamp_west(object=lamp,at=[11540,4948],heading_deg=180,role=prop);
 place station_quarter_lamp_center(object=lamp,at=[11940,4900],heading_deg=0,role=prop);
 place station_quarter_lamp_east(object=lamp,at=[12400,4948],heading_deg=180,role=prop);

@@ -1111,7 +1111,8 @@ retargeting, catch-up, seeded resources or replayed rewards.
 
 The r111 quarter is additive Dream data north of Workshop Street. Keep the two
 physical lobby doorways, supported floor-bound seats, connected entrance paths,
-shared promenade and parking aprons; its upper tower storeys are not enterable.
+shared promenade and parking aprons. Its original upper storeys were not enterable;
+r114's first office mezzanine is described below.
 The building measure profile permits 3..120 metres, but all existing part, voxel,
 contact, resolved-scale and actor limits still apply. Projects permit 40 reachable
 modules and 144 definitions with the same per-file/source/depth bounds. The CLI
@@ -1189,3 +1190,22 @@ The format-19 rules-only upgrade validates exact simulation 54 first and keeps
 every saved field, original slot and older migration. No population rebase,
 needs/resources initialization, rewards, time advance or catch-up. Current tests
 pin 55; historical route tests retain their simulation-54 projection.
+
+## Office mezzanine, r114
+
+Lantern Exchange retains its measured scale, lobby doorway, foundation, exterior
+height and roof contacts. Its first upper room uses two named retained slabs,
+twelve generated treads and an attached guard, with 29 parts / 28 contacts.
+Keep ordinary walking, headroom, floor-aware cutaways and return access. The
+paired benches and table share category damage, seating and the existing finite
+classroom_furniture service. Include both new floors in its grounds; preserve
+all older targets, resources, workers, actor/rig and navigation limits.
+
+Format19/simulation55 registers exact r113 by restoring the old office spec,
+removing only the two new floors and three furnishings, and restoring the old
+service grounds/label. Prepare those source-matched contacts before prior
+navigation. Validate before bounded recovery of newly obstructed grounded poses;
+preserve every unaffected state field, time, ownership, ledger, pending journey,
+population and original slot. This is construction, not a new simulation rule.
+Higher rooms, lifts, real office jobs and finer stair proportions remain missing.
+See docs/examples/tower-mezzanine.dream and docs/dream/station-quarter.md.

@@ -16,9 +16,14 @@ Walkers now complete shared portals using their body size and take safe yielding
 steps. A complete old-engine save restores without resets, then the four stalled
 residents leave the junction. The same 189-member instanced population and all
 existing limits remain. [Current recording and checks](evidence/crowd-flow/verification.md).
-Usable tower rooms and real indoor routines remain the next neighborhood work.
+The office tower now has a stair-connected mezzanine with shared seating,
+breakable furniture and finite caretaker repairs. The player climbs, sits and
+walks out; the caretaker climbs to work. Existing saves retain their progress.
+[Office room and checks](dream/station-quarter.md#take-the-stairs).
+Real office/home routines, finer stair proportions and the remaining tower
+storeys remain neighborhood work.
 
-The station quarter's fourteen placed fixtures now connect to existing finite
+The station quarter's seventeen placed fixtures now connect to existing finite
 repair and replant jobs, including both lobby benches. New visible places need
 these same practical connections. The next priorities remain usable rooms and
 daily work/home routines inside the towers, richer shared activities and

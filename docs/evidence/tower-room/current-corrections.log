@@ -1,0 +1,29 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/crossing-access-world.test.ts tests/station-district.test.ts tests/interaction-rules.test.ts tests/vehicle-construction.test.ts tests/short-links-world.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/station-district.test.ts (5 tests) 11930ms
+   ✓ walks from each existing sidewalk through the real tower doorway, across its lobby and back outside  2405ms
+   ✓ moves all eight visitors on accepted paths and waits for approaching vehicles without adding live rigs  1475ms
+ ✓ tests/short-links-world.test.ts (5 tests) 14544ms
+   ✓ carries the same shorter routes through worker graph preparation without changing source data  2528ms
+   ✓ reaches the corner review through a real strike, finite dispatch and ordinary fixed ticks  3758ms
+ ✓ tests/interaction-rules.test.ts (11 tests) 8154ms
+   ✓ category-wide Dream interaction rules > enforces category rules for the original 23 tables and benches and nine station-quarter furnishings  7944ms
+ ✓ tests/crossing-access-world.test.ts (6 tests) 13635ms
+   ✓ accepts r113 with every named or geometric four-way intersection covered and preserves the released geometry  1449ms
+   ✓ keeps all crossing paint single-owned and clears centerlines, stop bars and bicycle glyphs using shared footprints  623ms
+   ✓ replaces the current planner’s 14536-unit old-layout detour with the supported 164-unit north crossing in both directions  534ms
+   ✓ walks the complete new crossing through normal controls and retains an already parked car  1094ms
+   ✓ shortens all fourteen station jobs while retaining every old target and clear outbound and return paths  943ms
+   ✓ keeps the unchanged population and maintenance budgets with the expanded public graph  1061ms
+ ✓ tests/vehicle-construction.test.ts (11 tests) 7923ms
+   ✓ retains parked bicycle cranks for bounded activation inside the existing live-animation cap  7763ms
+
+ Test Files  5 passed (5)
+      Tests  38 passed (38)
+   Start at  02:11:14
+   Duration  31.90s (transform 532ms, setup 25ms, collect 1.74s, tests 56.19s, environment 0ms, prepare 122ms)

@@ -1,3 +1,4 @@
+import officeR113 from './compatibility/r113-office.json';
 import maintenanceR111 from './compatibility/r111-maintenance.json';
 import marketR55 from './compatibility/r55-market.json';
 import marketR106 from './compatibility/r106-market.json';
@@ -115,19 +116,33 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r114 opens the first office mezzanine using existing floor, seating and repair rules. */
+export const TOWER_ROOM_COMPATIBILITY='783e51cc974118b4d28c283a48546c99a37aad7f28a09dee2c0ad7c65495f55f';
+const towerRoomProjections=new WeakMap<Scene,Scene>();
+const towerRoomFloors=new Set(['office_mezzanine','office_landing']);
+const towerRoomObjects=new Set(['station_quarter_gallery_south','station_quarter_gallery_north','station_quarter_gallery_table']);
+export function preTowerRoomScene(scene:Scene):Scene{
+ const cached=towerRoomProjections.get(scene);if(cached)return cached;
+ if(!scene.floors?.some(f=>towerRoomFloors.has(f.id)))return scene;
+ const prior={...scene,floors:scene.floors.filter(f=>!towerRoomFloors.has(f.id)),objects:scene.objects.filter(o=>!towerRoomObjects.has(o.id)).map(o=>o.id==='station_quarter_offices' ? {...o,spec:officeR113 as ObjectDslV2} : o),economy:scene.economy && {...scene.economy,repairs:scene.economy.repairs.map(r=>r.id==='classroom_furniture' ? {...r,label:'Repair school furniture',grounds:r.grounds?.filter(id=>!towerRoomFloors.has(id))} : r)}};
+ towerRoomProjections.set(scene,prior);return prior;
+}
+export function preTowerRoomCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preTowerRoomScene(scene),55,true,encode);}
+
 /** Simulation 55 lets bounded walking populations clear shared portals. */
 export const CROWD_FLOW_COMPATIBILITY='38d148c136e56816af6b70d32d9786aa79d15a9e952de13c71fd940d2f33ce87';
-export function preCrowdFlowCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(scene,54,true,encode);}
+export function preCrowdFlowCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preTowerRoomScene(scene),54,true,encode);}
 
 /** Simulation 54 improves future work routes without changing accepted world data. */
 export const WALKING_LINKS_COMPATIBILITY='6f51da4a8fd320851d05e664f6f72d5ed9f7be57050e26ad31339a2c57f597d2';
-export function preWalkingLinksCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(scene,53,true,encode);}
+export function preWalkingLinksCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preTowerRoomScene(scene),53,true,encode);}
 
 /** r113 completes four authored junction crossings; only derived pedestrian indices change. */
 export const CROSSING_ACCESS_COMPATIBILITY='5d8cf576772c3ebebead408d764fa6d6e90e060d314a0ed8ba62a9d30b57f15f';
 const crossingAccessProjections=new WeakMap<Scene,Scene>();
 const crossingAccessIds=new Set(['crossing_medical_access','crossing_copper_access','crossing_weavers_access','crossing_terrace_access']);
 export function preCrossingAccessScene(scene:Scene):Scene{
+ scene=preTowerRoomScene(scene);
  const cached=crossingAccessProjections.get(scene);if(cached)return cached;
  if(!scene.crossings.some(c=>crossingAccessIds.has(c.id)))return scene;
  const prior={...scene,crossings:scene.crossings.filter(c=>!crossingAccessIds.has(c.id))};crossingAccessProjections.set(scene,prior);return prior;

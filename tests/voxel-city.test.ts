@@ -20,14 +20,14 @@ describe('voxel city integration',()=>{
   expect(infrastructure.filter(added).map(o=>o.id)).toEqual(['station_quarter_residences','station_quarter_offices','station_quarter_taxi_0','station_quarter_taxi_1','station_quarter_van_0','station_quarter_van_1']);
   expect(people).toHaveLength(141);expect(people.filter(o=>!added(o))).toHaveLength(133);expect(people.filter(added)).toHaveLength(8);expect(people.every(o=>objects.includes(o))).toBe(true);expect(objects).toHaveLength(infrastructure.length+people.length);
   expect(infrastructure.some(o=>o.id==='market_hall')).toBe(true);
-  const benches=scene.objects.filter(o=>o.spec?.displayName==='Slatted park bench');expect(benches).toHaveLength(19);expect(benches.filter(o=>!added(o))).toHaveLength(13);expect(benches.filter(added)).toHaveLength(6);expect(benches.every(o=>'voxelSize' in o.spec! && o.spec.voxelSize===scene.voxelWorld?.objectCell)).toBe(true);
+  const benches=scene.objects.filter(o=>o.spec?.displayName==='Slatted park bench');expect(benches).toHaveLength(21);expect(benches.filter(o=>!added(o))).toHaveLength(13);expect(benches.filter(added)).toHaveLength(8);expect(benches.every(o=>'voxelSize' in o.spec! && o.spec.voxelSize===scene.voxelWorld?.objectCell)).toBe(true);
   const expected=compileDream(wall)[0]!;
   for(const id of ['park_wall_west','park_wall_east'])expect(scene.objects.find(o=>o.id===id)!.spec).toEqual({...expected,voxelSize:scene.voxelWorld?.objectCell});
   const reactive=scene.objects.filter(o=>o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && (o.spec.impact || o.spec.breakZones));
-  expect(reactive).toHaveLength(832);expect(reactive.filter(o=>!added(o))).toHaveLength(818);expect(reactive.filter(added)).toHaveLength(14);expect(reactive.map(o=>o.id)).toEqual(expect.arrayContaining(['hall_workbench','home_upper_settee','home_upper_table','home_upper_planter','home_settee','home_table','home_planter']));expect(impactBudget(scene)).toMatchObject({resident:12,residentFragments:27,pooledTemplates:21});
+  expect(reactive).toHaveLength(835);expect(reactive.filter(o=>!added(o))).toHaveLength(818);expect(reactive.filter(added)).toHaveLength(17);expect(reactive.map(o=>o.id)).toEqual(expect.arrayContaining(['hall_workbench','home_upper_settee','home_upper_table','home_upper_planter','home_settee','home_table','home_planter']));expect(impactBudget(scene)).toMatchObject({resident:12,residentFragments:27,pooledTemplates:21});
   expect(scene.sports.map(s=>s.ballId).sort()).toEqual(['court_ball','pitch_ball']);
   const fragments=(objects:typeof reactive)=>objects.reduce((n,o)=>n+((o.spec as ObjectDslV2).impact?.kind==='bounce' ? 0 : objectFragments(o.spec as ObjectDslV2).length),0);
-  expect(fragments(reactive)).toBe(1052);expect(fragments(reactive.filter(o=>!added(o)))).toBe(1002);expect(fragments(reactive.filter(added))).toBe(50);
+  expect(fragments(reactive)).toBe(1073);expect(fragments(reactive.filter(o=>!added(o)))).toBe(1002);expect(fragments(reactive.filter(added))).toBe(71);
  });
  it('allows a real off-road car impact to release four chunks and continues driving',()=>{
   const world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11};

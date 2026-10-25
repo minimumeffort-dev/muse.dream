@@ -18,7 +18,7 @@ import {repairPath} from '../src/sim/repair';
 
 let scene:ReturnType<typeof createWorldScene>,world:World,prior:World,snapshot:string;
 beforeAll(()=>{
- scene=createWorldScene();snapshot=JSON.stringify(scene);const oldCrossing=c.preCrossingAccessScene(scene),oldDistrict=c.preDistrictScene(scene);
+ scene={...c.preTowerRoomScene(createWorldScene()),revisionId:'r113'};snapshot=JSON.stringify(scene);const oldCrossing=c.preCrossingAccessScene(scene),oldDistrict=c.preDistrictScene(scene);
  world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.WALKING_LINKS_COMPATIBILITY,previousWalkingLinksSaveCompatibility:c.CROSSING_ACCESS_COMPATIBILITY,previousCrossingAccessSaveCompatibility:c.STATION_MAINTENANCE_COMPATIBILITY,previousCrossingAccessContacts:sceneContactData(oldCrossing),previousCrossingAccessNavigation:ambientGraph(oldCrossing),previousStationMaintenanceSaveCompatibility:c.DISTRICT_COMPATIBILITY,previousDistrictSaveCompatibility:c.UPSTAIRS_SOCIAL_COMPATIBILITY,previousDistrictContacts:sceneContactData(oldDistrict),previousDistrictNavigation:ambientGraph(oldDistrict),previousUpstairsSocialSaveCompatibility:c.SEATED_REST_COMPATIBILITY,previousSeatedRestSaveCompatibility:c.COMPANY_COMPATIBILITY};
  prior={...world,saveCompatibility:c.CROSSING_ACCESS_COMPATIBILITY,previousWalkingLinksSaveCompatibility:undefined};
 },60000);

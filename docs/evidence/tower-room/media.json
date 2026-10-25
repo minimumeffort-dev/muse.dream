@@ -1,0 +1,41 @@
+{
+  "sourceFrames": 720,
+  "sourceSize": [
+    2400,
+    1350
+  ],
+  "fps": 30,
+  "simulationSeconds": 24,
+  "posterFrame": 180,
+  "interpolatedFrames": 0,
+  "livePerformanceMeasurement": false,
+  "files": {
+    "towerroom.mp4": {
+      "bytes": 3668658,
+      "sha256": "f5e1d6105bbd534e5ea1e52be71dfc66155e3e901dcad2c30ef1b8bbf5f53ad5",
+      "frames": 720,
+      "size": [
+        1600,
+        900
+      ]
+    },
+    "towerroom.gif": {
+      "bytes": 27178360,
+      "sha256": "6771d216d64936bbc6d8256ee93b9660097a81deba85ccd00d41eba6b381af7b",
+      "frames": 720,
+      "size": [
+        1280,
+        720
+      ]
+    },
+    "towerroom.jpg": {
+      "bytes": 114197,
+      "sha256": "a0735791d7d1b83d15616524af9a354a0f6cd2f6096117b53d99eaef8d6efa5d",
+      "frames": 1,
+      "size": [
+        1600,
+        900
+      ]
+    }
+  }
+}

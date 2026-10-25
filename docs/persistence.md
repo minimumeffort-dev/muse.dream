@@ -1,6 +1,13 @@
 # Leave and come back
 
-The current world is r113, using format 19 / simulation 55. Its registered
+The current world is r114, using format 19 / simulation 55. The registered
+office-room upgrade validates exact r113 geometry and state before applying
+the mezzanine. It preserves stock, money, damage, tasks, population, clocks and
+original slots. Only a grounded pose newly obstructed by construction uses
+existing bounded recovery. Upstairs seating and paid repair claims retain their
+floor on reload. [Room and restore evidence](evidence/tower-room/verification.md).
+
+The preceding r113 crowd-flow update used format 19 / simulation 55. Its registered
 simulation-54 upgrade retains the exact saved state before using the new ambient
 walking rules. It preserves positions, targets, random counters, waits, movement
 distances, needs, jobs, money and world time. Existing slots remain untouched;
@@ -169,7 +176,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 52. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+Format 19 retains the exact source hash and compatibility fingerprint. The earlier r110 world used simulation version 52; the current registration is described above. Economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved

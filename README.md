@@ -16,18 +16,25 @@ The station side of town now has a 55-metre brick residential tower and a
 75-metre office tower. Walk into either lobby, sit on a bench, or take one of the
 four parked taxis and vans. Their entrances, promenade and parking connect to
 Workshop Street; eight residents walk through the same pedestrian network.
-Upper storeys and lifts are still to come. The taxis use the existing car
-controls, without passengers or fares.
+Lantern Exchange now has a stair-connected mezzanine with two usable benches
+and a table. The higher storeys and lifts are still to come. The taxis use the
+existing car controls, without passengers or fares.
 
 The quarter also shares the city's maintenance system. Break a bench or knock
 over a light and the caretaker can walk over, spend a real repair kit and fix
 it. Felled rowans need a sapling and grow back over time. The two lobby benches
-use the same rule, reached through their doorways.
+use the same rule, reached through their doorways. Upstairs furniture also
+connects to that service; the caretaker climbs before working and gets paid once.
 
 ![Walk through the station quarter and take a ride](docs/media/stationquarter.gif)
 
 [Watch in HD](docs/media/stationquarter.mp4) ·
 [Explore the district and its Dream source](docs/dream/station-quarter.md)
+
+![Climbing to the office mezzanine and sitting upstairs](docs/media/towerroom.jpg)
+
+[Walk upstairs in HD](docs/media/towerroom.mp4) · [GIF](docs/media/towerroom.gif) ·
+[Build the same floor connections in Dream](docs/examples/tower-mezzanine.dream)
 
 Four missing crossings join the medical interchange, Copper Street, Weavers
 Lane and South Terrace. Work journeys now also use short, supported links around

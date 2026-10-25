@@ -59,29 +59,36 @@ object station_offices(label="Lantern Exchange offices"){
  measure(kind=building,axis=y,meters=75);
  body(interaction=solid,radius=30,height=160);
  foundation(size=[64.4,56.4],color=#a4aaa8);
- interior(at=[0,.5,0],size=[62,12,54]){portal entrance(side=front,offset=0,width=4,height=8);}
+ interior(at=[0,.5,0],size=[62,24,54]){portal entrance(side=front,offset=0,width=4,height=8);}
  lamp(at=[0,11.8,0],radius=26,color=#f4d398);
  contact c_floor(at=[0,0,0],size=[62,54],height=.5);
- contact c_left(at=[-31.5,0,0],size=[1,56],height=12.5);
- contact c_right(at=[31.5,0,0],size=[1,56],height=12.5);
- contact c_back(at=[0,0,27.5],size=[64,1],height=12.5);
- contact c_front_left(at=[-17,0,-27.5],size=[30,1],height=12.5);
- contact c_front_right(at=[17,0,-27.5],size=[30,1],height=12.5);
- contact c_lintel(at=[0,8.5,-27.5],size=[4,1],height=4);
- contact c_ceiling(at=[0,12.5,0],size=[64,56],height=51.5);
+ contact c_left(at=[-31.5,0,0],size=[1,56],height=24.5);
+ contact c_right(at=[31.5,0,0],size=[1,56],height=24.5);
+ contact c_back(at=[0,0,27.5],size=[64,1],height=24.5);
+ contact c_front_left(at=[-17,0,-27.5],size=[30,1],height=24.5);
+ contact c_front_right(at=[17,0,-27.5],size=[30,1],height=24.5);
+ contact c_lintel(at=[0,8.5,-27.5],size=[4,1],height=16);
+ contact c_ceiling(at=[0,24.5,0],size=[64,56],height=39.5);
+ contact c_mezzanine(at=[4,11.5,0],size=[54,54],height=1);
+ contact c_landing(at=[-27,11.5,23],size=[8,8],height=1);
+ contact c_gallery_guard(at=[-23.15,12.5,-4],size=[.3,46],height=2.6);
+ stairs gallery_stairs(material=tower_stone,at=[-27,.5,0],size=[6,12,40],steps=12);
  contact c_shaft(at=[0,64,0],size=[52,44],height=124);
  contact c_roof_left(at=[-25,128,0],size=[2,44],height=64);
  contact c_roof_right(at=[25,128,0],size=[2,44],height=64);
  contact c_roof_front(at=[0,128,-21],size=[48,2],height=64);
  contact c_roof_back(at=[0,128,21],size=[48,2],height=64);
  part floor(shape=box,material=tower_floor,at=[0,.25,0],size=[62,.5,54]);
- part left(shape=box,material=tower_metal,at=[-31.5,6.25,0],size=[1,12.5,56],cutaway=left);
- part right(shape=box,material=tower_metal,at=[31.5,6.25,0],size=[1,12.5,56],cutaway=right);
- part back(shape=box,material=tower_metal,at=[0,6.25,27.5],size=[64,12.5,1],cutaway=back);
- part front_left(shape=box,material=tower_metal,at=[-17,6.25,-27.5],size=[30,12.5,1],cutaway=front);
- part front_right(shape=box,material=tower_metal,at=[17,6.25,-27.5],size=[30,12.5,1],cutaway=front);
- part lintel(shape=box,material=tower_metal,at=[0,10.5,-27.5],size=[4,4,1],cutaway=front);
- part podium(shape=box,material=tower_metal,at=[0,38.25,0],size=[64,51.5,56],cutaway=roof);
+ part left(shape=box,material=tower_metal,at=[-31.5,12.25,0],size=[1,24.5,56],cutaway=left);
+ part right(shape=box,material=tower_metal,at=[31.5,12.25,0],size=[1,24.5,56],cutaway=right);
+ part back(shape=box,material=tower_metal,at=[0,12.25,27.5],size=[64,24.5,1],cutaway=back);
+ part front_left(shape=box,material=tower_metal,at=[-17,12.25,-27.5],size=[30,24.5,1],cutaway=front);
+ part front_right(shape=box,material=tower_metal,at=[17,12.25,-27.5],size=[30,24.5,1],cutaway=front);
+ part lintel(shape=box,material=tower_metal,at=[0,16.5,-27.5],size=[4,16,1],cutaway=front);
+ part mezzanine(shape=box,material=tower_floor,at=[4,12,0],size=[54,1,54],cutaway=above);
+ part landing(shape=box,material=tower_floor,at=[-27,12,23],size=[8,1,8],cutaway=above);
+ voxels gallery_guard(material=tower_metal,at=[-23.15,13.8,-4],size=[.3,2.6,46],grid=[1,13,23],cutaway=above){fill rail(from=[0,12,0],to=[1,13,23]);repeat posts(index=i,count=6){fill post(from=[0,0,i*4],to=[1,13,i*4+1]);}}
+ part podium(shape=box,material=tower_metal,at=[0,44.25,0],size=[64,39.5,56],cutaway=roof);
  part shaft(shape=box,material=tower_metal,at=[0,126,0],size=[52,124,44],cutaway=roof);
  voxels parapet(material=tower_metal,at=[0,128,0],size=[52,128,44],grid=[26,32,22],cutaway=roof){fill rim(from=[0,31,0],to=[26,32,22]);cut roof(from=[1,31,1],to=[25,32,21]);}
  part podium_coping(shape=box,material=tower_stone,at=[0,63.7,0],size=[64,.6,56],cutaway=roof);
@@ -97,5 +104,5 @@ object station_offices(label="Lantern Exchange offices"){
  voxels lobby_glass(material=tower_office_glass,at=[0,6.25,-28.08],size=[60,10,.16],grid=[30,5,1],cutaway=front){fill left(from=[0,0,0],to=[13,5,1]);fill right(from=[17,0,0],to=[30,5,1]);}
  voxels door_surround(material=tower_stone,at=[0,4.8,-28.08],size=[5,9,.2],grid=[20,32,1],cutaway=front){fill frame(from=[0,0,0],to=[20,32,1]);cut opening(from=[2,0,0],to=[18,29,1]);}
  part canopy(shape=box,material=tower_metal,at=[0,10,-30],size=[18,.5,5],cutaway=roof);
- part light(shape=box,material=tower_light,at=[0,12.35,-4],size=[20,.3,1.2],cutaway=roof);
+ part light(shape=box,material=tower_light,at=[0,11.35,-4],size=[20,.3,1.2],cutaway=above);
 }

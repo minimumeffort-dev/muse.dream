@@ -31,16 +31,57 @@ rowan trees and two planters give the path edges some structure without filling
 the walking corridor. These additions use existing population, lighting and
 streaming systems.
 
+## Take the stairs
+
+Lantern Exchange now has a usable mezzanine above its lobby. Enter from Workshop
+Street and take the staircase against the right-hand wall. The landing opens
+onto an upstairs seating area with two benches facing a timber table. **F** sits
+and stands; ordinary movement also gets you up. Sitting recovers energy through
+the same rule as every other bench. Walk back down to leave.
+
+![The office staircase and upper seating area](../media/towerroom.jpg)
+
+[Full climb, seat and return in HD](../media/towerroom.mp4) ·
+[GIF](../media/towerroom.gif) · [Runtime and save checks](../evidence/tower-room/verification.md)
+
+The slab, landing, guard and each tread have matching physical contacts. Dream
+names the retained slabs with `floor`; furniture binds to those floors. The
+upper slab and its contents cut away while you are below them. The flight uses
+the current arcade step sizes; finer stair proportions remain a construction
+improvement. No lift or teleport is involved.
+
+[The complete small world](../examples/tower-mezzanine.dream) imports the same
+office and benches. It can be checked with:
+
+```sh
+npm run -s dream -- check docs/examples/tower-mezzanine.dream --modules src/scene/world
+```
+
+Its two upper floor bindings use existing vocabulary:
+
+```dream
+floor mezzanine(on=exchange,at=[4,12.5,0],size=[54,54]);
+floor landing(on=exchange,at=[-27,12.5,23],size=[8,8]);
+```
+
+These declarations bind slabs already built by the object; they do not create
+floating floors. The enclosing building supplies the doorway, clear room,
+stair treads, landing and guard. Keep their geometry connected before placing
+furniture. The office remains 75 metres tall and fits the existing 32-part and
+32-contact limits, with 29 parts and 28 contacts.
+
 ## Damage has a follow-up
 
-All six benches, three lamps and two planters are connected to the caretaker's
+All eight benches, the upstairs table, three lamps and two planters are connected to the caretaker's
 existing fixture service. The three rowans use the tree service. A damaged
 fixture reserves a real kit and wage at the market; the caretaker walks to it,
 works there and returns home with any eligible recovered hardware. Replanting consumes a sapling,
 pays once and leaves a young tree to grow. Missing stock or an obstructed repair
 space can delay the job. Nobody earns money while travelling.
 
-The lobby benches use their named floors and actual doorways. Outdoor approaches
+The lobby and mezzanine furniture use their named floors and actual doorways. The
+caretaker reaches upper jobs through the same stairs and returns by that route.
+Outdoor approaches
 join the promenade; invisible `finish=terrain` work grounds describe where a
 worker may stand without painting another patch over the landscape. The same
 finite repair offers remain available to the player through **H** at the market.
@@ -152,11 +193,12 @@ npm run -s dream -- check docs/examples/ground-floor-seating.dream --modules src
 
 ## What is still missing
 
-The ground-floor lobbies are enterable. Upper tower storeys and lifts are not
-implemented. A residential label does not create households, and an office label
-does not create staff or paid work. The taxis are driveable cars; they do not yet
+The ground-floor lobbies and first office mezzanine are enterable. The remaining
+tower storeys and lifts are not implemented. A residential label does not create
+households, and the upstairs seating area does not create office staff or paid
+office work. The taxis are driveable cars; they do not yet
 take passengers or charge fares. The van has no separate cargo-storage mechanic.
-Building shells are not repair targets; maintenance here covers the fourteen
+Building shells are not repair targets; maintenance here covers the seventeen
 placed benches, lights, planters and trees.
 The live review confirmed the office doorway and bench and found walkers stalled
 at the promenade junction. Simulation 55 now clears that shared portal through
@@ -164,6 +206,12 @@ body-sized arrival and safe yielding steps. Existing saves retain their state
 before the rule takes effect. [Current crowd recording and checks](../evidence/crowd-flow/verification.md).
 [Earlier native review](../evidence/station-review/verification.md).
 The world remains a handmade mock with no provider calls.
+
+r114 validates the exact r113 world before applying construction. Existing
+resources, damage, journeys, population, time and original save slots stay intact.
+A grounded pose newly obstructed by stairs uses bounded local recovery. Saved
+upstairs seating and pending repairs retain their floor and claims on reload.
+The save format remains 19 and the engine simulation version remains 55.
 
 [Placement, persistence and runtime evidence](../evidence/station-quarter/verification.md).
 [Maintenance and save evidence](../evidence/station-maintenance/verification.md).

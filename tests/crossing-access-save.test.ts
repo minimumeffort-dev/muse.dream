@@ -19,7 +19,7 @@ import {stepNpcs} from '../src/sim/npcs';
 let scene:ReturnType<typeof createWorldScene>,previous:typeof scene,world:World,oldWorld:World,snapshot:string,oldSnapshot:string;
 const crossings=new Set(['crossing_medical_access','crossing_copper_access','crossing_weavers_access','crossing_terrace_access']);
 beforeAll(()=>{
- scene=createWorldScene();previous=c.preCrossingAccessScene(scene);snapshot=JSON.stringify(scene);oldSnapshot=JSON.stringify(previous);
+ scene={...c.preTowerRoomScene(createWorldScene()),revisionId:'r113'};previous=c.preCrossingAccessScene(scene);snapshot=JSON.stringify(scene);oldSnapshot=JSON.stringify(previous);
  const beforeDistrict=c.preDistrictScene(scene);
  world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.CROSSING_ACCESS_COMPATIBILITY,previousCrossingAccessSaveCompatibility:c.STATION_MAINTENANCE_COMPATIBILITY,previousCrossingAccessContacts:sceneContactData(previous),previousCrossingAccessNavigation:ambientGraph(previous),previousStationMaintenanceSaveCompatibility:c.DISTRICT_COMPATIBILITY,previousDistrictSaveCompatibility:c.UPSTAIRS_SOCIAL_COMPATIBILITY,previousDistrictContacts:sceneContactData(beforeDistrict),previousDistrictNavigation:ambientGraph(beforeDistrict),previousUpstairsSocialSaveCompatibility:c.SEATED_REST_COMPATIBILITY,previousSeatedRestSaveCompatibility:c.COMPANY_COMPATIBILITY};
  oldWorld={...world,scene:previous,saveCompatibility:c.STATION_MAINTENANCE_COMPATIBILITY,previousCrossingAccessSaveCompatibility:undefined,previousCrossingAccessContacts:undefined,previousCrossingAccessNavigation:undefined};
