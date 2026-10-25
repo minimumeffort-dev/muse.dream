@@ -1,0 +1,23 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/repair-verge-world.test.ts tests/growth-world.test.ts tests/crossing-access-world.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/growth-world.test.ts (2 tests) 1634ms
+   ✓ connects the orchard through its actual garden path and preserves the previous physical world  1624ms
+ ✓ tests/repair-verge-world.test.ts (2 tests) 8175ms
+   ✓ serves every declared city target and routes the four formerly isolated lamps through a real crossing  1135ms
+   ✓ rejects the same service coverage when its real street crossing is removed  7040ms
+ ✓ tests/crossing-access-world.test.ts (6 tests) 9919ms
+   ✓ accepts r113 with every named or geometric four-way intersection covered and preserves the released geometry  706ms
+   ✓ keeps all crossing paint single-owned and clears centerlines, stop bars and bicycle glyphs using shared footprints  624ms
+   ✓ replaces the 15540-unit medical detour with the supported 164-unit north crossing in both directions  496ms
+   ✓ walks the complete new crossing through normal controls and retains an already parked car  394ms
+   ✓ shortens all fourteen station jobs while retaining every old target and clear outbound and return paths  451ms
+
+ Test Files  3 passed (3)
+      Tests  10 passed (10)
+   Start at  22:44:57
+   Duration  19.72s (transform 508ms, setup 22ms, collect 15.66s, tests 19.73s, environment 0ms, prepare 72ms)

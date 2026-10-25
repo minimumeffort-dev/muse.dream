@@ -1,0 +1,8 @@
+{
+  "publicUrl": "https://musedream.vercel.app/",
+  "deploymentId": "dpl_EAvZsncfPC9zWkPFsJH5FEGvB4WR",
+  "gitRef": "main",
+  "gitSha": "b9fa201f88802bdfbd4e2ade6614a09aa21506e9",
+  "readyState": "READY",
+  "browserObservation": "Only passive world-map image was present; clicking it left the accessibility tree unchanged. No expanded-map opener was exposed."
+}
