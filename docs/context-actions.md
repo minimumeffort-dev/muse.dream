@@ -44,7 +44,7 @@ the current selection, with no bottom stripe;
 a separate light outline shows keyboard focus. The framed map stays north-up. The wallet includes a small fullness
 gauge; its coin icon replaces the old currency abbreviation.
 
-Click the minimap or press **C** to open the world map. Scroll or pinch over
+Click the minimap image or its World/Nearby header, or press **C**, to open the world map. Scroll or pinch over
 either map to zoom it independently of the game camera. In the expanded map,
 drag to pan and click to set a waypoint. Arrow keys/WASD pan, **+ / −** zoom,
 **Home** finds you, **0** fits the world and **Enter** places a waypoint at the

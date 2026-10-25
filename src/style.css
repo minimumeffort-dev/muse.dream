@@ -48,7 +48,7 @@ kbd { display:inline-block; font:700 10px Manrope,system-ui,sans-serif; min-widt
 .sport-meter b { display:none; position:absolute; left:58%; top:-2px; width:14%; height:6px; background:#f7c84370; border-inline:1px solid var(--yellow); }
 #sport-action[data-kind="basketball"] .sport-meter b { display:block; }
 #map-frame { position:fixed; right:var(--gutter); bottom:max(var(--gutter),env(safe-area-inset-bottom)); width:184px; margin:0; padding:7px; border:1px solid var(--line); border-radius:12px; background:var(--hud); color:var(--paper); box-shadow:0 5px 24px #0003; }
-#map-frame figcaption { display:flex; justify-content:space-between; padding:2px 4px 7px; font-size:11px; font-weight:650; }
+#map-frame .minimap-heading { display:flex; justify-content:space-between; padding:2px 4px 7px; font-size:11px; font-weight:650; }
 .compass { color:var(--yellow); }
 #world-map { width:168px; height:135px; border-radius:6px; }
 #map-open { display:block; padding:0; width:100%; border-radius:6px; background:none; }
