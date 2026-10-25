@@ -11,6 +11,21 @@ trailers, vehicle damage and service fleets remain separate work.
 
 ## Next playable work
 
+The station quarter's fourteen placed fixtures now connect to existing finite
+repair and replant jobs, including both lobby benches. New visible places need
+these same practical connections. The next priorities remain usable rooms and
+daily work/home routines inside the towers, richer shared activities and
+relationships, then lifts and vehicle cargo. Upper-storey labels alone do not
+implement those systems. [Station maintenance](dream/station-quarter.md#damage-has-a-follow-up).
+
+Before expanding tower interiors, audit pedestrian detours and missing nearer
+crossings. In the native station-bench repair recording, the caretaker starts
+work around 1,511 simulation seconds after walking roughly 21,000 world units
+via the eastern airfield, for about 5,300 units of straight-line displacement.
+All fourteen maintenance targets are connected; this observed route does not
+yet establish a navigation bug. Any network correction needs a separate,
+save-compatible change. [Recorded return path](evidence/station-maintenance/native-repaired.json).
+
 The commuter now rests upstairs; player seating and finite paid repairs work on
 the same upper floor. Named Dream floors connect retained slabs, furniture and
 height-aware stair trips. Saved travel and claims survive reload. Daily work attendance now connects
@@ -106,10 +121,13 @@ lower-powered hardware remains a separate measurement task.
 Worker walking now also follows irregular commerce timestamps, keeps its limb
 clock continuous and hands back to ordinary routes without a position jump.
 The bakery now serves inside the hall, behind its existing table. Customers,
-staff and supply workers share the doorway. The caretaker keeps all 449 repair
-and 106 replanting targets through connected work grounds and the public orchard
-path. Registered saves retain their ledgers, journeys and committed work.
+staff and supply workers share the doorway. The original 449-target fixture
+service retains its 413 street-network lamps; the school service adds the three
+station-quarter lamps, so all 416 lamps are repairable. The caretaker can replant
+109 of the 348 trees through connected work grounds, leaving 239 outside current
+coverage. Registered saves retain their ledgers, journeys and committed work.
 [Indoor service checks](evidence/indoor-service/verification.md).
+[Station maintenance](dream/station-quarter.md#damage-has-a-follow-up).
 Baking now names the existing table as equipment. Damage refunds interrupted
 batches for players and staff; the caretaker restores production through its
 existing repair service. The same declaration works for food and workshop jobs.
@@ -126,7 +144,7 @@ charged shots and net containment, with saved match ownership, scores, venue and
 clocks. The city shares one bounded squad; it assembles at the chosen ground.
 NPC-hosted games, fouls and league schedules remain further work.
 
-The current audit finds all thirteen slatted park benches have two authored seats, checked
+The current audit finds that slatted park benches have two authored seats, checked
 for support and dry access by complete-world validation. Keep that coverage when
 adding furniture variants. Apply the same category-wide consistency to other furniture and
 vehicles, preserving collision-free approaches and persistent state.
@@ -151,12 +169,12 @@ The useful shared primitives are entities with typed state, ownership, resources
 
 | Domain | What works now | Next executable test | Missing mechanics |
 | --- | --- | --- | --- |
-| Businesses and economics | Playable market with finite stock, conserved trade, inventory, food, paid recipe work and player flour/bread deliveries between 3D destinations; 449 fixture repairs, including all 413 lamps, and 106 tree-replanting targets across connected grounds and service streets with finite kits/pay, saved worker paths and paid kit procurement, walking NPC resupply and separate Lab exercises; depot ownership and conserved company transfers | Extend connected recovery coverage and upstream production | Upstream production chains, contracts, weekly schedules, general skills and pricing policy |
+| Businesses and economics | Playable market with finite stock, conserved trade, inventory, food, paid recipe work and player flour/bread deliveries between 3D destinations; the original 449-target fixture service plus station fixtures, including all 416 lamps across the two services, and 109 tree-replanting targets across connected grounds and service streets with finite kits/pay, saved worker paths and paid kit procurement, walking NPC resupply and separate Lab exercises; depot ownership and conserved company transfers | Extend connected recovery coverage and upstream production | Upstream production chains, contracts, weekly schedules, general skills and pricing policy |
 | Education | Lesson-pack delivery and a capacity-limited session exercise | Several learners choose a prerequisite class and share a timetable | Prerequisites, attendance, skills, feedback, curriculum and an explicit learning model |
 | Healthcare operations | Supply logistics and a timed service queue | A clinic schedules staff and routes supplies through shortages | Appointments, staff roles, equipment, staffing constraints and queue discipline; clinical outcomes need a separately justified model |
-| Flora | 345 measured trees can fall; 106 trees, including every furnished street tree, replant through finite saplings, paid player/NPC work and saved physical growth; authored vegetation and a separate Lab task | Plants compete for finite water through a changing season | Broader destructible-tree coverage, soil/water/light/season conditions, reproduction and a justified biological model |
+| Flora | 348 measured trees can fall; 109 trees, including every furnished street tree and the three station-quarter rowans, replant through finite saplings, paid player/NPC work and saved physical growth; 239 remain outside recovery coverage; authored vegetation and a separate Lab task | Plants compete for finite water through a changing season | Replanting for the remaining 239 trees, soil/water/light/season conditions, reproduction and a justified biological model |
 | Fauna | Authored wildlife, flock motion, NPC habitats and a care-visit task | Animals seek habitat/food as resources change | Species traits, needs, perception, food webs, population dynamics and animal behavior beyond fixed routes |
-| Transport and access | Direct 3D vehicle controls; boardable bus, tram and rail services; connected airport and medical sites; explicit travel links in the lab | A policy chooses walking, cycling and transit to reach a real entrance | Binding logical locations to sites, path planning, travel modes, schedules and action completion from actual simulation contacts |
+| Transport and access | Direct 3D vehicle controls, including 95 dormant parked rides; boardable bus, tram and rail services; connected airport and medical sites; explicit travel links in the lab | A policy chooses walking, cycling and transit to reach a real entrance | Binding logical locations to sites, path planning, travel modes, schedules and action completion from actual simulation contacts |
 | Agent evaluation | Private local observations, joint actions, deterministic contention, tasks, deadlines, metrics and exact replay | Two different policies complete the same held-out scenario under the same budgets | Real policy adapters, model/version metadata, action masks, inference limits, scoring validation and repeated seeds |
 | Dataset/platform operations | Local JSONL exports and headless replay | Reproduce a failed external-policy run with its exact source and model configuration | Persistent run storage, jobs, access control, provenance, licensing, train/test splits, review and dataset export pipelines |
 
@@ -182,10 +200,10 @@ Night navigation now has readable sky/ground fill outside lamp pools, while stat
 ## Current priorities and delivered foundation
 
 1. The social foundation now has authored conversations, recognition on return, local saves and inspected backup restore, including physical changes. Comments and spoken wording can change without resetting progress. The first market has a registered migration that preserves the earlier world and initializes only its new state. Later geometry, population, economy and rule changes still need explicit migrations.
-2. The market now connects finite stock, buy/sell, meals, fullness, paid recipe work and NPC staff/customers. Player delivery now brings finite flour from the station and bread to the school. The market caretaker now repairs 449 targets, including all 413 lamps, the sixteen planted street tubs and both produce stalls, which now topple when hit hard, across the market, park, station, school and 32 service streets using finite kits/pay, pedestrian-network travel and saved work. Paid player procurement replenishes kits from finite station stock; the player can take the same job. All 413 streetlights now share pooled topple behavior and persistent light-pool damage. The caretaker also replants 106 trees, including all 93 furnished street trees, through finite saplings and connected work approaches; saved physical growth waits for clearance. Multi-input recipes now connect bread and vegetables to packed lunches, and boards/fasteners to repair kits used by the existing repair service. Next connect remote woodland recovery and more structural categories, then upstream production and schedules: the depot and customers still have finite budgets, and work has personal completion requirements with daily physical shifts but no general skill system. The caretaker can now resupply kits and saplings from finite station stock through physical pedestrian trips and the shared delivery ledger. Keep sharing transactions with NPCs. The Lab remains separate.
+2. The market now connects finite stock, buy/sell, meals, fullness, paid recipe work and NPC staff/customers. Player delivery now brings finite flour from the station and bread to the school. The market caretaker retains the original 449-target fixture service, including its 413 street-network lamps, the sixteen planted street tubs and both produce stalls, which topple when hit hard, across the market, park, station, school and 32 service streets using finite kits/pay, pedestrian-network travel and saved work. Paid player procurement replenishes kits from finite station stock; the player can take the same job. The school service now also covers the station quarter’s six benches, three lamps and two planters. All 416 lamps share pooled topple behavior and persistent light-pool damage. The caretaker also replants 109 trees, including all 93 furnished street trees and the three station-quarter rowans, through finite saplings and connected work approaches; saved physical growth waits for clearance. Multi-input recipes now connect bread and vegetables to packed lunches, and boards/fasteners to repair kits used by the existing repair service. Next connect remote woodland recovery and more structural categories, then upstream production and schedules: the depot and customers still have finite budgets, and work has personal completion requirements with daily physical shifts but no general skill system. The caretaker can now resupply kits and saplings from finite station stock through physical pedestrian trips and the shared delivery ledger. Keep sharing transactions with NPCs. The Lab remains separate.
 3. The market now has an explicit ground-floor space, checked portal, physical walls/floor/ceiling, cutaway view and connected furniture repair. Expand useful indoor activities and handheld tools next. Unarmed prop hits now connect damage to repair and production. Multiple floors, stairs and lifts must connect real movement layers; hiding a car beneath a roof is insufficient.
 4. Staff now prepare lunches, the commuter takes a real meal detour, and the helper can resupply flour, using finite credits/stock, a timed meal and a saved return to the paused routine. Shared indoor seating now connects that trip to the hall. Next add more resident purposes and upstream production, then schedules and relationship history that change choices. Completed shared meals now add per-person history and authored return dialogue, with availability/fullness/cooldown boundaries. NPC-funded invitations now use that same activity and finite economy. Next add another shared activity; dating and a general relationship system remain separate.
-5. The 91 dormant vehicles now share direct controls through bounded activation, with instanced parked poses and persistent contacts. Pickups and parcel trucks now reuse that shared control system. Keep auditing road paint, corners, signs and asset attachments. Expand force-based destruction consistently across the world and make it persistent. The first repair worker now uses connected pedestrian routes, waits for obstructions and restores selected market/park/station furniture. Pooled static destruction now supports the 413 streetlights without making their intact geometry resident scene nodes. All 345 measured trees now share whole-tree toppling while retaining their foliage wind and material finishes. The service replants 106 trees through connected work areas, with matching contact bodies and finite delivered saplings. Extend recovery to the remaining woodland and more structural categories. Active debris and mesh caches remain bounded at 24 assemblies/templates and 128 pieces/fragment meshes; legacy limits stay unchanged. Add coherent weather and sound alongside those systems. Measure dense scenes, interiors, long travel and save responsiveness. Extend save migration when the world schema changes. Files can move progress between compatible browsers/devices manually; there is no cloud sync.
+5. The 95 dormant vehicles now share direct controls through bounded activation, with instanced parked poses and persistent contacts. Pickups and parcel trucks now reuse that shared control system. Keep auditing road paint, corners, signs and asset attachments. Expand force-based destruction consistently across the world and make it persistent. The first repair worker now uses connected pedestrian routes, waits for obstructions and restores selected market/park/station furniture. Pooled static destruction now supports all 416 lamps without making their intact geometry resident scene nodes. All 348 measured trees now share whole-tree toppling while retaining their foliage wind and material finishes. The service replants 109 trees through connected work areas, with matching contact bodies and finite delivered saplings. Extend recovery to the 239 trees outside current coverage and more structural categories. Active debris and mesh caches remain bounded at 24 assemblies/templates and 128 pieces/fragment meshes; legacy limits stay unchanged. Add coherent weather and sound alongside those systems. Measure dense scenes, interiors, long travel and save responsiveness. Extend save migration when the world schema changes. Files can move progress between compatible browsers/devices manually; there is no cloud sync.
 
 Existing limits remain visible: the city has decorative institutions, bounded NPC routines, arcade vehicles and six-a-side sports. Its food/work/delivery loop connects the market, school common room and commuter home, including named upper-floor activities. Employment contracts, an enterable restaurant, general relationship progression and lifts remain missing. Rain is the first bounded weather rule. Prioritize connected activities over adding more empty buildings.
 
@@ -439,8 +457,9 @@ budgets still bound these routes; this is not forestry or a general scheduler.
 
 ### Physical timber recovery, r88
 
-The existing 106 replanting sources can now yield a board when mature and storage
-permits. Player and NPC repair jobs reserve capacity, perform the planting and
+The r88 update added board recovery to the then-existing 106 replanting
+sources. Mature sources yield a board when storage permits. Player and NPC
+repair jobs reserve capacity, perform the planting and
 carry sealed output home. A guarded counter handoff supplies the workshop, where
 the existing paid recipe can turn boards and fasteners into kits. Full storage
 still permits ordinary replanting; breaking a sapling cannot multiply timber.
@@ -465,8 +484,8 @@ choices. The living-world backlog above remains incomplete.
 
 ### Reused fixture hardware, r89
 
-The same 449 fixture repairs can now return a fastener to the workshop. Players
-and NPCs carry it home, with future shelf room reserved and no second wage.
+The r89 update added fastener recovery to its existing 449 fixture targets.
+Players and NPCs carry it home, with future shelf room reserved and no second wage.
 Returned hardware can feed another paid kit recipe. Full storage still allows
 ordinary repairs. This connects damage, repair, material reuse and production
 without new goods, scenery, actors or engine rules.

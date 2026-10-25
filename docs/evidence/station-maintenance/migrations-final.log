@@ -1,0 +1,19 @@
+
+> muse-dream@0.1.0 test:watch
+> vitest watch --maxWorkers=2 --testTimeout=60000 tests/station-maintenance-save.test.ts
+
+
+ DEV  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/station-maintenance-save.test.ts (4 tests) 9950ms
+   ✓ projects exact r111 services and keeps physical state, contacts, public navigation and earlier fingerprints unchanged  1222ms
+   ✓ keeps an existing paid school repair, its reserved resources and old station damage exact through the policy upgrade  616ms
+   ✓ preserves the earlier registered native backup chain while adding only the current coverage projection  406ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  13:45:55
+   Duration  10.75s (transform 451ms, setup 9ms, collect 650ms, tests 9.95s, environment 0ms, prepare 29ms)
+
+ PASS  Waiting for file changes...
+       press h to show help, press q to quit

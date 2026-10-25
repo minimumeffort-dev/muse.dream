@@ -476,7 +476,7 @@ carry/actor/repair budgets and the registered r48 save migration, including
 completed repair counters and in-progress work. See `docs/dream/commerce.md`.
 
 
-Repair `grounds` optionally adds 1..7 unique convex surfaces beyond `on`. The
+Repair `grounds` optionally adds 1..11 unique convex surfaces beyond `on`. The
 primary market/home stays in `on`; all grounds share 4096 local grid samples.
 Network travel uses accepted pedestrian pavement and crossings with live contacts,
 8192 derived nodes, 32768 directed links and 128 saved coordinate-only waypoints.
@@ -549,7 +549,7 @@ node indices. See `docs/dream/worlds.md` and the orchard example.
 NPC `account.deliveries` accepts 1..4 unique ordered contracts, compatible with
 repair duties and exclusive with automatic work and player accounts. Couriers
 have stationary non-vendor homes in the receiving market reach and delivery `on`
-ground. Optional `grounds` adds 1..7 unique convex surfaces; all share 4096 local
+ground. Optional `grounds` adds 1..11 unique convex surfaces; all share 4096 local
 samples. Suppliers already on accepted pavement need no extra ground. Validate
 pickup, handoff and return from every assigned home. Reuse the existing sparse
 work-navigation/movement code and share identical ordered delivery coverage.

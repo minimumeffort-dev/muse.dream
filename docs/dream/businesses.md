@@ -331,7 +331,8 @@ board can feed the same paid kit assembly as a delivered depot board. The tree
 service pays its original planting wage and supplies the declared board; full
 storage still permits ordinary replanting. [Describe recovery in Dream](growth.md#timber-recovery).
 
-The live city retains 106 connected replanting sources and the existing worker.
+The live city has 109 connected replanting sources, including the three
+station-quarter rowans, served by the existing worker.
 Young trees must finish growing before supplying more wood. This connects a
 physical source to the repair chain; mining, fabrication, general forestry and
 renewable upstream sapling production remain further work.
@@ -339,8 +340,11 @@ renewable upstream sapling production remain further work.
 ## Reuse fixture hardware
 
 The live fixture service now returns one fastener when shelf and bag capacity
-permit. Its 449 existing targets share that policy, including lamps, tables,
-benches, street tubs and stalls. The worker repairs the fixture with a real kit
+permit. The primary street service's 449 targets share that policy, including
+lamps, tables, benches, street tubs and stalls. Eleven station-quarter fixtures
+use the same recovery rule through the school/quarter service.
+[Quarter maintenance](station-quarter.md#damage-has-a-follow-up). The worker
+repairs the fixture with a real kit
 and earns its ordinary wage. The recovered fastener stays sealed until returned
 to the open staffed workshop; it can then feed another kit recipe.
 

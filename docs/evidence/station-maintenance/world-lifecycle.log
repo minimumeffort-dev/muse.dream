@@ -1,0 +1,23 @@
+
+> muse-dream@0.1.0 test:watch
+> vitest watch --maxWorkers=2 --testTimeout=60000 tests/station-maintenance.test.ts tests/repair.test.ts tests/growth.test.ts
+
+
+ DEV  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/repair.test.ts (16 tests) 199ms
+ ✓ tests/growth.test.ts (9 tests) 211ms
+ ✓ tests/station-maintenance.test.ts (6 tests) 30208ms
+   ✓ adds all fourteen station damage targets to the existing finite caretaker policies without removing old work  361ms
+   ✓ keeps contacts, the public crowd graph and all actor, surface and navigation budgets intact  609ms
+   ✓ physically repairs station_quarter_bench_nw with finite supplies, one wage, a real return and ordinary growth  8249ms
+   ✓ physically repairs station_quarter_lamp_center with finite supplies, one wage, a real return and ordinary growth  7898ms
+   ✓ physically repairs station_quarter_tree_center with finite supplies, one wage, a real return and ordinary growth  6077ms
+
+ Test Files  3 passed (3)
+      Tests  31 passed (31)
+   Start at  13:42:13
+   Duration  31.40s (transform 455ms, setup 18ms, collect 1.38s, tests 30.62s, environment 0ms, prepare 75ms)
+
+ PASS  Waiting for file changes...
+       press h to show help, press q to quit

@@ -1,0 +1,16 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/docs-site.test.ts tests/dream-agent.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/docs-site.test.ts (52 tests) 921ms
+   ✓ published site > builds highlighted source with project-relative navigation and working downloads  909ms
+ ✓ tests/dream-agent.test.ts (20 tests) 2197ms
+   ✓ bounded agent context packets > exports machine-readable CLI context and preserves source/check boundaries  2189ms
+
+ Test Files  2 passed (2)
+      Tests  72 passed (72)
+   Start at  13:55:55
+   Duration  2.83s (transform 375ms, setup 17ms, collect 738ms, tests 3.12s, environment 0ms, prepare 54ms)

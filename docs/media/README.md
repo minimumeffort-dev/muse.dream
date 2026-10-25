@@ -1,5 +1,21 @@
 # Media and Dream highlighting
 
+## Station maintenance, r112
+
+`stationrepair` records one real bench repair in the new quarter. The dev-only
+exporter first performs a hand strike and short walking retreat, then advances
+the full fixed-tick world through the caretaker's actual route. The 360
+consecutive 2400x1350 PNGs begin at on-site work and record twelve simulation
+seconds at 30 rendered frames per second: repair, one four-credit payment and
+the start of the return walk. No NPC teleport, seeded damage/reward or missing
+frame interpolation supplies the clip. The long pre-roll is not shown. Day/night
+continued during travel, so the repair is recorded at night.
+
+Video/still use 1600x900 and GIF 1280x720; the still is frame 300. The existing
+station-quarter overview remains accurate because its geometry and rendering
+are unchanged. New clips are offline behavioral evidence, not live frame-rate
+measurements. [Verification](../evidence/station-maintenance/verification.md).
+
 The latest walking recordings use longer steps and retain planted feet through
 sharp reversals. Character, pedestrians, locomotion, switching, sports and park
 GIF/HD pairs and their stills are refreshed together. Character poster frame 40

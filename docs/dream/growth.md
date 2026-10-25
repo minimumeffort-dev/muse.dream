@@ -1,6 +1,6 @@
 # Bring a tree back
 
-Knock down a street or park tree, then park clear of the walking approach. The caretaker can collect a sapling from the market, walk over and plant a replacement. You can take the same job at the vendor before they leave. The live service covers 106 trees, including all 93 furnished street trees and the original orchard.
+Knock down a street or park tree, then park clear of the walking approach. The caretaker can collect a sapling from the market, walk over and plant a replacement. You can take the same job at the vendor before they leave. The live service covers 109 trees, including all 93 furnished street trees, the original orchard and the three station-quarter rowans. [The quarter's connected work grounds](station-quarter.md#damage-has-a-follow-up) use the same finite-sapling service.
 
 ![Planting a replacement in Garden park](../media/planting.jpg)
 
@@ -86,7 +86,7 @@ A planting completion is recorded when the replacement goes into the ground, not
 
 ## Still limited
 
-All 345 measured trees can fall, including wind-animated species. The service replants 106 of them. The remaining 239 trees lie outside its declared connected grounds and verges, so they stay broken. Remote woodland needs real service access before workers can restore it.
+All 348 measured trees can fall, including wind-animated species. The service replants 109 of them. The remaining 239 trees lie outside its declared connected grounds and verges, so they stay broken. Remote woodland needs real service access before workers can restore it.
 
 This is a recovery mechanic with authored timings. There is no soil, water, season, reproduction or biological model. Saplings have inventory units, rather than carried plant meshes. The worker performs a general planting gesture; there is no digging or terrain excavation. Growth checks solid player/vehicle/actor footprints; cosmetic ambient populations do not block it. The station supply is finite, and closed pages do no work.
 
@@ -97,7 +97,7 @@ This is a recovery mechanic with authored timings. There is no soil, water, seas
 
 The live replanting service can recover one board from a mature felled tree. It
 reserves bag and workshop space before starting. If either is unavailable,
-ordinary replanting still works. This covers the same 106 trees; it adds no new
+ordinary replanting still works. This covers the same 109 trees; recovery adds no new
 scenery, worker or navigation graph.
 
 ![Recovered timber ready to return](../media/recovery.jpg)

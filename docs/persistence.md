@@ -1,6 +1,14 @@
 # Leave and come back
 
-The current world is r111, using format 19 / simulation 53. Its registered r110
+The current world is r112, using format 19 / simulation 53. Its registered r111
+upgrade extends two existing repair services to the station quarter. It validates
+the exact prior world first and retains every saved field, including damage,
+growing trees, reserved supplies, worker paths, clocks and completion history.
+Four unpainted work areas change local service coverage; contacts and the public
+pedestrian graph stay identical. No new stock, wages, actors or progress is seeded.
+The original slot remains available. [Maintenance evidence](evidence/station-maintenance/verification.md).
+
+The registered r110
 upgrade adds the station quarter without new starting money, stock, jobs or
 completion credit. Old saves validate against the exact released world first.
 Derived walking targets rebase onto the new connected graph, eight new visitors

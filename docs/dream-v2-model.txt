@@ -343,9 +343,12 @@ instances and evict unused data after ten simulation seconds or to make room.
 No generated code, per-cell bodies, automatic damage or free repair.
 Lamps can be pooled static props; their surface light pools turn off while broken
 and return after repair. Use measure(kind=lamp,axis=y,meters=3.8); range 1..15 m.
-The live 413 lamps share the entry's lamp rule and connected repair coverage.
-All 345 trees share the tree rule; 106 have declared finite-sapling replanting,
-including all 93 furnished street trees. The other 239 stay broken. Keep
+All 416 live lamps share the entry's lamp rule and connected repair coverage.
+The primary street service retains 449 targets, including the original 413 lamps;
+the school/quarter service covers eleven quarter fixtures, including its three lamps.
+All 348 trees share the tree rule; 109 have declared finite-sapling replanting,
+including all 93 furnished street trees and three quarter rowans. The other 239
+stay broken. Keep
 actor/rig limits unchanged. Whole pooled static topplers allow only part sway;
 their falling crown retains its original wind phase, material finish and shadow.
 Omit damage_pool (or false) for the original strict budgets. Rest poses, ambient
@@ -706,6 +709,14 @@ seasons, floods, general shelter search or biological validity. Optional rest.sh
 connects existing covered seats to rain-aware NPC need trips; see Rest below.
 
 ## commerce
+
+Walking grounds: account(commute=true), station, delivery, repair, meal, social,
+rest and shift share one bound: on plus 0..11 unique extra grounds, 12 total.
+Omit grounds when there are no extras; an explicit list has 1..11 IDs and must
+exclude on. IDs name existing convex work surfaces, validated interiors or named
+floors. They do not create paving or graph edges. The combined grounds retain
+4096 local navigation samples, 8192 graph nodes, 32768 directed links and 128 saved
+waypoints; accepted pedestrian connections and physical reachability still apply.
 Resident companion meals: optional social(...,peers=[other_account,...],markets=[counter,...]);
 uses 1..4 unique other NPC account IDs. Requires priced supply markets; peers
 cannot be the player or a host of that same plan. Host keeps account.social and
@@ -835,7 +846,7 @@ The actor is a stationary measured-person decor NPC with a program, no route,
 meal, repair or delivery policy. shop and matching production may coexist;
 operated counter and every assigned job must use shift.market. The work placement
 must be in counter reach. Paths use the actual body, rounded upward to .1 units,
-with radius <=8 and height <=32. on plus 0..7 unique convex grounds share 4096
+with radius <=8 and height <=32. on plus 0..11 unique convex grounds share 4096
 local samples; existing pedestrian nodes, links, waypoints and actor budgets stay.
 Finish committed production before leaving. Walk to rest after closing and start
 returning lead_s before reopening. Reversing a journey preserves physical position.
@@ -889,7 +900,7 @@ Player accounts never act automatically.
 Rest is opt-in: rest home_rest(energy=35,drain_s=.1,recover_s=5,below=25,until=85,seats=[settee],on=home,grounds=[entry]); account(...,rest=home_rest).
 At most 8 plans; energy 0..100, drain_s 0..0.25 per second, recover_s .1..10,
 below 0..95, until 5..100 and at least below+5. Use 1..4 unique ordered furniture
-IDs and the existing eight convex grounds, navigation samples and path bounds.
+IDs and the existing twelve convex grounds, navigation samples and path bounds.
 The initial energy applies separately to each referencing account. Time drains
 energy; work/repair effort is required at start and spent once on completion.
 Cancellation spends no effort. Player and energy-enabled NPC seating recovers
@@ -946,7 +957,7 @@ Use a complete measured humanoid decor NPC with a program and a stationary home
 or walk route. Other automatic repair/delivery/shop/shift/social/ration policies
 are excluded; meal may coexist and takes priority when a meal is available.
 Only NPC policies commute; the player walks to the same counter and uses normal
-work controls. At most five ordered jobs, eight total convex grounds, 4096 local
+work controls. At most five ordered jobs, twelve total convex grounds, 4096 local
 samples, 8192 graph nodes, 32768 links and 128 saved path points per journey.
 The engine fits the actual body rounded up to .1 units, at least radius 4 and
 headroom 18, with authored body bounds radius <=8 and height <=32. Public pavement
@@ -972,7 +983,7 @@ walk to its approach, sit and eat; release before returning home. Shared claims
 include the player and customers walking to seats. Full/broken furniture falls
 back to standing, retaining the purchased food. No queues or table service.
 At most 8 plans, 1..4 unique ordered markets, a positive-food good with a priced
-lot in every market, and eat_s=1..12 seconds. on plus 0..7 unique extra convex
+lot in every market, and eat_s=1..12 seconds. on plus 0..11 unique extra convex
 work grounds share the 4096 local-sample budget and accepted pedestrian network.
 A meal account is a measured person decor NPC with a program, optional walk route,
 no counter operator role, and no shop/work/repair/delivery policy. Hungry at <=40, it
@@ -1051,7 +1062,7 @@ Owned food can be eaten on dry ground during work, repair or delivery; sealed ca
 Use repair id(label=...,market=supply_market,on=work_surface,kind=table,
 input=kit,take=1,seconds=8,pay=4,effort=5,dispatch_s=12); inside economy.
 At most 8 services. on is an existing convex ground surface. Optional
-grounds=[park_seating,station_seating] adds 1..7 unique convex surfaces, excluding
+grounds=[park_seating,station_seating] adds 1..11 unique convex surfaces, excluding
 on. All grounds together are capped at 4096 local samples at 12-unit spacing.
 With grounds, the engine joins them using accepted sidewalks, crossings and
 entrance paving; bridges require supported sidewalks. Complete-world acceptance
@@ -1133,7 +1144,7 @@ with repair/repairs. A courier is a stationary non-vendor NPC. Its home and both
 counters need clear connected approaches on declared grounds or accepted pedestrian
 pavement. Home need not be beside the receiving counter; one courier can serve
 different destinations. Add delivery(...,on=work_ground,
-grounds=[depot_yard]); grounds optional, 1..7 unique convex surfaces excluding on.
+grounds=[depot_yard]); grounds optional, 1..11 unique convex surfaces excluding on.
 The supplier may already be on accepted pedestrian pavement, needing no extra
 ground. All declared grounds together retain 4096 local samples. They add no paving.
 compileDreamScene checks pickup, handoff and return paths from every assigned home.

@@ -19,6 +19,11 @@ Workshop Street; eight residents walk through the same pedestrian network.
 Upper storeys and lifts are still to come. The taxis use the existing car
 controls, without passengers or fares.
 
+The quarter also shares the city's maintenance system. Break a bench or knock
+over a light and the caretaker can walk over, spend a real repair kit and fix
+it. Felled rowans need a sapling and grow back over time. The two lobby benches
+use the same rule, reached through their doorways.
+
 ![Walk through the station quarter and take a ride](docs/media/stationquarter.gif)
 
 [Watch in HD](docs/media/stationquarter.mp4) ·
@@ -470,8 +475,8 @@ rules; supported benches can lose their boards while their base stays put.
 
 All 416 streetlights can fall too. Their ground light pools turn off, and the
 damage stays after the district unloads or you reload the game. The caretaker
-can restore the 413 street-network lamps using real kits and paid work. The three
-new promenade lamps are not in a maintenance area yet. Their models, collisions
+can restore all 416 lamps using real kits and paid work, including the three
+promenade lamps in the station quarter. Their models, collisions
 and light pools return together. They use connected sidewalks and crossings to reach distant jobs.
 Intact lamps stay instanced; active debris and cached meshes have fixed limits.
 [How pooled destruction works in Dream](docs/dream/rules.md#streetlights-and-streamed-destruction).

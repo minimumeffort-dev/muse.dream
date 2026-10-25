@@ -2,6 +2,12 @@
 
 [Dream docs](README.md) / River city
 
+The station promenade's benches, lights, planted tubs and rowans now share the
+market caretaker's finite repair/replant services. Doorways connect both lobby
+benches; narrow unpainted work areas connect outdoor targets to the promenade.
+Existing work grounds and the public street network remain intact.
+[The station quarter](dream/station-quarter.md#damage-has-a-follow-up).
+
 The world has been rebuilt from scratch. It covers 1.4 × 1.1 kilometres, with an older center, garden streets, a southern neighborhood and a station district across the river. The previous racing layout is no longer a constraint.
 
 ![The actual streets, building footprints, entrances and public transport](media/city-plan.svg)

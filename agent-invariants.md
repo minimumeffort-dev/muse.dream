@@ -1126,3 +1126,20 @@ rides newly obstructed by construction, outside the new interiors, retaining the
 ownership, heading and travel. Physically clear poses bypass placement heuristics.
 The gallery camera must frame depth as well as width/height; choose its distance
 and far plane from actual model bounds without changing the viewing angle.
+
+## Station maintenance, r112
+
+Keep every older service ground and target when adding the quarter's six benches,
+three lamps, two planted tubs and three rowans. The two existing services share
+the same caretaker, finite kit/sapling/wage reservations and physical return.
+Named lobby floors require their building grounds and ordinary doorway paths.
+Four finish=terrain work areas add no pavement or contacts. Grounds permit twelve
+including on across the existing commerce users; local samples remain 4,096,
+network nodes 8,192, links 32,768 and saved waypoints 128. Narrow tree approaches are
+necessary; a broad rectangle still fails the navigation budget.
+
+Format19/simulation53 registers exact r111 by removing only four work surfaces
+and restoring the two service definitions. Validate the old state first and
+preserve every saved field, damage, growth, claim, resource, clock and path.
+Contacts and public graph may be reused only while identical; derive old repair
+coverage separately. Keep original slots and the complete earlier migration chain.

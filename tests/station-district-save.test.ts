@@ -23,7 +23,7 @@ import {COMMERCE_LIMITS} from '../src/scene/commerce';
 import type {ObjectDslV2} from '../src/scene/object-dsl';
 import {aircraftFloor} from '../src/scene/aircraft-support';
 
-const scene=createWorldScene(),previous=c.preDistrictScene(scene),snapshot=JSON.stringify(scene);
+const scene=c.preStationMaintenanceScene(createWorldScene()),previous=c.preDistrictScene(scene),snapshot=JSON.stringify(scene);
 const world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.DISTRICT_COMPATIBILITY,previousDistrictSaveCompatibility:c.UPSTAIRS_SOCIAL_COMPATIBILITY,previousDistrictContacts:sceneContactData(previous),previousDistrictNavigation:ambientGraph(previous),previousUpstairsSocialSaveCompatibility:c.SEATED_REST_COMPATIBILITY,previousSeatedRestSaveCompatibility:c.COMPANY_COMPATIBILITY};
 const oldWorld:World={...world,scene:previous,saveCompatibility:c.UPSTAIRS_SOCIAL_COMPATIBILITY,previousDistrictSaveCompatibility:undefined,previousDistrictContacts:undefined,previousDistrictNavigation:undefined};
 const added=(id:string)=>id.startsWith('station_quarter_'),fleet=scene.objects.filter(o=>added(o.id)&&isParkedVehicle(o));

@@ -431,8 +431,12 @@ the primary area.
 Blocked workers wait;
 there is no ladder, construction scaffold or dropped-kit simulation. Trees use
 a `regrow_s` repair service for paid planting and physical growth.
-[Planting guide and runnable source](growth.md). The live fixture service covers 449 targets: existing market, park, station and school
-furniture, the two park wall sections, sixteen planted street tubs, two produce stalls, and all 413 streetlights across 32 streets. It does not make other scenery destructible.
+[Planting guide and runnable source](growth.md). The primary fixture service covers 449 targets: existing market, park, station and school
+furniture, the two park wall sections, sixteen planted street tubs, two produce stalls,
+and the original 413 streetlights across 32 streets. The school/quarter service
+also reaches eleven station-quarter fixtures, including its three lamps.
+[Station maintenance](station-quarter.md#damage-has-a-follow-up) uses the same
+finite kits, wages and recovery rules. It does not make other scenery destructible.
 
 
 ### Replacement supplies
@@ -484,7 +488,7 @@ unreachable targets. The player can carry a kit in a vehicle; the caretaker walk
 at 1.4 m/s and returns after each job. A trip across the city takes several
 simulation minutes. Nothing completes during pause or while the page is closed.
 
-The primary ground plus extras are at most eight unique convex surfaces. Together
+The primary `on` plus up to eleven extra `grounds` are at most twelve unique convex surfaces. Together
 they retain the 4,096 local-sample limit; the derived pedestrian graph has at most
 8,192 nodes and 32,768 directed links. Saved paths still have at most 128 points.
 The world worker prepares topology before play; live contacts are checked during
@@ -501,7 +505,9 @@ an agent to author both services and infrastructure, use
 
 ### Street verges
 
-The live service reaches 449 targets, including all 413 city lamps.
+The primary street service reaches 449 targets, including the original 413 lamps.
+The three station-quarter lamps use the school/quarter service, bringing connected
+lamp coverage to all 416. [Quarter coverage](station-quarter.md#damage-has-a-follow-up).
 A subset such as `streets=[market_avenue,high_street,civic_walk]` declares which
 sidewalks a service covers; the live city lists all 32 streets.
 `verge=24` permits a short approach up to 2.4 metres beyond those sidewalks, near
@@ -572,9 +578,11 @@ It reuses the existing `repair` and `grounds` vocabulary:
  );
 ```
 
-The school grounds share the live 449-target service, including all 413 lamps.
-This extends one existing worker's connected area. It adds no worker, rig or
-physics body; every new destination still needs validated access.
+The outdoor school grounds remain part of the 449-target street service, including
+the original 413 lamps. School interior furniture and the eleven station-quarter
+fixtures share the separate school/quarter service; its three lamps complete
+coverage of all 416. One existing worker serves them, with no extra rig or physics
+body. Every destination still needs validated access.
 
 ## Planting and growth
 
@@ -620,8 +628,9 @@ home with connected pickup, handoff and return routes. Home and counters can
 use the declared grounds or accepted pedestrian pavement; home need not be beside
 the receiving counter. Market vendors stay at their businesses. The player never gets an automatic policy.
 
-Delivery `on` declares a work ground. Optional `grounds` adds 1..7
-unique convex areas for off-pavement approaches, such as the example's depot yard.
+Delivery `on` declares a work ground. Optional `grounds` adds 1..11
+unique convex areas, at most twelve including `on`, for off-pavement approaches
+such as the example's depot yard. The combined local-sample limit stays 4,096.
 A supplier already on accepted pedestrian pavement needs no extra ground. These
 areas create no road or paving. The complete-world compiler checks pickup,
 handoff and return from every assigned home, using sidewalks, crossings and
@@ -649,7 +658,7 @@ Pickup and handoff approaches stay less than four world units above/below the ve
 
 The market hall now has a [working indoor counter](interiors.md). Enter through the doorway and walk around the existing table to buy, sell, begin baking or talk to the vendor. Walls and the forty-unit counter reach block transactions from the square. Existing work cancellation, finite stock and conserved wages still apply. Customers and supply workers enter the same room; this remains one bakery, with no restaurant or new business.
 
-`repair.on` / `repair.grounds` and delivery grounds may name a placed building with an interior. The engine reuses its rotated floor footprint instead of a separate painted polygon. The live furniture service uses `on=market_hall` with the square and existing outdoor grounds. Tree work uses a narrow unpainted service aisle and the public orchard path, keeping the same 449 repair and 106 replanting targets. The worker uses the same doorway, floor and wall contacts as the player. No new worker, actor slot, inventory or money is created.
+`repair.on` / `repair.grounds` and delivery grounds may name a placed building with an interior. The engine reuses its rotated floor footprint instead of a separate painted polygon. The live furniture service uses `on=market_hall` with the square and existing outdoor grounds. Tree work uses a narrow unpainted service aisle and the public orchard path. The original street fixture service keeps its 449 targets; the planting service now reaches 109 trees, including the three station-quarter rowans. Eleven quarter fixtures use the school/quarter service, including the two lobby benches on their named floors. The worker uses the same doorway, floor and wall contacts as the player. No new worker, actor slot, inventory or money is created.
 
 ## Customers with somewhere to go
 
@@ -782,13 +791,15 @@ school staff use it in the live mock; no idle wages or employment contracts exis
 lamps. Both park entrances join the accepted pedestrian network; the caretaker
 walks from the market, reserves a real kit and wage, and restores the same usable
 furniture. These ten targets are part of the live 449-target service. The ground
-uses the remaining existing service-ground slot and stays within the 4096 local
-sample and 8192 network-node budgets. [Paths and park authoring](paths.md).
+shares the twelve-ground limit and stays within the 4096 local-sample and
+8192 network-node budgets. [Paths and park authoring](paths.md).
 
 ### City fixture coverage
 
-The live caretaker can reach all 413 lamps across the city's 32 streets, alongside
-18 existing furniture and wall targets. Dream still declares the service's
+The primary street service still reaches 449 targets: the original 413 lamps
+across 32 streets and 36 other furniture, wall, planter and stall targets. The
+school/quarter service adds eleven quarter fixtures, including the three new
+lamps, so all 416 city lamps have connected repair coverage. Dream declares each service's
 streets, grounds, categories, kit, pay and duration. The engine derives short
 access patches with room for the worker's complete body to join the sidewalk.
 Approaches remain inside the declared verge and clear riding surfaces and water;
@@ -806,11 +817,15 @@ uses a complete measured humanoid rig, the same twelve bone bindings as the city
 The same caretaker and finite market stock serve these jobs. Distant walks can
 be long; there are no regional crews or maintenance vehicles yet. Returning,
 eating, supplier deliveries and other duties use their existing rules. The separate
-planting service now covers 106 trees, including all 93 furnished street trees,
-using `verge=112` and the same connected sidewalks. Wide services derive supported
+planting service now covers 109 trees, including all 93 furnished street trees
+and the three quarter rowans, using `verge=112`, the connected sidewalks and
+explicit quarter work grounds. Wide services derive supported
 turns around pavement corners when a straight connection would cut the road.
-They create no new paving. Its 5,380 navigation nodes and 20,422 directed links
-fit the unchanged network caps. [Wind-tree example](../examples/city-tree-replanting.dream).
+They create no new paving. Before the quarter extension, the planting graph had
+5,380 navigation nodes and 20,422 directed links. Those measurements are historical;
+the current extension retains the same graph caps.
+[Quarter rules and current evidence](station-quarter.md#damage-has-a-follow-up) ·
+[Wind-tree example](../examples/city-tree-replanting.dream).
 The 239 trees beyond those work areas and other structural damage still need
 declared recovery coverage.
 

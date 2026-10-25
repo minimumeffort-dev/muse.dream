@@ -16,7 +16,7 @@ import type {Scene} from './schema';
 import {roleOf} from './agents';
 import {waterAt,drivingHeight} from './terrain';
 
-export const COMMERCE_LIMITS=Object.freeze({goods:8,rations:8,accounts:16,markets:8,jobs:16,meals:8,shifts:8,socials:8,mealMarkets:4,milestones:16,workerJobs:5,ingredients:4,equipment:4,stations:16,deliveries:16,courierContracts:4,repairs:8,recoverySources:512,repairNodes:4096,repairNetworkNodes:8192,repairNetworkLinks:32768,repairGrounds:8,repairStreetTargets:512,repairAccessPieces:2048,repairVerge:128,repairRadius:4,repairPath:128,money:1_000_000,quantity:10_000,capacity:32,decisionS:.25});
+export const COMMERCE_LIMITS=Object.freeze({goods:8,rations:8,accounts:16,markets:8,jobs:16,meals:8,shifts:8,socials:8,mealMarkets:4,milestones:16,workerJobs:5,ingredients:4,equipment:4,stations:16,deliveries:16,courierContracts:4,repairs:8,recoverySources:512,repairNodes:4096,repairNetworkNodes:8192,repairNetworkLinks:32768,repairGrounds:12,repairStreetTargets:512,repairAccessPieces:2048,repairVerge:128,repairRadius:4,repairPath:128,money:1_000_000,quantity:10_000,capacity:32,decisionS:.25});
 const ref=z.string().regex(/^[a-z][a-z0-9_]{0,31}$/),money=z.number().int().min(0).max(COMMERCE_LIMITS.money),quantity=z.number().int().min(0).max(COMMERCE_LIMITS.quantity);
 const label=z.string().min(1).max(40).refine(s=>s.trim().length>0,'label must contain text');
 const good=z.object({id:ref,label,food:z.number().finite().min(0).max(100).default(0)}).strict();

@@ -52,3 +52,9 @@ place station_quarter_walker_4(object=shopper,at=[12325,4924],heading_deg=180,ro
 place station_quarter_walker_5(object=student,at=[11700,5020],heading_deg=90,role=ambient,motion=walk(speed=16,wait_s=2));
 place station_quarter_walker_6(object=neighbor,at=[12200,5010],heading_deg=90,role=ambient,motion=walk(speed=11,wait_s=3));
 place station_quarter_walker_7(object=resident,at=[12200,4870],heading_deg=270,role=ambient,motion=walk(speed=14,wait_s=2));
+
+// Invisible maintenance grounds bridge the doorway thresholds and the promenade.
+surface station_repair_work(finish=terrain,points=[[11520,4790],[12420,4790],[12420,4970],[11520,4970]]);
+surface station_tree_work_west(finish=terrain,points=[[11530,4845],[11580,4845],[11580,4916],[11530,4916]]);
+surface station_tree_work_center(finish=terrain,points=[[11920,4815],[11970,4815],[11970,4916],[11920,4916]]);
+surface station_tree_work_east(finish=terrain,points=[[12365,4845],[12415,4845],[12415,4916],[12365,4916]]);

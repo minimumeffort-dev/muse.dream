@@ -31,6 +31,36 @@ rowan trees and two planters give the path edges some structure without filling
 the walking corridor. These additions use existing population, lighting and
 streaming systems.
 
+## Damage has a follow-up
+
+All six benches, three lamps and two planters are connected to the caretaker's
+existing fixture service. The three rowans use the tree service. A damaged
+fixture reserves a real kit and wage at the market; the caretaker walks to it,
+works there and returns home with any eligible recovered hardware. Replanting consumes a sapling,
+pays once and leaves a young tree to grow. Missing stock or an obstructed repair
+space can delay the job. Nobody earns money while travelling.
+
+The lobby benches use their named floors and actual doorways. Outdoor approaches
+join the promenade; invisible `finish=terrain` work grounds describe where a
+worker may stand without painting another patch over the landscape. The same
+finite repair offers remain available to the player through **H** at the market.
+
+![The caretaker repairing a station bench](../media/stationrepair.gif)
+
+[Repair in HD](../media/stationrepair.mp4) ·
+[Repair rules and example](commerce.md#connected-service-grounds)
+
+Ground lists now allow twelve areas including `on`, so the tree service retains
+every old work area while adding three narrow approaches here. This does not
+raise the 4,096 local samples, 8,192 nodes, 32,768 links or 128 saved waypoints.
+An enormous work rectangle still fails validation. New service coverage changes
+future choices; it does not reset existing damage, jobs, supplies or saved time.
+
+[This complete twelve-courtyard world](../examples/station-maintenance.dream)
+shows the same bounded grounds list with twelve breakable tables, twelve finite
+kits and one caretaker. Check it with
+`npm run -s dream -- check docs/examples/station-maintenance.dream`.
+
 ## Build the same things in Dream
 
 The [district source](../../src/scene/world/station_quarter.dream) owns placements,
@@ -92,8 +122,10 @@ npm run -s dream -- check docs/examples/ground-floor-seating.dream --modules src
 The ground-floor lobbies are enterable. Upper tower storeys and lifts are not
 implemented. A residential label does not create households, and an office label
 does not create staff or paid work. The taxis are driveable cars; they do not yet
-take passengers or charge fares. The van has no separate cargo-storage mechanic. Automatic maintenance coverage
-has not been extended to this quarter.
+take passengers or charge fares. The van has no separate cargo-storage mechanic.
+Building shells are not repair targets; maintenance here covers the fourteen
+placed benches, lights, planters and trees.
 The world remains a handmade mock with no provider calls.
 
 [Placement, persistence and runtime evidence](../evidence/station-quarter/verification.md).
+[Maintenance and save evidence](../evidence/station-maintenance/verification.md).

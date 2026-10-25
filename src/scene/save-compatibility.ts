@@ -1,3 +1,4 @@
+import maintenanceR111 from './compatibility/r111-maintenance.json';
 import marketR55 from './compatibility/r55-market.json';
 import marketR106 from './compatibility/r106-market.json';
 import cityR67 from './compatibility/r67-city.json';
@@ -114,10 +115,23 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r112 extends existing maintenance coverage without changing physical state or resources. */
+export const STATION_MAINTENANCE_COMPATIBILITY='910bdcc30bce4f13de0c4f7ec52995d8e1c0383520b86e8346505c75a61df02f';
+const stationMaintenanceProjections=new WeakMap<Scene,Scene>();
+const stationMaintenanceGrounds=new Set(['station_repair_work','station_tree_work_west','station_tree_work_center','station_tree_work_east']);
+export function preStationMaintenanceScene(scene:Scene):Scene{
+ const cached=stationMaintenanceProjections.get(scene);if(cached)return cached;
+ if(!scene.surfaces.some(s=>stationMaintenanceGrounds.has(s.id)))return scene;
+ const prior={...scene,surfaces:scene.surfaces.filter(s=>!stationMaintenanceGrounds.has(s.id)),economy:scene.economy && {...scene.economy,repairs:scene.economy.repairs.map(r=>(maintenanceR111.find(old=>old.id===r.id)??r) as NonNullable<Scene['economy']>['repairs'][number])}};
+ stationMaintenanceProjections.set(scene,prior);return prior;
+}
+export function preStationMaintenanceCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preStationMaintenanceScene(scene),53,true,encode);}
+
 /** r111 adds a connected station quarter without changing simulation semantics. */
 export const DISTRICT_COMPATIBILITY='b07395b81db63f19fae5d5688c0a45ab5d8d7b67bd7a63565dfebef37299f337';
 const districtProjections=new WeakMap<Scene,Scene>();
 export function preDistrictScene(scene:Scene):Scene{
+ scene=preStationMaintenanceScene(scene);
  const cached=districtProjections.get(scene);if(cached)return cached;
  const added=(id:string)=>id.startsWith('station_quarter_');
  if(!scene.objects.some(o=>added(o.id)))return scene;

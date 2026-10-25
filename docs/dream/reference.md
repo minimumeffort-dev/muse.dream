@@ -481,6 +481,15 @@ Simulation time owns availability, independently of the visual sky. Player and
 NPC transactions share the same check. See [opening hours](hours.md) for work,
 courier waits, refunds, reduced motion and the complete example.
 
+Commuting `account`, `station`, `delivery`, `repair`, `meal`, `social`, `rest`
+and `shift` share a limit of **12 walking grounds total**: the primary `on` and
+up to 11 additional `grounds`. Omit `grounds` for no extras; an explicit list
+contains 1..11 unique IDs and excludes `on`. These refer to existing convex work
+surfaces, validated interiors or named floors. They add no paving or graph edges.
+All grounds together keep the same 4,096 local samples, 8,192 graph nodes,
+32,768 directed links and 128 saved waypoints. Complete-world acceptance still
+checks their physical connections and clearance.
+
 At most 8 goods, 16 accounts, 8 markets, 16 jobs and 16 delivery contracts and 8 repair services; each market has 1..8 lots with unique goods. Exactly one player account; one account per actor. Other owners are existing NPC placements. Market vendors and production workers without `commute=true` retain stationary homes; station-bound jobs add real local work trips. Explicit commuters use connected on-foot journeys. Repair workers start at a stationary home in supply-market reach and travel within declared grounds and their pedestrian connections. NPC `shop` and `work` policies are optional; player accounts cannot automate themselves.
 
 Credits: integer 0..1,000,000. Stock/limits: integer 0..10,000 with positive limits. Price: integer 1..10,000, or omitted for untraded ingredients. Carrying capacity: integer 1..32. Fullness/food: 0..100, drain per second: 0..0.25. Radius: 20..80. Work: 1..120 seconds, positive integer take/make/pay, effort 1..50, capacity 1..4, target within output lot capacity. Use exactly scalar `input`/`take` or a block of 1..4 `ingredient(good=...,take=...)` statements with unique goods. No empty block or mixed forms. Every input has a matching market lot and take within its capacity. An input may equal the output only when make is greater than take for that good. Reserve the larger of refund or completion space once for a shared lot; starting work subtracts its held input before checking future output room. Make is the full output, not the net gain. Labels: 1..40 nonblank characters. IDs follow the ordinary identifier contract.
@@ -594,7 +603,7 @@ scaffolds or free restocking. Optional tree growth is bounded below. [Working gu
 
 ### Connected repair grounds
 
-Optional `repair.grounds` adds 1..7 unique existing convex ground-surface IDs,
+Optional `repair.grounds` adds 1..11 unique existing convex ground-surface IDs,
 excluding the primary `on`. The combined grids retain the 4,096-sample cap at
 12-unit spacing. The market and worker home stay inside `on`; extra grounds
 connect through accepted pedestrian pavement, crossings and supported bridge
@@ -687,7 +696,7 @@ ledger counts plantings rather than maturity. [Guide](growth.md) and
 Account `deliveries` is 1..4 unique ordered contract refs. It excludes production
 `work` and player accounts; repair duties may coexist, with available repairs
 first. The actor is a stationary non-vendor NPC with a connected home. A delivery
-`on` is an existing convex work ground. Optional `grounds` adds 1..7 unique convex
+`on` is an existing convex work ground. Optional `grounds` adds 1..11 unique convex
 surfaces excluding `on`, with 4096 local grid samples total. Home, supplier and
 receiving counter can use these grounds or accepted pedestrian pavement. Home
 need not be in receiving-counter reach, so one courier can serve different
