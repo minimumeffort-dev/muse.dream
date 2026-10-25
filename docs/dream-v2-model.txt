@@ -595,6 +595,8 @@ walk needs a complete measured humanoid rig; speed 4..24, wait_s 0..5 default 1.
 Engine caches portals from accepted sidewalk/crossing/entrance polygons; no paths invented across roads.
 Full rest footprints stay on pavement, wait for approaching swept vehicles and locally space ambient walkers.
 Engine-owned bounded passing/slowing/backing uses stable ID yielding; old overlaps separate without teleport.
+Portal arrival uses the measured rest footprint with smaller tolerance on short links. Active waits finish before another target is selected, including coincident portals.
+A yielding walker takes a safe moving option before waiting in another walker's way. No added scripts or per-actor steering fields.
 Narrow bottlenecks may wait/back away. This does not add pushing or avoidance of decor NPC people.
 roam stays within authored radius 20..180, speed 2..16; alert 20..180 uses 3D player distance.
 flee_speed 8..60 and >= speed; recover_s .5..10 default 2 after separation; gait walk default or hop.

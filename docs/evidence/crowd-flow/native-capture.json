@@ -1,0 +1,123 @@
+{
+  "capture": {
+    "advanced": 4,
+    "after": [
+      {
+        "distance": 954.8934516820952,
+        "fromDistance": 954.2434516820952,
+        "fromHeading": 1.5685273440806675,
+        "fromX": 12199.947496231587,
+        "fromY": 5121.860256368954,
+        "heading": 1.568527344080629,
+        "id": "station_quarter_walker_0",
+        "mode": "walk",
+        "node": 1647,
+        "pauseUntil": 128.65817475859075,
+        "previous": 760,
+        "random": 983922802,
+        "speed": 13,
+        "until": 0,
+        "x": 12199.948971069089,
+        "y": 5122.510254695762
+      },
+      {
+        "distance": 375.375,
+        "fromDistance": 374.625,
+        "fromHeading": 3.1185169649283564,
+        "fromX": 12190.616392014086,
+        "fromY": 5143.754231754199,
+        "heading": 3.1185169649283577,
+        "id": "station_quarter_walker_3",
+        "mode": "walk",
+        "node": 293,
+        "pauseUntil": 137.56669690441342,
+        "previous": 1647,
+        "random": 4008701078,
+        "speed": 15,
+        "until": 0,
+        "x": 12189.866591688004,
+        "y": 5143.771536984797
+      },
+      {
+        "distance": 370.4874999999954,
+        "fromDistance": 369.9374999999954,
+        "fromHeading": -3.092181389802378,
+        "fromX": 12049.847848276137,
+        "fromY": 4927.948597081564,
+        "heading": -3.092181389802372,
+        "id": "station_quarter_walker_6",
+        "mode": "walk",
+        "node": 774,
+        "pauseUntil": 126.39441427541897,
+        "previous": 1778,
+        "random": 3427977002,
+        "speed": 11,
+        "until": 0,
+        "x": 12049.298519544618,
+        "y": 4927.921431943455
+      },
+      {
+        "distance": 464.0999999999956,
+        "fromDistance": 463.3999999999956,
+        "fromHeading": 3.095852259236691,
+        "fromX": 12027.964249794424,
+        "fromY": 4921.3468417998,
+        "heading": 3.095852259236683,
+        "id": "station_quarter_walker_7",
+        "mode": "walk",
+        "node": 774,
+        "pauseUntil": 127.6830611633137,
+        "previous": 1778,
+        "random": 178372490,
+        "speed": 14,
+        "until": 0,
+        "x": 12027.26498193105,
+        "y": 4921.37884891233
+      }
+    ],
+    "before": [
+      {
+        "distance": 744.6184516821007,
+        "id": "station_quarter_walker_0",
+        "x": 12197.45985153232,
+        "y": 4929.118621315551
+      },
+      {
+        "distance": 132,
+        "id": "station_quarter_walker_3",
+        "x": 12202.507002052243,
+        "y": 4923.082882814008
+      },
+      {
+        "distance": 190.63749999999172,
+        "id": "station_quarter_walker_6",
+        "x": 12190.469911362745,
+        "y": 4925.304973639388
+      },
+      {
+        "distance": 219.09999999999795,
+        "id": "station_quarter_walker_7",
+        "x": 12195.932647931846,
+        "y": 4919.5737231828625
+      }
+    ],
+    "indices": [
+      68,
+      71,
+      74,
+      75
+    ],
+    "maxStep": 0.7500000000005346,
+    "minGap": 0.00005244894827161062,
+    "timeS": 139.9666666667037,
+    "unsupported": 0
+  },
+  "save": {
+    "compatibilityHash": "38d148c136e56816af6b70d32d9786aa79d15a9e952de13c71fd940d2f33ce87",
+    "enabled": false,
+    "restored": false,
+    "review": false,
+    "sourceHash": "c0fe7ea9b19183c1c7554f6b70f60371fc2d598492d4255dcfd013f975f8fc78",
+    "status": "Review session: saves disabled."
+  }
+}

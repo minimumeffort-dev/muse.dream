@@ -1,0 +1,18 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/crowd-flow-world.test.ts --maxWorkers=1 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/crowd-flow-world.test.ts (7 tests) 17315ms
+   ✓ registers only simulation 55 over exact r113 and retains the simulation-54 projection  723ms
+   ✓ clears the six observed stuck poses without overlap, unsupported movement or teleporting  2830ms
+   ✓ restores a seeded old-format jam exactly and replays a complete fixed-tick world identically through another reload  3334ms
+   ✓ keeps worker-transferred graph indices and deterministic crowd decisions unchanged by transport  1801ms
+   ✓ restores the complete previous-engine jam without resetting anyone and frees all four actual stalled walkers  1150ms
+
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
+   Start at  00:56:38
+   Duration  18.08s (transform 442ms, setup 8ms, collect 631ms, tests 17.31s, environment 0ms, prepare 26ms)

@@ -28,8 +28,8 @@ const advance=(state:CarState)=>stepCommerce({...state,population:stepAmbient(st
 const length=(start:{x:number;y:number},path:{x:number;y:number}[])=>{let total=0;for(const end of path){total+=Math.hypot(end.x-start.x,end.y-start.y);start=end;}return total;};
 
 it('registers only simulation 54 over the exact existing r113 world and retains all earlier fingerprints',async()=>{
- expect(SAVE_VERSION).toBe(19);expect(c.SAVE_SIMULATION_VERSION).toBe(54);expect(scene.revisionId).toBe('r113');
- const current=c.saveCompatibilitySource(scene),old=c.preWalkingLinksCompatibilitySource(scene);expect(await c.sha256(current)).toBe(c.WALKING_LINKS_COMPATIBILITY);expect(await c.sha256(old)).toBe(c.CROSSING_ACCESS_COMPATIBILITY);
+ expect(SAVE_VERSION).toBe(19);expect(JSON.parse(c.preCrowdFlowCompatibilitySource(scene)).simulationVersion).toBe(54);expect(scene.revisionId).toBe('r113');
+ const current=c.preCrowdFlowCompatibilitySource(scene),old=c.preWalkingLinksCompatibilitySource(scene);expect(await c.sha256(current)).toBe(c.WALKING_LINKS_COMPATIBILITY);expect(await c.sha256(old)).toBe(c.CROSSING_ACCESS_COMPATIBILITY);
  expect(JSON.parse(current)).toEqual({...JSON.parse(old),simulationVersion:54});
  expect(await c.sha256(c.preCrossingAccessCompatibilitySource(scene))).toBe(c.STATION_MAINTENANCE_COMPATIBILITY);expect(await c.sha256(c.preStationMaintenanceCompatibilitySource(scene))).toBe(c.DISTRICT_COMPATIBILITY);expect(await c.sha256(c.preDistrictCompatibilitySource(scene))).toBe(c.UPSTAIRS_SOCIAL_COMPATIBILITY);
 });

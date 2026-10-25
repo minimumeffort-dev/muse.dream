@@ -1,0 +1,33 @@
+{
+  "simulationVersion": 55,
+  "format": 19,
+  "canonicalWorldCompatibility": "38d148c136e56816af6b70d32d9786aa79d15a9e952de13c71fd940d2f33ce87",
+  "completeRunBeforeCoincidentGuard": {
+    "files": 217,
+    "tests": 2150,
+    "failures": 0,
+    "seconds": 1032.86,
+    "sourceManifest": "pre-coincident-source-manifest.json"
+  },
+  "finalFocusedRun": {
+    "files": 5,
+    "tests": 52,
+    "failures": 0,
+    "seconds": 25.16,
+    "report": "coincident-link-checks.log"
+  },
+  "currentSourceHashes": {
+    "src/sim/ambient.ts": "1501c1321ce8d1fb7de2037567720dfb794dd8ed7e22d017215713efbe1f46bd",
+    "src/sim/save.ts": "21ca778b0c0f06346f198c9ced07a213db86b1dd55f7e1f870484eb6a619d65e",
+    "src/scene/save-compatibility.ts": "68f61f0ce794bf25d01f60ba7179e0ed5ad60afae579b4588874ae1e50d2d29f",
+    "src/scene/world-worker.ts": "18c1d836ef17bb75eda247ee786a78b449783b7ed6b8fa4c597cc31772364a5c",
+    "src/game/world-worker-client.ts": "44abcf3372f0bb2045ba4c9af196d2dab7b7ddd839214e12e02b906a68d70ce4",
+    "src/game/main.ts": "aba5f1f8c44fdf06d941d358853bc5085ee31ae84f4139c5d6aaf0a19f11a626",
+    "src/game/review-start.ts": "94bb2611ee4bd4f41cdb0daf28d0bb03cccd7c525e6e4e9580da1b1a45e44d89",
+    "src/game/save.ts": "b18f5b4cde265d598bd86730faf0bb7b0a73a669e03fd1d011d33b2189ac0cff",
+    "tests/crowd-flow-world.test.ts": "95fcb6301dc3380a9969a8147cf64e9e446fc99300749509127115b89ff2ad14"
+  },
+  "nativeRecordingRegionCheck": "regional-recording-check.json",
+  "productionDeploymentPerformed": false,
+  "nodeVersion": "v26.8.1"
+}

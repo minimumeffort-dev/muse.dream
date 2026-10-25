@@ -1174,3 +1174,18 @@ clock, damage/growth record, original slot and older migration. Future planning
 uses the new graph; an old valid journey does not replan just for this upgrade.
 Historical fixture fingerprints pin their own simulation projection. The native
 backup and pre-change paid-repair fixture must survive exactly.
+
+## Ambient portal flow, simulation 55
+
+Recognize portal arrival within the conservative body radius, capped below half
+the incoming leg so adjacent arrival regions do not repeatedly reset wait_s.
+Honor an active pause before selecting another target; exact arrival must advance
+even when an incoming link has zero length.
+Keep a reachable safe yielding move ahead of stationary waiting; retain all
+relative sweeps, pavement/solid support and traffic checks. No teleporting,
+generated controllers, added state fields or extra actor/render budgets.
+
+The format-19 rules-only upgrade validates exact simulation 54 first and keeps
+every saved field, original slot and older migration. No population rebase,
+needs/resources initialization, rewards, time advance or catch-up. Current tests
+pin 55; historical route tests retain their simulation-54 projection.

@@ -77,9 +77,22 @@ Ambient walkers also give each other room. They choose a short passing step,
 slow down or back away while their complete rest footprints stay on accepted
 pavement. Stable placement IDs decide who may yield. The rule also separates
 people that already overlap in an older save, without moving them instantly.
+Portal arrival uses the walker's body size, so several people do not need the
+same exact center point. Arrival margins stay separate on very short links,
+keeping an authored wait from restarting every tick. An active wait finishes
+before another target is selected, including coincident portals. A yielding person takes a
+safe moving option when one exists. These are shared engine rules for existing
+`motion=walk(...)`; Dream needs no per-person escape script.
 A narrow bottleneck may still make people wait or back away. This applies to
 ambient walkers; it does not make animals or individual decor NPCs physical crowd
 obstacles.
+
+![The station crowd leaving a shared portal](../media/crowdflow.jpg)
+
+[Current crowd flow in HD](../media/crowdflow.mp4) · [GIF](../media/crowdflow.gif) ·
+[Migration and runtime checks](../evidence/crowd-flow/verification.md).
+
+The earlier Garden-path recording shows the previous route and yielding timing:
 
 ![Visitors give each other room on Garden park paths](../media/pedestrians.gif)
 

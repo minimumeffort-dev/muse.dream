@@ -11,12 +11,12 @@ trailers, vehicle damage and service fleets remain separate work.
 
 ## Next playable work
 
-The latest station play-through found a congestion problem before the next room
-expansion: four sampled pedestrians made no progress for 80.6 simulation seconds
-at the promenade junction, after their authored waits had expired. Their bodies
-remain on the pavement, but the group needs to yield and clear the shared portal.
-Resolve that behavior before adding more residents to this district.
-[Native review and bounded experiments](evidence/station-review/verification.md).
+Simulation 55 resolves the station crowd congestion found in the native review.
+Walkers now complete shared portals using their body size and take safe yielding
+steps. A complete old-engine save restores without resets, then the four stalled
+residents leave the junction. The same 189-member instanced population and all
+existing limits remain. [Current recording and checks](evidence/crowd-flow/verification.md).
+Usable tower rooms and real indoor routines remain the next neighborhood work.
 
 The station quarter's fourteen placed fixtures now connect to existing finite
 repair and replant jobs, including both lobby benches. New visible places need

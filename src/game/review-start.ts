@@ -94,6 +94,10 @@ export function drivingReviewStart(state:CarState,world:World,scenario:string|nu
 
 /** Dev-only close views of actual Dream population members; normal starts are untouched. */
 export function populationReviewStart(state:CarState,world:World,scenario:string|null):CarState{
+ if(scenario==='station-crowd'){
+  const next:CarState={...state,control:{kind:'foot'},x:12183,y:4846,elevation:drivingHeight(world.scene.terrain,12183,4846),vx:0,vy:0,vz:0,grounded:true,vehicles:[{id:null,x:state.x,y:state.y,elevation:state.elevation,headingRad:state.headingRad,distance:state.distance}]};
+  return carFootprintClear(bodyWorld(next,world),next.x,next.y,next.elevation,next.timeS,next) ? next : state;
+ }
  if(scenario!=='wildlife' && scenario!=='pedestrians' && scenario!=='crowd')return state;
  const object=scenario==='crowd' ? world.scene.objects.find(o=>o.id==='garden_visitor_0') : world.scene.objects.find(o=>o.ambient?.motion.kind===(scenario==='wildlife' ? 'roam' : 'walk') && (scenario!=='wildlife' || o.ambient.motion.kind==='roam' && o.ambient.motion.gait==='walk'));
  if(!object)return state;

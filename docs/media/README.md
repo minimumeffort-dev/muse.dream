@@ -2077,3 +2077,26 @@ No frame interpolation is used. Keep all three together: `stationquarter.mp4`,
 `stationquarter.gif` and `stationquarter.jpg`. The earlier central-station view
 is marked historical where this district changes its surroundings. Native
 multi-angle gallery captures and checks are in the station-quarter evidence.
+
+## Shared-portal crowd flow, simulation 55
+
+`crowdflow.mp4`, `crowdflow.gif` and `crowdflow.jpg` share 600 consecutive source
+PNGs from dev-only `?capture`, clip `crowdflow`, at 30 rendered frames per
+simulation second. Preparation restores a complete simulation-54 fixture through
+the normal decoder. The prior engine generated it by running 14,400 full fixed
+ticks; only the review player was seeded. Four people were stationary during
+the last twenty seconds. New ordinary ticks let them clear the portal.
+
+Video/still are 1600x900; GIF is 1280x720 with all 600 images. Poster frame 360
+shows the group leaving. Use `node scripts/encode-media.mjs <ffmpeg> <gifsicle> crowdflow`,
+then `<ffmpeg> -y -i .npm-cache/media/crowdflow/0360.png -vf scale=1600:900:flags=lanczos -q:v 2 docs/media/crowdflow.jpg`.
+No frames are interpolated and no live performance claim is made.
+
+Earlier pedestrian recordings retain their assets, rig, support, color and depth
+transforms but are historical for exact route/yield timing. Other motion remains
+accurate where its inputs are unchanged. The current HD/GIF/still are refreshed
+together. [Native state, fixture provenance and file hashes](../evidence/crowd-flow/verification.md).
+
+The final coincident-link correction leaves every ambient state field in the
+recorded region identical over 2,397 fixed ticks, so these media remain current.
+[Comparison and source hashes](../evidence/crowd-flow/regional-recording-check.json).

@@ -1,7 +1,14 @@
 # Leave and come back
 
-The current world is r113, using format 19 / simulation 54. The registered
-simulation-53 upgrade changes future work-route choices over the same authored
+The current world is r113, using format 19 / simulation 55. Its registered
+simulation-54 upgrade retains the exact saved state before using the new ambient
+walking rules. It preserves positions, targets, random counters, waits, movement
+distances, needs, jobs, money and world time. Existing slots remain untouched;
+new saves use the new fingerprint. The crowd can then clear a shared portal
+through ordinary supported steps. There is no population rebase or offline
+catch-up. [Crowd migration and runtime checks](evidence/crowd-flow/verification.md).
+
+The earlier simulation-54 upgrade changes future work-route choices over the same authored
 world. Restore validates the exact earlier fingerprint and retains every state
 field: positions, clocks, inventory, wages, claims, damage, growth and coordinate
 paths. There is no population rebase, new stock or offline catch-up. A paid

@@ -41,6 +41,18 @@ jobs keep their original paths; new plans use the shorter connections.
 [Crossing walk in HD](docs/media/crossingwalk.mp4) ·
 [The caretaker taking the corner](docs/media/workerwalk.mp4)
 
+## Give each other room
+
+People now clear the shared path portals around the station. They use their
+body size to finish a turn and take a safe yielding step when another person
+needs room. Restoring an old save keeps their positions and clocks; the group
+then gets moving through the same Dream walking rules.
+
+![The station group leaving a shared path junction](docs/media/crowdflow.jpg)
+
+[Watch in HD](docs/media/crowdflow.mp4) · [GIF](docs/media/crowdflow.gif) ·
+[Walking rules and limits](docs/dream/populations.md#give-residents-and-ground-wildlife-a-place)
+
 ## Come home and rest
 
 The resident can now buy lunch, come home, recover on the settee and return to

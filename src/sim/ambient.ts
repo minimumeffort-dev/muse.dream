@@ -34,8 +34,10 @@ export function stepAmbient(state:CarState,dt:number,scene:Scene):AmbientState|u
    const random=()=>{m.random=(Math.imul(m.random,1664525)+1013904223)>>>0;return m.random/4294967296;};
    let heading=m.heading,speed=motion.speed;
    if(motion.kind==='walk'){
-    const node=nav.nodes[m.node];if(!node)return finish();
-    if(Math.hypot(node.x-m.x,node.y-m.y)<.01){
+    const node=nav.nodes[m.node];if(!node || time<m.pauseUntil)return finish();
+    const arrivalFrom=nav.nodes[m.previous]??o,arrival=Math.min(nav.radius(o),Math.hypot(node.x-arrivalFrom.x,node.y-arrivalFrom.y)*.45);
+    // Body-sized portals need disjoint arrival space on very short links.
+    if(Math.hypot(node.x-m.x,node.y-m.y)<=arrival){
      const options=node.links.filter(j=>j!==m.previous),choices=options.length ? options : node.links;
      if(!choices.length)return finish();
      const next=choices[Math.floor(random()*choices.length)]!;m.previous=m.node;m.node=next;m.pauseUntil=time+random()*motion.waitS;
@@ -47,9 +49,11 @@ export function stepAmbient(state:CarState,dt:number,scene:Scene):AmbientState|u
     const previous=nav.nodes[m.previous]??o,online=distanceToRoad([previous,goal],m.x,m.y)<.001;
     if(near.length || !online){
      // Stable IDs decide who may back away when passing space is tight.
-     const offsets=near.some(b=>o.id>b.id) ? yieldingAngles : passingAngles;
+     const yielding=near.some(b=>o.id>b.id),offsets=yielding ? yieldingAngles : passingAngles;
      let best:{heading:number;speed:number;cost:number}|undefined;
      search: for(const scale of [1,.5,0])for(const offset of scale ? offsets : [0]){
+      // A safe yielding step must win over waiting in the other walker's way.
+      if(!scale && yielding && best)continue;
       const h=heading+offset,v=speed*scale,vx=Math.cos(h)*v,vy=Math.sin(h)*v,x=m.x+vx*AMBIENT_LIMITS.tickSeconds,y=m.y+vy*AMBIENT_LIMITS.tickSeconds;
       let cost=Math.hypot(goal.x-x,goal.y-y)-distance+Math.abs(offset)*.04+(v ? 0 : .15),safe=true;
       if(best && cost>=best.cost)continue;

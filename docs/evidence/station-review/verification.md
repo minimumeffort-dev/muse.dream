@@ -1,5 +1,8 @@
 # Station play-through after the route update
 
+This page records the simulation-54 review. [Simulation 55 implements and verifies
+the crowd correction](../crowd-flow/verification.md).
+
 The reviewed source is commit `6d44b668b4a0710b3b3cac41cd062f9c0071974d`,
 r113 / simulation 54. The route is `?test-driving=station-quarter` on local Vite
 in the in-app browser. That query seeds the initial car position; all subsequent
@@ -79,3 +82,10 @@ state; no new gameplay or rendering feature is claimed.
 The route release gate subsequently passed all 2,143 tests in 216 files on the
 unchanged production source. [Full report](../short-links/full-suite-final.log).
 The isolated crowd changes are not included in that pass or in the checkout.
+
+## Follow-up
+
+Simulation 55 implements and verifies the portal-flow correction. It also caps
+arrival space on short links to preserve authored waits. [Current native
+restoration, recording and complete checks](../crowd-flow/verification.md). The
+review and isolated experiment above remain historical evidence of the cause.

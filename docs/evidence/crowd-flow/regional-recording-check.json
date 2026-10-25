@@ -1,0 +1,10 @@
+{
+  "capturedSourceSha256": "61a78d78bb7d04a57b9cd67849529acb7cbfd1cd87eaeb7011e341e436e43c5a",
+  "finalSourceSha256": "1501c1321ce8d1fb7de2037567720dfb794dd8ed7e22d017215713efbe1f46bd",
+  "fixedTicksCompared": 2397,
+  "regionRadius": 600,
+  "memberTickComparisons": 21573,
+  "allAmbientFieldsCompared": true,
+  "maxNumericDifference": 0,
+  "recordedRegionStillMatches": true
+}

@@ -1,0 +1,32 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/crowd-flow-world.test.ts tests/ambient-populations.test.ts tests/population.test.ts tests/short-links-save.test.ts tests/startup.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/population.test.ts (11 tests) 14133ms
+   ✓ live district populations and transport > preserves the complete live graph, contact broad phase and crowd state across worker bootstrap  2358ms
+   ✓ live district populations and transport > keeps every live ambient member clear throughout two minutes of city movement  4036ms
+ ✓ tests/crowd-flow-world.test.ts (9 tests) 18296ms
+   ✓ registers only simulation 55 over exact r113 and retains the simulation-54 projection  699ms
+   ✓ clears the six observed stuck poses without overlap, unsupported movement or teleporting  2713ms
+   ✓ restores a seeded old-format jam exactly and replays a complete fixed-tick world identically through another reload  3148ms
+   ✓ keeps worker-transferred graph indices and deterministic crowd decisions unchanged by transport  1766ms
+   ✓ preserves waits and progress through portals separated by 0.5 units  586ms
+   ✓ preserves waits and progress through portals separated by 0.001 units  574ms
+   ✓ preserves waits and progress through portals separated by 0 units  574ms
+   ✓ restores the complete previous-engine jam without resetting anyone and frees all four actual stalled walkers  1103ms
+ ✓ tests/startup.test.ts (14 tests) 1879ms
+   ✓ cooperative route construction retains exact surfaces, paint, rails and sleepers  911ms
+   ✓ column indexing retains analytic UVs, negative coordinates and large index ranges  823ms
+ ✓ tests/ambient-populations.test.ts (14 tests) 1689ms
+   ✓ bounded moving ambient populations > walks through accepted sidewalk and zebra geometry without cutting across carriageways  702ms
+ ✓ tests/short-links-save.test.ts (4 tests) 10127ms
+   ✓ registers only simulation 54 over the exact existing r113 world and retains all earlier fingerprints  1032ms
+   ✓ preserves the older registered migration chain and chooses the shorter route for a new finite dispatch  543ms
+
+ Test Files  5 passed (5)
+      Tests  52 passed (52)
+   Start at  01:21:51
+   Duration  25.16s (transform 574ms, setup 21ms, collect 1.41s, tests 46.12s, environment 0ms, prepare 112ms)

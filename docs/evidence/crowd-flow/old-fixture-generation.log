@@ -1,0 +1,48 @@
+{
+  "sourceCommit": "d242e6bc3721abd3a181cf12ec1b9487b8688a31",
+  "simulationVersion": 54,
+  "compatibility": "6f51da4a8fd320851d05e664f6f72d5ed9f7be57050e26ad31339a2c57f597d2",
+  "sourceHash": "c0fe7ea9b19183c1c7554f6b70f60371fc2d598492d4255dcfd013f975f8fc78",
+  "playerOnlySeeded": true,
+  "otherStateSeeded": false,
+  "fixedDt": 0.008333333333333333,
+  "steps": 14400,
+  "timeS": 120.00000000004157,
+  "stationaryObservationSeconds": 20,
+  "stalled": [
+    {
+      "id": "station_quarter_walker_0",
+      "x": 12197.459851532321,
+      "y": 4929.118621315551,
+      "distance": 744.6184516821007,
+      "node": 1778
+    },
+    {
+      "id": "station_quarter_walker_3",
+      "x": 12202.507002052243,
+      "y": 4923.082882814008,
+      "distance": 132,
+      "node": 1778
+    },
+    {
+      "id": "station_quarter_walker_6",
+      "x": 12190.469911362745,
+      "y": 4925.304973639388,
+      "distance": 190.63749999999172,
+      "node": 1778
+    },
+    {
+      "id": "station_quarter_walker_7",
+      "x": 12195.932647931846,
+      "y": 4919.5737231828625,
+      "distance": 219.09999999999795,
+      "node": 1778
+    }
+  ],
+  "sha256": "60d5c29edcad71e16bc41f8bef975ceb38923100e4b06026b4b93fe78d6fb4d8",
+  "oldModules": {
+    "src/sim/ambient.ts": "13d9f3cec02defa1932d0421a12e8fed33df08c6c7ccb70d1ee3a4c2567571c9",
+    "src/scene/save-compatibility.ts": "b4a57246ae2e02bdf912b775e9c18c590b17ead5f72977d5491d44de7b70f12c",
+    "src/sim/save.ts": "63932e187d50815ccaeae5dfa569aeeee3e74e88c0b2482a91697feb351b2196"
+  }
+}
