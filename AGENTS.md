@@ -102,6 +102,10 @@ do not regenerate motion solely to accompany a code or authored-policy change.
 Close agent-owned heavy world review tabs during shared-code edits, then open a
 fresh stable build for runtime checks. This avoids repeated worker/chunk/shader
 startup on every hot reload. Preserve user-owned tabs.
+Retire older ignored capture frames after checking their final media is committed;
+keep the latest source sequence and any unpublished/newer recording. Remove
+generated docs output after verification when disk space is needed. Archive
+inactive integrated managed worktrees through the app so Git state stays recoverable.
 Ship once the slice meets its success criteria; do not add adjacent features or
 repeat successful checks without a new change, failure or concrete concern.
 Historical fixture tests pin their projection's simulation version. Keep current

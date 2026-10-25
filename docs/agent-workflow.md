@@ -117,6 +117,10 @@ repair-kit suites now remove one duplicate full-world build each. Their same
 13 checks took 16.21 seconds before and 10.85 after in a local paired run;
 [method and raw reports](evidence/test-world-setup/verification.md). This does not
 measure the full suite, browser startup or rendering performance.
+The six live driving routes now also share one accepted immutable city per file,
+with after-each mutation guards and fresh masks/car state. The same 26 checks
+took 22.38 seconds before and 10.21 after in one local pair.
+[Driving setup evidence](evidence/route-test-setup/verification.md).
 
 Run the complete suite before merging/releasing or after broad compiler,
 physics or save changes. The [r90 run](evidence/nursery/verification.md) covered

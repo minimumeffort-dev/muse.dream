@@ -1989,3 +1989,17 @@ Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> upstairsmeal`.
 There is no interpolated frame or live performance claim. Older companions media
 remains historical for the downstairs venue. [Current rules](../dream/upstairs-social.md)
 and [verification](../evidence/upstairs-social/verification.md).
+
+## Retire generated capture caches
+
+After final media is committed, older ignored PNG sequences and `palette.gif`
+files can be removed from `.npm-cache/media/<clip>/`. Verify that the corresponding
+video/GIF are committed and that no newer or active capture is being removed.
+Retain the latest sequence for iteration. Keep the published GIF, video, still
+and checked-in evidence; source frames can be regenerated from the recorded
+revision. Generated `dist-docs/` is also disposable after verification and rebuilds
+with `npm run docs:build`. Node dependencies and encoder binaries remain useful.
+
+Inactive managed worktrees whose changes are already integrated can be archived
+through Codex, retaining recoverable Git state. Do not delete branches or rewrite
+history as a cache cleanup.

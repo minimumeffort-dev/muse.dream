@@ -1,4 +1,4 @@
-import {describe,it,expect} from 'vitest';
+import {afterEach,describe,it,expect} from 'vitest';
 import {Mesh,MeshBasicMaterial,Raycaster,Vector3} from 'three';
 import {compileDreamWorld,formatDream} from '../src/scene/dream';
 import {createFixtureScene,buildMaskForScene} from '../src/scene/fixture';
@@ -19,6 +19,12 @@ import {buildPaperMask} from '../src/sim/mask';
 import {drivingReviewStart} from '../src/game/review-start';
 import example from '../docs/examples/city-cycle-lanes.dream?raw';
 
+let live:ReturnType<typeof createLiveWorld>|undefined,liveSnapshot:string|undefined;
+function liveScene(){
+ if(!live){live=createLiveWorld();liveSnapshot=JSON.stringify(live);}
+ return live;
+}
+afterEach(()=>{if(live)expect(JSON.stringify(live)).toBe(liveSnapshot);});
 const fixture=parseScene({...createFixtureScene(),objects:[],regions:[],terrain:{hills:[]}});
 const main=streetSchema.parse({id:'main',width:100,cycleWidth:20,sidewalk:20,points:[{x:480,y:130},{x:480,y:620}]});
 const cross=streetSchema.parse({...main,id:'cross',points:[{x:250,y:400},{x:730,y:400}]});
@@ -91,7 +97,7 @@ describe('connected larger world',()=>{
   for(const id of ['town_avenue_1','suburb_avenue_1','sports_approach','western_shore','waterfront_market'])expect(cycling.some(s=>s.id===id),id).toBe(true);
  });
  it.each(['waterfront','canal-bridge','lake-bridge'])('drives the %s streets without losing the dry riding surface',scenario=>{
-  const world=createLiveWorld(),context:World={scene:world,roadMask:buildMaskForScene(world),driveMask:buildPaperMask(world.canonical.width,world.canonical.height),carRadius:11};
+  const world=liveScene(),context:World={scene:world,roadMask:buildMaskForScene(world),driveMask:buildPaperMask(world.canonical.width,world.canonical.height),carRadius:11};
   let car=drivingReviewStart(createCarAtSpawn(world),context,scenario),start={x:car.x,y:car.y};
   expect(onStreet(world,car.x,car.y)).toBe(true);
   for(let i=0;i<600;i++){car=stepCar(car,{throttle:1,steer:0},1/120,context);expect(car.surface).not.toBe('water');}
