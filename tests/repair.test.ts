@@ -13,12 +13,21 @@ import {encodeSave,decodeSave} from '../src/sim/save';
 import {buildMaskForScene} from '../src/scene/fixture';
 import {buildPaperMask} from '../src/sim/mask';
 import {dreamAgentContext} from '../src/scene/dream-agent';
+import {navigationTarget} from '../src/game/navigation';
 const scene=compileDreamScene(source,{sceneId:'repairs',revisionId:'r1',sourceHash:'repairs'});
 const world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(scene.canonical.width,scene.canonical.height),carRadius:11};
 const start=():CarState=>({...createCarAtSpawn(scene),vehicles:[{id:null,x:525,y:609,elevation:0,headingRad:0,distance:0}],control:{kind:'foot'},x:580,y:750,elevation:0,surface:'paper',broken:['yard_table']});
 const step=(s:CarState,commerce?:Parameters<typeof stepCommerce>[1]['commerce'],dt=.25)=>stepCommerce({...s,timeS:s.timeS+dt},{commerce},dt,scene);
 const a=(s:CarState,id='regular')=>s.economy!.accounts.find(a=>a.id===id)!;
 const market=(s:CarState)=>s.economy!.markets[0]!;
+it('guides only the player repair approach and drops it on completion or cancellation',()=>{
+ const npc=step(start());expect(a(npc).repair).toBeDefined();expect(navigationTarget(npc,scene)).toBeUndefined();
+ let s=step(start(),{kind:'repair',repair:'yard_tables'}),task=a(s,'pocket').repair!,target=navigationTarget(s,scene)!;
+ expect(target).toEqual({x:task.at.x,y:task.at.y,kind:'repair',id:'yard_tables:yard_table:',label:'Repair a table'});
+ expect(navigationTarget(step(s,{kind:'cancel'}),scene)).toBeUndefined();
+ s={...s,x:target.x,y:target.y};for(let i=0;i<8;i++)s=step(s);
+ expect(s.broken).toEqual([]);expect(a(s,'pocket').credits).toBe(24);expect(navigationTarget(s,scene)).toBeUndefined();
+});
 it('compiles, formats and exposes bounded repair vocabulary and rejects invalid ownership/references',()=>{
  expect(formatDream(formatDream(source))).toBe(formatDream(source));expect(dreamAgentContext(['commerce']).contract.commands).toHaveProperty('repair');
  for(const [from,to] of [['on=work_yard','on=missing'],['kind=table','kind=bench'],['input=kit','input=missing'],['seconds=2','seconds=0'],['repair=yard_tables','repair=missing'],['actor=customer,credits=20','actor=neighbor,credits=20']])expect(()=>compileDreamScene(source.replace(from!,to!),{sceneId:'bad',revisionId:'r1',sourceHash:'bad'})).toThrow();

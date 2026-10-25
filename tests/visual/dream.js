@@ -3,16 +3,19 @@ import * as THREE from 'three';
 import { dreamExamples } from '../../src/scene/dream-creations';
 import { buildObject, animateObject } from '../../src/game/world3d';
 import {CharacterAnimator} from '../../src/game/character-animation';
+import {positionGalleryCamera} from './gallery-camera';
 import { worldTime, worldMotion } from '../../src/game/shaders';
 import { interactiveWorld } from '../../src/scene/interactive-world';
 import { compileDreamWorld } from '../../src/scene/dream';
 import { worldSource, worldModules } from '../../src/scene/world-fixture';
+import workshopSource from '../../src/scene/world/workshop_architecture.dream?raw';
 import materialExample from '../../docs/examples/material-finishes.dream?raw';
 import personExample from '../../docs/examples/city-person.dream?raw';
 import {mediaCapture} from '../../src/game/media-capture';
 import utilityExample from '../../docs/examples/utility-vehicles.dream?raw';
 import priorTrees from '../../src/scene/compatibility/r75-trees.json';
 import priorPlants from '../../src/scene/compatibility/r76-plants.json';
+import priorCharacters from '../../docs/evidence/character-construction/r80-visuals.json';
 import coverExample from '../../src/scene/ground-cover.dream?raw';
 
 const canvas=document.querySelector('canvas'),grid=document.querySelector('.grid');
@@ -33,8 +36,8 @@ const allExamples=params.has('all');
 // A full native-resolution atlas must fit within the WebGL renderbuffer height.
 // The ordinary responsive two-column view can exceed it with the full asset library.
 if(params.has('sheet')){document.body.style.width='1600px';grid.style.gridTemplateColumns='repeat(4,1fr)';}
-if((utilityExamples || canopyExamples || botanyExamples || coverExamples || furnitureExamples || faunaExamples) && params.has('capture'))document.body.style.width='1600px';
-const focusHeight=faunaExamples && params.has('capture') ? '300px' : furnitureExamples && params.has('capture') ? '300px' : (canopyExamples || botanyExamples || coverExamples) && params.has('capture') ? '450px' : utilityExamples && params.has('capture') ? '900px' : focus.length>2 ? '360px' : '650px';
+if((peopleExamples || utilityExamples || canopyExamples || botanyExamples || coverExamples || furnitureExamples || faunaExamples) && params.has('capture'))document.body.style.width='1600px';
+const focusHeight=peopleExamples && params.has('capture') ? '225px' : faunaExamples && params.has('capture') ? '300px' : furnitureExamples && params.has('capture') ? '300px' : (canopyExamples || botanyExamples || coverExamples) && params.has('capture') ? '450px' : utilityExamples && params.has('capture') ? '900px' : focus.length>2 ? '360px' : '650px';
 if(focus.length){grid.style.gridTemplateColumns=`repeat(${Math.min(2,focus.length)},1fr)`;document.querySelector('main').style.setProperty('min-height',focusHeight);}
 if(faunaExamples){grid.style.gridTemplateColumns='repeat(3,1fr)';document.querySelector('header a').href='/docs/examples/wildlife-construction.dream';}
 if(worldExamples)document.querySelector('header a').href='/src/scene/interactive-world.dream';
@@ -42,9 +45,9 @@ if(allExamples || canopyExamples || botanyExamples)document.querySelector('heade
 if(botanyExamples)document.querySelector('header a').href='/docs/examples/plant-construction.dream';
 if(furnitureExamples)document.querySelector('header a').href='/docs/examples/furniture-construction.dream';
 if(coverExamples)document.querySelector('header a').href='/docs/examples/ground-cover.dream';
-const items=(coverExamples ? compileDreamWorld(coverExample).assemblies.map(s=>({...s,voxelSize:1})) : utilityExamples ? compileDreamWorld(utilityExample).assemblies.map(s=>({...s,voxelSize:1})) : peopleExamples ? compileDreamWorld(personExample).assemblies.map(s=>({...s,voxelSize:1})) : params.has('materials') ? compileDreamWorld(materialExample).assemblies : allExamples || canopyExamples || botanyExamples || furnitureExamples || faunaExamples ? compileDreamWorld(worldSource,worldModules).assemblies : worldExamples ? interactiveWorld.assemblies : dreamExamples).filter(spec=>!focus.length || focus.includes(spec.displayName)).sort((a,b)=>faunaExamples ? focus.indexOf(a.displayName)-focus.indexOf(b.displayName) : 0).map(spec=>params.has('tree-before') ? priorTrees.templates.find(t=>t.spec.displayName===spec.displayName)?.spec??spec : params.has('plants-before') ? priorPlants.templates.find(t=>t.spec.displayName===spec.displayName)?.spec??spec : spec).map(spec=>{
+const items=(coverExamples ? compileDreamWorld(coverExample).assemblies.map(s=>({...s,voxelSize:1})) : utilityExamples ? compileDreamWorld(utilityExample).assemblies.map(s=>({...s,voxelSize:1})) : peopleExamples ? compileDreamWorld(personExample).assemblies.map(s=>({...s,voxelSize:1})) : params.has('materials') ? compileDreamWorld(materialExample).assemblies : allExamples || canopyExamples || botanyExamples || furnitureExamples || faunaExamples ? [...compileDreamWorld(worldSource,worldModules).assemblies,...(allExamples ? compileDreamWorld(workshopSource).assemblies : [])] : worldExamples ? interactiveWorld.assemblies : dreamExamples).filter(spec=>!focus.length || focus.includes(spec.displayName)).sort((a,b)=>faunaExamples ? focus.indexOf(a.displayName)-focus.indexOf(b.displayName) : 0).map(spec=>params.has('characters-before') ? priorCharacters.find(s=>s.displayName===spec.displayName && s.measure?.meters===spec.measure?.meters)??spec : params.has('tree-before') ? priorTrees.templates.find(t=>t.spec.displayName===spec.displayName)?.spec??spec : params.has('plants-before') ? priorPlants.templates.find(t=>t.spec.displayName===spec.displayName)?.spec??spec : spec).map(spec=>{
   const cell=document.createElement('article'),name=document.createElement('strong'),detail=document.createElement('small');
-  if(focus.length)cell.style.height=focusHeight;
+  if(focus.length || peopleExamples && params.has('capture'))cell.style.height=focusHeight;
   name.textContent=spec.displayName;detail.textContent=`${spec.parts.length} parts · ${spec.joints?.length??0} joints`;
   cell.append(name,detail);grid.append(cell);
   const scene=new THREE.Scene();scene.background=new THREE.Color(neutral ? '#e9e7df' : '#52714d');
@@ -54,14 +57,14 @@ const items=(coverExamples ? compileDreamWorld(coverExample).assemblies.map(s=>(
   const floor=new THREE.Mesh(new THREE.PlaneGeometry(2000,2000),new THREE.MeshStandardMaterial({color:neutral ? '#e9e7df' : '#52714d'}));
   floor.visible=!faunaExamples;floor.rotation.x=-Math.PI/2;floor.position.y=-.5;scene.add(floor);
   const bounds=new THREE.Box3().setFromObject(group,true);group.position.y-=bounds.min.y;bounds.setFromObject(group,true);const center=bounds.getCenter(new THREE.Vector3());
-  const size=Math.max(...bounds.getSize(new THREE.Vector3()).toArray())*(params.has('materials') ? .4 : .76);
-  return {cell,scene,group,center,size,meters:spec.measure?.meters??1,character:spec.joints?.some(j=>j.bone) ? new CharacterAnimator(group,spec) : undefined,phase:-1,camera:new THREE.OrthographicCamera(-1,1,1,-1,.1,2000)};
+  const extent=bounds.getSize(new THREE.Vector3()),radius=extent.length()/2,size=Math.max(...extent.toArray())*(params.has('materials') ? .4 : .76);
+  return {cell,scene,group,center,size,radius,meters:spec.measure?.meters??1,character:spec.joints?.some(j=>j.bone) ? new CharacterAnimator(group,spec) : undefined,phase:-1,camera:new THREE.OrthographicCamera(-1,1,1,-1,.1,2000)};
 });
 // Center a lone final specimen instead of leaving an unrendered atlas cell.
 if(!faunaExamples && items.length%2===1 && (focus.length || items.length%4===1))items.at(-1).cell.style.gridColumn='1 / -1';
 new ResizeObserver(()=>renderer.setSize(canvas.clientWidth,canvas.clientHeight,false)).observe(canvas);
 let capturePhase,captureAngle;
-const capture=utilityExamples || canopyExamples || botanyExamples || coverExamples || furnitureExamples || faunaExamples ? mediaCapture(canvas,faunaExamples ? {fauna:240} : furnitureExamples ? {furniture:240} : coverExamples ? {cover:240} : botanyExamples ? {botany:240} : canopyExamples ? {canopy:240} : {utility:240},()=>{},(_clip,frame)=>{capturePhase=frame/30;captureAngle=frame/240*Math.PI*2;}) : undefined;
+const capture=peopleExamples || utilityExamples || canopyExamples || botanyExamples || coverExamples || furnitureExamples || faunaExamples ? mediaCapture(canvas,peopleExamples ? {wardrobe:240} : faunaExamples ? {fauna:240} : furnitureExamples ? {furniture:240} : coverExamples ? {cover:240} : botanyExamples ? {botany:240} : canopyExamples ? {canopy:240} : {utility:240},()=>{},(_clip,frame)=>{capturePhase=frame/30;captureAngle=frame/240*Math.PI*2;}) : undefined;
 view.onchange=phase.onchange=()=>{capturePhase=captureAngle=undefined;};
 renderer.setAnimationLoop(()=>{
   if(capture?.begin()===null)return;
@@ -71,11 +74,10 @@ renderer.setAnimationLoop(()=>{
   for(const item of items){
     const rect=item.cell.getBoundingClientRect(),aspect=rect.width/rect.height,half=Math.max(item.size,item.size/aspect);
     const camera=item.camera,angle=captureAngle??Number(view.value);
-    Object.assign(camera,{left:-half*aspect,right:half*aspect,top:half,bottom:-half});camera.updateProjectionMatrix();
-    camera.position.copy(item.center).add(new THREE.Vector3(110*Math.cos(angle)+150*Math.sin(angle),110,150*Math.cos(angle)-110*Math.sin(angle)));
-    camera.lookAt(item.center);
+    Object.assign(camera,{left:-half*aspect,right:half*aspect,top:half,bottom:-half});
+    positionGalleryCamera(camera,item.center,item.radius,angle);camera.updateProjectionMatrix();
     if(item.character){
-      if(item.phase!==time){item.character.reset();for(let f=0;f<time*60;f++)item.character.update({speed:40,swimming:false,grounded:true,verticalSpeed:0,time:f/60,enabled:true},1/60);item.phase=time;}
+      if(item.phase!==time){const first=item.phase>=0 && item.phase<=time ? Math.floor(item.phase*60) : 0;if(first===0)item.character.reset();for(let f=first;f<Math.floor(time*60);f++)item.character.update({speed:40,swimming:false,grounded:true,verticalSpeed:0,time:f/60,enabled:true},1/60);item.phase=time;}
     }else animateObject(item.group,time,true,time*(faunaExamples ? item.meters*3 : 40),0,Number(document.querySelector('#near').value));
     renderer.setViewport(rect.left-bounds.left,bounds.bottom-rect.bottom,rect.width,rect.height);
     renderer.setScissor(rect.left-bounds.left,bounds.bottom-rect.bottom,rect.width,rect.height);renderer.render(item.scene,camera);

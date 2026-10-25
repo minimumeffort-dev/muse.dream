@@ -207,8 +207,10 @@ An interact transition can use `requires=milestone_id` from the world's economy.
 It checks the player's personal completion record. The teacher can recognize a
 school delivery, and the vendor can recognize paid work at their own market.
 A completed NPC task cannot produce that response for the player. Every placement
-using the program must be the task's receiving market actor; unknown or unrelated
-guards fail complete-world acceptance. Keep a normal greeting as the fallback,
+using the program must be the task's receiving market actor. A shared_meal
+milestone instead references the specific social account, and only its actor can
+use the guard. It recognizes the player's completed meal with that person.
+Unknown or unrelated guards fail complete-world acceptance. Keep a normal greeting as the fallback,
 and put the guarded response first because declaration order still wins.
 
 See [personal work and recognition](commerce.md#personal-work-and-recognition)
@@ -223,3 +225,7 @@ pedestrian planner and finite player transactions, with no extra NPC/rig slots.
 
 
 [Shared meals](social.md) add per-person activity history. Optional `on.shared_meals` gates interact-only dialogue on completed player meals with this particular social NPC; unknown accounts, non-interact guards and programs used by people without the capability fail acceptance. Their original program pauses until they return home.
+
+## Talking at a workstation
+
+A person holding a [physical workstation](workstations.md) can still receive an ordinary T interaction. It changes only the declared conversation state and familiarity. Their job, facing, physical position and held route/animation clocks retain their existing owners. Moving work trips remain unavailable for conversation; no task, wage or claim is cancelled by talking.

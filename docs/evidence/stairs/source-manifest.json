@@ -1,0 +1,31 @@
+{
+  "files": {
+    "scripts/encode-media.mjs": "77bfecb733ce8652d74426e3a372121647fffe172fdf18e330719c04c1f36fda",
+    "scripts/media-middleware.ts": "853993ed399df44b2e251df83b59a259a3c8693a43b7af06c2814ba2c0b9536e",
+    "src/game/chunk-packet.ts": "12c4a09b0cc6ca3b524da9ab003c4e0227f3627946f598833b50baedf39c4bb9",
+    "src/game/main.ts": "ac78c5c458fc9f647061191d9851fbc6ca272073055997203055051e75736472",
+    "src/game/save.ts": "f26187714fd9c5d64eee040545fb4d86fba4428398c4eff27d385f692e5ea7ba",
+    "src/game/scenery.ts": "37a140f8028c7a2e1c82178526e1c761821234f1bdac679fe3c2f7f46a4f5a50",
+    "src/game/stairs-review.ts": "e4696b541e8ed47fd0610a4f65a528fc2d256cb4aae216faacb62d74004d6a17",
+    "src/game/world-worker-client.ts": "f160300e211ebb700a77dc7a2cb00a17ac246994a7fff2c6e53affe8d606f428",
+    "src/scene/compatibility/r97-home.json": "2c03da2fd332475a6a984266095e85bfc762fb3155eede5d55d7e1daa2014e6b",
+    "src/scene/dream-agent.ts": "8e830b2af69480ea887984e44ebda2c03eaaeefb9acbe8b836de575db04bf5cb",
+    "src/scene/dream-contract.ts": "52164b145530457255e61896e86c5edd8b230785ddb4c5711816f279afa88c83",
+    "src/scene/dream-v2.ts": "f14d7fba452e0f3907129c81a695be64f58f922cf22a4ff7411f636dd3605033",
+    "src/scene/dream.ts": "c992d32195bec31bff1951ecdfd76171e5f096eaf2e4ce64ea0ce3e577b55d2d",
+    "src/scene/object-dsl.ts": "7a4bb8e93d11e029618dfbc27af5b6fe678dae43526f32b4b707c6177f5bdb29",
+    "src/scene/save-compatibility.ts": "dd3c2fb9ff5dc5a2b18b83be82e49d574dab02380a7fd10b5900dd350f85bcdf",
+    "src/scene/world-fixture.ts": "df1bc20f966147abe2ec5443cef23694c5a7400e053340c82016aec89d98867e",
+    "src/scene/world-worker.ts": "09f6f40b32ec0830d1eb2bfeebde68421bac15d8bb36ddd5f07a3680d0e918a9",
+    "src/scene/world/destructible.dream": "af3d4171c65e0b531d210a442103d8635cbf930ec71453dae715addfa0358bd5",
+    "src/scene/world/frontage_0.dream": "6f9edd36f9289866ea1081da4be75e1340b83e46319f2f3329ec8a43de4a776d",
+    "src/sim/car.ts": "5fc998f8795c413973d49e641911b8ebfaed70966cfaf10832799a8634ba05f1",
+    "src/sim/save.ts": "33c2481c01dd024a037a8a0491beb8fb84afff28d7f1ff6531b89cf28d5b2211",
+    "src/sim/stairs-upgrade.ts": "2f9038f50201c525409a0d498607c91badbfd67a714d266c1fb852da2418c78e",
+    "tests/docs-site.test.ts": "5a6689636e3404a6a70d58dabee8657459ad59a0f07a28f8ec92a11c755225fd",
+    "tests/docs.test.ts": "e0ed49a8e6d4c89d28ae3ffdb28a09eb7eb45b40927a92a341daad35837f6141",
+    "tests/resting-world.test.ts": "e270218e7c5a7ae5de2538e53d81a6910466bd62c01f47b48f0947e1786e6a34",
+    "tests/stairs-world.test.ts": "59e8fd2b30481d8e0a0671514018d4430a6c583472f4d208c971cbfde8c47477",
+    "tests/stairs.test.ts": "837e5afd3e6ce7296c2d80bf18b7c94e36b0f3450eab1c034a536267aa197b42"
+  }
+}

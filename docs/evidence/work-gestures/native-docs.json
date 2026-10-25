@@ -1,0 +1,47 @@
+{
+  "bodyFont": "Manrope, Arial, sans-serif",
+  "codeTokens": [
+    {
+      "style": "dream-keyword",
+      "text": "gesture"
+    },
+    {
+      "style": "dream-symbol",
+      "text": "kneading"
+    },
+    {
+      "style": "dream-field",
+      "text": "cycle_s"
+    },
+    {
+      "style": "dream-number",
+      "text": "1.15"
+    },
+    {
+      "style": "dream-keyword",
+      "text": "key"
+    },
+    {
+      "style": "dream-field",
+      "text": "t"
+    },
+    {
+      "style": "dream-number",
+      "text": "0"
+    },
+    {
+      "style": "dream-field",
+      "text": "left"
+    }
+  ],
+  "headingFont": "Archivo, Arial, sans-serif",
+  "images": [
+    {
+      "complete": true,
+      "height": 720,
+      "src": "../media/workstations.gif",
+      "width": 1280
+    }
+  ],
+  "title": "Give the work its own motion · Dream"
+}

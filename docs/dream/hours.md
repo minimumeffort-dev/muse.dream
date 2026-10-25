@@ -41,10 +41,11 @@ reservations, paused routine and position survive saves. A hungry customer skips
 closed shops. If closing happens before arrival, they return without buying or
 claiming a seat; no free food or refund is created.
 
-These are counter hours. Staff stay at their current authored locations; there
-are no work shifts, wages for idle time, queues, appointment slots or weekly
-calendars in this feature. Repair services use their existing finite stores and
-pay; closing a shop does not switch off street maintenance.
+These are counter hours. [Counter shifts](shifts.md) and [workplace attendance](attendance.md)
+can give staff physical workdays. Hours alone do not move them or pay for idle
+time. Queues, appointment slots and weekly calendars remain separate features.
+Repair services use their existing finite stores and pay; closing a shop does
+not switch off street maintenance.
 
 ## A bakery and an overnight supplier
 

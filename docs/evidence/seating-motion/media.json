@@ -1,0 +1,14 @@
+{
+  "seatmotion.mp4": {
+    "bytes": 1807366,
+    "sha256": "965bc0281b1b2becf6b4416e05d479d266552e990e8832f329ecaccf77996c39"
+  },
+  "seatmotion.gif": {
+    "bytes": 24789271,
+    "sha256": "28538417de7a271124f7b8e6fe643c4cf638ee2f8766176e68954bf1cc73aada"
+  },
+  "seatmotion.jpg": {
+    "bytes": 74076,
+    "sha256": "3bdb7e225009ff53de36d5277122eb640c2d5fb8f6bc37476c6b467bb1c0c312"
+  }
+}

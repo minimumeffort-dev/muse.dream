@@ -37,7 +37,7 @@ benches keep their usable seats. [Complete Dream source](examples/furniture-cons
 
 The seated traveler and standing Explorer are separate engine-provided Dream assemblies, with a shared face and matching clothes. The Explorer, eight civic characters and four sports variants use twelve bound joints for walking and running. The outfits include coats, aprons, skirts, hoodies, gloves, backpacks and carried items, with different hair, glasses and facial hair. The Explorer also crawls and treads in water, and keeps its own physical size when switching to a seated vehicle pose. Bread and a harvest bowl remain standalone authoring examples. [Open the full atlas](media/assets-all.jpg), or follow the [local gallery setup](README.md#try-it-locally) for interactive inspection. Front, right, back and left views share the same geometry. The phase selector exposes wheel and joint motion.
 
-![Twelve character variants built with the same bound anatomy](media/people-wardrobe.png)
+![Sixteen character constructions built from the same bound anatomy](media/people-wardrobe.png)
 
 ![Matching standing and seated player construction](media/player-characters.png)
 
@@ -277,3 +277,40 @@ The [furniture](examples/furniture-construction.dream) and
 [plant](examples/plant-construction.dream) examples contain the complete objects.
 Local impact data avoids applying a blanket rule to unrelated custom scenery.
 Shelters with compound contacts and sports targets retain their existing behavior.
+
+## One source for city people and the player
+
+All fourteen exported person templates, the Explorer and the seated Traveler
+now share [one complete library](examples/city-person.dream). Shaped shoulders,
+waists and sleeves replace the square shirt silhouette. Faces have chamfered
+corners, ears and brows; hair, facial hair and hats retain distinct profiles.
+The player and passenger share the same measured head, with independent body
+sizes. Existing clothing, conversations, work, sports and ownership stay in place.
+
+There are still 133 placed people. Bodies, scales, joints and pedestrian nodes
+are equal to r80; the registered upgrade preserves saved state. These remain
+stylized rigid assemblies. [Motion and measured costs](evidence/character-construction/verification.md).
+
+## Commuter home and settee
+
+The [home source](examples/enterable-home.dream) builds one open ground floor
+inside a two-storey terrace shell. Voxel frames follow directional cutaways;
+the doorway, floor and wall contacts are explicit. The measured 2.1 m timber
+settee has two seats, supported cushions and five rigid splinter groups.
+
+The live graph retains its 128-definition and 32-module limits. Two unplaced
+older buildings, the timber workshop and brick bakehouse, remain available in
+[the optional workshop architecture pack](../src/scene/world/workshop_architecture.dream)
+and the all-assets/destruction galleries. They no longer load into the live city.
+
+## Station quarter
+
+Copper Court and Lantern Exchange give the skyline two different forms: a stepped
+brick residential tower and a taller glazed office tower. Their ground floors
+have supported lobbies, doorways and usable seating. The station taxi has a
+separate hood, cabin and trunk; the cargo van has a taller enclosed load body.
+Both use rigid rolling axles and the same direct driving controls.
+
+[Build the towers](examples/station-towers.dream), [build the vehicles](examples/station-vehicles.dream),
+or [walk through the connected quarter](dream/station-quarter.md). Upper storeys,
+lifts and taxi fares remain future work.

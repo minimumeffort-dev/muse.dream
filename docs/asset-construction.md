@@ -22,8 +22,9 @@ records eleven refined live tree templates and the reviewed, retained deadwood.
 The [r77 catalogue](evidence/asset-direction/r77-catalogue.json) adds thirteen
 refined landscape and street-plant templates. The [r78 catalogue](evidence/asset-direction/r78-catalogue.json) adds five
 furniture/container templates across all 18 of their placements. The [r79 catalogue](evidence/asset-direction/r79-catalogue.json)
-adds all nine animal templates, covering 62 placements and 256 flock birds. Thirty-nine
-exports are reviewed; the other 70 remain pending, including 28 buildings and 14 person exports. Repeated exports remain listed. The
+adds all nine animal templates, covering 62 placements and 256 flock birds. The [r81 catalogue](evidence/asset-direction/r81-catalogue.json) adds all fourteen
+person exports. Fifty-three exports are reviewed; the other 56 remain pending,
+including 28 buildings. Repeated exports remain listed. The
 engine-provided player rigs, background ground cover, infrastructure and optional example catalogue also
 belong in the pass; the loaded-library list does not certify those separately.
 
@@ -121,8 +122,9 @@ four-angle evidence is retained with the match verification.
 
 ![The current character wardrobe](media/people-wardrobe.png)
 
-Twelve civic and sports templates now share a connected voxel body, face and
-articulated hands and feet. Clothing, hair, facial hair, glasses, hats and carried
+Fourteen exported people and the standing/seated player now share one Dream
+library, with shaped shoulders, waists, limbs and soles, a chamfered face, ears
+and brows. Fifteen forms have twelve joints; the passenger stays static. Clothing, hair, facial hair, glasses, hats and carried
 items use reusable components mounted on semantic bones. The standing Explorer
 and static seated passenger use the same face construction at their own measured
 size. Sleeve, elbow, knee and shoe joins stay connected in the seated pose.
@@ -131,7 +133,7 @@ These replace 133 person placements and the two sports grounds’ team templates
 without moving their identities or changing their physical dimensions. Existing
 CPU rigs and instanced populations retain their limits. The [complete source](examples/city-person.dream)
 matches the live city library; the [people guide](dream/people.md) explains the
-construction and its rigid-clothing limits. [Native views and saved-state checks](evidence/character-wardrobe/verification.md).
+construction and its rigid-clothing limits. [Current views, resource costs and saved-state checks](evidence/character-construction/verification.md).
 
 The [utility library](examples/utility-vehicles.dream) is shared verbatim with the
 street asset module. Check the independent passenger against the inside of the
@@ -274,3 +276,30 @@ cosmetic flocks still uses the existing bounded shader.
 [back](evidence/wildlife-construction/after-back.png) and
 [left](evidence/wildlife-construction/after-left.png) retain matching reviews.
 [Checks, saves and capture provenance](evidence/wildlife-construction/verification.md).
+
+## Character construction, r81
+
+![The sixteen shared constructions](media/people-wardrobe.png)
+
+The head, clothes, hats and soles use exact shaped contours in the voxel path.
+The straw hat has a thin brim and a raised crown. The chef's hat has a fitted
+band. Short hair exposes the ears; long hair and ponytails keep their own
+silhouettes. Arms and hands retain their connections while sleeves taper toward
+the wrist. All existing physical dimensions and twelve-bone frames stay fixed.
+
+The city, sports and player modules import the same library through existing
+Dream `asset` data. Across the three affected files, source drops from 24,047 to
+19,766 compiler syntax tokens. These are not measured model tokens or generation
+accuracy. The library's sixteen definitions expand to 483 parts and 180 joints,
+within existing per-object and project bounds; those are source totals, not live rigs.
+
+The richer geometry costs more: the sixteen prototype set uses 1,535,712 bytes
+of geometry buffers, compared with 993,844 before. Prototype meshes remain sixteen.
+These counts exclude live instance records and do not measure browser memory,
+VRAM or frame rate. [Raw counts, conditions and limits](evidence/character-construction/prototype-metrics.json).
+
+[Front](evidence/character-construction/after-front.png),
+[right](evidence/character-construction/after-right.png),
+[back](evidence/character-construction/after-back.png) and
+[left](evidence/character-construction/after-left.png) retain native views.
+[Motion, persistence and checks](evidence/character-construction/verification.md).

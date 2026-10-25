@@ -3,7 +3,7 @@ import {Box3,Vector3} from "three";
 import {compileDream,compileDreamWorld,checkDream,formatDream} from "../src/scene/dream";
 import {objectDslSchema} from "../src/scene/object-dsl";
 import {sceneObjectSchema,parseScene} from "../src/scene/schema";
-import {measuredScale,assemblyBounds,playerRadius,playerHeight,UNITS_PER_METER} from "../src/scene/measure";
+import {measuredScale,assemblyBounds,playerRadius,playerHeight,UNITS_PER_METER,measureProblem} from "../src/scene/measure";
 import {createWorldScene,worldSource,worldModules} from "../src/scene/world-fixture";
 import {createFixtureScene,buildMaskForScene} from "../src/scene/fixture";
 import {objectRadius,objectHeight} from "../src/sim/archetypes";
@@ -63,6 +63,19 @@ describe("physical proportions at the Dream boundary",()=>{
     expect(compileDreamWorld(board.replace('kind=skateboard','kind=custom')).objects[0]!.scale).toBeCloseTo(.8);
     const item=compileDreamWorld(board).objects[0]!;
     expect(sceneObjectSchema.safeParse({...item,scale:item.scale*2}).success).toBe(false);
+  });
+  it("accepts bounded high-rises while retaining category and resolved-scale limits",()=>{
+    const tower=source('measure(kind=building,axis=y,meters=75);').replace('height=10','height=160').replace('part cube(shape=box,material=red,at=[0,5,0],size=[10,10,10]);','part lower(shape=box,material=red,at=[0,64,0],size=[60,128,60]);part upper(shape=box,material=red,at=[0,128,0],size=[60,128,60]);');
+    const world=compileDreamWorld(tower),object=world.objects[0]!;
+    expect(object.scale).toBeCloseTo(750/192);
+    expect(assemblyBounds(world.assemblies[0]!).getSize(new Vector3()).y*object.scale).toBeCloseTo(750);
+    expect(checkDream(tower.replace('meters=75','meters=120')).ok).toBe(false);
+    expect(checkDream(tower.replace('meters=75','meters=121')).ok).toBe(false);
+    expect(checkDream(tower.replace('kind=building','kind=custom')).ok).toBe(false);
+    expect(checkDream(tower.replace('axis=y','axis=x')).ok).toBe(false);
+    expect(compileDreamWorld(tower.replace('meters=75','meters=76.8')).objects[0]!.scale).toBeCloseTo(4);
+    expect(measureProblem({kind:'building',axis:'y',meters:120})).toBeUndefined();
+    expect(measureProblem({kind:'building',axis:'y',meters:121})).toBeDefined();
   });
   it("rejects cyclic measured joints without hanging or throwing outside schema diagnostics",()=>{
     const text=source().replace('part cube(', 'joint frame(){part cube(').replace('size=[10,10,10]);','size=[10,10,10]);}');

@@ -1,0 +1,1595 @@
+
+> muse-dream@0.1.0 test
+> vitest run --maxWorkers=2 --testTimeout=60000 --reporter=default --reporter=json --outputFile=/tmp/muse-stations-full.json
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/school-interior.test.ts (7 tests) 48594ms
+   ✓ opens a measured school room without moving existing scenery, retaining the exact r90 save projection  848ms
+   ✓ walks through the real opening while walls and its narrower-than-car doorway retain collisions  401ms
+   ✓ connects real food purchases, teacher attendance, an indoor shared meal, remembered history and reload  8463ms
+   ✓ dispatches the existing caretaker indoors with a real kit, one wage, full-shelf recovery limits and a restorable seat  25752ms
+   ✓ migrates an r90 teacher break without teleporting, preserving money, food, clocks and the original slot  10859ms
+   ✓ preserves an unfinished outdoor school meal and returns the companion to the new indoor break spot  2245ms
+ ✓ tests/rain-shelter-world.test.ts (4 tests) 54418ms
+   ✓ pins r101 and exact r100 while retaining physical objects, resources and the daylight clock  492ms
+   ✓ takes a healthy off-duty resident upstairs through rain, keeps a single claim and replays the return  34682ms
+   ✓ restores old r100 upstairs claims and ledgers exactly and retains the original storage slot  7062ms
+   ✓ preserves an r100 paid batch and pays its original reserved wage once under the new policy  12181ms
+ ✓ tests/commerce-save.test.ts (29 tests) 37825ms
+   ✓ upgrades actual r44 browser saves into the registered first market while preserving their physical world  11351ms
+   ✓ migrates an actual reserved format 3 batch without resetting stock, credits, needs or work time  1193ms
+   ✓ upgrades the actual format 4 delivery backup, rejects forged old ownership and keeps its slot intact  927ms
+   ✓ upgrades the actual format 5 parked bicycle without losing fleet ownership, needs, accounts or memory  874ms
+   ✓ upgrades a real r48 in-progress repair without resetting its ledger, clock, needs, parked vehicles or memories  1691ms
+   ✓ keeps an actual r49 world intact when adding connected service grounds, including paid procurement and completed repairs  936ms
+   ✓ preserves an actual r50 saved repair and return world through pooled lamp destruction  1021ms
+   ✓ rebases actual r51 pedestrian references while preserving damage, the active worker and every other saved field  1590ms
+   ✓ upgrades actual r52 progress with only finite saplings and empty new ledgers initialized  922ms
+   ✓ preserves an actual r53 growing tree, return journey and every ledger through the natural-ground upgrade  2937ms
+   ✓ upgrades the exact r54 backup without changing any state or clocks, while keeping the old slot  863ms
+   ✓ upgrades the actual r55 browser backup through the exact old physical projection and retains the old slot  859ms
+   ✓ upgrades the released format 9 'passenger' save without rebasing any world state  412ms
+   ✓ upgrades the released format 9 'growth and returning work' save without rebasing any world state  330ms
+   ✓ adds recipes to the released simulation-13 work backup without changing old progress  390ms
+   ✓ adds recipes to the released simulation-13 life backup without changing old progress  334ms
+   ✓ replays the actual native simulation-14 saved lunch job with its courier and conserved workshop stock  771ms
+   ✓ adds personal history to the exact released recipe backup without assigning old shared work to anyone  656ms
+   ✓ prepares the live progression capture only through ordinary paid work and food transactions  695ms
+   ✓ replays the new mock practice backup without clearing qualifications or paying the large batch twice  588ms
+   ✓ resumes the native mock meal return without repurchasing, consuming twice or clearing the paused routine  1000ms
+   ✓ preserves every live and historical fingerprint byte through a bounded startup batch  5909ms
+   ✓ upgrades the released staffed bakery into seating without changing a saved field  894ms
+ ✓ tests/social-qualifications-world.test.ts (3 tests) 44537ms
+   ✓ registers r102, exact r101/r100 and alternative qualifications without moving the world or seeding resources  365ms
+   ✓ buys and shares real bread, physically returns to an open counter and replays one relationship-qualified paid job  26749ms
+   ✓ keeps an exact r101 unfinished shared meal and original slot before earning the new consequence through completion  17423ms
+ ✓ tests/work-attendance-world.test.ts (4 tests) 35899ms
+   ✓ pins r100 and the exact r99 projection with identical geometry, resources and public graph  1900ms
+   ✓ connects a real meal, upstairs rest, attendance, purchased demand and one paid batch past its closing time  17567ms
+   ✓ preserves an old upstairs rest commitment and original save slot without seeding attendance or wages  3142ms
+   ✓ finishes an old one-batch commute before new attendance decisions without changing reserved resources  13290ms
+ ✓ tests/school-repairs.test.ts (7 tests) 35357ms
+   ✓ adds exactly the school bench to existing coverage with unchanged geometry, public navigation and finite graph limits  1736ms
+   ✓ walks the complete route, reserves and consumes one kit, waits for a parked car, saves each phase and pays once  17037ms
+   ✓ prepares the native review through real driving, impact, dispatch and every pedestrian step  14701ms
+   ✓ retains an earned shared-meal memory exactly through the coverage upgrade  998ms
+   ✓ replays the actual native repaired-bench return while retaining its usable seat and one paid repair  437ms
+ ✓ tests/hosted-save.test.ts (6 tests) 31017ms
+   ✓ registers the exact previous world and keeps all 29 historical states and original slots  15719ms
+   ✓ funds the live invitation through real production, purchases and walking, then consumes once after acceptance  15263ms
+ ✓ tests/world-layout.test.ts (9 tests) 29661ms
+   ✓ connected river city > rebuilds the full world deterministically with distinct districts and civic destinations  5717ms
+   ✓ connected river city > shares exact junction coordinates and rejects a short overlapping branch  2140ms
+   ✓ connected river city > builds finite city meshes without duplicating the cached sidewalk network  16486ms
+   ✓ connected river city > retains the r67 circuit as an explicit migration regression with all checkpoint and effect rules  4778ms
+ ✓ tests/upstairs-world.test.ts (7 tests) 22771ms
+   ✓ pins r99 and the exact r98 projection without adding resources, actors or rigs  1249ms
+   ✓ walks upstairs to rest, saves every travel phase and returns without a teleport or changing scene data  3548ms
+   ✓ shares the upper settee, releases damage claims and keeps fragments on the retained floor  6095ms
+   ✓ repairs upstairs with conserved finite supplies and reloads while working there  2909ms
+   ✓ keeps an old rest commitment and its original save slot before applying the new preference  2432ms
+   ✓ reaches the upstairs table by ordinary walking and breaks it with the shared on-foot strike  6500ms
+ ✓ tests/street-furniture-impact.test.ts (6 tests) 27691ms
+   ✓ makes every street tub and produce stall a pooled toppler without changing construction, contacts or neighbors  1569ms
+   ✓ topples each tub and stall on a car hit and routes the existing caretaker to every one  470ms
+   ✓ repairs a genuinely hit street-stall once, preserving work and paid return through save/reload  3381ms
+   ✓ repairs a genuinely hit street-tub once, preserving work and paid return through save/reload  8519ms
+   ✓ keeps the complete historical save chain exact through the new fixture layer  13728ms
+ ✓ tests/repair-world.test.ts (3 tests) 20768ms
+   ✓ shares current lamp repairs and player kit procurement when staff are assigned only to food  6875ms
+   ✓ protects the live bakery assembly space before accepting a redundant finished-kit shipment  6511ms
+   ✓ prepares the rendered crossing review through actual driving, damage and dispatch with valid saved state  7382ms
+ ✓ tests/urban-world.test.ts (14 tests) 20124ms
+   ✓ continuous, terrain-conforming streets > rejects disconnected streets, blocked carriageways and water crossings before scene acceptance  575ms
+   ✓ expanded planned world > retains the circuit, controls and destruction inside existing scene limits  1684ms
+   ✓ expanded planned world > lets the original car drive the town streets with normal grip  6105ms
+   ✓ expanded planned world > lets the original car drive the suburbs streets with normal grip  5801ms
+   ✓ expanded planned world > lets the original car drive the sports streets with normal grip  5710ms
+ ✓ tests/transport-network.test.ts (12 tests) 19889ms
+   ✓ connected larger world > drives the waterfront streets without losing the dry riding surface  6281ms
+   ✓ connected larger world > drives the canal-bridge streets without losing the dry riding surface  5980ms
+   ✓ connected larger world > drives the lake-bridge streets without losing the dry riding surface  6024ms
+   ✓ connected larger world > sails beneath a city bridge while cars use its elevated deck  1071ms
+ ✓ tests/work-commute-world.test.ts (3 tests) 19432ms
+   ✓ pins r95 exactly while declaring resident work without new geometry, people or money  360ms
+   ✓ connects an actual meal, purchased demand, doorway/street travel, paid work and a continuous return  14297ms
+   ✓ keeps an r95 occupied home meal exact and retains its old slot without seeding work or wages  4740ms
+ ✓ tests/furniture.test.ts (3 tests) 18207ms
+   ✓ refines all 18 furnishings, retaining layout, seats and break identities while bringing table caps to dining height  1571ms
+   ✓ keeps every historical state and isolates review-prefix migrations through the registered visual upgrade  16545ms
+ ✓ tests/resting-world.test.ts (3 tests) 18260ms
+   ✓ registers exact r96 without changing physical data, resources, jobs or actor budgets  3798ms
+   ✓ shares home seating for real energy recovery after a finite meal and replays the complete return exactly  6493ms
+   ✓ preserves an r96 paid-work commitment and its entire ledger while initializing only the new need  7936ms
+ ✓ tests/hardware-recovery.test.ts (7 tests) 18579ms
+   ✓ pins the exact r88 world and applies one hardware return policy to every existing fixture target  7712ms
+   ✓ retains full-store fallback, then carries a later fixture fastener through R and reload until one real handoff  2323ms
+   ✓ migrates existing sealed timber without changing any old field, retroactive output or original slot  2648ms
+   ✓ retains the r87 growth upgrade boundary and rejects invented recovered hardware  703ms
+   ✓ retains real fastener procurement in the prior world and shows recovered output in the current review  2827ms
+   ✓ keeps current timber recovery working beside the new fixture counter  2338ms
+ ✓ tests/botany.test.ts (2 tests) 18295ms
+   ✓ refines all 460 plants while preserving physical measures, contacts, reservations and the complete pedestrian graph  1540ms
+   ✓ keeps every historical state and isolates review-prefix migrations through the registered visual upgrade  16754ms
+ ✓ tests/city-repairs.test.ts (4 tests) 18083ms
+   ✓ serves all 413 city lamps through the existing worker, stock, wages and bounded host-prepared geometry  1776ms
+   ✓ keeps all 33 prior backups and exact ledgers while registering only this coverage upgrade  15559ms
+   ✓ resumes the native airport repair once, retains the return journey and conserves the whole world ledger  737ms
+ ✓ tests/canopy.test.ts (2 tests) 17803ms
+   ✓ refines all live tree templates with unchanged bodies, scales, world members and pedestrian nodes  1658ms
+   ✓ keeps a falling tree, cargo, economy and every historical backup field through the registered visual upgrade  16144ms
+ ✓ tests/fleet.test.ts (6 tests) 17490ms
+   ✓ adds connected utility parking without displacing an old object, changing a pedestrian node or raising live budgets  1481ms
+   ✓ boards, drives, exits, reboards and restores every utility vehicle through the existing controls  369ms
+   ✓ replays the complete historical backup chain into the fleet without rebasing unrelated state  15449ms
+ ✓ tests/nursery-world.test.ts (5 tests) 16077ms
+   ✓ pins r89 exactly while reusing the complete world, population and finite supplies  7859ms
+   ✓ consumes a real planted sapling, returns its timber, then permits the player to replace the seed stock through paid work  2932ms
+   ✓ prepares the in-game nursery recording with actual reserved seed and wage  2085ms
+   ✓ adds only zero nursery counters to a real r89 hardware return and retains the original slot  2516ms
+   ✓ keeps the registered hardware and timber migration chain intact without retroactive materials  685ms
+stdout | tests/resident-supplies.test.ts > replays the accepted city courier at 4 Hz, feeds school staff and pays each handoff once
+resident-supply-replay {"atS":2842.983333333334,"delivered":{"flour_run":1,"school_run":1,"kits_run":0,"saplings_run":0,"boards_run":1,"fasteners_run":1},"porterCredits":4,"schoolCredits":25,"schoolMeal":true,"porterMeal":true,"phases":["pickup","dropoff","home"]}
+
+ ✓ tests/resident-supplies.test.ts (4 tests) 15911ms
+   ✓ pins the exact r86 world, unchanged contacts and walking graph, and one existing resident with two destinations  7645ms
+   ✓ replays the accepted city courier at 4 Hz, feeds school staff and pays each handoff once  4912ms
+   ✓ initializes only the new resident account at saved time and keeps r86 cargo, clocks, ledgers and original slot  3270ms
+ ✓ tests/home-interior.test.ts (8 tests) 15612ms
+   ✓ retains the exact r93 projection, other placements and commute while opening the existing home  384ms
+   ✓ walks through the door, sits on either cushion and keeps the car and people out of walls  1166ms
+   ✓ lets the existing caretaker repair the home using finite supplies, wages and recovered hardware  10928ms
+   ✓ migrates a real paid batch with resources, clocks and old slot intact, initializing only the new repair ledger  2346ms
+   ✓ recovers a saved car with a car inside the new home, retaining ownership and travel history  386ms
+   ✓ recovers a saved foot with a car inside the new home, retaining ownership and travel history  352ms
+ ✓ tests/character-construction.test.ts (3 tests) 15507ms
+   ✓ refines all 133 person placements and both squads while keeping exact bodies, scales, joints and navigation  1560ms
+   ✓ keeps every historical backup and current repair ledger exact through the character layer  13937ms
+ ✓ tests/people-save.test.ts (6 tests) 14745ms
+   ✓ restores exactly the released person templates and gates upgrades to the registered world  305ms
+   ✓ keeps every lived state and population coordinate while rebasing only derived walking portals  2091ms
+   ✓ retains all 28 historical backups without replaying completed work or changing ledgers  12059ms
+ ✓ tests/shared-meal.test.ts (18 tests) 14605ms
+   ✓ registers r63 migration without rewriting any saved field, reserves its old slot and refuses unrelated worlds  7271ms
+   ✓ resumes the actual native shared meal once without repurchasing or losing the staffed-world state  7067ms
+ ✓ tests/recovery-save.test.ts (5 tests) 13349ms
+   ✓ pins r87 exactly and retains geometry, contacts, population graph and the 106 physical sources  7677ms
+   ✓ migrates a genuine format-18 shape with outstanding cargo without changing any old field or source slot  2741ms
+   ✓ keeps the existing r85 supply and r87 account initialization inside their registered boundaries  709ms
+   ✓ prepares a real live impact, planting, sealed cargo, R and doorway walk before one ordinary handoff  2213ms
+ ✓ tests/city-trees.test.ts (7 tests) 12528ms
+   ✓ makes every measured city tree independently topple through one shared rule without changing its construction  1424ms
+   ✓ covers every furnished street tree, retains finite supplies and proves each selected worker approach  437ms
+   ✓ preserves every native r73 repair field and old slot through the exact registered projection  486ms
+   ✓ keeps intact instance geometry, wind and material programs identical across the tree policy change  9895ms
+ ✓ tests/junction-save.test.ts (5 tests) 12630ms
+   ✓ preserves native progress and old slots, rebasing derived portals and adding only the two new residents  1192ms
+   ✓ retains every historical migration without replaying completed jobs or changing ledgers  11121ms
+ ✓ tests/wildlife.test.ts (3 tests) 12335ms
+   ✓ rebuilds all nine animal exports, sixty roamers, two route animals and every flock without moving a neighbor or changing physical scale  1117ms
+   ✓ retains every crowd clock and the same deterministic movement/reaction decisions across the visual upgrade  425ms
+   ✓ replays all historical backups and isolates review slots while preserving the released state exactly  10793ms
+ ✓ tests/dream-project.test.ts (17 tests) 11454ms
+   ✓ complete Dream 2 mock world > accepts the whole world from text and revalidates an invalid included placement  11417ms
+ ✓ tests/workshop-supplies.test.ts (4 tests) 10902ms
+   ✓ pins the exact r85 projection and leaves geometry, old stock and runtime bounds intact  6328ms
+   ✓ uses real consumption, collection and handoff in the live world without paying twice or losing cargo on R  3278ms
+   ✓ initializes only the two new supplier lots and delivery counters on a registered r85 save  1094ms
+ ✓ tests/park-save.test.ts (4 tests) 11029ms
+   ✓ adds only new visitors at saved time and preserves old lives, resources, ownership, damage, matches and vehicle poses  791ms
+   ✓ carries the complete historical save matrix through the city and park migrations  10214ms
+ ✓ tests/population.test.ts (11 tests) 11052ms
+   ✓ live district populations and transport > preserves the complete live graph, contact broad phase and crowd state across worker bootstrap  2051ms
+   ✓ live district populations and transport > keeps every live ambient member clear throughout two minutes of city movement  2448ms
+ ✓ tests/whole-world-voxels.test.ts (9 tests) 10774ms
+   ✓ whole-world voxel construction > applies the world policy to every linked template, placement, player and flock, without changing physics  7229ms
+   ✓ whole-world voxel construction > voxelizes every shaped part in the complete library, retaining holes, thin fittings and rigid animation frames  1982ms
+   ✓ whole-world voxel construction > round trips the directive and rejects invalid grids and work before rendering  1528ms
+ ✓ tests/kit-production.test.ts (6 tests) 10487ms
+   ✓ pins the r85 policy and exact prior r84 world  6313ms
+   ✓ completes the live hand flow and replenishes exactly its consumed kit from real boards and fasteners  1830ms
+   ✓ retains the complete r84 ledger, work and hand cooldown, then preserves the original save slot  2157ms
+ ✓ tests/city-retirement-save.test.ts (6 tests) 10422ms
+   ✓ retains lives, businesses, damaged objects, vehicles, clocks and matches, rebasing only retired road/navigation state  841ms
+   ✓ carries every pinned historical browser backup through the full chain into the street-only world  8991ms
+ ✓ tests/strike.test.ts (19 tests) 10356ms
+   ✓ registers exact r83 state and the old slot, adding only an immediately ready hand cooldown  8737ms
+   ✓ walks through the real doorway to a reachable table and starts one ordinary paid batch  438ms
+   ✓ connects the on-foot hit, one full refund, manual repair and a new paid batch in ordinary fixed ticks  1018ms
+ ✓ tests/foundation-reuse-world.test.ts (1 test) 10216ms
+   ✓ retains exact contacts, node order, links and starts for upper-floor, home and old-city projections  10215ms
+ ✓ tests/work-equipment.test.ts (7 tests) 10069ms
+   ✓ pins r82 exactly, preserves old progress and refuses unregistered upgrade targets  8589ms
+   ✓ retains the r102 table-collision walkthrough as historical equipment evidence  1383ms
+ ✓ tests/interactive-world.test.ts (27 tests) 8934ms
+   ✓ Dream world authoring > rejects routes without a safe world footprint or water support  3496ms
+   ✓ Dream world authoring > rejects a boat crossing a bridge deck even when its side rails are disabled  3597ms
+   ✓ continuous watercourse and boat wakes > keeps the boat afloat around its full route and emits a wake independently of the car  1118ms
+ ✓ tests/stairs-world.test.ts (4 tests) 9609ms
+   ✓ registers the exact old home and every previous world projection while retaining resources and actor bounds  502ms
+   ✓ walks from the actual door to the upper room and preserves the same upstairs pose on reload and subsequent ticks  1129ms
+   ✓ keeps a paid home meal, both need values, resident rest and the old slot through the registered upgrade  6381ms
+   ✓ keeps finite home-table repair escrow and progress while rerouting its changed approach  1596ms
+ ✓ tests/path-layout.test.ts (9 tests) 8656ms
+   ✓ full-size mock activities > keeps the skate circuit and connects cycling to city streets  1712ms
+   ✓ full-size mock activities > keeps grass and flowers outside the newly reserved surfaces  6066ms
+ ✓ tests/home-meals.test.ts (3 tests) 8867ms
+   ✓ pins r94 exactly while adding preferred home seating and a clear NPC approach  367ms
+   ✓ buys lunch, walks through the home doorway and shares separate cushions with the player  5044ms
+   ✓ keeps old reserved hall meals, their money, food and timers exactly through upgrade and storage  3422ms
+ ✓ tests/vehicle-control.test.ts (31 tests) 8440ms
+   ✓ Dream control profiles > can reboard village_bike from its real dry exit point  788ms
+   ✓ boat and aircraft controls > keeps the complete live aircraft above hills while landing, banking and taxiing  6442ms
+ ✓ tests/staff-shifts.test.ts (13 tests) 8216ms
+   ✓ registers the live shift world and migrates r62 without rewriting clocks, cargo, money or history  7905ms
+ ✓ tests/market-hours.test.ts (9 tests) 7926ms
+   ✓ migrates the registered seated r61 world exactly, retains its slot and rejects unrelated changes  7781ms
+ ✓ tests/spacing-save.test.ts (3 tests) 7856ms
+   ✓ preserves every native saved field, exact clock and bench claim without population rebasing  718ms
+   ✓ retains the complete historical migration chain without replaying park or commerce initialization  6860ms
+ ✓ tests/team-sports.test.ts (21 tests) 6600ms
+   ✓ adds unused athlete variants without changing any accepted r66 world field  6138ms
+ ✓ tests/aircraft-assets.test.ts (6 tests) 6338ms
+   ✓ boards the live aircraft, takes off, banks, rejects a midair exit and recovers without changing race progress  6277ms
+ ✓ tests/interaction-rules.test.ts (11 tests) 6235ms
+   ✓ category-wide Dream interaction rules > enforces live tables and benches, including the older bench with retained supports  6024ms
+ ✓ tests/open-world.test.ts (10 tests) 5842ms
+   ✓ bounded open-world scene > expands to organized districts beyond the original landscape, a winding circuit and diverse assemblies  1679ms
+   ✓ bounded open-world scene > rejects collapsed, unbounded or off-sheet road proposals  3371ms
+   ✓ bounded open-world scene > finishes the full winding circuit through every ordered checkpoint  629ms
+ ✓ tests/parking.test.ts (7 tests) 6187ms
+   ✓ parked controllable vehicles > makes all 91 parked rides boardable and retains the original NPC passenger capabilities  6065ms
+ ✓ tests/sports.test.ts (22 tests) 6243ms
+   ✓ Dream sports contracts > connects both actual mock grounds, physical balls and local target anchors  6011ms
+ ✓ tests/park-paths.test.ts (6 tests) 6282ms
+   ✓ leaves the released world byte-compatible when the new optional fields are absent  6160ms
+ ✓ tests/city-services.test.ts (7 tests) 6212ms
+stdout | tests/street-guide.test.ts > routes through the actual Dream city while keeping every street leg on its authored centerline
+City graph + first route (32 streets): 1.22 ms
+100 warm city guidance queries: 0.68 ms
+
+ ✓ tests/street-guide.test.ts (9 tests) 6117ms
+   ✓ routes through the actual Dream city while keeping every street leg on its authored centerline  6096ms
+ ✓ tests/cycle-surface.test.ts (9 tests) 6102ms
+   ✓ retains continuous color through the live shallow fork within existing pavement  5907ms
+ ✓ tests/save.test.ts (12 tests) 6228ms
+   ✓ round-trips the live population, damage and every control domain without resetting ownership  6172ms
+ ✓ tests/character-family.test.ts (3 tests) 6370ms
+   ✓ changes only the 133 existing person visuals while retaining all other world data and live rig owners  6328ms
+ ✓ tests/vehicle-construction.test.ts (11 tests) 6210ms
+   ✓ retains parked bicycle cranks for bounded activation inside the existing live-animation cap  6050ms
+ ✓ tests/object-placement.test.ts (12 tests) 5792ms
+   ✓ objects supported on hills > places every current world assembly above the rendered surface  5629ms
+ ❯ tests/workstations-world.test.ts (5 tests | 1 failed) 2218ms
+   ✓ registers exact r102 and earlier fingerprints without changing geometry or initial resources  370ms
+   ✓ walks the real player to the fitted table, keeps the position through a pending save and pays one batch  829ms
+   ✓ walks the existing baker to the station without teleporting, extra stock or an added rig 121ms
+   ✓ refunds only incompatible r102 batches once and keeps the source slot, pose, clocks and personal history  879ms
+   × retains the live shared-meal recipe route with the new physical station and no seeded qualification 18ms
+     → Shared review needs paid food and a real meeting
+ ✓ tests/proportions.test.ts (15 tests) 5847ms
+   ✓ the complete mock world's proportion rules > rejects a valid per-kind size that contradicts the player car's proportions  5815ms
+ ✓ tests/rations-world.test.ts (2 tests) 4296ms
+   ✓ pins r91 exactly and adds only bounded worker policies, preserving physical data and finite resources  1884ms
+   ✓ restores a real in-progress r91 paid batch and every saved field without buying or eating during migration  2411ms
+ ✓ tests/repair-verge-world.test.ts (2 tests) 5823ms
+   ✓ rejects the same service coverage when its real street crossing is removed  5808ms
+ ✓ tests/weather-world.test.ts (2 tests) 4148ms
+   ✓ pins r92 exactly, retains all geometry/resources/navigation and declares outdoor versus indoor work  1721ms
+   ✓ preserves a genuine r92 paid batch field-for-field, derives weather from saved time and retains the original slot  2427ms
+ ✓ tests/indoor-service.test.ts (6 tests) 4290ms
+   ✓ registers the exact previous world, reuses physical assets and keeps every maintenance target  782ms
+   ✓ relocates a saved paid worker safely while retaining the exact job, reservations and time  319ms
+   ✓ keeps a saved hungry customer physically on the journey and charges once at the new counter  2791ms
+ ✓ tests/garden-park.test.ts (4 tests) 3996ms
+   ✓ adds a connected park without replacing any released object or raising live budgets  1480ms
+   ✓ uses the same sitting, damage and ride controls on every new bench, bicycle and scooter  601ms
+   ✓ moves every new visitor over accepted pavement without a CPU actor or new population clock  952ms
+   ✓ connects all ten breakable park furnishings to the existing finite repair service  962ms
+ ✓ tests/business-world.test.ts (4 tests) 3985ms
+   ✓ registers exactly the new depot capability and zero-funded owner with unchanged geometry and walking networks  3408ms
+   ✓ migrates the actual repaired-bench return without resetting a prior field, clock, seat, balance or job  324ms
+ ✓ tests/water-bridges.test.ts (13 tests) 3732ms
+   ✓ bounded landscape DSL > rejects off-world, overlapping and submerged bridge proposals  2420ms
+   ✓ one shared bridge driving surface > keeps the mock deck edges and interiors on the same triangulated surface as its rails  1139ms
+ ✓ tests/bridge-continuity.test.ts (13 tests) 3760ms
+   ✓ one continuous road across a bridge > stops painted dashes and raised curbs at timber banks  373ms
+   ✓ one continuous road across a bridge > tapers both curb sections into the timber without exposed ends  356ms
+   ✓ one continuous road across a bridge > retains asphalt over a stone road bridge  1841ms
+   ✓ bridge/road semantic validation > accepts either end order, curved contained crossings and unrelated footbridges  484ms
+ ✓ tests/landscape.test.ts (11 tests) 3487ms
+   ✓ paper-authored landscape data > keeps the larger mock world's racing road playable  1775ms
+   ✓ terrain and render alignment > subdivides long road straights and drapes every vertex over the same height field  909ms
+   ✓ terrain and render alignment > keeps triangle interiors above the rendered ground, including ice, boost and the road crest  692ms
+ ✓ tests/destruction.test.ts (24 tests) 3497ms
+   ✓ impact DSL > authors distinct bounce, table, crate and planter behaviors without object-name recipes  1932ms
+   ✓ destruction simulation > keeps destruction moving while a controlled bicycle is stationary  951ms
+ ✓ tests/ambient-populations.test.ts (14 tests) 3397ms
+   ✓ bounded moving ambient populations > walks through accepted sidewalk and zebra geometry without cutting across carriageways  2370ms
+ ✓ tests/extended-destruction.test.ts (27 tests) 2926ms
+   ✓ distinct fracture motion > supports a scaled, rotated tree falling over a hill without burying its geometry  1412ms
+   ✓ preserved destructible-world regression > allows an actual off-road impact on park_bench without damaging the circuit  889ms
+ ✓ tests/component-geometry.test.ts (19 tests) 3004ms
+   ✓ continuous road trim > joins every curb face, including the loop seam on side -1  1447ms
+   ✓ continuous road trim > joins every curb face, including the loop seam on side 1  1315ms
+ ✓ tests/dream-agent.test.ts (18 tests) 2144ms
+   ✓ bounded agent context packets > exports machine-readable CLI context and preserves source/check boundaries  2137ms
+ ✓ tests/terrain-driving.test.ts (19 tests) 2019ms
+   ✓ terrain driving > starts driving reviews at clear real-world poses and leaves normal starts untouched  998ms
+   ✓ terrain driving > lets the mock player drive the opening road crest, jump and land without a scripted impulse  944ms
+ ✓ tests/startup.test.ts (14 tests) 1982ms
+   ✓ cooperative route construction retains exact surfaces, paint, rails and sleepers  980ms
+   ✓ column indexing retains analytic UVs, negative coordinates and large index ranges  861ms
+ ✓ tests/tram-tracks.test.ts (8 tests) 1897ms
+   ✓ fits timber bridge approaches and both independently built voxel chunks  883ms
+   ✓ supports circuit-only tram tracks and retains fitted geometry and depth bias through worker transfer  697ms
+ ❯ tests/docs.test.ts (159 tests | 1 failed) 1904ms
+   ✓ published Dream documentation > keeps workstation declarations identical to the complete runnable source 1ms
+   ✓ published Dream documentation > keeps relationship qualifications identical to the complete runnable source 0ms
+   ✓ published Dream documentation > keeps the shelter declaration identical to the complete runnable source 0ms
+   ✓ published Dream documentation > keeps daily attendance identical to the complete runnable source 0ms
+   ✓ published Dream documentation > keeps floor bindings identical to the complete runnable upstairs example 0ms
+   ✓ published Dream documentation > keeps the stair declaration identical to its runnable source and linked live house 0ms
+   ✓ published Dream documentation > keeps the nursery declaration identical to its complete runnable example 0ms
+   ✓ published Dream documentation > keeps the fixture-hardware policy identical to its runnable example 0ms
+   ✓ published Dream documentation > keeps the complete counter-hours guide identical to its runnable world 0ms
+   ✓ published Dream documentation > keeps the complete business guide identical to its independently runnable world 0ms
+   ✓ published Dream documentation > keeps the complete meal guide identical to its runnable world 0ms
+   ✓ published Dream documentation > keeps the complete personal-progression guide identical to its runnable world 0ms
+   ✓ published Dream documentation > keeps both complete food and workshop recipes identical to their runnable world 0ms
+   ✓ published Dream documentation > keeps the complete interior guide, runnable example and live market identical 0ms
+   ✓ published Dream documentation > keeps the connected-path guide identical to its runnable source 0ms
+   ✓ published Dream documentation > keeps the parking guide identical to its runnable source 0ms
+   ✓ published Dream documentation > keeps planting and recovery declarations identical to their respective complete examples 0ms
+   ✓ published Dream documentation > keeps courier declarations identical to their runnable source 0ms
+   ✓ published Dream documentation > keeps the commerce guide identical to its complete runnable world 0ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/airport-stop.dream 89ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/airport-terminal.dream 1ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/ambient-wildlife.dream 3ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/bouncing-ball.dream 0ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/breakable-bench.dream 2ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/business-ownership.dream 14ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/cabin-launch.dream 11ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/character-import.dream 36ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/city-bicycle.dream 4ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/city-bus.dream 4ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/city-car.dream 4ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/city-cycle-lanes.dream 44ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/city-person.dream 12ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/city-tree-replanting.dream 62ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/classroom-scenario.dream 1ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/connected-city.dream 19ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/controllable-bicycle.dream 3ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/courier-resupply.dream 38ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/cycle-junctions.dream 11ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/day-night.dream 10ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/dedicated-path.dream 8ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/dream-v2-world.dream 20ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/ecology-scenario.dream 0ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/enterable-home.dream 9ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/enterable-market.dream 4ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/enterable-school.dream 6ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/faceted-canopy.dream 1ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/full-verge-repairs.dream 55ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/furniture-construction.dream 14ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/ground-cover.dream 1ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/hardware-recovery.dream 17ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/hosted-meal.dream 25ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/humanoid.dream 1ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/interaction-rules.dream 2ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/joint-stride.dream 1ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/light-aircraft.dream 2ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/market-delivery.dream 14ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/market-hours.dream 29ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/market-maintenance.dream 17ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/market-production.dream 22ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/market-repair.dream 13ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/market-work.dream 11ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/material-components.dream 1ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/material-finishes.dream 1ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/meal-trips.dream 11ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/moving-population.dream 50ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/multi-input-work.dream 11ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/neighborhood-courier.dream 25ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/neighborhood-repairs.dream 25ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/npc-behavior.dream 1ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/npc-conversation.dream 10ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/on-foot-strike.dream 13ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/orchard-replanting.dream 25ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/park-paths.dream 5ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/parked-vehicles.dream 1ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/planned-neighborhood.dream 0ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/plant-construction.dream 4ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/populated-neighborhood.dream 40ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/rain-shelter.dream 106ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/rain-work.dream 49ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/repair-production.dream 16ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/resting-population.dream 45ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/resting.dream 35ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/sapling-propagation.dream 18ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/scheduled-workday.dream 32ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/school-repairs.dream 24ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/seat-preferences.dream 27ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/shared-meal.dream 22ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/shared-recipe.dream 25ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/shared-seating.dream 23ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/sports-practice.dream 27ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/staff-shifts.dream 23ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/stairs-home.dream 1ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/street-verge-repairs.dream 22ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/street-world.dream 4ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/streetlight-repairs.dream 22ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/swinging-sign.dream 1ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/tapered-wood.dream 0ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/team-sports.dream 39ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/terraced-house.dream 14ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/timber-recovery.dream 54ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/toppling-tree.dream 1ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/town-scenario.dream 0ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/upstairs-rest.dream 132ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/utility-vehicles.dream 10ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/voxel-wall.dream 4ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/voxel-world.dream 21ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/walkable-steps.dream 0ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/wildlife-construction.dream 15ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/work-commute.dream 32ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/work-equipment.dream 16ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/work-progression.dream 12ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/worker-rations.dream 32ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/workshop-supplies.dream 24ms
+   ✓ published Dream documentation > compiles the complete example ../docs/examples/workstations.dream 30ms
+   ✓ published Dream documentation > keeps the quickstart's complete tree identical to its runnable source 0ms
+   ✓ published Dream documentation > keeps the material-parameter example identical to its runnable source 0ms
+   ✓ published Dream documentation > keeps the object's complete wood example identical to its runnable source 0ms
+   ✓ published Dream documentation > keeps the wildlife guide's complete example identical to its runnable source 0ms
+   ✓ published Dream documentation > keeps the NPC guide identical to its runnable module 0ms
+   ✓ published Dream documentation > keeps the complete conversation example identical to the runnable source 0ms
+   ✓ published Dream documentation > keeps the scenario guide identical to its complete runnable source 0ms
+   ✓ published Dream documentation > keeps the city crossing identical to its complete runnable source 0ms
+   ✓ published Dream documentation > keeps local links and images valid in ../README.md 22ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/README.md 2ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream-language.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/attendance.md 0ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/behavior.md 5ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/businesses.md 2ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/commerce.md 6ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/commuting.md 0ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/day-night.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/examples.md 7ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/floors.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/growth.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/hours.md 0ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/interiors.md 2ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/model-authoring.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/npcs.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/objects.md 2ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/paths.md 0ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/people.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/populations.md 2ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/quickstart.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/reference.md 5ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/relationships.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/resting.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/rules.md 2ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/scenarios.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/seating.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/shelter.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/shifts.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/social.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/sports.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/stairs.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/voxels.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/weather.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/workstations.md 1ms
+   ✓ published Dream documentation > keeps local links and images valid in ../docs/dream/worlds.md 2ms
+   × published Dream documentation > covers every parser command in the readable reference 5ms
+     → expected '# Dream 2 reference\n\n[Docs](../READ…' to contain '| `station` |'
+ ✓ tests/ground-cover.test.ts (4 tests) 1777ms
+   ✓ retains every released seeded position and scale, with upright roots fitted to the visible ground  552ms
+   ✓ plants roots into the actual rendered hill triangles and voxel column tops  581ms
+   ✓ rebuilds identical chunks and retains vertex paint through worker transfer without sharing owned buffers  631ms
+ ✓ tests/npc-behavior.test.ts (23 tests) 1624ms
+   ✓ fixed-step NPC programs > uses a live cylinder for solid stationary NPC contacts and validates their dry footprint  330ms
+   ✓ authors every live person as an NPC and every driveable instance explicitly; real review starts nearby on foot  917ms
+ ✓ tests/growth-world.test.ts (2 tests) 1601ms
+   ✓ connects the orchard through its actual garden path and preserves the previous physical world  1593ms
+ ✓ tests/damage-pool.test.ts (9 tests) 1030ms
+   ✓ streams through many template records without retaining more than 24 mesh templates or 128 fragment meshes  473ms
+   ✓ keeps the mesh cache within 128 pieces while many eight-part templates fracture in succession  331ms
+ ✓ tests/scene.test.ts (11 tests) 884ms
+ ✓ tests/team-sports-save.test.ts (3 tests) 1041ms
+   ✓ registers the exact r66 migration without resetting physical, personal or company progress  917ms
+ ✓ tests/locomotion.test.ts (25 tests) 787ms
+ ✓ tests/rain-shelter.test.ts (8 tests) 785ms
+ ✓ tests/docs-site.test.ts (50 tests) 832ms
+   ✓ published site > builds highlighted source with project-relative navigation and working downloads  821ms
+ ✓ tests/dream-v2.test.ts (66 tests) 657ms
+ ✓ tests/world-streaming.test.ts (16 tests) 634ms
+   ✓ joins water tiles through continuous shared UV waves without transparent internal skirts  383ms
+ ✓ tests/character-animation.test.ts (40 tests) 563ms
+ ✓ tests/ecology.test.ts (18 tests) 580ms
+   ✓ bounded ambient routes > rejects a ground habitat in water or through solids but allows clear overhead flight  315ms
+ ✓ tests/object-dsl-v2.test.ts (27 tests) 440ms
+ ✓ tests/voxel-city.test.ts (2 tests) 515ms
+   ✓ voxel city integration > uses voxels across architecture, transit, boat fittings, people and paired park boundaries  455ms
+ ✓ tests/courier.test.ts (7 tests) 441ms
+ ✓ tests/sports-visuals.test.ts (3 tests) 435ms
+   ✓ renders one shared eleven-person squad with bone/finish channels and releases its owned buffers  356ms
+ ✓ tests/terrain-footing.test.ts (9 tests) 387ms
+ ✓ tests/world-presentation.test.ts (8 tests) 359ms
+ ✓ tests/worker-rations.test.ts (8 tests) 361ms
+ ✓ tests/dream.test.ts (43 tests) 367ms
+ ✓ tests/work-attendance.test.ts (12 tests) 353ms
+ ✓ tests/interiors.test.ts (11 tests) 315ms
+ ✓ tests/timber-recovery.test.ts (12 tests) 312ms
+ ✓ tests/repair-network.test.ts (7 tests) 299ms
+ ✓ tests/sun.test.ts (4 tests) 272ms
+ ✓ tests/weather.test.ts (9 tests) 270ms
+ ✓ tests/hosted-meal.test.ts (18 tests) 256ms
+ ✓ tests/seating.test.ts (14 tests) 243ms
+ ✓ tests/workstations.test.ts (6 tests) 240ms
+ ✓ tests/pedestrian-spacing.test.ts (3 tests) 227ms
+ ✓ tests/landscape-queries.test.ts (4 tests) 210ms
+ ✓ tests/growth.test.ts (9 tests) 221ms
+ ✓ tests/city-access.test.ts (14 tests) 211ms
+ ✓ tests/repair.test.ts (16 tests) 206ms
+ ✓ tests/business-ownership.test.ts (9 tests) 199ms
+ ✓ tests/repair-verge.test.ts (7 tests) 204ms
+ ✓ tests/work-commute.test.ts (8 tests) 186ms
+ ✓ tests/rest-population.test.ts (8 tests) 187ms
+ ✓ tests/natural-grounds.test.ts (4 tests) 178ms
+ ✓ tests/asset-construction.test.ts (11 tests) 176ms
+ ✓ tests/social-qualifications.test.ts (8 tests) 171ms
+ ✓ tests/upstairs-rest.test.ts (4 tests) 158ms
+ ✓ tests/floors.test.ts (4 tests) 166ms
+ ✓ tests/propagation.test.ts (6 tests) 141ms
+ ✓ tests/materials.test.ts (5 tests) 135ms
+ ✓ tests/resting.test.ts (8 tests) 127ms
+ ✓ tests/work-navigation.test.ts (6 tests) 123ms
+ ✓ tests/kitchen.test.ts (5 tests) 115ms
+ ✓ tests/world-audit.test.ts (9 tests) 118ms
+ ✓ tests/render-batching.test.ts (3 tests) 115ms
+ ✓ tests/meals.test.ts (6 tests) 115ms
+ ✓ tests/voxels.test.ts (20 tests) 94ms
+ ✓ tests/stairs.test.ts (4 tests) 92ms
+ ✓ tests/npc-conversation.test.ts (6 tests) 89ms
+ ✓ tests/compatibility-encoder.test.ts (3 tests) 91ms
+ ✓ tests/utility-construction.test.ts (4 tests) 84ms
+ ✓ tests/progression.test.ts (6 tests) 80ms
+ ✓ tests/daylight.test.ts (8 tests) 81ms
+ ✓ tests/support-sampling.test.ts (1 test) 79ms
+ ✓ tests/rounded-voxels.test.ts (6 tests) 54ms
+ ✓ tests/roof-surfaces.test.ts (2 tests) 75ms
+ ✓ tests/car-boost.test.ts (20 tests) 55ms
+ ✓ tests/wind-topple.test.ts (4 tests) 55ms
+ ✓ tests/sim.test.ts (18 tests) 54ms
+ ✓ tests/faceted-parts.test.ts (4 tests) 52ms
+ ✓ tests/delivery.test.ts (12 tests) 51ms
+ ✓ tests/scenario.test.ts (31 tests) 50ms
+ ✓ tests/botany-construction.test.ts (5 tests) 56ms
+ ✓ tests/street-world.test.ts (3 tests) 53ms
+ ✓ tests/recipes.test.ts (7 tests) 48ms
+ ✓ tests/layout-clearance.test.ts (3 tests) 49ms
+ ✓ tests/dream-material-parameters.test.ts (16 tests) 44ms
+ ✓ tests/foundation-reuse.test.ts (4 tests) 42ms
+ ✓ tests/humanoid-mount.test.ts (3 tests) 40ms
+ ✓ tests/profile-mechanisms.test.ts (20 tests) 35ms
+ ✓ tests/airport-junction.test.ts (2 tests) 41ms
+ ✓ tests/object-dsl.test.ts (26 tests) 30ms
+ ✓ tests/presentation.test.ts (3 tests) 46ms
+ ✓ tests/walker-orientation.test.ts (7 tests) 27ms
+stderr | tests/woodland-assets.test.ts > bounded cylinder taper > rejects taper on other shapes and from legacy data
+THREE.BufferGeometry.computeBoundingBox(): Computed min/max have NaN values. The "position" attribute is likely to have NaN values. CylinderGeometry {
+  isBufferGeometry: true,
+  uuid: '9a6ded0b-9526-4680-91e0-8b6b650b075e',
+  name: '',
+  type: 'CylinderGeometry',
+  index: Uint16BufferAttribute {
+    isBufferAttribute: true,
+    name: '',
+    array: Uint16Array(192) [
+       0, 17,  1, 17, 18,  1,  1, 18,  2, 18, 19,  2,
+       2, 19,  3, 19, 20,  3,  3, 20,  4, 20, 21,  4,
+       4, 21,  5, 21, 22,  5,  5, 22,  6, 22, 23,  6,
+       6, 23,  7, 23, 24,  7,  7, 24,  8, 24, 25,  8,
+       8, 25,  9, 25, 26,  9,  9, 26, 10, 26, 27, 10,
+      10, 27, 11, 27, 28, 11, 11, 28, 12, 28, 29, 12,
+      12, 29, 13, 29, 30, 13, 13, 30, 14, 30, 31, 14,
+      14, 31, 15, 31, 32, 15, 15, 32, 16, 32, 33, 16,
+      50, 51, 34, 51,
+      ... 92 more items
+    ],
+    itemSize: 1,
+    count: 192,
+    normalized: false,
+    usage: 35044,
+    updateRanges: [],
+    gpuType: 1015,
+    version: 0
+  },
+  indirect: null,
+  attributes: {
+    position: Float32BufferAttribute {
+      isBufferAttribute: true,
+      name: '',
+      array: [Float32Array],
+      itemSize: 3,
+      count: 100,
+      normalized: false,
+      usage: 35044,
+      updateRanges: [],
+      gpuType: 1015,
+      version: 1
+    },
+    normal: Float32BufferAttribute {
+      isBufferAttribute: true,
+      name: '',
+      array: [Float32Array],
+      itemSize: 3,
+      count: 100,
+      normalized: false,
+      usage: 35044,
+      updateRanges: [],
+      gpuType: 1015,
+      version: 1
+    },
+    uv: Float32BufferAttribute {
+      isBufferAttribute: true,
+      name: '',
+      array: [Float32Array],
+      itemSize: 2,
+      count: 100,
+      normalized: false,
+      usage: 35044,
+      updateRanges: [],
+      gpuType: 1015,
+      version: 0
+    }
+  },
+  morphAttributes: {},
+  morphTargetsRelative: false,
+  groups: [
+    { start: 0, count: 96, materialIndex: 0 },
+    { start: 96, count: 48, materialIndex: 1 },
+    { start: 144, count: 48, materialIndex: 2 }
+  ],
+  boundingBox: Box3 {
+    isBox3: true,
+    min: Vector3 { x: NaN, y: NaN, z: NaN },
+    max: Vector3 { x: NaN, y: NaN, z: NaN }
+  },
+  boundingSphere: null,
+  drawRange: { start: 0, count: Infinity },
+  userData: {},
+  parameters: {
+    radiusTop: Infinity,
+    radiusBottom: 0.5,
+    height: 1,
+    radialSegments: 16,
+    heightSegments: 1,
+    openEnded: false,
+    thetaStart: 0,
+    thetaLength: 6.283185307179586
+  }
+}
+
+ ✓ tests/woodland-assets.test.ts (13 tests) 35ms
+ ✓ tests/joint-stride.test.ts (4 tests) 25ms
+ ✓ tests/commerce.test.ts (9 tests) 24ms
+ ✓ tests/transit-exits.test.ts (5 tests) 23ms
+ ✓ tests/render-profile.test.ts (2 tests) 22ms
+ ✓ tests/world3d.test.ts (5 tests) 23ms
+ ✓ tests/growth-render.test.ts (2 tests) 28ms
+ ✓ tests/spatial-grid.test.ts (3 tests) 20ms
+ ✓ tests/repair-view.test.ts (7 tests) 20ms
+ ✓ tests/media-export.test.ts (1 test) 20ms
+ ✓ tests/choice-navigation.test.ts (2 tests) 16ms
+ ✓ tests/wildlife-construction.test.ts (19 tests) 19ms
+ ✓ tests/furniture-construction.test.ts (9 tests) 16ms
+ ✓ tests/save-tools.test.ts (3 tests) 7ms
+ ✓ tests/map-route-render.test.ts (1 test) 7ms
+ ✓ tests/control-guide.test.ts (3 tests) 4ms
+ ✓ tests/edge-smoothing.test.ts (4 tests) 4ms
+ ✓ tests/world-map.test.ts (4 tests) 3ms
+ ✓ tests/canopy-construction.test.ts (4 tests) 10ms
+ ✓ tests/pavement.test.ts (4 tests) 2ms
+ ✓ tests/foot-plants.test.ts (4 tests) 2ms
+ ✓ tests/camera-input.test.ts (7 tests) 3ms
+ ✓ tests/activity-context.test.ts (4 tests) 2ms
+ ✓ tests/agents-size.test.ts (1 test) 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/docs.test.ts > published Dream documentation > covers every parser command in the readable reference
+AssertionError: expected '# Dream 2 reference\n\n[Docs](../READ…' to contain '| `station` |'
+
+- Expected
++ Received
+
+- | `station` |
++ # Dream 2 reference
++
++ [Docs](../README.md) / Reference
++
++ The command signatures below come from the committed [compiler contract](../dream-v2-contract.json). The parser table in [`dream-contract.ts`](../../src/scene/dream-contract.ts) owns field names, order and allowed contexts. `?` means optional; other fields are required. `ref` is an explicit symbol ID. Vertical bars separate allowed values.
++
++ ## Syntax and coordinates
++
++ ```text
++ dream 2;
++ command id(key=value,...);
++ command id(key=value,...){ statements }
++ ```
++
++ The placeholder signatures above describe the structure, not executable commands. IDs match `[a-z][a-z0-9_]{0,31}`. Labels are quoted strings. `sin`, `cos`, `true` and `false` are reserved. Fields can be written in any order; canonical output uses contract order. Unknown or duplicate fields fail. `//` comments and trailing commas are accepted.
++
++ World points are `[x,y]`, right/down from top-left. Object points are `[x,y,z]`, Y up. Asset forward is +X. Dimensions are full bounding sizes in canonical units, with ten units per metre for measured assets. Angles are degrees, heading 0 points right and heading 90 points down. Motion axes remain primitive-local after the rest rotation.
++
++ Expressions support finite numbers, constants, unary signs, arithmetic, parentheses, `sin(degrees)` and `cos(degrees)`. Global constants can forward-reference without cycles. Local constants resolve in order. Components see globals and parameters, not caller locals.
++
++ | Field type | Value |
++ | --- | --- |
++ | `position2` | XY pair or file-local junction ID |
++ | `n`, `v2`, `v3` | Numeric expression, two expressions or three expressions |
++ | `nums`, `symbols` | Array of expressions or array of symbol IDs |
++ | `point`, `points2` | Two/three expressions, or an array of XY points |
++ | `color`, `colors` | Six-digit hex, or two hex colors |
++ | `ref`, `symbol`, `text`, `bool` | ID reference, ID, quoted text, boolean |
++ | Named constructor | A listed motion, deformation or impact call |
++
++ ## Commands
++
++ ### Logical scenarios and episodes
++
++ These commands describe a bounded task network. They do not change NPC clocks, the 3D layout or driving physics. [Rules, runtime actions and recordings](scenarios.md).
++
++ | Command | Context | ID / block | Fields |
++ | --- | --- | --- | --- |
++ | `scenario` | top | ID / scenario | `seed: n`, `max_steps: n` |
++ | `item` | scenario | ID / no block | `label: text` |
++ | `location` | scenario | ID / no block | `label: text`, `at: v2` |
++ | `link` | scenario | ID / no block | `from: ref`, `to: ref`, `steps: n` |
++ | `stock` | scenario | ID / no block | `at: ref`, `item: ref`, `mode: source / sink`, `quantity: n`, `price?: n` |
++ | `service` | scenario | ID / no block | `at: ref`, `consumes: ref`, `produces: ref`, `duration: n`, `capacity: n`, `fee: n` |
++ | `agent` | scenario | ID / no block | `at: ref`, `budget: n`, `capacity: n` |
++ | `objective` | scenario | ID / no block | `agent: ref`, `kind: deliver / produce`, `at: ref`, `item: ref`, `quantity: n` |
++
++ One scenario per project. Its IDs are block-local and unique across declaration kinds. References must have the expected type. Locations form a connected undirected graph. `max_steps` is integer 1..1000; seed 0..2147483647; coordinates 0..14000. At most 32 locations/items/services/objectives, 64 links/stocks and eight agents. Link steps and service duration are 1..100, service capacity 1..8, agent capacity 1..100, objective quantity 1..1000. Stock quantity is 0..1000; price, budget and fee are integer 0..100000. Price defaults to zero. Sinks require zero initial quantity/price and cannot be purchased. Services consume and produce one unit of different existing items. Objectives require a matching sink/service and an agent; every agent needs an objective. Delivery/production availability checks do not prove affordability or deadline feasibility. The scenario can compile beside a world, but the lab/recording runner currently accepts standalone scenarios only.
++
++ A command with an ID requires a name immediately after its keyword. Commands with a block contain statements in their stated context. The context `top` is the file root; `visual` contains geometry/composition; `path` contains points, constants and repeats. Constructors are nested field values, not standalone statements.
++
++ ### Playable markets and work
++
++ These commands describe the 3D world's resident economy. [Guide](commerce.md) and [bounds](#commerce-bounds).
++
++ | Command | Context | ID / block | Fields |
++ | --- | --- | --- | --- |
++ | `economy` | top | No ID / economy | None |
++ | `good` | economy | ID / no block | `label: text`, `food?: n` |
++ | `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `rest?: ref`, `commute?: bool`, `attendance?: v2`, `on?: ref`, `grounds?: symbols`, `shop?: bool`, `ration?: ref`, `social?: ref`, `shift?: ref`, `meal?: ref`, `work?: ref`, `works?: symbols`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
++ | `rest` | economy | ID / no block | `energy: n`, `drain_s: n`, `recover_s: n`, `below: n`, `until: n`, `shelter?: bool`, `seats: symbols`, `on: ref`, `grounds?: symbols` |
++ | `ration` | economy | ID / no block | `good: ref`, `market: ref`, `below: n` |
++ | `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n`, `hours?: v2`, `owner?: ref`, `sale?: n` |
++ | `lot` | market | ID / no block | `good: ref`, `quantity: n`, `limit: n`, `price?: n` |
++ | `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `price: n?`, `capacity: n`, `on: ref?`, `grounds: symbols?` |
++ | `work` | economy | ID / optional recipe block | `label: text`, `market: ref`, `input?: ref`, `take?: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `requires?: ref`, `requires_any?: symbols`, `equipment?: symbols`, `station?: ref` |
++
++ | `social` | economy | ID / no block | `good: ref`, `seats: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `cooldown_s?: n`, `max_fullness?: n`, `markets?: symbols` |
++ | `shift` | economy | ID / no block | `market: ref`, `rest: v2`, `on: ref`, `grounds?: symbols`, `lead_s?: n` |
++ | `meal` | economy | ID / no block | `good: ref`, `markets: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `seats?: symbols` |
++ | `milestone` | economy | ID / no block | `label: text`, `kind: work / delivery / repair / shared_meal`, `task: ref`, `count: n` |
++ | `ingredient` | recipe | No ID / no block | `good: ref`, `take: n` |
++
++ ### Assemblies and composition
++
++ | Command | Context | ID / block | Fields |
++ | --- | --- | --- | --- |
++ | `material` | top | ID / no block | `style: toon / grain / glow / stripes / cloth / brick / wood / stone`, `colors: colors`, `night?: color` |
++ | `rule` | top | ID / no block | `kind: measure category`, `mode: impact` |
++ | `let` | top / object / visual / path / route_path / voxel_ops | ID / no block | `value: n` |
++ | `component` | top | ID / visual | `params?: symbols`, `materials?: symbols` |
++ | `object` | top | ID / object | `label: text` |
++ | `asset` | top | ID / no block | `module: ref`, `object: ref`, `control?: car / bicycle / skateboard / scooter / boat / plane` |
++ | `include` | top | ID / no block | `module: ref` |
++ | `body` | object | No ID / no block | `interaction: solid / knockable / decor`, `radius: n`, `height: n`, `clearance?: n`, `friction?: n` |
++ | `measure` | object | No ID / no block | `kind: car / plane / tree / person / bicycle / skateboard / bench / table / building / train / bus / tram / boat / food / custom`, `axis: x / y / z`, `meters: n` |
++ | `ground` | object | No ID / no block | `mode: upright / surface` |
++ | `foundation` | object | No ID / no block | `size: v2`, `color: color` |
++ | `contact` | object | ID / no block | `at: v3`, `radius?: n`, `size?: v2`, `height: n`, `heading_deg?: n`; exactly one radius or size |
++ | `stairs` | object | ID / no block | `material: ref`, `at: v3`, `size: v3`, `steps: n`, `heading_deg?: n` |
++ | `interior` | object | No ID / interior | `at: v3`, `size: v3` |
++ | `portal` | interior | ID / no block | `side: front / back / left / right`, `offset: n`, `width: n`, `height: n` |
++ | `seat` | object | ID / no block | `at: v3`, `approach: v2`, `heading_deg: n` |
++ | `rideable` | object | No ID / no block | `at: v3`, `control?: car / bicycle / skateboard / scooter / boat / plane` |
++ | `lamp` | object | No ID / no block | `at: v3`, `radius: n`, `color: color` |
++ | `emit` | object | No ID / no block | `kind: steam`, `at: v3`, `rate_s: n` |
++ | `impact` | object | No ID / no block | `mode: impact` |
++ | `fragment` | object / visual | ID / visual | None |
++ | `zone` | object | ID / visual | `at: v3`, `radius: n`, `height: n`, `mode: fracture` |
++ | `group` | object / visual | ID / visual | `at?: v3`, `rot_deg?: v3`, `scale?: n` |
++ | `joint` | object / visual | ID / visual | `at?: v3`, `rot_deg?: v3`, `bone?: humanoid binding`, `motion?: joint_motion` |
++ | `mount` | object | ID / visual | `bone: humanoid binding` |
++ | `repeat` | object / visual / path / route_path / voxel_ops | ID / inherit | `index: symbol`, `count: n` |
++ | `use` | object / visual | ID / no block | `component: ref`, `args?: nums`, `materials?: symbols`, `at?: v3`, `rot_deg?: v3`, `scale?: n` |
++ | `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus / prism`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `outline?: points2`, `taper?: n`, `faceted?: bool`, `deform?: deform`, `motion?: part_motion`, `cutaway?: roof / above / front / back / left / right` |
++ | `beam` | object / visual | ID / no block | `shape: box / cylinder / capsule`, `material: ref`, `from: v3`, `to: v3`, `width: n`, `depth: n`, `taper?: n`, `faceted?: bool`, `deform?: deform`, `motion?: part_motion` |
++
++ Optional Dream 2 `body.clearance` is a 4..128 local-unit minimum furnishing reservation, at least the collision radius. Visible bounds can require more space. It does not change contacts, driving, navigation radii or render culling. Compiled Object DSL uses `body.clearanceRadius`; v1 data remains strict. [People and clothing](people.md).
++
++ Object-root `mount detail(bone=spine){...}` adds visuals to exactly one previously declared humanoid bone. Declare or `use` the anatomy first. Its block starts in that bone’s local frame; it creates no new joint. All part, depth, source and expansion budgets still apply. Missing or ambiguous bindings are `E_REFERENCE`; other objects and labels cannot be targets. [Complete character example](../examples/city-person.dream).
++
++ Components allow eight unique numeric/material formals combined: `params=[height]` and `materials=[finish]`. `use.args` binds numeric expressions; `use.materials` binds material IDs or enclosing material formals. Both lists require exact arity in declaration order, including zero when omitted. Material formals cannot collide with numeric formals or global numeric constants; numeric-only shadowing retains its existing semantics. Material formals may shadow global materials. Callees receive globals plus explicit bindings, without caller-local leakage. Material bindings apply to parts, beams, voxels and nested uses. No recursion; source, expansion, part and joint limits remain unchanged. [Complete nested example](../examples/material-components.dream).
++
++ Prism parts require `outline: points2`: 3..24 vertices in normalized XY, each coordinate in 0..1, spanning 0..1 on both axes and area at least `.01`. Either winding is accepted. No holes, repeated closing point, zero-length edges, foldbacks, crossed edges or self-touching. The engine centers it across full size X/Y and extrudes through full size Z. Only prisms accept an outline. Rotation, uniform scaling, measurement, batching and material rules remain the same.
++
++ Optional `faceted: bool` applies only to undeformed cylinder, cone and icosphere
++ parts, including cylinder beams. True keeps flat faces and exact planar voxel
++ contours; false or omission keeps curved reconstruction. Positive deformation
++ and other shapes reject the field. It adds no cells, contacts or fragment slots.
++ [Complete fir](../examples/faceted-canopy.dream).
++
++ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1` to `1`, default `1`. It sets the +Y end diameter relative to the −Y base, or `to` relative to `from` for a beam. Full `size` dimensions and beam `width`/`depth` describe the base. Rotation and uniform group scaling preserve the ratio. Seeded deformation may vary the surface; grounding, measurement and rendering use the same resulting geometry. Other shapes reject this field. See the [complete tapered wood example](../examples/tapered-wood.dream).
++
++ ### World layout and activities
++
++ | Command | Context | ID / block | Fields |
++ | --- | --- | --- | --- |
++ | `strike` | top | no ID / no block | `reach: n`, `speed: n`, `cooldown_s: n` |
++ | `weather` | top | No ID / no block | `cycle_s: n`, `rain_start_s: n`, `rain_end_s: n`, `wet_grip: n` |
++ | `daylight` | top | No ID / no block | `cycle_s: n`, `start_hour: n` |
++ | `world` | top | No ID / no block | `size: v2`, `spawn: position2`, `heading_deg: n`, `player?: ref`, `damage_pool?: bool` |
++ | `road` | top | ID / no block | `width: n`, `points?: points2`, `via?: symbols`, `style?: racing / street` |
++ | `street` | top | ID / no block | `width: n`, `sidewalk: n`, `points?: points2`, `via?: symbols`, `cycle_width?: n` |
++ | `surface` | top | ID / no block | `color?: color`, `points: points2`, `finish?: paint / terrain`, `walkable?: bool` |
++ | `sport` | top | ID / optional sport block | `kind: football / basketball`, `surface: ref`, `ball: ref`, `targets: symbols`, `target_at: v3`, `target_size: v2`, `net_depth: n?`, `roster: symbol?`, `team_size: n?`, `duration_s: n?`, `score_to: n?` |
++ | `team` | sport | home or away ID / no block | `object: ref?` XOR `objects: symbols?`, `role: npc`, `members: symbols?`, `keeper: n?`, `keeper_object: ref?`, `style: balanced / press / counter?`, `skill: n?` |
++ | `marking` | top | ID / path | `color: color`, `width: n`, `closed: bool` |
++ | `hill` | top | ID / no block | `at: v2`, `radius: v2`, `height: n` |
++ | `tint` | top | ID / no block | `at: v2`, `radius: n`, `color: color` |
++ | `bridge` | top | ID / no block | `from: position2`, `to: position2`, `width: n`, `arch: n`, `style: timber / stone`, `rails: bool` |
++ | `water` | top | ID / no block | `points: points2`, `level: n`, `depth: n`, `bank: n`, `color: color`, `flow: v2`, `drag: n`, `waves: v3` |
++ | `watercourse` | top | ID / path | `level: n`, `depth: n`, `bank: n`, `color: color`, `flow: v2`, `ends?: round / open` |
++ | `effect` | top | ID / no block | `kind: ice / boost`, `points: points2` |
++ | `checkpoint` | top | ID / no block | `at: v2`, `dir: v2`, `width: n` |
++ | `route` | top | ID / route_path | `kind: rail / path / water / air / ambient / street / tram / walk`, `mode: loop / shuttle`, `speed: n`, `altitude?: n`, `wait_s?: n`, `width?: n`, `surface?: trail / cycle / paved`, `gauge?: n` |
++ | `point` | path / route_path | No ID / no block | `at: point` |
++ | `behavior` | top | ID / behavior | `start: ref` |
++ | `state` | behavior | ID / npc_state | `action: idle / patrol / perform`, `face?: none / player`, `say?: text` |
++ | `on` | npc_state | ID / no block | `event: after / near_player / far_player / interact`, `to: ref`, `seconds?: n`, `radius?: n`, `familiar?: bool`, `requires?: ref`, `shared_meals?: n` |
++ | `furnish` | top | ID / no block | `objects: symbols`, `streets?: symbols`, `sites?: symbols`, `grounds?: symbols`, `paving?: color`, `spacing: n`, `setback: n`, `seed: n`, `side?: left / right / both`, `facing?: along / street / varied`, `jitter?: n`, `count?: n`, `pose?: rest`, `on?: verge / sidewalk`, `motion?: ambient_motion`, `role?: prop / controllable` |
++ | `flock` | top | ID / no block | `object: ref`, `at: v2`, `radius: v2`, `count: n`, `altitude: n`, `speed: n`, `seed: n`, `flap_hz?: n`, `flap_deg?: n` |
++ | `floor` | top | ID / no block | `on: ref`, `at: v3`, `size: v2` |
++ | `place` | top | ID / no block | `object: ref`, `at?: v2`, `route?: ref`, `offset?: n`, `phase_s?: n`, `scale?: n`, `heading_deg?: n`, `role?: prop / npc / controllable / ambient`, `behavior?: ref`, `pose?: rest`, `motion?: ambient_motion`, `parked?: bool`, `floor?: ref` |
++ | `unresolved` | top | ID / no block | `label: text` |
++
++ `joint(...,bone=...)` binds engine-owned humanoid motion. Use all twelve bindings once:
++ `root`, `spine`, `left_hip`, `left_knee`, `left_ankle`, `left_shoulder`, `left_elbow`, and the five corresponding `right_` bindings. The hierarchy is `root → spine → shoulder → elbow` and `root → hip → knee → ankle` on both sides. Rest frames face +X, +Y up, left +Z, with zero rotation. Root is centered above the ground; spine is directly above root; hips lie at root height, shoulders above spine. Knee, ankle and elbow offsets point straight down by at least .5 local units. Hip/shoulder lateral offsets choose their declared side. The object must be a measured decor person, all parts must belong to bones, and bone motion cannot combine with `motion` or fracture groups. Bindings count as live animation, including without `swing`, and require explicit `pose=rest` for passive `furnish`. Other joints keep their existing behavior. [Complete rig and motion notes](behavior.md#humanoid-motion).
++
++ Rolling joints use the same bounded radius 1..32 as part roll. Their children rotate rigidly by traveled distance / resolved radius; their bearing positions remain fixed during visual suspension compression. Radius follows uniform group/placement scale. Reduced motion rests the pose. Prop `furnish` templates bake roll joints at rest; controllable furnishings retain them for activation; swing/stride/open templates require explicit `pose=rest`. Live rolling assemblies retain the 24-assembly and 12-joint caps.
++
++ ### Value constructors
++
++ | Command | Context | ID / block | Fields |
++ | --- | --- | --- | --- |
++ | `spin` | part_motion | No ID / no block | `axis: x / y / z`, `deg_s: n` |
++ | `roll` | part_motion / joint_motion | No ID / no block | `axis: x / y / z`, `radius: n` |
++ | `sway` | part_motion | No ID / no block | `deg: n`, `hz: n` |
++ | `stride` | joint_motion | No ID / no block | `axis: x / y / z`, `deg: n`, `length: n`, `phase_deg: n` |
++ | `swing` | joint_motion | No ID / no block | `axis: x / y / z`, `deg: n`, `hz: n`, `phase_deg: n` |
++ | `open` | joint_motion | No ID / no block | `axis: x / y / z`, `deg: n`, `radius: n` |
++ | `deform` | deform | No ID / no block | `seed: n`, `amount: n` |
++ | `bounce` | impact | No ID / no block | `restitution: n`, `lift: n` |
++ | `break` | impact / fracture | No ID / no block | `speed: n`, `scatter: n`, `lift: n`, `spin: n`, `lifetime: n`, `pattern?: scatter / splinter / crumble` |
++ | `topple` | impact | No ID / no block | `speed: n`, `duration: n`, `lifetime: n` |
++
++ ## Shared interaction rules
++
++ [Interaction rules](rules.md) apply a bounded impact to every matching
++ `measure.kind`, across linked modules. Entry file only, at most 16 and one per
++ category. The rule replaces local impact settings before validation. A `break`
++ rule updates every existing break zone when the assembly has zones; retained
++ structure survives. Body and fragment compatibility remain enforced. Legacy/resident impacts retain
++ 24 reactive placements and 128 potential fragments; pooled static impacts use
++ the separate policy below. The complete example has two different
++ tables and one shared rule.
++
++ ## Sports
++
++ [Sports](sports.md) connects one named surface, one bounce ball and two target
++ placements. Eight grounds per linked project; target anchors and sizes are
++ object-local, so they follow placement scale/heading. The guide covers bounds,
++ controls and the complete compiler-checked example.
++
++ ## Proportion profiles
++
++ Declare `measure` directly inside an object. It sets one rest-pose dimension, resolving a uniform factor before placement. `place.scale` is bounded variation on that measured size. The resolved scale already lives in compiled `SceneObject.scale`; don't apply measurement twice in a consumer.
++
++ | Kind | Axis | Permitted metres after placement variation |
++ | --- | --- | --- |
++ | `car` | x | 2.5–6 |
++ | `pickup` | x | 4–6.8 |
++ | `truck` | x | 5.5–12 |
++ | `plane` | z | 7–24 |
++ | `tree` | y | 4–30 |
++ | `person` | y | 1.4–2.2 |
++ | `bicycle` | x | 1.4–2.4 |
++ | `skateboard` | x | 0.5–1.2 |
++ | `bench` | x | 1.2–2.8 |
++ | `table` | x | 1–3 |
++ | `building` | y | 3–40 |
++ | `train` | x | 6–20 |
++ | `boat` | x | 3–12 |
++ | `food` | x | 0.1–0.8 |
++ | `custom` | Explicit X / Y / Z | 0.05–60 |
++
++ With a measured car player, tree height and plane wingspan must exceed the car's length; bike and board length must be smaller. `custom` explicitly permits fantasy sizes within its own bounds. A label never selects a class. Unmeasured legacy assets keep their existing local-unit behavior.
++
++ ## Budgets
++
++ | Scope | Bound |
++ | --- | --- |
++ | Source file | 65,536 UTF-16 characters, 12,000 lexer tokens, 2,048 expanded statements, nesting 16 |
++ | File declarations | 16 objects/assets combined, 64 placements, 12 routes, 8 watercourses, 16 includes |
++ | Components | Up to 8 numeric/material parameters combined; repeat 0–32; no recursive components |
++ | Numeric expressions | Finite, absolute value ≤1,000,000; parse depth 32, evaluation/dependency depth 64 |
++ | Assembly | 1–32 parts, ≤12 joints, joint depth ≤4, native reach ≤256 |
++ | Geometry | Part size .1–128 in object v2 (.5–128 in v1); beam length ≥ .5; X/Z offset ±64, Y ±128; joint offsets ±64 |
++ | Body | Native radius 4–30, height 4–160, friction .5–5 |
++ | Measured size | Uniform factor .05–4; placement variation .5–2 inside its profile |
++ | Unmeasured size | Placement multiplier .5–2 |
++ | Compound contacts | 1–8; cylinders radius 1–64, height 1–160; static rectangles sides .1–128, height .1–160; bottom Y 0–128 |
++ | Interiors | 32 placed static enclosures; 1–4 portals each; 32 parts and 32 contacts inside (8 contacts otherwise) |
++ | Project | 32 reachable modules including entry, depth 8, 524,288 UTF-16 characters, 128 defined assemblies |
++ | Full scene | Dimensions ≤16384 per axis; ≤4096 placements, 12 routes, 24 resident mobile actors, including controllable vehicles; ≤256 dormant parked vehicles |
++ | Animation / effects | ≤24 live joint assemblies including player; ≤16 steam emitters |
++ | Destruction | Resident/legacy: ≤24 reactive objects, ≤128 potential fragments. Pooled static props: ≤128 template records, ≤24 active assemblies, ≤128 active pieces and cached fragment meshes. Every assembly: ≤8 fragments, ≤4 zones. |
++ | Terrain | ≤16 hills and 16 tint areas; combined terrain height cap 320 |
++ | Infrastructure | Street-only worlds: no circuit or checkpoints. Optional circuit: 2–64 checkpoints, ≤8 bridges and ≤8 combined water basins/watercourses |
++
++ The live jointed-assembly budget is 24 including the engine character; source objects and the player vehicle share the remaining 23 slots. A fleet with animated parked models reserves one of those slots for its single occupied rig.
++
++ The [machine instructions](../dream-v2-model.txt) carry detailed motion and landscape parameter bounds. The schema and full-scene validator are the final acceptance boundary. Expanded/native geometry limits still apply before physical scaling.
++
++ ### Vehicle controls
++
++ `rideable` takes an optional `control=car|bicycle|skateboard|scooter|boat|plane`. Driver controls require a solid cylinder without foundations, compound contacts or impact behavior. Omitting `control` declares a passenger seat; a solid passenger vehicle may use compound contacts, so buses, trams and trains can retain their complete bodies. A controlled vehicle can use `place(...,at=[...])` or a route's initial pose; its declared route is not a movement constraint. Controlled and parked poses live in simulation state, leaving the accepted scene immutable.
++
++ F prefers accessible dry ground, then water with character clearance. On foot or swimming, F enters a seat within 60 units of the body's edge and 28 units of elevation. W/S controls throttle/braking/reverse; A/D steers. Walking/swimming is screen-relative; Shift runs or swims faster. Space jumps on foot, bicycles, skateboards and scooters, gives boats a small hop, and climbs in aircraft. Shift descends in aircraft. Jump presses buffer for 0.12 seconds and have 0.1 seconds of ledge grace; holding doesn't repeat. Walking climbs contact steps up to 4 units with headroom. Deep water switches to surface swimming, shallow water to wading. These are engine rules, with no new Dream fields.
++
++ Aircraft require speed for takeoff, descend at low speed and cannot be exited in flight. A water landing stalls at the surface; F leaves it to wade/swim and R recovers it. Boats need full-hull navigable water and stop at banks or bridges without body clearance. Boats and swimmers use water support below bridge decks, with underside and rail clearance. Ground vehicles share heightfield driving, collision and supported impact mechanics. Only the original racing car advances checkpoints. See [behavior](behavior.md) for the full control table and [walkable contact steps](../examples/walkable-steps.dream).
++
++ ### Dedicated paths
++
++ For `kind=path`, `width` is the full paved width, 16–120 units. `surface=trail|cycle|paved` requires an explicit width. These fields are invalid on rail, water, air and ambient routes. Omit both only for legacy paths, which retain a 28-unit trail and actor-only clearance.
++
++ An explicit width reserves a corridor even without a vehicle. Full-world validation keeps it inside the world and clear of road/curbs, water, placed physical objects, other ground routes and runways, with an 8-unit buffer plus conservative sampling allowance. Overlap rejects the proposed world with `E_SCENE_ROUTE_NOT_CLEAR`. Turns that would fold the inside edge also reject the world; widen their radius or shorten the width. It does not relocate assets automatically or create crossings. Paint and map widths use the same declaration; grass is excluded from the surface.
++
++ ### Ambient wildlife
++
++ `route(kind=ambient,...)` moves a `decor` assembly without building infrastructure or clearing ground plants. Speed is `.5`–`160` units/second; other route kinds keep `12`–`160`. Omit `altitude` for terrain-following movement, or set `60`–`300` for a constant height above the terrain, including at the loop seam. `air` retains its runway and takeoff/landing ramps.
++
++ Ambient actors cannot be solid or knockable and cannot carry seats, impact behavior, foundations or compound contacts. They create no vehicle collision contacts. Their rest-pose visual radius is checked against bounds and solids along the complete route; ground routes also reject water beneath their footprint. Routes remain bounded loops or shuttles, without autonomous perception or avoidance. Wing and gait joints use existing `swing` motion, return to rest for reduced motion and stop during route waits. The existing scene caps still apply: 12 routes, 24 actors/controlled vehicles and 24 jointed assemblies including the player.
++
++ See the [complete two-bird example](../examples/ambient-wildlife.dream) and the [flora and fauna sources](../../src/scene/world/life.dream).
++
++ ## Contextual populations
++
++ `furnish` expands after all includes are linked. Give it 1–8 object references (static unless ambient `motion` is declared) and exactly one target array: `streets` or `sites` (1–32 unique IDs). Street mode uses spacing 80–800 and `side=left|right|both` relative to path direction. Destination mode requires `count=1..12` per site, uses spacing 12–800 and follows the entrance side. `setback` is 0–120 beyond the pavement and visual radius; `facing=along|street|varied`, `jitter=0..0.3` and integer `seed=0..65535` make repeatable variations. `varied` randomizes heading from the seed; jitter applies to street and destination rows.
++
++ `on=verge` is the default. `on=sidewalk` requires decor, `setback=0` and no paving: the complete visual radius fits the outer sidewalk while preserving an inner corridor of at least 8 units. Narrow sidewalks skip candidates.
++
++ `pose=rest` explicitly bakes authored joint transforms and removes bone bindings and part/joint animation clocks. Geometry, material, scale, body and joint parenting remain intact. The source template remains live for other placements. Damage, knockables, emitters and proximity interactions cannot be frozen away. A single `place(...,at=[x,y],role=prop,pose=rest)` follows the same policy and rejects routes, behaviors or inferred ownership. Resting scenery is instanced, without spending live-rig or NPC slots. [Runnable example](../examples/resting-population.dream).
++
++ The compiler filters full visual footprints against roads, pavements, crossings, entrances, bridges, water, infrastructure and existing placements. `grounds=[surface_id,...]` permits named ground areas explicitly. Site-only `paving=#rrggbb` creates parking aprons joined to the sidewalk, within the existing 64-surface budget. Templates cannot be knockable or emitting. Static whole-object break/topple templates require `world(...,damage_pool=true)`; other reactive templates remain rejected. Live joints require the bounded ambient motion path, dormant controllable parking or passive `pose=rest`; default generated props cannot be boarded. `role=controllable` requires a driver-capable template, preserves rolling joints and emits `parked=true`; it rejects `pose=rest`, ambient motion and `on=sidewalk`. There is no minimum output guarantee: inspect compiled coverage. Limits are 32 rules, 2,048 candidates per rule, 128 emitted objects per rule and 1,024 generated objects overall, also counted against 4,096 scene placements.
++
++ | Constructor | Context | ID / block | Fields |
++ | --- | --- | --- | --- |
++ | `walk` | ambient_motion | No ID / no block | `speed: n`, `wait_s?: n` |
++ | `roam` | ambient_motion | No ID / no block | `radius: n`, `speed: n`, `alert: n`, `flee_speed: n`, `recover_s?: n`, `gait?: walk / hop` |
++
++ `motion=walk(speed=14,wait_s=1)` on `place` requires explicit `role=ambient` and fixed `at`; on `furnish` it creates ambient ownership and requires `on=sidewalk`. It follows cached portals in accepted pavement, including zebras, and yields to swept vehicle space. Ambient walkers use their complete rest footprints for bounded local passing, slowing and backing steps on accepted pavement; stable IDs select who may back away. Old overlapping poses separate gradually. Narrow bottlenecks can wait or back away. The complete humanoid rig is required. Speed is 4–24; wait is 0–5 seconds, default 1.
++
++ `motion=roam(radius=90,speed=5,alert=70,flee_speed=30,recover_s=2,gait=hop)` stays dry, clear of solids and outside roads/grounds. Radius and alert are 20–180; speed is 2–16; flee speed is 8–60 and at least speed; recovery is .5–10 seconds, default 2. Gait is `walk` (default) or `hop`. Player distance includes elevation. Blocked members wait rather than teleporting.
++
++ Ambient motion excludes passive `pose`, routes, programs, seats, contacts, foundations, damage, lamps, emitters, part clocks and proximity/rolling joints. Original humanoid bindings, swing or stride joints survive as validated metadata beside the resting assembly. At most 192 members use fixed 20 Hz movement, render interpolation and shared GPU geometry/rig transforms; the graph has at most 8,192 nodes. All remain resident. Existing NPC/route/CPU rig limits are unchanged. Pause freezes state, R preserves it and Start over resets it; reduced motion rests gait/hops. This adds no physics bodies, pushing or avoidance of decor NPC people. There is no general crowd physics, generated code, signal solving or ecosystem simulation. [Runnable example](../examples/moving-population.dream).
++
++ `flock` declares a decorative instanced population, separate from NPC ownership. Its template must be passive decor, without seats, contacts, foundations, emitters or impacts, and fit a 20-unit horizontal radius. `radius` is 40–1,200 per axis, `count` 1–32, `altitude` 60–300, `speed` 5–80, `flap_hz` 0–6 (default 2), `flap_deg` 0–25 (default 12), and integer `seed` 0–65,535. The complete habitat must fit the world. Altitude clears terrain and nearby roofs; authored joints are baked at rest and the shader flexes wings along local Z. The resident cap is 16 flocks and 256 birds. These birds do not collide, react or receive behavior programs. Reduced motion freezes their pose.
++
++ `place.phase_s=0..3600` requires a route and shifts its whole clock, including stops. It can stagger buses that share a service. `offset` still means carriage distance. Neither field adds traffic avoidance.
++
++ [Population authoring guide](populations.md) · [Complete runnable example](../examples/populated-neighborhood.dream)
++
++ ## Daylight and night lighting
++
++ `daylight(cycle_s=600,start_hour=10)` is optional and appears once beside the world's `world` and `road` declarations. `cycle_s` is 120–3,600 seconds for a complete 24-hour cycle. `start_hour` is finite, from 0 inclusive to 24 exclusive; fractions are accepted. Omit the declaration for legacy static daytime. The paused visual clock owns the cycle across every control mode. Pause and reduced motion freeze it, R preserves it, and Start over resets it.
++
++ `material(...,night=#rrggbb)` adds an after-dark emission color while preserving the daytime base paint. Emission survives rigid batching, instancing and detachable geometry. It adds no physical collider or point light. The compiled material field is `nightColor`.
++
++ Object-root `lamp(at=[x,y,z],radius=30,color=#ffd18a)` projects a soft, unshadowed pool onto the accepted terrain/deck surface below its source's XZ position. Position follows the existing object bounds (XZ ±64, Y 0–128); radius is 8–80 local units and follows measured placement scale. One lamp per assembly, at most 512 placed pools per scene. Lamp placements must be static props without knockable behavior; whole-object damage requires `world(...,damage_pool=true)`. Their surface pools switch off while broken and return on repair; they cannot be actors or the player. Pool geometry stays resident in culled tiles. These are ground-light effects; they do not illuminate walls, calculate optical falloff from source height or replace collision geometry.
++
++ One 2,048 × 2,048 directional shadow map serves the stylized sun and moon. Direct light fades out during their horizon handoff. Sky, fog, hemisphere light, night emission and pools blend with the same phase. Ground driving, traffic schedules and collisions retain their existing mechanics.
++
++ [Day and night guide](day-night.md) · [Complete lantern world](../examples/day-night.dream)
++
++ ## Compiler APIs
++
++ Import from [`src/scene/dream.ts`](../../src/scene/dream.ts).
++
++ | Function | Result |
++ | --- | --- |
++ | `compileDream(source)` | Validated object assemblies; rejects world declarations/imports |
++ | `compileDreamWorld(source, modules?)` | Assemblies, routes, placements, waters and optional layout; structural validation |
++ | `compileDreamScene(source, identity, modules?)` | Accepted full Scene after schema and playability checks |
++ | `checkDream(source, modules?)` | `{ok:true,world}` or `{ok:false,diagnostics}`; full layouts also get playability checks |
++ | `formatDream(source)` | Canonical Dream 2 source; parsing/formatting doesn't repair semantics |
++ | `migrateDream(source, modules?)` | Validated canonical Dream 2; validates before and after migration |
++
++ `identity` is host-owned `{sceneId,revisionId,sourceHash}`. `modules` is a closed map from IDs to source text. Neither is read from generated URLs or filesystem paths.
++
++ `dreamAgentContext(features?)` is exported separately from [`src/scene/dream-agent.ts`](../../src/scene/dream-agent.ts). It returns scoped instructions and the compiler contract subset, with dependency closure and deterministic feature order. Default: `['objects']`. `['all']` returns every command and semantic contract. Feature requests contain 1–16 names; unknown names fail with `E_CONTEXT`, and `all` must stand alone. The full compiler always enforces its complete bounds. [Feature list and host example](model-authoring.md).
++
++ ### CLI
++
++ ```sh
++ node scripts/dream.mjs check file.dream
++ node scripts/dream.mjs compile file.dream
++ node scripts/dream.mjs format file.dream
++ node scripts/dream.mjs migrate file.dream
++ node scripts/dream.mjs contract
++ node scripts/dream.mjs context --features objects,voxels
++ ```
++
++ Repeat `--modules directory` for explicit local libraries. `format` and `migrate` support atomic `--write`. Machine-readable stdout and exit codes are intended for a host's repair loop. The lexer token count isn't a model-token estimate. `context` prints compact JSON containing instructions and contract metadata; generated world source remains Dream text. It accepts no file, module directory or `--write` option.
++
++ ### Diagnostics and identity
++
++ A diagnostic carries `code`, `line`, `column`, `path`, `message`, optional `expected` choices and an optional source `module`. Codes distinguish syntax, unknown fields, missing/duplicate fields, types, references, arity, cycles, budgets, schemas, geometry and playability. The checker returns the first error and no partial world.
++
++ Named paths and repeat indices derive stable local part/joint/fragment IDs. Unrelated source edits preserve them; reparenting or renaming a scope changes them. Placement IDs remain verbatim. `format` preserves expression meaning without reassociating arithmetic. Migration refuses an unsafe silent rename of an existing world identity.
++
++ ## Runtime boundaries
++
++ The car uses fixed-timestep heightfield physics and cylinder contacts. One ground driving height per XY excludes stacked roads and ground driving under bridge decks. Boats and swimmers separately use the terrain bed and water support below decks, with hull/body and rail headroom. Covered objects can have separate wall/roof contacts, but they don't excavate terrain. Water supports surface waves and current forces. Vehicle activities are authored paths, not independent driver/flight AI.
++
++ Break behavior separates authored components; it doesn't cut new shards from an arbitrary mesh. Debris is cosmetic and collides with terrain only. Whole-object impacts exclude foundations, seats, compound/offset contacts and emitters. One centered base contact is allowed for break/topple; partial zones preserve retained building structure. Door animation is visual around authored contacts. Source never supplies executable code, callbacks, shader programs or provider credentials.
++
++ ### Urban ground bounds
++
++ Scenes and linked districts share limits of 32 streets, 64 surfaces and 128 markings. Streets take 2–16 XY anchors, widths 60–180 and sidewalks 0–40 per side. Segments may run in any direction, must be at least 80 units long, and cannot turn more than 120 degrees. Optional `cycle_width=16..40` adds a track on each side, separated from the carriageway by 6 units. Sidewalks move outward; the complete riding envelope gets normal road grip and must stay clear. The total street length is at most 120000 units. The scene compiler checks street connectivity, world boundaries, solid riding-surface clearance and water crossings. An explicit aligned bridge must carry the entire carriageway, both cycle tracks, separators and sidewalks through its open ends, clear of rails; the street must continue at least 20 units past each end.
++
++ Surfaces take 3–64 points and must be simple, nonzero polygons, at most 1000000 square units and 2000 units across. Split larger grounds into tiles. They cannot cover street carriageways. Later painted surfaces in the linked scene overlay earlier paint. Markings take 2–64 points, width .5–12, and at least three points when closed. Repeated first points and zero-length segments fail. Total marking length, including closed seams, is at most 40000 units. Painted grounds and markings stay within the world, follow the shared heightfield and clear procedural tufts. They add no collision body or flattening operation. [Runnable neighborhood](../examples/planned-neighborhood.dream).
++
++ Surface `finish` defaults to `paint`, requiring `color`; explicit `finish=paint`
++ is supported. `finish=terrain` forbids `color`, retains the underlying terrain
++ and cosmetic grass/flowers, and emits no surface mesh or map overlay. Both
++ finishes retain all polygon/world/riding-surface bounds, furniture reservations,
++ habitat exclusions and declared repair coverage. Natural coverage adds no path unless `walkable=true` is explicit. Neither finish
++ adds flattening, a collision body or a road/water shortcut. [Natural ground example](../examples/orchard-replanting.dream).
++
++ Optional `walkable=true` adds a convex surface to the accepted pedestrian network.
++ Each connected group must join existing sidewalk, crossing, entrance or interior
++ pavement at full width. Keep the entire piece clear of solids, unsupported water,
++ rail and runway corridors. Bridge paths must fit between the rails and enter through
++ open ends. Join convex strips for bends or loops; touching only at a corner fails.
++ Existing walker, work, surface and graph budgets remain. Standard paving
++ `#bcb6a4` merges with entrance paths into one painted surface.
++ [Guide and runnable example](paths.md).
++
++ ## NPC programs
++
++ `place(...,role=prop|npc|controllable|ambient,behavior=program_id)` assigns instance ownership. `controllable` requires the template's `rideable.control`; `npc` requires a route or program; `prop` prohibits both. Only NPCs accept a program. Legacy omitted roles infer control capability, then route, then prop. A driver-capable NPC cannot be boarded; passenger-only NPC seats retain passenger travel. The root player remains the original car.
++
++ `behavior id(start=state_id){state ...}` declares 1–8 unique reachable states. `state id(action=idle|patrol|perform,face=none|player){on ...}` chooses an action; face defaults to none and is invalid with patrol. `on id(event=after,to=state_id,seconds=n)` requires only seconds (.1–300). `near_player` and `far_player` require only radius (10–240 world units) and compare 3D distance <= and >= respectively. `interact` requires only radius, 10–80 units: one grounded on-foot talk press selects the nearest eligible NPC in 3D range, with stable ID ties. Optional `familiar=false|true` on `interact` matches first meetings or known people. Every successful interaction marks that NPC known. Familiarity survives R, chunk unloading and local save/load; Start over clears it. Other events reject `familiar`. Optional `state.say` accepts 1–240 nonblank plain-text characters on idle/perform states. A reply is shown only after interaction, for at most eight simulation seconds while within 80 units and on foot. Author return/next transitions explicitly. Transition IDs are unique per state; targets are local to the program. No compound conditions or executable code.
++
++ The first matching transition wins once per fixed tick; state time resets on entry. Idle rests joints; perform animates in place; both pause route time. Patrol resumes the placement's route without teleporting and animates only while moving. Stationary face=player turns at 2.5 rad/s. Animation respects reduced motion. Clocks are per-instance runtime state, preserved by R and reset by Start over. Without a runtime snapshot, actor inspection returns the program's initial pose.
++
++ Programs and references are file-local; includes merge data. There are at most 16 programs and 32 NPCs in the accepted scene. Each state has at most 4 transitions. Existing 24 resident moving actor/controllable and 24 live jointed assembly caps remain. Explicit NPCs require version 2 assemblies without foundations, knockable bodies or destruction. Solid street, tram and rail NPCs may use compound contacts; directly controlled rides require one body. Boat and plane NPCs need a domain route. Full-scene acceptance checks stationary dry footprints and route clearance. Solid NPC cylinders participate in player contacts. Behavior programs do not request general pathfinding, runtime avoidance, humanoid possession or generated input profiles. Repair accounts have separate bounded engine-owned navigation between declared service grounds. [Complete example](../examples/npc-behavior.dream) and [guide](npcs.md).
++
++ ### Water bounds
++
++ Water polygons have 3–32 vertices, area 400–8,000,000 square units and extent 80–16384 per axis. The wave bounding grid uses 24-unit cells and at most 131072 cells per body, including its final row/column. Watercourses take 2–8 distinct `[x,y,width]` stations, width 80–1200, and compile to the same polygon and wave bounds. Banks must contain the level; separate bodies cannot overlap. A wider world does not change terrain or wave resolution.
++
++ ## Connected city declarations
++
++ | Command | Context | ID / block | Fields |
++ | --- | --- | --- | --- |
++ | `stop` | route_path | ID / no block | `at: v2`, `wait_s: n`, `site: ref` |
++ | `site` | top | ID / no block | `object: ref`, `kind: home / market / school / hospital / work / civic / park / station / airport / stop`, `label?: text`, `entry: v2`, `street: ref`, `width: n`, `points: points2`, `serves?: symbols` |
++ | `crossing` | top | ID / no block | `street: ref`, `at: v2`, `width: n`, `junction?: bool` |
++ | `junction` | top | ID / no block | `at: v2` |
++
++ `junction` binds a file-local XY point. `road` and `street` require exactly one of `points` or `via`; the latter takes junction IDs. A world's `spawn` and a bridge's `from`/`to` also accept these IDs. Includes merge world data, and keep coordinate symbols local. Keep a connected network in one module so its joins share coordinates. Up to 128 junctions per source. Street bends use bounded miter joins, with square caps only at the two endpoints. Road grip, placement reservations, sidewalks and the rendered street share that footprint.
++
++ `site` attaches a use and entrance to a static object. Optional `label` is 1–80 nonblank plain-text characters and names the place independently of its object template. It adds no behavior. `entry` is object-local X/Z, transformed by the placement's heading and resolved scale. `points` are world XY; the engine prepends the entrance. The last point must join the named street's sidewalk with the full 12–40-unit path width. Paths stay dry, unobstructed and at most 800 units long. Every static measured building in a site-authored city needs an access site. Up to 256 sites per scene. Stops may `serves=[site_id,...]` up to eight reachable destinations.
++
++ `crossing` connects both sidewalks. Optional `junction=true` expands one declaration into zebra crossings on every street arm, outside the intersection. Duplicate zebra stripes merge into one surface. Centerlines, cycle symbols and neighboring stop lines leave clearance around the crossings; tram rails continue through them. Up to 64 crossing declarations. Sidewalks, entrance paths and crossings form the validated pedestrian network. Short overlapping street endpoints are rejected in site-authored cities; use shared junctions for exact centerline connections.
++
++ A junction declaration also connects existing `cycle_width` surfaces across its
++ carriageways. Through lanes retain their ribbon; an ending cycle street reaches
++ the connected cycle street's riding edge, or ends on its approach when no cycle
++ facility continues. The colored surface is bounded by the crossing arms and
++ existing riding footprints. Centerlines, separators and stop bars clear it;
++ zebras overlay it. This is visual continuity, not a priority rule or a new path.
++ Legacy circuit and timber-deck exclusions remain. See the complete runnable
++ [cycle junction example](../examples/cycle-junctions.dream).
++ At a declared junction, a street returning exactly to its first point joins that cycle-paint corner with
++ the same bounded miters, clipped to its existing riding footprint. Its physical
++ endpoint caps remain unchanged.
++
++ In sources that declare a circuit, city sidewalks, cycle tracks, separators and entrance paving yield to its carriageway. Existing sidewalk strips crossing the circuit become derived painted crosswalks, with curb openings and clear circuit center paint. They remain part of the pedestrian network and need no extra Dream declarations. Cycle symbols require their complete envelope inside a cycle track and outside crossing and symbol clearance; the renderer omits a crowded symbol instead of clipping its individual strokes. Maps reuse these same road and cycle-track footprints.
++
++ `route(kind=street)` places vehicles on existing carriageways; it creates no extra surface. `tram` adds rails in the existing road, and `walk` uses the pedestrian network without paving it. `rail` and `tram` accept a 10–24-unit gauge. A `stop` is a named route anchor, with a .1–30-second wait and a site within 120 units. Street, tram and rail stops use station/platform sites; walking stops can visit homes, markets and other destinations. Up to 16 stops within the existing 64 route anchors. Shuttle returns visit stops in reverse order. Rail, tram and street NPCs may use up to eight compound contacts for their long bodies; controlled vehicles retain their existing cylinder boundary.
++
++ Nearby junctions in a street-only world share an intersection area. Crossings stay on its outer arms; the short internal links receive no crossing. Parallel overlapping declarations share a zebra envelope and world-aligned stripe phase.
++
++ For a street-only world, declare `world` and connected `street` data, omit `road` and `checkpoint`, and put the spawn on a street. Every street component must connect to the spawn with full car clearance. A corner-only contact that cannot carry the car rejects with `E_SCENE_STREET_UNREACHABLE`. [Runnable example](../examples/street-world.dream).
++
++ An optional `road(style=street)` circuit uses neutral curbs and omits the racing start paint. The default remains `racing` for existing sources. `watercourse(ends=open)` removes round caps; use open ends at the world boundary to continue a river beyond the map. The default is `round`.
++
++ [Compile the complete connected city](../examples/connected-city.dream). The [source-derived world map](../media/city-plan.svg) uses the same compiled coordinates, footprints, paths, routes and bridges as the game.
++
++ ## Voxel construction
++
++ | Command | Context | ID / block | Fields |
++ | --- | --- | --- | --- |
++ | `voxels` | object / visual | ID / voxel_ops | `material: ref`, `at: v3`, `size: v3`, `grid: v3`, `chunks?: v3`, `rot_deg?: v3`, `cutaway?: roof / above / front / back / left / right` |
++ | `fill` | voxel_ops | ID / no block | `from: v3`, `to: v3`, `shape?: box / ellipsoid` |
++ | `cut` | voxel_ops | ID / no block | `from: v3`, `to: v3`, `shape?: box / ellipsoid` |
++
++ `voxels id(material,at,size,grid,chunks?,rot_deg?,cutaway?){...}` is one visual part, available inside objects, components, groups, joints, fragments and zones. Its block accepts named `fill` / `cut` operations with `from`, `to`, optional `shape=box|ellipsoid`, plus bounded `let` and `repeat`. Integer cell bounds are half-open and lie within the grid. Each axis is 1..32; each volume has at most 32,768 cells, 64 expanded operations and 8,192 merged quads. Assemblies have at most 65,536 cells and 1,048,576 fill/cut cell visits. The linked project has at most 1,048,576 cells across assembly definitions.
++
++ Optional `cutaway` uses the same retained static interior-shell policy as `part`.
++ It cannot belong to a joint, fragment or break zone. Tag carved frames with their
++ wall; keep furniture and floors untagged. [Complete home](../examples/enterable-home.dream).
++
++ `chunks` divides grid axes exactly, yielding at most eight nonempty pieces. It requires break behavior or a break zone and cannot be inside `fragment`. It counts toward the same eight-fragment assembly and 128-fragment scene budgets. Without chunks, existing fragment groups apply. Voxels reject deform, cloth and part motion; rigid joint motion is allowed. Cells affect appearance and released pieces; explicit body/contact cylinders still govern collisions. See [voxel construction](voxels.md) and the generated contract's `voxels` section.
++
++ ## Whole-world voxel construction
++
++ | Command | Context | Form | Fields |
++ | --- | --- | --- | --- |
++ | `voxel_world` | top | no ID / no block | `object_cell: n`, `ground_cell: n`, `height_step: n` |
++
++ One optional declaration in the world owner, beside `world` and `road`. `object_cell` is .25..4 local units, `ground_cell` is exactly 4 or 8, and `height_step` is .5..1. Ten world units represent one metre. The compiler applies the policy after module linking and furnishing, storing `voxelWorld` in Scene and `voxelSize` on compiled assembly data. The model continues to write compact shape stamps or explicit fill/cut volumes; compiled construction metadata is not another authoring command.
++
++ The engine fits stamps to the original envelope, with 4..32 cells per axis and a separate 16 MiB shared mesh cache. Explicit volume budgets remain unchanged. Solid terrain columns merge within 400-unit tiles, grouped into streamed 800-unit chunks. Infrastructure uses continuous cut-cell contours and retains its lift above the quantized base; thin paint keeps its fine footprint. Water retains its bounded wave field and shared UV displacement/normals across tile seams. Resolution does not vary with the camera. Smooth driving heights and explicit collision contacts remain independent. This does not provide editable terrain, implicit destruction or per-cell physics. See [the full guide](../whole-world-voxels.md).
++
++ ## Commerce bounds
++
++ NPC accounts can opt into paid work travel with `commute=true,on=home_ground`
++ and optional `grounds`, alongside `work`/`works`. A complete humanoid walks to a
++ validated workplace, rechecks the same work rules as the player and returns.
++ `meal` may coexist; competing automatic policies remain excluded. Body clearance
++ is engine-derived and the existing actor/navigation budgets remain unchanged.
++ [Work commuting](commuting.md) · [Runnable example](../examples/work-commute.dream).
++
++ Optional `attendance=[start_hour,end_hour]` gives that resident a daily work
++ window at one workplace. They travel even with full shelves, wait without pay,
++ perform real eligible jobs and return at closing or for food/rest. Committed
++ batches finish normally. It requires daylight and retains existing work/body/path
++ limits. [Attendance contract](attendance.md) · [Complete world](../examples/scheduled-workday.dream).
++
++ One optional `economy(){...}` per linked world. [Working guide](commerce.md).
++
++ ```text
++ good id(label=text,food=n?);
++ account id(actor=ref,credits=n,capacity=n,satiety=n,drain_s=n,rest=ref?,commute=bool?,attendance=v2?,on=ref?,grounds=symbols?,shop=bool?,meal=ref?,work=ref?,works=symbols?,repair=ref?,repairs=symbols?);
++ market id(label=text,actor=ref,credits=n,radius=n,hours=[6,22]){ lot ... }
++ lot id(good=ref,quantity=n,limit=n,price=n?);
++ work id(label=text,market=ref,input=ref,take=n,output=ref,make=n,seconds=n,pay=n,effort=n,capacity=n,target=n,requires=ref?,requires_any=symbols?);
++ ```
++
++ Market `hours` is an optional numeric pair: opening 0..less than 24, closing
++ 0..24, different endpoints. `[6,22]` includes 06:00 and excludes 22:00; `[22,6]`
++ wraps midnight. Omit it for all-day service. Requires `daylight` in the world.
++ Simulation time owns availability, independently of the visual sky. Player and
++ NPC transactions share the same check. See [opening hours](hours.md) for work,
++ courier waits, refunds, reduced motion and the complete example.
++
++ At most 8 goods, 16 accounts, 8 markets, 16 jobs and 16 delivery contracts and 8 repair services; each market has 1..8 lots with unique goods. Exactly one player account; one account per actor. Other owners are existing NPC placements. Market vendors and production workers without `commute=true` retain stationary homes; station-bound jobs add real local work trips. Explicit commuters use connected on-foot journeys. Repair workers start at a stationary home in supply-market reach and travel within declared grounds and their pedestrian connections. NPC `shop` and `work` policies are optional; player accounts cannot automate themselves.
++
++ Credits: integer 0..1,000,000. Stock/limits: integer 0..10,000 with positive limits. Price: integer 1..10,000, or omitted for untraded ingredients. Carrying capacity: integer 1..32. Fullness/food: 0..100, drain per second: 0..0.25. Radius: 20..80. Work: 1..120 seconds, positive integer take/make/pay, effort 1..50, capacity 1..4, target within output lot capacity. Use exactly scalar `input`/`take` or a block of 1..4 `ingredient(good=...,take=...)` statements with unique goods. No empty block or mixed forms. Every input has a matching market lot and take within its capacity. An input may equal the output only when make is greater than take for that good. Reserve the larger of refund or completion space once for a shared lot; starting work subtracts its held input before checking future output room. Make is the full output, not the net gain. Labels: 1..40 nonblank characters. IDs follow the ordinary identifier contract.
++
++ Buy/sell transfers one unit at the listed price. Work reserves every input, wage, refund space for each input and output capacity atomically; cancellation refunds, completion pays once and spends effort. Food consumes an owned unit and restores fullness. NPC food decisions occur at fullness <=40; automatic work refills to target. Shared money and material conservation, clock/owner/member bounds and capacity are checked on restore. The simulation owns rules and work time; the renderer owns gestures and feedback. No offline catch-up or generated scripts. Existing NPC, rig, physics and geometry caps are unchanged.
++
++ ### Physical workstations
++
++ `station id(object=ref,at=v2,hands=v3,on=ref,grounds=symbols?);`
++
++ `work(...,capacity=1,equipment=[object],station=id);` binds one shared work
++ position across recipes. At is object-local XZ; hands is local XYZ, fitted and
++ rotated with the static prop. Up to 16 stations, local coordinates ±256, hand
++ Y 0..256. Require ground-floor upright solid prop geometry without joints or
++ animated parts, a dry clear 4.1-radius/18-height stand, a supported surface
++ 3..7 world units away and 6..12 high, and 10-unit stand separation. Keep the
++ station inside counter reach and all grounds convex within existing budgets.
++ Stationary workers' stations share ordered grounds; commuters retain their
++ accepted grounds. Player/NPC starts and continuation require two-unit proximity.
++ NPCs walk before reserving stock/pay. One claimant per station, independent of
++ recipe; departure or damage refunds once. Animation uses rigid existing arms,
++ not generated code or saved mesh poses. [Working guide](workstations.md) ·
++ [Complete source](../examples/workstations.dream).
++
++ ### Personal work and recognition
++
++ `milestone id(label=text,kind=work|delivery|repair|shared_meal,task=ref,count=n);`
++ lives in `economy`. At most 16, count 1..1,000,000,000 and a 1..40-character label.
++ The first three kinds reference a matching task; shared_meal names an NPC social
++ account and checks its two participants' existing history. `work.requires` keeps
++ one prerequisite; `requires_any` accepts one of 1–4 unique alternatives. They
++ exclude each other. Every work prerequisite branch must be acyclic. `account.works=[advanced,basic]` tries
++ 1..4 unique jobs in order, each eligible and below target; it excludes `work`,
++ repair duties, deliveries and player ownership. Existing stationary/range checks apply.
++
++ `on.requires` is interact-only and checks the player. After linking, every placement
++ using that guard must be the task's receiving market actor: `work.market`,
++ `repair.market` or `delivery.to`, or the shared-meal account's actor. Unknown,
++ unrelated or absent-economy guards fail. Ordinary task completion increments
++ only when paid work, a handoff or a repair succeeds. Cancel,
++ pickup and another account's work do not count. Milestones award no resources.
++
++ Saved task counters and unassigned old task counts sum exactly to global task
++ totals. Shared-meal history remains separate and cannot exceed consumed food.
++ Strict IDs, integer bounds and qualified active work are checked on restore.
++ Format 10/simulation 15 preserves previous totals unassigned because older saves
++ had no complete ownership history. New personal records start at zero; old active
++ jobs count when completed. [Runnable example](../examples/work-progression.dream).
++
++ ### Delivery bounds
++
++ `delivery id(label=text,from=ref,to=ref,good=ref,quantity=n,pay=n,price=n?,capacity=n,on=ref?,grounds=symbols?);`
++ belongs inside `economy`. Both markets need a matching lot; their interaction
++ areas must be separate. Quantity: integer 1..32 and within both lot limits.
++ Pay: integer 1..1,000,000. Optional per-unit supplier price: integer 0..10,000,
++ default 0. Quantity × price + pay must fit 1,000,000. Shared capacity: integer 1..4. The contract label
++ uses the ordinary nonblank 1..40 character bound.
++
++ Collect on foot at `from`: reserve actual stock, destination invoice/pay, supplier
++ treasury headroom, source refund space and destination shelf space atomically. Cargo counts toward carrying
++ capacity but is unavailable for trade/food. One production, delivery or repair task per
++ account. Travel/vehicles/R/streaming retain cargo; hand over on foot at `to`
++ to transfer it, pay the supplier invoice and earn the wage once. Cancel returns
++ cargo and destination invoice/pay without output.
++ Completion counts and active reservations are saved and checked against money,
++ material and capacity bounds. Start over resets them. There is no timeout or unbounded item body. NPC couriers use explicit work-ground data and bounded pedestrian paths. [Complete example](../examples/market-delivery.dream).
++
++ ## Dormant vehicle parking
++
++ `place(...,at=[x,y],role=controllable,parked=true)` declares a stationary available ground vehicle (car, bicycle, skateboard or scooter). Boats and planes retain ordinary resident controllable placements and their existing water/air support. `furnish(...,role=controllable)` creates the same ownership mode for every accepted parking candidate. It requires a solid driver assembly without routes, programs, foundations, damage, emitters, lamps, humanoid or proximity joints. There are at most 256 dormant vehicles in addition to the existing 24 resident route actors or controllable vehicles; one occupied fleet rig must still fit the 24 live-assembly budget. Seeds and moved local poses are instanced. Saved poses retain signed wheel travel and collision bodies after unloading; R preserves them and Start over restores their authored positions. No NPC motion or vehicle damage is added. [Runnable source](../examples/parked-vehicles.dream).
++
++ `asset id(module=library,object=vehicle,control=car)` adapts an existing seat on a local copy. The original export and other imports remain unchanged, including NPC passenger seats. Missing seats and invalid driver bodies fail compilation. The module registry remains host-supplied.
++
++ ## Repair bounds
++
++ | Command | Context | Form | Fields |
++ | --- | --- | --- | --- |
++ | `repair` | economy | ID / no block | `label`, `market`, `on`, optional `dry`, `grounds`, `streets`, `verge`, exactly one of `kind` / `kinds`, `input`, `take`, `seconds`, `pay`, `effort`, optional `dispatch_s`, `regrow_s`, `seed_scale` |
++
++ `repair id(label=text,market=ref,on=ref,grounds=symbols?,streets=symbols?,verge=n?,kind=measure_kind?,kinds=symbols?,input=ref,take=n,seconds=n,pay=n,effort=n,dispatch_s=n?,regrow_s=n?,seed_scale=n?);`
++
++ Inside `economy`, at most 8 services. Choose exactly one of `kind` or `kinds`.
++ The latter is a nonempty unique list of existing measure categories. Input must be a matching supply-market lot.
++ Take: integer 1..32 within its lot limit. Seconds: 1..120, pay: positive integer
++ up to 1,000,000, effort: 1..50, dispatch delay: 0..120 seconds, default 12. `on`
++ references a convex surface containing the market and eligible measured-kind
++ break/topple objects or ground-accessible zones. The local 12-unit grid is capped
++ at 4,096 samples, saved paths at 128 points. Four-unit walking cylinders remain
++ inside the primary surface and clear roads, riding lanes, water and solids when both `grounds` and `streets` are omitted.
++
++ Optional NPC `account.repair` chooses one service; `account.repairs` chooses an
++ ordered, unique list of 1..4 services. The two fields are exclusive. Unavailable
++ or unaffordable services are skipped. Both exclude automatic `work`,
++ route/ambient movement and market ownership; its home starts within market reach.
++ The player collects manually. Each damage target has one shared claimant.
++ Collection reserves kits, refund space and pay; work progresses only beside the
++ damage. Restore waits for clear physical space, consumes inputs, pays once and
++ records a completion. Cancel refunds. NPCs walk home before resuming their saved
++ program. Journeys, notices, paths, work and conservation ledgers persist. Existing
++ actor, rig, reactive-object and fragment limits are unchanged. No arbitrary off-network dispatch,
++ scaffolds or free restocking. Optional tree growth is bounded below. [Working guide](commerce.md#repair-work). [Multi-category supply example](../examples/market-maintenance.dream).
++
++
++ ### Connected repair grounds
++
++ Optional `repair.grounds` adds 1..7 unique existing convex ground-surface IDs,
++ excluding the primary `on`. The combined grids retain the 4,096-sample cap at
++ 12-unit spacing. The market and worker home stay inside `on`; extra grounds
++ connect through accepted pedestrian pavement, crossings and supported bridge
++ sidewalks. Complete-world acceptance checks every eligible target from every
++ worker home. An unreachable target or oversized graph fails acceptance.
++
++ Derived routing is bounded to 8,192 nodes and 32,768 directed links. Host-owned
++ worker packets carry topology; Dream source and save files cannot supply graph
++ edges or controller code. Saved route intent still has at most 128 coordinate-only
++ waypoints. Live contacts govern travel/restoration and blocked workers wait.
++ Without `grounds`, the original local-yard behavior remains unchanged.
++ [Runnable example](../examples/neighborhood-repairs.dream).
++
++
++ ### Pooled static destruction
++
++ Optional `world.damage_pool` is a boolean, default false. True keeps static
++ whole-object break/topple props instanced, including `furnish` output. At most
++ 128 pooled template records fit the existing 4,096-placement and project budgets.
++ Resident bounce props/partial zones retain 24-object and 128-potential-fragment
++ limits. Each template retains eight fragments. Runtime destruction has at most
++ 24 active object assemblies and 128 pieces; the renderer caches at most 24
++ mesh templates and 128 fragment meshes, evicting unused data after ten simulation
++ seconds or to make room. Oldest cosmetic debris yields when full; all damage
++ records persist. No per-cell bodies, implicit damage or free repair.
++
++ Ungrouped Dream 2 `topple` source compiles one stable rigid fragment; explicit
++ fragment groups must still form exactly one. A whole-object impact may use one
++ centered base contact, while compound/offset contacts remain rejected. Lamp
++ height uses `measure(kind=lamp,axis=y,meters=...)`, 1..15 m. Pooled lamp damage
++ switches its terrain/deck light pool off; repair restores it. [Guide](rules.md#streetlights-and-streamed-destruction)
++ and [complete example](../examples/streetlight-repairs.dream).
++
++ Whole topplers may retain part-level `sway` when placed as static props in a
++ pooled world. Falling foliage keeps its original wind phase in both color and
++ shadow rendering. Spin, roll, cloth, moving joints, scatter and break-zone
++ animation remain rejected. [Wind tree and finite replanting example](../examples/city-tree-replanting.dream).
++
++
++ ### Repair street coverage
++
++ `repair(...,streets=[...],verge=24)` adds service sidewalks and nearby dry work
++ approaches to `on` and optional `grounds`. Name 1..32 unique streets with sidewalks
++ at least eight world units wide. Verge is 0..128, defaults to 24 and requires streets.
++ Per service: at most 512 street targets and 2,048 derived approach polygons.
++ Categories still use `measure.kind`; carriageways, cycle tracks, the circuit and
++ water are excluded. Full-world compilation checks every target from every worker
++ home. Existing 4,096 local samples, 8,192 network nodes, 32,768 directed links and
++ 128 saved waypoints remain the limits. [Working example and routing](commerce.md#street-verges).
++
++
++ ### Recovery bounds
++
++ Optional `repair(...,recover=good,amount=1)` needs both fields. Amount is a whole
++ 1..32 and must fit an existing receiving-market lot. At dispatch reserve bag
++ capacity and shelf space for output, in addition to ordinary input refund space.
++ Recover only from an eligible mature source; otherwise ordinary repair proceeds.
++ Completion creates sealed return cargo and increments a separate recovery count.
++ Its existing wage settles once. `deliver`/H transfers output to stock at the open
++ staffed counter; NPCs use that same guarded return after walking home. No second
++ pay, output trading/eating/cancellation or remote stock deposit.
++
++ At most 512 unique growing recovery sources. After replanting, maturity requires
++ actual unblocked growth; sapling destruction retains the spent source. Format
++ 19/simulation 35 persists reservations, cargo, counts and source eligibility,
++ with an exact r87 upgrade and no retroactive wood. Existing work, actor, damage
++ and growth caps remain. [Guide](growth.md#timber-recovery) and
++ [complete source](../examples/timber-recovery.dream).
++
++ ### Planting bounds
++
++ `repair(...,kind=tree,regrow_s=180,seed_scale=.15)` consumes the declared input and
++ pays once at planting completion. `regrow_s`: 30..86,400 seconds. `seed_scale`:
++ 0.1..0.5, default .15; requires `regrow_s`. Exactly `kind=tree` is required;
++ `kinds` is not accepted for growing repairs. Targets are whole-object topplers
++ with a centered base body/contact, no foundation, zones, rideable seat, emitter
++ or lamp. Existing geometry/animation limits still apply.
++
++ At most 32 growing plants plus reserved planting jobs. Mature scene dimensions
++ stay immutable; runtime visual transforms and cylinder contacts use the same
++ linear scale. Growth settles at 4 Hz, pauses for occupied expansion space and
++ persists outside render chunks. Destruction captures the current scale for
++ fragments and removes growth; it cannot refund a planted input. The completion
++ ledger counts plantings rather than maturity. [Guide](growth.md) and
++ [complete example](../examples/orchard-replanting.dream).
++
++
++ ### Courier bounds
++
++ Account `deliveries` is 1..4 unique ordered contract refs. It excludes production
++ `work` and player accounts; repair duties may coexist, with available repairs
++ first. The actor is a stationary non-vendor NPC with a connected home. A delivery
++ `on` is an existing convex work ground. Optional `grounds` adds 1..7 unique convex
++ surfaces excluding `on`, with 4096 local grid samples total. Home, supplier and
++ receiving counter can use these grounds or accepted pedestrian pavement. Home
++ need not be in receiving-counter reach, so one courier can serve different
++ destinations. Complete-world acceptance still checks every approach and return.
++
++ Complete-world acceptance checks every worker's pickup, handoff and return route.
++ Walking uses the same engine-owned work network: 8192 nodes, 32768 directed links,
++ 128 saved coordinate-only waypoints. Identical ordered delivery grounds share one
++ prepared graph. Crossings and supported bridge pavement are required; no dry-land
++ road shortcuts are inferred. Actor, rig and physical-body limits are unchanged.
++
++ A pickup intent holds one shared contract slot but no goods/funds/shelf capacity.
++ Only collection reserves sealed cargo, destination invoice/wage, supplier treasury
++ and shelf headroom through the shared transaction. Arrival rechecks every bound;
++ an unavailable pickup returns empty-handed. Handoff settles once, then the worker
++ returns to its home. Current stock must admit a whole shipment before dispatch.
++ One commitment owns walking/program state, with live obstacle checks and retry.
++ Pickup/carry/return state survives streaming, R and save/load; no offline catch-up,
++ upstream production, courier vehicle AI or item bodies are added.
++ [Runnable source](../examples/courier-resupply.dream).
++
++ Pickup and handoff approaches stay less than four world units above/below the vendor. A steep unsupported counter needs a level, connected approach before the courier can use it.
++
++ ## Enterable ground floors
++
++ [Interiors](interiors.md) defines supported floors, actual doorways, shell cutaways, sight and work coverage. A doorway is checked against physical contacts; a painted door does not create an opening. [Complete market assembly](../examples/enterable-market.dream).
++
++ ### Meal trips
++
++ `meal.seats` orders 1..4 unique furniture placement IDs by preference. The first
++ reachable free slot wins, retaining authored slot order within each object.
++ Busy, broken or inaccessible furniture yields to the next choice; no available
++ slot means a standing meal with the food already purchased. Placement order
++ never overrides this preference. [Runnable example](../examples/seat-preferences.dream).
++
++ `meal id(good=ref,markets=symbols,on=ref,grounds=symbols?,eat_s=n);` lives in
++ `economy`; `account.meal` assigns it to a person NPC. There are at most 8 plans,
++ 1..4 unique ordered markets and 1..12 seconds to eat. Every market must sell that
++ positive-food good. Grounds are the same convex work surfaces or interior floors,
++ with 4096 local samples and existing 8192-node/32768-link/128-waypoint bounds.
++ The actor needs a measured person decor body and program, optional walking route,
++ no market ownership and no other automatic commerce policy.
++
++ At fullness <=40, eat carried food or walk to the first stocked affordable market
++ with a complete round trip. Arrival rechecks the ordinary buy action. Nothing is
++ reserved during travel. An empty shelf, full bag, blocked sight or lost purchasing
++ power sends the customer home without a meal or refund. A purchased meal stays
++ in their inventory for `eat_s`, then the ordinary eat transaction consumes it once.
++ Return to the frozen routine pose before resuming the program. Live contact waits,
++ paths, timers, needs and balances survive unloading, recovery and saves. Optional `seats=[bench_placement]` reserves a reachable shared furniture slot
++ after purchase. See [seating](seating.md) for posture, claims and standing fallback.
++ No queues, extra rigs, per-item bodies or offline travel. [Complete example](../examples/meal-trips.dream).
++
++ The [staffed business example](../examples/market-production.dream) composes these
++ existing policies. Meal/courier public navigation prepares without a repair
++ service or ambient population. The same graph, path, actor and rig bounds apply.
++
++
++ Furniture seats are named object-root `seat` declarations. Optional `meal.seats`
++ references 1–4 unique furniture placements, with complete humanoids, connected
++ approaches and shared player/NPC claims. [Author shared seating](seating.md).
++
++ Daily [staff shifts](shifts.md) reuse explicit market hours, body-sized connected paths and existing NPC programs. The [complete example](../examples/staff-shifts.dream) includes a daytime bakery and overnight depot. Counter service waits for physical attendance.
++
++ ### Shared seated meals
++
++ `social` plus `account.social` connects two carried food portions, paired seating,
++ body-sized walking and per-person shared history. `on.shared_meals` gates interact
++ dialogue on actual completed meals with this NPC. Eight plans, four furniture
++ placements per plan, eat_s 1..12, cooldown_s 30..86400 (default 600), max_fullness
++ 0..100 (default 80). Stationary complete humanoid decor NPCs, radius <=8 and
++ height <=32, use the existing ground/navigation/actor budgets. The player must
++ be seated, grounded, dry, previously acquainted and within 80 units and clear
++ sight. Busy/full/cooling-down or soon-due staff decline. One active invitation;
++ consume two reserved portions once only after both finish eating. Interruptions
++ refund both once and return the person home. Shared history, paths and ownership
++ persist. Optional `markets=[counter,...]` supplies NPC-hosted offers: 1–4 unique
++ priced-food counters, with one reachable from the NPC work placement. The host
++ uses its own money and bag; a pending offer holds an adjacent seat for 30
++ simulation seconds. **Y** accepts and **X** declines. Purchases remain theirs on
++ decline or expiry; an accepted interruption refunds that donor once. The same
++ availability, history, consent, fullness and shift-return rules apply. Repeated
++ offers also use `cooldown_s`. Omitted `markets` keeps player-funded sharing.
++ [Full consent, ownership and save contract](social.md) ·
++ [Complete checked example](../examples/shared-meal.dream).
++
++ ### Business ownership
++
++ `market.owner` names a personal account, independently of the stationary counter
++ actor. Optional `sale` is an integer base price from 1 to 1,000,000 and requires a
++ non-player initial owner. The current quote includes available company cash.
++ Buying pays the seller account once; stock and commitments stay with the business.
++ Only the new owner can transfer positive whole credits locally, with wage, invoice
++ and refund headroom protected. Acquisition needs open/staffed counter service;
++ capital transfers can happen while closed. No resale, hiring, automatic profits,
++ new businesses or property deeds. [Complete example](../examples/business-ownership.dream)
++ and [playable ownership guide](businesses.md#own-the-station-depot).
++
++
++ `stride` joints use one sinusoidal cycle per 1..128 expanded local units of
++ travel. Angle amplitude is 0..1.4 radians and phase -pi..pi after conversion.
++ Resolved object scale converts world distance; primitive size does not change
++ the bearing. This is visual articulation, without a foot-contact solver or saved
++ clock. [Complete example](../examples/joint-stride.dream).
++
++ ### Worker provisions
++
++ `ration` is an optional economy declaration.
++
++ `ration id(good=bread,market=corner,below=40);` defines one of at most eight
++ provision plans. `account.ration` selects it for a stationary repair/delivery
++ worker, without production, shift, meal-trip or social policies. The authored
++ home must have clear reach to a priced-food counter. While idle, the worker can
++ buy one portion with their own money, leaving capacity for the largest declared
++ cargo, repair input or recovered output. At or below `below` (0..95), they eat
++ owned food through the same transaction as G, including during a commitment.
++ Stock, hours, staff, funds and capacity still apply. Sealed cargo stays sealed.
++ The ration plan owns automatic food decisions, including when `shop=true`.
++ No extra food, shopping path or actor. See [worker provisions](commerce.md#worker-provisions)
++ and the [complete example](../examples/worker-rations.dream).
++
++ ### Weather and dry-weather work
++
++ One optional world-owner `weather(cycle_s,rain_start_s,rain_end_s,wet_grip)`
++ declares a 120..3600-second simulation cycle. Rain starts at least ten seconds
++ in, lasts at least ten seconds and ends thirty seconds before the cycle ends.
++ Grip is .45..1. Rain fades over five seconds, wetness rises over ten and dries
++ over thirty. Omission preserves dry physics. Optional `repair.dry=true` requires
++ weather and rejects only new starts during rain for player and NPC alike.
++ Existing claims finish with their resources intact. [Full rules](weather.md)
++ and [runnable example](../examples/rain-work.dream).
++
++ ## Rest and energy
++
++ `rest` fields are `energy:n`, `drain_s:n`, `recover_s:n`, `below:n`, `until:n`,
++ `shelter:bool?`, `seats:symbols`, `on:ref`, `grounds:symbols?`. Optional
++ `shelter=true` requires weather and every seat slot beneath a retained core
++ interior ceiling above standing headroom. A free healthy uncovered NPC takes
++ the ordinary rest trip during rain, waits until dry and recovered, and returns.
++ Existing work and need journeys keep priority; player F seating stays manual.
++ Omitted/false keeps the low-energy-only policy. [Rain shelter](shelter.md).
++
++ `rest` declares a bounded game need and ordered NPC seat preferences; `account(...,rest=id)` opts in. Player seating can recover on any usable furniture. Shared work/repair effort, physical trips, claims and persistence are described in [Rest and energy](resting.md), with the [complete runnable example](../examples/resting.dream).
++
++
++ ## Stairs and upper floors
++
++ `stairs flight(material=wood,at=[6,.5,0],size=[4,8.5,22],steps=12);`
++ creates matching visible treads and static contacts. `at` is the footprint centre
++ at base height, `size` is width, rise and run, and +Z ascends before optional
++ `heading_deg`. Two flights per interior, 2..24 integer treads each, within 32
++ contacts and 32 parts. Measured width must reach 9 world units, risers at most 4
++ and tread depth at least 6. Landings need support and 18 units of headroom.
++ `cutaway=above` hides an upper slab when viewed from downstairs and keeps it
++ opaque underfoot upstairs, including streamed meshes. Named `floor` declarations bind existing slab contacts; static props use
++ `place(...,role=prop,floor=id)`. Rest and repair grounds name both the building
++ and its floors. Host-derived routes climb the actual stairs with supported
++ heights, preserving shared claims and finite paid repairs. Lifts and separate
++ stacked-room ownership remain missing. [Floor contract](floors.md).
++
++ [Build the two-storey home](../examples/stairs-home.dream) · [Walking guide](stairs.md).
++
++ ## Alternate work qualifications
++
++ `work.requires_any` is 1–4 unique milestone IDs, exclusive with `requires`. Any
++ one qualifies the acting account; every prerequisite branch must be acyclic.
++ `milestone(kind=shared_meal,task=npc_account,count=n)` derives progress from
++ completed meals with that specific social account. Only the player and named
++ NPC participant qualify. It changes no money, food or practice counter. Real
++ work keeps all ordinary financial, physical and need checks. Conversation
++ `on.requires` can reference this milestone only on that account's actor.
++ [Shared recipes](relationships.md) · [Complete source](../examples/shared-recipe.dream).
++
+
+ ❯ tests/docs.test.ts:133:75
+    131|   it("covers every parser command in the readable reference",()=>{
+    132|     const reference=pages['../docs/dream/reference.md']!;
+    133|     for(const command of Object.keys(DREAM_V2_COMMANDS))expect(referen…
+       |                                                                           ^
+    134|   });
+    135| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/workstations-world.test.ts > retains the live shared-meal recipe route with the new physical station and no seeded qualification
+Error: Shared review needs paid food and a real meeting
+ ❯ sharedMealReviewSteps src/game/review-start.ts:326:141
+    324|  for(let i=0;i<(hosted ? 0 : 2);i++)next=stepInteractive(next,{steer:0…
+    325|  next=stepInteractive(next,{steer:0,throttle:0,talkPressed:true},1/120…
+    326|  if(next.economy!.accounts.find(a=>a.id==='pocket')!.inventory.bread!=…
+       |                                                                                                                                             ^
+    327|  for(let i=0;i<120*360 && (next.timeS<303 || next.economy!.accounts.fi…
+    328|   next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30=…
+ ❯ bondReviewSteps src/game/bond-review.ts:13:18
+ ❯ run tests/workstations-world.test.ts:16:46
+ ❯ tests/workstations-world.test.ts:39:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 185 passed (187)
+      Tests  2 failed | 1911 passed (1913)
+   Start at  05:26:30
+   Duration  713.43s (transform 1.88s, setup 453ms, collect 333.91s, tests 1072.70s, environment 11ms, prepare 4.06s)
+
+JSON report written to /tmp/muse-stations-full.json

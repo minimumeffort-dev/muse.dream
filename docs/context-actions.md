@@ -44,6 +44,60 @@ the current selection, with no bottom stripe;
 a separate light outline shows keyboard focus. The framed map stays north-up. The wallet includes a small fullness
 gauge; its coin icon replaces the old currency abbreviation.
 
+Click the minimap image or its World/Nearby header, or press **C**, to open the world map. Scroll or pinch over
+either map to zoom it independently of the game camera. In the expanded map,
+drag to pan and click to set a waypoint. Arrow keys/WASD pan, **+ / −** zoom,
+**Home** finds you, **0** fits the world and **Enter** places a waypoint at the
+crosshair. **Delete**, Clear waypoint or the HUD’s × removes it. **Escape / C**
+returns to play. The map pauses the world and releases held controls.
+
+![The expanded map routing through streets and a bridge](media/navigation-map.png)
+
+A waypoint adds a map marker and distance in metres beside the minimap.
+Cars, bicycles, scooters and skateboards now use the connected Dream streets.
+The solid yellow line follows street centerlines through their real junctions;
+the arrow aims ahead along that same route and distance counts its remaining
+length. It updates as you drive, including after a missed turn. It does not
+steer for you or supply spoken turn instructions.
+
+Dashed ends are direct approaches to or from the street, not checked routes
+through buildings or terrain. Far-off-road positions, disconnected roads,
+walking, passengers, boats and aircraft keep a dashed direct bearing. Routes
+ignore moving traffic and closures and use the current single-height street
+network, without lane rules or one-way restrictions. Arrival always uses the
+actual destination, not the closest street point. It says Arrived
+within 2.5 metres, keeping the marker until you clear it. The point is remembered
+on this device for the same world and dimensions. It is a separate UI preference,
+not part of exported world backups. Start over clears it; R keeps it. Review
+captures use isolated preferences or disable storage. Closing the map releases
+its large canvas buffers; static geography is cached until the view changes.
+
+![Street guidance while driving](media/navigation.jpg)
+
+[Street-route walkthrough](media/navigation.mp4) · [GIF](media/navigation.gif) · [Checks](evidence/street-guidance/verification.md)
+
+The earlier [direct-bearing screenshot](media/waypoint-guide.jpg) predates street
+routing; its map controls remain unchanged.
+
+Delivery, repair and planting jobs also use this guide. With no personal
+waypoint, it points to the delivery counter or the repair approach and names
+the destination. **Find task / T** centers the expanded map there. A personal
+waypoint takes priority; clearing it brings the task guide back without
+cancelling the job. Finishing or cancelling work removes its marker.
+
+![Earlier school delivery map, before street-route guidance](media/task-map.jpg)
+
+Personal destinations now replace the task's route and marker on both maps;
+clearing one restores the task without cancelling it.
+
+Nearby means you are within 2.5 metres of the target, not that the task is
+complete. Hand deliveries over on foot through the ordinary activity controls;
+repairs still need a clear work area and time. The guide stays available when
+you change vehicles or use R. It reads the saved task rather than storing a
+second copy of it.
+
+![Earlier direct delivery bearing, before street routing](media/task-guide.jpg)
+
 The food icon uses a fork and knife with a clear gap between them. The bicycle
 icon shares its wheels, frame, saddle and fork with the cycle-lane stencil.
 Both remain legible at their small HUD sizes. [Four rendered paint angles](evidence/symbols/verification.md).
@@ -55,7 +109,19 @@ choices retain the engine's reason. None of this changes Dream's interaction
 ranges, ownership, money, inventories or physics. The UI reads the accepted
 world and asks the same fixed-step simulation to act.
 
-![Keyboard item slots at the bakery](media/market-controls.png)
+The Work view keeps the complete recipe separate from opening hours and current
+activity. Long ingredient names wrap instead of disappearing after two lines.
+A disabled action has one warning, and active-task directions stay readable.
+Keyboard selection and focus trapping use the same controls described above.
+
+![Complete recipes and one action warning](media/actions.jpg)
+
+[Current panel in motion](media/actions.mp4) · [GIF](media/actions.gif) ·
+[Browser and focused checks](evidence/work-panel/verification.md).
+Earlier market-control and commerce recordings retain their recorded panel layout;
+they still show the same transactions, not this current text arrangement.
+
+![Earlier keyboard item slots at the bakery](media/market-controls.png)
 
 ![Business finances, opened deliberately](media/business-controls.png)
 

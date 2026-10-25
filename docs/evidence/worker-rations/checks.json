@@ -1,0 +1,34 @@
+{
+  "tests": 1738,
+  "passed": 1734,
+  "failed": 4,
+  "durationSeconds": 528.35,
+  "unhandledErrors": [],
+  "failures": [
+    {
+      "file": "docs.test.ts",
+      "name": "published Dream documentation covers every parser command in the readable reference"
+    },
+    {
+      "file": "interaction-rules.test.ts",
+      "name": "category-wide Dream interaction rules enforces live tables and benches, including the older bench with retained supports"
+    },
+    {
+      "file": "repair-world.test.ts",
+      "name": "shares current lamp repairs and finished-kit procurement when staff are assigned only to food"
+    },
+    {
+      "file": "voxel-city.test.ts",
+      "name": "voxel city integration uses voxels across architecture, transit, boat fittings, people and paired park boundaries"
+    }
+  ],
+  "focusedCorrections": {
+    "reference": 1,
+    "furnitureAndRepairs": 14,
+    "voxelCity": 2
+  },
+  "finalFoodRegression": {
+    "tests": 20,
+    "durationSeconds": 13.49
+  }
+}

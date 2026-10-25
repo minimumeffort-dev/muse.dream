@@ -12,7 +12,7 @@ into Three.js and tested mechanics; model output remains data-only.
 Current state: **mock open world** — a 14000 x 11000 handmade landscape with a
 connected street network without a circuit or checkpoints, composed assets, heightfield driving/jumps,
 ICE/BOOST, off-road collisions, fixed-angle camera, walking, direct vehicle controls,
-a rebuilt river city with connected entrances, schools, two medical destinations, a regional airport, markets, workplaces, five buses, tram, regional rail, cycle tracks and sports grounds, ambient wildlife, layered vegetation and instanced scenery. Walking supports running, jumping, low contact steps and surface swimming. F prefers dry exits, permits water disembarking and boards nearby on foot. Bicycles,
+a rebuilt river city with connected entrances, two high-rise lobby buildings and a connected station promenade, schools, two medical destinations, a regional airport, markets, workplaces, five buses, tram, regional rail, cycle tracks and sports grounds, ambient wildlife, layered vegetation and instanced scenery. Walking supports running, jumping, low contact steps and surface swimming. Named floors connect upper-storey furnishing, resident rest and paid repair journeys through validated stairs. Daily attendance keeps the commuter at one workplace between real paid jobs, with unpaid waiting and physical returns. F prefers dry exits, permits water disembarking and boards nearby on foot. Bicycles,
 skateboards, scooters, boats and planes are player-controlled; public transport retains autonomous routes and exposes passenger seats.
 The original small fixture remains for regression tests. No photo upload,
 camera or model calls yet. The complete live world is authored in Dream 2 text
@@ -28,6 +28,12 @@ Two skills govern all work here: [Ponytail](.agents/skills/ponytail/SKILL.md)
 (**full** mode — smallest complete change) and
 [`paper-game`](.agents/skills/paper-game/SKILL.md) (domain invariants).
 Provenance and evidence rules: [`docs/agent-workflow.md`](docs/agent-workflow.md).
+
+Use focused checks for the affected behavior during iteration. Run the full suite
+once before merge/deployment, or after broad changes to shared compiler, physics
+or save behavior. Do not rerun a passing full suite for subsequent prose or capture
+updates; check those affected paths instead. CI retains the complete suite.
+Keep slices small enough to review and push without collecting unrelated work.
 
 ## Commit and push every change
 
@@ -65,6 +71,46 @@ Use Horia's editorial voice: concrete, conversational prose, useful visuals,
 no hype, no invented claims and no em dashes. Preserve the distinction between
 working mock mechanics and the future sketch/Muse pipeline.
 
+## Keep the feedback loop short
+
+Before running checks, name the changed behavior, the exact test files and the
+completion criteria. Use the [check selection table](docs/agent-workflow.md#check-selection)
+to choose the smallest sufficient scope. For documentation-only changes, build
+the docs and run their affected checks; skip gameplay tests, typecheck, production
+builds and captures when their inputs are unchanged. Do not turn a small fix into
+an adjacent feature or a performance investigation without evidence it is needed.
+If a command runs longer than a minute, report what it is checking and why it is
+still needed. Do not silently repeat it, weaken the checks or claim a fixed ship time.
+
+Pick one complete slice and finish it before expanding scope. Batch relevant
+checks and reuse successful results until code changes or a failure requires
+another run. Use focused regression tests for branch pushes; run the full suite
+before merging/releasing or when shared engine changes need broad coverage.
+Behavior suites may lazily reuse one accepted immutable world per file, with a
+mutation guard and fresh simulation state/storage per case. Compiler acceptance
+and deterministic-rebuild checks stay fresh; keep test reuse out of production.
+During iteration, use `npm run test:watch -- tests/<affected>.test.ts` to keep
+selected checks running in one process. Include neighboring regression files;
+watch mode does not replace the required full-suite gate. Run either typecheck
+or build as needed: `npm run build` already includes typecheck. Before a full
+suite or motion export, explain which change requires it. Do not wait for an
+unrelated CI/deployment run to finish a verified branch push.
+For visual changes, capture one representative current flow and refresh its
+GIF, video and still together. Mark older affected recordings as historical.
+When rendering and controls are unchanged, retain accurate media and explain why;
+do not regenerate motion solely to accompany a code or authored-policy change.
+Close agent-owned heavy world review tabs during shared-code edits, then open a
+fresh stable build for runtime checks. This avoids repeated worker/chunk/shader
+startup on every hot reload. Preserve user-owned tabs.
+Retire older ignored capture frames after checking their final media is committed;
+keep the latest source sequence and any unpublished/newer recording. Remove
+generated docs output after verification when disk space is needed. Archive
+inactive integrated managed worktrees through the app so Git state stays recoverable.
+Ship once the slice meets its success criteria; do not add adjacent features or
+repeat successful checks without a new change, failure or concrete concern.
+Historical fixture tests pin their projection's simulation version. Keep current
+engine-version assertions in current-world checks, so old fixtures stay stable.
+
 ## Run and test (verified 2026-10-15)
 
 ```sh
@@ -84,6 +130,11 @@ keep unhandled errors fatal; do not hide a reporting failure to publish docs.
 
 Worker bootstrap supplies host-derived pedestrian graph, static contact caches
 and complete-world culling bounds.
+Worker historical preparation may reuse exact static prop fits only for the
+same immutable object and terrain, outside changed interior walking surfaces.
+Keep the conservative support bound, floor-bound/actor/moving exclusions, authored
+source-pose guard and target ownership. These are private caches, never Dream or
+saved fields.
 Prime contacts before navigation on the exact received Scene. Preserve graph node
 order, contact order, source identity, bounds and structural checks; these caches
 are not authored Dream fields or saved data. Keep runtime imports out of the tiny
@@ -302,8 +353,8 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 
 ## Saved simulation state
 
-Current save format 17 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 32. Historical formats retain their registered projections.
+Current save format 19 pins exact source plus a host-computed accepted-world fingerprint
+at simulation version 53. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -336,8 +387,10 @@ upgrade. Preserve the old format-9 slot and the entire earlier migration chain.
 
 Dream `economy()` contains bounded `good`, `account`, `market`, `lot` and `work`
 data. Actor ownership resolves after linking; one player account, at most 16
-accounts, 8 goods, 8 markets and 16 jobs. Markets/automatic workers are stationary
-NPCs; customers may use existing validated routes. B/V/H/G are per-press requests,
+accounts, 8 goods, 8 markets and 16 jobs. Market operators and workers without
+`commute` retain stationary homes; jobs with a station use bounded local work trips,
+and explicit commuters use their declared home/work network.
+Customers may use existing validated routes. B/V/H/G are per-press requests,
 accepted on foot, grounded and dry. All accounts use the same finite trade,
 food, capacity and reserved-work rules. Work reserves input/wage/output/refund
 space, completes once, or refunds on cancellation/range loss; no pay on cancel.
@@ -423,7 +476,7 @@ carry/actor/repair budgets and the registered r48 save migration, including
 completed repair counters and in-progress work. See `docs/dream/commerce.md`.
 
 
-Repair `grounds` optionally adds 1..7 unique convex surfaces beyond `on`. The
+Repair `grounds` optionally adds 1..11 unique convex surfaces beyond `on`. The
 primary market/home stays in `on`; all grounds share 4096 local grid samples.
 Network travel uses accepted pedestrian pavement and crossings with live contacts,
 8192 derived nodes, 32768 directed links and 128 saved coordinate-only waypoints.
@@ -496,7 +549,7 @@ node indices. See `docs/dream/worlds.md` and the orchard example.
 NPC `account.deliveries` accepts 1..4 unique ordered contracts, compatible with
 repair duties and exclusive with automatic work and player accounts. Couriers
 have stationary non-vendor homes in the receiving market reach and delivery `on`
-ground. Optional `grounds` adds 1..7 unique convex surfaces; all share 4096 local
+ground. Optional `grounds` adds 1..11 unique convex surfaces; all share 4096 local
 samples. Suppliers already on accepted pavement need no extra ground. Validate
 pickup, handoff and return from every assigned home. Reuse the existing sparse
 work-navigation/movement code and share identical ordered delivery coverage.
@@ -522,7 +575,7 @@ ambient walking spacing, the r70 airport connector, character wardrobe
 (r71), the r72/r73 fixture service, wind-safe trees (r74), the utility fleet
 (r75), whole-library asset direction, and faceted tree, landscape plant,
 ground cover, furniture and wildlife construction (r76 to r79), and street
-furniture toppling (r80). That file is
+furniture toppling (r80), shared character construction (r81), indoor bakery service (r82), physical work equipment (r83), on-foot strikes (r84), repair-kit production (r85), workshop supplies (r86), exact work endpoint indexing and immutable edge acceptance reuse, connected resident courier homes (r87), carried material recovery (r88), shared fixture hardware (r89), same-good nursery work (r90), the connected school common room (r91), worker provisions (r92), authored weather (r93), the commuter home (r94), shared rest (r97), physical stairs (r98), named floors and upstairs rest/repairs (r99), daily work attendance (r100), rain-aware shared rest (r101), shared-recipe qualification (r102), physical workstations (r103), authored work motions (r104), resident companion meals (r105), peer recipe qualifications (r106), upper-floor workstations and the market loft (r107), company and planned social breaks (r108), shared seated meal recovery (r109), shared upstairs meals (r110), furniture seating presentation, and world-map/waypoint UI. That file is
 not loaded automatically, so read the relevant section there, alongside its
 linked guide, before changing a covered area.
 

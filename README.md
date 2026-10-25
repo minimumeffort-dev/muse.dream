@@ -10,6 +10,47 @@ Racing is where this started. The idea is to make whatever someone draws playabl
 
 **The playable world is a handmade mock today.** The renderer, driving simulation and Dream 2 compiler work. Photo upload and Muse interpretation are still to come. There are no model calls or API keys to configure.
 
+## A station quarter with some height
+
+The station side of town now has a 55-metre brick residential tower and a
+75-metre office tower. Walk into either lobby, sit on a bench, or take one of the
+four parked taxis and vans. Their entrances, promenade and parking connect to
+Workshop Street; eight residents walk through the same pedestrian network.
+Upper storeys and lifts are still to come. The taxis use the existing car
+controls, without passengers or fares.
+
+The quarter also shares the city's maintenance system. Break a bench or knock
+over a light and the caretaker can walk over, spend a real repair kit and fix
+it. Felled rowans need a sapling and grow back over time. The two lobby benches
+use the same rule, reached through their doorways.
+
+![Walk through the station quarter and take a ride](docs/media/stationquarter.gif)
+
+[Watch in HD](docs/media/stationquarter.mp4) ·
+[Explore the district and its Dream source](docs/dream/station-quarter.md)
+
+Four missing crossings now join the medical interchange, Copper Street, Weavers
+Lane and South Terrace. They shorten the caretaker's route to a station bench
+from 20,983 to 9,546 world units, about 2.1 km to 955 m. People still use the
+pavement and declared crossings. Two remaining corner detours need a separate
+navigation pass. [Connected crossings and current limits](docs/urban-world.md#four-missing-crossings).
+
+![Walking across the medical interchange](docs/media/crossingwalk.gif)
+
+[Crossing walk in HD](docs/media/crossingwalk.mp4)
+
+## Come home and rest
+
+The resident can now buy lunch, come home, recover on the settee and return to
+paid work. Sit beside them with **F**. Energy recovers while seated; food still
+comes from your bag, and wages still come from completed work. Broken or occupied
+furniture follows the same rules for both of you. [Rest in Dream](docs/dream/resting.md).
+
+![Sharing the home settee while recovering energy](docs/media/rest.jpg)
+
+[Watch the rest flow](docs/media/rest.mp4) · [GIF](docs/media/rest.gif)
+
+
 ## Take a walk in Garden park
 
 The old circuit is gone from the live city. Its western strip now has a park with
@@ -27,6 +68,13 @@ Cycle tracks now carry their orange surface through declared junctions. A side
 street can join both sides of an existing cycle route; an ending lane no longer
 leaves an isolated orange cap across the road. Centerlines and stop bars leave
 these connections clear. The minimap and city plan use the same outlines.
+
+Click the minimap image or its header, or press **C**, to open the full map. Zoom with a trackpad,
+pan, and set a waypoint. Ground vehicles now follow a route along the connected
+Dream streets; the map and HUD share its next direction and remaining distance.
+You can clear it from either view. With no personal waypoint, the same guide
+points to your delivery or repair. **T** in the map finds the current work site.
+[Map controls and route limits](docs/context-actions.md).
 [Junction example and checks](docs/urban-world.md#cycle-connections).
 
 ## The whole world is made of voxels
@@ -38,6 +86,8 @@ The world loads around you as you drive, walk or fly. Terrain, streets, river su
 Diagonal roads and painted lines keep their actual outline. Curved object stamps use continuous voxel contours. Undeformed prism and hip-roof stamps retain their exact planar boundaries, so thin roof panels stay closed and flat slopes don't turn into stripes. Bridge ramps and their paint share a continuous surface, and water tiles share wave samples. Explicit fill/cut volumes keep their carved cells and fracture chunks.
 
 The opening loader waits for the first neighbourhood. Validated pedestrian paths and collision cylinders are reused from the worker; road/transit and interactive-asset preparation yield between build steps. Camera rotation, manual zoom and offscreen shadow casters are included in streaming coverage. [How loading and memory work](docs/rendering.md#loading-and-memory).
+
+Workplace connections reuse the existing nearest-node index, keeping the same paths while avoiding a full graph sort for each entrance. [Measured lookup cost and limits](docs/evidence/work-network-build/verification.md).
 
 Ground fitting now reuses temporary vectors while keeping every support sample unchanged. [The allocation check](docs/evidence/support-sampling/verification.md) separates that measured change from browser frame rate.
 
@@ -115,7 +165,21 @@ Press **Shift** or click **Boost** for a one-second car burst, then give it five
 
 Static districts load as you approach and leave render memory behind you. Physics, NPCs and damage keep their state across the whole world. The renderer batches differently colored parts into fewer draws and reuses fixed transforms, keeping the same assets, shadows, particles and post-processing. The [rendering notes](docs/rendering.md) include before/after measurements and a local profiler for checking changes.
 
+Player movement, live vehicles and rolling balls now share a render pose between fixed
+simulation ticks. A football stays with its visible carrier, including NPCs,
+and rolls as it travels. Sun and camera zoom changes resize the shadow view
+continuously instead of stepping its bounds. [Motion checks](docs/evidence/animation-continuity/verification.md).
+[Scooter ride and jump in HD](docs/media/scooter.mp4) · [GIF](docs/media/scooter.gif).
+
+Foreground roofs and hills now open a clean view around the player instead of
+drawing a speckled layer over them. The rest of the building stays visible;
+its shadows and collisions remain. [Cutaway checks](docs/evidence/clean-cutaways/verification.md).
+
 World preparation avoids repeated terrain and outline work, and now reuses unchanged object data while checking historical save fingerprints. [Startup measurements](docs/evidence/startup-fingerprints/verification.md) compare the complete accepted world, paths, collisions and save contracts against the preceding release. Detail and visual settings stay the same.
+
+Historical save preparation also reuses fitted foundations when the object and
+terrain are identical. It keeps the complete bootstrap packet unchanged.
+[Current worker and browser measurements](docs/evidence/foundation-reuse/verification.md).
 
 Work-route checks also discard distant collision geometry before testing its exact
 shape. The city, navigation and saved journeys retain the same results.
@@ -136,6 +200,7 @@ open it; Shop, Work, Bag and Business have their own views. **M** opens activiti
 **I** opens your bag, and **Escape** closes a panel before pausing.
 Arrow keys select item slots, Enter acts, 1–4 switch sections and Tab reaches
 secondary actions. There are no gameplay dropdowns or number fields.
+The Work view gives the complete recipe its own line, keeps status below it and shows a blocked-action reason once.
 [How the contextual controls work](docs/context-actions.md).
 The food icon is a fork and knife. Cycle lanes and the riding prompt share one
 bicycle outline, with joined frame tubes and evenly sized wheels.
@@ -170,7 +235,9 @@ flour from the station. You can cook, buy and take the same delivery jobs. Stock
 money and journeys stay real and finite, and survive leaving or reloading.
 [How the business works](docs/dream/businesses.md).
 
-![A working bakery counter](docs/media/kitchen.gif)
+![Walk inside to work, buy bread and eat](docs/media/interior.gif)
+
+[Indoor counter walkthrough](docs/media/interior.mp4). Earlier outdoor-counter recordings below document the same controls before the r82 relocation.
 
 The bakery and depot open from **06:00 to 22:00**; the school canteen serves
 **08:00 to 17:00**. After closing, the counter shows when to return. Finish a
@@ -181,13 +248,18 @@ The baker and school staff now physically leave and return. The baker rests in
 the market hall; the teacher uses the school yard. If returning staff are late,
 customers and couriers wait. You can still talk to someone off duty. Journeys
 and remembered meetings survive saving. [Staff shifts in Dream](docs/dream/shifts.md).
+Their walking stays smooth when a purchase or meal advances the business clock
+between its regular updates. Contacts and transactions still use the fixed-step
+simulation. [Motion checks](docs/evidence/worker-continuity/verification.md).
 
-![The baker leaving after closing](docs/media/shifts.gif)
+[Earlier shift recording, before the counter moved indoors](docs/media/shifts.mp4). Staff still walk to rest and return before service.
 
 You can also take delivery work. Bring flour from the station depot to the bakery,
 or carry bread to the school canteen. Pick up with **H**, follow the marked
 location, then hand over on foot to get paid. Cargo, stock and money survive
-travel and reload. The school staff can buy the bread you delivered.
+travel and reload. The school staff can buy the bread you delivered. One school resident now takes
+the same bread runs and brings missing fasteners to the workshop. They walk the
+actual routes, earn the same wages and can spend their own pay on food.
 [How deliveries work](docs/dream/commerce.md#deliveries).
 
 ![Taking a delivery](docs/media/delivery.jpg)
@@ -211,8 +283,8 @@ journey keeps going while you drive away or unload that part of the world.
 
 [Watch the journey in HD](docs/media/maintenance.mp4) · [Animated journey](docs/media/maintenance.gif)
 
-Repairs use finite supplies. After two jobs, you can bring two replacement kits
-from **Station supplies**. The bakery pays the depot six credits and pays you four
+Repairs use finite supplies. When the bakery has room for two finished kits after
+pending assembly, you can bring them from **Station supplies**. The bakery pays the depot six credits and pays you four
 for the delivery. These are transfers between actual balances. The depot starts
 with 32 kits and cannot generate more. The service covers 449 targets: the existing furniture at the market, park, station and school,
 the sixteen planted street tubs and two produce stalls, plus all 413 lamps across the city’s 32 streets. Tubs and stalls topple when hit hard and are restored by the same paid repair work. The caretaker steps off the sidewalk for nearby repairs, using
@@ -268,9 +340,11 @@ parking and save rules as the other cars, and keep your delivery cargo with you.
 
 [Watch the vehicle switch in HD](docs/media/switching.mp4)
 
-The city now has twelve connected character templates: different hair, facial hair, glasses, uniforms, coats, aprons, skirts, hoodies and carried items. They share a body and reusable parts through Dream, with clothing attached to the bones that move it. [Build people in Dream](docs/dream/people.md).
+Fourteen exported person templates and the standing/seated player now share one Dream library: different hair, facial hair, glasses, uniforms, coats, aprons, skirts, hoodies and carried items. They share a body and reusable parts through Dream, with clothing attached to the bones that move it. [Build people in Dream](docs/dream/people.md).
 
-![The live character wardrobe](docs/media/people-wardrobe.png)
+![The shared character wardrobe in motion](docs/media/wardrobe.gif)
+
+[Wardrobe in HD](docs/media/wardrobe.mp4) · [All sixteen constructions](docs/media/people-wardrobe.png) · [Complete Dream source](docs/examples/city-person.dream)
 
 Walking and running tie their stride to distance travelled and character scale, with bent knees and articulated elbows. Walkers take longer steps, and sharp reversals keep a planted shoe in place instead of resetting it. Grounded feet keep their position and facing through turns and stops, including the instanced sidewalk crowds. Shoes now follow hills, visible pavement and low contact steps, with the pelvis adjusting so the legs keep their length. Returning feet move through a sharp turn instead of snapping to a new position, and take a recovery step before a leg overextends. Swimming alternates a crawl with upright treading when you stop. The same Dream bone bindings animate the city pedestrians. [Character rig and motion](docs/dream/behavior.md#humanoid-motion).
 
@@ -287,7 +361,7 @@ WASD walks, swims or drives. Space jumps on foot, a bicycle or skateboard, and g
 
 ## Walk into the market
 
-The market now has an actual doorway, walls and a supported floor. Walk in and the roof and near walls cut away, leaving the furniture and people visible. You can bake for wages, buy bread and eat from the foyer using the same finite stock as the people outside. The caretaker can reach damaged furniture inside through the doorway.
+The market now has an actual doorway, walls and a supported floor. Walk in and the roof and near walls cut away, leaving the furniture and people visible. The baker serves from inside, behind the existing table. Walk around it to bake for wages, buy bread and eat. Customers and supply workers use the same doorway and finite stock. The caretaker starts inside and can still reach the same damaged furniture and trees outside.
 
 You can sit on the market, park and station benches with **F**, then stand or
 move away when the exit is clear. **G** eats food you carry. The commuter buys a
@@ -301,9 +375,49 @@ Broken benches release their occupants; repaired ones work again.
 
 ![Inside the covered market](docs/media/interior.jpg)
 
-[Walkthrough](docs/media/interior.mp4) · [Night view](docs/media/interiornight.mp4) · [Author an interior in Dream](docs/dream/interiors.md)
+[Walkthrough](docs/media/interior.mp4) · [Earlier night view, before indoor service](docs/media/interiornight.mp4) · [Author an interior in Dream](docs/dream/interiors.md)
 
-This is the first usable ground floor. Multiple floors, stairs, lifts and a hand-tool control for furniture are still to come. Existing saves have an explicit upgrade; business state survives visiting and unloading the hall.
+Baking now depends on the table. Damage interrupts both your batch and the baker's,
+returning reserved ingredients and wages once. The caretaker repairs it from the
+same finite stock, then work resumes. The market worker now replenishes used repair kits from boards and fasteners, with the same paid recipe available to you. Paid station deliveries replenish both materials; the caretaker can fetch boards too. Dream uses the same `equipment` rule for
+food preparation and workshop jobs. [How to author it](docs/dream/commerce.md#work-needs-equipment).
+
+Felled mature trees can now supply a board while being replanted, when the bag
+and workshop have room. Carry it back and press **H** at the counter. The board
+only enters stock after handoff; the planting wage is paid once. Saplings need
+to finish growing before they can supply timber again. Players and caretakers
+share the same rule. [Write it in Dream](docs/dream/growth.md#timber-recovery).
+
+Fixture repairs can also return a fastener. It stays in the worker's bag until
+handoff, then goes into another repair kit. All 449 existing fixture targets use
+the same Dream policy; full storage still permits an ordinary repair.
+[Reuse hardware](docs/dream/businesses.md#reuse-fixture-hardware).
+
+You can now propagate a sapling into two at the market, earning two coins after
+twelve seconds. The original seed and wage reserve first. The vendor takes the
+same job when stock drops below five, then returns to food work. Larger baking
+batches stay available to you. [Nursery work in Dream](docs/dream/businesses.md#nursery-work).
+
+![Paid nursery work inside the market](docs/media/nursery.gif)
+
+[Nursery work in HD](docs/media/nursery.mp4). The seed and wage reserve first;
+completion replaces the input with two saplings and pays once.
+
+![Returning recovered timber to the workshop](docs/media/recovery.gif)
+
+[Timber handoff in HD](docs/media/recovery.mp4). This short recording shows the
+return action; its review setup uses a real impact and planting, then R and a
+walk through the market doorway.
+
+![Hit, repair and return to paid work](docs/media/hand.gif)
+
+You can now hit reachable props on foot with **K**. Break the table, choose its
+repair from **M → Work**, then go back to baking. Balls use their existing bounce
+rules. Walls, reach and cooldown still matter; K keeps its sports controls on the
+pitch. [Watch the sequence in HD](docs/media/hand.mp4) ·
+[Author the interaction in Dream](docs/dream/behavior.md#on-foot-strikes).
+
+This is the first usable ground floor. The home now has a usable upper floor and stairs. Lifts, handheld tools and furniture pickup are still to come. Existing saves have an explicit upgrade; business state survives visiting and unloading the hall.
 
 ## Get out and play
 
@@ -369,14 +483,15 @@ table still breaks independently. The live world uses shared table, bench, lamp 
 rules; supported benches can lose their boards while their base stays put.
 [How shared rules work](docs/dream/rules.md).
 
-All 413 streetlights can fall too. Their ground light pools turn off, and the
+All 416 streetlights can fall too. Their ground light pools turn off, and the
 damage stays after the district unloads or you reload the game. The caretaker
-can restore every one using real kits and paid work. Their models, collisions
+can restore all 416 lamps using real kits and paid work, including the three
+promenade lamps in the station quarter. Their models, collisions
 and light pools return together. They use connected sidewalks and crossings to reach distant jobs.
 Intact lamps stay instanced; active debris and cached meshes have fixed limits.
 [How pooled destruction works in Dream](docs/dream/rules.md#streetlights-and-streamed-destruction).
 
-All 345 measured trees follow the same falling rule. Their crowns keep moving in
+All 348 measured trees follow the same falling rule. Their crowns keep moving in
 the wind as the whole tree falls, and their materials and shadows stay attached.
 Intact trees remain instances. Falling copies reuse prepared geometry, within
 the existing destruction limits. The 239 trees outside declared work coverage
@@ -443,11 +558,11 @@ Agents can ask for just the language they need: `node scripts/dream.mjs context 
 
 The [checked examples](docs/dream/examples.md) also include a bouncing ball, breakable bench and swinging sign. The documentation uses Minimum Effort's Manrope and Archivo fonts, warm white, charcoal and yellow, with the same page gutters and spacing. Dream commands, fields, references, colors and expressions are highlighted, with copy buttons for complete examples.
 
-[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 1,773 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
+[Copy this tree](docs/examples/toppling-tree.dream), [build a breakable bench](docs/examples/breakable-bench.dream), or [open the complete world](src/scene/world/open-world.dream). The live mock has 1,784 placements, all authored in Dream 2. [Build the terminal](docs/examples/airport-terminal.dream) or [connect an airport and medical center to a bus service](docs/examples/airport-stop.dream).
 
 Streetlights now follow streets, bicycle and scooter parking sits beside destinations, and birds fly across sixteen habitats. Dream’s `furnish` and `flock` commands describe those populations with bounded rules.
 
-There are 131 residents, 60 additional ground animals and birds, 345 trees, 48 parked bicycles, 25 parked scooters and 14 parked cars alongside four road cars, five buses and boardable tram and rail services. 119 residents walk on the pedestrian network and 60 ground animals and birds roam and react nearby. Twelve people retain their individual NPC routines. The new populations share complete instanced models; the existing NPC and CPU rig limits stay the same. [See how populations work](docs/dream/populations.md). The movement checks reuse exact body radii, enclosing contact queries and numeric spatial cells. The [matched replay](docs/evidence/movement-queries/verification.md) checks every step against the same paths and saved results.
+There are 141 residents, 60 additional ground animals and birds, 348 trees, 48 parked bicycles, 25 parked scooters and 22 parked cars/utility rides alongside four road cars, five buses and boardable tram and rail services. 129 residents walk on the pedestrian network and 60 ground animals and birds roam and react nearby. Twelve people retain their individual NPC routines. The new populations share complete instanced models; the existing NPC and CPU rig limits stay the same. [See how populations work](docs/dream/populations.md). The movement checks reuse exact body radii, enclosing contact queries and numeric spatial cells. The [matched replay](docs/evidence/movement-queries/verification.md) checks every step against the same paths and saved results.
 
 ![People walk along the connected pavement](docs/media/pedestrians.gif)
 
@@ -514,7 +629,95 @@ Cylinder `part` and `beam` commands accept a bounded `taper` ratio, so a trunk c
 
 ![Trees, a plane, car, person, bicycle, bench, skateboard and bread shown at the same physical scale](docs/media/proportions.jpg)
 
+## When it rains
+
+The city also has an [authored rain cycle](docs/dream/weather.md). Roads get wet,
+braking and tire grip change, and outdoor maintenance can wait for dry weather.
+Committed jobs finish with their supplies and wages intact. Indoor school
+repairs stay available. It is still a bounded mock, without general shelter
+search, puddles or seasons. A configured resident can now [wait out a shower
+upstairs](docs/dream/shelter.md), using the same seats and stairs as you.
+
+![Waiting upstairs until the shower passes](docs/media/shelter.jpg)
+
+[Watch the shelter trip](docs/media/shelter.mp4) · [GIF](docs/media/shelter.gif) · [Write it in Dream](docs/examples/rain-shelter.dream)
+
+![Rain builds over the city as the car sets off on wet roads](docs/media/weather.gif)
+
+## Food for a long job
+
+The caretaker and school courier can now pack a portion before leaving, using
+their own wages and real counter stock. They eat from their own bag when hungry
+without dropping a job or opening sealed delivery cargo. You can also press G
+to eat carried food during work or a repair, keeping the task and its reserved
+supplies. [The Dream policy and runnable example](docs/dream/commerce.md#worker-provisions).
+
+## Take a break at school
+
+The Garden school's ground floor now opens onto its existing entrance path.
+Walk inside, take a bench and share the bread you brought with the teacher after
+school closes at 17:00. They walk indoors for their break, eat through the same
+food rules and remember the meal. Damaged benches and tables use the existing
+kits, caretaker and paid repair system.
+
+![A shared meal in the school common room](docs/media/schoolroom.gif)
+
+[Watch the common room](docs/media/schoolroom.mp4) · [Build the school](docs/examples/enterable-school.dream) · [Interiors](docs/dream/interiors.md#the-school-common-room)
+
+## Come home from the market
+
+The commuter now has a workday. After food and rest, they walk to the bakery,
+wait when there is nothing to make, and take a real job when demand appears.
+Finished batches earn wages and practice. Waiting earns nothing. At 20:00 they
+finish any committed batch and walk home; hunger and low energy can bring them
+home earlier.
+
+![The commuter finishing a paid batch and leaving at the end of the workday](docs/media/attendance.gif)
+
+[Watch the workday](docs/media/attendance.mp4) · [Write a schedule in Dream](docs/dream/attendance.md) · [Runnable world](docs/examples/scheduled-workday.dream)
+
+The commuter now buys a packed lunch and brings it home to the settee. Sit on
+one cushion and they can take the other. Dream lists preferred furniture first;
+if the home settee is unavailable, they try the hall bench, then eat standing.
+Food and money stay finite, and saved meals keep their progress.
+[Author seat preferences](docs/examples/seat-preferences.dream).
+
+![The player and commuter occupy different cushions during a paid meal at home](docs/media/home-meal.png)
+
+[Checks and saved-state evidence](docs/evidence/home-meals/verification.md).
+
+The market commuter now walks through a real doorway at the end of the existing
+route. You can enter the same ground floor, sit on either side of the timber
+settee and break its frame, table or planter. The caretaker uses the same paid
+repair kits and recovered hardware as the rest of the neighborhood.
+
+![Historical ground-floor walkthrough, before the upper floor opened](docs/media/home.gif)
+
+[Walkthrough](docs/media/home.mp4) · [Build the home](docs/examples/enterable-home.dream) · [Interior rules](docs/dream/interiors.md#the-commuters-home)
+
+The upstairs room now has a purpose. The commuter walks up the actual stairs,
+claims a cushion and rests. You can join them on the other cushion. Break the
+furniture and the caretaker carries supplies upstairs to repair it, earning a
+wage through the same finite ledger used downstairs. Reload during the trip and
+it carries on from the saved floor and step.
+
+![The resident climbing upstairs and settling on the settee](docs/media/upstairs.gif)
+
+[Walkthrough](docs/media/upstairs.mp4) · [Runnable Dream world](docs/examples/upstairs-rest.dream) · [Named floors](docs/dream/floors.md)
+
+Dream names existing slabs, binds props to them and lets rest/repair plans use
+those floors. It does not invent routes through the ceiling. Lifts, bedrooms,
+sleeping, upstairs businesses and property permissions remain work to do.
+
 ## Run it
+
+World acceptance now reuses checked edges of immutable work-route graphs.
+A local three-run Node comparison reduced median complete-world compilation
+from 7.18 to 5.45 seconds on an M3 Ultra. Gameplay still checks current vehicles,
+damage and actors; world data and save fingerprints match exactly. These are
+compiler timings, without a measured browser or full-test-suite speedup.
+[Samples and boundaries](docs/evidence/route-edge-cache/verification.md).
+
 
 ```sh
 git clone https://github.com/minimumeffort-dev/muse.dream.git
@@ -565,16 +768,30 @@ node scripts/dream.mjs check docs/examples/toppling-tree.dream
 Check the full world, including its module libraries and road/route validation:
 
 ```sh
-node scripts/dream.mjs check src/scene/world/open-world.dream --modules src/scene --modules src/scene/world
+npm test -- tests/world-layout.test.ts --maxWorkers=2 --testTimeout=60000
 ```
 
 [The docs](docs/README.md) cover composition, physical size, terrain, water, routes and destruction. For model integration, start with the [authoring instructions](docs/dream-v2-model.txt) and [generated command contract](docs/dream-v2-contract.json). Dream 2 source compiles to validated scene data; generated code never runs.
 
 ```sh
+npm test -- tests/propagation.test.ts --maxWorkers=2 --testTimeout=60000
+npm run test:watch -- tests/propagation.test.ts # Keep selected checks running
+npm run build      # TypeScript + production build, including typecheck
 npm run docs:build # Highlighted static docs in dist-docs/
-npm test       # Compiler, scene, simulation and rendering behavior
-npm run build  # TypeScript + production build
 ```
+
+Use the test files for the behavior you're changing, including its neighboring
+regressions. Behavior suites can reuse one validated, immutable world per
+file while creating fresh simulation state and storage for each case. The
+[equipment/repair-kit checks](docs/evidence/test-world-setup/verification.md)
+kept all 13 cases and fell from 16.21 to 10.85 seconds in one local paired run.
+Compiler determinism checks still rebuild the world. Watch mode keeps the test process running between edits. Run the
+complete suite before a merge/release or after broad compiler, physics or save
+changes: `npm test -- --maxWorkers=2 --testTimeout=60000`. Reuse passing checks
+until their code changes. Documentation-only edits need documentation checks;
+they do not need a game build or gameplay run when those inputs are unchanged.
+The published-site test already builds the docs, so that build counts too.
+[Choose checks by change](docs/agent-workflow.md#check-selection).
 
 The engine is split between [`src/scene`](src/scene), [`src/sim`](src/sim) and [`src/game`](src/game). [Current limits](docs/dream/reference.md#runtime-boundaries) include one driving height per XY, cylinder-based contacts and cosmetic debris. Water has surface waves and currents, rather than a volumetric fluid solver.
 
@@ -595,8 +812,56 @@ The baker and school staff use the same capability on their own grounds and
 schedules. An offer needs food, a free adjacent seat and time before work.
 Leaving early returns unfinished portions to their owner while the other person
 walks home. History, purchases and invitations survive travel, streaming and
-saves. NPC-to-NPC invitations, dating and a general relationship system remain
-to be built.
+saves. Residents can also [share meals with authored companions](docs/dream/companions.md),
+using finite food, free seats and their existing off-duty time. Dating and a
+general relationship system remain to be built.
+
+## Work at the workbench
+
+The hall now has a [workshop loft](docs/dream/upstairs-work.md). Kit assembly and
+sapling work happen upstairs; food stays below. You and the baker use the actual
+stairs and the same finite stock, wages and bench claims. Break the workbench
+and the existing indoor repair service can restore it.
+
+Walk to the bakery's marked preparation table and start a batch. Your character
+faces the surface and works with planted feet. Baking kneads, lunch packing folds,
+kit assembly fastens and planting tends. Those motions are bounded Dream data,
+shared by the player and workers. The baker walks to the same
+station. Different recipes share its capacity, so changing jobs cannot put two
+people in one place. Leaving early or breaking the table refunds the batch.
+
+![Climbing to the workshop loft and assembling a repair kit](docs/media/loft.jpg)
+
+[Watch the climb and work](docs/media/loft.mp4) · [GIF](docs/media/loft.gif)
+
+The earlier flat-hall recording below still shows the work gestures.
+
+![Working at the bakery preparation table before the loft](docs/media/workstations.jpg)
+
+[Watch the work](docs/media/workstations.mp4) · [GIF](docs/media/workstations.gif) · [Author a workstation](docs/dream/workstations.md) · [Author work motions](docs/dream/work-gestures.md)
+
+## Make time for company
+
+The baker and commuter now have a reason to share a break beyond hunger. Company
+falls with simulation time and recovers when two people finish a real meal.
+They prepare paid food before the shop closes when needed, keep their duties and
+use ordinary free seats. You use the same need; open **I** to see it in Bag.
+
+![A real break restores both participants company](docs/media/company.jpg)
+
+[Watch](docs/media/company.mp4) · [GIF](docs/media/company.gif) · [Write the rule in Dream](docs/dream/company.md)
+
+## Learn a recipe over lunch
+
+Share a real meal with the baker and you can take the larger bread batch, even
+with no baking history. Completing three ordinary batches still works too.
+The meal uses paid food; the job uses real flour and pays only when finished.
+
+![The larger bread batch unlocked by a shared meal](docs/media/sharedrecipe.jpg)
+
+[Watch the job](docs/media/sharedrecipe.mp4) · [GIF](docs/media/sharedrecipe.gif) · [Write the rule in Dream](docs/dream/relationships.md)
+
+This earlier recording shows recipe access. The workshop loft recording above shows the current hall layout.
 
 ## Own a business
 
@@ -616,3 +881,43 @@ or [run the complete bakery example](docs/examples/business-ownership.dream).
 [Ownership in HD](docs/media/business.mp4). This 20-second recording buys the
 depot before a courier hands over two repair kits, then shows its cash after a
 deposit and withdrawal. The supplier receives six credits only at handoff.
+
+
+## A break with a neighbor
+
+The baker can share food with the commuter or caretaker. They pay from their own
+accounts, walk to a pair of free seats, eat and return to their routines. Busy
+residents finish their existing commitments. Meals stay in their saved history. A completed break between the baker and
+commuter now qualifies both for the larger bread recipe, while your own progress
+keeps its existing meaning. They return to work and use actual flour and wages;
+the memory itself pays nothing. [Author the consequence in Dream](docs/dream/companion-recipes.md).
+
+Sitting and standing now ease the body and take short steps, with the same motion
+for you and the residents. [Watch the current seat transitions](docs/dream/seating-motion.md).
+
+![Residents sharing an evening break](docs/media/companions.jpg)
+
+[Watch](docs/media/companions.mp4) · [GIF](docs/media/companions.gif) · [Author companions](docs/dream/companions.md)
+
+
+### A meal can also be a rest
+
+Energy-enabled residents now recover while actually seated for a solo or shared
+meal, using the same rule as the player. Walking to a reserved seat still costs
+energy; broken furniture stops recovery. Food, Company and remembered meals keep
+their existing completion rules. Old saves retain every value and pending trip.
+[Rest rules and runnable example](docs/dream/resting.md#a-meal-is-also-a-seated-break).
+
+### Less repeated work before the first view
+
+Startup now reuses unchanged static prop fits while preparing older save worlds.
+Props near a changed interior floor still recompute. Two local warm-cache browser
+starts reached the complete view in 16.2–16.5 seconds, compared with 17.9–18.1
+before, with an identical captured image and geometry buffers. Main-thread
+loading gaps still need work. [Measurements and limits](docs/evidence/startup-preparation/verification.md).
+
+### A shared break upstairs
+
+The baker and commuter now use the home's upper settee for a real shared meal.
+They walk the stairs, claim separate seats, eat their paid food and return.
+Old saved meals keep their original seats. [Watch it and build the same activity in Dream](docs/dream/upstairs-social.md).

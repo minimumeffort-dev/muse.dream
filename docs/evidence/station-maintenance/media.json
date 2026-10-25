@@ -1,0 +1,37 @@
+{
+  "source": {
+    "frames": 360,
+    "width": 2400,
+    "height": 1350,
+    "renderedFps": 30,
+    "inspectedFrames": [
+      0,
+      180,
+      359
+    ],
+    "stillFrame": 300
+  },
+  "outputs": {
+    "gif": {
+      "bytes": 6556203
+    },
+    "mp4": {
+      "bytes": 898471
+    },
+    "jpg": {
+      "bytes": 77950
+    }
+  },
+  "gif": {
+    "frames": 360,
+    "width": 1280,
+    "height": 720
+  },
+  "video": {
+    "frames": 360,
+    "width": 1600,
+    "height": 900
+  },
+  "acceptedWorld": "910bdcc30bce4f13de0c4f7ec52995d8e1c0383520b86e8346505c75a61df02f",
+  "method": "dev capture exporter,30 rendered frames per simulation second; no interpolation or live FPS claim"
+}

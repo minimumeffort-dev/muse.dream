@@ -1,0 +1,12 @@
+ RERUN  docs/dream-v2-model.txt x4
+        Filename pattern: tests/social-qualifications.test.ts, tests/progression.test.ts, tests/shared-meal.test.ts, tests/hosted-meal.test.ts
+
+ ✓ tests/progression.test.ts (6 tests) 79ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  04:52:30
+   Duration  238ms
+
+ PASS  Waiting for file changes...
+       press h to show help, press q to quit

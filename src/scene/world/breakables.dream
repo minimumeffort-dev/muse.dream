@@ -27,8 +27,16 @@ place park_wall_east(object=a_garden_wall,at=[7550,7460],heading_deg=0);
 // Interior furniture uses the same category rules and repair supply as the square.
 place hall_table_west(object=a_breakaway_table,at=[6338,4455],heading_deg=90);
 place hall_table_east(object=a_breakaway_table,at=[6455,4455],heading_deg=0);
+place hall_workbench(object=a_breakaway_table,at=[6470,4490],heading_deg=180,role=prop,floor=hall_loft);
 place hall_bench(object=a_slatted_bench,at=[6380,4500],heading_deg=180);
 place hall_produce_crate(object=a_produce_crate,at=[6440,4440],heading_deg=0);
 
 // Paired seating on the existing school yard, beside the staff break point.
 place school_bench(object=a_slatted_bench,at=[4330,3890],heading_deg=180);
+
+// Shared common-room furniture, with the same seating and damage rules as outdoors.
+place school_common_bench(object=a_slatted_bench,at=[4395,3610],heading_deg=0);
+place school_reading_bench(object=a_slatted_bench,at=[4480,3610],heading_deg=0);
+place school_rear_bench(object=a_slatted_bench,at=[4395,3680],heading_deg=180);
+place school_table_west(object=a_breakaway_table,at=[4395,3645],heading_deg=0);
+place school_table_east(object=a_breakaway_table,at=[4480,3645],heading_deg=0);

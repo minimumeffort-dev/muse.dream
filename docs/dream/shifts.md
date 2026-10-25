@@ -1,12 +1,12 @@
 # People leave work
 
-The counter closes. The baker finishes the batch already underway, walks into
-the market hall and rests. Before morning service, they walk back. A clock alone
+The counter closes. The baker finishes the batch already underway, leaves the indoor counter
+and walks to the hall's rest area. Before morning service, they walk back. A clock alone
 cannot serve a customer: the counter waits if its owner has not arrived.
 
-![The baker walking away after closing](../media/shifts.gif)
+![The current indoor workplace](../media/interior.jpg)
 
-[HD recording](../media/shifts.mp4) · [Complete runnable world](../examples/staff-shifts.dream)
+[Current counter walkthrough](../media/interior.mp4) · [Earlier closing-shift recording, before indoor service](../media/shifts.mp4) · [Complete runnable world](../examples/staff-shifts.dream)
 
 ## Give a shift a destination
 
@@ -75,10 +75,16 @@ in simulation state. Walking away, chunk unloading, R and saving do not reset
 them. Pause freezes them; Start over starts a new world. Blocked journeys wait and
 replan through the same contacts rather than teleporting.
 
+The renderer follows actual commerce timestamps, including extra updates caused
+by player actions. It keeps the existing quarter-second visual delay; walking
+contacts and saved positions stay authoritative. Finishing work or resuming a
+walking route does not reset the visible stride.
+[Motion verification](../evidence/worker-continuity/verification.md).
+
 Save format 13 / simulation 20 validates the registered r62 world before retaining
 every saved field and both clocks. The original slot remains. The school path's
 two sections retain its old paved footprint, and the teacher's work anchor is
 centered on the existing entrance. [Persistence](../persistence.md) ·
 [Verification and limits](../evidence/staff-shifts/verification.md).
 
-Off-duty staff can now join [shared meals](social.md) at their break destinations. Current saves use format 14 / simulation 21; the shift upgrade above remains in the preserved migration chain.
+Off-duty staff can now join [shared meals](social.md) at their break destinations. Current saves use format 18 / simulation 34; the shift upgrade above remains in the preserved migration chain.

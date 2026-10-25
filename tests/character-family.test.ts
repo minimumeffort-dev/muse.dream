@@ -10,12 +10,12 @@ import {hasAnimatedJoints} from '../src/scene/object-dsl';
 import {HUMANOID_BONES} from '../src/scene/humanoid';
 
 it('ships the exact live wardrobe as a complete bounded runnable example',()=>{
- expect(family).toBe(live);const a=compileDreamWorld(family),b=compileDreamWorld(formatDream(family));expect(b).toEqual(a);expect(a.assemblies).toHaveLength(12);
+ expect(family).toBe(live);const a=compileDreamWorld(family),b=compileDreamWorld(formatDream(family));expect(b).toEqual(a);expect(a.assemblies).toHaveLength(16);
  const shapes=new Set<string>();
  for(const spec of a.assemblies){
   expect(spec.parts.length).toBeGreaterThanOrEqual(27);expect(spec.parts.length).toBeLessThanOrEqual(32);
-  expect(spec.joints!.map(j=>j.bone).sort()).toEqual([...HUMANOID_BONES].sort());
-  shapes.add(JSON.stringify(spec.parts.map(({id,material,parent,...geometry})=>({...geometry,parent:spec.joints!.find(j=>j.id===parent)?.bone}))));
+  if(spec.displayName==='Traveler')expect(spec.joints??[]).toHaveLength(0);else expect(spec.joints!.map(j=>j.bone).sort()).toEqual([...HUMANOID_BONES].sort());
+  shapes.add(JSON.stringify(spec.parts.map(({id,material,parent,...geometry})=>({...geometry,parent:spec.joints?.find(j=>j.id===parent)?.bone}))));
  }
  expect(shapes.size).toBeGreaterThanOrEqual(10);
 });
@@ -29,10 +29,10 @@ it('changes only the 133 existing person visuals while retaining all other world
 });
 it('keeps the independently measured passenger inside the existing seat envelope with a matching physical head',()=>{
  const seated=interactiveWorld.assemblies.find(a=>a.displayName==='Traveler')!,standing=interactiveWorld.assemblies.find(a=>a.displayName==='Explorer')!,bounds=assemblyBounds(seated);
- expect(seated.joints??[]).toHaveLength(0);expect(seated.parts).toHaveLength(30);expect(bounds.min.y).toBeCloseTo(-16,5);expect(bounds.max.y).toBeCloseTo(34.5,5);expect(bounds.min.x).toBeGreaterThanOrEqual(-10-1e-5);expect(bounds.max.x).toBeLessThanOrEqual(19+1e-5);expect(Math.max(Math.abs(bounds.min.z),Math.abs(bounds.max.z))).toBeLessThanOrEqual(7.55+1e-5);
+ expect(seated.joints??[]).toHaveLength(0);expect(seated.parts).toHaveLength(31);expect(bounds.min.y).toBeCloseTo(-16,5);expect(bounds.max.y).toBeCloseTo(34.5,5);expect(bounds.min.x).toBeGreaterThanOrEqual(-10-1e-5);expect(bounds.max.x).toBeLessThanOrEqual(19+1e-5);expect(Math.max(Math.abs(bounds.min.z),Math.abs(bounds.max.z))).toBeLessThanOrEqual(7.55+1e-5);
  expect(measuredScale(seated)).toBeCloseTo(12.5/50.5,7);expect(seated.body.colliderRadius*measuredScale(seated)).toBeCloseTo(8*12.5/50.5,7);expect(seated.body.colliderHeight!*measuredScale(seated)).toBeCloseTo(42*12.5/50.5,7);
  const volume=(p:typeof seated.parts[number])=>p.size.reduce((a,b)=>a*b,1);
- const head=(spec:typeof seated)=>spec.parts.filter(p=>p.shape==='box' && p.position[1]>20).sort((a,b)=>volume(b)-volume(a))[0]!;
+ const head=(spec:typeof seated)=>spec.parts.filter(p=>p.position[1]>20).sort((a,b)=>volume(b)-volume(a))[0]!;
  expect(head(seated)).toBeDefined();expect(head(standing)).toBeDefined();
  for(const axis of [0,1,2])expect(head(seated).size[axis]!*measuredScale(seated)).toBeCloseTo(head(standing).size[axis]!*measuredScale(standing),6);
 });

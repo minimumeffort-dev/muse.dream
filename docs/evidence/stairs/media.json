@@ -1,0 +1,25 @@
+{
+  "clip": "stairs",
+  "sourceFrames": 360,
+  "renderedFramesPerSimulationSecond": 30,
+  "video": {
+    "width": 1600,
+    "height": 900,
+    "frames": 360,
+    "fps": 30,
+    "durationSeconds": 12
+  },
+  "gif": {
+    "width": 1280,
+    "height": 720,
+    "frames": 360
+  },
+  "posterSourceFrame": 150,
+  "bytes": {
+    "mp4": 3495635,
+    "gif": 22343369,
+    "jpg": 121757
+  },
+  "environment": "macOS arm64, Node v26.8.1",
+  "performanceClaim": "Offline rendered export, not a measurement of live browser performance."
+}

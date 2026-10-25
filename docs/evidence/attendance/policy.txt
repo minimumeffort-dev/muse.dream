@@ -1,0 +1,12 @@
+> muse-dream@0.1.0 test
+> vitest run tests/work-attendance.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/work-attendance.test.ts (12 tests) 345ms
+
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+   Start at  03:25:22
+   Duration  1.10s (transform 394ms, setup 9ms, collect 631ms, tests 345ms, environment 0ms, prepare 26ms)

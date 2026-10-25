@@ -4,11 +4,12 @@ Build a body once, then dress it in components. A coat moves with the chest. A
 bag moves with the hand carrying it. Hair, glasses and a hat belong to the head's
 frame. The engine owns walking, running, swimming and sports poses.
 
-![The twelve live character variants composed in Dream](../media/people-wardrobe.png)
+![Sixteen shared character constructions in Dream](../media/people-wardrobe.png)
 
 The [complete example](../examples/city-person.dream) is the live city's character
-library: twelve templates with short and long hair, curls, ponytails, facial hair,
-glasses, uniforms, coats, aprons, skirts, hoodies, backpacks and carried items.
+library: twelve civic and squad outfits, two court-side athletes, the standing
+Explorer and seated Traveler. They share short and long hair, ponytails, facial
+hair, glasses, uniforms, coats, aprons, skirts, hoodies, backpacks and carried items.
 These are handmade voxel assemblies. No model call or imported character pack is
 involved.
 
@@ -78,10 +79,39 @@ hair, shoes against ankles, and carried items against their grip. Then inspect
 walking, running, sitting and swimming. Clothing is rigid geometry attached to
 bones; there is no cloth simulation or character editor yet.
 
-The live templates have 27..32 parts each. Existing people and shared sports
+The sixteen templates have 27..32 parts each. The fifteen moving forms keep
+twelve bones; the passenger has 31 static parts. Existing people and shared sports
 squads use their current owners and budgets. Ambient walkers remain instanced;
 adding an outfit does not add a per-person CPU rig. The seated passenger remains
 a static pose inside the occupied vehicle.
 
 [Compile the character library](../examples/city-person.dream) ·
 [Construction and persistence checks](../evidence/character-wardrobe/verification.md)
+
+## Reuse a complete person
+
+The city, sports library and engine player now import the same `city_people`
+module. This is a complete example using two host-listed definitions:
+
+```dream
+dream 2;
+asset explorer(module=city_people,object=walker);
+asset passenger(module=city_people,object=traveler);
+```
+
+It matches [character-import.dream](../examples/character-import.dream). Check it
+with `node scripts/dream.mjs check docs/examples/character-import.dream --modules src/scene/world`.
+The host supplies module text. These names do not resolve URLs or filesystem
+paths inside the compiler. `asset` imports an object, while components remain
+local to their module. All source, definition and expansion budgets still apply.
+
+The common body uses shaped shoulders, a fitted waist, tapered limbs and
+chamfered soles. A single face component supplies ears, brows, eyes, nose and
+mouth to standing and seated forms. Hair wraps around that face; the straw hat
+has a separate thin brim and crown. Coats, aprons and carried items remain rigid
+parts attached to bones. There is no cloth, finger or facial-expression simulation.
+
+![The shared wardrobe in motion](../media/wardrobe.gif)
+
+[Turntable in HD](../media/wardrobe.mp4) ·
+[Four-angle, motion, resource and save checks](../evidence/character-construction/verification.md).

@@ -74,6 +74,79 @@ The user also gave standing authorization to commit and push every completed
 change after verification and required documentation updates. Follow the Git
 workflow in `AGENTS.md`; pushes can trigger the linked Vercel deployment.
 
+## Development loop
+
+Choose the check scope before running commands. State the behavior being changed,
+the selected files and what will count as finished. Finish that slice, then push.
+
+### Check selection
+
+| Change | Local verification before push |
+|---|---|
+| Documentation or agent instructions only | Build the published docs and run affected documentation checks. No game build, gameplay suite or media export when their inputs are unchanged. |
+| One simulation behavior | Run its named test files and neighboring regressions. Use typecheck or build as appropriate. Verify the changed flow in the browser. |
+| Assets, rendering or HUD | Run affected geometry/control checks and inspect the current flow in the browser. Export one representative sequence when existing media becomes inaccurate. |
+| Broad compiler, physics or save changes | Run the full suite and relevant browser checks. Complete migration checks for changed save semantics. |
+| Merge or release | Run the full suite once and the production build. Reuse results if no relevant code changes afterward. |
+
+Avoid duplicate work: `build` includes typecheck, and the published-site test
+already builds the docs. A passing check can serve both purposes. Keep the complete
+suite in CI. For a command lasting more than a minute, explain its scope and give
+a progress update without starting a duplicate run. Command time is only part of
+the feedback loop; unnecessary planning and expanding the slice delay shipping too.
+
+### During edits
+
+Start with the affected test files and neighboring regressions. For repeated
+edits, keep them in one Vitest process:
+
+```sh
+npm run test:watch -- tests/propagation.test.ts
+```
+
+Vitest reruns selected tests when their dependencies change. Press `r` to rerun
+the selection and `q` to quit. Watch mode keeps transforms warm; tests still run
+in isolation and may rebuild their world fixtures. It does not cache a passing
+result across code changes or replace the full-suite gate.
+
+Within a behavior file, lazily reuse its accepted immutable world and create new
+simulation state and storage for each case. Guard the shared scene against
+mutation. Keep compiler-acceptance and deterministic-rebuild checks fresh, and
+keep test fixture reuse out of the production compiler. The equipment and
+repair-kit suites now remove one duplicate full-world build each. Their same
+13 checks took 16.21 seconds before and 10.85 after in a local paired run;
+[method and raw reports](evidence/test-world-setup/verification.md). This does not
+measure the full suite, browser startup or rendering performance.
+The six live driving routes now also share one accepted immutable city per file,
+with after-each mutation guards and fresh masks/car state. The same 26 checks
+took 22.38 seconds before and 10.21 after in one local pair.
+[Driving setup evidence](evidence/route-test-setup/verification.md).
+
+Run the complete suite before merging/releasing or after broad compiler,
+physics or save changes. The [r90 run](evidence/nursery/verification.md) covered
+1,719 tests in 500.50 seconds, with three historical-version assertion failures
+then corrected and checked in the affected files. That is a recorded full-run
+duration, not a watch-mode speed measurement.
+
+The [r92 run](evidence/worker-rations/verification.md) covered 1,738 tests in
+528.35 seconds. Four outdated documentation/world assertions were corrected
+and passed in focused reruns, without restarting the full suite. The seven
+worker-provision checks took 1.03 seconds in a separate process. These are
+different scopes on the same local machine, not a measured watch-mode gain.
+Close agent-owned world review tabs while changing shared source to avoid
+repeated worker/chunk/shader startup, then open one stable runtime review.
+Keep user-owned tabs open.
+
+`npm run build` already runs typecheck, so do not run both for unchanged code.
+Build docs once after the slice's documentation is ready. Keep accurate existing
+captures when rendering and controls are unchanged; a visual change needs one
+representative current flow with its video, GIF and still refreshed together.
+Explain the need before starting a full suite or motion export. A successful
+branch push does not need to wait for unrelated deployment or CI completion.
+
+This workflow change alters no game behavior or visuals; existing product
+screenshots and recordings remain accurate. No new captures are needed.
+
 ## Evidence requirements
 
 - The Pages build job allows 30 minutes for dependency installation, the complete

@@ -12,6 +12,14 @@ export function poseSportBall(group:THREE.Group,spin:THREE.Quaternion,radius:num
   group.position.add(center).sub(new THREE.Vector3(0,radius,0).applyQuaternion(group.quaternion));
 }
 
+/** A carried ball has zero physical velocity; visible travel still rolls its leather. */
+export function rollSportBall(group:THREE.Group,point:{x:number;y:number},radius:number,enabled:boolean){
+  const rotation=group.userData.ballRotation??=new THREE.Quaternion(),previous=group.userData.ballPrevious as {x:number;y:number}|undefined;
+  const dx=previous ? point.x-previous.x : 0,dy=previous ? point.y-previous.y : 0,travel=Math.hypot(dx,dy);
+  if(enabled && travel>1e-6 && travel<100)rotation.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(-dy,0,dx).normalize(),travel/radius));
+  group.userData.ballPrevious={x:point.x,y:point.y};poseSportBall(group,rotation,radius);
+}
+
 /** Two shared draws for the active ball and an obstacle-free shot preview. */
 export class SportsVisuals {
   readonly group=new THREE.Group();

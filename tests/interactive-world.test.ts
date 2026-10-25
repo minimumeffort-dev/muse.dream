@@ -1,3 +1,4 @@
+import characters from "../src/scene/world/city_people.dream?raw";
 import { describe,it,expect } from "vitest";
 import { Box3,Mesh,Quaternion,Vector3 } from "three";
 import source from "../src/scene/interactive-world.dream?raw";
@@ -36,7 +37,7 @@ const at=(x:number,y:number,headingRad=0):CarState=>({...createCarAtSpawn(doc),x
 
 describe("Dream world authoring",()=>{
   it("compiles eleven assemblies, routes, placements and a rounded watercourse from the same source",()=>{
-    expect(compileDreamWorld(source)).toEqual(interactiveWorld);
+    expect(compileDreamWorld(source,{city_people:characters})).toEqual(interactiveWorld);
     expect(interactiveWorld.assemblies).toHaveLength(11);expect(interactiveWorld.routes).toHaveLength(5);
     expect(interactiveWorld.objects).toHaveLength(9);expect(interactiveWorld.waters).toHaveLength(1);
     for(const object of interactiveWorld.objects)expect(doc.objects.some(o=>o.id===object.id),object.id).toBe(true);

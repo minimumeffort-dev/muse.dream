@@ -1,3 +1,4 @@
+import characters from "../src/scene/world/city_people.dream?raw";
 import {describe,it,expect} from 'vitest';
 import source from '../src/scene/world/sports_assets.dream?raw';
 import {compileDream,compileDreamWorld,formatDream,checkDream} from '../src/scene/dream';
@@ -12,11 +13,11 @@ import {activeSport,stepSports,cancelSportAction,sportCharge} from '../src/sim/s
 import {buildPaperMask} from '../src/sim/mask';
 import {sportCameraFrame} from '../src/game/camera';
 import {mapDestinations} from '../src/game/navigation';
-import {poseSportBall} from '../src/game/sports';
+import {poseSportBall,rollSportBall} from '../src/game/sports';
 import {buildObject} from '../src/game/world3d';
 import {Quaternion,Vector3} from 'three';
 
-const assemblies=compileDream(source),idle={steer:0,throttle:0},DT=1/120;
+const assemblies=compileDreamWorld(source,{city_people:characters}).assemblies,idle={steer:0,throttle:0},DT=1/120;
 const place=(id:string,label:string,x:number,y:number,headingRad=0):SceneObject=>{
   const spec=assemblies.find(a=>a.displayName===label)!;
   return {id,labelText:label,kind:'custom',role:'prop',spec,scale:measuredScale(spec),x,y,headingRad};
@@ -142,5 +143,12 @@ describe('walk-up sports',()=>{
     const before=group.localToWorld(new Vector3(0,4,0));
     poseSportBall(group,new Quaternion().setFromAxisAngle(new Vector3(1,0,1).normalize(),2.4),object.scale*4);group.updateMatrixWorld(true);
     expect(group.localToWorld(new Vector3(0,4,0)).distanceTo(before)).toBeLessThan(1e-7);
+  });
+  it('rolls carried balls by visible travel, freezing during pause and skipping reset teleports',()=>{
+    const group=buildObject(scene.objects[0]!),radius=scene.objects[0]!.scale*4;
+    rollSportBall(group,{x:0,y:0},radius,true);rollSportBall(group,{x:radius,y:0},radius,true);
+    const spin=group.userData.ballRotation as Quaternion;expect(spin.angleTo(new Quaternion())).toBeCloseTo(1);
+    const before=spin.clone();rollSportBall(group,{x:radius*2,y:0},radius,false);expect(spin.angleTo(before)).toBeLessThan(1e-7);
+    rollSportBall(group,{x:1000,y:0},radius,true);expect(spin.angleTo(before)).toBeLessThan(1e-7);
   });
 });

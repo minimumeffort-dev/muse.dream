@@ -1,5 +1,106 @@
 # Leave and come back
 
+The current world is r113, using format 19 / simulation 53. Its registered r112
+upgrade adds only the four authored junction crossings. Restore first validates
+the exact prior world, then maps ambient node and previous-node indices onto the current pedestrian graph. Member positions, travel, seeded choices and
+clocks remain; no population restarts. Coordinate work, repair, courier and meal
+paths stay intact, along with damage, claims, resources and completion history.
+Existing journeys finish their saved route; future choices can use the crossings.
+No offline travel, new stock or replayed wages occurs. The original slot and the
+earlier migration chain remain available.
+[Crossing migration evidence](evidence/crossing-access/verification.md).
+
+The r112 world also uses format 19 / simulation 53. Its registered r111
+upgrade extends two existing repair services to the station quarter. It validates
+the exact prior world first and retains every saved field, including damage,
+growing trees, reserved supplies, worker paths, clocks and completion history.
+Four unpainted work areas change local service coverage; contacts and the public
+pedestrian graph stay identical. No new stock, wages, actors or progress is seeded.
+The original slot remains available. [Maintenance evidence](evidence/station-maintenance/verification.md).
+
+The registered r110
+upgrade adds the station quarter without new starting money, stock, jobs or
+completion credit. Old saves validate against the exact released world first.
+Derived walking targets rebase onto the new connected graph, eight new visitors
+initialize at saved time, and old clocks and resources stay intact. New parking
+seeds yield to saved rides. A previously clear parked ground ride blocked by new
+construction recovers nearby, retaining its identity, heading and wheel travel.
+The original slot stays available. [The station quarter](dream/station-quarter.md).
+
+The r110 upgrade still connects resident meals to upstairs seats while retaining
+unfinished downstairs meetings. Earlier registered migrations remain available.
+
+The r109 world uses format 19 / simulation 52. The exact r108 upgrade is rules-only: it preserves every saved field, unfinished meal, seat claim and original slot, without time advance or retrospective recovery. Energy-enabled NPCs now recover on actual solo/companion eating seats through the same authored rule as the player.
+
+The simulation 51 upgrade remains registered. The exact r107 upgrade
+initializes only the player, baker and commuter company values at saved time.
+Existing money, stock, needs, paths, claims and history stay intact; pending
+meals earn company only when finished. No offline catch-up or reward replay.
+Original slots remain intact. [Company](dream/company.md).
+
+The r107 world uses format 19 / simulation 50. Its exact r106 upgrade opens
+the market workshop loft and moves kit/sapling work to its upper bench. Old state
+is validated first. Preserve unrelated commitments, money, history, stock and
+clocks; refund only work incompatible with its moved station, with no output or
+wage. Old ground-bound journeys can finish their approach before retargeting by
+walking. Only unsafe player poses use bounded local recovery. Original slots
+remain intact. Work journeys now retain supported elevation in pose, home,
+destination and path. [Upstairs work](dream/upstairs-work.md).
+
+The r106 world uses format 19 / simulation 49. The registered r105 upgrade
+adds a peer-meal work qualification and one ordered production choice for the
+baker. It preserves every saved field, including the existing pair history,
+active work, money, needs, poses and clocks. No new counters or rewards are
+initialized; only ordinary later decisions may start a newly qualified job.
+The original slot remains intact. [Peer recipes](dream/companion-recipes.md).
+
+The r105 world uses format 19 / simulation 48. Its registered r104 upgrade
+adds optional resident gatherings and sparse meal history, retaining prior food,
+money and clocks. Standard bench anchors move three centimetres outward; seated
+poses fit those anchors and unfinished approaches retarget without time advancing.
+
+The r104 world uses format 19 / simulation 47. Its registered r103 upgrade removes only
+new work gesture metadata to validate exact r103 saves, then retains every saved
+field, including pending job deadlines and repair progress. No refund, time advance
+or animation-state initialization occurs. The original slot remains intact.
+
+The r103 world also uses format 19 / simulation 47. Its registered r102 upgrade
+binds paid jobs to physical workstations. Poses, clocks, history and unrelated
+commitments stay intact. A batch incompatible with its new station is refunded
+through ordinary escrow, without output, wages or completion credit.
+
+The r102 world uses format 19 / simulation 46. Its registered r101 upgrade adds
+alternate work qualifications derived from existing completed shared meals,
+without adding saved fields or resources.
+
+The r101 world uses format 19 / simulation 45. Its registered r100 upgrade
+adds covered rest preferences and an independent weather period without changing
+a saved field. Existing commitments, energy, claims, ledgers and clocks remain
+exact. New shelter decisions begin only through ordinary simulation ticks.
+
+The r100 world uses format 19 / simulation 44. Its registered r99 upgrade
+adds daily work attendance without changing a saved field. Existing rest and
+one-batch work finish before new scheduled decisions begin. Upstairs positions,
+resources, clocks, wages and the old source slot are retained.
+
+The r97 world uses format 19 / simulation 41. Its registered r96 upgrade
+initializes only the newly declared energy values, keeping existing work, food,
+resources, clocks and seat claims. New rest journeys begin through the ordinary
+NPC decisions after restore. No offline drain or recovery is guessed.
+
+The r96 world uses format 19 / simulation 40. Its registered r95 upgrade
+keeps every saved field and adds no implicit work, stock or wages. New work trips
+begin through the ordinary NPC decision loop after restore.
+
+
+The r95 world uses format 19 / simulation 39. Its registered r94 upgrade
+checks the exact previous world, then keeps every saved field: a customer already
+walking to or eating at the hall bench finishes that same meal. New purchases
+use the authored home-first preference. The settee's sitting points stay fixed;
+only its standing approaches move outward for NPC clearance. The old storage
+slot remains available. No food, credits, clocks, claims or repairs are reset.
+
+
 The world now saves on this device. Meet someone, park a bicycle, move a ball or break a table, then reload the same world. Those changes return with you. A person you have met can recognize you through their Dream program.
 
 Autosave runs every ten simulation seconds, after a conversation press or committed economic event, when pausing and when leaving the page. **Save now** in the pause menu writes immediately. Reopening the page restores the saved state before the first neighbourhood is loaded.
@@ -52,7 +153,7 @@ The host hashes the complete supplied Dream source and module map with SHA-256 b
 | Placement, geometry, terrain, routes, NPC transitions, materials or other accepted world data | Separate slot; automatic migration is not supported |
 | Shader or UI code only | Source identity is unchanged; simulation-version changes still require an explicit upgrade |
 
-The current format 17 retains the exact source hash and compatibility fingerprint, with simulation version 32. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
+The current format 19 retains the exact source hash and compatibility fingerprint, with simulation version 52. Its economy records include reserved ingredients/wages, work deadlines, fullness, consumed items and completed batches, sealed cargo and completed delivery counts. Restore checks total credits and material conservation, including reservations, before applying anything. Work does not finish while the page is closed or compiling.
 
 The passenger-exit update has a registered upgrade from the released simulation
 12 world. Its accepted Dream data is identical. The upgrade keeps every saved
@@ -591,3 +692,404 @@ claims, stock and credits carry over. A tub or stall first knocked down after
 the upgrade enters the existing broken-object state and the same paid repair
 service, which now covers 449 targets.
 [Checks and browser evidence](evidence/street-furniture/verification.md).
+
+### Shared character construction (r81)
+
+All 133 placed people and both squads gain the refined visuals. A registered
+r80 projection restores their exact prior specifications, scales and squad
+templates before the earlier migration chain. Bodies, joints, contacts and the
+pedestrian graph remain equal. Format 17, simulation 32 and saved fields stay
+unchanged. Old slots remain intact while a new slot stores the upgraded world.
+Native repair progress, every ledger and world time survive the upgrade and
+reload exactly. [Evidence](evidence/character-construction/verification.md).
+
+
+## Indoor bakery service, r82
+
+This authored relocation keeps format 17 and simulation 32. Its registered r81
+projection restores both old actor positions, the eighty-unit counter reach,
+work grounds and the orchard path before validating the old backup. The new
+world keeps every balance, stock item, reservation, completed task and clock.
+
+Customers and couriers keep their physical positions, distance and sealed cargo;
+only their remaining counter approach changes. Returning staff and caretakers
+replan toward their new home. Ambient node indices rebase against the old graph,
+without moving residents or changing their random state. A grounded player with
+a paid batch underway follows the counter to a validated clear indoor position
+so the update does not cancel reserved work. Other players stay where they were.
+The old slot remains intact. Unknown fingerprints still fail rather than reset
+progress. [Migration checks](evidence/indoor-service/verification.md).
+
+
+## Physical work equipment, r83
+
+Format 17 now pins simulation 33. Its registered r82 projection removes only
+job equipment bindings and uses the original simulation-32 fingerprint. Geometry,
+contacts, paths, stock and initial accounts stay exact. Every earlier registered
+projection still validates its own world before the equipment upgrade runs.
+
+A prior saved batch whose new equipment is broken receives the ordinary full
+ingredient/wage refund once, without output, pay or completion credit. It records
+the cancellation at the existing settled commerce clock, with no simulation
+time advance or NPC decisions. Other saved fields, journeys, funds, materials,
+damage, bodies, seats and clocks remain. Unaffected commitments finish normally.
+The old slot stays intact; subsequent current reloads do not refund again.
+[Tests and native recording](evidence/work-equipment/verification.md).
+
+
+## On-foot strikes, r84
+
+Format 18 / simulation 34 adds only optional `strikeReadyAtS` to simulation state.
+It is required in worlds declaring `strike`, finite and no later than the saved
+time plus the declared cooldown. It cannot create damage on reload. Worlds
+without the declaration retain an absent field. Pending presses and impact
+flashes are not saved. R and vehicle changes retain the deadline; Start over
+uses zero, and pause freezes simulation time.
+
+The exact registered r83 projection removes only `Scene.strike` and pins
+simulation 33. Decode its original format-17 shape first, preserving every body,
+ledger, task, damage record and clock. Initialize the new cooldown to saved time,
+so it is immediately available without a false initial gesture. No graph, floor,
+resource, position or attribution rebase occurs. Retain the original slot; new
+writes use a format-18 key. Current reloads do not reapply migration.
+
+Earlier formats retain their strict field sets and registered projections. A
+format-17 packet cannot smuggle in the new cooldown; unknown targets and missing
+registration still fail. [Checks and native sequence](evidence/on-foot-strike/verification.md).
+
+
+## Repair-kit worker policy, r85
+
+Format 18 and simulation 34 stay unchanged: this composes existing production
+behavior and adds no state or transaction semantics. The exact r84 projection
+removes only `assemble_kit` from the baker's ordered work list and restores that
+job's previous target of four. It verifies the registered prior fingerprint
+before decoding. Every saved field and visual clock is retained, including
+active work, reserved supplies, hand cooldowns and NPC journeys. The original
+format-18 slot remains intact; current reloads do not reapply migration.
+No floor, contact, population, attribution or inventory rebase runs.
+[Checks](evidence/kit-production/verification.md).
+
+
+## Workshop procurement, r86
+
+Format 18/simulation 34 remain unchanged because existing lots and delivery
+transactions express this expansion. The registered r85 projection removes
+only the two new depot lots, two delivery contracts and caretaker board policy.
+After decoding the exact old world, initialize sixteen boards and sixteen
+fasteners in the station shelf, plus zero `boards_run`/`fasteners_run` counters
+in shared, unattributed and personal delivery records. Every existing field,
+clock, cargo claim, reserved wage and supplier balance is retained.
+
+The upgrade does not advance time, decide for NPCs, rebase bodies or navigation,
+or replenish the old workshop shelf. Original slots stay intact; current
+round trips never reapply the new stock. Missing registration fails.
+[Checks and native handoff](evidence/workshop-supplies/verification.md).
+
+
+## School and workshop courier, r87
+
+Format 18/simulation 34 registers the exact r86 accepted world before adding
+only the existing resident's `porter` account. It starts with zero credits, empty
+inventory and completion records, fullness 65 and decision time equal to the
+saved economy clock. Every earlier account, cargo reservation, job, repair,
+world clock and personal record is kept. The school resident's authored home
+moves to a clear existing pedestrian approach; no scenery or walking topology
+is added or removed. The r85 workshop-stock upgrade still runs only when needed
+through its registered target. Current reloads never reinitialize the account.
+Original browser slots survive; corrupt and changed-slot protections remain.
+
+
+## Carried recovery materials, r88
+
+Format 19/simulation 35 adds optional per-service recovery completion counters,
+a bounded list of spent growing sources and a true-only repair recovery flag.
+The flag reserves future output during outbound/work and owns sealed output on
+the return phase. Material conservation includes that cargo, while future output
+reservations are not counted as existing goods. Stock changes only at a guarded
+return; the repair wage is never paid twice.
+
+The exact r87 projection removes only the authored recovery fields. Migration
+initializes counters to zero and marks existing broken/growing recovery sources
+spent. Historical damage grants no retroactive timber, and young sources must
+mature before recovery. All prior saved fields, jobs, cargo, wages, damaged
+objects, growth, NPC clocks and world time remain unchanged. Current reloads do
+not repeat initialization. The registered r85/r86/r87 upgrades retain their
+boundaries and original slots. Older format schemas reject recovery fields.
+
+R, vehicle changes, chunk eviction, pause and storage retain carried output.
+Start over resets it. Return on foot at an open staffed counter. Sealed output
+cannot be traded, eaten or cancelled into remote stock; a closed counter can
+require waiting. When an old pose needs safe recovery, the cargo still belongs
+to the same task. [Checks and native handoff](evidence/timber-recovery/verification.md).
+
+## Reclaimed fixture hardware, r89
+
+Format 19/simulation 35 stays unchanged. The registered r88 projection removes
+only the fixture service's recovery pair and verifies its exact accepted hash.
+Upgrade adds `recovered.market_tables=0` after validating the old state, retaining
+every old field, including timber counts/cargo, spent sources, commitments,
+growth, ledgers, player pose and all clocks. No old repair gains retroactive
+hardware. Existing repairs keep their original recovery choice.
+
+The original format-19 source slot remains intact. Older registered upgrades
+retain their boundaries, current reloads never reinitialize counters, and an
+unrelated source or missing predecessor is rejected. New recovery cargo uses
+the same reserved capacity and guarded on-foot handoff as timber.
+[Checks and native return](evidence/hardware-recovery/verification.md).
+
+## Same-good nursery work, r90
+
+Format 19 keeps its shape; simulation version 36 pins the new shared-lot
+reservation rule. A job that consumes and produces one good requires a positive
+quantity gain. Its pending shelf envelope reserves max(take,make), while the
+held input remains real conserved material. No future output is counted as stock
+before completion. Other accepted recipes retain their previous behavior.
+
+The registered r89 projection removes only the nursery job and restores the
+vendor's previous four-job policy, using its pinned simulation-35 fingerprint.
+Migration adds only zero nursery batch and personal/unattributed work counts.
+Existing balances, stock, work, hardware/timber cargo, damage, growth, positions
+and clocks remain intact, with no offline work or rebase. The old format-19 slot
+survives. All older registered projections retain their original versions.
+
+## School common-room layout, r91
+
+Format 19 and simulation version 36 remain unchanged. The registered r90
+projection restores the exact closed-school assembly, original break/social
+plans and caretaker duties, removing only the new doorstep, five furnishings
+and furniture service. Old source validation uses that projection's contacts
+and pedestrian graph, rather than the new school's physical caches.
+
+Migration adds zero shared/personal/unattributed furniture-repair counts and
+zero recovered-hardware count. Existing resources, commitments, memories,
+positions and clocks survive. Changed pedestrian node references map by
+coordinate/adjacency. A resting or outward-bound teacher walks from their saved
+position to the new break point. An unfinished shared meal keeps its visible
+pose, portions and timer, with its eventual return retargeted indoors. An
+unreserved invitation can close while the teacher changes break spots.
+A parked vehicle may delay that journey; it does not prevent restoring a valid
+static route or move the saved car.
+
+The existing bounded active-pose recovery handles newly unsafe geometry; the
+original save slot is retained. No initial money, materials or NPCs are added.
+[Assembly and controls](dream/interiors.md#the-school-common-room) ·
+[Verification](evidence/school-interior/verification.md).
+
+## Worker food rules, r92
+
+Format 19 is unchanged; simulation version 37 permits eating owned food during
+work/repair/courier commitments and adds optional NPC ration policies. The exact
+r91 projection removes only those definitions and account references, pinning
+its original simulation-36 fingerprint. Migration preserves every saved field,
+including active work, stock, balances, owned food, sealed cargo and clocks.
+No purchase or consumption happens during load. The next normal fixed tick can
+make a decision. The original slot and all earlier registered upgrades remain.
+
+## Authored rain, r93
+
+Format 19/simulation 38 registers the exact r92 world. Its projection removes
+only the weather declaration and optional repair `dry` flags, using pinned
+simulation 37. Geometry, contacts, navigation and every saved field remain
+unchanged. No clock rebasing, food purchases, refunds or jobs run during load.
+The restored simulation time determines the current rain and wetness. Existing
+commitments finish even if it is raining; only new dry-weather jobs wait. R and
+streaming retain weather phase, pause freezes it and Start over resets it.
+The old slot and all earlier registered migrations survive.
+
+## Commuter-home upgrade, r94
+
+The r94 format-19 / simulation-38 world pins
+`f003f9a1a23eac605a5a780ac34e471888fea029ac9b6d05c1d571df0d0f0275`.
+Its registered projection restores the exact r93 house and entrance, removes
+the three indoor props and unpainted doorway corridor, and removes only the
+new caretaker service and reference. It reproduces
+`e79bef5a9b68401e438cb2eb94f1ae68e151fb65f29770e2fa166e382db817ec`.
+
+Validate the backup against that old scene's own contacts and pedestrian graph
+before upgrading. Preserve money, stock, inventory, damage, work, NPC clocks
+and visible safe positions. Add zero `home_furniture` repair/recovery and
+per-account attribution counters. Retarget derived pedestrian indices and
+work paths for the new walls, locally recovering unsafe positions through the
+existing bounded rules. No transactions or time advance occur during restore.
+The old source slot and every earlier registered migration remain available.
+
+Ground vehicles newly enclosed by this home use a 64-unit local search, retaining
+heading, travel history and ownership. Candidates must clear the complete body,
+other parked vehicles and the active player. Vehicles that fit the doorway can
+retain their position on the new floor. Other parked poses are unchanged; an
+unrecoverable pose rejects migration and keeps the old slot intact.
+
+
+## Home-meal upgrade, r95
+
+Format 19 / simulation 39 pins
+`62198a1eb0f91bb6793276db568458a0a980823c492c7f1fb7f2e8cf7cc8cdd4`.
+The r94 projection removes only the new home grounds and settee preference from
+`market_break`, and restores the settee's two old standing approaches. It
+reproduces `f003f9a1a23eac605a5a780ac34e471888fea029ac9b6d05c1d571df0d0f0275`.
+
+All restored state stays exact, including existing hall meal paths, food, money,
+seat claims and eating deadlines. Hall seating remains allowed, so an existing
+commitment finishes normally before a new trip uses the authored preference.
+Physical geometry and sitting points are unchanged; no pose recovery or resource
+initialization is added. The original slot and earlier migration chain survive.
+
+
+## Work-commute upgrade, r96
+
+The accepted-world fingerprint is
+`9b818d954cf53fe239b685e7cc54600aa417f0541de32e3b9c99db1bef443cad`.
+Projecting only the commuter's new `works`, `commute`, `on` and `grounds` fields
+reproduces the exact r95 fingerprint
+`62198a1eb0f91bb6793276db568458a0a980823c492c7f1fb7f2e8cf7cc8cdd4` at simulation 39.
+
+All old state remains exact, including paid batches, sealed deliveries, occupied
+home seats and meal timers. Work trips add an optional per-account state with
+out/work/home phase, the original pose and a bounded path. Work phase owns exactly
+one matching ordinary job; other phases cannot hold a paid batch. Restore checks
+body-supported routes, destinations, membership, clocks and all existing resource
+conservation. It never starts a job during migration. Original slots and the
+entire earlier migration chain remain available.
+
+## Shared rest upgrade, r97
+
+The current accepted-world fingerprint is
+`67ec3c6c263434eeb67f2dc17a986d719675505899452a283dedc53b071b8be9`.
+Removing only `economy.rests` and `account.rest` reproduces exact r96 at
+simulation 40:
+`9b818d954cf53fe239b685e7cc54600aa417f0541de32e3b9c99db1bef443cad`.
+
+Validate that exact prior world first. Initialize only energy for newly opted-in
+accounts from their authored plan; do not create a journey, cancel a batch,
+consume food, change resources, advance a clock or discard the old storage slot.
+Historical projections exclude the new source fields and retain their exact
+registered bytes and earlier upgrade chain.
+
+New saves keep per-account energy and optional out/sit/home rest trips. Validate
+source ownership, phase, original routine pose, actual body support, bounded
+paths, clocks, furniture membership and unique shared seat claims. Energy without
+a declared plan or a rest trip owned by the player is invalid. R, pause and
+streaming retain the need and journey; Start over resets them. Player seating
+remains its existing independent owner. [Rest rules](dream/resting.md).
+
+
+## Stairs upgrade, r98
+
+The r98 format 19 / simulation 42 stage accepts registered r97 fingerprint
+`67ec3c6c263434eeb67f2dc17a986d719675505899452a283dedc53b071b8be9`.
+The old house projection, ground furniture positions and prior contact/navigation
+packets are checked before applying the new layout. Finite stock, balances,
+needs, personal history, seat claims and clocks survive unchanged. An obsolete
+home-table repair approach is rerouted locally within 128 units; its reserved
+supplies, wage and completed work time remain held, with no second payment.
+The saved upstairs height survives ordinary reload. Unsafe player poses recover
+locally using the existing collision guard. No upper-floor NPC policy or offline
+travel is created. [Checks](evidence/stairs/verification.md).
+
+## Upstairs journeys, r99
+
+Format 19 / simulation 43 accepts the exact registered r98 world before adding
+three floor-bound props and the resident's upstairs preference. Existing rest
+commitments finish on their saved cushion; no money, food, energy, clock, claim,
+position or repair progress is initialized. The old slot remains available.
+If a new prop encloses an old player pose, bounded local recovery retains the
+same supported floor or rejects the backup without replacing its slot. New trips carry supported elevation on current positions, destinations and path
+points. Restore checks each segment against slabs and generated stair contacts;
+a fabricated floor height or shortcut through a slab is rejected. Upstairs repair
+escrow, carried supplies, progress and wages use the existing ledger. All older
+registered upgrades remain chained. [Checks](evidence/upstairs/verification.md).
+
+## Daily attendance, r100
+
+Format 19 / simulation 44 registers exact r99 by removing only the commuter's
+new attendance window. Restore preserves every saved field, including upstairs
+rest, pending one-batch work and its reservations, positions, clocks, money and
+energy. The old slot stays available. An old commute finishes once under its
+original trip policy before future decisions use the schedule.
+
+New trips save `dutyAtS` and out/idle/work/home ownership. The departure must be
+inside the authored window and no later than the saved commerce clock. Waiting
+has no work reservation or wage; a work phase requires its matching committed
+job. Derive closing from that departure, so a long blockage cannot grant another
+workday. Replay every path, work payment and home return from saved simulation
+time; no offline pay or forced clock advance. [Checks](evidence/attendance/verification.md).
+
+## Rain shelter, r101
+
+Format 19 / simulation 45 registers exact r100 at fingerprint
+`26bc063d3ad03e482ec65626ea6653403c59dec91211227e97687860f772545e`.
+Its projection removes only the live home rest plan's new shelter preference and
+restores the former 600-second weather period. All physical geometry, resources,
+ordered arrays and existing policies remain exact. The r101 fingerprint is
+`508f47125d575a0d10ff7122fe92a3cbea2495d90235120e50bbb24114167e02`.
+
+Restore first validates against the prior accepted world, then retains every
+saved field. Upstairs seat claims, paid batches, cargo, energy, stock, money,
+NPC programs and clocks are not rebased or initialized. Future choices use the
+new preference and 360-second rain cycle at the saved time. There is no separate
+saved weather intention or offline weather simulation. Original slots and the
+earlier migration chain remain. [Shelter checks](evidence/shelter/verification.md).
+
+## Shared recipes, r102
+
+Format 19 / simulation 46 registers exact r101 at fingerprint
+`508f47125d575a0d10ff7122fe92a3cbea2495d90235120e50bbb24114167e02`.
+The old projection removes only `bakers_table` and restores the larger bread
+job's original single practice prerequisite. Physics, actors, geometry, stock,
+accounts and all existing counters remain unchanged. The r102 fingerprint is
+`924a4c63641fed528986e698d8a5ad3c72c7201d1cf8ed94df4a0264c6b9827c`.
+
+No friendship field or extra completion counter is initialized. The ordinary
+shared history supplies the new qualification. An unfinished old meal restores
+with the same food/seat escrow and eating time; it earns the consequence only
+on completion. A valid old paid job keeps its original eligibility, inputs, pay
+and deadline. Existing completed meals can qualify their two participants on
+restore, without new money, food or practice.
+
+Shared history remains per companion and cannot exceed consumed food portions
+per good. This is a consistency bound, not a tamper-proof event log. The current
+slot and every earlier registered source slot remain separate and recoverable.
+[Verification](evidence/social-qualifications/verification.md).
+
+## Physical workstations, r103
+
+Format 19 now pins simulation 47 and the exact accepted station definitions.
+The registered r102 upgrade validates its original world, retains physical
+poses, clocks, history, resources and all unrelated commitments, then refunds
+only active batches incompatible with the new station rules. Refunds use the
+same reserved ingredients and wage; no output, pay or completion is awarded.
+An old outbound counter approach stays a real journey and is retargeted through
+walking before station work can start. Original slots survive; an ordinary
+reload never repeats the upgrade. Station ownership derives from active job
+IDs and poses, with cross-recipe duplicate claims rejected on restore.
+[Workstation rules](dream/workstations.md).
+
+
+## Work motions, r104
+
+The registered exact r103 fingerprint is
+`ba0749ebc87cea40ce37bd5d71f8adf69a75970811039062d6b650ca90cc59b3`.
+Only `economy.gestures`, `work.gesture` and `repair.gesture` disappear in that
+projection. Geometry, all resources and accepted simulation transitions stay
+identical; the simulation remains 47 and format remains 19. Decode validates the
+prior world first and the retained state against the current world. Pending work
+and repairs continue once with their original deadlines/progress. Motion phase
+comes from that progress after reload, with the normal visual entry blend.
+Earlier registered migrations and original slots remain available; arbitrary
+world changes cannot use this upgrade. [Checks](evidence/work-gestures/verification.md).
+
+## Upstairs social trips, r110
+
+Format 19 / simulation 53 registers the exact r109 projection by removing only
+the new hall-break upper-settee preference and its two floor grounds. Validate
+the old world first, then preserve the complete saved state and original slot.
+An unfinished downstairs meeting retains its seats, paths, food, clocks and
+rewards; future gatherings can choose upstairs. No resource initialization,
+retargeting, offline travel or replayed completion occurs.
+
+New shared and companion journeys accept bounded optional supported heights in
+their current position, home, target and path. Existing ground paths stay valid.
+Checks include full 3D arrival, saved support and every segment through the
+retained slabs and stairs. Unsupported layers and through-slab shortcuts fail
+restore. The complete earlier upgrade chain remains registered.

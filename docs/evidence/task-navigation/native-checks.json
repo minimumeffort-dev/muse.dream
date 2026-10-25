@@ -1,0 +1,367 @@
+{
+  "findTask": {
+    "account": {
+      "completed": {
+        "delivery": {
+          "flour_run": 0,
+          "kits_run": 0,
+          "saplings_run": 0,
+          "school_run": 0
+        },
+        "repair": {
+          "market_tables": 0,
+          "orchard_trees": 0
+        },
+        "work": {
+          "assemble_kit": 0,
+          "bake": 0,
+          "large_bake": 0,
+          "pack_lunch": 0
+        }
+      },
+      "credits": 20,
+      "decisionAtS": 0,
+      "delivery": {
+        "id": "school_run",
+        "startedAtS": 4.391666666666675
+      },
+      "id": "pocket",
+      "inventory": {
+        "boards": 0,
+        "bread": 0,
+        "fasteners": 0,
+        "flour": 0,
+        "lunch": 0,
+        "sapling": 0,
+        "timber": 0,
+        "vegetables": 0
+      },
+      "satiety": 47.78041666666662
+    },
+    "focus": "expanded-map",
+    "guide": {
+      "clearHidden": true,
+      "hidden": false,
+      "text": "222 mDelivery · School canteen"
+    },
+    "mode": "map",
+    "navigation": {
+      "arrived": false,
+      "center": {
+        "x": 4436,
+        "y": 3420
+      },
+      "direction": -43.73937682613339,
+      "distance": 2212.6578655723806,
+      "miniZoom": 1,
+      "open": true,
+      "target": {
+        "id": "school_run",
+        "kind": "delivery",
+        "label": "Delivery · School canteen",
+        "x": 4436,
+        "y": 3420
+      },
+      "task": {
+        "id": "school_run",
+        "kind": "delivery",
+        "label": "Delivery · School canteen",
+        "x": 4436,
+        "y": 3420
+      },
+      "waypoint": null,
+      "zoom": 3
+    },
+    "status": "Delivery · School canteen",
+    "taskHidden": false
+  },
+  "personalOverride": {
+    "account": {
+      "completed": {
+        "delivery": {
+          "flour_run": 0,
+          "kits_run": 0,
+          "saplings_run": 0,
+          "school_run": 0
+        },
+        "repair": {
+          "market_tables": 0,
+          "orchard_trees": 0
+        },
+        "work": {
+          "assemble_kit": 0,
+          "bake": 0,
+          "large_bake": 0,
+          "pack_lunch": 0
+        }
+      },
+      "credits": 20,
+      "decisionAtS": 0,
+      "delivery": {
+        "id": "school_run",
+        "startedAtS": 4.391666666666675
+      },
+      "id": "pocket",
+      "inventory": {
+        "boards": 0,
+        "bread": 0,
+        "fasteners": 0,
+        "flour": 0,
+        "lunch": 0,
+        "sapling": 0,
+        "timber": 0,
+        "vegetables": 0
+      },
+      "satiety": 47.78041666666662
+    },
+    "focus": "expanded-map",
+    "guide": {
+      "clearHidden": false,
+      "hidden": false,
+      "text": "174 mWaypoint"
+    },
+    "mode": "map",
+    "navigation": {
+      "arrived": false,
+      "center": {
+        "x": 4981.8089668615985,
+        "y": 3420
+      },
+      "direction": -35.906511642713646,
+      "distance": 1737.0680003761129,
+      "miniZoom": 1,
+      "open": true,
+      "target": {
+        "id": "waypoint",
+        "kind": "waypoint",
+        "label": "Waypoint",
+        "x": 4981.8089668615985,
+        "y": 3420
+      },
+      "task": {
+        "id": "school_run",
+        "kind": "delivery",
+        "label": "Delivery · School canteen",
+        "x": 4436,
+        "y": 3420
+      },
+      "waypoint": {
+        "x": 4981.8089668615985,
+        "y": 3420
+      },
+      "zoom": 3
+    },
+    "status": "Waypoint set · 174 m",
+    "taskHidden": false
+  },
+  "fallback": {
+    "account": {
+      "completed": {
+        "delivery": {
+          "flour_run": 0,
+          "kits_run": 0,
+          "saplings_run": 0,
+          "school_run": 0
+        },
+        "repair": {
+          "market_tables": 0,
+          "orchard_trees": 0
+        },
+        "work": {
+          "assemble_kit": 0,
+          "bake": 0,
+          "large_bake": 0,
+          "pack_lunch": 0
+        }
+      },
+      "credits": 20,
+      "decisionAtS": 0,
+      "delivery": {
+        "id": "school_run",
+        "startedAtS": 4.391666666666675
+      },
+      "id": "pocket",
+      "inventory": {
+        "boards": 0,
+        "bread": 0,
+        "fasteners": 0,
+        "flour": 0,
+        "lunch": 0,
+        "sapling": 0,
+        "timber": 0,
+        "vegetables": 0
+      },
+      "satiety": 47.78041666666662
+    },
+    "focus": "expanded-map",
+    "guide": {
+      "clearHidden": true,
+      "hidden": false,
+      "text": "222 mDelivery · School canteen"
+    },
+    "mode": "map",
+    "navigation": {
+      "arrived": false,
+      "center": {
+        "x": 4981.8089668615985,
+        "y": 3420
+      },
+      "direction": -43.73937682613339,
+      "distance": 2212.6578655723806,
+      "miniZoom": 1,
+      "open": true,
+      "target": {
+        "id": "school_run",
+        "kind": "delivery",
+        "label": "Delivery · School canteen",
+        "x": 4436,
+        "y": 3420
+      },
+      "task": {
+        "id": "school_run",
+        "kind": "delivery",
+        "label": "Delivery · School canteen",
+        "x": 4436,
+        "y": 3420
+      },
+      "waypoint": null,
+      "zoom": 3
+    },
+    "status": "Waypoint removed",
+    "taskHidden": false
+  },
+  "afterR": {
+    "account": {
+      "completed": {
+        "delivery": {
+          "flour_run": 0,
+          "kits_run": 0,
+          "saplings_run": 0,
+          "school_run": 0
+        },
+        "repair": {
+          "market_tables": 0,
+          "orchard_trees": 0
+        },
+        "work": {
+          "assemble_kit": 0,
+          "bake": 0,
+          "large_bake": 0,
+          "pack_lunch": 0
+        }
+      },
+      "credits": 20,
+      "decisionAtS": 0,
+      "delivery": {
+        "id": "school_run",
+        "startedAtS": 4.391666666666675
+      },
+      "id": "pocket",
+      "inventory": {
+        "boards": 0,
+        "bread": 0,
+        "fasteners": 0,
+        "flour": 0,
+        "lunch": 0,
+        "sapling": 0,
+        "timber": 0,
+        "vegetables": 0
+      },
+      "satiety": 47.767916666666615
+    },
+    "focus": "game",
+    "guide": {
+      "clearHidden": true,
+      "hidden": false,
+      "text": "207 mDelivery · School canteen"
+    },
+    "mode": "playing",
+    "navigation": {
+      "arrived": false,
+      "center": {
+        "x": 4436,
+        "y": 3420
+      },
+      "direction": -46.21251327873805,
+      "distance": 2061.11741538419,
+      "miniZoom": 1,
+      "open": false,
+      "target": {
+        "id": "school_run",
+        "kind": "delivery",
+        "label": "Delivery · School canteen",
+        "x": 4436,
+        "y": 3420
+      },
+      "task": {
+        "id": "school_run",
+        "kind": "delivery",
+        "label": "Delivery · School canteen",
+        "x": 4436,
+        "y": 3420
+      },
+      "waypoint": null,
+      "zoom": 3
+    },
+    "status": "Delivery · School canteen",
+    "taskHidden": false
+  },
+  "cancelled": {
+    "account": {
+      "completed": {
+        "delivery": {
+          "flour_run": 0,
+          "kits_run": 0,
+          "saplings_run": 0,
+          "school_run": 0
+        },
+        "repair": {
+          "market_tables": 0,
+          "orchard_trees": 0
+        },
+        "work": {
+          "assemble_kit": 0,
+          "bake": 0,
+          "large_bake": 0,
+          "pack_lunch": 0
+        }
+      },
+      "credits": 20,
+      "decisionAtS": 0,
+      "id": "pocket",
+      "inventory": {
+        "boards": 0,
+        "bread": 0,
+        "fasteners": 0,
+        "flour": 0,
+        "lunch": 0,
+        "sapling": 0,
+        "timber": 0,
+        "vegetables": 0
+      },
+      "satiety": 46.441249999999656
+    },
+    "focus": "expanded-map",
+    "guide": {
+      "clearHidden": true,
+      "hidden": true,
+      "text": "207 mDelivery · School canteen"
+    },
+    "mode": "map",
+    "navigation": {
+      "center": {
+        "x": 6759.9923887053255,
+        "y": 4858.8645087825
+      },
+      "miniZoom": 1,
+      "open": true,
+      "target": null,
+      "task": null,
+      "waypoint": null,
+      "zoom": 6.184214518733484
+    },
+    "status": "Click to set a waypoint",
+    "taskHidden": true
+  },
+  "logs": []
+}

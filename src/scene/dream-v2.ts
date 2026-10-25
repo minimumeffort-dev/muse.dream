@@ -25,10 +25,10 @@ export class ParserV2 extends Parser {
     if(this.token.text.startsWith('"')) {const token=this.take();try{return JSON.parse(token.text) as string;}catch{fail("invalid quoted string",{...token,path},"E_TYPE");}}
     if(this.is("true") || this.is("false"))return this.take().text==="true";
     if(this.token.text.startsWith("#")){const token=this.take();return {token:{...token,path},name:token.text.toLowerCase()};}
-    if(this.tokens[this.index+1]?.text==="(" && Object.hasOwn(commands,this.token.text) && commands[this.token.text]!.contexts.some(c=>["part_motion","joint_motion","deform","impact","ambient_motion"].includes(c)))
+    if(this.tokens[this.index+1]?.text==="(" && Object.hasOwn(commands,this.token.text) && commands[this.token.text]!.contexts.some(c=>["part_motion","joint_motion","deform","impact","ambient_motion","company_need"].includes(c)))
       return this.node("value",depth+1,path);
     if(/^[A-Za-z_]/.test(this.token.text) && this.tokens[this.index+1]?.text==="(" && !["sin","cos"].includes(this.token.text))
-      fail(`unknown constructor '${this.token.text}'`,{...this.token,path},"E_CONSTRUCTOR",["sin","cos",...Object.keys(commands).filter(k=>commands[k]!.contexts.some(c=>["part_motion","joint_motion","deform","impact","ambient_motion"].includes(c)))]);
+      fail(`unknown constructor '${this.token.text}'`,{...this.token,path},"E_CONSTRUCTOR",["sin","cos",...Object.keys(commands).filter(k=>commands[k]!.contexts.some(c=>["part_motion","joint_motion","deform","impact","ambient_motion","company_need"].includes(c)))]);
     const expr=this.expr();
     const locate=(e:Expr)=>{e.token={...e.token,path};e.args?.forEach(locate);};locate(expr);return expr;
   }
@@ -48,14 +48,14 @@ export class ParserV2 extends Parser {
     else if(type==="text")valid=typeof value==="string";
     else if(type==="bool")valid=typeof value==="boolean";
     else if(type==="symbol" || type==="ref") {valid=!!symbol && identifier.test(symbol);if(valid)checkSymbol(symbol!,token);}
-    else if(["part_motion","joint_motion","deform","impact","ambient_motion","fracture"].includes(type))valid=isNode(value) && commands[value.kind]!.contexts.includes(type);
+    else if(["part_motion","joint_motion","deform","impact","ambient_motion","company_need","fracture"].includes(type))valid=isNode(value) && commands[value.kind]!.contexts.includes(type);
     else valid=!!symbol && type.split("|").includes(symbol);
-    if(!valid)fail(`expected ${type}`,token,"E_TYPE",type.includes("|") ? type.split("|") : ["part_motion","joint_motion","deform","impact","ambient_motion","fracture"].includes(type) ? Object.keys(commands).filter(k=>commands[k]!.contexts.includes(type)) : [type]);
+    if(!valid)fail(`expected ${type}`,token,"E_TYPE",type.includes("|") ? type.split("|") : ["part_motion","joint_motion","deform","impact","ambient_motion","company_need","fracture"].includes(type) ? Object.keys(commands).filter(k=>commands[k]!.contexts.includes(type)) : [type]);
   }
   private node(context:string,depth:number,path:string):DreamNode {
     const original=this.take(),kind=original.text,definition=Object.hasOwn(commands,kind) ? commands[kind] : undefined;
     const token={...original,path};
-    if(!definition || (context==="value" ? !definition.contexts.some(c=>["part_motion","joint_motion","deform","impact","ambient_motion"].includes(c)) : !definition.contexts.includes(context)))
+    if(!definition || (context==="value" ? !definition.contexts.some(c=>["part_motion","joint_motion","deform","impact","ambient_motion","company_need"].includes(c)) : !definition.contexts.includes(context)))
       fail(`'${kind}' is not allowed in ${context}`,token,"E_CONTEXT",Object.keys(commands).filter(k=>commands[k]!.contexts.includes(context)));
     const id=definition.id ? this.name() : undefined;if(id)checkSymbol(id,token);
     token.path=`${path}/${kind}${id ? `:${id}` : ""}`;
@@ -82,7 +82,7 @@ export class ParserV2 extends Parser {
     while(context==="top" ? !this.is("<end>") : !this.accept("}")) {
       const node=this.node(context,depth,path);
       if(node.id) {if(names.has(node.id))fail(`duplicate ID '${node.id}' in this scope`,node.token,"E_DUPLICATE_ID");names.add(node.id);}
-      else if(!["point","ingredient"].includes(node.kind)) {if(singletons.has(node.kind))fail(`duplicate '${node.kind}'`,node.token,"E_DUPLICATE_ID");singletons.add(node.kind);}
+      else if(!["point","ingredient","key"].includes(node.kind)) {if(singletons.has(node.kind))fail(`duplicate '${node.kind}'`,node.token,"E_DUPLICATE_ID");singletons.add(node.kind);}
       nodes.push(node);
     }
     return nodes;
@@ -105,7 +105,7 @@ export class ParserV2 extends Parser {
         case "asset":program.assets!.push(node);break;
         case "include":program.includes!.push(node);break;
         case "route":program.routes.push({token,name,gauge:node.fields.has("gauge") ? num("gauge") : undefined,kind:wordField(node,"kind"),mode:wordField(node,"mode"),speed:num("speed"),altitude:node.fields.has("altitude") ? num("altitude") : undefined,wait:node.fields.has("wait_s") ? num("wait_s") : undefined,width:node.fields.has("width") ? num("width") : undefined,surface:node.fields.has("surface") ? wordField(node,"surface") : undefined,block:lowerBlock(node.block!)});break;
-        case "place":program.places.push({token,name,assembly:wordField(node,"object"),at:node.fields.get("at") as Expr[]|undefined,route:node.fields.has("route") ? wordField(node,"route") : undefined,offset:node.fields.get("offset") as Expr|undefined,phase:node.fields.get("phase_s") as Expr|undefined,scale:node.fields.get("scale") as Expr|undefined,heading:node.fields.get("heading_deg") as Expr|undefined,role:node.fields.has("role") ? wordField(node,"role") as "prop"|"npc"|"controllable"|"ambient" : undefined,behavior:node.fields.has("behavior") ? wordField(node,"behavior") : undefined,pose:node.fields.has("pose") ? wordField(node,"pose") as "rest" : undefined,motion:node.fields.get("motion") as DreamNode|undefined,parked:node.fields.get("parked") as boolean|undefined});break;
+        case "place":program.places.push({token,name,...(node.fields.has("floor") ? {floor:wordField(node,"floor")} : {}),assembly:wordField(node,"object"),at:node.fields.get("at") as Expr[]|undefined,route:node.fields.has("route") ? wordField(node,"route") : undefined,offset:node.fields.get("offset") as Expr|undefined,phase:node.fields.get("phase_s") as Expr|undefined,scale:node.fields.get("scale") as Expr|undefined,heading:node.fields.get("heading_deg") as Expr|undefined,role:node.fields.has("role") ? wordField(node,"role") as "prop"|"npc"|"controllable"|"ambient" : undefined,behavior:node.fields.has("behavior") ? wordField(node,"behavior") : undefined,pose:node.fields.has("pose") ? wordField(node,"pose") as "rest" : undefined,motion:node.fields.get("motion") as DreamNode|undefined,parked:node.fields.get("parked") as boolean|undefined});break;
         case "watercourse":program.waters.push({token,name,...(node.fields.has("ends") ? {ends:wordField(node,"ends") as "round"|"open"} : {}),level:num("level"),depth:num("depth"),bank:num("bank"),color:wordField(node,"color"),flow:listField(node,"flow"),block:lowerBlock(node.block!)});break;
         default:program.layout.push(node);
       }
@@ -148,6 +148,7 @@ export function lowerBlock(nodes:DreamNode[]):Statement[] {
       case "seat":statement.approach=listField(node,"approach");statement.heading=n("heading_deg");break;
       case "rideable":if(node.fields.has("control"))statement.control=wordField(node,"control");break;
       case "contact":statement.value=n("height");if(node.fields.has("radius"))statement.args=[n("radius")];if(node.fields.has("size"))statement.contactSize=listField(node,"size");if(node.fields.has("heading_deg"))statement.heading=n("heading_deg");break;
+      case "stairs":statement.material=wordField(node,"material");statement.size=v("size");statement.value=n("steps");if(node.fields.has("heading_deg"))statement.heading=n("heading_deg");break;
       case "interior":statement.size=v("size");break;
       case "portal":statement.name=wordField(node,"side");statement.args=[n("offset"),n("width"),n("height")];break;
       case "emit":statement.name=wordField(node,"kind");statement.value=n("rate_s");break;
@@ -197,7 +198,7 @@ function validateReferences(nodes:DreamNode[]):void {
         if(numericTypes.has(type) || type==="position2" && Array.isArray(value))checkNumbers(value,scope);
         if(isNode(value))for(const [innerKey,inner] of value.fields)if(commands[value.kind]!.fields[innerKey]==="n")checkNumbers(inner,scope);
       }
-      if((node.kind==="part" || node.kind==="beam" || node.kind==="voxels") && !materialScope.has(wordField(node,'material')))reference(node,"material","material");
+      if((node.kind==="part" || node.kind==="beam" || node.kind==="voxels" || node.kind==="stairs") && !materialScope.has(wordField(node,'material')))reference(node,"material","material");
       if(node.kind==="use"){
         const target=reference(node,"component","component"),params=(target.fields.get("params") as Expr[]|undefined)??[];
         if(((node.fields.get("args") as Expr[]|undefined)??[]).length!==params.length)fail(`component '${target.id}' expects ${params.length} arguments [${params.map(p=>p.name).join(',')}]`,{...node.token,path:`${node.token.path}/args`},"E_ARITY",params.map(p=>p.name!));

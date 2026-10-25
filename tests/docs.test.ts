@@ -1,4 +1,5 @@
 import liveLife from '../src/scene/world/life.dream?raw';
+import {worldModules} from '../src/scene/world-fixture';
 import liveMarket from '../src/scene/world/market_interior.dream?raw';
 import {describe,it,expect} from "vitest";
 import {checkDream} from "../src/scene/dream";
@@ -9,6 +10,44 @@ const examples=import.meta.glob<string>('../docs/examples/*.dream',{query:'?raw'
 const files=Object.keys(import.meta.glob(['../src/**/*','../docs/**/*','../scripts/*','../tests/**/*','../README.md'])).map(p=>p.slice(3));
 
 describe("published Dream documentation",()=>{
+  it('keeps the supported lobby example identical to the product guide',()=>{
+    const source=pages['../docs/dream/station-quarter.md']!.match(/```dream\n([\s\S]*?)```/)![1]!.trim();
+    expect(source).toBe(examples['../docs/examples/ground-floor-seating.dream']!.trim());
+  });
+  it('keeps the company declaration identical to its complete runnable world',()=>{const snippets=[...pages['../docs/dream/company.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());expect(snippets).toHaveLength(1);expect(examples['../docs/examples/company-needs.dream']).toContain(snippets[0]);});
+  it('keeps upstairs workstation declarations identical to their complete runnable source',()=>{
+    const blocks=[...pages['../docs/dream/upstairs-work.md']!.matchAll(/```dream\n([\s\S]*?)```/g)];expect(blocks).toHaveLength(3);for(const block of blocks)expect(examples['../docs/examples/upstairs-work.dream']).toContain(block[1]!.trim());
+  });
+  it('keeps peer recipe declarations identical to their complete runnable source',()=>{
+    const declaration=pages['../docs/dream/companion-recipes.md']!.match(/```dream\n([\s\S]*?)```/)![1]!.trim();expect(examples['../docs/examples/companion-recipes.dream']).toContain(declaration);
+  });
+  it('keeps workstation declarations identical to the complete runnable source',()=>{
+    const snippets=[...pages['../docs/dream/workstations.md']!.matchAll(/```dream\n([\s\S]*?)```/g)];expect(snippets).toHaveLength(2);
+    for(const snippet of snippets)expect(examples['../docs/examples/workstations.dream']).toContain(snippet[1]!.trim());
+  });
+  it('keeps relationship qualifications identical to the complete runnable source',()=>{
+    const declaration=pages['../docs/dream/relationships.md']!.match(/```dream\n([\s\S]*?)```/)![1]!.trim();expect(examples['../docs/examples/shared-recipe.dream']).toContain(declaration);
+  });
+  it('keeps the shelter declaration identical to the complete runnable source',()=>{
+    const declaration=pages['../docs/dream/shelter.md']!.match(/```dream\n([\s\S]*?)```/)![1]!.trim();expect(examples['../docs/examples/rain-shelter.dream']).toContain(declaration);
+  });
+  it('keeps daily attendance identical to the complete runnable source',()=>{
+    const declaration=pages['../docs/dream/attendance.md']!.match(/```dream\n([\s\S]*?)```/)![1]!.trim();expect(examples['../docs/examples/scheduled-workday.dream']).toContain(declaration);
+  });
+  it('keeps floor bindings identical to the complete runnable upstairs example',()=>{
+    const declaration=pages['../docs/dream/floors.md']!.match(/```dream\n([\s\S]*?)```/)![1]!.trim();expect(examples['../docs/examples/upstairs-rest.dream']).toContain(declaration);
+  });
+  it('keeps the stair declaration identical to its runnable source and linked live house',()=>{
+    const guide=pages['../docs/dream/stairs.md']!,declaration=guide.match(/```dream\n([\s\S]*?)```/)![1]!.trim();expect(examples['../docs/examples/stairs-home.dream']).toContain(declaration);expect(worldModules.destructible).toContain(declaration);
+  });
+  it('keeps the nursery declaration identical to its complete runnable example',()=>{
+    const section=pages['../docs/dream/businesses.md']!.split('## Nursery work')[1]!;
+    expect(examples['../docs/examples/sapling-propagation.dream']).toContain(section.match(/```dream\n([\s\S]*?)```/)![1]!.trim());
+  });
+  it('keeps the fixture-hardware policy identical to its runnable example',()=>{
+    const section=pages['../docs/dream/businesses.md']!.split('## Reuse fixture hardware')[1]!;
+    const declaration=section.match(/```dream\n([\s\S]*?)```/)![1]!.trim();expect(examples['../docs/examples/hardware-recovery.dream']).toContain(declaration);
+  });
   it('keeps the complete counter-hours guide identical to its runnable world',()=>{
     const blocks=[...pages['../docs/dream/hours.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
     expect(blocks).toContain(examples['../docs/examples/market-hours.dream']!.trim());
@@ -38,9 +77,12 @@ describe("published Dream documentation",()=>{
     const blocks=[...pages['../docs/dream/populations.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
     expect(blocks).toContain(examples['../docs/examples/parked-vehicles.dream']!.trim());
   });
-  it('keeps the planting declarations identical to their checked complete example',()=>{
-    const declarations=[...pages['../docs/dream/growth.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].flatMap(m=>m[1]!.trim().split('\n'));
-    for(const declaration of declarations)expect(examples['../docs/examples/orchard-replanting.dream']).toContain(declaration);
+  it('keeps planting and recovery declarations identical to their respective complete examples',()=>{
+    const sections=pages['../docs/dream/growth.md']!.split('## Timber recovery');
+    for(const [i,path] of ['orchard-replanting','timber-recovery'].entries()){
+      const declarations=[...sections[i]!.matchAll(/```dream\n([\s\S]*?)```/g)].flatMap(m=>m[1]!.trim().split('\n'));
+      expect(declarations.length).toBeGreaterThan(0);for(const declaration of declarations)expect(examples[`../docs/examples/${path}.dream`]).toContain(declaration);
+    }
   });
   it('keeps courier declarations identical to their runnable source',()=>{
     const section=pages['../docs/dream/commerce.md']!.split('## NPC supply trips')[1]!;
@@ -54,7 +96,7 @@ describe("published Dream documentation",()=>{
     expect(block.trim()).toBe(examples['../docs/examples/market-work.dream']!.trim());
   });
   it.each(Object.entries(examples))("compiles the complete example %s",(path,source)=>{
-    const result=checkDream(source);
+    const result=checkDream(source,['/character-import.dream','/ground-floor-seating.dream'].some(name=>path.endsWith(name)) ? worldModules : {});
     expect(result.ok,result.ok ? path : JSON.stringify(result.diagnostics)).toBe(true);
   });
   it("keeps the quickstart's complete tree identical to its runnable source",()=>{

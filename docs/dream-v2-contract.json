@@ -14,6 +14,7 @@
   },
   "expressions": "finite numbers, constants, + - * /, sin(degrees), cos(degrees); no general code",
   "types": {
+    "company_need": "need(initial=n,drain_s=n,below=n,gain=n)",
     "n": "numeric expression",
     "v2": "[n,n]",
     "position2": "[n,n] or a file-local junction reference",
@@ -40,10 +41,10 @@
     "repeat": 32
   },
   "projectLimits": {
-    "modules": 32,
+    "modules": 40,
     "depth": 8,
     "characters": 524288,
-    "assemblies": 128
+    "assemblies": 144
   },
   "commands": {
     "material": {
@@ -174,6 +175,19 @@
         "radius": "n?",
         "size": "v2?",
         "height": "n",
+        "heading_deg": "n?"
+      }
+    },
+    "stairs": {
+      "contexts": [
+        "object"
+      ],
+      "id": true,
+      "fields": {
+        "material": "ref",
+        "at": "v3",
+        "size": "v3",
+        "steps": "n",
         "heading_deg": "n?"
       }
     },
@@ -358,7 +372,7 @@
         "faceted": "bool?",
         "deform": "deform?",
         "motion": "part_motion?",
-        "cutaway": "roof|front|back|left|right?"
+        "cutaway": "roof|above|front|back|left|right?"
       }
     },
     "voxels": {
@@ -373,7 +387,8 @@
         "size": "v3",
         "grid": "v3",
         "chunks": "v3?",
-        "rot_deg": "v3?"
+        "rot_deg": "v3?",
+        "cutaway": "roof|above|front|back|left|right?"
       },
       "block": "voxel_ops"
     },
@@ -549,6 +564,17 @@
         "flap_deg": "n?"
       }
     },
+    "floor": {
+      "contexts": [
+        "top"
+      ],
+      "id": true,
+      "fields": {
+        "on": "ref",
+        "at": "v3",
+        "size": "v2"
+      }
+    },
     "place": {
       "contexts": [
         "top"
@@ -566,7 +592,8 @@
         "behavior": "ref?",
         "pose": "rest?",
         "motion": "ambient_motion?",
-        "parked": "bool?"
+        "parked": "bool?",
+        "floor": "ref?"
       }
     },
     "behavior": {
@@ -624,6 +651,18 @@
         "food": "n?"
       }
     },
+    "need": {
+      "contexts": [
+        "company_need"
+      ],
+      "id": false,
+      "fields": {
+        "initial": "n",
+        "drain_s": "n",
+        "below": "n",
+        "gain": "n"
+      }
+    },
     "account": {
       "contexts": [
         "economy"
@@ -635,7 +674,14 @@
         "capacity": "n",
         "satiety": "n",
         "drain_s": "n",
+        "rest": "ref?",
+        "company": "company_need?",
+        "commute": "bool?",
+        "attendance": "v2?",
+        "on": "ref?",
+        "grounds": "symbols?",
         "shop": "bool?",
+        "ration": "ref?",
         "social": "ref?",
         "shift": "ref?",
         "meal": "ref?",
@@ -691,9 +737,75 @@
         "effort": "n",
         "capacity": "n",
         "target": "n",
-        "requires": "ref?"
+        "requires": "ref?",
+        "requires_any": "symbols?",
+        "equipment": "symbols?",
+        "station": "ref?",
+        "gesture": "ref?"
       },
       "block": "recipe?"
+    },
+    "gesture": {
+      "contexts": [
+        "economy"
+      ],
+      "id": true,
+      "fields": {
+        "cycle_s": "n"
+      },
+      "block": "work_gesture"
+    },
+    "key": {
+      "contexts": [
+        "work_gesture"
+      ],
+      "id": false,
+      "fields": {
+        "t": "n",
+        "left": "v3",
+        "right": "v3"
+      }
+    },
+    "station": {
+      "contexts": [
+        "economy"
+      ],
+      "id": true,
+      "fields": {
+        "object": "ref",
+        "at": "v2",
+        "hands": "v3",
+        "on": "ref",
+        "grounds": "symbols?"
+      }
+    },
+    "rest": {
+      "contexts": [
+        "economy"
+      ],
+      "id": true,
+      "fields": {
+        "energy": "n",
+        "drain_s": "n",
+        "recover_s": "n",
+        "below": "n",
+        "until": "n",
+        "shelter": "bool?",
+        "seats": "symbols",
+        "on": "ref",
+        "grounds": "symbols?"
+      }
+    },
+    "ration": {
+      "contexts": [
+        "economy"
+      ],
+      "id": true,
+      "fields": {
+        "good": "ref",
+        "market": "ref",
+        "below": "n"
+      }
     },
     "meal": {
       "contexts": [
@@ -715,6 +827,7 @@
       ],
       "id": true,
       "fields": {
+        "peers": "symbols?",
         "good": "ref",
         "seats": "symbols",
         "on": "ref",
@@ -745,8 +858,9 @@
       "id": true,
       "fields": {
         "label": "text",
-        "kind": "work|delivery|repair",
+        "kind": "work|delivery|repair|shared_meal",
         "task": "ref",
+        "peer": "ref?",
         "count": "n"
       }
     },
@@ -766,9 +880,11 @@
       ],
       "id": true,
       "fields": {
+        "gesture": "ref?",
         "label": "text",
         "market": "ref",
         "on": "ref",
+        "dry": "bool?",
         "grounds": "symbols?",
         "streets": "symbols?",
         "verge": "n?",
@@ -776,6 +892,8 @@
         "kinds": "symbols?",
         "input": "ref",
         "take": "n",
+        "recover": "ref?",
+        "amount": "n?",
         "seconds": "n",
         "pay": "n",
         "effort": "n",
@@ -918,6 +1036,17 @@
         "at": "v2"
       }
     },
+    "strike": {
+      "contexts": [
+        "top"
+      ],
+      "id": false,
+      "fields": {
+        "reach": "n",
+        "speed": "n",
+        "cooldown_s": "n"
+      }
+    },
     "daylight": {
       "contexts": [
         "top"
@@ -926,6 +1055,18 @@
       "fields": {
         "cycle_s": "n",
         "start_hour": "n"
+      }
+    },
+    "weather": {
+      "contexts": [
+        "top"
+      ],
+      "id": false,
+      "fields": {
+        "cycle_s": "n",
+        "rain_start_s": "n",
+        "rain_end_s": "n",
+        "wet_grip": "n"
       }
     },
     "voxel_world": {
@@ -1281,15 +1422,15 @@
     },
     "source": "Object-root seat id(at=[x,y,z],approach=[x,z],heading_deg=n); 1..4 unique slots on an upright static solid prop. at is the sitting surface, not an avatar origin. The engine fits the humanoid pelvis and rigid legs; the current bench fits feet to its floor. Requires one body cylinder, without compound contacts, foundations, interiors, transport seats, moving parts, surface grounding, break zones or bouncing/toppling furniture. Whole-object break remains supported.",
     "acceptance": "At most 512 world seats; sitting surface 3..9 world units above the floor; dry unobstructed authored transfer 6..40 units from approach to seat, <=4-unit steps and full 3-unit radius/17.5-unit headroom. Placement rotation and measured scale apply once. All sitting points need furniture geometry and all approaches must validate outside the furniture body; seats and approaches require 6-unit separation. No labels infer seating.",
-    "runtime": "F sits or stands; movement and jump first request a clear exit. One shared claim per slot, including an NPC walking to it. G uses ordinary finite carried food; working, trade, sports and boarding require standing. Broken furniture releases claims and repair restores the same slots. Seats add no physics bodies, actors or animated rigs. NPC meal.seats is an optional 1..4 unique furniture-placement list; complete humanoids reserve a reachable free slot after paying, walk to its approach, eat for eat_s, release and return home. Busy/broken seats use standing meals. All claims, paths and timers persist; no queue or table service."
+    "runtime": "F sits or stands; movement and jump first request a clear exit. One shared claim per slot, including an NPC walking to it. G uses ordinary finite carried food; working, trade, sports and boarding require standing. Broken furniture releases claims and repair restores the same slots. Seats add no physics bodies, actors or animated rigs. NPC meal.seats is an optional 1..4 unique furniture-placement list in preference order, with authored slot order within each object; complete humanoids reserve the first reachable free slot after paying, walk to its approach, eat for eat_s, release and return home. Busy/broken seats use standing meals. All claims, paths and timers persist; no queue or table service."
   },
   "interiors": {
     "limits": {
       "spaces": 32,
       "portals": 4
     },
-    "contacts": "contact uses exactly one radius (1..64, cylinder height 1..160) or size=[width,depth] (.1..128, rectangle height .1..160); optional heading_deg only for rectangles. At most eight upright contacts. Rectangles are static structures without seats, whole-object impact or route motion; circles remain compatible.",
-    "semantics": "One optional object-root interior(at=[x,floor_y,z],size=[width,clear_height,depth]) with 1..4 named portal records. Requires a static solid foundation, a matching rectangle floor contact covering the complete interior with its top at floor_y, a matching ceiling contact with its bottom at floor_y + clear_height, and explicit part.cutaway roof tags. Portals use front=-Z, back=+Z, left=-X, right=+X; offset runs along X for front/back and Z for left/right. Width/height are local full dimensions. Complete scenes prove a 9-unit doorway, 20-unit headroom and unobstructed approach with steps <=4. Existing 32-part/8-contact budgets apply. Explicit cutaway=roof|front|back|left|right keeps floor, contents and far walls opaque inside; shell tags survive instancing and streaming. The ordinary simulation supports the physical floor and ceiling. The placed object ID may be used in repair/delivery grounds without independent polygon coordinates. One ground floor per building; no stacked floors, stairs, lifts or inferred rooms. A room-owning lamp supplies a floor-clipped always-on surface pool; it does not light walls or occlude other objects."
+    "contacts": "contact uses exactly one radius (1..64, cylinder height 1..160) or size=[width,depth] (.1..128, rectangle height .1..160); optional heading_deg only for rectangles. At most eight upright contacts without an interior, or 32 inside a static interior. Rectangles are static structures without seats, whole-object impact or route motion; circles remain compatible.",
+    "semantics": "One optional object-root interior(at=[x,floor_y,z],size=[width,clear_height,depth]) with 1..4 named portal records. Requires a static solid foundation, a matching rectangle floor contact covering the complete interior with its top at floor_y, a matching ceiling contact with its bottom at floor_y + clear_height, and explicit part.cutaway roof tags. Portals use front=-Z, back=+Z, left=-X, right=+X; offset runs along X for front/back and Z for left/right. Width/height are local full dimensions. Complete scenes prove a 9-unit doorway, 20-unit headroom and unobstructed approach with steps <=4. Existing 32-part budget applies; interior assemblies have at most 32 contacts including generated stair treads. Explicit cutaway=roof|front|back|left|right keeps floor, contents and far walls opaque inside; shell tags survive instancing and streaming. The ordinary simulation supports the physical floor and ceiling. The placed object ID may be used in repair/delivery grounds without independent polygon coordinates. One enclosing volume per building, with a ground-floor support polygon for NPC work/navigation. Internal upper slabs may use explicit rectangle contacts and cutaway=above. stairs id(material=ref,at=[x,base_y,z],size=[width,rise,run],steps=n,heading_deg=0) creates one voxel volume and n matching rectangular contacts; +Z rises before heading rotation. At most two flights, 2..24 integer treads per flight, within 32 total contacts and 32 visual parts. Measured width >=9, riser <=4 and tread depth >=6 world units. Compiler checks clear supported landings and 18-unit headroom. Above-tagged static parts hide below their local lower bound, remain opaque underfoot and survive chunk transfer. Named floor id(on=building,at=[local_x,height,local_z],size=[width,depth]) binds to an existing full rectangle slab contact inside its enclosure. At most 32 floors, 20 world units headroom. Explicit static prop place(...,role=prop,floor=id) fits its complete footprint and resolves height once; no joints, controls, knockables or nested interiors. Rest, repair, social and station work grounds may name floors together with their owning building. Derived routes traverse validated generated stairs with supported elevations, at most 1024 indoor nodes and the existing combined 8192-node/32768-link/128-waypoint bounds. Only host worker packets carry graph topology. Upper furniture/actors hide below the floor inside the same building; collisions, damage, claims and saves remain physical. Lifts, upstairs commerce and separate stacked-room ownership remain missing. A room-owning lamp supplies a floor-clipped always-on surface pool; it does not light walls or occlude other objects."
   },
   "geometry": {
     "stride": {
@@ -1412,10 +1553,41 @@
       "after": "only seconds, since state entry",
       "near_player": "only radius; 3D distance <= radius",
       "far_player": "only radius; 3D distance >= radius",
-      "interact": "only radius, 10..80; one player talk press, nearest eligible NPC within 3D range; on foot and grounded only; optional familiar matches whether this NPC has already interacted with the player; optional requires checks a personal economy milestone, restricted to the task receiving market actor after linking; optional shared_meals checks completed meals with this particular social NPC (use the commerce feature packet)"
+      "interact": "only radius, 10..80; one player talk press, nearest eligible NPC within 3D range; on foot and grounded only; optional familiar matches whether this NPC has already interacted with the player; optional requires checks a personal economy milestone, restricted after linking to the task receiving market actor, or the named social account actor for shared_meal milestones; optional shared_meals checks completed meals with this particular social NPC (use the commerce feature packet)"
     },
     "execution": "one transition per fixed tick, first matching declaration wins; elapsed resets on transition; per-instance clocks live outside Scene; patrol resumes without teleport; face=player turns stationary actors at 2.5 rad/s",
     "boundary": "data-only bounded state machines; no scripts, pathfinding, generated input profiles or model calls; root world.player remains the original car"
+  },
+  "striking": {
+    "limits": {
+      "reach": [
+        6,
+        16
+      ],
+      "speed": [
+        20,
+        120
+      ],
+      "cooldownS": [
+        0.35,
+        2
+      ],
+      "handRadius": 1
+    },
+    "semantics": "Optional one world-owner strike(reach,speed,cooldown_s). A grounded dry standing player can hit one reachable prop in front with K, outside sports grounds. Engine checks exact contact boundaries, vertical reach and intervening solid contacts. Reuse authored bounce/break/topple thresholds and existing fragment budgets. speed is an arcade equivalent closing speed, not force or damage health. Too-sturdy props remain intact. Cooldown advances in fixed simulation time and survives R, vehicles, streaming and saves. No NPC combat, item inventory, new body, generated controller or hand tool mesh."
+  },
+  "weather": {
+    "cycleSeconds": [
+      120,
+      3600
+    ],
+    "rainStartS": "at least 10",
+    "rainDurationS": "at least 10; end at least 30 seconds before cycle end",
+    "wetGrip": [
+      0.45,
+      1
+    ],
+    "semantics": "Optional world-owner cycle from saved simulation time. Rain fades over five seconds, surfaces wet over ten and dry over thirty after rain. Shared ground tire acceleration/braking/lateral grip scale by wetness; ICE, water, air and indoor floors retain their existing rules. Coast stopping resistance is unchanged. Optional repair dry=true waits before dispatch for both player and NPC; committed jobs finish and keep resources. Sky and existing pooled particles show rain, reduced motion suppresses precipitation. No new clock, bodies, shadows or per-drop physics."
   },
   "daylight": {
     "cycleSeconds": [
@@ -1618,7 +1790,7 @@
       "building": {
         "axis": "y",
         "min": 3,
-        "max": 40
+        "max": 120
       },
       "train": {
         "axis": "x",
@@ -1690,6 +1862,59 @@
     "phase": "place.phase_s 0..3600 only with route; shifts the entire route clock including stops. offset remains a carriage distance."
   },
   "commerce": {
+    "grounds": {
+      "commands": [
+        "account",
+        "station",
+        "delivery",
+        "repair",
+        "meal",
+        "social",
+        "rest",
+        "shift"
+      ],
+      "total": 12,
+      "extra": 11,
+      "semantics": "Each requires on when grounds is used. Omit grounds for no extras; otherwise use unique existing convex work grounds excluding on. Shared local-sample, graph and saved-waypoint bounds remain unchanged."
+    },
+    "company": {
+      "source": "account id(...,company=need(initial=65,drain_s=.05,below=40,gain=35));",
+      "bounds": "One optional need per existing account; initial 0..100, drain_s 0...25, below 0..95, gain 1..100; company requires a participating NPC social host/peer, or a player with an existing social host. Existing account/actor/seat/path budgets remain unchanged.",
+      "runtime": "Simulation time lowers company at the existing 4Hz economy cadence in every control mode; pause freezes it. Completed player/NPC or NPC/NPC shared meals restore only the actual participants, once, capped at 100. Cancelled, offered, solitary or interrupted meals grant nothing. NPC hosts offer/start company activities only at or below their own threshold; priced food may be stocked in advance while an open supply counter will close before the need can be served at its next opening; player invitations remain deliberate and available at high company. Existing hunger, fullness, cooldown, consent, duties, finite food/money, round-trip and refund rules still apply. Persist company and current commitments through R, streaming and saves; Start over resets. Exact r107 migration initializes only authored company values at saved simulation time without catch-up, rewards or resource rebasing. A game need, not psychological validity, affection, dating, a general emotional model or provider policy."
+    },
+    "companions": {
+      "source": "social break(peers=[other_account],good=bread,seats=[bench],on=plaza,eat_s=8,markets=[corner]);",
+      "bounds": "1..4 unique other NPC account refs per plan; needs supply markets. One global shared social activity across invitations, player meals and resident gatherings. Hosts are stationary complete humanoids; peers may use accepted walk routes. Actual body-sized supported seat pairs and outward/return paths; upper floors require the named floor and its enclosing building in grounds, reachable validated stairs, saved supported elevations and full 3D arrival checks, existing 16-account/32-NPC/24-rig/navigation caps; 64 sparse plan/host/guest history records.",
+      "runtime": "NPC hosts buy missing portions through finite trade, may carry them until off duty, and reserve two portions plus both seats. Both residents finish existing commitments, walk, eat once together and return to their exact interrupted positions before decisions/program clocks resume. Cooldown/fullness and due shift/attendance margins apply. Broken seating, a 120-second blocked approach or due work cancels/refunds the donor. Pair history does not grant player meal or recipe credit. Persist journeys, clocks and history through streaming, pause, R/save; Start over resets. No new actors, bodies, generated code, general affection, dating, groups or upstairs social travel."
+    },
+    "workGestures": {
+      "limits": {
+        "gestures": 8,
+        "keys": 8,
+        "minCycleS": 0.6,
+        "maxCycleS": 8,
+        "minGap": 0.1,
+        "maxSpeed": 12
+      },
+      "source": "gesture id(cycle_s=n){key(t=n,left=v3,right=v3);...}; work(...,station=ref,gesture=ref); repair(...,gesture=ref);",
+      "coordinates": "Offsets in world units (10 per metre) from the work anchor; actor-forward +X, up +Y, left +Z. X -1.25..1.25, Y .6..3, Z -3..3; left Z >= .6 and right Z <= -.6.",
+      "keys": "2..8 ordered anonymous keys, first t=0, last t=1, gap >=.1; first/last hand positions identical within 1e-8. Smoothstep interpolation, peak hand speed <=12 world units/s. 1..8 unique programs, cycle .6..8 seconds.",
+      "runtime": "Render-only rigid arms on existing complete humanoids. Work requires a physical station; repairs use a generic forward anchor, not verified tool contact. Phase derives from saved task progress; no saved animation fields, scripts, tools, item bodies, resource changes or added rigs. Pause and reduced motion retain existing policy."
+    },
+    "workstations": {
+      "source": "station prep(object=table,at=[16.5,0],hands=[9.8,10,0],on=work_yard); work(...,capacity=1,equipment=[table],station=prep);",
+      "bounds": "16 stations; at is local XZ and hands local XYZ in object units, each coordinate within +/-256 (hand Y 0..256); upright static solid prop without joints; existing place.floor bindings are supported when the station names that floor and its enclosing building; dry clear 4.1-radius/18-height stand, supported hands 3..7 world units away and 6..12 high; stands separated by 10 world units",
+      "semantics": "A station is one shared work claim across jobs. Work must name its object in equipment and have capacity=1. Start within two world units on foot; face the hand target without moving the body. Departure or equipment damage refunds once. Complete NPC humanoids walk there through existing bounded journeys before reserving stock/wages and return afterwards. Stationary accounts use matching ordered station grounds; commuters use their own accepted grounds. Stationary station holders accept ordinary interact transitions without handing back body/facing or advancing route/animation clocks; moving trips retain their talk guard. Floor stations require one source business and a full supported standing footprint, with connected stair/counter approaches even without assigned NPCs. Ground and upper job starts/continuation retain the same counter-radius bound; an accepted upper station replaces counter sight only for production. Purchases and business actions still require actual counter sight. Player work/bag context appears only near the same supported floor and clear sight of the bench. Work trips retain bounded elevation in pose, home, destination and path; reject unsupported heights and through-slab paths. Preserve one claim, finite escrow, refunds, R, pause, streaming and saved work. Hands are renderer-only rigid-arm targets. No item bodies, new rigs, generated controllers or offline work. See examples/upstairs-work.dream."
+    },
+    "qualifications": {
+      "source": "milestone table_friend(label=\"Share bread\",kind=shared_meal,task=baker,count=1); work(...,requires_any=[practiced,table_friend]);",
+      "bounds": "16 milestones, shared_meal task references a non-player account with social; optional peer references a different NPC account explicitly listed in that host social.peers; peer is shared_meal-only and cannot gate player conversation; requires_any has 1..4 unique milestone IDs, excludes requires; every prerequisite branch must be acyclic",
+      "semantics": "Without peer, completed shared meals qualify only the player and the named NPC account using socialHistory. With peer, only task and peer qualify, using the exact saved peerHistory key social/task/peer. Both must complete the actual meal; no reversed key, global count or stranger qualifies. Paired NPC milestones cannot gate player on.requires. Residents finish their return before taking work. Third parties never inherit another pair's history. Starting, cancelling or refunded meals do not qualify. Either listed milestone qualifies the acting worker; requires retains its single-milestone rule. Player/NPC work, commute decisions and saved active jobs share the same qualification check. Counts award no goods, wages or practice; recipes still require finite inputs, pay, capacity, hours, food, energy and equipment. Shared history cannot exceed consumed portions per good. No new saved field, free stock, general friendship or relationship score. Ordered account.works now permits five unique jobs; concurrent capacity and actor/render bounds are unchanged."
+    },
+    "attendance": "Optional account(...,commute=true,attendance=[start_hour,end_hour]) schedules one NPC workplace using its existing 1..5 work preferences, home/grounds, body and pedestrian graph. Needs daylight; opening 0..<24, closing 0..24, different endpoints; overnight and [0,24] are supported. Every assigned job uses the same market. Arrive even with full shelves or missing supplies; no input, wage, stock or job capacity is reserved while travelling or waiting. At the workplace choose an eligible shortage job at most once per simulation second through the same finite player work rules. Waiting earns no wages or practice. Finish committed work across the attendance boundary, then walk home. An affordable meal or owned food at fullness <=40, or configured low energy, returns the worker for the ordinary home food/rest routine before another attendance trip. Unaffordable meals do not stop earning a feasible wage. Existing jobs, equipment interruption/refunds, qualification, service hours, player capacity and conservation stay authoritative. One journey owns pose and pauses the NPC program; existing actor/rig/path budgets stay. Persist dutyAtS and out/idle/work/home; pin the workday to departure, never roll a delayed trip into a later day or create offline attendance. Registered old one-batch trips finish unchanged before new attendance decisions. No employee contracts, idle pay, queue or guaranteed job.",
+    "resting": "Optional economy rest(energy=0..100,drain_s=0..0.25,recover_s=.1..10,below=0..95,until=5..100,seats=[furniture],on=ground,grounds=[extra]); account(...,rest=plan). At most 8 plans, 1..4 unique ordered furniture IDs, until >= below+5 and the existing convex-ground, 4096-sample, 8192-node/32768-link/128-waypoint limits. Player and non-vendor complete humanoid NPC accounts use the same bounded energy rule. NPCs may combine meal and commuting work, excluding other automatic policies. Time drains energy, work and repairs require effort before starting and spend it once on completion. Cancellation never spends effort. Player and energy-enabled NPC recovery uses any usable occupied furniture, regardless of NPC rest preferences. An NPC recovers while its existing meal or companion journey is in eat, or its rest journey is in sit; reserved approaches, standing meals and return walks still drain. Recovery stops immediately on damage or a lost claim, and never adds another journey or recovery reward. Hungry food decisions precede automatic rest. Low-energy NPCs reserve a reachable free seat, physically walk/sit/recover until target, release it and return to the paused routine. Broken or occupied furniture prevents recovery; claims share player/meal capacity. Optional shelter=true requires world weather and every listed seat fully under a retained interior ceiling with body-sized headroom. An otherwise free uncovered NPC seeks the same claimed seat when rain starts, even at high energy; energy and weather share one journey. Existing meals, work and travel finish first. Stay until rain ends and energy reaches until; a healthy outward trip can return early once rain stops. Covered healthy routines remain in place. No food, cash, work pay, extra actors or offline catch-up. Energy, seat ownership and out/sit/home paths persist through R, streaming and saves. Registered r96 upgrade initializes only new energy values, preserving all commitments and resources. This is a game need, not a clinical sleep model. See examples/resting.dream.",
+    "commuting": "Optional account.commute=true with work/works and on plus 0..11 grounds lets a complete decor humanoid NPC walk to paid work and return. It may coexist with meal, excluding vendor/shop/ration/shift/social/repair/delivery policies. Host-derived body profile rounds up to .1 units with minimum radius 4/headroom 18 and maximum authored radius 8/height 32. Grounds are convex and share 4096 samples; paths keep the existing 8192-node/32768-link/128-waypoint bounds. Ordered eligible work and target shortage dispatch; travel reserves no materials, wage, output room or work slot. Arrival uses ordinary guarded work. Existing work commits once, refunds on interruption and returns without teleporting. Program clocks, paths, ownership, pay and meals persist through pause, R, streaming and saves. No automatic transport or increased actor/rig budgets.",
+    "rations": "Optional economy ration(good,market,below=0..95), at most eight plans, referenced by a stationary NPC repair/delivery account with a clear supply counter at home. One owned portion, paid finite stock. Pack only with room for every declared task load, eat once at/below the threshold through ordinary transactions, including during travel. No borrowing sealed cargo, free food, new journeys or forced purchases when unavailable. Player G can eat owned food during work/repair/delivery on dry ground without cancelling the task.",
     "business": {
       "source": "market(...,owner=seller_account,sale=15){lot(...);}",
       "bounds": "owner references an existing account, independent of the counter actor; sale is an optional positive integer 1..1000000 and needs a non-player initial owner; existing 8 markets/16 accounts caps",
@@ -1698,11 +1923,11 @@
     "social": {
       "source": "social id(good=food,seats=[bench],on=ground,grounds=[extra],eat_s=8,cooldown_s=600,max_fullness=80,markets=[counter]); account(...,social=id);",
       "bounds": "8 plans; 1..4 unique furniture IDs with at least 2 slots each; optional markets has 1..4 unique counters with a priced lot for good and at least one within work-placement reach; host capacity >=2; positive food; eat_s 1..12, cooldown_s 30..86400 default 600, max_fullness 0..100 default 80; stationary complete humanoid decor NPC program, body radius <=8 and height <=32; existing convex grounds and walking limits",
-      "semantics": "Y invites while seated after T establishes acquaintance. With markets, a familiar NPC may buy two portions from its own finite credits at a reachable open staffed counter and later offer to host. Initial resources are unchanged. Offers require the same nearby seated dry grounded player, sight, paired seat, fullness, availability and round-trip shift margin as player invitations, including 30 seconds for consent. One pending offer or shared journey globally. Pending holds the adjacent seat; food stays in the host bag. Y accepts; X declines. Expiry after 30 simulation seconds, decline, F/R, a lost seat or renewed duties releases the offer; purchases stay with the NPC. invitedAtS applies the plan cooldown to repeated offers. Acceptance reserves two actual donor-owned units and refund room, then uses physical outward/eat/return paths. Eat once after the whole duration, feed both and increment per-person shared history once. Interruption refunds the donor once, never another account. Omitting markets keeps player-funded Y sharing unchanged. No NPC-to-NPC invitations, free meals, generated controllers, extra rigs or offline progression. Pause freezes offer time; streaming/R retain history; Start over resets. Format 17/simulation 30 registers r71, preserving all prior state without initializing money or stock. See examples/hosted-meal.dream and examples/shared-meal.dream."
+      "semantics": "Y invites while seated after T establishes acquaintance. With markets, a familiar NPC may buy two portions from its own finite credits at a reachable open staffed counter and later offer to host. Initial resources are unchanged. Offers require the same nearby seated dry grounded player, sight, paired seat, fullness, availability and round-trip shift margin as player invitations, including 30 seconds for consent. One pending offer or shared journey globally. Pending holds the adjacent seat; food stays in the host bag. Y accepts; X declines. Expiry after 30 simulation seconds, decline, F/R, a lost seat or renewed duties releases the offer; purchases stay with the NPC. invitedAtS applies the plan cooldown to repeated offers. Acceptance reserves two actual donor-owned units and refund room, then uses physical outward/eat/return paths. Eat once after the whole duration, feed both and increment per-person shared history once. Interruption refunds the donor once, never another account. Omitting markets keeps player-funded Y sharing unchanged. Resident-to-resident meals require explicit social.peers and use the companion rules. No free meals, generated controllers, extra rigs or offline progression. Pause freezes offer time; streaming/R retain history; Start over resets. Format 17/simulation 30 registers r71, preserving all prior state without initializing money or stock. See examples/hosted-meal.dream and examples/shared-meal.dream."
     },
     "shifts": {
       "source": "shift id(market=counter,rest=[x,y],on=ground,grounds=[extra],lead_s=15); account(...,shift=id);",
-      "bounds": "at most 8 plans, one NPC per plan; existing market with daily hours; rest at least 16 units from work; lead_s 0..120 and shorter than the closed interval; on plus 0..7 unique convex grounds, 4096 local samples",
+      "bounds": "at most 8 plans, one NPC per plan; existing market with daily hours; rest at least 16 units from work; lead_s 0..120 and shorter than the closed interval; on plus 0..11 unique convex grounds, 4096 local samples",
       "ownership": "stationary measured-person decor NPC program, no route, meal, repair or delivery policy; shop and matching production may coexist; actual world body radius <= 8, height <= 32; body-sized paths use accepted pedestrian pavement and existing 8192-node/32768-link/128-waypoint bounds",
       "semantics": "Finish own committed work before walking out. Return lead_s before reopening; a shifted counter owner must actually reach the work anchor before trade, new work, pickup or handoff resumes. No wages for idle time. Resting staff can use existing conversations and finite food transactions. Save out/rest/in pose, path, retry time and distance outside Scene; R and streaming retain them, Start over resets. Format 13/simulation 20 registers r62 without changing stored state, clocks, money or history. See examples/staff-shifts.dream."
     },
@@ -1714,6 +1939,7 @@
     },
     "limits": {
       "goods": 8,
+      "rations": 8,
       "accounts": 16,
       "markets": 8,
       "jobs": 16,
@@ -1722,15 +1948,18 @@
       "socials": 8,
       "mealMarkets": 4,
       "milestones": 16,
-      "workerJobs": 4,
+      "workerJobs": 5,
       "ingredients": 4,
+      "equipment": 4,
+      "stations": 16,
       "deliveries": 16,
       "courierContracts": 4,
       "repairs": 8,
+      "recoverySources": 512,
       "repairNodes": 4096,
       "repairNetworkNodes": 8192,
       "repairNetworkLinks": 32768,
-      "repairGrounds": 8,
+      "repairGrounds": 12,
       "repairStreetTargets": 512,
       "repairAccessPieces": 2048,
       "repairVerge": 128,
@@ -1848,6 +2077,10 @@
         1,
         32
       ],
+      "recoveryAmount": [
+        1,
+        32
+      ],
       "repairSeconds": [
         1,
         120
@@ -1874,7 +2107,7 @@
       "repairNetworkNodes": 8192,
       "repairNetworkLinks": 32768
     },
-    "semantics": "NPC meal trips use meal id(good=food_id,markets=[first_shop,second_shop],on=home_ground,grounds=[extra_ground],eat_s=4); and account.meal=meal_id. At most 8 plans, 1..4 unique ordered markets, a positive-food good with a priced lot in every market, and eat_s=1..12 seconds. on plus 0..7 unique extra convex work grounds share the 4096 local-sample budget and accepted pedestrian network. A meal account is a measured person decor NPC with a program, optional walk route, no counter operator role, and no shop/work/repair/delivery policy. Hungry at <=40, it eats carried food first; otherwise it walks to the first stocked affordable shop with a clear outbound/return path. No reservation before arrival. The shared buy transaction rechecks stock, funds, bag and treasury. Failure returns empty-handed, without refund or pay. Success waits eat_s, consumes its owned unit once, restores fullness, then returns to the captured routine position. Program clocks pause through travel/eating/return; moving transit/player contacts can cause waits and bounded replans. Save paths, timers and ownership outside Scene. Optional meal.seats names 1..4 furniture placements and uses the seating contract for shared claims, approach paths and standing fallback; complete humanoids required. No item bodies, new rigs, queues, generated navigation or offline catch-up. See examples/meal-trips.dream. Compose works=[pack_lunch,bake], account.deliveries and meal for a finite staffed business; see examples/market-production.dream. Courier/meal scenes prepare pedestrian routing independently of repairs or ambient walkers. Format 11/simulation 17 preserves registered previous worlds, all personal records and active tasks, without new money/stock or live-city graph rebasing.  Optional one economy() block per linked world. Goods, accounts, stationary-NPC markets and timed work are bounded data. One player account, one account per actor; NPC shop=true buys/eats when satiety <=40; NPC work refills to its job target and requires a stationary actor in range. The player uses explicit on-foot grounded controls. Market lots buy and sell one unit at their fixed price, with finite stock, treasury and capacity; omitted price means a work ingredient not traded. Work uses exactly input/take or a block of 1..4 ingredient(good,take) declarations with unique goods. Every input requires an existing lot, positive bounded take within that lot limit, and differs from output. Empty blocks, mixed forms, duplicate/unknown goods and fractional or excessive quantities fail. Transactions conserve credits, atomically reserve every input/wage/output room and all refund capacity, and refund every input on interrupted work. Work requires satiety >= effort; effort is spent on completion. At most 16 milestone(id,label,kind=work|delivery|repair,task,count) definitions reference existing tasks of the matching kind; count is an integer 1..1000000000, label 1..40 nonblank characters. Optional work.requires references a milestone and checks the acting account only; work prerequisite cycles are rejected. Only paid work, completed handoffs and successful repairs increment that account completion once. Start, cancel, pickup and another account do not qualify. Optional on.requires is interact-only, and can recognize player completions at that task receiving market actor (work/repair.market or delivery.to); reject unknown, absent-economy or unrelated actor requirements after linking. Milestones grant no credits, goods or controller access. Personal counters plus unassigned historical totals must equal shared completion totals. Save format 10/simulation 15 migrates only registered old worlds: old totals stay unassigned, new personal records start at zero, old active jobs earn personal credit when they finish. No guessing from truncated event history. Needs and NPC decisions use a resident 4 Hz clock, with immediate player actions/cancellation. No scripts, provider calls, offline catch-up, free replenishment or clinical/nutritional realism. State survives R, streaming and saves; Start over resets it. Delivery declares separate from/to markets, good, quantity, pay, optional per-unit supplier price (0..10000, default 0) and capacity. Quantity*price+pay must fit the treasury limit. Collect reserves finite source cargo, destination invoice plus wage, supplier treasury headroom and both shelf capacities; sealed cargo counts toward carry capacity and cannot be traded/eaten. Complete on foot at the destination to transfer goods, pay the source business its invoice and the courier its wage once, or cancel anywhere to return all reservations. Carrying survives vehicles, R, streaming and saves. Optional account.deliveries is an ordered 1..4 unique contract list for stationary non-vendor NPCs at the receiving market home; it can accompany repairs, but excludes production work and player accounts. Delivery on names its receiving convex work ground; optional grounds adds 1..7 unique convex surfaces, excluding on. The supplier must have a clear approach on those grounds or accepted pedestrian pavement. All grounds share 4096 local samples. Complete-world acceptance checks pickup, handoff and return for every assigned home. Pickup and handoff approaches must be less than 4 world units above/below the vendor. NPC local food and available repairs take priority; then whole-shipment shelf demand can start a physical walking trip. Pickup intent holds one shared contract-capacity slot without reserving stock, funds or shelf room. Arrival rechecks shared player collection rules; unavailable shipments return empty-handed without goods, refund or pay. Collected cargo uses the same escrow and conservation ledger; handoff pays once, then the worker walks home. Pickup/carry/return paths and retry clocks persist, pause NPC programs and interpolate through the existing worker renderer. Live contacts block travel. Identical ordered delivery grounds share one prepared topology, bounded by 8192 nodes, 32768 links and 128 saved waypoints. No courier vehicle AI, item pickup bodies, upstream production or offline travel. Repair services require exactly one of kind or a nonempty unique kinds list from the measure categories; both select measured-kind ground-accessible break/topple objects or zones within an explicit convex surface containing a supply market. Optional grounds adds 1..7 unique existing convex surfaces, excluding on; all grounds together retain the 4096 local-sample budget. Extra grounds enable engine-owned walking on accepted sidewalks, crossings and entrance paving between service grounds. Optional streets is a unique list of 1..32 existing street IDs with sidewalks at least 8 units wide; it adds measured-kind damage contacts within verge distance of those sidewalks. verge is 0..128 world units, default 24, and requires streets. Short per-target access patches use the shared miter geometry, exclude all riding surfaces, the circuit and water, and do not create paving or infrastructure. At most 512 street targets and 2048 access pieces per service. Paths stay on accepted pavement except these local dry work approaches; named streets do not grant unpainted-road shortcuts. Full-cylinder inset portals join work approaches to pavement. The complete-world compiler checks every target from every worker home; disconnected grounds fail. Derived routing is capped at 8192 nodes, 32768 directed links and 128 saved waypoints, never a world raster or model-authored graph. NPC account.repair requires a stationary home within that area and market reach, and excludes production work and market ownership. Optional dispatch_s defaults to 12 (0..120) simulation seconds so the player can take the same job first. One claimant per damage target across services; reserve finite kits, wage and refund room, count kits against carrying capacity, work on site, wait for clear restoration space, consume/pay once, and walk home without losing program memory. Local dry navigation has 4096 samples at 12-unit spacing and 128 saved path points. Without grounds or streets it remains inside on and avoids roads, riding lanes and water. Network travel uses accepted pedestrian surfaces and bounded local dry work approaches; crossings and supported bridge sidewalks connect streets, and movement checks live contacts. Worker-owned topology is prepared in the world worker; model source and saves cannot supply graph edges. Visual worker poses interpolate one commerce tick while simulation contacts stay authoritative. Notices, poses, paths, progress, reservations, material-use counters and returns survive R, streaming and saves. Optional repair regrow_s (30..86400 seconds) requires kind=tree and whole toppling prop targets with a centered base body, without foundations, zones, seats, emitters or lamps. seed_scale is 0.1..0.5, default .15, requires regrow_s. Planting consumes the declared finite input and pays once, then scales the replacement geometry and contacts from the seed scale to maturity. Resident growth waits for physical clearance; no offline growth or biological validity is claimed. At most 32 growing plants plus committed planting jobs, each reserving one slot. Re-destruction loses the consumed sapling and captures debris at its current size. Account repairs is a unique 1..4 service list, exclusive with repair and work. Priority selects available work, one commitment; all service homes must be in on and within market reach. Notices identify service and target. Touching work grounds join through full-cylinder portals; no road or water shortcuts. No arbitrary city dispatch or scaffold. Long walking journeys take actual simulation time; supplies and wages remain reserved until completion/cancellation. Existing actor/rig/destruction budgets stay unchanged. Logical Lab scenarios remain independent."
+    "semantics": "NPC meal trips use meal id(good=food_id,markets=[first_shop,second_shop],on=home_ground,grounds=[extra_ground],eat_s=4); and account.meal=meal_id. At most 8 plans, 1..4 unique ordered markets, a positive-food good with a priced lot in every market, and eat_s=1..12 seconds. on plus 0..11 unique extra convex work grounds share the 4096 local-sample budget and accepted pedestrian network. A meal account is a measured person decor NPC with a program, optional walk route, no counter operator role, and no shop/work/repair/delivery policy. Hungry at <=40, it eats carried food first; otherwise it walks to the first stocked affordable shop with a clear outbound/return path. No reservation before arrival. The shared buy transaction rechecks stock, funds, bag and treasury. Failure returns empty-handed, without refund or pay. Success waits eat_s, consumes its owned unit once, restores fullness, then returns to the captured routine position. Program clocks pause through travel/eating/return; moving transit/player contacts can cause waits and bounded replans. Save paths, timers and ownership outside Scene. Optional meal.seats names 1..4 furniture placements and uses the seating contract for shared claims, approach paths and standing fallback; complete humanoids required. No item bodies, new rigs, queues, generated navigation or offline catch-up. See examples/meal-trips.dream. Compose works=[pack_lunch,bake], account.deliveries and meal for a finite staffed business; see examples/market-production.dream. Courier/meal scenes prepare pedestrian routing independently of repairs or ambient walkers. Format 11/simulation 17 preserves registered previous worlds, all personal records and active tasks, without new money/stock or live-city graph rebasing.  Optional one economy() block per linked world. Goods, accounts, stationary-NPC markets and timed work are bounded data. One player account, one account per actor; NPC shop=true buys/eats when satiety <=40; NPC work refills to its job target and requires a stationary actor in range. The player uses explicit on-foot grounded controls. Market lots buy and sell one unit at their fixed price, with finite stock, treasury and capacity; omitted price means a work ingredient not traded. Work uses exactly input/take or a block of 1..4 ingredient(good,take) declarations with unique goods. Every input requires an existing lot, positive bounded take within that lot limit, and differs from output. Empty blocks, mixed forms, duplicate/unknown goods and fractional or excessive quantities fail. Same-good work requires make greater than its input take. Reserve max(take,make) once for that lot, subtract its held input before checking future space, and count make minus take as the completed gain. Other ingredient refunds remain reserved independently. No seed-free or no-gain self-loop. Transactions conserve credits, atomically reserve every input/wage/output room and all refund capacity, and refund every input on interrupted work. Work requires satiety >= effort; effort is spent on completion. At most 16 milestone(id,label,kind=work|delivery|repair,task,count) definitions reference existing tasks of the matching kind; count is an integer 1..1000000000, label 1..40 nonblank characters. Optional work.requires references a milestone and checks the acting account only; work prerequisite cycles are rejected. Only paid work, completed handoffs and successful repairs increment that account completion once. Start, cancel, pickup and another account do not qualify. Optional on.requires is interact-only, and can recognize player completions at that task receiving market actor (work/repair.market or delivery.to); reject unknown, absent-economy or unrelated actor requirements after linking. Milestones grant no credits, goods or controller access. Personal counters plus unassigned historical totals must equal shared completion totals. Save format 10/simulation 15 migrates only registered old worlds: old totals stay unassigned, new personal records start at zero, old active jobs earn personal credit when they finish. No guessing from truncated event history. Needs and NPC decisions use a resident 4 Hz clock, with immediate player actions/cancellation. No scripts, provider calls, offline catch-up, free replenishment or clinical/nutritional realism. State survives R, streaming and saves; Start over resets it. Delivery declares separate from/to markets, good, quantity, pay, optional per-unit supplier price (0..10000, default 0) and capacity. Quantity*price+pay must fit the treasury limit. Collect reserves finite source cargo, destination invoice plus wage, supplier treasury headroom and both shelf capacities; sealed cargo counts toward carry capacity and cannot be traded/eaten. Complete on foot at the destination to transfer goods, pay the source business its invoice and the courier its wage once, or cancel anywhere to return all reservations. Carrying survives vehicles, R, streaming and saves. Optional account.deliveries is an ordered 1..4 unique contract list for stationary non-vendor NPCs with a connected home; it can accompany repairs, but excludes production work and player accounts. Delivery on names a convex work ground; optional grounds adds 1..11 unique convex surfaces, excluding on. The home, supplier and receiving counter need clear approaches on those grounds or accepted pedestrian pavement, with complete connected pickup, handoff and return paths. The home need not be in receiving-counter reach, so one courier can serve different destinations. All grounds share 4096 local samples. Complete-world acceptance checks pickup, handoff and return for every assigned home. Pickup and handoff approaches must be less than 4 world units above/below the vendor. NPC local food and available repairs take priority; then whole-shipment shelf demand can start a physical walking trip. Pickup intent holds one shared contract-capacity slot without reserving stock, funds or shelf room. Arrival rechecks shared player collection rules; unavailable shipments return empty-handed without goods, refund or pay. Collected cargo uses the same escrow and conservation ledger; handoff pays once, then the worker walks home. Pickup/carry/return paths and retry clocks persist, pause NPC programs and interpolate through the existing worker renderer. Live contacts block travel. Identical ordered delivery grounds share one prepared topology, bounded by 8192 nodes, 32768 links and 128 saved waypoints. No courier vehicle AI, item pickup bodies, upstream production or offline travel. Optional repair recover=good,amount=1..32 recovers material from completed physical damage. It needs an existing receiving lot with sufficient limit. At dispatch recover only when its source is mature and both bag and reserved shelf room fit; otherwise ordinary repair still proceeds. Reserve potential output until return, never count it as existing stock before completion. Completion consumes input, pays the existing wage once and increments recovered[service]; flagged home-phase cargo belongs to the business until the shared deliver action deposits it at the open staffed counter. No second wage, trade, eat or abandonment of sealed output; R, vehicles, pause, streaming and saves retain it. NPCs walk home and use the same guarded handoff. Growing sources stay spent across sapling damage until actual unobstructed growth completes; at most 512 unique growing recovery sources. The historical format-19/simulation-35 r87 upgrade initializes counters to zero and mark historical broken/growing sources spent, without altering old state or issuing retroactive material. Repair services require exactly one of kind or a nonempty unique kinds list from the measure categories; both select measured-kind ground-accessible break/topple objects or zones within an explicit convex surface containing a supply market. Optional grounds adds 1..11 unique existing convex surfaces, excluding on; all grounds together retain the 4096 local-sample budget. Extra grounds enable engine-owned walking on accepted sidewalks, crossings and entrance paving between service grounds. Optional streets is a unique list of 1..32 existing street IDs with sidewalks at least 8 units wide; it adds measured-kind damage contacts within verge distance of those sidewalks. verge is 0..128 world units, default 24, and requires streets. Short per-target access patches use the shared miter geometry, exclude all riding surfaces, the circuit and water, and do not create paving or infrastructure. At most 512 street targets and 2048 access pieces per service. Paths stay on accepted pavement except these local dry work approaches; named streets do not grant unpainted-road shortcuts. Full-cylinder inset portals join work approaches to pavement. The complete-world compiler checks every target from every worker home; disconnected grounds fail. Derived routing is capped at 8192 nodes, 32768 directed links and 128 saved waypoints, never a world raster or model-authored graph. NPC account.repair requires a stationary home within that area and market reach, and excludes production work and market ownership. Optional dispatch_s defaults to 12 (0..120) simulation seconds so the player can take the same job first. One claimant per damage target across services; reserve finite kits, wage and refund room, count kits against carrying capacity, work on site, wait for clear restoration space, consume/pay once, and walk home without losing program memory. Local dry navigation has 4096 samples at 12-unit spacing and 128 saved path points. Without grounds or streets it remains inside on and avoids roads, riding lanes and water. Network travel uses accepted pedestrian surfaces and bounded local dry work approaches; crossings and supported bridge sidewalks connect streets, and movement checks live contacts. Worker-owned topology is prepared in the world worker; model source and saves cannot supply graph edges. Visual worker poses interpolate one commerce tick while simulation contacts stay authoritative. Notices, poses, paths, progress, reservations, material-use counters and returns survive R, streaming and saves. Optional repair regrow_s (30..86400 seconds) requires kind=tree and whole toppling prop targets with a centered base body, without foundations, zones, seats, emitters or lamps. seed_scale is 0.1..0.5, default .15, requires regrow_s. Planting consumes the declared finite input and pays once, then scales the replacement geometry and contacts from the seed scale to maturity. Resident growth waits for physical clearance; no offline growth or biological validity is claimed. At most 32 growing plants plus committed planting jobs, each reserving one slot. Re-destruction loses the consumed sapling and captures debris at its current size. Account repairs is a unique 1..4 service list, exclusive with repair and work. Priority selects available work, one commitment; all service homes must be in on and within market reach. Notices identify service and target. Touching work grounds join through full-cylinder portals; no road or water shortcuts. No arbitrary city dispatch or scaffold. Long walking journeys take actual simulation time; supplies and wages remain reserved until completion/cancellation. Existing actor/rig/destruction budgets stay unchanged. Logical Lab scenarios remain independent."
   },
   "output": "validated Object DSL v2 and Scene v1; authoring-language version is separate"
 }

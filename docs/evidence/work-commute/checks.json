@@ -1,0 +1,718 @@
+{
+  "environment": {
+    "node": "v26.8.1",
+    "platform": "darwin",
+    "arch": "arm64",
+    "workers": 2,
+    "testTimeoutMs": 60000
+  },
+  "fullRun": {
+    "tests": 1793,
+    "passed": 1792,
+    "failed": 1,
+    "durationSeconds": 578.62,
+    "note": "The only failure used the pre-correction owned-food guard. Final affected-file rerun passed; the full suite was not repeated."
+  },
+  "finalAffectedRun": {
+    "files": 5,
+    "passed": 76,
+    "durationSeconds": 2.57
+  },
+  "reports": [
+    {
+      "localPath": ".npm-cache/work-commute-full.json",
+      "sha256": "70c152f2c769a6dfab4c1f154e74d5af0482f6571771436ae20e99f6173d640f"
+    },
+    {
+      "localPath": ".npm-cache/work-commute-final.json",
+      "sha256": "2aef28c2df56b7afaa8b9886f6194d349b31249cb17cb9ffb48f757b52ed3541"
+    }
+  ],
+  "combined": {
+    "files": 170,
+    "passed": 1793,
+    "note": "Latest executed result per test file, not a fresh all-green full-suite run."
+  },
+  "files": [
+    {
+      "path": "tests/activity-context.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/agents-size.test.ts",
+      "passed": 1
+    },
+    {
+      "path": "tests/aircraft-assets.test.ts",
+      "passed": 6
+    },
+    {
+      "path": "tests/airport-junction.test.ts",
+      "passed": 2
+    },
+    {
+      "path": "tests/ambient-populations.test.ts",
+      "passed": 14
+    },
+    {
+      "path": "tests/asset-construction.test.ts",
+      "passed": 11
+    },
+    {
+      "path": "tests/botany-construction.test.ts",
+      "passed": 5
+    },
+    {
+      "path": "tests/botany.test.ts",
+      "passed": 2
+    },
+    {
+      "path": "tests/bridge-continuity.test.ts",
+      "passed": 13
+    },
+    {
+      "path": "tests/business-ownership.test.ts",
+      "passed": 9
+    },
+    {
+      "path": "tests/business-world.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/camera-input.test.ts",
+      "passed": 7
+    },
+    {
+      "path": "tests/canopy-construction.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/canopy.test.ts",
+      "passed": 2
+    },
+    {
+      "path": "tests/car-boost.test.ts",
+      "passed": 20
+    },
+    {
+      "path": "tests/character-animation.test.ts",
+      "passed": 38
+    },
+    {
+      "path": "tests/character-construction.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/character-family.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/choice-navigation.test.ts",
+      "passed": 2
+    },
+    {
+      "path": "tests/city-access.test.ts",
+      "passed": 14
+    },
+    {
+      "path": "tests/city-repairs.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/city-retirement-save.test.ts",
+      "passed": 6
+    },
+    {
+      "path": "tests/city-services.test.ts",
+      "passed": 7
+    },
+    {
+      "path": "tests/city-trees.test.ts",
+      "passed": 7
+    },
+    {
+      "path": "tests/commerce-save.test.ts",
+      "passed": 29
+    },
+    {
+      "path": "tests/commerce.test.ts",
+      "passed": 9
+    },
+    {
+      "path": "tests/compatibility-encoder.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/component-geometry.test.ts",
+      "passed": 19
+    },
+    {
+      "path": "tests/control-guide.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/courier.test.ts",
+      "passed": 7
+    },
+    {
+      "path": "tests/cycle-surface.test.ts",
+      "passed": 9
+    },
+    {
+      "path": "tests/damage-pool.test.ts",
+      "passed": 9
+    },
+    {
+      "path": "tests/daylight.test.ts",
+      "passed": 8
+    },
+    {
+      "path": "tests/delivery.test.ts",
+      "passed": 12
+    },
+    {
+      "path": "tests/destruction.test.ts",
+      "passed": 24
+    },
+    {
+      "path": "tests/docs-site.test.ts",
+      "passed": 44
+    },
+    {
+      "path": "tests/docs.test.ts",
+      "passed": 139
+    },
+    {
+      "path": "tests/dream-agent.test.ts",
+      "passed": 15
+    },
+    {
+      "path": "tests/dream-material-parameters.test.ts",
+      "passed": 16
+    },
+    {
+      "path": "tests/dream-project.test.ts",
+      "passed": 17
+    },
+    {
+      "path": "tests/dream-v2.test.ts",
+      "passed": 66
+    },
+    {
+      "path": "tests/dream.test.ts",
+      "passed": 43
+    },
+    {
+      "path": "tests/ecology.test.ts",
+      "passed": 18
+    },
+    {
+      "path": "tests/edge-smoothing.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/extended-destruction.test.ts",
+      "passed": 27
+    },
+    {
+      "path": "tests/faceted-parts.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/fleet.test.ts",
+      "passed": 6
+    },
+    {
+      "path": "tests/foot-plants.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/furniture-construction.test.ts",
+      "passed": 9
+    },
+    {
+      "path": "tests/furniture.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/garden-park.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/ground-cover.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/growth-render.test.ts",
+      "passed": 2
+    },
+    {
+      "path": "tests/growth-world.test.ts",
+      "passed": 2
+    },
+    {
+      "path": "tests/growth.test.ts",
+      "passed": 9
+    },
+    {
+      "path": "tests/hardware-recovery.test.ts",
+      "passed": 7
+    },
+    {
+      "path": "tests/home-interior.test.ts",
+      "passed": 8
+    },
+    {
+      "path": "tests/home-meals.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/hosted-meal.test.ts",
+      "passed": 18
+    },
+    {
+      "path": "tests/hosted-save.test.ts",
+      "passed": 6
+    },
+    {
+      "path": "tests/humanoid-mount.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/indoor-service.test.ts",
+      "passed": 6
+    },
+    {
+      "path": "tests/interaction-rules.test.ts",
+      "passed": 11
+    },
+    {
+      "path": "tests/interactive-world.test.ts",
+      "passed": 27
+    },
+    {
+      "path": "tests/interiors.test.ts",
+      "passed": 11
+    },
+    {
+      "path": "tests/joint-stride.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/junction-save.test.ts",
+      "passed": 5
+    },
+    {
+      "path": "tests/kit-production.test.ts",
+      "passed": 6
+    },
+    {
+      "path": "tests/kitchen.test.ts",
+      "passed": 5
+    },
+    {
+      "path": "tests/landscape-queries.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/landscape.test.ts",
+      "passed": 11
+    },
+    {
+      "path": "tests/layout-clearance.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/locomotion.test.ts",
+      "passed": 25
+    },
+    {
+      "path": "tests/map-route-render.test.ts",
+      "passed": 1
+    },
+    {
+      "path": "tests/market-hours.test.ts",
+      "passed": 9
+    },
+    {
+      "path": "tests/materials.test.ts",
+      "passed": 5
+    },
+    {
+      "path": "tests/meals.test.ts",
+      "passed": 6
+    },
+    {
+      "path": "tests/media-export.test.ts",
+      "passed": 1
+    },
+    {
+      "path": "tests/natural-grounds.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/npc-behavior.test.ts",
+      "passed": 23
+    },
+    {
+      "path": "tests/npc-conversation.test.ts",
+      "passed": 6
+    },
+    {
+      "path": "tests/nursery-world.test.ts",
+      "passed": 5
+    },
+    {
+      "path": "tests/object-dsl-v2.test.ts",
+      "passed": 27
+    },
+    {
+      "path": "tests/object-dsl.test.ts",
+      "passed": 26
+    },
+    {
+      "path": "tests/object-placement.test.ts",
+      "passed": 12
+    },
+    {
+      "path": "tests/open-world.test.ts",
+      "passed": 10
+    },
+    {
+      "path": "tests/park-paths.test.ts",
+      "passed": 6
+    },
+    {
+      "path": "tests/park-save.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/parking.test.ts",
+      "passed": 7
+    },
+    {
+      "path": "tests/path-layout.test.ts",
+      "passed": 9
+    },
+    {
+      "path": "tests/pavement.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/pedestrian-spacing.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/people-save.test.ts",
+      "passed": 6
+    },
+    {
+      "path": "tests/population.test.ts",
+      "passed": 11
+    },
+    {
+      "path": "tests/presentation.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/profile-mechanisms.test.ts",
+      "passed": 20
+    },
+    {
+      "path": "tests/progression.test.ts",
+      "passed": 6
+    },
+    {
+      "path": "tests/propagation.test.ts",
+      "passed": 6
+    },
+    {
+      "path": "tests/proportions.test.ts",
+      "passed": 15
+    },
+    {
+      "path": "tests/rations-world.test.ts",
+      "passed": 2
+    },
+    {
+      "path": "tests/recipes.test.ts",
+      "passed": 7
+    },
+    {
+      "path": "tests/recovery-save.test.ts",
+      "passed": 5
+    },
+    {
+      "path": "tests/render-batching.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/render-profile.test.ts",
+      "passed": 2
+    },
+    {
+      "path": "tests/repair-network.test.ts",
+      "passed": 7
+    },
+    {
+      "path": "tests/repair-verge-world.test.ts",
+      "passed": 2
+    },
+    {
+      "path": "tests/repair-verge.test.ts",
+      "passed": 7
+    },
+    {
+      "path": "tests/repair-view.test.ts",
+      "passed": 7
+    },
+    {
+      "path": "tests/repair-world.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/repair.test.ts",
+      "passed": 16
+    },
+    {
+      "path": "tests/resident-supplies.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/rest-population.test.ts",
+      "passed": 8
+    },
+    {
+      "path": "tests/roof-surfaces.test.ts",
+      "passed": 2
+    },
+    {
+      "path": "tests/rounded-voxels.test.ts",
+      "passed": 6
+    },
+    {
+      "path": "tests/save-tools.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/save.test.ts",
+      "passed": 12
+    },
+    {
+      "path": "tests/scenario.test.ts",
+      "passed": 31
+    },
+    {
+      "path": "tests/scene.test.ts",
+      "passed": 11
+    },
+    {
+      "path": "tests/school-interior.test.ts",
+      "passed": 7
+    },
+    {
+      "path": "tests/school-repairs.test.ts",
+      "passed": 7
+    },
+    {
+      "path": "tests/seating.test.ts",
+      "passed": 14
+    },
+    {
+      "path": "tests/shared-meal.test.ts",
+      "passed": 18
+    },
+    {
+      "path": "tests/sim.test.ts",
+      "passed": 18
+    },
+    {
+      "path": "tests/spacing-save.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/spatial-grid.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/sports-visuals.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/sports.test.ts",
+      "passed": 22
+    },
+    {
+      "path": "tests/staff-shifts.test.ts",
+      "passed": 13
+    },
+    {
+      "path": "tests/startup.test.ts",
+      "passed": 14
+    },
+    {
+      "path": "tests/street-furniture-impact.test.ts",
+      "passed": 6
+    },
+    {
+      "path": "tests/street-guide.test.ts",
+      "passed": 9
+    },
+    {
+      "path": "tests/street-world.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/strike.test.ts",
+      "passed": 19
+    },
+    {
+      "path": "tests/sun.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/support-sampling.test.ts",
+      "passed": 1
+    },
+    {
+      "path": "tests/team-sports-save.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/team-sports.test.ts",
+      "passed": 21
+    },
+    {
+      "path": "tests/terrain-driving.test.ts",
+      "passed": 19
+    },
+    {
+      "path": "tests/terrain-footing.test.ts",
+      "passed": 9
+    },
+    {
+      "path": "tests/timber-recovery.test.ts",
+      "passed": 12
+    },
+    {
+      "path": "tests/tram-tracks.test.ts",
+      "passed": 8
+    },
+    {
+      "path": "tests/transit-exits.test.ts",
+      "passed": 5
+    },
+    {
+      "path": "tests/transport-network.test.ts",
+      "passed": 12
+    },
+    {
+      "path": "tests/urban-world.test.ts",
+      "passed": 14
+    },
+    {
+      "path": "tests/utility-construction.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/vehicle-construction.test.ts",
+      "passed": 11
+    },
+    {
+      "path": "tests/vehicle-control.test.ts",
+      "passed": 31
+    },
+    {
+      "path": "tests/voxel-city.test.ts",
+      "passed": 2
+    },
+    {
+      "path": "tests/voxels.test.ts",
+      "passed": 20
+    },
+    {
+      "path": "tests/walker-orientation.test.ts",
+      "passed": 7
+    },
+    {
+      "path": "tests/water-bridges.test.ts",
+      "passed": 13
+    },
+    {
+      "path": "tests/weather-world.test.ts",
+      "passed": 2
+    },
+    {
+      "path": "tests/weather.test.ts",
+      "passed": 9
+    },
+    {
+      "path": "tests/whole-world-voxels.test.ts",
+      "passed": 9
+    },
+    {
+      "path": "tests/wildlife-construction.test.ts",
+      "passed": 19
+    },
+    {
+      "path": "tests/wildlife.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/wind-topple.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/woodland-assets.test.ts",
+      "passed": 13
+    },
+    {
+      "path": "tests/work-commute-world.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/work-commute.test.ts",
+      "passed": 8
+    },
+    {
+      "path": "tests/work-equipment.test.ts",
+      "passed": 7
+    },
+    {
+      "path": "tests/work-navigation.test.ts",
+      "passed": 6
+    },
+    {
+      "path": "tests/worker-rations.test.ts",
+      "passed": 8
+    },
+    {
+      "path": "tests/workshop-supplies.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/world-audit.test.ts",
+      "passed": 9
+    },
+    {
+      "path": "tests/world-layout.test.ts",
+      "passed": 9
+    },
+    {
+      "path": "tests/world-map.test.ts",
+      "passed": 4
+    },
+    {
+      "path": "tests/world-presentation.test.ts",
+      "passed": 8
+    },
+    {
+      "path": "tests/world-streaming.test.ts",
+      "passed": 16
+    },
+    {
+      "path": "tests/world3d.test.ts",
+      "passed": 5
+    }
+  ]
+}

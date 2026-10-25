@@ -44,3 +44,9 @@ export function contactTouchesPolygon(c:ContactFootprint,p:Point[],margin=0):boo
  if(!c.box)return pointInPolygon(c.x,c.y,p) || distanceToPolygon(c.x,c.y,p)<c.r+margin;
  return pointInPolygon(c.x,c.y,p) || contactPolygon(c).some(q=>pointInPolygon(q.x,q.y,p)) || p.some((a,i)=>segmentContactDistance(c,a,p[(i+1)%p.length]!)<=margin);
 }
+
+/** Shared standing-height sight, with ownership/damage filtering supplied by the caller. */
+export function standingSightClear(contacts:readonly Contact[],a:{x:number;y:number;elevation:number},b:{x:number;y:number;elevation:number},ignore:(contact:Contact)=>boolean):boolean{
+ const low=Math.min(a.elevation,b.elevation)+10,high=Math.max(a.elevation,b.elevation)+10;
+ return !contacts.some(c=>!ignore(c) && c.bottom<high && c.top>low && segmentContactDistance(c,a,b)<.5);
+}

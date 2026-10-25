@@ -1,0 +1,262 @@
+{
+  "method": "One complete run, then exact failed cases and affected focused checks. Cases use file, full name and occurrence index because parameterized names can repeat. No repeated full-suite run.",
+  "fullRunTests": 1950,
+  "latestPassedFullRunCases": 1950,
+  "latestFailedFullRunCases": 0,
+  "runs": {
+    "full": {
+      "passed": 1915,
+      "failed": 35,
+      "skipped": 0,
+      "files": 191,
+      "seconds": 729.2522199707031
+    },
+    "final": {
+      "passed": 236,
+      "failed": 0,
+      "skipped": 0,
+      "files": 6,
+      "seconds": 50.179572265625
+    },
+    "migration-fix": {
+      "passed": 35,
+      "failed": 0,
+      "skipped": 74,
+      "files": 17,
+      "seconds": 186.24296728515625
+    },
+    "doc-fix": {
+      "passed": 237,
+      "failed": 1,
+      "skipped": 0,
+      "files": 5,
+      "seconds": 2.784163330078125
+    },
+    "seat-final": {
+      "passed": 24,
+      "failed": 0,
+      "skipped": 0,
+      "files": 2,
+      "seconds": 0.89877001953125
+    },
+    "docs-final": {
+      "passed": 214,
+      "failed": 0,
+      "skipped": 0,
+      "files": 3,
+      "seconds": 2.606015380859375
+    }
+  },
+  "resolvedFullRunFailures": [
+    {
+      "file": "tests/botany.test.ts",
+      "test": "keeps every historical state and isolates review-prefix migrations through the registered visual upgrade",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/canopy.test.ts",
+      "test": "keeps a falling tree, cargo, economy and every historical backup field through the registered visual upgrade",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/character-construction.test.ts",
+      "test": "keeps every historical backup and current repair ledger exact through the character layer",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/city-repairs.test.ts",
+      "test": "keeps all 33 prior backups and exact ledgers while registering only this coverage upgrade",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/city-retirement-save.test.ts",
+      "test": "carries every pinned historical browser backup through the full chain into the street-only world",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "upgrades actual r44 browser saves into the registered first market while preserving their physical world",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "migrates an actual reserved format 3 batch without resetting stock, credits, needs or work time",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "upgrades the actual format 4 delivery backup, rejects forged old ownership and keeps its slot intact",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "upgrades the actual format 5 parked bicycle without losing fleet ownership, needs, accounts or memory",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "upgrades a real r48 in-progress repair without resetting its ledger, clock, needs, parked vehicles or memories",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "keeps an actual r49 world intact when adding connected service grounds, including paid procurement and completed repairs",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "preserves an actual r50 saved repair and return world through pooled lamp destruction",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "rebases actual r51 pedestrian references while preserving damage, the active worker and every other saved field",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "upgrades actual r52 progress with only finite saplings and empty new ledgers initialized",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "preserves an actual r53 growing tree, return journey and every ledger through the natural-ground upgrade",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "upgrades the exact r54 backup without changing any state or clocks, while keeping the old slot",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "upgrades the actual r55 browser backup through the exact old physical projection and retains the old slot",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "upgrades the released format 9 'passenger' save without rebasing any world state",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "upgrades the released format 9 'growth and returning work' save without rebasing any world state",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "keeps the previous format 9 slot and blocks corrupt or changed newer progress after the exit upgrade",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "adds recipes to the released simulation-13 work backup without changing old progress",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "adds recipes to the released simulation-13 life backup without changing old progress",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "replays the actual native simulation-14 saved lunch job with its courier and conserved workshop stock",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/commerce-save.test.ts",
+      "test": "adds personal history to the exact released recipe backup without assigning old shared work to anyone",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/fleet.test.ts",
+      "test": "replays the complete historical backup chain into the fleet without rebasing unrelated state",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/furniture-construction.test.ts",
+      "test": "keeps the complete five-object Dream example identical to the live library",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/furniture.test.ts",
+      "test": "keeps every historical state and isolates review-prefix migrations through the registered visual upgrade",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/hosted-save.test.ts",
+      "test": "registers the exact previous world and keeps all 29 historical states and original slots",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/junction-save.test.ts",
+      "test": "retains every historical migration without replaying completed jobs or changing ledgers",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/park-save.test.ts",
+      "test": "carries the complete historical save matrix through the city and park migrations",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/people-save.test.ts",
+      "test": "retains all 28 historical backups without replaying completed work or changing ledgers",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/save.test.ts",
+      "test": "upgrades an exact-source format 1 slot without removing it, and never guesses across source changes",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/spacing-save.test.ts",
+      "test": "retains the complete historical migration chain without replaying park or commerce initialization",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/street-furniture-impact.test.ts",
+      "test": "keeps the complete historical save chain exact through the new fixture layer",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    },
+    {
+      "file": "tests/wildlife.test.ts",
+      "test": "replays all historical backups and isolates review slots while preserving the released state exactly",
+      "occurrence": 1,
+      "latestRun": "migration-fix"
+    }
+  ]
+}

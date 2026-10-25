@@ -1,0 +1,122 @@
+{
+  "baseCommit": "657c997",
+  "node": "v26.8.1",
+  "sourceHash": "ed9c3c6782d3fe95b862484d7199313e5970f742379edab5fb7a878e9e867733",
+  "acceptedFingerprint": "f47a995c431246b6234b69a05a38f7220a65e56fbd4414d02f54405e817f0f5b",
+  "saveFormat": 19,
+  "simulationVersion": 35,
+  "fullSweep": {
+    "passed": 1670,
+    "failed": 23,
+    "files": 156,
+    "seconds": 559.83
+  },
+  "affectedRecheck": {
+    "passed": 216,
+    "files": 10,
+    "seconds": 72.46
+  },
+  "finalDocsAndCaptureChecks": {
+    "passed": 43,
+    "files": 3
+  },
+  "capture": {
+    "frames": 300,
+    "simulationFps": 30,
+    "sourceSize": [
+      2400,
+      1350
+    ],
+    "videoSize": [
+      1600,
+      900
+    ],
+    "gifSize": [
+      1280,
+      720
+    ],
+    "stillFrame": 60
+  },
+  "files": [
+    {
+      "path": "src/sim/commerce.ts",
+      "bytes": 58170,
+      "sha256": "dab688e09ffadb450bdbe5c420cebc91eef275304ba7cd9137eb43748f62d965"
+    },
+    {
+      "path": "src/sim/growth.ts",
+      "bytes": 1268,
+      "sha256": "b5cffeabafc500b957113bac9a4a95712712faae8919d8b17329806cf97f59e8"
+    },
+    {
+      "path": "src/sim/save.ts",
+      "bytes": 74365,
+      "sha256": "28ad7637f3bdc1a9f02764b8fb376910807f2ebc56cf4b5307f9b3e94ccdd416"
+    },
+    {
+      "path": "src/scene/commerce.ts",
+      "bytes": 36515,
+      "sha256": "74344d69feddf76cbb68c5c97912f31db237d384ced9160f75107979ddb3a2c1"
+    },
+    {
+      "path": "src/scene/world/life.dream",
+      "bytes": 17806,
+      "sha256": "3feab6a6b48d7ac1f624cd5709f78800fad67686adb025de3fd831aab484c64c"
+    },
+    {
+      "path": "src/scene/save-compatibility.ts",
+      "bytes": 46420,
+      "sha256": "e344bbf631425de537c34ba8c6744c4cfdf7e3b5ce17352de9268ab355d39fde"
+    },
+    {
+      "path": "src/game/commerce.ts",
+      "bytes": 35223,
+      "sha256": "868239a48fab9877908675a14e1e157e2314566d477f016c2887bb3b7ca155fb"
+    },
+    {
+      "path": "src/game/review-start.ts",
+      "bytes": 30888,
+      "sha256": "80dd8629034607b2d15ff3a6a5104af39dbb8549b074e36a7b208e424f051e1a"
+    },
+    {
+      "path": "docs/dream-v2-contract.json",
+      "bytes": 74133,
+      "sha256": "64f2d41e8d1517bc0dced374bd3b4a2264e1907b384a87520937bf067524462d"
+    },
+    {
+      "path": "docs/dream-v2-model.txt",
+      "bytes": 81085,
+      "sha256": "fdbf3462926ac6e61842be6b3890ece182dd5316a3273bca77f2209498b28ee8"
+    },
+    {
+      "path": "docs/examples/timber-recovery.dream",
+      "bytes": 5062,
+      "sha256": "dd8e0527a9c97feb326a5e533c987455d7449682c21d606ba89fa04684bc429f"
+    },
+    {
+      "path": "docs/media/recovery.gif",
+      "bytes": 3047621,
+      "sha256": "14ba8aff354663cd0ee1ac22796b285c73e3f2cd35411cd861960ae2aca3af31"
+    },
+    {
+      "path": "docs/media/recovery.mp4",
+      "bytes": 773701,
+      "sha256": "3b39d96186bd2e31ed60a1ccf2c77afe9c96d0d55f17cd826f4afbcc4f1732c8"
+    },
+    {
+      "path": "docs/media/recovery.jpg",
+      "bytes": 340844,
+      "sha256": "ff9d460b96a3a49d103774b0f7bb5b15692f57b780d54d2949120303e43a00fd"
+    },
+    {
+      "path": "docs/evidence/timber-recovery/native.json",
+      "bytes": 29069,
+      "sha256": "f8f4c392d62e197dab447cf1368d1f4c57458d8e0fd8f28753d36f6b3a01dd34"
+    },
+    {
+      "path": "docs/evidence/timber-recovery/native.jpg",
+      "bytes": 85229,
+      "sha256": "d5f27048d93de6b5abe23df1f4b46be9bcf0442d4a023f81a8a7866bf85df91b"
+    }
+  ]
+}

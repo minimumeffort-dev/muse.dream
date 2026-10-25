@@ -14,6 +14,12 @@ The live city now uses `voxel_world(object_cell=1,ground_cell=8,height_step=1);`
 
 `part` and `beam` remain compact shape stamps for the model. The engine samples their occupied cells, preserving outlines, openings, material, measured bounds and rigid motion. Explicit `voxels` gives the model direct control of fill/cut operations and fracture chunks. The world policy changes construction; it does not silently add damage or replace contacts.
 
+`voxels(...,cutaway=front)` can tag a carved frame or shell section in an
+explicit interior, using the same roof/front/back/left/right values as `part`.
+Keep it static and retained, outside joints, fragments and break zones. The
+[commuter home](../examples/enterable-home.dream) tags frames with their walls,
+so they disappear together when the camera reveals the room.
+
 ## Fill, cut, repeat
 
 `voxels` creates one rigid visual part. `grid` gives its cell counts, `size` its full local dimensions and `at` its center. Cell coordinates start at the minimum corner. Every operation uses integer half-open bounds: `from` is included, `to` is excluded. A `[30,16,4]` grid with size `[60,32,8]` has two-unit cubic cells.

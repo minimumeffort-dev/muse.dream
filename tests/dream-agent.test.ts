@@ -7,6 +7,7 @@ import {modelContext,DEFAULT_PROMPT} from '../src/authoring/prompt';
 import instructions from '../docs/dream-v2-model.txt?raw';
 
 describe('bounded agent context packets',()=>{
+  it('exports company constructor rules in the commerce packet with their bounds and supply policy',()=>{const p=dreamAgentContext(['commerce']);expect(p.contract.commands.account!.fields.company).toBe('company_need?');expect(p.contract.commands.need).toMatchObject({contexts:['company_need'],id:false,fields:{initial:'n',drain_s:'n',below:'n',gain:'n'}});expect(p.instructions).toContain('Company need:');expect(p.instructions).toContain('next opening');expect(p.contract).toMatchObject({commerce:{company:{runtime:expect.stringContaining('only the actual participants')}}});});
   it('gives standalone scenarios a small, complete vocabulary without geometry',()=>{
     const packet=dreamAgentContext(['scenarios']);
     expect(packet.features).toEqual(['scenarios']);
@@ -21,7 +22,8 @@ describe('bounded agent context packets',()=>{
   });
   it('includes the city vocabulary required by courier and repair grounds',()=>{
     const packet=dreamAgentContext(['commerce']);expect(packet.features).toContain('city');
-    for(const command of ['account','meal','delivery','surface','street','crossing','site'])expect(packet.contract.commands).toHaveProperty(command);
+    expect(packet.instructions).toContain('Physical work:');expect(packet.contract.commands.work!.fields.station).toBe('ref?');expect(dreamAgentContext(['lighting']).instructions).not.toContain('Physical work:');
+    for(const command of ['station','account','meal','delivery','surface','street','crossing','site'])expect(packet.contract.commands).toHaveProperty(command);
     expect(packet.instructions).toContain('NPC resupply:');expect(packet.instructions).toContain('NPC meal trips');expect(packet.contract.commands.account!.fields.meal).toBe('ref?');expect(packet.contract.commands.account!.fields.deliveries).toBe('symbols?');
   });
   it('adds required features once in deterministic order',()=>{
@@ -70,4 +72,20 @@ it('includes bounded staff shift authoring in the commerce packet',()=>{const pa
 it('includes bounded social meals and remembered interaction guards in the commerce packet',()=>{const packet=dreamAgentContext(['commerce']);expect(packet.contract.commands.social!.fields.seats).toBe('symbols');expect(packet.contract.commands.account!.fields.social).toBe('ref?');expect(packet.contract.commands.on!.fields.shared_meals).toBe('n?');expect(packet.instructions).toContain('Shared social meals:');expect(packet.contract).toHaveProperty('commerce.social');});
 it('provides the explicit connected-path and named-destination contract in city packets',()=>{
  const packet=dreamAgentContext(['city']);expect(packet.contract.commands.surface!.fields.walkable).toBe('bool?');expect(packet.contract.commands.site!.fields.label).toBe('text?');expect(packet.instructions).toContain('Explicit pedestrian paths:');expect(packet.instructions).toContain('bridge side entries');
+});
+
+it('includes daily attendance and its one-owner rules in the commerce context',()=>{
+ const packet=dreamAgentContext(['commerce']);expect(packet.contract.commands.account!.fields.attendance).toBe('v2?');expect(packet.instructions).toContain('Daily work attendance:');expect(packet.contract).toHaveProperty('commerce.attendance',expect.stringContaining('Waiting earns no wages'));
+});
+
+it('includes covered rest and unchanged commitment ownership in commerce packets',()=>{
+ const packet=dreamAgentContext(['commerce']);expect(packet.contract.commands.rest!.fields.shelter).toBe('bool?');expect(packet.contract.commands).toHaveProperty('weather');expect(packet.instructions).toContain('Rain shelter:');expect(packet.instructions).toContain('shelter never cancels cargo');expect(packet.contract).toHaveProperty('commerce.resting',expect.stringContaining('shelter'));
+});
+
+it('includes bounded shared-meal qualifications and alternate work gates in commerce packets',()=>{
+ const p=dreamAgentContext(['commerce']);expect(p.contract.commands.work!.fields.requires_any).toBe('symbols?');expect(p.contract.commands.milestone!.fields.kind).toContain('shared_meal');expect(p.contract.commands.milestone!.fields.peer).toBe('ref?');expect(p.instructions).toContain('work(...,requires_any=');expect(p.contract).toHaveProperty('commerce.qualifications');expect(p.instructions).toContain('Without peer, completed shared meals qualify only the player and that named NPC');expect(p.instructions).toContain('using the exact social/task/peer key');expect(p.instructions).toContain('cannot gate a player on.requires');expect(p.contract).toHaveProperty('commerce.limits.workerJobs',5);
+});
+
+it('includes bounded upstairs work and keeps counter trade distinct in combined commerce/interior packets',()=>{
+ const p=dreamAgentContext(['commerce','interiors']);expect(p.contract.commands.place!.fields.floor).toBe('ref?');expect(p.contract.commands).toHaveProperty('floor');expect(p.instructions).toContain('Floor stations must name their floor and enclosing building');expect(p.instructions).toContain('trading and business actions still need counter sight');expect(p.contract).toHaveProperty('commerce.workstations.semantics',expect.stringContaining('Floor stations require one source business'));
 });

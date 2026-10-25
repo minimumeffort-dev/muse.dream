@@ -59,7 +59,7 @@ place second(object=bicycle,at=[350,400],role=controllable,parked=true);
 
 ![New resident variants use the complete shared humanoid construction](../media/city-residents.jpg)
 
-The city has 123 people. Of those, 111 walk around the connected pavement, while twelve keep their existing NPC activities, greetings and commutes. The 60 ground animals and birds now roam their habitats and flee when you approach. Dogs and cats use neighborhood green areas; deer, hares and foxes use woodland; sparrows hop around gardens and park edges.
+The city has 141 people. Of those, 129 walk around the connected pavement, while twelve keep their existing NPC activities, greetings and commutes. The 60 ground animals and birds now roam their habitats and flee when you approach. Dogs and cats use neighborhood green areas; deer, hares and foxes use woodland; sparrows hop around gardens and park edges.
 
 ![Pedestrians moving on the authored pavement](../media/pedestrians.gif)
 
@@ -85,7 +85,7 @@ obstacles.
 
 ![A deer moves away from the approaching player](../media/wildlife.gif)
 
-These instances have explicit `role=ambient`, or acquire it from `furnish(...,motion=...)`. They are cosmetic populations, separate from general NPC programs, seats and physical contacts. Their validated rig and full voxel geometry are shared in GPU instances. Pure movement runs at 20 Hz with interpolated rendering. Animal `stride` joints follow interpolated travel in local units, independently of timed head or wing swings. A common stride length also paces an existing hop. This uses the existing three animal instance floats; saved distances remain unchanged. All 181 members remain resident; frustum culling checks both the camera and shadow view. Walking members share the player’s terrain-aware stance anchors. Returning feet sample support at most 20 Hz; planted feet keep their world height and normal until release. Color and shadow passes use the same packed contacts, without another attribute slot or rig. The cap is 192 ambient members and 8,192 cached walking nodes. The existing NPC, route, vehicle and CPU live-rig limits stay unchanged.
+These instances have explicit `role=ambient`, or acquire it from `furnish(...,motion=...)`. They are cosmetic populations, separate from general NPC programs, seats and physical contacts. Their validated rig and full voxel geometry are shared in GPU instances. Pure movement runs at 20 Hz with interpolated rendering. Animal `stride` joints follow interpolated travel in local units, independently of timed head or wing swings. A common stride length also paces an existing hop. This uses the existing three animal instance floats; saved distances remain unchanged. All 189 members remain resident; frustum culling checks both the camera and shadow view. Walking members share the player’s terrain-aware stance anchors. Returning feet sample support at most 20 Hz; planted feet keep their world height and normal until release. Color and shadow passes use the same packed contacts, without another attribute slot or rig. The cap is 192 ambient members and 8,192 cached walking nodes. The existing NPC, route, vehicle and CPU live-rig limits stay unchanged.
 
 Pause freezes the population clock. R preserves it; Start over restores its seed and home poses. Reduced motion rests limb and hopping animation. This is bounded walking and avoidance, without pushing, general crowd physics, traffic signals, full animal intelligence or ecological simulation. Use a full `role=npc` program when an individual needs custom states or a transit route.
 

@@ -16,12 +16,17 @@ export function initialNpcState(scene:Scene,object:SceneObject):NpcState{
 }
 export function initialNpcs(scene:Scene):NpcState[]{return programmed(scene).map(o=>initialNpcState(scene,o));}
 const interacts=(t:Behavior['states'][number]['transitions'][number],known:boolean,distance:number,state:CarState,scene:Scene,actor:string)=>t.event==='interact' && distance<=t.radius! && (t.familiar===undefined || t.familiar===known) && (t.shared_meals===undefined || sharedMeals(state,scene,actor)>=t.shared_meals) && (!t.requires || hasMilestone(state,scene,scene.economy?.accounts.find(a=>a.actor==='player')?.id??'',t.requires));
+/** Talking at a held work station does not hand body or routine clocks back. */
+function workingConversation(state:CarState,scene:Scene,id:string):boolean{
+ const spec=scene.economy?.accounts.find(a=>a.actor===id),account=spec && state.economy?.accounts.find(a=>a.id===spec.id);
+ return account?.commute?.phase==='work' && !!account.work && !!scene.economy?.jobs.find(j=>j.id===account.work!.id)?.station;
+}
 /** Nearest eligible program, with stable ties; ambient/decor populations have no conversation owner. */
 export function nearbyNpc(state:CarState,scene:Scene){
   if(state.control.kind!=='foot' || !state.grounded)return;
   let nearest:{object:SceneObject;distance:number}|undefined;
   for(const object of programmed(scene)){
-    const journey=workJourneyForActor(state,scene,object.id);if(journey && journey.phase!=='rest')continue;
+    const journey=workJourneyForActor(state,scene,object.id);if(journey && journey.phase!=='rest' && !workingConversation(state,scene,object.id))continue;
     const program=behaviorFor(scene,object)!,snapshot=state.npcs?.find(n=>n.id===object.id)??initialNpcState(scene,object),active=program.states.find(s=>s.id===snapshot.stateId)!;
     if(!active.transitions.some(t=>t.event==='interact'))continue;
     const pose=actorPose(scene,object,state.timeS,state),distance=Math.hypot(state.x-pose.x,state.y-pose.y,state.elevation-pose.elevation);
@@ -46,7 +51,12 @@ export function stepNpcs(state:CarState,dt:number,scene:Scene,talkPressed=false)
   const target=talkPressed ? nearbyNpc(state,scene) : undefined;
   return programmed(scene).map(object=>{
     const program=behaviorFor(scene,object)!,previous=state.npcs?.find(n=>n.id===object.id)??initialNpcState(scene,object),next={...previous,elapsedS:previous.elapsedS+dt};
-    const journey=workJourneyForActor(state,scene,object.id);if(journey && journey.phase!=='rest')return previous;
+    const journey=workJourneyForActor(state,scene,object.id);if(journey && journey.phase!=='rest'){
+      if(target!==object || !workingConversation(state,scene,object.id))return previous;
+      const pose=actorPose(scene,object,state.timeS,state),distance=Math.hypot(state.x-pose.x,state.y-pose.y,state.elevation-pose.elevation);
+      const transition=program.states.find(s=>s.id===previous.stateId)!.transitions.find(t=>interacts(t,previous.known,distance,state,scene,object.id));
+      return transition ? {...previous,stateId:transition.to,elapsedS:0,replyAtS:state.timeS+dt,known:true} : previous;
+    }
     let active=program.states.find(s=>s.id===previous.stateId)!;
     const pose=actorPose(scene,object,state.timeS,state),distance=Math.hypot(state.x-pose.x,state.y-pose.y,state.elevation-pose.elevation);
     const transition=active.transitions.find(t=>t.event==='after' ? next.elapsedS+1e-9>=t.seconds! : t.event==='interact' ? target===object && interacts(t,previous.known,distance,state,scene,object.id) : t.event==='near_player' ? distance<=t.radius! : distance>=t.radius!);

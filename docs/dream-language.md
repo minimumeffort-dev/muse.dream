@@ -29,6 +29,10 @@ For a provider integration, use the [model instructions](dream-v2-model.txt), [c
 
 The live world uses `voxel_world(object_cell=1,ground_cell=8,height_step=1);` to construct all assets and landscape surfaces from voxels. See [whole-world construction](whole-world-voxels.md). Explicit voxel volumes add bounded `fill` and `cut` operations, cached greedy surface meshing and optional fracture chunks. Start with the [voxel guide](dream/voxels.md) and [complete wall](examples/voxel-wall.dream). Physical contacts remain explicit and separate from occupied cells.
 
+Carved voxel frames can share an interior wall's `cutaway` tag. The
+[complete home and settee](examples/enterable-home.dream) combines a real doorway,
+supported furniture, seating and category-based destruction.
+
 ## Version policy
 
 Dream 2 fixes existing field meanings, units, scopes and identity paths. Compatible additions require allowlisted fields, bounds, runnable examples, updated docs and regression coverage. Regenerate the command export with `node scripts/dream.mjs contract`. Changing existing syntax, units or identity semantics requires a new major authoring version. Unknown fields keep failing.
@@ -39,7 +43,7 @@ Urban districts use bounded `street`, `surface` and `marking` declarations. Expl
 
 Ground populations can use Dream 2 `walk` and `roam` motion under explicit ambient ownership. The engine derives walking portals from accepted pavement and executes nearby animal reactions at 20 Hz; full geometry and joint poses stay instanced. [Population guide](dream/populations.md).
 
-Playable markets use one bounded `economy()` block with `good`, `account`, `market`, `lot`, `work`, `delivery` and `repair` data. Player controls and NPC policies share conserved transactions, food, reserved wages and timed production. [Market guide and runnable world](dream/commerce.md). This is separate from the logical Lab scenario language.
+Playable markets use one bounded `economy()` block with `good`, `account`, `market`, `lot`, `work`, `delivery` and `repair` data. Player controls and NPC policies share conserved transactions, food, reserved wages and timed production. [Market guide and runnable world](dream/commerce.md). This is separate from the logical Lab scenario language. Optional `work.equipment` ties production to existing physical props. Damage refunds an unfinished batch; repair restores availability for players and NPCs. [Equipment and a complete example](dream/commerce.md#work-needs-equipment).
 
 Dream repair services connect category-selected damage, finite market kits/pay and bounded local worker journeys. The live fixture service now reaches all 413 lamps through declared streets and full-body verge joins. `kinds` shares one policy across several measured categories; delivery `price` pays a supplier from the receiving business, with goods and money reserved together. [Rules and runnable example](dream/commerce.md#repair-work).
 
@@ -112,3 +116,56 @@ Optional `market(...,owner=account_id,sale=15)` makes an existing counter ownabl
 The base sale price plus available cash is paid to its personal seller once;
 stock and commitments stay with the business. Owners can transfer available
 capital locally through conserved transactions. [Ownership rules and example](dream/businesses.md#own-the-station-depot).
+
+Optional world-owner `strike(reach=10,speed=100,cooldown_s=.6)` enables bounded
+on-foot hits through the existing impact data. The engine owns target selection,
+wall/height checks, response and saved cooldown. It adds no generated controller,
+item body or NPC combat. [Controls and complete example](dream/behavior.md#on-foot-strikes).
+
+
+Repair services can also [recover physical material](dream/growth.md#timber-recovery).
+The same bounded declaration covers timber and recovered furniture parts, with
+shared player/NPC returns, conserved stock and persistent source eligibility.
+
+## Recipes that reuse their input
+
+Dream 2 work can consume and produce the same good when the full output exceeds
+that input. One sapling can become two through a bounded paid recipe. Held input,
+refund capacity and future output share one reservation envelope; other inputs
+still reserve independently. The compiler rejects empty-input and no-gain loops.
+[Authoring and controls](dream/businesses.md#nursery-work) ·
+[Complete runnable nursery](examples/sapling-propagation.dream).
+
+Use [stairs and upper floors](dream/stairs.md) to connect physical levels. One Dream stair command owns its tread geometry and contacts; named [floors](dream/floors.md) connect furnishing, resident rest and repair journeys to the same slabs.
+
+Use [rain shelter](dream/shelter.md) to let existing residents wait indoors during
+showers through shared rest, seat claims and physical stairs.
+
+Use [workstations](dream/workstations.md) to attach work to a real piece of equipment, with local standing and hand points and one shared claim across recipes.
+[Work motions](dream/work-gestures.md) adds bounded hand keyframes for jobs and
+repairs, with shared program references and phase derived from saved progress.
+
+Use [shared recipes](dream/relationships.md) to connect remembered meals to
+work eligibility. `requires_any` keeps alternate personal qualification paths
+in bounded Dream data.
+
+Use [daily attendance](dream/attendance.md) to give an existing commuter a work
+window. Waiting reserves nothing; real jobs still use the shared transaction.
+
+
+[Resident companions](dream/companions.md) adds `social.peers`: ordered NPC account
+references for funded meals, physical shared seating and persistent pair history.
+
+[Peer recipes](dream/companion-recipes.md) uses optional `milestone.peer` to give
+the two named NPC participants a work qualification from their existing meal
+history. Omitting it preserves the player-and-NPC rule.
+
+[Upstairs work](dream/upstairs-work.md) binds ordinary stations to existing
+`place.floor` equipment, with validated stairs and supported work-trip heights.
+The source syntax is the same as a ground-floor station.
+
+[Company needs](dream/company.md) give existing player and NPC accounts a bounded reason to share time. The complete example uses `company=need(...)`, ordinary food transactions and existing social seats.
+
+[Upstairs meals](dream/upstairs-social.md) combine existing floor-bound seats,
+social grounds and supported stair travel. Furniture preference follows
+`social.seats`; saved trip heights prevent arrival on the wrong layer.

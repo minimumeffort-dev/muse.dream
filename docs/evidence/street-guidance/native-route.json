@@ -1,0 +1,41 @@
+{
+  "car": "6330.0,4233.0,1.5",
+  "mode": "map",
+  "navigation": {
+    "arrived": false,
+    "center": {
+      "x": 7000,
+      "y": 5500
+    },
+    "direction": 88.13989774023982,
+    "distance": 7983.245394494449,
+    "miniZoom": 1,
+    "next": [
+      {
+        "x": 6330,
+        "y": 4200
+      },
+      {
+        "x": 6800,
+        "y": 4200
+      }
+    ],
+    "open": true,
+    "routePoints": 10,
+    "routed": true,
+    "target": {
+      "id": "waypoint",
+      "kind": "waypoint",
+      "label": "Waypoint",
+      "x": 12459.45945945946,
+      "y": 6189.189189189189
+    },
+    "task": null,
+    "waypoint": {
+      "x": 12459.45945945946,
+      "y": 6189.189189189189
+    },
+    "zoom": 1
+  },
+  "status": "Waypoint set · 799 m"
+}

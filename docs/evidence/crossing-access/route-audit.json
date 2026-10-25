@@ -1,0 +1,2001 @@
+{
+  "buildMs": 6783.867084,
+  "sourceAppend": "\ncrossing cross_medical_interchange(street=station_avenue,at=[11200,5200],width=24,junction=true);\ncrossing cross_copper_lane(street=copper_street,at=[5900,3200],width=24,junction=true);\ncrossing cross_weavers_market(street=market_avenue,at=[7450,4200],width=24,junction=true);\ncrossing cross_terrace_high(street=high_street,at=[5345.405405405405,7363.243243243243],width=24,junction=true);\n",
+  "variants": [
+    {
+      "name": "in-memory",
+      "rows": [
+        {
+          "id": "station_quarter_bench_nw",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9546.475120381727,
+            "end": {
+              "x": 11814.660340933317,
+              "y": 4948.638067652958
+            }
+          },
+          "initial": {
+            "length": 9546.475120381727,
+            "end": {
+              "x": 11814.660340933317,
+              "y": 4948.638067652958
+            }
+          },
+          "recorded": {
+            "length": 9546.475120381727,
+            "end": {
+              "x": 11814.660340933317,
+              "y": 4948.638067652958
+            }
+          }
+        },
+        {
+          "id": "station_quarter_bench_ne",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9659.585587038968,
+            "end": {
+              "x": 12034.655693773713,
+              "y": 4948.691464011224
+            }
+          },
+          "initial": {
+            "length": 9659.585587038968,
+            "end": {
+              "x": 12034.655693773713,
+              "y": 4948.691464011224
+            }
+          },
+          "recorded": {
+            "length": 9659.585587038968,
+            "end": {
+              "x": 12034.655693773713,
+              "y": 4948.691464011224
+            }
+          }
+        },
+        {
+          "id": "station_quarter_bench_sw",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9510.805334988825,
+            "end": {
+              "x": 11814.647685599104,
+              "y": 4895.7890323967895
+            }
+          },
+          "initial": {
+            "length": 9510.805334988825,
+            "end": {
+              "x": 11814.647685599104,
+              "y": 4895.7890323967895
+            }
+          },
+          "recorded": {
+            "length": 9510.805334988825,
+            "end": {
+              "x": 11814.647685599104,
+              "y": 4895.7890323967895
+            }
+          }
+        },
+        {
+          "id": "station_quarter_bench_se",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9640.205774087503,
+            "end": {
+              "x": 12034.644008897474,
+              "y": 4895.836583797977
+            }
+          },
+          "initial": {
+            "length": 9640.205774087503,
+            "end": {
+              "x": 12034.644008897474,
+              "y": 4895.836583797977
+            }
+          },
+          "recorded": {
+            "length": 9640.205774087503,
+            "end": {
+              "x": 12034.644008897474,
+              "y": 4895.836583797977
+            }
+          }
+        },
+        {
+          "id": "station_quarter_home_seat",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9659.822028251732,
+            "end": {
+              "x": 11614.613402504265,
+              "y": 4689.357646900664,
+              "elevation": 1.71875
+            }
+          },
+          "initial": {
+            "length": 9659.822028251732,
+            "end": {
+              "x": 11614.613402504265,
+              "y": 4689.357646900664,
+              "elevation": 1.71875
+            }
+          },
+          "recorded": {
+            "length": 9659.822028251732,
+            "end": {
+              "x": 11614.613402504265,
+              "y": 4689.357646900664,
+              "elevation": 1.71875
+            }
+          }
+        },
+        {
+          "id": "station_quarter_office_seat",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9688.499659859775,
+            "end": {
+              "x": 12254.610606245566,
+              "y": 4689.428545827772,
+              "elevation": 1.953125
+            }
+          },
+          "initial": {
+            "length": 9688.499659859775,
+            "end": {
+              "x": 12254.610606245566,
+              "y": 4689.428545827772,
+              "elevation": 1.953125
+            }
+          },
+          "recorded": {
+            "length": 9688.499659859775,
+            "end": {
+              "x": 12254.610606245566,
+              "y": 4689.428545827772,
+              "elevation": 1.953125
+            }
+          }
+        },
+        {
+          "id": "station_quarter_lamp_west",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9590.88575456769,
+            "end": {
+              "x": 11531.63646159519,
+              "y": 4947.218190975203
+            }
+          },
+          "initial": {
+            "length": 9590.88575456769,
+            "end": {
+              "x": 11531.63646159519,
+              "y": 4947.218190975203
+            }
+          },
+          "recorded": {
+            "length": 9590.88575456769,
+            "end": {
+              "x": 11531.63646159519,
+              "y": 4947.218190975203
+            }
+          }
+        },
+        {
+          "id": "station_quarter_lamp_center",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9642.563375144127,
+            "end": {
+              "x": 11931.625332253177,
+              "y": 4899.348125679047
+            }
+          },
+          "initial": {
+            "length": 9642.563375144127,
+            "end": {
+              "x": 11931.625332253177,
+              "y": 4899.348125679047
+            }
+          },
+          "recorded": {
+            "length": 9642.563375144127,
+            "end": {
+              "x": 11931.625332253177,
+              "y": 4899.348125679047
+            }
+          }
+        },
+        {
+          "id": "station_quarter_lamp_east",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9675.956386132846,
+            "end": {
+              "x": 12391.626684242752,
+              "y": 4947.330983386288
+            }
+          },
+          "initial": {
+            "length": 9675.956386132846,
+            "end": {
+              "x": 12391.626684242752,
+              "y": 4947.330983386288
+            }
+          },
+          "recorded": {
+            "length": 9675.956386132846,
+            "end": {
+              "x": 12391.626684242752,
+              "y": 4947.330983386288
+            }
+          }
+        },
+        {
+          "id": "station_quarter_home_planter",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9484.846802075599,
+            "end": {
+              "x": 11652.574543858296,
+              "y": 4829.149269637357
+            }
+          },
+          "initial": {
+            "length": 9484.846802075599,
+            "end": {
+              "x": 11652.574543858296,
+              "y": 4829.149269637357
+            }
+          },
+          "recorded": {
+            "length": 9484.846802075599,
+            "end": {
+              "x": 11652.574543858296,
+              "y": 4829.149269637357
+            }
+          }
+        },
+        {
+          "id": "station_quarter_work_planter",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9512.963282887302,
+            "end": {
+              "x": 12227.570385167453,
+              "y": 4839.212359476757
+            }
+          },
+          "initial": {
+            "length": 9512.963282887302,
+            "end": {
+              "x": 12227.570385167453,
+              "y": 4839.212359476757
+            }
+          },
+          "recorded": {
+            "length": 9512.963282887302,
+            "end": {
+              "x": 12227.570385167453,
+              "y": 4839.212359476757
+            }
+          }
+        },
+        {
+          "id": "station_quarter_tree_west",
+          "service": "orchard_trees",
+          "static": {
+            "length": 9277.51335683244,
+            "end": {
+              "x": 11538.484731001136,
+              "y": 4868.714575122256
+            }
+          },
+          "initial": {
+            "length": 9277.51335683244,
+            "end": {
+              "x": 11538.484731001136,
+              "y": 4868.714575122256
+            }
+          },
+          "recorded": {
+            "length": 9277.51335683244,
+            "end": {
+              "x": 11538.484731001136,
+              "y": 4868.714575122256
+            }
+          }
+        },
+        {
+          "id": "station_quarter_tree_center",
+          "service": "orchard_trees",
+          "static": {
+            "length": 9414.119863859312,
+            "end": {
+              "x": 11928.47160589558,
+              "y": 4838.896090787171
+            }
+          },
+          "initial": {
+            "length": 9414.119863859312,
+            "end": {
+              "x": 11928.47160589558,
+              "y": 4838.896090787171
+            }
+          },
+          "recorded": {
+            "length": 9414.119863859312,
+            "end": {
+              "x": 11928.47160589558,
+              "y": 4838.896090787171
+            }
+          }
+        },
+        {
+          "id": "station_quarter_tree_east",
+          "service": "orchard_trees",
+          "static": {
+            "length": 9382.219910130225,
+            "end": {
+              "x": 12373.471657804745,
+              "y": 4868.89531384651
+            }
+          },
+          "initial": {
+            "length": 9382.219910130225,
+            "end": {
+              "x": 12373.471657804745,
+              "y": 4868.89531384651
+            }
+          },
+          "recorded": {
+            "length": 9382.219910130225,
+            "end": {
+              "x": 12373.471657804745,
+              "y": 4868.89531384651
+            }
+          }
+        }
+      ],
+      "counts": {
+        "objects": 1813,
+        "sites": 221,
+        "crossings": 62,
+        "surfaces": 61,
+        "ambient": 189
+      },
+      "graphs": [
+        {
+          "id": "market_tables",
+          "nodes": 5733,
+          "links": 23456,
+          "targets": [
+            "garden_bench_nw/",
+            "garden_bench_ne/",
+            "garden_bench_sw/",
+            "garden_bench_se/",
+            "garden_bench_west/",
+            "garden_bench_east/",
+            "garden_lamp_north/",
+            "garden_lamp_south/",
+            "garden_lamp_west/",
+            "garden_lamp_east/",
+            "picnic_table/",
+            "produce_crate/",
+            "market_planter/",
+            "park_bench/",
+            "station_bench/",
+            "market_stall_west/",
+            "market_stall_east/",
+            "park_wall_west/",
+            "park_wall_east/",
+            "hall_table_west/",
+            "hall_table_east/",
+            "hall_bench/",
+            "hall_produce_crate/",
+            "school_bench/",
+            "center_lamps_0_0_l/",
+            "center_lamps_0_0_r/",
+            "center_lamps_0_1_l/",
+            "center_lamps_0_1_r/",
+            "center_lamps_0_2_l/",
+            "center_lamps_0_3_l/",
+            "center_lamps_0_5_l/",
+            "center_lamps_0_6_l/",
+            "center_lamps_0_7_r/",
+            "center_lamps_0_9_l/",
+            "center_lamps_0_10_l/",
+            "center_lamps_0_10_r/",
+            "center_lamps_0_11_l/",
+            "center_lamps_0_14_l/",
+            "center_lamps_0_18_l/",
+            "center_lamps_0_21_l/",
+            "center_lamps_0_21_r/",
+            "center_lamps_0_23_l/",
+            "center_lamps_0_23_r/",
+            "center_lamps_0_24_l/",
+            "center_lamps_0_24_r/",
+            "center_lamps_0_25_r/",
+            "center_lamps_1_0_l/",
+            "center_lamps_1_0_r/",
+            "center_lamps_1_1_l/",
+            "center_lamps_1_1_r/",
+            "center_lamps_1_2_l/",
+            "center_lamps_1_2_r/",
+            "center_lamps_1_4_l/",
+            "center_lamps_1_4_r/",
+            "center_lamps_1_5_l/",
+            "center_lamps_1_6_l/",
+            "center_lamps_1_6_r/",
+            "center_lamps_1_7_l/",
+            "center_lamps_1_7_r/",
+            "center_lamps_1_8_l/",
+            "center_lamps_1_9_l/",
+            "center_lamps_1_9_r/",
+            "center_lamps_1_10_l/",
+            "center_lamps_1_10_r/",
+            "center_lamps_1_11_r/",
+            "center_lamps_1_12_l/",
+            "center_lamps_1_12_r/",
+            "center_lamps_1_13_l/",
+            "center_lamps_1_13_r/",
+            "center_lamps_1_14_l/",
+            "center_lamps_1_14_r/",
+            "center_lamps_1_16_l/",
+            "center_lamps_1_16_r/",
+            "center_lamps_1_17_l/",
+            "center_lamps_1_17_r/",
+            "center_lamps_1_18_l/",
+            "center_lamps_2_0_l/",
+            "center_lamps_2_0_r/",
+            "center_lamps_2_1_l/",
+            "center_lamps_2_1_r/",
+            "center_lamps_2_3_l/",
+            "center_lamps_2_3_r/",
+            "center_lamps_2_6_l/",
+            "center_lamps_2_6_r/",
+            "center_lamps_2_7_l/",
+            "center_lamps_2_7_r/",
+            "center_lamps_2_8_l/",
+            "center_lamps_2_8_r/",
+            "center_lamps_2_9_l/",
+            "center_lamps_2_9_r/",
+            "center_lamps_2_10_l/",
+            "center_lamps_2_10_r/",
+            "center_lamps_2_12_l/",
+            "center_lamps_2_12_r/",
+            "center_lamps_2_13_l/",
+            "center_lamps_2_13_r/",
+            "center_lamps_2_15_l/",
+            "center_lamps_2_15_r/",
+            "center_lamps_2_16_l/",
+            "center_lamps_2_16_r/",
+            "north_lamps_0_0_l/",
+            "north_lamps_0_0_r/",
+            "north_lamps_0_1_r/",
+            "north_lamps_0_2_l/",
+            "north_lamps_0_2_r/",
+            "north_lamps_0_3_l/",
+            "north_lamps_0_3_r/",
+            "north_lamps_0_4_l/",
+            "north_lamps_0_4_r/",
+            "north_lamps_0_5_l/",
+            "north_lamps_0_5_r/",
+            "north_lamps_0_6_l/",
+            "north_lamps_0_6_r/",
+            "north_lamps_0_7_l/",
+            "north_lamps_0_7_r/",
+            "north_lamps_0_8_l/",
+            "north_lamps_0_8_r/",
+            "north_lamps_0_9_l/",
+            "north_lamps_0_9_r/",
+            "north_lamps_0_10_l/",
+            "north_lamps_0_10_r/",
+            "north_lamps_0_11_l/",
+            "north_lamps_0_12_l/",
+            "north_lamps_0_12_r/",
+            "north_lamps_0_13_l/",
+            "north_lamps_0_14_l/",
+            "north_lamps_0_14_r/",
+            "north_lamps_0_15_r/",
+            "north_lamps_0_16_l/",
+            "north_lamps_0_16_r/",
+            "north_lamps_0_19_l/",
+            "north_lamps_0_19_r/",
+            "north_lamps_0_20_l/",
+            "north_lamps_0_20_r/",
+            "north_lamps_0_21_l/",
+            "north_lamps_0_21_r/",
+            "north_lamps_0_22_l/",
+            "north_lamps_0_22_r/",
+            "north_lamps_0_23_l/",
+            "north_lamps_0_23_r/",
+            "north_lamps_0_24_l/",
+            "north_lamps_0_24_r/",
+            "north_lamps_0_25_l/",
+            "north_lamps_0_25_r/",
+            "north_lamps_0_26_l/",
+            "north_lamps_0_26_r/",
+            "north_lamps_0_27_l/",
+            "north_lamps_0_28_l/",
+            "north_lamps_0_28_r/",
+            "north_lamps_0_29_l/",
+            "north_lamps_0_29_r/",
+            "north_lamps_0_30_l/",
+            "north_lamps_0_30_r/",
+            "north_lamps_1_0_l/",
+            "north_lamps_1_0_r/",
+            "north_lamps_1_1_l/",
+            "north_lamps_1_1_r/",
+            "north_lamps_1_2_l/",
+            "north_lamps_1_2_r/",
+            "garden_lamps_0_0_l/",
+            "garden_lamps_0_0_r/",
+            "garden_lamps_0_1_l/",
+            "garden_lamps_0_1_r/",
+            "garden_lamps_0_2_l/",
+            "garden_lamps_0_2_r/",
+            "garden_lamps_0_4_l/",
+            "garden_lamps_0_4_r/",
+            "garden_lamps_0_5_l/",
+            "garden_lamps_0_6_l/",
+            "garden_lamps_0_6_r/",
+            "garden_lamps_0_7_l/",
+            "garden_lamps_0_7_r/",
+            "garden_lamps_0_8_l/",
+            "garden_lamps_0_8_r/",
+            "garden_lamps_0_9_l/",
+            "garden_lamps_0_9_r/",
+            "garden_lamps_0_10_l/",
+            "garden_lamps_0_10_r/",
+            "garden_lamps_0_11_l/",
+            "garden_lamps_0_11_r/",
+            "garden_lamps_0_12_l/",
+            "garden_lamps_0_12_r/",
+            "garden_lamps_0_13_l/",
+            "garden_lamps_0_13_r/",
+            "garden_lamps_0_14_l/",
+            "garden_lamps_0_14_r/",
+            "garden_lamps_0_15_l/",
+            "garden_lamps_0_15_r/",
+            "garden_lamps_0_16_l/",
+            "garden_lamps_0_16_r/",
+            "garden_lamps_0_17_l/",
+            "garden_lamps_0_17_r/",
+            "garden_lamps_0_19_l/",
+            "garden_lamps_0_19_r/",
+            "garden_lamps_0_20_l/",
+            "garden_lamps_0_20_r/",
+            "garden_lamps_0_21_l/",
+            "garden_lamps_0_21_r/",
+            "garden_lamps_1_0_l/",
+            "garden_lamps_1_0_r/",
+            "garden_lamps_1_1_l/",
+            "garden_lamps_1_1_r/",
+            "garden_lamps_1_3_l/",
+            "garden_lamps_1_3_r/",
+            "garden_lamps_1_4_l/",
+            "garden_lamps_1_4_r/",
+            "garden_lamps_1_5_l/",
+            "garden_lamps_1_6_l/",
+            "garden_lamps_1_6_r/",
+            "garden_lamps_1_7_l/",
+            "garden_lamps_1_7_r/",
+            "garden_lamps_1_8_l/",
+            "garden_lamps_1_8_r/",
+            "garden_lamps_1_9_l/",
+            "garden_lamps_1_10_l/",
+            "garden_lamps_2_0_l/",
+            "garden_lamps_2_0_r/",
+            "garden_lamps_2_2_l/",
+            "garden_lamps_2_2_r/",
+            "garden_lamps_3_0_l/",
+            "garden_lamps_3_0_r/",
+            "garden_lamps_3_1_r/",
+            "garden_lamps_3_3_l/",
+            "garden_lamps_3_3_r/",
+            "garden_lamps_4_0_l/",
+            "garden_lamps_4_0_r/",
+            "garden_lamps_4_1_l/",
+            "garden_lamps_4_1_r/",
+            "garden_lamps_4_2_l/",
+            "garden_lamps_4_2_r/",
+            "south_lamps_0_0_l/",
+            "south_lamps_0_0_r/",
+            "south_lamps_0_1_l/",
+            "south_lamps_0_1_r/",
+            "south_lamps_0_2_l/",
+            "south_lamps_0_2_r/",
+            "south_lamps_0_3_l/",
+            "south_lamps_0_4_l/",
+            "south_lamps_0_4_r/",
+            "south_lamps_0_5_l/",
+            "south_lamps_0_7_l/",
+            "south_lamps_0_7_r/",
+            "south_lamps_0_8_l/",
+            "south_lamps_0_8_r/",
+            "south_lamps_0_10_l/",
+            "south_lamps_0_10_r/",
+            "south_lamps_0_11_l/",
+            "south_lamps_0_11_r/",
+            "south_lamps_0_12_l/",
+            "south_lamps_0_12_r/",
+            "south_lamps_0_13_l/",
+            "south_lamps_0_13_r/",
+            "south_lamps_0_15_l/",
+            "south_lamps_0_15_r/",
+            "south_lamps_0_16_l/",
+            "south_lamps_0_16_r/",
+            "south_lamps_0_17_l/",
+            "south_lamps_0_17_r/",
+            "south_lamps_0_18_l/",
+            "south_lamps_0_18_r/",
+            "south_lamps_0_19_l/",
+            "south_lamps_0_19_r/",
+            "south_lamps_0_22_l/",
+            "south_lamps_0_22_r/",
+            "south_lamps_0_24_l/",
+            "south_lamps_0_24_r/",
+            "south_lamps_0_25_l/",
+            "south_lamps_0_25_r/",
+            "south_lamps_0_26_l/",
+            "south_lamps_0_26_r/",
+            "south_lamps_1_0_l/",
+            "south_lamps_1_0_r/",
+            "south_lamps_1_1_l/",
+            "south_lamps_1_1_r/",
+            "south_lamps_1_2_l/",
+            "south_lamps_1_2_r/",
+            "south_lamps_1_3_l/",
+            "south_lamps_1_3_r/",
+            "south_lamps_1_4_l/",
+            "south_lamps_1_4_r/",
+            "south_lamps_1_5_l/",
+            "south_lamps_1_5_r/",
+            "south_lamps_1_7_l/",
+            "south_lamps_1_7_r/",
+            "south_lamps_1_8_l/",
+            "south_lamps_1_8_r/",
+            "south_lamps_2_0_l/",
+            "south_lamps_2_1_l/",
+            "south_lamps_2_1_r/",
+            "south_lamps_2_2_l/",
+            "south_lamps_2_2_r/",
+            "south_lamps_2_3_l/",
+            "south_lamps_2_5_l/",
+            "south_lamps_2_5_r/",
+            "south_lamps_2_7_l/",
+            "south_lamps_2_7_r/",
+            "south_lamps_3_0_l/",
+            "south_lamps_3_0_r/",
+            "south_lamps_3_1_l/",
+            "south_lamps_3_1_r/",
+            "south_lamps_3_2_l/",
+            "south_lamps_3_3_l/",
+            "south_lamps_3_3_r/",
+            "south_lamps_3_4_l/",
+            "south_lamps_4_0_l/",
+            "south_lamps_4_0_r/",
+            "south_lamps_4_1_l/",
+            "south_lamps_4_1_r/",
+            "east_lamps_0_0_l/",
+            "east_lamps_0_0_r/",
+            "east_lamps_0_1_l/",
+            "east_lamps_0_2_l/",
+            "east_lamps_0_3_l/",
+            "east_lamps_0_5_l/",
+            "east_lamps_0_5_r/",
+            "east_lamps_0_6_l/",
+            "east_lamps_0_6_r/",
+            "east_lamps_0_7_r/",
+            "east_lamps_0_8_l/",
+            "east_lamps_0_8_r/",
+            "east_lamps_0_9_l/",
+            "east_lamps_0_9_r/",
+            "east_lamps_0_10_l/",
+            "east_lamps_0_10_r/",
+            "east_lamps_0_11_l/",
+            "east_lamps_0_11_r/",
+            "east_lamps_0_12_l/",
+            "east_lamps_0_12_r/",
+            "east_lamps_0_13_l/",
+            "east_lamps_0_13_r/",
+            "east_lamps_0_14_l/",
+            "east_lamps_0_14_r/",
+            "east_lamps_0_15_l/",
+            "east_lamps_0_15_r/",
+            "east_lamps_0_16_l/",
+            "east_lamps_0_16_r/",
+            "east_lamps_0_17_l/",
+            "east_lamps_0_17_r/",
+            "east_lamps_0_18_l/",
+            "east_lamps_1_0_l/",
+            "east_lamps_1_1_l/",
+            "east_lamps_1_3_l/",
+            "east_lamps_1_3_r/",
+            "east_lamps_1_4_l/",
+            "east_lamps_1_4_r/",
+            "east_lamps_1_5_r/",
+            "east_lamps_1_6_l/",
+            "east_lamps_1_6_r/",
+            "east_lamps_1_7_l/",
+            "east_lamps_1_7_r/",
+            "east_lamps_1_8_l/",
+            "east_lamps_1_8_r/",
+            "east_lamps_2_3_l/",
+            "east_lamps_2_4_l/",
+            "east_lamps_2_4_r/",
+            "east_lamps_2_5_l/",
+            "east_lamps_2_5_r/",
+            "east_lamps_2_7_l/",
+            "east_lamps_2_7_r/",
+            "east_lamps_2_8_l/",
+            "east_lamps_2_8_r/",
+            "east_lamps_2_9_l/",
+            "east_lamps_2_9_r/",
+            "east_lamps_2_10_l/",
+            "east_lamps_2_10_r/",
+            "east_lamps_2_11_l/",
+            "east_lamps_2_11_r/",
+            "east_lamps_2_12_l/",
+            "east_lamps_2_12_r/",
+            "east_lamps_2_13_l/",
+            "east_lamps_2_13_r/",
+            "east_lamps_2_14_r/",
+            "east_lamps_2_15_l/",
+            "east_lamps_2_15_r/",
+            "east_lamps_3_0_l/",
+            "east_lamps_3_0_r/",
+            "east_lamps_3_2_l/",
+            "east_lamps_3_4_l/",
+            "east_lamps_3_4_r/",
+            "east_lamps_3_5_l/",
+            "east_lamps_3_5_r/",
+            "east_lamps_3_6_l/",
+            "east_lamps_4_0_l/",
+            "east_lamps_4_0_r/",
+            "east_lamps_4_1_l/",
+            "east_lamps_4_1_r/",
+            "east_lamps_4_2_l/",
+            "east_lamps_4_2_r/",
+            "east_lamps_4_3_l/",
+            "east_lamps_4_3_r/",
+            "east_lamps_4_4_l/",
+            "east_lamps_4_4_r/",
+            "east_lamps_4_5_l/",
+            "east_lamps_4_5_r/",
+            "east_lamps_4_6_l/",
+            "east_lamps_4_6_r/",
+            "east_lamps_5_0_l/",
+            "east_lamps_5_0_r/",
+            "east_lamps_5_1_l/",
+            "east_lamps_5_1_r/",
+            "east_lamps_5_2_l/",
+            "east_lamps_5_2_r/",
+            "east_lamps_5_4_l/",
+            "east_lamps_5_4_r/",
+            "east_lamps_5_5_l/",
+            "destination_planters_1_5_r/",
+            "destination_planters_2_4_r/",
+            "destination_planters_2_5_r/",
+            "destination_planters_3_4_l/",
+            "destination_planters_3_5_l/",
+            "destination_planters_4_4_r/",
+            "destination_planters_4_5_r/",
+            "destination_planters_5_4_r/",
+            "destination_planters_6_4_r/",
+            "destination_planters_6_5_r/",
+            "destination_planters_7_4_l/",
+            "destination_planters_7_5_l/",
+            "destination_planters_8_4_r/",
+            "destination_planters_8_5_r/",
+            "airport_lamps_0_0_l/",
+            "airport_lamps_0_0_r/",
+            "airport_lamps_0_1_l/",
+            "airport_lamps_0_1_r/",
+            "airport_lamps_0_2_l/",
+            "airport_lamps_0_2_r/",
+            "airport_lamps_0_3_l/",
+            "airport_lamps_0_3_r/",
+            "airport_lamps_1_0_l/",
+            "airport_lamps_1_0_r/",
+            "airport_lamps_1_1_l/",
+            "airport_lamps_1_1_r/",
+            "airport_lamps_1_2_l/",
+            "airport_lamps_1_2_r/",
+            "airport_lamps_1_3_r/",
+            "airport_lamps_1_4_l/",
+            "airport_lamps_1_4_r/",
+            "airport_lamps_1_5_l/",
+            "airport_lamps_1_5_r/",
+            "airport_lamps_1_6_l/",
+            "airport_lamps_2_0_r/",
+            "airport_lamps_2_1_l/",
+            "airport_lamps_2_1_r/",
+            "airport_lamps_2_2_l/",
+            "airport_lamps_2_3_l/",
+            "airport_lamps_2_3_r/",
+            "airport_lamps_2_4_l/",
+            "airport_lamps_2_4_r/",
+            "service_planters_0_3_r/",
+            "service_planters_1_3_r/"
+          ]
+        },
+        {
+          "id": "classroom_furniture",
+          "nodes": 3863,
+          "links": 12324,
+          "targets": [
+            "hall_table_east/",
+            "hall_produce_crate/",
+            "school_common_bench/",
+            "school_reading_bench/",
+            "school_rear_bench/",
+            "school_table_west/",
+            "school_table_east/",
+            "station_quarter_bench_nw/",
+            "station_quarter_bench_ne/",
+            "station_quarter_bench_sw/",
+            "station_quarter_bench_se/",
+            "station_quarter_home_seat/",
+            "station_quarter_office_seat/",
+            "station_quarter_lamp_west/",
+            "station_quarter_lamp_center/",
+            "station_quarter_lamp_east/",
+            "station_quarter_home_planter/",
+            "station_quarter_work_planter/"
+          ]
+        },
+        {
+          "id": "home_furniture",
+          "nodes": 2156,
+          "links": 5652,
+          "targets": [
+            "home_settee/",
+            "home_table/",
+            "home_planter/",
+            "home_upper_settee/",
+            "home_upper_table/",
+            "home_upper_planter/",
+            "hall_table_west/",
+            "hall_table_east/",
+            "hall_workbench/",
+            "hall_bench/",
+            "hall_produce_crate/"
+          ]
+        },
+        {
+          "id": "orchard_trees",
+          "nodes": 5564,
+          "links": 21214,
+          "targets": [
+            "garden_oak_west/",
+            "garden_oak_east/",
+            "garden_rowan_north/",
+            "garden_rowan_south/",
+            "garden_rowan_east/",
+            "ecology_032/",
+            "ecology_061/",
+            "ecology_086/",
+            "ecology_165/",
+            "ecology_167/",
+            "orchard_birch/",
+            "meadow_spruce/",
+            "orchard_sapling/",
+            "station_quarter_tree_west/",
+            "station_quarter_tree_center/",
+            "station_quarter_tree_east/",
+            "center_trees_0_0_l/",
+            "center_trees_0_1_l/",
+            "center_trees_0_4_r/",
+            "center_trees_0_7_l/",
+            "center_trees_1_0_l/",
+            "center_trees_1_0_r/",
+            "center_trees_1_6_l/",
+            "center_trees_1_6_r/",
+            "center_trees_1_7_r/",
+            "center_trees_1_8_l/",
+            "center_trees_1_8_r/",
+            "center_trees_2_0_l/",
+            "center_trees_2_0_r/",
+            "center_trees_2_1_l/",
+            "center_trees_2_1_r/",
+            "center_trees_2_2_l/",
+            "center_trees_2_2_r/",
+            "center_trees_2_3_r/",
+            "center_trees_2_6_l/",
+            "center_trees_2_6_r/",
+            "center_trees_2_7_l/",
+            "center_trees_2_7_r/",
+            "center_trees_2_8_l/",
+            "center_trees_2_8_r/",
+            "center_trees_2_9_l/",
+            "center_trees_2_9_r/",
+            "garden_trees_0_0_l/",
+            "garden_trees_0_0_r/",
+            "garden_trees_0_1_l/",
+            "garden_trees_0_2_l/",
+            "garden_trees_0_4_l/",
+            "garden_trees_0_5_l/",
+            "garden_trees_0_6_l/",
+            "garden_trees_0_6_r/",
+            "garden_trees_0_7_l/",
+            "garden_trees_0_7_r/",
+            "garden_trees_0_8_l/",
+            "garden_trees_0_9_l/",
+            "garden_trees_0_9_r/",
+            "garden_trees_0_11_l/",
+            "garden_trees_0_11_r/",
+            "garden_trees_1_0_r/",
+            "garden_trees_1_2_r/",
+            "garden_trees_2_0_r/",
+            "garden_trees_2_1_l/",
+            "garden_trees_3_1_r/",
+            "garden_trees_3_3_r/",
+            "waterfront_trees_0_0_l/",
+            "waterfront_trees_0_1_l/",
+            "waterfront_trees_0_2_l/",
+            "waterfront_trees_0_3_l/",
+            "waterfront_trees_0_3_r/",
+            "waterfront_trees_0_4_r/",
+            "waterfront_trees_0_5_l/",
+            "waterfront_trees_0_5_r/",
+            "waterfront_trees_0_6_l/",
+            "waterfront_trees_0_6_r/",
+            "waterfront_trees_0_7_r/",
+            "waterfront_trees_0_8_l/",
+            "waterfront_trees_0_8_r/",
+            "waterfront_trees_0_9_l/",
+            "waterfront_trees_0_9_r/",
+            "waterfront_trees_0_10_l/",
+            "waterfront_trees_0_10_r/",
+            "waterfront_trees_0_11_l/",
+            "waterfront_trees_0_11_r/",
+            "waterfront_trees_0_12_l/",
+            "waterfront_trees_0_12_r/",
+            "waterfront_trees_0_13_r/",
+            "waterfront_trees_1_0_l/",
+            "waterfront_trees_1_0_r/",
+            "waterfront_trees_1_1_l/",
+            "waterfront_trees_1_1_r/",
+            "waterfront_trees_1_3_l/",
+            "waterfront_trees_1_4_l/",
+            "waterfront_trees_1_4_r/",
+            "waterfront_trees_2_1_l/",
+            "waterfront_trees_2_1_r/",
+            "waterfront_trees_2_2_l/",
+            "waterfront_trees_2_2_r/",
+            "waterfront_trees_2_4_l/",
+            "waterfront_trees_2_4_r/",
+            "waterfront_trees_2_5_l/",
+            "waterfront_trees_2_6_l/",
+            "waterfront_trees_2_6_r/",
+            "waterfront_trees_2_7_l/",
+            "waterfront_trees_2_8_l/",
+            "waterfront_trees_2_8_r/",
+            "waterfront_trees_2_9_l/",
+            "waterfront_trees_2_10_l/",
+            "waterfront_trees_2_10_r/",
+            "waterfront_trees_2_11_l/",
+            "waterfront_trees_2_11_r/"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "compiled",
+      "rows": [
+        {
+          "id": "station_quarter_bench_nw",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9546.475120381727,
+            "end": {
+              "x": 11814.660340933317,
+              "y": 4948.638067652958
+            }
+          },
+          "initial": {
+            "length": 9546.475120381727,
+            "end": {
+              "x": 11814.660340933317,
+              "y": 4948.638067652958
+            }
+          },
+          "recorded": {
+            "length": 9546.475120381727,
+            "end": {
+              "x": 11814.660340933317,
+              "y": 4948.638067652958
+            }
+          }
+        },
+        {
+          "id": "station_quarter_bench_ne",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9659.585587038968,
+            "end": {
+              "x": 12034.655693773713,
+              "y": 4948.691464011224
+            }
+          },
+          "initial": {
+            "length": 9659.585587038968,
+            "end": {
+              "x": 12034.655693773713,
+              "y": 4948.691464011224
+            }
+          },
+          "recorded": {
+            "length": 9659.585587038968,
+            "end": {
+              "x": 12034.655693773713,
+              "y": 4948.691464011224
+            }
+          }
+        },
+        {
+          "id": "station_quarter_bench_sw",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9510.805334988825,
+            "end": {
+              "x": 11814.647685599104,
+              "y": 4895.7890323967895
+            }
+          },
+          "initial": {
+            "length": 9510.805334988825,
+            "end": {
+              "x": 11814.647685599104,
+              "y": 4895.7890323967895
+            }
+          },
+          "recorded": {
+            "length": 9510.805334988825,
+            "end": {
+              "x": 11814.647685599104,
+              "y": 4895.7890323967895
+            }
+          }
+        },
+        {
+          "id": "station_quarter_bench_se",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9640.205774087503,
+            "end": {
+              "x": 12034.644008897474,
+              "y": 4895.836583797977
+            }
+          },
+          "initial": {
+            "length": 9640.205774087503,
+            "end": {
+              "x": 12034.644008897474,
+              "y": 4895.836583797977
+            }
+          },
+          "recorded": {
+            "length": 9640.205774087503,
+            "end": {
+              "x": 12034.644008897474,
+              "y": 4895.836583797977
+            }
+          }
+        },
+        {
+          "id": "station_quarter_home_seat",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9659.822028251732,
+            "end": {
+              "x": 11614.613402504265,
+              "y": 4689.357646900664,
+              "elevation": 1.71875
+            }
+          },
+          "initial": {
+            "length": 9659.822028251732,
+            "end": {
+              "x": 11614.613402504265,
+              "y": 4689.357646900664,
+              "elevation": 1.71875
+            }
+          },
+          "recorded": {
+            "length": 9659.822028251732,
+            "end": {
+              "x": 11614.613402504265,
+              "y": 4689.357646900664,
+              "elevation": 1.71875
+            }
+          }
+        },
+        {
+          "id": "station_quarter_office_seat",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9688.499659859775,
+            "end": {
+              "x": 12254.610606245566,
+              "y": 4689.428545827772,
+              "elevation": 1.953125
+            }
+          },
+          "initial": {
+            "length": 9688.499659859775,
+            "end": {
+              "x": 12254.610606245566,
+              "y": 4689.428545827772,
+              "elevation": 1.953125
+            }
+          },
+          "recorded": {
+            "length": 9688.499659859775,
+            "end": {
+              "x": 12254.610606245566,
+              "y": 4689.428545827772,
+              "elevation": 1.953125
+            }
+          }
+        },
+        {
+          "id": "station_quarter_lamp_west",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9590.88575456769,
+            "end": {
+              "x": 11531.63646159519,
+              "y": 4947.218190975203
+            }
+          },
+          "initial": {
+            "length": 9590.88575456769,
+            "end": {
+              "x": 11531.63646159519,
+              "y": 4947.218190975203
+            }
+          },
+          "recorded": {
+            "length": 9590.88575456769,
+            "end": {
+              "x": 11531.63646159519,
+              "y": 4947.218190975203
+            }
+          }
+        },
+        {
+          "id": "station_quarter_lamp_center",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9642.563375144127,
+            "end": {
+              "x": 11931.625332253177,
+              "y": 4899.348125679047
+            }
+          },
+          "initial": {
+            "length": 9642.563375144127,
+            "end": {
+              "x": 11931.625332253177,
+              "y": 4899.348125679047
+            }
+          },
+          "recorded": {
+            "length": 9642.563375144127,
+            "end": {
+              "x": 11931.625332253177,
+              "y": 4899.348125679047
+            }
+          }
+        },
+        {
+          "id": "station_quarter_lamp_east",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9675.956386132846,
+            "end": {
+              "x": 12391.626684242752,
+              "y": 4947.330983386288
+            }
+          },
+          "initial": {
+            "length": 9675.956386132846,
+            "end": {
+              "x": 12391.626684242752,
+              "y": 4947.330983386288
+            }
+          },
+          "recorded": {
+            "length": 9675.956386132846,
+            "end": {
+              "x": 12391.626684242752,
+              "y": 4947.330983386288
+            }
+          }
+        },
+        {
+          "id": "station_quarter_home_planter",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9484.846802075599,
+            "end": {
+              "x": 11652.574543858296,
+              "y": 4829.149269637357
+            }
+          },
+          "initial": {
+            "length": 9484.846802075599,
+            "end": {
+              "x": 11652.574543858296,
+              "y": 4829.149269637357
+            }
+          },
+          "recorded": {
+            "length": 9484.846802075599,
+            "end": {
+              "x": 11652.574543858296,
+              "y": 4829.149269637357
+            }
+          }
+        },
+        {
+          "id": "station_quarter_work_planter",
+          "service": "classroom_furniture",
+          "static": {
+            "length": 9512.963282887302,
+            "end": {
+              "x": 12227.570385167453,
+              "y": 4839.212359476757
+            }
+          },
+          "initial": {
+            "length": 9512.963282887302,
+            "end": {
+              "x": 12227.570385167453,
+              "y": 4839.212359476757
+            }
+          },
+          "recorded": {
+            "length": 9512.963282887302,
+            "end": {
+              "x": 12227.570385167453,
+              "y": 4839.212359476757
+            }
+          }
+        },
+        {
+          "id": "station_quarter_tree_west",
+          "service": "orchard_trees",
+          "static": {
+            "length": 9277.51335683244,
+            "end": {
+              "x": 11538.484731001136,
+              "y": 4868.714575122256
+            }
+          },
+          "initial": {
+            "length": 9277.51335683244,
+            "end": {
+              "x": 11538.484731001136,
+              "y": 4868.714575122256
+            }
+          },
+          "recorded": {
+            "length": 9277.51335683244,
+            "end": {
+              "x": 11538.484731001136,
+              "y": 4868.714575122256
+            }
+          }
+        },
+        {
+          "id": "station_quarter_tree_center",
+          "service": "orchard_trees",
+          "static": {
+            "length": 9414.119863859312,
+            "end": {
+              "x": 11928.47160589558,
+              "y": 4838.896090787171
+            }
+          },
+          "initial": {
+            "length": 9414.119863859312,
+            "end": {
+              "x": 11928.47160589558,
+              "y": 4838.896090787171
+            }
+          },
+          "recorded": {
+            "length": 9414.119863859312,
+            "end": {
+              "x": 11928.47160589558,
+              "y": 4838.896090787171
+            }
+          }
+        },
+        {
+          "id": "station_quarter_tree_east",
+          "service": "orchard_trees",
+          "static": {
+            "length": 9382.219910130225,
+            "end": {
+              "x": 12373.471657804745,
+              "y": 4868.89531384651
+            }
+          },
+          "initial": {
+            "length": 9382.219910130225,
+            "end": {
+              "x": 12373.471657804745,
+              "y": 4868.89531384651
+            }
+          },
+          "recorded": {
+            "length": 9382.219910130225,
+            "end": {
+              "x": 12373.471657804745,
+              "y": 4868.89531384651
+            }
+          }
+        }
+      ],
+      "counts": {
+        "objects": 1813,
+        "sites": 221,
+        "crossings": 62,
+        "surfaces": 61,
+        "ambient": 189
+      },
+      "graphs": [
+        {
+          "id": "market_tables",
+          "nodes": 5733,
+          "links": 23456,
+          "targets": [
+            "garden_bench_nw/",
+            "garden_bench_ne/",
+            "garden_bench_sw/",
+            "garden_bench_se/",
+            "garden_bench_west/",
+            "garden_bench_east/",
+            "garden_lamp_north/",
+            "garden_lamp_south/",
+            "garden_lamp_west/",
+            "garden_lamp_east/",
+            "picnic_table/",
+            "produce_crate/",
+            "market_planter/",
+            "park_bench/",
+            "station_bench/",
+            "market_stall_west/",
+            "market_stall_east/",
+            "park_wall_west/",
+            "park_wall_east/",
+            "hall_table_west/",
+            "hall_table_east/",
+            "hall_bench/",
+            "hall_produce_crate/",
+            "school_bench/",
+            "center_lamps_0_0_l/",
+            "center_lamps_0_0_r/",
+            "center_lamps_0_1_l/",
+            "center_lamps_0_1_r/",
+            "center_lamps_0_2_l/",
+            "center_lamps_0_3_l/",
+            "center_lamps_0_5_l/",
+            "center_lamps_0_6_l/",
+            "center_lamps_0_7_r/",
+            "center_lamps_0_9_l/",
+            "center_lamps_0_10_l/",
+            "center_lamps_0_10_r/",
+            "center_lamps_0_11_l/",
+            "center_lamps_0_14_l/",
+            "center_lamps_0_18_l/",
+            "center_lamps_0_21_l/",
+            "center_lamps_0_21_r/",
+            "center_lamps_0_23_l/",
+            "center_lamps_0_23_r/",
+            "center_lamps_0_24_l/",
+            "center_lamps_0_24_r/",
+            "center_lamps_0_25_r/",
+            "center_lamps_1_0_l/",
+            "center_lamps_1_0_r/",
+            "center_lamps_1_1_l/",
+            "center_lamps_1_1_r/",
+            "center_lamps_1_2_l/",
+            "center_lamps_1_2_r/",
+            "center_lamps_1_4_l/",
+            "center_lamps_1_4_r/",
+            "center_lamps_1_5_l/",
+            "center_lamps_1_6_l/",
+            "center_lamps_1_6_r/",
+            "center_lamps_1_7_l/",
+            "center_lamps_1_7_r/",
+            "center_lamps_1_8_l/",
+            "center_lamps_1_9_l/",
+            "center_lamps_1_9_r/",
+            "center_lamps_1_10_l/",
+            "center_lamps_1_10_r/",
+            "center_lamps_1_11_r/",
+            "center_lamps_1_12_l/",
+            "center_lamps_1_12_r/",
+            "center_lamps_1_13_l/",
+            "center_lamps_1_13_r/",
+            "center_lamps_1_14_l/",
+            "center_lamps_1_14_r/",
+            "center_lamps_1_16_l/",
+            "center_lamps_1_16_r/",
+            "center_lamps_1_17_l/",
+            "center_lamps_1_17_r/",
+            "center_lamps_1_18_l/",
+            "center_lamps_2_0_l/",
+            "center_lamps_2_0_r/",
+            "center_lamps_2_1_l/",
+            "center_lamps_2_1_r/",
+            "center_lamps_2_3_l/",
+            "center_lamps_2_3_r/",
+            "center_lamps_2_6_l/",
+            "center_lamps_2_6_r/",
+            "center_lamps_2_7_l/",
+            "center_lamps_2_7_r/",
+            "center_lamps_2_8_l/",
+            "center_lamps_2_8_r/",
+            "center_lamps_2_9_l/",
+            "center_lamps_2_9_r/",
+            "center_lamps_2_10_l/",
+            "center_lamps_2_10_r/",
+            "center_lamps_2_12_l/",
+            "center_lamps_2_12_r/",
+            "center_lamps_2_13_l/",
+            "center_lamps_2_13_r/",
+            "center_lamps_2_15_l/",
+            "center_lamps_2_15_r/",
+            "center_lamps_2_16_l/",
+            "center_lamps_2_16_r/",
+            "north_lamps_0_0_l/",
+            "north_lamps_0_0_r/",
+            "north_lamps_0_1_r/",
+            "north_lamps_0_2_l/",
+            "north_lamps_0_2_r/",
+            "north_lamps_0_3_l/",
+            "north_lamps_0_3_r/",
+            "north_lamps_0_4_l/",
+            "north_lamps_0_4_r/",
+            "north_lamps_0_5_l/",
+            "north_lamps_0_5_r/",
+            "north_lamps_0_6_l/",
+            "north_lamps_0_6_r/",
+            "north_lamps_0_7_l/",
+            "north_lamps_0_7_r/",
+            "north_lamps_0_8_l/",
+            "north_lamps_0_8_r/",
+            "north_lamps_0_9_l/",
+            "north_lamps_0_9_r/",
+            "north_lamps_0_10_l/",
+            "north_lamps_0_10_r/",
+            "north_lamps_0_11_l/",
+            "north_lamps_0_12_l/",
+            "north_lamps_0_12_r/",
+            "north_lamps_0_13_l/",
+            "north_lamps_0_14_l/",
+            "north_lamps_0_14_r/",
+            "north_lamps_0_15_r/",
+            "north_lamps_0_16_l/",
+            "north_lamps_0_16_r/",
+            "north_lamps_0_19_l/",
+            "north_lamps_0_19_r/",
+            "north_lamps_0_20_l/",
+            "north_lamps_0_20_r/",
+            "north_lamps_0_21_l/",
+            "north_lamps_0_21_r/",
+            "north_lamps_0_22_l/",
+            "north_lamps_0_22_r/",
+            "north_lamps_0_23_l/",
+            "north_lamps_0_23_r/",
+            "north_lamps_0_24_l/",
+            "north_lamps_0_24_r/",
+            "north_lamps_0_25_l/",
+            "north_lamps_0_25_r/",
+            "north_lamps_0_26_l/",
+            "north_lamps_0_26_r/",
+            "north_lamps_0_27_l/",
+            "north_lamps_0_28_l/",
+            "north_lamps_0_28_r/",
+            "north_lamps_0_29_l/",
+            "north_lamps_0_29_r/",
+            "north_lamps_0_30_l/",
+            "north_lamps_0_30_r/",
+            "north_lamps_1_0_l/",
+            "north_lamps_1_0_r/",
+            "north_lamps_1_1_l/",
+            "north_lamps_1_1_r/",
+            "north_lamps_1_2_l/",
+            "north_lamps_1_2_r/",
+            "garden_lamps_0_0_l/",
+            "garden_lamps_0_0_r/",
+            "garden_lamps_0_1_l/",
+            "garden_lamps_0_1_r/",
+            "garden_lamps_0_2_l/",
+            "garden_lamps_0_2_r/",
+            "garden_lamps_0_4_l/",
+            "garden_lamps_0_4_r/",
+            "garden_lamps_0_5_l/",
+            "garden_lamps_0_6_l/",
+            "garden_lamps_0_6_r/",
+            "garden_lamps_0_7_l/",
+            "garden_lamps_0_7_r/",
+            "garden_lamps_0_8_l/",
+            "garden_lamps_0_8_r/",
+            "garden_lamps_0_9_l/",
+            "garden_lamps_0_9_r/",
+            "garden_lamps_0_10_l/",
+            "garden_lamps_0_10_r/",
+            "garden_lamps_0_11_l/",
+            "garden_lamps_0_11_r/",
+            "garden_lamps_0_12_l/",
+            "garden_lamps_0_12_r/",
+            "garden_lamps_0_13_l/",
+            "garden_lamps_0_13_r/",
+            "garden_lamps_0_14_l/",
+            "garden_lamps_0_14_r/",
+            "garden_lamps_0_15_l/",
+            "garden_lamps_0_15_r/",
+            "garden_lamps_0_16_l/",
+            "garden_lamps_0_16_r/",
+            "garden_lamps_0_17_l/",
+            "garden_lamps_0_17_r/",
+            "garden_lamps_0_19_l/",
+            "garden_lamps_0_19_r/",
+            "garden_lamps_0_20_l/",
+            "garden_lamps_0_20_r/",
+            "garden_lamps_0_21_l/",
+            "garden_lamps_0_21_r/",
+            "garden_lamps_1_0_l/",
+            "garden_lamps_1_0_r/",
+            "garden_lamps_1_1_l/",
+            "garden_lamps_1_1_r/",
+            "garden_lamps_1_3_l/",
+            "garden_lamps_1_3_r/",
+            "garden_lamps_1_4_l/",
+            "garden_lamps_1_4_r/",
+            "garden_lamps_1_5_l/",
+            "garden_lamps_1_6_l/",
+            "garden_lamps_1_6_r/",
+            "garden_lamps_1_7_l/",
+            "garden_lamps_1_7_r/",
+            "garden_lamps_1_8_l/",
+            "garden_lamps_1_8_r/",
+            "garden_lamps_1_9_l/",
+            "garden_lamps_1_10_l/",
+            "garden_lamps_2_0_l/",
+            "garden_lamps_2_0_r/",
+            "garden_lamps_2_2_l/",
+            "garden_lamps_2_2_r/",
+            "garden_lamps_3_0_l/",
+            "garden_lamps_3_0_r/",
+            "garden_lamps_3_1_r/",
+            "garden_lamps_3_3_l/",
+            "garden_lamps_3_3_r/",
+            "garden_lamps_4_0_l/",
+            "garden_lamps_4_0_r/",
+            "garden_lamps_4_1_l/",
+            "garden_lamps_4_1_r/",
+            "garden_lamps_4_2_l/",
+            "garden_lamps_4_2_r/",
+            "south_lamps_0_0_l/",
+            "south_lamps_0_0_r/",
+            "south_lamps_0_1_l/",
+            "south_lamps_0_1_r/",
+            "south_lamps_0_2_l/",
+            "south_lamps_0_2_r/",
+            "south_lamps_0_3_l/",
+            "south_lamps_0_4_l/",
+            "south_lamps_0_4_r/",
+            "south_lamps_0_5_l/",
+            "south_lamps_0_7_l/",
+            "south_lamps_0_7_r/",
+            "south_lamps_0_8_l/",
+            "south_lamps_0_8_r/",
+            "south_lamps_0_10_l/",
+            "south_lamps_0_10_r/",
+            "south_lamps_0_11_l/",
+            "south_lamps_0_11_r/",
+            "south_lamps_0_12_l/",
+            "south_lamps_0_12_r/",
+            "south_lamps_0_13_l/",
+            "south_lamps_0_13_r/",
+            "south_lamps_0_15_l/",
+            "south_lamps_0_15_r/",
+            "south_lamps_0_16_l/",
+            "south_lamps_0_16_r/",
+            "south_lamps_0_17_l/",
+            "south_lamps_0_17_r/",
+            "south_lamps_0_18_l/",
+            "south_lamps_0_18_r/",
+            "south_lamps_0_19_l/",
+            "south_lamps_0_19_r/",
+            "south_lamps_0_22_l/",
+            "south_lamps_0_22_r/",
+            "south_lamps_0_24_l/",
+            "south_lamps_0_24_r/",
+            "south_lamps_0_25_l/",
+            "south_lamps_0_25_r/",
+            "south_lamps_0_26_l/",
+            "south_lamps_0_26_r/",
+            "south_lamps_1_0_l/",
+            "south_lamps_1_0_r/",
+            "south_lamps_1_1_l/",
+            "south_lamps_1_1_r/",
+            "south_lamps_1_2_l/",
+            "south_lamps_1_2_r/",
+            "south_lamps_1_3_l/",
+            "south_lamps_1_3_r/",
+            "south_lamps_1_4_l/",
+            "south_lamps_1_4_r/",
+            "south_lamps_1_5_l/",
+            "south_lamps_1_5_r/",
+            "south_lamps_1_7_l/",
+            "south_lamps_1_7_r/",
+            "south_lamps_1_8_l/",
+            "south_lamps_1_8_r/",
+            "south_lamps_2_0_l/",
+            "south_lamps_2_1_l/",
+            "south_lamps_2_1_r/",
+            "south_lamps_2_2_l/",
+            "south_lamps_2_2_r/",
+            "south_lamps_2_3_l/",
+            "south_lamps_2_5_l/",
+            "south_lamps_2_5_r/",
+            "south_lamps_2_7_l/",
+            "south_lamps_2_7_r/",
+            "south_lamps_3_0_l/",
+            "south_lamps_3_0_r/",
+            "south_lamps_3_1_l/",
+            "south_lamps_3_1_r/",
+            "south_lamps_3_2_l/",
+            "south_lamps_3_3_l/",
+            "south_lamps_3_3_r/",
+            "south_lamps_3_4_l/",
+            "south_lamps_4_0_l/",
+            "south_lamps_4_0_r/",
+            "south_lamps_4_1_l/",
+            "south_lamps_4_1_r/",
+            "east_lamps_0_0_l/",
+            "east_lamps_0_0_r/",
+            "east_lamps_0_1_l/",
+            "east_lamps_0_2_l/",
+            "east_lamps_0_3_l/",
+            "east_lamps_0_5_l/",
+            "east_lamps_0_5_r/",
+            "east_lamps_0_6_l/",
+            "east_lamps_0_6_r/",
+            "east_lamps_0_7_r/",
+            "east_lamps_0_8_l/",
+            "east_lamps_0_8_r/",
+            "east_lamps_0_9_l/",
+            "east_lamps_0_9_r/",
+            "east_lamps_0_10_l/",
+            "east_lamps_0_10_r/",
+            "east_lamps_0_11_l/",
+            "east_lamps_0_11_r/",
+            "east_lamps_0_12_l/",
+            "east_lamps_0_12_r/",
+            "east_lamps_0_13_l/",
+            "east_lamps_0_13_r/",
+            "east_lamps_0_14_l/",
+            "east_lamps_0_14_r/",
+            "east_lamps_0_15_l/",
+            "east_lamps_0_15_r/",
+            "east_lamps_0_16_l/",
+            "east_lamps_0_16_r/",
+            "east_lamps_0_17_l/",
+            "east_lamps_0_17_r/",
+            "east_lamps_0_18_l/",
+            "east_lamps_1_0_l/",
+            "east_lamps_1_1_l/",
+            "east_lamps_1_3_l/",
+            "east_lamps_1_3_r/",
+            "east_lamps_1_4_l/",
+            "east_lamps_1_4_r/",
+            "east_lamps_1_5_r/",
+            "east_lamps_1_6_l/",
+            "east_lamps_1_6_r/",
+            "east_lamps_1_7_l/",
+            "east_lamps_1_7_r/",
+            "east_lamps_1_8_l/",
+            "east_lamps_1_8_r/",
+            "east_lamps_2_3_l/",
+            "east_lamps_2_4_l/",
+            "east_lamps_2_4_r/",
+            "east_lamps_2_5_l/",
+            "east_lamps_2_5_r/",
+            "east_lamps_2_7_l/",
+            "east_lamps_2_7_r/",
+            "east_lamps_2_8_l/",
+            "east_lamps_2_8_r/",
+            "east_lamps_2_9_l/",
+            "east_lamps_2_9_r/",
+            "east_lamps_2_10_l/",
+            "east_lamps_2_10_r/",
+            "east_lamps_2_11_l/",
+            "east_lamps_2_11_r/",
+            "east_lamps_2_12_l/",
+            "east_lamps_2_12_r/",
+            "east_lamps_2_13_l/",
+            "east_lamps_2_13_r/",
+            "east_lamps_2_14_r/",
+            "east_lamps_2_15_l/",
+            "east_lamps_2_15_r/",
+            "east_lamps_3_0_l/",
+            "east_lamps_3_0_r/",
+            "east_lamps_3_2_l/",
+            "east_lamps_3_4_l/",
+            "east_lamps_3_4_r/",
+            "east_lamps_3_5_l/",
+            "east_lamps_3_5_r/",
+            "east_lamps_3_6_l/",
+            "east_lamps_4_0_l/",
+            "east_lamps_4_0_r/",
+            "east_lamps_4_1_l/",
+            "east_lamps_4_1_r/",
+            "east_lamps_4_2_l/",
+            "east_lamps_4_2_r/",
+            "east_lamps_4_3_l/",
+            "east_lamps_4_3_r/",
+            "east_lamps_4_4_l/",
+            "east_lamps_4_4_r/",
+            "east_lamps_4_5_l/",
+            "east_lamps_4_5_r/",
+            "east_lamps_4_6_l/",
+            "east_lamps_4_6_r/",
+            "east_lamps_5_0_l/",
+            "east_lamps_5_0_r/",
+            "east_lamps_5_1_l/",
+            "east_lamps_5_1_r/",
+            "east_lamps_5_2_l/",
+            "east_lamps_5_2_r/",
+            "east_lamps_5_4_l/",
+            "east_lamps_5_4_r/",
+            "east_lamps_5_5_l/",
+            "destination_planters_1_5_r/",
+            "destination_planters_2_4_r/",
+            "destination_planters_2_5_r/",
+            "destination_planters_3_4_l/",
+            "destination_planters_3_5_l/",
+            "destination_planters_4_4_r/",
+            "destination_planters_4_5_r/",
+            "destination_planters_5_4_r/",
+            "destination_planters_6_4_r/",
+            "destination_planters_6_5_r/",
+            "destination_planters_7_4_l/",
+            "destination_planters_7_5_l/",
+            "destination_planters_8_4_r/",
+            "destination_planters_8_5_r/",
+            "airport_lamps_0_0_l/",
+            "airport_lamps_0_0_r/",
+            "airport_lamps_0_1_l/",
+            "airport_lamps_0_1_r/",
+            "airport_lamps_0_2_l/",
+            "airport_lamps_0_2_r/",
+            "airport_lamps_0_3_l/",
+            "airport_lamps_0_3_r/",
+            "airport_lamps_1_0_l/",
+            "airport_lamps_1_0_r/",
+            "airport_lamps_1_1_l/",
+            "airport_lamps_1_1_r/",
+            "airport_lamps_1_2_l/",
+            "airport_lamps_1_2_r/",
+            "airport_lamps_1_3_r/",
+            "airport_lamps_1_4_l/",
+            "airport_lamps_1_4_r/",
+            "airport_lamps_1_5_l/",
+            "airport_lamps_1_5_r/",
+            "airport_lamps_1_6_l/",
+            "airport_lamps_2_0_r/",
+            "airport_lamps_2_1_l/",
+            "airport_lamps_2_1_r/",
+            "airport_lamps_2_2_l/",
+            "airport_lamps_2_3_l/",
+            "airport_lamps_2_3_r/",
+            "airport_lamps_2_4_l/",
+            "airport_lamps_2_4_r/",
+            "service_planters_0_3_r/",
+            "service_planters_1_3_r/"
+          ]
+        },
+        {
+          "id": "classroom_furniture",
+          "nodes": 3863,
+          "links": 12324,
+          "targets": [
+            "hall_table_east/",
+            "hall_produce_crate/",
+            "school_common_bench/",
+            "school_reading_bench/",
+            "school_rear_bench/",
+            "school_table_west/",
+            "school_table_east/",
+            "station_quarter_bench_nw/",
+            "station_quarter_bench_ne/",
+            "station_quarter_bench_sw/",
+            "station_quarter_bench_se/",
+            "station_quarter_home_seat/",
+            "station_quarter_office_seat/",
+            "station_quarter_lamp_west/",
+            "station_quarter_lamp_center/",
+            "station_quarter_lamp_east/",
+            "station_quarter_home_planter/",
+            "station_quarter_work_planter/"
+          ]
+        },
+        {
+          "id": "home_furniture",
+          "nodes": 2156,
+          "links": 5652,
+          "targets": [
+            "home_settee/",
+            "home_table/",
+            "home_planter/",
+            "home_upper_settee/",
+            "home_upper_table/",
+            "home_upper_planter/",
+            "hall_table_west/",
+            "hall_table_east/",
+            "hall_workbench/",
+            "hall_bench/",
+            "hall_produce_crate/"
+          ]
+        },
+        {
+          "id": "orchard_trees",
+          "nodes": 5564,
+          "links": 21214,
+          "targets": [
+            "garden_oak_west/",
+            "garden_oak_east/",
+            "garden_rowan_north/",
+            "garden_rowan_south/",
+            "garden_rowan_east/",
+            "ecology_032/",
+            "ecology_061/",
+            "ecology_086/",
+            "ecology_165/",
+            "ecology_167/",
+            "orchard_birch/",
+            "meadow_spruce/",
+            "orchard_sapling/",
+            "station_quarter_tree_west/",
+            "station_quarter_tree_center/",
+            "station_quarter_tree_east/",
+            "center_trees_0_0_l/",
+            "center_trees_0_1_l/",
+            "center_trees_0_4_r/",
+            "center_trees_0_7_l/",
+            "center_trees_1_0_l/",
+            "center_trees_1_0_r/",
+            "center_trees_1_6_l/",
+            "center_trees_1_6_r/",
+            "center_trees_1_7_r/",
+            "center_trees_1_8_l/",
+            "center_trees_1_8_r/",
+            "center_trees_2_0_l/",
+            "center_trees_2_0_r/",
+            "center_trees_2_1_l/",
+            "center_trees_2_1_r/",
+            "center_trees_2_2_l/",
+            "center_trees_2_2_r/",
+            "center_trees_2_3_r/",
+            "center_trees_2_6_l/",
+            "center_trees_2_6_r/",
+            "center_trees_2_7_l/",
+            "center_trees_2_7_r/",
+            "center_trees_2_8_l/",
+            "center_trees_2_8_r/",
+            "center_trees_2_9_l/",
+            "center_trees_2_9_r/",
+            "garden_trees_0_0_l/",
+            "garden_trees_0_0_r/",
+            "garden_trees_0_1_l/",
+            "garden_trees_0_2_l/",
+            "garden_trees_0_4_l/",
+            "garden_trees_0_5_l/",
+            "garden_trees_0_6_l/",
+            "garden_trees_0_6_r/",
+            "garden_trees_0_7_l/",
+            "garden_trees_0_7_r/",
+            "garden_trees_0_8_l/",
+            "garden_trees_0_9_l/",
+            "garden_trees_0_9_r/",
+            "garden_trees_0_11_l/",
+            "garden_trees_0_11_r/",
+            "garden_trees_1_0_r/",
+            "garden_trees_1_2_r/",
+            "garden_trees_2_0_r/",
+            "garden_trees_2_1_l/",
+            "garden_trees_3_1_r/",
+            "garden_trees_3_3_r/",
+            "waterfront_trees_0_0_l/",
+            "waterfront_trees_0_1_l/",
+            "waterfront_trees_0_2_l/",
+            "waterfront_trees_0_3_l/",
+            "waterfront_trees_0_3_r/",
+            "waterfront_trees_0_4_r/",
+            "waterfront_trees_0_5_l/",
+            "waterfront_trees_0_5_r/",
+            "waterfront_trees_0_6_l/",
+            "waterfront_trees_0_6_r/",
+            "waterfront_trees_0_7_r/",
+            "waterfront_trees_0_8_l/",
+            "waterfront_trees_0_8_r/",
+            "waterfront_trees_0_9_l/",
+            "waterfront_trees_0_9_r/",
+            "waterfront_trees_0_10_l/",
+            "waterfront_trees_0_10_r/",
+            "waterfront_trees_0_11_l/",
+            "waterfront_trees_0_11_r/",
+            "waterfront_trees_0_12_l/",
+            "waterfront_trees_0_12_r/",
+            "waterfront_trees_0_13_r/",
+            "waterfront_trees_1_0_l/",
+            "waterfront_trees_1_0_r/",
+            "waterfront_trees_1_1_l/",
+            "waterfront_trees_1_1_r/",
+            "waterfront_trees_1_3_l/",
+            "waterfront_trees_1_4_l/",
+            "waterfront_trees_1_4_r/",
+            "waterfront_trees_2_1_l/",
+            "waterfront_trees_2_1_r/",
+            "waterfront_trees_2_2_l/",
+            "waterfront_trees_2_2_r/",
+            "waterfront_trees_2_4_l/",
+            "waterfront_trees_2_4_r/",
+            "waterfront_trees_2_5_l/",
+            "waterfront_trees_2_6_l/",
+            "waterfront_trees_2_6_r/",
+            "waterfront_trees_2_7_l/",
+            "waterfront_trees_2_8_l/",
+            "waterfront_trees_2_8_r/",
+            "waterfront_trees_2_9_l/",
+            "waterfront_trees_2_10_l/",
+            "waterfront_trees_2_10_r/",
+            "waterfront_trees_2_11_l/",
+            "waterfront_trees_2_11_r/"
+          ]
+        }
+      ]
+    }
+  ],
+  "compiledDiff": {
+    "objects": {
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    "sites": {
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    "surfaces": {
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    "contactsSame": true,
+    "contactCounts": [
+      3458,
+      3458
+    ],
+    "economySame": true,
+    "terrainSame": true,
+    "oldTargetsRetained": true
+  }
+}

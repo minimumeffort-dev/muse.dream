@@ -1,3 +1,4 @@
+import {objectFloor,floorBindings,type FloorFrame} from '../scene/floors';
 import {occupiedInterior} from '../scene/interiors';
 import {pooledImpact} from '../scene/damage-pool';
 import {indexedGeometry} from './indexed-geometry';
@@ -19,7 +20,7 @@ import { objectPlacement } from "../scene/placement";
 export function batchPrototype(source: THREE.Group): THREE.Group {
   source.updateMatrixWorld(true);
   const group = new THREE.Group();
-  const batches = new Map<string, { geometries: THREE.BufferGeometry[]; material: THREE.Material; motion: ObjectPart["animation"];cutaway?:string }>();
+  const batches = new Map<string, { geometries: THREE.BufferGeometry[]; material: THREE.Material; motion: ObjectPart["animation"];cutaway?:string;cutawayHeight?:number }>();
   source.traverse(child=> {
     if (!(child instanceof THREE.Mesh)) return;
     const material = child.material as THREE.MeshToonMaterial, motion = child.userData.rest?.animation as ObjectPart["animation"];
@@ -31,7 +32,8 @@ export function batchPrototype(source: THREE.Group): THREE.Group {
       flag.geometry.setAttribute("spinAxis", new THREE.Float32BufferAttribute(new Float32Array(count * 3), 3));
       group.add(flag); return;
     }
-    const key = JSON.stringify([child.userData.cutaway,child.userData.materialKey ? JSON.stringify([child.userData.materialKey, motion]) : JSON.stringify([material.type, material.color?.getHex(), (material as unknown as THREE.MeshStandardMaterial).emissive?.getHex(), material.customProgramCacheKey(), motion])]);
+    const cutawayHeight=child.userData.cutaway==='above' ? new THREE.Box3().setFromObject(child).min.y : undefined;
+    const key = JSON.stringify([cutawayHeight,child.userData.cutaway,child.userData.materialKey ? JSON.stringify([child.userData.materialKey, motion]) : JSON.stringify([material.type, material.color?.getHex(), (material as unknown as THREE.MeshStandardMaterial).emissive?.getHex(), material.customProgramCacheKey(), motion])]);
     const geometry = (child.geometry.index ? child.geometry.toNonIndexed() : child.geometry.clone()).applyMatrix4(child.matrixWorld), count = geometry.getAttribute("position").count;
     const pivot = new Float32Array(count * 3), axes = new Float32Array(count * 3);
     const axis = motion?.kind === "spin" ? new THREE.Vector3(Number(motion.axis === "x"), Number(motion.axis === "y"), Number(motion.axis === "z")) : new THREE.Vector3(0, 0, 1);
@@ -39,20 +41,20 @@ export function batchPrototype(source: THREE.Group): THREE.Group {
     axis.applyQuaternion(rotation);
     for (let i = 0;i < count;i++) { position.toArray(pivot, i * 3); axis.toArray(axes, i * 3); }
     geometry.setAttribute("pivot", new THREE.BufferAttribute(pivot, 3)); geometry.setAttribute("spinAxis", new THREE.BufferAttribute(axes, 3));
-    const batch = batches.get(key) ?? { geometries: [], material, motion,cutaway:child.userData.cutaway as string|undefined }; batch.geometries.push(geometry); batches.set(key, batch);
+    const batch = batches.get(key) ?? { geometries: [], material, motion,cutaway:child.userData.cutaway as string|undefined,cutawayHeight }; batch.geometries.push(geometry); batches.set(key, batch);
   });
   for (const batch of batches.values()) {
     const geometry = mergeGeometries(batch.geometries, false);
     if (!geometry) throw new Error("scenery parts could not be combined");
-    const mesh = new THREE.Mesh(indexedGeometry(geometry), batch.material); mesh.userData.rest = { animation: batch.motion };mesh.userData.cutaway=batch.cutaway; group.add(mesh);
+    const mesh = new THREE.Mesh(indexedGeometry(geometry), batch.material); mesh.userData.rest = { animation: batch.motion };mesh.userData.cutaway=batch.cutaway;mesh.userData.cutawayHeight=batch.cutawayHeight; group.add(mesh);
     batch.geometries.forEach(g => g.dispose());
   }
   source.traverse(node => { if (node instanceof THREE.Mesh) node.geometry.dispose(); });
   return group;
 }
 
-type Fade = { attribute: THREE.InstancedBufferAttribute; index: number;cutaway?:string };
-type Entry = { id:number;objectId?:string;x: number; y: number; box: THREE.Box3; opacity: number; instances: Fade[];transforms:{mesh:THREE.InstancedMesh;index:number;original?:THREE.Matrix4}[];hidden?:boolean;growthScale?:number;growthPivot?:THREE.Vector3;originalBox?:THREE.Box3 };
+type Fade = { attribute: THREE.InstancedBufferAttribute; index: number;cutaway?:string;cutawayHeight?:number };
+type Entry = { floor?:FloorFrame;id:number;objectId?:string;x: number; y: number; box: THREE.Box3; opacity: number; instances: Fade[];transforms:{mesh:THREE.InstancedMesh;index:number;original?:THREE.Matrix4}[];hidden?:boolean;growthScale?:number;growthPivot?:THREE.Vector3;originalBox?:THREE.Box3 };
 
 /** Static scenery is instanced by assembly and local tile. Only knockables need scene nodes. */
 export class WorldScenery {
@@ -83,7 +85,7 @@ export class WorldScenery {
       if (!live && !prototype) { prototype = batchPrototype(buildObject({ ...object, scale: 1 })); prototype.updateMatrixWorld(true); prototypes.set(key, prototype); }
       const position = worldPosition(scene, object.x, object.y, 1.5);position.y=placement.base+objectGroundLift(object);
       const transform = new THREE.Matrix4().compose(position, placement.rotation, new THREE.Vector3().setScalar(object.scale));
-      const entry: Entry = {id:entries.length,objectId:object.id,x: position.x, y: position.z, box: prototype ? new THREE.Box3().setFromObject(prototype).applyMatrix4(transform) : new THREE.Box3(), opacity: 1, instances: [],transforms:[] };
+      const entry: Entry = {id:entries.length,objectId:object.id,floor:objectFloor(scene,object),x: position.x, y: position.z, box: prototype ? new THREE.Box3().setFromObject(prototype).applyMatrix4(transform) : new THREE.Box3(), opacity: 1, instances: [],transforms:[] };
       entries.push(entry);
       if(placement.foundation && placement.base-placement.low>.1){
         const {width,depth,color}=placement.foundation,height=placement.base-placement.low+4;
@@ -112,7 +114,7 @@ export class WorldScenery {
         const placement=objectPlacement(scene,object);
         const position=worldPosition(scene,object.x,object.y,1.5);position.y=placement.base+objectGroundLift(object);
         const matrix = new THREE.Matrix4().compose(position, placement.rotation, new THREE.Vector3().setScalar(object.scale));
-        mesh.setMatrixAt(i, matrix.multiply(partTransform)); entry.instances.push({ attribute: visibility, index: i,cutaway:child.userData.cutaway });entry.transforms.push({mesh,index:i});
+        mesh.setMatrixAt(i, matrix.multiply(partTransform)); entry.instances.push({ attribute: visibility, index: i,cutaway:child.userData.cutaway,cutawayHeight:child.userData.cutawayHeight===undefined ? undefined : placement.base+child.userData.cutawayHeight*object.scale });entry.transforms.push({mesh,index:i});
       });
       const motion=child.userData.rest?.animation as ObjectPart["animation"],cloth=child.userData.materialStyle === "cloth";
       if(motion?.kind === "sway" || motion?.kind === "spin" || cloth){
@@ -120,7 +122,7 @@ export class WorldScenery {
         if(!shadow){shadow=sceneryDepthMaterial(motion,cloth);shadowMaterials.set(child,shadow);}
         mesh.customDepthMaterial=shadow;
       }
-      mesh.userData.sceneryEntries=items.map(item=>item.entry.id);mesh.userData.cutaway=child.userData.cutaway;
+      mesh.userData.sceneryEntries=items.map(item=>item.entry.id);mesh.userData.cutaway=child.userData.cutaway;mesh.userData.cutawayHeight=child.userData.cutawayHeight;
       mesh.castShadow = true; mesh.receiveShadow = true; mesh.computeBoundingSphere(); this.group.add(mesh);
     }
     for(const {color,items} of foundations.values()){
@@ -141,11 +143,11 @@ export class WorldScenery {
 
   /** Rebind transferred instance attributes to the same local fade entries. */
   static fromChunk(scene:Scene,group:THREE.Group,data:{objectId?:string;x:number;y:number;min:number[];max:number[]}[]=[]):WorldScenery{
-    const scenery=new WorldScenery(scene,[]),entries:Entry[]=data.map((e,id)=>({id,objectId:e.objectId,x:e.x,y:e.y,box:new THREE.Box3(new THREE.Vector3().fromArray(e.min),new THREE.Vector3().fromArray(e.max)),opacity:1,instances:[],transforms:[]}));
+    const scenery=new WorldScenery(scene,[]),bindings=floorBindings(scene),entries:Entry[]=data.map((e,id)=>({id,objectId:e.objectId,floor:bindings.get(e.objectId??''),x:e.x,y:e.y,box:new THREE.Box3(new THREE.Vector3().fromArray(e.min),new THREE.Vector3().fromArray(e.max)),opacity:1,instances:[],transforms:[]}));
     group.traverse(node=>{
       if(!(node instanceof THREE.Mesh) || !node.userData.sceneryEntries)return;
       const attribute=node.geometry.getAttribute('visibility') as THREE.InstancedBufferAttribute;
-      (node.userData.sceneryEntries as number[]).forEach((id,index)=>{entries[id]!.instances.push({attribute,index,cutaway:node.userData.cutaway});entries[id]!.transforms.push({mesh:node as THREE.InstancedMesh,index});});
+      (node.userData.sceneryEntries as number[]).forEach((id,index)=>{const object=node.userData.cutawayHeight===undefined ? undefined : scene.objects.find(o=>o.id===entries[id]!.objectId);entries[id]!.instances.push({attribute,index,cutaway:node.userData.cutaway,cutawayHeight:object && node.userData.cutawayHeight!==undefined ? objectPlacement(scene,object).base+node.userData.cutawayHeight*object.scale : undefined});entries[id]!.transforms.push({mesh:node as THREE.InstancedMesh,index});});
     });
     scenery.entries=entries;scenery.grid=new SpatialGrid(entries);scenery.count=entries.length;return scenery;
   }
@@ -166,7 +168,7 @@ export class WorldScenery {
       t.mesh.visible=!(t.mesh.userData.sceneryEntries as number[]).every(id=>this.entries[id]!.hidden);
     }
   }
-  /** Collapse both colour and shadow geometry; ghosting still keeps ordinary shadows. */
+  /** Collapse both colour and shadow geometry; visual reveals keep ordinary shadows. */
   setHidden(ids:ReadonlySet<string>):void{
     if(this.hidden===ids)return;this.hidden=ids;
     for(const entry of this.entries){const hidden=!!entry.objectId && ids.has(entry.objectId);if(hidden===!!entry.hidden)continue;entry.hidden=hidden;this.transform(entry);}
@@ -190,19 +192,19 @@ export class WorldScenery {
     const hide=(side:string|undefined)=>!!interior && (side==='roof' || side==='front' && cameraLocal!.y<interior.room.position[2] || side==='back' && cameraLocal!.y>interior.room.position[2] || side==='left' && cameraLocal!.x<interior.room.position[0] || side==='right' && cameraLocal!.x>interior.room.position[0]);
     for (const entry of this.grid.query(player.x, player.z, 700)) {
       if(entry.hidden)continue;
-      if(entry.objectId===interior?.object.id){this.fading.add(entry);continue;}
+      if(entry.objectId===interior?.object.id || entry.floor?.object.id===interior?.object.id && entry.floor!==undefined && player.y-8.5<entry.floor.elevation-.1){this.fading.add(entry);continue;}
       if (this.ray.ray.intersectBox(entry.box, hit) && hit.distanceTo(this.ray.ray.origin) < distance) {
         obscuring.add(entry); this.fading.add(entry);
       }
     }
     this.obscuredCount = obscuring.size;
     for (const entry of this.fading) {
-      const target = obscuring.has(entry) ? .22 : 1;
+      const target = entry.floor && entry.floor.object.id===interior?.object.id && player.y-8.5<entry.floor.elevation-.1 ? 0 : obscuring.has(entry) ? .22 : 1;
       entry.opacity += (target - entry.opacity) * (snap ? 1 : 1 - Math.exp(-dt * 12));
       if (Math.abs(entry.opacity - target) < .002) entry.opacity = target;
       let restored=true;
       for (const instance of entry.instances) {
-        const target=entry.objectId===interior?.object.id && hide(instance.cutaway) ? 0 : entry.opacity,current=instance.attribute.getX(instance.index),value=current+(target-current)*(snap ? 1 : 1-Math.exp(-dt*12)),next=Math.abs(value-target)<.002 ? target : value;
+        const target=entry.objectId===interior?.object.id && (hide(instance.cutaway) || instance.cutaway==='above' && instance.cutawayHeight!==undefined && player.y-8.5<instance.cutawayHeight-.05) ? 0 : entry.opacity,current=instance.attribute.getX(instance.index),value=current+(target-current)*(snap ? 1 : 1-Math.exp(-dt*12)),next=Math.abs(value-target)<.002 ? target : value;
         if(Math.abs(next-current)>1e-6){instance.attribute.setX(instance.index,next);instance.attribute.needsUpdate=true;}
         if(next!==1)restored=false;
       }

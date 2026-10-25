@@ -1,3 +1,4 @@
+import characters from "../src/scene/world/city_people.dream?raw";
 import {describe,it,expect} from 'vitest';
 import {Box3,Euler,Matrix4,Mesh,Quaternion,Raycaster,Vector3} from 'three';
 import {compileDreamWorld,compileDream} from '../src/scene/dream';
@@ -12,7 +13,7 @@ import interactive from '../src/scene/interactive-world.dream?raw';
 import houseExample from '../docs/examples/terraced-house.dream?raw';
 import busExample from '../docs/examples/city-bus.dream?raw';
 import launchExample from '../docs/examples/cabin-launch.dream?raw';
-const assets=[architecture,transit,interactive].flatMap(s=>compileDreamWorld(s).assemblies);
+const assets=[architecture,transit,interactive].flatMap(s=>compileDreamWorld(s,{city_people:characters}).assemblies);
 const asset=(name:string)=>assets.find(s=>s.displayName===name)!;
 const item=(spec:ObjectDslV2)=>({id:'model',kind:'custom' as const,labelText:spec.displayName,x:0,y:0,scale:1,spec});
 const pointTransform=(part:ObjectDslV2['parts'][number])=>new Matrix4().compose(new Vector3(...part.position),new Quaternion().setFromEuler(new Euler(...(part.rotation??[0,0,0]))),new Vector3(...part.size));

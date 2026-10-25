@@ -18,6 +18,26 @@ Pinch the trackpad or scroll vertically over the world to zoom in and out. Mouse
 
 [Wider overview of the same position](../media/zoom-overview.jpg) · [Input and camera checks](../evidence/trackpad-zoom/verification.md)
 
+## Map and waypoint navigation
+
+Click the minimap or press **C** for the expanded map. Pinch/scroll zooms either
+map; dragging pans the expanded map. Click a destination to place a waypoint.
+The HUD and minimap then show its direct bearing and distance, with Arrived
+within 2.5 metres. Clear it with the × beside the distance or from the map.
+This is direction guidance, without automatic steering or street route planning.
+
+Everything also works from the keyboard: arrows/WASD pan, **+ / −** zoom,
+**Home** centers the player, **0** shows the whole world, **Enter** sets a point
+at the crosshair, **Delete** clears it, and **Escape / C** closes the map. The
+world pauses while you choose; map input cannot drive, jump or rotate the camera.
+Waypoints persist as a bounded local UI preference, separate from exported
+simulation backups. **R** keeps the point; **Start over** clears it.
+Without a personal waypoint, active deliveries, repairs and planting supply
+the HUD target automatically. **T / Find task** in the map centers that work
+destination. Clearing a waypoint never cancels work. Nearby is only a distance
+cue; ordinary on-foot handoff, repair and payment rules still apply.
+[Full map and HUD guide](../context-actions.md).
+
 ## Pause and find the controls
 
 **P** or **Escape** pauses the world. **Controls** opens a key guide with Explore,
@@ -34,6 +54,11 @@ up.
 ![The pause menu and contextual key guide](../media/pause-controls.jpg)
 
 ## Sit on furniture
+
+With an authored [rest plan](resting.md), F seating also recovers energy. The
+context badge shows the current percentage while resting; the bag retains it
+elsewhere. The player can use any usable seat. Residents reserve reachable seats
+through the same claims, and broken furniture grants no recovery.
 
 **F** also sits on an available furniture seat when you reach its approach.
 Move, jump or press F to request a clear exit; **G** eats owned food. Work,
@@ -240,6 +265,14 @@ joint leg(bone=left_hip,at=[0,0,4]){
 
 This is a fragment; the [complete example](../examples/humanoid.dream) supplies the materials, root, spine, arms and other leg. Bone bindings survive generated IDs, imports and voxel construction. They do not depend on a character's name. The Explorer and twelve civic and sports templates share this connected construction. Hair, coats and carried items bind to the appropriate frame with `mount`; the seated passenger reuses the face in a static driving pose. [People and clothing](people.md). Football kicks and basketball shots override the player's relevant limbs while locomotion continues.
 
+Furniture seating now blends the body, position and facing over 0.7 seconds, with
+staggered foot transfers through the existing support and rigid-leg solvers.
+Pause holds the transition; another seat change can reverse its current pose.
+The final contacts transfer into walking. Loading, reset, reduced motion, water,
+airborne ownership and large discontinuities clear it. Physics, seat claims,
+controls and saved timers respond through their existing immediate rules.
+[Current seating motion and recording](seating-motion.md).
+
 Walking people now use the same small ground lift as the player, including static street residents and instanced walkers. This removes the inherited vehicle-sized hover gap without changing their physical support or movement.
 
 The renderer caches bone references and solves rigid two-segment legs. On the player and CPU pedestrians, stride phase follows the visible distance travelled and the resolved character scale. A requested speed cannot animate walking while the body stays still. Each grounded foot keeps a world anchor in all three axes and its facing through stance, including turns and stops. Hips can lean sideways to reach that contact, while the ankle follows the support normal. A returning foot settles when movement stops. Its returning movement and facing have bounded rates, so a sharp body turn cannot teleport a foot in mid-air. A foot that has not reached its next contact stays lifted; an overextended contact releases into a recovery step before the leg becomes unreachable. Pause holds these unfinished steps too. Jumping, swimming, sitting, reduced motion, reset and a position teleport clear these visual anchors.
@@ -267,3 +300,77 @@ pose. Food ownership, consumption and timing belong to the fixed-step economy.
 
 
 [Shared meals](social.md) use existing seated humanoids and body-sized pedestrian travel. F, movement, jumping or R ends an unfinished meal and refunds both reserved portions before returning the companion to their routine.
+
+
+## On-foot strikes
+
+Walk toward a reachable prop and press **K**, or use the contextual **Hit** button.
+Your character must stand on dry ground and face it. A wall, height difference,
+seat or vehicle can prevent a hit. On sports grounds K retains its pass/tackle
+controls; sports-owned balls and NPCs are excluded from hand strikes.
+
+![Breaking and repairing a bakery table on foot](../media/hand.jpg)
+
+[The full sequence](../media/hand.mp4) · [GIF](../media/hand.gif) ·
+[Complete runnable world](../examples/on-foot-strike.dream)
+
+Enable the action once, alongside `world`, in the world-owning file:
+
+```dream
+strike(reach=10,speed=100,cooldown_s=.6);
+```
+
+`reach` is 6–16 world units from the player centre to the nearest contact surface.
+Ten units represent a metre. `speed` is 20–120 equivalent closing-speed units,
+using the existing impact thresholds. It is an arcade strength setting, not a
+force or damage-health model. `cooldown_s` is .35–2 simulation seconds. Unknown
+fields, out-of-range values and duplicate declarations fail compilation.
+
+The engine chooses one forward target with a clear straight contact path. It
+checks the actual cylinder or rectangle, vertical reach and intervening contacts,
+including another solid section of the same building. Existing Dream impact data
+decides what happens: a ball bounces, a table breaks, a weaker topple prop falls,
+and a sturdier object stays intact. Only the chosen object or section is affected.
+Category rules still apply to every matching prop; names do not grant exceptions.
+The hand does not move the player's physical body or give a vehicle extra speed.
+
+The bakery table is equipment. Hitting it interrupts reserved work and refunds
+its ingredients and wages. Open **M → Work**, select **Repair city fixtures** with
+the arrow keys and accept with **Enter**. That repair uses real kits, time and
+payment. Once the table is restored, baking is available again. The existing
+caretaker can claim it instead if you leave it unclaimed.
+
+Cooldown survives vehicle changes, R, streaming and save/reload; pause freezes
+simulation time, and Start over clears it. The gesture uses the existing bound
+humanoid joints, keeps planted feet and rigid limbs, and rests for reduced motion.
+No additional mesh, rig, item inventory or physics body is allocated. A world
+without `strike` keeps its earlier on-foot controls.
+
+```sh
+npm run -s dream -- check docs/examples/on-foot-strike.dream
+node scripts/dream.mjs context --features world,interactions
+```
+
+This is an unarmed prop interaction. Handheld tools, pickup/carry controls,
+terrain editing and NPC combat are separate capabilities.
+[Native verification and save upgrade](../evidence/on-foot-strike/verification.md).
+
+
+### Authored work motions
+
+Jobs and repairs can reference bounded economy `gesture` hand programs. The
+renderer applies closed smoothstep keyframes to the existing rigid shoulder and
+elbow chain while feet retain their grounded anchors. Phase comes from saved
+job/repair progress; no new saved clock or rig. Pause freezes the pose; reduced
+motion keeps the existing rest policy. Jobs use their physical station anchor.
+Repair anchors remain generic, without exact contact with each broken asset.
+[Motion guide](work-gestures.md).
+
+
+### Resident meal ownership
+
+A Dream social plan's optional peers can include stationary residents or people
+on accepted walking routes. Meetings own both bodies and hold their program and
+route clocks through outward travel, eating and return. Walking resumes from the
+exact interrupted route position; other commitments stay unavailable until the
+return. [Companion rules](companions.md).

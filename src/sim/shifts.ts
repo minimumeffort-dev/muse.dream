@@ -1,3 +1,4 @@
+import {companionBusy} from './social';
 import type {Scene} from '../scene/schema';
 import type {CarState} from './car';
 import {actorPose} from './actors';
@@ -29,11 +30,11 @@ export function shiftAccessProblems(scene:Scene):string[]{
 export function stepStaffShifts(state:CarState,dt:number,scene:Scene):CarState{
  const e=state.economy!,definition=scene.economy!;let next=state;
  for(const a of e.accounts){
-  const spec=definition.accounts.find(s=>s.id===a.id)!;if(!spec.shift || e.shared?.partner===a.id)continue;
+  const spec=definition.accounts.find(s=>s.id===a.id)!;if(!spec.shift || companionBusy(state,a.id) || e.shared?.partner===a.id)continue;
   const plan=definition.shifts.find(s=>s.id===spec.shift)!,market=definition.markets.find(m=>m.id===plan.market)!,work=scene.objects.find(o=>o.id===spec.actor)!,area=shiftArea(scene,plan);
   const opening=marketOpening(scene,market,state.timeS),returning=marketIsOpen(scene,market,state.timeS) || !!opening && opening.seconds<=plan.lead_s;
   if(!a.shift){
-   if(returning || a.work)continue;
+   if(returning || a.work || a.commute)continue;
    a.shift={id:plan.id,phase:'out',at:{...plan.rest},x:work.x,y:work.y,headingRad:actorPose(scene,work,state.timeS,next).headingRad,distance:0,speed:0,path:[],routeAtS:0};
   }
   const t=a.shift,phase=returning ? 'in' : t.phase==='in' ? 'out' : t.phase;

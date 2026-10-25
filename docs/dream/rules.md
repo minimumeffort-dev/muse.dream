@@ -81,7 +81,7 @@ Mock-only. [Checks and media audit](../evidence/interaction-rules/verification.m
 Drive into a streetlight hard enough and the whole lamp falls about its base.
 Its ground light pool turns off. The damage stays after the fallen piece fades,
 after you drive away and unload the district, and after saving or reloading.
-All 413 lamps use their shared category rule, including both lantern and avenue
+All 416 lamps use their shared category rule, including both lantern and avenue
 models. A gentle touch still leaves them intact.
 
 ![A streetlight falling after a car impact](../media/lamps.jpg)
@@ -123,10 +123,12 @@ Start over restores the authored world. Reduced motion applies damage without
 flying pieces. Lamps retain their authored material paint/emission on fragments;
 their declared surface pool is off. This is not an electrical network simulation.
 
-The caretaker can repair all 413 lamps beside the declared service streets and grounds
-with the same finite kit and four-credit wage used for furniture. The full model,
-collision and light pool return together. The service covers 449 targets in total,
-including furniture, wall sections, planted street tubs and produce stalls.
+The caretaker can repair all 416 lamps with finite kits and the same four-credit
+wage used for furniture. The primary street service retains 449 targets, including
+the original 413 lamps, furniture, wall sections, planted street tubs and produce
+stalls. The other three lamps belong to the eleven fixtures covered by the
+school/quarter service. The full model, collision and light pool return together.
+[Quarter coverage](station-quarter.md#damage-has-a-follow-up).
 [Street verges](commerce.md#street-verges) connect nearby work to sidewalks and
 crossings. Neither the renderer nor a category rule grants free repairs.
 
@@ -146,7 +148,7 @@ the sidewalk without inventing paving. [Watch that repair](../media/streetrepair
 
 ## Trees share one fall policy
 
-The live entry file applies one rule to all 345 measured trees:
+The live entry file applies one rule to all 348 measured trees:
 
 ```dream
 rule living_trees(kind=tree,mode=topple(speed=110,duration=1.1,lifetime=8));
@@ -162,8 +164,8 @@ geometry stays shared until an actual impact needs a falling piece.
 
 [Impact in HD](../media/treefall.mp4) · [Animated impact](../media/treefall.gif)
 
-The existing caretaker can plant replacements for 106 trees, including all 93
-furnished street trees. The remaining 239 trees have no declared recovery service
+The existing caretaker can plant replacements for 109 trees, including all 93
+furnished street trees and the three station-quarter rowans. The remaining 239 trees have no declared recovery service
 and remain damaged. Supplies and pay still come from the finite economy.
 
 Whole-tree topple rules feed that finite-sapling planting service. A young

@@ -1,0 +1,21 @@
+{
+  "bodyFont": "Manrope, Arial, sans-serif",
+  "fields": [
+    "at",
+    "approach",
+    "heading_deg",
+    "at",
+    "approach",
+    "heading_deg"
+  ],
+  "headingFont": "Archivo, Arial, sans-serif",
+  "images": [
+    {
+      "height": 720,
+      "loaded": true,
+      "src": "../media/seatmotion.gif",
+      "width": 1280
+    }
+  ],
+  "title": "Take a seat · Dream"
+}

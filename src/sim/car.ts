@@ -43,10 +43,13 @@ export interface CarInput {
   boostPressed?:boolean;
   shoot?:boolean;shootPressed?:boolean;shootReleased?:boolean;
   matchPressed?:boolean;passPressed?:boolean;
-  talkPressed?:boolean;
+  talkPressed?:boolean;strikePressed?:boolean;
   commerce?:CommerceAction;
   aim?:{x:number;y:number};
 }
+
+import {sampleWeather} from '../scene/weather';
+import {occupiedInterior} from '../scene/interiors';
 
 export type Surface = "road" | "paper" | "ice" | "water";
 
@@ -88,6 +91,7 @@ export interface CarState {
   /** True for the single step in which a boost fired (HUD flash). */
   boostedThisStep: boolean;
   carBoost:{held:boolean;activeUntilS:number;readyAtS:number};
+  strikeReadyAtS?:number;
   sports:SportState[];
   /** Live knockable props, in scene-object order. Solids never move. */
   props: PropState[];
@@ -125,6 +129,35 @@ export interface World {
   previousCourierSaveCompatibility?:string;
   previousPeopleSaveCompatibility?:string;
   previousInvitationSaveCompatibility?:string;
+  previousCrossingAccessSaveCompatibility?:string;previousCrossingAccessContacts?:import('../scene/contacts').SceneContactData;previousCrossingAccessNavigation?:import('../scene/ambient-navigation').AmbientGraph;
+  previousStationMaintenanceSaveCompatibility?:string;
+  previousDistrictSaveCompatibility?:string;previousDistrictContacts?:import('../scene/contacts').SceneContactData;previousDistrictNavigation?:import('../scene/ambient-navigation').AmbientGraph;
+  previousUpstairsSocialSaveCompatibility?:string;previousSeatedRestSaveCompatibility?:string;previousCompanySaveCompatibility?:string;previousLoftSaveCompatibility?:string;previousLoftContacts?:import('../scene/contacts').SceneContactData;previousLoftNavigation?:import('../scene/ambient-navigation').AmbientGraph;previousPeerRecipeSaveCompatibility?:string;previousCompanionSaveCompatibility?:string;previousGestureSaveCompatibility?:string;previousStationSaveCompatibility?:string;previousBondSaveCompatibility?:string;previousShelterSaveCompatibility?:string;previousAttendanceSaveCompatibility?:string;previousFloorsSaveCompatibility?:string;previousFloorsContacts?:import('../scene/contacts').SceneContactData;previousFloorsNavigation?:import('../scene/ambient-navigation').AmbientGraph;
+  previousStairsSaveCompatibility?:string;
+  previousStairsContacts?:import('../scene/contacts').SceneContactData;
+  previousStairsNavigation?:import('../scene/ambient-navigation').AmbientGraph;
+  previousRestSaveCompatibility?:string;
+  previousWorkCommuteSaveCompatibility?:string;
+  previousHomeMealsSaveCompatibility?:string;
+  previousHomeInteriorSaveCompatibility?:string;
+  previousHomeInteriorNavigation?:import('../scene/ambient-navigation').AmbientGraph;
+  previousHomeInteriorContacts?:import('../scene/contacts').SceneContactData;
+  previousWeatherSaveCompatibility?:string;
+  previousRationsSaveCompatibility?:string;
+  previousSchoolInteriorSaveCompatibility?:string;
+  previousSchoolInteriorNavigation?:import('../scene/ambient-navigation').AmbientGraph;
+  previousSchoolInteriorContacts?:import('../scene/contacts').SceneContactData;
+  previousNurserySaveCompatibility?:string;
+  previousHardwareSaveCompatibility?:string;
+  previousRecoverySaveCompatibility?:string;
+  previousResidentSupplySaveCompatibility?:string;
+  previousWorkshopSupplySaveCompatibility?:string;
+  previousKitProductionSaveCompatibility?:string;
+  previousStrikeSaveCompatibility?:string;
+  previousEquipmentSaveCompatibility?:string;
+  previousServiceSaveCompatibility?:string;
+  previousServiceNavigation?:import('../scene/ambient-navigation').AmbientGraph;
+  previousCharactersSaveCompatibility?:string;
   previousFixturesSaveCompatibility?:string;
   previousWildlifeSaveCompatibility?:string;previousWildlifeContacts?:import('../scene/contacts').SceneContactData;previousFurnitureSaveCompatibility?:string;previousFurnitureContacts?:import('../scene/contacts').SceneContactData;previousBotanySaveCompatibility?:string;previousBotanyContacts?:import('../scene/contacts').SceneContactData;previousCanopySaveCompatibility?:string;
   previousCanopyContacts?:import('../scene/contacts').SceneContactData;
@@ -210,6 +243,7 @@ export function createCarAtSpawn(scene: Scene): CarState {
   return {
     control:{kind:"car"},vehicles:[],npcs:initialNpcs(scene),population:initialAmbient(scene),economy:initialEconomy(scene),distance:0,pitch:0,bank:0,
     jump:{held:false,bufferUntilS:0,coyoteUntilS:0},
+    ...(scene.strike ? {strikeReadyAtS:0} : {}),
     x: scene.spawn.x,
     y: scene.spawn.y,
     vx: 0,
@@ -248,6 +282,7 @@ export function resetCar(state: CarState, scene: Scene, resetRace = false): CarS
     npcs:state.npcs.map(n=>({...n})),population:state.population,economy:state.economy,
     lap: state.lap,
     boostReadyAtS: { ...state.boostReadyAtS },
+    ...(scene.strike ? {strikeReadyAtS:state.strikeReadyAtS} : {}),
     carBoost:{...fresh.carBoost,held:state.carBoost.held,readyAtS:state.carBoost.readyAtS},
     sports:state.sports.map(game=>({...game,held:false,possessed:false,chargeStartS:null,...(game.match ? {match:{...game.match,owner:null}} : {})})),
     props: state.props.map((p) => ({ ...p })),
@@ -420,22 +455,23 @@ export function stepCar(state: CarState, input: CarInput, dt: number, world: Wor
   let fwd = s.vx * nfx + s.vy * nfy;
   let lat = s.vx * -nfy + s.vy * nfx;
   const beforeEngine = fwd;
+  const weatherGrip=!scene.weather || surface==="ice" || water || occupiedInterior(scene,s.x,s.y,s.elevation) ? 1 : sampleWeather(scene.weather,s.timeS).grip;
 
   if (s.grounded && throttle > 0) {
     const fade = Math.max(0, 1 - fwd / tuning.maxForwardSpeed);
-    fwd += tuning.engineAccel * fade * throttle * dt;
+    fwd += tuning.engineAccel * weatherGrip * fade * throttle * dt;
   } else if (s.grounded && throttle < 0) {
     if (fwd > 1) {
-      fwd = Math.max(0, fwd + tuning.brakeAccel * throttle * dt);
+      fwd = Math.max(0, fwd + tuning.brakeAccel * weatherGrip * throttle * dt);
     } else {
-      fwd = Math.max(-tuning.maxReverseSpeed, fwd + tuning.reverseAccel * throttle * dt);
+      fwd = Math.max(-tuning.maxReverseSpeed, fwd + tuning.reverseAccel * weatherGrip * throttle * dt);
     }
   }
   if(boosting)fwd+=CAR_BOOST.acceleration*dt;
   const engineAccel = (fwd - beforeEngine) / dt;
   const drag = Math.exp(-(s.grounded ? tuning.dragPerS : .04) * dt);
   fwd *= drag;
-  const grip = surface === "ice" ? tuning.iceLateralGrip : tuning.baseLateralGrip;
+  const grip = surface === "ice" ? tuning.iceLateralGrip : tuning.baseLateralGrip*weatherGrip;
   lat *= Math.exp(-(s.grounded ? grip : .04) * dt);
 
   s.vx = nfx * fwd + -nfy * lat;
@@ -585,6 +621,9 @@ export class FixedStepper {
   constructor(stepDt = 1 / 120) {
     this.stepDt = stepDt;
   }
+
+  /** Fraction between the last two fixed poses; presentation never advances physics. */
+  get alpha():number{return this.accumulator/this.stepDt;}
 
   /** Returns how many fixed steps to run for this render frame. */
   push(frameDtS: number): number {

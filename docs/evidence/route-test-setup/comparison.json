@@ -1,0 +1,18 @@
+{
+  "same26TestNames": true,
+  "measurements": {
+    "before": {
+      "tests": 26,
+      "passed": 26,
+      "reportedRunMs": 22383.645263671875
+    },
+    "after": {
+      "tests": 26,
+      "passed": 26,
+      "reportedRunMs": 10205.56103515625
+    }
+  },
+  "node": "v26.8.1",
+  "platform": "macOS-26.7.1-arm64-arm-64bit-Mach-O",
+  "baseCommit": "5f61cbb0f08cdca02594366fa3057dc0d07e26d1"
+}

@@ -1,3 +1,8 @@
+import {strikeTarget} from '../sim/strike';
+import {courierApproach} from '../sim/courier';
+import {socialArea} from '../sim/social';
+import {walkReviewSteps} from './walk-review';
+import {objectContacts} from '../scene/contacts';
 import {worldSeats} from '../scene/seating';
 import {sceneInteriors,portalPoints,walkingHeight} from '../scene/interiors';
 import type {CarInput} from '../sim/car';
@@ -11,6 +16,7 @@ import {aircraftFloor} from '../scene/aircraft-support';
 
 /** Real mock-world positions for exercising terrain contact, jumping and water navigation. */
 export function movementReviewStart(state:CarState,world:World,scenario:string|null):CarState {
+  if(scenario?.startsWith('lobby:'))return interiorReviewStart(state,world,false,scenario.slice(6));
   if(scenario==='park'){const seat=worldSeats(world.scene).find(s=>s.objectId==='garden_bench_nw')!;const foot=toggleRide(drivingReviewStart(state,world,'park'),world);return {...foot,x:seat.approach.x,y:seat.approach.y,elevation:walkingHeight(world.scene,seat.approach.x,seat.approach.y)};}
   if(scenario==='seating'){const seat=worldSeats(world.scene).find(s=>s.objectId==='hall_bench')!;const foot=interiorReviewStart(state,world,true);return {...foot,x:seat.approach.x,y:seat.approach.y,elevation:walkingHeight(world.scene,seat.approach.x,seat.approach.y)};}
   if(scenario==='interior')return interiorReviewStart(state,world,true);
@@ -48,8 +54,9 @@ export function vehicleReviewStart(state:CarState,world:World,id:string|null):Ca
 export function npcReviewStart(state:CarState,world:World,id:string|null):CarState {
   const object=world.scene.objects.find(o=>o.id===id && o.behavior);if(!object)return state;
   const pose=actorPose(world.scene,object,0,state),foot:CarState={...state,control:{kind:'foot'},vehicles:[{id:null,x:state.x,y:state.y,elevation:state.elevation,headingRad:state.headingRad,distance:0}]};
+  const market=world.scene.economy?.markets.find(m=>m.actor===object.id),reach=Math.min(42,(market?.radius??80)-4);
   for(let side=0;side<8;side++){
-    const angle=side*Math.PI/4,x=pose.x+Math.cos(angle)*42,y=pose.y+Math.sin(angle)*42,elevation=drivingHeight(world.scene.terrain,x,y);
+    const angle=side*Math.PI/4,x=pose.x+Math.cos(angle)*reach,y=pose.y+Math.sin(angle)*reach,elevation=walkingHeight(world.scene,x,y);
     if(carFootprintClear(bodyWorld(foot,world),x,y,elevation,0,foot))return {...foot,x,y,elevation,vx:0,vy:0};
   }
   return state;
@@ -75,7 +82,7 @@ export function drivingReviewStart(state:CarState,world:World,scenario:string|nu
     if(!carFootprintClear(world,x,y,elevation,state.timeS,state))throw Error('Street fixture review start is blocked');
     return {...state,x,y,elevation,headingRad:tub ? Math.PI/2 : Math.PI,vx:0,vy:0};
   }
-  const district=scenario==='terrace-junction' ? [4470,7753.5,0] : scenario==='hospital-junction' ? [3300,7000,-Math.PI/2] : scenario==='park' ? [2380,3480,0] : scenario==='school-bench' ? [4480,3890,Math.PI] : scenario==='orchard' ? [4750,4620,Math.PI/2] : scenario==='street-crossing' ? [5217.41935483871,6339.354838709678,0] : scenario==='street-lamp' ? [6135.612721988243,4165,-Math.PI/2] : scenario==='lamp' ? [7510,7350,Math.PI/2] : scenario==='repair' ? [6540,4350,Math.PI] : scenario==='voxels' ? [7440,7460,0] : scenario==='airport' ? [2000,9250,Math.PI/2] : scenario==='medical' ? [12000,5200,0] : scenario==='town' ? [6330,4233,0] : scenario==='suburbs' ? [3600,3300,0] : scenario==='sports' ? [10400,5200,0] : scenario==='waterfront' ? [9900,2800,Math.PI/2] : scenario==='canal-bridge' ? [8610,4200,0] : scenario==='lake-bridge' ? [8865,6200,0] : undefined;
+  const district=scenario==='station-quarter' ? [11950,5200,0] : scenario==='terrace-junction' ? [4470,7753.5,0] : scenario==='hospital-junction' ? [3300,7000,-Math.PI/2] : scenario==='park' ? [2380,3480,0] : scenario==='school-bench' ? [4480,3890,Math.PI] : scenario==='orchard' ? [4750,4620,Math.PI/2] : scenario==='street-crossing' ? [5217.41935483871,6339.354838709678,0] : scenario==='street-lamp' ? [6135.612721988243,4165,-Math.PI/2] : scenario==='lamp' ? [7510,7350,Math.PI/2] : scenario==='repair' ? [6540,4350,Math.PI] : scenario==='voxels' ? [7440,7460,0] : scenario==='airport' ? [2000,9250,Math.PI/2] : scenario==='medical' ? [12000,5200,0] : scenario==='town' ? [6330,4233,0] : scenario==='suburbs' ? [3600,3300,0] : scenario==='sports' ? [10400,5200,0] : scenario==='waterfront' ? [9900,2800,Math.PI/2] : scenario==='canal-bridge' ? [8610,4200,0] : scenario==='lake-bridge' ? [8865,6200,0] : undefined;
   if(district){const [x,y,headingRad]=district as [number,number,number],elevation=drivingHeight(world.scene.terrain,x,y);
     if(carFootprintClear(world,x,y,elevation,state.timeS,state))return {...state,x,y,headingRad,elevation,vx:0,vy:0};
   }
@@ -157,18 +164,78 @@ export function* businessReviewSteps(state:CarState,world:World):Generator<CarSt
  return {...npcReviewStart(prepared,world,'station_resident'),vehicles:prepared.vehicles};
 }
 
+/** Walk from the public doorway to the table; no indoor car or seeded damage. */
+export function* handReviewSteps(state:CarState,world:World,working=false):Generator<void,CarState>{
+ const table=world.scene.objects.find(o=>o.id==='hall_table_east');if(!table)throw Error('The hand review needs the hall table');
+ const contact=objectContacts(world.scene,table)[0]!,approach={x:contact.x+contact.r+7,y:contact.y};
+ let next=interiorReviewStart(state,world);
+ for(let i=0;i<120*8;i++){const input=interiorReviewInput(next,world,Math.floor(i/4));next=stepInteractive(next,{steer:input.steer,throttle:input.throttle},1/120,world);if(i%30===0)yield;}
+ for(const at of [{x:approach.x+20,y:approach.y},approach]){
+  let arrived=false;
+  for(let i=0;i<120*10;i++){
+   const dx=at.x-next.x,dy=at.y-next.y,d=Math.hypot(dx,dy),a=Math.atan2(180,480);
+   if(d<1){arrived=true;break;}
+   next=stepInteractive(next,{steer:(dx*Math.cos(a)-dy*Math.sin(a))/d,throttle:(-dx*Math.sin(a)-dy*Math.cos(a))/d},1/120,world);if(i%30===0)yield;
+  }
+  if(!arrived)throw Error('The hand review did not reach its table approach');
+ }
+ for(let i=0;i<24;i++)next=stepInteractive(next,{steer:0,throttle:0},1/120,world);
+ if(strikeTarget(next,world)?.id!==table.id)throw Error('The on-foot review cannot reach its work table: '+JSON.stringify({x:next.x,y:next.y,heading:next.headingRad,elevation:next.elevation,grounded:next.grounded,target:strikeTarget(next,world)?.id,contact}));
+ if(working){next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:'work',job:'bake'}},1/120,world);if(next.economy?.accounts.find(a=>a.id==='pocket')?.work?.id!=='bake')throw Error('The hand review did not start its paid batch');}
+ return next;
+}
+
+/** Real consumption opens receiving space; the existing cargo fixture uses collect and R. */
+export function* workshopReviewSteps(state:CarState,world:World):Generator<void,CarState>{
+ let next=yield* handReviewSteps(state,world);
+ for(let cycle=0;cycle<2;cycle++){
+  next=stepInteractive(next,{steer:0,throttle:0,strikePressed:true},1/120,world);
+  if(!next.broken.includes('hall_table_east'))throw Error('Workshop review did not break its table');
+  for(let i=0;i<120*180;i++){
+   next=stepInteractive(next,{steer:0,throttle:0,...(i===239 ? {commerce:{kind:'repair',repair:'market_tables'} as const} : {})},1/120,world);if(i%30===0)yield;
+   if(i>=120*25-1 && !next.broken.includes('hall_table_east') && next.economy!.accounts.find(a=>a.id==='baker')!.completed.work.assemble_kit!>=cycle+1)break;
+  }
+  if(next.broken.includes('hall_table_east') || next.economy!.accounts.find(a=>a.id==='baker')!.completed.work.assemble_kit!<cycle+1)throw Error('Workshop review did not repair and replace its kit');
+  if(next.economy!.accounts.find(a=>a.id==='pocket')!.repair?.recover)return next;
+ }
+ next=cargoReviewStart(next,world,'fasteners_run');
+ if(next.economy!.accounts.find(a=>a.id==='pocket')!.delivery?.id!=='fasteners_run')throw Error('Workshop review did not collect real fasteners');
+ return yield* handReviewSteps(next,world);
+}
+
+/** Dev fixture starts a car inside the hall; damage and the complete repair still use real fixed steps. */
+export function* equipmentReviewSteps(state:CarState,world:World):Generator<void,CarState>{
+ const table=world.scene.objects.find(o=>o.id==='hall_table_east');if(!table)throw Error('The equipment review needs the hall table');
+ let next:CarState={...state,control:{kind:'car'},x:table.x,y:table.y+65,elevation:walkingHeight(world.scene,table.x,table.y+65),headingRad:-Math.PI/2,vx:0,vy:0,vz:0,grounded:true,vehicles:[]};
+ if(!carFootprintClear(world,next.x,next.y,next.elevation,next.timeS,next))throw Error('The equipment review car needs a clear starting pose');
+ let hit=false;
+ for(let i=0;i<120*3;i++){next=stepInteractive(next,{steer:0,throttle:1},1/120,world);if(next.broken.includes(table.id)){hit=true;break;}if(i%30===0)yield;}
+ if(!hit)throw Error('The review car did not damage its work table');
+ for(let i=0;i<120*3;i++){next=stepInteractive(next,{steer:0,throttle:-1},1/120,world);if(i%30===0)yield;}
+ next=npcReviewStart(next,world,'vendor');
+ for(let i=0;i<120*90;i++){
+  next=stepInteractive(next,{steer:0,throttle:0},1/120,world);
+  const task=next.economy?.accounts.find(a=>a.repair?.objectId===table.id)?.repair;
+  if(task?.phase==='work')return next;
+  if(!next.broken.includes(table.id))throw Error('The table was repaired before its review start');
+  if(i%30===0)yield;
+ }
+ throw Error('The caretaker did not reach the damaged equipment');
+}
+
 /** Dev-only ground-floor walkthrough; all movement and transactions use the ordinary engine. */
-export function interiorReviewStart(state:CarState,world:World,night=false):CarState{
- const f=sceneInteriors(world.scene).find(f=>f.object.id==='market_hall');if(!f)return state;
+export function interiorReviewStart(state:CarState,world:World,night=false,objectId='market_hall'):CarState{
+ const f=sceneInteriors(world.scene).find(f=>f.object.id===objectId);if(!f)return state;
  const p=night ? f.toWorld(0,-8) : portalPoints(f,f.room.portals[0]!,24).outside;
  const next:CarState={...state,control:{kind:'foot'},x:p.x,y:p.y,elevation:walkingHeight(world.scene,p.x,p.y),vx:0,vy:0,vz:0,headingRad:Math.PI/2,grounded:true,vehicles:[{id:null,x:state.x,y:state.y,elevation:state.elevation,headingRad:state.headingRad,distance:0}]};
  return carFootprintClear(bodyWorld(next,world),next.x,next.y,next.elevation,next.timeS,next) ? next : state;
 }
 export function interiorReviewInput(state:CarState,world:World,frame:number,viewAngle=0,night=false):CarInput{
  const f=sceneInteriors(world.scene).find(f=>f.object.id==='market_hall');if(!f)return {steer:0,throttle:0};
- const target=night ? f.toWorld(frame<120 ? 12 : -12,-4) : frame<300 ? f.toWorld(0,-18) : frame<360 ? f.toWorld(0,-4) : frame<450 ? f.toWorld(14,-4) : frame<540 ? f.toWorld(-14,-4) : f.toWorld(0,-18);
+ const vendor=world.scene.objects.find(o=>o.id==='vendor')!,aisle=f.toWorld(0,-2.5),counter={x:vendor.x+36,y:aisle.y};
+ const target=night ? f.toWorld(frame<120 ? 12 : -12,-4) : frame<90 ? f.toWorld(0,-15) : frame<480 ? state.y<aisle.y-2 && state.x<vendor.x-20 ? aisle : counter : frame<540 ? aisle : portalPoints(f,f.room.portals[0]!,24).outside;
  const dx=target.x-state.x,dy=target.y-state.y,d=Math.hypot(dx,dy),a=Math.atan2(180,480)+viewAngle,c=Math.cos(a),s=Math.sin(a),move=d>1.5;
- return {steer:move ? (dx*c-dy*s)/d : 0,throttle:move ? (-dx*s-dy*c)/d : 0,...(!night && frame===60 ? {commerce:{kind:'work',job:'bake'} as const} : !night && frame===270 ? {commerce:{kind:'buy',market:'market_stall',good:'bread'} as const} : !night && frame===280 ? {commerce:{kind:'eat',good:'bread'} as const} : {})};
+ return {steer:move ? (dx*c-dy*s)/d : 0,throttle:move ? (-dx*s-dy*c)/d : 0,...(!night && frame===240 ? {commerce:{kind:'work',job:'bake'} as const} : !night && frame===450 ? {commerce:{kind:'buy',market:'market_stall',good:'bread'} as const} : !night && frame===460 ? {commerce:{kind:'eat',good:'bread'} as const} : {})};
 }
 
 /** Capture setup earns practice through ordinary paid work; no completion counters are assigned. */
@@ -257,23 +324,62 @@ export function seatingReviewInput(state:CarState,world:World,frame:number,viewA
 export function* sharedMealReviewSteps(state:CarState,world:World,hosted=false):Generator<void,CarState>{
  let next=npcReviewStart(state,world,'vendor');
  for(let i=0;i<(hosted ? 0 : 2);i++)next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:'buy',market:'market_stall',good:'bread'}},1/120,world);
- next=stepInteractive(next,{steer:0,throttle:0,talkPressed:true},1/120,world);
+ for(let i=0;i<120*30 && !next.npcs.find(n=>n.id==='vendor')!.known;i++){next=stepInteractive(next,{steer:0,throttle:0,talkPressed:i%120===0},1/120,world);if(i%30===0)yield;}
  if(next.economy!.accounts.find(a=>a.id==='pocket')!.inventory.bread!==(hosted ? 0 : 2) || !next.npcs.find(n=>n.id==='vendor')!.known)throw Error('Shared review needs paid food and a real meeting');
- for(let i=0;i<120*360 && (next.timeS<303 || next.economy!.accounts.find(a=>a.id==='baker')!.shift?.phase!=='rest');i++){
-  next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30===0)yield;
- }
+ const earlySeat=!!world.scene.economy!.accounts.find(a=>a.actor==='player')!.company;
+ function* waitForBreak():Generator<void,void>{for(let i=0;i<120*360 && (next.timeS<303 || next.economy!.accounts.find(a=>a.id==='baker')!.shift?.phase!=='rest');i++){next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30===0)yield;}}
+ if(!earlySeat)yield* waitForBreak();
  const hall=sceneInteriors(world.scene).find(f=>f.object.id==='market_hall')!,door=portalPoints(hall,hall.room.portals[0]!,24),seat=worldSeats(world.scene).find(s=>s.objectId==='hall_bench' && s.seatId==='left')!;
- for(const target of [door.outside,door.inside,seat.approach]){
-  for(let i=0;Math.hypot(next.x-target.x,next.y-target.y)>1.5;i++){
-   if(i>=120*20)throw Error('Shared review could not walk through the market door');
-   const dx=target.x-next.x,dy=target.y-next.y,d=Math.hypot(dx,dy),a=Math.atan2(180,480);
-   next=stepInteractive(next,{steer:(dx*Math.cos(a)-dy*Math.sin(a))/d,throttle:(-dx*Math.sin(a)-dy*Math.cos(a))/d},1/120,world);if(i%30===0)yield;
-  }
- }
+ for(const target of [door.outside,door.inside,seat.approach])next=yield* walkReviewSteps(next,world,socialArea(world.scene,'baker'),target);
  next=toggleRide(next,world);if(!next.seated)throw Error('Shared review could not sit on the bench');
+ if(earlySeat)yield* waitForBreak();
  if(hosted){
   for(let i=0;i<120*3 && !next.economy!.invitation;i++){next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30===0)yield;}
   if(next.economy!.invitation?.partner!=='baker' || next.economy!.accounts.find(a=>a.id==='pocket')!.credits!==20)throw Error('Host review needs a real paid offer and unchanged player funds');
  }
  return next;
+}
+
+/** Review positions the car and task approach; impacts, work, R and the final walk remain real fixed steps. */
+export function* recoveryReviewSteps(state:CarState,world:World,stage:'work'|'counter'='counter'):Generator<void,CarState>{
+ let next=yield* handReviewSteps(state,world);
+ next=stepInteractive(next,{steer:0,throttle:0,strikePressed:true},1/120,world);
+ for(let i=0;i<120*25;i++){next=stepInteractive(next,{steer:0,throttle:0,...(i===239 ? {commerce:{kind:'repair',repair:'market_tables'} as const} : {})},1/120,world);if(i%30===0)yield;}
+ const account=()=>next.economy!.accounts.find(a=>a.id==='pocket')!,market=()=>next.economy!.markets.find(m=>m.id==='market_stall')!;
+ if(market().stock.boards!==7)throw Error('Recovery review needs one consumed board and real receiving space');
+ next=drivingReviewStart({...next,control:{kind:'car'},vehicles:next.vehicles.filter(v=>v.id!==null)},world,'street-tree');
+ for(let i=0;i<336;i++){next=stepInteractive(next,{steer:0,throttle:i<180 ? 1 : -1},1/120,world);if(i%30===0)yield;}
+ if(!next.broken.includes('garden_rowan_north'))throw Error('Recovery review did not fell its tree');
+ next=npcReviewStart(next,world,'vendor');next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:'repair',repair:'orchard_trees'}},1/120,world);
+ const task=account().repair;if(!task?.recover || task.objectId!=='garden_rowan_north')throw Error('Recovery review did not reserve real tree work and timber space');
+ next={...next,x:task.at.x,y:task.at.y,elevation:walkingHeight(world.scene,task.at.x,task.at.y),vx:0,vy:0,vz:0,grounded:true};
+ if(!carFootprintClear(bodyWorld(next,world),next.x,next.y,next.elevation,next.timeS,next))throw Error('Recovery review needs a clear on-foot work approach');
+ for(let i=0;i<120*(stage==='work' ? 8 : 11);i++){next=stepInteractive(next,{steer:0,throttle:0},1/120,world);if(i%30===0)yield;}
+ if(stage==='work')return next;
+ if(account().repair?.phase!=='home' || !account().repair?.recover || market().stock.boards!==7)throw Error('Recovery review did not produce sealed return cargo');
+ next=toggleRide(resetCar(next,world.scene),world);if(next.control.kind!=='foot')throw Error('Recovery review could not leave the recovered car');
+ const r=world.scene.economy!.repairs.find(r=>r.id==='orchard_trees')!,hall=sceneInteriors(world.scene).find(f=>f.object.id==='market_hall')!,door=portalPoints(hall,hall.room.portals[0]!,24),offer=courierApproach(world.scene,r,r.market,door.inside,next);if(!offer)throw Error('Recovery review needs a connected return counter');
+ for(const target of [door.outside,door.inside,...offer.path]){
+  let reached=false;for(let i=0;i<120*20;i++){const dx=target.x-next.x,dy=target.y-next.y,d=Math.hypot(dx,dy),a=Math.atan2(180,480);if(d<1.5){reached=true;break;}next=stepInteractive(next,{steer:(dx*Math.cos(a)-dy*Math.sin(a))/d,throttle:(-dx*Math.sin(a)-dy*Math.cos(a))/d},1/120,world);if(i%30===0)yield;}
+  if(!reached)throw Error('Recovery review could not walk its return waypoint');
+ }
+ if(account().repair?.phase!=='home')throw Error('Recovery review lost its cargo before handoff');return next;
+}
+
+/** One real planting creates nursery demand; both return and propagation use ordinary actions. */
+export function* nurseryReviewSteps(state:CarState,world:World,working=true):Generator<void,CarState>{
+ let next=yield* recoveryReviewSteps(state,world);
+ next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:'deliver'}},1/120,world);
+ if(next.economy!.accounts.find(a=>a.id==='pocket')!.repair)throw Error('Nursery review could not return its timber');
+ if(!working)return next;
+ next=stepInteractive(next,{steer:0,throttle:0,commerce:{kind:'work',job:'propagate_saplings'}},1/120,world);
+ if(next.economy!.accounts.find(a=>a.id==='pocket')!.work?.id!=='propagate_saplings')throw Error('Nursery review could not reserve its real seed and wage');
+ return next;
+}
+
+/** Advance ordinary city ticks to the shower; no injected clock or free resources. */
+export function* weatherReviewSteps(state:CarState,world:World):Generator<void,CarState>{
+ const target=(world.scene.weather?.rainStartS??2)-2;let next=state,ticks=0;
+ while(next.timeS+1e-8<target){next=stepInteractive(next,{steer:0,throttle:0},Math.min(1/120,target-next.timeS),world);if(++ticks%60===0)yield;}
+ return drivingReviewStart(next,world,'town');
 }

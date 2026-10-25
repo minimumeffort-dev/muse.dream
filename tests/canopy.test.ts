@@ -30,7 +30,7 @@ it('refines all live tree templates with unchanged bodies, scales, world members
   expect(objectFragments(spec).map(f=>f.id)).toEqual(objectFragments(prior).map(f=>f.id));
  }
  expect(impactBudget(scene)).toEqual(impactBudget(previous));expect(ambientGraph(scene).nodes).toEqual(ambientGraph(previous).nodes);expect(ambientGraph(scene).starts).toEqual(ambientGraph(previous).starts);
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.CANOPY_COMPATIBILITY);expect(await c.sha256(c.preCanopyCompatibilitySource(scene))).toBe(c.FLEET_COMPATIBILITY);
+ expect(await c.sha256(c.preEquipmentCompatibilitySource(scene))).toBe(c.CANOPY_COMPATIBILITY);expect(await c.sha256(c.preCanopyCompatibilitySource(scene))).toBe(c.FLEET_COMPATIBILITY);
 });
 it('keeps a falling tree, cargo, economy and every historical backup field through the registered visual upgrade',async()=>{
  const parking=c.preParkingScene(c.preCityScene(previous)),empty=await c.sha256(c.preCommerceCompatibilitySource(parking,2)),legacy={previousSaveCompatibility:await c.sha256(c.preCommerceCompatibilitySource(parking)),emptyEconomySaveCompatibility:empty,previousSaveSource:c.registeredLegacySource(empty),previousMarketSaveCompatibility:await c.sha256(c.preDeliveryCompatibilitySource(parking))};

@@ -1,0 +1,120 @@
+{
+  "canvas": [
+    1920,
+    1080
+  ],
+  "compileMs": 11523.5,
+  "identity": {
+    "compatibilityHash": "cf4a6bffe75b42fdab3872242948b8350f269c16e3ad19fc1a9d1ecd356f78e0",
+    "enabled": false,
+    "restored": false,
+    "review": false,
+    "sourceHash": "ac10cef0b007f5f5c38ce0728096e2ef98eeeef5803925f2f92d4328c414f43a",
+    "status": "Review session: saves disabled."
+  },
+  "loading": {
+    "firstRenderMs": 136.09999990463257,
+    "heartbeat": {
+      "maxGapMs": 787.1000000238419,
+      "samples": 302
+    },
+    "phases": [
+      {
+        "endMs": 11818.699999928474,
+        "label": "Reading Dream · checking the world",
+        "startMs": 0.2999999523162842
+      },
+      {
+        "endMs": 12488.599999904633,
+        "label": "Preparing driving and walking",
+        "startMs": 11818.699999928474
+      },
+      {
+        "endMs": 12505.399999976158,
+        "label": "Starting the renderer",
+        "startMs": 12488.599999904633
+      },
+      {
+        "endMs": 12620.799999952316,
+        "label": "Building water and bridges",
+        "startMs": 12505.399999976158
+      },
+      {
+        "endMs": 12697.299999952316,
+        "label": "Building roads and transit",
+        "startMs": 12620.799999952316
+      },
+      {
+        "endMs": 12929.899999976158,
+        "label": "Assembling people and wildlife",
+        "startMs": 12697.299999952316
+      },
+      {
+        "endMs": 13713.099999904633,
+        "label": "Preparing vehicles and interactive objects",
+        "startMs": 12929.899999976158
+      },
+      {
+        "endMs": 13841.799999952316,
+        "label": "Preparing lighting",
+        "startMs": 13713.099999904633
+      },
+      {
+        "endMs": 15925,
+        "label": "Loading the first neighbourhood",
+        "startMs": 13841.799999952316
+      },
+      {
+        "endMs": 16211.599999904633,
+        "label": "Preparing the first frame",
+        "startMs": 15925
+      }
+    ],
+    "totalMs": 16211.599999904633
+  },
+  "memory": {
+    "bytes": 95949526,
+    "geometries": 1396,
+    "uniqueBuffers": 8090,
+    "uniqueTriangles": 883197
+  },
+  "streaming": {
+    "bytes": 70172952,
+    "discarded": 0,
+    "keys": [
+      "5600,4000",
+      "6400,4000",
+      "5600,3200",
+      "6400,3200",
+      "5600,4800",
+      "6400,4800",
+      "4800,4000",
+      "7200,4000",
+      "4800,3200",
+      "7200,3200",
+      "4800,4800",
+      "7200,4800",
+      "5600,2400",
+      "6400,2400",
+      "5600,5600",
+      "4800,2400",
+      "6400,5600",
+      "7200,2400",
+      "4800,5600"
+    ],
+    "loaded": 19,
+    "maxInstallMs": 3.399999976158142,
+    "maxSliceMs": 3.299999952316284,
+    "peakBytes": 70172952,
+    "peakResident": 19,
+    "pending": 0,
+    "ready": true,
+    "required": 12,
+    "resident": 19,
+    "unloaded": 0
+  },
+  "viewport": [
+    1280,
+    720
+  ]
+}

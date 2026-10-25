@@ -1,0 +1,23 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/upstairs-work.test.ts tests/upstairs-work-world.test.ts tests/activity-context.test.ts tests/media-export.test.ts tests/docs.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/docs.test.ts (170 tests) 1971ms
+ ✓ tests/upstairs-work.test.ts (5 tests) 508ms
+   ✓ compiles a supported floor-bound station and rejects missing floors, unsupported stands and disconnected stairs  418ms
+ ✓ tests/media-export.test.ts (1 test) 20ms
+ ✓ tests/activity-context.test.ts (5 tests) 2ms
+ ✓ tests/upstairs-work-world.test.ts (6 tests) 8545ms
+   ✓ registers exact r106 while keeping all starting resources and the actor budget, with a connected capped workshop loft  361ms
+   ✓ preserves the actual r106 browser backup, clocks and original slot without credit, food or progress rebasing  788ms
+   ✓ walks the existing baker to upstairs kit work after finite fixture maintenance, then pays and replays a real batch  3620ms
+   ✓ lets the player physically repair, return hardware, climb and complete a conserved upstairs batch  1654ms
+   ✓ refunds a displaced r106 kit commitment once without resetting other resources, progress or time  2099ms
+
+ Test Files  5 passed (5)
+      Tests  187 passed (187)
+   Start at  08:37:12
+   Duration  15.61s (transform 605ms, setup 24ms, collect 7.83s, tests 11.05s, environment 0ms, prepare 116ms)

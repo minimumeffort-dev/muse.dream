@@ -17,7 +17,7 @@ export type Statement = {
 };
 export type Component = { token: Token; params: string[]; materials?:string[]; block: Statement[] };
 export type RouteSource={token:Token;name:string;kind:string;mode:string;speed:Expr;altitude?:Expr;wait?:Expr;width?:Expr;surface?:string;gauge?:Expr;block:Statement[]};
-export type PlaceSource={token:Token;name:string;assembly:string;at?:Expr[];route?:string;offset?:Expr;phase?:Expr;scale?:Expr;heading?:Expr;role?:'prop'|'npc'|'controllable'|'ambient';behavior?:string;pose?:'rest';parked?:boolean;motion?:DreamNode};
+export type PlaceSource={floor?:string;token:Token;name:string;assembly:string;at?:Expr[];route?:string;offset?:Expr;phase?:Expr;scale?:Expr;heading?:Expr;role?:'prop'|'npc'|'controllable'|'ambient';behavior?:string;pose?:'rest';parked?:boolean;motion?:DreamNode};
 export type WaterSource={ends?:"round"|"open";token:Token;name:string;level:Expr;depth:Expr;bank:Expr;color:string;flow:Expr[];block:Statement[]};
 export type Program = {
   version: 1 | 2; layout: DreamNode[]; nodes?: DreamNode[]; assets?: DreamNode[]; includes?: DreamNode[];

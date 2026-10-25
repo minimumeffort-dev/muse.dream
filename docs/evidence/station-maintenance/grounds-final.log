@@ -1,0 +1,13 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/commerce-grounds.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/commerce-grounds.test.ts (17 tests) 25ms
+
+ Test Files  1 passed (1)
+      Tests  17 passed (17)
+   Start at  13:46:36
+   Duration  567ms (transform 317ms, setup 8ms, collect 429ms, tests 25ms, environment 0ms, prepare 25ms)

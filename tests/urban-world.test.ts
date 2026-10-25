@@ -1,4 +1,4 @@
-import {describe,it,expect} from 'vitest';
+import {afterEach,describe,it,expect} from 'vitest';
 import {Mesh} from 'three';
 import {compileDreamWorld,formatDream,checkDream,compileDreamScene} from '../src/scene/dream';
 import {streetSchema,surfaceSchema,markingSchema,unionRects,streetRects,inRect,onStreet,markingPolygons} from '../src/scene/streets';
@@ -16,6 +16,12 @@ import {nearbyRide,toggleRide} from '../src/sim/interaction';
 import {controlOf,hasAnimatedJoints,isReactive} from '../src/scene/object-dsl';
 import example from '../docs/examples/planned-neighborhood.dream?raw';
 import fullExample from '../docs/examples/dream-v2-world.dream?raw';
+let live:ReturnType<typeof createLiveWorld>|undefined,liveSnapshot:string|undefined;
+function liveScene(){
+ if(!live){live=createLiveWorld();liveSnapshot=JSON.stringify(live);}
+ return live;
+}
+afterEach(()=>{if(live)expect(JSON.stringify(live)).toBe(liveSnapshot);});
 const world=createWorldScene(),fixture=parseScene({...createFixtureScene(),objects:[],regions:[]});
 const data=compileDreamWorld(example);
 
@@ -103,7 +109,7 @@ describe('expanded planned world',()=>{
   }
  });
  it.each(['town','suburbs','sports'])('lets the original car drive the %s streets with normal grip',scenario=>{
-  const world=createLiveWorld(),context={scene:world,roadMask:buildMaskForScene(world),driveMask:buildPaperMask(world.canonical.width,world.canonical.height),carRadius:11};
+  const world=liveScene(),context={scene:world,roadMask:buildMaskForScene(world),driveMask:buildPaperMask(world.canonical.width,world.canonical.height),carRadius:11};
   let car=drivingReviewStart(createCarAtSpawn(world),context,scenario),initial={x:car.x,y:car.y};
   expect(onStreet(world,car.x,car.y)).toBe(true);
   for(let i=0;i<180;i++)car=stepCar(car,{throttle:1,steer:0},1/120,context);

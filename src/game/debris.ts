@@ -1,3 +1,4 @@
+import {interiorVisibility,type WalkingPoint} from '../scene/floors';
 import * as THREE from "three";
 import {DAMAGE_POOL_LIMITS,impactTemplateKey} from "../scene/damage-pool";
 import type { Scene,SceneObject } from "../scene/schema";
@@ -99,10 +100,10 @@ export class WorldDebris {
     source.traverse(node=>{if(node instanceof THREE.Mesh)node.geometry.dispose();});
     this.prototypes.set(key,{groups,usedAt:this.time});
   }
-  update(state:CarState,reduced=false):void {
+  update(state:CarState,reduced=false,viewer:WalkingPoint=state):void {
     if(this.stopped)return;
     if(state.timeS<this.time)this.clear();this.time=state.timeS;
-    const visible=reduced ? [] : state.debris;if(!visible.length && !this.pieces.size && !this.prototypes.size && !this.pending.size)return;
+    const cutaway=interiorVisibility(this.scene,viewer),visible=reduced ? [] : state.debris.filter(p=>!cutaway.point(p));if(!visible.length && !this.pieces.size && !this.prototypes.size && !this.pending.size)return;
     const active=new Set(visible.map(p=>`${p.objectId}/${p.fragmentId}`)),wanted=new Map<string,Set<string>>();
     for(const piece of visible){const key=impactTemplateKey(this.objects.get(piece.objectId)!.spec as ObjectDslV2),ids=wanted.get(key)??new Set<string>();ids.add(piece.fragmentId);wanted.set(key,ids);}
     for(const [key,abort] of this.pending)if(!wanted.has(key)){abort.abort();this.pending.delete(key);}

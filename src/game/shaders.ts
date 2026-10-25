@@ -16,6 +16,24 @@ export const nightFactor = { value: 0 };
 export const terrainPlayer = { value: new THREE.Vector3() };
 export const terrainView = { value: new THREE.Vector3(180,1000,480).normalize() };
 
+// Existing obstruction visibility .22 opens 26 units; interior tags continue to zero.
+const revealField=`
+#ifndef DREAM_REVEAL_FIELD
+#define DREAM_REVEAL_FIELD
+uniform vec3 terrainPlayer; uniform vec3 terrainView;
+bool dreamReveal(vec3 world,float visibility,float front){
+  float v=clamp(visibility,0.,1.);
+  if(v>=1.)return false;
+  if(v<.001)return true;
+  vec3 delta=world-terrainPlayer;float along=dot(delta,terrainView);
+  float across=length(delta-terrainView*along);
+  float radius=26.*((1.-v)/.78+max(0.,.22-v)/max(v,.02));
+  float nearPlane=front-8192.*(1.-smoothstep(0.,.22,v));
+  return along>nearPlane && across<radius;
+}
+#endif
+`;
+
 function grainInject(material: THREE.MeshStandardMaterial, strength: number): void {
   material.onBeforeCompile = (shader) => {
     shader.vertexShader = shader.vertexShader
@@ -204,16 +222,14 @@ export function groundMaterial(): THREE.MeshStandardMaterial {
   mat.userData.streamMaterial={kind:"ground"};return mat;
 }
 
-/** Dither only ground between the eye and the car; steep terrain never forces a camera tilt. */
+/** Clear the sight corridor without a pixel pattern crawling over the player. */
 function terrainCutaway(material:THREE.MeshStandardMaterial):void {
   const original=material.onBeforeCompile.bind(material);
   material.onBeforeCompile=(shader,renderer)=>{
     original(shader,renderer);shader.uniforms.terrainPlayer=terrainPlayer;shader.uniforms.terrainView=terrainView;
-    shader.fragmentShader=shader.fragmentShader.replace("#include <common>","#include <common>\nuniform vec3 terrainPlayer; uniform vec3 terrainView;")
+    shader.fragmentShader=shader.fragmentShader.replace("#include <common>",`#include <common>\n${revealField}`)
       .replace("#include <clipping_planes_fragment>",`#include <clipping_planes_fragment>
-        vec3 toGround=vWorldPos3-terrainPlayer;float along=dot(toGround,terrainView);
-        float across=length(toGround-terrainView*along);
-        if(along>14. && across<26. && fract(dot(floor(gl_FragCoord.xy),vec2(.754877,.569841)))>.22) discard;`);
+        if(dreamReveal(vWorldPos3,.22,14.)) discard;`);
   };
 }
 
@@ -332,6 +348,7 @@ export function particleMaterial(): THREE.ShaderMaterial {
         if(shape>1.5 && shape<2.5) a=1.-smoothstep(.22,.38,abs(p.x)+abs(p.y));
         if(shape>2.5 && shape<3.5) a=pow(max(0.,1.-length(p)*2.),2.);
         if(shape>3.5 && shape<4.5) a=(1.-smoothstep(.16,.3,abs(p.x)))*(1.-smoothstep(.2,.48,abs(p.y)));
+        if(shape>5.5 && shape<6.5) a=(1.-smoothstep(.015,.055,abs(p.x)))*(1.-smoothstep(.3,.5,abs(p.y)));
         if(a*alpha<.005) discard;gl_FragColor=vec4(tint,a*alpha);
       }`,
   });
@@ -344,6 +361,8 @@ export function voxelParticleMaterial():THREE.ShaderMaterial{
       varying float alpha;varying vec3 tint;
       void main(){alpha=opacity;float c=cos(angle),s=sin(angle);mat3 turn=mat3(c,0.,-s,0.,1.,0.,s,0.,c);
         vec3 extent=vec3(1.);if(kind>.5&&kind<1.5)extent=vec3(.3,1.8,.3);
+        if(kind>5.5&&kind<6.5)extent=vec3(.05,1.6,.05);
+        if(kind>6.5)extent=vec3(.5,.1,.5);
         vec3 p=turn*(position*extent*max(0.,size)*.35)+offset;
         tint=color*(.65+.35*max(0.,dot(turn*normal,normalize(vec3(-.4,.8,.3)))));
         gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,
@@ -392,19 +411,25 @@ export function toppleMaterial(material:THREE.Material,motion:ObjectPart['animat
  material.customProgramCacheKey=()=>`topple-${key}-${JSON.stringify(motion)}`;return material;
 }
 
-/** Per-instance ghosting keeps occlusion local without cloning thousands of materials. */
+/** Per-instance reveal keeps occlusion local without transparent sorting or stippling. */
 export function sceneryMaterial(material:THREE.Material,motion?:ObjectPart["animation"]):THREE.Material {
   const original=material.onBeforeCompile.bind(material),key=material.customProgramCacheKey();
   material.userData.streamMaterial={kind:"scenery",base:material.userData.streamMaterial,motion};
   material.onBeforeCompile=(shader,renderer)=>{
-    original(shader,renderer);sceneryMotion(shader,motion);
-    shader.vertexShader=shader.vertexShader.replace("#include <common>","#include <common>\nattribute float visibility; varying float sceneryVisibility;")
-      .replace("#include <begin_vertex>","#include <begin_vertex>\nsceneryVisibility=visibility;");
-    shader.fragmentShader=shader.fragmentShader.replace("#include <common>","#include <common>\nvarying float sceneryVisibility;")
+    original(shader,renderer);sceneryMotion(shader,motion);shader.uniforms.terrainPlayer=terrainPlayer;shader.uniforms.terrainView=terrainView;
+    shader.vertexShader=shader.vertexShader.replace("#include <common>","#include <common>\nattribute float visibility; varying float sceneryVisibility; varying vec3 sceneryWorld;")
+      .replace("#include <begin_vertex>","#include <begin_vertex>\nsceneryVisibility=visibility;")
+      .replace("#include <worldpos_vertex>",`#include <worldpos_vertex>
+        vec4 revealWorld=vec4(transformed,1.);
+        #ifdef USE_INSTANCING
+          revealWorld=instanceMatrix*revealWorld;
+        #endif
+        sceneryWorld=(modelMatrix*revealWorld).xyz;`);
+    shader.fragmentShader=shader.fragmentShader.replace("#include <common>",`#include <common>\nvarying float sceneryVisibility; varying vec3 sceneryWorld;\n${revealField}`)
       .replace("#include <clipping_planes_fragment>",`#include <clipping_planes_fragment>
-        if(fract(dot(floor(gl_FragCoord.xy),vec2(.754877,.569841)))>sceneryVisibility) discard;`);
+        if(dreamReveal(sceneryWorld,sceneryVisibility,4.)) discard;`);
   };
-  material.customProgramCacheKey=()=>`scenery-${key}-${JSON.stringify(motion)}`;return material;
+  material.customProgramCacheKey=()=>`scenery-reveal-v2-${key}-${JSON.stringify(motion)}`;return material;
 }
 
 export function sceneryDepthMaterial(motion?:ObjectPart["animation"],cloth=false):THREE.MeshDepthMaterial {

@@ -1,0 +1,189 @@
+> muse-dream@0.1.0 test:watch
+> vitest watch --maxWorkers=2 --testTimeout=60000 tests/static-placement-reuse.test.ts tests/foundation-reuse.test.ts tests/foundation-reuse-world.test.ts tests/startup.test.ts tests/pavement.test.ts tests/ambient.test.ts tests/indoor-navigation.test.ts
+
+
+ DEV  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/startup.test.ts (14 tests) 1938ms
+   ✓ cooperative route construction retains exact surfaces, paint, rails and sleepers  960ms
+   ✓ column indexing retains analytic UVs, negative coordinates and large index ranges  828ms
+ ❯ tests/static-placement-reuse.test.ts (4 tests | 4 failed) 10ms
+   × shares only an exact immutable static fit while retaining contacts and authored data 6ms
+     → [
+  {
+    "code": "custom",
+    "path": [
+      "objects",
+      1,
+      "scale"
+    ],
+    "message": "building must measure 3..40 meters after placement scale; use kind=custom for deliberate fantasy sizes"
+  }
+]
+   × keeps distant static fits across a changed interior but recomputes supports inside the changed floor 1ms
+     → [
+  {
+    "code": "custom",
+    "path": [
+      "objects",
+      1,
+      "scale"
+    ],
+    "message": "building must measure 3..40 meters after placement scale; use kind=custom for deliberate fantasy sizes"
+  }
+]
+   × rejects reuse for new objects, changed terrain, moving props and non-prop owners 1ms
+     → [
+  {
+    "code": "custom",
+    "path": [
+      "objects",
+      1,
+      "scale"
+    ],
+    "message": "building must measure 3..40 meters after placement scale; use kind=custom for deliberate fantasy sizes"
+  }
+]
+   × preserves target ownership and moving-position invalidation rather than sharing a displaced source pose 1ms
+     → [
+  {
+    "code": "custom",
+    "path": [
+      "objects",
+      1,
+      "scale"
+    ],
+    "message": "building must measure 3..40 meters after placement scale; use kind=custom for deliberate fantasy sizes"
+  }
+]
+ ✓ tests/foundation-reuse.test.ts (4 tests) 41ms
+ ✓ tests/pavement.test.ts (4 tests) 2ms
+ ✓ tests/foundation-reuse-world.test.ts (1 test) 10068ms
+   ✓ retains exact contacts, node order, links and starts for upper-floor, home and old-city projections  10067ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/static-placement-reuse.test.ts > shares only an exact immutable static fit while retaining contacts and authored data
+ZodError: [
+  {
+    "code": "custom",
+    "path": [
+      "objects",
+      1,
+      "scale"
+    ],
+    "message": "building must measure 3..40 meters after placement scale; use kind=custom for deliberate fantasy sizes"
+  }
+]
+ ❯ Object.get error [as error] node_modules/zod/v3/types.js:39:31
+ ❯ ZodEffects.parse node_modules/zod/v3/types.js:114:22
+ ❯ parseScene src/scene/schema.ts:254:22
+    252|
+    253| export function parseScene(data: unknown): Scene {
+    254|   return sceneSchema.parse(data);
+       |                      ^
+    255| }
+    256|
+ ❯ fixture tests/static-placement-reuse.test.ts:11:38
+ ❯ tests/static-placement-reuse.test.ts:13:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/static-placement-reuse.test.ts > keeps distant static fits across a changed interior but recomputes supports inside the changed floor
+ZodError: [
+  {
+    "code": "custom",
+    "path": [
+      "objects",
+      1,
+      "scale"
+    ],
+    "message": "building must measure 3..40 meters after placement scale; use kind=custom for deliberate fantasy sizes"
+  }
+]
+ ❯ Object.get error [as error] node_modules/zod/v3/types.js:39:31
+ ❯ ZodEffects.parse node_modules/zod/v3/types.js:114:22
+ ❯ parseScene src/scene/schema.ts:254:22
+    252|
+    253| export function parseScene(data: unknown): Scene {
+    254|   return sceneSchema.parse(data);
+       |                      ^
+    255| }
+    256|
+ ❯ fixture tests/static-placement-reuse.test.ts:11:38
+ ❯ tests/static-placement-reuse.test.ts:17:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/static-placement-reuse.test.ts > rejects reuse for new objects, changed terrain, moving props and non-prop owners
+ZodError: [
+  {
+    "code": "custom",
+    "path": [
+      "objects",
+      1,
+      "scale"
+    ],
+    "message": "building must measure 3..40 meters after placement scale; use kind=custom for deliberate fantasy sizes"
+  }
+]
+ ❯ Object.get error [as error] node_modules/zod/v3/types.js:39:31
+ ❯ ZodEffects.parse node_modules/zod/v3/types.js:114:22
+ ❯ parseScene src/scene/schema.ts:254:22
+    252|
+    253| export function parseScene(data: unknown): Scene {
+    254|   return sceneSchema.parse(data);
+       |                      ^
+    255| }
+    256|
+ ❯ fixture tests/static-placement-reuse.test.ts:11:38
+ ❯ tests/static-placement-reuse.test.ts:22:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/static-placement-reuse.test.ts > preserves target ownership and moving-position invalidation rather than sharing a displaced source pose
+ZodError: [
+  {
+    "code": "custom",
+    "path": [
+      "objects",
+      1,
+      "scale"
+    ],
+    "message": "building must measure 3..40 meters after placement scale; use kind=custom for deliberate fantasy sizes"
+  }
+]
+ ❯ Object.get error [as error] node_modules/zod/v3/types.js:39:31
+ ❯ ZodEffects.parse node_modules/zod/v3/types.js:114:22
+ ❯ parseScene src/scene/schema.ts:254:22
+    252|
+    253| export function parseScene(data: unknown): Scene {
+    254|   return sceneSchema.parse(data);
+       |                      ^
+    255| }
+    256|
+ ❯ fixture tests/static-placement-reuse.test.ts:11:38
+ ❯ tests/static-placement-reuse.test.ts:27:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  4 failed | 23 passed (27)
+   Start at  10:11:11
+   Duration  10.66s (transform 485ms, setup 23ms, collect 1.04s, tests 12.06s, environment 0ms, prepare 116ms)
+
+ FAIL  Tests failed. Watching for file changes...
+       press h to show help, press q to quit
+ RERUN  tests/static-placement-reuse-world.test.ts x1
+        Filename pattern: tests/static-placement-reuse.test.ts, tests/foundation-reuse.test.ts, tests/foundation-reuse-world.test.ts, tests/startup.test.ts, tests/pavement.test.ts, tests/ambient.test.ts, tests/indoor-navigation.test.ts
+
+ ✓ tests/static-placement-reuse.test.ts (4 tests) 103ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  10:12:20
+   Duration  216ms
+
+ PASS  Waiting for file changes...
+       press h to show help, press q to quit

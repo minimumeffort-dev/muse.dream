@@ -18,7 +18,7 @@ const diner=(s:CarState)=>s.economy!.accounts.find(a=>a.id==='regular')!;
 const step=(s:CarState)=>stepCommerce({...s,timeS:s.timeS+.25},{},.25,scene);
 it('compiles named furniture seats, canonical formatting and useful repair diagnostics',()=>{
  expect(seats).toHaveLength(2);expect(formatDream(formatDream(source))).toBe(formatDream(source));expect(compileDreamScene(formatDream(source),{sceneId:'seating',revisionId:'r1',sourceHash:'seating'})).toEqual(scene);
- for(const [a,b] of [['body(interaction=solid,radius=28,height=31);','body(interaction=solid,radius=28,height=31); contact body(at=[0,0,0],radius=28,height=31);'],['approach=[-13,48]','approach=[-13,20]'],['at=[-13,18,12]','at=[-13,21,12]'],['at=[13,18,12]','at=[-13,18,12]'],['heading_deg=90','heading_deg=900'],['seat right(','seat left('],['approach=[-13,48]','approach=[-13,8]'],['seats=[lunch_bench]','seats=[missing]'],['seats=[lunch_bench]','seats=[lunch_bench,lunch_bench]'],['at=[690,775]','at=[900,775]']] as const)expect(checkDream(source.replace(a,b)).ok,b).toBe(false);
+ for(const [a,b] of [['body(interaction=solid,radius=28,height=31);','body(interaction=solid,radius=28,height=31); contact body(at=[0,0,0],radius=28,height=31);'],['approach=[-14,48]','approach=[-14,20]'],['at=[-14,18,12]','at=[-14,21,12]'],['at=[14,18,12]','at=[-14,18,12]'],['heading_deg=90','heading_deg=900'],['seat right(','seat left('],['approach=[-14,48]','approach=[-14,8]'],['seats=[lunch_bench]','seats=[missing]'],['seats=[lunch_bench]','seats=[lunch_bench,lunch_bench]'],['at=[690,775]','at=[900,775]']] as const){expect(source,a).toContain(a);expect(checkDream(source.replace(a,b)).ok,b).toBe(false);}
 });
 it('sits only from a clear grounded approach, holds one body and stands before moving or jumping',()=>{
  const snapshot=JSON.stringify(scene),s=toggleRide(start(),world);expect(s.seated).toEqual({objectId:seat.objectId,seatId:seat.seatId});checkSeatingState(s,scene);expect(carFootprintClear(bodyWorld(s,world),s.x,s.y,s.elevation,s.timeS,s)).toBe(true);
@@ -95,4 +95,15 @@ it('rejects outbound detours and seat reservations without their purchased food 
  for(let i=0;i<160 && diner(s).meal?.phase!=='seat';i++)s=step(s);expect(diner(s).meal?.phase).toBe('seat');
  diner(s).inventory.bread!--;s.economy!.markets[0]!.stock.bread!++;
  expect(()=>checkEconomyState(s,scene)).toThrow('Invalid saved meal food');expect(()=>encodeSave(s,s.timeS,world)).toThrow();
+});
+
+it.each(['free','preferred-broken','all-broken'] as const)('uses authored furniture preference before placement order: %s',async condition=>{
+ const {default:orderedSource}=await import('../docs/examples/seat-preferences.dream?raw');
+ const ordered=compileDreamScene(orderedSource,{sceneId:'preferred',revisionId:'r1',sourceHash:'preferred'});
+ expect(worldSeats(ordered)[0]!.objectId).toBe('lunch_bench');
+ let s:CarState={...createCarAtSpawn(ordered),control:{kind:'foot' as const},x:900,y:730,elevation:0,broken:condition==='free' ? [] : condition==='preferred-broken' ? ['home_bench'] : ['home_bench','lunch_bench']};
+ for(let i=0;i<160 && diner(s).meal?.phase!=='seat' && diner(s).meal?.phase!=='eat';i++)s=stepCommerce({...s,timeS:s.timeS+.25},{},.25,ordered);
+ expect(diner(s).credits).toBe(15);expect(diner(s).inventory.bread).toBe(1);expect(diner(s).meal?.seat?.objectId).toBe(condition==='free' ? 'home_bench' : condition==='preferred-broken' ? 'lunch_bench' : undefined);
+ for(let i=0;i<240 && diner(s).meal;i++)s=stepCommerce({...s,timeS:s.timeS+.25},{},.25,ordered);
+ expect(diner(s).meal).toBeUndefined();expect(diner(s).inventory.bread).toBe(0);expect(diner(s).credits).toBe(15);expect(s.economy!.consumed.bread).toBe(1);checkEconomyState(s,ordered);
 });

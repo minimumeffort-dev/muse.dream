@@ -1,5 +1,38 @@
 # Media and Dream highlighting
 
+## Connected crossings, r113
+
+`crossingwalk` records the full 164-unit walk across the medical interchange,
+from `[11118,5126]` to `[11282,5126]`, using the ordinary foot body and controls.
+Only the initial review pose is seeded. All 240 consecutive 2400x1350 frames
+are rendered at 30 frames per simulation second through the dev-only exporter.
+No missing-frame interpolation or NPC teleport supplies the walk. The fixed
+observer shows the zebra through both cycle lanes and the adjoining sidewalks.
+
+Video and still use 1600x900; GIF uses 1280x720. The poster is frame 45.
+Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> crossingwalk`.
+The published city plan now reuses the renderer's exact zebra polygons for all
+62 crossing declarations. The r112 station-repair clip below is historical for
+its longer journey; its finite work/payment rules and the quarter overview
+remain accurate. These exports are behavioral evidence, not live frame-rate
+measurements. [Checks and native restore](../evidence/crossing-access/verification.md).
+
+## Station maintenance, r112
+
+`stationrepair` records one real bench repair in the new quarter. The dev-only
+exporter first performs a hand strike and short walking retreat, then advances
+the full fixed-tick world through the caretaker's actual route. The 360
+consecutive 2400x1350 PNGs begin at on-site work and record twelve simulation
+seconds at 30 rendered frames per second: repair, one four-credit payment and
+the start of the return walk. No NPC teleport, seeded damage/reward or missing
+frame interpolation supplies the clip. The long pre-roll is not shown. Day/night
+continued during travel, so the repair is recorded at night.
+
+Video/still use 1600x900 and GIF 1280x720; the still is frame 300. The existing
+station-quarter overview remains accurate because its geometry and rendering
+are unchanged. New clips are offline behavioral evidence, not live frame-rate
+measurements. [Verification](../evidence/station-maintenance/verification.md).
+
 The latest walking recordings use longer steps and retain planted feet through
 sharp reversals. Character, pedestrians, locomotion, switching, sports and park
 GIF/HD pairs and their stills are refreshed together. Character poster frame 40
@@ -21,6 +54,100 @@ Its poster uses frame 40. The matching GIF, HD video and stills come from
 These exports are motion evidence, not live frame-rate measurements.
 
 These are captures of the running mock prototype. The game and asset geometry are rendered by Three.js from the checked-in Dream source.
+
+## Shared rest, r97
+
+The new `rest.mp4`, `rest.gif` and frame-60 `rest.jpg` share 360 consecutive
+2400 × 1350 rendered PNGs at 30 frames per simulation second. Video is
+1600 × 900; GIF is 1280 × 720. They show the player sharing the settee while
+recovering energy, then the resident standing and resuming their routine.
+Only the player's initial review pose is seeded. Purchases, needs, NPC travel
+and the player's walk into the home advance through ordinary simulation.
+
+Earlier home and seating recordings retain their source release's policies and
+Seated badge; they do not demonstrate energy or automatic rest. Their geometry
+remains accurate. Other asset/locomotion recordings are unchanged. These exports
+are motion evidence, not a live performance measurement. Native controls,
+save/reload, source and frame checks are recorded in
+[the rest verification note](../evidence/resting/verification.md).
+
+## Work commute, r96
+
+`work-commute.png` is a native browser still after ordinary player purchases,
+a resident meal and an actual NPC walk to the market. It records an active paid
+batch before the wage is awarded. [State and checks](../evidence/work-commute/verification.md)
+separate that rendered observation from the fixed-step review preparation.
+There are no new meshes, shaders, controls or animation poses in this change;
+existing asset/home recordings remain accurate. Older economic recordings keep
+their release's policies. No motion export or performance claim accompanies
+this policy and simulation change.
+
+## Home meal, r95
+
+`home-meal.png` is a native browser still of the player on the left cushion and
+the commuter on the right after buying lunch and walking home. The review
+advances ordinary fixed-step mechanics; only the player's initial review pose is
+seeded. It uses a separate review-save prefix. No motion was re-exported: home
+geometry, cutaway rendering and controls retain the r94 walkthrough behavior.
+That walkthrough remains accurate; its new NPC meal policy is documented by
+this still and [saved-state checks](../evidence/home-meals/verification.md).
+Older meal recordings keep their historical venue and policy.
+
+## Authored rain, r93
+
+The newer [rain recording](weather.gif), [HD video](weather.mp4) and
+[frame-180 still](weather.jpg) show the r93 weather policy and wet-tire spray.
+They share 240 consecutive 2400 × 1350 rendered PNGs at 30 frames per simulation
+second. Video is 1600 × 900, GIF 960 × 540 and the still retains source size.
+The review advances ordinary world ticks to two seconds before the shower,
+then drives with normal input. No injected clock, interpolated frames or live
+FPS claim. Geometry, actors and the existing particle draw/pool remain unchanged.
+The sky softens; rain replaces ambient motes and wet tires use small spray.
+Earlier daytime/work/vehicle recordings remain accurate for their shown flows
+and source-pinned conditions, but do not demonstrate weather-aware maintenance.
+The initial export route rejected the new clip until its bounded allowlist was
+extended; the final recording completed all 240 frames.
+[Rules and verification](../evidence/weather/verification.md).
+
+## Worker provisions, r92
+
+Geometry, animation, camera and HUD layout are unchanged. Existing commerce,
+work, courier and school recordings remain accurate for the flows they show;
+they do not demonstrate automatic provision use. Native evidence records G
+while a paid batch is active. No motion set was regenerated solely for this
+policy and transaction change. See the [worker-provisions verification note](../evidence/worker-rations/verification.md).
+
+## School common room, r91
+
+`schoolroom.mp4`, `schoolroom.gif` and `schoolroom.jpg` show the same 600
+consecutive rendered 2400 × 1350 PNG frames, at 30 frames per simulation second.
+The video is 1600 × 900 and GIF 1280 × 720. The still uses frame 180. Preparation
+buys two loaves, meets the teacher, advances their real shift, walks through the
+door and sits through the normal controls. The clip invites the teacher, shares
+food and lets them return to their break spot. No interpolated frames or live
+performance claim.
+
+The older town and asset overviews show the school's former closed shell.
+They remain historical for that building. This common-room set and its native
+entrance/cutaway checks show the new school. Other buildings and assets retain
+their geometry, so their focused recordings need no regeneration.
+[Source and verification](../evidence/school-interior/verification.md).
+
+## Nursery work, r90
+
+`nursery.mp4`, `nursery.gif` and `nursery.jpg` share 420 consecutive 2400 × 1350
+rendered PNG frames, at 30 frames per simulation second. Frame 60 is the matching
+still. The video is 1600 × 900; the GIF is 1280 × 720. No interpolation or live
+performance claim. The positioned review uses actual damage, planting, a timber
+return and paid nursery work. It opens the normal work panel during the batch.
+
+The native control check separately selects the recipe with M, Work, arrow keys
+and H, observing a held seed, one completed output and exactly two coins of pay.
+Earlier food/work recordings are historical for their available-job lists;
+their geometry and named mechanics remain accurate. Current nursery motion
+shows the added recipe. Other graphics recordings need no regeneration because
+assets, placements and controls remain unchanged.
+[Source, controls and verification](../evidence/nursery/verification.md).
 
 ## Connected cycle junctions, 2026-10-19
 
@@ -1009,6 +1136,17 @@ Earlier evidence remains pinned to its own source. The tiny school work-anchor
 correction is outside those focused views. These offline exports do not measure
 live FPS or low-powered-laptop performance. See [verification](../evidence/staff-shifts/verification.md).
 
+The 2026-10-20 refresh replaces the shifts GIF, HD video and frame-570 still
+together from 600 new native-renderer frames at 30 frames per simulation second.
+At frame 101, G eats the player's previously purchased bread while the baker
+walks; this is an ordinary transaction between commerce updates. Frame 540
+still talks to the resting baker. Timestamped walking now handles these extra
+updates without restarting interpolation. Source frames are 2400 × 1350;
+HD is 1600 × 900 and GIF 1280 × 720, without interpolated video frames. Other
+economic captures retain their historical presentation and unchanged mechanics;
+asset/DSL definitions and their captures are unchanged. These exports are not
+live performance measurements. [Evidence](../evidence/worker-continuity/verification.md).
+
 ## Shared meals (r64)
 
 `shared.gif`, `shared.mp4` and `shared.jpg` come from `?capture`'s `shared`
@@ -1399,3 +1537,518 @@ Earlier recordings retain their historical behavior and background details.
 README, asset, impact, repair and persistence guides were reviewed and updated;
 the model instructions, compiler contract and highlighting need no vocabulary
 change. [Checks, native saves and source/frame manifest](../evidence/street-furniture/verification.md).
+
+## Shared character construction, r81
+
+`wardrobe.gif` / `.mp4` and `wardrobe.jpg` show all sixteen shared constructions
+from the native `?people&capture` gallery: 240 actual rendered PNGs at 30 frames
+per simulation second, poster frame 0. GIF uses 1280 × 720, 256 colors and loss
+20; HD uses 1600 × 900, CRF 18. The character closeup uses the same settings
+for 180 frames, with `character-motion.jpg` from frame 60.
+
+Driving, locomotion, swimming, football, basketball and switching are refreshed
+from 210/180/180/480/480/240 native main-game frames. Their GIF/HD pairs and
+matching world/driving, on-foot/jumping, swimming, sports-park, basketball and
+riding/switching posters share those sources. Source frames are 2400 × 1350.
+No interpolation or performance measurement. The complete asset, sports,
+people, player and squad sheets are fresh native gallery exports. The four-angle
+people stills are 2400 × 1860. Other focused sheets retain unchanged focus
+geometry; earlier conversation and economic recordings retain their historical
+costumes and revision. The generated map has unchanged layout and footprints.
+
+README, people, construction, library, model-authoring, rendering and persistence
+guides are updated. No compiler vocabulary changed.
+[Source/frame manifest, native saves, checks and limitations](../evidence/character-construction/verification.md).
+
+## Interactive map and waypoint guidance
+
+`world-map.jpg` and `waypoint-guide.jpg` come from native screenshots of the
+expanded map and real driving at a 548 × 748 browser viewport. Their original
+PNGs, public UI diagnostics and exact pointer-coordinate checks are retained in
+[world-map evidence](../evidence/world-map/verification.md). They show map zoom,
+the waypoint marker, current distance and the camera-relative HUD arrow. No
+upscaling, generated assets or motion interpolation was used. The expanded
+map's canvas redraws the accepted geometry at its current view resolution.
+
+The README, context-action and movement guides describe the new controls.
+Earlier gameplay recordings retain their recorded HUD; they still illustrate
+their mechanics. These new stills document map interaction. Dream grammar,
+geometry and world-save behavior are unchanged, so DSL examples and existing
+construction/map-plan captures remain accurate.
+
+`task-map.jpg` and `task-guide.jpg` add the active school delivery: its counter
+is focused with T, and its bearing appears automatically without a personal
+waypoint. These are native 548 × 748 screenshots, with original PNGs and public
+UI checks in [task-navigation evidence](../evidence/task-navigation/verification.md).
+No upscaling or generated frames. The earlier personal-waypoint stills remain
+accurate for their context. Existing economic videos show the same cargo,
+handoff, repair and payment mechanics with their recorded HUD; these new stills
+document the added guidance. No motion clip, geometry or Dream example changed.
+
+## Animation continuity
+
+Football's GIF, HD video, `football-practice.jpg` and `sports-park.jpg` are
+refreshed from 480 native `?capture` PNG frames, with frame 180 for the stills.
+The new `scooter.gif`, `.mp4` and `.jpg` use 240 native frames and still frame
+95, showing direct riding, a turn, jump and braking. All source frames are
+2400 × 1350, at 30 rendered frames per simulation second. HD uses 1600 × 900
+at CRF 18; GIF uses 1280 × 720 and 256 colours, with Gifsicle loss level 20.
+No missing video frames are interpolated. Runtime pose interpolation reads
+actual fixed physics poses before each rendered frame; it is not video frame
+generation. These offline clips are not browser frame-rate measurements.
+
+README, rendering, sports and the motion invariants document the common
+presentation clock, carrier ball alignment and continuous shadow extents.
+Other recordings retain their recorded presentation; their geometry, controls,
+commerce and saves remain accurate. No Dream vocabulary or example changed.
+[Source hashes, checks and remaining limits](../evidence/animation-continuity/verification.md).
+
+## Clean foreground reveals
+
+The scooter GIF, HD video and frame-95 still are refreshed together from 240
+native `?capture` frames. This pass turns behind the market roof to show the
+clean opening while riding and jumping. The source remains 2400 × 1350 at 30
+rendered frames per simulation second, with the same encoder settings above.
+There is no missing-frame interpolation or live performance claim.
+
+README, rendering, interiors and world priorities explain the changed reveal.
+The other asset, sports and economic captures retain their recorded presentation;
+their construction and interaction rules are unchanged. Interior stills with
+fully hidden tagged parts remain accurate because the final visibility state
+is unchanged. [Native GPU and world evidence](../evidence/clean-cutaways/verification.md).
+
+
+## Indoor bakery service, r82
+
+`interior.gif`, `interior.mp4` and `interior.jpg` are refreshed together from
+600 newly rendered 2400 × 1350 PNG frames at 30 frames per simulation second.
+The player walks through the real doorway, around the existing table, starts
+paid baking at frame 240, buys bread at 450, eats at 460 and walks outside.
+The still is frame 390. The existing encoder produces 1600 × 900 HD video and
+a 1280 × 720 GIF. No interpolation or synthetic frames were used. This is an
+offline native capture, not a live frame-rate measurement.
+
+README, interior, commerce and shift guides now show or link this current flow.
+Earlier outdoor-counter recordings, including kitchen, commerce, progression,
+shifts and interiornight, remain historical evidence of those controls before
+the relocation; their old actor coordinates do not describe r82. Unchanged
+architecture, vehicle, sports and vegetation captures retain their geometry.
+The compiled map was regenerated; its visible footprint is unchanged because
+the new service aisle uses `finish=terrain`.
+[Source hashes and native results](../evidence/indoor-service/verification.md).
+
+
+## Physical work equipment, r83
+
+`equipment.gif`, `equipment.mp4` and `equipment.jpg` come from 480 consecutive
+2400 × 1350 PNG frames at thirty rendered frames per simulation second. The
+existing encoder produces 1600 × 900 HD video and a 1280 × 720 GIF; frame 120
+is the still. No missing frames were interpolated. This is an offline native
+recording, not a live performance sample.
+
+The dev setup places a car inside the hall, replays an actual table collision,
+backs away and follows the caretaker's entire dispatch/approach. Recording
+starts as repair work begins. The work panel shows the equipment requirement;
+once repair finishes, the player starts one bake and is paid once. The baker's
+interrupted lunch batch refunds once and their ordinary production resumes.
+The fixture does not provide an on-foot tool or car access through the doorway.
+
+README, commerce, interior, language and persistence guides describe the new
+binding and retain those limits. Current intact-hall, vehicle, plant, wildlife
+and city-map captures keep the same geometry and controls. The map needs no new
+image because no placement, terrain, street or entrance moves. Historical
+recordings remain pinned to their original source.
+[Native events, source hashes and verification](../evidence/work-equipment/verification.md).
+
+## On-foot prop interaction, r84
+
+`hand.gif`, `hand.mp4` and `hand.jpg` are refreshed together from 600
+consecutive native 2400 × 1350 PNG frames at 30 rendered frames per simulation
+second. The still is frame 32. The existing encoder produces 1600 × 900 HD
+video and a 1280 × 720 GIF, without missing-frame interpolation. This offline
+recording is not a live frame-rate measurement.
+
+The dev setup walks the player through the actual doorway and starts an ordinary
+paid bake. At frame 30 the player hits the table; the equipment interruption
+refunds that batch. At frame 60 the player requests the existing repair service,
+and at frame 330 starts a new bake. The final public diagnostic confirms one
+paid repair, one paid bake, an intact table and 27 coins. No car is seeded indoors
+and no damage is seeded. A separate native keyboard check verifies K dispatch.
+
+README, behavior, commerce, interior, language and persistence guides now describe
+this flow. The earlier equipment recording remains historical evidence of the
+r83 car-based dev fixture. No asset placement, road, terrain or entrance changed,
+so existing construction atlases and the city map remain accurate.
+[Native evidence, source hashes and checks](../evidence/on-foot-strike/verification.md).
+
+
+## Repair-kit policy, r85
+
+No geometry, materials, HUD layout, controls or animation changed. Existing hand,
+food, repair and construction captures remain accurate for their visible mechanics.
+The r84 hand and earlier kitchen recordings are historical source-pinned flows;
+they do not demonstrate the new NPC kit-production priority. A current native
+still and public state checks document this policy without regenerating motion.
+[Current policy verification](../evidence/kit-production/verification.md).
+
+
+## Work-panel details
+
+`actions.gif`, `actions.mp4` and `actions.jpg` use one current six-second flow:
+180 native 2400 × 1350 PNG frames at 30 rendered frames per simulation second,
+with frame 45 as the still. The existing encoder produces 1600 × 900 HD video
+and a 1280 × 720 GIF. No frames are interpolated, and this is not a live FPS
+measurement. The player is placed by the existing real-doorway review walk;
+ordinary activity controls inspect a kit recipe, then a lunch recipe.
+
+Earlier hand, kit-production, market-control and commerce captures keep their
+recorded panel layouts and remain historical evidence of those mechanics.
+Construction, map and asset captures remain accurate. README and the context-action,
+commerce and world-system guides describe the current wrapping recipe and single
+warning. [Current evidence](../evidence/work-panel/verification.md).
+
+
+## Workshop supply contracts, r86
+
+`workshop-supplies.jpg` is a native current screenshot after the player hands over
+sealed fastener cargo. It uses the normal updated activity panel. No renderer,
+asset, animation or control changes, so existing motion and construction/map
+captures remain accurate for their visible mechanics. Earlier supply captures
+retain their original contract lists and source-pinned ledgers.
+[Native state, fixture boundaries and checks](../evidence/workshop-supplies/verification.md).
+
+
+## Work endpoint indexing
+
+This changes only graph endpoint selection cost. Existing product stills, GIFs
+and videos retain the exact accepted world, geometry, animation and controls.
+They remain accurate and are not regenerated. A current functional screenshot
+is kept with the [Node measurements and browser check](../evidence/work-endpoints/verification.md);
+no browser FPS, loader speed comparison or memory reduction is inferred from it.
+
+
+## Resident courier work, r87
+
+The school resident now walks paid bread and hardware runs using the existing
+courier controller and animation. Rendering, controls, scenery and pedestrian
+topology stay unchanged. Existing caretaker/player recordings remain accurate
+for those mechanics; their source-pinned ledgers are historical and do not show
+the new resident's journey. They are not regenerated for this policy change.
+A current [native school-frontage still and public state observations](../evidence/resident-supplies/verification.md)
+show the new owner moving and pausing. Full deliveries, meals and wages are
+checked separately in the 4 Hz commerce/NPC replay, without browser performance
+claims.
+
+
+## Timber recovery, r88
+
+`recovery.gif`, `recovery.mp4` and `recovery.jpg` share 300 consecutive rendered
+frames from the `?capture` recovery clip, at 30 frames per simulation second.
+Source PNGs are 2400 × 1350. The HD video is 1600 × 900 at 30 fps; the GIF is
+1280 × 720 with a full-clip palette and Gifsicle loss level 20. The still comes
+from source frame 60 at its original resolution. No missing frame is interpolated.
+
+The ten-second clip shows sealed timber at the counter and one real H handoff.
+Its pre-roll consumes a kit through an actual table hit/repair, lets the paid
+recipe consume a board, fells the tree with the car, completes a player planting,
+uses R and walks through the doorway. Review setup positions the car and the
+on-foot work approach, so this is not an ordinary outward trip to the tree.
+The board stays outside workshop stock until receipt; the player's 30 coins do
+not change at handoff. Existing planting/growth clips remain accurate for their
+shown geometry and clocks, with their original source-pinned ledgers historical.
+They do not demonstrate the new material return.
+
+Encode only this slice with:
+
+```sh
+node scripts/encode-media.mjs /path/to/ffmpeg /path/to/gifsicle recovery
+```
+
+[Rules, native state, saves and verification](../evidence/timber-recovery/verification.md).
+The exports are offline recordings, without a browser performance claim.
+
+## Commuter home, r94
+
+`home.mp4`, `home.gif` and `home.jpg` share 300 consecutive 2400 × 1350 rendered
+frames at 30 frames per simulation second. The ten-second walkthrough enters
+the existing terrace, sits on its settee and rotates the camera. Video is
+1600 × 900, GIF 1280 × 720, and the still is full-size frame 240. No interpolation
+or live performance claim. Earlier market and school recordings remain accurate
+for their unchanged venues. The upper storey stays closed.
+
+The native browser separately stood, hit the settee with K and observed its paid
+caretaker repair. [Checks, source identity and media hashes](../evidence/home-interior/verification.md).
+
+## Street-route guidance
+
+`navigation.mp4`, `navigation.gif` and `navigation.jpg` share 180 consecutive
+2400 × 1350 rendered frames at 30 frames per simulation second. Set a waypoint
+through the normal map UI before choosing the dev-only navigation clip; this
+clip preserves that review point while resetting its simulated drive. Other
+captures and ordinary Start over keep their existing point-reset behavior.
+Video is 1600 × 900, GIF 1280 × 720 and the still is full-size frame 150.
+`navigation-map.png` is the native expanded-map review, with its actual keyboard
+focus ring. The earlier direct-bearing map/task captures are historical for
+guidance; their controls still apply. No frame interpolation or FPS claim.
+[Runtime, source and frame evidence](../evidence/street-guidance/verification.md).
+
+
+## Stairs and upper floor, r98
+
+`stairs.mp4`, `stairs.gif` and `stairs.jpg` are a historical r98 walkthrough of the
+commuter's home: normal fixed-step movement climbs the wooden treads, crosses
+the upper landing and descends again. Export `stairs` from the dev-only
+`?capture` controls: 360 consecutive PNGs, 30 rendered frames per simulation
+second. Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> stairs`.
+The HD video is 1600×900 and the GIF is 1280×720; both use the same source frames.
+This is an offline motion export, not measured live browser performance.
+
+Earlier `home`, `home-meal` and `rest` captures predate the upper floor and table
+relocation. They remain historical evidence of the ground-floor food, shared
+seat and energy policies. Those policies, controls and character models still
+apply; use the new stairs capture for the current house layout. Other venues,
+transport and sports recordings remain accurate because their inputs and
+presentation did not change. [Checks](../evidence/stairs/verification.md).
+
+## Upstairs rest, r99
+
+`upstairs.mp4`, `upstairs.gif` and `upstairs.jpg` follow the resident up physical
+stairs to the upper settee. They share one export: 480 consecutive rendered
+frames at 30 frames per simulation second. The dev-only `?capture` exporter
+uses the normal resident need, path, support and shared-seat rules; only the
+player's outside observation pose is seeded. The camera follows the resident.
+Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> upstairs`.
+The HD video and still use 1600×900; the GIF uses 1280×720. This deterministic
+offline recording is not a live performance measurement.
+
+The older stairs recording predates the upper props. Its treads, landing and
+controls remain current. Earlier home/rest recordings are historical layouts.
+Other venues and vehicle/sport captures remain accurate because those assets,
+controls and geometry did not change. [Checks](../evidence/upstairs/verification.md).
+
+## Daily workplace attendance, r100
+
+`attendance.mp4`, `attendance.gif` and `attendance.jpg` share 480 consecutive
+frames from the dev-only `?capture` attendance clip. Preparation follows the
+existing resident through a paid meal, upstairs rest and unpaid bakery attendance.
+Ordinary player purchases create demand shortly before the 20:00 attendance end.
+The clip shows the committed bread batch finishing after that boundary, followed
+by the walk home. The camera follows the resident; the HUD purse is the player's.
+
+Export at 30 rendered frames per simulation second, then run
+`node scripts/encode-media.mjs <ffmpeg> <gifsicle> attendance`.
+HD video/still use 1600×900; the GIF uses 1280×720. This is an offline export,
+not a live performance measurement. The older work-commute recording shows the
+historical one-batch policy. Upstairs rest, venue, asset and transport captures
+remain accurate because their geometry, controls and rendering are unchanged.
+[Checks](../evidence/attendance/verification.md).
+
+## Rain shelter, r101
+
+`shelter.mp4`, `shelter.gif` and `shelter.jpg` share 480 consecutive rendered
+frames from the dev-only `?capture` shelter clip, at 30 frames per simulation
+second. Preparation runs ordinary fixed ticks through food, rest, attendance
+and the second shower. Only the distant player's observation pose is seeded.
+The clip starts four seconds before the shower ends, following the resident
+from a covered upper settee as they begin the physical return down the stairs.
+HD video/still use 1600×900; GIF uses 1280×720. Encode with
+`node scripts/encode-media.mjs <ffmpeg> <gifsicle> shelter`. No interpolation or
+live performance claim. The weather clip's initial shower remains exact; the
+attendance and earlier upstairs clips precede the new second-shower choice.
+Their geometry, controls and first-cycle behavior remain accurate. Earlier
+ground-floor rest recordings remain historical layouts.
+
+The earlier upstairs recording predates synchronized camera/roof snapping on
+the first frame. Its stair, seat and energy behavior remains accurate; use the
+r101 shelter recording for the current immediate interior reveal.
+
+## Shared recipe, r102
+
+`sharedrecipe.mp4`, `sharedrecipe.gif` and `sharedrecipe.jpg` use 480 consecutive
+rendered source frames at 30 frames per simulation second. The dev-only `?capture`
+clip advances real purchases, a meeting, shared seating/food and the next counter
+opening, then walks back through the ordinary foot controller. No food, history,
+practice or money is seeded. The recording shows the relationship-qualified
+larger batch and one real wage, while personal bread-baking count remains zero.
+HD video/still are 1600×900; GIF is 1280×720. Run
+`node scripts/encode-media.mjs <ffmpeg> <gifsicle> sharedrecipe`. No interpolation
+or live performance claim.
+
+The older shared/hosted recordings remain accurate for their meal, donor, seat
+and return rules. They predate the new work consequence. Current preparation
+uses body-sized walking paths around the market corner, rather than the former
+straight approach. Work/attendance, weather and asset geometry stay unchanged.
+
+## Workstations and authored motions, r104
+
+workstations.mp4, workstations.gif and workstations.jpg now share 480 consecutive
+rendered source frames from the dev-only ?capture workstation clip: sixteen
+simulation seconds at 30 frames per second. It physically walks the player to
+the table, opens Work, submits a bake at frame45, then a lunch pack at frame270.
+Both use ordinary simulation requests, real finite stock and one wage each.
+Kneading and folding come from Dream gesture data. No frame interpolation.
+The video/still are 1600×900 and the GIF is 1280×720. These are offline rendered
+frames, not live performance measurements. Source hashes, frames and native
+verification live in [work motion evidence](../evidence/work-gestures/verification.md).
+
+The r103 ten-second station recording is historical; its
+[evidence](../evidence/workstations/verification.md) retains the original hashes.
+Earlier sharedrecipe, commerce, interior, recipes, kitchen, progression and
+equipment recordings remain historical for work location and the generic work
+gesture. The current workstation recording replaces that demonstration;
+Earlier maintenance, fixture repair, school repair and planting recordings also
+show the former generic hand motion. Their damage, travel and economic evidence
+remains historical. Unrelated driving, world, weather and upstairs media retain
+their appearance.
+
+
+## Resident companion meals, r105
+
+companions.mp4, companions.gif and companions.jpg share 480 consecutive rendered
+source frames at 30 frames per simulation second, sixteen seconds total. The
+review first runs real wages, purchases and walking until both residents are
+seated. The clip records the meal completing and the start of their return walks;
+the commuter's longer return continues beyond it. The still uses frame 90.
+Video/still are 1600×900; GIF is 1280×720. No interpolated frames or live performance
+claim. [Evidence](../evidence/companion-meals/verification.md).
+
+The bench mesh is unchanged; standard seat centers move from 78 to 84 cm. Older
+shared/hosted/seating recordings remain historical for those anchors and resident
+social activity. Workstation, driving, weather and architecture media retain
+their geometry and appearance, so they were retained.
+
+## Sitting and standing
+
+seatmotion.mp4, seatmotion.gif and seatmotion.jpg record the current player
+standing, walking away, returning and sitting at the market bench. The existing
+seating review runs real food purchasing and a resident meal before the player's
+observation pose. Export is 480 rendered frames at 30 frames per simulation second,
+sixteen seconds total, without frame interpolation. Video/still are 1600×900;
+GIF is 1280×720. [Current motion](../dream/seating-motion.md) and
+[verification](../evidence/seating-motion/verification.md).
+
+Earlier seating, shared, hosted, rest, home and companion recordings predate the
+body transitions. They remain historical for those motions; their ownership,
+food, work and save evidence remains valid. Static people, building geometry,
+driving, sport and weather are unchanged, so their accurate captures were retained.
+
+## Peer recipe policy, r106
+
+This changes eligibility and ordered work choices, with no rendering/control
+changes. Retain the accurate current workstation, companion and seatmotion media;
+the companion recording predates this recipe policy. A fresh native screenshot
+`peer-recipes.png` (copied unchanged from
+`../evidence/peer-qualifications/native-work-panel.png`) shows the player's
+separate unchanged requirements after the resident's actual completed batch.
+There is no new motion export or performance claim. See the
+[verification note](../evidence/peer-qualifications/verification.md).
+
+
+## Market workshop loft, r107
+
+`loft.mp4`, `loft.gif` and `loft.jpg` share a new native `?capture` sequence:
+540 consecutive 2400 × 1350 source frames, eighteen simulation seconds at
+30 rendered frames per simulation second. The preparation uses two actual table
+break/repair/return cycles to make shelf room. The clip follows ordinary foot
+controls up all seventeen treads, crosses the supported landing, starts a kit
+batch at the timber workbench and records its conserved three-coin payment.
+The review does not add inventory, money, job progress or resident history.
+
+Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> loft`. Video and
+still use 1600 × 900; the GIF uses 1280 × 720. The still comes from source frame
+300 during work. No interpolated frames or browser performance claim.
+The [verification note](../evidence/upstairs-work/verification.md) records the
+source identity, native checks and final test results.
+
+Older `interior`, `workstations`, `sharedrecipe`, `companions` and `seatmotion`
+recordings are historical for the flat hall layout. Their respective entry,
+food, work, social and seat controls still apply. Existing home, outdoor
+transport, vegetation and sports media keep their accurate geometry and remain
+unchanged. The new hall is inspected from two camera angles, including its
+wall connections, support columns, guardrails and shared stair landing.
+
+
+## Company and shared breaks, r108
+
+`company.mp4`, `company.gif` and `company.jpg` share 360 consecutive native
+2400 × 1350 `?capture` source frames at 30 rendered frames per simulation second,
+twelve seconds total. Real purchases, a first meeting, walking, seat ownership and
+the staff's paid invitation prepare the clip. The player accepts that invitation.
+The recording starts during eating and shows both actual participants gaining
+company, followed by the baker's return. No food, income or history is seeded.
+
+Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> company`. The
+video/still use 1600 × 900, GIF 1280 × 720, and still frame 300 shows the resulting
+Company value in Bag. No interpolation or browser performance claim. The native
+reload and old-save checks are recorded in the
+[verification note](../evidence/company-needs/verification.md).
+
+Earlier social/companion recordings remain historical for the new need and its
+food-planning policy. Their geometry, input controls and recorded transactions
+remain valid. The current loft and unrelated transport, plants, characters and
+sports retain their accurate models and motion. The new need adds only one Bag
+row, with no permanent HUD meter or new interactive control.
+
+
+## Seated recovery rules, r109
+
+Rendering, geometry, animation and controls are unchanged. Existing rest clips
+still show accurate dedicated-seat recovery, and the Company player/baker clip
+still shows the same completed meal and Bag. Their source provenance remains
+labelled r108 or earlier. No motion was regenerated solely for this policy fix.
+NPC solo/companion energy trajectories from older recordings are historical; use
+the current [native checks](../evidence/seated-recovery/verification.md) for the
+corrected rule and exact saved-state upgrade.
+
+## Static-fit startup reuse
+
+World source, meshes, shading, animation, camera and controls are unchanged.
+The native before/after startup stills compare pixel-for-pixel, and tracked
+geometry buffers and chunk membership remain identical. Existing HD/GIF/still
+sets therefore remain accurate; no motion export is regenerated for private
+bootstrap memoization. Native startup timings and the separate driving sample
+come from the live browser, not offline frame export. See
+[method and limitations](../evidence/startup-preparation/verification.md).
+
+## Shared meals upstairs, r110
+
+upstairsmeal.mp4, upstairsmeal.gif and upstairsmeal.jpg share 600 consecutive
+frames from the dev-only `?capture` exporter, at 30 rendered frames per simulation
+second. The source is 2400×1350; video/still are 1600×900 and GIF 1280×720.
+The still uses frame 450. The clip shows the baker's ascent and the two seated
+residents; later completion and return have separate native and replay checks.
+
+Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> upstairsmeal`.
+There is no interpolated frame or live performance claim. Older companions media
+remains historical for the downstairs venue. [Current rules](../dream/upstairs-social.md)
+and [verification](../evidence/upstairs-social/verification.md).
+
+## Retire generated capture caches
+
+After final media is committed, older ignored PNG sequences and `palette.gif`
+files can be removed from `.npm-cache/media/<clip>/`. Verify that the corresponding
+video/GIF are committed and that no newer or active capture is being removed.
+Retain the latest sequence for iteration. Keep the published GIF, video, still
+and checked-in evidence; source frames can be regenerated from the recorded
+revision. Generated `dist-docs/` is also disposable after verification and rebuilds
+with `npm run docs:build`. Node dependencies and encoder binaries remain useful.
+
+Inactive managed worktrees whose changes are already integrated can be archived
+through Codex, retaining recoverable Git state. Do not delete branches or rewrite
+history as a cache cleanup.
+
+## Station quarter
+
+`stationquarter` records 360 consecutive 2400×1350 PNGs through the dev-only
+`?capture` exporter: twelve simulation seconds at 30 rendered frames per second.
+The overview camera is fixed on the two towers and their shared promenade. The
+taxi boards through the existing interaction and receives a short forward input;
+walkers retain their real path/traffic behavior. This is an offline illustration,
+not a browser FPS measurement or a claim about less powerful laptops.
+
+Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> stationquarter`.
+Video/still use 1600×900; the GIF uses 1280×720. The still comes from frame 180.
+No frame interpolation is used. Keep all three together: `stationquarter.mp4`,
+`stationquarter.gif` and `stationquarter.jpg`. The earlier central-station view
+is marked historical where this district changes its surroundings. Native
+multi-angle gallery captures and checks are in the station-quarter evidence.

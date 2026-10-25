@@ -1,5 +1,8 @@
 # Small things you can build
 
+[Rain and maintenance](../examples/rain-work.dream) connects an authored shower,
+wet-road handling and a dry-weather repair policy. [Weather guide](weather.md).
+
 [Docs](../README.md) / Examples
 
 Start with something you can see and understand. Change one field, run the checker and look at what the engine builds. These are complete Dream 2 files, checked alongside the compiler tests.
@@ -302,3 +305,41 @@ objects. Existing measure frames and furnishing reservations are explicit.
 [Background ground cover](../examples/ground-cover.dream) defines two reusable
 components, grass and a flower, plus their combined inspection object. These
 are the engine's small passable details. Scatter density remains engine-owned.
+
+## A furnished home
+
+[enterable-home.dream](../examples/enterable-home.dream) builds the commuter terrace and timber settee. It uses explicit floor/wall contacts, carved voxel cutaway frames, two seats and five splinter groups. The live placement and repair service are in `frontage_0.dream` and `life.dream`.
+
+[Two-storey home](../examples/stairs-home.dream): one enclosing interior, a generated staircase, an upper slab, a clear landing and floor-aware cutaways. [Authoring rules](stairs.md).
+
+## Upstairs rest and repairs
+
+[upstairs-rest.dream](../examples/upstairs-rest.dream) is a complete world with a
+connected doorway, named upper slabs, a settee and shared rest/repair journeys.
+It uses finite supplies and wages. [Floor guide](floors.md).
+
+## A scheduled workday
+
+[scheduled-workday.dream](../examples/scheduled-workday.dream) connects a resident
+to daily attendance, unpaid waiting, finite paid batches and a physical return.
+[Authoring rules](attendance.md).
+
+## A place out of the rain
+
+[rain-shelter.dream](../examples/rain-shelter.dream) connects weather to a healthy
+resident's shared upstairs seat, physical stair trip and persistent return.
+[Authoring rules](shelter.md).
+
+## A shared recipe
+
+[shared-recipe.dream](../examples/shared-recipe.dream) connects paid food, a shared
+seat, remembered time and alternate work qualifications. The two meal participants
+can qualify for the same finite larger-batch job. [Rules](relationships.md).
+
+## Physical workstations
+
+[Complete workstation world](../examples/workstations.dream) binds a preparation table to one shared job position. The commuter walks there before reserving ingredients or wages. [Controls and bounds](workstations.md).
+
+[Company needs](../examples/company-needs.dream) adds the same bounded social need to a player and two residents. Actual shared meals restore their participants; [the guide](company.md) covers thresholds, supply planning and persistence.
+
+[Seated meal breaks](../examples/seated-breaks.dream) combines existing companion food and authored energy, with no new command. See [rest rules](resting.md#a-meal-is-also-a-seated-break).

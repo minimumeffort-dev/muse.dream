@@ -4,11 +4,11 @@ The vendor now packs lunches and bakes bread when stock runs low. A hungry
 commuter walks over, buys a meal, eats and returns to their routine. When the
 bakery has room for more flour, the market helper can walk to the station,
 collect two units and bring them back. You can buy, cook and take the same
-transport work. Staff do not get their own free supplies or wages.
+transport work. Used repair kits now trigger paid assembly from boards and fasteners. Staff do not get their own free supplies or wages.
 
 ![Staff preparing food for the player and a customer](../media/kitchen.gif)
 
-[Watch in HD](../media/kitchen.mp4). The recording shows a player purchase and
+[Watch in HD](../media/kitchen.mp4). This historical outdoor-counter recording shows a player purchase and
 meal, a customer purchase, and the vendor replacing the sold food. Flour transport
 takes several simulation minutes and is checked separately; this sixteen-second
 clip does not show that complete journey. These are 30 rendered frames per
@@ -18,6 +18,7 @@ simulation second, not a live performance measurement.
 
 | Activity | Input | Result |
 | --- | --- | --- |
+| Repair-kit assembly | 1 board and 1 fastener, reserved together | 1 kit after 7 seconds; worker earns 3 credits |
 | Basic bread batch | 1 flour, reserved from the bakery | 2 bread after 6 seconds; worker earns 3 credits |
 | Pack lunch | 1 bread and 1 vegetable, reserved together | 1 lunch after 5 seconds; worker earns 3 credits |
 | Buy lunch | 8 credits from the customer's wallet | One owned lunch; the bakery receives the credits |
@@ -39,8 +40,9 @@ service or upstream farming. Ownership is now available at the station depot.
 
 ## Compose the existing Dream rules
 
-`works` chooses eligible jobs below their stock targets in order. Lunch comes
-first; if it needs bread, baking can supply the missing ingredient. `meal`
+`works` chooses eligible jobs below their stock targets in order. The live worker
+first replaces consumed repair kits, then prepares lunch and bread. The small
+food-only example below puts lunch first; baking supplies its missing bread. `meal`
 provides a customer's food destination. `deliveries` connects finite source and
 destination shelves. No special restaurant command or generated controller is
 needed. Public pedestrian routing works in a standalone business scene, without
@@ -220,3 +222,184 @@ Start over restores the authored owner and balances. Format 15 / simulation 23
 validates the exact r65 world before adding only its zero-funded depot seller and
 initial owner reference. Every older field and original save slot stays intact.
 [Save rules and migration](../persistence.md#business-ownership-r66).
+
+
+## Repair-kit production
+
+![The repaired workshop and refilled kit shelf](../media/kit-production.jpg)
+
+The live market worker now uses this ordered Dream policy:
+
+```dream
+account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,social=hall_break,shift=bakery_day,works=[assemble_kit,propagate_saplings,pack_lunch,bake]);
+```
+
+`assemble_kit` uses the existing boards-and-fasteners recipe, with `target=12`
+matching the repair-kit shelf limit. The worker first considers assembly, then
+nursery demand and food. Both player and worker need actual ingredients, wages, shelf space, effort
+and the job's shared capacity. The existing daily shift controls availability.
+No special NPC production transaction is introduced.
+
+A reserved repair kit still needs room if the repair is cancelled. Production
+counts that reservation toward its target and starts after the kit is actually
+consumed. With one completed repair, the worker spends one board and one fastener
+and earns three coins to replace the kit. Food equipment can be broken while
+assembly remains available, avoiding a dependency on the table being repaired.
+Food preparation resumes after repair and restocking.
+
+[Try the complete example](../examples/repair-production.dream): its workshop
+starts without kits, produces them from finite inputs, repairs the food table
+and resumes lunch preparation. Its separate kit bench remains required equipment;
+breaking both benches can still stop this particular example's production.
+The live hand-assembly recipe needs no table. These are authored dependencies,
+not exemptions from a shared damage category.
+
+Existing format-18 saves have an exact registered r84 upgrade. It preserves every
+ledger, task, body, cooldown and clock and retains the original slot.
+[In-game evidence and focused checks](../evidence/kit-production/verification.md).
+Raw material generation, dedicated tools and manufacturing machinery remain
+separate capabilities.
+
+
+## Workshop material deliveries
+
+The station depot now keeps sixteen boards and sixteen fasteners. Both have
+paid, two-unit delivery contracts to the market workshop. The receiving business
+reserves four coins for the courier and two coins for the supplier, plus shelf
+space. Handoff transfers real cargo, pays once and records the courier's work.
+Cancellation returns cargo and reserved money. Kits still need actual ingredients
+and wages; a delivery does not manufacture either material.
+
+The caretaker adds `boards_run` after its existing kit, sapling and flour runs,
+within the unchanged four-contract policy limit. The player can collect either
+raw material. A school resident now takes fastener and school-bread runs through
+a separate two-contract policy. Existing repair, food and finished-kit procurement
+keep their authored priority.
+
+![A completed fastener handoff and the worker's board trip](../media/workshop-supplies.jpg)
+
+[Download the complete supply-chain example](../examples/workshop-supplies.dream).
+It uses two-unit receiving buffers for boards and fasteners: an ordered courier
+fills the first eligible shelf before choosing the next, so a small buffer lets
+both inputs arrive before assembly. Its worker then makes two kits using the
+same conserved recipe. This is ordinary Dream `lot`, `delivery`, `works` and
+`deliveries` composition, with no new command or script.
+
+Old saves receive only the two new supplier lots and zeroed delivery counters
+after exact prior-world validation. Existing bodies, money, stock, tasks, damage
+and clocks stay intact. [Native checks and save evidence](../evidence/workshop-supplies/verification.md).
+Finite depot stock, business cash and carry capacity still limit the chain.
+Forestry, mining and fabrication remain further work.
+
+
+## A resident who supplies two destinations
+
+The existing school resident now has a paid courier account. Hardware deliveries
+come first when two fasteners fit the workshop shelf; otherwise they can carry
+bread from the bakery to the school. Their school-frontage home connects to the
+public walking network. No extra person, vehicle, rig or decorative object is
+added. The worker buys food with earned money through the same counter rules.
+
+```dream
+account porter(actor=school_student,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,deliveries=[fasteners_run,school_run]);
+```
+
+A courier no longer needs to live beside each receiving counter. Declared convex
+work grounds and existing sidewalks/crossings must connect home, pickup, handoff
+and return. The complete-world compiler checks those paths, including safe
+approaches, support and vertical clearance. Vendors stay at their counters.
+
+[Run the remote-home courier example](../examples/neighborhood-courier.dream).
+It puts the helper at the depot and feeds both inputs into kit assembly. The
+live city uses the same rule for two different receiving businesses. Pickup
+intent reserves a slot; collection alone commits real cargo and money. Closed
+counters can cause waits, busy contracts remain exclusive, and insufficient
+stock, wages or receiving space can stop dispatch. These are finite supplies and
+walking jobs, without vehicle delivery AI or an unlimited production chain.
+
+The registered r86 upgrade creates only the new zero-credit account at saved
+simulation time. Existing accounts, commitments, ledgers, personal records and
+clocks stay intact, and the original slot is retained. No offline travel or pay.
+[Checks and runtime evidence](../evidence/resident-supplies/verification.md).
+
+
+## Timber from a physical source
+
+Replanting can now recover a board from a felled mature tree when the worker and
+workshop have room. It stays in the worker's sealed cargo until returned. That
+board can feed the same paid kit assembly as a delivered depot board. The tree
+service pays its original planting wage and supplies the declared board; full
+storage still permits ordinary replanting. [Describe recovery in Dream](growth.md#timber-recovery).
+
+The live city has 109 connected replanting sources, including the three
+station-quarter rowans, served by the existing worker.
+Young trees must finish growing before supplying more wood. This connects a
+physical source to the repair chain; mining, fabrication, general forestry and
+renewable upstream sapling production remain further work.
+
+## Reuse fixture hardware
+
+The live fixture service now returns one fastener when shelf and bag capacity
+permit. The primary street service's 449 targets share that policy, including
+lamps, tables, benches, street tubs and stalls. Eleven station-quarter fixtures
+use the same recovery rule through the school/quarter service.
+[Quarter maintenance](station-quarter.md#damage-has-a-follow-up). The worker
+repairs the fixture with a real kit
+and earns its ordinary wage. The recovered fastener stays sealed until returned
+to the open staffed workshop; it can then feed another kit recipe.
+
+[Run the complete hardware-recovery example](../examples/hardware-recovery.dream):
+
+```dream
+repair workshop_repairs(label="Repair work tables",market=corner,on=work_yard,kind=table,input=kit,take=1,seconds=2,pay=2,effort=2,dispatch_s=0,recover=fasteners,amount=1);
+```
+
+Players use **H** to return materials on foot. NPCs walk home and use the same
+guarded transaction. Full storage still allows a normal repair, without output.
+Future return space is reserved during work; a second delivery cannot claim it.
+The return pays no second wage and does not discard or remotely deposit cargo.
+
+This reuses declared material after actual damage and paid repair. It does not
+make raw metal, saplings or money. Boards, other supplies and business budgets
+still bound the chain. The exact r88 save upgrade adds only a zero recovery
+counter for fixtures; old jobs, damage, timber cargo and source slots survive.
+[Verification and native handoff](../evidence/hardware-recovery/verification.md).
+
+## Nursery work
+
+![A nursery batch running on the existing work system](../media/nursery.jpg)
+
+[HD recording](../media/nursery.mp4) · [GIF](../media/nursery.gif).
+
+One sapling can now supply two through paid work. You still need the first plant,
+an open staffed counter, room for the result and money for wages. This connects
+replanting to replacement supply through the same recipes used for food and kits.
+
+[Run the complete small nursery](../examples/sapling-propagation.dream):
+
+```dream
+work propagate_saplings(label="Propagate saplings",market=corner,input=sapling,take=1,output=sapling,make=2,seconds=2,pay=2,effort=2,capacity=2,target=5);
+```
+
+The live market uses twelve seconds, one worker and the existing food table.
+Press **M**, open **Work**, select **Propagate saplings** with the arrow keys and
+press Enter or H. Stay nearby. Completion pays two coins and spends two fullness
+points. Cancellation returns the held seed and wage once, with no output or pay.
+R, vehicle changes, closing hours and damaged equipment use the same work rules.
+
+`make=2` is the complete output. The net gain after `take=1` is one sapling.
+Input and output may share a good only when make exceeds take for that good.
+This works with scalar input/take or a bounded ingredient block. Other ingredients
+still reserve independently. A batch either refunds or completes, so its shared
+lot reserves the larger outcome once. With five plants on a six-slot shelf,
+starting holds one seed, leaves four on the shelf and reserves two output slots.
+Cancellation restores five; completion leaves six. Another seller or delivery
+cannot use those reserved slots.
+
+The vendor's four-job policy now prioritizes kits, nursery work, lunches and
+ordinary bread. It propagates below five plants, leaving one free shelf slot for
+the player's work. The larger baking recipe stays available to qualified players.
+No person, prop, stock or cash is added, and the existing layout is unchanged.
+Planting and nursery work are bounded game recipes; no botanical validity or
+unlimited production is claimed. Food inputs, effort and business money still
+matter. [Checks, saved progress and runtime evidence](../evidence/nursery/verification.md).

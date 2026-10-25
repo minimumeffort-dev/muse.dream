@@ -57,17 +57,25 @@
       </section>
       <div data-commerce-view="work"><div id="market-job" class="choice-grid" role="group" aria-label="Available work" hidden></div>
       <button id="market-work" type="button" hidden></button>
-      <p id="market-progress"></p></div>
+      <p id="market-recipe"></p><p id="market-progress"></p></div>
       <div data-commerce-view="bag"><div id="meal-good" class="choice-grid" role="group" aria-label="Food in your bag" hidden></div>
       <button id="market-eat" type="button" hidden></button>
       <button id="shared-meal" type="button" hidden></button>
       <button id="decline-shared-meal" type="button" hidden>No thanks</button>
+      <p id="company-need" hidden><span class="icon-slot" data-icon-name="talk"></span><span class="caption-text"></span></p>
       <p id="bag-contents"></p></div>
       <button id="market-cancel" type="button" hidden>Cancel delivery</button>
       <p id="choice-hint" role="status" aria-live="polite"></p><div id="activity-keys" aria-hidden="true"><kbd>↑ ↓</kbd><span>Select</span><kbd>Tab</kbd><span>Actions</span><kbd>esc</kbd><span>Back</span></div>
       <output id="market-feedback" role="status" aria-live="polite"></output>
     </section>
-    <figure id="map-frame"><figcaption><span class="ui-label">World</span><span class="ui-label compass">N ↑</span></figcaption><canvas id="world-map" width="304" height="244" role="img" aria-label="World map with your position"></canvas></figure>
+    <figure id="map-frame"><button id="map-open" type="button" aria-label="Open world map (C)" aria-controls="map-dialog" aria-expanded="false" title="Open map (C). Scroll or pinch here to zoom the minimap."><span class="minimap-heading"><span id="minimap-title" class="ui-label">World</span><span class="ui-label compass">N ↑ <kbd>C</kbd></span></span><canvas id="world-map" width="304" height="244" role="img" aria-label="World map with your position"></canvas></button><div id="waypoint-guide" hidden><svg id="waypoint-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 7 16-7-4-7 4z"/></svg><span><strong id="waypoint-distance"></strong><small id="waypoint-caption">Waypoint</small></span><button id="waypoint-clear" type="button" aria-label="Remove waypoint"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg></button></div></figure>
+    <output id="navigation-announcement" class="sr-only" role="status" aria-live="polite"></output>
+    <dialog id="map-dialog" aria-labelledby="map-title" aria-describedby="map-help">
+      <header class="map-heading"><div><span class="map-eyebrow">Navigation</span><h1 id="map-title">World map</h1></div><button id="map-close" type="button" aria-label="Close world map"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"/></svg><kbd>esc</kbd></button></header>
+      <div class="map-tools"><div class="map-zoom"><button id="map-zoom-out" type="button" aria-label="Zoom map out">−</button><output id="map-zoom-level" aria-label="Map zoom">100%</output><button id="map-zoom-in" type="button" aria-label="Zoom map in">+</button></div><button id="map-fit" type="button">Whole world <kbd>0</kbd></button><button id="map-player" type="button">Find me <kbd>Home</kbd></button><button id="map-task" type="button" hidden>Find task <kbd>T</kbd></button><button id="map-clear" type="button" disabled>Clear waypoint</button></div>
+      <div id="map-stage"><canvas id="expanded-map" tabindex="0" role="img" aria-label="Interactive world map. Arrow keys pan, plus and minus zoom. Enter sets a waypoint at the center. Delete clears it."></canvas><span class="map-north" aria-hidden="true">N ↑</span><span id="map-crosshair" aria-hidden="true"></span></div>
+      <footer class="map-footer"><p id="map-status" role="status" aria-live="polite">Choose a destination</p><p id="map-help"><span>Drag · pan</span><span>Scroll / pinch · zoom</span><span><kbd>↑ ↓ ← →</kbd> pan</span><span><kbd>Enter</kbd> set</span><span><kbd>Del</kbd> clear</span></p></footer>
+    </dialog>
     <section id="match-score" aria-label="Match" hidden><div><span id="match-state">Ready</span><span id="match-clock"></span></div><output id="match-scoreline" aria-live="polite"></output></section>
     <div id="action-bar" aria-label="Nearby actions">
     <button id="boost" class="action-chip" type="button" title="Boost (Shift)" disabled hidden>
@@ -81,6 +89,7 @@
       <span id="sport-action-label" class="ui-label">Shoot</span><kbd>J</kbd>
       <span class="sport-meter" aria-hidden="true"><i></i><b></b></span>
     </button>
+    <button id="strike-action" class="action-chip" type="button" aria-keyshortcuts="K" hidden><span class="icon-slot" data-icon-name="strike"></span><span class="ui-label">Hit</span><kbd>K</kbd></button>
     <button id="pass-action" class="action-chip" type="button" aria-keyshortcuts="K" hidden disabled><span class="icon-slot" data-icon-name="pass"></span><span id="pass-action-label" class="ui-label">Pass</span><kbd>K</kbd></button>
 
       <button id="interact" class="action-chip" type="button" hidden><span id="interact-icon" class="icon-slot"></span><span id="interact-label" class="ui-label"></span><kbd>F</kbd></button>

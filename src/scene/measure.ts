@@ -10,7 +10,7 @@ export const MEASURE_PROFILES=Object.freeze({
   tree:{axis:"y",min:4,max:30}, person:{axis:"y",min:1.4,max:2.2},
   bicycle:{axis:"x",min:1.4,max:2.4}, skateboard:{axis:"x",min:.5,max:1.2},
   bench:{axis:"x",min:1.2,max:2.8}, table:{axis:"x",min:1,max:3},
-  building:{axis:"y",min:3,max:40}, train:{axis:"x",min:6,max:20},
+  building:{axis:"y",min:3,max:120}, train:{axis:"x",min:6,max:20},
   bus:{axis:"x",min:6,max:18}, tram:{axis:"x",min:10,max:35},
   boat:{axis:"x",min:3,max:12}, food:{axis:"x",min:.1,max:.8},
   lamp:{axis:"y",min:1,max:15},

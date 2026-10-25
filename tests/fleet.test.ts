@@ -21,7 +21,7 @@ const fleet=scene.objects.filter(o=>o.spec && 'measure' in o.spec && ['pickup','
 it('adds connected utility parking without displacing an old object, changing a pedestrian node or raising live budgets',async()=>{
  expect(fleet).toHaveLength(4);expect(fleet.every(isParkedVehicle)).toBe(true);expect(fleet.map(controlFor)).toEqual(['car','car','car','car']);
  expect(scene.objects).toHaveLength(1773);expect(scene.objects.filter(isParkedVehicle)).toHaveLength(91);
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.FLEET_COMPATIBILITY);expect(await c.sha256(c.preFleetCompatibilitySource(scene))).toBe(c.TREE_COMPATIBILITY);
+ expect(await c.sha256(c.preEquipmentCompatibilitySource(scene))).toBe(c.FLEET_COMPATIBILITY);expect(await c.sha256(c.preFleetCompatibilitySource(scene))).toBe(c.TREE_COMPATIBILITY);
  expect(previous.objects).toHaveLength(1769);expect(previous.surfaces).toHaveLength(47);expect(scene.surfaces).toHaveLength(51);
  expect(ambientGraph(scene).nodes).toEqual(ambientGraph(previous).nodes);expect(ambientGraph(scene).starts).toEqual(ambientGraph(previous).starts);
  const ids=new Set(fleet.map(o=>o.id));expect(sceneContactData(scene).contacts.filter(c=>!c.id || !ids.has(c.id))).toEqual(sceneContactData(previous).contacts);

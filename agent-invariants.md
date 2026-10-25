@@ -9,9 +9,9 @@ keep only cross-cutting rules in `AGENTS.md` itself.
 
 ## Enterable ground floors
 
-Dream object-root `interior` owns one static ground-floor space with 1..4 explicit portals. Keep the 32-space scene cap and existing eight contacts / 32 parts per assembly. Rectangle contacts use size XOR radius, optional rectangle heading, upright static structures only; cylinders remain compatible. Floor and ceiling contacts must span the space at the declared heights. Full-scene acceptance proves doorway cylinder clearance and steps. Use shared contact geometry for every narrow phase and `walkingHeight` for people/work, placement and dry exits. Preserve water/bridge support. No inferred collider from a visual door or floor.
+Dream object-root `interior` owns one static enclosing volume with 1..4 explicit portals. Keep the 32-space scene cap and eight contacts outside interiors, or 32 contacts inside / 32 parts per assembly. Rectangle contacts use size XOR radius, optional rectangle heading, upright static structures only; cylinders remain compatible. Floor and ceiling contacts must span the space at the declared heights. Full-scene acceptance proves doorway cylinder clearance and steps. Use shared contact geometry for every narrow phase and `walkingHeight` for people/work, placement and dry exits. Preserve water/bridge support. No inferred collider from a visual door or floor.
 
-Keep explicit shell `part.cutaway` tags through compaction, instancing and worker transfer; only the roof and camera-facing walls disappear inside. Contents/floors stay opaque, physical contacts and roof shadows survive, reduced motion snaps transitions. A room-owning lamp clips its always-on surface pool to the floor; no new point lights, shadow maps or wall-lighting claims. Work grounds may name the placed building ID and reuse the same floor polygon. Trade and conversation use shared contact sight. Preserve saved jobs, stock, money, damage, bodies and ownership through the registered r55 physical projection and bounded local player recovery. Multiple floors, stairs/lifts and hand tools remain separate missing capabilities. See `docs/dream/interiors.md`.
+Keep explicit shell `part.cutaway` tags through compaction, instancing and worker transfer; the roof and camera-facing walls disappear inside; `above` parts hide only below their lower bound. Contents and the occupied floor stay opaque, physical contacts and roof shadows survive, reduced motion snaps transitions. A room-owning lamp clips its always-on surface pool to the floor; no new point lights, shadow maps or wall-lighting claims. Work grounds may name the placed building ID and reuse the same floor polygon. Trade and conversation use shared contact sight. Preserve saved jobs, stock, money, damage, bodies and ownership through the registered r55 physical projection and bounded local player recovery. Internal upper slabs and stairs now use ordinary static contact support inside one enclosing volume. `stairs` emits one bounded voxel part and 2..24 matching tread contacts, at most two flights, within the 32-part/32-contact interior caps. Preserve measured riser/run/width checks, supported landings and headroom. `cutaway=above` hides only while below a part lower bound; keep that bound through batching and chunk transfer. Named floors now bind existing slab contacts and static prop placements; rest and repair journeys may traverse generated stairs. Lifts remain missing. Preserve the exact r97 projection, finite repair escrow/progress and old save slots through the registered r98 geometry upgrade. See `docs/dream/interiors.md`.
 
 Multi-input `work` uses an optional recipe block with 1..4 unique
 `ingredient(good=...,take=...)` declarations, exclusive with scalar input/take.
@@ -30,7 +30,7 @@ is bounded to 16 existing matching tasks with integer counts 1..1e9. Work
 `requires` checks the acting account and rejects dependency cycles. Interact-only
 `on.requires` checks the player at the task receiving market actor after linking;
 never infer contributions from global counts or labels. `account.works` is an
-ordered 1..4 unique production list, exclusive with work, repair duties,
+ordered 1..5 unique production list, exclusive with work, repair duties,
 deliveries and player ownership. Both actors use the same eligible transactions.
 Keep the existing actor/rig/physics/navigation/render bounds.
 
@@ -154,9 +154,8 @@ expires. One pending invitation reserves one adjacent seat; persist per-NPC offe
 cooldowns. Pause freezes time. Interrupted accepted meals refund the actual donor,
 never the guest. Format 17 / simulation 30 validates the exact r71 projection,
 removing supply lists and restoring only bakery pack_lunch.target=2. Keep every
-saved resource, clock, state and original slot. No NPC-to-NPC invitations, dating,
-general affection score, physical food items, offline progression or provider
-calls. See docs/dream/social.md.
+saved resource, clock, state and original slot. Resident companion meals are added in r105 below. No dating, general affection
+score, physical food items, offline progression or provider calls. See docs/dream/social.md.
 
 
 The r65 furniture service adds school_yard, school_yard_access and
@@ -434,3 +433,729 @@ and the whole earlier chain. Format 17 / simulation 32 stay unchanged.
 Decor plants, transit shelters (compound contacts), sports targets and
 buildings remain outside pooled destruction. See
 `docs/evidence/street-furniture/verification.md`.
+
+## Shared character construction, r81
+
+The city_people Dream module owns sixteen definitions: twelve civic/squad
+outfits, two court-side athletes, Explorer and Traveler. Sports and the
+interactive library import its complete objects through the closed host map.
+Keep the byte-identical city-person example, 32-module project bound,
+16-definition file bound, 32 parts per object and twelve-bone moving rigs.
+The passenger remains a 31-part static pose inside its existing seat envelope.
+Keep the 133 placements, exact body dimensions/scales/joint frames, contacts and
+pedestrian graph. Foot support stays derived from real sole geometry.
+
+Preserve the exact r80 character/squad projection before every earlier save
+stage. Format 17 / simulation 32 and saved fields stay unchanged. Face, clothing
+and hair are rigid geometry, without cloth, fingers or facial animation.
+The current whole-library review is 53/109 exports, 56 pending, with engine rigs
+reviewed separately and infrastructure/optional examples still pending.
+See docs/evidence/character-construction/verification.md.
+
+## World map and waypoint UI
+
+Map zoom/pan use the same accepted road/cycle/water footprints as the minimap.
+Reproject pointer coordinates through the current view; zoom around the pointer,
+keep marker sizes readable and clamp views to the finite world. C opens/closes;
+keyboard and pointer actions share one UI owner. Map mode pauses simulation,
+releases held controls and cannot steer or change the gameplay camera. Ground-vehicle guidance
+uses a bounded cached graph of the accepted street centerlines, split at exact
+intersections and collinear overlaps. Cap it at 2048 nodes / 8192 edges; fall
+back to a direct bearing for disconnected/oversized networks or far-off-road
+positions. Cache one reverse shortest-path solve per destination. HUD and maps
+share the path and next screen-relative aim, with dashed unsurveyed approaches.
+Walking, passengers, boats and planes retain direct bearings. No automatic
+steering, lane/one-way rules, traffic-aware closures or road physics changes.
+Keep bounded version-1 waypoint preferences separate from simulation backups,
+keyed by world ID/dimensions; review/capture sessions never read public preferences.
+R preserves the point, Start over clears it. Release expanded canvas buffers on
+close. Do not change Dream contracts, physical state or save semantics for this UI.
+
+Active delivery/repair/planting targets derive from the existing accepted task,
+using the same target on maps and HUD. Personal waypoints take priority; clearing
+one restores task guidance and cannot cancel work. T / Find task only changes
+map framing. Remove task markers on completion/cancellation and ignore NPC work.
+Nearby is a distance cue, never proof of handoff, repair or payment. Keep this
+derived UI state out of world saves and preserve ordinary activity controls.
+
+## Render motion continuity
+
+Presentation samples the last two fixed player/prop poses using the stepper's
+remaining fraction. Never feed this derived state back into simulation, saves,
+transactions or contacts. Keep camera and occupied rides on that same sample;
+snap ownership changes, reset clocks and discontinuous travel. Preserve the
+complete accepted state and the single body owner. Sports carrier and ball
+poses share squad interpolation through 20 Hz boundaries; spin follows visual
+travel and ignores pause, reduced motion and reset teleports. Color and shadow
+passes retain identical group/instance transforms. Shadow centers remain on
+world texels; resize extents continuously for sun/zoom changes, ignoring only
+translation roundoff. Preserve map resolution, caster coverage and all budgets.
+
+Work-journey presentation samples actual commerce timestamps, including per-press
+updates, with the existing quarter-second visual delay. Keep clocks continuous,
+complete visible strides before resting, and retain route handoff continuity
+until the next stop. Bound each cached account to 64 samples within the existing
+16-account cap; reset/rewind/teleport/reduced motion release them. These are
+renderer-owned poses, never saved state or contact positions.
+
+## Clean sight cutaways
+
+Static scenery/terrain/road reveals use a continuous world-space sight opening,
+not screen-pixel stippling. Preserve the existing per-instance visibility float:
+one is opaque, zero completely hides an authored interior part in colour only.
+Apply rigid motion and instancing before sampling the sight field. Keep ordinary
+neighbours opaque, shared player/view uniforms, full shadow casters, exact
+geometry/contact/save data and existing buffers/draw budgets. Live object
+opacity fades remain independent. The native cutaway fixture checks moving
+player pixels, restoration, hidden parts, neighbouring surfaces and unchanged
+shadow-map bytes; a source-string check alone does not prove a working shader.
+
+
+## Indoor service, r82
+
+The bakery vendor and caretaker start inside the existing market hall. Reuse its
+table and doorway; keep exact contacts and all 449 repair / 106 replanting
+targets. The forty-unit counter reach cannot trade through walls or from the
+square. Work grounds use the hall, a narrow terrain-finish service aisle and the
+public orchard path within existing navigation budgets. No new vocabulary or
+actor slots are needed.
+
+Preserve the exact r81 projection and prior migration chain at format 17 /
+simulation 32. Retarget pending service paths while keeping physical positions,
+ledgers, cargo, timers and distance. Repair home destinations remain implicit
+actor homes; repair.at remains the task approach. Rebase derived ambient indices
+against the worker-prepared prior graph. Only an active grounded paid worker may
+move to a checked safe counter position to preserve reserved work. Ordinary
+players do not relocate. Do not apply legacy repair-coverage policy to r81.
+
+
+## Physical work equipment, r83
+
+Optional `work.equipment` lists 1..4 unique static solid prop placement IDs within
+the counter's horizontal reach. Validate after linking; reject unknown/templates,
+actors, routes, ambient motion and rideable objects. A whole break or any broken
+zone blocks player/NPC starts. Damage during a batch refunds all reserved inputs
+and wage once before completion, including between 4 Hz updates. No pay, output
+or completion credit on cancellation. Repairs restore availability through the
+existing finite ledger; trade, deliveries and repairs cannot deadlock on equipment.
+Keep all geometry, physics, actor, worker, navigation and rendering budgets.
+
+Format 17/simulation 33 registers the exact r82 simulation-32 projection by
+removing only bindings. Refund incompatible prior active work through the shared
+transaction, without advancing clocks, making NPC decisions, moving bodies or
+rebasing graphs. Preserve every earlier migration, original slot and unaffected
+commitment. Historical appearance fixtures use the pinned simulation-32 source,
+not the current rules fingerprint. The dev capture replays a real collision from
+a car placed inside the hall; it does not imply hand tools or doorway car access.
+
+
+## On-foot strikes, r84
+
+One optional world-owner `strike(reach,speed,cooldown_s)` enables the grounded dry
+standing K action outside sport grounds. Reach 6..16 is centre-to-contact surface;
+speed 20..120 is an equivalent closing speed; cooldown .35..2 uses simulation
+time. Target only one forward reactive prop, with exact contact distance/height,
+static sight and stable ID ties. Another core/zone of the same object can block
+sight. Never hit NPCs or sports-owned balls. Keep K pass/tackle priority, menu
+input isolation, per-press ownership and all existing actor/body/fragment budgets.
+
+Reuse shared break/topple and bounce response, including immediate ordinary
+contact/world-boundary containment after a hand impulse. Preserve player momentum
+and cloned input state. The existing humanoid rig supplies the gesture without
+new meshes/joints; keep stance feet, rigid limb lengths, reduced motion and pause.
+No hand-held item inventory, damage-health model or generated controller.
+
+Format 18/simulation 34 registers exact r83/simulation 33 by removing only strike
+data. Initialize only `strikeReadyAtS` at saved time; no other field, clock or
+resource changes. Old formats retain strict field sets. Preserve every earlier
+projection and slot, R/vehicle cooldowns and current round trips. The current
+native hand recording walks through the doorway; it does not place a car inside.
+
+
+## Repair-kit production policy, r85
+
+The existing stationary worker's `works` list prioritizes assemble_kit before
+food, with a twelve-kit target and unchanged finite materials, wages, staffing,
+capacity and reservations. Repair refund space counts toward the refill target;
+replenish after actual consumption. Do not add NPC transaction exemptions,
+initial resources, rigs, actors or independent work clocks.
+
+Format 18/simulation 34 retains the existing semantics. Register the exact r84
+projection by removing only the added worker job and restoring its target to
+four. Validate the old fingerprint before applying unchanged saved state, keep
+its original slot, and preserve every historical projection and cooldown.
+No inventory, navigation or physical rebase is permitted for this policy change.
+
+
+## Workshop material supplies, r86
+
+Keep the two finite depot lots and two paid material deliveries in Dream. The
+caretaker's boards_run is its fourth contract after existing priorities; do not
+raise courier/actor limits or infer a live fastener policy. The example uses
+small receiving buffers to make ordered procurement feed both recipe inputs.
+
+Format 18/simulation 34 adds no new transaction semantics. Validate exact r85
+before initializing only station boards/fasteners to sixteen and new shared,
+unattributed and personal delivery counters to zero. Preserve every existing
+saved field, active commitment, source slot and historical projection. Current
+reloads cannot repeat initialization; no population/floor/navigation rebase.
+
+
+## Exact work endpoint indexing
+
+Endpoint indices are weakly owned by immutable WorkNode arrays, including arrays
+received through worker priming. Preserve exactly the nearest 32 linked nodes
+before clearance and the Math.hypot/distance-then-node-index order. Bound empty
+cell expansion and retain exhaustive ranking for sparse/far probes. Never cache
+actor positions, broken-state decisions or stateful segment clearance. Different prepared
+arrays own different indices. Keep graph/node order, route semantics, source
+fingerprints and save versions unchanged.
+
+## Immutable work-edge acceptance reuse
+
+Only workPath calls without CarState may reuse directed graph-edge clearance.
+Scope entries to the exact Scene, node array, static contact owner and body
+radius/height. Store one byte per directed link plus four bytes per node offset;
+retain existing 8192-node/32768-link caps and weak ownership. Contact replacement,
+profile changes and network priming invalidate affected results. Preserve edge
+direction, ordering and first-check geometry. Always run endpoint/pavement/water
+checks; every stateful query still checks current actors, parking poses, growth
+and damage. No authored, saved, worker-packet or render fields are added.
+
+
+## Resident courier homes, r87
+
+A stationary non-vendor courier may live away from a receiving counter. Require
+complete connected pickup, handoff and return routes from that exact home, with
+existing convex ground/sample/graph/path caps, supported pedestrian clearance and
+shared finite transactions. `on` anchors declared work grounds; home and both
+counters may use accepted public pavement. Keep market-vendor ownership and
+policy exclusions. No road, water or cycle-track shortcuts.
+
+The live existing school resident uses fasteners_run before school_run, without
+adding actors, rigs, scenery or topology. Format 18/simulation 34 validates exact
+r86 before inserting only the zero-credit porter account at the saved economy
+time. Keep all existing saved state and the original slot; restore the prior
+authored home and delivery metadata when projecting r86. Preserve earlier
+projections, worker handoff and current reloads without reinitialization.
+
+
+## Physical material recovery, r88
+
+Optional repair recover/amount is paired, bounded 1..32 and backed by an existing
+market lot. Recover only with mature source, bag room and reserved output/refund
+shelf room; otherwise preserve ordinary repair. Count generated goods only on
+completion. Hold sealed output in a flagged home-phase repair until the shared
+deliver action at an open staffed counter. No second wage, abandonment, trade,
+eating or remote stock deposit. Player and NPC returns share guards; R, vehicles,
+pause and streaming retain cargo. Keep HUD/bag, guidance and keyboard H aligned.
+
+Spent growing sources survive sapling damage and reset only on actual unblocked
+maturity. Cap unique sources at 512 without new actors or render budgets. Keep
+growth and commerce on one current EconomyState owner. Validate recovery counts
+against completions, generated material, cargo and reserved capacity.
+
+Format 19/simulation 35 registers exact r87 by removing only authored recovery
+fields. Initialize new counters to zero and historical broken/growing sources
+as spent, preserving every old field and slot. Do not retroactively grant wood
+or rebase geometry/navigation. Old format schemas remain strict. Preserve the
+complete earlier migration chain and safe active-pose recovery with cargo.
+
+## Shared fixture hardware, r89
+
+The existing market_tables service uses recover=fasteners,amount=1 across all
+449 targets. Preserve ordinary full-store fallback, finite kit consumption and
+wages, carried output and one guarded return for players/NPCs. Do not infer a
+hardware exemption from a label, category variant or showcase placement. Existing
+tree maturity, growth sources, navigation, actor/rig/render budgets remain exact.
+
+Keep format 19/simulation 35. Validate exact r88 before adding only zero
+recovered.market_tables; retain old timber counts/cargo, spent sources, jobs,
+commitments, clocks, poses and original slot. Old repairs retain their original
+recovery flag, with no retroactive hardware. Preserve the entire predecessor
+chain and reject missing/unrelated targets. Current reloads cannot reinitialize.
+The current workshop review stops at recovered hardware instead of requesting
+a redundant shipment; historical source reviews retain real fastener cargo.
+
+## Same-good nursery work, r90
+
+Permit an output among a recipe's inputs only when make exceeds take for that
+good. Keep scalar/block exclusivity, positive bounded quantities and all current
+limits. Reserve max(input,output) once per shared lot; subtract the newly held
+input before accepting its output envelope. Held inputs remain actual material,
+future output does not. Completion contributes make minus take to conservation;
+refunds, trades, deliveries, other batches and recovery must respect that space.
+Preserve finite seed, wages, effort, capacity, hours, equipment and per-action
+guards identically for players/NPCs. No zero-input or no-gain propagation loop.
+
+The live vendor uses four slots: kits, propagation, lunches and basic baking;
+qualified player baking stays available. Nursery target five leaves one spare
+slot, with no added stock, cash, actors, geometry or changed layout. Format 19 /
+simulation 36 registers exact r89 by removing only the job and restoring its
+prior worker policy at simulation 35. Add only zero batch/personal/unattributed
+work counters; preserve every existing saved field, original slot and earlier
+projection. No clock advance, resource seeding or population/navigation rebase.
+
+## School common room, r91
+
+The Garden school reuses the existing one-floor interior, doorway, cutaway,
+seating, shared-meal and repair contracts. Preserve its existing entrance and
+furnishing; only the doorstep, shell and five common-room props are added.
+Teacher duty remains at the outdoor canteen, with after-hours rest indoors.
+School furniture follows the shared category damage rules and finite kit/wage/
+recovered-hardware transactions. The caretaker shares its existing capacity.
+No lessons, extra NPCs, new live rigs or stacked floors are implied.
+
+The registered r90 projection restores the exact old school, grounds, break
+plans and caretaker policy. Prepare contacts and navigation on that projected
+scene, never prime it from the new physical world. Retarget an old rest/outward
+shift from its visible position; an active shared meal keeps its pose, portions
+and timer, then returns to the new rest point. A pending unreserved invitation
+can close while the teacher changes break spots. Preserve all money, inventory,
+history, clocks, source slots and earlier registered migrations. Rebase only
+changed pedestrian node references and recover unsafe active poses through the
+existing bounded physical recovery policy. See docs/examples/enterable-school.dream.
+
+## Worker provisions, r92
+
+Optional economy `ration(good,market,below)` has at most eight plans; below is
+0..95. Only stationary NPC repair/delivery accounts may reference one, without
+production, shift, meal-trip or social policies. Require a priced food lot and
+clear counter reach at the authored home. Buy one owned portion while idle,
+using ordinary hours/staff/stock/funds/headroom checks, only with room for the
+largest declared delivery, repair input or recovered output. One decision per
+simulation second. Eating can use owned inventory while committed; never sealed
+cargo, escrow or held recipe inputs. Keep shared-meal/meal-trip ownership and
+all actor/navigation/render budgets. Missing food does not lock ordinary work.
+
+Simulation 37 retains format 19. Register the exact r91 projection, removing
+only ration definitions/references at its pinned simulation 36. Restore every
+saved field and original slot before any new decision; no food, money, clock,
+position, attribution or population initialization. Keep all earlier migrations.
+The standing sight helper is shared between runtime and static acceptance,
+without importing simulation ownership into scene-schema initialization.
+
+## Authored weather, r93
+
+Weather is one optional world-owner cycle from simulation time: 120..3600
+seconds; rain starts at least ten seconds in, lasts at least ten and leaves
+thirty seconds before cycle end. Grip is .45..1. Keep five-second rain fades,
+ten-second wetting and thirty-second drying. Ground tires share the sample;
+retain ICE, water, airborne and indoor-floor behavior, static stopping, boost
+ownership and collision/jump rules. No wall clock or saved weather state.
+
+Optional repair.dry requires weather and guards new player/NPC starts only.
+Rain never refunds or abandons commitments. NPCs may take other declared work;
+keep finite escrow, conservation and existing actor/path/rig limits. Rendering
+shares the existing particle pool/draw, with cached drop floors and validated
+room ceilings, no new physical drops, lights or shadow maps. Pause and reduced
+motion retain their existing presentation policy. Registered r92 migration
+removes only the two new data fields at simulation 37, preserves every saved
+field/slot and primes identical physical caches. Current simulation is 38 at
+format 19. No general shelter, seasons, flooding or ecological claims.
+
+## Commuter home, r94
+
+Keep the market commuter's route and waits unchanged; its existing home stop
+is now inside a foyer. One new ground-floor interior replaces oldtown_044,
+with three supported props, two seats and shared category damage/finite repair
+rules. The existing caretaker uses its fourth service slot; no new actors,
+accounts, starting resources, live rigs or template/module budget increases.
+Keep the optional workshop/bakehouse pack available outside the live graph.
+Upper floors, sleeping and access permissions remain unimplemented.
+
+`voxels.cutaway` uses exactly the existing retained static interior-shell policy
+of `part.cutaway`, including joint/fragment/zone rejection and worker batching.
+Register the exact r93 house/site projection, remove only new props/corridor/
+service, and prepare its own contacts/navigation before validating old saves.
+Initialize only new repair attribution counters, rebase derived paths and use
+bounded local recovery for newly unsafe poses. For ground vehicles newly enclosed
+by this home, preserve safe doorway-fitting poses or search at most 64 units
+for an exterior body-clear position, avoiding the player and other vehicles.
+Keep heading, travel, ownership and all other parked poses; reject unrecoverable
+backups without replacing the old slot. Preserve resources, clocks,
+damage, old slots and the complete earlier migration chain. See
+`docs/examples/enterable-home.dream` and `docs/persistence.md`.
+
+
+## Home meal preferences, r95
+
+Meal furniture IDs define preference order; slots within a furniture retain
+source order. Reserve only a reachable free claim after the finite purchase,
+using the same player/NPC claims. Fall back through other furniture and then
+standing without buying twice. Broken furniture retains the existing release
+policy. Keep fixed-step paths, timers, conservation and current actor/rig caps.
+The commuter's home uses existing floor, entrance and corridor data; keep the
+settee approaches clear for both 3-unit player and 4-unit NPC bodies.
+
+Format 19/simulation 39 registers exact r94 by projecting only the new meal
+grounds/preference and the two approach offsets. Existing sitting points remain
+fixed. Preserve every old saved field, including hall seat claims and pending
+meals, before accepting under the new superset policy. Never reroute or repurchase
+an old commitment. Keep the entire earlier migration chain and original slots.
+
+
+## Resident work trips, r96
+
+Explicit account commute=true plus work/works and on/grounds owns one bounded
+out/work/home trip. Complete humanoid decor NPCs may have a stationary home or
+walk route; fit their actual rounded-up body with minimum radius 4/headroom 18
+and authored maximum radius 8/height 32. Keep existing ground, graph, waypoint,
+account, NPC and rig caps. Reuse prepared worker-owned navigation and ordinary
+walking/contact checks; no generated graph or controller code.
+
+Intent reserves no stock, wage, shelf room or work capacity. Arrival uses the
+same guarded job as the player. Completion pays and qualifies the worker once;
+range/equipment interruption refunds once and returns home. Never mutate the
+previous frame's trip when refunding immediately after impact. Keep one owner
+across food/work travel, pause the original NPC program and resume at the same
+pose. Available meal trips take priority; exclude other automatic policies.
+
+Format 19/simulation 40 registers exact r95 by removing only the new commuter
+policy fields. Preserve every old saved field and original slot; do not seed
+work, income, counters or resources during restore. Validate phase/job ownership,
+full body-supported paths and shared conservation, retaining every earlier
+registered migration. See docs/dream/commuting.md.
+
+Work-ground portal attachment uses the existing immutable public-node index.
+Retain exactly the nearest 32 linked candidates, stable source-index distance
+ties, the pre-clearance cutoff and eight accepted attachments. Never index the
+partially built mutable work graph or cache dynamic contact clearance. This
+changes preparation cost only, not graph order, source, save or movement rules.
+
+## Shared rest and energy, r97
+
+Optional economy rest plans and account.rest add bounded energy, without changing
+unconfigured accounts. Keep food, money, escrow and energy separate. Elapsed
+simulation time drains energy; usable seating recovers it. Work and repairs need
+effort at start and spend it once on completion, not cancellation. Any usable
+player seat recovers energy; the ordered furniture list selects NPC destinations.
+
+Automatic rest uses one out/sit/home journey, actual body-sized access, shared
+seat claims and the paused original routine. Hungry food decisions precede rest.
+Occupied/broken furniture grants no recovery; damage releases the claim and
+returns the resident. Keep existing actor/rig, eight-ground, local sample, graph
+and path caps. Rest may coexist with meal and commuting work; other automatic
+policies and operated counters remain excluded. All time is simulation-owned.
+
+Format 19/simulation 41 registers exact r96. Initialize only energy for newly
+configured accounts, preserve every older commitment, resource, clock and source
+slot, and keep the complete earlier migration chain. No guessed offline needs,
+new food/coins, forced player sleep or clinical sleep claims. See
+`docs/dream/resting.md` and its checked example.
+
+## Named floors and shared upstairs activity, r99
+
+At most 32 floors bind full rectangle core slab contacts within a static enclosing
+interior, with 20-unit headroom. Floor props are explicit upright static prop
+placements, fully contained, without joints/controls/knockables or nested rooms.
+Their finite contact bottoms leave the lower room usable. Reuse category damage,
+shared seats and finite repair rules; retained building contacts support debris.
+
+Floor-aware rest/repair grounds also name the owning building. Only validated
+stair voxel/tread pairs derive links. Keep 1024 indoor nodes and the existing
+combined 8192 nodes/32768 links/128 waypoints per area; graph topology stays
+worker-owned. Save supported heights on trips, preserve old ground paths, reject
+forged heights and through-slab shortcuts. Storey cutaways hide only upper contents
+from below, including instanced worker chunks and fragments, without mutating
+physics or claims. No actor/live-rig budget increases.
+
+Format 19/simulation 43 registers the exact r98 projection. Existing commitments
+retain claims, paths, clocks, resources and progress; future decisions use the
+new preference. Never seed resources, teleport old trips or replace old slots.
+See docs/dream/floors.md and docs/examples/upstairs-rest.dream.
+
+## Daily workplace attendance, r100
+
+Optional account.attendance uses one daily clock window for a commuting NPC's
+single workplace. Existing work preferences, body, grounds and paths remain.
+Arrive even with full shelves or missing materials; travelling/idle attendance
+reserves no stock, wage or job capacity and earns no pay or practice. Recheck
+ordinary finite work rules at most once per second. Finish committed production
+before leaving at closing; preserve refund-once on equipment/range interruption.
+Affordable food/owned food and configured low energy return the resident for
+ordinary home need routines. Unaffordable food cannot block a feasible wage.
+
+Persist dutyAtS and out/idle/work/home, pinning the day to actual departure.
+Reject future/out-of-window departures, unowned work and moving/unreserved idle
+poses. Preserve program pause/resume, actual paths, R, pause, streaming and all
+existing actor/rig/navigation budgets. No idle wages, job guarantee, employee
+contract or offline catch-up. Format 19/simulation 44 registers exact r99,
+removing only attendance. Preserve every old field and original slot; old
+one-batch trips finish before new scheduled decisions. See docs/dream/attendance.md.
+
+## Worker foundation reuse
+
+Only immutable worker projections may borrow an already fitted foundation with
+the exact same object and terrain references at its authored XY. Exclude floor
+bindings and ordinary props; preserve already owned target fits and moving-pose
+invalidation. Keep all current/historical contacts, node order, links, support
+polygons, stream bounds, source identity and save fingerprints exact. Reuse is
+host preparation, never an authored Dream field or serialized simulation state.
+
+## Rain-aware shared rest, r101
+
+Optional rest.shelter requires weather and full-footprint furniture cover under
+a retained core ceiling inside an existing interior, with standing headroom.
+A healthy free uncovered NPC may use the ordinary out/sit/home rest journey
+during rain. Already-covered healthy actors retain their routine. Preserve
+existing meals, jobs and journeys before shelter; no extra body owner, actors,
+rigs, graph budgets or resource creation. Keep shared player/meal seat claims,
+physical stairs and energy. Wait until dry and energy reaches until; healthy
+outbound trips can turn back once dry. Lost cover or broken/blocked furniture
+releases the claim. Player seating remains manual. Omission retains old choices.
+
+Format 19/simulation 45 registers exact r100 by removing only the live shelter
+flag and restoring its former weather period. Preserve all saved fields and
+original slots, no weather-intent field, rebase, reward or offline progression.
+See docs/dream/shelter.md and its independently runnable world.
+
+## Shared recipes and alternate qualifications, r102
+
+Milestone kind shared_meal names a non-player social account, using its existing
+completed pair history. Only the player and that named NPC qualify. Other people
+and global production do not. Partial/refunded meals grant nothing; aggregate
+shared portions per good cannot exceed consumption. This is a saved-state
+consistency bound, not an authenticated event ledger or NPC-to-NPC friendship.
+
+Work requires_any is 1..4 unique milestone IDs, exclusive with requires; every
+prerequisite branch is acyclic. Use the same qualification helper for manual
+starts, automatic/commuting choices and saved active jobs. Keep ingredients,
+hours/staff, capacity, food, energy, equipment, wages and completion ownership.
+A qualification reserves and awards nothing. Existing single requirements stay.
+
+Format 19/simulation 46 registers exact r101 by removing only the new relationship
+milestone and restoring the old larger-batch prerequisite. Preserve every saved
+field, unfinished meal, qualified work and original slot. No seeded history,
+resources, offline progression, new bodies/rigs or raised navigation budgets.
+Dev walkthroughs use actual foot-sized navigation and controls around corners,
+with a separate body-profile cache key; never teleport to bypass a blocked path.
+
+## Physical workstations, r103
+
+Economy station binds a static prop's local XZ stand and XYZ supported hand point
+through its actual fitted scale/heading. Keep 16 stations, coordinate bounds,
+dry clear 4.1-radius/18-height stand, supported 3..7-unit reach/6..12-unit height,
+10-unit separation, counter reach and existing convex/navigation bounds. No
+joints, animated parts or named-floor binding. Work.station requires matching
+equipment and capacity=1. One active claim across recipes; real two-unit
+proximity for starts and continuation, body-facing only, no position snap.
+NPC complete humanoids walk before reserving ingredients/pay and return after
+work. T remains available while holding a station; only explicit conversation
+state/familiarity changes, with work body, facing and route/animation clocks held.
+Moving trips retain their interaction guard. Stationary jobs share ordered grounds; commuters keep their own network.
+Keep fixed-step ownership, immediate departure/damage refund, finite resource
+conservation, pause, reduced motion and existing actor/rig/body caps. Visual
+rigid arm targets and the single pooled floor ring are renderer-owned state.
+
+Format 19/simulation 47 registers exact r102 by removing only station metadata
+and its kit equipment binding. Validate old state first, refund only incompatible
+active work through the ordinary escrow, no pay/completion or clock/pose rebase.
+Old outbound counter journeys retarget by walking, never teleport. Preserve
+original slots and all earlier projections. See docs/dream/workstations.md.
+
+
+## Authored work motions, r104
+
+Economy gesture programs contain 2..8 anonymous keyframes, at most eight unique
+programs. Preserve finite bounds, ordered .1 gaps, closed positions and smoothstep
+peak speed <=12 units/s. Coordinates are world units in actor-facing anchor frame,
+not model-scaled limb units. Work references require a station, repair references
+require an existing program; NPCs need complete humanoids. Keep rigid segments,
+planted feet, entry/switch/release blending, pause and reduced-motion policy.
+Only task progress drives phase; no new rigs, item bodies, clocks, saved animation
+state or generated scripts. Repair anchors are generic, not proof of tool contact.
+Format19/simulation47 registers exact r103 by stripping only new gesture metadata;
+validate old and new state, preserve every saved field and original slots, without
+refund, resource/pose/time rebase or changed transaction rules. Maintain the prior
+projection chain. See docs/dream/work-gestures.md.
+
+
+## Resident companion meals, r105
+
+Optional social.peers contains 1..4 unique other NPC account IDs and requires
+priced supply markets. Hosts keep stationary complete humanoid programs; peers
+may use accepted walk routes. Validate actual body-sized ground-floor paired
+seats, outward/return paths and every walking peer route corner. Keep all existing
+account, actor, rig and navigation caps; one global social activity across player
+invitations/meals and resident gatherings. Both physical journeys own their
+bodies and program clocks until return; no interruption of existing commitments.
+Food is bought atomically through finite trade, then two portions held/refunded
+to the real donor or consumed once for both people. Keep 4 Hz progression, 1 Hz
+decisions, due shifts/attendance, bench damage, blocked approach timeout and
+conservation. Preserve interrupted route positions and facing on return. NPC
+pair history never supplies player meal credit; keep <=64 bounded sparse records,
+per-plan/host/guest cooldowns, saved journeys/timers, R and Start over semantics.
+
+The existing bench template moves seat/approach X from +/-13 to +/-14 local units;
+mesh, height, body and part IDs stay identical. Format19/simulation48 registers
+exact r104 by restoring those anchors and removing peer plan metadata/extra hall
+grounds. Validate old state first, fit seated poses and retarget unfinished
+approaches, without advancing clocks or changing resources/history. Old slots and
+earlier projections survive. See docs/dream/companions.md.
+
+## Furniture seating presentation
+
+CharacterAnimator blends complete humanoid position/facing/posture over .7 seconds
+using renderer-owned offsets and cached bone quaternions. Staggered foot transfers
+reuse FootPlants and rigid two-segment legs; fit the pelvis to both contacts and
+pass their anchors into ordinary walking. Preserve upright roots, rigid lengths,
+sole support, interrupted-pose continuity, pause and identical color/shadow nodes.
+First/restored poses, reduced motion, reset, jump, swim and large discontinuities
+clear transition state. Never delay controls, seize physics ownership or save
+animation offsets; Dream's existing seat/approach/heading data stays authoritative.
+Keep actor/rig/draw budgets unchanged. Vehicle passenger poses remain separate.
+See docs/dream/seating-motion.md.
+
+## Peer recipe qualifications, r106
+
+Optional milestone.peer is valid only for shared_meal and references a different
+NPC account explicitly listed in task's social.peers. Derive eligibility from the
+exact existing plan/host/peer history for those two accounts only; preserve the
+omitted-peer player/NPC meaning. Reject paired NPC milestones on player
+conversation guards; omit foreign requirements from player-facing job details.
+Partial/cancelled/refunded meals never qualify, and return journeys retain body
+ownership before work. No new saved counters, resources, actors or rigs.
+
+account.works permits five ordered unique jobs, retaining one task per account,
+existing station/job capacity, finite escrow and all navigation/render limits.
+The live baker keeps all four older choices beside large_bake. Format19/simulation49
+registers exact r105 by removing only the named pair milestone and new job-choice/
+requirement references; preserve every saved field and original slot, including
+pair memory and pending work. No resource/time/pose rebasing. See
+`docs/dream/companion-recipes.md` and its runnable example.
+
+## Upper-floor workstations, r107
+
+Station objects may use existing place.floor bindings. Require the named floor,
+its enclosing building, a fully supported dry 4.1-radius/18-height stand, actual
+hand support and the existing reach/separation/budget checks. One source business
+per upper station; prove outward and return stairs/counter access even for
+player-only work. Counter-radius bounds remain. Only production at an accepted
+upper bench replaces counter sight; trades and ownership actions retain it.
+Local HUD offers work/bag only on the same supported floor near a visible bench.
+
+Retain elevation on current commute pose, home, destination and path. Compare
+station distance in XYZ, reuse the existing indoor/body-sized walking network,
+reserve only on arrival and reject forged heights/through-slab routes on restore.
+Keep one claim across recipes, finite inputs/wages/refunds, clocks and all actor,
+rig, contact and navigation caps. Old ground paths retain their representation.
+
+The market loft has 29 parts, 32 contacts and 17 generated treads. Kit/sapling
+work shares its upper bench; food stays downstairs. Existing indoor maintenance
+covers the new table without new accounts, resources or a fifth repair duty.
+Format19/simulation50 registers exact r106 geometry/policy, validates the old
+state first and keeps its original slot. Refund only work incompatible with its
+moved station; preserve unrelated work, ledgers, history, clocks and paths. Fit
+only unsafe player poses through existing bounded recovery. Host bootstrap sends
+source-matched old contacts before old navigation, sharing unchanged foundation
+fits. See docs/dream/upstairs-work.md and its runnable source.
+
+
+## Company need, r108
+
+Account company=need(initial,drain_s,below,gain) is optional bounded data, not
+an affection or psychological model. Require real social participation, preserve
+legacy sources and use existing 4 Hz economy time across all controls. Completed
+shared meals restore only their actual participants once; cancellation, solitary
+eating and observation earn nothing. NPC thresholds gate initiation, with paid
+advance supply before closures when the need will be due by next opening.
+Preserve duties, consent, food/fullness, seat/round-trip claims, finite ledgers,
+all budgets and deliberate player invitations at high company. Keep the need
+inside Bag, not another permanent HUD control. Format19/simulation51 validates
+exact r107 then initializes only newly declared needs at saved time, preserving
+all existing state, old slots and pending rewards. No offline catch-up.
+
+
+## Shared seated energy, r109
+
+Use the existing actor journey owner to find actual NPC eat/sit occupancy.
+Energy-enabled solo and companion eaters share the player’s authored recovery
+rate, including furniture outside automatic rest preferences. Approach claims,
+standing meals and returns still drain. Require usable dry furniture, actual
+body clearance and exclusive claims; damage stops recovery before departure.
+Keep one journey/clock, existing food/company completion, finite resources and
+all budgets. Format19/simulation52 accepts only the registered exact r108
+rules-only upgrade, preserving every saved field and original slot without
+catch-up. Earlier registered migrations remain intact.
+
+## Static placement reuse during startup
+
+shareStaticPlacements retains the foundation-only reuse policy, then considers
+only immutable static solid prop identities on the same terrain. Compare actual
+interior floor geometry, transforms and fitted heights. Exclude a fit whose
+conservative 3D underside support sphere touches any changed floor AABB; a pivot
+or collider radius alone is insufficient. Keep floor-bound objects, actors,
+knockables, distinct objects, displaced sources and already-owned targets local.
+The scalar support bound stays on the existing private placement entry, with no
+per-frame or unbounded cache. Worker packet values, graph/node/contact order,
+source and historical hashes, physical rules, scene/save versions and all
+rendering/streaming quality must remain unchanged.
+
+## Shared upstairs meals, r110
+
+Social furniture selection follows authored plan order. Reuse supported stair
+travel for player/resident and resident/resident journeys, retaining bounded
+optional heights in pose/home/target/path. Named upper grounds require their
+enclosing building and validated outward/return paths. Full 3D arrival and save
+checks prevent through-slab completion; use complete prior trip points when
+validating paths. Keep paired body clearance, exclusive claims, finite food,
+needs/history completion, duty margins and blocked/damaged cancellation. Return
+physically before releasing routines. No new actors, geometry, rigs or budgets.
+Format19/simulation53 first validates exact r109 by stripping only the new upper
+social seat/floor grounds. Preserve every old field and original slot, including
+in-progress downstairs meals. Future decisions use the new preference. No
+retargeting, catch-up, seeded resources or replayed rewards.
+
+## Station quarter and high-rise authoring
+
+The r111 quarter is additive Dream data north of Workshop Street. Keep the two
+physical lobby doorways, supported floor-bound seats, connected entrance paths,
+shared promenade and parking aprons; its upper tower storeys are not enterable.
+The building measure profile permits 3..120 metres, but all existing part, voxel,
+contact, resolved-scale and actor limits still apply. Projects permit 40 reachable
+modules and 144 definitions with the same per-file/source/depth bounds. The CLI
+reads its module-registry cap from that contract. Named floors may equal the room
+base height only with their existing full slab and headroom checks.
+
+The registered r111 projection removes only station_quarter_ objects, sites,
+surfaces and floor bindings. Validate r110 before rebasing derived pedestrian node
+references and adding new population states. Keep positions, clocks, resources,
+old storage slots and vehicle history. New parking seeds yield to old saved bodies. Recover only released valid ground
+rides newly obstructed by construction, outside the new interiors, retaining their
+ownership, heading and travel. Physically clear poses bypass placement heuristics.
+The gallery camera must frame depth as well as width/height; choose its distance
+and far plane from actual model bounds without changing the viewing angle.
+
+## Station maintenance, r112
+
+Keep every older service ground and target when adding the quarter's six benches,
+three lamps, two planted tubs and three rowans. The two existing services share
+the same caretaker, finite kit/sapling/wage reservations and physical return.
+Named lobby floors require their building grounds and ordinary doorway paths.
+Four finish=terrain work areas add no pavement or contacts. Grounds permit twelve
+including on across the existing commerce users; local samples remain 4,096,
+network nodes 8,192, links 32,768 and saved waypoints 128. Narrow tree approaches are
+necessary; a broad rectangle still fails the navigation budget.
+
+Format19/simulation53 registers exact r111 by removing only four work surfaces
+and restoring the two service definitions. Validate the old state first and
+preserve every saved field, damage, growth, claim, resource, clock and path.
+Contacts and public graph may be reused only while identical; derive old repair
+coverage separately. Keep original slots and the complete earlier migration chain.
+
+## Authored crossing access, r113
+
+The four new junction crossings use existing Dream pavement and paint rules.
+Preserve all objects, surfaces, sites, contacts, resources and movement rules.
+Audit geometric four-way intersections as well as named junctions, without
+adding crossings to ordinary two-arm bends. The published map reuses exact
+renderer zebra polygons; paint must remain single-owned and clear of other marks.
+
+Format19/simulation53 registers exact r112 by removing only these four crossings.
+Validate old state before mapping derived pedestrian node/previous references.
+Prepare source-matched prior contacts before its navigation in the worker.
+Keep member positions, seeds, clocks and every coordinate-based paid journey,
+claim, ledger, damage and old storage slot. Existing trips finish their old route;
+only new plans use the added connections. This authored change does not fix the
+separate same-component corner-link detours in work navigation.

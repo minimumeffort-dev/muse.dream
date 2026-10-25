@@ -1,4 +1,8 @@
-import {walkingHeight} from './interiors';
+import {objectFloor} from './floors';
+import {walkingHeight,sceneInteriors} from './interiors';
+import {roleOf} from './agents';
+import {archetypeOf} from '../sim/archetypes';
+import {polygonBounds} from './polygons';
 import type { Scene, SceneObject } from "./schema";
 import { Quaternion, Vector3 } from "three";
 import { drivingHeight, sampleTerrain, terrainSurfaceHeight } from "./terrain";
@@ -12,13 +16,46 @@ export interface ObjectPlacement {
 }
 
 // Cache one position per object; moving props invalidate it without accumulating entries.
-const placements = new WeakMap<Scene, Map<SceneObject, {x:number;y:number;placement:ObjectPlacement}>>();
+const placements = new WeakMap<Scene, Map<SceneObject, {x:number;y:number;placement:ObjectPlacement;supportRadius?:number}>>();
+/** Worker bootstrap only: immutable foundations fit the same object against the same terrain. */
+export function shareFoundationPlacements(scene:Scene,source:Scene):void{
+  if(scene===source || scene.terrain!==source.terrain)return;
+  const from=placements.get(source);if(!from)return;
+  let target=placements.get(scene);
+  for(const object of scene.objects){
+    const spec=object.spec,entry=from.get(object);
+    if(object.floor || !spec || !('dslVersion' in spec) || !spec.foundation || !entry || entry.x!==object.x || entry.y!==object.y || target?.has(object))continue;
+    target??=new Map();target.set(object,entry);
+  }
+  if(target)placements.set(scene,target);
+}
+/** Unchanged static fits remain valid outside any changed interior walking surface. */
+export function shareStaticPlacements(scene:Scene,source:Scene):void{
+  shareFoundationPlacements(scene,source);
+  if(scene===source || scene.terrain!==source.terrain)return;
+  const from=placements.get(source);if(!from)return;
+  const frames=(doc:Scene)=>sceneInteriors(doc).map(f=>({key:JSON.stringify([f.object.x,f.object.y,f.object.scale,f.object.headingRad??0,f.floor,f.room.position,f.room.size]),bounds:polygonBounds(f.polygon)})),before=frames(source),after=frames(scene);
+  const changed=[...before.filter(f=>!after.some(g=>g.key===f.key)),...after.filter(f=>!before.some(g=>g.key===f.key))].map(f=>f.bounds);
+  let target=placements.get(scene);
+  for(const object of scene.objects){
+    const entry=from.get(object),spec=object.spec;
+    if(object.floor || roleOf(object)!=='prop' || archetypeOf(object).interaction!=='solid' || spec && 'dslVersion' in spec && spec.foundation || !entry || entry.x!==object.x || entry.y!==object.y || target?.has(object))continue;
+    if(changed.length){
+      // A 3D support sphere also encloses every rotated underside sample.
+      entry.supportRadius??=Math.sqrt(objectSupport(source,object).reduce((r,p)=>Math.max(r,p.lengthSq()),0))*object.scale+.01;
+      if(changed.some(b=>Math.hypot(Math.max(b.x0-object.x,0,object.x-b.x1),Math.max(b.y0-object.y,0,object.y-b.y1))<=entry.supportRadius!))continue;
+    }
+    target??=new Map();target.set(object,entry);
+  }
+  if(target)placements.set(scene,target);
+}
 export function objectPlacement(scene: Scene, object: SceneObject, x=object.x, y=object.y): ObjectPlacement {
   let cache = placements.get(scene);
   if (!cache) { cache = new Map(); placements.set(scene, cache); }
   const cached = cache.get(object); if (cached?.x===x && cached.y===y) return cached.placement;
   const grounded=object.spec && "dslVersion" in object.spec && !!object.spec.foundation;
-  const height=(x:number,y:number)=>Math.max(grounded ? drivingHeight(scene.terrain,x,y) : walkingHeight(scene,x,y,0),terrainSurfaceHeight(scene.terrain,x,y));
+  const bound=objectFloor(scene,object);
+  const height=(x:number,y:number)=>bound ? bound.elevation : Math.max(grounded ? drivingHeight(scene.terrain,x,y) : walkingHeight(scene,x,y,0),terrainSurfaceHeight(scene.terrain,x,y));
   const rotation = new Quaternion();
   if (object.spec && "dslVersion" in object.spec && object.spec.grounding === "surface") {
     const slope=sampleTerrain(scene.terrain,x,y);

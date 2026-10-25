@@ -1,0 +1,13 @@
+> muse-dream@0.1.0 test
+> vitest run tests/rain-shelter-world.test.ts -t restores old r100 upstairs claims --maxWorkers=1 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/rain-shelter-world.test.ts (4 tests | 3 skipped) 2348ms
+   ✓ restores old r100 upstairs claims and ledgers exactly and retains the original storage slot  2347ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 3 skipped (4)
+   Start at  09:45:59
+   Duration  9.82s (transform 474ms, setup 9ms, collect 7.34s, tests 2.35s, environment 0ms, prepare 27ms)

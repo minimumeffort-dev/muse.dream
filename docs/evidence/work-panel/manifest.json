@@ -1,0 +1,88 @@
+{
+  "date": "2026-10-22",
+  "baseCommit": "9f83e02",
+  "files": [
+    {
+      "path": "src/game/commerce.ts",
+      "bytes": 34239,
+      "sha256": "0d17458736d7861926e0d3bb6e353a05efbc6badb1305d420f96fcd7aff667f6"
+    },
+    {
+      "path": "src/style.css",
+      "bytes": 26865,
+      "sha256": "454e1cd4e2bcd93e15b31ae6bf6a272c8df04a2b2f69e2e038dbc88ab50488e2"
+    },
+    {
+      "path": "index.html",
+      "bytes": 14049,
+      "sha256": "7bf740b0fb7afa082416fe43a7bf0b2aae41f3230c3ae51e555e6e7397ca96ce"
+    },
+    {
+      "path": "src/game/main.ts",
+      "bytes": 87672,
+      "sha256": "e9470c5f70f73258c60e51420ad075159e99bc4e62470886140fb1542f793bf4"
+    },
+    {
+      "path": "scripts/media-middleware.ts",
+      "bytes": 2517,
+      "sha256": "c0ce41b03823a4ab1e978d9ef2c10642d48364dae73608a739d45ade56609165"
+    },
+    {
+      "path": "scripts/encode-media.mjs",
+      "bytes": 4359,
+      "sha256": "86f608e6c9b3a31faef56da482d0a69f3a65c469d468dc60f489930670de604f"
+    },
+    {
+      "path": "tests/activity-context.test.ts",
+      "bytes": 2015,
+      "sha256": "21c0770506bae64178faf82bce0491b55cfa97a49cae86ecbc59ec42ed5e8fe4"
+    },
+    {
+      "path": "docs/evidence/work-panel/native.json",
+      "bytes": 1712,
+      "sha256": "5128ecdc404c3c23120fafbcd6ace019fc3a7752d2cd881b7305affac160d0d7"
+    },
+    {
+      "path": "docs/evidence/work-panel/keyboard.json",
+      "bytes": 221,
+      "sha256": "9eaf63ebec456b940c8358bd3f9876254eeceaaafda9eaeaf3cb946568c6cf67"
+    },
+    {
+      "path": "docs/evidence/work-panel/narrow.json",
+      "bytes": 191,
+      "sha256": "dbf8f1b91cf0c529d5351ce5438a331255f54cab333c7c99417b3f21516d68b0"
+    },
+    {
+      "path": "docs/media/actions.mp4",
+      "bytes": 373902,
+      "sha256": "1dd31fe24c04ba62e13862bda2cd098669ba7948c8d57371d1915d693593cd92"
+    },
+    {
+      "path": "docs/media/actions.gif",
+      "bytes": 1820310,
+      "sha256": "ec8d77b9d813e46ec70715da5fab3ac325b9ceb5efd0afe13c0413917548f31a"
+    },
+    {
+      "path": "docs/media/actions.jpg",
+      "bytes": 361548,
+      "sha256": "8a177e2bfdf25a589310e9c4c9d8a2f87127dcabd7a3798c0ce148d6052fe9a6"
+    }
+  ],
+  "frames": {
+    "count": 180,
+    "width": 2400,
+    "height": 1350,
+    "renderedPerSimulationSecond": 30,
+    "aggregateSha256": "383159114b3995fb527a0786a15f5c3475d22a31f4df5694725b3f9a387fcf11",
+    "still": 45
+  },
+  "videoCheck": [
+    "  Duration: 00:00:06.00, start: 0.000000, bitrate: 498 kb/s",
+    "frame=  180 fps=0.0 q=-1.0 Lsize=N/A time=00:00:05.93 bitrate=N/A speed=1.12e+04x    "
+  ],
+  "gifCheck": [
+    "* docs/media/actions.gif 180 images",
+    "  logical screen 1280x720"
+  ],
+  "limits": "Offline native capture. No interpolation or live performance claim."
+}

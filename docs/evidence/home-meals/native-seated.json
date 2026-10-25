@@ -1,0 +1,122 @@
+{
+  "car": "6507.7,3978.7,3.5",
+  "consumed": {
+    "boards": 0,
+    "bread": 1,
+    "fasteners": 0,
+    "flour": 0,
+    "lunch": 0,
+    "sapling": 0,
+    "timber": 0,
+    "vegetables": 0
+  },
+  "mode": "paused",
+  "regular": {
+    "completed": {
+      "delivery": {
+        "boards_run": 0,
+        "fasteners_run": 0,
+        "flour_run": 0,
+        "kits_run": 0,
+        "saplings_run": 0,
+        "school_run": 0
+      },
+      "repair": {
+        "classroom_furniture": 0,
+        "home_furniture": 0,
+        "market_tables": 0,
+        "orchard_trees": 0
+      },
+      "work": {
+        "assemble_kit": 0,
+        "bake": 0,
+        "large_bake": 0,
+        "pack_lunch": 0,
+        "propagate_saplings": 0
+      }
+    },
+    "credits": 22,
+    "decisionAtS": 6.250000000000051,
+    "id": "regular",
+    "inventory": {
+      "boards": 0,
+      "bread": 0,
+      "fasteners": 0,
+      "flour": 0,
+      "lunch": 1,
+      "sapling": 0,
+      "timber": 0,
+      "vegetables": 0
+    },
+    "meal": {
+      "at": {
+        "x": 6516.265625,
+        "y": 3992.4375
+      },
+      "distance": 1447.794672231844,
+      "eatUntilS": 120.25000000003858,
+      "headingRad": -1.0472673338596332,
+      "home": {
+        "x": 6493.348,
+        "y": 4064.717
+      },
+      "id": "market_break",
+      "market": "market_stall",
+      "path": [],
+      "phase": "eat",
+      "routeAtS": 61.74999999999714,
+      "seat": {
+        "objectId": "home_settee",
+        "seatId": "right"
+      },
+      "speed": 0,
+      "x": 6516.265625,
+      "y": 3992.4375
+    },
+    "satiety": 19.174999999998093
+  },
+  "save": {
+    "characters": 74892,
+    "compatibilityHash": "62198a1eb0f91bb6793276db568458a0a980823c492c7f1fb7f2e8cf7cc8cdd4",
+    "known": [],
+    "ms": 2.5,
+    "restored": false,
+    "review": true,
+    "saved": true,
+    "sourceHash": "76e311415cdd72378ec89fcf0c790e05aa1accd964712eb2a660bfca6f3da6c2",
+    "status": "Saved on this device.",
+    "timeS": 116.55833333337216
+  },
+  "seated": {
+    "objectId": "home_settee",
+    "seatId": "left"
+  },
+  "streaming": {
+    "bytes": 41858778,
+    "discarded": 0,
+    "keys": [
+      "6400,3200",
+      "6400,4000",
+      "5600,3200",
+      "5600,4000",
+      "7200,3200",
+      "7200,4000",
+      "6400,2400",
+      "6400,4800",
+      "5600,2400",
+      "5600,4800",
+      "7200,2400",
+      "7200,4800"
+    ],
+    "loaded": 12,
+    "maxInstallMs": 3.299999952316284,
+    "maxSliceMs": 3.200000047683716,
+    "peakBytes": 41858778,
+    "peakResident": 12,
+    "pending": 0,
+    "ready": true,
+    "required": 6,
+    "resident": 12,
+    "unloaded": 0
+  }
+}

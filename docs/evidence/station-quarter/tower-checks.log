@@ -1,0 +1,14 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/station-towers.test.ts tests/interiors.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/station-towers.test.ts (7 tests) 126ms
+ ✓ tests/interiors.test.ts (11 tests) 327ms
+
+ Test Files  2 passed (2)
+      Tests  18 passed (18)
+   Start at  12:50:01
+   Duration  943ms (transform 455ms, setup 17ms, collect 1.01s, tests 453ms, environment 0ms, prepare 51ms)

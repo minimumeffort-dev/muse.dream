@@ -1,0 +1,21 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/social-qualifications-world.test.ts tests/rain-shelter-world.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/social-qualifications-world.test.ts (3 tests) 41486ms
+   ✓ registers r102, exact r101/r100 and alternative qualifications without moving the world or seeding resources  339ms
+   ✓ buys and shares real bread, physically returns to an open counter and replays one relationship-qualified paid job  24732ms
+   ✓ keeps an exact r101 unfinished shared meal and original slot before earning the new consequence through completion  16414ms
+ ✓ tests/rain-shelter-world.test.ts (4 tests) 51245ms
+   ✓ pins r101 and exact r100 while retaining physical objects, resources and the daylight clock  494ms
+   ✓ takes a healthy off-duty resident upstairs through rain, keeps a single claim and replays the return  32819ms
+   ✓ restores old r100 upstairs claims and ledgers exactly and retains the original storage slot  6762ms
+   ✓ preserves an r100 paid batch and pays its original reserved wage once under the new policy  11169ms
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  04:47:40
+   Duration  57.73s (transform 422ms, setup 16ms, collect 12.76s, tests 92.73s, environment 0ms, prepare 53ms)

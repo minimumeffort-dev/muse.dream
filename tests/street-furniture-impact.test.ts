@@ -18,7 +18,7 @@ import {gameSave} from '../src/game/save';
 import {drivingReviewStart,repairReviewSteps} from '../src/game/review-start';
 import {buildToppleChunk} from '../src/game/chunk-builder';
 import {disposeChunk} from '../src/game/chunk-packet';
-const scene=createWorldScene(),previous=c.preFixturesScene(scene),ids=new Set(prior.placements.map(p=>p.id));
+const scene=c.preCharactersScene(createWorldScene()),previous=c.preFixturesScene(scene),ids=new Set(prior.placements.map(p=>p.id));
 const pairs=[['Furniture', 'BOTANY'], ['Botany', 'CANOPY'], ['Canopy', 'FLEET'], ['Fleet', 'TREE'], ['Tree', 'COVERAGE'], ['Coverage', 'INVITATION'], ['Invitation', 'PEOPLE'], ['People', 'JUNCTION'], ['Junction', 'SPACING'], ['Spacing', 'PARK'], ['Park', 'CITY'], ['City', 'MATCH'], ['Match', 'BUSINESS'], ['Business', 'SCHOOL_REPAIR'], ['SchoolRepair', 'SOCIAL'], ['Social', 'SHIFT'], ['Shift', 'HOURS'], ['Hours', 'SEATING'], ['Seating', 'KITCHEN'], ['Kitchen', 'MEAL'], ['Meal', 'PROGRESS'], ['Progress', 'RECIPE'], ['Recipe', 'EGRESS'], ['Egress', 'INTERIOR'], ['Interior', 'COURIER'], ['Courier', 'NATURAL'], ['Finish', 'PLANT'], ['Plant', 'VERGE'], ['Verge', 'POOL'], ['Pool', 'NETWORK'], ['Network', 'SUPPLY'], ['Supply', 'REPAIR'], ['Repair', 'PARKING'], ['Parking', 'DELIVERY']];
 const lineage=Object.fromEntries(pairs.map(([field,key])=>['previous'+field+'SaveCompatibility',c[(key+'_COMPATIBILITY') as keyof typeof c]]));
 const world:World={...lineage,scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.FIXTURES_COMPATIBILITY,previousFixturesSaveCompatibility:c.WILDLIFE_COMPATIBILITY,previousWildlifeSaveCompatibility:c.FURNITURE_COMPATIBILITY,previousWildlifeContacts:sceneContactData(c.preWildlifeScene(scene))};
@@ -33,7 +33,7 @@ it('makes every street tub and produce stall a pooled toppler without changing c
  expect(scene.objects.filter(o=>!ids.has(o.id))).toEqual(previous.objects.filter(o=>!ids.has(o.id)));
  expect(sceneContactData(scene).contacts).toEqual(sceneContactData(previous).contacts);expect(ambientGraph(scene)).toEqual(ambientGraph(previous));
  expect(impactBudget(scene)).toEqual({templates:32,fragments:74,resident:12,residentFragments:27,pooledTemplates:20});
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.FIXTURES_COMPATIBILITY);expect(await c.sha256(c.preFixturesCompatibilitySource(scene))).toBe(c.WILDLIFE_COMPATIBILITY);
+ expect(await c.sha256(c.preEquipmentCompatibilitySource(scene))).toBe(c.FIXTURES_COMPATIBILITY);expect(await c.sha256(c.preFixturesCompatibilitySource(scene))).toBe(c.WILDLIFE_COMPATIBILITY);
 });
 it('topples each tub and stall on a car hit and routes the existing caretaker to every one',()=>{
  const first=createCarAtSpawn(scene);

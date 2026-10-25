@@ -1,0 +1,26 @@
+[
+  {
+    "blocked": 15,
+    "kind": "scenery",
+    "neighbourChanged": 0,
+    "passed": false,
+    "shadowChanged": 0,
+    "total": 72
+  },
+  {
+    "blocked": 15,
+    "kind": "terrain",
+    "neighbourChanged": 0,
+    "passed": false,
+    "shadowChanged": 0,
+    "total": 72
+  },
+  {
+    "blocked": 15,
+    "kind": "road",
+    "neighbourChanged": 0,
+    "passed": false,
+    "shadowChanged": 0,
+    "total": 72
+  }
+]

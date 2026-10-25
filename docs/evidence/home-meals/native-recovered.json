@@ -1,0 +1,65 @@
+{
+  "consumed": {
+    "boards": 0,
+    "bread": 1,
+    "fasteners": 0,
+    "flour": 0,
+    "lunch": 1,
+    "sapling": 0,
+    "timber": 0,
+    "vegetables": 0
+  },
+  "control": "{\"kind\":\"car\"}",
+  "mode": "paused",
+  "regular": {
+    "completed": {
+      "delivery": {
+        "boards_run": 0,
+        "fasteners_run": 0,
+        "flour_run": 0,
+        "kits_run": 0,
+        "saplings_run": 0,
+        "school_run": 0
+      },
+      "repair": {
+        "classroom_furniture": 0,
+        "home_furniture": 0,
+        "market_tables": 0,
+        "orchard_trees": 0
+      },
+      "work": {
+        "assemble_kit": 0,
+        "bake": 0,
+        "large_bake": 0,
+        "pack_lunch": 0,
+        "propagate_saplings": 0
+      }
+    },
+    "credits": 22,
+    "decisionAtS": 135.75000000004178,
+    "id": "regular",
+    "inventory": {
+      "boards": 0,
+      "bread": 0,
+      "fasteners": 0,
+      "flour": 0,
+      "lunch": 0,
+      "sapling": 0,
+      "timber": 0,
+      "vegetables": 0
+    },
+    "satiety": 83.26249999999773
+  },
+  "save": {
+    "characters": 75030,
+    "compatibilityHash": "62198a1eb0f91bb6793276db568458a0a980823c492c7f1fb7f2e8cf7cc8cdd4",
+    "known": [],
+    "ms": 1.5999999046325684,
+    "restored": true,
+    "review": true,
+    "saved": true,
+    "sourceHash": "76e311415cdd72378ec89fcf0c790e05aa1accd964712eb2a660bfca6f3da6c2",
+    "status": "Saved on this device.",
+    "timeS": 134.95833333337492
+  }
+}

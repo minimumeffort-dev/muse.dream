@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "numTotalTestSuites": 315,
+  "numPassedTestSuites": 315,
+  "numFailedTestSuites": 0,
+  "numTotalTests": 2015,
+  "numPassedTests": 2015,
+  "numFailedTests": 0,
+  "numPendingTests": 0,
+  "startTime": 1792718430859,
+  "files": 197,
+  "reportedDurationSeconds": 815.39
+}

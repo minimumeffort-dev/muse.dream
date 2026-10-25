@@ -1,6 +1,6 @@
 # Bring a tree back
 
-Knock down a street or park tree, then park clear of the walking approach. The caretaker can collect a sapling from the market, walk over and plant a replacement. You can take the same job at the vendor before they leave. The live service covers 106 trees, including all 93 furnished street trees and the original orchard.
+Knock down a street or park tree, then park clear of the walking approach. The caretaker can collect a sapling from the market, walk over and plant a replacement. You can take the same job at the vendor before they leave. The live service covers 109 trees, including all 93 furnished street trees, the original orchard and the three station-quarter rowans. [The quarter's connected work grounds](station-quarter.md#damage-has-a-follow-up) use the same finite-sapling service.
 
 ![Planting a replacement in Garden park](../media/planting.jpg)
 
@@ -86,8 +86,59 @@ A planting completion is recorded when the replacement goes into the ground, not
 
 ## Still limited
 
-All 345 measured trees can fall, including wind-animated species. The service replants 106 of them. The remaining 239 trees lie outside its declared connected grounds and verges, so they stay broken. Remote woodland needs real service access before workers can restore it.
+All 348 measured trees can fall, including wind-animated species. The service replants 109 of them. The remaining 239 trees lie outside its declared connected grounds and verges, so they stay broken. Remote woodland needs real service access before workers can restore it.
 
 This is a recovery mechanic with authored timings. There is no soil, water, season, reproduction or biological model. Saplings have inventory units, rather than carried plant meshes. The worker performs a general planting gesture; there is no digging or terrain excavation. Growth checks solid player/vehicle/actor footprints; cosmetic ambient populations do not block it. The station supply is finite, and closed pages do no work.
 
 [Markets and repairs](commerce.md) · [Shared destruction rules](rules.md) · [Current gaps](../world-systems.md)
+
+
+## Timber recovery
+
+The live replanting service can recover one board from a mature felled tree. It
+reserves bag and workshop space before starting. If either is unavailable,
+ordinary replanting still works. This covers the same 109 trees; recovery adds no new
+scenery, worker or navigation graph.
+
+![Recovered timber ready to return](../media/recovery.jpg)
+
+[Watch the handoff](../media/recovery.mp4) · [Animated handoff](../media/recovery.gif).
+The ten-second recording shows the return action. Its setup uses a real table
+repair to consume a board, an actual car impact, a planting job, R recovery and
+a walk through the market doorway. The review positions the car and the work
+approach; it does not show ordinary travel to the tree. It is an offline export
+at 30 rendered frames per simulation second, without interpolation.
+
+Add the optional pair `recover` and `amount` to an ordinary repair:
+
+```dream
+repair tree_care(label="Plant a new tree",market=corner,on=work_yard,streets=[main],verge=24,kind=tree,input=sapling,take=1,recover=boards,amount=1,seconds=2,pay=4,effort=5,dispatch_s=0,regrow_s=30,seed_scale=0.2);
+```
+
+This declaration is copied from the [complete timber example](../examples/timber-recovery.dream).
+Run `npm run -s dream -- check docs/examples/timber-recovery.dream`. Its two-second
+work and thirty-second growth keep the loop small. The live city uses ten-second
+planting and three-minute growth.
+
+`recover` names an existing good and receiving market lot; `amount` is 1..32 and
+must fit the lot limit. Recovery is optional when dispatching: the source must
+be mature and the worker's bag plus promised shelf room must fit. Full storage
+or an immature source still permits ordinary repair. Reservations protect both
+refund space and output from other jobs and deliveries.
+
+Completion pays the usual repair wage, consumes its input and produces sealed
+return cargo. It does not add stock at a distant workshop. The NPC walks home;
+the player gets **Return materials** and a map target. Return on foot to the
+open staffed counter and press **H**. There is no second wage, and cargo cannot
+be traded, eaten or abandoned. R and vehicle changes keep it.
+
+A replanted source stays spent until its actual growth finishes. Blocking its
+expanding footprint also delays renewed timber. Breaking a sapling cannot yield
+another mature board. At most 512 growing recovery sources are supported, within
+the existing actor, growth and damage limits. Ordinary repairs can use the same
+return mechanism for other declared goods, such as recovered furniture parts.
+
+This is a bounded game resource loop. It does not model timber mass, forestry,
+water, nutrients or material fabrication. Saplings, fasteners and company funds
+remain finite. The registered save upgrade issues no wood for historical damage.
+[Conservation, saves and runtime evidence](../evidence/timber-recovery/verification.md).

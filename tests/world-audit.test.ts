@@ -1,3 +1,4 @@
+import characters from "../src/scene/world/city_people.dream?raw";
 import {describe,it,expect} from 'vitest';
 import {Box3,Mesh,MeshBasicMaterial,DoubleSide,Raycaster,Vector3} from 'three';
 import {compileDream,compileDreamWorld} from '../src/scene/dream';
@@ -13,7 +14,7 @@ import sports from '../src/scene/world/sports_assets.dream?raw';
 import civic from '../src/scene/world/civic_assets.dream?raw';
 import impacts from '../src/scene/impact-creations.dream?raw';
 
-const assets=[...compileDream(transit),...compileDream(sports),...compileDream(civic),...compileDreamWorld(impacts).assemblies];
+const assets=[...compileDream(transit),...compileDreamWorld(sports,{city_people:characters}).assemblies,...compileDream(civic),...compileDreamWorld(impacts).assemblies];
 function model(name:string){
   const spec=assets.find(s=>s.displayName===name)!,group=buildObject({id:'audit',kind:'custom',labelText:name,x:0,y:0,scale:1,spec});group.updateMatrixWorld(true);
   return {spec,boxes:spec.parts.map(p=>new Box3().setFromObject(group.getObjectByName(p.id)!,true))};

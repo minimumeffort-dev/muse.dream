@@ -1,0 +1,12 @@
+{
+  "playerEnergyBefore": 58.062499999997215,
+  "playerEnergyAfter": 100,
+  "regularRecoveredThenReturned": true,
+  "exactReload": true,
+  "recoveryRetainedEnergy": 99.9875,
+  "playerCoins": 20,
+  "residentCoins": 22,
+  "paidLunches": 1,
+  "console": [],
+  "compatibilityHash": "67ec3c6c263434eeb67f2dc17a986d719675505899452a283dedc53b071b8be9"
+}

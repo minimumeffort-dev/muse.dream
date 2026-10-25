@@ -6,7 +6,7 @@ import {groundMaterial,roadMaterial,toonMaterial,zoneMaterial,styledMaterial,nig
 export type MaterialRecipe=({kind:'ground'}|{kind:'road'}|{kind:'toon';color:number}|{kind:'zone';effect:Effect}|{kind:'water';id:string}|{kind:'styled';spec:ObjectMaterial;useB?:boolean}|{kind:'scenery';base:MaterialRecipe;motion?:ObjectPart['animation']}|{kind:'scenery-depth';motion?:ObjectPart['animation'];cloth:boolean}) & {vertexColors?:boolean;paintColor?:number;nightPaint?:boolean;polygonOffset?:{factor:number;units:number}};
 type Attribute={array:THREE.TypedArray;size:number;normalized:boolean;instanced?:number};
 type GeometryPacket={attributes:Record<string,Attribute>;index?:Attribute};
-type MeshPacket={geometry:number;material:number;matrix:number[];name:string;cast:boolean;receive:boolean;order:number;depth?:number;sceneryEntries?:number[];cutaway?:string;instances?:Float32Array;colors?:Float32Array};
+type MeshPacket={geometry:number;material:number;matrix:number[];name:string;cast:boolean;receive:boolean;order:number;depth?:number;sceneryEntries?:number[];cutaway?:string;cutawayHeight?:number;instances?:Float32Array;colors?:Float32Array};
 export type ChunkPacket={occlusion?:{objectId?:string;x:number;y:number;min:number[];max:number[]}[];geometries:GeometryPacket[];materials:(MaterialRecipe & {vertexColors?:boolean})[];meshes:MeshPacket[]};
 
 export function materialRecipe(material:THREE.Material):MaterialRecipe{
@@ -39,7 +39,7 @@ export function packChunk(root:THREE.Group):{packet:ChunkPacket;transfer:ArrayBu
     if(!(node instanceof THREE.Mesh))return;
     const g:THREE.BufferGeometry=node.geometry,m:THREE.Material|THREE.Material[]=node.material;if(Array.isArray(m))throw Error('streamed mesh needs one material');
     let geometry=geometries.get(g);if(geometry===undefined){geometry=packet.geometries.length;geometries.set(g,geometry);packet.geometries.push({attributes:Object.fromEntries(Object.entries(g.attributes).map(([name,a])=>[name,attribute(a)])),index:g.index ? attribute(g.index) : undefined});}
-    const mesh:MeshPacket={geometry,material:materialId(m),matrix:node.matrixWorld.toArray(),name:node.name,cast:node.castShadow,receive:node.receiveShadow,order:node.renderOrder,depth:node.customDepthMaterial ? materialId(node.customDepthMaterial) : undefined,sceneryEntries:node.userData.sceneryEntries,cutaway:node.userData.cutaway};
+    const mesh:MeshPacket={geometry,material:materialId(m),matrix:node.matrixWorld.toArray(),name:node.name,cast:node.castShadow,receive:node.receiveShadow,order:node.renderOrder,depth:node.customDepthMaterial ? materialId(node.customDepthMaterial) : undefined,sceneryEntries:node.userData.sceneryEntries,cutaway:node.userData.cutaway,cutawayHeight:node.userData.cutawayHeight};
     if(node instanceof THREE.InstancedMesh){mesh.instances=node.instanceMatrix.array as Float32Array;buffers.add(mesh.instances.buffer as ArrayBuffer);if(node.instanceColor){mesh.colors=node.instanceColor.array as Float32Array;buffers.add(mesh.colors.buffer as ArrayBuffer);}}
     packet.meshes.push(mesh);
   });
@@ -53,7 +53,7 @@ export function unpackChunk(packet:ChunkPacket,water:(id:string)=>THREE.Material
   for(const item of packet.meshes){
     const g=geometries[item.geometry]!,m=materials[item.material]!,mesh=item.instances ? new THREE.InstancedMesh(g,m,item.instances.length/16) : new THREE.Mesh(g,m);
     if(mesh instanceof THREE.InstancedMesh){mesh.instanceMatrix=new THREE.InstancedBufferAttribute(item.instances!,16);if(item.colors)mesh.instanceColor=new THREE.InstancedBufferAttribute(item.colors,3);mesh.computeBoundingSphere();}
-    mesh.matrix.fromArray(item.matrix);mesh.matrixAutoUpdate=false;mesh.name=item.name;mesh.castShadow=item.cast;mesh.receiveShadow=item.receive;mesh.renderOrder=item.order;mesh.userData.sceneryEntries=item.sceneryEntries;mesh.userData.cutaway=item.cutaway;if(item.depth!==undefined)mesh.customDepthMaterial=materials[item.depth];
+    mesh.matrix.fromArray(item.matrix);mesh.matrixAutoUpdate=false;mesh.name=item.name;mesh.castShadow=item.cast;mesh.receiveShadow=item.receive;mesh.renderOrder=item.order;mesh.userData.sceneryEntries=item.sceneryEntries;mesh.userData.cutaway=item.cutaway;mesh.userData.cutawayHeight=item.cutawayHeight;if(item.depth!==undefined)mesh.customDepthMaterial=materials[item.depth];
     if(item.order===2)g.boundingSphere!.radius+=3;group.add(mesh);
   }
   return group;

@@ -15,11 +15,15 @@ place east_medical_center(object=a_east_medical_center,at=[12000,5530],heading_d
 site access_east_medical_center(object=east_medical_center,kind=hospital,entry=[-18,-31.5],street=workshop_street,width=20,points=[[11946,5250]]);
 surface east_medical_apron(color=#b6b9ac,points=[[11860,5262],[12130,5262],[12130,5440],[11860,5440]]);
 place market_hall(object=a_market_hall,at=[6400,4495],heading_deg=0);
+floor hall_loft(on=market_hall,at=[14.5,9,-5],size=[21,28]);
+floor hall_landing(on=market_hall,at=[28.25,9,-15.5],size=[6.5,7]);
 site access_market_hall(object=market_hall,kind=market,entry=[0,-19],street=market_avenue,width=16,points=[[6400,4288]]);
 place hospital(object=a_hospital,at=[3900,6830],heading_deg=0);
 site access_hospital(object=hospital,kind=hospital,entry=[0,-32.25],street=south_avenue,width=16,points=[[3900,6587]]);
 place garden_school(object=a_primary_school,at=[4430,3650],heading_deg=0);
 site access_garden_school(object=garden_school,kind=school,entry=[0,-26.25],street=school_street,width=16,points=[[4440.68,3384.805]]);
+// Join the existing entrance paving to the actual open doorway.
+surface school_doorstep(color=#bab8a8,points=[[4420,3538],[4440,3538],[4440,3586],[4420,3586]]);
 place south_school(object=a_south_school,at=[5900,6970],heading_deg=180);
 site access_south_school(object=south_school,kind=school,entry=[0,-26.25],street=south_terrace,width=16,points=[[5893.397,7273.091]]);
 place public_library(object=a_library,at=[7200,5520],heading_deg=0);

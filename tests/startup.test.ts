@@ -25,8 +25,10 @@ it('carries the accepted worker graph and fails scene/chunk waiters on bootstrap
  const worker=makeWorker(),compile=vi.fn(),client=new WorldWorkerClient(worker as unknown as Worker,compile),scene=createFixtureScene();
  const navigation=structuredClone(ambientGraph(scene)),received=structuredClone(scene);
  const ground=structuredClone(prepareCharacterGround(scene));
- worker.onmessage({data:{scene:received,navigation,characterGround:ground,contacts:structuredClone(sceneContactData(scene)),compileMs:12,saveCompatibility:'current',previousCoverageSaveCompatibility:'r72',previousInvitationSaveCompatibility:'r71'}});
+ worker.onmessage({data:{scene:received,navigation,characterGround:ground,contacts:structuredClone(sceneContactData(scene)),compileMs:12,saveCompatibility:'current',previousCrossingAccessSaveCompatibility:'r112',previousCrossingAccessNavigation:navigation,previousCrossingAccessContacts:sceneContactData(scene),previousCoverageSaveCompatibility:'r72',previousInvitationSaveCompatibility:'r71',previousHomeInteriorSaveCompatibility:'r93',previousHomeInteriorNavigation:navigation,previousHomeInteriorContacts:sceneContactData(scene)}});
  expect(await client.scene).toBe(received);primeSceneContacts(received,client.contacts);primeAmbientNavigation(received,client.navigation);primeCharacterGround(received,client.characterGround);expect(client.characterGround).toEqual(ground);expect(compile).toHaveBeenCalledWith(12);expect(client.saveCompatibility).toBe('current');expect(client.previousInvitationSaveCompatibility).toBe('r71');expect(client.previousCoverageSaveCompatibility).toBe('r72');expect(ambientNavigation(received).nodes).toEqual(navigation.nodes);
+ expect(client.previousCrossingAccessSaveCompatibility).toBe('r112');expect(client.previousCrossingAccessNavigation).toEqual(navigation);expect(client.previousCrossingAccessContacts).toEqual(sceneContactData(scene));
+ expect(client.previousHomeInteriorSaveCompatibility).toBe('r93');expect(client.previousHomeInteriorNavigation).toEqual(navigation);expect(client.previousHomeInteriorContacts).toEqual(sceneContactData(scene));
  client.dispose();
  const broken=makeWorker(),bad=new WorldWorkerClient(broken as unknown as Worker),failure=bad.scene.catch(e=>e.message);
  const pending=bad.build({x0:0,y0:0,x1:800,y1:800}).catch(e=>e.message);

@@ -1,0 +1,41 @@
+{
+  "before": {
+    "compileMs": [
+      13228.399999976158,
+      13211
+    ],
+    "completeDrawMs": [
+      18067.799999952316,
+      17854.600000023842
+    ],
+    "maxHeartbeatGapMs": [
+      775.8000000715256,
+      770.7000000476837
+    ]
+  },
+  "after": {
+    "compileMs": [
+      11523.5,
+      11547.899999976158
+    ],
+    "completeDrawMs": [
+      16211.599999904633,
+      16501.400000095367
+    ],
+    "maxHeartbeatGapMs": [
+      787.1000000238419,
+      883.5
+    ]
+  },
+  "completeDrawMedianImprovementMs": 1604.699999988079,
+  "pixelIdentical": true,
+  "memoryBuffersIdentical": true,
+  "geometryBuffers": {
+    "bytes": 95949526,
+    "geometries": 1396,
+    "uniqueBuffers": 8090,
+    "uniqueTriangles": 883197
+  },
+  "chunkMembershipIdentical": true,
+  "scope": "Two warm-cache native starts per version, same local IAB and view. Geometry buffers are not total browser heap or VRAM."
+}

@@ -1,12 +1,19 @@
 # A market you can use
 
+Residents can now [walk to paid work](commuting.md). The live commuter keeps
+their home meal plan and can earn baking wages through the same guarded jobs
+as the player. Travel itself earns nothing and reserves no resources.
+
+
+The bakery counter now operates [inside the market hall](interiors.md). Earlier outdoor-counter recordings on this page show the same finite transactions before the r82 relocation.
+
 The market now opens on request: use its icon or **M**, then choose Shop or Work.
 Use **I** for carried food. Only the current view is shown, and leaving the
 counter closes its actions. [Contextual controls](../context-actions.md).
 
 Walk up to the market vendor and buy bread with **B**. Shelf stock drops by one, your credits move to the business and your bag records one loaf. **G** eats it and restores fullness. **V** sells an owned item back at the listed price, if the business has money and room for it.
 
-Want to earn some credits? **H** starts a six-second bread batch. The business reserves flour, three credits and space on its shelf. Stay nearby until the batch finishes: two loaves reach the shelf, the reserved wage reaches you and work uses some fullness. Press H again or leave the work area to cancel; the reservations return without a wage or finished bread.
+Want to earn some credits? Walk onto the [workstation ring](workstations.md), then **H** starts a six-second bread batch. The business reserves flour, three credits and space on its shelf. Stay at the workbench until the batch finishes: two loaves reach the shelf, the reserved wage reaches you and work uses some fullness. Press H again or leave the work area to cancel; the reservations return without a wage or finished bread.
 
 ![Buying food, eating and completing paid work](../media/commerce.gif)
 
@@ -14,9 +21,14 @@ Want to earn some credits? **H** starts a six-second bread batch. The business r
 
 The vendor packs lunches and bakes when bread runs low. The commuter buys and eats when hungry, using actual route positions and the same transactions as the player. Neither gets free food or money. Flour is finite, customers have finite budgets and work stops when ingredients, shelf space, wages or fullness run out. Player delivery jobs now connect the station depot, bakery and school canteen; there is no automatic supply generation.
 
+Optional [rest plans](resting.md) now add a shared energy need. Work and repairs
+check effort before starting and spend it once on completion; cancellation keeps
+energy apart from elapsed-time drain. Usable seating recovers energy. Food,
+credits and all ordinary escrow remain independent.
+
 ## Author it in Dream
 
-One `economy()` block owns the system for a linked world. Goods, accounts, markets and work have explicit IDs. Accounts reference the player or existing NPC placements. Markets and production workers require stationary NPCs; repair workers start from a stationary home and use their declared grounds, service streets and connecting pedestrian pavement. Customers may use the existing walking routes. The complete-world compiler checks ownership after module linking.
+One `economy()` block owns the system for a linked world. Goods, accounts, markets and work have explicit IDs. Accounts reference the player or existing NPC placements. Market operators and production workers without `commute=true` require stationary NPCs. Explicit commuters walk from their declared grounds; repair workers start from a stationary home and use their declared grounds, service streets and connecting pedestrian pavement. Customers may use the existing walking routes. The complete-world compiler checks ownership after module linking.
 
 | Declaration | Meaning |
 | --- | --- |
@@ -83,7 +95,7 @@ economy(){
 }
 ```
 
-Run `npm run -s dream -- check docs/examples/market-work.dream`. The example uses short work durations for testing; the live market takes six seconds. The example's simple pedestrian has swing joints; full humanoid rigs in the live world also get a planted work gesture through their explicit bone bindings.
+Run `npm run -s dream -- check docs/examples/market-work.dream`. The example uses short work durations for testing; the live market takes six seconds. The example's simple pedestrian has swing joints; full humanoid rigs can bind physical standing and hand targets through [workstations](workstations.md). The live bakery uses one shared prep station for every recipe.
 
 ## What the engine guarantees
 
@@ -120,11 +132,13 @@ fastener units. They are finite supplies, added once for existing saves. Neither
 job creates ingredients or business money, and kit assembly does not replace
 all the world's supply needs.
 
-The work panel shows the selected recipe. A missing ingredient blocks the whole
+The work panel shows the complete selected recipe on its own wrapping line, with
+status below and a single reason for a disabled action. [Current panel](../context-actions.md#open-the-part-you-need).
+A missing ingredient blocks the whole
 start; it cannot take the bread and fail halfway through taking vegetables.
 Wages, output room and room to refund every ingredient stay reserved. Cancel or
 walk away before completion to return all inputs and wages without output or pay.
-NPC workers use the same rule; the live vendor now packs lunches before restocking bread through its ordered work policy.
+NPC workers use the same rule; the live vendor replenishes consumed repair kits before preparing lunches and bread through its ordered work policy.
 
 ![Packing, buying and eating a lunch](../media/recipes.gif)
 
@@ -417,22 +431,28 @@ the primary area.
 Blocked workers wait;
 there is no ladder, construction scaffold or dropped-kit simulation. Trees use
 a `regrow_s` repair service for paid planting and physical growth.
-[Planting guide and runnable source](growth.md). The live fixture service covers 449 targets: existing market, park, station and school
-furniture, the two park wall sections, sixteen planted street tubs, two produce stalls, and all 413 streetlights across 32 streets. It does not make other scenery destructible.
+[Planting guide and runnable source](growth.md). The primary fixture service covers 449 targets: existing market, park, station and school
+furniture, the two park wall sections, sixteen planted street tubs, two produce stalls,
+and the original 413 streetlights across 32 streets. The school/quarter service
+also reaches eleven station-quarter fixtures, including its three lamps.
+[Station maintenance](station-quarter.md#damage-has-a-follow-up) uses the same
+finite kits, wages and recovery rules. It does not make other scenery destructible.
 
 
 ### Replacement supplies
 
-The station depot starts with 32 repair kits. After the caretaker or player has
-used at least two kits, go to **Station supplies**, choose **Bring repair kits to
-the market** and press H. Two kits leave the depot; the bakery reserves six
+The station depot starts with 32 repair kits. When two kits fit after pending
+assembly and refund reservations, go to **Station supplies**, choose **Bring
+repair kits to the market** and press H. Two kits leave the depot; the bakery reserves six
 credits for the supplier and four for the courier. Take the cargo back, get out
 and hand it over with H. The bakery receives two kits, the depot receives six
-credits and you receive four. No player credits are charged.
+credits and you receive four. No player credits are charged. The baker may already be replacing used kits
+from boards and fasteners, so two repairs do not always create space for a
+finished-kit shipment.
 
 ```dream
-delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_square);
-repair market_tables(label="Repair city fixtures",market=market_stall,on=market_square,grounds=[park_seating,station_seating,market_hall,school_yard,school_yard_access,school_yard_return,garden_work],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
+delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_hall,grounds=[market_square]);
+repair market_tables(gesture=mending,dry=true,label="Repair city fixtures",market=market_stall,on=market_hall,grounds=[park_seating,station_seating,market_square,school_yard,school_yard_access,school_yard_return,garden_work],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5,recover=fasteners,amount=1);
 ```
 
 These declarations are the live world's policy. The earlier flour and bread
@@ -468,7 +488,7 @@ unreachable targets. The player can carry a kit in a vehicle; the caretaker walk
 at 1.4 m/s and returns after each job. A trip across the city takes several
 simulation minutes. Nothing completes during pause or while the page is closed.
 
-The primary ground plus extras are at most eight unique convex surfaces. Together
+The primary `on` plus up to eleven extra `grounds` are at most twelve unique convex surfaces. Together
 they retain the 4,096 local-sample limit; the derived pedestrian graph has at most
 8,192 nodes and 32,768 directed links. Saved paths still have at most 128 points.
 The world worker prepares topology before play; live contacts are checked during
@@ -485,7 +505,9 @@ an agent to author both services and infrastructure, use
 
 ### Street verges
 
-The live service reaches 449 targets, including all 413 city lamps.
+The primary street service reaches 449 targets, including the original 413 lamps.
+The three station-quarter lamps use the school/quarter service, bringing connected
+lamp coverage to all 416. [Quarter coverage](station-quarter.md#damage-has-a-follow-up).
 A subset such as `streets=[market_avenue,high_street,civic_walk]` declares which
 sidewalks a service covers; the live city lists all 32 streets.
 `verge=24` permits a short approach up to 2.4 metres beyond those sidewalks, near
@@ -556,9 +578,11 @@ It reuses the existing `repair` and `grounds` vocabulary:
  );
 ```
 
-The school grounds share the live 449-target service, including all 413 lamps.
-This extends one existing worker's connected area. It adds no worker, rig or
-physics body; every new destination still needs validated access.
+The outdoor school grounds remain part of the 449-target street service, including
+the original 413 lamps. School interior furniture and the eleven station-quarter
+fixtures share the separate school/quarter service; its three lamps complete
+coverage of all 416. One existing worker serves them, with no extra rig or physics
+body. Every destination still needs validated access.
 
 ## Planting and growth
 
@@ -600,11 +624,13 @@ These declarations come from the [complete runnable courier world](../examples/c
 
 `account.deliveries` is an ordered list of 1..4 unique contracts. It can accompany
 repair duties, but excludes automatic production work. The actor needs a stationary
-home inside the receiving market's `on` ground and interaction radius. Market
-vendors stay at their businesses. The player never gets an automatic policy.
+home with connected pickup, handoff and return routes. Home and counters can
+use the declared grounds or accepted pedestrian pavement; home need not be beside
+the receiving counter. Market vendors stay at their businesses. The player never gets an automatic policy.
 
-Delivery `on` declares the receiving work ground. Optional `grounds` adds 1..7
-unique convex areas for off-pavement approaches, such as the example's depot yard.
+Delivery `on` declares a work ground. Optional `grounds` adds 1..11
+unique convex areas, at most twelve including `on`, for off-pavement approaches
+such as the example's depot yard. The combined local-sample limit stays 4,096.
 A supplier already on accepted pedestrian pavement needs no extra ground. These
 areas create no road or paving. The complete-world compiler checks pickup,
 handoff and return from every assigned home, using sidewalks, crossings and
@@ -630,9 +656,9 @@ Pickup and handoff approaches stay less than four world units above/below the ve
 
 ## Work inside a building
 
-The market hall now has a [usable ground floor](interiors.md). Stand in its foyer with a clear line through the doorway to buy, sell, begin baking or talk to the vendor. Walls block these interactions. Existing work cancellation, finite stock and conserved wages still apply. The vendor remains at the entrance; this does not add a restaurant or another business.
+The market hall now has a [working indoor counter](interiors.md). Enter through the doorway and walk around the existing table to buy, sell, begin baking or talk to the vendor. Walls and the forty-unit counter reach block transactions from the square. Existing work cancellation, finite stock and conserved wages still apply. Customers and supply workers enter the same room; this remains one bakery, with no restaurant or new business.
 
-`repair.on` / `repair.grounds` and delivery grounds may name a placed building with an interior. The engine reuses its rotated floor footprint instead of a separate painted polygon. The live furniture service adds `market_hall` to its extra grounds; the worker uses the same doorway, floor and wall contacts as the player. No new worker, actor slot, inventory or money is created.
+`repair.on` / `repair.grounds` and delivery grounds may name a placed building with an interior. The engine reuses its rotated floor footprint instead of a separate painted polygon. The live furniture service uses `on=market_hall` with the square and existing outdoor grounds. Tree work uses a narrow unpainted service aisle and the public orchard path. The original street fixture service keeps its 449 targets; the planting service now reaches 109 trees, including the three station-quarter rowans. Eleven quarter fixtures use the school/quarter service, including the two lobby benches on their named floors. The worker uses the same doorway, floor and wall contacts as the player. No new worker, actor slot, inventory or money is created.
 
 ## Customers with somewhere to go
 
@@ -734,8 +760,19 @@ its remaining simulation time.
 
 
 Furniture seats are named object-root `seat` declarations. Optional `meal.seats`
-references 1–4 unique furniture placements, with complete humanoids, connected
-approaches and shared player/NPC claims. [Author shared seating](seating.md).
+references 1–4 unique furniture placements in preference order. Within a piece
+of furniture, slots retain their authored order. Complete humanoids reserve the
+first reachable free slot after buying food; broken, occupied or unreachable
+choices yield to the next one. When none is available, the customer eats standing
+with the portion already purchased. Claims are shared with the player.
+[Author shared seating](seating.md) or compile the
+[ordered example](../examples/seat-preferences.dream).
+
+The live commuter prefers the home settee over the hall bench. The declared home
+floor and doorway corridor connect it to the market through existing sidewalks.
+The two cushion approaches clear both the player and the NPC walking body.
+These are individual meal trips; sitting beside someone does not itself count
+as a shared meal or change relationship history.
 
 ## Staff attendance
 
@@ -754,13 +791,15 @@ school staff use it in the live mock; no idle wages or employment contracts exis
 lamps. Both park entrances join the accepted pedestrian network; the caretaker
 walks from the market, reserves a real kit and wage, and restores the same usable
 furniture. These ten targets are part of the live 449-target service. The ground
-uses the remaining existing service-ground slot and stays within the 4096 local
-sample and 8192 network-node budgets. [Paths and park authoring](paths.md).
+shares the twelve-ground limit and stays within the 4096 local-sample and
+8192 network-node budgets. [Paths and park authoring](paths.md).
 
 ### City fixture coverage
 
-The live caretaker can reach all 413 lamps across the city's 32 streets, alongside
-18 existing furniture and wall targets. Dream still declares the service's
+The primary street service still reaches 449 targets: the original 413 lamps
+across 32 streets and 36 other furniture, wall, planter and stall targets. The
+school/quarter service adds eleven quarter fixtures, including the three new
+lamps, so all 416 city lamps have connected repair coverage. Dream declares each service's
 streets, grounds, categories, kit, pay and duration. The engine derives short
 access patches with room for the worker's complete body to join the sidewalk.
 Approaches remain inside the declared verge and clear riding surfaces and water;
@@ -778,10 +817,142 @@ uses a complete measured humanoid rig, the same twelve bone bindings as the city
 The same caretaker and finite market stock serve these jobs. Distant walks can
 be long; there are no regional crews or maintenance vehicles yet. Returning,
 eating, supplier deliveries and other duties use their existing rules. The separate
-planting service now covers 106 trees, including all 93 furnished street trees,
-using `verge=112` and the same connected sidewalks. Wide services derive supported
+planting service now covers 109 trees, including all 93 furnished street trees
+and the three quarter rowans, using `verge=112`, the connected sidewalks and
+explicit quarter work grounds. Wide services derive supported
 turns around pavement corners when a straight connection would cut the road.
-They create no new paving. Its 5,380 navigation nodes and 20,422 directed links
-fit the unchanged network caps. [Wind-tree example](../examples/city-tree-replanting.dream).
+They create no new paving. Before the quarter extension, the planting graph had
+5,380 navigation nodes and 20,422 directed links. Those measurements are historical;
+the current extension retains the same graph caps.
+[Quarter rules and current evidence](station-quarter.md#damage-has-a-follow-up) ·
+[Wind-tree example](../examples/city-tree-replanting.dream).
 The 239 trees beyond those work areas and other structural damage still need
 declared recovery coverage.
+
+
+## Work needs equipment
+
+A job can name the physical props it uses. The bakery now uses the table inside
+the hall. If it breaks, both the player and baker stop production. Every reserved
+ingredient and wage returns once; an interrupted batch earns no output, pay or
+practice. The caretaker can repair the table using the existing finite supplies,
+then production becomes available again. Buying food, delivering supplies and
+repairing remain available during the interruption.
+
+![Repairing the bakery table after an on-foot hit](../media/hand.jpg)
+
+[On-foot damage and recovery](../media/hand.mp4) · [GIF](../media/hand.gif)
+
+Add `equipment` to an existing job. This exact recipe comes from the complete
+[work-equipment.dream](../examples/work-equipment.dream) example:
+
+```dream
+ work pack_lunch(label="Pack lunch",market=corner,output=lunch,make=1,seconds=2,pay=3,effort=6,capacity=1,target=2,equipment=[food_table]){
+  ingredient(good=bread,take=1);
+  ingredient(good=vegetables,take=1);
+ }
+```
+
+The example also binds repair-kit production to a different workbench. Breaking
+one workplace does not stop the other. Its caretaker repairs either through the
+same category-based service; the rule does not depend on a label or coordinate.
+
+`equipment` takes one to four unique **placement IDs**, including IDs from linked
+districts. Each must be a static solid prop within the market's horizontal reach.
+A template name, missing placement, moving actor or rideable vehicle fails complete
+world acceptance. Every listed item must be intact. Any broken section disables
+the whole declared item; part-level tool selection is not implied.
+
+The engine checks damage before paying a completed batch, including the same
+fixed tick. The next fixed tick handles interruptions even between the regular
+quarter-second commerce updates. Holds, refunds and capacity use the existing
+ledger. Jobs with no equipment field keep their earlier behavior.
+
+```sh
+npm run -s dream -- check docs/examples/work-equipment.dream
+node scripts/dream.mjs context --features commerce,interactions
+```
+
+The current recording walks through the doorway, hits the table on foot, refunds
+an interrupted batch, performs the shared repair and completes a new paid batch.
+[On-foot controls and Dream data](behavior.md#on-foot-strikes) ·
+[Equipment verification](../evidence/work-equipment/verification.md) ·
+[Current native sequence](../evidence/on-foot-strike/verification.md).
+
+
+## Return recovered materials
+
+A repair may declare `recover=good,amount=1`. When mature material, bag room and
+reserved shelf room permit, completion produces sealed return cargo. The input
+and ordinary wage settle once. Return to the market on foot and use **H**,
+without another wage. NPC workers carry it home and use the same transaction.
+A full warehouse still allows ordinary repairs without recovery.
+
+The live city recovers timber during tree replanting and fasteners during fixture
+repairs. Both can feed the existing paid kit recipe after an actual return.
+Saplings, extra materials and money remain finite. Young trees must mature before
+another timber recovery. Stock, refunds, output
+reservations, cargo, funds and ownership remain conserved through pauses, R,
+streaming and registered saves. [Authoring, controls and limits](growth.md#timber-recovery).
+[Fixture hardware and a complete runnable example](businesses.md#reuse-fixture-hardware).
+
+## Worker provisions
+
+Workers can take food with them before a long job. The food comes from their
+own money and a counter's real stock. In the live city, the caretaker can pack
+vegetables at the bakery and the school courier can pack bread at the canteen,
+when they have earned enough to buy it.
+
+```dream
+ration field_snack(good=bread,market=corner,below=60);
+account regular(actor=customer,credits=20,capacity=4,satiety=65,drain_s=.05,shop=true,ration=field_snack,repair=yard_furniture,deliveries=[kits_run]);
+```
+
+[Compile the complete example](../examples/worker-rations.dream).
+
+The worker buys one portion while idle and within clear reach of the declared
+counter. It needs an open, staffed counter, stock, money and room in the bag.
+Packing leaves capacity for the largest declared delivery, repair input or
+recovered output. A full bag or unavailable food leaves ordinary work available.
+There is no extra shopping journey and no free starting food or cash.
+
+At or below the declared fullness threshold, they eat owned food through the
+same transaction as the player. They keep moving and retain their commitment,
+route, deadline, wage and sealed cargo. Only their own bag supplies the portion.
+The policy makes at most one decision per simulation second; pause stops its
+clock. Its declared threshold and packing room replace generic automatic
+shopping for that worker. Food, fullness, spending and journeys survive R,
+streaming and reload.
+
+G now also eats carried food during a paid batch or repair, on dry ground.
+It does not consume held recipe inputs, repair kits or sealed delivery cargo,
+and does not cancel the job. Shared meals and timed meal-trip reservations
+retain their existing ownership rules.
+
+There are at most eight ration plans, with a threshold from 0 to 95. They are
+optional on stationary NPC repair/delivery accounts, without production,
+shift, meal-trip or social policies. This is a bounded game need. It adds no
+nutrition model, food meshes, new actors or new routes.
+
+## A recipe learned over lunch
+
+Shared-meal history can now qualify its two participants for real work. The
+city's larger bread batch accepts either three personal bread batches or a
+completed meal with the baker. All existing job reservations, inputs, wages,
+hours, equipment and effort checks still apply. The Work view shows the valid
+route; other residents never inherit this pair's progress.
+[Authoring rules and runnable source](relationships.md).
+
+## Physical workstations
+
+The live bakery now uses [one shared prep station](workstations.md). Players walk to its floor ring before starting; staff and commuters take actual bounded walking trips. Every recipe uses the same claim, body, equipment and finite transaction. Leaving or damage refunds once. Earlier recordings of work at counter range are historical; the workstation recording shows current placement and hand contact.
+
+
+## Motions for work and repair
+
+Jobs at the shared preparation table now bind different [Dream hand motions](work-gestures.md).
+Bread uses kneading, lunch packing folds, kit assembly fastens and saplings use
+tending. Furniture repair uses mending. The same programs drive player and worker
+rigs from real task progress. They change no wages, resources or eligibility.
+Repair anchors remain generic; handheld tools and exact contact with each damaged
+part are still unfinished.

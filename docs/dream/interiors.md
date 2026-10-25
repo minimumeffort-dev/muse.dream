@@ -4,13 +4,86 @@
 
 The covered market now has a doorway you can walk through, a floor you can stand on and walls you cannot walk through. Inside, the roof and the walls nearest the camera cut away. The floor, furniture and people stay visible.
 
-![Walking into the covered market](../media/interior.jpg)
+The earlier walkthrough is historical for the flat hall layout. The [workshop loft](upstairs-work.md) is the current interior; entry, counter and baking controls remain the same.
+
+![Historical ground-floor market walkthrough](../media/interior.jpg)
 
 [Watch the walkthrough](../media/interior.mp4) · [30 fps GIF](../media/interior.gif) · [Complete Dream source](../examples/enterable-market.dream)
 
-Leave your vehicle with **F**, then walk through the market's front entrance. The stall at the entrance still uses the existing economy: **H** starts paid baking, **B** buys bread and **G** eats what you carry. Stand in the foyer with a clear line through the doorway. A wall blocks buying, starting work and conversation; proximity alone is not enough. Leaving the work area or jumping cancels a batch and returns its reserved supplies and wage.
+Leave your vehicle with **F**, then walk through the market's front entrance. The vendor now stands inside, behind the existing table: **H** starts paid baking, **B** buys bread and **G** eats what you carry. Walk around the table to the counter. The outdoor square is outside its forty-unit reach. Staff, customers and supply workers use the same doorway and clear interior aisle. Walls block counter trades and conversation; proximity alone is not enough. Production requires its physical workstation. The loft uses a validated upper bench while counter sight remains required for trade. Leaving the work area or jumping cancels a batch and returns its reserved supplies and wage.
 
-This is one usable ground floor. It is not a restaurant, a system of stacked floors or a finished interior library. There is no hand-tool or furniture-grabbing control yet. The hall's tables, bench and crate use the existing impact and repair rules; the caretaker can walk to them through the doorway after damage.
+Buildings use one enclosing interior volume. The home and market now have connected upper floors; independent stacked rooms, lifts and a finished interior library remain future work. K can now hit reachable props on foot. Handheld tools and furniture pickup are not implemented. The hall's tables, bench and crate use the existing impact and repair rules; the caretaker can walk to them through the doorway after damage.
+
+## The school common room
+
+The Garden primary school's ground floor is now another connected interior.
+Its existing entrance path continues to a 1.6 m doorway, a 20 cm floor step and
+3.2 m of clear headroom. The upper floor remains part of the shell, without
+stairs or a usable second level.
+
+![Sharing bread after the school day](../media/schoolroom.jpg)
+
+[Common-room video](../media/schoolroom.mp4) · [GIF](../media/schoolroom.gif) · [Complete school assembly](../examples/enterable-school.dream)
+
+The teacher still serves the outdoor canteen during its 08:00–17:00 hours.
+After closing, they walk through the door to their indoor break spot. Meet them
+with T, buy two portions of bread while a counter is open, sit on a nearby bench
+with F and invite them with Y. Both consume a portion after the shared meal;
+the teacher's existing per-person memory and return dialogue record it. They
+can decline when busy, full or due back at work. This is a common room, without
+classroom lessons or an education simulation.
+
+All three new benches use the same seating and splintering rules as the yard.
+The two tables also retain their category's break policy. The existing
+caretaker's added `classroom_furniture` service uses finite repair kits, wages
+and the same pedestrian network and doorway. The player can claim that paid
+service too. Repaired seating becomes usable again; reclaimed fasteners return
+to the bakery supply chain. There are no extra NPCs or live rigs.
+
+The registered r90 upgrade keeps saved resources and visible journeys. A teacher
+already resting outside walks to the new break spot. An active outdoor shared
+meal retains its visible pose, food and timer, then returns indoors. The old
+source slot remains available. [Checks and capture](../evidence/school-interior/verification.md).
+
+## The commuter's home
+
+The same home now has [physical stairs and an upper floor](stairs.md). The earlier
+ground-floor walkthrough below is historical; its seating, food and repairs still
+work. Use [stairs-home.dream](../examples/stairs-home.dream) for the current house.
+
+
+The home now also supports [shared rest and energy](resting.md). Sit beside the
+resident with F; ordinary work and repairs check and spend energy, while usable
+seating recovers it. Automatic home rest shares the existing seat claims and
+finite damage/repair system. This adds no beds or sleeping model.
+
+The brick terrace beside Market Avenue now has an open ground floor, a timber
+settee, a table and a planter. Its existing commuter walks through the doorway
+and waits in the foyer before the next market trip. The route and waits are
+unchanged. You can enter from the street, sit with F, stand with F or movement,
+and hit reachable furniture with K.
+
+![The commuter's ground-floor room](../media/home.jpg)
+
+[Walkthrough](../media/home.mp4) · [GIF](../media/home.gif) · [Complete home and settee source](../examples/enterable-home.dream)
+
+The doorway is about 1.17 m wide, the floor step 20 cm and clear headroom 3.13 m.
+The car stays outside. Window frames are carved voxel parts, with the same
+`cutaway` tags as their walls. Rotating the view hides the appropriate shell;
+floors, contents and physical contacts remain.
+
+The settee uses the shared bench splintering policy. Its frame, cushions and
+arms form five released groups. The table and pot keep their own category
+policies. `home_furniture` connects the interior to the existing caretaker,
+finite repair kits, wages and reclaimed fasteners. The player can claim that
+service at the market counter too. Its existing counter area also covers the
+hall's east table and produce crate. Indoor repairs can start during rain.
+
+The r93 save upgrade keeps resources, damage, work and commute clocks. It
+initializes only the new repair counters, retargets derived paths and recovers
+poses blocked by the new shell. A saved car newly enclosed by the home moves
+to a clear nearby exterior position, retaining its heading, travel and ownership. The old source slot survives. The upper storey now has [physical stairs](stairs.md). Sleeping, ownership,
+access permissions and lifts remain missing. Named [floors](floors.md) now support upstairs rest and repair journeys. [Checks](../evidence/home-interior/verification.md).
 
 ## Give the floor an owner
 
@@ -30,7 +103,11 @@ Rectangle contacts use `size=[width,depth]`, plus `at`, `height` and optional `h
 
 ## Cut away the shell
 
-Tag the appropriate static parts with `cutaway=roof|front|back|left|right`. The directions describe the object, including its placement heading. Keep the floor and contents untagged. The camera hides the roof and the near sides while you are below the ceiling and inside the room. Q/E changes which sides are hidden, without changing the character's heading.
+Tag the appropriate static `part` or `voxels` sections with `cutaway=roof|front|back|left|right`. The directions describe the object, including its placement heading. Keep the floor and contents untagged. The camera hides the roof and the near sides while you are below the ceiling and inside the room. Q/E changes which sides are hidden, without changing the character's heading.
+
+The reveal opens cleanly instead of stippling the player. Fully hidden tagged
+parts still cast their ordinary shadows; the floor, contents and physical
+contacts stay intact. [GPU visibility checks](../evidence/clean-cutaways/verification.md).
 
 The tags survive compaction, instancing and worker transfer. A newly loaded chunk immediately uses the current room view. Cutaways affect the view; the walls and ceiling still collide and the building retains its shadow. Ordinary foreground occlusion still works outside the building.
 
@@ -40,9 +117,9 @@ A work ground can name the **placed building ID** instead of another painted pol
 
 A room-owning `lamp` draws an always-on pool clipped to that floor. It remains readable at night, with no extra point light or shadow map. It is a surface effect: it does not light walls or calculate object occlusion.
 
-![The same ground floor at night](../media/interiornight.jpg)
+![The same ground floor at night, before the r82 counter relocation](../media/interiornight.jpg)
 
-[Night walkthrough](../media/interiornight.mp4) · [30 fps GIF](../media/interiornight.gif)
+[Earlier night walkthrough, before indoor service](../media/interiornight.mp4) · [30 fps GIF](../media/interiornight.gif)
 
 ## Complete assembly
 
@@ -76,6 +153,20 @@ object market_hall(label="Covered market hall"){
   contact c_front_right(at=[17.25,0,-19.5],size=[30.5,1],height=22);
   contact c_lintel(at=[0,6.5,-19.5],size=[4,1],height=15.5);
   contact c_ceiling(at=[0,21.5,0],size=[65,40],height=6.5);
+  contact c_loft(at=[14.5,8,-5],size=[21,28],height=1);
+  contact c_loft_landing(at=[28.25,8,-15.5],size=[6.5,7],height=1);
+  contact c_loft_left_guard(at=[3.85,9,-5],size=[.3,28],height=2.5);
+  contact c_loft_right_guard(at=[25.15,9,-1.4],size=[.3,20.8],height=2.5);
+  contact c_loft_back_guard(at=[14.5,9,9.15],size=[21,.3],height=2.5);
+  contact c_loft_left_post(at=[4.5,.5,8.5],size=[.8,.8],height=7.5);
+  contact c_loft_right_post(at=[24.5,.5,8.5],size=[.8,.8],height=7.5);
+  stairs loft_stairs(material=wood,at=[27,.5,1],size=[4,8.5,26],steps=17,heading_deg=180);
+  part loft_floor(shape=box,material=floorboards,at=[14.5,8.5,-5],size=[21,1,28],cutaway=above);
+  part loft_landing(shape=box,material=floorboards,at=[28.25,8.5,-15.5],size=[6.5,1,7],cutaway=above);
+  voxels loft_supports(material=wood,at=[14.5,4.25,8.5],size=[20.8,7.5,.8],grid=[26,15,1]){fill left(from=[0,0,0],to=[1,15,1]);fill right(from=[25,0,0],to=[26,15,1]);}
+  voxels loft_left_guard(material=wood,at=[3.85,10.25,-5],size=[.3,2.5,28],grid=[1,12,32],cutaway=above){fill rail(from=[0,11,0],to=[1,12,32]);repeat posts(index=i,count=5){fill post(from=[0,0,i*7],to=[1,12,i*7+1]);}}
+  voxels loft_right_guard(material=wood,at=[25.15,10.25,-1.4],size=[.3,2.5,20.8],grid=[1,12,32],cutaway=above){fill rail(from=[0,11,0],to=[1,12,32]);repeat posts(index=i,count=5){fill post(from=[0,0,i*7],to=[1,12,i*7+1]);}}
+  voxels loft_back_guard(material=wood,at=[14.5,10.25,9.15],size=[21,2.5,.3],grid=[32,12,1],cutaway=above){fill rail(from=[0,11,0],to=[32,12,1]);repeat posts(index=i,count=5){fill post(from=[i*7,0,0],to=[i*7+1,12,1]);}}
   part floor(shape=box,material=floorboards,at=[0,.25,0],size=[63,.5,38]);
   part left_wall(shape=box,material=redbrick,at=[-32,11,0],size=[1,22,40],cutaway=left);
   part right_wall(shape=box,material=redbrick,at=[32,11,0],size=[1,22,40],cutaway=right);
@@ -107,11 +198,13 @@ node scripts/dream.mjs check docs/examples/enterable-market.dream
 node scripts/dream.mjs context --features interiors,commerce
 ```
 
-The current limits are 32 placed interiors, four portals per interior, eight contacts and 32 visual parts per assembly. Existing NPC, live rig, destruction, fragment, source and navigation limits remain unchanged. Floors and room ownership live in accepted Dream data; saved people, goods, jobs and damage remain simulation state. Unloading a render chunk resets neither.
+The current limits are 32 placed interiors, four portals per interior, 32 contacts inside interiors (eight otherwise) and 32 visual parts per assembly. Existing NPC, live rig, destruction, fragment, source and navigation limits remain unchanged. Floors and room ownership live in accepted Dream data; saved people, goods, jobs and damage remain simulation state. Unloading a render chunk resets neither.
 
-[Verification, migration and performance](../evidence/interiors/verification.md) · [World systems still to build](../world-systems.md)
+[Indoor service and migration checks](../evidence/indoor-service/verification.md) · [Original interior verification](../evidence/interiors/verification.md) · [World systems still to build](../world-systems.md)
 
 
 The indoor bench now has two usable slots shared by the player and meal customer.
 Its authored approaches fit the existing floor and doorway network. Furniture
 remains destructible and repairable. See [shared seating](seating.md).
+
+Baking now depends on the existing table through [work equipment](commerce.md#work-needs-equipment). Damage refunds unfinished batches; repair restores production. Trade and repair remain usable.

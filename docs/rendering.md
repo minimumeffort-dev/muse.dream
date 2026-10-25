@@ -32,6 +32,15 @@ Walking feet retain world position, height and facing during stance, then return
 
 ## Loading and memory
 
+The development `?profile` panel also has **Measure journey**: use the normal
+controls through 60 warm-up and 3,600 measured rendered frames. Keep the tab
+visible. Unlike the short fixed-input drive, this uses ordinary elapsed simulation
+time and does not steer for you. `presentationMs` includes gaps between completed
+frames; `wait` reports complete-run streaming/shader hold episodes and duration.
+`cpuMs` excludes those hold intervals and is active-frame work, not total browser
+CPU time. `wallMs` includes warm-up. Hidden tabs interrupt instead of publishing
+a partial result. [Checks and a native sample](evidence/travel-profiling/verification.md).
+
 Cycle surfaces are resolved once per accepted Scene before chunk clipping.
 Declared junctions connect existing cycle facilities within the shared riding
 footprints and crossing-arm bounds. Their convex pieces are unioned once, so
@@ -57,6 +66,14 @@ draw. Browsers with parallel shader compilation can complete that work while the
 loading screen remains active; other drivers may still block. Simulation waits
 for both the required chunks and shader readiness. A failure exposes Reload,
 stops rendering and releases the streaming worker.
+
+Work-ground entrances now reuse the same exact nearest-node index as live path
+queries. Candidate selection still keeps the nearest 32 linked nodes, distance
+ties retain source order, and at most eight clear links attach an entrance.
+All eleven current work/journey packets remain byte-for-byte identical. A local
+512-probe benchmark reduced median lookup cost from 120.49 ms to 5.55 ms;
+complete world acceptance stayed around 5.7 seconds. This does not establish a
+browser startup or frame-rate gain. [Method and raw results](evidence/work-network-build/verification.md).
 
 On the local M3 Ultra / 96 GiB, the recorded maximum startup heartbeat gap fell
 from 1,949 ms to 289–293 ms across two final samples at full settings. Loading
@@ -94,6 +111,18 @@ cache held, then a released checkpoint below the initial level. These are Node d
 not peak memory or browser heap. The [matched browser and world checks](evidence/startup-fingerprints/verification.md)
 cover loading, full-quality drawing and the exact accepted scene. This does not
 change frame-by-frame rendering cost, world contents or save semantics.
+
+Historical projections now reuse a static foundation's accepted fit when both
+its object and terrain references are identical. Floor-bound furniture, ordinary
+props, changed terrain and independently authored objects keep their own fits.
+An existing target fit is never replaced, and a moved source pose is not seeded.
+The ordinary placement algorithm and its per-scene moving-object cache are unchanged.
+
+The [foundation comparison](evidence/foundation-reuse/verification.md) checks the
+complete bootstrap packet, including all historical fingerprints, contacts,
+navigation, foot support and stream bounds. It measures preparation separately
+from the first draw. This changes no graphics settings, render assets or save
+semantics; it does not establish a frame-rate or total-memory improvement.
 
 Two clean, warmed development reloads at a fixed 1600 × 900 CSS canvas and
 1.5 pixel ratio recorded world checking at 7.31–8.32 seconds before and
@@ -173,7 +202,35 @@ Brick, wood and stone use separate engine-owned surface shaders and palettes. A 
 
 The engine computes fixed terrain, road, bridge and instanced-scenery transforms once. Wind, water waves and local occlusion fades still animate on the GPU. Moving vehicles, people and debris keep their live transforms. The scene's matrices are updated once before occlusion and rendering, actor poses are reused within a frame, and a character is reparented only when changing vehicles.
 
+Player bodies, live rides, props, sports squads and camera framing share a
+presentation sample between the last two 120 Hz simulation poses. This adds
+at most one fixed tick of visual delay, without extrapolation or new physics.
+Resets, control changes and teleports snap. Owned sports balls use the visible
+carrier pose, including the squad's 20 Hz movement interpolation, and roll from
+visible displacement even when possession sets physical velocity to zero.
+Contacts, input, save data and transactions keep the accepted simulation state.
+
+Shadow centers still snap to world-aligned shadow texels. The projection's
+extents now follow sunlight and zoom continuously; translation noise cannot
+resize them. This removes the former 16-unit half-extent jumps during motion.
+The 2048 map, caster coverage, bias and filtering stay unchanged.
+[Regression checks and native captures](evidence/animation-continuity/verification.md).
+
+![Scooter turning and jumping beside the market](media/scooter.jpg)
+
+[Scooter in HD](media/scooter.mp4) · [GIF](media/scooter.gif)
+
 Pixel ratio, antialiasing, the 2048 × 2048 sun shadow map, shadow coverage, bloom, color grading, particle counts, asset detail and the fixed simulation timestep stay the same. Frustum culling avoids drawing geometry outside a camera or light's view; it never removes that geometry from memory.
+
+Static foreground scenery, terrain and hill roads use a clean sight opening
+around the player. There is no screen-pixel stipple over the character. The
+existing visibility value expands or closes that opening; authored interior
+roof/wall tags still disappear completely at zero. Nearby opaque instances
+stay intact. The fragment shader samples the world position after rigid motion
+and instancing, using the same player/view uniforms as terrain. Shadow passes
+keep the full caster, and contacts, geometry, instance buffers and draw counts
+are unchanged. Live unbatched objects retain their ordinary opacity fade.
+[GPU pixel checks and the moving scooter example](evidence/clean-cutaways/verification.md).
 
 ## Day and night
 
@@ -279,6 +336,17 @@ surface is skipped, so later overlays do not move down onto earlier paint.
 
 
 NPC resupply reuses resident maintenance walking and the existing character rigs.
+Staff, repair, meal and courier walking uses a timestamped presentation buffer.
+Player transactions can advance commerce between its regular quarter-second
+updates; those extra samples no longer restart the visual interpolation. Limb
+clocks stay continuous, and a finished stride keeps moving until the rendered
+feet reach their stop. A resumed route retains its visual delay until its next
+stop, then releases the buffer. There are at most 64 pose samples per cached
+account within the existing 16-account cap. Reset, clock rewind, teleport and
+reduced motion clear the samples. The existing quarter-second visual delay
+does not move contacts or alter saved journeys, money or inventory.
+[Replay and native recording](evidence/worker-continuity/verification.md).
+
 The live kit and sapling jobs share one additional prepared graph (3,248 nodes,
 10,000 directed links) for the same receiving ground, rather than building one
 per shipment. Original repair graphs, all 1,695 placements and the 2,813-node
@@ -408,7 +476,7 @@ results. Required prototypes hold the last complete frame and simulation tick
 until ready; failures use the existing terminal reload screen. There is no second
 worker, per-cell body or increase to active debris and template-cache limits.
 
-All 345 trees now use a shared fall rule. Their intact meshes, materials, scale,
+All 348 trees use a shared fall rule. Their intact meshes, materials, scale,
 contacts and public crowd graph are unchanged. New supported work turns belong
 only to services whose declared verge exceeds the previous 32-unit bound; earlier
 service paths and saved states retain their released semantics. The tree service
@@ -481,3 +549,75 @@ actors and 256 flock birds. Its geometry/instance typed arrays change from
 to 205,000. Family meshes rise from 57 to 64 because of distinct limb/face
 materials. These are full-detail fixture counts, not per-frame draws, total
 browser memory, VRAM or an FPS improvement. [Raw counts](evidence/wildlife-construction/geometry.json).
+
+## Character construction, r81
+
+The refined people keep the existing instanced attributes, live rigs, joint
+frames and color/depth pose paths. Sixteen prototype specimens use 1,535,712
+geometry-buffer bytes and 13,768 triangles, versus 993,844 bytes and 8,230
+triangles before; both sets contain sixteen compacted meshes. This is a bounded
+increase in asset detail, not a rendering speedup. These source-buffer counts
+exclude live instance records, total browser memory and VRAM.
+[Conditions and raw rows](evidence/character-construction/prototype-metrics.json).
+
+
+## Work-route endpoint lookup
+
+Complete-world validation and runtime work routing now reuse a spatial index
+for each immutable work graph. It returns exactly the nearest 32 linked nodes
+before clearance, including the original distance/index tie order. Sparse and
+distant probes use a bounded fallback. Actor positions, damage and segment
+clearance remain live, and worker-primed graph identity owns the cache.
+
+A local Node v26.8.1 / M3 Ultra three-run median for complete-world compilation
+fell from 8.12 to 7.27 seconds. Both entire service graphs and 24 reference paths
+remain exact. This adds bounded graph indices; it is not a memory reduction or
+measured browser/laptop gain. No geometry, rendering settings, actor budget or
+saved state changes. [Samples, source comparison and native checks](evidence/work-endpoints/verification.md).
+
+World acceptance also reuses directed work-graph edge checks when no simulation
+state is supplied. The exact Scene, graph array, contact owner and body profile
+own each entry. Contact replacement or graph priming invalidates it. Stateful
+queries still test current damage, growing objects, parking and live actors;
+endpoints, pavement and dry support retain their normal checks.
+
+Each queried graph adds one byte per directed edge and four bytes per offset,
+within the existing node/link bounds. This is added host cache memory, outside
+Dream, saves and worker transfers. Three matched local Node v26.8.1 comparisons
+reduced median complete-world acceptance from 7.18 to 5.45 seconds, with all eleven
+accepted-data groups and historical hashes unchanged. No browser FPS, loading,
+full-suite timing or lower-powered-device improvement was measured. Existing
+GIFs, videos and stills remain accurate because visuals and controls are unchanged.
+[Measurements, checks and native return](evidence/route-edge-cache/verification.md).
+
+## Storey-aware contents
+
+Named [floors](dream/floors.md) bind furnishing to existing slab contacts. From
+below inside the same building, upper contents use the existing per-instance
+visibility channel; streamed copies rebind that floor identity without another
+mesh or live rig. Actor and fragment views use the same viewer level. Standing
+upstairs keeps the occupied slab and contents opaque. These cutaways change no
+contacts, claims, saved poses or repair rules. The upper-floor walkthrough is an
+offline 30-frame-per-simulation-second export, not a performance benchmark.
+
+## Reuse static fits during worker preparation
+
+Historical save layouts now reuse the current world's cached static prop fits
+when the exact object and terrain are unchanged. Changed interior floor regions
+are compared geometrically; a conservative 3D support sphere prevents reuse when
+any underside sample could reach a changed floor. Floor-bound props, moving
+objects, actors, distinct objects and already-owned target fits retain their own
+calculation. The existing foundation-only path remains available.
+
+This is worker bootstrap memoization. It adds no authored Dream field or saved
+state, and does not alter contacts, navigation validation, meshes or streaming.
+The complete decoded packet and all 65 historical fingerprints compare exactly.
+The source remains r109 / simulation 52.
+
+Two quiet warm-cache native starts per version reached the first complete draw
+in 17.9–18.1 seconds before and 16.2–16.5 after. The 1280×720 captured view is
+pixel-identical, with the same 1920×1080 drawing buffer and 95,949,526 tracked
+geometry-buffer bytes. Those bytes are not total browser memory or VRAM. Loading
+heartbeat gaps still reach 0.8–0.9 seconds, and this does not establish a driving
+FPS gain or performance on less powerful laptops.
+[Method, raw data and remaining costs](evidence/startup-preparation/verification.md).

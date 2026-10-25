@@ -87,7 +87,7 @@ const objectV2PartSchema=objectPartSchema.extend({
   shape:z.enum(["box","sphere","cylinder","cone","pyramid","icosphere","capsule","torus","prism","voxel"]),
   voxels:voxelSchema.optional(),
   outline:z.array(z.tuple([z.number().finite(),z.number().finite()])).min(3).max(24).optional(),
-  cutaway:z.enum(["roof","front","back","left","right"]).optional(),
+  cutaway:z.enum(["roof","above","front","back","left","right"]).optional(),
   parent:z.string().min(1).max(40).optional(),
   position:z.tuple([offset,z.number().finite().min(-128).max(128),offset]),
   taper:z.number().finite().min(.1).max(1).optional(),
@@ -99,9 +99,10 @@ const objectV2PartSchema=objectPartSchema.extend({
 const objectDslV2Schema=objectV1Schema.extend({
   body:objectV1Schema.shape.body.extend({clearanceRadius:z.number().finite().min(4).max(128).optional()}).strict(),
   voxelSize:z.number().finite().min(.25).max(4).optional(),
-  measure:z.object({kind:z.enum(MEASURE_KINDS),axis:z.enum(["x","y","z"]),meters:z.number().finite().min(.05).max(60)}).strict().optional(),
+  measure:z.object({kind:z.enum(MEASURE_KINDS),axis:z.enum(["x","y","z"]),meters:z.number().finite().min(.05).max(120)}).strict().optional(),
   dslVersion:z.literal(2),joints:z.array(jointSchema).max(12).optional(),parts:z.array(objectV2PartSchema).min(1).max(32),
-  contacts:z.array(z.object({position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),radius:z.number().finite().min(1).max(64).optional(),size:z.tuple([z.number().finite().min(.1).max(128),z.number().finite().min(.1).max(128)]).optional(),headingRad:z.number().finite().min(-2*Math.PI).max(2*Math.PI).optional(),height:z.number().finite().min(.1).max(160)}).strict()).min(1).max(8).optional(),
+  contacts:z.array(z.object({position:z.tuple([offset,z.number().finite().min(0).max(128),offset]),radius:z.number().finite().min(1).max(64).optional(),size:z.tuple([z.number().finite().min(.1).max(128),z.number().finite().min(.1).max(128)]).optional(),headingRad:z.number().finite().min(-2*Math.PI).max(2*Math.PI).optional(),height:z.number().finite().min(.1).max(160)}).strict()).min(1).max(32).optional(),
+  stairways:z.array(z.object({part:z.string().min(1).max(40),contactStart:z.number().int().min(0).max(31),steps:z.number().int().min(2).max(24)}).strict()).min(1).max(2).optional(),
   interior:z.object({position:z.tuple([offset,z.number().finite().min(.1).max(64),offset]),size:z.tuple([z.number().finite().min(2).max(128),z.number().finite().min(1).max(128),z.number().finite().min(2).max(128)]),portals:z.array(z.object({id:z.string().min(1).max(40),side:z.enum(["front","back","left","right"]),offset:z.number().finite().min(-64).max(64),width:z.number().finite().min(1).max(32),height:z.number().finite().min(1).max(64)}).strict()).min(1).max(4)}).strict().optional(),
   seats:z.array(z.object({id:z.string().regex(/^[a-z][a-z0-9_]{0,31}$/),position:z.tuple([offset,z.number().finite().min(.1).max(128),offset]),approach:z.tuple([offset,offset]),headingRad:z.number().finite().min(-2*Math.PI).max(2*Math.PI)}).strict()).min(1).max(4).optional(),
   rideable:z.object({seat:z.tuple([offset,z.number().finite().min(0).max(128),offset]),control:z.enum(["car","bicycle","skateboard","scooter","boat","plane"]).optional()}).strict().optional(),
@@ -147,11 +148,21 @@ export const objectDslSchema=z.discriminatedUnion("dslVersion",[objectV1Schema,o
       if(p.voxels && (p.deform || p.animation || p.material.shaderStyle==='cloth'))ctx.addIssue({code:z.ZodIssueCode.custom,path:['parts',i,'voxels'],message:'voxels use rigid geometry without deform, cloth or part motion; joints remain available'});
       if(p.voxels?.chunks && (p.fragment || !(spec.impact?.kind==='break' || p.zone)))ctx.addIssue({code:z.ZodIssueCode.custom,path:['parts',i,'voxels','chunks'],message:'voxel chunks require break behavior or a break zone and cannot belong to a fragment group'});
     });
+    if(!spec.interior && (spec.contacts?.length??0)>8)ctx.addIssue({code:"custom",path:["contacts"],message:"contact budget exceeds 8 outside an interior"});
     spec.contacts?.forEach((c,i)=>{
       if((c.radius!==undefined)===(c.size!==undefined))ctx.addIssue({code:z.ZodIssueCode.custom,path:['contacts',i,'size'],message:'contact needs exactly one of radius or size'});
       if(c.headingRad!==undefined && !c.size)ctx.addIssue({code:z.ZodIssueCode.custom,path:['contacts',i,'headingRad'],message:'heading requires a rectangle contact'});
       if(c.radius!==undefined && c.height<1)ctx.addIssue({code:z.ZodIssueCode.custom,path:['contacts',i,'height'],message:'cylinder height must be at least 1'});
     });
+    const stairParts=new Set<string>(),stairContacts=new Set<number>();
+    for(const flight of spec.stairways??[]){
+      const p=spec.parts.find(p=>p.id===flight.part),cs=spec.contacts?.slice(flight.contactStart,flight.contactStart+flight.steps),n=flight.steps;
+      const invalid=()=>ctx.addIssue({code:"custom",path:["stairways"],message:"stair navigation must match its generated voxel treads and rectangle contacts"});
+      if(stairParts.has(flight.part) || Array.from({length:n},(_,i)=>flight.contactStart+i).some(i=>stairContacts.has(i))){invalid();continue;}stairParts.add(flight.part);for(let i=0;i<n;i++)stairContacts.add(flight.contactStart+i);
+      if(!spec.interior || !p?.voxels || p.voxels.grid.join(',')!==[1,n,n].join(',') || p.voxels.operations.length!==n || !cs || cs.length!==n){invalid();continue;}
+      const [x,y,z]=p.position,[w,h,d]=p.size,a=-(p.rotation?.[1]??0),base=y-h/2;
+      if((p.rotation?.[0]??0)!==0 || (p.rotation?.[2]??0)!==0 || p.voxels.operations.some((op,i)=>op.mode!=="fill" || op.shape!=="box" || op.from.join(',')!==[0,0,i].join(',') || op.to.join(',')!==[1,i+1,i+1].join(',')) || cs.some((c,i)=>{const offset=-d/2+(i+.5)*d/n;return !c.size || Math.abs(c.size[0]-w)>1e-6 || Math.abs(c.size[1]-d/n)>1e-6 || Math.abs((c.headingRad??0)-a)>1e-6 || Math.abs(c.position[0]-(x-Math.sin(a)*offset))>1e-6 || Math.abs(c.position[2]-(z+Math.cos(a)*offset))>1e-6 || Math.abs(c.position[1]-base)>1e-6 || Math.abs(c.height-h*(i+1)/n)>1e-6;}))invalid();
+    }
     if(spec.interior){
       const r=spec.interior,[x,y,zAt]=r.position,[w,h,d]=r.size;
       const problem=(message:string)=>ctx.addIssue({code:z.ZodIssueCode.custom,path:['interior'],message});

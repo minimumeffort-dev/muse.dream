@@ -1,0 +1,14 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/voxel-city.test.ts --maxWorkers=1 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/voxel-city.test.ts (2 tests) 521ms
+   ✓ voxel city integration > uses voxels across architecture, transit, boat fittings, people and paired park boundaries  460ms
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  13:27:59
+   Duration  7.73s (transform 345ms, setup 8ms, collect 7.09s, tests 521ms, environment 0ms, prepare 24ms)

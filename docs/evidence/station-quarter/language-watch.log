@@ -1,0 +1,165 @@
+
+> muse-dream@0.1.0 test:watch
+> vitest watch --maxWorkers=2 --testTimeout=60000 tests/proportions.test.ts tests/dream-project.test.ts tests/dream-agent.test.ts tests/floors.test.ts
+
+
+ DEV  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ❯ tests/proportions.test.ts (16 tests | 1 failed) 6551ms
+   ✓ physical proportions at the Dream boundary > resolves a physical extent uniformly, retaining local geometry and scaling contacts/seats 4ms
+   ✓ physical proportions at the Dream boundary > preserves physical size through imports and placement variation, with legacy units unchanged 2ms
+   ✓ physical proportions at the Dream boundary > measures rotated primitives in joint rest frames rather than summing raw sizes 1ms
+   ✓ physical proportions at the Dream boundary > rejects contradictory or unbounded sizing atomically: measure(kind=skateboard,axis=x,meters=5); 0ms
+   ✓ physical proportions at the Dream boundary > rejects contradictory or unbounded sizing atomically: measure(kind=tree,axis=x,meters=10); 0ms
+   ✓ physical proportions at the Dream boundary > rejects contradictory or unbounded sizing atomically: measure(kind=custom,axis=x,meters=0); 0ms
+   ✓ physical proportions at the Dream boundary > rejects contradictory or unbounded sizing atomically: measure(kind=custom,axis=x,meters=60); 0ms
+   ✓ physical proportions at the Dream boundary > rejects contradictory or unbounded sizing atomically: measure(kind=dragon,axis=x,meters=2); 0ms
+   ✓ physical proportions at the Dream boundary > rejects contradictory or unbounded sizing atomically: measure(kind=custom,axis=x,meters=2);measure(kind=custom,axis=x,meters=1); 0ms
+   ✓ physical proportions at the Dream boundary > rejects oversized typed placements and permits explicitly fantastical custom sizes 0ms
+   × physical proportions at the Dream boundary > accepts bounded high-rises while retaining category and resolved-scale limits 4ms
+     → Block: parts.0.size.1: Number must be less than or equal to 128
+   ✓ physical proportions at the Dream boundary > rejects cyclic measured joints without hanging or throwing outside schema diagnostics 1ms
+   ✓ physical proportions at the Dream boundary > uses the player's measure for both its mesh and driving cylinder 18ms
+   ✓ the complete mock world's proportion rules > gives every placed asset a measure and keeps the existing racing car footprint 3ms
+   ✓ the complete mock world's proportion rules > rejects a valid per-kind size that contradicts the player car's proportions  6516ms
+   ✓ the complete mock world's proportion rules > keeps plane, bike, skateboard, people and street furniture in a coherent hierarchy 0ms
+ ✓ tests/dream-agent.test.ts (20 tests) 2189ms
+   ✓ bounded agent context packets > exports machine-readable CLI context and preserves source/check boundaries  2181ms
+ ❯ tests/floors.test.ts (5 tests | 1 failed) 252ms
+   ✓ binds checked furnishing to an existing slab without blocking the room below 73ms
+   ✓ sits and stands upstairs without transferring through the slab 1ms
+   ✓ routes through the physical stairs and landing in both directions, never straight through the slab 45ms
+   ✓ retains floor bindings through chunk transfer and hides only the upper instance from below 110ms
+   × binds furniture to a supported ground-floor slab while rejecting floors below the room 23ms
+     → [
+  {
+    "code": "custom",
+    "path": [
+      "floors"
+    ],
+    "message": "ground: floor must fit its enclosure with 20-unit headroom above it"
+  },
+  {
+    "code": "custom",
+    "path": [
+      "floors"
+    ],
+    "message": "ground: floor needs a matching full rectangle slab contact"
+  }
+]
+ ✓ tests/dream-project.test.ts (17 tests) 13452ms
+   ✓ complete Dream 2 mock world > accepts the whole world from text and revalidates an invalid included placement  13413ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/floors.test.ts > binds furniture to a supported ground-floor slab while rejecting floors below the room
+ZodError: [
+  {
+    "code": "custom",
+    "path": [
+      "floors"
+    ],
+    "message": "ground: floor must fit its enclosure with 20-unit headroom above it"
+  },
+  {
+    "code": "custom",
+    "path": [
+      "floors"
+    ],
+    "message": "ground: floor needs a matching full rectangle slab contact"
+  }
+]
+ ❯ Object.get error [as error] node_modules/zod/v3/types.js:39:31
+ ❯ ZodEffects.parse node_modules/zod/v3/types.js:114:22
+ ❯ parseScene src/scene/schema.ts:254:22
+    252|
+    253| export function parseScene(data: unknown): Scene {
+    254|   return sceneSchema.parse(data);
+       |                      ^
+    255| }
+    256|
+ ❯ tests/floors.test.ts:43:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/proportions.test.ts > physical proportions at the Dream boundary > accepts bounded high-rises while retaining category and resolved-scale limits
+DreamError: Block: parts.0.size.1: Number must be less than or equal to 128
+ ❯ fail src/scene/dream-syntax.ts:42:9
+     40| }
+     41| export function fail(message: string, token?: Token, code?: string, ex…
+     42|   throw new DreamError(message, token, code, expected);
+       |         ^
+     43| }
+     44|
+ ❯ src/scene/dream.ts:316:7
+ ❯ compileObjects src/scene/dream.ts:117:26
+ ❯ compileWorldProgram src/scene/dream.ts:398:40
+ ❯ load src/scene/dream.ts:374:20
+ ❯ compileDreamWorld src/scene/dream.ts:378:17
+ ❯ tests/proportions.test.ts:69:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 2 passed (4)
+      Tests  2 failed | 56 passed (58)
+   Start at  12:54:02
+   Duration  21.04s (transform 456ms, setup 22ms, collect 15.11s, tests 22.44s, environment 0ms, prepare 98ms)
+
+ FAIL  Tests failed. Watching for file changes...
+       press h to show help, press q to quit
+c[3J RERUN  tests/vehicle-construction.test.ts
+        Filename pattern: tests/proportions.test.ts, tests/dream-project.test.ts, tests/dream-agent.test.ts, tests/floors.test.ts
+
+ ✓ tests/floors.test.ts (5 tests) 197ms
+ ✓ tests/proportions.test.ts (16 tests) 6266ms
+   ✓ the complete mock world's proportion rules > rejects a valid per-kind size that contradicts the player car's proportions  6232ms
+
+ Test Files  2 passed (2)
+      Tests  21 passed (21)
+   Start at  12:55:28
+   Duration  13.57s
+
+ PASS  Waiting for file changes...
+       press h to show help, press q to quit
+c[3J RERUN  tests/dream-project.test.ts x1
+        Filename pattern: tests/proportions.test.ts, tests/dream-project.test.ts, tests/dream-agent.test.ts, tests/floors.test.ts
+
+ ✓ tests/dream-project.test.ts (17 tests) 13313ms
+   ✓ complete Dream 2 mock world > accepts the whole world from text and revalidates an invalid included placement  13247ms
+
+ Test Files  1 passed (1)
+      Tests  17 passed (17)
+   Start at  12:56:43
+   Duration  20.12s
+
+ PASS  Waiting for file changes...
+       press h to show help, press q to quit
+c[3J RERUN  tests/proportions.test.ts x2
+        Filename pattern: tests/proportions.test.ts, tests/dream-project.test.ts, tests/dream-agent.test.ts, tests/floors.test.ts
+
+ ✓ tests/proportions.test.ts (16 tests) 6371ms
+   ✓ the complete mock world's proportion rules > rejects a valid per-kind size that contradicts the player car's proportions  6337ms
+
+ Test Files  1 passed (1)
+      Tests  16 passed (16)
+   Start at  12:57:35
+   Duration  13.39s
+
+ PASS  Waiting for file changes...
+       press h to show help, press q to quit
+c[3J RERUN  src/scene/world/open-world.dream
+        Filename pattern: tests/proportions.test.ts, tests/dream-project.test.ts, tests/dream-agent.test.ts, tests/floors.test.ts
+
+ ✓ tests/proportions.test.ts (16 tests) 6464ms
+   ✓ the complete mock world's proportion rules > rejects a valid per-kind size that contradicts the player car's proportions  6430ms
+ ✓ tests/dream-project.test.ts (17 tests) 13240ms
+   ✓ complete Dream 2 mock world > accepts the whole world from text and revalidates an invalid included placement  13197ms
+
+ Test Files  2 passed (2)
+      Tests  33 passed (33)
+   Start at  13:02:27
+   Duration  33.44s
+
+ PASS  Waiting for file changes...
+       press h to show help, press q to quit

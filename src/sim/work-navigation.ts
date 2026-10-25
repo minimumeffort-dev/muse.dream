@@ -1,3 +1,6 @@
+import {indoorAreas,indoorOwner,indoorEntries,indoorPath,indoorClear,indoorSegment,buildIndoorNetwork,type IndoorArea} from './indoor-navigation';
+import type {WalkingPoint} from '../scene/floors';
+import {sceneFloors} from '../scene/floors';
 import {walkingHeight,workGround} from '../scene/interiors';
 import {contactOverlaps,segmentContactDistance} from '../scene/contact-geometry';
 import type {Scene,Point} from '../scene/schema';
@@ -17,12 +20,13 @@ import {pavementSurface,pavementPortal,pavementInsetPoint} from '../scene/paveme
 const REPAIR_RADIUS=COMMERCE_LIMITS.repairRadius;
 
 /** Engine-owned work coverage; IDs are host cache keys, not source or saved graph data. */
-export interface WalkingArea {id:string;grounds:string[];access:Point[][];network:boolean;radius?:number;height?:number;wideAccess?:boolean}
+export interface WalkingArea {indoor?:string;id:string;grounds:string[];access:Point[][];network:boolean;radius?:number;height?:number;wideAccess?:boolean}
 const cache=new WeakMap<Scene,Map<string,ReturnType<typeof area>>>();
 function area(scene:Scene,r:WalkingArea){
  const radius=r.radius??REPAIR_RADIUS;
  let offset=0;
- const patches=r.grounds.map(id=>{const polygon=workGround(scene,id)!.points,b=polygonBounds(polygon),nx=Math.ceil((b.x1-b.x0)/12)+1,ny=Math.ceil((b.y1-b.y0)/12)+1,start=offset;offset+=nx*ny;return {polygon,b,nx,ny,start};});
+ const floorIds=new Set(scene.floors?.map(f=>f.id));
+ const patches=r.grounds.filter(id=>!floorIds.has(id)).map(id=>{const polygon=workGround(scene,id)!.points,b=polygonBounds(polygon),nx=Math.ceil((b.x1-b.x0)/12)+1,ny=Math.ceil((b.y1-b.y0)/12)+1,start=offset;offset+=nx*ny;return {polygon,b,nx,ny,start};});
  const point=(i:number):Point=>{const p=patches.find(p=>i>=p.start && i<p.start+p.nx*p.ny)!,n=i-p.start;
   // Fit explicit body profiles inside narrow paths instead of missing their only clear row.
   const coordinate=(low:number,high:number,k:number,count:number)=>{const inset=Math.min(radius,(high-low)/2);return low+inset+k/Math.max(1,count-1)*(high-low-2*inset);};
@@ -38,11 +42,13 @@ function area(scene:Scene,r:WalkingArea){
  return {nx,ny,point,allowed,patches,access,surface,dry,nodes:Array.from({length:Math.min(offset,COMMERCE_LIMITS.repairNodes)},(_,i)=>allowed(point(i)))};
 }
 function grid(scene:Scene,r:WalkingArea){let entries=cache.get(scene);if(!entries){entries=new Map();cache.set(scene,entries);}let value=entries.get(r.id);if(!value){value=area(scene,r);entries.set(r.id,value);}return value;}
-export function workClear(scene:Scene,r:WalkingArea,p:Point,state?:CarState):boolean{
+export function workClear(scene:Scene,r:WalkingArea,p:WalkingPoint,state?:CarState):boolean{
+ const above=indoorOwner(scene,indoorAreas(scene,r),p);if(above)return indoorClear(scene,above,p,state);if(p.elevation!==undefined && Math.abs(p.elevation-walkingHeight(scene,p.x,p.y))>.1)return false;
  const floor=walkingHeight(scene,p.x,p.y),radius=r.radius??REPAIR_RADIUS,height=r.height??18;
  return grid(scene,r).allowed(p) && !queryStaticContacts(scene,p.x,p.y,radius,state).some(c=>!(state && isBroken(state,c)) && contactOverlaps(c,p.x,p.y,radius) && c.top>floor && c.bottom<floor+height);
 }
-export function workSegment(scene:Scene,r:WalkingArea,a:Point,b:Point,state:CarState|undefined,areaOnly=false):boolean{
+export function workSegment(scene:Scene,r:WalkingArea,a:WalkingPoint,b:WalkingPoint,state:CarState|undefined,areaOnly=false):boolean{
+ const areas=r.indoor ? [r as IndoorArea] : indoorAreas(scene,r),layer=indoorOwner(scene,areas,a)??indoorOwner(scene,areas,b);if(layer || r.indoor)return indoorSegment(scene,(layer??r) as IndoorArea,a,b,state,areaOnly);if([a,b].some(p=>p.elevation!==undefined && Math.abs(p.elevation-walkingHeight(scene,p.x,p.y))>.1))return false;
  const g=grid(scene,r),radius=r.radius??REPAIR_RADIUS;
  if(g.surface){
   if(!g.allowed(a) || !g.allowed(b) || !g.surface.segment(a,b,radius))return false;
@@ -68,7 +74,19 @@ function segmentClear(scene:Scene,a:Point,b:Point,state?:CarState,live:Contact[]
   });
 }
 /** Bounded work-yard or public-pavement path; never a world raster or street shortcut. */
-export function workPath(scene:Scene,r:WalkingArea,start:Point,end:Point,state?:CarState):Point[]|undefined{
+export function workPath(scene:Scene,r:WalkingArea,start:WalkingPoint,end:WalkingPoint,state?:CarState):WalkingPoint[]|undefined{
+ const areas=indoorAreas(scene,r),a=indoorOwner(scene,areas,start),b=indoorOwner(scene,areas,end);
+ if(a || b){
+  if(a?.indoor===b?.indoor && a)return indoorPath(scene,a,workNetwork(scene,a),start,end,state);
+  const from=a ? indoorEntries(scene,a) : [start],to=b ? indoorEntries(scene,b) : [end],ground={...r,grounds:r.grounds.filter(id=>!scene.floors?.some(f=>f.id===id))};let best:WalkingPoint[]|undefined,cost=Infinity;
+  for(const entry of from)for(const exit of to){
+   const first=a ? indoorPath(scene,a,workNetwork(scene,a),start,entry,state) : [],middle=workPath(scene,ground,entry,exit,state),last=b ? indoorPath(scene,b,workNetwork(scene,b),exit,end,state) : [];
+   if(!first || !middle || !last)continue;const path=[...first,...middle,...last];if(path.length>128)continue;let previous=start,length=0;for(const p of path){length+=Math.hypot(p.x-previous.x,p.y-previous.y,(p.elevation??walkingHeight(scene,p.x,p.y))-(previous.elevation??walkingHeight(scene,previous.x,previous.y)));previous=p;}
+   if(length<cost){best=path;cost=length;}
+  }
+  return best;
+ }
+
  if(r.network)return networkPath(scene,r,start,end,state);
  const destination={x:end.x,y:end.y};
  if(workSegment(scene,r,start,end,state))return [destination];
@@ -81,14 +99,42 @@ export function workPath(scene:Scene,r:WalkingArea,start:Point,end:Point,state?:
   for(const j of [i-1,i+1,i-g.nx,i+g.nx])if(j>=0 && j<g.nodes.length && previous[j]===-2 && g.nodes[j] && Math.abs(j%g.nx-i%g.nx)+Math.abs(Math.floor(j/g.nx)-Math.floor(i/g.nx))===1 && workSegment(scene,r,g.point(i),g.point(j),state)){previous[j]=i;queue.push(j);}
  }return;
 }
-export type WorkNode=Point & {links:number[]};
+export type WorkNode=WalkingPoint & {links:number[]};
+const endpointIndices=new WeakMap<WorkNode[],{points:{x:number;y:number;i:number}[];grid:SpatialGrid<{x:number;y:number;i:number}>}>();
+/** Graph geometry is immutable after construction/priming; dynamic clearance is never cached. */
+export function nearestWorkNodes(nodes:WorkNode[],p:Point):{i:number;d:number}[]{
+ let index=endpointIndices.get(nodes);
+ if(!index){const points=nodes.flatMap((n,i)=>n.links.length ? [{x:n.x,y:n.y,i}] : []);index={points,grid:new SpatialGrid(points,128)};endpointIndices.set(nodes,index);}
+ const rank=(points:typeof index.points)=>points.map(n=>({i:n.i,d:Math.hypot(n.x-p.x,n.y-p.y)})).sort((a,b)=>a.d-b.d || a.i-b.i);
+ if(index.points.length<=32)return rank(index.points);
+ for(let radius=64;;radius*=2){
+  // Sparse or far-away probes must not scan more empty cells than a full node query.
+  if((Math.ceil(radius/64)+2)**2>index.points.length*2)return rank(index.points).slice(0,32);
+  const nearest=rank(index.grid.query(p.x,p.y,radius)).filter(n=>n.d<=radius);
+  if(nearest.length>=32)return nearest.slice(0,32);
+ }
+}
 const networks=new WeakMap<Scene,Map<string,WorkNode[]>>();
+const staticEdges=new WeakMap<Scene,WeakMap<WorkNode[],{contacts:ReturnType<typeof sceneContacts>;radius:number;height:number;offsets:Uint32Array;clear:Uint8Array}>>();
+/** Only immutable acceptance queries reuse edge results; gameplay always checks current contacts. */
+function staticEdgeClearance(scene:Scene,nodes:WorkNode[],radius:number,height:number){
+ let entries=staticEdges.get(scene);if(!entries){entries=new WeakMap();staticEdges.set(scene,entries);}
+ const contacts=sceneContacts(scene);let entry=entries.get(nodes);
+ if(!entry || entry.contacts!==contacts || entry.radius!==radius || entry.height!==height){
+  const offsets=new Uint32Array(nodes.length+1);for(let i=0;i<nodes.length;i++)offsets[i+1]=offsets[i]!+nodes[i]!.links.length;
+  entry={contacts,radius,height,offsets,clear:new Uint8Array(offsets[nodes.length]!)};entries.set(nodes,entry);
+ }
+ const memo=entry;
+ return (i:number,k:number)=>{const at=memo.offsets[i]!+k;let result=memo.clear[at]!;if(!result){result=segmentClear(scene,nodes[i]!,nodes[nodes[i]!.links[k]!]!,undefined,[],radius,height) ? 1 : 2;memo.clear[at]=result;}return result===1;};
+}
 /** Reuse the city's sparse pedestrian graph; local grids only cover declared work grounds. */
 export function workNetwork(scene:Scene,r:WalkingArea){
  let entries=networks.get(scene);if(!entries){entries=new Map();networks.set(scene,entries);}const existing=entries.get(r.id);if(existing)return existing;
+ if(r.indoor){const nodes=buildIndoorNetwork(scene,r as IndoorArea);entries.set(r.id,nodes);return nodes;}
+ const levels=indoorAreas(scene,r).map(a=>workNetwork(scene,a)),indoorNodes=levels.reduce((n,g)=>n+g.length,0),indoorLinks=levels.reduce((n,g)=>n+g.reduce((s,p)=>s+p.links.length,0),0);
  const radius=r.radius??REPAIR_RADIUS,g=grid(scene,r),publicNodes=ambientNavigation(scene).nodes,nodes:WorkNode[]=publicNodes.map(n=>({x:n.x,y:n.y,links:[...n.links]})),local=new Int32Array(g.nodes.length).fill(-1);
  if(r.radius!==undefined)for(let i=0;i<publicNodes.length;i++)nodes[i]!.links=nodes[i]!.links.filter(j=>j<i ? nodes[j]!.links.includes(i) : workSegment(scene,r,nodes[i]!,nodes[j]!,undefined,true));
- const add=(p:Point)=>{if(nodes.length>=COMMERCE_LIMITS.repairNetworkNodes)throw Error(`${r.id}: repair network exceeds 8192 nodes`);nodes.push({x:p.x,y:p.y,links:[]});return nodes.length-1;};
+ const add=(p:Point)=>{if(nodes.length+indoorNodes>=COMMERCE_LIMITS.repairNetworkNodes)throw Error(`${r.id}: repair network exceeds 8192 nodes`);nodes.push({x:p.x,y:p.y,links:[]});return nodes.length-1;};
  const connect=(a:number,b:number)=>{if(a!==b && workSegment(scene,r,nodes[a]!,nodes[b]!,undefined,true)){if(!nodes[a]!.links.includes(b))nodes[a]!.links.push(b);if(!nodes[b]!.links.includes(a))nodes[b]!.links.push(a);return true;}return false;};
  for(let i=0;i<g.nodes.length;i++)if(g.nodes[i])local[i]=add(g.point(i));
  for(const patch of g.patches)for(let j=0;j<patch.nx*patch.ny;j++){const i=patch.start+j;if(local[i]!<0)continue;for(const k of [j+1,j+patch.nx])if(k<patch.nx*patch.ny && (k===j+patch.nx || k%patch.nx!==0) && local[patch.start+k]!>=0)connect(local[i]!,local[patch.start+k]!);}
@@ -107,7 +153,7 @@ export function workNetwork(scene:Scene,r:WalkingArea){
   const i=add(p),inner=patch.verge ? pavementInsetPoint(polygon,p,radius) : undefined;let link=i;
   if(inner && Math.hypot(inner.x-p.x,inner.y-p.y)>.01){const j=add(inner);if(connect(i,j))link=j;}
   connectLocal(i,p);
-  let linked=0;for(const {j} of publicNodes.map((n,j)=>({j,d:Math.hypot(n.x-p.x,n.y-p.y)})).filter(({j})=>publicNodes[j]!.links.length).sort((a,b)=>a.d-b.d || a.j-b.j).slice(0,32))if(connect(link,j) && ++linked===8)break;
+  let linked=0;for(const {i:j} of nearestWorkNodes(publicNodes,p))if(connect(link,j) && ++linked===8)break;
  }
  // Wider service areas need supported corner turns omitted for larger cosmetic rigs.
  if(r.wideAccess){
@@ -131,13 +177,13 @@ export function workNetwork(scene:Scene,r:WalkingArea){
    }
   }
  }
- if(nodes.reduce((n,p)=>n+p.links.length,0)>COMMERCE_LIMITS.repairNetworkLinks)throw Error(`${r.id}: repair network exceeds 32768 links`);
+ if(nodes.length+indoorNodes>COMMERCE_LIMITS.repairNetworkNodes || nodes.reduce((n,p)=>n+p.links.length,0)+indoorLinks>COMMERCE_LIMITS.repairNetworkLinks)throw Error(`${r.id}: repair network exceeds 32768 links`);
  entries.set(r.id,nodes);return nodes;
 }
 function networkPath(scene:Scene,r:WalkingArea,start:Point,end:Point,state?:CarState):Point[]|undefined{
  const radius=r.radius??REPAIR_RADIUS,height=r.height??18,live=state ? actorContacts(scene,state.timeS,state).filter(c=>!c.id || !sceneContacts(scene).objects.get(c.id)?.route) : [],clear=(a:Point,b:Point)=>workSegment(scene,r,a,b,state,true) && segmentClear(scene,a,b,state,live,radius,height);
  if(clear(start,end))return [{x:end.x,y:end.y}];
- const nodes=workNetwork(scene,r),near=(p:Point)=>nodes.map((n,i)=>({i,d:Math.hypot(n.x-p.x,n.y-p.y)})).filter(v=>nodes[v.i]!.links.length).sort((a,b)=>a.d-b.d || a.i-b.i).slice(0,32).filter(v=>clear(p,nodes[v.i]!));
+ const nodes=workNetwork(scene,r),near=(p:Point)=>nearestWorkNodes(nodes,p).filter(v=>clear(p,nodes[v.i]!)),edgeClear=state ? (i:number,k:number)=>segmentClear(scene,nodes[i]!,nodes[nodes[i]!.links[k]!]!,state,live,radius,height) : staticEdgeClearance(scene,nodes,radius,height);
  const starts=near(start),ends=new Set(near(end).map(n=>n.i)),previous=new Int32Array(nodes.length).fill(-2),cost=new Float64Array(nodes.length).fill(Infinity),closed=new Uint8Array(nodes.length),heap:{i:number;f:number}[]=[];
  const less=(a:{i:number;f:number},b:{i:number;f:number})=>a.f<b.f || a.f===b.f && a.i<b.i;
  const push=(v:{i:number;f:number})=>{let i=heap.length;heap.push(v);while(i>0){const p=(i-1)>>1;if(!less(v,heap[p]!))break;heap[i]=heap[p]!;i=p;}heap[i]=v;};
@@ -149,8 +195,8 @@ function networkPath(scene:Scene,r:WalkingArea,start:Point,end:Point,state?:CarS
    const compact:Point[]=[];
    for(const p of path){if(compact.length && distance(compact.at(-1)!,p)<.001)continue;while(compact.length>1){const a=compact.at(-2)!,b=compact.at(-1)!,cross=(b.x-a.x)*(p.y-b.y)-(b.y-a.y)*(p.x-b.x),dot=(b.x-a.x)*(p.x-b.x)+(b.y-a.y)*(p.y-b.y);if(dot<0 || Math.abs(cross)>1e-5*(distance(a,b)+distance(b,p)))break;compact.pop();}compact.push(p);}
    return compact.length<=COMMERCE_LIMITS.repairPath ? compact : undefined;}
-  for(const j of nodes[i]!.links){const next=cost[i]!+distance(nodes[i]!,nodes[j]!);if(!closed[j] && next<cost[j]! && segmentClear(scene,nodes[i]!,nodes[j]!,state,live,radius,height)){cost[j]=next;previous[j]=i;push({i:j,f:next+distance(nodes[j]!,end)});}}
+  for(let k=0;k<nodes[i]!.links.length;k++){const j=nodes[i]!.links[k]!,next=cost[i]!+distance(nodes[i]!,nodes[j]!);if(!closed[j] && next<cost[j]! && edgeClear(i,k)){cost[j]=next;previous[j]=i;push({i:j,f:next+distance(nodes[j]!,end)});}}
  }return;
 }
 
-export function primeWorkNetworks(scene:Scene,prepared:Map<string,WorkNode[]>):void{networks.set(scene,prepared);}
+export function primeWorkNetworks(scene:Scene,prepared:Map<string,WorkNode[]>):void{networks.set(scene,prepared);staticEdges.delete(scene);}

@@ -1,0 +1,64 @@
+dream 2;
+material masonry(style=brick,colors=[#a96f55,#bcb1a0]);
+material steel(style=toon,colors=[#8f9b94,#8f9b94]);
+material glazing(style=toon,colors=[#61919a,#61919a]);
+material bark(style=grain,colors=[#6e5137,#9a7550]);
+material birch_bark(style=toon,colors=[#e5e3d5,#bec5b5]);
+material birch_leaf(style=toon,colors=[#7fa461,#5e804e]);
+material birch_shade(style=toon,colors=[#6c9252,#527146]);
+material leaves(style=toon,colors=[#638653,#365b42]);
+material fir_leaves(style=toon,colors=[#416958,#284b40]);
+material amber(style=toon,colors=[#c18942,#866037]);
+material wood(style=wood,colors=[#91613f,#bb915d]);
+material dark_wood(style=toon,colors=[#5e4735,#40372d]);
+material plaster(style=toon,colors=[#ddd0a7,#b4a17b]);
+material roof(style=toon,colors=[#45626c,#2d424e]);
+material brick(style=brick,colors=[#a66146,#bcb1a0]);
+material stone(style=stone,colors=[#8b9181,#5a655f]);
+object timber_workshop(label="Timber workshop"){
+  measure(kind=building,axis=y,meters=6);
+  body(interaction=solid,radius=30,height=66);
+  foundation(size=[128,90],color=#79816e);
+  contact core(at=[-12,0,0],radius=30,height=54);
+  part walls(shape=box,material=wood,at=[-12,21,0],size=[50,42,54]);
+  part roof(shape=pyramid,material=roof,at=[-12,55,0],size=[70,26,74]);
+  part door(shape=box,material=dark_wood,at=[14,16,0],size=[2,32,21]);
+  part lintel(shape=box,material=plaster,at=[15,34,0],size=[3,4,27]);
+  zone porch(at=[44,0,0],radius=16,height=43,mode=break(speed=100,scatter=52,lift=52,spin=3,lifetime=7,pattern=splinter)){
+    repeat boards(index=i,count=4){part canopy(shape=box,material=wood,at=[-8,40,-24+i*16],size=[48,4,15]);}
+    repeat posts(index=i,count=2){part post(shape=box,material=dark_wood,at=[10,19,i*56-28],size=[5,38,5]);}
+  }
+  repeat eaves(index=s,count=2){part eave(shape=box,material=dark_wood,at=[-12,42,s*64-32],size=[68,2,3]);}
+  repeat siding(index=b,count=4){part batten(shape=box,material=dark_wood,at=[b*11-29,22,27],size=[1,37,1]);}
+  part window_frame(shape=box,material=plaster,at=[-12,25,27.6],size=[20,19,1]);
+  part window(shape=box,material=glazing,at=[-12,25,28.2],size=[15,14,.5]);
+}
+
+object brick_bakehouse(label="Brick bakehouse"){
+  measure(kind=building,axis=y,meters=7);
+  body(interaction=solid,radius=30,height=72);
+  foundation(size=[128,90],color=#8e8171);
+  contact core(at=[-16,0,0],radius=28,height=56);
+  part walls(shape=box,material=plaster,at=[-14,23,0],size=[48,46,54]);
+  part roof(shape=pyramid,material=roof,at=[-14,59,0],size=[72,26,74]);
+  part chimney(shape=box,material=brick,at=[-25,65,-12],size=[10,23,10]);
+  part threshold(shape=box,material=stone,at=[29,1,0],size=[28,2,36]);
+  zone storefront(at=[42,0,0],radius=16,height=39,mode=break(speed=135,scatter=55,lift=45,spin=3,lifetime=7,pattern=crumble)){
+    voxels brickwork(material=brick,at=[0,15,0],size=[12,30,40],grid=[6,15,20],chunks=[1,3,2]){
+      fill wall(from=[0,0,0],to=[6,15,20]);
+      cut doorway(from=[0,0,6],to=[6,15,14]);
+    }
+    fragment entry_cover(){
+      part lintel(shape=box,material=brick,at=[0,35,0],size=[13,9,40]);
+      part canopy(shape=box,material=roof,at=[-14,38.5,0],size=[42,2,42]);
+    }
+    part door(shape=box,material=dark_wood,at=[-2,15,0],size=[3,30,17]);
+  }
+  repeat windows(index=w,count=2){
+    part frame(shape=box,material=dark_wood,at=[w*28-28,29,27.6],size=[18,21,1]);
+    part window(shape=box,material=glazing,at=[w*28-28,29,28.2],size=[13,16,.5]);
+    part mullion(shape=box,material=plaster,at=[w*28-28,29,28.7],size=[1,16,.5]);
+  }
+  part chimney_cap(shape=box,material=stone,at=[-25,75,-12],size=[13,2,13]);
+  repeat eaves(index=s,count=2){part eave(shape=box,material=dark_wood,at=[-14,46,s*34-17],size=[68,2,3]);}
+}

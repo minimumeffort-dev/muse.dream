@@ -19,7 +19,24 @@ describe('local capture boundary',()=>{
       await handle(req,res,()=>{status=404;});return status;
     }
     try{
+      expect(await request('/__media/crossingwalk/0239.png')).toBe(204);expect(await request('/__media/crossingwalk/0240.png')).toBe(400);
+      expect(await request('/__media/upstairsmeal/0599.png')).toBe(204);expect(await request('/__media/upstairsmeal/0600.png')).toBe(400);
+      expect(await request('/__media/stationrepair/0359.png')).toBe(204);expect(await request('/__media/stationrepair/0360.png')).toBe(400);
+      expect(await request('/__media/stationquarter/0359.png')).toBe(204);expect(await request('/__media/stationquarter/0360.png')).toBe(400);
+      expect(await request('/__media/company/0359.png')).toBe(204);expect(await request('/__media/company/0360.png')).toBe(400);
+      expect(await request('/__media/loft/0539.png')).toBe(204);expect(await request('/__media/loft/0540.png')).toBe(400);
+      expect(await request('/__media/seatmotion/0479.png')).toBe(204);expect(await request('/__media/seatmotion/0480.png')).toBe(400);
+      expect(await request('/__media/companions/0479.png')).toBe(204);expect(await request('/__media/companions/0480.png')).toBe(400);
+      expect(await request('/__media/workstations/0479.png')).toBe(204);expect(await request('/__media/workstations/0480.png')).toBe(400);
       expect(await request('/__media/driving/0000.png')).toBe(204);
+      expect(await request('/__media/navigation/0179.png')).toBe(204);expect(await request('/__media/navigation/0180.png')).toBe(400);
+      expect(await request('/__media/rest/0359.png')).toBe(204);expect(await request('/__media/rest/0360.png')).toBe(400);
+      expect(await request('/__media/home/0299.png')).toBe(204);expect(await request('/__media/home/0300.png')).toBe(400);
+      expect(await request('/__media/weather/0239.png')).toBe(204);expect(await request('/__media/weather/0240.png')).toBe(400);
+      expect(await request('/__media/schoolroom/0599.png')).toBe(204);expect(await request('/__media/schoolroom/0600.png')).toBe(400);
+      expect(await request('/__media/recovery/0299.png')).toBe(204);expect(await request('/__media/recovery/0300.png')).toBe(400);
+      expect(await request('/__media/scooter/0239.png')).toBe(204);expect(await request('/__media/scooter/0240.png')).toBe(400);
+      expect(await request('/__media/wardrobe/0239.png')).toBe(204);expect(await request('/__media/wardrobe/0240.png')).toBe(400);
       expect(await request('/__media/fixturefall/0239.png')).toBe(204);expect(await request('/__media/fixturefall/0240.png')).toBe(400);
       expect(await request('/__media/fixturerepair/0599.png')).toBe(204);expect(await request('/__media/fixturerepair/0600.png')).toBe(400);
       expect(await request('/__media/utility/0239.png')).toBe(204);expect(await request('/__media/utility/0240.png')).toBe(400);
@@ -48,6 +65,7 @@ describe('local capture boundary',()=>{
       expect(await request('/__media/transit/0239.png')).toBe(204);expect(await request('/__media/transit/0240.png')).toBe(400);
       expect(await request('/__media/business/0599.png')).toBe(204);expect(await request('/__media/business/0600.png')).toBe(400);
       expect(await request('/__media/schoolrepair/0599.png')).toBe(204);expect(await request('/__media/schoolrepair/0600.png')).toBe(400);
+      expect(await request('/__media/nursery/0419.png')).toBe(204);expect(await request('/__media/nursery/0420.png')).toBe(400);
       expect(await request('/__media/shared/0719.png')).toBe(204);expect(await request('/__media/shared/0720.png')).toBe(400);
       expect(await request('/__media/unknown/0000.png')).toBe(400);
       expect(await request('/__media/driving/0001.png','https://other.example')).toBe(403);

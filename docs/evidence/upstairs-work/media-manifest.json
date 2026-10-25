@@ -1,0 +1,31 @@
+{
+  "sourceHash": "8dadb2a9d2aa593c7d9ef7167502558b5b0c7dbbcc77ac19d1055b0a2397ba5f",
+  "compatibilityHash": "1dc29cda7770917eb18cb167dd0caa5b5149d8f3e983857a253903ad24cd85d6",
+  "simulationVersion": 50,
+  "saveFormat": 19,
+  "sourceFrames": 540,
+  "sourceDimensions": [
+    2400,
+    1350
+  ],
+  "simulationFramesPerSecond": 30,
+  "durationSimulationSeconds": 18,
+  "posterFrame": 300,
+  "files": [
+    {
+      "path": "docs/media/loft.mp4",
+      "bytes": 2534746,
+      "sha256": "a255344bf887170ad1fa0f495d937c1f4f5a2162977e5aa625cde171ce3ddfdc"
+    },
+    {
+      "path": "docs/media/loft.gif",
+      "bytes": 15759354,
+      "sha256": "d7b61a4c22e4c85d9e37d04a9aaab34c7d9a386113d742009d67b1eb0cd9de0c"
+    },
+    {
+      "path": "docs/media/loft.jpg",
+      "bytes": 164658,
+      "sha256": "b29aed546cfd547c0c9c00820991b56f6603de151e88f030803f22ad2c6a8ad6"
+    }
+  ]
+}

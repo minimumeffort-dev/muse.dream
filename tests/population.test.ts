@@ -127,6 +127,7 @@ describe('live district populations and transport',()=>{
  it('keeps every live ambient member clear throughout two minutes of city movement',async()=>{
   const {stepAmbient,ambientObjects}=await import('../src/sim/ambient'),{stepNpcs}=await import('../src/sim/npcs'),{ambientNavigation}=await import('../src/scene/ambient-navigation');
   const scene=liveScene,objects=ambientObjects(scene),nav=ambientNavigation(scene),unsafe=new Set<string>(),walkers=objects.flatMap((o,i)=>o.ambient!.motion.kind==='walk' ? [i] : []),radii=objects.map(o=>nav.radius(o));let minGap=Infinity;let state={...createCarAtSpawn(scene),x:100,y:100};
+  expect(objects).toHaveLength(189);
   for(let tick=0;tick<2400;tick++){
    state={...state,population:stepAmbient(state,.05,scene),npcs:stepNpcs(state,.05,scene),timeS:state.timeS+.05};
    for(let a=0;a<walkers.length;a++)for(let b=0;b<a;b++){const i=walkers[a]!,j=walkers[b]!,p=state.population!.members[i]!,q=state.population!.members[j]!;minGap=Math.min(minGap,Math.hypot(p.x-q.x,p.y-q.y)-radii[i]!-radii[j]!);}
@@ -135,7 +136,7 @@ describe('live district populations and transport',()=>{
     if(!nav.clear(p.x,p.y,nav.radius(o),motion.kind==='walk') || motion.kind==='roam' && Math.hypot(p.x-o.x,p.y-o.y)>motion.radius+1e-6)unsafe.add(o.id);
    }
   }
-  expect(minGap).toBeGreaterThanOrEqual(-.0001);expect([...unsafe]).toEqual([]);expect(state.population!.members.filter(m=>m.distance>20)).toHaveLength(181);
+  expect(minGap).toBeGreaterThanOrEqual(-.0001);expect([...unsafe]).toEqual([]);expect(state.population!.members.filter(m=>m.distance>20)).toHaveLength(objects.length);
   expect(nav.segment({x:2939.5379564469386,y:4700},{x:2952.8310501211927,y:4674.986300727158},3.960441356140415,true)).toBe(false);
  });
  it('advances ambient motion in every direct control mode and in transit seats',async()=>{

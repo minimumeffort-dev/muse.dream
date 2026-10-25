@@ -33,7 +33,7 @@ it('uses clear inspection starts at the airport instead of silently falling back
  expect([airport.x,airport.y]).toEqual([2000,9250]);expect([lamp.x,lamp.y]).toEqual([target.x,target.y-140]);expect(lamp.headingRad).toBe(Math.PI/2);
 });
 it('keeps all 33 prior backups and exact ledgers while registering only this coverage upgrade',async()=>{
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.TREE_COMPATIBILITY);expect(await c.sha256(c.preCoverageCompatibilitySource(scene))).toBe(c.INVITATION_COMPATIBILITY);
+ expect(await c.sha256(c.preEquipmentCompatibilitySource(scene))).toBe(c.TREE_COMPATIBILITY);expect(await c.sha256(c.preCoverageCompatibilitySource(scene))).toBe(c.INVITATION_COMPATIBILITY);
  const parking=c.preParkingScene(c.preCityScene(scene)),hash=await c.sha256(c.preCommerceCompatibilitySource(parking,2)),legacy={previousSaveCompatibility:await c.sha256(c.preCommerceCompatibilitySource(parking)),emptyEconomySaveCompatibility:hash,previousSaveSource:c.registeredLegacySource(hash),previousMarketSaveCompatibility:await c.sha256(c.preDeliveryCompatibilitySource(parking))};
  const fixtures=import.meta.glob('./fixtures/save-v*.json',{query:'?raw',import:'default',eager:true}) as Record<string,string>;expect(Object.keys(fixtures)).toHaveLength(28);
  const oldR71=import.meta.glob('./fixtures/hosted-meal-r71-save-v16.json',{query:'?raw',import:'default',eager:true}) as Record<string,string>;

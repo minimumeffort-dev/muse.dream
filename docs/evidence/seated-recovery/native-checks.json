@@ -1,0 +1,17 @@
+{
+  "elapsedEconomySeconds": 27.249999999975216,
+  "seatedSeconds": 8.0,
+  "energyBefore": 79.74999999997772,
+  "energyAfter": 98.07500000000176,
+  "expectedAfterCapAndReturnDrain": 98.07500000000248,
+  "breadConsumed": 2,
+  "guestCoinsUnchanged": true,
+  "guestInventoryUnchanged": true,
+  "marketLedgersUnchanged": true,
+  "mealsCompleted": 1,
+  "nativeOldSlotRestored": true,
+  "nativeMigratedStateIdentical": true,
+  "nativeMigratedWorldTime": 331.0591999999301,
+  "nativeReloadStateIdentical": true,
+  "nativeReloadWorldTimeIdentical": true
+}

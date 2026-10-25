@@ -1,0 +1,16 @@
+
+> muse-dream@0.1.0 test
+> vitest run --maxWorkers=2 --testTimeout=60000 tests/stairs-world.test.ts
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/stairs-world.test.ts (4 tests) 8862ms
+   ✓ registers the exact old home and every previous world projection while retaining resources and actor bounds  374ms
+   ✓ keeps a paid home meal, both need values, resident rest and the old slot through the registered upgrade  6587ms
+   ✓ keeps finite home-table repair escrow and progress while rerouting its changed approach  1629ms
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  01:56:49
+   Duration  16.48s (transform 443ms, setup 9ms, collect 7.47s, tests 8.86s, environment 0ms, prepare 27ms)

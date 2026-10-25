@@ -1,0 +1,115 @@
+{
+  "baker": {
+    "completed": {
+      "delivery": {
+        "boards_run": 0,
+        "fasteners_run": 0,
+        "flour_run": 0,
+        "kits_run": 0,
+        "saplings_run": 0,
+        "school_run": 0
+      },
+      "repair": {
+        "classroom_furniture": 0,
+        "home_furniture": 0,
+        "market_tables": 0,
+        "orchard_trees": 0
+      },
+      "work": {
+        "assemble_kit": 0,
+        "bake": 2,
+        "large_bake": 0,
+        "pack_lunch": 4,
+        "propagate_saplings": 0
+      }
+    },
+    "credits": 3,
+    "decisionAtS": 446.9999999997587,
+    "id": "baker",
+    "inventory": {
+      "boards": 0,
+      "bread": 0,
+      "fasteners": 0,
+      "flour": 0,
+      "lunch": 0,
+      "sapling": 0,
+      "timber": 0,
+      "vegetables": 0
+    },
+    "satiety": 84.67500000001061,
+    "shift": {
+      "at": {
+        "x": 6360,
+        "y": 4490
+      },
+      "distance": 96.176920308354,
+      "headingRad": 2.984990776607665,
+      "id": "bakery_day",
+      "path": [],
+      "phase": "rest",
+      "routeAtS": 301.24999999989126,
+      "speed": 0,
+      "x": 6360,
+      "y": 4490
+    }
+  },
+  "history": {
+    "hall_break/baker/regular": {
+      "lastAtS": 359.49999999983737,
+      "meals": 1
+    }
+  },
+  "player": {
+    "completed": {
+      "delivery": {
+        "boards_run": 0,
+        "fasteners_run": 0,
+        "flour_run": 0,
+        "kits_run": 0,
+        "saplings_run": 0,
+        "school_run": 0
+      },
+      "repair": {
+        "classroom_furniture": 0,
+        "home_furniture": 0,
+        "market_tables": 0,
+        "orchard_trees": 0
+      },
+      "work": {
+        "assemble_kit": 0,
+        "bake": 0,
+        "large_bake": 0,
+        "pack_lunch": 0,
+        "propagate_saplings": 0
+      }
+    },
+    "credits": 20,
+    "decisionAtS": 0,
+    "energy": 42.67500000001121,
+    "id": "pocket",
+    "inventory": {
+      "boards": 0,
+      "bread": 0,
+      "fasteners": 0,
+      "flour": 0,
+      "lunch": 0,
+      "sapling": 0,
+      "timber": 0,
+      "vegetables": 0
+    },
+    "satiety": 25.67500000001121
+  },
+  "save": {
+    "characters": 75897,
+    "compatibilityHash": "8989717956ee55328cf06ae424fff171d91aff76d9ff41638384496506cfa2e1",
+    "known": [],
+    "ms": 3.399999976158142,
+    "restored": true,
+    "review": true,
+    "saved": true,
+    "sourceHash": "fbd736c00c7acab65ce63d98c26b4569747e9dde55c613f958f0a6b1a17ee8cb",
+    "status": "Saved on this device.",
+    "timeS": 446.6499999997581
+  },
+  "time": 446.49999999975824
+}

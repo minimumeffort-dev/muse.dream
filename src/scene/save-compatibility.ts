@@ -1,4 +1,6 @@
+import maintenanceR111 from './compatibility/r111-maintenance.json';
 import marketR55 from './compatibility/r55-market.json';
+import marketR106 from './compatibility/r106-market.json';
 import cityR67 from './compatibility/r67-city.json';
 import parkR68 from './compatibility/r68-park.json';
 import junctionR69 from './compatibility/r69-junction.json';
@@ -11,9 +13,15 @@ import plantsR76 from './compatibility/r76-plants.json';
 import furnitureR77 from './compatibility/r77-furniture.json';
 import wildlifeR78 from './compatibility/r78-wildlife.json';
 import fixturesR79 from './compatibility/r79-street-furniture.json';
+import charactersR80 from './compatibility/r80-characters.json';
+import serviceR81 from './compatibility/r81-indoor-service.json';
+import schoolR90 from './compatibility/r90-school.json';
+import homeR93 from './compatibility/r93-home.json';
+import homeR98 from './compatibility/r98-home.json';
+import homeR97 from './compatibility/r97-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=32;
+export const SAVE_SIMULATION_VERSION=53;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -45,6 +53,17 @@ export function saveCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder
   return projection(scene,SAVE_SIMULATION_VERSION,true,encode);
 }
 function projection(scene:Scene,simulationVersion:number,rounded=true,encode?:CompatibilityEncoder):string {
+  if(simulationVersion<51)scene=preCompanyScene(scene);
+  if(simulationVersion<50)scene=preLoftScene(scene);
+  if(simulationVersion<49)scene=prePeerRecipeScene(scene);
+  if(simulationVersion<48)scene=preCompanionScene(scene);
+  if(simulationVersion<47)scene=preStationScene(scene);
+  if(simulationVersion<46)scene=preBondScene(scene);
+  if(simulationVersion<45)scene=preShelterScene(scene);
+  if(simulationVersion<44)scene=preAttendanceScene(scene);
+  if(simulationVersion<43)scene=preFloorsScene(scene);
+  if(simulationVersion<42)scene=preStairsScene(scene);
+  if(simulationVersion<41)scene=preRestScene(scene);
   const {revisionId,sourceHash,provenance,...world}=scene;
   let economy=world.economy;
   if(economy && simulationVersion<21){const {socials,...old}=economy;economy=old as typeof economy;}
@@ -96,11 +115,408 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r113 completes four authored junction crossings; only derived pedestrian indices change. */
+export const CROSSING_ACCESS_COMPATIBILITY='5d8cf576772c3ebebead408d764fa6d6e90e060d314a0ed8ba62a9d30b57f15f';
+const crossingAccessProjections=new WeakMap<Scene,Scene>();
+const crossingAccessIds=new Set(['crossing_medical_access','crossing_copper_access','crossing_weavers_access','crossing_terrace_access']);
+export function preCrossingAccessScene(scene:Scene):Scene{
+ const cached=crossingAccessProjections.get(scene);if(cached)return cached;
+ if(!scene.crossings.some(c=>crossingAccessIds.has(c.id)))return scene;
+ const prior={...scene,crossings:scene.crossings.filter(c=>!crossingAccessIds.has(c.id))};crossingAccessProjections.set(scene,prior);return prior;
+}
+export function preCrossingAccessCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preCrossingAccessScene(scene),53,true,encode);}
+
+/** r112 extends existing maintenance coverage without changing physical state or resources. */
+export const STATION_MAINTENANCE_COMPATIBILITY='910bdcc30bce4f13de0c4f7ec52995d8e1c0383520b86e8346505c75a61df02f';
+const stationMaintenanceProjections=new WeakMap<Scene,Scene>();
+const stationMaintenanceGrounds=new Set(['station_repair_work','station_tree_work_west','station_tree_work_center','station_tree_work_east']);
+export function preStationMaintenanceScene(scene:Scene):Scene{
+ scene=preCrossingAccessScene(scene);
+ const cached=stationMaintenanceProjections.get(scene);if(cached)return cached;
+ if(!scene.surfaces.some(s=>stationMaintenanceGrounds.has(s.id)))return scene;
+ const prior={...scene,surfaces:scene.surfaces.filter(s=>!stationMaintenanceGrounds.has(s.id)),economy:scene.economy && {...scene.economy,repairs:scene.economy.repairs.map(r=>(maintenanceR111.find(old=>old.id===r.id)??r) as NonNullable<Scene['economy']>['repairs'][number])}};
+ stationMaintenanceProjections.set(scene,prior);return prior;
+}
+export function preStationMaintenanceCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preStationMaintenanceScene(scene),53,true,encode);}
+
+/** r111 adds a connected station quarter without changing simulation semantics. */
+export const DISTRICT_COMPATIBILITY='b07395b81db63f19fae5d5688c0a45ab5d8d7b67bd7a63565dfebef37299f337';
+const districtProjections=new WeakMap<Scene,Scene>();
+export function preDistrictScene(scene:Scene):Scene{
+ scene=preStationMaintenanceScene(scene);
+ const cached=districtProjections.get(scene);if(cached)return cached;
+ const added=(id:string)=>id.startsWith('station_quarter_');
+ if(!scene.objects.some(o=>added(o.id)))return scene;
+ const prior={...scene,objects:scene.objects.filter(o=>!added(o.id)),surfaces:scene.surfaces.filter(s=>!added(s.id)),sites:scene.sites.filter(s=>!added(s.id)),floors:scene.floors?.filter(f=>!added(f.id))};
+ districtProjections.set(scene,prior);return prior;
+}
+export function preDistrictCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preDistrictScene(scene),53,true,encode);}
+
+/** r110 shares supported stair travel with social meals; existing claims keep their seats. */
+export const UPSTAIRS_SOCIAL_COMPATIBILITY='4b10448683d5eea828b3d229eaa7ab0bef09f19e6876eafc5f2611c6de09bf4a';
+const upstairsSocialProjections=new WeakMap<Scene,Scene>();
+export function preUpstairsSocialScene(scene:Scene):Scene{
+ scene=preDistrictScene(scene);
+ const cached=upstairsSocialProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.socials.some(s=>s.id==='hall_break' && s.seats.includes('home_upper_settee')))return scene;
+ const prior={...scene,economy:{...scene.economy,socials:scene.economy.socials.map(s=>s.id==='hall_break' ? {...s,seats:s.seats.filter(id=>id!=='home_upper_settee'),grounds:s.grounds?.filter(id=>id!=='home_upper' && id!=='home_landing')} : s)}};
+ upstairsSocialProjections.set(scene,prior);return prior;
+}
+export function preUpstairsSocialCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preUpstairsSocialScene(scene),52,true,encode);}
+
+/** r109 applies authored energy recovery to every occupied meal/rest seat. */
+export const SEATED_REST_COMPATIBILITY='cf4a6bffe75b42fdab3872242948b8350f269c16e3ad19fc1a9d1ecd356f78e0';
+export function preSeatedRestCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preUpstairsSocialScene(scene),51,true,encode);}
+
+/** r108 gives three existing people a shared, bounded social need. */
+export const COMPANY_COMPATIBILITY='3335e4520386d33466a409caaa0d451b8772d904c09c6a8d76d3371d0390effd';
+const companyProjections=new WeakMap<Scene,Scene>();
+export function preCompanyScene(scene:Scene):Scene{
+ scene=preUpstairsSocialScene(scene);
+ const cached=companyProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.accounts.some(a=>a.company))return scene;
+ const prior={...scene,economy:{...scene.economy,accounts:scene.economy.accounts.map(a=>{const {company,...old}=a;return old;})}};companyProjections.set(scene,prior);return prior;
+}
+export function preCompanyCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preCompanyScene(scene),50,true,encode);}
+
+/** r107 opens a connected workshop loft without adding stock, wages or actors. */
+export const LOFT_COMPATIBILITY='1dc29cda7770917eb18cb167dd0caa5b5149d8f3e983857a253903ad24cd85d6';
+const loftProjections=new WeakMap<Scene,Scene>();
+export function preLoftScene(scene:Scene):Scene{
+ scene=preCompanyScene(scene);
+ const cached=loftProjections.get(scene);if(cached)return cached;
+ if(!scene.floors?.some(f=>f.id==='hall_loft'))return scene;
+ const grounds=(ids:string[]|undefined)=>ids?.filter(id=>id!=='hall_loft' && id!=='hall_landing');
+ const prior={...scene,floors:scene.floors.filter(f=>f.id!=='hall_loft' && f.id!=='hall_landing'),objects:scene.objects.filter(o=>o.id!=='hall_workbench').map(o=>o.id==='market_hall' ? {...o,spec:marketR106 as ObjectDslV2} : o),economy:scene.economy && {...scene.economy,stations:scene.economy.stations?.filter(s=>s.id!=='workshop_prep').map(s=>({...s,grounds:grounds(s.grounds)})),accounts:scene.economy.accounts.map(a=>a.grounds ? {...a,grounds:grounds(a.grounds)} : a),jobs:scene.economy.jobs.map(j=>j.id==='assemble_kit' || j.id==='propagate_saplings' ? {...j,equipment:['hall_table_east'],station:'bakery_prep'} : j),repairs:scene.economy.repairs.map(r=>r.id==='home_furniture' ? {...r,label:'Repair home furniture',grounds:grounds(r.grounds)?.filter(id=>id!=='market_hall')} : r)}};
+ loftProjections.set(scene,prior);return prior;
+}
+export function preLoftCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preLoftScene(scene),49,true,encode);}
+
+/** r106 derives recipe eligibility from completed, explicitly named resident pairs. */
+export const PEER_RECIPE_COMPATIBILITY='eac00f9a8d8b0de82607c53e068c66880828c03e3680d8337b40ad81a35cf64e';
+const peerRecipeProjections=new WeakMap<Scene,Scene>();
+export function prePeerRecipeScene(scene:Scene):Scene{
+ scene=preLoftScene(scene);
+ const cached=peerRecipeProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.milestones.some(m=>m.id==='bakers_pair' && m.peer==='regular'))return scene;
+ const prior={...scene,economy:{...scene.economy,milestones:scene.economy.milestones.filter(m=>m.id!=='bakers_pair'),accounts:scene.economy.accounts.map(a=>a.id==='baker' ? {...a,works:a.works?.filter(id=>id!=='large_bake')} : a),jobs:scene.economy.jobs.map(j=>j.id==='large_bake' ? {...j,requires_any:j.requires_any?.filter(id=>id!=='bakers_pair')} : j)}};
+ peerRecipeProjections.set(scene,prior);return prior;
+}
+export function prePeerRecipeCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(prePeerRecipeScene(scene),48,true,encode);}
+
+/** r105 connects funded, persistent resident-to-resident meals. */
+export const COMPANION_COMPATIBILITY='8989717956ee55328cf06ae424fff171d91aff76d9ff41638384496506cfa2e1';
+const companionProjections=new WeakMap<Scene,Scene>();
+export function preCompanionScene(scene:Scene):Scene{
+ scene=prePeerRecipeScene(scene);
+ const cached=companionProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.socials.some(s=>s.peers))return scene;
+ const prior={...scene,objects:scene.objects.map(o=>o.spec && 'measure' in o.spec && o.spec.measure?.kind==='bench' && o.spec.seats?.length===2 && o.spec.seats.every(s=>Math.abs(s.position[0])===14 && s.position[1]===18 && s.position[2]===12 && s.approach[0]===s.position[0]) ? {...o,spec:{...o.spec,seats:o.spec.seats?.map(s=>({...s,position:[s.id==='left' ? -13 : 13,s.position[1],s.position[2]] as [number,number,number],approach:[s.id==='left' ? -13 : 13,s.approach[1]] as [number,number]}))}} : o),economy:{...scene.economy,socials:scene.economy.socials.map(s=>{const {peers,...old}=s;return s.id==='hall_break' ? {...old,grounds:['market_square']} : old;})}};
+ companionProjections.set(scene,prior);return prior;
+}
+export function preCompanionCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preCompanionScene(scene),47,true,encode);}
+
+/** r104 adds data-only work motion without changing simulation transitions. */
+export const GESTURE_COMPATIBILITY='a4107f0d54f50cc0c4c0045ef84ed31e6e64b89416963622c0727a141cd208bb';
+const gestureProjections=new WeakMap<Scene,Scene>();
+export function preGestureScene(scene:Scene):Scene{
+ scene=preCompanionScene(scene);
+ const cached=gestureProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.gestures?.some(g=>g.id==='kneading'))return scene;
+ const {gestures,...economy}=scene.economy;
+ const prior={...scene,economy:{...economy,jobs:economy.jobs.map(j=>{const {gesture,...old}=j;return old;}),repairs:economy.repairs.map(r=>{const {gesture,...old}=r;return old;})}};
+ gestureProjections.set(scene,prior);return prior;
+}
+export function preGestureCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preGestureScene(scene),47,true,encode);}
+
+/** r103 binds existing paid jobs to physical shared workstations. */
+export const STATION_COMPATIBILITY='ba0749ebc87cea40ce37bd5d71f8adf69a75970811039062d6b650ca90cc59b3';
+const stationProjections=new WeakMap<Scene,Scene>();
+export function preStationScene(scene:Scene):Scene{
+ scene=preGestureScene(scene);
+ const cached=stationProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.stations?.some(s=>s.id==='bakery_prep'))return scene;
+ const {stations,...economy}=scene.economy;
+ const prior={...scene,economy:{...economy,jobs:economy.jobs.map(j=>{const {station,...old}=j;if(j.id!=='assemble_kit')return old;const {equipment,...legacy}=old;return legacy;})}};
+ stationProjections.set(scene,prior);return prior;
+}
+export function preStationCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preStationScene(scene),46,true,encode);}
+
+export const BOND_COMPATIBILITY='924a4c63641fed528986e698d8a5ad3c72c7201d1cf8ed94df4a0264c6b9827c';
+const bondProjections=new WeakMap<Scene,Scene>();
+export function preBondScene(scene:Scene):Scene{
+ scene=preStationScene(scene);
+ const cached=bondProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.milestones.some(m=>m.id==='bakers_table' && m.kind==='shared_meal'))return scene;
+ const prior={...scene,economy:{...scene.economy,milestones:scene.economy.milestones.filter(m=>m.id!=='bakers_table'),jobs:scene.economy.jobs.map(j=>{if(j.id!=='large_bake')return j;const {requires_any,...old}=j;return {...old,requires:'practiced_baker'};})}};bondProjections.set(scene,prior);return prior;
+}
+export function preBondCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preBondScene(scene),45,true,encode);}
+
+export const SHELTER_COMPATIBILITY='508f47125d575a0d10ff7122fe92a3cbea2495d90235120e50bbb24114167e02';
+const shelterProjections=new WeakMap<Scene,Scene>();
+export function preShelterScene(scene:Scene):Scene{
+ scene=preBondScene(scene);
+ const cached=shelterProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.rests?.some(r=>r.id==='home_rest' && r.shelter))return scene;
+ const prior={...scene,weather:scene.weather && {...scene.weather,cycleSeconds:600},economy:{...scene.economy,rests:scene.economy.rests.map(r=>{if(r.id!=='home_rest')return r;const {shelter,...old}=r;return old;})}};shelterProjections.set(scene,prior);return prior;
+}
+export function preShelterCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preShelterScene(scene),44,true,encode);}
+
+/** r100 adds bounded daily attendance; existing one-batch trips finish unchanged. */
+export const ATTENDANCE_COMPATIBILITY='26bc063d3ad03e482ec65626ea6653403c59dec91211227e97687860f772545e';
+const attendanceProjections=new WeakMap<Scene,Scene>();
+export function preAttendanceScene(scene:Scene):Scene{
+ scene=preShelterScene(scene);
+ const cached=attendanceProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.accounts.some(a=>a.id==='regular' && a.attendance))return scene;
+ const prior={...scene,economy:{...scene.economy,accounts:scene.economy.accounts.map(a=>{if(a.id!=='regular')return a;const {attendance,...old}=a;return old;})}};attendanceProjections.set(scene,prior);return prior;
+}
+export function preAttendanceCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preAttendanceScene(scene),43,true,encode);}
+
+/** r99 binds upper-storey props and journeys to retained slab/stair contacts. */
+export const FLOORS_COMPATIBILITY='c5eb87dd0dcf58f2c0aff89875203b51bc29673aeab3b40b560f81ee43c906ad';
+const floorProjections=new WeakMap<Scene,Scene>();
+export function preFloorsScene(scene:Scene):Scene{
+ scene=preAttendanceScene(scene);
+ const cached=floorProjections.get(scene);if(cached)return cached;if(!scene.floors?.some(f=>f.id==='home_upper'))return scene;
+ const {floors,...old}=scene;
+ const prior={...old,objects:scene.objects.filter(o=>!['home_upper_settee','home_upper_table','home_upper_planter'].includes(o.id)).map(o=>o.id==='oldtown_044' ? {...o,spec:homeR98 as ObjectDslV2} : o),economy:scene.economy && {...scene.economy,rests:scene.economy.rests?.map(r=>r.id==='home_rest' ? {...r,seats:['home_settee'],grounds:['home_entry','market_square','market_hall']} : r),repairs:scene.economy.repairs.map(r=>r.id==='home_furniture' ? {...r,grounds:['oldtown_044']} : r)}};
+ floorProjections.set(scene,prior);return prior;
+}
+export function preFloorsCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preFloorsScene(scene),42,true,encode);}
+
+/** r98 opens a physical upper floor without changing the existing life ledger. */
+export const STAIRS_COMPATIBILITY='ced2d2f3ab7f629d8e5f57b344e4aec70bc4bfbfeb2ac667ebf3eec1c2620e85';
+const stairProjections=new WeakMap<Scene,Scene>();
+export function preStairsScene(scene:Scene):Scene{
+ scene=preFloorsScene(scene);
+ const cached=stairProjections.get(scene);if(cached)return cached;
+ if(!scene.objects.some(o=>o.id==='oldtown_044' && o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && (o.spec.interior?.size[1]??0)>8))return scene;
+ const prior={...scene,objects:scene.objects.map(o=>o.id==='oldtown_044' ? {...o,spec:homeR97 as ObjectDslV2} : o.id==='home_table' ? {...o,x:6475} : o)};stairProjections.set(scene,prior);return prior;
+}
+export function preStairsCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preStairsScene(scene),41,true,encode);}
+
+/** r97 adds authored energy and shared seated recovery, preserving existing commitments. */
+export const REST_COMPATIBILITY='67ec3c6c263434eeb67f2dc17a986d719675505899452a283dedc53b071b8be9';
+const restProjections=new WeakMap<Scene,Scene>();
+export function preRestScene(scene:Scene):Scene{
+ scene=preStairsScene(scene);
+ const cached=restProjections.get(scene);if(cached)return cached;if(!scene.economy?.rests)return scene;
+ const {rests,...economy}=scene.economy;
+ const prior={...scene,economy:{...economy,accounts:economy.accounts.map(a=>{const {rest,...old}=a;return old;})}};restProjections.set(scene,prior);return prior;
+}
+export function preRestCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preRestScene(scene),40,true,encode);}
+
+/** r96 adds opt-in work journeys without changing existing commitments or physical data. */
+export const WORK_COMMUTE_COMPATIBILITY='9b818d954cf53fe239b685e7cc54600aa417f0541de32e3b9c99db1bef443cad';
+const commuteProjections=new WeakMap<Scene,Scene>();
+export function preWorkCommuteScene(scene:Scene):Scene{
+ scene=preRestScene(scene);
+ const cached=commuteProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.accounts.some(a=>a.id==='regular' && a.commute))return scene;
+ const accounts=scene.economy.accounts.map(a=>{if(a.id!=='regular')return a;const {commute,on,grounds,works,...old}=a;return old;});
+ const prior={...scene,economy:{...scene.economy,accounts}};commuteProjections.set(scene,prior);return prior;
+}
+export function preWorkCommuteCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preWorkCommuteScene(scene),39,true,encode);}
+
+/** r95 prefers the commuter's home for meals; existing claims remain valid. */
+export const HOME_MEALS_COMPATIBILITY='62198a1eb0f91bb6793276db568458a0a980823c492c7f1fb7f2e8cf7cc8cdd4';
+const homeMealProjections=new WeakMap<Scene,Scene>();
+export function preHomeMealsScene(scene:Scene):Scene{
+ scene=preWorkCommuteScene(scene);
+ const cached=homeMealProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.meals.some(m=>m.id==='market_break' && m.seats?.includes('home_settee')))return scene;
+ const objects=scene.objects.map(o=>o.id==='home_settee' && o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2
+  ? {...o,spec:{...o.spec,seats:o.spec.seats!.map(s=>({...s,approach:[s.approach[0],20] as [number,number]}))}} : o);
+ const meals=scene.economy.meals.map(m=>m.id==='market_break'
+  ? {...m,grounds:m.grounds!.filter(id=>id!=='oldtown_044' && id!=='home_entry'),seats:m.seats!.filter(id=>id!=='home_settee')} : m);
+ const prior={...scene,objects,economy:{...scene.economy,meals}};
+ homeMealProjections.set(scene,prior);return prior;
+}
+export function preHomeMealsCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preHomeMealsScene(scene),38,true,encode);}
+
+/** r94 opens the commuter's existing home and adds its shared furniture service. */
+export const HOME_INTERIOR_COMPATIBILITY='f003f9a1a23eac605a5a780ac34e471888fea029ac9b6d05c1d571df0d0f0275';
+const homeProjections=new WeakMap<Scene,Scene>();
+export function preHomeInteriorScene(scene:Scene):Scene{
+ scene=preHomeMealsScene(scene);
+ const cached=homeProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.repairs.some(r=>r.id==='home_furniture'))return scene;
+ const added=new Set(['home_settee','home_table','home_planter']);
+ const prior={...scene,objects:scene.objects.filter(o=>!added.has(o.id)).map(o=>o.id==='oldtown_044' ? homeR93.object as Scene['objects'][number] : o),sites:scene.sites.map(s=>s.id==='access_oldtown_044' ? homeR93.site as Scene['sites'][number] : s),surfaces:scene.surfaces.filter(s=>s.id!=='home_entry'),economy:{...scene.economy,repairs:scene.economy.repairs.filter(r=>r.id!=='home_furniture'),accounts:scene.economy.accounts.map(a=>a.id==='caretaker' ? {...a,repairs:a.repairs!.filter(id=>id!=='home_furniture')} : a)}};
+ homeProjections.set(scene,prior);return prior;
+}
+export function preHomeInteriorCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preHomeInteriorScene(scene),38,true,encode);}
+
+/** r93 adds authored weather and dry-weather maintenance rules without new saved fields. */
+export const WEATHER_COMPATIBILITY='e79bef5a9b68401e438cb2eb94f1ae68e151fb65f29770e2fa166e382db817ec';
+const weatherProjections=new WeakMap<Scene,Scene>();
+export function preWeatherScene(scene:Scene):Scene{
+ scene=preHomeInteriorScene(scene);
+ const cached=weatherProjections.get(scene);if(cached)return cached;
+ if(!scene.weather)return scene;
+ const {weather,...rest}=scene;
+ const prior={...rest,...(scene.economy ? {economy:{...scene.economy,repairs:scene.economy.repairs.map(r=>{const {dry,...old}=r;return old;})}} : {})};
+ weatherProjections.set(scene,prior);return prior;
+}
+export function preWeatherCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preWeatherScene(scene),37,true,encode);}
+
+/** r92 adds optional worker provisions and shared eating during a commitment. */
+export const RATIONS_COMPATIBILITY='685d508191100e9740e378b70f14fbe60ffe02177e70c7d756aa6c626cb5abd0';
+const rationProjections=new WeakMap<Scene,Scene>();
+export function preRationsScene(scene:Scene):Scene{
+ scene=preWeatherScene(scene);
+ const cached=rationProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.rations)return scene;
+ const {rations,...economy}=scene.economy;
+ const prior={...scene,economy:{...economy,accounts:economy.accounts.map(a=>{const {ration,...old}=a;return old;})}};
+ rationProjections.set(scene,prior);return prior;
+}
+export function preRationsCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preRationsScene(scene),36,true,encode);}
+
+/** r91 opens the school's common room and connects its furniture and staff break. */
+export const SCHOOL_INTERIOR_COMPATIBILITY='1563d4e8511812ec931cb475b615d75978b72a2efcd8f69e1c4190f24c7bc554';
+const schoolInteriorProjections=new WeakMap<Scene,Scene>();
+export function preSchoolInteriorScene(scene:Scene):Scene{
+ scene=preRationsScene(scene);
+ const cached=schoolInteriorProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.repairs.some(r=>r.id==='classroom_furniture'))return scene;
+ const added=new Set(['school_common_bench','school_reading_bench','school_rear_bench','school_table_west','school_table_east']);
+ const prior={...scene,objects:scene.objects.filter(o=>!added.has(o.id)).map(o=>o.id==='garden_school' ? schoolR90.object as Scene['objects'][number] : o),surfaces:scene.surfaces.filter(s=>s.id!=='school_doorstep'),economy:{...scene.economy,accounts:scene.economy.accounts.map(a=>a.id==='caretaker' ? {...a,repairs:a.repairs!.filter(id=>id!=='classroom_furniture')} : a),repairs:scene.economy.repairs.filter(r=>r.id!=='classroom_furniture'),shifts:scene.economy.shifts.map(s=>s.id==='school_day' ? schoolR90.shift : s),socials:scene.economy.socials.map(s=>s.id==='school_break' ? schoolR90.social : s)}};
+ schoolInteriorProjections.set(scene,prior);return prior;
+}
+export function preSchoolInteriorCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preSchoolInteriorScene(scene),36,true,encode);}
+
+/** r90 adds bounded same-good nursery work to the existing vendor policy. */
+export const NURSERY_COMPATIBILITY='f2475e551ec0dc5c95f2f98ff04236fb2123a0efbea0f45e0ba694615f589baa';
+const nurseryProjections=new WeakMap<Scene,Scene>();
+export function preNurseryScene(scene:Scene):Scene{
+ scene=preSchoolInteriorScene(scene);
+ const cached=nurseryProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.jobs.some(j=>j.id==='propagate_saplings'))return scene;
+ const prior={...scene,economy:{...scene.economy,accounts:scene.economy.accounts.map(a=>a.id==='baker' ? {...a,works:['assemble_kit','pack_lunch','large_bake','bake']} : a),jobs:scene.economy.jobs.filter(j=>j.id!=='propagate_saplings')}};
+ nurseryProjections.set(scene,prior);return prior;
+}
+export function preNurseryCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preNurseryScene(scene),35,true,encode);}
+
+/** r89 recovers fixture hardware through the existing carried-output transaction. */
+export const HARDWARE_COMPATIBILITY='ff41ef8540f2b52d963f771948f948ce14f897a57936dad7e9ff30b2fb14096d';
+const hardwareProjections=new WeakMap<Scene,Scene>();
+export function preHardwareScene(scene:Scene):Scene{
+ scene=preNurseryScene(scene);
+ const cached=hardwareProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.repairs.some(r=>r.id==='market_tables' && r.recover))return scene;
+ const prior={...scene,economy:{...scene.economy,repairs:scene.economy.repairs.map(r=>{if(r.id!=='market_tables')return r;const {recover,amount,...old}=r;return old;})}};
+ hardwareProjections.set(scene,prior);return prior;
+}
+export function preHardwareCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preHardwareScene(scene),35,true,encode);}
+
+/** r88 carries recovered physical materials back to their receiving business. */
+export const RECOVERY_COMPATIBILITY='f47a995c431246b6234b69a05a38f7220a65e56fbd4414d02f54405e817f0f5b';
+const recoveryProjections=new WeakMap<Scene,Scene>();
+export function preRecoveryScene(scene:Scene):Scene{
+ scene=preNurseryScene(scene);
+ const cached=recoveryProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.repairs.some(r=>r.recover))return scene;
+ const prior={...scene,economy:{...scene.economy,repairs:scene.economy.repairs.map(({recover,amount,...r})=>r)}};
+ recoveryProjections.set(scene,prior);return prior;
+}
+export function preRecoveryCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preRecoveryScene(scene),34,true,encode);}
+
+/** r87 gives one existing resident connected school and hardware delivery work. */
+export const RESIDENT_SUPPLY_COMPATIBILITY='e2317da9bd916988c3f252eb1f1e1660b8f2c2ebc54113d6f5c02492afca59a8';
+const residentSupplyProjections=new WeakMap<Scene,Scene>();
+export function preResidentSupplyScene(scene:Scene):Scene{
+ scene=preRecoveryScene(scene);
+ const cached=residentSupplyProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.accounts.some(a=>a.id==='porter'))return scene;
+ const prior={...scene,objects:scene.objects.map(o=>o.id==='school_student' ? {...o,x:4490,y:3470} : o),economy:{...scene.economy,accounts:scene.economy.accounts.filter(a=>a.id!=='porter'),deliveries:scene.economy.deliveries.map(d=>{if(d.id==='school_run'){const {on,grounds,...old}=d;return old;}return d.id==='fasteners_run' ? {...d,grounds:['market_square']} : d;})}};
+ residentSupplyProjections.set(scene,prior);return prior;
+}
+export function preResidentSupplyCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preResidentSupplyScene(scene),34,true,encode);}
+
+/** r86 opens finite workshop-material stock and conserved delivery contracts. */
+export const WORKSHOP_SUPPLY_COMPATIBILITY='595e9821e3a223698fdc272e097ce119730359e85dc65ea75d647409921d4329';
+const workshopProjections=new WeakMap<Scene,Scene>();
+export function preWorkshopSupplyScene(scene:Scene):Scene{
+ scene=preResidentSupplyScene(scene);
+ const cached=workshopProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.deliveries.some(d=>d.id==='boards_run'))return scene;
+ const prior={...scene,economy:{...scene.economy,deliveries:scene.economy.deliveries.filter(d=>!['boards_run','fasteners_run'].includes(d.id)),accounts:scene.economy.accounts.map(a=>a.id==='caretaker' ? {...a,deliveries:a.deliveries?.filter(id=>id!=='boards_run')} : a),markets:scene.economy.markets.map(m=>m.id==='station_supplies' ? {...m,lots:m.lots.filter(l=>!['boards','fasteners'].includes(l.good))} : m)}};
+ workshopProjections.set(scene,prior);return prior;
+}
+export function preWorkshopSupplyCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preWorkshopSupplyScene(scene),34,true,encode);}
+
+/** r85 uses the existing shared recipe policy to replenish consumed repair kits. */
+export const KIT_PRODUCTION_COMPATIBILITY='c8e3de0f54713b9c887145934b5b84f20511312062347dbd416e75e3321c8d02';
+const kitProjections=new WeakMap<Scene,Scene>();
+export function preKitProductionScene(scene:Scene):Scene{
+ scene=preWorkshopSupplyScene(scene);
+ const cached=kitProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.accounts.some(a=>a.id==='baker' && a.works?.includes('assemble_kit')))return scene;
+ const prior={...scene,economy:{...scene.economy,accounts:scene.economy.accounts.map(a=>a.id==='baker' && a.works?.includes('assemble_kit') ? {...a,works:a.works.filter(id=>id!=='assemble_kit')} : a),jobs:scene.economy.jobs.map(j=>j.id==='assemble_kit' ? {...j,target:4} : j)}};
+ kitProjections.set(scene,prior);return prior;
+}
+export function preKitProductionCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preKitProductionScene(scene),34,true,encode);}
+
+/** r84 adds bounded on-foot strikes and a saved cooldown; all old geometry stays exact. */
+export const STRIKE_COMPATIBILITY='f1a8ec4b7803b4bbd21984e5baef2689b3fc6378f81cca0c95060e8d34d374f3';
+const strikeProjections=new WeakMap<Scene,Scene>();
+export function preStrikeScene(scene:Scene):Scene{
+ scene=preKitProductionScene(scene);
+ if(!scene.strike)return scene;
+ const cached=strikeProjections.get(scene);if(cached)return cached;
+ const {strike,...prior}=scene;strikeProjections.set(scene,prior);return prior;
+}
+export function preStrikeCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preStrikeScene(scene),33,true,encode);}
+
+/** r83 binds work to existing physical equipment; the prior world keeps simulation 32. */
+export const EQUIPMENT_COMPATIBILITY='a5b345f631855363a24d67e40268357e95970974fefd991788c46bf1c7f086ce';
+const equipmentProjections=new WeakMap<Scene,Scene>();
+export function preEquipmentScene(scene:Scene):Scene{
+ scene=preStrikeScene(scene);
+ if(!scene.economy?.jobs.some(j=>j.equipment))return scene;
+ const cached=equipmentProjections.get(scene);if(cached)return cached;
+ const prior={...scene,economy:{...scene.economy,jobs:scene.economy.jobs.map(({equipment,...job})=>job)}};
+ equipmentProjections.set(scene,prior);return prior;
+}
+export function preEquipmentCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preEquipmentScene(scene),32,true,encode);}
+
+/** r82 moves service indoors without changing any physical assembly or supply rule. */
+export const SERVICE_COMPATIBILITY='08c37a536a120c91b5175e8a5771f04c12230bfe179ebe7da6afdc924938cada';
+const serviceProjections=new WeakMap<Scene,Scene>();
+function priorGrounds<T extends {id:string;on?:string;grounds?:string[]}>(rules:T[],prior:{id:string;on:string;grounds?:string[]}[]):T[]{
+ return rules.map(rule=>{const old=prior.find(p=>p.id===rule.id);return old ? {...rule,on:old.on,grounds:old.grounds} : rule;});
+}
+export function preServiceScene(scene:Scene):Scene{
+ scene=preEquipmentScene(scene);
+ if(!scene.surfaces.some(s=>s.id==='hall_service'))return scene;
+ const cached=serviceProjections.get(scene);if(cached)return cached;
+ const e=scene.economy!,old=serviceR81.economy;
+ const prior={...scene,objects:scene.objects.map(o=>{const p=serviceR81.objects.find(p=>p.id===o.id);return p ? {...o,x:p.x,y:p.y} : o;}),surfaces:scene.surfaces.filter(s=>s.id!=='hall_service').map(s=>s.id===serviceR81.orchardPath.id ? {...s,...serviceR81.orchardPath,walkable:undefined} : s),economy:{...e,markets:e.markets.map(m=>{const p=old.markets.find(p=>p.id===m.id);return p ? {...m,radius:p.radius} : m;}),deliveries:priorGrounds(e.deliveries,old.deliveries),repairs:priorGrounds(e.repairs,old.repairs),socials:priorGrounds(e.socials,old.socials),shifts:priorGrounds(e.shifts,old.shifts),meals:priorGrounds(e.meals,old.meals)}};
+ serviceProjections.set(scene,prior);return prior;
+}
+export function preServiceCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preServiceScene(scene),32,true,encode);}
+
+/** r81 refines the shared character family, retaining the exact r80 world. */
+export const CHARACTERS_COMPATIBILITY='5bd553a8bc5a9639513a5d19a2bcad969ec74e06b46627ffd6448b60067f16b3';
+const characterPoses=new Map(charactersR80.placements.map(p=>[p.id,p])),characterSports=new Map(charactersR80.sports.map(s=>[s.id,s]));
+const characterProjections=new WeakMap<Scene,Scene>();
+export function preCharactersScene(scene:Scene):Scene{
+ scene=preServiceScene(scene);
+ if(!scene.objects.some(o=>characterPoses.has(o.id) && o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && o.spec.parts.some(p=>p.shape==='prism' && p.size[0]===12 && p.size[1]===18)))return scene;
+ const cached=characterProjections.get(scene);if(cached)return cached;
+ const template=(index:number)=>charactersR80.templates[index] as unknown as ObjectDslV2;
+ const prior={...scene,objects:scene.objects.map(o=>{const p=characterPoses.get(o.id);return p ? {...o,spec:template(p.template),scale:p.scale} : o;}),sports:scene.sports.map(s=>{const before=characterSports.get(s.id);return !before || !s.match ? s : {...s,match:{...s.match,teams:s.match.teams.map((t,i)=>{const old=before.teams[i]!;return {...t,specs:old.specs.map(template),...('keeperSpec' in old ? {keeperSpec:template(old.keeperSpec!)} : {})};})}};})};
+ characterProjections.set(scene,prior);return prior;
+}
+export function preCharactersCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preCharactersScene(scene),32,true,encode);}
 /** r80 makes street tubs and produce stalls topple, retaining exact released r79 data. */
 export const FIXTURES_COMPATIBILITY='1c5352790e1f50878a43c4054eb9bb28af1e9bd970d3c5bf1f4636225acd8e76';
 const fixturesTemplates=new Map(fixturesR79.templates.flatMap(t=>t.objects.map(id=>[id,t.spec as unknown as ObjectDslV2] as const))),fixturesPlacements=new Map(fixturesR79.placements.map(p=>[p.id,p]));
 const fixturesProjections=new WeakMap<Scene,Scene>();
 export function preFixturesScene(scene:Scene):Scene{
+ scene=preCharactersScene(scene);
  if(!scene.objects.some(o=>fixturesTemplates.has(o.id) && o.spec && 'dslVersion' in o.spec && o.spec.dslVersion===2 && o.spec.impact))return scene;
  const cached=fixturesProjections.get(scene);if(cached)return cached;
  const prior={...scene,objects:scene.objects.map(o=>{const spec=fixturesTemplates.get(o.id),pose=fixturesPlacements.get(o.id);return spec && pose ? {...o,spec,x:pose.x,y:pose.y,scale:pose.scale} : o;})};

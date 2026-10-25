@@ -130,3 +130,21 @@ persist. Nothing progresses while the page is closed.
 
 NPCs do not invite each other. There is no queue, waiter, table service,
 physical food prop, general relationship score or provider call.
+
+## Remembered meals can unlock work
+
+A `milestone(kind=shared_meal,task=npc_account,count=1)` can now qualify the two
+people who actually finished the activity. `work.requires_any` permits that
+relationship route alongside ordinary personal practice. The live baker's
+larger bread batch uses both paths; neither route creates money or ingredients.
+See [shared recipes](relationships.md) and the [complete example](../examples/shared-recipe.dream).
+
+
+## Residents can invite each other
+
+Optional `social.peers` names other NPC accounts for [resident companion meals](companions.md).
+They use the same finite purchase and food rules, two real seat claims and their
+own walking journeys. Completed resident meals have separate saved history from
+the player's meals and recipe qualifications.
+
+The player and NPCs can now use [company](company.md), an optional bounded need restored by the same completed meal. A player may still choose an invitation at high company; automatic hosts use their need and keep their real food and duty constraints.

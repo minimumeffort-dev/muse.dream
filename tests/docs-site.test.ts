@@ -6,6 +6,56 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights company and its need constructor at complete boundaries with escaped source',()=>{const html=highlight('account person(company=need(initial=65,drain_s=.05,below=40,gain=35)); // <Company>&');expect(html).toContain('dream-field">company</span>');expect(html).toContain('dream-keyword">need</span>');for(const name of ['initial','gain'])expect(html).toContain(`dream-field">${name}</span>`);expect(html).toContain('&lt;Company&gt;&amp;');expect(highlight('company_extra needs needed initial_extra gainful')).not.toMatch(/dream-(?:field|keyword)/);});
+  it('highlights the peer selector at complete boundaries and escapes authored text',()=>{
+    const html=highlight('milestone pair(label="<Meal>&",kind=shared_meal,task=host,peer=guest,count=1);');expect(html).toContain('class="dream-field">peer</span>');expect(html).toContain('&lt;Meal&gt;&amp;');expect(highlight('peer_extra peerless')).not.toMatch(/dream-field/);
+  });
+  it('highlights alternate requirements at complete boundaries and escapes source text',()=>{
+    const html=highlight('work bake(requires_any=[practice,table_friend]); milestone friend(kind=shared_meal); // <Recipe>&');expect(html).toContain('class="dream-field">requires_any</span>');expect(html).toContain('&lt;Recipe&gt;&amp;');expect(highlight('requires_anything requires_any_extra')).not.toMatch(/dream-field/);
+  });
+  it('highlights shelter only at complete boundaries and escapes authored HTML',()=>{
+    const html=highlight('rest home(shelter=true,seats=[settee]); // <Cover>&');expect(html).toContain('class="dream-field">shelter</span>');expect(html).toContain('&lt;Cover&gt;&amp;');expect(highlight('sheltered shelter_extra')).not.toMatch(/dream-field/);
+  });
+  it('highlights attendance only at field boundaries and escapes authored source',()=>{
+    const html=highlight('account worker(commute=true,attendance=[8,17]); // <Duty>&');expect(html).toContain('class="dream-field">attendance</span>');expect(html).toContain('&lt;Duty&gt;&amp;');expect(highlight('attendance_extra work_attendance')).not.toMatch(/dream-field/);
+  });
+  it('highlights stairs and steps at exact boundaries while escaping source text',()=>{const html=highlight('stairs flight(material=wood,at=[0,0,0],size=[4,8,22],steps=12); // <Stairs>&');expect(html).toContain('class="dream-keyword">stairs</span>');expect(html).toContain('class="dream-field">steps</span>');expect(html).toContain('&lt;Stairs&gt;&amp;');expect(highlight('upstairs stairs_extra steps_extra')).not.toMatch(/dream-(?:keyword|field)/);});
+  it('highlights floor bindings at exact boundaries and escapes source HTML',()=>{
+    const html=highlight('floor upper(on=house,at=[0,9,0],size=[12,32]);place seat(object=bench,role=prop,floor=upper); // <img>\nconst floored=1;');
+    expect(html).toContain('dream-keyword">floor</span>');expect(html).toContain('dream-field">floor</span>');expect(html).toContain('&lt;img&gt;');expect(html).not.toContain('dream-keyword">floored');
+  });
+  it('highlights rest commands and fields at exact boundaries and escapes authored text',()=>{
+    const html=highlight('rest home(energy=20,recover_s=5,below=25,until=85,seats=[bench],on=yard); account person(rest=home); // <Rest>&');
+    expect(html).toContain('class="dream-keyword">rest</span>');expect(html).toContain('class="dream-field">energy</span>');expect(html).toContain('&lt;Rest&gt;&amp;');expect(highlight('resting rest_plan recover_something')).not.toMatch(/dream-(?:keyword|field)/);
+  });
+  it('highlights commuting only at field boundaries and escapes labels',()=>{
+    const html=highlight('account worker(commute=true,on=home,grounds=[hall],works=[bake]); // <Work>&');
+    expect(html).toContain('class="dream-field">commute</span>');expect(html).toContain('&lt;Work&gt;&amp;');expect(highlight('commutes commute_extra commuter')).not.toMatch(/dream-field/);
+  });
+  it('highlights weather and repair conditions at exact boundaries with escaped source',()=>{
+    const html=highlight('weather(cycle_s=600,rain_start_s=90,rain_end_s=150,wet_grip=.68); repair kit(dry=true,label="<Rain>&");');
+    expect(html).toContain('class="dream-keyword">weather</span>');for(const key of ['rain_start_s','rain_end_s','wet_grip','dry'])expect(html).toContain(`class="dream-field">${key}</span>`);expect(html).toContain('&lt;Rain&gt;&amp;');expect(highlight('weathered weather_extra dry_extra wet_grips')).not.toMatch(/dream-(?:keyword|field)/);
+  });
+  it('highlights ration commands and fields at exact boundaries with escaped source',()=>{
+    const html=highlight('ration snack(good=bread,market=corner,below=40); // <Food>&');
+    expect(html).toContain('class="dream-keyword">ration</span>');expect(html).toContain('class="dream-field">below</span>');expect(html).toContain('&lt;Food&gt;&amp;');expect(highlight('rations ration_extra below_extra')).not.toMatch(/dream-(?:keyword|field)/);
+  });
+
+  it('highlights recovery fields at exact boundaries and escapes source text',()=>{
+    const html=highlight('repair trees(recover=boards,amount=1,label="<Wood>&"); // <Source>&');
+    for(const key of ['recover','amount'])expect(html).toContain(`class="dream-field">${key}</span>`);expect(html).toContain('&lt;Wood&gt;&amp;');expect(html).toContain('&lt;Source&gt;&amp;');expect(highlight('recovered recover_extra amounts amount_extra')).not.toMatch(/dream-(?:keyword|field)/);
+  });
+
+  it('highlights on-foot strike declarations at full boundaries and escapes authored HTML',()=>{
+    const html=highlight('strike(reach=10,speed=100,cooldown_s=.6); // <Hand>&');
+    expect(html).toContain('class="dream-keyword">strike</span>');expect(html).toContain('class="dream-field">reach</span>');expect(html).toContain('&lt;Hand&gt;&amp;');expect(highlight('striker strike_extra reacher reach_extra')).not.toMatch(/dream-(?:keyword|field)/);
+  });
+
+  it('highlights equipment only at field boundaries and escapes labels and comments',()=>{
+    const html=highlight('work bake(label="<Bench>&",equipment=[table_one]); // <Tool>&');
+    expect(html).toContain('class="dream-field">equipment</span>');expect(html).toContain('&lt;Bench&gt;&amp;');expect(html).toContain('&lt;Tool&gt;&amp;');expect(highlight('equipments equipment_extra unequipment')).not.toMatch(/dream-(?:keyword|field)/);
+  });
+
   it('highlights stride at token boundaries and escapes authored labels',()=>{
     const html=highlight('joint hip(motion=stride(axis=z,deg=24,length=20,phase_deg=0)); // <Paw>&');
     expect(html).toContain('class="dream-keyword">stride</span>');expect(html).toContain('&lt;Paw&gt;&amp;');expect(highlight('strider stride_extra')).not.toMatch(/>stride<\/span>/);

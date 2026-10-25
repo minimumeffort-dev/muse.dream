@@ -28,7 +28,7 @@ behavior public_life(start=busy){
  state busy(action=perform,face=none){on look(event=near_player,radius=90,to=hello);}
  state hello(action=idle,face=player){on resume(event=far_player,radius=130,to=busy);}
 }
-place vendor(object=a_market_vendor,at=[6400,4350],role=npc,behavior=market_chat);
+place vendor(object=a_market_vendor,at=[6455,4475],role=npc,behavior=market_chat);
 place doctor(object=a_health_worker,at=[3900,6600],role=npc,behavior=health_chat);
 place teacher(object=a_teacher,at=[4436,3420],role=npc,behavior=school_chat);
 place footballer_a(object=a_football_player,at=[10400,4650],role=npc,behavior=public_life);
@@ -68,9 +68,9 @@ behavior neighborhood_greeting(start=rest){
  state rest(action=idle,face=none){on hello(event=near_player,radius=80,to=greet);}
  state greet(action=idle,face=player){on resume(event=far_player,radius=120,to=rest);}
 }
-place market_neighbor(object=neighbor,at=[6460,4380],role=npc,behavior=neighborhood_greeting);
+place market_neighbor(object=neighbor,at=[6480,4475],role=npc,behavior=neighborhood_greeting);
 place hospital_visitor(object=shopper,at=[4040,6610],role=npc,behavior=neighborhood_greeting);
-place school_student(object=student,at=[4490,3470],role=npc,behavior=neighborhood_greeting);
+place school_student(object=student,at=[4440,3436],role=npc,behavior=neighborhood_greeting);
 place station_resident(object=resident,at=[11000,4112],role=npc,behavior=neighborhood_greeting);
 include resting_wildlife(module=fauna);
 include understory(module=flora);
@@ -93,7 +93,7 @@ behavior market_chat(start=busy){
   on meal_memory(event=interact,to=shared_lunch,radius=55,shared_meals=1);
   on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
- state shared_lunch(action=idle,face=player,say="I enjoyed sharing that meal with you. It is good to have company during a break."){
+ state shared_lunch(action=idle,face=player,say="Thanks for sharing a meal. You can take the larger bread batch at the bakery now."){
   on friends(event=interact,to=friend,radius=55,shared_meals=3);on ask(event=interact,to=about,radius=55);on finish(event=after,to=watching,seconds=6);on leave(event=far_player,to=busy,radius=130);
  }
  state friend(action=idle,face=player,say="We have shared a few meals now. I look forward to these breaks with you."){
@@ -141,6 +141,10 @@ behavior school_chat(start=busy){
 }
 
 economy(){
+ rest home_rest(energy=35,drain_s=.1,recover_s=5,below=25,until=85,shelter=true,seats=[home_upper_settee,home_settee],on=oldtown_044,grounds=[home_entry,market_square,market_hall,home_upper,home_landing]);
+ rest player_rest(energy=65,drain_s=.05,recover_s=5,below=25,until=85,seats=[home_settee],on=oldtown_044);
+ ration field_snack(good=vegetables,market=market_stall,below=40);
+ ration school_snack(good=bread,market=school_canteen,below=40);
  good bread(label="Bread",food=45);
  good flour(label="Flour");
  good timber(label="Repair kit");
@@ -149,26 +153,29 @@ economy(){
  good lunch(label="Packed lunch",food=65);
  good boards(label="Timber boards");
  good fasteners(label="Fasteners");
- account pocket(actor=player,credits=20,capacity=8,satiety=48,drain_s=.05);
- account baker(actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,social=hall_break,shift=bakery_day,works=[pack_lunch,large_bake,bake]);
- social hall_break(good=bread,seats=[hall_bench],on=market_square,grounds=[market_hall],eat_s=8,cooldown_s=600,markets=[market_stall]);
- social school_break(good=bread,seats=[school_bench],on=school_yard,eat_s=8,cooldown_s=600,markets=[school_canteen]);
- shift bakery_day(market=market_stall,rest=[6360,4490],on=market_square,grounds=[market_hall],lead_s=15);
- shift school_day(market=school_canteen,rest=[4320,3860],on=school_yard,grounds=[school_yard_access,school_yard_return],lead_s=50);
- meal market_break(good=lunch,markets=[market_stall],on=market_square,grounds=[market_hall],eat_s=4,seats=[hall_bench]);
- account regular(actor=market_commuter,credits=30,capacity=4,satiety=25,drain_s=.05,meal=market_break);
+ account pocket(company=need(initial=65,drain_s=.05,below=40,gain=35),rest=player_rest,actor=player,credits=20,capacity=8,satiety=48,drain_s=.05);
+ account baker(company=need(initial=55,drain_s=.05,below=40,gain=35),actor=vendor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,social=hall_break,shift=bakery_day,works=[large_bake,assemble_kit,propagate_saplings,pack_lunch,bake]);
+ social hall_break(peers=[caretaker,regular],good=bread,seats=[home_upper_settee,hall_bench],on=market_hall,grounds=[market_square,oldtown_044,home_entry,home_upper,home_landing],eat_s=8,cooldown_s=600,markets=[market_stall]);
+ social school_break(good=bread,seats=[school_bench,school_common_bench,school_reading_bench,school_rear_bench],on=school_yard,grounds=[school_yard_access,school_yard_return,garden_school,school_doorstep],eat_s=8,cooldown_s=600,markets=[school_canteen]);
+ shift bakery_day(market=market_stall,rest=[6360,4490],on=market_hall,grounds=[market_square],lead_s=15);
+ shift school_day(market=school_canteen,rest=[4390,3590],on=school_yard,grounds=[school_yard_access,school_yard_return,garden_school,school_doorstep],lead_s=50);
+ meal market_break(good=lunch,markets=[market_stall],on=market_hall,grounds=[market_square,oldtown_044,home_entry],eat_s=4,seats=[home_settee,hall_bench]);
+ account regular(company=need(initial=60,drain_s=.05,below=40,gain=35),rest=home_rest,actor=market_commuter,credits=30,capacity=4,satiety=25,drain_s=.05,meal=market_break,works=[large_bake,bake],commute=true,attendance=[6,20],on=oldtown_044,grounds=[home_entry,market_square,market_hall,hall_loft,hall_landing]);
  account school_staff(actor=teacher,credits=30,capacity=4,satiety=28,drain_s=.05,shop=true,social=school_break,shift=school_day);
- account caretaker(actor=market_neighbor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,repairs=[market_tables,orchard_trees],deliveries=[kits_run,saplings_run,flour_run]);
+ account caretaker(ration=field_snack,actor=market_neighbor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,repairs=[market_tables,orchard_trees,classroom_furniture,home_furniture],deliveries=[kits_run,saplings_run,flour_run,boards_run]);
+ account porter(ration=school_snack,actor=school_student,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,deliveries=[fasteners_run,school_run]);
  account depot_owner(actor=station_resident,credits=0,capacity=4,satiety=65,drain_s=0);
  market station_supplies(label="Station supplies",actor=station_resident,credits=0,radius=70,hours=[6,22],owner=depot_owner,sale=15){
   lot flour_store(good=flour,quantity=80,limit=80);
   lot depot_kits(good=timber,quantity=32,limit=32);
   lot depot_saplings(good=sapling,quantity=18,limit=18);
+  lot depot_boards(good=boards,quantity=16,limit=16);
+  lot depot_fasteners(good=fasteners,quantity=16,limit=16);
  }
  market school_canteen(label="School canteen",actor=teacher,credits=60,radius=70,hours=[8,17]){
   lot bread_counter(good=bread,quantity=0,limit=12,price=5);
  }
- market market_stall(label="Market bakery",actor=vendor,credits=100,radius=80,hours=[6,22]){
+ market market_stall(label="Market bakery",actor=vendor,credits=100,radius=40,hours=[6,22]){
   lot bread_shelf(good=bread,quantity=8,limit=16,price=5);
   lot flour_sack(good=flour,quantity=30,limit=30);
   lot repair_kits(good=timber,quantity=12,limit=12);
@@ -178,23 +185,71 @@ economy(){
   lot workshop_boards(good=boards,quantity=8,limit=8);
   lot workshop_fasteners(good=fasteners,quantity=8,limit=8);
  }
- delivery flour_run(label="Bring flour to the bakery",from=station_supplies,to=market_stall,good=flour,quantity=2,pay=4,capacity=1,on=market_square);
- delivery school_run(label="Take bread to school",from=market_stall,to=school_canteen,good=bread,quantity=2,pay=5,capacity=1);
- delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_square);
- repair market_tables(label="Repair city fixtures",market=market_stall,on=market_square,grounds=[park_seating,station_seating,market_hall,school_yard,school_yard_access,school_yard_return,garden_work],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5);
- delivery saplings_run(label="Bring saplings to the market",from=station_supplies,to=market_stall,good=sapling,quantity=2,pay=4,price=2,capacity=1,on=market_square);
- repair orchard_trees(label="Replant city trees",market=market_stall,on=market_square,grounds=[orchard_work,orchard_path,garden_work,park_seating,station_seating,school_yard,school_yard_access],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=112,kind=tree,input=sapling,take=1,seconds=10,pay=6,effort=6,regrow_s=180,seed_scale=.15);
- work bake(label="Bake bread",market=market_stall,input=flour,take=1,output=bread,make=2,seconds=6,pay=3,effort=12,capacity=1,target=4);
+ delivery flour_run(label="Bring flour to the bakery",from=station_supplies,to=market_stall,good=flour,quantity=2,pay=4,capacity=1,on=market_hall,grounds=[market_square]);
+ delivery school_run(label="Take bread to school",from=market_stall,to=school_canteen,good=bread,quantity=2,pay=5,capacity=1,on=school_yard,grounds=[school_yard_access,school_yard_return,market_hall,market_square]);
+ delivery kits_run(label="Bring repair kits to the market",from=station_supplies,to=market_stall,good=timber,quantity=2,pay=4,price=3,capacity=1,on=market_hall,grounds=[market_square]);
+ repair market_tables(gesture=mending,dry=true,label="Repair city fixtures",market=market_stall,on=market_hall,grounds=[park_seating,station_seating,market_square,school_yard,school_yard_access,school_yard_return,garden_work],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=24,kinds=[table,custom,bench,lamp],input=timber,take=1,seconds=8,pay=4,effort=5,recover=fasteners,amount=1);
+ delivery saplings_run(label="Bring saplings to the market",from=station_supplies,to=market_stall,good=sapling,quantity=2,pay=4,price=2,capacity=1,on=market_hall,grounds=[market_square]);
+ repair classroom_furniture(gesture=mending,label="Repair school furniture",market=market_stall,on=hall_service,grounds=[garden_school,school_doorstep,station_repair_work,station_quarter_residences,station_quarter_home_floor,station_quarter_offices,station_quarter_office_floor],kinds=[table,bench,lamp,custom],input=timber,take=1,seconds=8,pay=4,effort=5,recover=fasteners,amount=1);
+ repair home_furniture(gesture=mending,label="Repair indoor furniture",market=market_stall,on=hall_service,grounds=[oldtown_044,home_upper,home_landing,market_hall,hall_loft,hall_landing],kinds=[table,bench,custom],input=timber,take=1,seconds=8,pay=4,effort=5,recover=fasteners,amount=1);
+ repair orchard_trees(gesture=tending,dry=true,label="Replant city trees",market=market_stall,on=hall_service,grounds=[orchard_work,market_square,garden_work,park_seating,station_seating,school_yard,school_yard_access,station_tree_work_west,station_tree_work_center,station_tree_work_east],streets=[market_avenue,north_avenue,south_avenue,garden_collector,high_street,civic_walk,river_street,copper_street,weavers_street,library_lane,copper_lane,weavers_lane,garden_crescent,garden_lane,school_street,orchard_lane,hospital_street,south_terrace,south_school_lane,park_lane,eastbank,station_avenue,workshop_street,harbor_street,yard_link,east_gardens,lakefront,east_station_road,farm_road,airfield_road,airport_service,airport_connector],verge=112,kind=tree,input=sapling,take=1,seconds=10,pay=6,effort=6,regrow_s=180,seed_scale=.15,recover=boards,amount=1);
+ gesture kneading(cycle_s=1.15){
+  key(t=0,left=[-.8,1.1,1.3],right=[-.8,1.1,-1.3]);
+  key(t=.25,left=[.2,.6,1.5],right=[.2,.6,-1.5]);
+  key(t=.5,left=[.65,.65,1],right=[.65,.65,-1]);
+  key(t=.75,left=[-.6,1.6,1],right=[-.6,1.6,-1]);
+  key(t=1,left=[-.8,1.1,1.3],right=[-.8,1.1,-1.3]);
+ }
+ gesture folding(cycle_s=1.8){
+  key(t=0,left=[-.5,.7,2.9],right=[-.5,.7,-2.9]);
+  key(t=.25,left=[0,1.9,1.5],right=[0,1.9,-1.5]);
+  key(t=.5,left=[.7,1.2,.6],right=[.7,1.2,-.6]);
+  key(t=.75,left=[-.2,.6,1.5],right=[-.2,.6,-1.5]);
+  key(t=1,left=[-.5,.7,2.9],right=[-.5,.7,-2.9]);
+ }
+ gesture fastening(cycle_s=1.4){
+  key(t=0,left=[-.1,.65,1.2],right=[0,1.2,-1]);
+  key(t=.35,left=[-.1,.65,1.2],right=[0,.65,-1]);
+  key(t=.65,left=[-.1,.65,1.2],right=[.5,1.2,-1.2]);
+  key(t=.85,left=[-.1,.65,1.2],right=[-.3,.8,-.8]);
+  key(t=1,left=[-.1,.65,1.2],right=[0,1.2,-1]);
+ }
+ gesture tending(cycle_s=2){
+  key(t=0,left=[-.4,.7,1.8],right=[-.4,.7,-1.8]);
+  key(t=.25,left=[.2,1,1.2],right=[.2,1,-1.2]);
+  key(t=.5,left=[.6,.65,.7],right=[.6,.65,-.7]);
+  key(t=.75,left=[-.5,1.6,2],right=[-.5,1.6,-2]);
+  key(t=1,left=[-.4,.7,1.8],right=[-.4,.7,-1.8]);
+ }
+ gesture mending(cycle_s=1){
+  key(t=0,left=[-.5,.8,1.8],right=[-.5,2,-.9]);
+  key(t=.25,left=[-.5,.8,1.8],right=[.5,.65,-.9]);
+  key(t=.5,left=[-.5,.8,1.8],right=[-.1,1.3,-1.2]);
+  key(t=.75,left=[-.5,.8,1.8],right=[.4,.65,-.9]);
+  key(t=1,left=[-.5,.8,1.8],right=[-.5,2,-.9]);
+ }
+ station bakery_prep(object=hall_table_east,at=[40,0],hands=[26,19.2,0],on=market_hall,grounds=[market_square,hall_loft,hall_landing]);
+ station workshop_prep(object=hall_workbench,at=[40,0],hands=[26,19.2,0],on=market_hall,grounds=[market_square,hall_loft,hall_landing]);
+ work bake(gesture=kneading,label="Bake bread",market=market_stall,input=flour,take=1,output=bread,make=2,seconds=6,pay=3,effort=12,capacity=1,target=4,equipment=[hall_table_east],station=bakery_prep);
  milestone practiced_baker(label="Bake bread batches",kind=work,task=bake,count=3);
+ milestone bakers_pair(label="Share a break with the commuter",kind=shared_meal,task=baker,peer=regular,count=1);
+ milestone bakers_table(label="Share a meal with the baker",kind=shared_meal,task=baker,count=1);
  milestone school_helper(label="Deliver bread to school",kind=delivery,task=school_run,count=1);
- work large_bake(label="Bake a larger batch",market=market_stall,input=flour,take=2,output=bread,make=5,seconds=9,pay=5,effort=16,capacity=1,target=6,requires=practiced_baker);
- work pack_lunch(label="Pack lunch",market=market_stall,output=lunch,make=1,seconds=5,pay=3,effort=6,capacity=1,target=3){
+ work large_bake(gesture=kneading,label="Bake a larger batch",market=market_stall,input=flour,take=2,output=bread,make=5,seconds=9,pay=5,effort=16,capacity=1,target=6,requires_any=[practiced_baker,bakers_table,bakers_pair],equipment=[hall_table_east],station=bakery_prep);
+ work pack_lunch(gesture=folding,label="Pack lunch",market=market_stall,output=lunch,make=1,seconds=5,pay=3,effort=6,capacity=1,target=3,equipment=[hall_table_east],station=bakery_prep){
   ingredient(good=bread,take=1);
   ingredient(good=vegetables,take=1);
  }
- work assemble_kit(label="Assemble a repair kit",market=market_stall,output=timber,make=1,seconds=7,pay=3,effort=6,capacity=1,target=4){
+ work assemble_kit(gesture=fastening,label="Assemble a repair kit",market=market_stall,output=timber,make=1,seconds=7,pay=3,effort=6,capacity=1,target=12,equipment=[hall_workbench],station=workshop_prep){
   ingredient(good=boards,take=1);
   ingredient(good=fasteners,take=1);
  }
 
+ work propagate_saplings(gesture=tending,label="Propagate saplings",market=market_stall,input=sapling,take=1,output=sapling,make=2,seconds=12,pay=2,effort=2,capacity=1,target=5,equipment=[hall_workbench],station=workshop_prep);
+
+ delivery boards_run(label="Bring boards to the workshop",from=station_supplies,to=market_stall,good=boards,quantity=2,pay=4,price=1,capacity=1,on=market_hall,grounds=[market_square]);
+ delivery fasteners_run(label="Bring fasteners to the workshop",from=station_supplies,to=market_stall,good=fasteners,quantity=2,pay=4,price=1,capacity=1,on=market_hall,grounds=[market_square,school_yard,school_yard_access,school_yard_return]);
+
 }
+
+include station_quarter(module=station_quarter);

@@ -1,0 +1,37 @@
+{
+  "clip": "upstairs",
+  "frames": 480,
+  "renderedFramesPerSimulationSecond": 30,
+  "sourceSize": [
+    2400,
+    1350
+  ],
+  "videoSize": [
+    1600,
+    900
+  ],
+  "stillSize": [
+    1600,
+    900
+  ],
+  "gifSize": [
+    1280,
+    720
+  ],
+  "posterFrame": 420,
+  "assets": {
+    "docs/media/upstairs.gif": {
+      "bytes": 33657519,
+      "sha256": "265b4f1d442d414043a5e3e7c530997932feb0884303f4e0beb945898e5f66c7"
+    },
+    "docs/media/upstairs.jpg": {
+      "bytes": 137521,
+      "sha256": "494402e16af8a8fc3893df770c8d2715879f42fae11bb17656c8a92b7bd2b65a"
+    },
+    "docs/media/upstairs.mp4": {
+      "bytes": 3032130,
+      "sha256": "c9b0e9dad85cb38c47901c16d57897c34dc6364915d6ac1bf296ae916ba1e307"
+    }
+  },
+  "livePerformanceMeasurement": false
+}

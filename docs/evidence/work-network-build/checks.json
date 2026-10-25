@@ -1,0 +1,41 @@
+{
+  "passed": 64,
+  "files": [
+    {
+      "path": "tests/courier.test.ts",
+      "passed": 7
+    },
+    {
+      "path": "tests/meals.test.ts",
+      "passed": 6
+    },
+    {
+      "path": "tests/repair-network.test.ts",
+      "passed": 7
+    },
+    {
+      "path": "tests/staff-shifts.test.ts",
+      "passed": 13
+    },
+    {
+      "path": "tests/startup.test.ts",
+      "passed": 14
+    },
+    {
+      "path": "tests/work-commute-world.test.ts",
+      "passed": 3
+    },
+    {
+      "path": "tests/work-commute.test.ts",
+      "passed": 8
+    },
+    {
+      "path": "tests/work-navigation.test.ts",
+      "passed": 6
+    }
+  ],
+  "reportSha256": "6a420037640e1ace0ef8db1a05e95ba1177f18155210d3193ec8d94cd85f17a1",
+  "fullSuiteRepeated": false,
+  "build": "passed; existing large-chunk advisory",
+  "runtimeDiff": "Reuse nearestWorkNodes when attaching work-ground portals."
+}

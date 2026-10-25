@@ -9,6 +9,8 @@ import {createCarAtSpawn,resetCar,type CarState,type World} from '../src/sim/car
 import {stepCommerce,commerceReason,checkEconomyState,type CommerceAction} from '../src/sim/commerce';
 import {stepNpcs,nearbyNpc} from '../src/sim/npcs';
 import {actorPose} from '../src/sim/actors';
+import {repairView} from '../src/game/repair-view';
+import {indoorServiceUpgrade} from '../src/sim/indoor-service-upgrade';
 import {shiftArea} from '../src/sim/shifts';
 import {workClear,workPath,workSegment} from '../src/sim/work-navigation';
 import {marketIsOpen,marketIsStaffed} from '../src/sim/market-hours';
@@ -46,6 +48,21 @@ it('finishes committed production after closing, then walks away without restart
  expect(account(s).shift?.phase).toBe('rest');expect(account(s).completed.work.pack_lunch).toBe(2);expect(resetCar(s,scene).economy).toEqual(s.economy);expect(JSON.stringify(scene)).toBe(before);
 });
 
+it('keeps the rendered worker continuous when failed player purchases advance the real commerce clock',()=>{
+ let s=until(start(),s=>account(s).shift?.phase==='out');
+ const view=repairView(),worker=scene.objects.find(o=>o.id==='neighbor')!,begin=s.timeS,inputs=new Set([37,41,57,64,79]);
+ let last=actorPose(scene,worker,s.timeS,s),largest=0,irregular=0;view.sample(last,true,s.economy!.atS,s.timeS);
+ for(let tick=1;tick<=240;tick++){
+  const dt=1/120,action:CommerceAction|undefined=inputs.has(tick) ? {kind:'buy',market:'corner',good:'bread'} : undefined,at=s.economy!.atS;
+  s=stepCommerce({...s,npcs:stepNpcs(s,dt,scene),timeS:s.timeS+dt},{commerce:action},dt,scene);
+  if(action && s.economy!.atS-at<.24)irregular++;
+  if(tick%2)continue;
+  const before=JSON.stringify(s),p=actorPose(scene,worker,s.timeS,s),visible=view.sample(p,true,s.economy!.atS,s.timeS);
+  largest=Math.max(largest,Math.hypot(visible.x-last.x,visible.y-last.y));last=visible;expect(JSON.stringify(s)).toBe(before);
+ }
+ expect(s.timeS-begin).toBeCloseTo(2);expect(irregular).toBe(inputs.size);expect(largest).toBeGreaterThan(.2);expect(largest).toBeLessThanOrEqual(14/60+1e-6);checkEconomyState(s,scene);
+});
+
 it('uses the overnight counter schedule, physically returns early, and keeps journeys deterministic through saves',()=>{
  const world=worldFor(scene);let s=until(start(),s=>account(s).shift?.phase==='out');
  const original=structuredClone(s);let loaded=decodeSave(encodeSave(s,s.timeS,world),world).state;expect(loaded).toEqual(JSON.parse(JSON.stringify(s)));
@@ -55,6 +72,12 @@ it('uses the overnight counter schedule, physically returns early, and keeps jou
  s=until(s,s=>account(s,'depot_staff').shift?.phase==='rest');expect(marketIsOpen(scene,scene.economy!.markets[1]!,s.timeS)).toBe(false);checkEconomyState(s,scene);
 });
 
+it('redirects a returning employee to the moved counter without resetting travel or serving early',()=>{
+ const moved=compile(source.replace('at=[580,710]','at=[600,710]')),world=worldFor(moved),old=until(start(),s=>account(s).shift?.phase==='in');
+ let s=indoorServiceUpgrade(old,scene,world);expect(account(s).shift!.at).toEqual({x:600,y:710});expect(account(s).shift!.distance).toBe(account(old).shift!.distance);expect(marketIsStaffed(moved,moved.economy!.markets[0]!,s.economy)).toBe(false);
+ checkEconomyState(s,moved);s=decodeSave(encodeSave(s,s.timeS,world),world).state;
+ s=until(s,s=>!account(s).shift,moved);expect(actorPose(moved,moved.objects.find(o=>o.id==='neighbor')!,s.timeS,s)).toMatchObject({x:600,y:710});expect(marketIsStaffed(moved,moved.economy!.markets[0]!,s.economy)).toBe(true);
+});
 it('waits for returning staff after opening and uses the same presence check for trade, work and cargo',()=>{
  const doc=compile(source.replace('lead_s=18','lead_s=0'));let s=until(start(doc),s=>s.timeS>=42.5,doc),m=doc.economy!.markets[0]!;
  expect(marketIsOpen(doc,m,s.timeS)).toBe(true);expect(marketIsStaffed(doc,m,s.economy)).toBe(false);expect(account(s).shift?.phase).toBe('in');

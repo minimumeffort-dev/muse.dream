@@ -36,6 +36,11 @@ JSON scene consumers must use the already resolved placement scale, not apply
 `measure` a second time. `measuredScale` supplies the factor for standalone
 assembly previews and the player.
 
+Buildings allow 3..120 metres of height. This admits high-rises without changing
+other category ranges or the 32-part, contact, voxel and resolved-scale limits.
+Their entrances and interiors still need explicit geometry and contacts. A tall
+model does not create working floors, lifts or businesses by itself.
+
 The generated [contract](dream-v2-contract.json) contains the authoritative
 `proportions.profiles` table: cars, pickups and trucks use length X, planes wingspan Z, trees and
 people height Y, lamps height Y (1..15 m), and bikes, boards and furniture length X. Bounds are game

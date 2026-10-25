@@ -1,0 +1,16 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/docs.test.ts tests/docs-site.test.ts tests/agents-size.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/docs-site.test.ts (52 tests) 861ms
+   ✓ published site > builds highlighted source with project-relative navigation and working downloads  851ms
+ ✓ tests/agents-size.test.ts (1 test) 1ms
+ ✓ tests/docs.test.ts (182 tests) 2109ms
+
+ Test Files  3 passed (3)
+      Tests  235 passed (235)
+   Start at  13:53:22
+   Duration  2.86s (transform 512ms, setup 18ms, collect 903ms, tests 2.97s, environment 0ms, prepare 73ms)

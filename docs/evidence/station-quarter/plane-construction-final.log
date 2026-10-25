@@ -1,0 +1,15 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/station-district-save.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/station-district-save.test.ts (19 tests) 2326ms
+   ✓ projects the exact released r110 city and retains old objects, resources, contacts and legacy fingerprints  413ms
+   ✓ migrates the real native backup without changing money, inventory, physical history, clocks or old storage  378ms
+
+ Test Files  1 passed (1)
+      Tests  19 passed (19)
+   Start at  13:10:50
+   Duration  10.06s (transform 410ms, setup 7ms, collect 7.61s, tests 2.33s, environment 0ms, prepare 25ms)

@@ -57,16 +57,22 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | --- | --- | --- | --- |
 | `economy` | top | No ID / economy | None |
 | `good` | economy | ID / no block | `label: text`, `food?: n` |
-| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `shop?: bool`, `social?: ref`, `shift?: ref`, `meal?: ref`, `work?: ref`, `works?: symbols`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
+| `need` | `company_need` constructor | no | `initial`, `drain_s`, `below`, `gain` |
+| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `rest?: ref`, `company?: company_need`, `commute?: bool`, `attendance?: v2`, `on?: ref`, `grounds?: symbols`, `shop?: bool`, `ration?: ref`, `social?: ref`, `shift?: ref`, `meal?: ref`, `work?: ref`, `works?: symbols`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
+| `rest` | economy | ID / no block | `energy: n`, `drain_s: n`, `recover_s: n`, `below: n`, `until: n`, `shelter?: bool`, `seats: symbols`, `on: ref`, `grounds?: symbols` |
+| `ration` | economy | ID / no block | `good: ref`, `market: ref`, `below: n` |
 | `market` | economy | ID / market | `label: text`, `actor: ref`, `credits: n`, `radius: n`, `hours?: v2`, `owner?: ref`, `sale?: n` |
 | `lot` | market | ID / no block | `good: ref`, `quantity: n`, `limit: n`, `price?: n` |
 | `delivery` | economy | ID / no block | `label: text`, `from: ref`, `to: ref`, `good: ref`, `quantity: n`, `pay: n`, `price: n?`, `capacity: n`, `on: ref?`, `grounds: symbols?` |
-| `work` | economy | ID / optional recipe block | `label: text`, `market: ref`, `input?: ref`, `take?: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `requires?: ref` |
+| `gesture` | economy | ID / required work gesture block | `cycle_s: n` |
+| `key` | work gesture | no ID / no block | `t: n`, `left: v3`, `right: v3` |
+| `station` | economy | ID / no block | `object: ref`, `at: v2`, `hands: v3`, `on: ref`, `grounds?: symbols` |
+| `work` | economy | ID / optional recipe block | `label: text`, `market: ref`, `input?: ref`, `take?: n`, `output: ref`, `make: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `requires?: ref`, `requires_any?: symbols`, `equipment?: symbols`, `station?: ref`, `gesture?: ref` |
 
-| `social` | economy | ID / no block | `good: ref`, `seats: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `cooldown_s?: n`, `max_fullness?: n`, `markets?: symbols` |
+| `social` | economy | ID / no block | `peers?: symbols`, `good: ref`, `seats: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `cooldown_s?: n`, `max_fullness?: n`, `markets?: symbols` |
 | `shift` | economy | ID / no block | `market: ref`, `rest: v2`, `on: ref`, `grounds?: symbols`, `lead_s?: n` |
 | `meal` | economy | ID / no block | `good: ref`, `markets: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `seats?: symbols` |
-| `milestone` | economy | ID / no block | `label: text`, `kind: work / delivery / repair`, `task: ref`, `count: n` |
+| `milestone` | economy | ID / no block | `label: text`, `kind: work / delivery / repair / shared_meal`, `task: ref`, `peer?: ref`, `count: n` |
 | `ingredient` | recipe | No ID / no block | `good: ref`, `take: n` |
 
 ### Assemblies and composition
@@ -85,6 +91,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `ground` | object | No ID / no block | `mode: upright / surface` |
 | `foundation` | object | No ID / no block | `size: v2`, `color: color` |
 | `contact` | object | ID / no block | `at: v3`, `radius?: n`, `size?: v2`, `height: n`, `heading_deg?: n`; exactly one radius or size |
+| `stairs` | object | ID / no block | `material: ref`, `at: v3`, `size: v3`, `steps: n`, `heading_deg?: n` |
 | `interior` | object | No ID / interior | `at: v3`, `size: v3` |
 | `portal` | interior | ID / no block | `side: front / back / left / right`, `offset: n`, `width: n`, `height: n` |
 | `seat` | object | ID / no block | `at: v3`, `approach: v2`, `heading_deg: n` |
@@ -99,7 +106,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `mount` | object | ID / visual | `bone: humanoid binding` |
 | `repeat` | object / visual / path / route_path / voxel_ops | ID / inherit | `index: symbol`, `count: n` |
 | `use` | object / visual | ID / no block | `component: ref`, `args?: nums`, `materials?: symbols`, `at?: v3`, `rot_deg?: v3`, `scale?: n` |
-| `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus / prism`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `outline?: points2`, `taper?: n`, `faceted?: bool`, `deform?: deform`, `motion?: part_motion`, `cutaway?: roof / front / back / left / right` |
+| `part` | object / visual | ID / no block | `shape: box / sphere / cylinder / cone / pyramid / icosphere / capsule / torus / prism`, `material: ref`, `at: v3`, `size: v3`, `rot_deg?: v3`, `outline?: points2`, `taper?: n`, `faceted?: bool`, `deform?: deform`, `motion?: part_motion`, `cutaway?: roof / above / front / back / left / right` |
 | `beam` | object / visual | ID / no block | `shape: box / cylinder / capsule`, `material: ref`, `from: v3`, `to: v3`, `width: n`, `depth: n`, `taper?: n`, `faceted?: bool`, `deform?: deform`, `motion?: part_motion` |
 
 Optional Dream 2 `body.clearance` is a 4..128 local-unit minimum furnishing reservation, at least the collision radius. Visible bounds can require more space. It does not change contacts, driving, navigation radii or render culling. Compiled Object DSL uses `body.clearanceRadius`; v1 data remains strict. [People and clothing](people.md).
@@ -122,6 +129,8 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 
 | Command | Context | ID / block | Fields |
 | --- | --- | --- | --- |
+| `strike` | top | no ID / no block | `reach: n`, `speed: n`, `cooldown_s: n` |
+| `weather` | top | No ID / no block | `cycle_s: n`, `rain_start_s: n`, `rain_end_s: n`, `wet_grip: n` |
 | `daylight` | top | No ID / no block | `cycle_s: n`, `start_hour: n` |
 | `world` | top | No ID / no block | `size: v2`, `spawn: position2`, `heading_deg: n`, `player?: ref`, `damage_pool?: bool` |
 | `road` | top | ID / no block | `width: n`, `points?: points2`, `via?: symbols`, `style?: racing / street` |
@@ -144,7 +153,8 @@ For cylinder `part` and `beam` only, optional `taper` is a finite ratio from `.1
 | `on` | npc_state | ID / no block | `event: after / near_player / far_player / interact`, `to: ref`, `seconds?: n`, `radius?: n`, `familiar?: bool`, `requires?: ref`, `shared_meals?: n` |
 | `furnish` | top | ID / no block | `objects: symbols`, `streets?: symbols`, `sites?: symbols`, `grounds?: symbols`, `paving?: color`, `spacing: n`, `setback: n`, `seed: n`, `side?: left / right / both`, `facing?: along / street / varied`, `jitter?: n`, `count?: n`, `pose?: rest`, `on?: verge / sidewalk`, `motion?: ambient_motion`, `role?: prop / controllable` |
 | `flock` | top | ID / no block | `object: ref`, `at: v2`, `radius: v2`, `count: n`, `altitude: n`, `speed: n`, `seed: n`, `flap_hz?: n`, `flap_deg?: n` |
-| `place` | top | ID / no block | `object: ref`, `at?: v2`, `route?: ref`, `offset?: n`, `phase_s?: n`, `scale?: n`, `heading_deg?: n`, `role?: prop / npc / controllable / ambient`, `behavior?: ref`, `pose?: rest`, `motion?: ambient_motion`, `parked?: bool` |
+| `floor` | top | ID / no block | `on: ref`, `at: v3`, `size: v2` |
+| `place` | top | ID / no block | `object: ref`, `at?: v2`, `route?: ref`, `offset?: n`, `phase_s?: n`, `scale?: n`, `heading_deg?: n`, `role?: prop / npc / controllable / ambient`, `behavior?: ref`, `pose?: rest`, `motion?: ambient_motion`, `parked?: bool`, `floor?: ref` |
 | `unresolved` | top | ID / no block | `label: text` |
 
 `joint(...,bone=...)` binds engine-owned humanoid motion. Use all twelve bindings once:
@@ -201,7 +211,7 @@ Declare `measure` directly inside an object. It sets one rest-pose dimension, re
 | `skateboard` | x | 0.5–1.2 |
 | `bench` | x | 1.2–2.8 |
 | `table` | x | 1–3 |
-| `building` | y | 3–40 |
+| `building` | y | 3–120 |
 | `train` | x | 6–20 |
 | `boat` | x | 3–12 |
 | `food` | x | 0.1–0.8 |
@@ -223,8 +233,8 @@ With a measured car player, tree height and plane wingspan must exceed the car's
 | Measured size | Uniform factor .05–4; placement variation .5–2 inside its profile |
 | Unmeasured size | Placement multiplier .5–2 |
 | Compound contacts | 1–8; cylinders radius 1–64, height 1–160; static rectangles sides .1–128, height .1–160; bottom Y 0–128 |
-| Interiors | 32 placed static ground floors; 1–4 portals each; existing part/contact bounds |
-| Project | 32 reachable modules including entry, depth 8, 524,288 UTF-16 characters, 128 defined assemblies |
+| Interiors | 32 placed static enclosures; 1–4 portals each; 32 parts and 32 contacts inside (8 contacts otherwise) |
+| Project | 40 reachable modules including entry, depth 8, 524,288 UTF-16 characters, 144 defined assemblies |
 | Full scene | Dimensions ≤16384 per axis; ≤4096 placements, 12 routes, 24 resident mobile actors, including controllable vehicles; ≤256 dormant parked vehicles |
 | Animation / effects | ≤24 live joint assemblies including player; ≤16 steam emitters |
 | Destruction | Resident/legacy: ≤24 reactive objects, ≤128 potential fragments. Pooled static props: ≤128 template records, ≤24 active assemblies, ≤128 active pieces and cached fragment meshes. Every assembly: ≤8 fragments, ≤4 zones. |
@@ -417,11 +427,15 @@ An optional `road(style=street)` circuit uses neutral curbs and omits the racing
 
 | Command | Context | ID / block | Fields |
 | --- | --- | --- | --- |
-| `voxels` | object / visual | ID / voxel_ops | `material: ref`, `at: v3`, `size: v3`, `grid: v3`, `chunks?: v3`, `rot_deg?: v3` |
+| `voxels` | object / visual | ID / voxel_ops | `material: ref`, `at: v3`, `size: v3`, `grid: v3`, `chunks?: v3`, `rot_deg?: v3`, `cutaway?: roof / above / front / back / left / right` |
 | `fill` | voxel_ops | ID / no block | `from: v3`, `to: v3`, `shape?: box / ellipsoid` |
 | `cut` | voxel_ops | ID / no block | `from: v3`, `to: v3`, `shape?: box / ellipsoid` |
 
-`voxels id(material,at,size,grid,chunks?,rot_deg?){...}` is one visual part, available inside objects, components, groups, joints, fragments and zones. Its block accepts named `fill` / `cut` operations with `from`, `to`, optional `shape=box|ellipsoid`, plus bounded `let` and `repeat`. Integer cell bounds are half-open and lie within the grid. Each axis is 1..32; each volume has at most 32,768 cells, 64 expanded operations and 8,192 merged quads. Assemblies have at most 65,536 cells and 1,048,576 fill/cut cell visits. The linked project has at most 1,048,576 cells across assembly definitions.
+`voxels id(material,at,size,grid,chunks?,rot_deg?,cutaway?){...}` is one visual part, available inside objects, components, groups, joints, fragments and zones. Its block accepts named `fill` / `cut` operations with `from`, `to`, optional `shape=box|ellipsoid`, plus bounded `let` and `repeat`. Integer cell bounds are half-open and lie within the grid. Each axis is 1..32; each volume has at most 32,768 cells, 64 expanded operations and 8,192 merged quads. Assemblies have at most 65,536 cells and 1,048,576 fill/cut cell visits. The linked project has at most 1,048,576 cells across assembly definitions.
+
+Optional `cutaway` uses the same retained static interior-shell policy as `part`.
+It cannot belong to a joint, fragment or break zone. Tag carved frames with their
+wall; keep furniture and floors untagged. [Complete home](../examples/enterable-home.dream).
 
 `chunks` divides grid axes exactly, yielding at most eight nonempty pieces. It requires break behavior or a break zone and cannot be inside `fragment`. It counts toward the same eight-fragment assembly and 128-fragment scene budgets. Without chunks, existing fragment groups apply. Voxels reject deform, cloth and part motion; rigid joint motion is allowed. Cells affect appearance and released pieces; explicit body/contact cylinders still govern collisions. See [voxel construction](voxels.md) and the generated contract's `voxels` section.
 
@@ -437,14 +451,27 @@ The engine fits stamps to the original envelope, with 4..32 cells per axis and a
 
 ## Commerce bounds
 
+NPC accounts can opt into paid work travel with `commute=true,on=home_ground`
+and optional `grounds`, alongside `work`/`works`. A complete humanoid walks to a
+validated workplace, rechecks the same work rules as the player and returns.
+`meal` may coexist; competing automatic policies remain excluded. Body clearance
+is engine-derived and the existing actor/navigation budgets remain unchanged.
+[Work commuting](commuting.md) · [Runnable example](../examples/work-commute.dream).
+
+Optional `attendance=[start_hour,end_hour]` gives that resident a daily work
+window at one workplace. They travel even with full shelves, wait without pay,
+perform real eligible jobs and return at closing or for food/rest. Committed
+batches finish normally. It requires daylight and retains existing work/body/path
+limits. [Attendance contract](attendance.md) · [Complete world](../examples/scheduled-workday.dream).
+
 One optional `economy(){...}` per linked world. [Working guide](commerce.md).
 
 ```text
 good id(label=text,food=n?);
-account id(actor=ref,credits=n,capacity=n,satiety=n,drain_s=n,shop=bool?,meal=ref?,work=ref?,works=symbols?,repair=ref?,repairs=symbols?);
+account id(actor=ref,credits=n,capacity=n,satiety=n,drain_s=n,rest=ref?,commute=bool?,attendance=v2?,on=ref?,grounds=symbols?,shop=bool?,meal=ref?,work=ref?,works=symbols?,repair=ref?,repairs=symbols?);
 market id(label=text,actor=ref,credits=n,radius=n,hours=[6,22]){ lot ... }
 lot id(good=ref,quantity=n,limit=n,price=n?);
-work id(label=text,market=ref,input=ref,take=n,output=ref,make=n,seconds=n,pay=n,effort=n,capacity=n,target=n,requires=ref?);
+work id(label=text,market=ref,input=ref,take=n,output=ref,make=n,seconds=n,pay=n,effort=n,capacity=n,target=n,requires=ref?,requires_any=symbols?);
 ```
 
 Market `hours` is an optional numeric pair: opening 0..less than 24, closing
@@ -454,28 +481,67 @@ Simulation time owns availability, independently of the visual sky. Player and
 NPC transactions share the same check. See [opening hours](hours.md) for work,
 courier waits, refunds, reduced motion and the complete example.
 
-At most 8 goods, 16 accounts, 8 markets, 16 jobs and 16 delivery contracts and 8 repair services; each market has 1..8 lots with unique goods. Exactly one player account; one account per actor. Other owners are existing NPC placements. Market vendors and production workers are stationary. Repair workers start at a stationary home in supply-market reach and travel within declared grounds and their pedestrian connections. NPC `shop` and `work` policies are optional; player accounts cannot automate themselves.
+Commuting `account`, `station`, `delivery`, `repair`, `meal`, `social`, `rest`
+and `shift` share a limit of **12 walking grounds total**: the primary `on` and
+up to 11 additional `grounds`. Omit `grounds` for no extras; an explicit list
+contains 1..11 unique IDs and excludes `on`. These refer to existing convex work
+surfaces, validated interiors or named floors. They add no paving or graph edges.
+All grounds together keep the same 4,096 local samples, 8,192 graph nodes,
+32,768 directed links and 128 saved waypoints. Complete-world acceptance still
+checks their physical connections and clearance.
 
-Credits: integer 0..1,000,000. Stock/limits: integer 0..10,000 with positive limits. Price: integer 1..10,000, or omitted for untraded ingredients. Carrying capacity: integer 1..32. Fullness/food: 0..100, drain per second: 0..0.25. Radius: 20..80. Work: 1..120 seconds, positive integer take/make/pay, effort 1..50, capacity 1..4, target within output lot capacity. Use exactly scalar `input`/`take` or a block of 1..4 `ingredient(good=...,take=...)` statements with unique goods. No empty block or mixed forms. Every input has a matching market lot, take within its capacity, and differs from the output. Labels: 1..40 nonblank characters. IDs follow the ordinary identifier contract.
+At most 8 goods, 16 accounts, 8 markets, 16 jobs and 16 delivery contracts and 8 repair services; each market has 1..8 lots with unique goods. Exactly one player account; one account per actor. Other owners are existing NPC placements. Market vendors and production workers without `commute=true` retain stationary homes; station-bound jobs add real local work trips. Explicit commuters use connected on-foot journeys. Repair workers start at a stationary home in supply-market reach and travel within declared grounds and their pedestrian connections. NPC `shop` and `work` policies are optional; player accounts cannot automate themselves.
+
+Credits: integer 0..1,000,000. Stock/limits: integer 0..10,000 with positive limits. Price: integer 1..10,000, or omitted for untraded ingredients. Carrying capacity: integer 1..32. Fullness/food: 0..100, drain per second: 0..0.25. Radius: 20..80. Work: 1..120 seconds, positive integer take/make/pay, effort 1..50, capacity 1..4, target within output lot capacity. Use exactly scalar `input`/`take` or a block of 1..4 `ingredient(good=...,take=...)` statements with unique goods. No empty block or mixed forms. Every input has a matching market lot and take within its capacity. An input may equal the output only when make is greater than take for that good. Reserve the larger of refund or completion space once for a shared lot; starting work subtracts its held input before checking future output room. Make is the full output, not the net gain. Labels: 1..40 nonblank characters. IDs follow the ordinary identifier contract.
 
 Buy/sell transfers one unit at the listed price. Work reserves every input, wage, refund space for each input and output capacity atomically; cancellation refunds, completion pays once and spends effort. Food consumes an owned unit and restores fullness. NPC food decisions occur at fullness <=40; automatic work refills to target. Shared money and material conservation, clock/owner/member bounds and capacity are checked on restore. The simulation owns rules and work time; the renderer owns gestures and feedback. No offline catch-up or generated scripts. Existing NPC, rig, physics and geometry caps are unchanged.
 
+### Physical workstations
+
+`station id(object=ref,at=v2,hands=v3,on=ref,grounds=symbols?);`
+
+`work(...,capacity=1,equipment=[object],station=id);` binds one shared work
+position across recipes. At is object-local XZ; hands is local XYZ, fitted and
+rotated with the static prop. Up to 16 stations, local coordinates ±256, hand
+Y 0..256. Require upright solid prop geometry without joints or
+animated parts, a dry clear 4.1-radius/18-height stand, a supported surface
+3..7 world units away and 6..12 high, and 10-unit stand separation. Keep the
+station inside counter reach and all grounds convex within existing budgets.
+Floor-bound equipment uses existing `place.floor`; name that floor and its
+building in the station grounds. The complete stand must fit, with supported
+feet and headroom. One source business per upper station, with proven connected
+stairs and counter approaches even without assigned NPCs. Production retains
+counter radius, but uses the accepted upstairs bench instead of counter sight.
+Trading and business actions still need sight of the counter. Work/bag context
+appears only on the same floor near the visible bench. Trip poses, destinations,
+homes and paths retain supported heights. [Upstairs example](../examples/upstairs-work.dream).
+Stationary workers' stations share ordered grounds; commuters retain their
+accepted grounds. Player/NPC starts and continuation require two-unit proximity.
+NPCs walk before reserving stock/pay. One claimant per station, independent of
+recipe; departure or damage refunds once. Animation uses rigid existing arms,
+not generated code or saved mesh poses. [Working guide](workstations.md) ·
+[Complete source](../examples/workstations.dream).
+
 ### Personal work and recognition
 
-`milestone id(label=text,kind=work|delivery|repair,task=ref,count=n);` lives in
-`economy`. At most 16, with a matching existing task, integer count 1..1,000,000,000
-and the ordinary 1..40-character label. `work.requires` checks that worker's own
-record. Work prerequisite cycles fail. `account.works=[advanced,basic]` tries
-1..4 unique jobs in order, each eligible and below target; it excludes `work`,
+`milestone id(label=text,kind=work|delivery|repair|shared_meal,task=ref,peer=ref?,count=n);`
+lives in `economy`. At most 16, count 1..1,000,000,000 and a 1..40-character label.
+The first three kinds reference a matching task; shared_meal names an NPC social
+account. Without `peer`, only the player and that NPC qualify through `socialHistory`. Optional `peer=account` is shared_meal-only: it must name a different NPC in the host's `social.peers`. Only that exact host/peer pair qualifies through `peerHistory["social/task/peer"]`; unrelated accounts and reversed keys do not. Paired NPC milestones cannot gate player `on.requires` conversation. Completing the meal grants eligibility, not wages; residents still return before working. [Complete example](../examples/companion-recipes.dream). `work.requires` keeps
+one prerequisite; `requires_any` accepts one of 1–4 unique alternatives. They
+exclude each other. Every work prerequisite branch must be acyclic. `account.works=[advanced,basic]` tries
+1..5 unique jobs in order, each eligible and below target; it excludes `work`,
 repair duties, deliveries and player ownership. Existing stationary/range checks apply.
 
 `on.requires` is interact-only and checks the player. After linking, every placement
 using that guard must be the task's receiving market actor: `work.market`,
-`repair.market` or `delivery.to`. Unknown, unrelated or absent-economy guards fail.
-Completion increments only when paid work, a handoff or a repair succeeds. Cancel,
+`repair.market` or `delivery.to`, or the shared-meal account's actor. Unknown,
+unrelated or absent-economy guards fail. Ordinary task completion increments
+only when paid work, a handoff or a repair succeeds. Cancel,
 pickup and another account's work do not count. Milestones award no resources.
 
-Saved personal counters and unassigned old counts sum exactly to shared totals.
+Saved task counters and unassigned old task counts sum exactly to global task
+totals. Shared-meal history remains separate and cannot exceed consumed food.
 Strict IDs, integer bounds and qualified active work are checked on restore.
 Format 10/simulation 15 preserves previous totals unassigned because older saves
 had no complete ownership history. New personal records start at zero; old active
@@ -509,7 +575,7 @@ material and capacity bounds. Start over resets them. There is no timeout or unb
 
 | Command | Context | Form | Fields |
 | --- | --- | --- | --- |
-| `repair` | economy | ID / no block | `label`, `market`, `on`, optional `grounds`, `streets`, `verge`, exactly one of `kind` / `kinds`, `input`, `take`, `seconds`, `pay`, `effort`, optional `dispatch_s`, `regrow_s`, `seed_scale` |
+| `repair` | economy | ID / no block | `label`, `market`, `on`, optional `gesture`, `dry`, `grounds`, `streets`, `verge`, exactly one of `kind` / `kinds`, `input`, `take`, `seconds`, `pay`, `effort`, optional `dispatch_s`, `regrow_s`, `seed_scale` |
 
 `repair id(label=text,market=ref,on=ref,grounds=symbols?,streets=symbols?,verge=n?,kind=measure_kind?,kinds=symbols?,input=ref,take=n,seconds=n,pay=n,effort=n,dispatch_s=n?,regrow_s=n?,seed_scale=n?);`
 
@@ -537,7 +603,7 @@ scaffolds or free restocking. Optional tree growth is bounded below. [Working gu
 
 ### Connected repair grounds
 
-Optional `repair.grounds` adds 1..7 unique existing convex ground-surface IDs,
+Optional `repair.grounds` adds 1..11 unique existing convex ground-surface IDs,
 excluding the primary `on`. The combined grids retain the 4,096-sample cap at
 12-unit spacing. The market and worker home stay inside `on`; extra grounds
 connect through accepted pedestrian pavement, crossings and supported bridge
@@ -589,6 +655,24 @@ home. Existing 4,096 local samples, 8,192 network nodes, 32,768 directed links a
 128 saved waypoints remain the limits. [Working example and routing](commerce.md#street-verges).
 
 
+### Recovery bounds
+
+Optional `repair(...,recover=good,amount=1)` needs both fields. Amount is a whole
+1..32 and must fit an existing receiving-market lot. At dispatch reserve bag
+capacity and shelf space for output, in addition to ordinary input refund space.
+Recover only from an eligible mature source; otherwise ordinary repair proceeds.
+Completion creates sealed return cargo and increments a separate recovery count.
+Its existing wage settles once. `deliver`/H transfers output to stock at the open
+staffed counter; NPCs use that same guarded return after walking home. No second
+pay, output trading/eating/cancellation or remote stock deposit.
+
+At most 512 unique growing recovery sources. After replanting, maturity requires
+actual unblocked growth; sapling destruction retains the spent source. Format
+19/simulation 35 persists reservations, cargo, counts and source eligibility,
+with an exact r87 upgrade and no retroactive wood. Existing work, actor, damage
+and growth caps remain. [Guide](growth.md#timber-recovery) and
+[complete source](../examples/timber-recovery.dream).
+
 ### Planting bounds
 
 `repair(...,kind=tree,regrow_s=180,seed_scale=.15)` consumes the declared input and
@@ -611,11 +695,12 @@ ledger counts plantings rather than maturity. [Guide](growth.md) and
 
 Account `deliveries` is 1..4 unique ordered contract refs. It excludes production
 `work` and player accounts; repair duties may coexist, with available repairs
-first. The actor is a stationary non-vendor NPC with a home in the receiving
-market reach and primary `on` ground. A delivery `on` is an existing convex
-surface containing its receiving market. Optional `grounds` adds 1..7 unique
-convex surfaces excluding `on`, with 4096 local grid samples total. A supplier
-already on pedestrian pavement needs no additional ground.
+first. The actor is a stationary non-vendor NPC with a connected home. A delivery
+`on` is an existing convex work ground. Optional `grounds` adds 1..11 unique convex
+surfaces excluding `on`, with 4096 local grid samples total. Home, supplier and
+receiving counter can use these grounds or accepted pedestrian pavement. Home
+need not be in receiving-counter reach, so one courier can serve different
+destinations. Complete-world acceptance still checks every approach and return.
 
 Complete-world acceptance checks every worker's pickup, handoff and return route.
 Walking uses the same engine-owned work network: 8192 nodes, 32768 directed links,
@@ -640,6 +725,12 @@ Pickup and handoff approaches stay less than four world units above/below the ve
 [Interiors](interiors.md) defines supported floors, actual doorways, shell cutaways, sight and work coverage. A doorway is checked against physical contacts; a painted door does not create an opening. [Complete market assembly](../examples/enterable-market.dream).
 
 ### Meal trips
+
+`meal.seats` orders 1..4 unique furniture placement IDs by preference. The first
+reachable free slot wins, retaining authored slot order within each object.
+Busy, broken or inaccessible furniture yields to the next choice; no available
+slot means a standing meal with the food already purchased. Placement order
+never overrides this preference. [Runnable example](../examples/seat-preferences.dream).
 
 `meal id(good=ref,markets=symbols,on=ref,grounds=symbols?,eat_s=n);` lives in
 `economy`; `account.meal` assigns it to a person NPC. There are at most 8 plans,
@@ -710,3 +801,128 @@ travel. Angle amplitude is 0..1.4 radians and phase -pi..pi after conversion.
 Resolved object scale converts world distance; primitive size does not change
 the bearing. This is visual articulation, without a foot-contact solver or saved
 clock. [Complete example](../examples/joint-stride.dream).
+
+### Worker provisions
+
+`ration` is an optional economy declaration.
+
+`ration id(good=bread,market=corner,below=40);` defines one of at most eight
+provision plans. `account.ration` selects it for a stationary repair/delivery
+worker, without production, shift, meal-trip or social policies. The authored
+home must have clear reach to a priced-food counter. While idle, the worker can
+buy one portion with their own money, leaving capacity for the largest declared
+cargo, repair input or recovered output. At or below `below` (0..95), they eat
+owned food through the same transaction as G, including during a commitment.
+Stock, hours, staff, funds and capacity still apply. Sealed cargo stays sealed.
+The ration plan owns automatic food decisions, including when `shop=true`.
+No extra food, shopping path or actor. See [worker provisions](commerce.md#worker-provisions)
+and the [complete example](../examples/worker-rations.dream).
+
+### Weather and dry-weather work
+
+One optional world-owner `weather(cycle_s,rain_start_s,rain_end_s,wet_grip)`
+declares a 120..3600-second simulation cycle. Rain starts at least ten seconds
+in, lasts at least ten seconds and ends thirty seconds before the cycle ends.
+Grip is .45..1. Rain fades over five seconds, wetness rises over ten and dries
+over thirty. Omission preserves dry physics. Optional `repair.dry=true` requires
+weather and rejects only new starts during rain for player and NPC alike.
+Existing claims finish with their resources intact. [Full rules](weather.md)
+and [runnable example](../examples/rain-work.dream).
+
+## Rest and energy
+
+`rest` fields are `energy:n`, `drain_s:n`, `recover_s:n`, `below:n`, `until:n`,
+`shelter:bool?`, `seats:symbols`, `on:ref`, `grounds:symbols?`. Optional
+`shelter=true` requires weather and every seat slot beneath a retained core
+interior ceiling above standing headroom. A free healthy uncovered NPC takes
+the ordinary rest trip during rain, waits until dry and recovered, and returns.
+Existing work and need journeys keep priority; player F seating stays manual.
+Omitted/false keeps the low-energy-only policy. [Rain shelter](shelter.md).
+
+`rest` declares a bounded game need and ordered NPC seat preferences; `account(...,rest=id)` opts in. Player seating can recover on any usable furniture. Shared work/repair effort, physical trips, claims and persistence are described in [Rest and energy](resting.md), with the [complete runnable example](../examples/resting.dream).
+
+
+
+Named `floor` may also bind a supported ground-floor slab at the room base,
+with the same footprint, full-slab contact and 20-world-unit headroom checks.
+A ground-floor binding keeps lobby furniture at its physical support height;
+it adds no stairs, lift, actor or navigation budget.
+
+## Stairs and upper floors
+
+`stairs flight(material=wood,at=[6,.5,0],size=[4,8.5,22],steps=12);`
+creates matching visible treads and static contacts. `at` is the footprint centre
+at base height, `size` is width, rise and run, and +Z ascends before optional
+`heading_deg`. Two flights per interior, 2..24 integer treads each, within 32
+contacts and 32 parts. Measured width must reach 9 world units, risers at most 4
+and tread depth at least 6. Landings need support and 18 units of headroom.
+`cutaway=above` hides an upper slab when viewed from downstairs and keeps it
+opaque underfoot upstairs, including streamed meshes. Named `floor` declarations bind existing slab contacts; static props use
+`place(...,role=prop,floor=id)`. Rest and repair grounds name both the building
+and its floors. Host-derived routes climb the actual stairs with supported
+heights, preserving shared claims and finite paid repairs. Lifts and separate
+stacked-room ownership remain missing. [Floor contract](floors.md).
+
+[Build the two-storey home](../examples/stairs-home.dream) · [Walking guide](stairs.md).
+
+## Alternate work qualifications
+
+`work.requires_any` is 1–4 unique milestone IDs, exclusive with `requires`. Any
+one qualifies the acting account; every prerequisite branch must be acyclic.
+`milestone(kind=shared_meal,task=npc_account,count=n)` derives progress from
+completed meals with that specific social account. Only the player and named
+NPC participant qualify when `peer` is omitted. With `peer=other_account`, only
+the explicitly named NPC host and peer qualify through their exact saved pair
+history; the peer must be listed in the host social plan. This paired form
+cannot gate player conversation. It changes no money, food or practice counter. Real
+work keeps all ordinary financial, physical and need checks. Conversation
+`on.requires` can reference this milestone only on that account's actor.
+[Shared recipes](relationships.md) · [Complete source](../examples/shared-recipe.dream).
+
+
+### Work gesture bounds
+
+`gesture` defines a closed 2..8-key hand motion, with at most eight programs per
+economy. `cycle_s` is .6..8 seconds; keys start at 0, end at 1, increase by at
+least .1 and close with identical positions within 1e-8. Smoothstep interpolation
+keeps peak hand speed at most 12 world units/s. Offsets use world units (10/m)
+in the actor-facing work frame: +X forward, +Y up, +Z left. X is ±1.25, Y .6..3,
+Z ±3; left Z >=.6, right Z <=-.6. A `work.gesture` needs a station; `repair.gesture`
+uses the existing repair pose with a generic forward anchor. NPCs using either
+need a complete humanoid. No generated scripts, saved motion state, tool bodies
+or extra rigs. [Guide](work-gestures.md) and [runnable source](../examples/work-gestures.dream).
+
+
+### Resident companion bounds
+
+Optional `social.peers` names 1..4 unique other NPC accounts and requires priced
+supply markets. Hosts remain stationary complete humanoids; peers may follow
+accepted walking routes. Validate full body-sized supported paired seats and
+outward/return paths, including every walking route corner. Upper furniture
+requires named floor and enclosing building grounds, reachable validated stairs
+and supported 3D arrivals. The engine saves trip/home/path heights; these are not
+additional Dream fields. Furniture selection follows authored `social.seats` order. Keep the existing
+account, NPC, rig and navigation caps. One shared social activity covers a player
+invitation, player meal or resident gathering. Two portions are held/refunded to
+the donor or consumed once. Both bodies retain their journeys until physical
+return; route clocks resume from the interrupted position. Pair cooldown and
+fullness, due shift/attendance and a 120-second approach bound apply. At most 64
+saved plan/host/guest history records; these do not award player meal credit.
+[Guide](companions.md), [complete example](../examples/companion-meals.dream),
+[upstairs source and rules](upstairs-social.md).
+
+
+## Company need
+
+Optional `account.company` uses the constructor
+`need(initial=n,drain_s=n,below=n,gain=n)`. Bounds are 0..100 initial,
+0..0.25 drain, 0..95 threshold and 1..100 gain. NPCs must participate in an
+existing host/peer social plan; a player requires an existing NPC social host.
+Simulation time drains; only a completed shared meal restores its two actual
+participants once, clamped at 100. The threshold gates NPC initiation, while
+player invitations remain deliberate. Existing counter hours permit ordinary
+advance purchases when the need will be due by the next opening. No free food,
+extra actor/seat slots, generated policy or affection model.
+[Rules](company.md) · [Complete source](../examples/company-needs.dream).
+
+Energy-enabled residents recover during actual seated solo/companion meals as well as rest trips. Reserved approaches and standing food do not count. [Seated-break rules](resting.md#a-meal-is-also-a-seated-break).

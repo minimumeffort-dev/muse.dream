@@ -16,13 +16,28 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 | [A whole voxel world](whole-world-voxels.md) | Construct the terrain, city, vehicles, plants and water from cells |
 | [City design](city-design.md) | Research, connected destinations and the source-derived map |
 | [Asset library](asset-library.md) | The mock-world assemblies and their construction details |
-| [Enterable buildings](dream/interiors.md) | Supported ground floors, real doorways, cutaway views and connected work |
+| [Enterable buildings](dream/interiors.md) | Supported rooms, real doorways, cutaway views and connected work |
+| [Named floors](dream/floors.md) | Floor-bound furnishing, shared upstairs rest and paid repairs |
+| [Stairs and upper floors](dream/stairs.md) | Matching treads and contacts, usable landings and floor-aware cutaways |
+| [Station quarter](dream/station-quarter.md) | Two connected towers, supported lobbies, usable seats and a driveable station fleet |
 | [Connected paths](dream/paths.md) | Walkable park loops, named destinations and usable shared furniture |
 | [Build a world](dream/worlds.md) | Terrain, roads, bridges, water, dedicated paths and moving vehicles |
 | [Populate streets and habitats](dream/populations.md) | Connected lighting, planting, destination parking, birds and transit |
 | [Day and night](dream/day-night.md) | A shared clock, changing sunlight, window glow and street lighting |
 | [Shared meals](dream/social.md) | Invite an off-duty person or accept their meal, share paid food and build remembered history |
 | [Shared seating](dream/seating.md) | Sit on furniture, share seats with customers and preserve occupancy |
+| [Upstairs work](dream/upstairs-work.md) | Physical stairs, separate workshop space and shared finite production |
+| [Sitting and standing](dream/seating-motion.md) | Smooth body transitions, staggered steps and shared ground support |
+| [Shared recipes](dream/relationships.md) | A real shared meal can unlock work, alongside personal practice |
+| [Peer recipes](dream/companion-recipes.md) | Named resident pairs earn eligibility through their actual shared meals |
+| [Company](dream/company.md) | A shared social need, planned food and actual breaks |
+| [Upstairs meals](dream/upstairs-social.md) | Shared food and seats connected by physical stairs, with saved outward and return trips |
+| [Resident companions](dream/companions.md) | Finite food, shared seats, remembered meals and resumed routines |
+| [Work motions](dream/work-gestures.md) | Bounded hand keyframes for jobs and repairs, shared by people |
+| [Physical workstations](dream/workstations.md) | Standing points, supported hand targets, shared capacity and real worker travel |
+| [Daily work attendance](dream/attendance.md) | Arrive, wait unpaid, perform real jobs and come home |
+| [Rain shelter](dream/shelter.md) | Covered seats, shared claims and weather-aware home trips |
+| [Rest and energy](dream/resting.md) | Recover through shared seating, resident home trips and finite work effort |
 | [Staff shifts](dream/shifts.md) | Physical attendance, connected rest destinations and persistent journeys |
 | [Opening hours](dream/hours.md) | Daily counter service, overnight suppliers and saved courier waits |
 | [Business ownership](dream/businesses.md#own-the-station-depot) | Buy the depot, transfer capital and retain its real stock and contracts |
@@ -85,3 +100,5 @@ Dream 1 remains readable. [Its syntax](dream-v1.md), [Object DSL v2](object-dsl-
 [Explore the planned town, suburbs, lake and sports park](urban-world.md). The whole mock world is authored in Dream 2, including streets, ground surfaces, markings and people.
 
 [Asset construction](asset-construction.md) explains the live house, bus and launch sources and the checks that keep their parts connected.
+
+[Work commuting](dream/commuting.md) connects resident homes, ordinary paid jobs and a saved return journey.

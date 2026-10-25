@@ -1,3 +1,5 @@
+import {floorSchema,floorProblems} from './floors';
+import {strikeSchema} from './strike';
 import {seatingProblems} from './seating';
 import {DAMAGE_POOL_LIMITS,impactBudget,pooledImpact} from './damage-pool';
 import {ambientSchema,ambientProblem,AMBIENT_LIMITS} from './ambient';
@@ -5,6 +7,7 @@ import {economySchema,economyProblems} from './commerce';
 import {voxelCells,VOXEL_LIMITS} from './voxels';
 import {voxelWorldSchema} from './voxel-world';
 import {daylightSchema,MAX_LIGHT_POOLS} from './daylight';
+import {weatherSchema} from './weather';
 import {MAX_WORLD_SIZE,MAX_STREET_LENGTH} from './world-bounds';
 import { z } from "zod";
 import { assemblyHorizontalRadius, measuredScale, measureProblem } from "./measure";
@@ -88,6 +91,7 @@ export const sceneObjectSchema = z.object({
   /** Resolved uniform scale. Measured assets share the world's physical unit. */
   scale: z.number().finite().min(0.05).max(4),
   headingRad:z.number().finite().min(-Math.PI*2).max(Math.PI*2).optional(),
+  floor:z.string().regex(/^[a-z][a-z0-9_]{0,31}$/).optional(),
   role:roleSchema.optional(),
   parked:z.literal(true).optional(),
   ambient:ambientSchema.optional(),
@@ -119,6 +123,7 @@ export const checkpointSchema = z.object({
 });
 
 export const sceneSchema = z.object({
+  floors:z.array(floorSchema).min(1).max(32).optional(),
   schemaVersion: z.literal(1),
   sceneId: z.string().min(1),
   revisionId: z.string().min(1),
@@ -159,6 +164,8 @@ export const sceneSchema = z.object({
   }),
   damagePool:z.boolean().optional(),
   daylight:daylightSchema.optional(),
+  weather:weatherSchema.optional(),
+  strike:strikeSchema.optional(),
   voxelWorld:voxelWorldSchema.optional(),
   terrain: terrainSchema.default({ hills: [] }),
   routes:z.array(routeSchema).max(12).default([]),
@@ -193,6 +200,7 @@ export const sceneSchema = z.object({
   if(scene.roadMaskRef.kind==='street-network' ? scene.checkpoints.length!==0 || !scene.streets.length : scene.checkpoints.length<2)
     ctx.addIssue({code:'custom',path:['checkpoints'],message:'street-only worlds need streets and no checkpoints; a circuit needs 2..64 checkpoints'});
   for(const message of seatingProblems(scene))ctx.addIssue({code:'custom',path:['objects'],message});
+  for(const message of floorProblems(scene))ctx.addIssue({code:"custom",path:["floors"],message});
   for(const message of economyProblems(scene))ctx.addIssue({code:'custom',path:['economy'],message});
   for(const message of sportProblems(scene))ctx.addIssue({code:'custom',path:['sports'],message});
   for(const message of interactionRuleProblems(scene))ctx.addIssue({code:'custom',path:['interactionRules'],message});

@@ -1,0 +1,133 @@
+{
+  "algorithm": "sha256",
+  "files": [
+    {
+      "path": "docs/dream-v2-contract.json",
+      "sha256": "89146bb1f32c74bec3eb3d7659a3594f835365ff60d86c62f45fd3f717d5c74c"
+    },
+    {
+      "path": "docs/dream-v2-model.txt",
+      "sha256": "bf8999b454ed823ee61f3991bf86f62af13c77807d02373183a71d21df4aef36"
+    },
+    {
+      "path": "docs/examples/resting.dream",
+      "sha256": "f3971305cd2cfe0173b14c559448bc5712020db41668ed76a0e81b708474f65b"
+    },
+    {
+      "path": "scripts/encode-media.mjs",
+      "sha256": "70b88bf3285499c8af25c3ad0bc8a24b00e1efc6241cccbad3d3e9a856fdb45b"
+    },
+    {
+      "path": "scripts/media-middleware.ts",
+      "sha256": "f4a612283f1d1a827e2a9e361672e9daa0b307fb9060a83d632bbb3e74135f0c"
+    },
+    {
+      "path": "src/game/commerce.ts",
+      "sha256": "9da109883f85cdc60049a4e23514437946eaff66cfa2910b6de6e4add6794ed8"
+    },
+    {
+      "path": "src/game/home-review.ts",
+      "sha256": "71951cc71426205a50be1a970db7389412ea17e03ccb3f49e7fcc735fa54e488"
+    },
+    {
+      "path": "src/game/main.ts",
+      "sha256": "e3d1c1f07ba6a1d995110a77d3d2a6cb067707f5529d712f1a02eaf2220a0183"
+    },
+    {
+      "path": "src/game/rest-review.ts",
+      "sha256": "c75096463199bfa6d08ae349d993405560992caef90eadc1d2b972dcaa61441c"
+    },
+    {
+      "path": "src/game/save.ts",
+      "sha256": "557e463743dd196c792fc2c07a0f690d684f5f10ff917130142b57f91f0db808"
+    },
+    {
+      "path": "src/game/world-worker-client.ts",
+      "sha256": "12fb92de3e8802a33e4f21de8e435d9b212596b916a35ca47608905acd7263e5"
+    },
+    {
+      "path": "src/scene/commerce.ts",
+      "sha256": "b3c6c74ceb7d67055379d1b92ec561a3073bc9f63f75c999c069fdf2254f7089"
+    },
+    {
+      "path": "src/scene/dream-agent.ts",
+      "sha256": "ca184db12063135f1df113d9eeed4acae21fcbd82c630360655ddbb6a77d0b97"
+    },
+    {
+      "path": "src/scene/dream-commerce.ts",
+      "sha256": "e6a2233a9ca92ce3479e1d76daf5ecd3dc5810d8a32e3153730c985837adf659"
+    },
+    {
+      "path": "src/scene/dream-contract.ts",
+      "sha256": "e90b1b1833c195e8d3f07862f09faf279063218cfd3a940627893840f2f0d936"
+    },
+    {
+      "path": "src/scene/save-compatibility.ts",
+      "sha256": "daf16cebcba821fdabde630709995a0a98209f98af534b584f7c0915323643ca"
+    },
+    {
+      "path": "src/scene/validate.ts",
+      "sha256": "6282cf83096420893eb557bedb14bf69146dae1d708e53c706dacec3f3319c81"
+    },
+    {
+      "path": "src/scene/world-fixture.ts",
+      "sha256": "f5bc89c03813edb275b0e2389c2ae39487459ed1618dc8206afa3419aa6c6b65"
+    },
+    {
+      "path": "src/scene/world-worker.ts",
+      "sha256": "aae2da34ded27b41580d29b108db6aec7427c0b22039fe18a0d86b1fbe78bd5a"
+    },
+    {
+      "path": "src/scene/world/life.dream",
+      "sha256": "ed6cbc9805304f06a18c7b0688c88765a69f5dea3f331a76b3808ff82dcc225d"
+    },
+    {
+      "path": "src/sim/actors.ts",
+      "sha256": "2e7b5be26b83d9d313847bafd9be66ddb4284944599cdd7ee49c6787aca58978"
+    },
+    {
+      "path": "src/sim/car.ts",
+      "sha256": "3fd46035a4f6eea98bc41bc8b9ded4b33574fdca32d81d370b658aa775c4f715"
+    },
+    {
+      "path": "src/sim/commerce.ts",
+      "sha256": "1375c794a580b795d5f07317b026b79265fc790aee826039edf21df8431c4784"
+    },
+    {
+      "path": "src/sim/courier.ts",
+      "sha256": "788eb789f868ccf8ff11968512431d57f13bbd42c6e91133f63626ae4ebd1cc1"
+    },
+    {
+      "path": "src/sim/rest.ts",
+      "sha256": "12edcc52a0a926bfbee9fdfa8486009225d977b629b7b2d77b8a6fa0756ffd2e"
+    },
+    {
+      "path": "src/sim/save.ts",
+      "sha256": "5c7fa8e20606d4e966174f042d27e4aa3a0ab5db5c674e94b66d9184c454e07b"
+    },
+    {
+      "path": "src/sim/seating.ts",
+      "sha256": "43013ae559acfcf67ba59452aeddb2104b9ecdf877825ca7b617954c471a42a1"
+    },
+    {
+      "path": "tests/docs-site.test.ts",
+      "sha256": "4d408a55dafd4a285e9d9c58ec7577ecc4a75c1087a8c62a42e54fdaf7ade6c4"
+    },
+    {
+      "path": "tests/media-export.test.ts",
+      "sha256": "7a43a637026bc3487a6e86cd61f7bbd7e6a16811c8cb091ba50a1a34364bc3a6"
+    },
+    {
+      "path": "tests/resting-world.test.ts",
+      "sha256": "31f77e9135e37a0e3665e71121342e2e09d16b12e37f20beaa7f65bbc909ac16"
+    },
+    {
+      "path": "tests/resting.test.ts",
+      "sha256": "f0cacf7eeac7f912ee3da8fd774466b4693c6420637e96fdb5f30f232d70d951"
+    },
+    {
+      "path": "tests/work-commute-world.test.ts",
+      "sha256": "a09375d2e27e62cd07fdcb61bce6ea05e0531626f731fecbe2a530d2beeb4d33"
+    }
+  ]
+}

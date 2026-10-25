@@ -1,0 +1,11 @@
+{
+  "preservedWorkThroughRecovery": true,
+  "preservedWorkThroughReload": true,
+  "wagePaidOnce": 3,
+  "personalBakes": 1,
+  "returnedHome": true,
+  "preservedAfterSecondReload": true,
+  "finalConsole": [],
+  "sourceHash": "0896113badf0f6b4fc90196d9d4d95e4c1bf85ce455a60879e33605ca851145f",
+  "compatibilityHash": "9b818d954cf53fe239b685e7cc54600aa417f0541de32e3b9c99db1bef443cad"
+}

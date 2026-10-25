@@ -33,7 +33,7 @@ it('refines all 18 furnishings, retaining layout, seats and break identities whi
  }
  expect(scene.objects.filter(o=>!ids.has(o.id))).toEqual(previous.objects.filter(o=>!ids.has(o.id)));expect(impactBudget(scene)).toEqual(impactBudget(previous));expect(worldSeats(scene)).toEqual(worldSeats(previous));expect(ambientGraph(scene)).toEqual({...ambientGraph(previous),sourceHash:scene.sourceHash});
  const contacts=sceneContactData(scene).contacts,priorContacts=sceneContactData(previous).contacts;expect(contacts.map(({top,...c})=>c)).toEqual(priorContacts.map(({top,...c})=>c));expect(contacts.filter((c,i)=>c.top!==priorContacts[i]!.top).map(c=>c.id).sort()).toEqual(objects.filter(o=>plantSpec(o)?.measure?.kind==='table').map(o=>o.id).sort());
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.FURNITURE_COMPATIBILITY);expect(await c.sha256(c.preFurnitureCompatibilitySource(scene))).toBe(c.BOTANY_COMPATIBILITY);
+ expect(await c.sha256(c.preEquipmentCompatibilitySource(scene))).toBe(c.FURNITURE_COMPATIBILITY);expect(await c.sha256(c.preFurnitureCompatibilitySource(scene))).toBe(c.BOTANY_COMPATIBILITY);
 });
 it('keeps every historical state and isolates review-prefix migrations through the registered visual upgrade',async()=>{
  const parking=c.preParkingScene(c.preCityScene(previous)),empty=await c.sha256(c.preCommerceCompatibilitySource(parking,2)),legacy={previousSaveCompatibility:await c.sha256(c.preCommerceCompatibilitySource(parking)),emptyEconomySaveCompatibility:empty,previousSaveSource:c.registeredLegacySource(empty),previousMarketSaveCompatibility:await c.sha256(c.preDeliveryCompatibilitySource(parking))};
