@@ -1209,3 +1209,19 @@ preserve every unaffected state field, time, ownership, ledger, pending journey,
 population and original slot. This is construction, not a new simulation rule.
 Higher rooms, lifts, real office jobs and finer stair proportions remain missing.
 See docs/examples/tower-mezzanine.dream and docs/dream/station-quarter.md.
+
+## Finite service work, r115 / simulation 56
+
+`work(kind=service)` requires a real station, matching equipment and capacity 1,
+and forbids all recipe input/output fields. Completed plus active tasks share
+one lifetime target quota across player and NPCs. Reserve a task and finite wage
+atomically; cancellation releases both, completion spends effort and pays once
+without changing goods. Preserve station travel, attendance, hours,
+qualifications, damage, needs, actor and rig limits. Recipes retain their default
+semantics. No automatic demand or quota refill is implied by a label.
+
+The registered format-19 upgrade validates exact r114 first. Add only zero
+stocktake counters in shared batches, unattributed work and each personal work
+history. Preserve pending old recipes, journeys, all resources, clocks, ownership,
+original slots and the complete earlier migration chain. No replayed rewards or
+catch-up. See docs/dream/service-work.md.

@@ -1,0 +1,634 @@
+{
+  "capture": "Saved 240 frames · complete",
+  "result": {
+    "before": {
+      "completed": 0,
+      "credits": 20
+    },
+    "economy": {
+      "accounts": [
+        {
+          "company": 64.58666666666657,
+          "completed": {
+            "delivery": {
+              "boards_run": 0,
+              "fasteners_run": 0,
+              "flour_run": 0,
+              "kits_run": 0,
+              "saplings_run": 0,
+              "school_run": 0
+            },
+            "repair": {
+              "classroom_furniture": 0,
+              "home_furniture": 0,
+              "market_tables": 0,
+              "orchard_trees": 0
+            },
+            "work": {
+              "assemble_kit": 0,
+              "bake": 0,
+              "large_bake": 0,
+              "pack_lunch": 0,
+              "propagate_saplings": 0,
+              "stocktake": 1
+            }
+          },
+          "credits": 22,
+          "decisionAtS": 0,
+          "energy": 62.586666666666574,
+          "id": "pocket",
+          "inventory": {
+            "boards": 0,
+            "bread": 0,
+            "fasteners": 0,
+            "flour": 0,
+            "lunch": 0,
+            "sapling": 0,
+            "timber": 0,
+            "vegetables": 0
+          },
+          "satiety": 45.586666666666574
+        },
+        {
+          "commute": {
+            "at": {
+              "x": 6471.2962962962965,
+              "y": 4455
+            },
+            "distance": 24.733333333333263,
+            "headingRad": -1.7830257582617042,
+            "home": {
+              "x": 6455,
+              "y": 4475
+            },
+            "id": "pack_lunch",
+            "path": [],
+            "phase": "out",
+            "routeAtS": 8.51666666666683,
+            "speed": 0,
+            "x": 6473.147655533297,
+            "y": 4463.592019991669
+          },
+          "company": 54.586666666666574,
+          "completed": {
+            "delivery": {
+              "boards_run": 0,
+              "fasteners_run": 0,
+              "flour_run": 0,
+              "kits_run": 0,
+              "saplings_run": 0,
+              "school_run": 0
+            },
+            "repair": {
+              "classroom_furniture": 0,
+              "home_furniture": 0,
+              "market_tables": 0,
+              "orchard_trees": 0
+            },
+            "work": {
+              "assemble_kit": 0,
+              "bake": 0,
+              "large_bake": 0,
+              "pack_lunch": 0,
+              "propagate_saplings": 0,
+              "stocktake": 0
+            }
+          },
+          "credits": 0,
+          "decisionAtS": 1.25,
+          "id": "baker",
+          "inventory": {
+            "boards": 0,
+            "bread": 0,
+            "fasteners": 0,
+            "flour": 0,
+            "lunch": 0,
+            "sapling": 0,
+            "timber": 0,
+            "vegetables": 0
+          },
+          "satiety": 64.58666666666657
+        },
+        {
+          "commute": {
+            "at": {
+              "x": 6471.2962962962965,
+              "y": 4455
+            },
+            "distance": 112.23333333333566,
+            "dutyAtS": 0.24999999999999997,
+            "headingRad": 3.0137426074847142,
+            "home": {
+              "x": 6493.348,
+              "y": 4064.717
+            },
+            "id": "stocktake",
+            "path": [
+              {
+                "x": 6400,
+                "y": 4118
+              },
+              {
+                "x": 6400,
+                "y": 4420.357142857143
+              },
+              {
+                "x": 6405.69761904762,
+                "y": 4424.4571428571435
+              },
+              {
+                "x": 6474.069047619048,
+                "y": 4424.4571428571435
+              },
+              {
+                "x": 6471.2962962962965,
+                "y": 4455
+              }
+            ],
+            "phase": "out",
+            "routeAtS": 0.24999999999999997,
+            "speed": 14,
+            "x": 6422.9767413436975,
+            "y": 4115.046311692543
+          },
+          "company": 59.586666666666574,
+          "completed": {
+            "delivery": {
+              "boards_run": 0,
+              "fasteners_run": 0,
+              "flour_run": 0,
+              "kits_run": 0,
+              "saplings_run": 0,
+              "school_run": 0
+            },
+            "repair": {
+              "classroom_furniture": 0,
+              "home_furniture": 0,
+              "market_tables": 0,
+              "orchard_trees": 0
+            },
+            "work": {
+              "assemble_kit": 0,
+              "bake": 0,
+              "large_bake": 0,
+              "pack_lunch": 0,
+              "propagate_saplings": 0,
+              "stocktake": 0
+            }
+          },
+          "credits": 30,
+          "decisionAtS": 1.25,
+          "energy": 34.17333333333338,
+          "id": "regular",
+          "inventory": {
+            "boards": 0,
+            "bread": 0,
+            "fasteners": 0,
+            "flour": 0,
+            "lunch": 0,
+            "sapling": 0,
+            "timber": 0,
+            "vegetables": 0
+          },
+          "satiety": 24.58666666666669
+        },
+        {
+          "completed": {
+            "delivery": {
+              "boards_run": 0,
+              "fasteners_run": 0,
+              "flour_run": 0,
+              "kits_run": 0,
+              "saplings_run": 0,
+              "school_run": 0
+            },
+            "repair": {
+              "classroom_furniture": 0,
+              "home_furniture": 0,
+              "market_tables": 0,
+              "orchard_trees": 0
+            },
+            "work": {
+              "assemble_kit": 0,
+              "bake": 0,
+              "large_bake": 0,
+              "pack_lunch": 0,
+              "propagate_saplings": 0,
+              "stocktake": 0
+            }
+          },
+          "credits": 30,
+          "decisionAtS": 9.266666666666838,
+          "id": "school_staff",
+          "inventory": {
+            "boards": 0,
+            "bread": 0,
+            "fasteners": 0,
+            "flour": 0,
+            "lunch": 0,
+            "sapling": 0,
+            "timber": 0,
+            "vegetables": 0
+          },
+          "satiety": 27.58666666666669
+        },
+        {
+          "completed": {
+            "delivery": {
+              "boards_run": 0,
+              "fasteners_run": 0,
+              "flour_run": 0,
+              "kits_run": 0,
+              "saplings_run": 0,
+              "school_run": 0
+            },
+            "repair": {
+              "classroom_furniture": 0,
+              "home_furniture": 0,
+              "market_tables": 0,
+              "orchard_trees": 0
+            },
+            "work": {
+              "assemble_kit": 0,
+              "bake": 0,
+              "large_bake": 0,
+              "pack_lunch": 0,
+              "propagate_saplings": 0,
+              "stocktake": 0
+            }
+          },
+          "credits": 0,
+          "decisionAtS": 9.266666666666838,
+          "id": "caretaker",
+          "inventory": {
+            "boards": 0,
+            "bread": 0,
+            "fasteners": 0,
+            "flour": 0,
+            "lunch": 0,
+            "sapling": 0,
+            "timber": 0,
+            "vegetables": 0
+          },
+          "satiety": 64.58666666666657
+        },
+        {
+          "completed": {
+            "delivery": {
+              "boards_run": 0,
+              "fasteners_run": 0,
+              "flour_run": 0,
+              "kits_run": 0,
+              "saplings_run": 0,
+              "school_run": 0
+            },
+            "repair": {
+              "classroom_furniture": 0,
+              "home_furniture": 0,
+              "market_tables": 0,
+              "orchard_trees": 0
+            },
+            "work": {
+              "assemble_kit": 0,
+              "bake": 0,
+              "large_bake": 0,
+              "pack_lunch": 0,
+              "propagate_saplings": 0,
+              "stocktake": 0
+            }
+          },
+          "courier": {
+            "at": {
+              "x": 6440.779194239102,
+              "y": 4467.667286756539
+            },
+            "distance": 112.23333333333566,
+            "headingRad": 0.013506632554466784,
+            "id": "school_run",
+            "path": [
+              {
+                "x": 4553.397733410482,
+                "y": 3392.3197454201427
+              },
+              {
+                "x": 4593.832116773003,
+                "y": 3382.988733874946
+              },
+              {
+                "x": 4751.08635640302,
+                "y": 3342.59416655598
+              },
+              {
+                "x": 5107,
+                "y": 3264.565376207177
+              },
+              {
+                "x": 5123.5,
+                "y": 3269.4192199586787
+              },
+              {
+                "x": 5118,
+                "y": 3671.799806057773
+              },
+              {
+                "x": 5123.5,
+                "y": 4084.01307965987
+              },
+              {
+                "x": 5200,
+                "y": 4085.7452225170127
+              },
+              {
+                "x": 5276.5,
+                "y": 4085.7452225170127
+              },
+              {
+                "x": 5282,
+                "y": 4100
+              },
+              {
+                "x": 5307,
+                "y": 4118
+              },
+              {
+                "x": 5570.5,
+                "y": 4112
+              },
+              {
+                "x": 5838,
+                "y": 4118
+              },
+              {
+                "x": 5861,
+                "y": 4100
+              },
+              {
+                "x": 5865.5,
+                "y": 4086
+              },
+              {
+                "x": 5934.5,
+                "y": 4086
+              },
+              {
+                "x": 5939,
+                "y": 4100
+              },
+              {
+                "x": 5962,
+                "y": 4118
+              },
+              {
+                "x": 6332,
+                "y": 4112
+              },
+              {
+                "x": 6400,
+                "y": 4118
+              },
+              {
+                "x": 6400,
+                "y": 4420.357142857143
+              },
+              {
+                "x": 6420.25,
+                "y": 4432.357142857143
+              },
+              {
+                "x": 6420.25,
+                "y": 4444.357142857143
+              },
+              {
+                "x": 6440.779194239102,
+                "y": 4467.667286756539
+              }
+            ],
+            "phase": "pickup",
+            "routeAtS": 0.24999999999999997,
+            "speed": 14,
+            "x": 4507.299037820782,
+            "y": 3391.697069412366
+          },
+          "credits": 0,
+          "decisionAtS": 9.266666666666838,
+          "id": "porter",
+          "inventory": {
+            "boards": 0,
+            "bread": 0,
+            "fasteners": 0,
+            "flour": 0,
+            "lunch": 0,
+            "sapling": 0,
+            "timber": 0,
+            "vegetables": 0
+          },
+          "satiety": 64.58666666666657
+        },
+        {
+          "completed": {
+            "delivery": {
+              "boards_run": 0,
+              "fasteners_run": 0,
+              "flour_run": 0,
+              "kits_run": 0,
+              "saplings_run": 0,
+              "school_run": 0
+            },
+            "repair": {
+              "classroom_furniture": 0,
+              "home_furniture": 0,
+              "market_tables": 0,
+              "orchard_trees": 0
+            },
+            "work": {
+              "assemble_kit": 0,
+              "bake": 0,
+              "large_bake": 0,
+              "pack_lunch": 0,
+              "propagate_saplings": 0,
+              "stocktake": 0
+            }
+          },
+          "credits": 0,
+          "decisionAtS": 9.266666666666838,
+          "id": "depot_owner",
+          "inventory": {
+            "boards": 0,
+            "bread": 0,
+            "fasteners": 0,
+            "flour": 0,
+            "lunch": 0,
+            "sapling": 0,
+            "timber": 0,
+            "vegetables": 0
+          },
+          "satiety": 65
+        }
+      ],
+      "atS": 8.266666666666838,
+      "batches": {
+        "assemble_kit": 0,
+        "bake": 0,
+        "large_bake": 0,
+        "pack_lunch": 0,
+        "propagate_saplings": 0,
+        "stocktake": 1
+      },
+      "consumed": {
+        "boards": 0,
+        "bread": 0,
+        "fasteners": 0,
+        "flour": 0,
+        "lunch": 0,
+        "sapling": 0,
+        "timber": 0,
+        "vegetables": 0
+      },
+      "delivered": {
+        "boards_run": 0,
+        "fasteners_run": 0,
+        "flour_run": 0,
+        "kits_run": 0,
+        "saplings_run": 0,
+        "school_run": 0
+      },
+      "events": [
+        {
+          "account": "porter",
+          "atS": 0.24999999999999997,
+          "kind": "courier_started",
+          "ref": "school_run"
+        },
+        {
+          "account": "pocket",
+          "atS": 2.016666666666662,
+          "kind": "start",
+          "ref": "stocktake"
+        },
+        {
+          "account": "pocket",
+          "atS": 6.016666666666755,
+          "kind": "paid",
+          "ref": "stocktake"
+        }
+      ],
+      "markets": [
+        {
+          "credits": 0,
+          "id": "station_supplies",
+          "owner": "depot_owner",
+          "stock": {
+            "boards": 16,
+            "fasteners": 16,
+            "flour": 80,
+            "sapling": 18,
+            "timber": 32
+          }
+        },
+        {
+          "credits": 60,
+          "id": "school_canteen",
+          "stock": {
+            "bread": 0
+          }
+        },
+        {
+          "credits": 98,
+          "id": "market_stall",
+          "stock": {
+            "boards": 8,
+            "bread": 8,
+            "fasteners": 8,
+            "flour": 30,
+            "lunch": 0,
+            "sapling": 6,
+            "timber": 12,
+            "vegetables": 8
+          }
+        }
+      ],
+      "recovered": {
+        "classroom_furniture": 0,
+        "home_furniture": 0,
+        "market_tables": 0,
+        "orchard_trees": 0
+      },
+      "recoverySpent": [],
+      "repaired": {
+        "classroom_furniture": 0,
+        "home_furniture": 0,
+        "market_tables": 0,
+        "orchard_trees": 0
+      },
+      "turn": 6,
+      "unattributed": {
+        "delivery": {
+          "boards_run": 0,
+          "fasteners_run": 0,
+          "flour_run": 0,
+          "kits_run": 0,
+          "saplings_run": 0,
+          "school_run": 0
+        },
+        "repair": {
+          "classroom_furniture": 0,
+          "home_furniture": 0,
+          "market_tables": 0,
+          "orchard_trees": 0
+        },
+        "work": {
+          "assemble_kit": 0,
+          "bake": 0,
+          "large_bake": 0,
+          "pack_lunch": 0,
+          "propagate_saplings": 0,
+          "stocktake": 0
+        }
+      }
+    },
+    "player": {
+      "company": 64.58666666666657,
+      "completed": {
+        "delivery": {
+          "boards_run": 0,
+          "fasteners_run": 0,
+          "flour_run": 0,
+          "kits_run": 0,
+          "saplings_run": 0,
+          "school_run": 0
+        },
+        "repair": {
+          "classroom_furniture": 0,
+          "home_furniture": 0,
+          "market_tables": 0,
+          "orchard_trees": 0
+        },
+        "work": {
+          "assemble_kit": 0,
+          "bake": 0,
+          "large_bake": 0,
+          "pack_lunch": 0,
+          "propagate_saplings": 0,
+          "stocktake": 1
+        }
+      },
+      "credits": 22,
+      "decisionAtS": 0,
+      "energy": 62.586666666666574,
+      "id": "pocket",
+      "inventory": {
+        "boards": 0,
+        "bread": 0,
+        "fasteners": 0,
+        "flour": 0,
+        "lunch": 0,
+        "sapling": 0,
+        "timber": 0,
+        "vegetables": 0
+      },
+      "satiety": 45.586666666666574
+    },
+    "timeS": 8.47500000000016
+  },
+  "source": "dream-2"
+}

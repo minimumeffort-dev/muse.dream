@@ -160,7 +160,7 @@ economy(){
  shift bakery_day(market=market_stall,rest=[6360,4490],on=market_hall,grounds=[market_square],lead_s=15);
  shift school_day(market=school_canteen,rest=[4390,3590],on=school_yard,grounds=[school_yard_access,school_yard_return,garden_school,school_doorstep],lead_s=50);
  meal market_break(good=lunch,markets=[market_stall],on=market_hall,grounds=[market_square,oldtown_044,home_entry],eat_s=4,seats=[home_settee,hall_bench]);
- account regular(company=need(initial=60,drain_s=.05,below=40,gain=35),rest=home_rest,actor=market_commuter,credits=30,capacity=4,satiety=25,drain_s=.05,meal=market_break,works=[large_bake,bake],commute=true,attendance=[6,20],on=oldtown_044,grounds=[home_entry,market_square,market_hall,hall_loft,hall_landing]);
+ account regular(company=need(initial=60,drain_s=.05,below=40,gain=35),rest=home_rest,actor=market_commuter,credits=30,capacity=4,satiety=25,drain_s=.05,meal=market_break,works=[stocktake,large_bake,bake],commute=true,attendance=[6,20],on=oldtown_044,grounds=[home_entry,market_square,market_hall,hall_loft,hall_landing]);
  account school_staff(actor=teacher,credits=30,capacity=4,satiety=28,drain_s=.05,shop=true,social=school_break,shift=school_day);
  account caretaker(ration=field_snack,actor=market_neighbor,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,repairs=[market_tables,orchard_trees,classroom_furniture,home_furniture],deliveries=[kits_run,saplings_run,flour_run,boards_run]);
  account porter(ration=school_snack,actor=school_student,credits=0,capacity=4,satiety=65,drain_s=.05,shop=true,deliveries=[fasteners_run,school_run]);
@@ -244,6 +244,8 @@ economy(){
   ingredient(good=boards,take=1);
   ingredient(good=fasteners,take=1);
  }
+
+ work stocktake(kind=service,gesture=folding,label="Check bakery stock",market=market_stall,seconds=4,pay=2,effort=2,capacity=1,target=3,equipment=[hall_table_east],station=bakery_prep);
 
  work propagate_saplings(gesture=tending,label="Propagate saplings",market=market_stall,input=sapling,take=1,output=sapling,make=2,seconds=12,pay=2,effort=2,capacity=1,target=5,equipment=[hall_workbench],station=workshop_prep);
 

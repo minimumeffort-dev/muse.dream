@@ -354,7 +354,7 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 ## Saved simulation state
 
 Current save format 19 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 55. Historical formats retain their registered projections.
+at simulation version 56. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -386,7 +386,9 @@ upgrade. Preserve the old format-9 slot and the entire earlier migration chain.
 ## Playable commerce
 
 Dream `economy()` contains bounded `good`, `account`, `market`, `lot` and `work`
-data. Actor ownership resolves after linking; one player account, at most 16
+data. Service work uses explicit `kind=service`, physical station/equipment and a
+shared lifetime completion quota, with wage escrow but no recipe goods. See
+`docs/dream/service-work.md` and the r115 section of `agent-invariants.md`. Actor ownership resolves after linking; one player account, at most 16
 accounts, 8 goods, 8 markets and 16 jobs. Market operators and workers without
 `commute` retain stationary homes; jobs with a station use bounded local work trips,
 and explicit commuters use their declared home/work network.

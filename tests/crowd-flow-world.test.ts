@@ -29,8 +29,8 @@ const seeded=(base:CarState):CarState=>{
 const focus=()=>{const ids=new Set(sample.sample.map(m=>m.id));return ambientObjects(scene).map((o,i)=>ids.has(o.id)?i:-1).filter(i=>i>=0);};
 
 it('registers only simulation 55 over exact r113 and retains the simulation-54 projection',async()=>{
- expect(SAVE_VERSION).toBe(19);expect(c.SAVE_SIMULATION_VERSION).toBe(55);expect(scene.revisionId).toBe('r113');
- const current=c.saveCompatibilitySource(scene),old=c.preCrowdFlowCompatibilitySource(scene);expect(await c.sha256(current)).toBe(c.CROWD_FLOW_COMPATIBILITY);expect(await c.sha256(old)).toBe(c.WALKING_LINKS_COMPATIBILITY);expect(JSON.parse(current)).toEqual({...JSON.parse(old),simulationVersion:55});
+ expect(SAVE_VERSION).toBe(19);expect(JSON.parse(c.preServiceWorkCompatibilitySource(scene)).simulationVersion).toBe(55);expect(scene.revisionId).toBe('r113');
+ const current=c.preServiceWorkCompatibilitySource(scene),old=c.preCrowdFlowCompatibilitySource(scene);expect(await c.sha256(current)).toBe(c.CROWD_FLOW_COMPATIBILITY);expect(await c.sha256(old)).toBe(c.WALKING_LINKS_COMPATIBILITY);expect(JSON.parse(current)).toEqual({...JSON.parse(old),simulationVersion:55});
  expect(await c.sha256(c.preWalkingLinksCompatibilitySource(scene))).toBe(c.CROSSING_ACCESS_COMPATIBILITY);expect(ambientObjects(scene)).toHaveLength(189);expect(AMBIENT_LIMITS.members).toBe(192);expect(AMBIENT_LIMITS.tickSeconds).toBe(.05);
 });
 it('clears the six observed stuck poses without overlap, unsupported movement or teleporting',()=>{

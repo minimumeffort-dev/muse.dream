@@ -727,11 +727,12 @@
       "id": true,
       "fields": {
         "label": "text",
+        "kind": "recipe|service?",
         "market": "ref",
         "input": "ref?",
         "take": "n?",
-        "output": "ref",
-        "make": "n",
+        "output": "ref?",
+        "make": "n?",
         "seconds": "n",
         "pay": "n",
         "effort": "n",
@@ -1862,6 +1863,24 @@
     "phase": "place.phase_s 0..3600 only with route; shifts the entire route clock including stops. offset remains a carriage distance."
   },
   "commerce": {
+    "serviceWork": {
+      "kind": "service",
+      "recipeDefault": true,
+      "target": "Lifetime shared completion quota, integer 1..10000; completed plus active work cannot exceed it. Cancellation releases the reservation.",
+      "requires": [
+        "station",
+        "equipment",
+        "capacity=1"
+      ],
+      "forbids": [
+        "input",
+        "take",
+        "ingredients",
+        "output",
+        "make"
+      ],
+      "runtime": "Player and NPC share station, quota, wage escrow, effort, qualifications, opening hours and equipment checks. Completion pays once without changing goods. No daily quota refill."
+    },
     "grounds": {
       "commands": [
         "account",

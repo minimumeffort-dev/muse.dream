@@ -26,10 +26,17 @@ const account=z.object({id:ref,actor:ref,credits:money,capacity:z.number().int()
 const lot=z.object({id:ref,good:ref,quantity,limit:quantity.refine(n=>n>0),price:z.number().int().min(1).max(10_000).optional()}).strict();
 const market=z.object({id:ref,label,actor:ref,credits:money,radius:z.number().finite().min(20).max(80),hours:hours.optional(),owner:ref.optional(),sale:money.positive().optional(),lots:z.array(lot).min(1).max(COMMERCE_LIMITS.goods)}).strict();
 const ingredient=z.object({good:ref,take:quantity.refine(n=>n>0)}).strict();
-const job=z.object({id:ref,label,market:ref,input:ref.optional(),take:quantity.refine(n=>n>0).optional(),ingredients:z.array(ingredient).min(1).max(COMMERCE_LIMITS.ingredients).optional(),output:ref,make:quantity.refine(n=>n>0),seconds:z.number().finite().min(1).max(120),pay:money.refine(n=>n>0),effort:z.number().finite().min(1).max(50),capacity:z.number().int().min(1).max(4),target:quantity,requires:ref.optional(),requires_any:z.array(ref).min(1).max(4).optional(),equipment:z.array(ref).min(1).max(COMMERCE_LIMITS.equipment).optional(),station:ref.optional(),gesture:ref.optional()}).strict().superRefine((j,ctx)=>{
+const job=z.object({id:ref,label,kind:z.enum(['recipe','service']).optional(),market:ref,input:ref.optional(),take:quantity.refine(n=>n>0).optional(),ingredients:z.array(ingredient).min(1).max(COMMERCE_LIMITS.ingredients).optional(),output:ref.optional(),make:quantity.refine(n=>n>0).optional(),seconds:z.number().finite().min(1).max(120),pay:money.refine(n=>n>0),effort:z.number().finite().min(1).max(50),capacity:z.number().int().min(1).max(4),target:quantity,requires:ref.optional(),requires_any:z.array(ref).min(1).max(4).optional(),equipment:z.array(ref).min(1).max(COMMERCE_LIMITS.equipment).optional(),station:ref.optional(),gesture:ref.optional()}).strict().superRefine((j,ctx)=>{
  if(j.requires_any && (j.requires || new Set(j.requires_any).size!==j.requires_any.length))ctx.addIssue({code:'custom',message:'requires_any needs unique milestone IDs and excludes requires',path:['requires_any']});
  if(j.equipment && new Set(j.equipment).size!==j.equipment.length)ctx.addIssue({code:'custom',message:'work equipment needs unique placement IDs',path:['equipment']});
- if(j.ingredients ? j.input!==undefined || j.take!==undefined : j.input===undefined || j.take===undefined)ctx.addIssue({code:'custom',message:'work needs input and take, or an ingredient block, never both',path:['ingredients']});
+ if(j.kind==='service'){
+  for(const field of ['input','take','ingredients','output','make'] as const)if(j[field]!==undefined)ctx.addIssue({code:'custom',message:'service work cannot consume or produce goods',path:[field]});
+  if(!j.station || !j.equipment?.length || j.capacity!==1)ctx.addIssue({code:'custom',message:'service work needs a physical station, matching equipment and capacity=1',path:['station']});
+  if(j.target<1)ctx.addIssue({code:'custom',message:'service target must be a positive shared completion quota',path:['target']});
+ }else{
+  if(j.output===undefined || j.make===undefined)ctx.addIssue({code:'custom',message:'recipe work needs output and make',path:['output']});
+  if(j.ingredients ? j.input!==undefined || j.take!==undefined : j.input===undefined || j.take===undefined)ctx.addIssue({code:'custom',message:'work needs input and take, or an ingredient block, never both',path:['ingredients']});
+ }
  if(j.ingredients && new Set(j.ingredients.map(i=>i.good)).size!==j.ingredients.length)ctx.addIssue({code:'custom',message:'work ingredients need unique goods',path:['ingredients']});
 });
 const station=z.object({id:ref,object:ref,at:z.tuple([z.number().finite().min(-256).max(256),z.number().finite().min(-256).max(256)]),hands:z.tuple([z.number().finite().min(-256).max(256),z.number().finite().min(0).max(256),z.number().finite().min(-256).max(256)]),on:ref,grounds:z.array(ref).min(1).max(COMMERCE_LIMITS.repairGrounds-1).optional()}).strict().superRefine((s,ctx)=>{if(s.grounds && new Set([s.on,...s.grounds]).size!==s.grounds.length+1)ctx.addIssue({code:'custom',message:'station grounds must be unique and exclude on',path:['grounds']});});
@@ -97,8 +104,8 @@ export const economySchema=z.object({gestures:z.array(workGestureSchema).min(1).
   const m=e.markets.find(m=>m.id===j.market),output=m?.lots.find(l=>l.good===j.output);
   if(!m)issue('unknown work market',['jobs',i,'market']);
   for(const [k,need] of jobInputs(j).entries()){const input=m?.lots.find(l=>l.good===need.good);if(!input || need.take>input.limit)issue('work input must fit an existing market lot',j.ingredients ? ['jobs',i,'ingredients',k,'good'] : ['jobs',i,'input']);}
-  if(!output || j.make>output.limit || j.target>output.limit)issue('work output and target must fit an existing market lot',['jobs',i,'output']);
-  if(jobTake(j,j.output)>0 && j.make<=jobTake(j,j.output))issue('same-good work must make more than it takes',['jobs',i,'make']);
+  if(j.kind!=='service' && (!output || j.make!>output.limit || j.target>output.limit))issue('work output and target must fit an existing market lot',['jobs',i,'output']);
+  if(j.kind!=='service' && jobTake(j,j.output!)>0 && j.make!<=jobTake(j,j.output!))issue('same-good work must make more than it takes',['jobs',i,'make']);
  });
  e.milestones.forEach((m,i)=>{const tasks=m.kind==='work' ? e.jobs : m.kind==='delivery' ? e.deliveries : m.kind==='repair' ? e.repairs : e.accounts.filter(a=>a.actor!=='player' && a.social);if(!tasks.some(t=>t.id===m.task))issue(m.kind==='shared_meal' ? 'shared meal milestone needs an existing NPC social account' : 'milestone needs an existing task of its kind',['milestones',i,'task']);});
  e.milestones.forEach((m,i)=>{if(m.peer){const host=e.accounts.find(a=>a.id===m.task),plan=e.socials.find(s=>s.id===host?.social);if(m.peer===m.task || !e.accounts.some(a=>a.id===m.peer && a.actor!=='player') || !plan?.peers?.includes(m.peer))issue('peer must name another NPC account in the host social plan peers',['milestones',i,'peer']);}});
@@ -152,6 +159,7 @@ export type Market=Economy['markets'][number];
 export type Job=Economy['jobs'][number];
 export const jobRequirements=(job:Pick<Job,'requires'|'requires_any'>)=>job.requires_any??(job.requires ? [job.requires] : []);
 export const jobInputs=(job:Pick<Job,'input'|'take'|'ingredients'>)=>job.ingredients??(job.input!==undefined && job.take!==undefined ? [{good:job.input,take:job.take}] : []);
+export const jobMakes=(job:Pick<Job,'output'|'make'>,good:string)=>job.output===good ? job.make??0 : 0;
 export const jobTake=(job:Job,good:string)=>job.ingredients ? job.ingredients.find(i=>i.good===good)?.take??0 : job.input===good ? job.take! : 0;
 export type Repair=Economy['repairs'][number];
 export const accountJobs=(a:{work?:string;works?:string[]})=>a.works??(a.work ? [a.work] : []);

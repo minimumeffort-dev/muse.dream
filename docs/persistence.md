@@ -1,6 +1,15 @@
 # Leave and come back
 
-The current world is r114, using format 19 / simulation 55. The registered
+The current world is r115, using format 19 / simulation 56. The registered
+service-work upgrade first validates the exact r114 world and state. It adds
+only zero `stocktake` counters to shared batches, unattributed work and each
+account's completed work. Money, stock, pending recipes, positions, journeys,
+population and clocks remain intact. Original slots remain untouched. New
+pending service claims and completion quotas persist through the same format;
+restore rejects completed plus active tasks above their quota. There is no
+catch-up, new treasury money or task refill. [Service-work verification](evidence/service-work/verification.md).
+
+The preceding r114 world used format 19 / simulation 55. Its registered
 office-room upgrade validates exact r113 geometry and state before applying
 the mezzanine. It preserves stock, money, damage, tasks, population, clocks and
 original slots. Only a grounded pose newly obstructed by construction uses

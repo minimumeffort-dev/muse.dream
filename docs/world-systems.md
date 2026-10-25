@@ -9,6 +9,11 @@ harbor workshops and airport hangar. They preserve delivery cargo and parked
 poses through the existing controls and saves. Dedicated vehicle cargo,
 trailers, vehicle damage and service fleets remain separate work.
 
+Service work now separates a paid task from a production recipe. The bakery's
+three stock checks share a physical station, finite wages and a completion quota
+between the player and commuter. They create no stock. Daily demand, goods-free
+service desks and actual office jobs remain open work. [Service task rules](dream/service-work.md).
+
 ## Next playable work
 
 Simulation 55 resolves the station crowd congestion found in the native review.

@@ -872,7 +872,7 @@ For multiple inputs omit input/take and use a work block:
 work id(label,market,output,make,seconds,pay,effort,capacity,target){
  ingredient(good=first_good,take=1); ingredient(good=second_good,take=2);
 }
-Use exactly one form. A block has 1..4 unique ingredient goods, no IDs, no empty
+Omitted kind means recipe; kind=recipe is also valid. Use exactly one recipe form. A block has 1..4 unique ingredient goods, no IDs, no empty
 block. An input may equal output only when make > take for that good. Reserve
 max(input,output) once for that shared lot; do not add its mutually exclusive
 refund and completion space. Seed input is still required; make is the full
@@ -881,6 +881,19 @@ lot at that market. All ingredients and all refund space reserve atomically;
 a shortage changes nothing, cancellation returns every input, completion consumes
 once. The same rules apply to food recipes and manufactured repair supplies.
 Use examples/multi-input-work.dream. Existing scalar input/take work stays readable.
+Service work uses kind=service and the same finite wages, qualifications, hours,
+effort and physical workstation rules as recipes. Declare no input, take,
+ingredients, output or make. Require station, matching equipment and capacity=1.
+Target is a lifetime shared completion quota, integer 1..10000. Completed and
+active tasks together cannot exceed it; cancellation releases the task and
+refunds its wage. Completion increments existing work history and pays once,
+without consuming or producing goods. NPCs use the same quota, player accounts
+remain manual. No daily quota refill or invented customer demand. Example:
+work stocktake(label="Check bakery stock",kind=service,market=corner,seconds=2,pay=3,effort=2,capacity=1,target=3,equipment=[prep_table],station=preparation);
+See docs/examples/service-work.dream. Omitted kind means recipe; recipe goods
+and output-room requirements remain unchanged. Businesses still require real
+market lots; a goods-free service desk is not supported yet.
+
 Optional work.equipment=[placement_id,...] binds production to 1..4 unique static
 solid prop placements within its counter reach, not asset template IDs. No actors,
 rideable objects or moving props. All listed equipment must be intact: whole-object
@@ -895,7 +908,7 @@ Labels must contain nonblank text. Every declaration except economy and ingredie
 and lot goods must agree. One economy per linked project, with exactly one player
 account. Other account actors are existing role=npc placements. Market operators and
 production workers without commute=true need stationary home placements; station-bound work adds bounded local trips. NPC shop=true buys and eats food at satiety <=40;
-NPC work refills output up to target. Alternatively works=[advanced,basic] is an
+NPC recipes refill output up to target; service work stops at its shared lifetime quota. Alternatively works=[advanced,basic] is an
 ordered list of 1..5 unique work IDs, exclusive with work, repairs and deliveries.
 Try the first eligible job below target; no extra actors, commitments or free stock.
 Player accounts never act automatically.
@@ -1038,7 +1051,7 @@ old active work earns its owner credit only on completion. Start over resets all
 See examples/work-progression.dream. This is task recognition and earned work,
 not a friendship score, qualifications in the real world or generated dialogue.
 Prices/pay/quantities/capacities are bounded integers. No price means an ingredient
-that cannot be bought or sold. Trade is one unit at the listed price in either direction, with stock, carrying and treasury checks. Work reserves input, wage and output room atomically; leave
+that cannot be bought or sold. Trade is one unit at the listed price in either direction, with stock, carrying and treasury checks. Recipe work reserves input, wage and output room atomically; service work reserves a task and wage; leave
 range or cancel to refund without output/pay. Completion spends effort and moves
 reserved wage to the worker. Food restores bounded satiety; drain_s is simulation
 time only. Limits and ranges are in contract.commerce; preserve finite stock,

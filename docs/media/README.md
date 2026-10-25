@@ -1,5 +1,24 @@
 # Media and Dream highlighting
 
+## Service work, r115
+
+`servicework` records one real stocktaking task at the existing bakery desk.
+Only the initial observer pose is seeded; the dev-only pre-roll walks to the
+accepted station through ordinary fixed-step movement. Selection and start use
+the existing Work controls. The task reserves its wage and shared quota, works
+for four simulation seconds and pays once. The last frame asserts the personal
+completion and exact two-coin payment.
+
+The exporter renders 240 consecutive 2400x1350 PNGs at 30 frames per simulation
+second, with no missing-frame interpolation. Encode with
+`node scripts/encode-media.mjs <ffmpeg> <gifsicle> servicework`. Keep the HD video,
+1280x720 GIF and 1600x900 still together. The still uses frame 210. This is offline behavior evidence, not
+a live performance measurement. Existing recipe and office recordings retain
+accurate geometry and controls; their world/task lists are historical. The new
+clip is the current reference for the service-task panel.
+
+[Checks and native restore](../evidence/service-work/verification.md).
+
 ## Office mezzanine, r114
 
 `towerroom` records the real player walking through Lantern Exchange's doorway,

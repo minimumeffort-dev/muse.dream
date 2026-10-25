@@ -10,6 +10,19 @@ Racing is where this started. The idea is to make whatever someone draws playabl
 
 **The playable world is a handmade mock today.** The renderer, driving simulation and Dream 2 compiler work. Photo upload and Muse interpretation are still to come. There are no model calls or API keys to configure.
 
+## Paid work without extra goods
+
+The bakery now has stocktaking alongside its recipes. Walk to the preparation
+table, choose the task and finish it for a wage. You and the commuter share
+three checks, the same workstation and the same finite business money. A check
+creates no goods. Cancelling frees the task; finishing pays once, and progress
+survives reload. Daily task replenishment is still to come.
+
+![Stocktaking at the shared bakery workstation](docs/media/servicework.jpg)
+
+[Watch in HD](docs/media/servicework.mp4) · [GIF](docs/media/servicework.gif) ·
+[Author a service in Dream](docs/dream/service-work.md)
+
 ## A station quarter with some height
 
 The station side of town now has a 55-metre brick residential tower and a

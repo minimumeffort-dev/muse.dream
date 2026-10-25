@@ -7,6 +7,7 @@ import {modelContext,DEFAULT_PROMPT} from '../src/authoring/prompt';
 import instructions from '../docs/dream-v2-model.txt?raw';
 
 describe('bounded agent context packets',()=>{
+  it('exports service tasks with a finite shared quota and physical work requirements',()=>{const p=dreamAgentContext(['commerce']);expect(p.contract.commands.work!.fields.kind).toBe('recipe|service?');expect(p.contract).toHaveProperty('commerce.serviceWork.requires',['station','equipment','capacity=1']);expect(p.instructions).toContain('lifetime shared completion quota');expect(p.instructions).toContain('without consuming or producing goods');expect(p.instructions).toContain('goods-free service desk is not supported yet');});
   it('exports company constructor rules in the commerce packet with their bounds and supply policy',()=>{const p=dreamAgentContext(['commerce']);expect(p.contract.commands.account!.fields.company).toBe('company_need?');expect(p.contract.commands.need).toMatchObject({contexts:['company_need'],id:false,fields:{initial:'n',drain_s:'n',below:'n',gain:'n'}});expect(p.instructions).toContain('Company need:');expect(p.instructions).toContain('next opening');expect(p.contract).toMatchObject({commerce:{company:{runtime:expect.stringContaining('only the actual participants')}}});});
   it('gives standalone scenarios a small, complete vocabulary without geometry',()=>{
     const packet=dreamAgentContext(['scenarios']);

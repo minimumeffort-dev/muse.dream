@@ -1,0 +1,141 @@
+dream 2;
+material teal(style=toon,colors=[#297f88,#24616b]);
+material skin(style=toon,colors=[#c59774,#a97655]);
+material dark(style=toon,colors=[#303d48,#222c36]);
+material cream(style=toon,colors=[#eee8d9,#c9c0ae]);
+material wood(style=toon,colors=[#96714d,#6e503a]);
+object pedestrian(label="Explorer"){
+  measure(kind=person,axis=y,meters=1.75);
+  body(interaction=decor,radius=8,height=57);
+  joint pelvis(bone=root,at=[0,25,0]){
+    part belt(shape=box,material=dark,at=[0,0,0],size=[12,3,15]);
+    joint chest(bone=spine,at=[0,1,0]){
+      part torso(shape=capsule,material=teal,at=[0,8,0],size=[12,19,16]);
+      part head(shape=sphere,material=skin,at=[0,24,0],size=[12,12,12]);
+      part hair(shape=sphere,material=dark,at=[-.7,28,0],size=[12.8,6.4,13]);
+      part nose(shape=sphere,material=skin,at=[6,23,0],size=[3,3,3]);
+      repeat eyes(index=s,count=2){
+        part eye(shape=sphere,material=dark,at=[5.3,25.5,s*7-3.5],size=[1.5,1.5,1.5]);
+        part ear(shape=sphere,material=skin,at=[-.5,24,s*12-6],size=[2.5,3,2]);
+      }
+      part backpack(shape=box,material=wood,at=[-7,8,0],size=[6,15,13]);
+      joint left_arm(bone=left_shoulder,at=[0,17,9]){
+        part sleeve(shape=capsule,material=teal,at=[0,-4.5,0],size=[5,10.5,5]);
+        joint left_forearm(bone=left_elbow,at=[0,-9.5,0]){
+          part elbow(shape=sphere,material=skin,at=[0,0,0],size=[4.2,4.2,4.2]);
+          part forearm(shape=capsule,material=skin,at=[0,-4.5,0],size=[4,10,4]);
+          part hand(shape=box,material=skin,at=[.5,-10,0],size=[4.5,4,3.5]);
+        }
+      }
+      joint right_arm(bone=right_shoulder,at=[0,17,-9]){
+        part sleeve(shape=capsule,material=teal,at=[0,-4.5,0],size=[5,10.5,5]);
+        joint right_forearm(bone=right_elbow,at=[0,-9.5,0]){
+          part elbow(shape=sphere,material=skin,at=[0,0,0],size=[4.2,4.2,4.2]);
+          part forearm(shape=capsule,material=skin,at=[0,-4.5,0],size=[4,10,4]);
+          part hand(shape=box,material=skin,at=[.5,-10,0],size=[4.5,4,3.5]);
+        }
+      }
+    }
+    joint left_leg(bone=left_hip,at=[0,0,4]){
+      part thigh(shape=capsule,material=dark,at=[0,-5.5,0],size=[5.7,12,5.7]);
+      joint left_shin(bone=left_knee,at=[0,-11.5,0]){
+        part knee(shape=sphere,material=dark,at=[0,0,0],size=[5,5,5]);
+        part calf(shape=capsule,material=dark,at=[0,-5.2,0],size=[5,11,5]);
+        joint left_foot(bone=left_ankle,at=[0,-10.5,0]){
+          part shoe(shape=box,material=cream,at=[2.3,-1,0],size=[9,4,6.2]);
+        }
+      }
+    }
+    joint right_leg(bone=right_hip,at=[0,0,-4]){
+      part thigh(shape=capsule,material=dark,at=[0,-5.5,0],size=[5.7,12,5.7]);
+      joint right_shin(bone=right_knee,at=[0,-11.5,0]){
+        part knee(shape=sphere,material=dark,at=[0,0,0],size=[5,5,5]);
+        part calf(shape=capsule,material=dark,at=[0,-5.2,0],size=[5,11,5]);
+        joint right_foot(bone=right_ankle,at=[0,-10.5,0]){
+          part shoe(shape=box,material=cream,at=[2.3,-1,0],size=[9,4,6.2]);
+        }
+      }
+    }
+  }
+}
+
+material dark_wood(style=wood,colors=[#53412e,#413325]);
+material steel(style=toon,colors=[#737d7e,#49545b]);
+object slatted_bench(label="Slatted park bench"){
+  measure(kind=bench,axis=x,meters=1.8);
+  body(interaction=solid,radius=28,height=31);
+  seat left(at=[-13,18,12],approach=[-13,48],heading_deg=90);
+  seat right(at=[13,18,12],approach=[13,48],heading_deg=90);
+  impact(mode=break(speed=95,scatter=65,lift=65,spin=4,lifetime=6,pattern=splinter));
+  repeat slats(index=i,count=4){
+    fragment plank(){voxels seat(material=wood,at=[0,16,-12+i*8],size=[60,4,6],grid=[30,2,3]){fill board(from=[0,0,0],to=[30,2,3]);}}
+  }
+  repeat supports(index=i,count=2){
+    fragment frame(){
+      voxels leg_front(material=dark_wood,at=[i*44-22,6.5,12],size=[5,13,6],grid=[2,6,3]){fill board(from=[0,0,0],to=[2,6,3]);}
+      voxels leg_back(material=dark_wood,at=[i*44-22,15,-13],size=[5,30,6],grid=[2,15,3]){fill board(from=[0,0,0],to=[2,15,3]);}
+      voxels brace(material=dark_wood,at=[i*44-22,12,0],size=[6,4,29],grid=[3,2,14]){fill board(from=[0,0,0],to=[3,2,14]);}
+      voxels armrest(material=wood,at=[i*44-22,24,0],size=[5,3,29],grid=[2,2,14]){fill board(from=[0,0,0],to=[2,2,14]);}
+      voxels arm_support(material=dark_wood,at=[i*44-22,20,12],size=[3,8,3],grid=[2,4,2]){fill board(from=[0,0,0],to=[2,4,2]);}
+    }
+  }
+  fragment back(){
+    voxels upper(material=wood,at=[0,27,-16],size=[60,6,4],grid=[30,3,2]){fill board(from=[0,0,0],to=[30,3,2]);}
+    voxels lower(material=wood,at=[0,21,-16],size=[60,6,4],grid=[30,3,2]){fill board(from=[0,0,0],to=[30,3,2]);}
+      repeat bolts(index=b,count=2){part bolt(shape=sphere,material=steel,at=[b*44-22,27,-13.7],size=[1,1,1]);}
+  }
+}
+behavior welcome(start=waiting){
+  state waiting(action=idle){on talk(event=interact,to=hello,radius=55,familiar=false);on again(event=interact,to=returning,radius=55,familiar=true);}
+  state hello(action=idle,face=player,say="Hello. Welcome to the neighborhood."){
+    on ask(event=interact,to=about,radius=55);
+    on finish(event=after,to=waiting,seconds=6);
+  }
+  state returning(action=idle,face=player,say="Good to see you again."){
+    on finish(event=after,to=waiting,seconds=6);
+  }
+  state about(action=idle,face=player,say="I like walking by the river. See you around."){
+    on finish(event=after,to=waiting,seconds=6);
+  }
+}
+place neighbor(object=pedestrian,at=[580,710],role=npc,behavior=welcome);
+object prep_table_model(label="Prep table"){
+ measure(kind=table,axis=x,meters=2);
+ body(interaction=solid,radius=12,height=10);
+ impact(mode=break(speed=60,scatter=30,lift=40,spin=2,lifetime=6));
+ part top(shape=box,material=wood,at=[0,9,0],size=[20,2,12]);
+ repeat legs(index=i,count=2){part leg(shape=box,material=wood,at=[i*14-7,4,0],size=[2,8,10]);}
+}
+place prep_table(object=prep_table_model,at=[610,750],role=prop);
+world(size=[4000,2400],spawn=[525,609],heading_deg=0);
+road circuit(width=118,points=[[300,590],[660,590],[810,500],[810,220],[660,130],[300,130],[150,220],[150,500]]);
+
+checkpoint start(at=[480,612.5],dir=[1,0],width=100);
+checkpoint east(at=[828.75,360],dir=[0,-1],width=100);
+checkpoint north(at=[480,107.5],dir=[-1,0],width=100);
+checkpoint west(at=[131.25,360],dir=[0,1],width=100);
+
+route work_walk(kind=walk,mode=shuttle,speed=10){point(at=[760,730]);point(at=[780,730]);}
+behavior work_routine(start=walk){
+ state walk(action=patrol,face=none){on hello(event=near_player,radius=40,to=chat);}
+ state chat(action=idle,face=player){on resume(event=far_player,radius=70,to=walk);}
+}
+place customer(object=pedestrian,route=work_walk,role=npc,behavior=work_routine);
+street work_street(width=60,sidewalk=12,points=[[500,638],[850,638]]);
+surface home_walk(finish=terrain,walkable=true,points=[[742,680],[800,680],[800,746],[742,746]]);
+surface plaza(finish=terrain,points=[[530,680],[820,680],[820,816],[530,816]]);
+place lunch_bench(object=slatted_bench,at=[690,775],role=prop);
+economy(){
+ station preparation(object=prep_table,at=[16.5,0],hands=[9.8,10,0],on=plaza);
+ good bread(label="Bread",food=45);
+ good flour(label="Flour");
+ account pocket(actor=player,credits=20,capacity=8,satiety=40,drain_s=.05);
+ account baker(actor=neighbor,credits=0,capacity=4,satiety=65,drain_s=.05);
+ meal bakery_break(good=bread,markets=[corner],on=plaza,eat_s=4,seats=[lunch_bench]);
+ account regular(actor=customer,credits=20,capacity=4,satiety=65,drain_s=.05,works=[stocktake],commute=true,on=plaza);
+ market corner(label="Corner bakery",actor=neighbor,credits=100,radius=70){
+  lot bread_shelf(good=bread,quantity=2,limit=16,price=5);
+  lot flour_sack(good=flour,quantity=12,limit=12);
+ }
+ work stocktake(label="Check bakery stock",kind=service,market=corner,seconds=2,pay=3,effort=2,capacity=1,target=3,equipment=[prep_table],station=preparation);
+}

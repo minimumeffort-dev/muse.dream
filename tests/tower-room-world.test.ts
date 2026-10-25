@@ -21,7 +21,7 @@ import {towerRoomReviewSteps} from '../src/game/tower-room-review';
 import {stepInteractive,bodyWorld,toggleRide} from '../src/sim/interaction';
 let scene:ReturnType<typeof createWorldScene>,prior:typeof scene,world:World,old:World,snapshot:string;
 beforeAll(()=>{
- scene=createWorldScene();prior=c.preTowerRoomScene(scene);snapshot=JSON.stringify(scene);
+ scene={...c.preServiceWorkScene(createWorldScene()),revisionId:'r114'};prior=c.preTowerRoomScene(scene);snapshot=JSON.stringify(scene);
  world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.TOWER_ROOM_COMPATIBILITY,previousTowerRoomSaveCompatibility:c.CROWD_FLOW_COMPATIBILITY,previousTowerRoomContacts:sceneContactData(prior),previousTowerRoomNavigation:ambientGraph(prior)};
  old={...world,scene:prior,saveCompatibility:c.CROWD_FLOW_COMPATIBILITY,previousTowerRoomSaveCompatibility:undefined};
 },60000);
@@ -30,7 +30,7 @@ const furniture=['station_quarter_gallery_south','station_quarter_gallery_north'
 const run=async(steps:Generator<CarState,CarState>)=>{let r=steps.next(),n=0;while(!r.done){if(++n%120===0)await new Promise(resolve=>setTimeout(resolve,0));r=steps.next();}return r.value;};
 
 it('registers exact r113 and adds supported rooms without actors, resources or public-network changes',async()=>{
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.TOWER_ROOM_COMPATIBILITY);
+ expect(await c.sha256(c.preServiceWorkCompatibilitySource(scene))).toBe(c.TOWER_ROOM_COMPATIBILITY);
  expect(await c.sha256(c.preTowerRoomCompatibilitySource(scene))).toBe(c.CROWD_FLOW_COMPATIBILITY);
  expect(await c.sha256(c.preCrowdFlowCompatibilitySource(scene))).toBe(c.WALKING_LINKS_COMPATIBILITY);
  expect(scene.revisionId).toBe('r114');expect(scene.objects.length-prior.objects.length).toBe(3);expect(scene.floors!.length-prior.floors!.length).toBe(2);

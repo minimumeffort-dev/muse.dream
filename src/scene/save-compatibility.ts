@@ -22,7 +22,7 @@ import homeR98 from './compatibility/r98-home.json';
 import homeR97 from './compatibility/r97-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=55;
+export const SAVE_SIMULATION_VERSION=56;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -116,12 +116,24 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r115 adds finite service tasks and one existing worker preference, without physical or resource changes. */
+export const SERVICE_WORK_COMPATIBILITY='180aa45b5573fec413014be184ca16a4f06eb90bcb1840ea012cf905f13d9aa8';
+const serviceWorkProjections=new WeakMap<Scene,Scene>();
+export function preServiceWorkScene(scene:Scene):Scene{
+ const cached=serviceWorkProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.jobs.some(j=>j.id==='stocktake'))return scene;
+ const prior={...scene,economy:{...scene.economy,jobs:scene.economy.jobs.filter(j=>j.id!=='stocktake'),accounts:scene.economy.accounts.map(a=>a.id==='regular' ? {...a,works:a.works?.filter(id=>id!=='stocktake')} : a)}};
+ serviceWorkProjections.set(scene,prior);return prior;
+}
+export function preServiceWorkCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preServiceWorkScene(scene),55,true,encode);}
+
 /** r114 opens the first office mezzanine using existing floor, seating and repair rules. */
 export const TOWER_ROOM_COMPATIBILITY='783e51cc974118b4d28c283a48546c99a37aad7f28a09dee2c0ad7c65495f55f';
 const towerRoomProjections=new WeakMap<Scene,Scene>();
 const towerRoomFloors=new Set(['office_mezzanine','office_landing']);
 const towerRoomObjects=new Set(['station_quarter_gallery_south','station_quarter_gallery_north','station_quarter_gallery_table']);
 export function preTowerRoomScene(scene:Scene):Scene{
+ scene=preServiceWorkScene(scene);
  const cached=towerRoomProjections.get(scene);if(cached)return cached;
  if(!scene.floors?.some(f=>towerRoomFloors.has(f.id)))return scene;
  const prior={...scene,floors:scene.floors.filter(f=>!towerRoomFloors.has(f.id)),objects:scene.objects.filter(o=>!towerRoomObjects.has(o.id)).map(o=>o.id==='station_quarter_offices' ? {...o,spec:officeR113 as ObjectDslV2} : o),economy:scene.economy && {...scene.economy,repairs:scene.economy.repairs.map(r=>r.id==='classroom_furniture' ? {...r,label:'Repair school furniture',grounds:r.grounds?.filter(id=>!towerRoomFloors.has(id))} : r)}};
