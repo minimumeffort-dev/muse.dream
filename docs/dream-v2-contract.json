@@ -740,6 +740,7 @@
         "effort": "n",
         "capacity": "n",
         "target": "n",
+        "period_s": "n?",
         "requires": "ref?",
         "requires_any": "symbols?",
         "equipment": "symbols?",
@@ -1886,7 +1887,8 @@
     "serviceWork": {
       "kind": "service",
       "recipeDefault": true,
-      "target": "Lifetime shared completion quota, integer 1..10000; completed plus active work cannot exceed it. Cancellation releases the reservation.",
+      "target": "Shared completion quota, integer 1..10000. Lifetime unless period_s is explicit. Completed this period plus active work cannot exceed it; cancellation releases the reservation.",
+      "period_s": "Optional service-only finite 30..86400 simulation seconds. Fixed windows from simulation time zero; no accumulation of skipped windows. In-flight jobs remain reserved and their completion consumes the current window. Lifetime history, resources and finite wages never reset.",
       "requires": [
         "station",
         "equipment",
@@ -1899,7 +1901,7 @@
         "output",
         "make"
       ],
-      "runtime": "Player and NPC share station, quota, wage escrow, effort, qualifications, opening hours and equipment checks. Completion pays once without changing goods. No daily quota refill."
+      "runtime": "Player and NPC share station, quota, wage escrow, effort, qualifications, opening hours and equipment checks. Completion pays once without changing goods. Only explicit period_s renews quota; pause and reload never grant catch-up or treasury funds."
     },
     "grounds": {
       "commands": [

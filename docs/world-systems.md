@@ -11,7 +11,8 @@ trailers, vehicle damage and service fleets remain separate work.
 
 Service work now separates a paid task from a production recipe. The bakery's
 three stock checks share a physical station, finite wages and a completion quota
-between the player and commuter. They create no stock. Daily demand and richer service tasks remain open work. The first goods-free
+between the player and commuter. They create no stock. Explicit recurring quotas now renew the office work without resetting history
+or funding. Customer demand and richer service tasks remain open work. The first goods-free
 office now connects Copper Court home breaks, a real stair commute and shared
 paid work in Lantern Exchange. The clerk now buys station bread with earned wages,
 eats at home and funds real bakery-to-station resupply by the existing porter.

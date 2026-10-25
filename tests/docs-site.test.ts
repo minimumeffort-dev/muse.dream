@@ -6,6 +6,7 @@ import {DREAM_V2_COMMANDS} from '../src/scene/dream-contract';
 
 const highlight=(source:string)=>highlightDream(source,DREAM_V2_COMMANDS);
 describe('Dream syntax highlighting',()=>{
+  it('highlights service periods only at field boundaries and escapes source HTML',()=>{const html=highlight('work records(kind=service,period_s=60); // <Period>&');expect(html).toContain('dream-field">period_s</span>');expect(html).toContain('&lt;Period&gt;&amp;');expect(highlight('period_s_extra my_period_s')).not.toMatch(/dream-field/);});
   it('highlights company and its need constructor at complete boundaries with escaped source',()=>{const html=highlight('account person(company=need(initial=65,drain_s=.05,below=40,gain=35)); // <Company>&');expect(html).toContain('dream-field">company</span>');expect(html).toContain('dream-keyword">need</span>');for(const name of ['initial','gain'])expect(html).toContain(`dream-field">${name}</span>`);expect(html).toContain('&lt;Company&gt;&amp;');expect(highlight('company_extra needs needed initial_extra gainful')).not.toMatch(/dream-(?:field|keyword)/);});
   it('highlights the peer selector at complete boundaries and escapes authored text',()=>{
     const html=highlight('milestone pair(label="<Meal>&",kind=shared_meal,task=host,peer=guest,count=1);');expect(html).toContain('class="dream-field">peer</span>');expect(html).toContain('&lt;Meal&gt;&amp;');expect(highlight('peer_extra peerless')).not.toMatch(/dream-field/);

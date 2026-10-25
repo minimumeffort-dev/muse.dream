@@ -1279,3 +1279,26 @@ The registered format-19 upgrade validates exact r116 and retains every old
 state field, adding only the four depot loaves and zero station_bread counters.
 Retain the full earlier migration chain and old slots. No offline catch-up.
 See docs/dream/office-food.md and docs/examples/service-office-meals.dream.
+
+
+## Recurring service quotas, r118 / simulation 59
+
+Optional work.period_s is service-only, finite 30..86400 simulation seconds.
+Fixed windows start at simulation time zero. Omitted retains the lifetime quota.
+Only the current-window completion count renews; skipped windows never accumulate.
+Outstanding jobs retain their wage/slot and count in the window where they finish.
+Preserve existing completion-before-input and damage-before-completion ordering,
+atomic reservations/refunds, lifetime personal/shared history and conserved money
+and goods. No pay for waiting, free treasury, need recovery or offline catch-up.
+Pause freezes time; R/save/streaming retain it; Start over starts an empty world.
+At most sixteen service windows share the existing job cap. Validate exact keys,
+current economic-clock period, integer usage <= lifetime completions and quota
+including active claims. Keep actor, rig, geometry and graph budgets unchanged.
+
+The live records office renews six shared tasks every 600 simulation seconds.
+Bakery stocktaking keeps its lifetime quota. Format-19/simulation-59 validates
+exact r117 first and preserves every prior saved field, clock and original slot.
+Initialize only the new window at saved economy time, conservatively counting
+min(target,lifetime completions) so restoration does not reopen an exhausted
+quota. All earlier migrations remain. See docs/dream/service-work.md and the
+complete docs/examples/recurring-service.dream example.

@@ -1,0 +1,38 @@
+dream 2;
+rule benches(kind=bench,mode=break(speed=95,scatter=65,lift=65,spin=4,lifetime=6,pattern=splinter));
+asset offices(module=tower_assets,object=station_offices);
+asset bench(module=destructible,object=slatted_bench);
+asset resident(module=city_people,object=city_resident);
+world(size=[2400,1800],spawn=[1400,1400],heading_deg=0);
+daylight(cycle_s=600,start_hour=10);
+street avenue(width=80,sidewalk=24,points=[[200,1400],[2200,1400]]);
+place exchange(object=offices,at=[1200,950],heading_deg=180,role=prop);
+site entrance(object=exchange,kind=work,entry=[0,-28],street=avenue,width=16,points=[[1200,1348]]);
+floor lobby(on=exchange,at=[0,.5,0],size=[62,54]);
+floor mezzanine(on=exchange,at=[4,12.5,0],size=[54,54]);
+floor landing(on=exchange,at=[-27,12.5,23],size=[8,8]);
+place upstairs_south(object=bench,at=[1168.75,985.15625],heading_deg=180,role=prop,floor=mezzanine);
+place upstairs_north(object=bench,at=[1168.75,914.84375],heading_deg=0,role=prop,floor=mezzanine);
+
+material wood(style=wood,colors=[#876448,#664a35]);
+object records_table(label="Records table"){
+ measure(kind=table,axis=x,meters=2.2);
+ body(interaction=solid,radius=29,height=19.2);
+ impact(mode=break(speed=90,scatter=62,lift=100,spin=4,lifetime=6));
+ part top(shape=box,material=wood,at=[0,17.2,0],size=[54,4,28]);
+ repeat supports(index=i,count=2){part leg(shape=box,material=wood,at=[i*42-21,7.6,0],size=[4,15.2,20]);}
+}
+surface entry_work(finish=terrain,points=[[1050,1030],[1350,1030],[1350,1250],[1050,1250]]);
+place desk(object=records_table,at=[1168.75,950],role=prop,floor=mezzanine);
+place clerk(object=resident,at=[1400,1348],role=npc,behavior=welcome);
+behavior welcome(start=waiting){
+ state waiting(action=idle,face=none){on talk(event=interact,to=reply,radius=55);}
+ state reply(action=idle,face=player,say="I work at the records desk upstairs."){on finish(event=after,to=waiting,seconds=6);}
+}
+economy(){
+ station records(object=desk,at=[40,0],hands=[26.5,19.2,0],on=mezzanine,grounds=[exchange,landing]);
+ account pocket(actor=player,credits=20,capacity=8,satiety=65,drain_s=0);
+ account worker(actor=clerk,credits=0,capacity=4,satiety=65,drain_s=0,work=check_records,commute=true,attendance=[8,18],on=exchange,grounds=[lobby,mezzanine,landing,entry_work]);
+ market office(label="Records office",actor=clerk,on=exchange,credits=60,radius=80,hours=[8,18]){}
+ work check_records(label="Check visitor records",kind=service,market=office,seconds=6,pay=4,effort=2,capacity=1,target=2,period_s=60,equipment=[desk],station=records);
+}

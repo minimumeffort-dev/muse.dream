@@ -27,13 +27,13 @@ survives reload. Daily task replenishment is still to come.
 
 The clerk lives in Copper Court, takes a break on its bench and walks across the
 promenade to Lantern Exchange. You can take the same stairs and work at the
-same records desk. There are six shared tasks and finite wages, with no pretend
+same records desk. There are six shared tasks per 600 simulation seconds and finite wages, with no pretend
 inventory for a service business. Break the table and work stops until it is
-repaired. The quota does not refill each day yet.
+repaired. Lifetime work history stays intact when the quota renews.
 
-![Going upstairs and working in Lantern Exchange](docs/media/officework.jpg)
+![Renewing and completing a shared task in Lantern Exchange](docs/media/periodwork.jpg)
 
-[Watch in HD](docs/media/officework.mp4) · [GIF](docs/media/officework.gif) ·
+[Watch in HD](docs/media/periodwork.mp4) · [GIF](docs/media/periodwork.gif) ·
 [Build the office in Dream](docs/dream/office-work.md)
 
 ## Earn lunch, then bring more bread

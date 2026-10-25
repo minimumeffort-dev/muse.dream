@@ -13,7 +13,7 @@ only after finishing.
 The live bakery offers three stock checks, each taking four simulation seconds
 and paying two coins. They are a shared lifetime quota, so finishing one leaves
 two for everyone else. They do not replenish when you leave, reload or press R.
-Start over resets the world. There is no daily demand generator yet.
+Start over resets the world. Only an explicit recurring rule refills a quota; customer demand is not inferred.
 
 ## Declare the task
 
@@ -38,6 +38,57 @@ Walking away, cancelling, sitting or breaking the desk releases the reservation
 and refunds the wage. The shared guards for money, qualifications, opening hours,
 food, energy and station occupancy still apply.
 
+## Work comes back
+
+The records office now offers six shared tasks per 600 simulation seconds.
+Its treasury stays finite. You or the clerk can use the available work, and a
+later period can supply another task without forgetting what either person earned.
+Bakery stock checks retain their lifetime quota.
+
+![A shared quota renews, then pays for one completed task](../media/periodwork.jpg)
+
+[HD video](../media/periodwork.mp4) · [GIF](../media/periodwork.gif) ·
+[Complete recurring office](../examples/recurring-service.dream).
+The clip records the actual player exhausting a period, waiting unpaid and
+finishing one renewed task. The long wait happens before the twelve-second clip.
+
+The complete example uses two tasks per minute so the same behavior is quicker
+to try. This is its exact work declaration:
+
+```dream
+work check_records(label="Check visitor records",kind=service,market=office,seconds=6,pay=4,effort=2,capacity=1,target=2,period_s=60,equipment=[desk],station=records);
+```
+
+`period_s` accepts 30..86400 finite simulation seconds and only service work.
+Windows start at simulation time zero: a 60-second period covers 0..60, then
+60..120. This clock is independent of the visual daylight hour. Omit the field
+for the existing lifetime quota. Missed windows do not accumulate extra tasks.
+
+| At a boundary | What happens |
+| --- | --- |
+| Completed tasks | Only current-window usage returns to zero |
+| Unfinished work | Keeps its reserved wage and slot; completion uses the new window |
+| Cancellation | Refunds once and releases the slot |
+| Lifetime work history | Continues increasing for pay, practice and milestones |
+| Treasury, stock and needs | Keep their actual values |
+
+The HUD shows usage, availability and the next renewal. Empty funds, damaged
+furniture, occupied stations, opening hours and qualifications can still block
+a task. Quota renewal pays nobody. It does not create a visitor queue, business
+income or wages the treasury cannot cover.
+
+Pause freezes the period. R, streaming and reload retain it; Start over begins a
+new world. A save with unfinished work keeps the claim. The registered r118
+upgrade validates r117, retains all old fields and clock, then initializes the new usage from
+existing completions, capped at the target. An already exhausted quota stays
+exhausted until its next real simulation boundary. No offline catch-up.
+
+Compile the example with:
+
+```sh
+node scripts/dream.mjs check docs/examples/recurring-service.dream --modules src/scene/world
+```
+
 ## Play it
 
 Walk to the bakery preparation table and press M, then choose Work. Select
@@ -60,8 +111,8 @@ This is a bounded service task in the mock world. It does not infer demand,
 customer satisfaction, clinical care, lessons or meaningful paperwork from a
 label. Goods-free service desks now use empty market blocks, with an optional
 explicit building binding. [A working office](office-work.md) separates premises
-from its operator home. A lifetime quota is deliberate here. Daily task generation needs its own
-bounded, persistent rule before it can be authored.
+from its operator home. Quota renewal is explicit and bounded. Customer requests, visitor queues and
+service outcomes still need their own authored systems.
 
 Compile the example with:
 

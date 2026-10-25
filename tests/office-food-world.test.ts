@@ -13,12 +13,12 @@ import {buildPaperMask} from '../src/sim/mask';
 import {encodeSave,decodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
 let scene:ReturnType<typeof createWorldScene>,prior:typeof scene,world:World,old:World,snapshot:string;
-beforeAll(()=>{scene=createWorldScene();prior=c.preOfficeFoodScene(scene);snapshot=JSON.stringify(scene);world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.OFFICE_FOOD_COMPATIBILITY,previousOfficeFoodSaveCompatibility:c.OFFICE_WORK_COMPATIBILITY};old={...world,scene:prior,saveCompatibility:c.OFFICE_WORK_COMPATIBILITY,previousOfficeFoodSaveCompatibility:undefined};},60000);
+beforeAll(()=>{scene={...c.preRecurringWorkScene(createWorldScene()),revisionId:'r117',sourceHash:'handmade-city-life-v117'};prior=c.preOfficeFoodScene(scene);snapshot=JSON.stringify(scene);world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.OFFICE_FOOD_COMPATIBILITY,previousOfficeFoodSaveCompatibility:c.OFFICE_WORK_COMPATIBILITY};old={...world,scene:prior,saveCompatibility:c.OFFICE_WORK_COMPATIBILITY,previousOfficeFoodSaveCompatibility:undefined};},60000);
 afterEach(()=>expect(JSON.stringify(scene)).toBe(snapshot));
 const clerk=(s:CarState)=>s.economy!.accounts.find(a=>a.id==='office_clerk')!;
 const tick=(s:CarState)=>stepCommerce({...s,timeS:s.timeS+.25,npcs:stepNpcs(s,.25,scene),population:stepAmbient(s,.25,scene)},{},.25,scene);
 it('adds local food and an existing courier contract without geometry, actors or goods, and versions floor-aware meal saves',async()=>{
- expect(c.SAVE_SIMULATION_VERSION).toBe(58);expect(scene.revisionId).toBe('r117');expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.OFFICE_FOOD_COMPATIBILITY);expect(await c.sha256(c.preOfficeFoodCompatibilitySource(scene))).toBe(c.OFFICE_WORK_COMPATIBILITY);
+ expect(JSON.parse(c.preRecurringWorkCompatibilitySource(scene)).simulationVersion).toBe(58);expect(scene.revisionId).toBe('r117');expect(await c.sha256(c.preRecurringWorkCompatibilitySource(scene))).toBe(c.OFFICE_FOOD_COMPATIBILITY);expect(await c.sha256(c.preOfficeFoodCompatibilitySource(scene))).toBe(c.OFFICE_WORK_COMPATIBILITY);
  for(const k of ['objects','surfaces','streets','floors','routes','behaviors'] as const)expect(scene[k]).toEqual(prior[k]);expect(scene.economy!.goods).toEqual(prior.economy!.goods);expect(scene.economy!.accounts).toHaveLength(prior.economy!.accounts.length);expect(scene.economy!.markets).toHaveLength(prior.economy!.markets.length);
 });
 it('keeps every old saved field and slot while adding exactly four finite loaves and zero delivery counters',()=>{
@@ -31,7 +31,7 @@ type Recording={simulationVersion:number;compatibilityHash:string;sourceRevision
 const recordings=['fresh','restored'].map(name=>({name,...JSON.parse(readFileSync(new URL('./fixtures/office-food/'+name+'.json',import.meta.url),'utf8')) as Recording}));
 const segments=recordings.flatMap(r=>r.points.slice(1).map((to,i)=>({label:r.name+'/'+i,from:r.points[i]!,to,recording:r})));
 it.each(segments)('replays the complete city between independent saved checkpoints: $label',async({from,to,recording})=>{
- expect(recording.simulationVersion).toBe(c.SAVE_SIMULATION_VERSION);expect(recording.compatibilityHash).toBe(c.OFFICE_FOOD_COMPATIBILITY);expect(recording.sourceRevision).toBe(scene.revisionId);const steps=to.steps-from.steps;expect(steps).toBeGreaterThan(0);expect(steps).toBeLessThanOrEqual(800);
+ expect(recording.simulationVersion).toBe(58);expect(recording.compatibilityHash).toBe(c.OFFICE_FOOD_COMPATIBILITY);expect(recording.sourceRevision).toBe(scene.revisionId);const steps=to.steps-from.steps;expect(steps).toBeGreaterThan(0);expect(steps).toBeLessThanOrEqual(800);
  let s=decodeSave(JSON.stringify(from.packet),world).state;const person=scene.objects.find(o=>o.id==='hospital_visitor')!;let p=actorPose(scene,person,s.timeS,s);
  for(let i=0;i<steps;i++){
   const was=clerk(s);s=tick(s);const a=clerk(s),q=actorPose(scene,person,s.timeS,s);expect(Math.hypot(q.x-p.x,q.y-p.y)).toBeLessThan(20);p=q;

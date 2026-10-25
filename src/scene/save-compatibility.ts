@@ -22,7 +22,7 @@ import homeR98 from './compatibility/r98-home.json';
 import homeR97 from './compatibility/r97-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=58;
+export const SAVE_SIMULATION_VERSION=59;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -116,10 +116,22 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r118 renews authored service quotas without resetting lifetime history or resources. */
+export const RECURRING_WORK_COMPATIBILITY='7f61d64a7c7c25b637c9d2dc8bc5901b82bfa47c72294468940db24e8df71638';
+const recurringWorkProjections=new WeakMap<Scene,Scene>();
+export function preRecurringWorkScene(scene:Scene):Scene{
+ const cached=recurringWorkProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.jobs.some(j=>j.id==='check_records' && j.period_s!==undefined))return scene;
+ const prior={...scene,economy:{...scene.economy,jobs:scene.economy.jobs.map(j=>{if(j.id!=='check_records')return j;const {period_s,...old}=j;return old;})}};
+ recurringWorkProjections.set(scene,prior);return prior;
+}
+export function preRecurringWorkCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preRecurringWorkScene(scene),58,true,encode);}
+
 /** r117 connects office wages, local food, shared seating and finite station resupply. */
 export const OFFICE_FOOD_COMPATIBILITY='643b70b96ca5415687a91955ca4f43a20b9ac2590303d04fd5aacd0d637aa9e6';
 const officeFoodProjections=new WeakMap<Scene,Scene>();
 export function preOfficeFoodScene(scene:Scene):Scene{
+ scene=preRecurringWorkScene(scene);
  const cached=officeFoodProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.deliveries?.some(d=>d.id==='station_bread'))return scene;
  const prior={...scene,economy:{...scene.economy,meals:scene.economy.meals.filter(m=>m.id!=='office_lunch'),deliveries:scene.economy.deliveries.filter(d=>d.id!=='station_bread'),markets:scene.economy.markets.map(m=>m.id==='station_supplies' ? {...m,lots:m.lots.filter(l=>l.id!=='depot_bread')} : m),accounts:scene.economy.accounts.map(a=>{if(a.id==='office_clerk'){const {meal,...old}=a;return {...old,satiety:65,drainPerS:0};}return a.id==='porter' ? {...a,deliveries:a.deliveries?.filter(id=>id!=='station_bread')} : a;})}};

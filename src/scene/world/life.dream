@@ -261,7 +261,7 @@ economy(){
  meal office_lunch(good=bread,markets=[station_supplies],on=station_quarter_residences,grounds=[station_quarter_home_floor,station_repair_work],eat_s=8,seats=[station_quarter_home_seat]);
  account office_clerk(actor=hospital_visitor,credits=0,capacity=4,satiety=50,drain_s=.02,meal=office_lunch,rest=office_home_rest,work=check_records,commute=true,attendance=[8,18],on=station_quarter_residences,grounds=[station_quarter_home_floor,station_repair_work,station_quarter_offices,station_quarter_office_floor,office_mezzanine,office_landing,hospital_apron]);
  market office_business(label="Lantern records office",actor=hospital_visitor,on=station_quarter_offices,credits=60,radius=80,hours=[8,18]){}
- work check_records(label="Check visitor records",kind=service,market=office_business,seconds=6,pay=4,effort=2,capacity=1,target=6,equipment=[station_quarter_gallery_table],station=office_records,gesture=folding);
+ work check_records(label="Check visitor records",kind=service,market=office_business,seconds=6,pay=4,effort=2,capacity=1,target=6,period_s=600,equipment=[station_quarter_gallery_table],station=office_records,gesture=folding);
 }
 
 include station_quarter(module=station_quarter);

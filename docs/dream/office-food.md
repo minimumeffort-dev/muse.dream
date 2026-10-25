@@ -71,7 +71,8 @@ or copied. The earlier unpaid clerk relocation remains a physical journey, and
 the clerk still has to earn the money for food. Original slots remain intact.
 [Runtime and save evidence](../evidence/office-food/verification.md).
 
-Office checks still have a six-task lifetime quota. Broader paid demand,
+Office checks now renew six shared tasks every 600 simulation seconds; wages
+still need real office funds. [Recurring work](service-work.md#work-comes-back). Broader paid demand,
 additional food shops, cooking tools, table service and richer diets remain
 unfinished. This is a working mock routine, not a nutrition model or a complete
 business simulation.

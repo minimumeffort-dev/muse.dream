@@ -1,6 +1,13 @@
 # Leave and come back
 
-The current world is r117, using format 19 / simulation 58. Its registered upgrade
+The current world is r118, using format 19 / simulation 59. Its registered upgrade
+validates exact r117 and retains every old field and clock. It initializes only
+the records office service window at saved economic time, counting existing
+completions up to the target. An exhausted quota stays exhausted until the next
+real simulation boundary. Pending work keeps its wage and slot, lifetime history
+stays monotonic and original slots remain. [Recurring work](dream/service-work.md#work-comes-back).
+
+The preceding r117 world used format 19 / simulation 58. Its registered upgrade
 validates exact r116 before adding four finite station loaves and zero delivery
 counters. Existing accounts, wages, food, tasks, ownership, paths and clocks stay
 intact. Current meal trips now retain supported floor, seat and home elevations;

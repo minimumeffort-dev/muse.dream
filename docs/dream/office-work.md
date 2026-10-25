@@ -88,7 +88,7 @@ when the authored home moves. [Slot omissions](populations.md#keep-a-generated-s
 ## Still unfinished
 
 Records checking is a timed service task, without a visitor queue or paperwork
-data. The six-task quota is shared for the lifetime of this world and does not
-refill each day. The clerk now spends earned wages on bread at Station supplies and eats at home.
+data. The six-task quota now renews every 600 simulation seconds, with finite
+wages and retained lifetime history. [Recurring service rules](service-work.md#work-comes-back). The clerk now spends earned wages on bread at Station supplies and eats at home.
 [Food and resupply](office-food.md). The usable rooms are the two lobbies and the office
 mezzanine. Further storeys, lifts and richer work remain future capabilities.

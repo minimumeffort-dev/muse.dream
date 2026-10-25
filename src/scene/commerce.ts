@@ -26,7 +26,7 @@ const account=z.object({id:ref,actor:ref,credits:money,capacity:z.number().int()
 const lot=z.object({id:ref,good:ref,quantity,limit:quantity.refine(n=>n>0),price:z.number().int().min(1).max(10_000).optional()}).strict();
 const market=z.object({id:ref,label,actor:ref,on:ref.optional(),credits:money,radius:z.number().finite().min(20).max(80),hours:hours.optional(),owner:ref.optional(),sale:money.positive().optional(),lots:z.array(lot).max(COMMERCE_LIMITS.goods)}).strict();
 const ingredient=z.object({good:ref,take:quantity.refine(n=>n>0)}).strict();
-const job=z.object({id:ref,label,kind:z.enum(['recipe','service']).optional(),market:ref,input:ref.optional(),take:quantity.refine(n=>n>0).optional(),ingredients:z.array(ingredient).min(1).max(COMMERCE_LIMITS.ingredients).optional(),output:ref.optional(),make:quantity.refine(n=>n>0).optional(),seconds:z.number().finite().min(1).max(120),pay:money.refine(n=>n>0),effort:z.number().finite().min(1).max(50),capacity:z.number().int().min(1).max(4),target:quantity,requires:ref.optional(),requires_any:z.array(ref).min(1).max(4).optional(),equipment:z.array(ref).min(1).max(COMMERCE_LIMITS.equipment).optional(),station:ref.optional(),gesture:ref.optional()}).strict().superRefine((j,ctx)=>{
+const job=z.object({id:ref,label,kind:z.enum(['recipe','service']).optional(),market:ref,input:ref.optional(),take:quantity.refine(n=>n>0).optional(),ingredients:z.array(ingredient).min(1).max(COMMERCE_LIMITS.ingredients).optional(),output:ref.optional(),make:quantity.refine(n=>n>0).optional(),seconds:z.number().finite().min(1).max(120),pay:money.refine(n=>n>0),effort:z.number().finite().min(1).max(50),capacity:z.number().int().min(1).max(4),target:quantity,period_s:z.number().finite().min(30).max(86400).optional(),requires:ref.optional(),requires_any:z.array(ref).min(1).max(4).optional(),equipment:z.array(ref).min(1).max(COMMERCE_LIMITS.equipment).optional(),station:ref.optional(),gesture:ref.optional()}).strict().superRefine((j,ctx)=>{
  if(j.requires_any && (j.requires || new Set(j.requires_any).size!==j.requires_any.length))ctx.addIssue({code:'custom',message:'requires_any needs unique milestone IDs and excludes requires',path:['requires_any']});
  if(j.equipment && new Set(j.equipment).size!==j.equipment.length)ctx.addIssue({code:'custom',message:'work equipment needs unique placement IDs',path:['equipment']});
  if(j.kind==='service'){
@@ -34,6 +34,7 @@ const job=z.object({id:ref,label,kind:z.enum(['recipe','service']).optional(),ma
   if(!j.station || !j.equipment?.length || j.capacity!==1)ctx.addIssue({code:'custom',message:'service work needs a physical station, matching equipment and capacity=1',path:['station']});
   if(j.target<1)ctx.addIssue({code:'custom',message:'service target must be a positive shared completion quota',path:['target']});
  }else{
+  if(j.period_s!==undefined)ctx.addIssue({code:'custom',message:'period_s is only valid for service work',path:['period_s']});
   if(j.output===undefined || j.make===undefined)ctx.addIssue({code:'custom',message:'recipe work needs output and make',path:['output']});
   if(j.ingredients ? j.input!==undefined || j.take!==undefined : j.input===undefined || j.take===undefined)ctx.addIssue({code:'custom',message:'work needs input and take, or an ingredient block, never both',path:['ingredients']});
  }

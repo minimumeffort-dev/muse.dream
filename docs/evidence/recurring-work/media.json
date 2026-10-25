@@ -1,0 +1,41 @@
+{
+  "frames": 360,
+  "fps": 30,
+  "simulationSeconds": 12,
+  "sourceSize": [
+    2400,
+    1350
+  ],
+  "posterFrame": 345,
+  "interpolatedFrames": 0,
+  "livePerformanceMeasurement": false,
+  "files": {
+    "periodwork.mp4": {
+      "size": [
+        1600,
+        900
+      ],
+      "frames": 360,
+      "bytes": 813039,
+      "sha256": "1fbbcaf1c70b97e7b1613464db5a5608f19b3e6edfd7248993f947daad91afeb"
+    },
+    "periodwork.gif": {
+      "size": [
+        1280,
+        720
+      ],
+      "frames": 360,
+      "bytes": 5011412,
+      "sha256": "0c9170da8473f1410d38254f7f8001854953c0268f5f7afd6a6fd3f5652edc64"
+    },
+    "periodwork.jpg": {
+      "size": [
+        1600,
+        900
+      ],
+      "frames": 1,
+      "bytes": 116145,
+      "sha256": "534386988e31a1b4c6bdc9fb7a43e6eb0f727b83fb3affeeac5d73aaf92a0a01"
+    }
+  }
+}

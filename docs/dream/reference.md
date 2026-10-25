@@ -68,7 +68,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `gesture` | economy | ID / required work gesture block | `cycle_s: n` |
 | `key` | work gesture | no ID / no block | `t: n`, `left: v3`, `right: v3` |
 | `station` | economy | ID / no block | `object: ref`, `at: v2`, `hands: v3`, `on: ref`, `grounds?: symbols` |
-| `work` | economy | ID / optional recipe block | `label: text`, `kind?: recipe / service`, `market: ref`, `input?: ref`, `take?: n`, `output?: ref`, `make?: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `requires?: ref`, `requires_any?: symbols`, `equipment?: symbols`, `station?: ref`, `gesture?: ref` |
+| `work` | economy | ID / optional recipe block | `label: text`, `kind?: recipe / service`, `market: ref`, `input?: ref`, `take?: n`, `output?: ref`, `make?: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `period_s?: n`, `requires?: ref`, `requires_any?: symbols`, `equipment?: symbols`, `station?: ref`, `gesture?: ref` |
 
 | `social` | economy | ID / no block | `peers?: symbols`, `good: ref`, `seats: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `cooldown_s?: n`, `max_fullness?: n`, `markets?: symbols` |
 | `shift` | economy | ID / no block | `market: ref`, `rest: v2`, `on: ref`, `grounds?: symbols`, `lead_s?: n` |
@@ -473,7 +473,7 @@ account id(actor=ref,credits=n,capacity=n,satiety=n,drain_s=n,rest=ref?,commute=
 market id(label=text,actor=ref,on=ref?,credits=n,radius=n,hours=[6,22]){ lot ... }
 lot id(good=ref,quantity=n,limit=n,price=n?);
 work id(label=text,kind=recipe?,market=ref,input=ref,take=n,output=ref,make=n,seconds=n,pay=n,effort=n,capacity=n,target=n,requires=ref?,requires_any=symbols?);
-work id(label=text,kind=service,market=ref,seconds=n,pay=n,effort=n,capacity=1,target=n,equipment=symbols,station=ref,gesture=ref?,requires=ref?,requires_any=symbols?);
+work id(label=text,kind=service,market=ref,seconds=n,pay=n,effort=n,capacity=1,target=n,period_s=n?,equipment=symbols,station=ref,gesture=ref?,requires=ref?,requires_any=symbols?);
 ```
 
 Market `hours` is an optional numeric pair: opening 0..less than 24, closing
@@ -497,12 +497,18 @@ At most 8 goods, 16 accounts, 8 markets, 16 jobs and 16 delivery contracts and 8
 Credits: integer 0..1,000,000. Stock/limits: integer 0..10,000 with positive limits. Price: integer 1..10,000, or omitted for untraded ingredients. Carrying capacity: integer 1..32. Fullness/food: 0..100, drain per second: 0..0.25. Radius: 20..80. Recipe work: 1..120 seconds, positive integer take/make/pay, effort 1..50, capacity 1..4, target within output lot capacity. Use exactly scalar `input`/`take` or a block of 1..4 `ingredient(good=...,take=...)` statements with unique goods. No empty block or mixed forms. Every input has a matching market lot and take within its capacity. An input may equal the output only when make is greater than take for that good. Reserve the larger of refund or completion space once for a shared lot; starting work subtracts its held input before checking future output room. Make is the full output, not the net gain. Labels: 1..40 nonblank characters. IDs follow the ordinary identifier contract.
 
 Service work uses `kind=service`, 1..120 seconds, positive integer pay, effort
-1..50 and a shared lifetime completion `target` of 1..10,000. It requires a real
+1..50 and a shared completion `target` of 1..10,000. The quota is lifetime
+unless `period_s` is explicit. It requires a real
 station, matching equipment and capacity 1. It forbids `input`, `take`,
 `ingredients`, `output` and `make`. Completed tasks plus active reservations may
 not exceed the target. Cancellation releases a reservation and refunds its wage;
 completion pays once and adds personal work history without changing goods.
-Player and NPC use the same rules. Quotas do not refill automatically. Omitted
+Player and NPC use the same rules. Optional service-only `period_s` is finite
+30..86400 simulation seconds, with fixed windows from time zero. It renews only
+current usage; skipped windows do not accumulate. Unfinished jobs keep their
+reservation and count when completed. Lifetime history, funds, materials and
+needs remain unchanged. Pause freezes the clock and reload never catches up.
+The HUD shows current usage and the next renewal. Omitted
 `kind` retains recipe behavior. [Service work and complete example](service-work.md).
 
 Buy/sell transfers one unit at the listed price. Work reserves every input, wage, refund space for each input and output capacity atomically; cancellation refunds, completion pays once and spends effort. Food consumes an owned unit and restores fullness. NPC food decisions occur at fullness <=40; automatic recipes refill to target and services respect their shared quota. Shared money and material conservation, clock/owner/member bounds and capacity are checked on restore. The simulation owns rules and work time; the renderer owns gestures and feedback. No offline catch-up or generated scripts. Existing NPC, rig, physics and geometry caps are unchanged.

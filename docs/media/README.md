@@ -1,5 +1,21 @@
 # Media and Dream highlighting
 
+## Recurring work, r118
+
+`periodwork` follows actual office work through quota exhaustion, unpaid waiting,
+a new simulation window and one paid task. The exporter advances the full real
+world before recording; it does not seed a clock, wages or quota counts. The
+twelve-second clip starts four seconds before renewal. All 360 consecutive
+2400x1350 PNGs are rendered at 30 frames per simulation second, without
+interpolation. The terminal assertion requires one new paid completion in the
+new window. Video/still are 1600x900 and GIF is 1280x720; still frame 345 shows
+the result. Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> periodwork`.
+
+Older office and station-food media retain accurate geometry, controls and food
+transactions. Their source and lifetime office quota are historical. No live
+frame-rate or low-powered hardware claim follows from this offline export.
+
+
 ## Station food, r117
 
 `stationfood` records a real player purchase and food action at the existing

@@ -1,0 +1,17 @@
+{
+  "oldBackupSha256": "c908723e6f7eeb5d8ff22291a9b30fde1426d1229e38d45259752e05e3ff5832",
+  "newBackupSha256": "5645ab25a147f479f310e7206d55189f00692b1d423a2e6c9aa1e8434de91573",
+  "sourceHash": "21a2fef83a09078b9c4290b39d909a029d800b722f1de0a0584b6de155e3c855",
+  "compatibilityHash": "7f61d64a7c7c25b637c9d2dc8bc5901b82bfa47c72294468940db24e8df71638",
+  "worldTime": 972.4314999993378,
+  "everyOldStateFieldPreserved": true,
+  "addedOnly": {
+    "serviceWindows": {
+      "check_records": {
+        "period": 1,
+        "completed": 4
+      }
+    }
+  },
+  "warnings": []
+}

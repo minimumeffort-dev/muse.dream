@@ -907,13 +907,20 @@ Use examples/multi-input-work.dream. Existing scalar input/take work stays reada
 Service work uses kind=service and the same finite wages, qualifications, hours,
 effort and physical workstation rules as recipes. Declare no input, take,
 ingredients, output or make. Require station, matching equipment and capacity=1.
-Target is a lifetime shared completion quota, integer 1..10000. Completed and
-active tasks together cannot exceed it; cancellation releases the task and
+Target is a shared completion quota, integer 1..10000. Omit period_s for the
+existing lifetime quota. Optional period_s is service-only, finite 30..86400
+simulation seconds. Fixed windows start at simulation time zero, independently
+of daylight hours; only current-window completions reset. No skipped-window
+accumulation, new money, stock, needs recovery or offline catch-up. In-flight work
+keeps a slot across the boundary and its completion counts in the current window.
+Lifetime batches and personal history remain monotonic for wages and milestones.
+Completed in the current window plus active tasks cannot exceed target; cancellation releases the task and
 refunds its wage. Completion increments existing work history and pays once,
 without consuming or producing goods. NPCs use the same quota, player accounts
-remain manual. No daily quota refill or invented customer demand. Example:
+remain manual. Pause freezes the clock; R and reload retain it. Do not author
+serviceWindows, period counters, runtime clocks or customer demand. Example:
 work stocktake(label="Check bakery stock",kind=service,market=corner,seconds=2,pay=3,effort=2,capacity=1,target=3,equipment=[prep_table],station=preparation);
-See docs/examples/service-work.dream. Omitted kind means recipe; recipe goods
+See docs/examples/service-work.dream and docs/examples/recurring-service.dream. Omitted kind means recipe; recipe goods
 and output-room requirements remain unchanged. Goods-free businesses use empty market blocks; explicit premises keep the workplace independent of its operator home.
 
 Optional work.equipment=[placement_id,...] binds production to 1..4 unique static
