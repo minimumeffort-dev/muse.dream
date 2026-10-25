@@ -7,6 +7,9 @@ ordinary wage and practice.
 
 ![Finishing a paid batch after the attendance window ends, then walking home](../media/attendance.gif)
 
+Recorded on r100. Current shorter journeys change the timing; the attendance and
+after-closing payment rules remain the same.
+
 [Watch in HD](../media/attendance.mp4) · [Complete runnable world](../examples/scheduled-workday.dream) · [Verification](../evidence/attendance/verification.md)
 
 ## Give an existing commuter a window

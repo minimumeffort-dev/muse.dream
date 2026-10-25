@@ -41,7 +41,7 @@ it('covers every furnished street tree, retains finite supplies and proves each 
  expect(targets).toHaveLength(106);expect(street).toHaveLength(93);expect(street.every(o=>targets.some(t=>t.objectId===o.id))).toBe(true);expect(targets.some(t=>t.objectId==='garden_rowan_north')).toBe(true);expect(targets.length).toBeLessThan(trees.length);
  expect(service).toMatchObject({input:'sapling',take:1,seconds:10,pay:6,effort:6,regrow_s:180,seed_scale:.15});expect(scene.economy!.accounts).toBe(previous.economy!.accounts);expect(scene.economy!.markets).toBe(previous.economy!.markets);
  for(const target of targets){const approach=repairApproach(scene,service,target,home);expect(approach,target.objectId).toBeDefined();let p:{x:number;y:number}=home;for(const q of approach!.path){expect(repairSegment(scene,service,p,q,undefined),target.objectId).toBe(true);p=q;}}
- const nodes=repairNetwork(scene,service);expect(nodes).toHaveLength(5380);expect(nodes.reduce((n,p)=>n+p.links.length,0)).toBe(20422);
+ const nodes=repairNetwork(scene,service);expect(nodes).toHaveLength(5380);expect(nodes.reduce((n,p)=>n+p.links.length,0)).toBe(22030);
 });
 
 it('routes the airport approach through a supported corner rather than cutting diagonally across the road',()=>{

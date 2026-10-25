@@ -113,12 +113,32 @@ bends; changing a street name does not require another zebra.
 
 The r113 city has 62 crossing declarations, up from 58. Its 1,813 objects,
 221 sites, 61 surfaces and 3,458 physical contacts stay unchanged. The accepted
-market-to-station bench route drops from 20,983 to 9,546 world units. Across all
+simulation-53 market-to-station bench route dropped from 20,983 to 9,546 world units. Across all
 fourteen station maintenance targets, routes are 9,278–9,689 units, previously
 17,557–21,125. This measures walking distance from the authored supply home,
 without claiming faster rendering or universal shortest paths. Two remaining
-corner detours in the work graph need an engine pass.
+corner detours were the next engine issue; simulation 54 addresses them below.
 [Crossing and persistence evidence](evidence/crossing-access/verification.md).
+
+## Short journeys around clear corners
+
+The work graph used to add nearby pavement links only between separate connected
+areas. Two corners were already connected by a long loop, so the short clear
+join was omitted. The engine now considers the same bounded nearby candidates
+inside connected areas too. The body still needs dry supported pavement, and
+search and movement still check static and current contacts.
+
+The two measured corner routes fall from 1,106 and 1,052 units to 236 and 230.
+The station bench is now 7,479 units from the supply home, previously 9,546.
+All fourteen station jobs remain reachable in both directions. Graph node counts
+are unchanged; links remain under the existing 32,768 cap, with no new actors or
+physics bodies. This improves these walking choices without claiming every
+possible pavement route is globally shortest.
+
+![The caretaker taking a supported corner](media/workerwalk.jpg)
+
+[Current walk in HD](media/workerwalk.mp4) · [GIF](media/workerwalk.gif) ·
+[Recorded routes and save checks](evidence/short-links/verification.md)
 
 ## A regional airport
 

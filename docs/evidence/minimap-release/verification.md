@@ -100,3 +100,7 @@ Pages workflow for merge commit `524628f` was still running at this observation;
 no claim is made that remote Node 22 CI or documentation deployment completed.
 The next working branch is `codex/living-world-navigation`; the remaining clear
 corner detours in work navigation remain next in the existing backlog.
+
+Later verification: [Node 22 CI completed successfully](ci-completed.json),
+including the full suite, docs build, artifact upload and Pages deployment for
+merge commit `524628f`. This result applies to the released simulation-53 build.

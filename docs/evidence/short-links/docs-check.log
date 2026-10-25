@@ -1,0 +1,14 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/docs-site.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/docs-site.test.ts (52 tests) 911ms
+   ✓ published site > builds highlighted source with project-relative navigation and working downloads  901ms
+
+ Test Files  1 passed (1)
+      Tests  52 passed (52)
+   Start at  00:10:59
+   Duration  1.23s (transform 148ms, setup 8ms, collect 203ms, tests 911ms, environment 0ms, prepare 25ms)

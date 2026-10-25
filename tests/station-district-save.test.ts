@@ -30,7 +30,7 @@ const added=(id:string)=>id.startsWith('station_quarter_'),fleet=scene.objects.f
 afterEach(()=>expect(JSON.stringify(scene)).toBe(snapshot));
 
 it('projects the exact released r110 city and retains old objects, resources, contacts and legacy fingerprints',async()=>{
- expect(c.SAVE_SIMULATION_VERSION).toBe(53);expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.DISTRICT_COMPATIBILITY);
+ expect(JSON.parse(c.preWalkingLinksCompatibilitySource(scene)).simulationVersion).toBe(53);expect(await c.sha256(c.preWalkingLinksCompatibilitySource(scene))).toBe(c.DISTRICT_COMPATIBILITY);
  expect(await c.sha256(c.preDistrictCompatibilitySource(scene))).toBe(c.UPSTAIRS_SOCIAL_COMPATIBILITY);expect(await c.sha256(c.preUpstairsSocialCompatibilitySource(scene))).toBe(c.SEATED_REST_COMPATIBILITY);
  expect(previous.objects).toHaveLength(1785);expect(previous.sites).toHaveLength(219);expect(previous.surfaces).toHaveLength(54);
  expect(previous.objects).toEqual(scene.objects.filter(o=>!added(o.id)));expect(previous.floors).toEqual(scene.floors!.filter(f=>!added(f.id)));expect(previous.economy).toEqual(scene.economy);

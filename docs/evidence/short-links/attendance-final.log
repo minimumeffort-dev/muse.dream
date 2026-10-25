@@ -1,0 +1,23 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/work-attendance-world.test.ts tests/rain-shelter-world.test.ts tests/work-attendance.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/work-attendance-world.test.ts (4 tests) 35758ms
+   ✓ pins r100 and the exact r99 projection with identical geometry, resources and public graph  1913ms
+   ✓ connects a real meal, upstairs rest, attendance, purchased demand and one paid batch past its closing time  15507ms
+   ✓ preserves an old upstairs rest commitment and original save slot without seeding attendance or wages  9853ms
+   ✓ finishes an old one-batch commute before new attendance decisions without changing reserved resources  8485ms
+ ✓ tests/work-attendance.test.ts (12 tests) 379ms
+ ✓ tests/rain-shelter-world.test.ts (4 tests) 46950ms
+   ✓ pins r101 and exact r100 while retaining physical objects, resources and the daylight clock  494ms
+   ✓ takes a healthy off-duty resident upstairs through rain, keeps a single claim and replays the return  32808ms
+   ✓ restores old r100 upstairs claims and ledgers exactly and retains the original storage slot  1513ms
+   ✓ preserves an r100 paid batch and pays its original reserved wage once under the new policy  12134ms
+
+ Test Files  3 passed (3)
+      Tests  20 passed (20)
+   Start at  00:08:01
+   Duration  54.85s (transform 433ms, setup 19ms, collect 15.75s, tests 83.09s, environment 0ms, prepare 74ms)

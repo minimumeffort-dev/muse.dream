@@ -1,5 +1,26 @@
 # Media and Dream highlighting
 
+## Shorter work journeys, simulation 54
+
+`workerwalk` follows the actual caretaker through the Civic corner on a paid
+station-bench repair journey. The dev-only pre-roll performs a real hand strike,
+walking retreat, finite dispatch and full fixed-step journey from the market.
+The observer starts when the worker reaches the corner, without teleporting the
+worker or seeding a reward. The 600 consecutive 2400x1350 source frames record
+20 simulation seconds at 30 rendered frames per second. The worker remains
+outward-bound and unpaid during this clip.
+
+Video and still use 1600x900; GIF uses 1280x720. The still is frame 240.
+Encode with `node scripts/encode-media.mjs <ffmpeg> <gifsicle> workerwalk`.
+No missing frames are interpolated. [Route and save checks](../evidence/short-links/verification.md)
+record actual coordinates, distance and the registered simulation-53 upgrade.
+This is offline behavioral evidence, not a live performance benchmark.
+
+Current crossing-walk and station-quarter media remain accurate because geometry,
+controls and camera policy are unchanged. Older maintenance journey recordings
+remain historical for their longer chosen paths. The connected-service guide
+now uses the current worker-walk GIF, HD video and still together.
+
 ## Connected crossings, r113
 
 `crossingwalk` records the full 164-unit walk across the medical interchange,
@@ -1827,6 +1848,10 @@ Other venues and vehicle/sport captures remain accurate because those assets,
 controls and geometry did not change. [Checks](../evidence/upstairs/verification.md).
 
 ## Daily workplace attendance, r100
+
+This is a historical r100 recording. Simulation 54 shortens the meal/work routes,
+so its preparation timings differ today. The attendance and after-closing payment
+rules still work; the current worker journey is recorded in `workerwalk`.
 
 `attendance.mp4`, `attendance.gif` and `attendance.jpg` share 480 consecutive
 frames from the dev-only `?capture` attendance clip. Preparation follows the

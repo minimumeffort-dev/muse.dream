@@ -29,15 +29,17 @@ use the same rule, reached through their doorways.
 [Watch in HD](docs/media/stationquarter.mp4) ·
 [Explore the district and its Dream source](docs/dream/station-quarter.md)
 
-Four missing crossings now join the medical interchange, Copper Street, Weavers
-Lane and South Terrace. They shorten the caretaker's route to a station bench
-from 20,983 to 9,546 world units, about 2.1 km to 955 m. People still use the
-pavement and declared crossings. Two remaining corner detours need a separate
-navigation pass. [Connected crossings and current limits](docs/urban-world.md#four-missing-crossings).
+Four missing crossings join the medical interchange, Copper Street, Weavers
+Lane and South Terrace. Work journeys now also use short, supported links around
+clear pavement corners. The caretaker's station-bench route is 7,479 world units,
+about 748 m, down from 9,546 after the crossings and 20,983 before them. Saved
+jobs keep their original paths; new plans use the shorter connections.
+[Connected crossings and route checks](docs/urban-world.md#short-journeys-around-clear-corners).
 
 ![Walking across the medical interchange](docs/media/crossingwalk.gif)
 
-[Crossing walk in HD](docs/media/crossingwalk.mp4)
+[Crossing walk in HD](docs/media/crossingwalk.mp4) ·
+[The caretaker taking the corner](docs/media/workerwalk.mp4)
 
 ## Come home and rest
 
@@ -673,6 +675,9 @@ finish any committed batch and walk home; hunger and low energy can bring them
 home earlier.
 
 ![The commuter finishing a paid batch and leaving at the end of the workday](docs/media/attendance.gif)
+
+Recorded on r100. Current shorter journeys change the timing; the attendance and
+after-closing payment rules remain the same.
 
 [Watch the workday](docs/media/attendance.mp4) · [Write a schedule in Dream](docs/dream/attendance.md) · [Runnable world](docs/examples/scheduled-workday.dream)
 

@@ -20,11 +20,15 @@ implement those systems. [Station maintenance](dream/station-quarter.md#damage-h
 
 The crossing audit found four missing four-way pedestrian connections. r113 adds
 those authored crossings without changing the pathfinder or physical contacts.
-Station maintenance routes now measure 9,278–9,689 world units, previously
+After that authored change, station routes measured 9,278–9,689 world units, previously
 17,557–21,125. The bench route drops from 20,983 to 9,546 units. These are route
 distances, not frame-rate measurements or a claim of shortest paths everywhere.
-Two clear corners still cause work-graph detours and need a separate engine pass
-before further tower expansion. [Current crossing evidence](evidence/crossing-access/verification.md).
+Simulation 54 also removes the remaining measured corner detours. It considers
+short supported joins inside connected pavement, reducing those corner walks
+to 236 and 230 units and the station bench to 7,479 units. Existing paid paths
+remain intact; new plans use the new links. Node counts and all graph/actor caps
+stay fixed. [Current routing evidence](evidence/short-links/verification.md).
+[Historical crossing evidence](evidence/crossing-access/verification.md).
 
 The r112 native station-bench recording is historical: work starts around 1,511
 simulation seconds after roughly 21,000 world units of walking around the eastern

@@ -1,0 +1,32 @@
+{
+  "sourceFrames": 600,
+  "sourceSize": [
+    2400,
+    1350
+  ],
+  "renderedFps": 30,
+  "videoSize": [
+    1600,
+    900
+  ],
+  "gifSize": [
+    1280,
+    720
+  ],
+  "stillFrame": 240,
+  "files": {
+    "mp4": {
+      "bytes": 3214429,
+      "sha256": "bf4a7eb88db2c565133e409675e44bef72a74091801775d4776a24f84c6d8ddc"
+    },
+    "gif": {
+      "bytes": 34380746,
+      "sha256": "a44ea08a8dce56882be701b28685ec30a54bb05d1cc902dba60bf48ebdb87929"
+    },
+    "jpg": {
+      "bytes": 131095,
+      "sha256": "82b783c95d3ef347c4aef3bb6bebc38322b1ffa3119007209e5cd224beac3a74"
+    }
+  },
+  "livePerformanceMeasurement": false
+}

@@ -24,7 +24,8 @@ Click the minimap or press **C** for the expanded map. Pinch/scroll zooms either
 map; dragging pans the expanded map. Click a destination to place a waypoint.
 The HUD and minimap then show its direct bearing and distance, with Arrived
 within 2.5 metres. Clear it with the × beside the distance or from the map.
-This is direction guidance, without automatic steering or street route planning.
+Ground vehicles use connected street routes. Walking, boats and aircraft use a
+direct bearing; none of these guides steer automatically.
 
 Everything also works from the keyboard: arrows/WASD pan, **+ / −** zoom,
 **Home** centers the player, **0** shows the whole world, **Enter** sets a point

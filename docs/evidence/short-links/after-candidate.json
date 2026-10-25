@@ -1,0 +1,154 @@
+{
+  "variant": "relaxed",
+  "accepted": true,
+  "elapsedMs": 7859.918707999999,
+  "revision": "r113",
+  "objects": 1813,
+  "crossings": 62,
+  "graphs": [
+    {
+      "id": "market_tables",
+      "nodes": 5733,
+      "links": 25210
+    },
+    {
+      "id": "classroom_furniture",
+      "nodes": 3863,
+      "links": 14062
+    },
+    {
+      "id": "home_furniture",
+      "nodes": 2156,
+      "links": 7390
+    },
+    {
+      "id": "orchard_trees",
+      "nodes": 5564,
+      "links": 22968
+    }
+  ],
+  "probes": [
+    {
+      "id": "river",
+      "length": 235.5674327288312,
+      "clear": true,
+      "path": [
+        {
+          "x": 8123,
+          "y": 4314
+        },
+        {
+          "x": 8277,
+          "y": 4314
+        },
+        {
+          "x": 8283,
+          "y": 4300
+        },
+        {
+          "x": 8309,
+          "y": 4282
+        }
+      ]
+    },
+    {
+      "id": "civic",
+      "length": 229.85714705456837,
+      "clear": true,
+      "path": [
+        {
+          "x": 6731.610970155257,
+          "y": 4300
+        },
+        {
+          "x": 6739.750374371175,
+          "y": 4321.094788432451
+        },
+        {
+          "x": 6811.393052066294,
+          "y": 4313.93052066294
+        },
+        {
+          "x": 6888.389029844742,
+          "y": 4300
+        },
+        {
+          "x": 6900,
+          "y": 4288
+        }
+      ]
+    }
+  ],
+  "stations": [
+    {
+      "id": "station_quarter_bench_nw",
+      "length": 7479.139198148574,
+      "liveLength": 7479.139198148574
+    },
+    {
+      "id": "station_quarter_bench_ne",
+      "length": 7592.249664805818,
+      "liveLength": 7592.249664805818
+    },
+    {
+      "id": "station_quarter_bench_sw",
+      "length": 7443.469412755674,
+      "liveLength": 7443.469412755674
+    },
+    {
+      "id": "station_quarter_bench_se",
+      "length": 7572.8698518543515,
+      "liveLength": 7572.8698518543515
+    },
+    {
+      "id": "station_quarter_home_seat",
+      "length": 7592.486106018581,
+      "liveLength": 7592.486106018581
+    },
+    {
+      "id": "station_quarter_office_seat",
+      "length": 7621.1637376266235,
+      "liveLength": 7621.1637376266235
+    },
+    {
+      "id": "station_quarter_lamp_west",
+      "length": 7523.549832334537,
+      "liveLength": 7523.549832334537
+    },
+    {
+      "id": "station_quarter_lamp_center",
+      "length": 7575.227452910975,
+      "liveLength": 7575.227452910975
+    },
+    {
+      "id": "station_quarter_lamp_east",
+      "length": 7608.620463899695,
+      "liveLength": 7608.620463899695
+    },
+    {
+      "id": "station_quarter_home_planter",
+      "length": 7417.510879842448,
+      "liveLength": 7417.510879842448
+    },
+    {
+      "id": "station_quarter_work_planter",
+      "length": 7445.62736065415,
+      "liveLength": 7445.62736065415
+    },
+    {
+      "id": "station_quarter_tree_west",
+      "length": 7216.189555345126,
+      "liveLength": 7216.189555345126
+    },
+    {
+      "id": "station_quarter_tree_center",
+      "length": 7352.796062371996,
+      "liveLength": 7352.796062371996
+    },
+    {
+      "id": "station_quarter_tree_east",
+      "length": 7320.89610864291,
+      "liveLength": 7320.89610864291
+    }
+  ]
+}

@@ -32,7 +32,7 @@ export function stationMaintenanceReviewStart(state:CarState,world:World,target:
 }
 
 /** Actual strike, a short walking retreat, then finite dispatch/work/return. No seeded damage or pay. */
-export function* stationMaintenanceReviewSteps(state:CarState,world:World,target:StationRepairTarget='bench',stage:'damaged'|'approach'|'work'|'returned'='work'):Generator<void,CarState>{
+export function* stationMaintenanceReviewSteps(state:CarState,world:World,target:StationRepairTarget='bench',stage:'damaged'|'corner'|'approach'|'work'|'returned'='work'):Generator<void,CarState>{
  const id=targets[target],service=world.scene.economy!.repairs.find(r=>r.id===(target==='tree' ? 'orchard_trees' : 'classroom_furniture'))!;
  let next=stationMaintenanceReviewStart(state,world,target);
  if(target==='tree'){
@@ -50,14 +50,15 @@ export function* stationMaintenanceReviewSteps(state:CarState,world:World,target
  next=yield* walkReviewSteps(next,world,repairArea(world.scene,walkingService),retreat);
  if(stage==='damaged')return next;
  let dispatched=false;
- for(let i=0;i<120*1800;i++){
+ for(let i=0;i<120*(stage==='corner' ? 180 : 1800);i++){
   next=stepInteractive(next,{steer:0,throttle:0},1/120,world);
   const worker=next.economy!.accounts.find(a=>a.id==='caretaker')!,task=worker.repair;
   if(task?.objectId===id)dispatched=true;
+  if(stage==='corner' && task?.objectId===id && task.phase==='out' && Math.hypot(task.x-6695.551119409912,task.y-4282)<40)return next;
   if(stage==='approach' && task?.objectId===id && task.phase==='out' && Math.hypot(task.x-task.at.x,task.y-task.at.y)<55)return next;
   if(stage==='work' && task?.objectId===id && task.phase==='work')return next;
   if(stage==='returned' && dispatched && !task && (next.economy!.repaired[service.id]??0)>0)return next;
   if(i%30===0)yield;
  }
- throw Error('Station maintenance did not complete its real journey within thirty simulation minutes');
+ throw Error('Station maintenance did not reach its review stage within its simulation-time bound');
 }

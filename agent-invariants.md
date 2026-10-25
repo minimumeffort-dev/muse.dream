@@ -1159,3 +1159,18 @@ Keep member positions, seeds, clocks and every coordinate-based paid journey,
 claim, ledger, damage and old storage slot. Existing trips finish their old route;
 only new plans use the added connections. This authored change does not fix the
 separate same-component corner-link detours in work navigation.
+
+## Short supported work links, simulation 54
+
+Near-pavement augmentation considers pairs inside an already connected public
+component too. Preserve original inter-component candidates ahead of same-component choices, so nearby edges cannot consume their allowance. Retain the existing 128-unit query, nearest 32 candidates, four
+successful links, stable distance/index order, full support, live contact checks
+and 8192-node/32768-link/128-waypoint caps. No new public crowd nodes, geometry,
+actors, contacts or controller vocabulary. Do not claim global path optimality.
+
+The rules-only format-19 upgrade registers exact r113/simulation53 and changes
+no saved state field. Keep every paid coordinate path, claim, balance, inventory,
+clock, damage/growth record, original slot and older migration. Future planning
+uses the new graph; an old valid journey does not replan just for this upgrade.
+Historical fixture fingerprints pin their own simulation projection. The native
+backup and pre-change paid-repair fixture must survive exactly.

@@ -80,9 +80,9 @@ it('keeps all crossing paint single-owned and clears centerlines, stop bars and 
  for(const crossing of current.crossings){const arms=crossingPolygons(current,crossing);expect(arms.length,crossing.id).toBeGreaterThan(0);for(const arm of arms)expect(overlapArea(zebras,[arm]),crossing.id).toBeGreaterThan(1);}
 });
 
-it('replaces the 15540-unit medical detour with the supported 164-unit north crossing in both directions',()=>{
+it('replaces the current planner’s 14536-unit old-layout detour with the supported 164-unit north crossing in both directions',()=>{
  const current=scene(),prior=preCrossingAccessScene(current),a={x:11118,y:5126},b={x:11282,y:5126},r=current.economy!.repairs.find(r=>r.id==='classroom_furniture')!;
- expect(repairSegment(prior,r,a,b,undefined)).toBe(false);const old=repairPath(prior,r,a,b)!;expect(pathLength(a,old)).toBeCloseTo(15540.885325698764,5);
+ expect(repairSegment(prior,r,a,b,undefined)).toBe(false);const old=repairPath(prior,r,a,b)!;expect(pathLength(a,old)).toBeCloseTo(14536.565692457023,5);
  for(const [from,to] of [[a,b],[b,a]] as const){expect(repairSegment(current,r,from,to,undefined)).toBe(true);const path=repairPath(current,r,from,to)!;expect(path).toEqual([to]);expect(pathLength(from,path)).toBe(164);}
 });
 

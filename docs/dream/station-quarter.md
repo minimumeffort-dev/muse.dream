@@ -68,7 +68,7 @@ on a long loop around the eastern lake. Four authored junction crossings now
 connect the medical interchange, Copper Street and Copper Lane, Market Avenue
 and Weavers Lane, and High Street and South Terrace.
 
-The accepted route to the north-west station bench is now 9,546 world units,
+At simulation 53, the route to the north-west station bench became 9,546 world units,
 compared with 20,983 in r112. Across all fourteen station targets, route lengths
 are 9,278–9,689 units, previously 17,557–21,125. Ten world units are one metre.
 These are route distances; live contacts and waits still affect travel time.
@@ -83,8 +83,16 @@ They do not measure browser performance.
 The r112 [station repair recording](../media/stationrepair.mp4) remains historical
 for its longer journey. It shows the same repair, supplies and wage rules.
 The current crossing change adds no new model vocabulary or moving actors.
-Two clear corners still cause detours in the sparse work graph; those need a
-separate engine pass and physical route checks.
+Simulation 54 also joins nearby clear pavement inside an already connected
+area. Those two remaining corner detours now have short supported routes. The
+bench journey is 7,479 units; all fourteen station jobs are 7,216–7,621 units.
+Live bodies still cause waits or replanning. These are route distances, not
+browser-performance measurements. Existing paid trips retain their saved paths.
+
+![The caretaker following the shorter corner route](../media/workerwalk.jpg)
+
+[Current journey in HD](../media/workerwalk.mp4) · [GIF](../media/workerwalk.gif) ·
+[Routing, budgets and save checks](../evidence/short-links/verification.md)
 
 ## Build the same things in Dream
 

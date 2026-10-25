@@ -1,0 +1,11 @@
+{
+  "before": {
+    "timeS": 59.999999999997236,
+    "distance": 668.4999999999588
+  },
+  "atS": 79.96666666667637,
+  "distance": 945.0000000001279,
+  "maxNumericDifferenceAllowed": 1e-7,
+  "differences": [],
+  "existingRecordingStillMatches": true
+}

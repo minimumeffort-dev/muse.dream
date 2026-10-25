@@ -29,8 +29,8 @@ const caretaker=(s:CarState)=>s.economy!.accounts.find(a=>a.id==='caretaker')!;
 const advance=(s:CarState,doc:typeof scene)=>stepCommerce({...s,population:stepAmbient(s,.25,doc),npcs:stepNpcs(s,.25,doc),timeS:s.timeS+.25},{},.25,doc);
 
 it('projects exact r111 services and keeps physical state, contacts, public navigation and earlier fingerprints unchanged',async()=>{
- expect(SAVE_VERSION).toBe(19);expect(c.SAVE_SIMULATION_VERSION).toBe(53);
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.STATION_MAINTENANCE_COMPATIBILITY);
+ expect(SAVE_VERSION).toBe(19);expect(JSON.parse(c.preWalkingLinksCompatibilitySource(scene)).simulationVersion).toBe(53);
+ expect(await c.sha256(c.preWalkingLinksCompatibilitySource(scene))).toBe(c.STATION_MAINTENANCE_COMPATIBILITY);
  expect(await c.sha256(c.preStationMaintenanceCompatibilitySource(scene))).toBe(c.DISTRICT_COMPATIBILITY);
  expect(await c.sha256(c.preDistrictCompatibilitySource(scene))).toBe(c.UPSTAIRS_SOCIAL_COMPATIBILITY);
  expect(await c.sha256(c.preUpstairsSocialCompatibilitySource(scene))).toBe(c.SEATED_REST_COMPATIBILITY);

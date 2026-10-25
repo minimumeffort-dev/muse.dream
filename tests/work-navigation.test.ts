@@ -5,6 +5,7 @@ import {createFixtureScene} from '../src/scene/fixture';
 import {workSegment,workPath,workNetwork,primeWorkNetworks,type WalkingArea} from '../src/sim/work-navigation';
 import {sceneContactData,primeSceneContacts} from '../src/scene/contacts';
 import {createCarAtSpawn} from '../src/sim/car';
+import {primeAmbientNavigation} from '../src/scene/ambient-navigation';
 
 const area:WalkingArea={id:'yard',grounds:['yard'],access:[],network:true};
 function scene(bottom=0){
@@ -67,4 +68,11 @@ it('keeps empty/unlinked graphs, small graphs and independently primed node arra
  for(const nodes of [[],Array.from({length:100},(_,i)=>({x:i,y:0,links:[]})),[{x:1,y:2,links:[0]}]])expect(nearestWorkNodes(nodes,{x:0,y:0})).toEqual(referenceNearest(nodes,{x:0,y:0}));
  const first:WorkNode[]=Array.from({length:64},(_,i)=>({x:i,y:0,links:[0]})),second=first.map(n=>({...n,x:n.x+10000}));
  expect(nearestWorkNodes(first,{x:0,y:0})).toEqual(referenceNearest(first,{x:0,y:0}));expect(nearestWorkNodes(second,{x:0,y:0})).toEqual(referenceNearest(second,{x:0,y:0}));
+});
+
+it('keeps existing component joins when closer neighbors compete for the four-link allowance',()=>{
+ const doc=scene(),nodes=Array.from({length:8},(_,i)=>({x:i<6 ? 320+i : 400+i-6,y:260,links:i<6 ? [i-1,i+1].filter(j=>j>=0&&j<6) : [i===6 ? 7 : 6]}));
+ primeAmbientNavigation(doc,{sourceHash:doc.sourceHash,nodes,starts:new Map()});
+ const prepared=workNetwork(doc,area);expect(prepared[0]!.links).toEqual(expect.arrayContaining([1,6,7]));
+ expect(prepared[0]!.links).toContain(2);expect(prepared[6]!.links).toContain(0);
 });

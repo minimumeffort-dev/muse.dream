@@ -11,10 +11,8 @@ export function* attendanceReviewSteps(state:CarState,world:World,stage:'idle'|'
  let bought=false,worked=false,closingAtS:number|undefined;
  for(let i=0;i<120*600;i++){
   const regular=next.economy!.accounts.find(a=>a.id==='regular')!,baker=next.economy!.accounts.find(a=>a.id==='baker')!,pocket=next.economy!.accounts.find(a=>a.id==='pocket')!,market=next.economy!.markets.find(m=>m.id==='market_stall')!,trip=regular.commute;
-  if(trip?.phase==='idle' && trip.dutyAtS!==undefined){
-   if(stage==='idle')return next;
-   closingAtS??=attendanceEnd(world.scene,world.scene.economy!.accounts.find(a=>a.id==='regular')!.attendance!,trip.dutyAtS);
-  }
+  if(trip?.dutyAtS!==undefined)closingAtS=attendanceEnd(world.scene,world.scene.economy!.accounts.find(a=>a.id==='regular')!.attendance!,trip.dutyAtS);
+  if(stage==='idle' && trip?.phase==='idle')return next;
   if(stage==='home' && worked && !trip)return next;
   if(trip?.phase==='work'){
    worked=true;
@@ -24,7 +22,8 @@ export function* attendanceReviewSteps(state:CarState,world:World,stage:'idle'|'
   let input:CarInput={steer:0,throttle:0};
   if(trip?.phase==='idle' && (stage!=='closing' || next.timeS>=closingAtS!-4)){
    if(!bought){input.commerce={kind:'buy',market:'market_stall',good:'lunch'};bought=true;}
-   else if(baker.work?.id==='pack_lunch' && market.stock.bread!>=3 && pocket.credits>=5)input.commerce={kind:'buy',market:'market_stall',good:'bread'};
+   // Purchases must leave demand even while the courier reserves bread for refunds.
+   else if(baker.work?.id==='pack_lunch' && market.stock.bread!>0 && pocket.credits>=5)input.commerce={kind:'buy',market:'market_stall',good:'bread'};
   }
   next=stepInteractive(next,input,1/120,world);if(i%30===0)yield;
  }

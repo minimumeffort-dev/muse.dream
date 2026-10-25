@@ -21,7 +21,7 @@ import homeR98 from './compatibility/r98-home.json';
 import homeR97 from './compatibility/r97-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=53;
+export const SAVE_SIMULATION_VERSION=54;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -115,6 +115,10 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** Simulation 54 improves future work routes without changing accepted world data. */
+export const WALKING_LINKS_COMPATIBILITY='6f51da4a8fd320851d05e664f6f72d5ed9f7be57050e26ad31339a2c57f597d2';
+export function preWalkingLinksCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(scene,53,true,encode);}
+
 /** r113 completes four authored junction crossings; only derived pedestrian indices change. */
 export const CROSSING_ACCESS_COMPATIBILITY='5d8cf576772c3ebebead408d764fa6d6e90e060d314a0ed8ba62a9d30b57f15f';
 const crossingAccessProjections=new WeakMap<Scene,Scene>();

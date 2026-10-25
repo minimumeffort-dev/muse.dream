@@ -31,8 +31,8 @@ const withoutDerivedIndices=(state:CarState)=>({...state,population:state.popula
 const pathLength=(start:{x:number;y:number},path:{x:number;y:number}[])=>{let total=0,p=start;for(const q of path){total+=Math.hypot(q.x-p.x,q.y-p.y);p=q;}return total;};
 
 it('registers the exact r113 crossing-only revision and retains every older physical fingerprint',async()=>{
- expect(SAVE_VERSION).toBe(19);expect(c.SAVE_SIMULATION_VERSION).toBe(53);
- expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.CROSSING_ACCESS_COMPATIBILITY);
+ expect(SAVE_VERSION).toBe(19);expect(JSON.parse(c.preWalkingLinksCompatibilitySource(scene)).simulationVersion).toBe(53);
+ expect(await c.sha256(c.preWalkingLinksCompatibilitySource(scene))).toBe(c.CROSSING_ACCESS_COMPATIBILITY);
  expect(await c.sha256(c.preCrossingAccessCompatibilitySource(scene))).toBe(c.STATION_MAINTENANCE_COMPATIBILITY);
  expect(await c.sha256(c.preStationMaintenanceCompatibilitySource(scene))).toBe(c.DISTRICT_COMPATIBILITY);
  expect(await c.sha256(c.preDistrictCompatibilitySource(scene))).toBe(c.UPSTAIRS_SOCIAL_COMPATIBILITY);
@@ -70,7 +70,7 @@ it('preserves an unfinished paid station repair coordinate path while future rou
  const trip=caretaker(state).repair!;expect(trip).toMatchObject({id:service.id,objectId:target.objectId,phase:'out'});expect(trip.path.length).toBeGreaterThan(0);checkEconomyState(state,previous);
  const loaded=decodeSave(encodeSave(state,state.timeS,oldWorld),world);expect(withoutDerivedIndices(loaded.state)).toEqual(withoutDerivedIndices(state));expect(caretaker(loaded.state).repair).toEqual(trip);expect(loaded.worldTime).toBe(state.timeS);checkEconomyState(loaded.state,scene);
  const home=previous.objects.find(o=>o.id==='market_neighbor')!,oldPath=repairPath(previous,service,home,trip.at)!,nextPath=repairPath(scene,scene.economy!.repairs.find(r=>r.id===service.id)!,home,trip.at)!;
- expect(oldPath).toBeDefined();expect(nextPath).toBeDefined();expect(pathLength(home,oldPath)).toBeGreaterThan(20000);expect(pathLength(home,nextPath)).toBeLessThan(10000);
+ expect(oldPath).toBeDefined();expect(nextPath).toBeDefined();expect(pathLength(home,oldPath)).toBeCloseTo(19619.94299730439,6);expect(pathLength(home,nextPath)).toBeLessThan(10000);
  expect(pathLength(home,nextPath)).toBeLessThan(pathLength(home,oldPath)*.5);
  const beforeStep=advance(state,previous),afterStep=advance(loaded.state,scene);expect(caretaker(afterStep).repair).toEqual(caretaker(beforeStep).repair);expect(afterStep.economy).toEqual(beforeStep.economy);
  expect(decodeSave(encodeSave(loaded.state,loaded.worldTime,world),world).state).toEqual(loaded.state);

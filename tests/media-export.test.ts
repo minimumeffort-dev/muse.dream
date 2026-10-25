@@ -19,6 +19,7 @@ describe('local capture boundary',()=>{
       await handle(req,res,()=>{status=404;});return status;
     }
     try{
+      expect(await request('/__media/workerwalk/0599.png')).toBe(204);expect(await request('/__media/workerwalk/0600.png')).toBe(400);
       expect(await request('/__media/crossingwalk/0239.png')).toBe(204);expect(await request('/__media/crossingwalk/0240.png')).toBe(400);
       expect(await request('/__media/upstairsmeal/0599.png')).toBe(204);expect(await request('/__media/upstairsmeal/0600.png')).toBe(400);
       expect(await request('/__media/stationrepair/0359.png')).toBe(204);expect(await request('/__media/stationrepair/0360.png')).toBe(400);

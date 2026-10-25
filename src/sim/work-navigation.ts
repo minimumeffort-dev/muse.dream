@@ -142,11 +142,11 @@ export function workNetwork(scene:Scene,r:WalkingArea){
  for(let a=0;a<g.patches.length;a++)for(let b=a+1;b<g.patches.length;b++){
   const p=pavementPortal(g.patches[a]!.polygon,g.patches[b]!.polygon,radius);if(p && g.allowed(p))connectLocal(add(p),p);
  }
- // The worker's four-unit cylinder can use safe links omitted for wider cosmetic rigs.
+ // Retain inter-component links before spending spare links on short corner turns.
  const components=new Int32Array(publicNodes.length).fill(-1);let component=0;
  for(let i=0;i<publicNodes.length;i++)if(components[i]===-1){const queue=[i];components[i]=component;for(let at=0;at<queue.length;at++)for(const j of publicNodes[queue[at]!]!.links)if(components[j]===-1){components[j]=component;queue.push(j);}component++;}
  const publicGrid=new SpatialGrid(publicNodes.map((n,i)=>({x:n.x,y:n.y,i})),128);
- for(let i=0;i<publicNodes.length;i++){const n=publicNodes[i]!;let count=0;for(const p of publicGrid.query(n.x,n.y,128).filter(p=>p.i>i && components[p.i]!==components[i] && Math.hypot(p.x-n.x,p.y-n.y)<=128).sort((a,b)=>Math.hypot(a.x-n.x,a.y-n.y)-Math.hypot(b.x-n.x,b.y-n.y) || a.i-b.i).slice(0,32))if(connect(i,p.i) && ++count===4)break;}
+ for(let i=0;i<publicNodes.length;i++){const n=publicNodes[i]!;let count=0;for(const p of publicGrid.query(n.x,n.y,128).filter(p=>p.i>i && Math.hypot(p.x-n.x,p.y-n.y)<=128).sort((a,b)=>Number(components[a.i]===components[i])-Number(components[b.i]===components[i]) || Math.hypot(a.x-n.x,a.y-n.y)-Math.hypot(b.x-n.x,b.y-n.y) || a.i-b.i).slice(0,32))if(connect(i,p.i) && ++count===4)break;}
  const pavement=walkingNetwork(scene).polygons.map(polygon=>({polygon,b:polygonBounds(polygon)}));
  for(const patch of [...g.patches.map(p=>({...p,verge:false})),...g.access.map(polygon=>({polygon,b:polygonBounds(polygon),verge:true}))])for(const {polygon,b} of pavement){if(b.x1<patch.b.x0 || b.x0>patch.b.x1 || b.y1<patch.b.y0 || b.y0>patch.b.y1)continue;
   const p=pavementPortal(patch.polygon,polygon,radius);if(!p || !g.allowed(p))continue;

@@ -29,7 +29,7 @@ it('adds exactly the school bench to existing coverage with unchanged geometry, 
  expect(await sha256(saveCompatibilitySource(scene))).toBe(MATCH_COMPATIBILITY);expect(await sha256(preSchoolRepairCompatibilitySource(scene))).toBe(SOCIAL_COMPATIBILITY);
  expect(repairTargets(scene,service)).toHaveLength(89);expect(before).toHaveLength(88);expect(repairTargets(scene,service).filter(t=>!before.some(b=>b.objectId===t.objectId&&b.zoneId===t.zoneId)).map(t=>t.objectId)).toEqual(['school_bench']);
  expect(preMatchScene(scene).objects).toEqual(old.objects);expect(sceneContactData(scene)).toEqual(sceneContactData(old));expect(ambientGraph(scene)).toEqual(ambientGraph(old));
- const graph=repairNetwork(scene,service);expect(graph.length).toBe(4305);expect(graph.reduce((n,p)=>n+p.links.length,0)).toBe(14368);expect(service.grounds).toEqual(['park_seating','station_seating','market_hall','school_yard','school_yard_access','school_yard_return']);
+ const graph=repairNetwork(scene,service);expect(graph.length).toBe(4305);expect(graph.reduce((n,p)=>n+p.links.length,0)).toBe(20508);expect(service.grounds).toEqual(['park_seating','station_seating','market_hall','school_yard','school_yard_access','school_yard_return']);
 });
 it('walks the complete route, reserves and consumes one kit, waits for a parked car, saves each phase and pays once',async()=>{
  let s={...npcReviewStart(createCarAtSpawn(scene),world,'vendor'),broken:['school_bench']},previous={x:scene.objects.find(o=>o.id==='market_neighbor')!.x,y:scene.objects.find(o=>o.id==='market_neighbor')!.y},waited=false,arrived=false,returned=false,paidOnce=false;const phases=new Set<string>();

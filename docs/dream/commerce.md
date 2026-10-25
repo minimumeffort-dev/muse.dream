@@ -476,9 +476,9 @@ planter retain their original positions; the furnishing rules explicitly allow
 these new grounds. Repair selection still uses measured categories and available
 damage, so the worker may restore a nearer wall before a bench.
 
-![Walking from the market along the accepted pedestrian network](../media/maintenance.jpg)
+![Walking from the market along the accepted pedestrian network](../media/workerwalk.jpg)
 
-[Journey in HD](../media/maintenance.mp4) · [Animated journey](../media/maintenance.gif)
+[Journey in HD](../media/workerwalk.mp4) · [Animated journey](../media/workerwalk.gif)
 
 Keep the market and worker home inside `on`. Add `grounds=[park_seating,station_seating]`
 for distant work surfaces. The engine derives routes through sidewalks, crossings
@@ -487,6 +487,13 @@ cut straight across an unpainted carriageway. The complete-world compiler reject
 unreachable targets. The player can carry a kit in a vehicle; the caretaker walks
 at 1.4 m/s and returns after each job. A trip across the city takes several
 simulation minutes. Nothing completes during pause or while the page is closed.
+
+Simulation 54 also uses short supported links within already connected pavement,
+so workers do not need a long loop around a clear corner. This applies to the
+shared work, service and resident journey planner; no new Dream field or generated
+controller is involved. Current contacts still cause waits or replanning. Existing
+saved trips keep their coordinate paths, while new plans use the improved graph.
+[Current route and migration checks](../evidence/short-links/verification.md).
 
 The primary `on` plus up to eleven extra `grounds` are at most twelve unique convex surfaces. Together
 they retain the 4,096 local-sample limit; the derived pedestrian graph has at most

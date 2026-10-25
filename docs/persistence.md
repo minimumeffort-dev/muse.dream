@@ -1,6 +1,15 @@
 # Leave and come back
 
-The current world is r113, using format 19 / simulation 53. Its registered r112
+The current world is r113, using format 19 / simulation 54. The registered
+simulation-53 upgrade changes future work-route choices over the same authored
+world. Restore validates the exact earlier fingerprint and retains every state
+field: positions, clocks, inventory, wages, claims, damage, growth and coordinate
+paths. There is no population rebase, new stock or offline catch-up. A paid
+9,546-unit repair journey still follows its saved path; a new plan can take the
+7,479-unit route. The original slot and complete earlier migration chain remain.
+[Short-route migration and native checks](evidence/short-links/verification.md).
+
+The earlier r113 world used format 19 / simulation 53. Its registered r112
 upgrade adds only the four authored junction crossings. Restore first validates
 the exact prior world, then maps ambient node and previous-node indices onto the current pedestrian graph. Member positions, travel, seeded choices and
 clocks remain; no population restarts. Coordinate work, repair, courier and meal
