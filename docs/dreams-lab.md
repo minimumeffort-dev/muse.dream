@@ -19,7 +19,9 @@ The environment stays in view. World and Task fields and parameters sit at the
 left, with individual agent activity below the map. The design chooser,
 explanatory footer, repeated status labels and helper paragraphs are removed.
 One compact connection state remains in the header; Dream source opens when
-needed. Detailed comparisons would use another view.
+needed. Panel headings, fields and playback controls follow shared gutters and
+control sizes on desktop, tablet and mobile. Detailed comparisons would use
+another view.
 
 ![Workspace: a brief beside a large environment and agent activity](media/dreams-lab-workspace.jpg)
 

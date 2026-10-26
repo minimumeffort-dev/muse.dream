@@ -20,7 +20,7 @@ The fresh [dreams-lab/ workspace](dreams-lab/README.md) uses the selected
 [Workspace A layout](docs/dreams-lab.md): a brief beside the world, parameters
 and agent activity, with source available when needed. It opens directly,
 without the design chooser or repeated explanatory notices. It is a static
-interface with illustrative data. Porting the compiler and runner, connecting
+interface with illustrative data, shared gutters and aligned controls. Porting the compiler and runner, connecting
 Muse and binding agents to a physical environment are the next steps.
 
 ![The Dreams Lab Workspace design preview, with a brief beside the environment](docs/media/dreams-lab-workspace.jpg)

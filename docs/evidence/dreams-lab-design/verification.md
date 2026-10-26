@@ -1,5 +1,34 @@
 # Dreams Lab design review
 
+## Alignment pass
+
+Workspace A uses one horizontal gutter per breakpoint: 24 pixels on desktop and
+tablet, 16 on mobile. The logo, title and form align; the world heading, legend,
+timeline and agent rows share their column inset. The two World headings use
+matching line boxes and vertical padding. Before this change their tops differed
+by 6.5 pixels; at the checked desktop viewport both start at y=169.
+
+Numeric fields, Run and playback buttons are 40 pixels tall. Playback buttons
+previously shrank to 28 pixels wide in the timeline's flex layout; the timeline
+now reserves fixed square columns. Agent avatars stay aligned when status text
+wraps. Dream source keeps native keyboard interaction with its chevron aligned
+at the right. Content and simulation state are unchanged.
+
+[Browser readings](alignment-checks.json) verify matching left/right edges at
+1280, 768 and 390 pixels, zero heading offset on the two column layouts, square
+40-pixel playback buttons, aligned avatar/text tops and no horizontal overflow.
+The source control fits in the desktop/tablet sidebar and opens with Enter.
+Textarea and numeric text use matching eight-pixel insets. The current World
+and Task values fit without internal scrolling at all three checked sizes.
+[Tablet capture](workspace-tablet.jpg) supplements the current desktop and
+mobile stills. The three focused design checks pass.
+
+The Workspace still and responsive captures are refreshed. These are static
+layout changes, with no motion sequence to export. Existing game recordings and
+the earlier B/C design captures remain accurate for their labeled versions.
+The focused design checks and published docs build cover this isolated change;
+no gameplay, compiler, physics or save behavior changed.
+
 ## Workspace A cleanup
 
 The user selected A and requested an interface without repeated demo labels or

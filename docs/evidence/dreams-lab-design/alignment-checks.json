@@ -1,0 +1,464 @@
+[
+  {
+    "agentRows": [
+      {
+        "avatarY": 656,
+        "textY": 656
+      },
+      {
+        "avatarY": 656,
+        "textY": 656
+      }
+    ],
+    "brand": {
+      "bottom": 51.5,
+      "height": 32,
+      "right": 169.234375,
+      "width": 145.234375,
+      "x": 24,
+      "y": 19.5
+    },
+    "brief": {
+      "bottom": 720,
+      "height": 567,
+      "right": 296,
+      "width": 296,
+      "x": 0,
+      "y": 153
+    },
+    "formLabel": {
+      "bottom": 189,
+      "height": 20,
+      "right": 271,
+      "width": 247,
+      "x": 24,
+      "y": 169
+    },
+    "numberField": {
+      "bottom": 517,
+      "height": 40,
+      "right": 141.5,
+      "width": 117.5,
+      "x": 24,
+      "y": 477
+    },
+    "offline": {
+      "bottom": 45.5,
+      "height": 20,
+      "right": 1256,
+      "width": 51.7734375,
+      "x": 1204.2265625,
+      "y": 25.5
+    },
+    "play": {
+      "bottom": 587,
+      "height": 40,
+      "right": 360,
+      "width": 40,
+      "x": 320,
+      "y": 547
+    },
+    "run": {
+      "bottom": 132,
+      "height": 40,
+      "right": 1256,
+      "width": 74.75,
+      "x": 1181.25,
+      "y": 92
+    },
+    "scrollWidth": 1280,
+    "source": {
+      "bottom": 714,
+      "height": 41,
+      "right": 271,
+      "width": 247,
+      "x": 24,
+      "y": 673
+    },
+    "step": {
+      "bottom": 587,
+      "height": 40,
+      "right": 1256,
+      "width": 40,
+      "x": 1216,
+      "y": 547
+    },
+    "title": {
+      "bottom": 128,
+      "height": 32,
+      "right": 198.078125,
+      "width": 174.078125,
+      "x": 24,
+      "y": 96
+    },
+    "values": [
+      {
+        "label": "Agents",
+        "value": "2",
+        "width": 107.5
+      },
+      {
+        "label": "Budget",
+        "value": "16",
+        "width": 76.265625
+      },
+      {
+        "label": "Deadline",
+        "value": "80",
+        "width": 75.53125
+      },
+      {
+        "label": "Seed",
+        "value": "7",
+        "width": 107.5
+      }
+    ],
+    "width": 1280,
+    "worldCount": {
+      "bottom": 189,
+      "height": 20,
+      "right": 1256,
+      "width": 48.0859375,
+      "x": 1207.9140625,
+      "y": 169
+    },
+    "worldHeading": {
+      "bottom": 189,
+      "height": 20,
+      "right": 353.609375,
+      "width": 33.609375,
+      "x": 320,
+      "y": 169
+    },
+    "worldPanel": {
+      "bottom": 720,
+      "height": 567,
+      "right": 1280,
+      "width": 984,
+      "x": 296,
+      "y": 153
+    },
+    "textareas": [
+      {
+        "clientHeight": 78,
+        "label": "World",
+        "padding": "8px",
+        "scrollHeight": 78
+      },
+      {
+        "clientHeight": 78,
+        "label": "Task",
+        "padding": "8px",
+        "scrollHeight": 78
+      }
+    ]
+  },
+  {
+    "agentRows": [
+      {
+        "avatarY": 967,
+        "textY": 967
+      },
+      {
+        "avatarY": 967,
+        "textY": 967
+      }
+    ],
+    "brand": {
+      "bottom": 51.5,
+      "height": 32,
+      "right": 169.234375,
+      "width": 145.234375,
+      "x": 24,
+      "y": 19.5
+    },
+    "brief": {
+      "bottom": 1024,
+      "height": 871,
+      "right": 256,
+      "width": 256,
+      "x": 0,
+      "y": 153
+    },
+    "formLabel": {
+      "bottom": 189,
+      "height": 20,
+      "right": 231,
+      "width": 207,
+      "x": 24,
+      "y": 169
+    },
+    "numberField": {
+      "bottom": 581,
+      "height": 40,
+      "right": 121.5,
+      "width": 97.5,
+      "x": 24,
+      "y": 541
+    },
+    "offline": {
+      "bottom": 45.5,
+      "height": 20,
+      "right": 744,
+      "width": 51.7734375,
+      "x": 692.2265625,
+      "y": 25.5
+    },
+    "play": {
+      "bottom": 898,
+      "height": 40,
+      "right": 320,
+      "width": 40,
+      "x": 280,
+      "y": 858
+    },
+    "run": {
+      "bottom": 132,
+      "height": 40,
+      "right": 744,
+      "width": 74.75,
+      "x": 669.25,
+      "y": 92
+    },
+    "scrollWidth": 768,
+    "source": {
+      "bottom": 1008,
+      "height": 41,
+      "right": 231,
+      "width": 207,
+      "x": 24,
+      "y": 967
+    },
+    "step": {
+      "bottom": 898,
+      "height": 40,
+      "right": 744,
+      "width": 40,
+      "x": 704,
+      "y": 858
+    },
+    "title": {
+      "bottom": 128,
+      "height": 32,
+      "right": 198.078125,
+      "width": 174.078125,
+      "x": 24,
+      "y": 96
+    },
+    "values": [
+      {
+        "label": "Agents",
+        "value": "2",
+        "width": 87.5
+      },
+      {
+        "label": "Budget",
+        "value": "16",
+        "width": 56.265625
+      },
+      {
+        "label": "Deadline",
+        "value": "80",
+        "width": 55.53125
+      },
+      {
+        "label": "Seed",
+        "value": "7",
+        "width": 87.5
+      }
+    ],
+    "width": 768,
+    "worldCount": {
+      "bottom": 189,
+      "height": 20,
+      "right": 744,
+      "width": 48.0859375,
+      "x": 695.9140625,
+      "y": 169
+    },
+    "worldHeading": {
+      "bottom": 189,
+      "height": 20,
+      "right": 313.609375,
+      "width": 33.609375,
+      "x": 280,
+      "y": 169
+    },
+    "worldPanel": {
+      "bottom": 1024,
+      "height": 871,
+      "right": 768,
+      "width": 512,
+      "x": 256,
+      "y": 153
+    },
+    "textareas": [
+      {
+        "clientHeight": 110,
+        "label": "World",
+        "padding": "8px",
+        "scrollHeight": 110
+      },
+      {
+        "clientHeight": 110,
+        "label": "Task",
+        "padding": "8px",
+        "scrollHeight": 110
+      }
+    ]
+  },
+  {
+    "agentRows": [
+      {
+        "avatarY": 1214,
+        "textY": 1214
+      },
+      {
+        "avatarY": 1214,
+        "textY": 1214
+      }
+    ],
+    "brand": {
+      "bottom": 47.5,
+      "height": 32,
+      "right": 149.984375,
+      "width": 133.984375,
+      "x": 16,
+      "y": 15.5
+    },
+    "brief": {
+      "bottom": 723,
+      "height": 578,
+      "right": 390,
+      "width": 390,
+      "x": 0,
+      "y": 145
+    },
+    "formLabel": {
+      "bottom": 181,
+      "height": 20,
+      "right": 374,
+      "width": 358,
+      "x": 16,
+      "y": 161
+    },
+    "numberField": {
+      "bottom": 509,
+      "height": 40,
+      "right": 189,
+      "width": 173,
+      "x": 16,
+      "y": 469
+    },
+    "offline": {
+      "bottom": 41.5,
+      "height": 20,
+      "right": 374,
+      "width": 51.7734375,
+      "x": 322.2265625,
+      "y": 21.5
+    },
+    "play": {
+      "bottom": 1149,
+      "height": 40,
+      "right": 56,
+      "width": 40,
+      "x": 16,
+      "y": 1109
+    },
+    "run": {
+      "bottom": 124,
+      "height": 40,
+      "right": 374,
+      "width": 74.75,
+      "x": 299.25,
+      "y": 84
+    },
+    "scrollWidth": 390,
+    "source": {
+      "bottom": 706,
+      "height": 41,
+      "right": 374,
+      "width": 358,
+      "x": 16,
+      "y": 665
+    },
+    "step": {
+      "bottom": 1149,
+      "height": 40,
+      "right": 374,
+      "width": 40,
+      "x": 334,
+      "y": 1109
+    },
+    "title": {
+      "bottom": 118,
+      "height": 28,
+      "right": 161.0625,
+      "width": 145.0625,
+      "x": 16,
+      "y": 90
+    },
+    "values": [
+      {
+        "label": "Agents",
+        "value": "2",
+        "width": 163
+      },
+      {
+        "label": "Budget",
+        "value": "16",
+        "width": 131.765625
+      },
+      {
+        "label": "Deadline",
+        "value": "80",
+        "width": 131.03125
+      },
+      {
+        "label": "Seed",
+        "value": "7",
+        "width": 163
+      }
+    ],
+    "width": 390,
+    "worldCount": {
+      "bottom": 759,
+      "height": 20,
+      "right": 374,
+      "width": 48.0859375,
+      "x": 325.9140625,
+      "y": 739
+    },
+    "worldHeading": {
+      "bottom": 759,
+      "height": 20,
+      "right": 49.609375,
+      "width": 33.609375,
+      "x": 16,
+      "y": 739
+    },
+    "worldPanel": {
+      "bottom": 1271,
+      "height": 548,
+      "right": 390,
+      "width": 390,
+      "x": 0,
+      "y": 723
+    },
+    "textareas": [
+      {
+        "clientHeight": 78,
+        "label": "World",
+        "padding": "8px",
+        "scrollHeight": 78
+      },
+      {
+        "clientHeight": 78,
+        "label": "Task",
+        "padding": "8px",
+        "scrollHeight": 78
+      }
+    ]
+  }
+]

@@ -277,25 +277,45 @@ summary{font-size:12px;font-weight:650;cursor:pointer;line-height:24px}
 
 .workspace-map>.map-wrap,.notebook-world>.map-wrap{height:100%;min-height:0}
 
-body.workspace-page{height:100dvh;min-height:640px;display:flex;flex-direction:column}
+body.workspace-page{--gutter:24px;height:100dvh;min-height:640px;display:flex;flex-direction:column}
 .workspace-page main{display:flex;flex-direction:column;flex:1;min-height:0}
 .workspace-page .topbar{flex:none}
 .workspace-page .workspace-title{height:auto;min-height:80px;padding-block:16px;flex:none}
 .workspace-page .workspace-layout{height:auto;min-height:0;flex:1}
-.workspace-page .brief-panel{overflow-y:auto;gap:16px;padding:20px}
-.workspace-page .section-label{margin-bottom:0}
+.workspace-page .brief-panel{overflow-y:auto;gap:16px;padding:16px var(--gutter)}
+.workspace-page .section-label{margin-bottom:0;font-weight:650;line-height:20px}
+.workspace-page label{line-height:20px}
 .workspace-page .field{gap:8px}
 .workspace-page .brief-panel section>div.section-label{margin-bottom:12px}
-.workspace-page textarea{min-height:80px;height:80px}
-.workspace-page .world-toolbar{flex:none}
+.workspace-page textarea{min-height:80px;height:80px;padding:8px}
+.workspace-page .world-toolbar{height:auto;flex:none;padding:16px var(--gutter)}
 .workspace-page .world-toolbar h2{font:650 12px/20px Manrope,sans-serif;letter-spacing:0}
 .workspace-page .world-column{min-height:0}
 .workspace-page .workspace-map{flex:1;min-height:240px;max-height:none}
-.workspace-page .timeline,.workspace-page .activity{flex:none}
-.workspace-page .activity-row{grid-template-columns:1fr 1fr}
+.workspace-page .timeline,.workspace-page .activity{flex:none;padding-inline:var(--gutter)}
+.workspace-page .map-legend{left:var(--gutter)}
+.workspace-page .number-field{height:40px}
+.workspace-page .timeline{display:grid;grid-template-columns:40px 64px minmax(0,1fr) 40px;gap:16px}
+.workspace-page .timeline .btn{width:40px;height:40px;min-width:40px;padding:8px}
+.workspace-page .timeline .time{min-width:0;white-space:nowrap}
+.workspace-page .timeline input{width:100%;min-width:0;margin:0}
+.workspace-page .policy{min-height:40px;padding:8px 12px}
+.workspace-page .policy>div{display:flex;align-items:center;justify-content:space-between;flex:1;gap:12px}
+.workspace-page .policy-name{line-height:20px}
+.workspace-page .activity-row{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+.workspace-page .activity-person{align-items:flex-start}
+.workspace-page .activity-person>div{min-width:0}
+.workspace-page .avatar{flex:none}
 .workspace-page .activity .section-label{margin-bottom:12px}
+.workspace-page .source summary{display:flex;align-items:center;justify-content:space-between;list-style:none}
+.workspace-page .source summary::-webkit-details-marker{display:none}
+.workspace-page .source summary::after{content:"";width:6px;height:6px;border-right:1.5px solid;border-bottom:1.5px solid;transform:rotate(45deg);margin-right:4px}
+.workspace-page .source[open] summary::after{transform:rotate(225deg)}
+@media(min-width:721px) and (max-width:1099px){
+  .workspace-page textarea{height:112px}
+}
 @media(max-width:720px){
-  body.workspace-page{height:auto;min-height:100dvh}
+  body.workspace-page{--gutter:16px;height:auto;min-height:100dvh}
   .workspace-page .workspace-title{flex-direction:row;align-items:center;gap:12px}
   .workspace-page .workspace-title h1{font-size:20px;line-height:28px}
   .workspace-page .brief-panel{display:flex;overflow:visible}

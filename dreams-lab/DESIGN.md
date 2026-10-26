@@ -19,6 +19,12 @@ these docs. The other variants remain historical references. The functional
 port has not started in this design slice.
 
 Desktop layouts adapt to stacked controls and readable maps on narrow screens.
+Workspace uses a shared 24-pixel desktop gutter and 16-pixel mobile gutter.
+The form and world headings share a line box and top inset. Numeric inputs,
+Run and playback controls use 40-pixel control heights; playback buttons cannot
+shrink against the timeline. Agent avatars align to the top of their text rows.
+Textarea and numeric values share an eight-pixel inner inset; narrower tablet
+fields have enough height for the current brief without clipping it.
 Named native buttons, labeled inputs, keyboard focus and reduced motion apply
 to all variants. Prototype play is an authored timeline, never a performance
 measurement or simulated evaluation.

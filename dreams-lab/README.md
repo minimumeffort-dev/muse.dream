@@ -6,6 +6,8 @@ it in Dream, run an agent, then change something and compare the outcome.
 Workspace A is selected. It opens directly with World and Task fields,
 parameters, the environment, agent activity and a collapsed Dream source view.
 One compact connection status replaces the repeated notices and review controls.
+Shared gutters, aligned panel headings and fixed control sizes keep the layout
+consistent across desktop, tablet and mobile.
 The compiler, episode runner and recording tools have not been ported yet.
 
 From the repository root, using the existing dependencies:
