@@ -31,24 +31,36 @@ export const repairPath=(scene:Scene,r:Repair,start:Point,end:Point,state?:CarSt
 export const repairNetwork=(scene:Scene,r:Repair)=>workNetwork(scene,repairArea(scene,r));
 export interface RepairNavigation {sourceHash:string;services:{id:string;nodes:WorkNode[];coverage?:RepairCoverage}[]}
 const journeyAreas=(scene:Scene)=>[...new Map([...errandAreas(scene),...shiftAreas(scene),...socialAreas(scene)].map(a=>[a.id,a])).values()];
-const indoorWorkAreas=(scene:Scene)=>!scene.floors ? [] : [...new Map([...(scene.economy?.repairs??[]).map(r=>repairArea(scene,r)),...journeyAreas(scene)].flatMap(a=>indoorAreas(scene,a)).map(a=>[a.id,a])).values()];
+// Indoor membership needs declared grounds, not a second survey of worker-owned repair coverage.
+const navigationAreas=(scene:Scene):WalkingArea[]=>[...(scene.economy?.repairs??[]).map(r=>({id:r.id,grounds:repairGrounds(r),access:[],network:!!(r.grounds || r.streets)})),...journeyAreas(scene)];
+const indoorWorkAreas=(scene:Scene)=>!scene.floors ? [] : [...new Map(navigationAreas(scene).flatMap(a=>indoorAreas(scene,a)).map(a=>[a.id,a])).values()];
 export function repairNavigation(scene:Scene):RepairNavigation{const packet:RepairNavigation= {sourceHash:scene.sourceHash,services:[...indoorWorkAreas(scene).map(a=>({id:a.id,nodes:workNetwork(scene,a)})),...(scene.economy?.repairs??[]).filter(r=>r.grounds || r.streets).map(r=>({id:r.id,nodes:repairNetwork(scene,r),coverage:repairCoverage(scene,r)})),...journeyAreas(scene).map(a=>({id:a.id,nodes:workNetwork(scene,a)}))]};checkCombinedNetworks(scene,new Map(packet.services.map(s=>[s.id,s.nodes])));return packet;}
 function checkCombinedNetworks(scene:Scene,networks:Map<string,WorkNode[]>):void{
- for(const area of [...(scene.economy?.repairs??[]).map(r=>repairArea(scene,r)),...journeyAreas(scene)]){
+ for(const area of navigationAreas(scene)){
   const levels=indoorAreas(scene,area);if(!levels.length)continue;
-  const graphs=[area.id,...levels.map(a=>a.id)].map(id=>networks.get(id)??workNetwork(scene,id===area.id ? area : levels.find(a=>a.id===id)!));
+  const repair=scene.economy?.repairs.find(r=>r.id===area.id);
+  const graphs=[networks.get(area.id)??workNetwork(scene,repair ? repairArea(scene,repair) : journeyAreas(scene).find(a=>a.id===area.id)!),...levels.map(a=>networks.get(a.id)??workNetwork(scene,a))];
   if(graphs.reduce((n,g)=>n+g.length,0)>COMMERCE_LIMITS.repairNetworkNodes || graphs.reduce((n,g)=>n+g.reduce((s,p)=>s+p.links.length,0),0)>COMMERCE_LIMITS.repairNetworkLinks)throw Error('Combined indoor and public navigation exceeds existing graph bounds');
  }
 }
 /** Prepared topology comes only from the accepted world's own worker, never Dream or saves. */
 export function primeRepairNavigation(scene:Scene,packet:RepairNavigation):void{
+ for(const _ of primeRepairNavigationSteps(scene,packet)){}
+}
+/** Yield during validation; install topology and coverage only after the complete packet passes. */
+export function* primeRepairNavigationSteps(scene:Scene,packet:RepairNavigation):Generator<void>{
  const indoor=indoorWorkAreas(scene),expected=indoor.map(a=>a.id).concat((scene.economy?.repairs??[]).filter(r=>r.grounds || r.streets).map(r=>r.id).concat(journeyAreas(scene).map(a=>a.id))),bad=()=>{throw Error('Invalid prepared repair navigation');};
  if(!packet || packet.sourceHash!==scene.sourceHash || !Array.isArray(packet.services) || packet.services.length!==expected.length || packet.services.some(s=>!s || typeof s.id!=='string') || new Set(packet.services.map(s=>s.id)).size!==expected.length)bad();
  const prepared=new Map<string,WorkNode[]>();
  for(const service of packet.services){if(!expected.includes(service.id) || !Array.isArray(service.nodes) || !service.nodes.length || service.nodes.length>COMMERCE_LIMITS.repairNetworkNodes)bad();
-  const nodes=service.nodes,level=indoor.find(a=>a.id===service.id);if(level ? nodes.length>1024 || nodes.some(n=>n.elevation===undefined || !indoorClear(scene,level,n,undefined,true)) : nodes.some(n=>n.elevation!==undefined))bad();let links=0;
-  for(let i=0;i<nodes.length;i++){const n=nodes[i]!;if(!n || !Number.isFinite(n.x) || !Number.isFinite(n.y) || n.x<0 || n.y<0 || n.x>scene.canonical.width || n.y>scene.canonical.height || n.elevation!==undefined && (!Number.isFinite(n.elevation) || Math.abs(n.elevation)>4096) || !Array.isArray(n.links))bad();links+=n.links.length;if(links>COMMERCE_LIMITS.repairNetworkLinks || new Set(n.links).size!==n.links.length || n.links.some(j=>!Number.isInteger(j) || j<0 || j>=nodes.length || j===i))bad();}
-  const sets=nodes.map(n=>new Set(n.links));if(nodes.some((n,i)=>n.links.some(j=>!sets[j]!.has(i))))bad();if(level && nodes.some(n=>n.links.some(j=>!indoorSegment(scene,level,n,nodes[j]!,undefined,true))))bad();prepared.set(service.id,nodes);
+  const nodes=service.nodes,level=indoor.find(a=>a.id===service.id);if(level && nodes.length>1024)bad();let links=0;
+  for(let i=0;i<nodes.length;i++){const n=nodes[i]!;if(!n || !Number.isFinite(n.x) || !Number.isFinite(n.y) || n.x<0 || n.y<0 || n.x>scene.canonical.width || n.y>scene.canonical.height || n.elevation!==undefined && (!Number.isFinite(n.elevation) || Math.abs(n.elevation)>4096) || !Array.isArray(n.links))bad();links+=n.links.length;if(links>COMMERCE_LIMITS.repairNetworkLinks || new Set(n.links).size!==n.links.length || n.links.some(j=>!Number.isInteger(j) || j<0 || j>=nodes.length || j===i))bad();
+   if(level ? n.elevation===undefined || !indoorClear(scene,level,n,undefined,true) : n.elevation!==undefined)bad();
+   if(level || (i+1)%32===0)yield;
+  }
+  const sets=nodes.map(n=>new Set(n.links));
+  for(let i=0;i<nodes.length;i++){const n=nodes[i]!;if(n.links.some(j=>!sets[j]!.has(i)) || level && n.links.some(j=>!indoorSegment(scene,level,n,nodes[j]!,undefined,true)))bad();if(level || (i+1)%32===0)yield;}
+  prepared.set(service.id,nodes);yield;
  }
  const coverage=new Map(packet.services.filter(s=>scene.economy?.repairs.some(r=>r.id===s.id)).map(s=>[s.id,s.coverage!]));
  if(packet.services.some(s=>!coverage.has(s.id) && s.coverage!==undefined))bad();

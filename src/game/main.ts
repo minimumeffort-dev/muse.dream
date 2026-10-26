@@ -68,7 +68,7 @@ import { buildPaperMask } from "../sim/mask";
 import { CAR_BOOST, isCarControl, createCarAtSpawn, FixedStepper, resetCar, type World } from "../sim/car";
 import { MAX_FLIGHT_CLEARANCE,isSwimming,nearbyRide,toggleRide,standUp,stepInteractive,occupiedObject,exitPosition } from "../sim/interaction";
 import {repairView} from './repair-view';
-import {primeRepairNavigation} from '../sim/repair';
+import {primeRepairNavigationSteps} from '../sim/repair';
 import { actorPose,actorPoses,workJourneyForActor } from "../sim/actors";
 import {isActor} from '../scene/agents';
 import { interactiveWorld } from "../scene/interactive-world";
@@ -112,11 +112,12 @@ const saveButton=document.querySelector<HTMLButtonElement>("#save-game")!,saveLa
 const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 
 export async function start(doc:Scene,loading:Loading,worker:WorldWorkerClient):Promise<void> {
-  await loading.stage("Preparing driving and walking");
-  primeSceneContacts(doc,worker.contacts);
-  primeAmbientNavigation(doc,worker.navigation);
-  primeRepairNavigation(doc,worker.repairNavigation);
-  primeCharacterGround(doc,worker.characterGround);
+  await loading.build("Preparing driving and walking",(function*(){
+    primeSceneContacts(doc,worker.contacts);yield;
+    primeAmbientNavigation(doc,worker.navigation);yield;
+    yield* primeRepairNavigationSteps(doc,worker.repairNavigation);
+    primeCharacterGround(doc,worker.characterGround);
+  })());
   const footGround=characterGround(doc),sampleFoot=(x:number,z:number,from:number,radius:number)=>footGround(x+doc.canonical.width/2,z+doc.canonical.height/2,from,radius,car);
   const carRadius = playerRadius(doc);
   const roadMask = buildMaskForScene(doc);

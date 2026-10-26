@@ -1,0 +1,27 @@
+
+> muse-dream@0.1.0 build
+> tsc --noEmit && vite build
+
+vite v6.4.4 building for production...
+transforming...
+✓ 236 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/lab/index.html                                 4.76 kB │ gzip:   1.96 kB
+dist/index.html                                    14.32 kB │ gzip:   3.67 kB
+dist/assets/manrope-latin-C46ZzDBF.woff2           24.58 kB
+dist/assets/archivo-latin-BEIDiHaE.woff2           34.94 kB
+dist/assets/world-worker-B7izC2PM.js            1,850.63 kB
+dist/assets/lab-CQD68qGd.css                       11.84 kB │ gzip:   3.42 kB
+dist/assets/game-BpdBbQo3.css                      24.67 kB │ gzip:   5.82 kB
+dist/assets/modulepreload-polyfill-B5Qt9EMX.js      0.71 kB │ gzip:   0.40 kB
+dist/assets/game-B0-HxOTV.js                       17.89 kB │ gzip:   4.06 kB
+dist/assets/lab-DsWsK9BG.js                       132.13 kB │ gzip:  50.68 kB
+dist/assets/dream-Ccs9v-Vf.js                   1,096.32 kB │ gzip: 317.57 kB
+dist/assets/main-D2BW9f_V.js                    1,265.48 kB │ gzip: 250.48 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.96s

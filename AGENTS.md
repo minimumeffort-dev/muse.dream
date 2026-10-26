@@ -567,7 +567,8 @@ vehicle AI. See `docs/examples/courier-resupply.dream` and the commerce guide.
 
 ## Feature invariants (read before touching an area)
 
-Per-slice invariants live in [`agent-invariants.md`](agent-invariants.md) and
+Per-slice invariants live in [`agent-invariants.md`](agent-invariants.md), including
+cooperative navigation packet validation, and
 carry the same weight as this file: interiors, multi-input work, personal
 task credit and milestones, meal trips and the r60 bakery, startup
 fingerprints, Vite cache checks, furniture seating, market hours, staff

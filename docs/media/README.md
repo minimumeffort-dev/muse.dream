@@ -2128,6 +2128,12 @@ bootstrap memoization. Native startup timings and the separate driving sample
 come from the live browser, not offline frame export. See
 [method and limitations](../evidence/startup-preparation/verification.md).
 
+The later cooperative navigation-validation pass also changes no meshes,
+animation, shading, camera or controls. Existing HD/GIF/still sets remain
+accurate; no motion export is needed for the loader scheduling change. Its
+native before/after stills and live startup measurements are recorded separately
+in [the navigation evidence](../evidence/cooperative-navigation/verification.md).
+
 ## Shared meals upstairs, r110
 
 upstairsmeal.mp4, upstairsmeal.gif and upstairsmeal.jpg share 600 consecutive

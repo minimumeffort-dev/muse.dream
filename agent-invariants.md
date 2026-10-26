@@ -1092,6 +1092,16 @@ per-frame or unbounded cache. Worker packet values, graph/node/contact order,
 source and historical hashes, physical rules, scene/save versions and all
 rendering/streaming quality must remain unchanged.
 
+## Cooperative navigation packet validation
+
+Synchronous and cooperative priming drain the same complete validator. Yield
+between bounded public-node batches and indoor node/edge checks; install coverage
+and topology only after every check succeeds. Abandonment and late failure retain
+previously installed graphs and coverage. Indoor membership needs declared
+grounds only, not a second repair survey; any missing graph fallback still uses
+the original complete repair/journey area. Preserve worker packet identity,
+source, node/link order, support checks, all budgets, saves and render quality.
+
 ## Shared upstairs meals, r110
 
 Social furniture selection follows authored plan order. Reuse supported stair

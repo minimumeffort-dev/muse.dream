@@ -9,7 +9,8 @@ import {stepNpcs} from '../src/sim/npcs';
 import {actorPose} from '../src/sim/actors';
 import {worldSeats} from '../src/scene/seating';
 import {encodeSave,decodeSave} from '../src/sim/save';
-import {repairNavigation,primeRepairNavigation,repairArea} from '../src/sim/repair';
+import {repairNavigation,primeRepairNavigation,primeRepairNavigationSteps,repairArea,repairNetwork} from '../src/sim/repair';
+import {repairCoverage} from '../src/scene/commerce';
 import {parseScene} from '../src/scene/schema';
 const scene=compileDreamScene(source,{sceneId:'upstairs',revisionId:'r1',sourceHash:'upstairs'}),world:World={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(4000,2400),carRadius:11};
 const account=(s:ReturnType<typeof createCarAtSpawn>,id='regular')=>s.economy!.accounts.find(a=>a.id===id)!;
@@ -32,6 +33,23 @@ it('carries real repair supplies up the stairs and pays once after restoring the
 it('transfers derived indoor graphs with supported elevations and rejects forged heights',()=>{
  const prepared=repairNavigation(scene);expect(prepared.services.some(s=>s.id.startsWith('indoor/') && s.nodes.some(n=>n.elevation!>20))).toBe(true);const copy=parseScene(structuredClone(scene));primeRepairNavigation(copy,prepared);const plan=copy.economy!.repairs[0]!,service=prepared.services.find(s=>s.id===plan.id)!;expect(repairArea(copy,plan).access).toBe(service.coverage!.access);
  const forged=structuredClone(prepared),indoor=forged.services.find(s=>s.id.startsWith('indoor/'))!;indoor.nodes[0]!.elevation=4000;expect(()=>primeRepairNavigation(parseScene(structuredClone(scene)),forged)).toThrow();
+});
+
+it('cooperative navigation retains exact graph identities and installs only after all yielded checks pass',()=>{
+ const packet=structuredClone(repairNavigation(scene)),copy=structuredClone(scene),plan=copy.economy!.repairs[0]!,previous=repairNetwork(copy,plan),coverage=repairCoverage(copy,plan),unchanged=JSON.stringify({copy,packet});
+ const steps=primeRepairNavigationSteps(copy,packet);let result=steps.next(),yields=0;
+ while(!result.done){yields++;expect(repairNetwork(copy,plan)).toBe(previous);expect(repairCoverage(copy,plan)).toBe(coverage);result=steps.next();}
+ expect(yields).toBeGreaterThan(20);expect(repairNetwork(copy,plan)).toBe(packet.services.find(s=>s.id===plan.id)!.nodes);expect(repairCoverage(copy,plan)).toBe(packet.services.find(s=>s.id===plan.id)!.coverage);expect(JSON.stringify({copy,packet})).toBe(unchanged);
+ const sync=structuredClone(scene);primeRepairNavigation(sync,structuredClone(packet));expect(repairNetwork(sync,plan)).toEqual(repairNetwork(copy,plan));
+});
+
+it('abandoned or late-invalid cooperative packets leave the previous navigation and coverage installed',()=>{
+ const packet=structuredClone(repairNavigation(scene)),copy=structuredClone(scene),plan=copy.economy!.repairs[0]!,previous=repairNetwork(copy,plan),coverage=repairCoverage(copy,plan);
+ const abandoned=primeRepairNavigationSteps(copy,packet);expect(abandoned.next().done).toBe(false);abandoned.return(undefined);expect(repairNetwork(copy,plan)).toBe(previous);expect(repairCoverage(copy,plan)).toBe(coverage);
+ for(const change of [(p:typeof packet)=>{p.services.filter(s=>s.id.startsWith('indoor/')).at(-1)!.nodes.at(-1)!.elevation=4000;},(p:typeof packet)=>{p.services.find(s=>s.coverage)!.coverage!.targets[0]!.contact.r++;}]){
+  const bad=structuredClone(packet);change(bad);let yields=0;
+  expect(()=>{for(const _ of primeRepairNavigationSteps(copy,bad))yields++;}).toThrow('Invalid prepared');expect(yields).toBeGreaterThan(20);expect(repairNetwork(copy,plan)).toBe(previous);expect(repairCoverage(copy,plan)).toBe(coverage);
+ }
 });
 
 it('rejects a saved resident height on an unsupported layer',()=>{

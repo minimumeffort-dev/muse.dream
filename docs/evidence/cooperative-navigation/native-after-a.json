@@ -1,0 +1,120 @@
+{
+  "compileMs": 16015.5,
+  "loading": {
+    "firstRenderMs": 149.30000001192093,
+    "heartbeat": {
+      "maxGapMs": 240.79999999701977,
+      "samples": 454
+    },
+    "phases": [
+      {
+        "endMs": 16316.5,
+        "label": "Reading Dream · checking the world",
+        "startMs": 0.30000001192092896
+      },
+      {
+        "endMs": 17713,
+        "label": "Preparing driving and walking",
+        "startMs": 16316.5
+      },
+      {
+        "endMs": 17731.5,
+        "label": "Starting the renderer",
+        "startMs": 17713
+      },
+      {
+        "endMs": 17941.10000000894,
+        "label": "Building water and bridges",
+        "startMs": 17731.5
+      },
+      {
+        "endMs": 18038.40000000596,
+        "label": "Building roads and transit",
+        "startMs": 17941.10000000894
+      },
+      {
+        "endMs": 18269.30000001192,
+        "label": "Assembling people and wildlife",
+        "startMs": 18038.40000000596
+      },
+      {
+        "endMs": 19042.20000000298,
+        "label": "Preparing vehicles and interactive objects",
+        "startMs": 18269.30000001192
+      },
+      {
+        "endMs": 19224.20000000298,
+        "label": "Preparing lighting",
+        "startMs": 19042.20000000298
+      },
+      {
+        "endMs": 23298.30000001192,
+        "label": "Loading the first neighbourhood",
+        "startMs": 19224.20000000298
+      },
+      {
+        "endMs": 23582.30000001192,
+        "label": "Preparing the first frame",
+        "startMs": 23298.30000001192
+      }
+    ],
+    "totalMs": 23582.40000000596
+  },
+  "memory": {
+    "bytes": 165032964,
+    "geometries": 2186,
+    "uniqueBuffers": 12674,
+    "uniqueTriangles": 1478852
+  },
+  "streaming": {
+    "bytes": 139116646,
+    "discarded": 0,
+    "keys": [
+      "5600,4000",
+      "6400,4000",
+      "5600,3200",
+      "6400,3200",
+      "5600,4800",
+      "6400,4800",
+      "4800,4000",
+      "7200,4000",
+      "4800,3200",
+      "7200,3200",
+      "5600,2400",
+      "4800,4800",
+      "6400,2400",
+      "7200,4800",
+      "5600,5600",
+      "4800,2400",
+      "6400,5600",
+      "7200,2400",
+      "4000,4000",
+      "4000,3200",
+      "4800,5600",
+      "4000,4800",
+      "7200,5600",
+      "4000,5600",
+      "8000,4000",
+      "8000,3200",
+      "8000,4800",
+      "4000,2400",
+      "8000,2400",
+      "5600,6400",
+      "6400,6400",
+      "8000,5600",
+      "4800,6400",
+      "7200,6400",
+      "4000,6400"
+    ],
+    "loaded": 35,
+    "maxInstallMs": 3.5,
+    "maxSliceMs": 3.4000000059604645,
+    "peakBytes": 139116646,
+    "peakResident": 35,
+    "pending": 0,
+    "ready": true,
+    "required": 24,
+    "resident": 35,
+    "unloaded": 0
+  }
+}

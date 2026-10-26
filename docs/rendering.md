@@ -602,7 +602,7 @@ offline 30-frame-per-simulation-second export, not a performance benchmark.
 
 ## Reuse static fits during worker preparation
 
-Historical save layouts now reuse the current world's cached static prop fits
+The r109 pass made historical save layouts reuse the current world's cached static prop fits
 when the exact object and terrain are unchanged. Changed interior floor regions
 are compared geometrically; a conservative 3D support sphere prevents reuse when
 any underside sample could reach a changed floor. Floor-bound props, moving
@@ -621,3 +621,23 @@ geometry-buffer bytes. Those bytes are not total browser memory or VRAM. Loading
 heartbeat gaps still reach 0.8–0.9 seconds, and this does not establish a driving
 FPS gain or performance on less powerful laptops.
 [Method, raw data and remaining costs](evidence/startup-preparation/verification.md).
+
+## Cooperative navigation validation
+
+Startup validates the worker's navigation packet through the loader's existing
+cooperative build loop. Public nodes yield in batches of 32; indoor support and
+directed stair-edge checks yield per node. The same synchronous entry point
+drains that generator for fixtures. No graph or repair coverage is installed
+until the complete packet passes, so interruption or a late invalid node cannot
+publish half a network.
+
+Indoor membership comes from declared building/floor grounds. It does not need
+another repair-target/verge survey. Missing graph fallbacks still build the full
+original work area, and received coverage retains its independent ownership,
+contact and bounds checks. Source identity, node/link order, graph limits,
+physical rules, saves, render detail and streaming policy are unchanged.
+
+The [matched diagnostic and native starts](evidence/cooperative-navigation/verification.md)
+record this pass against r119. This improves preparation scheduling; individual
+mesh builds, uploads and other startup work can still block. Existing gameplay
+recordings remain accurate because their visual and control inputs are unchanged.

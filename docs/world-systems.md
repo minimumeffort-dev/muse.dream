@@ -647,10 +647,13 @@ relationships, lifts, useful interiors and wider daily roles remain unfinished.
 Static placement reuse now cuts repeated historical preparation while keeping
 the complete bootstrap data identical. Local warm-cache starts reach the first
 complete view about 1.6 seconds sooner at the median of two samples per version.
-Receiving-side indoor navigation validation and interactive assembly preparation
-still cause noticeable loading gaps. Measure and reduce those next without
-weakening structural checks or cutting visual detail. The broader life-simulation
-quest remains unfinished. [Evidence](evidence/startup-preparation/verification.md).
+Receiving-side navigation validation now yields between batches and no longer
+repeats the worker's repair survey just to find indoor routes. All structural
+checks remain. Interactive assembly preparation, individual mesh work and the
+remaining worker preparation still need attention as this world grows. The
+broader life-simulation quest remains unfinished.
+[Earlier evidence](evidence/startup-preparation/verification.md) ·
+[Current navigation checks](evidence/cooperative-navigation/verification.md).
 
 ## Shared meals upstairs, r110
 

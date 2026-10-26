@@ -1,0 +1,14 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/repair-network.test.ts tests/upstairs-rest.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/repair-network.test.ts (7 tests) 369ms
+ ✓ tests/upstairs-rest.test.ts (6 tests) 317ms
+
+ Test Files  2 passed (2)
+      Tests  13 passed (13)
+   Start at  08:36:00
+   Duration  1.21s (transform 426ms, setup 18ms, collect 1.40s, tests 686ms, environment 0ms, prepare 55ms)
