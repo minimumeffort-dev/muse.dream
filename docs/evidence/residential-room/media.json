@@ -1,0 +1,32 @@
+{
+  "sourceFrames": 720,
+  "sourceSize": [
+    2400,
+    1350
+  ],
+  "renderedFramesPerSimulationSecond": 30,
+  "videoAndStill": [
+    1600,
+    900
+  ],
+  "gif": [
+    1280,
+    720
+  ],
+  "stillFrame": 270,
+  "assets": {
+    "homelounge.jpg": {
+      "bytes": 87586,
+      "sha256": "e2a3101bc06bf4b5bfb3360f0680c61ffd60c992f67e714ed03fc32434cc157b"
+    },
+    "homelounge.mp4": {
+      "bytes": 3198354,
+      "sha256": "c2bbc28cdf8ec22b59ddb13c6853cc48846b597f4080dbfccdc094fd88daae7e"
+    },
+    "homelounge.gif": {
+      "bytes": 25707765,
+      "sha256": "1b6baeae139688d8de378ac9e20cdd3c272878ddf36ba4fd787fe1ff357ea4e5"
+    }
+  },
+  "performanceEvidence": false
+}

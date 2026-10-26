@@ -10,6 +10,18 @@ Racing is where this started. The idea is to make whatever someone draws playabl
 
 **The playable world is a handmade mock today.** The renderer, driving simulation and Dream 2 compiler work. Photo upload and Muse interpretation are still to come. There are no model calls or API keys to configure.
 
+## Come home, go upstairs
+
+Copper Court now has a connected first-floor lounge, with cushioned settees,
+a table, plants and a bookcase. You can climb, sit and walk back out. The clerk
+uses it for rest and meals bought with earned wages. Damaged furnishings join
+the existing caretaker's finite repair work.
+
+![The residential lounge and its connected staircase](docs/media/homelounge.jpg)
+
+[Walk upstairs and back in HD](docs/media/homelounge.mp4) ·
+[GIF](docs/media/homelounge.gif) · [Build it in Dream](docs/dream/residential-lounge.md)
+
 ## Paid work without extra goods
 
 The bakery now has stocktaking alongside its recipes. Walk to the preparation

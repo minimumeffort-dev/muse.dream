@@ -1329,3 +1329,19 @@ Start over, save ownership and all actor/rig/path caps. The exact r118 migration
 adds zero receipts and only the explicit doctor account; old pending office
 work retains one legacy reservation and its original deadline/wage. Validate
 old first, then current, retaining original slots. No new legacy work starts.
+
+## Copper Court lounge, r120
+
+Keep the residence's measured height, scale, exterior footprint and usable lobby.
+The retained upper slab, landing, guard and fifteen generated treads share actual
+contacts, within 32 parts / 32 contacts. Both settees, table, planter and bookcase
+bind to the named floor and finite fixture service. Preserve the existing lobby
+fallback, shared seat claims and physical rest/meal/work/repair journeys. No new
+people, starting resources or simulation rule is supplied by a residential label.
+
+The exact r119 projection restores its released building and removes only new
+floors, furnishings and added policy references. Prime source-matched prior
+contacts before navigation. Validate old state before bounded grounded-pose
+recovery; retain all unaffected state, economic escrow/history, journeys, damage,
+vehicles, population, clocks and original slots. Format 19 / simulation 60 and
+the complete older migration chain remain. See docs/dream/residential-lounge.md.

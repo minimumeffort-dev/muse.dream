@@ -1,0 +1,19 @@
+
+> muse-dream@0.1.0 test
+> vitest run tests/short-links-world.test.ts tests/station-district.test.ts --maxWorkers=2 --testTimeout=60000
+
+
+ RUN  v3.2.7 /Users/horia/Projects/muse.dream
+
+ ✓ tests/station-district.test.ts (5 tests) 14921ms
+   ✓ walks from each existing sidewalk through the real tower doorway, across its lobby and back outside  3131ms
+   ✓ moves all eight visitors on accepted paths and waits for approaching vehicles without adding live rigs  1531ms
+ ✓ tests/short-links-world.test.ts (5 tests) 16460ms
+   ✓ retains all accepted targets and fits all prepared journey graphs inside unchanged bounds  474ms
+   ✓ carries the same shorter routes through worker graph preparation without changing source data  1496ms
+   ✓ reaches the corner review through a real strike, finite dispatch and ordinary fixed ticks  4383ms
+
+ Test Files  2 passed (2)
+      Tests  10 passed (10)
+   Start at  10:06:37
+   Duration  17.15s (transform 419ms, setup 18ms, collect 1.13s, tests 31.38s, environment 0ms, prepare 56ms)

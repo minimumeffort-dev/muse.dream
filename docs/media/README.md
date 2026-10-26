@@ -2228,3 +2228,20 @@ with its old wage policy labelled in the guides. Other retained asset, road and
 movement media has unchanged inputs in this slice.
 
 [Verification and native evidence](../evidence/service-visits/verification.md).
+
+## Copper Court lounge, r120
+
+homelounge.mp4, homelounge.gif and homelounge.jpg share the dev-only rendered
+PNG source sequence. The clip uses ordinary walking and F seating, with a
+complete stair climb, short rest and return. It is an offline 30-frame-per-
+simulation-second export, not live performance evidence. Exact frame count,
+source size, encoded dimensions and native verification are recorded in
+[the lounge evidence](../evidence/residential-room/verification.md).
+
+The r111 stationquarter views predate the new residential floor, settees and
+bookcase. stationfood remains historical for its r117 lobby meal and older wage
+policy; current paid food travels to the lounge, with the lobby as fallback.
+The office mezzanine and paid waiting-room geometry and controls remain
+unchanged, so their existing HD/GIF/still sets retain their labelled provenance.
+World overviews and unaffected asset/road recordings remain useful for their
+recorded releases. Native multi-angle lounge stills cover this construction.

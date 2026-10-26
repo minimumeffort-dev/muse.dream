@@ -6,21 +6,45 @@ material tower_metal(style=toon,colors=[#47565e,#34434c]);
 material tower_office_glass(style=toon,colors=[#658798,#466575],night=#dfcc9f);
 material tower_floor(style=stone,colors=[#ccc6b5,#b7b09d]);
 material tower_light(style=toon,colors=[#edd7ad,#ddc599],night=#f4d398);
+material shelf_wood(style=wood,colors=[#906b4b,#5d4633]);
+material book_ochre(style=toon,colors=[#bc8d49,#dfb966]);
+material book_blue(style=toon,colors=[#507b89,#31505e]);
+
+object lounge_bookcase(label="Shared lounge bookcase"){
+ measure(kind=custom,axis=y,meters=1.9);
+ body(interaction=solid,radius=24,height=40);
+ impact(mode=break(speed=95,scatter=42,lift=40,spin=3,lifetime=6,pattern=crumble));
+ fragment frame(){
+  part base(shape=box,material=shelf_wood,at=[0,1.125,0],size=[44,2.25,12]);
+  part top(shape=box,material=shelf_wood,at=[0,39,0],size=[44,2,12]);
+  part back(shape=box,material=shelf_wood,at=[0,20,-5.5],size=[42,36,1]);
+  repeat sides(index=i,count=2){part side(shape=box,material=shelf_wood,at=[i*42-21,20,0],size=[2,36,12]);}
+ }
+ repeat levels(index=i,count=2){fragment shelf(){part shelf(shape=box,material=shelf_wood,at=[0,13.5+i*12,0],size=[40,1.5,11]);}}
+ repeat rows(index=i,count=3){fragment books(){
+  voxels warm_books(material=book_ochre,at=[0,5.75+i*12,0],size=[38,7,7],grid=[32,7,1]){repeat books(index=b,count=8){fill spine(from=[b*4,0,0],to=[b*4+1,6,1]);}}
+  voxels blue_books(material=book_blue,at=[0,5.75+i*12,0],size=[38,7,7],grid=[32,7,1]){repeat books(index=b,count=8){fill spine(from=[b*4+1,0,0],to=[b*4+3,7,1]);}}
+ }}
+}
 
 object station_residences(label="Copper Court residences"){
  measure(kind=building,axis=y,meters=55);
  body(interaction=solid,radius=30,height=160);
  foundation(size=[72.4,62.4],color=#aaa797);
- interior(at=[0,.5,0],size=[70,10,60]){portal entrance(side=front,offset=0,width=4,height=7);}
+ interior(at=[0,.5,0],size=[70,18,60]){portal entrance(side=front,offset=0,width=4,height=7);}
  lamp(at=[0,9.8,0],radius=26,color=#f4d398);
  contact c_floor(at=[0,0,0],size=[70,60],height=.5);
- contact c_left(at=[-35.5,0,0],size=[1,62],height=10.5);
- contact c_right(at=[35.5,0,0],size=[1,62],height=10.5);
- contact c_back(at=[0,0,30.5],size=[72,1],height=10.5);
- contact c_front_left(at=[-19,0,-30.5],size=[34,1],height=10.5);
- contact c_front_right(at=[19,0,-30.5],size=[34,1],height=10.5);
- contact c_lintel(at=[0,7.5,-30.5],size=[4,1],height=3);
- contact c_ceiling(at=[0,10.5,0],size=[72,62],height=21.5);
+ contact c_left(at=[-35.5,0,0],size=[1,62],height=18.5);
+ contact c_right(at=[35.5,0,0],size=[1,62],height=18.5);
+ contact c_back(at=[0,0,30.5],size=[72,1],height=18.5);
+ contact c_front_left(at=[-19,0,-30.5],size=[34,1],height=18.5);
+ contact c_front_right(at=[19,0,-30.5],size=[34,1],height=18.5);
+ contact c_lintel(at=[0,7.5,-30.5],size=[4,1],height=11);
+ contact c_ceiling(at=[0,18.5,0],size=[72,62],height=13.5);
+ contact c_lounge(at=[4,8,0],size=[62,60],height=.5);
+ contact c_landing(at=[-31,8,16],size=[8,8],height=.5);
+ contact c_lounge_guard(at=[-27.15,8.5,-9],size=[.3,42],height=2.9);
+ stairs home_stairs(material=tower_stone,at=[-31,.5,-2],size=[6,8,28],steps=15);
  contact c_shaft(at=[0,32,0],size=[62,52],height=96);
  contact c_crown(at=[0,128,0],size=[50,42],height=30);
  contact c_roof_left(at=[-24,128,0],size=[2,42],height=32);
@@ -28,13 +52,16 @@ object station_residences(label="Copper Court residences"){
  contact c_roof_front(at=[0,128,-20],size=[46,2],height=32);
  contact c_roof_back(at=[0,128,20],size=[46,2],height=32);
  part floor(shape=box,material=tower_floor,at=[0,.25,0],size=[70,.5,60]);
- part left(shape=box,material=tower_stone,at=[-35.5,5.25,0],size=[1,10.5,62],cutaway=left);
- part right(shape=box,material=tower_stone,at=[35.5,5.25,0],size=[1,10.5,62],cutaway=right);
- part back(shape=box,material=tower_stone,at=[0,5.25,30.5],size=[72,10.5,1],cutaway=back);
- part front_left(shape=box,material=tower_stone,at=[-19,5.25,-30.5],size=[34,10.5,1],cutaway=front);
- part front_right(shape=box,material=tower_stone,at=[19,5.25,-30.5],size=[34,10.5,1],cutaway=front);
- part lintel(shape=box,material=tower_stone,at=[0,9,-30.5],size=[4,3,1],cutaway=front);
- part podium(shape=box,material=tower_brick,at=[0,21.25,0],size=[72,21.5,62],cutaway=roof);
+ part left(shape=box,material=tower_stone,at=[-35.5,9.25,0],size=[1,18.5,62],cutaway=left);
+ part right(shape=box,material=tower_stone,at=[35.5,9.25,0],size=[1,18.5,62],cutaway=right);
+ part back(shape=box,material=tower_stone,at=[0,9.25,30.5],size=[72,18.5,1],cutaway=back);
+ part front_left(shape=box,material=tower_stone,at=[-19,9.25,-30.5],size=[34,18.5,1],cutaway=front);
+ part front_right(shape=box,material=tower_stone,at=[19,9.25,-30.5],size=[34,18.5,1],cutaway=front);
+ part lintel(shape=box,material=tower_stone,at=[0,13,-30.5],size=[4,11,1],cutaway=front);
+ part lounge(shape=box,material=tower_floor,at=[4,8.25,0],size=[62,.5,60],cutaway=above);
+ part landing(shape=box,material=tower_floor,at=[-31,8.25,16],size=[8,.5,8],cutaway=above);
+ voxels lounge_guard(material=tower_metal,at=[-27.15,9.95,-9],size=[.3,2.9,42],grid=[1,15,21],cutaway=above){fill rail(from=[0,14,0],to=[1,15,21]);repeat posts(index=i,count=6){fill post(from=[0,0,i*4],to=[1,15,i*4+1]);}}
+ part podium(shape=box,material=tower_brick,at=[0,25.25,0],size=[72,13.5,62],cutaway=roof);
  part shaft(shape=box,material=tower_brick,at=[0,80,0],size=[62,96,52],cutaway=roof);
  voxels crown(material=tower_brick,at=[0,128,0],size=[50,64,42],grid=[25,32,21],cutaway=roof){fill storeys(from=[0,16,0],to=[25,31,21]);}
  voxels crown_parapet(material=tower_stone,at=[0,128,0],size=[50,64,42],grid=[25,32,21],cutaway=roof){fill rim(from=[0,31,0],to=[25,32,21]);cut terrace(from=[1,31,1],to=[24,32,20]);}
@@ -50,9 +77,10 @@ object station_residences(label="Copper Court residences"){
   voxels crown_glass(material=tower_glass,at=[s*50.12-25.06,128,0],size=[.12,64,42],grid=[1,32,21],cutaway=roof){repeat rows(index=f,count=3){repeat bays(index=b,count=3){fill pane(from=[0,f*5+17,b*6+2],to=[1,f*5+20,b*6+5]);}}}
  }
  voxels lobby_glass(material=tower_glass,at=[0,5.5,-31.08],size=[60,6,.16],grid=[30,3,1],cutaway=front){fill left(from=[0,0,0],to=[12,3,1]);fill right(from=[18,0,0],to=[30,3,1]);}
+ voxels lounge_glass(material=tower_glass,at=[0,13.5,-31.08],size=[60,5,.16],grid=[30,5,1],cutaway=front){repeat bays(index=b,count=5){fill pane(from=[b*6+1,0,0],to=[b*6+5,5,1]);}}
  voxels door_surround(material=tower_metal,at=[0,4.3,-31.08],size=[5,8,.2],grid=[20,32,1],cutaway=front){fill frame(from=[0,0,0],to=[20,32,1]);cut opening(from=[2,0,0],to=[18,29,1]);}
  part canopy(shape=box,material=tower_metal,at=[0,8.8,-33],size=[16,.5,5],cutaway=roof);
- part light(shape=box,material=tower_light,at=[0,10.35,-4],size=[18,.3,1.2],cutaway=roof);
+ part light(shape=box,material=tower_light,at=[0,7.85,-4],size=[18,.3,1.2],cutaway=roof);
 }
 
 object station_offices(label="Lantern Exchange offices"){

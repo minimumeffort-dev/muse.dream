@@ -129,6 +129,7 @@ export interface World {
   previousCourierSaveCompatibility?:string;
   previousPeopleSaveCompatibility?:string;
   previousInvitationSaveCompatibility?:string;
+  previousResidentialRoomSaveCompatibility?:string;previousResidentialRoomContacts?:import('../scene/contacts').SceneContactData;previousResidentialRoomNavigation?:import('../scene/ambient-navigation').AmbientGraph;
   previousServiceVisitsSaveCompatibility?:string;previousRecurringWorkSaveCompatibility?:string;previousOfficeFoodSaveCompatibility?:string;previousOfficeWorkSaveCompatibility?:string;
   previousServiceWorkSaveCompatibility?:string;
   previousTowerRoomSaveCompatibility?:string;previousTowerRoomContacts?:import('../scene/contacts').SceneContactData;previousTowerRoomNavigation?:import('../scene/ambient-navigation').AmbientGraph;

@@ -13,7 +13,7 @@ import {stepCommerce,checkEconomyState,commerceReason} from '../src/sim/commerce
 import {stepNpcs} from '../src/sim/npcs';
 import {stepAmbient} from '../src/sim/ambient';
 let scene:ReturnType<typeof createWorldScene>,prior:typeof scene,world:World,old:World,snapshot:string;
-beforeAll(()=>{scene=createWorldScene();prior={...c.preServiceVisitsScene(scene),revisionId:'r118',sourceHash:'handmade-city-life-v118'};snapshot=JSON.stringify(scene);world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.SERVICE_VISITS_COMPATIBILITY,previousServiceVisitsSaveCompatibility:c.RECURRING_WORK_COMPATIBILITY};old={...world,scene:prior,saveCompatibility:c.RECURRING_WORK_COMPATIBILITY,previousServiceVisitsSaveCompatibility:undefined};},60000);
+beforeAll(()=>{scene={...c.preResidentialRoomScene(createWorldScene()),revisionId:'r119',sourceHash:'handmade-city-life-v119'};prior={...c.preServiceVisitsScene(scene),revisionId:'r118',sourceHash:'handmade-city-life-v118'};snapshot=JSON.stringify(scene);world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.SERVICE_VISITS_COMPATIBILITY,previousServiceVisitsSaveCompatibility:c.RECURRING_WORK_COMPATIBILITY};old={...world,scene:prior,saveCompatibility:c.RECURRING_WORK_COMPATIBILITY,previousServiceVisitsSaveCompatibility:undefined};},60000);
 afterEach(()=>expect(JSON.stringify(scene)).toBe(snapshot));
 const tick=(s:CarState,doc=scene)=>stepCommerce({...s,timeS:s.timeS+.25,npcs:stepNpcs(s,.25,doc),population:stepAmbient(s,.25,doc)},{},.25,doc);
 const account=(s:CarState,id:string)=>s.economy!.accounts.find(a=>a.id===id)!;

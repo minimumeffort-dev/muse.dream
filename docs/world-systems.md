@@ -34,9 +34,12 @@ The office tower now has a stair-connected mezzanine with shared seating,
 breakable furniture and finite caretaker repairs. The player climbs, sits and
 walks out; the caretaker climbs to work. Existing saves retain their progress.
 [Office room and checks](dream/station-quarter.md#take-the-stairs).
-The clerk now uses a home bench, scheduled office work and the same stairs.
-Further home/office roles, finer stair proportions and the remaining tower
-storeys remain neighborhood work.
+The clerk now uses a stair-connected residential lounge with settees, a table,
+books and planting. The player uses the same seats; existing food, rest and
+finite caretaker work reach the new floor. The residence's fifteen low risers
+stay inside the existing construction limits. [Home lounge](dream/residential-lounge.md).
+Further household roles, useful rooms and the remaining tower storeys remain
+neighborhood work.
 
 The station quarter's seventeen placed fixtures now connect to existing finite
 repair and replant jobs, including both lobby benches. New visible places need

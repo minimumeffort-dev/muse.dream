@@ -41,7 +41,7 @@ to 18:00. They use the same doors and stairs as the player. They take a seated
 break before leaving when energy is low, work at the shared table, and return
 to the residence. Standing or travelling earns no money.
 
-The home bench uses ordinary exclusive seats. If someone occupies one, another
+The [home lounge](residential-lounge.md) and lobby fallback use ordinary exclusive seats. If someone occupies one, another
 free seat can be used; breaking the furniture can block the break. The records
 table also keeps its normal destruction and repair rules. Breaking it cancels
 work, releases the task and refunds the reserved wage. The existing city

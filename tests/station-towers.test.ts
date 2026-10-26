@@ -21,8 +21,9 @@ const specs=compileDream(source),models=specs.map(spec=>{
 afterAll(()=>models.forEach(({group})=>group.traverse(n=>{if(n instanceof Mesh){n.geometry.dispose();for(const m of Array.isArray(n.material)?n.material:[n.material])m.dispose();}})));
 
 it('keeps the complete runnable library identical and its two high-rises at their authored physical sizes',()=>{
- expect(example).toBe(source);expect(compileDream(formatDream(source))).toEqual(specs);expect(specs).toHaveLength(2);
- for(const [index,spec] of specs.entries()){
+ expect(example).toBe(source);expect(compileDream(formatDream(source))).toEqual(specs);expect(specs).toHaveLength(3);
+ const towers=specs.filter(s=>s.measure?.kind==='building');expect(towers).toHaveLength(2);
+ for(const [index,spec] of towers.entries()){
   const bounds=assemblyBounds(spec),scale=measuredScale(spec),size=bounds.getSize(new Vector3()).multiplyScalar(scale);
   expect(spec.measure).toEqual({kind:'building',axis:'y',meters:index ? 75 : 55});
   expect(size.y).toBeCloseTo(index ? 750 : 550);expect(size.x).toBeGreaterThan(200);expect(size.x).toBeLessThan(280);
@@ -30,15 +31,17 @@ it('keeps the complete runnable library identical and its two high-rises at thei
  }
 });
 
-it.each(models)('keeps every $spec.displayName roof and façade part attached after voxel construction',({spec,boxes})=>{
+it.each(models)('keeps every $spec.displayName part attached after voxel construction',({spec,boxes})=>{
  const attached=new Set([0]);let added=true;
  while(added){added=false;for(let i=0;i<boxes.length;i++)if(!attached.has(i)&&[...attached].some(j=>boxes[i]!.clone().expandByScalar(.025).intersectsBox(boxes[j]!))){attached.add(i);added=true;}}
  expect(spec.parts.filter((_,i)=>!attached.has(i)).map(p=>p.id)).toEqual([]);
- expect(spec.parts.some(p=>p.material.nightColor)).toBe(true);
- for(const part of spec.parts)if(part.position[1]-part.size[1]/2>12.5)expect(part.cutaway).toBe('roof');
+ if(spec.measure?.kind==='building'){
+  expect(spec.parts.some(p=>p.material.nightColor)).toBe(true);
+  for(const part of spec.parts)if(part.position[1]-part.size[1]/2>12.5)expect(part.cutaway).toBe('roof');
+ }
 });
 
-it.each(models)('matches the visible recessed roof and parapet contacts on $spec.displayName',({spec,group})=>{
+it.each(models.filter(m=>m.spec.measure?.kind==='building'))('matches the visible recessed roof and parapet contacts on $spec.displayName',({spec,group})=>{
  const object={id:'tower',kind:'custom' as const,labelText:spec.displayName,x:480,y:360,scale:measuredScale(spec),spec},scene=parseScene({...createFixtureScene(),objects:[object],regions:[],terrain:{hills:[]}}),contacts=objectContacts(scene,object);
  for(const x of [0,spec.measure!.meters===55 ? 24 : 25]){
   const visible=new Raycaster(new Vector3(x,220,0),new Vector3(0,-1,0)).intersectObject(group,true)[0]!.point.y;
@@ -47,7 +50,7 @@ it.each(models)('matches the visible recessed roof and parapet contacts on $spec
  }
 });
 
-it.each(specs)('walks into the $displayName lobby through its actual doorway and preserves the supported floor',spec=>{
+it.each(specs.filter(s=>s.measure?.kind==='building'))('walks into the $displayName lobby through its actual doorway and preserves the supported floor',spec=>{
  const object={id:'tower',kind:'custom' as const,labelText:spec.displayName,x:480,y:360,scale:measuredScale(spec),spec};
  const scene=parseScene({...createFixtureScene(),objects:[object],regions:[],terrain:{hills:[]}}),world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(960,720),carRadius:11};
  expect(interiorProblems(scene)).toEqual([]);const room=sceneInteriors(scene)[0]!,door=portalPoints(room,room.room.portals[0]!);

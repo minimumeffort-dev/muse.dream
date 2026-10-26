@@ -2,10 +2,11 @@
 
 The office clerk now needs food too. They earn wages upstairs in Lantern
 Exchange, buy bread at Station supplies, walk home and eat on Copper Court's
-bench. You use the same shop, money, food and seat rules.
+upstairs settee. You use the same shop, money, food and seat rules.
 
 The recordings show r117 food journeys. The same purchase and home meal work
-now; current office wages require [customer demand](service-work.md#customers-make-the-work).
+now; current office wages require [customer demand](service-work.md#customers-make-the-work),
+and the preferred home meal is in the [residential lounge](residential-lounge.md).
 
 ![Buying and eating at Station supplies](../media/stationfood.jpg)
 
@@ -20,7 +21,7 @@ new people, geometry, goods or money. The existing depot owner keeps the busines
 
 The clerk starts with no money. Work pays from the office treasury; buying bread
 moves five earned coins into the station shop. The clerk then walks to a free
-home bench slot and eats their own loaf. Fullness improves through the ordinary
+home settee slot and eats their own loaf. The lobby bench remains a fallback. Fullness improves through the ordinary
 food action. Travel and waiting earn nothing.
 
 The same seat can be used by the player. An occupied slot leads to another free

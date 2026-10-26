@@ -1,4 +1,5 @@
 import officeR113 from './compatibility/r113-office.json';
+import residencesR119 from './compatibility/r119-residences.json';
 import maintenanceR111 from './compatibility/r111-maintenance.json';
 import marketR55 from './compatibility/r55-market.json';
 import marketR106 from './compatibility/r106-market.json';
@@ -116,10 +117,24 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r120 opens Copper Court's lounge with the same meals, rest and finite repairs. */
+export const RESIDENTIAL_ROOM_COMPATIBILITY='6b28ad1e5ddac9935a8154ceb61e7b9f941518ecb0a5bdce967090c4b5e506b9';
+const residentialRoomProjections=new WeakMap<Scene,Scene>();
+const residentialFloors=new Set(['home_lounge','home_lounge_landing']);
+const residentialObjects=new Set(['station_quarter_lounge_seat','station_quarter_lounge_north','station_quarter_lounge_shelf','station_quarter_lounge_table','station_quarter_lounge_planter']);
+export function preResidentialRoomScene(scene:Scene):Scene{
+ const cached=residentialRoomProjections.get(scene);if(cached)return cached;
+ if(!scene.floors?.some(f=>residentialFloors.has(f.id)))return scene;
+ const prior={...scene,floors:scene.floors.filter(f=>!residentialFloors.has(f.id)),objects:scene.objects.filter(o=>!residentialObjects.has(o.id)).map(o=>o.id==='station_quarter_residences' ? {...o,spec:residencesR119 as ObjectDslV2} : o),economy:scene.economy && {...scene.economy,rests:scene.economy.rests?.map(r=>r.id==='office_home_rest' ? {...r,seats:r.seats.filter(id=>!residentialObjects.has(id)),grounds:r.grounds?.filter(id=>!residentialFloors.has(id))} : r),meals:scene.economy.meals.map(m=>m.id==='office_lunch' ? {...m,seats:m.seats?.filter(id=>!residentialObjects.has(id)),grounds:m.grounds?.filter(id=>!residentialFloors.has(id))} : m),accounts:scene.economy.accounts.map(a=>a.id==='office_clerk' ? {...a,grounds:a.grounds?.filter(id=>!residentialFloors.has(id))} : a),repairs:scene.economy.repairs.map(r=>r.id==='classroom_furniture' ? {...r,grounds:r.grounds?.filter(id=>!residentialFloors.has(id))} : r)}};
+ residentialRoomProjections.set(scene,prior);return prior;
+}
+export function preResidentialRoomCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preResidentialRoomScene(scene),60,true,encode);}
+
 /** r119 connects finite customer fees, real waiting seats and persistent service visits. */
 export const SERVICE_VISITS_COMPATIBILITY='f84a4ee5fe7dbf90e27e888506c57fb5b6715fe8715f680b95f0680470af73b1';
 const serviceVisitProjections=new WeakMap<Scene,Scene>();
 export function preServiceVisitsScene(scene:Scene):Scene{
+ scene=preResidentialRoomScene(scene);
  const cached=serviceVisitProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.accounts.some(a=>a.id==='clinic_visitor'))return scene;
  const {visits,...economy}=scene.economy;

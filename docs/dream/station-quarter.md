@@ -8,9 +8,9 @@ high; the other is a 75-metre office tower with framed glazing and vertical fins
 Their entrances face the same street. A promenade joins the two entrance paths,
 with seating, planting and room for people to pass.
 
-![The two towers, connected promenade and parking](../media/stationquarter.jpg)
+![The earlier two-tower layout, connected promenade and parking](../media/stationquarter.jpg)
 
-[Watch the quarter](../media/stationquarter.mp4) ·
+[Earlier quarter recording](../media/stationquarter.mp4) ·
 [GIF](../media/stationquarter.gif)
 
 ## Walk in, sit down, take a ride
@@ -73,7 +73,7 @@ furniture. The office remains 75 metres tall and fits the existing 32-part and
 ## Work upstairs and rest across the promenade
 
 The mezzanine table is now a shared records workstation. The clerk lives in
-Copper Court, uses its lobby bench for energy and walks over for scheduled work.
+Copper Court, uses its upstairs lounge for energy and walks over for scheduled work.
 The player uses the same desk and finite task quota. The business binds to the
 office building independently of its operator home and needs no fake stock.
 
@@ -83,14 +83,15 @@ office building independently of its operator home and needs no fake stock.
 [Rules, controls and complete example](office-work.md)
 
 The earlier room recording still shows the same stairs, seats and geometry. Its
-world activity list predates this office. Higher floors and lifts remain future
-work.
+world activity list predates this office. Copper Court now also has a [connected residential lounge](residential-lounge.md),
+with its own stairs, settees and paid-food routines. The quarter recording above
+predates that room. Further floors and lifts remain future work.
 
 ## Damage has a follow-up
 
-All eight benches, the upstairs table, three lamps and two planters are connected to the caretaker's
+All ten benches and settees, two tables, the bookcase, three lamps and three planters are connected to the caretaker's
 existing fixture service. The three rowans use the tree service. A damaged
-fixture reserves a real kit and wage at the market; the caretaker walks to it,
+fixture reserves its service's stocked material and wage at the market; the caretaker walks to it,
 works there and returns home with any eligible recovered hardware. Replanting consumes a sapling,
 pays once and leaves a young tree to grow. Missing stock or an obstructed repair
 space can delay the job. Nobody earns money while travelling.
@@ -209,13 +210,13 @@ npm run -s dream -- check docs/examples/ground-floor-seating.dream --modules src
 
 ## What is still missing
 
-The ground-floor lobbies and first office mezzanine are enterable. The remaining
+The ground-floor lobbies, first office mezzanine and residential lounge are enterable. The remaining
 tower storeys and lifts are not implemented. A residential label does not create
-households, and the upstairs seating area does not create office staff or paid
-office work. The taxis are driveable cars; they do not yet
+private households. The current office has its explicit clerk and paid customer
+work. The taxis are driveable cars; they do not yet
 take passengers or charge fares. The van has no separate cargo-storage mechanic.
-Building shells are not repair targets; maintenance here covers the seventeen
-placed benches, lights, planters and trees.
+Building shells are not repair targets; maintenance here covers the twenty-two
+placed furnishings, lamps and trees.
 The live review confirmed the office doorway and bench and found walkers stalled
 at the promenade junction. Simulation 55 now clears that shared portal through
 body-sized arrival and safe yielding steps. Existing saves retain their state
