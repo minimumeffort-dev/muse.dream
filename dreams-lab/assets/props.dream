@@ -1,0 +1,39 @@
+dream 2;
+material seam(style=toon,colors=[#755334,#755334]);
+material flour(style=toon,colors=[#e6d4b1,#e6d4b1]);
+material m0(style=toon,colors=[#4f8091,#4f8091]);
+material m1(style=toon,colors=[#f1dfb5,#f1dfb5]);
+material m2(style=toon,colors=[#353b40,#353b40]);
+material m4(style=toon,colors=[#594033,#594033]);
+material m6(style=grain,colors=[#bd783d,#e2ae63]);
+material m7(style=toon,colors=[#ead09b,#ead09b]);
+object crusty_bread(label="Crusty bread"){
+  measure(kind=food,axis=x,meters=0.35);
+  body(interaction=knockable,radius=13,height=18,friction=2.8);
+  ground(mode=surface);
+  part loaf(shape=capsule,material=m6,at=[0,8,0],size=[16,38,18],rot_deg=[0,0,90],deform=deform(seed=73,amount=0.045));
+  part score_0_0(shape=capsule,material=m7,at=[-11.2,15.492472332656506,-3],size=[1.2,3.8,0.8],rot_deg=[72.55364766278666,0,-20.05352282957881]);
+  part score_0_1(shape=capsule,material=m7,at=[-10,15.95,0],size=[1.2,3.8,0.8],rot_deg=[90,0,-20.05352282957881]);
+  part score_0_2(shape=capsule,material=m7,at=[-8.8,15.492472332656506,3],size=[1.2,3.8,0.8],rot_deg=[107.44635233721337,0,-20.05352282957881]);
+  part score_1_0(shape=capsule,material=m7,at=[-1.2000000000000002,15.492472332656506,-3],size=[1.2,3.8,0.8],rot_deg=[72.55364766278666,0,-20.05352282957881]);
+  part score_1_1(shape=capsule,material=m7,at=[0,15.95,0],size=[1.2,3.8,0.8],rot_deg=[90,0,-20.05352282957881]);
+  part score_1_2(shape=capsule,material=m7,at=[1.2000000000000002,15.492472332656506,3],size=[1.2,3.8,0.8],rot_deg=[107.44635233721337,0,-20.05352282957881]);
+  part score_2_0(shape=capsule,material=m7,at=[8.8,15.492472332656506,-3],size=[1.2,3.8,0.8],rot_deg=[72.55364766278666,0,-20.05352282957881]);
+  part score_2_1(shape=capsule,material=m7,at=[10,15.95,0],size=[1.2,3.8,0.8],rot_deg=[90,0,-20.05352282957881]);
+  part score_2_2(shape=capsule,material=m7,at=[11.2,15.492472332656506,3],size=[1.2,3.8,0.8],rot_deg=[107.44635233721337,0,-20.05352282957881]);
+  part baked_base(shape=capsule,material=seam,at=[0,2,0],size=[3,36,15],rot_deg=[0,0,90]);
+  repeat flour_dust(index=f,count=3){part dust(shape=sphere,material=flour,at=[f*8-8,15,4],size=[3,.5,2]);}
+}
+material kit(style=toon,colors=[#b8cbb9,#71947b]);
+object supply_kit(label="Supply kit"){
+ measure(kind=custom,axis=x,meters=.45);body(interaction=decor,radius=5,height=7);
+ part case(shape=box,material=kit,at=[0,3,0],size=[10,6,6]);
+ part strap(shape=box,material=m2,at=[0,6.1,0],size=[2,.4,6.2]);
+}
+object pavilion(label="Task destination"){
+ measure(kind=building,axis=y,meters=4);body(interaction=decor,radius=18,height=24);
+ part walls(shape=box,material=m1,at=[0,10,0],size=[34,20,24]);
+ part roof(shape=pyramid,material=m4,at=[0,22,0],size=[38,5,28]);
+ part door(shape=box,material=m0,at=[0,6,-12.2],size=[7,12,.5]);
+ repeat windows(index=w,count=2){part window(shape=box,material=m0,at=[w*22-11,11,-12.2],size=[9,8,.5]);}
+}

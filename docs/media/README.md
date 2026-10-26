@@ -1,6 +1,29 @@
 # Media and Dream highlighting
 
-## Dreams Lab runner
+## Dreams Lab 3D observer
+
+`dreams-lab-3d-workspace.jpg` is a native browser capture of the separate Lab's
+production build at 1440x900. The buildings and characters come from its local
+Dream pack; the completed result is a real recorded mock episode.
+
+`dreams-lab-3d-run.mp4`, `dreams-lab-3d-run.gif` and
+`dreams-lab-3d-run.jpg` use the same Three renderer. The dev capture button renders
+all 840 consecutive 1600x900 source PNGs at 30 frames per display second. One
+logical episode step occupies one display second; the final second holds the
+completed state. The 28-second recording is an offline view of logical link
+travel, inventory and service activity, without physical navigation or live
+performance claims. No missing frames are synthesized by the encoder.
+
+The still uses frame 360. Video/still are 1600x900; GIF is 1280x720. Source frames
+live under `dreams-lab/.cache/media/lab3d/`. From the Lab, run
+`node encode-media.mjs /path/to/ffmpeg`. Final media is local under its
+`docs/media/` and mirrored here for the published guide. Capture locks camera
+input; the dev-only writer checks origin, PNG dimensions and fixed frame slots.
+The source hash remains
+`b95908eed9610620273d2c788ab4270bfe60e83a3571dfd58ffdef6d018b8158`.
+See [3D verification](../evidence/dreams-lab-3d/verification.md).
+
+## Dreams Lab logical runner, historical
 
 `dreams-lab-workspace.jpg` is a native browser capture of the working Workspace A
 after a real local episode. The map, agent inventories and metrics derive from
@@ -21,6 +44,8 @@ finishing the default episode at `http://127.0.0.1:5180/?capture`, press
 **Capture frames**, then run `node dreams-lab/encode-media.mjs /path/to/ffmpeg`.
 The origin-checked writer exists only in the separate Lab dev server and writes
 fixed PNG slots under ignored `.npm-cache/media/labrun/`.
+Those capture controls describe commit `f5d9703`; the current 3D exporter is
+documented above. These graph-only recordings are historical.
 
 `dreams-lab-notebook.jpg` and `dreams-lab-compare.jpg` remain historical static
 design alternatives, with illustrative results. Their original

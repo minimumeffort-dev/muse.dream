@@ -6,7 +6,7 @@ const root=path.dirname(fileURLToPath(import.meta.url));
 const workspaceMarkup=await readFile(path.join(root,'workspace.html'),'utf8');
 let css=(await readFile(path.join(root,'preview.css'),'utf8')).replaceAll('\n','');
 for(const [token,file] of [['MANROPE_FONT','manrope-latin.woff2'],['ARCHIVO_FONT','archivo-latin.woff2']]){
-  const font=await readFile(path.join(root,'../docs/site/fonts',file));
+  const font=await readFile(path.join(root,'fonts',file));
   css=css.replace(token,'data:font/woff2;base64,'+font.toString('base64'));
 }
 const paths={play:'m8 5 11 7-11 7z',step:'m5 5 10 7-10 7zM19 5v14',refresh:'M20 7v5h-5M4 17v-5h5M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1',code:'m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16',arrow:'M5 12h14m-6-6 6 6-6 6',settings:'M4 7h16M4 17h16M8 4v6M16 14v6',check:'m5 12 4 4L19 6',agent:'M8 10a4 4 0 1 0 8 0 4 4 0 0 0-8 0M5 21v-2a7 7 0 0 1 14 0v2',layers:'m12 3 10 5-10 5L2 8zM2 12l10 5 10-5M2 16l10 5 10-5',plus:'M12 5v14M5 12h14'};
@@ -34,7 +34,7 @@ function page(variant,body){return `<!doctype html>\n<html lang="en"><head><meta
 await mkdir(path.join(root,'design'),{recursive:true});
 for(const [name,render] of Object.entries({workspace,notebook,compare}))await writeFile(path.join(root,'design',`${name}.html`),page(name,render()));
 for(const name of ['workspace','notebook','compare']){
-  try{await copyFile(path.join(root,`../docs/media/dreams-lab-${name}.jpg`),path.join(root,`design/${name}.jpg`));}
+  try{await copyFile(path.join(root,`docs/media/dreams-lab-${name}.jpg`),path.join(root,`design/${name}.jpg`));}
   catch(error){if(error.code!=='ENOENT')throw error;}
 }
 await writeFile(path.join(root,'design','example.dream'),await readFile(path.join(root,'examples/morning-delivery.dream'),'utf8'));

@@ -147,7 +147,7 @@ worker/chunk cleanup. Record actual first-draw time separately from loader time.
 
 ## Layout
 
-- `dreams-lab/` — separate researcher app; canonical Dream/episode imports, local mock builder, baseline policies, recording and timeline UI. No city renderer or city saves.
+- `dreams-lab/` — standalone researcher app; copied Dream/episode/rendering modules, local Dream assets, mock builder, recording, 3D observer and timeline. No complete-city loader or city saves.
 - `src/scene/` — versioned scene document, Dream 1/2 compiler, schema, handmade fixture, validation
 - `src/sim/` — pure fixed-timestep car simulation and raster-mask collision
 - `src/game/` — Three.js 2.5D renderer, terrain/road builders, shaders, particles, camera
@@ -175,13 +175,19 @@ clinical/learning/ecosystem validity or dataset quality. Domain examples are tas
 exercises; consult `docs/world-systems.md` before expanding them. Existing world
 NPC/animation/physics limits remain independent and unchanged.
 
-The fresh `dreams-lab/` app uses the same canonical compiler and episode rules
-through its own framework boundary. Preserve its accepted-run/draft separation,
+The fresh `dreams-lab/` app owns copied compiler, episode and rendering modules,
+selected Dream assets, fonts, package/config files and tests. Keep it independent
+of parent source and build assets so the folder can become the root. Original
+city files stay in place. The copy manifest records the committed baseline.
+Preserve its accepted-run/draft separation,
 late-preparation guard, one playback timer, bounded recorded-state timeline and
 source-pinned JSONL exports. The local builder recognizes only the provided
 brief; unsupported intent must reject. Direct source mode disables brief inputs
 and never silently merges them. Keep the minimal Workspace A presentation and
 document mock/physical-world limits without repeated interface notices.
+The 3D view observes accepted logical transitions, with link travel, cargo and
+service gestures; it cannot decide actions or outcomes. Preserve pause/replay,
+reduced motion, keyboard camera controls and cleanup on run replacement/exit.
 
 Street road/riding/reserved footprints share bounded miter joins and square endpoint
 caps. Preserve that geometry across masks, reservations, rendering and maps. Merge

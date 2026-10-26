@@ -1,12 +1,16 @@
 import {buildFromBrief,compileExperiment,createEpisode,DEFAULT_WORLD,DEFAULT_TASK,DEFAULT_PARAMETERS,type Parameters} from './framework';
 import {ExperimentSession} from './runner';
-import {ExperimentMap,AGENT_COLORS} from './world-map';
+import {AGENT_COLORS} from './world-map';
+import {ExperimentWorld} from './world-view';
+import {STEP_MS} from './scene-plan';
 
 const get=<T extends Element=HTMLElement>(id:string)=>document.querySelector<T>('#'+id)!;
 const runButton=get<HTMLButtonElement>('run'),play=get<HTMLButtonElement>('play'),step=get<HTMLButtonElement>('step');
 const world=get<HTMLTextAreaElement>('world-brief'),task=get<HTMLTextAreaElement>('task-brief'),source=get<HTMLTextAreaElement>('dream-source');
 const sourceMode=get<HTMLButtonElement>('source-mode'),timeline=get<HTMLInputElement>('timeline'),download=get<HTMLAnchorElement>('export');
-const error=get('lab-error'),session=new ExperimentSession(),map=new ExperimentMap(get<SVGSVGElement>('experiment-map'));
+const error=get('lab-error'),session=new ExperimentSession();
+let view:ExperimentWorld|undefined,viewError='';
+function graphicsFailure(message:string){viewError=message;stop();showError(message);render();}
 const fields=['agents','budget','deadline','seed'] as const;
 const controls=fields.map(key=>get<HTMLInputElement>('parameter-'+key));
 let manual=false,manualDraft='',cursor=0,timer:number|undefined,exportUrl='',exportOwner:unknown,exportLength=-1,capturing=false;
@@ -14,20 +18,21 @@ world.value=DEFAULT_WORLD;task.value=DEFAULT_TASK;
 controls.forEach((control,i)=>{control.value=String(DEFAULT_PARAMETERS[fields[i]!]);});
 const initial=buildFromBrief(world.value,task.value,DEFAULT_PARAMETERS),preview=createEpisode(initial.scenario);
 source.value=initial.source;
+try{view=new ExperimentWorld(get('experiment-world'),graphicsFailure);}catch{viewError='The 3D view needs WebGL. Enable hardware acceleration and reload.';showError(viewError);}
 
 const text=(element:HTMLElement,value:string)=>{if(element.textContent!==value)element.textContent=value;};
 const label=(id:string)=>id.replaceAll('_',' ').replace(/^./,c=>c.toUpperCase());
 const parameters=()=>Object.fromEntries(controls.map((control,i)=>[fields[i]!,control.valueAsNumber])) as Parameters;
-function showError(message=''){error.hidden=!message;error.textContent=message;}
+function showError(message=viewError){error.hidden=!message;error.textContent=message;}
 function stop(){if(timer!==undefined)window.clearInterval(timer);timer=undefined;}
 function render(animate=false){
   const run=session.run,scenario=run?.scenario??preview.scenario,state=run?.at(cursor)??preview.state;
-  map.draw(scenario,state,animate);
+  if(!capturing&&!viewError)view?.show(scenario,state,animate,timer!==undefined);
   text(get('experiment-title'),label(scenario.id));
   const status=timer!==undefined?'Running':run&&cursor<run.length?'Replay':state.terminated?'Completed':state.truncated?'Deadline':run?'Paused':'Ready';
   text(get('world-status'),`${scenario.agents.length} ${scenario.agents.length===1?'agent':'agents'} · ${status}`);
-  runButton.disabled=session.preparing||capturing;text(get('run-label'),session.preparing?'Preparing…':'Run');
-  play.disabled=step.disabled=!run||capturing||session.preparing;sourceMode.disabled=capturing;
+  runButton.disabled=session.preparing||capturing||!!viewError;text(get('run-label'),session.preparing?'Preparing…':'Run');
+  play.disabled=step.disabled=!run||capturing||session.preparing||!!viewError;sourceMode.disabled=capturing;
   for(const control of [world,task,...controls])control.disabled=manual||capturing;
   source.readOnly=!manual||capturing;
   play.setAttribute('aria-label',timer!==undefined?'Pause':'Play');
@@ -63,7 +68,7 @@ function tick(){
   if(run.ended&&cursor===run.length)stop();
   render(true);
 }
-function startPlayback(){stop();timer=window.setInterval(tick,250);render();}
+function startPlayback(){stop();timer=window.setInterval(tick,STEP_MS);render();}
 runButton.onclick=async()=>{
   stop();session.invalidate();showError();
   try{
@@ -101,7 +106,8 @@ sourceMode.onclick=()=>{
   render();
 };
 document.addEventListener('visibilitychange',()=>{if(document.hidden){stop();render();}});
-addEventListener('pagehide',()=>{stop();session.invalidate();if(exportUrl)URL.revokeObjectURL(exportUrl);});
+addEventListener('pagehide',()=>{stop();session.invalidate();view?.dispose();if(exportUrl)URL.revokeObjectURL(exportUrl);});
+if(import.meta.hot)import.meta.hot.dispose(()=>{stop();session.invalidate();view?.dispose();if(exportUrl)URL.revokeObjectURL(exportUrl);});
 if(import.meta.env.DEV&&new URLSearchParams(location.search).has('capture')){
   const capture=document.createElement('button');capture.type='button';capture.className='btn';capture.textContent='Capture frames';
   runButton.parentElement!.prepend(capture);
@@ -110,12 +116,10 @@ if(import.meta.env.DEV&&new URLSearchParams(location.search).has('capture')){
     stop();showError();capturing=true;capture.disabled=true;capture.textContent='Capturing…';render();
     try{
       const {captureRun}=await import('./capture');
-      await captureRun(run,get<SVGSVGElement>('experiment-map'),(step,fraction)=>{
-        cursor=step;render();map.draw(run.scenario,run.at(step),false,run.at(Math.max(0,step-1)),fraction);
-      });
-      capture.textContent='210 frames saved';
+      await captureRun(run,view!,step=>{cursor=step;render();});
+      capture.textContent='840 frames saved';
     }catch(reason){showError(reason instanceof Error?reason.message:String(reason));capture.textContent='Capture frames';}
-    finally{capturing=false;capture.disabled=false;render();}
+    finally{view?.finishCapture();capturing=false;capture.disabled=false;render();}
   };
 }
 render();

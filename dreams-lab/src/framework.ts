@@ -1,12 +1,12 @@
 import {z} from 'zod';
-import {checkDream,formatDream} from '../../src/scene/dream';
+import {checkDream,formatDream} from './engine/scene/dream';
 import template from '../examples/morning-delivery.dream?raw';
 
-export type {Scenario} from '../../src/scene/scenario';
-export {createEpisode,stepEpisode,mockAction,observeAgent,episodeMetrics} from '../../src/sim/episode';
-export type {Episode,EpisodeState,EpisodeAgent} from '../../src/sim/episode';
-export {recordingManifest,exportEpisode,replayEpisode} from '../../src/experiment/recording';
-export type {Manifest} from '../../src/experiment/recording';
+export type {Scenario} from './engine/scene/scenario';
+export {createEpisode,stepEpisode,mockAction,observeAgent,episodeMetrics} from './engine/sim/episode';
+export type {Episode,EpisodeState,EpisodeAgent} from './engine/sim/episode';
+export {recordingManifest,exportEpisode,replayEpisode} from './engine/experiment/recording';
+export type {Manifest} from './engine/experiment/recording';
 
 export const DEFAULT_WORLD='A neighbourhood with a bakery, school and clinic. Couriers share stock and one service desk.';
 export const DEFAULT_TASK='Deliver bread to the school, then take a supply kit to the clinic.';
@@ -20,7 +20,7 @@ export function compileExperiment(source:string){
   const result=checkDream(source);
   if(!result.ok)throw new Error(result.diagnostics.map(d=>`${d.code} ${d.line}:${d.column} · ${d.message}`).join('\n'));
   if(result.world.scenarios.length!==1 || Object.entries(result.world).some(([key,value])=>key!=='scenarios' && (Array.isArray(value)?value.length>0:value!==undefined)))
-    throw new Error('The runner accepts one standalone scenario. 3D worlds and object libraries are not connected here yet.');
+    throw new Error('The runner accepts one standalone scenario. Geometry comes from the Lab asset pack.');
   return {source:formatDream(source),scenario:result.world.scenarios[0]!};
 }
 

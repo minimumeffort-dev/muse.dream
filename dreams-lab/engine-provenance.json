@@ -1,0 +1,370 @@
+{
+  "sourceRepository": "minimumeffort-dev/muse.dream",
+  "revision": "f5d9703ea8b34e3b3480ae84f7542c4c4682d43d",
+  "files": [
+    {
+      "path": "experiment/recording.ts",
+      "sha256": "375e554cbfee00043cd9b4fdeacb67356426a15f05de6c566f738b699333d719"
+    },
+    {
+      "path": "game/character-animation.ts",
+      "sha256": "d15d023b187ee9b7e55b2f11b567debc231a725445a45f649257c3bc4a0c9733"
+    },
+    {
+      "path": "game/compact-object.ts",
+      "sha256": "aa99be9d76adc54fb3fdc20dba48493cef219387c4849995b01eab547b2d43de"
+    },
+    {
+      "path": "game/humanoid-gait.ts",
+      "sha256": "b437ed6b4dc6d21247835bb14d722ab987f40d80dbbb13a442507e45a4304872"
+    },
+    {
+      "path": "game/indexed-geometry.ts",
+      "sha256": "c595aa49505b32bbb4aa09dc10f7d3a802846c2d8ee9fc32add6e38231d07b0b"
+    },
+    {
+      "path": "game/material-coordinates.ts",
+      "sha256": "adf8d272a87c1e176db1b0a87ddbbe506685034b6f8d2275963f15f73025a611"
+    },
+    {
+      "path": "game/shaders.ts",
+      "sha256": "a85840911e16de4c704eaa13b1eda6071c6958fea496e34a057c9cf946c5942c"
+    },
+    {
+      "path": "game/world3d.ts",
+      "sha256": "3e589fcc987fa992388e488a32181c2c872954549ee5ddd9e819672de21435f7"
+    },
+    {
+      "path": "scene/agents.ts",
+      "sha256": "6370f66722549aabfec4295215981fd1619bce8c0dd08fe243c49e0116b4328b"
+    },
+    {
+      "path": "scene/aircraft-support.ts",
+      "sha256": "df35e4344014b5af8bb181e8186431d981aaa483c71073dc7d06512f4fd2397e"
+    },
+    {
+      "path": "scene/ambient-navigation.ts",
+      "sha256": "9c881aefa10cd8589efcd1e84c3470146c157369c1d7f267a27816689cc0bdbc"
+    },
+    {
+      "path": "scene/ambient.ts",
+      "sha256": "bda40d5be5de222be1603aaa4455cd36a1d51d7bf6bb3922f090f09f2c2b15bb"
+    },
+    {
+      "path": "scene/commerce.ts",
+      "sha256": "462503f4805cd51a80f9914772410c5502ebe7ba9dbeb1531c37c14310934bdc"
+    },
+    {
+      "path": "scene/contact-geometry.ts",
+      "sha256": "9ec993563b19e412ae94ea97bb217d33c4de7dd17637489c60b799182b379195"
+    },
+    {
+      "path": "scene/contacts.ts",
+      "sha256": "d749e0b3547bddfbd6766b4fa719bbb4c69eb44361916efa961a9971c215e67c"
+    },
+    {
+      "path": "scene/damage-pool.ts",
+      "sha256": "8b8fa86b57c27dc536fd68a3c21edbbca7b52b8f22f6adfce91cbde126f943ef"
+    },
+    {
+      "path": "scene/daylight.ts",
+      "sha256": "a075108bfbdf9846616b6d430e536c7f520c5a92105b5aec2ea173f0b1ed5ee3"
+    },
+    {
+      "path": "scene/dream-commerce.ts",
+      "sha256": "b6d33319886439e73037a8719e1379bd2b56de87f2e8a749f9ef843079884652"
+    },
+    {
+      "path": "scene/dream-contract.ts",
+      "sha256": "1800dccb920518c0b7dff72120804a978642e8a0b5ba156c9e1fda84c2f5e40e"
+    },
+    {
+      "path": "scene/dream-layout.ts",
+      "sha256": "5396340cf60045bae4f43e01f04f9a87c0f1b64dd08ab5e578e0479a4363e216"
+    },
+    {
+      "path": "scene/dream-migrate.ts",
+      "sha256": "f17820f06b345ff4ba1b53829cefa7f4c4b3e7f0812783077d82a6fcf1b9bc80"
+    },
+    {
+      "path": "scene/dream-syntax.ts",
+      "sha256": "ea75b2e796e70454267ffed53cb0891e4f5839f5cb761cc3245d8fe813d877bd"
+    },
+    {
+      "path": "scene/dream-v2.ts",
+      "sha256": "df2e407f471b1ed4c05a7003c20e5fcfd0df43275b59806ab6ee544b686277c7"
+    },
+    {
+      "path": "scene/dream.ts",
+      "sha256": "c2baa3bb12b33ce4ddbdc727bef07df8e57acea55968f44a094f0bce63469f99"
+    },
+    {
+      "path": "scene/fixture.ts",
+      "sha256": "6f6596b8e4b881afb3a617868c3df320d09460060101e849e0d1d78220ada3c0"
+    },
+    {
+      "path": "scene/floors.ts",
+      "sha256": "df0d710a538a99baafc9f44790fa0355c5cb133592bc6d17a6e2079e9e2a0859"
+    },
+    {
+      "path": "scene/fragments.ts",
+      "sha256": "35e8fd032008b97527885725f359849ceba247f00d56ded4ff3472a015eeed2d"
+    },
+    {
+      "path": "scene/growth.ts",
+      "sha256": "f2befa735520418f93472d18392da1c562b4be45966f0d83b87ad25fef252829"
+    },
+    {
+      "path": "scene/humanoid.ts",
+      "sha256": "8012383e0923f6fddae4fbaababb95d1ae68cd31c299092e534d66b44fe11c1a"
+    },
+    {
+      "path": "scene/interaction-rules.ts",
+      "sha256": "7440d4b5f48fcc261ba9c92b44f32746a27d84eb509330cb141fe26590ff68fa"
+    },
+    {
+      "path": "scene/interiors.ts",
+      "sha256": "f90295db23a4e012a8603a9239c6d303885d961202030409921c8abaeff47081"
+    },
+    {
+      "path": "scene/landscape-dsl.ts",
+      "sha256": "db0b81e381c8b84adc831d4e5d2546af52ba829345bcb5e70f221845ae9df7ed"
+    },
+    {
+      "path": "scene/measure.ts",
+      "sha256": "cefd4fe1a0ed7db0027474635b2715088361c673d3e25d4ffa53b3ee2cc0b745"
+    },
+    {
+      "path": "scene/mock-objects.ts",
+      "sha256": "e9b011c63b1da40672169b4e96d031a945ea181b0b4bade0c0a283b02ef1395f"
+    },
+    {
+      "path": "scene/object-dsl.ts",
+      "sha256": "039b3caac58e4e1b75e56b956793f3ce3a53648547eeced2aa2f755813ea889c"
+    },
+    {
+      "path": "scene/object-geometry.ts",
+      "sha256": "069b26443fd0e5de4e14f55d1025334ade47736e90c8f68a256e843c0d6d6505"
+    },
+    {
+      "path": "scene/object-support.ts",
+      "sha256": "65469387ce9ea40f4676aa3d9d65aae79c5220bce53be8b23219eff32a528e2b"
+    },
+    {
+      "path": "scene/pavement.ts",
+      "sha256": "93a02202f3c9e85dcedb77290c3bc9313782acbfa6a159720ad76eab001ffc93"
+    },
+    {
+      "path": "scene/placement.ts",
+      "sha256": "5cb4f2a98ab105abf7a2134c13ad501318ccee1ab44e593ef2226d9f5282533f"
+    },
+    {
+      "path": "scene/polygons.ts",
+      "sha256": "0c9a407d51b78a8c70b445bbdf832b69d3cf61a4f249036c18c7930427c07ecf"
+    },
+    {
+      "path": "scene/population.ts",
+      "sha256": "78924de6347986bae6fdf33d32e0f01f44910917bd6fec6650cff020026ccebc"
+    },
+    {
+      "path": "scene/profile.ts",
+      "sha256": "c28d454599832fd2306fa71c1eb67eb9b828e46fc279b2f5df391bd32d973b3f"
+    },
+    {
+      "path": "scene/road.ts",
+      "sha256": "eb0045a5e9c9d6a97c545d53b738c9e0ea0924f0fd3fab8b0cb3407224a9c9b1"
+    },
+    {
+      "path": "scene/routes.ts",
+      "sha256": "80d87639bf443dd0ece2dee2162150447be88dd4184a3357bef07ad8c8f6dd9e"
+    },
+    {
+      "path": "scene/scenario.ts",
+      "sha256": "1f7b4d4b48abdb8a8cf11064682e0d27899bbc36a7b979d6d6f816f46aa602bc"
+    },
+    {
+      "path": "scene/schema.ts",
+      "sha256": "2402b7568277dbe3db69b1d854c217f7fa2c8888aaf6c9260482ef289751a845"
+    },
+    {
+      "path": "scene/seating.ts",
+      "sha256": "161452e9527ab8f6a2716076c9bf26076d9a545028b93e21929f242369f61004"
+    },
+    {
+      "path": "scene/sites.ts",
+      "sha256": "6c5fba8c3198a8170202010e782f4a6816f3e2e3f5c43b53f9822f94d8a462b0"
+    },
+    {
+      "path": "scene/sports-match.ts",
+      "sha256": "054785a0231125cd501b20ec9a75f96414089d44f31885f7f911f0b34cbcf459"
+    },
+    {
+      "path": "scene/sports.ts",
+      "sha256": "a029c00d4778d51f97969ffb25e96afde37c87ce2d0776f25f93f6f18445d86d"
+    },
+    {
+      "path": "scene/streets.ts",
+      "sha256": "3cdac4b502ce7a2acb7b66561daea1ba7d5d079e95d287ceed46e549f88517c6"
+    },
+    {
+      "path": "scene/strike.ts",
+      "sha256": "84d044e6a45dfa484e84211694ae639b304bc0fc6f3e6b0b0fa0bf12e4bc95df"
+    },
+    {
+      "path": "scene/terrain.ts",
+      "sha256": "05eeef9badd3250fdc8adb22a6e7404c2165d71049dbe8b789a424727274844d"
+    },
+    {
+      "path": "scene/validate.ts",
+      "sha256": "a1c240dc36205e2d3fc5d47ab9d971088bd644f47228f4cdda094b485a69fca3"
+    },
+    {
+      "path": "scene/voxel-contour.ts",
+      "sha256": "d2821dbfad75b4c996f0bcb875d7813e6625d44015fd02e48db02c62c9b8884e"
+    },
+    {
+      "path": "scene/voxel-stamp.ts",
+      "sha256": "b41728d62d6392e67e6bca972233f539ccac045b6a453079e8ebf06b2f7a1844"
+    },
+    {
+      "path": "scene/voxel-world.ts",
+      "sha256": "73efce829b2833a256b51430d850aaa8cec0813c186c06ef5279ccd5d29ef110"
+    },
+    {
+      "path": "scene/voxels.ts",
+      "sha256": "ffaf7089ddf5a5a91776828dffcc189ed02664a1a4b8266d6de9ec53c1c76e25"
+    },
+    {
+      "path": "scene/weather.ts",
+      "sha256": "60c1b2acf561bda52a2078e43707b3c0ad8bf5144b7f5f08ecfdf6b737c5eaf5"
+    },
+    {
+      "path": "scene/work-gestures.ts",
+      "sha256": "c4ce673e8a0bbd0b91eebe876a6f3d2ff952404971641f3daefc7e7a152a7ce8"
+    },
+    {
+      "path": "scene/workstations.ts",
+      "sha256": "36953ae1a363910124fe629e9afb7d66ea50eb24199b3afc8c5d39b83088ce79"
+    },
+    {
+      "path": "scene/world-bounds.ts",
+      "sha256": "b7a9f94f616f4ae14150e851e61c4d6ac917be66f1ffd8a5f5f8f339021afeca"
+    },
+    {
+      "path": "sim/actors.ts",
+      "sha256": "c4814730c6c454ddfd432dff27650d3bc928bf1259a046596fe172d032f93e72"
+    },
+    {
+      "path": "sim/ambient.ts",
+      "sha256": "1501c1321ce8d1fb7de2037567720dfb794dd8ed7e22d017215713efbe1f46bd"
+    },
+    {
+      "path": "sim/archetypes.ts",
+      "sha256": "f26de90a20bf1722e3bf1a97e611bde7c98f3446b277a4b3db7eaeba6eba74ab"
+    },
+    {
+      "path": "sim/attendance.ts",
+      "sha256": "37518636c823cce885ab9cc8005e7890280b7462e4f6ee33efeab87b318e427f"
+    },
+    {
+      "path": "sim/car.ts",
+      "sha256": "df4cff61e6859826c4fc1d994e2ed6e56a698ff944c81b212e0f7505022f6130"
+    },
+    {
+      "path": "sim/commerce.ts",
+      "sha256": "54ac9453c5919aea1ce05741ee49fdd5fe76956d1de54b0aeecfda0f2277ffaf"
+    },
+    {
+      "path": "sim/company.ts",
+      "sha256": "118492c995e9b2c354e7391a89ca9a88b1f5dfe1614ca80a1f591798b9af7956"
+    },
+    {
+      "path": "sim/courier.ts",
+      "sha256": "af1bfa130c06d457b5e616666dc03e747996399c9344c1516b261cd8883153a9"
+    },
+    {
+      "path": "sim/episode.ts",
+      "sha256": "f5e9349835add7bde97e751fc459c8bff68bb9eef4ef225dc2ba825511dee8d1"
+    },
+    {
+      "path": "sim/growth.ts",
+      "sha256": "b5cffeabafc500b957113bac9a4a95712712faae8919d8b17329806cf97f59e8"
+    },
+    {
+      "path": "sim/impacts.ts",
+      "sha256": "b4c8076a827c0cc3129310b0cb2b4235b9f6f18791a8e50be36fd1c2da42bb97"
+    },
+    {
+      "path": "sim/indoor-navigation.ts",
+      "sha256": "3cfe29510ca7fbb9b5e2b8ef25466f5c5b2c1ca29ae2703a34eeafdcf10d61d0"
+    },
+    {
+      "path": "sim/market-hours.ts",
+      "sha256": "3591ed3eefb88cbf8410dbefd12aa303a2aba4803eb849718ae36521222c3a00"
+    },
+    {
+      "path": "sim/mask.ts",
+      "sha256": "0160293af79171135e268f0480b7bc9640ef45600fc6fcb0d17b3dbe17e1dcdf"
+    },
+    {
+      "path": "sim/npcs.ts",
+      "sha256": "2b11540e9257975096587694ad6eef06614e731660b365029817f5554a2275bc"
+    },
+    {
+      "path": "sim/parking.ts",
+      "sha256": "1c2f808d546b47971da1d1455884c38156a2f944299bb952244c08352bfe45c2"
+    },
+    {
+      "path": "sim/repair.ts",
+      "sha256": "038c1515ca156d40c5f18985283ac07db86a553e1cbc73b378ff7017ecd45cb2"
+    },
+    {
+      "path": "sim/rest.ts",
+      "sha256": "19ca07a4072c4fc2e142297d2facaff74905bc09aa073101f5b1fb0529ee02f9"
+    },
+    {
+      "path": "sim/seating.ts",
+      "sha256": "ac5672494cb40567df29eff2c518ee48d18d876ba21b268d12d77a575d04ce13"
+    },
+    {
+      "path": "sim/service-visits.ts",
+      "sha256": "ddf6e3a4a88579c083f13cf1c8c8087920035e1656c4d3da8498325740e17416"
+    },
+    {
+      "path": "sim/shelter.ts",
+      "sha256": "a2a39cdf07d233870a426d867b2bfe842c12506f2caf576ae0b162ebeb9cf043"
+    },
+    {
+      "path": "sim/shifts.ts",
+      "sha256": "afe807bedba401754623d8240ae34384030f416d57de866766789e76cac056d7"
+    },
+    {
+      "path": "sim/sight.ts",
+      "sha256": "f738c51e470e500c850b749490ef40302fd9969dcf74762bb7cb46915aa04d11"
+    },
+    {
+      "path": "sim/social.ts",
+      "sha256": "4232975ada6ef1b3a13d5535fdd7966d626b6154aa828c6f6bcb92c227fe5072"
+    },
+    {
+      "path": "sim/spatial.ts",
+      "sha256": "a9ab8fa91a17a0eeef37a02bd114597b2a04cd082250b49eefbbbb0aba46e5a1"
+    },
+    {
+      "path": "sim/sports.ts",
+      "sha256": "0207987e46b7e05563ffc0a859a26d9fabdc70a06fc1c75f68c7671c732bde1d"
+    },
+    {
+      "path": "sim/team-sports.ts",
+      "sha256": "e4b40ea6049cbdf688169930d1afb700943bb648659ca8ad59962e8f2fdaf4b0"
+    },
+    {
+      "path": "sim/work-journey.ts",
+      "sha256": "4d4ec6d9675f1e038018b3bde36522bf229f564c28c53cd4058c6d5299fe2a81"
+    },
+    {
+      "path": "sim/work-navigation.ts",
+      "sha256": "1365917f2a445913253c46bf8fee08baefb0a9eda2d4a53c6b4b637e5cdcddb1"
+    }
+  ]
+}

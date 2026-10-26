@@ -2,10 +2,11 @@
 
 [Docs](../README.md) / Scenarios · [Open Dream Lab](https://musedream.vercel.app/lab/)
 
-The fresh [Dreams Lab workspace](../dreams-lab.md) now uses this canonical
-compiler, episode engine and recording format. Run, pause, step, timeline replay,
-direct source editing and export work there. Both interfaces retain mocked
-interpretation and policies on logical networks, with no physical 3D binding.
+The fresh [Dreams Lab workspace](../dreams-lab.md) owns copied compiler, episode,
+recording and rendering modules. Run, pause, step, replay, source editing and
+export work there. Its Three.js view shows agents travelling, carrying purchases
+and using services. Both interfaces retain mocked interpretation/policies and
+logical task rules; the new view does not add physical collision/navigation.
 
 A useful world needs more than buildings. A shop has stock and prices. An agent has a budget and can carry only so much. A service takes time and can serve only a few people at once. A task needs a measurable outcome.
 

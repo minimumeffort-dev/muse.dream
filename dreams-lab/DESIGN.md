@@ -4,7 +4,7 @@ Mode: Operate. The researcher should understand what is being tested, what is
 running and what changed between runs without opening the source editor.
 
 All variants inherit the existing Minimum Effort identity. Fonts are loaded
-from the repository's licensed local copies in `docs/site/fonts/`. Color has
+from the licensed local copies in `fonts/`. Color has
 meaning: yellow for the active control or agent, blue for a second agent,
 charcoal for text and actions. Yellow is not body text on a light background.
 
@@ -20,7 +20,9 @@ uses one compact Local provider status. Run starts a fresh accepted episode;
 conditional Export, playback controls and measured outcomes appear in context.
 Compiler errors appear inline. Source editing owns its own mode, with brief
 controls disabled until Use brief. The map uses accepted data rather than the
-earlier authored picture. Do not add a wall of implementation notices.
+earlier authored picture. The current view renders local Dream assets in Three.js,
+with orbit/zoom, labeled destinations and couriers. Keep the existing layout and
+controls; the renderer observes the episode. Do not add a wall of implementation notices.
 
 Desktop layouts adapt to stacked controls and readable maps on narrow screens.
 Workspace uses a shared 24-pixel desktop gutter and 16-pixel mobile gutter.

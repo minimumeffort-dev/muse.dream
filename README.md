@@ -21,13 +21,16 @@ the selected [Workspace A layout](docs/dreams-lab.md). Run compiles Dream, start
 local baseline agents and measures the outcome. Pause, step through recorded
 history, change the budget or deadline and run again. Export the source-pinned
 trace and replay it through the CLI. The local builder uses one delivery template;
-direct Dream editing supports other logical scenarios. Muse and physical 3D
-agent navigation remain the next integrations.
+direct Dream editing supports other logical scenarios. The Three.js view now
+shows the buildings, walking couriers, carried purchases and service activity.
+The Lab contains its own copied engine, assets, fonts and build configuration;
+it can become the project root. Muse and physical collision/navigation controllers
+remain the next integrations.
 
-![The working Dreams Lab after a completed episode](docs/media/dreams-lab-workspace.jpg)
+![The working 3D Dreams Lab](docs/media/dreams-lab-3d-workspace.jpg)
 
-[Watch the episode](docs/media/dreams-lab-run.mp4) ·
-[GIF](docs/media/dreams-lab-run.gif) · [Run locally](dreams-lab/README.md)
+[Watch the episode](docs/media/dreams-lab-3d-run.mp4) ·
+[GIF](docs/media/dreams-lab-3d-run.gif) · [Run locally](dreams-lab/README.md)
 
 ## Come home, go upstairs
 

@@ -7,8 +7,8 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5173",
     "lab:design": "npm run lab:dev",
-    "lab:dev": "node dreams-lab/render-variants.mjs && vite --config dreams-lab/vite.config.ts",
-    "lab:build": "node dreams-lab/render-variants.mjs && tsc --noEmit -p dreams-lab/tsconfig.json && vite build --config dreams-lab/vite.config.ts",
+    "lab:dev": "npm --prefix dreams-lab run dev",
+    "lab:build": "npm --prefix dreams-lab run build",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1 --port 4173",
     "test": "vitest run",

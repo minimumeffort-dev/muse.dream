@@ -1,0 +1,145 @@
+dream 2;
+material plaster(style=toon,colors=[#ddd1b9,#c5b69a]);
+material blue(style=toon,colors=[#9aadaf,#758e98]);
+material ochre(style=toon,colors=[#d4b378,#b9955f]);
+material glass(style=toon,colors=[#6c929d,#42616f],night=#f2bf7e);
+material roof(style=toon,colors=[#535b64,#3b4753]);
+material tile(style=toon,colors=[#aa6b50,#864d3e]);
+material trim(style=toon,colors=[#e5decd,#c5bfae]);
+material wood(style=wood,colors=[#805c40,#aa815a]);
+material dark(style=toon,colors=[#35464c,#28363e]);
+material green(style=toon,colors=[#5e7c73,#405d55]);
+material school_floor(style=wood,colors=[#c7b796,#ab9874]);
+component sash(params=[w,h]){
+  part glazing(shape=box,material=glass,at=[0,0,0],size=[w*.79,h*.84,.12]);
+  voxels joinery(material=trim,at=[0,0,.08],size=[w,h,.12],grid=[16,20,1]){
+    fill frame(from=[0,0,0],to=[16,20,1]);
+    cut aperture(from=[2,2,0],to=[14,18,1]);
+    fill mullion(from=[7,2,0],to=[8,18,1]);
+    fill transom(from=[2,10,0],to=[14,11,1]);
+  }
+}
+component drainage(params=[w,h,d,side]){
+  beam gutter(shape=cylinder,material=dark,from=[-w/2,h,side*(d/2+.6)],to=[w/2,h,side*(d/2+.6)],width=.22,depth=.22);
+  part leader(shape=prism,material=dark,at=[w/2-.5,(h+.5)/2,side*(d/2+.37)],size=[.74,h-.5,.18],rot_deg=[0,-90*side,0],outline=[[0,0],[.24,0],[.24,.94],[1,.985],[1,1],[.76,1],[0,.95]]);
+}
+component entry(params=[]){
+  voxels frame(material=trim,at=[0,3.35,.04],size=[4.5,6.7,.18],grid=[20,30,1]){
+    fill surround(from=[0,0,0],to=[20,30,1]);cut opening(from=[2,0,0],to=[18,27,1]);
+  }
+  voxels door(material=dark,at=[0,3,0],size=[3.5,6,.12],grid=[14,24,2]){
+    fill slab(from=[0,0,0],to=[14,24,2]);
+    repeat panels(index=i,count=2){cut inset(from=[2,i*10+2,1],to=[12,i*10+10,2]);}
+  }
+}
+object bakery(label="Neighborhood bakery"){
+  measure(kind=building,axis=y,meters=9.5);
+  body(interaction=solid,radius=12.5,height=24);
+  foundation(size=[25.4,26.4],color=#9e9d8c);
+  contact cell_0_0(at=[-6.250000,0,-9.750000],radius=7.044501,height=18.0);
+  contact cell_0_1(at=[-6.250000,0,-3.250000],radius=7.044501,height=18.0);
+  contact cell_0_2(at=[-6.250000,0,3.250000],radius=7.044501,height=18.0);
+  contact cell_0_3(at=[-6.250000,0,9.750000],radius=7.044501,height=18.0);
+  contact cell_1_0(at=[6.250000,0,-9.750000],radius=7.044501,height=18.0);
+  contact cell_1_1(at=[6.250000,0,-3.250000],radius=7.044501,height=18.0);
+  contact cell_1_2(at=[6.250000,0,3.250000],radius=7.044501,height=18.0);
+  contact cell_1_3(at=[6.250000,0,9.750000],radius=7.044501,height=18.0);
+  voxels walls(material=ochre,at=[0,9,0],size=[25,18,26],grid=[25,18,26]){
+    fill shell(from=[0,0,0],to=[25,18,26]);
+  }
+  part roof(shape=pyramid,material=tile,at=[0,21,0],size=[25.2,6,27.5]);
+  part eaves(shape=box,material=trim,at=[0,17.75,0],size=[25.2,0.5,27.5]);
+  repeat floors(index=f,count=2){
+    repeat bays(index=b,count=2){
+      use window(component=sash,args=[5,4.95],at=[(b*2-1)*6.5,(f+.55)*9,-13.02],rot_deg=[0,180,0]);
+    }
+  }
+  repeat rear(index=b,count=2){use window(component=sash,args=[5,4.95],at=[(b*2-1)*6.5,13.95,13.02]);}
+  use rear_ground(component=sash,args=[5,4.95],at=[0,4.95,13.02]);
+  repeat sides(index=s,count=2){use window(component=sash,args=[4.16,4.95],at=[(s*2-1)*12.52,13.95,0],rot_deg=[0,s*180-90,0]);}
+  use entrance(component=entry,at=[0,0,-13.02],rot_deg=[0,180,0]);
+  part step(shape=box,material=trim,at=[0,0.25,-14.5],size=[24,0.5,3.5]);
+  part porch_base(shape=box,material=trim,at=[0,0.25,-16],size=[24,0.5,6.5]);
+  use drain_0(component=drainage,args=[25,18,26,-1]);
+  use drain_2(component=drainage,args=[25,18,26,1]);
+  zone porch(at=[0,0,-16],radius=12,height=9,mode=break(speed=115,scatter=50,lift=45,spin=3,lifetime=7,pattern=splinter)){
+  part porch_canopy(shape=prism,material=green,at=[0,7.9,0],size=[20,1.2,6.5],outline=[[0,0],[1,0],[1,.5],[0,1]]);
+  part porch_post_l(shape=box,material=wood,at=[-9.3,4,-2.7],size=[0.8,8,0.8]);
+  part porch_post_r(shape=box,material=wood,at=[9.3,4,-2.7],size=[0.8,8,0.8]);
+  }
+}
+object primary_school(label="Garden primary school"){
+  measure(kind=building,axis=y,meters=10);
+  body(interaction=solid,radius=28.75,height=25);
+  foundation(size=[57.9,40.4],color=#9e9d8c);
+  lamp(at=[0,7.8,0],radius=28,color=#ffd69a);
+  interior(at=[0,.5,0],size=[55.5,8,38]){
+    portal entrance(side=front,offset=0,width=4,height=6);
+  }
+  contact c_floor(at=[0,0,0],size=[55.5,38],height=.5);
+  contact c_left_wall(at=[-28.25,0,0],size=[1,40],height=19);
+  contact c_right_wall(at=[28.25,0,0],size=[1,40],height=19);
+  contact c_back_wall(at=[0,0,19.5],size=[57.5,1],height=19);
+  contact c_front_left(at=[-15.375,0,-19.5],size=[26.75,1],height=19);
+  contact c_front_right(at=[15.375,0,-19.5],size=[26.75,1],height=19);
+  contact c_lintel(at=[0,6.5,-19.5],size=[4,1],height=12.5);
+  contact c_ceiling(at=[0,8.5,0],size=[57.5,40],height=16.5);
+  part floor(shape=box,material=school_floor,at=[0,.25,0],size=[55.5,.5,38]);
+  part left_wall(shape=box,material=ochre,at=[-28.25,9.5,0],size=[1,19,40],cutaway=left);
+  part right_wall(shape=box,material=ochre,at=[28.25,9.5,0],size=[1,19,40],cutaway=right);
+  part back_wall(shape=box,material=ochre,at=[0,9.5,19.5],size=[57.5,19,1],cutaway=back);
+  part front_left(shape=box,material=ochre,at=[-15.375,9.5,-19.5],size=[26.75,19,1],cutaway=front);
+  part front_right(shape=box,material=ochre,at=[15.375,9.5,-19.5],size=[26.75,19,1],cutaway=front);
+  part lintel(shape=box,material=ochre,at=[0,12.75,-19.5],size=[4,12.5,1],cutaway=front);
+  part ceiling(shape=box,material=trim,at=[0,8.75,0],size=[55.5,.5,38],cutaway=roof);
+  part roof(shape=pyramid,material=tile,at=[0,22,0],size=[57.7,6,41.5],cutaway=roof);
+  part eaves(shape=box,material=trim,at=[0,18.75,0],size=[57.7,.5,41.5],cutaway=roof);
+  part window_0_0(shape=box,material=glass,at=[-17.25,7,-20.15],size=[7.13,3.99,0.5],cutaway=front);
+  part window_0_1(shape=box,material=glass,at=[-5.75,7,-20.15],size=[7.13,3.99,0.5],cutaway=front);
+  part window_0_2(shape=box,material=glass,at=[5.75,7,-20.15],size=[7.13,3.99,0.5],cutaway=front);
+  part window_0_3(shape=box,material=glass,at=[17.25,7,-20.15],size=[7.13,3.99,0.5],cutaway=front);
+  part window_1_0(shape=box,material=glass,at=[-17.25,14,-20.15],size=[7.13,3.99,0.5],cutaway=front);
+  part window_1_1(shape=box,material=glass,at=[-5.75,14,-20.15],size=[7.13,3.99,0.5],cutaway=front);
+  part window_1_2(shape=box,material=glass,at=[5.75,14,-20.15],size=[7.13,3.99,0.5],cutaway=front);
+  part window_1_3(shape=box,material=glass,at=[17.25,14,-20.15],size=[7.13,3.99,0.5],cutaway=front);
+  part rear_1_0(shape=box,material=glass,at=[-14.375,14,20.15],size=[10.35,4,0.5],cutaway=back);
+  part rear_1_1(shape=box,material=glass,at=[14.375,14,20.15],size=[10.35,4,0.5],cutaway=back);
+  part door_open(shape=box,material=dark,at=[-2.2,3.5,-17.5],size=[.3,6,3.5],cutaway=front);
+  part door_header(shape=box,material=trim,at=[0,6.85,-20.3],size=[4.8,.7,.6],cutaway=front);
+  part porch_base(shape=box,material=trim,at=[0,.05,-23],size=[20,.1,6.5]);
+  part canopy(shape=box,material=green,at=[0,8.5,-23],size=[18,.7,6.5],cutaway=front);
+  part post0(shape=box,material=wood,at=[-8,4.125,-25.5],size=[.8,8.05,.8],cutaway=front);
+  part post1(shape=box,material=wood,at=[8,4.125,-25.5],size=[.8,8.05,.8],cutaway=front);
+  part signboard(shape=box,material=dark,at=[0,11,-20.4],size=[16,3,1],cutaway=front);
+  part clock(shape=cylinder,material=trim,at=[0,15,-20.15],size=[4,.6,4],rot_deg=[90,0,0],cutaway=front);
+  part clock_hand(shape=box,material=dark,at=[.4,15.5,-20.5],size=[1.6,.5,.5],cutaway=front);
+  part board_frame(shape=box,material=wood,at=[0,4.5,18.8],size=[20,5,.5]);
+  part board(shape=box,material=dark,at=[0,4.5,18.45],size=[19,4,.2]);
+}
+object east_medical_center(label="Eastbank medical center"){
+ measure(kind=building,axis=y,meters=9);
+ body(interaction=solid,radius=30,height=30);
+ foundation(size=[66,44],color=#a6aaa0);
+ contact cell_0(at=[-24,0,-10],radius=13,height=28);
+ contact cell_1(at=[-8,0,-10],radius=13,height=28);
+ contact cell_2(at=[8,0,-10],radius=13,height=28);
+ contact cell_3(at=[24,0,-10],radius=13,height=28);
+ contact cell_4(at=[-24,0,10],radius=13,height=28);
+ contact cell_5(at=[-8,0,10],radius=13,height=28);
+ contact cell_6(at=[8,0,10],radius=13,height=28);
+ contact cell_7(at=[24,0,10],radius=13,height=28);
+ part walls(shape=box,material=plaster,at=[0,14,0],size=[64,28,40]);
+ part roof(shape=box,material=green,at=[0,29,0],size=[66,2,44]);
+ part entry_block(shape=box,material=blue,at=[-18,9,-23],size=[22,18,10]);
+ part entry_roof(shape=box,material=roof,at=[-18,18.5,-23],size=[24,1,12]);
+ part doors(shape=box,material=glass,at=[-18,5,-28.2],size=[9,10,.6]);
+ part entry_step(shape=box,material=trim,at=[-18,.25,-29],size=[14,.5,4]);
+ repeat bays(index=i,count=4){
+  part upstairs(shape=box,material=glass,at=[i*15-22.5,22,-20.1],size=[11,6,.5]);
+  part rear(shape=box,material=glass,at=[i*15-22.5,14,20.1],size=[11,7,.5]);
+ }
+ part ground_window(shape=box,material=glass,at=[14,10,-20.1],size=[20,7,.5]);
+ part cross_back(shape=box,material=green,at=[-18,14,-28.3],size=[7,5,.6]);
+ part cross_vertical(shape=box,material=trim,at=[-18,14,-28.7],size=[1,3,.5]);
+ part cross_horizontal(shape=box,material=trim,at=[-18,14,-28.7],size=[3,1,.5]);
+}

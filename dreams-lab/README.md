@@ -1,79 +1,91 @@
 # Dreams Lab
 
-Describe an environment and a task, run an agent, then change the conditions and
-try again. Workspace A now compiles Dream and executes real episodes with a
-local builder and deterministic baseline agents.
+Define an environment and a task. Run agents, change the conditions and try
+again. The Lab now shows the delivery world in Three.js, with walking couriers,
+visible purchases and service activity tied to the recorded episode.
 
-From the repository root, using the existing dependencies:
+![The 3D Lab](docs/media/dreams-lab-3d-workspace.jpg)
 
-    npm run lab:dev
-    npm run lab:build
+[Watch in HD](docs/media/dreams-lab-3d-run.mp4) · [GIF](docs/media/dreams-lab-3d-run.gif)
 
-The lab:design command remains an alias for lab:dev. The build writes a separate
-app to dist/dreams-lab/. It does not build or load the city renderer.
+## Start here
 
-## Run an experiment
+This folder is self-contained. From here:
 
-Press **Run**. The local builder expands the morning-delivery template using
-Agents, Budget, Deadline and Seed, then the canonical Dream compiler checks it.
-The accepted source starts a fresh episode. Agents receive their own observations
-and submit actions through the existing rules; they cannot set rewards.
+    npm ci
+    npm run dev
+    npm test
+    npm run build
 
-The map derives locations, links and positions from that accepted scenario.
-Inventory, spending, blocked requests, violations and task completion come from
-committed engine transitions. The default two-courier run completes four tasks
-in 27 steps, spending 16 coins. Smaller budgets and deadlines can fail.
+The existing parent install can supply dependencies during the transition.
+The dev server uses port 5180; production output is local dist/. From the parent,
+npm run lab:dev and npm run lab:build remain shortcuts.
 
-**Play/Pause**, **Step** and the timeline work on the current run. Seeking reads
-recorded state without rewinding or advancing its engine head. Playing from an
-earlier point replays that history, then resumes an unfinished episode. A completed
-run replays without adding actions. Hiding the tab pauses playback.
+## Run, inspect, repeat
 
-**Export** downloads a complete or paused JSONL trace with canonical source,
-SHA-256, seed, policy label, observations, actions and outcomes. Verify it with:
+Press **Run**. The local builder expands the morning-delivery Dream template
+using Agents, Budget, Deadline and Seed. The compiler accepts it before a fresh
+episode starts. Agents receive private observations and submit actions through
+the rules. They cannot set their rewards.
+
+The default couriers buy bread, deliver it to the school, return for supply kits
+and use the clinic service. The outcome is four tasks in 27 logical steps,
+16 coins spent, one blocked request and no rule violations. Smaller budgets and
+deadlines can fail. These are mock policy outcomes, not real delivery estimates.
+
+**Pause** holds the episode and current animation. **Step** advances one
+transition. The timeline reads recorded history without rewinding the engine
+head; Play replays it before resuming an unfinished episode. Hiding the tab
+pauses playback. One logical step occupies one display second.
+
+Drag the world to orbit; scroll or pinch to zoom. Keyboard users can focus the
+view, use arrow keys, plus/minus and Home to reset. Task controls stay beside
+the view. Reduced motion keeps static character poses.
+
+## Edit Dream
+
+Open **Dream source**, choose **Edit**, paste a standalone scenario and press
+Run. **Use brief** returns to the local template and preserves the manual draft
+in memory. Invalid source shows its diagnostic and preserves the accepted result.
+
+The mock builder recognizes only the provided delivery brief. Other descriptions
+reject rather than silently producing the same world. Other supported tasks use
+the source editor. Try the [classroom scenario](examples/classroom.dream).
+
+## Keep the record
+
+**Export** downloads the paused or completed episode as source-pinned JSONL.
+Replay it using the Lab's own CLI:
 
     node scripts/experiment.mjs replay path/to/episode.jsonl
 
-## Edit Dream directly
+Run history resets on reload. Exports are local, unsigned records, with no cloud
+history, model training or certified dataset pipeline.
 
-Open **Dream source**, then **Edit**. The brief controls disable while source is
-in control. Paste a standalone Dream scenario and press Run. **Use brief** returns
-to the local template; the manual draft stays in memory. Invalid source displays
-its compiler diagnostic and preserves the previous accepted run and export.
-Draft edits and late preparation results cannot replace an accepted episode.
+## What lives here
 
-The mock builder recognizes the provided morning-delivery brief only. Other
-World or Task descriptions reject rather than silently producing that template.
-Use Dream source for other supported tasks. This is a logical network runner;
-3D geometry, city movement, real Muse calls, persistent run history and arbitrary
-semantic interpretation are not connected yet. State resets on reload; exports
-are the durable record. No model keys or network inference are required.
+The [port guide](docs/port.md) records the copied engine modules and selected
+Dream assets. Compiler, episode, recording and rendering code are local under
+src/engine/. Fonts and licenses, package/config files, scripts and tests are all
+inside this folder. The original city files remain untouched. There are no
+parent-source imports or parent assets read during startup/build.
 
-## What was ported
+The 3D view observes the logical network. It does not add city collisions or
+physical pathfinding. Explicit mock IDs bind the default buildings; other
+scenarios receive generic pavilions. Arbitrary generated scenery and real Muse
+calls remain later integrations. The engine still owns every outcome.
 
-- The framework module is the app boundary to the canonical compiler, bounded
-  scenario schema, episode engine and recording format. There is no language fork.
-- The runner owns one accepted run, immutable engine transitions and its bounded
-  timeline. The engine retains its existing 1,000-step/eight-agent caps.
-- The map draws only accepted location/link data and episode poses.
-- The main module owns controls, draft modes, playback and local exports.
-- [Morning delivery](examples/morning-delivery.dream) is the runnable source
-  behind the local builder.
-
-The earlier Notebook and Compare designs remain at design/notebook.html and
-design/compare.html; their illustrative data is separate from the live app.
-
-## Record the runner
+## Record the view
 
 In dev, open the app with ?capture, finish the default 27-step run and press
-**Capture frames**. This writes 210 consecutive PNGs to the ignored
-.npm-cache/media/labrun/ folder. Encode with an installed FFmpeg:
+**Capture frames**. The same Three renderer writes 840 consecutive PNGs under
+.cache/media/lab3d/. Encode with an installed FFmpeg:
 
-    node dreams-lab/encode-media.mjs /path/to/ffmpeg
+    node encode-media.mjs /path/to/ffmpeg
 
-The seven-second map recording renders at 30 fps. Each abstract episode step
-occupies a quarter of a display second; visual interpolation never changes the
-logical transitions. It is not a physical simulation clock or live-performance
-measurement. The dev writer is origin-checked, bounded and absent from production.
+The 28-second recording uses 30 rendered frames per display second, including
+one second at the completed state. Video/still are 1600x900, GIF is 1280x720.
+No frames are synthesized by the encoder. This offline recording is not a live
+performance measurement. Older graph-only media remains historical.
 
-[Product guide](../docs/dreams-lab.md) · [Scenario language](../docs/dream/scenarios.md)
+[Scenario guide](docs/scenarios.md) · [Port and boundaries](docs/port.md)

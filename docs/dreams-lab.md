@@ -2,79 +2,81 @@
 
 [Docs](README.md) / Research workspace
 
-Define an environment and a task. Run an agent, change the conditions and try
-again. Workspace A now connects the canonical Dream compiler to the existing
-logical episode runner, with a local builder and deterministic baseline agents.
+Define an environment and a task. Run agents, change the conditions and try
+again. The Lab now shows its delivery world in Three.js, with walking couriers,
+visible purchases and service activity connected to the accepted episode.
 
-![The working Lab after a completed delivery episode](media/dreams-lab-workspace.jpg)
+![The working 3D Lab](media/dreams-lab-3d-workspace.jpg)
 
-[Watch the episode in HD](media/dreams-lab-run.mp4) · [GIF](media/dreams-lab-run.gif)
+[Watch in HD](media/dreams-lab-3d-run.mp4) · [GIF](media/dreams-lab-3d-run.gif)
 
 ## Run, inspect, repeat
 
-Start the separate app from the repository root:
+From the repository root, run npm run lab:dev. From dreams-lab itself, run
+npm ci once, then npm run dev. The folder has its own package, TypeScript/Vite
+configuration, engine copies, fonts, assets, CLI and tests. It builds to its own
+dist/ without reading parent source or build assets. Original city files remain.
 
-    npm run lab:dev
+Press **Run**. The local builder expands the delivery template and bounded
+parameters into Dream. The compiler checks it before a fresh episode starts.
+The view derives paths and positions from the accepted scenario, with explicit
+mock bindings for the bakery, school and clinic. Agents carry bread and kits
+from their actual inventories and animate the existing service state.
 
-Press **Run**. The current morning-delivery brief becomes bounded Dream source.
-The compiler checks it before a fresh episode starts. The map uses the accepted
-locations, links and real agent positions. The outcome counters measure committed
-tasks, spending, blocking and rule violations.
+The default run completes four tasks in 27 logical steps, spends 16 coins and
+records one blocked request with no violations. Four coins per courier and an
+eight-step deadline produce two completed tasks at the deadline. The rules and
+source hashes remain the same as the earlier logical runner.
 
-The default episode completes four tasks in 27 steps, spends 16 coins and
-records one blocked request with no rule violations. With four coins per
-courier and an eight-step deadline, it completes two tasks and reaches the
-deadline after spending eight coins. These are outcomes from the mock policies
-and finite rules, not claims about real delivery performance.
+**Pause** holds playback and animation. **Step** advances one transition.
+The timeline reads recorded states without changing the engine head. **Play**
+replays a completed episode, or resumes an unfinished one after its history.
+Each logical step occupies one display second. Hiding the tab pauses playback.
 
-**Pause** freezes playback. **Step** advances one transition. The timeline reads
-recorded states; moving it never changes the engine head. **Play** replays a
-completed episode, or resumes an unfinished one after its recorded history.
-Hiding the tab pauses it. Each Run starts fresh, with a new pinned source.
+Drag the world to orbit; scroll or pinch to zoom. Tab to the view, then use
+arrows, plus/minus and Home. Reduced motion keeps static poses. WebGL failure
+is explicit, with no 2D fallback.
 
-## Give the compiler another task
+## Edit the scenario
 
 Open **Dream source**, choose **Edit**, paste a standalone scenario and press
-Run. The [scenario vocabulary](dream/scenarios.md) covers locations, links,
-finite stocks, carrying limits, services and objectives. The classroom example
-also runs here through the same compiler and rules.
+Run. **Use brief** returns to the local template; the manual draft stays in
+memory. Invalid source preserves the accepted result and export. The mock
+builder recognizes the supplied delivery brief only; other tasks use Dream.
 
-**Use brief** returns to the local template. Brief controls disable in source
-mode, and the manual draft remains in memory. Invalid source shows its located
-diagnostic and preserves the previous accepted result and export. Editing a
-brief does not mutate an already accepted episode.
-
-The current local builder supports only the provided morning-delivery brief
-plus Agents, Budget, Deadline and Seed. Unsupported descriptions reject; no
-arbitrary semantic interpretation is implied. Editing Dream directly supports
-other scenarios within the existing language and engine bounds.
+The [classroom example](../dreams-lab/examples/classroom.dream) also runs.
+Other scenarios receive generic destination pavilions. Display labels do not
+invent an asset, behavior or domain meaning. Arbitrary generated scenery needs
+explicit validated presentation bindings first.
 
 ## Keep the record
 
-**Export** downloads JSONL for a paused or completed run. It includes canonical
-source, SHA-256, seed, policy label, per-agent observations, actions and outcomes.
-Replay recompiles the source and checks every transition:
+**Export** downloads a paused or completed run with canonical source, SHA-256,
+seed, policy label, observations, actions and outcomes. The Lab's own CLI replays
+and verifies it. From dreams-lab:
 
     node scripts/experiment.mjs replay path/to/episode.jsonl
 
-[Native exports and verification](evidence/dreams-lab-runner/verification.md)
-record a successful delivery, a deadline result and an authored classroom task.
-Records are local, unsigned mock rollouts. Run history resets on reload; there
-is no cloud history, model training or certified dataset pipeline.
+[3D verification](evidence/dreams-lab-3d/verification.md) records the native
+controls, exports, isolation build and captures. The earlier
+[logical-runner exports](evidence/dreams-lab-runner/verification.md) remain valid
+historical evidence. Reload clears local history; exported records remain local
+and unsigned, without a certified dataset or training pipeline.
 
-## Scope of the port
+## What was copied
 
-The fresh app owns its framework boundary, run lifecycle, timeline, controls and
-renderer. It imports the canonical compiler and episode engine instead of
-forking their language or rules. Model output remains data-only. Policies cannot
-change rewards, rules or completion.
+The [port guide](../dreams-lab/docs/port.md) lists the bounded dependency closure
+and nine Dream objects. Source bytes are pinned to the committed baseline,
+without the parent checkout's unfinished changes. Seven rendering modules
+supply the object builder, materials, batching and humanoid animation. The city
+world, HUD, worker and saves are outside the port.
 
-This is a logical task environment. Real Muse generation and policy calls,
-physical 3D agent navigation and persistent experiment history remain separate
-integrations. The city renderer and city save migrations are not loaded.
+This is a 3D observation of a logical task environment. The renderer cannot
+submit actions, change inventories, set rewards or decide completion. Agents
+follow accepted links; city collisions, physical pathfinding, real Muse calls
+and persistent experiment storage remain later integrations.
 
-The approved compact layout remains, with shared gutters, aligned controls and
-one Local provider status. The earlier [Notebook](media/dreams-lab-notebook.jpg)
-and [Compare](media/dreams-lab-compare.jpg) captures are historical design options.
+The approved compact Workspace A layout remains. Older graph-only, Notebook
+and Compare captures are historical references.
 
-[Source and commands](../dreams-lab/README.md) · [Runnable delivery source](../dreams-lab/examples/morning-delivery.dream)
+[Run locally](../dreams-lab/README.md) · [Scenario guide](../dreams-lab/docs/scenarios.md)

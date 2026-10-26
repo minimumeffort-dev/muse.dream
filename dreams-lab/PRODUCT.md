@@ -23,16 +23,19 @@ The user requested a fresh `dreams-lab/` folder at the repository root, selectiv
 reuse of the existing Dream framework, and several interface variants for
 approval before implementation. Workspace A is now approved. The user asked to
 remove unnecessary interface text and repeated demo/illustrative notices.
-Workspace now uses the canonical compiler, logical episode engine and recording
-format. Run, pause, step, history seeking, direct source editing and JSONL export
-work. Metrics and map poses come from accepted engine state. The local builder
+Workspace now uses local copies of the compiler, logical episode engine,
+recording format and selected Three.js rendering modules. Run, pause, step,
+history seeking, direct source editing and JSONL export work. The 3D buildings,
+walking agents, carried purchases and service gestures observe accepted state.
+The local builder
 expands only the provided morning-delivery brief and bounded parameters; baseline
 agents are deterministic mocks. No Muse calls, physical navigation, training or
 domain-validity claims are implemented.
 
-The compiler and deterministic scenario runner are shared through the Lab's
-framework boundary, without a language fork or complete-city import. Existing
-uncommitted game work stays outside this port.
+The compiler and deterministic runner are copied into the Lab with pinned
+provenance. Selected Dream assets, fonts, package/config files, scripts and tests
+are local too. The folder can become the root; it imports no parent source or
+build assets. Existing uncommitted city work stays outside this port.
 
 ## Brand Commitments
 

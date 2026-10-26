@@ -322,6 +322,11 @@ body.workspace-page{--gutter:24px;height:100dvh;min-height:640px;display:flex;fl
 .workspace-page .link-duration{font-size:11px;paint-order:stroke;stroke:#e9eade;stroke-width:5px;stroke-linejoin:round}
 .workspace-page .agent-marker text{font-size:12px;font-weight:700}
 .workspace-page .agent-marker{transition:none}
+.workspace-page .world-view canvas{display:block;width:100%;height:100%;touch-action:none}
+.workspace-page .world-view:focus-visible{outline:2px solid #875b00;outline-offset:-4px}
+.workspace-page .world-location,.workspace-page .world-agent{position:absolute;top:0;left:0;pointer-events:none;white-space:nowrap;line-height:20px}
+.workspace-page .world-location{font-size:12px;font-weight:650;color:#171717;background:#fafaf7ed;padding:2px 8px;border-radius:4px}
+.workspace-page .world-agent{font-size:12px;font-weight:750;min-width:20px;line-height:18px;text-align:center;border:1px solid #fafaf7;border-radius:50%}
 .workspace-page .btn:hover:not(:disabled){background:#e9e9e0;color:#171717}
 .workspace-page .btn.primary:hover:not(:disabled){background:#373731;color:#fafaf7}
 @media(prefers-reduced-motion:no-preference){.workspace-page [data-animate=true] .agent-marker{transition:transform 240ms linear}}
