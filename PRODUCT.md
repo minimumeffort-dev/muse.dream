@@ -28,7 +28,10 @@ history seeking, direct source editing and JSONL export work. The 3D buildings,
 walking agents, carried purchases and service gestures observe accepted state.
 The local builder
 expands only the provided morning-delivery brief and bounded parameters; baseline
-agents are deterministic mocks. No Muse calls, physical navigation, training or
+agents are deterministic mocks. A separate local HTTP host accepts actor-scoped
+decisions, commits joint steps and continues when its viewer closes. One external
+mock process proves that boundary. Post-run reports link findings to exact
+recorded transitions. No Muse calls, physical navigation, training or
 domain-validity claims are implemented.
 
 The compiler and deterministic runner are copied into the Lab with pinned
@@ -45,5 +48,5 @@ keyboard accessible. Use concrete language and no invented performance claims.
 ## Open Decisions
 
 The design chooser recorded Workspace as the initial selection. Real Muse
-integration, first physical scenario, observation interface, inference budget and
-experiment storage remain later decisions.
+integration, hosted run persistence, first physical scenario, observation
+profiles, inference budget and experiment storage remain later decisions.

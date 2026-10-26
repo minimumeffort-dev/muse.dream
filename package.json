@@ -8,7 +8,9 @@
     "build": "node render-workspace.mjs && tsc --noEmit -p tsconfig.json && vite build --config vite.config.ts",
     "preview": "vite preview --config vite.config.ts",
     "test": "vitest run --config vitest.config.ts",
-    "docs:build": "node scripts/docs.mjs"
+    "docs:build": "node scripts/docs.mjs",
+    "agent:host": "node scripts/agent-host.mjs",
+    "agent:mock": "node scripts/mock-agent.mjs"
   },
   "dependencies": {
     "three": "0.170.0",

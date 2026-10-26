@@ -28,3 +28,11 @@ Named native buttons, labeled inputs, keyboard focus and reduced motion apply
 to all variants. Playback advances actual engine transitions; timeline seeking
 reads recorded state. Visual movement interpolates between accepted poses and
 does not change steps, scoring or policy observations.
+
+Report is a contextual disclosure below agent activity, visible while playback
+is paused or complete. A compact table compares actors; native buttons seek to
+recorded events and reveal their observation, action and outcome as readable
+code. Reuse the existing typography, gutters, focus rings and restrained colors.
+The local host viewer replaces editing controls with a connection form and
+controller ownership. Credentials stay in memory. Pausing affects replay only;
+the host remains authoritative. No extra capture archives accompany this slice.

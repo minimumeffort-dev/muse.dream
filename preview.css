@@ -341,3 +341,18 @@ body.workspace-page{--gutter:24px;height:100dvh;min-height:640px;display:flex;fl
   .workspace-page .workspace-map{flex:none;height:320px}
   .workspace-page .activity{min-height:0}
 }
+
+.workspace-page .run-report{flex:none;max-height:256px;overflow:auto;padding:12px var(--gutter);border-top:1px solid var(--line);font-size:12px;line-height:20px}
+.workspace-page .run-report summary{cursor:pointer;font-weight:650;padding-block:4px}
+.workspace-page .report-content{padding-top:12px;overflow-x:auto}
+.workspace-page .report-content table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;text-align:right}
+.workspace-page .report-content th,.workspace-page .report-content td{padding:4px 8px;white-space:nowrap}
+.workspace-page .report-content th:first-child{text-align:left;padding-left:0}
+.workspace-page .report-content thead{color:var(--soft)}
+.workspace-page .report-findings{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-top:12px}
+.workspace-page .evidence-link{background:none;border:0;padding:4px 0;font:inherit;text-align:left;color:#634400;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.workspace-page .evidence-link:focus-visible,.workspace-page .run-report summary:focus-visible{outline:2px solid #875b00;outline-offset:2px}
+.workspace-page .event-detail{max-height:160px;overflow:auto;font:12px/20px ui-monospace,monospace;margin-top:16px;white-space:pre-wrap;overflow-wrap:anywhere}
+.workspace-page #host-connection{display:flex;flex-direction:column;gap:12px}
+.workspace-page #host-token{font:inherit;min-width:0;width:100%;height:40px;padding:8px;border:1px solid var(--line);border-radius:4px;background:var(--paper)}
+.workspace-page #policy-status{overflow-wrap:anywhere}

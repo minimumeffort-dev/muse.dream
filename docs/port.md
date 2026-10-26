@@ -69,7 +69,10 @@ WebGL failure is explicit. There is no 2D fallback.
 This is a 3D observation of the logical task network, not a city collision or
 navigation simulation. Agents follow accepted links; local mocks still choose
 their actions. Provider calls, generated physical layouts, persistent history and
-physical agent controllers remain later integrations.
+physical agent controllers remain later integrations. The new
+[local HTTP host](agent-protocol.md) runs the same logical engine in Node,
+with actor-scoped controller requests and an observing browser. It remains
+in-memory and is separate from the static Vercel deployment.
 
 The [source-only asset library](../assets/library/README.md) preserves reusable
 objects from the retired project. City layouts, historical screenshots, evidence

@@ -35,6 +35,10 @@ The timeline reads recorded history without rewinding the engine head. Play
 replays it before resuming an unfinished episode. Hiding the tab pauses playback.
 One logical step occupies one display second.
 
+Pause and open **Report** for each agent's task progress, spending and time in
+travel, service or idle steps. Select a finding to inspect its recorded
+observation, action and outcome at the matching replay step.
+
 Drag the world to orbit; scroll or pinch to zoom. Focus the view with Tab, then
 use arrows, plus/minus and Home to reset. Reduced motion keeps static poses.
 
@@ -70,10 +74,25 @@ Compiler, episode, recording and rendering code live under src/engine/. Fonts,
 configuration, scripts and tests are local too. The [port guide](docs/port.md)
 records the copied engine's origin. Source, assets and build tools are self-contained.
 
+## Connect a controller
+
+The [local agent host](docs/agent-protocol.md) runs independently of the browser:
+
+    npm run build
+    npm run agent:host
+
+One actor is controlled by a separate mock process over authenticated HTTP;
+the remaining actors use the baseline. The host writes its private viewer
+connection to .cache/agent-host.json. Closing the viewer leaves execution active.
+Requests carry run, actor, step and controller identities. Retries are
+idempotent; timeouts pause the run instead of inventing actions.
+
 The 3D view observes a logical task network. It does not add city collisions or
 physical pathfinding. Explicit mock IDs bind the default buildings; other
-scenarios receive generic pavilions. Real Muse calls, external-agent connections,
-generated physical layouts and persistent experiment storage remain future work.
+scenarios receive generic pavilions. The Vercel app retains the browser baseline;
+the local host is an in-memory development service. Real Muse calls, hosted
+agent execution, generated physical layouts and persistent experiment storage
+remain future work.
 
 [Scenario guide](docs/scenarios.md) · [Dream reference](docs/language/reference.md) ·
 [Model instructions](docs/language/dream-v2-model.txt)

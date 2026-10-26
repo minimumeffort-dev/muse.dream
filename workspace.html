@@ -8,7 +8,8 @@
     <p id="lab-error" role="alert" hidden></p>
   </div>
   <div class="workspace-layout">
-    <aside class="brief-panel" aria-label="Experiment setup">
+    <aside id="setup-panel" class="brief-panel" aria-label="Experiment setup">
+      <form id="host-connection" hidden><label class="field">Host token<input id="host-token" type="password" autocomplete="off" required></label><button class="btn" type="submit">Connect</button></form>
       <section><label class="field"><span class="section-label">World</span><textarea id="world-brief" maxlength="2000" aria-label="World"></textarea></label></section>
       <section><label class="field"><span class="section-label">Task</span><textarea id="task-brief" maxlength="2000" aria-label="Task"></textarea></label></section>
       <section>
@@ -20,7 +21,7 @@
           <label class="field">Seed<span class="number-field"><input id="parameter-seed" type="number" value="7" min="0" max="2147483647" aria-label="Seed"><span></span></span></label>
         </div>
       </section>
-      <div class="policy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 10a4 4 0 1 0 8 0 4 4 0 0 0-8 0M5 21v-2a7 7 0 0 1 14 0v2"/></svg><div><div class="policy-name">Agent</div><p>Baseline</p></div></div>
+      <div class="policy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 10a4 4 0 1 0 8 0 4 4 0 0 0-8 0M5 21v-2a7 7 0 0 1 14 0v2"/></svg><div><div class="policy-name">Agent</div><p id="policy-status">Baseline</p></div></div>
       <details class="source"><summary>Dream source</summary><textarea id="dream-source" class="code-editor" aria-label="Dream source" maxlength="65536" spellcheck="false" readonly></textarea><button id="source-mode" class="btn" type="button">Edit</button></details>
     </aside>
     <section class="world-column" aria-label="Environment">
@@ -33,6 +34,7 @@
         <button id="step" class="btn icon-only" type="button" aria-label="Step" disabled><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 5 10 7-10 7zM19 5v14"/></svg></button>
       </div>
       <div class="activity"><div class="section-label"><span>Agents</span><output id="run-metrics" class="small muted"></output></div><div id="agent-activity" class="activity-row"></div></div>
+      <details id="run-report" class="run-report" hidden><summary>Report</summary><output id="host-latency" class="small muted" hidden></output><div class="report-content"></div></details>
     </section>
   </div>
 </main>

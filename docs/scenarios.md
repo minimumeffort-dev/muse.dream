@@ -33,3 +33,8 @@ school or ecosystem. Services are finite task rules, without clinical, learning
 or biological validity claims.
 
 [Dream language reference](language/reference.md)
+
+For a browser-independent episode with a separate mock controller, use the
+[local agent protocol](agent-protocol.md). The same source, action rules and
+replay checks apply. Paused or completed runs expose Report in the viewer, with
+step links for blocked requests and violations.
