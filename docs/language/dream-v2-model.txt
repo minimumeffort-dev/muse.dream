@@ -657,13 +657,13 @@ An optional scenario block describes a logical graph environment, separate from 
 movement/NPC clocks. Do not claim physical navigation, clinical or learning outcomes.
 scenario morning(seed=7,max_steps=80){ ... }
 Block-local commands, IDs unique across kinds, no callbacks or generated scripts:
-item bread(label="Bread");
-location shop(label="Shop",at=[100,200]);
+item bread(label="Bread",look=bread);
+location shop(label="Shop",at=[100,200],look=bakery);
 link walk(from=shop,to=school,steps=3);
 stock shelf(at=shop,item=bread,mode=source,quantity=8,price=2);
 stock delivered(at=school,item=bread,mode=sink,quantity=0);
 service session(at=school,consumes=material,produces=receipt,duration=4,capacity=1,fee=1);
-agent courier(at=shop,budget=16,capacity=4);
+agent courier(at=shop,budget=16,capacity=4,look=courier_a);
 objective breakfast(agent=courier,kind=deliver,at=school,item=bread,quantity=2);
 All references need typed declarations in the same block. Links are bidirectional;
 all locations connected. Steps/durations are integer ticks including the start tick.
@@ -682,6 +682,15 @@ Every agent needs a goal; delivery goals need a matching sink and production goa
 need a matching service. An item needs finite initial stock or a production chain.
 No guarantee of affordability/solvability. The current lab requires a standalone
 scenario; it cannot yet apply logical actions to the rendered city's actors.
+Optional Lab presentation fields:
+location.look=plaza|pavilion|bakery|school|clinic|warehouse|stockroom|library|classroom;
+agent.look=courier_a|courier_b|worker|learner; item.look=none|bread|kit|parcel|book.
+Omitted looks use pavilion/courier_a/kit. none hides an abstract item result.
+location.facing_deg is finite -360..360; zero faces -Z, 90 faces -X. Omit to face
+connected neighbors. Location at is the network arrival point; the catalog owns
+measured model dimensions and entrance offsets. Agent at selects its spawn.
+IDs/labels never choose assets. Looks resolve only the closed local catalog, never
+files, scripts, URLs or behaviors. Presentation does not change rules or scoring.
 Keep unsupported user intent explicit instead of inventing vocabulary.
 
 ## voxels

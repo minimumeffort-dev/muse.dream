@@ -4,7 +4,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {createLabHost,type ExternalMockConnection} from '../server/lab-host';
 import {ExperimentStore,type ExperimentConfig,type StoreOptions} from '../server/experiments';
-import {DEFAULT_PARAMETERS,DEFAULT_TASK,DEFAULT_WORLD,mockAction,replayEpisode} from '../src/framework';
+import {BRIEF_BUILDER,SCENARIO_BRIEFS,DEFAULT_PARAMETERS,DEFAULT_TASK,DEFAULT_WORLD,buildFromBrief,mockAction,replayEpisode} from '../src/framework';
 import type {AgentDecision} from '../src/agent-runtime';
 
 const admin='private-test-admin';
@@ -38,6 +38,21 @@ async function ended(host:Awaited<ReturnType<typeof start>>,runId:string){
   }throw Error('Run did not finish');
 }
 const action=(decision:AgentDecision)=>{const {observation,...identity}=decision;return {...identity,action:mockAction(observation)};};
+
+it('creates every selectable world over HTTP and preserves its source-authored presentation on restart',async()=>{
+  const host=await start(),pins=[];
+  for(const brief of SCENARIO_BRIEFS){
+    const {scenario}=buildFromBrief(brief.world,brief.task,DEFAULT_PARAMETERS);
+    const input:ExperimentConfig={name:brief.label,input:{mode:'brief',world:brief.world,task:brief.task,parameters:DEFAULT_PARAMETERS,builder:BRIEF_BUILDER},controllers:scenario.agents.map(a=>({actor:a.id,kind:'baseline'}))};
+    const {run}=await savedRun(host,input);pins.push(run);
+    expect((await ended(host,run.id)).metrics).toMatchObject({success:true,violations:0});
+    const exported=await host.request(`/api/runs/${run.id}/export`),replayed=await replayEpisode(exported.text);
+    expect(replayed.episode.scenario.locations.map(l=>l.look)).toEqual(scenario.locations.map(l=>l.look));
+    expect((await host.request(`/api/runs/${run.id}/report`)).json().metrics.success).toBe(true);
+  }
+  await host.close();const reopened=await start(host.directory);
+  for(const pin of pins)expect((await reopened.request(`/api/runs/${pin.id}`)).json()).toMatchObject({sourceHash:pin.sourceHash,status:'completed'});
+});
 
 it('saves revisions, runs changed budgets, and preserves both replayable outcomes after restarting the host',async()=>{
   const host=await start(),first=await savedRun(host);

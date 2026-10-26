@@ -4,7 +4,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {ExperimentStore,type ExperimentConfig} from '../server/experiments';
 import {ExperimentRun} from '../src/runner';
-import {DEFAULT_WORLD,DEFAULT_TASK,DEFAULT_PARAMETERS,replayEpisode} from '../src/framework';
+import {BRIEF_BUILDER,DEFAULT_WORLD,DEFAULT_TASK,DEFAULT_PARAMETERS,replayEpisode} from '../src/framework';
 const directories:string[]=[];
 const config=(budget=16):ExperimentConfig=>({name:'Delivery',input:{mode:'brief',world:DEFAULT_WORLD,task:DEFAULT_TASK,parameters:{...DEFAULT_PARAMETERS,budget}},controllers:[{actor:'courier_a',kind:'external-mock'},{actor:'courier_b',kind:'baseline'}]});
 const fresh=async()=>{const directory=await mkdtemp(join(tmpdir(),'dream-store-'));directories.push(directory);return {directory,store:await ExperimentStore.open(directory)};};
@@ -26,6 +26,17 @@ it('pins both budget revisions and their outcomes across host restart',async()=>
   expect((await replayEpisode(old.recording)).episode.state.terminated).toBe(true);
   expect((await reopened.getExperiment(first.id,1)).sourceHash).toBe(runA.sourceHash);
   expect((await stat(join(directory,'index.json'))).mode&0o777).toBe(0o600);expect((await stat(join(directory,'runs',runA.id+'.json'))).mode&0o777).toBe(0o600);
+});
+it('reopens old delivery pins and explicitly upgrades the builder in a new revision',async()=>{
+  const {directory,store}=await fresh(),old=await store.save(config()),oldRun=await store.createRun(old.id,1,'legacy');await complete(store,oldRun.id);
+  expect(old.source).not.toContain('look=');
+  const nextConfig=config();if(nextConfig.input.mode!=='brief')throw Error('Expected brief');nextConfig.input.builder=BRIEF_BUILDER;
+  const next=await store.save(nextConfig,{id:old.id,expectedRevision:1});expect(next.source).toContain('look=bakery');
+  expect(next.sourceHash).not.toBe(old.sourceHash);
+  const reopened=await ExperimentStore.open(directory);
+  expect((await reopened.getExperiment(old.id,1)).sourceHash).toBe(old.sourceHash);
+  expect((await reopened.getRun(oldRun.id)).recording).toBe((await store.getRun(oldRun.id)).recording);
+  expect((await reopened.getExperiment(old.id)).config).toEqual(nextConfig);
 });
 it('serializes revision races and idempotent start retries without changing pins',async()=>{
   const {directory,store}=await fresh(),experiment=await store.save(config());

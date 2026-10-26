@@ -2,7 +2,7 @@ import {ExperimentClient} from './experiment-client';
 import {compareRuns} from './compare-runs';
 import type {ControllerAssignment,ExperimentConfig,SavedExperiment,RunSummary,SavedRunReport} from './experiment-types';
 import type {EvidenceRef} from './report';
-import {DEFAULT_WORLD,DEFAULT_TASK,DEFAULT_PARAMETERS} from './framework';
+import {BRIEF_BUILDER,DEFAULT_WORLD,DEFAULT_TASK,DEFAULT_PARAMETERS} from './framework';
 const get=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 const name=(text:string)=>text.replaceAll('_',' ').replace(/\b\w/g,c=>c.toUpperCase());
 const text=(tag:string,value:string)=>{const node=document.createElement(tag);node.textContent=value;return node;};
@@ -101,7 +101,7 @@ export class ExperimentWorkspace {
     if(this.pending||!this.client)return;
     this.selectionRevision++;
     this.requestRevision++;this.selected=undefined;this.selectedRun='';this.runs=[];this.compared=[];
-    this.comparisonRevision++;get('run-comparison').hidden=true;this.callbacks.clearRun();this.callbacks.applyDraft({name:'Morning delivery',input:{mode:'brief',world:DEFAULT_WORLD,task:DEFAULT_TASK,parameters:{...DEFAULT_PARAMETERS}},controllers:[]});
+    this.comparisonRevision++;get('run-comparison').hidden=true;this.callbacks.clearRun();this.callbacks.applyDraft({name:'Morning delivery',input:{mode:'brief',world:DEFAULT_WORLD,task:DEFAULT_TASK,parameters:{...DEFAULT_PARAMETERS},builder:BRIEF_BUILDER},controllers:[]});
     this.choices=[];this.setActors(['courier_a','courier_b']);this.renderRuns();this.renderExperiments();this.remember();this.changed();
   }
   private async openExperiment(experiment:SavedExperiment,preferredRun?:string){

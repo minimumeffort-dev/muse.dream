@@ -5,9 +5,11 @@ data describes locations, links, resources, services, agents and objectives.
 The engine owns transfers, capacity, deadlines and completion. Policies receive
 their own observations and submit actions.
 
-The [morning delivery source](../examples/morning-delivery.dream) is the mock
-builder's template. The [classroom source](../examples/classroom.dream) is a
-second runnable task. Open Dream source, choose Edit, paste a scenario and Run.
+The [delivery](../examples/morning-delivery.dream),
+[warehouse](../examples/warehouse.dream) and [classroom](../examples/classroom.dream)
+sources are the three selectable mock briefs. Each includes validated presentation
+for its buildings, agents and carried objects. [Build a scenario world](worlds.md)
+explains the catalog and connected entrance layout. Open Dream source, choose Edit, paste a scenario and Run.
 Use brief returns to the delivery template and its numeric parameters.
 
 Run and replay an export from this folder:
@@ -22,13 +24,12 @@ JSONL pins canonical source, its SHA-256, seed and policy label, then records
 observations, actions, outcomes and rewards for every transition. Replay
 recompiles that source and verifies every transition.
 
-The mock builder recognizes the supplied delivery brief only. Change Agents,
+The mock builder recognizes the three supplied briefs exactly. Change Agents,
 Budget, Deadline or Seed there; use source mode for other tasks. Invalid drafts
-preserve the last accepted run. Reload clears local run history, so export is
-the durable record.
+preserve the last accepted run. The saved host retains history; the static browser
+baseline resets on reload, so export preserves its record.
 
-The 3D view uses the [local asset pack and presentation rules](port.md). Generic
-locations remain generic pavilions; a label cannot imply a simulated hospital,
+The 3D view uses the [local asset pack and presentation rules](port.md). Locations without `look` receive generic pavilions; a label cannot imply a simulated hospital,
 school or ecosystem. Services are finite task rules, without clinical, learning
 or biological validity claims.
 

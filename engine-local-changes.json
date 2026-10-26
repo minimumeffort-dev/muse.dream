@@ -1,0 +1,20 @@
+{
+  "description": "Intentional local changes; engine-provenance.json retains the unmodified original snapshot.",
+  "files": [
+    {
+      "path": "scene/scenario.ts",
+      "sha256": "4a904ecddf7d57d076e020c28a4af5536cd833e5815d53f4ab61c58de8c8d3ee",
+      "reason": "Accept optional closed presentation looks and building heading without changing existing scenario defaults or logical transitions."
+    },
+    {
+      "path": "scene/dream-contract.ts",
+      "sha256": "2e082e85a2ff8dda938ca4867e83e2d175d65caf942369d45f8a2336866f366b",
+      "reason": "Expose optional scenario presentation fields through the canonical Dream 2 parser contract."
+    },
+    {
+      "path": "scene/scenario-looks.ts",
+      "sha256": "d1e408a230663d23b3c7f70c03d3fedc2acd0b5a0eb23635007d849d53847c89",
+      "reason": "Define the closed Lab appearance vocabulary, shared by schema validation and the command contract."
+    }
+  ]
+}

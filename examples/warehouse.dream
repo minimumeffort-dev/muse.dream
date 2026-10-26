@@ -1,0 +1,20 @@
+dream 2;
+scenario warehouse_restock(seed=7,max_steps=80){
+  item parcel(label="Stock carton",look=parcel);
+  location receiving(label="Receiving dock",at=[150,350],look=warehouse);
+  location aisle(label="Loading yard",at=[450,350],look=plaza);
+  location north_racks(label="North stockroom",at=[750,100],look=stockroom);
+  location south_racks(label="South stockroom",at=[750,600],look=stockroom);
+  link receiving_lane(from=receiving,to=aisle,steps=2);
+  link north_lane(from=aisle,to=north_racks,steps=3);
+  link south_lane(from=aisle,to=south_racks,steps=3);
+  stock incoming(at=receiving,item=parcel,mode=source,quantity=12,price=2);
+  stock north_shelf(at=north_racks,item=parcel,mode=sink,quantity=0);
+  stock south_shelf(at=south_racks,item=parcel,mode=sink,quantity=0);
+  agent worker_a(at=receiving,budget=16,capacity=2,look=worker);
+  agent worker_b(at=receiving,budget=16,capacity=2,look=worker);
+  objective north_a(agent=worker_a,kind=deliver,at=north_racks,item=parcel,quantity=1);
+  objective south_a(agent=worker_a,kind=deliver,at=south_racks,item=parcel,quantity=1);
+  objective north_b(agent=worker_b,kind=deliver,at=north_racks,item=parcel,quantity=1);
+  objective south_b(agent=worker_b,kind=deliver,at=south_racks,item=parcel,quantity=1);
+}

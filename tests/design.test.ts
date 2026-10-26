@@ -13,6 +13,8 @@ it('builds the active workspace with local fonts and no retired review artifacts
  expect(html).toContain('<script type="module" src="/src/main.ts"></script>');
  expect(html).toContain('aria-label="Provider: local mock"');
  expect(html).toContain('id="experiment-world"');
+ for(const brief of ['delivery','warehouse','classroom'])expect(html).toContain(`id="brief-${brief}"`);
+ expect(html).toContain('aria-label="Scenario brief"');
  expect(body).not.toMatch(/\b(demo|illustrative|sample|prototype|preview|mock)\b/i);
  expect(html).not.toMatch(/<iframe\b|src="https?:|Design variants|Capture frames/);
  expect(existsSync(new URL('../design-review.json',import.meta.url))).toBe(false);

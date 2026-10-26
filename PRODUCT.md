@@ -26,8 +26,9 @@ Workspace now uses local copies of the compiler, logical episode engine,
 recording format and selected Three.js rendering modules. Run, pause, step,
 history seeking, direct source editing and JSONL export work. The 3D buildings,
 walking agents, carried purchases and service gestures observe accepted state.
-The local builder
-expands only the provided morning-delivery brief and bounded parameters; baseline
+The local builder expands three explicit briefs: delivery, warehouse restocking
+and classroom preparation, with bounded parameters. Validated Dream presentation
+selects buildings, appearances and cargo independently of scenario IDs. Baseline
 agents are deterministic mocks. A separate local HTTP host accepts actor-scoped
 decisions, commits joint steps and continues when its viewer closes. One external
 mock process proves that boundary. Post-run reports link findings to exact

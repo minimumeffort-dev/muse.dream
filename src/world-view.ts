@@ -5,13 +5,13 @@ import {compactObject} from './engine/game/compact-object';
 import {CharacterAnimator} from './engine/game/character-animation';
 import {measuredScale} from './engine/scene/measure';
 import type {Scenario,EpisodeState} from './framework';
-import {ASSETS,type AssetId} from './assets';
+import {ASSETS,AGENT_MODELS,type AssetId} from './assets';
 import {AGENT_COLORS} from './world-map';
-import {agentPose,scenePlan,STEP_MS,type Point} from './scene-plan';
+import {agentPose,cargoAssets,scenePlan,STEP_MS,type Point} from './scene-plan';
 
 const ground=()=>({height:.15,slopeX:0,slopeZ:0});
 const lerp=(a:number,b:number,t:number)=>a+(b-a)*t;
-type AgentView={rig:THREE.Group;animator:CharacterAnimator;cargo:THREE.Group;bread:THREE.Group;kit:THREE.Group;label:HTMLElement;last:Point;heading:number};
+type AgentView={rig:THREE.Group;animator:CharacterAnimator;items:Map<AssetId,THREE.Group>;label:HTMLElement;last:Point;heading:number};
 
 /** Observer only: meshes follow accepted transitions and cannot submit actions. */
 export class ExperimentWorld {
@@ -129,12 +129,14 @@ export class ExperimentWorld {
       const tree=this.asset('tree');tree.position.set(x!,0,z!);this.world.add(tree);
     }
     this.agents=scenario.agents.map((agent,i)=>{
-      const id=i%2?'courierB':'courierA',rig=this.asset(id),animator=new CharacterAnimator(rig,ASSETS[id]);this.world.add(rig);
-      const cargo=new THREE.Group(),bread=this.asset('bread'),kit=this.asset('kit');cargo.add(bread,kit);rig.add(cargo);
+      const id=AGENT_MODELS[agent.look??'courier_a'],rig=this.asset(id),animator=new CharacterAnimator(rig,ASSETS[id]);this.world.add(rig);
+      const cargo=new THREE.Group(),items=new Map<AssetId,THREE.Group>();
+      for(const asset of cargoAssets(scenario,Object.fromEntries(scenario.items.map(item=>[item.id,1])))){const model=this.asset(asset);model.visible=false;items.set(asset,model);cargo.add(model);}
+      rig.add(cargo);
       // Cargo is in rig-local space, beside the backpack rather than inside the torso.
       cargo.position.set(-7,34,6);cargo.scale.setScalar(1/rig.scale.x);
       const label=this.label(String.fromCharCode(65+i),'world-agent',new THREE.Vector3());label.style.background=AGENT_COLORS[i]!;label.style.color=i?'#fafaf7':'#171717';label.title=agent.id;
-      return {rig,animator,cargo,bread,kit,label,last:{x:0,z:0},heading:0};
+      return {rig,animator,items,label,last:{x:0,z:0},heading:0};
     });
     this.controls.minDistance=45;this.controls.maxDistance=span*5;this.camera.far=Math.max(3000,span*10);this.camera.updateProjectionMatrix();
     this.sun.position.copy(center).add(new THREE.Vector3(span*.65,span*1.4,span*.65));this.sun.target.position.copy(center);
@@ -168,7 +170,8 @@ export class ExperimentWorld {
       agent.rig.position.set(x,.15,z);agent.rig.rotation.y=-agent.heading;
       if(this.frozen===undefined)agent.animator.update({speed:moving?Math.hypot(dx,dz)/Math.max(.001,dt):0,grounded:true,swimming:false,verticalSpeed:0,time:this.elapsed,enabled:!this.reduced.matches,
         travel:{x,y:.15,z,heading:agent.heading},ground,working:pose.working},dt);
-      agent.bread.visible=this.scenario!.id==='morning_delivery'&&pose.cargo.includes('bread');agent.kit.visible=pose.cargo.length>0&&!agent.bread.visible;
+      const carried=cargoAssets(this.scenario!,this.state!.agents[i]!.inventory);
+      for(const [asset,model] of agent.items){model.visible=carried.includes(asset);model.position.z=carried.indexOf(asset)*5;}
       agent.last={x,z};const label=this.labels.find(l=>l.element===agent.label)!;label.point.set(x,23,z);
       agent.label.title=`${this.state!.agents[i]!.id} · ${pose.working?'Using service':moving?'Travelling':this.state!.agents[i]!.at}`;
     });
@@ -189,7 +192,7 @@ export class ExperimentWorld {
     });
     for(const [i,agent] of this.agents.entries()){
       agent.label.dataset.x=String(agent.rig.position.x);agent.label.dataset.z=String(agent.rig.position.z);
-      agent.label.dataset.cargo=agent.bread.visible?'bread':agent.kit.visible?'kit':'';
+      agent.label.dataset.cargo=[...agent.items].filter(([,model])=>model.visible).map(([asset])=>asset).join(',');
       agent.label.dataset.working=String(this.state.agents[i]!.work?.kind==='service');
     }
     this.host.dataset.step=String(this.state.step);this.host.dataset.drawCalls=String(this.renderer.info.render.calls);this.host.dataset.triangles=String(this.renderer.info.render.triangles);

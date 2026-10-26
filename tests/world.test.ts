@@ -2,7 +2,7 @@ import {it,expect} from 'vitest';
 import {Box3,Vector3,Ray} from 'three';
 import {ASSETS} from '../src/assets';
 import {scenePlan,agentPose,episodePoint,scenarioPoints} from '../src/scene-plan';
-import {buildFromBrief,DEFAULT_WORLD,DEFAULT_TASK,DEFAULT_PARAMETERS} from '../src/framework';
+import {buildFromBrief,DEFAULT_WORLD,DEFAULT_TASK,DEFAULT_PARAMETERS,SCENARIO_BRIEFS} from '../src/framework';
 import {ExperimentRun} from '../src/runner';
 import {buildCustom} from '../src/engine/game/world3d';
 import {compactObject} from '../src/engine/game/compact-object';
@@ -12,7 +12,7 @@ import {HUMANOID_BONES} from '../src/engine/scene/humanoid';
 
 const build=()=>buildFromBrief(DEFAULT_WORLD,DEFAULT_TASK,DEFAULT_PARAMETERS);
 it('ports a bounded Dream asset pack through the existing geometry builder and complete humanoid bindings',()=>{
-  expect(Object.keys(ASSETS)).toHaveLength(9);
+  expect(Object.keys(ASSETS)).toHaveLength(17);
   for(const [id,spec] of Object.entries(ASSETS)){
     const group=compactObject(buildCustom({id,kind:'custom',labelText:spec.displayName,x:0,y:0,scale:measuredScale(spec),spec}));
     const box=new Box3().setFromObject(group),size=box.getSize(new Vector3());
@@ -26,15 +26,15 @@ it('ports a bounded Dream asset pack through the existing geometry builder and c
     }
   }
 });
-it('uses only accepted links and attaches each default building entrance to its connected apron',()=>{
-  const {scenario}=build(),before=structuredClone(scenario),plan=scenePlan(scenario);
+it('uses only accepted links and attaches every authored building entrance to its connected apron',()=>{
+ for(const brief of SCENARIO_BRIEFS){
+  const {scenario}=buildFromBrief(brief.world,brief.task,DEFAULT_PARAMETERS),before=structuredClone(scenario),plan=scenePlan(scenario);
   expect(plan.links.map(l=>l.id)).toEqual(scenario.links.map(l=>l.id));
-  expect(plan.locations.filter(l=>l.asset).map(l=>l.asset)).toEqual(['bakery','school','clinic']);
+  expect(plan.locations.filter(l=>l.asset)).toHaveLength(3);
   for(const location of plan.locations.filter(l=>l.asset)){
-    const c=Math.cos(location.yaw),s=Math.sin(location.yaw),entry=location.asset==='clinic'?{x:-18,z:-28.7}:{x:0,z:undefined};
+    const c=Math.cos(location.yaw),s=Math.sin(location.yaw),entry=location.entry;
     const group=buildCustom({id:location.id,kind:'custom',labelText:location.label,x:0,y:0,scale:location.scale,spec:ASSETS[location.asset!]});
-    const z=entry.z===undefined?new Box3().setFromObject(group).min.z:entry.z*location.scale;
-    const x=entry.x*location.scale;
+    const z=entry.z,x=entry.x;
     expect(location.position.x+x*c+z*s).toBeCloseTo(location.door.x);
     expect(location.position.z-x*s+z*c).toBeCloseTo(location.door.z);
     expect(Math.hypot(location.point.x-location.door.x,location.point.z-location.door.z)).toBeCloseTo(24);
@@ -46,6 +46,7 @@ it('uses only accepted links and attaches each default building entrance to its 
     }
   }
   expect(scenario).toEqual(before);
+ }
 });
 it('derives travel, cargo and service poses from recorded state without changing it or its outcome',async()=>{
   const run=await ExperimentRun.create(build().source),points=scenarioPoints(run.scenario),initial=structuredClone(run.at(0));

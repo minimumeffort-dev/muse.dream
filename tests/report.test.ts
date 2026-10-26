@@ -30,8 +30,8 @@ it('reports observed resources and per-agent progress without mutating the accep
 it('counts all travel and service duration steps, including their starts and completion steps',()=>{
   const source=readFileSync(new URL('../examples/classroom.dream',import.meta.url),'utf8');
   const report=buildRunReport(finish(createEpisode(compileExperiment(source).scenario)));
-  expect(report.metrics).toMatchObject({steps:9,completed:1,success:true});
-  expect(report.agents[0]!.steps).toEqual({travel:3,service:5,idle:0,other:1});
+  expect(report.metrics).toMatchObject({steps:11,completed:2,success:true});
+  expect(report.agents[0]!.steps).toEqual({travel:5,service:5,idle:0,other:1});
 });
 
 it('retains partial objective units, separates idle from rejected requests and does not call a partial run successful',()=>{

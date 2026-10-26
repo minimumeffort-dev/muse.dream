@@ -17,6 +17,7 @@ it('builds only current Lab guides, fonts and source examples with working local
   expect(generated.some(file=>/(?:^|\/)(media|evidence)(?:\/|$)/.test(file))).toBe(false);
   expect(existsSync(resolve(output,'examples/morning-delivery.dream'))).toBe(true);
   expect(existsSync(resolve(output,'examples/classroom.dream'))).toBe(true);
+  expect(existsSync(resolve(output,'examples/warehouse.dream'))).toBe(true);
   expect(existsSync(resolve(output,'site/fonts/manrope-latin.woff2'))).toBe(true);
   expect(existsSync(resolve(output,'site/fonts/archivo-latin.woff2'))).toBe(true);
   const contract=resolve(root,'docs/language/dream-v2-contract.json');

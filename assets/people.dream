@@ -129,3 +129,15 @@ object courier_b(label="Courier B"){
  use anatomy(component=civic_person,args=[0,1,1],materials=[blue,deep_skin,deep_skin,dark,dark]);
  mount head(bone=spine){use hair(component=hair_cut,args=[1],materials=[hair]);}
 }
+material workwear(style=toon,colors=[#b8793e,#8e5d32]);
+material campus(style=toon,colors=[#6c6a8a,#4d4d68]);
+object worker(label="Warehouse worker"){
+ measure(kind=person,axis=y,meters=1.8);body(interaction=decor,radius=13,height=57);
+ use anatomy(component=civic_person,args=[0,1,0],materials=[workwear,deep_skin,deep_skin,dark,dark]);
+ mount head(bone=spine){use hair(component=hair_cut,args=[0],materials=[hair]);}
+}
+object learner(label="Campus learner"){
+ measure(kind=person,axis=y,meters=1.7);body(interaction=decor,radius=13,height=57);
+ use anatomy(component=civic_person,args=[0,1,1],materials=[campus,skin,skin,dark,white]);
+ mount head(bone=spine){use hair(component=hair_cut,args=[1],materials=[hair]);}
+}

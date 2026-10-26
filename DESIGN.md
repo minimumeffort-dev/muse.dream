@@ -41,3 +41,11 @@ Two selected runs reveal a table of pinned changes and metrics, with evidence
 buttons into each replay. Partial results and differing seeds remain explicit.
 Tab-scoped credentials and the selected run survive reload; durable history belongs
 to the host. Pausing affects replay only. No capture archives accompany this slice.
+
+Three compact, keyboard accessible brief buttons select Delivery, Warehouse or
+Classroom. Pressed state reflects the editable brief, never the accepted run.
+Choosing a brief preserves playback until Run accepts its replacement. Source
+mode preserves its manual draft when returning to a brief. Existing gutters,
+colors and native focus treatment apply; no additional explanatory chrome.
+Sidebar sections retain their content height and scroll together, including long
+controller summaries for larger cohorts.

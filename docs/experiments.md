@@ -16,8 +16,9 @@ tab can connect using the private URL again. Do not share this file or token.
 ## Create an experiment
 
 Name the experiment, enter World and Task, and choose Agents, Budget, Deadline
-and Seed. The brief builder still supports morning delivery only; source mode
-accepts another supported standalone Dream scenario.
+and Seed. Select Delivery, Warehouse or Classroom to load its brief; source mode
+accepts custom standalone Dream scenarios. [World authoring](worlds.md) covers
+appearances, layouts and a warehouse stock comparison.
 
 Each compiled actor has an explicit controller. Use its button to choose
 Baseline or External mock. The external mock runs in a separate Node process
@@ -28,7 +29,9 @@ Save keeps a revision without starting a run. Run saves a changed draft, pins
 that revision and starts its episode on the host. New starts another experiment.
 Invalid drafts leave the accepted run and saved history intact.
 
-Every saved revision contains the exact canonical Dream source, its SHA-256,
+New brief revisions pin builder `scenarios-1`; older delivery revisions keep the
+original builder and source hash. Selecting Delivery explicitly upgrades its
+draft. Every saved revision contains the exact canonical Dream source, its SHA-256,
 seed, inputs and actor assignments. Each run pins its own revision. Editing a
 budget or controller later cannot change an earlier run's configuration or trace.
 Concurrent edits require the expected revision; stale saves return an error.

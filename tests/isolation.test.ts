@@ -5,6 +5,7 @@ import {resolve,dirname,relative} from 'node:path';
 import {createHash} from 'node:crypto';
 import ts from 'typescript';
 import provenance from '../engine-provenance.json';
+import localChanges from '../engine-local-changes.json';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 it('keeps every application source import inside the Lab or its declared packages',()=>{
@@ -23,10 +24,16 @@ it('keeps every application source import inside the Lab or its declared package
   };visit(resolve(root,'src'));
   expect(JSON.parse(readFileSync(resolve(root,'tsconfig.json'),'utf8')).extends).toBeUndefined();
 });
-it('pins the copied engine bytes to a committed source snapshot and excludes the city entry points',()=>{
+it('retains original engine provenance and verifies separately documented local changes',()=>{
   expect(provenance.revision).toMatch(/^[a-f0-9]{40}$/);
-  for(const file of provenance.files){
+  expect(new Set(localChanges.files.map(f=>f.path)).size).toBe(localChanges.files.length);
+  for(const file of localChanges.files){
+    expect(file.reason.length).toBeGreaterThan(20);
     expect(createHash('sha256').update(readFileSync(resolve(root,'src/engine',file.path))).digest('hex')).toBe(file.sha256);
+  }
+  for(const file of provenance.files){
+    const local=localChanges.files.find(f=>f.path===file.path);
+    expect(createHash('sha256').update(readFileSync(resolve(root,'src/engine',file.path))).digest('hex')).toBe(local?.sha256??file.sha256);
     expect(file.path).not.toMatch(/world-fixture|game\/main|world\//);
   }
 });

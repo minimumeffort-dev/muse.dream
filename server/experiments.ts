@@ -10,7 +10,7 @@ const parameters=z.object({agents:z.number().int().min(1).max(8),budget:z.number
 export const experimentConfigSchema=z.object({
   name:z.string().trim().min(1).max(100),
   input:z.discriminatedUnion('mode',[
-    z.object({mode:z.literal('brief'),world:z.string().max(2000),task:z.string().max(2000),parameters}).strict(),
+    z.object({mode:z.literal('brief'),world:z.string().max(2000),task:z.string().max(2000),parameters,builder:z.literal('scenarios-1').optional()}).strict(),
     z.object({mode:z.literal('source'),source:z.string().max(65536)}).strict(),
   ]),
   controllers:z.array(z.object({actor:id,kind:z.enum(['baseline','external-mock'])}).strict()).min(1).max(8),
@@ -94,7 +94,7 @@ export class ExperimentStore {
   private async accepted(input:unknown){
     const parsed=experimentConfigSchema.safeParse(input);if(!parsed.success)fail('INVALID_CONFIG','Invalid experiment configuration. Check name, inputs and controller assignments.');
     try{
-    const config=parsed.data,accepted=config.input.mode==='brief'?buildFromBrief(config.input.world,config.input.task,config.input.parameters):compileExperiment(config.input.source);
+    const config=parsed.data,accepted=config.input.mode==='brief'?buildFromBrief(config.input.world,config.input.task,config.input.parameters,config.input.builder??'delivery-1'):compileExperiment(config.input.source);
     const actors=accepted.scenario.agents.map(a=>a.id);
     if(config.controllers.length!==actors.length||new Set(config.controllers.map(c=>c.actor)).size!==actors.length||config.controllers.some(c=>!actors.includes(c.actor)))fail('INVALID_CONFIG','Assign exactly one controller to each compiled actor.');
     const manifest=await recordingManifest(accepted.source,'mock-agent-protocol-1');

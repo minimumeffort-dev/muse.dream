@@ -1,6 +1,6 @@
 import type {Parameters} from './framework';
 import type {RunReport} from './report';
-export type ExperimentInput={mode:'brief';world:string;task:string;parameters:Parameters}|{mode:'source';source:string};
+export type ExperimentInput={mode:'brief';world:string;task:string;parameters:Parameters;builder?:'scenarios-1'}|{mode:'source';source:string};
 export interface ControllerAssignment {actor:string;kind:'baseline'|'external-mock'}
 export interface ExperimentConfig {name:string;input:ExperimentInput;controllers:ControllerAssignment[]}
 export interface SavedExperiment {id:string;revision:number;name:string;config:ExperimentConfig;source:string;sourceHash:string;seed:number;createdAt:string;updatedAt:string}

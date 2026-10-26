@@ -1,4 +1,4 @@
-import {buildFromBrief,compileExperiment,createEpisode,DEFAULT_WORLD,DEFAULT_TASK,DEFAULT_PARAMETERS,type Parameters} from './framework';
+import {buildFromBrief,compileExperiment,createEpisode,BRIEF_BUILDER,SCENARIO_BRIEFS,DEFAULT_WORLD,DEFAULT_TASK,DEFAULT_PARAMETERS,type Parameters,type BriefBuilder} from './framework';
 import {ExperimentSession} from './runner';
 import {AGENT_COLORS} from './world-map';
 import {ExperimentWorld} from './world-view';
@@ -22,10 +22,10 @@ let view:ExperimentWorld|undefined,viewError='';
 function graphicsFailure(message:string){viewError=message;stop();showError(message);render();}
 const fields=['agents','budget','deadline','seed'] as const;
 const controls=fields.map(key=>get<HTMLInputElement>('parameter-'+key));
-let manual=false,manualDraft='',cursor=0,timer:number|undefined,exportUrl='',exportOwner:unknown,exportLength=-1;
+let manual=false,manualDraft='',builder:BriefBuilder=BRIEF_BUILDER,cursor=0,timer:number|undefined,exportUrl='',exportOwner:unknown,exportLength=-1;
 const showReport=createReportView(get('run-report'),evidence=>{stop();following=false;cursor=evidence.step;render();});
 const savedWorkspace=new ExperimentWorkspace({
-  readDraft:()=>({name:get<HTMLInputElement>('experiment-name').value,input:manual?{mode:'source',source:source.value}:{mode:'brief',world:world.value,task:task.value,parameters:parameters()}}),
+  readDraft:()=>({name:get<HTMLInputElement>('experiment-name').value,input:manual?{mode:'source',source:source.value}:{mode:'brief',world:world.value,task:task.value,parameters:parameters(),...(builder===BRIEF_BUILDER?{builder:BRIEF_BUILDER}:{})}}),
   applyDraft,selectRun:selectHostedRun,
   clearRun:()=>{stopHostPolling();stop();following=false;host=undefined;cursor=0;render();},
   busy:pending=>{hostBusy=pending;render();},error:showError,
@@ -37,7 +37,7 @@ const savedWorkspace=new ExperimentWorkspace({
 });
 world.value=DEFAULT_WORLD;task.value=DEFAULT_TASK;
 controls.forEach((control,i)=>{control.value=String(DEFAULT_PARAMETERS[fields[i]!]);});
-const initial=buildFromBrief(world.value,task.value,DEFAULT_PARAMETERS),preview=createEpisode(initial.scenario);
+const initial=buildFromBrief(world.value,task.value,DEFAULT_PARAMETERS);let preview=createEpisode(initial.scenario);
 source.value=initial.source;
 try{view=new ExperimentWorld(get('experiment-world'),graphicsFailure);}catch{viewError='The 3D view needs WebGL. Enable hardware acceleration and reload.';showError(viewError);}
 
@@ -52,6 +52,7 @@ function render(animate=false){
   const playing=timer!==undefined||following;
   if(!viewError)view?.show(scenario,state,animate,playing);
   text(get('experiment-title'),label(scenario.id));
+  document.title=`${label(scenario.id)} · Dreams Lab`;
   const status=hostMode&&host?.status==='paused'?'Paused':following?'Live':timer!==undefined?'Running':run&&cursor<run.length?'Replay':state.terminated?'Completed':state.truncated?'Deadline':run?'Paused':'Ready';
   text(get('world-status'),`${scenario.agents.length} ${scenario.agents.length===1?'agent':'agents'} · ${status}`);
   const preparing=session.preparing||hostBusy,disconnected=hostMode&&!savedWorkspace.connected;
@@ -59,6 +60,7 @@ function render(animate=false){
   for(const id of ['save-experiment','new-experiment','resume-run','experiment-name','source-mode'])(get(id) as HTMLButtonElement).disabled=preparing||disconnected;
   play.disabled=step.disabled=!run||preparing||!!viewError;
   for(const control of [world,task,...controls])control.disabled=manual||preparing||disconnected;
+  for(const brief of SCENARIO_BRIEFS){const button=get<HTMLButtonElement>('brief-'+brief.id);button.disabled=preparing||disconnected;button.setAttribute('aria-pressed',String(!manual&&world.value===brief.world&&task.value===brief.task));}
   source.readOnly=!manual||preparing||disconnected;
   play.setAttribute('aria-label',playing?'Pause':'Play');
   play.innerHTML=playing?'<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>':'<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg>';
@@ -103,7 +105,7 @@ runButton.onclick=async()=>{
   stop();session.invalidate();showError();
   try{
     if(!manual&&![world,task,...controls].every(control=>control.reportValidity())){render();return;}
-    const candidate=manual?compileExperiment(source.value):buildFromBrief(world.value,task.value,parameters());
+    const candidate=manual?compileExperiment(source.value):buildFromBrief(world.value,task.value,parameters(),builder);
     const pending=session.start(candidate.source);render();const run=await pending;if(!run)return;
     source.value=candidate.source;cursor=0;render();startPlayback();
   }catch(reason){showError(reason instanceof Error?reason.message:String(reason));}
@@ -119,10 +121,15 @@ step.onclick=()=>{stop();following=false;tick();};
 timeline.oninput=()=>{stop();following=false;cursor=Number(timeline.value);render();};
 function changed(){
   session.invalidate();showError();
-  if(!manual){try{source.value=buildFromBrief(world.value,task.value,parameters()).source;}catch{/* Run reports invalid draft input without replacing the accepted episode. */}}
+  if(!manual){try{const candidate=buildFromBrief(world.value,task.value,parameters(),builder);source.value=candidate.source;preview=createEpisode(candidate.scenario);}catch{/* Run reports invalid draft input without replacing the accepted episode. */}}
   updateControllers();savedWorkspace.changed();render();
 }
 for(const control of [world,task,...controls])control.addEventListener('input',changed);
+for(const brief of SCENARIO_BRIEFS)get<HTMLButtonElement>('brief-'+brief.id).onclick=()=>{
+  if(manual)manualDraft=source.value;manual=false;builder=BRIEF_BUILDER;sourceMode.textContent='Edit';
+  world.value=brief.world;task.value=brief.task;get<HTMLInputElement>('experiment-name').value=brief.label;
+  changed();
+};
 source.oninput=()=>{session.invalidate();showError();updateControllers();savedWorkspace.changed();render();};
 get('experiment-name').addEventListener('input',()=>savedWorkspace.changed());
 sourceMode.onclick=()=>{
@@ -160,8 +167,8 @@ function updateControllers(){try{savedWorkspace.setActors(compileExperiment(sour
 function applyDraft(config:ExperimentConfig){
   get<HTMLInputElement>('experiment-name').value=config.name;manual=config.input.mode==='source';
   if(config.input.mode==='brief'){
-    const input=config.input;world.value=input.world;task.value=input.task;controls.forEach((control,i)=>control.value=String(input.parameters[fields[i]!]));
-    source.value=buildFromBrief(world.value,task.value,parameters()).source;
+    const input=config.input;builder=input.builder??'delivery-1';world.value=input.world;task.value=input.task;controls.forEach((control,i)=>control.value=String(input.parameters[fields[i]!]));
+    const candidate=buildFromBrief(world.value,task.value,parameters(),builder);source.value=candidate.source;preview=createEpisode(candidate.scenario);
   }else{source.value=config.input.source;manualDraft=source.value;}
   sourceMode.textContent=manual?'Use brief':'Edit';updateControllers();render();
 }

@@ -35,18 +35,24 @@ Expressions support finite numbers, constants, unary signs, arithmetic, parenthe
 
 ### Logical scenarios and episodes
 
-These commands describe a bounded task network. They do not change NPC clocks, the 3D layout or driving physics. [Rules, runtime actions and recordings](https://github.com/minimumeffort-dev/muse.dream/blob/f5d9703ea8b34e3b3480ae84f7542c4c4682d43d/docs/dream/scenarios.md).
+These commands describe a bounded task network. They do not change NPC clocks or driving physics. Optional Lab presentation
+fields choose models in its 3D observer; see [scenario worlds](../worlds.md). [Rules, runtime actions and recordings](https://github.com/minimumeffort-dev/muse.dream/blob/f5d9703ea8b34e3b3480ae84f7542c4c4682d43d/docs/dream/scenarios.md).
 
 | Command | Context | ID / block | Fields |
 | --- | --- | --- | --- |
 | `scenario` | top | ID / scenario | `seed: n`, `max_steps: n` |
-| `item` | scenario | ID / no block | `label: text` |
-| `location` | scenario | ID / no block | `label: text`, `at: v2` |
+| `item` | scenario | ID / no block | `label: text`, `look?: none / bread / kit / parcel / book` |
+| `location` | scenario | ID / no block | `label: text`, `at: v2`, `look?: plaza / pavilion / bakery / school / clinic / warehouse / stockroom / library / classroom`, `facing_deg?: n` |
 | `link` | scenario | ID / no block | `from: ref`, `to: ref`, `steps: n` |
 | `stock` | scenario | ID / no block | `at: ref`, `item: ref`, `mode: source / sink`, `quantity: n`, `price?: n` |
 | `service` | scenario | ID / no block | `at: ref`, `consumes: ref`, `produces: ref`, `duration: n`, `capacity: n`, `fee: n` |
-| `agent` | scenario | ID / no block | `at: ref`, `budget: n`, `capacity: n` |
+| `agent` | scenario | ID / no block | `at: ref`, `budget: n`, `capacity: n`, `look?: courier_a / courier_b / worker / learner` |
 | `objective` | scenario | ID / no block | `agent: ref`, `kind: deliver / produce`, `at: ref`, `item: ref`, `quantity: n` |
+
+`look` is an optional closed catalog name, never a file or URL. Omitted location,
+agent and item looks use pavilion, courier_a and kit. Item `none` hides abstract
+results. `facing_deg` is finite -360..360; omit it for neighbor-facing entrances.
+These fields affect presentation only; the engine still owns every task outcome.
 
 One scenario per project. Its IDs are block-local and unique across declaration kinds. References must have the expected type. Locations form a connected undirected graph. `max_steps` is integer 1..1000; seed 0..2147483647; coordinates 0..14000. At most 32 locations/items/services/objectives, 64 links/stocks and eight agents. Link steps and service duration are 1..100, service capacity 1..8, agent capacity 1..100, objective quantity 1..1000. Stock quantity is 0..1000; price, budget and fee are integer 0..100000. Price defaults to zero. Sinks require zero initial quantity/price and cannot be purchased. Services consume and produce one unit of different existing items. Objectives require a matching sink/service and an agent; every agent needs an objective. Delivery/production availability checks do not prove affordability or deadline feasibility. The scenario can compile beside a world, but the lab/recording runner currently accepts standalone scenarios only.
 

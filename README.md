@@ -1,8 +1,8 @@
 # Dreams Lab
 
 Define an environment and a task, run agents, then change the conditions and
-try again. The Lab shows a delivery world in Three.js, with walking couriers,
-visible purchases and service activity tied to the recorded episode.
+try again. Delivery, warehouse and classroom worlds appear in Three.js, with agents,
+carried objects and service activity tied to the recorded episode.
 
 ## Start here
 
@@ -25,7 +25,8 @@ Both are generated and ignored. CI and Vercel build directly from the root.
 
 ## Run, inspect, repeat
 
-Press **Run**. The local builder expands the morning-delivery Dream template
+Select **Delivery**, **Warehouse** or **Classroom**, then press **Run**. The local
+builder expands the chosen Dream template
 using Agents, Budget, Deadline and Seed. The compiler accepts it before a fresh
 episode starts. Agents receive private observations and submit actions through
 the rules. They cannot set rewards or completion.
@@ -53,9 +54,11 @@ Open **Dream source**, choose **Edit**, paste a standalone scenario and Run.
 **Use brief** returns to the template and preserves the manual draft in memory.
 Invalid source shows its diagnostic and preserves the accepted result.
 
-The mock builder recognizes the supplied delivery brief only. Other descriptions
-reject rather than silently producing the same world. Other supported tasks use
-the source editor. Try the [classroom scenario](examples/classroom.dream).
+The mock builder recognizes the three supplied briefs exactly. Other descriptions
+produce an error. Use source mode for custom tasks. Dream `look` fields choose
+buildings, wardrobes and carried objects from a closed catalog; locations and
+links define their connected task network. Try the [world authoring guide](docs/worlds.md)
+and [warehouse scenario](examples/warehouse.dream).
 
 ## Keep the record
 
@@ -95,8 +98,8 @@ Requests carry run, actor, step and controller identities. Retries are
 idempotent; timeouts pause the run instead of inventing actions.
 
 The 3D view observes a logical task network. It does not add city collisions or
-physical pathfinding. Explicit mock IDs bind the default buildings; other
-scenarios receive generic pavilions. The Vercel app retains the browser baseline;
+physical pathfinding. Explicit Dream presentation binds buildings and objects independently of IDs
+and labels. Omitted presentation uses generic defaults. The Vercel app retains the browser baseline;
 the local host saves experiments and run records on disk. Real Muse calls,
 hosted persistent execution and generated physical layouts remain future work.
 

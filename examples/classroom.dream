@@ -1,12 +1,19 @@
 dream 2;
-scenario class_preparation(seed=2,max_steps=50){
-  item material(label="Lesson pack");
-  item session(label="Session completed");
-  location library(label="Learning library",at=[150,200]);
-  location classroom(label="Classroom",at=[650,200]);
-  link campus_walk(from=library,to=classroom,steps=3);
-  stock lesson_packs(at=library,item=material,mode=source,quantity=4,price=1);
-  service class_session(at=classroom,consumes=material,produces=session,duration=5,capacity=1,fee=0);
-  agent learner(at=library,budget=4,capacity=1);
-  objective attend_session(agent=learner,kind=produce,at=classroom,item=session,quantity=1);
+scenario class_preparation(seed=7,max_steps=80){
+  item material(label="Lesson pack",look=book);
+  item session(label="Session completed",look=none);
+  location library(label="Learning library",at=[150,350],look=library);
+  location courtyard(label="Campus courtyard",at=[450,350],look=plaza);
+  location studio(label="Studio classroom",at=[750,100],look=classroom);
+  location seminar(label="Seminar classroom",at=[750,600],look=classroom);
+  link campus_walk(from=library,to=courtyard,steps=3);
+  link studio_walk(from=courtyard,to=studio,steps=2);
+  link seminar_walk(from=courtyard,to=seminar,steps=2);
+  stock lesson_packs(at=library,item=material,mode=source,quantity=12,price=1);
+  service studio_session(at=studio,consumes=material,produces=session,duration=5,capacity=1,fee=0);
+  service seminar_session(at=seminar,consumes=material,produces=session,duration=5,capacity=1,fee=0);
+  agent learner_a(at=library,budget=16,capacity=1,look=learner);
+  agent learner_b(at=library,budget=16,capacity=1,look=learner);
+  objective attend_a(agent=learner_a,kind=produce,at=studio,item=session,quantity=1);
+  objective attend_b(agent=learner_b,kind=produce,at=seminar,item=session,quantity=1);
 }

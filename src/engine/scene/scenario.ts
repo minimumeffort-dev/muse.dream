@@ -1,16 +1,17 @@
 import {z} from 'zod';
 import {fail,type DreamNode,type Expr} from './dream-syntax';
+import {SCENARIO_LOOKS} from './scenario-looks';
 
 export const SCENARIO_LIMITS=Object.freeze({scenarios:1,locations:32,links:64,items:32,stocks:64,services:32,agents:8,objectives:32,steps:1000});
 const id=z.string().regex(/^[a-z][a-z0-9_]{0,31}$/),quantity=z.number().int().min(1).max(1000),money=z.number().int().min(0).max(100000);
 export const scenarioSchema=z.object({
   id,seed:z.number().int().min(0).max(2147483647),maxSteps:z.number().int().min(1).max(SCENARIO_LIMITS.steps),
-  items:z.array(z.object({id,label:z.string().min(1).max(100)}).strict()).min(1).max(SCENARIO_LIMITS.items),
-  locations:z.array(z.object({id,label:z.string().min(1).max(100),at:z.tuple([z.number().finite().min(0).max(14000),z.number().finite().min(0).max(14000)])}).strict()).min(2).max(SCENARIO_LIMITS.locations),
+  items:z.array(z.object({id,label:z.string().min(1).max(100),look:z.enum(SCENARIO_LOOKS.items).optional()}).strict()).min(1).max(SCENARIO_LIMITS.items),
+  locations:z.array(z.object({id,label:z.string().min(1).max(100),at:z.tuple([z.number().finite().min(0).max(14000),z.number().finite().min(0).max(14000)]),look:z.enum(SCENARIO_LOOKS.locations).optional(),facingDeg:z.number().finite().min(-360).max(360).optional()}).strict()).min(2).max(SCENARIO_LIMITS.locations),
   links:z.array(z.object({id,from:id,to:id,steps:z.number().int().min(1).max(100)}).strict()).min(1).max(SCENARIO_LIMITS.links),
   stocks:z.array(z.object({id,at:id,item:id,mode:z.enum(['source','sink']),quantity:z.number().int().min(0).max(1000),price:money}).strict()).max(SCENARIO_LIMITS.stocks),
   services:z.array(z.object({id,at:id,consumes:id,produces:id,duration:z.number().int().min(1).max(100),capacity:z.number().int().min(1).max(8),fee:money}).strict()).max(SCENARIO_LIMITS.services),
-  agents:z.array(z.object({id,at:id,budget:money,capacity:z.number().int().min(1).max(100)}).strict()).min(1).max(SCENARIO_LIMITS.agents),
+  agents:z.array(z.object({id,at:id,budget:money,capacity:z.number().int().min(1).max(100),look:z.enum(SCENARIO_LOOKS.agents).optional()}).strict()).min(1).max(SCENARIO_LIMITS.agents),
   objectives:z.array(z.object({id,agent:id,kind:z.enum(['deliver','produce']),at:id,item:id,quantity}).strict()).min(1).max(SCENARIO_LIMITS.objectives),
 }).strict().superRefine((s,ctx)=>{
   const problem=(message:string)=>ctx.addIssue({code:'custom',message});
@@ -47,7 +48,7 @@ export function compileScenario(node:DreamNode,evaluate:(e:Expr)=>number):Scenar
   const values={id:node.id,seed:number(node,'seed'),maxSteps:number(node,'max_steps'),items:[] as unknown[],locations:[] as unknown[],links:[] as unknown[],stocks:[] as unknown[],services:[] as unknown[],agents:[] as unknown[],objectives:[] as unknown[]};
   for(const n of node.block!){
     const record:Record<string,unknown>={id:n.id};
-    for(const [key,value] of n.fields)record[key]=key==='label' ? value : key==='at'&&n.kind==='location' ? (value as Expr[]).map(evaluate) : ['quantity','price','steps','duration','capacity','fee','budget'].includes(key) ? number(n,key) : (value as Expr).name!;
+    for(const [key,value] of n.fields)record[key==='facing_deg'?'facingDeg':key]=key==='label' ? value : key==='at'&&n.kind==='location' ? (value as Expr[]).map(evaluate) : ['quantity','price','steps','duration','capacity','fee','budget','facing_deg'].includes(key) ? number(n,key) : (value as Expr).name!;
     const target={item:'items',location:'locations',link:'links',stock:'stocks',service:'services',agent:'agents',objective:'objectives'}[n.kind] as keyof Pick<typeof values,'items'|'locations'|'links'|'stocks'|'services'|'agents'|'objectives'>;
     values[target].push({...record,...(n.kind==='stock'&&!n.fields.has('price') ? {price:0} : {})});
   }

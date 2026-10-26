@@ -9,8 +9,11 @@ preserving reusable object definitions.
 `src/engine/` contains 91 copied modules: the Dream compiler and its validation
 dependencies, the logical episode and recording code, and seven rendering
 modules. `engine-provenance.json` pins every file's SHA-256 to commit
-`f5d9703ea8b34e3b3480ae84f7542c4c4682d43d`. These copies use the committed
-baseline, without the parent checkout's unfinished changes.
+`f5d9703ea8b34e3b3480ae84f7542c4c4682d43d`. The original snapshot remains unchanged in that manifest.
+[engine-local-changes.json](../engine-local-changes.json) separately records
+intentional local compiler changes and their current hashes: optional scenario
+`look` and `facing_deg` fields, with the closed presentation vocabulary. Logical
+transitions and the recording format are unchanged.
 
 The rendering subset contains the object builder, materials, rigid batching,
 indexed geometry, material coordinates, humanoid gait and character animator.
@@ -23,14 +26,15 @@ source provenance remains a record of where the port began.
 
 ## Scene and assets
 
-The local Dream pack has nine objects:
+The local Dream pack has seventeen objects:
 
 | File | Selected objects |
 | --- | --- |
 | `assets/buildings.dream` | Bakery, primary school, medical center |
-| `assets/people.dream` | Two courier wardrobes using the complete city humanoid rig |
+| `assets/people.dream` | Two courier wardrobes, worker and learner using the complete humanoid rig |
 | `assets/garden.dream` | Birch |
 | `assets/props.dream` | Bread, supply kit, generic destination pavilion |
+| `assets/lab-spaces.dream` | Warehouse, stockroom, library, classroom, carton and lesson pack |
 
 Architecture, anatomy, foliage and bread were copied from the original authored
 Dream libraries, with only their required components/materials. Courier coats
@@ -38,17 +42,21 @@ adapt those components. The kit and generic pavilion are small new Dream objects
 The closed asset pack compiles locally; it resolves no model-selected files or
 URLs. Physical sizes use Dream's measured proportions.
 
-The default mock binds explicit scenario/location IDs to the three buildings.
-Other standalone scenarios use generic destination pavilions. Display labels do
-not choose behavior or asset types. This host mapping is temporary; arbitrary
-generated scenery needs explicit validated presentation bindings first.
+Scenario `look` fields choose models from the closed host catalog. Location `at`
+sets its network arrival point; the model entrance connects through an apron.
+Optional `facing_deg` chooses orientation. Agent `at` and `look` choose spawn
+location and wardrobe; item `look` chooses visible cargo. No IDs or labels select
+assets implicitly. [World authoring](worlds.md) lists every binding and fallback.
+All three templates check route clearance against measured building bounds.
+Arbitrary authored networks remain logical; physical collision/pathfinding is
+not implied by their presentation.
 
 ## Rendered episodes
 
 Scenario links become connected paths. Building doors connect to their arrival
 aprons, facing the neighboring path. Couriers have separate visual lane slots,
 carry visible purchased items and use the existing humanoid service gesture.
-The default route clearance check uses rotated building bounds with an eight-unit
+Template route clearance checks use rotated building bounds with an eight-unit
 margin. Other authored networks are displayed without claiming physical clearance.
 
 One logical step occupies one display second. The renderer interpolates positions
@@ -68,8 +76,9 @@ WebGL failure is explicit. There is no 2D fallback.
 
 This is a 3D observation of the logical task network, not a city collision or
 navigation simulation. Agents follow accepted links; local mocks still choose
-their actions. Provider calls, generated physical layouts, persistent history and
-physical agent controllers remain later integrations. The new
+their actions. Provider calls, generated physical layouts and
+physical agent controllers remain later integrations. Saved logical runs have local
+source-pinned persistence. The new
 [local HTTP host](agent-protocol.md) runs the same logical engine in Node,
 with actor-scoped controller requests and an observing browser. It remains
 local, with source-pinned disk history, and is separate from the static Vercel deployment.

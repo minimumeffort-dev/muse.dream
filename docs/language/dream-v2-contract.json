@@ -957,7 +957,8 @@
       ],
       "id": true,
       "fields": {
-        "label": "text"
+        "label": "text",
+        "look": "none|bread|kit|parcel|book?"
       }
     },
     "location": {
@@ -967,7 +968,9 @@
       "id": true,
       "fields": {
         "label": "text",
-        "at": "v2"
+        "at": "v2",
+        "look": "plaza|pavilion|bakery|school|clinic|warehouse|stockroom|library|classroom?",
+        "facing_deg": "n?"
       }
     },
     "link": {
@@ -1016,7 +1019,8 @@
       "fields": {
         "at": "ref",
         "budget": "n",
-        "capacity": "n"
+        "capacity": "n",
+        "look": "courier_a|courier_b|worker|learner?"
       }
     },
     "objective": {
@@ -1525,6 +1529,44 @@
       "agents": 8,
       "objectives": 32,
       "steps": 1000
+    },
+    "presentation": {
+      "looks": {
+        "locations": [
+          "plaza",
+          "pavilion",
+          "bakery",
+          "school",
+          "clinic",
+          "warehouse",
+          "stockroom",
+          "library",
+          "classroom"
+        ],
+        "agents": [
+          "courier_a",
+          "courier_b",
+          "worker",
+          "learner"
+        ],
+        "items": [
+          "none",
+          "bread",
+          "kit",
+          "parcel",
+          "book"
+        ]
+      },
+      "defaults": {
+        "location": "pavilion",
+        "agent": "courier_a",
+        "item": "kit"
+      },
+      "facing_deg": [
+        -360,
+        360
+      ],
+      "semantics": "Optional appearance only. at remains the logical arrival point; catalog dimensions and entrance offsets are host-owned. No files, URLs, scripts, policies or scoring from looks."
     },
     "semantics": "Optional logical task environment, separate from driving physics and NPC clocks. Explicit bidirectional links take integer steps; source stock sells, sinks accept deliveries and cannot resell; services consume/produce one item with capacity, duration and fee. Agents have integer credits and carrying capacity. Deliver/produce objectives advance only on committed transfers/completions. Seed rotates contention priority deterministically. No generated scripts, real model calls, medical decisions or ecological realism.",
     "output": "Step API with local observations, joint actions, rewards, termination/truncation and replayable JSONL. Prompt interpreter and agent policies are labelled mocks."

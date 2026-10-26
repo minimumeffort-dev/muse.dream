@@ -1,5 +1,5 @@
 import type {EpisodeAgent,EpisodeState,Scenario} from './framework';
-import {ASSETS,DELIVERY_BUILDINGS,type AssetId} from './assets';
+import {ASSETS,LOCATION_MODELS,ITEM_MODELS} from './assets';
 import {assemblyBounds,measuredScale} from './engine/scene/measure';
 import {Vector3} from 'three';
 
@@ -20,7 +20,7 @@ export function agentPose(scenario:Scenario,state:EpisodeState,index:number,poin
   const move=agent.work?.kind==='move'?agent.work:undefined;
   const a=move?points.get(move.from)!:p,b=move?points.get(move.to)!:p,length=Math.hypot(b.x-a.x,b.z-a.z);
   return {x:p.x+(length?(-(b.z-a.z)*lane+(b.x-a.x)*row)/length:lane),z:p.z+(length?((b.x-a.x)*lane+(b.z-a.z)*row)/length:row),heading:length?Math.atan2(b.z-a.z,b.x-a.x):0,
-    cargo:Object.entries(agent.inventory).filter(([id,n])=>n>0&&!(scenario.id==='morning_delivery'&&id==='visit')).map(([id])=>id),
+    cargo:Object.entries(agent.inventory).filter(([id,n])=>n>0&&scenario.items.find(item=>item.id===id)?.look!=='none').map(([id])=>id),
     working:agent.work?.kind==='service'};
 }
 export function scenePlan(scenario:Scenario){
@@ -28,13 +28,16 @@ export function scenePlan(scenario:Scenario){
   const locations=scenario.locations.map(location=>{
     const point=points.get(location.id)!,neighbors=scenario.links.flatMap(link=>link.from===location.id?[points.get(link.to)!]:link.to===location.id?[points.get(link.from)!]:[]);
     let dx=0,dz=0;for(const n of neighbors){const d=Math.hypot(n.x-point.x,n.z-point.z)||1;dx+=(n.x-point.x)/d;dz+=(n.z-point.z)/d;}
-    const d=Math.hypot(dx,dz)||1;if(!dx&&!dz)dz=1;const front={x:dx/d,z:dz/d};
-    const asset:AssetId|undefined=scenario.id==='morning_delivery'&&location.id==='square'?undefined:scenario.id==='morning_delivery'?DELIVERY_BUILDINGS[location.id]??'pavilion':neighbors.length>2?undefined:'pavilion';
+    if(!dx&&!dz)dz=1;const angle=location.facingDeg===undefined?Math.atan2(-dx,-dz):location.facingDeg*Math.PI/180,front={x:-Math.sin(angle),z:-Math.cos(angle)};
+    const model=LOCATION_MODELS[location.look??'pavilion'],asset=model.asset;
     const scale=asset?measuredScale(ASSETS[asset]):1,bounds=asset?assemblyBounds(ASSETS[asset]):undefined;
-    const entry=asset==='clinic'?{x:-18*scale,z:-28.7*scale}:{x:0,z:(bounds?.min.z??0)*scale};
-    const yaw=Math.atan2(-front.x,-front.z),c=Math.cos(yaw),s=Math.sin(yaw),door={x:point.x-front.x*24,z:point.z-front.z*24};
+    const entry={x:(model.entry?.[0]??0)*scale,z:(model.entry?.[1]??bounds?.min.z??0)*scale};
+    const yaw=angle,c=Math.cos(yaw),s=Math.sin(yaw),door={x:point.x-front.x*24,z:point.z-front.z*24};
     const position={x:door.x-entry.x*c-entry.z*s,z:door.z+entry.x*s-entry.z*c};
-    return {id:location.id,label:location.label,point,asset,scale,yaw,position,door,height:bounds?bounds.getSize(new Vector3()).y*scale:0};
+    return {id:location.id,label:location.label,point,asset,scale,yaw,position,door,entry,height:bounds?bounds.getSize(new Vector3()).y*scale:0};
   });
   return {points,locations,links:scenario.links.map(link=>({id:link.id,a:points.get(link.from)!,b:points.get(link.to)!}))};
+}
+export function cargoAssets(scenario:Scenario,inventory:Record<string,number>){
+  return [...new Set(scenario.items.filter(item=>(inventory[item.id]??0)>0&&item.look!=='none').map(item=>ITEM_MODELS[item.look??'kit']).filter(asset=>asset!==undefined))];
 }

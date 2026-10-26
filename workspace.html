@@ -14,6 +14,7 @@
     <aside id="setup-panel" class="brief-panel" aria-label="Experiment setup">
       <form id="host-connection" hidden><label class="field">Host token<input id="host-token" type="password" autocomplete="off" required></label><button class="btn" type="submit">Connect</button></form>
       <div id="saved-library" hidden><details open><summary>Experiments</summary><div id="experiment-list" class="history-list"></div></details><details open><summary>Runs</summary><div id="run-list" class="history-list"></div></details></div>
+      <div class="brief-choices" role="group" aria-label="Scenario brief"><button id="brief-delivery" class="btn" type="button" aria-pressed="true">Delivery</button><button id="brief-warehouse" class="btn" type="button" aria-pressed="false">Warehouse</button><button id="brief-classroom" class="btn" type="button" aria-pressed="false">Classroom</button></div>
       <section><label class="field"><span class="section-label">World</span><textarea id="world-brief" maxlength="2000" aria-label="World"></textarea></label></section>
       <section><label class="field"><span class="section-label">Task</span><textarea id="task-brief" maxlength="2000" aria-label="Task"></textarea></label></section>
       <section>

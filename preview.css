@@ -283,6 +283,7 @@ body.workspace-page{--gutter:24px;height:100dvh;min-height:640px;display:flex;fl
 .workspace-page .workspace-title{height:auto;min-height:80px;padding-block:16px;flex:none}
 .workspace-page .workspace-layout{height:auto;min-height:0;flex:1}
 .workspace-page .brief-panel{overflow-y:auto;gap:16px;padding:16px var(--gutter)}
+.workspace-page .brief-panel>*{flex-shrink:0}
 .workspace-page .section-label{margin-bottom:0;font-weight:650;line-height:20px}
 .workspace-page label{line-height:20px}
 .workspace-page .field{gap:8px}
@@ -300,7 +301,7 @@ body.workspace-page{--gutter:24px;height:100dvh;min-height:640px;display:flex;fl
 .workspace-page .timeline .time{min-width:0;white-space:nowrap}
 .workspace-page .timeline input{width:100%;min-width:0;margin:0}
 .workspace-page .policy{min-height:40px;padding:8px 12px}
-.workspace-page .policy>div{display:flex;align-items:center;justify-content:space-between;flex:1;gap:12px}
+.workspace-page .policy>div{display:flex;align-items:center;justify-content:space-between;flex:1;gap:12px;min-width:0}
 .workspace-page .policy-name{line-height:20px}
 .workspace-page .activity-row{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
 .workspace-page .activity-person{align-items:flex-start}
@@ -378,6 +379,9 @@ body.workspace-page{--gutter:24px;height:100dvh;min-height:640px;display:flex;fl
 .workspace-page .controller-row{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;margin-top:8px}
 .workspace-page .controller-toggle{font-size:12px;padding:4px 8px;min-height:32px;white-space:nowrap}
 .workspace-page .controller-toggle[aria-pressed=true]{background:#f4e9bd;color:#513900}
+.workspace-page .brief-choices{display:flex;flex-wrap:wrap;gap:8px}
+.workspace-page .brief-choices .btn{font-size:12px;min-height:32px;padding:4px 8px}
+.workspace-page .brief-choices [aria-pressed=true]{background:#f4e9bd;color:#513900;border-color:#baa267}
 .workspace-page #run-comparison{max-height:320px}
 .workspace-page .comparison .report-content>p{margin-bottom:12px;overflow-wrap:anywhere}
 .workspace-page .comparison table{min-width:520px}

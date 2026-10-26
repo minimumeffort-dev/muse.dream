@@ -1,7 +1,7 @@
 import type {Parameters} from './framework';
 import type {EvidenceRef,RunReport} from './report';
 
-export type ComparisonInput={mode:'brief';world:string;task:string;parameters:Parameters}|{mode:'source';source:string};
+export type ComparisonInput={mode:'brief';world:string;task:string;parameters:Parameters;builder?:'scenarios-1'}|{mode:'source';source:string};
 export interface ComparisonController {actor:string;kind:string}
 export interface ComparableRun {
   id:string;name?:string;experimentId?:string;revision?:number;
@@ -30,6 +30,7 @@ export function compareRuns(baseline:ComparableRun,candidate:ComparableRun){
     change('input.mode',left.mode,right.mode);
     if(left.mode==='brief'&&right.mode==='brief'){
       change('input.world',left.world,right.world);change('input.task',left.task,right.task);
+      change('input.builder',left.builder??'delivery-1',right.builder??'delivery-1');
       for(const field of parameters)change(`input.parameters.${field}`,left.parameters[field],right.parameters[field]);
       if(!changes.length&&baseline.sourceHash!==candidate.sourceHash)change('sourceHash',baseline.sourceHash,candidate.sourceHash);
     }else if(baseline.sourceHash!==candidate.sourceHash)change('input.source',baseline.sourceHash,candidate.sourceHash);
