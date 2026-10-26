@@ -15,8 +15,12 @@ Workspace A. It now opens directly, with the brief, parameters, world and agent
 activity. Source stays in a native disclosure. Keep the interface free of demo
 labels, explanatory footers, repeated counts and variant navigation. One compact
 connection state belongs in the header. Implementation limitations belong in
-these docs. The other variants remain historical references. The functional
-port has not started in this design slice.
+these docs. The other variants remain historical references. The working app
+uses one compact Local provider status. Run starts a fresh accepted episode;
+conditional Export, playback controls and measured outcomes appear in context.
+Compiler errors appear inline. Source editing owns its own mode, with brief
+controls disabled until Use brief. The map uses accepted data rather than the
+earlier authored picture. Do not add a wall of implementation notices.
 
 Desktop layouts adapt to stacked controls and readable maps on narrow screens.
 Workspace uses a shared 24-pixel desktop gutter and 16-pixel mobile gutter.
@@ -26,5 +30,6 @@ shrink against the timeline. Agent avatars align to the top of their text rows.
 Textarea and numeric values share an eight-pixel inner inset; narrower tablet
 fields have enough height for the current brief without clipping it.
 Named native buttons, labeled inputs, keyboard focus and reduced motion apply
-to all variants. Prototype play is an authored timeline, never a performance
-measurement or simulated evaluation.
+to all variants. Playback advances actual engine transitions; timeline seeking
+reads recorded state. Visual movement interpolates between accepted poses and
+does not change steps, scoring or policy observations.

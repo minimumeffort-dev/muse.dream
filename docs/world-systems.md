@@ -1,6 +1,11 @@
 # Worlds with systems
 
-The longer-term product is a way to describe a world, its rules and a task, then watch an agent try to complete it. Paper can become another input to the same authoring boundary. The current focus is the playable world and its bounded, authored systems. Prompt interpretation is deferred: when revived, intent becomes a proposed Dream program, the compiler checks it, and the engine decides what it actually means.
+The product direction is a research workspace: describe a world, its rules and
+a task, then watch an agent try to complete it. The fresh [Dreams Lab](dreams-lab.md)
+now connects the canonical compiler, logical runner, measured outcomes and replay
+in Workspace A. The builder and agents remain local mocks. Real Muse
+interpretation and physical agent binding are separate next steps. Paper can
+become another input to that same authoring boundary.
 
 The [first working lab](dream/scenarios.md) connects that path using a bounded mock interpreter, explicit task rules, multiple mock policies and replayable local episodes. It is a logical graph environment. Linking those decisions to the existing 3D city's paths and physics is a separate next step, not something the dashboard already does.
 

@@ -5,7 +5,7 @@ import {compileDreamWorld} from '../src/scene/dream';
 
 beforeAll(()=>{execFileSync(process.execPath,['dreams-lab/render-variants.mjs']);});
 
-it('renders three self-contained, distinctly structured previews without runtime or external font dependencies',()=>{
+it('renders the live workspace and archived alternatives with embedded fonts',()=>{
   const structures=['workspace-layout','notebook-layout','compare-layout'];
   ['workspace','notebook','compare'].forEach((name,i)=>{
     const html=readFileSync(`dreams-lab/design/${name}.html`,'utf8');
@@ -14,12 +14,14 @@ it('renders three self-contained, distinctly structured previews without runtime
       const bodyText=html.slice(html.indexOf('<body')).replace(/<[^>]*>/g,'');
       expect(bodyText).not.toMatch(/\b(demo|illustrative|sample|prototype|preview|mock)\b/i);
       expect(html).not.toContain('aria-label="Design variants"');
-      expect(html).toContain('aria-label="Muse connection: offline"');
+      expect(html).toContain('aria-label="Provider: local mock"');
       expect(html).toContain('<summary>Dream source</summary>');
     }else expect(html).toContain('Design preview · illustrative data · no model calls or simulation');
     expect(html).toContain('data:font/woff2;base64,');
-    expect(html).not.toMatch(/<script\b|<iframe\b|src="https?:/);
-    expect(html.includes(name==='notebook' ? 'aria-label="Run experiment" disabled' : 'aria-label="Play" disabled')).toBe(true);
+    expect(html).not.toMatch(/<iframe\b|src="https?:/);
+    if(name==='workspace')expect(html).toContain('<script type="module" src="/src/main.ts"></script>');
+    else expect(html).not.toContain('<script');
+    expect(html.includes(name==='workspace'?'id="play"':name==='notebook'?'aria-label="Run experiment" disabled':'aria-label="Play" disabled')).toBe(true);
     expect(html.split('\n').length).toBeLessThan(200);
     for(const [,href] of html.matchAll(/href="([^"#][^"]*)"/g)){
       if(href!.startsWith('https:'))continue;
@@ -46,5 +48,6 @@ it('keeps design review options linked to the actual generated previews',()=>{
     expect(existsSync(`dreams-lab/${option.comp}`)).toBe(true);
   }
   const packageJson=JSON.parse(readFileSync('package.json','utf8'));
-  expect(packageJson.scripts['lab:design']).toContain('node dreams-lab/render-variants.mjs && vite dreams-lab');
+  expect(packageJson.scripts['lab:design']).toBe('npm run lab:dev');
+  expect(packageJson.scripts['lab:dev']).toContain('vite --config dreams-lab/vite.config.ts');
 });

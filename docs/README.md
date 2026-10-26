@@ -8,7 +8,7 @@ The source is text. It compiles into validated data for the engine. Dream 2 is d
 
 | Start here | What you'll build or learn |
 | --- | --- |
-| [Dreams Lab designs](dreams-lab.md) | Three research-workspace layouts for defining an environment, running agents and comparing outcomes |
+| [Dreams Lab](dreams-lab.md) | Compile a bounded Dream scenario, run local agents, inspect outcomes and export a replayable trace |
 | [Runnable examples](dream/examples.md) | Bouncing ball, breakable bench, hinged sign and toppling tree |
 | [Quickstart](dream/quickstart.md) | Compile a complete object, then a playable world |
 | [Compose objects](dream/objects.md) | Parts, materials, components, joints and physical size |

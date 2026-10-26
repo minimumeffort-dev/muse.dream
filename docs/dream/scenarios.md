@@ -2,9 +2,10 @@
 
 [Docs](../README.md) / Scenarios · [Open Dream Lab](https://musedream.vercel.app/lab/)
 
-A fresh researcher workspace is being designed separately in `dreams-lab/`.
-See the [three design variants](../dreams-lab.md). The scenario contract below
-continues to describe the existing mock Lab; the new previews do not run it yet.
+The fresh [Dreams Lab workspace](../dreams-lab.md) now uses this canonical
+compiler, episode engine and recording format. Run, pause, step, timeline replay,
+direct source editing and export work there. Both interfaces retain mocked
+interpretation and policies on logical networks, with no physical 3D binding.
 
 A useful world needs more than buildings. A shop has stock and prices. An agent has a budget and can carry only so much. A service takes time and can serve only a few people at once. A task needs a measurable outcome.
 

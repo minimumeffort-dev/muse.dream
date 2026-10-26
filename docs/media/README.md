@@ -1,21 +1,32 @@
 # Media and Dream highlighting
 
-## Dreams Lab design review
+## Dreams Lab runner
 
-`dreams-lab-workspace.jpg`, `dreams-lab-notebook.jpg` and
-`dreams-lab-compare.jpg` are native full-page browser captures of three static
-interface variants. Workspace is refreshed after selecting A and removing
-the review navigation, explanatory footer and repeated labels. Notebook and
-Compare retain the earlier comparison designs. Workspace's latest captures also
-include shared gutters, matching panel-heading baselines and aligned controls.
-Their maps, timelines and results are illustrative design
-data. They are not model-generated worlds, simulation runs or performance
-measurements. Mobile captures and viewport checks are kept with
-[the review evidence](../evidence/dreams-lab-design/verification.md).
+`dreams-lab-workspace.jpg` is a native browser capture of the working Workspace A
+after a real local episode. The map, agent inventories and metrics derive from
+accepted Dream data and committed transitions. Native mobile evidence and three
+exported episode traces are kept with [the runner verification](../evidence/dreams-lab-runner/verification.md).
 
-This slice changes no gameplay rendering or controls. Existing game HD/GIF/still
-sets retain their recorded provenance. These static design previews have no
-simulation or animated sequence to export, so no motion recording was made.
+`dreams-lab-run.mp4`, `dreams-lab-run.gif` and `dreams-lab-run.jpg` show the
+default morning-delivery map trace. The dev-only `?capture` button writes all
+210 consecutive 1600x900 PNGs at 30 rendered frames per display second. Each
+abstract episode step occupies a quarter display second; renderer interpolation
+connects recorded positions without changing transitions. No source frames are
+missing or interpolated by the encoder. This seven-second clip is a map recording,
+not a 3D episode or live performance measurement. Its canonical source hash is
+`b95908eed9610620273d2c788ab4270bfe60e83a3571dfd58ffdef6d018b8158`.
+
+Video and still are 1600x900; GIF is 1280x720. The still uses frame 120. After
+finishing the default episode at `http://127.0.0.1:5180/?capture`, press
+**Capture frames**, then run `node dreams-lab/encode-media.mjs /path/to/ffmpeg`.
+The origin-checked writer exists only in the separate Lab dev server and writes
+fixed PNG slots under ignored `.npm-cache/media/labrun/`.
+
+`dreams-lab-notebook.jpg` and `dreams-lab-compare.jpg` remain historical static
+design alternatives, with illustrative results. Their original
+[design review](../evidence/dreams-lab-design/verification.md) is retained.
+Existing city recordings remain accurate for their documented scopes; this slice
+does not change city rendering or controls.
 
 ## Recurring work, r118
 

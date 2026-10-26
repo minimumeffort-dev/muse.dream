@@ -1,74 +1,80 @@
-# A fresh Dreams Lab
+# Dreams Lab
 
 [Docs](README.md) / Research workspace
 
-Describe a world and the task an agent should perform there. Muse would turn
-that brief into Dream source. The compiler checks the proposal; the engine runs
-the supported rules and records what happened. Change a parameter, run again
-and compare the outcome.
+Define an environment and a task. Run an agent, change the conditions and try
+again. Workspace A now connects the canonical Dream compiler to the existing
+logical episode runner, with a local builder and deterministic baseline agents.
 
-The new `dreams-lab/` folder opens the selected Workspace A layout directly.
-The earlier Notebook and Compare layouts remain design references.
-All three inherit Minimum Effort's fonts, colors and spacing. The maps, agent
-positions and results are illustrative. The simulation controls are disabled.
-There are no model calls or generated environments in these previews.
+![The working Lab after a completed delivery episode](media/dreams-lab-workspace.jpg)
 
-## Workspace A
+[Watch the episode in HD](media/dreams-lab-run.mp4) · [GIF](media/dreams-lab-run.gif)
 
-The environment stays in view. World and Task fields and parameters sit at the
-left, with individual agent activity below the map. The design chooser,
-explanatory footer, repeated status labels and helper paragraphs are removed.
-One compact connection state remains in the header; Dream source opens when
-needed. Panel headings, fields and playback controls follow shared gutters and
-control sizes on desktop, tablet and mobile. Detailed comparisons would use
-another view.
+## Run, inspect, repeat
 
-![Workspace: a brief beside a large environment and agent activity](media/dreams-lab-workspace.jpg)
+Start the separate app from the repository root:
 
-## Earlier option B · Notebook
+    npm run lab:dev
 
-A research question, environment and outcome form one continuous experiment.
-This layout gives more context to someone preparing or explaining a study,
-with less space for watching several agents at once.
+Press **Run**. The current morning-delivery brief becomes bounded Dream source.
+The compiler checks it before a fresh episode starts. The map uses the accepted
+locations, links and real agent positions. The outcome counters measure committed
+tasks, spending, blocking and rule violations.
 
-![Notebook: the question, environment and sample outcome in sequence](media/dreams-lab-notebook.jpg)
+The default episode completes four tasks in 27 steps, spends 16 coins and
+records one blocked request with no rule violations. With four coins per
+courier and an eight-step deadline, it completes two tasks and reaches the
+deadline after spending eight coins. These are outcomes from the mock policies
+and finite rules, not claims about real delivery performance.
 
-## Earlier option C · Compare
+**Pause** freezes playback. **Step** advances one transition. The timeline reads
+recorded states; moving it never changes the engine head. **Play** replays a
+completed episode, or resumes an unfinished one after its recorded history.
+Hiding the tab pauses it. Each Run starts fresh, with a new pinned source.
 
-Two runs share a timeline. The changed parameter stays visible above their
-environments, with a results table below. This layout puts repeated experiments
-first; defining the initial world would need a separate setup step.
+## Give the compiler another task
 
-![Compare: two illustrative runs, their changed budget and sample results](media/dreams-lab-compare.jpg)
+Open **Dream source**, choose **Edit**, paste a standalone scenario and press
+Run. The [scenario vocabulary](dream/scenarios.md) covers locations, links,
+finite stocks, carrying limits, services and objectives. The classroom example
+also runs here through the same compiler and rules.
 
-## Open the previews
+**Use brief** returns to the local template. Brief controls disable in source
+mode, and the manual draft remains in memory. Invalid source shows its located
+diagnostic and preserves the previous accepted result and export. Editing a
+brief does not mutate an already accepted episode.
 
-From the repository root, with its existing dependencies installed:
+The current local builder supports only the provided morning-delivery brief
+plus Agents, Budget, Deadline and Seed. Unsupported descriptions reject; no
+arbitrary semantic interpretation is implied. Editing Dream directly supports
+other scenarios within the existing language and engine bounds.
 
-```sh
-npm run lab:design
-```
+## Keep the record
 
-Open the local address printed by Vite to go straight to Workspace A.
-The source disclosure uses a native keyboard-accessible control. Brief and
-parameter fields are preview controls and do not alter the sample map or
-results. No prototype state is sent or saved by the app.
+**Export** downloads JSONL for a paused or completed run. It includes canonical
+source, SHA-256, seed, policy label, per-agent observations, actions and outcomes.
+Replay recompiles the source and checks every transition:
 
-The complete sample Dream file is generated alongside the previews and checked
-by the existing compiler. It is a small standalone delivery example, separate
-from the illustrative two-courier timeline. No new Dream vocabulary was added.
+    node scripts/experiment.mjs replay path/to/episode.jsonl
 
-## Port only what we need
+[Native exports and verification](evidence/dreams-lab-runner/verification.md)
+record a successful delivery, a deadline result and an authored classroom task.
+Records are local, unsigned mock rollouts. Run history resets on reload; there
+is no cloud history, model training or certified dataset pipeline.
 
-The first functional slice should reuse the
-canonical compiler, bounded scenario rules, observation/action interface and
-recording/replay tools. The [existing Lab](dream/scenarios.md) already exercises
-these with mocked interpretation and policies on a logical network.
+## Scope of the port
 
-Real Muse interpretation, a real agent policy, physical world binding, parameter
-comparisons and stored run history still need implementation in the fresh app.
-The world builder proposes rules; the evaluator enforces accepted rules and
-scores committed events. Agents must not set their own rewards or completion.
+The fresh app owns its framework boundary, run lifecycle, timeline, controls and
+renderer. It imports the canonical compiler and episode engine instead of
+forking their language or rules. Model output remains data-only. Policies cannot
+change rewards, rules or completion.
 
-[Design source and launch instructions](../dreams-lab/README.md) ·
-[Current verification](evidence/dreams-lab-design/verification.md)
+This is a logical task environment. Real Muse generation and policy calls,
+physical 3D agent navigation and persistent experiment history remain separate
+integrations. The city renderer and city save migrations are not loaded.
+
+The approved compact layout remains, with shared gutters, aligned controls and
+one Local provider status. The earlier [Notebook](media/dreams-lab-notebook.jpg)
+and [Compare](media/dreams-lab-compare.jpg) captures are historical design options.
+
+[Source and commands](../dreams-lab/README.md) · [Runnable delivery source](../dreams-lab/examples/morning-delivery.dream)

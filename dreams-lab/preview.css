@@ -311,6 +311,20 @@ body.workspace-page{--gutter:24px;height:100dvh;min-height:640px;display:flex;fl
 .workspace-page .source summary::-webkit-details-marker{display:none}
 .workspace-page .source summary::after{content:"";width:6px;height:6px;border-right:1.5px solid;border-bottom:1.5px solid;transform:rotate(45deg);margin-right:4px}
 .workspace-page .source[open] summary::after{transform:rotate(225deg)}
+.workspace-page .workspace-title{flex-wrap:wrap}
+.workspace-page [hidden]{display:none!important}
+.workspace-page #lab-error{width:100%;color:#982f23;font-size:12px;line-height:20px;white-space:pre-wrap}
+.workspace-page .code-editor{height:240px;min-height:160px;resize:vertical;margin:12px 0 8px;font:12px/20px ui-monospace,monospace;tab-size:2}
+.workspace-page .activity{max-height:176px;min-height:0;overflow:auto}
+.workspace-page .activity>.section-label{gap:12px;flex-wrap:wrap}
+.workspace-page #run-metrics{font-weight:450}
+.workspace-page .activity-person small{line-height:20px}
+.workspace-page .link-duration{font-size:11px;paint-order:stroke;stroke:#e9eade;stroke-width:5px;stroke-linejoin:round}
+.workspace-page .agent-marker text{font-size:12px;font-weight:700}
+.workspace-page .agent-marker{transition:none}
+.workspace-page .btn:hover:not(:disabled){background:#e9e9e0;color:#171717}
+.workspace-page .btn.primary:hover:not(:disabled){background:#373731;color:#fafaf7}
+@media(prefers-reduced-motion:no-preference){.workspace-page [data-animate=true] .agent-marker{transition:transform 240ms linear}}
 @media(min-width:721px) and (max-width:1099px){
   .workspace-page textarea{height:112px}
 }

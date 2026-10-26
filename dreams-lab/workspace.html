@@ -1,0 +1,38 @@
+<main id="workspace">
+  <div class="workspace-title">
+    <h1 id="experiment-title">Morning delivery</h1>
+    <div class="row">
+      <a id="export" class="btn" hidden download>Export</a>
+      <button id="run" class="btn primary" type="button" disabled><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg><span id="run-label">Run</span></button>
+    </div>
+    <p id="lab-error" role="alert" hidden></p>
+  </div>
+  <div class="workspace-layout">
+    <aside class="brief-panel" aria-label="Experiment setup">
+      <section><label class="field"><span class="section-label">World</span><textarea id="world-brief" maxlength="2000" aria-label="World"></textarea></label></section>
+      <section><label class="field"><span class="section-label">Task</span><textarea id="task-brief" maxlength="2000" aria-label="Task"></textarea></label></section>
+      <section>
+        <div class="section-label">Parameters</div>
+        <div class="parameter-grid">
+          <label class="field">Agents<span class="number-field"><input id="parameter-agents" type="number" value="2" min="1" max="8" aria-label="Agents"><span></span></span></label>
+          <label class="field">Budget<span class="number-field"><input id="parameter-budget" type="number" value="16" min="0" max="100000" aria-label="Budget"><span>coins</span></span></label>
+          <label class="field">Deadline<span class="number-field"><input id="parameter-deadline" type="number" value="80" min="1" max="1000" aria-label="Deadline"><span>steps</span></span></label>
+          <label class="field">Seed<span class="number-field"><input id="parameter-seed" type="number" value="7" min="0" max="2147483647" aria-label="Seed"><span></span></span></label>
+        </div>
+      </section>
+      <div class="policy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 10a4 4 0 1 0 8 0 4 4 0 0 0-8 0M5 21v-2a7 7 0 0 1 14 0v2"/></svg><div><div class="policy-name">Agent</div><p>Baseline</p></div></div>
+      <details class="source"><summary>Dream source</summary><textarea id="dream-source" class="code-editor" aria-label="Dream source" maxlength="65536" spellcheck="false" readonly></textarea><button id="source-mode" class="btn" type="button">Edit</button></details>
+    </aside>
+    <section class="world-column" aria-label="Environment">
+      <div class="world-toolbar"><h2>World</h2><span id="world-status" class="small muted" role="status">Loading</span></div>
+      <div class="workspace-map"><div class="map-wrap"><svg id="experiment-map" class="world-map" role="img" aria-label="Environment"></svg></div></div>
+      <div class="timeline">
+        <button id="play" class="btn icon-only" type="button" aria-label="Play" disabled><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg></button>
+        <output id="step-count" class="mono time">0 / 80</output>
+        <input id="timeline" type="range" min="0" max="0" value="0" aria-label="Timeline" disabled>
+        <button id="step" class="btn icon-only" type="button" aria-label="Step" disabled><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 5 10 7-10 7zM19 5v14"/></svg></button>
+      </div>
+      <div class="activity"><div class="section-label"><span>Agents</span><output id="run-metrics" class="small muted"></output></div><div id="agent-activity" class="activity-row"></div></div>
+    </section>
+  </div>
+</main>
