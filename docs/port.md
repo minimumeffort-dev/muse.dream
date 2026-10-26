@@ -72,7 +72,7 @@ their actions. Provider calls, generated physical layouts, persistent history an
 physical agent controllers remain later integrations. The new
 [local HTTP host](agent-protocol.md) runs the same logical engine in Node,
 with actor-scoped controller requests and an observing browser. It remains
-in-memory and is separate from the static Vercel deployment.
+local, with source-pinned disk history, and is separate from the static Vercel deployment.
 
 The [source-only asset library](../assets/library/README.md) preserves reusable
 objects from the retired project. City layouts, historical screenshots, evidence

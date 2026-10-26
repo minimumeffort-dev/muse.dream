@@ -116,4 +116,20 @@ describe('Agent runtime protocol boundary',()=>{
     for(const timeoutMs of [0,-1,Infinity,NaN])await expect(AgentRuntime.create(source(),{timeoutMs})).rejects.toMatchObject({code:'INVALID_REQUEST'});
     await expect(AgentRuntime.create(source(),{externalActor:'stranger'})).rejects.toMatchObject({code:'UNKNOWN_ACTOR'});
   });
+  it('revokes uncommitted decisions when the host pauses a restored run',async()=>{
+    const runtime=await AgentRuntime.create(source()),a=runtime.decision('courier_a','baseline');
+    runtime.submit('baseline',request(a));runtime.pause();
+    expect(runtime.status).toBe('paused');expect(runtime.run.length).toBe(0);
+    rejects('CONFLICT',()=>runtime.submit('baseline',request(a)));
+    runtime.resume();const fresh=runtime.decision('courier_a','baseline');
+    expect(fresh.epoch).toBeGreaterThan(a.epoch);expect(fresh.requestId).not.toBe(a.requestId);
+    runtime.submit('baseline',request(fresh));runtime.submit('baseline',request(runtime.decision('courier_b','baseline')));
+    expect(runtime.run.length).toBe(1);
+  });
+  it('does not reuse request identities when a persistent run ID is restored',async()=>{
+    const first=await AgentRuntime.create(source(),{id:()=> 'saved-run'}),restored=await AgentRuntime.create(source(),{id:()=> 'saved-run'});
+    const old=first.decision('courier_a','baseline'),fresh=restored.decision('courier_a','baseline');
+    expect(fresh.runId).toBe(old.runId);expect(fresh.requestId).not.toBe(old.requestId);
+    rejects('CONFLICT',()=>restored.submit('baseline',request(old)));
+  });
 });

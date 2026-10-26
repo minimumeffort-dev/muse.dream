@@ -1,8 +1,11 @@
 <main id="workspace">
   <div class="workspace-title">
-    <h1 id="experiment-title">Morning delivery</h1>
+    <div class="experiment-heading"><h1 id="experiment-title">Morning delivery</h1><input id="experiment-name" aria-label="Experiment name" maxlength="100" value="Morning delivery" hidden><span id="revision-label" class="small muted" hidden></span></div>
     <div class="row">
       <a id="export" class="btn" hidden download>Export</a>
+      <button id="new-experiment" class="btn" type="button" hidden>New</button>
+      <button id="save-experiment" class="btn" type="button" hidden>Save</button>
+      <button id="resume-run" class="btn" type="button" hidden>Resume run</button>
       <button id="run" class="btn primary" type="button" disabled><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg><span id="run-label">Run</span></button>
     </div>
     <p id="lab-error" role="alert" hidden></p>
@@ -10,6 +13,7 @@
   <div class="workspace-layout">
     <aside id="setup-panel" class="brief-panel" aria-label="Experiment setup">
       <form id="host-connection" hidden><label class="field">Host token<input id="host-token" type="password" autocomplete="off" required></label><button class="btn" type="submit">Connect</button></form>
+      <div id="saved-library" hidden><details open><summary>Experiments</summary><div id="experiment-list" class="history-list"></div></details><details open><summary>Runs</summary><div id="run-list" class="history-list"></div></details></div>
       <section><label class="field"><span class="section-label">World</span><textarea id="world-brief" maxlength="2000" aria-label="World"></textarea></label></section>
       <section><label class="field"><span class="section-label">Task</span><textarea id="task-brief" maxlength="2000" aria-label="Task"></textarea></label></section>
       <section>
@@ -22,10 +26,11 @@
         </div>
       </section>
       <div class="policy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 10a4 4 0 1 0 8 0 4 4 0 0 0-8 0M5 21v-2a7 7 0 0 1 14 0v2"/></svg><div><div class="policy-name">Agent</div><p id="policy-status">Baseline</p></div></div>
+      <section id="controller-section" hidden><div class="section-label">Controllers</div><div id="controller-assignments"></div></section>
       <details class="source"><summary>Dream source</summary><textarea id="dream-source" class="code-editor" aria-label="Dream source" maxlength="65536" spellcheck="false" readonly></textarea><button id="source-mode" class="btn" type="button">Edit</button></details>
     </aside>
     <section class="world-column" aria-label="Environment">
-      <div class="world-toolbar"><h2>World</h2><span id="world-status" class="small muted" role="status">Loading</span></div>
+      <div class="world-toolbar"><h2 id="world-title">World</h2><span id="world-status" class="small muted" role="status">Loading</span></div>
       <div class="workspace-map"><div id="experiment-world" class="map-wrap world-view" role="img" tabindex="0" aria-label="Loading 3D world"></div></div>
       <div class="timeline">
         <button id="play" class="btn icon-only" type="button" aria-label="Play" disabled><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg></button>
@@ -35,6 +40,7 @@
       </div>
       <div class="activity"><div class="section-label"><span>Agents</span><output id="run-metrics" class="small muted"></output></div><div id="agent-activity" class="activity-row"></div></div>
       <details id="run-report" class="run-report" hidden><summary>Report</summary><output id="host-latency" class="small muted" hidden></output><div class="report-content"></div></details>
+      <details id="run-comparison" class="run-report comparison" open hidden><summary>Compare runs</summary><div id="comparison-content" class="report-content"></div></details>
     </section>
   </div>
 </main>

@@ -31,7 +31,10 @@ expands only the provided morning-delivery brief and bounded parameters; baselin
 agents are deterministic mocks. A separate local HTTP host accepts actor-scoped
 decisions, commits joint steps and continues when its viewer closes. One external
 mock process proves that boundary. Post-run reports link findings to exact
-recorded transitions. No Muse calls, physical navigation, training or
+recorded transitions. Saved experiments have immutable revisions and per-run
+source/configuration pins. Researchers create runs from the UI, reopen history
+after a host restart, explicitly resume interrupted runs and compare two runs
+with links into their evidence. No Muse calls, physical navigation, training or
 domain-validity claims are implemented.
 
 The compiler and deterministic runner are copied into the Lab with pinned

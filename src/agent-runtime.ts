@@ -25,7 +25,6 @@ export class AgentRuntime {
   private readonly queued=new Map<string,AgentAction>();
   private readonly receipts=new Map<string,Receipt>();
   private paused=false;
-  private sequence=0;
   private constructor(readonly run:ExperimentRun,readonly id:string,private readonly timeoutMs:number,private readonly now:()=>number,externalActor?:string){
     for(const actor of run.scenario.agents)this.controllers.set(actor.id,{owner:actor.id===externalActor?'external':'baseline',epoch:0});
   }
@@ -51,7 +50,7 @@ export class AgentRuntime {
     const controller=this.authorize(actor,owner);this.requireWaiting();
     let request=this.pending.get(actor);
     if(!request){
-      request={decision:{version:AGENT_PROTOCOL_VERSION,runId:this.id,actorId:actor,step:this.run.length,requestId:`${this.id.slice(0,220)}:${++this.sequence}`,epoch:controller.epoch,observation:this.run.observe(actor)},expires:this.now()+this.timeoutMs};
+      request={decision:{version:AGENT_PROTOCOL_VERSION,runId:this.id,actorId:actor,step:this.run.length,requestId:`${this.id.slice(0,180)}:${crypto.randomUUID()}`,epoch:controller.epoch,observation:this.run.observe(actor)},expires:this.now()+this.timeoutMs};
       this.pending.set(actor,request);
     }
     return structuredClone(request.decision);
@@ -84,6 +83,11 @@ export class AgentRuntime {
   }
   resume(){
     if(this.status==='paused')this.paused=false;
+  }
+  /** A host restart or durable-storage failure revokes uncommitted requests. */
+  pause(){
+    if(this.run.ended)return;
+    this.paused=true;this.invalidate();
   }
   handoff(actor:string,newOwner:string){
     const controller=this.controller(actor);

@@ -37,4 +37,5 @@ or biological validity claims.
 For a browser-independent episode with a separate mock controller, use the
 [local agent protocol](agent-protocol.md). The same source, action rules and
 replay checks apply. Paused or completed runs expose Report in the viewer, with
-step links for blocked requests and violations.
+step links for blocked requests and violations. [Save experiments and compare
+reruns](experiments.md) in the host workspace; each run keeps its own revision.

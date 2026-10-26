@@ -15,29 +15,16 @@ npm run build
 npm run agent:host
 ```
 
-The host binds only to `127.0.0.1:5190`. It starts morning delivery with the first
-courier assigned to the external mock and the other courier assigned to the
-baseline. Pass a different local scenario and actor explicitly:
+The host binds only to `127.0.0.1:5190` and opens an empty saved workspace.
+Create an experiment in the browser, assign a controller to each actor, then
+press Run. [Saved experiments](experiments.md) describes revisions, history,
+comparison and recovery.
 
-```sh
-npm run agent:host -- examples/classroom.dream learner
-```
-
-Use the exact actor ID in that source. The private connection file
-`.cache/agent-host.json` contains a viewer URL and credentials. Open its URL
-locally, or enter its admin token at the host's Connect form. The viewer removes
-the token fragment from the address and keeps the credential in memory.
-Do not share the connection file. It is ignored by Git and deleted on normal
-host shutdown, before asynchronous process cleanup. Existing files are written
-with owner-only permissions. Forced termination can leave the ignored file;
-its tokens stop working when the host stops.
-
-`DREAM_HOST_PORT` changes the listening port. `DREAM_AGENT_DELAY_MS` changes the
-external mock's decision delay, from zero to 30,000 milliseconds. This delay is
-wall time; it never changes travel duration, service duration or the simulation
-step. A 30-second unanswered decision pauses the host and invalidates pending
-requests. No action or replacement policy is invented.
-Use one local host at a time; its connection file belongs to that process.
+The private connection file `.cache/agent-host.json` contains the viewer URL
+and researcher token. The tab uses session storage to survive reloads; the
+private admin key in the data directory survives host restarts. Actor credentials
+are separate, stay out of run files and rotate on recovery or handoff.
+Use one host per data directory and keep credentials local.
 
 ## Actor protocol
 
@@ -48,13 +35,13 @@ agent URLs.
 
 | Operation | Request | Result |
 | --- | --- | --- |
-| Receive a decision | `GET /api/actors/{actor}/decision` | Current identity, private observation |
-| Submit an action | `POST /api/actors/{actor}/action` | Stable acknowledgement |
-| Read the run | `GET /api/view?after={step}` | Researcher only; incremental transitions |
-| Read the report | `GET /api/report` | Researcher only; findings and wall timings |
-| Export a recording | `GET /api/export` | Researcher only; replayable episode JSONL |
-| Resume after timeout | `POST /api/resume` | Researcher only; new decision identities |
-| Transfer control | `POST /api/actors/{actor}/handoff` | Researcher only; rotates the actor token |
+| Receive a decision | `GET /api/runs/{run}/actors/{actor}/decision` | Current identity, private observation |
+| Submit an action | `POST /api/runs/{run}/actors/{actor}/action` | Stable acknowledgement |
+| Read the run | `GET /api/runs/{run}/view?after={step}` | Researcher only; incremental transitions |
+| Read the report | `GET /api/runs/{run}/report` | Researcher only; findings and wall timings |
+| Export a recording | `GET /api/runs/{run}/export` | Researcher only; replayable episode JSONL |
+| Resume after timeout | `POST /api/runs/{run}/resume` | Researcher only; new decision identities |
+| Transfer control | `POST /api/runs/{run}/actors/{actor}/handoff` | Researcher only; rotates the actor token |
 
 Researcher operations require the admin bearer token. An actor token cannot
 read another actor's inventory, objectives, source or full run trace.
@@ -107,8 +94,10 @@ Handoff accepts `{"owner":"external"}` or `{"owner":"baseline"}`. It operates
 at the current committed boundary, removes that actor's uncommitted response,
 increments its epoch and rotates its credential. Other decisions keep their
 same-state observations. The former controller cannot commit a delayed action.
-To replace the supplied mock process, use the returned actor token with your
-own client. The supplied [mock client](../scripts/mock-agent.mjs) shows the loop.
+To replace a supplied mock process, use the returned actor token with your
+own client. The supplied [mock client](../scripts/mock-agent.mjs) shows the loop;
+DREAM_AGENT_RUN_ID selects the run-scoped endpoint. Each run pins its initial
+controller assignments, while explicit handoffs are saved as current ownership.
 
 ## Inspect the result
 
@@ -125,14 +114,14 @@ include the mock client's deliberate delay and HTTP overhead.
 
 ## Current boundary
 
-The host and credentials live in one local process. Runs survive closing the
-browser, but not stopping or restarting the host. Export before stopping if you
-need the gameplay record. Exports do not persist controller handoffs, wall
-latency or credentials. They are unsigned local records.
+The host keeps source-pinned runs, controller ownership and wall timings in its
+[local saved store](experiments.md). Incomplete runs reopen paused after a
+restart; pending decisions are revoked. Gameplay JSONL exports remain unsigned
+and exclude controller handoffs, wall latency and credentials.
 
 This is not a public multi-tenant backend or an OS sandbox for untrusted code.
 Controllers on the same machine share that machine's user permissions. The
 Vercel app still runs its browser baseline; it does not host this local service.
-Hosted execution needs persistent storage, run ownership, account authentication
-and a durable execution owner. Python and MCP adapters, agent messaging,
-matched-seed comparisons and AI-written summaries remain later slices.
+Hosted execution still needs account authentication and a persistent execution
+service. Python and MCP adapters, agent messaging and AI-written summaries remain
+later slices. Local matched-seed comparisons are available in run history.

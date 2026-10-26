@@ -22,6 +22,7 @@ export function createReportView(element:HTMLElement,onEvidence:(evidence:Eviden
     const findings=document.createElement('div');findings.className='report-findings';
     for(const finding of report.findings){
       const button=document.createElement('button');button.type='button';button.className='evidence-link';
+      button.dataset.step=String(finding.step);button.dataset.actor=finding.agent;button.dataset.outcome=String(finding.outcomeIndex);
       button.textContent=`Step ${finding.step} · ${title(finding.agent)} · ${title(finding.reason)}`;
       button.onclick=()=>{
         onEvidence(finding);

@@ -16,3 +16,6 @@ evidence/
 media/
 screenshots/
 captures/
+
+# Local saved experiments, run records and host credentials.
+.dreams-lab/

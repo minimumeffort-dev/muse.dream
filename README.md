@@ -9,13 +9,18 @@ visible purchases and service activity tied to the recorded episode.
 The Lab lives at the repository root:
 
     npm ci
-    npm run dev
-    npm test
     npm run build
+    npm run agent:host
+    npm test
     npm run docs:build
 
-The dev server uses port 5180. npm run preview serves the production build at
-port 4180. App output is dist/; the lightweight documentation site is dist-docs/.
+The saved workspace uses port 5190. Open the private connection URL in
+.cache/agent-host.json. Create an experiment, assign controllers and press Run.
+Save keeps a revision without starting it; New starts another experiment.
+History and comparison are described in the [experiment guide](docs/experiments.md).
+
+For interface development, npm run dev uses port 5180; npm run preview serves
+the static browser baseline at port 4180. App output is dist/; documentation is dist-docs/.
 Both are generated and ignored. CI and Vercel build directly from the root.
 
 ## Run, inspect, repeat
@@ -59,7 +64,9 @@ Replay it using the local CLI:
 
     node scripts/experiment.mjs replay path/to/episode.jsonl
 
-Run history resets on reload. Exports are local, unsigned records. Historical
+The local host retains source-pinned history across reloads and restarts.
+Incomplete runs reopen paused and continue only after Resume run. The static
+browser baseline resets on reload. Exports are local, unsigned records. Historical
 run exports and captured review material are not kept in this repository; tests
 generate their own records. The export/replay product feature remains available.
 
@@ -81,18 +88,17 @@ The [local agent host](docs/agent-protocol.md) runs independently of the browser
     npm run build
     npm run agent:host
 
-One actor is controlled by a separate mock process over authenticated HTTP;
-the remaining actors use the baseline. The host writes its private viewer
-connection to .cache/agent-host.json. Closing the viewer leaves execution active.
+Assign each actor to the baseline or a separate mock process over authenticated
+HTTP. The host writes its private viewer connection to .cache/agent-host.json.
+Closing the viewer leaves execution active.
 Requests carry run, actor, step and controller identities. Retries are
 idempotent; timeouts pause the run instead of inventing actions.
 
 The 3D view observes a logical task network. It does not add city collisions or
 physical pathfinding. Explicit mock IDs bind the default buildings; other
 scenarios receive generic pavilions. The Vercel app retains the browser baseline;
-the local host is an in-memory development service. Real Muse calls, hosted
-agent execution, generated physical layouts and persistent experiment storage
-remain future work.
+the local host saves experiments and run records on disk. Real Muse calls,
+hosted persistent execution and generated physical layouts remain future work.
 
 [Scenario guide](docs/scenarios.md) · [Dream reference](docs/language/reference.md) ·
 [Model instructions](docs/language/dream-v2-model.txt)

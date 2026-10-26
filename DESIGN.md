@@ -33,6 +33,11 @@ Report is a contextual disclosure below agent activity, visible while playback
 is paused or complete. A compact table compares actors; native buttons seek to
 recorded events and reveal their observation, action and outcome as readable
 code. Reuse the existing typography, gutters, focus rings and restrained colors.
-The local host viewer replaces editing controls with a connection form and
-controller ownership. Credentials stay in memory. Pausing affects replay only;
-the host remains authoritative. No extra capture archives accompany this slice.
+The saved host workspace keeps the editor, with inline experiment name, contextual
+New/Save/Run controls, a compact history in the sidebar and explicit controller
+buttons per actor. History updates preserve native button and checkbox identity.
+Selecting a run changes playback without overwriting the editable draft.
+Two selected runs reveal a table of pinned changes and metrics, with evidence
+buttons into each replay. Partial results and differing seeds remain explicit.
+Tab-scoped credentials and the selected run survive reload; durable history belongs
+to the host. Pausing affects replay only. No capture archives accompany this slice.
