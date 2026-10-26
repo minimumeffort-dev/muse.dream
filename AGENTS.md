@@ -36,3 +36,8 @@ Run exports remain a product feature; tests generate their own records.
 Commit and push each completed slice to the current branch after checks. Stage
 only task files, preserve unrelated edits and never force-push. Never commit
 secrets. Keep any future model credentials server-side.
+
+Ship completed slices through main: merge the checked branch into main, push
+main and synchronize the local checkout. Verify GitHub Actions and the Vercel
+production deployment against that commit before reporting it live. A feature
+branch push or preview deployment alone does not complete delivery.

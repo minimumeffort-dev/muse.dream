@@ -22,6 +22,9 @@ History and comparison are described in the [experiment guide](docs/experiments.
 For interface development, npm run dev uses port 5180; npm run preview serves
 the static browser baseline at port 4180. App output is dist/; documentation is dist-docs/.
 Both are generated and ignored. CI and Vercel build directly from the root.
+Completed changes are merged and pushed to main, which deploys the Lab to
+[production](https://musedream.vercel.app/). Shipping includes checking GitHub
+Actions and the production deployment against the merged commit.
 
 ## Run, inspect, repeat
 
