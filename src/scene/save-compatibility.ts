@@ -22,7 +22,7 @@ import homeR98 from './compatibility/r98-home.json';
 import homeR97 from './compatibility/r97-home.json';
 
 // Bump when simulation/save semantics change, even if the Dream source does not.
-export const SAVE_SIMULATION_VERSION=59;
+export const SAVE_SIMULATION_VERSION=60;
 
 type CompatibilityEncoder=(value:object,rounded:boolean)=>string;
 /** One immutable worker-bootstrap batch; release before chunk construction. */
@@ -116,10 +116,23 @@ export const HOURS_COMPATIBILITY='91b2ba2a543b7e6c31dd1889602404f6b0dcc75ff3a363
 export const SHIFT_COMPATIBILITY='d1530dd0d802e67408e27f4d7167dd81d142c911107959d979c7ef7066497023';
 export const SOCIAL_COMPATIBILITY='8e4b7baa6a34ee91f7bb86a99a5fdda917be740e05e3d68986b11cdb7c5e11bd';
 export const SCHOOL_REPAIR_COMPATIBILITY='2f926f10804ba28a2413a01fc4a0b690695c66ee7cf9a2cf8029d4d0693382e7';
+/** r119 connects finite customer fees, real waiting seats and persistent service visits. */
+export const SERVICE_VISITS_COMPATIBILITY='f84a4ee5fe7dbf90e27e888506c57fb5b6715fe8715f680b95f0680470af73b1';
+const serviceVisitProjections=new WeakMap<Scene,Scene>();
+export function preServiceVisitsScene(scene:Scene):Scene{
+ const cached=serviceVisitProjections.get(scene);if(cached)return cached;
+ if(!scene.economy?.accounts.some(a=>a.id==='clinic_visitor'))return scene;
+ const {visits,...economy}=scene.economy;
+ const prior={...scene,economy:{...economy,accounts:economy.accounts.filter(a=>a.id!=='clinic_visitor').map(a=>{if(a.id!=='regular')return a;const {visit,...old}=a;return old;}),jobs:economy.jobs.map(j=>{if(j.id!=='check_records')return j;const {fee,waiting,wait_s,cooldown_s,...old}=j;return old;})}};
+ serviceVisitProjections.set(scene,prior);return prior;
+}
+export function preServiceVisitsCompatibilitySource(scene:Scene,encode?:CompatibilityEncoder):string{return projection(preServiceVisitsScene(scene),59,true,encode);}
+
 /** r118 renews authored service quotas without resetting lifetime history or resources. */
 export const RECURRING_WORK_COMPATIBILITY='7f61d64a7c7c25b637c9d2dc8bc5901b82bfa47c72294468940db24e8df71638';
 const recurringWorkProjections=new WeakMap<Scene,Scene>();
 export function preRecurringWorkScene(scene:Scene):Scene{
+ scene=preServiceVisitsScene(scene);
  const cached=recurringWorkProjections.get(scene);if(cached)return cached;
  if(!scene.economy?.jobs.some(j=>j.id==='check_records' && j.period_s!==undefined))return scene;
  const prior={...scene,economy:{...scene.economy,jobs:scene.economy.jobs.map(j=>{if(j.id!=='check_records')return j;const {period_s,...old}=j;return old;})}};

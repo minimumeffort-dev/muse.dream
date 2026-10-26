@@ -1,7 +1,7 @@
 import {leaveSharedMeal} from './social';
 import {contactOverlaps} from '../scene/contact-geometry';
 import {initialAmbient,stepAmbient,type AmbientState} from './ambient';
-import {initialEconomy,type EconomyState,type CommerceAction} from './commerce';
+import {initialEconomy,leaveServiceRequest,type EconomyState,type CommerceAction} from './commerce';
 import {routePath} from "../scene/routes";
 import {initialSports,type SportState} from './sports';
 import {initialNpcs,stepNpcs,type NpcState} from './npcs';
@@ -129,7 +129,7 @@ export interface World {
   previousCourierSaveCompatibility?:string;
   previousPeopleSaveCompatibility?:string;
   previousInvitationSaveCompatibility?:string;
-  previousRecurringWorkSaveCompatibility?:string;previousOfficeFoodSaveCompatibility?:string;previousOfficeWorkSaveCompatibility?:string;
+  previousServiceVisitsSaveCompatibility?:string;previousRecurringWorkSaveCompatibility?:string;previousOfficeFoodSaveCompatibility?:string;previousOfficeWorkSaveCompatibility?:string;
   previousServiceWorkSaveCompatibility?:string;
   previousTowerRoomSaveCompatibility?:string;previousTowerRoomContacts?:import('../scene/contacts').SceneContactData;previousTowerRoomNavigation?:import('../scene/ambient-navigation').AmbientGraph;
   previousCrowdFlowSaveCompatibility?:string;
@@ -276,7 +276,7 @@ export function createCarAtSpawn(scene: Scene): CarState {
 export function resetCar(state: CarState, scene: Scene, resetRace = false): CarState {
   const fresh = createCarAtSpawn(scene);
   if (resetRace) return fresh;
-  state=leaveSharedMeal(state,scene);
+  state=leaveServiceRequest(leaveSharedMeal(state,scene),scene);
   const vehicleId=state.control.kind==="vehicle" ? state.control.id : undefined;
   const saveVehicle=vehicleId && state.grounded && !(controlOf(scene.objects.find(o=>o.id===vehicleId)?.spec)==="plane" && waterAt(scene.terrain,state.x,state.y,drivingHeight(scene.terrain,state.x,state.y)));
   // Car-only reset leaves knocked props and safely parked vehicles where they lie.

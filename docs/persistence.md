@@ -1,6 +1,16 @@
 # Leave and come back
 
-The current world is r118, using format 19 / simulation 59. Its registered upgrade
+The current world is r119, using format 19 / simulation 60. It validates exact
+r118 before adding zero paid-visit history and the doctor's explicitly authored
+20 coins. Existing resources, clocks, journeys, damage and completion history
+survive. An old office job in progress retains its deadline and wage through a
+legacy reservation, then new work requires a real customer. Original slots remain.
+Requests retain their held fee, seat, deadline and assigned worker; visits retain
+supported travel, return and cooldown. Duplicate claims, forged fees, invalid
+worker ownership and inconsistent receipt totals fail restore.
+[Paid visits](dream/service-work.md#customers-make-the-work).
+
+The preceding r118 world used format 19 / simulation 59. Its registered upgrade
 validates exact r117 and retains every old field and clock. It initializes only
 the records office service window at saved economic time, counting existing
 completions up to the target. An exhausted quota stays exhausted until the next

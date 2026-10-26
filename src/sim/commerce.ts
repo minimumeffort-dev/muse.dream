@@ -1,3 +1,5 @@
+import {serviceSeat,startVisit,stepVisits,returnFromVisit,checkVisitJourneys} from './service-visits';
+import {sameSeat,seatAccessClear} from '../scene/seating';
 import {stepCompanyNeeds,companyShoppingDue,checkCompanyState} from './company';
 import {workstation,workstations,STATION_REACH} from '../scene/workstations';
 import {attendanceEnd,attendanceOpen} from './attendance';
@@ -56,21 +58,36 @@ const seatRef=z.object({objectId:id,seatId:id}).strict();
 export const priorRecoveryEconomyStateSchema=priorInvitationEconomyStateSchema.extend({accounts:z.array(priorInvitationEconomyStateSchema.shape.accounts.element.extend({invitedAtS:clock.optional()}).strict()).max(L.accounts),shared:sharedState.extend({host:id.optional()}).strict().optional(),invitation:z.object({partner:id,playerSeat:seatRef,seat:seatRef,offeredAtS:clock,expiresAtS:clock}).strict().optional(),events:z.array(priorInvitationEconomyStateSchema.shape.events.element.extend({kind:z.enum([...priorInvitationEconomyStateSchema.shape.events.element.shape.kind.options,'invited','invite_declined']),reason:z.enum([...priorInvitationEconomyStateSchema.shape.events.element.shape.reason.unwrap().options,'equipment']).optional()}).strict()).max(12)}).strict();
 const companionTrip=courierState.omit({id:true,phase:true}).extend({...raisedJourney,home:raisedPoint,seat:seatRef}).strict();
 const companionState=z.object({id,host:id,guest:id,phase:z.enum(['out','eat','home']),hostTrip:companionTrip,guestTrip:companionTrip,startedAtS:clock,eatUntilS:clock.optional(),portions:z.union([z.literal(0),z.literal(2)])}).strict();
-export const economyStateSchema=priorRecoveryEconomyStateSchema.extend({serviceWindows:z.record(z.object({period:count,completed:count}).strict()).refine(v=>Object.keys(v).length<=L.jobs).optional(),shared:sharedState.extend({...raisedJourney,home:raisedPoint,host:id.optional()}).strict().optional(),gathering:companionState.optional(),peerHistory:z.record(z.object({meals:count.min(1),lastAtS:clock}).strict()).refine(h=>Object.keys(h).length<=64).optional(),recovered:z.record(count).optional(),recoverySpent:z.array(z.string().min(1).max(128)).max(L.recoverySources).optional(),events:z.array(priorRecoveryEconomyStateSchema.shape.events.element.extend({kind:z.enum([...priorRecoveryEconomyStateSchema.shape.events.element.shape.kind.options,'recovery_returned']),reason:z.enum([...priorRecoveryEconomyStateSchema.shape.events.element.shape.reason.unwrap().options,'weather','energy','station','quota']).optional()}).strict()).max(12),accounts:z.array(priorRecoveryEconomyStateSchema.shape.accounts.element.extend({energy:z.number().finite().min(0).max(100).optional(),company:z.number().finite().min(0).max(100).optional(),resting:restState.optional(),meal:mealState.extend({...raisedJourney,home:raisedPoint}).strict().optional(),commute:commuteState.extend({...raisedJourney,home:raisedPoint}).strict().optional(),repair:repairState.extend({...raisedJourney,recover:z.literal(true).optional()}).strict().optional()}).strict()).max(L.accounts)}).strict();
+const serviceVisitState=courierState.omit({id:true,phase:true}).extend({...raisedJourney,id,phase:z.enum(['out','wait','home']),home:raisedPoint,seat:seatRef.optional(),arrivedAtS:clock.optional()}).strict();
+const serviceRequestState=z.object({id,seat:seatRef,startedAtS:clock,deadlineS:clock,worker:id.optional()}).strict();
+export const economyStateSchema=priorRecoveryEconomyStateSchema.extend({served:z.record(count).refine(v=>Object.keys(v).length<=L.jobs).optional(),serviceWindows:z.record(z.object({period:count,completed:count}).strict()).refine(v=>Object.keys(v).length<=L.jobs).optional(),shared:sharedState.extend({...raisedJourney,home:raisedPoint,host:id.optional()}).strict().optional(),gathering:companionState.optional(),peerHistory:z.record(z.object({meals:count.min(1),lastAtS:clock}).strict()).refine(h=>Object.keys(h).length<=64).optional(),recovered:z.record(count).optional(),recoverySpent:z.array(z.string().min(1).max(128)).max(L.recoverySources).optional(),events:z.array(priorRecoveryEconomyStateSchema.shape.events.element.extend({kind:z.enum([...priorRecoveryEconomyStateSchema.shape.events.element.shape.kind.options,'recovery_returned','requested','served','request_cancelled']),reason:z.enum([...priorRecoveryEconomyStateSchema.shape.events.element.shape.reason.unwrap().options,'weather','energy','station','quota','customer']).optional()}).strict()).max(12),accounts:z.array(priorRecoveryEconomyStateSchema.shape.accounts.element.extend({work:previousAccountState.shape.work.unwrap().extend({legacy:z.literal(true).optional()}).strict().optional(),request:serviceRequestState.optional(),visiting:serviceVisitState.optional(),visits:z.record(z.object({completed:count,nextAtS:clock}).strict()).refine(v=>Object.keys(v).length<=L.jobs).optional(),energy:z.number().finite().min(0).max(100).optional(),company:z.number().finite().min(0).max(100).optional(),resting:restState.optional(),meal:mealState.extend({...raisedJourney,home:raisedPoint}).strict().optional(),commute:commuteState.extend({...raisedJourney,home:raisedPoint}).strict().optional(),repair:repairState.extend({...raisedJourney,recover:z.literal(true).optional()}).strict().optional()}).strict()).max(L.accounts)}).strict();
 export type EconomyState=z.infer<typeof economyStateSchema>;
-export type CommerceAction={kind:'buy';market:string;good:string}|{kind:'sell';market:string;good:string}|{kind:'eat';good:string}|{kind:'work';job:string}|{kind:'collect';delivery:string}|{kind:'deliver'}|{kind:'cancel'}|{kind:'repair';repair:string}|{kind:'share';partner:string}|{kind:'accept_share';partner:string}|{kind:'decline_share';partner:string}|{kind:'acquire';market:string}|{kind:'deposit';market:string;amount:number}|{kind:'withdraw';market:string;amount:number};
+export type CommerceAction={kind:'request';job:string}|{kind:'buy';market:string;good:string}|{kind:'sell';market:string;good:string}|{kind:'eat';good:string}|{kind:'work';job:string}|{kind:'collect';delivery:string}|{kind:'deliver'}|{kind:'cancel'}|{kind:'repair';repair:string}|{kind:'share';partner:string}|{kind:'accept_share';partner:string}|{kind:'decline_share';partner:string}|{kind:'acquire';market:string}|{kind:'deposit';market:string;amount:number}|{kind:'withdraw';market:string;amount:number};
 type Account=EconomyState['accounts'][number];
 type Reason=NonNullable<EconomyState['events'][number]['reason']>;
 type Pose={x:number;y:number;elevation:number};
 export function damagedEquipment(state:Pick<CarState,'broken'|'brokenZones'>,job:Job):string|undefined{
  return job.equipment?.find(id=>state.broken.includes(id) || state.brokenZones.some(z=>z.objectId===id));
 }
+function refundRequest(e:EconomyState,a:Account,job:Job,atS:number){
+ const request=a.request!;a.request=undefined;a.credits+=job.fee!;a.visits![job.id]!.nextAtS=atS+(job.cooldown_s??600);returnFromVisit(a);
+ if(request.worker){const worker=e.accounts.find(w=>w.id===request.worker)!;if(worker.work?.id===job.id)refundWork(e,worker,job,atS,'customer');}
+ e.events=[...e.events,{account:a.id,kind:'request_cancelled' as const,ref:job.id,atS}].slice(-12);
+}
 function refundWork(e:EconomyState,a:Account,job:Job,atS:number,reason?:Reason){
  const market=e.markets.find(m=>m.id===job.market)!;
  for(const input of jobInputs(job))market.stock[input.good]!+=input.take;
- market.credits+=job.pay;a.work=undefined;if(a.commute)a.commute={...a.commute,phase:'home',at:{...a.commute.home},path:[],routeAtS:0,speed:0};
+ market.credits+=job.pay;a.work=undefined;const customer=e.accounts.find(c=>c.request?.id===job.id && c.request.worker===a.id);if(customer)refundRequest(e,customer,job,atS);if(a.commute)a.commute={...a.commute,phase:'home',at:{...a.commute.home},path:[],routeAtS:0,speed:0};
  e.events=[...e.events,{account:a.id,kind:'cancel' as const,ref:job.id,atS,...(reason ? {reason} : {})}].slice(-12);
 }
+/** Leaving a customer seat must already be saveable before the next fixed tick. */
+export function leaveServiceRequest(state:CarState,scene:Scene):CarState{
+ const definition=scene.economy,old=state.economy,player=definition?.accounts.find(a=>a.actor==='player'),customer=old?.accounts.find(a=>a.id===player?.id);if(!customer?.request || !definition || !old)return state;
+ const economy={...old,accounts:old.accounts.map(a=>({...a,...(a.visits ? {visits:Object.fromEntries(Object.entries(a.visits).map(([id,h])=>[id,{...h}]))} : {})})),markets:old.markets.map(m=>({...m})),events:[...old.events]};
+ refundRequest(economy,economy.accounts.find(a=>a.id===customer.id)!,definition.jobs.find(j=>j.id===customer.request!.id)!,old.atS);
+ return {...state,economy};
+}
+
 /** Registered equipment upgrade only: refund incompatible old commitments without advancing time. */
 export function refundDamagedWork(state:CarState,scene:Scene):CarState{
  if(!state.economy || !scene.economy || !state.economy.accounts.some(a=>a.work && damagedEquipment(state,scene.economy!.jobs.find(j=>j.id===a.work!.id)!)))return state;
@@ -105,8 +122,8 @@ export function initialServiceWindows(scene:Pick<Scene,'economy'>,timeS:number,c
  return jobs.length ? Object.fromEntries(jobs.map(j=>[j.id,{period:servicePeriod(timeS,j.period_s!),completed:Math.min(j.target,Object.hasOwn(completed,j.id) ? completed[j.id]! : 0)}])) : undefined;
 }
 export function initialEconomy(scene:Pick<Scene,'economy'>,timeS=0):EconomyState|undefined{
- const e=scene.economy;if(!e)return;const windows=initialServiceWindows(scene,timeS);
- return {atS:timeS,turn:0,...(windows ? {serviceWindows:windows} : {}),...(e.repairs.some(r=>r.recover) ? {recovered:Object.fromEntries(e.repairs.filter(r=>r.recover).map(r=>[r.id,0])),recoverySpent:[]} : {}),accounts:e.accounts.map(a=>({id:a.id,credits:a.credits,...(a.company ? {company:a.company.initial} : {}),...(a.rest ? {energy:e.rests!.find(r=>r.id===a.rest)!.energy} : {}),inventory:Object.fromEntries(e.goods.map(g=>[g.id,0])),satiety:a.satiety,decisionAtS:timeS,completed:emptyCompletions(e)})),unattributed:emptyCompletions(e),markets:e.markets.map(m=>({id:m.id,credits:m.credits,...(m.owner ? {owner:m.owner} : {}),stock:Object.fromEntries(m.lots.map(l=>[l.good,l.quantity]))})),consumed:Object.fromEntries(e.goods.map(g=>[g.id,0])),batches:Object.fromEntries(e.jobs.map(j=>[j.id,0])),delivered:Object.fromEntries(e.deliveries.map(d=>[d.id,0])),repaired:Object.fromEntries(e.repairs.map(r=>[r.id,0])),events:[]};
+ const e=scene.economy;if(!e)return;const paid=e.jobs.filter(j=>j.fee!==undefined),visitHistory=()=>Object.fromEntries(paid.map(j=>[j.id,{completed:0,nextAtS:timeS}]));const windows=initialServiceWindows(scene,timeS);
+ return {atS:timeS,turn:0,...(paid.length ? {served:Object.fromEntries(paid.map(j=>[j.id,0]))} : {}),...(windows ? {serviceWindows:windows} : {}),...(e.repairs.some(r=>r.recover) ? {recovered:Object.fromEntries(e.repairs.filter(r=>r.recover).map(r=>[r.id,0])),recoverySpent:[]} : {}),accounts:e.accounts.map(a=>({id:a.id,...(paid.length ? {visits:visitHistory()} : {}),credits:a.credits,...(a.company ? {company:a.company.initial} : {}),...(a.rest ? {energy:e.rests!.find(r=>r.id===a.rest)!.energy} : {}),inventory:Object.fromEntries(e.goods.map(g=>[g.id,0])),satiety:a.satiety,decisionAtS:timeS,completed:emptyCompletions(e)})),unattributed:emptyCompletions(e),markets:e.markets.map(m=>({id:m.id,credits:m.credits,...(m.owner ? {owner:m.owner} : {}),stock:Object.fromEntries(m.lots.map(l=>[l.good,l.quantity]))})),consumed:Object.fromEntries(e.goods.map(g=>[g.id,0])),batches:Object.fromEntries(e.jobs.map(j=>[j.id,0])),delivered:Object.fromEntries(e.deliveries.map(d=>[d.id,0])),repaired:Object.fromEntries(e.repairs.map(r=>[r.id,0])),events:[]};
 }
 function ownerPose(state:CarState,scene:Scene,account:Account):Pose|undefined{
  const c=data(scene),owner=c.accounts.get(account.id)!;
@@ -132,19 +149,22 @@ function inWorkReach(state:CarState,scene:Scene,account:Account,job:Job):boolean
  const p=ownerPose(state,scene,account),q=c.places.get(market.id)!;return !!p && Math.hypot(p.x-q.x,p.y-q.y,p.elevation-q.elevation)<=market.radius;
 }
 const active=(e:EconomyState,job:string)=>e.accounts.filter(a=>a.work?.id===job).length;
+export const pendingService=(e:EconomyState,id:string)=>e.accounts.find(a=>a.request?.id===id && a.request.worker===undefined);
+const pendingServices=(e:EconomyState,id:string)=>e.accounts.filter(a=>a.request?.id===id && a.request.worker===undefined).length;
 /** Pending workers reserve shared service tasks without creating inventory. */
 export function serviceProgress(e:EconomyState,job:Pick<Job,'id'|'target'|'period_s'>){
  const completed=job.period_s===undefined ? e.batches[job.id]! : e.serviceWindows![job.id]!.completed;
- return {completed,remaining:Math.max(0,job.target-completed-active(e,job.id)),...(job.period_s===undefined ? {} : {nextAtS:(servicePeriod(e.atS,job.period_s)+1)*job.period_s})};
+ return {completed,remaining:Math.max(0,job.target-completed-active(e,job.id)-pendingServices(e,job.id)),...(job.period_s===undefined ? {} : {nextAtS:(servicePeriod(e.atS,job.period_s)+1)*job.period_s})};
 }
 export const serviceRemaining=(e:EconomyState,job:Pick<Job,'id'|'target'|'period_s'>)=>serviceProgress(e,job).remaining;
 function targetReached(e:EconomyState,definition:Economy,job:Job):boolean{
+ if(job.fee!==undefined)return !pendingService(e,job.id);
  if(job.kind==='service')return serviceRemaining(e,job)===0;
  const m=e.markets.find(m=>m.id===job.market)!;
  return m.stock[job.output!]!+reserved(e,definition,m.id,job.output!)>=job.target;
 }
 function reserved(e:EconomyState,definition:Economy,market:string,good?:string){
- let n=0;for(const a of e.accounts)if(a.repair){const t=a.repair,r=definition.repairs.find(r=>r.id===t.id)!;if(r.market===market){if(t.phase!=='home')n+=good===undefined ? r.pay : r.input===good ? r.take : 0;if(t.recover && good===r.recover)n+=r.amount!;}}
+ let n=0;if(good===undefined)for(const a of e.accounts)if(a.request){const j=definition.jobs.find(j=>j.id===a.request!.id)!;if(j.market===market)n+=j.fee!;}for(const a of e.accounts)if(a.repair){const t=a.repair,r=definition.repairs.find(r=>r.id===t.id)!;if(r.market===market){if(t.phase!=='home')n+=good===undefined ? r.pay : r.input===good ? r.take : 0;if(t.recover && good===r.recover)n+=r.amount!;}}
  // A batch either refunds its input or produces output; a shared lot needs the larger space once.
  for(const a of e.accounts)if(a.work){const j=definition.jobs.find(j=>j.id===a.work!.id)!;if(j.market===market)n+=good===undefined ? j.pay : Math.max(jobTake(j,good!),jobMakes(j,good!));}
  for(const a of e.accounts)if(a.delivery){const d=definition.deliveries.find(d=>d.id===a.delivery!.id)!;n+=good===undefined ? (d.to===market ? d.pay+deliveryBill(d) : d.from===market ? deliveryBill(d) : 0) : (d.from===market || d.to===market) && d.good===good ? d.quantity : 0;}
@@ -156,7 +176,7 @@ export function businessPrice(market:Market,stock:EconomyState['markets'][number
 }
 export function businessReserved(state:CarState,scene:Scene,market:string):number{return state.economy && scene.economy ? reserved(state.economy,scene.economy,market) : 0;}
 function incomingPay(e:EconomyState,definition:Economy,a:Account):number{
- return (a.work ? definition.jobs.find(j=>j.id===a.work!.id)!.pay : 0)+(a.delivery ? definition.deliveries.find(d=>d.id===a.delivery!.id)!.pay : 0)+(a.repair && a.repair.phase!=='home' ? definition.repairs.find(r=>r.id===a.repair!.id)!.pay : 0);
+ return (a.request ? definition.jobs.find(j=>j.id===a.request!.id)!.fee! : 0)+(a.work ? definition.jobs.find(j=>j.id===a.work!.id)!.pay : 0)+(a.delivery ? definition.deliveries.find(d=>d.id===a.delivery!.id)!.pay : 0)+(a.repair && a.repair.phase!=='home' ? definition.repairs.find(r=>r.id===a.repair!.id)!.pay : 0);
 }
 function deliveryCommitments(e:EconomyState,id:string,except?:Account){return e.accounts.filter(a=>a!==except && (a.delivery?.id===id || a.courier?.id===id && a.courier.phase==='pickup')).length;}
 function collectionReason(scene:Scene,e:EconomyState,a:Account,id:string,timeS:number):Reason|undefined{
@@ -192,9 +212,9 @@ function reason(state:CarState,scene:Scene,e:EconomyState,a:Account,action:Comme
  if(action.kind==='accept_share' || action.kind==='decline_share')return definition.actor==='player' ? hostedMealReason(state,scene,action.partner,action.kind==='decline_share') : 'busy';
  if(companionBusy(state,a.id) || e.invitation?.partner===a.id)return 'busy';
  if(e.shared && (definition.actor==='player' && e.shared.phase!=='home' || e.shared.partner===a.id))return action.kind==='cancel' && definition.actor==='player' && e.shared.phase!=='home' ? undefined : 'busy';
- if(action.kind==='cancel')return a.work || a.delivery || a.repair && a.repair.phase!=='home' ? undefined : 'busy';
- if(definition.actor==='player' && state.seated && action.kind!=='eat')return 'busy';
- if(definition.actor==='player' && !ownerPose(state,scene,a) && !(state.seated && action.kind==='eat'))return 'range';
+ if(action.kind==='cancel')return a.request || a.work || a.delivery || a.repair && a.repair.phase!=='home' ? undefined : 'busy';
+ if(definition.actor==='player' && state.seated && action.kind!=='eat' && action.kind!=='request')return 'busy';
+ if(definition.actor==='player' && !ownerPose(state,scene,a) && !(state.seated && (action.kind==='eat' || action.kind==='request')))return 'range';
  if(action.kind==='deliver'){
   const d=a.delivery && c.deliveries.get(a.delivery.id),r=a.repair?.phase==='home' && a.repair.recover ? c.repairs.get(a.repair.id) : undefined,m=c.markets.get(d?.to??r?.market??'');if(!m || !inReach(state,scene,a,m))return 'range';
   if(!marketIsOpen(scene,m,state.timeS))return 'closed';
@@ -202,9 +222,21 @@ function reason(state:CarState,scene:Scene,e:EconomyState,a:Account,action:Comme
  }
  if(a.resting && action.kind!=='eat')return 'busy';
  if(a.commute && action.kind!=='eat' && !((a.commute.phase==='work' || a.commute.phase==='idle') && action.kind==='work' && !a.work))return 'busy';
+ if(a.request)return 'busy';
+ if(a.visiting && !(a.visiting.phase==='wait' && action.kind==='request' && c.e.visits!.find(v=>v.id===a.visiting!.id)?.work===action.job))return 'busy';
  if(a.shift && (a.shift.phase!=='rest' || !['eat','buy','sell'].includes(action.kind)))return 'busy';
  if(a.meal && !(a.meal.phase==='out' && action.kind==='buy' && action.market===a.meal.market && action.good===c.meals.get(a.meal.id)!.good || a.meal.phase==='eat' && action.kind==='eat' && action.good===c.meals.get(a.meal.id)!.good))return 'busy';
  if(action.kind!=='eat' && (a.work || a.repair || a.courier && !(action.kind==='collect' && a.courier.phase==='pickup' && a.courier.id===action.delivery) || a.delivery))return 'busy';
+ if(action.kind==='request'){
+  const j=c.jobs.get(action.job),seat=serviceSeat(state,scene,a);if(!j?.fee || !seat || !j.waiting!.includes(seat.objectId) || !seatAccessClear(scene,seat,state.broken))return 'seat';
+  const market=c.markets.get(j.market)!,stock=e.markets.find(m=>m.id===j.market)!;if(market.actor===definition.actor)return 'customer';
+  if(!marketIsOpen(scene,market,state.timeS))return 'closed';if(!marketIsStaffed(scene,market,e))return 'unstaffed';
+  if(a.visits![j.id]!.nextAtS>state.timeS+1e-8)return 'cooldown';
+  if(e.accounts.some(c=>c.request?.id===j.id) || active(e,j.id))return 'busy';
+  if(serviceRemaining(e,j)===0)return 'quota';if(a.visits![j.id]!.completed>=1e9 || e.served![j.id]!>=1e9)return 'capacity';
+  if(a.credits<j.fee)return 'funds';if(stock.credits<j.pay)return 'treasury';
+  if(stock.credits+reserved(e,c.e,market.id)+j.fee>L.money)return 'headroom';return;
+ }
  if(action.kind==='repair'){
   const r=c.repairs.get(action.repair);if(!r || !inReach(state,scene,a,c.markets.get(r.market)!))return 'range';
   if(r.dry && sampleWeather(scene.weather,state.timeS).raining)return 'weather';
@@ -270,7 +302,8 @@ function reason(state:CarState,scene:Scene,e:EconomyState,a:Account,action:Comme
   if(active(e,j.id)>=j.capacity)return 'busy';
   if(jobInputs(j).some(i=>stock.stock[i.good]!<i.take))return 'input';
   if(stock.credits<j.pay || a.credits+j.pay>L.money)return 'treasury';
-  if(j.kind==='service'){if(serviceRemaining(e,j)===0)return 'quota';}
+  if(j.fee!==undefined){const customer=pendingService(e,j.id);if(!customer || customer.id===a.id || state.timeS+j.seconds>customer.request!.deadlineS+1e-8)return 'customer';}
+  else if(j.kind==='service'){if(serviceRemaining(e,j)===0)return 'quota';}
   else {const lot=m.lots.find(l=>l.good===j.output)!;if(stock.stock[j.output!]!+reserved(e,c.e,m.id,j.output)+j.make!-jobTake(j,j.output!)>lot.limit)return 'capacity';}
  }
 }
@@ -300,19 +333,22 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
  const failedEquipment=old.accounts.some(a=>a.work && (damagedEquipment(state,c.jobs.get(a.work.id)!) || !stationValid(a,c.jobs.get(a.work.id)!)));
  const interrupted=player.work && (state.seated || !inWorkReach(state,scene,player,c.jobs.get(player.work.id)!)) || player.repair?.phase==='work' && !!state.seated;
  const lostCompanionSeat=old.gathering && old.gathering.phase!=='home' && state.broken.includes(old.gathering.hostTrip.seat.objectId);
- const lostSeat=!!lostCompanionSeat || old.accounts.some(a=>a.meal?.seat && state.broken.includes(a.meal.seat.objectId) || a.resting?.seat && state.broken.includes(a.resting.seat.objectId)) || !!old.invitation && (!state.seated || state.broken.includes(old.invitation.seat.objectId)) || !!old.shared && old.shared.phase!=='home' && (!state.seated || state.broken.includes(old.shared.seat.objectId));
+ const lostRequest=old.accounts.some(a=>a.request && (!sameSeat(serviceSeat(state,scene,a),a.request.seat) || !seatAccessClear(scene,findSeat(scene,a.request.seat)!,state.broken)));
+ const lostSeat=!!lostRequest || !!lostCompanionSeat || old.accounts.some(a=>a.meal?.seat && state.broken.includes(a.meal.seat.objectId) || a.resting?.seat && state.broken.includes(a.resting.seat.objectId)) || !!old.invitation && (!state.seated || state.broken.includes(old.invitation.seat.objectId)) || !!old.shared && old.shared.phase!=='home' && (!state.seated || state.broken.includes(old.shared.seat.objectId));
  if(state.economy && !input.commerce && !interrupted && !failedEquipment && !lostSeat && state.timeS-old.atS<L.decisionS-1e-8)return state;
  const cloneTrip=(t:NonNullable<EconomyState['gathering']>['hostTrip'])=>({...t,home:{...t.home},at:{...t.at},path:t.path.map(p=>({...p}))});
- const now=state.timeS;let e:EconomyState={...old,...(old.serviceWindows ? {serviceWindows:Object.fromEntries(c.recurring.map(j=>{const w=old.serviceWindows![j.id]!,period=servicePeriod(now,j.period_s!);return [j.id,{period,completed:w.period===period ? w.completed : 0}];}))} : {}),...(old.gathering ? {gathering:{...old.gathering,hostTrip:cloneTrip(old.gathering.hostTrip),guestTrip:cloneTrip(old.gathering.guestTrip)}} : {}),...(old.peerHistory ? {peerHistory:{...old.peerHistory}} : {}),...(old.shared ? {shared:{...old.shared,home:{...old.shared.home},at:{...old.shared.at},path:old.shared.path.map(p=>({...p}))}} : {}),...(old.socialHistory ? {socialHistory:{...old.socialHistory}} : {}),...(old.recovered ? {recovered:{...old.recovered}} : {}),atS:now,turn:(old.turn+1)%old.accounts.length,accounts:old.accounts.map(a=>({...a,...(a.resting ? {resting:{...a.resting,home:{...a.resting.home},at:{...a.resting.at},path:a.resting.path.map(p=>({...p}))}} : {}),...(a.commute ? {commute:{...a.commute,home:{...a.commute.home},at:{...a.commute.at},path:a.commute.path.map(p=>({...p}))}} : {}),completed:{work:{...a.completed.work},delivery:{...a.completed.delivery},repair:{...a.completed.repair}},inventory:{...a.inventory},...(a.shift ? {shift:{...a.shift,at:{...a.shift.at},path:a.shift.path.map(p=>({...p}))}} : {}),...(a.meal ? {meal:{...a.meal,home:{...a.meal.home},at:{...a.meal.at},path:a.meal.path.map(p=>({...p}))}} : {}),...(a.work ? {work:{...a.work}} : {}),...(a.repair ? {repair:{...a.repair,path:a.repair.path.map(p=>({...p}))}} : {}),...(a.courier ? {courier:{...a.courier,path:a.courier.path.map(p=>({...p})),at:{...a.courier.at}}} : {}),satiety:Math.max(0,a.satiety-(now-old.atS)*c.accounts.get(a.id)!.drainPerS)})),markets:old.markets.map(m=>({...m,stock:{...m.stock}})),consumed:{...old.consumed},batches:{...old.batches},delivered:{...old.delivered},repaired:{...old.repaired},events:[...old.events]};
+ const now=state.timeS;let e:EconomyState={...old,...(old.served ? {served:{...old.served}} : {}),...(old.serviceWindows ? {serviceWindows:Object.fromEntries(c.recurring.map(j=>{const w=old.serviceWindows![j.id]!,period=servicePeriod(now,j.period_s!);return [j.id,{period,completed:w.period===period ? w.completed : 0}];}))} : {}),...(old.gathering ? {gathering:{...old.gathering,hostTrip:cloneTrip(old.gathering.hostTrip),guestTrip:cloneTrip(old.gathering.guestTrip)}} : {}),...(old.peerHistory ? {peerHistory:{...old.peerHistory}} : {}),...(old.shared ? {shared:{...old.shared,home:{...old.shared.home},at:{...old.shared.at},path:old.shared.path.map(p=>({...p}))}} : {}),...(old.socialHistory ? {socialHistory:{...old.socialHistory}} : {}),...(old.recovered ? {recovered:{...old.recovered}} : {}),atS:now,turn:(old.turn+1)%old.accounts.length,accounts:old.accounts.map(a=>({...a,...(a.visits ? {visits:Object.fromEntries(Object.entries(a.visits).map(([id,h])=>[id,{...h}]))} : {}),...(a.request ? {request:{...a.request}} : {}),...(a.visiting ? {visiting:{...a.visiting,home:{...a.visiting.home},at:{...a.visiting.at},path:a.visiting.path.map(p=>({...p}))}} : {}),...(a.resting ? {resting:{...a.resting,home:{...a.resting.home},at:{...a.resting.at},path:a.resting.path.map(p=>({...p}))}} : {}),...(a.commute ? {commute:{...a.commute,home:{...a.commute.home},at:{...a.commute.at},path:a.commute.path.map(p=>({...p}))}} : {}),completed:{work:{...a.completed.work},delivery:{...a.completed.delivery},repair:{...a.completed.repair}},inventory:{...a.inventory},...(a.shift ? {shift:{...a.shift,at:{...a.shift.at},path:a.shift.path.map(p=>({...p}))}} : {}),...(a.meal ? {meal:{...a.meal,home:{...a.meal.home},at:{...a.meal.at},path:a.meal.path.map(p=>({...p}))}} : {}),...(a.work ? {work:{...a.work}} : {}),...(a.repair ? {repair:{...a.repair,path:a.repair.path.map(p=>({...p}))}} : {}),...(a.courier ? {courier:{...a.courier,path:a.courier.path.map(p=>({...p})),at:{...a.courier.at}}} : {}),satiety:Math.max(0,a.satiety-(now-old.atS)*c.accounts.get(a.id)!.drainPerS)})),markets:old.markets.map(m=>({...m,stock:{...m.stock}})),consumed:{...old.consumed},batches:{...old.batches},delivered:{...old.delivered},repaired:{...old.repaired},events:[...old.events]};
  let current:CarState=advanceGrowth({...state,economy:e},now-old.atS,scene);e=current.economy!;
  const report=(a:Account,kind:EconomyState['events'][number]['kind'],ref:string,why?:Reason)=>{e.events.push({account:a.id,kind,ref,atS:now,...(why ? {reason:why} : {})});e.events=e.events.slice(-12);};
  const cancel=(a:Account,why?:Reason)=>refundWork(e,a,c.jobs.get(a.work!.id)!,now,why);
+ for(const a of e.accounts)if(a.request){const t=a.request,j=c.jobs.get(t.id)!,seat=serviceSeat(current,scene,a),worker=t.worker && e.accounts.find(w=>w.id===t.worker);if(!seat || !sameSeat(seat,t.seat) || !seatAccessClear(scene,seat,current.broken) || now+1e-8>=t.deadlineS && (!worker || !worker.work || worker.work.doneAtS>now+1e-8))refundRequest(e,a,j,now);}
  for(const a of e.accounts)if(a.work){
   const j=c.jobs.get(a.work.id)!,m=e.markets.find(m=>m.id===j.market)!;
+  if(j.fee!==undefined && !a.work!.legacy && !e.accounts.some(c=>c.request?.id===j.id && c.request.worker===a.id)){cancel(a,'customer');continue;}
   if(damagedEquipment(state,j)){cancel(a,'equipment');continue;}
   if(!stationValid(a,j)){cancel(a,'station');continue;}
   if(c.accounts.get(a.id)!.actor==='player' && state.seated || !inWorkReach(state,scene,a,j)){cancel(a);continue;}
-  if(now+1e-8>=a.work.doneAtS){if(j.output!==undefined)m.stock[j.output]!+=j.make!;a.credits+=j.pay;a.satiety=Math.max(0,a.satiety-j.effort);if(a.energy!==undefined)a.energy=Math.max(0,a.energy-j.effort);e.batches[j.id]!++;if(j.period_s!==undefined)e.serviceWindows![j.id]!.completed++;a.completed.work[j.id]!++;a.work=undefined;report(a,'paid',j.id);}
+  if(now+1e-8>=a.work.doneAtS){if(j.output!==undefined)m.stock[j.output]!+=j.make!;if(j.fee!==undefined && !a.work!.legacy){const customer=e.accounts.find(c=>c.request?.id===j.id && c.request.worker===a.id)!;m.credits+=j.fee;customer.request=undefined;customer.visits![j.id]!.completed++;customer.visits![j.id]!.nextAtS=now+(j.cooldown_s??600);e.served![j.id]!++;returnFromVisit(customer);report(customer,'served',j.id);}a.credits+=j.pay;a.satiety=Math.max(0,a.satiety-j.effort);if(a.energy!==undefined)a.energy=Math.max(0,a.energy-j.effort);e.batches[j.id]!++;if(j.period_s!==undefined)e.serviceWindows![j.id]!.completed++;a.completed.work[j.id]!++;a.work=undefined;report(a,'paid',j.id);}
  }
  stepRestNeeds(current,now-old.atS,scene);stepCompanyNeeds(current,now-old.atS,scene);
  current=stepStaffShifts(current,now-old.atS,scene);
@@ -337,6 +373,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
  }
  const perform=(a:Account,action:CommerceAction)=>{
   if(action.kind==='cancel'){
+   if(a.request){refundRequest(e,a,c.jobs.get(a.request.id)!,now);return;}
    if(a.repair?.phase==='home' && a.repair.recover){report(a,'blocked','action','busy');return;}
    if(c.accounts.get(a.id)!.actor==='player' && e.shared?.phase!=='home')endSharedMeal(current,scene);
    if(a.repair && a.repair.phase!=='home')finishRepair(a,true);
@@ -346,6 +383,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
   }
   const blocked=reason(current,scene,e,a,action);
   if(blocked){if(a.id===player.id)report(a,'blocked','action',blocked);return;}
+  if(action.kind==='request'){const j=c.jobs.get(action.job)!,seat=serviceSeat(current,scene,a)!;a.credits-=j.fee!;a.request={id:j.id,seat:{objectId:seat.objectId,seatId:seat.seatId},startedAtS:now-dt,deadlineS:now-dt+(j.wait_s??120)};a.visits![j.id]!.nextAtS=now-dt+(j.cooldown_s??600);report(a,'requested',j.id);return;}
   if(action.kind==='acquire' || action.kind==='deposit' || action.kind==='withdraw'){
    const m=e.markets.find(m=>m.id===action.market)!,market=c.markets.get(m.id)!;
    const amount=action.kind==='acquire' ? businessPrice(market,m)! : action.amount;
@@ -363,7 +401,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
   if(action.kind==='eat'){a.inventory[action.good]!--;a.satiety=Math.min(100,a.satiety+c.goods.get(action.good)!.food);e.consumed[action.good]!++;report(a,'eat',action.good);return;}
   if(action.kind==='buy'){const m=e.markets.find(m=>m.id===action.market)!,lot=c.markets.get(m.id)!.lots.find(l=>l.good===action.good)!;a.credits-=lot.price!;m.credits+=lot.price!;m.stock[action.good]!--;a.inventory[action.good]!++;report(a,'buy',action.good);return;}
   if(action.kind==='sell'){const m=e.markets.find(m=>m.id===action.market)!,lot=c.markets.get(m.id)!.lots.find(l=>l.good===action.good)!;a.credits+=lot.price!;m.credits-=lot.price!;m.stock[action.good]!++;a.inventory[action.good]!--;report(a,'sell',action.good);return;}
-  const j=c.jobs.get(action.job)!,m=e.markets.find(m=>m.id===j.market)!;for(const i of jobInputs(j))m.stock[i.good]!-=i.take;m.credits-=j.pay;a.work={id:j.id,doneAtS:now-dt+j.seconds};const station=workstation(scene,j.station);if(station){if(c.accounts.get(a.id)!.actor==='player')current={...current,headingRad:station.headingRad};else if(a.commute)a.commute.headingRad=station.headingRad;}report(a,'start',j.id);
+  const j=c.jobs.get(action.job)!,m=e.markets.find(m=>m.id===j.market)!;for(const i of jobInputs(j))m.stock[i.good]!-=i.take;m.credits-=j.pay;a.work={id:j.id,doneAtS:now-dt+j.seconds};if(j.fee!==undefined)pendingService(e,j.id)!.request!.worker=a.id;const station=workstation(scene,j.station);if(station){if(c.accounts.get(a.id)!.actor==='player')current={...current,headingRad:station.headingRad};else if(a.commute)a.commute.headingRad=station.headingRad;}report(a,'start',j.id);
  };
  const returnCourier=(a:Account)=>{const t=a.courier!,home=c.objects.get(c.accounts.get(a.id)!.actor)!;t.phase='home';t.at={x:home.x,y:home.y};t.path=[];t.routeAtS=0;};
  for(const a of e.accounts)if(a.courier){
@@ -423,20 +461,21 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
   if(offer){t.seat={objectId:offer.seat.objectId,seatId:offer.seat.seatId};t.phase='seat';t.at={...offer.seat.approach};t.path=offer.path!;t.routeAtS=now;}
   else{t.phase='eat';t.speed=0;t.eatUntilS=now+m.eat_s;}
  }
+ stepVisits(current,scene,now-old.atS,perform);
  // Rotating stable account order resolves contention independently of rendering order.
  for(let i=0;i<e.accounts.length;i++){
   const a=e.accounts[(i+old.turn)%e.accounts.length]!,spec=c.accounts.get(a.id)!;
   if(spec.actor==='player'){if(input.commerce)perform(a,input.commerce);continue;}
-  if(companionBusy(current,a.id))continue;
+  if(companionBusy(current,a.id) || a.request || a.visiting)continue;
   const ration=spec.ration && c.rations.get(spec.ration);
   if(ration && now+1e-8>=a.decisionAtS && e.shared?.partner!==a.id && e.invitation?.partner!==a.id){
    const eat={kind:'eat' as const,good:ration.good},buy={kind:'buy' as const,market:ration.market,good:ration.good};
    if(a.satiety<=ration.below && !reason(current,scene,e,a,eat)){a.decisionAtS=now+1;perform(a,eat);continue;}
-   const busy=a.work || a.delivery || a.repair || a.courier || a.meal || a.resting || a.commute || a.shift;
+   const busy=a.work || a.delivery || a.repair || a.courier || a.visiting || a.request || a.meal || a.resting || a.commute || a.shift;
    if(!busy && !a.inventory[ration.good] && Object.values(a.inventory).reduce((n,v)=>n+v,0)+1+c.rationLoads.get(a.id)!<=spec.capacity && !reason(current,scene,e,a,buy)){a.decisionAtS=now+1;perform(a,buy);continue;}
    if(busy)a.decisionAtS=now+1;
   }
-  if(e.shared?.partner===a.id || e.invitation?.partner===a.id || now+1e-8<a.decisionAtS || a.work || a.delivery || a.repair || a.courier || a.meal || a.resting || a.commute || a.shift && a.shift.phase!=='rest')continue;a.decisionAtS=now+1;
+  if(e.shared?.partner===a.id || e.invitation?.partner===a.id || now+1e-8<a.decisionAtS || a.work || a.delivery || a.repair || a.courier || a.visiting || a.request || a.meal || a.resting || a.commute || a.shift && a.shift.phase!=='rest')continue;a.decisionAtS=now+1;
   const social=c.e.socials.find(p=>p.id===spec.social);
   if(social?.markets && companyShoppingDue(current,scene,a.id) && (social.peers?.length || current.npcs.find(n=>n.id===spec.actor)?.known) && a.satiety<=social.max_fullness){
    const need=Math.max(0,2-a.inventory[social.good]!);
@@ -466,6 +505,7 @@ export function stepCommerce(state:CarState,input:Pick<CarInput,'commerce'>,dt:n
    a.courier={id,phase:'pickup',at:offer.end,x:p.x,y:p.y,headingRad:c.objects.get(spec.actor)!.headingRad??0,distance:0,speed:0,path:offer.path,routeAtS:now};a.repairSeen=undefined;report(a,'courier_started',id);break;
   }
   if(a.courier)continue;
+  if(startVisit(current,scene,a))continue;
   if(spec.commute){
    const p=ownerPose(current,scene,a)!,area=commuteArea(scene,spec);
    if(spec.attendance && !attendanceOpen(scene,spec.attendance,now))continue;
@@ -515,7 +555,7 @@ export function checkEconomyState(state:CarState,scene:Scene):void{
  }
  for(const a of e.accounts)if(a.meal){
   const t=a.meal,spec=d.accounts.find(s=>s.id===a.id)!,plan=d.meals.find(m=>m.id===t.id),object=scene.objects.find(o=>o.id===spec.actor);
-  if(!plan || spec.meal!==t.id || !plan.markets.includes(t.market) || !object || spec.actor==='player' || a.work || a.delivery || a.repair || a.courier || a.commute || t.routeAtS>state.timeS+1.01)throw Error('Invalid saved meal');
+  if(!plan || spec.meal!==t.id || !plan.markets.includes(t.market) || !object || spec.actor==='player' || a.work || a.delivery || a.repair || a.courier || a.visiting || a.request || a.commute || t.routeAtS>state.timeS+1.01)throw Error('Invalid saved meal');
   const seat=findSeat(scene,t.seat);
   if(t.phase==='seat' && !seat || t.seat && (!seat || !plan.seats?.includes(seat.objectId) || !['seat','eat'].includes(t.phase) || !seatAvailable(scene,state,seat,a.id) || walkingDistance(scene,t.at,seat.approach)>.01))throw Error('Invalid saved meal seat');
   const home=actorPose(scene,object,state.timeS,{...state,economy:undefined}),area=deliveryArea(plan),market=d.markets.find(m=>m.id===t.market)!,vendor=scene.objects.find(o=>o.id===market.actor)!;
@@ -528,7 +568,7 @@ export function checkEconomyState(state:CarState,scene:Scene):void{
  for(const a of e.accounts)if(a.work){const job=d.jobs.find(j=>j.id===a.work!.id)!,station=workstation(scene,job.station),p=station && ownerPose(state,scene,a);if(station && (!p || Math.hypot(p.x-station.x,p.y-station.y,p.elevation-station.elevation)>STATION_REACH || e.accounts.some(b=>b!==a && b.work && d.jobs.find(j=>j.id===b.work!.id)?.station===job.station)))throw Error('Invalid saved workstation');}
  for(const a of e.accounts)if(a.commute){
   const t=a.commute,spec=d.accounts.find(s=>s.id===a.id)!,job=d.jobs.find(j=>j.id===t.id),object=scene.objects.find(o=>o.id===spec.actor);
-  if(!usesWorkTravel(scene,spec) || !job || !accountJobs(spec).includes(t.id) || !object || a.meal || a.repair || a.delivery || a.courier || a.shift || (t.phase==='work' ? a.work?.id!==t.id : !!a.work) || t.routeAtS>state.timeS+1.01)throw Error('Invalid saved work commute');
+  if(!usesWorkTravel(scene,spec) || !job || !accountJobs(spec).includes(t.id) || !object || a.visiting || a.request || a.meal || a.repair || a.delivery || a.courier || a.shift || (t.phase==='work' ? a.work?.id!==t.id : !!a.work) || t.routeAtS>state.timeS+1.01)throw Error('Invalid saved work commute');
   const home=actorPose(scene,object,state.timeS,{...state,economy:undefined}),area=commuteArea(scene,spec),market=d.markets.find(m=>m.id===job.market)!,vendor=scene.objects.find(o=>o.id===(market.on??market.actor))!;
   const station=workstation(scene,job.station),floorEnd=station?.floor && walkingDistance(scene,t.at,station)<.01;
   if(Math.hypot(t.home.x-home.x,t.home.y-home.y)>.01 || (t.phase==='home' ? Math.hypot(t.at.x-home.x,t.at.y-home.y)>.01 : Math.hypot(t.at.x-vendor.x,t.at.y-vendor.y)>market.radius || !floorEnd && Math.abs((t.at.elevation??walkingHeight(scene,t.at.x,t.at.y))-walkingHeight(scene,vendor.x,vendor.y))>=4))throw Error('Invalid commute destination');
@@ -560,9 +600,16 @@ export function checkEconomyState(state:CarState,scene:Scene):void{
   if(spec.actor!=='player'){if(!repairSegment(scene,r,t,t,state,true))throw Error('Invalid worker position');let previous:import('../scene/floors').WalkingPoint=t;for(const p of t.path){if(!repairSegment(scene,r,previous,p,state,true))throw Error('Invalid saved repair path');previous=p;}if(t.path.length && Math.hypot(previous.x-(t.phase==='home' ? scene.objects.find(o=>o.id===spec.actor)!.x : t.at.x),previous.y-(t.phase==='home' ? scene.objects.find(o=>o.id===spec.actor)!.y : t.at.y))>.01)throw Error('Invalid repair destination');}
  }
  for(const m of e.markets){const spec=d.markets.find(s=>s.id===m.id)!;if(spec.owner ? !m.owner || !d.accounts.some(a=>a.id===m.owner) || (m.owner===spec.owner ? m.acquiredAtS!==undefined : spec.sale===undefined || m.acquiredAtS===undefined || m.acquiredAtS>e.atS) : m.owner!==undefined || m.acquiredAtS!==undefined)throw Error('Invalid business ownership');if(!ids(Object.keys(m.stock),spec.lots.map(l=>l.good)) || m.credits+reserved(e,d,m.id)>L.money || spec.lots.some(l=>m.stock[l.good]!+reserved(e,d,m.id,l.good)>l.limit))throw Error('Invalid market capacity');}
+ const paid=d.jobs.filter(j=>j.fee!==undefined);
+ if(!!e.served!==!!paid.length || !ids(Object.keys(e.served??{}),paid.map(j=>j.id)))throw Error('Unknown paid services');
+ for(const a of e.accounts){if(!!a.visits!==!!paid.length || !ids(Object.keys(a.visits??{}),paid.map(j=>j.id)))throw Error('Unknown service history');for(const j of paid){const h=a.visits![j.id]!;if(!Number.isInteger(h.completed) || h.completed<0 || h.nextAtS>state.timeS+(j.cooldown_s??600)+1e-6)throw Error('Invalid service history');}}
+ for(const j of paid)if(e.served![j.id]!>e.batches[j.id]! || e.accounts.reduce((n,a)=>n+a.visits![j.id]!.completed,0)!==e.served![j.id] || e.accounts.filter(a=>a.request?.id===j.id).length>j.capacity)throw Error('Invalid shared service history');
+ for(const a of e.accounts)if(a.request){const t=a.request,j=d.jobs.find(j=>j.id===t.id),seat=serviceSeat(state,scene,a),worker=t.worker && e.accounts.find(w=>w.id===t.worker);if(!j?.fee || a.work || a.delivery || a.repair || a.courier || a.meal || a.resting || a.commute || a.shift || !seat || !sameSeat(seat,t.seat) || !j.waiting!.includes(seat.objectId) || !seatAccessClear(scene,seat,state.broken) || t.startedAtS>e.atS || Math.abs(t.deadlineS-t.startedAtS-(j.wait_s??120))>1e-6 || t.deadlineS<e.atS-1e-6 || Math.abs(a.visits![j.id]!.nextAtS-t.startedAtS-(j.cooldown_s??600))>1e-6 || a.credits+j.fee>L.money || (t.worker ? !worker || worker===a || worker.work?.id!==j.id || worker.work.legacy : active(e,j.id)>0))throw Error('Invalid saved service request');}
+ for(const a of e.accounts)if(a.work){const j=d.jobs.find(j=>j.id===a.work!.id)!;if(a.work.legacy ? j.fee===undefined || e.served![j.id]!==0 : j.fee!==undefined && !e.accounts.some(c=>c.request?.id===j.id && c.request.worker===a.id))throw Error('Invalid saved service work owner');}
+ checkVisitJourneys(state,scene);
  if(d.deliveries.some(d=>{const n=deliveryCommitments(e,d.id);return n>d.capacity || e.delivered[d.id]!+n>1e9;}))throw Error('Invalid delivery capacity');
- if(d.jobs.some(j=>active(e,j.id)>j.capacity || e.batches[j.id]!+active(e,j.id)>1e9 || j.kind==='service' && serviceProgress(e,j).completed+active(e,j.id)>j.target))throw Error('Invalid work capacity');
- const total=e.accounts.reduce((n,a)=>n+a.credits+(a.work ? d.jobs.find(j=>j.id===a.work!.id)!.pay : 0)+(a.delivery ? d.deliveries.find(t=>t.id===a.delivery!.id)!.pay+deliveryBill(d.deliveries.find(t=>t.id===a.delivery!.id)!) : 0)+(a.repair && a.repair.phase!=='home' ? d.repairs.find(r=>r.id===a.repair!.id)!.pay : 0),0)+e.markets.reduce((n,m)=>n+m.credits,0),initial=d.accounts.reduce((n,a)=>n+a.credits,0)+d.markets.reduce((n,m)=>n+m.credits,0);
+ if(d.jobs.some(j=>active(e,j.id)>j.capacity || e.batches[j.id]!+active(e,j.id)>1e9 || j.kind==='service' && serviceProgress(e,j).completed+active(e,j.id)+pendingServices(e,j.id)>j.target))throw Error('Invalid work capacity');
+ const total=e.accounts.reduce((n,a)=>n+a.credits+(a.request ? d.jobs.find(j=>j.id===a.request!.id)!.fee! : 0)+(a.work ? d.jobs.find(j=>j.id===a.work!.id)!.pay : 0)+(a.delivery ? d.deliveries.find(t=>t.id===a.delivery!.id)!.pay+deliveryBill(d.deliveries.find(t=>t.id===a.delivery!.id)!) : 0)+(a.repair && a.repair.phase!=='home' ? d.repairs.find(r=>r.id===a.repair!.id)!.pay : 0),0)+e.markets.reduce((n,m)=>n+m.credits,0),initial=d.accounts.reduce((n,a)=>n+a.credits,0)+d.markets.reduce((n,m)=>n+m.credits,0);
  if(total!==initial)throw Error('Money is not conserved');
  for(const g of d.goods){const expected=d.markets.reduce((n,m)=>n+(m.lots.find(l=>l.good===g.id)?.quantity??0),0)+d.jobs.reduce((n,j)=>n+e.batches[j.id]!*(jobMakes(j,g.id)-jobTake(j,g.id)),0)+d.repairs.reduce((n,r)=>n+(r.recover===g.id ? r.amount!*(e.recovered?.[r.id]??0) : 0),0)-e.consumed[g.id]!-d.repairs.reduce((n,r)=>n+(r.input===g.id ? r.take*e.repaired[r.id]! : 0),0);
   const actual=(e.gathering?.portions && d.socials.find(p=>p.id===e.gathering!.id)!.good===g.id ? e.gathering.portions : 0)+(e.shared?.portions && d.socials.find(p=>p.id===e.shared!.id)!.good===g.id ? e.shared.portions : 0)+e.markets.reduce((n,m)=>n+(m.stock[g.id]??0),0)+e.accounts.reduce((n,a)=>n+a.inventory[g.id]!+(a.repair?.phase==='home' && a.repair.recover && d.repairs.find(r=>r.id===a.repair!.id)!.recover===g.id ? d.repairs.find(r=>r.id===a.repair!.id)!.amount! : 0)+(a.work ? jobTake(d.jobs.find(j=>j.id===a.work!.id)!,g.id) : 0)+(a.delivery && d.deliveries.find(t=>t.id===a.delivery!.id)!.good===g.id ? d.deliveries.find(t=>t.id===a.delivery!.id)!.quantity : 0)+(a.repair && a.repair.phase!=='home' && d.repairs.find(r=>r.id===a.repair!.id)!.input===g.id ? d.repairs.find(r=>r.id===a.repair!.id)!.take : 0),0);

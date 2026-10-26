@@ -20,7 +20,7 @@ the camera and **0** resets manual framing; pinch and scroll still work.
 | View | When it appears | What you can do |
 | --- | --- | --- |
 | Shop / Stock | Beside a counter on foot | Inspect stock; buy or sell when it has retail offers |
-| Work | Beside a workplace, or during a task | Choose work, collect cargo, hand it over or inspect progress |
+| Work | Beside a workplace, on a waiting bench, or during a task | Request service, choose work, collect cargo, hand it over or inspect progress |
 | Bag | While playing | Inspect carried items; eat or share food when the ordinary rules allow it |
 | Business | Beside a counter with an authored owner | Inspect the sale, buy it or transfer company cash |
 
@@ -130,3 +130,11 @@ a controller binding system. Full movement controls remain under Pause → Contr
 actions, controls and backup tools also work with Tab and Enter. The [contextual
 key guide](dream/behavior.md#pause-and-find-the-controls) starts with the current
 movement or sport, then uses arrow-key sections instead of one long text list.
+
+
+At the records office, sit on the north waiting bench with **F**, open **M** and
+use **H** or **Enter** to request service. The panel separates the waiting
+deadline from the worker's actual time remaining. Stay seated to finish;
+**H** cancels an unfinished request for a refund. Standing also releases it.
+The same work view lets the player serve an NPC from the desk.
+[Customer rules](dream/service-work.md#customers-make-the-work).

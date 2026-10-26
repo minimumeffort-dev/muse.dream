@@ -12,11 +12,11 @@ import {stepAmbient} from '../src/sim/ambient';
 import {decodeSave,encodeSave} from '../src/sim/save';
 import {gameSave} from '../src/game/save';
 let scene:ReturnType<typeof createWorldScene>,prior:typeof scene,world:World,old:World,snapshot:string;
-beforeAll(()=>{scene=createWorldScene();prior=c.preRecurringWorkScene(scene);snapshot=JSON.stringify(scene);world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.RECURRING_WORK_COMPATIBILITY,previousRecurringWorkSaveCompatibility:c.OFFICE_FOOD_COMPATIBILITY};old={...world,scene:prior,saveCompatibility:c.OFFICE_FOOD_COMPATIBILITY,previousRecurringWorkSaveCompatibility:undefined};},60000);
+beforeAll(()=>{scene={...c.preServiceVisitsScene(createWorldScene()),revisionId:'r118',sourceHash:'handmade-city-life-v118'};prior=c.preRecurringWorkScene(scene);snapshot=JSON.stringify(scene);world={scene,roadMask:buildMaskForScene(scene),driveMask:buildPaperMask(14000,11000),carRadius:11,saveCompatibility:c.RECURRING_WORK_COMPATIBILITY,previousRecurringWorkSaveCompatibility:c.OFFICE_FOOD_COMPATIBILITY};old={...world,scene:prior,saveCompatibility:c.OFFICE_FOOD_COMPATIBILITY,previousRecurringWorkSaveCompatibility:undefined};},60000);
 afterEach(()=>expect(JSON.stringify(scene)).toBe(snapshot));
 const clerk=(s:CarState)=>s.economy!.accounts.find(a=>a.id==='office_clerk')!;
 it('registers one recurring quota while keeping exact earlier world identity, geometry and resources',async()=>{
- expect(c.SAVE_SIMULATION_VERSION).toBe(59);expect(scene.revisionId).toBe('r118');expect(await c.sha256(c.saveCompatibilitySource(scene))).toBe(c.RECURRING_WORK_COMPATIBILITY);expect(await c.sha256(c.preRecurringWorkCompatibilitySource(scene))).toBe(c.OFFICE_FOOD_COMPATIBILITY);
+ expect(JSON.parse(c.preServiceVisitsCompatibilitySource(scene)).simulationVersion).toBe(59);expect(scene.revisionId).toBe('r118');expect(await c.sha256(c.preServiceVisitsCompatibilitySource(scene))).toBe(c.RECURRING_WORK_COMPATIBILITY);expect(await c.sha256(c.preRecurringWorkCompatibilitySource(scene))).toBe(c.OFFICE_FOOD_COMPATIBILITY);
  for(const k of ['objects','surfaces','streets','floors','routes','behaviors'] as const)expect(scene[k]).toEqual(prior[k]);expect(scene.economy).toEqual({...prior.economy,jobs:prior.economy!.jobs.map(j=>j.id==='check_records'?{...j,period_s:600}:j)});
 });
 it('preserves every actual r117 saved field and clock, conservatively initializes usage, and retains the original slot',()=>{

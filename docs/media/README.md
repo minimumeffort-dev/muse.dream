@@ -2193,3 +2193,32 @@ together. [Native state, fixture provenance and file hashes](../evidence/crowd-f
 The final coincident-link correction leaves every ambient state field in the
 recorded region identical over 2,397 fixed ticks, so these media remain current.
 [Comparison and source hashes](../evidence/crowd-flow/regional-recording-check.json).
+
+
+## Paid service visits, r119
+
+`servicevisit.mp4`, `servicevisit.gif` and `servicevisit.jpg` replace the office
+quota-only lead media. The current `?capture` exporter renders 360 consecutive
+2400×1350 PNG frames at 30 frames per simulation second. The clip walks upstairs
+in its pre-roll, uses a real seat, opens the existing work panel and requests
+service through H. It then shows the worker completing the request. The player
+pays eight coins, the worker earns four, and the business ends with 64.
+
+The HD video and still are 1600×900; the GIF is 1280×720. Frame 180 supplies the
+still. All three use the same twelve simulation seconds, with no interpolated
+frames or speed-up. This is offline documentation export, not live frame-rate
+evidence. Source frames remain in `.npm-cache/media/servicevisit/` until replaced
+by a newer accepted capture. Use `node scripts/encode-media.mjs` with the bundled
+ffmpeg/gifsicle paths and `servicevisit` to encode it. The JPG uses the same
+source frame and Lanczos resize.
+
+`periodwork` records r118 before paid customer demand. `officework` records r116
+before that change. Those recordings remain historical and their capture options
+are retired from the current exporter; use the matching commit to reproduce
+them. Old `?test-office` and `?test-recurring-work` entry URLs open the current
+paid-service walkthrough; they no longer try to start a job without a customer.
+`stationfood` records r117. Its food journey and geometry remain accurate,
+with its old wage policy labelled in the guides. Other retained asset, road and
+movement media has unchanged inputs in this slice.
+
+[Verification and native evidence](../evidence/service-visits/verification.md).

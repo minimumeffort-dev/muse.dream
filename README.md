@@ -16,7 +16,7 @@ The bakery now has stocktaking alongside its recipes. Walk to the preparation
 table, choose the task and finish it for a wage. You and the commuter share
 three checks, the same workstation and the same finite business money. A check
 creates no goods. Cancelling frees the task; finishing pays once, and progress
-survives reload. Daily task replenishment is still to come.
+survives reload. Bakery checks retain a lifetime quota; other services can declare recurring windows.
 
 ![Stocktaking at the shared bakery workstation](docs/media/servicework.jpg)
 
@@ -27,14 +27,21 @@ survives reload. Daily task replenishment is still to come.
 
 The clerk lives in Copper Court, takes a break on its bench and walks across the
 promenade to Lantern Exchange. You can take the same stairs and work at the
-same records desk. There are six shared tasks per 600 simulation seconds and finite wages, with no pretend
-inventory for a service business. Break the table and work stops until it is
+same records desk. A customer now sits on the waiting bench and requests a
+check for eight coins. You or the clerk earn four for finishing it. Six checks
+fit each 600-second window, and new work requires an actual paid request. Break the table and work stops until it is
 repaired. Lifetime work history stays intact when the quota renews.
 
-![Renewing and completing a shared task in Lantern Exchange](docs/media/periodwork.jpg)
+![Requesting and receiving a paid service upstairs](docs/media/servicevisit.jpg)
 
-[Watch in HD](docs/media/periodwork.mp4) · [GIF](docs/media/periodwork.gif) ·
-[Build the office in Dream](docs/dream/office-work.md)
+[Watch in HD](docs/media/servicevisit.mp4) · [GIF](docs/media/servicevisit.gif) ·
+[Build the office in Dream](docs/dream/office-work.md) · [Customer visits](docs/dream/service-work.md#customers-make-the-work)
+
+The doctor and commuter can make the same visit, using real pedestrian routes,
+doors and stairs. Fees stay refundable until completion. Stand up, cancel or
+lose the bench and the fee returns; break the desk and reserved wages return
+too. Completed visits and cooldowns survive reload. There is one waiting
+request per job for now.
 
 ## Earn lunch, then bring more bread
 
@@ -42,6 +49,9 @@ Station supplies now sells bread. The office clerk spends earned wages there,
 walks back to Copper Court and eats on the same bench you can use. A courier
 brings replacement loaves from the bakery, paid from the shop's actual takings.
 There is no free meal or automatic stock refill.
+
+The food recording below is from r117. Its route, purchase and seated meal
+remain the same; current office wages depend on paying customers.
 
 ![Buying and eating bread at Station supplies](docs/media/stationfood.jpg)
 

@@ -18,6 +18,11 @@ paid work in Lantern Exchange. The clerk now buys station bread with earned wage
 eats at home and funds real bakery-to-station resupply by the existing porter.
 [Food and supply](dream/office-food.md). [Office rules](dream/office-work.md). [Service task rules](dream/service-work.md).
 
+The records office now has seated paying customers. The doctor and commuter
+use declared visit routes; the player can request or provide the same service.
+Fees fund the business, interrupted requests refund once, and visit history
+survives reload. [Customer rules](dream/service-work.md#customers-make-the-work).
+
 ## Next playable work
 
 Simulation 55 resolves the station crowd congestion found in the native review.

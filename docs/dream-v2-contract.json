@@ -671,6 +671,7 @@
       "id": true,
       "fields": {
         "actor": "ref",
+        "visit": "ref?",
         "credits": "n",
         "capacity": "n",
         "satiety": "n",
@@ -741,6 +742,10 @@
         "capacity": "n",
         "target": "n",
         "period_s": "n?",
+        "fee": "n?",
+        "waiting": "symbols?",
+        "wait_s": "n?",
+        "cooldown_s": "n?",
         "requires": "ref?",
         "requires_any": "symbols?",
         "equipment": "symbols?",
@@ -809,6 +814,17 @@
         "good": "ref",
         "market": "ref",
         "below": "n"
+      }
+    },
+    "visit": {
+      "contexts": [
+        "economy"
+      ],
+      "id": true,
+      "fields": {
+        "work": "ref",
+        "on": "ref",
+        "grounds": "symbols?"
       }
     },
     "meal": {
@@ -1872,6 +1888,13 @@
     "phase": "place.phase_s 0..3600 only with route; shifts the entire route clock including stops. offset remains a carriage distance."
   },
   "commerce": {
+    "serviceVisits": {
+      "source": "work(...,kind=service,fee=8,waiting=[bench],wait_s=120,cooldown_s=600); visit plan(work=job,on=ground,grounds=[floor]); account npc(...,visit=plan);",
+      "bounds": "fee integer 1..10000 paired with 1..4 unique waiting placements; wait_s 1..600 and >= work.seconds, default120; cooldown_s 30..86400 default600; 8 visit plans; one queued or served customer per paid job",
+      "navigation": "Waiting furniture needs same-floor station access within80 units. Visiting NPCs require supported outward and return paths in their own on/grounds. One journey owner; meal, rest and commuting may coexist; vendors and competing direct duties are excluded.",
+      "transactions": "Customer holds a refundable fee while seated; assigned worker reserves a finite wage. Completion pays once, transfers the fee to the business and increments customer history. Cancellation, lost/damaged seat, desk damage or timeout refunds exactly once. Waiting alone earns nothing.",
+      "runtime": "Requests, served counts, histories, clocks and paths are engine-owned, never authored. Travelling targets do not claim seats; claim only on arrival, with bounded local reselection/wait. Cooldown continues through physical return. No goods, actor slots, private customer labels, provider calls or implied real services."
+    },
     "serviceBusinesses": {
       "source": "market(...,actor=operator,on=building){}",
       "goods": "0..8; zero requires service work",

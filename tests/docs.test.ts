@@ -10,6 +10,7 @@ const examples=import.meta.glob<string>('../docs/examples/*.dream',{query:'?raw'
 const files=Object.keys(import.meta.glob(['../src/**/*','../docs/**/*','../scripts/*','../tests/**/*','../README.md'])).map(p=>p.slice(3));
 
 describe("published Dream documentation",()=>{
+  it('keeps the paid service excerpts identical to their runnable customer world',()=>{const guide=pages['../docs/dream/service-work.md']!,block=guide.split('## Customers make the work')[1]!.match(/```dream\n([\s\S]*?)```/)![1]!.trim();for(const line of block.split('\n'))expect(examples['../docs/examples/service-visits.dream']).toContain(line);});
   it('keeps the supported lobby and mezzanine declarations identical to their runnable sources',()=>{
     const blocks=[...pages['../docs/dream/station-quarter.md']!.matchAll(/```dream\n([\s\S]*?)```/g)].map(m=>m[1]!.trim());
     expect(blocks).toHaveLength(2);expect(blocks.find(b=>b.startsWith('dream 2;'))).toBe(examples['../docs/examples/ground-floor-seating.dream']!.trim());
@@ -97,7 +98,7 @@ describe("published Dream documentation",()=>{
     expect(block.trim()).toBe(examples['../docs/examples/market-work.dream']!.trim());
   });
   it.each(Object.entries(examples))("compiles the complete example %s",(path,source)=>{
-    const result=checkDream(source,['/character-import.dream','/ground-floor-seating.dream','/tower-mezzanine.dream','/service-office.dream','/service-office-meals.dream','/recurring-service.dream'].some(name=>path.endsWith(name)) ? worldModules : {});
+    const result=checkDream(source,['/character-import.dream','/ground-floor-seating.dream','/tower-mezzanine.dream','/service-office.dream','/service-office-meals.dream','/recurring-service.dream','/service-visits.dream'].some(name=>path.endsWith(name)) ? worldModules : {});
     expect(result.ok,result.ok ? path : JSON.stringify(result.diagnostics)).toBe(true);
   });
   it("keeps the quickstart's complete tree identical to its runnable source",()=>{

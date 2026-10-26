@@ -5,7 +5,7 @@ import type {Scene} from '../scene/schema';
 import {carFootprintClear,type CarState,type World} from './car';
 
 export function seatClaimed(state:CarState,ref:SeatRef,exceptAccount?:string):boolean{
- return !!state.economy?.gathering && state.economy.gathering.phase!=='home' && (state.economy.gathering.host!==exceptAccount && sameSeat(state.economy.gathering.hostTrip.seat,ref) || state.economy.gathering.guest!==exceptAccount && sameSeat(state.economy.gathering.guestTrip.seat,ref)) || !!state.economy?.invitation && state.economy.invitation.partner!==exceptAccount && sameSeat(state.economy.invitation.seat,ref) || !!state.economy?.shared && state.economy.shared.phase!=='home' && state.economy.shared.partner!==exceptAccount && sameSeat(state.economy.shared.seat,ref) || sameSeat(state.seated,ref) || !!state.economy?.accounts.some(a=>a.id!==exceptAccount && (sameSeat(a.meal?.seat,ref) || sameSeat(a.resting?.seat,ref)));
+ return !!state.economy?.gathering && state.economy.gathering.phase!=='home' && (state.economy.gathering.host!==exceptAccount && sameSeat(state.economy.gathering.hostTrip.seat,ref) || state.economy.gathering.guest!==exceptAccount && sameSeat(state.economy.gathering.guestTrip.seat,ref)) || !!state.economy?.invitation && state.economy.invitation.partner!==exceptAccount && sameSeat(state.economy.invitation.seat,ref) || !!state.economy?.shared && state.economy.shared.phase!=='home' && state.economy.shared.partner!==exceptAccount && sameSeat(state.economy.shared.seat,ref) || sameSeat(state.seated,ref) || !!state.economy?.accounts.some(a=>a.id!==exceptAccount && (sameSeat(a.visiting?.phase==='wait' ? a.visiting.seat : undefined,ref) || sameSeat(a.meal?.seat,ref) || sameSeat(a.resting?.seat,ref)));
 }
 export function seatAvailable(scene:Scene,state:CarState,seat:WorldSeat,exceptAccount?:string){return !seatClaimed(state,seat,exceptAccount) && seatAccessClear(scene,seat,state.broken);}
 function clearApproach(state:CarState,world:World,seat:WorldSeat){
@@ -21,7 +21,7 @@ export function nearbySeat(state:CarState,world:World){
 export function seatedPose(state:Pick<CarState,'seated'>,scene:Scene){return findSeat(scene,state.seated);}
 
 export function checkSeatingState(state:CarState,scene:Scene){
- const claims=[state.seated,...(state.economy?.gathering && state.economy.gathering.phase!=='home' ? [state.economy.gathering.hostTrip.seat,state.economy.gathering.guestTrip.seat] : []),state.economy?.invitation?.seat,...(state.economy?.shared && state.economy.shared.phase!=='home' ? [state.economy.shared.seat] : []),...(state.economy?.accounts.flatMap(a=>[a.meal?.seat,a.resting?.seat])??[])].filter((r):r is SeatRef=>!!r);
+ const claims=[state.seated,...(state.economy?.gathering && state.economy.gathering.phase!=='home' ? [state.economy.gathering.hostTrip.seat,state.economy.gathering.guestTrip.seat] : []),state.economy?.invitation?.seat,...(state.economy?.shared && state.economy.shared.phase!=='home' ? [state.economy.shared.seat] : []),...(state.economy?.accounts.flatMap(a=>[a.visiting?.phase==='wait' ? a.visiting.seat : undefined,a.meal?.seat,a.resting?.seat])??[])].filter((r):r is SeatRef=>!!r);
  if(claims.some((r,i)=>claims.slice(0,i).some(s=>sameSeat(r,s))))throw Error('Saved seats have duplicate owners');
  if(!state.seated)return;
  const seat=findSeat(scene,state.seated);

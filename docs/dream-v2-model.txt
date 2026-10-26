@@ -918,10 +918,32 @@ Completed in the current window plus active tasks cannot exceed target; cancella
 refunds its wage. Completion increments existing work history and pays once,
 without consuming or producing goods. NPCs use the same quota, player accounts
 remain manual. Pause freezes the clock; R and reload retain it. Do not author
-serviceWindows, period counters, runtime clocks or customer demand. Example:
+serviceWindows, period counters, runtime clocks or customer demand state. Example:
 work stocktake(label="Check bakery stock",kind=service,market=corner,seconds=2,pay=3,effort=2,capacity=1,target=3,equipment=[prep_table],station=preparation);
 See docs/examples/service-work.dream and docs/examples/recurring-service.dream. Omitted kind means recipe; recipe goods
 and output-room requirements remain unchanged. Goods-free businesses use empty market blocks; explicit premises keep the workplace independent of its operator home.
+
+Paid service visits: Optional work fee=8 pairs with waiting=[bench]. Service-only;
+fee integer 1..10000, waiting 1..4 unique furniture placements. Each needs at
+least one body-clear seat on the station floor within 80 units. Optional wait_s
+1..600, default120, must cover work.seconds. cooldown_s 30..86400, default600.
+One queued or served customer per job, also reserving the shared quota. A real
+seated customer pays the refundable fee before a worker can reserve its wage.
+Completion transfers fee to the business, pays the worker once and remembers
+that customer's visit. Stand, cancel, lose furniture, break equipment or time
+out: refund the fee and any wage once. New work cannot invent customer demand.
+visit id(work=paid_job,on=ground,grounds=[floor]) defines a reusable NPC route
+area, at most8 plans. account.visit=plan requires a measured humanoid NPC,
+supported home/seat/return paths and exclusive real seat claims on arrival.
+A travelling seat target is not a claim. Retarget a free nearby seat or return
+after bounded local waiting when the destination remains occupied. No vendor,
+shop/ration/shift/social/repair/delivery or noncommuting automatic work policy;
+meal, rest and commuting may coexist under one journey owner. Grounds retain
+all existing sample, graph, path and floor bounds. Travel and waiting earn
+nothing. Return physically before other routines; cooldown extends through
+return. Player requests remain manual from the same seats. Do not author
+request, visiting, visits, served, runtime paths, clocks or receipt counts.
+Keep fees distinct from wages and inventory. See docs/examples/service-visits.dream.
 
 Optional work.equipment=[placement_id,...] binds production to 1..4 unique static
 solid prop placements within its counter reach, not asset template IDs. No actors,

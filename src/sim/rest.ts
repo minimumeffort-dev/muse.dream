@@ -15,7 +15,7 @@ export function stepRestNeeds(state:CarState,dt:number,scene:Scene):void{
  const e=state.economy!,d=scene.economy!;
  for(const a of e.accounts){const spec=d.accounts.find(s=>s.id===a.id)!,plan=d.rests?.find(r=>r.id===spec.rest);if(!plan)continue;
   const t=a.resting,journey=spec.actor==='player' ? undefined : workJourneyForActor(state,scene,spec.actor),seat=findSeat(scene,spec.actor==='player' ? state.seated : journey && 'seat' in journey ? journey.seat : undefined),area=spec.actor==='player' ? undefined : restArea(scene,spec);
-  const seated=!!seat && (spec.actor==='player' ? state.control.kind==='foot' && state.grounded && state.surface!=='water' : (journey?.phase==='sit' || journey?.phase==='eat') && seatAvailable(scene,state,seat,a.id)) && seatAccessClear(scene,seat,state.broken,area);
+  const seated=!!seat && (spec.actor==='player' ? state.control.kind==='foot' && state.grounded && state.surface!=='water' : (journey?.phase==='sit' || journey?.phase==='eat' || journey?.phase==='wait') && seatAvailable(scene,state,seat,a.id)) && seatAccessClear(scene,seat,state.broken,area);
   a.energy=Math.max(0,Math.min(100,a.energy!+dt*(seated ? plan.recover_s : -plan.drainPerS)));
   if(!t)continue;
   const home=()=>{t.phase='home';t.seat=undefined;t.at={...t.home};t.path=[];t.routeAtS=0;t.speed=0;};
@@ -35,7 +35,7 @@ export function startRestTrip(state:CarState,scene:Scene,id:string):boolean{
  if(!plan || spec.actor==='player')return false;
  const object=scene.objects.find(o=>o.id===spec.actor)!,p=actorPose(scene,object,state.timeS,state),area=restArea(scene,spec);
  if(a.energy!>plan.below && !(plan.shelter && sampleWeather(scene.weather,state.timeS).raining && !sheltered(scene,p,area.radius,area.height,state)))return false;
- if(a.work || a.delivery || a.repair || a.courier || a.meal || a.commute || a.shift || a.resting)return true;
+ if(a.work || a.delivery || a.repair || a.courier || a.visiting || a.request || a.meal || a.commute || a.shift || a.resting)return true;
  for(const id of plan.seats)for(const seat of worldSeats(scene).filter(s=>s.objectId===id)){
   if(!seatAvailable(scene,state,seat,a.id) || !seatAccessClear(scene,seat,state.broken,area) || plan.shelter && !sheltered(scene,seat,area.radius,area.height,state))continue;
   const path=workPath(scene,area,p,seat.approach,state);if(!path || !workPath(scene,area,seat.approach,p,state))continue;
@@ -60,7 +60,7 @@ export function checkRestState(state:CarState,scene:Scene):void{
  for(const a of e.accounts){const spec=d.accounts.find(s=>s.id===a.id)!,plan=d.rests?.find(r=>r.id===spec.rest),t=a.resting;
   if(plan ? a.energy===undefined : a.energy!==undefined || !!t)throw Error('Invalid saved energy owner');
   if(!t)continue;
-  if(!plan || spec.actor==='player' || t.id!==plan.id || a.work || a.delivery || a.repair || a.courier || a.meal || a.commute || a.shift || t.routeAtS>state.timeS+1.01)throw Error('Invalid saved rest owner');
+  if(!plan || spec.actor==='player' || t.id!==plan.id || a.work || a.delivery || a.repair || a.courier || a.visiting || a.request || a.meal || a.commute || a.shift || t.routeAtS>state.timeS+1.01)throw Error('Invalid saved rest owner');
   const object=scene.objects.find(o=>o.id===spec.actor)!,home=actorPose(scene,object,state.timeS,{...state,economy:undefined}),area=restArea(scene,spec),seat=findSeat(scene,t.seat);
   if(walkingDistance(scene,t.home,home)>.01 || (t.phase==='home' ? !!t.seat || walkingDistance(scene,t.at,t.home)>.01 : !seat || !plan.seats.includes(seat.objectId) || !seatAvailable(scene,state,seat,a.id) || !seatAccessClear(scene,seat,state.broken,area) || walkingDistance(scene,t.at,seat.approach)>.01))throw Error('Invalid saved rest destination');
   if(t.phase==='sit' && (t.path.length || t.speed!==0 || walkingDistance(scene,t,t.at)>.1))throw Error('Invalid saved resting pose');

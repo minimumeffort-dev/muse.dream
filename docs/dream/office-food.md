@@ -4,6 +4,9 @@ The office clerk now needs food too. They earn wages upstairs in Lantern
 Exchange, buy bread at Station supplies, walk home and eat on Copper Court's
 bench. You use the same shop, money, food and seat rules.
 
+The recordings show r117 food journeys. The same purchase and home meal work
+now; current office wages require [customer demand](service-work.md#customers-make-the-work).
+
 ![Buying and eating at Station supplies](../media/stationfood.jpg)
 
 [HD video](../media/stationfood.mp4) · [GIF](../media/stationfood.gif) ·
@@ -71,7 +74,8 @@ or copied. The earlier unpaid clerk relocation remains a physical journey, and
 the clerk still has to earn the money for food. Original slots remain intact.
 [Runtime and save evidence](../evidence/office-food/verification.md).
 
-Office checks now renew six shared tasks every 600 simulation seconds; wages
+Office checks now require a seated paying customer, within a cap of six tasks
+every 600 simulation seconds; wages
 still need real office funds. [Recurring work](service-work.md#work-comes-back). Broader paid demand,
 additional food shops, cooking tools, table service and richer diets remain
 unfinished. This is a working mock routine, not a nutrition model or a complete

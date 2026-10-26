@@ -39,7 +39,7 @@ export function socialAccessProblems(scene:Scene):string[]{
 }
 function duties(state:CarState,scene:Scene,id:string){
  const e=state.economy!,a=e.accounts.find(a=>a.id===id)!,spec=scene.economy!.accounts.find(a=>a.id===id)!;
- return !!(a.work || a.delivery || a.repair || a.courier || a.meal || a.shift && a.shift.phase!=='rest' || spec.shift && !a.shift || scene.economy!.markets.some(m=>m.actor===spec.actor && marketIsOpen(scene,m,state.timeS)));
+ return !!(a.work || a.delivery || a.repair || a.courier || a.visiting || a.request || a.meal || a.shift && a.shift.phase!=='rest' || spec.shift && !a.shift || scene.economy!.markets.some(m=>m.actor===spec.actor && marketIsOpen(scene,m,state.timeS)));
 }
 function returnDue(state:CarState,scene:Scene,id:string,seconds=0){
  const spec=scene.economy!.accounts.find(a=>a.id===id)!,shift=scene.economy!.shifts.find(s=>s.id===spec.shift);
@@ -139,7 +139,7 @@ export function checkSharedMeal(state:CarState,scene:Scene){
  for(const [good,portions] of sharedFood)if(portions>e.consumed[good]!)throw Error('Shared meal history exceeds consumed food');
  const t=e.shared;if(!t)return;if(e.gathering)throw Error('Shared meal ownership overlaps a companion meal');
  const a=e.accounts.find(a=>a.id===t.partner),spec=d.accounts.find(a=>a.id===t.partner),plan=d.socials.find(p=>p.id===t.id),object=scene.objects.find(o=>o.id===spec?.actor),player=e.accounts.find(a=>d.accounts.find(s=>s.id===a.id)!.actor==='player')!;
- if(!a || !spec || !plan || spec.social!==plan.id || !object || a.work || a.meal || a.delivery || a.repair || a.courier || a.shift && a.shift.phase!=='rest' || spec.shift && !a.shift || t.startedAtS>e.atS+1e-6 || t.routeAtS>state.timeS+1.01)throw Error('Invalid shared meal ownership');
+ if(!a || !spec || !plan || spec.social!==plan.id || !object || a.work || a.visiting || a.request || a.meal || a.delivery || a.repair || a.courier || a.shift && a.shift.phase!=='rest' || spec.shift && !a.shift || t.startedAtS>e.atS+1e-6 || t.routeAtS>state.timeS+1.01)throw Error('Invalid shared meal ownership');
  const home=a.shift ? a.shift.at : object,seat=findSeat(scene,t.seat),own=findSeat(scene,t.playerSeat),area=socialArea(scene,t.partner);
  if(t.host!==undefined && (t.host!==t.partner || !plan.markets))throw Error('Invalid shared meal host');
  if(walkingDistance(scene,t.home,home)>.01 || !seat || !own || sameSeat(t.seat,t.playerSeat) || seat.objectId!==own.objectId || !plan.seats.includes(seat.objectId))throw Error('Invalid shared meal furniture or home');
@@ -157,7 +157,7 @@ export function companionBusy(state:Pick<CarState,'economy'>,id:string):boolean{
 export function companionJourney(state:Pick<CarState,'economy'>,id:string){const t=state.economy?.gathering;if(!t)return;const trip=t.host===id ? t.hostTrip : t.guest===id ? t.guestTrip : undefined;return trip && {id:t.id,...trip,phase:t.phase};}
 const peerKey=(plan:string,host:string,guest:string)=>`${plan}/${host}/${guest}`;
 function companionDue(state:CarState,scene:Scene,id:string,seconds=0){const a=scene.economy!.accounts.find(a=>a.id===id)!;if(returnDue(state,scene,id,seconds))return true;const opening=a.attendance && marketOpening(scene,{hours:a.attendance},state.timeS);return !!a.attendance && (!opening || opening.seconds<=seconds);}
-function companionFree(state:CarState,scene:Scene,id:string){const a=state.economy!.accounts.find(a=>a.id===id)!,spec=scene.economy!.accounts.find(a=>a.id===id)!;return !(a.work || a.delivery || a.repair || a.courier || a.meal || a.commute || a.resting || a.shift && a.shift.phase!=='rest' || spec.shift && !a.shift);}
+function companionFree(state:CarState,scene:Scene,id:string){const a=state.economy!.accounts.find(a=>a.id===id)!,spec=scene.economy!.accounts.find(a=>a.id===id)!;return !(a.work || a.delivery || a.repair || a.courier || a.visiting || a.request || a.meal || a.commute || a.resting || a.shift && a.shift.phase!=='rest' || spec.shift && !a.shift);}
 function companionIdle(state:CarState,scene:Scene,id:string){return companionFree(state,scene,id) && !duties(state,scene,id);}
 const pathLength=(scene:Scene,points:WalkingPoint[],from:WalkingPoint)=>points.reduce((sum,p,i)=>sum+walkingDistance(scene,p,i ? points[i-1]! : from),0);
 export function startCompanionMeal(state:CarState,scene:Scene,id:string):boolean{

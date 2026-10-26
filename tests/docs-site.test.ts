@@ -17,6 +17,7 @@ describe('Dream syntax highlighting',()=>{
   it('highlights shelter only at complete boundaries and escapes authored HTML',()=>{
     const html=highlight('rest home(shelter=true,seats=[settee]); // <Cover>&');expect(html).toContain('class="dream-field">shelter</span>');expect(html).toContain('&lt;Cover&gt;&amp;');expect(highlight('sheltered shelter_extra')).not.toMatch(/dream-field/);
   });
+  it('highlights paid visits and fields at exact boundaries and escapes source text',()=>{const html=highlight('visit errand(work=records,on=hall);work records(fee=8,waiting=[bench],wait_s=120); // <Visit>&');for(const word of ['visit','fee','waiting','wait_s'])expect(html).toContain('>'+word+'</span>');expect(html).toContain('&lt;Visit&gt;&amp;');expect(highlight('visitor fee_extra waiting_room')).not.toMatch(/dream-(?:keyword|field)/);});
   it('highlights attendance only at field boundaries and escapes authored source',()=>{
     const html=highlight('account worker(commute=true,attendance=[8,17]); // <Duty>&');expect(html).toContain('class="dream-field">attendance</span>');expect(html).toContain('&lt;Duty&gt;&amp;');expect(highlight('attendance_extra work_attendance')).not.toMatch(/dream-field/);
   });

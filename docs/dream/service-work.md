@@ -40,7 +40,9 @@ food, energy and station occupancy still apply.
 
 ## Work comes back
 
-The records office now offers six shared tasks per 600 simulation seconds.
+The records office has a six-task cap per 600 simulation seconds. Its current
+work also requires the explicit customer request described below. A quota-only
+world can still use this smaller declaration.
 Its treasury stays finite. You or the clerk can use the available work, and a
 later period can supply another task without forgetting what either person earned.
 Bakery stock checks retain their lifetime quota.
@@ -49,7 +51,7 @@ Bakery stock checks retain their lifetime quota.
 
 [HD video](../media/periodwork.mp4) · [GIF](../media/periodwork.gif) ·
 [Complete recurring office](../examples/recurring-service.dream).
-The clip records the actual player exhausting a period, waiting unpaid and
+This historical r118 clip records the actual player exhausting a period, waiting unpaid and
 finishing one renewed task. The long wait happens before the twelve-second clip.
 
 The complete example uses two tasks per minute so the same behavior is quicker
@@ -119,3 +121,62 @@ Compile the example with:
 ```sh
 node scripts/dream.mjs check docs/examples/service-work.dream
 ```
+
+## Customers make the work
+
+A business needs customers as well as tasks. The records office now charges
+eight coins for a six-second check, while the person doing it earns four.
+The fee goes into the business after completion. It can fund later wages;
+it is not a new inventory item or money created by the engine.
+
+![A seated customer requests service, then pays after it finishes](../media/servicevisit.jpg)
+
+[HD video](../media/servicevisit.mp4) · [GIF](../media/servicevisit.gif) ·
+[Complete runnable customer world](../examples/service-visits.dream)
+
+These declarations are exact excerpts from that world:
+
+```dream
+visit records_trip(work=check_records,on=exchange,grounds=[lobby,mezzanine,landing,entry_work]);
+account visitor(actor=customer,credits=20,capacity=4,satiety=65,drain_s=0,visit=records_trip);
+work check_records(label="Check visitor records",kind=service,market=office,seconds=6,pay=4,effort=2,capacity=1,target=2,period_s=60,fee=8,waiting=[upstairs_north],wait_s=120,cooldown_s=60,equipment=[desk],station=records);
+```
+
+Sit with **F** on a declared waiting bench, open **M** and choose the service
+with the arrow keys. **H** or **Enter** requests it. The panel shows the held
+fee, waiting deadline and whether a worker has started. The same action then
+cancels for a refund. Standing up or returning to the start with R also cancels, with the refund
+already present if you save immediately. The player can instead stand
+at the desk and serve an NPC through the normal work action.
+
+| Rule | Meaning |
+| --- | --- |
+| `fee` | Integer 1..10000 coins, paired with `waiting` on a service job |
+| `waiting` | 1..4 unique furniture placements; a clear seat on the station floor within 80 units |
+| `wait_s` | 1..600 simulation seconds, default 120; at least the work duration |
+| `cooldown_s` | 30..86400 simulation seconds, default 600, before another request |
+| `visit` | One of at most eight NPC plans, with real home, outward and return paths in `on` / `grounds` |
+
+One customer can reserve each paid job at a time. Their request holds the fee
+and a quota place. A worker then reserves the ordinary finite wage. Completion
+transfers the fee once, pays the wage once and increments that customer's visit
+history. Cancellation, timeout, damaged seating or interrupted work refunds both
+commitments once. A new job without a customer is unavailable. Legacy work
+already reserved in r118 can finish once under its original agreement.
+
+Visiting NPCs walk, claim a free seat on arrival, wait and return physically.
+A distant visitor cannot reserve the bench. Near the destination, an occupied
+seat causes local reselection or a bounded wait and return. Food, rest and
+commuting can share that account, with one journey owning the person at a time.
+Cooldown extends through the return, so the NPC does not immediately turn around
+for another visit. Requests, paths, clocks and histories belong to simulation
+state, not authored Dream. Existing graph, rig and account limits remain.
+The live doctor has 20 explicitly authored starting coins; the commuter spends
+existing earnings. This is a mock records service with one waiting request,
+not a general appointment system or a simulation of healthcare.
+
+```sh
+node scripts/dream.mjs check docs/examples/service-visits.dream --modules src/scene/world
+```
+
+[Runtime, migration and replay evidence](../evidence/service-visits/verification.md).

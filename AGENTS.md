@@ -354,7 +354,7 @@ Day/night is optional `daylight(cycle_s,start_hour)` in the world-owning file. T
 ## Saved simulation state
 
 Current save format 19 pins exact source plus a host-computed accepted-world fingerprint
-at simulation version 59. Historical formats retain their registered projections.
+at simulation version 60. Historical formats retain their registered projections.
 Only revision/source/provenance and behavior `say` text
 are excluded; numeric fingerprint values use a 1e-8 grid to remove browser math
 noise without altering simulation geometry. Keep every other rule, array order
@@ -585,3 +585,16 @@ This file must stay under 60000 bytes: startup context truncates rules files
 at 65536 bytes, and `tests/agents-size.test.ts` guards the limit. Put new
 per-slice invariants in `agent-invariants.md` and extend the index above;
 keep only cross-cutting rules here.
+
+
+Paid service work pairs `fee` with `waiting` furniture and optional bounded
+`wait_s`/`cooldown_s`. One real seated customer request reserves its refundable
+fee and one quota place; an assigned worker reserves the finite wage. Completion
+transfers fee and wage once; seat loss, work interruption, timeout or cancellation
+refunds once. `visit`/`account.visit` owns physical supported outward, waiting and
+return journeys, sharing claims and one journey owner with meals, rest and
+commuting. Preserve account/rig/path caps, receipts, cooldowns and conserved money.
+The registered r119 upgrade preserves exact r118 state, adds only zero visit
+history and the doctor's explicit capital, and lets already-reserved old office
+work finish once under its legacy flag. New jobs always need paid demand.
+See docs/dream/service-work.md and docs/examples/service-visits.dream.

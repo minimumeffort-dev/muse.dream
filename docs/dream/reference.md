@@ -59,7 +59,7 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `economy` | top | No ID / economy | None |
 | `good` | economy | ID / no block | `label: text`, `food?: n` |
 | `need` | `company_need` constructor | no | `initial`, `drain_s`, `below`, `gain` |
-| `account` | economy | ID / no block | `actor: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `rest?: ref`, `company?: company_need`, `commute?: bool`, `attendance?: v2`, `on?: ref`, `grounds?: symbols`, `shop?: bool`, `ration?: ref`, `social?: ref`, `shift?: ref`, `meal?: ref`, `work?: ref`, `works?: symbols`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
+| `account` | economy | ID / no block | `actor: ref`, `visit?: ref`, `credits: n`, `capacity: n`, `satiety: n`, `drain_s: n`, `rest?: ref`, `company?: company_need`, `commute?: bool`, `attendance?: v2`, `on?: ref`, `grounds?: symbols`, `shop?: bool`, `ration?: ref`, `social?: ref`, `shift?: ref`, `meal?: ref`, `work?: ref`, `works?: symbols`, `repair?: ref`, `repairs?: symbols`, `deliveries?: symbols` |
 | `rest` | economy | ID / no block | `energy: n`, `drain_s: n`, `recover_s: n`, `below: n`, `until: n`, `shelter?: bool`, `seats: symbols`, `on: ref`, `grounds?: symbols` |
 | `ration` | economy | ID / no block | `good: ref`, `market: ref`, `below: n` |
 | `market` | economy | ID / market | `label: text`, `actor: ref`, `on?: ref`, `credits: n`, `radius: n`, `hours?: v2`, `owner?: ref`, `sale?: n` |
@@ -68,8 +68,9 @@ These commands describe the 3D world's resident economy. [Guide](commerce.md) an
 | `gesture` | economy | ID / required work gesture block | `cycle_s: n` |
 | `key` | work gesture | no ID / no block | `t: n`, `left: v3`, `right: v3` |
 | `station` | economy | ID / no block | `object: ref`, `at: v2`, `hands: v3`, `on: ref`, `grounds?: symbols` |
-| `work` | economy | ID / optional recipe block | `label: text`, `kind?: recipe / service`, `market: ref`, `input?: ref`, `take?: n`, `output?: ref`, `make?: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `period_s?: n`, `requires?: ref`, `requires_any?: symbols`, `equipment?: symbols`, `station?: ref`, `gesture?: ref` |
+| `work` | economy | ID / optional recipe block | `label: text`, `kind?: recipe / service`, `market: ref`, `input?: ref`, `take?: n`, `output?: ref`, `make?: n`, `seconds: n`, `pay: n`, `effort: n`, `capacity: n`, `target: n`, `period_s?: n`, `fee?: n`, `waiting?: symbols`, `wait_s?: n`, `cooldown_s?: n`, `requires?: ref`, `requires_any?: symbols`, `equipment?: symbols`, `station?: ref`, `gesture?: ref` |
 
+| `visit` | economy | ID / no block | `work: ref`, `on: ref`, `grounds?: symbols` |
 | `social` | economy | ID / no block | `peers?: symbols`, `good: ref`, `seats: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `cooldown_s?: n`, `max_fullness?: n`, `markets?: symbols` |
 | `shift` | economy | ID / no block | `market: ref`, `rest: v2`, `on: ref`, `grounds?: symbols`, `lead_s?: n` |
 | `meal` | economy | ID / no block | `good: ref`, `markets: symbols`, `on: ref`, `grounds?: symbols`, `eat_s: n`, `seats?: symbols` |
@@ -510,6 +511,22 @@ reservation and count when completed. Lifetime history, funds, materials and
 needs remain unchanged. Pause freezes the clock and reload never catches up.
 The HUD shows current usage and the next renewal. Omitted
 `kind` retains recipe behavior. [Service work and complete example](service-work.md).
+
+Paid service jobs may pair `fee` (integer 1..10000) with `waiting` (1..4 unique
+furniture placements). A real seat must be on the station floor with body-clear
+access within 80 units. `wait_s` is 1..600, default 120 and at least `seconds`;
+`cooldown_s` is 30..86400, default 600. One customer request per job holds a
+refundable fee and quota place; a worker then reserves the ordinary wage.
+Completion pays once, transfers the fee and increments customer history.
+Cancellation, seat/equipment loss or timeout refunds once. No goods are implied.
+
+`visit id(work=paid_job,on=ground,grounds=[floor]);` defines one of at most eight
+NPC visiting plans. `account.visit` requires a nonvendor measured humanoid with
+supported outward and return paths, one exclusive seat and no competing direct
+duties. Food, rest and commuting may coexist through one journey owner.
+Cooldown extends through physical return. Player requests remain manual.
+Runtime requests, paths, clocks, served totals and history are never authored.
+[Complete paid service rules and example](service-work.md#customers-make-the-work).
 
 Buy/sell transfers one unit at the listed price. Work reserves every input, wage, refund space for each input and output capacity atomically; cancellation refunds, completion pays once and spends effort. Food consumes an owned unit and restores fullness. NPC food decisions occur at fullness <=40; automatic recipes refill to target and services respect their shared quota. Shared money and material conservation, clock/owner/member bounds and capacity are checked on restore. The simulation owns rules and work time; the renderer owns gestures and feedback. No offline catch-up or generated scripts. Existing NPC, rig, physics and geometry caps are unchanged.
 

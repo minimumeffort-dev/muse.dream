@@ -1,14 +1,15 @@
 # An office people can use
 
 Lantern Exchange now has work upstairs. Walk through its lobby, take the stairs
-and check visitor records at the existing table. You and the clerk share six
-tasks, one workstation and a finite business treasury. Finishing a check takes
+and check visitor records at the existing table. A seated customer requests
+a check for eight coins. You and the clerk share one workstation, a finite
+business treasury and six possible checks per 600-second window. Finishing a check takes
 six simulation seconds and pays four coins.
 
-![Walking upstairs and working at the records desk](../media/officework.jpg)
+![Requesting a real paid visit at the records office](../media/servicevisit.jpg)
 
-[Watch in HD](../media/officework.mp4) · [GIF](../media/officework.gif) ·
-[Complete Dream office](../examples/service-office.dream)
+[Watch in HD](../media/servicevisit.mp4) · [GIF](../media/servicevisit.gif) ·
+[Complete Dream office with a visiting customer](../examples/service-visits.dream)
 
 ## A building and a person have different locations
 
@@ -49,7 +50,8 @@ caretaker service can restore it with a real repair kit.
 Press **M**, then choose Work with **2** or the arrow keys. A service business
 shows Work and Bag without an empty Shop or Stock page. The upstairs station
 shows its distance, task count and unavailable reason. You can inspect the
-clerk's active work there, or take a remaining task when the desk is free.
+clerk's active work there, or serve a waiting customer when the desk is free. Sit on the north bench to
+request service yourself. [Fees, refunds and visit policies](service-work.md#customers-make-the-work).
 
 ## Paths are part of the business
 
@@ -66,7 +68,7 @@ path format. Stair and graph node/link/waypoint budgets remain unchanged.
 Compile the complete world with:
 
 ```sh
-node scripts/dream.mjs check docs/examples/service-office.dream --modules src/scene/world
+node scripts/dream.mjs check docs/examples/service-visits.dream --modules src/scene/world
 ```
 
 The smaller [service desk](../examples/service-desk.dream) needs no asset modules
@@ -87,8 +89,8 @@ when the authored home moves. [Slot omissions](populations.md#keep-a-generated-s
 
 ## Still unfinished
 
-Records checking is a timed service task, without a visitor queue or paperwork
-data. The six-task quota now renews every 600 simulation seconds, with finite
+Records checking has one paid waiting request per job, without general queues,
+appointments or paperwork data. The six-task quota now renews every 600 simulation seconds, with finite
 wages and retained lifetime history. [Recurring service rules](service-work.md#work-comes-back). The clerk now spends earned wages on bread at Station supplies and eats at home.
 [Food and resupply](office-food.md). The usable rooms are the two lobbies and the office
 mezzanine. Further storeys, lifts and richer work remain future capabilities.

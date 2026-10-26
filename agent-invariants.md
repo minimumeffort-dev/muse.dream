@@ -1302,3 +1302,20 @@ Initialize only the new window at saved economy time, conservatively counting
 min(target,lifetime completions) so restoration does not reopen an exhausted
 quota. All earlier migrations remain. See docs/dream/service-work.md and the
 complete docs/examples/recurring-service.dream example.
+
+
+## Paid customer visits, r119 / simulation 60
+
+Dream owns fee, waiting furniture, bounded wait/cooldown and visit policy.
+The engine owns held fees, assigned workers, supported paths, seat claims,
+receipts and clocks. One customer per job reserves a shared quota place; wage
+escrow and fee escrow remain distinct. Complete transfers each once. Refund
+both once on cancel, timeout, lost/broken seating or interrupted/damaged work.
+Same guards for player and NPC. No new goods, live actors or hidden money.
+Visit plans use their own bounded grounds and the existing graph. Meal/rest/
+commuting compose through one physical journey owner. Return before another
+errand; cooldown extends through that return. Preserve pause, R, streaming,
+Start over, save ownership and all actor/rig/path caps. The exact r118 migration
+adds zero receipts and only the explicit doctor account; old pending office
+work retains one legacy reservation and its original deadline/wage. Validate
+old first, then current, retaining original slots. No new legacy work starts.
