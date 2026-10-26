@@ -16,11 +16,12 @@ The hackathon direction is a small research workspace: describe an environment
 and a task, let Muse propose Dream source, run an agent and compare what changes
 when you adjust a parameter. The engine owns the rules and measures the outcome.
 
-The fresh [dreams-lab/ workspace](dreams-lab/README.md) starts with three
-[design variants](docs/dreams-lab.md) for review: a world-first workspace, a
-sequential notebook and a comparison bench. These are static interface previews
-with illustrative data. Porting the compiler and runner, connecting Muse and
-binding agents to a physical environment are the next steps.
+The fresh [dreams-lab/ workspace](dreams-lab/README.md) uses the selected
+[Workspace A layout](docs/dreams-lab.md): a brief beside the world, parameters
+and agent activity, with source available when needed. It opens directly,
+without the design chooser or repeated explanatory notices. It is a static
+interface with illustrative data. Porting the compiler and runner, connecting
+Muse and binding agents to a physical environment are the next steps.
 
 ![The Dreams Lab Workspace design preview, with a brief beside the environment](docs/media/dreams-lab-workspace.jpg)
 

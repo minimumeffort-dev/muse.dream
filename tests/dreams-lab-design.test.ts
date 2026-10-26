@@ -10,16 +10,23 @@ it('renders three self-contained, distinctly structured previews without runtime
   ['workspace','notebook','compare'].forEach((name,i)=>{
     const html=readFileSync(`dreams-lab/design/${name}.html`,'utf8');
     expect(html).toContain(`class="${structures[i]}"`);
-    expect(html).toContain('Design preview · illustrative data · no model calls or simulation');
+    if(name==='workspace'){
+      const bodyText=html.slice(html.indexOf('<body')).replace(/<[^>]*>/g,'');
+      expect(bodyText).not.toMatch(/\b(demo|illustrative|sample|prototype|preview|mock)\b/i);
+      expect(html).not.toContain('aria-label="Design variants"');
+      expect(html).toContain('aria-label="Muse connection: offline"');
+      expect(html).toContain('<summary>Dream source</summary>');
+    }else expect(html).toContain('Design preview · illustrative data · no model calls or simulation');
     expect(html).toContain('data:font/woff2;base64,');
     expect(html).not.toMatch(/<script\b|<iframe\b|src="https?:/);
-    expect(html).toContain('disabled title="Design preview; simulation controls are not connected"');
+    expect(html.includes(name==='notebook' ? 'aria-label="Run experiment" disabled' : 'aria-label="Play" disabled')).toBe(true);
     expect(html.split('\n').length).toBeLessThan(200);
     for(const [,href] of html.matchAll(/href="([^"#][^"]*)"/g)){
       if(href!.startsWith('https:'))continue;
       expect(existsSync(new URL(href!,new URL(`../dreams-lab/design/${name}.html`,import.meta.url)))).toBe(true);
     }
   });
+  expect(readFileSync('dreams-lab/index.html','utf8')).toBe(readFileSync('dreams-lab/design/workspace.html','utf8'));
 });
 
 it('shows an example accepted by the canonical Dream compiler without introducing a language fork',()=>{

@@ -10,11 +10,13 @@ charcoal for text and actions. Yellow is not body text on a light background.
 
 The three structures differ in information hierarchy, not theme. Workspace
 prioritizes the world, Notebook prioritizes the experiment definition, and
-Compare prioritizes controlled changes and paired outcomes. Source is a
-progressive disclosure. A persistent design-preview notice identifies all
-illustrative data. The chooser recorded Workspace as the selected option;
-the other variants remain available for comparison. The functional port has
-not started in this design slice.
+Compare prioritizes controlled changes and paired outcomes. The user selected
+Workspace A. It now opens directly, with the brief, parameters, world and agent
+activity. Source stays in a native disclosure. Keep the interface free of demo
+labels, explanatory footers, repeated counts and variant navigation. One compact
+connection state belongs in the header. Implementation limitations belong in
+these docs. The other variants remain historical references. The functional
+port has not started in this design slice.
 
 Desktop layouts adapt to stacked controls and readable maps on narrow screens.
 Named native buttons, labeled inputs, keyboard focus and reduced motion apply

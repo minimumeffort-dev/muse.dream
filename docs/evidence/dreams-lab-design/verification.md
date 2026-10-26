@@ -1,5 +1,31 @@
 # Dreams Lab design review
 
+## Workspace A cleanup
+
+The user selected A and requested an interface without repeated demo labels or
+explanatory text. The root page now opens Workspace directly. Its review tabs,
+breadcrumb, tagline, explanatory footer, map caption, repeated counts and helper
+paragraphs are removed. World and Task have labeled native fields. One compact
+Offline state remains in the header; source opens through a native disclosure.
+
+The current Workspace desktop and mobile captures replace the earlier A views.
+Notebook and Compare captures remain earlier design references. The limits below
+still apply: the interface is static, simulation controls remain disabled and
+no Muse or engine integration is added. The UI copy change does not create
+functional agent runs. No motion was introduced, so existing game recordings
+were retained and no static-screen video was exported.
+
+The focused `tests/dreams-lab-design.test.ts` checks the default entry, removed
+copy, accessible controls, retained standalone Dream source and earlier routes.
+All three checks passed. Native checks at widths 1280 and 390 found no horizontal
+overflow or removed copy in the visible text. Budget and Deadline retain their
+full values. Enter opens Dream source; the collapsed control fits in the desktop
+sidebar. [Current readings](cleanup-checks.json) record those observations.
+The docs build is run after the guide and captures are refreshed. No compiler,
+physics or save code changed, so no full gameplay suite was run for this cleanup.
+
+## Earlier three-layout review
+
 This slice creates a fresh `dreams-lab/` folder with three code-rendered interface
 variants. It does not port or change the engine. The design chooser recorded
 Workspace as the selected composition, and all three variants remain available

@@ -21,7 +21,9 @@ agent. Researchers can inspect the generated source and replay a recorded run.
 
 The user requested a fresh `dreams-lab/` folder at the repository root, selective
 reuse of the existing Dream framework, and several interface variants for
-approval before implementation. This folder currently contains design previews.
+approval before implementation. Workspace A is now approved. The user asked to
+remove unnecessary interface text and repeated demo/illustrative notices.
+This folder currently contains design previews.
 Preview runs and metrics are illustrative. There are no model calls, physics,
 evaluation or training results in these previews.
 

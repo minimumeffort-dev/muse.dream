@@ -4,7 +4,9 @@
 
 `dreams-lab-workspace.jpg`, `dreams-lab-notebook.jpg` and
 `dreams-lab-compare.jpg` are native full-page browser captures of three static
-interface variants. Their maps, timelines and results are illustrative design
+interface variants. Workspace is refreshed after selecting A and removing
+the review navigation, explanatory footer and repeated labels. Notebook and
+Compare retain the earlier comparison designs. Their maps, timelines and results are illustrative design
 data. They are not model-generated worlds, simulation runs or performance
 measurements. Mobile captures and viewport checks are kept with
 [the review evidence](../evidence/dreams-lab-design/verification.md).

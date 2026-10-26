@@ -3,8 +3,10 @@
 A fresh workspace for the hackathon: describe an environment and a task, build
 it in Dream, run an agent, then change something and compare the outcome.
 
-This first slice is a design review. Choose a workspace before we port the
-compiler, episode runner and recording tools into this app's boundary.
+Workspace A is selected. It opens directly with World and Task fields,
+parameters, the environment, agent activity and a collapsed Dream source view.
+One compact connection status replaces the repeated notices and review controls.
+The compiler, episode runner and recording tools have not been ported yet.
 
 From the repository root, using the existing dependencies:
 
@@ -12,7 +14,8 @@ From the repository root, using the existing dependencies:
 npm run lab:design
 ```
 
-Open the printed local URL. The three views are:
+Open the printed local URL for Workspace. The earlier views remain at
+`design/notebook.html` and `design/compare.html` as design references:
 
 - **Workspace**: the environment takes most of the screen, with a brief beside
   it and agent activity below. Best for watching and debugging one run.
@@ -31,7 +34,7 @@ There is no app storage or model transport.
 
 ## Port in small steps
 
-After a design is chosen, bring over the existing compiler boundary, bounded
+Next, bring over the existing compiler boundary, bounded
 scenario data, observation/action runner and replayable recordings. Keep one
 canonical Dream vocabulary. Then connect a real Muse generation/repair loop and
 an agent policy, with the evaluator owned by the engine. Bind a small physical
