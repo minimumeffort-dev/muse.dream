@@ -1,4 +1,5 @@
-import {readFile,mkdir,writeFile,chmod,rm} from 'node:fs/promises';
+import {readFile,mkdir,writeFile,chmod} from 'node:fs/promises';
+import {unlinkSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {createServer} from 'vite';
 import {spawn} from 'node:child_process';
@@ -24,5 +25,9 @@ try{
   client=spawn(process.execPath,['scripts/mock-agent.mjs'],{cwd:root,stdio:['ignore','inherit','inherit'],env:{...clientEnvironment,DREAM_AGENT_URL:`http://127.0.0.1:${port}`,DREAM_AGENT_ID:host.external,DREAM_AGENT_TOKEN:host.actorToken}});
   client.once('exit',code=>{if(code)console.error('Mock controller disconnected. The run will pause at its decision timeout.');});
 }catch(error){console.error(error.message);process.exitCode=1;client?.kill();host?.server.close();await loader?.close();}
-async function stop(){client?.kill();host?.server.close();await loader?.close();await rm('.cache/agent-host.json',{force:true});process.exit();}
+async function stop(){
+  // Remove the credential before the npm wrapper can end asynchronous shutdown.
+  try{unlinkSync('.cache/agent-host.json');}catch(error){if(error.code!=='ENOENT')console.error('Remove .cache/agent-host.json manually.');}
+  client?.kill();host?.server.close();await loader?.close();process.exit();
+}
 process.once('SIGINT',stop);process.once('SIGTERM',stop);

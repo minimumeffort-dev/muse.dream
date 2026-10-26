@@ -28,7 +28,9 @@ Use the exact actor ID in that source. The private connection file
 locally, or enter its admin token at the host's Connect form. The viewer removes
 the token fragment from the address and keeps the credential in memory.
 Do not share the connection file. It is ignored by Git and deleted on normal
-host shutdown. Existing files are written with owner-only permissions.
+host shutdown, before asynchronous process cleanup. Existing files are written
+with owner-only permissions. Forced termination can leave the ignored file;
+its tokens stop working when the host stops.
 
 `DREAM_HOST_PORT` changes the listening port. `DREAM_AGENT_DELAY_MS` changes the
 external mock's decision delay, from zero to 30,000 milliseconds. This delay is
