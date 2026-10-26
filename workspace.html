@@ -1,47 +1,51 @@
-<main id="workspace">
+<main id="workspace" tabindex="-1">
   <div class="workspace-title">
-    <div class="experiment-heading"><h1 id="experiment-title">Morning delivery</h1><input id="experiment-name" aria-label="Experiment name" maxlength="100" value="Morning delivery" hidden><span id="revision-label" class="small muted" hidden></span></div>
+    <div class="experiment-heading"><h1 id="experiment-title">Morning delivery</h1><input id="experiment-name" aria-label="Experiment name" required maxlength="100" value="Morning delivery" hidden><p class="workspace-purpose">See how agents complete a task, then change the conditions and try again.</p><span id="revision-label" class="small muted" hidden></span></div>
     <div class="row">
-      <a id="export" class="btn" hidden download>Export</a>
-      <button id="new-experiment" class="btn" type="button" hidden>New</button>
-      <button id="save-experiment" class="btn" type="button" hidden>Save</button>
       <button id="resume-run" class="btn" type="button" hidden>Resume run</button>
-      <button id="run" class="btn primary" type="button" disabled><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg><span id="run-label">Run</span></button>
+      <button id="run" class="btn primary" type="button" disabled><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg><span id="run-label">Run experiment</span></button>
     </div>
     <p id="lab-error" role="alert" hidden></p>
   </div>
   <div class="workspace-layout">
     <aside id="setup-panel" class="brief-panel" aria-label="Experiment setup">
-      <form id="host-connection" hidden><label class="field">Host token<input id="host-token" type="password" autocomplete="off" required></label><button class="btn" type="submit">Connect</button></form>
-      <div id="saved-library" hidden><details open><summary>Experiments</summary><div id="experiment-list" class="history-list"></div></details><details open><summary>Runs</summary><div id="run-list" class="history-list"></div></details></div>
-      <div class="brief-choices" role="group" aria-label="Scenario brief"><button id="brief-delivery" class="btn" type="button" aria-pressed="true">Delivery</button><button id="brief-warehouse" class="btn" type="button" aria-pressed="false">Warehouse</button><button id="brief-classroom" class="btn" type="button" aria-pressed="false">Classroom</button></div>
-      <section><label class="field"><span class="section-label">World</span><textarea id="world-brief" maxlength="2000" aria-label="World"></textarea></label></section>
-      <section><label class="field"><span class="section-label">Task</span><textarea id="task-brief" maxlength="2000" aria-label="Task"></textarea></label></section>
-      <section>
-        <div class="section-label">Parameters</div>
+      <form id="host-connection" hidden><p class="small muted">Connect to your local workspace to save experiments and compare runs.</p><label class="field">Workspace access token<input id="host-token" type="password" autocomplete="off" required></label><button class="btn" type="submit">Connect workspace</button></form>
+      <section class="scenario-section" aria-labelledby="scenario-heading"><h2 id="scenario-heading">Choose a scenario</h2><div class="brief-choices" role="group" aria-label="Scenario brief"><button id="brief-delivery" class="btn" type="button" aria-pressed="true">Delivery</button><button id="brief-warehouse" class="btn" type="button" aria-pressed="false">Warehouse</button><button id="brief-classroom" class="btn" type="button" aria-pressed="false">Classroom</button></div></section>
+      <section class="scenario-summary" aria-labelledby="task-heading"><h2 id="task-heading">The task</h2><p id="task-summary"></p><p id="world-summary" class="small muted"></p></section>
+      <textarea id="world-brief" maxlength="2000" aria-label="World" hidden></textarea><textarea id="task-brief" maxlength="2000" aria-label="Task" hidden></textarea>
+      <section aria-labelledby="conditions-heading">
+        <h2 id="conditions-heading">Change the conditions</h2>
         <div class="parameter-grid">
-          <label class="field">Agents<span class="number-field"><input id="parameter-agents" type="number" value="2" min="1" max="8" aria-label="Agents"><span></span></span></label>
-          <label class="field">Budget<span class="number-field"><input id="parameter-budget" type="number" value="16" min="0" max="100000" aria-label="Budget"><span>coins</span></span></label>
-          <label class="field">Deadline<span class="number-field"><input id="parameter-deadline" type="number" value="80" min="1" max="1000" aria-label="Deadline"><span>steps</span></span></label>
-          <label class="field">Seed<span class="number-field"><input id="parameter-seed" type="number" value="7" min="0" max="2147483647" aria-label="Seed"><span></span></span></label>
+          <label class="field">Team size<span class="number-field"><input id="parameter-agents" type="number" required value="2" min="1" max="8" aria-label="Team size"><span>agents</span></span></label>
+          <label class="field">Budget per agent<span class="number-field"><input id="parameter-budget" type="number" required value="16" min="0" max="100000" aria-label="Budget per agent"><span>coins</span></span></label>
+          <label class="field time-limit">Time limit<span class="number-field"><input id="parameter-deadline" type="number" required value="80" min="1" max="1000" aria-label="Time limit" aria-describedby="step-help"><span>steps</span></span></label>
         </div>
+        <p id="step-help" class="small muted">Steps measure simulation time, not real seconds.</p>
+        <button id="save-experiment" class="btn save-setup" type="button" hidden>Save setup</button>
       </section>
-      <div class="policy"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 10a4 4 0 1 0 8 0 4 4 0 0 0-8 0M5 21v-2a7 7 0 0 1 14 0v2"/></svg><div><div class="policy-name">Agent</div><p id="policy-status">Baseline</p></div></div>
-      <section id="controller-section" hidden><div class="section-label">Controllers</div><div id="controller-assignments"></div></section>
-      <details class="source"><summary>Dream source</summary><textarea id="dream-source" class="code-editor" aria-label="Dream source" maxlength="65536" spellcheck="false" readonly></textarea><button id="source-mode" class="btn" type="button">Edit</button></details>
+      <details class="source advanced-setup"><summary>Advanced setup</summary><div class="advanced-content">
+        <label class="field">Random seed<span class="number-field"><input id="parameter-seed" type="number" required value="7" min="0" max="2147483647" aria-label="Random seed" aria-describedby="seed-help"><span></span></span></label><p id="seed-help" class="small muted">Keep the same seed when comparing conditions.</p>
+        <section id="controller-section" hidden><h3>Agent assignments</h3><p class="small muted">Choose the built-in policy or test the agent connection in a separate process.</p><div id="controller-assignments"></div></section>
+        <div class="policy" hidden><div><div class="policy-name">Active run</div><p id="policy-status"></p></div></div>
+        <section class="rules-section"><div class="row spread"><h3>Dream rules</h3><button id="source-mode" class="btn" type="button">Edit rules</button></div><p class="small muted">Inspect the world and task rules, or edit them to define a custom experiment.</p><textarea id="dream-source" class="code-editor" aria-label="Dream rules" maxlength="65536" spellcheck="false" readonly></textarea></section>
+      </div></details>
+      <div id="saved-library" hidden><button id="new-experiment" class="btn" type="button" hidden>New experiment</button><details><summary>Saved experiments</summary><div id="experiment-list" class="history-list"></div></details><details open><summary>Run history</summary><p id="compare-help" class="small muted">Select two runs to compare their outcomes.</p><div id="run-list" class="history-list"></div></details></div>
     </aside>
-    <section class="world-column" aria-label="Environment">
-      <div class="world-toolbar"><h2 id="world-title">World</h2><span id="world-status" class="small muted" role="status">Loading</span></div>
-      <div class="workspace-map"><div id="experiment-world" class="map-wrap world-view" role="img" tabindex="0" aria-label="Loading 3D world"></div></div>
-      <div class="timeline">
+    <section class="world-column" aria-label="Experiment world">
+      <div class="world-toolbar"><h2 id="world-title">Experiment world</h2><span id="world-status" class="small muted" role="status">Loading</span></div>
+      <p id="draft-notice" class="draft-notice" hidden>Setup changed. Run the experiment to update this view.</p>
+      <div class="workspace-map"><div id="experiment-world" class="map-wrap world-view" role="img" tabindex="0" aria-label="Loading 3D world"></div><span class="camera-help small">Drag to orbit · Scroll to zoom</span></div>
+      <div id="playback" class="timeline" hidden>
         <button id="play" class="btn icon-only" type="button" aria-label="Play" disabled><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg></button>
-        <output id="step-count" class="mono time">0 / 80</output>
-        <input id="timeline" type="range" min="0" max="0" value="0" aria-label="Timeline" disabled>
-        <button id="step" class="btn icon-only" type="button" aria-label="Step" disabled><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 5 10 7-10 7zM19 5v14"/></svg></button>
+        <output id="step-count" class="time">Step 0</output>
+        <input id="timeline" type="range" min="0" max="0" value="0" aria-label="Run timeline" disabled>
+        <button id="step" class="btn icon-only" type="button" aria-label="Advance one step" disabled><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 5 10 7-10 7zM19 5v14"/></svg></button>
       </div>
-      <div class="activity"><div class="section-label"><span>Agents</span><output id="run-metrics" class="small muted"></output></div><div id="agent-activity" class="activity-row"></div></div>
-      <details id="run-report" class="run-report" hidden><summary>Report</summary><output id="host-latency" class="small muted" hidden></output><div class="report-content"></div></details>
-      <details id="run-comparison" class="run-report comparison" open hidden><summary>Compare runs</summary><div id="comparison-content" class="report-content"></div></details>
+      <p id="playback-notice" class="playback-notice small muted" hidden>Playback is paused. The experiment is still running on your local host.</p>
+      <section id="result-summary" class="outcome-summary" aria-labelledby="run-metrics" hidden><h2 id="run-metrics"></h2><p id="result-detail"></p><p id="result-next" class="small muted"></p></section>
+      <details id="agent-panel" class="activity" hidden><summary>Agent activity</summary><div id="agent-activity" class="activity-row"></div></details>
+      <details id="run-report" class="run-report" hidden><summary>Results breakdown</summary><div class="report-content" role="region" aria-label="Results breakdown" tabindex="0"></div><div class="report-footer"><a id="export" class="btn" title="Download a source-pinned JSONL record for replay" hidden download>Download run data</a><output id="host-latency" class="small muted" hidden></output></div></details>
+      <details id="run-comparison" class="run-report comparison" open hidden><summary>Compare outcomes</summary><div id="comparison-content" class="report-content" role="region" aria-label="Run comparison" tabindex="0"></div></details>
     </section>
   </div>
 </main>

@@ -1,10 +1,10 @@
 # Build a scenario world
 
 Delivery, Warehouse and Classroom are selectable briefs in the Lab. Each expands
-an explicit Dream template with Agents, Budget, Deadline and Seed. Select a brief,
+an explicit Dream template with Team size, Budget per agent, Time limit and the advanced Random seed. Select a brief,
 then Run. Selecting a different brief changes the draft; an accepted run stays on
 screen until its replacement is accepted. The builder matches these briefs
-exactly. Other descriptions produce an error; custom scenarios use Dream source.
+exactly. Custom tasks use Dream rules in Advanced setup.
 
 | Brief | World and measured task |
 | --- | --- |
@@ -64,12 +64,12 @@ exports. Exact visual reproduction therefore also needs the same app revision.
 
 In the saved host workspace, select Warehouse and Run with two agents, budget
 16, deadline 80 and seed 7. It completes four tasks, spending eight coins.
-Open Dream source, choose Edit and change incoming `quantity=12` to `quantity=2`.
+Open Advanced setup, choose Edit rules and change incoming `quantity=12` to `quantity=2`.
 Run again, then select Compare beside both runs. The second run completes two of
 four tasks and spends four coins before its deadline. Inventory and reports
 explain the shortage; replay reads the recorded transitions.
 
-Agents changes staffing. With eight warehouse workers, twelve cartons cannot
+Team size changes staffing. With eight warehouse workers, twelve cartons cannot
 fill sixteen delivery objectives. Classroom agents alternate between the two
 rooms; each room has one service place. These resource and capacity limits are
 engine rules, not renderer animations.

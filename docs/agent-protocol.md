@@ -101,7 +101,7 @@ controller assignments, while explicit handoffs are saved as current ownership.
 
 ## Inspect the result
 
-Pause the viewer and open Report. Each actor has task progress, spending and
+Pause the viewer and open Results breakdown. Each actor has task progress, spending and
 travel, service and idle step counts. These are simulation steps, including the
 step that starts a move or service. Each blocked or rejected event opens its
 recorded observation, action, outcome and reward, and seeks the 3D replay to

@@ -21,7 +21,9 @@ agent. Researchers can inspect the generated source and replay a recorded run.
 
 The Lab is the sole product at the repository root. It selectively reuses the
 Dream framework and the approved Workspace A interface, with compact controls
-and contextual results.
+and contextual results. The human-facing flow is scenario, conditions, run and
+outcome. Advanced settings and Dream rules stay behind a disclosure; results and
+comparisons explain measured outcomes before technical evidence.
 Workspace now uses local copies of the compiler, logical episode engine,
 recording format and selected Three.js rendering modules. Run, pause, step,
 history seeking, direct source editing and JSONL export work. The 3D buildings,
@@ -53,4 +55,4 @@ keyboard accessible. Use concrete language and no invented performance claims.
 
 The design chooser recorded Workspace as the initial selection. Real Muse
 integration, hosted run persistence, first physical scenario, observation
-profiles, inference budget and experiment storage remain later decisions.
+profiles, inference budget and cloud storage remain later decisions.

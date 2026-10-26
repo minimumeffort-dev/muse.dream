@@ -9,8 +9,8 @@ The [delivery](../examples/morning-delivery.dream),
 [warehouse](../examples/warehouse.dream) and [classroom](../examples/classroom.dream)
 sources are the three selectable mock briefs. Each includes validated presentation
 for its buildings, agents and carried objects. [Build a scenario world](worlds.md)
-explains the catalog and connected entrance layout. Open Dream source, choose Edit, paste a scenario and Run.
-Use brief returns to the delivery template and its numeric parameters.
+explains the catalog and connected entrance layout. Open Advanced setup, choose Edit rules, paste a scenario and Run.
+Use scenario returns to the delivery template and its numeric parameters.
 
 Run and replay an export from this folder:
 
@@ -24,8 +24,9 @@ JSONL pins canonical source, its SHA-256, seed and policy label, then records
 observations, actions, outcomes and rewards for every transition. Replay
 recompiles that source and verifies every transition.
 
-The mock builder recognizes the three supplied briefs exactly. Change Agents,
-Budget, Deadline or Seed there; use source mode for other tasks. Invalid drafts
+The mock builder recognizes the three supplied briefs exactly. Change Team size,
+Budget per agent or Time limit; Advanced setup contains Random seed and Dream
+rules for custom tasks. Invalid drafts
 preserve the last accepted run. The saved host retains history; the static browser
 baseline resets on reload, so export preserves its record.
 
@@ -37,6 +38,6 @@ or biological validity claims.
 
 For a browser-independent episode with a separate mock controller, use the
 [local agent protocol](agent-protocol.md). The same source, action rules and
-replay checks apply. Paused or completed runs expose Report in the viewer, with
+replay checks apply. Paused or completed runs expose Results breakdown in the viewer, with
 step links for blocked requests and violations. [Save experiments and compare
 reruns](experiments.md) in the host workspace; each run keeps its own revision.

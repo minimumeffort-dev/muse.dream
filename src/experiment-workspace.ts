@@ -3,10 +3,12 @@ import {compareRuns} from './compare-runs';
 import type {ControllerAssignment,ExperimentConfig,SavedExperiment,RunSummary,SavedRunReport} from './experiment-types';
 import type {EvidenceRef} from './report';
 import {BRIEF_BUILDER,DEFAULT_WORLD,DEFAULT_TASK,DEFAULT_PARAMETERS} from './framework';
+import {changeCopy,comparisonCopy} from './workspace-copy';
 const get=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 const name=(text:string)=>text.replaceAll('_',' ').replace(/\b\w/g,c=>c.toUpperCase());
 const text=(tag:string,value:string)=>{const node=document.createElement(tag);node.textContent=value;return node;};
 export interface WorkspaceCallbacks {
+  validateDraft:()=>boolean;
   readDraft:()=>Omit<ExperimentConfig,'controllers'>;
   applyDraft:(config:ExperimentConfig)=>void;
   selectRun:(run:RunSummary,token:string,evidence?:EvidenceRef)=>Promise<void>;
@@ -34,7 +36,7 @@ export class ExperimentWorkspace {
   private readonly runNodes=new Map<string,HTMLElement>();
   private readonly experimentNodes=new Map<string,HTMLButtonElement>();
   constructor(private readonly callbacks:WorkspaceCallbacks){
-    get<HTMLButtonElement>('save-experiment').onclick=()=>void this.mutate(()=>this.save());
+    get<HTMLButtonElement>('save-experiment').onclick=()=>{if(this.callbacks.validateDraft())void this.mutate(()=>this.save());};
     get<HTMLButtonElement>('new-experiment').onclick=()=>this.newDraft();
     get<HTMLButtonElement>('resume-run').onclick=()=>void this.mutate(async()=>{
       if(!this.client||!this.selectedRun)return;
@@ -57,7 +59,7 @@ export class ExperimentWorkspace {
       let row=this.actorNodes.get(controller.actor);
       if(!row){row=document.createElement('div');row.className='controller-row';row.append(text('span',name(controller.actor)));const button=document.createElement('button');button.className='btn controller-toggle';button.type='button';button.onclick=()=>{const choice=this.choices.find(c=>c.actor===controller.actor);if(choice){choice.kind=choice.kind==='baseline'?'external-mock':'baseline';this.renderControllers();this.changed();}};row.append(button);this.actorNodes.set(controller.actor,row);}
       const button=row.querySelector('button')!;button.disabled=this.pending;
-      button.textContent=controller.kind==='external-mock'?'External mock':'Baseline';button.setAttribute('aria-label',`Controller for ${name(controller.actor)}: ${button.textContent}`);button.setAttribute('aria-pressed',String(controller.kind==='external-mock'));
+      button.textContent=controller.kind==='external-mock'?'Test connection':'Built in';button.setAttribute('aria-label',`Agent policy for ${name(controller.actor)}: ${button.textContent}`);button.setAttribute('aria-pressed',String(controller.kind==='external-mock'));
       if(container.children[index]!==row)container.insertBefore(row,container.children[index]??null);
     }
   }
@@ -76,7 +78,7 @@ export class ExperimentWorkspace {
   changed(){
     if(!this.client)return;
     let dirty=true;try{dirty=JSON.stringify(this.draft())!==JSON.stringify(this.selected?.config);}catch{/* Invalid drafts remain editable. */}
-    get('revision-label').textContent=this.selected?`Revision ${this.selected.revision}${dirty?' · Unsaved':''}`:'New experiment';
+    get('revision-label').textContent=this.selected?dirty?'Setup has unsaved changes':'Setup saved':'Unsaved experiment';
   }
   private draft():ExperimentConfig{return {...this.callbacks.readDraft(),controllers:structuredClone(this.choices)};}
   private async mutate(action:()=>Promise<unknown>){
@@ -92,7 +94,7 @@ export class ExperimentWorkspace {
     const saved=await this.client.save(config,this.selected);if(this.disposed)return saved;
     this.selected=saved;this.experiments=[saved,...this.experiments.filter(e=>e.id!==saved.id)];this.renderExperiments();this.remember();this.changed();return saved;
   }
-  async start(){await this.mutate(async()=>{
+  async start(){if(!this.callbacks.validateDraft())return;await this.mutate(async()=>{
     const saved=await this.save();if(!this.client||this.disposed)return;
     const run=await this.client.start(saved);if(this.disposed)return;
     this.runs=[run,...this.runs.filter(r=>r.id!==run.id)];this.selectRun(run);this.renderRuns();
@@ -127,7 +129,7 @@ export class ExperimentWorkspace {
   }
   private renderExperiments(){
     const container=get('experiment-list');container.querySelector('p')?.remove();
-    if(!this.experiments.length)container.append(text('p','No saved experiments.'));
+    if(!this.experiments.length)container.append(text('p','Save a setup to return to it later.'));
     for(const [index,experiment] of this.experiments.entries()){
       let button=this.experimentNodes.get(experiment.id);if(!button){button=document.createElement('button');button.type='button';button.className='history-experiment';button.onclick=()=>{const current=this.experiments.find(e=>e.id===experiment.id);if(current&&!this.pending)void this.openExperiment(current);};this.experimentNodes.set(experiment.id,button);}
       button.textContent=experiment.name;button.disabled=this.pending;button.setAttribute('aria-pressed',String(experiment.id===this.selected?.id));if(container.children[index]!==button)container.insertBefore(button,container.children[index]??null);
@@ -136,18 +138,19 @@ export class ExperimentWorkspace {
   private renderRuns(){
     const container=get('run-list');container.querySelector('p')?.remove();
     for(const [id,node] of this.runNodes)if(!this.runs.some(run=>run.id===id)){node.remove();this.runNodes.delete(id);}
-    if(!this.runs.length)container.append(text('p','No runs yet.'));
+    if(!this.runs.length)container.append(text('p','Run this experiment to start its history.'));
+    get('compare-help').hidden=this.runs.length<2;
     const ordered=[...this.runs].sort((a,b)=>String(a.createdAt).localeCompare(String(b.createdAt)));
     for(const [index,run] of [...ordered].reverse().entries()){
       const number=ordered.findIndex(r=>r.id===run.id)+1;let row=this.runNodes.get(run.id);
       if(!row){row=document.createElement('div');row.className='history-run';const button=document.createElement('button');button.type='button';button.className='history-open';button.append(text('strong',''),text('small',''));button.onclick=()=>{const current=this.runs.find(r=>r.id===run.id);if(current&&!this.pending){this.selectRun(current);this.renderRuns();}};
-        const compare=document.createElement('input');compare.type='checkbox';compare.onchange=()=>{if(compare.checked)this.compared=[...this.compared.filter(id=>id!==run.id),run.id].slice(-2);else this.compared=this.compared.filter(id=>id!==run.id);this.renderRuns();void this.renderComparison();};const label=document.createElement('label');label.className='compare-choice';label.append(compare,text('span','Compare'));row.append(button,label);this.runNodes.set(run.id,row);}
-      const button=row.querySelector('button')!,compare=row.querySelector('input')!;button.setAttribute('aria-pressed',String(this.selectedRun===run.id));button.disabled=this.pending;button.querySelector('strong')!.textContent=`Run ${number} · Revision ${run.revision}`;button.querySelector('small')!.textContent=`${name(run.status)} · ${run.metrics.completed}/${run.metrics.total} tasks · ${run.steps} steps`;
-      compare.checked=this.compared.includes(run.id);compare.disabled=this.pending;compare.setAttribute('aria-label',`Compare run ${number}`);if(container.children[index]!==row)container.insertBefore(row,container.children[index]??null);
+        const compare=document.createElement('input');compare.type='checkbox';compare.onchange=()=>{if(compare.checked)this.compared=[...this.compared.filter(id=>id!==run.id),run.id].slice(-2);else this.compared=this.compared.filter(id=>id!==run.id);this.renderRuns();void this.renderComparison(true);};const label=document.createElement('label');label.className='compare-choice';label.append(compare,text('span','Compare'));row.append(button,label);this.runNodes.set(run.id,row);}
+      const button=row.querySelector('button')!,compare=row.querySelector('input')!;button.setAttribute('aria-pressed',String(this.selectedRun===run.id));button.disabled=this.pending;button.querySelector('strong')!.textContent=`Run ${number}`;button.querySelector('small')!.textContent=`${run.status==='deadline'?'Time limit reached':run.status==='waiting'?'Running':name(run.status)} · ${run.metrics.completed}/${run.metrics.total} tasks`;
+      compare.checked=this.compared.includes(run.id);compare.disabled=this.pending||this.runs.length<2;compare.parentElement!.hidden=this.runs.length<2;compare.setAttribute('aria-label',`Compare run ${number}`);if(container.children[index]!==row)container.insertBefore(row,container.children[index]??null);
     }
     get('resume-run').hidden=!this.runs.some(r=>r.id===this.selectedRun&&r.status==='paused');
   }
-  private async renderComparison(){
+  private async renderComparison(reveal=false){
     const revision=++this.comparisonRevision,panel=get('run-comparison'),content=get('comparison-content');
     panel.hidden=this.compared.length!==2;if(panel.hidden||!this.client)return;
     content.replaceChildren(text('p','Loading comparison…'));
@@ -155,16 +158,22 @@ export class ExperimentWorkspace {
       const reports=await Promise.all(this.compared.map(id=>this.client!.report(id)));if(this.disposed||revision!==this.comparisonRevision)return;
       const [left,right]=reports as [SavedRunReport,SavedRunReport],comparison=compareRuns({...left.run,report:left},{...right.run,report:right});
       content.replaceChildren();
-      const display=(report:SavedRunReport)=>`${this.runLabel(report.run.id)} · Revision ${report.run.revision}`;
-      content.append(text('p',`${comparison.matchedSeed?'Same seed '+left.run.seed:'Different seeds'} · ${comparison.complete?'Finished runs':'Includes partial results'}`));
-      const changes=text('p',comparison.changes.length?comparison.changes.map(change=>`${change.field.replace('input.parameters.','').replace('input.','')}: ${this.value(change.before)} → ${this.value(change.after)}`).join(' · '):'Configuration unchanged.');changes.className='comparison-changes';content.append(changes);
+      const display=(report:SavedRunReport)=>this.runLabel(report.run.id);
+      const headline=text('p',comparisonCopy(comparison,display(left),display(right)));headline.className='comparison-headline';content.append(headline);
+      content.append(text('p',comparison.matchedSeed?'Same random seed.':`Different random seeds (${left.run.seed} and ${right.run.seed}); the starting conditions are not matched.`));
+      const changes=text('p',comparison.changes.length?comparison.changes.map(changeCopy).join(' · '):'Same setup and agent assignments.');changes.className='comparison-changes';content.append(changes);
       const table=document.createElement('table'),header=document.createElement('tr');for(const value of ['Metric',display(left),display(right),'Change']){const cell=document.createElement('th');cell.scope='col';cell.textContent=value;header.append(cell);}const head=document.createElement('thead');head.append(header);table.append(head);
       const body=document.createElement('tbody');
-      for(const row of comparison.rows){const tr=document.createElement('tr');for(const value of [row.label+(row.unit==='agent steps'?' (agent steps)':''),this.value(row.baseline),this.value(row.candidate),row.delta===null?'—':`${row.delta>0?'+':''}${row.delta}`])tr.append(text('td',String(value)));body.append(tr);}table.append(body);content.append(table);
+      const fullTable=document.createElement('table'),fullHead=document.createElement('thead'),fullHeader=header.cloneNode(true);fullHead.append(fullHeader);fullTable.append(fullHead);const fullBody=document.createElement('tbody');
+      for(const row of comparison.rows){const tr=document.createElement('tr');for(const value of [row.label+(row.unit==='agent steps'?' (agent steps)':''),this.value(row.baseline),this.value(row.candidate),row.delta===null?'—':`${row.delta>0?'+':''}${row.delta}`])tr.append(text('td',String(value)));(['completed','total','creditsSpent','steps'].includes(row.key)?body:fullBody).append(tr);}table.append(body);content.append(table);
+      fullTable.append(fullBody);const more=document.createElement('details');more.className='comparison-details';more.append(text('summary','Detailed metrics'),text('p','Travel, service and waiting add up each agent’s steps. They can exceed the length of the run.'),fullTable);content.append(more);
       for(const evidence of comparison.rows.flatMap(row=>row.evidence).filter((item,index,all)=>all.findIndex(other=>other.runId===item.runId&&other.step===item.step&&other.outcomeIndex===item.outcomeIndex)===index)){
         const button=document.createElement('button');button.type='button';button.className='evidence-link';const report=evidence.runId===left.run.id?left:right;
         button.textContent=`${this.runLabel(report.run.id)} · Step ${evidence.step} · ${name(evidence.agent)}`;button.onclick=()=>{const run=this.runs.find(run=>run.id===evidence.runId);if(run&&!this.pending){this.selectRun(run,evidence);this.renderRuns();}};content.append(button);
       }
+      const pins=document.createElement('details');pins.className='comparison-details';pins.append(text('summary','Run details'));
+      for(const report of [left,right])pins.append(text('p',`${display(report)} · Saved setup ${report.run.revision} · Seed ${report.run.seed}`),text('code',report.run.sourceHash));content.append(pins);
+      if(reveal)panel.scrollIntoView({block:'nearest'});
     }catch(error){if(revision===this.comparisonRevision)content.replaceChildren(text('p',error instanceof Error?error.message:String(error)));}
   }
   private value(value:unknown){return value===null||value===undefined?'—':typeof value==='object'?JSON.stringify(value):String(value);}

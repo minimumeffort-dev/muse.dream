@@ -11,10 +11,15 @@ it('builds the active workspace with local fonts and no retired review artifacts
  expect(html).toContain('class="workspace-layout"');
  expect(html).toContain('data:font/woff2;base64,');
  expect(html).toContain('<script type="module" src="/src/main.ts"></script>');
- expect(html).toContain('aria-label="Provider: local mock"');
+ expect(html).toContain('aria-label="Agents use scripted test policies"');
  expect(html).toContain('id="experiment-world"');
  for(const brief of ['delivery','warehouse','classroom'])expect(html).toContain(`id="brief-${brief}"`);
  expect(html).toContain('aria-label="Scenario brief"');
+ expect(html).toContain('See how agents complete a task');
+ for(const label of ['Team size','Budget per agent','Time limit'])expect(html).toContain(`aria-label="${label}"`);
+ const advanced=read('workspace.html').match(/<details class="source advanced-setup">([\s\S]*?)<\/details>/)![1]!;
+ for(const id of ['parameter-seed','controller-assignments','dream-source'])expect(advanced).toContain(`id="${id}"`);
+ expect(html).toContain('id="result-summary"');expect(html).toContain('id="draft-notice"');
  expect(body).not.toMatch(/\b(demo|illustrative|sample|prototype|preview|mock)\b/i);
  expect(html).not.toMatch(/<iframe\b|src="https?:|Design variants|Capture frames/);
  expect(existsSync(new URL('../design-review.json',import.meta.url))).toBe(false);

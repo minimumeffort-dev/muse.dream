@@ -15,18 +15,21 @@ tab can connect using the private URL again. Do not share this file or token.
 
 ## Create an experiment
 
-Name the experiment, enter World and Task, and choose Agents, Budget, Deadline
-and Seed. Select Delivery, Warehouse or Classroom to load its brief; source mode
+Name the experiment, select a scenario and choose Team size, Budget per agent
+and Time limit. Random seed is in Advanced setup. Select Delivery, Warehouse or
+Classroom to load its brief; source mode
 accepts custom standalone Dream scenarios. [World authoring](worlds.md) covers
 appearances, layouts and a warehouse stock comparison.
 
-Each compiled actor has an explicit controller. Use its button to choose
-Baseline or External mock. The external mock runs in a separate Node process
+Each compiled actor has an explicit controller. Under Advanced setup, use its
+Agent assignments button to choose
+Built in or Test connection. The external mock runs in a separate Node process
 and uses the same authenticated actor protocol as an independently connected
 controller. Both choices use the existing mock policy. They are not model calls.
 
-Save keeps a revision without starting a run. Run saves a changed draft, pins
-that revision and starts its episode on the host. New starts another experiment.
+Save setup keeps a revision without starting a run. Run experiment saves a
+changed draft, pins that revision and starts its episode on the host. New
+experiment starts another setup.
 Invalid drafts leave the accepted run and saved history intact.
 
 New brief revisions pin builder `scenarios-1`; older delivery revisions keep the
@@ -40,7 +43,7 @@ A retried run request keeps the same request identity until it is acknowledged.
 ## Inspect earlier runs
 
 The history lists each run's revision, status, task progress and simulation step.
-Open a run to inspect it in 3D, seek its timeline, open Report or export JSONL.
+Open a run to inspect it in 3D, seek its timeline, open Results breakdown or export JSONL.
 Opening a historical run changes the viewer; it does not overwrite the editable
 draft or rewind a live engine.
 

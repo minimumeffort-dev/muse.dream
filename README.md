@@ -28,10 +28,11 @@ Actions and the production deployment against the merged commit.
 
 ## Run, inspect, repeat
 
-Select **Delivery**, **Warehouse** or **Classroom**, then press **Run**. The local
-builder expands the chosen Dream template
-using Agents, Budget, Deadline and Seed. The compiler accepts it before a fresh
-episode starts. Agents receive private observations and submit actions through
+Select **Delivery**, **Warehouse** or **Classroom**. The sidebar explains the
+task and environment. Change **Team size**, **Budget per agent** or **Time limit**,
+then press **Run experiment**. Advanced setup holds the random seed, agent
+assignments and Dream rules. The local builder expands the chosen template.
+The compiler accepts it before a fresh episode starts. Agents receive private observations and submit actions through
 the rules. They cannot set rewards or completion.
 
 The default couriers buy bread, deliver it to the school, return for supply kits
@@ -39,22 +40,28 @@ and use the clinic service. The result is four tasks in 27 logical steps,
 16 coins spent, one blocked request and no rule violations. Smaller budgets and
 deadlines can fail. These are mock policy outcomes, not real delivery estimates.
 
-**Pause** holds the episode and animation. **Step** advances one transition.
+The outcome summary shows completed tasks, coins spent and simulation steps.
+Agent activity and Results breakdown provide detail when you need it.
+
+**Pause run** holds the browser episode and animation. **Advance one step**
+commits one transition.
 The timeline reads recorded history without rewinding the engine head. Play
 replays it before resuming an unfinished episode. Hiding the tab pauses playback.
 One logical step occupies one display second.
 
-Pause and open **Report** for each agent's task progress, spending and time in
+Pause and open **Results breakdown** for each agent's task progress, spending and time in
 travel, service or idle steps. Select a finding to inspect its recorded
-observation, action and outcome at the matching replay step.
+attempted action and outcome at the matching replay step. Expand its technical
+details to inspect the recorded observation, action and outcome as JSON.
 
 Drag the world to orbit; scroll or pinch to zoom. Focus the view with Tab, then
 use arrows, plus/minus and Home to reset. Reduced motion keeps static poses.
 
 ## Edit Dream
 
-Open **Dream source**, choose **Edit**, paste a standalone scenario and Run.
-**Use brief** returns to the template and preserves the manual draft in memory.
+Open **Advanced setup**, choose **Edit rules** beside Dream rules, paste a
+standalone scenario and Run experiment. **Use scenario** returns to the template
+and preserves the manual draft in memory.
 Invalid source shows its diagnostic and preserves the accepted result.
 
 The mock builder recognizes the three supplied briefs exactly. Other descriptions
@@ -65,7 +72,8 @@ and [warehouse scenario](examples/warehouse.dream).
 
 ## Keep the record
 
-**Export** downloads the paused or completed episode as source-pinned JSONL.
+**Download run data**, inside Results breakdown, downloads the paused or completed
+episode as source-pinned JSONL.
 Replay it using the local CLI:
 
     node scripts/experiment.mjs replay path/to/episode.jsonl
@@ -94,7 +102,8 @@ The [local agent host](docs/agent-protocol.md) runs independently of the browser
     npm run build
     npm run agent:host
 
-Assign each actor to the baseline or a separate mock process over authenticated
+Under Advanced setup, assign each agent to **Built in** or **Test connection**.
+The latter uses a separate mock process over authenticated
 HTTP. The host writes its private viewer connection to .cache/agent-host.json.
 Closing the viewer leaves execution active.
 Requests carry run, actor, step and controller identities. Retries are

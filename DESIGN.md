@@ -1,51 +1,60 @@
-# Dreams Lab design review
+# Dreams Lab workspace
 
-Mode: Operate. The researcher should understand what is being tested, what is
-running and what changed between runs without opening the source editor.
+Mode: Operate. A first-time researcher should understand what is being tested,
+what can change and what happened without reading Dream source or protocol data.
 
-All variants inherit the existing Minimum Effort identity. Fonts are loaded
-from the licensed local copies in `fonts/`. Color has
-meaning: yellow for the active control or agent, blue for a second agent,
-charcoal for text and actions. Yellow is not body text on a light background.
+Keep Minimum Effort’s warm white, charcoal and yellow identity, local Manrope
+body type and Archivo headings. Yellow marks a selection; it is never body text
+on a light background. Controls use visible focus, native buttons and disclosures.
 
-The approved Workspace layout opens directly, with the brief, parameters, 3D
-world and agent activity. Source stays in a native disclosure. Keep the interface
-free of explanatory footers, repeated counts and variant navigation. One compact
-Local provider status belongs in the header. Run starts a fresh accepted episode;
-conditional Export, playback controls and measured outcomes appear in context.
-Compiler errors are inline. Source editing disables brief inputs until Use brief.
-The renderer observes accepted data and retains orbit/zoom. Historical design
-variants and their captured media have been removed.
+## The primary flow
 
-Desktop layouts adapt to stacked controls and readable maps on narrow screens.
-Workspace uses a shared 24-pixel desktop gutter and 16-pixel mobile gutter.
-The form and world headings share a line box and top inset. Numeric inputs,
-Run and playback controls use 40-pixel control heights; playback buttons cannot
-shrink against the timeline. Agent avatars align to the top of their text rows.
-Textarea and numeric values share an eight-pixel inner inset; narrower tablet
-fields have enough height for the current brief without clipping it.
-Named native buttons, labeled inputs, keyboard focus and reduced motion apply
-to all variants. Playback advances actual engine transitions; timeline seeking
-reads recorded state. Visual movement interpolates between accepted poses and
-does not change steps, scoring or policy observations.
+The header states the Lab’s purpose in one sentence. The primary action is Run
+experiment. Scenario buttons choose Delivery, Warehouse or Classroom. A readable
+task and environment summary replaces the preset-only editable brief boxes.
+Team size, Budget per agent and Time limit are the visible conditions. Explain
+simulation steps once, without treating them as real seconds.
 
-Report is a contextual disclosure below agent activity, visible while playback
-is paused or complete. A compact table compares actors; native buttons seek to
-recorded events and reveal their observation, action and outcome as readable
-code. Reuse the existing typography, gutters, focus rings and restrained colors.
-The saved host workspace keeps the editor, with inline experiment name, contextual
-New/Save/Run controls, a compact history in the sidebar and explicit controller
-buttons per actor. History updates preserve native button and checkbox identity.
-Selecting a run changes playback without overwriting the editable draft.
-Two selected runs reveal a table of pinned changes and metrics, with evidence
-buttons into each replay. Partial results and differing seeds remain explicit.
-Tab-scoped credentials and the selected run survive reload; durable history belongs
-to the host. Pausing affects replay only. No capture archives accompany this slice.
+Advanced setup contains the random seed, host agent assignments, active controller
+ownership and Dream rules. Code can be inspected or edited; Use scenario restores
+the brief and preserves the manual draft. The header says Scripted agents in the
+browser baseline; the saved host identifies its local workspace. No provider is
+implied to be connected. The host’s built-in and test-connection controls retain
+the original baseline/external-mock protocol values.
 
-Three compact, keyboard accessible brief buttons select Delivery, Warehouse or
-Classroom. Pressed state reflects the editable brief, never the accepted run.
-Choosing a brief preserves playback until Run accepts its replacement. Source
-mode preserves its manual draft when returning to a brief. Existing gutters,
-colors and native focus treatment apply; no additional explanatory chrome.
-Sidebar sections retain their content height and scroll together, including long
-controller summaries for larger cohorts.
+Save setup belongs to the conditions. Saved experiments, New experiment and Run
+history are below setup. Comparison choices appear when there are two runs.
+Updates preserve native button and checkbox identity and keyboard focus.
+
+## Watching and understanding a run
+
+The 3D world remains the central observation surface. Drag/scroll guidance is
+visible, with keyboard camera controls on the focused view. Playback controls
+appear after a run exists. A changed draft is labeled while the accepted world
+continues to show its own source-pinned result. Host playback pause explicitly
+says that execution continues on the local host.
+
+Outcome copy leads with completion or the time limit, then coins spent and
+simulation steps. It suggests the next useful action without inventing failure
+causes or calling lower spend a better result. Agent activity is a disclosure.
+Results breakdown shows tasks, spending and time per agent; event buttons open a
+readable attempted action and its recorded reason. Raw observation/action/outcome
+JSON is a second disclosure. Download run data belongs to those results.
+
+Comparisons lead with a measured difference. Different workloads show their own
+completed/total counts; unfinished comparisons stay explicit. Primary rows show
+tasks, spending and elapsed steps. Detailed time and rule checks are available
+below, with source hashes and saved revision pins in Run details. Evidence still
+opens the exact run and step and leaves the editable draft intact.
+
+## Layout and accessibility
+
+Desktop keeps a narrow setup column and a large world/result column. Each column
+has one main vertical scroll area; expanded result tables do not create a stack
+of nested scroll boxes. The shared desktop gutter is 24 pixels, mobile 16 pixels.
+Narrow screens stack setup and world and keep Run experiment in a bottom action
+bar, with space reserved below the content. Buttons and numeric inputs keep 40-pixel
+control heights; playback controls do not shrink. Tables scroll horizontally and
+can be focused. Reduced motion, stale-result guards, accepted/draft separation,
+one playback owner and renderer cleanup remain unchanged. No capture files are
+retained with this pass.

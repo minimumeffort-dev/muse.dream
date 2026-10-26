@@ -284,6 +284,12 @@ body.workspace-page{--gutter:24px;height:100dvh;min-height:640px;display:flex;fl
 .workspace-page .workspace-layout{height:auto;min-height:0;flex:1}
 .workspace-page .brief-panel{overflow-y:auto;gap:16px;padding:16px var(--gutter)}
 .workspace-page .brief-panel>*{flex-shrink:0}
+.workspace-page .brief-panel h2{font:650 14px/20px Manrope,sans-serif;letter-spacing:0;margin-bottom:12px}
+.workspace-page .scenario-summary p{font-size:14px;line-height:24px}
+.workspace-page .scenario-summary .small{font-size:12px;line-height:20px;margin-top:8px}
+.workspace-page .time-limit{grid-column:1/-1;grid-template-columns:1fr 128px;align-items:center}
+.workspace-page #step-help{margin-top:8px}
+.workspace-page .save-setup{margin-top:12px}
 .workspace-page .section-label{margin-bottom:0;font-weight:650;line-height:20px}
 .workspace-page label{line-height:20px}
 .workspace-page .field{gap:8px}
@@ -299,6 +305,7 @@ body.workspace-page{--gutter:24px;height:100dvh;min-height:640px;display:flex;fl
 .workspace-page .timeline{display:grid;grid-template-columns:40px 64px minmax(0,1fr) 40px;gap:16px}
 .workspace-page .timeline .btn{width:40px;height:40px;min-width:40px;padding:8px}
 .workspace-page .timeline .time{min-width:0;white-space:nowrap}
+.workspace-page .timeline .time{font-variant-numeric:tabular-nums}
 .workspace-page .timeline input{width:100%;min-width:0;margin:0}
 .workspace-page .policy{min-height:40px;padding:8px 12px}
 .workspace-page .policy>div{display:flex;align-items:center;justify-content:space-between;flex:1;gap:12px;min-width:0}
@@ -312,11 +319,37 @@ body.workspace-page{--gutter:24px;height:100dvh;min-height:640px;display:flex;fl
 .workspace-page .source summary::-webkit-details-marker{display:none}
 .workspace-page .source summary::after{content:"";width:6px;height:6px;border-right:1.5px solid;border-bottom:1.5px solid;transform:rotate(45deg);margin-right:4px}
 .workspace-page .source[open] summary::after{transform:rotate(225deg)}
+.workspace-page .advanced-setup{margin-top:0;padding-top:16px}
+.workspace-page .advanced-content{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.workspace-page .advanced-content h3{font-family:Manrope,sans-serif}
+.workspace-page .advanced-content .field+p{margin-top:-4px}
+.workspace-page .advanced-content section{margin-top:8px}
+.workspace-page .rules-section .row{margin-bottom:8px}
+.workspace-page .rules-section .btn{min-height:32px;padding:4px 8px}
+.workspace-page .advanced-content .policy>div{display:block}
+.workspace-page .workspace-purpose{font-size:14px;line-height:24px;color:var(--soft);max-width:580px}
+.workspace-page .workspace-title .btn{font-size:14px;line-height:20px}
+.workspace-page .workspace-title .experiment-heading{flex:1;min-width:min(100%,280px)}
+.workspace-page .workspace-map{position:relative}
+.workspace-page .camera-help{position:absolute;left:var(--gutter);bottom:12px;color:#3e4738;pointer-events:none}
+.workspace-page .draft-notice,.workspace-page .playback-notice{flex:none;padding:8px var(--gutter);font-size:12px;line-height:20px}
+.workspace-page .draft-notice{background:#f4e9bd;color:#513900}
+.workspace-page .outcome-summary{flex:none;padding:16px var(--gutter);border-top:1px solid var(--line)}
+.workspace-page .outcome-summary h2{font-size:18px;line-height:28px;letter-spacing:0}
+.workspace-page .outcome-summary p{margin-top:4px}
+.workspace-page .activity{padding-block:12px;border-top:1px solid var(--line)}
+.workspace-page .activity summary{font-size:12px;line-height:24px}
+.workspace-page .activity[open] .activity-row{padding-top:12px}
+.workspace-page .world-column{overflow-y:auto}
+.workspace-page .workspace-map{flex-shrink:0}
+.workspace-page .skip-link{position:fixed;left:16px;top:8px;z-index:5;padding:8px 12px;background:var(--paper);transform:translateY(-200%)}
+.workspace-page .skip-link:focus{transform:none}
+.workspace-page .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 .workspace-page .workspace-title{flex-wrap:wrap}
 .workspace-page [hidden]{display:none!important}
 .workspace-page #lab-error{width:100%;color:#982f23;font-size:12px;line-height:20px;white-space:pre-wrap}
 .workspace-page .code-editor{height:240px;min-height:160px;resize:vertical;margin:12px 0 8px;font:12px/20px ui-monospace,monospace;tab-size:2}
-.workspace-page .activity{max-height:176px;min-height:0;overflow:auto}
+.workspace-page .activity{max-height:none;min-height:0;overflow:visible}
 .workspace-page .activity>.section-label{gap:12px;flex-wrap:wrap}
 .workspace-page #run-metrics{font-weight:450}
 .workspace-page .activity-person small{line-height:20px}
@@ -335,21 +368,29 @@ body.workspace-page{--gutter:24px;height:100dvh;min-height:640px;display:flex;fl
   .workspace-page textarea{height:112px}
 }
 @media(max-width:720px){
-  body.workspace-page{--gutter:16px;height:auto;min-height:100dvh}
+  body.workspace-page{--gutter:16px;height:auto;min-height:100dvh;padding-bottom:72px}
   .workspace-page .workspace-title{flex-direction:row;align-items:center;gap:12px}
+  .workspace-page .workspace-title>.row{position:fixed;left:0;right:0;bottom:0;z-index:3;padding:12px 16px max(12px,env(safe-area-inset-bottom));background:var(--paper);border-top:1px solid var(--line)}
+  .workspace-page .workspace-title>.row .primary{flex:1}
   .workspace-page .workspace-title h1{font-size:20px;line-height:28px}
   .workspace-page .brief-panel{display:flex;overflow:visible}
   .workspace-page .workspace-map{flex:none;height:320px}
   .workspace-page .activity{min-height:0}
 }
 
-.workspace-page .run-report{flex:none;max-height:256px;overflow:auto;padding:12px var(--gutter);border-top:1px solid var(--line);font-size:12px;line-height:20px}
+.workspace-page .run-report{flex:none;padding:12px var(--gutter);border-top:1px solid var(--line);font-size:12px;line-height:20px}
 .workspace-page .run-report summary{cursor:pointer;font-weight:650;padding-block:4px}
 .workspace-page .report-content{padding-top:12px;overflow-x:auto}
 .workspace-page .report-content table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;text-align:right}
 .workspace-page .report-content th,.workspace-page .report-content td{padding:4px 8px;white-space:nowrap}
 .workspace-page .report-content th:first-child{text-align:left;padding-left:0}
 .workspace-page .report-content thead{color:var(--soft)}
+.workspace-page .report-content caption{text-align:left;caption-side:top;color:var(--soft);font-size:12px;line-height:20px;padding-bottom:12px;white-space:normal}
+.workspace-page .report-footer{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding-top:12px}
+.workspace-page .evidence-detail{margin-top:16px;padding:12px;background:var(--wash);border-radius:4px}
+.workspace-page .evidence-detail h3{font:650 14px/20px Manrope,sans-serif;margin-bottom:8px}
+.workspace-page .evidence-detail p{font-size:12px;line-height:20px}
+.workspace-page .evidence-detail details{margin-top:12px}
 .workspace-page .report-findings{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-top:12px}
 .workspace-page .evidence-link{background:none;border:0;padding:4px 0;font:inherit;text-align:left;color:#634400;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .workspace-page .evidence-link:focus-visible,.workspace-page .run-report summary:focus-visible{outline:2px solid #875b00;outline-offset:2px}
@@ -382,8 +423,13 @@ body.workspace-page{--gutter:24px;height:100dvh;min-height:640px;display:flex;fl
 .workspace-page .brief-choices{display:flex;flex-wrap:wrap;gap:8px}
 .workspace-page .brief-choices .btn{font-size:12px;min-height:32px;padding:4px 8px}
 .workspace-page .brief-choices [aria-pressed=true]{background:#f4e9bd;color:#513900;border-color:#baa267}
-.workspace-page #run-comparison{max-height:320px}
+.workspace-page #run-comparison{max-height:none}
 .workspace-page .comparison .report-content>p{margin-bottom:12px;overflow-wrap:anywhere}
 .workspace-page .comparison table{min-width:520px}
 .workspace-page .comparison .evidence-link{display:block;margin-top:8px}
+.workspace-page .comparison-headline{font-weight:650}
+.workspace-page .comparison-details{margin-top:16px}
+.workspace-page .comparison-details p{margin-block:8px}
+.workspace-page .comparison-details code{display:block;overflow-wrap:anywhere;font-size:12px;line-height:20px}
+.workspace-page #compare-help{margin-top:8px}
 @media(max-width:720px){.workspace-page #experiment-name{font-size:20px;line-height:28px}.workspace-page .workspace-title>.row{gap:8px}.workspace-page .comparison table{min-width:460px}}
