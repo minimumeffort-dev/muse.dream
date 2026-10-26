@@ -1,0 +1,13 @@
+dream 2;
+material red(style=toon,colors=[#c85c43,#c85c43]);
+material dark(style=toon,colors=[#303c43,#303c43]);
+object sketch_car(label="Sketch car"){
+  measure(kind=car,axis=x,meters=3.55);
+  body(interaction=solid,radius=11,height=15);
+  part chassis(shape=box,material=red,at=[0,7,0],size=[26,10,17]);
+  repeat axles(index=i,count=2){
+    repeat sides(index=j,count=2){
+      part wheel(shape=cylinder,material=dark,at=[i*18-9,5,j*18-9],size=[8,3,8],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
+    }
+  }
+}

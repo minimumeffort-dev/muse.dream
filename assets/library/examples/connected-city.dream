@@ -1,0 +1,41 @@
+dream 2;
+material brick(style=grain,colors=[#b87861,#975f50]);
+material roof(style=toon,colors=[#535b64,#3b4753]);
+material glass(style=toon,colors=[#6c929d,#42616f]);
+material cream(style=toon,colors=[#e5decd,#c5bfae]);
+material blue(style=toon,colors=[#648c9b,#466b7c]);
+object car(label="Sketch car"){
+ measure(kind=car,axis=x,meters=3.5);
+ body(interaction=solid,radius=11,height=14);
+ part chassis(shape=box,material=brick,at=[0,5,0],size=[35,10,17]);
+ part cab(shape=box,material=glass,at=[-4,12,0],size=[14,8,15]);
+}
+object house(label="Street house"){
+ measure(kind=building,axis=y,meters=4);
+ body(interaction=solid,radius=12,height=40);
+ foundation(size=[40,30],color=#9e9d8c);
+ part walls(shape=box,material=brick,at=[0,15,0],size=[40,30,30]);
+ part roof(shape=pyramid,material=roof,at=[0,35,0],size=[41,10,32]);
+ part door(shape=box,material=glass,at=[0,7,-15.2],size=[7,14,.5]);
+ part step(shape=box,material=cream,at=[0,.5,-17],size=[10,1,4]);
+}
+object bus(label="Neighborhood bus"){
+ measure(kind=bus,axis=x,meters=7.2);
+ body(interaction=solid,radius=14,height=24);
+ contact shell_0(at=[-25,0,0],radius=11,height=24);
+ contact shell_1(at=[-15,0,0],radius=11,height=24);
+ contact shell_2(at=[-5,0,0],radius=11,height=24);
+ contact shell_3(at=[5,0,0],radius=11,height=24);
+ contact shell_4(at=[15,0,0],radius=11,height=24);
+ contact shell_5(at=[25,0,0],radius=11,height=24);
+ part shell(shape=box,material=blue,at=[0,12,0],size=[72,24,22]);
+ part windows(shape=box,material=glass,at=[0,17,-11.2],size=[60,8,.5]);
+ part roof(shape=box,material=cream,at=[0,23,0],size=[70,2,22]);
+}
+object person(label="Neighbor"){
+ measure(kind=person,axis=y,meters=1.8);
+ body(interaction=decor,radius=4,height=18);
+ part feet(shape=box,material=roof,at=[0,1,0],size=[5,2,4]);
+ part body(shape=capsule,material=blue,at=[0,8,0],size=[5,12,4]);
+ part head(shape=sphere,material=cream,at=[0,16,0],size=[4,4,4]);
+}

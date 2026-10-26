@@ -1,7 +1,0 @@
-{
-  "afterFinalCoincidentLinkGuard": true,
-  "compared": "All four recorded members and simulation time at the end of the clip",
-  "maxNumericDifferenceAllowed": 1e-7,
-  "differences": [],
-  "recordingStillMatches": true
-}

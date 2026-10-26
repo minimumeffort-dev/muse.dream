@@ -1,0 +1,16 @@
+dream 2;
+material teal(style=toon,colors=[#297f88,#24616b]);
+material skin(style=toon,colors=[#c59774,#a97655]);
+material dark(style=toon,colors=[#303d48,#222c36]);
+material cream(style=toon,colors=[#eee8d9,#c9c0ae]);
+material wood(style=toon,colors=[#96714d,#6e503a]);
+material fur(style=toon,colors=[#b98862,#79543e]);
+object hare(label="Meadow hare"){
+  measure(kind=custom,axis=x,meters=.7);
+  body(interaction=decor,radius=4,height=8);
+  part body(shape=sphere,material=fur,at=[0,4,0],size=[8,7,4]);
+  part head(shape=sphere,material=fur,at=[3,7,0],size=[4,4,3]);
+  repeat ears(index=s,count=2){
+    part ear(shape=capsule,material=fur,at=[2,10,s*2-1],size=[1,5,1]);
+  }
+}

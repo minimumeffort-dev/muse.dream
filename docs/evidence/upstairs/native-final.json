@@ -1,9 +1,0 @@
-{
-  "control": "{\"kind\":\"foot\"}",
-  "player": {
-    "elevation": 35.21739130434783,
-    "x": 6512.265625,
-    "y": 4005.65625
-  },
-  "seated": "{\"objectId\":\"home_upper_settee\",\"seatId\":\"right\"}"
-}

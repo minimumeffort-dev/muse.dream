@@ -1,0 +1,12 @@
+dream 2;
+asset offices(module=tower_assets,object=station_offices);
+asset bench(module=destructible,object=slatted_bench);
+asset resident(module=city_people,object=city_resident);
+material wood(style=wood,colors=[#876448,#664a35]);
+object records_table(label="Records table"){
+ measure(kind=table,axis=x,meters=2.2);
+ body(interaction=solid,radius=29,height=19.2);
+ impact(mode=break(speed=90,scatter=62,lift=100,spin=4,lifetime=6));
+ part top(shape=box,material=wood,at=[0,17.2,0],size=[54,4,28]);
+ repeat supports(index=i,count=2){part leg(shape=box,material=wood,at=[i*42-21,7.6,0],size=[4,15.2,20]);}
+}

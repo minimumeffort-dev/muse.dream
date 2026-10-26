@@ -1,1 +1,0 @@
-Native r73 upgrade and planted reload retain every state field and visual clock; planting consumes one sapling and pays once; R preserves growth.

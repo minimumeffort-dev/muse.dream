@@ -1,0 +1,16 @@
+dream 2;
+material teal(style=toon,colors=[#448b87,#448b87]);
+material rubber(style=toon,colors=[#273239,#273239]);
+object bicycle(label="Parked bicycle"){
+  measure(kind=bicycle,axis=x,meters=1.8);
+  body(interaction=solid,radius=8,height=16);
+  rideable(at=[-2,12,0],control=bicycle);
+  repeat wheels(index=i,count=2){
+    part tire(shape=torus,material=rubber,at=[i*16-8,4,0],size=[8,8,1.2],motion=roll(axis=z,radius=4),rot_deg=[0,180,0]);
+  }
+  beam frame(shape=cylinder,material=teal,from=[-8,4,0],to=[6,12,0],width=1,depth=1);
+  beam fork(shape=cylinder,material=teal,from=[6,14,0],to=[8,4,0],width=1,depth=1);
+  beam seatpost(shape=cylinder,material=teal,from=[-2,7,0],to=[-2,12,0],width=1,depth=1);
+  part seat(shape=box,material=rubber,at=[-2,12,0],size=[4,1,2]);
+  part handlebar(shape=box,material=rubber,at=[6,14,0],size=[1,1,7]);
+}

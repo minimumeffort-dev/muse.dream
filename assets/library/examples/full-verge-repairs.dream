@@ -1,0 +1,72 @@
+dream 2;
+material teal(style=toon,colors=[#297f88,#24616b]);
+material skin(style=toon,colors=[#c59774,#a97655]);
+material dark(style=toon,colors=[#303d48,#222c36]);
+material cream(style=toon,colors=[#eee8d9,#c9c0ae]);
+material wood(style=toon,colors=[#96714d,#6e503a]);
+object pedestrian(label="Maintenance worker"){
+  measure(kind=person,axis=y,meters=1.8);
+  body(interaction=decor,radius=8,height=57);
+  joint pelvis(bone=root,at=[0,25,0]){
+    part belt(shape=box,material=dark,at=[0,0,0],size=[12,3,15]);
+    joint chest(bone=spine,at=[0,1,0]){
+      part torso(shape=capsule,material=teal,at=[0,8,0],size=[12,19,16]);
+      part head(shape=sphere,material=skin,at=[0,24,0],size=[12,12,12]);
+      part hair(shape=sphere,material=dark,at=[-.7,28,0],size=[12.8,6.4,13]);
+      part nose(shape=sphere,material=skin,at=[6,23,0],size=[3,3,3]);
+      repeat eyes(index=s,count=2){
+        part eye(shape=sphere,material=dark,at=[5.3,25.5,s*7-3.5],size=[1.5,1.5,1.5]);
+        part ear(shape=sphere,material=skin,at=[-.5,24,s*12-6],size=[2.5,3,2]);
+      }
+      part backpack(shape=box,material=wood,at=[-7,8,0],size=[6,15,13]);
+      joint left_arm(bone=left_shoulder,at=[0,17,9]){
+        part sleeve(shape=capsule,material=teal,at=[0,-4.5,0],size=[5,10.5,5]);
+        joint left_forearm(bone=left_elbow,at=[0,-9.5,0]){
+          part elbow(shape=sphere,material=skin,at=[0,0,0],size=[4.2,4.2,4.2]);
+          part forearm(shape=capsule,material=skin,at=[0,-4.5,0],size=[4,10,4]);
+          part hand(shape=box,material=skin,at=[.5,-10,0],size=[4.5,4,3.5]);
+        }
+      }
+      joint right_arm(bone=right_shoulder,at=[0,17,-9]){
+        part sleeve(shape=capsule,material=teal,at=[0,-4.5,0],size=[5,10.5,5]);
+        joint right_forearm(bone=right_elbow,at=[0,-9.5,0]){
+          part elbow(shape=sphere,material=skin,at=[0,0,0],size=[4.2,4.2,4.2]);
+          part forearm(shape=capsule,material=skin,at=[0,-4.5,0],size=[4,10,4]);
+          part hand(shape=box,material=skin,at=[.5,-10,0],size=[4.5,4,3.5]);
+        }
+      }
+    }
+    joint left_leg(bone=left_hip,at=[0,0,4]){
+      part thigh(shape=capsule,material=dark,at=[0,-5.5,0],size=[5.7,12,5.7]);
+      joint left_shin(bone=left_knee,at=[0,-11.5,0]){
+        part knee(shape=sphere,material=dark,at=[0,0,0],size=[5,5,5]);
+        part calf(shape=capsule,material=dark,at=[0,-5.2,0],size=[5,11,5]);
+        joint left_foot(bone=left_ankle,at=[0,-10.5,0]){
+          part shoe(shape=box,material=cream,at=[2.3,-1,0],size=[9,4,6.2]);
+        }
+      }
+    }
+    joint right_leg(bone=right_hip,at=[0,0,-4]){
+      part thigh(shape=capsule,material=dark,at=[0,-5.5,0],size=[5.7,12,5.7]);
+      joint right_shin(bone=right_knee,at=[0,-11.5,0]){
+        part knee(shape=sphere,material=dark,at=[0,0,0],size=[5,5,5]);
+        part calf(shape=capsule,material=dark,at=[0,-5.2,0],size=[5,11,5]);
+        joint right_foot(bone=right_ankle,at=[0,-10.5,0]){
+          part shoe(shape=box,material=cream,at=[2.3,-1,0],size=[9,4,6.2]);
+        }
+      }
+    }
+  }
+}
+material timber(style=wood,colors=[#92613d,#bd905d]);
+material iron(style=toon,colors=[#35464c,#25363d]);
+material lens(style=glow,colors=[#f4db9c,#ffe9ba],night=#ffd18a);
+object light(label="Streetlight"){
+ measure(kind=lamp,axis=y,meters=4);
+ body(interaction=solid,radius=4,height=40);
+ contact pole_body(at=[0,0,0],radius=1.4,height=40);
+ lamp(at=[0,38,0],radius=30,color=#ffd18a);
+ part pole(shape=cylinder,material=iron,at=[0,19,0],size=[2,38,2]);
+ part housing(shape=box,material=iron,at=[0,39,0],size=[5,2,5]);
+ part glass(shape=box,material=lens,at=[0,37.5,0],size=[3,1,3]);
+}

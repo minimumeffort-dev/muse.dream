@@ -1,32 +1,25 @@
 {
-  "name": "muse-dream",
-  "private": true,
+  "name": "dreams-lab",
   "version": "0.1.0",
+  "private": true,
   "type": "module",
-  "description": "Playable worlds described in Dream 2. Paper-to-world mock prototype with Three.js.",
   "scripts": {
-    "dev": "vite --host 127.0.0.1 --port 5173",
-    "lab:design": "npm run lab:dev",
-    "lab:dev": "npm --prefix dreams-lab run dev",
-    "lab:build": "npm --prefix dreams-lab run build",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview --host 127.0.0.1 --port 4173",
-    "test": "vitest run",
-    "test:watch": "vitest watch --maxWorkers=2 --testTimeout=60000",
-    "typecheck": "tsc --noEmit",
-    "dream": "node scripts/dream.mjs",
+    "dev": "node render-workspace.mjs && vite --config vite.config.ts",
+    "build": "node render-workspace.mjs && tsc --noEmit -p tsconfig.json && vite build --config vite.config.ts",
+    "preview": "vite preview --config vite.config.ts",
+    "test": "vitest run --config vitest.config.ts",
     "docs:build": "node scripts/docs.mjs"
   },
   "dependencies": {
-    "three": "^0.170.0",
-    "zod": "^3.24.1"
+    "three": "0.170.0",
+    "zod": "3.25.76"
   },
   "devDependencies": {
     "@types/node": "22.20.5",
-    "@types/three": "^0.170.0",
-    "marked": "15.0.12",
-    "typescript": "^5.7.2",
-    "vite": "^6.0.7",
-    "vitest": "^3.0.5"
+    "@types/three": "0.170.0",
+    "typescript": "5.9.3",
+    "vite": "6.4.4",
+    "vitest": "3.2.7",
+    "marked": "15.0.12"
   }
 }

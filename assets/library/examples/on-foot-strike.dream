@@ -1,0 +1,10 @@
+dream 2;
+material blue(style=toon,colors=[#537eaa,#3c5f87]);
+material skin(style=toon,colors=[#c59774,#a97655]);
+material timber(style=wood,colors=[#92613d,#bd905d]);
+object practice_ball(label="Loose ball"){
+ measure(kind=custom,axis=x,meters=.6);
+ body(interaction=knockable,radius=4,height=8,friction=.7);
+ impact(mode=bounce(restitution=.74,lift=.24));
+ part shell(shape=sphere,material=blue,at=[0,4,0],size=[8,8,8]);
+}

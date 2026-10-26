@@ -1,5 +1,0 @@
-
-> muse-dream@0.1.0 docs:build
-> node scripts/docs.mjs
-
-Built 57 documentation pages in dist-docs/

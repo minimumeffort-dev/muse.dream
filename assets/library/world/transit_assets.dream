@@ -1,0 +1,223 @@
+dream 2;
+material brick(style=grain,colors=[#b17459,#985c48]);
+material redbrick(style=grain,colors=[#9e6053,#bd8170]);
+material plaster(style=toon,colors=[#ddd1b9,#c5b69a]);
+material blue(style=toon,colors=[#9aadaf,#758e98]);
+material ochre(style=toon,colors=[#d4b378,#b9955f]);
+material glass(style=toon,colors=[#6c929d,#42616f]);
+material roof(style=toon,colors=[#535b64,#3b4753]);
+material tile(style=toon,colors=[#aa6b50,#864d3e]);
+material trim(style=toon,colors=[#e5decd,#c5bfae]);
+material wood(style=wood,colors=[#805c40,#aa815a]);
+material dark(style=toon,colors=[#35464c,#28363e]);
+material green(style=toon,colors=[#5e7c73,#405d55]);
+material sign(style=toon,colors=[#e4b948,#c79435]);
+material airport_glass(style=toon,colors=[#7ba5b2,#456a7c],night=#e6bd83);
+object airport_terminal(label="Regional airport terminal"){
+ measure(kind=building,axis=y,meters=7.7);
+ body(interaction=solid,radius=30,height=22);
+ foundation(size=[76,38],color=#a6a79b);
+ contact wall_0(at=[-27,0,-8.5],radius=13,height=20);
+ contact wall_1(at=[-9,0,-8.5],radius=13,height=20);
+ contact wall_2(at=[9,0,-8.5],radius=13,height=20);
+ contact wall_3(at=[27,0,-8.5],radius=13,height=20);
+ contact wall_4(at=[-27,0,8.5],radius=13,height=20);
+ contact wall_5(at=[-9,0,8.5],radius=13,height=20);
+ contact wall_6(at=[9,0,8.5],radius=13,height=20);
+ contact wall_7(at=[27,0,8.5],radius=13,height=20);
+ part walls(shape=box,material=plaster,at=[0,10,0],size=[72,20,34]);
+ part roof(shape=box,material=roof,at=[0,21,0],size=[76,2,38]);
+ part fascia(shape=box,material=green,at=[0,18.8,-17.2],size=[72,2,.6]);
+ repeat bays(index=i,count=6){
+  part glazing(shape=box,material=airport_glass,at=[i*11-27.5,11,-17.15],size=[9.5,12,.5]);
+  part mullion(shape=box,material=trim,at=[i*11-32.5,10,-17.3],size=[.7,18,.7]);
+ }
+ part doors(shape=box,material=dark,at=[0,5,-17.5],size=[9,10,.6]);
+ part door_glass(shape=box,material=airport_glass,at=[0,6,-17.85],size=[7,7,.5]);
+ part porch(shape=box,material=trim,at=[0,.25,-21],size=[36,.5,10]);
+ part canopy(shape=box,material=green,at=[0,9,-21],size=[34,1,9]);
+ repeat columns(index=i,count=2){part column(shape=cylinder,material=trim,at=[i*28-14,4.75,-24],size=[.9,8.5,.9]);}
+ part sign_panel(shape=box,material=dark,at=[0,15,-17.6],size=[22,3,1]);
+ beam aircraft_wing(shape=box,material=sign,from=[-6,15,-18.2],to=[6,15,-18.2],width=.5,depth=.5);
+ beam aircraft_body(shape=box,material=sign,from=[0,14,-18.2],to=[0,16,-18.2],width=.5,depth=.5);
+}
+object airport_hangar(label="Aircraft maintenance hangar"){
+ measure(kind=building,axis=y,meters=10.8);
+ body(interaction=solid,radius=30,height=36);
+ foundation(size=[65,54],color=#93998e);
+ contact wall_0(at=[-22.5,0,-12.5],radius=14.6,height=24);
+ contact wall_1(at=[-7.5,0,-12.5],radius=14.6,height=24);
+ contact wall_2(at=[7.5,0,-12.5],radius=14.6,height=24);
+ contact wall_3(at=[22.5,0,-12.5],radius=14.6,height=24);
+ contact wall_4(at=[-22.5,0,12.5],radius=14.6,height=24);
+ contact wall_5(at=[-7.5,0,12.5],radius=14.6,height=24);
+ contact wall_6(at=[7.5,0,12.5],radius=14.6,height=24);
+ contact wall_7(at=[22.5,0,12.5],radius=14.6,height=24);
+ part walls(shape=box,material=blue,at=[0,12,0],size=[60,24,50]);
+ part roof(shape=prism,material=roof,at=[0,30,0],size=[64,12,53],outline=[[0,0],[1,0],[1,.35],[.5,1],[0,.35]]);
+ repeat doors(index=i,count=2){part door(shape=box,material=trim,at=[i*27-13.5,10,-25.2],size=[26.5,20,.7]);}
+ repeat ribs(index=i,count=6){part rib(shape=box,material=dark,at=[i*10-25,12,-25.65],size=[.5,23,.5]);}
+ part lintel(shape=box,material=dark,at=[0,22,-25.3],size=[59,2,1]);
+ part crew_door(shape=box,material=dark,at=[0,3,25.2],size=[4,6,.7]);
+ part crew_step(shape=box,material=trim,at=[0,.25,26],size=[6,.5,3]);
+}
+object airport_tower(label="Airport control tower"){
+ measure(kind=building,axis=y,meters=18);
+ body(interaction=solid,radius=14,height=48);
+ foundation(size=[28,28],color=#a1a397);
+ contact shaft_body(at=[0,0,0],radius=8.5,height=36);
+ contact cabin_body(at=[0,36,0],radius=15.6,height=6);
+ part shaft(shape=box,material=plaster,at=[0,18,0],size=[12,36,12]);
+ part cabin(shape=box,material=green,at=[0,39,0],size=[22,6,22]);
+ part roof(shape=box,material=roof,at=[0,42.75,0],size=[24,1.5,24]);
+ repeat windows(index=i,count=2){
+  let sign(value=i*2-1);
+  part front_glass(shape=box,material=airport_glass,at=[0,39,sign*11.1],size=[20,4,.5]);
+  part side_glass(shape=box,material=airport_glass,at=[sign*11.1,39,0],size=[.5,4,20]);
+ }
+ part antenna(shape=cylinder,material=dark,at=[0,45.5,0],size=[.5,5,.5]);
+ part base(shape=box,material=trim,at=[0,.3,0],size=[28,.6,28]);
+ part door(shape=box,material=dark,at=[0,3,-6.2],size=[3,6,.5]);
+}
+component road_axle(params=[x,r]){
+  part axle(shape=cylinder,material=dark,at=[x,r,0],size=[1.1,13.3,1.1],rot_deg=[90,0,0]);
+  repeat sides(index=s,count=2){
+    part tire(shape=cylinder,material=dark,at=[x,r,(s*2-1)*6.4],size=[r*2,1.5,r*2],rot_deg=[90,0,0],motion=roll(axis=y,radius=r));
+    part hub(shape=cylinder,material=trim,at=[x,r,(s*2-1)*6.4],size=[r*1.15,1.8,r*1.15],rot_deg=[90,0,0],motion=roll(axis=y,radius=r));
+  }
+}
+component rail_axle(params=[x,r]){
+  repeat sides(index=s,count=2){
+    part wheel(shape=cylinder,material=dark,at=[x,r,(s*2-1)*6.4],size=[r*2,1.5,r*2],rot_deg=[90,0,0],motion=roll(axis=y,radius=r));
+    part hub(shape=cylinder,material=trim,at=[x,r,(s*2-1)*6.4],size=[r*1.25,1.8,r*1.25],rot_deg=[90,0,0],motion=roll(axis=y,radius=r));
+  }
+}
+component passenger_door(params=[w,h]){
+  voxels leaf(material=dark,at=[0,0,0],size=[w,h,.5],grid=[12,28,1]){
+    fill frame(from=[0,0,0],to=[12,28,1]);
+    repeat leaves(index=i,count=2){
+      cut upper_pane(from=[i*6+1,9,0],to=[i*6+5,26,1]);
+      cut lower_panel(from=[i*6+1,2,0],to=[i*6+5,7,1]);
+    }
+  }
+}
+object city_bus(label="City bus"){
+ measure(kind=bus,axis=x,meters=9.4);
+ body(interaction=solid,radius=15,height=17);
+ rideable(at=[0,8.7,0]);
+ contact shell_0(at=[-17,0,0],radius=7,height=17);
+ contact shell_1(at=[-12.1429,0,0],radius=7,height=17);
+ contact shell_2(at=[-7.2857,0,0],radius=7,height=17);
+ contact shell_3(at=[-2.4286,0,0],radius=7,height=17);
+ contact shell_4(at=[2.4286,0,0],radius=7,height=17);
+ contact shell_5(at=[7.2857,0,0],radius=7,height=17);
+ contact shell_6(at=[12.1429,0,0],radius=7,height=17);
+ contact shell_7(at=[17,0,0],radius=7,height=17);
+  part shell(shape=prism,material=ochre,at=[0,8,0],size=[46,12,13],outline=[[0,0],[0.13043,0],[0.13043,0.05833],[0.14954,0.23511],[0.19565,0.30833],[0.24177,0.23511],[0.26087,0.05833],[0.26087,0],[0.73913,0],[0.73913,0.05833],[0.75823,0.23511],[0.80435,0.30833],[0.85046,0.23511],[0.86957,0.05833],[0.86957,0],[1,0],[1,0.41667],[0.97391,1],[0.01565,1],[0,0.66667]]);
+  part roof(shape=box,material=trim,at=[0,14.5,0],size=[45,1,12]);
+  part windscreen(shape=box,material=glass,at=[22.54286,10.6,0],size=[0.5,6,10.7],rot_deg=[0,0,9.72758]);
+  part rear_window(shape=box,material=glass,at=[-23.1,10.6,0],size=[0.5,5,10.7]);
+  voxels side_glazing_l(material=glass,at=[0,10.4,-6.6],size=[37,5,.5],grid=[30,10,1]){repeat windows(index=i,count=6){fill pane(from=[i*5,0,0],to=[i*5+4,10,1]);}}
+  voxels side_glazing_r(material=glass,at=[0,10.4,6.6],size=[37,5,.5],grid=[30,10,1]){repeat windows(index=i,count=6){fill pane(from=[i*5,0,0],to=[i*5+4,10,1]);}}
+  use axle_0(component=road_axle,args=[-14,2.7]);
+  use axle_1(component=road_axle,args=[14,2.7]);
+  part chassis(shape=box,material=dark,at=[0,3,0],size=[41,2,10]);
+  use door_0(component=passenger_door,args=[4.4,11],at=[20,7.7,6.75]);
+  use door_1(component=passenger_door,args=[4.4,11],at=[-2,7.7,6.75]);
+  part headlight_m1(shape=box,material=sign,at=[23.1,5,-4.3],size=[0.5,1.8,2]);
+  part tail_light_m1(shape=box,material=redbrick,at=[-23.1,5.5,-4.5],size=[0.5,2,1.5]);
+  beam mirror_arm_m1(shape=cylinder,material=dark,from=[20,11,-6.5],to=[22,11.5,-6.8],width=0.5,depth=0.5);
+  part mirror_m1(shape=box,material=dark,at=[22,11,-6.9],size=[0.8,2,0.5]);
+  part headlight_1(shape=box,material=sign,at=[23.1,5,4.3],size=[0.5,1.8,2]);
+  part tail_light_1(shape=box,material=redbrick,at=[-23.1,5.5,4.5],size=[0.5,2,1.5]);
+  beam mirror_arm_1(shape=cylinder,material=dark,from=[20,11,6.5],to=[22,11.5,6.8],width=0.5,depth=0.5);
+  part mirror_1(shape=box,material=dark,at=[22,11,6.9],size=[0.8,2,0.5]);
+  part destination(shape=box,material=dark,at=[22.4,14.1,0],size=[0.5,1.2,9]);
+  part air_conditioner(shape=box,material=roof,at=[-5,16,0],size=[13,2,8]);
+  part grille(shape=box,material=dark,at=[23.05,4,0],size=[0.5,1.1,6]);
+}
+object city_tram(label="City tram"){
+ measure(kind=tram,axis=x,meters=16);
+ body(interaction=solid,radius=15,height=17);
+ rideable(at=[0,8.7,0]);
+ contact shell_0(at=[-33.5,0,0],radius=7,height=17);
+ contact shell_1(at=[-23.9286,0,0],radius=7,height=17);
+ contact shell_2(at=[-14.3571,0,0],radius=7,height=17);
+ contact shell_3(at=[-4.7857,0,0],radius=7,height=17);
+ contact shell_4(at=[4.7857,0,0],radius=7,height=17);
+ contact shell_5(at=[14.3571,0,0],radius=7,height=17);
+ contact shell_6(at=[23.9286,0,0],radius=7,height=17);
+ contact shell_7(at=[33.5,0,0],radius=7,height=17);
+  part shell(shape=prism,material=green,at=[0,8.25,0],size=[79,11.5,13],outline=[[0,0],[0.09114,0],[0.10253,0.30435],[0.28987,0.30435],[0.30127,0],[0.69873,0],[0.71013,0.30435],[0.89747,0.30435],[0.90886,0],[1,0],[1,0.3913],[0.94937,1],[0.03038,1],[0,0.65217]]);
+  part roof(shape=box,material=trim,at=[0,14.5,0],size=[78,1,12]);
+  part windscreen(shape=box,material=glass,at=[37.60286,10.6,0],size=[0.5,6.3,10.7],rot_deg=[0,0,29.74488]);
+  part rear_cab(shape=box,material=glass,at=[-37.60286,10.6,0],size=[0.5,6.3,10.7],rot_deg=[0,0,-29.74488]);
+  voxels side_glazing_l(material=glass,at=[0,10.4,-6.6],size=[64,5,.5],grid=[32,10,1]){repeat windows(index=i,count=8){fill pane(from=[i*4,0,0],to=[i*4+3,10,1]);}}
+  voxels side_glazing_r(material=glass,at=[0,10.4,6.6],size=[64,5,.5],grid=[32,10,1]){repeat windows(index=i,count=8){fill pane(from=[i*4,0,0],to=[i*4+3,10,1]);}}
+  use axle_0(component=rail_axle,args=[-29,2]);
+  use axle_1(component=rail_axle,args=[-19,2]);
+  use axle_2(component=rail_axle,args=[19,2]);
+  use axle_3(component=rail_axle,args=[29,2]);
+  part bogie_0(shape=box,material=dark,at=[-24,4,0],size=[14,5,13]);
+  part bogie_1(shape=box,material=dark,at=[24,4,0],size=[14,5,13]);
+  voxels doors_l(material=dark,at=[0,8,-6.75],size=[67,11,.5],grid=[32,28,1]){repeat doors(index=i,count=2){fill surround(from=[i*18+5,0,0],to=[i*18+9,28,1]);cut glass(from=[i*18+6,9,0],to=[i*18+8,26,1]);}}
+  voxels doors_r(material=dark,at=[0,8,6.75],size=[67,11,.5],grid=[32,28,1]){repeat doors(index=i,count=2){fill surround(from=[i*18+5,0,0],to=[i*18+9,28,1]);cut glass(from=[i*18+6,9,0],to=[i*18+8,26,1]);}}
+  voxels end_lights(material=sign,at=[0,5,0],size=[79.7,1.5,10],grid=[32,3,20]){repeat ends(index=e,count=2){repeat lenses(index=l,count=2){fill lens(from=[e*31,0,l*16],to=[e*31+1,3,l*16+4]);}}}
+  beam pantograph_lower(shape=cylinder,material=dark,from=[-12,15,0],to=[-5,18.5,0],width=0.6,depth=0.6);
+  beam pantograph_upper(shape=cylinder,material=dark,from=[-5,18.5,0],to=[-12,22,0],width=0.6,depth=0.6);
+  beam collector(shape=cylinder,material=dark,from=[-12,22,-5],to=[-12,22,5],width=0.7,depth=0.7);
+  part insulator(shape=cylinder,material=roof,at=[-12,15.4,0],size=[2,1,2]);
+}
+object regional_train(label="Regional electric train"){
+ measure(kind=train,axis=x,meters=20);
+ body(interaction=solid,radius=15,height=17);
+ rideable(at=[0,8.7,0]);
+ contact shell_0(at=[-43.5,0,0],radius=7,height=17);
+ contact shell_1(at=[-31.0714,0,0],radius=7,height=17);
+ contact shell_2(at=[-18.6429,0,0],radius=7,height=17);
+ contact shell_3(at=[-6.2143,0,0],radius=7,height=17);
+ contact shell_4(at=[6.2143,0,0],radius=7,height=17);
+ contact shell_5(at=[18.6429,0,0],radius=7,height=17);
+ contact shell_6(at=[31.0714,0,0],radius=7,height=17);
+ contact shell_7(at=[43.5,0,0],radius=7,height=17);
+  part shell(shape=prism,material=blue,at=[0,9.25,0],size=[99,9.5,13],outline=[[0,0],[0.10303,0],[0.11212,0.15789],[0.26162,0.15789],[0.27071,0],[0.72929,0],[0.73838,0.15789],[0.88788,0.15789],[0.89697,0],[1,0],[1,0.26316],[0.93434,1],[0.03939,1],[0,0.57895]]);
+  part roof(shape=box,material=trim,at=[0,14.5,0],size=[98,1,12]);
+  part windscreen(shape=box,material=glass,at=[46.31714,10.6,0],size=[0.5,6.3,10.7],rot_deg=[0,0,42.8789]);
+  part rear_cab(shape=box,material=glass,at=[-46.31714,10.6,0],size=[0.5,6.3,10.7],rot_deg=[0,0,-42.8789]);
+  voxels side_glazing_l(material=glass,at=[0,10.4,-6.6],size=[84,5,.5],grid=[30,10,1]){repeat windows(index=i,count=10){fill pane(from=[i*3,0,0],to=[i*3+2,10,1]);}}
+  voxels side_glazing_r(material=glass,at=[0,10.4,6.6],size=[84,5,.5],grid=[30,10,1]){repeat windows(index=i,count=10){fill pane(from=[i*3,0,0],to=[i*3+2,10,1]);}}
+  use axle_0(component=rail_axle,args=[-36,2.5]);
+  use axle_1(component=rail_axle,args=[-26,2.5]);
+  use axle_2(component=rail_axle,args=[26,2.5]);
+  use axle_3(component=rail_axle,args=[36,2.5]);
+  part bogie_0(shape=box,material=dark,at=[-31,4,0],size=[14,5,13]);
+  part bogie_1(shape=box,material=dark,at=[31,4,0],size=[14,5,13]);
+  voxels doors_l(material=dark,at=[0,8,-6.75],size=[87,11,.5],grid=[32,28,1]){repeat doors(index=i,count=2){fill surround(from=[i*18+5,0,0],to=[i*18+9,28,1]);cut glass(from=[i*18+6,9,0],to=[i*18+8,26,1]);}}
+  voxels doors_r(material=dark,at=[0,8,6.75],size=[87,11,.5],grid=[32,28,1]){repeat doors(index=i,count=2){fill surround(from=[i*18+5,0,0],to=[i*18+9,28,1]);cut glass(from=[i*18+6,9,0],to=[i*18+8,26,1]);}}
+  voxels end_lights(material=sign,at=[0,5,0],size=[99.7,1.5,10],grid=[32,3,20]){repeat ends(index=e,count=2){repeat lenses(index=l,count=2){fill lens(from=[e*31,0,l*16],to=[e*31+1,3,l*16+4]);}}}
+  part coupler_m1(shape=box,material=dark,at=[-49,3.8,0],size=[1.5,1.5,3]);
+  part coupler_1(shape=box,material=dark,at=[49,3.8,0],size=[1.5,1.5,3]);
+  part roof_plant(shape=box,material=roof,at=[-8,16,0],size=[19,2,8]);
+  beam aerial(shape=cylinder,material=dark,from=[5,15,0],to=[7,16.7,0],width=0.5,depth=0.5);
+}
+object transit_shelter(label="Transit shelter"){
+ measure(kind=custom,axis=y,meters=2.8);
+ body(interaction=solid,radius=12,height=14);
+ contact left_post(at=[-9,0,0],radius=1,height=13);
+ contact right_post(at=[9,0,0],radius=1,height=13);
+ contact rear_0(at=[-8,1,3],radius=2.1,height=12);
+ contact rear_1(at=[-4,1,3],radius=2.1,height=12);
+ contact rear_2(at=[0,1,3],radius=2.1,height=12);
+ contact rear_3(at=[4,1,3],radius=2.1,height=12);
+ contact rear_4(at=[8,1,3],radius=2.1,height=12);
+ contact roof_clearance(at=[0,13,0],radius=12.1,height=1);
+ part base(shape=box,material=trim,at=[0,.25,0],size=[20,.5,8]);
+ part roof(shape=box,material=green,at=[0,13.5,0],size=[22,1,10]);
+ repeat posts(index=p,count=2){part post(shape=box,material=dark,at=[p*18-9,6.5,0],size=[1,13,1]);}
+ part bench(shape=box,material=wood,at=[0,2.8,1],size=[14,1,3]);
+ repeat bench_supports(index=p,count=2){
+  beam leg(shape=box,material=dark,from=[p*10-5,.5,1],to=[p*10-5,2.5,1],width=.6,depth=2);
+ }
+ part rear(shape=box,material=glass,at=[0,7,3],size=[18,12,.5]);
+ part board(shape=box,material=sign,at=[8,10,-.6],size=[2.5,4,.5]);
+}

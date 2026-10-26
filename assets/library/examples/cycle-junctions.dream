@@ -1,0 +1,7 @@
+dream 2;
+material red(style=toon,colors=[#b85a44,#b85a44]);
+object car(label="Town car"){
+  measure(kind=car,axis=x,meters=4);
+  body(interaction=solid,radius=11,height=15);
+  part bodywork(shape=box,material=red,at=[0,8,0],size=[40,12,18]);
+}

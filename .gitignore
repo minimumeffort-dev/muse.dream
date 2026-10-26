@@ -1,16 +1,18 @@
 node_modules/
-.npm-cache/
 dist/
+dist-docs/
+.cache/
+.npm-cache/
 .vercel/
-.DS_Store
 .env
 .env.*
 !.env.example
 *.local
-
-dist-docs/
-
-# Rebuild Dreams Lab design previews with npm run lab:design.
-dreams-lab/index.html
-dreams-lab/design/
-dreams-lab/.impeccable/
+.DS_Store
+index.html
+design/
+.impeccable/
+evidence/
+media/
+screenshots/
+captures/

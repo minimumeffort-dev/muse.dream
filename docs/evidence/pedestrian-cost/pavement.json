@@ -1,6 +1,0 @@
-{
-  "baselineCommit": "5091c75c307b1d09c81161e9dcd68fb5520c8743",
-  "comparisons": 80000,
-  "resultHash": "a856bbe41c05b460d6616ccbff633ddd5f79f5c8aa70a4a68a539d2e1df63b49",
-  "description": "Seeded whole-world pavement and rotated, concave and thin-gap boundary queries; no renderer or timing claim."
-}

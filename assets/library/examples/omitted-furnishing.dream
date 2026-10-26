@@ -1,0 +1,12 @@
+dream 2;
+material steel(style=toon,colors=[#46535d,#62727e]);
+object lamp(label="Lamp"){
+  measure(kind=custom,axis=y,meters=4);
+  body(interaction=solid,radius=4,height=40);
+  part pole(shape=box,material=steel,at=[0,20,0],size=[1,40,1]);
+}
+object bird(label="Bird"){
+  measure(kind=custom,axis=z,meters=1);
+  body(interaction=decor,radius=4,height=4);
+  part wings(shape=box,material=steel,at=[0,2,0],size=[3,1,10]);
+}

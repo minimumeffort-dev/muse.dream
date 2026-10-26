@@ -1,0 +1,2279 @@
+{
+  "version": 1,
+  "origin": "minimumeffort-dev/muse.dream",
+  "engineRevision": "f5d9703ea8b34e3b3480ae84f7542c4c4682d43d",
+  "catalogs": [
+    {
+      "path": "core/dream-creations.dream",
+      "moduleId": "dream_creations",
+      "originalPath": "src/scene/dream-creations.dream",
+      "originalHash": "9ae69b0833f7fd88cb755a915a66b84254a09db0aeba9327782b273f9aba196e",
+      "sourceHash": "9ae69b0833f7fd88cb755a915a66b84254a09db0aeba9327782b273f9aba196e",
+      "sourceObjectCount": 7,
+      "objectCount": 7,
+      "objects": [
+        "orchard_cart",
+        "field_naturalist",
+        "meadow_tortoise",
+        "bakery_basket",
+        "wild_sunflowers",
+        "trail_cairn",
+        "wayside_bench"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "core/ground-cover.dream",
+      "moduleId": "ground_cover",
+      "originalPath": "src/scene/ground-cover.dream",
+      "originalHash": "4e5343642ae5ab1bf05d5b989d179f8d0b85b71c113ab4024fa0fb65ad550901",
+      "sourceHash": "4e5343642ae5ab1bf05d5b989d179f8d0b85b71c113ab4024fa0fb65ad550901",
+      "sourceObjectCount": 3,
+      "objectCount": 3,
+      "objects": [
+        "grass_sprig",
+        "meadow_bloom",
+        "planted_pair"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "core/impact-creations.dream",
+      "moduleId": "impact_creations",
+      "originalPath": "src/scene/impact-creations.dream",
+      "originalHash": "5385796d2a14e5ba25aae617f6912652a71083061813f9ff9ae392285f7f17b4",
+      "sourceHash": "73cf384b9349f41e1e8c82b88278ce9a0f18ea230387918635d12950c2a2ecaa",
+      "sourceObjectCount": 4,
+      "objectCount": 4,
+      "objects": [
+        "festival_ball",
+        "breakaway_table",
+        "produce_crate",
+        "terracotta_planter"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "core/interactive-world.dream",
+      "moduleId": "interactive_world",
+      "originalPath": "src/scene/interactive-world.dream",
+      "originalHash": "c9216d8b6f9a313ff4d8798e587ee6784aa7a0a53b4531160596ffa32b255ab3",
+      "sourceHash": "78c79a54d1447c6b7037dd36ed81199c843e11da4bfe542ac49666c697bbc158",
+      "sourceObjectCount": 9,
+      "objectCount": 9,
+      "objects": [
+        "meadow_locomotive",
+        "passenger_carriage",
+        "cloudhopper_plane",
+        "willow_launch",
+        "meadow_bicycle",
+        "maple_skateboard",
+        "meadow_station_2",
+        "lakeside_boathouse",
+        "mossy_passage"
+      ],
+      "dependencies": [
+        "city_people"
+      ],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "world/architecture.dream",
+      "moduleId": "architecture",
+      "originalPath": "src/scene/world/architecture.dream",
+      "originalHash": "68e570c705183e0f166849a93cf9b3b56e2e175c2c210e4b43ef631d7b1a3b32",
+      "sourceHash": "446e086beb175d82f07b71dcef08ec1815b6a1faa1423b91467439067fd41c74",
+      "sourceObjectCount": 11,
+      "objectCount": 11,
+      "objects": [
+        "brick_terrace",
+        "ochre_terrace",
+        "blue_terrace",
+        "garden_house",
+        "courtyard_house",
+        "brick_apartments",
+        "corner_apartments",
+        "canal_apartments",
+        "corner_shop",
+        "bakery",
+        "office_studios"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "world/city_people.dream",
+      "moduleId": "city_people",
+      "originalPath": "src/scene/world/city_people.dream",
+      "originalHash": "b5fe3db0510ec39eb8bad5b39e8c15cfbc27d8f1546c1dae3a83e3eba8de08d8",
+      "sourceHash": "c062f68a7f5e8dadf3f4b98e580119ec050fc322c35984f1ef160080e4f63d31",
+      "sourceObjectCount": 16,
+      "objectCount": 16,
+      "objects": [
+        "commuter",
+        "health_worker",
+        "market_vendor",
+        "teacher",
+        "river_shopper",
+        "campus_student",
+        "park_neighbor",
+        "city_resident",
+        "home_athlete",
+        "home_athlete_warm",
+        "away_athlete",
+        "keeper_athlete",
+        "football_player",
+        "basketball_player",
+        "traveler",
+        "walker"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "world/civic_assets.dream",
+      "moduleId": "civic_assets",
+      "originalPath": "src/scene/world/civic_assets.dream",
+      "originalHash": "87a4962b1bb0a3b84632e99407c7a125f59db3457cfdc30fd61c0ecf48d43f5c",
+      "sourceHash": "87a4962b1bb0a3b84632e99407c7a125f59db3457cfdc30fd61c0ecf48d43f5c",
+      "sourceObjectCount": 13,
+      "objectCount": 13,
+      "objects": [
+        "east_medical_center",
+        "hospital",
+        "primary_school",
+        "south_school",
+        "library",
+        "technical_college",
+        "workshop",
+        "harbor_market",
+        "sports_pavilion",
+        "station_hall",
+        "east_station",
+        "boathouse",
+        "market_stall"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "world/creations.dream",
+      "moduleId": "creations",
+      "originalPath": "src/scene/world/creations.dream",
+      "originalHash": "57599a9798b0c3c82f2e1fb5175e83435462a4c9a949f8fdb25f97ef306d9029",
+      "sourceHash": "be7fd726147b4ff04c1b4a79de56226049e3f38756e60eae10a91c5f5a4d4582",
+      "sourceObjectCount": 7,
+      "objectCount": 7,
+      "objects": [
+        "waving_baker",
+        "crusty_bread",
+        "harvest_bowl",
+        "mossy_granite",
+        "orchard_picnic",
+        "weathered_boulder",
+        "exposed_stone_slab"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "world/destructible.dream",
+      "moduleId": "destructible",
+      "originalPath": "src/scene/world/destructible.dream",
+      "originalHash": "cd884788de57bf3156612a7a481cc77c87d731166c5308b3d932e05af71be79d",
+      "sourceHash": "42cd4fb7734c4d78c6f2852e267156535045da7e8da9b7eafb9f1107b96df4e8",
+      "sourceObjectCount": 7,
+      "objectCount": 7,
+      "objects": [
+        "leaning_birch",
+        "silver_spruce",
+        "amber_sapling",
+        "slatted_bench",
+        "garden_wall",
+        "commuter_home",
+        "timber_settee"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "world/fauna.dream",
+      "moduleId": "fauna",
+      "originalPath": "src/scene/world/fauna.dream",
+      "originalHash": "a8edead6b6d072d49568ef16c140dcfe3ad68458347446dd18da2282fd080554",
+      "sourceHash": "bee52fbd56856d815ea2b832d20afe15d3bf13dd4dafc0dab435b295298cc2df",
+      "sourceObjectCount": 8,
+      "objectCount": 8,
+      "objects": [
+        "roe_deer",
+        "meadow_hare",
+        "copper_fox",
+        "river_gull",
+        "red_kite",
+        "neighborhood_dog",
+        "garden_cat",
+        "perched_sparrow"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "world/flora.dream",
+      "moduleId": "flora",
+      "originalPath": "src/scene/world/flora.dream",
+      "originalHash": "69c8afbc6f5b386016a67cb1e94d98f6f7508a2eef4a2c1b22f9acde683c8933",
+      "sourceHash": "7bdaf2efecaca54e5c0c4cde0b27d269cfbd4f701aa6d0d7789f9dd03c237fcc",
+      "sourceObjectCount": 10,
+      "objectCount": 10,
+      "objects": [
+        "woodland_fern",
+        "broadleaf_dock",
+        "foxglove",
+        "wild_lavender",
+        "river_reeds",
+        "meadow_daisies",
+        "hazel_bush",
+        "weeping_willow",
+        "meadow_grass",
+        "blue_hydrangea"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "experimental/home_assets.dream",
+      "moduleId": "home_assets",
+      "originalPath": "src/scene/world/home_assets.dream",
+      "originalHash": "bb34714337b82ca85db8e583c5dba426cff72c87074878fa56e0b9646e984342",
+      "sourceHash": "bb34714337b82ca85db8e583c5dba426cff72c87074878fa56e0b9646e984342",
+      "sourceObjectCount": 2,
+      "objectCount": 2,
+      "objects": [
+        "timber_bed",
+        "bedside_lamp"
+      ],
+      "dependencies": [],
+      "compatibility": "experimental",
+      "reason": "Dream 8:10: expected car|pickup|truck|plane|tree|person|bicycle|skateboard|bench|table|building|train|bus|tram|boat|food|lamp|custom"
+    },
+    {
+      "path": "world/landmarks.dream",
+      "moduleId": "landmarks",
+      "originalPath": "src/scene/world/landmarks.dream",
+      "originalHash": "e3673ea78e15621efcc10fba1fa35a45f6d55d1fac678ecb1f70f959300c2add",
+      "sourceHash": "e3673ea78e15621efcc10fba1fa35a45f6d55d1fac678ecb1f70f959300c2add",
+      "sourceObjectCount": 14,
+      "objectCount": 14,
+      "objects": [
+        "castle",
+        "mushroom",
+        "mushroom_rover",
+        "oak",
+        "pine",
+        "boulders",
+        "little_rally_car",
+        "hillside_cottage",
+        "windmill",
+        "crystal_garden",
+        "ancient_ruins",
+        "cactus",
+        "amber_tree",
+        "town_car"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "world/market_interior.dream",
+      "moduleId": "market_interior",
+      "originalPath": "src/scene/world/market_interior.dream",
+      "originalHash": "f7998c46513cd8650d33eb0a9b89624819848fb21a17cd4bf5dc4b579d6adf7f",
+      "sourceHash": "f7998c46513cd8650d33eb0a9b89624819848fb21a17cd4bf5dc4b579d6adf7f",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "market_hall"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "world/nature.dream",
+      "moduleId": "nature",
+      "originalPath": "src/scene/world/nature.dream",
+      "originalHash": "dcedc1fc3663e2bdeee2db26963d426a26aeda6d0e83a0192616d2014dba82cb",
+      "sourceHash": "993d825e660e3c9c7eaaebf5f855ab7bd6ab671b660259629029603787d02b79",
+      "sourceObjectCount": 10,
+      "objectCount": 10,
+      "objects": [
+        "birch",
+        "silver_fir",
+        "young_rowan",
+        "wild_shrub",
+        "juniper_scrub",
+        "standing_deadwood",
+        "fallen_log",
+        "timber_barn",
+        "village_well",
+        "old_apple_tree"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "world/sports_assets.dream",
+      "moduleId": "sports_assets",
+      "originalPath": "src/scene/world/sports_assets.dream",
+      "originalHash": "2dcc6284ede46fc213db8ec67c0a9e6add8170752bfc677da117355304dc9ba7",
+      "sourceHash": "2dcc6284ede46fc213db8ec67c0a9e6add8170752bfc677da117355304dc9ba7",
+      "sourceObjectCount": 8,
+      "objectCount": 8,
+      "objects": [
+        "football",
+        "basketball",
+        "football_goal",
+        "basketball_hoop",
+        "golf_pin",
+        "town_walker",
+        "park_walker",
+        "park_visitor"
+      ],
+      "dependencies": [
+        "city_people"
+      ],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "world/station_vehicles.dream",
+      "moduleId": "station_vehicles",
+      "originalPath": "src/scene/world/station_vehicles.dream",
+      "originalHash": "76f7c556ea7dfc262cce252e69226c0fa068a60bc5e9c9c93d15020556db15b4",
+      "sourceHash": "76f7c556ea7dfc262cce252e69226c0fa068a60bc5e9c9c93d15020556db15b4",
+      "sourceObjectCount": 2,
+      "objectCount": 2,
+      "objects": [
+        "station_taxi",
+        "station_cargo_van"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "world/street_assets.dream",
+      "moduleId": "street_assets",
+      "originalPath": "src/scene/world/street_assets.dream",
+      "originalHash": "3d73f12f3a4982d04809236473db20d453b8c6102c7e8ebeca2b811dee051993",
+      "sourceHash": "ef6617dbac7073433a428ec8960b057b9fd6f2adf1d71e09154a8c431ff9abed",
+      "sourceObjectCount": 10,
+      "objectCount": 10,
+      "objects": [
+        "avenue_lamp",
+        "neighborhood_lamp",
+        "planted_tub",
+        "verge_flowers",
+        "city_scooter",
+        "city_pigeon",
+        "city_hatchback",
+        "delivery_van",
+        "field_pickup",
+        "parcel_truck"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "world/tower_assets.dream",
+      "moduleId": "tower_assets",
+      "originalPath": "src/scene/world/tower_assets.dream",
+      "originalHash": "131a12140ac7268e05d151eebe004ccd84a7eb82c1a31c6a29bd9bcfaf457a90",
+      "sourceHash": "e47cd0aeaea59075630ae00c3dad458809c4e895c243831dffad70e067bbb0ea",
+      "sourceObjectCount": 3,
+      "objectCount": 3,
+      "objects": [
+        "lounge_bookcase",
+        "station_residences",
+        "station_offices"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "world/transit_assets.dream",
+      "moduleId": "transit_assets",
+      "originalPath": "src/scene/world/transit_assets.dream",
+      "originalHash": "6e9eee9e47547ddfe2906fcf5b8e5b3aaf2ea946e3579b126b551afe3930c212",
+      "sourceHash": "dcf3a87773179d022c9fc5192cc0e8d4e755b4fc5904ff2342acd22d3af9d370",
+      "sourceObjectCount": 7,
+      "objectCount": 7,
+      "objects": [
+        "airport_terminal",
+        "airport_hangar",
+        "airport_tower",
+        "city_bus",
+        "city_tram",
+        "regional_train",
+        "transit_shelter"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "world/workshop_architecture.dream",
+      "moduleId": "workshop_architecture",
+      "originalPath": "src/scene/world/workshop_architecture.dream",
+      "originalHash": "7762e25e6a0ccf5f33f03ed6223f2f65b43fff149367bd91aa13d45289f227a3",
+      "sourceHash": "e62bfe94ddc317f0eb40cf5a20c341f4c7be1de37ab720657d14ef0006072f7d",
+      "sourceObjectCount": 2,
+      "objectCount": 2,
+      "objects": [
+        "timber_workshop",
+        "brick_bakehouse"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/airport-stop.dream",
+      "moduleId": "airport_stop",
+      "originalPath": "docs/examples/airport-stop.dream",
+      "originalHash": "85505483048a6a4b9688f12101bed47607f1839bb0918f2655e8e39ab87935a2",
+      "sourceHash": "329a3a94091853a6f83c78b3e3c5ad9c2e1dc7198d58eda9dfb492a5fda6eb61",
+      "sourceObjectCount": 5,
+      "objectCount": 4,
+      "objects": [
+        "car",
+        "shelter",
+        "bus",
+        "east_medical_center"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible",
+      "duplicates": [
+        {
+          "object": "airport_terminal",
+          "catalog": "world/transit_assets.dream",
+          "catalogObject": "airport_terminal"
+        }
+      ]
+    },
+    {
+      "path": "examples/ambient-wildlife.dream",
+      "moduleId": "ambient_wildlife",
+      "originalPath": "docs/examples/ambient-wildlife.dream",
+      "originalHash": "715059040b261fc74542b69435c0bf416edebc0f0316485e0da5d3b7e37f3f4a",
+      "sourceHash": "143538ec22334c866f84e1375b5924fa8c9d967d382335221166c7366e3f7c57",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "gull"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/bouncing-ball.dream",
+      "moduleId": "bouncing_ball",
+      "originalPath": "docs/examples/bouncing-ball.dream",
+      "originalHash": "209ef0710a22404891487355b00b261ecac777dd01aedcef4be43a4e363b075f",
+      "sourceHash": "209ef0710a22404891487355b00b261ecac777dd01aedcef4be43a4e363b075f",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "ball"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/breakable-bench.dream",
+      "moduleId": "breakable_bench",
+      "originalPath": "docs/examples/breakable-bench.dream",
+      "originalHash": "56551c5657d829cd0cd5e814fed6a296074c011160abccc2f342061d37fc7bc6",
+      "sourceHash": "56551c5657d829cd0cd5e814fed6a296074c011160abccc2f342061d37fc7bc6",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "park_bench"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/business-ownership.dream",
+      "moduleId": "business_ownership",
+      "originalPath": "docs/examples/business-ownership.dream",
+      "originalHash": "69b27767d8812998121504ca6e680c1a062cebb97261be7673a63002569fcbbf",
+      "sourceHash": "a81aea9f3bc037187d5a3631ec385ed1f4e78eef761c08228624413ff0b1f7c7",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "pedestrian"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/city-tree-replanting.dream",
+      "moduleId": "city_tree_replanting",
+      "originalPath": "docs/examples/city-tree-replanting.dream",
+      "originalHash": "a32c11aea42e9bae55c9ee41186758f5f178255f9524c3c93039ff589ddb3954",
+      "sourceHash": "068e935003f004200a9c7e940b15fb75dae8fbe681d77a6765070f2ecadedbc9",
+      "sourceObjectCount": 3,
+      "objectCount": 2,
+      "objects": [
+        "rowan",
+        "crate"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "path": "examples/companion-meals.dream",
+      "moduleId": "companion_meals",
+      "originalPath": "docs/examples/companion-meals.dream",
+      "originalHash": "ac363250244b2b874c4bec6645fcd1a467f24da3e2755e80eaf3010ac6ce5884",
+      "sourceHash": "a2a7c6aff1c44f17413a7dc4ff00103571faa216dcd6daa62a9f0a41c0b3e571",
+      "sourceObjectCount": 2,
+      "objectCount": 2,
+      "objects": [
+        "pedestrian",
+        "slatted_bench"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/connected-city.dream",
+      "moduleId": "connected_city",
+      "originalPath": "docs/examples/connected-city.dream",
+      "originalHash": "b6c185c589d147e7564dae2ccc18cff0e59d49d917dd20f7b33c6a45d8c96d86",
+      "sourceHash": "b95f0bf8f645533d9d039df5321864e7fad42a6eb65155cf24eea718976a7159",
+      "sourceObjectCount": 5,
+      "objectCount": 4,
+      "objects": [
+        "car",
+        "house",
+        "bus",
+        "person"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible",
+      "duplicates": [
+        {
+          "object": "shelter",
+          "catalog": "examples/airport-stop.dream",
+          "catalogObject": "shelter"
+        }
+      ]
+    },
+    {
+      "path": "examples/controllable-bicycle.dream",
+      "moduleId": "controllable_bicycle",
+      "originalPath": "docs/examples/controllable-bicycle.dream",
+      "originalHash": "e2a2c7c24481219c7ad56716ac066080b1b9efcca41e9540ca22dd56ce2bf276",
+      "sourceHash": "e2a2c7c24481219c7ad56716ac066080b1b9efcca41e9540ca22dd56ce2bf276",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "meadow_bicycle"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/courier-resupply.dream",
+      "moduleId": "courier_resupply",
+      "originalPath": "docs/examples/courier-resupply.dream",
+      "originalHash": "c20d9abb11e0a5dc07cf11487f31b7953d2d1f5f7972288b59f1d1179d4064c1",
+      "sourceHash": "31835804794f8c585fa69c81d963c83c6b5d441a0389e55b49a51b554adf6087",
+      "sourceObjectCount": 3,
+      "objectCount": 1,
+      "objects": [
+        "table"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "crate",
+          "catalog": "examples/city-tree-replanting.dream",
+          "catalogObject": "crate"
+        }
+      ]
+    },
+    {
+      "path": "examples/cycle-junctions.dream",
+      "moduleId": "cycle_junctions",
+      "originalPath": "docs/examples/cycle-junctions.dream",
+      "originalHash": "115d61d73d53414b8175a90c0f9da06b524a0630a0bc5e297f6c6c18799e08ab",
+      "sourceHash": "f469b08ba1018be9555b37e28fab916c01b59e3f3278a1cba6bc450a4a26e581",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "car"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/day-night.dream",
+      "moduleId": "day_night",
+      "originalPath": "docs/examples/day-night.dream",
+      "originalHash": "8816918f350181f7a274a821c113b47b9f62690423a0672b8057cb19e7bb47e3",
+      "sourceHash": "7b7ed4aca5b5bf2b6e417aa5422898868065036d278feb7fb8f61f451873841c",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "lantern"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/dedicated-path.dream",
+      "moduleId": "dedicated_path",
+      "originalPath": "docs/examples/dedicated-path.dream",
+      "originalHash": "f33caa43e17a25be78812bfab327382a688ecdd46c50d0c2f6c7e4cab8f26e10",
+      "sourceHash": "93b7c2ac58702b964ebe101cf9dd217bd2a7b9d82a02bfd32e900ed30b6dc680",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "sketch_car"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/dream-v2-world.dream",
+      "moduleId": "dream_v2_world",
+      "originalPath": "docs/examples/dream-v2-world.dream",
+      "originalHash": "8690de21eb7158d2efe14c93e9791896d94ea7107da7018c002ce647d67d293f",
+      "sourceHash": "381d2734b12faea18a3105c857e43e8607147c6f4dc89a43bacca693fa2d331d",
+      "sourceObjectCount": 2,
+      "objectCount": 2,
+      "objects": [
+        "sketch_car",
+        "picnic_table"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/enterable-home.dream",
+      "moduleId": "enterable_home",
+      "originalPath": "docs/examples/enterable-home.dream",
+      "originalHash": "472dc8eb50f05439f5440f69c07e7741454ba8a49a202a5a1aa5bdd007d37f96",
+      "sourceHash": "8ec017f6747820dae1997a320b5cdeb72296a198774c4e28b1b660eea2a37955",
+      "sourceObjectCount": 2,
+      "objectCount": 1,
+      "objects": [
+        "commuter_home"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible",
+      "duplicates": [
+        {
+          "object": "timber_settee",
+          "catalog": "world/destructible.dream",
+          "catalogObject": "timber_settee"
+        }
+      ]
+    },
+    {
+      "path": "examples/full-verge-repairs.dream",
+      "moduleId": "full_verge_repairs",
+      "originalPath": "docs/examples/full-verge-repairs.dream",
+      "originalHash": "197c6a8bb3a21f69df4643cbd13c09db42a992a73fb3ae480736d2b1f6b1131c",
+      "sourceHash": "7970f0b3b488bc5ca18f4c23d52a160c42626701956473aed8b4eaf3db900eac",
+      "sourceObjectCount": 3,
+      "objectCount": 2,
+      "objects": [
+        "pedestrian",
+        "light"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible",
+      "duplicates": [
+        {
+          "object": "crate",
+          "catalog": "examples/city-tree-replanting.dream",
+          "catalogObject": "crate"
+        }
+      ]
+    },
+    {
+      "path": "examples/hosted-meal.dream",
+      "moduleId": "hosted_meal",
+      "originalPath": "docs/examples/hosted-meal.dream",
+      "originalHash": "e19a24a129334417fc780e125b619786e5d7c41d51586089d355da723e5a7a51",
+      "sourceHash": "d569e46a5c5e646d345c3247dd05eb339f92cc4b7f6a33ae0894155dde4ae1f7",
+      "sourceObjectCount": 2,
+      "objectCount": 1,
+      "objects": [
+        "slatted_bench"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "path": "experimental/interaction-rules.dream",
+      "moduleId": "interaction_rules",
+      "originalPath": "docs/examples/interaction-rules.dream",
+      "originalHash": "a39a3204498ffe4b8d2377a9219332f5608069e8183789f06b2f002a2301f195",
+      "sourceHash": "723332719e923b01f9e1f8b8358e36b2a9475b25648fa939fc3ce8a84c82d963",
+      "sourceObjectCount": 2,
+      "objectCount": 2,
+      "objects": [
+        "square_table",
+        "round_table"
+      ],
+      "dependencies": [],
+      "compatibility": "experimental",
+      "reason": "Dream 10:1: Square table: assembly: fragment groups require break/topple behavior or a break zone"
+    },
+    {
+      "path": "examples/joint-stride.dream",
+      "moduleId": "joint_stride",
+      "originalPath": "docs/examples/joint-stride.dream",
+      "originalHash": "2a1ca2de4b9de770660db27111786c4a1663733694ceec969ac6eb1c6987730c",
+      "sourceHash": "2a1ca2de4b9de770660db27111786c4a1663733694ceec969ac6eb1c6987730c",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "stride_limb"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/material-components.dream",
+      "moduleId": "material_components",
+      "originalPath": "docs/examples/material-components.dream",
+      "originalHash": "f69d8455c7527b81cf00e9085a6e51a5b31208676c7983bb77dbc486d9ad786d",
+      "sourceHash": "f69d8455c7527b81cf00e9085a6e51a5b31208676c7983bb77dbc486d9ad786d",
+      "sourceObjectCount": 2,
+      "objectCount": 2,
+      "objects": [
+        "oak_table",
+        "blue_table"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/material-finishes.dream",
+      "moduleId": "material_finishes",
+      "originalPath": "docs/examples/material-finishes.dream",
+      "originalHash": "31e9b2310934bd103acbfb006456cf85a06de498662c4d4696068e88d2f260f7",
+      "sourceHash": "31e9b2310934bd103acbfb006456cf85a06de498662c4d4696068e88d2f260f7",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "garden_wall"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/moving-population.dream",
+      "moduleId": "moving_population",
+      "originalPath": "docs/examples/moving-population.dream",
+      "originalHash": "80fcf95f3f3c8694b79210b290e808a98d719306e61dc75e7fc99e3b8381497f",
+      "sourceHash": "de8ef7fb1d41b1ba5b952e898daf5930be4f85956842d50c899417b8e6c57cda",
+      "sourceObjectCount": 2,
+      "objectCount": 1,
+      "objects": [
+        "hare"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible",
+      "duplicates": [
+        {
+          "object": "explorer",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "path": "examples/omitted-furnishing.dream",
+      "moduleId": "omitted_furnishing",
+      "originalPath": "docs/examples/omitted-furnishing.dream",
+      "originalHash": "f8fed84fd92c609e4496a0f3d787746025d0b5865636d6a3a9625fbe0b6b3428",
+      "sourceHash": "84e444988b133373fff978ec574390393a7f61632b87cbbc77bd7a5452ec1f7e",
+      "sourceObjectCount": 2,
+      "objectCount": 2,
+      "objects": [
+        "lamp",
+        "bird"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/on-foot-strike.dream",
+      "moduleId": "on_foot_strike",
+      "originalPath": "docs/examples/on-foot-strike.dream",
+      "originalHash": "d5cd50810ebc672cfd7ec7bc25bf6cded6e663b955484994de2f722d57ae0c5f",
+      "sourceHash": "b63ac8fad392933b1100c535fee21ec5ebf9b4b7a451b48cf578a8a272f1b316",
+      "sourceObjectCount": 3,
+      "objectCount": 1,
+      "objects": [
+        "practice_ball"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "work_table",
+          "catalog": "examples/courier-resupply.dream",
+          "catalogObject": "table"
+        }
+      ]
+    },
+    {
+      "path": "examples/orchard-replanting.dream",
+      "moduleId": "orchard_replanting",
+      "originalPath": "docs/examples/orchard-replanting.dream",
+      "originalHash": "84dcf2c807c5bbfd235f2752e3a4b3a593c9f8162be81888b1f9a1c4a4979aa7",
+      "sourceHash": "b90b4bf93e4475316e162734e6f52251500a6f17e26080dbf89d237bbbeaa98b",
+      "sourceObjectCount": 3,
+      "objectCount": 1,
+      "objects": [
+        "rowan"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "crate",
+          "catalog": "examples/city-tree-replanting.dream",
+          "catalogObject": "crate"
+        }
+      ]
+    },
+    {
+      "path": "examples/park-paths.dream",
+      "moduleId": "park_paths",
+      "originalPath": "docs/examples/park-paths.dream",
+      "originalHash": "92816e39328ba9b71b4463ebb5f62ddf1f81ecebecc6b68684b0434fc15cd084",
+      "sourceHash": "fe42649eb92ed1ac1b998480e6fa5d48afe4ed9a1f52a67806fc394782b69b30",
+      "sourceObjectCount": 2,
+      "objectCount": 1,
+      "objects": [
+        "entrance"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible",
+      "duplicates": [
+        {
+          "object": "car",
+          "catalog": "examples/cycle-junctions.dream",
+          "catalogObject": "car"
+        }
+      ]
+    },
+    {
+      "path": "examples/parked-vehicles.dream",
+      "moduleId": "parked_vehicles",
+      "originalPath": "docs/examples/parked-vehicles.dream",
+      "originalHash": "407460a707f91ee6a4a90d4415e4a5edbb94465957da3af66a7bbd6dd880ff42",
+      "sourceHash": "2881e9efc7dfcfe7d64503eab23860fecc27457e575d27b437b9b10118d50f0f",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "bicycle"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/recurring-service.dream",
+      "moduleId": "recurring_service",
+      "originalPath": "docs/examples/recurring-service.dream",
+      "originalHash": "5eabe362537132239ce13cc34cfc8f39832bce978103d4c98c766c079ecc3cde",
+      "sourceHash": "8e2f3519bdde592704f9e289c2731d1bc0e0a7c3ff0db240a68ed1931d2f41db",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "records_table"
+      ],
+      "dependencies": [
+        "tower_assets",
+        "destructible",
+        "city_people"
+      ],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/residential-lounge.dream",
+      "moduleId": "residential_lounge",
+      "originalPath": "docs/examples/residential-lounge.dream",
+      "originalHash": "4a0bc092e37af4baf153b98566e44ab5f0458156ece37dcb2dc9509aa3b75abb",
+      "sourceHash": "50c52bf3733aea65a9324050aa4a53256660e9f6abb57089a14e42d77fceec07",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "table"
+      ],
+      "dependencies": [
+        "tower_assets",
+        "destructible"
+      ],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/service-desk.dream",
+      "moduleId": "service_desk",
+      "originalPath": "docs/examples/service-desk.dream",
+      "originalHash": "035199b2f453e94a22c03e9b492bc9e471341810da7fa98e8d8ab53b94aafd0b",
+      "sourceHash": "cd298f790e4bfbc6e40f3c65adbf38dbb126207f25adddd55b9a1b94bcc217e5",
+      "sourceObjectCount": 3,
+      "objectCount": 1,
+      "objects": [
+        "prep_table_model"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/hosted-meal.dream",
+          "catalogObject": "slatted_bench"
+        }
+      ]
+    },
+    {
+      "path": "examples/sports-practice.dream",
+      "moduleId": "sports_practice",
+      "originalPath": "docs/examples/sports-practice.dream",
+      "originalHash": "907cec212ffaeb3c0a488d4ff40c26aa008fe7ee2218c8a6b2c77836fcf96f4c",
+      "sourceHash": "9af8584a011a1920097de1e87013c483b39c3c8c7c033a5828891f79232b36e0",
+      "sourceObjectCount": 4,
+      "objectCount": 1,
+      "objects": [
+        "football_goal"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible",
+      "duplicates": [
+        {
+          "object": "football",
+          "catalog": "world/sports_assets.dream",
+          "catalogObject": "football"
+        },
+        {
+          "object": "basketball",
+          "catalog": "world/sports_assets.dream",
+          "catalogObject": "basketball"
+        },
+        {
+          "object": "basketball_hoop",
+          "catalog": "world/sports_assets.dream",
+          "catalogObject": "basketball_hoop"
+        }
+      ]
+    },
+    {
+      "path": "examples/station-maintenance.dream",
+      "moduleId": "station_maintenance",
+      "originalPath": "docs/examples/station-maintenance.dream",
+      "originalHash": "09a474a793bf81a7a4400284482a9100b097b237e510a37f37a558315c542ce8",
+      "sourceHash": "bdff525b8a3674e023a54496d9d09af3bfeb3aab9c6ccf643671aa791b4c6829",
+      "sourceObjectCount": 2,
+      "objectCount": 2,
+      "objects": [
+        "worker",
+        "table"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/swinging-sign.dream",
+      "moduleId": "swinging_sign",
+      "originalPath": "docs/examples/swinging-sign.dream",
+      "originalHash": "c5bd35bf7c348b264be70a3860535530f79cb29e5ab1956c3d3cce4eaa599889",
+      "sourceHash": "c5bd35bf7c348b264be70a3860535530f79cb29e5ab1956c3d3cce4eaa599889",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "sign"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/tapered-wood.dream",
+      "moduleId": "tapered_wood",
+      "originalPath": "docs/examples/tapered-wood.dream",
+      "originalHash": "f78e689b52a9434cabf28bed44eb5630e66f74d13e0048d6d31ac7efc5e22711",
+      "sourceHash": "f78e689b52a9434cabf28bed44eb5630e66f74d13e0048d6d31ac7efc5e22711",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "snag"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/team-sports.dream",
+      "moduleId": "team_sports",
+      "originalPath": "docs/examples/team-sports.dream",
+      "originalHash": "f4adbe3cc9f1d7214e8f5d1e36019c40bf63c6b66d6d3e81e0cadc6fe62ae1b3",
+      "sourceHash": "ca3bcc17644c7fb4e1166909d2d18a78ac1c2065a8839257cfd2ea574140d91a",
+      "sourceObjectCount": 9,
+      "objectCount": 5,
+      "objects": [
+        "home_athlete",
+        "home_athlete_warm",
+        "away_athlete",
+        "away_athlete_deep",
+        "keeper_athlete"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible",
+      "duplicates": [
+        {
+          "object": "football",
+          "catalog": "world/sports_assets.dream",
+          "catalogObject": "football"
+        },
+        {
+          "object": "basketball",
+          "catalog": "world/sports_assets.dream",
+          "catalogObject": "basketball"
+        },
+        {
+          "object": "football_goal",
+          "catalog": "world/sports_assets.dream",
+          "catalogObject": "football_goal"
+        },
+        {
+          "object": "basketball_hoop",
+          "catalog": "world/sports_assets.dream",
+          "catalogObject": "basketball_hoop"
+        }
+      ]
+    },
+    {
+      "path": "examples/toppling-tree.dream",
+      "moduleId": "toppling_tree",
+      "originalPath": "docs/examples/toppling-tree.dream",
+      "originalHash": "ee183da3998ce027746de9edd81db4608cce9b4b6b2a7488675e77448570dd3b",
+      "sourceHash": "ee183da3998ce027746de9edd81db4608cce9b4b6b2a7488675e77448570dd3b",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "oak"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    },
+    {
+      "path": "examples/walkable-steps.dream",
+      "moduleId": "walkable_steps",
+      "originalPath": "docs/examples/walkable-steps.dream",
+      "originalHash": "c0c39e5ec1765029aa9504e1a4ce54190a1c8a68f427e3e28b8f0ede9e4baa5d",
+      "sourceHash": "c0c39e5ec1765029aa9504e1a4ce54190a1c8a68f427e3e28b8f0ede9e4baa5d",
+      "sourceObjectCount": 1,
+      "objectCount": 1,
+      "objects": [
+        "garden_steps"
+      ],
+      "dependencies": [],
+      "compatibility": "compatible"
+    }
+  ],
+  "omittedExamples": [
+    {
+      "originalPath": "docs/examples/airport-terminal.dream",
+      "originalHash": "b3c41a87cf9b1a58a7f9ba00ef7620b3cf2a55424cc0380dbddfb3c7da8f6295",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "airport_terminal",
+          "catalog": "world/transit_assets.dream",
+          "catalogObject": "airport_terminal"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/bed.dream",
+      "originalHash": "bb34714337b82ca85db8e583c5dba426cff72c87074878fa56e0b9646e984342",
+      "reason": "identical_source",
+      "catalog": "experimental/home_assets.dream"
+    },
+    {
+      "originalPath": "docs/examples/cabin-launch.dream",
+      "originalHash": "fdb33743bcbcd4d229c4ea155ab3123c16b27d8540d30231be1e60f560397f31",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "willow_launch",
+          "catalog": "core/interactive-world.dream",
+          "catalogObject": "willow_launch"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/city-bicycle.dream",
+      "originalHash": "823fe97aa4ca3b4f0adbb98f76aaad38ff383e0f3fa653491c63e244648022dd",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "meadow_bicycle",
+          "catalog": "core/interactive-world.dream",
+          "catalogObject": "meadow_bicycle"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/city-bus.dream",
+      "originalHash": "eb184c84fe83e77c99ad042aa70c86ac3eae0d58dbfdd6236eefe8e8f59327f2",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "city_bus",
+          "catalog": "world/transit_assets.dream",
+          "catalogObject": "city_bus"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/city-car.dream",
+      "originalHash": "b4438b0ad8160ee361d793c94b44fdfb54b0cf45527714bc7e308ca4fb33ad10",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "town_car",
+          "catalog": "world/landmarks.dream",
+          "catalogObject": "town_car"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/city-person.dream",
+      "originalHash": "b5fe3db0510ec39eb8bad5b39e8c15cfbc27d8f1546c1dae3a83e3eba8de08d8",
+      "reason": "identical_source",
+      "catalog": "world/city_people.dream"
+    },
+    {
+      "originalPath": "docs/examples/companion-recipes.dream",
+      "originalHash": "e6b4ea68d3b9931bedba7e2ebe762696b0096a2d605a824fad2f9fc8b684fcad",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "slatted_bench"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/company-needs.dream",
+      "originalHash": "d824534757ca61f61bd9371e13d7a56c3a1d7b165f8b6769d2998822654d218a",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "slatted_bench"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/enterable-market.dream",
+      "originalHash": "f7998c46513cd8650d33eb0a9b89624819848fb21a17cd4bf5dc4b579d6adf7f",
+      "reason": "identical_source",
+      "catalog": "world/market_interior.dream"
+    },
+    {
+      "originalPath": "docs/examples/enterable-school.dream",
+      "originalHash": "8d19695a88f740cde0840864547af73f54f98467724a763ec7536d2667b034d5",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "primary_school",
+          "catalog": "world/civic_assets.dream",
+          "catalogObject": "primary_school"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/faceted-canopy.dream",
+      "originalHash": "a434f580b1f16554327eea6ece3d8d4921da4f9b3cb5217f3c9fc08a8636a5ac",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "silver_fir",
+          "catalog": "world/nature.dream",
+          "catalogObject": "silver_fir"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/furniture-construction.dream",
+      "originalHash": "2d0d6837a2dd8d80bf29fe38e9f99faac3d8058425733e3f865c5919da00161e",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "breakaway_table",
+          "catalog": "core/impact-creations.dream",
+          "catalogObject": "breakaway_table"
+        },
+        {
+          "object": "produce_crate",
+          "catalog": "core/impact-creations.dream",
+          "catalogObject": "produce_crate"
+        },
+        {
+          "object": "terracotta_planter",
+          "catalog": "core/impact-creations.dream",
+          "catalogObject": "terracotta_planter"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "world/destructible.dream",
+          "catalogObject": "slatted_bench"
+        },
+        {
+          "object": "market_stall",
+          "catalog": "world/civic_assets.dream",
+          "catalogObject": "market_stall"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/ground-cover.dream",
+      "originalHash": "4e5343642ae5ab1bf05d5b989d179f8d0b85b71c113ab4024fa0fb65ad550901",
+      "reason": "identical_source",
+      "catalog": "core/ground-cover.dream"
+    },
+    {
+      "originalPath": "docs/examples/hardware-recovery.dream",
+      "originalHash": "f91020eb4338375a93d1d78c34ff66ed5678ab2e234949d062babcf79bdc3fd0",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "work_table",
+          "catalog": "examples/courier-resupply.dream",
+          "catalogObject": "table"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/humanoid.dream",
+      "originalHash": "c26cf5e4453afa03f1d0b8808d7916e080708cc17c4ed51ae4a36ead75c97b38",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "explorer",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/light-aircraft.dream",
+      "originalHash": "3077472fa1feb989ef6976eae34e228ccb54711e1902999f96baf9dc9e1f4f22",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "cloudhopper_plane",
+          "catalog": "core/interactive-world.dream",
+          "catalogObject": "cloudhopper_plane"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/market-delivery.dream",
+      "originalHash": "90a2128d30f223657980d38fab77cae110971ff8fa9e6846b9bcce611418a498",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/market-hours.dream",
+      "originalHash": "6805f0af54abba949bf67a40b21ed69ca7bfdafe2ad8a00dd035a9177a1efc02",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/market-maintenance.dream",
+      "originalHash": "9879df0a76e969c81d2ee9d563ca5183b420c9fff432cb4a2e52cd90ed15760d",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "table",
+          "catalog": "examples/courier-resupply.dream",
+          "catalogObject": "table"
+        },
+        {
+          "object": "crate",
+          "catalog": "examples/city-tree-replanting.dream",
+          "catalogObject": "crate"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/market-production.dream",
+      "originalHash": "2e3174fe02d4fb9e32692e85b2797822b9f3e48f5f85f3e09f86d21d6193f0cf",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/market-repair.dream",
+      "originalHash": "218da4d3ab542e16c853be7fcab26c38988e495652ab81c82334e1fed90df7cc",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "table",
+          "catalog": "examples/courier-resupply.dream",
+          "catalogObject": "table"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/market-work.dream",
+      "originalHash": "791c03de789e9c1fc5d9cf7255b881faebeea16a7207abec1dd69c005ab8d9bd",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/meal-trips.dream",
+      "originalHash": "2f62a7202e62532f80e4223482266452806711ffa627360c86d9e6ebf7577bca",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/multi-input-work.dream",
+      "originalHash": "8ef745b11981e7282fe28a496971c7b41a7140079c1675981dba64848e337737",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/neighborhood-courier.dream",
+      "originalHash": "98c87e9f7316b8ed4d28597cf13e11a8a6462a38de37a179ecd2dad3cb5b9457",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/neighborhood-repairs.dream",
+      "originalHash": "9711264a84e3cf545032ea899b49cd2ce12c1fdf1a68087aeeecbbe318642a91",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "table",
+          "catalog": "examples/courier-resupply.dream",
+          "catalogObject": "table"
+        },
+        {
+          "object": "crate",
+          "catalog": "examples/city-tree-replanting.dream",
+          "catalogObject": "crate"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/npc-behavior.dream",
+      "originalHash": "e1efff7dbb86a5dab43016d9d4a2605690c1fde31660750b689c360026573c83",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/npc-conversation.dream",
+      "originalHash": "b3af30f9a183691d65a02cc624ac520664fd01da95318434372f4125671cf83d",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/plant-construction.dream",
+      "originalHash": "084de281728282c88d7d4dd8c6b87d815be3f8b251a3626ef1b9ba388b1931b1",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "woodland_fern",
+          "catalog": "world/flora.dream",
+          "catalogObject": "woodland_fern"
+        },
+        {
+          "object": "foxglove",
+          "catalog": "world/flora.dream",
+          "catalogObject": "foxglove"
+        },
+        {
+          "object": "planted_tub",
+          "catalog": "world/street_assets.dream",
+          "catalogObject": "planted_tub"
+        },
+        {
+          "object": "blue_hydrangea",
+          "catalog": "world/flora.dream",
+          "catalogObject": "blue_hydrangea"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/populated-neighborhood.dream",
+      "originalHash": "a3608a951238e6c69c4529443fe84fb5a245a06d85f439d23d4acd5014ef3f76",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "lamp",
+          "catalog": "examples/omitted-furnishing.dream",
+          "catalogObject": "lamp"
+        },
+        {
+          "object": "bird",
+          "catalog": "examples/omitted-furnishing.dream",
+          "catalogObject": "bird"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/rain-shelter.dream",
+      "originalHash": "1516821dda73143deb950ec60b32bc993cbf48c324110d8d6b7d3fc7c66ef1d1",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/hosted-meal.dream",
+          "catalogObject": "slatted_bench"
+        },
+        {
+          "object": "commuter_home",
+          "catalog": "world/destructible.dream",
+          "catalogObject": "commuter_home"
+        },
+        {
+          "object": "timber_settee",
+          "catalog": "world/destructible.dream",
+          "catalogObject": "timber_settee"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/rain-work.dream",
+      "originalHash": "83f3b78354cd4284eac5a87a899a1eca709b840bf4b945d37c61cab7a13405e4",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "table",
+          "catalog": "examples/courier-resupply.dream",
+          "catalogObject": "table"
+        },
+        {
+          "object": "crate",
+          "catalog": "examples/city-tree-replanting.dream",
+          "catalogObject": "crate"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/repair-production.dream",
+      "originalHash": "4f6b0d03c7b24a7efe49e2577997acf23afa7a53cd69bc18dd9ae07def871bb0",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "work_table",
+          "catalog": "examples/courier-resupply.dream",
+          "catalogObject": "table"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/resting-population.dream",
+      "originalHash": "59d33eb164acab02aa2b2c6c613ee4ef7424561eb572e08e09b1214a4f25498a",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "explorer",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/resting.dream",
+      "originalHash": "f3971305cd2cfe0173b14c559448bc5712020db41668ed76a0e81b708474f65b",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/hosted-meal.dream",
+          "catalogObject": "slatted_bench"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/sapling-propagation.dream",
+      "originalHash": "ab475e912d9eb6402d94f6ab89405b0d3b5b9efc81d2814ff2d87551d1da36fd",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/scheduled-workday.dream",
+      "originalHash": "08365a7bbb7e2329a01b23c048c366094e55b40a4425513538a4f09944296ba4",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/hosted-meal.dream",
+          "catalogObject": "slatted_bench"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/school-repairs.dream",
+      "originalHash": "1444b7a71312a93d5ed90c3688eee98e6ab808ed883412e47670ffec46c46945",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/hosted-meal.dream",
+          "catalogObject": "slatted_bench"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/seat-preferences.dream",
+      "originalHash": "79ac747aad2c6c7c9dc01687070a269f0483eb2b90ef1b6ecb2605f0d1776c6b",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/hosted-meal.dream",
+          "catalogObject": "slatted_bench"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/seated-breaks.dream",
+      "originalHash": "ab477e3461eb940d6b1608d52bcd6d19e9e17734ea96b5ee183d569392b51d70",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "slatted_bench"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/service-office-meals.dream",
+      "originalHash": "0bb82a23e21fe60160a55197835fe725d6c3a0ad38e5900be0c78c2bc7691634",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "records_table",
+          "catalog": "examples/recurring-service.dream",
+          "catalogObject": "records_table"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/service-office.dream",
+      "originalHash": "ae1eddac2342632a981d24c30802890b63a53c60fde701a859ef7e791c2354d8",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "records_table",
+          "catalog": "examples/recurring-service.dream",
+          "catalogObject": "records_table"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/service-visits.dream",
+      "originalHash": "c65ba2ab5a9714ceb3ef3c2afe6cc9b25fc177413f868e3cfd40e9bcf3fffb20",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "records_table",
+          "catalog": "examples/recurring-service.dream",
+          "catalogObject": "records_table"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/service-work.dream",
+      "originalHash": "6f96ce3ec477fc2f458db11bfcc4e82284f5e96bb3ab5d64b8b00c69eba097bc",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/hosted-meal.dream",
+          "catalogObject": "slatted_bench"
+        },
+        {
+          "object": "prep_table_model",
+          "catalog": "examples/service-desk.dream",
+          "catalogObject": "prep_table_model"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/shared-meal.dream",
+      "originalHash": "e9fc43d3efe51ef3dbda7e48777c36d0bea2721cd5e802ecdb3cb5d123861270",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/hosted-meal.dream",
+          "catalogObject": "slatted_bench"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/shared-recipe.dream",
+      "originalHash": "97730d413c9213b2d1fe6b51f49451b3e0e433fbc9ee6588eb981ebd2aeb2926",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/hosted-meal.dream",
+          "catalogObject": "slatted_bench"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/shared-seating.dream",
+      "originalHash": "413947dd08ea6a3c62a00e3c2d4de671909e03a79e0dd15cf84c81c4039c1ac3",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "slatted_bench"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/staff-shifts.dream",
+      "originalHash": "683b3f6a2faa982af2fbc555cec3484e6d16c4c63595a7f14802984474bfcfa3",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/stairs-home.dream",
+      "originalHash": "6ff18b47c9b974b252e3d6b5f50f091fce2ad09ed8d01963a698867160a897d1",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "commuter_home",
+          "catalog": "world/destructible.dream",
+          "catalogObject": "commuter_home"
+        },
+        {
+          "object": "timber_settee",
+          "catalog": "world/destructible.dream",
+          "catalogObject": "timber_settee"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/station-towers.dream",
+      "originalHash": "131a12140ac7268e05d151eebe004ccd84a7eb82c1a31c6a29bd9bcfaf457a90",
+      "reason": "identical_source",
+      "catalog": "world/tower_assets.dream"
+    },
+    {
+      "originalPath": "docs/examples/station-vehicles.dream",
+      "originalHash": "76f7c556ea7dfc262cce252e69226c0fa068a60bc5e9c9c93d15020556db15b4",
+      "reason": "identical_source",
+      "catalog": "world/station_vehicles.dream"
+    },
+    {
+      "originalPath": "docs/examples/street-verge-repairs.dream",
+      "originalHash": "9b65410afa90fc5ed796955b5737c220245a9dfb0c36486345506803026bb522",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "light",
+          "catalog": "examples/full-verge-repairs.dream",
+          "catalogObject": "light"
+        },
+        {
+          "object": "crate",
+          "catalog": "examples/city-tree-replanting.dream",
+          "catalogObject": "crate"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/street-world.dream",
+      "originalHash": "dd04bb1cedc196bf8604d9d2521e2d6a5ad9a387812c6c6a53dd402d9c1590fb",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "car",
+          "catalog": "examples/cycle-junctions.dream",
+          "catalogObject": "car"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/streetlight-repairs.dream",
+      "originalHash": "6fe4eb7d2a905594aba30dc91e712d66ca273ba2a367b018b0008066aee8d05d",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "light",
+          "catalog": "examples/full-verge-repairs.dream",
+          "catalogObject": "light"
+        },
+        {
+          "object": "crate",
+          "catalog": "examples/city-tree-replanting.dream",
+          "catalogObject": "crate"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/terraced-house.dream",
+      "originalHash": "1e3a973765ebbebead89b4384ef6f0401c302cbc295e88ea0fea5d65249181a9",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "brick_terrace",
+          "catalog": "world/architecture.dream",
+          "catalogObject": "brick_terrace"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/timber-recovery.dream",
+      "originalHash": "dd8e0527a9c97feb326a5e533c987455d7449682c21d606ba89fa04684bc429f",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "rowan",
+          "catalog": "examples/orchard-replanting.dream",
+          "catalogObject": "rowan"
+        },
+        {
+          "object": "crate",
+          "catalog": "examples/city-tree-replanting.dream",
+          "catalogObject": "crate"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/upstairs-rest.dream",
+      "originalHash": "5219b507547ddca3148917a44802ea71b54f68332362353d21f74dcccd4bce66",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/hosted-meal.dream",
+          "catalogObject": "slatted_bench"
+        },
+        {
+          "object": "commuter_home",
+          "catalog": "world/destructible.dream",
+          "catalogObject": "commuter_home"
+        },
+        {
+          "object": "timber_settee",
+          "catalog": "world/destructible.dream",
+          "catalogObject": "timber_settee"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/upstairs-social.dream",
+      "originalHash": "e7c7af09e22f9acd7d232caa67dcfb985fee49540e0bc9578a41d4b73adadb4c",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/hosted-meal.dream",
+          "catalogObject": "slatted_bench"
+        },
+        {
+          "object": "commuter_home",
+          "catalog": "world/destructible.dream",
+          "catalogObject": "commuter_home"
+        },
+        {
+          "object": "timber_settee",
+          "catalog": "world/destructible.dream",
+          "catalogObject": "timber_settee"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/upstairs-work.dream",
+      "originalHash": "03774ab3c437d115933577c8ab8536f8b32685f1b96e376f7645688256ecebb3",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/hosted-meal.dream",
+          "catalogObject": "slatted_bench"
+        },
+        {
+          "object": "commuter_home",
+          "catalog": "world/destructible.dream",
+          "catalogObject": "commuter_home"
+        },
+        {
+          "object": "timber_settee",
+          "catalog": "world/destructible.dream",
+          "catalogObject": "timber_settee"
+        },
+        {
+          "object": "prep_table_model",
+          "catalog": "examples/service-desk.dream",
+          "catalogObject": "prep_table_model"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/utility-vehicles.dream",
+      "originalHash": "67734e0e406053a7b5f36f735e38a6b1693c024dd03dc92837f2b7c60e9867f8",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "field_pickup",
+          "catalog": "world/street_assets.dream",
+          "catalogObject": "field_pickup"
+        },
+        {
+          "object": "parcel_truck",
+          "catalog": "world/street_assets.dream",
+          "catalogObject": "parcel_truck"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/voxel-wall.dream",
+      "originalHash": "d4d0082dc77d818185f5bfbae7f3315d907e6e31430039c256b8853a23ff7f14",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "garden_wall",
+          "catalog": "world/destructible.dream",
+          "catalogObject": "garden_wall"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/voxel-world.dream",
+      "originalHash": "528a342d62e43924d293a58273357ad3cde1afbca7f60ea16e1a403ceb95c096",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "sketch_car",
+          "catalog": "examples/dream-v2-world.dream",
+          "catalogObject": "sketch_car"
+        },
+        {
+          "object": "picnic_table",
+          "catalog": "examples/dream-v2-world.dream",
+          "catalogObject": "picnic_table"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/wildlife-construction.dream",
+      "originalHash": "277cd4a53a0d27b04ab424eb3c741aa7544ab6a6fefb079e52ea4cf7f267f636",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "roe_deer",
+          "catalog": "world/fauna.dream",
+          "catalogObject": "roe_deer"
+        },
+        {
+          "object": "meadow_hare",
+          "catalog": "world/fauna.dream",
+          "catalogObject": "meadow_hare"
+        },
+        {
+          "object": "copper_fox",
+          "catalog": "world/fauna.dream",
+          "catalogObject": "copper_fox"
+        },
+        {
+          "object": "river_gull",
+          "catalog": "world/fauna.dream",
+          "catalogObject": "river_gull"
+        },
+        {
+          "object": "red_kite",
+          "catalog": "world/fauna.dream",
+          "catalogObject": "red_kite"
+        },
+        {
+          "object": "neighborhood_dog",
+          "catalog": "world/fauna.dream",
+          "catalogObject": "neighborhood_dog"
+        },
+        {
+          "object": "garden_cat",
+          "catalog": "world/fauna.dream",
+          "catalogObject": "garden_cat"
+        },
+        {
+          "object": "perched_sparrow",
+          "catalog": "world/fauna.dream",
+          "catalogObject": "perched_sparrow"
+        },
+        {
+          "object": "city_pigeon",
+          "catalog": "world/street_assets.dream",
+          "catalogObject": "city_pigeon"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/work-commute.dream",
+      "originalHash": "bd961aad638f2b8be46c1a9e4c83f67ca6149e79f8d86c6c1566444ba9df5e35",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/hosted-meal.dream",
+          "catalogObject": "slatted_bench"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/work-equipment.dream",
+      "originalHash": "f0744220ddc8ecfd2e1e46b77925422404f6da60fcb5156d41035e5ad01504b7",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "work_table",
+          "catalog": "examples/courier-resupply.dream",
+          "catalogObject": "table"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/work-gestures.dream",
+      "originalHash": "0597d172f4a4d8ffb3d7481f27f5e8b6398d1864619524388964310330492728",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/hosted-meal.dream",
+          "catalogObject": "slatted_bench"
+        },
+        {
+          "object": "prep_table_model",
+          "catalog": "examples/service-desk.dream",
+          "catalogObject": "prep_table_model"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/work-progression.dream",
+      "originalHash": "6cfb93122a7825eaac4f664724ebf1f9e25f9111bfb2debca4ee7c0b66528204",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/worker-rations.dream",
+      "originalHash": "5116c7eaf20538e4d087665f35c4ee82dbd1ba07520c86aef84be52f948094ad",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "table",
+          "catalog": "examples/courier-resupply.dream",
+          "catalogObject": "table"
+        },
+        {
+          "object": "crate",
+          "catalog": "examples/city-tree-replanting.dream",
+          "catalogObject": "crate"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/workshop-supplies.dream",
+      "originalHash": "dbd591a0066ef531105a6e252a182671e5d06e490268d1c3bfcb0f4288cfd536",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/business-ownership.dream",
+          "catalogObject": "pedestrian"
+        }
+      ]
+    },
+    {
+      "originalPath": "docs/examples/workstations.dream",
+      "originalHash": "549770eca86a27433fd46ec21cb3806ce219b8f117766e2acb2b0f0fba9d4035",
+      "reason": "equivalent_compiled_objects",
+      "duplicates": [
+        {
+          "object": "pedestrian",
+          "catalog": "examples/companion-meals.dream",
+          "catalogObject": "pedestrian"
+        },
+        {
+          "object": "slatted_bench",
+          "catalog": "examples/hosted-meal.dream",
+          "catalogObject": "slatted_bench"
+        },
+        {
+          "object": "prep_table_model",
+          "catalog": "examples/service-desk.dream",
+          "catalogObject": "prep_table_model"
+        }
+      ]
+    }
+  ]
+}

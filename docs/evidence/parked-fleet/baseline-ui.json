@@ -1,6 +1,0 @@
-{
-  "car": "6429.7,4379.7,1.5",
-  "control": "{\"kind\":\"foot\"}",
-  "nearbyVehicleVisible": false,
-  "source": "{\"sourceHash\":\"3325eeea049f101970216b9914a395541040d20b146daf0667c486af68569283\",\"compatibilityHash\":\"41d7da9d2228df8a28a08d7db9713602482f312be20a04b6e50be2c028909def\",\"restored\":false,\"enabled\":false,\"review\":false,\"status\":\"Review session: saves disabled.\"}"
-}

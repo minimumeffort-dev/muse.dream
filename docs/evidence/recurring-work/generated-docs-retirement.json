@@ -1,8 +1,0 @@
-{
-  "retired": "dist-docs",
-  "generatedPages": 64,
-  "apparentBytes": 1458287462,
-  "allocatedUniqueInodeBytes": 1544642560,
-  "validation": "The final full suite passes all 53 published-site checks, including building with scripts/docs.mjs and checking navigation/downloads",
-  "sourceAndFinalMediaRetained": true
-}

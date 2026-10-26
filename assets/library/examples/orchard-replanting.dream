@@ -1,0 +1,14 @@
+dream 2;
+material blue(style=toon,colors=[#537eaa,#3c5f87]);
+material skin(style=toon,colors=[#c59774,#a97655]);
+material timber(style=wood,colors=[#92613d,#bd905d]);
+material bark(style=wood,colors=[#6b4c35,#503926]);
+material leaf(style=toon,colors=[#70945a,#56743f]);
+object rowan(label="Young rowan"){
+ measure(kind=tree,axis=y,meters=4);
+ body(interaction=solid,radius=4,height=40);
+ contact trunk_body(at=[0,0,0],radius=1.4,height=40);
+ part trunk(shape=cylinder,material=bark,at=[0,12,0],size=[3,24,3]);
+ part lower_crown(shape=icosphere,material=leaf,at=[0,26,0],size=[18,20,16]);
+ part upper_crown(shape=icosphere,material=leaf,at=[1,35,0],size=[13,13,12]);
+}

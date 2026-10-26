@@ -1,8 +1,0 @@
-{
-  walkingBeforeMaxStep: 7.603681176779229,
-  walkingAfterMaxStep: 1.8666666666667013,
-  maxContactDrift: 1.6397419032748102e-13,
-  minPelvisLocal: 18.545976394507143,
-  extraBytes: 968,
-  fingerprint: 'b1a3a8d992797f3b4d1286b6dd387d11938e4a263b613716a1f4f3b5bcb4f335'
-}

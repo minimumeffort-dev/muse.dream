@@ -1,1 +1,0 @@
-240 unique native frames, captured after source edits; GIF and HD video decoded; output hashes recorded.

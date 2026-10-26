@@ -1,0 +1,344 @@
+dream 2;
+material shirt(style=toon,colors=[#6f7f9a,#4f607b]);
+material skin(style=toon,colors=[#c59774,#a97655]);
+material hair(style=toon,colors=[#4e4037,#362e29]);
+material dark(style=toon,colors=[#303b46,#202b36]);
+material white(style=toon,colors=[#e9e5d7,#c9ccc7]);
+component person_face(materials=[complexion]){
+ part neck(shape=cylinder,faceted=true,material=complexion,at=[0,19,0],size=[3.6,4.2,3.8]);
+ part head(shape=prism,material=complexion,at=[0,25.4,0],size=[9.2,8.8,9.2],rot_deg=[90,0,0],outline=[[0,.18],[.18,0],[.82,0],[1,.18],[1,.82],[.82,1],[.18,1],[0,.82]]);
+ part nose(shape=prism,material=complexion,at=[5,24.5,0],size=[1,1.4,1.4],outline=[[0,.12],[.5,0],[1,.23],[1,.55],[.3,1],[0,.82]]);
+ voxels features(material=dark,at=[4.65,25,0],size=[.2,7,6.4],grid=[1,28,32]){
+  fill left_eye(from=[0,17,4],to=[1,21,8]);
+  fill right_eye(from=[0,17,24],to=[1,21,28]);
+  fill left_brow(from=[0,23,4],to=[1,24,10]);
+  fill right_brow(from=[0,23,22],to=[1,24,28]);
+  fill mouth(from=[0,5,13],to=[1,6,19]);
+ }
+ repeat ears(index=s,count=2){part ear(shape=prism,material=complexion,at=[-.3,24.5,s*9.2-4.6],size=[1.4,2.4,.9],outline=[[0,.2],[.25,0],[.8,.12],[1,.4],[.9,.85],[.4,1],[.1,.8]]);}
+}
+component person_sleeve(materials=[fabric]){
+ part sleeve(shape=prism,material=fabric,at=[0,-4.5,0],size=[4,10.5,3.8],rot_deg=[0,90,0],outline=[[.1,0],[.9,0],[1,.85],[.82,1],[.18,1],[0,.85]]);
+}
+component person_forearm(materials=[fabric]){
+ part forearm(shape=prism,material=fabric,at=[0,-4.3,0],size=[3.4,9.6,3.2],rot_deg=[0,90,0],outline=[[.12,0],[.88,0],[1,.9],[.9,1],[.1,1],[0,.9]]);
+}
+component person_hand(materials=[fabric]){
+ part hand(shape=prism,material=fabric,at=[.4,-9.9,0],size=[3.6,4.5,2.7],outline=[[0,.12],[.12,0],[.68,0],[.76,.18],[.76,.38],[1,.48],[1,.72],[.76,.82],[.76,.94],[.1,1],[0,.88]]);
+}
+component person_thigh(materials=[fabric]){
+ part thigh(shape=prism,material=fabric,at=[0,-5.5,0],size=[4.4,11.5,4.2],rot_deg=[0,90,0],outline=[[.08,0],[.92,0],[1,.88],[.86,1],[.14,1],[0,.88]]);
+}
+component person_calf(materials=[fabric]){
+ part calf(shape=prism,material=fabric,at=[0,-5,0],size=[4,10.6,3.8],rot_deg=[0,90,0],outline=[[.12,0],[.88,0],[1,.75],[.94,1],[.06,1],[0,.75]]);
+}
+component person_sole(){
+ part sole(shape=prism,material=white,at=[1.5,-2.7,0],size=[7.6,4.6,.6],rot_deg=[90,0,0],outline=[[0,.12],[.1,0],[.82,0],[1,.18],[1,.82],[.82,1],[.1,1],[0,.88]]);
+}
+component dressed_upper_leg(params=[athletic],materials=[trousers,complexion,top]){
+repeat trousers(index=t,count=1-athletic){use thigh(component=person_thigh,materials=[trousers]);}
+   repeat bare(index=t,count=athletic){use thigh(component=person_thigh,materials=[complexion]);}
+   repeat uniform(index=u,count=athletic){part shorts(shape=box,material=top,at=[0,-3.1,0],size=[5.4,8.2,5.5]);}
+}
+component dressed_lower_leg(params=[athletic],materials=[trousers,complexion]){
+repeat trousers(index=t,count=1-athletic){use calf(component=person_calf,materials=[trousers]);}
+    repeat bare(index=t,count=athletic){use calf(component=person_calf,materials=[complexion]);}
+}
+component dressed_forearm(params=[long_sleeves],materials=[complexion,top,handwear]){
+repeat bare(index=a,count=1-long_sleeves){use forearm(component=person_forearm,materials=[complexion]);}
+     repeat covered(index=a,count=long_sleeves){use forearm(component=person_forearm,materials=[top]);}
+     use hand(component=person_hand,materials=[handwear]);
+}
+component dressed_footwear(params=[athletic],materials=[shoes]){
+repeat uniform(index=u,count=athletic){part sock(shape=box,material=white,at=[0,3,0],size=[4.2,6,4.5]);}
+     part shoe(shape=prism,material=shoes,at=[1.4,-1.2,0],size=[7.3,2.9,4.4],outline=[[0,.18],[.12,0],[.78,0],[1,.2],[1,.5],[.87,.72],[.45,.75],[.4,1],[.05,1],[0,.7]]);
+     use sole(component=person_sole);
+}
+component civic_person(params=[athletic,long_sleeves,bag],materials=[top,complexion,handwear,trousers,shoes]){
+ joint pelvis(bone=root,at=[0,25,0]){
+  part hips(shape=prism,material=top,at=[0,-.5,0],size=[11.6,4,7.8],rot_deg=[0,90,0],outline=[[.08,0],[.92,0],[1,.3],[.91,1],[.09,1],[0,.3]]);
+
+  joint chest(bone=spine,at=[0,1,0]){
+   part torso(shape=prism,material=top,at=[0,8.5,0],size=[12,18,8.3],rot_deg=[0,90,0],outline=[[.1,0],[.9,0],[.96,.2],[1,.85],[.89,1],[.11,1],[0,.85],[.04,.2]]);
+   use face(component=person_face,materials=[complexion]);
+   part collar(shape=prism,material=white,at=[4.22,16.8,0],size=[4.3,1.2,.25],rot_deg=[0,90,0],outline=[[0,1],[.25,0],[.5,.5],[.75,0],[1,1],[.7,.75],[.5,.8],[.3,.75]]);
+   repeat uniform(index=u,count=athletic){part stripe(shape=box,material=white,at=[4.22,12.5,0],size=[.25,1,10.4]);}
+
+   repeat backpack(index=b,count=bag){
+    part pack(shape=prism,material=dark,at=[-5.25,8,0],size=[3.4,11,8.8],outline=[[0,.12],[.2,0],[.8,0],[1,.12],[1,.85],[.8,1],[.2,1],[0,.85]]);
+    repeat straps(index=s,count=2){
+     part strap(shape=prism,material=dark,at=[0,10.3,s*7.6-3.8],size=[9.1,14.6,1.4],outline=[[0,0],[.1,0],[.1,.89],[.16,.92],[.84,.92],[.9,.89],[.9,0],[1,0],[1,.95],[.94,1],[.06,1],[0,.95]]);
+    }
+   }
+   repeat details(index=d,count=1-athletic){
+    part pocket_seam(shape=box,material=dark,at=[4.2,11,-3.2],size=[.2,.35,2.8]);
+   }
+   joint left_arm(bone=left_shoulder,at=[0,16.4,7.2]){
+    use sleeve(component=person_sleeve,materials=[top]);
+    joint left_forearm(bone=left_elbow,at=[0,-9.5,0]){
+ use detail(component=dressed_forearm,args=[long_sleeves],materials=[complexion,top,handwear]);
+ }
+   }
+   joint right_arm(bone=right_shoulder,at=[0,16.4,-7.2]){
+    use sleeve(component=person_sleeve,materials=[top]);
+    joint right_forearm(bone=right_elbow,at=[0,-9.5,0]){
+ use detail(component=dressed_forearm,args=[long_sleeves],materials=[complexion,top,handwear]);
+ }
+   }
+  }
+  joint left_leg(bone=left_hip,at=[0,0,3.3]){
+ use detail(component=dressed_upper_leg,args=[athletic],materials=[trousers,complexion,top]);
+ joint left_shin(bone=left_knee,at=[0,-11.5,0]){
+ use detail(component=dressed_lower_leg,args=[athletic],materials=[trousers,complexion]);
+ joint left_foot(bone=left_ankle,at=[0,-10.5,0]){
+ use detail(component=dressed_footwear,args=[athletic],materials=[shoes]);
+ }
+   }
+  }
+  joint right_leg(bone=right_hip,at=[0,0,-3.3]){
+ use detail(component=dressed_upper_leg,args=[athletic],materials=[trousers,complexion,top]);
+ joint right_shin(bone=right_knee,at=[0,-11.5,0]){
+ use detail(component=dressed_lower_leg,args=[athletic],materials=[trousers,complexion]);
+ joint right_foot(bone=right_ankle,at=[0,-10.5,0]){
+ use detail(component=dressed_footwear,args=[athletic],materials=[shoes]);
+ }
+   }
+  }
+ }
+}
+component hair_wrap(params=[long_hair],materials=[tone]){
+ part sides(shape=prism,material=tone,at=[-.3,27.4-long_hair*3.2,0],size=[10.2,10,4+long_hair*6.4],rot_deg=[90,0,0],outline=[[.95,0],[.1,0],[0,.1],[0,.9],[.1,1],[.95,1],[1,.88],[.8,.83],[.78,.9],[.2,.9],[.12,.82],[.12,.18],[.2,.1],[.78,.1],[.8,.17],[1,.12]]);
+}
+component hair_cut(params=[long_hair],materials=[tone]){
+ use lower(component=hair_wrap,args=[long_hair],materials=[tone]);
+ part crown(shape=prism,material=tone,at=[-.3,30,0],size=[10.2,10,2.4],rot_deg=[90,0,0],outline=[[0,.14],[.14,0],[.86,0],[1,.14],[1,.86],[.86,1],[.14,1],[0,.86]]);
+}
+component curls(materials=[tone]){
+ use lower(component=hair_wrap,args=[0],materials=[tone]);
+ part crown(shape=icosphere,faceted=true,material=tone,at=[-.3,29.2,0],size=[12.4,4,12.4]);
+}
+component beard(materials=[tone]){
+ part beard(shape=prism,material=tone,at=[4.55,22.2,0],size=[8.4,3.7,1.4],rot_deg=[0,90,0],outline=[[0,.55],[.1,.22],[.28,.08],[.5,0],[.72,.08],[.9,.22],[1,.55],[1,1],[.8,1],[.72,.58],[.28,.58],[.2,1],[0,1]]);
+}
+component moustache(materials=[tone]){
+ part moustache(shape=prism,material=tone,at=[4.9,23.7,0],size=[4.8,1.2,.8],rot_deg=[0,90,0],outline=[[0,.1],[.17,0],[.42,.18],[.5,.5],[.58,.18],[.83,0],[1,.1],[.92,.72],[.7,1],[.3,1],[.08,.72]]);
+}
+component glasses(){
+ voxels frame(material=dark,at=[2.2,26.1,0],size=[5.7,2.2,9.6],grid=[6,4,12]){
+  fill front(from=[5,0,0],to=[6,4,12]);
+  cut left(from=[5,1,1],to=[6,3,5]);
+  cut right(from=[5,1,7],to=[6,3,11]);
+  fill left_arm(from=[0,1,0],to=[5,2,1]);
+  fill right_arm(from=[0,1,11],to=[5,2,12]);
+ }
+}
+component cap(materials=[tone]){
+ part hat(shape=prism,material=tone,at=[.3,29.3,0],size=[11.4,3.8,10.4],outline=[[0,.12],[.12,0],[1,0],[1,.18],[.94,.25],[.92,.68],[.78,1],[.2,1],[.05,.75]]);
+}
+component sun_hat(materials=[tone]){
+ part brim(shape=prism,material=tone,at=[0,27.65,0],size=[12,12,.5],rot_deg=[90,0,0],outline=[[0,.2],[.2,0],[.8,0],[1,.2],[1,.8],[.8,1],[.2,1],[0,.8]]);
+ part crown(shape=cylinder,faceted=true,material=tone,at=[0,29.5,0],size=[9.8,3.4,9.8]);
+}
+component chef_hat(){
+ part band(shape=prism,material=white,at=[0,27.4,0],size=[9.6,9.6,1.6],rot_deg=[90,0,0],outline=[[0,.15],[.15,0],[.85,0],[1,.15],[1,.85],[.85,1],[.15,1],[0,.85]]);
+ part crown(shape=prism,material=white,at=[0,29.5,0],size=[10.4,10.4,3.4],rot_deg=[90,0,0],outline=[[0,.2],[.2,0],[.8,0],[1,.2],[1,.8],[.8,1],[.2,1],[0,.8]]);
+}
+component lab_coat(materials=[fabric]){
+ part hem(shape=prism,material=fabric,at=[-.2,-1.5,0],size=[12.4,9,8.6],rot_deg=[0,90,0],outline=[[0,0],[.46,0],[.5,.18],[.54,0],[1,0],[.92,1],[.08,1]]);
+ voxels buttons(material=dark,at=[4.25,8,0],size=[.4,21,.7],grid=[1,21,1]){
+  fill lower(from=[0,2,0],to=[1,3,1]);fill middle(from=[0,7,0],to=[1,8,1]);
+  fill upper(from=[0,12,0],to=[1,13,1]);fill collar(from=[0,17,0],to=[1,18,1]);
+ }
+ part lapel(shape=prism,material=teal,at=[4.25,15.5,0],size=[6,7,.4],rot_deg=[0,90,0],outline=[[0,1],[.16,1],[.5,.16],[.84,1],[1,1],[.5,0]]);
+}
+component stethoscope(){
+ voxels tube(material=dark,at=[4.25,14.1,0],size=[.4,5.4,4],grid=[1,16,12]){
+  fill left(from=[0,1,0],to=[1,16,1]);fill right(from=[0,1,11],to=[1,16,12]);
+  fill bend(from=[0,0,0],to=[1,2,12]);
+ }
+ part chestpiece(shape=cylinder,material=dark,at=[4.5,11.9,1.8],size=[1.2,.35,1.2],rot_deg=[0,0,90]);
+}
+component apron(materials=[fabric]){
+ part bib(shape=prism,material=fabric,at=[4.25,4,0],size=[10.5,20,.3],rot_deg=[0,90,0],outline=[[0,0],[1,0],[.94,.6],[.8,.7],[.8,1],[.2,1],[.2,.7],[.06,.6]]);
+ repeat straps(index=s,count=2){
+  let side(value=s*2-1);
+  beam strap(shape=box,material=fabric,from=[4.25,14,side*3],to=[4.25,18.2,side*2],width=.45,depth=.45);
+ }
+}
+component skirt(materials=[fabric]){
+ part skirt(shape=prism,material=fabric,at=[0,-4,0],size=[13.2,12,11],rot_deg=[0,90,0],outline=[[0,0],[1,0],[.96,1],[.04,1]]);
+}
+component tie(materials=[fabric]){
+ part tie(shape=prism,material=fabric,at=[4.25,13,0],size=[2,7,.3],rot_deg=[0,90,0],outline=[[.3,1],[.7,1],[1,.12],[.5,0],[0,.12]]);
+}
+component book(materials=[cover]){
+ part book(shape=prism,material=cover,at=[1.2,-7.4,2.1],size=[3.6,6,1.6],outline=[[0,.04],[.08,0],[.92,0],[1,.04],[1,.96],[.92,1],[.08,1],[0,.96]]);
+}
+component ponytail(materials=[tone]){
+ use head(component=hair_cut,args=[0],materials=[tone]);
+ part tail(shape=prism,material=tone,at=[-6.15,23.5,0],size=[3.9,9,4],outline=[[0,.2],[.35,0],[.85,.08],[1,.8],[.88,1],[.35,1],[.2,.7]]);
+}
+component hoodie(materials=[fabric]){
+ voxels hood(material=fabric,at=[-2.5,17.5,0],size=[8,7,10],grid=[8,7,10]){
+  fill back(from=[0,0,0],to=[2,7,10]);
+  fill left(from=[2,0,0],to=[8,7,2]);
+  fill right(from=[2,0,8],to=[8,7,10]);
+  fill base(from=[2,0,2],to=[8,2,8]);
+ }
+}
+component tote(materials=[fabric]){
+ voxels bag(material=fabric,at=[.3,-14.9,-2.8],size=[4,10,5],grid=[4,10,5]){
+  fill body(from=[0,0,0],to=[4,6,5]);
+  fill handle(from=[0,6,0],to=[4,10,5]);
+  cut opening(from=[0,6,1],to=[4,9,4]);
+ }
+}
+component headband(materials=[fabric]){
+ voxels band(material=fabric,at=[0,28.3,0],size=[9.8,1,9.4],grid=[10,1,10]){
+  fill ring(from=[0,0,0],to=[10,1,10]);cut center(from=[1,0,1],to=[9,1,9]);
+ }
+}
+component knee_pad(){part pad(shape=box,material=dark,at=[1.95,-.2,0],size=[.5,3,3.4]);}
+material scrub(style=toon,colors=[#e3e5de,#bfc7c4]);
+material teal(style=toon,colors=[#297f88,#24616b]);
+material deep_skin(style=toon,colors=[#925e45,#714631]);
+material hair_gray(style=toon,colors=[#96938d,#72716c]);
+material hair_black(style=toon,colors=[#30302d,#21211e]);
+material rust(style=toon,colors=[#b96440,#884832]);
+material straw(style=toon,colors=[#d7b974,#ac935a]);
+material skin_warm(style=toon,colors=[#d5ad86,#ab805b]);
+material uniform_commuter(style=toon,colors=[#756f94,#ded5bf]);
+material uniform_teacher(style=toon,colors=[#83966c,#667750]);
+material coat_lilac(style=toon,colors=[#9481ae,#70658b]);
+material coat_cream(style=toon,colors=[#d8c591,#b2a174]);
+material home_kit(style=toon,colors=[#4f9593,#286c72]);
+material away_kit(style=toon,colors=[#d47d43,#a94e37]);
+material yellow(style=toon,colors=[#e2bd5d,#b4913f]);
+object commuter(label="Commuter"){
+ measure(kind=person,axis=y,meters=1.8);
+ body(interaction=decor,radius=13,height=57,clearance=13.729530217745982);
+ use anatomy(component=civic_person,args=[0,1,1],materials=[uniform_commuter,skin,skin,dark,dark]);
+ mount head(bone=spine){use hair(component=hair_cut,args=[0],materials=[hair_black]);use glasses(component=glasses);use tie(component=tie,materials=[rust]);}
+}
+object health_worker(label="Health worker"){
+ measure(kind=person,axis=y,meters=1.8);
+ body(interaction=decor,radius=13,height=57,clearance=13.729530217745982);
+ use anatomy(component=civic_person,args=[0,1,0],materials=[scrub,skin,skin,dark,white]);
+ mount head(bone=spine){use hair(component=hair_cut,args=[0],materials=[hair_black],scale=.96);use tools(component=stethoscope);use hat(component=cap,materials=[white]);}
+ mount coat(bone=root){use coat(component=lab_coat,materials=[scrub]);}
+}
+object market_vendor(label="Market vendor"){
+ measure(kind=person,axis=y,meters=1.8);
+ body(interaction=decor,radius=13,height=57,clearance=13.729530217745982);
+ use anatomy(component=civic_person,args=[0,1,0],materials=[scrub,deep_skin,deep_skin,dark,dark]);
+ mount head(bone=spine){use hair(component=hair_cut,args=[0],materials=[hair_black],scale=.96);use moustache(component=moustache,materials=[hair_black]);use hat(component=chef_hat);}
+ mount clothing(bone=root){use apron(component=apron,materials=[rust]);}
+}
+object teacher(label="Teacher"){
+ measure(kind=person,axis=y,meters=1.8);
+ body(interaction=decor,radius=13,height=57,clearance=13.729530217745982);
+ use anatomy(component=civic_person,args=[0,1,0],materials=[uniform_teacher,skin_warm,skin_warm,dark,dark]);
+ mount head(bone=spine){use hair(component=ponytail,materials=[hair_black]);use glasses(component=glasses);}
+ mount clothing(bone=root){use skirt(component=skirt,materials=[dark]);}
+ mount book(bone=left_elbow){use book(component=book,materials=[rust]);}
+}
+object river_shopper(label="River shopper"){
+ measure(kind=person,axis=y,meters=1.75);
+ body(interaction=decor,radius=13,height=57,clearance=13.729530217745982);
+ use anatomy(component=civic_person,args=[0,0,0],materials=[rust,deep_skin,deep_skin,dark,dark]);
+ mount head(bone=spine){use hair(component=hair_cut,args=[1],materials=[hair_black]);}
+ mount clothing(bone=root){use skirt(component=skirt,materials=[teal]);}
+ mount bag(bone=right_elbow){use tote(component=tote,materials=[straw]);}
+}
+object campus_student(label="Campus student"){
+ measure(kind=person,axis=y,meters=1.65);
+ body(interaction=decor,radius=13,height=57,clearance=13.729530217745982);
+ use anatomy(component=civic_person,args=[0,0,1],materials=[coat_lilac,skin_warm,skin_warm,dark,white]);
+ mount head(bone=spine){use hair(component=hair_cut,args=[1],materials=[hair_black]);use glasses(component=glasses);}
+}
+object park_neighbor(label="Park neighbor"){
+ measure(kind=person,axis=y,meters=1.8);
+ body(interaction=decor,radius=13,height=57,clearance=13.729530217745982);
+ use anatomy(component=civic_person,args=[0,1,0],materials=[teal,deep_skin,deep_skin,dark,dark]);
+ mount head(bone=spine){use beard(component=beard,materials=[hair_gray]);use hat(component=sun_hat,materials=[straw]);}
+}
+object city_resident(label="City resident"){
+ measure(kind=person,axis=y,meters=1.85);
+ body(interaction=decor,radius=13,height=57,clearance=13.729530217745982);
+ use anatomy(component=civic_person,args=[0,1,0],materials=[coat_cream,skin,skin,dark,white]);
+ mount head(bone=spine){use hair(component=curls,materials=[hair_black]);use hood(component=hoodie,materials=[coat_cream]);}
+}
+object home_athlete(label="Home athlete"){
+ measure(kind=person,axis=y,meters=1.8);
+ body(interaction=decor,radius=13,height=57,clearance=13.729530217745982);
+ use anatomy(component=civic_person,args=[1,0,0],materials=[home_kit,deep_skin,deep_skin,dark,dark]);
+ mount head(bone=spine){use hair(component=curls,materials=[hair_black]);use band(component=headband,materials=[white]);}
+}
+object home_athlete_warm(label="Home athlete"){
+ measure(kind=person,axis=y,meters=1.72);
+ body(interaction=decor,radius=13,height=57,clearance=13.729530217745982);
+ use anatomy(component=civic_person,args=[1,0,0],materials=[home_kit,skin_warm,skin_warm,dark,white]);
+ mount head(bone=spine){use hair(component=ponytail,materials=[hair]);use band(component=headband,materials=[white]);}
+}
+object away_athlete(label="Away athlete"){
+ measure(kind=person,axis=y,meters=1.84);
+ body(interaction=decor,radius=13,height=57,clearance=13.729530217745982);
+ use anatomy(component=civic_person,args=[1,0,0],materials=[away_kit,skin_warm,skin_warm,dark,dark]);
+ mount head(bone=spine){use hair(component=hair_cut,args=[0],materials=[hair_black]);use moustache(component=moustache,materials=[hair_black]);}
+}
+object keeper_athlete(label="Goalkeeper"){
+ measure(kind=person,axis=y,meters=1.86);
+ body(interaction=decor,radius=13,height=57,clearance=13.729530217745982);
+ use anatomy(component=civic_person,args=[1,1,0],materials=[yellow,skin_warm,white,dark,dark]);
+ mount head(bone=spine){use hair(component=hair_cut,args=[0],materials=[hair_black]);}
+ mount left_pad(bone=left_knee){use pad(component=knee_pad);}
+ mount right_pad(bone=right_knee){use pad(component=knee_pad);}
+}
+material cream(style=toon,colors=[#e6d6b0,#e6d6b0]);
+material blue(style=toon,colors=[#537eaa,#3c5f87]);
+let legacy_human_unit(value=57.20000076293945/17.100000381469727);
+let seated_head_unit(value=1.75*50.5/(1.25*57.20000076293945));
+object football_player(label="Football player"){
+ measure(kind=person,axis=y,meters=1.8);
+ body(interaction=decor,radius=4*legacy_human_unit,height=18*legacy_human_unit);
+ use anatomy(component=civic_person,args=[1,0,0],materials=[blue,skin,skin,dark,white]);
+ mount head(bone=spine){use hair(component=hair_cut,args=[0],materials=[hair]);}
+}
+object basketball_player(label="Basketball player"){
+ measure(kind=person,axis=y,meters=1.8);
+ body(interaction=decor,radius=4*legacy_human_unit,height=18*legacy_human_unit);
+ use anatomy(component=civic_person,args=[1,0,0],materials=[blue,deep_skin,deep_skin,dark,dark]);
+ mount head(bone=spine){use hair(component=curls,materials=[hair]);}
+}
+object traveler(label="Traveler"){
+ measure(kind=custom,axis=y,meters=1.25);
+ body(interaction=decor,radius=8,height=42);
+ part torso(shape=prism,material=teal,at=[0,10,0],size=[12,20,10.5],rot_deg=[0,90,0],outline=[[.1,0],[.9,0],[1,.85],[.89,1],[.11,1],[0,.85]]);
+ part hips(shape=box,material=dark,at=[0,-.5,0],size=[8,4,11.6]);
+ group head_frame(at=[0,34.5-seated_head_unit*31.20000076293945,0],scale=seated_head_unit){
+  use face(component=person_face,materials=[skin]);
+  use hair(component=hair_cut,args=[0],materials=[dark]);
+ }
+ repeat sides(index=s,count=2){
+  let sign(value=s*2-1);
+  part collar(shape=box,material=white,at=[5.3,17,sign*1.8],size=[.25,1.2,1.6]);
+  beam sleeve(shape=box,material=teal,from=[0,15,sign*5.2],to=[6,6,sign*5.2],width=3.8,depth=3.6);
+  beam forearm(shape=box,material=skin,from=[6,6,sign*5.2],to=[13,4,sign*5.2],width=3.2,depth=3.4);
+  part elbow(shape=box,material=skin,at=[6,6,sign*5.2],size=[3.8,3.8,3.6]);
+  voxels hand(material=skin,at=[13,4,sign*5.2],size=[3.8,3,2.8],grid=[4,4,3]){
+   fill palm(from=[0,0,0],to=[3,4,3]);fill thumb(from=[3,0,0],to=[4,2,3]);
+  }
+  beam thigh(shape=box,material=dark,from=[0,0,sign*3],to=[10,-5,sign*3],width=4.2,depth=4.4);
+  beam shin(shape=box,material=dark,from=[10,-5,sign*3],to=[13,-14,sign*3],width=3.8,depth=4);
+  part knee(shape=box,material=dark,at=[10,-5,sign*3],size=[4.4,4.4,4.4]);
+  part shoe(shape=prism,material=dark,at=[15,-14,sign*3],size=[8,4,5],outline=[[0,0],[1,0],[1,.55],[.7,1],[.1,1],[0,.8]]);
+  part sole(shape=prism,material=cream,at=[15,-15.7,sign*3],size=[8,5,.6],rot_deg=[90,0,0],outline=[[0,.12],[.1,0],[.82,0],[1,.18],[1,.82],[.82,1],[.1,1],[0,.88]]);
+ }
+ part backpack(shape=box,material=dark,at=[-7,10,0],size=[6,12,11]);
+}
+object walker(label="Explorer"){
+ measure(kind=person,axis=y,meters=1.75);
+ body(interaction=decor,radius=8,height=57);
+ use anatomy(component=civic_person,args=[0,0,1],materials=[teal,skin,skin,dark,dark]);
+ mount head(bone=spine){use hair(component=hair_cut,args=[0],materials=[dark]);}
+}

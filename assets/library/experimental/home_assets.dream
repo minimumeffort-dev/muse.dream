@@ -1,0 +1,36 @@
+dream 2;
+material bed_wood(style=wood,colors=[#916d4b,#624c37]);
+material linen(style=toon,colors=[#e8dfcd,#d2c9b7]);
+material blanket(style=toon,colors=[#6f8793,#536e7d]);
+material lamp_metal(style=toon,colors=[#675e4e,#403b34]);
+material lamp_shade(style=toon,colors=[#e9d6ad,#c8b88e],night=#f4d99e);
+object timber_bed(label="Timber bed"){
+ measure(kind=bed,axis=x,meters=2.4);
+ body(interaction=solid,radius=28,height=19);
+ impact(mode=break(speed=95,scatter=65,lift=65,spin=4,lifetime=6,pattern=splinter));
+ seat rest(at=[0,11,0],approach=[0,38],heading_deg=0,pose=lie);
+ fragment frame(){
+  part base(shape=box,material=bed_wood,at=[0,4,0],size=[48,3,25]);
+  part headboard(shape=prism,material=bed_wood,at=[-23,10,0],size=[25,18,2],rot_deg=[0,90,0],outline=[[0,0],[1,0],[1,.84],[.9,1],[.1,1],[0,.84]]);
+  part footboard(shape=box,material=bed_wood,at=[23,5,0],size=[2,8,25]);
+  repeat ends(index=x,count=2){repeat sides(index=z,count=2){part leg(shape=box,material=bed_wood,at=[x*42-21,1.25,z*20-10],size=[3,2.5,3]);}}
+ }
+ fragment mattress(){part mattress(shape=box,material=linen,at=[0,8,0],size=[46,6,22]);}
+ fragment pillow(){part pillow(shape=prism,material=linen,at=[-15,12,0],size=[9,2,16],outline=[[.08,0],[.92,0],[1,.18],[1,.82],[.92,1],[.08,1],[0,.82],[0,.18]]);}
+ fragment cover(){part cover(shape=box,material=blanket,at=[6,11.15,0],size=[30,.3,21]);}
+}
+object bedside_lamp(label="Bedside lamp cabinet"){
+ measure(kind=lamp,axis=y,meters=1.1);
+ body(interaction=solid,radius=12,height=25);
+ lamp(at=[0,23,0],radius=80,color=#f4d99e);
+ impact(mode=topple(speed=95,duration=1,lifetime=8));
+ fragment cabinet(){
+  part cabinet(shape=box,material=bed_wood,at=[0,5.5,0],size=[16,11,16]);
+  part top(shape=box,material=bed_wood,at=[0,11.5,0],size=[17,1,17]);
+  part drawer(shape=box,material=bed_wood,at=[8.1,7,0],size=[.3,5,14]);
+  part handle(shape=box,material=lamp_metal,at=[8.6,7,0],size=[.8,.8,4]);
+  part lamp_base(shape=cylinder,material=lamp_metal,at=[0,12.6,0],size=[6,1.2,6]);
+  part stem(shape=cylinder,material=lamp_metal,at=[0,17,0],size=[1,8,1]);
+  part shade(shape=cylinder,material=lamp_shade,at=[0,22,0],size=[11,6,11],taper=.65,faceted=true);
+ }
+}

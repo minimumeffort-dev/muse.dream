@@ -1,2 +1,0 @@
-2:19:38 AM [vite] (client) Re-optimizing dependencies because vite config has changed
-Map rendered from compiled geometry: 32 streets 219 entrances

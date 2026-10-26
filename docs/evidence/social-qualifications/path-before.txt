@@ -1,4 +1,0 @@
-Error: Shared review could not walk through the market door: {"timeS":326.7666666665338,"at":{"x":6469.7790783087175,"y":4456.043679993481,"elevation":1.9642857142857142},"target":{"x":6400,"y":4396.357142857143},"grounded":true,"surface":"paper"}
-    at sharedMealReviewSteps (/Users/horia/Projects/muse.dream/src/game/review-start.ts:406:32)
-    at sharedMealReviewSteps.next (<anonymous>)
-    at file:///Users/horia/Projects/muse.dream/.npm-cache/bond-baseline.mjs:5:232

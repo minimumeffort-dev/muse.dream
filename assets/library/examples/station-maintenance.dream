@@ -1,0 +1,18 @@
+dream 2;
+material jacket(style=toon,colors=[#527487,#354e60]);
+material skin(style=toon,colors=[#b98766,#99674b]);
+material timber(style=wood,colors=[#92613d,#bd905d]);
+object worker(label="Maintenance worker"){
+ measure(kind=person,axis=y,meters=1.8);
+ body(interaction=decor,radius=4,height=18);
+ part torso(shape=capsule,material=jacket,at=[0,11,0],size=[5,6,4]);
+ part head(shape=sphere,material=skin,at=[0,16,0],size=[4,4,4]);
+ repeat legs(index=i,count=2){joint leg(at=[0,8,i*3-1.5],motion=swing(axis=z,deg=18,hz=.6,phase_deg=i*180)){part shin(shape=capsule,material=jacket,at=[0,-4,0],size=[2,8,2]);}}
+}
+object table(label="Courtyard table"){
+ measure(kind=table,axis=x,meters=2);
+ body(interaction=solid,radius=12,height=10);
+ impact(mode=break(speed=60,scatter=30,lift=40,spin=2,lifetime=6,pattern=splinter));
+ fragment top(){part board(shape=box,material=timber,at=[0,9,0],size=[20,2,12]);}
+ repeat legs(index=i,count=2){fragment leg(){part support(shape=box,material=timber,at=[i*14-7,4,0],size=[2,8,10]);}}
+}

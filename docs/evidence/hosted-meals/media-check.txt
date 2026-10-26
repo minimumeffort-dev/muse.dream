@@ -1,2 +1,0 @@
-hosted: 420 consecutive 2400x1350 source frames; GIF and HD decode
-shared: 720 consecutive 2400x1350 source frames; GIF and HD decode

@@ -1,6 +1,0 @@
-{
-  "car": "5427.6,752.5,5.8",
-  "control": "{\"kind\":\"foot\"}",
-  "parking": "{\"active\":null,\"prototypes\":1,\"instances\":3}",
-  "vehicles": "[{\"id\":null,\"x\":6330,\"y\":4233,\"elevation\":0,\"headingRad\":0,\"distance\":0},{\"id\":\"civic_parking_3_7_r\",\"x\":5409.352321419183,\"y\":762.3152013042604,\"elevation\":3.4212751746843986,\"headingRad\":-2.0629582498980406,\"distance\":2005.2759413449085}]"
-}

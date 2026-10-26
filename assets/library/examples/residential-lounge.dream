@@ -1,0 +1,13 @@
+dream 2;
+asset homes(module=tower_assets,object=station_residences);
+asset bench(module=destructible,object=slatted_bench);
+asset settee(module=destructible,object=timber_settee);
+asset bookcase(module=tower_assets,object=lounge_bookcase);
+material lounge_wood(style=wood,colors=[#876448,#664a35]);
+object table(label="Lounge table"){
+ measure(kind=table,axis=x,meters=2.2);
+ body(interaction=solid,radius=29,height=19.2);
+ impact(mode=break(speed=95,scatter=65,lift=65,spin=4,lifetime=6,pattern=splinter));
+ part top(shape=box,material=lounge_wood,at=[0,17.2,0],size=[54,4,28]);
+ repeat supports(index=i,count=2){part leg(shape=box,material=lounge_wood,at=[i*42-21,7.6,0],size=[4,15.2,20]);}
+}

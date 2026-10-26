@@ -1,0 +1,15 @@
+dream 2;
+material teal(style=toon,colors=[#297f88,#24616b]);
+material skin(style=toon,colors=[#c59774,#a97655]);
+material dark(style=toon,colors=[#303d48,#222c36]);
+material cream(style=toon,colors=[#eee8d9,#c9c0ae]);
+material wood(style=toon,colors=[#96714d,#6e503a]);
+material dark_wood(style=wood,colors=[#53412e,#413325]);
+material steel(style=toon,colors=[#737d7e,#49545b]);
+object prep_table_model(label="Prep table"){
+ measure(kind=table,axis=x,meters=2);
+ body(interaction=solid,radius=12,height=10);
+ impact(mode=break(speed=60,scatter=30,lift=40,spin=2,lifetime=6));
+ part top(shape=box,material=wood,at=[0,9,0],size=[20,2,12]);
+ repeat legs(index=i,count=2){part leg(shape=box,material=wood,at=[i*14-7,4,0],size=[2,8,10]);}
+}

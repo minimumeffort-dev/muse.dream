@@ -1,8 +1,0 @@
-{
-  "src/scene/save-compatibility.ts": "de9a96a20425cabdd209f8f234e7cec58b3ec1fa27e56e47177de98f039c7c17",
-  "src/scene/world-worker.ts": "1f79d0976657d0d7119ccee0c3524f348cc9e780cfaf840fc895af05eb327781",
-  "scripts/profile-world-acceptance.mjs": "e807ef5905b3eef70b6872c2e5d8b8704091fcf01ad40fd46a537d76e8cff580",
-  "tests/compatibility-encoder.test.ts": "dde2834ffc4ad754290ec4beec474f5cca7e11b53c58049c52fa3a687498a5ff",
-  "tests/commerce-save.test.ts": "bcc3b09d94b10b813e8981bcadeca3deae5ee3456fdb4510820de7145c8e79ac",
-  "vite.config.ts": "65a186d4935e296695c9a114634b49edb741fbdbaac10d32226907c47f5a537e"
-}

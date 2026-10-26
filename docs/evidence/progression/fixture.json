@@ -1,8 +1,0 @@
-{
-  "kind": "mock-review-fixture",
-  "sourceHash": "e6a0c4b3fdff3e554a4d04af0f4bbd36888f4e7240456d73a8a673245abb8c16",
-  "compatibility": "46a0824a39fbddaae24bae941554b33cddaf84437d24dfb0d9eaea8daed6bbcd",
-  "path": "tests/fixtures/save-v10-r58-practice.json",
-  "sha256": "5838d54e0985a6a2f88b645a4198da6b724c4f841280740634eb87616842dfe9",
-  "setup": "progressionReviewSteps: clear vendor review start, three ordinary paid bread jobs, three purchases, one meal; then ordinary large_bake start through stepInteractive. No completion counters, cash or stock edited. Not user progress."
-}

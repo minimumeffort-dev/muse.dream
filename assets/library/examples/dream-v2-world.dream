@@ -1,0 +1,30 @@
+dream 2;
+material red(style=toon,colors=[#c85c43,#c85c43]);
+material wood(style=grain,colors=[#92613d,#bd905d]);
+material dark(style=toon,colors=[#303c43,#303c43]);
+component leg(params=[x,z]){
+  part post(shape=box,material=wood,at=[x,12,z],size=[4,24,4]);
+}
+object sketch_car(label="Sketch car"){
+  body(interaction=solid,radius=11,height=15);
+  part chassis(shape=box,material=red,at=[0,7,0],size=[26,10,17]);
+  repeat axles(index=i,count=2){
+    repeat sides(index=j,count=2){
+      part wheel(shape=cylinder,material=dark,at=[i*18-9,5,j*18-9],size=[8,3,8],rot_deg=[90,0,0],motion=roll(axis=y,radius=4));
+    }
+  }
+}
+object picnic_table(label="Breakable table"){
+  body(interaction=solid,radius=24,height=28);
+  impact(mode=break(speed=90,scatter=62,lift=100,spin=4,lifetime=6));
+  fragment top(){
+    part board(shape=box,material=wood,at=[0,26,0],size=[48,4,32]);
+  }
+  repeat ends(index=i,count=2){
+    repeat sides(index=j,count=2){
+      fragment leg(){
+        use post(component=leg,args=[i*36-18,j*22-11]);
+      }
+    }
+  }
+}

@@ -1,7 +1,0 @@
-{
-  "car": "6429.7,4379.7,1.5",
-  "control": "{\"kind\":\"foot\"}",
-  "render": "{\"calls\":312,\"triangles\":518313,\"geometries\":198}",
-  "save": "{\"sourceHash\":\"6dd2a1418f815c48b445ede8a08a83cb455028a6712f4e59d4d17057f243fbc9\",\"compatibilityHash\":\"3dcc5c36ef9319b57520f2b561a988259cddebc4aedcc3a41fa27b9fbdc85ab9\",\"restored\":true,\"saved\":true,\"ms\":0.7000000476837158,\"characters\":60247,\"timeS\":1294.3750000026757,\"known\":[\"vendor\"],\"review\":false,\"status\":\"Saved on this device.\"}",
-  "vehicles": "[{\"id\":null,\"x\":6330,\"y\":4233,\"elevation\":0,\"headingRad\":0,\"distance\":0}]"
-}

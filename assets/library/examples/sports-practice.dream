@@ -1,0 +1,26 @@
+dream 2;
+material white(style=toon,colors=[#e9e5d7,#c9ccc7]);
+material steel(style=toon,colors=[#6f8187,#4b626d]);
+material net(style=toon,colors=[#b8c7b9,#8ca99c]);
+material orange(style=toon,colors=[#d28a42,#ab622d]);
+material skin(style=toon,colors=[#c59774,#a97655]);
+material hair(style=toon,colors=[#4e4037,#362e29]);
+material blue(style=toon,colors=[#537eaa,#3c5f87]);
+material red(style=toon,colors=[#b96a60,#944f50]);
+material dark(style=toon,colors=[#3c4c59,#283844]);
+material yellow(style=cloth,colors=[#e2bd5d,#b4913f]);
+object football_goal(label="Football goal"){
+  measure(kind=custom,axis=x,meters=7.4);
+  body(interaction=decor,radius=4,height=25);
+  repeat posts(index=p,count=2){
+    beam upright(shape=cylinder,material=white,from=[p*72-36,0,0],to=[p*72-36,24,0],width=1.2,depth=1.2);
+    beam support(shape=cylinder,material=steel,from=[p*72-36,24,0],to=[p*72-36,0,18],width=0.8,depth=0.8);
+  }
+  beam bar(shape=cylinder,material=white,from=[-36,24,0],to=[36,24,0],width=1.2,depth=1.2);
+  repeat threads(index=t,count=9){
+    beam thread(shape=cylinder,material=net,from=[t*8-32,24,0],to=[t*8-32,0,18],width=0.5,depth=0.5);
+  }
+  repeat horizontals(index=n,count=3){
+    beam thread(shape=cylinder,material=net,from=[-36,n*8,18-n*6],to=[36,n*8,18-n*6],width=0.5,depth=0.5);
+  }
+}

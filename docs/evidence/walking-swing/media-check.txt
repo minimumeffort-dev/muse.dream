@@ -1,3 +1,0 @@
-character: source sequence, GIF, HD and matching still verified
-pedestrians: source sequence, GIF, HD and matching still verified
-locomotion: source sequence, GIF, HD and matching still verified

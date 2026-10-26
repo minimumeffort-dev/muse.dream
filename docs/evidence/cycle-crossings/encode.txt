@@ -1,3 +1,0 @@
-driving: 210 frames at 30 fps · GIF 13.94 MB
-boost: 210 frames at 30 fps · GIF 13.86 MB
-switching: 240 frames at 30 fps · GIF 6.25 MB

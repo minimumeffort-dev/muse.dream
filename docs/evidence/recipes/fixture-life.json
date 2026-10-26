@@ -1,9 +1,0 @@
-{
-  "release": "caa39b792a4bf1ae8d49f84dea2e4a8e4205c84a",
-  "simulation": 13,
-  "sourceHash": "269c818e0f333fe8fb11fe881219eb363ab59e54da8817787ba24191002c5464",
-  "saveCompatibility": "f7b5f8bc696e111422148d51e068413050785a6dc03dcc418cbeb80d9f8adcfc",
-  "source": "Released simulation-13 decoder upgrades the retained simulation-12 life fixture, then its normal encoder writes it.",
-  "path": "tests/fixtures/save-v9-sim13-life.json",
-  "sha256": "8e533510c9510f310f2304cd28aeed7d8456ddb45309201aeefb039bb00fb074"
-}

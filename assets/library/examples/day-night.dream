@@ -1,0 +1,10 @@
+dream 2;
+material iron(style=toon,colors=[#35464c,#25363d]);
+material glass(style=glow,colors=[#f4db9c,#ffe9ba],night=#ffd18a);
+object lantern(label="Night lantern"){
+  measure(kind=custom,axis=y,meters=4);
+  body(interaction=solid,radius=4,height=40);
+  lamp(at=[0,38,0],radius=30,color=#ffd18a);
+  beam pole(shape=cylinder,material=iron,from=[0,0,0],to=[0,35,0],width=1.5,depth=1.5);
+  part lens(shape=box,material=glass,at=[0,37.5,0],size=[4,5,4]);
+}

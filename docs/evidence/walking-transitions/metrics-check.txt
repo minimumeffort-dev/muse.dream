@@ -1,8 +1,0 @@
-{
-  fingerprint: '5297667c16ec9218ef46e6cbf82cfdffe826220f92572f16d85f88ef5c8c2c53',
-  beforeMax: 4.217029175648606,
-  afterMax: 1.2034838070738907e-13,
-  curveCases: 60,
-  curveMax: 1.092611446924279e-12,
-  strideMeters: 1.2338709677419355
-}

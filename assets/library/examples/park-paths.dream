@@ -1,0 +1,9 @@
+dream 2;
+material red(style=toon,colors=[#b85a44,#b85a44]);
+material timber(style=wood,colors=[#84684b,#aa916f]);
+object entrance(label="Park entrance"){
+  measure(kind=custom,axis=y,meters=2);
+  body(interaction=solid,radius=4,height=20);
+  part post(shape=box,material=timber,at=[0,9,0],size=[2,18,2]);
+  part board(shape=box,material=timber,at=[0,17,0],size=[12,6,1]);
+}

@@ -1,16 +1,16 @@
-name: Dream documentation
+name: Dreams Lab
 on:
   push:
-    branches: [main]
+  pull_request:
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: dream-pages
+  group: dreams-lab-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   build:
-    timeout-minutes: 30
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -18,13 +18,17 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: package-lock.json
       - run: npm ci
-      - run: npm test -- --maxWorkers=2 --testTimeout=60000
+      - run: npm test
+      - run: npm run build
       - run: npm run docs:build
       - uses: actions/upload-pages-artifact@v3
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         with:
           path: dist-docs
   deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: build
     permissions:
       pages: write
@@ -35,6 +39,5 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy documentation
+      - uses: actions/deploy-pages@v4
         id: deployment
-        uses: actions/deploy-pages@v4

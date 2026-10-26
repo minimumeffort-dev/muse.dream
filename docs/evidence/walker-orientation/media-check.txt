@@ -1,1 +1,0 @@
-Character, crowd and locomotion: 1,080 consecutive 2400x1350 rendered frames, GIF/HD pairs and matching stills verified.

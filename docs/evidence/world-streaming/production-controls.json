@@ -1,9 +1,0 @@
-{
-  "state": {
-    "car": "6444.4,4252.0,1.5",
-    "control": "{\"kind\":\"foot\"}",
-    "grounded": "true"
-  },
-  "loading": "{\"totalMs\":11019.399999976158,\"phases\":[{\"label\":\"Reading Dream · checking the world\",\"startMs\":0.19999998807907104,\"endMs\":3327.699999988079},{\"label\":\"Preparing driving and walking\",\"startMs\":3327.699999988079,\"endMs\":4650.300000011921},{\"label\":\"Starting the renderer\",\"startMs\":4650.300000011921,\"endMs\":4663.800000011921},{\"label\":\"Building water and bridges\",\"startMs\":4663.800000011921,\"endMs\":5887.100000023842},{\"label\":\"Assembling people and wildlife\",\"startMs\":5887.100000023842,\"endMs\":6340.399999976158},{\"label\":\"Preparing vehicles and interactive objects\",\"startMs\":6340.399999976158,\"endMs\":7516.300000011921},{\"label\":\"Preparing lighting\",\"startMs\":7516.300000011921,\"endMs\":7691.5},{\"label\":\"Loading the first neighbourhood\",\"startMs\":7691.5,\"endMs\":11019.300000011921}],\"heartbeat\":{\"samples\":132,\"maxGapMs\":1677.199999988079}}",
-  "errors": []
-}

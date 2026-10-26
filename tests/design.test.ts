@@ -1,0 +1,25 @@
+import {beforeAll,expect,it} from 'vitest';
+import {execFileSync} from 'node:child_process';
+import {readFileSync,existsSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
+import {compileDreamWorld} from '../src/engine/scene/dream';
+const root=fileURLToPath(new URL('../',import.meta.url));
+const read=(name:string)=>readFileSync(new URL(name,new URL('../',import.meta.url)),'utf8');
+beforeAll(()=>{execFileSync(process.execPath,['render-workspace.mjs'],{cwd:root});});
+it('builds the active workspace with local fonts and no retired review artifacts',()=>{
+ const html=read('index.html'),body=html.slice(html.indexOf('<body')).replace(/<[^>]*>/g,'');
+ expect(html).toContain('class="workspace-layout"');
+ expect(html).toContain('data:font/woff2;base64,');
+ expect(html).toContain('<script type="module" src="/src/main.ts"></script>');
+ expect(html).toContain('aria-label="Provider: local mock"');
+ expect(html).toContain('id="experiment-world"');
+ expect(body).not.toMatch(/\b(demo|illustrative|sample|prototype|preview|mock)\b/i);
+ expect(html).not.toMatch(/<iframe\b|src="https?:|Design variants|Capture frames/);
+ expect(existsSync(new URL('../design-review.json',import.meta.url))).toBe(false);
+});
+it('keeps the local delivery example runnable after the legacy root is removed',()=>{
+ const world=compileDreamWorld(read('examples/morning-delivery.dream'));
+ expect(world.scenarios).toHaveLength(1);expect(world.scenarios[0]!.objectives).toHaveLength(4);
+ expect(world.assemblies).toEqual([]);expect(world.layout).toBeUndefined();
+ const pkg=JSON.parse(read('package.json'));expect(pkg.scripts.dev).toContain('render-workspace.mjs');
+});

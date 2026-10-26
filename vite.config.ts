@@ -1,11 +1,9 @@
-import { defineConfig } from "vite";
-import {mediaCapturePlugin} from "./scripts/media-middleware";
-
+import {defineConfig} from 'vite';
+import {fileURLToPath} from 'node:url';
+const root=fileURLToPath(new URL('./',import.meta.url));
 export default defineConfig({
-  cacheDir: '.npm-cache/vite',
-  plugins: [mediaCapturePlugin()],
-  build: {rollupOptions:{input:{game:'index.html',lab:'lab/index.html'}}},
-  server: { host: "127.0.0.1", port: 5173, watch: { ignored: ["**/dist-docs/**", "**/.npm-cache/**"] } },
-  preview: { host: "127.0.0.1", port: 4173 },
-  test: { environment: "node", include: ["tests/**/*.test.ts"], setupFiles:["tests/setup.ts"] },
+  root,publicDir:false,cacheDir:'.cache/vite',
+  server:{host:'127.0.0.1',port:5180,strictPort:true,fs:{allow:[root]},watch:{ignored:['**/dist-docs/**']}},
+  build:{outDir:'dist',emptyOutDir:true},
+  preview:{host:'127.0.0.1',port:4180,strictPort:true},
 });

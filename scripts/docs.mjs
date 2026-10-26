@@ -1,48 +1,89 @@
-import {readFile, readdir, mkdir, writeFile, cp, rm} from 'node:fs/promises';
+import {readFile,readdir,mkdir,writeFile,copyFile,rm,stat} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {marked} from 'marked';
-import {highlightDream, escapeHtml} from '../docs/site/dream-highlight.mjs';
+import {createServer} from 'vite';
+import {highlightDream,escapeHtml} from '../docs/site/dream-highlight.mjs';
 
-const root=fileURLToPath(new URL('../',import.meta.url)), out=path.join(root,'dist-docs');
-const contract=JSON.parse(await readFile(path.join(root,'docs/dream-v2-contract.json'),'utf8'));
+const root=fileURLToPath(new URL('../',import.meta.url)),out=path.join(root,'dist-docs');
 const repo='https://github.com/minimumeffort-dev/muse.dream/blob/main/';
-const files=['README.md','docs/media/README.md'];
-async function walk(dir){for(const entry of await readdir(path.join(root,dir),{withFileTypes:true})){
-  if(['evidence','media','site'].includes(entry.name))continue;
-  const name=path.posix.join(dir,entry.name);
-  if(entry.isDirectory())await walk(name);else if(name.endsWith('.md'))files.push(name);
-}}
+const files=['README.md'],sources=new Map(),copied=new Set();
+async function walk(directory){
+  for(const entry of await readdir(path.join(root,directory),{withFileTypes:true})){
+    if(['site','media','evidence'].includes(entry.name)||entry.name.startsWith('.'))continue;
+    const name=path.posix.join(directory,entry.name);
+    if(entry.isDirectory())await walk(name);else if(name.endsWith('.md'))files.push(name);
+  }
+}
 await walk('docs');
-const outputName=name=>name==='docs/README.md'?'index.html':name==='README.md'?'overview.html':name.slice(5).replace(/\.md$/,'.html');
-await rm(out,{recursive:true,force:true});await mkdir(out,{recursive:true});
-for(const dir of ['media','examples','site'])await cp(path.join(root,'docs',dir),path.join(out,dir),{recursive:true});
-for(const name of ['dream-v2-contract.json','dream-v2-model.txt','dream-v2.ebnf'])await cp(path.join(root,'docs',name),path.join(out,name));
+files.sort((a,b)=>a==='README.md'?-1:b==='README.md'?1:a.localeCompare(b));
+for(const file of files)sources.set(file,await readFile(path.join(root,file),'utf8'));
+const title=file=>sources.get(file).match(/^# (.+)/m)?.[1]||path.posix.basename(file,'.md');
+const outputName=file=>file==='README.md'?'index.html':file.slice(5).replace(/\.md$/,'.html');
+if(new Set(files.map(outputName)).size!==files.length)throw Error('Documentation page output paths collide.');
+const dataOutput=file=>file.startsWith('docs/')?file.slice(5):file;
+let commands;
+try{commands=JSON.parse(await readFile(path.join(root,'docs/language/dream-v2-contract.json'),'utf8')).commands;}
+catch(error){
+  if(error.code!=='ENOENT')throw error;
+  const server=await createServer({root,configFile:false,logLevel:'silent',server:{middlewareMode:true,watch:null},appType:'custom'});
+  try{commands=(await server.ssrLoadModule('/src/engine/scene/dream-contract.ts')).DREAM_V2_COMMANDS;}
+  finally{await server.close();}
+}
+if(!commands||typeof commands!=='object')throw Error('Dream command contract is missing commands.');
+await rm(out,{recursive:true,force:true});await mkdir(path.join(out,'site/fonts'),{recursive:true});
+for(const name of ['style.css','copy.js'])await copyFile(path.join(root,'docs/site',name),path.join(out,'site',name));
+for(const name of await readdir(path.join(root,'fonts')))if(/\.(woff2|txt)$/.test(name))await copyFile(path.join(root,'fonts',name),path.join(out,'site/fonts',name));
+async function copyText(file){
+  if(copied.has(file))return;
+  const destination=dataOutput(file);
+  await mkdir(path.dirname(path.join(out,destination)),{recursive:true});
+  await copyFile(path.join(root,file),path.join(out,destination));copied.add(file);
+}
+async function copySources(directory,pattern){
+  const entries=await readdir(path.join(root,directory),{withFileTypes:true}).catch(error=>{if(error.code==='ENOENT')return [];throw error;});
+  for(const entry of entries){
+    const file=path.posix.join(directory,entry.name);
+    if(entry.isDirectory())await copySources(file,pattern);else if(pattern.test(file))await copyText(file);
+  }
+}
+await copySources('examples',/\.dream$/);
+await copySources('docs/language',/\.(json|txt|ebnf|dream)$/);
 for(const file of files){
-  const source=await readFile(path.join(root,file),'utf8'), destination=outputName(file), relative=target=>path.posix.relative(path.posix.dirname(destination),target)||'index.html';
-  const link=href=>{
-    if(!href || /^(?:https?:|mailto:|#)/.test(href))return href;
-    const [pathname,hash]=href.split('#'), resolved=path.posix.normalize(path.posix.join(path.posix.dirname(file),pathname));
-    const copied=resolved.startsWith('docs/') && /^(?:media|examples|site)\//.test(resolved.slice(5)) || ['docs/dream-v2-contract.json','docs/dream-v2-model.txt','docs/dream-v2.ebnf'].includes(resolved);
-    const target=files.includes(resolved) ? relative(outputName(resolved)) : copied ? relative(resolved.slice(5)) : repo+resolved;
-    return target+(hash?'#'+hash:'');
-  };
-  const renderer=new marked.Renderer(), slugs=new Map();
-  renderer.code=({text,lang})=>`<div class="code-block"><div class="code-bar"><span>${escapeHtml(lang||'text')}</span><button type="button" aria-label="Copy code">Copy</button></div><pre tabindex="0"><code class="language-${escapeHtml(lang||'text')}">${lang==='dream'?highlightDream(text,contract.commands):escapeHtml(text)}</code></pre></div>`;
-  renderer.link=function({href,title,tokens}){return `<a href="${escapeHtml(link(href))}"${title?` title="${escapeHtml(title)}"`:''}>${this.parser.parseInline(tokens)}</a>`;};
-  renderer.image=({href,text})=>`<img src="${escapeHtml(link(href))}" alt="${escapeHtml(text)}" loading="lazy" decoding="async">`;
+  const source=sources.get(file),destination=outputName(file),relative=target=>path.posix.relative(path.posix.dirname(destination),target)||'index.html';
+  const localLinks=new Map();
+  for(const token of marked.lexer(source,{gfm:true})){
+    // Resolve links recursively, including table cells and list items, before synchronous rendering.
+    marked.walkTokens([token],node=>{if(node.type==='link'||node.type==='image')localLinks.set(node.href,undefined);});
+  }
+  for(const href of localLinks.keys()){
+    const pathnameOnly=(href??'').split(/[?#]/)[0];
+    if(/(?:^|\/)(?:media|evidence)(?:\/|$)|\.(?:png|jpe?g|gif|webp|mp4|webm|jsonl)$/i.test(pathnameOnly))throw Error(`${file}: remove the retired capture/evidence link: ${href}`);
+    if(!href||/^(?:https?:|mailto:|#)/i.test(href)){localLinks.set(href,href);continue;}
+    if(/^[a-z][a-z\d+.-]*:/i.test(href)){localLinks.set(href,'#');continue;}
+    const [pathname,...suffix]=href.split(/(?=[?#])/),resolved=path.posix.normalize(path.posix.join(path.posix.dirname(file),pathname));
+    if(path.posix.isAbsolute(resolved)||resolved==='..'||resolved.startsWith('../'))throw Error(`${file}: link leaves the Lab: ${href}`);
+    if(/(?:^|\/)(?:media|evidence)(?:\/|$)/.test(resolved))throw Error(`${file}: remove the retired capture/evidence link: ${href}`);
+    let target;
+    if(files.includes(resolved))target=relative(outputName(resolved));
+    else{
+      const info=await stat(path.join(root,resolved)).catch(()=>undefined);
+      if(!info?.isFile())throw Error(`${file}: missing local link: ${href}`);
+      if(/\.(dream|json|txt|ebnf)$/.test(resolved)){await copyText(resolved);target=relative(dataOutput(resolved));}
+      else target=repo+resolved;
+    }
+    localLinks.set(href,target+suffix.join(''));
+  }
+  const renderer=new marked.Renderer(),slugs=new Map();
+  renderer.code=({text,lang})=>`<div class="code-block"><div class="code-bar"><span>${escapeHtml(lang||'text')}</span><button type="button" aria-label="Copy code">Copy</button></div><pre tabindex="0"><code class="language-${escapeHtml(lang||'text')}">${lang==='dream'?highlightDream(text,commands):escapeHtml(text)}</code></pre></div>`;
+  renderer.link=function({href,title:linkTitle,tokens}){return `<a href="${escapeHtml(localLinks.get(href)??href??'')}"${linkTitle?` title="${escapeHtml(linkTitle)}"`:''}>${this.parser.parseInline(tokens)}</a>`;};
+  renderer.image=({href})=>{throw Error(`${file}: image captures are not retained: ${href}`);};
+  renderer.html=({text})=>escapeHtml(text);
   renderer.heading=function({tokens,depth,text}){
-    const slug=text.toLowerCase().replace(/<[^>]*>|[^\p{L}\p{N}_\-\s]/gu,'').trim().replace(/\s/g,'-'), count=slugs.get(slug)||0;slugs.set(slug,count+1);
+    const slug=text.toLowerCase().replace(/<[^>]*>|[^\p{L}\p{N}_\-\s]/gu,'').trim().replace(/\s/g,'-'),count=slugs.get(slug)||0;slugs.set(slug,count+1);
     return `<h${depth} id="${slug}${count?'-'+count:''}">${this.parser.parseInline(tokens)}</h${depth}>`;
   };
-  renderer.html=({text})=>escapeHtml(text);
-  const title=source.match(/^# (.+)/m)?.[1]||'Dream 2';
-  const groups=[['Start','docs/README.md'],['Play & controls','docs/context-actions.md'],['Quickstart','docs/dream/quickstart.md'],['Examples','docs/dream/examples.md'],['Objects','docs/dream/objects.md'],['People & clothing','docs/dream/people.md'],['Voxels','docs/dream/voxels.md'],['Worlds','docs/dream/worlds.md'],['Interiors','docs/dream/interiors.md'],['Seating','docs/dream/seating.md'],['Shared meals','docs/dream/social.md'],['Weather','docs/dream/weather.md'],['Behavior','docs/dream/behavior.md'],['Shared rules','docs/dream/rules.md'],['Sports','docs/dream/sports.md'],['NPCs & control','docs/dream/npcs.md'],['Markets & work','docs/dream/commerce.md'],['Businesses','docs/dream/businesses.md'],['Staff shifts','docs/dream/shifts.md'],['Opening hours','docs/dream/hours.md'],['Planting & growth','docs/dream/growth.md'],['Scenarios & agents','docs/dream/scenarios.md'],['World systems','docs/world-systems.md'],['Model authoring','docs/dream/model-authoring.md'],['Reference','docs/dream/reference.md'],['Asset library','docs/asset-library.md'],['Media & highlighting','docs/media/README.md']].filter(([,f])=>files.includes(f));
-  const html=`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#fafaf7"><title>${escapeHtml(title)} · Dream</title><link rel="preload" href="${relative('site/fonts/manrope-latin.woff2')}" as="font" type="font/woff2" crossorigin><link rel="preload" href="${relative('site/fonts/archivo-latin.woff2')}" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="${relative('site/style.css')}"><script src="${relative('site/copy.js')}" defer></script></head><body><a class="skip" href="#content">Skip to content</a><header class="site-header">
-    <a class="brand" href="https://minimumeffort.dev/" aria-label="Minimum Effort, home"><span class="brand-compact" aria-hidden="true"><span class="brand-compact-m">m</span><span class="brand-compact-e">e.</span></span><span class="brand-name" aria-hidden="true">minimum<span class="brand-effort">effort.</span></span></a>
-    <a class="product" href="${relative('index.html')}">Muse Dream<span>Dream 2 documentation</span></a>
-    <div class="header-links"><a href="https://musedream.vercel.app/">Play ↗</a><a href="https://github.com/minimumeffort-dev/muse.dream">GitHub ↗</a></div>
-  </header><div class="layout"><nav class="docs-nav" aria-label="Documentation"><p class="nav-label">Dream 2 / Docs</p>${groups.map(([label,f])=>`<a ${file===f?'aria-current="page"':''} href="${relative(outputName(f))}">${label}</a>`).join('')}</nav><main id="content" tabindex="-1"><article>${marked.parse(source,{renderer,gfm:true})}</article><footer><span>Handmade mock. No model calls.</span><a href="${repo+file}">Edit this page ↗</a></footer></main></div><div id="copy-status" role="status" class="sr-only"></div></body></html>`;
+  const html=`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#fafaf7"><title>${escapeHtml(title(file))} · Dreams Lab</title><link rel="preload" href="${relative('site/fonts/manrope-latin.woff2')}" as="font" type="font/woff2" crossorigin><link rel="preload" href="${relative('site/fonts/archivo-latin.woff2')}" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="${relative('site/style.css')}"><script src="${relative('site/copy.js')}" defer></script></head><body><a class="skip" href="#content">Skip to content</a><header class="site-header"><a class="brand" href="https://minimumeffort.dev/" aria-label="Minimum Effort, home"><span class="brand-compact" aria-hidden="true"><span class="brand-compact-m">m</span><span class="brand-compact-e">e.</span></span><span class="brand-name" aria-hidden="true">minimum<span class="brand-effort">effort.</span></span></a><a class="product" href="${relative('index.html')}">Dreams Lab<span>Documentation</span></a><div class="header-links"><a href="https://musedream.vercel.app/">Open Lab ↗</a><a href="https://github.com/minimumeffort-dev/muse.dream">GitHub ↗</a></div></header><div class="layout"><nav class="docs-nav" aria-label="Documentation">${files.map(target=>`<a ${file===target?'aria-current="page"':''} href="${relative(outputName(target))}">${escapeHtml(target==='README.md'?'Overview':title(target))}</a>`).join('')}</nav><main id="content" tabindex="-1"><article>${marked.parse(source,{renderer,gfm:true})}</article><footer><span>Mock interpretation and agents.</span><a href="${repo+file}">Edit this page ↗</a></footer></main></div><div id="copy-status" role="status" class="sr-only"></div></body></html>`;
   await mkdir(path.dirname(path.join(out,destination)),{recursive:true});await writeFile(path.join(out,destination),html);
 }
-console.log(`Built ${files.length} documentation pages in dist-docs/`);
+console.log(`Built ${files.length} Lab documentation pages in dist-docs/ without captures or evidence.`);

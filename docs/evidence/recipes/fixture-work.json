@@ -1,9 +1,0 @@
-{
-  "release": "caa39b792a4bf1ae8d49f84dea2e4a8e4205c84a",
-  "simulation": 13,
-  "sourceHash": "269c818e0f333fe8fb11fe881219eb363ab59e54da8817787ba24191002c5464",
-  "saveCompatibility": "f7b5f8bc696e111422148d51e068413050785a6dc03dcc418cbeb80d9f8adcfc",
-  "source": "Released simulation-13 review start, shared bake action and 121 real fixed ticks, then its normal encoder.",
-  "path": "tests/fixtures/save-v9-sim13-work.json",
-  "sha256": "fc3b160d6f2974044b79291be5f81dba7fbff469db465d537f9853587e1e366f"
-}

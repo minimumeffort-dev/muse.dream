@@ -1,5 +1,0 @@
-
-> muse-dream@0.1.0 test
-> vitest run tests/urban-world.test.ts tests/transport-network.test.ts --maxWorkers=2 --testTimeout=60000 --reporter=json --outputFile=/tmp/muse-feedback-after.json
-
-JSON report written to /tmp/muse-feedback-after.json
