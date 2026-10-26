@@ -2,6 +2,10 @@
 
 [Docs](../README.md) / Scenarios · [Open Dream Lab](https://musedream.vercel.app/lab/)
 
+A fresh researcher workspace is being designed separately in `dreams-lab/`.
+See the [three design variants](../dreams-lab.md). The scenario contract below
+continues to describe the existing mock Lab; the new previews do not run it yet.
+
 A useful world needs more than buildings. A shop has stock and prices. An agent has a budget and can carry only so much. A service takes time and can serve only a few people at once. A task needs a measurable outcome.
 
 Dream now describes those rules in an optional `scenario` block. The first lab accepts a prompt, proposes Dream source through a labelled local mock, validates it and runs one or more mock agents. A live dashboard shows their tasks, inventory, spending, capacity contention and rule violations. You can export the episode and replay it headlessly.

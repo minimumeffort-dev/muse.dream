@@ -1,0 +1,74 @@
+{
+  "checks": [
+    {
+      "variant": "workspace",
+      "viewport": "desktop",
+      "footerTop": 977.359375,
+      "mainBottom": 977.359375,
+      "scrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "variant": "notebook",
+      "viewport": "desktop",
+      "footerTop": 868,
+      "mainBottom": 868,
+      "scrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "variant": "compare",
+      "viewport": "desktop",
+      "footerTop": 1002,
+      "mainBottom": 1002,
+      "scrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "variant": "workspace",
+      "viewport": "mobile",
+      "footerTop": 1546,
+      "inputs": [
+        {
+          "name": "Preview agents",
+          "value": "2",
+          "width": 159
+        },
+        {
+          "name": "Preview budget",
+          "value": "16",
+          "width": 127.765625
+        },
+        {
+          "name": "Preview deadline",
+          "value": "80",
+          "width": 127.03125
+        },
+        {
+          "name": "Preview seed",
+          "value": "7",
+          "width": 159
+        }
+      ],
+      "mainBottom": 1546,
+      "scrollWidth": 390,
+      "width": 390
+    }
+  ],
+  "otherMobile": [
+    {
+      "variant": "notebook",
+      "footerTop": 1518,
+      "mainBottom": 1518,
+      "scrollWidth": 390,
+      "width": 390
+    },
+    {
+      "variant": "compare",
+      "footerTop": 1589.5,
+      "mainBottom": 1589.5,
+      "scrollWidth": 390,
+      "width": 390
+    }
+  ]
+}

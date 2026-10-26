@@ -1,5 +1,18 @@
 # Media and Dream highlighting
 
+## Dreams Lab design review
+
+`dreams-lab-workspace.jpg`, `dreams-lab-notebook.jpg` and
+`dreams-lab-compare.jpg` are native full-page browser captures of three static
+interface variants. Their maps, timelines and results are illustrative design
+data. They are not model-generated worlds, simulation runs or performance
+measurements. Mobile captures and viewport checks are kept with
+[the review evidence](../evidence/dreams-lab-design/verification.md).
+
+This slice changes no gameplay rendering or controls. Existing game HD/GIF/still
+sets retain their recorded provenance. These static design previews have no
+simulation or animated sequence to export, so no motion recording was made.
+
 ## Recurring work, r118
 
 `periodwork` follows actual office work through quota exhaustion, unpaid waiting,

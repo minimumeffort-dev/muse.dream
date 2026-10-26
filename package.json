@@ -6,6 +6,7 @@
   "description": "Playable worlds described in Dream 2. Paper-to-world mock prototype with Three.js.",
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5173",
+    "lab:design": "node dreams-lab/render-variants.mjs && vite dreams-lab --host 127.0.0.1 --port 5180 --strictPort",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1 --port 4173",
     "test": "vitest run",

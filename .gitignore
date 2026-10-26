@@ -9,3 +9,8 @@ dist/
 *.local
 
 dist-docs/
+
+# Rebuild Dreams Lab design previews with npm run lab:design.
+dreams-lab/index.html
+dreams-lab/design/
+dreams-lab/.impeccable/
