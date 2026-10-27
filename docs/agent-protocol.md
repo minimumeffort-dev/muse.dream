@@ -49,7 +49,10 @@ read another actor's inventory, objectives, source or full run trace.
 Reports include a `history` prefix from step zero through `metrics.steps`. Each
 point contains `step`, `completed`, `spent` and `waiting` (cumulative agent steps).
 The host derives and caches these from accepted transitions; actor credentials
-cannot read them. Timeline overlays reuse the existing report refresh. Older
+cannot read them. Selecting an overlay step loads both recorded prefixes through
+the researcher-only view endpoint and verifies their run ID, source and seed
+before displaying agent activity. It never submits actions. Timeline overlays
+reuse the existing report refresh. Older
 hosts may omit history; supplied histories must agree with the report.
 
 A decision has this shape:

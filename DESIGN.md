@@ -62,9 +62,12 @@ completed/total counts; unfinished comparisons stay explicit. Three overlaid
 step charts compare tasks, spending and waiting, using one actual step axis and
 shared zero-based scales. First run is solid gold, second dashed blue; a compact
 legend and matching readouts show their values and signed difference. Lines stop
-at each recorded head; missing values remain missing. Inspection is read-only,
-with one shared cursor, arrow/Home/End keys, click/Enter to hold and Latest/Escape
-to follow again. Preserve held steps through live refresh. Timeline CSV exports
+at each recorded head; missing values remain missing. Inspection uses one shared cursor: hover previews values, click/Enter opens a
+paired view of recorded agent positions, work, actions and outcomes at that step,
+and Latest/Escape returns to following. Arrow/Home/End keys inspect; after a
+selection they move the paired view too. Each run can open the same step in the
+existing 3D replay, using the single playback owner. An unrecorded step stays
+unavailable. Preserve held steps, focus and disclosures through live refresh. Timeline CSV exports
 the aligned prefixes, differences and source pins. Run data
 holds the full metric table, source hashes and saved revision pins. Evidence still
 opens the exact run and step and leaves the editable draft intact.

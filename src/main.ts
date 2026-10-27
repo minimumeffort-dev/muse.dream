@@ -178,14 +178,16 @@ async function pollHost(revision=hostRevision){
   }catch(reason){if(!disposed&&revision===hostRevision){stop();following=false;showError(reason instanceof Error?reason.message:String(reason));render();if((reason as {status?:number}).status===401){retry=false;try{sessionStorage.removeItem('dream-lab-token');}catch{}get('host-connection').hidden=false;}}}
   finally{if(!disposed&&retry&&revision===hostRevision)hostTimer=window.setTimeout(()=>void pollHost(revision),500);}
 }
-async function selectHostedRun(summary:RunSummary,token:string,evidence?:EvidenceRef){
+async function selectHostedRun(summary:RunSummary,token:string,evidence?:EvidenceRef,step?:number){
   stopHostPolling();stop();following=false;const revision=hostRevision;
   const candidate=new HostView(token,'/api/runs/'+encodeURIComponent(summary.id));candidate.summary=summary;hostAbort=new AbortController();
   const run=await candidate.poll(hostAbort.signal);if(disposed||revision!==hostRevision)return;
-  host=candidate;cursor=evidence?.step??run.length;following=!evidence&&candidate.status==='waiting'&&!document.hidden;
+  if(step!==undefined&&step>run.length)throw Error('That step is not recorded in this run yet.');
+  host=candidate;cursor=step??evidence?.step??run.length;following=step===undefined&&!evidence&&candidate.status==='waiting'&&!document.hidden;
   if(candidate.summary)savedWorkspace.acceptRun(candidate.summary);render();
   if(evidence){get<HTMLDetailsElement>('run-report').open=true;
     const button=Array.from(get('run-report').querySelectorAll<HTMLButtonElement>('button')).find(button=>button.dataset.step===String(evidence.step)&&button.dataset.actor===evidence.agent&&button.dataset.outcome===String(evidence.outcomeIndex));button?.click();}
+  if(step!==undefined)get('world-title').scrollIntoView({block:'nearest'});
   hostTimer=window.setTimeout(()=>void pollHost(revision),500);
 }
 function updateControllers(){try{draftScenario=compileExperiment(source.value).scenario;savedWorkspace.setActors(draftScenario.agents.map(actor=>actor.id));}catch{/* Keep the last valid roster while source is being edited. */}}

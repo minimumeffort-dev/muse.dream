@@ -3,6 +3,8 @@ import type {ControllerAssignment,ExperimentConfig,SavedExperiment,RunSummary,Sa
 import type {EvidenceRef} from './report';
 import {BRIEF_BUILDER,DEFAULT_WORLD,DEFAULT_TASK,DEFAULT_PARAMETERS} from './framework';
 import {createComparisonView} from './comparison-view';
+import {ComparisonReplay} from './comparison-replay';
+import {createComparisonReplayView} from './comparison-replay-view';
 const get=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 const name=(text:string)=>text.replaceAll('_',' ').replace(/\b\w/g,c=>c.toUpperCase());
 const text=(tag:string,value:string)=>{const node=document.createElement(tag);node.textContent=value;return node;};
@@ -10,7 +12,7 @@ export interface WorkspaceCallbacks {
   validateDraft:()=>boolean;
   readDraft:()=>Omit<ExperimentConfig,'controllers'>;
   applyDraft:(config:ExperimentConfig)=>void;
-  selectRun:(run:RunSummary,token:string,evidence?:EvidenceRef)=>Promise<void>;
+  selectRun:(run:RunSummary,token:string,evidence?:EvidenceRef,step?:number)=>Promise<void>;
   clearRun:()=>void;
   busy:(pending:boolean)=>void;
   error:(message:string)=>void;
@@ -33,6 +35,11 @@ export class ExperimentWorkspace {
   private comparisonTimer:ReturnType<typeof setTimeout>|undefined;
   private comparisonPair='';
   private readonly comparisonCache=new Map<string,SavedRunReport>();
+  private comparisonReader:ComparisonReplay|undefined;
+  private comparisonReports:[SavedRunReport,SavedRunReport]|undefined;
+  private inspectionStep:number|undefined;
+  private inspectionRevision=0;
+  private readonly replayView:ReturnType<typeof createComparisonReplayView>;
   private readonly showComparison:ReturnType<typeof createComparisonView>;
   private pending=false;
   private disposed=false;
@@ -42,7 +49,8 @@ export class ExperimentWorkspace {
   private readonly runNodes=new Map<string,HTMLElement>();
   private readonly experimentNodes=new Map<string,HTMLButtonElement>();
   constructor(private readonly callbacks:WorkspaceCallbacks){
-    this.showComparison=createComparisonView(get('comparison-content'),evidence=>{const run=this.runs.find(run=>run.id===evidence.runId);if(run&&!this.pending){this.selectRun(run,evidence);this.renderRuns();}});
+    this.replayView=createComparisonReplayView((id,step)=>{const run=this.runs.find(run=>run.id===id);if(run&&!this.pending){this.selectRun(run,undefined,step);this.renderRuns();}});
+    this.showComparison=createComparisonView(get('comparison-content'),evidence=>{const run=this.runs.find(run=>run.id===evidence.runId);if(run&&!this.pending){this.selectRun(run,evidence);this.renderRuns();}},step=>this.inspectComparison(step),this.replayView.element);
     get<HTMLButtonElement>('save-experiment').onclick=()=>{if(this.callbacks.validateDraft())void this.mutate(()=>this.save());};
     get<HTMLButtonElement>('new-experiment').onclick=()=>this.newDraft();
     get<HTMLButtonElement>('resume-run').onclick=()=>void this.mutate(async()=>{
@@ -73,7 +81,7 @@ export class ExperimentWorkspace {
   async connect(token:string){
     const connection=++this.connectionRevision,revision=++this.requestRevision,client=new ExperimentClient(token);
     const {experiments}=await client.experiments();if(this.disposed||revision!==this.requestRevision)return false;
-    this.client=client;this.experiments=experiments;this.callbacks.connected();get('saved-library').hidden=false;get('controller-section').hidden=false;
+    this.resetInspection();this.client=client;this.comparisonReader=new ComparisonReplay(token);this.experiments=experiments;this.callbacks.connected();get('saved-library').hidden=false;get('controller-section').hidden=false;
     this.renderExperiments();
     const remembered=this.readSelection();
     const selected=experiments.find(e=>e.id===remembered?.experimentId)??experiments[0];
@@ -110,7 +118,7 @@ export class ExperimentWorkspace {
     if(this.pending||!this.client)return;
     this.selectionRevision++;
     this.requestRevision++;this.selected=undefined;this.selectedRun='';this.runs=[];this.compared=[];
-    this.comparisonRevision++;this.stopComparisonRefresh();get('run-comparison').hidden=true;this.callbacks.clearRun();this.callbacks.applyDraft({name:'Morning delivery',input:{mode:'brief',world:DEFAULT_WORLD,task:DEFAULT_TASK,parameters:{...DEFAULT_PARAMETERS},builder:BRIEF_BUILDER},controllers:[]});
+    this.comparisonRevision++;this.stopComparisonRefresh();this.resetInspection();get('run-comparison').hidden=true;this.callbacks.clearRun();this.callbacks.applyDraft({name:'Morning delivery',input:{mode:'brief',world:DEFAULT_WORLD,task:DEFAULT_TASK,parameters:{...DEFAULT_PARAMETERS},builder:BRIEF_BUILDER},controllers:[]});
     this.choices=[];this.setActors(['courier_a','courier_b']);this.renderRuns();this.renderExperiments();this.remember();this.changed();
   }
   private async openExperiment(experiment:SavedExperiment,preferredRun?:string){
@@ -120,14 +128,14 @@ export class ExperimentWorkspace {
     this.pending=true;this.callbacks.busy(true);this.renderControllers();this.renderRuns();this.renderExperiments();
     try{
       const {runs}=await this.client.runs(experiment.id);if(this.disposed||revision!==this.requestRevision)return;
-      this.selected=experiment;this.runs=runs;this.compared=[];this.comparisonRevision++;this.stopComparisonRefresh();get('run-comparison').hidden=true;
+      this.selected=experiment;this.runs=runs;this.compared=[];this.comparisonRevision++;this.stopComparisonRefresh();this.resetInspection();get('run-comparison').hidden=true;
       this.callbacks.applyDraft(experiment.config);this.choices=[];this.setActors(experiment.config.controllers.map(c=>c.actor),experiment.config.controllers);
       const latest=runs.find(r=>r.id===preferredRun)??runs[0];if(latest)this.selectRun(latest);else{this.selectedRun='';this.callbacks.clearRun();}
       this.renderRuns();this.renderExperiments();this.remember();this.changed();
     }catch(error){if(revision===this.requestRevision)this.callbacks.error(error instanceof Error?error.message:String(error));}
     finally{this.pending=false;if(!this.disposed){this.callbacks.busy(false);this.renderControllers();this.renderRuns();this.renderExperiments();}}
   }
-  private selectRun(run:RunSummary,evidence?:EvidenceRef){if(!this.client)return;const revision=++this.selectionRevision;this.selectedRun=run.id;this.remember();void this.callbacks.selectRun(run,this.client.token,evidence).catch(error=>{if(!this.disposed&&revision===this.selectionRevision)this.callbacks.error(error instanceof Error?error.message:String(error));});get('resume-run').hidden=run.status!=='paused';}
+  private selectRun(run:RunSummary,evidence?:EvidenceRef,step?:number){if(!this.client)return;const revision=++this.selectionRevision;this.selectedRun=run.id;this.remember();void this.callbacks.selectRun(run,this.client.token,evidence,step).catch(error=>{if(!this.disposed&&revision===this.selectionRevision)this.callbacks.error(error instanceof Error?error.message:String(error));});get('resume-run').hidden=run.status!=='paused';}
   acceptRun(run:RunSummary,refreshComparison=true){
     const previous=this.runs.find(r=>r.id===run.id);if(previous&&(previous.steps>run.steps||previous.steps===run.steps&&previous.updatedAt>run.updatedAt||previous.updatedAt===run.updatedAt&&previous.status===run.status&&previous.steps===run.steps))return;
     if(run.experimentId===this.selected?.id){this.runs=[run,...this.runs.filter(r=>r.id!==run.id)].sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)));this.renderRuns();}
@@ -160,10 +168,10 @@ export class ExperimentWorkspace {
   private async renderComparison(reveal=false){
     this.stopComparisonRefresh();this.comparisonReveal||=reveal;
     const panel=get('run-comparison'),content=get('comparison-content');
+    const pair=this.compared.join('|');
+    if(this.comparisonPair!==pair){this.comparisonPair=pair;this.resetInspection();this.comparisonCache.clear();if(this.compared.length===2)content.replaceChildren(text('p','Loading comparison…'));}
     panel.hidden=this.compared.length!==2;
     if(panel.hidden||!this.client){this.comparisonQueued=false;this.comparisonReveal=false;return;}
-    const pair=this.compared.join('|');
-    if(this.comparisonPair!==pair){this.comparisonPair=pair;this.comparisonCache.clear();content.replaceChildren(text('p','Loading comparison…'));}
     if(this.comparisonBusy){this.comparisonQueued=true;return;}
     this.comparisonBusy=true;
     const revision=this.comparisonRevision,ids=[...this.compared],revealNow=this.comparisonReveal;this.comparisonReveal=false;
@@ -171,7 +179,9 @@ export class ExperimentWorkspace {
       const settled=await Promise.allSettled(ids.map(id=>this.comparisonCache.get(id)??this.client!.report(id)));if(this.disposed||revision!==this.comparisonRevision)return;
       const reports=settled.map(result=>{if(result.status==='rejected')throw result.reason;return result.value;});
       for(const report of reports){if(['completed','deadline'].includes(report.run.status))this.comparisonCache.set(report.run.id,report);this.acceptRun(report.run,false);}
+      const previous=this.comparisonReports;this.comparisonReports=[reports[0]!,reports[1]!];
       this.showComparison(reports[0]!,reports[1]!,id=>this.runLabel(id));
+      if(this.inspectionStep!==undefined&&previous&&reports.some((report,index)=>previous[index]!.run.steps<this.inspectionStep!&&report.run.steps>=this.inspectionStep!))this.inspectComparison(this.inspectionStep,true);
       if(revealNow)panel.scrollIntoView({block:'nearest'});
     }catch{
       if(!this.disposed&&revision===this.comparisonRevision){
@@ -187,7 +197,20 @@ export class ExperimentWorkspace {
       }
     }
   }
+  private resetInspection(){this.inspectionRevision++;this.inspectionStep=undefined;this.comparisonReports=undefined;this.comparisonReader?.clear();this.replayView.clear();}
+  private inspectComparison(step:number|undefined,refresh=false){
+    const revision=++this.inspectionRevision;this.inspectionStep=step;
+    if(step===undefined){this.comparisonReader?.clear();this.replayView.clear();return;}
+    const reports=this.comparisonReports,reader=this.comparisonReader;if(!reports||!reader)return;
+    const labels:[string,string]=[this.runLabel(reports[0].run.id),this.runLabel(reports[1].run.id)];
+    if(!refresh)this.replayView.loading(step,labels);
+    void Promise.allSettled(reports.map(report=>reader.at(report.run,step))).then(results=>{
+      if(this.disposed||revision!==this.inspectionRevision)return;
+      const entry=(index:number)=>({summary:reports[index]!.run,label:labels[index]!,result:results[index]!.status==='fulfilled'?results[index]!.value:undefined,error:results[index]!.status==='rejected'});
+      this.replayView.show(step,[entry(0),entry(1)]);
+    });
+  }
   private stopComparisonRefresh(){if(this.comparisonTimer!==undefined)clearTimeout(this.comparisonTimer);this.comparisonTimer=undefined;}
   runLabel(id:string){const ordered=[...this.runs].sort((a,b)=>String(a.createdAt).localeCompare(String(b.createdAt))),index=ordered.findIndex(run=>run.id===id);return index<0?'Run':'Run '+(index+1);}
-  dispose(){this.disposed=true;this.requestRevision++;this.comparisonRevision++;this.selectionRevision++;this.connectionRevision++;this.stopComparisonRefresh();}
+  dispose(){this.disposed=true;this.requestRevision++;this.comparisonRevision++;this.selectionRevision++;this.connectionRevision++;this.stopComparisonRefresh();this.resetInspection();}
 }

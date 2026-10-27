@@ -4,16 +4,16 @@ const node=(tag:string,className:string,text='')=>{const element=document.create
 const svgNode=(tag:string,attributes:Record<string,string>)=>{const element=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [key,value] of Object.entries(attributes))element.setAttribute(key,value);return element;};
 const tick=new Intl.NumberFormat('en',{notation:'compact',maximumFractionDigits:1});
 
-/** One read-only cursor compares recorded prefixes; it never takes over replay. */
-export function createComparisonHistoryView(){
+/** One read-only cursor compares recorded prefixes; selecting a step inspects both. */
+export function createComparisonHistoryView(onSelect:(step:number|undefined)=>void){
   const element=node('section','history-view comparison-history');element.tabIndex=0;element.setAttribute('role','group');element.setAttribute('aria-label','Comparison history charts');
-  element.setAttribute('aria-description','Arrow keys inspect steps. Home and End inspect first and latest. Enter holds the selected step. Escape follows latest.');
+  element.setAttribute('aria-description','Arrow keys inspect steps. Home and End inspect first and latest. Enter opens both runs at the selected step. Escape follows latest.');
   const heading=node('div','row spread history-heading'),selection=node('span','small muted history-selection'),latest=document.createElement('button');latest.type='button';latest.className='history-latest';latest.textContent='Latest';latest.hidden=true;
   heading.append(node('h3','','Over time'),selection,latest);
   const legend=node('div','history-legend'),labels=['baseline','candidate'].map(tone=>{const label=node('span',tone);label.append(node('i',''),node('span',''));legend.append(label);return label.lastElementChild!;});
-  const plots=node('div','history-charts'),hint=node('p','small muted history-hint','Point to inspect · Select to hold'),announcement=node('span','sr-only');announcement.setAttribute('role','status');
+  const plots=node('div','history-charts'),hint=node('p','small muted history-hint','Point to inspect · Select to compare agents'),announcement=node('span','sr-only');announcement.setAttribute('role','status');
   element.append(heading,legend,plots,hint,announcement);
-  let reports:readonly SavedRunReport[]=[],lastStep=0,inspected:number|undefined,held:number|undefined;
+  let reports:readonly SavedRunReport[]=[],lastStep=0,inspected:number|undefined,held:number|undefined,committed=false;
   const figures=([['completed','Tasks completed'],['spent','Coins spent'],['waiting','Waiting (agent steps)']] as const).map(([key,title])=>{
     const figure=node('figure','history-chart '+key),caption=node('figcaption','chart-label'),values=node('div','comparison-values');
     const outputs=['baseline','candidate'].map(tone=>{const output=node('output',tone);output.setAttribute('aria-live','off');values.append(output);return output;});
@@ -26,7 +26,7 @@ export function createComparisonHistoryView(){
     svg.append(axes,maximum,zero,start,end,...series.map(s=>s.line),crosshair,...series.map(s=>s.point));figure.append(caption,svg);plots.append(figure);
     const stepAt=(event:MouseEvent|PointerEvent)=>Math.max(0,Math.min(lastStep,Math.round(((event.clientX-svg.getBoundingClientRect().left)/svg.getBoundingClientRect().width*plot.width-plot.left)/(plot.right-plot.left)*lastStep)));
     svg.onpointermove=event=>{inspected=stepAt(event);showPoint();};svg.onpointerleave=()=>{inspected=undefined;showPoint();};
-    svg.onclick=event=>{held=stepAt(event);inspected=undefined;element.focus({preventScroll:true});showPoint();};
+    svg.onclick=event=>{held=stepAt(event);inspected=undefined;committed=true;element.focus({preventScroll:true});showPoint();onSelect(held);};
     return {key,outputs,delta,maximum,end,crosshair,series,scale:1};
   });
   function showPoint(){
@@ -46,7 +46,7 @@ export function createComparisonHistoryView(){
     }
     return step;
   }
-  latest.onclick=()=>{held=undefined;inspected=undefined;element.focus({preventScroll:true});showPoint();};
+  latest.onclick=()=>{held=undefined;inspected=undefined;committed=false;element.focus({preventScroll:true});showPoint();onSelect(undefined);};
   element.onkeydown=event=>{
     if(event.target!==element)return;
     const current=inspected??held??lastStep;
@@ -54,10 +54,10 @@ export function createComparisonHistoryView(){
     else if(event.key==='ArrowRight'||event.key==='ArrowUp')held=Math.min(lastStep,current+1);
     else if(event.key==='Home')held=0;
     else if(event.key==='End')held=lastStep;
-    else if(event.key==='Escape')held=undefined;
-    else if(event.key==='Enter')held=current;
+    else if(event.key==='Escape'){held=undefined;committed=false;}
+    else if(event.key==='Enter'){held=current;committed=true;}
     else return;
-    event.preventDefault();inspected=undefined;const step=showPoint();announcement.textContent=`Step ${step}. `+figures.map(f=>`${f.key==='completed'?'Tasks completed':f.key==='spent'?'Coins spent':'Waiting agent steps'}: ${f.outputs.map(output=>output.getAttribute('aria-label')).join('; ')}; ${f.delta.textContent}.`).join(' ');
+    event.preventDefault();inspected=undefined;const step=showPoint();if(event.key==='Escape')onSelect(undefined);else if(committed)onSelect(step);announcement.textContent=`Step ${step}. `+figures.map(f=>`${f.key==='completed'?'Tasks completed':f.key==='spent'?'Coins spent':'Waiting agent steps'}: ${f.outputs.map(output=>output.getAttribute('aria-label')).join('; ')}; ${f.delta.textContent}.`).join(' ');
   };
   return {element,update(left:SavedRunReport,right:SavedRunReport,display:(id:string)=>string){
     reports=[left,right];lastStep=Math.max(...reports.map(report=>report.metrics.steps));

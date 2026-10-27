@@ -89,10 +89,16 @@ agent steps. Solid gold is the first selected run; dashed blue is the second.
 Both share the same simulation-step axis and zero-based scales. Task readouts
 include each run’s total, and Δ shows the second run minus the first at that step.
 Point at any chart or focus the charts and use arrow keys to inspect all three.
-Select a step or press Enter to hold it; **Latest** or Escape resumes following
-the latest recorded step. Home/End inspect the first/latest step. Inspection
-does not change replay or the selected world. Lines end at their own recorded
-head; values and differences show — beyond an unavailable prefix. Older hosts
+Select a step or press Enter to hold it and show both runs’ agent activity.
+Each side shows the recorded location or work, action and outcome at that step.
+**Open run** opens either available run at the same step in the 3D replay. Step
+zero shows the starting positions. Steps beyond a run’s recorded head are marked
+unavailable, rather than showing a different step. Hover previews values; once
+you have selected a step, arrow keys move the paired view too. **Latest** or
+Escape returns to following the latest recorded step. Home/End inspect the
+first/latest step. The selected run and editable setup only change when you
+choose **Open run**. Lines end at their own recorded head; values and
+differences show — beyond an unavailable prefix. Older hosts
 without timeline data show History unavailable, with summary data still usable.
 Different seeds are called out; partial results are labeled, and comparisons
 refresh as a selected run advances and finishes.

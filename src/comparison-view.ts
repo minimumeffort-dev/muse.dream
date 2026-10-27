@@ -7,7 +7,7 @@ import {comparisonCsv,comparisonHistoryCsv,csvDownload} from './result-exports';
 const text=(tag:string,value='')=>{const node=document.createElement(tag);node.textContent=value;return node;};
 
 /** Refresh values inside a pinned pair without replacing disclosures or controls. */
-export function createComparisonView(content:HTMLElement,onEvidence:(evidence:ComparisonEvidence)=>void){
+export function createComparisonView(content:HTMLElement,onEvidence:(evidence:ComparisonEvidence)=>void,onSelect:(step:number|undefined)=>void,replay:HTMLElement){
   let pair='';
   let history:ReturnType<typeof createComparisonHistoryView>;
   const evidenceNodes=new Map<string,HTMLButtonElement>();
@@ -16,7 +16,7 @@ export function createComparisonView(content:HTMLElement,onEvidence:(evidence:Co
     if(pair!==key||!content.querySelector('.comparison-headline')){
       pair=key;evidenceNodes.clear();content.replaceChildren();
       const headline=text('p');headline.className='comparison-headline';const changes=text('p');changes.className='comparison-changes small muted';content.append(headline,changes);
-      history=createComparisonHistoryView();content.append(history.element);
+      history=createComparisonHistoryView(onSelect);content.append(history.element,replay);
       const table=document.createElement('table'),head=document.createElement('thead'),header=document.createElement('tr');for(const value of ['Metric',display(left.run.id),display(right.run.id),'Change']){const cell=text('th',value) as HTMLTableCellElement;cell.scope='col';header.append(cell);}head.append(header);table.append(head,document.createElement('tbody'));
       const scroll=document.createElement('div');scroll.className='table-scroll';scroll.tabIndex=0;scroll.setAttribute('role','region');scroll.setAttribute('aria-label','Comparison data table');scroll.append(table);
       const more=document.createElement('details');more.className='result-data';more.append(text('summary','Run data'),text('p','Travel, service and waiting sum each agent’s steps.'),scroll);
