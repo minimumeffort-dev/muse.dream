@@ -287,7 +287,7 @@ body.workspace-page{--gutter:24px;height:100dvh;min-height:640px;display:flex;fl
 .workspace-page .brief-panel h2{font:650 14px/20px Manrope,sans-serif;letter-spacing:0;margin-bottom:12px}
 .workspace-page .scenario-summary p{font-size:14px;line-height:24px}
 .workspace-page .scenario-summary .small{font-size:12px;line-height:20px;margin-top:8px}
-.workspace-page .time-limit{grid-column:1/-1;grid-template-columns:1fr 128px;align-items:center}
+.workspace-page .parameter-grid{grid-template-columns:minmax(0,1fr)}
 .workspace-page #step-help{margin-top:8px}
 .workspace-page .save-setup{margin-top:12px}
 .workspace-page .section-label{margin-bottom:0;font-weight:650;line-height:20px}

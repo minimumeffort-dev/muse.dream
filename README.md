@@ -30,7 +30,8 @@ Actions and the production deployment against the merged commit.
 
 Select **Delivery**, **Warehouse** or **Classroom**. The sidebar explains the
 task and environment. Change **Team size**, **Budget per agent** or **Time limit**,
-then press **Run experiment**. Advanced setup holds the random seed, agent
+then press **Run experiment**. Conditions share a single column, with each label
+above its input and units on the right. Advanced setup holds the random seed, agent
 assignments and Dream rules. The local builder expands the chosen template.
 The compiler accepts it before a fresh episode starts. Agents receive private observations and submit actions through
 the rules. They cannot set rewards or completion.

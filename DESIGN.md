@@ -12,8 +12,10 @@ on a light background. Controls use visible focus, native buttons and disclosure
 The header states the Lab’s purpose in one sentence. The primary action is Run
 experiment. Scenario buttons choose Delivery, Warehouse or Classroom. A readable
 task and environment summary replaces the preset-only editable brief boxes.
-Team size, Budget per agent and Time limit are the visible conditions. Explain
-simulation steps once, without treating them as real seconds.
+Team size, Budget per agent and Time limit are the visible conditions. Stack all
+three in one column, with labels above equal-width inputs and units aligned on
+the right. Use the same structure on desktop and mobile. Explain simulation
+steps once, without treating them as real seconds.
 
 Advanced setup contains the random seed, host agent assignments, active controller
 ownership and Dream rules. Code can be inspected or edited; Use scenario restores
