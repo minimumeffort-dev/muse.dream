@@ -42,8 +42,14 @@ A retried run request keeps the same request identity until it is acknowledged.
 
 ## Inspect earlier runs
 
-The history lists each run's revision, status, task progress and simulation step.
-Open a run to inspect it in 3D, seek its timeline, open Results breakdown or export JSONL.
+The history shows each run’s status and task progress. Open a run to inspect it
+in 3D or seek its timeline. Results breakdown shows task progress and stacked
+travel, service, waiting and action time for each agent. These charts describe
+the full recording, even when playback is at an earlier step. Data table and
+Events open the underlying numbers and recorded requests. Controller timing
+is separate from simulation time.
+Download CSV includes each agent’s measurements, source hash and seed. Full run
+(JSONL) keeps the source and transitions needed for replay.
 Opening a historical run changes the viewer; it does not overwrite the editable
 draft or rewind a live engine.
 
@@ -59,12 +65,18 @@ an explicit conflict.
 ## Compare two runs
 
 Select Compare beside two history entries. Their comparison shows the pinned
-configuration changes and candidate-minus-baseline metric differences. Column
-headers identify each run and revision. Different seeds are called out; partial
+configuration changes and paired bars for tasks, coins spent and simulation
+steps. Each pair shares a zero-based scale; task labels include each run’s total
+so different workloads remain visible. Different seeds are called out; partial
 results are labeled, and comparisons refresh when a selected live run finishes.
 There is no automatic winner label.
 
-The comparison includes completed and partial tasks, spending, travel, service,
+Run data keeps the full comparison table and each run’s saved revision and source
+hash. Download CSV exports those pinned measurements and signed differences.
+Only tables scroll horizontally on narrow screens; charts, explanations and
+evidence links keep the page gutter.
+
+The full data includes completed and partial tasks, spending, travel, service,
 idle time, blocked requests, violations and elapsed simulation steps. Travel,
 service and idle counts sum each actor's steps, so they can exceed elapsed world
 steps. Wall latency remains a separate controller measurement. Missing

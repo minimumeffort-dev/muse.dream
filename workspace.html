@@ -44,8 +44,8 @@
       <p id="playback-notice" class="playback-notice small muted" hidden>Playback is paused. The experiment is still running on your local host.</p>
       <section id="result-summary" class="outcome-summary" aria-labelledby="run-metrics" hidden><h2 id="run-metrics"></h2><p id="result-detail"></p><p id="result-next" class="small muted"></p></section>
       <details id="agent-panel" class="activity" hidden><summary>Agent activity</summary><div id="agent-activity" class="activity-row"></div></details>
-      <details id="run-report" class="run-report" hidden><summary>Results breakdown</summary><div class="report-content" role="region" aria-label="Results breakdown" tabindex="0"></div><div class="report-footer"><a id="export" class="btn" title="Download a source-pinned JSONL record for replay" hidden download>Download run data</a><output id="host-latency" class="small muted" hidden></output></div></details>
-      <details id="run-comparison" class="run-report comparison" open hidden><summary>Compare outcomes</summary><div id="comparison-content" class="report-content" role="region" aria-label="Run comparison" tabindex="0"></div></details>
+      <details id="run-report" class="run-report" hidden><summary>Results breakdown</summary><div class="report-content" role="region" aria-label="Results breakdown"></div><div class="report-footer"><a id="export" class="text-link" title="Download a source-pinned JSONL record for replay" hidden download>Full run (JSONL)</a><details id="host-timing" class="controller-timing" hidden><summary>Controller timing</summary><output id="host-latency" class="small muted" hidden></output></details></div></details>
+      <details id="run-comparison" class="run-report comparison" open hidden><summary>Compare outcomes</summary><div id="comparison-content" class="report-content" role="region" aria-label="Run comparison"></div></details>
     </section>
   </div>
 </main>

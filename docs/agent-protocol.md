@@ -101,15 +101,16 @@ controller assignments, while explicit handoffs are saved as current ownership.
 
 ## Inspect the result
 
-Pause the viewer and open Results breakdown. Each actor has task progress, spending and
-travel, service and idle step counts. These are simulation steps, including the
-step that starts a move or service. Each blocked or rejected event opens its
+Pause the viewer and open Results breakdown. Charts show task progress and time;
+Data table holds spending and exact travel, service and waiting counts. These are
+simulation steps, including the step that starts a move or service. Events holds
+blocked or rejected requests. Each event opens its
 recorded observation, action, outcome and reward, and seeks the 3D replay to
 that step. The first 64 findings appear; exports retain every transition.
 
 External decision latency is measured separately in wall milliseconds. It is
 runtime metadata, excluded from canonical gameplay replay. The report endpoint
-includes per-request timings; the viewer shows their total. These measurements
+includes per-request timings; Controller timing in the viewer shows their total. These measurements
 include the mock client's deliberate delay and HTTP overhead.
 
 ## Current boundary

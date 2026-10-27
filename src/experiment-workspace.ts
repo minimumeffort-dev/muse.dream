@@ -4,6 +4,8 @@ import type {ControllerAssignment,ExperimentConfig,SavedExperiment,RunSummary,Sa
 import type {EvidenceRef} from './report';
 import {BRIEF_BUILDER,DEFAULT_WORLD,DEFAULT_TASK,DEFAULT_PARAMETERS} from './framework';
 import {changeCopy,comparisonCopy} from './workspace-copy';
+import {barChart} from './result-charts';
+import {comparisonCsv,csvDownload} from './result-exports';
 const get=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 const name=(text:string)=>text.replaceAll('_',' ').replace(/\b\w/g,c=>c.toUpperCase());
 const text=(tag:string,value:string)=>{const node=document.createElement(tag);node.textContent=value;return node;};
@@ -160,19 +162,28 @@ export class ExperimentWorkspace {
       content.replaceChildren();
       const display=(report:SavedRunReport)=>this.runLabel(report.run.id);
       const headline=text('p',comparisonCopy(comparison,display(left),display(right)));headline.className='comparison-headline';content.append(headline);
-      content.append(text('p',comparison.matchedSeed?'Same random seed.':`Different random seeds (${left.run.seed} and ${right.run.seed}); the starting conditions are not matched.`));
-      const changes=text('p',comparison.changes.length?comparison.changes.map(changeCopy).join(' · '):'Same setup and agent assignments.');changes.className='comparison-changes';content.append(changes);
+      const settings=comparison.changes.filter(change=>!change.field.endsWith('seed')).map(changeCopy).join(' · ');
+      const changes=text('p',[settings||(!comparison.changes.length?'Same setup':''),comparison.matchedSeed?`Seed ${left.run.seed}`:`Different seeds: ${left.run.seed} → ${right.run.seed}`].filter(Boolean).join(' · '));changes.className='comparison-changes small muted';content.append(changes);
+      const charts=document.createElement('div');charts.className='result-charts comparison-charts';
+      for(const key of ['completed','creditsSpent','steps']){
+        const row=comparison.rows.find(row=>row.key===key)!;
+        charts.append(barChart(row.label,[{label:display(left),value:row.baseline!,display:key==='completed'?`${row.baseline}/${left.metrics.total}`:undefined,tone:'baseline'},{label:display(right),value:row.candidate!,display:key==='completed'?`${row.candidate}/${right.metrics.total}`:undefined,tone:'candidate'}]));
+      }content.append(charts);
       const table=document.createElement('table'),header=document.createElement('tr');for(const value of ['Metric',display(left),display(right),'Change']){const cell=document.createElement('th');cell.scope='col';cell.textContent=value;header.append(cell);}const head=document.createElement('thead');head.append(header);table.append(head);
       const body=document.createElement('tbody');
-      const fullTable=document.createElement('table'),fullHead=document.createElement('thead'),fullHeader=header.cloneNode(true);fullHead.append(fullHeader);fullTable.append(fullHead);const fullBody=document.createElement('tbody');
-      for(const row of comparison.rows){const tr=document.createElement('tr');for(const value of [row.label+(row.unit==='agent steps'?' (agent steps)':''),this.value(row.baseline),this.value(row.candidate),row.delta===null?'—':`${row.delta>0?'+':''}${row.delta}`])tr.append(text('td',String(value)));(['completed','total','creditsSpent','steps'].includes(row.key)?body:fullBody).append(tr);}table.append(body);content.append(table);
-      fullTable.append(fullBody);const more=document.createElement('details');more.className='comparison-details';more.append(text('summary','Detailed metrics'),text('p','Travel, service and waiting add up each agent’s steps. They can exceed the length of the run.'),fullTable);content.append(more);
+      for(const row of comparison.rows){
+        const tr=document.createElement('tr'),label=document.createElement('th');label.scope='row';label.textContent=row.label+(row.unit==='agent steps'?' (agent steps)':'');tr.append(label);
+        for(const value of [this.value(row.baseline),this.value(row.candidate),row.delta===null?'—':`${row.delta>0?'+':''}${row.delta}`])tr.append(text('td',String(value)));body.append(tr);
+      }table.append(body);
+      const scroll=document.createElement('div');scroll.className='table-scroll';scroll.tabIndex=0;scroll.setAttribute('role','region');scroll.setAttribute('aria-label','Comparison data table');scroll.append(table);
+      const more=document.createElement('details');more.className='result-data';more.append(text('summary','Run data'),text('p','Travel, service and waiting sum each agent’s steps.'),scroll);
+      const pins=document.createElement('div');pins.className='run-pins';
+      for(const report of [left,right]){const pin=document.createElement('div');pin.append(text('p',`${display(report)} · Setup ${report.run.revision} · Seed ${report.run.seed}`),text('code',report.run.sourceHash));pins.append(pin);}more.append(pins);content.append(more);
       for(const evidence of comparison.rows.flatMap(row=>row.evidence).filter((item,index,all)=>all.findIndex(other=>other.runId===item.runId&&other.step===item.step&&other.outcomeIndex===item.outcomeIndex)===index)){
         const button=document.createElement('button');button.type='button';button.className='evidence-link';const report=evidence.runId===left.run.id?left:right;
         button.textContent=`${this.runLabel(report.run.id)} · Step ${evidence.step} · ${name(evidence.agent)}`;button.onclick=()=>{const run=this.runs.find(run=>run.id===evidence.runId);if(run&&!this.pending){this.selectRun(run,evidence);this.renderRuns();}};content.append(button);
       }
-      const pins=document.createElement('details');pins.className='comparison-details';pins.append(text('summary','Run details'));
-      for(const report of [left,right])pins.append(text('p',`${display(report)} · Saved setup ${report.run.revision} · Seed ${report.run.seed}`),text('code',report.run.sourceHash));content.append(pins);
+      const footer=document.createElement('div');footer.className='report-footer';footer.append(csvDownload(comparisonCsv(comparison,left.run,right.run),'run-comparison.csv','Download comparison CSV'));content.append(footer);
       if(reveal)panel.scrollIntoView({block:'nearest'});
     }catch(error){if(revision===this.comparisonRevision)content.replaceChildren(text('p',error instanceof Error?error.message:String(error)));}
   }

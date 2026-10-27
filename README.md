@@ -42,7 +42,10 @@ and use the clinic service. The result is four tasks in 27 logical steps,
 deadlines can fail. These are mock policy outcomes, not real delivery estimates.
 
 The outcome summary shows completed tasks, coins spent and simulation steps.
-Agent activity and Results breakdown provide detail when you need it.
+Results breakdown charts each agent’s task progress and time. Comparisons use
+paired bars for tasks, spending and run length. Tables, events and source details
+stay folded away. Download CSV for analysis, or the full JSONL recording for replay.
+Tables scroll independently on small screens, keeping charts and controls in place.
 
 **Pause run** holds the browser episode and animation. **Advance one step**
 commits one transition.
@@ -50,10 +53,9 @@ The timeline reads recorded history without rewinding the engine head. Play
 replays it before resuming an unfinished episode. Hiding the tab pauses playback.
 One logical step occupies one display second.
 
-Pause and open **Results breakdown** for each agent's task progress, spending and time in
-travel, service or idle steps. Select a finding to inspect its recorded
-attempted action and outcome at the matching replay step. Expand its technical
-details to inspect the recorded observation, action and outcome as JSON.
+Pause and open **Results breakdown** for each agent’s charts. **Data table** holds
+the exact numbers. **Events** links blocked or rejected requests to their replay
+step; **Technical record** reveals the recorded observation, action and outcome.
 
 Drag the world to orbit; scroll or pinch to zoom. Focus the view with Tab, then
 use arrows, plus/minus and Home to reset. Reduced motion keeps static poses.
@@ -73,8 +75,8 @@ and [warehouse scenario](examples/warehouse.dream).
 
 ## Keep the record
 
-**Download run data**, inside Results breakdown, downloads the paused or completed
-episode as source-pinned JSONL.
+**Download CSV** exports the full recording’s per-agent measurements and source
+pins. **Full run (JSONL)** downloads the paused or completed episode for replay.
 Replay it using the local CLI:
 
     node scripts/experiment.mjs replay path/to/episode.jsonl

@@ -39,14 +39,16 @@ says that execution continues on the local host.
 Outcome copy leads with completion or the time limit, then coins spent and
 simulation steps. It suggests the next useful action without inventing failure
 causes or calling lower spend a better result. Agent activity is a disclosure.
-Results breakdown shows tasks, spending and time per agent; event buttons open a
-readable attempted action and its recorded reason. Raw observation/action/outcome
-JSON is a second disclosure. Download run data belongs to those results.
+Results breakdown leads with task-progress bars and stacked travel, service,
+waiting and action time per agent. Tables and events stay inside disclosures.
+Event buttons open the attempted action and its recorded reason; Technical record
+holds the raw observation/action/outcome. CSV exports the pinned measurements;
+Full run (JSONL) preserves replay. Controller timing is a separate disclosure.
 
 Comparisons lead with a measured difference. Different workloads show their own
-completed/total counts; unfinished comparisons stay explicit. Primary rows show
-tasks, spending and elapsed steps. Detailed time and rule checks are available
-below, with source hashes and saved revision pins in Run details. Evidence still
+completed/total counts; unfinished comparisons stay explicit. Three paired charts
+show tasks, spending and elapsed steps with shared zero-based scales. Run data
+holds the full metric table, source hashes and saved revision pins. Evidence still
 opens the exact run and step and leaves the editable draft intact.
 
 ## Layout and accessibility
@@ -56,7 +58,11 @@ has one main vertical scroll area; expanded result tables do not create a stack
 of nested scroll boxes. The shared desktop gutter is 24 pixels, mobile 16 pixels.
 Narrow screens stack setup and world and keep Run experiment in a bottom action
 bar, with space reserved below the content. Buttons and numeric inputs keep 40-pixel
-control heights; playback controls do not shrink. Tables scroll horizontally and
-can be focused. Reduced motion, stale-result guards, accepted/draft separation,
+control heights; playback controls do not shrink. Disclosure labels share the
+content gutter, with chevrons aligned on the right and 40-pixel targets. Charts
+and agent rows reflow to readable columns. Long titles use available header space.
+Only table wrappers scroll horizontally and receive keyboard focus; surrounding
+text, evidence and exports stay aligned. Comparison labels are left-aligned row
+headers, numbers right-aligned under stable columns. Reduced motion, stale-result guards, accepted/draft separation,
 one playback owner and renderer cleanup remain unchanged. No capture files are
 retained with this pass.

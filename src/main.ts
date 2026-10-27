@@ -112,7 +112,8 @@ function render(animate=false){
   document.querySelector<HTMLElement>('.policy')!.hidden=!hostMode||!run;
   const recordedTitle=scenario.id.replaceAll('_',' ').replace(/^./,c=>c.toUpperCase());
   text(get('world-title'),host?.summary?`${savedWorkspace.runLabel(host.summary.id)} · ${recordedTitle}`:run?`${recordedTitle} · Recorded run`:'Experiment world');
-  if(hostMode&&host){text(get('policy-status'),host.controllers.map(c=>`${label(c.actor)}: ${c.owner==='external'?'test connection':'built in'}`).join(' · '));const latency=get('host-latency');latency.hidden=false;text(latency,`${Math.round(host.latency.totalMs).toLocaleString()} ms total response time across ${host.latency.decisions} connected-agent decisions`);}
+  get('host-timing').hidden=!hostMode||!host;
+  if(hostMode&&host){text(get('policy-status'),host.controllers.map(c=>`${label(c.actor)}: ${c.owner==='external'?'test connection':'built in'}`).join(' · '));const latency=get('host-latency');latency.hidden=false;text(latency,`${Math.round(host.latency.totalMs).toLocaleString()} ms across ${host.latency.decisions} connected-agent decisions`);}
 }
 function tick(playback=false){
   const run=currentRun();if(!run){stop();return;}
