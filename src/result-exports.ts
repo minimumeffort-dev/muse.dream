@@ -25,7 +25,7 @@ export function comparisonCsv(comparison:RunComparison,left:Pick<ComparableRun,'
   ]);
 }
 
-export function csvDownload(contents:string,filename:string,label:string){
-  const link=document.createElement('a');link.className='btn';link.textContent='Download CSV';link.setAttribute('aria-label',label);
+export function csvDownload(contents:string,filename:string,label:string,link=document.createElement('a')){
+  link.className='btn';link.textContent='Download CSV';link.setAttribute('aria-label',label);
   link.href='data:text/csv;charset=utf-8,'+encodeURIComponent('\ufeff'+contents);link.download=filename;return link;
 }

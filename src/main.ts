@@ -108,7 +108,7 @@ function render(animate=false){
     exportOwner=run;exportLength=run.length;download.href=exportUrl;download.download=`${run.scenario.id}-seed-${run.scenario.seed}.jsonl`;
   }
   const workspace=get('workspace');workspace.dataset.state=status;workspace.dataset.step=String(cursor);workspace.dataset.runLength=String(run?.length??0);workspace.dataset.sourceHash=run?.manifest.sourceHash??'';
-  showReport(run,!playing);
+  showReport(run,!!run&&!run.ended&&(hostMode?host?.status==='waiting':playing&&cursor===run.length));
   document.querySelector<HTMLElement>('.policy')!.hidden=!hostMode||!run;
   const recordedTitle=scenario.id.replaceAll('_',' ').replace(/^./,c=>c.toUpperCase());
   text(get('world-title'),host?.summary?`${savedWorkspace.runLabel(host.summary.id)} · ${recordedTitle}`:run?`${recordedTitle} · Recorded run`:'Experiment world');

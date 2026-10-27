@@ -44,17 +44,24 @@ A retried run request keeps the same request identity until it is acknowledged.
 
 The history shows each run’s status and task progress. Open a run to inspect it
 in 3D or seek its timeline. Results breakdown shows task progress and stacked
-travel, service, waiting and action time for each agent. These charts describe
-the full recording, even when playback is at an earlier step. Data table and
+travel, service, waiting and action time for each agent. Charts update during
+execution without pausing. Live results labels the latest committed step;
+Recorded so far labels an unfinished browser run that is not advancing, and
+Full recording labels an ended run. This scope stays separate from the replay
+cursor. Data table and
 Events open the underlying numbers and recorded requests. Controller timing
 is separate from simulation time.
-Download CSV includes each agent’s measurements, source hash and seed. Full run
+Download CSV snapshots the currently reported measurements, source hash, seed
+and partial/completed/deadline outcome. Full run
 (JSONL) keeps the source and transitions needed for replay.
 Opening a historical run changes the viewer; it does not overwrite the editable
 draft or rewind a live engine.
 
 Live follows committed host state. Pause and the timeline affect playback only.
 The host and its controllers continue when the viewer is hidden or closed.
+With the viewer open, results keep following the host while playback is paused
+or showing an earlier step. Tables, event details, focus and scroll position stay
+in place as new measurements arrive.
 Recorded replay uses one display second per logical step; live updates can
 contain several committed steps between polls.
 
@@ -68,7 +75,10 @@ Select Compare beside two history entries. Their comparison shows the pinned
 configuration changes and paired bars for tasks, coins spent and simulation
 steps. Each pair shares a zero-based scale; task labels include each run’s total
 so different workloads remain visible. Different seeds are called out; partial
-results are labeled, and comparisons refresh when a selected live run finishes.
+results are labeled, and comparisons refresh as a selected run advances and finishes.
+They also refresh about once a second when the viewer is showing a different run.
+Only one refresh is in flight; completed baselines are reused, late responses from
+an old selection are discarded, and refreshes stop when neither run is executing.
 There is no automatic winner label.
 
 Run data keeps the full comparison table and each run’s saved revision and source

@@ -1,11 +1,8 @@
 import {ExperimentClient} from './experiment-client';
-import {compareRuns} from './compare-runs';
 import type {ControllerAssignment,ExperimentConfig,SavedExperiment,RunSummary,SavedRunReport} from './experiment-types';
 import type {EvidenceRef} from './report';
 import {BRIEF_BUILDER,DEFAULT_WORLD,DEFAULT_TASK,DEFAULT_PARAMETERS} from './framework';
-import {changeCopy,comparisonCopy} from './workspace-copy';
-import {barChart} from './result-charts';
-import {comparisonCsv,csvDownload} from './result-exports';
+import {createComparisonView} from './comparison-view';
 const get=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 const name=(text:string)=>text.replaceAll('_',' ').replace(/\b\w/g,c=>c.toUpperCase());
 const text=(tag:string,value:string)=>{const node=document.createElement(tag);node.textContent=value;return node;};
@@ -30,6 +27,13 @@ export class ExperimentWorkspace {
   private compared:string[]=[];
   private requestRevision=0;
   private comparisonRevision=0;
+  private comparisonBusy=false;
+  private comparisonQueued=false;
+  private comparisonReveal=false;
+  private comparisonTimer:ReturnType<typeof setTimeout>|undefined;
+  private comparisonPair='';
+  private readonly comparisonCache=new Map<string,SavedRunReport>();
+  private readonly showComparison:ReturnType<typeof createComparisonView>;
   private pending=false;
   private disposed=false;
   private connectionRevision=0;
@@ -38,6 +42,7 @@ export class ExperimentWorkspace {
   private readonly runNodes=new Map<string,HTMLElement>();
   private readonly experimentNodes=new Map<string,HTMLButtonElement>();
   constructor(private readonly callbacks:WorkspaceCallbacks){
+    this.showComparison=createComparisonView(get('comparison-content'),evidence=>{const run=this.runs.find(run=>run.id===evidence.runId);if(run&&!this.pending){this.selectRun(run,evidence);this.renderRuns();}});
     get<HTMLButtonElement>('save-experiment').onclick=()=>{if(this.callbacks.validateDraft())void this.mutate(()=>this.save());};
     get<HTMLButtonElement>('new-experiment').onclick=()=>this.newDraft();
     get<HTMLButtonElement>('resume-run').onclick=()=>void this.mutate(async()=>{
@@ -105,7 +110,7 @@ export class ExperimentWorkspace {
     if(this.pending||!this.client)return;
     this.selectionRevision++;
     this.requestRevision++;this.selected=undefined;this.selectedRun='';this.runs=[];this.compared=[];
-    this.comparisonRevision++;get('run-comparison').hidden=true;this.callbacks.clearRun();this.callbacks.applyDraft({name:'Morning delivery',input:{mode:'brief',world:DEFAULT_WORLD,task:DEFAULT_TASK,parameters:{...DEFAULT_PARAMETERS},builder:BRIEF_BUILDER},controllers:[]});
+    this.comparisonRevision++;this.stopComparisonRefresh();get('run-comparison').hidden=true;this.callbacks.clearRun();this.callbacks.applyDraft({name:'Morning delivery',input:{mode:'brief',world:DEFAULT_WORLD,task:DEFAULT_TASK,parameters:{...DEFAULT_PARAMETERS},builder:BRIEF_BUILDER},controllers:[]});
     this.choices=[];this.setActors(['courier_a','courier_b']);this.renderRuns();this.renderExperiments();this.remember();this.changed();
   }
   private async openExperiment(experiment:SavedExperiment,preferredRun?:string){
@@ -115,7 +120,7 @@ export class ExperimentWorkspace {
     this.pending=true;this.callbacks.busy(true);this.renderControllers();this.renderRuns();this.renderExperiments();
     try{
       const {runs}=await this.client.runs(experiment.id);if(this.disposed||revision!==this.requestRevision)return;
-      this.selected=experiment;this.runs=runs;this.compared=[];this.comparisonRevision++;get('run-comparison').hidden=true;
+      this.selected=experiment;this.runs=runs;this.compared=[];this.comparisonRevision++;this.stopComparisonRefresh();get('run-comparison').hidden=true;
       this.callbacks.applyDraft(experiment.config);this.choices=[];this.setActors(experiment.config.controllers.map(c=>c.actor),experiment.config.controllers);
       const latest=runs.find(r=>r.id===preferredRun)??runs[0];if(latest)this.selectRun(latest);else{this.selectedRun='';this.callbacks.clearRun();}
       this.renderRuns();this.renderExperiments();this.remember();this.changed();
@@ -123,10 +128,10 @@ export class ExperimentWorkspace {
     finally{this.pending=false;if(!this.disposed){this.callbacks.busy(false);this.renderControllers();this.renderRuns();this.renderExperiments();}}
   }
   private selectRun(run:RunSummary,evidence?:EvidenceRef){if(!this.client)return;const revision=++this.selectionRevision;this.selectedRun=run.id;this.remember();void this.callbacks.selectRun(run,this.client.token,evidence).catch(error=>{if(!this.disposed&&revision===this.selectionRevision)this.callbacks.error(error instanceof Error?error.message:String(error));});get('resume-run').hidden=run.status!=='paused';}
-  acceptRun(run:RunSummary){
-    const previous=this.runs.find(r=>r.id===run.id);if(previous&&previous.updatedAt===run.updatedAt&&previous.status===run.status&&previous.steps===run.steps)return;
+  acceptRun(run:RunSummary,refreshComparison=true){
+    const previous=this.runs.find(r=>r.id===run.id);if(previous&&(previous.steps>run.steps||previous.steps===run.steps&&previous.updatedAt>run.updatedAt||previous.updatedAt===run.updatedAt&&previous.status===run.status&&previous.steps===run.steps))return;
     if(run.experimentId===this.selected?.id){this.runs=[run,...this.runs.filter(r=>r.id!==run.id)].sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)));this.renderRuns();}
-    if(previous&&previous.status!==run.status&&this.compared.includes(run.id))void this.renderComparison();
+    if(refreshComparison&&previous&&(previous.status!==run.status||previous.steps!==run.steps)&&this.compared.includes(run.id))void this.renderComparison();
     if(run.id===this.selectedRun)get('resume-run').hidden=run.status!=='paused';
   }
   private renderExperiments(){
@@ -146,48 +151,43 @@ export class ExperimentWorkspace {
     for(const [index,run] of [...ordered].reverse().entries()){
       const number=ordered.findIndex(r=>r.id===run.id)+1;let row=this.runNodes.get(run.id);
       if(!row){row=document.createElement('div');row.className='history-run';const button=document.createElement('button');button.type='button';button.className='history-open';button.append(text('strong',''),text('small',''));button.onclick=()=>{const current=this.runs.find(r=>r.id===run.id);if(current&&!this.pending){this.selectRun(current);this.renderRuns();}};
-        const compare=document.createElement('input');compare.type='checkbox';compare.onchange=()=>{if(compare.checked)this.compared=[...this.compared.filter(id=>id!==run.id),run.id].slice(-2);else this.compared=this.compared.filter(id=>id!==run.id);this.renderRuns();void this.renderComparison(true);};const label=document.createElement('label');label.className='compare-choice';label.append(compare,text('span','Compare'));row.append(button,label);this.runNodes.set(run.id,row);}
+        const compare=document.createElement('input');compare.type='checkbox';compare.onchange=()=>{if(compare.checked)this.compared=[...this.compared.filter(id=>id!==run.id),run.id].slice(-2);else this.compared=this.compared.filter(id=>id!==run.id);this.comparisonRevision++;this.renderRuns();void this.renderComparison(true);};const label=document.createElement('label');label.className='compare-choice';label.append(compare,text('span','Compare'));row.append(button,label);this.runNodes.set(run.id,row);}
       const button=row.querySelector('button')!,compare=row.querySelector('input')!;button.setAttribute('aria-pressed',String(this.selectedRun===run.id));button.disabled=this.pending;button.querySelector('strong')!.textContent=`Run ${number}`;button.querySelector('small')!.textContent=`${run.status==='deadline'?'Time limit reached':run.status==='waiting'?'Running':name(run.status)} · ${run.metrics.completed}/${run.metrics.total} tasks`;
       compare.checked=this.compared.includes(run.id);compare.disabled=this.pending||this.runs.length<2;compare.parentElement!.hidden=this.runs.length<2;compare.setAttribute('aria-label',`Compare run ${number}`);if(container.children[index]!==row)container.insertBefore(row,container.children[index]??null);
     }
     get('resume-run').hidden=!this.runs.some(r=>r.id===this.selectedRun&&r.status==='paused');
   }
   private async renderComparison(reveal=false){
-    const revision=++this.comparisonRevision,panel=get('run-comparison'),content=get('comparison-content');
-    panel.hidden=this.compared.length!==2;if(panel.hidden||!this.client)return;
-    content.replaceChildren(text('p','Loading comparison…'));
+    this.stopComparisonRefresh();this.comparisonReveal||=reveal;
+    const panel=get('run-comparison'),content=get('comparison-content');
+    panel.hidden=this.compared.length!==2;
+    if(panel.hidden||!this.client){this.comparisonQueued=false;this.comparisonReveal=false;return;}
+    const pair=this.compared.join('|');
+    if(this.comparisonPair!==pair){this.comparisonPair=pair;this.comparisonCache.clear();content.replaceChildren(text('p','Loading comparison…'));}
+    if(this.comparisonBusy){this.comparisonQueued=true;return;}
+    this.comparisonBusy=true;
+    const revision=this.comparisonRevision,ids=[...this.compared],revealNow=this.comparisonReveal;this.comparisonReveal=false;
     try{
-      const reports=await Promise.all(this.compared.map(id=>this.client!.report(id)));if(this.disposed||revision!==this.comparisonRevision)return;
-      const [left,right]=reports as [SavedRunReport,SavedRunReport],comparison=compareRuns({...left.run,report:left},{...right.run,report:right});
-      content.replaceChildren();
-      const display=(report:SavedRunReport)=>this.runLabel(report.run.id);
-      const headline=text('p',comparisonCopy(comparison,display(left),display(right)));headline.className='comparison-headline';content.append(headline);
-      const settings=comparison.changes.filter(change=>!change.field.endsWith('seed')).map(changeCopy).join(' · ');
-      const changes=text('p',[settings||(!comparison.changes.length?'Same setup':''),comparison.matchedSeed?`Seed ${left.run.seed}`:`Different seeds: ${left.run.seed} → ${right.run.seed}`].filter(Boolean).join(' · '));changes.className='comparison-changes small muted';content.append(changes);
-      const charts=document.createElement('div');charts.className='result-charts comparison-charts';
-      for(const key of ['completed','creditsSpent','steps']){
-        const row=comparison.rows.find(row=>row.key===key)!;
-        charts.append(barChart(row.label,[{label:display(left),value:row.baseline!,display:key==='completed'?`${row.baseline}/${left.metrics.total}`:undefined,tone:'baseline'},{label:display(right),value:row.candidate!,display:key==='completed'?`${row.candidate}/${right.metrics.total}`:undefined,tone:'candidate'}]));
-      }content.append(charts);
-      const table=document.createElement('table'),header=document.createElement('tr');for(const value of ['Metric',display(left),display(right),'Change']){const cell=document.createElement('th');cell.scope='col';cell.textContent=value;header.append(cell);}const head=document.createElement('thead');head.append(header);table.append(head);
-      const body=document.createElement('tbody');
-      for(const row of comparison.rows){
-        const tr=document.createElement('tr'),label=document.createElement('th');label.scope='row';label.textContent=row.label+(row.unit==='agent steps'?' (agent steps)':'');tr.append(label);
-        for(const value of [this.value(row.baseline),this.value(row.candidate),row.delta===null?'—':`${row.delta>0?'+':''}${row.delta}`])tr.append(text('td',String(value)));body.append(tr);
-      }table.append(body);
-      const scroll=document.createElement('div');scroll.className='table-scroll';scroll.tabIndex=0;scroll.setAttribute('role','region');scroll.setAttribute('aria-label','Comparison data table');scroll.append(table);
-      const more=document.createElement('details');more.className='result-data';more.append(text('summary','Run data'),text('p','Travel, service and waiting sum each agent’s steps.'),scroll);
-      const pins=document.createElement('div');pins.className='run-pins';
-      for(const report of [left,right]){const pin=document.createElement('div');pin.append(text('p',`${display(report)} · Setup ${report.run.revision} · Seed ${report.run.seed}`),text('code',report.run.sourceHash));pins.append(pin);}more.append(pins);content.append(more);
-      for(const evidence of comparison.rows.flatMap(row=>row.evidence).filter((item,index,all)=>all.findIndex(other=>other.runId===item.runId&&other.step===item.step&&other.outcomeIndex===item.outcomeIndex)===index)){
-        const button=document.createElement('button');button.type='button';button.className='evidence-link';const report=evidence.runId===left.run.id?left:right;
-        button.textContent=`${this.runLabel(report.run.id)} · Step ${evidence.step} · ${name(evidence.agent)}`;button.onclick=()=>{const run=this.runs.find(run=>run.id===evidence.runId);if(run&&!this.pending){this.selectRun(run,evidence);this.renderRuns();}};content.append(button);
+      const settled=await Promise.allSettled(ids.map(id=>this.comparisonCache.get(id)??this.client!.report(id)));if(this.disposed||revision!==this.comparisonRevision)return;
+      const reports=settled.map(result=>{if(result.status==='rejected')throw result.reason;return result.value;});
+      for(const report of reports){if(['completed','deadline'].includes(report.run.status))this.comparisonCache.set(report.run.id,report);this.acceptRun(report.run,false);}
+      this.showComparison(reports[0]!,reports[1]!,id=>this.runLabel(id));
+      if(revealNow)panel.scrollIntoView({block:'nearest'});
+    }catch{
+      if(!this.disposed&&revision===this.comparisonRevision){
+        const hasSnapshot=!!content.querySelector('.comparison-headline');if(!hasSnapshot)content.replaceChildren();
+        let warning=content.querySelector<HTMLElement>('.comparison-error');if(!warning){warning=text('p','');warning.className='comparison-error small muted';warning.setAttribute('role','status');content.prepend(warning);}
+        const message=hasSnapshot?'Updates unavailable. Showing the last snapshot.':'Comparison unavailable. Select the runs again to retry.';if(warning.textContent!==message)warning.textContent=message;
       }
-      const footer=document.createElement('div');footer.className='report-footer';footer.append(csvDownload(comparisonCsv(comparison,left.run,right.run),'run-comparison.csv','Download comparison CSV'));content.append(footer);
-      if(reveal)panel.scrollIntoView({block:'nearest'});
-    }catch(error){if(revision===this.comparisonRevision)content.replaceChildren(text('p',error instanceof Error?error.message:String(error)));}
+    }finally{
+      this.comparisonBusy=false;
+      if(!this.disposed){
+        if(this.comparisonQueued||this.comparisonReveal){this.comparisonQueued=false;void this.renderComparison();}
+        else if(revision===this.comparisonRevision&&this.compared.some(id=>this.runs.find(run=>run.id===id)?.status==='waiting'))this.comparisonTimer=setTimeout(()=>void this.renderComparison(),1000);
+      }
+    }
   }
-  private value(value:unknown){return value===null||value===undefined?'—':typeof value==='object'?JSON.stringify(value):String(value);}
+  private stopComparisonRefresh(){if(this.comparisonTimer!==undefined)clearTimeout(this.comparisonTimer);this.comparisonTimer=undefined;}
   runLabel(id:string){const ordered=[...this.runs].sort((a,b)=>String(a.createdAt).localeCompare(String(b.createdAt))),index=ordered.findIndex(run=>run.id===id);return index<0?'Run':'Run '+(index+1);}
-  dispose(){this.disposed=true;this.requestRevision++;this.comparisonRevision++;this.selectionRevision++;this.connectionRevision++;}
+  dispose(){this.disposed=true;this.requestRevision++;this.comparisonRevision++;this.selectionRevision++;this.connectionRevision++;this.stopComparisonRefresh();}
 }

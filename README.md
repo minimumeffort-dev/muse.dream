@@ -42,7 +42,8 @@ and use the clinic service. The result is four tasks in 27 logical steps,
 deadlines can fail. These are mock policy outcomes, not real delivery estimates.
 
 The outcome summary shows completed tasks, coins spent and simulation steps.
-Results breakdown charts each agent’s task progress and time. Comparisons use
+Results breakdown charts each agent’s task progress and time as the run advances.
+Open it while the simulation runs; pausing is optional. Comparisons use
 paired bars for tasks, spending and run length. Tables, events and source details
 stay folded away. Download CSV for analysis, or the full JSONL recording for replay.
 Tables scroll independently on small screens, keeping charts and controls in place.
@@ -53,9 +54,13 @@ The timeline reads recorded history without rewinding the engine head. Play
 replays it before resuming an unfinished episode. Hiding the tab pauses playback.
 One logical step occupies one display second.
 
-Pause and open **Results breakdown** for each agent’s charts. **Data table** holds
+Open **Results breakdown** for each agent’s live charts. **Data table** holds
 the exact numbers. **Events** links blocked or rejected requests to their replay
 step; **Technical record** reveals the recorded observation, action and outcome.
+Charts describe the latest committed step, separately from the replay cursor.
+On the local host they keep updating even when playback is paused. Open tables,
+keyboard focus and scroll positions survive updates. Live comparisons refresh
+while either selected run is executing, including when you view another run.
 
 Drag the world to orbit; scroll or pinch to zoom. Focus the view with Tab, then
 use arrows, plus/minus and Home to reset. Reduced motion keeps static poses.
@@ -75,7 +80,7 @@ and [warehouse scenario](examples/warehouse.dream).
 
 ## Keep the record
 
-**Download CSV** exports the full recording’s per-agent measurements and source
+**Download CSV** exports the latest committed snapshot’s measurements and source
 pins. **Full run (JSONL)** downloads the paused or completed episode for replay.
 Replay it using the local CLI:
 

@@ -101,8 +101,8 @@ controller assignments, while explicit handoffs are saved as current ownership.
 
 ## Inspect the result
 
-Pause the viewer and open Results breakdown. Charts show task progress and time;
-Data table holds spending and exact travel, service and waiting counts. These are
+Open Results breakdown while the experiment runs. Charts show live task progress and time;
+Data table holds spending and exact travel, service, waiting and action counts. These are
 simulation steps, including the step that starts a move or service. Events holds
 blocked or rejected requests. Each event opens its
 recorded observation, action, outcome and reward, and seeks the 3D replay to

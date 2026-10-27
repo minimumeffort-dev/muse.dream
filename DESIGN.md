@@ -41,6 +41,9 @@ simulation steps. It suggests the next useful action without inventing failure
 causes or calling lower spend a better result. Agent activity is a disclosure.
 Results breakdown leads with task-progress bars and stacked travel, service,
 waiting and action time per agent. Tables and events stay inside disclosures.
+Results remain available during execution and show the latest committed step,
+independent of the replay cursor. Update chart values, table cells and download
+snapshots in place; preserve disclosures, keyboard focus and scroll positions.
 Event buttons open the attempted action and its recorded reason; Technical record
 holds the raw observation/action/outcome. CSV exports the pinned measurements;
 Full run (JSONL) preserves replay. Controller timing is a separate disclosure.
@@ -50,6 +53,11 @@ completed/total counts; unfinished comparisons stay explicit. Three paired chart
 show tasks, spending and elapsed steps with shared zero-based scales. Run data
 holds the full metric table, source hashes and saved revision pins. Evidence still
 opens the exact run and step and leaves the editable draft intact.
+Comparisons refresh while either selected run is executing, even when another
+run is being viewed. Live refresh never scrolls the panel into view or changes
+selection. Coalesce requests, reuse completed baselines, discard stale selections
+and stop refresh timers on completion or disposal. Failed refreshes retain the
+last snapshot with a short status message.
 
 ## Layout and accessibility
 
