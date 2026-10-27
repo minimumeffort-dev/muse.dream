@@ -86,6 +86,7 @@ function render(animate=false){
   get('edit-brief-rules').hidden=manual||!!example&&matchesExamplePrompt(brief.value,example.id);
   get('review-confirm-label').hidden=!manual;
   get('condition-grid').hidden=manual;get('step-help').hidden=manual;get('manual-conditions').hidden=!manual;
+  get('seed-field').hidden=manual;get('seed-help').hidden=manual;
   reviewStatus();
   source.readOnly=!manual||preparing||disconnected;
   play.setAttribute('aria-label',playing?(hostMode?'Pause playback':'Pause run'):(run?.ended||run&&cursor<run.length?'Play replay':hostMode?'Follow live run':'Play run'));
@@ -231,7 +232,7 @@ function renderReview(scenario?:typeof draftScenario){
   section('Tasks',review.tasks.map(value=>`${value.description} · ${value.agents.join(', ')}`));
   if(manual)section('Starting budgets',review.budgets);
   section('Supplies and services',[...review.stocks,...review.services]);
-  const more=document.createElement('details'),summary=document.createElement('summary');summary.textContent='More conditions';more.append(summary);if(!manual)section('Budgets',review.budgets,more);section('Carrying capacity',review.capacities,more);section('Routes',review.routes,more);content.append(more);
+  const more=document.createElement('details'),summary=document.createElement('summary');summary.textContent='More conditions';more.append(summary);if(!manual)section('Budgets',review.budgets,more);section('Carrying capacity',review.capacities,more);section('Routes',review.routes,more);section('Random seed',[String(scenario.seed)],more);content.append(more);
 }
 function reviewStatus(){
   const scenario=reviewScenario;if(!scenario){text(get('review-status'),'Check the conditions or Dream rules to review this setup.');return;}

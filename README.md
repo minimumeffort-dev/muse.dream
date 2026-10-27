@@ -35,7 +35,8 @@ service rules and deadline before pressing **Run experiment**. The condition
 controls override the example’s original values; the brief stays unchanged.
 Conditions share a single column, with each label
 above its input and units on the right. Advanced setup holds the random seed, agent
-assignments and Dream rules. The local builder expands the chosen template.
+assignments and Dream rules. For custom rules, the compiled seed appears under
+**More conditions**. The local builder expands the chosen template.
 The compiler accepts it before a fresh episode starts. Agents receive private
 observations and submit actions through the rules. They cannot set rewards or
 completion.

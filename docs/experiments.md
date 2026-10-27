@@ -29,8 +29,9 @@ facts. A matching example uses prepared rules directly. The confirmation is the
 researcher’s review, not an automated semantic check. An unsupported brief
 cannot silently run a preset.
 
-Random seed is in Advanced setup. Select Delivery, Warehouse or
-Classroom to load its brief; source mode
+For an example, Random seed is in Advanced setup. A custom scenario’s actual
+seed appears under More conditions and can be changed in its Dream rules.
+Select Delivery, Warehouse or Classroom to load its brief; source mode
 accepts custom standalone Dream scenarios. [World authoring](worlds.md) covers
 appearances, layouts and a warehouse stock comparison.
 
