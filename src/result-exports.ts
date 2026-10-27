@@ -1,6 +1,7 @@
 import type {RunReport} from './report';
 import type {RunComparison,ComparableRun} from './compare-runs';
-import type {HistoryPoint} from './run-history';
+import {historyPointAt,type HistoryPoint} from './run-history';
+import type {SavedRunReport} from './experiment-types';
 
 /** Quote text and neutralize spreadsheet formulas, while retaining numeric cells. */
 export function csv(rows:readonly (readonly (string|number|null)[])[]){
@@ -30,6 +31,18 @@ export function historyCsv(points:readonly HistoryPoint[],pin:{scenario:string;s
   return csv([
     ['scenario','source_hash','seed','recorded_steps','snapshot_outcome','step','tasks_completed','coins_spent','waiting_agent_steps'],
     ...points.map(point=>[pin.scenario,pin.sourceHash,pin.seed,points.at(-1)!.step,pin.outcome,point.step,point.completed,point.spent,point.waiting]),
+  ]);
+}
+
+export function comparisonHistoryCsv(left:SavedRunReport,right:SavedRunReport){
+  const outcome=(report:SavedRunReport)=>report.metrics.success?'completed':report.metrics.truncated?'deadline':'partial';
+  const pins=[left.run.id,left.run.sourceHash,left.run.seed,left.metrics.steps,outcome(left),right.run.id,right.run.sourceHash,right.run.seed,right.metrics.steps,outcome(right)];
+  return csv([
+    ['baseline_run','baseline_source_hash','baseline_seed','baseline_recorded_steps','baseline_snapshot_outcome','candidate_run','candidate_source_hash','candidate_seed','candidate_recorded_steps','candidate_snapshot_outcome','step','baseline_tasks_completed','candidate_tasks_completed','tasks_change','baseline_coins_spent','candidate_coins_spent','coins_change','baseline_waiting_agent_steps','candidate_waiting_agent_steps','waiting_change'],
+    ...Array.from({length:Math.max(left.metrics.steps,right.metrics.steps)+1},(_,step)=>{
+      const before=historyPointAt(left.history,step),after=historyPointAt(right.history,step);
+      return [...pins,step,...(['completed','spent','waiting'] as const).flatMap(key=>[before?.[key]??null,after?.[key]??null,before&&after?after[key]-before[key]:null])];
+    }),
   ]);
 }
 

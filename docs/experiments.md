@@ -84,10 +84,18 @@ an explicit conflict.
 ## Compare two runs
 
 Select Compare beside two history entries. Their comparison shows the pinned
-configuration changes and paired bars for tasks, coins spent and simulation
-steps. Each pair shares a zero-based scale; task labels include each run’s total
-so different workloads remain visible. Different seeds are called out; partial
-results are labeled, and comparisons refresh as a selected run advances and finishes.
+configuration changes and overlaid timelines for tasks, coins spent and waiting
+agent steps. Solid gold is the first selected run; dashed blue is the second.
+Both share the same simulation-step axis and zero-based scales. Task readouts
+include each run’s total, and Δ shows the second run minus the first at that step.
+Point at any chart or focus the charts and use arrow keys to inspect all three.
+Select a step or press Enter to hold it; **Latest** or Escape resumes following
+the latest recorded step. Home/End inspect the first/latest step. Inspection
+does not change replay or the selected world. Lines end at their own recorded
+head; values and differences show — beyond an unavailable prefix. Older hosts
+without timeline data show History unavailable, with summary data still usable.
+Different seeds are called out; partial results are labeled, and comparisons
+refresh as a selected run advances and finishes.
 They also refresh about once a second when the viewer is showing a different run.
 Only one refresh is in flight; completed baselines are reused, late responses from
 an old selection are discarded, and refreshes stop when neither run is executing.
@@ -95,6 +103,9 @@ There is no automatic winner label.
 
 Run data keeps the full comparison table and each run’s saved revision and source
 hash. Download CSV exports those pinned measurements and signed differences.
+Timeline CSV exports both source-pinned histories aligned by step, with each
+metric’s signed difference. Unrecorded values and differences stay empty; the
+export always includes each recorded head, independently of the inspection cursor.
 Only tables scroll horizontally on narrow screens; charts, explanations and
 evidence links keep the page gutter.
 

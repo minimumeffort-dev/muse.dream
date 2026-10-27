@@ -38,13 +38,19 @@ agent URLs.
 | Receive a decision | `GET /api/runs/{run}/actors/{actor}/decision` | Current identity, private observation |
 | Submit an action | `POST /api/runs/{run}/actors/{actor}/action` | Stable acknowledgement |
 | Read the run | `GET /api/runs/{run}/view?after={step}` | Researcher only; incremental transitions |
-| Read the report | `GET /api/runs/{run}/report` | Researcher only; findings and wall timings |
+| Read the report | `GET /api/runs/{run}/report` | Researcher only; findings, step history and wall timings |
 | Export a recording | `GET /api/runs/{run}/export` | Researcher only; replayable episode JSONL |
 | Resume after timeout | `POST /api/runs/{run}/resume` | Researcher only; new decision identities |
 | Transfer control | `POST /api/runs/{run}/actors/{actor}/handoff` | Researcher only; rotates the actor token |
 
 Researcher operations require the admin bearer token. An actor token cannot
 read another actor's inventory, objectives, source or full run trace.
+
+Reports include a `history` prefix from step zero through `metrics.steps`. Each
+point contains `step`, `completed`, `spent` and `waiting` (cumulative agent steps).
+The host derives and caches these from accepted transitions; actor credentials
+cannot read them. Timeline overlays reuse the existing report refresh. Older
+hosts may omit history; supplied histories must agree with the report.
 
 A decision has this shape:
 

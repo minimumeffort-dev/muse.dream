@@ -6,6 +6,8 @@ import {createLabHost,type ExternalMockConnection} from '../server/lab-host';
 import {ExperimentStore,type ExperimentConfig,type StoreOptions} from '../server/experiments';
 import {BRIEF_BUILDER,SCENARIO_BRIEFS,DEFAULT_PARAMETERS,DEFAULT_TASK,DEFAULT_WORLD,buildFromBrief,mockAction,replayEpisode} from '../src/framework';
 import type {AgentDecision} from '../src/agent-runtime';
+import {RunHistory,validateReportedHistory} from '../src/run-history';
+import {ExperimentRun} from '../src/runner';
 
 const admin='private-test-admin';
 const cleanups:(()=>Promise<unknown>)[]=[];
@@ -66,6 +68,9 @@ it('saves revisions, runs changed budgets, and preserves both replayable outcome
   expect((await reopened.request(`/api/runs/${rich.id}/export`)).text).toBe(before);
   const replay=await replayEpisode(before);expect(replay.episode.state.terminated).toBe(true);
   const report=(await reopened.request(`/api/runs/${rich.id}/report`)).json();expect(report.metrics).toEqual(rich.metrics);expect(report.run.sourceHash).toBe(rich.sourceHash);expect(report.findings[0].step).toBe(20);
+  const reader=await ExperimentRun.create(replay.manifest.source);for(const record of replay.episode.records)reader.appendRecorded(record);
+  expect(report.history).toEqual(new RunHistory(reader).update());expect(()=>validateReportedHistory(report)).not.toThrow();
+  const limitedReport=(await reopened.request(`/api/runs/${limited.id}/report`)).json();expect(limitedReport.history.at(-1)).toEqual({step:80,completed:2,spent:8,waiting:136});
 });
 
 it('enforces admin and actor privacy and keeps the local hostname/origin boundary',async()=>{
@@ -104,11 +109,13 @@ it('recovers unfinished runs paused, revokes pending credentials, and resumes th
 
 it('waits for every external actor, persists a committed transition before acknowledging it, and never double-commits a retry',async()=>{
   const host=await start(),first=await savedRun(host,config(16,true));let lastBody:unknown,lastToken='';
+  expect((await host.request(`/api/runs/${first.run.id}/report`)).json().history).toEqual([{step:0,completed:0,spent:0,waiting:0}]);
   for(const connection of host.connections){
     const decision=(await host.request(`/api/runs/${first.run.id}/actors/${connection.actor}/decision`,{token:connection.token})).json(),body=action(decision);
     const result=await host.request(`/api/runs/${first.run.id}/actors/${connection.actor}/action`,{method:'POST',token:connection.token,body});expect(result.status).toBe(200);lastBody=body;lastToken=connection.token;
   }
   const durable=await host.store.getRunSummary(first.run.id);expect(durable.steps).toBe(1);
+  const report=(await host.request(`/api/runs/${first.run.id}/report`)).json();expect(report.history).toHaveLength(2);expect(report.history.at(-1).step).toBe(durable.steps);expect(()=>validateReportedHistory(report)).not.toThrow();
   const retry=await host.request(`/api/runs/${first.run.id}/actors/courier_b/action`,{method:'POST',token:lastToken,body:lastBody});expect(retry.status).toBe(200);expect((await host.store.getRunSummary(first.run.id)).steps).toBe(1);
 });
 

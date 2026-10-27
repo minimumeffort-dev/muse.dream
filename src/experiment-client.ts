@@ -1,4 +1,5 @@
 import type {ExperimentConfig,SavedExperiment,RunSummary,SavedRunReport} from './experiment-types';
+import {validateReportedHistory} from './run-history';
 export class ExperimentClient {
   private readonly pendingStarts=new Map<string,string>();
   constructor(readonly token:string){}
@@ -16,6 +17,6 @@ export class ExperimentClient {
     catch(error){const status=(error as {status?:number}).status;if(status&&status>=400&&status<500)this.pendingStarts.delete(key);throw error;}
   }
   runs(experimentId:string,signal?:AbortSignal){return this.request<{runs:RunSummary[]}>('/runs?experimentId='+encodeURIComponent(experimentId),'GET',undefined,signal);}
-  report(runId:string,signal?:AbortSignal){return this.request<SavedRunReport>('/runs/'+encodeURIComponent(runId)+'/report','GET',undefined,signal);}
+  async report(runId:string,signal?:AbortSignal){const report=await this.request<SavedRunReport>('/runs/'+encodeURIComponent(runId)+'/report','GET',undefined,signal);validateReportedHistory(report);return report;}
   resume(runId:string){return this.request<RunSummary>('/runs/'+encodeURIComponent(runId)+'/resume','POST',{});}
 }

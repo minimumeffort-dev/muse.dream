@@ -47,8 +47,11 @@ cumulative waiting. One cursor inspects all three at the same step. Point at a
 chart or use arrow keys to inspect without pausing; select a step or press Enter
 to open it in replay. Home/End inspect the first/latest step; Escape returns to
 the playback cursor. **By agent** holds the individual progress and time charts.
-Comparisons use
-paired bars for tasks, spending and run length. Tables, events and source details
+Select two saved runs to overlay their timelines: solid gold and dashed blue,
+with shared scales and a per-step difference. Hover or use arrow keys to inspect;
+select to hold a step, then **Latest** or Escape to follow again. Each line ends
+at its last recorded step. **Timeline CSV** includes both histories and their
+aligned differences. Tables, events and source details
 stay folded away. Download CSV for analysis, or the full JSONL recording for replay.
 Tables scroll independently on small screens, keeping charts and controls in place.
 

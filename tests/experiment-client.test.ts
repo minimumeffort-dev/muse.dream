@@ -25,3 +25,7 @@ it('saves edits with an optimistic revision and pins report requests to a run',a
   await client.save(config,experiment);expect(transport.mock.calls[0]![0]).toBe('/api/experiments/saved');expect(transport.mock.calls[0]![1].method).toBe('PUT');expect(JSON.parse(transport.mock.calls[0]![1].body).expectedRevision).toBe(1);
   transport.mockResolvedValue(new Response('{}'));await client.report('run-one');expect(transport.mock.calls[1]![0]).toBe('/api/runs/run-one/report');
 });
+it('rejects a supplied history that disagrees with the report at the HTTP boundary',async()=>{
+  const transport=vi.fn().mockResolvedValue(new Response(JSON.stringify({metrics:{steps:1},history:[]})));vi.stubGlobal('fetch',transport);
+  await expect(new ExperimentClient('private').report('run-one')).rejects.toThrow('Run history does not match');
+});

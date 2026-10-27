@@ -58,8 +58,14 @@ holds the raw observation/action/outcome. CSV exports the pinned measurements;
 Full run (JSONL) preserves replay. Controller timing is a separate disclosure.
 
 Comparisons lead with a measured difference. Different workloads show their own
-completed/total counts; unfinished comparisons stay explicit. Three paired charts
-show tasks, spending and elapsed steps with shared zero-based scales. Run data
+completed/total counts; unfinished comparisons stay explicit. Three overlaid
+step charts compare tasks, spending and waiting, using one actual step axis and
+shared zero-based scales. First run is solid gold, second dashed blue; a compact
+legend and matching readouts show their values and signed difference. Lines stop
+at each recorded head; missing values remain missing. Inspection is read-only,
+with one shared cursor, arrow/Home/End keys, click/Enter to hold and Latest/Escape
+to follow again. Preserve held steps through live refresh. Timeline CSV exports
+the aligned prefixes, differences and source pins. Run data
 holds the full metric table, source hashes and saved revision pins. Evidence still
 opens the exact run and step and leaves the editable draft intact.
 Comparisons refresh while either selected run is executing, even when another

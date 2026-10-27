@@ -1,8 +1,9 @@
 import type {Parameters} from './framework';
 import type {RunReport} from './report';
+import type {HistoryPoint} from './run-history';
 export type ExperimentInput={mode:'brief';world:string;task:string;parameters:Parameters;builder?:'scenarios-1'}|{mode:'source';source:string};
 export interface ControllerAssignment {actor:string;kind:'baseline'|'external-mock'}
 export interface ExperimentConfig {name:string;input:ExperimentInput;controllers:ControllerAssignment[]}
 export interface SavedExperiment {id:string;revision:number;name:string;config:ExperimentConfig;source:string;sourceHash:string;seed:number;createdAt:string;updatedAt:string}
 export interface RunSummary {id:string;experimentId:string;revision:number;name:string;sourceHash:string;seed:number;config:ExperimentConfig;status:string;steps:number;metrics:RunReport['metrics'];createdAt:string;updatedAt:string}
-export type SavedRunReport=RunReport&{run:RunSummary;decisions?:unknown[]};
+export type SavedRunReport=RunReport&{run:RunSummary;decisions?:unknown[];history?:readonly HistoryPoint[]};

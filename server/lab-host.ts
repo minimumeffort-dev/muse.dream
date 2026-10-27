@@ -7,6 +7,7 @@ import {AgentRuntime,AgentRuntimeError} from '../src/agent-runtime';
 import {mockAction} from '../src/framework';
 import type {Transition} from '../src/engine/sim/episode';
 import {buildRunReport} from '../src/report';
+import {RunHistory} from '../src/run-history';
 import {ExperimentStore,StoreError,type SavedRun} from './experiments';
 
 export interface ExternalMockConnection {runId:string;actor:string;token:string}
@@ -15,7 +16,7 @@ export interface LabHostOptions {
   onExternalMock?:(connection:ExternalMockConnection)=>void|Promise<void>;
 }
 type DecisionTiming={requestId:string;actor:string;step:number;started:number;latencyMs?:number};
-type Entry={runtime:AgentRuntime;saved:SavedRun;tokens:Map<string,string>;decisions:DecisionTiming[];reason?:string;storageError?:string};
+type Entry={runtime:AgentRuntime;history:RunHistory;saved:SavedRun;tokens:Map<string,string>;decisions:DecisionTiming[];reason?:string;storageError?:string};
 const revision=z.number().int().min(1).max(64);
 const startSchema=z.object({revision,requestId:z.string().min(1).max(128)}).strict();
 const updateSchema=z.object({expectedRevision:revision}).passthrough();
@@ -37,7 +38,7 @@ export function createLabHost(store:ExperimentStore,options:LabHostOptions){
     for(const line of saved.recording.trim().split('\n').slice(1))runtime.run.appendRecorded(JSON.parse(line) as Transition);
     if(forcePause||saved.status==='paused')runtime.pause();
     const tokens=new Map(saved.controllers.filter(c=>c.owner==='external').map(c=>[c.actor,freshToken()]));
-    return {runtime,saved,tokens,decisions:structuredClone(saved.decisions??[]),reason:saved.reason};
+    return {runtime,history:new RunHistory(runtime.run),saved,tokens,decisions:structuredClone(saved.decisions??[]),reason:saved.reason};
   }
   async function entry(runId:string){let found=entries.get(runId);if(!found){found=await restore(await store.getRun(runId));entries.set(runId,found);}return found;}
   const controllers=(item:Entry)=>item.runtime.actors.map(actor=>({actor,owner:item.runtime.owner(actor) as 'baseline'|'external'}));
@@ -144,7 +145,7 @@ export function createLabHost(store:ExperimentStore,options:LabHostOptions){
           const completed=item.decisions.filter(d=>d.latencyMs!==undefined);
           json(res,200,{version:'dream-host-1',runId:item.saved.id,status:item.storageError?'paused':item.runtime.status,manifest:item.runtime.run.manifest,from:after,records:item.runtime.run.records.slice(Math.max(0,after)),controllers:controllers(item),latency:{decisions:completed.length,totalMs:completed.reduce((sum,d)=>sum+d.latencyMs!,0),maxMs:Math.max(0,...completed.map(d=>d.latencyMs!))},run:await summary(item)});return;
         }
-        if(operation==='report'&&method==='GET'){json(res,200,{...buildRunReport(item.runtime.run.episodeSnapshot),run:await summary(item),decisions:item.decisions});return;}
+        if(operation==='report'&&method==='GET'){json(res,200,{...buildRunReport(item.runtime.run.episodeSnapshot),run:await summary(item),decisions:item.decisions,history:item.history.update()});return;}
         if(operation==='export'&&method==='GET'){res.writeHead(200,{'Content-Type':'application/x-ndjson','Cache-Control':'no-store'});res.end(item.runtime.run.export());return;}
         if(operation==='resume'&&method==='POST'){
           await available(item.saved.id);if(item.runtime.run.ended)throw httpError('Run has ended',409);

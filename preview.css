@@ -448,7 +448,6 @@ body.workspace-page{--gutter:24px;height:100dvh;min-height:640px;display:flex;fl
 .workspace-page .run-pins p{margin:0}
 .workspace-page .run-pins code{display:block;overflow-wrap:anywhere;font-size:11px;line-height:20px;color:var(--soft)}
 .workspace-page .result-charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:24px;margin-top:16px}
-.workspace-page .comparison-charts{grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr))}
 .workspace-page .result-chart{margin:0;min-width:0}
 .workspace-page .result-chart figcaption{font-size:12px;line-height:20px;font-weight:650;margin-bottom:12px}
 .workspace-page .chart-row+.chart-row{margin-top:12px}
@@ -481,6 +480,19 @@ body.workspace-page{--gutter:24px;height:100dvh;min-height:640px;display:flex;fl
 .workspace-page .history-point{fill:var(--series);stroke:var(--paper);stroke-width:1;vector-effect:non-scaling-stroke}
 .workspace-page .history-context{min-height:20px;margin-top:8px;overflow-wrap:anywhere}
 .workspace-page .history-hint{margin-top:4px}
+.workspace-page .comparison-history .baseline{--series:#a87805}
+.workspace-page .comparison-history .candidate{--series:#386d85}
+.workspace-page .comparison-history .history-line.candidate{stroke-dasharray:6 4}
+.workspace-page .history-legend{display:flex;flex-wrap:wrap;gap:4px 20px;margin-top:8px;font-size:12px;line-height:20px}
+.workspace-page .history-legend>span{display:flex;align-items:center;gap:8px;min-width:0}
+.workspace-page .history-legend i{width:24px;border-top:2px solid var(--series);flex:none}
+.workspace-page .history-legend .candidate i{border-top-style:dashed}
+.workspace-page .comparison-history .history-selection{margin-left:auto}
+.workspace-page .comparison-values{display:flex;gap:12px;font-variant-numeric:tabular-nums;font-weight:500;white-space:nowrap}
+.workspace-page .comparison-values output{color:var(--ink);border-bottom:2px solid var(--series)}
+.workspace-page .comparison-values .candidate{border-bottom-style:dashed}
+.workspace-page .comparison-history figcaption{flex-direction:column;gap:4px;align-items:flex-start}
+.workspace-page .history-latest{background:none;color:var(--ink);border:0;text-decoration:underline;text-underline-offset:4px;font:inherit;font-size:12px;min-height:40px;padding:0 8px;cursor:pointer}
 @media(max-width:1099px){.workspace-page .history-charts{grid-template-columns:1fr;gap:16px}.workspace-page .history-chart svg{height:120px}}
 .workspace-page #compare-help{margin-top:8px}
 @media(min-width:721px) and (max-width:1099px){.workspace-page .brief-choices{grid-template-columns:1fr}}
