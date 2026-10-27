@@ -10,8 +10,13 @@ on a light background. Controls use visible focus, native buttons and disclosure
 ## The primary flow
 
 The header states the Lab’s purpose in one sentence. The primary action is Run
-experiment. Scenario buttons choose Delivery, Warehouse or Classroom. A readable
-task and environment summary replaces the preset-only editable brief boxes.
+experiment. An editable Experiment brief contains the original researcher text;
+scenario buttons choose prepared Delivery, Warehouse or Classroom examples.
+Free-form text is not interpreted and requires manually authored, explicitly
+reviewed Dream rules. Never silently run the old example against an edited brief.
+Review setup derives tasks, costs, services and success criteria from compiled
+Dream, with capacity and routes in a disclosure. Invalid drafts show no stale
+review. The original brief remains unchanged when conditions override it.
 Team size, Budget per agent and Time limit are the visible conditions. Stack all
 three in one column, with labels above equal-width inputs and units aligned on
 the right. Use the same structure on desktop and mobile. Explain simulation
@@ -35,6 +40,10 @@ visible, with keyboard camera controls on the focused view. Playback controls
 appear after a run exists. A changed draft is labeled while the accepted world
 continues to show its own source-pinned result. Host playback pause explicitly
 says that execution continues on the local host.
+
+Each accepted run exposes its own original brief separately from the draft, and
+a portable JSON record carries it alongside the replay without changing JSONL.
+Older runs explicitly show that no brief was recorded.
 
 Outcome copy leads with completion or the time limit, then coins spent and
 simulation steps. It suggests the next useful action without inventing failure

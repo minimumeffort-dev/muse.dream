@@ -13,6 +13,8 @@ it('builds the active workspace with local fonts and no retired review artifacts
  expect(html).toContain('<script type="module" src="/src/main.ts"></script>');
  expect(html).toContain('aria-label="Agents use scripted test policies"');
  expect(html).toContain('id="experiment-world"');
+ expect(html).toContain('id="experiment-brief"');expect(html).toContain('id="review-content"');
+ expect(html).toContain('id="run-brief-text"');expect(html).toContain('id="export-bundle"');
  for(const brief of ['delivery','warehouse','classroom'])expect(html).toContain(`id="brief-${brief}"`);
  expect(html).toContain('aria-label="Scenario brief"');
  expect(html).toContain('See how agents complete a task');

@@ -9,8 +9,11 @@ The [delivery](../examples/morning-delivery.dream),
 [warehouse](../examples/warehouse.dream) and [classroom](../examples/classroom.dream)
 sources are the three selectable mock briefs. Each includes validated presentation
 for its buildings, agents and carried objects. [Build a scenario world](worlds.md)
-explains the catalog and connected entrance layout. Open Advanced setup, choose Edit rules, paste a scenario and Run.
-Use scenario returns to the delivery template and its numeric parameters.
+explains the catalog and connected entrance layout. For a custom brief, open
+Advanced setup, choose Edit rules, paste a matching scenario, review the compiled
+setup and confirm that the rules match the brief before running. Use scenario
+returns to the selected template and its numeric parameters while retaining a
+custom brief. The current builder does not interpret free-form text.
 
 Run and replay an export from this folder:
 
@@ -22,7 +25,9 @@ node scripts/experiment.mjs replay delivery.jsonl
 The output path must be new; the CLI does not replace an existing record.
 JSONL pins canonical source, its SHA-256, seed and policy label, then records
 observations, actions, outcomes and rewards for every transition. Replay
-recompiles that source and verifies every transition.
+recompiles that source and verifies every transition. The separate versioned JSON
+run record also carries the original brief as unsigned metadata; the CLI accepts
+either export format.
 
 The mock builder recognizes the three supplied briefs exactly. Change Team size,
 Budget per agent or Time limit; Advanced setup contains Random seed and Dream

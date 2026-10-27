@@ -4,11 +4,11 @@ import {fileURLToPath} from 'node:url';
 const [command,file,...options]=process.argv.slice(2);
 let server;
 try{
-  if(!['run','replay'].includes(command)||!file||(command==='run'?options.length!==2||options[0]!=='--output':options.length))throw Error('Usage: node scripts/experiment.mjs run scenario.dream --output episode.jsonl; or replay episode.jsonl');
+  if(!['run','replay'].includes(command)||!file||(command==='run'?options.length!==2||options[0]!=='--output':options.length))throw Error('Usage: node scripts/experiment.mjs run scenario.dream --output episode.jsonl; or replay episode.jsonl / run-bundle.json');
   server=await createServer({root:fileURLToPath(new URL('../',import.meta.url)),configFile:false,logLevel:'silent',server:{middlewareMode:true,watch:null},appType:'custom'});
   const engine=await server.ssrLoadModule('/src/engine/sim/episode.ts'),recording=await server.ssrLoadModule('/src/engine/experiment/recording.ts');
   let episode;
-  if(command==='replay')episode=(await recording.replayEpisode(await readFile(file,'utf8'))).episode;
+  if(command==='replay'){const bundle=await server.ssrLoadModule('/src/run-bundle.ts');episode=(await bundle.replayRunFile(await readFile(file,'utf8'))).episode;}
   else{
     const source=await readFile(file,'utf8'),manifest=await recording.recordingManifest(source),compiler=await server.ssrLoadModule('/src/engine/scene/dream.ts');
     episode=engine.createEpisode(compiler.compileDreamWorld(source).scenarios[0]);

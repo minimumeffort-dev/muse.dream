@@ -285,6 +285,20 @@ body.workspace-page{--gutter:24px;height:100dvh;min-height:640px;display:flex;fl
 .workspace-page .brief-panel{overflow-y:auto;gap:16px;padding:16px var(--gutter)}
 .workspace-page .brief-panel>*{flex-shrink:0}
 .workspace-page .brief-panel h2{font:650 14px/20px Manrope,sans-serif;letter-spacing:0;margin-bottom:12px}
+.workspace-page .brief-entry textarea{height:176px;line-height:20px;font-size:13px}
+.workspace-page .brief-entry p{margin-top:8px}
+.workspace-page #edit-brief-rules{margin-top:8px;padding:0;border:0;background:none;color:var(--ink);cursor:pointer}
+.workspace-page .setup-review h3{font:650 12px/20px Manrope,sans-serif;margin:12px 0 4px}
+.workspace-page .setup-review ul{padding-left:18px;margin:0;font-size:12px;line-height:20px}
+.workspace-page .setup-review li+li{margin-top:6px}
+.workspace-page .setup-review details{margin-top:12px}
+.workspace-page .setup-review details summary{font-size:12px}
+.workspace-page .review-confirm{display:flex;align-items:flex-start;gap:8px;margin-top:12px;font-size:12px;line-height:20px}
+.workspace-page .review-confirm[hidden]{display:none}
+.workspace-page .review-confirm input{flex:none;margin-top:3px;accent-color:#634400}
+.workspace-page .run-brief{padding:0 var(--gutter);border-top:1px solid var(--line)}
+.workspace-page .run-brief summary{min-height:40px;display:flex;align-items:center;cursor:pointer;font-size:12px;font-weight:650}
+.workspace-page .run-brief p{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:20px;padding-bottom:16px}
 .workspace-page .scenario-summary p{font-size:14px;line-height:24px}
 .workspace-page .scenario-summary .small{font-size:12px;line-height:20px;margin-top:8px}
 .workspace-page .parameter-grid{grid-template-columns:minmax(0,1fr)}

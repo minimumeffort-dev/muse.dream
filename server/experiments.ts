@@ -2,13 +2,15 @@ import {z} from 'zod';
 import {randomUUID} from 'node:crypto';
 import {mkdir,readFile,readdir,writeFile,rename,unlink,stat,chmod,open} from 'node:fs/promises';
 import {join} from 'node:path';
-import {buildFromBrief,compileExperiment,createEpisode,recordingManifest,exportEpisode,replayEpisode,episodeMetrics,type Parameters,type Manifest,type Episode} from '../src/framework';
+import {buildFromBrief,compileExperiment,createEpisode,recordingManifest,exportEpisode,replayEpisode,episodeMetrics,SCENARIO_BRIEFS,type Parameters,type Manifest,type Episode} from '../src/framework';
+import {matchesExamplePrompt} from '../src/experiment-brief';
 import {stepEpisode,type Transition} from '../src/engine/sim/episode';
 
 const id=z.string().regex(/^[a-zA-Z0-9_-]{1,80}$/),date=z.string().datetime(),hash=z.string().regex(/^[a-f0-9]{64}$/);
 const parameters=z.object({agents:z.number().int().min(1).max(8),budget:z.number().int().min(0).max(100000),deadline:z.number().int().min(1).max(1000),seed:z.number().int().min(0).max(2147483647)}).strict();
 export const experimentConfigSchema=z.object({
   name:z.string().trim().min(1).max(100),
+  prompt:z.string().max(8000).optional(),
   input:z.discriminatedUnion('mode',[
     z.object({mode:z.literal('brief'),world:z.string().max(2000),task:z.string().max(2000),parameters,builder:z.literal('scenarios-1').optional()}).strict(),
     z.object({mode:z.literal('source'),source:z.string().max(65536)}).strict(),
@@ -91,10 +93,16 @@ export class ExperimentStore {
     await this.write(file,text);this.sizes.set(file,bytes);
   }
   private runFile(runId:string){if(!id.safeParse(runId).success)fail('NOT_FOUND','Unknown run.',404);return join(this.directory,'runs',runId+'.json');}
-  private async accepted(input:unknown){
+  private async accepted(input:unknown,checkPrompt=false){
     const parsed=experimentConfigSchema.safeParse(input);if(!parsed.success)fail('INVALID_CONFIG','Invalid experiment configuration. Check name, inputs and controller assignments.');
     try{
     const config=parsed.data,accepted=config.input.mode==='brief'?buildFromBrief(config.input.world,config.input.task,config.input.parameters,config.input.builder??'delivery-1'):compileExperiment(config.input.source);
+    if(checkPrompt&&config.prompt!==undefined&&!config.prompt.trim())fail('INVALID_CONFIG','Describe the experiment before saving it.');
+    if(checkPrompt&&config.input.mode==='brief'&&config.prompt!==undefined){
+      const normalized=(value:string)=>value.trim().replace(/\s+/g,' ').toLowerCase();
+      const input=config.input,example=SCENARIO_BRIEFS.find(value=>normalized(value.world)===normalized(input.world)&&normalized(value.task)===normalized(input.task));
+      if(!example||!matchesExamplePrompt(config.prompt,example.id))fail('INVALID_CONFIG','This brief needs matching Dream rules. Select Edit Dream rules and review them.');
+    }
     const actors=accepted.scenario.agents.map(a=>a.id);
     if(config.controllers.length!==actors.length||new Set(config.controllers.map(c=>c.actor)).size!==actors.length||config.controllers.some(c=>!actors.includes(c.actor)))fail('INVALID_CONFIG','Assign exactly one controller to each compiled actor.');
     const manifest=await recordingManifest(accepted.source,'mock-agent-protocol-1');
@@ -110,7 +118,7 @@ export class ExperimentStore {
   async listExperiments(){await this.queue;const latest=new Map<string,SavedExperiment>();for(const e of this.index.experiments)latest.set(e.id,e);return clone([...latest.values()].sort((a,b)=>b.updatedAt.localeCompare(a.updatedAt))); }
   async getExperiment(experimentId:string,revision?:number){await this.queue;const all=this.index.experiments.filter(e=>e.id===experimentId),found=revision===undefined?all.at(-1):all.find(e=>e.revision===revision);if(!found)fail('NOT_FOUND','Unknown experiment revision.',404);return clone(found);}
   async save(input:unknown,options:{id?:string;expectedRevision?:number}={}){
-    const {config,manifest}=await this.accepted(input);
+    const {config,manifest}=await this.accepted(input,true);
     return this.serial(async()=>{
       const existing=options.id?this.index.experiments.filter(e=>e.id===options.id).at(-1):undefined;
       if(options.id&&!existing)fail('NOT_FOUND','Unknown experiment.',404);

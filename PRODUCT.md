@@ -21,8 +21,9 @@ agent. Researchers can inspect the generated source and replay a recorded run.
 
 The Lab is the sole product at the repository root. It selectively reuses the
 Dream framework and the approved Workspace A interface, with compact controls
-and contextual results. The human-facing flow is scenario, conditions, run and
-outcome. Advanced settings and Dream rules stay behind a disclosure; results and
+and contextual results. The human-facing flow is brief, reviewed setup, conditions, run and outcome.
+The original brief is captured with each new run; prepared examples and manual
+Dream authoring do not imply model interpretation. Advanced settings and Dream rules stay behind a disclosure; results and
 comparisons explain measured outcomes before technical evidence.
 Workspace now uses local copies of the compiler, logical episode engine,
 recording format and selected Three.js rendering modules. Run, pause, step,

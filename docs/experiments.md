@@ -15,8 +15,21 @@ tab can connect using the private URL again. Do not share this file or token.
 
 ## Create an experiment
 
-Name the experiment, select a scenario and choose Team size, Budget per agent
-and Time limit. Random seed is in Advanced setup. Select Delivery, Warehouse or
+Name the experiment and start with its editable brief. Delivery, Warehouse and
+Classroom have complete example briefs with prepared rules. Choose Team size,
+Budget per agent and Time limit, then review the compiled setup before running.
+The review shows each agent’s tasks, shared resources, prices, services,
+capacity, route times and deadline from the actual Dream rules. Controls change
+the setup without rewriting the original brief; the review calls out overrides.
+
+An edited arbitrary brief is captured but is not interpreted. To run it, choose
+**Edit Dream rules**, author a matching standalone scenario, and confirm the
+rules match your brief. Invalid rules clear the review rather than showing old
+facts. A matching example uses prepared rules directly. The confirmation is the
+researcher’s review, not an automated semantic check. An unsupported brief
+cannot silently run a preset.
+
+Random seed is in Advanced setup. Select Delivery, Warehouse or
 Classroom to load its brief; source mode
 accepts custom standalone Dream scenarios. [World authoring](worlds.md) covers
 appearances, layouts and a warehouse stock comparison.
@@ -34,8 +47,10 @@ Invalid drafts leave the accepted run and saved history intact.
 
 New brief revisions pin builder `scenarios-1`; older delivery revisions keep the
 original builder and source hash. Selecting Delivery explicitly upgrades its
-draft. Every saved revision contains the exact canonical Dream source, its SHA-256,
-seed, inputs and actor assignments. Each run pins its own revision. Editing a
+draft. Every new saved revision contains the exact original brief, canonical Dream source,
+its SHA-256, seed, inputs and actor assignments. Each run retains that brief.
+Older records may have no brief; they stay unchanged and show that none was
+recorded. Each run pins its own revision. Editing a
 budget or controller later cannot change an earlier run's configuration or trace.
 Concurrent edits require the expected revision; stale saves return an error.
 A retried run request keeps the same request identity until it is acknowledged.
@@ -62,6 +77,11 @@ Full recording labels an ended run. This scope stays separate from the replay
 cursor. Data table and
 Events open the underlying numbers and recorded requests. Controller timing
 is separate from simulation time.
+**Run brief** shows the recorded prompt, independently of the editable draft.
+**Run record (JSON)** exports the exact prompt and source-pinned replay as a
+versioned bundle. Prompt metadata is unsigned and does not prove semantic
+consistency. Existing JSONL exports remain unchanged and exclude the prompt;
+the CLI replays either format.
 Download CSV snapshots per-agent measurements. Timeline CSV exports each committed
 step from zero through the current head, independently of the inspection cursor.
 Both include source hash, seed and partial/completed/deadline outcome. Full run

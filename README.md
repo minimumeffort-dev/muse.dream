@@ -28,13 +28,17 @@ Actions and the production deployment against the merged commit.
 
 ## Run, inspect, repeat
 
-Select **Delivery**, **Warehouse** or **Classroom**. The sidebar explains the
-task and environment. Change **Team size**, **Budget per agent** or **Time limit**,
-then press **Run experiment**. Conditions share a single column, with each label
+Start with the **Experiment brief**. Delivery, Warehouse and Classroom each
+have a complete example brief and prepared Dream rules. Change **Team size**,
+**Budget per agent** or **Time limit** and review the actual tasks, supplies,
+service rules and deadline before pressing **Run experiment**. The condition
+controls override the example’s original values; the brief stays unchanged.
+Conditions share a single column, with each label
 above its input and units on the right. Advanced setup holds the random seed, agent
 assignments and Dream rules. The local builder expands the chosen template.
-The compiler accepts it before a fresh episode starts. Agents receive private observations and submit actions through
-the rules. They cannot set rewards or completion.
+The compiler accepts it before a fresh episode starts. Agents receive private
+observations and submit actions through the rules. They cannot set rewards or
+completion.
 
 The default couriers buy bread, deliver it to the school, return for supply kits
 and use the clinic service. The result is four tasks in 27 logical steps,
@@ -82,21 +86,30 @@ standalone scenario and Run experiment. **Use scenario** returns to the template
 and preserves the manual draft in memory.
 Invalid source shows its diagnostic and preserves the accepted result.
 
-The mock builder recognizes the three supplied briefs exactly. Other descriptions
-produce an error. Use source mode for custom tasks. Dream `look` fields choose
+The mock builder recognizes only the three supplied example briefs exactly.
+For a different brief, select **Edit Dream rules**, author the matching scenario
+and confirm you reviewed it. The Lab does not interpret the text or verify that
+the prose and rules mean the same thing. An unsupported brief cannot silently run
+an example setup. Use source mode for custom tasks. Dream `look` fields choose
 buildings, wardrobes and carried objects from a closed catalog; locations and
 links define their connected task network. Try the [world authoring guide](docs/worlds.md)
 and [warehouse scenario](examples/warehouse.dream).
 
 ## Keep the record
 
+Each run retains its original brief separately from later edits. Open **Run brief**
+while viewing a run; older runs without one say so. **Run record (JSON)** includes
+the original brief, source pin, seed and replayable recording in a versioned
+bundle. **Full run (JSONL)** remains the original source-pinned recording and
+does not include brief metadata. Both formats can be replayed with the CLI.
+Prompt metadata is unsigned and is not proof that the rules match the brief.
+
 **Download CSV** exports the latest committed snapshot’s per-agent measurements
 and source pins. **Timeline CSV** exports every recorded step, including step zero,
-with tasks completed, coins spent and waiting agent steps. **Full run (JSONL)**
-downloads the paused or completed episode for replay.
-Replay it using the local CLI:
+with tasks completed, coins spent and waiting agent steps. Replay either run
+record format using the local CLI:
 
-    node scripts/experiment.mjs replay path/to/episode.jsonl
+    node scripts/experiment.mjs replay path/to/run.json
 
 The local host retains source-pinned history across reloads and restarts.
 Incomplete runs reopen paused and continue only after Resume run. The static

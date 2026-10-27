@@ -10,19 +10,21 @@
   <div class="workspace-layout">
     <aside id="setup-panel" class="brief-panel" aria-label="Experiment setup">
       <form id="host-connection" hidden><p class="small muted">Connect to your local workspace to save experiments and compare runs.</p><label class="field">Workspace access token<input id="host-token" type="password" autocomplete="off" required></label><button class="btn" type="submit">Connect workspace</button></form>
+      <section class="brief-entry" aria-labelledby="brief-heading"><h2 id="brief-heading">Experiment brief</h2><label class="sr-only" for="experiment-brief">Describe the environment, task and conditions</label><textarea id="experiment-brief" maxlength="8000" required aria-describedby="brief-help"></textarea><p id="brief-help" class="small muted">Examples use prepared rules. Other briefs need matching Dream rules.</p><button id="edit-brief-rules" class="text-link" type="button" hidden>Edit Dream rules</button></section>
       <section class="scenario-section" aria-labelledby="scenario-heading"><h2 id="scenario-heading">Choose a scenario</h2><div class="brief-choices" role="group" aria-label="Scenario brief"><button id="brief-delivery" class="btn" type="button" aria-pressed="true">Delivery</button><button id="brief-warehouse" class="btn" type="button" aria-pressed="false">Warehouse</button><button id="brief-classroom" class="btn" type="button" aria-pressed="false">Classroom</button></div></section>
-      <section class="scenario-summary" aria-labelledby="task-heading"><h2 id="task-heading">The task</h2><p id="task-summary"></p><p id="world-summary" class="small muted"></p></section>
       <textarea id="world-brief" maxlength="2000" aria-label="World" hidden></textarea><textarea id="task-brief" maxlength="2000" aria-label="Task" hidden></textarea>
       <section aria-labelledby="conditions-heading">
         <h2 id="conditions-heading">Change the conditions</h2>
-        <div class="parameter-grid">
+        <div id="condition-grid" class="parameter-grid">
           <label class="field">Team size<span class="number-field"><input id="parameter-agents" type="number" required value="2" min="1" max="8" aria-label="Team size"><span>agents</span></span></label>
           <label class="field">Budget per agent<span class="number-field"><input id="parameter-budget" type="number" required value="16" min="0" max="100000" aria-label="Budget per agent"><span>coins</span></span></label>
           <label class="field">Time limit<span class="number-field"><input id="parameter-deadline" type="number" required value="80" min="1" max="1000" aria-label="Time limit" aria-describedby="step-help"><span>steps</span></span></label>
         </div>
         <p id="step-help" class="small muted">Steps measure simulation time, not real seconds.</p>
+        <p id="manual-conditions" class="small muted" hidden>Change conditions in the Dream rules.</p>
         <button id="save-experiment" class="btn save-setup" type="button" hidden>Save setup</button>
       </section>
+      <section class="setup-review" aria-labelledby="review-heading"><h2 id="review-heading">Review setup</h2><p id="review-status" class="small muted"></p><div id="review-content"></div><label id="review-confirm-label" class="review-confirm" hidden><input id="review-confirm" type="checkbox"> I checked that the Dream rules match this brief.</label></section>
       <details class="source advanced-setup"><summary>Advanced setup</summary><div class="advanced-content">
         <label class="field">Random seed<span class="number-field"><input id="parameter-seed" type="number" required value="7" min="0" max="2147483647" aria-label="Random seed" aria-describedby="seed-help"><span></span></span></label><p id="seed-help" class="small muted">Keep the same seed when comparing conditions.</p>
         <section id="controller-section" hidden><h3>Agent assignments</h3><p class="small muted">Choose the built-in policy or test the agent connection in a separate process.</p><div id="controller-assignments"></div></section>
@@ -43,8 +45,9 @@
       </div>
       <p id="playback-notice" class="playback-notice small muted" hidden>Playback is paused. The experiment is still running on your local host.</p>
       <section id="result-summary" class="outcome-summary" aria-labelledby="run-metrics" hidden><h2 id="run-metrics"></h2><p id="result-detail"></p><p id="result-next" class="small muted"></p></section>
+      <details id="run-brief" class="run-brief" hidden><summary>Run brief</summary><p id="run-brief-text"></p></details>
       <details id="agent-panel" class="activity" hidden><summary>Agent activity</summary><div id="agent-activity" class="activity-row"></div></details>
-      <details id="run-report" class="run-report" hidden><summary>Results breakdown</summary><div class="report-content" role="region" aria-label="Results breakdown"></div><div class="report-footer"><a id="export" class="text-link" title="Download a source-pinned JSONL record for replay" hidden download>Full run (JSONL)</a><details id="host-timing" class="controller-timing" hidden><summary>Controller timing</summary><output id="host-latency" class="small muted" hidden></output></details></div></details>
+      <details id="run-report" class="run-report" hidden><summary>Results breakdown</summary><div class="report-content" role="region" aria-label="Results breakdown"></div><div class="report-footer"><a id="export" class="text-link" title="Download a source-pinned JSONL record for replay" hidden download>Full run (JSONL)</a><a id="export-bundle" class="text-link" title="Download the run with its original brief" hidden download>Run record (JSON)</a><details id="host-timing" class="controller-timing" hidden><summary>Controller timing</summary><output id="host-latency" class="small muted" hidden></output></details></div></details>
       <details id="run-comparison" class="run-report comparison" open hidden><summary>Compare outcomes</summary><div id="comparison-content" class="report-content" role="region" aria-label="Run comparison"></div></details>
     </section>
   </div>

@@ -128,7 +128,9 @@ include the mock client's deliberate delay and HTTP overhead.
 The host keeps source-pinned runs, controller ownership and wall timings in its
 [local saved store](experiments.md). Incomplete runs reopen paused after a
 restart; pending decisions are revoked. Gameplay JSONL exports remain unsigned
-and exclude controller handoffs, wall latency and credentials.
+and exclude the brief, controller handoffs, wall latency and credentials. The
+versioned JSON run record includes the exact brief as unsigned metadata alongside
+the same replayable JSONL, source hash and seed.
 
 This is not a public multi-tenant backend or an OS sandbox for untrusted code.
 Controllers on the same machine share that machine's user permissions. The
