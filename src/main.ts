@@ -24,7 +24,8 @@ function graphicsFailure(message:string){viewError=message;stop();showError(mess
 const fields=['agents','budget','deadline','seed'] as const;
 const controls=fields.map(key=>get<HTMLInputElement>('parameter-'+key));
 let manual=false,manualDraft='',builder:BriefBuilder=BRIEF_BUILDER,cursor=0,timer:number|undefined,exportUrl='',exportOwner:unknown,exportLength=-1;
-const showReport=createReportView(get('run-report'),evidence=>{stop();following=false;cursor=evidence.step;render();});
+function seek(step:number){stop();following=false;cursor=step;render();}
+const showReport=createReportView(get('run-report'),evidence=>seek(evidence.step),seek);
 const savedWorkspace=new ExperimentWorkspace({
   validateDraft,
   readDraft:()=>({name:get<HTMLInputElement>('experiment-name').value,input:manual?{mode:'source',source:source.value}:{mode:'brief',world:world.value,task:task.value,parameters:parameters(),...(builder===BRIEF_BUILDER?{builder:BRIEF_BUILDER}:{})}}),
@@ -108,7 +109,7 @@ function render(animate=false){
     exportOwner=run;exportLength=run.length;download.href=exportUrl;download.download=`${run.scenario.id}-seed-${run.scenario.seed}.jsonl`;
   }
   const workspace=get('workspace');workspace.dataset.state=status;workspace.dataset.step=String(cursor);workspace.dataset.runLength=String(run?.length??0);workspace.dataset.sourceHash=run?.manifest.sourceHash??'';
-  showReport(run,!!run&&!run.ended&&(hostMode?host?.status==='waiting':playing&&cursor===run.length));
+  showReport(run,!!run&&!run.ended&&(hostMode?host?.status==='waiting':playing&&cursor===run.length),cursor);
   document.querySelector<HTMLElement>('.policy')!.hidden=!hostMode||!run;
   const recordedTitle=scenario.id.replaceAll('_',' ').replace(/^./,c=>c.toUpperCase());
   text(get('world-title'),host?.summary?`${savedWorkspace.runLabel(host.summary.id)} · ${recordedTitle}`:run?`${recordedTitle} · Recorded run`:'Experiment world');
@@ -142,7 +143,7 @@ play.onclick=()=>{
   if(run.ended&&cursor===run.length)cursor=0;startPlayback();
 };
 step.onclick=()=>{stop();following=false;tick();};
-timeline.oninput=()=>{stop();following=false;cursor=Number(timeline.value);render();};
+timeline.oninput=()=>seek(Number(timeline.value));
 function changed(){
   session.invalidate();showError();
   if(!manual){try{const candidate=buildFromBrief(world.value,task.value,parameters(),builder);source.value=candidate.source;preview=createEpisode(candidate.scenario);}catch{/* Run reports invalid draft input without replacing the accepted episode. */}}

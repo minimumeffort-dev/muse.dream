@@ -2,18 +2,22 @@ import {buildRunReport,type EvidenceRef} from './report';
 import type {ExperimentRun} from './runner';
 import {humanName,reasonCopy,actionCopy} from './workspace-copy';
 import {barChart,timeChart} from './result-charts';
-import {runCsv,csvDownload} from './result-exports';
+import {runCsv,historyCsv,csvDownload} from './result-exports';
+import {createRunHistoryView} from './run-history-view';
 
-export function createReportView(element:HTMLElement,onEvidence:(evidence:EvidenceRef)=>void){
+export function createReportView(element:HTMLElement,onEvidence:(evidence:EvidenceRef)=>void,onSeek:(step:number)=>void){
   let owner:ExperimentRun|undefined,length=-1;
-  return (run:ExperimentRun|undefined,live:boolean)=>{
+  let history:ReturnType<typeof createRunHistoryView>|undefined;
+  return (run:ExperimentRun|undefined,live:boolean,cursor:number)=>{
     element.hidden=!run;
     if(!run)return;
     const content=element.querySelector('.report-content')!;
     if(owner!==run){
       owner=run;length=-1;content.replaceChildren();
       const scope=document.createElement('p');scope.className='small muted result-scope';content.append(scope);
-      const charts=document.createElement('div');charts.className='result-charts';charts.append(barChart('Tasks completed',[]),timeChart([]));content.append(charts);
+      history=createRunHistoryView(run,onSeek);content.append(history.element);
+      const agents=document.createElement('details');agents.className='result-data agent-charts';const agentSummary=document.createElement('summary');agentSummary.textContent='By agent';
+      const charts=document.createElement('div');charts.className='result-charts';charts.append(barChart('Tasks completed',[]),timeChart([]));agents.append(agentSummary,charts);content.append(agents);
       const data=document.createElement('details');data.className='result-data';const summary=document.createElement('summary');summary.textContent='Data table';data.append(summary);
       const scroll=document.createElement('div');scroll.className='table-scroll';scroll.tabIndex=0;scroll.setAttribute('role','region');scroll.setAttribute('aria-label','Per-agent results');
       const table=document.createElement('table'),head=document.createElement('thead'),header=document.createElement('tr');table.setAttribute('aria-label','Per-agent results');
@@ -21,6 +25,7 @@ export function createReportView(element:HTMLElement,onEvidence:(evidence:Eviden
       const events=document.createElement('details');events.className='result-data report-events';const findings=document.createElement('div');findings.className='report-findings';const more=document.createElement('p');more.className='small muted omitted-events';events.append(document.createElement('summary'),findings,more);content.append(events);
     }
     content.querySelector('.result-scope')!.textContent=`${run.ended?'Full recording':live?'Live results':'Recorded so far'} · ${run.length} ${run.length===1?'step':'steps'}`;
+    history!.update(cursor);
     if(length===run.length)return;
     length=run.length;
     const report=buildRunReport(run.episodeSnapshot),charts=content.querySelectorAll<HTMLElement>('.result-chart');
@@ -33,6 +38,8 @@ export function createReportView(element:HTMLElement,onEvidence:(evidence:Eviden
     }
     const footer=element.querySelector('.report-footer')!,previous=footer.querySelector<HTMLAnchorElement>('[data-run-csv]');
     const download=csvDownload(runCsv(report,{scenario:run.scenario.id,sourceHash:run.manifest.sourceHash,seed:run.scenario.seed}),`${run.scenario.id}-seed-${run.scenario.seed}.csv`,'Download run results CSV',previous??undefined);download.dataset.runCsv='';if(!previous)footer.prepend(download);
+    const previousHistory=footer.querySelector<HTMLAnchorElement>('[data-history-csv]');
+    const timeline=csvDownload(historyCsv(history!.history.points,{scenario:run.scenario.id,sourceHash:run.manifest.sourceHash,seed:run.scenario.seed,outcome:report.metrics.success?'completed':report.metrics.truncated?'deadline':'partial'}),`${run.scenario.id}-seed-${run.scenario.seed}-history.csv`,'Download timeline CSV',previousHistory??undefined);timeline.className='text-link';timeline.textContent='Timeline CSV';timeline.dataset.historyCsv='';if(!previousHistory)download.after(timeline);
     const events=content.querySelector<HTMLElement>('.report-events')!,findings=events.querySelector('.report-findings')!;
     events.hidden=!report.findings.length;events.querySelector('summary')!.textContent=`Events · ${report.metrics.blocked+report.metrics.violations}`;
     for(const finding of report.findings.slice(findings.children.length)){

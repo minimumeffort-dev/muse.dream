@@ -33,7 +33,8 @@ and classroom preparation, with bounded parameters. Validated Dream presentation
 selects buildings, appearances and cargo independently of scenario IDs. Baseline
 agents are deterministic mocks. A separate local HTTP host accepts actor-scoped
 decisions, commits joint steps and continues when its viewer closes. One external
-mock process proves that boundary. Live and recorded results link findings to exact
+mock process proves that boundary. Live task, spending and waiting timelines let
+researchers inspect and replay recorded steps. Live and recorded results link findings to exact
 recorded transitions. Saved experiments have immutable revisions and per-run
 source/configuration pins. Researchers create runs from the UI, reopen history
 after a host restart, explicitly resume interrupted runs and compare two runs

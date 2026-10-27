@@ -42,8 +42,12 @@ and use the clinic service. The result is four tasks in 27 logical steps,
 deadlines can fail. These are mock policy outcomes, not real delivery estimates.
 
 The outcome summary shows completed tasks, coins spent and simulation steps.
-Results breakdown charts each agent’s task progress and time as the run advances.
-Open it while the simulation runs; pausing is optional. Comparisons use
+Results breakdown shows live timelines for completed tasks, coins spent and
+cumulative waiting. One cursor inspects all three at the same step. Point at a
+chart or use arrow keys to inspect without pausing; select a step or press Enter
+to open it in replay. Home/End inspect the first/latest step; Escape returns to
+the playback cursor. **By agent** holds the individual progress and time charts.
+Comparisons use
 paired bars for tasks, spending and run length. Tables, events and source details
 stay folded away. Download CSV for analysis, or the full JSONL recording for replay.
 Tables scroll independently on small screens, keeping charts and controls in place.
@@ -57,7 +61,8 @@ One logical step occupies one display second.
 Open **Results breakdown** for each agent’s live charts. **Data table** holds
 the exact numbers. **Events** links blocked or rejected requests to their replay
 step; **Technical record** reveals the recorded observation, action and outcome.
-Charts describe the latest committed step, separately from the replay cursor.
+Timelines keep the full committed history; their cursor follows playback until
+you inspect another step. By agent and snapshot CSVs describe the latest head.
 On the local host they keep updating even when playback is paused. Open tables,
 keyboard focus and scroll positions survive updates. Live comparisons refresh
 while either selected run is executing, including when you view another run.
@@ -80,8 +85,10 @@ and [warehouse scenario](examples/warehouse.dream).
 
 ## Keep the record
 
-**Download CSV** exports the latest committed snapshot’s measurements and source
-pins. **Full run (JSONL)** downloads the paused or completed episode for replay.
+**Download CSV** exports the latest committed snapshot’s per-agent measurements
+and source pins. **Timeline CSV** exports every recorded step, including step zero,
+with tasks completed, coins spent and waiting agent steps. **Full run (JSONL)**
+downloads the paused or completed episode for replay.
 Replay it using the local CLI:
 
     node scripts/experiment.mjs replay path/to/episode.jsonl

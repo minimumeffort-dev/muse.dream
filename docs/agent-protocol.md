@@ -101,7 +101,8 @@ controller assignments, while explicit handoffs are saved as current ownership.
 
 ## Inspect the result
 
-Open Results breakdown while the experiment runs. Charts show live task progress and time;
+Open Results breakdown while the experiment runs. Timelines show live task progress,
+spending and cumulative waiting. By agent holds individual progress and time charts;
 Data table holds spending and exact travel, service, waiting and action counts. These are
 simulation steps, including the step that starts a move or service. Events holds
 blocked or rejected requests. Each event opens its

@@ -39,10 +39,19 @@ says that execution continues on the local host.
 Outcome copy leads with completion or the time limit, then coins spent and
 simulation steps. It suggests the next useful action without inventing failure
 causes or calling lower spend a better result. Agent activity is a disclosure.
-Results breakdown leads with task-progress bars and stacked travel, service,
-waiting and action time per agent. Tables and events stay inside disclosures.
-Results remain available during execution and show the latest committed step,
-independent of the replay cursor. Update chart values, table cells and download
+Results breakdown leads with three aligned step charts: completed tasks, coins
+spent and cumulative waiting agent steps. They share a step cursor and a compact
+readout. Pointer hover and arrow keys inspect without pausing; click or Enter uses
+the existing replay owner to seek. Home/End inspect first/latest, Escape restores
+the playback cursor. New points extend the history without resetting inspection.
+Use discrete step lines with visible zero-based scales, no smoothing, animation,
+automatic diagnosis or new chart dependency. Derive new samples incrementally
+from validated transitions. By agent holds task-progress bars and stacked time;
+tables and events stay inside disclosures. Timeline CSV exports the exact history
+with the run’s source pins and snapshot outcome.
+Results remain available during execution. Their scope labels the latest committed
+head; timeline readouts identify the inspected step. Per-agent charts and snapshot
+exports stay at the head. Update chart values, table cells and download
 snapshots in place; preserve disclosures, keyboard focus and scroll positions.
 Event buttons open the attempted action and its recorded reason; Technical record
 holds the raw observation/action/outcome. CSV exports the pinned measurements;

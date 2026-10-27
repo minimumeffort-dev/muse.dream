@@ -1,4 +1,4 @@
-import {episodeMetrics,type Episode,type Outcome} from './engine/sim/episode';
+import {episodeMetrics,type Episode,type Outcome,type Transition} from './engine/sim/episode';
 
 export interface EvidenceRef {step:number;agent:string;outcomeIndex:number}
 export interface RunFinding extends EvidenceRef {status:'blocked'|'rejected';reason:string}
@@ -11,6 +11,14 @@ export interface AgentReport {
 }
 const FINDING_LIMIT=64;
 
+export function agentStepKind(record:Transition,agent:string):keyof AgentReport['steps']{
+  const work=record.observations.find(observation=>observation.self.id===agent)!.self.work;
+  const outcomes=record.outcomes.filter(outcome=>outcome.agent===agent);
+  if(work?.kind==='move'||outcomes.some(outcome=>outcome.status==='accepted'&&outcome.reason==='travel_started'))return 'travel';
+  if(work?.kind==='service'||outcomes.some(outcome=>outcome.status==='accepted'&&outcome.reason==='service_started'))return 'service';
+  return outcomes.some(outcome=>outcome.status==='accepted'&&outcome.kind==='wait')?'idle':'other';
+}
+
 /** Findings reference recorded outcomes; elapsed work includes its initiating transition. */
 export function buildRunReport(episode:Episode){
   const findings:RunFinding[]=[];
@@ -20,12 +28,7 @@ export function buildRunReport(episode:Episode){
     const objectives=episode.scenario.objectives.filter(goal=>goal.agent===spec.id).map(goal=>({id:goal.id,kind:goal.kind,at:goal.at,item:goal.item,quantity:goal.quantity,progress:episode.state.progress[goal.id]!}));
     const steps={travel:0,service:0,idle:0,other:0},reasons:ReasonSummary[]=[];
     for(const record of episode.records){
-      const work=record.observations.find(observation=>observation.self.id===spec.id)!.self.work;
-      const outcomes=record.outcomes.filter(outcome=>outcome.agent===spec.id);
-      if(work?.kind==='move'||outcomes.some(outcome=>outcome.status==='accepted'&&outcome.reason==='travel_started'))steps.travel++;
-      else if(work?.kind==='service'||outcomes.some(outcome=>outcome.status==='accepted'&&outcome.reason==='service_started'))steps.service++;
-      else if(outcomes.some(outcome=>outcome.status==='accepted'&&outcome.kind==='wait'))steps.idle++;
-      else steps.other++;
+      steps[agentStepKind(record,spec.id)]++;
       record.outcomes.forEach((outcome:Outcome,outcomeIndex:number)=>{
         if(outcome.agent!==spec.id||outcome.status==='accepted')return;
         const evidence={step:record.step,agent:spec.id,outcomeIndex};

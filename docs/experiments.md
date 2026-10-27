@@ -43,16 +43,28 @@ A retried run request keeps the same request identity until it is acknowledged.
 ## Inspect earlier runs
 
 The history shows each run’s status and task progress. Open a run to inspect it
-in 3D or seek its timeline. Results breakdown shows task progress and stacked
-travel, service, waiting and action time for each agent. Charts update during
+in 3D or seek its timeline. Results breakdown leads with three cumulative timelines:
+completed tasks, coins spent and waiting agent steps. They share the same step
+axis and inspection cursor. Hovering or arrow keys inspect without pausing;
+clicking a chart or pressing Enter opens that step in replay. Home/End inspect
+the first/latest point; Escape returns to the playback cursor. The latest committed
+history keeps growing while inspecting an older point on the local host.
+
+Waiting counts explicit wait actions outside travel or service, summed across
+agents. Flat progress with rising waiting shows a period without task completion;
+it does not establish a cause. The inspected step shows a recorded blocked/rejected
+reason or the number of waiting agents when available. By agent keeps the
+individual progress and stacked travel, service, waiting and action charts.
+Charts update during
 execution without pausing. Live results labels the latest committed step;
 Recorded so far labels an unfinished browser run that is not advancing, and
 Full recording labels an ended run. This scope stays separate from the replay
 cursor. Data table and
 Events open the underlying numbers and recorded requests. Controller timing
 is separate from simulation time.
-Download CSV snapshots the currently reported measurements, source hash, seed
-and partial/completed/deadline outcome. Full run
+Download CSV snapshots per-agent measurements. Timeline CSV exports each committed
+step from zero through the current head, independently of the inspection cursor.
+Both include source hash, seed and partial/completed/deadline outcome. Full run
 (JSONL) keeps the source and transitions needed for replay.
 Opening a historical run changes the viewer; it does not overwrite the editable
 draft or rewind a live engine.
